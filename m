@@ -1,14 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HeOGh-0003V0-Bm
-	for kexec@lists.infradead.org; Thu, 19 Apr 2007 00:29:18 -0400
-From: Michael Neuling <mikey@neuling.org>
-Subject: [PATCH] kexec-tools ppc64: add --reuseinitrd option 
-In-reply-to: <12001.1176881167@neuling.org> 
-References: <12001.1176881167@neuling.org>
-Date: Thu, 19 Apr 2007 14:29:09 +1000
-Message-ID: <5129.1176956949@neuling.org>
+Subject: Re: [ANNOUNCE] kexec mailing list
+From: David Woodhouse <dwmw2@infradead.org>
+In-Reply-To: <20070419030217.GA7754@verge.net.au>
+References: <20070419030217.GA7754@verge.net.au>
+Date: Wed, 18 Apr 2007 22:23:50 -0500
+Message-Id: <1176953030.21611.107.camel@shinybook.infradead.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,200 +14,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, Fastboot mailing list <fastboot@lists.osdl.org>, miltonm@bga.com
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@in.ibm.com>, fastboot@lists.osdl.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Add a --reuseinitrd option so that initrds saved using the
-retain_initrd kernel option can be reused on the kexec boot.
+On Thu, 2007-04-19 at 12:02 +0900, Simon Horman wrote:
+> 
+> David advises me that there are two spam-reduction rules that users
+> should keep in mind:
+> 
+>   * No attachments
+>     Please send patches and the like inline in accordance with
+>     the patch sumission guidelines that can be found at.
 
-Signed-off-by: Michael Neuling <mikey@neuling.org>
----
-Horms: This fixes comments from Milton.  Also adds sanity checks to make
-sure the old initrd was retained, and that another initrd/ramdisk is not
-being specified at the same time.
+To be precise: mail with types text/html and multipart/* are all trapped
+for moderation. Whether they get through or not are up to the whim of
+the moderator. I'm not sure I'd express that as "no attachments", but if
+you want your mail to go straight through instead of waiting for Simon
+or I to approve it, then including a patch inline instead of attaching
+it might be a good idea.
 
-fastboot is dead... love live kexec! Yay :-)
+>     On the topic of patch submission. I think it would be
+>     good if kernel and user-space patches alike followed
+>     the guidelines at:
+>     http://www.zip.com.au/~akpm/linux/patches/stuff/tpp.txt
+> 
+>   * If there is an "Re: " in the subject then there must also
+>     be a "References:" header
+   ... or an In-Reply-To: header. One or the other will suffice -- which
+means that if you reply by clicking on a mailto: link in the archive,
+you should be OK because those links have correct In-Reply-To: in the
+URL and you'll preserve the threading information correctly.
 
- kexec/arch/ppc64/fs2dt.c           |   36 +++++++++++++++++++++++++++---------
- kexec/arch/ppc64/kexec-elf-ppc64.c |    9 +++++++++
- kexec/arch/ppc64/kexec-ppc64.c     |    1 +
- kexec/arch/ppc64/kexec-ppc64.h     |    1 +
- 4 files changed, 38 insertions(+), 9 deletions(-)
+Conversely, anything with References: or In-Reply-To: headers should
+have 'Re: ' in the subject to avoid being trapped for moderation. That's
+a rule used on higher-traffic mailing lists where some muppets make a
+habit of replying to existing threads and changing the subject, when
+they should have started a new thread instead. 
 
-Index: kexec-tools-testing/kexec/arch/ppc64/fs2dt.c
-===================================================================
---- kexec-tools-testing.orig/kexec/arch/ppc64/fs2dt.c
-+++ kexec-tools-testing/kexec/arch/ppc64/fs2dt.c
-@@ -66,11 +66,11 @@ void reserve(unsigned long long where, u
- }
- 
- /* look for properties we need to reserve memory space for */
--static void checkprop(char *name, unsigned *data)
-+static void checkprop(char *name, unsigned *data, int len)
- {
--	static unsigned long long base, size;
-+	static unsigned long long base, size, end;
- 
--	if ((data == NULL) && (base || size))
-+	if ((data == NULL) && (base || size || end))
- 		die("unrecoverable error: no property data");
- 	else if (!strcmp(name, "linux,rtas-base"))
- 		base = *data;
-@@ -79,11 +79,24 @@ static void checkprop(char *name, unsign
- 	else if (!strcmp(name, "rtas-size") ||
- 			!strcmp(name, "linux,tce-size"))
- 		size = *data;
-+	else if (reuse_initrd && !strcmp(name, "linux,initrd-start"))
-+		if (len == 8)
-+			base = *(unsigned long long *) data;
-+		else
-+			base = *data;
-+	else if (reuse_initrd && !strcmp(name, "linux,initrd-end"))
-+		end = *(unsigned long long *) data;
- 
-+	if (size && end)
-+		die("unrecoverable error: size and end set at same time\n");
- 	if (base && size) {
- 		reserve(base, size);
- 		base = size = 0;
- 	}
-+	if (base && end) {
-+		reserve(base, end-base);
-+		base = end = 0;
-+	}
- }
- 
- /*
-@@ -213,10 +226,11 @@ static void putprops(char *fn, struct di
- 				continue;
- 
- 		/* This property will be created/modified later in putnode()
--		 * So ignore it.
-+		 * So ignore it, unless we are reusing the initrd.
- 		 */
--		if (!strcmp(dp->d_name, "linux,initrd-start") ||
--			!strcmp(dp->d_name, "linux,initrd-end"))
-+		if ((!strcmp(dp->d_name, "linux,initrd-start") ||
-+		     !strcmp(dp->d_name, "linux,initrd-end")) &&
-+		    !reuse_initrd)
- 				continue;
- 
- 		if (! S_ISREG(statbuf.st_mode))
-@@ -241,7 +255,7 @@ static void putprops(char *fn, struct di
- 			die("unrecoverable error: could not read \"%s\": %s\n",
- 			    pathname, strerror(errno));
- 
--		checkprop(fn, dt);
-+		checkprop(fn, dt, len);
- 
- 		/* Get the cmdline from the device-tree and modify it */
- 		if (!strcmp(dp->d_name, "bootargs")) {
-@@ -249,6 +263,10 @@ static void putprops(char *fn, struct di
- 			char temp_cmdline[COMMAND_LINE_SIZE] = { "" };
- 			char *param = NULL;
- 			cmd_len = strlen(local_cmdline);
-+			if (reuse_initrd &&
-+			    (strstr((char *)dt, "retain_initrd") == NULL))
-+				die("unrecoverable error: current boot didn't "
-+				    "retain the initrd for reuse.\n");
- 			if (cmd_len != 0) {
- 				param = strstr(local_cmdline, "crashkernel=");
- 				if (param)
-@@ -282,7 +300,7 @@ static void putprops(char *fn, struct di
- 	}
- 
- 	fn[0] = '\0';
--	checkprop(pathname, NULL);
-+	checkprop(pathname, NULL, 0);
- }
- 
- /*
-@@ -343,7 +361,7 @@ static void putnode(void)
- 	putprops(dn, namelist, numlist);
- 
- 	/* Add initrd entries to the second kernel */
--	if (initrd_base && !strcmp(basename,"/chosen/")) {
-+	if (initrd_base && !strcmp(basename,"/chosen/") && !reuse_initrd) {
- 		int len = 8;
- 		unsigned long long initrd_end;
- 		*dt++ = 3;
-Index: kexec-tools-testing/kexec/arch/ppc64/kexec-elf-ppc64.c
-===================================================================
---- kexec-tools-testing.orig/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ kexec-tools-testing/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -43,6 +43,7 @@
- #define BOOTLOADER_VERSION VERSION
- 
- unsigned long initrd_base, initrd_size;
-+unsigned char reuse_initrd = 0;
- 
- int create_flatten_tree(struct kexec_info *, unsigned char **, unsigned long *,
- 			char *);
-@@ -95,6 +96,7 @@ int elf_ppc64_load(int argc, char **argv
- #define OPT_RAMDISK     (OPT_ARCH_MAX+1)
- #define OPT_DEVICETREEBLOB     (OPT_ARCH_MAX+2)
- #define OPT_ARGS_IGNORE		(OPT_ARCH_MAX+3)
-+#define OPT_REUSE_INITRD	(OPT_ARCH_MAX+4)
- 
- 	static const struct option options[] = {
- 		KEXEC_ARCH_OPTIONS
-@@ -104,6 +106,7 @@ int elf_ppc64_load(int argc, char **argv
- 		{ "initrd",             1, NULL, OPT_RAMDISK },
- 		{ "devicetreeblob",     1, NULL, OPT_DEVICETREEBLOB },
- 		{ "args-linux",		0, NULL, OPT_ARGS_IGNORE },
-+		{ "reuseinitrd",	0, NULL, OPT_REUSE_INITRD },
- 		{ 0,                    0, NULL, 0 },
- 	};
- 
-@@ -139,6 +142,9 @@ int elf_ppc64_load(int argc, char **argv
- 			break;
- 		case OPT_ARGS_IGNORE:
- 			break;
-+		case OPT_REUSE_INITRD:
-+			reuse_initrd = 1;
-+			break;
- 		}
- 	}
- 
-@@ -148,6 +154,9 @@ int elf_ppc64_load(int argc, char **argv
- 	else
- 		fprintf(stdout, "Warning: append= option is not passed. Using the first kernel root partition\n");
- 
-+	if (ramdisk && reuse_initrd)
-+		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
-+
- 	setup_memory_ranges(info->kexec_flags);
- 
- 	/* Need to append some command line parameters internally in case of
-Index: kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
-===================================================================
---- kexec-tools-testing.orig/kexec/arch/ppc64/kexec-ppc64.c
-+++ kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
-@@ -635,6 +635,7 @@ void arch_usage(void)
- 	fprintf(stderr, "     --ramdisk=<filename> Initial RAM disk.\n");
- 	fprintf(stderr, "     --initrd=<filename> same as --ramdisk.\n");
- 	fprintf(stderr, "     --devicetreeblob=<filename> Specify device tree blob file.\n");
-+	fprintf(stderr, "     --reuseinitrd Reuse the current initrd in memory.\n");
- 	fprintf(stderr, "     --elf64-core-headers Prepare core headers in ELF64 format\n");
- }
- 
-Index: kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.h
-===================================================================
---- kexec-tools-testing.orig/kexec/arch/ppc64/kexec-ppc64.h
-+++ kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.h
-@@ -16,6 +16,7 @@ void reserve(unsigned long long where, u
- 
- extern unsigned long initrd_base, initrd_size;
- extern int max_memory_ranges;
-+extern unsigned char reuse_initrd;
- 
- /* boot block version 2 as defined by the linux kernel */
- struct bootblock {
+We could perhaps drop that rule for this list, since it conflicts with
+what's generally considered to be the good practice of sending sets of
+patches in a 'thread' with the second and subsequent ones bearing the
+Message-Id of the first in their References:. It's just a question of
+how much manual approval the moderator can be bothered to deal with :)
+
+Anyway, these are all just the settings inherited from other lists.
+They're subject to change -- we could relax the rules for a low-volume
+list if we want to; I'll leave it up to Simon.
+
+The only rules which are really enforced system-wide are that incoming
+messages must have a Message-Id: header, and must come from a valid
+address which actually accepts bounces (MAIL FROM:<>). But those are
+just common sense.
+
+-- 
+dwmw2
+
 
 _______________________________________________
 kexec mailing list
