@@ -1,11 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [ANNOUNCE] kexec mailing list
-From: David Woodhouse <dwmw2@infradead.org>
-In-Reply-To: <20070419030217.GA7754@verge.net.au>
-References: <20070419030217.GA7754@verge.net.au>
-Date: Wed, 18 Apr 2007 22:23:50 -0500
-Message-Id: <1176953030.21611.107.camel@shinybook.infradead.org>
-Mime-Version: 1.0
+Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hem92-0008UB-5O
+	for kexec@lists.infradead.org; Fri, 20 Apr 2007 01:58:57 -0400
+In-Reply-To: <5129.1176956949@neuling.org>
+References: <12001.1176881167@neuling.org> <5129.1176956949@neuling.org>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <46b0d1603ea2ab82b37daaa1888e8793@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: [PATCH] kexec-tools ppc64: add --reuseinitrd option 
+Date: Fri, 20 Apr 2007 00:58:38 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +22,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@in.ibm.com>, fastboot@lists.osdl.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Michael Neuling <mikey@neuling.org>
+Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, kexec@lists.infradead.org, Fastboot mailing list <fastboot@lists.osdl.org>
 
-On Thu, 2007-04-19 at 12:02 +0900, Simon Horman wrote:
-> 
-> David advises me that there are two spam-reduction rules that users
-> should keep in mind:
-> 
->   * No attachments
->     Please send patches and the like inline in accordance with
->     the patch sumission guidelines that can be found at.
 
-To be precise: mail with types text/html and multipart/* are all trapped
-for moderation. Whether they get through or not are up to the whim of
-the moderator. I'm not sure I'd express that as "no attachments", but if
-you want your mail to go straight through instead of waiting for Simon
-or I to approve it, then including a patch inline instead of attaching
-it might be a good idea.
+On Apr 18, 2007, at 11:29 PM, Michael Neuling wrote:
 
->     On the topic of patch submission. I think it would be
->     good if kernel and user-space patches alike followed
->     the guidelines at:
->     http://www.zip.com.au/~akpm/linux/patches/stuff/tpp.txt
-> 
->   * If there is an "Re: " in the subject then there must also
->     be a "References:" header
-   ... or an In-Reply-To: header. One or the other will suffice -- which
-means that if you reply by clicking on a mailto: link in the archive,
-you should be OK because those links have correct In-Reply-To: in the
-URL and you'll preserve the threading information correctly.
+> Add a --reuseinitrd option so that initrds saved using the
+> retain_initrd kernel option can be reused on the kexec boot.
+>
+> Signed-off-by: Michael Neuling <mikey@neuling.org>
+> ---
+> Horms: This fixes comments from Milton.  Also adds sanity checks to 
+> make
+> sure the old initrd was retained, and that another initrd/ramdisk is 
+> not
+> being specified at the same time.
+>
+> fastboot is dead... love live kexec! Yay :-)
+>
 
-Conversely, anything with References: or In-Reply-To: headers should
-have 'Re: ' in the subject to avoid being trapped for moderation. That's
-a rule used on higher-traffic mailing lists where some muppets make a
-habit of replying to existing threads and changing the subject, when
-they should have started a new thread instead. 
+> -		checkprop(fn, dt);
+> +		checkprop(fn, dt, len);
+>
+>  		/* Get the cmdline from the device-tree and modify it */
+>  		if (!strcmp(dp->d_name, "bootargs")) {
+> @@ -249,6 +263,10 @@ static void putprops(char *fn, struct di
+>  			char temp_cmdline[COMMAND_LINE_SIZE] = { "" };
+>  			char *param = NULL;
+>  			cmd_len = strlen(local_cmdline);
+> +			if (reuse_initrd &&
+> +			    (strstr((char *)dt, "retain_initrd") == NULL))
+> +				die("unrecoverable error: current boot didn't "
+> +				    "retain the initrd for reuse.\n");
 
-We could perhaps drop that rule for this list, since it conflicts with
-what's generally considered to be the good practice of sending sets of
-patches in a 'thread' with the second and subsequent ones bearing the
-Message-Id of the first in their References:. It's just a question of
-how much manual approval the moderator can be bothered to deal with :)
+Although this seems efficent to look at what was in the device tree,
+I'd prefer we actually looked at /proc/cmdline when we parse the
+arg, so that we are sure to find what the kernel is actually
+using for the command line.
 
-Anyway, these are all just the settings inherited from other lists.
-They're subject to change -- we could relax the rules for a low-volume
-list if we want to; I'll leave it up to Simon.
+Besides it will be eaiser for other archs to copy the check.
 
-The only rules which are really enforced system-wide are that incoming
-messages must have a Message-Id: header, and must come from a valid
-address which actually accepts bounces (MAIL FROM:<>). But those are
-just common sense.
+>  			if (cmd_len != 0) {
+>  				param = strstr(local_cmdline, "crashkernel=");
+>  				if (param)
+> @@ -282,7 +300,7 @@ static void putprops(char *fn, struct di
+>  	}
+>
+>  	fn[0] = '\0';
+> -	checkprop(pathname, NULL);
+> +	checkprop(pathname, NULL, 0);
+>  }
+>
+>  /*
+> @@ -343,7 +361,7 @@ static void putnode(void)
+>  	putprops(dn, namelist, numlist);
+>
+>  	/* Add initrd entries to the second kernel */
+> -	if (initrd_base && !strcmp(basename,"/chosen/")) {
+> +	if (initrd_base && !strcmp(basename,"/chosen/") && !reuse_initrd) {
 
--- 
-dwmw2
+How does initrd_base get set if you disallow --initrd= ?
+
+>
+> @@ -148,6 +154,9 @@ int elf_ppc64_load(int argc, char **argv
+>  	else
+>  		fprintf(stdout, "Warning: append= option is not passed. Using the 
+> first kernel root partition\n");
+>
+> +	if (ramdisk && reuse_initrd)
+> +		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
+> +
+
+This check is generic, not elf specific, so it should be where
+we pass the args.  Hmm, maybe this is that place and it just
+wants abstracting, I don't have the tree in front of me.
+
+>  	setup_memory_ranges(info->kexec_flags);
+>
+>  	/* Need to append some command line parameters internally in case of
+>
+
+milton
 
 
 _______________________________________________
