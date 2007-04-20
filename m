@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Henlz-0001kD-Er
-	for kexec@lists.infradead.org; Fri, 20 Apr 2007 03:43:17 -0400
-In-Reply-To: <14852.1177053830@neuling.org>
-References: <12001.1176881167@neuling.org> <5129.1176956949@neuling.org>
-	<46b0d1603ea2ab82b37daaa1888e8793@bga.com>
-	<14852.1177053830@neuling.org>
-Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <1b37836af7a3cbc22d6b9bf8cef5851b@bga.com>
-From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH] kexec-tools ppc64: add --reuseinitrd option 
-Date: Fri, 20 Apr 2007 02:42:44 -0500
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hepfk-00035z-3t
+	for kexec@lists.infradead.org; Fri, 20 Apr 2007 05:45:13 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [Fastboot] kexec cant load OpenBSD
+References: <4627C7DA.7010401@esentire.com> <20070420065451.GA14852@in.ibm.com>
+Date: Fri, 20 Apr 2007 03:43:48 -0600
+In-Reply-To: <20070420065451.GA14852@in.ibm.com> (Vivek Goyal's message of
+	"Fri, 20 Apr 2007 12:24:51 +0530")
+Message-ID: <m1ejmfl6sr.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,69 +23,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, kexec@lists.infradead.org, Fastboot mailing list <fastboot@lists.osdl.org>
+To: vgoyal@in.ibm.com
+Cc: fastboot@osdl.org, Jon Steel <jon.steel@esentire.com>, Kexec Mailing List <kexec@lists.infradead.org>
 
-On Apr 20, 2007, at 2:23 AM, Michael Neuling wrote:
-> In message <46b0d1603ea2ab82b37daaa1888e8793@bga.com> you wrote:
->> On Apr 18, 2007, at 11:29 PM, Michael Neuling wrote:
->>> Add a --reuseinitrd option so that initrds saved using the
->>> retain_initrd kernel option can be reused on the kexec boot.
->>
->> Although this seems efficent to look at what was in the device tree,
->> I'd prefer we actually looked at /proc/cmdline when we parse the
->> arg, so that we are sure to find what the kernel is actually
->> using for the command line.
->>
->> Besides it will be eaiser for other archs to copy the check.
+Vivek Goyal <vgoyal@in.ibm.com> writes:
+
+> On Thu, Apr 19, 2007 at 03:49:46PM -0400, Jon Steel wrote:
+>> Hi
+>> 
+>> Im running Gentoo and Im trying to use kexec to start up OpenBSD. I've
+>> got it set up correct because I can do a boot into Gentoo. Here is what
+>> happens:
+>> 
+>> base ~ # kexec -l /boot/bsd --type="elf-x86"
+>> Base address: d0200120 is not page aligned
+>> 
 >
-> Looks like we should make it a generic option.  If we do, this should
-> probably be two patches.  One to introduce the option, and one for the
-> ppc64 specific parts.
+> Above address indicates that some loadable program segment is not
+> page size(4K) aligned hence kexec is cribbing.
 >
-> Do any of the other architectures allow you to see where the initrd is
-> located for the current boot from user space?  If not, the option will
-> need to take two parameters saying where the retained initrd is.  This
-> will make the option less generic (if not, we'll need to change the
-> other archs to export these values to user space).
-
-Since we just added the option to the kernel, I'm guessing not.
-Most of them use /proc/iomem with resources for finding system ram,
-the kernel text and crash kernel region, so they should probably
-add a resource there when the initrd is retained.  We (powerpc) export
-our bootloader data aka device tree instead, and make kexec-tools
-parse it.  I don't know how sparc passes an initrd to the kernel.
-
->>> @@ -148,6 +154,9 @@ int elf_ppc64_load(int argc, char **argv
->>>  	else
->>>  		fprintf(stdout, "Warning: append= option is not passed. Using t
-> he
->>> first kernel root partition\n");
->>>
->>> +	if (ramdisk && reuse_initrd)
->>> +		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n")
-> ;
->>> +
->>
->> This check is generic, not elf specific, so it should be where
->> we pass the args.  Hmm, maybe this is that place and it just
->> wants abstracting, I don't have the tree in front of me.
+> A, "readelf -l /boot/bsd" should display the various program headers.
+> I think you shall have to modify linker script of OpenBSD kernel to 
+> generate page size aligned loadable segments.
 >
-> I put it here so the error's caught independent of the arg parsing
-> order.  Otherwise, we'd need to duplicate the check.
+> This does raise a question in my mind, why all the program headers
+> should be loaded at page size boundaries? Just because ease of handling
+> or there is some other reason too?
 >
-> I think it's the right place, unless we move it to an arch generic
-> option.
+> Eric, you want to shed some light on this requirement?
 
-I didn't mean as we parse the option, but is there not something
-that gets called after we parse all the options?   Maybe that is
-just the load function.   I was just thinking it should be in a
-sanity_check_args() function that looks for exclusive options like
-these rather than in "load a kernel like elf file", although that
-is the only current option for ppc64, so it might be ok here.
+A) The first problem is that we don't currently have support for OpenBSD
+   and it does some weird things, and doesn't quite use the ELF fields
+   generically.  So specific support will have to be written for at least
+   part of it.
 
-milton
+B) In the kernel side of the interface the page alignment restriction is
+   important because of how our intermediate buffers work.  For user space
+   ELF the page alignment of program segments is an important
+   consideration to allow page sharing but for standalone executables we
+   really shouldn't care and the restriction probably only exists 
+   because we have a simple translation from ELF segment to the kernel
+   segments.
 
+Eric
 
 _______________________________________________
 kexec mailing list
