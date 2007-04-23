@@ -1,14 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hfrsq-0000j1-6x
-	for kexec@lists.infradead.org; Mon, 23 Apr 2007 02:18:48 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hfrzn-0002tD-4f
+	for kexec@lists.infradead.org; Mon, 23 Apr 2007 07:25:58 +0100
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l3N6PjD4023401
+	for <kexec@lists.infradead.org>; Mon, 23 Apr 2007 02:25:45 -0400
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l3N6PiA1515554
+	for <kexec@lists.infradead.org>; Mon, 23 Apr 2007 02:25:45 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l3N6PiE2025498
+	for <kexec@lists.infradead.org>; Mon, 23 Apr 2007 02:25:44 -0400
+Date: Mon, 23 Apr 2007 11:55:34 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
 Subject: Re: [PATCH 2/2] x86_64: Remove CONFIG_PHYSICAL_START and
 	CONFIG_RELOCATABLE
-References: <20070331232957.e1c93f19.akpm@linux-foundation.org>
-	<20070402074159.GA13704@in.ibm.com>
-	<m1abxrf9o3.fsf@ebiederm.dsl.xmission.com>
+Message-ID: <20070423062534.GB14664@in.ibm.com>
+References: <m1abxrf9o3.fsf@ebiederm.dsl.xmission.com>
 	<20070402094520.GC13704@in.ibm.com>
 	<m1648eg01d.fsf@ebiederm.dsl.xmission.com>
 	<20070403040152.GA5108@in.ibm.com>
@@ -17,11 +28,11 @@ References: <20070331232957.e1c93f19.akpm@linux-foundation.org>
 	<m18xcjznbm.fsf_-_@ebiederm.dsl.xmission.com>
 	<m14pn7zn5n.fsf_-_@ebiederm.dsl.xmission.com>
 	<20070423060739.GA14664@in.ibm.com>
-Date: Mon, 23 Apr 2007 00:17:22 -0600
-In-Reply-To: <20070423060739.GA14664@in.ibm.com> (Vivek Goyal's message of
-	"Mon, 23 Apr 2007 11:37:39 +0530")
-Message-ID: <m1slary5ql.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	<m1slary5ql.fsf@ebiederm.dsl.xmission.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1slary5ql.fsf@ebiederm.dsl.xmission.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,42 +45,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: fastboot@osdl.org, Kexec Mailing List <kexec@lists.infradead.org>, Jurriaan <thunder7@xs4all.nl>, linux-kernel@vger.kernel.org, Magnus Damm <magnus@valinux.co.jp>, Helge Hafting <helgehaf@aitel.hist.no>, Horms <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, Andi Kleen <ak@suse.de>
 
-Vivek Goyal <vgoyal@in.ibm.com> writes:
+On Mon, Apr 23, 2007 at 12:17:22AM -0600, Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@in.ibm.com> writes:
+> 
+> > On Sun, Apr 22, 2007 at 11:15:48PM -0600, Eric W. Biederman wrote:
+> >> +++ b/arch/x86_64/Kconfig
+> >> @@ -565,62 +565,9 @@ config CRASH_DUMP
+> >>            which are loaded in the main kernel with kexec-tools into
+> >>            a specially reserved region and then later executed after
+> >>            a crash by kdump/kexec. The crash dump kernel must be compiled
+> >> -	  to a memory address not used by the main kernel or BIOS using
+> >> -	  PHYSICAL_START.
+> >> +	  to a memory address not used by the main kernel or BIOS
+> >>            For more details see Documentation/kdump/kdump.txt
+> >
+> > Hi Eric,
+> >
+> > I think "must be compiled" should be replaced with "must be loaded" now.
+> 
+> Yes, that sounds right.  Ugh.  I didn't look at enough context to read
+> the whole sentence.  I just killed the part about PHYSICAL_START.
+> 
+> > Otherwise both the patches look fine.  I am planning to test these.
+> >
+> > This change will also require modifications to Documentation/kdump/kdump.txt
+> > file.
+> 
+> Do you think you can generate the patch fix up the CONFIG_CRASH_DUMP
+> and kdump.txt documentation.
+> 
 
-> On Sun, Apr 22, 2007 at 11:15:48PM -0600, Eric W. Biederman wrote:
->> +++ b/arch/x86_64/Kconfig
->> @@ -565,62 +565,9 @@ config CRASH_DUMP
->>            which are loaded in the main kernel with kexec-tools into
->>            a specially reserved region and then later executed after
->>            a crash by kdump/kexec. The crash dump kernel must be compiled
->> -	  to a memory address not used by the main kernel or BIOS using
->> -	  PHYSICAL_START.
->> +	  to a memory address not used by the main kernel or BIOS
->>            For more details see Documentation/kdump/kdump.txt
->
-> Hi Eric,
->
-> I think "must be compiled" should be replaced with "must be loaded" now.
+Ok. I will send one.
 
-Yes, that sounds right.  Ugh.  I didn't look at enough context to read
-the whole sentence.  I just killed the part about PHYSICAL_START.
-
-> Otherwise both the patches look fine.  I am planning to test these.
->
-> This change will also require modifications to Documentation/kdump/kdump.txt
-> file.
-
-Do you think you can generate the patch fix up the CONFIG_CRASH_DUMP
-and kdump.txt documentation.
-
-I was just interested enough to spend the 15 minutes needed to generate
-this patch.  I don't think I care enough to dot the i's and cross the t's
-in the documentation.
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
