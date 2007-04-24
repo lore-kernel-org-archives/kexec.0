@@ -1,27 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from e31.co.us.ibm.com ([32.97.110.149])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HgFMJ-00063N-Mm
-	for kexec@lists.infradead.org; Tue, 24 Apr 2007 03:23:34 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH 1/2] x86_64: Reflect the relocatability of the kernel in
-	the ELF header.
-References: <m1ircghb6w.fsf@ebiederm.dsl.xmission.com>
-	<20070331232957.e1c93f19.akpm@linux-foundation.org>
-	<20070402074159.GA13704@in.ibm.com>
-	<m1abxrf9o3.fsf@ebiederm.dsl.xmission.com>
-	<20070402094520.GC13704@in.ibm.com>
-	<m1648eg01d.fsf@ebiederm.dsl.xmission.com>
-	<20070403040152.GA5108@in.ibm.com>
-	<m1zm5qc9q2.fsf@ebiederm.dsl.xmission.com>
-	<20070403100349.GA21759@in.ibm.com>
-	<m18xcjznbm.fsf_-_@ebiederm.dsl.xmission.com>
-	<20070424063139.GA22742@in.ibm.com>
-Date: Tue, 24 Apr 2007 01:21:03 -0600
-In-Reply-To: <20070424063139.GA22742@in.ibm.com> (Vivek Goyal's message of
-	"Tue, 24 Apr 2007 12:01:40 +0530")
-Message-ID: <m1vefmtezk.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	id 1HgGfB-0007N3-Ua
+	for kexec@lists.infradead.org; Tue, 24 Apr 2007 04:46:20 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l3O8jqEt022924
+	for <kexec@lists.infradead.org>; Tue, 24 Apr 2007 04:45:52 -0400
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l3O8jqdN149072
+	for <kexec@lists.infradead.org>; Tue, 24 Apr 2007 02:45:52 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l3O8jp7o010741
+	for <kexec@lists.infradead.org>; Tue, 24 Apr 2007 02:45:52 -0600
+Date: Tue, 24 Apr 2007 14:14:44 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [PATCH] aacraid: fails to initialize after a  kexec operation
+Message-ID: <20070424084444.GC22742@in.ibm.com>
+References: <20070423161203.GA2129@in.ibm.com>
+	<AE4F746F2AECFC4DA4AADD66A1DFEF0188AE58@otce2k301.adaptec.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <AE4F746F2AECFC4DA4AADD66A1DFEF0188AE58@otce2k301.adaptec.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,139 +33,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1974638538=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Jurriaan <thunder7@xs4all.nl>, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, Helge Hafting <helgehaf@aitel.hist.no>, Horms <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>
+To: "Salyzyn, Mark" <mark_salyzyn@adaptec.com>
+Cc: James Bottomley <James.Bottomley@SteelEye.com>, Kexec Mailing List <kexec@lists.infradead.org>, Judith Lebzelter <judith@linux-foundation.org>, linux-scsi@vger.kernel.org
 
---===============1974638538==
-Content-Type: text/plain; charset=macintosh
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 23, 2007 at 01:20:32PM -0400, Salyzyn, Mark wrote:
+> That is a failure to route the interrupts and is possibly an issue with
+> the kernel and the hardware, and not the driver directly (since there is
+> an expectation that request_irq will connect the interrupt to the
+> interrupt service routine). Judith reported success in the past with
+> this patch on her hardware, perhaps the motherboard on your system has
+> some odd BIOS setup of the hardware that is giving acpi or the apic some
+> headaches? Can you check out success or failure on other motherboards?
+> Please try the suggestions from the driver (safe flags)?
+> 
+> Sincerely -- Mark Salyzyn
+> 
 
-Vivek Goyal <vgoyal@in.ibm.com> writes:
+Hi Mark,
 
-> On Sun, Apr 22, 2007 at 11:12:13PM -0600, Eric W. Biederman wrote:
->>=20
->> Currently because vmlinux does not reflect that the kernel is relocatable
->> we still have to support CONFIG_PHYSICAL_START.  So this patch adds a sm=
-all
->> c program to do what we cannot do with a linker script, set the elf head=
-er
->> type to ET_DYN.
->>=20
->> This should remove the last obstacle to removing CONFIG_PHYSICAL_START
->> on x86_64.
->>=20
->> Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
->
-> [Dropping fastboot mailing list from CC as kexec mailing list is new list
->  for this discussion]
->
-> [..]
->> +void file_open(const char *name)
->> +{
->> +	if ((fd =3D open(name, O_RDWR, 0)) < 0)
->> +		die("Unable to open `%s': %m", name);
->> +}
->> +
->> +static void mketrel(void)
->> +{
->> +	unsigned char e_type[2];
->> +	if (read(fd, &e_ident, sizeof(e_ident)) !=3D sizeof(e_ident))
->> +		die("Cannot read ELF header: %s\n", strerror(errno));
->> +
->> +	if (memcmp(e_ident, ELFMAG, 4) !=3D 0)
->> +		die("No ELF magic\n");
->> +
->> +	if ((e_ident[EI_CLASS] !=3D ELFCLASS64) &&
->> +	    (e_ident[EI_CLASS] !=3D ELFCLASS32))
->> +		die("Unrecognized ELF class: %x\n", e_ident[EI_CLASS]);
->> +=09
->> +	if ((e_ident[EI_DATA] !=3D ELFDATA2LSB) &&
->> +	    (e_ident[EI_DATA] !=3D ELFDATA2MSB))
->> +		die("Unrecognized ELF data encoding: %x\n", e_ident[EI_DATA]);
->> +
->> +	if (e_ident[EI_VERSION] !=3D EV_CURRENT)
->> +		die("Unknown ELF version: %d\n", e_ident[EI_VERSION]);
->> +
->> +	if (e_ident[EI_DATA] =3D=3D ELFDATA2LSB) {
->> +		e_type[0] =3D ET_REL & 0xff;
->> +		e_type[1] =3D ET_REL >> 8;
->> +	} else {
->> +		e_type[1] =3D ET_REL & 0xff;
->> +		e_type[0] =3D ET_REL >> 8;
->> +	}
->
-> Hi Eric,
->
-> Should this be ET_REL or ET_DYN? kexec refuses to load this vmlinux
-> as it does not find it to be executable type.
+We don't even go through BIOS in kexec and kdump. So BIOS should not be an
+issue.
 
-Doh.  It should be ET_DYN.  I had relocatable much to much on the brain,
-and so I stuffed in the wrong type.
+Looks like you sent some message to controller and then waiting for an
+interrupt from the controller as an indication of completion of command. In
+this case you never seem to get an interrupt hence timeout.
 
-> I am not well versed with various conventions but if I go through "Execut=
-able
-> and Linking Format" document, this is what it says about various file typ=
-es.
->
-> =A5 A relocatable file holds code and data suitable for linking with other
->   object files to create an executable or a shared object file.
->
-> =A5 An executable file holds a program suitable for execution.
->
-> =A5 A shared object file holds code and data suitable for linking in two
->   contexts. First, the link editor may process it with other relocatable =
-and
->   shared object files to create another object file. Second, the dynamic
->   linker combines it with an executable file and other shared objects
->   to create a process image.
->
-> So above does not seem to fit in the ET_REL type. We can't relink this
-> vmlinux? And it does not seem to fit in ET_DYN definition too. We are
-> not relinking this vmlinux with another executable or other relocatable
-> files.
->
-> I remember once you mentioned the term dynamic executable which can be
-> loaded at a non-compiled address and let run without requiring any
-> relocation processing. This vmlinux will fall in that category but can't=
-=20
-> relate it to standard elf file definitions.
+To bypass this problem, I am now booting my second kernel with "irqpoll"
+command line option. This will make sure that aacraid interrupt handler
+gets invoked even if there is an interrupt routing issue.
 
-Sorry about that.=20=20
+This option does help in progressing the things but it ends up corrupting
+something or other on the disk. In three attempts I get three types of
+errors.
 
-ET_DYN without a PT_DYNAMIC segment, without a PT_INTERP segment,
-and with a valid entry point is exactly that.  Loaders never perform
-relocation processing on a ET_DYN executable but they are allowed to
-shift all of the addresses by a single delta so long as all of the
-alignment restrictions are honored.
+In first attempt I get continuous stream of following messages once
+root file system has been mounted.
 
-Relocation processing when it happens comes from the dynamic linker,
-which is set in PT_INTERP and the dynamic linker looks a PT_DYNAMIC
-to figure out what relocations are available for processing.
+=============================================
+sda1: rw=0, want=9261304112, limit=41945652
+attempt to access beyond end of device
+sda1: rw=0, want=9261304112, limit=41945652
+attempt to access beyond end of device
+sda1: rw=0, want=9261304112, limit=41945652
+attempt to access beyond end of device
+sda1: rw=0, want=9261304112, limit=41945652
+attempt to access beyond end of device
+sda1: rw=0, want=9261304112, limit=41945652
+attempt to access beyond end of device
+============================================
 
-The basic issue is that ld don't really comprehend what we are doing
-since we are building a position independent executable in a way
-that the normal tools don't allow, so we have to poke the header.
+In second attempt, it mounted the file system but it found some issue
+with "resize" inode and asked me to run fsck manually. Which in turn 
+deleted whole lot of inodes.
 
-If we had compiled with -fPIC we could have specified -pie or
---pic-executable to ld and it would have done the right thing.
-But as it is our executable only changes physical addresses and
-not virtual addresses something completely foreign to ld.
+In third attemt it panics later when it finds ext3 to be corrupted.
 
-Eric
+=========================================
+Creating block device nodes.
+Trying to resume from LABEL=SWAP-sda3
+No suspend signature on swap, not resuming.
+Creating root device.
+Mounting root filesystem.
+EXT3-fs: Magic mismatch, very weird !
+mount: error mouKernel panic - not syncing: Attempted to kill init!
+nting /dev/root
+=================================================== 
 
+Following are relevant aacraid initiliazation messages on serial console.
 
---===============1974638538==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+===================================================================
+Adaptec aacraid driver (1.1-5[2437]-mh4)
+ACPI: PCI Interrupt 0000:01:02.0[A] -> GSI 25 (level, low) -> IRQ 25
+AAC0: kernel 5.2-0[11835] Jan  9 2007
+AAC0: monitor 5.2-0[11835]
+AAC0: bios 5.2-0[11835]
+AAC0: serial 1625d1
+AAC0: 64bit support enabled.
+AAC0: 64 Bit DAC enabled
+scsi0 : ServeRAID
+scsi 0:0:0:0: Direct-Access     IBM      x366             V1.0 PQ: 0 ANSI: 2
+scsi 0:1:0:0: Direct-Access     IBM-ESXS ST973401SS       B519 PQ: 0 ANSI: 5
+scsi 0:1:1:0: Direct-Access     IBM-ESXS ST973401SS       B519 PQ: 0 ANSI: 5
+scsi 0:1:2:0: Direct-Access     IBM-ESXS ST973401SS       B519 PQ: 0 ANSI: 5
+scsi 0:3:0:0: Enclosure         IBM      SAS SES-2 DEVICE 0.09 PQ: 0 ANSI: 5
+sd 0:0:0:0: [sda] 429459456 512-byte hardware sectors (219883 MB)
+sd 0:0:0:0: [sda] Assuming Write Enabled
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+sd 0:0:0:0: [sda] 429459456 512-byte hardware sectors (219883 MB)
+sd 0:0:0:0: [sda] Assuming Write Enabled
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+ sda: sda1 sda2 sda3 sda4 < sda5 >
+sd 0:0:0:0: [sda] Attached SCSI removable disk
+sd 0:0:0:0: Attached scsi generic sg0 type 0
+scsi 0:1:0:0: Attached scsi generic sg1 type 0
+scsi 0:1:1:0: Attached scsi generic sg2 type 0
+scsi 0:1:2:0: Attached scsi generic sg3 type 0
+scsi 0:3:0:0: Attached scsi generic sg4 type 13
+================================================
+
+I am not sure why this reset leaves file system in corrupted state and
+is there a better way to handle this? Link syncing the existing commands
+before restarting it.
+
+Should one keep a dedicated partition on the disk and not mount it in first
+kernel. Mount this partition only in second kernel to save the dump. I shall
+have to test such configuration.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1974638538==--
