@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv1.oss.ntt.co.jp ([222.151.198.98])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hgh5Y-0000Wx-4v
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 08:59:17 -0400
-Subject: Re: [PATCH 1/10] safe_apic_wait_icr_idle - i386
-From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
-In-Reply-To: <15716.1177505701@ocs3.ocs.com.au>
-References: <15716.1177505701@ocs3.ocs.com.au>
-Date: Wed, 25 Apr 2007 21:59:14 +0900
-Message-Id: <1177505954.19745.22.camel@sebastian.intellilink.co.jp>
-Mime-Version: 1.0
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1HghIC-0000eC-NW
+	for kexec@lists.infradead.org; Wed, 25 Apr 2007 09:12:21 -0400
+From: Andi Kleen <ak@suse.de>
+Subject: Re: [PATCH 2/10] safe_apic_wait_icr_idle - x86_64
+Date: Wed, 25 Apr 2007 15:11:59 +0200
+References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+	<200704251426.14398.ak@suse.de>
+	<1177505712.19745.18.camel@sebastian.intellilink.co.jp>
+In-Reply-To: <1177505712.19745.18.camel@sebastian.intellilink.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200704251511.59495.ak@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,44 +21,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Keith Owens <kaos@ocs.com.au>
-Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, ak@suse.de, linux-kernel@vger.kernel.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, mbligh@google.com, akpm@linux-foundation.org
+To: Fernando Luis =?iso-8859-15?q?V=E1zquez_Cao?= <fernando@oss.ntt.co.jp>
+Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
-On Wed, 2007-04-25 at 22:55 +1000, Keith Owens wrote:
-> Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao (on Wed, 25 Apr 2007 20:13:28 +0900) wrote:
-> >+static __inline__ unsigned long safe_apic_wait_icr_idle(void)
-> >+{
-> >+	unsigned long send_status;
-> >+	int timeout;
-> >+
-> >+	timeout = 0;
-> >+	do {
-> >+		udelay(100);
-> >+		send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
-> >+	} while (send_status && (timeout++ < 1000));
-> >+
-> >+	return send_status;
-> >+}
-> >+
-> 
-> safe_apic_wait_icr_idle() as coded guarantees a minimum 100 usec delay
-> before sending the IPI, this extra delay is unnecessary.  Change it to
-Hi Keith,
+On Wednesday 25 April 2007 14:55:12 Fernando Luis V=E1zquez Cao wrote:
+> On Wed, 2007-04-25 at 14:26 +0200, Andi Kleen wrote:
+> > >  static __inline__ void apic_wait_icr_idle(void)
+> > >  {
+> > > -	while (apic_read( APIC_ICR ) & APIC_ICR_BUSY)
+> > > +	while (apic_read(APIC_ICR) & APIC_ICR_BUSY)
+> > >  		cpu_relax();
+> > >  }
+> > >  =
 
-Thank you for the feedback!
+> > > +static __inline__ unsigned int safe_apic_wait_icr_idle(void)
+> > =
 
-> 	do {
-> 		send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
-> 		if (send_status)
-> 			break;
-> 		udelay(100);
-> 	} while (timeout++ < 1000);
-Oops, that is a good point. I will resend this patch either tonight or
-tomorrow morning.
+> > This should be probably not inline -- too large
+> Hello Andi,
+> =
+
+> Thank you for reviewing the patches. Do you want me to resend the whole
+> patch or should I cook a new one that un-inlines the function instead?
+
+I already did that.
+
+Also will apply Keith's suggestion.
+
+-Andi
+
+
 
 
 _______________________________________________
