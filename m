@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
+Received: from serv1.oss.ntt.co.jp ([222.151.198.98])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hgfoq-0007Me-T3
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:37:59 -0400
-Subject: [PATCH 7/10] __send_IPI_dest_field - i386
+	id 1Hgfqm-0007Nj-Kn
+	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:39:58 -0400
+Subject: [PATCH 8/10] __send_IPI_dest_field - x86_64
 From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
 In-Reply-To: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
 References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
-Date: Wed, 25 Apr 2007 20:37:55 +0900
-Message-Id: <1177501075.17974.40.camel@sebastian.intellilink.co.jp>
+Date: Wed, 25 Apr 2007 20:39:55 +0900
+Message-Id: <1177501195.17974.42.camel@sebastian.intellilink.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -32,89 +32,117 @@ field). Use it whenever possible.
 Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
 ---
 
-diff -urNp linux-2.6.21-rc7-orig/arch/i386/kernel/smp.c linux-2.6.21-rc7/arch/i386/kernel/smp.c
---- linux-2.6.21-rc7-orig/arch/i386/kernel/smp.c	2007-04-18 15:27:48.000000000 +0900
-+++ linux-2.6.21-rc7/arch/i386/kernel/smp.c	2007-04-23 16:29:24.000000000 +0900
-@@ -165,16 +165,13 @@ void fastcall send_IPI_self(int vector)
- }
- 
- /*
-- * This is only used on smaller machines.
-+ * This is used to send an IPI with no shorthand notation (the destination is
-+ * specified in bits 56 to 63 of the ICR).
-  */
--void send_IPI_mask_bitmask(cpumask_t cpumask, int vector)
-+static inline void __send_IPI_dest_field(unsigned long mask, int vector)
+diff -urNp linux-2.6.21-rc7-orig/arch/x86_64/kernel/genapic_flat.c linux-2.6.21-rc7/arch/x86_64/kernel/genapic_flat.c
+--- linux-2.6.21-rc7-orig/arch/x86_64/kernel/genapic_flat.c	2007-02-05 03:44:54.000000000 +0900
++++ linux-2.6.21-rc7/arch/x86_64/kernel/genapic_flat.c	2007-04-23 17:19:14.000000000 +0900
+@@ -60,31 +60,10 @@ static void flat_init_apic_ldr(void)
+ static void flat_send_IPI_mask(cpumask_t cpumask, int vector)
  {
--	unsigned long mask = cpus_addr(cpumask)[0];
- 	unsigned long cfg;
--	unsigned long flags;
- 
--	local_irq_save(flags);
--	WARN_ON(mask & ~cpus_addr(cpu_online_map)[0]);
- 	/*
- 	 * Wait for idle.
- 	 */
-@@ -195,13 +192,25 @@ void send_IPI_mask_bitmask(cpumask_t cpu
- 	 * Send the IPI. The write to APIC_ICR fires this off.
- 	 */
- 	apic_write_around(APIC_ICR, cfg);
-+}
- 
-+/*
-+ * This is only used on smaller machines.
-+ */
-+void send_IPI_mask_bitmask(cpumask_t cpumask, int vector)
-+{
-+	unsigned long mask = cpus_addr(cpumask)[0];
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	WARN_ON(mask & ~cpus_addr(cpu_online_map)[0]);
-+	__send_IPI_dest_field(mask, vector);
- 	local_irq_restore(flags);
- }
- 
- void send_IPI_mask_sequence(cpumask_t mask, int vector)
- {
--	unsigned long cfg, flags;
-+	unsigned long flags;
- 	unsigned int query_cpu;
- 
- 	/*
-@@ -211,30 +220,10 @@ void send_IPI_mask_sequence(cpumask_t ma
- 	 */ 
+ 	unsigned long mask = cpus_addr(cpumask)[0];
+-	unsigned long cfg;
+ 	unsigned long flags;
  
  	local_irq_save(flags);
 -
- 	for (query_cpu = 0; query_cpu < NR_CPUS; ++query_cpu) {
- 		if (cpu_isset(query_cpu, mask)) {
--		
--			/*
--			 * Wait for idle.
--			 */
--			apic_wait_icr_idle();
--		
--			/*
--			 * prepare target chip field
--			 */
--			cfg = __prepare_ICR2(cpu_to_logical_apicid(query_cpu));
--			apic_write_around(APIC_ICR2, cfg);
--		
--			/*
--			 * program the ICR 
--			 */
--			cfg = __prepare_ICR(0, vector);
--			
--			/*
--			 * Send the IPI. The write to APIC_ICR fires this off.
--			 */
--			apic_write_around(APIC_ICR, cfg);
-+			__send_IPI_dest_field(cpu_to_logical_apicid(query_cpu),
-+					      vector);
- 		}
+-	/*
+-	 * Wait for idle.
+-	 */
+-	apic_wait_icr_idle();
+-
+-	/*
+-	 * prepare target chip field
+-	 */
+-	cfg = __prepare_ICR2(mask);
+-	apic_write(APIC_ICR2, cfg);
+-
+-	/*
+-	 * program the ICR
+-	 */
+-	cfg = __prepare_ICR(0, vector, APIC_DEST_LOGICAL);
+-
+-	/*
+-	 * Send the IPI. The write to APIC_ICR fires this off.
+-	 */
+-	apic_write(APIC_ICR, cfg);
++	__send_IPI_dest_field(mask, vector, APIC_DEST_LOGICAL);
+ 	local_irq_restore(flags);
+ }
+ 
+diff -urNp linux-2.6.21-rc7-orig/include/asm-x86_64/ipi.h linux-2.6.21-rc7/include/asm-x86_64/ipi.h
+--- linux-2.6.21-rc7-orig/include/asm-x86_64/ipi.h	2007-02-05 03:44:54.000000000 +0900
++++ linux-2.6.21-rc7/include/asm-x86_64/ipi.h	2007-04-23 17:11:04.000000000 +0900
+@@ -76,10 +76,39 @@ static inline void __send_IPI_shortcut(u
+ 	apic_write(APIC_ICR, cfg);
+ }
+ 
++/*
++ * This is used to send an IPI with no shorthand notation (the destination is
++ * specified in bits 56 to 63 of the ICR).
++ */
++static inline void __send_IPI_dest_field(unsigned int mask, int vector, unsigned int dest)
++{
++	unsigned long cfg;
++
++	/*
++	 * Wait for idle.
++	 */
++	apic_wait_icr_idle();
++
++	/*
++	 * prepare target chip field
++	 */
++	cfg = __prepare_ICR2(mask);
++	apic_write(APIC_ICR2, cfg);
++
++	/*
++	 * program the ICR
++	 */
++	cfg = __prepare_ICR(0, vector, dest);
++
++	/*
++	 * Send the IPI. The write to APIC_ICR fires this off.
++	 */
++	apic_write(APIC_ICR, cfg);
++}
+ 
+ static inline void send_IPI_mask_sequence(cpumask_t mask, int vector)
+ {
+-	unsigned long cfg, flags;
++	unsigned long flags;
+ 	unsigned long query_cpu;
+ 
+ 	/*
+@@ -88,28 +117,9 @@ static inline void send_IPI_mask_sequenc
+ 	 * - mbligh
+ 	 */
+ 	local_irq_save(flags);
+-
+ 	for_each_cpu_mask(query_cpu, mask) {
+-		/*
+-		 * Wait for idle.
+-		 */
+-		apic_wait_icr_idle();
+-
+-		/*
+-		 * prepare target chip field
+-		 */
+-		cfg = __prepare_ICR2(x86_cpu_to_apicid[query_cpu]);
+-		apic_write(APIC_ICR2, cfg);
+-
+-		/*
+-		 * program the ICR
+-		 */
+-		cfg = __prepare_ICR(0, vector, APIC_DEST_PHYSICAL);
+-
+-		/*
+-		 * Send the IPI. The write to APIC_ICR fires this off.
+-		 */
+-		apic_write(APIC_ICR, cfg);
++		__send_IPI_dest_field(x86_cpu_to_apicid[query_cpu],
++				      vector, APIC_DEST_PHYSICAL);
  	}
  	local_irq_restore(flags);
+ }
 
 
 
