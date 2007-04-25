@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HgdUu-00065v-BC
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 05:09:15 -0400
-Date: Wed, 25 Apr 2007 18:09:05 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: kexec/kdump: Use generic elf code on ia64
-Message-ID: <20070425090903.GA26412@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+	id 1HgfHB-00076L-8U
+	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:03:13 -0400
+Subject: [RFC PATCH 0/10] apic_wait_icr_idle issues and possible solutions
+From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+Date: Wed, 25 Apr 2007 20:03:04 +0900
+Message-Id: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,249 +16,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: fastboot@lists.osdl.org, kexec@lists.infradead.org, linux-ia64@vger.kernel.org
-Cc: Nanhai Zou <nanhai.zou@intel.com>, Vivek Goyal <vgoyal@in.ibm.com>, Tony Luck <tony.luck@intel.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de, vgoyal@in.ibm.com, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
-Make use of the generic implementation of crash_save_cpu().
-
-On ia64 the registers are saved by a kdump-specific function
-ia64_dump_cpu_regs() rather than elf_core_copy_regs() which
-is used by other architectures via crash_save_cpu(). It seems
-that ia64_dump_cpu_regs() and elf_core_copy_regs() are indeed
-quite different
-
-In order to facilitate this kdump_elf_core_copy_regs()
-has been created, and it is called by crash_save_cpu().
-By default kdump_elf_core_copy_regs() is just defined to be
-elf_core_copy_regs() and ia64 defines its own implementation,
-which calls ia64_dump_cpu_regs().  The ia64 version also sets
-register 47 in accordance with the code that it replaces.
-
-crash_save_cpu() has also been modifued to use a pre-alocated,
-per-cpu variable for saving the cpu registers, as per the
-IA64 specific code that this patch removes. This is
-in order to reduce possible stack contention at crash-time.
-
-The code appears to work, however as the place where the registers
-are captured has changed natrually some of their values have also changed.
-This makes looking for problems by comparing the new and old output a
-little tricky.
-
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
---- 
-* This patch applies on top of the note size calculation patch
-  that can be found in mm and at
-  http://lists.linux-foundation.org/pipermail/fastboot/2007-April/006792.html
-
-  Porting this patch to not require that one is quite trivial.
-  I can supply a port or a thread containing both patches if it helps.
-
-* Update
-  Diff against include/asm-ia64/kexec.h instead of include/asm/kexec.h
-  Ooops!
-
-* Updated crash_save_cpu() to use a per-cpu variable for the registers.
-  As requested by Nanhai Zou
-
-* This patch does three things, should it be split?
-  - Makes crash_save_cpu() use a per-cpu variable.
-  - Adds the kdump_elf_core_copy_regs() macro
-  - Has IA64 use the generic code (which requires the other two changes).
-
-* Added CC: kexec@lists.infradead.org, which is the new place for kexec
-  discussion.
-
- arch/ia64/kernel/crash.c         |   46 ++------------------------------------
- arch/ia64/kernel/machine_kexec.c |    2 -
- include/asm-ia64/kexec.h         |    7 ++++-
- include/linux/kexec.h            |    5 ++++
- kernel/kexec.c                   |   13 +++++++++-
- 5 files changed, 26 insertions(+), 47 deletions(-)
-Index: linux-2.6/arch/ia64/kernel/crash.c
-===================================================================
---- linux-2.6.orig/arch/ia64/kernel/crash.c	2007-04-25 17:31:54.000000000 +0900
-+++ linux-2.6/arch/ia64/kernel/crash.c	2007-04-25 17:31:55.000000000 +0900
-@@ -25,44 +25,11 @@ static atomic_t kdump_cpu_frozen;
- atomic_t kdump_in_progress;
- static int kdump_on_init = 1;
- 
--static inline Elf64_Word
--*append_elf_note(Elf64_Word *buf, char *name, unsigned type, void *data,
--		size_t data_len)
--{
--	struct elf_note *note = (struct elf_note *)buf;
--	note->n_namesz = strlen(name) + 1;
--	note->n_descsz = data_len;
--	note->n_type   = type;
--	buf += (sizeof(*note) + 3)/4;
--	memcpy(buf, name, note->n_namesz);
--	buf += (note->n_namesz + 3)/4;
--	memcpy(buf, data, data_len);
--	buf += (data_len + 3)/4;
--	return buf;
--}
--
--static void
--final_note(void *buf)
--{
--	memset(buf, 0, sizeof(struct elf_note));
--}
--
--extern void ia64_dump_cpu_regs(void *);
--
--static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
--
- void
--crash_save_this_cpu(void)
-+ia64_kexec_elf_core_copy_regs(elf_gregset_t *elfregs, struct pt_regs *regs)
- {
--	void *buf;
- 	unsigned long cfm, sof, sol;
--
--	int cpu = smp_processor_id();
--	struct elf_prstatus *prstatus = &per_cpu(elf_prstatus, cpu);
--
--	elf_greg_t *dst = (elf_greg_t *)&(prstatus->pr_reg);
--	memset(prstatus, 0, sizeof(*prstatus));
--	prstatus->pr_pid = current->pid;
-+	elf_greg_t *dst = (elf_greg_t *)elfregs;
- 
- 	ia64_dump_cpu_regs(dst);
- 	cfm = dst[43];
-@@ -70,13 +37,6 @@ crash_save_this_cpu(void)
- 	sof = cfm & 0x7f;
- 	dst[46] = (unsigned long)ia64_rse_skip_regs((unsigned long *)dst[46],
- 			sof - sol);
--
--	buf = (u64 *) per_cpu_ptr(crash_notes, cpu);
--	if (!buf)
--		return;
--	buf = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS, prstatus,
--			sizeof(*prstatus));
--	final_note(buf);
- }
- 
- #ifdef CONFIG_SMP
-@@ -134,7 +94,7 @@ kdump_cpu_freeze(struct unw_frame_info *
- 	int cpuid;
- 	local_irq_disable();
- 	cpuid = smp_processor_id();
--	crash_save_this_cpu();
-+	crash_save_cpu(NULL, smp_processor_id());
- 	current->thread.ksp = (__u64)info->sw - 16;
- 	atomic_inc(&kdump_cpu_frozen);
- 	kdump_status[cpuid] = 1;
-Index: linux-2.6/include/asm-ia64/kexec.h
-===================================================================
---- linux-2.6.orig/include/asm-ia64/kexec.h	2007-04-25 17:31:54.000000000 +0900
-+++ linux-2.6/include/asm-ia64/kexec.h	2007-04-25 17:31:55.000000000 +0900
-@@ -19,6 +19,9 @@
-                 flush_icache_range(page_addr, page_addr + PAGE_SIZE); \
-         } while(0)
- 
-+#define kexec_elf_core_copy_regs(elfregs, regs) \
-+	ia64_kexec_elf_core_copy_regs(elfregs, regs)
-+
- extern struct kimage *ia64_kimage;
- extern const unsigned int relocate_new_kernel_size;
- extern void relocate_new_kernel(unsigned long, unsigned long,
-@@ -32,7 +35,9 @@ extern struct resource boot_param_res;
- extern void kdump_smp_send_stop(void);
- extern void kdump_smp_send_init(void);
- extern void kexec_disable_iosapic(void);
--extern void crash_save_this_cpu(void);
-+extern void ia64_dump_cpu_regs(void *);
-+extern void ia64_kexec_elf_core_copy_regs(elf_gregset_t *elfregs,
-+					  struct pt_regs *regs);
- struct rsvd_region;
- extern unsigned long kdump_find_rsvd_region(unsigned long size,
- 		struct rsvd_region *rsvd_regions, int n);
-Index: linux-2.6/include/linux/kexec.h
-===================================================================
---- linux-2.6.orig/include/linux/kexec.h	2007-04-25 17:31:54.000000000 +0900
-+++ linux-2.6/include/linux/kexec.h	2007-04-25 17:31:55.000000000 +0900
-@@ -128,6 +128,11 @@ extern struct kimage *kexec_crash_image;
- #define kexec_flush_icache_page(page)
- #endif
- 
-+#ifndef kexec_elf_core_copy_regs
-+#define kexec_elf_core_copy_regs(elfregs, regs) \
-+	elf_core_copy_regs(elfregs, regs)
-+#endif
-+
- #define KEXEC_ON_CRASH  0x00000001
- #define KEXEC_ARCH_MASK 0xffff0000
- 
-Index: linux-2.6/kernel/kexec.c
-===================================================================
---- linux-2.6.orig/kernel/kexec.c	2007-04-25 17:31:54.000000000 +0900
-+++ linux-2.6/kernel/kexec.c	2007-04-25 17:57:12.000000000 +0900
-@@ -1097,9 +1097,18 @@ static void final_note(u32 *buf)
- 	memcpy(buf, &note, sizeof(note));
- }
- 
-+/*
-+ * There is some concern that on architectures where struct elf_prstatus is
-+ * large, such as IA64, having elf_prstatus on the stack in
-+ * crash_save_cpu() could cause problems given that this function
-+ * is run after a kernel crash has occured. To aleviate this problem
-+ * a pre-allocated per-cpu value is used instead.
-+ */
-+static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
-+
- void crash_save_cpu(struct pt_regs *regs, int cpu)
- {
--	struct elf_prstatus prstatus;
-+	struct elf_prstatus *prstatus;
- 	u32 *buf;
- 
- 	if ((cpu < 0) || (cpu >= NR_CPUS))
-@@ -1107,7 +1116,7 @@ void crash_save_cpu(struct pt_regs *regs
- 
- 	/* Using ELF notes here is opportunistic.
- 	 * I need a well defined structure format
--	 * for the data I pass, and I need tags
-+	 * for the data I pass, and I need tag)s
- 	 * on the data to indicate what information I have
- 	 * squirrelled away.  ELF notes happen to provide
- 	 * all of that, so there is no need to invent something new.
-@@ -1115,11 +1124,12 @@ void crash_save_cpu(struct pt_regs *regs
- 	buf = (u32*)per_cpu_ptr(crash_notes, cpu);
- 	if (!buf)
- 		return;
--	memset(&prstatus, 0, sizeof(prstatus));
--	prstatus.pr_pid = current->pid;
--	elf_core_copy_regs(&prstatus.pr_reg, regs);
-+	prstatus = &per_cpu(elf_prstatus, cpu);
-+	memset(prstatus, 0, sizeof(struct elf_prstatus));
-+	prstatus->pr_pid = current->pid;
-+	kexec_elf_core_copy_regs(&(prstatus->pr_reg), regs);
- 	buf = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
--		      	      &prstatus, sizeof(prstatus));
-+			      prstatus, sizeof(struct elf_prstatus));
- 	final_note(buf);
- }
- 
-Index: linux-2.6/arch/ia64/kernel/machine_kexec.c
-===================================================================
---- linux-2.6.orig/arch/ia64/kernel/machine_kexec.c	2007-04-25 17:31:54.000000000 +0900
-+++ linux-2.6/arch/ia64/kernel/machine_kexec.c	2007-04-25 17:31:55.000000000 +0900
-@@ -84,7 +84,7 @@ static void ia64_machine_kexec(struct un
- 
- 	BUG_ON(!image);
- 	if (image->type == KEXEC_TYPE_CRASH) {
--		crash_save_this_cpu();
-+		crash_save_cpu(NULL, smp_processor_id());
- 		current->thread.ksp = (__u64)info->sw - 16;
- 	}
- 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+LS0tIEJhY2tncm91bmQKCk9uIGkzODYgYW5kIHg4Nl82NCwgaW4gdGhlIGV2ZW50IG9mIGEgY3Jh
+c2gsIGtkdW1wIGF0dGVtcHRzIHRvIHN0b3AgYWxsCm90aGVyIENQVXMgYmVmb3JlIHByb2NlZWRp
+bmcgdG8gYm9vdCBpbnRvIHRoZSBkdW1wIGNhcHR1cmUga2VybmVsLgpEZXBlbmRpbmcgb24gdGhl
+IHN1Yi1hcmNoaXRlY3R1cmUgc2V2ZXJhbCBpbXBsZW1lbnRhdGlvbnMgZXhpc3QgYXMKZGV0YWls
+ZWQgYmVsb3cuCgotIGkzODYKCnNtcF9zZW5kX25taV9hbGxidXRzZWxmCiAgc2VuZF9JUElfbWFz
+ayhtYXNrLCBOTUlfVkVDVE9SKQoKKiBtYWNoLWRlZmF1bHQKICBzZW5kX0lQSV9tYXNrCi0tPnNl
+bmRfSVBJX21hc2tfYml0bWFzawogICAgICBhcGljX3dhaXRfaWNyX2lkbGUKCiogbWFjaC1iaWdz
+bXAsIG1hY2gtZXM3MDAwLCBtYWNoLW51bWFxLCBtYWNoLXN1bW1pdAogIHNlbmRfSVBJX21hc2sK
+LS0+c2VuZF9JUElfbWFza19zZXF1ZW5jZQogICAgICBhcGljX3dhaXRfaWNyX2lkbGUKCi0tIHg4
+Nl82NAoKc21wX3NlbmRfbm1pX2FsbGJ1dHNlbGYKICBzZW5kX0lQSV9hbGxidXRzZWxmKE5NSV9W
+RUNUT1IpCgoqIGZsYXQgQVBJQwogIHNlbmRfSVBJX2FsbGJ1dHNlbGY9ZmxhdF9zZW5kX0lQSV9h
+bGxidXRzZWxmCi0tPmZsYXRfc2VuZF9JUElfbWFzawogICAgICBhcGljX3dhaXRfaWNyX2lkbGUK
+CiogY2x1c3RlcmVkIEFQSUMsIHBoeXNmbGF0IEFQSUMKCnNlbmRfSVBJX2FsbGJ1dHNlbGY9KGNs
+dXN0ZXJfc2VuZF9JUElfYWxsYnV0c2VsZi9waHlzZmxhdF9zZW5kX0lQSV9hbGxidXRzZWxmKQog
+ICAgKGNsdXN0ZXJfc2VuZF9JUElfbWFzay9waHlzZmxhdF9zZW5kX0lQSV9tYXNrKQogICAtLT5z
+ZW5kX0lQSV9tYXNrX3NlcXVlbmNlCiAgICAgICAgYXBpY193YWl0X2ljcl9pZGxlCgpBcyB0aGUg
+cHNldWRvLWNvZGUgYWJvdmUgc2hvd3MgYWxsIHRoZSBzdWItYXJjaGl0ZWN0dXJlcyBlbmQgdXAg
+Y2FsbGluZwphcGljX3dhaXRfaWNyX2lkbGUsIHdoaWNoIGxvb2tzIGxpa2UgdGhpczoKCnN0YXRp
+YyBfX2lubGluZV9fIHZvaWQgYXBpY193YWl0X2ljcl9pZGxlKHZvaWQpCnsKICB3aGlsZSAoYXBp
+Y19yZWFkKEFQSUNfSUNSKSAmIEFQSUNfSUNSX0JVU1kpCiAgICBjcHVfcmVsYXgoKTsKfQoKVGhl
+IGJ1c3kgbG9vcCBpbiB0aGlzIGZ1bmN0aW9uIHdvdWxkIG5vdCBiZSBwcm9ibGVtYXRpYyBpZiB0
+aGUKY29ycmVzcG9uZGluZyBzdGF0dXMgYml0IGluIHRoZSBJQ1Igd2VyZSBhbHdheXMgdXBkYXRl
+ZCwgYnV0IHRoYXQgZG9lcwpub3Qgc2VlbSB0byBiZSB0aGUgY2FzZSB1bmRlciBjZXJ0YWluIGNy
+YXNoIHNjZW5hcmlvcy4gQXMgYW4gZXhhbXBsZSwKd2hlbiB0aGUgb3RoZXIgQ1BVcyBhcmUgbG9j
+a2VkLXVwIGluc2lkZSB0aGUgTk1JIGhhbmRsZXIgdGhlIENQVSB0aGF0CnNlbmRzIHRoZSBJUEkg
+d2lsbCBlbmQgdXAgbG9vcGluZyBmb3JldmVyIGluIHRoZSBJQ1IgY2hlY2ssIGVmZmVjdGl2ZWx5
+CmhhcmQtbG9ja2luZyB0aGUgd2hvbGUgc3lzdGVtLgoKUXVvdGluZyBmcm9tIEludGVsJ3MgIk11
+bHRpUHJvY2Vzc29yIFNwZWNpZmljYXRpb24iIChWZXJzaW9uIDEuNCksIEItMzoKCiJBIGxvY2Fs
+IEFQSUMgdW5pdCBpbmRpY2F0ZXMgc3VjY2Vzc2Z1bCBkaXNwYXRjaCBvZiBhbiBJUEkgYnkKcmVz
+ZXR0aW5nIHRoZSBEZWxpdmVyeSBTdGF0dXMgYml0IGluIHRoZSBJbnRlcnJ1cHQgQ29tbWFuZApS
+ZWdpc3RlciAoSUNSKS4gVGhlIG9wZXJhdGluZyBzeXN0ZW0gcG9sbHMgdGhlIGRlbGl2ZXJ5IHN0
+YXR1cwpiaXQgYWZ0ZXIgc2VuZGluZyBhbiBJTklUIG9yIFNUQVJUVVAgSVBJIHVudGlsIHRoZSBj
+b21tYW5kIGhhcwpiZWVuIGRpc3BhdGNoZWQuCgpBIHBlcmlvZCBvZiAyMCBtaWNyb3NlY29uZHMg
+c2hvdWxkIGJlIHN1ZmZpY2llbnQgZm9yIElQSSBkaXNwYXRjaAp0byBjb21wbGV0ZSB1bmRlciBu
+b3JtYWwgb3BlcmF0aW5nIGNvbmRpdGlvbnMuIElmIHRoZSBJUEkgaXMgbm90CnN1Y2Nlc3NmdWxs
+eSBkaXNwYXRjaGVkLCB0aGUgb3BlcmF0aW5nIHN5c3RlbSBjYW4gYWJvcnQgdGhlCmNvbW1hbmQu
+IEFsdGVybmF0aXZlbHksIHRoZSBvcGVyYXRpbmcgc3lzdGVtIGNhbiByZXRyeSB0aGUgSVBJIGJ5
+CndyaXRpbmcgdGhlIGxvd2VyIDMyLWJpdCBkb3VibGUgd29yZCBvZiB0aGUgSUNSLiBUaGlzIOKA
+nHRpbWUtb3V04oCdCm1lY2hhbmlzbSBjYW4gYmUgaW1wbGVtZW50ZWQgdGhyb3VnaCBhbiBleHRl
+cm5hbCBpbnRlcnJ1cHQsIGlmCmludGVycnVwdHMgYXJlIGVuYWJsZWQgb24gdGhlIHByb2Nlc3Nv
+ciwgb3IgdGhyb3VnaCBleGVjdXRpb24gb2YKYW4gaW5zdHJ1Y3Rpb24gb3IgdGltZS1zdGFtcCBj
+b3VudGVyIHNwaW4gbG9vcC4iCgpJbnRlbCdzIGRvY3VtZW50YXRpb24gc3VnZ2VzdHMgdGhlIGlt
+cGxlbWVudGF0aW9uIG9mIGEgdGltZS1vdXQKbWVjaGFuaXNtLCB3aGljaCwgYnkgdGhlIHdheSwg
+aXMgYWxyZWFkeSBiZWluZyBvcGVuLWNvZGVkIGluIHNvbWUgcGFydHMKb2YgdGhlIGtlcm5lbCB0
+aGF0IHRpbmtlciB3aXRoIElDUi4KCi0tLSBQb3NzaWJsZSBzb2x1dGlvbnMKCiogU29sdXRpb24g
+QTogSW1wbGVtZW50IHRoZSB0aW1lLW91dCBtZWNoYW5pc20gaW4gYXBpY193YWl0X2ljcl9pZGxl
+LgoKVGhlIHByb2JsZW0gd2l0aCB0aGlzIGFwcHJvYWNoIGlzIHRoYXQgaW50cm9kdWNlcyBhIHBl
+cmZvcm1hbmNlIHBlbmFsdHkKdGhhdCBtYXkgbm90IGJlIGFjY2VwdGFibGUgZm9yIHNvbWUgY2Fs
+bGVycyBvZiBhcGljX3dhaXRfaWNyX2lkbGUuCkJlc2lkZXMsIGR1cmluZyBub3JtYWwgb3BlcmF0
+aW9uIGRlbGl2ZXJ5IGVycm9ycyBzaG91bGQgbm90IG9jY3VyLiBUaGlzCmJyaW5ncyB1cyB0byBz
+b2x1dGlvbiBCLgoKKiBTb2x1dGlvbiBCOiBDcmVhdGUgYSBuZXcgZnVuY3Rpb24gdGhhdCBpbXBs
+ZW1lbnRzIHRoZSB0aW1lLW91dAptZWNoYW5pc20uCgpDcmVhdGUgYSBuZXcgZnVuY3Rpb24gKHdo
+YXQgYWJvdXQgc2FmZV9hcGljX3dhaXRfaWNyX2lkbGU/KSB0aGF0CnByb3ZpZGVzIHRoZSBhcGlj
+X3dhaXRfaWNyX2lkbGUgZnVuY3Rpb25hbGl0eSBidXQgYWxzbyBpbXBsZW1lbnRzIGEKdGltZS1v
+dXQgbWVjaGFuaXNtLiBUaGlzIGZ1bmN0aW9uIHdvdWxkIGxvb2sgbGlrZSB0aGlzOgoKc3RhdGlj
+IF9faW5saW5lX18gaW50IHNhZmVfYXBpY193YWl0X2ljcl9pZGxlKHZvaWQpCnsKICB1bnNpZ25l
+ZCBsb25nIHNlbmRfc3RhdHVzOwogIGludCB0aW1lb3V0OwoKICB0aW1lb3V0ID0gMDsKICBkbyB7
+CiAgICB1ZGVsYXkoMTAwKTsKICAgIHNlbmRfc3RhdHVzID0gYXBpY19yZWFkKEFQSUNfSUNSKSAm
+IEFQSUNfSUNSX0JVU1k7CiAgfSB3aGlsZSAoc2VuZF9zdGF0dXMgJiYgKHRpbWVvdXQrKyA8IDEw
+MDApKTsKCiAgcmV0dXJuIHNlbmRfc3RhdHVzOwp9CgpPbmNlIHdlIGhhdmUgdGhpcyBmdW5jdGlv
+biB3ZSBzdGlsbCBoYXZlIHRvIGRlY2lkZSBob3cgdG8gdXNlIGl0OgoKU29sdXRpb24gQi0xOiBD
+cmVhdGUgc2VuZF9JUElfbWFzayBhbmQgc2VuZF9JUElfYWxsYnV0c2VsZiByZXBsYWNlbWVudHMK
+dGhhdCB1c2UgdGhlIG5ldyBzYWZlX2FwaWNfd2FpdF9pY3JfaWRsZSBpbnN0ZWFkIG9mIGFwaWNf
+d2FpdF9pY3JfaWRsZS4KVGhlIHByb2JsZW0gd2l0aCB0aGlzIGFwcHJvYWNoIGlzIHRoYXQgaXQg
+bWF5IGJlIG92ZXJraWxsLCBzaW5jZSB0aGV5CnByb2JhYmx5IHdvdWxkIG5vdCBoYXZlIG1hbnkg
+dXNlcnMgYmVzaWRlcyBrZHVtcC4KClNvbHV0aW9uIEItMjogVXNlIHNhZmVfYXBpY193YWl0X2lj
+cl9pZGxlIHdoZW4gdGhlIHZlY3RvciBpcyBOTUlfVkVDVE9SCmFuZCBhcGljX3dhaXRfaWNyX2lj
+cl9pZGxlIG90aGVyd2lzZS4gVGhpcyBzb2x1dGlvbiBoYXMgdGhlIGFkdmFudGFnZQp0aGF0IGl0
+IGlzIHZlcnkgc2ltcGxlLCBidXQgaXQgcHJvYmFibHkgaXNuJ3QgdmVyeSBlbGVnYW50LgoKLS0t
+IEFib3V0IHRoaXMgcGF0Y2ggc2V0CgpUaGUga2R1bXAtcmVsYXRlZCBzdHVmZiBpcyBpbmNsdWRl
+ZCBpbiBwYXRjaGVzIDkgYW5kIDEwLCBidXQgZXZlbiB0aGlzCnBhcnQgaXMgcmVqZWN0ZWQgSSB0
+aGluayB0aGF0IHBhdGNoZXMgMSB0aHJvdWdoIDggaW5jbHVkZSBzb21lIG5lY2Vzc2FyeQpjbGVh
+bnVwcy4KClBhdGNoZXMgMSBhbmQgMjogaW1wbGVtZW50IHNhZmVfYXBpY193YWl0X2ljcl9pZGxl
+IGZvciBpMzg2IGFuZCB4ODZfNjQKcmVzcGVjdGl2ZWx5LgoKUGF0Y2hlcyAzIHRocm91Z2ggNjog
+cmVtb3ZlIHNvbWUgdWdseSBjdXQgYW5kIHBhc3RpbmcgZnJvbSB0aGUgc21wIGNvZGUuCgpQYXRj
+aGVzIDcgYW5kIDg6IENsZWFudXAgKnNlbmRfSVBJKi4KClBhdGNoZXMgOSBhbmQgMTA6IEltcGxl
+bWVudCBzb2x1dGlvbiBCLTIuCgpJIHdvdWxkIGFwcHJlY2lhdGUgeW91ciBmZWVkYmFjayBvbiB0
+aGVzZSBwYXRjaGVzLgoKLSBGZXJuYW5kbwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
