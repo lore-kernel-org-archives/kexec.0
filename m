@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv1.oss.ntt.co.jp ([222.151.198.98])
+Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hgfnu-0007Lh-T9
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:37:02 -0400
-Subject: [PATCH 2/10] safe_apic_wait_icr_idle - x86_64
+	id 1Hgfnu-0007Lg-T4
+	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:37:03 -0400
+Subject: [PATCH 3/10] smpboot: use safe_apic_wait_icr_idle - i386
 From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
 In-Reply-To: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
 References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
-Date: Wed, 25 Apr 2007 20:15:15 +0900
-Message-Id: <1177499715.17974.12.camel@sebastian.intellilink.co.jp>
+Date: Wed, 25 Apr 2007 20:19:43 +0900
+Message-Id: <1177499983.17974.19.camel@sebastian.intellilink.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -18,62 +18,105 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de, horms@verge.net.au, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
-YXBpY193YWl0X2ljcl9pZGxlIGxvb2tzIGxpa2UgdGhpczoKCnN0YXRpYyBfX2lubGluZV9fIHZv
-aWQgYXBpY193YWl0X2ljcl9pZGxlKHZvaWQpCnsKICB3aGlsZSAoYXBpY19yZWFkKEFQSUNfSUNS
-KSAmIEFQSUNfSUNSX0JVU1kpCiAgICBjcHVfcmVsYXgoKTsKfQoKVGhlIGJ1c3kgbG9vcCBpbiB0
-aGlzIGZ1bmN0aW9uIHdvdWxkIG5vdCBiZSBwcm9ibGVtYXRpYyBpZiB0aGUKY29ycmVzcG9uZGlu
-ZyBzdGF0dXMgYml0IGluIHRoZSBJQ1Igd2VyZSBhbHdheXMgdXBkYXRlZCwgYnV0IHRoYXQgZG9l
-cwpub3Qgc2VlbSB0byBiZSB0aGUgY2FzZSB1bmRlciBjZXJ0YWluIGNyYXNoIHNjZW5hcmlvcy4g
-S2R1bXAgdXNlcyBhbiBJUEkKdG8gc3RvcCB0aGUgb3RoZXIgQ1BVcyBpbiB0aGUgZXZlbnQgb2Yg
-YSBjcmFzaCwgYnV0IHdoZW4gYW55IG9mIHRoZQpvdGhlciBDUFVzIGFyZSBsb2NrZWQtdXAgaW5z
-aWRlIHRoZSBOTUkgaGFuZGxlciB0aGUgQ1BVIHRoYXQgc2VuZHMgdGhlCklQSSB3aWxsIGVuZCB1
-cCBsb29waW5nIGZvcmV2ZXIgaW4gdGhlIElDUiBjaGVjaywgZWZmZWN0aXZlbHkKaGFyZC1sb2Nr
-aW5nIHRoZSB3aG9sZSBzeXN0ZW0uCgpRdW90aW5nIGZyb20gSW50ZWwncyAiTXVsdGlQcm9jZXNz
-b3IgU3BlY2lmaWNhdGlvbiIgKFZlcnNpb24gMS40KSwgQi0zOgoKIkEgbG9jYWwgQVBJQyB1bml0
-IGluZGljYXRlcyBzdWNjZXNzZnVsIGRpc3BhdGNoIG9mIGFuIElQSSBieQpyZXNldHRpbmcgdGhl
-IERlbGl2ZXJ5IFN0YXR1cyBiaXQgaW4gdGhlIEludGVycnVwdCBDb21tYW5kClJlZ2lzdGVyIChJ
-Q1IpLiBUaGUgb3BlcmF0aW5nIHN5c3RlbSBwb2xscyB0aGUgZGVsaXZlcnkgc3RhdHVzCmJpdCBh
-ZnRlciBzZW5kaW5nIGFuIElOSVQgb3IgU1RBUlRVUCBJUEkgdW50aWwgdGhlIGNvbW1hbmQgaGFz
-CmJlZW4gZGlzcGF0Y2hlZC4KCkEgcGVyaW9kIG9mIDIwIG1pY3Jvc2Vjb25kcyBzaG91bGQgYmUg
-c3VmZmljaWVudCBmb3IgSVBJIGRpc3BhdGNoCnRvIGNvbXBsZXRlIHVuZGVyIG5vcm1hbCBvcGVy
-YXRpbmcgY29uZGl0aW9ucy4gSWYgdGhlIElQSSBpcyBub3QKc3VjY2Vzc2Z1bGx5IGRpc3BhdGNo
-ZWQsIHRoZSBvcGVyYXRpbmcgc3lzdGVtIGNhbiBhYm9ydCB0aGUKY29tbWFuZC4gQWx0ZXJuYXRp
-dmVseSwgdGhlIG9wZXJhdGluZyBzeXN0ZW0gY2FuIHJldHJ5IHRoZSBJUEkgYnkKd3JpdGluZyB0
-aGUgbG93ZXIgMzItYml0IGRvdWJsZSB3b3JkIG9mIHRoZSBJQ1IuIFRoaXMg4oCcdGltZS1vdXTi
-gJ0KbWVjaGFuaXNtIGNhbiBiZSBpbXBsZW1lbnRlZCB0aHJvdWdoIGFuIGV4dGVybmFsIGludGVy
-cnVwdCwgaWYKaW50ZXJydXB0cyBhcmUgZW5hYmxlZCBvbiB0aGUgcHJvY2Vzc29yLCBvciB0aHJv
-dWdoIGV4ZWN1dGlvbiBvZgphbiBpbnN0cnVjdGlvbiBvciB0aW1lLXN0YW1wIGNvdW50ZXIgc3Bp
-biBsb29wLiIKCkludGVsJ3MgZG9jdW1lbnRhdGlvbiBzdWdnZXN0cyB0aGUgaW1wbGVtZW50YXRp
-b24gb2YgYSB0aW1lLW91dAptZWNoYW5pc20sIHdoaWNoLCBieSB0aGUgd2F5LCBpcyBhbHJlYWR5
-IGJlaW5nIG9wZW4tY29kZWQgaW4gc29tZSBwYXJ0cwpvZiB0aGUga2VybmVsIHRoYXQgdGlua2Vy
-IHdpdGggSUNSLgoKQ3JlYXRlIGEgYXBpY193YWl0X2ljcl9pZGxlIHJlcGxhY2VtZW50IHRoYXQg
-aW1wbGVtZW50cyB0aGUgdGltZS1vdXQKbWVjaGFuaXNtIGFuZCB0aGF0IGNhbiBiZSB1c2VkIHRv
-IHNvbHZlIHRoZSBhZm9yZW1lbnRpb25lZCBwcm9ibGVtLgoKU2lnbmVkLW9mZi1ieTogRmVybmFu
-ZG8gTHVpcyBWYXpxdWV6IENhbyA8ZmVybmFuZG9Ab3NzLm50dC5jby5qcD4KLS0tCgpkaWZmIC11
-ck5wIGxpbnV4LTIuNi4yMS1yYzctb3JpZy9pbmNsdWRlL2FzbS14ODZfNjQvYXBpYy5oIGxpbnV4
-LTIuNi4yMS1yYzcvaW5jbHVkZS9hc20teDg2XzY0L2FwaWMuaAotLS0gbGludXgtMi42LjIxLXJj
-Ny1vcmlnL2luY2x1ZGUvYXNtLXg4Nl82NC9hcGljLmgJMjAwNy0wNC0xOCAxMzo0NzowNi4wMDAw
-MDAwMDAgKzA5MDAKKysrIGxpbnV4LTIuNi4yMS1yYzcvaW5jbHVkZS9hc20teDg2XzY0L2FwaWMu
-aAkyMDA3LTA0LTE4IDE1OjI0OjMwLjAwMDAwMDAwMCArMDkwMApAQCAtMiw2ICsyLDcgQEAKICNk
-ZWZpbmUgX19BU01fQVBJQ19ICiAKICNpbmNsdWRlIDxsaW51eC9wbS5oPgorI2luY2x1ZGUgPGxp
-bnV4L2RlbGF5Lmg+CiAjaW5jbHVkZSA8YXNtL2ZpeG1hcC5oPgogI2luY2x1ZGUgPGFzbS9hcGlj
-ZGVmLmg+CiAjaW5jbHVkZSA8YXNtL3N5c3RlbS5oPgpAQCAtNDksMTAgKzUwLDI0IEBAIHN0YXRp
-YyBfX2lubGluZSB1bnNpZ25lZCBpbnQgYXBpY19yZWFkKHUKIAogc3RhdGljIF9faW5saW5lX18g
-dm9pZCBhcGljX3dhaXRfaWNyX2lkbGUodm9pZCkKIHsKLQl3aGlsZSAoYXBpY19yZWFkKCBBUElD
-X0lDUiApICYgQVBJQ19JQ1JfQlVTWSkKKwl3aGlsZSAoYXBpY19yZWFkKEFQSUNfSUNSKSAmIEFQ
-SUNfSUNSX0JVU1kpCiAJCWNwdV9yZWxheCgpOwogfQogCitzdGF0aWMgX19pbmxpbmVfXyB1bnNp
-Z25lZCBpbnQgc2FmZV9hcGljX3dhaXRfaWNyX2lkbGUodm9pZCkKK3sKKwl1bnNpZ25lZCBpbnQg
-c2VuZF9zdGF0dXM7CisJaW50IHRpbWVvdXQ7CisKKwl0aW1lb3V0ID0gMDsKKwlkbyB7CisJCXVk
-ZWxheSgxMDApOworCQlzZW5kX3N0YXR1cyA9IGFwaWNfcmVhZChBUElDX0lDUikgJiBBUElDX0lD
-Ul9CVVNZOworCX0gd2hpbGUgKHNlbmRfc3RhdHVzICYmICh0aW1lb3V0KysgPCAxMDAwKSk7CisK
-KwlyZXR1cm4gc2VuZF9zdGF0dXM7Cit9CisKIHN0YXRpYyBpbmxpbmUgdm9pZCBhY2tfQVBJQ19p
-cnEodm9pZCkKIHsKIAkvKgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+The functionality provided by the new safe_apic_wait_icr_idle is being
+open-coded all over "kernel/smpboot.c". Use safe_apic_wait_icr_idle
+instead to consolidate code and ease maintenance.
+
+Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
+---
+
+diff -urNp linux-2.6.21-rc7-orig/arch/i386/kernel/smpboot.c linux-2.6.21-rc7/arch/i386/kernel/smpboot.c
+--- linux-2.6.21-rc7-orig/arch/i386/kernel/smpboot.c	2007-04-18 15:27:48.000000000 +0900
++++ linux-2.6.21-rc7/arch/i386/kernel/smpboot.c	2007-04-18 15:44:41.000000000 +0900
+@@ -568,8 +568,8 @@ static inline void __inquire_remote_apic
+ static int __devinit
+ wakeup_secondary_cpu(int logical_apicid, unsigned long start_eip)
+ {
+-	unsigned long send_status = 0, accept_status = 0;
+-	int timeout, maxlvt;
++	unsigned long send_status, accept_status = 0;
++	int maxlvt;
+ 
+ 	/* Target chip */
+ 	apic_write_around(APIC_ICR2, SET_APIC_DEST_FIELD(logical_apicid));
+@@ -579,12 +579,7 @@ wakeup_secondary_cpu(int logical_apicid,
+ 	apic_write_around(APIC_ICR, APIC_DM_NMI | APIC_DEST_LOGICAL);
+ 
+ 	Dprintk("Waiting for send to finish...\n");
+-	timeout = 0;
+-	do {
+-		Dprintk("+");
+-		udelay(100);
+-		send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
+-	} while (send_status && (timeout++ < 1000));
++	send_status = safe_apic_wait_icr_idle();
+ 
+ 	/*
+ 	 * Give the other CPU some time to accept the IPI.
+@@ -614,8 +609,8 @@ wakeup_secondary_cpu(int logical_apicid,
+ static int __devinit
+ wakeup_secondary_cpu(int phys_apicid, unsigned long start_eip)
+ {
+-	unsigned long send_status = 0, accept_status = 0;
+-	int maxlvt, timeout, num_starts, j;
++	unsigned long send_status, accept_status = 0;
++	int maxlvt, num_starts, j;
+ 
+ 	/*
+ 	 * Be paranoid about clearing APIC errors.
+@@ -640,12 +635,7 @@ wakeup_secondary_cpu(int phys_apicid, un
+ 				| APIC_DM_INIT);
+ 
+ 	Dprintk("Waiting for send to finish...\n");
+-	timeout = 0;
+-	do {
+-		Dprintk("+");
+-		udelay(100);
+-		send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
+-	} while (send_status && (timeout++ < 1000));
++	send_status = safe_apic_wait_icr_idle();
+ 
+ 	mdelay(10);
+ 
+@@ -658,12 +648,7 @@ wakeup_secondary_cpu(int phys_apicid, un
+ 	apic_write_around(APIC_ICR, APIC_INT_LEVELTRIG | APIC_DM_INIT);
+ 
+ 	Dprintk("Waiting for send to finish...\n");
+-	timeout = 0;
+-	do {
+-		Dprintk("+");
+-		udelay(100);
+-		send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
+-	} while (send_status && (timeout++ < 1000));
++	send_status = safe_apic_wait_icr_idle();
+ 
+ 	atomic_set(&init_deasserted, 1);
+ 
+@@ -719,12 +704,7 @@ wakeup_secondary_cpu(int phys_apicid, un
+ 		Dprintk("Startup point 1.\n");
+ 
+ 		Dprintk("Waiting for send to finish...\n");
+-		timeout = 0;
+-		do {
+-			Dprintk("+");
+-			udelay(100);
+-			send_status = apic_read(APIC_ICR) & APIC_ICR_BUSY;
+-		} while (send_status && (timeout++ < 1000));
++		send_status = safe_apic_wait_icr_idle();
+ 
+ 		/*
+ 		 * Give the other CPU some time to accept the IPI.
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
