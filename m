@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hgg42-0007XT-Rr
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 07:54:13 -0400
-Subject: [PATCH 5/10] __inquire_remote_apic: use safe_apic_wait_icr_idle - i386
-From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
-In-Reply-To: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hggh4-0008Uq-50
+	for kexec@lists.infradead.org; Wed, 25 Apr 2007 08:34:01 -0400
+From: Andi Kleen <ak@suse.de>
+Subject: Re: [PATCH 2/10] safe_apic_wait_icr_idle - x86_64
+Date: Wed, 25 Apr 2007 14:26:14 +0200
 References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
-Date: Wed, 25 Apr 2007 20:26:25 +0900
-Message-Id: <1177500385.17974.28.camel@sebastian.intellilink.co.jp>
-Mime-Version: 1.0
+	<1177499715.17974.12.camel@sebastian.intellilink.co.jp>
+In-Reply-To: <1177499715.17974.12.camel@sebastian.intellilink.co.jp>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200704251426.14398.ak@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de, horms@verge.net.au, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
-
-__inquire_remote_apic is used for APIC debugging, so use
-safe_apic_wait_icr_idle  instead of apic_wait_icr_idle to avoid possible
-lockups when APIC delivery fails.
-
-Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
----
-
-diff -urNp linux-2.6.21-rc7-orig/arch/i386/kernel/smpboot.c linux-2.6.21-rc7/arch/i386/kernel/smpboot.c
---- linux-2.6.21-rc7-orig/arch/i386/kernel/smpboot.c	2007-04-18 15:49:33.000000000 +0900
-+++ linux-2.6.21-rc7/arch/i386/kernel/smpboot.c	2007-04-18 16:36:27.000000000 +0900
-@@ -526,7 +526,8 @@ static inline void __inquire_remote_apic
- {
- 	int i, regs[] = { APIC_ID >> 4, APIC_LVR >> 4, APIC_SPIV >> 4 };
- 	char *names[] = { "ID", "VERSION", "SPIV" };
--	int timeout, status;
-+	int timeout;
-+	unsigned long status;
- 
- 	printk("Inquiring remote APIC #%d...\n", apicid);
- 
-@@ -536,7 +537,9 @@ static inline void __inquire_remote_apic
- 		/*
- 		 * Wait for idle.
- 		 */
--		apic_wait_icr_idle();
-+		status = safe_apic_wait_icr_idle();
-+		if (status)
-+			printk("a previous APIC delivery may have failed\n");
- 
- 		apic_write_around(APIC_ICR2, SET_APIC_DEST_FIELD(apicid));
- 		apic_write_around(APIC_ICR, APIC_DM_REMRD | regs[i]);
+To: Fernando Luis =?utf-8?q?V=C3=A1zquez_Cao?= <fernando@oss.ntt.co.jp>
+Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
 
+>  static __inline__ void apic_wait_icr_idle(void)
+>  {
+> -	while (apic_read( APIC_ICR ) & APIC_ICR_BUSY)
+> +	while (apic_read(APIC_ICR) & APIC_ICR_BUSY)
+>  		cpu_relax();
+>  }
+>  
+> +static __inline__ unsigned int safe_apic_wait_icr_idle(void)
+
+This should be probably not inline -- too large
+
+-Andi
 
 _______________________________________________
 kexec mailing list
