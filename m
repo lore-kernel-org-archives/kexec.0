@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from serv1.oss.ntt.co.jp ([222.151.198.98])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HgyDw-0002h4-PC
-	for kexec@lists.infradead.org; Thu, 26 Apr 2007 03:17:15 -0400
-Date: Thu, 26 Apr 2007 16:17:00 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] fix valid_memory_range region merging
-Message-ID: <20070426071658.GF17808@verge.net.au>
-References: <1165.1177570234@neuling.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1165.1177570234@neuling.org>
+	id 1HgyHe-0002jP-Ri
+	for kexec@lists.infradead.org; Thu, 26 Apr 2007 03:21:56 -0400
+Subject: Re: [RFC PATCH 0/10] apic_wait_icr_idle issues and possible solutions
+From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+In-Reply-To: <20070426064806.GA2626@in.ibm.com>
+References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+	<20070426064806.GA2626@in.ibm.com>
+Date: Thu, 26 Apr 2007 16:20:51 +0900
+Message-Id: <1177572051.1600.20.camel@sebastian.intellilink.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,30 +19,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, kexec@lists.infradead.org
+To: vgoyal@in.ibm.com
+Cc: kexec@lists.infradead.org, ak@suse.de, linux-kernel@vger.kernel.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
-On Thu, Apr 26, 2007 at 04:50:34PM +1000, Michael Neuling wrote:
-> Check the next region we are including is type RANGE_RAM as well.
-> 
-> Signed-off-by: Michael Neuling <mikey@neuling.org>
-> ---
-> I've not actually seen this cause a problem, but it looks wrong.  We
-> should probably merge regions properly and solve this problem for real. 
-
-I think that Magnus was working on some code do do just that...
-
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAyMDA3LTA0LTI2IGF0IDEyOjE4ICswNTMwLCBWaXZlayBHb3lhbCB3cm90ZToKPiBP
+biBXZWQsIEFwciAyNSwgMjAwNyBhdCAwODowMzowNFBNICswOTAwLCBGZXJuYW5kbyBMdWlzIFbD
+oXpxdWV6IENhbyB3cm90ZToKPiA+IAo+ID4gc3RhdGljIF9faW5saW5lX18gdm9pZCBhcGljX3dh
+aXRfaWNyX2lkbGUodm9pZCkKPiA+IHsKPiA+ICAgd2hpbGUgKGFwaWNfcmVhZChBUElDX0lDUikg
+JiBBUElDX0lDUl9CVVNZKQo+ID4gICAgIGNwdV9yZWxheCgpOwo+ID4gfQo+ID4gCj4gPiBUaGUg
+YnVzeSBsb29wIGluIHRoaXMgZnVuY3Rpb24gd291bGQgbm90IGJlIHByb2JsZW1hdGljIGlmIHRo
+ZQo+ID4gY29ycmVzcG9uZGluZyBzdGF0dXMgYml0IGluIHRoZSBJQ1Igd2VyZSBhbHdheXMgdXBk
+YXRlZCwgYnV0IHRoYXQgZG9lcwo+ID4gbm90IHNlZW0gdG8gYmUgdGhlIGNhc2UgdW5kZXIgY2Vy
+dGFpbiBjcmFzaCBzY2VuYXJpb3MuIEFzIGFuIGV4YW1wbGUsCj4gPiB3aGVuIHRoZSBvdGhlciBD
+UFVzIGFyZSBsb2NrZWQtdXAgaW5zaWRlIHRoZSBOTUkgaGFuZGxlciB0aGUgQ1BVIHRoYXQKPiA+
+IHNlbmRzIHRoZSBJUEkgd2lsbCBlbmQgdXAgbG9vcGluZyBmb3JldmVyIGluIHRoZSBJQ1IgY2hl
+Y2ssIGVmZmVjdGl2ZWx5Cj4gPiBoYXJkLWxvY2tpbmcgdGhlIHdob2xlIHN5c3RlbS4KPiA+IAo+
+ID4gUXVvdGluZyBmcm9tIEludGVsJ3MgIk11bHRpUHJvY2Vzc29yIFNwZWNpZmljYXRpb24iIChW
+ZXJzaW9uIDEuNCksIEItMzoKPiA+IAo+ID4gIkEgbG9jYWwgQVBJQyB1bml0IGluZGljYXRlcyBz
+dWNjZXNzZnVsIGRpc3BhdGNoIG9mIGFuIElQSSBieQo+ID4gcmVzZXR0aW5nIHRoZSBEZWxpdmVy
+eSBTdGF0dXMgYml0IGluIHRoZSBJbnRlcnJ1cHQgQ29tbWFuZAo+ID4gUmVnaXN0ZXIgKElDUiku
+IFRoZSBvcGVyYXRpbmcgc3lzdGVtIHBvbGxzIHRoZSBkZWxpdmVyeSBzdGF0dXMKPiA+IGJpdCBh
+ZnRlciBzZW5kaW5nIGFuIElOSVQgb3IgU1RBUlRVUCBJUEkgdW50aWwgdGhlIGNvbW1hbmQgaGFz
+Cj4gPiBiZWVuIGRpc3BhdGNoZWQuCj4gPiAKPiA+IEEgcGVyaW9kIG9mIDIwIG1pY3Jvc2Vjb25k
+cyBzaG91bGQgYmUgc3VmZmljaWVudCBmb3IgSVBJIGRpc3BhdGNoCj4gPiB0byBjb21wbGV0ZSB1
+bmRlciBub3JtYWwgb3BlcmF0aW5nIGNvbmRpdGlvbnMuIElmIHRoZSBJUEkgaXMgbm90Cj4gPiBz
+dWNjZXNzZnVsbHkgZGlzcGF0Y2hlZCwgdGhlIG9wZXJhdGluZyBzeXN0ZW0gY2FuIGFib3J0IHRo
+ZQo+ID4gY29tbWFuZC4gQWx0ZXJuYXRpdmVseSwgdGhlIG9wZXJhdGluZyBzeXN0ZW0gY2FuIHJl
+dHJ5IHRoZSBJUEkgYnkKPiA+IHdyaXRpbmcgdGhlIGxvd2VyIDMyLWJpdCBkb3VibGUgd29yZCBv
+ZiB0aGUgSUNSLiBUaGlzIOKAnHRpbWUtb3V04oCdCj4gPiBtZWNoYW5pc20gY2FuIGJlIGltcGxl
+bWVudGVkIHRocm91Z2ggYW4gZXh0ZXJuYWwgaW50ZXJydXB0LCBpZgo+ID4gaW50ZXJydXB0cyBh
+cmUgZW5hYmxlZCBvbiB0aGUgcHJvY2Vzc29yLCBvciB0aHJvdWdoIGV4ZWN1dGlvbiBvZgo+ID4g
+YW4gaW5zdHJ1Y3Rpb24gb3IgdGltZS1zdGFtcCBjb3VudGVyIHNwaW4gbG9vcC4iCj4gPiAKPiA+
+IEludGVsJ3MgZG9jdW1lbnRhdGlvbiBzdWdnZXN0cyB0aGUgaW1wbGVtZW50YXRpb24gb2YgYSB0
+aW1lLW91dAo+ID4gbWVjaGFuaXNtLCB3aGljaCwgYnkgdGhlIHdheSwgaXMgYWxyZWFkeSBiZWlu
+ZyBvcGVuLWNvZGVkIGluIHNvbWUgcGFydHMKPiA+IG9mIHRoZSBrZXJuZWwgdGhhdCB0aW5rZXIg
+d2l0aCBJQ1IuCj4gPiAKPiA+IC0tLSBQb3NzaWJsZSBzb2x1dGlvbnMKPiA+IAo+ID4gKiBTb2x1
+dGlvbiBBOiBJbXBsZW1lbnQgdGhlIHRpbWUtb3V0IG1lY2hhbmlzbSBpbiBhcGljX3dhaXRfaWNy
+X2lkbGUuCj4gPiAKPiA+IFRoZSBwcm9ibGVtIHdpdGggdGhpcyBhcHByb2FjaCBpcyB0aGF0IGlu
+dHJvZHVjZXMgYSBwZXJmb3JtYW5jZSBwZW5hbHR5Cj4gPiB0aGF0IG1heSBub3QgYmUgYWNjZXB0
+YWJsZSBmb3Igc29tZSBjYWxsZXJzIG9mIGFwaWNfd2FpdF9pY3JfaWRsZS4KPiA+IEJlc2lkZXMs
+IGR1cmluZyBub3JtYWwgb3BlcmF0aW9uIGRlbGl2ZXJ5IGVycm9ycyBzaG91bGQgbm90IG9jY3Vy
+LiBUaGlzCj4gPiBicmluZ3MgdXMgdG8gc29sdXRpb24gQi4KPiA+IAo+IAo+IEhpIEZlcm5hbmRv
+LApIaSBWaXZlaywKClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayEKCj4gSG93IG11Y2ggaXMg
+dGhlIHBlcmZvcm1hbmNlIHBlbmFsdHk/IElzIGl0IHJlYWxseSBzaWduaWZpY2FudC4gTXkgcG9p
+bnQKPiBpcyB0aGF0LCB0byBtZSBjaGFuZ2luZyBhcGljX3dhaXRfaWNyX2RsZSgpIGl0c2VsZiBz
+ZWVtcyB0byBiZSB0aGUgc2ltcGxlCj4gYXBwcm9hY2ggaW5zdGVhZCBvZiBpbnRyb2R1Y2luZyBh
+bm90aGVyIGZ1bmN0aW9uLgpUaGF0IHdhcyB3aGF0IG15IGd1dCBmZWVsIHNhaWQgYXQgZmlyc3Qs
+IHRvby4gQnV0Li4uCgo+IE9yaWdpbmFsIGltcGxlbWVudGF0aW9uIGlzOgo+IAo+IHN0YXRpYyBf
+X2lubGluZV9fIHZvaWQgYXBpY193YWl0X2ljcl9pZGxlKHZvaWQpCj4gewo+IAl3aGlsZSAoYXBp
+Y19yZWFkKEFQSUNfSUNSKSAmIEFQSUNfSUNSX0JVU1kpCj4gCWNwdV9yZWxheCgpOwo+IH0KPiAK
+PiBBbmQgbmV3IG9uZSB3aWxsIGxvb2sgc29tZXRoaW5nIGxpa2UuCj4gCj4gICAgICAgICBkbyB7
+Cj4gICAgICAgICAgICAgICAgIHNlbmRfc3RhdHVzID0gYXBpY19yZWFkKEFQSUNfSUNSKSAmIEFQ
+SUNfSUNSX0JVU1k7Cj4gICAgICAgICAgICAgICAgIGlmICghc2VuZF9zdGF0dXMpCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gICAgICAgICAgICAgICAgIHVkZWxheSgxMDApOwo+
+ICAgICAgICAgfSB3aGlsZSAodGltZW91dCsrIDwgMTAwMCk7Cj4gCj4gVGhlcmUgd2lsbCBiZSBh
+dCBtYXggMTAwIG1pY3Jvc2Vjb25kIGRlbGF5IGJlZm9yZSB5b3UgcmVhbGl6ZSB0aGF0IElQSSBo
+YXMKPiBiZWVuIGRpc3BhdGNoZWQuIFRvIG9wdGltaXplIGl0IGZ1cnRoZXIgd2UgY2FuIGNoYW5n
+ZSBpdCB0byAxMCBtaWNyb3NlY29uZAo+IGRlbGF5Ci4uLiBJIG5vdGljZWQgdGhhdCB0aGUgbWF4
+aW11bSB0aGVvcmV0aWNhbCBkZWxheSB5b3UgbWVudGlvbiBoYXMgdG8gYmUKbXVsdGlwbGllZCBi
+eSB0aGUgbnVtYmVyIG9mIENQVXMgb24gYmlnIHN5c3RlbXMsIGJlY2F1c2Ugb24gdGhvc2UKbWFj
+aGluZXMgc2VuZF9JUElfbWFzayBpcyBpbXBsZW1lbnRlZCBhcyBhIHNlcmllcyBvZiB1bmljYXN0
+cyB0byBlYWNoCkNQVS4gSXQgaXMgZm9yIHRoaXMgcmVhc29uIHRoYXQgSSB0aG91Z2h0IHRoaXMg
+YXBwcm9hY2ggbWF5IGJlCmNvbnNpZGVyZWQgdW5hY2NlcHRhYmxlIChJIGhhdmUgdG8gYWRtaXQg
+dGhhdCBJIGhhdmUgbm90IHBlcmZvcm1lZCBhbnkKbWljcm8tYmVuY2htYXJrcywgdGhvdWdoKS4K
+Cj4gICAgICAgICBkbyB7Cj4gICAgICAgICAgICAgICAgIHNlbmRfc3RhdHVzID0gYXBpY19yZWFk
+KEFQSUNfSUNSKSAmIEFQSUNfSUNSX0JVU1k7Cj4gICAgICAgICAgICAgICAgIGlmICghc2VuZF9z
+dGF0dXMpCj4gICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gICAgICAgICAgICAgICAg
+IHVkZWxheSgxMCk7Cj4gICAgICAgICB9IHdoaWxlICh0aW1lb3V0KysgPCAxMDAwMCk7Cj4gIAo+
+IG9yIG1heSBiZQo+IAo+ICAgICAgICAgZG8gewo+ICAgICAgICAgICAgICAgICBzZW5kX3N0YXR1
+cyA9IGFwaWNfcmVhZChBUElDX0lDUikgJiBBUElDX0lDUl9CVVNZOwo+ICAgICAgICAgICAgICAg
+ICBpZiAoIXNlbmRfc3RhdHVzKQo+ICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwo+ICAg
+ICAgICAgICAgICAgICB1ZGVsYXkoMSk7Cj4gICAgICAgICB9IHdoaWxlICh0aW1lb3V0KysgPCAx
+MDAwMDApOwo+IAo+IEkgZG9uJ3Qga25vdyBpZiAxIG1pY3JvIHNlY29uZCBkZWxheSBpcyBzdXBw
+b3J0ZWQuIEkgZG8gc2VlIGl0IGJlaW5nCj4gdXNlZCBpbiBrZXJuZWwvaHBldC5jClBsZWFzZSBu
+b3RpY2UgdGhhdCBzdWNoIGhpZ2gtcHJlY2lzaW9uIHRpbWVycyBhcmUgbm90IGF2YWlsYWJsZSBp
+biBhbGwKbWFjaGluZXMuCgo+IElzIGl0IHRvbyBtdWNoIG9mIHBlcmZvcm1hbmNlIG92ZXJoZWFk
+PyBTb21lYm9keSB3aG8ga25vd3MgbW9yZSBhYm91dCBpdAo+IG5lZWRzIHRvIHRlbGwuIFRvIG1l
+IGNoYW5naW5nIGFwaWNfd2FpdF9pY3JfaWRsZSgpIHNlZW1zIHNpbXBsZSBpbnN0ZWFkCj4gb2Yg
+aW50cm9kdWNpbmcgYSBuZXcgZnVuY3Rpb24gYW5kIHRoZW4gbWFraW5nIGEgc3BlY2lhbCBjYXNl
+IGZvciBOTUkuCkFzIEkgbWVudGlvbmVkIGFib3ZlIHRoZSBwZXJmb3JtYW5jZSBvdmVyaGVhZCBk
+ZXBlbmRzIG9uIHNldmVyYWwKZmFjdG9ycy4gSSBob3BlIGl0IG1ha2VzIHNlbnNlLgoKIC0gRmVy
+bmFuZG8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
