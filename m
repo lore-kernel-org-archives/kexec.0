@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HgtA3-0005Ck-5h
-	for kexec@lists.infradead.org; Wed, 25 Apr 2007 21:52:45 -0400
-Date: Thu, 26 Apr 2007 10:52:36 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec/kdump: Use generic elf code on ia64
-Message-ID: <20070426015233.GB13085@verge.net.au>
-References: <20070425090903.GA26412@verge.net.au>
-MIME-Version: 1.0
+Received: from e34.co.us.ibm.com ([32.97.110.152])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hgxnf-0001Xj-Dv
+	for kexec@lists.infradead.org; Thu, 26 Apr 2007 02:49:59 -0400
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l3Q6nBFe007167
+	for <kexec@lists.infradead.org>; Thu, 26 Apr 2007 02:49:11 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l3Q6nBRT167348
+	for <kexec@lists.infradead.org>; Thu, 26 Apr 2007 00:49:11 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l3Q6nACO022968
+	for <kexec@lists.infradead.org>; Thu, 26 Apr 2007 00:49:11 -0600
+Date: Thu, 26 Apr 2007 12:18:06 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [RFC PATCH 0/10] apic_wait_icr_idle issues and possible solutions
+Message-ID: <20070426064806.GA2626@in.ibm.com>
+References: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070425090903.GA26412@verge.net.au>
+In-Reply-To: <1177498984.16078.37.camel@sebastian.intellilink.co.jp>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,49 +32,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: fastboot@lists.osdl.org, kexec@lists.infradead.org, linux-ia64@vger.kernel.org
-Cc: Nanhai Zou <nanhai.zou@intel.com>, Vivek Goyal <vgoyal@in.ibm.com>, Tony Luck <tony.luck@intel.com>
+To: Fernando Luis =?iso-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+Cc: kexec@lists.infradead.org, ak@suse.de, linux-kernel@vger.kernel.org, horms@verge.net.au, "Eric W. Biederman" <ebiederm@xmission.com>, mbligh@google.com, Keith Owens <kaos@ocs.com.au>, akpm@linux-foundation.org
 
-On Wed, Apr 25, 2007 at 06:09:05PM +0900, Simon Horman wrote:
-> Make use of the generic implementation of crash_save_cpu().
-> 
-> On ia64 the registers are saved by a kdump-specific function
-> ia64_dump_cpu_regs() rather than elf_core_copy_regs() which
-> is used by other architectures via crash_save_cpu(). It seems
-> that ia64_dump_cpu_regs() and elf_core_copy_regs() are indeed
-> quite different
-> 
-> In order to facilitate this kdump_elf_core_copy_regs()
-> has been created, and it is called by crash_save_cpu().
-> By default kdump_elf_core_copy_regs() is just defined to be
-> elf_core_copy_regs() and ia64 defines its own implementation,
-> which calls ia64_dump_cpu_regs().  The ia64 version also sets
-> register 47 in accordance with the code that it replaces.
-> 
-> crash_save_cpu() has also been modifued to use a pre-alocated,
-> per-cpu variable for saving the cpu registers, as per the
-> IA64 specific code that this patch removes. This is
-> in order to reduce possible stack contention at crash-time.
-
-There are a couple of areas of the kexec code that allocate
-per-cpu variables either staticly or at boot time. I wonder
-if a more lazy approach of initialising them when they are first
-accessed would be better. I am thinking of cases such as this one
-where the first access will occur at kexec load time, so there
-shouldn't be any chance of contention occuring at the time when
-kexec executes the new kernel, or in the case of kdump, crash-time.
-
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBBcHIgMjUsIDIwMDcgYXQgMDg6MDM6MDRQTSArMDkwMCwgRmVybmFuZG8gTHVpcyBW
+w6F6cXVleiBDYW8gd3JvdGU6Cj4gCj4gc3RhdGljIF9faW5saW5lX18gdm9pZCBhcGljX3dhaXRf
+aWNyX2lkbGUodm9pZCkKPiB7Cj4gICB3aGlsZSAoYXBpY19yZWFkKEFQSUNfSUNSKSAmIEFQSUNf
+SUNSX0JVU1kpCj4gICAgIGNwdV9yZWxheCgpOwo+IH0KPiAKPiBUaGUgYnVzeSBsb29wIGluIHRo
+aXMgZnVuY3Rpb24gd291bGQgbm90IGJlIHByb2JsZW1hdGljIGlmIHRoZQo+IGNvcnJlc3BvbmRp
+bmcgc3RhdHVzIGJpdCBpbiB0aGUgSUNSIHdlcmUgYWx3YXlzIHVwZGF0ZWQsIGJ1dCB0aGF0IGRv
+ZXMKPiBub3Qgc2VlbSB0byBiZSB0aGUgY2FzZSB1bmRlciBjZXJ0YWluIGNyYXNoIHNjZW5hcmlv
+cy4gQXMgYW4gZXhhbXBsZSwKPiB3aGVuIHRoZSBvdGhlciBDUFVzIGFyZSBsb2NrZWQtdXAgaW5z
+aWRlIHRoZSBOTUkgaGFuZGxlciB0aGUgQ1BVIHRoYXQKPiBzZW5kcyB0aGUgSVBJIHdpbGwgZW5k
+IHVwIGxvb3BpbmcgZm9yZXZlciBpbiB0aGUgSUNSIGNoZWNrLCBlZmZlY3RpdmVseQo+IGhhcmQt
+bG9ja2luZyB0aGUgd2hvbGUgc3lzdGVtLgo+IAo+IFF1b3RpbmcgZnJvbSBJbnRlbCdzICJNdWx0
+aVByb2Nlc3NvciBTcGVjaWZpY2F0aW9uIiAoVmVyc2lvbiAxLjQpLCBCLTM6Cj4gCj4gIkEgbG9j
+YWwgQVBJQyB1bml0IGluZGljYXRlcyBzdWNjZXNzZnVsIGRpc3BhdGNoIG9mIGFuIElQSSBieQo+
+IHJlc2V0dGluZyB0aGUgRGVsaXZlcnkgU3RhdHVzIGJpdCBpbiB0aGUgSW50ZXJydXB0IENvbW1h
+bmQKPiBSZWdpc3RlciAoSUNSKS4gVGhlIG9wZXJhdGluZyBzeXN0ZW0gcG9sbHMgdGhlIGRlbGl2
+ZXJ5IHN0YXR1cwo+IGJpdCBhZnRlciBzZW5kaW5nIGFuIElOSVQgb3IgU1RBUlRVUCBJUEkgdW50
+aWwgdGhlIGNvbW1hbmQgaGFzCj4gYmVlbiBkaXNwYXRjaGVkLgo+IAo+IEEgcGVyaW9kIG9mIDIw
+IG1pY3Jvc2Vjb25kcyBzaG91bGQgYmUgc3VmZmljaWVudCBmb3IgSVBJIGRpc3BhdGNoCj4gdG8g
+Y29tcGxldGUgdW5kZXIgbm9ybWFsIG9wZXJhdGluZyBjb25kaXRpb25zLiBJZiB0aGUgSVBJIGlz
+IG5vdAo+IHN1Y2Nlc3NmdWxseSBkaXNwYXRjaGVkLCB0aGUgb3BlcmF0aW5nIHN5c3RlbSBjYW4g
+YWJvcnQgdGhlCj4gY29tbWFuZC4gQWx0ZXJuYXRpdmVseSwgdGhlIG9wZXJhdGluZyBzeXN0ZW0g
+Y2FuIHJldHJ5IHRoZSBJUEkgYnkKPiB3cml0aW5nIHRoZSBsb3dlciAzMi1iaXQgZG91YmxlIHdv
+cmQgb2YgdGhlIElDUi4gVGhpcyDigJx0aW1lLW91dOKAnQo+IG1lY2hhbmlzbSBjYW4gYmUgaW1w
+bGVtZW50ZWQgdGhyb3VnaCBhbiBleHRlcm5hbCBpbnRlcnJ1cHQsIGlmCj4gaW50ZXJydXB0cyBh
+cmUgZW5hYmxlZCBvbiB0aGUgcHJvY2Vzc29yLCBvciB0aHJvdWdoIGV4ZWN1dGlvbiBvZgo+IGFu
+IGluc3RydWN0aW9uIG9yIHRpbWUtc3RhbXAgY291bnRlciBzcGluIGxvb3AuIgo+IAo+IEludGVs
+J3MgZG9jdW1lbnRhdGlvbiBzdWdnZXN0cyB0aGUgaW1wbGVtZW50YXRpb24gb2YgYSB0aW1lLW91
+dAo+IG1lY2hhbmlzbSwgd2hpY2gsIGJ5IHRoZSB3YXksIGlzIGFscmVhZHkgYmVpbmcgb3Blbi1j
+b2RlZCBpbiBzb21lIHBhcnRzCj4gb2YgdGhlIGtlcm5lbCB0aGF0IHRpbmtlciB3aXRoIElDUi4K
+PiAKPiAtLS0gUG9zc2libGUgc29sdXRpb25zCj4gCj4gKiBTb2x1dGlvbiBBOiBJbXBsZW1lbnQg
+dGhlIHRpbWUtb3V0IG1lY2hhbmlzbSBpbiBhcGljX3dhaXRfaWNyX2lkbGUuCj4gCj4gVGhlIHBy
+b2JsZW0gd2l0aCB0aGlzIGFwcHJvYWNoIGlzIHRoYXQgaW50cm9kdWNlcyBhIHBlcmZvcm1hbmNl
+IHBlbmFsdHkKPiB0aGF0IG1heSBub3QgYmUgYWNjZXB0YWJsZSBmb3Igc29tZSBjYWxsZXJzIG9m
+IGFwaWNfd2FpdF9pY3JfaWRsZS4KPiBCZXNpZGVzLCBkdXJpbmcgbm9ybWFsIG9wZXJhdGlvbiBk
+ZWxpdmVyeSBlcnJvcnMgc2hvdWxkIG5vdCBvY2N1ci4gVGhpcwo+IGJyaW5ncyB1cyB0byBzb2x1
+dGlvbiBCLgo+IAoKSGkgRmVybmFuZG8sCgpIb3cgbXVjaCBpcyB0aGUgcGVyZm9ybWFuY2UgcGVu
+YWx0eT8gSXMgaXQgcmVhbGx5IHNpZ25pZmljYW50LiBNeSBwb2ludAppcyB0aGF0LCB0byBtZSBj
+aGFuZ2luZyBhcGljX3dhaXRfaWNyX2RsZSgpIGl0c2VsZiBzZWVtcyB0byBiZSB0aGUgc2ltcGxl
+CmFwcHJvYWNoIGluc3RlYWQgb2YgaW50cm9kdWNpbmcgYW5vdGhlciBmdW5jdGlvbi4KCk9yaWdp
+bmFsIGltcGxlbWVudGF0aW9uIGlzOgoKc3RhdGljIF9faW5saW5lX18gdm9pZCBhcGljX3dhaXRf
+aWNyX2lkbGUodm9pZCkKewoJd2hpbGUgKGFwaWNfcmVhZChBUElDX0lDUikgJiBBUElDX0lDUl9C
+VVNZKQoJY3B1X3JlbGF4KCk7Cn0KCkFuZCBuZXcgb25lIHdpbGwgbG9vayBzb21ldGhpbmcgbGlr
+ZS4KCiAgICAgICAgZG8gewogICAgICAgICAgICAgICAgc2VuZF9zdGF0dXMgPSBhcGljX3JlYWQo
+QVBJQ19JQ1IpICYgQVBJQ19JQ1JfQlVTWTsKICAgICAgICAgICAgICAgIGlmICghc2VuZF9zdGF0
+dXMpCiAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwogICAgICAgICAgICAgICAgdWRlbGF5
+KDEwMCk7CiAgICAgICAgfSB3aGlsZSAodGltZW91dCsrIDwgMTAwMCk7CgpUaGVyZSB3aWxsIGJl
+IGF0IG1heCAxMDAgbWljcm9zZWNvbmQgZGVsYXkgYmVmb3JlIHlvdSByZWFsaXplIHRoYXQgSVBJ
+IGhhcwpiZWVuIGRpc3BhdGNoZWQuIFRvIG9wdGltaXplIGl0IGZ1cnRoZXIgd2UgY2FuIGNoYW5n
+ZSBpdCB0byAxMCBtaWNyb3NlY29uZApkZWxheQoKICAgICAgICBkbyB7CiAgICAgICAgICAgICAg
+ICBzZW5kX3N0YXR1cyA9IGFwaWNfcmVhZChBUElDX0lDUikgJiBBUElDX0lDUl9CVVNZOwogICAg
+ICAgICAgICAgICAgaWYgKCFzZW5kX3N0YXR1cykKICAgICAgICAgICAgICAgICAgICAgICAgYnJl
+YWs7CiAgICAgICAgICAgICAgICB1ZGVsYXkoMTApOwogICAgICAgIH0gd2hpbGUgKHRpbWVvdXQr
+KyA8IDEwMDAwKTsKIApvciBtYXkgYmUKCiAgICAgICAgZG8gewogICAgICAgICAgICAgICAgc2Vu
+ZF9zdGF0dXMgPSBhcGljX3JlYWQoQVBJQ19JQ1IpICYgQVBJQ19JQ1JfQlVTWTsKICAgICAgICAg
+ICAgICAgIGlmICghc2VuZF9zdGF0dXMpCiAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwog
+ICAgICAgICAgICAgICAgdWRlbGF5KDEpOwogICAgICAgIH0gd2hpbGUgKHRpbWVvdXQrKyA8IDEw
+MDAwMCk7CgpJIGRvbid0IGtub3cgaWYgMSBtaWNybyBzZWNvbmQgZGVsYXkgaXMgc3VwcG9ydGVk
+LiBJIGRvIHNlZSBpdCBiZWluZwp1c2VkIGluIGtlcm5lbC9ocGV0LmMKCklzIGl0IHRvbyBtdWNo
+IG9mIHBlcmZvcm1hbmNlIG92ZXJoZWFkPyBTb21lYm9keSB3aG8ga25vd3MgbW9yZSBhYm91dCBp
+dApuZWVkcyB0byB0ZWxsLiBUbyBtZSBjaGFuZ2luZyBhcGljX3dhaXRfaWNyX2lkbGUoKSBzZWVt
+cyBzaW1wbGUgaW5zdGVhZApvZiBpbnRyb2R1Y2luZyBhIG5ldyBmdW5jdGlvbiBhbmQgdGhlbiBt
+YWtpbmcgYSBzcGVjaWFsIGNhc2UgZm9yIE5NSS4KClRoYW5rcwpWaXZlawoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
