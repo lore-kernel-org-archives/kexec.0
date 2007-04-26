@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HgxoR-0001Yy-8d
-	for kexec@lists.infradead.org; Thu, 26 Apr 2007 02:50:44 -0400
-From: Michael Neuling <mikey@neuling.org>
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HgyDw-0002h4-PC
+	for kexec@lists.infradead.org; Thu, 26 Apr 2007 03:17:15 -0400
+Date: Thu, 26 Apr 2007 16:17:00 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] fix valid_memory_range region merging
+Message-ID: <20070426071658.GF17808@verge.net.au>
+References: <1165.1177570234@neuling.org>
 MIME-Version: 1.0
-Subject: [PATCH] fix valid_memory_range region merging
-Date: Thu, 26 Apr 2007 16:50:34 +1000
-Message-ID: <1165.1177570234@neuling.org>
+Content-Disposition: inline
+In-Reply-To: <1165.1177570234@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,32 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
+To: Michael Neuling <mikey@neuling.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, kexec@lists.infradead.org
 
-Check the next region we are including is type RANGE_RAM as well.
+On Thu, Apr 26, 2007 at 04:50:34PM +1000, Michael Neuling wrote:
+> Check the next region we are including is type RANGE_RAM as well.
+> 
+> Signed-off-by: Michael Neuling <mikey@neuling.org>
+> ---
+> I've not actually seen this cause a problem, but it looks wrong.  We
+> should probably merge regions properly and solve this problem for real. 
 
-Signed-off-by: Michael Neuling <mikey@neuling.org>
----
-I've not actually seen this cause a problem, but it looks wrong.  We
-should probably merge regions properly and solve this problem for real. 
+I think that Magnus was working on some code do do just that...
 
- kexec/kexec.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
-Index: kexec-tools-testing/kexec/kexec.c
-===================================================================
---- kexec-tools-testing.orig/kexec/kexec.c
-+++ kexec-tools-testing/kexec/kexec.c
-@@ -96,7 +96,8 @@ int valid_memory_range(struct kexec_info
- 		mstart = info->memory_range[i].start;
- 		mend = info->memory_range[i].end;
- 		if (i < info->memory_ranges - 1
--		    && mend == info->memory_range[i+1].start)
-+		    && mend == info->memory_range[i+1].start
-+		    && info->memory_range[i+1].type == RANGE_RAM)
- 			mend = info->memory_range[i+1].end;
- 
- 		/* Check to see if we are fully contained */
 
 _______________________________________________
 kexec mailing list
