@@ -1,15 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HhJFp-00054D-90
-	for kexec@lists.infradead.org; Fri, 27 Apr 2007 01:44:26 -0400
-Subject: Re: [Fastboot] makedumpfile list ?
-In-reply-to: <20070426141042.GB21122@in.ibm.com>
-Message-Id: <20070427144239oomichi@mail.jp.nec.com>
-References: <20070426141042.GB21122@in.ibm.com>
+	id 1HhNgN-0004t7-QY
+	for kexec@lists.infradead.org; Fri, 27 Apr 2007 06:28:09 -0400
+Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RAS1TA018663
+	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:28:01 +0900 (JST)
+Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.192])
+	by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RALm5J023695
+	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:21:48 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+	(8.11.7/3.7W-MAILGATE-NEC)
+	id l3RALmu04080 for kexec@lists.infradead.org;
+	Fri, 27 Apr 2007 19:21:48 +0900 (JST)
+Received: from yonosuke.jp.nec.com (yonosuke.jp.nec.com [10.26.220.15]) by
+	mailsv4.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
+	id l3RALgg21365 for <kexec@lists.infradead.org>;
+	Fri, 27 Apr 2007 19:21:42 +0900 (JST)
+Subject: Re: makedumpfile IA64 DISCONTIGMEM
+Message-Id: <20070427192204tachibana@mail.jp.nec.com>
 Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Fri, 27 Apr 2007 14:42:39 +0900
+From: tachibana@mxm.nes.nec.co.jp
+Date: Fri, 27 Apr 2007 19:22:04 +0900
+Reply-To: tachibana@mxm.nes.nec.co.jp
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,33 +35,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: fastboot@lists.osdl.org, Bernhard Walle <bwalle@suse.de>, Kexec Mailing List <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
+Hi Bernhard-san,
 
-Hi,
-
-2007/04/26 19:40:42 +0530, Vivek Goyal <vgoyal@in.ibm.com> wrote:
->On Thu, Apr 26, 2007 at 03:10:33PM +0200, Bernhard Walle wrote:
->> Hello,
->> 
->> I think one plan of moving the kexec stuff from fastboot to the new
->> kexec mailing list was to make this list superflous due to a high
->> amount of spam traffic.
->> 
->> But where should makedumpfile issues go to?
+2007/04/26 14:21:53 +0200, Bernhard Walle <bwalle@suse.de> wrote:
 >
->I think kexec list should be good for this too. Anyway we are discussing
->kdump also on kexec list and makedumpfile is so closely related to
->kdump.
+>Hello,
+>
+>I found in your announcment of makedumpfile 1.1.1:
+>
+>  Todo:
+>     - ia64 DISCONTIGMEM support
+>
+>Did you already do something in this area? If you have something to
+>test, I'd be happy. :)
 
-I hope so.
-I would like to discuss makedumpfile on kexec list because it is not
-much traffic about makedumpfile and it is related to kdump as Vivek said.
+Thank you for your vaddr_to_offset_ia64() patch.
+We are currently investigating ia64 discontigmem, and
+your patch will be our help.
+I think your patch has problems when translating virtual address into
+physical address for ia64 discontigmem if layer 3 (or layer 4)
+paging is necessary.
+
+In Japan, we have a vacation on April 28th - May 6th.
+Sorry, we will reply again after the vacation.
 
 
 Thanks
-Ken'ichi Ohmichi
+tachibana
 
 _______________________________________________
 kexec mailing list
