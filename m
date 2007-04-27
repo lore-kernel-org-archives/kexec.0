@@ -1,27 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HhNgN-0004t7-QY
-	for kexec@lists.infradead.org; Fri, 27 Apr 2007 06:28:09 -0400
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RAS1TA018663
-	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:28:01 +0900 (JST)
-Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.192])
-	by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RALm5J023695
-	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:21:48 +0900 (JST)
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HhNji-0001Ud-Qy
+	for kexec@lists.infradead.org; Fri, 27 Apr 2007 11:31:37 +0100
+Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.162])
+	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RAVKpQ020852
+	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:31:20 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
 	(8.11.7/3.7W-MAILGATE-NEC)
-	id l3RALmu04080 for kexec@lists.infradead.org;
-	Fri, 27 Apr 2007 19:21:48 +0900 (JST)
+	id l3RAVJu15886 for kexec@lists.infradead.org;
+	Fri, 27 Apr 2007 19:31:19 +0900 (JST)
 Received: from yonosuke.jp.nec.com (yonosuke.jp.nec.com [10.26.220.15]) by
-	mailsv4.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
-	id l3RALgg21365 for <kexec@lists.infradead.org>;
-	Fri, 27 Apr 2007 19:21:42 +0900 (JST)
-Subject: Re: makedumpfile IA64 DISCONTIGMEM
-Message-Id: <20070427192204tachibana@mail.jp.nec.com>
+	mailsv3.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
+	id l3RAVJL24077 for <kexec@lists.infradead.org>;
+	Fri, 27 Apr 2007 19:31:19 +0900 (JST)
+Subject: Re: [PATCH] [makedumpfile] Implement memory regions on IA64
+Message-Id: <20070427193140tachibana@mail.jp.nec.com>
 Mime-Version: 1.0
 From: tachibana@mxm.nes.nec.co.jp
-Date: Fri, 27 Apr 2007 19:22:04 +0900
+Date: Fri, 27 Apr 2007 19:31:40 +0900
 Reply-To: tachibana@mxm.nes.nec.co.jp
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -38,6 +35,9 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: kexec@lists.infradead.org
 
 Hi Bernhard-san,
+
+Sorry, the subject was wrong.
+I send my reply again.
 
 2007/04/26 14:21:53 +0200, Bernhard Walle <bwalle@suse.de> wrote:
 >
