@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HhNji-0001Ud-Qy
-	for kexec@lists.infradead.org; Fri, 27 Apr 2007 11:31:37 +0100
-Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.162])
-	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l3RAVKpQ020852
-	for <kexec@lists.infradead.org>; Fri, 27 Apr 2007 19:31:20 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
-	(8.11.7/3.7W-MAILGATE-NEC)
-	id l3RAVJu15886 for kexec@lists.infradead.org;
-	Fri, 27 Apr 2007 19:31:19 +0900 (JST)
-Received: from yonosuke.jp.nec.com (yonosuke.jp.nec.com [10.26.220.15]) by
-	mailsv3.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
-	id l3RAVJL24077 for <kexec@lists.infradead.org>;
-	Fri, 27 Apr 2007 19:31:19 +0900 (JST)
-Subject: Re: [PATCH] [makedumpfile] Implement memory regions on IA64
-Message-Id: <20070427193140tachibana@mail.jp.nec.com>
-Mime-Version: 1.0
-From: tachibana@mxm.nes.nec.co.jp
-Date: Fri, 27 Apr 2007 19:31:40 +0900
-Reply-To: tachibana@mxm.nes.nec.co.jp
+Received: from koto.vergenet.net ([210.128.90.7])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HhcN2-000826-OR
+	for kexec@lists.infradead.org; Fri, 27 Apr 2007 22:09:12 -0400
+Date: Sat, 28 Apr 2007 11:08:57 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [Fastboot] makedumpfile list ?
+Message-ID: <20070428020857.GH3643@verge.net.au>
+References: <20070426141042.GB21122@in.ibm.com>
+	<20070427144239oomichi@mail.jp.nec.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070427144239oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,38 +24,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, Bernhard Walle <bwalle@suse.de>, vgoyal@in.ibm.com, fastboot@lists.osdl.org
 
-Hi Bernhard-san,
+On Fri, Apr 27, 2007 at 02:42:39PM +0900, Ken'ichi Ohmichi wrote:
+> 
+> Hi,
+> 
+> 2007/04/26 19:40:42 +0530, Vivek Goyal <vgoyal@in.ibm.com> wrote:
+> >On Thu, Apr 26, 2007 at 03:10:33PM +0200, Bernhard Walle wrote:
+> >> Hello,
+> >> 
+> >> I think one plan of moving the kexec stuff from fastboot to the new
+> >> kexec mailing list was to make this list superflous due to a high
+> >> amount of spam traffic.
+> >> 
+> >> But where should makedumpfile issues go to?
+> >
+> >I think kexec list should be good for this too. Anyway we are discussing
+> >kdump also on kexec list and makedumpfile is so closely related to
+> >kdump.
+> 
+> I hope so.
+> I would like to discuss makedumpfile on kexec list because it is not
+> much traffic about makedumpfile and it is related to kdump as Vivek said.
 
-Sorry, the subject was wrong.
-I send my reply again.
+kexec may not have been entirely the best name for the list, but
+at least its kind of short :-)
 
-2007/04/26 14:21:53 +0200, Bernhard Walle <bwalle@suse.de> wrote:
->
->Hello,
->
->I found in your announcment of makedumpfile 1.1.1:
->
->  Todo:
->     - ia64 DISCONTIGMEM support
->
->Did you already do something in this area? If you have something to
->test, I'd be happy. :)
-
-Thank you for your vaddr_to_offset_ia64() patch.
-We are currently investigating ia64 discontigmem, and
-your patch will be our help.
-I think your patch has problems when translating virtual address into
-physical address for ia64 discontigmem if layer 3 (or layer 4)
-paging is necessary.
-
-In Japan, we have a vacation on April 28th - May 6th.
-Sorry, we will reply again after the vacation.
+I think its entirely appropriate for discussions of kdump and
+makedumpfile to be carried out on the kexec@ list. In fact, anything
+related to kexec and crash analysis tht was on fastboot@ is more
+than welcome on the kexec list in my book.
 
 
-Thanks
-tachibana
+
 
 _______________________________________________
 kexec mailing list
