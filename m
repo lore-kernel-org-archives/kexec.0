@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HhcN2-000826-OR
-	for kexec@lists.infradead.org; Fri, 27 Apr 2007 22:09:12 -0400
-Date: Sat, 28 Apr 2007 11:08:57 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [Fastboot] makedumpfile list ?
-Message-ID: <20070428020857.GH3643@verge.net.au>
-References: <20070426141042.GB21122@in.ibm.com>
-	<20070427144239oomichi@mail.jp.nec.com>
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hi3Gx-0003TR-VA
+	for kexec@lists.infradead.org; Sun, 29 Apr 2007 02:52:41 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [Fastboot] restoring x86 BIOS state before reboot
+References: <20070406154628.GG12005@jukie.net>
+Date: Sun, 29 Apr 2007 00:51:09 -0600
+In-Reply-To: <20070406154628.GG12005@jukie.net> (Bart Trojanowski's message of
+	"Fri, 6 Apr 2007 11:46:28 -0400")
+Message-ID: <m1zm4rd676.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070427144239oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +23,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Bernhard Walle <bwalle@suse.de>, vgoyal@in.ibm.com, fastboot@lists.osdl.org
+To: Bart Trojanowski <bart@jukie.net>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, fastboot@lists.osdl.org, linux-kernel@vger.kernel.org, Jan Engelhardt <jengelh@linux01.gwdg.de>
 
-On Fri, Apr 27, 2007 at 02:42:39PM +0900, Ken'ichi Ohmichi wrote:
-> 
-> Hi,
-> 
-> 2007/04/26 19:40:42 +0530, Vivek Goyal <vgoyal@in.ibm.com> wrote:
-> >On Thu, Apr 26, 2007 at 03:10:33PM +0200, Bernhard Walle wrote:
-> >> Hello,
-> >> 
-> >> I think one plan of moving the kexec stuff from fastboot to the new
-> >> kexec mailing list was to make this list superflous due to a high
-> >> amount of spam traffic.
-> >> 
-> >> But where should makedumpfile issues go to?
-> >
-> >I think kexec list should be good for this too. Anyway we are discussing
-> >kdump also on kexec list and makedumpfile is so closely related to
-> >kdump.
-> 
-> I hope so.
-> I would like to discuss makedumpfile on kexec list because it is not
-> much traffic about makedumpfile and it is related to kdump as Vivek said.
+Bart Trojanowski <bart@jukie.net> writes:
 
-kexec may not have been entirely the best name for the list, but
-at least its kind of short :-)
+> Hi all,
+>
+> I am looking at a two stage boot where linux is loaded to do some system
+> initialization before booting to Windows, which needs BIOS.
+>
+> I am interested in bypassing the BIOS on the second boot.
+>
+> I wanted to know if anyone has attempted to restore the BIOS memory such 
+> that this could be attempted.  If not, I would love to get some pointers
+> :)
+>
+> My plan right now is to backup the 128k of memory under 0x10000 to some
+> staging memory under 0x90000, temporarily while in real mode, and then
+> move it up somewhere higher once the kernel is running.
+>
+> Then on reboot I hope to undo the above and jump to 0x00007c00.
+>
+> Does this approach have any merit?
 
-I think its entirely appropriate for discussions of kdump and
-makedumpfile to be carried out on the kexec@ list. In fact, anything
-related to kexec and crash analysis tht was on fastboot@ is more
-than welcome on the kexec list in my book.
+The primary problem isn't so much the BIOS memory.  That is usually
+preserved.  But rather the BIOS gets confused at the massive change
+in hardware state.  At least I think that is what happens.
 
+On some BIOS/kernel configuration it isn't a problem I think I
+got maybe a 20% success rate trying to use the 16bit linux entry
+point that starts the new kernel from kexec when I was investigating
+it.
 
+You might get a little more success if you backup the BIOS memory
+I don't know.
 
+As long as you are not coming out of a panic situation there is
+no theoretical reason why you shouldn't get the BIOS back and
+working again, but the how of it is a challenge.
+
+The possibility I keep playing with is to load the Bochs BIOS or
+some other implementation of the basic boot services that I have
+control over so that if it doesn't work the code can be fixed.
+There has been some limited success with this technique in the
+context of LinuxBIOS.
+
+The ACPI tables should be reusable as is.
+
+It may also be worth investigating if it is possible to bypass
+the part of windows that uses BIOS calls.  I really don't have
+a clue how a modern windows systems boots.
+
+Eric
 
 _______________________________________________
 kexec mailing list
