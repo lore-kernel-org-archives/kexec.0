@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gw3.adaptec.com ([216.52.22.36])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HiWbq-0006ET-9N
-	for kexec@lists.infradead.org; Mon, 30 Apr 2007 10:12:12 -0400
-Content-class: urn:content-classes:message
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1HiXZ3-0006pV-6w
+	for kexec@lists.infradead.org; Mon, 30 Apr 2007 11:13:29 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: [PATCH 1/2] x86_64: Reflect the relocatability of the kernel in the
+	ELF header.
+Date: Mon, 30 Apr 2007 09:12:39 -0600
+Message-ID: <m1slah6gm0.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Subject: RE: [PATCH] aacraid: fails to initialize after a  kexec operation
-Date: Mon, 30 Apr 2007 10:11:03 -0400
-Message-ID: <AE4F746F2AECFC4DA4AADD66A1DFEF018FDB38@otce2k301.adaptec.com>
-In-Reply-To: <20070430095334.GA17186@in.ibm.com>
-From: "Salyzyn, Mark" <mark_salyzyn@adaptec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,104 +21,166 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: James Bottomley <James.Bottomley@SteelEye.com>, Kexec Mailing List <kexec@lists.infradead.org>, Judith Lebzelter <judith@linux-foundation.org>, linux-scsi@vger.kernel.org, "Darrick J. Wong" <djwong@us.ibm.com>
+To: Andi Kleen <ak@suse.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Helge Hafting <helgehaf@aitel.hist.no>, Horms <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, Jurriaan <thunder7@xs4all.nl>, linux-kernel@vger.kernel.org
 
-Foreign arrays are arrays configured on another adapter then moved over
-to the current host adapter. I do not know why this may be the case in
-your situation, but it had the smell of behaving like a foreign array
-and thus my suggestion. We use commit=1 for all situations where the
-importation of an array is not considered an error and there is no BIOS
-to intervene prior to driver load. Typically we advise to set this flag
-in embedded systems, or in non-Intel based architectures. Normally on
-Intel based systems you get a query from the card's BIOS as you boot
-that queries the user (to answer yes) to accept the array configuration
-should it be detected as foreign.
 
-I see some problems with declaring aacraid.commit=1 for kdump, you are
-changing the storage system conditions and the fact you have a foreign
-array may have been the cause of the primary kernel's failure. You are
-rubbing out a factor in the system's failure? I would also hate to store
-a kernel dump over an array one does not know the status or origin of.
+Currently because vmlinux does not reflect that the kernel is relocatable
+we still have to support CONFIG_PHYSICAL_START.  So this patch adds a small
+c program to do what we cannot do with a linker script set the elf header
+type to ET_DYN.
 
-If there is a clean shutdown, and there are no outstanding commands from
-the OS (including the ioctl, so make sure the management software
-commands are shut down), I do not see a reason to reset the adapter.
+Since last time I have fixed the type to be in my code ET_DYN (oops),
+and verified this works with kexec.  I realized while testing that we
+don't have anyway of identifying a kernel vmlinux as linux so we
+probably want to add an ELF note but that will be another patch.
 
-I agree, the irqpoll is troublesome! Could something else in the kexec
-kernel be catching the interrupts and dropping them on the floor? Are
-there any other devices sharing that same interrupt line that may be
-holding the interrupt asserted? /proc/irq/*, /proc/interrupts? By
-routing, I did not make it clear, but there is more than just the PCI
-hardware in control of the path of an Interrupt from the controller
-hardware to the interrupt service routine ... this may not be a pure
-issue with PCI configuration being corrupted.
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+---
+ arch/x86_64/Kconfig  |    4 +++
+ arch/x86_64/Makefile |   10 +++++++
+ scripts/Makefile     |   11 ++++---
+ scripts/mketrel.c    |   70 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 90 insertions(+), 5 deletions(-)
+ create mode 100644 scripts/mketrel.c
 
-Sincerely -- Mark Salyzyn
+diff --git a/arch/x86_64/Kconfig b/arch/x86_64/Kconfig
+index b00adb9..95949c3 100644
+--- a/arch/x86_64/Kconfig
++++ b/arch/x86_64/Kconfig
+@@ -121,6 +121,10 @@ config ARCH_HAS_ILOG2_U64
+ 	bool
+ 	default n
+ 
++config ELF_RELOCATABLE
++	bool
++	default y
++
+ source "init/Kconfig"
+ 
+ 
+diff --git a/arch/x86_64/Makefile b/arch/x86_64/Makefile
+index a81a84a..7c0434c 100644
+--- a/arch/x86_64/Makefile
++++ b/arch/x86_64/Makefile
+@@ -125,6 +125,16 @@ define archhelp
+   echo  '  isoimage     - Create a boot CD-ROM image'
+ endef
+ 
++ifeq ($(CONFIG_RELOCATABLE),y)
++define cmd_vmlinux__
++      $(LD) $(LDFLAGS) $(LDFLAGS_vmlinux) -o $@ \
++      -T $(vmlinux-lds) $(vmlinux-init)		\
++      --start-group $(vmlinux-main) --end-group	\
++      $(filter-out $(vmlinux-lds) $(vmlinux-init) $(vmlinux-main) FORCE ,$^) \
++      && scripts/mketrel $@
++endef
++endif
++
+ CLEAN_FILES += arch/$(ARCH)/boot/fdimage \
+ 	       arch/$(ARCH)/boot/image.iso \
+ 	       arch/$(ARCH)/boot/mtools.conf
+diff --git a/scripts/Makefile b/scripts/Makefile
+index 1c73c5a..ddba550 100644
+--- a/scripts/Makefile
++++ b/scripts/Makefile
+@@ -7,11 +7,12 @@
+ # conmakehash:   Create chartable
+ # conmakehash:	 Create arrays for initializing the kernel console tables
+ 
+-hostprogs-$(CONFIG_KALLSYMS)     += kallsyms
+-hostprogs-$(CONFIG_LOGO)         += pnmtologo
+-hostprogs-$(CONFIG_VT)           += conmakehash
+-hostprogs-$(CONFIG_PROM_CONSOLE) += conmakehash
+-hostprogs-$(CONFIG_IKCONFIG)     += bin2c
++hostprogs-$(CONFIG_KALLSYMS)        += kallsyms
++hostprogs-$(CONFIG_LOGO)            += pnmtologo
++hostprogs-$(CONFIG_VT)              += conmakehash
++hostprogs-$(CONFIG_PROM_CONSOLE)    += conmakehash
++hostprogs-$(CONFIG_IKCONFIG)        += bin2c
++hostprogs-$(CONFIG_ELF_RELOCATABLE) += mketrel
+ 
+ always		:= $(hostprogs-y) $(hostprogs-m)
+ 
+diff --git a/scripts/mketrel.c b/scripts/mketrel.c
+new file mode 100644
+index 0000000..aa0408a
+--- /dev/null
++++ b/scripts/mketrel.c
+@@ -0,0 +1,70 @@
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <elf.h>
++#include <stdio.h>
++#include <errno.h>
++#include <string.h>
++#include <stdarg.h>
++#include <stdlib.h>
++
++static int fd;
++unsigned char e_ident[EI_NIDENT];
++
++void die(const char * str, ...)
++{
++	va_list args;
++	va_start(args, str);
++	vfprintf(stderr, str, args);
++	fputc('\n', stderr);
++	exit(1);
++}
++
++void file_open(const char *name)
++{
++	if ((fd = open(name, O_RDWR, 0)) < 0)
++		die("Unable to open `%s': %m", name);
++}
++
++static void mketrel(void)
++{
++	unsigned char e_type[2];
++	if (read(fd, &e_ident, sizeof(e_ident)) != sizeof(e_ident))
++		die("Cannot read ELF header: %s\n", strerror(errno));
++
++	if (memcmp(e_ident, ELFMAG, 4) != 0)
++		die("No ELF magic\n");
++
++	if ((e_ident[EI_CLASS] != ELFCLASS64) &&
++	    (e_ident[EI_CLASS] != ELFCLASS32))
++		die("Unrecognized ELF class: %x\n", e_ident[EI_CLASS]);
++	
++	if ((e_ident[EI_DATA] != ELFDATA2LSB) &&
++	    (e_ident[EI_DATA] != ELFDATA2MSB))
++		die("Unrecognized ELF data encoding: %x\n", e_ident[EI_DATA]);
++
++	if (e_ident[EI_VERSION] != EV_CURRENT)
++		die("Unknown ELF version: %d\n", e_ident[EI_VERSION]);
++
++	if (e_ident[EI_DATA] == ELFDATA2LSB) {
++		e_type[0] = ET_DYN & 0xff;
++		e_type[1] = ET_DYN >> 8;
++	} else {
++		e_type[1] = ET_DYN & 0xff;
++		e_type[0] = ET_DYN >> 8;
++	}
++
++	if (write(fd, &e_type, sizeof(e_type)) != sizeof(e_type))
++		die("Cannot write ELF type: %s\n", strerror(errno));
++}
++
++int main(int argc, char **argv)
++{
++	if (argc != 2)
++		die("Usage: mketrel: vmlinux");
++	file_open(argv[1]);
++	mketrel();
++	close(fd);
++	return 0;
++}
+-- 
+1.5.1.1.181.g2de0
 
-> -----Original Message-----
-> From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
-> Sent: Monday, April 30, 2007 5:54 AM
-> To: Salyzyn, Mark
-> Cc: James Bottomley; Kexec Mailing List; Judith Lebzelter; 
-> linux-scsi@vger.kernel.org; Darrick J. Wong
-> Subject: Re: [PATCH] aacraid: fails to initialize after a 
-> kexec operation
-> 
-> 
-> On Tue, Apr 24, 2007 at 09:21:35AM -0400, Salyzyn, Mark wrote:
-> > The system BIOS sets up the card's PCI configuration and 
-> there is code
-> > in the kernel that is capable of picking up some of the BIOS'
-> > information from the BIOS Data Space (not sure if it is actively
-> > collected in your configuration, you need a kernel flag to pick this
-> > up). On kexec this BIOS Data Space information is missing (?) and if
-> > there was any reconfiguration of the PCI space going on (I 
-> think only
-> > the Linux BIOS project does this), kexec will inherit it. This issue
-> > strikes me as a corrupted PCI configuration inherited in 
-> the kexec case,
-> > such corrupted PCI configurations could be a motherboard 
-> specific issue
-> > and can be related to the BIOS' initial setup for the 
-> initial kernel. At
-> > least that is my thought process in questioning the 
-> motherboard BIOS or
-> > hardware.
-> > 
-> > Another possibility is that after you have patched over the 
-> interrupt
-> > routing issues (a PCI configuration problem), the card has a foreign
-> > array, and the reset and reconfiguration is taking arrays 
-> offline. Add
-> > 'aacraid.commit=1' to force the foreign arrays to be accepted by the
-> > card.
-> > 
-> 
-> Hi Mark,
-> 
-> So aacraid.commit=1 and irqpoll combination has done the trick. I can
-> kexec/kdump into second kernel. I am using an IBM x366 series machine.
-> There is one array and three disks behind it.
-> 
-> Now few queries.
-> 
-> - What is the concept of foreign arrays? 
-> - Should we pass aacraid.commit=1 all the time or this is only for
->   some special cases? What's the point in resetting an adapter if it
->   does not online the array it is managing?
-> - For kexec, it calls the device shutdown routine 
-> (aac_shutdown) in this
->   case. If this is the case for normal kexec (not kdump) 
-> adapter should
->   not be reset?
-> - Still needs to be found out why PCI configuration is 
-> getting corrupted
->   and why irq routing is not proper and irqpoll is required.
->  
-> Thanks
-> Vivek
-> 
 
 _______________________________________________
 kexec mailing list
