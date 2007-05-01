@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HiXcz-0006rs-DU
-	for kexec@lists.infradead.org; Mon, 30 Apr 2007 11:17:27 -0400
-From: Andi Kleen <ak@suse.de>
-Subject: Re: [PATCH 1/2] x86_64: Reflect the relocatability of the kernel in
-	the ELF header.
-Date: Mon, 30 Apr 2007 17:17:07 +0200
-References: <m1slah6gm0.fsf@ebiederm.dsl.xmission.com>
-In-Reply-To: <m1slah6gm0.fsf@ebiederm.dsl.xmission.com>
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HihqH-0004XT-Gu
+	for kexec@lists.infradead.org; Mon, 30 Apr 2007 22:11:51 -0400
+Date: Tue, 1 May 2007 11:11:36 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Update the list information for kexec and kdump
+Message-ID: <20070501021135.GC18364@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200704301717.08230.ak@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +21,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, Jurriaan <thunder7@xs4all.nl>, linux-kernel@vger.kernel.org, Helge Hafting <helgehaf@aitel.hist.no>, Horms <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org, fastboot@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: Haren Myneni <hbabu@us.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@in.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Monday 30 April 2007 17:12:39 Eric W. Biederman wrote:
-> 
-> Currently because vmlinux does not reflect that the kernel is relocatable
-> we still have to support CONFIG_PHYSICAL_START.  So this patch adds a small
-> c program to do what we cannot do with a linker script set the elf header
-> type to ET_DYN.
-> 
-> Since last time I have fixed the type to be in my code ET_DYN (oops),
-> and verified this works with kexec.  I realized while testing that we
-> don't have anyway of identifying a kernel vmlinux as linux so we
-> probably want to add an ELF note but that will be another patch.
+There is a new list for kexec/kdump discussion.
 
-The patch is ok for me, but does it pass Vivek's usual testing?
+Signed-off-by: Simon Horman <horms@verge.net.au>
+Acked-by: Eric W. Biederman <ebiederm@xmission.com>
 
--Andi
+--- 
+Update: osdl.org -> linux-foundation.org
+
+Index: linux-2.6/MAINTAINERS
+===================================================================
+--- linux-2.6.orig/MAINTAINERS	2007-04-23 17:34:30.000000000 +0900
++++ linux-2.6/MAINTAINERS	2007-04-23 17:34:47.000000000 +0900
+@@ -1951,7 +1951,7 @@ P:	Vivek Goyal
+ M:	vgoyal@in.ibm.com
+ P:	Haren Myneni
+ M:	hbabu@us.ibm.com
+-L:	fastboot@lists.linux-foundation.org
++L:	kexec@lists.infradead.org
+ L:	linux-kernel@vger.kernel.org
+ W:	http://lse.sourceforge.net/kdump/
+ S:	Maintained
+@@ -2001,7 +2001,7 @@ P:	Eric Biederman
+ M:	ebiederm@xmission.com
+ W:	http://www.xmission.com/~ebiederm/files/kexec/
+ L:	linux-kernel@vger.kernel.org
+-L:	fastboot@lists.linux-foundation.org
++L:	kexec@lists.infradead.org
+ S:	Maintained
+ 
+ KPROBES
 
 _______________________________________________
 kexec mailing list
