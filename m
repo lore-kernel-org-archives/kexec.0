@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hii3B-0004dY-U9
-	for kexec@lists.infradead.org; Mon, 30 Apr 2007 22:25:12 -0400
-Date: Tue, 1 May 2007 11:25:07 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] kexec: Added generic --reuseinitrd option
-Message-ID: <20070501022505.GA22818@verge.net.au>
-References: <13112.1177317015@neuling.org>
-	<1177649598.976491.841801585564.qpush@coopers>
+Received: from ozlabs.org ([203.10.76.45])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1HijKn-0005jk-Lf
+	for kexec@lists.infradead.org; Mon, 30 Apr 2007 23:47:28 -0400
+From: Michael Neuling <mikey@neuling.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1177649598.976491.841801585564.qpush@coopers>
+Subject: [PATCH] kexec ppc64: cleanup get_devtree_details
+Date: Tue, 01 May 2007 13:47:14 +1000
+Message-ID: <10869.1177991234@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,20 +20,306 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>
+To: horms@verge.net.au
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
 
-On Fri, Apr 27, 2007 at 02:53:18PM +1000, Michael Neuling wrote:
-> Adds a generic --reuseinitrd option and performs some sanity checks on
-> it.  Can be used with the retain_initrd kernel option.
+Cleanup error paths in get_devtree_details.  Also convert fstat from a
+pointer to avoid malloc.
 
-Thanks, I've applied both this and the following patch.
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+---
+It's error paths, so if I screwed something up, I won't have picked it
+up with the simple testing I did. 
 
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
+ kexec/arch/ppc64/kexec-ppc64.c |  136 ++++++++++++-----------------------------
+ 1 file changed, 40 insertions(+), 96 deletions(-)
 
+Index: kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
+===================================================================
+--- kexec-tools-testing.orig/kexec/arch/ppc64/kexec-ppc64.c
++++ kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
+@@ -265,7 +265,7 @@ static int get_devtree_details(unsigned 
+ 	DIR *dir, *cdir;
+ 	FILE *file;
+ 	struct dirent *dentry;
+-	struct stat *fstat = malloc(sizeof(struct stat));
++	struct stat fstat;
+ 	int n, i = 0;
+ 
+ 	if ((dir = opendir(device_tree)) == NULL) {
+@@ -283,24 +283,18 @@ static int get_devtree_details(unsigned 
+ 		strcat(fname, dentry->d_name);
+ 		if ((cdir = opendir(fname)) == NULL) {
+ 			perror(fname);
+-			closedir(dir);
+-			return -1;
++			goto error_opendir;
+ 		}
+ 
+ 		if (strncmp(dentry->d_name, "chosen", 6) == 0) {
+ 			strcat(fname, "/linux,kernel-end");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if (fread(&kernel_end, sizeof(unsigned long), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			fclose(file);
+ 
+@@ -316,17 +310,12 @@ static int get_devtree_details(unsigned 
+ 				strcat(fname, "/linux,crashkernel-base");
+ 				if ((file = fopen(fname, "r")) == NULL) {
+ 					perror(fname);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_opencdir;
+ 				}
+ 				if (fread(&crash_base, sizeof(unsigned long), 1,
+ 						file) != 1) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+ 				fclose(file);
+ 
+@@ -336,17 +325,12 @@ static int get_devtree_details(unsigned 
+ 				strcat(fname, "/linux,crashkernel-size");
+ 				if ((file = fopen(fname, "r")) == NULL) {
+ 					perror(fname);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_opencdir;
+ 				}
+ 				if (fread(&crash_size, sizeof(unsigned long), 1,
+ 						file) != 1) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+ 
+ 				if (crash_base > mem_min)
+@@ -370,15 +354,11 @@ static int get_devtree_details(unsigned 
+ 					continue;
+                                 }
+ 				perror(fname);
+-				closedir(dir);
+-				return -1;
++				goto error_opendir;
+ 			}
+ 			if (fread(&htab_base, sizeof(unsigned long), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+ 			strcpy(fname, device_tree);
+@@ -386,16 +366,11 @@ static int get_devtree_details(unsigned 
+ 			strcat(fname, "/linux,htab-size");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if (fread(&htab_size, sizeof(unsigned long), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			/* Add htab address to exclude_range - NON-LPAR only */
+ 			exclude_range[i].start = htab_base;
+@@ -410,24 +385,16 @@ static int get_devtree_details(unsigned 
+ 				strcat(fname, "/linux,initrd-start");
+ 				if ((file = fopen(fname, "r")) == NULL) {
+ 					perror(fname);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_opencdir;
+ 				}
+ 				/* check for 4 and 8 byte initrd offset sizes */
+-				if (stat(fname, fstat) != 0) {
++				if (stat(fname, &fstat) != 0) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+- 				if (fread(&initrd_start, fstat->st_size, 1, file) != 1) {
++ 				if (fread(&initrd_start, fstat.st_size, 1, file) != 1) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+ 				fclose(file);
+ 
+@@ -437,24 +404,16 @@ static int get_devtree_details(unsigned 
+ 				strcat(fname, "/linux,initrd-end");
+ 				if ((file = fopen(fname, "r")) == NULL) {
+ 					perror(fname);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_opencdir;
+ 				}
+ 				/* check for 4 and 8 byte initrd offset sizes */
+-				if (stat(fname, fstat) != 0) {
++				if (stat(fname, &fstat) != 0) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+- 				if (fread(&initrd_end, fstat->st_size, 1, file) != 1) {
++ 				if (fread(&initrd_end, fstat.st_size, 1, file) != 1) {
+ 					perror(fname);
+-					fclose(file);
+-					closedir(cdir);
+-					closedir(dir);
+-					return -1;
++					goto error_openfile;
+ 				}
+ 				fclose(file);
+ 
+@@ -469,16 +428,11 @@ static int get_devtree_details(unsigned 
+ 			strcat(fname, "/linux,rtas-base");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if (fread(&rtas_base, sizeof(unsigned int), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+ 			strcpy(fname, device_tree);
+@@ -486,16 +440,11 @@ static int get_devtree_details(unsigned 
+ 			strcat(fname, "/rtas-size");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if (fread(&rtas_size, sizeof(unsigned int), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			closedir(cdir);
+ 			/* Add rtas to exclude_range */
+@@ -510,16 +459,11 @@ static int get_devtree_details(unsigned 
+ 			strcat(fname, "/reg");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			rmo_base = ((unsigned long long *)buf)[0];
+ 			rmo_top = rmo_base + ((unsigned long long *)buf)[1];
+@@ -540,14 +484,11 @@ static int get_devtree_details(unsigned 
+ 					continue;
+ 				}
+ 				perror(fname);
+-				closedir(dir);
+-				return -1;
++				goto error_opendir;
+ 			}
+ 			if (fread(&tce_base, sizeof(unsigned long), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
++				goto error_openfile;
+ 				return -1;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+@@ -556,16 +497,11 @@ static int get_devtree_details(unsigned 
+ 			strcat(fname, "/linux,tce-size");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_opencdir;
+ 			}
+ 			if (fread(&tce_size, sizeof(unsigned int), 1, file) != 1) {
+ 				perror(fname);
+-				fclose(file);
+-				closedir(cdir);
+-				closedir(dir);
+-				return -1;
++				goto error_openfile;
+ 			}
+ 			/* Add tce to exclude_range - NON-LPAR only */
+ 			exclude_range[i].start = tce_base;
+@@ -590,6 +526,14 @@ static int get_devtree_details(unsigned 
+ 			exclude_range[k].end);
+ #endif
+ 	return 0;
++
++error_openfile:
++	fclose(file);
++error_opencdir:
++	closedir(cdir);
++error_opendir:
++	closedir(dir);
++	return -1;
+ }
+ 
+ /* Setup a sorted list of memory ranges. */
 
 _______________________________________________
 kexec mailing list
