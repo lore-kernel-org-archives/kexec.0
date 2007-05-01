@@ -1,13 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HijKn-0005jk-Lf
-	for kexec@lists.infradead.org; Mon, 30 Apr 2007 23:47:28 -0400
-From: Michael Neuling <mikey@neuling.org>
-MIME-Version: 1.0
-Subject: [PATCH] kexec ppc64: cleanup get_devtree_details
-Date: Tue, 01 May 2007 13:47:14 +1000
-Message-ID: <10869.1177991234@neuling.org>
+Received: from e35.co.us.ibm.com ([32.97.110.153])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1HijT4-0000Qu-HO
+	for kexec@lists.infradead.org; Tue, 01 May 2007 04:55:59 +0100
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e35.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l413tqvv008920
+	for <kexec@lists.infradead.org>; Mon, 30 Apr 2007 23:55:52 -0400
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l413tpkq179752
+	for <kexec@lists.infradead.org>; Mon, 30 Apr 2007 21:55:51 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l413tpOc020179
+	for <kexec@lists.infradead.org>; Mon, 30 Apr 2007 21:55:51 -0600
+Date: Tue, 1 May 2007 09:25:39 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [PATCH 1/2] x86_64: Reflect the relocatability of the kernel in
+	the ELF header.
+Message-ID: <20070501035539.GA15472@in.ibm.com>
+References: <m1slah6gm0.fsf@ebiederm.dsl.xmission.com>
+	<200704301717.08230.ak@suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200704301717.08230.ak@suse.de>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,306 +38,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
+To: Andi Kleen <ak@suse.de>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Jurriaan <thunder7@xs4all.nl>, Helge Hafting <helgehaf@aitel.hist.no>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Cleanup error paths in get_devtree_details.  Also convert fstat from a
-pointer to avoid malloc.
+On Mon, Apr 30, 2007 at 05:17:07PM +0200, Andi Kleen wrote:
+> On Monday 30 April 2007 17:12:39 Eric W. Biederman wrote:
+> > 
+> > Currently because vmlinux does not reflect that the kernel is relocatable
+> > we still have to support CONFIG_PHYSICAL_START.  So this patch adds a small
+> > c program to do what we cannot do with a linker script set the elf header
+> > type to ET_DYN.
+> > 
+> > Since last time I have fixed the type to be in my code ET_DYN (oops),
+> > and verified this works with kexec.  I realized while testing that we
+> > don't have anyway of identifying a kernel vmlinux as linux so we
+> > probably want to add an ELF note but that will be another patch.
+> 
+> The patch is ok for me, but does it pass Vivek's usual testing?
 
-Signed-off-by: Michael Neuling <mikey@neuling.org>
----
-It's error paths, so if I screwed something up, I won't have picked it
-up with the simple testing I did. 
+I am facing one issue with this patch. gdb can not analyze the
+resulting kernel core file. Looks like gdb treats vmlinux differently if
+ELF header type is "ET_DYN". It reads the symbol values incorrectly.
 
- kexec/arch/ppc64/kexec-ppc64.c |  136 ++++++++++++-----------------------------
- 1 file changed, 40 insertions(+), 96 deletions(-)
+For example, symbol value of "panic_timeout" is 0xffffffff808a1fa8 but
+gdb somehow things that it is 0xffffffff008aaebf. Looks like it is
+performing some relocation.
 
-Index: kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
-===================================================================
---- kexec-tools-testing.orig/kexec/arch/ppc64/kexec-ppc64.c
-+++ kexec-tools-testing/kexec/arch/ppc64/kexec-ppc64.c
-@@ -265,7 +265,7 @@ static int get_devtree_details(unsigned 
- 	DIR *dir, *cdir;
- 	FILE *file;
- 	struct dirent *dentry;
--	struct stat *fstat = malloc(sizeof(struct stat));
-+	struct stat fstat;
- 	int n, i = 0;
- 
- 	if ((dir = opendir(device_tree)) == NULL) {
-@@ -283,24 +283,18 @@ static int get_devtree_details(unsigned 
- 		strcat(fname, dentry->d_name);
- 		if ((cdir = opendir(fname)) == NULL) {
- 			perror(fname);
--			closedir(dir);
--			return -1;
-+			goto error_opendir;
- 		}
- 
- 		if (strncmp(dentry->d_name, "chosen", 6) == 0) {
- 			strcat(fname, "/linux,kernel-end");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if (fread(&kernel_end, sizeof(unsigned long), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			fclose(file);
- 
-@@ -316,17 +310,12 @@ static int get_devtree_details(unsigned 
- 				strcat(fname, "/linux,crashkernel-base");
- 				if ((file = fopen(fname, "r")) == NULL) {
- 					perror(fname);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_opencdir;
- 				}
- 				if (fread(&crash_base, sizeof(unsigned long), 1,
- 						file) != 1) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
- 				fclose(file);
- 
-@@ -336,17 +325,12 @@ static int get_devtree_details(unsigned 
- 				strcat(fname, "/linux,crashkernel-size");
- 				if ((file = fopen(fname, "r")) == NULL) {
- 					perror(fname);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_opencdir;
- 				}
- 				if (fread(&crash_size, sizeof(unsigned long), 1,
- 						file) != 1) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
- 
- 				if (crash_base > mem_min)
-@@ -370,15 +354,11 @@ static int get_devtree_details(unsigned 
- 					continue;
-                                 }
- 				perror(fname);
--				closedir(dir);
--				return -1;
-+				goto error_opendir;
- 			}
- 			if (fread(&htab_base, sizeof(unsigned long), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			memset(fname, 0, sizeof(fname));
- 			strcpy(fname, device_tree);
-@@ -386,16 +366,11 @@ static int get_devtree_details(unsigned 
- 			strcat(fname, "/linux,htab-size");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if (fread(&htab_size, sizeof(unsigned long), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			/* Add htab address to exclude_range - NON-LPAR only */
- 			exclude_range[i].start = htab_base;
-@@ -410,24 +385,16 @@ static int get_devtree_details(unsigned 
- 				strcat(fname, "/linux,initrd-start");
- 				if ((file = fopen(fname, "r")) == NULL) {
- 					perror(fname);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_opencdir;
- 				}
- 				/* check for 4 and 8 byte initrd offset sizes */
--				if (stat(fname, fstat) != 0) {
-+				if (stat(fname, &fstat) != 0) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
-- 				if (fread(&initrd_start, fstat->st_size, 1, file) != 1) {
-+ 				if (fread(&initrd_start, fstat.st_size, 1, file) != 1) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
- 				fclose(file);
- 
-@@ -437,24 +404,16 @@ static int get_devtree_details(unsigned 
- 				strcat(fname, "/linux,initrd-end");
- 				if ((file = fopen(fname, "r")) == NULL) {
- 					perror(fname);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_opencdir;
- 				}
- 				/* check for 4 and 8 byte initrd offset sizes */
--				if (stat(fname, fstat) != 0) {
-+				if (stat(fname, &fstat) != 0) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
-- 				if (fread(&initrd_end, fstat->st_size, 1, file) != 1) {
-+ 				if (fread(&initrd_end, fstat.st_size, 1, file) != 1) {
- 					perror(fname);
--					fclose(file);
--					closedir(cdir);
--					closedir(dir);
--					return -1;
-+					goto error_openfile;
- 				}
- 				fclose(file);
- 
-@@ -469,16 +428,11 @@ static int get_devtree_details(unsigned 
- 			strcat(fname, "/linux,rtas-base");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if (fread(&rtas_base, sizeof(unsigned int), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			memset(fname, 0, sizeof(fname));
- 			strcpy(fname, device_tree);
-@@ -486,16 +440,11 @@ static int get_devtree_details(unsigned 
- 			strcat(fname, "/rtas-size");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if (fread(&rtas_size, sizeof(unsigned int), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			closedir(cdir);
- 			/* Add rtas to exclude_range */
-@@ -510,16 +459,11 @@ static int get_devtree_details(unsigned 
- 			strcat(fname, "/reg");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			rmo_base = ((unsigned long long *)buf)[0];
- 			rmo_top = rmo_base + ((unsigned long long *)buf)[1];
-@@ -540,14 +484,11 @@ static int get_devtree_details(unsigned 
- 					continue;
- 				}
- 				perror(fname);
--				closedir(dir);
--				return -1;
-+				goto error_opendir;
- 			}
- 			if (fread(&tce_base, sizeof(unsigned long), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
-+				goto error_openfile;
- 				return -1;
- 			}
- 			memset(fname, 0, sizeof(fname));
-@@ -556,16 +497,11 @@ static int get_devtree_details(unsigned 
- 			strcat(fname, "/linux,tce-size");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_opencdir;
- 			}
- 			if (fread(&tce_size, sizeof(unsigned int), 1, file) != 1) {
- 				perror(fname);
--				fclose(file);
--				closedir(cdir);
--				closedir(dir);
--				return -1;
-+				goto error_openfile;
- 			}
- 			/* Add tce to exclude_range - NON-LPAR only */
- 			exclude_range[i].start = tce_base;
-@@ -590,6 +526,14 @@ static int get_devtree_details(unsigned 
- 			exclude_range[k].end);
- #endif
- 	return 0;
-+
-+error_openfile:
-+	fclose(file);
-+error_opencdir:
-+	closedir(cdir);
-+error_opendir:
-+	closedir(dir);
-+	return -1;
- }
- 
- /* Setup a sorted list of memory ranges. */
+I am using GNU gdb Red Hat Linux (6.5-5.fc6rh).
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
