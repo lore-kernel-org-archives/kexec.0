@@ -1,31 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hj6LG-0005Sg-Vz
-	for kexec@lists.infradead.org; Wed, 02 May 2007 05:21:29 +0100
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e32.co.us.ibm.com (8.12.11.20060308/8.13.8) with ESMTP id
-	l424ICmC030985
-	for <kexec@lists.infradead.org>; Wed, 2 May 2007 00:18:12 -0400
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
-	l424LKEn180944
-	for <kexec@lists.infradead.org>; Tue, 1 May 2007 22:21:20 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l424LKhE030378
-	for <kexec@lists.infradead.org>; Tue, 1 May 2007 22:21:20 -0600
-Date: Wed, 2 May 2007 09:51:15 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [PATCH] aacraid: fails to initialize after a  kexec operation
-Message-ID: <20070502042115.GB4858@in.ibm.com>
-References: <20070430095334.GA17186@in.ibm.com>
-	<AE4F746F2AECFC4DA4AADD66A1DFEF018FDB38@otce2k301.adaptec.com>
+Received: from e1.ny.us.ibm.com ([32.97.182.141])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hjcab-0001mJ-8T
+	for kexec@lists.infradead.org; Thu, 03 May 2007 10:47:28 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l43ElIr0018227
+	for <kexec@lists.infradead.org>; Thu, 3 May 2007 10:47:18 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l43ElIrF547038
+	for <kexec@lists.infradead.org>; Thu, 3 May 2007 10:47:18 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l43ElIss004752
+	for <kexec@lists.infradead.org>; Thu, 3 May 2007 10:47:18 -0400
+Date: Thu, 3 May 2007 20:17:21 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
+Subject: Re: [PATCH] Fix interrupt distribution in ppc970
+Message-ID: <20070503144721.GA28460@in.ibm.com>
+References: <20070307045341.GG7476@in.ibm.com>
+	<1173264752.5101.49.camel@concordia.ozlabs.ibm.com>
+	<20070409085732.GC4281@in.ibm.com>
+	<1176188763.9836.16.camel@concordia.ozlabs.ibm.com>
+	<eeb3b19029c753682f476e97dcfaa820@bga.com>
+	<1176254201.4815.14.camel@concordia.ozlabs.ibm.com>
+	<20070419115233.GA4172@in.ibm.com>
+	<080126626f9bea228426c0c3d7bf1730@bga.com>
+	<20070426092455.GA4144@in.ibm.com>
+	<4cb567d635b4ac3333e6b4b2c27c12f2@bga.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <AE4F746F2AECFC4DA4AADD66A1DFEF018FDB38@otce2k301.adaptec.com>
-Reply-To: vgoyal@in.ibm.com
+In-Reply-To: <4cb567d635b4ac3333e6b4b2c27c12f2@bga.com>
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,72 +44,171 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Salyzyn, Mark" <mark_salyzyn@adaptec.com>
-Cc: James Bottomley <James.Bottomley@SteelEye.com>, Kexec Mailing List <kexec@lists.infradead.org>, Judith Lebzelter <judith@linux-foundation.org>, linux-scsi@vger.kernel.org, "Darrick J. Wong" <djwong@us.ibm.com>
+To: Milton Miller <miltonm@bga.com>
+Cc: fastboot@lists.osdl.org, kexec@lists.infradead.org, Michael Ellerman <michael@ellerman.id.au>, ppcdev <linuxppc-dev@ozlabs.org>, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>
 
-On Mon, Apr 30, 2007 at 10:11:03AM -0400, Salyzyn, Mark wrote:
-> Foreign arrays are arrays configured on another adapter then moved over
-> to the current host adapter. I do not know why this may be the case in
-> your situation, but it had the smell of behaving like a foreign array
-> and thus my suggestion. We use commit=1 for all situations where the
-> importation of an array is not considered an error and there is no BIOS
-> to intervene prior to driver load. Typically we advise to set this flag
-> in embedded systems, or in non-Intel based architectures. Normally on
-> Intel based systems you get a query from the card's BIOS as you boot
-> that queries the user (to answer yes) to accept the array configuration
-> should it be detected as foreign.
+On Thu, Apr 26, 2007 at 09:42:50AM -0500, Milton Miller wrote:
+> Yes.   The whole point of
+> >-static int get_irq_server(unsigned int virq)
+> >+static int get_irq_server(unsigned int virq, unsigned int 
+> >strict_check)
+> was to factor out the common code in this function.
 > 
-> I see some problems with declaring aacraid.commit=1 for kdump, you are
-> changing the storage system conditions and the fact you have a foreign
-> array may have been the cause of the primary kernel's failure. You are
-> rubbing out a factor in the system's failure? I would also hate to store
-> a kernel dump over an array one does not know the status or origin of.
+> I wasn't trying to change the prototype of xics_set_affinity.
 > 
+> Looking at the code a bit, I think part of the confusion is that newmask
+> is horribly misnamed.   Please rename it to server or irqserver.
+> Obtain its value by calling get_irq_server.  If the server returned
+> is -1 (in strict mode), don't call rtas (just return like today).
+> I guess a printk could be in order since the function is void, and
+> only root can request the change.
 
-Hi Mark,
+Milton,
 
-How does one find from BIOS if array is local or foreign? In this machine
-I have not done any migration. I have not even configured the array. I think
-I am using default factory settings. If I get into the controller BIOS and
-query arrays, it shows me one array of type Volume.
-
-So if an adapter is managing both local and foreign arrays, it would online
-local one upon reset but offline foreign one. So we can continue to save
-dump?
-
-By the way, when you say that foreign arrays are configured on another
-adapter and then moved to current host adapter. Once the movement is
-complete (I am assuming it will happen in first kernel) then what's the
-issue with saving dump on foreign array. I think if applications are 
-actively using the disks behind foreign array, then it should not be
-unreliable to save dump on those disks?
+How about this patch?
 
 
-> If there is a clean shutdown, and there are no outstanding commands from
-> the OS (including the ioctl, so make sure the management software
-> commands are shut down), I do not see a reason to reset the adapter.
-> 
+It is observed that in some PPC970 based machines, When the kernel is
+booted with maxcpus=1, interrupts were distributed to offline cpus
+also. So a condition is included to check whether the cpu online
+map and cpu present map are equal or not. If they are equal
+default_distrib_server is used as the interrupt server otherwise
+default_server(ie boot cpu) is used as the interrupt server.
 
-In case of normal kexec (not kdump) clean shutdown takes place. All 
-filesystems are unmounted, processes stopped and from kernel we call
-device_shutdown() which should shutdown the device no pending interrupt.
-I am wondering why it does not happen in case of aacraid and we end up
-restarting adapter even in case of clean shutdown using kexec.
+In addition to this, if an interrupt is assigned to a specific cpu (ie
+smp affinity) and if that cpu is not online, the earlier code used to
+return the default_distrib_server as interrupt server. This patch
+introduces an additional paramter to the get_irq function ie
+strict_check, based on this parameter, if the cpu is not online either
+default_distrib_server or -1 is returned.
 
-> I agree, the irqpoll is troublesome! Could something else in the kexec
-> kernel be catching the interrupts and dropping them on the floor? Are
-> there any other devices sharing that same interrupt line that may be
-> holding the interrupt asserted? /proc/irq/*, /proc/interrupts? By
-> routing, I did not make it clear, but there is more than just the PCI
-> hardware in control of the path of an Interrupt from the controller
-> hardware to the interrupt service routine ... this may not be a pure
-> issue with PCI configuration being corrupted.
-> 
+Cc: Milton Miller <miltonm@bga.com>,
+    Michael Ellerman <michael@ellerman.id.au>
+Signed-off-by: Mohan Kumar M <mohan@in.ibm.com>
+---
+ arch/powerpc/platforms/pseries/xics.c |   63 +++++++++++++++++++++-------------
+ 1 file changed, 39 insertions(+), 24 deletions(-)
 
-I will look more into it.
-
-Thanks
-Vivek
+Index: linux-2.6.21.1/arch/powerpc/platforms/pseries/xics.c
+===================================================================
+--- linux-2.6.21.1.orig/arch/powerpc/platforms/pseries/xics.c
++++ linux-2.6.21.1/arch/powerpc/platforms/pseries/xics.c
+@@ -156,9 +156,9 @@ static inline void lpar_qirr_info(int n_
+ 
+ 
+ #ifdef CONFIG_SMP
+-static int get_irq_server(unsigned int virq)
++static int get_irq_server(unsigned int virq, unsigned int strict_check)
+ {
+-	unsigned int server;
++	int server;
+ 	/* For the moment only implement delivery to all cpus or one cpu */
+ 	cpumask_t cpumask = irq_desc[virq].affinity;
+ 	cpumask_t tmp = CPU_MASK_NONE;
+@@ -166,22 +166,28 @@ static int get_irq_server(unsigned int v
+ 	if (!distribute_irqs)
+ 		return default_server;
+ 
+-	if (cpus_equal(cpumask, CPU_MASK_ALL)) {
+-		server = default_distrib_server;
+-	} else {
++	if (!cpus_equal(cpumask, CPU_MASK_ALL)) {
+ 		cpus_and(tmp, cpu_online_map, cpumask);
+ 
+-		if (cpus_empty(tmp))
+-			server = default_distrib_server;
++		server = first_cpu(tmp);
++
++		if (server < NR_CPUS)
++			return get_hard_smp_processor_id(server);
++		else {
++			if (strict_check)
++				return -1;
++			else
++				return default_distrib_server;
++		}
++	} else {
++		if (cpus_equal(cpu_online_map, cpu_present_map))
++			return default_distrib_server;
+ 		else
+-			server = get_hard_smp_processor_id(first_cpu(tmp));
++			return default_server;
+ 	}
+-
+-	return server;
+-
+ }
+ #else
+-static int get_irq_server(unsigned int virq)
++static int get_irq_server(unsigned int virq, unsigned int strict_check)
+ {
+ 	return default_server;
+ }
+@@ -192,7 +198,7 @@ static void xics_unmask_irq(unsigned int
+ {
+ 	unsigned int irq;
+ 	int call_status;
+-	unsigned int server;
++	int server;
+ 
+ 	pr_debug("xics: unmask virq %d\n", virq);
+ 
+@@ -201,7 +207,7 @@ static void xics_unmask_irq(unsigned int
+ 	if (irq == XICS_IPI || irq == XICS_IRQ_SPURIOUS)
+ 		return;
+ 
+-	server = get_irq_server(virq);
++	server = get_irq_server(virq, 0);
+ 
+ 	call_status = rtas_call(ibm_set_xive, 3, 1, NULL, irq, server,
+ 				DEFAULT_PRIORITY);
+@@ -398,8 +404,7 @@ static void xics_set_affinity(unsigned i
+ 	unsigned int irq;
+ 	int status;
+ 	int xics_status[2];
+-	unsigned long newmask;
+-	cpumask_t tmp = CPU_MASK_NONE;
++	int irq_server;
+ 
+ 	irq = (unsigned int)irq_map[virq].hwirq;
+ 	if (irq == XICS_IPI || irq == XICS_IRQ_SPURIOUS)
+@@ -413,18 +418,28 @@ static void xics_set_affinity(unsigned i
+ 		return;
+ 	}
+ 
+-	/* For the moment only implement delivery to all cpus or one cpu */
+-	if (cpus_equal(cpumask, CPU_MASK_ALL)) {
+-		newmask = default_distrib_server;
+-	} else {
+-		cpus_and(tmp, cpu_online_map, cpumask);
+-		if (cpus_empty(tmp))
++	/* Get current irq_server for the given irq */
++	irq_server = get_irq_server(irq, 1);
++	if (irq_server == -1) {
++		printk(KERN_ERR "xics_set_affinity: Invalid cpumask\n");
++		return;
++	}
++
++	/* For the moment only implement delivery to all cpus or one cpu.
++	 * Compare the irq_server with the new cpumask. If the irq_server
++	 * is specified in cpumask, do the required rtas_call, otherwise
++	 * return by printing an error message
++	 */
++	if (!cpus_equal(cpumask, CPU_MASK_ALL)) {
++		if (!cpu_isset(irq_server, cpumask)) {
++			printk(KERN_ERR "xics_set_affinity: Invalid "
++							"cpumask\n");
+ 			return;
+-		newmask = get_hard_smp_processor_id(first_cpu(tmp));
++		}
+ 	}
+ 
+ 	status = rtas_call(ibm_set_xive, 3, 1, NULL,
+-				irq, newmask, xics_status[1]);
++				irq, irq_server, xics_status[1]);
+ 
+ 	if (status) {
+ 		printk(KERN_ERR "xics_set_affinity: irq=%u ibm,set-xive "
 
 _______________________________________________
 kexec mailing list
