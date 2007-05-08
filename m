@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlK2t-0004DR-GJ
-	for kexec@lists.infradead.org; Tue, 08 May 2007 03:24:53 -0400
-Date: Tue, 8 May 2007 16:23:25 +0900
+	id 1HlK47-0004GT-DC
+	for kexec@lists.infradead.org; Tue, 08 May 2007 03:26:40 -0400
+Date: Tue, 8 May 2007 16:24:48 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec/kdump: Use generic elf code on ia64
-Message-ID: <20070508072323.GB31881@verge.net.au>
-References: <20070425090903.GA26412@verge.net.au>
-	<20070508063239.GA31881@verge.net.au>
-	<1178607344.2613.9.camel@linux-znh>
+Subject: Re: [patch 1/5] kexec debug output improvments
+Message-ID: <20070508072446.GC31881@verge.net.au>
+References: <20070507235727.631477448@am.sony.com>>
+	<463FBE27.4060402@am.sony.com> <20070508062019.GC5400@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1178607344.2613.9.camel@linux-znh>
+In-Reply-To: <20070508062019.GC5400@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,19 +24,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Zou Nan hai <nanhai.zou@intel.com>
-Cc: kexec@lists.infradead.org, Linux-IA64 <linux-ia64@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, fastboot <fastboot@lists.osdl.org>, "Luck,
-	Tony" <tony.luck@intel.com>
+To: Vivek Goyal <vgoyal@in.ibm.com>
+Cc: kexec@lists.infradead.org, Geoff Levand <geoffrey.levand@am.sony.com>
 
-On Tue, May 08, 2007 at 02:55:44PM +0800, Zou Nan hai wrote:
-> Hi, 
-> 	The patch looks ok to me.  
-> However split the patch in 2 parts, 
-> 1. Put pr_status to percpu data to save stack usage.
-> 2. IA64 specific part.
->    may help others to review the patches.
+On Tue, May 08, 2007 at 11:50:19AM +0530, Vivek Goyal wrote:
+> On Mon, May 07, 2007 at 05:02:47PM -0700, Geoff Levand wrote:
+> > kexec debug output improvments.
+> >  - Add better type checking for the debug output macro dfprintf().
+> >  - Add a convenence macro dprintf().
+> > 
+> > Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+> > ---
+> >  kexec/kexec.h |    6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > --- kexec-tools-hacked.orig/kexec/kexec.h
+> > +++ kexec-tools-hacked/kexec/kexec.h
+> > @@ -217,10 +217,12 @@ int parse_iomem_single(char *str, uint64
+> > 
+> >  #define MAX_LINE	160
+> > 
+> > +#define dprintf(args...) dfprintf(stdout, args)
+> >  #ifdef DEBUG
+> > -#define dfprintf(args...)	do {fprintf(args);} while(0)
+> > +#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
+> 
+> Should't dprintf() also be inside #ifdef DEBUG?
 
-Sure, will do.
+Good point, yes I think so too.
 
 -- 
 Horms
