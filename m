@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-sin.frontbridge.com ([207.46.51.80]
-	helo=outbound1-sin-R.bigfish.com)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlQrW-00055F-0A
-	for kexec@lists.infradead.org; Tue, 08 May 2007 10:40:24 -0400
-Message-ID: <46408BC9.3000503@am.sony.com>
-Date: Tue, 08 May 2007 07:40:09 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
-MIME-Version: 1.0
-Subject: Re: [patch 1/5] kexec debug output improvments
-References: <20070507235727.631477448@am.sony.com>>	<463FBE27.4060402@am.sony.com>
-	<20070508060857.GC8170@verge.net.au>
-In-Reply-To: <20070508060857.GC8170@verge.net.au>
+Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HlR1S-0005Gt-GZ
+	for kexec@lists.infradead.org; Tue, 08 May 2007 10:50:39 -0400
+In-Reply-To: <20070508061338.GE8170@verge.net.au>
+References: <20070507235727.631477448@am.sony.com>>
+	<463FBE34.7070504@am.sony.com> <20070508061338.GE8170@verge.net.au>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <99b394986052b4a8627e4c893d16136d@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: [patch 4/5] Add proper node alignment for the powerpc device-tree
+	cmdline.
+Date: Tue, 8 May 2007 09:50:08 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,44 +25,53 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+Cc: kexec@lists.infradead.org, Geoff Levand <geoffrey.levand@am.sony.com>
 
-Simon Horman wrote:
-> On Mon, May 07, 2007 at 05:02:47PM -0700, Geoff Levand wrote:
->> kexec debug output improvments.
->>  - Add better type checking for the debug output macro dfprintf().
->>  - Add a convenence macro dprintf().
->> 
+On May 8, 2007, at 1:13 AM, Simon Horman wrote:
+> On Mon, May 07, 2007 at 05:03:00PM -0700, Geoff Levand wrote:
+>> Add proper node alignment for the powerpc device-tree cmdline.
+>>
+>> Fixes the runtime error 'Invalid tag 3a scanning flattened device 
+>> tree !'.
+>>
 >> Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+>
+> This seems ok to me, though I don't know much about the device tree.
+>
+> Milton, do you have any thoughts on this?
+NACK
+
 >> ---
->>  kexec/kexec.h |    6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->> 
->> --- kexec-tools-hacked.orig/kexec/kexec.h
->> +++ kexec-tools-hacked/kexec/kexec.h
->> @@ -217,10 +217,12 @@ int parse_iomem_single(char *str, uint64
->>  
->>  #define MAX_LINE	160
->>  
->> +#define dprintf(args...) dfprintf(stdout, args)
->>  #ifdef DEBUG
->> -#define dfprintf(args...)	do {fprintf(args);} while(0)
->> +#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
->>  #else
->> -#define dfprintf(args...)	do { } while(0)
->> +static inline int __attribute__ ((format (printf, 1, 2)))
->> +	dfprintf(FILE *f, const char *fmt, ...) {return 0;}
->>  #endif
-> 
-> I think that this should be
-> 
-> static inline int __attribute__ ((format (printf, 2, 3)))
-> 
-> am I crazy?
+>>  kexec/arch/ppc64/fs2dt.c |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> --- kexec-tools-hacked.orig/kexec/arch/ppc64/fs2dt.c
+>> +++ kexec-tools-hacked/kexec/arch/ppc64/fs2dt.c
+>> @@ -283,6 +283,10 @@ static void putprops(char *fn, struct di
+>>  			strcat(local_cmdline, " ");
+>>  			cmd_len = strlen(local_cmdline);
+>>  			cmd_len = cmd_len + 1;
+>> +			if ((cmd_len >= 8) && ((unsigned long)dt & 0x4)) {
+>> +				fprintf(stderr, "Aligning cmdline %p\n", dt);
+>> +				dt++;
+>> +			}
+>>  			memcpy(dt, local_cmdline,cmd_len);
+>>  			len = cmd_len;
+>>  			*dt_len = cmd_len;
+>>
+>> -- 
+>>
 
-Yes, you are not crazy!  My mistake.
+That's only half the fix.  If the propety was > 8 and is now < 8
+it might need to undo this alignment, but only if it was there
+before.
 
--Geoff
+Please change the code to behave like the initrd, where we skip the
+property totally when copying, and then insert it at the end of the
+directory.   That also handles the case where the source device-tree
+doesn't have the property.
+
+milton
 
 
 _______________________________________________
