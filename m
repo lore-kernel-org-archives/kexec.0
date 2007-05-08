@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlM8X-0007nL-IT
-	for kexec@lists.infradead.org; Tue, 08 May 2007 05:37:39 -0400
-Message-Id: <20070508093114.767199973@tabatha.lab.ultramonkey.org>
-Date: Tue, 08 May 2007 18:31:14 +0900
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HlM8z-000313-T1
+	for kexec@lists.infradead.org; Tue, 08 May 2007 10:38:07 +0100
+Message-Id: <20070508093329.088911844@tabatha.lab.ultramonkey.org>
+References: <20070508093114.767199973@tabatha.lab.ultramonkey.org>
+Date: Tue, 08 May 2007 18:31:16 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 0/3] [KEXEC] Use generic elf code on ia64
+Subject: [patch 2/3] Use per-cpu elf_prstatus
+Content-Disposition: inline; filename=ia64-kdump-merge-cpu-save-2.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,12 +25,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: fastboot@lists.osdl.org, kexec@lists.infradead.org, linux-ia64@vger.kernel.org
 Cc: Nanhai Zou <nanhai.zou@intel.com>, Vivek Goyal <vgoyal@in.ibm.com>, Tony Luck <tony.luck@intel.com>
 
-Hi,
+Use a pre-allocated per-cpu variable for saving the cpu registers, as per
+the IA64 specific code. This is in order to reduce possible stack
+contention at crash-time as per the inline comment.
 
-the following series of three patches changes ia64 to use
-the generic elf note creation code. I previously posted it as
-a single patch, and have broken it up on Nanhai Zou's suggestion
-in order to make it easier to review.
+A following patch will update ia64 to use crash_save_cpu() rather
+than its own re-implementation of the routine.
+
+Signed-off-by: Simon Horman <horms@verge.net.au>
+
+--- 
+ linux-2.6/kernel/kexec.c |   20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+Index: linux-2.6/kernel/kexec.c
+===================================================================
+--- linux-2.6.orig/kernel/kexec.c	2007-05-08 18:08:50.000000000 +0900
++++ linux-2.6/kernel/kexec.c	2007-05-08 18:22:45.000000000 +0900
+@@ -1097,9 +1097,18 @@ static void final_note(u32 *buf)
+ 	memcpy(buf, &note, sizeof(note));
+ }
+ 
++/*
++ * There is some concern that on architectures where struct elf_prstatus is
++ * large, such as IA64, having elf_prstatus on the stack in
++ * crash_save_cpu() could cause problems given that this function
++ * is run after a kernel crash has occured. To aleviate this problem
++ * a pre-allocated per-cpu value is used instead.
++ */
++static DEFINE_PER_CPU(struct elf_prstatus, elf_prstatus);
++
+ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ {
+-	struct elf_prstatus prstatus;
++	struct elf_prstatus *prstatus;
+ 	u32 *buf;
+ 
+ 	if ((cpu < 0) || (cpu >= NR_CPUS))
+@@ -1115,11 +1124,12 @@ void crash_save_cpu(struct pt_regs *regs
+ 	buf = (u32*)per_cpu_ptr(crash_notes, cpu);
+ 	if (!buf)
+ 		return;
+-	memset(&prstatus, 0, sizeof(prstatus));
+-	prstatus.pr_pid = current->pid;
+-	kexec_elf_core_copy_regs(&prstatus.pr_reg, regs);
++	prstatus = &per_cpu(elf_prstatus, cpu);
++	memset(prstatus, 0, sizeof(struct elf_prstatus));
++	prstatus->pr_pid = current->pid;
++	kexec_elf_core_copy_regs(&(prstatus->pr_reg), regs);
+ 	buf = append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
+-		      	      &prstatus, sizeof(prstatus));
++			      prstatus, sizeof(struct elf_prstatus));
+ 	final_note(buf);
+ }
+ 
 
 -- 
 
