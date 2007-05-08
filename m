@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-blu.bigfish.com ([65.55.251.10]
-	helo=mail196-blu-R.bigfish.com)
+Received: from outbound-sin.frontbridge.com ([207.46.51.80]
+	helo=outbound1-sin-R.bigfish.com)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlQo6-00052y-KU
-	for kexec@lists.infradead.org; Tue, 08 May 2007 10:36:54 -0400
-Message-ID: <46408AFD.10107@am.sony.com>
-Date: Tue, 08 May 2007 07:36:45 -0700
+	id 1HlQrW-00055F-0A
+	for kexec@lists.infradead.org; Tue, 08 May 2007 10:40:24 -0400
+Message-ID: <46408BC9.3000503@am.sony.com>
+Date: Tue, 08 May 2007 07:40:09 -0700
 From: Geoff Levand <geoffrey.levand@am.sony.com>
 MIME-Version: 1.0
 Subject: Re: [patch 1/5] kexec debug output improvments
-References: <20070507235727.631477448@am.sony.com>>
-	<463FBE27.4060402@am.sony.com> <20070508062019.GC5400@in.ibm.com>
-In-Reply-To: <20070508062019.GC5400@in.ibm.com>
+References: <20070507235727.631477448@am.sony.com>>	<463FBE27.4060402@am.sony.com>
+	<20070508060857.GC8170@verge.net.au>
+In-Reply-To: <20070508060857.GC8170@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,19 +24,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
+To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-Vivek Goyal wrote:
+Simon Horman wrote:
 > On Mon, May 07, 2007 at 05:02:47PM -0700, Geoff Levand wrote:
+>> kexec debug output improvments.
+>>  - Add better type checking for the debug output macro dfprintf().
+>>  - Add a convenence macro dprintf().
+>> 
+>> Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+>> ---
+>>  kexec/kexec.h |    6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>> 
+>> --- kexec-tools-hacked.orig/kexec/kexec.h
+>> +++ kexec-tools-hacked/kexec/kexec.h
+>> @@ -217,10 +217,12 @@ int parse_iomem_single(char *str, uint64
+>>  
+>>  #define MAX_LINE	160
+>>  
 >> +#define dprintf(args...) dfprintf(stdout, args)
 >>  #ifdef DEBUG
 >> -#define dfprintf(args...)	do {fprintf(args);} while(0)
 >> +#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
+>>  #else
+>> -#define dfprintf(args...)	do { } while(0)
+>> +static inline int __attribute__ ((format (printf, 1, 2)))
+>> +	dfprintf(FILE *f, const char *fmt, ...) {return 0;}
+>>  #endif
 > 
-> Should't dprintf() also be inside #ifdef DEBUG?
+> I think that this should be
+> 
+> static inline int __attribute__ ((format (printf, 2, 3)))
+> 
+> am I crazy?
 
-Then you need two identical defs for dprintf.
+Yes, you are not crazy!  My mistake.
 
 -Geoff
 
