@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-sin.frontbridge.com ([207.46.51.80]
-	helo=outbound3-sin-R.bigfish.com)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlR7g-0005Jq-Ou
-	for kexec@lists.infradead.org; Tue, 08 May 2007 10:57:07 -0400
-Message-ID: <46408FB6.8070705@am.sony.com>
-Date: Tue, 08 May 2007 07:56:54 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
-MIME-Version: 1.0
-Subject: Re: [patch 3/5] kexec add strict-prototypes
+Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HlR8A-0005LM-NB
+	for kexec@lists.infradead.org; Tue, 08 May 2007 10:57:37 -0400
+In-Reply-To: <20070508061454.GF8170@verge.net.au>
 References: <20070507235727.631477448@am.sony.com>>
-	<463FBE30.8080500@am.sony.com> <20070508023811.GA8170@verge.net.au>
-In-Reply-To: <20070508023811.GA8170@verge.net.au>
+	<463FBE38.5090901@am.sony.com> <20070508061454.GF8170@verge.net.au>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <e9a549b7a8225faa255906285ac8e151@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: Spam:****, Re: [patch 5/5] kexec fix ppc64 device-tree mem node
+Date: Tue, 8 May 2007 09:57:13 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +24,120 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+Cc: kexec@lists.infradead.org, Geoff Levand <geoffrey.levand@am.sony.com>
 
-Simon Horman wrote:
-> On Mon, May 07, 2007 at 05:02:56PM -0700, Geoff Levand wrote:
->> Add -Wstrict-prototypes to EXTRA_CFLAGS and fix the powerpc compiler warnings.
->> 
+
+On May 8, 2007, at 1:14 AM, Simon Horman wrote:
+
+> X-SpamDetect-Info: ------------- Start ASpam results ---------------
+> X-SpamDetect-Info: This message may be spam. This message BODY has 
+> been altered to show you the spam information
+> X-SpamDetect: ****: 4.500000 From3consonants=0.5, GreyPassed=1.0, 
+> DodgySource=2.0, SPF Default Fail=1.0
+> X-SpamDetect-Info: ------------- End ASpam results -----------------
+>
+> On Mon, May 07, 2007 at 05:03:04PM -0700, Geoff Levand wrote:
+>> Change the ppc64 device-tree memory node name spec to match the 
+>> allowable names
+>> specified in the booting-without-of document.
+>>
 >> Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
-> 
-> Hi Geoff,
-> 
-> I'm all for fixing up this kind of thing, but I'm not sure that
-> hardcoding it into -Wstrict-prototypes is the right way to go.
-> People who want -Wstrict-prototypes can just add it to CFLAGS
-> in the environment and fix problems from there. Then again, it is
-> kind of nice to get rid of all this crap :-)
-> 
-> Could you split the configure.ac patch and the fixes into two separate
-> patches so that they can be considered separtely?
+>
+> Again, this seems fine to me, but I'm not an expert on the device tree.
+> Milton, how does this change sit with you?
 
-Sure.  New patches will follow.
+[several cases of]
+>> -		if (strncmp(dentry->d_name, "memory@", 7))
+>> +		if (strncmp(dentry->d_name, "memory", 6))
 
-> 
-> The change to sort_base_ranges() seems like a lot of diff for very
-> little change. Is it whitespace fixes. If so could you put that in a
-> separate patch?
-> 
+Thinking about it a bit, this makes the check too generic.   There are
+firmware platforms that generate /memory-controller nodes which should
+not be found.   While we really should be looking for the device type,
+for now the simplest would be to accept ether memory@ or memory\0.  The
+one counting the nodes could remain memory, since we are just sizing an
+allocation.
 
-It is just a move.  sort_base_ranges() was defined after
-it was used.
 
--Geoff
+>
+>> ---
+>>  kexec/arch/ppc64/crashdump-ppc64.c |    2 +-
+>>  kexec/arch/ppc64/kexec-ppc64.c     |   10 +++++-----
+>>  2 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> --- kexec-tools-hacked.orig/kexec/arch/ppc64/crashdump-ppc64.c
+>> +++ kexec-tools-hacked/kexec/arch/ppc64/crashdump-ppc64.c
+>> @@ -129,7 +129,7 @@ static int get_crash_memory_ranges(struc
+>>  		goto err;
+>>  	}
+>>  	while ((dentry = readdir(dir)) != NULL) {
+>> -		if (strncmp(dentry->d_name, "memory@", 7))
+>> +		if (strncmp(dentry->d_name, "memory", 6))
+>>  			continue;
+>>  		strcpy(fname, device_tree);
+>>  		strcat(fname, dentry->d_name);
+>> --- kexec-tools-hacked.orig/kexec/arch/ppc64/kexec-ppc64.c
+>> +++ kexec-tools-hacked/kexec/arch/ppc64/kexec-ppc64.c
+>> @@ -98,7 +98,7 @@ err1:
+>>  }
+>>
+>>  /*
+>> - * Count the memory@ nodes under /proc/device-tree and populate the
+>> + * Count the memory nodes under /proc/device-tree and populate the
+>>   * max_memory_ranges variable. This variable replaces 
+>> MAX_MEMORY_RANGES
+>>   * macro used earlier.
+>>   */
+>> @@ -114,7 +114,7 @@ static int count_memory_ranges(void)
+>>  	}
+>>
+>>  	while ((dentry = readdir(dir)) != NULL) {
+>> -		if (strncmp(dentry->d_name, "memory@", 7) &&
+>> +		if (strncmp(dentry->d_name, "memory", 6) &&
+>>  		    strncmp(dentry->d_name, "pci@", 4))
+>>  			continue;
+>>  		max_memory_ranges++;
+>> @@ -170,7 +170,7 @@ static int get_base_ranges(void)
+>>  		return -1;
+>>  	}
+>>  	while ((dentry = readdir(dir)) != NULL) {
+>> -		if (strncmp(dentry->d_name, "memory@", 7))
+>> +		if (strncmp(dentry->d_name, "memory", 6))
+>>  			continue;
+>>  		strcpy(fname, device_tree);
+>>  		strcat(fname, dentry->d_name);
+>> @@ -272,7 +272,7 @@ static int get_devtree_details(unsigned
+>>
+>>  	while ((dentry = readdir(dir)) != NULL) {
+>>  		if (strncmp(dentry->d_name, "chosen", 6) &&
+>> -			strncmp(dentry->d_name, "memory@0", 8) &&
+>> +			strncmp(dentry->d_name, "memory", 6) &&
+>>  			strncmp(dentry->d_name, "pci@", 4) &&
+>>  			strncmp(dentry->d_name, "rtas", 4))
+>>  			continue;
+>> @@ -452,7 +452,7 @@ static int get_devtree_details(unsigned
+>>  				add_usable_mem_rgns(rtas_base, rtas_size);
+>>  		} /* rtas */
+>>
+>> -		if (strncmp(dentry->d_name, "memory@0", 8) == 0) {
+>> +		if (strncmp(dentry->d_name, "memory", 6) == 0) {
+>>  			strcat(fname, "/reg");
+>>  			if ((file = fopen(fname, "r")) == NULL) {
+>>  				perror(fname);
+>>
+>> -- 
+>>
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+> -- 
+> Horms
+>   H: http://www.vergenet.net/~horms/
+>   W: http://www.valinux.co.jp/en/
+>
 
 
 _______________________________________________
