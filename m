@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlIrB-0001z2-S5
-	for kexec@lists.infradead.org; Tue, 08 May 2007 02:07:31 -0400
-Date: Tue, 8 May 2007 15:07:19 +0900
+	id 1HlIsh-00020U-IY
+	for kexec@lists.infradead.org; Tue, 08 May 2007 02:09:05 -0400
+Date: Tue, 8 May 2007 15:08:58 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 2/5] kexec improve build for ppc64
-Message-ID: <20070508060717.GB8170@verge.net.au>
+Subject: Re: [patch 1/5] kexec debug output improvments
+Message-ID: <20070508060857.GC8170@verge.net.au>
 References: <20070507235727.631477448@am.sony.com>>
-	<463FBE2C.6070804@am.sony.com>
+	<463FBE27.4060402@am.sony.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <463FBE2C.6070804@am.sony.com>
+In-Reply-To: <463FBE27.4060402@am.sony.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,22 +27,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Geoff Levand <geoffrey.levand@am.sony.com>
 Cc: kexec@lists.infradead.org
 
-On Mon, May 07, 2007 at 05:02:52PM -0700, Geoff Levand wrote:
-> Powerpc 64 bit platforms support both 64 bit and 32 bit runtimes.  Allow
-> ARCH= to be specified on the command line to separate the processor arch
-> from the compiler machine.  This also helps cross-builds with non-standard
-> compiler names.
+On Mon, May 07, 2007 at 05:02:47PM -0700, Geoff Levand wrote:
+> kexec debug output improvments.
+>  - Add better type checking for the debug output macro dfprintf().
+>  - Add a convenence macro dprintf().
+> 
+> Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+> ---
+>  kexec/kexec.h |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> --- kexec-tools-hacked.orig/kexec/kexec.h
+> +++ kexec-tools-hacked/kexec/kexec.h
+> @@ -217,10 +217,12 @@ int parse_iomem_single(char *str, uint64
+>  
+>  #define MAX_LINE	160
+>  
+> +#define dprintf(args...) dfprintf(stdout, args)
+>  #ifdef DEBUG
+> -#define dfprintf(args...)	do {fprintf(args);} while(0)
+> +#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
+>  #else
+> -#define dfprintf(args...)	do { } while(0)
+> +static inline int __attribute__ ((format (printf, 1, 2)))
+> +	dfprintf(FILE *f, const char *fmt, ...) {return 0;}
+>  #endif
 
-Hi Geoff,
+I think that this should be
 
-This does fundamentally change the affect that ARCH has on the
-build - that is, it now has an affect. And this worries me in
-the context of cross-compiling. However, after reasonably extensive
-testing of all the supported architectures, I have convinced myself
-that it at least for cross-compiling its ok :-)
+static inline int __attribute__ ((format (printf, 2, 3)))
 
-I have gone ahead and applied this change. But if people
-could test building various architectures, I would appreciate it.
+am I crazy?
 
 -- 
 Horms
