@@ -1,17 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlIvy-0001dL-EG
-	for kexec@lists.infradead.org; Tue, 08 May 2007 07:12:28 +0100
-Date: Tue, 8 May 2007 15:12:05 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: use dprintf
-Message-ID: <20070508061204.GD8170@verge.net.au>
+Received: from e32.co.us.ibm.com ([32.97.110.150])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1HlJ4W-0001h3-Hz
+	for kexec@lists.infradead.org; Tue, 08 May 2007 07:21:17 +0100
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e32.co.us.ibm.com (8.12.11.20060308/8.13.8) with ESMTP id
+	l486HXWQ020638
+	for <kexec@lists.infradead.org>; Tue, 8 May 2007 02:17:33 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l486KrqI166162
+	for <kexec@lists.infradead.org>; Tue, 8 May 2007 00:20:53 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l486Krwu006453
+	for <kexec@lists.infradead.org>; Tue, 8 May 2007 00:20:53 -0600
+Date: Tue, 8 May 2007 11:50:19 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [patch 1/5] kexec debug output improvments
+Message-ID: <20070508062019.GC5400@in.ibm.com>
 References: <20070507235727.631477448@am.sony.com>>
 	<463FBE27.4060402@am.sony.com>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <463FBE27.4060402@am.sony.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,173 +41,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Geoff Levand <geoffrey.levand@am.sony.com>
 Cc: kexec@lists.infradead.org
 
-Use the new fprintf macro where possible
+On Mon, May 07, 2007 at 05:02:47PM -0700, Geoff Levand wrote:
+> kexec debug output improvments.
+>  - Add better type checking for the debug output macro dfprintf().
+>  - Add a convenence macro dprintf().
+> 
+> Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+> ---
+>  kexec/kexec.h |    6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> --- kexec-tools-hacked.orig/kexec/kexec.h
+> +++ kexec-tools-hacked/kexec/kexec.h
+> @@ -217,10 +217,12 @@ int parse_iomem_single(char *str, uint64
+> 
+>  #define MAX_LINE	160
+> 
+> +#define dprintf(args...) dfprintf(stdout, args)
+>  #ifdef DEBUG
+> -#define dfprintf(args...)	do {fprintf(args);} while(0)
+> +#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
 
-Cc: Geoff Levand <geoffrey.levand@am.sony.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+Should't dprintf() also be inside #ifdef DEBUG?
 
---- 
- kexec/arch/i386/crashdump-x86.c   |    5 ++---
- kexec/arch/i386/kexec-bzImage.c   |    9 ++++-----
- kexec/arch/i386/x86-linux-setup.c |    6 +++---
- kexec/crashdump-elf.c             |   30 ++++++++++++++----------------
- 4 files changed, 23 insertions(+), 27 deletions(-)
-
-Index: kexec-tools-testing-geoff-levand/kexec/arch/i386/crashdump-x86.c
-===================================================================
---- kexec-tools-testing-geoff-levand.orig/kexec/arch/i386/crashdump-x86.c	2007-05-08 12:08:53.000000000 +0900
-+++ kexec-tools-testing-geoff-levand/kexec/arch/i386/crashdump-x86.c	2007-05-08 12:10:58.000000000 +0900
-@@ -515,8 +515,7 @@ int load_crashdump_segments(struct kexec
- 	memset(tmp, 0, sz);
- 	info->backup_start = add_buffer(info, tmp, sz, sz, align,
- 				0, max_addr, -1);
--	dfprintf(stdout, "Created backup segment at 0x%lx\n",
--				info->backup_start);
-+	dprintf("Created backup segment at 0x%lx\n", info->backup_start);
- 	if (delete_memmap(memmap_p, info->backup_start, sz) < 0)
- 		return -1;
- 
-@@ -545,7 +544,7 @@ int load_crashdump_segments(struct kexec
- 	 */
- 	elfcorehdr = add_buffer(info, tmp, sz, 16*1024, align, min_base,
- 							max_addr, -1);
--	dfprintf(stdout, "Created elf header segment at 0x%lx\n", elfcorehdr);
-+	dprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
- 	if (delete_memmap(memmap_p, elfcorehdr, sz) < 0)
- 		return -1;
- 	cmdline_add_memmap(mod_cmdline, memmap_p);
-Index: kexec-tools-testing-geoff-levand/kexec/arch/i386/kexec-bzImage.c
-===================================================================
---- kexec-tools-testing-geoff-levand.orig/kexec/arch/i386/kexec-bzImage.c	2007-05-08 12:08:53.000000000 +0900
-+++ kexec-tools-testing-geoff-levand/kexec/arch/i386/kexec-bzImage.c	2007-05-08 12:10:58.000000000 +0900
-@@ -136,7 +136,7 @@ int do_bzImage_load(struct kexec_info *i
- 
- 	if (setup_header.protocol_version >= 0x0205) {
- 		relocatable_kernel = setup_header.relocatable_kernel;
--		dfprintf(stdout, "bzImage is relocatable\n");
-+		dprintf("bzImage is relocatable\n");
- 	}
- 
- 	/* Can't use bzImage for crash dump purposes with real mode entry */
-@@ -192,8 +192,7 @@ int do_bzImage_load(struct kexec_info *i
- 	else
- 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
- 					0x3000, 640*1024, -1, 0);
--	dfprintf(stdout, "Loaded purgatory at addr 0x%lx\n",
--				info->rhdr.rel_addr);
-+	dprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
- 	/* The argument/parameter segment */
- 	setup_size = kern16_size + command_line_len;
- 	real_mode = xmalloc(setup_size);
-@@ -215,7 +214,7 @@ int do_bzImage_load(struct kexec_info *i
- 		add_segment(info, real_mode, setup_size, SETUP_BASE, setup_size);
- 		setup_base = SETUP_BASE;
- 	}
--	dfprintf(stdout, "Loaded real-mode code and command line at 0x%lx\n",
-+	dprintf("Loaded real-mode code and command line at 0x%lx\n",
- 			setup_base);
- 
- 	/* Verify purgatory loads higher than the parameters */
-@@ -247,7 +246,7 @@ int do_bzImage_load(struct kexec_info *i
- 				kernel32_load_addr, size);
- 	}
- 		
--	dfprintf(stdout, "Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
-+	dprintf("Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
- 
- 	/* Tell the kernel what is going on */
- 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
-Index: kexec-tools-testing-geoff-levand/kexec/arch/i386/x86-linux-setup.c
-===================================================================
---- kexec-tools-testing-geoff-levand.orig/kexec/arch/i386/x86-linux-setup.c	2007-05-08 12:08:53.000000000 +0900
-+++ kexec-tools-testing-geoff-levand/kexec/arch/i386/x86-linux-setup.c	2007-05-08 12:10:58.000000000 +0900
-@@ -61,7 +61,7 @@ void setup_linux_bootloader_parameters(
- 	initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
- 	if (real_mode->protocol_version >= 0x0203) {
- 		initrd_addr_max = real_mode->initrd_addr_max;
--		dfprintf(stdout, "initrd_addr_max is 0x%lx\n", initrd_addr_max);
-+		dprintf("initrd_addr_max is 0x%lx\n", initrd_addr_max);
- 	}
- 
- 	/* Load the initrd if we have one */
-@@ -69,8 +69,8 @@ void setup_linux_bootloader_parameters(
- 		initrd_base = add_buffer(info,
- 			initrd_buf, initrd_size, initrd_size,
- 			4096, INITRD_BASE, initrd_addr_max, -1);
--		dfprintf(stdout, "Loaded initrd at 0x%lx size 0x%lx\n",
--					initrd_base, initrd_size);
-+		dprintf("Loaded initrd at 0x%lx size 0x%lx\n", initrd_base,
-+			initrd_size);
- 	} else {
- 		initrd_base = 0;
- 		initrd_size = 0;
-Index: kexec-tools-testing-geoff-levand/kexec/crashdump-elf.c
-===================================================================
---- kexec-tools-testing-geoff-levand.orig/kexec/crashdump-elf.c	2007-05-08 12:08:53.000000000 +0900
-+++ kexec-tools-testing-geoff-levand/kexec/crashdump-elf.c	2007-05-08 12:12:03.000000000 +0900
-@@ -4,22 +4,20 @@
- #endif
- 
- #if (ELF_WIDTH == 64)
--#define dfprintf_phdr(fh, prefix, phdr)					\
-+#define dprintf_phdr(prefix, phdr)					\
- do {									\
--	dfprintf((fh),							\
--		 "%s: p_type = %u, p_offset = 0x%lx p_paddr = 0x%lx "	\
--		 "p_vaddr = 0x%lx p_filesz = 0x%lx p_memsz = 0x%lx\n",	\
--		 (prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, \
--		 (phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);	\
-+	dprintf("%s: p_type = %u, p_offset = 0x%lx p_paddr = 0x%lx "	\
-+		"p_vaddr = 0x%lx p_filesz = 0x%lx p_memsz = 0x%lx\n",	\
-+		(prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, \
-+		(phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);	\
- } while(0)
- #else
--#define dfprintf_phdr(fh, prefix, phdr)					\
-+#define dprintf_phdr(prefix, phdr)					\
- do {									\
--	dfprintf((fh),							\
--		 "%s: p_type = %u, p_offset = 0x%x " "p_paddr = 0x%x "	\
--		 "p_vaddr = 0x%x p_filesz = 0x%x p_memsz = 0x%x\n",	\
--		 (prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, \
--		 (phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);	\
-+	dprintf("%s: p_type = %u, p_offset = 0x%x " "p_paddr = 0x%x "	\
-+		"p_vaddr = 0x%x p_filesz = 0x%x p_memsz = 0x%x\n",	\
-+		(prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, \
-+		(phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);	\
- } while(0)
- #endif
- 
-@@ -145,7 +143,7 @@ int FUNC(struct kexec_info *info,
- 
- 		/* Increment number of program headers. */
- 		(elf->e_phnum)++;
--		dfprintf_phdr(stdout, "Elf header", phdr);
-+		dprintf_phdr("Elf header", phdr);
- 	}
- 
- 	/* Setup an PT_LOAD type program header for the region where
-@@ -162,7 +160,7 @@ int FUNC(struct kexec_info *info,
- 		phdr->p_filesz	= phdr->p_memsz	= info->kern_size;
- 		phdr->p_align	= 0;
- 		(elf->e_phnum)++;
--		dfprintf_phdr(stdout, "Kernel text Elf header", phdr);
-+		dprintf_phdr("Kernel text Elf header", phdr);
- 	}
- 
- 	/* Setup PT_LOAD type program header for every system RAM chunk.
-@@ -203,9 +201,9 @@ int FUNC(struct kexec_info *info,
- 
- 		/* Increment number of program headers. */
- 		(elf->e_phnum)++;
--		dfprintf_phdr(stdout, "Elf header", phdr);
-+		dprintf_phdr("Elf header", phdr);
- 	}
- 	return 0;
- }
- 
--#undef dfprintf_phdr
-+#undef dprintf_phdr
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
