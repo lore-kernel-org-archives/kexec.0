@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HlxU3-0001S4-2N
-	for kexec@lists.infradead.org; Wed, 09 May 2007 21:30:22 -0400
-Date: Thu, 10 May 2007 10:30:10 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Handle maloc() failure in xen_get_nr_phys_cpus()
-Message-ID: <20070510013008.GA27220@verge.net.au>
-References: <20070509095609.44BAA4F7D7@tabatha.lab.ultramonkey.org>
-	<1178707717.4742.7.camel@localhost.localdomain>
+Received: from outbound-sin.frontbridge.com ([207.46.51.80]
+	helo=outbound1-sin-R.bigfish.com)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hlttq-0005rl-1y
+	for kexec@lists.infradead.org; Wed, 09 May 2007 22:40:44 +0100
+Message-ID: <46423FC4.605@am.sony.com>
+Date: Wed, 09 May 2007 14:40:20 -0700
+From: Geoff Levand <geoffrey.levand@am.sony.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1178707717.4742.7.camel@localhost.localdomain>
+Subject: [patch 1/2] kexec remove last remaining dfprintf
+References: <20070507235727.631477448@am.sony.com>>
+	<463FBE27.4060402@am.sony.com> <20070508061204.GD8170@verge.net.au>
+In-Reply-To: <20070508061204.GD8170@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +24,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ian Campbell <Ian.Campbell@xensource.com>
+To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-On Wed, May 09, 2007 at 11:48:37AM +0100, Ian Campbell wrote:
-> On Wed, 2007-05-09 at 18:56 +0900, Simon Horman wrote:
-> > Currently xen_get_nr_phys_cpus() doesn't write to xen_phys_notes if
-> > allocation fails, but it doesn't return an error either, leaving
-> > xen_phys_notes wide open to be accessed by other functions later.
-> > 
-> > Signed-off-by: Simon Horman <horms@verge.net.au>
-> 
-> Looks good to me.
->
-> Acked-by: Ian Campbell <ian.campbell@xensource.com>
+Remove the last remaining dfprintf call and remove the dfprintf
+definition.
 
-Thanks, I've applied it now.
+Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+---
+ kexec/arch/ppc64/kexec-ppc64.c |    2 +-
+ kexec/kexec.h                  |    7 +++----
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
+--- ps3-kexec-tools.orig/kexec/arch/ppc64/kexec-ppc64.c
++++ ps3-kexec-tools/kexec/arch/ppc64/kexec-ppc64.c
+@@ -207,7 +207,7 @@ static int get_base_ranges(void)
+ 				((unsigned long long *)buf)[1];
+ 			base_memory_range[local_memory_ranges].type = RANGE_RAM;
+ 			local_memory_ranges++;
+-			dfprintf(stderr, "%016llx-%016llx : %x\n",
++			dprintf("%016llx-%016llx : %x\n",
+ 				base_memory_range[local_memory_ranges-1].start,
+ 				base_memory_range[local_memory_ranges-1].end,
+ 				base_memory_range[local_memory_ranges-1].type);
+--- ps3-kexec-tools.orig/kexec/kexec.h
++++ ps3-kexec-tools/kexec/kexec.h
+@@ -217,12 +217,11 @@ int parse_iomem_single(char *str, uint64
+ 
+ #define MAX_LINE	160
+ 
+-#define dprintf(args...) dfprintf(stdout, args)
+ #ifdef DEBUG
+-#define dfprintf(_f, _args...) do {fprintf(_f, _args);} while(0)
++#define dprintf(_args...) do {printf(_args);} while(0)
+ #else
+-static inline int __attribute__ ((format (printf, 2, 3)))
+-	dfprintf(FILE *f, const char *fmt, ...) {return 0;}
++static inline int __attribute__ ((format (printf, 1, 2)))
++	dprintf(const char *fmt, ...) {return 0;}
+ #endif
+ 
+ #endif /* KEXEC_H */
+
 
 
 _______________________________________________
