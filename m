@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mail.kazeon.com ([209.172.74.40] helo=bigfoot.kazeon.com)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hlyoy-00022y-IK
-	for kexec@lists.infradead.org; Wed, 09 May 2007 22:56:02 -0400
-Date: Thu, 10 May 2007 11:55:56 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 2/2] kexec rename dprintf to dbgprintf
-Message-ID: <20070510025553.GD30920@verge.net.au>
-References: <20070507235727.631477448@am.sony.com>>
-	<463FBE27.4060402@am.sony.com> <20070508061204.GD8170@verge.net.au>
-	<46423FCB.4080200@am.sony.com>
-	<20070510021414.GB30920@verge.net.au>
+	id 1HmGqM-0006Ko-5l
+	for kexec@lists.infradead.org; Thu, 10 May 2007 18:10:39 -0400
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070510021414.GB30920@verge.net.au>
+Subject: kexec and kdb
+Date: Thu, 10 May 2007 15:10:16 -0700
+Message-ID: <4E022DDAB8F45741914ACD6EDFE2309B041EAD74@BIGFOOT.kazeon.local>
+In-Reply-To: <20070510025553.GD30920@verge.net.au>
+From: "Preetesh Parekh" <preetesh@kazeon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,24 +22,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoffrey.levand@am.sony.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Thu, May 10, 2007 at 11:14:16AM +0900, Simon Horman wrote:
-> On Wed, May 09, 2007 at 02:40:27PM -0700, Geoff Levand wrote:
-> > The recently introduce kexec debug routine dprintf clashes with an existing
-> > libc symbol.  Rename dprintf to dbgprintf.
-> 
-> Ok, ignore my previous email :-)
-> 
-> This seems good to me. I'll test it out in my tree.
+Hi,
 
-Applied.
+I have a question about kexec and kdb. Please advice or point me to the
+right mailing list that can answer this.
 
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
+I have a linux 2.6.20 kernel (patched with kdb patches) on i686 system.
+I have setup a crash kernel using "kexec -p" command which is working
+very well. I tested this by triggering a crash by using "echo c >
+/proc/sysrq-trigger" command. 
+
+The requirement is to allow kdb to invoke first after the kernel crash
+which is not happening now (The system directly gets booted with the
+dump kernel). 
+
+Please let me know how to do this. Do we have any patch or steps for it
+?
+
+You will get more details about my system below:
+
+# uname -a
+Linux mybox 2.6.20smp #1 SMP Mon May 7 11:23:42 PDT 2007 i686 i686 i386
+GNU/Linux
+
+# kexec -p /boot/vmlinux-dump --initrd=/boot/initrd-dump.img
+--args-linux --append="root=/dev/hda6 init 1 irqpoll maxcpus=1"
+
+# more /proc/sys/kernel/kdb
+1
+
+# System Kernel config file:
+CONFIG_KEXEC=y
+CONFIG_KALLSYMS=y
+CONFIG_KALLSYMS_ALL=y
+CONFIG_KALLSYMS_EXTRA_PASS=y
+CONFIG_KDB=y
+CONFIG_KDB_MODULES=y
+# CONFIG_KDB_OFF is not set
+CONFIG_KDB_CONTINUE_CATASTROPHIC=0
+CONFIG_KDB_USB=y
+
+Thanks
+Preetesh
 
 
 _______________________________________________
