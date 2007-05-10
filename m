@@ -1,39 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-sin.frontbridge.com ([207.46.51.80]
-	helo=outbound2-sin-R.bigfish.com)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hlul3-0006Tn-1i
-	for kexec@lists.infradead.org; Wed, 09 May 2007 23:35:43 +0100
-Received: from outbound2-sin.bigfish.com (localhost.localdomain [127.0.0.1])
-	by outbound2-sin-R.bigfish.com (Postfix) with ESMTP id C26DB14F5FBE
-	for <kexec@lists.infradead.org>; Wed,  9 May 2007 22:35:30 +0000 (UTC)
-Received: from mail62-sin-R.bigfish.com (unknown [10.3.252.3])
-	by outbound2-sin.bigfish.com (Postfix) with ESMTP id AA17F528067
-	for <kexec@lists.infradead.org>; Wed,  9 May 2007 22:35:30 +0000 (UTC)
-Received: from mail62-sin (localhost.localdomain [127.0.0.1])
-	by mail62-sin-R.bigfish.com (Postfix) with ESMTP id 1A51A192821B
-	for <kexec@lists.infradead.org>; Wed,  9 May 2007 22:35:26 +0000 (UTC)
-Received: from mail8.fw-bc.sony.com (mail8.fw-bc.sony.com [160.33.98.75])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail62-sin.bigfish.com (Postfix) with ESMTP id 68B391610058
-	for <kexec@lists.infradead.org>; Wed,  9 May 2007 22:35:24 +0000 (UTC)
-Received: from mail1.sgo.in.sel.sony.com (mail1.sgo.in.sel.sony.com
-	[43.130.1.111])
-	by mail8.fw-bc.sony.com (8.12.11/8.12.11) with ESMTP id l49MZLfT020282
-	for <kexec@lists.infradead.org>; Wed, 9 May 2007 22:35:21 GMT
-Received: from USSDIXIM01.am.sony.com (ussdixim01.am.sony.com [43.130.140.33])
-	by mail1.sgo.in.sel.sony.com (8.12.11/8.12.11) with ESMTP id
-	l49MZKOM001589
-	for <kexec@lists.infradead.org>; Wed, 9 May 2007 22:35:20 GMT
-Message-ID: <46424CA7.8060204@am.sony.com>
-Date: Wed, 09 May 2007 15:35:19 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hly9m-0001m7-MC
+	for kexec@lists.infradead.org; Wed, 09 May 2007 22:13:29 -0400
+Date: Thu, 10 May 2007 11:13:19 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch 1/2] kexec remove last remaining dfprintf
+Message-ID: <20070510021318.GA30920@verge.net.au>
+References: <20070507235727.631477448@am.sony.com>>
+	<463FBE27.4060402@am.sony.com>
+	<20070508061204.GD8170@verge.net.au> <46423FC4.605@am.sony.com>
 MIME-Version: 1.0
-Subject: [patch v3] kexec fix ppc64 device-tree mem node
-References: <20070507235727.631477448@am.sony.com>>	<463FBE38.5090901@am.sony.com>
-	<46413472.8000304@am.sony.com>
-In-Reply-To: <46413472.8000304@am.sony.com>
+Content-Disposition: inline
+In-Reply-To: <46423FC4.605@am.sony.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -49,83 +28,58 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Geoff Levand <geoffrey.levand@am.sony.com>
 Cc: kexec@lists.infradead.org
 
-Subject: kexec fix ppc64 device-tree mem node
+On Wed, May 09, 2007 at 02:40:20PM -0700, Geoff Levand wrote:
+> Remove the last remaining dfprintf call and remove the dfprintf
+> definition.
 
-Change the ppc64 device-tree memory node name spec to match the allowable names
-specified in the booting-without-of document.
+So we are standardising on stdout for debug messages?
+Thats fine by me. However, curiously with your patch I get
+the following error. Perhaps we should choose a different name?
 
-Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
----
-Version 2, Changed to look for 'memory', or 'memory@' nodes.
-Version 3, Fixed missing 'if' in get_base_ranges().
+i686-unknown-linux-gnu-gcc -Wall -O2 -fomit-frame-pointer -pipe -Wall -g -fno-strict-aliasing -Wstrict-prototypes -I/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/include -I./include -I./util_lib/include -DVERSION='"20070330-git"' -DRELEASE_DATE='"30th March 2007"' -DPACKAGE='"kexec-tools-testing"' -DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -DSTDC_HEADERS=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DHAVE_STRINGS_H=1 -DHAVE_INTTYPES_H=1 -DHAVE_STDINT_H=1 -DHAVE_UNISTD_H=1 -DHAVE_ZLIB_H=1 -Wall -g -fno-strict-aliasing -Wstrict-prototypes -I/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/include -Ikexec/arch/i386/include -o /home/horms/lang/c/kexec-tools/kexec-tools-testing-geoff-levand/objdir-i686-unknown-linux-gnu/kexec/kexec.o -c kexec/kexec.c
+In file included from kexec/kexec.c:36:
+kexec/kexec.h:224: error: conflicting types for 'dprintf'
+/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/bin/../lib/gcc/i686-unknown-linux-gnu/3.4.5/../../../../i686-unknown-linux-gnu/sys-include/stdio.h:384:
+error: previous declaration of 'dprintf' was here
+kexec/kexec.h:224: error: conflicting types for 'dprintf'
+/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/bin/../lib/gcc/i686-unknown-linux-gnu/3.4.5/../../../../i686-unknown-linux-gnu/sys-include/stdio.h:384:
+error: previous declaration of 'dprintf' was here
+make: ***
+[/home/horms/lang/c/kexec-tools/kexec-tools-testing-geoff-levand/objdir-i686-unknown-linux-gnu/kexec/kexec.o] Error 1
 
- kexec/arch/ppc64/crashdump-ppc64.c |    3 ++-
- kexec/arch/ppc64/kexec-ppc64.c     |   14 +++++++++-----
- 2 files changed, 11 insertions(+), 6 deletions(-)
 
---- ps3-kexec-tools.orig/kexec/arch/ppc64/crashdump-ppc64.c
-+++ ps3-kexec-tools/kexec/arch/ppc64/crashdump-ppc64.c
-@@ -129,7 +129,8 @@ static int get_crash_memory_ranges(struc
- 		goto err;
- 	}
- 	while ((dentry = readdir(dir)) != NULL) {
--		if (strncmp(dentry->d_name, "memory@", 7))
-+		if (strncmp(dentry->d_name, "memory@", 7) &&
-+			strcmp(dentry->d_name, "memory"))
- 			continue;
- 		strcpy(fname, device_tree);
- 		strcat(fname, dentry->d_name);
---- ps3-kexec-tools.orig/kexec/arch/ppc64/kexec-ppc64.c
-+++ ps3-kexec-tools/kexec/arch/ppc64/kexec-ppc64.c
-@@ -98,7 +98,7 @@ err1:
- }
- 
- /*
-- * Count the memory@ nodes under /proc/device-tree and populate the
-+ * Count the memory nodes under /proc/device-tree and populate the
-  * max_memory_ranges variable. This variable replaces MAX_MEMORY_RANGES
-  * macro used earlier.
-  */
-@@ -115,7 +115,8 @@ static int count_memory_ranges(void)
- 
- 	while ((dentry = readdir(dir)) != NULL) {
- 		if (strncmp(dentry->d_name, "memory@", 7) &&
--		    strncmp(dentry->d_name, "pci@", 4))
-+			strcmp(dentry->d_name, "memory") &&
-+			strncmp(dentry->d_name, "pci@", 4))
- 			continue;
- 		max_memory_ranges++;
- 	}
-@@ -170,7 +171,8 @@ static int get_base_ranges(void)
- 		return -1;
- 	}
- 	while ((dentry = readdir(dir)) != NULL) {
--		if (strncmp(dentry->d_name, "memory@", 7))
-+		if (strncmp(dentry->d_name, "memory@", 7) &&
-+			strcmp(dentry->d_name, "memory"))
- 			continue;
- 		strcpy(fname, device_tree);
- 		strcat(fname, dentry->d_name);
-@@ -272,7 +274,8 @@ static int get_devtree_details(unsigned 
- 
- 	while ((dentry = readdir(dir)) != NULL) {
- 		if (strncmp(dentry->d_name, "chosen", 6) &&
--			strncmp(dentry->d_name, "memory@0", 8) &&
-+			strncmp(dentry->d_name, "memory@", 7) &&
-+			strcmp(dentry->d_name, "memory") &&
- 			strncmp(dentry->d_name, "pci@", 4) &&
- 			strncmp(dentry->d_name, "rtas", 4))
- 			continue;
-@@ -452,7 +455,8 @@ static int get_devtree_details(unsigned 
- 				add_usable_mem_rgns(rtas_base, rtas_size);
- 		} /* rtas */
- 
--		if (strncmp(dentry->d_name, "memory@0", 8) == 0) {
-+		if (!strncmp(dentry->d_name, "memory@", 7) ||
-+			!strcmp(dentry->d_name, "memory")) {
- 			strcat(fname, "/reg");
- 			if ((file = fopen(fname, "r")) == NULL) {
- 				perror(fname);
+The relevant section of stdio.h is:
+
+#ifdef __USE_GNU
+/* Write formatted output to a string dynamically allocated with `malloc'.
+   Store the address of the string in *PTR.  */
+extern int vasprintf (char **__restrict __ptr, __const char *__restrict __f,
+		      _G_va_list __arg)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int __asprintf (char **__restrict __ptr,
+		       __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+extern int asprintf (char **__restrict __ptr,
+		     __const char *__restrict __fmt, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
+
+/* Write formatted output to a file descriptor.
+
+   These functions are not part of POSIX and therefore no official
+   cancellation point.  But due to similarity with an POSIX interface
+   or due to the implementation they are cancellation points and
+   therefore not marked with __THROW.  */
+extern int vdprintf (int __fd, __const char *__restrict __fmt,
+		     _G_va_list __arg)
+     __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int dprintf (int __fd, __const char *__restrict __fmt, ...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
+#endif
+
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
 
 _______________________________________________
