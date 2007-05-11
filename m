@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gw.goop.org ([64.81.55.164] helo=mail.goop.org)
+Received: from terminus.zytor.com ([192.83.249.54])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hmanh-00023B-BT
-	for kexec@lists.infradead.org; Fri, 11 May 2007 15:29:14 -0400
-Message-ID: <4644C401.5010208@goop.org>
-Date: Fri, 11 May 2007 12:29:05 -0700
-From: Jeremy Fitzhardinge <jeremy@goop.org>
+	id 1Hmbcb-0002ME-0G
+	for kexec@lists.infradead.org; Fri, 11 May 2007 16:21:50 -0400
+Message-ID: <4644CFB0.10603@zytor.com>
+Date: Fri, 11 May 2007 13:18:56 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
 Subject: Re: [Fastboot] restoring x86 BIOS state before reboot
 References: <20070406154628.GG12005@jukie.net>
@@ -28,14 +28,14 @@ To: Pavel Machek <pavel@ucw.cz>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jan Engelhardt <jengelh@linux01.gwdg.de>
 
 Pavel Machek wrote:
+> 
 > I do not think OLPC is using linuxBIOS these days. What they have
 > certainly looks like Sun's ROM monitor.
+> 
 
-Yep, looks like they've got Mitch Bradley, (ex?) of Firmworks, doing
-their firmware.  That means its pretty much exactly OpenFirmware.  Lots
-of yummy, delicious Forth.
+That would be OpenFirmware, then.
 
-    J
+	-hpa
 
 _______________________________________________
 kexec mailing list
