@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HniQa-0000qb-SZ
-	for kexec@lists.infradead.org; Mon, 14 May 2007 17:50:02 -0400
-Date: Mon, 14 May 2007 23:49:56 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] [makedumpfile] Implement memory regions on IA64
-Message-ID: <20070514214956.GA31603@suse.de>
-References: <20070426193725.GA2586@suse.de>
-	<20070511155950oomichi@mail.jp.nec.com>
-	<20070514181521.GA1748@suse.de>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hnond-0004FF-If
+	for kexec@lists.infradead.org; Tue, 15 May 2007 00:38:18 -0400
+Date: Tue, 15 May 2007 13:38:04 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch v3] kexec fix ppc64 device-tree mem node
+Message-ID: <20070515043802.GA13708@verge.net.au>
+References: <20070507235727.631477448@am.sony.com>>
+	<463FBE38.5090901@am.sony.com> <46413472.8000304@am.sony.com>
+	<46424CA7.8060204@am.sony.com> <4648B3C4.6000506@am.sony.com>
 MIME-Version: 1.0
-In-Reply-To: <20070514181521.GA1748@suse.de>
+Content-Disposition: inline
+In-Reply-To: <4648B3C4.6000506@am.sony.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,88 +21,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0099184429=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Kexec Mailing List <kexec@lists.infradead.org>, Jay Lan <jlan@sgi.com>
+To: Geoff Levand <geoffrey.levand@am.sony.com>
+Cc: kexec@lists.infradead.org
 
+On Mon, May 14, 2007 at 12:08:52PM -0700, Geoff Levand wrote:
+> Hi Simon.
+> 
+> Geoff Levand wrote:
+> > Subject: kexec fix ppc64 device-tree mem node
+> > 
+> > Change the ppc64 device-tree memory node name spec to match the allowable names
+> > specified in the booting-without-of document.
+> > 
+> > Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+> > ---
+> > Version 2, Changed to look for 'memory', or 'memory@' nodes.
+> > Version 3, Fixed missing 'if' in get_base_ranges().
+> > 
+> >  kexec/arch/ppc64/crashdump-ppc64.c |    3 ++-
+> >  kexec/arch/ppc64/kexec-ppc64.c     |   14 +++++++++-----
+> >  2 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> There are currently no outstanding issues with this, so
+> I would like it to get merged in. It is needed to support
+> kexec on the PS3 game console.
 
---===============0099184429==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Content-Disposition: inline
+Sure, I have applied it now.
 
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-* Bernhard Walle <bwalle@suse.de> [2007-05-14 20:15]:
-> * Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-05-11 08:59]:
-> > 2007/04/26 21:37:25 +0200, Bernhard Walle <bwalle@suse.de> wrote:
-> > >This patch fixes an error in vaddr_to_offset_ia64() which happened on
-> > >a SGI machine here while retrieving the utsname from the kernel dump
-> > >image. It implements memory region support for IA64.
-> >=20
-> > For ia64 DISCONTIGMEM support, I added the translation (virtual address
-> > to physical address) by using layer 3 paging into your patch.
-> > I created 2 attached patches for ia64 DISCONTIGMEM support.
-> >=20
-> > I confirmed makedumpfile with these patches can run on linux-2.6.18 ker=
-nel
-> > (made of RHEL5 kernel by changing configs from SPARSEMEM to DISCONTIGME=
-M).
-> > Could you please test them on SLES10 ?
->=20
-> it doesn't work here. The config file is generated, but at runtime I
-> get a SEGV which is caused by a endless recusion of ia64_vtop() while
-> resolving the utsname.
-
-Because of CONFIG_PGTABLE_4=3Dy in SUSE kernels. Your implementation
-assumes a 3-level-pagetable.
-
-> > BTW, the patches don't run on stock linux-2.6.20 w/DISCONTIGMEM
-> > (it works with stock linux-2.6.20 w/SPARSEMEM)
-> > I am trying to resolve the problem and if you have any idea about
-> > kernel changes between 2.6.18-20, please let me know.
->=20
-> Sorry, no.
-
-And I guess because of the same reason (maybe the default changed?).
-
-I'm working on support for the 4 layer pagetable.
-
-
-
-Thanks,
-   Bernhard
-
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-
-iD8DBQFGSNmEiGU2lt2vZFQRAi+IAJ47KXSkUzzzxmBhr/DGPYeaP66hAgCeL59s
-9O70rcKgvSXjPAJfwg0L0Qo=
-=gYO6
------END PGP SIGNATURE-----
-
---LZvS9be/3tNcYl/X--
-
-
---===============0099184429==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0099184429==--
-
