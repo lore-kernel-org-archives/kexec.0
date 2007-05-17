@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kazeon.com ([209.172.74.40] helo=bigfoot.kazeon.com)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HoNZe-0005He-1H
-	for kexec@lists.infradead.org; Wed, 16 May 2007 13:46:44 -0400
-Content-class: urn:content-classes:message
+Received: from koto.vergenet.net ([210.128.90.7])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HoYz3-0006EO-Lx
+	for kexec@lists.infradead.org; Thu, 17 May 2007 06:57:06 +0100
+Date: Thu, 17 May 2007 14:56:38 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] Kexec for Xen on IA64 (v20070417)
+Message-ID: <20070517055636.GA3271@verge.net.au>
+References: <20070112012646.GA5373@verge.net.au>
+	<20070112042204.GA14383@verge.net.au>
+	<20070208081033.GH23574@verge.net.au>
+	<20070214100956.GA16375@verge.net.au>
 MIME-Version: 1.0
-Subject: RE: kexec and kdb
-Date: Wed, 16 May 2007 10:45:12 -0700
-Message-ID: <4E022DDAB8F45741914ACD6EDFE2309B0426E191@BIGFOOT.kazeon.local>
-In-Reply-To: <20070515075450.GD8544@in.ibm.com>
-From: "Preetesh Parekh" <preetesh@kazeon.com>
+Content-Disposition: inline
+In-Reply-To: <20070214100956.GA16375@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,33 +26,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: kexec@lists.infradead.org
+To: xen-ia64-devel@lists.xensource.com, Kexec Mailing List <kexec@lists.infradead.org>
+Cc: Akio Takebe <takebe_akio@jp.fujitsu.com>, Ian Campbell <Ian.Campbell@xensource.com>
 
-You are right. It's working now. Thanks.
+Hi,
 
-Preetesh
+I'm happy to announce the another alpha release of Kexec for Xen on IA64.
+The major change is the addition of /proc/iomem_hardware, which
+allows kexec-tools to see what the EFI really looks like, rather
+than some very limited virtualised view.
 
------Original Message-----
-From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
-Sent: Tuesday, May 15, 2007 12:55 AM
-To: Preetesh Parekh
-Cc: kexec@lists.infradead.org
-Subject: Re: kexec and kdb
+Most of the new changes are broken out into separate patches to make it
+slightly easier to see what is changing. I have also been able to
+remove a number of patches, particularly from the linux directory,
+as they have been merged.
 
-On Mon, May 14, 2007 at 04:20:29PM -0700, Preetesh Parekh wrote:
-> Hi Vivek,
-> 
-> I did modify "arch/i386/kernel/traps.c" file at 2 places as per your
-> suggestion but still problem is not solved. Please let us know.
-> 
+http://www.vergenet.net/linux/kexec/ia64-xen.shtml
+http://www.vergenet.net/linux/kexec/ia64-xen/20070417/xen-ia64-kexec-20070417.tar.bz2
+http://www.vergenet.net/linux/kexec/ia64-xen/20070417/broken_out/README
+http://www.vergenet.net/linux/kexec/ia64-xen/20070417/broken_out/BUILD
 
-This should have worked. What method are you using to simulate a crash.
-If you are using "echo c > /proc/sysrq-trigger" then you also need
-to modify drivers/char/sysrq.c file.
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
