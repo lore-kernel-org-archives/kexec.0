@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hozzc-0001MS-5z
-	for kexec@lists.infradead.org; Fri, 18 May 2007 06:47:30 -0400
-Date: Fri, 18 May 2007 12:47:15 +0200
+	id 1Hp02A-0001OM-0x
+	for kexec@lists.infradead.org; Fri, 18 May 2007 06:50:09 -0400
+Date: Fri, 18 May 2007 12:50:04 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] [makedumpfile] Fix ELF output with overlapping sections
-Message-ID: <20070518104715.GD16227@suse.de>
+Subject: [PATCH] [makedumpfile] Fix problem with `half' pages
+Message-ID: <20070518105003.GE16227@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -24,115 +24,70 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-I have a core dump with following program headers on IA64:
+We have a system here with following memory map:
 
-  LOAD           0x0000000000001f4c 0xa000000100000000 0x0000000004000000
-                 0x000000000055c4a0 0x000000000055c4a0  RWE    0
-...
-  LOAD           0x00000000044fc3ec 0xe000000004000000 0x0000000004000000
-                 0x0000000000c92000 0x0000000000c92000  RWE    0
+/proc/iomem:
+4ffe14000-4ffe7ffff : reserved
+4ffe80000-4fffb5fff : System RAM
+4fffb6000-4ffffffff : reserved
 
-The interesting thing is the overlap in the physical address space.
-write_elf_pages() assumes that there's no overlap because it looks only
-for the file offset according to the physical start address and silently
-assumes that the length matches.
+max_pfn = 1310720
 
-This patch tries to address that problem. At least it works here. Before
-I could not read the dump file with `crash' because MAGIC_START was missing
-(it's in the 0x4000000 section).
+In that case, the last page of the "System RAM" is not full in 16K page size
+configuration. That leads to an error in makedumpfile when it checks if that's
+a zero page. It's because it tries to read the whole page and the read()
+fails because it's after the end of the dump file.
+
+That patch fixes this problem.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- makedumpfile.c |   50 +++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 45 insertions(+), 5 deletions(-)
+ makedumpfile.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -64,6 +64,43 @@ paddr_to_offset(struct DumpInfo *info, u
- 	return offset;
- }
+@@ -3155,6 +3155,7 @@ create_dump_bitmap(struct DumpInfo *info
+ 		for (; pfn < mmd->pfn_end;
+ 		    pfn++, mem_map += SIZE(page),
+ 		    paddr += info->page_size) {
++			int page_mem_size = info->page_size;
  
-+/**
-+ * Sames as paddr_to_offset() but makes sure that the complete range is covered
-+ * by the segment
-+ */
-+off_t
-+paddr_to_offset_range(struct DumpInfo *info, unsigned long long paddr, unsigned long len)
-+{
-+	int i;
-+	off_t offset;
-+	struct pt_load_segment *pls;
-+
-+	for (i = offset = 0; i < info->num_load_memory; i++) {
-+		pls = &info->pt_load_segments[i];
-+		if ((paddr >= pls->phys_start)
-+		    && (paddr <= pls->phys_end)) {
-+
-+			/* check the length and also consider adjacent sections */
-+			unsigned long long end = pls->phys_end;
-+			int j = i+1;
-+
-+			while (j < info->num_load_memory &&
-+					(info->pt_load_segments[j-1].phys_end
-+					 == info->pt_load_segments[j].phys_start)) {
-+				end = info->pt_load_segments[j].phys_end;
-+				j++;
-+			}
-+
-+			if (paddr + len <= end) {
-+				offset = (off_t)(paddr - pls->phys_start) +
-+					pls->file_offset;
-+				break;
-+			}
-+		}
-+	}
-+	return offset;
-+}
-+
- unsigned long long
- vaddr_to_paddr(struct DumpInfo *info, unsigned long long vaddr)
- {
-@@ -3777,6 +3814,7 @@ write_elf_pages(struct DumpInfo *info)
- 			pfn_end++;
+ 			if ((pfn != 0) && (pfn%PFN_BUFBITMAP) == 0) {
+ 				/*
+@@ -3190,6 +3191,14 @@ create_dump_bitmap(struct DumpInfo *info
+ 				val = 0;
  
- 		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+ 			/*
++			 * check for pages that are not complete pages and
++			 * decrease the page size here
++			 */
++			if (val == 1 && !is_in_segs(info, paddr + info->page_size))
++				while (!is_in_segs(info, paddr + page_mem_size))
++					page_mem_size--;
 +
- 			if (!is_dumpable(&bitmap2, pfn)) {
- 				num_excluded++;
- 				if ((pfn == pfn_end - 1) && frac_tail)
-@@ -3934,13 +3972,19 @@ write_elf_pages(struct DumpInfo *info)
- 				goto out;
- 		}
- 
-+		if (info->flag_elf64) /* ELF64 */
-+			bufsz_remain = load64.p_filesz;
-+		else                  /* ELF32 */
-+			bufsz_remain = load32.p_filesz;
-+
- 		/*
- 		 * Write a PT_LOAD segment.
- 		 */
--		off_memory = paddr_to_offset(info, paddr);
-+		off_memory = paddr_to_offset_range(info, paddr, bufsz_remain);
- 		if (!off_memory) {
- 			ERRMSG("Can't convert physaddr(%llx) to a offset.\n",
- 			    paddr);
-+			printf("paddr = 0x%llx, bufsz_remain=%lld\n", paddr, bufsz_remain);
- 			goto out;
- 		}
- 		if (lseek(info->fd_memory, off_memory, SEEK_SET)
-@@ -3949,10 +3993,6 @@ write_elf_pages(struct DumpInfo *info)
- 			    info->name_memory, strerror(errno));
- 			goto out;
- 		}
--		if (info->flag_elf64) /* ELF64 */
--			bufsz_remain = load64.p_filesz;
--		else                  /* ELF32 */
--			bufsz_remain = load32.p_filesz;
- 
- 		while (bufsz_remain > 0) {
- 			if ((num_dumped % per) == 0)
++			/*
+ 			 * Set the 1st-bitmap.
+ 			 *  val  1: not memory hole
+ 			 *       0: memory hole
+@@ -3223,13 +3232,13 @@ create_dump_bitmap(struct DumpInfo *info
+ 					    info->name_memory, strerror(errno));
+ 					goto out;
+ 				}
+-				if (read(info->fd_memory, buf, info->page_size)
+-				    != info->page_size) {
++				if (read(info->fd_memory, buf, page_mem_size)
++				    != page_mem_size) {
+ 					ERRMSG("Can't read the dump memory(%s). %s\n",
+ 					    info->name_memory, strerror(errno));
+ 					goto out;
+ 				}
+-				if (is_zero_page(buf, info->page_size))
++				if (is_zero_page(buf, page_mem_size))
+ 					val = 0;
+ 			}
+ 			if ((info->dump_level <= DL_EXCLUDE_ZERO)
 
 _______________________________________________
 kexec mailing list
