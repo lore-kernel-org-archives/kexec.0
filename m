@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hp02A-0001OM-0x
-	for kexec@lists.infradead.org; Fri, 18 May 2007 06:50:09 -0400
-Date: Fri, 18 May 2007 12:50:04 +0200
+	id 1Hp02K-0001OS-Ad
+	for kexec@lists.infradead.org; Fri, 18 May 2007 06:50:21 -0400
+Date: Fri, 18 May 2007 12:50:12 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] [makedumpfile] Fix problem with `half' pages
-Message-ID: <20070518105003.GE16227@suse.de>
+Subject: [PATCH] [makedumpfile] Fix missing last node
+Message-ID: <20070518105012.GF16227@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -24,70 +24,25 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-We have a system here with following memory map:
-
-/proc/iomem:
-4ffe14000-4ffe7ffff : reserved
-4ffe80000-4fffb5fff : System RAM
-4fffb6000-4ffffffff : reserved
-
-max_pfn = 1310720
-
-In that case, the last page of the "System RAM" is not full in 16K page size
-configuration. That leads to an error in makedumpfile when it checks if that's
-a zero page. It's because it tries to read the whole page and the read()
-fails because it's after the end of the dump file.
-
-That patch fixes this problem.
-
+This patch fixes a typo which results in duplication of the first node (and the
+last node was missing then).
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- makedumpfile.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ makedumpfile.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3155,6 +3155,7 @@ create_dump_bitmap(struct DumpInfo *info
- 		for (; pfn < mmd->pfn_end;
- 		    pfn++, mem_map += SIZE(page),
- 		    paddr += info->page_size) {
-+			int page_mem_size = info->page_size;
- 
- 			if ((pfn != 0) && (pfn%PFN_BUFBITMAP) == 0) {
- 				/*
-@@ -3190,6 +3191,14 @@ create_dump_bitmap(struct DumpInfo *info
- 				val = 0;
- 
- 			/*
-+			 * check for pages that are not complete pages and
-+			 * decrease the page size here
-+			 */
-+			if (val == 1 && !is_in_segs(info, paddr + info->page_size))
-+				while (!is_in_segs(info, paddr + page_mem_size))
-+					page_mem_size--;
-+
-+			/*
- 			 * Set the 1st-bitmap.
- 			 *  val  1: not memory hole
- 			 *       0: memory hole
-@@ -3223,13 +3232,13 @@ create_dump_bitmap(struct DumpInfo *info
- 					    info->name_memory, strerror(errno));
- 					goto out;
- 				}
--				if (read(info->fd_memory, buf, info->page_size)
--				    != info->page_size) {
-+				if (read(info->fd_memory, buf, page_mem_size)
-+				    != page_mem_size) {
- 					ERRMSG("Can't read the dump memory(%s). %s\n",
- 					    info->name_memory, strerror(errno));
- 					goto out;
- 				}
--				if (is_zero_page(buf, info->page_size))
-+				if (is_zero_page(buf, page_mem_size))
- 					val = 0;
- 			}
- 			if ((info->dump_level <= DL_EXCLUDE_ZERO)
+@@ -2278,7 +2278,7 @@ get_mm_discontigmem(struct DumpInfo *inf
+ 			if ((node = next_online_node(node + 1)) < 0) {
+ 				ERRMSG("Can't get next online node.\n");
+ 				return FALSE;
+-			} else if (!(pgdat = next_online_pgdat(info, node))) {
++			} else if (!(pgdat = next_online_pgdat(info, node + 1))) {
+ 				ERRMSG("Can't determine pgdat list (node %d).\n",
+ 				    node);
+ 				return FALSE;
 
 _______________________________________________
 kexec mailing list
