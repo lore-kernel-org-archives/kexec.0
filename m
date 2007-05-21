@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hq2a7-0006Yb-He
-	for kexec@lists.infradead.org; Mon, 21 May 2007 03:45:28 -0400
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hq3zU-0007cr-2s
+	for kexec@lists.infradead.org; Mon, 21 May 2007 05:15:45 -0400
+Date: Mon, 21 May 2007 11:15:03 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: [PATCH] [makedumpfile] Fix missing last node
-In-reply-to: <20070518105012.GF16227@suse.de>
-Message-Id: <20070521164518oomichi@mail.jp.nec.com>
+Message-ID: <20070521091503.GA3363@suse.de>
 References: <20070518105012.GF16227@suse.de>
-Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Mon, 21 May 2007 16:45:18 +0900
+	<20070521164518oomichi@mail.jp.nec.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070521164518oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,45 +24,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
+* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-05-21 09:45]:
+> 2007/05/18 12:50:12 +0200, Bernhard Walle <bwalle@suse.de> wrote:
+> >This patch fixes a typo which results in duplication of the first node (and the
+> >last node was missing then).
+> 
+> I think the cause of this problem is the other typo.
+> Does the attached patch fix it ?
 
-Hi Bernhard,
-
-Thank you for your patches and your cooperation.
-
-2007/05/18 12:50:12 +0200, Bernhard Walle <bwalle@suse.de> wrote:
->This patch fixes a typo which results in duplication of the first node (and the
->last node was missing then).
-
-I think the cause of this problem is the other typo.
-Does the attached patch fix it ?
-
-Please apply the attached patch with the following makedumpfile:
-
-makedumpfile-1.1.3
- + 2007/05/11 by Ken'ichi, 01-vaddr_to_offset_ia64.patch 
- + 2007/05/11 by Ken'ichi, 02-ia64-discontigmem.patch
- + 2007/05/16 by Bernhard, [Re: Implement memory regions on IA64] patch
+Yes, thanks!
 
 
-Thanks
-Ken'ichi Ohmichi
-
-diff -puN makedumpfile.org/makedumpfile.c makedumpfile/makedumpfile.c
---- makedumpfile.org/makedumpfile.c	2007-05-21 20:54:04.000000000 +0900
-+++ makedumpfile/makedumpfile.c	2007-05-21 20:54:16.000000000 +0900
-@@ -2121,7 +2121,7 @@ pgdat3:
- 	if (node == 0)
- 		return pgdat;
- 
--	for (i = 1; i < node; i++) {
-+	for (i = 1; i <= node; i++) {
- 		if (!readmem(info, pgdat + OFFSET(pglist_data.pgdat_next),
- 		    &pgdat, sizeof pgdat))
- 			goto pgdat4;
-_
+Bernhard
 
 _______________________________________________
 kexec mailing list
