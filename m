@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hq4an-0008LL-Rp
-	for kexec@lists.infradead.org; Mon, 21 May 2007 05:54:19 -0400
-Date: Mon, 21 May 2007 11:54:14 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] [makedumpfile] Implement memory regions on IA64
-Message-ID: <20070521095414.GA32741@suse.de>
-References: <20070516202000oomichi@mail.jp.nec.com>
-	<20070521183227oomichi@mail.jp.nec.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070521183227oomichi@mail.jp.nec.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hqq79-0001P1-CO
+	for kexec@lists.infradead.org; Wed, 23 May 2007 08:38:52 -0400
+Subject: Re: [PATCH] [makedumpfile] Fix problem with `half' pages
+In-reply-to: <20070518105003.GE16227@suse.de>
+Message-Id: <20070523213856oomichi@mail.jp.nec.com>
+References: <20070518105003.GE16227@suse.de>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Wed, 23 May 2007 21:38:56 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Jay Lan <jlan@sgi.com>, Kexec Mailing List <kexec@lists.infradead.org>
-
-* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-05-21 11:32]:
-> 2007/05/16 20:20:00 +0900, "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
-> >I propose that makedumpfile distinguishes the page table (3L or 4L)
-> >by checking the defined file name of pud_t.
-> >I'm trying for the above implementation.
-> >I will send you the patch when it is complete.
-> 
-> The attached patch is for the above implementation.
-> It works fine with linux-2.6.18.
-> Could you test it with your environment ?
-
-works, thanks.
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
 
-Bernhard
+Hi Bernhard,
+
+2007/05/18 12:50:04 +0200, Bernhard Walle <bwalle@suse.de> wrote:
+>We have a system here with following memory map:
+>
+>/proc/iomem:
+>4ffe14000-4ffe7ffff : reserved
+>4ffe80000-4fffb5fff : System RAM
+>4fffb6000-4ffffffff : reserved
+>
+>max_pfn = 1310720
+>
+>In that case, the last page of the "System RAM" is not full in 16K page size
+>configuration. That leads to an error in makedumpfile when it checks if that's
+>a zero page. It's because it tries to read the whole page and the read()
+>fails because it's after the end of the dump file.
+>
+>That patch fixes this problem.
+
+Thank you for the patch.
+I guess there are the other problems because makedumpfile should not access
+incomplete page.
+To confirm the problem, I'd like to see the makedumpfile log with -D option.
+Could you send it ?
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
