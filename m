@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HrJOZ-0001MZ-He
-	for kexec@lists.infradead.org; Thu, 24 May 2007 15:54:51 -0400
-Date: Thu, 24 May 2007 21:54:32 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] [makedumpfile] Follow debuginfo link of vmlinux file
-Message-ID: <20070524195432.GC4160@suse.de>
-References: <20070501133912.GA8247@suse.de>
-	<20070524093556oomichi@mail.jp.nec.com>
-	<4655C9B3.7060903@sgi.com> <4655D9EA.8020601@redhat.com>
-	<20070524192139.GA4160@suse.de> <4655EB1A.3000704@sgi.com>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HrPS3-0003TK-L6
+	for kexec@lists.infradead.org; Thu, 24 May 2007 22:22:49 -0400
+Date: Fri, 25 May 2007 11:22:35 +0900
+From: Horms <horms@verge.net.au>
+Subject: Re: [PATCH] fix kexec-tools options
+Message-ID: <20070525022234.GI26510@verge.net.au>
+References: <20070524124936.GA7982@in.ibm.com> <26898.1180015012@neuling.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4655EB1A.3000704@sgi.com>
+In-Reply-To: <26898.1180015012@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,40 +23,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org
+To: Michael Neuling <mikey@neuling.org>
+Cc: kexec@lists.infradead.org, maneesh@in.ibm.com
 
-Hello,
-
-* Jay Lan <jlan@sgi.com> [2007-05-24 21:44]:
-> Bernhard Walle wrote:
-> > * Dave Anderson <anderson@redhat.com> [2007-05-24 20:31]:
-> >> The crash utility hides the details of there being a separate debug
-> >> file in the same way the gdb does when working with a binary executable
-> >> that has a separate debuginfo file.  It tries *not* to be ambiguous,
-> >> i.e., the point is to stay true to the "crash vmlinux vmcore" model.
+On Thu, May 24, 2007 at 11:56:52PM +1000, Michael Neuling wrote:
+> > o value for OPT_REUSE_INITRD clashes with arch specific options which are
+> >   defined as (OPT_MAX + 1), like --serial option on x86_64. Changed the
+> >   values so that OPT_REUSE_INITRD is less than OPT_MAX.
 > > 
-> > It's documented in the GDB documentation:
-> > http://sourceware.org/gdb/current/onlinedocs/gdb_16.html#SEC154
+> > Signed-off-by: Maneesh Soni <maneesh@in.ibm.com>
 > 
-> Thanks for the pointer, Bernhard. I installed kernel-debuginfo rpm
-> but crash still failed to find the debug information... I had to
-> copy the kernel-<version>.debug to /boot for it to work.
+> Oops.. thanks for fixing.
+> 
+> > ----
+> > --- kexec.h.orig	2007-05-15 10:06:33.000000000 +0530
+> > +++ kexec.h	2007-05-24 17:37:34.000000000 +0530
+> 
+> BTW the path has been stripped here, so this patch doesn't apply.  I've
+> fixed it up and reposted below.
+> 
+> Mikey
 
-On SLES? I never had problems. Maybe didn't you specify the full path?
-I.e. not
+Thanks guys, applied.
 
-   cd /boot
-   crash vmlinux-<version>
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
-but
-
-   cd /
-   crash /boot/vmlinux-<version>
-
-
-Thanks,
-   Bernhard
 
 _______________________________________________
 kexec mailing list
