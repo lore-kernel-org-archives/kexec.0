@@ -1,23 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
-	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
+Received: from e3.ny.us.ibm.com ([32.97.182.143])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HsmpL-0001EQ-FO
-	for kexec@lists.infradead.org; Mon, 28 May 2007 17:32:33 -0400
+	id 1Hsv1m-0004lG-51
+	for kexec@lists.infradead.org; Tue, 29 May 2007 02:17:56 -0400
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e3.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l4T5FVsA019190
+	for <kexec@lists.infradead.org>; Tue, 29 May 2007 01:15:31 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l4T6HnBd534726
+	for <kexec@lists.infradead.org>; Tue, 29 May 2007 02:17:49 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l4T6Hm0a003709
+	for <kexec@lists.infradead.org>; Tue, 29 May 2007 02:17:48 -0400
+Message-ID: <465BC5A1.5040505@in.ibm.com>
+Date: Tue, 29 May 2007 11:48:09 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
+MIME-Version: 1.0
 Subject: Re: [Patch ] Kexec/Kdump support - POWER6
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-In-Reply-To: <465ABFC9.9020502@in.ibm.com>
 References: <4652E088.9080207@in.ibm.com> <4652E109.4020204@in.ibm.com>
 	<4652E17C.7080607@in.ibm.com> <20070522153419.GA22047@lixom.net>
 	<46540B6F.6030300@in.ibm.com>
 	<18004.7556.311264.415721@cargo.ozlabs.ibm.com>
-	<20070524121751.GB4547@in.ibm.com> <20070524142133.GA13191@lixom.net>
-	<4656A488.2020507@in.ibm.com>
+	<20070524121751.GB4547@in.ibm.com>
+	<20070524142133.GA13191@lixom.net> <4656A488.2020507@in.ibm.com>
 	<1180132987.19517.9.camel@localhost.localdomain>
 	<465ABFC9.9020502@in.ibm.com>
-Date: Tue, 29 May 2007 07:31:34 +1000
-Message-Id: <1180387894.19517.99.camel@localhost.localdomain>
-Mime-Version: 1.0
+	<1180387894.19517.99.camel@localhost.localdomain>
+In-Reply-To: <1180387894.19517.99.camel@localhost.localdomain>
+Content-Type: multipart/mixed; boundary="------------020907050404060804010709"
+Reply-To: sachinp@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,59 +39,142 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: sachinp@in.ibm.com
-Cc: linuxppc-dev@ozlabs.org, Paul Mackerras <paulus@samba.org>, kexec@lists.infradead.org, Milton Miller II <miltonm@us.ibm.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linuxppc-dev@ozlabs.org, Paul Mackerras <paulus@samba.org>, kexec@lists.infradead.org
 
-On Mon, 2007-05-28 at 17:10 +0530, Sachin P. Sant wrote:
-> 
-> +#define HPTE_V_1TB_SEG         ASM_CONST(0x4000000000000000)
-> +#define HPTE_V_VRMA_MASK       ASM_CONST(0x4001ffffff)
+This is a multi-part message in MIME format.
+--------------020907050404060804010709
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Move those to mmu-hash64.h along with the other ones. Also, keep the
-mask aligned to the top bits
+Benjamin Herrenschmidt wrote:
+> Move those to mmu-hash64.h along with the other ones. Also, keep the
+> mask aligned to the top bits
+>   
+In previous patches i had these #defines in mmu-hash64.h. But got
+review comments to move them to lpar.c :-)
 
->  static void pSeries_lpar_hptab_clear(void)
->  {
->         unsigned long size_bytes = 1UL << ppc64_pft_size;
->         unsigned long hpte_count = size_bytes >> 4;
-> -       unsigned long dummy1, dummy2;
-> +       unsigned long dummy1, dummy2, dword0;
-> +       long lpar_rc;
->         int i;
->  
->         /* TODO: Use bulk call */
-> -       for (i = 0; i < hpte_count; i++)
-> -               plpar_pte_remove_raw(0, i, 0, &dummy1, &dummy2);
-> +       for (i = 0; i < hpte_count; i++) {
-> +               /* dont remove HPTEs with VRMA mappings */
-> +               lpar_rc = plpar_pte_remove_raw(H_ANDCOND, i, HPTE_V_1TB_SEG,
-> +                                               &dummy1, &dummy2);
-> +               if (lpar_rc == H_NOT_FOUND) {
-> +                       lpar_rc = plpar_pte_read_raw(0, i, &dword0, &dummy1);
-> +                       if (!lpar_rc && (((dword0 >> 24) & HPTE_V_VRMA_MASK) 
-> +                               != HPTE_V_VRMA_MASK))
+Oh well i will move them back to mmu-hash64.h.
 
-No need to shift >> 24, just have the mask left justified in the first
-place. No need to have a "magic" shift value in there.
+>> +                       if (!lpar_rc && (((dword0 >> 24) & HPTE_V_VRMA_MASK) 
+>>     
+> No need to shift >> 24, just have the mask left justified in the first
+> place. No need to have a "magic" shift value in there.
+>   
+Ok.
 
-> +                               /* Can be hpte for 1TB Seg. So remove it */
-> +                               plpar_pte_remove_raw(0, i, 0, &dummy1, &dummy2);
-> +               }
-> +       }
->  }
+> Appart from that, looks good. Does it actually work ? :-)
+>   
+Yes it does work. It must be my lucky day when i coded the patch :-)
 
-Appart from that, looks good. Does it actually work ? :-)
+Thanks
+-Sachin
 
-Cheers,
-Ben.
+Signed-off-by : Sachin Sant <sachinp@in.ibm.com>
+Signed-off-by : Mohan Kumar M <mohan@in.ibm.com>
+---
 
 
+
+--------------020907050404060804010709
+Content-Type: text/plain;
+ name="kexec-kdump-support-on-POWER6"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="kexec-kdump-support-on-POWER6"
+
+* On Power machines supporting VRMA, Kexec/Kdump does not work.
+* Hypervisor stores VRMA mapping used by the OS, in the hpte hash tables.
+* Make sure these hpte entries are left untouched.
+*
+* This patch also adds plpar_pte_read_raw() on the lines of
+* plpar_pte_remove_raw().
+
+Signed-off-by : Sachin Sant <sachinp@in.ibm.com>
+Signed-off-by : Mohan Kumar M <mohan@in.ibm.com>
+---
+
+diff -Naurp a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+--- a/arch/powerpc/platforms/pseries/lpar.c	2007-05-19 09:36:17.000000000 +0530
++++ b/arch/powerpc/platforms/pseries/lpar.c	2007-05-29 10:45:34.000000000 +0530
+@@ -373,12 +373,23 @@ static void pSeries_lpar_hptab_clear(voi
+ {
+ 	unsigned long size_bytes = 1UL << ppc64_pft_size;
+ 	unsigned long hpte_count = size_bytes >> 4;
+-	unsigned long dummy1, dummy2;
++	unsigned long dummy1, dummy2, dword0;
++	long lpar_rc;
+ 	int i;
+ 
+ 	/* TODO: Use bulk call */
+-	for (i = 0; i < hpte_count; i++)
+-		plpar_pte_remove_raw(0, i, 0, &dummy1, &dummy2);
++	for (i = 0; i < hpte_count; i++) {
++		/* dont remove HPTEs with VRMA mappings */
++		lpar_rc = plpar_pte_remove_raw(H_ANDCOND, i, HPTE_V_1TB_SEG,
++						&dummy1, &dummy2);
++		if (lpar_rc == H_NOT_FOUND) {
++			lpar_rc = plpar_pte_read_raw(0, i, &dword0, &dummy1);
++			if (!lpar_rc && ((dword0 & HPTE_V_VRMA_MASK) 
++				!= HPTE_V_VRMA_MASK))
++				/* Can be hpte for 1TB Seg. So remove it */
++				plpar_pte_remove_raw(0, i, 0, &dummy1, &dummy2);
++		}
++	}
+ }
+ 
+ /*
+diff -Naurp a/arch/powerpc/platforms/pseries/plpar_wrappers.h b/arch/powerpc/platforms/pseries/plpar_wrappers.h
+--- a/arch/powerpc/platforms/pseries/plpar_wrappers.h	2007-05-19 09:36:17.000000000 +0530
++++ b/arch/powerpc/platforms/pseries/plpar_wrappers.h	2007-05-25 12:20:38.000000000 +0530
+@@ -108,6 +108,21 @@ static inline long plpar_pte_read(unsign
+ 	return rc;
+ }
+ 
++/* plpar_pte_read_raw can be called in real mode. It calls plpar_hcall_raw */
++static inline long plpar_pte_read_raw(unsigned long flags, unsigned long ptex,
++		unsigned long *old_pteh_ret, unsigned long *old_ptel_ret)
++{
++	long rc;
++	unsigned long retbuf[PLPAR_HCALL_BUFSIZE];
++
++	rc = plpar_hcall_raw(H_READ, retbuf, flags, ptex);
++
++	*old_pteh_ret = retbuf[0];
++	*old_ptel_ret = retbuf[1];
++
++	return rc;
++}
++
+ static inline long plpar_pte_protect(unsigned long flags, unsigned long ptex,
+ 		unsigned long avpn)
+ {
+diff -Naurp a/include/asm-powerpc/mmu-hash64.h b/include/asm-powerpc/mmu-hash64.h
+--- a/include/asm-powerpc/mmu-hash64.h	2007-05-19 09:36:17.000000000 +0530
++++ b/include/asm-powerpc/mmu-hash64.h	2007-05-29 10:46:22.000000000 +0530
+@@ -94,6 +94,9 @@ extern char initial_stab[];
+ #define HPTE_R_C		ASM_CONST(0x0000000000000080)
+ #define HPTE_R_R		ASM_CONST(0x0000000000000100)
+ 
++#define HPTE_V_1TB_SEG          ASM_CONST(0x4000000000000000)
++#define HPTE_V_VRMA_MASK        ASM_CONST(0x4001ffffff000000)
++
+ /* Values for PP (assumes Ks=0, Kp=1) */
+ /* pp0 will always be 0 for linux     */
+ #define PP_RWXX	0	/* Supervisor read/write, User none */
+
+--------------020907050404060804010709
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------020907050404060804010709--
+
