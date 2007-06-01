@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hu35z-0000fw-TC
-	for kexec@lists.infradead.org; Fri, 01 Jun 2007 05:07:20 -0400
-Subject: Re: [makedumpfile] config file -- OSRELEASE
-In-reply-to: <m1d50g3iwj.fsf@ebiederm.dsl.xmission.com>
-Message-Id: <20070601180704oomichi@mail.jp.nec.com>
-References: <m1d50g3iwj.fsf@ebiederm.dsl.xmission.com>
+	id 1Hu37F-0000lG-8f
+	for kexec@lists.infradead.org; Fri, 01 Jun 2007 05:08:40 -0400
+Subject: Re: [PATCH] [makedumpfile] Fix ELF output with overlapping sections
+In-reply-to: <20070531151842.GA16961@suse.de>
+Message-Id: <20070601180827oomichi@mail.jp.nec.com>
+References: <20070531151842.GA16961@suse.de>
 Mime-Version: 1.0
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Fri, 1 Jun 2007 18:07:04 +0900
+Date: Fri, 1 Jun 2007 18:08:27 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,57 +22,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: jlan@sgi.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
 
-Hi Eric,
+Hi Bernhard,
 
-2007/05/31 13:14:20 -0600, ebiederm@xmission.com (Eric W. Biederman) wrote:
->> * Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-05-30 13:13]:
->>> 2007/05/29 21:30:58 +0200, Bernhard Walle <bwalle@suse.de> wrote:
->>> >is there any reason why the kernel version saved in the configuration
->>> >file is the version of the running kernel and not the version for
->>> >which the config file is for?
->>> 
->>> The reason is that makedumpfile gets a running kernel's page_size as
->>> a 1st-kernel's page_size. If they are different, makedumpfile cannot
->>> analyze /proc/vmcore and it fails. So I think a configuration file
->>> should be created while 1st-kernel is running.
->>
->> I also didn't find a possibility to get the page size from a kernel
->> image without running the executable.
->>
->>> >It's a big problem because my plan was to ship the configuration files
->>> >with the kernel RPMs in SLES. However, we don't build the kernels on
->>> >systems which run the kernel that is just built -- so that's not
->>> >possible.
->>> 
->>> It is a good idea to ship the configuration files with the kernel RPMs. 
->>> I think you can do it with current implementation, because you need
->>> only one configuration file for one kernel image.
->>> 
->>> I think you can ship configuration files as follows:
->>> 
->>> 1. Build a kernel file and a debuginfo file.
->>> 2. Boot the system with the above kernel file.
->>> 3. Generate a configration file from a debuginfo file.
->>> 4. Ship the configration file with the kernel RPM.
->>> 
->>> Any problem to follow the method above ?
->>
->> No, that's not possible because it would change our whole build
->> process. However, I just replace the OSRELEASE now after generating
->> the config file with the kernel that's built and change the page size
->> according to the .config on IA64. That works for now. I know it's not
->> the best solution, but the only practicable for now.
+2007/05/31 17:18:42 +0200, Bernhard Walle <bwalle@suse.de> wrote:
+>* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-05-31 04:26]:
+>> 2007/05/18 12:47:15 +0200, Bernhard Walle <bwalle@suse.de> wrote:
+>> >I have a core dump with following program headers on IA64:
+>> >
+>> >  LOAD           0x0000000000001f4c 0xa000000100000000 0x0000000004000000
+>> >                 0x000000000055c4a0 0x000000000055c4a0  RWE    0
+>> >...
+>> >  LOAD           0x00000000044fc3ec 0xe000000004000000 0x0000000004000000
+>> >                 0x0000000000c92000 0x0000000000c92000  RWE    0
+>> >
+>> >The interesting thing is the overlap in the physical address space.
+>> >write_elf_pages() assumes that there's no overlap because it looks only
+>> >for the file offset according to the physical start address and silently
+>> >assumes that the length matches.
+>> 
+>> Thank you for the patch.
+>> I'm worry that the overlapping spaces may have the same p_filesz.
+>> I think it is certain to check it by p_offset, and created the
+>> attached patch. Please let me know your opinion.
+>> 
+>> 
+>> BTW, I don't know the reason why your system's /proc/vmcore has the
+>> overlapping physical address. If you know it, please let me know.
 >
->Do we need more information in vmlinux to make it more amenable to
->automatic processing?  version and page size for example.
+>thanks for the patch. It looks more safe than my attempt to fix it.
+>I tested your patch on the machine on which I originally had my
+>problem. It worked without any problems.
+>
+>So I vote for applying the patch to your code base. :-)
 
-Now, the items makedumpfile cannot get from vmlinux statically are
-only version and page size. Do you have any idea for getting them
-from vmlinux ?
+Thank you for the test !
+I will merge it.
 
 
 Thanks
