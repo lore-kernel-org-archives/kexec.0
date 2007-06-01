@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hu3oO-0001FQ-81
-	for kexec@lists.infradead.org; Fri, 01 Jun 2007 05:55:22 -0400
-Date: Fri, 1 Jun 2007 11:52:28 +0200
+	id 1Hu6DM-0002c5-Pc
+	for kexec@lists.infradead.org; Fri, 01 Jun 2007 08:26:46 -0400
+Date: Fri, 1 Jun 2007 14:26:14 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [makedumpfile] config file -- OSRELEASE
-Message-ID: <20070601095228.GB27205@suse.de>
-References: <m1d50g3iwj.fsf@ebiederm.dsl.xmission.com>
-	<20070601180704oomichi@mail.jp.nec.com>
+Subject: Re: [PATCH 1/2] x86_64: Reflect the relocatability of the kernel in
+	the ELF header.
+Message-ID: <20070601122614.GA4651@suse.de>
+References: <m1slah6gm0.fsf@ebiederm.dsl.xmission.com>
+	<200704301717.08230.ak@suse.de> <20070501035539.GA15472@in.ibm.com>
+	<m14pmx18ey.fsf@ebiederm.dsl.xmission.com>
+	<20070501050657.GA23111@in.ibm.com>
+	<20070528105442.GA25599@suse.de>
+	<20070528110944.GE32045@in.ibm.com>
+	<20070528143939.GA16026@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070601180704oomichi@mail.jp.nec.com>
+In-Reply-To: <20070528143939.GA16026@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +30,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: jlan@sgi.com, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Vivek Goyal <vgoyal@in.ibm.com>, Andi Kleen <ak@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-06-01 11:07]:
+* Bernhard Walle <bwalle@suse.de> [2007-05-28 16:39]:
+> * Vivek Goyal <vgoyal@in.ibm.com> [2007-05-28 13:09]:
+> > On Mon, May 28, 2007 at 12:54:42PM +0200, Bernhard Walle wrote:
+> > > * Vivek Goyal <vgoyal@in.ibm.com> [2007-05-01 07:06]:
+> > > > This seems to be a problem with gdb 6.5. I transferred the dump to a
+> > > > different machine having GNU gdb 6.4, and it works fine there.
+> > > 
+> > > What's the state of it? Andy, was the GDB breakage the reason why you
+> > > didn't merge it? Did someone file a GDB bug?
+> > 
+> > I had sent a mail to gdb mailing list but no response. Did not raise
+> > a bug though.
 > 
-> Now, the items makedumpfile cannot get from vmlinux statically are
-> only version and page size. Do you have any idea for getting them
-> from vmlinux ?
+> BTW: Did anyone test with GDB 6.6?
 
-I already tried to address a similar issue (version + command line
-length for kexec-tools) by adding a ELF note. But it seems that kernel
-hackers didn't like it.
-
-http://article.gmane.org/gmane.comp.boot-loaders.fastboot.general/3996/.
-
+/me. But I get the same error as with GDB 6.5. I'm looking if I can
+find the cause of the problem.
 
 
 Thanks,
