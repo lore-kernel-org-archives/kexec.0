@@ -1,15 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hu3D5-0000u5-Cr
-	for kexec@lists.infradead.org; Fri, 01 Jun 2007 05:14:47 -0400
-Subject: Re: [RFC] makedumpfile: xen extraction
-In-reply-to: <20070528091114.529F.ODA@valinux.co.jp>
-Message-Id: <20070601181424oomichi@mail.jp.nec.com>
-References: <20070528091114.529F.ODA@valinux.co.jp>
+Received: from e31.co.us.ibm.com ([32.97.110.149])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hu3Vt-00012V-4p
+	for kexec@lists.infradead.org; Fri, 01 Jun 2007 05:33:47 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l519Xbbe011462
+	for <kexec@lists.infradead.org>; Fri, 1 Jun 2007 05:33:37 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l519XbEK230978
+	for <kexec@lists.infradead.org>; Fri, 1 Jun 2007 03:33:37 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l519XbLQ021514
+	for <kexec@lists.infradead.org>; Fri, 1 Jun 2007 03:33:37 -0600
+Date: Fri, 1 Jun 2007 15:03:29 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: Can we take partial dump?
+Message-ID: <20070601093329.GA20714@in.ibm.com>
+References: <1EB9723B6BE.0000066Edseetharam@inbox.com>
 Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Fri, 1 Jun 2007 18:14:24 +0900
+Content-Disposition: inline
+In-Reply-To: <1EB9723B6BE.0000066Edseetharam@inbox.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +36,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Itsuro ODA <oda@valinux.co.jp>
-Cc: kexec@lists.infradead.org
+To: Dharmosoth Seetharam <dseetharam@inbox.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
+On Thu, May 31, 2007 at 10:38:48PM -0800, Dharmosoth Seetharam wrote:
+> Hi, 
+> 
+> Can we take partial dump instead of full dump of memory ?
+> If so, what are the parameter do i need to set?
+> 
 
-Hi Oda-san,
+Yes.
 
-2007/05/28 10:49:49 +0900, Itsuro ODA <oda@valinux.co.jp> wrote:
->I think the part of xen hypervisor and domain-0 is enough to analyze
->a cause of system crash in almost of all cases under xen environment.
->Thus extracting the part of xen and domain-0 from /proc/vmcore under
->the second kernel is useful to reduce down time.
->
->The attached patch enables makedumpfile to extract the part of xen and
->domain-0 from vmcore.
->I implemented this function as an option of makedumpfile since many
->parts of makedumpfile can be used for implement of this function
->and the aim of this function is same as the aim of makedumpfile.
->
->usage: -X option is added for this funtion. -E and "-x xen-syms" must be
->       specified with -X.
->       "makedumpfile -XE -x xen-syms [-D] vmcore output-vmcore"
->
->This patch is for makedumpfile-1.1.3.
->
->This patch supports x86-PAE and ia64 now.
->(x86 and x86_64 is easy to support. I'd like to get feedbacks before
->implement many architectures.)
->
->The output-vmcore can be analyzed by "crash" command for both of
->xen hypervisor and domain-0.
->
->Your comments are welcome.
+http://sourceforge.net/projects/makedumpfile
 
-Thank you for the xen patch, I'm interested in your patch.
-I'd like to separate the command of xen from the makedumpfile command,
-because the commandline usage should be simple and the binary file should
-be small in 2nd-kernel memory. Please let me know your opinion.
+Now kexec/kdump related discussion take place at kexec mailing list and
+fastboot list is kind of dead.
 
+kexec@lists.infradead.org
+
+CCing the mail to that list. 
 
 Thanks
-Ken'ichi Ohmichi
+Vivek
 
 _______________________________________________
 kexec mailing list
