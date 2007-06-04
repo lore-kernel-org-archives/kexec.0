@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from ozlabs.org ([203.10.76.45])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hv9Gy-0000v2-Ln
-	for kexec@lists.infradead.org; Mon, 04 Jun 2007 05:54:50 -0400
-Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 2903B12533
-	for <kexec@lists.infradead.org>; Mon,  4 Jun 2007 11:54:35 +0200 (CEST)
-Date: Mon, 4 Jun 2007 11:54:34 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: kexec on PS3
-Message-ID: <20070604095433.GB29457@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
+	id 1HvA8g-0001VI-7p
+	for kexec@lists.infradead.org; Mon, 04 Jun 2007 06:50:20 -0400
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: kexec on PS3 
+In-reply-to: <20070604095433.GB29457@suse.de> 
+References: <20070604095433.GB29457@suse.de>
+Date: Mon, 04 Jun 2007 20:50:14 +1000
+Message-ID: <7629.1180954214@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +17,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Stefan Assmann <sassmann@suse.de>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linuxppc-dev@ozlabs.org, Stefan Assmann <sassmann@suse.de>, kexec@lists.infradead.org
 
-Hello,
+> At http://www.powerdeveloper.org/platforms/cell/playstation there are
+> some patches that are required for kexec-tools to use kdump on the
+> Play Station 3. Wouldn't it make sense to merge them in kexec-tools
+> testing?
 
-At http://www.powerdeveloper.org/platforms/cell/playstation there are
-some patches that are required for kexec-tools to use kdump on the
-Play Station 3. Wouldn't it make sense to merge them in kexec-tools
-testing?
+Yes.
 
-kexec-tools-1.101-bootargs-align.patch is already discussed here in
-the thread "kexec ppc64: fix misaligned cmdline". But what about
-kexec-tools-1.101-ps3-rmo_top-max.patch and
-kexec-tools-1.101-align-dtstruct.patch?
+> kexec-tools-1.101-bootargs-align.patch is already discussed here in
+> the thread "kexec ppc64: fix misaligned cmdline". But what about
+> kexec-tools-1.101-ps3-rmo_top-max.patch and
+> kexec-tools-1.101-align-dtstruct.patch?
 
-I'm not the author, and I don't know how to contact the author of that
-patches, but I'd like to see them in mainline kexec-tools.
+This doesn't fix the problem mentioned by Milton.  
 
+> I'm not the author, and I don't know how to contact the author of that
+> patches, but I'd like to see them in mainline kexec-tools.
 
-Thanks,
-   Bernhard
+Bugger.  It would make sense to merge them, especially since they are
+fixing generic powerpc problems.
+
+If you can get a signed off by the author, that would be awesome!
+
+Mikey
 
 _______________________________________________
 kexec mailing list
