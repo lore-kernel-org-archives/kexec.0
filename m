@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hv94u-0000Z3-Bl
-	for kexec@lists.infradead.org; Mon, 04 Jun 2007 05:42:22 -0400
-From: Michael Neuling <mikey@neuling.org>
-Subject: Re: [PATCH] kexec ppc64: fix misaligned cmdline 
-In-reply-to: <8f5d8a214e9042b0c556ac7256928a52@bga.com> 
-References: <25445.1180941825@neuling.org>
-	<8f5d8a214e9042b0c556ac7256928a52@bga.com>
-Date: Mon, 04 Jun 2007 19:42:16 +1000
-Message-ID: <26608.1180950136@neuling.org>
+	id 1Hv9Gy-0000v2-Ln
+	for kexec@lists.infradead.org; Mon, 04 Jun 2007 05:54:50 -0400
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 2903B12533
+	for <kexec@lists.infradead.org>; Mon,  4 Jun 2007 11:54:35 +0200 (CEST)
+Date: Mon, 4 Jun 2007 11:54:34 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: kexec on PS3
+Message-ID: <20070604095433.GB29457@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,30 +22,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, kexec@lists.infradead.org, Santhosh Rao <sonny@burdell.org>
+To: kexec@lists.infradead.org
+Cc: Stefan Assmann <sassmann@suse.de>
 
-> While this appears to fix the stated problem, did you explore my
-> suggestion of deleting and creating the property like we do for
-> the initrd base and size?
+Hello,
 
-Yeah, but it didn't seem "hapazard" enough for kexec. :-)
+At http://www.powerdeveloper.org/platforms/cell/playstation there are
+some patches that are required for kexec-tools to use kdump on the
+Play Station 3. Wouldn't it make sense to merge them in kexec-tools
+testing?
 
-> Deleting and recreating should also handle the case of no boot-args in
-> the original /chosen sub-tree (when the bootloader didn't (need to)
-> supply a command line).
+kexec-tools-1.101-bootargs-align.patch is already discussed here in
+the thread "kexec ppc64: fix misaligned cmdline". But what about
+kexec-tools-1.101-ps3-rmo_top-max.patch and
+kexec-tools-1.101-align-dtstruct.patch?
 
-Yeah, we're screwed when the first boot has no bootargs.
+I'm not the author, and I don't know how to contact the author of that
+patches, but I'd like to see them in mainline kexec-tools.
 
-Let me get the policy right.  We blow away the old command line except
-for the "root=blah" item.  Correct?
 
-Mikey
+Thanks,
+   Bernhard
 
 _______________________________________________
 kexec mailing list
