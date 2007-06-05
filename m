@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HvNNJ-0006DF-9T
-	for kexec@lists.infradead.org; Mon, 04 Jun 2007 20:59:38 -0400
+	id 1HvUJ8-00036P-EP
+	for kexec@lists.infradead.org; Tue, 05 Jun 2007 04:22:29 -0400
 From: Michael Neuling <mikey@neuling.org>
-Subject: Re: [PATCH] kexec ppc64: fix misaligned cmdline 
-In-reply-to: <20070605001632.GA26483@localhost.localdomain> 
+Subject: root= cmdline modification in kexec (was Re: [PATCH] kexec ppc64: fix
+	misaligned cmdline )
+In-reply-to: <26608.1180950136@neuling.org> 
 References: <25445.1180941825@neuling.org>
-	<20070604234917.GB10877@localhost.localdomain>
-	<2554.1181001397@neuling.org>
-	<20070605001632.GA26483@localhost.localdomain>
-Date: Tue, 05 Jun 2007 10:58:07 +1000
-Message-ID: <12946.1181005087@neuling.org>
+	<8f5d8a214e9042b0c556ac7256928a52@bga.com>
+	<26608.1180950136@neuling.org>
+Date: Tue, 05 Jun 2007 18:22:18 +1000
+Message-ID: <2773.1181031738@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: David Gibson <david@gibson.dropbear.id.au>
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, kexec@lists.infradead.org, miltonm@bga.com
+To: horms@verge.net.au, kexec@lists.infradead.org, miltonm@bga.com
 
-> On Tue, Jun 05, 2007 at 09:56:37AM +1000, Miichael Neuling wrote:
-> > > > If the cmdline changes between boots, we can get misalignment of the
-> > > > bootargs entry, which in turn corrupts our device tree blob and hence
-> > > > kills our kexec boot.  
-> > > > 
-> > > > Specifically, if the cmdline length was >= 8 before and the new cmdline
-> > > > length is < 8, we can get corruption.
-> > > 
-> > > Hrm.  Have you considered using dtc for this conversion, rather than
-> > > this somewhat dubious looking fs2dt?
-> > 
-> > Numerous times.  
-> > 
-> > fs2dt needs to be converted to use the device tree library, but that
-> > will take a lot more work than a 5 minute patch.
+> > While this appears to fix the stated problem, did you explore my
+> > suggestion of deleting and creating the property like we do for
+> > the initrd base and size?
 > 
+> Yeah, but it didn't seem "hapazard" enough for kexec. :-)
 > 
-> Well, sure.. but do you need fs2dt at all.  dtc has an "fs" input
-> mode..
+> > Deleting and recreating should also handle the case of no boot-args in
+> > the original /chosen sub-tree (when the bootloader didn't (need to)
+> > supply a command line).
+> 
+> Yeah, we're screwed when the first boot has no bootargs.
+> 
+> Let me get the policy right.  We blow away the old command line except
+> for the "root=blah" item.  Correct?
 
-As discussed offline, you can do this with the --devicetreeblob kexec
-option.  The issue is the special cases like having to modify the kernel
-cmdline options or initrd locations.
+OK Looks like we parse the new command line to see if there is a
+'root=blah' parameter.  If yes, use that, otherwise we use what was on
+the last boot.
+
+Is this what other architectures are doing?  Is there any other special
+cases we need to look out for?
 
 Mikey
 
