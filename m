@@ -1,31 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e6.ny.us.ibm.com ([32.97.182.146])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hvo7m-0000dr-Ka
-	for kexec@lists.infradead.org; Wed, 06 Jun 2007 06:32:04 +0100
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l565WhR1008860
-	for <kexec@lists.infradead.org>; Wed, 6 Jun 2007 01:32:43 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
-	l565VdOw531830
-	for <kexec@lists.infradead.org>; Wed, 6 Jun 2007 01:31:39 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l565Vdux023416
-	for <kexec@lists.infradead.org>; Wed, 6 Jun 2007 01:31:39 -0400
-Date: Wed, 6 Jun 2007 11:01:35 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
-Subject: Re: root= cmdline modification in kexec (was Re: [PATCH] kexec ppc64:
-	fix misaligned cmdline )
-Message-ID: <20070606053135.GB4916@in.ibm.com>
-References: <25445.1180941825@neuling.org>
-	<8f5d8a214e9042b0c556ac7256928a52@bga.com>
-	<26608.1180950136@neuling.org> <2773.1181031738@neuling.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2773.1181031738@neuling.org>
-Reply-To: mohan@in.ibm.com
+Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hvs3Y-0001zp-UZ
+	for kexec@lists.infradead.org; Wed, 06 Jun 2007 05:43:59 -0400
+In-Reply-To: <20070604105455.GA4916@in.ibm.com>
+References: <20070409085732.GC4281@in.ibm.com>
+	<1176188763.9836.16.camel@concordia.ozlabs.ibm.com>
+	<eeb3b19029c753682f476e97dcfaa820@bga.com>
+	<1176254201.4815.14.camel@concordia.ozlabs.ibm.com>
+	<20070419115233.GA4172@in.ibm.com>
+	<080126626f9bea228426c0c3d7bf1730@bga.com>
+	<20070426092455.GA4144@in.ibm.com>
+	<4cb567d635b4ac3333e6b4b2c27c12f2@bga.com>
+	<20070503144721.GA28460@in.ibm.com>
+	<ca045e7e6fde9345b3461214777d8102@bga.com>
+	<20070604105455.GA4916@in.ibm.com>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <c1b8d82c8241fc3750c1339c34ecc799@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: [PATCH] Fix interrupt distribution in ppc970
+Date: Wed, 6 Jun 2007 04:43:22 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,34 +32,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, miltonm@bga.com
+To: mohan@in.ibm.com
+Cc: Michael Ellerman <michael@ellerman.id.au>, ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org, Paul Mackerras <paulus@samba.org>
 
-On Tue, Jun 05, 2007 at 06:22:18PM +1000, Michael Neuling wrote:
-> OK Looks like we parse the new command line to see if there is a
-> 'root=blah' parameter.  If yes, use that, otherwise we use what was on
-> the last boot.
 
-For PPC64, if the user does not pass the kernel parameter, it is taken
-from the existing kernel parameter. In this case "crashkernel=X@Y"
-parameter is removed. If user explicitly gives the parameter, it is
-used.
+On Jun 4, 2007, at 5:54 AM, Mohan Kumar M wrote:
 
-> 
-> Is this what other architectures are doing?  Is there any other special
-> cases we need to look out for?
+> Milton,
+>
+> How about this patch?
 
-I am not sure about x86, I hope they expect that user has to _pass_ the
-kernel parameter. They don't copy the kernel parameter from current
-kernel.
+I'd make a few minor changes (see below), but I'll ack it.
 
-> 
-> Mikey
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+I've checked it compiles and boots but not the server selection.
+
+> =============================================================
+> In some of the PPC970 based systems, interrupt would be distributed to
+> offline cpus also even when booted with "maxcpus=1". So check whether
+> cpu online map and cpu present map are equal or not. If they are equal
+> default_distrib_server is used as interrupt server otherwise boot cpu
+> (default_server) used as interrupt server.
+>
+> In addition to this, if an interrupt is assigned to a specific cpu (ie
+> smp affinity) and if that cpu is not online, the earlier code used to
+> return the default_distrib_server as interrupt server. This patch
+> introduces an additional paramter to the get_irq function ie
+> strict_check, based on this parameter, if the cpu is not online either
+> default_distrib_server or -1 is returned.
+>
+> Cc: Milton Miller <miltonm@bga.com>,
+>     Michael Ellerman <michael@ellerman.id.au>
+> Signed-off-by: Mohan Kumar M <mohan@in.ibm.com>
+
+Acked-By: Milton Miller <miltonm@bga.com>
+
+> @@ -166,22 +166,24 @@ static int get_irq_server(unsigned int v
+>  	if (!distribute_irqs)
+>  		return default_server;
+>
+> -	if (cpus_equal(cpumask, CPU_MASK_ALL)) {
+> -		server = default_distrib_server;
+> -	} else {
+> +	if (!cpus_equal(cpumask, CPU_MASK_ALL)) {
+>  		cpus_and(tmp, cpu_online_map, cpumask);
+>
+> -		if (cpus_empty(tmp))
+> -			server = default_distrib_server;
+> -		else
+> -			server = get_hard_smp_processor_id(first_cpu(tmp));
+> -	}
+> +		server = first_cpu(tmp);
+>
+> -	return server;
+> +		if (server < NR_CPUS)
+> +			return get_hard_smp_processor_id(server);
+> +		else if (strict_check)
+> +				return -1;
+
+The indent on the return is 1 tab too many.
+See next comment.
+
+> +	}
+>
+> +	if (cpus_equal(cpu_online_map, cpu_present_map))
+> +		return default_distrib_server;
+> +	else
+> +		return default_server;
+
+I'd actually remove both occurrences of "else" bringing this and the 
+previous return back a tabstop.  The else is unnecessary because the if 
+statement is return .  (Seperate the new if from the previous with a 
+blank line in both cases).
+
+>  }
+>  #else
+> -static int get_irq_server(unsigned int virq)
+> +static int get_irq_server(unsigned int virq, unsigned int 
+> strict_check)
+>  {
+>  	return default_server;
+>  }
+
 
 _______________________________________________
 kexec mailing list
