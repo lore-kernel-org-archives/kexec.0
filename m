@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hvs3Y-0001zp-UZ
-	for kexec@lists.infradead.org; Wed, 06 Jun 2007 05:43:59 -0400
-In-Reply-To: <20070604105455.GA4916@in.ibm.com>
-References: <20070409085732.GC4281@in.ibm.com>
-	<1176188763.9836.16.camel@concordia.ozlabs.ibm.com>
-	<eeb3b19029c753682f476e97dcfaa820@bga.com>
-	<1176254201.4815.14.camel@concordia.ozlabs.ibm.com>
-	<20070419115233.GA4172@in.ibm.com>
-	<080126626f9bea228426c0c3d7bf1730@bga.com>
-	<20070426092455.GA4144@in.ibm.com>
-	<4cb567d635b4ac3333e6b4b2c27c12f2@bga.com>
-	<20070503144721.GA28460@in.ibm.com>
-	<ca045e7e6fde9345b3461214777d8102@bga.com>
-	<20070604105455.GA4916@in.ibm.com>
-Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <c1b8d82c8241fc3750c1339c34ecc799@bga.com>
-From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH] Fix interrupt distribution in ppc970
-Date: Wed, 6 Jun 2007 04:43:22 -0500
+	id 1HvtXy-0002qZ-Ee
+	for kexec@lists.infradead.org; Wed, 06 Jun 2007 07:19:29 -0400
+Subject: Re: [RFC] makedumpfile: xen extraction
+In-reply-to: <20070604122722.52E3.ODA@valinux.co.jp>
+Message-Id: <20070606201934oomichi@mail.jp.nec.com>
+References: <20070604122722.52E3.ODA@valinux.co.jp>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Wed, 6 Jun 2007 20:19:34 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,87 +22,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: mohan@in.ibm.com
-Cc: Michael Ellerman <michael@ellerman.id.au>, ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org, Paul Mackerras <paulus@samba.org>
+To: Itsuro ODA <oda@valinux.co.jp>
+Cc: kexec@lists.infradead.org
 
 
-On Jun 4, 2007, at 5:54 AM, Mohan Kumar M wrote:
+Hi Oda-san,
 
-> Milton,
+2007/06/04 13:01:44 +0900, Itsuro ODA <oda@valinux.co.jp> wrote:
+>> Thank you for the xen patch, I'm interested in your patch.
+>> I'd like to separate the command of xen from the makedumpfile command,
+>> because the commandline usage should be simple and the binary file should
+>> be small in 2nd-kernel memory. Please let me know your opinion.
 >
-> How about this patch?
-
-I'd make a few minor changes (see below), but I'll ack it.
-
-I've checked it compiles and boots but not the server selection.
-
-> =============================================================
-> In some of the PPC970 based systems, interrupt would be distributed to
-> offline cpus also even when booted with "maxcpus=1". So check whether
-> cpu online map and cpu present map are equal or not. If they are equal
-> default_distrib_server is used as interrupt server otherwise boot cpu
-> (default_server) used as interrupt server.
+>I think separated command is possible option too.
+>How about to be "ifdef"ed the part of structures I added and
+>the main is sepatated ?
 >
-> In addition to this, if an interrupt is assigned to a specific cpu (ie
-> smp affinity) and if that cpu is not online, the earlier code used to
-> return the default_distrib_server as interrupt server. This patch
-> introduces an additional paramter to the get_irq function ie
-> strict_check, based on this parameter, if the cpu is not online either
-> default_distrib_server or -1 is returned.
->
-> Cc: Milton Miller <miltonm@bga.com>,
->     Michael Ellerman <michael@ellerman.id.au>
-> Signed-off-by: Mohan Kumar M <mohan@in.ibm.com>
+>BTW,
+>All pages used by the dom-0 are saved now.
+>Do you think it is better to be available to select pages like
+>makedumpfile from the dom-0 ?
 
-Acked-By: Milton Miller <miltonm@bga.com>
+Yes, I do. It is a good idea.
+I think that it is better that the command for xen isn't separated
+from makedumpfile if unnecessary pages will be filtered out from dom-0,
+because the command for xen will need almost the same code.
 
-> @@ -166,22 +166,24 @@ static int get_irq_server(unsigned int v
->  	if (!distribute_irqs)
->  		return default_server;
->
-> -	if (cpus_equal(cpumask, CPU_MASK_ALL)) {
-> -		server = default_distrib_server;
-> -	} else {
-> +	if (!cpus_equal(cpumask, CPU_MASK_ALL)) {
->  		cpus_and(tmp, cpu_online_map, cpumask);
->
-> -		if (cpus_empty(tmp))
-> -			server = default_distrib_server;
-> -		else
-> -			server = get_hard_smp_processor_id(first_cpu(tmp));
-> -	}
-> +		server = first_cpu(tmp);
->
-> -	return server;
-> +		if (server < NR_CPUS)
-> +			return get_hard_smp_processor_id(server);
-> +		else if (strict_check)
-> +				return -1;
+I'll start testing makedumpfile with your patch (2007/05/28) and inform
+you of the result.
 
-The indent on the return is 1 tab too many.
-See next comment.
 
-> +	}
->
-> +	if (cpus_equal(cpu_online_map, cpu_present_map))
-> +		return default_distrib_server;
-> +	else
-> +		return default_server;
-
-I'd actually remove both occurrences of "else" bringing this and the 
-previous return back a tabstop.  The else is unnecessary because the if 
-statement is return .  (Seperate the new if from the previous with a 
-blank line in both cases).
-
->  }
->  #else
-> -static int get_irq_server(unsigned int virq)
-> +static int get_irq_server(unsigned int virq, unsigned int 
-> strict_check)
->  {
->  	return default_server;
->  }
-
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
