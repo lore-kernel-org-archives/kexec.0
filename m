@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wip-ectls-mx1.wipro.com ([203.91.193.21])
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1HxwV4-0002Vt-RM
-	for kexec@lists.infradead.org; Mon, 11 Jun 2007 22:52:57 -0400
-Subject: [KJ PATCH] Replacing memcpy(dest,src,PAGE_SIZE) with
-	copy_page(dest,src) in arch/i386/kernel/machine_kexec.c
-From: Shani Moideen <shani.moideen@wipro.com>
-Date: Tue, 12 Jun 2007 08:15:41 +0530
-Message-Id: <1181616342.2282.8.camel@shani-win>
-Mime-Version: 1.0
+	id 1Hxz0B-00045f-7k
+	for kexec@lists.infradead.org; Tue, 12 Jun 2007 01:33:19 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [KJ PATCH] Replacing memcpy(dest, src,
+	PAGE_SIZE) with copy_page(dest,
+	src) in arch/i386/kernel/machine_kexec.c
+References: <1181616342.2282.8.camel@shani-win>
+Date: Mon, 11 Jun 2007 23:32:03 -0600
+In-Reply-To: <1181616342.2282.8.camel@shani-win> (Shani Moideen's message of
+	"Tue, 12 Jun 2007 08:15:41 +0530")
+Message-ID: <m1vedtpwks.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,39 +25,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
+To: Shani Moideen <shani.moideen@wipro.com>
 Cc: kernel-janitors@lists.osdl.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
+Shani Moideen <shani.moideen@wipro.com> writes:
 
-Hi,
-Replacing memcpy(dest,src,PAGE_SIZE) with copy_page(dest,src) in arch/i386/kernel/machine_kexec.c.
+> Hi,
+> Replacing memcpy(dest,src,PAGE_SIZE) with copy_page(dest,src) in
+> arch/i386/kernel/machine_kexec.c.
 
-Signed-off-by: Shani Moideen <shani.moideen@wipro.com>
-----
+Please no.
 
-diff --git a/arch/i386/kernel/machine_kexec.c b/arch/i386/kernel/machine_kexec.c
-index 91966ba..ce79a44 100644
---- a/arch/i386/kernel/machine_kexec.c
-+++ b/arch/i386/kernel/machine_kexec.c
-@@ -110,7 +110,7 @@ NORET_TYPE void machine_kexec(struct kimage *image)
- 	local_irq_disable();
- 
- 	control_page = page_address(image->control_code_page);
--	memcpy(control_page, relocate_kernel, PAGE_SIZE);
-+	copy_page(control_page, relocate_kernel);
- 
- 	page_list[PA_CONTROL_PAGE] = __pa(control_page);
- 	page_list[VA_CONTROL_PAGE] = (unsigned long)relocate_kernel;
+People get creative in copy_page (especially mmx_copy_page),
+and this code path need something simple and stupid, that
+will work every time, especially when things are messed up
+elsewhere.
 
--- 
-Shani 
+Ideally we would actually do all of the setup before this point.
+but that is another issue entirely.
 
-
-The information contained in this electronic message and any attachments to this message are intended for the exclusive use of the addressee(s) and may contain proprietary, confidential or privileged information. If you are not the intended recipient, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately and destroy all copies of this message and any attachments. 
-
-WARNING: Computer viruses can be transmitted via email. The recipient should check this email and any attachments for the presence of viruses. The company accepts no liability for any damage caused by any virus transmitted by this email.
- 
-www.wipro.com
+Eric
 
 _______________________________________________
 kexec mailing list
