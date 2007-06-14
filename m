@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HyZG7-0001NQ-Un
-	for kexec@lists.infradead.org; Wed, 13 Jun 2007 16:16:09 -0400
-Date: Wed, 13 Jun 2007 19:46:54 +0000
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [KJ PATCH] Replacing memcpy(dest, src,
-	PAGE_SIZE) with copy_page(dest,
-	src) in arch/i386/kernel/machine_kexec.c
-Message-ID: <20070613194653.GA8273@ucw.cz>
-References: <1181616342.2282.8.camel@shani-win>
-	<m1vedtpwks.fsf@ebiederm.dsl.xmission.com>
-	<466ECF37.6040303@zytor.com>
+Received: from wm14.inbox.com ([208.50.6.14])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1HyqIM-0004lF-3I
+	for kexec@lists.infradead.org; Thu, 14 Jun 2007 10:27:32 -0400
+Received: from inbox.com (127.0.0.1:25)
+	by inbox.com with [InBox.Com SMTP Server]
+	id <706140030700.WM14> for <kexec@lists.infradead.org> from
+	<dseetharam@inbox.com>; Thu, 14 Jun 2007 6:27:18 AM -0800
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <466ECF37.6040303@zytor.com>
+Date: Thu, 14 Jun 2007 06:27:18 -0800
+Message-ID: <C6430F72A46.000002F9dseetharam@inbox.com>
+From: Dharmosoth Seetharam <dseetharam@inbox.com>
+Subject: problem with elfutils-0.125 for makedumpfile
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,52 +24,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@lists.osdl.org, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Shani Moideen <shani.moideen@wipro.com>
+To: kexec@lists.infradead.org
+Cc: vgoyal@in.ibm.com
 
-Hi!
+Hi, 
 
-> >> Replacing memcpy(dest,src,PAGE_SIZE) with copy_page(dest,src) in
-> >> arch/i386/kernel/machine_kexec.c.
-> > 
-> > Please no.
-> > 
-> > People get creative in copy_page (especially mmx_copy_page),
-> > and this code path need something simple and stupid, that
-> > will work every time, especially when things are messed up
-> > elsewhere.
-> 
-> memcpy() is pretty creative, too.  If you want something really dumb and
-> robust, you should probably create an inline:
-> 
-> /*
->  * Eric sez: his code path need something simple and stupid, that
->  * will work every time, especially when things are messed up
->  * elsewhere.
->  */
-> static inline void braindead_copy_page(void *dst, void *src)
-> {
-> 	unsigned long ctr = PAGE_SIZE >> 2;
-> 
-> 	asm volatile("cld; rep; movsl"
-> 			: "+D" (dst), "+S" (src), "+c" (ctr)
-> 			: : "memory");
-> }
-> 
-> (FWIW, the "cld" is supposed to be redundant, as DF=0 is supposed to be
-> guaranteed by the ABI.)
+I tryinging to install makedumpfile utility program.
+For this elfutils-0.125 should be installed on the same machine.
 
-Actually, swsusp would be second user for that. We currently do it
-with for loop in C, but...
+So, i have done the same thing.
 
-...well, we'd probably need it for i386, ppc, x86-64, ppc64 and maybe
-arm...
+After installing the "elfutils-0.125", I am getting the following error.
 
-(But you should probably add a comment into kexec )
-							Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Can any one please tell me what should be the mistake i have done?
+
+
+[root@tc210 makedumpfile]# make
+gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"' -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o ia64.o ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
+makedumpfile.c: In function `write_kdump_pages':
+makedumpfile.c:4102: warning: implicit declaration of function `compressBound'
+/usr/local/bin/ld: invalid option -- Y
+Try `ld --help' or `ld --usage' for more information.
+collect2: ld returned 64 exit status
+make: *** [makedumpfile] Error 1
+
+
+This is a simple program to print Hello.
+Even for this is the error is same.
+
+[root@tc210 makedumpfile]# gcc -o test test.c
+/usr/local/bin/ld: invalid option -- Y
+Try `ld --help' or `ld --usage' for more information.
+collect2: ld returned 64 exit status
+[root@tc210 makedumpfile]#         
+
+
+Thanks in Advance
+Seetharam
+
 
 _______________________________________________
 kexec mailing list
