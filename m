@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from wm14.inbox.com ([208.50.6.14])
 	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HyqIM-0004lF-3I
-	for kexec@lists.infradead.org; Thu, 14 Jun 2007 10:27:32 -0400
+	id 1HyqaV-0004wX-KE
+	for kexec@lists.infradead.org; Thu, 14 Jun 2007 10:46:18 -0400
 Received: from inbox.com (127.0.0.1:25)
 	by inbox.com with [InBox.Com SMTP Server]
-	id <706140030700.WM14> for <kexec@lists.infradead.org> from
-	<dseetharam@inbox.com>; Thu, 14 Jun 2007 6:27:18 AM -0800
+	id <706140032265.WM14> for <kexec@lists.infradead.org> from
+	<dseetharam@inbox.com>; Thu, 14 Jun 2007 6:46:06 AM -0800
 Mime-Version: 1.0
-Date: Thu, 14 Jun 2007 06:27:18 -0800
-Message-ID: <C6430F72A46.000002F9dseetharam@inbox.com>
+Date: Thu, 14 Jun 2007 06:46:06 -0800
+Message-ID: <C66D144C4DE.00000326dseetharam@inbox.com>
 From: Dharmosoth Seetharam <dseetharam@inbox.com>
-Subject: problem with elfutils-0.125 for makedumpfile
+Subject: RE: problem with elfutils-0.125 for makedumpfile
+In-Reply-To: <C6430F72A46.000002F9dseetharam@inbox.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,44 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Dharmosoth Seetharam <dseetharam@inbox.com>, kexec@lists.infradead.org
 Cc: vgoyal@in.ibm.com
 
-Hi, 
 
-I tryinging to install makedumpfile utility program.
-For this elfutils-0.125 should be installed on the same machine.
+gcc version is :
 
-So, i have done the same thing.
-
-After installing the "elfutils-0.125", I am getting the following error.
-
-Can any one please tell me what should be the mistake i have done?
+[root@tc210 makedumpfile]# gcc --version
+gcc (GCC) 3.2.3 20030502 (Red Hat Linux 3.2.3-24)
+Copyright (C) 2002 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 
-[root@tc210 makedumpfile]# make
-gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"' -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o ia64.o ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
-makedumpfile.c: In function `write_kdump_pages':
-makedumpfile.c:4102: warning: implicit declaration of function `compressBound'
-/usr/local/bin/ld: invalid option -- Y
-Try `ld --help' or `ld --usage' for more information.
-collect2: ld returned 64 exit status
-make: *** [makedumpfile] Error 1
+> -----Original Message-----
+> From: dseetharam@inbox.com
+> Sent: Thu, 14 Jun 2007 06:27:18 -0800
+> To: kexec@lists.infradead.org
+> Subject: problem with elfutils-0.125 for makedumpfile
+> 
+> Hi,
+> 
+> I tryinging to install makedumpfile utility program.
+> For this elfutils-0.125 should be installed on the same machine.
+> 
+> So, i have done the same thing.
+> 
+> After installing the "elfutils-0.125", I am getting the following error.
+> 
+> Can any one please tell me what should be the mistake i have done?
+> 
+> 
+> [root@tc210 makedumpfile]# make
+> gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"'
+> -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o ia64.o
+> ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
+> makedumpfile.c: In function `write_kdump_pages':
+> makedumpfile.c:4102: warning: implicit declaration of function
+> `compressBound'
+> /usr/local/bin/ld: invalid option -- Y
+> Try `ld --help' or `ld --usage' for more information.
+> collect2: ld returned 64 exit status
+> make: *** [makedumpfile] Error 1
+> 
+> 
+> This is a simple program to print Hello.
+> Even for this is the error is same.
+> 
+> [root@tc210 makedumpfile]# gcc -o test test.c
+> /usr/local/bin/ld: invalid option -- Y
+> Try `ld --help' or `ld --usage' for more information.
+> collect2: ld returned 64 exit status
+> [root@tc210 makedumpfile]#
+> 
+> 
+> Thanks in Advance
+> Seetharam
 
-
-This is a simple program to print Hello.
-Even for this is the error is same.
-
-[root@tc210 makedumpfile]# gcc -o test test.c
-/usr/local/bin/ld: invalid option -- Y
-Try `ld --help' or `ld --usage' for more information.
-collect2: ld returned 64 exit status
-[root@tc210 makedumpfile]#         
-
-
-Thanks in Advance
-Seetharam
-
+____________________________________________________________
+ONE-CLICK WEBMAIL ACCESS - Easily monitor & access your email accounts!
+Visit http://www.inbox.com/notifier and check it out!
 
 _______________________________________________
 kexec mailing list
