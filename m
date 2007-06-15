@@ -1,15 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mercury.realtime.net ([205.238.132.86] helo=ruth.realtime.net)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Hz6Vm-0004FU-4x
-	for kexec@lists.infradead.org; Fri, 15 Jun 2007 03:46:29 -0400
-Subject: Re: problem with elfutils-0.125 for makedumpfile
-In-reply-to: <C6430F72A46.000002F9dseetharam@inbox.com>
-Message-Id: <20070615164557oomichi@mail.jp.nec.com>
-References: <C6430F72A46.000002F9dseetharam@inbox.com>
-Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Fri, 15 Jun 2007 16:45:57 +0900
+	id 1HzEm9-0002Hn-Ty
+	for kexec@lists.infradead.org; Fri, 15 Jun 2007 12:35:55 -0400
+In-Reply-To: <20070612145157.GA7562@in.ibm.com>
+References: <20070419115233.GA4172@in.ibm.com>
+	<080126626f9bea228426c0c3d7bf1730@bga.com>
+	<20070426092455.GA4144@in.ibm.com>
+	<4cb567d635b4ac3333e6b4b2c27c12f2@bga.com>
+	<20070503144721.GA28460@in.ibm.com>
+	<ca045e7e6fde9345b3461214777d8102@bga.com>
+	<20070604105455.GA4916@in.ibm.com>
+	<c1b8d82c8241fc3750c1339c34ecc799@bga.com>
+	<20070606113134.GC4916@in.ibm.com>
+	<ac119a2f080a47cf41f7c916010eaccd@bga.com>
+	<20070612145157.GA7562@in.ibm.com>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <984f2f169b3e60daa032eb31147241b4@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: [PATCH] Fix interrupt distribution in ppc970
+Date: Fri, 15 Jun 2007 11:35:49 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,65 +32,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dharmosoth Seetharam <dseetharam@inbox.com>
-Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org
+To: mohan@in.ibm.com
+Cc: Michael Ellerman <michael@ellerman.id.au>, ppcdev <linuxppc-dev@ozlabs.org>, Paul Mackerras <paulus@samba.org>, kexec@lists.infradead.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 
 
-Hi Dharmosoth,
-
-
-2007/06/14 06:27:18 -0800, Dharmosoth Seetharam <dseetharam@inbox.com> wrote:
->I tryinging to install makedumpfile utility program.
->For this elfutils-0.125 should be installed on the same machine.
+On Jun 12, 2007, at 9:51 AM, Mohan Kumar M wrote:
 >
->So, i have done the same thing.
+> Attached patch uses cpumask_scnprintf function.
+
+
+> In some of the PPC970 based systems, interrupt would be distributed to
+> offline cpus also even when booted with "maxcpus=1". So check whether
+> cpu online map and cpu present map are equal or not. If they are equal
+> default_distrib_server is used as interrupt server otherwise boot cpu
+> (default_server) used as interrupt server.
 >
->After installing the "elfutils-0.125", I am getting the following error.
+> In addition to this, if an interrupt is assigned to a specific cpu (ie
+> smp affinity) and if that cpu is not online, the earlier code used to
+> return the default_distrib_server as interrupt server. This patch
+> introduces an additional paramter to the get_irq function ie
+> strict_check, based on this parameter, if the cpu is not online either
+> default_distrib_server or -1 is returned.
 >
->Can any one please tell me what should be the mistake i have done?
+> Cc: Milton Miller <miltonm@bga.com>,
+>     Michael Ellerman <michael@ellerman.id.au>
+> Signed-off-by: Mohan Kumar M <mohan@in.ibm.com>
 >
->
->[root@tc210 makedumpfile]# make
->gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"' -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o
- ia64.o ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
->makedumpfile.c: In function `write_kdump_pages':
->makedumpfile.c:4102: warning: implicit declaration of function `compressBound'
->/usr/local/bin/ld: invalid option -- Y
->Try `ld --help' or `ld --usage' for more information.
->collect2: ld returned 64 exit status
->make: *** [makedumpfile] Error 1
 
-I think the cause is 'ld' installed by elfutils-0.125.
-elfutils-0.125 installs 'ld' into /usr/local/bin/ with the library files.
-For installing only necessary files, could you please try follows ?
+Acked-by: Milton Miller <miltonm@bga.com>
 
-- Uninstall elfutils-0.125
-  # cd elfutils-0.125
-  # make uninstall
-  #
-
-- Make elfutils-0.125, and install only the library files.
-  # make clean
-  # ./configure
-  # make
-  #
-  # mkdir /usr/local/include/elfutils/
-  # cp ./libdw/libdw.h   /usr/local/include/elfutils/libdw.h
-  # cp ./libdw/dwarf.h   /usr/local/include/dwarf.h
-  # cp ./libelf/libelf.h /usr/local/include/libelf.h
-  # cp ./libelf/gelf.h   /usr/local/include/gelf.h
-  #
-  # cp ./libelf/libelf.a /usr/local/lib/libelf.a
-  # cp ./libdw/libdw.a   /usr/local/lib/libdw.a
-  # cp ./libasm/libasm.a /usr/local/lib/libasm.a
-  # cp ./libebl/libebl.a /usr/local/lib/libebl.a
-  #
-
-If there are not any problems, I will add the above method to README file.
-
-
-Thanks
-Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
