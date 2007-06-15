@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wm14.inbox.com ([208.50.6.14])
-	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1HyqaV-0004wX-KE
-	for kexec@lists.infradead.org; Thu, 14 Jun 2007 10:46:18 -0400
-Received: from inbox.com (127.0.0.1:25)
-	by inbox.com with [InBox.Com SMTP Server]
-	id <706140032265.WM14> for <kexec@lists.infradead.org> from
-	<dseetharam@inbox.com>; Thu, 14 Jun 2007 6:46:06 AM -0800
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Hz6Vm-0004FU-4x
+	for kexec@lists.infradead.org; Fri, 15 Jun 2007 03:46:29 -0400
+Subject: Re: problem with elfutils-0.125 for makedumpfile
+In-reply-to: <C6430F72A46.000002F9dseetharam@inbox.com>
+Message-Id: <20070615164557oomichi@mail.jp.nec.com>
+References: <C6430F72A46.000002F9dseetharam@inbox.com>
 Mime-Version: 1.0
-Date: Thu, 14 Jun 2007 06:46:06 -0800
-Message-ID: <C66D144C4DE.00000326dseetharam@inbox.com>
-From: Dharmosoth Seetharam <dseetharam@inbox.com>
-Subject: RE: problem with elfutils-0.125 for makedumpfile
-In-Reply-To: <C6430F72A46.000002F9dseetharam@inbox.com>
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Fri, 15 Jun 2007 16:45:57 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,66 +22,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dharmosoth Seetharam <dseetharam@inbox.com>, kexec@lists.infradead.org
-Cc: vgoyal@in.ibm.com
+To: Dharmosoth Seetharam <dseetharam@inbox.com>
+Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org
 
 
-gcc version is :
-
-[root@tc210 makedumpfile]# gcc --version
-gcc (GCC) 3.2.3 20030502 (Red Hat Linux 3.2.3-24)
-Copyright (C) 2002 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Hi Dharmosoth,
 
 
-> -----Original Message-----
-> From: dseetharam@inbox.com
-> Sent: Thu, 14 Jun 2007 06:27:18 -0800
-> To: kexec@lists.infradead.org
-> Subject: problem with elfutils-0.125 for makedumpfile
-> 
-> Hi,
-> 
-> I tryinging to install makedumpfile utility program.
-> For this elfutils-0.125 should be installed on the same machine.
-> 
-> So, i have done the same thing.
-> 
-> After installing the "elfutils-0.125", I am getting the following error.
-> 
-> Can any one please tell me what should be the mistake i have done?
-> 
-> 
-> [root@tc210 makedumpfile]# make
-> gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"'
-> -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o ia64.o
-> ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
-> makedumpfile.c: In function `write_kdump_pages':
-> makedumpfile.c:4102: warning: implicit declaration of function
-> `compressBound'
-> /usr/local/bin/ld: invalid option -- Y
-> Try `ld --help' or `ld --usage' for more information.
-> collect2: ld returned 64 exit status
-> make: *** [makedumpfile] Error 1
-> 
-> 
-> This is a simple program to print Hello.
-> Even for this is the error is same.
-> 
-> [root@tc210 makedumpfile]# gcc -o test test.c
-> /usr/local/bin/ld: invalid option -- Y
-> Try `ld --help' or `ld --usage' for more information.
-> collect2: ld returned 64 exit status
-> [root@tc210 makedumpfile]#
-> 
-> 
-> Thanks in Advance
-> Seetharam
+2007/06/14 06:27:18 -0800, Dharmosoth Seetharam <dseetharam@inbox.com> wrote:
+>I tryinging to install makedumpfile utility program.
+>For this elfutils-0.125 should be installed on the same machine.
+>
+>So, i have done the same thing.
+>
+>After installing the "elfutils-0.125", I am getting the following error.
+>
+>Can any one please tell me what should be the mistake i have done?
+>
+>
+>[root@tc210 makedumpfile]# make
+>gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -DVERSION='"1.1.4"' -DRELEASE_DATE='"08 June 2007"' -D__x86_64__ x86.o x86_64.o
+ ia64.o ppc64.o -o makedumpfile makedumpfile.c -static -ldw -lelf -lz
+>makedumpfile.c: In function `write_kdump_pages':
+>makedumpfile.c:4102: warning: implicit declaration of function `compressBound'
+>/usr/local/bin/ld: invalid option -- Y
+>Try `ld --help' or `ld --usage' for more information.
+>collect2: ld returned 64 exit status
+>make: *** [makedumpfile] Error 1
 
-____________________________________________________________
-ONE-CLICK WEBMAIL ACCESS - Easily monitor & access your email accounts!
-Visit http://www.inbox.com/notifier and check it out!
+I think the cause is 'ld' installed by elfutils-0.125.
+elfutils-0.125 installs 'ld' into /usr/local/bin/ with the library files.
+For installing only necessary files, could you please try follows ?
+
+- Uninstall elfutils-0.125
+  # cd elfutils-0.125
+  # make uninstall
+  #
+
+- Make elfutils-0.125, and install only the library files.
+  # make clean
+  # ./configure
+  # make
+  #
+  # mkdir /usr/local/include/elfutils/
+  # cp ./libdw/libdw.h   /usr/local/include/elfutils/libdw.h
+  # cp ./libdw/dwarf.h   /usr/local/include/dwarf.h
+  # cp ./libelf/libelf.h /usr/local/include/libelf.h
+  # cp ./libelf/gelf.h   /usr/local/include/gelf.h
+  #
+  # cp ./libelf/libelf.a /usr/local/lib/libelf.a
+  # cp ./libdw/libdw.a   /usr/local/lib/libdw.a
+  # cp ./libasm/libasm.a /usr/local/lib/libasm.a
+  # cp ./libebl/libebl.a /usr/local/lib/libebl.a
+  #
+
+If there are not any problems, I will add the above method to README file.
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
