@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from jack.tiscali.it ([213.205.33.53])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1I1HT2-0008IU-Ke
-	for kexec@lists.infradead.org; Thu, 21 Jun 2007 03:52:39 -0400
-From: francesco chiechi <francesco.chiechi@colibre.it>
-Subject: Re: [PATCH] kexec tools mipsel port
-Date: Thu, 21 Jun 2007 09:52:19 +0200
-References: <200706020021.38658.francesco.chiechi@colibre.it>
-	<20070604054034.GA6093@verge.net.au>
-In-Reply-To: <20070604054034.GA6093@verge.net.au>
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I1RL7-0005M0-Js
+	for kexec@lists.infradead.org; Thu, 21 Jun 2007 14:25:07 -0400
+Date: Thu, 21 Jun 2007 20:24:41 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [IA64] [kdump] machveg=dig on hpzx1 platforms
+Message-ID: <20070621182441.GA21840@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200706210952.20232.francesco.chiechi@colibre.it>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,58 +21,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Alessandro Rubini <rubini@gnudd.com>, Horms <horms@verge.net.au>
+To: kexec@lists.infradead.org, linux-ia64@vger.kernel.org
+Cc: Terry Loftin <terry.loftin@hp.com>, Khalid Aziz <khalid_aziz@hp.com>
 
-On Monday 04 June 2007 07:40, Horms wrote:
-> On Sat, Jun 02, 2007 at 12:21:38AM +0200, francesco chiechi wrote:
-> > Hello,
-> >
-> > We developed a patch to port kexec-tools to mips arch and included
-> > support for command line passing through elf boot notes.  We did it
-> > for a customer of ours on a specific platform derived from toshiba
-> > tx4938 (so we think it should work at least for tx4938 evaluation
-> > board also).  We would like to contribute it in case somebody else
-> > needs it or wants to improve it.  This patch works for us but the
-> > assembler part in particular, should be considered as a starting point
-> > because my assembly knowledge is not too deep.
-> >
-> > As this is the first time I submit a patch I tried to guess reading
-> > tpp.txt if this is the right way to submit. Please let me know about
-> > any mistakes I may have made.
->
-> Hi Francesco,
+Hello,
 
-Hi Horms,
+on most HP machines, the 'machveg=dig' parameter is needed for the
+kdump kernel to avoid problems with the HP ioc. In the original kdump
+patches, a function ioc_iova_disable() was used, which (as I
+understand) disabled the IOC before executing the new kernel. However,
+that function wasn't added to mainline [2].
 
-sorry about the long delay in my reply
+However, with a 2.6.22-rc kernel, booting into the kdump kernel works
+surprisingly. I haven't found a fix in the git history that could be
+responsible. Was there a fix? Or is it just a random result on a
+machine I tested that it works?
 
-> thanks for the patch. Sending them to this list is indeed the right
-> thing to do. You can also CC me (who makes the commits) to be sure
-> to get my attention.
->
-> I'm curious to about all the #ifdef __MIPSEL__ stuff in kexec.c.
-> Is there no chance that couldn't be placed somewhere in /kexec/arch/mipsel
-> somehow? kexec is a bit hapazard in parts, but generally there
-> isn't much #ifdef ARCH foo in there and we try and keep
-> architecture-specific and generic code separated.
+Are there any plans to bring back ioc_iova_disable(), or would some
+automatic kernel code that uses machvec=dig in the kernel without
+forcing the user to pass an additional command line work?
 
-I am aware of this problem but I did not find a more appropriate way to solve 
-this. This has something to to with the way mips handles virtual addresses.
-I will retry to fix this as soon as I have some time
 
-> Two other minor things:
->
-> * please patch configure.ac, not configure
->
-> * please provide a signed-off-by line, which is described at
->   http://linux.yyz.us/patch-format.html amongst other places.
 
-should I resend the patch or you say these for future reference?
+Thanks,
+   Bernhard
 
-thank you again
+[1] http://article.gmane.org/gmane.linux.ports.ia64/15192
+[2] http://article.gmane.org/gmane.linux.ports.ia64/15147
 
-Francesco
 
 _______________________________________________
 kexec mailing list
