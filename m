@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I1fee-0000Pl-KL
-	for kexec@lists.infradead.org; Fri, 22 Jun 2007 05:42:14 -0400
-Date: Fri, 22 Jun 2007 11:41:53 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [IA64] [kdump] machveg=dig on hpzx1 platforms
-Message-ID: <20070622094153.GA18449@suse.de>
-References: <20070621182441.GA21840@suse.de> <467AE260.7030906@hp.com>
+	id 1I2vNe-00006x-G6
+	for kexec@lists.infradead.org; Mon, 25 Jun 2007 16:41:54 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: kexec-tools unknown rel relocation: 9
+References: <467E5422.60604@impulze.org>
+Date: Mon, 25 Jun 2007 14:41:29 -0600
+In-Reply-To: <467E5422.60604@impulze.org> (Daniel Mierswa's message of "Sun,
+	24 Jun 2007 13:23:14 +0200")
+Message-ID: <m1y7i7u5qe.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <467AE260.7030906@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Terry Loftin <terry.loftin@hp.com>
-Cc: linux-ia64@vger.kernel.org, Khalid Aziz <khalid_aziz@hp.com>, kexec@lists.infradead.org
+To: Daniel Mierswa <impulze@impulze.org>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-Hi Terry,
+Daniel Mierswa <impulze@impulze.org> writes:
 
-* Terry Loftin <terry.loftin@hp.com> [2007-06-21 22:41]:
+> Hi there...
+> i'm struggling with kexec-tools on that particular machine for good a year
+> now... it never seemed to work on that machine so it might not be the software
+> itself but i wonder if you could manage to give me a hint on where it particular
+> goes kaboom
+> from the source i cannot dig anything except the switch statement which boils
+> out with unknown rel relocation if a specific r_type is not matched.
 >
->> Are there any plans to bring back ioc_iova_disable(), or would some
->> automatic kernel code that uses machvec=dig in the kernel without
->> forcing the user to pass an additional command line work?
 >
-> Here is a patch to do that.  We use this internally, but
-> I had forgotten to post it.
+> barad-dur i386 # kexec --debug --type=bzImage --append="init=/linuxrc rw
+> root=/dev/ram0 real_root=/dev/vg/ROOT lvm=vg
+> crypt0=sda:8:0:router.sda.key:wd91ultra2" --initrd=/boot/initrd-new.gz --load
+> /boot/vmlinuz-2.6.20-hardened-r5
+> Unknown rel relocation: 9
+>
+> the version i'm using is
+> kexec-tools-testing 20070330-git released 30th March 2007
+>
+> but it's the same error with any other version :)
 
-Thanks for your explanation and the patch.
+That is a generic software bug.  
+Either /sbin/kexec needs to handle R_386_GOT_OFF or you need to
+switch to a different set of build tools.
 
-Can you try to bring it mainline? Since it affects only
-arch/ia64/hp/*, I don't see a reason why it should be rejected.
+What are you compiler, linker, and assembler versions?
+Just so we have a chance of reproducing this problem.
 
-
-Thanks,
-   Bernhard
+Eric
 
 _______________________________________________
 kexec mailing list
