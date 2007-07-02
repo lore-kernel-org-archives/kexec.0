@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I3Dpy-0001as-JG
-	for kexec@lists.infradead.org; Tue, 26 Jun 2007 12:24:24 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: Need urgent help for kexec 1.101
-References: <2E9E457F08144E49B69941C5BC66A74C024A7287@bgsmsx411.gar.corp.intel.com>
-Date: Tue, 26 Jun 2007 10:23:59 -0600
-In-Reply-To: <2E9E457F08144E49B69941C5BC66A74C024A7287@bgsmsx411.gar.corp.intel.com>
-	(Somnath Chakrabarti's message of "Tue, 26 Jun 2007 11:47:27 +0530")
-Message-ID: <m1lke6smzk.fsf@ebiederm.dsl.xmission.com>
+	id 1I5LlA-0006Qn-Vk
+	for kexec@lists.infradead.org; Mon, 02 Jul 2007 09:16:09 -0400
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 300C221629
+	for <kexec@lists.infradead.org>; Mon,  2 Jul 2007 15:15:48 +0200 (CEST)
+Date: Mon, 2 Jul 2007 15:15:41 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: ELF64 header on i386
+Message-ID: <20070702131541.GA6084@suse.de>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +26,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Chakrabarti, Somnath" <somnath.chakrabarti@intel.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-"Chakrabarti, Somnath" <somnath.chakrabarti@intel.com> writes:
+Hello,
 
-> Hello,
->
->  
->
-> I am using kexec-tools 1.101 for booting RHEL5 and CentOS 5.0.
->
-> But both are giving an error ?Base address: 800001 is not page aligned?
->
-> Can you please help me in this issue.
->
-
-Off the top of my head I'm not certain what is going on.
-I'm going to redirect you to the kexec mailling list and perhaps
-someone there will recognize the problem.
-
-> However it works fine for booting RHEL4 , FC6.
+why creates kexec-tools ELF64 headers per default on i386? Wouldn't it
+make more sense to look if a physical address exceeds the 32-bit limit
+and then switch to ELF64 automatically if the user doesn't have
+specified an option?
 
 
-Eric
+Thanks,
+   Bernhard
 
 _______________________________________________
 kexec mailing list
