@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I5kz7-00081M-Cv
-	for kexec@lists.infradead.org; Tue, 03 Jul 2007 12:12:15 -0400
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id 1293E217E6
-	for <kexec@lists.infradead.org>; Tue,  3 Jul 2007 18:12:08 +0200 (CEST)
-Date: Tue, 3 Jul 2007 18:12:07 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Determine ELF32/ELF64 automatically on i386
-Message-ID: <20070703161207.GA5070@suse.de>
-References: <20070702131541.GA6084@suse.de>
+	id 1I5oy6-00025u-OC
+	for kexec@lists.infradead.org; Tue, 03 Jul 2007 16:27:28 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: kexec fails (pretty often)
+References: <32209efe0707030906r58993b12se9a4b9dab409a15@mail.gmail.com>
+Date: Tue, 03 Jul 2007 14:24:50 -0600
+In-Reply-To: <32209efe0707030906r58993b12se9a4b9dab409a15@mail.gmail.com>
+	(Natalie Protasevich's message of "Tue, 3 Jul 2007 10:06:40 -0600")
+Message-ID: <m1d4z9i6b1.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070702131541.GA6084@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,115 +23,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Natalie Protasevich <protasnb@gmail.com>
+Cc: Zou Nan hai <nanhai.zou@intel.com>, "Luck, Tony" <tony.luck@intel.com>, Kexec Mailing List <kexec@lists.infradead.org>, Horms <horms@verge.net.au>
 
-On i386, kexec generates ELF64 core headers by default if the user doesn't
-override this via a command line option. Because GDB cannot analyse
-ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
-needed.
+"Natalie Protasevich" <protasnb@gmail.com> writes:
 
-This patch selects ELF32 if the biggest memory address fits in 32 bit address
-space, which should be the case on non PAE systems. If the user specifies
-a command line option, that option overrides the detection.
+> I came across a report about panics on a IA64 system that happen when
+> kexec is being executed. The FSB parity error gets generated:
+>
+> BRLD / UC to x8208208208,   A43:41 = x0,  FSB Parity Error detected on
+> Processor Request
+> BRLC / UC to xFFFF2000000,  A43:41 = x7,  FSB Parity Error detected on
+> the Deferred Reply
+> BRLD / WB to xFFFFFFF0028,  A43:41 = x7,  FSB Parity Error detected on
+> the Deferred Reply
+> BRLD / WB to xFFFFFFF0028,  A43:41 = x7,  FSB Parity Error detected on
+> the Deferred Reply
+> BRLC / UC to xFFFF2000000,  A43:41 = x7,  FSB Parity Error detected on
+> the Deferred Reply
+> BRLD / UC to x8208208208,   A43:41 = x0,  FSB Parity Error detected on
+> Processor Request
+>
+>
+> And the pattern of the address on the bus is actually coming from the
+> piece of code in arch/ia64/kernel/gate.S, calculating ar.bpstore:
+>
+> ...
+>        sub r14=r14,r17         // r14 <- -rse_num_regs(bspstore1, bsp1)
+>        movl r17=0x8208208208208209
+>        ;;
+>        add r18=r18,r14         // r18 (delta) <- rse_slot_num(bsp0) -
+> rse_num_regs(bspstore1,bsp1)
+>        setf.sig f7=r17
+>        cmp.lt p7,p0=r14,r0     // p7 <- (r14 < 0)?
+>        ;;
+> ...
+>
+> Have you seen such error before? What would you recommend for debugging this?
 
+Not really.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+However this sounds fairly deterministic on the hardware involved.
+So I would recommend a code audit.
 
----
- kexec/arch/i386/crashdump-x86.c |   26 ++++++++++++++++++++++++++
- kexec/arch/i386/kexec-x86.c     |    2 +-
- kexec/arch/i386/kexec-x86.h     |   20 ++++++++++++--------
- 3 files changed, 39 insertions(+), 9 deletions(-)
+With low-level kexec code like this it really requires someone who knows
+the architecture to think through the code.
 
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -486,6 +486,23 @@ static struct crash_elf_info elf_info32 
- 	get_note_info: get_crash_notes,
- };
- 
-+static enum CoreType get_core_type(struct kexec_info *info,
-+				   struct memory_range *range, int ranges)
-+{
-+	if (info->kexec_flags & KEXEC_ARCH_X86_64)
-+		return CORE_TYPE_ELF64;
-+	else {
-+		/* fall back to default */
-+		if (ranges == 0)
-+			return CORE_TYPE_ELF64;
-+
-+		if (range[ranges].end > 0xFFFFFFFFUL)
-+			return CORE_TYPE_ELF64;
-+		else
-+			return CORE_TYPE_ELF32;
-+	}
-+}
-+
- /* Loads additional segments in case of a panic kernel is being loaded.
-  * One segment for backup region, another segment for storing elf headers
-  * for crash memory image.
-@@ -501,6 +518,15 @@ int load_crashdump_segments(struct kexec
- 	if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
- 		return -1;
- 
-+	/*
-+	 * if the core type has not been set on command line, set it here
-+	 * automatically
-+	 */
-+	if (arch_options.core_header_type == CORE_TYPE_UNDEF) {
-+		arch_options.core_header_type =
-+			get_core_type(info, mem_range, nr_ranges);
-+	}
-+
- 	/* Memory regions which panic kernel can safely use to boot into */
- 	sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
- 	memmap_p = xmalloc(sz);
---- a/kexec/arch/i386/kexec-x86.c
-+++ b/kexec/arch/i386/kexec-x86.c
-@@ -145,7 +145,7 @@ struct arch_options_t arch_options = {
- 	.serial_baud = 0,
- 	.console_vga = 0,
- 	.console_serial = 0,
--	.core_header_type = CORE_TYPE_ELF64,
-+	.core_header_type = CORE_TYPE_UNDEF,
- };
- 
- int arch_process_options(int argc, char **argv)
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -2,8 +2,12 @@
- #define KEXEC_X86_H
- 
- #define MAX_MEMORY_RANGES 64
--#define CORE_TYPE_ELF32 1
--#define CORE_TYPE_ELF64 2
-+
-+enum CoreType {
-+	CORE_TYPE_UNDEF = 0,
-+	CORE_TYPE_ELF32 = 1,
-+	CORE_TYPE_ELF64 = 2
-+};
- 
- extern unsigned char compat_x86_64[];
- extern uint32_t compat_x86_64_size, compat_x86_64_entry32;
-@@ -40,12 +44,12 @@ struct entry16_regs {
- };
- 
- struct arch_options_t {
--	uint8_t  reset_vga;
--	uint16_t serial_base;
--	uint32_t serial_baud;
--	uint8_t  console_vga;
--	uint8_t  console_serial;
--	int	 core_header_type;
-+	uint8_t  	reset_vga;
-+	uint16_t 	serial_base;
-+	uint32_t 	serial_baud;
-+	uint8_t  	console_vga;
-+	uint8_t  	console_serial;
-+	enum CoreType	core_header_type;
- };
- 
- int multiboot_x86_probe(const char *buf, off_t len);
+Adding in serial output into the assembly and what not can help to
+isolate the piece of the code causing the problem.  But it looks
+like you have done that.
+
+You haven't provided quite enough context for me to understand how
+this code sequence is reproduced.  I would certainly need more
+information then you have given to even locate the code path this is
+coming from, as it has been a long time since I looked at ia64.
+
+I have CC'd a few likely suspects and the kexec list so with a little
+luck if anyone is familiar with this they can answer you.
+
+Eric
 
 _______________________________________________
 kexec mailing list
