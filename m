@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ausmtp04.au.ibm.com ([202.81.18.152])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I6S9X-0001IN-Ma
-	for kexec@lists.infradead.org; Thu, 05 Jul 2007 15:17:58 +0100
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by ausmtp04.au.ibm.com (8.13.8/8.13.8) with ESMTP id l65Edd7Z307862
-	for <kexec@lists.infradead.org>; Fri, 6 Jul 2007 00:39:49 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.250.237])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
-	l65EKgTN103386
-	for <kexec@lists.infradead.org>; Fri, 6 Jul 2007 00:20:42 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l65EH9Xc021091
-	for <kexec@lists.infradead.org>; Fri, 6 Jul 2007 00:17:09 +1000
-Message-ID: <468CFC55.4090702@linux.vnet.ibm.com>
-Date: Thu, 05 Jul 2007 19:42:37 +0530
-From: Subrata Modak <subrata@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1I6TQg-0004i4-Ts
+	for kexec@lists.infradead.org; Thu, 05 Jul 2007 11:39:41 -0400
+Message-ID: <468D10B7.4020600@redhat.com>
+Date: Thu, 05 Jul 2007 11:39:35 -0400
+From: Prarit Bhargava <prarit@redhat.com>
 MIME-Version: 1.0
-Subject: [ANNOUNCE] LTP Roadmap Released
-Reply-To: subrata@linux.vnet.ibm.com
+Subject: Re: [IA64] [kdump] machveg=dig on hpzx1 platforms
+References: <20070621182441.GA21840@suse.de> <467AE260.7030906@hp.com>
+In-Reply-To: <467AE260.7030906@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,25 +22,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: ltp-list@lists.sourceforge.net, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-mm@vger.kernel.org
+To: Terry Loftin <terry.loftin@hp.com>
+Cc: linux-ia64@vger.kernel.org, Bernhard Walle <bwalle@suse.de>, Khalid Aziz <khalid_aziz@hp.com>, kexec@lists.infradead.org
 
-Hi All,
 
-Sometime back we started retrospection on LTP and the various ways to 
-make it better. It resulted in critical evaluation of LTP within & 
-outside LTP users community. It also reflected the various ways on 
-making it more better and effective. Working in this direction, we have 
-come up with a road map which we feel will be helpful to the community. 
-The following wiki pages will throw some light on the same:
-* http://ltp.sourceforge.net/wiki/
-* http://ltp.sourceforge.net/wikiArchives.php
+>
+> Here is a patch to do that.  We use this internally, but
+> I had forgotten to post it.
+>
 
-Your comments on the contents and the goals set will be highly 
-appreciated. All comments will be published on the above wiki pages.
+Not that it matters a huge amount, but this has been in RHEL5 for 
+sometime and does fix the "machvec=dig" nuisance.
 
-Regards & Thanks--
-Subrata Modak
+(Sorry for not replying earlier Terry -- I had a huge backlog of things 
+to get to before this ...)
 
+P.
+
+
+> -T
+>
+> ---
+> diff --git a/arch/ia64/hp/common/sba_iommu.c 
+> b/arch/ia64/hp/common/sba_iommu.c
+> --- a/arch/ia64/hp/common/sba_iommu.c
+> +++ b/arch/ia64/hp/common/sba_iommu.c
+> @@ -42,6 +42,9 @@ #include <asm/dma.h>
+>  #include <asm/system.h>        /* wmb() */
+>
+>  #include <asm/acpi-ext.h>
+> +#include <linux/crash_dump.h>
+> +
+> +extern int swiotlb_late_init_with_default_size (size_t size);
+>
+>  #define PFX "IOC: "
+>
+> @@ -2026,11 +2029,24 @@ sba_init(void)
+>      if (!ia64_platform_is("hpzx1") && 
+> !ia64_platform_is("hpzx1_swiotlb"))
+>          return 0;
+>
+> +#ifdef CONFIG_CRASH_DUMP
+> +    /* If we are booting a kdump kernel, the sba_iommu will
+> +     * cause devices that were not shutdown properly to MCA
+> +     * as soon as they are turned back on.  Our only option for
+> +     * a successful kdump kernel boot is to use the swiotlb.
+> +     */
+> +    if (elfcorehdr_addr < ELFCORE_ADDR_MAX) {
+> +        if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
+> +            panic("Unable to initialize software I/O TLB:"
+> +                  " Try machvec=dig boot option");
+> +        machvec_init("dig");
+> +        return 0;
+> +    }
+> +#endif
+> +
+>      acpi_bus_register_driver(&acpi_sba_ioc_driver);
+>      if (!ioc_list) {
+>  #ifdef CONFIG_IA64_GENERIC
+> -        extern int swiotlb_late_init_with_default_size (size_t size);
+> -
+>          /*
+>           * If we didn't find something sba_iommu can claim, we
+>           * need to setup the swiotlb and switch to the dig machvec.
+> -
+> To unsubscribe from this list: send the line "unsubscribe linux-ia64" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
 _______________________________________________
 kexec mailing list
