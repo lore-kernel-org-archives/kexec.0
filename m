@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1I6TQg-0004i4-Ts
-	for kexec@lists.infradead.org; Thu, 05 Jul 2007 11:39:41 -0400
-Message-ID: <468D10B7.4020600@redhat.com>
-Date: Thu, 05 Jul 2007 11:39:35 -0400
-From: Prarit Bhargava <prarit@redhat.com>
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I6nrR-0002EU-Rz
+	for kexec@lists.infradead.org; Fri, 06 Jul 2007 09:28:42 -0400
+Date: Fri, 6 Jul 2007 15:28:14 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Determine version of kernel that produced vmcore
+Message-ID: <20070706132814.GA7079@suse.de>
 MIME-Version: 1.0
-Subject: Re: [IA64] [kdump] machveg=dig on hpzx1 platforms
-References: <20070621182441.GA21840@suse.de> <467AE260.7030906@hp.com>
-In-Reply-To: <467AE260.7030906@hp.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,74 +21,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Terry Loftin <terry.loftin@hp.com>
-Cc: linux-ia64@vger.kernel.org, Bernhard Walle <bwalle@suse.de>, Khalid Aziz <khalid_aziz@hp.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+
+Hello,
+
+does anybody know a _reliable_ way to determine the version the kernel
+that produced a vmcore file? This means not scanning for a specific
+string or something like that which can fail on random memory.
+
+Would it make sense to add a ELF PT_NOTE section in the vmcore?
+
+Thanks for input!
 
 
->
-> Here is a patch to do that.  We use this internally, but
-> I had forgotten to post it.
->
 
-Not that it matters a huge amount, but this has been in RHEL5 for 
-sometime and does fix the "machvec=dig" nuisance.
-
-(Sorry for not replying earlier Terry -- I had a huge backlog of things 
-to get to before this ...)
-
-P.
-
-
-> -T
->
-> ---
-> diff --git a/arch/ia64/hp/common/sba_iommu.c 
-> b/arch/ia64/hp/common/sba_iommu.c
-> --- a/arch/ia64/hp/common/sba_iommu.c
-> +++ b/arch/ia64/hp/common/sba_iommu.c
-> @@ -42,6 +42,9 @@ #include <asm/dma.h>
->  #include <asm/system.h>        /* wmb() */
->
->  #include <asm/acpi-ext.h>
-> +#include <linux/crash_dump.h>
-> +
-> +extern int swiotlb_late_init_with_default_size (size_t size);
->
->  #define PFX "IOC: "
->
-> @@ -2026,11 +2029,24 @@ sba_init(void)
->      if (!ia64_platform_is("hpzx1") && 
-> !ia64_platform_is("hpzx1_swiotlb"))
->          return 0;
->
-> +#ifdef CONFIG_CRASH_DUMP
-> +    /* If we are booting a kdump kernel, the sba_iommu will
-> +     * cause devices that were not shutdown properly to MCA
-> +     * as soon as they are turned back on.  Our only option for
-> +     * a successful kdump kernel boot is to use the swiotlb.
-> +     */
-> +    if (elfcorehdr_addr < ELFCORE_ADDR_MAX) {
-> +        if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
-> +            panic("Unable to initialize software I/O TLB:"
-> +                  " Try machvec=dig boot option");
-> +        machvec_init("dig");
-> +        return 0;
-> +    }
-> +#endif
-> +
->      acpi_bus_register_driver(&acpi_sba_ioc_driver);
->      if (!ioc_list) {
->  #ifdef CONFIG_IA64_GENERIC
-> -        extern int swiotlb_late_init_with_default_size (size_t size);
-> -
->          /*
->           * If we didn't find something sba_iommu can claim, we
->           * need to setup the swiotlb and switch to the dig machvec.
-> -
-> To unsubscribe from this list: send the line "unsubscribe linux-ia64" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+Thanks,
+   Bernhard
 
 _______________________________________________
 kexec mailing list
