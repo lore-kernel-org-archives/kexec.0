@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from ik-out-1112.google.com ([66.249.90.183])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1I7i4c-00070m-2m
-	for kexec@lists.infradead.org; Sun, 08 Jul 2007 21:30:00 -0400
-Content-class: urn:content-classes:message
+	id 1I7iK6-0007AJ-I2
+	for kexec@lists.infradead.org; Sun, 08 Jul 2007 21:46:01 -0400
+Received: by ik-out-1112.google.com with SMTP id c29so594058ika
+	for <kexec@lists.infradead.org>; Sun, 08 Jul 2007 18:45:57 -0700 (PDT)
+Message-ID: <32209efe0707081845y4141a363ic3a0a013ff6d527d@mail.gmail.com>
+Date: Sun, 8 Jul 2007 18:45:56 -0700
+From: "Natalie Protasevich" <protasnb@gmail.com>
+Subject: Re: kexec fails (pretty often)
+In-Reply-To: <10EA09EFD8728347A513008B6B0DA77A01751443@pdsmsx411.ccr.corp.intel.com>
 MIME-Version: 1.0
-Subject: RE: kexec fails (pretty often)
-Date: Mon, 9 Jul 2007 09:29:40 +0800
-Message-ID: <10EA09EFD8728347A513008B6B0DA77A01751443@pdsmsx411.ccr.corp.intel.com>
-In-Reply-To: <32209efe0707081045w7f110b37h92f385d9103d49ab@mail.gmail.com>
-From: "Zou, Nanhai" <nanhai.zou@intel.com>
+Content-Disposition: inline
+References: <32209efe0707081045w7f110b37h92f385d9103d49ab@mail.gmail.com>
+	<10EA09EFD8728347A513008B6B0DA77A01751443@pdsmsx411.ccr.corp.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,98 +22,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Natalie Protasevich <protasnb@gmail.com>
+To: "Zou, Nanhai" <nanhai.zou@intel.com>
 Cc: "Luck, Tony" <tony.luck@intel.com>, Kexec Mailing List <kexec@lists.infradead.org>, Horms <horms@verge.net.au>
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IE5hdGFsaWUgUHJvdGFzZXZpY2gg
-W21haWx0bzpwcm90YXNuYkBnbWFpbC5jb21dCj4gU2VudDogMjAwN8TqN9TCOcjVIDE6NDUKPiBU
-bzogWm91LCBOYW5oYWkKPiBDYzogTHVjaywgVG9ueTsgS2V4ZWMgTWFpbGluZyBMaXN0OyBIb3Jt
-cwo+IFN1YmplY3Q6IFJlOiBrZXhlYyBmYWlscyAocHJldHR5IG9mdGVuKQo+IAo+IE9uIDcvMy8w
-NywgTmF0YWxpZSBQcm90YXNldmljaCA8cHJvdGFzbmJAZ21haWwuY29tPiB3cm90ZToKPiA+IE9u
-IDA0IEp1bCAyMDA3IDA4OjI5OjM5ICswODAwLCBab3UgTmFuIGhhaSA8bmFuaGFpLnpvdUBpbnRl
-bC5jb20+IHdyb3RlOgo+ID4gPiBPbiBXZWQsIDIwMDctMDctMDQgYXQgMDQ6MjQsIEVyaWMgVy4g
-QmllZGVybWFuIHdyb3RlOgo+ID4gPiA+ICJOYXRhbGllIFByb3Rhc2V2aWNoIiA8cHJvdGFzbmJA
-Z21haWwuY29tPiB3cml0ZXM6Cj4gPiA+ID4KPiA+ID4gPiA+IEkgY2FtZSBhY3Jvc3MgYSByZXBv
-cnQgYWJvdXQgcGFuaWNzIG9uIGEgSUE2NCBzeXN0ZW0gdGhhdCBoYXBwZW4gd2hlbgo+ID4gPiA+
-ID4ga2V4ZWMgaXMgYmVpbmcgZXhlY3V0ZWQuIFRoZSBGU0IgcGFyaXR5IGVycm9yIGdldHMgZ2Vu
-ZXJhdGVkOgo+ID4gPiA+ID4KPiA+ID4gPiA+IEJSTEQgLyBVQyB0byB4ODIwODIwODIwOCwgICBB
-NDM6NDEgPSB4MCwgIEZTQiBQYXJpdHkgRXJyb3IgZGV0ZWN0ZWQKPiBvbgo+ID4gPiA+ID4gUHJv
-Y2Vzc29yIFJlcXVlc3QKPiA+ID4gPiA+IEJSTEMgLyBVQyB0byB4RkZGRjIwMDAwMDAsICBBNDM6
-NDEgPSB4NywgIEZTQiBQYXJpdHkgRXJyb3IgZGV0ZWN0ZWQKPiBvbgo+ID4gPiA+ID4gdGhlIERl
-ZmVycmVkIFJlcGx5Cj4gPiA+ID4gPiBCUkxEIC8gV0IgdG8geEZGRkZGRkYwMDI4LCAgQTQzOjQx
-ID0geDcsICBGU0IgUGFyaXR5IEVycm9yIGRldGVjdGVkCj4gb24KPiA+ID4gPiA+IHRoZSBEZWZl
-cnJlZCBSZXBseQo+ID4gPiA+ID4gQlJMRCAvIFdCIHRvIHhGRkZGRkZGMDAyOCwgIEE0Mzo0MSA9
-IHg3LCAgRlNCIFBhcml0eSBFcnJvciBkZXRlY3RlZAo+IG9uCj4gPiA+ID4gPiB0aGUgRGVmZXJy
-ZWQgUmVwbHkKPiA+ID4gPiA+IEJSTEMgLyBVQyB0byB4RkZGRjIwMDAwMDAsICBBNDM6NDEgPSB4
-NywgIEZTQiBQYXJpdHkgRXJyb3IgZGV0ZWN0ZWQKPiBvbgo+ID4gPiA+ID4gdGhlIERlZmVycmVk
-IFJlcGx5Cj4gPiA+ID4gPiBCUkxEIC8gVUMgdG8geDgyMDgyMDgyMDgsICAgQTQzOjQxID0geDAs
-ICBGU0IgUGFyaXR5IEVycm9yIGRldGVjdGVkCj4gb24KPiA+ID4gPiA+IFByb2Nlc3NvciBSZXF1
-ZXN0Cj4gPiA+ID4gPgo+ID4gPiA+ID4KPiA+ID4gPiA+IEFuZCB0aGUgcGF0dGVybiBvZiB0aGUg
-YWRkcmVzcyBvbiB0aGUgYnVzIGlzIGFjdHVhbGx5IGNvbWluZyBmcm9tIHRoZQo+ID4gPiA+ID4g
-cGllY2Ugb2YgY29kZSBpbiBhcmNoL2lhNjQva2VybmVsL2dhdGUuUywgY2FsY3VsYXRpbmcgYXIu
-YnBzdG9yZToKPiA+ID4gPiA+Cj4gPiA+ID4gPiAuLi4KPiA+ID4gPiA+ICAgICAgICBzdWIgcjE0
-PXIxNCxyMTcgICAgICAgICAvLyByMTQgPC0gLXJzZV9udW1fcmVncyhic3BzdG9yZTEsCj4gYnNw
-MSkKPiA+ID4gPiA+ICAgICAgICBtb3ZsIHIxNz0weDgyMDgyMDgyMDgyMDgyMDkKPiA+ID4gPiA+
-ICAgICAgICA7Owo+ID4gPiA+ID4gICAgICAgIGFkZCByMTg9cjE4LHIxNCAgICAgICAgIC8vIHIx
-OCAoZGVsdGEpIDwtIHJzZV9zbG90X251bShic3AwKQo+IC0KPiA+ID4gPiA+IHJzZV9udW1fcmVn
-cyhic3BzdG9yZTEsYnNwMSkKPiA+ID4gPiA+ICAgICAgICBzZXRmLnNpZyBmNz1yMTcKPiA+ID4g
-PiA+ICAgICAgICBjbXAubHQgcDcscDA9cjE0LHIwICAgICAvLyBwNyA8LSAocjE0IDwgMCk/Cj4g
-PiA+ID4gPiAgICAgICAgOzsKPiA+ID4gPiA+IC4uLgo+ID4gPiA+ID4KPiA+ID4KPiA+ID4KPiA+
-ID4gSGksCj4gPiA+Cj4gPiA+IElzIHRoZSBwcm9ibGVtIHJlcHJvZHVjaWJsZT8gSXMgdGhlcmUg
-YW55IHNwZWNpYWwgY29uZmlndXJhdGlvbiBvciBrZXhlYwo+ID4gPiBjb21tYW5kIGxpbmUgb3B0
-aW9uIHRvIHJlcHJvZHVjZSBpdD8KPiA+ID4gT24gd2hpY2ggcGxhdGZvcm0gYW5kIHdoaWNoIHZl
-cnNpb24gb2Yga2VybmVsIGRpZCB5b3Ugc2VlIHRoZSBpc3N1ZT8KPiA+ID4KPiA+ID4gSXQgbG9v
-a3MgbGlrZSB0aGVyZSBtYXkgYmUgc29tZXRoaW5nIHdyb25nIHdpdGggdGhlIG1lbW9yeSBtYXAg
-c2V0dGluZwo+ID4gPiBvZiB0aGUgc2Vjb25kIGtlcm5lbC4KPiA+ID4gQ2FuIHlvdSBzZW5kIG1l
-IGNvcGllcyBvZiAvcHJvYy9pb21lbSBvZiB0aGUgZmlyc3Qga2VybmVsIGFuZCB0aGUgc2Vjb25k
-Cj4gPiA+IGtlcm5lbD8KPiA+ID4KPiA+Cj4gPiBUaGFua3MhIEkgd2lsbCB0cnkgdG8gZ2V0IGFz
-IG11Y2ggaW5mb3JtYXRpb24gYXMgSSBjYW4uCj4gPiBJdCBpcyAxMDAgJSByZXByb2R1Y2libGUs
-IGJ1dCBpbnRlcm1pdHRlbnQgLSBhbm90aGVyIHdvcmRzIGhhcHBlbnMKPiA+IHdpdGggZWFjaCBy
-dW4sIGJ1dCBub3QgcHJlZGljdGFibHkgKEkgd2lsbCBnZXQgbW9yZSBwcmVjaXNlIHNjZW5hcmlv
-KS4KPiA+IFRoaXMgaXMgYSBsYXJnZSBFUzcwMDAgc2VydmVyIHdpdGggdXAgdG8gNTEyIHByb2Nl
-c3NvcnMsIEkgd2lsbCBmaW5kCj4gPiBvdXQgaWYgdGhpcyBoYXBwZW5zIHdpdGggbGFyZ2UgY29u
-ZmlndXJhdGlvbiBvciBhbnkuCj4gPiBLZXJuZWwgaXMgdGhlIFNMRVMxMCBvciBSSEVMNFU1LCB0
-aGV5IHVzZSBib3RoLgo+ID4gSSB3aWxsIHByb3ZpZGUgdGhlIGlvbWVtLCBub3Qgc3VyZSBob3cg
-c29vbiAtIGVpdGhlciB0b21vcnJvdyBvciBhZnRlcgo+ID4gdGhlIGhvbGlkYXkuLi4KPiA+Cj4g
-Wm91LAo+IAo+IEkgZ290IHRoaXMgaW5mb3JtYXRpb24uIEFjdHVhbGx5IHRoZSBzaXR1YXRpb24g
-aXMgZXZlbiB3b3JzZSB0aGFuIEkgaW1hZ2luZWQuCj4gCj4gQWNjb3JkaW5nIHRvIEJlbiB3aG8g
-aXMgd29ya2luZyBvbiB0aGlzIHRob3NlIGFyZToKPiAKPiAtLS0tLS0tLS0tLS0tLS0tLS0tLQo+
-ICJUbyBzdW0gdXAgd2hhdCBoYXBwZW5zLCBJIGRvIHRoaXMgdXNpbmcgdGhlIGRlZmF1bHQga2Vy
-bmVsIGNvbW1hbmQgbGluZQo+IChhbmQgYWxzbyBvbmUgd2l0aCAiZGVidWcgY29uc29sZT11YXJ0
-LGlvLDB4M2Y4LDExNTIwMG44IGNvbnNvbGU9dHR5MCIKPiBhZGRlZCB0byBpdCk6Cj4gCj4gIyBr
-ZXhlYyAtbCAvYm9vdC9lZmkvZWZpL3JlZGhhdC92bWxpbnV6LTIuNi4xOC04LmVsNQo+IC0tYXBw
-ZW5kPWBjYXQgL3Byb2MvY21kbGluZWAKPiAtLWluaXRyZD0vYm9vdC9lZmkvZWZpL3JlZGhhdC9p
-bml0cmQtMi42LjE4LTguZWw1LmltZwo+IAo+ICMga2V4ZWMgLWUKPiAKPiBUaGUgb2xkIGtlcm5l
-bCBzaHV0cyBkb3duIGFuZCBib290cyB0aGUgbmV3IG9uZSBzdWNjZXNzZnVsbHksIGJ1dCwgdGhl
-Cj4gbmV3IGtlcm5lbCBjYXVzZXMgYSBmYXVsdCBkdXJpbmcgaXRzIGJvb3QuIEkgY2FuJ3QgcG9z
-aXRpdmVseSBpZGVudGlmeQo+IHRoZSBleGFjdCBzcG90IGl0IGNyYXNoZXMgYmVjYXVzZSB0aGUg
-c2VyaWFsIG91dHB1dCBzdG9wcy4gR29pbmcgYnkgdGhlCj4gc2NyZWVuLCBpdCBpcyBlaXRoZXIg
-ZHVyaW5nIG9yIGltbWVkaWF0ZWx5IGFmdGVyIHRoZSBBQ1BJIHN5c3RlbSB0cmllcwo+IHRvIGRl
-dGVjdCBhbGwgb2YgdGhlIENQVXMuIE9uIGEgY291cGxlIG9jY2FzaW9ucyBJJ3ZlIHNlZW4gaXQg
-c3BpdCBvdXQKPiBzb21ldGhpbmcgYWxvbmcgdGhlIGxpbmVzIG9mICJFRkkgVGltZSBkcml2ZXIi
-IGJlZm9yZSBpdCBibGFua3MgdGhlCj4gc2NyZWVuIG91dCwgYnV0IGl0IGRvZXMgaXQgdmVyeSBx
-dWlja2x5IGFuZCB0aGUgUmFyaXRhbiBkb2Vzbid0IHVwZGF0ZQo+IGZhc3QgZW5vdWdoLCBldmVu
-IGlmIEknbSBzaXR0aW5nIGF0IHRoZSBjb2xkIGZsb29yIGRpc3BsYXkuCj4gCj4gVGhlIHN5c3Rl
-bSBpcyBjb25maWd1cmVkIHdpdGggYSBzaW5nbGUgQ1BVLCBhcyBtdWx0aXBsZSBDUFVzIGNhdXNl
-IGEKPiBkaWZmZXJlbnQgZXJyb3IsIHNvbWV0aGluZyBhbG9uZyB0aGUgbGluZXMgb2YgImh1aD8g
-Q1BVICMweDIwMCBpcwo+IGFscmVhZHkgcHJlc2VudCIgLSBidXQgdGhpcyBhbHNvIGhhcHBlbmVk
-IG9uIHRoZSBzeXN0ZW0gd2l0aG91dCB0aGUKPiBjYXBhY2l0b3IgZml4LiBUdXJuaW5nIG9uIGFu
-ZCBvZmYgaHlwZXJ0aHJlYWRpbmcgZG9lc24ndCBzZWVtIHRvIG1hdHRlcgo+IGVpdGhlci4KPiAK
-PiBIZXJlIGlzIGVudGlyZSBsb2cgYW5kIGEgc2NyZWVuIGNhcHR1cmUgb2YgdGhlIGxhc3QgdGhp
-bmdzIHRoYXQKPiBzaG93IHVwIG9uIHRoZSB2aWRlbyBjb25zb2xlLiBUaGUgL3Byb2MvaW9tZW0g
-Y29udGVudHMgYXJlIGF0IGxpbmUgNDYwCj4gaW4gdGhlIGxvZywgYW5kIHRoZSBrZXhlYyBJIHVz
-ZWQgaXMgYXQgdGhlIHZlcnkgZW5kLiBUaGUgc2Vjb25kIGtlcm5lbAo+IGRvZXNuJ3QgZ2V0IGZh
-ciBlbm91Z2ggdG8gZW50ZXIgYW55IGNvbW1hbmRzLCBzbyBJJ20KPiBhZnJhaWQgSSBjYW4ndCBn
-ZXQgeW91IHRoZSAvcHJvYy9pb21lbSBmb3IgdGhhdC4iCj4gLS0tLS0tLS0tLS0tLS0KPiAKPiBQ
-bGVhc2UgYWR2aXNlIHdoZXJlIGhlIGNhbiBsb29rIHRvIGFuYWx5c2UgdGhpcy4KPiBUaGFua3Mh
-Cj4gLS1OYXRhbGllCgoKRnJvbSB0aGUgbG9nIGl0IGlzIHZlcnkgaGFyZCB0byB0ZWxsIHdoYXQg
-aXMgZ29pbmcgd3JvbmcuCklzIHRoZSAiYWNwaT1kZWJ1ZyIgaW4gY29tbWFuZCBsaW5lIGludGVu
-ZCB0byBiZSB0aGVyZT8KQ291bGQgeW91IHRyeSBsYXRlc3QgYmFzZSBrZXJuZWw/IApBbHNvIGNv
-dWxkIHlvdSB0ZXN0IGlmICJrZXhlYyAtcCIgd29ya3M/CgpUaGFua3MKWm91IE5hbiBoYWkKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+> > > > > > I came across a report about panics on a IA64 system that happen when
+> > > > > > kexec is being executed. The FSB parity error gets generated:
+> > > > > >
+> > > > > > BRLD / UC to x8208208208,   A43:41 = x0,  FSB Parity Error detected
+> > on
+> > > > > > Processor Request
+> > > > > > BRLC / UC to xFFFF2000000,  A43:41 = x7,  FSB Parity Error detected
+> > on
+> > > > > > the Deferred Reply
+> > > > > > BRLD / WB to xFFFFFFF0028,  A43:41 = x7,  FSB Parity Error detected
+> > on
+> > > > > > the Deferred Reply
+> > > > > > BRLD / WB to xFFFFFFF0028,  A43:41 = x7,  FSB Parity Error detected
+> > on
+> > > > > > the Deferred Reply
+> > > > > > BRLC / UC to xFFFF2000000,  A43:41 = x7,  FSB Parity Error detected
+> > on
+> > > > > > the Deferred Reply
+> > > > > > BRLD / UC to x8208208208,   A43:41 = x0,  FSB Parity Error detected
+> > on
+> > > > > > Processor Request
+> > > > > >
+> > > > > >
+> > > > > > And the pattern of the address on the bus is actually coming from the
+> > > > > > piece of code in arch/ia64/kernel/gate.S, calculating ar.bpstore:
+> > > > > >
+> > > > > > ...
+> > > > > >        sub r14=r14,r17         // r14 <- -rse_num_regs(bspstore1,
+> > bsp1)
+> > > > > >        movl r17=0x8208208208208209
+> > > > > >        ;;
+> > > > > >        add r18=r18,r14         // r18 (delta) <- rse_slot_num(bsp0)
+> > -
+> > > > > > rse_num_regs(bspstore1,bsp1)
+> > > > > >        setf.sig f7=r17
+> > > > > >        cmp.lt p7,p0=r14,r0     // p7 <- (r14 < 0)?
+> > > > > >        ;;
+> > > > > > ...
+> > > > > >
+> > > >
+> > > >
+> > > > Hi,
+> > > >
+> > > > Is the problem reproducible? Is there any special configuration or kexec
+> > > > command line option to reproduce it?
+> > > > On which platform and which version of kernel did you see the issue?
+> > > >
+> > > > It looks like there may be something wrong with the memory map setting
+> > > > of the second kernel.
+> > > > Can you send me copies of /proc/iomem of the first kernel and the second
+> > > > kernel?
+> > > >
+> > >
+> > > Thanks! I will try to get as much information as I can.
+> > > It is 100 % reproducible, but intermittent - another words happens
+> > > with each run, but not predictably (I will get more precise scenario).
+> > > This is a large ES7000 server with up to 512 processors, I will find
+> > > out if this happens with large configuration or any.
+> > > Kernel is the SLES10 or RHEL4U5, they use both.
+> > > I will provide the iomem, not sure how soon - either tomorrow or after
+> > > the holiday...
+> > >
+> > Zou,
+> >
+> > I got this information. Actually the situation is even worse than I imagined.
+> >
+> > According to Ben who is working on this those are:
+> >
+> > --------------------
+> > "To sum up what happens, I do this using the default kernel command line
+> > (and also one with "debug console=uart,io,0x3f8,115200n8 console=tty0"
+> > added to it):
+> >
+> > # kexec -l /boot/efi/efi/redhat/vmlinuz-2.6.18-8.el5
+> > --append=`cat /proc/cmdline`
+> > --initrd=/boot/efi/efi/redhat/initrd-2.6.18-8.el5.img
+> >
+> > # kexec -e
+> >
+> > The old kernel shuts down and boots the new one successfully, but, the
+> > new kernel causes a fault during its boot. I can't positively identify
+> > the exact spot it crashes because the serial output stops. Going by the
+> > screen, it is either during or immediately after the ACPI system tries
+> > to detect all of the CPUs. On a couple occasions I've seen it spit out
+> > something along the lines of "EFI Time driver" before it blanks the
+> > screen out, but it does it very quickly and the Raritan doesn't update
+> > fast enough, even if I'm sitting at the cold floor display.
+> >
+> > The system is configured with a single CPU, as multiple CPUs cause a
+> > different error, something along the lines of "huh? CPU #0x200 is
+> > already present" - but this also happened on the system without the
+> > capacitor fix. Turning on and off hyperthreading doesn't seem to matter
+> > either.
+> >
+> > Here is entire log and a screen capture of the last things that
+> > show up on the video console. The /proc/iomem contents are at line 460
+> > in the log, and the kexec I used is at the very end. The second kernel
+> > doesn't get far enough to enter any commands, so I'm
+> > afraid I can't get you the /proc/iomem for that."
+> > --------------
+> >
+> > Please advise where he can look to analyse this.
+> > Thanks!
+> > --Natalie
+>
+>
+> From the log it is very hard to tell what is going wrong.
+> Is the "acpi=debug" in command line intend to be there?
+> Could you try latest base kernel?
+> Also could you test if "kexec -p" works?
+>
+I will ask them to run kexec -p, I think he intended to do apic=debug,
+will mention that either ...
+I see that they load the same kernel as the first one. It is a good
+idea - to test with latest vanilla (2.6.22 as of today) and see if the
+problem still there.
+Thanks, I will pass on information to you later on as it becomes available.
+Regards,
+--Natalie
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
