@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from noname.neutralserver.com ([70.84.186.210])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I8Ara-0003gb-8S
-	for kexec@lists.infradead.org; Tue, 10 Jul 2007 04:14:30 -0400
-Date: Tue, 10 Jul 2007 11:14:14 +0300
-From: Dan Aloni <da-x@monatomic.org>
-Subject: Re: Determine version of kernel that produced vmcore
-Message-ID: <20070710081413.GA29034@localdomain>
-References: <20070706132814.GA7079@suse.de>
-	<20070706145804.GA31409@localdomain>
-	<20070710064817.GC5471@in.ibm.com>
+	id 1I8B0G-00044N-EK
+	for kexec@lists.infradead.org; Tue, 10 Jul 2007 04:23:26 -0400
+Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 51BBB1226B
+	for <kexec@lists.infradead.org>; Tue, 10 Jul 2007 10:23:17 +0200 (CEST)
+Date: Tue, 10 Jul 2007 10:23:16 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Determine ELF32/ELF64 automatically on i386
+Message-ID: <20070710082316.GA17090@suse.de>
+References: <20070702131541.GA6084@suse.de> <20070703161207.GA5070@suse.de>
+	<20070710055259.GA5471@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070710064817.GC5471@in.ibm.com>
+In-Reply-To: <20070710055259.GA5471@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +29,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@in.ibm.com>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-On Tue, Jul 10, 2007 at 12:18:17PM +0530, Vivek Goyal wrote:
-> On Fri, Jul 06, 2007 at 05:58:04PM +0300, Dan Aloni wrote:
+* Vivek Goyal <vgoyal@in.ibm.com> [2007-07-10 07:52]:
+> On Tue, Jul 03, 2007 at 06:12:07PM +0200, Bernhard Walle wrote:
+> > On i386, kexec generates ELF64 core headers by default if the user doesn't
+> > override this via a command line option. Because GDB cannot analyse
+> > ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
+> > needed.
 > > 
->[..]
-> > It contains enough information in order to make a compact kernel
-> > dump (makedumpinfo needs to go over the struct page arrays). As
-> > you see, it also contains the kernel version.
-> > 
-> 
-> But this will not solve Bernhard's problem where looking at a vmcore
-> he wants to know which vmlinux (kernel version with time stamp) has
-> generated this vmcore. So adding a ELF NOTE should help.
-
-That, or pass it in *runtime* by other means.
- 
-> > However, this file needs to be passed somehow to the rootfs
-> > of the kdump kernel. This poses a chicken-and-egg problem on 
-> > my setup where the initramfs of the first kernel contains 
-> > a staticlu linked version of the kexec executable along with a
-> > kdump kernel to be loaded before mount rootfs and running 
-> > init. 
+> > This patch selects ELF32 if the biggest memory address fits in 32 bit address
+> > space, which should be the case on non PAE systems. If the user specifies
+> > a command line option, that option overrides the detection.
 > > 
 > 
-> Why are you loading kdump kernel from first kernel's initramfs?
-> I guess to enable the dump capture as soon as possible so if some
-> driver panics() you can capture the dump?
+> Makes sense to me. No need to generate 64bit ELF headers on systems
+> having less than 4G of memory. gdb runs into issues with 64bit ELF headers
+> on 32bit machines.
 
-Yes, that's one of the reasons.
+Exaclty that was my point.
+
+> I think we can avoid mixed case in "CoreType" and use something like
+> "coretype".
+
+Of course:
+
+----
+
+[PATCH] Determine ELF32/ELF64 automatically on i386
+
+On i386, kexec generates ELF64 core headers by default if the user doesn't
+override this via a command line option. Because GDB cannot analyse
+ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
+needed.
+
+This patch selects ELF32 if the biggest memory address fits in 32 bit address
+space, which should be the case on non PAE systems. If the user specifies
+a command line option, that option overrides the detection.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+---
+ kexec/arch/i386/crashdump-x86.c |   26 ++++++++++++++++++++++++++
+ kexec/arch/i386/kexec-x86.c     |    2 +-
+ kexec/arch/i386/kexec-x86.h     |   20 ++++++++++++--------
+ 3 files changed, 39 insertions(+), 9 deletions(-)
+
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -486,6 +486,23 @@ static struct crash_elf_info elf_info32 
+ 	get_note_info: get_crash_notes,
+ };
  
-> Can't we modify the initramfs generation process (mkinitrd) to take
-> care of this situation?. By the way, how is second kernel's initramfs
-> is generated currently? The moment we start packing a file which contains
-> the debuginfo for first kernel, initramfs of second kernel becomes dependent
-> on first kernel and to me its not a good approach.
-
-That's not what I'm aiming for, they are actually independent (my 
-initramfs is a build-time constant). I have described it in another
-mail.
++static enum coretype get_core_type(struct kexec_info *info,
++				   struct memory_range *range, int ranges)
++{
++	if (info->kexec_flags & KEXEC_ARCH_X86_64)
++		return CORE_TYPE_ELF64;
++	else {
++		/* fall back to default */
++		if (ranges == 0)
++			return CORE_TYPE_ELF64;
++
++		if (range[ranges].end > 0xFFFFFFFFUL)
++			return CORE_TYPE_ELF64;
++		else
++			return CORE_TYPE_ELF32;
++	}
++}
++
+ /* Loads additional segments in case of a panic kernel is being loaded.
+  * One segment for backup region, another segment for storing elf headers
+  * for crash memory image.
+@@ -501,6 +518,15 @@ int load_crashdump_segments(struct kexec
+ 	if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
+ 		return -1;
  
-> A dump kernel and its initrd should be independent of the crashing kernel.
-
-I agree.
-
--- 
-Dan Aloni
-XIV LTD, http://www.xivstorage.com
-da-x (at) monatomic.org, dan (at) xiv.co.il
++	/*
++	 * if the core type has not been set on command line, set it here
++	 * automatically
++	 */
++	if (arch_options.core_header_type == CORE_TYPE_UNDEF) {
++		arch_options.core_header_type =
++			get_core_type(info, mem_range, nr_ranges);
++	}
++
+ 	/* Memory regions which panic kernel can safely use to boot into */
+ 	sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
+ 	memmap_p = xmalloc(sz);
+--- a/kexec/arch/i386/kexec-x86.c
++++ b/kexec/arch/i386/kexec-x86.c
+@@ -145,7 +145,7 @@ struct arch_options_t arch_options = {
+ 	.serial_baud = 0,
+ 	.console_vga = 0,
+ 	.console_serial = 0,
+-	.core_header_type = CORE_TYPE_ELF64,
++	.core_header_type = CORE_TYPE_UNDEF,
+ };
+ 
+ int arch_process_options(int argc, char **argv)
+--- a/kexec/arch/i386/kexec-x86.h
++++ b/kexec/arch/i386/kexec-x86.h
+@@ -2,8 +2,12 @@
+ #define KEXEC_X86_H
+ 
+ #define MAX_MEMORY_RANGES 64
+-#define CORE_TYPE_ELF32 1
+-#define CORE_TYPE_ELF64 2
++
++enum coretype {
++	CORE_TYPE_UNDEF = 0,
++	CORE_TYPE_ELF32 = 1,
++	CORE_TYPE_ELF64 = 2
++};
+ 
+ extern unsigned char compat_x86_64[];
+ extern uint32_t compat_x86_64_size, compat_x86_64_entry32;
+@@ -40,12 +44,12 @@ struct entry16_regs {
+ };
+ 
+ struct arch_options_t {
+-	uint8_t  reset_vga;
+-	uint16_t serial_base;
+-	uint32_t serial_baud;
+-	uint8_t  console_vga;
+-	uint8_t  console_serial;
+-	int	 core_header_type;
++	uint8_t  	reset_vga;
++	uint16_t 	serial_base;
++	uint32_t 	serial_baud;
++	uint8_t  	console_vga;
++	uint8_t  	console_serial;
++	enum coretype	core_header_type;
+ };
+ 
+ int multiboot_x86_probe(const char *buf, off_t len);
 
 _______________________________________________
 kexec mailing list
