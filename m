@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1I86A0-0007DE-Tc
-	for kexec@lists.infradead.org; Mon, 09 Jul 2007 23:13:10 -0400
+Received: from noname.neutralserver.com ([70.84.186.210])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I87c1-0005Ss-Tx
+	for kexec@lists.infradead.org; Tue, 10 Jul 2007 05:46:11 +0100
+Date: Tue, 10 Jul 2007 07:45:46 +0300
+From: Dan Aloni <da-x@monatomic.org>
 Subject: Re: Determine version of kernel that produced vmcore
-In-reply-to: <20070706132814.GA7079@suse.de>
-Message-Id: <20070710121315oomichi@mail.jp.nec.com>
+Message-ID: <20070710044546.GA2240@localdomain>
 References: <20070706132814.GA7079@suse.de>
-Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Tue, 10 Jul 2007 12:13:15 +0900
+	<20070706145804.GA31409@localdomain>
+	<20070709092154.GA19705@suse.de>
+	<20070709114131.GA18750@localdomain>
+	<20070709204938.GA21663@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070709204938.GA21663@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,64 +27,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: oomichi@mxs.nes.nec.co.jp, nhorman@redhat.com, bwalle@suse.de
 
-
-Hi,
-
-On Fri, 6 Jul 2007 17:58:04 +0300, Dan Aloni <da-x@monatomic.org> wrote:
-> On Fri, Jul 06, 2007 at 03:28:14PM +0200, Bernhard Walle wrote:
-> > Hello,
+On Mon, Jul 09, 2007 at 10:49:38PM +0200, Bernhard Walle wrote:
+> Hi,
+> 
+> * Dan Aloni <da-x@monatomic.org> [2007-07-09 13:41]:
+> > > > A patch that I am working on will make it possible to integrate
+> > > > the output of 'makedumpinfo -g' into vmlinux as the final build
+> > > > stage of the kernel. This information will be presented itself
+> > > > as /proc/kcore.info for the first kernel throughout its entire
+> > > > execution.
+> > > 
+> > > That sounds good. But I doubt that kernel developers like the idea of
+> > > needing another utility in the build process ...
 > > 
-> > does anybody know a _reliable_ way to determine the version the kernel
-> > that produced a vmcore file? This means not scanning for a specific
-> > string or something like that which can fail on random memory.
+> > I don't think it would add much complexity to build process as it 
+> > is now, just like the other tools that transparently do post-linking 
+> > modifications. As far as the developer is concerned, there's just
+> > the vmlinux and/or bzImage files that get emitted at the end.
+> 
+> I didn't complain about the complexity but about the requirement of an
+> additional tool. However, I think it will be configurable.
+
+Yes, I suppose it should be.
+ 
+> > > > Then inside initramfs of the first kernel, a small 
+> > > > util will modify the vmlinux file of the kdump kernel before it
+> > > > gets loaded so that another special file appearing as 
+> > > > /proc/vmcore.info under the kdump kernel will present the same
+> > > > info. 
+> > > 
+> > > Where do you get the info from? If you're in the kdump initrd,
+> > > then the kdump kernel is already loaded. Do you want to attach the
+> > > info from the crashed kernel to the initrd of the kdump kernel?
 > > 
-> > Would it make sense to add a ELF PT_NOTE section in the vmcore?
+> > Not exactly. Let me describe the procedure in greater detail.
+> > Basically, it would go like this:
 > > 
-> > Thanks for input!
+> > 1. <normal bootloader boot>
+> > 2. <normal initramfs>
+> > 3. embed_configfile /proc/kcore.info /vmlinux-kdump
+> > 4. kexec -l vmlinux-kdump <....>
+> > 5. <boot continues>
+> > 6. <crash>
+> > 7. <kdump kernel boot>
+> > 8. <kdump initramfs runs>
+> > 9. makedumpfile -i /proc/vmcore.info <....>
+> 
+> I don't see why an additional tool would be needed here. kexec already
+> modifies symbols, so why not adding the functionality into kexec? The
+> advantage would be that there's no on-disk modification necessary.
 
-(CONFIGFILE means makedumpfile's config file.)
+Actually, 'embed_configfile /proc/kcore.info /vmlinux-kdump' makes
+no on-disk modification, since it is all contained in initramfs (we
+step out of initramfs in stage 5). 
 
-makedumpfile checks kernel version by reading system_utsname.release
-from /proc/vmcore, as you know. If the release and OSRELEASE in CONFIGFILE
-don't match, makedumpfile fails.
+BTW another option would be containing the whole CONFIGFILE as a 
+vmlinux-specific ELF note, to be easily read from /proc/vmcore.
+You'd still need some util like embed_configfile at build time 
+in order to integrate it, and you'd also need to modify 
+makedumpfile so it can use it. Actually this sounds quite better
+to me. I'll try to prepare patches both for makedumpfile and the 
+kernel and see how easy it is.
 
-Besides Dan's plan, I'm planning the change of CONFIGFILE for distributors.
-In the kernel building process, distributors need to make CONFIGFILE
-on an older kernel (ex. RHEL5 kernel is built on RHEL4), and OSRELEASE
-may be an older kernel. So OSRELEASE should be modified to the building
-kernel version by hand, but it is not smart.
+> Another issue: Some parameters of makedumpfile (currently the page
+> size) are read from the running system. If you build the configuration
+> file while building the kernel, you always have the .config which
+> contains the page size. So it would be possible to extend the
+> makedumpfile utility to read that parts from a .config, and that would
+> remove a dependency that page size of the running kernel matches the
+> page size of the building kernel. On IA64, that's not always the case.
 
-To solve this problem, I'm proposing 2 plans.
-Could you give me your opinion ?
+That needs to be changed.. the part in makedumpfile that generates 
+the CONFIGFILE shouldn't depend on the running kernel at all. As 
+Ken'ichi suggests we don't need to have 'OSRELEASE=' in the 
+CONFIGFILE (instead, peeking inside init_uts_ns from /proc/vmcore
+is enough). For PAGESIZE, it can be replaced by readmem() of some
+variable such as:
 
-Plan 1:
-  A new option [--osrelease="string"] is added.
-  The OSRELEASE of CONFIGFILE is overwritten by "string".
-  In the kernel building process, distributors should specify "string"
-  as the building kernel version.
+         unsigned int image_page_size = PAGE_SIZE;
 
-Plan2:
-  Remove the OSRELEASE from CONFIGFILE.
-  Instead of checking the OSRELEASE, makedumpfile only checks whether the
-  area of /proc/vmcore specified by the symbol "system_utsname" in CONFIGFILE
-  is the string "2.6.". If CONFIGFILE and /proc/vmcore don't match, the
-  "system_utsname" must not point to the correct area in most cases.
-  Old makedumpfile needs OSRELEASE, and it cannot work by new CONFIGFILE.
-  But I think there are not any problems because old makedumpfile will not
-  read new CONFIGFILE. Now, CONFIGFILE is used only by RHEL5's kdump initramfs,
-  the CONFIGFILE is generated during 1st-kernel running. Even if CONFIGFILE
-  will be updated, makedumpfile can read the CONFIGFILE because makedumpfile
-  should be updated with CONFIGFILE.
+With the system I propose for generation and delivery of the 
+CONFIGFILE, it would be impossible to pass an incorrect CONFIGFILE
+since the kernel will already contain its own CONFIGFILE generated
+during build time (assuming it didn't get corrupted in the crash,
+it's quite far-fetched...).
 
+> > BTW I think there could be a confusion between makedumpfile's 
+> > CONFIGFILE and the .config file, so we should pick a different 
+> > name for it...
+> 
+> Aggreed. Your suggestion? :)
 
-I'd like to change the name of CONFIGFILE to mkdfinfo.
+Ken'ichi's "mkdfinfo" works for me.
 
-
-Thanks
-Ken'ichi Ohmichi
+-- 
+Dan Aloni
+XIV LTD, http://www.xivstorage.com
+da-x (at) monatomic.org, dan (at) xiv.co.il
 
 _______________________________________________
 kexec mailing list
