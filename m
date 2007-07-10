@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I8B0G-00044N-EK
-	for kexec@lists.infradead.org; Tue, 10 Jul 2007 04:23:26 -0400
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 51BBB1226B
-	for <kexec@lists.infradead.org>; Tue, 10 Jul 2007 10:23:17 +0200 (CEST)
-Date: Tue, 10 Jul 2007 10:23:16 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Determine ELF32/ELF64 automatically on i386
-Message-ID: <20070710082316.GA17090@suse.de>
-References: <20070702131541.GA6084@suse.de> <20070703161207.GA5070@suse.de>
-	<20070710055259.GA5471@in.ibm.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1I8EQZ-0000PO-D7
+	for kexec@lists.infradead.org; Tue, 10 Jul 2007 08:02:49 -0400
+Date: Tue, 10 Jul 2007 08:02:43 -0400
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: Determine version of kernel that produced vmcore
+Message-ID: <20070710120243.GA10121@hmsendeavour.rdu.redhat.com>
+References: <20070706132814.GA7079@suse.de>
+	<20070710121315oomichi@mail.jp.nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070710055259.GA5471@in.ibm.com>
+In-Reply-To: <20070710121315oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,142 +24,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Neil Horman <nhorman@redhat.com>, linux-kernel@vger.kernel.org
 
-* Vivek Goyal <vgoyal@in.ibm.com> [2007-07-10 07:52]:
-> On Tue, Jul 03, 2007 at 06:12:07PM +0200, Bernhard Walle wrote:
-> > On i386, kexec generates ELF64 core headers by default if the user doesn't
-> > override this via a command line option. Because GDB cannot analyse
-> > ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
-> > needed.
-> > 
-> > This patch selects ELF32 if the biggest memory address fits in 32 bit address
-> > space, which should be the case on non PAE systems. If the user specifies
-> > a command line option, that option overrides the detection.
-> > 
+On Tue, Jul 10, 2007 at 12:13:15PM +0900, Ken'ichi Ohmichi wrote:
 > 
-> Makes sense to me. No need to generate 64bit ELF headers on systems
-> having less than 4G of memory. gdb runs into issues with 64bit ELF headers
-> on 32bit machines.
+> Hi,
+> 
+> On Fri, 6 Jul 2007 17:58:04 +0300, Dan Aloni <da-x@monatomic.org> wrote:
+> > On Fri, Jul 06, 2007 at 03:28:14PM +0200, Bernhard Walle wrote:
+> > > Hello,
+> > > 
+> > > does anybody know a _reliable_ way to determine the version the kernel
+> > > that produced a vmcore file? This means not scanning for a specific
+> > > string or something like that which can fail on random memory.
+> > > 
+> > > Would it make sense to add a ELF PT_NOTE section in the vmcore?
+> > > 
+> > > Thanks for input!
+> 
+> (CONFIGFILE means makedumpfile's config file.)
+> 
+> makedumpfile checks kernel version by reading system_utsname.release
+> from /proc/vmcore, as you know. If the release and OSRELEASE in CONFIGFILE
+> don't match, makedumpfile fails.
+> 
+> Besides Dan's plan, I'm planning the change of CONFIGFILE for distributors.
+> In the kernel building process, distributors need to make CONFIGFILE
+> on an older kernel (ex. RHEL5 kernel is built on RHEL4), and OSRELEASE
+> may be an older kernel. So OSRELEASE should be modified to the building
+> kernel version by hand, but it is not smart.
+> 
+> To solve this problem, I'm proposing 2 plans.
+> Could you give me your opinion ?
+> 
+> Plan 1:
+>   A new option [--osrelease="string"] is added.
+>   The OSRELEASE of CONFIGFILE is overwritten by "string".
+>   In the kernel building process, distributors should specify "string"
+>   as the building kernel version.
+> 
+> Plan2:
+>   Remove the OSRELEASE from CONFIGFILE.
+>   Instead of checking the OSRELEASE, makedumpfile only checks whether the
+>   area of /proc/vmcore specified by the symbol "system_utsname" in CONFIGFILE
+>   is the string "2.6.". If CONFIGFILE and /proc/vmcore don't match, the
+>   "system_utsname" must not point to the correct area in most cases.
+>   Old makedumpfile needs OSRELEASE, and it cannot work by new CONFIGFILE.
+>   But I think there are not any problems because old makedumpfile will not
+>   read new CONFIGFILE. Now, CONFIGFILE is used only by RHEL5's kdump initramfs,
+>   the CONFIGFILE is generated during 1st-kernel running. Even if CONFIGFILE
+>   will be updated, makedumpfile can read the CONFIGFILE because makedumpfile
+>   should be updated with CONFIGFILE.
+> 
+> 
+> I'd like to change the name of CONFIGFILE to mkdfinfo.
+> 
+Why not, instead of either plan above, just redefine OSRELEASE to be the version
+of the kernel the config file was built against?  i.e. when you build a config
+file, you need to specify a kernel to extract symbol information from, why not
+grab the utsname from that kernel and use that to set OSRELEASE?  When you're
+building a config file the running kernel on the system isn't really relevent
+anyway.
 
-Exaclty that was my point.
+Thanks & Regards
+Neil
 
-> I think we can avoid mixed case in "CoreType" and use something like
-> "coretype".
+> 
+> Thanks
+> Ken'ichi Ohmichi
 
-Of course:
-
-----
-
-[PATCH] Determine ELF32/ELF64 automatically on i386
-
-On i386, kexec generates ELF64 core headers by default if the user doesn't
-override this via a command line option. Because GDB cannot analyse
-ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
-needed.
-
-This patch selects ELF32 if the biggest memory address fits in 32 bit address
-space, which should be the case on non PAE systems. If the user specifies
-a command line option, that option overrides the detection.
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
----
- kexec/arch/i386/crashdump-x86.c |   26 ++++++++++++++++++++++++++
- kexec/arch/i386/kexec-x86.c     |    2 +-
- kexec/arch/i386/kexec-x86.h     |   20 ++++++++++++--------
- 3 files changed, 39 insertions(+), 9 deletions(-)
-
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -486,6 +486,23 @@ static struct crash_elf_info elf_info32 
- 	get_note_info: get_crash_notes,
- };
- 
-+static enum coretype get_core_type(struct kexec_info *info,
-+				   struct memory_range *range, int ranges)
-+{
-+	if (info->kexec_flags & KEXEC_ARCH_X86_64)
-+		return CORE_TYPE_ELF64;
-+	else {
-+		/* fall back to default */
-+		if (ranges == 0)
-+			return CORE_TYPE_ELF64;
-+
-+		if (range[ranges].end > 0xFFFFFFFFUL)
-+			return CORE_TYPE_ELF64;
-+		else
-+			return CORE_TYPE_ELF32;
-+	}
-+}
-+
- /* Loads additional segments in case of a panic kernel is being loaded.
-  * One segment for backup region, another segment for storing elf headers
-  * for crash memory image.
-@@ -501,6 +518,15 @@ int load_crashdump_segments(struct kexec
- 	if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
- 		return -1;
- 
-+	/*
-+	 * if the core type has not been set on command line, set it here
-+	 * automatically
-+	 */
-+	if (arch_options.core_header_type == CORE_TYPE_UNDEF) {
-+		arch_options.core_header_type =
-+			get_core_type(info, mem_range, nr_ranges);
-+	}
-+
- 	/* Memory regions which panic kernel can safely use to boot into */
- 	sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
- 	memmap_p = xmalloc(sz);
---- a/kexec/arch/i386/kexec-x86.c
-+++ b/kexec/arch/i386/kexec-x86.c
-@@ -145,7 +145,7 @@ struct arch_options_t arch_options = {
- 	.serial_baud = 0,
- 	.console_vga = 0,
- 	.console_serial = 0,
--	.core_header_type = CORE_TYPE_ELF64,
-+	.core_header_type = CORE_TYPE_UNDEF,
- };
- 
- int arch_process_options(int argc, char **argv)
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -2,8 +2,12 @@
- #define KEXEC_X86_H
- 
- #define MAX_MEMORY_RANGES 64
--#define CORE_TYPE_ELF32 1
--#define CORE_TYPE_ELF64 2
-+
-+enum coretype {
-+	CORE_TYPE_UNDEF = 0,
-+	CORE_TYPE_ELF32 = 1,
-+	CORE_TYPE_ELF64 = 2
-+};
- 
- extern unsigned char compat_x86_64[];
- extern uint32_t compat_x86_64_size, compat_x86_64_entry32;
-@@ -40,12 +44,12 @@ struct entry16_regs {
- };
- 
- struct arch_options_t {
--	uint8_t  reset_vga;
--	uint16_t serial_base;
--	uint32_t serial_baud;
--	uint8_t  console_vga;
--	uint8_t  console_serial;
--	int	 core_header_type;
-+	uint8_t  	reset_vga;
-+	uint16_t 	serial_base;
-+	uint32_t 	serial_baud;
-+	uint8_t  	console_vga;
-+	uint8_t  	console_serial;
-+	enum coretype	core_header_type;
- };
- 
- int multiboot_x86_probe(const char *buf, off_t len);
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
