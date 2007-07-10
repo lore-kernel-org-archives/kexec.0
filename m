@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I8FOs-0001Cc-70
-	for kexec@lists.infradead.org; Tue, 10 Jul 2007 09:05:07 -0400
-Date: Tue, 10 Jul 2007 15:05:03 +0200
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I8Fdt-0001Ge-MH
+	for kexec@lists.infradead.org; Tue, 10 Jul 2007 14:20:38 +0100
+Date: Tue, 10 Jul 2007 15:20:31 +0200
 From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: Determine version of kernel that produced vmcore
-Message-ID: <20070710130503.GD22862@suse.de>
+Message-ID: <20070710132031.GE22862@suse.de>
 References: <20070706132814.GA7079@suse.de>
 	<20070706145804.GA31409@localdomain>
-	<20070710064817.GC5471@in.ibm.com>
-	<20070710081413.GA29034@localdomain>
-	<20070710121225.GC10121@hmsendeavour.rdu.redhat.com>
+	<20070709092154.GA19705@suse.de>
+	<20070709114131.GA18750@localdomain>
+	<20070709204938.GA21663@suse.de>
+	<20070710044546.GA2240@localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070710121225.GC10121@hmsendeavour.rdu.redhat.com>
+In-Reply-To: <20070710044546.GA2240@localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,39 +30,66 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Neil Horman <nhorman@redhat.com> [2007-07-10 14:12]:
-> On Tue, Jul 10, 2007 at 11:14:14AM +0300, Dan Aloni wrote:
-> > On Tue, Jul 10, 2007 at 12:18:17PM +0530, Vivek Goyal wrote:
-> > > On Fri, Jul 06, 2007 at 05:58:04PM +0300, Dan Aloni wrote:
-> > > > 
-> > >[..]
-> > > > It contains enough information in order to make a compact kernel
-> > > > dump (makedumpinfo needs to go over the struct page arrays). As
-> > > > you see, it also contains the kernel version.
-> > > > 
+Hello,
+
+* Dan Aloni <da-x@monatomic.org> [2007-07-10 06:45]:
 > > > 
-> > > But this will not solve Bernhard's problem where looking at a vmcore
-> > > he wants to know which vmlinux (kernel version with time stamp) has
-> > > generated this vmcore. So adding a ELF NOTE should help.
+> > > Not exactly. Let me describe the procedure in greater detail.
+> > > Basically, it would go like this:
+> > > 
+> > > 1. <normal bootloader boot>
+> > > 2. <normal initramfs>
+> > > 3. embed_configfile /proc/kcore.info /vmlinux-kdump
+> > > 4. kexec -l vmlinux-kdump <....>
+> > > 5. <boot continues>
+> > > 6. <crash>
+> > > 7. <kdump kernel boot>
+> > > 8. <kdump initramfs runs>
+> > > 9. makedumpfile -i /proc/vmcore.info <....>
 > > 
-> > That, or pass it in *runtime* by other means.
-> Wait a second,  I may have been confused before.  Do you want to know the
-> version of the crashing kernel when you look at a core in the crash utilty, or
-> do you want to know it when you are capturing the crash?  If you want the
-> former, then an ELF NOTE would be perfect.  If you want to know the latter, my
-> suggestion would be to simply modify mkdumprd to place the name of the crashing
-> kernel, along with its version directly into the kdump initramfs init script.
-> We can use makedumpfile or readelf to fish out the utsname and just embed it.
-> Either approach is rather easy to do I think, the former would require a kernel
-> modification, while the latter would require some extra scripting.
+> > I don't see why an additional tool would be needed here. kexec already
+> > modifies symbols, so why not adding the functionality into kexec? The
+> > advantage would be that there's no on-disk modification necessary.
+> 
+> Actually, 'embed_configfile /proc/kcore.info /vmlinux-kdump' makes
+> no on-disk modification, since it is all contained in initramfs (we
+> step out of initramfs in stage 5). 
 
-Well, mkdumprd is RedHat specific. (We use the normal mkinitrd for
-this.) 
+Well, that assumes that you load the kdump kernel in the initrd of the
+normal kernel. That's not always the case. For example, in SUSE the
+kdump kernel is loaded as init script in the normal boot process.
+Also, e.g. when testing, you may load the kdump kernel again. So you
+would always need to copy the kdump kernel, modify it with
+embed_configfile and then run kexec.
 
-Also, I don't want to rebuild the initrd of the kdump kernel just only
-after changing the running kernel. That would require to rebuild the
-initrd for the kdump kernel on *every* boot of a kernel that's another
-version than the last booted kernel.
+I think extending kexec to perform this task is more user friendly.
+
+> BTW another option would be containing the whole CONFIGFILE as a 
+> vmlinux-specific ELF note, to be easily read from /proc/vmcore.
+> You'd still need some util like embed_configfile at build time 
+> in order to integrate it, and you'd also need to modify 
+> makedumpfile so it can use it. Actually this sounds quite better
+> to me. I'll try to prepare patches both for makedumpfile and the 
+> kernel and see how easy it is.
+
+Well, in our kernel RPMs there's also a CONFIGFILE which can be
+located on disk based on the version. (If a user builds the kernel
+manually, then he probably builds it with -g anyway because if he
+doesn't, he cannot run makedumpfile.)
+
+The inclusion of the CONFIGFILE can be done by kexec when loading the
+kdump kernel, either from a file or from the compiled-in
+/proc/kcore.info file. I don't see a reason why a tool should modify
+the vmlinux file for kdump on-disk.  Actually, I like the idea of
+including a ELF note that contains CONFIGFILE.
+
+Currently, we still have another problem: On x86_64, if the kernel is
+relocatable, we only can use bzImage, not vmlinux kexec because of a
+GDB bug that doesn't get attention by the GDB developers although I
+found out the patch that broke GDB in that way ... But: That would
+require that embed_configfile must also be able to modify bzImage
+which is very problematic. Adding a ELF in kexec that could be read in
+the /proc/vmcore hasn't that problem.
 
 
 
