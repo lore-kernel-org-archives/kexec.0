@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atlrel9.hp.com ([156.153.255.214])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I984U-0008Eo-8x
-	for kexec@lists.infradead.org; Thu, 12 Jul 2007 19:27:43 -0400
-Message-ID: <4696B7EA.6030009@hp.com>
-Date: Thu, 12 Jul 2007 17:23:22 -0600
-From: Terry Loftin <terry.loftin@hp.com>
+Received: from dsl081-033-126.lax1.dsl.speakeasy.net ([64.81.33.126]
+	helo=bifrost.lang.hm)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I948F-0003bH-Vx
+	for kexec@lists.infradead.org; Thu, 12 Jul 2007 20:15:21 +0100
+Date: Thu, 12 Jul 2007 12:09:31 -0700 (PDT)
+From: david@lang.hm
+Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec base hibernation
+In-Reply-To: <m14pk9fuqa.fsf@ebiederm.dsl.xmission.com>
+Message-ID: <Pine.LNX.4.64.0707121206240.25614@asgard.lang.hm>
+References: <1184167831.12556.13.camel@caritas-dev.intel.com>
+	<20070711172243.ab44c4d4.akpm@linux-foundation.org>
+	<1184251423.9346.55.camel@caritas-dev.intel.com>
+	<m14pk9fuqa.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Subject: [PATCH][IA64][kdump] use machvec=dig on hpzx1 platforms
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,104 +26,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: linux-ia64@vger.kernel.org, tony.luck@intel.com
-Cc: prarit@redhat.com, bwalle@suse.de, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-Tony,
+On Thu, 12 Jul 2007, Eric W. Biederman wrote:
 
-This is a cleaned up version of the machvec=dig patch:
-* added CONFIG_IA64_GENERIC to avoid the compile problems, and
-   test built with different config combinations
-* moved include declaration to be consistent
-* got review and sign off from Alex Williamson as well.
-* +extern int swiotlb_late_init_with_default_size (size_t size);
-   I left this because there is no applicable header file.
-   I'm no fan of extern declarations either, but I didn't want to
-   add a header just for this declaration, nor modify the machvec
-   headers just to accommodate this hack.
+>> 2. Do not reserve memory for kexec kernel. That is, backup needed memory
+>> before kexec and restore them after kexec.
+>> 3. Support the in-place kexec? The relocatable kernel is not necessary
+>> if this can be implemented.
+>
+> It sounds like what you really want is the normal kexec path enhanced
+> so that you can return to the kernel you started with.
+>
+> The normal kexec path already knows how to do the memory shuffle so
+> it can do on demand memory allocation.  That code just needs to
+> enhanced slightly so that you allocate an extra page, setup an inverse
+> scatter gather list for restoring the pages, and teach relocate_kernel.S
+> to preserve it's destination pages by using the inverse scatter gather
+> list.
+>
+> The normal kexec path already calls device_shutdown and the like to
+> stop devices from running.  Although again that code path is not
+> prepared to restore the devices.
 
-Thanks!
+we shouldn't need a restore code path if the new kernel re-detects 
+everything. if kexec already shuts down all the devices we may not need to 
+implement anything new here (although there may be room for future 
+performance optimization)
 
--T
+> ...
+>
+> For prototyping I would:
+> - reserve a chunk of memory (possibly with the crashkernel= option)
+>  and run a relocatable kernel out of it.
+>
+>  By using the normal kexec you can boot a relocatable restore kernel
+>  in that reserved region. It is an extra step but it makes things
+>  work today.
+>
+> - I would use the normal sys_kexec_load.
+>
+> - I would debug/tweak the user space and the code to reenter the
+>  old kernel.  I.e. the device driver stop/start code.
+>
+>  Once it was basically working I would the update normal kexec
+>  memory copy code in relocate.S to preserve the destination pages.
 
-Patch Description:
+for prototyping there's no need to use the same kernel.
 
-On HP zx1 machines, the 'machvec=dig' parameter is needed for the
-kdump kernel to avoid problems with the HP sba iommu.  The problem
-is that during the boot of the kdump kernel, the iommu is re-initialized,
-so in-flight DMA from improperly shutdown drivers causes an IOTLB
-miss which leads to an MCA.  With kdump, the idea is to get into the
-kdump kernel with as little code as we can, so shutting down drivers
-properly is not an option.
+>> 4. Image writing/reading. (Only user space application is needed).
+>
+> And possibly a few fixes to /dev/mem.  This is pretty much the same
+> process as generating a core dump so there should be some synergy with that.
 
-The workaround is to add 'machvec=dig' to the kdump kernel boot
-parameters.  This makes the kdump kernel avoid using the sba iommu
-altogether, leaving the IOTLB intact.  Any ongoing DMA falls
-harmlessly outside the kdump kernel.  After the kdump kernel reboots,
-all devices will have been shutdown properly and DMA stopped.
+what fixes are you thinking of?
 
-This patch pushes that functionality into the sba iommu
-initialization code, so that users won't have to find the obscure
-documentation telling them about 'machvec=dig'.
+you are makeing this sound very simple ;-)
 
-This patch only affects HP platforms.  It still includes one
-extern declaration in the file, because no applicable header file
-exists.
-
-Signed-off-by: Terry Loftin <terry.loftin@hp.com>
-Signed-off-by: Alex Williamson <alex.williamson@hp.com>
----
-
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index c1dca22..6abc080 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -34,6 +34,7 @@ #include <linux/acpi.h>
-  #include <linux/efi.h>
-  #include <linux/nodemask.h>
-  #include <linux/bitops.h>         /* hweight64() */
-+#include <linux/crash_dump.h>
-
-  #include <asm/delay.h>		/* ia64_get_itc() */
-  #include <asm/io.h>
-@@ -43,6 +44,8 @@ #include <asm/system.h>		/* wmb() */
-
-  #include <asm/acpi-ext.h>
-
-+extern int swiotlb_late_init_with_default_size (size_t size);
-+
-  #define PFX "IOC: "
-
-  /*
-@@ -2026,11 +2029,24 @@ sba_init(void)
-  	if (!ia64_platform_is("hpzx1") && !ia64_platform_is("hpzx1_swiotlb"))
-  		return 0;
-
-+#if defined(CONFIG_IA64_GENERIC) && defined(CONFIG_CRASH_DUMP)
-+	/* If we are booting a kdump kernel, the sba_iommu will
-+	 * cause devices that were not shutdown properly to MCA
-+	 * as soon as they are turned back on.  Our only option for
-+	 * a successful kdump kernel boot is to use the swiotlb.
-+	 */
-+	if (elfcorehdr_addr < ELFCORE_ADDR_MAX) {
-+		if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
-+			panic("Unable to initialize software I/O TLB:"
-+				  " Try machvec=dig boot option");
-+		machvec_init("dig");
-+		return 0;
-+	}
-+#endif
-+
-  	acpi_bus_register_driver(&acpi_sba_ioc_driver);
-  	if (!ioc_list) {
-  #ifdef CONFIG_IA64_GENERIC
--		extern int swiotlb_late_init_with_default_size (size_t size);
--
-  		/*
-  		 * If we didn't find something sba_iommu can claim, we
-  		 * need to setup the swiotlb and switch to the dig machvec.
-
-
+David Lang
 
 _______________________________________________
 kexec mailing list
