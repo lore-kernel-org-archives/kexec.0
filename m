@@ -1,20 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1I94iH-0006Ke-Sk
-	for kexec@lists.infradead.org; Thu, 12 Jul 2007 15:52:35 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec base hibernation
-References: <1184167831.12556.13.camel@caritas-dev.intel.com>
-	<20070711172243.ab44c4d4.akpm@linux-foundation.org>
-	<1184251423.9346.55.camel@caritas-dev.intel.com>
-	<m14pk9fuqa.fsf@ebiederm.dsl.xmission.com>
-	<Pine.LNX.4.64.0707121206240.25614@asgard.lang.hm>
-Date: Thu, 12 Jul 2007 13:49:59 -0600
-In-Reply-To: <Pine.LNX.4.64.0707121206240.25614@asgard.lang.hm>
-	(david@lang.hm's message of "Thu, 12 Jul 2007 12:09:31 -0700 (PDT)")
-Message-ID: <m1sl7te714.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+Received: from e35.co.us.ibm.com ([32.97.110.153])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I9C4m-0000tB-AT
+	for kexec@lists.infradead.org; Fri, 13 Jul 2007 04:44:19 +0100
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e35.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6D3hwkJ024646
+	for <kexec@lists.infradead.org>; Thu, 12 Jul 2007 23:43:58 -0400
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.3) with ESMTP id
+	l6D3hwGL175406
+	for <kexec@lists.infradead.org>; Thu, 12 Jul 2007 21:43:58 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l6D3hwcr028175
+	for <kexec@lists.infradead.org>; Thu, 12 Jul 2007 21:43:58 -0600
+Date: Fri, 13 Jul 2007 09:13:58 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: Determine version of kernel that produced vmcore
+Message-ID: <20070713034358.GA4975@in.ibm.com>
+References: <20070706132814.GA7079@suse.de>
+	<20070706145804.GA31409@localdomain>
+	<20070710064817.GC5471@in.ibm.com>
+	<20070710120904.GB10121@hmsendeavour.rdu.redhat.com>
+	<20070710165201.GA7984@localdomain>
+	<20070711060726.GA5310@in.ibm.com>
+	<20070711073216.GA11757@localdomain>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070711073216.GA11757@localdomain>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,78 +42,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: david@lang.hm
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Dan Aloni <da-x@monatomic.org>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Bernhard Walle <bwalle@suse.de>
 
-david@lang.hm writes:
+On Wed, Jul 11, 2007 at 10:32:16AM +0300, Dan Aloni wrote:
+[..]
+> > This implementation looks interesting. No need of debug compiled
+> > vmlinux for dump filtering purposes. No run time vmlinux binary modifications
+> > as suggested by your previous mails. People can export kernel CONFIG info
+> > like PAGESIZE etc with the help of this ELF note and any tool which is
+> > processing kernel core file can benifit from this. No guesses required for
+> > determining the page size of crashed kernel.
+> > 
+> > All the info required by dump filtering tool, put it into an ELF note, 
+> > pass it to second kernel which appends it to final vmcore. The only concern
+> > here again is that type of ELF note is not standard. The contents of 
+> > ELF notes will keep on changing over a period of time. For example if a 
+> > new memory model evolves. Now everytime this note data changes one shall
+> > have to update mkdumpfile and user shall have to newer version. If there
+> > are any issues, user will not come to know about the issue during kdump
+> > service enablement time, instead it will be detected during dump 
+> > capture time. It is too late till then.
+> 
+> I guess that dump filtering will needed to be tested at least once 
+> under various platforms for every major release of the kernel to see 
+> if the information exported by the kernel through this elf note is 
+> still sufficient. 
+> 
+> Adding more info to this elf note as needed can be done through a simple 
+> patch to the kernel and it can be tested along with mkdumpfile changes 
+> even before a major version gets released.
+> 
+> More things to consider:
+> 
+>  * Elf note size is currently limited to 1024, we might need a bit more
+>    (currently this elf note is in the 900-area).
 
-> On Thu, 12 Jul 2007, Eric W. Biederman wrote:
->
->>> 2. Do not reserve memory for kexec kernel. That is, backup needed memory
->>> before kexec and restore them after kexec.
->>> 3. Support the in-place kexec? The relocatable kernel is not necessary
->>> if this can be implemented.
->>
->> It sounds like what you really want is the normal kexec path enhanced
->> so that you can return to the kernel you started with.
->>
->> The normal kexec path already knows how to do the memory shuffle so
->> it can do on demand memory allocation.  That code just needs to
->> enhanced slightly so that you allocate an extra page, setup an inverse
->> scatter gather list for restoring the pages, and teach relocate_kernel.S
->> to preserve it's destination pages by using the inverse scatter gather
->> list.
->>
->> The normal kexec path already calls device_shutdown and the like to
->> stop devices from running.  Although again that code path is not
->> prepared to restore the devices.
->
-> we shouldn't need a restore code path if the new kernel re-detects
-> everything. if kexec already shuts down all the devices we may not need to
-> implement anything new here (although there may be room for future performance
-> optimization)
+How about putting all the required info in a structure and then do
+sizeof(struct) and reserve that much of memory at compile time for the
+note. This will mean there are no hardcodings about the size of the note.
 
-Yes, reusing device hotplug...  You still need the code path for little
-things and to kick of the device redetection but if you get lucky
-it won't have to do much.  Of course speed is important.
+But I guess, one shall have to keep user space kexec-tools in sync to
+create a PT_NOTE for that. May be exporting this info in header files to
+user space might help.
 
->> ...
->>
->> For prototyping I would:
->> - reserve a chunk of memory (possibly with the crashkernel= option)
->>  and run a relocatable kernel out of it.
->>
->>  By using the normal kexec you can boot a relocatable restore kernel
->>  in that reserved region. It is an extra step but it makes things
->>  work today.
->>
->> - I would use the normal sys_kexec_load.
->>
->> - I would debug/tweak the user space and the code to reenter the
->>  old kernel.  I.e. the device driver stop/start code.
->>
->>  Once it was basically working I would the update normal kexec
->>  memory copy code in relocate.S to preserve the destination pages.
->
-> for prototyping there's no need to use the same kernel.
->
->>> 4. Image writing/reading. (Only user space application is needed).
->>
->> And possibly a few fixes to /dev/mem.  This is pretty much the same
->> process as generating a core dump so there should be some synergy with that.
->
-> what fixes are you thinking of?
+>  * If we move the generation of the elf note to the boot time instead 
+>    of crash time as you suggested, we can also make it viewable as a 
+>    virtual file.
 
-Don't really know.  I figured /dev/mem was sufficient but the kexec
-on panic folks tell me it doesn't work for areas we have told the kernel
-isn't memory, I haven't had time so I haven't pushed it.
+That would make sense. In that case, makedumpfile can do some verification
+on the exported data and scream if something is not right at kdump service
+start time.
 
-> you are makeing this sound very simple ;-)
+>  * We should come up with a standard name for the note (LINUX, or 
+>    LINUX-VMCORE, etc).
+> 
 
-Which is the primary point of using kexec.  If it isn't simple then we
-are doing something wrong...
+How about VMCOREINFO?
 
-Eric
+> > I think we can make OSRELEASE info into a separate ELF note. Something
+> > like a note type "UTS_RELEASE". This ELF note type then can also be 
+> > reused for appending an ELF note to vmlinux to determine the kernel
+> > version.
+> 
+> Agreed.
+> 
+> Actually, having a UTS_RELEASE note attached to vmlinux itself is quite 
+> easy to implement. All we need is some .s file in the kernel doing 
+> something similar to this (inspired by some post made by Ulrich Drepper):
+> 
+> #include <linux/utsrelease.h>
+> 
+> 	.section ".note.UTS_RELEASE", "a"
+> 	.align 4
+> 	.long 1f - 0f		/* name length */
+> 	.long 3f - 2f		/* data length */
+> 	.long  1		/* note type */
+> 0:	.asciz "UTS_RELEASE"	/* uts release */
+> 1:	.align 4	
+> 2:	.asciz UTS_RELEASE     	/* note data */
+> 3:	.align 4		/* pad out section */
+> 
+> > We don't have to save this info in ELF note format after the crash. This
+> > info gets fixed once kernel is booted. I think we should save it in some
+> > init routine and not in crash_kexec().
+> 
+> Agreed.
+> 
+> > > +extern unsigned char mkdfinfo_data[MAX_NOTE_BYTES];
+> > > +extern unsigned int mkdfinfo_size;
+> > > +extern unsigned int mkdfinfo_max_size;
+> > > +extern note_buf_t mkdfinfo_note;
+> > 
+> > mkdfinfo does not seem to be very appropriate name. We probably need to have a
+> > better name. This all seems to be debug data (symbol info, structure size,
+> > offsets of struct members) so how about "debuginfo"?
+> 
+> 'debuginfo' can be confused with the more standard DWARF debuginfo. 
+> How about vmcoreinfo, dumpinfo, debugaux, debugauxinfo, or 
+> dumpauxinfo?
+> 
+
+To me vmcoreinfo looks like a good name to begin with. As of today vmcore
+is the only consumer of the info. We might have to migrate to a more generic
+name down the line if consumers of the info pop-up.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
