@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1I9MsQ-0002Si-07
-	for kexec@lists.infradead.org; Fri, 13 Jul 2007 11:16:18 -0400
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1I9OGv-0003Ar-1D
+	for kexec@lists.infradead.org; Fri, 13 Jul 2007 12:45:39 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec base hibernation
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <m14pk9fuqa.fsf@ebiederm.dsl.xmission.com>
 References: <1184167831.12556.13.camel@caritas-dev.intel.com>
 	<20070711172243.ab44c4d4.akpm@linux-foundation.org>
 	<1184251423.9346.55.camel@caritas-dev.intel.com>
 	<m14pk9fuqa.fsf@ebiederm.dsl.xmission.com>
-Date: Fri, 13 Jul 2007 23:15:25 +0000
-Message-Id: <1184368525.1069.68.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	<1184368525.1069.68.camel@caritas-dev.intel.com>
+Date: Fri, 13 Jul 2007 10:43:03 -0600
+In-Reply-To: <1184368525.1069.68.camel@caritas-dev.intel.com> (Ying Huang's
+	message of "Fri, 13 Jul 2007 23:15:25 +0000")
+Message-ID: <m1k5t4dzl4.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,154 +27,144 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Huang, Ying" <ying.huang@intel.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Thu, 2007-07-12 at 10:32 -0600, Eric W. Biederman wrote:
-> >
-> > 1. Separate device suspend from device hibernate.
-> 
-> Actually in some very practical sense we already have two copies of
-> this in the kernel.  device_shutdown and the hotunplug/module
-> remove code.  So it is should be mostly a matter of using what we have.
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-Maybe I misuse the terminology. The "device hibernate" here means put
-device into quiescent state and save the device state into memory for
-later restore.
+> On Thu, 2007-07-12 at 10:32 -0600, Eric W. Biederman wrote:
+>> >
+>> > 1. Separate device suspend from device hibernate.
+>> 
+>> Actually in some very practical sense we already have two copies of
+>> this in the kernel.  device_shutdown and the hotunplug/module
+>> remove code.  So it is should be mostly a matter of using what we have.
+>
+> Maybe I misuse the terminology. The "device hibernate" here means put
+> device into quiescent state and save the device state into memory for
+> later restore.
+>
+> But, how to restore device state after jumping back from kexeced kernel
+> if device_shutdown or hotplug/module removing code is used?
 
-But, how to restore device state after jumping back from kexeced kernel
-if device_shutdown or hotplug/module removing code is used?
+With device_shutdown there really isn't a path (although putting
+the device into a quiescent state is exactly what that method does).
 
-> Basically all this entails is to modify sys_reboot()
-> and adding a LINUX_REBOOT_CMD_KSPAWN and have that command
-> enter the kexec path with the appropriate set of calls.
-> I would be really surprised if this winds up with much
-> more code then the current kernel_kexec function.
+However with the module remove path you disassociate the pci device
+and the pci device driver and then after restore you go through
+the pci devices and you redo the association (as if the pci
+device or the module had just been loaded).
 
-Yes, this is the right place to trigger kexec jump. Thank you for your
-valuable comments. It seems that just the device state
-quiesce/save/restore and CPU state save/restore code need to be added.
+For devices that have a really slow probe/initialization this might be
+an issue but it will work, and generally it will work fairly quickly.
 
-> This might wind up exactly the same as the current
-> LINUX_REBOOT_CMD_KEXEC but at least until we have a working
-> prototype it makes sense to allow for differences.
-> 
-> This should allow the kexec based implementation to coincide
-> with the existing software suspend to disk code until it is proven out
-> and then we can just remove all of the software suspend code to
-> disk code.
-> 
-> > 2. Do not reserve memory for kexec kernel. That is, backup needed memory
-> > before kexec and restore them after kexec.
-> > 3. Support the in-place kexec? The relocatable kernel is not necessary
-> > if this can be implemented.
-> 
-> It sounds like what you really want is the normal kexec path enhanced
-> so that you can return to the kernel you started with.
+So in that sense restore may be the wrong concept for devices.
+At least for prototypes.
 
-Yes
+>> Basically all this entails is to modify sys_reboot()
+>> and adding a LINUX_REBOOT_CMD_KSPAWN and have that command
+>> enter the kexec path with the appropriate set of calls.
+>> I would be really surprised if this winds up with much
+>> more code then the current kernel_kexec function.
+>
+> Yes, this is the right place to trigger kexec jump. Thank you for your
+> valuable comments. It seems that just the device state
+> quiesce/save/restore and CPU state save/restore code need to be
+> added.
 
-> The normal kexec path already knows how to do the memory shuffle so
-> it can do on demand memory allocation.  That code just needs to
-> enhanced slightly so that you allocate an extra page, setup an inverse
-> scatter gather list for restoring the pages, and teach relocate_kernel.S
-> to preserve it's destination pages by using the inverse scatter gather
-> list.
+Yes.
 
-Yes, I have seen that code. The framework of current kexec memory
-copying can be used for memory backup before kexec.
+For cpu state I'm fairly certain we don't need to do anything fancy.
 
-> The normal kexec path already calls device_shutdown and the like to
-> stop devices from running.  Although again that code path is not
-> prepared to restore the devices.
+At least for the first pass prototyping with a uniprocessor kernel
+will remove that hurdle.
 
-Yes, the device state quiesce/save/restore and CPU state save/restore
-code should be added.
 
-> For prototyping I would:
-> - reserve a chunk of memory (possibly with the crashkernel= option)
->   and run a relocatable kernel out of it.  
-> 
->   By using the normal kexec you can boot a relocatable restore kernel
->   in that reserved region. It is an extra step but it makes things
->   work today.
-> 
-> - I would use the normal sys_kexec_load.
-> 
-> - I would debug/tweak the user space and the code to reenter the
->   old kernel.  I.e. the device driver stop/start code.
+>> For prototyping I would:
+>> - reserve a chunk of memory (possibly with the crashkernel= option)
+>>   and run a relocatable kernel out of it.  
+>> 
+>>   By using the normal kexec you can boot a relocatable restore kernel
+>>   in that reserved region. It is an extra step but it makes things
+>>   work today.
+>> 
+>> - I would use the normal sys_kexec_load.
+>> 
+>> - I would debug/tweak the user space and the code to reenter the
+>>   old kernel.  I.e. the device driver stop/start code.
+>
+> The above 3 steps are exactly what I have done in this patch. I reserve
+> memory with crashkernel=, use sys_kexec_load (kexec -p ...) to load the
+> kexec kernel and manage to jump back to normal kernel. But I should not
+> mix the kexec jump trigger code with the software suspend code, that is,
+> use "kexec -e", not "echo disk > /sys/power/state".
 
-The above 3 steps are exactly what I have done in this patch. I reserve
-memory with crashkernel=, use sys_kexec_load (kexec -p ...) to load the
-kexec kernel and manage to jump back to normal kernel. But I should not
-mix the kexec jump trigger code with the software suspend code, that is,
-use "kexec -e", not "echo disk > /sys/power/state".
+Right.  That caused all kinds of weirdness in your patch.
 
->   Once it was basically working I would the update normal kexec
->   memory copy code in relocate.S to preserve the destination pages.
 
-This is what I plan to do.
+>> > 5. A smooth resume process. Maybe it is not needed to kexec a new kernel
+>> > for resume. For example, in the first stage of kernel boot, just first
+>> > 16M (or a little more) RAM is used, if the resume image is found, the
+>> > saved kernel image is resumed; if the resume image is not found, turn on
+>> > the remaining RAM. This will depends on 3.
+>> 
+>> Well I expect the resume will be load the resumed kernel into reserved
+>> memory.  And kexec a very small assembly stub that will jump back
+>> to the code in relocate_kernel.S which will call ret.
+>> 
+>> Then either hot add the rest of our memory or kexec to a kernel without
+>> restrictions.
+>
+> Why a assembly stub is necessary? Is it not sufficient that just
+> continue to complete a normal boot (hot add the reset of memory) or load
+> the hibernated kernel (hibernated image) and jump to it?
 
-> > 4. Image writing/reading. (Only user space application is needed).
-> 
-> And possibly a few fixes to /dev/mem.  This is pretty much the same
-> process as generating a core dump so there should be some synergy with that.
-> 
-> We probably want to use something like the ELF header the crashdump
-> path uses to communicate to the kernel saving memory which memory
-> regions need to be saved.  Which probably means that we you can use the
-> exact same method as the kexec on panic kernel uses to save memory.
+I was thinking the assembly stub would be the small piece that jumps
+to loaded hibernated kernel.  Quite possibly we could just get away
+with providing no memory and just an entry point to kexec but it
+makes sense to me to plan on running a couple of instructions.
 
-This sound good. The information in ELF header can be used to locate
-necessary information for image writing.
+Actually the way the kexec infrastructure it might be reasonable to
+just use sys_kexec_load to load the entire hibernated image.  Except
+for the fact that sys_kexec_load requires the source pages to be
+in the processes memory image the code shouldn't have the 50% of
+memory limitation already.
 
-> > 5. A smooth resume process. Maybe it is not needed to kexec a new kernel
-> > for resume. For example, in the first stage of kernel boot, just first
-> > 16M (or a little more) RAM is used, if the resume image is found, the
-> > saved kernel image is resumed; if the resume image is not found, turn on
-> > the remaining RAM. This will depends on 3.
-> 
-> Well I expect the resume will be load the resumed kernel into reserved
-> memory.  And kexec a very small assembly stub that will jump back
-> to the code in relocate_kernel.S which will call ret.
-> 
-> Then either hot add the rest of our memory or kexec to a kernel without
-> restrictions.
+If we can get that going we don't even need to restrict the first
+kernels memory.  So it might just require teaching sys_kexec_load
+how to steal process pages.  Anyway something to think about.
 
-Why a assembly stub is necessary? Is it not sufficient that just
-continue to complete a normal boot (hot add the reset of memory) or load
-the hibernated kernel (hibernated image) and jump to it?
+>> Well just not loading drivers you aren't going to use and generally avoiding
+>> long disk probing times will help here.  We control all of the code so
+>> it should be relatively straight forward.
+>
+> Just not loading unnecessary drivers may be sufficient. But further
+> optimization is also possible.
+>
+> The basic idea of optimization is:
+>
+> For first run:
+>
+> 1. boot the normal kernel A
+> 2. kexec the hibernate kernel B
+> 3. jump back to kernel A
+> 4. Save the kernel B into a image
+> 5. Work under kernel A.
+>
+> For normal use:
+>
+> 1. boot the normal kernel A
+> 2. resume the image of kernel B
+> 3. jump to kernel B
+> 4. Save the kernel A into image
 
-> > 6. Reduce the boot-up time of kexec kernel. Maybe the kexec kernel can
-> > be hibernate/resume by the normal kernel too. This way, a real
-> > kexec/boot-up is only needed for the first time.
-> 
-> Well just not loading drivers you aren't going to use and generally avoiding
-> long disk probing times will help here.  We control all of the code so
-> it should be relatively straight forward.
+Yes.  That may help.  Cooperative multitasking between kernels.
 
-Just not loading unnecessary drivers may be sufficient. But further
-optimization is also possible.
+Anyway all of that comes after we get something simple working.
+Then we can see what really needs to be optimized, and what works
+well enough.
 
-The basic idea of optimization is:
-
-For first run:
-
-1. boot the normal kernel A
-2. kexec the hibernate kernel B
-3. jump back to kernel A
-4. Save the kernel B into a image
-5. Work under kernel A.
-
-For normal use:
-
-1. boot the normal kernel A
-2. resume the image of kernel B
-3. jump to kernel B
-4. Save the kernel A into image
-
-Best Regards,
-Huang Ying
+Eric
 
 _______________________________________________
 kexec mailing list
