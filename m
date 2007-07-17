@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IAiFm-0007Qs-6C
-	for kexec@lists.infradead.org; Tue, 17 Jul 2007 04:18:35 -0400
-Date: Tue, 17 Jul 2007 10:17:24 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: Determine version of kernel that produced vmcore
-Message-ID: <20070717081724.GA16853@suse.de>
-References: <20070710120243.GA10121@hmsendeavour.rdu.redhat.com>
-	<20070713200533oomichi@mail.jp.nec.com>
-	<20070713131550.GB10985@suse.de>
-	<20070716041918.GA11390@in.ibm.com>
-	<20070716115707.GA29923@suse.de> <20070717035055.GA4869@in.ibm.com>
+Received: from dsl081-033-126.lax1.dsl.speakeasy.net ([64.81.33.126]
+	helo=bifrost.lang.hm)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IAiJ3-0003Tu-R0
+	for kexec@lists.infradead.org; Tue, 17 Jul 2007 09:21:19 +0100
+Date: Tue, 17 Jul 2007 01:13:49 -0700 (PDT)
+From: david@lang.hm
+Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec base	hibernation
+In-Reply-To: <1184491804.1898.121.camel@caritas-dev.intel.com>
+Message-ID: <Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
+References: <1184167831.12556.13.camel@caritas-dev.intel.com> 
+	<200707141159.47289.rjw@sisk.pl>
+	<1184410554.1898.84.camel@caritas-dev.intel.com>
+	<200707142116.10237.rjw@sisk.pl>
+	<1184491804.1898.121.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070717035055.GA4869@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,23 +27,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@in.ibm.com>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-* Vivek Goyal <vgoyal@in.ibm.com> [2007-07-17 05:50]:
-> 
-> Thinking more about it. These config variables are accessible in user
-> space in first kernel through sysconf() interface. In that case kexec
-> can pack required config variables into an ELF note and kernel does not
-> have to intervene.
+Ying, as the kexec guru in this thread I have a question for you about how 
+kexec works (and possibly where you are going with this)
 
-That's a good point. So we'd only need to aggree on a format for all
-this information. I think the makedumpfile format is quite good --
-instead of inventing another new format.
+for the power-off hibernate with ACPI disabled the hibernation seems 
+fairly straightforward (although there are still some missing pieces)
 
+however, since the resume designed for ACPI won't work would the following 
+approach work
 
-Thanks,
-   Bernhard
+1. boot one kernel
+2. setup a kexec the same way you would for hibernate
+3. kexec to the new kernel
+4. overwrite the memory of the first kernel
+5. kexec 'back' to the main kernel that has now been overwritten by what was saved?
+
+as part of this question, when you do a kexec, how does the kernel that 
+you are doing the kexec to know what to run next?
+
+it needs to do some initialization first before it starts running normal 
+things, and at that point it the move back doesn't look for init like a 
+normal kernel boot (or the system would effectivly boot instead of picking 
+up where it left off)
+
+is this 'restart point' flexible enough that either the pre-hibernate 
+kerenl or the small hibernate kernel could tell the pre-hibernate kernel 
+to go into suspend-to-ram mode before doing anything else?
+
+Rafael,
+   if ACPI is disabled and not used, is there any memory in the origional 
+kernel that _must not_ be saved in the hibernate image? I recognise that 
+for efficancy it would save time to not save free memory, but if I'm 
+willing to waste some resources would it hurt to save everything?
+
+David Lang
 
 _______________________________________________
 kexec mailing list
