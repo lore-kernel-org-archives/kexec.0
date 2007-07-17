@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IAnXO-00039b-T7
-	for kexec@lists.infradead.org; Tue, 17 Jul 2007 09:56:28 -0400
-Date: Tue, 17 Jul 2007 15:56:16 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] [makedumpfile] Introduce -f (force) option
-Message-ID: <20070717135615.GA19864@suse.de>
+Received: from ogre.sisk.pl ([217.79.144.158])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IAnpQ-0003Jm-BG
+	for kexec@lists.infradead.org; Tue, 17 Jul 2007 10:15:06 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec
+	=?iso-8859-15?q?base=09hibernation?=
+Date: Tue, 17 Jul 2007 16:22:52 +0200
+References: <1184167831.12556.13.camel@caritas-dev.intel.com>
+	<Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
+	<1184676518.10998.34.camel@caritas-dev.intel.com>
+In-Reply-To: <1184676518.10998.34.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <200707171622.53657.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,92 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-As I always forget to delete the produced dump file when testing
-something, I'd like to see a `-f' option that forces makedumpfile to
-overwrite existing files.
+On Tuesday, 17 July 2007 14:48, Huang, Ying wrote:
+> On Tue, 2007-07-17 at 01:13 -0700, david@lang.hm wrote:
+> > however, since the resume designed for ACPI won't work would the following 
+> > approach work
+> > 
+> > 1. boot one kernel
+> > 2. setup a kexec the same way you would for hibernate
+> > 3. kexec to the new kernel
+> > 4. overwrite the memory of the first kernel
+> > 5. kexec 'back' to the main kernel that has now been overwritten by what was saved?
+> > 
+> > as part of this question, when you do a kexec, how does the kernel that 
+> > you are doing the kexec to know what to run next?
+> 
+> For kernel in 3 that do kexec, the devices and CPU state are saved into
+> memory before executing the new kernel. So when jumping back, the
+> control will continue from kexec point. If the memory image of main
+> kernel is restored from disk, the devices and CPU state in memory is
+> restored too. Before jumping back in 5, the devices are put in the known
+> state, after jumping back, the devices and CPU state is restored. If the
+> "kexec -j" is used to trigger the kexec in 3, the system will continue
+> with "kexec -j" exiting with exit code 0.
+> 
+> > it needs to do some initialization first before it starts running normal 
+> > things, and at that point it the move back doesn't look for init like a 
+> > normal kernel boot (or the system would effectivly boot instead of picking 
+> > up where it left off)
+> 
+> I think the early initialization can be done in a initramfs. At that
+> point, the resume image can be checked, the next step depends on the
+> result of checking.
+> 
+> > is this 'restart point' flexible enough that either the pre-hibernate 
+> > kerenl or the small hibernate kernel could tell the pre-hibernate kernel 
+> > to go into suspend-to-ram mode before doing anything else?
+> 
+> It is possible for hibernate kernel to pass information back to
+> pre-hibernate kernel. For example, the information can be passed in jump
+> buffer page. 
+
+I think it would be reasonable to have a protocol defined for passing this
+information, so that it's independent of the kernel version etc.
+
+Greetings,
+Rafael
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
----
- makedumpfile.8 |   10 ++++++++++
- makedumpfile.c |   11 +++++++++--
- makedumpfile.h |    1 +
- 3 files changed, 20 insertions(+), 2 deletions(-)
-
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -144,6 +144,16 @@ support compressed data.
- # makedumpfile \-E \-d 31 \-x vmlinux /proc/vmcore dumpfile
- 
- .TP
-+\fB\-f\fR
-+Force existing files to be overwritten.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-f \-x vmlinux /proc/vmcore dumpfile
-+.br
-+This command overwrites \fIdumpfile\fR if it already exists.
-+
-+.TP
- \fB\-x\fR \fIVMLINUX\fR
- Specify the first kernel's \fIVMLINUX\fR with debug information to analyze the
- first kernel's memory usage.
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -409,6 +409,10 @@ int
- open_dump_file(struct DumpInfo *info)
- {
- 	int fd;
-+	int open_flags = O_RDWR|O_CREAT;
-+
-+	if (!info->flag_force)
-+		open_flags |= O_EXCL;
- 
- 	if (info->flag_flatten) {
- 		if ((info->name_dumpfile
-@@ -420,7 +424,7 @@ open_dump_file(struct DumpInfo *info)
- 		fd = STDOUT_FILENO;
- 		strcpy(info->name_dumpfile, FILENAME_STDOUT);
- 
--	} else if ((fd = open(info->name_dumpfile, O_RDWR|O_CREAT|O_EXCL,
-+	} else if ((fd = open(info->name_dumpfile, open_flags,
- 	    S_IRUSR|S_IWUSR)) < 0) {
- 		ERRMSG("Can't open the dump file(%s). %s\n",
- 		    info->name_dumpfile, strerror(errno));
-@@ -4624,7 +4628,7 @@ main(int argc, char *argv[])
- 	vt = &info->vm_table;
- 
- 	info->block_order = DEFAULT_ORDER;
--	while ((opt = getopt(argc, argv, "b:cDd:EFg:hi:Rvx:")) != -1) {
-+	while ((opt = getopt(argc, argv, "b:cDd:EFg:hi:Rvx:f")) != -1) {
- 		switch (opt) {
- 		case 'b':
- 			info->block_order = atoi(optarg);
-@@ -4646,6 +4650,9 @@ main(int argc, char *argv[])
- 		case 'F':
- 			info->flag_flatten = 1;
- 			break;
-+		case 'f':
-+			info->flag_force = 1;
-+			break;
- 		case 'g':
- 			info->flag_generate_config = 1;
- 			info->name_configfile = optarg;
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -552,6 +552,7 @@ struct DumpInfo {
- 						format to a standard out */
- 	int		flag_rearrange;      /* flag of creating dumpfile from
- 						flattened format */
-+	int		flag_force;	     /* overwrite existing stuff */
- 	long		page_size;           /* size of page */
- 	long		page_shift;
- 	unsigned long long	max_mapnr;   /* number of page descriptor */
+-- 
+"Premature optimization is the root of all evil." - Donald Knuth
 
 _______________________________________________
 kexec mailing list
