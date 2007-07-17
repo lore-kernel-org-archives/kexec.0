@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IAk0J-0000ON-Cn
-	for kexec@lists.infradead.org; Tue, 17 Jul 2007 06:10:05 -0400
-Subject: [PATCH RFC] Debug handling of early spurious interrupts
-From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
-Date: Tue, 17 Jul 2007 19:09:57 +0900
-Message-Id: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
-Mime-Version: 1.0
+	id 1IAlbF-0001iM-B6
+	for kexec@lists.infradead.org; Tue, 17 Jul 2007 07:52:21 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec
+	=?iso-8859-1?q?base=09hibernation?=
+Date: Tue, 17 Jul 2007 13:59:31 +0200
+References: <1184167831.12556.13.camel@caritas-dev.intel.com>
+	<1184491804.1898.121.camel@caritas-dev.intel.com>
+	<Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
+In-Reply-To: <Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200707171359.33317.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,75 +26,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: david@lang.hm
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-With the advent of kdump it is possible that device drivers receive
-interrupts generated in the context of a previous kernel. Ideally
-quiescing the underlying devices should suffice but not all drivers
-do this, either because it is not possible or because they did not
-contemplate this case. Thus drivers ought to be able to handle
-interrupts coming in as soon as the interrupt handler is registered.
+On Tuesday, 17 July 2007 10:13, david@lang.hm wrote:
+> Ying, as the kexec guru in this thread I have a question for you about how 
+> kexec works (and possibly where you are going with this)
+> 
+> for the power-off hibernate with ACPI disabled the hibernation seems 
+> fairly straightforward (although there are still some missing pieces)
+> 
+> however, since the resume designed for ACPI won't work would the following 
+> approach work
+> 
+> 1. boot one kernel
+> 2. setup a kexec the same way you would for hibernate
+> 3. kexec to the new kernel
+> 4. overwrite the memory of the first kernel
+> 5. kexec 'back' to the main kernel that has now been overwritten by what was saved?
+> 
+> as part of this question, when you do a kexec, how does the kernel that 
+> you are doing the kexec to know what to run next?
+> 
+> it needs to do some initialization first before it starts running normal 
+> things, and at that point it the move back doesn't look for init like a 
+> normal kernel boot (or the system would effectivly boot instead of picking 
+> up where it left off)
+> 
+> is this 'restart point' flexible enough that either the pre-hibernate 
+> kerenl or the small hibernate kernel could tell the pre-hibernate kernel 
+> to go into suspend-to-ram mode before doing anything else?
+> 
+> Rafael,
+>    if ACPI is disabled and not used, is there any memory in the origional 
+> kernel that _must not_ be saved in the hibernate image? I recognise that 
+> for efficancy it would save time to not save free memory, but if I'm 
+> willing to waste some resources would it hurt to save everything?
 
-Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
----
+On some systems there are valid 'struct page' structures that correspond to
+memory holes and the kernel will oops if you try to save the contents of
+these pages.  Unfortunately, only the early initialization platform code can
+tell you which they are.
 
-diff -urNp linux-2.6.22-orig/kernel/irq/manage.c linux-2.6.22/kernel/irq/manage.c
---- linux-2.6.22-orig/kernel/irq/manage.c	2007-07-09 08:32:17.000000000 +0900
-+++ linux-2.6.22/kernel/irq/manage.c	2007-07-17 18:37:24.000000000 +0900
-@@ -537,6 +537,29 @@ int request_irq(unsigned int irq, irq_ha
- 
- 	select_smp_affinity(irq);
- 
-+#if defined(CONFIG_DEBUG_PENDING_IRQ) || defined(CONFIG_DEBUG_SHIRQ)
-+#ifndef CONFIG_DEBUG_PENDING_IRQ
-+	if (irqflags & IRQF_SHARED) {
-+		/*
-+		 * It's a shared IRQ -- the driver ought to be prepared for it
-+		 * to happen immediately, so let's make sure....
-+		 * We do this before actually registering it, to make sure that
-+		 * a 'real' IRQ doesn't run in parallel with our fake.
-+		 */
-+#endif /* !CONFIG_DEBUG_PENDING_IRQ */
-+		if (irqflags & IRQF_DISABLED) {
-+			unsigned long flags;
-+
-+			local_irq_save(flags);
-+			handler(irq, dev_id);
-+			local_irq_restore(flags);
-+		} else
-+			handler(irq, dev_id);
-+#ifndef CONFIG_DEBUG_PENDING_IRQ
-+	}
-+#endif /* !CONFIG_DEBUG_PENDING_IRQ */
-+#endif /* CONFIG_DEBUG_PENDING_IRQ || CONFIG_DEBUG_SHIRQ */
-+
- #ifdef CONFIG_DEBUG_SHIRQ
- 	if (irqflags & IRQF_SHARED) {
- 		/*
-diff -urNp linux-2.6.22-orig/lib/Kconfig.debug linux-2.6.22/lib/Kconfig.debug
---- linux-2.6.22-orig/lib/Kconfig.debug	2007-07-09 08:32:17.000000000 +0900
-+++ linux-2.6.22/lib/Kconfig.debug	2007-07-17 18:52:00.000000000 +0900
-@@ -77,6 +77,17 @@ config DEBUG_KERNEL
- 	  Say Y here if you are developing drivers or trying to debug and
- 	  identify kernel problems.
- 
-+config DEBUG_PENDING_IRQ
-+	bool "Debug handling of early spurious interrupts"
-+	depends on DEBUG_KERNEL && GENERIC_HARDIRQS
-+	help
-+	  With the advent of kdump it is possible that device drivers receive
-+	  interrupts generated in the context of a previous kernel. Ideally
-+	  quiescing the underlying devices should suffice but not all drivers
-+	  do this, either because it is not possible or because they did not
-+	  contemplate this case. Thus drivers ought to be able to handle
-+	  interrupts coming in as soon as the interrupt handler is registered.
-+
- config DEBUG_SHIRQ
- 	bool "Debug shared IRQ handlers"
- 	depends on DEBUG_KERNEL && GENERIC_HARDIRQS
+Greetings,
+Rafael
 
 
+-- 
+"Premature optimization is the root of all evil." - Donald Knuth
 
 _______________________________________________
 kexec mailing list
