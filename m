@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
+Received: from mga03.intel.com ([143.182.124.21])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IAlbF-0001iM-B6
-	for kexec@lists.infradead.org; Tue, 17 Jul 2007 07:52:21 -0400
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec
-	=?iso-8859-1?q?base=09hibernation?=
-Date: Tue, 17 Jul 2007 13:59:31 +0200
+	id 1IAmUf-0002an-6L
+	for kexec@lists.infradead.org; Tue, 17 Jul 2007 08:49:36 -0400
+Subject: Re: [PATCH 0/2] Kexec jump: The first step to kexec base	hibernation
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
 References: <1184167831.12556.13.camel@caritas-dev.intel.com>
+	<200707141159.47289.rjw@sisk.pl>
+	<1184410554.1898.84.camel@caritas-dev.intel.com>
+	<200707142116.10237.rjw@sisk.pl>
 	<1184491804.1898.121.camel@caritas-dev.intel.com>
 	<Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
-In-Reply-To: <Pine.LNX.4.64.0707170101010.19248@asgard.lang.hm>
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200707171359.33317.rjw@sisk.pl>
+Date: Tue, 17 Jul 2007 20:48:38 +0800
+Message-Id: <1184676518.10998.34.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,15 +28,9 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: david@lang.hm
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Tuesday, 17 July 2007 10:13, david@lang.hm wrote:
-> Ying, as the kexec guru in this thread I have a question for you about how 
-> kexec works (and possibly where you are going with this)
-> 
-> for the power-off hibernate with ACPI disabled the hibernation seems 
-> fairly straightforward (although there are still some missing pieces)
-> 
+On Tue, 2007-07-17 at 01:13 -0700, david@lang.hm wrote:
 > however, since the resume designed for ACPI won't work would the following 
 > approach work
 > 
@@ -47,33 +42,35 @@ On Tuesday, 17 July 2007 10:13, david@lang.hm wrote:
 > 
 > as part of this question, when you do a kexec, how does the kernel that 
 > you are doing the kexec to know what to run next?
-> 
+
+For kernel in 3 that do kexec, the devices and CPU state are saved into
+memory before executing the new kernel. So when jumping back, the
+control will continue from kexec point. If the memory image of main
+kernel is restored from disk, the devices and CPU state in memory is
+restored too. Before jumping back in 5, the devices are put in the known
+state, after jumping back, the devices and CPU state is restored. If the
+"kexec -j" is used to trigger the kexec in 3, the system will continue
+with "kexec -j" exiting with exit code 0.
+
 > it needs to do some initialization first before it starts running normal 
 > things, and at that point it the move back doesn't look for init like a 
 > normal kernel boot (or the system would effectivly boot instead of picking 
 > up where it left off)
-> 
+
+I think the early initialization can be done in a initramfs. At that
+point, the resume image can be checked, the next step depends on the
+result of checking.
+
 > is this 'restart point' flexible enough that either the pre-hibernate 
 > kerenl or the small hibernate kernel could tell the pre-hibernate kernel 
 > to go into suspend-to-ram mode before doing anything else?
-> 
-> Rafael,
->    if ACPI is disabled and not used, is there any memory in the origional 
-> kernel that _must not_ be saved in the hibernate image? I recognise that 
-> for efficancy it would save time to not save free memory, but if I'm 
-> willing to waste some resources would it hurt to save everything?
 
-On some systems there are valid 'struct page' structures that correspond to
-memory holes and the kernel will oops if you try to save the contents of
-these pages.  Unfortunately, only the early initialization platform code can
-tell you which they are.
+It is possible for hibernate kernel to pass information back to
+pre-hibernate kernel. For example, the information can be passed in jump
+buffer page. 
 
-Greetings,
-Rafael
-
-
--- 
-"Premature optimization is the root of all evil." - Donald Knuth
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
