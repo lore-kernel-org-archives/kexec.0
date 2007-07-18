@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.linux-foundation.org ([207.189.120.14])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IBIIX-0003Ks-7O
-	for kexec@lists.infradead.org; Wed, 18 Jul 2007 18:47:10 -0400
-Date: Wed, 18 Jul 2007 15:46:59 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RFC] Debug handling of early spurious interrupts
-Message-Id: <20070718154659.c8b5ffea.akpm@linux-foundation.org>
-In-Reply-To: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
-References: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
-Mime-Version: 1.0
+	id 1IBIfb-0003VE-QX
+	for kexec@lists.infradead.org; Wed, 18 Jul 2007 19:11:01 -0400
+Date: Thu, 19 Jul 2007 01:10:50 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: Determine version of kernel that produced vmcore
+Message-ID: <20070718231050.GB25660@suse.de>
+References: <20070716123633.GA10920@in.ibm.com>
+	<20070718230740oomichi@mail.jp.nec.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070718230740oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,75 +24,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Neil Horman <nhorman@redhat.com>, vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Aloni <da-x@monatomic.org>
 
-On Tue, 17 Jul 2007 19:09:57 +0900
-Fernando Luis V__zquez Cao <fernando@oss.ntt.co.jp> wrote:
+Hello,
 
-> With the advent of kdump it is possible that device drivers receive
-> interrupts generated in the context of a previous kernel. Ideally
-> quiescing the underlying devices should suffice but not all drivers
-> do this, either because it is not possible or because they did not
-> contemplate this case. Thus drivers ought to be able to handle
-> interrupts coming in as soon as the interrupt handler is registered.
+* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-07-18 16:07]:
+> I propose the solution including Dan's, Vivek's and Bernhard's opinions.
+> How about the following sequence for distributors ?
+> (It is not necessary to rebuild 2nd-kernel initrd even if 1st-kernel changes.
+>  A new option "--mkdfinfo" is added to kexec command.)
 > 
-> Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
-> ---
+> * On the kernel building system
+>   1. Create the kernel files.
+>      # cd linux-2.6.xx
+>      # make
+>   2. Create the mkdfinfo file from the vmlinux.
+>      # makedumpfile -g mkdfinfo-2.6.xx -x vmlinux
+>      (OSRELEASE is taken from the vmlinux.)
+>   3. Pack the kernel package with the kernel files and the mkdfinfo file.
 > 
-> diff -urNp linux-2.6.22-orig/kernel/irq/manage.c linux-2.6.22/kernel/irq/manage.c
-> --- linux-2.6.22-orig/kernel/irq/manage.c	2007-07-09 08:32:17.000000000 +0900
-> +++ linux-2.6.22/kernel/irq/manage.c	2007-07-17 18:37:24.000000000 +0900
-> @@ -537,6 +537,29 @@ int request_irq(unsigned int irq, irq_ha
->  
->  	select_smp_affinity(irq);
->  
-> +#if defined(CONFIG_DEBUG_PENDING_IRQ) || defined(CONFIG_DEBUG_SHIRQ)
-> +#ifndef CONFIG_DEBUG_PENDING_IRQ
-> +	if (irqflags & IRQF_SHARED) {
-> +		/*
-> +		 * It's a shared IRQ -- the driver ought to be prepared for it
-> +		 * to happen immediately, so let's make sure....
-> +		 * We do this before actually registering it, to make sure that
-> +		 * a 'real' IRQ doesn't run in parallel with our fake.
-> +		 */
-> +#endif /* !CONFIG_DEBUG_PENDING_IRQ */
-> +		if (irqflags & IRQF_DISABLED) {
-> +			unsigned long flags;
-> +
-> +			local_irq_save(flags);
-> +			handler(irq, dev_id);
-> +			local_irq_restore(flags);
-> +		} else
-> +			handler(irq, dev_id);
-> +#ifndef CONFIG_DEBUG_PENDING_IRQ
-> +	}
-> +#endif /* !CONFIG_DEBUG_PENDING_IRQ */
-> +#endif /* CONFIG_DEBUG_PENDING_IRQ || CONFIG_DEBUG_SHIRQ */
+> * On each system
+>   4. Preload 2nd-kernel and the mkdfinfo file.
+>      # kexec -p vmlinux-kdump --mkdfinfo=mkdfinfo-2.6.xx ...
+>      - 2nd-kernel is preloaded.
+>      - 1st-kernel's PAGESIZE is taken by sysconf().
+>      - The mkdfinfo file and the above PAGESIZE is preloaded
+>        into /proc/vmcore's PT_NOTE segment.
+>   5. Panic happens, and the system switchs to 2nd-kernel.
+>   6. Create a filtered dump file.
+>      # makedumpfile -cd31 /proc/vmcore dumpfile
+>      (User doesn't need to specify the mkdfinfo file, because the
+>       contents of the mkdfinfo file is included into /proc/vmcore.)
 
-Even if we were going to merge this functionality as-is, I'd ask for some
-sort of refactoring to fix up that ifdef maze.
+I like the proposal. The advantage over exporting the needed
+information from the kernel directly is that makedumpfile (and the
+contents of the mkdfinfo file [1]) can be changed without changing the
+kernel which simplifies maintenance.
 
-But more substantial issues:
+If now everybody agrees that this is the way to go, I can also offer
+to implement the kernel and kexec userspace utility part
+implementation of that stuff.
 
-- This is presented as a "debug" feature, but it isn't a debug feature at
-  all - it is new functionality which is unrelated to kernel development.
-
-  Also, it is a "debug" feature which provides no debugging!  At the very
-  least, one would expect to see it emit a printk to tell people that we
-  have some driver which needs fixing.
-
-  Also, this not-really-a-debug-feature is undesirably coupled with a
-  real debugging feature: CONFIG_DEBUG_PENDING_IRQ.
-
-- Does this new feature really need its own Kconfig setting?  Why not enable
-  it unconditionally?  request_irq() isn't exactly performance-critical.
-
-- If poss, we really do want to find some way of emitting a warning when
-  we detect such a device driver.  Like, call the handler and if it
-  returned IRQ_HANDLED, start shouting.
+Maybe we should wait until Simon Horman is back here as he's the
+current maintainer of kexec-tools(-testing).
 
 
+Thanks,
+   Bernhard
+
+[1] didn't we agree to vmcoreinfo?
 
 _______________________________________________
 kexec mailing list
