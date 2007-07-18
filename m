@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IBACl-0007hW-D1
-	for kexec@lists.infradead.org; Wed, 18 Jul 2007 10:08:42 -0400
-Subject: Re: Determine version of kernel that produced vmcore
-In-reply-to: <20070716123633.GA10920@in.ibm.com>
-Message-Id: <20070718230740oomichi@mail.jp.nec.com>
-References: <20070716123633.GA10920@in.ibm.com>
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IBIIX-0003Ks-7O
+	for kexec@lists.infradead.org; Wed, 18 Jul 2007 18:47:10 -0400
+Date: Wed, 18 Jul 2007 15:46:59 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH RFC] Debug handling of early spurious interrupts
+Message-Id: <20070718154659.c8b5ffea.akpm@linux-foundation.org>
+In-Reply-To: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
+References: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
 Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Wed, 18 Jul 2007 23:07:40 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,79 +22,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: Neil Horman <nhorman@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Aloni <da-x@monatomic.org>
+To: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+
+On Tue, 17 Jul 2007 19:09:57 +0900
+Fernando Luis V__zquez Cao <fernando@oss.ntt.co.jp> wrote:
+
+> With the advent of kdump it is possible that device drivers receive
+> interrupts generated in the context of a previous kernel. Ideally
+> quiescing the underlying devices should suffice but not all drivers
+> do this, either because it is not possible or because they did not
+> contemplate this case. Thus drivers ought to be able to handle
+> interrupts coming in as soon as the interrupt handler is registered.
+> 
+> Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
+> ---
+> 
+> diff -urNp linux-2.6.22-orig/kernel/irq/manage.c linux-2.6.22/kernel/irq/manage.c
+> --- linux-2.6.22-orig/kernel/irq/manage.c	2007-07-09 08:32:17.000000000 +0900
+> +++ linux-2.6.22/kernel/irq/manage.c	2007-07-17 18:37:24.000000000 +0900
+> @@ -537,6 +537,29 @@ int request_irq(unsigned int irq, irq_ha
+>  
+>  	select_smp_affinity(irq);
+>  
+> +#if defined(CONFIG_DEBUG_PENDING_IRQ) || defined(CONFIG_DEBUG_SHIRQ)
+> +#ifndef CONFIG_DEBUG_PENDING_IRQ
+> +	if (irqflags & IRQF_SHARED) {
+> +		/*
+> +		 * It's a shared IRQ -- the driver ought to be prepared for it
+> +		 * to happen immediately, so let's make sure....
+> +		 * We do this before actually registering it, to make sure that
+> +		 * a 'real' IRQ doesn't run in parallel with our fake.
+> +		 */
+> +#endif /* !CONFIG_DEBUG_PENDING_IRQ */
+> +		if (irqflags & IRQF_DISABLED) {
+> +			unsigned long flags;
+> +
+> +			local_irq_save(flags);
+> +			handler(irq, dev_id);
+> +			local_irq_restore(flags);
+> +		} else
+> +			handler(irq, dev_id);
+> +#ifndef CONFIG_DEBUG_PENDING_IRQ
+> +	}
+> +#endif /* !CONFIG_DEBUG_PENDING_IRQ */
+> +#endif /* CONFIG_DEBUG_PENDING_IRQ || CONFIG_DEBUG_SHIRQ */
+
+Even if we were going to merge this functionality as-is, I'd ask for some
+sort of refactoring to fix up that ifdef maze.
+
+But more substantial issues:
+
+- This is presented as a "debug" feature, but it isn't a debug feature at
+  all - it is new functionality which is unrelated to kernel development.
+
+  Also, it is a "debug" feature which provides no debugging!  At the very
+  least, one would expect to see it emit a printk to tell people that we
+  have some driver which needs fixing.
+
+  Also, this not-really-a-debug-feature is undesirably coupled with a
+  real debugging feature: CONFIG_DEBUG_PENDING_IRQ.
+
+- Does this new feature really need its own Kconfig setting?  Why not enable
+  it unconditionally?  request_irq() isn't exactly performance-critical.
+
+- If poss, we really do want to find some way of emitting a warning when
+  we detect such a device driver.  Like, call the handler and if it
+  returned IRQ_HANDLED, start shouting.
 
 
-Hi,
-
-2007/07/16 18:06:33 +0530, Vivek Goyal <vgoyal@in.ibm.com> wrote:
->On Mon, Jul 16, 2007 at 02:28:54PM +0200, Bernhard Walle wrote:
->> * Vivek Goyal <vgoyal@in.ibm.com> [2007-07-16 14:25]:
->> > 
->> > Ok. Now there seems to be two ways for accessing such info.
->> > - Through global variables
->> > - Export through ELF notes.
->> > 
->> > Personally, I like the approach taken by Dan Aloni of exporting required
->> > info through ELF notes. That seems to be more standard in the sense we 
->> > are not dependent on somebody removing above variable tomorrow.
->> > 
->> > Dan, are you planning to put the modified patch for discussions on LKML?
->> 
->> You mean the proposal with the makedumpfile-compatible ELF note?
->> Although I like that idea, I think Ken'ichi Ohmichi was against it.
->> 
->
->Yes, makedumpfile compatible ELF note one. Ken'ichi did not like the idea
->too much, but I am not sure we discussed his objections in detail. I had
->also responded with a mail with some of the advantages of ELF note based
->approach. No response on that.
-
-Sorry for my delayed response, I took a short vacation.
-
-I'm not against with the proposal adding PT_NOTE segment to /proc/vmcore.
-I don't like only point that adds the necessary information list
-(some symbols, structures, etc.) for makedumpfile to kernel code.
-
-The content of mkdfinfo file has been increasing whenever adding
-features and correcting bugs. The content is increasing even now.
-And, the feature addition is done not only for new kernels but also
-for old upstream kernels. When the content of mkdfinfo file is taken 
-into the kernel and fixed, the feature addition in the future is
-remarkably limited. So makedumpfile needs mkdfinfo file outside of
-the kernel.
-
-I propose the solution including Dan's, Vivek's and Bernhard's opinions.
-How about the following sequence for distributors ?
-(It is not necessary to rebuild 2nd-kernel initrd even if 1st-kernel changes.
- A new option "--mkdfinfo" is added to kexec command.)
-
-* On the kernel building system
-  1. Create the kernel files.
-     # cd linux-2.6.xx
-     # make
-  2. Create the mkdfinfo file from the vmlinux.
-     # makedumpfile -g mkdfinfo-2.6.xx -x vmlinux
-     (OSRELEASE is taken from the vmlinux.)
-  3. Pack the kernel package with the kernel files and the mkdfinfo file.
-
-* On each system
-  4. Preload 2nd-kernel and the mkdfinfo file.
-     # kexec -p vmlinux-kdump --mkdfinfo=mkdfinfo-2.6.xx ...
-     - 2nd-kernel is preloaded.
-     - 1st-kernel's PAGESIZE is taken by sysconf().
-     - The mkdfinfo file and the above PAGESIZE is preloaded
-       into /proc/vmcore's PT_NOTE segment.
-  5. Panic happens, and the system switchs to 2nd-kernel.
-  6. Create a filtered dump file.
-     # makedumpfile -cd31 /proc/vmcore dumpfile
-     (User doesn't need to specify the mkdfinfo file, because the
-      contents of the mkdfinfo file is included into /proc/vmcore.)
-
-
-Thanks
-Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
