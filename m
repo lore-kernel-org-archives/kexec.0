@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IBRxh-0002WS-7L
-	for kexec@lists.infradead.org; Thu, 19 Jul 2007 05:06:18 -0400
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATH 0/1] Kexec jump - v2 - the first step to kexec based
-	hibernation
-Date: Thu, 19 Jul 2007 11:13:21 +0200
-References: <1184483593.1898.98.camel@caritas-dev.intel.com>
-	<20070718180420.02352d4f.akpm@linux-foundation.org>
-	<1184827403.15756.14.camel@caritas-dev.intel.com>
-In-Reply-To: <1184827403.15756.14.camel@caritas-dev.intel.com>
+	id 1IBUuo-00040o-AB
+	for kexec@lists.infradead.org; Thu, 19 Jul 2007 08:15:33 -0400
+Message-ID: <469F55D0.4050203@ah.jp.nec.com>
+Date: Thu, 19 Jul 2007 21:15:12 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200707191113.22711.rjw@sisk.pl>
+Subject: [patch] add kdump_after_notifier
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,29 +20,147 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: k-miyoshi@cb.jp.nec.com
 
-On Thursday, 19 July 2007 08:43, Huang, Ying wrote:
-> On Wed, 2007-07-18 at 18:04 -0700, Andrew Morton wrote:
-> > I like the idea but I think I'll let people chat about it a bit more
-> > before looking at merging the patches, OK?
-> 
-> I think maybe we should wait for Rafael to separate the device hibernate
-> (quiesce and state save) from device suspend.
+Hi,
 
-Well, I'm afraid that will take some time ...
+In latest kernel, we can't use panic_notifier_list if kdump is enabled.
+panic_notifier_list is very useful function for debug, failover, etc...
 
-> Without that, the ACPI issue can not be resolved.
+So this patch adds a control file /proc/sys/kernel/dump_after_notifier
+and resolves a problem users can not use both kdump and panic_notifier_list
+at the same time.
 
-Yes, it seems so.
+kdump_after_notifier = 0
+ -> panic()
+    -> crash_kexec(NULL)
 
-Greetings,
-Rafael
+kdump_after_notifier = 1
+ -> panic()
+    -> atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+    -> crash_kexec(NULL)
 
 
--- 
-"Premature optimization is the root of all evil." - Donald Knuth
+Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
+Signed-off-by: Kazuto Miyoshi <k-miyoshi@cb.jp.nec.com>
+---
+
+diff -uprN linux-2.6.22.orig/include/linux/kexec.h
+linux-2.6.22/include/linux/kexec.h
+--- linux-2.6.22.orig/include/linux/kexec.h	2007-07-09 08:32:17.000000000 +0900
++++ linux-2.6.22/include/linux/kexec.h	2007-07-19 18:55:04.236000000 +0900
+@@ -123,6 +123,7 @@ int kexec_should_crash(struct task_struc
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ extern struct kimage *kexec_image;
+ extern struct kimage *kexec_crash_image;
++extern int kdump_after_notifier;
+
+ #ifndef kexec_flush_icache_page
+ #define kexec_flush_icache_page(page)
+@@ -160,5 +161,6 @@ struct pt_regs;
+ struct task_struct;
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
++#define kdump_after_notifier 0
+ #endif /* CONFIG_KEXEC */
+ #endif /* LINUX_KEXEC_H */
+diff -uprN linux-2.6.22.orig/include/linux/sysctl.h
+linux-2.6.22/include/linux/sysctl.h
+--- linux-2.6.22.orig/include/linux/sysctl.h	2007-07-09 08:32:17.000000000 +0900
++++ linux-2.6.22/include/linux/sysctl.h	2007-07-19 18:55:04.260000000 +0900
+@@ -165,6 +165,7 @@ enum
+ 	KERN_MAX_LOCK_DEPTH=74,
+ 	KERN_NMI_WATCHDOG=75, /* int: enable/disable nmi watchdog */
+ 	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
++	KERN_KDUMP_AFTER_NOTIFIER=77, /* int: kdump after panic_notifier */
+ };
+
+
+diff -uprN linux-2.6.22.orig/kernel/kexec.c linux-2.6.22/kernel/kexec.c
+--- linux-2.6.22.orig/kernel/kexec.c	2007-07-09 08:32:17.000000000 +0900
++++ linux-2.6.22/kernel/kexec.c	2007-07-19 18:55:04.304000000 +0900
+@@ -22,6 +22,7 @@
+ #include <linux/hardirq.h>
+ #include <linux/elf.h>
+ #include <linux/elfcore.h>
++#include <linux/sysctl.h>
+
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -31,6 +32,7 @@
+
+ /* Per cpu memory for storing cpu states in case of system crash. */
+ note_buf_t* crash_notes;
++int kdump_after_notifier;
+
+ /* Location of the reserved area for the crash kernel */
+ struct resource crashk_res = {
+@@ -1123,6 +1125,30 @@ void crash_save_cpu(struct pt_regs *regs
+ 	final_note(buf);
+ }
+
++#ifdef CONFIG_SYSCTL
++static ctl_table kdump_after_notifier_table[] = {
++	{
++		.ctl_name = KERN_KDUMP_AFTER_NOTIFIER,
++		.procname = "kdump_after_notifier",
++		.data = &kdump_after_notifier,
++		.maxlen = sizeof(int),
++		.mode = 0644,
++		.proc_handler = &proc_dointvec,
++	},
++	{ .ctl_name = 0 }
++};
++
++static ctl_table kexec_sys_table[] = {
++	{
++		.ctl_name = CTL_KERN,
++		.procname = "kernel",
++		.mode = 0555,
++		.child = kdump_after_notifier_table,
++	},
++	{ .ctl_name = 0 }
++};
++#endif
++
+ static int __init crash_notes_memory_init(void)
+ {
+ 	/* Allocate memory for saving cpu registers. */
+@@ -1132,6 +1158,9 @@ static int __init crash_notes_memory_ini
+ 		" states failed\n");
+ 		return -ENOMEM;
+ 	}
++#ifdef CONFIG_SYSCTL
++	register_sysctl_table(kexec_sys_table, 0);
++#endif
+ 	return 0;
+ }
+ module_init(crash_notes_memory_init)
+diff -uprN linux-2.6.22.orig/kernel/panic.c linux-2.6.22/kernel/panic.c
+--- linux-2.6.22.orig/kernel/panic.c	2007-07-09 08:32:17.000000000 +0900
++++ linux-2.6.22/kernel/panic.c	2007-07-19 18:55:04.340000000 +0900
+@@ -85,7 +85,8 @@ NORET_TYPE void panic(const char * fmt,
+ 	 * everything else.
+ 	 * Do we want to call this before we try to display a message?
+ 	 */
+-	crash_kexec(NULL);
++	if (!kdump_after_notifier)
++		crash_kexec(NULL);
+
+ #ifdef CONFIG_SMP
+ 	/*
+@@ -98,6 +99,8 @@ NORET_TYPE void panic(const char * fmt,
+
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+
++	crash_kexec(NULL);
++
+ 	if (!panic_blink)
+ 		panic_blink = no_blink;
+
+
+
 
 _______________________________________________
 kexec mailing list
