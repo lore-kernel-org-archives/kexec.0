@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dsl081-033-126.lax1.dsl.speakeasy.net ([64.81.33.126]
-	helo=bifrost.lang.hm)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IBMpk-0006NG-8n
-	for kexec@lists.infradead.org; Thu, 19 Jul 2007 04:37:45 +0100
-Date: Wed, 18 Jul 2007 20:30:47 -0700 (PDT)
-From: david@lang.hm
-Subject: Re: [PATH 0/1] Kexec jump - v2 - the first step to kexec based
-	hibernation
-In-Reply-To: <200707191215.05245.nigel@nigel.suspend2.net>
-Message-ID: <Pine.LNX.4.64.0707182026130.19248@asgard.lang.hm>
-References: <1184483593.1898.98.camel@caritas-dev.intel.com>
-	<20070718180420.02352d4f.akpm@linux-foundation.org>
-	<200707191215.05245.nigel@nigel.suspend2.net>
-MIME-Version: 1.0
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IBPHR-0006vk-1m
+	for kexec@lists.infradead.org; Thu, 19 Jul 2007 02:14:31 -0400
+Subject: Re: [PATCH] [makedumpfile] Introduce -f (force) option
+In-reply-to: <20070717135615.GA19864@suse.de>
+Message-Id: <20070719151446oomichi@mail.jp.nec.com>
+References: <20070717135615.GA19864@suse.de>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Thu, 19 Jul 2007 15:14:46 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,45 +22,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: nigel@suspend2.net
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
-On Thu, 19 Jul 2007, Nigel Cunningham wrote:
 
-> Hi.
+Hi Bernhard,
+
+2007/07/17 15:56:16 +0200, Bernhard Walle <bwalle@suse.de> wrote:
+>As I always forget to delete the produced dump file when testing
+>something, I'd like to see a `-f' option that forces makedumpfile to
+>overwrite existing files.
+
+Thank you for a good patch.
+I will merge it into a new release.
+
+
+Thanks
+Ken'ichi Ohmichi
+
+>Signed-off-by: Bernhard Walle <bwalle@suse.de>
 >
-> On Thursday 19 July 2007 11:04:20 Andrew Morton wrote:
->> On Sun, 15 Jul 2007 15:13:13 +0800
->> "Huang, Ying" <ying.huang@intel.com> wrote:
->>
->>>
->>> The changelog between v1 and v2
->>>
->>> 1. The kexec jump implementation is put into the kexec/kdump
->>>    framework instead of software suspend framework. The device
->>>    and CPU state save/restore code of software suspend is called
->>>    when needed.
->>>
->>> 2. The same code path is used for both kexec a new kernel and jump
->>>    back to original kernel.
->>
->> I like the idea but I think I'll let people chat about it a bit more
->> before looking at merging the patches, OK?
+>---
+> makedumpfile.8 |   10 ++++++++++
+> makedumpfile.c |   11 +++++++++--
+> makedumpfile.h |    1 +
+> 3 files changed, 20 insertions(+), 2 deletions(-)
 >
-> Please wait until you see a complete implementation that actually works. I'm
-> sitting here quietly, following (and now breaking) the "If you can't say
-> anything positive, don't say anything at all" line because I think that the
-> more into the implementation details people get, the uglier this is going to
-> show itself to be. I'm perfectly willing to be proven wrong, but haven't seen
-> anything so far that's even begun to convince me otherwise.
-
-as someone who's eager to have this work, I have to agree with Nigel that 
-it's premature to talk about merging anything.
-
-the only exception I could see is if there are other uses for this 
-functionality. but even then, let things settle out a little bit.
-
-David Lang
+>--- a/makedumpfile.8
+>+++ b/makedumpfile.8
+>@@ -144,6 +144,16 @@ support compressed data.
+> # makedumpfile \-E \-d 31 \-x vmlinux /proc/vmcore dumpfile
+> 
+> .TP
+>+\fB\-f\fR
+>+Force existing files to be overwritten.
+>+.br
+>+.B Example:
+>+.br
+>+# makedumpfile \-f \-x vmlinux /proc/vmcore dumpfile
+>+.br
+>+This command overwrites \fIdumpfile\fR if it already exists.
+>+
+>+.TP
+> \fB\-x\fR \fIVMLINUX\fR
+> Specify the first kernel's \fIVMLINUX\fR with debug information to analyze the
+> first kernel's memory usage.
+>--- a/makedumpfile.c
+>+++ b/makedumpfile.c
+>@@ -409,6 +409,10 @@ int
+> open_dump_file(struct DumpInfo *info)
+> {
+> 	int fd;
+>+	int open_flags = O_RDWR|O_CREAT;
+>+
+>+	if (!info->flag_force)
+>+		open_flags |= O_EXCL;
+> 
+> 	if (info->flag_flatten) {
+> 		if ((info->name_dumpfile
+>@@ -420,7 +424,7 @@ open_dump_file(struct DumpInfo *info)
+> 		fd = STDOUT_FILENO;
+> 		strcpy(info->name_dumpfile, FILENAME_STDOUT);
+> 
+>-	} else if ((fd = open(info->name_dumpfile, O_RDWR|O_CREAT|O_EXCL,
+>+	} else if ((fd = open(info->name_dumpfile, open_flags,
+> 	    S_IRUSR|S_IWUSR)) < 0) {
+> 		ERRMSG("Can't open the dump file(%s). %s\n",
+> 		    info->name_dumpfile, strerror(errno));
+>@@ -4624,7 +4628,7 @@ main(int argc, char *argv[])
+> 	vt = &info->vm_table;
+> 
+> 	info->block_order = DEFAULT_ORDER;
+>-	while ((opt = getopt(argc, argv, "b:cDd:EFg:hi:Rvx:")) != -1) {
+>+	while ((opt = getopt(argc, argv, "b:cDd:EFg:hi:Rvx:f")) != -1) {
+> 		switch (opt) {
+> 		case 'b':
+> 			info->block_order = atoi(optarg);
+>@@ -4646,6 +4650,9 @@ main(int argc, char *argv[])
+> 		case 'F':
+> 			info->flag_flatten = 1;
+> 			break;
+>+		case 'f':
+>+			info->flag_force = 1;
+>+			break;
+> 		case 'g':
+> 			info->flag_generate_config = 1;
+> 			info->name_configfile = optarg;
+>--- a/makedumpfile.h
+>+++ b/makedumpfile.h
+>@@ -552,6 +552,7 @@ struct DumpInfo {
+> 						format to a standard out */
+> 	int		flag_rearrange;      /* flag of creating dumpfile from
+> 						flattened format */
+>+	int		flag_force;	     /* overwrite existing stuff */
+> 	long		page_size;           /* size of page */
+> 	long		page_shift;
+> 	unsigned long long	max_mapnr;   /* number of page descriptor */
+>
+>_______________________________________________
+>kexec mailing list
+>kexec@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
