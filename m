@@ -1,28 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e4.ny.us.ibm.com ([32.97.182.144])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1ICNhe-0000Pm-8V
-	for kexec@lists.infradead.org; Sat, 21 Jul 2007 18:45:37 -0400
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6LMjUA0016959
-	for <kexec@lists.infradead.org>; Sat, 21 Jul 2007 18:45:30 -0400
-Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l6LMjTeF474340
-	for <kexec@lists.infradead.org>; Sat, 21 Jul 2007 18:45:30 -0400
-Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
-	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l6LMjSmO015406
-	for <kexec@lists.infradead.org>; Sat, 21 Jul 2007 18:45:29 -0400
-Date: Sat, 21 Jul 2007 15:45:27 -0700
-From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+Received: from py-out-1112.google.com ([64.233.166.181])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1ICQVG-0001Yg-F5
+	for kexec@lists.infradead.org; Sat, 21 Jul 2007 21:44:59 -0400
+Received: by py-out-1112.google.com with SMTP id a25so2931042pyi
+	for <kexec@lists.infradead.org>; Sat, 21 Jul 2007 18:44:56 -0700 (PDT)
+Message-ID: <a781481a0707211844s40e203c4t51250ff421d8781d@mail.gmail.com>
+Date: Sun, 22 Jul 2007 07:14:56 +0530
+From: "Satyam Sharma" <satyam.sharma@gmail.com>
 Subject: Re: [PATCH][24/37] Clean up duplicate includes in kernel/
-Message-ID: <20070721224527.GB11746@linux.vnet.ibm.com>
-References: <200707211703.30346.jesper.juhl@gmail.com>
+In-Reply-To: <200707211703.30346.jesper.juhl@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200707211703.30346.jesper.juhl@gmail.com>
-Reply-To: paulmck@linux.vnet.ibm.com
+References: <200707211703.30346.jesper.juhl@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,21 +26,24 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Jesper Juhl <jesper.juhl@gmail.com>
-Cc: Shailabh Nagar <nagar@watson.ibm.com>, Randy Dunlap <randy.dunlap@oracle.com>, Manfred Spraul <manfred@colorfullife.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Tweedie <sct@redhat.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Christoph Lameter <clameter@engr.sgi.com>, linux-audit@redhat.com, john stultz <johnstul@us.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Dipankar Sarma <dipankar@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Rickard Faith <faith@redhat.com>, Josh Triplett <josh@freedesktop.org>
+Cc: Shailabh Nagar <nagar@watson.ibm.com>, Randy Dunlap <randy.dunlap@oracle.com>, Manfred Spraul <manfred@colorfullife.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Tweedie <sct@redhat.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Christoph Lameter <clameter@engr.sgi.com>, Paul McKenney <paulmck@us.ibm.com>, linux-audit@redhat.com, john stultz <johnstul@us.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Dipankar Sarma <dipankar@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Rickard Faith <faith@redhat.com>, Josh Triplett <josh@freedesktop.org>
 
-On Sat, Jul 21, 2007 at 05:03:29PM +0200, Jesper Juhl wrote:
+On 7/21/07, Jesper Juhl <jesper.juhl@gmail.com> wrote:
 > Hi,
-> 
+>
 > This patch cleans up duplicate includes in
-> 	kernel/
-
-Changes to kernel/rcupdate.c and kernel/rcutorture.c:
-
-Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-
+>         kernel/
+>
+>
 > Signed-off-by: Jesper Juhl <jesper.juhl@gmail.com>
-> ---
-> 
+
+Reviewed-by: Satyam Sharma <ssatyam@cse.iitk.ac.in>
+
+[ Jesper, I hope you re-built with all these changes? Some
+of these duplicate #include's could have been hiding deeper
+header-include-ordering problems, and we'd want to know
+about that too. Otherwise looks fairly obvious, thanks. ]
+
 > diff --git a/kernel/auditsc.c b/kernel/auditsc.c
 > index 145cbb7..5f7dba2 100644
 > --- a/kernel/auditsc.c
@@ -63,6 +56,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/fs.h>
 >  #include <linux/namei.h>
 >  #include <linux/mm.h>
+
+Ack
+
 > diff --git a/kernel/exit.c b/kernel/exit.c
 > index 464c2b1..9eef513 100644
 > --- a/kernel/exit.c
@@ -72,9 +68,12 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/blkdev.h>
 >  #include <linux/task_io_accounting_ops.h>
 > -#include <linux/freezer.h>
-> 
+>
 >  #include <asm/uaccess.h>
 >  #include <asm/unistd.h>
+
+Ack
+
 > diff --git a/kernel/kexec.c b/kernel/kexec.c
 > index 25db14b..d8de12e 100644
 > --- a/kernel/kexec.c
@@ -87,6 +86,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/ioport.h>
 >  #include <linux/hardirq.h>
 >  #include <linux/elf.h>
+
+Ack
+
 > diff --git a/kernel/rcupdate.c b/kernel/rcupdate.c
 > index 2c2dd84..5d9e07e 100644
 > --- a/kernel/rcupdate.c
@@ -98,7 +100,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 > -#include <linux/rcupdate.h>
 >  #include <linux/cpu.h>
 >  #include <linux/mutex.h>
-> 
+
+Ack
+
 > diff --git a/kernel/rcutorture.c b/kernel/rcutorture.c
 > index ddff332..dd413bf 100644
 > --- a/kernel/rcutorture.c
@@ -111,6 +115,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/completion.h>
 >  #include <linux/moduleparam.h>
 >  #include <linux/percpu.h>
+
+Ack
+
 > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
 > index 2222998..e0b2456 100644
 > --- a/kernel/sysctl.c
@@ -123,6 +130,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/smp_lock.h>
 >  #include <linux/fs.h>
 >  #include <linux/init.h>
+
+Ack
+
 > diff --git a/kernel/taskstats.c b/kernel/taskstats.c
 > index 059431e..7d4d7f9 100644
 > --- a/kernel/taskstats.c
@@ -135,6 +145,9 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/cpumask.h>
 >  #include <linux/percpu.h>
 >  #include <net/genetlink.h>
+
+Ack
+
 > diff --git a/kernel/time.c b/kernel/time.c
 > index 5b81da0..6304942 100644
 > --- a/kernel/time.c
@@ -144,9 +157,11 @@ Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 >  #include <linux/security.h>
 >  #include <linux/fs.h>
 > -#include <linux/module.h>
-> 
+>
 >  #include <asm/uaccess.h>
 >  #include <asm/unistd.h>
+
+Ack
 
 _______________________________________________
 kexec mailing list
