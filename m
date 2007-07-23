@@ -1,24 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ID549-0003Zk-Co
-	for kexec@lists.infradead.org; Mon, 23 Jul 2007 17:03:42 -0400
+	id 1ID3Mh-0002qx-Jf
+	for kexec@lists.infradead.org; Mon, 23 Jul 2007 15:14:44 -0400
 Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
 	[172.16.52.254])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6NL3dxH007797
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6NJEfGS024010
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:41 -0400
 Received: from mail.boston.redhat.com (mail.boston.redhat.com [172.16.76.12])
 	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
-	l6NL3dNk022297
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
+	l6NJEcLn002431
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:40 -0400
 Received: from redhat.com (crash.boston.redhat.com [172.16.80.17])
-	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l6NL3dlT031187
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
-Message-ID: <46A518C6.5070108@redhat.com>
-Date: Mon, 23 Jul 2007 17:08:22 -0400
+	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l6NJEb4e008496
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:37 -0400
+Message-ID: <46A4FF38.5000504@redhat.com>
+Date: Mon, 23 Jul 2007 15:19:20 -0400
 From: Dave Anderson <anderson@redhat.com>
 MIME-Version: 1.0
-Subject: Determine version of kernel that produced vmcore 
+Subject: Re: kexec Digest, Vol 4, Issue 28
+References: <mailman.13.1185206419.4831.kexec@lists.infradead.org>
+In-Reply-To: <mailman.13.1185206419.4831.kexec@lists.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,16 +36,16 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: kexec@lists.infradead.org
 
 
-
- > From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+> From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+> Subject: Re: Determine version of kernel that produced vmcore
 ...
- >
- > BTW, we should test makedumpfile by each linux(-rc1 ?) releases.
- > Now, I test the makedumpfile functions by comparing the crash utility's
- > output of /proc/vmcore and the one of the filtered dumpfile.
- > Often, the crash utility cannot read /proc/vmcore of the latest kernel.
- > Does anybody know the crash's option that the crash can run loosely for
- > the early test ?
+> 
+> BTW, we should test makedumpfile by each linux(-rc1 ?) releases.
+> Now, I test the makedumpfile functions by comparing the crash utility's
+> output of /proc/vmcore and the one of the filtered dumpfile.
+> Often, the crash utility cannot read /proc/vmcore of the latest kernel.
+> Does anybody know the crash's option that the crash can run loosely for
+> the early test ?
 
 There is no "loosely-run" option for the crash utility.
 
@@ -65,11 +67,10 @@ files, that option wouldn't apply.
 
 Dave
 
- >
- > Thanks
- > Ken'ichi Ohmichi
 
-
+> 
+> Thanks
+> Ken'ichi Ohmichi
 
 
 
