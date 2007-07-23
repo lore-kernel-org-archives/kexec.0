@@ -1,19 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from qb-out-0506.google.com ([72.14.204.230])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ICTfK-0002yJ-Ch
-	for kexec@lists.infradead.org; Sun, 22 Jul 2007 01:07:36 -0400
-Received: by qb-out-0506.google.com with SMTP id e6so1197649qbe
-	for <kexec@lists.infradead.org>; Sat, 21 Jul 2007 22:07:33 -0700 (PDT)
-Message-ID: <9a8748490707212207h63abdb94o3d27a24d67a0ca12@mail.gmail.com>
-Date: Sun, 22 Jul 2007 07:07:32 +0200
-From: "Jesper Juhl" <jesper.juhl@gmail.com>
-Subject: Re: [PATCH][24/37] Clean up duplicate includes in kernel/
-In-Reply-To: <a781481a0707211844s40e203c4t51250ff421d8781d@mail.gmail.com>
-MIME-Version: 1.0
+Received: from e3.ny.us.ibm.com ([32.97.182.143])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1ICq39-0001yk-DL
+	for kexec@lists.infradead.org; Mon, 23 Jul 2007 01:01:41 -0400
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e3.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6N3vMBU017889
+	for <kexec@lists.infradead.org>; Sun, 22 Jul 2007 23:57:22 -0400
+Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
+	l6N51UvV529326
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 01:01:30 -0400
+Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
+	by d01av01.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l6N51UaF021908
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 01:01:30 -0400
+Date: Mon, 23 Jul 2007 10:31:47 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: Determine version of kernel that produced vmcore
+Message-ID: <20070723050147.GA5691@in.ibm.com>
+References: <20070716123633.GA10920@in.ibm.com>
+	<20070718230740oomichi@mail.jp.nec.com>
+	<20070719163915.GN9623@redhat.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-References: <200707211703.30346.jesper.juhl@gmail.com>
-	<a781481a0707211844s40e203c4t51250ff421d8781d@mail.gmail.com>
+In-Reply-To: <20070719163915.GN9623@redhat.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +37,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Satyam Sharma <satyam.sharma@gmail.com>
-Cc: Shailabh Nagar <nagar@watson.ibm.com>, Randy Dunlap <randy.dunlap@oracle.com>, Manfred Spraul <manfred@colorfullife.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Tweedie <sct@redhat.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Christoph Lameter <clameter@engr.sgi.com>, Paul McKenney <paulmck@us.ibm.com>, linux-audit@redhat.com, john stultz <johnstul@us.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Dipankar Sarma <dipankar@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, David Woodhouse <dwmw2@infradead.org>, Rickard Faith <faith@redhat.com>, Josh Triplett <josh@freedesktop.org>
+To: Don Zickus <dzickus@redhat.com>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 22/07/07, Satyam Sharma <satyam.sharma@gmail.com> wrote:
-> On 7/21/07, Jesper Juhl <jesper.juhl@gmail.com> wrote:
-> > Hi,
-> >
-> > This patch cleans up duplicate includes in
-> >         kernel/
-> >
-> >
-> > Signed-off-by: Jesper Juhl <jesper.juhl@gmail.com>
->
-> Reviewed-by: Satyam Sharma <ssatyam@cse.iitk.ac.in>
->
-> [ Jesper, I hope you re-built with all these changes? Some
-> of these duplicate #include's could have been hiding deeper
-> header-include-ordering problems, and we'd want to know
-> about that too. Otherwise looks fairly obvious, thanks. ]
->
-I build an allmodconfig kernel, an allnoconfig one as well as one with
-my regular config for my home machine.
+On Thu, Jul 19, 2007 at 12:39:15PM -0400, Don Zickus wrote:
+[..]
+> 
+> I am not a big fan of this approach as it forces distros to require
+> kexec-tools when building a kernel.  Even Joe Hacker who wants a custom
+> kernel (and not interested in kexec) would have to not only download the
+> kernel.src.rpm but kexec-tools just to build a kernel that probably
+> doesn't have kexec enabled.
+> 
+> I had to deal with a similar experience when providing a build dependency
+> on the unifdef package when create the kernel-headers rpm for RHEL-5.  A
+> lot of people were confused and upset by this dependency.  Luckily
+> upstream resolved this by just putting similar code in the kernel/scripts
+> directory and thus removing the dependency (well not for RHEL-5).  I would
+> rather not have to deal with this again unless I know there is a more
+> permanent solution that would remove this dependency.
+> 
 
--- 
-Jesper Juhl <jesper.juhl@gmail.com>
-Don't top-post  http://www.catb.org/~esr/jargon/html/T/top-post.html
-Plain text mails only, please      http://www.expita.com/nomime.html
+That's a good point Don. kernel rpm being dependent on kexec-tools rpm is
+not a good idea.
+
+> After talking to Dave Anderson about this more, I start to understand why
+> Ken'ichi prefers to implement the new features in userspace instead of the
+> kernel (it makes things automatically work with older kernels), but I
+> still am not a big fan of it.  I was hoping for a complete in kernel
+> solution (that way you never need the vmlinux file).  Perhaps makedumpfile
+> can support both vmlinux files (if provided) or interface with the kernel
+> (if the vmlinux is not provided?).
+> 
+
+I am also in favour of a complete kernel based solution. Export required
+info from kernel and let kexec-tools parse that info, pass it to second
+kernel and it will be appended to vmcore.
+
+This will put some restrictions on that we can't keep on changing the
+format of the info very frequently and some new features might not work
+with older kernels. But I guess, kexec-tools can provide an override option
+where dump filtering info can be passed on kexec-tools command line (as
+suggested by ken'chi). If user passes this info on command line then
+kexec-tools will not read the info exported from kernel. This way new
+features can be made to work on older kernels. 
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
