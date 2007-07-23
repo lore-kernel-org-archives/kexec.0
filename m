@@ -1,31 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e34.co.us.ibm.com ([32.97.110.152])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1ID0RV-0001Ny-05
-	for kexec@lists.infradead.org; Mon, 23 Jul 2007 12:07:30 -0400
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6NG7OhU005903
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 12:07:24 -0400
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l6NG7DkF208544
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 10:07:24 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l6NFwRej018778
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 09:58:27 -0600
-Date: Mon, 23 Jul 2007 21:28:03 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: Determine version of kernel that produced vmcore
-Message-ID: <20070723155803.GA30193@in.ibm.com>
-References: <20070723050147.GA5691@in.ibm.com>
-	<20070723204723oomichi@mail.jp.nec.com>
-	<20070723130239.GA311@localdomain>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070723130239.GA311@localdomain>
-Reply-To: vgoyal@in.ibm.com
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1ID549-0003Zk-Co
+	for kexec@lists.infradead.org; Mon, 23 Jul 2007 17:03:42 -0400
+Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
+	[172.16.52.254])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6NL3dxH007797
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
+Received: from mail.boston.redhat.com (mail.boston.redhat.com [172.16.76.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
+	l6NL3dNk022297
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
+Received: from redhat.com (crash.boston.redhat.com [172.16.80.17])
+	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l6NL3dlT031187
+	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 17:03:39 -0400
+Message-ID: <46A518C6.5070108@redhat.com>
+Date: Mon, 23 Jul 2007 17:08:22 -0400
+From: Dave Anderson <anderson@redhat.com>
+MIME-Version: 1.0
+Subject: Determine version of kernel that produced vmcore 
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,55 +31,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dan Aloni <da-x@monatomic.org>
-Cc: Don Zickus <dzickus@redhat.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-On Mon, Jul 23, 2007 at 04:02:39PM +0300, Dan Aloni wrote:
-> On Mon, Jul 23, 2007 at 08:47:23PM +0900, Ken'ichi Ohmichi wrote:
-> > 
-> > Hi,
-> > 
-> > 2007/07/23 10:31:47 +0530, Vivek Goyal <vgoyal@in.ibm.com> wrote:
-> [..]
-> > >
-> > >I am also in favour of a complete kernel based solution. Export required
-> > >info from kernel and let kexec-tools parse that info, pass it to second
-> > >kernel and it will be appended to vmcore.
-> > >
-> > >This will put some restrictions on that we can't keep on changing the
-> > >format of the info very frequently and some new features might not work
-> > >with older kernels. But I guess, kexec-tools can provide an override option
-> > >where dump filtering info can be passed on kexec-tools command line (as
-> > >suggested by ken'chi). If user passes this info on command line then
-> > >kexec-tools will not read the info exported from kernel. This way new
-> > >features can be made to work on older kernels. 
-> > 
-> > That sounds good.
-> 
-> Note that currently kexec doesn't actually pass the ELF notes themselves
-> to the kernel, but only their physical addresses as extracted from /sys. 
-> If we want to be able to pass the notes themselves from userspace, a 
-> little more trickery will be needed here.
-> 
 
-That should be easy. Like so many other segments kexec prepares, one
-more segment need to be created and required elf note data needs to be
-put in this segment. 
 
-Right now we create a PT_NOTE type ELF header for every cpu. Now we need
-to create few more notes to pass on the OS release, config variables and
-debug data to second kernel.
+ > From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+...
+ >
+ > BTW, we should test makedumpfile by each linux(-rc1 ?) releases.
+ > Now, I test the makedumpfile functions by comparing the crash utility's
+ > output of /proc/vmcore and the one of the filtered dumpfile.
+ > Often, the crash utility cannot read /proc/vmcore of the latest kernel.
+ > Does anybody know the crash's option that the crash can run loosely for
+ > the early test ?
 
-Should we create a separate note for passing on kernel config info something
-like "linuxconfig" and every note will contain CONFIG_VARIABLE=VALUE string?
+There is no "loosely-run" option for the crash utility.
 
-Probably something similar can be done for appropriate debugging data 
-instead of putting all the info in one ELF note. Breaking the required
-info into multiple generic notes will help it to be used in other things
-also down the line. Just a thought....
+When you state "cannot read /proc/vmcore", I'm presuming that
+you mean that something fails during initialization due to
+the "shifting sands" of the upstream kernel (and which should
+be reported to the crash-utility list so that it can be
+addressed...)
 
-Thanks
-Vivek
+There are a couple debug-only options that prevent crash from
+accessing certain subsystems during initialization, such as
+"--no_kmem_cache" to avoid traversing the kmalloc/slab subsystem,
+and "--no_modules" to avoid traversing the vmalloc'd module list.
+Those two may help if you have an "incomplete" dumpfile that is
+missing pages that *should* be there.  There's also a "-f" to
+force the use of split vmlinux/vmlinux.debug pair whose CRC's
+do not match.  But if you're using a simple -g build vmlinux
+files, that option wouldn't apply.
+
+Dave
+
+ >
+ > Thanks
+ > Ken'ichi Ohmichi
+
+
+
+
+
 
 _______________________________________________
 kexec mailing list
