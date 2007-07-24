@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ID3Mh-0002qx-Jf
-	for kexec@lists.infradead.org; Mon, 23 Jul 2007 15:14:44 -0400
-Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
-	[172.16.52.254])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6NJEfGS024010
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:41 -0400
-Received: from mail.boston.redhat.com (mail.boston.redhat.com [172.16.76.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
-	l6NJEcLn002431
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:40 -0400
-Received: from redhat.com (crash.boston.redhat.com [172.16.80.17])
-	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l6NJEb4e008496
-	for <kexec@lists.infradead.org>; Mon, 23 Jul 2007 15:14:37 -0400
-Message-ID: <46A4FF38.5000504@redhat.com>
-Date: Mon, 23 Jul 2007 15:19:20 -0400
-From: Dave Anderson <anderson@redhat.com>
-MIME-Version: 1.0
-Subject: Re: kexec Digest, Vol 4, Issue 28
-References: <mailman.13.1185206419.4831.kexec@lists.infradead.org>
-In-Reply-To: <mailman.13.1185206419.4831.kexec@lists.infradead.org>
+	id 1IDE4l-0007Z5-NG
+	for kexec@lists.infradead.org; Tue, 24 Jul 2007 02:40:57 -0400
+Subject: Re: Determine version of kernel that produced vmcore
+In-reply-to: <20070723130239.GA311@localdomain>
+Message-Id: <20070724154054oomichi@mail.jp.nec.com>
+References: <20070723130239.GA311@localdomain>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Tue, 24 Jul 2007 15:40:54 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,47 +22,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Dan Aloni <da-x@monatomic.org>
+Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com
 
 
-> From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-> Subject: Re: Determine version of kernel that produced vmcore
-...
-> 
-> BTW, we should test makedumpfile by each linux(-rc1 ?) releases.
-> Now, I test the makedumpfile functions by comparing the crash utility's
-> output of /proc/vmcore and the one of the filtered dumpfile.
-> Often, the crash utility cannot read /proc/vmcore of the latest kernel.
-> Does anybody know the crash's option that the crash can run loosely for
-> the early test ?
+Hi Dan,
 
-There is no "loosely-run" option for the crash utility.
+2007/07/23 16:02:39 +0300, Dan Aloni <da-x@monatomic.org> wrote:
+>> Dan Aloni, I'd like to cooperate with you for implementing this feature.
+>> If you have some patches other than 2007/07/10 patches, could you send
+>> me them ?  I will update them.
+>
+>Sure, though I haven't made new patches (was busy with other things). 
+>Feel free to post new versions of these patches, I'll take a look and 
+>cooperate with you on this.
 
-When you state "cannot read /proc/vmcore", I'm presuming that
-you mean that something fails during initialization due to
-the "shifting sands" of the upstream kernel (and which should
-be reported to the crash-utility list so that it can be
-addressed...)
-
-There are a couple debug-only options that prevent crash from
-accessing certain subsystems during initialization, such as
-"--no_kmem_cache" to avoid traversing the kmalloc/slab subsystem,
-and "--no_modules" to avoid traversing the vmalloc'd module list.
-Those two may help if you have an "incomplete" dumpfile that is
-missing pages that *should* be there.  There's also a "-f" to
-force the use of split vmlinux/vmlinux.debug pair whose CRC's
-do not match.  But if you're using a simple -g build vmlinux
-files, that option wouldn't apply.
-
-Dave
+OK. Now, I am testing a new makedumpfile including some corrections
+and some features to release it in July. I'll start making new patches
+after the release.
 
 
-> 
-> Thanks
-> Ken'ichi Ohmichi
-
-
-
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
