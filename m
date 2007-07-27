@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IEClz-000220-Ne
-	for kexec@lists.infradead.org; Thu, 26 Jul 2007 19:29:39 -0400
-Message-ID: <46A92E30.8070703@ah.jp.nec.com>
-Date: Fri, 27 Jul 2007 08:28:48 +0900
-From: Takenori Nagano <t-nagano@ah.jp.nec.com>
+	id 1IEI88-0005Ld-BH
+	for kexec@lists.infradead.org; Fri, 27 Jul 2007 01:12:50 -0400
+Date: Fri, 27 Jul 2007 14:12:37 +0900
+From: Horms <horms@verge.net.au>
+Subject: Re: [PATCH] Determine ELF32/ELF64 automatically on i386
+Message-ID: <20070727051235.GA26198@verge.net.au>
+References: <20070702131541.GA6084@suse.de> <20070703161207.GA5070@suse.de>
+	<20070710055259.GA5471@in.ibm.com> <20070710082316.GA17090@suse.de>
 MIME-Version: 1.0
-Subject: Re: [patch] add kdump_after_notifier
-References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
-	<20070726153240.GA15969@in.ibm.com>
-	<20070726153440.GA19095@suse.de>
-	<20070726154415.GB15969@in.ibm.com>
-	<20070726154718.GA25561@suse.de>
-	<20070726155444.GC15969@in.ibm.com>
-In-Reply-To: <20070726155444.GC15969@in.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20070710082316.GA17090@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,58 +20,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: Andrew Morton <akpm@linux-foundation.org>, k-miyoshi@cb.jp.nec.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Bernhard Walle <bwalle@suse.de>
+To: kexec@lists.infradead.org
+Cc: Vivek Goyal <vgoyal@in.ibm.com>
 
-Hi Vivek,
-
-Vivek Goyal wrote:
-> On Thu, Jul 26, 2007 at 05:47:18PM +0200, Bernhard Walle wrote:
->> * Vivek Goyal <vgoyal@in.ibm.com> [2007-07-26 17:44]:
->>>> Of course, but that's why the patch doesn't change this by default but
->>>> gives the user the choice.
->>>>
->>> What value will distro set it to by default?
->> 0.
->>
->>> Can we be more specific in terms of functionality and code that exactly
->>> what we are trying to do after panic?
->> Well, KDB, but now everybody answers with “not mainline -- doesn't
->> count”.
->>
+On Tue, Jul 10, 2007 at 10:23:16AM +0200, Bernhard Walle wrote:
+> * Vivek Goyal <vgoyal@in.ibm.com> [2007-07-10 07:52]:
+> > On Tue, Jul 03, 2007 at 06:12:07PM +0200, Bernhard Walle wrote:
+> > > On i386, kexec generates ELF64 core headers by default if the user doesn't
+> > > override this via a command line option. Because GDB cannot analyse
+> > > ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
+> > > needed.
+> > > 
+> > > This patch selects ELF32 if the biggest memory address fits in 32 bit address
+> > > space, which should be the case on non PAE systems. If the user specifies
+> > > a command line option, that option overrides the detection.
+> > > 
+> > 
+> > Makes sense to me. No need to generate 64bit ELF headers on systems
+> > having less than 4G of memory. gdb runs into issues with 64bit ELF headers
+> > on 32bit machines.
 > 
-> That's true. Its not mainline. We had similar discussion in the past
-> also. I think we should allow only audited code to be run after panic().
-> Leaving it open to modules or unaudited code makes this solution
-> something like LKCD where whole lot of code used to run after the crash,
-> hence was unreliable.
-
-It is *not* KDB specific problem. Please grep in mainline kernel. You can find
-some function using panic_notifier_list. (IPMI, softdog, heartbeat, etc...)
-My patch gives a chance to use kdump for panic_notifier user. It is good for
-kdump too, because kdump user goes to increase. :-)
-
-Bernhard's idea (kdump uses panic_notifier) is very good for me. But it isn't
-good for kdump user, because they want to take a dump ASAP when panicked.
-
-Vivek, please think about this problem again.
-
-If there is a developer who has the opinion on this problem, please give us your
-opinion.
-
-Thanks.
-
-> If KDB goes mainline, then I think it is not a bad idea to call debugger
-> first (if it is enabled) and then one can trigger crash dump from inside
-> the debugger.
-> Thanks
-> Vivek
+> Exaclty that was my point.
 > 
+> > I think we can avoid mixed case in "CoreType" and use something like
+> > "coretype".
 > 
+> Of course:
+> 
+> ----
+> 
+> [PATCH] Determine ELF32/ELF64 automatically on i386
+> 
+> On i386, kexec generates ELF64 core headers by default if the user doesn't
+> override this via a command line option. Because GDB cannot analyse
+> ELF64 core dumps on 32 bit platforms, it's a bad idea to use ELF64 if it's not
+> needed.
+> 
+> This patch selects ELF32 if the biggest memory address fits in 32 bit address
+> space, which should be the case on non PAE systems. If the user specifies
+> a command line option, that option overrides the detection.
+
+Sorry for being slow, I missed the patch earlier as it wasn't CCed to me.
+I have applied it now.
+
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
+
 
 _______________________________________________
 kexec mailing list
