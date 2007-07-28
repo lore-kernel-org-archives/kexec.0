@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IEbd0-0005Y0-2j
-	for kexec@lists.infradead.org; Fri, 27 Jul 2007 22:01:59 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [BUG] i386 relocable kernel breakes /proc/kcore debugging
-References: <200707280443.44048.maximlevitsky@gmail.com>
-Date: Fri, 27 Jul 2007 19:58:56 -0600
-In-Reply-To: <200707280443.44048.maximlevitsky@gmail.com> (Maxim Levitsky's
-	message of "Sat, 28 Jul 2007 04:43:43 +0300")
-Message-ID: <m1fy39thjz.fsf@ebiederm.dsl.xmission.com>
+	id 1IEhqD-0001q2-Fy
+	for kexec@lists.infradead.org; Sat, 28 Jul 2007 04:40:17 -0400
+Date: Sat, 28 Jul 2007 10:39:57 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [Crash-utility] ATA scsi driver misbehavior under kdump
+	capture kernel
+Message-ID: <20070728083956.GB21143@suse.de>
+References: <46AA8338.mailxBAZ1JN3SV@eag09.americas.sgi.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <46AA8338.mailxBAZ1JN3SV@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,60 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Levitsky <maximlevitsky@gmail.com>
-Cc: Vivek Goyal <vgoyal@in.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
+To: Cliff Wickman <cpw@sgi.com>
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-Maxim Levitsky <maximlevitsky@gmail.com> writes:
-
-> Hello,
->
-> Today I noticed that gdb gets confused when I try to load a vmlinux image.
-> gdb 'thinks' that all kernel symbols are below 0x80000000 , while they are at 
-> 0xC000....
->
-> Turning CONFIG_RELOCATABLE off fixes that, so I assume that is the reason for 
-> that.
->
-> I am using 2.6.23-rc1, although I don't think that older versions are better.
->
-> Best regards,
-> 	Maxim Levitsky
-
-Weird.
-
-Vivek could this be related to the problem of problematic core dumps we
-were seeing earlier?
-
-Eric
-
-
-> PS: 
-> This is what gdb says:
-
->
-> (gdb) disassemble sys_open
-> Dump of assembler code for function sys_open:
-> 0x8026fa60 <sys_open+0>:        Cannot access memory at address 0x8026fa60
->
-> While real address of sys_open is:
->
-> [root@MAIN linux-2.6]# nm ./.obj/vmlinux |  grep sys_open
-> .........
-> c016ea60 T sys_open
->
-> Strange, but gdb recordnizes the above address directly:
->
-> (gdb) disassemble 0xc016ea60
-> Dump of assembler code for function sys_open:
-> 0xc016ea60 <sys_open+0>:        sub    $0x4,%esp
-> 0xc016ea63 <sys_open+3>:        mov    0x10(%esp),%eax
-> ...............
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+KiBDbGlmZiBXaWNrbWFuIDxjcHdAc2dpLmNvbT4gWzIwMDctMDctMjggMDE6NDNdOgo+IEkndmUg
+cnVuIGludG8gYSBwcm9ibGVtIHdpdGggdGhlIEFUQSBTQ1NJIGRpc2sgZHJpdmVyIHdoZW4gcnVu
+bmluZyBpbiBhCj4ga2R1bXAgZHVtcC1jYXB0dXJlIGtlcm5lbC4KPiAKPiBJJ20gcnVubmluZyBv
+biAyLXByb2Nlc3NvciB4ODZfNjQgYm94LiAgSXQgaGFzIDIgc2NzaSBkaXNrcywgL2Rldi9zZGEg
+YW5kCj4gL2Rldi9zZGIKPiAKPiBNeSBrZXJuZWwgaXMgMi42LjIyLCBhbmQgYnVpbHQgdG8gYmUg
+YSBkdW1wIGNhcHR1cmluZyBrZXJuZWwgbG9hZGVkIGJ5IGtleGVjLgo+IFdoZW4gSSBib290IHRo
+aXMga2VybmVsIGJ5IGl0c2VsZiwgaXQgZmluZHMgYm90aCBzZGEgYW5kIHNkYi4KPiAKPiBCdXQg
+d2hlbiBpdCBpcyBsb2FkZWQgYnkga2V4ZWMgYW5kIGJvb3RlZCBvbiBhIHBhbmljIGl0IG9ubHkg
+ZmluZHMgc2RhLgo+IAo+IEFueSBpZGVhcyBmcm9tIHRob3NlIGZhbWlsaWFyIHdpdGggdGhlIEFU
+QSBkcml2ZXI/CgpGcm9tIHlvdXIgcHJldmlvdXMgcG9zdGluZyBJIHNlZSB0aGF0IHlvdSdyZSBu
+b3QgdXNpbmcgdGhlIOKAnGlycXBvbGzigJ0Kb3B0aW9uIGZvciB0aGUgY2FwdHVyZSBrZXJuZWwu
+IE9uZSBjb21tb24gcHJvYmxlbSBmb3IgZGV2aWNlIGRyaXZlcnMKaXMgdGhhdCBpbnRlcnJ1cHRz
+IGFyZSBub3QgZGVsaXZlcmVkIHByb3Blcmx5IGFuZCDigJxpcnFwb2xs4oCdIHByZXZlbnRzCnRo
+YXQgcHJvYmxlbSBieSBjYWxsaW5nIGVhY2ggaW50ZXJydXB0IGhhbmRsZXIgd2l0aCBlYWNoIHRp
+bWVyCmludGVycnVwdC4KCgpUaGFua3MsCiAgIEJlcm5oYXJkCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
