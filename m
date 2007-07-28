@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IESRR-0005fp-MV
-	for kexec@lists.infradead.org; Fri, 27 Jul 2007 12:13:26 -0400
-Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
-	[172.16.52.254])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6RGDN8r012563
-	for <kexec@lists.infradead.org>; Fri, 27 Jul 2007 12:13:23 -0400
-Received: from mail.boston.redhat.com (mail.boston.redhat.com [172.16.76.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
-	l6RGDN3w021460
-	for <kexec@lists.infradead.org>; Fri, 27 Jul 2007 12:13:23 -0400
-Received: from redhat.com (crash.boston.redhat.com [172.16.80.17])
-	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l6RGDMF3005993
-	for <kexec@lists.infradead.org>; Fri, 27 Jul 2007 12:13:22 -0400
-Message-ID: <46AA1AC0.2040702@redhat.com>
-Date: Fri, 27 Jul 2007 12:18:08 -0400
-From: Dave Anderson <anderson@redhat.com>
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IEbd0-0005Y0-2j
+	for kexec@lists.infradead.org; Fri, 27 Jul 2007 22:01:59 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [BUG] i386 relocable kernel breakes /proc/kcore debugging
+References: <200707280443.44048.maximlevitsky@gmail.com>
+Date: Fri, 27 Jul 2007 19:58:56 -0600
+In-Reply-To: <200707280443.44048.maximlevitsky@gmail.com> (Maxim Levitsky's
+	message of "Sat, 28 Jul 2007 04:43:43 +0300")
+Message-ID: <m1fy39thjz.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Subject: Re: makedumpfile-1.1.5: Xen support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,32 +23,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Maxim Levitsky <maximlevitsky@gmail.com>
+Cc: Vivek Goyal <vgoyal@in.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
+
+Maxim Levitsky <maximlevitsky@gmail.com> writes:
+
+> Hello,
+>
+> Today I noticed that gdb gets confused when I try to load a vmlinux image.
+> gdb 'thinks' that all kernel symbols are below 0x80000000 , while they are at 
+> 0xC000....
+>
+> Turning CONFIG_RELOCATABLE off fixes that, so I assume that is the reason for 
+> that.
+>
+> I am using 2.6.23-rc1, although I don't think that older versions are better.
+>
+> Best regards,
+> 	Maxim Levitsky
+
+Weird.
+
+Vivek could this be related to the problem of problematic core dumps we
+were seeing earlier?
+
+Eric
 
 
-> Changelog:
-> o Add a new feature that extracting the part of xen hypervisor and
->   domain-0 from /proc/vmcore. In most cases under xen environment,
->   it is enough to analyze a cause of system crash.
->   The patch was provided by Itsuro Oda.
->   Usage:
->     # makedumpfile -E --xen-syms xen-syms /proc/vmcore dumpfile
+> PS: 
+> This is what gdb says:
 
-Can you verify that the dumpfile created above is usable as both a
-hypervisor dumpfile as well as a dom0 vmlinux dumpfile?  In other
-words, can both of the following sessions be accomplished with the
-resultant dumpfile?
-
-  # crash xen-syms dumpfile
-
-and:
-
-  # crash vmlinux dumpfile
-
-Thanks,
-   Dave
-
-
+>
+> (gdb) disassemble sys_open
+> Dump of assembler code for function sys_open:
+> 0x8026fa60 <sys_open+0>:        Cannot access memory at address 0x8026fa60
+>
+> While real address of sys_open is:
+>
+> [root@MAIN linux-2.6]# nm ./.obj/vmlinux |  grep sys_open
+> .........
+> c016ea60 T sys_open
+>
+> Strange, but gdb recordnizes the above address directly:
+>
+> (gdb) disassemble 0xc016ea60
+> Dump of assembler code for function sys_open:
+> 0xc016ea60 <sys_open+0>:        sub    $0x4,%esp
+> 0xc016ea63 <sys_open+3>:        mov    0x10(%esp),%eax
+> ...............
 
 _______________________________________________
 kexec mailing list
