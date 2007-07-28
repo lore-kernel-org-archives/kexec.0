@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IEhqD-0001q2-Fy
-	for kexec@lists.infradead.org; Sat, 28 Jul 2007 04:40:17 -0400
-Date: Sat, 28 Jul 2007 10:39:57 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [Crash-utility] ATA scsi driver misbehavior under kdump
-	capture kernel
-Message-ID: <20070728083956.GB21143@suse.de>
-References: <46AA8338.mailxBAZ1JN3SV@eag09.americas.sgi.com>
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IEjvi-00036x-AF
+	for kexec@lists.infradead.org; Sat, 28 Jul 2007 06:53:52 -0400
+Message-ID: <1181.219.4.192.46.1185620025.risu@secure.valinux.co.jp>
+In-Reply-To: <46AA1AC0.2040702@redhat.com>
+References: <46AA1AC0.2040702@redhat.com>
+Date: Sat, 28 Jul 2007 19:53:45 +0900 (JST)
+Subject: Re: makedumpfile-1.1.5: Xen support
+From: "Itsuro ODA" <oda@valinux.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46AA8338.mailxBAZ1JN3SV@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,28 +18,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: Dave Anderson <anderson@redhat.com>
+Cc: kexec@lists.infradead.org
 
-KiBDbGlmZiBXaWNrbWFuIDxjcHdAc2dpLmNvbT4gWzIwMDctMDctMjggMDE6NDNdOgo+IEkndmUg
-cnVuIGludG8gYSBwcm9ibGVtIHdpdGggdGhlIEFUQSBTQ1NJIGRpc2sgZHJpdmVyIHdoZW4gcnVu
-bmluZyBpbiBhCj4ga2R1bXAgZHVtcC1jYXB0dXJlIGtlcm5lbC4KPiAKPiBJJ20gcnVubmluZyBv
-biAyLXByb2Nlc3NvciB4ODZfNjQgYm94LiAgSXQgaGFzIDIgc2NzaSBkaXNrcywgL2Rldi9zZGEg
-YW5kCj4gL2Rldi9zZGIKPiAKPiBNeSBrZXJuZWwgaXMgMi42LjIyLCBhbmQgYnVpbHQgdG8gYmUg
-YSBkdW1wIGNhcHR1cmluZyBrZXJuZWwgbG9hZGVkIGJ5IGtleGVjLgo+IFdoZW4gSSBib290IHRo
-aXMga2VybmVsIGJ5IGl0c2VsZiwgaXQgZmluZHMgYm90aCBzZGEgYW5kIHNkYi4KPiAKPiBCdXQg
-d2hlbiBpdCBpcyBsb2FkZWQgYnkga2V4ZWMgYW5kIGJvb3RlZCBvbiBhIHBhbmljIGl0IG9ubHkg
-ZmluZHMgc2RhLgo+IAo+IEFueSBpZGVhcyBmcm9tIHRob3NlIGZhbWlsaWFyIHdpdGggdGhlIEFU
-QSBkcml2ZXI/CgpGcm9tIHlvdXIgcHJldmlvdXMgcG9zdGluZyBJIHNlZSB0aGF0IHlvdSdyZSBu
-b3QgdXNpbmcgdGhlIOKAnGlycXBvbGzigJ0Kb3B0aW9uIGZvciB0aGUgY2FwdHVyZSBrZXJuZWwu
-IE9uZSBjb21tb24gcHJvYmxlbSBmb3IgZGV2aWNlIGRyaXZlcnMKaXMgdGhhdCBpbnRlcnJ1cHRz
-IGFyZSBub3QgZGVsaXZlcmVkIHByb3Blcmx5IGFuZCDigJxpcnFwb2xs4oCdIHByZXZlbnRzCnRo
-YXQgcHJvYmxlbSBieSBjYWxsaW5nIGVhY2ggaW50ZXJydXB0IGhhbmRsZXIgd2l0aCBlYWNoIHRp
-bWVyCmludGVycnVwdC4KCgpUaGFua3MsCiAgIEJlcm5oYXJkCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+Hi Dave,
+
+>> Changelog:
+>> o Add a new feature that extracting the part of xen hypervisor and
+>>   domain-0 from /proc/vmcore. In most cases under xen environment,
+>>   it is enough to analyze a cause of system crash.
+>>   The patch was provided by Itsuro Oda.
+>>   Usage:
+>>     # makedumpfile -E --xen-syms xen-syms /proc/vmcore dumpfile
+>
+> Can you verify that the dumpfile created above is usable as both a
+> hypervisor dumpfile as well as a dom0 vmlinux dumpfile?  In other
+> words, can both of the following sessions be accomplished with the
+> resultant dumpfile?
+>
+>   # crash xen-syms dumpfile
+>
+> and:
+>
+>   # crash vmlinux dumpfile
+>
+
+Yes.
+
+Thanks.
+-- 
+Itsuro ODA <oda@valinux.co.jp>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
