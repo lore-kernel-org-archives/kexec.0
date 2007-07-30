@@ -1,34 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e1.ny.us.ibm.com ([32.97.182.141])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IFRMb-0008TE-La
-	for kexec@lists.infradead.org; Mon, 30 Jul 2007 05:16:31 -0400
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6U9GGtC016297
-	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
-Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l6U9GGVe536054
-	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
-Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
-	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l6U9GF4M028957
-	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
-Date: Mon, 30 Jul 2007 14:46:24 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [patch] add kdump_after_notifier
-Message-ID: <20070730091624.GB6071@in.ibm.com>
-References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
-	<20070726153240.GA15969@in.ibm.com>
-	<20070726153440.GA19095@suse.de>
-	<20070726154415.GB15969@in.ibm.com>
-	<20070726154718.GA25561@suse.de>
-	<20070726155444.GC15969@in.ibm.com>
-	<46A92E30.8070703@ah.jp.nec.com>
+Received: from ns.oss.ntt.co.jp ([222.151.198.98] helo=serv1.oss.ntt.co.jp)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IFS15-0000bR-OG
+	for kexec@lists.infradead.org; Mon, 30 Jul 2007 05:58:23 -0400
+Subject: Re: [PATCH 2/2] Debug handling of early spurious interrupts
+From: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+In-Reply-To: <20070720144302.2785e961.akpm@linux-foundation.org>
+References: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
+	<20070718154659.c8b5ffea.akpm@linux-foundation.org>
+	<1184896459.27369.36.camel@sebastian.kern.oss.ntt.co.jp>
+	<1184896944.27369.50.camel@sebastian.kern.oss.ntt.co.jp>
+	<1184898043.28418.3.camel@sebastian.kern.oss.ntt.co.jp>
+	<20070720144302.2785e961.akpm@linux-foundation.org>
+Date: Mon, 30 Jul 2007 18:58:14 +0900
+Message-Id: <1185789494.9831.107.camel@sebastian.kern.oss.ntt.co.jp>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46A92E30.8070703@ah.jp.nec.com>
-Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,67 +23,242 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-T24gRnJpLCBKdWwgMjcsIDIwMDcgYXQgMDg6Mjg6NDhBTSArMDkwMCwgVGFrZW5vcmkgTmFnYW5v
-IHdyb3RlOgo+IEhpIFZpdmVrLAo+IAo+IFZpdmVrIEdveWFsIHdyb3RlOgo+ID4gT24gVGh1LCBK
-dWwgMjYsIDIwMDcgYXQgMDU6NDc6MThQTSArMDIwMCwgQmVybmhhcmQgV2FsbGUgd3JvdGU6Cj4g
-Pj4gKiBWaXZlayBHb3lhbCA8dmdveWFsQGluLmlibS5jb20+IFsyMDA3LTA3LTI2IDE3OjQ0XToK
-PiA+Pj4+IE9mIGNvdXJzZSwgYnV0IHRoYXQncyB3aHkgdGhlIHBhdGNoIGRvZXNuJ3QgY2hhbmdl
-IHRoaXMgYnkgZGVmYXVsdCBidXQKPiA+Pj4+IGdpdmVzIHRoZSB1c2VyIHRoZSBjaG9pY2UuCj4g
-Pj4+Pgo+ID4+PiBXaGF0IHZhbHVlIHdpbGwgZGlzdHJvIHNldCBpdCB0byBieSBkZWZhdWx0Pwo+
-ID4+IDAuCj4gPj4KPiA+Pj4gQ2FuIHdlIGJlIG1vcmUgc3BlY2lmaWMgaW4gdGVybXMgb2YgZnVu
-Y3Rpb25hbGl0eSBhbmQgY29kZSB0aGF0IGV4YWN0bHkKPiA+Pj4gd2hhdCB3ZSBhcmUgdHJ5aW5n
-IHRvIGRvIGFmdGVyIHBhbmljPwo+ID4+IFdlbGwsIEtEQiwgYnV0IG5vdyBldmVyeWJvZHkgYW5z
-d2VycyB3aXRoIOKAnG5vdCBtYWlubGluZSAtLSBkb2Vzbid0Cj4gPj4gY291bnTigJ0uCj4gPj4K
-PiA+IAo+ID4gVGhhdCdzIHRydWUuIEl0cyBub3QgbWFpbmxpbmUuIFdlIGhhZCBzaW1pbGFyIGRp
-c2N1c3Npb24gaW4gdGhlIHBhc3QKPiA+IGFsc28uIEkgdGhpbmsgd2Ugc2hvdWxkIGFsbG93IG9u
-bHkgYXVkaXRlZCBjb2RlIHRvIGJlIHJ1biBhZnRlciBwYW5pYygpLgo+ID4gTGVhdmluZyBpdCBv
-cGVuIHRvIG1vZHVsZXMgb3IgdW5hdWRpdGVkIGNvZGUgbWFrZXMgdGhpcyBzb2x1dGlvbgo+ID4g
-c29tZXRoaW5nIGxpa2UgTEtDRCB3aGVyZSB3aG9sZSBsb3Qgb2YgY29kZSB1c2VkIHRvIHJ1biBh
-ZnRlciB0aGUgY3Jhc2gsCj4gPiBoZW5jZSB3YXMgdW5yZWxpYWJsZS4KPiAKPiBJdCBpcyAqbm90
-KiBLREIgc3BlY2lmaWMgcHJvYmxlbS4gUGxlYXNlIGdyZXAgaW4gbWFpbmxpbmUga2VybmVsLiBZ
-b3UgY2FuIGZpbmQKPiBzb21lIGZ1bmN0aW9uIHVzaW5nIHBhbmljX25vdGlmaWVyX2xpc3QuIChJ
-UE1JLCBzb2Z0ZG9nLCBoZWFydGJlYXQsIGV0Yy4uLikKPiBNeSBwYXRjaCBnaXZlcyBhIGNoYW5j
-ZSB0byB1c2Uga2R1bXAgZm9yIHBhbmljX25vdGlmaWVyIHVzZXIuIEl0IGlzIGdvb2QgZm9yCj4g
-a2R1bXAgdG9vLCBiZWNhdXNlIGtkdW1wIHVzZXIgZ29lcyB0byBpbmNyZWFzZS4gOi0pCgpJIGdy
-ZXBwZWQgZm9yIGNvdXBsZSBvZiBpdGVtcy4gSGVhcnRiZWF0IGZ1bmN0aW9uYWxpdHkgb2YgZm9y
-IHN0b3BwaW5nCnJlc3BvbmRpbmcgdG8gc2VydmljZSBwcm9jZXNzc29yIGluIGNhc2Ugb2YgcGFu
-aWMgc28gdGhhdCBzZXJ2aWNlIHByb2Nlc3Nvcgprbm93cyB0aGF0IHN5c3RlbSBoYXMgY3Jhc2hl
-ZCBhbmQgaXQgbmVlZHMgdG8gcmVib290IHRoZSBtYWNoaW5lLiBCdXQgaWYKc29tZWJvZHkgaGFz
-IGNvbmZpZ3VyZWQgYW5kIGVuYWJsZWQga2R1bXAgdGhlbiB3ZSBkb24ndCB3YW50IHNlcnZpY2Ug
-CnByb2Nlc3NvciB0byBzdG9wIHJlc3BvbmRpbmcgdG8gaGVhcnRiZWF0IG90aGVyd2lzZSBzZXJ2
-aWNlIHByb2Nlc3Nvcgp3aWxsIHJlYm9vdCB0aGUgbWFjaGluZSBhbmQgd2Ugd2lsbCBub3QgYmUg
-YWJsZSB0byBjYXB0dXJlIHRoZSBkdW1wLgoKSW4gY2FzZSBvZiBkZXRlY3Rpbmcgc29mdGxvY2t1
-cCwgcGFuaWMgbm90aWZpZXIgaXMgdXNlZCBzbyB0aGF0IGluIGNhc2UKb2YgcGFuaWMgd2UgZG9u
-J3Qgd2FudCB0byBmbGFnIG90aGVyIHRocmVhZHMgYXJlIG5vdCBiZWluZyBzY2hlZHVsZWQgYW5k
-Cml0IGlzIGEgc29mdGxvY2t1cC4gSW4gY2FzZSBvZiBrZHVtcCB0aGlzIGNvbmRpdGlvbiBpcyBu
-b3QgdmFsaWQuIEltbWVkaWF0ZWx5CmFmdGVyIGtkdW1wIHdlIHdpbGwgYm9vdCB0byBuZXh0IE9T
-IGFuZCBwcmV2aW91cyBrZXJuZWwncyBjb250ZXh0IGlzIHdpcGVkCm9mZi4KCkNhbiB5b3UgcGxl
-YXNlIGJlIHNwZWNpZmljIHdoYXQgZXhhY3RseSBpcyB0aGUgcHJvYmxlbSB5b3UgYXJlIGZhY2lu
-Zz8gSW4Kd2hhdCBzaXR1YXRpb24gaXMgdGhpcyBjYWxsIGNyZWF0aW5nIHRoZSBwcm9ibGVtPwoK
-PiAKPiBCZXJuaGFyZCdzIGlkZWEgKGtkdW1wIHVzZXMgcGFuaWNfbm90aWZpZXIpIGlzIHZlcnkg
-Z29vZCBmb3IgbWUuIEJ1dCBpdCBpc24ndAo+IGdvb2QgZm9yIGtkdW1wIHVzZXIsIGJlY2F1c2Ug
-dGhleSB3YW50IHRvIHRha2UgYSBkdW1wIEFTQVAgd2hlbiBwYW5pY2tlZC4KPiAKClRoaXMgb25l
-IGlzIGJldHRlciB0aGFuIHJlZ2lzdGVyaW5nIGtkdW1wIGFzIG9uZSBvZiB0aGUgdXNlcnMgb2Yg
-YQpwYW5pY19ub3RpZmllcigpIGxpc3QuIAoKSSB0aGluayBpZiB0aGVyZSBhcmUgYW55IGNyYXNo
-IHNwZWNpZmljIGFjdGlvbnMsIHRoZXkgc2hvdWxkIGJlIHRha2VuIGNhcmUKaW4gbmV4dCBrZXJu
-ZWwgd2hpbGUgaXQgaXMgYm9vdGluZy4KCklmIHNvbWV0aGluZyBpcyByZWFsbHkgdmVyeSB0aW1l
-IGNyaXRpY2FsLCBhbmQgaGFzIHRvIGJlIGRvbmUgaW1tZWRpYXRlbHkKYWZ0ZXIgcGFuaWMgKEkg
-YW0gbm90IHN1cmUgaG93IGNhbiBvbmUgZW5zdXJlIHRoYXQgZ2l2ZW4gdGhlIGZhY3QgYW55IG51
-bWJlcgpvZiB1c2VycyBjYW4gcmVnaXN0ZXIgb24gcGFuaWNfbm90aWZpZXJfbGlzdCBhbmQgeW91
-IGFyZSBub3Qgc3VyZSBhYm91dCB5b3VyCm9yZGVyIGluIHRoZSBsaXN0IGFuZCB3aGVuIG9uZSB3
-aWxsIGdldCB0aGUgY29udHJvbCksIHRoZW4gcHJvYmFibHkgdGhhdApwaWVjZSBvZiBjb2RlIHNo
-b3VsZCBiZSBpbiBrZXJuZWwgYW5kIGNhbGxlZCBiZWZvcmUgY3Jhc2hfa2V4ZWMoKS4KCldoYXQg
-aXMgdGhhdCBzcGVjaWZpYyBwaWVjZSBvZiBhY3Rpb24gd2hpY2ggeW91IGNhbid0IGRvIGluIHNl
-Y29uZCBrZXJuZWw/CgpFcmljLCBkbyB5b3UgaGF2ZSBhbnkgdGhvdWdodHMgb24gdGhpcy4gSSB0
-aGluayB0aGVzZSBndXlzIGFyZSByZWZlcnJpbmcKdG8gZmFpbG92ZXIgcHJvYmxlbSB3aGVyZSBp
-bW1lZGlhdGVseSBhZnRlciBwYW5pYygpIHRoZXkgd2FudCB0byBzZW5kCm1lc3NhZ2UgdG8gb3Ro
-ZXIgbm9kZS4KClRoYW5rcwpWaXZlawoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Fri, 2007-07-20 at 14:43 -0700, Andrew Morton wrote: 
+> On Fri, 20 Jul 2007 11:20:43 +0900
+> Fernando Luis V__zquez Cao <fernando@oss.ntt.co.jp> wrote:
+> 
+> > With the advent of kdump it is possible that device drivers receive
+> > interrupts generated in the context of a previous kernel. Ideally
+> > quiescing the underlying devices should suffice but not all drivers do
+> > this, either because it is not possible or because they did not
+> > contemplate this case. Thus drivers ought to be able to handle
+> > interrupts coming in as soon as the interrupt handler is registered.
+> > 
+> > Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
+> > ---
+> > 
+> > diff -urNp linux-2.6.22-orig/kernel/irq/manage.c linux-2.6.22-pendirq/kernel/irq/manage.c
+> > --- linux-2.6.22-orig/kernel/irq/manage.c	2007-07-19 18:18:53.000000000 +0900
+> > +++ linux-2.6.22-pendirq/kernel/irq/manage.c	2007-07-19 19:43:41.000000000 +0900
+> > @@ -533,21 +533,32 @@ int request_irq(unsigned int irq, irq_ha
+> >  
+> >  	select_smp_affinity(irq);
+> >  
+> > -	if (irqflags & IRQF_SHARED) {
+> > -		/*
+> > -		 * It's a shared IRQ -- the driver ought to be prepared for it
+> > -		 * to happen immediately, so let's make sure....
+> > -		 * We do this before actually registering it, to make sure that
+> > -		 * a 'real' IRQ doesn't run in parallel with our fake
+> > -		 */
+> > -		if (irqflags & IRQF_DISABLED) {
+> > -			unsigned long flags;
+> > +	/*
+> > +	 * With the advent of kdump it possible that device drivers receive
+> > +	 * interrupts generated in the context of a previous kernel. Ideally
+> > +	 * quiescing the underlying devices should suffice but not all drivers
+> > +	 * do this, either because it is not possible or because they did not
+> > +	 * contemplate this case. Thus drivers ought to be able to handle
+> > +	 * interrupts coming in as soon as the interrupt handler is registered.
+> > +	 *
+> > +	 * Besides, if it is a shared IRQ the driver ought to be prepared for
+> > +	 * it to happen immediately too.
+> > +	 *
+> > +	 * We do this before actually registering it, to make sure that
+> > +	 * a 'real' IRQ doesn't run in parallel with our fake.
+> > +	 */
+> > +	if (irqflags & IRQF_DISABLED) {
+> > +		unsigned long flags;
+> >  
+> > -			local_irq_save(flags);
+> > -			handler(irq, dev_id);
+> > -			local_irq_restore(flags);
+> > -		} else
+> > -			handler(irq, dev_id);
+> > +		local_irq_save(flags);
+> > +		retval = handler(irq, dev_id);
+> > +		local_irq_restore(flags);
+> > +	} else
+> > +		retval = handler(irq, dev_id);
+> > +	if (retval == IRQ_HANDLED) {
+> > +		printk(KERN_WARNING
+> > +		       "%s (IRQ %d) handled a spurious interrupt\n",
+> > +		       devname, irq);
+> >  	}
+> >  
+> 
+> This change means that we'll run the irq handler at request_irq()-time even
+> for non-shared interrupts.
+> 
+> This is a bit of a worry.  See, shared-interrupt handlers are required to
+> be able to cope with being called when their device isn't interrupting. 
+> But nobody ever said that non-shared interrupt handlers need to be able to
+> cope with that.
+> 
+> Hence these non-shared handlers are within their rights to emit warning
+> printks, go BUG or accuse the operator of having busted hardware.
+> 
+> So bad things might happen because of this change.  And if they do, they
+> will take a loooong time to be discovered, because non-shared interrupt
+> handlers tend to dwell in crufty old drivers which not many people use.
+> 
+> So I'm wondering if it would be more prudent to only do all this for shared
+> handlers?
+
+I have been testing this patches on all my machines, which spans three
+different architectures: i386, x86_64 (EM64T and Opteron), and ia64.
+
+The good news is that nothing catastrophic happened and, in the process,
+I managed to find some somewhat buggy interrupt handlers.
+
+I will present a brief summary of my findings here. That said, I have to
+admit that these are still preliminary results and have not had time to
+dig deep into all the issues. I would like hear from you first.
+
+- Test environment
+
+-- x86_64 [EM64T]
+   CPU: Intel(R) Xeon(TM) CPU 3.20GHz (2 cpus)
+   SCSI: Adaptec AIC-7902B U320
+   IDE: Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller
+
+-- x86_64 [Opteron]
+   CPU: AMD Opteron(tm) Processor 240 (2 cpus)
+   IDE: Advanced Micro Devices [AMD] AMD-8111 IDE (rev 03)
+
+-- ia64
+   CPU: Itanium 2 Madison (2 cpus)
+   SCSI: LSI Logic / Symbios Logic 53c1030 PCI-X Fusion-MPT Dual
+Ultra320 SCSI
+   IDE: Intel Corporation 82801DB (ICH4) IDE Controller
+
+-- i386
+   CPU: Intel(R) Xeon(TM) CPU 2.40GHz (2 cpus)
+   IDE: Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller (rev
+02)
+
+- Test results for i386
+
+--i8042 (IRQ 12) handled a spurious interrupt -> i8042
+The culprit here was the i8042_aux_test_irq interrupt handler
+unconditionally returning IRQ_HANDLED despite being marked as
+IRQF_SHARED. I submitted a fix and it is currently sitting in the
+'for-linus' branch of Dmitry Torokhov's input tree (Dmitry, Alan,
+Vojtech, thank you for reviewing the patch!).
+
+-- eth0 (IRQ 16) handled a spurious interrupt -> e1000
+The problem here is that the network card is active before it has been
+assigned an interrupt line. This means that if the card detects an event
+such as a link status change it will update the status register (ICR) by
+setting the corresponding flag, even if request_irq has not been invoked
+yet. In such a case, once the interrupt handler is set if a spurious
+interrupt comes in it will be handled. The reason is that the handler
+checks ICR to determine whether the underlying the device has generated
+an interrupt or not, and the flag that indicates a link status change
+will happen to be set.
+
+I have sent a patch that clears the ICR before requesting an IRQ, but
+according to Auke Kok there is a small window during which the device
+could generate another link status change interrupt. I am looking for a
+way to prevent the device from reacting to such events before an IRQ has
+been allocated, but still do not know if it is possible.
+
+-- rtc (IRQ 8) handled a spurious interrupt
+-- parport0 (IRQ 7) handled a spurious interrupt
+-- MPU401 UART (IRQ 10) handled a spurious interrupt
+I have not looked into these three yet but it seems that in some cases
+it is not possible to determine whether an interrupt has actually
+occurred.
+
+- Test results for x86_64 [EM64T]
+
+-- i8042 (IRQ 12) handled a spurious interrupt -> i8042
+Ditto.
+-- eth0 (IRQ 54) handled a spurious interrupt -> e1000
+Ditto.
+-- rtc (IRQ 8) handled a spurious interrupt
+Ditto.
+
+- Test results for x86_64 [Opteron]
+-- i8042 (IRQ 12) handled a spurious interrupt -> i8042
+Ditto.
+-- rtc (IRQ 8) handled a spurious interrupt
+Ditto.
+-- parport0 (IRQ 7) handled a spurious interrupt
+Ditto.
+
+- Test results for ia64
+-- eth0 (IRQ 48) handled a spurious interrupt -> e1000
+Ditto.
+
+Besides these patches have exposed bugs in other people's machines too.
+Valdis Kletnieks discovered a problem in his tpm driver and it seems
+that the TPM guys are already looking into it.
+
+- Conclusion
+
+These patches can affect device drivers in several ways and, so far, I
+have identified 5 possible scenarios:
+
+  1. Shared handlers that behave as expected and ignore spurious
+interrupts.
+  2. Shared handlers that unconditionally handle any incoming interrupt.
+  3. Shared handlers that cannot distinguish between interrupts that it
+needs to handle and interrupts generated by other devices in certain
+situations.
+  4. Non-shared handlers that behave as expected and ignore spurious
+interrupts.
+  5. Drivers for legacy devices in which it is not possible to determine
+whether a given interrupt has actually come from the underlying device.
+
+Obviously, 1) and 4) are the ideal cases and (probably) the majority of
+the drivers fall into this group.
+
+2) means that the driver cannot cohabit harmoniously with other drivers
+and it would end up handling any interrupt coming in from that interrupt
+line regardless of its origin. i8042 used to be belong to this group,
+but the aforementioned patch should have solved it.
+
+Most devices have a interrupt pending bit in some port or an interrupt
+cause register (ICR) that can be checked by the driver to determine what
+interrupts it needs to handle. The problem is that some devices are
+operational before request_irq has been called and react to external
+events by updating the interrupt pending bit or the ICR. This means that
+after actually registering the interrupt handler, any interrupt coming
+in would be handled. 3) refers to such cases. By the way, the e1000
+driver seems to be suffering this issue which causes the error message
+above.
+
+When it comes to 5) there is not much we can do. Sometimes you simply
+cannot tell.
+
+The bottom line is that we have to decide how two tackle 2), 3) and 5).
+My gut feeling is that in most cases 2) and 3) constitute a bug, because
+if the driver is not fixable then IRQF_SHARED should not have been set
+in the first place. Regarding 5), there is no choice, so it seems we
+would need to mark such drivers somehow (another possible solution would
+be calling the interrupt handler from request_irq only when IRQF_SHARED
+is set, because shared handlers should not be affected by this problem).
+
+If we find drivers that are not fixable we should probably consider this
+new behaviour on a per-driver basis, as Andrew suggested. This would
+probably require passing a new flag into request_irq. Besides, when such
+a driver is detected we should emit a warning that it may not work
+properly in a kdump kernel.
+
+I would appreciate your comments on this.
+
+- Fernando
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
