@@ -1,15 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IEjvi-00036x-AF
-	for kexec@lists.infradead.org; Sat, 28 Jul 2007 06:53:52 -0400
-Message-ID: <1181.219.4.192.46.1185620025.risu@secure.valinux.co.jp>
-In-Reply-To: <46AA1AC0.2040702@redhat.com>
-References: <46AA1AC0.2040702@redhat.com>
-Date: Sat, 28 Jul 2007 19:53:45 +0900 (JST)
-Subject: Re: makedumpfile-1.1.5: Xen support
-From: "Itsuro ODA" <oda@valinux.co.jp>
-MIME-Version: 1.0
+Received: from e1.ny.us.ibm.com ([32.97.182.141])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IFRMb-0008TE-La
+	for kexec@lists.infradead.org; Mon, 30 Jul 2007 05:16:31 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l6U9GGtC016297
+	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
+	l6U9GGVe536054
+	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l6U9GF4M028957
+	for <kexec@lists.infradead.org>; Mon, 30 Jul 2007 05:16:16 -0400
+Date: Mon, 30 Jul 2007 14:46:24 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [patch] add kdump_after_notifier
+Message-ID: <20070730091624.GB6071@in.ibm.com>
+References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
+	<20070726153240.GA15969@in.ibm.com>
+	<20070726153440.GA19095@suse.de>
+	<20070726154415.GB15969@in.ibm.com>
+	<20070726154718.GA25561@suse.de>
+	<20070726155444.GC15969@in.ibm.com>
+	<46A92E30.8070703@ah.jp.nec.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <46A92E30.8070703@ah.jp.nec.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,43 +37,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Takenori Nagano <t-nagano@ah.jp.nec.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Hi Dave,
-
->> Changelog:
->> o Add a new feature that extracting the part of xen hypervisor and
->>   domain-0 from /proc/vmcore. In most cases under xen environment,
->>   it is enough to analyze a cause of system crash.
->>   The patch was provided by Itsuro Oda.
->>   Usage:
->>     # makedumpfile -E --xen-syms xen-syms /proc/vmcore dumpfile
->
-> Can you verify that the dumpfile created above is usable as both a
-> hypervisor dumpfile as well as a dom0 vmlinux dumpfile?  In other
-> words, can both of the following sessions be accomplished with the
-> resultant dumpfile?
->
->   # crash xen-syms dumpfile
->
-> and:
->
->   # crash vmlinux dumpfile
->
-
-Yes.
-
-Thanks.
--- 
-Itsuro ODA <oda@valinux.co.jp>
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBKdWwgMjcsIDIwMDcgYXQgMDg6Mjg6NDhBTSArMDkwMCwgVGFrZW5vcmkgTmFnYW5v
+IHdyb3RlOgo+IEhpIFZpdmVrLAo+IAo+IFZpdmVrIEdveWFsIHdyb3RlOgo+ID4gT24gVGh1LCBK
+dWwgMjYsIDIwMDcgYXQgMDU6NDc6MThQTSArMDIwMCwgQmVybmhhcmQgV2FsbGUgd3JvdGU6Cj4g
+Pj4gKiBWaXZlayBHb3lhbCA8dmdveWFsQGluLmlibS5jb20+IFsyMDA3LTA3LTI2IDE3OjQ0XToK
+PiA+Pj4+IE9mIGNvdXJzZSwgYnV0IHRoYXQncyB3aHkgdGhlIHBhdGNoIGRvZXNuJ3QgY2hhbmdl
+IHRoaXMgYnkgZGVmYXVsdCBidXQKPiA+Pj4+IGdpdmVzIHRoZSB1c2VyIHRoZSBjaG9pY2UuCj4g
+Pj4+Pgo+ID4+PiBXaGF0IHZhbHVlIHdpbGwgZGlzdHJvIHNldCBpdCB0byBieSBkZWZhdWx0Pwo+
+ID4+IDAuCj4gPj4KPiA+Pj4gQ2FuIHdlIGJlIG1vcmUgc3BlY2lmaWMgaW4gdGVybXMgb2YgZnVu
+Y3Rpb25hbGl0eSBhbmQgY29kZSB0aGF0IGV4YWN0bHkKPiA+Pj4gd2hhdCB3ZSBhcmUgdHJ5aW5n
+IHRvIGRvIGFmdGVyIHBhbmljPwo+ID4+IFdlbGwsIEtEQiwgYnV0IG5vdyBldmVyeWJvZHkgYW5z
+d2VycyB3aXRoIOKAnG5vdCBtYWlubGluZSAtLSBkb2Vzbid0Cj4gPj4gY291bnTigJ0uCj4gPj4K
+PiA+IAo+ID4gVGhhdCdzIHRydWUuIEl0cyBub3QgbWFpbmxpbmUuIFdlIGhhZCBzaW1pbGFyIGRp
+c2N1c3Npb24gaW4gdGhlIHBhc3QKPiA+IGFsc28uIEkgdGhpbmsgd2Ugc2hvdWxkIGFsbG93IG9u
+bHkgYXVkaXRlZCBjb2RlIHRvIGJlIHJ1biBhZnRlciBwYW5pYygpLgo+ID4gTGVhdmluZyBpdCBv
+cGVuIHRvIG1vZHVsZXMgb3IgdW5hdWRpdGVkIGNvZGUgbWFrZXMgdGhpcyBzb2x1dGlvbgo+ID4g
+c29tZXRoaW5nIGxpa2UgTEtDRCB3aGVyZSB3aG9sZSBsb3Qgb2YgY29kZSB1c2VkIHRvIHJ1biBh
+ZnRlciB0aGUgY3Jhc2gsCj4gPiBoZW5jZSB3YXMgdW5yZWxpYWJsZS4KPiAKPiBJdCBpcyAqbm90
+KiBLREIgc3BlY2lmaWMgcHJvYmxlbS4gUGxlYXNlIGdyZXAgaW4gbWFpbmxpbmUga2VybmVsLiBZ
+b3UgY2FuIGZpbmQKPiBzb21lIGZ1bmN0aW9uIHVzaW5nIHBhbmljX25vdGlmaWVyX2xpc3QuIChJ
+UE1JLCBzb2Z0ZG9nLCBoZWFydGJlYXQsIGV0Yy4uLikKPiBNeSBwYXRjaCBnaXZlcyBhIGNoYW5j
+ZSB0byB1c2Uga2R1bXAgZm9yIHBhbmljX25vdGlmaWVyIHVzZXIuIEl0IGlzIGdvb2QgZm9yCj4g
+a2R1bXAgdG9vLCBiZWNhdXNlIGtkdW1wIHVzZXIgZ29lcyB0byBpbmNyZWFzZS4gOi0pCgpJIGdy
+ZXBwZWQgZm9yIGNvdXBsZSBvZiBpdGVtcy4gSGVhcnRiZWF0IGZ1bmN0aW9uYWxpdHkgb2YgZm9y
+IHN0b3BwaW5nCnJlc3BvbmRpbmcgdG8gc2VydmljZSBwcm9jZXNzc29yIGluIGNhc2Ugb2YgcGFu
+aWMgc28gdGhhdCBzZXJ2aWNlIHByb2Nlc3Nvcgprbm93cyB0aGF0IHN5c3RlbSBoYXMgY3Jhc2hl
+ZCBhbmQgaXQgbmVlZHMgdG8gcmVib290IHRoZSBtYWNoaW5lLiBCdXQgaWYKc29tZWJvZHkgaGFz
+IGNvbmZpZ3VyZWQgYW5kIGVuYWJsZWQga2R1bXAgdGhlbiB3ZSBkb24ndCB3YW50IHNlcnZpY2Ug
+CnByb2Nlc3NvciB0byBzdG9wIHJlc3BvbmRpbmcgdG8gaGVhcnRiZWF0IG90aGVyd2lzZSBzZXJ2
+aWNlIHByb2Nlc3Nvcgp3aWxsIHJlYm9vdCB0aGUgbWFjaGluZSBhbmQgd2Ugd2lsbCBub3QgYmUg
+YWJsZSB0byBjYXB0dXJlIHRoZSBkdW1wLgoKSW4gY2FzZSBvZiBkZXRlY3Rpbmcgc29mdGxvY2t1
+cCwgcGFuaWMgbm90aWZpZXIgaXMgdXNlZCBzbyB0aGF0IGluIGNhc2UKb2YgcGFuaWMgd2UgZG9u
+J3Qgd2FudCB0byBmbGFnIG90aGVyIHRocmVhZHMgYXJlIG5vdCBiZWluZyBzY2hlZHVsZWQgYW5k
+Cml0IGlzIGEgc29mdGxvY2t1cC4gSW4gY2FzZSBvZiBrZHVtcCB0aGlzIGNvbmRpdGlvbiBpcyBu
+b3QgdmFsaWQuIEltbWVkaWF0ZWx5CmFmdGVyIGtkdW1wIHdlIHdpbGwgYm9vdCB0byBuZXh0IE9T
+IGFuZCBwcmV2aW91cyBrZXJuZWwncyBjb250ZXh0IGlzIHdpcGVkCm9mZi4KCkNhbiB5b3UgcGxl
+YXNlIGJlIHNwZWNpZmljIHdoYXQgZXhhY3RseSBpcyB0aGUgcHJvYmxlbSB5b3UgYXJlIGZhY2lu
+Zz8gSW4Kd2hhdCBzaXR1YXRpb24gaXMgdGhpcyBjYWxsIGNyZWF0aW5nIHRoZSBwcm9ibGVtPwoK
+PiAKPiBCZXJuaGFyZCdzIGlkZWEgKGtkdW1wIHVzZXMgcGFuaWNfbm90aWZpZXIpIGlzIHZlcnkg
+Z29vZCBmb3IgbWUuIEJ1dCBpdCBpc24ndAo+IGdvb2QgZm9yIGtkdW1wIHVzZXIsIGJlY2F1c2Ug
+dGhleSB3YW50IHRvIHRha2UgYSBkdW1wIEFTQVAgd2hlbiBwYW5pY2tlZC4KPiAKClRoaXMgb25l
+IGlzIGJldHRlciB0aGFuIHJlZ2lzdGVyaW5nIGtkdW1wIGFzIG9uZSBvZiB0aGUgdXNlcnMgb2Yg
+YQpwYW5pY19ub3RpZmllcigpIGxpc3QuIAoKSSB0aGluayBpZiB0aGVyZSBhcmUgYW55IGNyYXNo
+IHNwZWNpZmljIGFjdGlvbnMsIHRoZXkgc2hvdWxkIGJlIHRha2VuIGNhcmUKaW4gbmV4dCBrZXJu
+ZWwgd2hpbGUgaXQgaXMgYm9vdGluZy4KCklmIHNvbWV0aGluZyBpcyByZWFsbHkgdmVyeSB0aW1l
+IGNyaXRpY2FsLCBhbmQgaGFzIHRvIGJlIGRvbmUgaW1tZWRpYXRlbHkKYWZ0ZXIgcGFuaWMgKEkg
+YW0gbm90IHN1cmUgaG93IGNhbiBvbmUgZW5zdXJlIHRoYXQgZ2l2ZW4gdGhlIGZhY3QgYW55IG51
+bWJlcgpvZiB1c2VycyBjYW4gcmVnaXN0ZXIgb24gcGFuaWNfbm90aWZpZXJfbGlzdCBhbmQgeW91
+IGFyZSBub3Qgc3VyZSBhYm91dCB5b3VyCm9yZGVyIGluIHRoZSBsaXN0IGFuZCB3aGVuIG9uZSB3
+aWxsIGdldCB0aGUgY29udHJvbCksIHRoZW4gcHJvYmFibHkgdGhhdApwaWVjZSBvZiBjb2RlIHNo
+b3VsZCBiZSBpbiBrZXJuZWwgYW5kIGNhbGxlZCBiZWZvcmUgY3Jhc2hfa2V4ZWMoKS4KCldoYXQg
+aXMgdGhhdCBzcGVjaWZpYyBwaWVjZSBvZiBhY3Rpb24gd2hpY2ggeW91IGNhbid0IGRvIGluIHNl
+Y29uZCBrZXJuZWw/CgpFcmljLCBkbyB5b3UgaGF2ZSBhbnkgdGhvdWdodHMgb24gdGhpcy4gSSB0
+aGluayB0aGVzZSBndXlzIGFyZSByZWZlcnJpbmcKdG8gZmFpbG92ZXIgcHJvYmxlbSB3aGVyZSBp
+bW1lZGlhdGVseSBhZnRlciBwYW5pYygpIHRoZXkgd2FudCB0byBzZW5kCm1lc3NhZ2UgdG8gb3Ro
+ZXIgbm9kZS4KClRoYW5rcwpWaXZlawoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
