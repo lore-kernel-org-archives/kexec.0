@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IFVZR-0003Sb-UZ
-	for kexec@lists.infradead.org; Mon, 30 Jul 2007 09:46:03 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [patch] add kdump_after_notifier
-References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
-	<20070726153240.GA15969@in.ibm.com> <20070726153440.GA19095@suse.de>
-	<20070726154415.GB15969@in.ibm.com> <20070726154718.GA25561@suse.de>
-	<20070726155444.GC15969@in.ibm.com> <46A92E30.8070703@ah.jp.nec.com>
-	<20070730091624.GB6071@in.ibm.com>
-Date: Mon, 30 Jul 2007 07:42:59 -0600
-In-Reply-To: <20070730091624.GB6071@in.ibm.com> (Vivek Goyal's message of
-	"Mon, 30 Jul 2007 14:46:24 +0530")
-Message-ID: <m16442vwgs.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	id 1IFZtZ-00075T-45
+	for kexec@lists.infradead.org; Mon, 30 Jul 2007 14:23:06 -0400
+Date: Mon, 30 Jul 2007 11:22:23 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 2/2] Debug handling of early spurious interrupts
+Message-Id: <20070730112223.7b52cf63.akpm@linux-foundation.org>
+In-Reply-To: <1185789494.9831.107.camel@sebastian.kern.oss.ntt.co.jp>
+References: <1184666997.5271.5.camel@sebastian.kern.oss.ntt.co.jp>
+	<20070718154659.c8b5ffea.akpm@linux-foundation.org>
+	<1184896459.27369.36.camel@sebastian.kern.oss.ntt.co.jp>
+	<1184896944.27369.50.camel@sebastian.kern.oss.ntt.co.jp>
+	<1184898043.28418.3.camel@sebastian.kern.oss.ntt.co.jp>
+	<20070720144302.2785e961.akpm@linux-foundation.org>
+	<1185789494.9831.107.camel@sebastian.kern.oss.ntt.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,58 +28,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: Fernando Luis =?ISO-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Vivek Goyal <vgoyal@in.ibm.com> writes:
+On Mon, 30 Jul 2007 18:58:14 +0900
+Fernando Luis V__zquez Cao <fernando@oss.ntt.co.jp> wrote:
 
->> Bernhard's idea (kdump uses panic_notifier) is very good for me. But it isn't
->> good for kdump user, because they want to take a dump ASAP when panicked.
->> 
->
-> This one is better than registering kdump as one of the users of a
-> panic_notifier() list. 
->
-> I think if there are any crash specific actions, they should be taken care
-> in next kernel while it is booting.
->
-> If something is really very time critical, and has to be done immediately
-> after panic (I am not sure how can one ensure that given the fact any number
-> of users can register on panic_notifier_list and you are not sure about your
-> order in the list and when one will get the control), then probably that
-> piece of code should be in kernel and called before crash_kexec().
->
-> What is that specific piece of action which you can't do in second kernel?
->
-> Eric, do you have any thoughts on this. I think these guys are referring
-> to failover problem where immediately after panic() they want to send
-> message to other node.
+> > 
+> > So bad things might happen because of this change.  And if they do, they
+> > will take a loooong time to be discovered, because non-shared interrupt
+> > handlers tend to dwell in crufty old drivers which not many people use.
+> > 
+> > So I'm wondering if it would be more prudent to only do all this for shared
+> > handlers?
+> 
+> I have been testing this patches on all my machines, which spans three
+> different architectures: i386, x86_64 (EM64T and Opteron), and ia64.
+> 
+> The good news is that nothing catastrophic happened and, in the process,
+> I managed to find some somewhat buggy interrupt handlers.
+> 
+> I will present a brief summary of my findings here.
 
-My thoughts are roughly the same as they were last time this was suggested.
-I think adding a notifier to the kexec on panic path is a bad idea.
-This functionality  sounds wrong, because it makes it hard to ensure
-reliability of the kexec on panic code path.  We are still doing to
-much on it as it stands. The working assumption on that code path
-needs to be the kernel is broken. Anything else is just asking for
-trouble.
+That's quite a lot of breakage for such a small sample of machines.  I do
+suspect that if we were to merge this lot into mainline, all sorts of bad
+stuff would happen.
 
-Currently we do have a hook in place for code to be called. It is called
-the purgatory section of /sbin/kexec.  And it's user space so you can
-do whatever you want there.  Or you can wait until the second kernel
-gets more fully booted.
+otoh, as you point out, pretty much everthing which goes wrong is due to
+incorrect or dubious driver behaviour, and there is value in weeding these
+things out. 
 
-If we really need to do something in the kernel we can patch the kernel
-to make a function call from crash_kexec.  We don't need any notifiers
-to do this.
+But the problem with this process is that we're weeding things out at
+runtime.  Some drivers don't get used by many people and users of some
+architectures (esp embedded) tend to lag kernel.org by a long time.  So it
+could be years before all the fallout from this change is finally wrapped
+up.
 
-A further problem with notifiers is they mess up the state we would
-like to debug.  Which again makes them a problem.
+> 
+> If we find drivers that are not fixable we should probably consider this
+> new behaviour on a per-driver basis, as Andrew suggested.
 
+We haven't found any such yet, have we?
 
-So at least until a specific case is made for a specific piece of code
-to get in I am totally opposed to the idea.
+> This would
+> probably require passing a new flag into request_irq. Besides, when such
+> a driver is detected we should emit a warning that it may not work
+> properly in a kdump kernel.
+> 
+> I would appreciate your comments on this.
 
-Eric
+Oh well, let's just keep maintaining it in -mm for now, gather more
+information so that we can make a more informed decision later on.
 
 _______________________________________________
 kexec mailing list
