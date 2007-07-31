@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IFkiC-00051t-3D
-	for kexec@lists.infradead.org; Tue, 31 Jul 2007 01:56:09 -0400
-Message-ID: <46AECEE0.3000307@ah.jp.nec.com>
-Date: Tue, 31 Jul 2007 14:55:44 +0900
-From: Takenori Nagano <t-nagano@ah.jp.nec.com>
-MIME-Version: 1.0
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IFlfo-0005VZ-Nf
+	for kexec@lists.infradead.org; Tue, 31 Jul 2007 02:57:42 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: [patch] add kdump_after_notifier
-References: <469F55D0.4050203@ah.jp.nec.com>
-	<20070726140702.GA8949@suse.de>	<20070726153240.GA15969@in.ibm.com>
-	<20070726153440.GA19095@suse.de>	<20070726154415.GB15969@in.ibm.com>
-	<20070726154718.GA25561@suse.de>	<20070726155444.GC15969@in.ibm.com>
-	<46A92E30.8070703@ah.jp.nec.com>	<20070730091624.GB6071@in.ibm.com>
+References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
+	<20070726153240.GA15969@in.ibm.com> <20070726153440.GA19095@suse.de>
+	<20070726154415.GB15969@in.ibm.com> <20070726154718.GA25561@suse.de>
+	<20070726155444.GC15969@in.ibm.com> <46A92E30.8070703@ah.jp.nec.com>
+	<20070730091624.GB6071@in.ibm.com>
 	<m16442vwgs.fsf@ebiederm.dsl.xmission.com>
-In-Reply-To: <m16442vwgs.fsf@ebiederm.dsl.xmission.com>
+	<46AECEE0.3000307@ah.jp.nec.com>
+Date: Tue, 31 Jul 2007 00:53:54 -0600
+In-Reply-To: <46AECEE0.3000307@ah.jp.nec.com> (Takenori Nagano's message of
+	"Tue, 31 Jul 2007 14:55:44 +0900")
+Message-ID: <m1fy35t665.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,83 +29,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Takenori Nagano <t-nagano@ah.jp.nec.com>
 Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>
 
-Eric W. Biederman wrote:
-> Vivek Goyal <vgoyal@in.ibm.com> writes:
-> 
->>> Bernhard's idea (kdump uses panic_notifier) is very good for me. But it isn't
->>> good for kdump user, because they want to take a dump ASAP when panicked.
->>>
->> This one is better than registering kdump as one of the users of a
->> panic_notifier() list. 
->>
->> I think if there are any crash specific actions, they should be taken care
->> in next kernel while it is booting.
->>
->> If something is really very time critical, and has to be done immediately
->> after panic (I am not sure how can one ensure that given the fact any number
->> of users can register on panic_notifier_list and you are not sure about your
->> order in the list and when one will get the control), then probably that
->> piece of code should be in kernel and called before crash_kexec().
->>
->> What is that specific piece of action which you can't do in second kernel?
->>
->> Eric, do you have any thoughts on this. I think these guys are referring
->> to failover problem where immediately after panic() they want to send
->> message to other node.
-> 
-> My thoughts are roughly the same as they were last time this was suggested.
-> I think adding a notifier to the kexec on panic path is a bad idea.
-> This functionality  sounds wrong, because it makes it hard to ensure
-> reliability of the kexec on panic code path.  We are still doing to
-> much on it as it stands. The working assumption on that code path
-> needs to be the kernel is broken. Anything else is just asking for
-> trouble.
-> 
-> Currently we do have a hook in place for code to be called. It is called
-> the purgatory section of /sbin/kexec.  And it's user space so you can
-> do whatever you want there.  Or you can wait until the second kernel
-> gets more fully booted.
-> 
-> If we really need to do something in the kernel we can patch the kernel
-> to make a function call from crash_kexec.  We don't need any notifiers
-> to do this.
-> 
-> A further problem with notifiers is they mess up the state we would
-> like to debug.  Which again makes them a problem.
-> 
-> 
-> So at least until a specific case is made for a specific piece of code
-> to get in I am totally opposed to the idea.
+Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+>
+> Hi all,
+>
+> IMHO, most users don't use kdump, kdump users are only kernel developers and
+> enterprise users. 
 
-Hi all,
+Not at all.  So far the only kdump related bug report I have seen has
+been from fedora Core.
 
-IMHO, most users don't use kdump, kdump users are only kernel developers and
-enterprise users. I think enterprise users want the notifier function, because
-they use some driver and software (hardware monitering driver, clustering
-software, heartbeat driver, etc...) to raise their system availability.
+> think enterprise users want the notifier function, because
+> they use some driver and software (hardware monitering driver, clustering
+> software, heartbeat driver, etc...) to raise their system availability.
 
-Some popular distributers added the dump function to their own kernel. We can
-use panic_notifier on LKCD (http://lkcd.sourceforge.net/), and diskdump
-(http://sourceforge.net/projects/lkdump) provides own notifier function
-disk_dump_notifier.
+Which users want this?  Specifics are needed here not hand waving.
+In particular why can't the use the existing hooks that are already
+in place.
 
-Now, kdump was merged mainline kernel. Then some distributers chose kdump.
-I think kdump is greater than other dump function, but kdump has no notifier
-function. This is a large problem for enterprise users.
+> Some popular distributers added the dump function to their own kernel. We can
+> use panic_notifier on LKCD (http://lkcd.sourceforge.net/), and diskdump
+> (http://sourceforge.net/projects/lkdump) provides own notifier function
+> disk_dump_notifier.
+>
+> Now, kdump was merged mainline kernel. Then some distributers chose kdump.
+> I think kdump is greater than other dump function, but kdump has no notifier
+> function. This is a large problem for enterprise users.
 
-Solutions
- 1: my patch
- 2: Bernhard's idea
- 3: add kdump_notifier_list
+Why?  If this is a large problem we should have people that are willing
+to have patches with users of this notifier.
 
-I think my patch is better than other solutions, because it has only very few
-impact. Vivek, Eric, how do you think?
+> Solutions
+>  1: my patch
+>  2: Bernhard's idea
+>  3: add kdump_notifier_list
 
-Thanks.
+I think you are solving a non-problem.  And the more I get hand waving
+the more I think this. 
 
+> I think my patch is better than other solutions, because it has only very few
+> impact. Vivek, Eric, how do you think?
+
+No.  The problem with your patch is that it doesn't have a code
+impact.  We need to see who is using this and why.
+
+Because you are trying to hide what is going on your code has
+a tremendous maintenance and review burden.  I think any hook has a
+tremendous maintenance and review burden.  Especially since the people
+who want this absolutely refuse to publish their code.
+
+If it is some proprietary solution that needs this and can not
+withstand a code review it is absolutely the wrong thing to have
+on this path.
+
+The answer is no, and it isn't even worth talking about
+until the code for some real users shows up.
+
+Adding a notifier violates a fundamental assumption of
+the code path.  The assumption is that the entire kernel
+is broken, and you want me to follow a broken pointer
+to broken code?
+
+We already have so much code on that code path it is almost
+impossible to test and review thoroughly and you want to
+add more crap?
+
+My apologies about my tone but I'm very annoyed at the direction of
+all of this conversation, please don't try and avoid showing the
+users.  Please let's make it upfront.
+
+Eric
 
 _______________________________________________
 kexec mailing list
