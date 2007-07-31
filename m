@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IFnz2-0007z1-Mm
-	for kexec@lists.infradead.org; Tue, 31 Jul 2007 05:25:42 -0400
-Subject: Re: [PATH 0/1] Kexec jump - v2 - the first step to kexec based
-	hibernation
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20070731091004.GA2022@elf.ucw.cz>
-References: <1184483593.1898.98.camel@caritas-dev.intel.com>
-	<20070731091004.GA2022@elf.ucw.cz>
-Date: Tue, 31 Jul 2007 17:25:24 +0800
-Message-Id: <1185873924.23149.86.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1IFoNU-0008BS-6j
+	for kexec@lists.infradead.org; Tue, 31 Jul 2007 05:51:07 -0400
+Date: Tue, 31 Jul 2007 11:51:01 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATH 1/1] Kexec jump - v2 - kexec jump
+Message-ID: <20070731095101.GA1774@elf.ucw.cz>
+References: <1184483639.1898.99.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1184483639.1898.99.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,120 +23,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
+To: "Huang, Ying" <ying.huang@intel.com>
 Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Tue, 2007-07-31 at 11:10 +0200, Pavel Machek wrote:
-> > Index: kexec-tools-1.101/kexec/arch/i386/crashdump-x86.c
-> > ===================================================================
-> > --- kexec-tools-1.101.orig/kexec/arch/i386/crashdump-x86.c	2007-07-08 23:00:25.000000000 +0800
-> > +++ kexec-tools-1.101/kexec/arch/i386/crashdump-x86.c	2007-07-14 17:06:45.000000000 +0800
-> > @@ -428,6 +428,29 @@
-> >  	return 0;
-> >  }
-> >  
-> > +/* Adds the kexec_backup= command line parameter to command line. */
-> > +static int cmdline_add_backup(char *cmdline, unsigned long addr)
-> > +{
-> > +	int cmdlen, len, align = 1024;
-> > +	char str[30], *ptr;
-> > +
-> > +	/* Passing in kexec_backup=xxxK format. Saves space required
-> > +	 * in cmdline. Ensure 1K alignment*/
-> > +	if (addr%align)
-> > +		return -1;
-> > +	addr = addr/align;
-> > +	ptr = str;
-> > +	strcpy(str, " kexec_backup=");
-> > +	ptr += strlen(str);
-> > +	ultoa(addr, ptr);
-> > +	strcat(str, "K");
-> > +	len = strlen(str);
-> > +	cmdlen = strlen(cmdline) + len;
-> > +	if (cmdlen > (COMMAND_LINE_SIZE - 1))
-> > +		die("Command line overflow\n");
-> > +	strcat(cmdline, str);
-> > +	return 0;
-> > +}
+Hi!
+
+> This patch implement the functionality of jumping from kexeced kernel
+> to original kernel.
 > 
-> This part did not apply for me -- it seems crashdump related and I did
-> not have that applied. Is it critical?
+> A new reboot command named LINUX_REBOOT_CMD_KJUMP is defined to
+> trigger the jumping to (executing) the new kernel or jumping back to
+> the original kernel.
 
-This is needed for kexec_jump to work properly. Which version of
-kexec-tools do you use? This patch is against 1.101. The kdump patch
-must be applied before this patch is applied.
+Could we get two reboot commands? Exec loaded kernel seems to be quite
+different operation than "jump back".
 
-> > Index: kexec-tools-1.101/kexec/kexec.c
-> > ===================================================================
-> > --- kexec-tools-1.101.orig/kexec/kexec.c	2007-07-14 16:57:26.000000000 +0800
-> > +++ kexec-tools-1.101/kexec/kexec.c	2007-07-14 21:04:51.000000000 +0800
-> > @@ -660,6 +660,17 @@
-> >  	return -1;
-> >  }
-> >  
-> > +/*
-> > + *	Jump to the new kernel
-> > + */
-> > +static int my_jump(void)
-> > +{
-> > +	int result;
-> > +
-> > +	result = kexec_jump();
-> > +	return result;
-> > +}
-> > +
-> >  static void version(void)
-> >  {
-> >  	printf("kexec " VERSION " released " RELEASE_DATE "\n");
-> > @@ -683,6 +694,7 @@
-> >  		" -p, --load-panic     Load the new kernel for use on panic.\n"
-> >  		" -u, --unload         Unload the current kexec target kernel.\n"
-> >  		" -e, --exec           Execute a currently loaded kernel.\n"
-> > +		" -j, --jump           Jump to a currently loaded kernel or jump back to the previous kernel.\n"
-> >  		" -t, --type=TYPE      Specify the new kernel is of this type.\n"
-> >  		"     --mem-min=<addr> Specify the lowest memory addres to load code into.\n"
-> >  		"     --mem-max=<addr> Specify the highest memory addres to load code into.\n"
-> > @@ -715,6 +727,7 @@
-> >  {
-> >  	int do_load = 1;
-> >  	int do_exec = 0;
-> > +	int do_jump = 0;
-> >  	int do_shutdown = 1;
-> >  	int do_sync = 1;
-> >  	int do_ifdown = 0;
-> > @@ -768,6 +781,14 @@
-> >  			do_ifdown = 1;
-> >  			do_exec = 1;
-> >  			break;
-> > +		case OPT_JUMP:
-> > +			do_load = 0;
-> > +			do_shutdown = 0;
-> > +			do_sync = 1;
-> > +			do_ifdown = 0;
-> > +			do_exec = 0;
-> > +			do_jump = 1;
-> > +			break;
-> >  		case OPT_TYPE:
-> >  			type = optarg;
-> >  			break;
-> > @@ -833,6 +854,9 @@
-> >  	if ((result == 0) && do_exec) {
-> >  		result = my_exec();
-> >  	}
-> > +	if ((result == 0) && do_jump) {
-> > +		result = my_jump();
-> > +	}
-> >  
-> 
-> Well, it may be nice to print something to the user he. kexec
-> -j does nothing, and does not print error message in case something is
-> wrong...
+How do I test these patches? kexec -p <bzImage>, then kexec -j?
 
-Yes. At least some message should be printed in case something is wrong.
-I will fix it in the next version.
 
-Best Regards,
-Huang Ying
+> +static unsigned long kexec_backup_addr = ~0UL;
+> +
+> +/* kexec_backup= specifies the location of backuped 0~640k memory of
+> + * crashed kernel.
+> + */
+> +static int __init parse_kexec_backup(char *arg)
+> +{
+> +	if (!arg)
+> +		return -EINVAL;
+> +
+> +	kexec_backup_addr = memparse(arg, &arg);
+> +	return 0;
+> +}
+> +early_param("kexec_backup", parse_kexec_backup);
+
+New kernel parameters should be documented. (Plus I do not know how to
+use this one, please help :-).
+
+
+> +int kexec_flags;
+> +
+> +static unsigned long kexec_jump_buf_pfn;
+> +
+> +static int __init parse_kexec_jump_buf_pfn(char *arg)
+> +{
+> +	if (!arg)
+> +		return -EINVAL;
+> +
+> +	kexec_jump_buf_pfn = memparse(arg, &arg);
+> +	kexec_flags |= KEXEC_FLAGS_IS_KEXECED_KERNEL;
+> +	return 0;
+> +}
+> +early_param("kexec_jump_buf_pfn", parse_kexec_jump_buf_pfn);
+
+This one should be documented, too, I'd guess. (Is that internal,
+kernel-to-kernel communication?)
+
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
