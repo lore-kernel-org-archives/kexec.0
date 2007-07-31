@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IFoNU-0008BS-6j
-	for kexec@lists.infradead.org; Tue, 31 Jul 2007 05:51:07 -0400
-Date: Tue, 31 Jul 2007 11:51:01 +0200
+	id 1IFpWx-0000O3-Lx
+	for kexec@lists.infradead.org; Tue, 31 Jul 2007 07:04:51 -0400
+Date: Tue, 31 Jul 2007 13:04:58 +0200
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATH 1/1] Kexec jump - v2 - kexec jump
-Message-ID: <20070731095101.GA1774@elf.ucw.cz>
-References: <1184483639.1898.99.camel@caritas-dev.intel.com>
+Subject: Re: [PATH 0/1] Kexec jump - v2 - the first step to kexec based
+	hibernation
+Message-ID: <20070731110458.GA1777@elf.ucw.cz>
+References: <1184483593.1898.98.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1184483639.1898.99.camel@caritas-dev.intel.com>
+In-Reply-To: <1184483593.1898.98.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,58 +29,50 @@ Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.inf
 
 Hi!
 
-> This patch implement the functionality of jumping from kexeced kernel
-> to original kernel.
+> 3. Boot kernel compiled for normal usage, the reserved crash kernel
+>    memory region must be added to kernel command line as following:
 > 
-> A new reboot command named LINUX_REBOOT_CMD_KJUMP is defined to
-> trigger the jumping to (executing) the new kernel or jumping back to
-> the original kernel.
+>    crashkernel=<XX>M@<XX>M
+> 
+>    Where, <XX> should be replaced by the real memory size and
+> position.
 
-Could we get two reboot commands? Exec loaded kernel seems to be quite
-different operation than "jump back".
-
-How do I test these patches? kexec -p <bzImage>, then kexec -j?
+I used crashkernel=64M@64M .
 
 
-> +static unsigned long kexec_backup_addr = ~0UL;
-> +
-> +/* kexec_backup= specifies the location of backuped 0~640k memory of
-> + * crashed kernel.
-> + */
-> +static int __init parse_kexec_backup(char *arg)
-> +{
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	kexec_backup_addr = memparse(arg, &arg);
-> +	return 0;
-> +}
-> +early_param("kexec_backup", parse_kexec_backup);
+> 4. Load kernel compiled for hibernating usage as a crashdump kernel
+>    with kexec, the same kernel as that of 3 can be used if
+>    CONFIG_RELOCATABLE=y is selected. The kernel command line option as
+>    following must be appended to kernel command line.
+> 
+>    kexec_jump_buf_pfn=`cat /sys/kernel/kexec_jump_buf_pfn`
+> 
+>    For example, the shell command line can be as follow:
+> 
+>    kexec -p /boot/vmlinux --args-linux --append="root=/dev/hdb signal
+>        kexec_jump_buf_pfn=`cat /sys/kernel/kexec_jump_buf_pfn`"
 
-New kernel parameters should be documented. (Plus I do not know how to
-use this one, please help :-).
+I think I followed the instructions closely. Now I'm trying to do 
 
+kexec -p /data/l/linux/vmlinux --args-linux --append="init=/bin/bash
+kexec_jump_buf_pfn=`cat /sys/kernel/kexec_jump_buf_pfn`"
 
-> +int kexec_flags;
-> +
-> +static unsigned long kexec_jump_buf_pfn;
-> +
-> +static int __init parse_kexec_jump_buf_pfn(char *arg)
-> +{
-> +	if (!arg)
-> +		return -EINVAL;
-> +
-> +	kexec_jump_buf_pfn = memparse(arg, &arg);
-> +	kexec_flags |= KEXEC_FLAGS_IS_KEXECED_KERNEL;
-> +	return 0;
-> +}
-> +early_param("kexec_jump_buf_pfn", parse_kexec_jump_buf_pfn);
+but it tells me:
 
-This one should be documented, too, I'd guess. (Is that internal,
-kernel-to-kernel communication?)
+Invalid memory segment 0x100000 - 0x7a0fff
 
-									Pavel
+(and nothing in dmesg) 
 
+If I try to load bzImage (corresponding to vmlinux I tried to use),  I
+get:
+
+root@amd:~# kexec -p /data/l/linux/arch/i386/boot/bzImage --append="init=/bin/bash kexec_jump_buf_pfn=`cat /sys/kernel/kexec_jump_buf_pfn`"
+Could not find a free area of memory of 9000 bytes...
+locate_hole failed
+root@amd:~#
+
+What am I doing wrong?
+								Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
