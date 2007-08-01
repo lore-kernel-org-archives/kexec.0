@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga03.intel.com ([143.182.124.21])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IG94N-0000mu-UZ
-	for kexec@lists.infradead.org; Wed, 01 Aug 2007 03:56:39 -0400
-Subject: Re: [PATH 1/1] Kexec jump - v2 - kexec jump
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20070731095101.GA1774@elf.ucw.cz>
-References: <1184483639.1898.99.camel@caritas-dev.intel.com>
-	<20070731095101.GA1774@elf.ucw.cz>
-Date: Wed, 01 Aug 2007 15:56:18 +0800
-Message-Id: <1185954978.1363.23.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IGB44-0002tN-Il
+	for kexec@lists.infradead.org; Wed, 01 Aug 2007 06:04:26 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [patch] add kdump_after_notifier
+References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
+	<20070726153240.GA15969@in.ibm.com> <20070726153440.GA19095@suse.de>
+	<20070726154415.GB15969@in.ibm.com> <20070726154718.GA25561@suse.de>
+	<20070726155444.GC15969@in.ibm.com> <46A92E30.8070703@ah.jp.nec.com>
+	<20070730091624.GB6071@in.ibm.com>
+	<m16442vwgs.fsf@ebiederm.dsl.xmission.com>
+	<46AECEE0.3000307@ah.jp.nec.com>
+	<m1fy35t665.fsf@ebiederm.dsl.xmission.com>
+	<46B051B5.6020207@ah.jp.nec.com>
+Date: Wed, 01 Aug 2007 04:00:48 -0600
+In-Reply-To: <46B051B5.6020207@ah.jp.nec.com> (Takenori Nagano's message of
+	"Wed, 01 Aug 2007 18:26:13 +0900")
+Message-ID: <m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,81 +31,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Takenori Nagano <t-nagano@ah.jp.nec.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>
 
-On Tue, 2007-07-31 at 11:51 +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > This patch implement the functionality of jumping from kexeced kernel
-> > to original kernel.
-> > 
-> > A new reboot command named LINUX_REBOOT_CMD_KJUMP is defined to
-> > trigger the jumping to (executing) the new kernel or jumping back to
-> > the original kernel.
-> 
-> Could we get two reboot commands? Exec loaded kernel seems to be quite
-> different operation than "jump back".
+Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
 
-Exec loaded kernel for jumping back is also different from exec loaded
-kernel normally.
+>> No.  The problem with your patch is that it doesn't have a code
+>> impact.  We need to see who is using this and why.
+>
+> My motivation is very simple. I want to use both kdb and kdump, but I think it
+> is too weak to satisfy kexec guys. Then I brought up the example enterprise
+> software. But it isn't a lie. I know some drivers which use panic_notifier.
+> IMHO, they use only major distribution, and they has the workaround or they
+> don't notice this problem yet. I think they will be in trouble if all
+> distributions choose only kdump.
 
-Maybe the two reboot operations in kexec jump can be seen as "jump to"
-and "jump back"?
+Possibly.
 
-> How do I test these patches? kexec -p <bzImage>, then kexec -j?
+> BTW, I use kdb and lkcd now, but I want to use kdb and kdump. I sent a patch to
+> kdb community but it was rejected. kdb maintainer Keith Owens said,
 
-Yes.
+>> Both KDB and crash_kexec should be using the panic_notifier_chain, with
+>> KDB having a higher priority than crash_exec.  The whole point of
+>> notifier chains is to handle cases like this, so we should not be
+>> adding more code to the panic routine.
+>>
+>> The real problem here is the way that the crash_exec code is hard coded
+>> into various places instead of using notifier chains.  The same issue
+>> exists in arch/ia64/kernel/mca.c because of bad coding practices from
+>> kexec.
 
-> > +static unsigned long kexec_backup_addr = ~0UL;
-> > +
-> > +/* kexec_backup= specifies the location of backuped 0~640k memory of
-> > + * crashed kernel.
-> > + */
-> > +static int __init parse_kexec_backup(char *arg)
-> > +{
-> > +	if (!arg)
-> > +		return -EINVAL;
-> > +
-> > +	kexec_backup_addr = memparse(arg, &arg);
-> > +	return 0;
-> > +}
-> > +early_param("kexec_backup", parse_kexec_backup);
-> 
-> New kernel parameters should be documented. (Plus I do not know how to
-> use this one, please help :-).
+I respectfully disagree with his opinion, as using notifier chains
+assumes more of the kernel works.  Although following it's argument
+to it's logical conclusion we should call crash_kexec as the very
+first thing inside of panic.  Given how much state something like
+bust_spinlocks messes up that might not be a bad idea.
 
-This kernel parameter will be added to kernel command line by
-kexec-tools automatically.
+It does make adding an alternative debug mechanism in there difficult.
+Does anyone know if this also affects kgdb?
 
-I will add corresponding document in next version.
+> Then I gave up to merge my patch to kdb, and I tried to send another patch to
+> kexec community. I can understand his opinion, but it is very difficult to
+> modify that kdump is called from panic_notifier. Because it has a reason why
+> kdump don't use panic_notifier. So, I made this patch.
+>
+> Please do something about this problem.
 
-> 
-> > +int kexec_flags;
-> > +
-> > +static unsigned long kexec_jump_buf_pfn;
-> > +
-> > +static int __init parse_kexec_jump_buf_pfn(char *arg)
-> > +{
-> > +	if (!arg)
-> > +		return -EINVAL;
-> > +
-> > +	kexec_jump_buf_pfn = memparse(arg, &arg);
-> > +	kexec_flags |= KEXEC_FLAGS_IS_KEXECED_KERNEL;
-> > +	return 0;
-> > +}
-> > +early_param("kexec_jump_buf_pfn", parse_kexec_jump_buf_pfn);
-> 
-> This one should be documented, too, I'd guess. (Is that internal,
-> kernel-to-kernel communication?)
+Hmm.  Tricky.  These appear to be two code bases with a completely different
+philosophy on what errors are being avoided.
 
-Document will be added in next version too.
+The kexec on panic assumption is that the kernel is broken and we better not
+touch it something horrible has gone wrong.  And this is the reason why
+kexec on panic is replacing lkcd.  Because the strong assumption results
+in more errors getting captured with less likely hood of messing up your
+system.
 
-This parameter is used for kernel-to-kernel communication. But now, it
-must be setup by user, as in usage guide.
+The kdb assumption appears to be that the kernel is mostly ok, and that there
+are just some specific thing that is wrong.
 
-Best Regards,
-Huang Ying
+The easiest way I can think to resolve this is for kdb to simply set
+a break point at the entry point of panic() when it initializes.  Then
+it wouldn't even need to be on the panic_list.  That approach would probably
+even give better debug information because you would not have the effects
+of bust_spinlocks to undo.
+
+Is there some reason why kdb doesn't want to hook panic with a some
+kind of break point?
+
+Eric
 
 _______________________________________________
 kexec mailing list
