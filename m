@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IGB44-0002tN-Il
-	for kexec@lists.infradead.org; Wed, 01 Aug 2007 06:04:26 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [patch] add kdump_after_notifier
-References: <469F55D0.4050203@ah.jp.nec.com> <20070726140702.GA8949@suse.de>
-	<20070726153240.GA15969@in.ibm.com> <20070726153440.GA19095@suse.de>
-	<20070726154415.GB15969@in.ibm.com> <20070726154718.GA25561@suse.de>
-	<20070726155444.GC15969@in.ibm.com> <46A92E30.8070703@ah.jp.nec.com>
-	<20070730091624.GB6071@in.ibm.com>
-	<m16442vwgs.fsf@ebiederm.dsl.xmission.com>
-	<46AECEE0.3000307@ah.jp.nec.com>
-	<m1fy35t665.fsf@ebiederm.dsl.xmission.com>
-	<46B051B5.6020207@ah.jp.nec.com>
-Date: Wed, 01 Aug 2007 04:00:48 -0600
-In-Reply-To: <46B051B5.6020207@ah.jp.nec.com> (Takenori Nagano's message of
-	"Wed, 01 Aug 2007 18:26:13 +0900")
-Message-ID: <m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IGH0b-00079W-F2
+	for kexec@lists.infradead.org; Wed, 01 Aug 2007 12:25:15 -0400
+Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
+	[172.16.52.254])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l71GPBmN007584
+	for <kexec@lists.infradead.org>; Wed, 1 Aug 2007 12:25:11 -0400
+Received: from mail.boston.redhat.com (mail.boston.redhat.com [172.16.76.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
+	l71GPAuc019507
+	for <kexec@lists.infradead.org>; Wed, 1 Aug 2007 12:25:11 -0400
+Received: from redhat.com (crash.boston.redhat.com [172.16.80.17])
+	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id l71GPAsk031375
+	for <kexec@lists.infradead.org>; Wed, 1 Aug 2007 12:25:10 -0400
+Message-ID: <46B0B507.5090704@redhat.com>
+Date: Wed, 01 Aug 2007 12:29:59 -0400
+From: Dave Anderson <anderson@redhat.com>
 MIME-Version: 1.0
+Subject: Question re: mem= usage and resultant vmcore
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,74 +31,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
 
-Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
 
->> No.  The problem with your patch is that it doesn't have a code
->> impact.  We need to see who is using this and why.
->
-> My motivation is very simple. I want to use both kdb and kdump, but I think it
-> is too weak to satisfy kexec guys. Then I brought up the example enterprise
-> software. But it isn't a lie. I know some drivers which use panic_notifier.
-> IMHO, they use only major distribution, and they has the workaround or they
-> don't notice this problem yet. I think they will be in trouble if all
-> distributions choose only kdump.
+On an 4GB x86_64 kernel, with memory restricted with "mem=" like so:
 
-Possibly.
+   kernel /vmlinuz-2.6.18-36.el5 ro root=/dev/VolGroup00/LogVol00
+   console=ttyS0,115200 mem=2000m crashkernel=128M@16M
 
-> BTW, I use kdb and lkcd now, but I want to use kdb and kdump. I sent a patch to
-> kdb community but it was rejected. kdb maintainer Keith Owens said,
+The secondary kernel boots fine with this:
 
->> Both KDB and crash_kexec should be using the panic_notifier_chain, with
->> KDB having a higher priority than crash_exec.  The whole point of
->> notifier chains is to handle cases like this, so we should not be
->> adding more code to the panic routine.
->>
->> The real problem here is the way that the crash_exec code is hard coded
->> into various places instead of using notifier chains.  The same issue
->> exists in arch/ia64/kernel/mca.c because of bad coding practices from
->> kexec.
+   Kernel command line: ro root=/dev/VolGroup00/LogVol00 console=ttyS0,115200
+   mem=2000m  irqpoll maxcpus=1 memmap=exactmap memmap=640K@0K
+   memmap=5048K@16384K memmap=125368K@22072K elfcorehdr=147440K
+   memmap=76K#3406720K memmap=564K#3406796K
 
-I respectfully disagree with his opinion, as using notifier chains
-assumes more of the kernel works.  Although following it's argument
-to it's logical conclusion we should call crash_kexec as the very
-first thing inside of panic.  Given how much state something like
-bust_spinlocks messes up that might not be a bad idea.
+The /proc/vmcore shows 4GB:
 
-It does make adding an alternative debug mechanism in there difficult.
-Does anyone know if this also affects kgdb?
+   # ls -l /proc/vmcore
+   -r-------- 1 root root 4164192032 Aug  1 10:57 /proc/vmcore
+   #
 
-> Then I gave up to merge my patch to kdb, and I tried to send another patch to
-> kexec community. I can understand his opinion, but it is very difficult to
-> modify that kdump is called from panic_notifier. Because it has a reason why
-> kdump don't use panic_notifier. So, I made this patch.
->
-> Please do something about this problem.
+I'm not sure whether that's supposed to reflect the "mem=2000m" size
+or not?
 
-Hmm.  Tricky.  These appear to be two code bases with a completely different
-philosophy on what errors are being avoided.
+Anyway, when copied to /var/crash, the "cp" command in the kdump init
+file returns a 1, and the vmcore file is kept named as "vmcore-incomplete".
 
-The kexec on panic assumption is that the kernel is broken and we better not
-touch it something horrible has gone wrong.  And this is the reason why
-kexec on panic is replacing lkcd.  Because the strong assumption results
-in more errors getting captured with less likely hood of messing up your
-system.
+But the vmcore-incomplete looks to be the "right" size, and is functional
+as a vmcore file:
 
-The kdb assumption appears to be that the kernel is mostly ok, and that there
-are just some specific thing that is wrong.
+   # crash /usr/lib/debug/lib/modules/2.6.18-36.el5/vmlinux vmcore-incomplete
 
-The easiest way I can think to resolve this is for kdb to simply set
-a break point at the entry point of panic() when it initializes.  Then
-it wouldn't even need to be on the panic_list.  That approach would probably
-even give better debug information because you would not have the effects
-of bust_spinlocks to undo.
+   crash 4.0-4.3.1
+   Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Red Hat, Inc.
+   Copyright (C) 2004, 2005, 2006  IBM Corporation
+   Copyright (C) 1999-2006  Hewlett-Packard Co
+   Copyright (C) 2005, 2006  Fujitsu Limited
+   Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+   Copyright (C) 2005  NEC Corporation
+   Copyright (C) 1999, 2002  Silicon Graphics, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+   This program is free software, covered by the GNU General Public License,
+   and you are welcome to change it and/or distribute copies of it under
+   certain conditions.  Enter "help copying" to see the conditions.
+   This program has absolutely no warranty.  Enter "help warranty" for details.
 
-Is there some reason why kdb doesn't want to hook panic with a some
-kind of break point?
+   GNU gdb 6.1
+   Copyright 2004 Free Software Foundation, Inc.
+   GDB is free software, covered by the GNU General Public License, and you are
+   welcome to change it and/or distribute copies of it under certain conditions.
+   Type "show copying" to see the conditions.
+   There is absolutely no warranty for GDB.  Type "show warranty" for details.
+   This GDB was configured as "x86_64-unknown-linux-gnu"...
 
-Eric
+         KERNEL: /usr/lib/debug/lib/modules/2.6.18-36.el5/vmlinux
+       DUMPFILE: vmcore-incomplete
+           CPUS: 4
+           DATE: Wed Aug  1 11:47:13 2007
+         UPTIME: 00:02:15
+   LOAD AVERAGE: 0.16, 0.14, 0.06
+          TASKS: 118
+       NODENAME: nec-em17.rhts.boston.redhat.com
+        RELEASE: 2.6.18-36.el5
+        VERSION: #1 SMP Fri Jul 20 14:26:46 EDT 2007
+        MACHINE: x86_64  (2992 Mhz)
+         MEMORY: 1.9 GB
+          PANIC: "SysRq : Trigger a crashdump"
+            PID: 3044
+        COMMAND: "bash"
+           TASK: ffff8100794f0100  [THREAD_INFO: ffff8100656dc000]
+            CPU: 0
+          STATE: TASK_RUNNING (SYSRQ)
+
+   crash>
+
+So two questions -- should the /proc/vmcore on the secondary kernel
+reflect the restricted size, and what would cause the "cp" to
+only copy the "correct" amount, while returning an error code?
+
+Dave
+
+
 
 _______________________________________________
 kexec mailing list
