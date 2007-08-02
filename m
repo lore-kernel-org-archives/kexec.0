@@ -1,28 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e3.ny.us.ibm.com ([32.97.182.143])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IGScJ-00065r-0A
-	for kexec@lists.infradead.org; Thu, 02 Aug 2007 00:49:01 -0400
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e3.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l723iJ40029160
-	for <kexec@lists.infradead.org>; Wed, 1 Aug 2007 23:44:19 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l724mnG2479126
-	for <kexec@lists.infradead.org>; Thu, 2 Aug 2007 00:48:49 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l724mnjU022436
-	for <kexec@lists.infradead.org>; Thu, 2 Aug 2007 00:48:49 -0400
-Date: Thu, 2 Aug 2007 10:16:53 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: Question re: mem= usage and resultant vmcore
-Message-ID: <20070802044653.GB8003@in.ibm.com>
-References: <46B0B507.5090704@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46B0B507.5090704@redhat.com>
-Reply-To: vgoyal@in.ibm.com
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IGVoo-0000ex-KF
+	for kexec@lists.infradead.org; Thu, 02 Aug 2007 04:14:04 -0400
+Message-ID: <46B19195.8010207@ah.jp.nec.com>
+Date: Thu, 02 Aug 2007 17:11:01 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
+MIME-Version: 1.0
+Subject: Re: [patch] add kdump_after_notifier
+References: <469F55D0.4050203@ah.jp.nec.com>
+	<20070726140702.GA8949@suse.de>	<20070726153240.GA15969@in.ibm.com>
+	<20070726153440.GA19095@suse.de>	<20070726154415.GB15969@in.ibm.com>
+	<20070726154718.GA25561@suse.de>	<20070726155444.GC15969@in.ibm.com>
+	<46A92E30.8070703@ah.jp.nec.com>	<20070730091624.GB6071@in.ibm.com>	<m16442vwgs.fsf@ebiederm.dsl.xmission.com>	<46AECEE0.3000307@ah.jp.nec.com>	<m1fy35t665.fsf@ebiederm.dsl.xmission.com>	<46B051B5.6020207@ah.jp.nec.com>
+	<m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,72 +27,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kaos@sgi.com, k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>
 
-On Wed, Aug 01, 2007 at 12:29:59PM -0400, Dave Anderson wrote:
+Eric W. Biederman wrote:
+> Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+>> Then I gave up to merge my patch to kdb, and I tried to send another patch to
+>> kexec community. I can understand his opinion, but it is very difficult to
+>> modify that kdump is called from panic_notifier. Because it has a reason why
+>> kdump don't use panic_notifier. So, I made this patch.
+>>
+>> Please do something about this problem.
 > 
-> On an 4GB x86_64 kernel, with memory restricted with "mem=" like so:
+> Hmm.  Tricky.  These appear to be two code bases with a completely different
+> philosophy on what errors are being avoided.
 > 
->    kernel /vmlinuz-2.6.18-36.el5 ro root=/dev/VolGroup00/LogVol00
->    console=ttyS0,115200 mem=2000m crashkernel=128M@16M
+> The kexec on panic assumption is that the kernel is broken and we better not
+> touch it something horrible has gone wrong.  And this is the reason why
+> kexec on panic is replacing lkcd.  Because the strong assumption results
+> in more errors getting captured with less likely hood of messing up your
+> system.
 > 
-> The secondary kernel boots fine with this:
+> The kdb assumption appears to be that the kernel is mostly ok, and that there
+> are just some specific thing that is wrong.
+
+Yes, kdump and kdb have a completely different philosophy. But it's natural,
+because their duties are different.
+
+I think kdb is a supplementary debug means. kdump is not perfect, because
+hardware sometimes breaks down. The probability that hardware (HDD, HBA, memory,
+etc...) breaks down is very low, but it is not zero. If kdump fails taking a
+dump, kdb data (process status, backtrace, log buffer, etc...) is very useful to
+analyze the panic reason. kdb data is very poor in comparison with kdump, but
+better than nothing.
+
+So I request a favor of you again, please do something about this problem.
+
+> The easiest way I can think to resolve this is for kdb to simply set
+> a break point at the entry point of panic() when it initializes.  Then
+> it wouldn't even need to be on the panic_list.  That approach would probably
+> even give better debug information because you would not have the effects
+> of bust_spinlocks to undo.
 > 
->    Kernel command line: ro root=/dev/VolGroup00/LogVol00 console=ttyS0,115200
->    mem=2000m  irqpoll maxcpus=1 memmap=exactmap memmap=640K@0K
->    memmap=5048K@16384K memmap=125368K@22072K elfcorehdr=147440K
->    memmap=76K#3406720K memmap=564K#3406796K
-> 
-> The /proc/vmcore shows 4GB:
-> 
->    # ls -l /proc/vmcore
->    -r-------- 1 root root 4164192032 Aug  1 10:57 /proc/vmcore
->    #
-> 
-> I'm not sure whether that's supposed to reflect the "mem=2000m" size
-> or not?
-> 
+> Is there some reason why kdb doesn't want to hook panic with a some
+> kind of break point?
 
-Hi Dave,
+I think there is no technical reason. But panic code will be dirty if every
+kernel developers adds their own hook. I think this is a reason why kdb uses
+panic_notifier.
 
-/proc/iomem on i386 and x86_64 behave differently when passed with mem=
-parameter. I think on i386, only memory specified by mem= is visible but
-in case of x86_64, all the memory passed by BIOS to kernel is visible.
-
-Kexec/kdump retrieve the physical memory info from /proc/iomem. We need
-both the behaviours for two scenarios.
-
-- For kexec, we want to see whole of the memory (irrespective of the fact
-  how much current kernel is using), so that next kernel can potentially
-  use all the memory to boot in.
-
-- For kdump, we want to know about only the physical memory current kernel
-  is using and not all the memory system has.
-
-Here the issue is that despite the fact you have passed mem=2000m, /proc/iomem
-will show 4G physical memory and kdump will create elf header for 4G of 
-memory. That's why /proc/vmcore size is 4G. I am not sure why it did not
-copy whole 4G on disk and stoppped after 2000m. To me it should have copied
-whole of the 4G.
-
-Bottom line, we need to do some work in this area.
-
-- Make /proc/iomem behaviour consistent across i386 and x86_64. I think
-  it can be changed to reflect the physical memory currently used by 
-  kernel (based on mem=) parameter.
-
-- Create another /proc interface, lets say /proc/physmem, which will reflect
-  all the physical memory system has, irrespective of the fact what is being
-  used by the kernel.
-
-In this case kexec can make use of /proc/physmem and kdump can make use
-of /proc/iomem and things will be fine.
-
-Anybody interested in writing patches for this?
-
-Thanks
-Vivek
+Thanks,
 
 _______________________________________________
 kexec mailing list
