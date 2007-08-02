@@ -1,36 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e2.ny.us.ibm.com ([32.97.182.142])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IGYrI-0002X5-4R
-	for kexec@lists.infradead.org; Thu, 02 Aug 2007 07:28:50 -0400
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l72BSkeq017860
-	for <kexec@lists.infradead.org>; Thu, 2 Aug 2007 07:28:46 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l72BSkHs144960
-	for <kexec@lists.infradead.org>; Thu, 2 Aug 2007 07:28:46 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l72BSjiO010588
-	for <kexec@lists.infradead.org>; Thu, 2 Aug 2007 07:28:46 -0400
-Date: Thu, 2 Aug 2007 16:58:52 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [patch] add kdump_after_notifier
-Message-ID: <20070802112852.GA7054@in.ibm.com>
-References: <20070726154415.GB15969@in.ibm.com>
-	<20070726154718.GA25561@suse.de>
-	<20070726155444.GC15969@in.ibm.com>
-	<46A92E30.8070703@ah.jp.nec.com> <20070730091624.GB6071@in.ibm.com>
-	<m16442vwgs.fsf@ebiederm.dsl.xmission.com>
-	<46AECEE0.3000307@ah.jp.nec.com>
-	<m1fy35t665.fsf@ebiederm.dsl.xmission.com>
-	<46B051B5.6020207@ah.jp.nec.com>
-	<m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m18x8vpoa7.fsf@ebiederm.dsl.xmission.com>
-Reply-To: vgoyal@in.ibm.com
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IGard-000448-Uz
+	for kexec@lists.infradead.org; Thu, 02 Aug 2007 09:37:19 -0400
+Message-ID: <46B1DF28.9020605@redhat.com>
+Date: Thu, 02 Aug 2007 09:42:00 -0400
+From: Dave Anderson <anderson@redhat.com>
+MIME-Version: 1.0
+Subject: Re: Question re: mem= usage and resultant vmcore
+References: <46B0B507.5090704@redhat.com> <20070802044653.GB8003@in.ibm.com>
+In-Reply-To: <20070802044653.GB8003@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,124 +22,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Keith Owens <kaos@sgi.com>, k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: vgoyal@in.ibm.com
+Cc: kexec@lists.infradead.org
 
-On Wed, Aug 01, 2007 at 04:00:48AM -0600, Eric W. Biederman wrote:
-> Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+Vivek Goyal wrote:
+> On Wed, Aug 01, 2007 at 12:29:59PM -0400, Dave Anderson wrote:
 > 
-> >> No.  The problem with your patch is that it doesn't have a code
-> >> impact.  We need to see who is using this and why.
-> >
-> > My motivation is very simple. I want to use both kdb and kdump, but I think it
-> > is too weak to satisfy kexec guys. Then I brought up the example enterprise
-> > software. But it isn't a lie. I know some drivers which use panic_notifier.
-> > IMHO, they use only major distribution, and they has the workaround or they
-> > don't notice this problem yet. I think they will be in trouble if all
-> > distributions choose only kdump.
+>>On an 4GB x86_64 kernel, with memory restricted with "mem=" like so:
+>>
+>>   kernel /vmlinuz-2.6.18-36.el5 ro root=/dev/VolGroup00/LogVol00
+>>   console=ttyS0,115200 mem=2000m crashkernel=128M@16M
+>>
+>>The secondary kernel boots fine with this:
+>>
+>>   Kernel command line: ro root=/dev/VolGroup00/LogVol00 console=ttyS0,115200
+>>   mem=2000m  irqpoll maxcpus=1 memmap=exactmap memmap=640K@0K
+>>   memmap=5048K@16384K memmap=125368K@22072K elfcorehdr=147440K
+>>   memmap=76K#3406720K memmap=564K#3406796K
+>>
+>>The /proc/vmcore shows 4GB:
+>>
+>>   # ls -l /proc/vmcore
+>>   -r-------- 1 root root 4164192032 Aug  1 10:57 /proc/vmcore
+>>   #
+>>
+>>I'm not sure whether that's supposed to reflect the "mem=2000m" size
+>>or not?
+>>
 > 
-> Possibly.
 > 
-> > BTW, I use kdb and lkcd now, but I want to use kdb and kdump. I sent a patch to
-> > kdb community but it was rejected. kdb maintainer Keith Owens said,
+> Hi Dave,
 > 
-> >> Both KDB and crash_kexec should be using the panic_notifier_chain, with
-> >> KDB having a higher priority than crash_exec.  The whole point of
-> >> notifier chains is to handle cases like this, so we should not be
-> >> adding more code to the panic routine.
-> >>
-> >> The real problem here is the way that the crash_exec code is hard coded
-> >> into various places instead of using notifier chains.  The same issue
-> >> exists in arch/ia64/kernel/mca.c because of bad coding practices from
-> >> kexec.
+> /proc/iomem on i386 and x86_64 behave differently when passed with mem=
+> parameter. I think on i386, only memory specified by mem= is visible but
+> in case of x86_64, all the memory passed by BIOS to kernel is visible.
 > 
-> I respectfully disagree with his opinion, as using notifier chains
-> assumes more of the kernel works.  Although following it's argument
-> to it's logical conclusion we should call crash_kexec as the very
-> first thing inside of panic.  Given how much state something like
-> bust_spinlocks messes up that might not be a bad idea.
+> Kexec/kdump retrieve the physical memory info from /proc/iomem. We need
+> both the behaviours for two scenarios.
 > 
-> It does make adding an alternative debug mechanism in there difficult.
-> Does anyone know if this also affects kgdb?
+> - For kexec, we want to see whole of the memory (irrespective of the fact
+>   how much current kernel is using), so that next kernel can potentially
+>   use all the memory to boot in.
 > 
-> > Then I gave up to merge my patch to kdb, and I tried to send another patch to
-> > kexec community. I can understand his opinion, but it is very difficult to
-> > modify that kdump is called from panic_notifier. Because it has a reason why
-> > kdump don't use panic_notifier. So, I made this patch.
-> >
-> > Please do something about this problem.
+> - For kdump, we want to know about only the physical memory current kernel
+>   is using and not all the memory system has.
 > 
-> Hmm.  Tricky.  These appear to be two code bases with a completely different
-> philosophy on what errors are being avoided.
+> Here the issue is that despite the fact you have passed mem=2000m, /proc/iomem
+> will show 4G physical memory and kdump will create elf header for 4G of 
+> memory. That's why /proc/vmcore size is 4G. I am not sure why it did not
+> copy whole 4G on disk and stoppped after 2000m. To me it should have copied
+> whole of the 4G.
+
+Yeah -- I haven't verified it, but I'm guessing that read_vmcore()
+fails due to its call to map_offset_to_paddr(), which doesn't
+find the physical memory beyond 2000m in the vmcore_list?
+
+Interestingly enough, this may never have been noticed except for
+the save_core() function in the /etc/init.d/kdump file in Red Hat's
+kexec-tools package:
+
+function save_core()
+{
+         coredir="/var/crash/`date +"%Y-%m-%d-%H:%M"`"
+
+         mkdir -p $coredir
+         cp /proc/vmcore $coredir/vmcore-incomplete
+         exitcode=$?
+         if [ $exitcode == 0 ]; then
+                 mv $coredir/vmcore-incomplete $coredir/vmcore
+                 $LOGGER "saved a vmcore to $coredir"
+         else
+                 $LOGGER "failed to save a vmcore to $coredir"
+         fi
+         return $exitcode
+}
+
+And even though the ELF header reflects the 4GB memory size,
+the vmcore-incomplete file is "complete" w/respect to the
+primary kernel.  In other words, even though the ELF header
+advertises non-existent physical memory beyond the 2000m
+limit, there's never a need to access it from the crash utility,
+so it's kind of a benign bug.
+
+Dave
+
+
 > 
-> The kexec on panic assumption is that the kernel is broken and we better not
-> touch it something horrible has gone wrong.  And this is the reason why
-> kexec on panic is replacing lkcd.  Because the strong assumption results
-> in more errors getting captured with less likely hood of messing up your
-> system.
+> Bottom line, we need to do some work in this area.
 > 
-> The kdb assumption appears to be that the kernel is mostly ok, and that there
-> are just some specific thing that is wrong.
+> - Make /proc/iomem behaviour consistent across i386 and x86_64. I think
+>   it can be changed to reflect the physical memory currently used by 
+>   kernel (based on mem=) parameter.
 > 
+> - Create another /proc interface, lets say /proc/physmem, which will reflect
+>   all the physical memory system has, irrespective of the fact what is being
+>   used by the kernel.
+> 
+> In this case kexec can make use of /proc/physmem and kdump can make use
+> of /proc/iomem and things will be fine.
+> 
+> Anybody interested in writing patches for this?
+> 
+> Thanks
+> Vivek
 
-Thinking more about it. So basically there are two kind of users. One who
-believe that despite the kernel has crashed  something meaningful can
-be done. In fact kernel also thinks so. That's why we have created
-panic_notifier_list and even exported it to modules and now we have some
-users. These users most of the time do non-disruptive activities and
-can co-exist.
 
-OTOH, we have kexec on panic, which thinks that once kernel is crashed
-nothing meaningful can be done and it is disruptive and can't co-exist
-with other users.
-
-Some thoughts on possible solutions for this problem.
-
-- Stop exporting panic_notifier_list list to modules. Audit the in kernel
-  users of panic_notifier_list. Let crash_kexec() run once all other users
-  of panic_notifier_list have been executed. This has fall side of breaking
-  down external modules using panic_notifier_list and at the same time
-  there is no gurantee that audited code will not run into the issues.
-
-- Continue with existing policy. If kdump is configured, panic_notifier_list
-  notifications will not be invoked. Any post panic action should be executed
-  in second kernel. There might be 1-2 odd cases like in kernel debugger
-  which still needs to be invoked in first kernel. These users should
-  explicitly put hooks in panic() routine and refrain from using
-  panic_notifier list.
-
-  One thing to keep in mind, doing things in second kernel might not be easy
-  as we have lost all the config data of the first kernel. For example,
-  if one wants to send a kernel crash event over network to a system
-  management software, he might have to pack in lot of software in 
-  second kernel's initrd.
-
-- Let the user decide if he wants to run panic_notifier_list after the
-  crash or not with the help of a /proc option as suggested by the
-  Takenori's patch. Fall side is, on what basis an enterprise user will
-  take a decision whether he wants to run the notifiers or not. My gut
-  feeling is that distro will end up setting this parameter as 1 by default,
-  which would mean first run panic notifiers and then run crash_kexec().
-
-- Make crash_kexec() a user of panic_notifier_list and let it run after all
-  the callback handlers have run. This will invariably reduce the reliability
-  of kdump.  
-
-Personally I believe that second solution should bring us best of both
-the worlds. Making sure post panic actions can be done more reliably at
-the same time making sure reliability of kdump is not compromised.
-
-Keith, do you see a value in second solution and would there be any
-reason why kdb hook can not be explicitly placed in panic(). There will
-not be many users like kdb. Rest of the users should end up performing
-post panic actions in second kernel. 
-
-Solutoin 3, can prove to be a stop gap solution but I think this will
-make situation confusing for customers at the same time everybody will
-try to take short route of performing post panic operations in first kernel.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
