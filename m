@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from netops-testserver-4-out.sgi.com ([192.48.171.29]
-	helo=relay.sgi.com)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IGqjy-0005KL-Mp
-	for kexec@lists.infradead.org; Fri, 03 Aug 2007 02:34:31 -0400
-From: Keith Owens <kaos@ocs.com.au>
-Subject: Re: [patch] add kdump_after_notifier 
-In-reply-to: Your message of "Thu, 02 Aug 2007 23:25:02 MST."
-	<20070802232502.b93f4ea0.akpm@linux-foundation.org> 
-Mime-Version: 1.0
-Date: Fri, 03 Aug 2007 16:34:04 +1000
-Message-ID: <2462.1186122844@kao2.melbourne.sgi.com>
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IGrMh-00071s-Nj
+	for kexec@lists.infradead.org; Fri, 03 Aug 2007 03:14:30 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [patch] add kdump_after_notifier
+References: <20070802112852.GA7054@in.ibm.com>
+	<31687.1186113947@kao2.melbourne.sgi.com>
+	<20070802232502.b93f4ea0.akpm@linux-foundation.org>
+Date: Fri, 03 Aug 2007 01:10:44 -0600
+In-Reply-To: <20070802232502.b93f4ea0.akpm@linux-foundation.org> (Andrew
+	Morton's message of "Thu, 2 Aug 2007 23:25:02 -0700")
+Message-ID: <m1hcnhm6tn.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,50 +26,45 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Keith Owens <kaos@sgi.com>, k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com
 
-Andrew Morton (on Thu, 2 Aug 2007 23:25:02 -0700) wrote:
->On Fri, 03 Aug 2007 14:05:47 +1000 Keith Owens <kaos@sgi.com> wrote:
-
-Switching to kaos@ocs.com.au, I just resigned from SGI.
-
->> I have pretty well given up on RAS code in the Linux kernel.  Everybody
->> has different ideas, there is no overall plan and little interest from
->> Linus in getting RAS tools into the kernel.  We are just thrashing.
+Andrew Morton <akpm@linux-foundation.org> writes:
 >
->Lots of different groups, little commonality in their desired funtionality,
->little interest in sharing infrastructure or concepts.  Sometimes people
->need a bit of motivational help.
->
->In this case that motivation would come from the understanding that all the
->RAS tools would be *required* to use such infrastructure if it was merged. 
->Going off and open-coding your own stuff would henceforth not be acceptable.
->If it turns out that it really was unsuitable for a particular group's RAS
->feature, and we merged it anyway, well, that mismatch is that group's
->fault.
->
->It was a sizeable mistake to send those patches to a few obscure mailing
->lists - this is the first I've heard of it, for example.
+> Much of the onus is upon the various RAS tool developers to demonstrate why it
+> is unsuitable for their use and, hopefully, to explain how it can be fixed for
+> them.
 
-linux-arch is obscure??  Where else do you send patches that affect
-multiple architectures?
+My current take on the situation.
 
->So.  Please, send it all again, copy the correct lists and people, make sure
->that at least one client of the infrastructure is wired up and working (ideally,
->all such in-kernel clients should be wired up) and let's take a look at it.
+There are 4 different cases we care about.
+- Trivial in kernel message failure reports. (Oops, backtraces and the like)
+- Crash dumps.
+- Debuggers.
+- kernel Probes.
 
-Already tried that.  The only RAS tool that is currently in the kernel is
-kexec/kdump and they insist on doing things their own way.  That makes
-it impossible to put a common RAS structure in place, because kexec
-will not use it.
+The in kernel failure messages seem to be doing a good job and are
+reasonably simple to maintain.
 
-Sorry to keep beating on this drum, but kexec insist that their code
-must have priority and that they do not trust the rest of the kernel.
-Until that changes, there is no point is discussing how to make kexec
-coexist with other RAS tools.  If kexec change their mind then we can
-look at using a common RAS interface, otherwise it is a waste of time
-and I have better things to do with my life.
+For crash dumping we have sufficient infrastructure in the kernel now in
+the kexec on panic work, and it is simpler and more reliable then the
+previous attempts.  Although those kernel code paths could be made
+simpler yet and probably should be.
 
+Only when it comes to debuggers does it seem we don't have something
+we can generally settle on and agree on.
+
+All I know is that any set of code that wants to be common
+infrastructure that makes the assumption that the kernel is mostly
+not broken is not interesting for use when things are fully automated.
+Because it fails to work in real world failure cases.  Those things
+only work in the artificial testing environments of developers.
+
+Right now I have seen so little to seriously address these real
+world concerns in suggests or patches for some kind of infrastructure
+that I'm tired of discussing it.  I admit I haven't seen or heard of those
+patches either but even their description sounds non-interesting.
+
+Eric
 
 _______________________________________________
 kexec mailing list
