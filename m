@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate2.fujitsu-siemens.com ([217.115.66.36])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1II4Bv-0007hZ-1N
-	for kexec@lists.infradead.org; Mon, 06 Aug 2007 11:08:23 -0400
-Message-ID: <46B73955.2080007@fujitsu-siemens.com>
-Date: Mon, 06 Aug 2007 17:08:05 +0200
-From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-MIME-Version: 1.0
-Subject: PATCH/RFC: [kdump] fix APIC shutdown sequence
-Content-Type: multipart/mixed; boundary="------------060306010309070707030809"
+Received: from wm14.inbox.com ([208.50.6.14])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IIGr3-0007iS-30
+	for kexec@lists.infradead.org; Tue, 07 Aug 2007 00:39:39 -0400
+Received: from inbox.com (127.0.0.1:25)
+	by inbox.com with [InBox.Com SMTP Server]
+	id <708060158105.WM14> for <kexec@lists.infradead.org> from
+	<dseetharam@inbox.com>; Mon, 6 Aug 2007 8:39:13 PM -0800
+Mime-Version: 1.0
+Date: Mon, 6 Aug 2007 20:39:12 -0800
+Message-ID: <680FB55E340.00000842dseetharam@inbox.com>
+From: Dharmosoth Seetharam <dseetharam@inbox.com>
+Subject: Mini kernel ( kexec ) is having boot time errors
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,408 +20,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@in.ibm.com>, Haren Myneni <hbabu@us.ibm.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: vgoyal@in.ibm.com, kexec@lists.infradead.org
 
-This is a multi-part message in MIME format.
---------------060306010309070707030809
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Hi,
 
-PATCH/RFC: [kdump] fix APIC shutdown sequence
+I am getting the following error when my system gets panic it tries to
+switch into mini kernel ( pre-loaded one).
 
-This patch fixes a problem that we have encountered
-with kdump under high I/O load on some machines.
-The machines showing the errors have an Intel ICH7
-chip set with a 6702PXH  PCI Express-to-PCI Bridge
-(8086:032c) containing an IO-APIC.
-
-The bug symptom is that certain controllers connected
-to the 6702PXH bridge wouldn't receive any IRQs in the
-kdump kernel. In the error case (which is about 20% of
-all cases) the IRR bit of the IO-APIC pin for that
-controller is always set after the start of the kdump
-kernel, indicating an IRQ in progress. We haven't found
-a way to recover from this situation when it has once
-occured, except for a system reset.
-
-The error is caused by IRQs arriving while the APIC
-subsystem is deactivated in machine_crash_shutdown().
-
-Apparently, the IO-APIC gets stuck if it sends an IRQ
-message to a Local APIC and never receives an EOI for that
-message. This can have several possible reasons:
-
-1. If, under SMP, the IO-APIC logical destination field is
-   set by the IRQ balancing code to one of the "other"
-   CPUs (i.e. not the crashing_cpu), and an IRQ arrives
-   on the respective pin after that CPU has shut down
-   its local APIC (but before the IO-APIC pin is masked)
-   the IRQ message can't be delivered.
-
-2. The crashing CPU itself disables its local APIC
-   before the IO-APIC, leaving a short time window
-   where the IOAPIC can receive IRQs, but not
-   deliver them.
-
-3. An IRQ is received and delivered to a local APIC, but
-   no CPU ever executes the IRQ handler and therefore no
-   EOI is sent.
-
-After a lot of failed attempts, i have come up with the
-following patch, which fixes the problem.
-
-The patch first masks all IO-Apic pins to avoid a sitation
-where the IO-Apic can receive, but not deliver, the IRQs.
-Moreover, it enables interrupts for a short period before
-eventually starting the kdump kernel, so that EOIs can be
-sent to the APICs as necessary.
-
-Notes:
-a) Simply calling disable_IO_APIC() early doesn't
-work, probably because that also clears the IRQ vector
-information, so that arriving EOI messages can't be
-associated with pins by the IO-APIC.
-b) We have tried patches that avoid re-enabling interrupts,
-but so far without success. Re-enabling IRQs is of course
-dangerous while dumping, and I'd rather find a way to avoid it.
-c) There are indications that besides the EOI, it's also
-necessary that the PCI IRQ pin is deasserted at least for
-a short time. That usually requires that the driver IRQ
-handler is called and tells the FW that the IRQ was received.
-Whether or not this is a requirement hasn't been finally
-clarified yet.
-d) The problem is only seen with the IO-APIC in the 6702PXH
-PCI bridge, which is the system's secondary IO-APIC. On the
-system's main IO-APIC, we see other IRQs (timer etc) arrive
-and never get an EOI, but we see no errors.
-
-The patch below is against 2.6.23-rc1. The problem was
-originally analyzed and the patch developed against the
-Red Hat EL5 kernel (2.6.18-8.el5). I verified that the
-problem still occurs with 2.6.23-rc1, and that the patch
-below fixes the problem.
-
-Regards
-Martin
-
-PS: patch attached ain MIME format because it'd be mangled
-quoted-printable by my Mail relay.
-
--- 
-Martin Wilck
-PRIMERGY System Software Engineer
-FSC IP ESP DE6
-
-Fujitsu Siemens Computers GmbH
-Heinz-Nixdorf-Ring 1
-33106 Paderborn
-Germany
-
-Tel:			++49 5251 8 15113
-Fax:			++49 5251 8 20409
-Email:			mailto:martin.wilck@fujitsu-siemens.com
-Internet:		http://www.fujitsu-siemens.com
-Company Details:	http://www.fujitsu-siemens.com/imprint.html
+pre-loaded the mini kernel with the following option.
 
 
---------------060306010309070707030809
-Content-Type: text/x-patch;
- name="kdump.diff"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="kdump.diff"
+/*
+kexec -p /usr/u/seetharam/bin/vmlinux.10888 --initrd=/boot/initrd-2.6.20-aruba_0.0.10888.img --command-line=" root=/dev/system/rootvol console=ttyS0,19200n8 SPEED=19200 init 1 maxcpus=1 irqpoll " --serial-baud=19200 --console-vga  --console-serial --args-linux
 
-PATCH/RFC: [kdump] fix APIC shutdown sequence
+*/
 
-This patch fixes a problem that we have encountered
-with kdump under high I/O load on some machines.
-The machines showing the errors have an Intel ICH7 
-chip set with a 6702PXH  PCI Express-to-PCI Bridge 
-(8086:032c) containing an IO-APIC.
-
-The bug symptom is that certain controllers connected
-to the 6702PXH bridge wouldn't receive any IRQs in the 
-kdump kernel. In the error case (which is about 20% of 
-all cases) the IRR bit of the IO-APIC pin for that 
-controller is always set after the start of the kdump 
-kernel, indicating an IRQ in progress. We haven't found
-a way to recover from this situation when it has once 
-occured, except for a system reset.
-
-The error is caused by IRQs arriving while the APIC 
-subsystem is deactivated in machine_crash_shutdown().
-
-Apparently, the IO-APIC gets stuck if it sends an IRQ
-message to a Local APIC and never receives an EOI for that
-message. This can have several possible reasons: 
-
-1. If, under SMP, the IO-APIC logical destination field is
-   set by the IRQ balancing code to one of the "other"
-   CPUs (i.e. not the crashing_cpu), and an IRQ arrives
-   on the respective pin after that CPU has shut down
-   its local APIC (but before the IO-APIC pin is masked)
-   the IRQ message can't be delivered.
-
-2. The crashing CPU itself disables its local APIC 
-   before the IO-APIC, leaving a short time window
-   where the IOAPIC can receive IRQs, but not 
-   deliver them.
-
-3. An IRQ is received and delivered to a local APIC, but 
-   no CPU ever executes the IRQ handler and therefore no 
-   EOI is sent.
-
-After a lot of failed attempts, i have come up with the
-following patch, which fixes the problem. 
-
-The patch first masks all IO-Apic pins to avoid a sitation 
-where the IO-Apic can receive, but not deliver, the IRQs. 
-Moreover, it enables interrupts for a short period before 
-eventually starting the kdump kernel, so that EOIs can be
-sent to the APICs as necessary.
-
-Notes: 
-a) Simply calling disable_IO_APIC() early doesn't
-work, probably because that also clears the IRQ vector
-information, so that arriving EOI messages can't be 
-associated with pins by the IO-APIC.
-b) We have tried patches that avoid re-enabling interrupts,
-but so far without success. Re-enabling IRQs is of course
-dangerous while dumping, and I'd rather find a way to avoid it.
-c) There are indications that besides the EOI, it's also
-necessary that the PCI IRQ pin is deasserted at least for
-a short time. That usually requires that the driver IRQ 
-handler is called and tells the FW that the IRQ was received.
-Whether or not this is a requirement hasn't been finally
-clarified yet.
-d) The problem is only seen with the IO-APIC in the 6702PXH
-PCI bridge, which is the system's secondary IO-APIC. On the
-system's main IO-APIC, we see other IRQs (timer etc) arrive 
-and never get an EOI, but we see no errors.
-
-The patch below is against 2.6.23-rc1. The problem was 
-originally analyzed and the patch developed against the 
-Red Hat EL5 kernel (2.6.18-8.el5). I verified that the 
-problem still occurs with 2.6.23-rc1, and that the patch 
-below fixes the problem.
-
-Regards
-Martin
-
-Signed-off-by: Martin Wilck <Martin.Wilck@fujitsu-siemens.com>
+[root@tc210 root]# mount | grep root
+/dev/system/rootvol on / type xfs (rw,sync)
 
 
---- 2.6.23-rc1/arch/x86_64/kernel/crash.c.orig	2007-06-05 11:19:07.000000000 +0200
-+++ 2.6.23-rc1/arch/x86_64/kernel/crash.c	2007-08-02 12:38:05.000000000 +0200
-@@ -18,6 +18,7 @@
- #include <linux/elf.h>
- #include <linux/elfcore.h>
- #include <linux/kdebug.h>
-+#include <linux/interrupt.h>
- 
- #include <asm/processor.h>
- #include <asm/hardirq.h>
-@@ -30,6 +31,11 @@ static int crashing_cpu;
- 
- #ifdef CONFIG_SMP
- static atomic_t waiting_for_crash_ipi;
-+static atomic_t crash_ipi_stage2 = ATOMIC_INIT(0);
-+
-+extern void remove_siblinginfo(int);
-+extern void remove_cpu_from_maps(void);
-+extern void crash_mask_IO_APIC(int);
- 
- static int crash_nmi_callback(struct notifier_block *self,
- 				unsigned long val, void *data)
-@@ -53,13 +59,30 @@ static int crash_nmi_callback(struct not
- 	local_irq_disable();
- 
- 	crash_save_cpu(regs, cpu);
--	disable_local_APIC();
--	atomic_dec(&waiting_for_crash_ipi);
-+	disable_APIC_timer();
-+        atomic_dec(&waiting_for_crash_ipi);
-+
-+	while(atomic_read(&crash_ipi_stage2) == 0)
-+		cpu_relax();
-+ 
-+ 	/* Send EOI for pending IRQs */
-+ 	local_irq_enable();
-+ 	udelay(10000);
-+ 	local_irq_disable();
-+ 
-+ 	remove_siblinginfo(cpu);
-+ 	cpu_clear(cpu, cpu_online_map);
-+ 	remove_cpu_from_maps();
-+ 
-+ 	disable_local_APIC();
-+ 	atomic_dec(&crash_ipi_stage2);
-+ 
-+
- 	/* Assume hlt works */
- 	for(;;)
- 		halt();
- 
--	return 1;
-+	return NOTIFY_OK;
- }
- 
- static void smp_send_nmi_allbutself(void)
-@@ -79,7 +102,7 @@ static struct notifier_block crash_nmi_n
- 
- static void nmi_shootdown_cpus(void)
- {
--	unsigned long msecs;
-+	unsigned long usecs;
- 
- 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
- 	if (register_die_notifier(&crash_nmi_nb))
-@@ -93,19 +116,33 @@ static void nmi_shootdown_cpus(void)
- 
- 	smp_send_nmi_allbutself();
- 
-+	usecs = 1000000; /* Wait at most a second for the other cpus to stop */
-+	while ((atomic_read(&waiting_for_crash_ipi) > 0) && usecs) {
-+		udelay(1);
-+		usecs--;
-+	}
-+}
-+
-+static void nmi_shootdown_cpus_stage2(void)
-+{
-+	
-+	unsigned long msecs;
-+	atomic_set(&crash_ipi_stage2, num_online_cpus());
-+
- 	msecs = 1000; /* Wait at most a second for the other cpus to stop */
--	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
-+	while ((atomic_read(&crash_ipi_stage2) > 1) && msecs) {
- 		mdelay(1);
- 		msecs--;
- 	}
--	/* Leave the nmi callback set */
--	disable_local_APIC();
- }
- #else
- static void nmi_shootdown_cpus(void)
- {
- 	/* There are no cpus to shootdown */
- }
-+static void nmi_shootdown_cpus_stage2(void)
-+{
-+}
- #endif
- 
- void machine_crash_shutdown(struct pt_regs *regs)
-@@ -121,15 +158,27 @@ void machine_crash_shutdown(struct pt_re
- 	 */
- 	/* The kernel is broken so disable interrupts */
- 	local_irq_disable();
--
- 	/* Make a note of crashing cpu. Will be used in NMI callback.*/
- 	crashing_cpu = smp_processor_id();
-+	crash_save_cpu(regs, crashing_cpu);
-+
-+ 	/* disable timer interrupts */
-+ 	disable_irq_nosync(0);
-+ 	disable_APIC_timer();	
-+ 
- 	nmi_shootdown_cpus();
- 
-+ 	/* Mask all IRQs, and make sure they are delivered to this CPU */
-+ 	crash_mask_IO_APIC(crashing_cpu);
-+ 	nmi_shootdown_cpus_stage2();
-+ 
- 	if(cpu_has_apic)
- 		 disable_local_APIC();
- 
-+ 	/* Send EOI for pending IRQs */
-+ 	local_irq_enable();
-+ 	udelay(10000);
-+ 	local_irq_disable();
-+ 
- 	disable_IO_APIC();
--
--	crash_save_cpu(regs, smp_processor_id());
- }
---- 2.6.23-rc1/arch/x86_64/kernel/io_apic.c.orig	2007-07-25 17:50:05.000000000 +0200
-+++ 2.6.23-rc1/arch/x86_64/kernel/io_apic.c	2007-08-02 12:17:57.000000000 +0200
-@@ -371,6 +371,50 @@ static void unmask_IO_APIC_irq (unsigned
- 	spin_unlock_irqrestore(&ioapic_lock, flags);
- }
- 
-+static void crash_mask_IO_APIC_pin(unsigned int apic, unsigned int pin, int reg1)
-+{
-+	struct IO_APIC_route_entry entry;
-+	unsigned long flags;
-+
-+	/* Check delivery_mode to be sure we're not clearing an SMI pin
-+	 * Don't bother disabling masked pins 
-+	 */
-+	spin_lock_irqsave(&ioapic_lock, flags);
-+	*(((int*)&entry) + 0) = io_apic_read(apic, 0x10 + 2 * pin);
-+	spin_unlock_irqrestore(&ioapic_lock, flags);
-+	if (entry.delivery_mode == dest_SMI || entry.mask)
-+		return;
-+
-+	entry.mask = 1;
-+	*(((int*)&entry) + 1) = reg1;
-+
-+	spin_lock_irqsave(&ioapic_lock, flags);
-+	io_apic_write(apic, 0x10 + 2 * pin, *(((int *)&entry) + 0));
-+	io_apic_write(apic, 0x11 + 2 * pin, *(((int *)&entry) + 1));
-+	io_apic_sync(apic);
-+	spin_unlock_irqrestore(&ioapic_lock, flags);
-+}
-+
-+/*
-+ * This function is used for kdump to mask all IO-APIC IRQs, and reset
-+ * the destination apic ID.
-+ */
-+void crash_mask_IO_APIC(int cpu)
-+{
-+	int apic, pin;
-+	int reg1;	
-+	cpumask_t mask;
-+
-+	cpus_clear(mask);
-+	cpu_set(cpu, mask);
-+	reg1 = SET_APIC_LOGICAL_ID(cpu_mask_to_apicid(mask));
-+
-+	for (apic = 0; apic < nr_ioapics; apic++) {
-+		for (pin = 0; pin < nr_ioapic_registers[apic]; pin++)
-+			crash_mask_IO_APIC_pin(apic, pin, reg1);
-+	}
-+}
-+
- static void clear_IO_APIC_pin(unsigned int apic, unsigned int pin)
- {
- 	struct IO_APIC_route_entry entry;
---- 2.6.23-rc1/arch/x86_64/kernel/smpboot.c.orig	2007-06-05 11:19:07.000000000 +0200
-+++ 2.6.23-rc1/arch/x86_64/kernel/smpboot.c	2007-08-02 12:17:57.000000000 +0200
-@@ -973,7 +973,7 @@ void __init smp_cpus_done(unsigned int m
- 
- #ifdef CONFIG_HOTPLUG_CPU
- 
--static void remove_siblinginfo(int cpu)
-+void remove_siblinginfo(int cpu)
- {
- 	int sibling;
- 	struct cpuinfo_x86 *c = cpu_data;
 
---------------060306010309070707030809
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+
+[  359.466225] irq 19: nobody cared (try booting with the "irqpoll" option)
+[  359.506286]
+[  359.506287] Call Trace:
+[  359.529762]  <IRQ>  [<ffffffff81053cc8>] __report_bad_irq+0x38/0x90
+[  359.567313]  [<ffffffff81053dcd>] note_interrupt+0x8d/0xd0
+[  359.600086]  [<ffffffff81054483>] handle_fasteoi_irq+0x93/0xb0
+[  359.634936]  [<ffffffff8100c85d>] do_IRQ+0xfd/0x170
+[  359.664071]  [<ffffffff8100a231>] ret_from_intr+0x0/0xb
+[  359.695286]  [<ffffffff8102bfac>] vprintk+0x23c/0x250
+[  359.725459]  [<ffffffff81053350>] handle_IRQ_event+0x20/0x60
+[  359.759271]  [<ffffffff81053d91>] note_interrupt+0x51/0xd0
+[  359.792041]  [<ffffffff81054574>] handle_edge_irq+0xd4/0x110
+[  359.825851]  [<ffffffff8100c85d>] do_IRQ+0xfd/0x170
+[  359.854990]  [<ffffffff81016b9e>] smp_local_timer_interrupt+0xe/0x30
+[  359.892953]  [<ffffffff8100a231>] ret_from_intr+0x0/0xb
+[  359.924167]  <EOI>
+[  359.936736] handlers:
+[  359.950292] [<ffffffff81200ac0>] (usb_hcd_irq+0x0/0x80)
+[  359.981610] [<ffffffff81200ac0>] (usb_hcd_irq+0x0/0x80)
+[  360.012927] Disabling IRQ #19
+[  360.046773]    generic_sse:  5497.000 MB/sec
+[  360.072317] raid5: using function: generic_sse (5497.000 MB/sec)
+[  360.108256] md: md driver 0.90.0 MAX_MD_DEVS=1048576, MD_SB_DISKS=27
+[  360.146413] device-mapper: ioctl: 4.11.0-ioctl (2006-10-12) initialised: dm-devel@redhat.com
+[  360.196921] md: raidcm personality registered as nr 9
+[  360.227155] IPv4 over IPv4 tunneling driver
+[  360.252222] GRE over IPv4 tunneling driver
+[  360.276890] TCP cubic registered
+[  360.296234] NET: Registered protocol family 1
+[  360.322311] NET: Registered protocol family 10
+[  360.348987] IPv6 over IPv4 tunneling driver
+[  360.374099] NET: Registered protocol family 17
+[  360.400775] 802.1Q VLAN Support v1.8 Ben Greear <greearb@candelatech.com>
+[  360.441379] All bugs added by David S. Miller <davem@redhat.com>
+[  360.889982] md: Autodetecting RAID arrays.
+[  360.914522] md: autorun ...
+[  360.931240] md: ... autorun DONE.
+[  360.951151] RAMDISK: Compressed image found at block 0
+[  361.045990] RAMDISK: incomplete write (-28 != 32768) 8388608
+[  361.429544] VFS: Cannot open root device "/dev/system/rootvol" or unknown-block(0,0)
+[  361.475850] Please append a correct "root=" boot option
+[  361.507115] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+[  361.556556]                                                                                           
+
+
+I have given the cmd parameter "irqpoll" but, suggesting me to use irqpoll...:)
+
+Please help me in this regards.
+
+
+
+Thanks,
+Seetharam
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------060306010309070707030809--
-
