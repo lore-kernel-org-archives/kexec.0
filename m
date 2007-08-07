@@ -1,28 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e36.co.us.ibm.com ([32.97.110.154])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIQ4w-0004KT-Ee
-	for kexec@lists.infradead.org; Tue, 07 Aug 2007 15:30:38 +0100
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e36.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l77ETsvb016558
-	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 10:29:54 -0400
+Received: from e33.co.us.ibm.com ([32.97.110.151])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IIQAM-0006m9-AH
+	for kexec@lists.infradead.org; Tue, 07 Aug 2007 10:36:14 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e33.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l77Ea5iN006207
+	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 10:36:05 -0400
 Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l77EThdQ079968
-	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 08:29:43 -0600
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
+	l77Ea1QP184434
+	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 08:36:04 -0600
 Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
 	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l77ETgYC014791
-	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 08:29:42 -0600
-Date: Tue, 7 Aug 2007 19:59:28 +0530
+	l77Ea0Pm019192
+	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 08:36:01 -0600
+Date: Tue, 7 Aug 2007 20:04:15 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-Message-ID: <20070807142928.GA18839@in.ibm.com>
-References: <46B73955.2080007@fujitsu-siemens.com>
+Subject: Re: Kexec from xterm -> uhci_hcd. irq 4: nobody cared
+Message-ID: <20070807143415.GB18839@in.ibm.com>
+References: <20070807113048.GE5065@hindley.org.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46B73955.2080007@fujitsu-siemens.com>
+In-Reply-To: <20070807113048.GE5065@hindley.org.uk>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -36,142 +36,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Mark Hindley <mark@hindley.org.uk>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org
 
-On Mon, Aug 06, 2007 at 05:08:05PM +0200, Martin Wilck wrote:
-> PATCH/RFC: [kdump] fix APIC shutdown sequence
+On Tue, Aug 07, 2007 at 12:30:48PM +0100, Mark Hindley wrote:
+> Hi,
 > 
-> This patch fixes a problem that we have encountered
-> with kdump under high I/O load on some machines.
-> The machines showing the errors have an Intel ICH7
-> chip set with a 6702PXH  PCI Express-to-PCI Bridge
-> (8086:032c) containing an IO-APIC.
+> I have just started using kexec. If I kexec from within an xterm I get
+> the following error on reboot. kexec from a console there is no error.
 > 
-
-I quickly went through the problem description and the
-patch. I think currently problem is not fully understood
-and we are trying to put a patch. I think we need to
-do little more study of the problem and then think of
-a solution.
-
-> The bug symptom is that certain controllers connected
-> to the 6702PXH bridge wouldn't receive any IRQs in the
-> kdump kernel. In the error case (which is about 20% of
-> all cases) the IRR bit of the IO-APIC pin for that
-> controller is always set after the start of the kdump
-> kernel, indicating an IRQ in progress. We haven't found
-> a way to recover from this situation when it has once
-> occured, except for a system reset.
-> 
-> The error is caused by IRQs arriving while the APIC
-> subsystem is deactivated in machine_crash_shutdown().
-> 
-> Apparently, the IO-APIC gets stuck if it sends an IRQ
-> message to a Local APIC and never receives an EOI for that
-> message. This can have several possible reasons:
+> This is from 2.6.23-rc2, but I get something similar back to 2.6.16.
 > 
 
-We need to zoom onto one precise reason to solve the issue
-Speculation will not help.
+How are you using kexec? Are you doing directly "kexec -e" ? You should
+be using "reboot". This will first shutdown X and other user space applications
+and then do a kexec (if kexec kernel was loaded). 
 
-> 1. If, under SMP, the IO-APIC logical destination field is
->    set by the IRQ balancing code to one of the "other"
->    CPUs (i.e. not the crashing_cpu), and an IRQ arrives
->    on the respective pin after that CPU has shut down
->    its local APIC (but before the IO-APIC pin is masked)
->    the IRQ message can't be delivered.
+This works at least on RHEL5. You shall have to check if your distribution
+has modified the init scripts accordingly or not.
 
-Point 1 and Point 2 seems to be same.
-
-> 
-> 2. The crashing CPU itself disables its local APIC
->    before the IO-APIC, leaving a short time window
->    where the IOAPIC can receive IRQs, but not
->    deliver them.
-> 
-
-I doubut that it would be the issue. Looking at intel IOAPIC (82093AA)
-documentation, it says that IRR bit of IOAPIC will be set only if
-destination CPU has accepted the interrupt. So if we have disabled
-the LAPIC, it will not accept the interrupt and IRR bit of IOAPIC
-should not be set.
- 
-> 3. An IRQ is received and delivered to a local APIC, but
->    no CPU ever executes the IRQ handler and therefore no
->    EOI is sent.
-> 
-
-We do issue EOI for all the pending interrupts in second
-kernel. Look at setup_local_APIC(). Once the second is booting, it
-checks if there are any pending interrupts (ISR bit is set). If yes,
-it goes ahead and issues an extra EOI. This should also clear the
-IRR register of IOAPIC.
-
-
-> After a lot of failed attempts, i have come up with the
-> following patch, which fixes the problem.
-> 
-> The patch first masks all IO-Apic pins to avoid a sitation
-> where the IO-Apic can receive, but not deliver, the IRQs.
-> Moreover, it enables interrupts for a short period before
-> eventually starting the kdump kernel, so that EOIs can be
-> sent to the APICs as necessary.
-> 
-> Notes:
-> a) Simply calling disable_IO_APIC() early doesn't
-> work, probably because that also clears the IRQ vector
-> information, so that arriving EOI messages can't be
-> associated with pins by the IO-APIC.
-
-disable_IO_APIC() code does not clear the vector information
-in routing table. It just masks the interrupt. So even if
-an EOI is issued later in second kernel, it should clear the
-IRR bit at IOAPIC.
-
-> b) We have tried patches that avoid re-enabling interrupts,
-> but so far without success. Re-enabling IRQs is of course
-> dangerous while dumping, and I'd rather find a way to avoid it.
-> c) There are indications that besides the EOI, it's also
-> necessary that the PCI IRQ pin is deasserted at least for
-> a short time. That usually requires that the driver IRQ
-> handler is called and tells the FW that the IRQ was received.
-> Whether or not this is a requirement hasn't been finally
-> clarified yet.
-
-I doubt this. There are situations when there is no device
-driver for the device and device pushes the interrupt (frequently
-observed in the case of kdump). Kernel still keeps on receiving
-the interrupt without driver telling device to lower the interrupt
-line.
-
-> d) The problem is only seen with the IO-APIC in the 6702PXH
-> PCI bridge, which is the system's secondary IO-APIC. On the
-> system's main IO-APIC, we see other IRQs (timer etc) arrive
-> and never get an EOI, but we see no errors.
-> 
-> The patch below is against 2.6.23-rc1. The problem was
-> originally analyzed and the patch developed against the
-> Red Hat EL5 kernel (2.6.18-8.el5). I verified that the
-> problem still occurs with 2.6.23-rc1, and that the patch
-> below fixes the problem.
-> 
-
-I can imagine one possibility. There might be pending interrupts
-on a non-crashing cpu. When second kernel boots, we initialize only
-one cpu and issue EOI for pending interrupts only on that CPU. So
-if an interrupt is pending on other CPU, then IRR bit for that interrupt
-on IOAPIC will remain set and one would not get further interrupts from
-that device.
-
-- Can you please see if you can reproduce same problem with a
-  single processor (maxcpus=1)
-
-- Can you please print local apic (print_local_APIC) and
-  ioapic registers (print_IO_APIC) and verify above theory?
+In this case looks like some USB device is active and has not been shutdown
+at kexec time. So second kernel sees the interrupt before driver is ready
+to take interrupts.
 
 Thanks
 Vivek
+
+
+> Aug  7 11:42:08 mercury kernel: irq 4: nobody cared (try booting with the "irqpoll" option)
+> Aug  7 11:42:08 mercury kernel:  [<c013beda>] __report_bad_irq+0x36/0x75
+> Aug  7 11:42:08 mercury kernel:  [<c013c119>] note_interrupt+0x200/0x23b
+> Aug  7 11:42:08 mercury kernel:  [<c013b628>] handle_IRQ_event+0x1a/0x3f
+> Aug  7 11:42:08 mercury kernel:  [<c013c917>] handle_level_irq+0xa7/0xec
+> Aug  7 11:42:08 mercury kernel:  [<c013c870>] handle_level_irq+0x0/0xec
+> Aug  7 11:42:08 mercury kernel:  [<c01062fc>] do_IRQ+0x81/0xad
+> Aug  7 11:42:08 mercury kernel:  [<c012bde3>] hrtimer_wakeup+0x15/0x18
+> Aug  7 11:42:08 mercury kernel:  [<c012c029>] hrtimer_run_queues+0x103/0x162
+> Aug  7 11:42:08 mercury kernel:  [<c01046fb>] common_interrupt+0x23/0x28
+> Aug  7 11:42:08 mercury kernel:  [<c011e935>] __do_softirq+0x2c/0x75
+> Aug  7 11:42:08 mercury kernel:  [<c0106030>] do_softirq+0x3e/0x8d
+> Aug  7 11:42:08 mercury kernel:  [<c013c870>] handle_level_irq+0x0/0xec
+> Aug  7 11:42:08 mercury kernel:  [<c011e8d0>] irq_exit+0x29/0x62
+> Aug  7 11:42:08 mercury kernel:  [<c010630f>] do_IRQ+0x94/0xad
+> Aug  7 11:42:08 mercury kernel:  [<c01046fb>] common_interrupt+0x23/0x28
+> Aug  7 11:42:08 mercury kernel:  [<c013bb08>] setup_irq+0x155/0x1bd
+> Aug  7 11:42:08 mercury kernel:  [<cc8c4565>] usb_hcd_irq+0x0/0x4d [usbcore]
+> Aug  7 11:42:08 mercury kernel:  [<c013bbea>] request_irq+0x7a/0x96
+> Aug  7 11:42:08 mercury kernel:  [<cc8c4aca>] usb_add_hcd+0x289/0x56f [usbcore]
+> Aug  7 11:42:08 mercury kernel:  [<cc8cd84b>] usb_hcd_pci_probe+0x1ea/0x283 [usbcore]
+> Aug  7 11:42:08 mercury kernel:  [<c01c2bd3>] pci_device_probe+0x36/0x57
+> Aug  7 11:42:08 mercury kernel:  [<c020ac86>] driver_probe_device+0xdd/0x15a
+> Aug  7 11:42:08 mercury kernel:  [<c027c562>] klist_next+0x50/0x82
+> Aug  7 11:42:08 mercury kernel:  [<c020ad93>] __driver_attach+0x0/0x75
+> Aug  7 11:42:08 mercury kernel:  [<c020add7>] __driver_attach+0x44/0x75
+> Aug  7 11:42:08 mercury kernel:  [<c020a274>] bus_for_each_dev+0x37/0x59
+> Aug  7 11:42:08 mercury kernel:  [<c020aaee>] driver_attach+0x16/0x18
+> Aug  7 11:42:08 mercury kernel:  [<c020ad93>] __driver_attach+0x0/0x75
+> Aug  7 11:42:08 mercury kernel:  [<c020a558>] bus_add_driver+0x6d/0x16d
+> Aug  7 11:42:08 mercury kernel:  [<c01c2d15>] __pci_register_driver+0x3e/0x6a
+> Aug  7 11:42:08 mercury kernel:  [<cc81c075>] uhci_hcd_init+0x75/0x95 [uhci_hcd]
+> Aug  7 11:42:08 mercury kernel:  [<c01355c4>] sys_init_module+0x12d0/0x1413
+> Aug  7 11:42:08 mercury kernel:  [<cc86f000>] bitrev32+0x0/0x48 [bitrev]
+> Aug  7 11:42:08 mercury kernel:  [<c0103cea>] sysenter_past_esp+0x5f/0x85
+> Aug  7 11:42:08 mercury kernel:  =======================
+> Aug  7 11:42:08 mercury kernel: handlers:
+> Aug  7 11:42:08 mercury kernel: [<cc8c4565>] (usb_hcd_irq+0x0/0x4d [usbcore])
+> Aug  7 11:42:08 mercury kernel: Disabling IRQ #4
+> 
+> Is running kexec from an xterm expected to work? Or is it just something
+> to avoid? I can't find that documented anywhere.
+> 
+> Thanks,
+> 
+> Mark
 
 _______________________________________________
 kexec mailing list
