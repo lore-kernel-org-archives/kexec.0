@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e34.co.us.ibm.com ([32.97.110.152])
+Received: from 83-216-141-215.markhi700.adsl.metronet.co.uk ([83.216.141.215]
+	helo=mx.hindley.org.uk)
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIH1B-0007q3-Eh
-	for kexec@lists.infradead.org; Tue, 07 Aug 2007 00:50:07 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l774nqDd006155
-	for <kexec@lists.infradead.org>; Tue, 7 Aug 2007 00:49:52 -0400
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l774npI9236784
-	for <kexec@lists.infradead.org>; Mon, 6 Aug 2007 22:49:51 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l774npLA015260
-	for <kexec@lists.infradead.org>; Mon, 6 Aug 2007 22:49:51 -0600
-Date: Tue, 7 Aug 2007 10:19:51 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: Mini kernel ( kexec ) is having boot time errors
-Message-ID: <20070807044951.GB4892@in.ibm.com>
-References: <680FB55E340.00000842dseetharam@inbox.com>
-Mime-Version: 1.0
+	id 1IINHG-0004Oo-4n
+	for kexec@lists.infradead.org; Tue, 07 Aug 2007 07:31:10 -0400
+Date: Tue, 7 Aug 2007 12:30:48 +0100
+Subject: Kexec from xterm -> uhci_hcd. irq 4: nobody cared   
+Message-ID: <20070807113048.GE5065@hindley.org.uk>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <680FB55E340.00000842dseetharam@inbox.com>
-Reply-To: vgoyal@in.ibm.com
+From: Mark Hindley <mark@hindley.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,81 +22,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dharmosoth Seetharam <dseetharam@inbox.com>
+To: vgoyal@in.ibm.com, hbabu@us.ibm.com
 Cc: kexec@lists.infradead.org
 
-On Mon, Aug 06, 2007 at 08:39:12PM -0800, Dharmosoth Seetharam wrote:
-> Hi,
-> 
-> I am getting the following error when my system gets panic it tries to
-> switch into mini kernel ( pre-loaded one).
-> 
-> pre-loaded the mini kernel with the following option.
-> 
-> 
-> /*
-> kexec -p /usr/u/seetharam/bin/vmlinux.10888 --initrd=/boot/initrd-2.6.20-aruba_0.0.10888.img --command-line=" root=/dev/system/rootvol console=ttyS0,19200n8 SPEED=19200 init 1 maxcpus=1 irqpoll " --serial-baud=19200 --console-vga  --console-serial --args-linux
-> 
-> */
-> 
-> [root@tc210 root]# mount | grep root
-> /dev/system/rootvol on / type xfs (rw,sync)
-> 
-> 
-> 
-> 
-> [  359.466225] irq 19: nobody cared (try booting with the "irqpoll" option)
-> [  359.506286]
-> [  359.506287] Call Trace:
-> [  359.529762]  <IRQ>  [<ffffffff81053cc8>] __report_bad_irq+0x38/0x90
-> [  359.567313]  [<ffffffff81053dcd>] note_interrupt+0x8d/0xd0
-> [  359.600086]  [<ffffffff81054483>] handle_fasteoi_irq+0x93/0xb0
-> [  359.634936]  [<ffffffff8100c85d>] do_IRQ+0xfd/0x170
-> [  359.664071]  [<ffffffff8100a231>] ret_from_intr+0x0/0xb
-> [  359.695286]  [<ffffffff8102bfac>] vprintk+0x23c/0x250
-> [  359.725459]  [<ffffffff81053350>] handle_IRQ_event+0x20/0x60
-> [  359.759271]  [<ffffffff81053d91>] note_interrupt+0x51/0xd0
-> [  359.792041]  [<ffffffff81054574>] handle_edge_irq+0xd4/0x110
-> [  359.825851]  [<ffffffff8100c85d>] do_IRQ+0xfd/0x170
-> [  359.854990]  [<ffffffff81016b9e>] smp_local_timer_interrupt+0xe/0x30
-> [  359.892953]  [<ffffffff8100a231>] ret_from_intr+0x0/0xb
-> [  359.924167]  <EOI>
-> [  359.936736] handlers:
-> [  359.950292] [<ffffffff81200ac0>] (usb_hcd_irq+0x0/0x80)
-> [  359.981610] [<ffffffff81200ac0>] (usb_hcd_irq+0x0/0x80)
-> [  360.012927] Disabling IRQ #19
-> [  360.046773]    generic_sse:  5497.000 MB/sec
-> [  360.072317] raid5: using function: generic_sse (5497.000 MB/sec)
-> [  360.108256] md: md driver 0.90.0 MAX_MD_DEVS=1048576, MD_SB_DISKS=27
-> [  360.146413] device-mapper: ioctl: 4.11.0-ioctl (2006-10-12) initialised: dm-devel@redhat.com
-> [  360.196921] md: raidcm personality registered as nr 9
-> [  360.227155] IPv4 over IPv4 tunneling driver
-> [  360.252222] GRE over IPv4 tunneling driver
-> [  360.276890] TCP cubic registered
-> [  360.296234] NET: Registered protocol family 1
-> [  360.322311] NET: Registered protocol family 10
-> [  360.348987] IPv6 over IPv4 tunneling driver
-> [  360.374099] NET: Registered protocol family 17
-> [  360.400775] 802.1Q VLAN Support v1.8 Ben Greear <greearb@candelatech.com>
-> [  360.441379] All bugs added by David S. Miller <davem@redhat.com>
-> [  360.889982] md: Autodetecting RAID arrays.
-> [  360.914522] md: autorun ...
-> [  360.931240] md: ... autorun DONE.
-> [  360.951151] RAMDISK: Compressed image found at block 0
-> [  361.045990] RAMDISK: incomplete write (-28 != 32768) 8388608
-> [  361.429544] VFS: Cannot open root device "/dev/system/rootvol" or unknown-block(0,0)
-> [  361.475850] Please append a correct "root=" boot option
-> [  361.507115] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
-> [  361.556556]                                                                                           
-> 
-> 
-> I have given the cmd parameter "irqpoll" but, suggesting me to use irqpoll...:)
+Hi,
 
-This is not a irqpoll issue. You are running into issues because of 
-your RAMDISL and root file system.
+I have just started using kexec. If I kexec from within an xterm I get
+the following error on reboot. kexec from a console there is no error.
 
-Thanks
-Vivek
+This is from 2.6.23-rc2, but I get something similar back to 2.6.16.
+
+Aug  7 11:42:08 mercury kernel: irq 4: nobody cared (try booting with the "irqpoll" option)
+Aug  7 11:42:08 mercury kernel:  [<c013beda>] __report_bad_irq+0x36/0x75
+Aug  7 11:42:08 mercury kernel:  [<c013c119>] note_interrupt+0x200/0x23b
+Aug  7 11:42:08 mercury kernel:  [<c013b628>] handle_IRQ_event+0x1a/0x3f
+Aug  7 11:42:08 mercury kernel:  [<c013c917>] handle_level_irq+0xa7/0xec
+Aug  7 11:42:08 mercury kernel:  [<c013c870>] handle_level_irq+0x0/0xec
+Aug  7 11:42:08 mercury kernel:  [<c01062fc>] do_IRQ+0x81/0xad
+Aug  7 11:42:08 mercury kernel:  [<c012bde3>] hrtimer_wakeup+0x15/0x18
+Aug  7 11:42:08 mercury kernel:  [<c012c029>] hrtimer_run_queues+0x103/0x162
+Aug  7 11:42:08 mercury kernel:  [<c01046fb>] common_interrupt+0x23/0x28
+Aug  7 11:42:08 mercury kernel:  [<c011e935>] __do_softirq+0x2c/0x75
+Aug  7 11:42:08 mercury kernel:  [<c0106030>] do_softirq+0x3e/0x8d
+Aug  7 11:42:08 mercury kernel:  [<c013c870>] handle_level_irq+0x0/0xec
+Aug  7 11:42:08 mercury kernel:  [<c011e8d0>] irq_exit+0x29/0x62
+Aug  7 11:42:08 mercury kernel:  [<c010630f>] do_IRQ+0x94/0xad
+Aug  7 11:42:08 mercury kernel:  [<c01046fb>] common_interrupt+0x23/0x28
+Aug  7 11:42:08 mercury kernel:  [<c013bb08>] setup_irq+0x155/0x1bd
+Aug  7 11:42:08 mercury kernel:  [<cc8c4565>] usb_hcd_irq+0x0/0x4d [usbcore]
+Aug  7 11:42:08 mercury kernel:  [<c013bbea>] request_irq+0x7a/0x96
+Aug  7 11:42:08 mercury kernel:  [<cc8c4aca>] usb_add_hcd+0x289/0x56f [usbcore]
+Aug  7 11:42:08 mercury kernel:  [<cc8cd84b>] usb_hcd_pci_probe+0x1ea/0x283 [usbcore]
+Aug  7 11:42:08 mercury kernel:  [<c01c2bd3>] pci_device_probe+0x36/0x57
+Aug  7 11:42:08 mercury kernel:  [<c020ac86>] driver_probe_device+0xdd/0x15a
+Aug  7 11:42:08 mercury kernel:  [<c027c562>] klist_next+0x50/0x82
+Aug  7 11:42:08 mercury kernel:  [<c020ad93>] __driver_attach+0x0/0x75
+Aug  7 11:42:08 mercury kernel:  [<c020add7>] __driver_attach+0x44/0x75
+Aug  7 11:42:08 mercury kernel:  [<c020a274>] bus_for_each_dev+0x37/0x59
+Aug  7 11:42:08 mercury kernel:  [<c020aaee>] driver_attach+0x16/0x18
+Aug  7 11:42:08 mercury kernel:  [<c020ad93>] __driver_attach+0x0/0x75
+Aug  7 11:42:08 mercury kernel:  [<c020a558>] bus_add_driver+0x6d/0x16d
+Aug  7 11:42:08 mercury kernel:  [<c01c2d15>] __pci_register_driver+0x3e/0x6a
+Aug  7 11:42:08 mercury kernel:  [<cc81c075>] uhci_hcd_init+0x75/0x95 [uhci_hcd]
+Aug  7 11:42:08 mercury kernel:  [<c01355c4>] sys_init_module+0x12d0/0x1413
+Aug  7 11:42:08 mercury kernel:  [<cc86f000>] bitrev32+0x0/0x48 [bitrev]
+Aug  7 11:42:08 mercury kernel:  [<c0103cea>] sysenter_past_esp+0x5f/0x85
+Aug  7 11:42:08 mercury kernel:  =======================
+Aug  7 11:42:08 mercury kernel: handlers:
+Aug  7 11:42:08 mercury kernel: [<cc8c4565>] (usb_hcd_irq+0x0/0x4d [usbcore])
+Aug  7 11:42:08 mercury kernel: Disabling IRQ #4
+
+Is running kexec from an xterm expected to work? Or is it just something
+to avoid? I can't find that documented anywhere.
+
+Thanks,
+
+Mark
 
 _______________________________________________
 kexec mailing list
