@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from dgate1.fujitsu-siemens.com ([217.115.66.35])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIgyR-0000mP-2w
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 04:33:01 -0400
-Message-ID: <46B97FB2.1030502@fujitsu-siemens.com>
-Date: Wed, 08 Aug 2007 10:32:50 +0200
+	id 1IIhRw-00012o-Dt
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 05:03:30 -0400
+Message-ID: <46B986D5.2010407@fujitsu-siemens.com>
+Date: Wed, 08 Aug 2007 11:03:17 +0200
 From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
 MIME-Version: 1.0
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-References: <46B73955.2080007@fujitsu-siemens.com>
-	<20070807172911.cc626719.akpm@linux-foundation.org>
-In-Reply-To: <20070807172911.cc626719.akpm@linux-foundation.org>
+References: <46B73955.2080007@fujitsu-siemens.com>	<20070807142928.GA18839@in.ibm.com>	<46B8AECA.7050908@fujitsu-siemens.com>
+	<m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Hello Andrew,
+Hello Eric,
 
-thanks a lot for looking at this patch.
+> How bad is it if you just run with irqpoll in the kdump kernel?
+> If running with irqpoll is usable that is probably preferable
+> to putting in a hardware work around we can survive without.
 
-> Please feed the diff through scripts/checkpatch.pl.  It finds a lot of issues.
+Yes, I tried that. No effect.
 
-I should have read the latest version of SubmittingPatches :-(
-I didn't expect you to pick up this patch so quickly, if I did
-I'd have cleaned it more thoroughly. I apologize.
+> Have you done any looking at moving where the kernel initalizes
+> io_apics?  One of the todo items on the path is to leave
+> io_apic mode enabled and just startup the kernel in io_apic
+> mode.
 
-I expect this patch to go through a few more iterations in discussions
-with Vivek and other people on this list.
+I have tried to recover from the "IRR set" situation in several ways by
+changing setup_IO_APIC_irq(). But I haven't found a way to recover from
+this situation once disable_IO_APIC() had been called.
+I concluded thatthe sequence of events
+"send INT message - never receive EOI - disable IO-APIC pin"
+messes up the IO-APIC (at least this specific one in the
+PCIEx-PCI bridge of the ICH7).
 
-> This is tricky code which you're adding.  Empirically-based stuff derived
-> from observation and experimentation.  It is quite impossible for readers
-> of this code to work out what the code is doing and why it is doing it
-> purely by reading the C statements.
+The current state of affairs is that the only thing that "worked" was to
+re-enable irqs.
 
-OK. I thought this might make the patch itself too long, that's why I put
-it into the header.
+> When doing that a version of your work around (if needed)
+> would certainly be reasonable.
 
-Thanks, Martin
+> My general concern is that the trickier we get in the code
+> running in the crashed kernel the less reliable the entire
+> process will be.
+
+That's certainly correct. I am grateful for all hints that simplify my patch.
+
+Thanks,
+Martin
 
 -- 
 Martin Wilck
