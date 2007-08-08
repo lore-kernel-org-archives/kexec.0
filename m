@@ -1,28 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e4.ny.us.ibm.com ([32.97.182.144])
+Received: from dgate2.fujitsu-siemens.com ([217.115.66.36])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIjrv-0002dC-Dx
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 07:38:34 -0400
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l78BcPkK014189
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l78BcPRY510670
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l78BcPwQ011856
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
-Date: Wed, 8 Aug 2007 17:08:34 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
+	id 1IIkHO-0002ua-VU
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 08:04:50 -0400
+Message-ID: <46B9B156.20802@fujitsu-siemens.com>
+Date: Wed, 08 Aug 2007 14:04:38 +0200
+From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
+MIME-Version: 1.0
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-Message-ID: <20070808113834.GA26145@in.ibm.com>
 References: <46B73955.2080007@fujitsu-siemens.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46B73955.2080007@fujitsu-siemens.com>
-Reply-To: vgoyal@in.ibm.com
+	<20070807142928.GA18839@in.ibm.com>
+	<46B8AECA.7050908@fujitsu-siemens.com>
+	<m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>
+	<46B986D5.2010407@fujitsu-siemens.com>
+	<20070808093336.GB13808@in.ibm.com>
+In-Reply-To: <20070808093336.GB13808@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,93 +27,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-On Mon, Aug 06, 2007 at 05:08:05PM +0200, Martin Wilck wrote:
-> PATCH/RFC: [kdump] fix APIC shutdown sequence
+Hi Vivek,
+
+>>> How bad is it if you just run with irqpoll in the kdump kernel?
+>>> If running with irqpoll is usable that is probably preferable
+>>> to putting in a hardware work around we can survive without.
+>> Yes, I tried that. No effect.
+>>
 > 
-> This patch fixes a problem that we have encountered
-> with kdump under high I/O load on some machines.
-> The machines showing the errors have an Intel ICH7
-> chip set with a 6702PXH  PCI Express-to-PCI Bridge
-> (8086:032c) containing an IO-APIC.
-> 
-> The bug symptom is that certain controllers connected
-> to the 6702PXH bridge wouldn't receive any IRQs in the
-> kdump kernel. In the error case (which is about 20% of
-> all cases) the IRR bit of the IO-APIC pin for that
-> controller is always set after the start of the kdump
-> kernel, indicating an IRQ in progress. We haven't found
-> a way to recover from this situation when it has once
-> occured, except for a system reset.
-> 
-> The error is caused by IRQs arriving while the APIC
-> subsystem is deactivated in machine_crash_shutdown().
-> 
-> Apparently, the IO-APIC gets stuck if it sends an IRQ
-> message to a Local APIC and never receives an EOI for that
-> message. This can have several possible reasons:
-> 
+> Martin, at least irpoll should have worked. I am assuming your timer
+> interrupts are coming in second kernel. In that case we are not
+> dependent at all on actually receiving device interrupt. Polling should
+> take care of it.
 
-Got this oops while testing your patch when I did
-"echo c > /proc/sysrq-trigger"
+You are right. I just tested irqpoll again , and it does works even if the error
+(detected by the IRR bit set in the IO-APIC) occurs.
 
-[root@llm37 ~]# SysRq : Trigger a crashdump
-Unable to handle kernel NULL pointer dereference at 0000000000000000 RIP:
- [<0000000000000000>]
-PGD 22229b067 PUD 0
-Oops: 0000 [1] SMP
-CPU 0
-Modules linked in:
-Pid: 2947, comm: klogd Not tainted 2.6.23-rc1-apic-issue #2
-RIP: 0010:[<0000000000000000>]  [<0000000000000000>]
-RSP: 0018:ffffffff807daf50  EFLAGS: 00010046
-RAX: 0000000000000000 RBX: ffffffff8073f480 RCX: ffffffff807ddea0
-RDX: ffffffff807717c0 RSI: ffffffff8073f480 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffffff807ddd28 R11: 0000000000000150 R12: 0000000000000000
-R13: ffffffff8073f4d0 R14: 000000000000000c R15: 0000000000000000
-FS:  00002b204ea686f0(0000) GS:ffffffff8073c000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
-CR2: 0000000000000000 CR3: 0000000223e9e000 CR4: 00000000000006e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-Process klogd (pid: 2947, threadinfo ffff81021b7b8000, task ffff8102251a27b0)
-Stack:  ffffffff8025afd0 0000000000000046 ffffffff807dddf8 0000000000000000
- 0000000000000030 0000000000000000 ffffffff8020e1ae ffffffff807d15c8
- 0000000000000000 ffffffff807dde20 0000000000000000 ffffffff807ddee8
-Call Trace:
- <IRQ>  [<ffffffff8025afd0>] handle_edge_irq+0x5c/0x127
- [<ffffffff8020e1ae>] do_IRQ+0xf1/0x15f
- [<ffffffff8020c191>] ret_from_intr+0x0/0xa
- <EOI>  <NMI>  [<ffffffff80351ae3>] __delay+0x6/0x10
- [<ffffffff8021e328>] crash_nmi_callback+0x4b/0x77
- [<ffffffff80557075>] notifier_call_chain+0x29/0x4c
- [<ffffffff80249a11>] notify_die+0x2d/0x34
- [<ffffffff805555a3>] default_do_nmi+0x55/0x197
- [<ffffffff80555f0e>] do_nmi+0x2e/0x44
- [<ffffffff805553af>] nmi+0x7f/0x90
- [<ffffffff8022e00a>] find_busiest_group+0x20e/0x6b3
- <<EOE>>  [<ffffffff80552d13>] __sched_text_start+0x1cb/0x5ba
- [<ffffffff80282294>] do_sync_write+0xc9/0x10c
- [<ffffffff80235c32>] do_syslog+0x11d/0x3a9
- [<ffffffff80246a03>] autoremove_wake_function+0x0/0x2e
- [<ffffffff802731c6>] free_pages_and_swap_cache+0x73/0x8f
- [<ffffffff802bbeac>] kmsg_read+0x3a/0x44
- [<ffffffff802b5245>] proc_reg_read+0x7e/0x99
- [<ffffffff80282b08>] vfs_read+0xaa/0x132
- [<ffffffff80282ea4>] sys_read+0x45/0x6e
- [<ffffffff8020bc7e>] system_call+0x7e/0x83
+I have no idea what went wrong when I tried "irqpoll" last time. But I was
+using a different kernel, controller firmware, driver, and HW configuration,
+so it can probably be explained somehow. Unfortunately, the unsuccessful early
+attempts caused me to conclude prematurely that "irqpoll" didn't help. I admit
+I didn't understand "irqpoll" fully until just now.
 
+> What is that device which is not working? What is the success criterion?
 
-Code:  Bad RIP value.
-RIP  [<0000000000000000>]
- RSP <ffffffff807daf50>
-CR2: 0000000000000000
+It's a LSI megaraid_sas "zero channel RAID" (ZCR) controller. The system has an
+on-board LSI 1068 (mptsas). If you put the ZCR in a certain PCI slot, the
+1068 is hidden from the system, which sees the megaraid_sas controller
+(1000:0413) instead of the 1068. The ZCR internally uses the 1068 as low-level
+controller.
 
-Thanks
-Vivek
+The success criterion was that the disks on the ZCR were successfully detected
+and the dump was written.
+
+Martin
+
+-- 
+Martin Wilck
+PRIMERGY System Software Engineer
+FSC IP ESP DE6
+
+Fujitsu Siemens Computers GmbH
+Heinz-Nixdorf-Ring 1
+33106 Paderborn
+Germany
+
+Tel:			++49 5251 8 15113
+Fax:			++49 5251 8 20409
+Email:			mailto:martin.wilck@fujitsu-siemens.com
+Internet:		http://www.fujitsu-siemens.com
+Company Details:	http://www.fujitsu-siemens.com/imprint.html
 
 _______________________________________________
 kexec mailing list
