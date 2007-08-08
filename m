@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from dgate1.fujitsu-siemens.com ([217.115.66.35])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIqBO-0003X9-70
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 14:23:04 -0400
-Message-ID: <46BA09FE.2070909@fujitsu-siemens.com>
-Date: Wed, 08 Aug 2007 20:22:54 +0200
+	id 1IIqQZ-0004Ve-MU
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 14:39:20 -0400
+Message-ID: <46BA0DA8.6000904@fujitsu-siemens.com>
+Date: Wed, 08 Aug 2007 20:38:32 +0200
 From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
 MIME-Version: 1.0
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
@@ -28,29 +28,16 @@ Cc: Haren Myneni <hbabu@us.ibm.com>, "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>, "k
 
 Eric W. Biederman wrote:
 
->> I think a lot would be gained if disable_IO_APIC() would just mask the IRQs
->> (like the function in my patch does), and perhaps fix the dest ID, instead of
->> totally clearing the registers.
+>>> irqpoll is working now.
+>> Yes. I'd give a lot to know what went wrong when I tried that in April.
+>> It'd have saved me many hours of work if I had discovered this workaround
+>> before.
 > 
-> Even masked we still won't see the EOI, because then we are in i8259
-> mode.  So masked versus totally cleared really should make no
-> difference.
+> Yes that is odd.
 
-You are talking about EOI sent in the kdump kernel, correct? With my patch
-the EOI (sent in the "old" kernel) is seen.
-
-> I guess right now I can see work put into cleaning things up a little
-> or not having to call disable_IO_APIC() at all.  that was supposed
-> to be a short term hack, until we fixed things properly.
-> 
-> So far no one has been brave enough to mess with the kernel apic
-> initialization order so we can remove disable_IO_APIC.  If our
-> goal isn't to fix things properly by removing the need for
-> disable_IO_APIC I don't feel like putting much effort into this
-> code path.
-
-Who is working on this? Can you give a reference to a list of things that
-would need to be done to do this right?
+Got it. At that time I was using "noirqdebug" because we had a FW problem that
+caused a lot of misrouted IRQs. With "noirqdebug", "irqpoll" has no effect.
+Bummer.
 
 Martin
 
