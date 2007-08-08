@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate1.fujitsu-siemens.com ([217.115.66.35])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIqQZ-0004Ve-MU
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 14:39:20 -0400
-Message-ID: <46BA0DA8.6000904@fujitsu-siemens.com>
-Date: Wed, 08 Aug 2007 20:38:32 +0200
-From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
+Received: from iolanthe.rowland.org ([192.131.102.54])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IIrvV-0007WZ-6p
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 16:14:42 -0400
+Date: Wed, 8 Aug 2007 16:07:59 -0400 (EDT)
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [3/3] 2.6.23-rc2: known regressions v2
+In-Reply-To: <46B9F983.9020700@googlemail.com>
+Message-ID: <Pine.LNX.4.44L0.0708081557450.3925-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-References: <46B73955.2080007@fujitsu-siemens.com>	<20070807142928.GA18839@in.ibm.com>	<46B8AECA.7050908@fujitsu-siemens.com>	<m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>	<46B986D5.2010407@fujitsu-siemens.com>	<m1myx2dpcc.fsf@ebiederm.dsl.xmission.com>	<46B9FEC8.20004@fujitsu-siemens.com>
-	<m1myx1c3lj.fsf@ebiederm.dsl.xmission.com>
-In-Reply-To: <m1myx1c3lj.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Michal Piotrowski <michal.k.k.piotrowski@gmail.com>
+Cc: USB development list <linux-usb-devel@lists.sourceforge.net>, Mark Hindley <mark@hindley.org.uk>, Greg KH <gregkh@suse.de>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Eric W. Biederman wrote:
+On Wed, 8 Aug 2007, Michal Piotrowski wrote:
 
->>> irqpoll is working now.
->> Yes. I'd give a lot to know what went wrong when I tried that in April.
->> It'd have saved me many hours of work if I had discovered this workaround
->> before.
+> USB
 > 
-> Yes that is odd.
+> Subject         : 2.6.23-rc1: uhci_hcd. irq 4: nobody cared
+> References      : http://lkml.org/lkml/2007/7/29/75
+> Last known good : ?
+> Submitter       : Mark Hindley <mark@hindley.org.uk>
+> Caused-By       : ?
+> Handled-By      : Alan Stern <stern@rowland.harvard.edu>
+> Status          : unknown
 
-Got it. At that time I was using "noirqdebug" because we had a FW problem that
-caused a lot of misrouted IRQs. With "noirqdebug", "irqpoll" has no effect.
-Bummer.
+Mark has determined that this is not a regression but rather an 
+already-existing problem, caused by invoking kexec from within an xterm 
+window.  See
 
-Martin
+	http://marc.info/?l=linux-usb-users&m=118648557203179&w=2
 
--- 
-Martin Wilck
-PRIMERGY System Software Engineer
-FSC IP ESP DE6
+Of course, this means there's liable to be something wrong with the way
+kexec interacts with uhci-hcd or the other drivers sharing the same 
+IRQ.  Failure to call the shutdown() method could cause the problem.  
+But I don't see why using an xterm should make any difference (unless 
+the only device being used was a mouse, and it was not in use while X 
+wasn't running).
 
-Fujitsu Siemens Computers GmbH
-Heinz-Nixdorf-Ring 1
-33106 Paderborn
-Germany
+Alan Stern
 
-Tel:			++49 5251 8 15113
-Fax:			++49 5251 8 20409
-Email:			mailto:martin.wilck@fujitsu-siemens.com
-Internet:		http://www.fujitsu-siemens.com
-Company Details:	http://www.fujitsu-siemens.com/imprint.html
 
 _______________________________________________
 kexec mailing list
