@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.linux-foundation.org ([207.189.120.14])
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIZQr-0003tP-EC
-	for kexec@lists.infradead.org; Tue, 07 Aug 2007 20:29:58 -0400
-Date: Tue, 7 Aug 2007 17:29:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+	id 1IIa1O-0004EV-9e
+	for kexec@lists.infradead.org; Tue, 07 Aug 2007 21:07:35 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-Message-Id: <20070807172911.cc626719.akpm@linux-foundation.org>
-In-Reply-To: <46B73955.2080007@fujitsu-siemens.com>
 References: <46B73955.2080007@fujitsu-siemens.com>
-Mime-Version: 1.0
+	<20070807142928.GA18839@in.ibm.com>
+	<46B8AECA.7050908@fujitsu-siemens.com>
+Date: Tue, 07 Aug 2007 19:04:50 -0600
+In-Reply-To: <46B8AECA.7050908@fujitsu-siemens.com> (Martin Wilck's message of
+	"Tue, 07 Aug 2007 19:41:30 +0200")
+Message-ID: <m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,231 +26,29 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-
-On Mon, 06 Aug 2007 17:08:05 +0200
-Martin Wilck <martin.wilck@fujitsu-siemens.com> wrote:
-
-> PATCH/RFC: [kdump] fix APIC shutdown sequence
-> 
-> This patch fixes a problem that we have encountered
-> with kdump under high I/O load on some machines.
-> The machines showing the errors have an Intel ICH7
-> chip set with a 6702PXH  PCI Express-to-PCI Bridge
-> (8086:032c) containing an IO-APIC.
-> 
-> The bug symptom is that certain controllers connected
-> to the 6702PXH bridge wouldn't receive any IRQs in the
-> kdump kernel. In the error case (which is about 20% of
-> all cases) the IRR bit of the IO-APIC pin for that
-> controller is always set after the start of the kdump
-> kernel, indicating an IRQ in progress. We haven't found
-> a way to recover from this situation when it has once
-> occured, except for a system reset.
-> 
-> The error is caused by IRQs arriving while the APIC
-> subsystem is deactivated in machine_crash_shutdown().
-> 
-> Apparently, the IO-APIC gets stuck if it sends an IRQ
-> message to a Local APIC and never receives an EOI for that
-> message. This can have several possible reasons:
-> 
-> 1. If, under SMP, the IO-APIC logical destination field is
->    set by the IRQ balancing code to one of the "other"
->    CPUs (i.e. not the crashing_cpu), and an IRQ arrives
->    on the respective pin after that CPU has shut down
->    its local APIC (but before the IO-APIC pin is masked)
->    the IRQ message can't be delivered.
-> 
-> 2. The crashing CPU itself disables its local APIC
->    before the IO-APIC, leaving a short time window
->    where the IOAPIC can receive IRQs, but not
->    deliver them.
-> 
-> 3. An IRQ is received and delivered to a local APIC, but
->    no CPU ever executes the IRQ handler and therefore no
->    EOI is sent.
-> 
-> After a lot of failed attempts, i have come up with the
-> following patch, which fixes the problem.
-> 
-> The patch first masks all IO-Apic pins to avoid a sitation
-> where the IO-Apic can receive, but not deliver, the IRQs.
-> Moreover, it enables interrupts for a short period before
-> eventually starting the kdump kernel, so that EOIs can be
-> sent to the APICs as necessary.
-> 
-> Notes:
-> a) Simply calling disable_IO_APIC() early doesn't
-> work, probably because that also clears the IRQ vector
-> information, so that arriving EOI messages can't be
-> associated with pins by the IO-APIC.
-> b) We have tried patches that avoid re-enabling interrupts,
-> but so far without success. Re-enabling IRQs is of course
-> dangerous while dumping, and I'd rather find a way to avoid it.
-> c) There are indications that besides the EOI, it's also
-> necessary that the PCI IRQ pin is deasserted at least for
-> a short time. That usually requires that the driver IRQ
-> handler is called and tells the FW that the IRQ was received.
-> Whether or not this is a requirement hasn't been finally
-> clarified yet.
-> d) The problem is only seen with the IO-APIC in the 6702PXH
-> PCI bridge, which is the system's secondary IO-APIC. On the
-> system's main IO-APIC, we see other IRQs (timer etc) arrive
-> and never get an EOI, but we see no errors.
-> 
-> The patch below is against 2.6.23-rc1. The problem was
-> originally analyzed and the patch developed against the
-> Red Hat EL5 kernel (2.6.18-8.el5). I verified that the
-> problem still occurs with 2.6.23-rc1, and that the patch
-> below fixes the problem.
-> 
-
-Some little things..
-
-Please feed the diff through scripts/checkpatch.pl.  It finds a lot of issues.
-
-For some reason you added a lot of lines which start with space-tab rather
-than tab.  checkpatch does detect this.
+Cc: Haren Myneni <hbabu@us.ibm.com>, "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
 
-> diff -puN arch/x86_64/kernel/crash.c~kdump-fix-apic-shutdown-sequence arch/x86_64/kernel/crash.c
-> --- a/arch/x86_64/kernel/crash.c~kdump-fix-apic-shutdown-sequence
-> +++ a/arch/x86_64/kernel/crash.c
-> @@ -18,6 +18,7 @@
->  #include <linux/elf.h>
->  #include <linux/elfcore.h>
->  #include <linux/kdebug.h>
-> +#include <linux/interrupt.h>
->  
->  #include <asm/processor.h>
->  #include <asm/hardirq.h>
-> @@ -30,6 +31,11 @@ static int crashing_cpu;
->  
->  #ifdef CONFIG_SMP
->  static atomic_t waiting_for_crash_ipi;
-> +static atomic_t crash_ipi_stage2 = ATOMIC_INIT(0);
-> +
-> +extern void remove_siblinginfo(int);
-> +extern void remove_cpu_from_maps(void);
-> +extern void crash_mask_IO_APIC(int);
+A couple of questions.
 
-please neverevereverever put extern declarations in C files.  Find a
-suitable header for it, ensure that the header is included by the
-definition site and by all callers.
-
->  static int crash_nmi_callback(struct notifier_block *self,
->  				unsigned long val, void *data)
-> @@ -53,13 +59,30 @@ static int crash_nmi_callback(struct not
->  	local_irq_disable();
->  
->  	crash_save_cpu(regs, cpu);
-> -	disable_local_APIC();
-> -	atomic_dec(&waiting_for_crash_ipi);
-> +	disable_APIC_timer();
-> +        atomic_dec(&waiting_for_crash_ipi);
-> +
-> +	while(atomic_read(&crash_ipi_stage2) == 0)
-
-Need a space here.  Everything I've mentioned thus far should have been
-picked up by checkpatch, so I'll shut up now.
-
-> +
-> +static void nmi_shootdown_cpus_stage2(void)
-> +{
-> +
-> +	unsigned long msecs;
-> +	atomic_set(&crash_ipi_stage2, num_online_cpus());
-> +
->  	msecs = 1000; /* Wait at most a second for the other cpus to stop */
-> -	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
-> +	while ((atomic_read(&crash_ipi_stage2) > 1) && msecs) {
->  		mdelay(1);
->  		msecs--;
->  	}
-> -	/* Leave the nmi callback set */
-> -	disable_local_APIC();
->  }
-
-This is tricky code which you're adding.  Empirically-based stuff derived
-from observation and experimentation.  It is quite impossible for readers
-of this code to work out what the code is doing and why it is doing it
-purely by reading the C statements.
-
-Hence for any form of maintainability you really do need to spell
-*everything* out in code comments.  All those little discoveries and
-observations.  Otherwise it'll be lost, unless the fraught reader decides
-to go hunting in the git repository.
-
->  #else
->  static void nmi_shootdown_cpus(void)
->  {
->  	/* There are no cpus to shootdown */
->  }
-> +static void nmi_shootdown_cpus_stage2(void)
-> +{
-> +}
->  #endif
-
-Although the compiler will inline this function for you, we'd
-conventionally declare it static inline.  We might as well do this here as
-well, and fix up nmi_shootdown_cpus() too.
-
-> diff -puN arch/x86_64/kernel/io_apic.c~kdump-fix-apic-shutdown-sequence arch/x86_64/kernel/io_apic.c
-> --- a/arch/x86_64/kernel/io_apic.c~kdump-fix-apic-shutdown-sequence
-> +++ a/arch/x86_64/kernel/io_apic.c
-> @@ -371,6 +371,50 @@ static void unmask_IO_APIC_irq (unsigned
->  	spin_unlock_irqrestore(&ioapic_lock, flags);
->  }
->  
-> +static void crash_mask_IO_APIC_pin(unsigned int apic, unsigned int pin, int reg1)
-> +{
-> +	struct IO_APIC_route_entry entry;
-> +	unsigned long flags;
-> +
-> +	/* Check delivery_mode to be sure we're not clearing an SMI pin
-> +	 * Don't bother disabling masked pins
-> +	 */
-> +	spin_lock_irqsave(&ioapic_lock, flags);
-> +	*(((int*)&entry) + 0) = io_apic_read(apic, 0x10 + 2 * pin);
-> +	spin_unlock_irqrestore(&ioapic_lock, flags);
-> +	if (entry.delivery_mode == dest_SMI || entry.mask)
-> +		return;
-> +
-> +	entry.mask = 1;
-> +	*(((int*)&entry) + 1) = reg1;
-> +
-> +	spin_lock_irqsave(&ioapic_lock, flags);
-> +	io_apic_write(apic, 0x10 + 2 * pin, *(((int *)&entry) + 0));
-> +	io_apic_write(apic, 0x11 + 2 * pin, *(((int *)&entry) + 1));
-> +	io_apic_sync(apic);
-> +	spin_unlock_irqrestore(&ioapic_lock, flags);
-> +}
-> +
-> +/*
-> + * This function is used for kdump to mask all IO-APIC IRQs, and reset
-> + * the destination apic ID.
-> + */
-> +void crash_mask_IO_APIC(int cpu)
-> +{
-> +	int apic, pin;
-> +	int reg1;
-> +	cpumask_t mask;
-> +
-> +	cpus_clear(mask);
-> +	cpu_set(cpu, mask);
-> +	reg1 = SET_APIC_LOGICAL_ID(cpu_mask_to_apicid(mask));
-> +
-> +	for (apic = 0; apic < nr_ioapics; apic++) {
-> +		for (pin = 0; pin < nr_ioapic_registers[apic]; pin++)
-> +			crash_mask_IO_APIC_pin(apic, pin, reg1);
-> +	}
-> +}
-
-The above two functions are unneeded if CONFIG_CRASH_DUMP=n, hence they
-should have the appropriate ifdef wrapping.
+How bad is it if you just run with irqpoll in the kdump kernel?
+If running with irqpoll is usable that is probably preferable
+to putting in a hardware work around we can survive without.
 
 
+Have you done any looking at moving where the kernel initalizes
+io_apics?  One of the todo items on the path is to leave
+io_apic mode enabled and just startup the kernel in io_apic
+mode.
+
+When doing that a version of your work around (if needed)
+would certainly be reasonable.
+
+My general concern is that the trickier we get in the code
+running in the crashed kernel the less reliable the entire
+process will be.
+
+Eric
 
 _______________________________________________
 kexec mailing list
