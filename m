@@ -1,29 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from e4.ny.us.ibm.com ([32.97.182.144])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIitI-0001rn-Ju
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 06:35:52 -0400
+	id 1IIjrv-0002dC-Dx
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 07:38:34 -0400
 Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l78AZk9p021178
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 06:35:46 -0400
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
+	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l78BcPkK014189
+	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
 	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.4) with ESMTP id
-	l78AZk6k425238
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 06:35:46 -0400
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
-	by d01av01.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l78AZkWs000820
-	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 06:35:46 -0400
-Date: Wed, 8 Aug 2007 16:06:03 +0530
+	l78BcPRY510670
+	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l78BcPwQ011856
+	for <kexec@lists.infradead.org>; Wed, 8 Aug 2007 07:38:25 -0400
+Date: Wed, 8 Aug 2007 17:08:34 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-Message-ID: <20070808103603.GC13808@in.ibm.com>
+Message-ID: <20070808113834.GA26145@in.ibm.com>
 References: <46B73955.2080007@fujitsu-siemens.com>
-	<20070807142928.GA18839@in.ibm.com>
-	<46B8AECA.7050908@fujitsu-siemens.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46B8AECA.7050908@fujitsu-siemens.com>
+In-Reply-To: <46B73955.2080007@fujitsu-siemens.com>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -33,125 +31,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-T24gVHVlLCBBdWcgMDcsIDIwMDcgYXQgMDc6NDE6MzBQTSArMDIwMCwgTWFydGluIFdpbGNrIHdy
-b3RlOgpbLi5dCj4gCj4gU3VjaCBhIHNpdHVhdGlvbiBoYXMgbmV2ZXIgYmVlbiBvYnNlcnZlZCBp
-biB0aGUgImdvb2QiIGNhc2UuCj4gU28sIHdlIGRvIGhhdmUgc29tZSBldmlkZW5jZSwgbm90IGp1
-c3QgYmFyZSBzcGVjdWxhdGlvbi4KPiAKPiA+PiAyLiBUaGUgY3Jhc2hpbmcgQ1BVIGl0c2VsZiBk
-aXNhYmxlcyBpdHMgbG9jYWwgQVBJQwo+ID4+ICAgIGJlZm9yZSB0aGUgSU8tQVBJQywgbGVhdmlu
-ZyBhIHNob3J0IHRpbWUgd2luZG93Cj4gPj4gICAgd2hlcmUgdGhlIElPQVBJQyBjYW4gcmVjZWl2
-ZSBJUlFzLCBidXQgbm90Cj4gPj4gICAgZGVsaXZlciB0aGVtLgo+ID4+Cj4gPiAKPiA+IEkgZG91
-YnV0IHRoYXQgaXQgd291bGQgYmUgdGhlIGlzc3VlLiBMb29raW5nIGF0IGludGVsIElPQVBJQyAo
-ODIwOTNBQSkKPiA+IGRvY3VtZW50YXRpb24sIGl0IHNheXMgdGhhdCBJUlIgYml0IG9mIElPQVBJ
-QyB3aWxsIGJlIHNldCBvbmx5IGlmCj4gPiBkZXN0aW5hdGlvbiBDUFUgaGFzIGFjY2VwdGVkIHRo
-ZSBpbnRlcnJ1cHQuIFNvIGlmIHdlIGhhdmUgZGlzYWJsZWQKPiA+IHRoZSBMQVBJQywgaXQgd2ls
-bCBub3QgYWNjZXB0IHRoZSBpbnRlcnJ1cHQgYW5kIElSUiBiaXQgb2YgSU9BUElDCj4gPiBzaG91
-bGQgbm90IGJlIHNldC4KPiAKPiBDYW4geW91IGV4cGxhaW4gaG93LCBvbiB0aGUgZnJvbnQgc2lk
-ZSBidXMsIHRoZSBJTy1BUElDIGtub3dzIHdoZXRoZXIKPiBhIENQVSBoYXMgYWNjZXB0ZWQgdGhl
-IElOVCBtZXNzYWdlPyBUaGVyZSBpcyBubyByZXNwb25zZQo+IHRvIHRoZSBJTlQgbWVzc2FnZSBv
-biB0aGUgYnVzLCBleGNlcHQgZm9yIHRoZSBFT0kgd2hpY2ggY29tZXMgbXVjaCBsYXRlci4KPiBJ
-J20gbm90IHNheWluZyB0aGF0IHlvdSdyZSB3cm9uZywgSSBqdXN0IHJlYWxseSBkb24ndCB1bmRl
-cnN0YW5kIHRoaXMKPiBwb2ludC4KPiAKCkkgZG9uJ3Qga25vdyB3aGF0IGlzIGV4YWN0bHkgaGFy
-ZHdhcmUgcHJvdG9jb2wuIEkgYW0ganVzdCBnb2luZyBieSAKaW50ZWwgZG9jdW1lbnRhdGlvbi4g
-CgpSZW1vdGUgSVJS4oCUUk8uIFRoaXMgYml0IGlzIHVzZWQgZm9yIGxldmVsIHRyaWdnZXJlZCBp
-bnRlcnJ1cHRzLiBJdHMgbWVhbmluZwppcyB1bmRlZmluZWQgZm9yIGVkZ2UgdHJpZ2dlcmVkIGlu
-dGVycnVwdHMuIEZvciBsZXZlbCB0cmlnZ2VyZWQgaW50ZXJydXB0cywKdGhpcyBiaXQgaXMgc2V0
-IHRvIDEgd2hlbiBsb2NhbCBBUElDKHMpIGFjY2VwdCB0aGUgbGV2ZWwgaW50ZXJydXB0IHNlbnQg
-YnkKdGhlIElPQVBJQy4gVGhlIFJlbW90ZSBJUlIgYml0IGlzIHNldCB0byAwIHdoZW4gYW4gRU9J
-IG1lc3NhZ2Ugd2l0aCBhIG1hdGNoaW5nCmludGVycnVwdCB2ZWN0b3IgaXMgcmVjZWl2ZWQgZnJv
-bSBhIGxvY2FsIEFQSUMuCgpBY2NvcmRpbmcgdG8gdGhpcywgSVJSIGJpdCBpcyBzZXQgdG8gb25l
-IG9ubHkgd2hlbiBMb2NhbCBBUElDIGFjY2VwdHMgdGhlCmxldmVsIHRyaWdnZXIgaW50ZXJydXB0
-LiBUaGlzIGltcGxpZXMgdGhlcmUgc2hvdWxkIGJlIGEgd2F5IG9mIElPQVBJQyAKa25vd2luZyB0
-aGF0IGRlc3RpbmF0aW9uIGxvY2FsIGFwaWMgaGFzIGFjY2VwdGVkIHRoZSBpbnRlcnJ1cHQuCgpB
-bnl3YXksIEkgdGhpbmsgYWZ0ZXIgZGlzYWJsaW5nIHRoZSBMQVBJQywgaXQgc2hvdWxkIG5vdCBh
-Y2NlcHQgbW9yZQppbnRlcnJ1cHQgZnJvbSBJT0FQSUMuIEl0IHdpbGwgb25seSBkZWxpdmVyIHBl
-bmRpbmcgaW50ZXJydXB0cyB0byBDUFUKaWYgQ1BVIGhhcyBub3QgbWFza2VkIGl0LiBTbyBpbiB5
-b3VyIGNhc2UgaXQgbG9va3MgbGlrZSB3ZSBoYXZlIGdvdApwZW5kaW5nIGludGVycnVwdHMgYXQg
-TEFQSUMgd2hpY2ggbmV2ZXIgcmVjZWl2ZWQgRU9JIGluIGZpcnN0IGtlcm5lbC4KU2Vjb25kIGtl
-cm5lbCB3aWxsIGZpZWxkIHRoZXNlIGludGVycnVwdHMgYW5kIHdpbGwgbWFyayBhcyBzcHVyaW91
-cwppbnRlcnJ1cHQgYW5kIGlzc3VlIEVPSS4gQnV0IGJ5IHRoYXQgdGltZSBJT0FQSUMgIGRvZXMg
-bm90IGhhdmUgdmVjdG9yCmluZm8gc28gd2lsbCBub3QgY2xlYXIgSVJSIGJpdC4KICAgCj4gSW4g
-dGhlIGxvZ2ljYWwgYW5hbHl6ZXIsIHdlIGNhbid0IHNlZSB3aGVuIGV4YWN0bHkgdGhlIGxvY2Fs
-IEFQSUNzIGFyZQo+IGRpc2FibGVkLiBCdXQgd2Ugc2VlIHRoYXQgSVJRcyBhcnJpdmluZyBhZnRl
-ciB0aGUgSU8gQVBJQyBwaW4gaXMKPiBtYXNrZWQgbmV2ZXIgZG8gYW55IGhhcm0sIHdoaWxlIElS
-UXMgYXJyaXZpbmcgImR1cmluZyB0aGUgc2h1dGRvd24KPiBzZXF1ZW5jZSIgKHdlIGNhbiBzZWUg
-ZS5nLiB0aGUgMm5kIENQVSB0YWtpbmcgdGhlIGJ1cyBhZnRlciB0aGUgTk1JCj4gSVBJKSBjYXVz
-ZSB0aGUgZXJyb3Igc2l0dWF0aW9uLgo+IAo+ID4+IDMuIEFuIElSUSBpcyByZWNlaXZlZCBhbmQg
-ZGVsaXZlcmVkIHRvIGEgbG9jYWwgQVBJQywgYnV0Cj4gPj4gICAgbm8gQ1BVIGV2ZXIgZXhlY3V0
-ZXMgdGhlIElSUSBoYW5kbGVyIGFuZCB0aGVyZWZvcmUgbm8KPiA+PiAgICBFT0kgaXMgc2VudC4K
-PiA+Pgo+ID4gCj4gPiBXZSBkbyBpc3N1ZSBFT0kgZm9yIGFsbCB0aGUgcGVuZGluZyBpbnRlcnJ1
-cHRzIGluIHNlY29uZAo+ID4ga2VybmVsLiBMb29rIGF0IHNldHVwX2xvY2FsX0FQSUMoKS4gT25j
-ZSB0aGUgc2Vjb25kIGlzIGJvb3RpbmcsIGl0Cj4gPiBjaGVja3MgaWYgdGhlcmUgYXJlIGFueSBw
-ZW5kaW5nIGludGVycnVwdHMgKElTUiBiaXQgaXMgc2V0KS4gSWYgeWVzLAo+ID4gaXQgZ29lcyBh
-aGVhZCBhbmQgaXNzdWVzIGFuIGV4dHJhIEVPSS4gVGhpcyBzaG91bGQgYWxzbyBjbGVhciB0aGUK
-PiA+IElSUiByZWdpc3RlciBvZiBJT0FQSUMuCj4gCj4gSW4gYW4gZWFybGllciBwYXRjaCwgSSB0
-cmllZCB0byBhZGQgdGhhdCBzYW1lIGNvZGUgaW4KPiBtYWNoaW5lX2NyYXNoX3NodXRkb3duKCkg
-YW5kIGNyYXNoX25taV9jYWxsYmFjaygpLCAgaW4gb3JkZXIKPiB0byBzZW5kIEVPSXMgZm9yIHBl
-bmRpbmcgSVJRcyBvbiBhbGwgQ1BVcy4gVW5mb3J0dW5hdGVseSwKPiB0aGF0IGhhZCBubyBlZmZl
-Y3QuCj4gCgpTbyB5b3UgdHJpZWQgaXNzdWluZyBFT0kgdG8gYWxsIHRoZSBwZW5kaW5nIGludGVy
-cnVwdHMgaW4gZmlyc3QKa2VybmVsLiBEaWQgeW91IGNoZWNrIHRoYXQgYXQgdGhlIHRpbWUgb2Yg
-aXNzdWluZyBFT0ksIGNvcnJlc3BvbmRpbmcKdmVjdG9yIGJpdHMgd2VyZSBzZXQgaW4gSVNSL0lS
-UiBhdCBMQVBJQyBhbmQgSVJSIHdhcyBzZXQgYXQgSU9BUElDPwpJZiB5ZXMsIHRoZW4gb25seSBz
-b21lIGhhcmR3YXJlIGd1eSBjYW4gdGVsbCB1cyB0aGF0IHdoeSBpc3N1aW5nIGFuIEVPSQpkaWQg
-bm90IGNsZWFyIHRoZSBJUlIgYml0IGF0IElPQVBJQy4KCkkgaGF2ZSBuZXZlciB1c2VkIGEgdHJh
-Y2UgYW5hbHl6ZXIuIENhbiB5b3UgcmVhbGx5IHBhcnNlIHRoZSBFT0kgbWVzc2FnZQphbmQgc2Vl
-IHdoYXQgYXJlIHRoZSBjb250ZW50cz8gSSBtZWFuIGluIHRlcm1zIG9mIG1ha2luZyBzdXJlIHJp
-Z2h0CnZlY3RvciBpbmZvIGlzIHRoZXJlIHNvIHRoYXQgSU9BUElDIGNhbiByZXNldCBJUlI/CgoK
-PiA+IGRpc2FibGVfSU9fQVBJQygpIGNvZGUgZG9lcyBub3QgY2xlYXIgdGhlIHZlY3RvciBpbmZv
-cm1hdGlvbgo+ID4gaW4gcm91dGluZyB0YWJsZS4gSXQganVzdCBtYXNrcyB0aGUgaW50ZXJydXB0
-LiBTbyBldmVuIGlmCj4gPiBhbiBFT0kgaXMgaXNzdWVkIGxhdGVyIGluIHNlY29uZCBrZXJuZWws
-IGl0IHNob3VsZCBjbGVhciB0aGUKPiA+IElSUiBiaXQgYXQgSU9BUElDLgo+IAo+IEhtbS4uLiBp
-b2FwaWNfbWFza19lbnRyeSgpIHdyaXRlcwo+ICJ1bmlvbiBlbnRyeV91bmlvbiBldSA9IHsgLmVu
-dHJ5Lm1hc2sgPSAxIH0iIHRvIHRoZSAgTFZUIHJlZ2lzdGVyLgo+IFRoYXQgY2xlYXJzIGFsbCBi
-aXRzIGV4Y2VwdCB0aGUgbWFzayBiaXQsIHNvIHRoYXQgdGhlIHZlY3RvciBpbmZvcm1hdGlvbgo+
-IGlzIGxvc3QuIFBsZWFzZSBjb3JyZWN0IG1lIGlmIEknbSBtaXN0YWtlbi4KPiAKClNvcnJ5LCB5
-b3UgYXJlIHJpZ2h0LiBJIHJlYWQgdGhlIGNvZGUgdG9vIGZhc3QuIElPQVBJQyBlbnRyaWVzIHdp
-bGwgYmUKY2xlYXJlZCBhbmQgcHJlY2lzZWx5IHRoYXQgc2VlbXMgdG8gYmUgdGhlIHJlYXNvbiB3
-aHkgaXNzdWluZyBhbiBFT0kKaW4gc2Vjb25kIGtlcm5lbCB3aWxsIG5vdCBoZWxwIHRoaXMgc2l0
-dWF0aW9uIGluIGl0cyBjdXJyZW50IGZvcm0uCgo+ID4+IGMpIFRoZXJlIGFyZSBpbmRpY2F0aW9u
-cyB0aGF0IGJlc2lkZXMgdGhlIEVPSSwgaXQncyBhbHNvCj4gPj4gbmVjZXNzYXJ5IHRoYXQgdGhl
-IFBDSSBJUlEgcGluIGlzIGRlYXNzZXJ0ZWQgYXQgbGVhc3QgZm9yCj4gPj4gYSBzaG9ydCB0aW1l
-Lgo+IAo+ID4gSSBkb3VidCB0aGlzLiBUaGVyZSBhcmUgc2l0dWF0aW9ucyB3aGVuIHRoZXJlIGlz
-IG5vIGRldmljZQo+ID4gZHJpdmVyIGZvciB0aGUgZGV2aWNlIGFuZCBkZXZpY2UgcHVzaGVzIHRo
-ZSBpbnRlcnJ1cHQgKGZyZXF1ZW50bHkKPiA+IG9ic2VydmVkIGluIHRoZSBjYXNlIG9mIGtkdW1w
-KS4gS2VybmVsIHN0aWxsIGtlZXBzIG9uIHJlY2VpdmluZwo+ID4gdGhlIGludGVycnVwdCB3aXRo
-b3V0IGRyaXZlciB0ZWxsaW5nIGRldmljZSB0byBsb3dlciB0aGUgaW50ZXJydXB0Cj4gPiBsaW5l
-Lgo+IAo+IFNvIGZhciBJIGhhdmVuJ3QgY29tZSB1cCB3aXRoIGEgcGF0Y2ggdGhhdCBqdXN0IHNl
-bmRzIEVPSSB3aXRob3V0Cj4gYWN0dWFsbHkgY2FsbGluZyBhbnkgSFcgSVJRIGhhbmRsZXIuIFRo
-YXQgd291bGQgY2xhcmlmeSB0aGlzIHF1ZXN0aW9uLgo+IEl0J3Mgb24gbXkgdG9kbyBsaXN0Lgo+
-IAoKSXNuJ3QgdGhlICJub2JvZHkgY2FyZWQgZm9yIGlycSB4IiBzaXR1YXRpb24gc2ltaWxhci4g
-U29tZSBkZXZpY2UgaGFzCmFzc2VydGVkIGEgbGV2ZWwgdHJpZ2dlcmVkIGludGVycnVwdCBhbmQg
-dGhlcmUgaXMgbm8gcmVzcGVjdGl2ZSBkZXZpY2UKZHJpdmVyLiBTbyBrZXJuZWwgc2VlcyBhIGZs
-dXJyeSBvZiBpbnRlcnJ1cHRzLiAoaXNzdWVzIGFuZCBFT0kgYnV0CmltbWVkaWF0ZWx5IHNlZXMg
-bmV4dCBpbnRlcnJ1cHQgYXMgZGV2aWNlIGhhcyBub3QgZGUtYXNzZXJ0ZWQgdGhlIGludGVycnVw
-dApsaW5lKT8KClsuLl0KPiA+IC0gQ2FuIHlvdSBwbGVhc2UgcHJpbnQgbG9jYWwgYXBpYyAocHJp
-bnRfbG9jYWxfQVBJQykgYW5kCj4gPiAgIGlvYXBpYyByZWdpc3RlcnMgKHByaW50X0lPX0FQSUMp
-IGFuZCB2ZXJpZnkgYWJvdmUgdGhlb3J5Pwo+IAo+IFdlIGFsd2F5cyBzZWUgdGhlIElPLUFQSUMg
-SVJSICBiaXQgaW4gdGhlIGVycm9yIHNpdHVhdGlvbiwgYmVmb3JlIGFuZAo+IGFmdGVyIHRoZSBz
-dGFydCBvZiB0aGUga2R1bXAga2VybmVsLgo+IAo+ICpCZWZvcmUqIHRoZSBrZHVtcCBrZXJuZWwg
-c3RhcnRzIChtb3JlIHByZWNpc2VseTogYmVmb3JlIHRoZSBjYWxsCj4gdG8gZGlzYWJsZV9JT19B
-UElDKCkpLCB0aGUgSU8tQVBJQyAiZGVsaXZlcnkgc3RhdHVzIiBiaXQgaXMgYWxzbyBzZXQuCj4g
-Cj4gSSBjaGVja2VkIGxvY2FsIEFQSUMgSVNSIGFuZCBJUlIgYml0cyBpbiBhbiBlYXJsaWVyIHZl
-cnNpb24gb2YgbXkgcGF0Y2gKPiAoc2VlIGFib3ZlKS4gVGhleSB3ZXJlIHNvbWV0aW1lcyBzZXQs
-IGFuZCBzb21ldGltZXMgbm90ICh1bmxpa2UgdGhlIElPLUFQSUMKPiBJUlIvRGVsaXZlcnkgU3Rh
-dHVzIHdoaWNoIGJlaGF2ZSBhbHdheXMgdGhlIHNhbWUpLgo+IAoKVGhpcyB3aWxsIGJlIGludGVy
-ZXN0aW5nLiBTbyB5b3UgYXJlIHNheWluZyB0aGF0IHRoZXJlIGFyZSBjYXNlcyB3aGVyZQpJUlIg
-Yml0IGlzIHNldCBhdCBJT0FQSUMgYnV0IGNvcnJlc3BvbmRpbmcgSVJSL0lTUiBiaXQgaXMgbm90
-IHNldCBhdApMQVBJQz8gSWYgdGhhdCBpcyB0aGUgY2FzZSB0aGVuIGV2ZW4gZW5hYmxpbmcgdGhl
-IGludGVycnVwdHMgd2lsbCBub3QKaGVscD8gQmVjYXVzZSBJUlIvSVNSIGJpdCBpcyBub3Qgc2V0
-LCBDUFUgd2lsbCBuZXZlciByZWNlaXZlIGFuIGludGVycnVwdAphbmQgaXQgd2lsbCBuZXZlciBp
-c3N1ZSBhbiBFT0kgZm9yIHRoYXQgdmVjdG9yPyBJIGFtIG5vdCBzdXJlIGluIHN1Y2ggY2FzZXMK
-aG93IHdpbGwgeW91ciBwYXRjaCBzb2x2ZSB0aGUgaXNzdWUuCgpJIHRoaW5rIHdlIHNob3VsZCBu
-b3QgYmUgZW5hYmxpbmcgdGhlIGludGVycnVwdCBhZnRlciB0aGUgY3Jhc2guIElmIG5lZWRlZCwK
-d2Ugc2hvdWxkIGp1c3QgaXNzdWUgdGhlIEVPSSBhbmQgaXQgc2hvdWxkIHdvcmsuIE90aGVyd2lz
-ZSB3ZSBuZWVkIHRvIGdldAppbiB0b3VjaCB3aXRoIGhhcmR3YXJlIGZvbGtzIHRvIHRlbGwgdXMg
-d2hhdCBpcyBnb2luZyBvbi4KClRoYW5rcwpWaXZlawoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On Mon, Aug 06, 2007 at 05:08:05PM +0200, Martin Wilck wrote:
+> PATCH/RFC: [kdump] fix APIC shutdown sequence
+> 
+> This patch fixes a problem that we have encountered
+> with kdump under high I/O load on some machines.
+> The machines showing the errors have an Intel ICH7
+> chip set with a 6702PXH  PCI Express-to-PCI Bridge
+> (8086:032c) containing an IO-APIC.
+> 
+> The bug symptom is that certain controllers connected
+> to the 6702PXH bridge wouldn't receive any IRQs in the
+> kdump kernel. In the error case (which is about 20% of
+> all cases) the IRR bit of the IO-APIC pin for that
+> controller is always set after the start of the kdump
+> kernel, indicating an IRQ in progress. We haven't found
+> a way to recover from this situation when it has once
+> occured, except for a system reset.
+> 
+> The error is caused by IRQs arriving while the APIC
+> subsystem is deactivated in machine_crash_shutdown().
+> 
+> Apparently, the IO-APIC gets stuck if it sends an IRQ
+> message to a Local APIC and never receives an EOI for that
+> message. This can have several possible reasons:
+> 
+
+Got this oops while testing your patch when I did
+"echo c > /proc/sysrq-trigger"
+
+[root@llm37 ~]# SysRq : Trigger a crashdump
+Unable to handle kernel NULL pointer dereference at 0000000000000000 RIP:
+ [<0000000000000000>]
+PGD 22229b067 PUD 0
+Oops: 0000 [1] SMP
+CPU 0
+Modules linked in:
+Pid: 2947, comm: klogd Not tainted 2.6.23-rc1-apic-issue #2
+RIP: 0010:[<0000000000000000>]  [<0000000000000000>]
+RSP: 0018:ffffffff807daf50  EFLAGS: 00010046
+RAX: 0000000000000000 RBX: ffffffff8073f480 RCX: ffffffff807ddea0
+RDX: ffffffff807717c0 RSI: ffffffff8073f480 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffffff807ddd28 R11: 0000000000000150 R12: 0000000000000000
+R13: ffffffff8073f4d0 R14: 000000000000000c R15: 0000000000000000
+FS:  00002b204ea686f0(0000) GS:ffffffff8073c000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
+CR2: 0000000000000000 CR3: 0000000223e9e000 CR4: 00000000000006e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Process klogd (pid: 2947, threadinfo ffff81021b7b8000, task ffff8102251a27b0)
+Stack:  ffffffff8025afd0 0000000000000046 ffffffff807dddf8 0000000000000000
+ 0000000000000030 0000000000000000 ffffffff8020e1ae ffffffff807d15c8
+ 0000000000000000 ffffffff807dde20 0000000000000000 ffffffff807ddee8
+Call Trace:
+ <IRQ>  [<ffffffff8025afd0>] handle_edge_irq+0x5c/0x127
+ [<ffffffff8020e1ae>] do_IRQ+0xf1/0x15f
+ [<ffffffff8020c191>] ret_from_intr+0x0/0xa
+ <EOI>  <NMI>  [<ffffffff80351ae3>] __delay+0x6/0x10
+ [<ffffffff8021e328>] crash_nmi_callback+0x4b/0x77
+ [<ffffffff80557075>] notifier_call_chain+0x29/0x4c
+ [<ffffffff80249a11>] notify_die+0x2d/0x34
+ [<ffffffff805555a3>] default_do_nmi+0x55/0x197
+ [<ffffffff80555f0e>] do_nmi+0x2e/0x44
+ [<ffffffff805553af>] nmi+0x7f/0x90
+ [<ffffffff8022e00a>] find_busiest_group+0x20e/0x6b3
+ <<EOE>>  [<ffffffff80552d13>] __sched_text_start+0x1cb/0x5ba
+ [<ffffffff80282294>] do_sync_write+0xc9/0x10c
+ [<ffffffff80235c32>] do_syslog+0x11d/0x3a9
+ [<ffffffff80246a03>] autoremove_wake_function+0x0/0x2e
+ [<ffffffff802731c6>] free_pages_and_swap_cache+0x73/0x8f
+ [<ffffffff802bbeac>] kmsg_read+0x3a/0x44
+ [<ffffffff802b5245>] proc_reg_read+0x7e/0x99
+ [<ffffffff80282b08>] vfs_read+0xaa/0x132
+ [<ffffffff80282ea4>] sys_read+0x45/0x6e
+ [<ffffffff8020bc7e>] system_call+0x7e/0x83
+
+
+Code:  Bad RIP value.
+RIP  [<0000000000000000>]
+ RSP <ffffffff807daf50>
+CR2: 0000000000000000
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
