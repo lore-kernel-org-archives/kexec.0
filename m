@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate2.fujitsu-siemens.com ([217.115.66.36])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIkHO-0002ua-VU
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 08:04:50 -0400
-Message-ID: <46B9B156.20802@fujitsu-siemens.com>
-Date: Wed, 08 Aug 2007 14:04:38 +0200
-From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IImBs-0004Bu-7B
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 10:07:16 -0400
+Date: Wed, 8 Aug 2007 10:06:13 -0400 (EDT)
+From: Chip Coldwell <coldwell@redhat.com>
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
+In-Reply-To: <20070808103603.GC13808@in.ibm.com>
+Message-ID: <Pine.LNX.4.64.0708081003000.29193@bogart.boston.redhat.com>
 References: <46B73955.2080007@fujitsu-siemens.com>
 	<20070807142928.GA18839@in.ibm.com>
 	<46B8AECA.7050908@fujitsu-siemens.com>
-	<m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>
-	<46B986D5.2010407@fujitsu-siemens.com>
-	<20070808093336.GB13808@in.ibm.com>
-In-Reply-To: <20070808093336.GB13808@in.ibm.com>
+	<20070808103603.GC13808@in.ibm.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,59 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Vivek Goyal <vgoyal@in.ibm.com>
+Cc: Martin Wilck <martin.wilck@fujitsu-siemens.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>
 
-Hi Vivek,
+On Wed, 8 Aug 2007, Vivek Goyal wrote:
 
->>> How bad is it if you just run with irqpoll in the kdump kernel?
->>> If running with irqpoll is usable that is probably preferable
->>> to putting in a hardware work around we can survive without.
->> Yes, I tried that. No effect.
->>
+> On Tue, Aug 07, 2007 at 07:41:30PM +0200, Martin Wilck wrote:
+> > 
+> > Can you explain how, on the front side bus, the IO-APIC knows whether
+> > a CPU has accepted the INT message? There is no response
+> > to the INT message on the bus, except for the EOI which comes much later.
+> > I'm not saying that you're wrong, I just really don't understand this
+> > point.
+> > 
 > 
-> Martin, at least irpoll should have worked. I am assuming your timer
-> interrupts are coming in second kernel. In that case we are not
-> dependent at all on actually receiving device interrupt. Polling should
-> take care of it.
+> I don't know what is exactly hardware protocol. I am just going by 
+> intel documentation. 
 
-You are right. I just tested irqpoll again , and it does works even if the error
-(detected by the IRR bit set in the IO-APIC) occurs.
+I think it's important to distinguish between the LAPIC receiving an
+interrupt and the CPU receiving an interrupt.  The former could happen
+without the latter if the CPU has set the TPR above the priority of
+the interrupt received by the LAPIC.  In that case, the interrupt is
+kept pending in the LAPIC and recorded in the IRR if I understand the
+Intel documentation correctly.
 
-I have no idea what went wrong when I tried "irqpoll" last time. But I was
-using a different kernel, controller firmware, driver, and HW configuration,
-so it can probably be explained somehow. Unfortunately, the unsuccessful early
-attempts caused me to conclude prematurely that "irqpoll" didn't help. I admit
-I didn't understand "irqpoll" fully until just now.
+So I think the scenario which leaves IRR set when the kdump kernel
+starts is possible.
 
-> What is that device which is not working? What is the success criterion?
-
-It's a LSI megaraid_sas "zero channel RAID" (ZCR) controller. The system has an
-on-board LSI 1068 (mptsas). If you put the ZCR in a certain PCI slot, the
-1068 is hidden from the system, which sees the megaraid_sas controller
-(1000:0413) instead of the 1068. The ZCR internally uses the 1068 as low-level
-controller.
-
-The success criterion was that the disks on the ZCR were successfully detected
-and the dump was written.
-
-Martin
+Chip
 
 -- 
-Martin Wilck
-PRIMERGY System Software Engineer
-FSC IP ESP DE6
+Charles M. "Chip" Coldwell
+Senior Software Engineer
+Red Hat, Inc
+978-392-2426
 
-Fujitsu Siemens Computers GmbH
-Heinz-Nixdorf-Ring 1
-33106 Paderborn
-Germany
-
-Tel:			++49 5251 8 15113
-Fax:			++49 5251 8 20409
-Email:			mailto:martin.wilck@fujitsu-siemens.com
-Internet:		http://www.fujitsu-siemens.com
-Company Details:	http://www.fujitsu-siemens.com/imprint.html
 
 _______________________________________________
 kexec mailing list
