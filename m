@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate2.fujitsu-siemens.com ([217.115.66.36])
+Received: from dgate1.fujitsu-siemens.com ([217.115.66.35])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IIpwI-0002hB-15
-	for kexec@lists.infradead.org; Wed, 08 Aug 2007 14:07:24 -0400
-Message-ID: <46BA0651.5010708@fujitsu-siemens.com>
-Date: Wed, 08 Aug 2007 20:07:13 +0200
+	id 1IIqBO-0003X9-70
+	for kexec@lists.infradead.org; Wed, 08 Aug 2007 14:23:04 -0400
+Message-ID: <46BA09FE.2070909@fujitsu-siemens.com>
+Date: Wed, 08 Aug 2007 20:22:54 +0200
 From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
 MIME-Version: 1.0
 Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-References: <46B73955.2080007@fujitsu-siemens.com>
-	<20070808113834.GA26145@in.ibm.com>
-In-Reply-To: <20070808113834.GA26145@in.ibm.com>
+References: <46B73955.2080007@fujitsu-siemens.com>	<20070807142928.GA18839@in.ibm.com>	<46B8AECA.7050908@fujitsu-siemens.com>	<m1ir7qg7kd.fsf@ebiederm.dsl.xmission.com>	<46B986D5.2010407@fujitsu-siemens.com>	<m1myx2dpcc.fsf@ebiederm.dsl.xmission.com>	<46B9FEC8.20004@fujitsu-siemens.com>
+	<m1myx1c3lj.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m1myx1c3lj.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +23,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 
-Vivek Goyal wrote:
+Eric W. Biederman wrote:
 
-> Got this oops while testing your patch when I did
-> "echo c > /proc/sysrq-trigger"
+>> I think a lot would be gained if disable_IO_APIC() would just mask the IRQs
+>> (like the function in my patch does), and perhaps fix the dest ID, instead of
+>> totally clearing the registers.
+> 
+> Even masked we still won't see the EOI, because then we are in i8259
+> mode.  So masked versus totally cleared really should make no
+> difference.
 
-That's bad :-(
+You are talking about EOI sent in the kdump kernel, correct? With my patch
+the EOI (sent in the "old" kernel) is seen.
 
-...
-> Unable to handle kernel NULL pointer dereference at 0000000000000000 RIP:
- [<0000000000000000>]
->  <IRQ>  [<ffffffff8025afd0>] handle_edge_irq+0x5c/0x127
->  [<ffffffff8020e1ae>] do_IRQ+0xf1/0x15f
->  [<ffffffff8020c191>] ret_from_intr+0x0/0xa
->  <EOI>  <NMI>  [<ffffffff80351ae3>] __delay+0x6/0x10
->  [<ffffffff8021e328>] crash_nmi_callback+0x4b/0x77
+> I guess right now I can see work put into cleaning things up a little
+> or not having to call disable_IO_APIC() at all.  that was supposed
+> to be a short term hack, until we fixed things properly.
+> 
+> So far no one has been brave enough to mess with the kernel apic
+> initialization order so we can remove disable_IO_APIC.  If our
+> goal isn't to fix things properly by removing the need for
+> disable_IO_APIC I don't feel like putting much effort into this
+> code path.
 
-Obviously, it the oops occurs after the IRQs are re-enabled in crash_nmi_callback().
-It appears that desc->chip->mask (in mask_ack_irq(), kernel/irq/chip.c:462) was NULL.
-I have no idea how my patch could cause that.
-
-This proves that re-enabling IRQs in this situation is too dangerous :-(.
-I really did hundreds of dumps in different ways (echo c>/proc/sysrq-trigger,
-forcing Oops and panic(), actually hititng Alt-Sysrq) and this never happened to
-me.
+Who is working on this? Can you give a reference to a list of things that
+would need to be done to do this right?
 
 Martin
 
