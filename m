@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IL4R7-0000bb-4F
-	for kexec@lists.infradead.org; Tue, 14 Aug 2007 18:00:35 -0400
-Date: Wed, 15 Aug 2007 00:00:25 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [RFC][PATCH 1/3] Embed vmcoreinfo into kernel file
-Message-ID: <20070814220025.GB16408@suse.de>
-References: <20070813163212oomichi@mail.jp.nec.com>
-	<20070813163653oomichi@mail.jp.nec.com>
-	<20070813173811.GA14191@localdomain>
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IJOPj-00029r-2T
+	for kexec@lists.infradead.org; Fri, 10 Aug 2007 02:56:04 -0400
+Date: Fri, 10 Aug 2007 15:56:32 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: Re: makedumpfile-1.1.5: Xen support
+In-Reply-To: <20070731071034.DBA9.ODA@valinux.co.jp>
+References: <46ADDF9D.4060704@redhat.com>
+	<20070731071034.DBA9.ODA@valinux.co.jp>
+Message-Id: <20070810154045.DC1F.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070813173811.GA14191@localdomain>
+Content-Type: multipart/mixed;
+	boundary="------_46BC086DE24406A334A8_MULTIPART_MIXED_"
+Content-Transfer-Encoding: 7bit
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,48 +22,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dan Aloni <da-x@monatomic.org>
-Cc: Don Zickus <dzickus@redhat.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, Vivek Goyal <vgoyal@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>
 
-* Dan Aloni <da-x@monatomic.org> [2007-08-13 19:38]:
-> On Mon, Aug 13, 2007 at 04:36:53PM +0900, Ken'ichi Ohmichi wrote:
-> >[..]
-> > Patches:
-> > - [1/3] patch for linux-2.6.22.
-> >   Changelog:
-> >   * Rename "mkdfinfo" to "vmcoreinfo".
-> >   * Multi memory models (FLATMEM, DISCONTIGMEM, and SPASEMEM) are
-> >     supported.
-> >   * The elf note typedef for vmcoreinfo is added because the original
-> >     elf note size is limited to 1024.
-> >   * The generation of the elf note is moved to boot time instead of
-> >     crash time.
+--------_46BC086DE24406A334A8_MULTIPART_MIXED_
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+
+Hi,
+
+> Hmm, adding to skip zero-filled pages is easy but I wonder
+> how effective it is ...
+
+I found it is sometimes effective.
+
+The attached patch enables the "-d" option with --xen-syms.
+Note that only the level 1 (skip zero-filled pages) is supported.
+
+ex. # makedumpfile -E -d 1 --xen-syms xen-syms.debug vmcore output
+
+Thanks.
+Itsuro Oda
+
+On Tue, 31 Jul 2007 07:19:48 +0900
+Itsuro ODA <oda@valinux.co.jp> wrote:
+
+> Hi,
 > 
-> This looks very good. Just one suggestion - in order to reduce clutter 
-> from kernel/kexec.c (as to avoid #ifdefs) perhaps it might be better 
-> to have crash_save_vmcoreinfo_init() additionally call an arch-specific 
-> arch_crash_save_vmcoreinfo_init() function and have that append all 
-> the arch-specific stuff.
+> > Is the "-d" dump_level option completely ignored, or can it
+> > (without vmlinux awareness) recognize and skip zero-filled
+> > pages?
+> 
+> Yes, "-d" is ignored.
+> 
+> Hmm, adding to skip zero-filled pages is easy but I wonder
+> how effective it is ...
+> 
+> Thanks.
+> -- 
+> Itsuro ODA <oda@valinux.co.jp>
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Because the only architecture that is really different is IA64, it may
-make sense here to provide a default implementation that is used on
-any architecture and declared as __attribute__((weak)). Then, any
-architecture (here: IA64) can override that implementation. That would
-avoid code duplication.
+-- 
+Itsuro ODA <oda@valinux.co.jp>
 
-The rest looks good from my point of view. I'd like to see that in the
-mainline kernel. :)
+--------_46BC086DE24406A334A8_MULTIPART_MIXED_
+Content-Type: application/octet-stream;
+ name="patch-zero-070810"
+Content-Disposition: attachment;
+ filename="patch-zero-070810"
+Content-Transfer-Encoding: base64
 
-
-
-Thanks,
-   Bernhard
+LS0tIG1ha2VkdW1wZmlsZS5jLm9yZwkyMDA3LTA4LTEwIDE1OjE0OjIyLjAwMDAwMDAwMCArMDkw
+MAorKysgbWFrZWR1bXBmaWxlLmMJMjAwNy0wOC0xMCAxNTo1MToxNi4wMDAwMDAwMDAgKzA5MDAK
+QEAgLTUxOTUsNiArNTE5NSw5IEBACiAJaW50IGk7CiAJc3RydWN0IHB0X2xvYWRfc2VnbWVudCAq
+cGxzOwogCWludCByZXQgPSBGQUxTRTsKKwl1bnNpZ25lZCBsb25nIGxvbmcgcGFkZHI7CisJb2Zm
+X3Qgb2Zmc2V0X3BhZ2U7CisJdW5zaWduZWQgY2hhciAqYnVmID0gTlVMTDsKIAogCS8qCiAJICog
+Tk9URTogdGhlIGZpcnN0IGhhbGYgb2YgYml0bWFwIGlzIG5vdCB1c2VkIGZvciBYZW4gZXh0cmFj
+dGlvbgpAQCAtNTIxMSw2ICs1MjE0LDExIEBACiAJCSAgICBzdHJlcnJvcihlcnJubykpOwogCQln
+b3RvIG91dDsKIAl9CisJaWYgKChidWYgPSBtYWxsb2MoaW5mby0+cGFnZV9zaXplKSkgPT0gTlVM
+TCkgeworCQlFUlJNU0coIkNhbid0IGFsbG9jYXRlIG1lbW9yeSBmb3IgdGhlIHBhZ2UuICVzXG4i
+LAorCQkgICAgc3RyZXJyb3IoZXJybm8pKTsKKwkJZ290byBvdXQ7CisJfQogCiAJcGZuID0gMDsK
+IAlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX2xvYWRfbWVtb3J5OyBpKyspIHsKQEAgLTUyNTUs
+MTEgKzUyNjMsMzUgQEAKIAkJCSAqICAtIHhlbiBoZWFwIGFyZWEsIG9yCiAJCQkgKiAgLSBzZWxl
+Y3RlZCBkb21haW4gcGFnZQogCQkJICovCi0JCQlpZiAoX2RvbWFpbiA9PSAwIHx8CisJCQlpZiAo
+IShfZG9tYWluID09IDAgfHwKIAkJCQkoaW5mby0+eGVuX2hlYXBfc3RhcnQgPD0gcGZuICYmIHBm
+biA8IGluZm8tPnhlbl9oZWFwX2VuZCkgfHwKLQkJCQkoKGNvdW50X2luZm8gJiAweGZmZmYpICYm
+IGlzX3NlbGVjdF9kb21haW4oaW5mbywgX2RvbWFpbikpKSB7Ci0JCQkJc2V0X2JpdG1hcChibTIu
+YnVmLCBwZm4lUEZOX0JVRkJJVE1BUCwgMSk7CisJCQkJKChjb3VudF9pbmZvICYgMHhmZmZmKSAm
+JiBpc19zZWxlY3RfZG9tYWluKGluZm8sIF9kb21haW4pKSkpIHsKKwkJCQljb250aW51ZTsKKwkJ
+CX0KKwkJCWlmIChpbmZvLT5kdW1wX2xldmVsICYgRExfRVhDTFVERV9aRVJPKSB7CisJCQkJcGFk
+ZHIgPSAodW5zaWduZWQgbG9uZyBsb25nKXBmbiAqIGluZm8tPnBhZ2Vfc2l6ZTsKKwkJCQlvZmZz
+ZXRfcGFnZSA9IHBhZGRyX3RvX29mZnNldChpbmZvLCBwYWRkcik7CisJCQkJaWYgKCFvZmZzZXRf
+cGFnZSkgeworCQkJCQlFUlJNU0coIkNhbid0IGNvbnZlcnQgcGh5c2FkZHIoJWxseCkgdG8gYSBv
+ZmZzZXQuXG4iLAorCQkJCQkgICAgcGFkZHIpOworCQkJCQlnb3RvIG91dDsKKwkJCQl9CisJCQkJ
+aWYgKGxzZWVrKGluZm8tPmZkX21lbW9yeSwgb2Zmc2V0X3BhZ2UsCisJCQkJICAgIFNFRUtfU0VU
+KSA9PSAob2ZmX3QpLTEpIHsKKwkJCQkJRVJSTVNHKCJDYW4ndCBzZWVrIHRoZSBkdW1wIG1lbW9y
+eSglcykuICVzXG4iLAorCQkJCQkgICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5v
+KSk7CisJCQkJCWdvdG8gb3V0OworCQkJCX0KKwkJCQlpZiAocmVhZChpbmZvLT5mZF9tZW1vcnks
+IGJ1ZiwgaW5mby0+cGFnZV9zaXplKQorCQkJCSAgICAhPSBpbmZvLT5wYWdlX3NpemUpIHsKKwkJ
+CQkJRVJSTVNHKCJDYW4ndCByZWFkIHRoZSBkdW1wIG1lbW9yeSglcykuICVzXG4iLAorCQkJCQkg
+ICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5vKSk7CisJCQkJCWdvdG8gb3V0Owor
+CQkJCX0KKwkJCQlpZiAoaXNfemVyb19wYWdlKGJ1ZiwgaW5mby0+cGFnZV9zaXplKSkKKwkJCQkJ
+Y29udGludWU7CiAJCQl9CisJCQlzZXRfYml0bWFwKGJtMi5idWYsIHBmbiVQRk5fQlVGQklUTUFQ
+LCAxKTsKIAkJfQogCX0KIApAQCAtNTI3NSw2ICs1MzA3LDggQEAKIG91dDoKIAlpZiAoYm0yLmJ1
+ZiAhPSBOVUxMKQogCQlmcmVlKGJtMi5idWYpOworCWlmIChidWYgIT0gTlVMTCkKKwkJZnJlZShi
+dWYpOwogCiAJcmV0dXJuIHJldDsKIH0KQEAgLTU1NDYsNyArNTU4MCw3IEBACiAJCQlNU0coIi1F
+IG11c3QgYmUgc3BlY2lmaWVkIHdpdGggLS14ZW4tc3ltcyBvciAtLXhlbi12bWNvcmVpbmZvLlxu
+Iik7CiAJCQlnb3RvIG91dDsKIAkJfQotCQlpbmZvLT5kdW1wX2xldmVsID0gRExfRVhDTFVERV9Y
+RU47CisJCWluZm8tPmR1bXBfbGV2ZWwgfD0gRExfRVhDTFVERV9YRU47CiAJCXJldHVybiBoYW5k
+bGVfeGVuKGluZm8pOwogCiAJfSBlbHNlIGlmIChpbmZvLT5mbGFnX3JlYXJyYW5nZSkgewo=
+--------_46BC086DE24406A334A8_MULTIPART_MIXED_
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------_46BC086DE24406A334A8_MULTIPART_MIXED_--
+
+
