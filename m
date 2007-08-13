@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IKjJE-0002IP-Rm
-	for kexec@lists.infradead.org; Mon, 13 Aug 2007 19:26:56 -0400
+	id 1IKjOe-0002NX-BT
+	for kexec@lists.infradead.org; Mon, 13 Aug 2007 19:32:31 -0400
 Received: from [172.16.3.165] (vagw.valinux.co.jp [210.128.90.14])
-	by mail.valinux.co.jp (Postfix) with ESMTP id CED272DC876
-	for <kexec@lists.infradead.org>; Tue, 14 Aug 2007 08:26:44 +0900 (JST)
-Date: Tue, 14 Aug 2007 08:27:17 +0900
+	by mail.valinux.co.jp (Postfix) with ESMTP id 08EA12DC86E
+	for <kexec@lists.infradead.org>; Tue, 14 Aug 2007 08:32:27 +0900 (JST)
+Date: Tue, 14 Aug 2007 08:32:59 +0900
 From: Itsuro ODA <oda@valinux.co.jp>
 Subject: Re: makedumpfile-1.1.5: Xen support
-Message-Id: <20070814082614.DC30.ODA@valinux.co.jp>
+Message-Id: <20070814083117.DC32.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="------_46C0E896E2A7069B6410_MULTIPART_MIXED_"
-Content-Transfer-Encoding: 7bit
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,13 +19,11 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-
---------_46C0E896E2A7069B6410_MULTIPART_MIXED_
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
 
 Hi,
 
@@ -69,65 +64,94 @@ Itsuro ODA <oda@valinux.co.jp> wrote:
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexe
 -- 
+--- makedumpfile.c.org	2007-08-10 15:14:22.000000000 +0900
++++ makedumpfile.c	2007-08-10 15:51:16.000000000 +0900
+@@ -5195,6 +5195,9 @@
+ 	int i;
+ 	struct pt_load_segment *pls;
+ 	int ret = FALSE;
++	unsigned long long paddr;
++	off_t offset_page;
++	unsigned char *buf = NULL;
+ 
+ 	/*
+ 	 * NOTE: the first half of bitmap is not used for Xen extraction
+@@ -5211,6 +5214,11 @@
+ 		    strerror(errno));
+ 		goto out;
+ 	}
++	if ((buf = malloc(info->page_size)) == NULL) {
++		ERRMSG("Can't allocate memory for the page. %s\n",
++		    strerror(errno));
++		goto out;
++	}
+ 
+ 	pfn = 0;
+ 	for (i = 0; i < info->num_load_memory; i++) {
+@@ -5255,11 +5263,35 @@
+ 			 *  - xen heap area, or
+ 			 *  - selected domain page
+ 			 */
+-			if (_domain == 0 ||
++			if (!(_domain == 0 ||
+ 				(info->xen_heap_start <= pfn && pfn < info->xen_heap_end) ||
+-				((count_info & 0xffff) && is_select_domain(info, _domain))) {
+-				set_bitmap(bm2.buf, pfn%PFN_BUFBITMAP, 1);
++				((count_info & 0xffff) && is_select_domain(info, _domain)))) {
++				continue;
++			}
++			if (info->dump_level & DL_EXCLUDE_ZERO) {
++				paddr = (unsigned long long)pfn * info->page_size;
++				offset_page = paddr_to_offset(info, paddr);
++				if (!offset_page) {
++					ERRMSG("Can't convert physaddr(%llx) to a offset.\n",
++					    paddr);
++					goto out;
++				}
++				if (lseek(info->fd_memory, offset_page,
++				    SEEK_SET) == (off_t)-1) {
++					ERRMSG("Can't seek the dump memory(%s). %s\n",
++					    info->name_memory, strerror(errno));
++					goto out;
++				}
++				if (read(info->fd_memory, buf, info->page_size)
++				    != info->page_size) {
++					ERRMSG("Can't read the dump memory(%s). %s\n",
++					    info->name_memory, strerror(errno));
++					goto out;
++				}
++				if (is_zero_page(buf, info->page_size))
++					continue;
+ 			}
++			set_bitmap(bm2.buf, pfn%PFN_BUFBITMAP, 1);
+ 		}
+ 	}
+ 
+@@ -5275,6 +5307,8 @@
+ out:
+ 	if (bm2.buf != NULL)
+ 		free(bm2.buf);
++	if (buf != NULL)
++		free(buf);
+ 
+ 	return ret;
+ }
+@@ -5546,7 +5580,7 @@
+ 			MSG("-E must be specified with --xen-syms or --xen-vmcoreinfo.\n");
+ 			goto out;
+ 		}
+-		info->dump_level = DL_EXCLUDE_XEN;
++		info->dump_level |= DL_EXCLUDE_XEN;
+ 		return handle_xen(info);
+ 
+ 	} else if (info->flag_rearrange) {
+
+
+-- 
 Itsuro ODA <oda@valinux.co.jp>
 
---------_46C0E896E2A7069B6410_MULTIPART_MIXED_
-Content-Type: application/octet-stream;
- name="patch-zero-070810"
-Content-Disposition: attachment;
- filename="patch-zero-070810"
-Content-Transfer-Encoding: base64
-
-LS0tIG1ha2VkdW1wZmlsZS5jLm9yZwkyMDA3LTA4LTEwIDE1OjE0OjIyLjAwMDAwMDAwMCArMDkw
-MAorKysgbWFrZWR1bXBmaWxlLmMJMjAwNy0wOC0xMCAxNTo1MToxNi4wMDAwMDAwMDAgKzA5MDAK
-QEAgLTUxOTUsNiArNTE5NSw5IEBACiAJaW50IGk7CiAJc3RydWN0IHB0X2xvYWRfc2VnbWVudCAq
-cGxzOwogCWludCByZXQgPSBGQUxTRTsKKwl1bnNpZ25lZCBsb25nIGxvbmcgcGFkZHI7CisJb2Zm
-X3Qgb2Zmc2V0X3BhZ2U7CisJdW5zaWduZWQgY2hhciAqYnVmID0gTlVMTDsKIAogCS8qCiAJICog
-Tk9URTogdGhlIGZpcnN0IGhhbGYgb2YgYml0bWFwIGlzIG5vdCB1c2VkIGZvciBYZW4gZXh0cmFj
-dGlvbgpAQCAtNTIxMSw2ICs1MjE0LDExIEBACiAJCSAgICBzdHJlcnJvcihlcnJubykpOwogCQln
-b3RvIG91dDsKIAl9CisJaWYgKChidWYgPSBtYWxsb2MoaW5mby0+cGFnZV9zaXplKSkgPT0gTlVM
-TCkgeworCQlFUlJNU0coIkNhbid0IGFsbG9jYXRlIG1lbW9yeSBmb3IgdGhlIHBhZ2UuICVzXG4i
-LAorCQkgICAgc3RyZXJyb3IoZXJybm8pKTsKKwkJZ290byBvdXQ7CisJfQogCiAJcGZuID0gMDsK
-IAlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX2xvYWRfbWVtb3J5OyBpKyspIHsKQEAgLTUyNTUs
-MTEgKzUyNjMsMzUgQEAKIAkJCSAqICAtIHhlbiBoZWFwIGFyZWEsIG9yCiAJCQkgKiAgLSBzZWxl
-Y3RlZCBkb21haW4gcGFnZQogCQkJICovCi0JCQlpZiAoX2RvbWFpbiA9PSAwIHx8CisJCQlpZiAo
-IShfZG9tYWluID09IDAgfHwKIAkJCQkoaW5mby0+eGVuX2hlYXBfc3RhcnQgPD0gcGZuICYmIHBm
-biA8IGluZm8tPnhlbl9oZWFwX2VuZCkgfHwKLQkJCQkoKGNvdW50X2luZm8gJiAweGZmZmYpICYm
-IGlzX3NlbGVjdF9kb21haW4oaW5mbywgX2RvbWFpbikpKSB7Ci0JCQkJc2V0X2JpdG1hcChibTIu
-YnVmLCBwZm4lUEZOX0JVRkJJVE1BUCwgMSk7CisJCQkJKChjb3VudF9pbmZvICYgMHhmZmZmKSAm
-JiBpc19zZWxlY3RfZG9tYWluKGluZm8sIF9kb21haW4pKSkpIHsKKwkJCQljb250aW51ZTsKKwkJ
-CX0KKwkJCWlmIChpbmZvLT5kdW1wX2xldmVsICYgRExfRVhDTFVERV9aRVJPKSB7CisJCQkJcGFk
-ZHIgPSAodW5zaWduZWQgbG9uZyBsb25nKXBmbiAqIGluZm8tPnBhZ2Vfc2l6ZTsKKwkJCQlvZmZz
-ZXRfcGFnZSA9IHBhZGRyX3RvX29mZnNldChpbmZvLCBwYWRkcik7CisJCQkJaWYgKCFvZmZzZXRf
-cGFnZSkgeworCQkJCQlFUlJNU0coIkNhbid0IGNvbnZlcnQgcGh5c2FkZHIoJWxseCkgdG8gYSBv
-ZmZzZXQuXG4iLAorCQkJCQkgICAgcGFkZHIpOworCQkJCQlnb3RvIG91dDsKKwkJCQl9CisJCQkJ
-aWYgKGxzZWVrKGluZm8tPmZkX21lbW9yeSwgb2Zmc2V0X3BhZ2UsCisJCQkJICAgIFNFRUtfU0VU
-KSA9PSAob2ZmX3QpLTEpIHsKKwkJCQkJRVJSTVNHKCJDYW4ndCBzZWVrIHRoZSBkdW1wIG1lbW9y
-eSglcykuICVzXG4iLAorCQkJCQkgICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5v
-KSk7CisJCQkJCWdvdG8gb3V0OworCQkJCX0KKwkJCQlpZiAocmVhZChpbmZvLT5mZF9tZW1vcnks
-IGJ1ZiwgaW5mby0+cGFnZV9zaXplKQorCQkJCSAgICAhPSBpbmZvLT5wYWdlX3NpemUpIHsKKwkJ
-CQkJRVJSTVNHKCJDYW4ndCByZWFkIHRoZSBkdW1wIG1lbW9yeSglcykuICVzXG4iLAorCQkJCQkg
-ICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5vKSk7CisJCQkJCWdvdG8gb3V0Owor
-CQkJCX0KKwkJCQlpZiAoaXNfemVyb19wYWdlKGJ1ZiwgaW5mby0+cGFnZV9zaXplKSkKKwkJCQkJ
-Y29udGludWU7CiAJCQl9CisJCQlzZXRfYml0bWFwKGJtMi5idWYsIHBmbiVQRk5fQlVGQklUTUFQ
-LCAxKTsKIAkJfQogCX0KIApAQCAtNTI3NSw2ICs1MzA3LDggQEAKIG91dDoKIAlpZiAoYm0yLmJ1
-ZiAhPSBOVUxMKQogCQlmcmVlKGJtMi5idWYpOworCWlmIChidWYgIT0gTlVMTCkKKwkJZnJlZShi
-dWYpOwogCiAJcmV0dXJuIHJldDsKIH0KQEAgLTU1NDYsNyArNTU4MCw3IEBACiAJCQlNU0coIi1F
-IG11c3QgYmUgc3BlY2lmaWVkIHdpdGggLS14ZW4tc3ltcyBvciAtLXhlbi12bWNvcmVpbmZvLlxu
-Iik7CiAJCQlnb3RvIG91dDsKIAkJfQotCQlpbmZvLT5kdW1wX2xldmVsID0gRExfRVhDTFVERV9Y
-RU47CisJCWluZm8tPmR1bXBfbGV2ZWwgfD0gRExfRVhDTFVERV9YRU47CiAJCXJldHVybiBoYW5k
-bGVfeGVuKGluZm8pOwogCiAJfSBlbHNlIGlmIChpbmZvLT5mbGFnX3JlYXJyYW5nZSkgewo=
---------_46C0E896E2A7069B6410_MULTIPART_MIXED_
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------_46C0E896E2A7069B6410_MULTIPART_MIXED_--
-
-
