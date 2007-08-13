@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from dsl022.labridge.com ([206.117.136.22] helo=perches.com)
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IKTSA-0005Px-LL
-	for kexec@lists.infradead.org; Mon, 13 Aug 2007 07:31:03 +0100
-Date: Sun, 12 Aug 2007 23:30:38 -0700
+	id 1IKTSJ-0005Q1-80
+	for kexec@lists.infradead.org; Mon, 13 Aug 2007 07:31:13 +0100
+Date: Sun, 12 Aug 2007 23:30:49 -0700
 From: joe@perches.com
-Subject: [PATCH] [275/2many] MAINTAINERS - KDUMP
-Message-ID: <46bffa8e.NHuk7h7puR+3eDXo%joe@perches.com>
+Subject: [PATCH] [281/2many] MAINTAINERS - KEXEC
+Message-ID: <46bffa99.nQ27DQOgkKo2uOy+%joe@perches.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -20,24 +20,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com, torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, hbabu@us.ibm.com, akpm@linux-foundation.org
+To: torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, akpm@linux-foundation.org
 
 Add file pattern to MAINTAINER entry
 
 Signed-off-by: Joe Perches <joe@perches.com>
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 1ea2c63..d61676a 100644
+index d9a53d9..71738bd 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -2634,6 +2634,7 @@ L:	kexec@lists.infradead.org
+@@ -2694,6 +2694,8 @@ W:	http://www.xmission.com/~ebiederm/files/kexec/
  L:	linux-kernel@vger.kernel.org
- W:	http://lse.sourceforge.net/kdump/
+ L:	kexec@lists.infradead.org
  S:	Maintained
-+F:	Documentation/kdump
++F:	include/linux/kexec.h
++F:	kernel/kexec.c
  
- KERNEL AUTOMOUNTER (AUTOFS)
- P:	H. Peter Anvin
+ KPROBES
+ P:	Prasanna S Panchamukhi
 
 _______________________________________________
 kexec mailing list
