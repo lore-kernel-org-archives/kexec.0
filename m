@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate1.fujitsu-siemens.com ([217.115.66.35])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IJBuj-0000oh-LU
-	for kexec@lists.infradead.org; Thu, 09 Aug 2007 13:35:18 -0400
-Message-ID: <46BB504A.9000100@fujitsu-siemens.com>
-Date: Thu, 09 Aug 2007 19:35:06 +0200
-From: Martin Wilck <martin.wilck@fujitsu-siemens.com>
-MIME-Version: 1.0
-Subject: Re: PATCH/RFC: [kdump] fix APIC shutdown sequence
-References: <46B73955.2080007@fujitsu-siemens.com>
-	<20070807142928.GA18839@in.ibm.com>
-	<46B8AECA.7050908@fujitsu-siemens.com>
-	<20070808103603.GC13808@in.ibm.com>
-	<Pine.LNX.4.64.0708081003000.29193@bogart.boston.redhat.com>
-	<20070808144239.GA1499@in.ibm.com>
-	<46BA0844.9080703@fujitsu-siemens.com>
-	<20070809101128.GA14738@in.ibm.com>
-In-Reply-To: <20070809101128.GA14738@in.ibm.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IKPW9-0001Tv-N6
+	for kexec@lists.infradead.org; Sun, 12 Aug 2007 22:18:55 -0400
+Subject: makedumpfile-1.1.6: linux-2.6.22 support
+Message-Id: <20070813111858oomichi@mail.jp.nec.com>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Mon, 13 Aug 2007 11:18:58 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,49 +20,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "vgoyal@in.ibm.com" <vgoyal@in.ibm.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Chip Coldwell <coldwell@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Akira Imamura <aimamura@redhat.com>
 
-Vivek Goyal wrote:
 
-> Did you also check IRR bits on LAPIC. May be some interrupt is already
-> being served and your new interrupts has been queued on LAPIC and IRR bit
-> on LAPIC is set?
+Hi,
 
-That's it. Whenever the IO-APIC IRR bit is set, I see the LAPIC IRR bit set, too.
-I never see any ISR bits set. Very rarely I see that IRQs are IRQ_PENDING or
-IRQ_INPROGRESS, but that's apparently unrelated to the problem.
+makedumpfile version 1.1.6 is released.
+Please test it. Your opinions/comments are welcome.
 
-Actually, I often see APIC IRR bits set, but it only seems to matter for
-IRQs coming from the secondary IO-APIC.
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
 
-Unfortunately, just writng APIC_EOI in this situation (when an IRR bit is set)
-has no effect.
 
-I have tried to set the IRQ_DISABLED flag for all IRQs. From my understanding,
-if I re-enable IRQs, that disables the actual IRQ handlers, but the ack()
-function of the IRQ chip (which, in our case, sends EOI) is called anyway.
-*That appears to work*, in the kdump kernel the IRR is cleared.
+Changelog:
 
-I'll run an overnight test with that technique tonight.
+Changelog:
+o linux-2.6.22 support.
+  The method for getting the member offset of "page.mapping" is
+  applied for linux-2.6.22.
+  Old makedumpfile assumed that there was "mapping" in the first
+  union in structure "page". But on linux-2.6.22, there is "mapping"
+  in the second union, because "_mapcount" and structure for slub
+  are packed in the first union. Then, new makedumpfile gets the
+  offset by searching "mapping" in each union.
 
-Martin
+o Change the check method of free_pages for linux-2.6.21 or later.
+  On linux-2.6.21 or later, the number of free_pages (vm_stat[0])
+  is sometimes different from the one of the pages listed in
+  "free_area" actually, because the former is flushed asynchronously.
+  Then, new makedumpfile doesn't check these numbers, and confirms
+  the free_pages only by checking whether the list "free_area" is
+  not corrupted.
 
--- 
-Martin Wilck
-PRIMERGY System Software Engineer
-FSC IP ESP DE6
+o Some cleanups
+  - Cleanup the description for '--message-level' by Akira Imamura.
+  - Cleanup the structures DumpInfo and vm_table.
+  - Cleanup the dwarf method.
+  - Cleanup page_to_pfn() method.
 
-Fujitsu Siemens Computers GmbH
-Heinz-Nixdorf-Ring 1
-33106 Paderborn
-Germany
 
-Tel:			++49 5251 8 15113
-Fax:			++49 5251 8 20409
-Email:			mailto:martin.wilck@fujitsu-siemens.com
-Internet:		http://www.fujitsu-siemens.com
-Company Details:	http://www.fujitsu-siemens.com/imprint.html
+You can download the latest makedumpfile(ver. 1.1.6) from the following URL.
+Details of the change are written on the CVS page of the following site.
+https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-1.1.6.tar.gz"
+  2. "cd makedumpfile"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
