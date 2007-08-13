@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IJOPj-00029r-2T
-	for kexec@lists.infradead.org; Fri, 10 Aug 2007 02:56:04 -0400
-Date: Fri, 10 Aug 2007 15:56:32 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: Re: makedumpfile-1.1.5: Xen support
-In-Reply-To: <20070731071034.DBA9.ODA@valinux.co.jp>
-References: <46ADDF9D.4060704@redhat.com>
-	<20070731071034.DBA9.ODA@valinux.co.jp>
-Message-Id: <20070810154045.DC1F.ODA@valinux.co.jp>
-MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="------_46BC086DE24406A334A8_MULTIPART_MIXED_"
-Content-Transfer-Encoding: 7bit
+	id 1IKUVY-000707-Hi
+	for kexec@lists.infradead.org; Mon, 13 Aug 2007 03:38:38 -0400
+Subject: [RFC][PATCH 2/3] Embed vmcoreinfo into kernel file
+In-reply-to: <20070813163212oomichi@mail.jp.nec.com>
+Message-Id: <20070813163810oomichi@mail.jp.nec.com>
+References: <20070813163212oomichi@mail.jp.nec.com>
+Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Mon, 13 Aug 2007 16:38:10 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,114 +18,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Don Zickus <dzickus@redhat.com>, Bernhard Walle <bwalle@suse.de>, Vivek Goyal <vgoyal@in.ibm.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>
 
---------_46BC086DE24406A334A8_MULTIPART_MIXED_
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
 
-Hi,
+Patches:
+- [2/3] patch for kexec-tools-testing-20070330.
+  Changelog:
+  * Rename "mkdfinfo" to "vmcoreinfo".
 
-> Hmm, adding to skip zero-filled pages is easy but I wonder
-> how effective it is ...
+---
+Signed-off-by: Dan Aloni <da-x@monatomic.org>
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
-I found it is sometimes effective.
-
-The attached patch enables the "-d" option with --xen-syms.
-Note that only the level 1 (skip zero-filled pages) is supported.
-
-ex. # makedumpfile -E -d 1 --xen-syms xen-syms.debug vmcore output
-
-Thanks.
-Itsuro Oda
-
-On Tue, 31 Jul 2007 07:19:48 +0900
-Itsuro ODA <oda@valinux.co.jp> wrote:
-
-> Hi,
-> 
-> > Is the "-d" dump_level option completely ignored, or can it
-> > (without vmlinux awareness) recognize and skip zero-filled
-> > pages?
-> 
-> Yes, "-d" is ignored.
-> 
-> Hmm, adding to skip zero-filled pages is easy but I wonder
-> how effective it is ...
-> 
-> Thanks.
-> -- 
-> Itsuro ODA <oda@valinux.co.jp>
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
--- 
-Itsuro ODA <oda@valinux.co.jp>
-
---------_46BC086DE24406A334A8_MULTIPART_MIXED_
-Content-Type: application/octet-stream;
- name="patch-zero-070810"
-Content-Disposition: attachment;
- filename="patch-zero-070810"
-Content-Transfer-Encoding: base64
-
-LS0tIG1ha2VkdW1wZmlsZS5jLm9yZwkyMDA3LTA4LTEwIDE1OjE0OjIyLjAwMDAwMDAwMCArMDkw
-MAorKysgbWFrZWR1bXBmaWxlLmMJMjAwNy0wOC0xMCAxNTo1MToxNi4wMDAwMDAwMDAgKzA5MDAK
-QEAgLTUxOTUsNiArNTE5NSw5IEBACiAJaW50IGk7CiAJc3RydWN0IHB0X2xvYWRfc2VnbWVudCAq
-cGxzOwogCWludCByZXQgPSBGQUxTRTsKKwl1bnNpZ25lZCBsb25nIGxvbmcgcGFkZHI7CisJb2Zm
-X3Qgb2Zmc2V0X3BhZ2U7CisJdW5zaWduZWQgY2hhciAqYnVmID0gTlVMTDsKIAogCS8qCiAJICog
-Tk9URTogdGhlIGZpcnN0IGhhbGYgb2YgYml0bWFwIGlzIG5vdCB1c2VkIGZvciBYZW4gZXh0cmFj
-dGlvbgpAQCAtNTIxMSw2ICs1MjE0LDExIEBACiAJCSAgICBzdHJlcnJvcihlcnJubykpOwogCQln
-b3RvIG91dDsKIAl9CisJaWYgKChidWYgPSBtYWxsb2MoaW5mby0+cGFnZV9zaXplKSkgPT0gTlVM
-TCkgeworCQlFUlJNU0coIkNhbid0IGFsbG9jYXRlIG1lbW9yeSBmb3IgdGhlIHBhZ2UuICVzXG4i
-LAorCQkgICAgc3RyZXJyb3IoZXJybm8pKTsKKwkJZ290byBvdXQ7CisJfQogCiAJcGZuID0gMDsK
-IAlmb3IgKGkgPSAwOyBpIDwgaW5mby0+bnVtX2xvYWRfbWVtb3J5OyBpKyspIHsKQEAgLTUyNTUs
-MTEgKzUyNjMsMzUgQEAKIAkJCSAqICAtIHhlbiBoZWFwIGFyZWEsIG9yCiAJCQkgKiAgLSBzZWxl
-Y3RlZCBkb21haW4gcGFnZQogCQkJICovCi0JCQlpZiAoX2RvbWFpbiA9PSAwIHx8CisJCQlpZiAo
-IShfZG9tYWluID09IDAgfHwKIAkJCQkoaW5mby0+eGVuX2hlYXBfc3RhcnQgPD0gcGZuICYmIHBm
-biA8IGluZm8tPnhlbl9oZWFwX2VuZCkgfHwKLQkJCQkoKGNvdW50X2luZm8gJiAweGZmZmYpICYm
-IGlzX3NlbGVjdF9kb21haW4oaW5mbywgX2RvbWFpbikpKSB7Ci0JCQkJc2V0X2JpdG1hcChibTIu
-YnVmLCBwZm4lUEZOX0JVRkJJVE1BUCwgMSk7CisJCQkJKChjb3VudF9pbmZvICYgMHhmZmZmKSAm
-JiBpc19zZWxlY3RfZG9tYWluKGluZm8sIF9kb21haW4pKSkpIHsKKwkJCQljb250aW51ZTsKKwkJ
-CX0KKwkJCWlmIChpbmZvLT5kdW1wX2xldmVsICYgRExfRVhDTFVERV9aRVJPKSB7CisJCQkJcGFk
-ZHIgPSAodW5zaWduZWQgbG9uZyBsb25nKXBmbiAqIGluZm8tPnBhZ2Vfc2l6ZTsKKwkJCQlvZmZz
-ZXRfcGFnZSA9IHBhZGRyX3RvX29mZnNldChpbmZvLCBwYWRkcik7CisJCQkJaWYgKCFvZmZzZXRf
-cGFnZSkgeworCQkJCQlFUlJNU0coIkNhbid0IGNvbnZlcnQgcGh5c2FkZHIoJWxseCkgdG8gYSBv
-ZmZzZXQuXG4iLAorCQkJCQkgICAgcGFkZHIpOworCQkJCQlnb3RvIG91dDsKKwkJCQl9CisJCQkJ
-aWYgKGxzZWVrKGluZm8tPmZkX21lbW9yeSwgb2Zmc2V0X3BhZ2UsCisJCQkJICAgIFNFRUtfU0VU
-KSA9PSAob2ZmX3QpLTEpIHsKKwkJCQkJRVJSTVNHKCJDYW4ndCBzZWVrIHRoZSBkdW1wIG1lbW9y
-eSglcykuICVzXG4iLAorCQkJCQkgICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5v
-KSk7CisJCQkJCWdvdG8gb3V0OworCQkJCX0KKwkJCQlpZiAocmVhZChpbmZvLT5mZF9tZW1vcnks
-IGJ1ZiwgaW5mby0+cGFnZV9zaXplKQorCQkJCSAgICAhPSBpbmZvLT5wYWdlX3NpemUpIHsKKwkJ
-CQkJRVJSTVNHKCJDYW4ndCByZWFkIHRoZSBkdW1wIG1lbW9yeSglcykuICVzXG4iLAorCQkJCQkg
-ICAgaW5mby0+bmFtZV9tZW1vcnksIHN0cmVycm9yKGVycm5vKSk7CisJCQkJCWdvdG8gb3V0Owor
-CQkJCX0KKwkJCQlpZiAoaXNfemVyb19wYWdlKGJ1ZiwgaW5mby0+cGFnZV9zaXplKSkKKwkJCQkJ
-Y29udGludWU7CiAJCQl9CisJCQlzZXRfYml0bWFwKGJtMi5idWYsIHBmbiVQRk5fQlVGQklUTUFQ
-LCAxKTsKIAkJfQogCX0KIApAQCAtNTI3NSw2ICs1MzA3LDggQEAKIG91dDoKIAlpZiAoYm0yLmJ1
-ZiAhPSBOVUxMKQogCQlmcmVlKGJtMi5idWYpOworCWlmIChidWYgIT0gTlVMTCkKKwkJZnJlZShi
-dWYpOwogCiAJcmV0dXJuIHJldDsKIH0KQEAgLTU1NDYsNyArNTU4MCw3IEBACiAJCQlNU0coIi1F
-IG11c3QgYmUgc3BlY2lmaWVkIHdpdGggLS14ZW4tc3ltcyBvciAtLXhlbi12bWNvcmVpbmZvLlxu
-Iik7CiAJCQlnb3RvIG91dDsKIAkJfQotCQlpbmZvLT5kdW1wX2xldmVsID0gRExfRVhDTFVERV9Y
-RU47CisJCWluZm8tPmR1bXBfbGV2ZWwgfD0gRExfRVhDTFVERV9YRU47CiAJCXJldHVybiBoYW5k
-bGVfeGVuKGluZm8pOwogCiAJfSBlbHNlIGlmIChpbmZvLT5mbGFnX3JlYXJyYW5nZSkgewo=
---------_46BC086DE24406A334A8_MULTIPART_MIXED_
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+---
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c kexec-tools/kexec/crashdump-elf.c
+--- backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump-elf.c	2007-08-03 14:45:47.000000000 +0900
+@@ -36,6 +36,8 @@ int FUNC(struct kexec_info *info,
+ 	char *bufp;
+ 	long int nr_cpus = 0;
+ 	uint64_t notes_addr, notes_len;
++	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
++	int has_vmcoreinfo = 0;
+ 	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
+ 
+ 	if (xen_present())
+@@ -47,7 +49,11 @@ int FUNC(struct kexec_info *info,
+ 		return -1;
+ 	}
+ 
+-	sz = sizeof(EHDR) + nr_cpus * sizeof(PHDR) + ranges * sizeof(PHDR);
++	if (get_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len) == 0) {
++		has_vmcoreinfo = 1;
++	}
++
++	sz = sizeof(EHDR) + (nr_cpus + has_vmcoreinfo) * sizeof(PHDR) + ranges * sizeof(PHDR);
+ 
+ 	/*
+ 	 * Certain architectures such as x86_64 and ia64 require a separate
+@@ -148,6 +154,21 @@ int FUNC(struct kexec_info *info,
+ 		dfprintf_phdr(stdout, "Elf header", phdr);
+ 	}
+ 
++	if (has_vmcoreinfo) {
++		phdr = (PHDR *) bufp;
++		bufp += sizeof(PHDR);
++		phdr->p_type	= PT_NOTE;
++		phdr->p_flags	= 0;
++		phdr->p_offset  = phdr->p_paddr = vmcoreinfo_addr;
++		phdr->p_vaddr   = 0;
++		phdr->p_filesz	= phdr->p_memsz	= vmcoreinfo_len;
++		/* Do we need any alignment of segments? */
++		phdr->p_align	= 0;
++
++		(elf->e_phnum)++;
++		dfprintf_phdr(stdout, "vmcoreinfo header", phdr);
++	}
++
+ 	/* Setup an PT_LOAD type program header for the region where
+ 	 * Kernel is mapped if info->kern_size is non-zero.
+ 	 */
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.c kexec-tools/kexec/crashdump.c
+--- backup/kexec-tools-testing-20070330/kexec/crashdump.c	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump.c	2007-08-03 14:45:05.000000000 +0900
+@@ -108,3 +108,35 @@ int get_crash_notes_per_cpu(int cpu, uin
+ 
+ 	return 0;
+ }
++
++/* Returns the physical address of start of crash notes buffer for a kernel. */
++int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
++{
++	char kdump_info[PATH_MAX];
++	char line[MAX_LINE];
++	int count;
++	FILE *fp;
++	unsigned long long temp, temp2;
++
++	*addr = 0;
++	*len = 0;
++
++	sprintf(kdump_info, "/sys/kernel/vmcoreinfo");
++	fp = fopen(kdump_info, "r");
++	if (!fp) {
++		die("Could not open \"%s\": %s\n", kdump_info,
++		    strerror(errno));
++		return -1;
++	}
++
++	if (!fgets(line, sizeof(line), fp))
++		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
++	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
++	if (count != 2)
++		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
++
++	*addr = (uint64_t) temp;
++	*len = (uint64_t) temp2;
++
++	return 0;
++}
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.h kexec-tools/kexec/crashdump.h
+--- backup/kexec-tools-testing-20070330/kexec/crashdump.h	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump.h	2007-08-03 14:45:05.000000000 +0900
+@@ -2,6 +2,7 @@
+ #define CRASHDUMP_H
+ 
+ extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
++extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
+ 
+ /* Need to find a better way to determine per cpu notes section size. */
+ #define MAX_NOTE_BYTES		1024
+_
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------_46BC086DE24406A334A8_MULTIPART_MIXED_--
-
-
