@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IL1uC-0007fH-9K
-	for kexec@lists.infradead.org; Tue, 14 Aug 2007 15:18:17 -0400
-Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id BADFA128E5
-	for <kexec@lists.infradead.org>; Tue, 14 Aug 2007 21:18:10 +0200 (CEST)
-Date: Tue, 14 Aug 2007 21:18:13 +0200
+	id 1IL4Q8-0000Yu-4W
+	for kexec@lists.infradead.org; Tue, 14 Aug 2007 17:59:27 -0400
+Date: Tue, 14 Aug 2007 23:59:22 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: Kdump for ARM (vmcore generation problem)
-Message-ID: <20070814191812.GA31273@suse.de>
-References: <46C1AA1A.6050907@samsung.com>
+Subject: Re: [RFC][PATCH 3/3] Embed vmcoreinfo into kernel file
+Message-ID: <20070814215922.GA16408@suse.de>
+References: <20070813163212oomichi@mail.jp.nec.com>
+	<20070813163934oomichi@mail.jp.nec.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46C1AA1A.6050907@samsung.com>
+In-Reply-To: <20070813163934oomichi@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,16 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Vivek Goyal <vgoyal@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>, Dan Aloni <da-x@monatomic.org>
 
-* Indraneel <indraneel.m@samsung.com> [2007-08-14 15:11]:
-> I'm trying to make Kdump work for ARM. Till now i've managed to get the 
-> /dev/oldmem interface working for taking dumps. Now i want to get the 
-> /proc/vmcore interface working.
-> I'm unclear how to generate the elfcore headers required by routines in 
-> vmcore.c.
+Hello,
 
-The core headers are generated in kexec-tools (userspace).
+* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-08-13 09:39]:
+> +#define FILENAME_VMCOREINFO		"/tmp/vmcoreinfo.tmp"
+
+Wouldn't it be better to use mkstemp() here? It also makes sense to
+copy the whole vmcore first and run makedumpfile after this in a full
+featured system, e.g. before sending the dump file via FTP.
+
+Then, you have the well-known security problems when using a temporary
+file with a static name -- as well as two makedumpfile processes
+running in parallel. While this all is not very likely, it's also not
+guaranteed that this doesn't happen.
 
 
 Thanks,
