@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from noname.neutralserver.com ([70.84.186.210])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IKdrv-00078p-Bz
-	for kexec@lists.infradead.org; Mon, 13 Aug 2007 13:38:21 -0400
-Date: Mon, 13 Aug 2007 20:38:11 +0300
-From: Dan Aloni <da-x@monatomic.org>
-Subject: Re: [RFC][PATCH 1/3] Embed vmcoreinfo into kernel file
-Message-ID: <20070813173811.GA14191@localdomain>
-References: <20070813163212oomichi@mail.jp.nec.com>
-	<20070813163653oomichi@mail.jp.nec.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IKrru-0001aV-E9
+	for kexec@lists.infradead.org; Tue, 14 Aug 2007 04:35:18 -0400
+Message-ID: <46C1691E.7090708@ah.jp.nec.com>
+Date: Tue, 14 Aug 2007 17:34:38 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070813163653oomichi@mail.jp.nec.com>
+Subject: Re: [patch] add kdump_after_notifier
+References: <20070802112852.GA7054@in.ibm.com>
+	<31687.1186113947@kao2.melbourne.sgi.com>
+	<20070805110746.GA12540@in.ibm.com>
+In-Reply-To: <20070805110746.GA12540@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Don Zickus <dzickus@redhat.com>, Bernhard Walle <bwalle@suse.de>, Vivek Goyal <vgoyal@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>, Neil Horman <nhorman@redhat.com>
+To: vgoyal@in.ibm.com
+Cc: Keith Owens <kaos@sgi.com>, k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Mon, Aug 13, 2007 at 04:36:53PM +0900, Ken'ichi Ohmichi wrote:
->[..]
-> Patches:
-> - [1/3] patch for linux-2.6.22.
->   Changelog:
->   * Rename "mkdfinfo" to "vmcoreinfo".
->   * Multi memory models (FLATMEM, DISCONTIGMEM, and SPASEMEM) are
->     supported.
->   * The elf note typedef for vmcoreinfo is added because the original
->     elf note size is limited to 1024.
->   * The generation of the elf note is moved to boot time instead of
->     crash time.
+Vivek Goyal wrote:
+> On Fri, Aug 03, 2007 at 02:05:47PM +1000, Keith Owens wrote:
+> 
+> 
+> To sum up, couple of options come to mind.
+> 
+> - Register all the RAS tools on die notifier and panic
+>   notifier lists with fairly high priority. Export list
+>   of RAS tools to user space and allow users to decide the
+>   order of execution and priority of RAS tools.
+> 
+> - Create a separate RAS tool notifier list (ras_tool_notifer_list).
+>   All the RAS tools register on this list. This list gets priority
+>   over die or panic notifier list. User decides the oder of execution
+>   of RAS tools. 
+> 
+>   Here assumption is that above list will not be exported to modules.
+>   All the RAS tools will be in kernel and they always get a priority
+>   to inspect an event.
+> 
+> What do others think?
 
-This looks very good. Just one suggestion - in order to reduce clutter 
-from kernel/kexec.c (as to avoid #ifdefs) perhaps it might be better 
-to have crash_save_vmcoreinfo_init() additionally call an arch-specific 
-arch_crash_save_vmcoreinfo_init() function and have that append all 
-the arch-specific stuff.
+Very good idea. But there is a problem how to give default priority to RAS tools.
 
--- 
-Dan Aloni
-XIV LTD, http://www.xivstorage.com
-da-x (at) monatomic.org, dan (at) xiv.co.il
+How about priority changeable notifier_list? User can change list order
+dynamically if they want. Of course, we have to give highest priority to kdump
+by default. It is very useful for users who want to use some RAS tools.
 
 _______________________________________________
 kexec mailing list
