@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IKjOe-0002NX-BT
-	for kexec@lists.infradead.org; Mon, 13 Aug 2007 19:32:31 -0400
-Received: from [172.16.3.165] (vagw.valinux.co.jp [210.128.90.14])
-	by mail.valinux.co.jp (Postfix) with ESMTP id 08EA12DC86E
-	for <kexec@lists.infradead.org>; Tue, 14 Aug 2007 08:32:27 +0900 (JST)
-Date: Tue, 14 Aug 2007 08:32:59 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: Re: makedumpfile-1.1.5: Xen support
-Message-Id: <20070814083117.DC32.ODA@valinux.co.jp>
-MIME-Version: 1.0
+	id 1ILNq4-0004W3-HX
+	for kexec@lists.infradead.org; Wed, 15 Aug 2007 14:43:29 -0400
+Date: Wed, 15 Aug 2007 11:44:41 -0700
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
+Subject: Re: [PATH 1/1] Kexec jump - v2 - kexec jump
+Message-ID: <20070815184441.GA14161@nlxdcldnl2.cl.intel.com>
+References: <1184483639.1898.99.camel@caritas-dev.intel.com>
+	<20070731095101.GA1774@elf.ucw.cz>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070731095101.GA1774@elf.ucw.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,133 +24,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: kexec@lists.infradead.org
 
-Hi,
+Pavel,
 
-> Hmm, adding to skip zero-filled pages is easy but I wonder
-> how effective it is ...
+Are you still having problem w/ kexec and the Intel NIC?  What kernel
+are you trying to kexec?  There's a problem when placing the e1000
+into D3hot when an older kernel is the target of the kexec.  The problem
+is manifested by the BARs being 0 in the kexec'd kernel.  We've checked
+the PCI specs and believe the e1000 is behaving in a compliant way.  
+We've seen this when trying to use kexec to boot any RHEL4 (2.6.9-basis)
+kernel; I've not seen it when trying to kexec 2.6.14 or later kernels.
 
-I found it is sometimes effective.
+We see work was done in later kernels to properly handle the D3hot to D0
+transition that's so problematic to 2.6.9.  And ugly hack that works
+around this problem is to not put the NIC in D3hot if we know we're going
+to kexec an older kernel--fortunately, this appears to be safe even when a
+newer kernel, that doesn't have that problem, is to be started.  I
+published that ugly nasty patch to the kboot list as that's the
+environment whence we ran into the problem and it only affects older
+kernels.
 
-The attached patch enables the "-d" option with --xen-syms.
-Note that only the level 1 (skip zero-filled pages) is supported.
-
-ex. # makedumpfile -E -d 1 --xen-syms xen-syms.debug vmcore output
-
-Thanks.
-Itsuro Oda
-
-On Tue, 31 Jul 2007 07:19:48 +0900
-Itsuro ODA <oda@valinux.co.jp> wrote:
-
-> Hi,
-> 
-> > Is the "-d" dump_level option completely ignored, or can it
-> > (without vmlinux awareness) recognize and skip zero-filled
-> > pages?
-> 
-> Yes, "-d" is ignored.
-> 
-> Hmm, adding to skip zero-filled pages is easy but I wonder
-> how effective it is ...
-> 
-> Thanks.
-> -- 
-> Itsuro ODA <oda@valinux.co.jp>
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexe
--- 
---- makedumpfile.c.org	2007-08-10 15:14:22.000000000 +0900
-+++ makedumpfile.c	2007-08-10 15:51:16.000000000 +0900
-@@ -5195,6 +5195,9 @@
- 	int i;
- 	struct pt_load_segment *pls;
- 	int ret = FALSE;
-+	unsigned long long paddr;
-+	off_t offset_page;
-+	unsigned char *buf = NULL;
- 
- 	/*
- 	 * NOTE: the first half of bitmap is not used for Xen extraction
-@@ -5211,6 +5214,11 @@
- 		    strerror(errno));
- 		goto out;
- 	}
-+	if ((buf = malloc(info->page_size)) == NULL) {
-+		ERRMSG("Can't allocate memory for the page. %s\n",
-+		    strerror(errno));
-+		goto out;
-+	}
- 
- 	pfn = 0;
- 	for (i = 0; i < info->num_load_memory; i++) {
-@@ -5255,11 +5263,35 @@
- 			 *  - xen heap area, or
- 			 *  - selected domain page
- 			 */
--			if (_domain == 0 ||
-+			if (!(_domain == 0 ||
- 				(info->xen_heap_start <= pfn && pfn < info->xen_heap_end) ||
--				((count_info & 0xffff) && is_select_domain(info, _domain))) {
--				set_bitmap(bm2.buf, pfn%PFN_BUFBITMAP, 1);
-+				((count_info & 0xffff) && is_select_domain(info, _domain)))) {
-+				continue;
-+			}
-+			if (info->dump_level & DL_EXCLUDE_ZERO) {
-+				paddr = (unsigned long long)pfn * info->page_size;
-+				offset_page = paddr_to_offset(info, paddr);
-+				if (!offset_page) {
-+					ERRMSG("Can't convert physaddr(%llx) to a offset.\n",
-+					    paddr);
-+					goto out;
-+				}
-+				if (lseek(info->fd_memory, offset_page,
-+				    SEEK_SET) == (off_t)-1) {
-+					ERRMSG("Can't seek the dump memory(%s). %s\n",
-+					    info->name_memory, strerror(errno));
-+					goto out;
-+				}
-+				if (read(info->fd_memory, buf, info->page_size)
-+				    != info->page_size) {
-+					ERRMSG("Can't read the dump memory(%s). %s\n",
-+					    info->name_memory, strerror(errno));
-+					goto out;
-+				}
-+				if (is_zero_page(buf, info->page_size))
-+					continue;
- 			}
-+			set_bitmap(bm2.buf, pfn%PFN_BUFBITMAP, 1);
- 		}
- 	}
- 
-@@ -5275,6 +5307,8 @@
- out:
- 	if (bm2.buf != NULL)
- 		free(bm2.buf);
-+	if (buf != NULL)
-+		free(buf);
- 
- 	return ret;
- }
-@@ -5546,7 +5580,7 @@
- 			MSG("-E must be specified with --xen-syms or --xen-vmcoreinfo.\n");
- 			goto out;
- 		}
--		info->dump_level = DL_EXCLUDE_XEN;
-+		info->dump_level |= DL_EXCLUDE_XEN;
- 		return handle_xen(info);
- 
- 	} else if (info->flag_rearrange) {
-
+I'll be happy to provide more detail if needed.
 
 -- 
-Itsuro ODA <oda@valinux.co.jp>
-
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
