@@ -1,32 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e33.co.us.ibm.com ([32.97.110.151])
+Received: from e4.ny.us.ibm.com ([32.97.182.144])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1ILzVP-00049P-78
-	for kexec@lists.infradead.org; Fri, 17 Aug 2007 06:56:41 -0400
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e33.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l7HAuTlI029744
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 06:56:29 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l7HAuTGu201286
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 04:56:29 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l7HAuTxv004861
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 04:56:29 -0600
-Date: Fri, 17 Aug 2007 16:26:30 +0530
+	id 1IM0vi-0004ni-VT
+	for kexec@lists.infradead.org; Fri, 17 Aug 2007 08:27:56 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l7HCRlps009437
+	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
+Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l7HCRloZ467104
+	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
+Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
+	by d01av01.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l7HCRlB2024589
+	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
+Date: Fri, 17 Aug 2007 17:58:03 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [patch] add kdump_after_notifier
-Message-ID: <20070817105630.GA18167@in.ibm.com>
-References: <20070802112852.GA7054@in.ibm.com>
-	<31687.1186113947@kao2.melbourne.sgi.com>
-	<20070805110746.GA12540@in.ibm.com>
-	<46C1691E.7090708@ah.jp.nec.com> <20070814083710.GA14538@suse.de>
-	<20070814132454.GA8293@in.ibm.com> <46C4184B.5030303@ah.jp.nec.com>
+Subject: Re: [RFC][PATCH 1/3] Embed vmcoreinfo into kernel file
+Message-ID: <20070817122803.GB18167@in.ibm.com>
+References: <20070816042008.GB20860@in.ibm.com>
+	<20070817154331oomichi@mail.jp.nec.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46C4184B.5030303@ah.jp.nec.com>
+In-Reply-To: <20070817154331oomichi@mail.jp.nec.com>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -40,65 +36,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Don Zickus <dzickus@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>
 
-On Thu, Aug 16, 2007 at 06:26:35PM +0900, Takenori Nagano wrote:
-> Vivek Goyal wrote:
->  > So for the time being I think we can put RAS tools on die notifier list
-> > and if it runs into issues we can always think of creating a separate list.
-> > 
-> > Few things come to mind.
-> > 
-> > - Why there is a separate panic_notifier_list? Can't it be merged with
-> >   die_chain? die_val already got one of the event type as PANIC. If there
-> >   are no specific reasons then we should merge the two lists. Registering
-> >   RAS tools on a single list is easier.
+On Fri, Aug 17, 2007 at 03:43:31PM +0900, Ken'ichi Ohmichi wrote:
+[..]
+> >- There is another important field which I would like to see in vmcoreinfo
+> >  and that is time of crash (lets say CRASH_TIME). This will indicate the
+> >  timestamp when did system actually crash. One can read the time in
+> >  crash_kexec(), fill in the field and then save vmcore info note.
+> >
+> >  For this, either you need to scan the vmcoreinfo note again and fill in
+> >  the time stamp. Or you need to do vmcoreinfo note saving after crash
+> >  instead of boot time.
 > 
-> I think it is difficult, because die_chain is defined by each architecture.
+> Is it necessary of the field for timestamp ?
+> The crash utility can display the time of crash already like the following.
 > 
-
-I think die_chain is arch independent definition (kernel/die_notifier.c)? 
-But anyway, to begin with it can be done only for panic_notifier.
-
-> > - Modify Kdump to register on die_chain list. 
-> > - Modify Kdb to register on die_chain list.
-> > - Export all the registered members of die_chain through sysfs along with
-> >   their priorities. Priorities should be modifiable. Most likely one 
-> >   shall have to introduce additional field in struct notifier_block. This
-> >   field will be a string as an identifier of the user registerd. e.g
-> >   "Kdump", "Kdb" etc.
-> > 
-> > Now user will be able to view all the die_chain users through sysfs and
-> > be able to modify the order in which these should run by modifying their
-> > priority. Hence all the RAS tools can co-exist.
+> # crash vmlinux vmcore
+> [snip]
+>       KERNEL: vmlinux
+>     DUMPFILE: vmcore
+>         CPUS: 2
+>         DATE: Tue Jul 10 20:41:50 2007  <- Here
+>       UPTIME: 00:04:58
+> LOAD AVERAGE: 0.12, 0.22, 0.11
+>        TASKS: 88
+>     NODENAME: peak
+>      RELEASE: 2.6.16.46-0.12-default
+>      VERSION: #1 SMP Thu May 17 14:00:09 UTC 2007
+>      MACHINE: ia64  (1000 Mhz)
+>       MEMORY: 5.5 GB
+>        PANIC: "SysRq : Trigger a crashdump"
+>          PID: 3455
+>      COMMAND: "bash"
+>         TASK: e0000040f2f40000  [THREAD_INFO: e0000040f2f410d0]
+>          CPU: 0
+>        STATE: TASK_RUNNING (SYSRQ)
 > 
-> This is my image of your proposal.
-> 
-> - Print current order
-> 
-> # cat /sys/class/misc/debug/panic_notifier_list
-> priority   name
-> 1          IPMI
-> 2          watchdog
-> 3          Kdb
-> 4          Kdump
 > 
 
-I think Bernhard's suggestion looks better here. I noticed that 
-/sys/kernel/debug is already present. So how about following.
+But this requires a debug compiled vmlinux to be available on the system
+and that's a rarity. For example, we are exporting UTSNAME also which 
+can be retrieved by opening vmcore with crash.
 
-/sys/kernel/debug/kdump/priority
-/sys/kernel/debug/kdb/priority
-/sys/kernel/debug/IPMI/priority
+By exporting this, now one can write a small utility in second kernel,
+which can just look at the /proc/vmcore in second kernel, determine that
+machine had crashed and send a notification over network to other machine
+with crash time stamp.
+ 
+[..]
+> +#define SYMBOL(name) \
+> +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+> +#define SIZE(name) \
+> +	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
+> +#define OFFSET(name, field) \
+> +	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, &(((struct name *)0)->field))
+> +#define LENGTH(name, value) \
+> +	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
+> +#define CONFIG(name) \
+> +	vmcoreinfo_append_str("CONFIG_%s=%c\n", #name, CONFIG_##name)
+> +
 
-I think at some point of time we shall have to create another file say
-description.
-
-/sys/kernel/debug/IPMI/description
-
-Which can tell what does this tool do? Other a user might not have any
-clue how to prioritize various things.
+Have you tested CONFIG(). For me it did not work? Are you getting output
+like CONFIG_KEXEC=y with above macro?
 
 Thanks
 Vivek
