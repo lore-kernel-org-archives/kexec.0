@@ -1,29 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e4.ny.us.ibm.com ([32.97.182.144])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IM0vi-0004ni-VT
-	for kexec@lists.infradead.org; Fri, 17 Aug 2007 08:27:56 -0400
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l7HCRlps009437
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l7HCRloZ467104
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
-	by d01av01.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l7HCRlB2024589
-	for <kexec@lists.infradead.org>; Fri, 17 Aug 2007 08:27:47 -0400
-Date: Fri, 17 Aug 2007 17:58:03 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [RFC][PATCH 1/3] Embed vmcoreinfo into kernel file
-Message-ID: <20070817122803.GB18167@in.ibm.com>
-References: <20070816042008.GB20860@in.ibm.com>
-	<20070817154331oomichi@mail.jp.nec.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070817154331oomichi@mail.jp.nec.com>
-Reply-To: vgoyal@in.ibm.com
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IMA5f-0001Y1-VD
+	for kexec@lists.infradead.org; Fri, 17 Aug 2007 18:14:50 -0400
+Message-ID: <007901c7e11c$1d5e4640$545010ac@fcsw1jlydk0m5j>
+From: "Akira Imamura" <aimamura@redhat.com>
+References: <20070813111858oomichi@mail.jp.nec.com>
+Subject: Re: makedumpfile-1.1.6: linux-2.6.22 support
+Date: Fri, 17 Aug 2007 18:15:21 -0400
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,72 +22,87 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Don Zickus <dzickus@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>
+Cc: RH Imamura <aimamura@redhat.com>, kexec-ml <kexec@lists.infradead.org>
 
-On Fri, Aug 17, 2007 at 03:43:31PM +0900, Ken'ichi Ohmichi wrote:
-[..]
-> >- There is another important field which I would like to see in vmcoreinfo
-> >  and that is time of crash (lets say CRASH_TIME). This will indicate the
-> >  timestamp when did system actually crash. One can read the time in
-> >  crash_kexec(), fill in the field and then save vmcore info note.
-> >
-> >  For this, either you need to scan the vmcoreinfo note again and fill in
-> >  the time stamp. Or you need to do vmcoreinfo note saving after crash
-> >  instead of boot time.
+Hi Ohmichi-san,
+
+I'm sorry for my late reply.
+
+> o Some cleanups
+>  - Cleanup the description for '--message-level' by Akira Imamura.
+
+Thank you for applying it. I verified the latest package.
+
+Thanks,
+Akira Imamura
+
+>
+> Hi,
+>
+> makedumpfile version 1.1.6 is released.
+> Please test it. Your opinions/comments are welcome.
+>
+> Explanation of makedumpfile:
+>  To shorten the size of the dumpfile and the time of creating the
+>  dumpfile, makedumpfile copies only the necessary pages for analysis
+>  to the dumpfile from /proc/vmcore. You can specify the kind of
+>  unnecessary pages with dump_level. If you want to shorten the size
+>  further, enable the compression of the page data.
+>
+>
+> Changelog:
+>
+> Changelog:
+> o linux-2.6.22 support.
+>  The method for getting the member offset of "page.mapping" is
+>  applied for linux-2.6.22.
+>  Old makedumpfile assumed that there was "mapping" in the first
+>  union in structure "page". But on linux-2.6.22, there is "mapping"
+>  in the second union, because "_mapcount" and structure for slub
+>  are packed in the first union. Then, new makedumpfile gets the
+>  offset by searching "mapping" in each union.
+>
+> o Change the check method of free_pages for linux-2.6.21 or later.
+>  On linux-2.6.21 or later, the number of free_pages (vm_stat[0])
+>  is sometimes different from the one of the pages listed in
+>  "free_area" actually, because the former is flushed asynchronously.
+>  Then, new makedumpfile doesn't check these numbers, and confirms
+>  the free_pages only by checking whether the list "free_area" is
+>  not corrupted.
+>
+> o Some cleanups
+>  - Cleanup the description for '--message-level' by Akira Imamura.
+>  - Cleanup the structures DumpInfo and vm_table.
+>  - Cleanup the dwarf method.
+>  - Cleanup page_to_pfn() method.
+>
+>
+> You can download the latest makedumpfile(ver. 1.1.6) from the following 
+> URL.
+> Details of the change are written on the CVS page of the following site.
+> https://sourceforge.net/projects/makedumpfile/
+>
+> Method of installation:
+>  You can compile the makedumpfile command as follows;
+>  1. "tar -zxvf makedumpfile-1.1.6.tar.gz"
+>  2. "cd makedumpfile"
+>  3. "make; make install"
+>
+> Usage:
+>  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+>
+> Example:
+>  If you want to exclude pages filled by zero, cache pages, user pages
+>  and free pages and to enable compression, please execute the following
+>  command.
+>
+>  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+>
+>
+> Thanks
+> Ken'ichi Ohmichi
 > 
-> Is it necessary of the field for timestamp ?
-> The crash utility can display the time of crash already like the following.
-> 
-> # crash vmlinux vmcore
-> [snip]
->       KERNEL: vmlinux
->     DUMPFILE: vmcore
->         CPUS: 2
->         DATE: Tue Jul 10 20:41:50 2007  <- Here
->       UPTIME: 00:04:58
-> LOAD AVERAGE: 0.12, 0.22, 0.11
->        TASKS: 88
->     NODENAME: peak
->      RELEASE: 2.6.16.46-0.12-default
->      VERSION: #1 SMP Thu May 17 14:00:09 UTC 2007
->      MACHINE: ia64  (1000 Mhz)
->       MEMORY: 5.5 GB
->        PANIC: "SysRq : Trigger a crashdump"
->          PID: 3455
->      COMMAND: "bash"
->         TASK: e0000040f2f40000  [THREAD_INFO: e0000040f2f410d0]
->          CPU: 0
->        STATE: TASK_RUNNING (SYSRQ)
-> 
-> 
 
-But this requires a debug compiled vmlinux to be available on the system
-and that's a rarity. For example, we are exporting UTSNAME also which 
-can be retrieved by opening vmcore with crash.
-
-By exporting this, now one can write a small utility in second kernel,
-which can just look at the /proc/vmcore in second kernel, determine that
-machine had crashed and send a notification over network to other machine
-with crash time stamp.
- 
-[..]
-> +#define SYMBOL(name) \
-> +	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
-> +#define SIZE(name) \
-> +	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
-> +#define OFFSET(name, field) \
-> +	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, &(((struct name *)0)->field))
-> +#define LENGTH(name, value) \
-> +	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
-> +#define CONFIG(name) \
-> +	vmcoreinfo_append_str("CONFIG_%s=%c\n", #name, CONFIG_##name)
-> +
-
-Have you tested CONFIG(). For me it did not work? Are you getting output
-like CONFIG_KEXEC=y with above macro?
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
