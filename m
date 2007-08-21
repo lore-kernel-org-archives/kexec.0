@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IN5pZ-0003Eq-J4
-	for kexec@lists.infradead.org; Mon, 20 Aug 2007 07:54:03 -0400
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 84DA612367
-	for <kexec@lists.infradead.org>; Mon, 20 Aug 2007 13:53:56 +0200 (CEST)
-Date: Mon, 20 Aug 2007 13:53:59 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: Kdump for ARM (vmcore generation problem)
-Message-ID: <20070820115359.GA21033@suse.de>
-References: <46C1AA1A.6050907@samsung.com> <20070816030251.GA20860@in.ibm.com>
-	<46C98029.2000800@samsung.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1INOQd-0005DK-L2
+	for kexec@lists.infradead.org; Tue, 21 Aug 2007 03:45:33 -0400
+Message-ID: <46CA97FE.90505@ah.jp.nec.com>
+Date: Tue, 21 Aug 2007 16:45:02 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46C98029.2000800@samsung.com>
+Subject: Re: [patch] add kdump_after_notifier
+References: <20070802112852.GA7054@in.ibm.com>
+	<31687.1186113947@kao2.melbourne.sgi.com>
+	<20070805110746.GA12540@in.ibm.com>
+	<46C1691E.7090708@ah.jp.nec.com> <20070814083710.GA14538@suse.de>
+	<20070814132454.GA8293@in.ibm.com> <46C4184B.5030303@ah.jp.nec.com>
+	<20070817105630.GA18167@in.ibm.com>
+In-Reply-To: <20070817105630.GA18167@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,44 +27,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: vgoyal@in.ibm.com
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-* Indraneel <indraneel.m@samsung.com> [2007-08-20 13:51]:
-> Hi Vivek/Bernhard,
+Vivek Goyal wrote:
+> On Thu, Aug 16, 2007 at 06:26:35PM +0900, Takenori Nagano wrote:
+>> Vivek Goyal wrote:
+>>  > So for the time being I think we can put RAS tools on die notifier list
+>>> and if it runs into issues we can always think of creating a separate list.
+>>>
+>>> Few things come to mind.
+>>>
+>>> - Why there is a separate panic_notifier_list? Can't it be merged with
+>>>   die_chain? die_val already got one of the event type as PANIC. If there
+>>>   are no specific reasons then we should merge the two lists. Registering
+>>>   RAS tools on a single list is easier.
+>> I think it is difficult, because die_chain is defined by each architecture.
+>>
 > 
-> Vivek Goyal wrote:
-> > On Tue, Aug 14, 2007 at 06:41:54PM +0530, Indraneel wrote:
-> >> Hi,
-> >> I'm trying to make Kdump work for ARM. Till now i've managed to get the 
-> >> /dev/oldmem interface working for taking dumps. Now i want to get the 
-> >> /proc/vmcore interface working.
-> >> I'm unclear how to generate the elfcore headers required by routines in 
-> >> vmcore.c.
-> >>
-> > 
-> > Hi Indraneel,
-> > 
-> > kexec-tools in user space generates those headers. Have a loot at
-> > kexec-tools code.
+> I think die_chain is arch independent definition (kernel/die_notifier.c)? 
+> But anyway, to begin with it can be done only for panic_notifier.
+
+I think die_val (notify_die() argument) values are arch independent.
+They are defined in include/asm-<arch>/kdebug.h.
+
+Your idea is good, but I think it has very large impact. It is very hard to fix
+them at the same time. So, how about putting off merging two lists?
+
+ > I think Bernhard's suggestion looks better here. I noticed that
+> /sys/kernel/debug is already present. So how about following.
 > 
-> Thanks for the lead. I'm looking into kexec-tools and trying to do 
-> changes for ARM. I'm unable to interpret one of the comments in 
-> kexec/crashdump-elf.c which says,
-> " The separate PT_LOAD program header is required either because the
->    kernel is mapped at a different location than the rest of the
->    physical memory or because we need to support relocatable kernels.
->    Or both as on x86_64. "
+> /sys/kernel/debug/kdump/priority
+> /sys/kernel/debug/kdb/priority
+> /sys/kernel/debug/IPMI/priority
+
+Good.
+
 > 
-> Can you please provide some more clarification for this so that i can 
-> figure out whether a separate PT_LOAD header is required for ARM 
-> architecture as well (esp. the "kernel mapped to diff. loc. part of the 
-> comment").
+> I think at some point of time we shall have to create another file say
+> description.
+> 
+> /sys/kernel/debug/IPMI/description
+> 
+> Which can tell what does this tool do? Other a user might not have any
+> clue how to prioritize various things.
 
-Is the ARM kernel relocatable? If no, then you don't need this.
+Good idea. :-)
 
-
-Thanks,
-   Bernhard
+Thanks
 
 _______________________________________________
 kexec mailing list
