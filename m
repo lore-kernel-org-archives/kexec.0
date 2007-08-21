@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1INTfi-0008Lo-Jy
-	for kexec@lists.infradead.org; Tue, 21 Aug 2007 09:21:28 -0400
-Date: Tue, 21 Aug 2007 15:21:19 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [patch] add kdump_after_notifier
-Message-ID: <20070821132119.GC4244@suse.de>
-References: <20070802112852.GA7054@in.ibm.com>
-	<31687.1186113947@kao2.melbourne.sgi.com>
-	<20070805110746.GA12540@in.ibm.com>
-	<46C1691E.7090708@ah.jp.nec.com> <20070814083710.GA14538@suse.de>
-	<20070814132454.GA8293@in.ibm.com> <46C4184B.5030303@ah.jp.nec.com>
-	<20070817105630.GA18167@in.ibm.com> <46CAE627.7070908@sgi.com>
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1INU7r-000095-B5
+	for kexec@lists.infradead.org; Tue, 21 Aug 2007 09:50:36 -0400
+Date: Tue, 21 Aug 2007 12:14:04 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [linux-pm] Re: [PATH 1/1] Kexec jump - v2 - kexec jump
+Message-ID: <20070821101404.GA1704@elf.ucw.cz>
+References: <1184483639.1898.99.camel@caritas-dev.intel.com>
+	<20070731095101.GA1774@elf.ucw.cz>
+	<1185954978.1363.23.camel@caritas-dev.intel.com>
+	<20070816102635.GA2039@elf.ucw.cz>
+	<1187331349.28497.9.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46CAE627.7070908@sgi.com>
+In-Reply-To: <1187331349.28497.9.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,75 +27,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: k-miyoshi@cb.jp.nec.com, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-* Jay Lan <jlan@sgi.com> [2007-08-21 15:18]:
-> Vivek Goyal wrote:
-> > On Thu, Aug 16, 2007 at 06:26:35PM +0900, Takenori Nagano wrote:
-> >> Vivek Goyal wrote:
-> >>  > So for the time being I think we can put RAS tools on die notifier list
-> >>> and if it runs into issues we can always think of creating a separate list.
-> >>>
-> >>> Few things come to mind.
-> >>>
-> >>> - Why there is a separate panic_notifier_list? Can't it be merged with
-> >>>   die_chain? die_val already got one of the event type as PANIC. If there
-> >>>   are no specific reasons then we should merge the two lists. Registering
-> >>>   RAS tools on a single list is easier.
-> >> I think it is difficult, because die_chain is defined by each architecture.
-> >>
+Hi!
+
+> On Thu, 2007-08-16 at 12:26 +0200, Pavel Machek wrote:
+> > Ping... is there some next version?
 > > 
-> > I think die_chain is arch independent definition (kernel/die_notifier.c)? 
-> > But anyway, to begin with it can be done only for panic_notifier.
+> > I'm stuck at the tools side currently. kexec-1.101 just won't load the
+> > kernel properly, and kexec-testing from git does not know -j option. I
+> > tried hand-patching it, but got lots of scary rejects.
 > > 
-> >>> - Modify Kdump to register on die_chain list. 
-> >>> - Modify Kdb to register on die_chain list.
-> >>> - Export all the registered members of die_chain through sysfs along with
-> >>>   their priorities. Priorities should be modifiable. Most likely one 
-> >>>   shall have to introduce additional field in struct notifier_block. This
-> >>>   field will be a string as an identifier of the user registerd. e.g
-> >>>   "Kdump", "Kdb" etc.
-> >>>
-> >>> Now user will be able to view all the die_chain users through sysfs and
-> >>> be able to modify the order in which these should run by modifying their
-> >>> priority. Hence all the RAS tools can co-exist.
-> >> This is my image of your proposal.
-> >>
-> >> - Print current order
-> >>
-> >> # cat /sys/class/misc/debug/panic_notifier_list
-> >> priority   name
-> >> 1          IPMI
-> >> 2          watchdog
-> >> 3          Kdb
-> >> 4          Kdump
-> >>
-> > 
-> > I think Bernhard's suggestion looks better here. I noticed that 
-> > /sys/kernel/debug is already present. So how about following.
-> > 
-> > /sys/kernel/debug/kdump/priority
-> > /sys/kernel/debug/kdb/priority
-> > /sys/kernel/debug/IPMI/priority
+> > Is there chance for a patch against kexec-testing?
 > 
-> Why separate priority files is better than a central file?
-> At least i think you get a grand picture of priority being
-> defined for all parties with a central file?
+> I have some other work to do recently. So the next version will delay
+> for some while. :(
 
-Well, it's more intuitive to set the priority in that case. You don't
-have to know a special syntax. However, it may be a good idea to
-implement a second read-only file that lists the sorted priorities in
-that order the kernel executues the handlers the handlers.
+Ok, I got it to work -- thanks a lot.
 
-> What do we decide priority if more than one component has
-> the same priority value?
+Yes, acpi=off is mandatory. Unfortunately, thinkpad x60 does not boot
+with acpi=off (should we add another test to linux firmware kit?
+Machines should still boot in acpi=off mode...). acpi=off noapic
+nolapic nosmp makes it boot, and that in turn makes kjump work.
 
-You can check this and return EINVAL in that case.
+Screen is not refreshed on kjump back to original kernel, but I guess
+that's to be expected. I did not play with framebuffer, yet.
 
+Maybe it is time to move kjump functionality into -mm and
+kexec-testing?
 
-Thanks,
-   Bernhard
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
