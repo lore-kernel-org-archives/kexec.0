@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1INp36-0004kw-MA
-	for kexec@lists.infradead.org; Wed, 22 Aug 2007 08:11:09 -0400
-Subject: [PATCH 1/3] [linux] Add vmcoreinfo
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1INp9S-0007F2-KK
+	for kexec@lists.infradead.org; Wed, 22 Aug 2007 13:17:37 +0100
+Subject: [PATCH 3/3] [makedumpfile] Extract vmcoreinfo from /proc/vmcore
 In-reply-to: <20070822210838oomichi@mail.jp.nec.com>
-Message-Id: <20070822211112oomichi@mail.jp.nec.com>
+Message-Id: <20070822211625oomichi@mail.jp.nec.com>
 References: <20070822210838oomichi@mail.jp.nec.com>
 Mime-Version: 1.0
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Wed, 22 Aug 2007 21:11:12 +0900
+Date: Wed, 22 Aug 2007 21:16:25 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,355 +26,401 @@ To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>
 
 
-[1/3] [linux] Add vmcoreinfo
-The patch is for linux-2.6.22.
-The patch adds the vmcoreinfo data.
-Its address and size are output to /sys/kernel/vmcoreinfo.
+[3/3] [makedumpfile] Extract vmcoreinfo from /proc/vmcore
+The patch is for makedumpfile v1.1.6.
+(https://sourceforge.net/projects/makedumpfile/)
+makedumpfile command extracts the vmcoreinfo data from /proc/vmcore
+and uses it for dump filtering.
 
 
 Thanks
 Ken'ichi Ohmichi
 
 ---
-Signed-off-by: Dan Aloni <da-x@monatomic.org>
 Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-Signed-off-by: Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
 
 ---
-diff -rpuN a/arch/i386/kernel/machine_kexec.c b/arch/i386/kernel/machine_kexec.c
---- a/arch/i386/kernel/machine_kexec.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/arch/i386/kernel/machine_kexec.c	2007-08-23 00:47:38.000000000 +0900
-@@ -10,6 +10,7 @@
- #include <linux/kexec.h>
- #include <linux/delay.h>
- #include <linux/init.h>
-+#include <linux/numa.h>
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
- #include <asm/tlbflush.h>
-@@ -169,3 +170,15 @@ static int __init parse_crashkernel(char
- 	return 0;
- }
- early_param("crashkernel", parse_crashkernel);
+diff -puN backup/v1.1.6/ia64.c makedumpfile/ia64.c
+--- backup/v1.1.6/ia64.c	2007-08-13 12:01:55.000000000 +0900
++++ makedumpfile/ia64.c	2007-08-17 14:23:32.000000000 +0900
+@@ -70,6 +70,10 @@ get_machdep_info_ia64()
+ 	else
+ 		info->vmalloc_start = KERNEL_VMALLOC_BASE;
+ 
++	if ((vt.mem_flags & MEMORY_PAGETABLE_4L)
++	    || (vt.mem_flags & MEMORY_PAGETABLE_3L))
++		return TRUE;
 +
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-+	SYMBOL(node_data);
-+	LENGTH(node_data, MAX_NUMNODES);
-+#endif
-+#ifdef CONFIG_X86_PAE
-+	CONFIG(X86_PAE);
-+#endif
-+}
-+
-diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
---- a/arch/ia64/kernel/machine_kexec.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/arch/ia64/kernel/machine_kexec.c	2007-08-23 00:47:38.000000000 +0900
-@@ -15,6 +15,8 @@
- #include <linux/cpu.h>
- #include <linux/irq.h>
- #include <linux/efi.h>
-+#include <linux/numa.h>
-+#include <linux/mmzone.h>
- #include <asm/mmu_context.h>
- #include <asm/setup.h>
- #include <asm/delay.h>
-@@ -125,3 +127,31 @@ void machine_kexec(struct kimage *image)
- 	unw_init_running(ia64_machine_kexec, image);
- 	for(;;);
- }
-+
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-+	SYMBOL(pgdat_list);
-+	LENGTH(pgdat_list, MAX_NUMNODES);
-+
-+	SYMBOL(node_memblk);
-+	LENGTH(node_memblk, NR_NODE_MEMBLKS);
-+	SIZE(node_memblk_s);
-+	OFFSET(node_memblk_s, start_paddr);
-+	OFFSET(node_memblk_s, size);
-+#endif
-+#ifdef CONFIG_PGTABLE_3
-+	CONFIG(PGTABLE_3);
-+#elif  CONFIG_PGTABLE_4
-+	CONFIG(PGTABLE_4);
-+#endif
-+}
-+
-+unsigned long paddr_vmcoreinfo_note(void)
-+{
-+	unsigned long vaddr, paddr;
-+	vaddr = (unsigned long)(char *)&vmcoreinfo_note;
-+	asm volatile ("tpa %0 = %1" : "=r"(paddr) : "r"(vaddr) : "memory");
-+	return paddr;
-+}
-+
-diff -rpuN a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
---- a/arch/ia64/mm/discontig.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/arch/ia64/mm/discontig.c	2007-08-23 00:47:38.000000000 +0900
-@@ -47,7 +47,7 @@ struct early_node_data {
- static struct early_node_data mem_data[MAX_NUMNODES] __initdata;
- static nodemask_t memory_less_mask __initdata;
- 
--static pg_data_t *pgdat_list[MAX_NUMNODES];
-+pg_data_t *pgdat_list[MAX_NUMNODES];
- 
- /*
-  * To prevent cache aliasing effects, align per-node structures so that they
-diff -rpuN a/arch/x86_64/kernel/machine_kexec.c b/arch/x86_64/kernel/machine_kexec.c
---- a/arch/x86_64/kernel/machine_kexec.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/arch/x86_64/kernel/machine_kexec.c	2007-08-23 00:47:38.000000000 +0900
-@@ -10,6 +10,7 @@
- #include <linux/kexec.h>
- #include <linux/string.h>
- #include <linux/reboot.h>
-+#include <linux/numa.h>
- #include <asm/pgtable.h>
- #include <asm/tlbflush.h>
- #include <asm/mmu_context.h>
-@@ -257,3 +258,11 @@ static int __init setup_crashkernel(char
- }
- early_param("crashkernel", setup_crashkernel);
- 
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-+	SYMBOL(node_data);
-+	LENGTH(node_data, MAX_NUMNODES);
-+#endif
-+}
-+
-diff -rpuN a/include/asm-ia64/numa.h b/include/asm-ia64/numa.h
---- a/include/asm-ia64/numa.h	2007-08-23 00:03:33.000000000 +0900
-+++ b/include/asm-ia64/numa.h	2007-08-23 00:47:38.000000000 +0900
-@@ -24,6 +24,7 @@
- 
- extern u16 cpu_to_node_map[NR_CPUS] __cacheline_aligned;
- extern cpumask_t node_to_cpu_mask[MAX_NUMNODES] __cacheline_aligned;
-+extern pg_data_t *pgdat_list[MAX_NUMNODES];
- 
- /* Stuff below this line could be architecture independent */
- 
-diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
---- a/include/linux/kexec.h	2007-08-23 00:03:33.000000000 +0900
-+++ b/include/linux/kexec.h	2007-08-23 00:47:38.000000000 +0900
-@@ -121,6 +121,23 @@ extern struct page *kimage_alloc_control
- extern void crash_kexec(struct pt_regs *);
- int kexec_should_crash(struct task_struct *);
- void crash_save_cpu(struct pt_regs *regs, int cpu);
-+void crash_save_vmcoreinfo(void);
-+void arch_crash_save_vmcoreinfo(void);
-+void vmcoreinfo_append_str(const char *fmt, ...);
-+unsigned long paddr_vmcoreinfo_note(void);
-+
-+#define SYMBOL(name) \
-+	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
-+#define SIZE(name) \
-+	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
-+#define OFFSET(name, field) \
-+	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, \
-+			      &(((struct name *)0)->field))
-+#define LENGTH(name, value) \
-+	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
-+#define CONFIG(name) \
-+	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
-+
- extern struct kimage *kexec_image;
- extern struct kimage *kexec_crash_image;
- 
-@@ -148,11 +165,20 @@ extern struct kimage *kexec_crash_image;
- 
- #define KEXEC_FLAGS    (KEXEC_ON_CRASH)  /* List of defined/legal kexec flags */
- 
-+#define VMCOREINFO_BYTES           (4096)
-+#define VMCOREINFO_NOTE_NAME       "VMCOREINFO"
-+#define VMCOREINFO_NOTE_NAME_BYTES ALIGN(sizeof(VMCOREINFO_NOTE_NAME), 4)
-+#define VMCOREINFO_NOTE_SIZE       (KEXEC_NOTE_HEAD_BYTES*2 + VMCOREINFO_BYTES \
-+				    + VMCOREINFO_NOTE_NAME_BYTES)
-+
- /* Location of a reserved region to hold the crash kernel.
-  */
- extern struct resource crashk_res;
- typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
- extern note_buf_t *crash_notes;
-+extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-+extern unsigned int vmcoreinfo_size;
-+extern unsigned int vmcoreinfo_max_size;
- 
- 
- #else /* !CONFIG_KEXEC */
-diff -rpuN a/kernel/kexec.c b/kernel/kexec.c
---- a/kernel/kexec.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/kernel/kexec.c	2007-08-23 00:48:40.000000000 +0900
-@@ -22,16 +22,26 @@
- #include <linux/hardirq.h>
- #include <linux/elf.h>
- #include <linux/elfcore.h>
-+#include <linux/utsrelease.h>
-+#include <linux/utsname.h>
-+#include <linux/numa.h>
- 
- #include <asm/page.h>
- #include <asm/uaccess.h>
- #include <asm/io.h>
- #include <asm/system.h>
- #include <asm/semaphore.h>
-+#include <asm/sections.h>
- 
- /* Per cpu memory for storing cpu states in case of system crash. */
- note_buf_t* crash_notes;
- 
-+/* vmcoreinfo stuff */
-+unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
-+u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-+unsigned int vmcoreinfo_size = 0;
-+unsigned int vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
-+
- /* Location of the reserved area for the crash kernel */
- struct resource crashk_res = {
- 	.name  = "Crash kernel",
-@@ -1061,6 +1071,7 @@ void crash_kexec(struct pt_regs *regs)
- 		if (kexec_crash_image) {
- 			struct pt_regs fixed_regs;
- 			crash_setup_regs(&fixed_regs, regs);
-+			crash_save_vmcoreinfo();
- 			machine_crash_shutdown(&fixed_regs);
- 			machine_kexec(kexec_crash_image);
+ 	/*
+ 	 * Check the pgtable (3 Levels or 4 Levels).
+ 	 */
+diff -puN backup/v1.1.6/makedumpfile.c makedumpfile/makedumpfile.c
+--- backup/v1.1.6/makedumpfile.c	2007-08-13 12:01:55.000000000 +0900
++++ makedumpfile/makedumpfile.c	2007-08-17 14:26:20.000000000 +0900
+@@ -608,7 +608,7 @@ open_files_for_creating_dumpfile()
+ 	if (info->flag_read_vmcoreinfo) {
+ 		if (!open_vmcoreinfo("r"))
+ 			return FALSE;
+-	} else if (info->dump_level > DL_EXCLUDE_ZERO) {
++	} else if (dwarf_info.vmlinux_name) {
+ 		if (!open_kernel_file())
+ 			return FALSE;
+ 	}
+@@ -2053,8 +2053,17 @@ read_vmcoreinfo_basic_info()
+ 				return FALSE;
+ 			}
  		}
-@@ -1135,3 +1146,102 @@ static int __init crash_notes_memory_ini
- 	return 0;
+-		if (get_release && page_size)
+-			break;
++		if (strncmp(buf, STR_CONFIG_X86_PAE,
++		    strlen(STR_CONFIG_X86_PAE)) == 0)
++			vt.mem_flags |= MEMORY_X86_PAE;
++
++		if (strncmp(buf, STR_CONFIG_PGTABLE_3,
++		    strlen(STR_CONFIG_PGTABLE_3)) == 0)
++			vt.mem_flags |= MEMORY_PAGETABLE_4L;
++
++		if (strncmp(buf, STR_CONFIG_PGTABLE_4,
++		    strlen(STR_CONFIG_PGTABLE_4)) == 0)
++			vt.mem_flags |= MEMORY_PAGETABLE_3L;
+ 	}
+ 	info->page_size = page_size;
+ 	info->page_shift = ffs(info->page_size) - 1;
+@@ -2215,6 +2224,172 @@ read_vmcoreinfo()
+ 	return TRUE;
  }
- module_init(crash_notes_memory_init)
-+
-+void crash_save_vmcoreinfo(void)
+ 
++int
++get_pt_note_info(int *flag_elf64, off_t *offset, unsigned long *size)
 +{
-+	u32 *buf;
++	Elf64_Phdr phdr64;
++	Elf32_Phdr phdr32;
++	int i, phnum, num_load, elf_format;
 +
-+	if (!vmcoreinfo_size)
-+		return;
++	(*offset) = 0;
++	(*size)   = 0;
 +
-+	vmcoreinfo_append_str("CRASHTIME=%d", xtime.tv_sec);
++	elf_format = check_elf_format(info->fd_memory, info->name_memory,
++	    &phnum, &num_load);
 +
-+	buf = (u32 *)vmcoreinfo_note;
++	if (elf_format == ELF64)
++		(*flag_elf64) = TRUE;
++	else if (elf_format == ELF32)
++		(*flag_elf64) = FALSE;
++	else {
++		return FALSE;
++	}
++	for (i = 0; i < phnum; i++) {
++		if (flag_elf64) { /* ELF64 */
++			if (!get_elf64_phdr(info->fd_memory, info->name_memory,
++			    i, &phdr64)) {
++				ERRMSG("Can't find Phdr %d.\n", i);
++				return FALSE;
++			}
++			if (phdr64.p_type != PT_NOTE)
++				continue;
 +
-+	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
-+			      vmcoreinfo_size);
++			(*offset) = phdr64.p_offset;
++			(*size)   = phdr64.p_filesz;
++			break;
++		} else {         /* ELF32 */
++			if (!get_elf32_phdr(info->fd_memory, info->name_memory,
++			    i, &phdr32)) {
++				ERRMSG("Can't find Phdr %d.\n", i);
++				return FALSE;
++			}
++			if (phdr32.p_type != PT_NOTE)
++				continue;
 +
-+	final_note(buf);
++			(*offset) = phdr32.p_offset;
++			(*size)   = phdr32.p_filesz;
++			break;
++		}
++	}
++	if (offset == 0 || size == 0) {
++		ERRMSG("Can't find PT_NOTE Phdr.\n");
++		return FALSE;
++	}
++	return TRUE;
 +}
 +
-+void vmcoreinfo_append_str(const char *fmt, ...)
++int
++is_vmcoreinfo_in_vmcore(int *flag_found)
 +{
-+	va_list args;
-+	char buf[0x50];
-+	int r;
++	off_t offset, off_note;
++	int flag_elf64;
++	unsigned long sz_note;
++	char buf[VMCOREINFO_NOTE_NAME_BYTES];
++	Elf64_Nhdr note64;
++	Elf32_Nhdr note32;
 +
-+	va_start(args, fmt);
-+	r = vsnprintf(buf, sizeof(buf), fmt, args);
-+	va_end(args);
++	const off_t failed = (off_t)-1;
 +
-+	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
-+		r = vmcoreinfo_max_size - vmcoreinfo_size;
++	(*flag_found) = FALSE;
 +
-+	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
++	/*
++	 * Get information about PT_NOTE segment.
++	 */
++	if (!get_pt_note_info(&flag_elf64, &off_note, &sz_note))
++		return FALSE;
 +
-+	vmcoreinfo_size += r;
++	offset = off_note;
++	while (offset < off_note + sz_note) {
++		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
++			ERRMSG("Can't seek the dump memory(%s). %s\n",
++			    info->name_memory, strerror(errno));
++			return FALSE;
++		}
++		if (flag_elf64) {
++			if (read(info->fd_memory, &note64, sizeof(note64))
++			    != sizeof(note64)) {
++				ERRMSG("Can't read the dump memory(%s). %s\n",
++				    info->name_memory, strerror(errno));
++				return FALSE;
++			}
++		} else {
++			if (read(info->fd_memory, &note32, sizeof(note32))
++			    != sizeof(note32)) {
++				ERRMSG("Can't read the dump memory(%s). %s\n",
++				    info->name_memory, strerror(errno));
++				return FALSE;
++			}
++		}
++		if (read(info->fd_memory, &buf, sizeof(buf)) != sizeof(buf)) {
++			ERRMSG("Can't read the dump memory(%s). %s\n",
++			    info->name_memory, strerror(errno));
++			return FALSE;
++		}
++		if (strncmp(VMCOREINFO_NOTE_NAME, buf,
++		    VMCOREINFO_NOTE_NAME_BYTES)) {
++			offset += sizeof(Elf64_Nhdr)
++			    + ((note64.n_namesz + 3) & ~3)
++			    + ((note64.n_descsz + 3) & ~3);
++			continue;
++		}
++		if (flag_elf64) {
++			info->offset_vmcoreinfo = offset + (sizeof(note64)
++			    + ((note64.n_namesz + 3) & ~3));
++			info->size_vmcoreinfo = note64.n_descsz;
++		} else {
++			info->offset_vmcoreinfo = offset + (sizeof(note64)
++			    + ((note32.n_namesz + 3) & ~3));
++			info->size_vmcoreinfo = note32.n_descsz;
++		}
++		(*flag_found) = TRUE;
++		break;
++	}
++	return TRUE;
 +}
 +
 +/*
-+ * provide an empty default implementation here -- architecture
-+ * code may override this
++ * Extract vmcoreinfo from /proc/vmcore and output it to /tmp/vmcoreinfo.tmp.
 + */
-+void __attribute__ ((weak)) arch_crash_save_vmcoreinfo(void)
-+{}
-+
-+unsigned long __attribute__ ((weak)) paddr_vmcoreinfo_note(void)
++int
++copy_vmcoreinfo()
 +{
-+	return __pa((unsigned long)(char *)&vmcoreinfo_note);
++	int fd;
++	char buf[VMCOREINFO_BYTES];
++	const off_t failed = (off_t)-1;
++
++	if (!info->offset_vmcoreinfo || !info->size_vmcoreinfo)
++		return FALSE;
++
++	if ((fd = mkstemp(info->name_vmcoreinfo)) < 0) {
++		ERRMSG("Can't open the vmcoreinfo file(%s). %s\n",
++		    info->name_vmcoreinfo, strerror(errno));
++		return FALSE;
++	}
++	if (lseek(info->fd_memory, info->offset_vmcoreinfo, SEEK_SET)
++	    == failed) {
++		ERRMSG("Can't seek the dump memory(%s). %s\n",
++		    info->name_memory, strerror(errno));
++		return FALSE;
++	}
++	if (read(info->fd_memory, &buf, info->size_vmcoreinfo)
++	    != info->size_vmcoreinfo) {
++		ERRMSG("Can't read the dump memory(%s). %s\n",
++		    info->name_memory, strerror(errno));
++		return FALSE;
++	}
++	if (write(fd, &buf, info->size_vmcoreinfo) != info->size_vmcoreinfo) {
++		ERRMSG("Can't write the vmcoreinfo file(%s). %s\n",
++		    info->name_vmcoreinfo, strerror(errno));
++		return FALSE;
++	}
++	if (close(fd) < 0) {
++		ERRMSG("Can't close the vmcoreinfo file(%s). %s\n",
++		    info->name_vmcoreinfo, strerror(errno));
++		return FALSE;
++	}
++	return TRUE;
 +}
 +
-+static int __init crash_save_vmcoreinfo_init(void)
-+{
-+	vmcoreinfo_append_str("OSRELEASE=%s\n", UTS_RELEASE);
-+	vmcoreinfo_append_str("PAGESIZE=%d\n", PAGE_SIZE);
+ /*
+  * Get the number of online nodes.
+  */
+@@ -2892,12 +3067,20 @@ get_mem_map()
+ int
+ initial()
+ {
++	int vmcoreinfo_in_vmcore = FALSE;
 +
-+	SYMBOL(init_uts_ns);
-+	SYMBOL(node_online_map);
-+	SYMBOL(swapper_pg_dir);
-+	SYMBOL(_stext);
-+
-+#ifndef CONFIG_NEED_MULTIPLE_NODES
-+	SYMBOL(mem_map);
-+	SYMBOL(contig_page_data);
-+#endif
-+#ifdef CONFIG_SPARSEMEM
-+	SYMBOL(mem_section);
-+	LENGTH(mem_section, NR_SECTION_ROOTS);
-+	SIZE(mem_section);
-+	OFFSET(mem_section, section_mem_map);
-+#endif
-+	SIZE(page);
-+	SIZE(pglist_data);
-+	SIZE(zone);
-+	SIZE(free_area);
-+	SIZE(list_head);
-+	OFFSET(page, flags);
-+	OFFSET(page, _count);
-+	OFFSET(page, mapping);
-+	OFFSET(page, lru);
-+	OFFSET(pglist_data, node_zones);
-+	OFFSET(pglist_data, nr_zones);
-+#ifdef CONFIG_FLAT_NODE_MEM_MAP
-+	OFFSET(pglist_data, node_mem_map);
-+#endif
-+	OFFSET(pglist_data, node_start_pfn);
-+	OFFSET(pglist_data, node_spanned_pages);
-+	OFFSET(pglist_data, node_id);
-+	OFFSET(zone, free_area);
-+	OFFSET(zone, vm_stat);
-+	OFFSET(zone, spanned_pages);
-+	OFFSET(free_area, free_list);
-+	OFFSET(list_head, next);
-+	OFFSET(list_head, prev);
-+	LENGTH(zone.free_area, MAX_ORDER);
-+
-+	arch_crash_save_vmcoreinfo();
-+
-+	return 0;
-+}
-+
-+module_init(crash_save_vmcoreinfo_init)
-diff -rpuN a/kernel/ksysfs.c b/kernel/ksysfs.c
---- a/kernel/ksysfs.c	2007-08-23 00:03:30.000000000 +0900
-+++ b/kernel/ksysfs.c	2007-08-23 00:47:53.000000000 +0900
-@@ -60,6 +60,15 @@ static ssize_t kexec_crash_loaded_show(s
- 	return sprintf(page, "%d\n", !!kexec_crash_image);
- }
- KERNEL_ATTR_RO(kexec_crash_loaded);
-+
-+static ssize_t vmcoreinfo_show(struct kset *kset, char *page)
-+{
-+	return sprintf(page, "%lx %x\n",
-+		       paddr_vmcoreinfo_note(),
-+		       vmcoreinfo_max_size);
-+}
-+KERNEL_ATTR_RO(vmcoreinfo);
-+
- #endif /* CONFIG_KEXEC */
+ 	if (!get_elf_info())
+ 		return FALSE;
  
- decl_subsys(kernel, NULL, NULL);
-@@ -73,6 +82,7 @@ static struct attribute * kernel_attrs[]
- #ifdef CONFIG_KEXEC
- 	&kexec_loaded_attr.attr,
- 	&kexec_crash_loaded_attr.attr,
-+	&vmcoreinfo_attr.attr,
- #endif
- 	NULL
- };
+ 	if (!get_phys_base())
+ 		return FALSE;
+ 
++	if (info->dump_level <= DL_EXCLUDE_ZERO) {
++		if (!get_mem_map_without_mm())
++			return FALSE;
++		else
++			return TRUE;
++	}
+ 	/*
+ 	 * Get the debug information for analysis from the vmcoreinfo file 
+ 	 */
+@@ -2907,22 +3090,53 @@ initial()
+ 	/*
+ 	 * Get the debug information for analysis from the kernel file 
+ 	 */
+-	} else {
+-		if (info->dump_level <= DL_EXCLUDE_ZERO) {
+-			if (!get_mem_map_without_mm())
+-				return FALSE;
+-			else
+-				return TRUE;
+-		} else {
+-			if (!get_symbol_info())
+-				return FALSE;
+-		}
++	} else if (info->flag_vmlinux) {
++		if (!get_symbol_info())
++			return FALSE;
++
+ 		if (!get_structure_info())
+ 			return FALSE;
+ 
+ 		if (!get_srcfile_info())
+ 			return FALSE;
++	/*
++	 * Get the debug information for analysis from /proc/vmcore
++	 */
++	} else {
++		/*
++		 * Check weather /proc/vmcore contains vmcoreinfo,
++		 * and get both the offset and the size.
++		 */
++		if (!is_vmcoreinfo_in_vmcore(&vmcoreinfo_in_vmcore))
++			return FALSE;
++
++		if (!vmcoreinfo_in_vmcore) {
++			MSG("%s doesn't contain vmcoreinfo.\n", info->name_memory);
++			MSG("'-x' or '-i' must be specified.\n");
++			return FALSE;
++		}
++		/*
++		 * Copy vmcoreinfo to /tmp/vmcoreinfoXXXXXX.
++		 */
++		if ((info->name_vmcoreinfo
++		    = malloc(sizeof(FILENAME_VMCOREINFO))) == NULL) {
++			ERRMSG("Can't allocate memory for the filename. %s\n",
++			    strerror(errno));
++			return FALSE;
++		}
++		strcpy(info->name_vmcoreinfo, FILENAME_VMCOREINFO);
++		if (!copy_vmcoreinfo())
++			return FALSE;
++		/*
++		 * Read vmcoreinfo from /tmp/vmcoreinfoXXXXXX.
++		 */
++		if (!open_vmcoreinfo("r"))
++			return FALSE;
++		if (!read_vmcoreinfo())
++			return FALSE;
++		unlink(info->name_vmcoreinfo);
+ 	}
++
+ 	if (!get_machdep_info())
+ 		return FALSE;
+ 
+diff -puN backup/v1.1.6/makedumpfile.h makedumpfile/makedumpfile.h
+--- backup/v1.1.6/makedumpfile.h	2007-08-13 12:01:55.000000000 +0900
++++ makedumpfile/makedumpfile.h	2007-08-17 14:24:57.000000000 +0900
+@@ -70,6 +70,7 @@ enum {
+  */
+ #define MEMORY_PAGETABLE_4L	(1 << 0)
+ #define MEMORY_PAGETABLE_3L	(1 << 1)
++#define MEMORY_X86_PAE		(1 << 2)
+ 
+ /*
+  * Type of address
+@@ -366,15 +367,26 @@ do { \
+ #define LATEST_VERSION		(0x02060016)	/* linux-2.6.22 */
+ 
+ /*
++ * vmcoreinfo in /proc/vmcore
++ */
++#define VMCOREINFO_BYTES		(4096)
++#define VMCOREINFO_NOTE_NAME		"VMCOREINFO"
++#define VMCOREINFO_NOTE_NAME_BYTES	(sizeof(VMCOREINFO_NOTE_NAME))
++#define FILENAME_VMCOREINFO		"/tmp/vmcoreinfoXXXXXX"
++
++/*
+  * field name of vmcoreinfo file
+  */
+-#define STR_OSRELEASE	"OSRELEASE="
+-#define STR_PAGESIZE	"PAGESIZE="
+-#define STR_SYMBOL(X)	"SYMBOL("X")="
+-#define STR_SIZE(X)	"SIZE("X")="
+-#define STR_OFFSET(X)	"OFFSET("X")="
+-#define STR_LENGTH(X)	"LENGTH("X")="
+-#define STR_SRCFILE(X)	"SRCFILE("X")="
++#define STR_OSRELEASE		"OSRELEASE="
++#define STR_PAGESIZE		"PAGESIZE="
++#define STR_SYMBOL(X)		"SYMBOL("X")="
++#define STR_SIZE(X)		"SIZE("X")="
++#define STR_OFFSET(X)		"OFFSET("X")="
++#define STR_LENGTH(X)		"LENGTH("X")="
++#define STR_SRCFILE(X)		"SRCFILE("X")="
++#define STR_CONFIG_X86_PAE	"CONFIG_X86_PAE=y"
++#define STR_CONFIG_PGTABLE_4	"CONFIG_PGTABLE_4=y"
++#define STR_CONFIG_PGTABLE_3	"CONFIG_PGTABLE_3=y"
+ 
+ /*
+  * common value
+@@ -664,6 +676,12 @@ struct DumpInfo {
+ 	char			release[STRLEN_OSRELEASE];
+ 
+ 	/*
++	 * vmcoreinfo in dump memory image info:
++	 */
++	off_t			offset_vmcoreinfo;
++	unsigned long		size_vmcoreinfo;
++
++	/*
+ 	 * for Xen extraction
+ 	 */
+ 	unsigned long xen_heap_start;	/* start mfn of xen heap area */
+diff -puN backup/v1.1.6/x86.c makedumpfile/x86.c
+--- backup/v1.1.6/x86.c	2007-08-13 12:01:55.000000000 +0900
++++ makedumpfile/x86.c	2007-08-17 14:23:32.000000000 +0900
+@@ -21,10 +21,11 @@ int
+ get_machdep_info_x86()
+ {
+ 	/* PAE */
+-	if ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
+-	    && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
+-	    && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
+-	    == 512) {
++	if ((vt.mem_flags & MEMORY_X86_PAE)
++	    || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
++	      && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
++	      && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
++	      == 512)) {
+ 		DEBUG_MSG("\n");
+ 		DEBUG_MSG("PAE          : ON\n");
+ 		info->section_size_bits = _SECTION_SIZE_BITS_PAE;
 _
 
 _______________________________________________
