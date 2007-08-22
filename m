@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.linux-foundation.org ([207.189.120.14])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1INysf-0001gL-SX
-	for kexec@lists.infradead.org; Wed, 22 Aug 2007 18:40:56 -0400
-Date: Wed, 22 Aug 2007 15:40:36 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/3] vmcoreinfo support for dump filtering
-Message-Id: <20070822154036.1bd2f360.akpm@linux-foundation.org>
-In-Reply-To: <20070822210838oomichi@mail.jp.nec.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1INp5c-0004m3-05
+	for kexec@lists.infradead.org; Wed, 22 Aug 2007 08:13:38 -0400
+Subject: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
+In-reply-to: <20070822210838oomichi@mail.jp.nec.com>
+Message-Id: <20070822211339oomichi@mail.jp.nec.com>
 References: <20070822210838oomichi@mail.jp.nec.com>
 Mime-Version: 1.0
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Date: Wed, 22 Aug 2007 21:13:39 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,92 +22,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>
 
-On Wed, 22 Aug 2007 21:08:38 +0900
-"Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
 
-> 
-> Hi Andrew,
-> 
-> This patch set frees the restriction that makedumpfile users should
-> install a vmlinux file (including the debugging information) into
-> each system.
-> 
-> makedumpfile command is the dump filtering feature for kdump.
-> It creates a small dumpfile by filtering unnecessary pages for the
-> analysis. To distinguish unnecessary pages, it needs a vmlinux file
-> including the debugging information. These days, the debugging package
-> becomes a huge file, and it is hard to install it into each system.
-> 
-> To solve the problem, kdump developers discussed it at lkml and kexec-ml.
-> As the result, we reached the conclusion that necessary information
-> for dump filtering (called "vmcoreinfo") should be embedded into the
-> first kernel file and it should be accessed through /proc/vmcore
-> during the second kernel.
-> (http://www.uwsg.iu.edu/hypermail/linux/kernel/0707.0/1806.html) 
-> 
-> Dan Aloni created the patch set for the above implementation.
-> (http://www.uwsg.iu.edu/hypermail/linux/kernel/0707.1/1053.html)
-> 
-> And I updated it for multi architectures and memory models.
-> (http://lists.infradead.org/pipermail/kexec/2007-August/000479.html)
-
-so...  will this permit us to generate kdump files whcih don't have any
-pagecache or anonymous memory in them?
+[2/3] [kexec-tools] Pass vmcoreinfo's address and size
+The patch is for kexec-tools-testing-20070330.
+(http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
+kexec command gets the address and size of the vmcoreinfo data from
+/sys/kernel/vmcoreinfo, and passes them to the second kernel through
+ELF header of /proc/vmcore. When the second kernel is booting, the
+kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
+segment into /proc/vmcore.
 
 
-> +void vmcoreinfo_append_str(const char *fmt, ...);
+Thanks
+Ken'ichi Ohmichi
 
-This should have suitable __attribute__s so that the compiler can check its
-use.    See many examples in include/linux/kernel.h, around line 120.
+---
+Signed-off-by: Dan Aloni <da-x@monatomic.org>
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
-> +/* vmcoreinfo stuff */
-> +unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
-> +u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
-> +unsigned int vmcoreinfo_size = 0;
-
-Please always run scripts/checkpatch.pl against your diffs.
-
-> +unsigned int vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
-
-unsigned int = size_t?  Perhaps vmcoreinfo_max_size should have size_t
-type?
-
-> +void crash_save_vmcoreinfo(void)
-> +{
-> +	u32 *buf;
-> +
-> +	if (!vmcoreinfo_size)
-> +		return;
-> +
-> +	vmcoreinfo_append_str("CRASHTIME=%d", xtime.tv_sec);
-
-open-coded access to xtime probably isn't appropriate here.  Consider using
-get_seconds().  That might be more accurate on tickless kernels, too.
-
-
-> +	buf = (u32 *)vmcoreinfo_note;
-> +
-> +	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
-> +			      vmcoreinfo_size);
-> +
-> +	final_note(buf);
-> +}
-> +
-> +}
-> +
-> +static int __init crash_save_vmcoreinfo_init(void)
-> +{
-> +	vmcoreinfo_append_str("OSRELEASE=%s\n", UTS_RELEASE);
-> +	vmcoreinfo_append_str("PAGESIZE=%d\n", PAGE_SIZE);
-
-I expect the virtualisation guys would be bothered by an open-coded access
-to UTS_RELEASE.  I guess it doesn't matter much here, but perhaps it'd be
-setting a better example to use init_uts_ns.name.release?
-
-
+---
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c kexec-tools/kexec/crashdump-elf.c
+--- backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump-elf.c	2007-08-03 14:45:47.000000000 +0900
+@@ -36,6 +36,8 @@ int FUNC(struct kexec_info *info,
+ 	char *bufp;
+ 	long int nr_cpus = 0;
+ 	uint64_t notes_addr, notes_len;
++	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
++	int has_vmcoreinfo = 0;
+ 	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
+ 
+ 	if (xen_present())
+@@ -47,7 +49,11 @@ int FUNC(struct kexec_info *info,
+ 		return -1;
+ 	}
+ 
+-	sz = sizeof(EHDR) + nr_cpus * sizeof(PHDR) + ranges * sizeof(PHDR);
++	if (get_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len) == 0) {
++		has_vmcoreinfo = 1;
++	}
++
++	sz = sizeof(EHDR) + (nr_cpus + has_vmcoreinfo) * sizeof(PHDR) + ranges * sizeof(PHDR);
+ 
+ 	/*
+ 	 * Certain architectures such as x86_64 and ia64 require a separate
+@@ -148,6 +154,21 @@ int FUNC(struct kexec_info *info,
+ 		dfprintf_phdr(stdout, "Elf header", phdr);
+ 	}
+ 
++	if (has_vmcoreinfo) {
++		phdr = (PHDR *) bufp;
++		bufp += sizeof(PHDR);
++		phdr->p_type	= PT_NOTE;
++		phdr->p_flags	= 0;
++		phdr->p_offset  = phdr->p_paddr = vmcoreinfo_addr;
++		phdr->p_vaddr   = 0;
++		phdr->p_filesz	= phdr->p_memsz	= vmcoreinfo_len;
++		/* Do we need any alignment of segments? */
++		phdr->p_align	= 0;
++
++		(elf->e_phnum)++;
++		dfprintf_phdr(stdout, "vmcoreinfo header", phdr);
++	}
++
+ 	/* Setup an PT_LOAD type program header for the region where
+ 	 * Kernel is mapped if info->kern_size is non-zero.
+ 	 */
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.c kexec-tools/kexec/crashdump.c
+--- backup/kexec-tools-testing-20070330/kexec/crashdump.c	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump.c	2007-08-03 14:45:05.000000000 +0900
+@@ -108,3 +108,35 @@ int get_crash_notes_per_cpu(int cpu, uin
+ 
+ 	return 0;
+ }
++
++/* Returns the physical address of start of crash notes buffer for a kernel. */
++int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
++{
++	char kdump_info[PATH_MAX];
++	char line[MAX_LINE];
++	int count;
++	FILE *fp;
++	unsigned long long temp, temp2;
++
++	*addr = 0;
++	*len = 0;
++
++	sprintf(kdump_info, "/sys/kernel/vmcoreinfo");
++	fp = fopen(kdump_info, "r");
++	if (!fp) {
++		die("Could not open \"%s\": %s\n", kdump_info,
++		    strerror(errno));
++		return -1;
++	}
++
++	if (!fgets(line, sizeof(line), fp))
++		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
++	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
++	if (count != 2)
++		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
++
++	*addr = (uint64_t) temp;
++	*len = (uint64_t) temp2;
++
++	return 0;
++}
+diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.h kexec-tools/kexec/crashdump.h
+--- backup/kexec-tools-testing-20070330/kexec/crashdump.h	2007-03-30 13:34:36.000000000 +0900
++++ kexec-tools/kexec/crashdump.h	2007-08-03 14:45:05.000000000 +0900
+@@ -2,6 +2,7 @@
+ #define CRASHDUMP_H
+ 
+ extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
++extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
+ 
+ /* Need to find a better way to determine per cpu notes section size. */
+ #define MAX_NOTE_BYTES		1024
+_
 
 _______________________________________________
 kexec mailing list
