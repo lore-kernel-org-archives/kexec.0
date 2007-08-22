@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mga11.intel.com ([192.55.52.93])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1INjtT-0000jK-H1
-	for kexec@lists.infradead.org; Wed, 22 Aug 2007 02:40:45 -0400
-Subject: Re: [RFC][PATCH 1/3] Embed vmcoreinfo into kernel file
-In-reply-to: <20070817094407.GA31095@suse.de>
-Message-Id: <20070822154050oomichi@mail.jp.nec.com>
-References: <20070817094407.GA31095@suse.de>
+	id 1INk3D-0000qe-M5
+	for kexec@lists.infradead.org; Wed, 22 Aug 2007 02:50:49 -0400
+Subject: Re: [linux-pm] Re: [PATH 1/1] Kexec jump - v2 - kexec jump
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20070821101404.GA1704@elf.ucw.cz>
+References: <1184483639.1898.99.camel@caritas-dev.intel.com>
+	<20070731095101.GA1774@elf.ucw.cz>
+	<1185954978.1363.23.camel@caritas-dev.intel.com>
+	<20070816102635.GA2039@elf.ucw.cz>
+	<1187331349.28497.9.camel@caritas-dev.intel.com>
+	<20070821101404.GA1704@elf.ucw.cz>
+Date: Wed, 22 Aug 2007 14:51:11 +0800
+Message-Id: <1187765471.20920.62.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Wed, 22 Aug 2007 15:40:50 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +27,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, vgoyal@in.ibm.com, kexec-ml <kexec@lists.infradead.org>, Dan Aloni <da-x@monatomic.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: david@lang.hm, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
+On Tue, 2007-08-21 at 12:14 +0200, Pavel Machek wrote:
+> Ok, I got it to work -- thanks a lot.
+> 
+> Yes, acpi=off is mandatory. Unfortunately, thinkpad x60 does not boot
+> with acpi=off (should we add another test to linux firmware kit?
+> Machines should still boot in acpi=off mode...). acpi=off noapic
+> nolapic nosmp makes it boot, and that in turn makes kjump work.
+> 
+> Screen is not refreshed on kjump back to original kernel, but I guess
+> that's to be expected. I did not play with framebuffer, yet.
+> 
+> Maybe it is time to move kjump functionality into -mm and
+> kexec-testing?
 
-Hi Bernhard,
+Now I have worked out a full kexec based hibernation prototype,
+including kexec, write out the image, reboot, restore the memory and
+jump back. I will release it recently. :)
 
-2007/08/17 11:44:07 +0200, Bernhard Walle <bwalle@suse.de> wrote:
->Hi,
->
->* Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp> [2007-08-17 08:43]:
->> 
->> Thank you for good comments.
->> I updated the patch for applying your comments.
->
->Instead of providing empty implementations of arch_save_vmcoreinfo()
->for each architecture that doesn't need that hook, I'd suggest to use
->one default implementation with __attribute((weak)) that gets
->overwritten by architecture implementations. See my patch below:
-
-Thank you for a good patch.
-I'll update the patch based on yours.
-
-
-Thanks
-Ken'ichi Ohmichi
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
