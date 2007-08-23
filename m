@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e33.co.us.ibm.com ([32.97.110.151])
+Received: from e31.co.us.ibm.com ([32.97.110.149])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IO3k1-0004PH-Cc
-	for kexec@lists.infradead.org; Wed, 22 Aug 2007 23:52:21 -0400
+	id 1IO3nz-0004SE-K7
+	for kexec@lists.infradead.org; Wed, 22 Aug 2007 23:56:25 -0400
 Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
 	[9.17.195.106])
-	by e33.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l7N3qBes015776
-	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 23:52:11 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l7N3uBsJ027729
+	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 23:56:11 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
 	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l7N3qATs215616
-	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 21:52:10 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l7N3qAl9027019
-	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 21:52:10 -0600
-Date: Thu, 23 Aug 2007 09:22:27 +0530
+	l7N3uBIC213726
+	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 21:56:11 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l7N3uAEZ002614
+	for <kexec@lists.infradead.org>; Wed, 22 Aug 2007 21:56:10 -0600
+Date: Thu, 23 Aug 2007 09:26:29 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
 Subject: Re: [patch] add kdump_after_notifier
-Message-ID: <20070823035227.GA365@in.ibm.com>
+Message-ID: <20070823035629.GB365@in.ibm.com>
 References: <20070802112852.GA7054@in.ibm.com>
 	<31687.1186113947@kao2.melbourne.sgi.com>
 	<20070805110746.GA12540@in.ibm.com>
 	<46C1691E.7090708@ah.jp.nec.com> <20070814083710.GA14538@suse.de>
 	<20070814132454.GA8293@in.ibm.com> <46C4184B.5030303@ah.jp.nec.com>
-	<20070817105630.GA18167@in.ibm.com> <46CA97FE.90505@ah.jp.nec.com>
+	<20070817105630.GA18167@in.ibm.com> <46CAE627.7070908@sgi.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46CA97FE.90505@ah.jp.nec.com>
+In-Reply-To: <46CAE627.7070908@sgi.com>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -41,39 +41,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-On Tue, Aug 21, 2007 at 04:45:02PM +0900, Takenori Nagano wrote:
-> Vivek Goyal wrote:
-> > On Thu, Aug 16, 2007 at 06:26:35PM +0900, Takenori Nagano wrote:
-> >> Vivek Goyal wrote:
-> >>  > So for the time being I think we can put RAS tools on die notifier list
-> >>> and if it runs into issues we can always think of creating a separate list.
-> >>>
-> >>> Few things come to mind.
-> >>>
-> >>> - Why there is a separate panic_notifier_list? Can't it be merged with
-> >>>   die_chain? die_val already got one of the event type as PANIC. If there
-> >>>   are no specific reasons then we should merge the two lists. Registering
-> >>>   RAS tools on a single list is easier.
-> >> I think it is difficult, because die_chain is defined by each architecture.
+On Tue, Aug 21, 2007 at 06:18:31AM -0700, Jay Lan wrote:
+[..]
+> >>> Now user will be able to view all the die_chain users through sysfs and
+> >>> be able to modify the order in which these should run by modifying their
+> >>> priority. Hence all the RAS tools can co-exist.
+> >> This is my image of your proposal.
+> >>
+> >> - Print current order
+> >>
+> >> # cat /sys/class/misc/debug/panic_notifier_list
+> >> priority   name
+> >> 1          IPMI
+> >> 2          watchdog
+> >> 3          Kdb
+> >> 4          Kdump
 > >>
 > > 
-> > I think die_chain is arch independent definition (kernel/die_notifier.c)? 
-> > But anyway, to begin with it can be done only for panic_notifier.
+> > I think Bernhard's suggestion looks better here. I noticed that 
+> > /sys/kernel/debug is already present. So how about following.
+> > 
+> > /sys/kernel/debug/kdump/priority
+> > /sys/kernel/debug/kdb/priority
+> > /sys/kernel/debug/IPMI/priority
 > 
-> I think die_val (notify_die() argument) values are arch independent.
-> They are defined in include/asm-<arch>/kdebug.h.
-> 
-> Your idea is good, but I think it has very large impact. It is very hard to fix
-> them at the same time. So, how about putting off merging two lists?
+> Why separate priority files is better than a central file?
+> At least i think you get a grand picture of priority being
+> defined for all parties with a central file?
 > 
 
-I think that's fine. For the time being we can just export panic_notifier
-list. die_chain is not a problem as of today as die notifiers get invoked
-first and then if panic_on_oops is set, kdump is called. So all the RAS
-tools registered on die_chain will get executed first.
+I thought of couple of reasons.
+- A very different syntax to modify the priority.
+- Separate directories allow easy future extensions in terms of more
+  files. For example, putting a small "description" file in each dir
+  where each registered user can specify what does it do.
+
+But I agree that a single file is good for consolidated view. As bernhard
+suggested, may be we should also implement a read only file where one
+will get a consolidated view.
+
+> What do we decide priority if more than one component has
+> the same priority value?
+> 
+
+I think first come first serve would be appropriate in this case instead of
+returning -EINVAL.
 
 Thanks
 Vivek
