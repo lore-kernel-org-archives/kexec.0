@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.18.163])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IQzeW-00036p-31
-	for kexec@lists.infradead.org; Fri, 31 Aug 2007 02:06:49 -0400
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp02.au.ibm.com (8.13.1/8.13.1) with ESMTP id l7V5nICx007251
-	for <kexec@lists.infradead.org>; Fri, 31 Aug 2007 15:49:18 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.250.244])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l7V5qoNX162126
-	for <kexec@lists.infradead.org>; Fri, 31 Aug 2007 15:52:50 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l7V5nGUN014706
-	for <kexec@lists.infradead.org>; Fri, 31 Aug 2007 15:49:16 +1000
-Message-ID: <46D7AA57.6030309@linux.vnet.ibm.com>
-Date: Fri, 31 Aug 2007 11:12:47 +0530
-From: Subrata Modak <subrata@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: [ANNOUNCE] The Linux Test Project has been Released for AUGUST 2007
-Content-Type: multipart/mixed; boundary="------------020909020405060108050201"
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IR1S9-0004TL-5b
+	for kexec@lists.infradead.org; Fri, 31 Aug 2007 04:02:11 -0400
+Date: Mon, 27 Aug 2007 18:48:29 +0000
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation: kexec jump
+Message-ID: <20070827184829.GB4104@ucw.cz>
+References: <1188177280.3247.37.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1188177280.3247.37.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,246 +19,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: ltp-list@lists.sourceforge.net, ltp-announce@lists.sourceforge.net
-Cc: containers@lists.osdl.org, redhat-lspp@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, selinux@tycho.nsa.gov
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-This is a multi-part message in MIME format.
---------------020909020405060108050201
-Content-Type: multipart/alternative;
-	boundary="------------090404000908070801020007"
+Hi!
 
+> To support jumping back from kexeced kernel, before executing the new
+> kernel, the devices are put into quiescent state (to be fully
+> implemented), and the state of devices and CPU is saved. After jumping
+> back from kexeced kernel, the state of devices and CPU are restored
+> accordingly. The devices/CPU state save/restore code of software
+> suspend is called to implement corresponding function.
+> 
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
 
---------------090404000908070801020007
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-
-*Dear All*,
-
-The Linux Test Project test suite has been released for the month of 
-AUGUST 2007. The latest version of the test-suite contains 3000+ tests 
-for the Linux OS and can be found at http://ltp.sourceforge.net/. Latest 
-happenings in LTP can also be found at:
-http://ltp.sourceforge.net/wiki/, and
-http://ltp.sourceforge.net/wikiArchives.php.
-
-Our web site also contains other information such as:
-- A Linux test tools matrix
-- Technical papers
-- How To's on Linux testing
-- Code coverage analysis tool.
-
-*Release Highlights:*
- ** * Integration of NUMA testcases*
- * *Releases of RHEL5 LSPP Certification Test suite***
- * * Release of LTP-KDUMP Test-Case Plan*
- * * Release of Containers Testcases Plan*
- * * Release of GCOV-Kernel & LCOV Packages*
- ** Merging of OPEN_HPI_TESTSUITE-2.9.3 to LTP*
- * Addition of a new Test Case 'swapon03'
- * Many more Bug Fixes and Patches
-*
-*Note(s) from the Maintainer:*
-You will see couple of new test-cases in LTP in coming months and also 
-broken testcases getting fixed slowly. We want to revisit all testcases 
-and hence the time taken is long. From every release onwards you will 
-also find results of LTP-RUNALL on different Architectures (_*ia64, 
-x86_64, i386, PPC64, s390x*_) on varied Kernels & Distros. This will 
-give you more insight into the behaviour of LTP across different platforms.
-
-We encourage the community to post results to ltp-results@lists.sf.net, 
-and patches, new tests, bugs or comments/questions to ltp-list@lists.sf.net,
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=103382 (for 
-New Bug(s)),
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=303382 (for 
-New Patch(s)),
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=353382 (for 
-New Feature Request(s))
-
-Please also see the ChangeLog Attached (AUGUST 2007):
-
-Happy testing,
-Regards--
-Subrata Modak,
+Looks quite ok to me...
 
 
---------------090404000908070801020007
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+> Index: linux-2.6.23-rc3/include/asm-i386/kexec.h
+> ===================================================================
+> --- linux-2.6.23-rc3.orig/include/asm-i386/kexec.h	2007-08-25 21:56:54.000000000 +0800
+> +++ linux-2.6.23-rc3/include/asm-i386/kexec.h	2007-08-25 21:57:00.000000000 +0800
+> @@ -94,6 +94,10 @@
+>  		unsigned long start_address,
+>  		unsigned int has_pae) ATTRIB_NORET;
+>  
+> +#ifdef CONFIG_KEXEC_JUMP
+> +extern asmlinkage int machine_kexec_real_jump(void *buf);
+> +#endif
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-  <title></title>
-</head>
-<body bgcolor="#ffffff" text="#000000">
-<b>Dear All</b>,<br>
-<br>
-The Linux Test Project test suite has been released for the month of
-AUGUST 2007. The latest version of the test-suite contains 3000+ tests
-for the Linux OS and can be found at <a class="moz-txt-link-freetext"
- href="http://ltp.sourceforge.net/">http://ltp.sourceforge.net/</a>.
-Latest happenings in LTP can also be found at:<br>
-<a class="moz-txt-link-freetext" href="http://ltp.sourceforge.net/wiki/">http://ltp.sourceforge.net/wiki/</a>,
-and<br>
-<a class="moz-txt-link-freetext"
- href="http://ltp.sourceforge.net/wikiArchives.php">http://ltp.sourceforge.net/wikiArchives.php</a>.
-<br>
-<br>
-Our web site also contains other information such as:<br>
-- A Linux test tools matrix<br>
-- Technical papers<br>
-- How To's on Linux testing<br>
-- Code coverage analysis tool.<br>
-<br>
-<b>Release Highlights:</b><br>
-&nbsp;<small><b>* <strong> Integration of NUMA testcases</strong><br>
-&nbsp;* <strong>Releases of RHEL5 LSPP Certification Test suite</strong><strong></strong><br>
-&nbsp;* <strong> Release of LTP-KDUMP Test-Case Plan</strong><br>
-&nbsp;* <strong> Release of Containers Testcases Plan</strong><br>
-&nbsp;* <strong> Release of GCOV-Kernel &amp; LCOV Packages</strong><br>
-&nbsp;*<strong> Merging of OPEN_HPI_TESTSUITE-2.9.3 to LTP</strong><br>
-&nbsp;* Addition of a new Test Case 'swapon03'<br>
-&nbsp;* Many more Bug Fixes and Patches <br>
-</b></small><br>
-<b>Note(s) from the Maintainer:</b><br>
-You will see couple of new test-cases in LTP in coming months and also
-broken testcases getting fixed slowly. We want to revisit all testcases
-and hence the time taken is long. From every release onwards you will
-also find results of LTP-RUNALL on different Architectures (<u><b>ia64,
-x86_64, i386, PPC64, s390x</b></u>) on varied Kernels &amp; Distros.
-This will give you more insight into the behaviour of LTP across
-different platforms.<br>
-<br>
-We encourage the community to post results to <a
- class="moz-txt-link-abbreviated" href="mailto:ltp-results@lists.sf.net">ltp-results@lists.sf.net</a>,
-and patches, new tests, bugs or comments/questions to
-<a class="moz-txt-link-abbreviated" href="mailto:ltp-list@lists.sf.net">ltp-list@lists.sf.net</a>,<br>
-<a class="moz-txt-link-freetext"
- href="http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=103382">http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=103382</a>
-(for New Bug(s)),<br>
-<a class="moz-txt-link-freetext"
- href="http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=303382">http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=303382</a>
-(for New Patch(s)),<br>
-<a class="moz-txt-link-freetext"
- href="http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=353382">http://sourceforge.net/tracker/?func=add&amp;group_id=3382&amp;atid=353382</a>
-(for New Feature Request(s))<br>
-<br>
-Please also see the ChangeLog Attached (AUGUST 2007):<br>
-<br>
-Happy testing,
-<br>
-Regards--
-<br>
-Subrata Modak,<br>
-<br>
-</body>
-</html>
+Is it really neccessery to have ifdef here?
 
---------------090404000908070801020007--
+> +#ifdef CONFIG_KEXEC_JUMP
+> +#define KEXEC_JUMP_FLAG_IS_KEXECED_KERNEL     0x1
+> +#endif /* CONFIG_KEXEC_JUMP */
 
---------------020909020405060108050201
-Content-Type: text/plain;
- name="Aug-2007_Changelog.txt"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="Aug-2007_Changelog.txt"
+And here? ... It would be nice to use slightly shorter identifier.
+'KJUMP_IS_KEXECED' should be enough.
 
-1)  Log Message: "rsalveti@br.ibm.com" fixed write05 that failed with LTP 20070331 on Fedora 7 GA
-File(s) Affected:
-ltp/testcases/kernel/syscalls/write/write05.c
+> +/*
+> + * Must be relocatable PIC code callable as a C function
+> + */
+> +#define HALF_PAGE_ALIGNED (1 << (PAGE_SHIFT-1))
+> +
+> +#define EBX	0x0
+> +#define ESI	0x4
+> +#define EDI	0x8
+> +#define EBP	0xc
+> +#define ESP	0x10
+> +#define CR0	0x14
+> +#define CR3	0x18
+> +#define CR4	0x1c
+> +#define FLAG	0x20
+> +#define RET	0x24
 
-2)  Log Message: "dmarlin@redhat.com" corrected fail message in data_space testcase
-File(s) Affected:
-ltp/testcases/kernel/mem/vmtests/data_space.c
+Hmm, is this enough? Should it use struct ptregs for normal registers?
+What about segment registers -- they could change between kernel
+version. Should some kind of 'version of kjump protocol' be
+introduced?
 
-3)  Log Message: "liudeyan@cn.ibm.com" made mmap1 to be terminated by Ctrl-C
-File(s) Affected:
-ltp/testcases/kernel/mem/mtest06/mmap1.c
+What about CX/DX/fpu state? GDT pointer?
 
-4)  Log Message: "suzuki@in.ibm.com" fixed times03, where it failed to generate report on user time on RHEl5.1 early build(2.6.18-32.el5)
-File(s) Affected: ltp/testcases/kernel/syscalls/times/times03.c
+Actually I think that you _do_ need to save FPU. You should probably
+use relevant swsusp parts here.
 
-5)  Log Message: gcov-kernel: added eabi-compatibility patch, renamed .diff to .patch by "oberpapr@users.sourceforge.net"
-File(s) Added:
-ltp/utils/analysis/gcov-kernel/linux-2.6.21-gcov-arm-eabi.patch 
-ltp/utils/analysis/gcov-kernel/linux-2.6.22-gcov-arm-eabi.patch
-File(s) Deleted:
-ltp/utils/analysis/gcov-kernel/linux-2.6.21-gcov-arm-eabi.diff
-
-6)  Log Message: lcov: fixed spec file
-File(s) Affected:
-ltp/utils/analysis/lcov/rpm/lcov.spec
-
-7)  Log Message: gcov-kernel: removed outdated FAQ entry
-File(s) Affected:
-ltp/utils/analysis/gcov-kernel/FAQ
-
-8)  Log Message: gcov-kernel: added Makefile
-File(s) Added: ltp/utils/analysis/gcov-kernel/Makefile
-
-9)  Log Message: lcov: Makefile for release 1.6
-File(s) Affected:
-/cvsroot/ltp/utils/analysis/lcov/Makefile
-
-10) Log Message: lcov: Makefile for post-release
-File(s) Affected:
-/cvsroot/ltp/utils/analysis/lcov/Makefile
-
-11) Log Message: lcov: add experimental option "--norecursion"
-File(s) Affected:
-/cvsroot/ltp/utils/analysis/lcov/bin/geninfo
-/cvsroot/ltp/utils/analysis/lcov/bin/lcov
-
-12) Log Message: Changes to make testcases/kernel/numa/numa01.sh executable
-File(s) Affected:
-ltp/testcases/kernel/numa/Makefile
-
-13) Log Message: "carmelo.amoroso@st.com" changed the Default values for MAXSIZE and csize
-File(s) Affected:
-ltp/testcases/kernel/mem/vmtests/stack_space.c
-
-14) Log Message: "brenohl@br.ibm.com" wanted to handle file descriptors properly 
-File(s) Affected:
-ltp/testcases/kernel/syscalls/mkdir/mkdir03.c
-ltp/testcases/kernel/syscalls/mmap/mmap09.c
-ltp/testcases/kernel/syscalls/open/open07.c
-ltp/testcases/kernel/syscalls/sendfile/sendfile03.c
-
-15) Log Message: "rsalvetidev@linux.vnet.ibm.com" says that this version can handle when the distro has MAX_SWAPFILES as 30 or 32
-File(s) Modified:
-ltp/runtest/ltplite ltp/runtest/stress.part3
-ltp/runtest/syscalls
-ltp/testcases/kernel/syscalls/swapon/swapon02.c
-File(s) Added:
-ltp/testcases/kernel/syscalls/swapon/swapon03.c
-
-16) Log Message: Containers Testcases Plan
-File(s) Added:
-ltp/testcases/kernel/containers/TEST_PLAN.txt
-
-17) Log Message: LTP-KDUMP Test-Case Plan
-File(s) Added:
-ltp/testcases/kdump/TEST_PLAN.txt
-
-18) Log Message: Update to OpenHPI 2.9.3 (www.openhpi.org for more info)
-File(s) Affected:
-ltp/testcases/open_hpi_testsuite/
- 
-
-
---------------020909020405060108050201
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+							Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------020909020405060108050201--
-
