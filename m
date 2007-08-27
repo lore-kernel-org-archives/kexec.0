@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from xenotime.net ([66.160.160.81])
-	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IPiO9-0007ZE-06
-	for kexec@lists.infradead.org; Mon, 27 Aug 2007 13:28:36 -0400
-Received: from midway.site ([96.225.192.201]) by xenotime.net for
-	<kexec@lists.infradead.org>; Mon, 27 Aug 2007 10:28:28 -0700
-Date: Mon, 27 Aug 2007 10:28:27 -0700
-From: Randy Dunlap <rdunlap@xenotime.net>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IPinG-0007oH-Dk
+	for kexec@lists.infradead.org; Mon, 27 Aug 2007 13:54:34 -0400
+Date: Mon, 27 Aug 2007 13:54:23 -0400
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: kexec+kdump + vmcoreinfo patch
-Message-Id: <20070827102827.5c5dcc53.rdunlap@xenotime.net>
-In-Reply-To: <20070827170253.GE27516@redhat.com>
+Message-ID: <20070827175423.GG20548@hmsendeavour.rdu.redhat.com>
 References: <20070824144147.5e1cadc2.rdunlap@xenotime.net>
 	<20070824170139.021be621.rdunlap@xenotime.net>
 	<20070826132305.GA15555@hmsendeavour.rdu.redhat.com>
 	<20070826100431.e36f92e7.rdunlap@xenotime.net>
 	<20070827165538.GE20548@hmsendeavour.rdu.redhat.com>
 	<20070827170253.GE27516@redhat.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070827170253.GE27516@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,8 +31,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Don Zickus <dzickus@redhat.com>
 Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Randy Dunlap <rdunlap@xenotime.net>
 
-On Mon, 27 Aug 2007 13:02:53 -0400 Don Zickus wrote:
-
+On Mon, Aug 27, 2007 at 01:02:53PM -0400, Don Zickus wrote:
 > On Mon, Aug 27, 2007 at 12:55:38PM -0400, Neil Horman wrote:
 > > > crashkernel=64M@16M
 > > > 
@@ -54,20 +52,31 @@ On Mon, 27 Aug 2007 13:02:53 -0400 Don Zickus wrote:
 > Killed process 701 (S01boot.udev)
 > 
 > Heh, it's udev again.  What a surprise! </sarcasm>
-
-Right, that's hardly a surprise.  :(
-
+> 
 > Neil, didn't we solve this with an init 1 or something (ignoring the whole
 > busybox thing).
+> 
+I don't recall, but that could well have been prior to my involvement in the
+project.  I can tell you that I don't run udevd in my initramfs for kdump, and
+I've never seen this particular oom-kill before, so there certainly seems to be
+some level of correlation there.
 
-I was trying to boot to runlevel 3.  I can just boot to runlevel 1
-for a workaround (I think).
+Regards
+Neil
 
-Thanks.
+> Cheers,
+> Don
+> 
 
----
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your code ***
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
