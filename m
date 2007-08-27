@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IPixA-0007yO-UQ
-	for kexec@lists.infradead.org; Mon, 27 Aug 2007 14:04:48 -0400
-Date: Mon, 27 Aug 2007 14:04:42 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: kexec+kdump + vmcoreinfo patch
-Message-ID: <20070827180442.GI20548@hmsendeavour.rdu.redhat.com>
-References: <20070824144147.5e1cadc2.rdunlap@xenotime.net>
-	<20070824170139.021be621.rdunlap@xenotime.net>
-	<20070826132305.GA15555@hmsendeavour.rdu.redhat.com>
-	<20070826100431.e36f92e7.rdunlap@xenotime.net>
-	<20070827165538.GE20548@hmsendeavour.rdu.redhat.com>
-	<20070827100952.4f3daf9c.rdunlap@xenotime.net>
+	id 1IPmAw-000130-Ln
+	for kexec@lists.infradead.org; Mon, 27 Aug 2007 17:31:18 -0400
+Date: Mon, 27 Aug 2007 23:31:34 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC][PATCH 2/2 -mm] kexec based hibernation: kexec restore
+Message-ID: <20070827213134.GE3398@elf.ucw.cz>
+References: <1188177296.3247.38.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070827100952.4f3daf9c.rdunlap@xenotime.net>
+In-Reply-To: <1188177296.3247.38.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,87 +23,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Mon, Aug 27, 2007 at 10:09:52AM -0700, Randy Dunlap wrote:
-> On Mon, 27 Aug 2007 12:55:38 -0400 Neil Horman wrote:
-> 
-> > On Sun, Aug 26, 2007 at 10:04:31AM -0700, Randy Dunlap wrote:
-> > > On Sun, 26 Aug 2007 09:23:05 -0400 Neil Horman wrote:
-> > > 
-> > > > On Fri, Aug 24, 2007 at 05:01:39PM -0700, Randy Dunlap wrote:
-> > > > > On Fri, 24 Aug 2007 14:41:47 -0700 Randy Dunlap wrote:
-> > > > > 
-> > > > > > Hi,
-> > > > > > 
-> > > > > > I'm trying to use the recent vmcoreinfo patch...
-> > > > > 
-> > > > > > c.  My 2.6.23-rc3 dump-capture kernel currently faults a few times,
-> > > > > > then it panics.  I'll add a serial console and capture its output
-> > > > > > to see what is going on.
-> > > > > 
-> > > > > I booted 3 times with no problems (without serial console on the
-> > > > > dump-capture kernel), then I added a serial console to that kernel
-> > > > > and got lots of problems.  They all seem to be OOM problems, then
-> > > > > the kernel gives up and falls over.  (log attached)
-> > > > > 
-> > > > haven't looked at your log yet, but how much memory are you passing in your
-> > > > crashkernel parameter in your first kernel boot?  Nominally 64MB is the minimum
-> > > > recommended for most kernel configurations
-> > > 
-> > > Hi Neil,
-> > > 
-> > > crashkernel=64M@16M
-> > > 
-> > Hmm, well that should be enough.  looking at your log, it appears as though you
-> > have a 512k chunk allocatable, which should seem sufficient to go on a little
-> > longer.  The fact that your not seems to indicate that you are allocating a
-> > suspiciously large single chunk of ram.  I'd configure your initramfs to drop to
-> > a shell prompt before it sets up lp0.  Then you can step through the actions of
-> > the init script and monitor the contents of /proc/slabinfo to get an idea of
-> > whats eating up all your lowmem prior to the oom kill.
-> 
-> I don't have an initramfs (nor an initrd).
-> Is one required for using kexec + kdump?
-> 
-Are you passing a root device directly to the kernel for mounting then?  that
-likely changes things.  As to weather or not you need an initramfs depends
-entirely on your kernel configuration.  Strictly speaking, you don't need one,
-since you can configure the kernel to find the root device on its own via the
-command line, but I would recommend an initramfs, since you can customize it for
-use in a particular dump environment, without needing to rely on things like
-udevd to create device nodes for you.  You can find the latest kexec-tools srpm
-on my home page:
-http://people.redhat.com/nhorman
-if you want to look at the mkdumprd utility to see how we assemble the
-initramfs.
+Hi!
 
-Regards
-Neil
- 
-> Anyway, I'll try to do your suggestion somehow.  Thanks.
+> This patch adds writing support for /dev/oldmem. This is used to
+> restore the memory contents of hibernated system.
 > 
-> > > > > d.  Documentation/kdump/kdump.txt mentions an option to produce
-> > > > > ELF32 headers instead of 64-bit headers:  --elf32-core-headers.
-> > > > > Where is this option used?  I.e., what program recognizes it?
-> > > > > kdump.txt isn't telling me this info and I can't read it between
-> > > > > the lines.
-> 
-> 
-> ---
-> ~Randy
-> *** Remember to use Documentation/SubmitChecklist when testing your code ***
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+
+> +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
+> +			  size_t csize, unsigned long offset, int userbuf)
+
+Hmm, int userbuf is only ever set to one... Does it make sense to have
+write_oldmem_page in the separate file? The onl user is mem.c, perhaps
+it should go there?
+
+> +
+> +/*
+> + * Write memory corresponding to the old kernel.
+> + */
+> +static ssize_t write_oldmem(struct file *file, const char __user *buf,
+> +			    size_t count, loff_t *ppos)
+> +{
+> +	unsigned long pfn, offset;
+> +	size_t write = 0, csize;
+> +	int rc = 0;
+> +
+> +	while (count) {
+> +		pfn = *ppos / PAGE_SIZE;
+> +		if (pfn > saved_max_pfn)
+> +			return write;
+> +
+> +		offset = (unsigned long)(*ppos % PAGE_SIZE);
+> +		if (count > PAGE_SIZE - offset)
+> +			csize = PAGE_SIZE - offset;
+> +		else
+> +			csize = count;
+> +		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
+> +		if (rc < 0)
+> +			return rc;
+> +		buf += csize;
+> +		*ppos += csize;
+> +		write += csize;
+> +		count -= csize;
+> +	}
+> +	return write;
+> +}
 
 -- 
-/***************************************************
- *Neil Horman
- *Software Engineer
- *Red Hat, Inc.
- *nhorman@redhat.com
- *gpg keyid: 1024D / 0x92A74FA1
- *http://pgp.mit.edu
- ***************************************************/
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
