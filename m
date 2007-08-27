@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IPi1X-0007LF-9A
-	for kexec@lists.infradead.org; Mon, 27 Aug 2007 13:05:14 -0400
-Date: Mon, 27 Aug 2007 13:02:53 -0400
-From: Don Zickus <dzickus@redhat.com>
+Received: from xenotime.net ([66.160.160.81])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IPi6C-0007OT-1C
+	for kexec@lists.infradead.org; Mon, 27 Aug 2007 13:10:06 -0400
+Received: from midway.site ([96.225.192.201]) by xenotime.net for
+	<kexec@lists.infradead.org>; Mon, 27 Aug 2007 10:09:53 -0700
+Date: Mon, 27 Aug 2007 10:09:52 -0700
+From: Randy Dunlap <rdunlap@xenotime.net>
 Subject: Re: kexec+kdump + vmcoreinfo patch
-Message-ID: <20070827170253.GE27516@redhat.com>
+Message-Id: <20070827100952.4f3daf9c.rdunlap@xenotime.net>
+In-Reply-To: <20070827165538.GE20548@hmsendeavour.rdu.redhat.com>
 References: <20070824144147.5e1cadc2.rdunlap@xenotime.net>
 	<20070824170139.021be621.rdunlap@xenotime.net>
 	<20070826132305.GA15555@hmsendeavour.rdu.redhat.com>
 	<20070826100431.e36f92e7.rdunlap@xenotime.net>
 	<20070827165538.GE20548@hmsendeavour.rdu.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070827165538.GE20548@hmsendeavour.rdu.redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,9 +29,35 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Neil Horman <nhorman@redhat.com>
-Cc: Randy Dunlap <rdunlap@xenotime.net>, kexec@lists.infradead.org
+Cc: kexec@lists.infradead.org
 
-On Mon, Aug 27, 2007 at 12:55:38PM -0400, Neil Horman wrote:
+On Mon, 27 Aug 2007 12:55:38 -0400 Neil Horman wrote:
+
+> On Sun, Aug 26, 2007 at 10:04:31AM -0700, Randy Dunlap wrote:
+> > On Sun, 26 Aug 2007 09:23:05 -0400 Neil Horman wrote:
+> > 
+> > > On Fri, Aug 24, 2007 at 05:01:39PM -0700, Randy Dunlap wrote:
+> > > > On Fri, 24 Aug 2007 14:41:47 -0700 Randy Dunlap wrote:
+> > > > 
+> > > > > Hi,
+> > > > > 
+> > > > > I'm trying to use the recent vmcoreinfo patch...
+> > > > 
+> > > > > c.  My 2.6.23-rc3 dump-capture kernel currently faults a few times,
+> > > > > then it panics.  I'll add a serial console and capture its output
+> > > > > to see what is going on.
+> > > > 
+> > > > I booted 3 times with no problems (without serial console on the
+> > > > dump-capture kernel), then I added a serial console to that kernel
+> > > > and got lots of problems.  They all seem to be OOM problems, then
+> > > > the kernel gives up and falls over.  (log attached)
+> > > > 
+> > > haven't looked at your log yet, but how much memory are you passing in your
+> > > crashkernel parameter in your first kernel boot?  Nominally 64MB is the minimum
+> > > recommended for most kernel configurations
+> > 
+> > Hi Neil,
+> > 
 > > crashkernel=64M@16M
 > > 
 > Hmm, well that should be enough.  looking at your log, it appears as though you
@@ -40,23 +67,22 @@ On Mon, Aug 27, 2007 at 12:55:38PM -0400, Neil Horman wrote:
 > a shell prompt before it sets up lp0.  Then you can step through the actions of
 > the init script and monitor the contents of /proc/slabinfo to get an idea of
 > whats eating up all your lowmem prior to the oom kill.
-> 
-> Neil
-> 
 
-<snipped from Randy's output>
+I don't have an initramfs (nor an initrd).
+Is one required for using kexec + kdump?
 
-Out of memory: kill process 680 (boot) score 309 or a child
-Killed process 701 (S01boot.udev)
+Anyway, I'll try to do your suggestion somehow.  Thanks.
 
-Heh, it's udev again.  What a surprise! </sarcasm>
+> > > > d.  Documentation/kdump/kdump.txt mentions an option to produce
+> > > > ELF32 headers instead of 64-bit headers:  --elf32-core-headers.
+> > > > Where is this option used?  I.e., what program recognizes it?
+> > > > kdump.txt isn't telling me this info and I can't read it between
+> > > > the lines.
 
-Neil, didn't we solve this with an init 1 or something (ignoring the whole
-busybox thing).
 
-Cheers,
-Don
-
+---
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
 
 _______________________________________________
 kexec mailing list
