@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
+Received: from mga11.intel.com ([192.55.52.93])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IPmAw-000130-Ln
-	for kexec@lists.infradead.org; Mon, 27 Aug 2007 17:31:18 -0400
-Date: Mon, 27 Aug 2007 23:31:34 +0200
-From: Pavel Machek <pavel@ucw.cz>
+	id 1IPpeO-0002ZI-BG
+	for kexec@lists.infradead.org; Mon, 27 Aug 2007 21:13:51 -0400
 Subject: Re: [RFC][PATCH 2/2 -mm] kexec based hibernation: kexec restore
-Message-ID: <20070827213134.GE3398@elf.ucw.cz>
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20070827213134.GE3398@elf.ucw.cz>
 References: <1188177296.3247.38.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1188177296.3247.38.camel@caritas-dev.intel.com>
+	<20070827213134.GE3398@elf.ucw.cz>
+Date: Tue, 28 Aug 2007 09:14:37 +0800
+Message-Id: <1188263677.2050.8.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,58 +23,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
+To: Pavel Machek <pavel@ucw.cz>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-Hi!
-
-> This patch adds writing support for /dev/oldmem. This is used to
-> restore the memory contents of hibernated system.
+On Mon, 2007-08-27 at 23:31 +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > This patch adds writing support for /dev/oldmem. This is used to
+> > restore the memory contents of hibernated system.
+> > 
+> > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> 
+> > +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
+> > +			  size_t csize, unsigned long offset, int userbuf)
+> 
+> Hmm, int userbuf is only ever set to one... Does it make sense to have
+> write_oldmem_page in the separate file? The onl user is mem.c, perhaps
+> it should go there?
+> 
 
-> +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
-> +			  size_t csize, unsigned long offset, int userbuf)
+write_oldmem_page is kept to be consistent with copy_oldmem_page as much
+as possible. The userbuf is used by copy_oldmem_page too, and
+write_oldmem_page is in the same file as copy_oldmem_page. I think the
+consistence between them is reasonable.
 
-Hmm, int userbuf is only ever set to one... Does it make sense to have
-write_oldmem_page in the separate file? The onl user is mem.c, perhaps
-it should go there?
+And the copy_oldmem_page/write_oldmem_page is considered to be
+architecture dependent. Now, there are different implementations for
+copy_oldmem_page on different architectures. So I think the
+copy_oldmem_page/write_oldmem_page should be kept in separate file
+instead of go mem.c.
 
-> +
-> +/*
-> + * Write memory corresponding to the old kernel.
-> + */
-> +static ssize_t write_oldmem(struct file *file, const char __user *buf,
-> +			    size_t count, loff_t *ppos)
-> +{
-> +	unsigned long pfn, offset;
-> +	size_t write = 0, csize;
-> +	int rc = 0;
-> +
-> +	while (count) {
-> +		pfn = *ppos / PAGE_SIZE;
-> +		if (pfn > saved_max_pfn)
-> +			return write;
-> +
-> +		offset = (unsigned long)(*ppos % PAGE_SIZE);
-> +		if (count > PAGE_SIZE - offset)
-> +			csize = PAGE_SIZE - offset;
-> +		else
-> +			csize = count;
-> +		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
-> +		if (rc < 0)
-> +			return rc;
-> +		buf += csize;
-> +		*ppos += csize;
-> +		write += csize;
-> +		count -= csize;
-> +	}
-> +	return write;
-> +}
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
