@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IPpnr-0002eX-2G
-	for kexec@lists.infradead.org; Mon, 27 Aug 2007 21:23:44 -0400
-Subject: Re: [RFC][PATCH 0/2 -mm] kexec based hibernation
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20070827131549.GA4104@ucw.cz>
-References: <1188177245.3247.36.camel@caritas-dev.intel.com>
-	<20070827050027.GB9809@in.ibm.com>
-	<1188195529.3247.82.camel@caritas-dev.intel.com>
-	<20070827075317.GB2060@elf.ucw.cz>
-	<m1d4x95dqy.fsf@ebiederm.dsl.xmission.com>
-	<20070827131549.GA4104@ucw.cz>
-Date: Tue, 28 Aug 2007 09:24:29 +0800
-Message-Id: <1188264269.2050.16.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from smtp104.mail.mud.yahoo.com ([209.191.85.214])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IQDUr-00081D-On
+	for kexec@lists.infradead.org; Tue, 28 Aug 2007 22:41:41 -0400
+Message-ID: <46D4DCD5.4030601@yahoo.com.au>
+Date: Wed, 29 Aug 2007 12:41:25 +1000
+From: Nick Piggin <nickpiggin@yahoo.com.au>
+MIME-Version: 1.0
+Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation
+References: <9D7649D18729DE4BB2BD7B494F7FEDC257EA60@pdsmsx415.ccr.corp.intel.com>
+	<1188180997.3247.68.camel@caritas-dev.intel.com>
+In-Reply-To: <1188180997.3247.68.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,56 +23,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@lists.linux-foundation.org, Andrew Morton <akpm@linux-foundation.org>, "Hu,
+	Fenghua" <fenghua.hu@intel.com>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Mon, 2007-08-27 at 13:15 +0000, Pavel Machek wrote:
-> Hi!
+Huang, Ying wrote:
+> On Mon, 2007-08-27 at 09:28 +0800, Hu, Fenghua wrote:
 > 
-> > >> > Does this make sense?
-> > >> 
-> > >> Yes, this is a sensible optimization. But I think it may be better to
-> > >> make bootloader load kernel D directly into a specified memory location.
-> > >> For example, we can add a option to "kernel" command of grub. 
-> > >> 
-> > >> And, I think we can do more in bootloader. Such as we can prepare
-> > >> two
-> > >
-> > > Yes, that would be nice.
-> > >
-> > > It will mean quite a bit of work, but I guess it should be the long
-> > > term goal. Loading restore kernel directly from bootloader means:
-> > >
-> > > 1) it is fast -- no need to boot another kernel
-> > >
-> > > 2) it is "classical" way of doing things
-> > >
-> > > On the other hand, we loose flexibility that way:
-> > >
-> > > 1) it locks you onto one bootloader
-> > >
-> > > 2) you no longer have userland there to do uncompression, decryption,
-> > > etc..
-> > 
-> > True although for the uncompression and decryption those aren't exactly foreign
-> > requirements for bootloaders.
+>>One quick question is, can it improve hiberation/wakeup time?
 > 
-> Well, uncompression yes, but crypto? What is that, some kind of
-> trusted computing thingie?
 > 
-> We do RSA for uswsusp, that may be a bit of problem for a bootloader,
-> but I'm glad bootloaders are bloated already :-).
+> In general, for kexec based hibernation, what increases
+> hibernation/wakeup time:
+> 
+> - One extra Linux boot is needed to hibernate and wakeup.
+> 
+> 
+> What decreases hibernation/wakeup time:
+> 
+> - Most hibernation/wakeup work is done in full functional user space
+> program, so it is possible to do some optimization, such as parallel
+> compression.
 
-As far as I know, the grub 2.0 uses a modular implementation scheme.
-That is, every OS loader (Multi-boot, Linux, FreeBSD etc), partition
-table, file system is implemented as a module, and these modules can be
-statically linked into the final image.
+- It does not have to reclaim pagecache before suspend?
 
-So I think the hibernation image loading can be implemented in grub 2.0
-in a manageable way. :)
+- It does not have to restore working set afterwards?
 
-Best Regards,
-Huang Ying
+(You could do this to reduce image size, of course, but it can
+be optional which is nice).
+
+
+> So, I think the kexec based hibernation may be slower than original
+> implementation in general. In this prototype implementation, the
+> hibernation/wakeup time is much longer than original hibernation/wakeup
+> implementation. But it has much to be optimized and I think it can
+> approach the speed of the original implementation after optimization.
+
+Also, don't just look at the time to do a simple suspend/resume cycle,
+but the full cost of going from working state to working state (eg.
+grep a kernel tree or two!).
+
+Although the kexec details are out of my league, I really like
+everything about the concept :) Nice work.
+
+-- 
+SUSE Labs, Novell Inc.
 
 _______________________________________________
 kexec mailing list
