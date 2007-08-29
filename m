@@ -1,18 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IQPGC-0007x4-1c
-	for kexec@lists.infradead.org; Wed, 29 Aug 2007 11:15:14 -0400
-Date: Wed, 29 Aug 2007 17:15:08 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC][PATCH 2/2 -mm] kexec based hibernation: kexec restore
-Message-ID: <20070829151508.GA11179@atrey.karlin.mff.cuni.cz>
-References: <1188177296.3247.38.camel@caritas-dev.intel.com>
-	<20070827213134.GE3398@elf.ucw.cz>
-	<1188263677.2050.8.camel@caritas-dev.intel.com>
+Received: from e23smtp01.au.ibm.com ([202.81.18.162])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IQL6f-0004rj-4z
+	for kexec@lists.infradead.org; Wed, 29 Aug 2007 06:49:11 -0400
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp01.au.ibm.com (8.13.1/8.13.1) with ESMTP id l7T8t6Jb030559
+	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 18:55:06 +1000
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l7T8wQJU146256
+	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 18:58:27 +1000
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l7T9sqNJ023272
+	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 19:54:52 +1000
+Message-ID: <46D532E6.2020708@linux.vnet.ibm.com>
+Date: Wed, 29 Aug 2007 14:18:38 +0530
+From: Subrata Modak <subrata@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1188263677.2050.8.camel@caritas-dev.intel.com>
+Subject: LTP-KDUMP Test Plan
+Content-Type: multipart/mixed; boundary="------------010807080803080503040909"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,48 +28,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: ltp-list@lists.sourceforge.net
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-> On Mon, 2007-08-27 at 23:31 +0200, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > This patch adds writing support for /dev/oldmem. This is used to
-> > > restore the memory contents of hibernated system.
-> > > 
-> > > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> > 
-> > > +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
-> > > +			  size_t csize, unsigned long offset, int userbuf)
-> > 
-> > Hmm, int userbuf is only ever set to one... Does it make sense to have
-> > write_oldmem_page in the separate file? The onl user is mem.c, perhaps
-> > it should go there?
-> > 
-> 
-> write_oldmem_page is kept to be consistent with copy_oldmem_page as much
-> as possible. The userbuf is used by copy_oldmem_page too, and
-> write_oldmem_page is in the same file as copy_oldmem_page. I think the
-> consistence between them is reasonable.
-> 
-> And the copy_oldmem_page/write_oldmem_page is considered to be
-> architecture dependent. Now, there are different implementations for
-> copy_oldmem_page on different architectures. So I think the
-> copy_oldmem_page/write_oldmem_page should be kept in separate file
-> instead of go mem.c.
+This is a multi-part message in MIME format.
+--------------010807080803080503040909
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I thought it may have something to do with consistency. ACK on that
-one. Perhaps it should be pushed to akpm?
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Please find attached the Tentative LTP-KDUMP Test case Plan, depicting 
+the future work that will be done on LTP-KDUMP.
+Regards--
+Subrata
+
+--------------010807080803080503040909
+Content-Type: text/plain;
+ name="TEST_PLAN.txt"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="TEST_PLAN.txt"
+
+Following is the Tentative plan for improving LTP-KDUMP Test-cases:
+
+===========================================================================================================
+||S.NO||                 ACTIVITY                                               ||  TENTATIVE-TIME       ||
+===========================================================================================================
+|| 1  ||      Test and integrate kdump's netdump patch to LTP                   ||   SEP/OCT-2007        ||
+|| 2  ||      Modify ltp-kdump to automate all usecases of                      ||   SEP/OCT-2007        ||
+||    ||        kdump-network dumping usecases                                  ||                       ||
+|| 3  ||      Enhance error handler for kdump test                              ||   OCT/NOV-2007        ||
+||    ||        automation script                                               ||                       ||
+|| 4  ||      Enhance result analysis module of ltp-kdump                       ||   OCT/NOV-2007        ||
+===========================================================================================================
+
+
+--------------010807080803080503040909
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------010807080803080503040909--
+
