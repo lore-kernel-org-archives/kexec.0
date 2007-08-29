@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp104.mail.mud.yahoo.com ([209.191.85.214])
-	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IQDUr-00081D-On
-	for kexec@lists.infradead.org; Tue, 28 Aug 2007 22:41:41 -0400
-Message-ID: <46D4DCD5.4030601@yahoo.com.au>
-Date: Wed, 29 Aug 2007 12:41:25 +1000
-From: Nick Piggin <nickpiggin@yahoo.com.au>
+Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IQPGC-0007x4-1c
+	for kexec@lists.infradead.org; Wed, 29 Aug 2007 11:15:14 -0400
+Date: Wed, 29 Aug 2007 17:15:08 +0200
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC][PATCH 2/2 -mm] kexec based hibernation: kexec restore
+Message-ID: <20070829151508.GA11179@atrey.karlin.mff.cuni.cz>
+References: <1188177296.3247.38.camel@caritas-dev.intel.com>
+	<20070827213134.GE3398@elf.ucw.cz>
+	<1188263677.2050.8.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation
-References: <9D7649D18729DE4BB2BD7B494F7FEDC257EA60@pdsmsx415.ccr.corp.intel.com>
-	<1188180997.3247.68.camel@caritas-dev.intel.com>
-In-Reply-To: <1188180997.3247.68.camel@caritas-dev.intel.com>
+Content-Disposition: inline
+In-Reply-To: <1188263677.2050.8.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,50 +26,41 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@lists.linux-foundation.org, Andrew Morton <akpm@linux-foundation.org>, "Hu,
-	Fenghua" <fenghua.hu@intel.com>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-Huang, Ying wrote:
-> On Mon, 2007-08-27 at 09:28 +0800, Hu, Fenghua wrote:
+> On Mon, 2007-08-27 at 23:31 +0200, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > This patch adds writing support for /dev/oldmem. This is used to
+> > > restore the memory contents of hibernated system.
+> > > 
+> > > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > 
+> > > +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
+> > > +			  size_t csize, unsigned long offset, int userbuf)
+> > 
+> > Hmm, int userbuf is only ever set to one... Does it make sense to have
+> > write_oldmem_page in the separate file? The onl user is mem.c, perhaps
+> > it should go there?
+> > 
 > 
->>One quick question is, can it improve hiberation/wakeup time?
+> write_oldmem_page is kept to be consistent with copy_oldmem_page as much
+> as possible. The userbuf is used by copy_oldmem_page too, and
+> write_oldmem_page is in the same file as copy_oldmem_page. I think the
+> consistence between them is reasonable.
 > 
-> 
-> In general, for kexec based hibernation, what increases
-> hibernation/wakeup time:
-> 
-> - One extra Linux boot is needed to hibernate and wakeup.
-> 
-> 
-> What decreases hibernation/wakeup time:
-> 
-> - Most hibernation/wakeup work is done in full functional user space
-> program, so it is possible to do some optimization, such as parallel
-> compression.
+> And the copy_oldmem_page/write_oldmem_page is considered to be
+> architecture dependent. Now, there are different implementations for
+> copy_oldmem_page on different architectures. So I think the
+> copy_oldmem_page/write_oldmem_page should be kept in separate file
+> instead of go mem.c.
 
-- It does not have to reclaim pagecache before suspend?
-
-- It does not have to restore working set afterwards?
-
-(You could do this to reduce image size, of course, but it can
-be optional which is nice).
-
-
-> So, I think the kexec based hibernation may be slower than original
-> implementation in general. In this prototype implementation, the
-> hibernation/wakeup time is much longer than original hibernation/wakeup
-> implementation. But it has much to be optimized and I think it can
-> approach the speed of the original implementation after optimization.
-
-Also, don't just look at the time to do a simple suspend/resume cycle,
-but the full cost of going from working state to working state (eg.
-grep a kernel tree or two!).
-
-Although the kexec details are out of my league, I really like
-everything about the concept :) Nice work.
-
+I thought it may have something to do with consistency. ACK on that
+one. Perhaps it should be pushed to akpm?
+									Pavel
 -- 
-SUSE Labs, Novell Inc.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
