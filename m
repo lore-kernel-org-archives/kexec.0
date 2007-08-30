@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.18.162])
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IQL6f-0004rj-4z
-	for kexec@lists.infradead.org; Wed, 29 Aug 2007 06:49:11 -0400
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp01.au.ibm.com (8.13.1/8.13.1) with ESMTP id l7T8t6Jb030559
-	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 18:55:06 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l7T8wQJU146256
-	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 18:58:27 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l7T9sqNJ023272
-	for <kexec@lists.infradead.org>; Wed, 29 Aug 2007 19:54:52 +1000
-Message-ID: <46D532E6.2020708@linux.vnet.ibm.com>
-Date: Wed, 29 Aug 2007 14:18:38 +0530
-From: Subrata Modak <subrata@linux.vnet.ibm.com>
+	id 1IQea6-0000EY-9Y
+	for kexec@lists.infradead.org; Thu, 30 Aug 2007 03:36:49 -0400
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH] kexec: reenable HPET before kexec
+References: <20070820205530.1ffd5876@windmill.dev.rtsoft.ru>
+	<20070823090845.GA13065@in.ibm.com>
+	<20070823154936.3b7ae498@windmill.dev.rtsoft.ru>
+	<20070827053656.GC9809@in.ibm.com>
+	<653FFBB4508B9042B5D43DC9E18836F501522051@scsmsx415.amr.corp.intel.com>
+	<20070828165832.5047d4de@windmill.dev.rtsoft.ru>
+Date: Thu, 30 Aug 2007 01:32:30 -0600
+In-Reply-To: <20070828165832.5047d4de@windmill.dev.rtsoft.ru> (Konstantin
+	Baydarov's message of "Tue, 28 Aug 2007 16:58:32 +0400")
+Message-ID: <m1ps1532b5.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Subject: LTP-KDUMP Test Plan
-Content-Type: multipart/mixed; boundary="------------010807080803080503040909"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +24,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: ltp-list@lists.sourceforge.net
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Konstantin Baydarov <kbaidarov@ru.mvista.com>
+Cc: RT <linux-rt-users@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Andi Kleen <ak@suse.de>, vgoyal@in.ibm.com, "Pallipadi,
+	Venkatesh" <venkatesh.pallipadi@intel.com>
 
-This is a multi-part message in MIME format.
---------------010807080803080503040909
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Konstantin Baydarov <kbaidarov@ru.mvista.com> writes:
 
-Please find attached the Tentative LTP-KDUMP Test case Plan, depicting 
-the future work that will be done on LTP-KDUMP.
-Regards--
-Subrata
+> On Mon, 27 Aug 2007 11:26:29 -0700
+> "Pallipadi, Venkatesh" <venkatesh.pallipadi@intel.com> wrote:
+>
+>> 
+>> 
+>> - Another thing to try is to disable HPET and boot with PIT in the
+>> first kernel. Just to check whether PIT never works on this platform
+>> or the first kernel is doing something to stop PIT. You can try
+>> "hpet=disable" boot option for that.
+>> 
+>> Thanks,
+>> Venki
+>
+> I've tried kernel 1 with HPET disabled - it boots fine, PIT works!
+> Then I made additional investigations and found out that PIT won't work
+> in kernel 2 if bit HPET_CFG_LEGACY is set.
+> Bit HPET_CFG_LEGACY is set by hpet_enable_int() during HPET
+> initialization, so if this bit is cleared in machine_kexec() kernel 2
+> boots fine.
+> I can't explain this magic, maybe someone can explain this. Thanks.
+>
+> Here is new version of workaround for 2.6.23-rc3
 
---------------010807080803080503040909
-Content-Type: text/plain;
- name="TEST_PLAN.txt"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="TEST_PLAN.txt"
+Ok.  It looks like you understand this issue.
 
-Following is the Tentative plan for improving LTP-KDUMP Test-cases:
+Can you please try calling hpet_disable_int from
+hpet_set_mode under CLOCK_EVT_MODE_SHUTDOWN.  I haven't
+traced the clock event methods all of the way through
+but as a first approximation I think that will get
+things called at the appropriate time with out needing
+to patch machine_kexec.  Which is very much the wrong
+place to add call any hpet code from.
 
-===========================================================================================================
-||S.NO||                 ACTIVITY                                               ||  TENTATIVE-TIME       ||
-===========================================================================================================
-|| 1  ||      Test and integrate kdump's netdump patch to LTP                   ||   SEP/OCT-2007        ||
-|| 2  ||      Modify ltp-kdump to automate all usecases of                      ||   SEP/OCT-2007        ||
-||    ||        kdump-network dumping usecases                                  ||                       ||
-|| 3  ||      Enhance error handler for kdump test                              ||   OCT/NOV-2007        ||
-||    ||        automation script                                               ||                       ||
-|| 4  ||      Enhance result analysis module of ltp-kdump                       ||   OCT/NOV-2007        ||
-===========================================================================================================
+We may also need to make the hpet initialization more
+robust so we can do something sane in the kexec on panic
+case, where we deliberately don't run any shutdown methods.
 
-
---------------010807080803080503040909
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Eric
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------010807080803080503040909--
-
