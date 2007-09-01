@@ -1,125 +1,130 @@
-From: Konstantin Baydarov <kbaidarov@ru.mvista.com>
-Date: Fri, 31 Aug 2007 14:31:51 +0400
-Subject: [PATCH] kexec: reenable HPET before kexec
-In-Reply-To: <m1d4x4zyoe.fsf@ebiederm.dsl.xmission.com>
-References: <20070820205530.1ffd5876@windmill.dev.rtsoft.ru>
-	<20070823090845.GA13065@in.ibm.com>
-	<20070823154936.3b7ae498@windmill.dev.rtsoft.ru>
-	<20070827053656.GC9809@in.ibm.com>
-	<653FFBB4508B9042B5D43DC9E18836F501522051@scsmsx415.amr.corp.intel.com>
-	<20070828165832.5047d4de@windmill.dev.rtsoft.ru>
-	<m1ps1532b5.fsf@ebiederm.dsl.xmission.com>
-	<20070830200749.2f1f0a18@windmill.dev.rtsoft.ru>
-	<m1d4x4zyoe.fsf@ebiederm.dsl.xmission.com>
-Message-ID: <20070831143151.7dde7c86@windmill.dev.rtsoft.ru>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IRNXI-0007Mc-71
+	for kexec@lists.infradead.org; Sat, 01 Sep 2007 08:36:55 +0100
+Subject: [PATCH][ia64][kdump] Fix problems on INIT
+From: Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>
+Date: Sat, 01 Sep 2007 16:34:53 +0900
+Message-Id: <1188632093.3930.6.camel@kane-linux>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
-MIME-Version: 1.0
+List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/kexec>
+List-Post: <mailto:kexec@lists.infradead.org>
+List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: kexec@lists.infradead.org
+Sender: kexec-bounces@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
+To: linux-ia64 <linux-ia64@vger.kernel.org>, "Luck, Tony" <tony.luck@intel.com>
+Cc: kexec@lists.infradead.org
 
-On Thu, 30 Aug 2007 12:04:33 -0600
-ebiederm at xmission.com (Eric W. Biederman) wrote:
+Hi,
 
-> I was assuming that CLOCK_EVT_MODE_SHUTDOWN just mapped
-> to the shutdown method of the clock events or something else.
-> But it shutdown means something different in this context we
-> can certainly find a better place to hook into the device
-> tree and call shutdown methods.   Especially if that will
-> make the code simpler.
+Here are patches for kdump on ia64 to fix the follwing problems:
 
-Agree. I've got rig from timekeeping. Now I'm using system device tree shutdown interface, as you suggested. I've added HPET system device class with shutdown method and HPET device to sysdev.
+  - [PATCH 1/2] Fix kernel panic in kdump on INIT
 
-> This is a design feature.  machine_crash_shutdown is not really 
-> supposed to disable any hardware.  There is a very minimal set that we
-> haven't been able to figure out how to get the kernels initialization
-> routines to deal with properly.  Which is a temporary justification
-> for not doing more now.  If we can't find anyway to make the
-> initialization code more robust for the hpet we can revisit this.
+    I encountered the kernel panic when I sent an INIT without
+    configuring kdump kernel image. The cause of this problem seems
+    that machine_kdump_on_init() uses printk() in INIT
+    context. Replacing it with ia64_mca_printk() fixes this problem.
+    The panic message is attached at the end of this mail.
 
-So you suggest to check if HPET is present in HPET init code even if HPET disabled in boot kernel command line or APIC is disabled. And if HPET is present and kernel not going to use it - disable HPET interrupts?
+  - [PATCH 2/2] Fix kernel hangup in kdump on INIT
 
-> Please remove the CONFIG_KEXEC.  We need to do this on a reboot also
-> so we don't confuse the BIOS.  BIOS's frequently but not always
-> can just reset the board to avoid complications like this, but if
-> we need a shutdown method we need a shutdown method.  The kexec
-> case just exercises things more.
-Removed CONFIG_KEXEC.
+    Even after fixing the kernel panic problem mentioned above, I
+    encontered the kernel hangup problem when I sent an INIT without
+    configuring kdump kernel image. The kdump_init_notifier() on
+    monarch CPU stops its operation if the kdump kernel image is not
+    configured. On the other hand, kdump_init_notifier() on
+    non-monarch CPUs get into spin because they don't know the fact
+    the monarch stops its operation. This is the cause of this
+    problem.
 
-So here is new version of fix. Patch against 2.6.23-rc3.
-Eric, review please. Thanks.
+Thanks,
+Kenji Kaneshige
 
-Signed-off-by: Konstantin Baydarov <kbaidarov@ru.mvista.com>
 
- arch/i386/kernel/hpet.c |   48 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+machine_kdump_on_init(): kdump not configured
+Unable to handle kernel NULL pointer dereference (address 0000000000000020)
+INIT swapper 1[0]: Oops 11012296146944 [1]
+Modules linked in: sunrpc binfmt_misc dm_mirror dm_mod fan sg eepro100 container e100 mii button thermal processor usb_storage ehci_hcd ohci_hcd
 
-Index: linux-2.6.23-rc3/arch/i386/kernel/hpet.c
-===================================================================
---- linux-2.6.23-rc3.orig/arch/i386/kernel/hpet.c
-+++ linux-2.6.23-rc3/arch/i386/kernel/hpet.c
-@@ -144,11 +144,31 @@ static void hpet_enable_int(void)
- {
- 	unsigned long cfg = hpet_readl(HPET_CFG);
- 
-+	if (hpet_legacy_int_enabled)
-+		return;
-+
- 	cfg |= HPET_CFG_LEGACY;
- 	hpet_writel(cfg, HPET_CFG);
- 	hpet_legacy_int_enabled = 1;
- }
- 
-+static void hpet_disable_int(void)
-+{
-+	unsigned long cfg;
-+
-+	if (!hpet_legacy_int_enabled)
-+		return;
-+
-+	if (!is_hpet_capable())
-+		return;
-+
-+	cfg = hpet_readl(HPET_CFG);
-+	cfg &= ~HPET_CFG_LEGACY;
-+	hpet_writel(cfg, HPET_CFG);
-+	hpet_legacy_int_enabled = 0;
-+
-+}
-+
- static void hpet_set_mode(enum clock_event_mode mode,
- 			  struct clock_event_device *evt)
- {
-@@ -551,3 +571,31 @@ irqreturn_t hpet_rtc_interrupt(int irq, 
- 	return IRQ_HANDLED;
- }
- #endif
-+
-+static int hpet_shutdown(struct sys_device *dev)
-+{
-+	/* We need this to make PIT works in KEXECuted kernel */
-+	hpet_disable_int();
-+
-+	return 0;
-+}
-+
-+static struct sysdev_class hpet_sysdev_class = {
-+	set_kset_name("hpet"),
-+	.shutdown = hpet_shutdown,
-+};
-+
-+static struct sys_device device_hpet = {
-+	.id	= 0,
-+	.cls	= &hpet_sysdev_class,
-+};
-+
-+static int __init hpet_init_sysfs(void)
-+{
-+	int error = sysdev_class_register(&hpet_sysdev_class);
-+	if (!error)
-+		error = sysdev_register(&device_hpet);
-+	return error;
-+}
-+
-+device_initcall(hpet_init_sysfs);
+Pid: 0, CPU 1, comm:       INIT swapper 1
+psr : 0000121808022030 ifs : 8000000000000813 ip  : [<a00000010006a3a1>]    Not tainted
+ip is at try_to_wake_up+0x5c1/0x740
+unat: 0000000000000000 pfs : 0000000000000813 rsc : 0000000000000003
+rnat: 0000000000000000 bsps: 0000000000000000 pr  : 000000000000a685
+ldrs: 0000000000000000 ccv : 0000000000000000 fpsr: 0009804c0270033f
+csd : 0000000000000000 ssd : 0000000000000000
+b0  : a00000010006a350 b6  : a000000100071540 b7  : e00000007fd08010
+f6  : 1003e0000005b41d7540b f7  : 1003e00000000000005dc
+f8  : 1003e000000002aaaaaab f9  : 1003e0000005b41d77388
+f10 : 1003e35a3e8b515f27bd8 f11 : 1003e000000000000000f
+r1  : a000000100bf9e20 r2  : 0000000000000000 r3  : a0000001009faa70
+r8  : 0000003ba3d925e4 r9  : 0000003b9e207e0a r10 : e0000000010368d0
+r11 : 0000003b9e207e0a r12 : e00000000115fa80 r13 : e000000001150000
+r14 : 0000000000000400 r15 : 0000000000000400 r16 : e0000000010368c0
+r17 : e000000001036ff8 r18 : e0000000010368c0 r19 : e00000007da10000
+r20 : 0000000000000000 r21 : e000000001150000 r22 : e000000001036910
+r23 : 0000000000000000 r24 : 0000000000000020 r25 : 0000000000000000
+r26 : e000000001150040 r27 : e000000001150000 r28 : e000000001036fd8
+r29 : a000000100a1a350 r30 : 0000000000000000 r31 : e000000001036880
 
+Call Trace:
+ [<a000000100013c20>] show_stack+0x40/0xa0
+                                sp=e00000000115f650 bsp=e000000001151148
+ [<a0000001000148a0>] show_regs+0x840/0x880
+                                sp=e00000000115f820 bsp=e0000000011510f0
+ [<a000000100036e80>] die+0x1a0/0x2a0
+                                sp=e00000000115f820 bsp=e0000000011510a8
+ [<a000000100061610>] ia64_do_page_fault+0x8d0/0xa00
+                                sp=e00000000115f820 bsp=e000000001151058
+ [<a00000010000b240>] ia64_leave_kernel+0x0/0x270
+                                sp=e00000000115f8b0 bsp=e000000001151058
+ [<a00000010006a3a0>] try_to_wake_up+0x5c0/0x740
+                                sp=e00000000115fa80 bsp=e000000001150fb8
+ [<a00000010006a550>] default_wake_function+0x30/0x60
+                                sp=e00000000115fa90 bsp=e000000001150f88
+ [<a0000001000a9670>] autoremove_wake_function+0x30/0xa0
+                                sp=e00000000115fa90 bsp=e000000001150f50
+ [<a0000001000641a0>] __wake_up_common+0x60/0x120
+                                sp=e00000000115fa90 bsp=e000000001150f00
+ [<a000000100067fd0>] __wake_up+0x50/0x80
+                                sp=e00000000115fa90 bsp=e000000001150ec0
+ [<a0000001000784b0>] wake_up_klogd+0x70/0xa0
+                                sp=e00000000115fa90 bsp=e000000001150ea8
+ [<a000000100079940>] release_console_sem+0x4a0/0x4c0
+                                sp=e00000000115fa90 bsp=e000000001150e60
+ [<a000000100078e40>] vprintk+0x7c0/0x940
+                                sp=e00000000115fa90 bsp=e000000001150dd8
+ [<a000000100079050>] printk+0x90/0xc0
+                                sp=e00000000115fb00 bsp=e000000001150d78
+ [<a00000010005f380>] machine_kdump_on_init+0x40/0xc0
+                                sp=e00000000115fb50 bsp=e000000001150d60
+ [<a00000010005f650>] kdump_init_notifier+0x250/0x280
+                                sp=e00000000115fb50 bsp=e000000001150d30
+ [<a000000100097c10>] notifier_call_chain+0x50/0xe0
+                                sp=e00000000115fb50 bsp=e000000001150ce8
+ [<a000000100097ce0>] __atomic_notifier_call_chain+0x40/0x60
+                                sp=e00000000115fb50 bsp=e000000001150ca8
+ [<a000000100097d40>] atomic_notifier_call_chain+0x40/0x60
+                                sp=e00000000115fb50 bsp=e000000001150c78
+ [<a0000001000b2160>] notify_die+0x80/0xa0
+                                sp=e00000000115fb50 bsp=e000000001150c30
+ [<a000000100049220>] ia64_init_handler+0x800/0x900
+                                sp=e00000000115fb70 bsp=e000000001150bd8
+ [<a000000100049b40>] ia64_os_init_virtual_begin+0x40/0x140
+                                sp=e00000000115fb80 bsp=e000000001150bd8
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
