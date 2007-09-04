@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IS85V-0007aj-Jf
-	for kexec@lists.infradead.org; Mon, 03 Sep 2007 05:19:20 -0400
-Date: Mon, 3 Sep 2007 03:11:45 +0000
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation: kexec jump
-Message-ID: <20070903031145.GF21721@ucw.cz>
-References: <1188177280.3247.37.camel@caritas-dev.intel.com>
-	<20070827184829.GB4104@ucw.cz>
-	<1188548842.1365.13.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1188548842.1365.13.camel@caritas-dev.intel.com>
+Received: from xenotime.net ([66.160.160.81])
+	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1ISdE8-0007sf-KL
+	for kexec@lists.infradead.org; Tue, 04 Sep 2007 14:34:20 -0400
+Received: from midway.site ([96.225.192.201]) by xenotime.net for
+	<kexec@lists.infradead.org>; Tue, 4 Sep 2007 11:34:12 -0700
+Date: Tue, 4 Sep 2007 11:34:12 -0700
+From: Randy Dunlap <rdunlap@xenotime.net>
+Subject: [patch] kexec-tools: fix typos
+Message-Id: <20070904113412.0510f1c8.rdunlap@xenotime.net>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +22,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-Hi!
+From: Randy Dunlap <randy.dunlap@oracle.com>
 
-> > > @@ -94,6 +94,10 @@
-> > >  		unsigned long start_address,
-> > >  		unsigned int has_pae) ATTRIB_NORET;
-> > >  
-> > > +#ifdef CONFIG_KEXEC_JUMP
-> > > +extern asmlinkage int machine_kexec_real_jump(void *buf);
-> > > +#endif
-> > 
-> > Is it really neccessery to have ifdef here?
-> 
-> It is not necessary. I will fix it in the next version.
+Correct spelling/typos in baud_rate.
 
-Looking forward to next version :-).
+Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
+---
+ kexec/arch/i386/kexec-x86.c      |    2 +-
+ kexec/arch/x86_64/kexec-x86_64.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> > > +#define CR3	0x18
-> > > +#define CR4	0x1c
-> > > +#define FLAG	0x20
-> > > +#define RET	0x24
-> > 
-> > Hmm, is this enough? Should it use struct ptregs for normal registers?
-> > What about segment registers -- they could change between kernel
-> > version. Should some kind of 'version of kjump protocol' be
-> > introduced?
-> 
-> All "preserve" registers defined in ABI are saved, I think that is
-> sufficient. The "swsusp_arch_suspend" saves only these registers too.
-> 
-> An extensible inter-kernel kjump protocol and corresponding version
-> number seems sensible. I will work on this.
-
-Ok, perhaps that can wait after initial merge.
-
-> > What about CX/DX/fpu state? GDT pointer?
-> > 
-> > Actually I think that you _do_ need to save FPU. You should probably
-> > use relevant swsusp parts here.
-> 
-> Before and after "machine_kexec_jump" is called, the
-> save_processor_state() and restore_processor_state() are called, where
-> the MTRR/FPU/GDT/IDT/TR/segments/cr are saved and restored. These two
-> functions come from swsusp. Thanks swsusp guys. :)
-
-So I'm blind. Sorry for the noise.
-									Pavel
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--- kexec-tools-testing-20070330.orig/kexec/arch/i386/kexec-x86.c
++++ kexec-tools-testing-20070330/kexec/arch/i386/kexec-x86.c
+@@ -131,7 +131,7 @@ void arch_usage(void)
+ 	printf(
+ 		"     --reset-vga               Attempt to reset a standard vga device\n"
+ 		"     --serial=<port>           Specify the serial port for debug output\n"
+-		"     --serial-baud=<buad_rate> Specify the serial port baud rate\n"
++		"     --serial-baud=<baud_rate> Specify the serial port baud rate\n"
+ 		"     --console-vga             Enable the vga console\n"
+ 		"     --console-serial          Enable the serial console\n"
+ 		"     --elf32-core-headers      Prepare core headers in ELF32 format\n"
+--- kexec-tools-testing-20070330.orig/kexec/arch/x86_64/kexec-x86_64.c
++++ kexec-tools-testing-20070330/kexec/arch/x86_64/kexec-x86_64.c
+@@ -133,7 +133,7 @@ void arch_usage(void)
+ 	printf(
+ 		"     --reset-vga               Attempt to reset a standard vga device\n"
+ 		"     --serial=<port>           Specify the serial port for debug output\n"
+-		"     --serial-baud=<buad_rate> Specify the serial port baud rate\n"
++		"     --serial-baud=<baud_rate> Specify the serial port baud rate\n"
+ 		"     --console-vga             Enable the vga console\n"
+ 		"     --console-serial          Enable the serial console\n"
+ 		);
 
 _______________________________________________
 kexec mailing list
