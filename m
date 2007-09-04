@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from xenotime.net ([66.160.160.81])
 	by canuck.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ISf8F-0000JN-TU
-	for kexec@lists.infradead.org; Tue, 04 Sep 2007 16:36:23 -0400
+	id 1IShnS-0001bC-2j
+	for kexec@lists.infradead.org; Tue, 04 Sep 2007 19:27:06 -0400
 Received: from midway.site ([96.225.192.201]) by xenotime.net for
-	<kexec@lists.infradead.org>; Tue, 4 Sep 2007 13:36:18 -0700
-Date: Tue, 4 Sep 2007 13:36:18 -0700
+	<kexec@lists.infradead.org>; Tue, 4 Sep 2007 16:26:53 -0700
+Date: Tue, 4 Sep 2007 16:26:52 -0700
 From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: [patch] makedumpfile: update/clarify README
-Message-Id: <20070904133618.6a23df52.rdunlap@xenotime.net>
+Subject: Re: [RFC] makedumpfile-1.1.4-rc: ia64 DISCONTIGMEM support
+Message-Id: <20070904162652.15636f66.rdunlap@xenotime.net>
 In-Reply-To: <20070903165708tachibana@mail.jp.nec.com>
 References: <20070831104951.f88cc3ba.rdunlap@xenotime.net>
 	<20070903165708tachibana@mail.jp.nec.com>
@@ -36,58 +36,31 @@ On Mon, 3 Sep 2007 16:57:08 +0900 tachibana@mxm.nes.nec.co.jp wrote:
 > Please uninstall elfutils-0.125 and elfutils-0.128 and try the above
 > procedure.
 
+
 Hi tachibana-san,
 
-Thanks for that info.  I completely missed that in the README file.
-Please update the README file with this patch.
+I have makedumpfile filtering working now.  Much thanks.
+
+Examples of filtering on a 1 GB x86_64 system, booted with
+"crashkernel=64M@16M" and then crashed (sysrq-c).
+
+
+Various makedumpfile -d values and their results:
+
+makedumpfile -d 1 -E -i vmcore.info vmcore.002 dump002.omit.zero 
+makedumpfile -d 17 -E -i vmcore.info vmcore.002 dump002.omit.zero.free
+makedumpfile -d 23 -E -i vmcore.info vmcore.002 dump002.omit.zero.free.all.cache
+makedumpfile -d 31 -E -i vmcore.info vmcore.002 dump002.omit.all
+
+-r-------- 1 rddunlap users    970M Sep  4 12:36 vmcore.002 // dumpfile
+-rw------- 1 rddunlap rddunlap 966M Sep  4 15:10 dump002.omit.zero
+-rw------- 1 rddunlap rddunlap 661M Sep  4 15:29 dump002.omit.zero.free
+-rw------- 1 rddunlap rddunlap 443M Sep  4 15:43 dump002.omit.zero.free.all.cache
+-rw------- 1 rddunlap rddunlap 429M Sep  4 15:55 dump002.omit.all
+
+Regards,
 ---
-
-
-From: Randy Dunlap <randy.dunlap@oracle.com>
-
-Warn not to use "make install" for elfutils.
-Fix a few typos.
-
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
----
- README |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
---- makedumpfile-1.1.6.orig/README
-+++ makedumpfile-1.1.6/README
-@@ -4,11 +4,13 @@
- ======================
- 
- * REQUIREMENTS
--  Please download the following library file and install it:
-+  Please download the following library file and install it exactly as below;
-+  do NOT use "make install".
-   - elfutils-0.125.tar.gz
-     The "make install" of elfutils installs some commands (ld, readelf, etc.),
--    and the compiling problem sometimes happens due to using the installed
--    commands. To install only the library files, do the following method.
-+    and compiling problems sometimes happen due to using the installed
-+    commands. To install only the library & header files, use the following
-+    method:
-      # tar -zxvf elfutils-0.125.tar.gz
-      # cd elfutils-0.125
-      # ./configure
-@@ -85,8 +87,8 @@
-     make: *** [makedumpfile] Error 1
-     #
- 
--    The compiler cannot find out elf_getshstrndx() because it tries
--    searching it only from /usr/lib/libelf.a though elf_getshstrndx()
-+    The compiler cannot find elf_getshstrndx() because it tries
-+    searching for it only from /usr/lib/libelf.a though elf_getshstrndx()
-     is archived in /usr/local/lib/libelf.a.
-     To solve the problem, add the option (-L/usr/local/lib/) to CFLAGS
-     of Makefile like the following:
-@@ -104,4 +106,3 @@
-   Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-   Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>
-   kexec-ml <kexec@lists.infradead.org>
--
+~Randy
 
 _______________________________________________
 kexec mailing list
