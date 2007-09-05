@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ISllB-0003bJ-K5
-	for kexec@lists.infradead.org; Tue, 04 Sep 2007 23:41:02 -0400
-Date: Wed, 5 Sep 2007 12:40:24 +0900
-From: Horms <horms@verge.net.au>
-Subject: Re: [patch] kexec-tools: fix typos
-Message-ID: <20070905034023.GD1689@verge.net.au>
-References: <20070904113412.0510f1c8.rdunlap@xenotime.net>
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IStud-0008T8-9T
+	for kexec@lists.infradead.org; Wed, 05 Sep 2007 08:23:18 -0400
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 3B2EB2177E
+	for <kexec@lists.infradead.org>; Wed,  5 Sep 2007 14:23:12 +0200 (CEST)
+Date: Wed, 5 Sep 2007 14:23:11 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: DEBUG_INFO -> DEBUG_KERNEL dependency
+Message-ID: <20070905122311.GA11013@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070904113412.0510f1c8.rdunlap@xenotime.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +26,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Tue, Sep 04, 2007 at 11:34:12AM -0700, Randy Dunlap wrote:
-> From: Randy Dunlap <randy.dunlap@oracle.com>
-> 
-> Correct spelling/typos in baud_rate.
+Hi,
 
-Thanks, applied.
+Subject says all. Why does DEBUG_INFO depend on DEBUG_KERNEL? IMO it's
+also desirable to use Kdump when DEBUG_KERNEL is not enabled.
 
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
 
+Thanks,
+   Bernhard
 
 _______________________________________________
 kexec mailing list
