@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ISjWG-0002PF-Tg
-	for kexec@lists.infradead.org; Tue, 04 Sep 2007 21:17:29 -0400
-Subject: Re: [patch] makedumpfile: fix comments and other strings
-In-reply-to: <20070904133636.de36ca67.rdunlap@xenotime.net>
-Message-Id: <20070905101745oomichi@mail.jp.nec.com>
-References: <20070904133636.de36ca67.rdunlap@xenotime.net>
-Mime-Version: 1.0
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Wed, 5 Sep 2007 10:17:45 +0900
+	id 1ISllB-0003bJ-K5
+	for kexec@lists.infradead.org; Tue, 04 Sep 2007 23:41:02 -0400
+Date: Wed, 5 Sep 2007 12:40:24 +0900
+From: Horms <horms@verge.net.au>
+Subject: Re: [patch] kexec-tools: fix typos
+Message-ID: <20070905034023.GD1689@verge.net.au>
+References: <20070904113412.0510f1c8.rdunlap@xenotime.net>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070904113412.0510f1c8.rdunlap@xenotime.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +24,20 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
+Cc: kexec@lists.infradead.org
 
+On Tue, Sep 04, 2007 at 11:34:12AM -0700, Randy Dunlap wrote:
+> From: Randy Dunlap <randy.dunlap@oracle.com>
+> 
+> Correct spelling/typos in baud_rate.
 
-Hi Randy,
+Thanks, applied.
 
-2007/09/04 13:36:36 -0700, Randy Dunlap <rdunlap@xenotime.net> wrote:
->From: Randy Dunlap <randy.dunlap@oracle.com>
->
->Fix comment typos and usage messages in makedumpfile.c.
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
-
-Thank you for the patch.
-That sounds good, I will merge the patch into the next release.
-
-
-Thanks
-Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
