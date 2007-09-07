@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1ITZaz-0001ZG-V2
-	for kexec@lists.infradead.org; Fri, 07 Sep 2007 04:53:49 -0400
-Subject: makedumpfile-1.2.0: Extract vmcoreinfo from /proc/vmcore
-Message-Id: <20070907175305oomichi@mail.jp.nec.com>
+	id 1ITZer-0001bx-9s
+	for kexec@lists.infradead.org; Fri, 07 Sep 2007 04:57:51 -0400
+Subject: [PATCH 0/2] vmcoreinfo support for dump filtering #2
+Message-Id: <20070907175746oomichi@mail.jp.nec.com>
 Mime-Version: 1.0
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Fri, 7 Sep 2007 17:53:05 +0900
+Date: Fri, 7 Sep 2007 17:57:46 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,68 +21,50 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec-ml <kexec@lists.infradead.org>
-Cc: Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@in.ibm.com>, Itsuro ODA <oda@valinux.co.jp>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Vivek Goyal <vgoyal@in.ibm.com>, Dan Aloni <da-x@monatomic.org>
 
 
 Hi,
 
-makedumpfile version 1.2.0 is released.
-Please test it. Your opinions/comments are welcome.
+I released a new makedumpfile (version 1.2.0) with vmcoreinfo support.
+I updated the patches for linux and kexec-tools.
 
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
+- Change of linux patch:
+  Old makedumpfile assumed some values (the size of nodemask_t and the
+  value of NR_FREE_PAGES), and it was not good on the reliability viewpoint.
+  For the reliability improvement, makedumpfile came to need these values
+  and I updated the kernel patch to output them.
 
-
-Changelog:
-o Extract vmcoreinfo from /proc/vmcore.
-  makedumpfile command extracts the vmcoreinfo data from /proc/vmcore
-  and uses it for dump filtering. It is a part of the following patchset:
-  http://lists.infradead.org/pipermail/kexec/2007-August/000521.html
-
-o linux-2.6.23-rc4-mm1 support.
-  On linux-2.6.23-rc4-mm1, node_states[N_ONLINE] is added instead of
-  node_online_map. makedumpfile can get the information from it.
-
-o Add the "-d 1" option (skip zero-filled pages) for Xen.
-  Other dump levels are invalid for Xen.
-  The patch was provided by Itsuro Oda:
-  http://lists.infradead.org/pipermail/kexec/2007-August/000490.html
-
-o Add the feature which gets enum number.
-  makedumpfile can get NR_FREE_PAGES dynamically.
-
-o Some Cleanups
-  - Cleanup README and comments by Randy Dunlap.
-  - Cleanup Xen code.
-  - Cleanup the indents.
-  - Randomize the filename for the bitmap.
-  - Unify PAGESHIFT and PAGE_SHIFT() to PAGE_SHIFT() because both
-    macros have the same content.
+- Chage of kexec-tools patch:
+  Vivek Goyal informed that the kexec command with old vmcoreinfo patch
+  didn't work on kernels without vmcoreinfo patch. It gave the following
+  error message, so I updated the patch of kexec-tools for fixing the
+  problem:
+    Could not open "/sys/kernel/vmcoreinfo": No such file or directory
 
 
-You can download the latest makedumpfile(ver. 1.2.0) from the following URL.
-Details of the change are written on the CVS page of the following site.
-https://sourceforge.net/projects/makedumpfile/
+PATCH SET:
+[1/2] [linux-2.6.22] Add vmcoreinfo
+  The patch is for linux-2.6.22.
+  The patch adds the vmcoreinfo data. Its address and size are output
+  to /sys/kernel/vmcoreinfo.
 
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-1.2.0.tar.gz"
-  2. "cd makedumpfile"
-  3. "make; make install"
+  Changelog:
+  - Add the size of nodemask_t and the value of NR_FREE_PAGES to the
+    vmcoreinfo data.
 
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+[2/2] [kexec-tools] Pass vmcoreinfo's address and size
+  The patch is for kexec-tools-testing-20070330.
+  (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
+  kexec command gets the address and size of the vmcoreinfo data from
+  /sys/kernel/vmcoreinfo, and passes them to the second kernel through
+  ELF header of /proc/vmcore. When the second kernel is booting, the
+  kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
+  segment into /proc/vmcore.
 
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+  Changelog:
+  - Fix the problem that the kexec command cannnot be executed on kernels
+    without vmcoreinfo.
 
 
 Thanks
