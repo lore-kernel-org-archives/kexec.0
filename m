@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from agminet01.oracle.com ([141.146.126.228])
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IURzo-0005qd-L1
-	for kexec@lists.infradead.org; Sun, 09 Sep 2007 14:59:05 -0400
-Date: Sun, 9 Sep 2007 11:55:07 -0700
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Subject: Re: [patch 1/3] Express relocatability of kernel on x86_64 in
-	documentation
-Message-Id: <20070909115507.3e85a7a1.randy.dunlap@oracle.com>
-In-Reply-To: <20070909080620.350255316@strauss.suse.de>
-References: <20070909080620.009772613@strauss.suse.de>
-	<20070909080620.350255316@strauss.suse.de>
-Mime-Version: 1.0
+	id 1IUS99-0005wW-73
+	for kexec@lists.infradead.org; Sun, 09 Sep 2007 15:08:44 -0400
+Date: Sun, 9 Sep 2007 21:08:36 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [patch 4/5] Use extended crashkernel command line on IA64
+Message-ID: <20070909190835.GB10600@suse.de>
+References: <20070909083914.065380136@strauss.suse.de>
+	<20070909083915.165288618@strauss.suse.de>
+	<20070909130139.GF6809@parisc-linux.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070909130139.GF6809@parisc-linux.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,125 +25,195 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: discuss@x86-64.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Matthew Wilcox <matthew@wil.cx>
+Cc: linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Sun, 09 Sep 2007 10:06:21 +0200 Bernhard Walle wrote:
-
-> This patch adapts the Documentation/kdump/kdump.txt file to express the fact
-> that the x86_64 kernel is now also relocatable. This makes i386 and x86_64 now
-> behave the same, simplifying the documentation.
+* Matthew Wilcox <matthew@wil.cx> [2007-09-09 15:01]:
+> On Sun, Sep 09, 2007 at 10:39:18AM +0200, Bernhard Walle wrote:
+> > Because the total amount of System RAM must be known when calling this
+> > function, efi_memmap_init() is modified to return its comulated 
 > 
+> accumulated?
+
+Yes, sorry.
+
+> > total_memory variable in a pointer value. IMO that's better than making the
+> > variable global.
 > 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> Why not make efi_memmap_init() return total_memory instead of void?
 
-Hi,
-Can we also please reconcile the CRASH_DUMP Kconfig help text?
-I.e., it says
+Good idea:
 
-  The crash dump kernel must be compiled
-  to a memory address not used by the main kernel or BIOS using
-  PHYSICAL_START.
+-----
 
-but this ignores the use of RELOCATABLE, right?
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Use extended crashkernel command line on IA64
+Cc: linux-ia64@vger.kernel.org
 
+This patch adapts IA64 to use the generic parse_crashkernel() function
+instead of its own parsing for the crashkernel command line.
+
+Because the total amount of System RAM must be known when calling this
+function, efi_memmap_init() is modified to return its accumulated
+total_memory variable in a pointer value. IMO that's better than making the
+variable global.
+
+Also, the crashkernel handling is moved in an own function in
+arch/ia64/kernel/setup.c to make the code more readable.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
 ---
-From: Randy Dunlap <randy.dunlap@oracle.com>
+ arch/ia64/kernel/efi.c     |    4 +-
+ arch/ia64/kernel/setup.c   |   88 +++++++++++++++++++++++----------------------
+ include/asm-ia64/meminit.h |    2 -
+ 3 files changed, 50 insertions(+), 44 deletions(-)
 
-Update help text for CONFIG_CRASH_DUMP.
-Fix typos in CONFIG_RELOCATABLE.
-Use tab + 2 spaces for indentation on all lines.
-
-Signed-off-by: Randy Dunlap <randy.dunlap@oracle.com>
----
- arch/i386/Kconfig   |   17 +++++++++--------
- arch/x86_64/Kconfig |   21 +++++++++++----------
- 2 files changed, 20 insertions(+), 18 deletions(-)
-
---- linux-2.6.23-rc5-git1.orig/arch/i386/Kconfig
-+++ linux-2.6.23-rc5-git1/arch/i386/Kconfig
-@@ -820,12 +820,13 @@ config CRASH_DUMP
- 	depends on HIGHMEM
- 	help
- 	  Generate crash dump after being started by kexec.
--          This should be normally only set in special crash dump kernels
-+	  This should be normally only set in special crash dump kernels
- 	  which are loaded in the main kernel with kexec-tools into
- 	  a specially reserved region and then later executed after
- 	  a crash by kdump/kexec. The crash dump kernel must be compiled
--          to a memory address not used by the main kernel or BIOS using
--          PHYSICAL_START.
-+	  to a memory address not used by the main kernel or BIOS using
-+	  PHYSICAL_START, or it must be built as a relocatable image
-+	  (CONFIG_RELOCATABLE=y).
- 	  For more details see Documentation/kdump/kdump.txt
+--- a/arch/ia64/kernel/efi.c
++++ b/arch/ia64/kernel/efi.c
+@@ -967,7 +967,7 @@ find_memmap_space (void)
+  * to use.  We can allocate partial granules only if the unavailable
+  * parts exist, and are WB.
+  */
+-void
++unsigned long
+ efi_memmap_init(unsigned long *s, unsigned long *e)
+ {
+ 	struct kern_memdesc *k, *prev = NULL;
+@@ -1084,6 +1084,8 @@ efi_memmap_init(unsigned long *s, unsign
+ 	/* reserve the memory we are using for kern_memmap */
+ 	*s = (u64)kern_memmap;
+ 	*e = (u64)++k;
++
++	return total_memory;
+ }
  
- config PHYSICAL_START
-@@ -871,17 +872,17 @@ config PHYSICAL_START
- 	  Don't change this unless you know what you are doing.
+ void
+--- a/arch/ia64/kernel/setup.c
++++ b/arch/ia64/kernel/setup.c
+@@ -208,6 +208,48 @@ static int __init register_memory(void)
  
- config RELOCATABLE
--	bool "Build a relocatable kernel(EXPERIMENTAL)"
-+	bool "Build a relocatable kernel (EXPERIMENTAL)"
- 	depends on EXPERIMENTAL
- 	help
- 	  This builds a kernel image that retains relocation information
--          so it can be loaded someplace besides the default 1MB.
-+	  so it can be loaded someplace besides the default 1MB.
- 	  The relocations tend to make the kernel binary about 10% larger,
--          but are discarded at runtime.
-+	  but are discarded at runtime.
+ __initcall(register_memory);
  
- 	  One use is for the kexec on panic case where the recovery kernel
--          must live at a different physical address than the primary
--          kernel.
-+	  must live at a different physical address than the primary
-+	  kernel.
++
++#ifdef CONFIG_KEXEC
++static void setup_crashkernel(unsigned long total, int *n)
++{
++	unsigned long long base = 0, size = 0;
++	int ret;
++
++	ret = parse_crashkernel(boot_command_line, total,
++			&size, &base);
++	if (ret == 0 && size > 0) {
++		if (!base) {
++			sort_regions(rsvd_region, *n);
++			base = kdump_find_rsvd_region(size,
++					rsvd_region, *n);
++		}
++		if (base != ~0UL) {
++			printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
++					"for crashkernel (System RAM: %ldMB)\n",
++					(unsigned long)(size >> 20),
++					(unsigned long)(base >> 20),
++					(unsigned long)(total >> 20));
++			rsvd_region[*n].start =
++				(unsigned long)__va(base);
++			rsvd_region[*n].end =
++				(unsigned long)__va(base + size);
++			(*n)++;
++			crashk_res.start = base;
++			crashk_res.end = base + size - 1;
++		}
++	}
++	efi_memmap_res.start = ia64_boot_param->efi_memmap;
++	efi_memmap_res.end = efi_memmap_res.start +
++		ia64_boot_param->efi_memmap_size;
++	boot_param_res.start = __pa(ia64_boot_param);
++	boot_param_res.end = boot_param_res.start +
++		sizeof(*ia64_boot_param);
++}
++#else
++static inline void setup_crashkernel(unsigned long total, int *n)
++{}
++#endif
++
+ /**
+  * reserve_memory - setup reserved memory areas
+  *
+@@ -219,6 +261,7 @@ void __init
+ reserve_memory (void)
+ {
+ 	int n = 0;
++	unsigned long total_memory = 0;
  
- config PHYSICAL_ALIGN
- 	hex "Alignment value to which kernel should be aligned"
---- linux-2.6.23-rc5-git1.orig/arch/x86_64/Kconfig
-+++ linux-2.6.23-rc5-git1/arch/x86_64/Kconfig
-@@ -575,17 +575,18 @@ config CRASH_DUMP
- 	bool "kernel crash dumps (EXPERIMENTAL)"
- 	depends on EXPERIMENTAL
- 	help
--          Generate crash dump after being started by kexec.
--          This should be normally only set in special crash dump kernels
--          which are loaded in the main kernel with kexec-tools into
--          a specially reserved region and then later executed after
--          a crash by kdump/kexec. The crash dump kernel must be compiled
-+	  Generate crash dump after being started by kexec.
-+	  This should be normally only set in special crash dump kernels
-+	  which are loaded in the main kernel with kexec-tools into
-+	  a specially reserved region and then later executed after
-+	  a crash by kdump/kexec. The crash dump kernel must be compiled
- 	  to a memory address not used by the main kernel or BIOS using
--	  PHYSICAL_START.
--          For more details see Documentation/kdump/kdump.txt
-+	  PHYSICAL_START, or it must be built as a relocatable image
-+	  (CONFIG_RELOCATABLE=y).
-+	  For more details see Documentation/kdump/kdump.txt
+ 	/*
+ 	 * none of the entries in this table overlap
+@@ -254,50 +297,11 @@ reserve_memory (void)
+ 		n++;
+ #endif
  
- config RELOCATABLE
--	bool "Build a relocatable kernel(EXPERIMENTAL)"
-+	bool "Build a relocatable kernel (EXPERIMENTAL)"
- 	depends on EXPERIMENTAL
- 	help
- 	  Builds a relocatable kernel. This enables loading and running
-@@ -596,8 +597,8 @@ config RELOCATABLE
- 	  must live at a different physical address than the primary
- 	  kernel.
+-	efi_memmap_init(&rsvd_region[n].start, &rsvd_region[n].end);
++	total_memory = efi_memmap_init(&rsvd_region[n].start, &rsvd_region[n].end);
+ 	n++;
  
--	  Note: If CONFIG_RELOCATABLE=y, then kernel run from the address
--	  it has been loaded at and compile time physical address
-+	  Note: If CONFIG_RELOCATABLE=y, then the kernel runs from the address
-+	  it has been loaded at and the compile time physical address
- 	  (CONFIG_PHYSICAL_START) is ignored.
+-#ifdef CONFIG_KEXEC
+-	/* crashkernel=size@offset specifies the size to reserve for a crash
+-	 * kernel. If offset is 0, then it is determined automatically.
+-	 * By reserving this memory we guarantee that linux never set's it
+-	 * up as a DMA target.Useful for holding code to do something
+-	 * appropriate after a kernel panic.
+-	 */
+-	{
+-		char *from = strstr(boot_command_line, "crashkernel=");
+-		unsigned long base, size;
+-		if (from) {
+-			size = memparse(from + 12, &from);
+-			if (*from == '@')
+-				base = memparse(from+1, &from);
+-			else
+-				base = 0;
+-			if (size) {
+-				if (!base) {
+-					sort_regions(rsvd_region, n);
+-					base = kdump_find_rsvd_region(size,
+-							      	rsvd_region, n);
+-					}
+-				if (base != ~0UL) {
+-					rsvd_region[n].start =
+-						(unsigned long)__va(base);
+-					rsvd_region[n].end =
+-						(unsigned long)__va(base + size);
+-					n++;
+-					crashk_res.start = base;
+-					crashk_res.end = base + size - 1;
+-				}
+-			}
+-		}
+-		efi_memmap_res.start = ia64_boot_param->efi_memmap;
+-                efi_memmap_res.end = efi_memmap_res.start +
+-                        ia64_boot_param->efi_memmap_size;
+-                boot_param_res.start = __pa(ia64_boot_param);
+-                boot_param_res.end = boot_param_res.start +
+-                        sizeof(*ia64_boot_param);
+-	}
+-#endif
++	setup_crashkernel(total_memory, &n);
++
+ 	/* end of memory marker */
+ 	rsvd_region[n].start = ~0UL;
+ 	rsvd_region[n].end   = ~0UL;
+--- a/include/asm-ia64/meminit.h
++++ b/include/asm-ia64/meminit.h
+@@ -35,7 +35,7 @@ extern void find_memory (void);
+ extern void reserve_memory (void);
+ extern void find_initrd (void);
+ extern int filter_rsvd_memory (unsigned long start, unsigned long end, void *arg);
+-extern void efi_memmap_init(unsigned long *, unsigned long *);
++extern unsigned long efi_memmap_init(unsigned long *s, unsigned long *e);
+ extern int find_max_min_low_pfn (unsigned long , unsigned long, void *);
  
- config PHYSICAL_START
-
+ extern unsigned long vmcore_find_descriptor_size(unsigned long address);
 
 _______________________________________________
 kexec mailing list
