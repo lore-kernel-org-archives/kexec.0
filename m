@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IUIKJ-0006YS-Qh
-	for kexec@lists.infradead.org; Sun, 09 Sep 2007 09:39:36 +0100
-Message-Id: <20070909083914.951336895@strauss.suse.de>
+Received: from palinux.external.hp.com ([192.25.206.14]
+	helo=mail.parisc-linux.org)
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IUMQ2-0003Ih-7L
+	for kexec@lists.infradead.org; Sun, 09 Sep 2007 09:01:44 -0400
+Date: Sun, 9 Sep 2007 07:01:39 -0600
+From: Matthew Wilcox <matthew@wil.cx>
+Subject: Re: [patch 4/5] Use extended crashkernel command line on IA64
+Message-ID: <20070909130139.GF6809@parisc-linux.org>
 References: <20070909083914.065380136@strauss.suse.de>
-Date: Sun, 09 Sep 2007 10:39:17 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 3/5] Use extended crashkernel command line on x86_64
-Content-Disposition: inline; filename=crashkernel-x86_64
+	<20070909083915.165288618@strauss.suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070909083915.165288618@strauss.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,132 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linux-arch@vger.kernel.org, discuss@x86-64.org, linux-kernel@vger.kernel.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-This patch removes the crashkernel parsing from
-arch/x86_64/kernel/machine_kexec.c and calls the generic function, introduced in
-the last patch, in setup_bootmem_allocator().
+On Sun, Sep 09, 2007 at 10:39:18AM +0200, Bernhard Walle wrote:
+> Because the total amount of System RAM must be known when calling this
+> function, efi_memmap_init() is modified to return its comulated 
 
-This is necessary because the amount of System RAM must be known in this
-function now because of the new syntax.
+accumulated?
 
+> total_memory variable in a pointer value. IMO that's better than making the
+> variable global.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
-
----
- arch/x86_64/kernel/e820.c          |    3 ++-
- arch/x86_64/kernel/machine_kexec.c |   27 ---------------------------
- arch/x86_64/kernel/setup.c         |   35 ++++++++++++++++++++++++++++-------
- 3 files changed, 30 insertions(+), 35 deletions(-)
-
---- a/arch/x86_64/kernel/e820.c
-+++ b/arch/x86_64/kernel/e820.c
-@@ -226,7 +226,8 @@ void __init e820_reserve_resources(void)
- 			request_resource(res, &code_resource);
- 			request_resource(res, &data_resource);
- #ifdef CONFIG_KEXEC
--			request_resource(res, &crashk_res);
-+			if (crashk_res.start != crashk_res.end)
-+				request_resource(res, &crashk_res);
- #endif
- 		}
- 	}
---- a/arch/x86_64/kernel/machine_kexec.c
-+++ b/arch/x86_64/kernel/machine_kexec.c
-@@ -231,33 +231,6 @@ NORET_TYPE void machine_kexec(struct kim
- 			image->start);
- }
- 
--/* crashkernel=size@addr specifies the location to reserve for
-- * a crash kernel.  By reserving this memory we guarantee
-- * that linux never set's it up as a DMA target.
-- * Useful for holding code to do something appropriate
-- * after a kernel panic.
-- */
--static int __init setup_crashkernel(char *arg)
--{
--	unsigned long size, base;
--	char *p;
--	if (!arg)
--		return -EINVAL;
--	size = memparse(arg, &p);
--	if (arg == p)
--		return -EINVAL;
--	if (*p == '@') {
--		base = memparse(p+1, &p);
--		/* FIXME: Do I want a sanity check to validate the
--		 * memory range?  Yes you do, but it's too early for
--		 * e820 -AK */
--		crashk_res.start = base;
--		crashk_res.end   = base + size - 1;
--	}
--	return 0;
--}
--early_param("crashkernel", setup_crashkernel);
--
- void arch_crash_save_vmcoreinfo(void)
- {
- #ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
---- a/arch/x86_64/kernel/setup.c
-+++ b/arch/x86_64/kernel/setup.c
-@@ -196,6 +196,33 @@ static inline void copy_edd(void)
- }
- #endif
- 
-+#ifdef CONFIG_KEXEC
-+static inline void reserve_crashkernel(void)
-+{
-+	unsigned long long 	free_mem;
-+	unsigned long long 	crash_size, crash_base;
-+	int			ret;
-+
-+	free_mem = max_low_pfn << PAGE_SHIFT;
-+
-+	ret = parse_crashkernel(boot_command_line, free_mem,
-+			&crash_size, &crash_base);
-+	if (ret == 0 && crash_size > 0) {
-+		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+				"for crashkernel (System RAM: %ldMB)\n",
-+				(unsigned long)(crash_size >> 20),
-+				(unsigned long)(crash_base >> 20),
-+				(unsigned long)(free_mem >> 20));
-+		crashk_res.start = crash_base;
-+		crashk_res.end   = crash_base + crash_size;
-+		reserve_bootmem(crash_base, crash_size);
-+	}
-+}
-+#else
-+static inline void reserve_crashkernel(void)
-+{}
-+#endif
-+
- #define EBDA_ADDR_POINTER 0x40E
- 
- unsigned __initdata ebda_addr;
-@@ -388,13 +415,7 @@ void __init setup_arch(char **cmdline_p)
- 		}
- 	}
- #endif
--#ifdef CONFIG_KEXEC
--	if (crashk_res.start != crashk_res.end) {
--		reserve_bootmem_generic(crashk_res.start,
--			crashk_res.end - crashk_res.start + 1);
--	}
--#endif
--
-+	reserve_crashkernel();
- 	paging_init();
- 
- #ifdef CONFIG_PCI
+Why not make efi_memmap_init() return total_memory instead of void?
 
 -- 
+Intel are signing my paycheques ... these opinions are still mine
+"Bill, look, we understand that you're interested in selling us this
+operating system, but compare it to ours.  We can't possibly take such
+a retrograde step."
 
 _______________________________________________
 kexec mailing list
