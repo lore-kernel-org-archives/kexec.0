@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IUU25-0006uu-Gs
-	for kexec@lists.infradead.org; Sun, 09 Sep 2007 17:09:32 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [discuss] [patch 3/5] Use extended crashkernel command line on
-	x86_64
-References: <20070909083914.065380136@strauss.suse.de>
-	<20070909083914.951336895@strauss.suse.de>
-	<86802c440709091027o32a63d11w629bad87abcc19c2@mail.gmail.com>
-	<20070909185257.GA10600@suse.de>
-Date: Sun, 09 Sep 2007 15:06:55 -0600
-In-Reply-To: <20070909185257.GA10600@suse.de> (Bernhard Walle's message of
-	"Sun, 9 Sep 2007 20:52:58 +0200")
-Message-ID: <m1ir6jsg40.fsf@ebiederm.dsl.xmission.com>
+Received: from mailout.stusta.mhn.de ([141.84.69.5] helo=mailhub.stusta.mhn.de)
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IUTLD-0006Zw-V9
+	for kexec@lists.infradead.org; Sun, 09 Sep 2007 16:25:14 -0400
+Date: Sun, 9 Sep 2007 22:25:16 +0200
+From: Adrian Bunk <bunk@kernel.org>
+Subject: [-mm patch] kernel/kexec.c: make code static
+Message-ID: <20070909202516.GQ3563@stusta.de>
+References: <20070831215822.26e1432b.akpm@linux-foundation.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070831215822.26e1432b.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,32 +23,145 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, discuss@x86-64.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@in.ibm.com>, Yinghai Lu <yhlu.kernel@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Dan Aloni <da-x@monatomic.org>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Bernhard Walle <bwalle@suse.de> writes:
+On Fri, Aug 31, 2007 at 09:58:22PM -0700, Andrew Morton wrote:
+>...
+> Changes since 2.6.23-rc3-mm1:
+>...
+> +add-vmcoreinfo.patch
+>...
+>  misc
+>...
 
-> * Yinghai Lu <yhlu.kernel@gmail.com> [2007-09-09 19:27]:
->> >
->> > +#ifdef CONFIG_KEXEC
->> ...
->> 
->> CONFIG_KEXEC or CONFIG_CRASH_DUMP?
->
-> Good question. The crashkernel parameter was CONFIG_KEXEC before, and
-> I also wondered why, but I didn't change this because maybe there's
-> some reason I don't know.
->
-> Vivek, do you know why this was CONFIG_KEXEC?
+This patch makes the following needlessly global code static:
+- vmcoreinfo_data[]
+- vmcoreinfo_size
+- vmcoreinfo_append_str()
 
-Probably because you use it in the primary kernel you use it.
-The option reserves an area of memory for the kernel we switch
-to on panic or another kernel crash.
+Signed-off-by: Adrian Bunk <bunk@kernel.org>
 
-Generally CONFIG_CRASH_DUMP seems to be about the options needed
-to read out the crash dump after the fact.
+---
 
-Eric
+ include/linux/kexec.h |   14 -----------
+ kernel/kexec.c        |   52 +++++++++++++++++++++++++-----------------
+ 2 files changed, 32 insertions(+), 34 deletions(-)
+
+e6dbb01497c12aa69b47914da4db1cfd23e9813e 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 99f2d6f..7cce357 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -123,21 +123,8 @@ int kexec_should_crash(struct task_struct *);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ void crash_save_vmcoreinfo(void);
+ void arch_crash_save_vmcoreinfo(void);
+-void vmcoreinfo_append_str(const char *fmt, ...);
+ unsigned long paddr_vmcoreinfo_note(void);
+ 
+-#define SYMBOL(name) \
+-	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+-#define SIZE(name) \
+-	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
+-#define OFFSET(name, field) \
+-	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, \
+-			      &(((struct name *)0)->field))
+-#define LENGTH(name, value) \
+-	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
+-#define CONFIG(name) \
+-	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+-
+ extern struct kimage *kexec_image;
+ extern struct kimage *kexec_crash_image;
+ 
+@@ -177,7 +164,6 @@ extern struct resource crashk_res;
+ typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
+ extern note_buf_t *crash_notes;
+ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+-extern unsigned int vmcoreinfo_size;
+ extern unsigned int vmcoreinfo_max_size;
+ 
+ 
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index af2c035..c84a387 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -36,9 +36,9 @@
+ note_buf_t* crash_notes;
+ 
+ /* vmcoreinfo stuff */
+-unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
++static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+ u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+-unsigned int vmcoreinfo_size = 0;
++static unsigned int vmcoreinfo_size = 0;
+ unsigned int vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+ 
+ /* Location of the reserved area for the crash kernel */
+@@ -49,6 +49,36 @@ struct resource crashk_res = {
+ 	.flags = IORESOURCE_BUSY | IORESOURCE_MEM
+ };
+ 
++#define SYMBOL(name) \
++	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
++#define SIZE(name) \
++	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
++#define OFFSET(name, field) \
++	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, \
++			      &(((struct name *)0)->field))
++#define LENGTH(name, value) \
++	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
++#define CONFIG(name) \
++	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
++
++static void vmcoreinfo_append_str(const char *fmt, ...)
++{
++	va_list args;
++	char buf[0x50];
++	int r;
++
++	va_start(args, fmt);
++	r = vsnprintf(buf, sizeof(buf), fmt, args);
++	va_end(args);
++
++	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
++		r = vmcoreinfo_max_size - vmcoreinfo_size;
++
++	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
++
++	vmcoreinfo_size += r;
++}
++
+ int kexec_should_crash(struct task_struct *p)
+ {
+ 	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+@@ -1163,24 +1193,6 @@ void crash_save_vmcoreinfo(void)
+ 	final_note(buf);
+ }
+ 
+-void vmcoreinfo_append_str(const char *fmt, ...)
+-{
+-	va_list args;
+-	char buf[0x50];
+-	int r;
+-
+-	va_start(args, fmt);
+-	r = vsnprintf(buf, sizeof(buf), fmt, args);
+-	va_end(args);
+-
+-	if (r + vmcoreinfo_size > vmcoreinfo_max_size)
+-		r = vmcoreinfo_max_size - vmcoreinfo_size;
+-
+-	memcpy(&vmcoreinfo_data[vmcoreinfo_size], buf, r);
+-
+-	vmcoreinfo_size += r;
+-}
+-
+ /*
+  * provide an empty default implementation here -- architecture
+  * code may override this
+
 
 _______________________________________________
 kexec mailing list
