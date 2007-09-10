@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IUZRM-0000mR-Kw
-	for kexec@lists.infradead.org; Sun, 09 Sep 2007 22:55:59 -0400
-Subject: Re: [-mm patch] kernel/kexec.c: make code static
-In-reply-to: <20070909202516.GQ3563@stusta.de>
-Message-Id: <20070910115549oomichi@mail.jp.nec.com>
-References: <20070909202516.GQ3563@stusta.de>
+	id 1IUdbn-000350-1C
+	for kexec@lists.infradead.org; Mon, 10 Sep 2007 03:23:01 -0400
+Subject: [PATCH 0/3] [-mm patch] Cleanup add-vmcoreinfo.patch
+Message-Id: <20070910162305oomichi@mail.jp.nec.com>
 Mime-Version: 1.0
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Date: Mon, 10 Sep 2007 11:55:49 +0900
+Date: Mon, 10 Sep 2007 16:23:05 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,48 +20,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Adrian Bunk <bunk@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, Dan Aloni <da-x@monatomic.org>, linux-kernel@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
 
-Hi Adrian,
+Hi Andrew,
 
-
-2007/09/09 22:25:16 +0200, Adrian Bunk <bunk@kernel.org> wrote:
->On Fri, Aug 31, 2007 at 09:58:22PM -0700, Andrew Morton wrote:
->>...
->> Changes since 2.6.23-rc3-mm1:
->>...
->> +add-vmcoreinfo.patch
->>...
->>  misc
->>...
+On Fri, Aug 31, 2007 at 09:58:22PM -0700, Andrew Morton wrote:
+> Changes since 2.6.23-rc3-mm1:
+> [snip]
+> +add-vmcoreinfo.patch
 >
->This patch makes the following needlessly global code static:
->- vmcoreinfo_data[]
->- vmcoreinfo_size
->- vmcoreinfo_append_str()
 
-The kernel compiling fails with your patch because architecture-specific
-function should access the above data/function:
+Thank you for merging add-vmcoreinfo.patch.
+I created the patchset for your comments and some corrections.
+The patchset is for linux-2.6.23-rc4-mm1.
 
-# make
-[snip]
-arch/ia64/kernel/machine_kexec.c: In function 'arch_crash_save_vmcoreinfo':
-arch/ia64/kernel/machine_kexec.c:134: error: implicit declaration of function 'SYMBOL'
-arch/ia64/kernel/machine_kexec.c:135: error: implicit declaration of function 'LENGTH'
-arch/ia64/kernel/machine_kexec.c:139: error: implicit declaration of function 'SIZE'
-arch/ia64/kernel/machine_kexec.c:139: error: 'node_memblk_s' undeclared (first use in this function)
-arch/ia64/kernel/machine_kexec.c:139: error: (Each undeclared identifier is reported only once
-arch/ia64/kernel/machine_kexec.c:139: error: for each function it appears in.)
-arch/ia64/kernel/machine_kexec.c:140: error: implicit declaration of function 'OFFSET'
-arch/ia64/kernel/machine_kexec.c:140: error: 'start_paddr' undeclared (first use in this function)
-arch/ia64/kernel/machine_kexec.c:141: error: 'size' undeclared (first use in this function)
-arch/ia64/kernel/machine_kexec.c:144: error: implicit declaration of function 'CONFIG'
-arch/ia64/kernel/machine_kexec.c:144: error: 'PGTABLE_3' undeclared (first use in this function)
-make[1]: *** [arch/ia64/kernel/machine_kexec.o] Error 1
-make: *** [arch/ia64/kernel] Error 2
-#
+[1/3] Cleanup the coding style according to Andrew's comments:
+http://lists.infradead.org/pipermail/kexec/2007-August/000522.html
+- vmcoreinfo_append_str() should have suitable __attribute__s so that
+  the compiler can check its use.
+- vmcoreinfo_max_size should have size_t.
+- Use get_seconds() instead of xtime.tv_sec.
+- Use init_uts_ns.name.release instead of UTS_RELEASE.
+
+[2/3] Add nodemask_t's size and NR_FREE_PAGES's value to vmcoreinfo_data.
+  The dump filetering command 'makedumpfile'(v1.1.6 or before) had assumed
+  the above values, and it was not good from the reliability viewpoint.
+  So makedumpfile v1.2.0 came to need these values and I created the patch
+  to let the kernel output them.
+  makedumpfile site:
+  https://sourceforge.net/projects/makedumpfile/
+
+[3/3] Use the existing ia64_tpa() instead of asm code.
 
 
 Thanks
