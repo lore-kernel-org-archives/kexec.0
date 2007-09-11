@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e6.ny.us.ibm.com ([32.97.182.146])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IUz1x-0004hK-EU
-	for kexec@lists.infradead.org; Tue, 11 Sep 2007 07:15:30 +0100
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8B6GeOR020240
-	for <kexec@lists.infradead.org>; Tue, 11 Sep 2007 02:16:40 -0400
-Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l8B6FEFN542150
-	for <kexec@lists.infradead.org>; Tue, 11 Sep 2007 02:15:14 -0400
-Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
-	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l8B6FER3026338
-	for <kexec@lists.infradead.org>; Tue, 11 Sep 2007 02:15:14 -0400
-Date: Tue, 11 Sep 2007 11:45:22 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IV2YV-0000Xv-SW
+	for kexec@lists.infradead.org; Tue, 11 Sep 2007 06:01:19 -0400
+Date: Tue, 11 Sep 2007 12:01:10 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: [patch 1/5] Extended crashkernel command line
-Message-ID: <20070911061522.GD5053@in.ibm.com>
+Message-ID: <20070911100110.GB31038@suse.de>
 References: <20070909083914.065380136@strauss.suse.de>
 	<20070909083914.488571169@strauss.suse.de>
-Mime-Version: 1.0
+	<20070911061522.GD5053@in.ibm.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070909083914.488571169@strauss.suse.de>
-Reply-To: vgoyal@in.ibm.com
+In-Reply-To: <20070911061522.GD5053@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,100 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
+To: Vivek Goyal <vgoyal@in.ibm.com>
 Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Sun, Sep 09, 2007 at 10:39:15AM +0200, Bernhard Walle wrote:
+* Vivek Goyal <vgoyal@in.ibm.com> [2007-09-11 08:15]:
+> 
+> "offset" seems to be optional in the new syntax. What happens if user does
+> not specify offset. I think crash_base will be set to zero and system will
+> try to reserve x amount of memory start at zero? That would fail?
 
-[..]
-> +
-> +/*
-> + * parsing the "crashkernel" commandline
-> + *
-> + * this code is intended to be called from architecture specific code
-> + */
-> +
-> +
-> +/*
-> + * This function parses command lines in the format
-> + *
-> + *   crashkernel=<ramsize-range>:<size>[,...][@<base>]
-> + *
-> + * The function returns 0 on success and -EINVAL on failure.
-> + */
-> +static int parse_crashkernel_mem(char 			*cmdline,
-> +				 unsigned long long 	*crash_size,
-> +				 unsigned long long 	*crash_base,
-> +				 unsigned long 		system_ram)
-> +{
-> +	char *cur = cmdline;
-> +
-> +	*crash_size = 0;
-> +	*crash_base = 0;
-> +
-> +	/* for each entry of the comma-separated list */
-> +	do {
-> +		unsigned long long start = 0, end = ULLONG_MAX;
-> +		unsigned long long size = -1;
-> +
-> +		/* get the start of the range */
-> +		start = memparse(cur, &cur);
-> +		if (*cur != '-') {
-> +			printk(KERN_WARNING "crashkernel: '-' expected\n");
-> +			return -EINVAL;
-> +		}
-> +		cur++;
-> +
-> +		/* if no ':' is here, than we read the end */
-> +		if (*cur != ':') {
-> +			end = memparse(cur, &cur);
-> +			if (end <= start) {
-> +				printk(KERN_WARNING "crashkernel: end <= start\n");
-> +				return -EINVAL;
-> +			}
-> +		}
-> +
-> +		if (*cur != ':') {
-> +			printk(KERN_WARNING "crashkernel: ':' expected\n");
-> +			return -EINVAL;
-> +		}
-> +		cur++;
-> +
-> +		size = memparse(cur, &cur);
-> +		if (size < 0) {
-> +			printk(KERN_WARNING "crashkernel: invalid size\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* match ? */
-> +		if (system_ram >= start  && system_ram <= end) {
-> +			*crash_size = size;
-> +			break;
-> +		}
-> +	} while (*cur++ == ',');
-> +
-> +	if (*crash_size > 0) {
-> +		while (*cur != ' ' && *cur != '@')
-> +			cur++;
-> +		if (*cur == '@')
-> +			*crash_base = memparse(cur+1, &cur);
+That's handled in the architecture specific code -- because it's
+different on each architecture and the architecture specific code does
+memory reservation. IA64 already can handle this case (on IA64,
+specifying 0 is the same than leaving out the base address, and that's
+why I wanted to keep that semantics). I think it doesn't also make
+sense on i386/x86_64 to choose 0 as real base address, because the
+value below 1 MB is special for booting ...
 
-"offset" seems to be optional in the new syntax. What happens if user does
-not specify offset. I think crash_base will be set to zero and system will
-try to reserve x amount of memory start at zero? That would fail?
+> I think we should add some intelligence for automatic selection of "offset"
+> if user has not specified one. Automatically choose a chunk of free memory.
+> This takes away the headache from user for selecting a right place. In fact
+> one "offset" might not be valid for all the systems. I remember, somebody
+> had reported that ACPI tables were mapped lower in the address space and
+> reserving memory for kdump had failed.
 
-I think we should add some intelligence for automatic selection of "offset"
-if user has not specified one. Automatically choose a chunk of free memory.
-This takes away the headache from user for selecting a right place. In fact
-one "offset" might not be valid for all the systems. I remember, somebody
-had reported that ACPI tables were mapped lower in the address space and
-reserving memory for kdump had failed.
+I think you're right -- with the relocatable kernel it makes sense to
+have the kernel to decide where to reservate that memory. But that's
+beyond of the scope of that patch series -- however, I can come up
+with a solution, after that patch has been finished.
 
-Choosing the "offset" automatically should help distributions where one
-command line is supposed to work on all the systems.
 
-Thanks
-Vivek
+Thanks,
+   Bernhard
+
 
 _______________________________________________
 kexec mailing list
