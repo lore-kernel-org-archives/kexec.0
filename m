@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IV5Zs-0002MZ-IA
-	for kexec@lists.infradead.org; Tue, 11 Sep 2007 09:14:56 -0400
-Date: Tue, 11 Sep 2007 15:14:45 +0200
-From: Olaf Dabrunz <od@suse.de>
-Subject: Re: [patch 1/5] Extended crashkernel command line
-Message-ID: <20070911131445.GA17460@suse.de>
-References: <20070909083914.065380136@strauss.suse.de>
-	<20070909083914.488571169@strauss.suse.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070909083914.488571169@strauss.suse.de>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IV6Gd-0002iU-Hz
+	for kexec@lists.infradead.org; Tue, 11 Sep 2007 09:59:06 -0400
+Message-ID: <46E6A03F.4010208@redhat.com>
+Date: Tue, 11 Sep 2007 10:03:43 -0400
+From: Dave Anderson <anderson@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [Crash-utility] Re: [PATCH 0/2] vmcoreinfo support for
+	dump	filtering #2
+References: <20070907175746oomichi@mail.jp.nec.com>	<20070910113521.755d0433.rdunlap@xenotime.net>
+	<20070911035250.GA5053@in.ibm.com>
+In-Reply-To: <20070911035250.GA5053@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,55 +20,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: vgoyal@in.ibm.com, "Discussion list for crash utility usage,
+	maintenance and development" <crash-utility@redhat.com>
+Cc: Randy Dunlap <rdunlap@xenotime.net>, kexec-ml <kexec@lists.infradead.org>
 
-T24gMDktU2VwLTA3LCBCZXJuaGFyZCBXYWxsZSB3cm90ZToKPiBJZiB0aGVyZSBhcmUgbXVsdGlw
-bGUgb2NjdXJyZW5jZXMsIHRoZW4gdGhlIGxhc3Qgb25lIGlzIHRha2VuLiAgVGhlIGFkdmFudGFn
-ZQo+IGlzIHRoYXQgaWYgeW91IGhhdmUgYSBib290bG9hZGVyIGxpa2UgbGlsbyBvciBlbGlsbyB3
-aGljaCBhbGxvd3MgeW91IHRvIGFwcGVuZAo+IGEgY29tbWFuZCBsaW5lIHBhcmFtZXRlciBidXQg
-bm90IHRvIHJlbW92ZSBvbmUgKGxpa2UgaW4gR1JVQiksIHRoZW4geW91IGNhbiBhZGQKPiBhbm90
-aGVyIGNyYXNoa2VybmVsIHZhbHVlIGZvciB0ZXN0aW5nIGF0IHRoZSBib290IGNvbW1hbmQgbGlu
-ZSBhbmQgdGhpcyBvbmUKPiBvdmVyd3JpdGVzIHRoZSBjb21tYW5kIGxpbmUgaW4gdGhlIGNvbmZp
-Z3VyYXRpb24gdGhlbi4KCkFGQUlLIGl0IGlzIHRoZSBvdGhlciB3YXkgcm91bmQ6IHRoZSBsaWxv
-IGNvbmZpZ3VyYXRpb24tcGFyYW1ldGVyCiJhcHBlbmQiIGFwcGVuZHMgdGhlIGtlcm5lbCBwYXJh
-bWV0ZXJzIGluIHRoZSBjb25maWd1cmF0aW9uIHRvIHRoZQpwYXJhbWV0ZXJzIGdpdmVuIGJ5IHRo
-ZSB1c2VyIG9uIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lLgoKU28gdGhlIHBhcmFtZXRlcnMgc2V0
-IGJ5IHRoZSB1c2VyIGR1cmluZyBib290IGFwcGVhciBmaXJzdCBvbiB0aGUKY29tbWFuZCBsaW5l
-LgoKPiBTaWduZWQtb2ZmLWJ5OiBCZXJuaGFyZCBXYWxsZSA8YndhbGxlQHN1c2UuZGU+Cj4gCj4g
-LS0tCj4gIGluY2x1ZGUvbGludXgva2V4ZWMuaCB8ICAgIDIgCj4gIGtlcm5lbC9rZXhlYy5jICAg
-ICAgICB8ICAxMzkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNDEgaW5zZXJ0aW9ucygrKQo+IAo+IC0tLSBhL2lu
-Y2x1ZGUvbGludXgva2V4ZWMuaAo+ICsrKyBiL2luY2x1ZGUvbGludXgva2V4ZWMuaAo+IEBAIC0x
-NzksNiArMTc5LDggQEAgZXh0ZXJuIG5vdGVfYnVmX3QgKmNyYXNoX25vdGVzOwo+ICBleHRlcm4g
-dTMyIHZtY29yZWluZm9fbm90ZVtWTUNPUkVJTkZPX05PVEVfU0laRS80XTsKPiAgZXh0ZXJuIHVu
-c2lnbmVkIGludCB2bWNvcmVpbmZvX3NpemU7Cj4gIGV4dGVybiB1bnNpZ25lZCBpbnQgdm1jb3Jl
-aW5mb19tYXhfc2l6ZTsKPiAraW50IHBhcnNlX2NyYXNoa2VybmVsKGNoYXIgKmNtZGxpbmUsIHVu
-c2lnbmVkIGxvbmcgbG9uZyBzeXN0ZW1fcmFtLAo+ICsJCXVuc2lnbmVkIGxvbmcgbG9uZyAqY3Jh
-c2hfc2l6ZSwgdW5zaWduZWQgbG9uZyBsb25nICpjcmFzaF9iYXNlKTsKPiAgCj4gIFsuLi5dCj4g
-IAo+ICtpbnQgcGFyc2VfY3Jhc2hrZXJuZWwoY2hhciAJCSAqY21kbGluZSwKPiArCQkgICAgICB1
-bnNpZ25lZCBsb25nIGxvbmcgc3lzdGVtX3JhbSwKPiArCQkgICAgICB1bnNpZ25lZCBsb25nIGxv
-bmcgKmNyYXNoX3NpemUsCj4gKwkJICAgICAgdW5zaWduZWQgbG9uZyBsb25nICpjcmFzaF9iYXNl
-KQo+ICt7Cj4gKwljaGFyIAkqcCA9IGNtZGxpbmUsICpja19jbWRsaW5lID0gTlVMTDsKPiArCWNo
-YXIJKmZpcnN0X2NvbG9uLCAqZmlyc3Rfc3BhY2U7Cj4gKwo+ICsJLyogZmluZCBjcmFzaGtlcm5l
-bCBhbmQgdXNlIHRoZSBsYXN0IG9uZSBpZiB0aGVyZSBhcmUgbW9yZSAqLwo+ICsJcCA9IHN0cnN0
-cihwLCAiY3Jhc2hrZXJuZWw9Iik7Cj4gKwl3aGlsZSAocCkgewo+ICsJCWNrX2NtZGxpbmUgPSBw
-Owo+ICsJCXAgPSBzdHJzdHIocCsxLCAiY3Jhc2hrZXJuZWw9Iik7Cj4gKwl9Cj4gKwoKU28gcGVy
-aGFwcyBzb21ldGhpbmcgbGlrZSB0aGlzIGluc3RlYWQ6CgorCS8qIGZpbmQgY3Jhc2hrZXJuZWwg
-YW5kIHVzZSB0aGUgZmlyc3Qgb25lIGlmIHRoZXJlIGFyZSBtb3JlICovCisJcCA9IHN0cnN0cihw
-LCAiY3Jhc2hrZXJuZWw9Iik7CisJY2tfY21kbGluZSA9IHA7Cgo+ICsJaWYgKCFja19jbWRsaW5l
-KQo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCWNrX2NtZGxpbmUgKz0gMTI7IC8qIHN0cmxl
-bigiY3Jhc2hrZXJuZWw9IikgKi8KPiArCj4gKwkvKgo+ICsJICogaWYgdGhlIGNvbW1hbmRsaW5l
-IGNvbnRhaW5zIGEgJzonLCB0aGVuIHRoYXQncyB0aGUgZXh0ZW5kZWQKPiArCSAqIHN5bnRheCAt
-LSBpZiBub3QsIGl0IG11c3QgYmUgdGhlIGNsYXNzaWMgc3ludGF4Cj4gKwkgKi8KPiArCWZpcnN0
-X2NvbG9uID0gc3RyY2hyKGNrX2NtZGxpbmUsICc6Jyk7Cj4gKwlmaXJzdF9zcGFjZSA9IHN0cmNo
-cihja19jbWRsaW5lLCAnICcpOwo+ICsJaWYgKGZpcnN0X2NvbG9uICYmICghZmlyc3Rfc3BhY2Ug
-fHwgZmlyc3RfY29sb24gPCBmaXJzdF9zcGFjZSkpCj4gCj4gWy4uLl0KCi0tIApPbGFmIERhYnJ1
-bnogKG9kL29kYWJydW56KSwgU1VTRSBMaW51eCBQcm9kdWN0cyBHbWJILCBOw7xybmJlcmcKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Vivek Goyal wrote:
+> On Mon, Sep 10, 2007 at 11:35:21AM -0700, Randy Dunlap wrote:
+> 
+>>On Fri, 7 Sep 2007 17:57:46 +0900 Ken'ichi Ohmichi wrote:
+>>
+>>
+>>>Hi,
+>>
+>>>I released a new makedumpfile (version 1.2.0) with vmcoreinfo support.
+>>>I updated the patches for linux and kexec-tools.
+>>>
+>>>PATCH SET:
+>>>[1/2] [linux-2.6.22] Add vmcoreinfo
+>>>  The patch is for linux-2.6.22.
+>>>  The patch adds the vmcoreinfo data. Its address and size are output
+>>>  to /sys/kernel/vmcoreinfo.
+>>>
+>>>[2/2] [kexec-tools] Pass vmcoreinfo's address and size
+>>>  The patch is for kexec-tools-testing-20070330.
+>>>  (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
+>>>  kexec command gets the address and size of the vmcoreinfo data from
+>>>  /sys/kernel/vmcoreinfo, and passes them to the second kernel through
+>>>  ELF header of /proc/vmcore. When the second kernel is booting, the
+>>>  kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
+>>>  segment into /proc/vmcore.
+>>
+>>Hi,
+>>When using the vmcoreinfo patches, what tool(s) are available for
+>>analyzing the vmcore (dump) file?  E.g., lkcd or crash or just gdb?
+>>
+>>gdb works for me, but I tried to use crash (4.0-4.6 from
+>>http://people.redhat.com/anderson/) and crash complained:
+>>
+>>crash: invalid kernel virtual address: 0  type: "cpu_pda entry"
+>>
+>>Should crash work, or does it need to be modified?
+>>
+> 
+> 
+> Hi Randy,
+> 
+> Crash should just work. It might broken on latest kernel. Copying it
+> to crash-utility mailing list. Dave will be able to tell us better.
+> 
+> 
+>>This is on a 2.6.23-rc3 kernel with vmcoreinfo patches and a dump file
+>>with -l 31 (dump level 31, omitting all possible pages).
+
+There's always the possibility that something crucial (to the crash
+utility) has changed in the upstream kernel; that's just the nature
+of the beast.
+
+In this case, crash is reading this set of per-cpu pointers:
+
+   struct x8664_pda *_cpu_pda[NR_CPUS] __read_mostly;
+
+and for each one, it then reads the x8664_pda data structure
+that it points to -- but finds a NULL.  It's possible that it
+has incorrectly determined the number of x8664_pda structures
+(cpus) that exist.  Or less likely, the array contents were read
+as zeroes from the dumpfile.
+
+Anyway, with any initialization-time failure, it's usually helpful
+to invoke crash with the "-d7" (debug level) argument, as in:
+
+  $ crash -d7 vmlinux vmcore
+
+That will display information re: every read made to the dumpfile.
+In this case, normally you would see, for each cpu, a read of the
+individual 8-byte address from the array, and then based upon what
+it read, the subsequent read of the whole 128-byte data structure:
+
+<readmem: ffffffff8042d9c0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
+<readmem: ffffffff80406000, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+CPU0: level4_pgt: 200000010 data_offset: ffff8100899c1000
+<readmem: ffffffff8042d9c8, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
+<readmem: ffff81003ff027c0, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+CPU1: level4_pgt: 200000010 data_offset: ffff8100899c9000
+<readmem: ffffffff8042d9d0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
+<readmem: ffff81003ff19e40, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+CPU2: level4_pgt: 200000010 data_offset: ffff8100899d1000
+<readmem: ffffffff8042d9d8, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
+<readmem: ffff81003ff19640, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+CPU3: level4_pgt: 200000010 data_offset: ffff8100899d9000
+<readmem: ffffffff8042d9e0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
+<readmem: ffffffff80406200, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+
+ From that data structure it grabs the level4_pgt and data_offset
+fields for subsequent use.  So in your case, it should show how
+many (if any) of the x8664_pda structures it read before encountering
+a NULL pointer in one of the array entries.
+
+Dave
+
+
+
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
