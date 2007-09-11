@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IV2Z2-0000Z9-5H
-	for kexec@lists.infradead.org; Tue, 11 Sep 2007 06:01:52 -0400
-Date: Tue, 11 Sep 2007 12:01:45 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [discuss] [patch 3/5] Use extended crashkernel command line on
-	x86_64
-Message-ID: <20070911100145.GC31038@suse.de>
+	id 1IV5Zs-0002MZ-IA
+	for kexec@lists.infradead.org; Tue, 11 Sep 2007 09:14:56 -0400
+Date: Tue, 11 Sep 2007 15:14:45 +0200
+From: Olaf Dabrunz <od@suse.de>
+Subject: Re: [patch 1/5] Extended crashkernel command line
+Message-ID: <20070911131445.GA17460@suse.de>
 References: <20070909083914.065380136@strauss.suse.de>
-	<20070909083914.951336895@strauss.suse.de>
-	<86802c440709091027o32a63d11w629bad87abcc19c2@mail.gmail.com>
-	<20070909185257.GA10600@suse.de> <20070911051453.GB5053@in.ibm.com>
-MIME-Version: 1.0
+	<20070909083914.488571169@strauss.suse.de>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070911051453.GB5053@in.ibm.com>
+In-Reply-To: <20070909083914.488571169@strauss.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +20,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@in.ibm.com>
-Cc: linux-arch@vger.kernel.org, discuss@x86-64.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Yinghai Lu <yhlu.kernel@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Vivek Goyal <vgoyal@in.ibm.com> [2007-09-11 07:14]:
-> On Sun, Sep 09, 2007 at 08:52:58PM +0200, Bernhard Walle wrote:
-> > * Yinghai Lu <yhlu.kernel@gmail.com> [2007-09-09 19:27]:
-> > > >
-> > > > +#ifdef CONFIG_KEXEC
-> > > ...
-> > > 
-> > > CONFIG_KEXEC or CONFIG_CRASH_DUMP?
-> > 
-> > Good question. The crashkernel parameter was CONFIG_KEXEC before, and
-> > I also wondered why, but I didn't change this because maybe there's
-> > some reason I don't know.
-> > 
-> > Vivek, do you know why this was CONFIG_KEXEC?
-> 
-> As Eric mentioned, CONFIG_CRASH_DUMP has been used for all dump capturing
-> infrastructure and rest of the kexec and kexec on panic functionality
-> has been put under CONFIG_KEXEC. 
-> 
-> Keeping memory reservation under CONFIG_KEXEC helps in a sense when
-> somebody is not using a relocatable kernel and uses a custom kernel for dump
-> capture. In that case he does not have to enable CONFIG_CRASH_DUMP in the
-> first kernel.
-
-Yes, you all are right ... sorry for the noise ;)
-
-
-Thanks,
-   Bernhard
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDktU2VwLTA3LCBCZXJuaGFyZCBXYWxsZSB3cm90ZToKPiBJZiB0aGVyZSBhcmUgbXVsdGlw
+bGUgb2NjdXJyZW5jZXMsIHRoZW4gdGhlIGxhc3Qgb25lIGlzIHRha2VuLiAgVGhlIGFkdmFudGFn
+ZQo+IGlzIHRoYXQgaWYgeW91IGhhdmUgYSBib290bG9hZGVyIGxpa2UgbGlsbyBvciBlbGlsbyB3
+aGljaCBhbGxvd3MgeW91IHRvIGFwcGVuZAo+IGEgY29tbWFuZCBsaW5lIHBhcmFtZXRlciBidXQg
+bm90IHRvIHJlbW92ZSBvbmUgKGxpa2UgaW4gR1JVQiksIHRoZW4geW91IGNhbiBhZGQKPiBhbm90
+aGVyIGNyYXNoa2VybmVsIHZhbHVlIGZvciB0ZXN0aW5nIGF0IHRoZSBib290IGNvbW1hbmQgbGlu
+ZSBhbmQgdGhpcyBvbmUKPiBvdmVyd3JpdGVzIHRoZSBjb21tYW5kIGxpbmUgaW4gdGhlIGNvbmZp
+Z3VyYXRpb24gdGhlbi4KCkFGQUlLIGl0IGlzIHRoZSBvdGhlciB3YXkgcm91bmQ6IHRoZSBsaWxv
+IGNvbmZpZ3VyYXRpb24tcGFyYW1ldGVyCiJhcHBlbmQiIGFwcGVuZHMgdGhlIGtlcm5lbCBwYXJh
+bWV0ZXJzIGluIHRoZSBjb25maWd1cmF0aW9uIHRvIHRoZQpwYXJhbWV0ZXJzIGdpdmVuIGJ5IHRo
+ZSB1c2VyIG9uIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lLgoKU28gdGhlIHBhcmFtZXRlcnMgc2V0
+IGJ5IHRoZSB1c2VyIGR1cmluZyBib290IGFwcGVhciBmaXJzdCBvbiB0aGUKY29tbWFuZCBsaW5l
+LgoKPiBTaWduZWQtb2ZmLWJ5OiBCZXJuaGFyZCBXYWxsZSA8YndhbGxlQHN1c2UuZGU+Cj4gCj4g
+LS0tCj4gIGluY2x1ZGUvbGludXgva2V4ZWMuaCB8ICAgIDIgCj4gIGtlcm5lbC9rZXhlYy5jICAg
+ICAgICB8ICAxMzkgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNDEgaW5zZXJ0aW9ucygrKQo+IAo+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgva2V4ZWMuaAo+ICsrKyBiL2luY2x1ZGUvbGludXgva2V4ZWMuaAo+IEBAIC0x
+NzksNiArMTc5LDggQEAgZXh0ZXJuIG5vdGVfYnVmX3QgKmNyYXNoX25vdGVzOwo+ICBleHRlcm4g
+dTMyIHZtY29yZWluZm9fbm90ZVtWTUNPUkVJTkZPX05PVEVfU0laRS80XTsKPiAgZXh0ZXJuIHVu
+c2lnbmVkIGludCB2bWNvcmVpbmZvX3NpemU7Cj4gIGV4dGVybiB1bnNpZ25lZCBpbnQgdm1jb3Jl
+aW5mb19tYXhfc2l6ZTsKPiAraW50IHBhcnNlX2NyYXNoa2VybmVsKGNoYXIgKmNtZGxpbmUsIHVu
+c2lnbmVkIGxvbmcgbG9uZyBzeXN0ZW1fcmFtLAo+ICsJCXVuc2lnbmVkIGxvbmcgbG9uZyAqY3Jh
+c2hfc2l6ZSwgdW5zaWduZWQgbG9uZyBsb25nICpjcmFzaF9iYXNlKTsKPiAgCj4gIFsuLi5dCj4g
+IAo+ICtpbnQgcGFyc2VfY3Jhc2hrZXJuZWwoY2hhciAJCSAqY21kbGluZSwKPiArCQkgICAgICB1
+bnNpZ25lZCBsb25nIGxvbmcgc3lzdGVtX3JhbSwKPiArCQkgICAgICB1bnNpZ25lZCBsb25nIGxv
+bmcgKmNyYXNoX3NpemUsCj4gKwkJICAgICAgdW5zaWduZWQgbG9uZyBsb25nICpjcmFzaF9iYXNl
+KQo+ICt7Cj4gKwljaGFyIAkqcCA9IGNtZGxpbmUsICpja19jbWRsaW5lID0gTlVMTDsKPiArCWNo
+YXIJKmZpcnN0X2NvbG9uLCAqZmlyc3Rfc3BhY2U7Cj4gKwo+ICsJLyogZmluZCBjcmFzaGtlcm5l
+bCBhbmQgdXNlIHRoZSBsYXN0IG9uZSBpZiB0aGVyZSBhcmUgbW9yZSAqLwo+ICsJcCA9IHN0cnN0
+cihwLCAiY3Jhc2hrZXJuZWw9Iik7Cj4gKwl3aGlsZSAocCkgewo+ICsJCWNrX2NtZGxpbmUgPSBw
+Owo+ICsJCXAgPSBzdHJzdHIocCsxLCAiY3Jhc2hrZXJuZWw9Iik7Cj4gKwl9Cj4gKwoKU28gcGVy
+aGFwcyBzb21ldGhpbmcgbGlrZSB0aGlzIGluc3RlYWQ6CgorCS8qIGZpbmQgY3Jhc2hrZXJuZWwg
+YW5kIHVzZSB0aGUgZmlyc3Qgb25lIGlmIHRoZXJlIGFyZSBtb3JlICovCisJcCA9IHN0cnN0cihw
+LCAiY3Jhc2hrZXJuZWw9Iik7CisJY2tfY21kbGluZSA9IHA7Cgo+ICsJaWYgKCFja19jbWRsaW5l
+KQo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCWNrX2NtZGxpbmUgKz0gMTI7IC8qIHN0cmxl
+bigiY3Jhc2hrZXJuZWw9IikgKi8KPiArCj4gKwkvKgo+ICsJICogaWYgdGhlIGNvbW1hbmRsaW5l
+IGNvbnRhaW5zIGEgJzonLCB0aGVuIHRoYXQncyB0aGUgZXh0ZW5kZWQKPiArCSAqIHN5bnRheCAt
+LSBpZiBub3QsIGl0IG11c3QgYmUgdGhlIGNsYXNzaWMgc3ludGF4Cj4gKwkgKi8KPiArCWZpcnN0
+X2NvbG9uID0gc3RyY2hyKGNrX2NtZGxpbmUsICc6Jyk7Cj4gKwlmaXJzdF9zcGFjZSA9IHN0cmNo
+cihja19jbWRsaW5lLCAnICcpOwo+ICsJaWYgKGZpcnN0X2NvbG9uICYmICghZmlyc3Rfc3BhY2Ug
+fHwgZmlyc3RfY29sb24gPCBmaXJzdF9zcGFjZSkpCj4gCj4gWy4uLl0KCi0tIApPbGFmIERhYnJ1
+bnogKG9kL29kYWJydW56KSwgU1VTRSBMaW51eCBQcm9kdWN0cyBHbWJILCBOw7xybmJlcmcKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
