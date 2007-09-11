@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga09.intel.com ([134.134.136.24])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IV6Gd-0002iU-Hz
-	for kexec@lists.infradead.org; Tue, 11 Sep 2007 09:59:06 -0400
-Message-ID: <46E6A03F.4010208@redhat.com>
-Date: Tue, 11 Sep 2007 10:03:43 -0400
-From: Dave Anderson <anderson@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [Crash-utility] Re: [PATCH 0/2] vmcoreinfo support for
-	dump	filtering #2
-References: <20070907175746oomichi@mail.jp.nec.com>	<20070910113521.755d0433.rdunlap@xenotime.net>
-	<20070911035250.GA5053@in.ibm.com>
-In-Reply-To: <20070911035250.GA5053@in.ibm.com>
+	id 1IV7em-0003hZ-Vr
+	for kexec@lists.infradead.org; Tue, 11 Sep 2007 11:28:07 -0400
+Date: Tue, 11 Sep 2007 08:32:09 -0700
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
+Subject: Re: [patch 1/5] Extended crashkernel command line
+Message-ID: <20070911153209.GA5054@nlxdcldnl2.cl.intel.com>
+References: <20070909083914.065380136@strauss.suse.de>
+	<20070909083914.488571169@strauss.suse.de>
+	<20070911131445.GA17460@suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070911131445.GA17460@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,109 +25,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@in.ibm.com, "Discussion list for crash utility usage,
-	maintenance and development" <crash-utility@redhat.com>
-Cc: Randy Dunlap <rdunlap@xenotime.net>, kexec-ml <kexec@lists.infradead.org>
+To: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
 
-Vivek Goyal wrote:
-> On Mon, Sep 10, 2007 at 11:35:21AM -0700, Randy Dunlap wrote:
+On Tue, Sep 11, 2007 at 03:14:45PM +0200, Olaf Dabrunz wrote:
+> On 09-Sep-07, Bernhard Walle wrote:
+> > If there are multiple occurrences, then the last one is taken.  The advantage
+> > is that if you have a bootloader like lilo or elilo which allows you to append
+> > a command line parameter but not to remove one (like in GRUB), then you can add
+> > another crashkernel value for testing at the boot command line and this one
+> > overwrites the command line in the configuration then.
 > 
->>On Fri, 7 Sep 2007 17:57:46 +0900 Ken'ichi Ohmichi wrote:
->>
->>
->>>Hi,
->>
->>>I released a new makedumpfile (version 1.2.0) with vmcoreinfo support.
->>>I updated the patches for linux and kexec-tools.
->>>
->>>PATCH SET:
->>>[1/2] [linux-2.6.22] Add vmcoreinfo
->>>  The patch is for linux-2.6.22.
->>>  The patch adds the vmcoreinfo data. Its address and size are output
->>>  to /sys/kernel/vmcoreinfo.
->>>
->>>[2/2] [kexec-tools] Pass vmcoreinfo's address and size
->>>  The patch is for kexec-tools-testing-20070330.
->>>  (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
->>>  kexec command gets the address and size of the vmcoreinfo data from
->>>  /sys/kernel/vmcoreinfo, and passes them to the second kernel through
->>>  ELF header of /proc/vmcore. When the second kernel is booting, the
->>>  kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
->>>  segment into /proc/vmcore.
->>
->>Hi,
->>When using the vmcoreinfo patches, what tool(s) are available for
->>analyzing the vmcore (dump) file?  E.g., lkcd or crash or just gdb?
->>
->>gdb works for me, but I tried to use crash (4.0-4.6 from
->>http://people.redhat.com/anderson/) and crash complained:
->>
->>crash: invalid kernel virtual address: 0  type: "cpu_pda entry"
->>
->>Should crash work, or does it need to be modified?
->>
+> AFAIK it is the other way round: the lilo configuration-parameter
+> "append" appends the kernel parameters in the configuration to the
+> parameters given by the user on the kernel command line.
 > 
-> 
-> Hi Randy,
-> 
-> Crash should just work. It might broken on latest kernel. Copying it
-> to crash-utility mailing list. Dave will be able to tell us better.
-> 
-> 
->>This is on a 2.6.23-rc3 kernel with vmcoreinfo patches and a dump file
->>with -l 31 (dump level 31, omitting all possible pages).
+> So the parameters set by the user during boot appear first on the
+> command line.
 
-There's always the possibility that something crucial (to the crash
-utility) has changed in the upstream kernel; that's just the nature
-of the beast.
+Given the kernel itself processes the cmdline from front to back,
+that suggests the last value is the correct value.
 
-In this case, crash is reading this set of per-cpu pointers:
 
-   struct x8664_pda *_cpu_pda[NR_CPUS] __read_mostly;
+A survey of bootloaders shows differing behaviors:
 
-and for each one, it then reads the x8664_pda data structure
-that it points to -- but finds a NULL.  It's possible that it
-has incorrectly determined the number of x8664_pda structures
-(cpus) that exist.  Or less likely, the array contents were read
-as zeroes from the dumpfile.
+syslinux et al.:
+  APPEND options...
+    Add one or more options to the kernel command line.  These are
+    added both for automatic and manual boots.  The options are
+    added at the very beginning of the kernel command line,
+    usually permitting explicitly entered kernel options to override
+    them.  This is the equivalent of the LILO "append" option.
 
-Anyway, with any initialization-time failure, it's usually helpful
-to invoke crash with the "-d7" (debug level) argument, as in:
+lilo:
+  append=<string>
 
-  $ crash -d7 vmlinux vmcore
+    Appends the options specified to the parameter line passed to
+    the kernel.  This is typically used to specify hardware parameters
+    that can't be entirely auto-detected or for which probing may be
+    dangerous. Multiple kernel parameters are separated by a blank
+    space, and the string must be enclosed in double quotes.  A local
+    append= appearing withing an image= section overrides any
+    global append= appearing in the top section of the configuration file.
+    Append= may be used only once per "image=" section.
 
-That will display information re: every read made to the dumpfile.
-In this case, normally you would see, for each cpu, a read of the
-individual 8-byte address from the array, and then based upon what
-it read, the subsequent read of the whole 128-byte data structure:
+    [There's also a local addappend string that's appended to the append string]
 
-<readmem: ffffffff8042d9c0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
-<readmem: ffffffff80406000, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
-CPU0: level4_pgt: 200000010 data_offset: ffff8100899c1000
-<readmem: ffffffff8042d9c8, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
-<readmem: ffff81003ff027c0, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
-CPU1: level4_pgt: 200000010 data_offset: ffff8100899c9000
-<readmem: ffffffff8042d9d0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
-<readmem: ffff81003ff19e40, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
-CPU2: level4_pgt: 200000010 data_offset: ffff8100899d1000
-<readmem: ffffffff8042d9d8, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
-<readmem: ffff81003ff19640, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
-CPU3: level4_pgt: 200000010 data_offset: ffff8100899d9000
-<readmem: ffffffff8042d9e0, KVADDR, "_cpu_pda addr", 8, (FOE), 7fbffff210>
-<readmem: ffffffff80406200, KVADDR, "cpu_pda entry", 128, (FOE), 937680>
+elilo:
+  append=string       Append a string of options to kernel command line
+    ...
+    The user can specify a kernel and related kernel options using the image
+    label. Alternatively, the user can also specify a kernel file that is
+    not specified in the config file. In any case, some of the global options
+    (such as append) are always concatenated to whatever the user type.
 
- From that data structure it grabs the level4_pgt and data_offset
-fields for subsequent use.  So in your case, it should show how
-many (if any) of the x8664_pda structures it read before encountering
-a NULL pointer in one of the array entries.
+Grub:
+  Interactive editing of the command line...
 
-Dave
+kboot
+  Config file entries precede user's values from keyboard
 
 
 
-
-
-
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
