@@ -1,28 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e6.ny.us.ibm.com ([32.97.182.146])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IUwnu-0003Mw-Ha
-	for kexec@lists.infradead.org; Tue, 11 Sep 2007 04:52:51 +0100
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8B3ruG2020828
-	for <kexec@lists.infradead.org>; Mon, 10 Sep 2007 23:53:56 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l8B3qVt8555314
-	for <kexec@lists.infradead.org>; Mon, 10 Sep 2007 23:52:31 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l8B3qUDh022731
-	for <kexec@lists.infradead.org>; Mon, 10 Sep 2007 23:52:30 -0400
-Date: Tue, 11 Sep 2007 09:22:50 +0530
+Received: from e31.co.us.ibm.com ([32.97.110.149])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IUy5R-0004yV-0n
+	for kexec@lists.infradead.org; Tue, 11 Sep 2007 01:15:01 -0400
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8B5EeYe030465
+	for <kexec@lists.infradead.org>; Tue, 11 Sep 2007 01:14:40 -0400
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l8B5Ee66420870
+	for <kexec@lists.infradead.org>; Mon, 10 Sep 2007 23:14:40 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l8B5Edsh026340
+	for <kexec@lists.infradead.org>; Mon, 10 Sep 2007 23:14:40 -0600
+Date: Tue, 11 Sep 2007 10:44:53 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [PATCH 0/2] vmcoreinfo support for dump filtering #2
-Message-ID: <20070911035250.GA5053@in.ibm.com>
-References: <20070907175746oomichi@mail.jp.nec.com>
-	<20070910113521.755d0433.rdunlap@xenotime.net>
+Subject: Re: [discuss] [patch 3/5] Use extended crashkernel command line on
+	x86_64
+Message-ID: <20070911051453.GB5053@in.ibm.com>
+References: <20070909083914.065380136@strauss.suse.de>
+	<20070909083914.951336895@strauss.suse.de>
+	<86802c440709091027o32a63d11w629bad87abcc19c2@mail.gmail.com>
+	<20070909185257.GA10600@suse.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070910113521.755d0433.rdunlap@xenotime.net>
+In-Reply-To: <20070909185257.GA10600@suse.de>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -36,52 +40,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>, Dan Aloni <da-x@monatomic.org>, crash mailing list <crash-utility@redhat.com>
+To: Yinghai Lu <yhlu.kernel@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-arch@vger.kernel.org, discuss@x86-64.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Bernhard Walle <bwalle@suse.de>
 
-On Mon, Sep 10, 2007 at 11:35:21AM -0700, Randy Dunlap wrote:
-> On Fri, 7 Sep 2007 17:57:46 +0900 Ken'ichi Ohmichi wrote:
-> 
-> > Hi,
-> 
-> > I released a new makedumpfile (version 1.2.0) with vmcoreinfo support.
-> > I updated the patches for linux and kexec-tools.
+On Sun, Sep 09, 2007 at 08:52:58PM +0200, Bernhard Walle wrote:
+> * Yinghai Lu <yhlu.kernel@gmail.com> [2007-09-09 19:27]:
+> > >
+> > > +#ifdef CONFIG_KEXEC
+> > ...
 > > 
-> > PATCH SET:
-> > [1/2] [linux-2.6.22] Add vmcoreinfo
-> >   The patch is for linux-2.6.22.
-> >   The patch adds the vmcoreinfo data. Its address and size are output
-> >   to /sys/kernel/vmcoreinfo.
-> > 
-> > [2/2] [kexec-tools] Pass vmcoreinfo's address and size
-> >   The patch is for kexec-tools-testing-20070330.
-> >   (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
-> >   kexec command gets the address and size of the vmcoreinfo data from
-> >   /sys/kernel/vmcoreinfo, and passes them to the second kernel through
-> >   ELF header of /proc/vmcore. When the second kernel is booting, the
-> >   kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
-> >   segment into /proc/vmcore.
+> > CONFIG_KEXEC or CONFIG_CRASH_DUMP?
 > 
-> Hi,
-> When using the vmcoreinfo patches, what tool(s) are available for
-> analyzing the vmcore (dump) file?  E.g., lkcd or crash or just gdb?
+> Good question. The crashkernel parameter was CONFIG_KEXEC before, and
+> I also wondered why, but I didn't change this because maybe there's
+> some reason I don't know.
 > 
-> gdb works for me, but I tried to use crash (4.0-4.6 from
-> http://people.redhat.com/anderson/) and crash complained:
+> Vivek, do you know why this was CONFIG_KEXEC?
 > 
-> crash: invalid kernel virtual address: 0  type: "cpu_pda entry"
-> 
-> Should crash work, or does it need to be modified?
 > 
 
-Hi Randy,
+Bernhard,
 
-Crash should just work. It might broken on latest kernel. Copying it
-to crash-utility mailing list. Dave will be able to tell us better.
+As Eric mentioned, CONFIG_CRASH_DUMP has been used for all dump capturing
+infrastructure and rest of the kexec and kexec on panic functionality
+has been put under CONFIG_KEXEC. 
 
-> This is on a 2.6.23-rc3 kernel with vmcoreinfo patches and a dump file
-> with -l 31 (dump level 31, omitting all possible pages).
-> 
+Keeping memory reservation under CONFIG_KEXEC helps in a sense when
+somebody is not using a relocatable kernel and uses a custom kernel for dump
+capture. In that case he does not have to enable CONFIG_CRASH_DUMP in the
+first kernel.
 
 Thanks
 Vivek
