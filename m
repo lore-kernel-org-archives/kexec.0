@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IVMnc-0003NZ-86
-	for kexec@lists.infradead.org; Wed, 12 Sep 2007 03:38:16 -0400
-Message-Id: <46E7972A.7000107@mxs.nes.nec.co.jp>
-Date: Wed, 12 Sep 2007 16:37:14 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [-mm patch] kernel/kexec.c: make code static
-References: <20070909202516.GQ3563@stusta.de>
-	<20070910115549oomichi@mail.jp.nec.com>
-	<20070910122040.GE3563@stusta.de>
-	<20070911055327.GA14117@in.ibm.com>
-In-Reply-To: <20070911055327.GA14117@in.ibm.com>
+Received: from e36.co.us.ibm.com ([32.97.110.154])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IVQKZ-0001nH-TI
+	for kexec@lists.infradead.org; Wed, 12 Sep 2007 12:24:33 +0100
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e36.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8CBMplF002763
+	for <kexec@lists.infradead.org>; Wed, 12 Sep 2007 07:22:51 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l8CBMotY484810
+	for <kexec@lists.infradead.org>; Wed, 12 Sep 2007 05:22:50 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l8CBMo8h011844
+	for <kexec@lists.infradead.org>; Wed, 12 Sep 2007 05:22:50 -0600
+Date: Wed, 12 Sep 2007 16:53:08 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [patch 1/5] Extended crashkernel command line
+Message-ID: <20070912112308.GA17436@in.ibm.com>
+References: <20070909083914.065380136@strauss.suse.de>
+	<20070909083914.488571169@strauss.suse.de>
+	<20070911061522.GD5053@in.ibm.com> <20070911100110.GB31038@suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070911100110.GB31038@suse.de>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,70 +38,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: maneesh@in.ibm.com
-Cc: linux-kernel@vger.kernel.org, Adrian Bunk <bunk@kernel.org>, kexec@lists.infradead.org, Andrew Morton <akpm@linux-foundation.org>, Dan Aloni <da-x@monatomic.org>
+To: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
+On Tue, Sep 11, 2007 at 12:01:10PM +0200, Bernhard Walle wrote:
+> * Vivek Goyal <vgoyal@in.ibm.com> [2007-09-11 08:15]:
+> > 
+> > "offset" seems to be optional in the new syntax. What happens if user does
+> > not specify offset. I think crash_base will be set to zero and system will
+> > try to reserve x amount of memory start at zero? That would fail?
+> 
+> That's handled in the architecture specific code -- because it's
+> different on each architecture and the architecture specific code does
+> memory reservation. IA64 already can handle this case (on IA64,
+> specifying 0 is the same than leaving out the base address, and that's
+> why I wanted to keep that semantics). I think it doesn't also make
+> sense on i386/x86_64 to choose 0 as real base address, because the
+> value below 1 MB is special for booting ...
+> 
 
-Hi Adrian, Maneesh,
-
-Maneesh Soni wrote:
- > On Mon, Sep 10, 2007 at 02:20:40PM +0200, Adrian Bunk wrote:
- >> On Mon, Sep 10, 2007 at 11:55:49AM +0900, Ken'ichi Ohmichi wrote:
- >>> Hi Adrian,
- >>>
- >>>
- >>> 2007/09/09 22:25:16 +0200, Adrian Bunk <bunk@kernel.org> wrote:
- >>>> On Fri, Aug 31, 2007 at 09:58:22PM -0700, Andrew Morton wrote:
- >>>>> ...
- >>>>> Changes since 2.6.23-rc3-mm1:
- >>>>> ...
- >>>>> +add-vmcoreinfo.patch
- >>>>> ...
- >>>>>  misc
- >>>>> ...
- >>>> This patch makes the following needlessly global code static:
- >>>> - vmcoreinfo_data[]
- >>>> - vmcoreinfo_size
- >>>> - vmcoreinfo_append_str()
- >>> The kernel compiling fails with your patch because architecture-specific
- >>> function should access the above data/function:
- >>>
- >>> # make
- >>> [snip]
- >>> arch/ia64/kernel/machine_kexec.c: In function 'arch_crash_save_vmcoreinfo':
- >>> arch/ia64/kernel/machine_kexec.c:134: error: implicit declaration of function 'SYMBOL'
- >>> arch/ia64/kernel/machine_kexec.c:135: error: implicit declaration of function 'LENGTH'
- >>> arch/ia64/kernel/machine_kexec.c:139: error: implicit declaration of function 'SIZE'
- >>> arch/ia64/kernel/machine_kexec.c:139: error: 'node_memblk_s' undeclared (first use in this function)
- >>> arch/ia64/kernel/machine_kexec.c:139: error: (Each undeclared identifier is reported only once
- >>> arch/ia64/kernel/machine_kexec.c:139: error: for each function it appears in.)
- >>> arch/ia64/kernel/machine_kexec.c:140: error: implicit declaration of function 'OFFSET'
- >>> arch/ia64/kernel/machine_kexec.c:140: error: 'start_paddr' undeclared (first use in this function)
- >>> arch/ia64/kernel/machine_kexec.c:141: error: 'size' undeclared (first use in this function)
- >>> arch/ia64/kernel/machine_kexec.c:144: error: implicit declaration of function 'CONFIG'
- >>> arch/ia64/kernel/machine_kexec.c:144: error: 'PGTABLE_3' undeclared (first use in this function)
- >>> make[1]: *** [arch/ia64/kernel/machine_kexec.o] Error 1
- >>> make: *** [arch/ia64/kernel] Error 2
- >>> #
- >> Thanks, I missed this.
- >>
- >> That's 80% my fault and 20% the fault of the usage of generic names SYMBOL/SIZE/OFFSET/LENGTH/CONFIG making it impossible to grep for them (and namespace conflicts quite possible).
-
-I understand your motivation. It is better to change these names as you said.
-
-
- >> Can we get these #define's properly prefixed (e.g. KEXEC_SYMBOL etc.) so that other people will not repeat my mistake and namespace conflicts will be prevented?
- >>
- >
- > CRASH_DUMP_ or VMCORE_ should be a better prefix as the dump filtering
- > functionality not directly related to kexec.
-
-I think that VMCOREINFO_ is a better prefix, because these macros are for
-writing the information to the vmcoreinfo data.
-
+Ok. I see IA64 is handling this case. But in current patchset, i386 and
+x86_64 will try to reserve memory starting at zero?  So we still got
+to handle this case in i386 and x86_64?
 
 Thanks
-Ken'ichi Ohmichi
+Vivek
 
 _______________________________________________
 kexec mailing list
