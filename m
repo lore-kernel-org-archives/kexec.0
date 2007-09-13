@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IVrKp-0005Gp-Hy
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 12:14:50 -0400
-Message-Id: <20070913161428.754733639@strauss.suse.de>
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IVrML-0001Lo-KU
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 17:16:09 +0100
+Message-Id: <20070913161430.686458007@strauss.suse.de>
 References: <20070913161428.343951643@strauss.suse.de>
-Date: Thu, 13 Sep 2007 18:14:29 +0200
+Date: Thu, 13 Sep 2007 18:14:35 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 1/7] Extended crashkernel command line
-Content-Disposition: inline; filename=crashkernel-generic
+Subject: [patch 7/7] Add documentation for extended crashkernel syntax
+Content-Disposition: inline; filename=crashkernel-documentation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,184 +25,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: kexec@lists.infradead.org
 Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This is the generic part of the patch. It adds a parse_crashkernel() function
-in kernel/kexec.c that is called by the architecture specific code that
-actually reserves the memory. That function takes the whole command line and
-looks itself for "crashkernel=" in it.
-
-If there are multiple occurrences, then the last one is taken.  The advantage
-is that if you have a bootloader like lilo or elilo which allows you to append
-a command line parameter but not to remove one (like in GRUB), then you can add
-another crashkernel value for testing at the boot command line and this one
-overwrites the command line in the configuration then.
-
+This adds the documentation for the extended crashkernel syntax into
+Documentation/kdump/kdump.txt.
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
 ---
- include/linux/kexec.h |    2 
- kernel/kexec.c        |  139 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 141 insertions(+)
+ Documentation/kdump/kdump.txt |   26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -179,6 +179,8 @@ extern note_buf_t *crash_notes;
- extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
- extern unsigned int vmcoreinfo_size;
- extern unsigned int vmcoreinfo_max_size;
-+int parse_crashkernel(char *cmdline, unsigned long long system_ram,
-+		unsigned long long *crash_size, unsigned long long *crash_base);
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -231,6 +231,32 @@ Dump-capture kernel config options (Arch
+   any space below the alignment point will be wasted.
  
  
- #else /* !CONFIG_KEXEC */
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1146,6 +1146,145 @@ static int __init crash_notes_memory_ini
- }
- module_init(crash_notes_memory_init)
++Extended crashkernel syntax
++===========================
++
++While the "crashkernel=size[@offset]" syntax is sufficient for most
++configurations, sometimes it's handy to have the reserved memory dependent
++on the value of System RAM -- that's mostly for distributors that pre-setup
++the kernel command line to avoid a unbootable system after some memory has
++been removed from the machine.
++
++The syntax is:
++
++    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++    range=start-[end]
++
++For example:
++
++    crashkernel=512M-2G:64M,2G-:128M
++
++This would mean:
++
++    1) if the RAM is smaller than 512M, then don't reserve anything
++       (this is the "rescue" case)
++    2) if the RAM size is between 512M and 2G, then reserve 64M
++    3) if the RAM size is larger than 2G, then reserve 128M
++
++
+ Boot into System Kernel
+ =======================
  
-+
-+/*
-+ * parsing the "crashkernel" commandline
-+ *
-+ * this code is intended to be called from architecture specific code
-+ */
-+
-+
-+/*
-+ * This function parses command lines in the format
-+ *
-+ *   crashkernel=<ramsize-range>:<size>[,...][@<base>]
-+ *
-+ * The function returns 0 on success and -EINVAL on failure.
-+ */
-+static int parse_crashkernel_mem(char 			*cmdline,
-+				 unsigned long long 	*crash_size,
-+				 unsigned long long 	*crash_base,
-+				 unsigned long 		system_ram)
-+{
-+	char *cur = cmdline;
-+
-+	*crash_size = 0;
-+	*crash_base = 0;
-+
-+	/* for each entry of the comma-separated list */
-+	do {
-+		unsigned long long start = 0, end = ULLONG_MAX;
-+		unsigned long long size = -1;
-+
-+		/* get the start of the range */
-+		start = memparse(cur, &cur);
-+		if (*cur != '-') {
-+			printk(KERN_WARNING "crashkernel: '-' expected\n");
-+			return -EINVAL;
-+		}
-+		cur++;
-+
-+		/* if no ':' is here, than we read the end */
-+		if (*cur != ':') {
-+			end = memparse(cur, &cur);
-+			if (end <= start) {
-+				printk(KERN_WARNING "crashkernel: end <= start\n");
-+				return -EINVAL;
-+			}
-+		}
-+
-+		if (*cur != ':') {
-+			printk(KERN_WARNING "crashkernel: ':' expected\n");
-+			return -EINVAL;
-+		}
-+		cur++;
-+
-+		size = memparse(cur, &cur);
-+		if (size < 0) {
-+			printk(KERN_WARNING "crashkernel: invalid size\n");
-+			return -EINVAL;
-+		}
-+
-+		/* match ? */
-+		if (system_ram >= start  && system_ram <= end) {
-+			*crash_size = size;
-+			break;
-+		}
-+	} while (*cur++ == ',');
-+
-+	if (*crash_size > 0) {
-+		while (*cur != ' ' && *cur != '@')
-+			cur++;
-+		if (*cur == '@')
-+			*crash_base = memparse(cur+1, &cur);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * That function parses "simple" (old) crashkernel command lines like
-+ *
-+ * 	crashkernel=size[@base]
-+ *
-+ * It returns 0 on success and -EINVAL on failure.
-+ */
-+static int parse_crashkernel_simple(char 		*cmdline,
-+			     	    unsigned long long 	*crash_size,
-+			     	    unsigned long long 	*crash_base)
-+{
-+	char *cur = cmdline;
-+
-+	*crash_size = memparse(cmdline, &cur);
-+	if (cmdline == cur)
-+		return -EINVAL;
-+
-+	if (*cur == '@')
-+		*crash_base = memparse(cur+1, &cur);
-+
-+	return 0;
-+}
-+
-+/*
-+ * That function is the entry point for command line parsing and should be
-+ * called from the arch-specific code.
-+ */
-+int parse_crashkernel(char 		 *cmdline,
-+		      unsigned long long system_ram,
-+		      unsigned long long *crash_size,
-+		      unsigned long long *crash_base)
-+{
-+	char 	*p = cmdline, *ck_cmdline = NULL;
-+	char	*first_colon, *first_space;
-+
-+	/* find crashkernel and use the last one if there are more */
-+	p = strstr(p, "crashkernel=");
-+	while (p) {
-+		ck_cmdline = p;
-+		p = strstr(p+1, "crashkernel=");
-+	}
-+
-+	if (!ck_cmdline)
-+		return -EINVAL;
-+
-+	ck_cmdline += 12; /* strlen("crashkernel=") */
-+
-+	/*
-+	 * if the commandline contains a ':', then that's the extended
-+	 * syntax -- if not, it must be the classic syntax
-+	 */
-+	first_colon = strchr(ck_cmdline, ':');
-+	first_space = strchr(ck_cmdline, ' ');
-+	if (first_colon && (!first_space || first_colon < first_space))
-+		return parse_crashkernel_mem(ck_cmdline, crash_size,
-+				crash_base, system_ram);
-+	else
-+		return parse_crashkernel_simple(ck_cmdline,
-+				crash_size, crash_base);
-+}
-+
-+
-+
- void crash_save_vmcoreinfo(void)
- {
- 	u32 *buf;
 
 -- 
 
