@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IVrKp-0005Gu-TX
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 12:14:55 -0400
-Message-Id: <20070913161429.387888398@strauss.suse.de>
-References: <20070913161428.343951643@strauss.suse.de>
-Date: Thu, 13 Sep 2007 18:14:31 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 3/7] Use extended crashkernel command line on x86_64
-Content-Disposition: inline; filename=crashkernel-x86_64
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IVofj-0007wG-7U
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 14:23:58 +0100
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: My position on general ``RAS'' tool support infrastructure
+References: <46E8B06D.9080006@bluelane.com>
+Date: Thu, 13 Sep 2007 07:21:10 -0600
+In-Reply-To: <46E8B06D.9080006@bluelane.com> (pete@bluelane.com's message of
+	"Wed, 12 Sep 2007 20:37:17 -0700")
+Message-ID: <m1abrq7lbt.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,132 +19,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linux-arch@vger.kernel.org, discuss@x86-64.org, linux-kernel@vger.kernel.org
+To: pete@bluelane.com
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, jlan@sgi.com, Jason Wessel <jason.wessel@windriver.com>, Amit Kale <amitkale@linsyssoft.com>, kdb@oss.sgi.com, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Matt Mackall <mpm@selenic.com>, Andrew Morton <akpm@linux-foundation.org>
 
-This patch removes the crashkernel parsing from
-arch/x86_64/kernel/machine_kexec.c and calls the generic function, introduced in
-the last patch, in setup_bootmem_allocator().
+Pete/Piet Delaney <pete@bluelane.com> writes:
 
-This is necessary because the amount of System RAM must be known in this
-function now because of the new syntax.
+> Jason, Eric:
+>
+> Did you read Keith Owens suggestion on RAS tools from:
 
+Yes.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+There is a tension here between generality of support infrastructure,
+maintainability of the infrastructure, simplicity of the
+infrastructure and reliability of the infrastructure.
 
+The historical linux perspective is that anything that compromises
+the maintainability or the reliability of the kernel without the
+tools is unacceptable.
 
----
- arch/x86_64/kernel/e820.c          |    3 ++-
- arch/x86_64/kernel/machine_kexec.c |   27 ---------------------------
- arch/x86_64/kernel/setup.c         |   35 ++++++++++++++++++++++++++++-------
- 3 files changed, 30 insertions(+), 35 deletions(-)
+There is also a historical perspective that using the single stepping
+mode of a debugger to diagnose problems frequently leads to symptoms
+being fixed and not the actual problems being fixed.
 
---- a/arch/x86_64/kernel/e820.c
-+++ b/arch/x86_64/kernel/e820.c
-@@ -226,7 +226,8 @@ void __init e820_reserve_resources(void)
- 			request_resource(res, &code_resource);
- 			request_resource(res, &data_resource);
- #ifdef CONFIG_KEXEC
--			request_resource(res, &crashk_res);
-+			if (crashk_res.start != crashk_res.end)
-+				request_resource(res, &crashk_res);
- #endif
- 		}
- 	}
---- a/arch/x86_64/kernel/machine_kexec.c
-+++ b/arch/x86_64/kernel/machine_kexec.c
-@@ -231,33 +231,6 @@ NORET_TYPE void machine_kexec(struct kim
- 			image->start);
- }
- 
--/* crashkernel=size@addr specifies the location to reserve for
-- * a crash kernel.  By reserving this memory we guarantee
-- * that linux never set's it up as a DMA target.
-- * Useful for holding code to do something appropriate
-- * after a kernel panic.
-- */
--static int __init setup_crashkernel(char *arg)
--{
--	unsigned long size, base;
--	char *p;
--	if (!arg)
--		return -EINVAL;
--	size = memparse(arg, &p);
--	if (arg == p)
--		return -EINVAL;
--	if (*p == '@') {
--		base = memparse(p+1, &p);
--		/* FIXME: Do I want a sanity check to validate the
--		 * memory range?  Yes you do, but it's too early for
--		 * e820 -AK */
--		crashk_res.start = base;
--		crashk_res.end   = base + size - 1;
--	}
--	return 0;
--}
--early_param("crashkernel", setup_crashkernel);
--
- void arch_crash_save_vmcoreinfo(void)
- {
- #ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
---- a/arch/x86_64/kernel/setup.c
-+++ b/arch/x86_64/kernel/setup.c
-@@ -196,6 +196,33 @@ static inline void copy_edd(void)
- }
- #endif
- 
-+#ifdef CONFIG_KEXEC
-+static inline void reserve_crashkernel(void)
-+{
-+	unsigned long long 	free_mem;
-+	unsigned long long 	crash_size, crash_base;
-+	int			ret;
-+
-+	free_mem = max_low_pfn << PAGE_SHIFT;
-+
-+	ret = parse_crashkernel(boot_command_line, free_mem,
-+			&crash_size, &crash_base);
-+	if (ret == 0 && crash_size > 0 && crash_base > 0) {
-+		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+				"for crashkernel (System RAM: %ldMB)\n",
-+				(unsigned long)(crash_size >> 20),
-+				(unsigned long)(crash_base >> 20),
-+				(unsigned long)(free_mem >> 20));
-+		crashk_res.start = crash_base;
-+		crashk_res.end   = crash_base + crash_size - 1;
-+		reserve_bootmem(crash_base, crash_size);
-+	}
-+}
-+#else
-+static inline void reserve_crashkernel(void)
-+{}
-+#endif
-+
- #define EBDA_ADDR_POINTER 0x40E
- 
- unsigned __initdata ebda_addr;
-@@ -388,13 +415,7 @@ void __init setup_arch(char **cmdline_p)
- 		}
- 	}
- #endif
--#ifdef CONFIG_KEXEC
--	if (crashk_res.start != crashk_res.end) {
--		reserve_bootmem_generic(crashk_res.start,
--			crashk_res.end - crashk_res.start + 1);
--	}
--#endif
--
-+	reserve_crashkernel();
- 	paging_init();
- 
- #ifdef CONFIG_PCI
+My initial proposal in this thread was that if kdb wanted to have
+a hook point someplace where were not comfortable adding a hook
+point it could use a break point or some of the tracing
+infrastructure.  Somehow that suggestion seems to have gotten lost.
 
--- 
+On the kexec on panic path the philosophy is that the kernel is
+broken and as little as possible should be relied upon.  So in general
+I am opposed to extra code on that path.  General hooks like notifiers
+in particular, because they make adding non-paranoid code much easier
+and review of the code on a particular call path much harder.
+
+From what I can tell the philosophy of the kdb code is that the kernel
+is mostly ok except for one or two little bugs so it is reasonable to
+rely on lots of kernel infrastructure.
+
+As I understand the problem the difference in philosophy and
+maintenance overhead is why kexec on panic has been merged and why
+it has a much larger success rate the previous crash dump
+implementation like lkcd.  I will not that in some sense it is a
+harder approach to implement as it emphasizes the challenge of
+drivers that work starting from a random hardware state, and because
+it draws a clear line between the broken kernel and the recover
+kernel.  But those things are exactly what encourage things to work
+well.
+
+I don't mind playing well with others as long as that doesn't
+compromise the implementation reliability, and maintainability.
+
+So far it is my opinion that the current kexec on panic implementation
+is insufficiently paranoid and touches the hardware and the rest of
+the kernel too much.   Which explains my rather strong reactions when
+people suggest that we trust the broken kernel more.
+
+I don't think this is an insolvable problem but I do think it is hard
+problem that must be solved with delicacy.
+
+I also get irritable that the last time something like this came up
+I had to have a several day long conversation with someone about why
+they need a patch that has already been rejected because it
+compromised the reliability of the implementation only to discover
+they were trying to make kdb and kexec on panic play nice together.
+
+So if someone who is suggesting an implementation can absorb 
+and understand the requirements of the different groups and come
+up with solutions that meet the requirements of the different projects
+I think progress can be made.  That as far as I know takes talent.
+
+If we wind up with a situation where we have to continually review
+unacceptable solutions the choices are either get negative about it
+and reject everything, or give up and let something through.  Since
+I think giving up in this situation is irresponsible and likely to
+make a worse kernel I am leaning very strongly towards NAK'ing
+everything because I have seen so many problematic proposals that did
+not look like they were on the path to something reasonable.
+
+Eric
 
 _______________________________________________
 kexec mailing list
