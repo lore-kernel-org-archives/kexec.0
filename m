@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IVofj-0007wG-7U
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 14:23:58 +0100
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: My position on general ``RAS'' tool support infrastructure
-References: <46E8B06D.9080006@bluelane.com>
-Date: Thu, 13 Sep 2007 07:21:10 -0600
-In-Reply-To: <46E8B06D.9080006@bluelane.com> (pete@bluelane.com's message of
-	"Wed, 12 Sep 2007 20:37:17 -0700")
-Message-ID: <m1abrq7lbt.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+Received: from mx2.suse.de ([195.135.220.15])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IVrKp-0005Gp-Hy
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 12:14:50 -0400
+Message-Id: <20070913161428.754733639@strauss.suse.de>
+References: <20070913161428.343951643@strauss.suse.de>
+Date: Thu, 13 Sep 2007 18:14:29 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [patch 1/7] Extended crashkernel command line
+Content-Disposition: inline; filename=crashkernel-generic
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,89 +17,194 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: pete@bluelane.com
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, jlan@sgi.com, Jason Wessel <jason.wessel@windriver.com>, Amit Kale <amitkale@linsyssoft.com>, kdb@oss.sgi.com, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Matt Mackall <mpm@selenic.com>, Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Pete/Piet Delaney <pete@bluelane.com> writes:
+This is the generic part of the patch. It adds a parse_crashkernel() function
+in kernel/kexec.c that is called by the architecture specific code that
+actually reserves the memory. That function takes the whole command line and
+looks itself for "crashkernel=" in it.
 
-> Jason, Eric:
->
-> Did you read Keith Owens suggestion on RAS tools from:
+If there are multiple occurrences, then the last one is taken.  The advantage
+is that if you have a bootloader like lilo or elilo which allows you to append
+a command line parameter but not to remove one (like in GRUB), then you can add
+another crashkernel value for testing at the boot command line and this one
+overwrites the command line in the configuration then.
 
-Yes.
 
-There is a tension here between generality of support infrastructure,
-maintainability of the infrastructure, simplicity of the
-infrastructure and reliability of the infrastructure.
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-The historical linux perspective is that anything that compromises
-the maintainability or the reliability of the kernel without the
-tools is unacceptable.
+---
+ include/linux/kexec.h |    2 
+ kernel/kexec.c        |  139 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 141 insertions(+)
 
-There is also a historical perspective that using the single stepping
-mode of a debugger to diagnose problems frequently leads to symptoms
-being fixed and not the actual problems being fixed.
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -179,6 +179,8 @@ extern note_buf_t *crash_notes;
+ extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+ extern unsigned int vmcoreinfo_size;
+ extern unsigned int vmcoreinfo_max_size;
++int parse_crashkernel(char *cmdline, unsigned long long system_ram,
++		unsigned long long *crash_size, unsigned long long *crash_base);
+ 
+ 
+ #else /* !CONFIG_KEXEC */
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1146,6 +1146,145 @@ static int __init crash_notes_memory_ini
+ }
+ module_init(crash_notes_memory_init)
+ 
++
++/*
++ * parsing the "crashkernel" commandline
++ *
++ * this code is intended to be called from architecture specific code
++ */
++
++
++/*
++ * This function parses command lines in the format
++ *
++ *   crashkernel=<ramsize-range>:<size>[,...][@<base>]
++ *
++ * The function returns 0 on success and -EINVAL on failure.
++ */
++static int parse_crashkernel_mem(char 			*cmdline,
++				 unsigned long long 	*crash_size,
++				 unsigned long long 	*crash_base,
++				 unsigned long 		system_ram)
++{
++	char *cur = cmdline;
++
++	*crash_size = 0;
++	*crash_base = 0;
++
++	/* for each entry of the comma-separated list */
++	do {
++		unsigned long long start = 0, end = ULLONG_MAX;
++		unsigned long long size = -1;
++
++		/* get the start of the range */
++		start = memparse(cur, &cur);
++		if (*cur != '-') {
++			printk(KERN_WARNING "crashkernel: '-' expected\n");
++			return -EINVAL;
++		}
++		cur++;
++
++		/* if no ':' is here, than we read the end */
++		if (*cur != ':') {
++			end = memparse(cur, &cur);
++			if (end <= start) {
++				printk(KERN_WARNING "crashkernel: end <= start\n");
++				return -EINVAL;
++			}
++		}
++
++		if (*cur != ':') {
++			printk(KERN_WARNING "crashkernel: ':' expected\n");
++			return -EINVAL;
++		}
++		cur++;
++
++		size = memparse(cur, &cur);
++		if (size < 0) {
++			printk(KERN_WARNING "crashkernel: invalid size\n");
++			return -EINVAL;
++		}
++
++		/* match ? */
++		if (system_ram >= start  && system_ram <= end) {
++			*crash_size = size;
++			break;
++		}
++	} while (*cur++ == ',');
++
++	if (*crash_size > 0) {
++		while (*cur != ' ' && *cur != '@')
++			cur++;
++		if (*cur == '@')
++			*crash_base = memparse(cur+1, &cur);
++	}
++
++	return 0;
++}
++
++/*
++ * That function parses "simple" (old) crashkernel command lines like
++ *
++ * 	crashkernel=size[@base]
++ *
++ * It returns 0 on success and -EINVAL on failure.
++ */
++static int parse_crashkernel_simple(char 		*cmdline,
++			     	    unsigned long long 	*crash_size,
++			     	    unsigned long long 	*crash_base)
++{
++	char *cur = cmdline;
++
++	*crash_size = memparse(cmdline, &cur);
++	if (cmdline == cur)
++		return -EINVAL;
++
++	if (*cur == '@')
++		*crash_base = memparse(cur+1, &cur);
++
++	return 0;
++}
++
++/*
++ * That function is the entry point for command line parsing and should be
++ * called from the arch-specific code.
++ */
++int parse_crashkernel(char 		 *cmdline,
++		      unsigned long long system_ram,
++		      unsigned long long *crash_size,
++		      unsigned long long *crash_base)
++{
++	char 	*p = cmdline, *ck_cmdline = NULL;
++	char	*first_colon, *first_space;
++
++	/* find crashkernel and use the last one if there are more */
++	p = strstr(p, "crashkernel=");
++	while (p) {
++		ck_cmdline = p;
++		p = strstr(p+1, "crashkernel=");
++	}
++
++	if (!ck_cmdline)
++		return -EINVAL;
++
++	ck_cmdline += 12; /* strlen("crashkernel=") */
++
++	/*
++	 * if the commandline contains a ':', then that's the extended
++	 * syntax -- if not, it must be the classic syntax
++	 */
++	first_colon = strchr(ck_cmdline, ':');
++	first_space = strchr(ck_cmdline, ' ');
++	if (first_colon && (!first_space || first_colon < first_space))
++		return parse_crashkernel_mem(ck_cmdline, crash_size,
++				crash_base, system_ram);
++	else
++		return parse_crashkernel_simple(ck_cmdline,
++				crash_size, crash_base);
++}
++
++
++
+ void crash_save_vmcoreinfo(void)
+ {
+ 	u32 *buf;
 
-My initial proposal in this thread was that if kdb wanted to have
-a hook point someplace where were not comfortable adding a hook
-point it could use a break point or some of the tracing
-infrastructure.  Somehow that suggestion seems to have gotten lost.
-
-On the kexec on panic path the philosophy is that the kernel is
-broken and as little as possible should be relied upon.  So in general
-I am opposed to extra code on that path.  General hooks like notifiers
-in particular, because they make adding non-paranoid code much easier
-and review of the code on a particular call path much harder.
-
-From what I can tell the philosophy of the kdb code is that the kernel
-is mostly ok except for one or two little bugs so it is reasonable to
-rely on lots of kernel infrastructure.
-
-As I understand the problem the difference in philosophy and
-maintenance overhead is why kexec on panic has been merged and why
-it has a much larger success rate the previous crash dump
-implementation like lkcd.  I will not that in some sense it is a
-harder approach to implement as it emphasizes the challenge of
-drivers that work starting from a random hardware state, and because
-it draws a clear line between the broken kernel and the recover
-kernel.  But those things are exactly what encourage things to work
-well.
-
-I don't mind playing well with others as long as that doesn't
-compromise the implementation reliability, and maintainability.
-
-So far it is my opinion that the current kexec on panic implementation
-is insufficiently paranoid and touches the hardware and the rest of
-the kernel too much.   Which explains my rather strong reactions when
-people suggest that we trust the broken kernel more.
-
-I don't think this is an insolvable problem but I do think it is hard
-problem that must be solved with delicacy.
-
-I also get irritable that the last time something like this came up
-I had to have a several day long conversation with someone about why
-they need a patch that has already been rejected because it
-compromised the reliability of the implementation only to discover
-they were trying to make kdb and kexec on panic play nice together.
-
-So if someone who is suggesting an implementation can absorb 
-and understand the requirements of the different groups and come
-up with solutions that meet the requirements of the different projects
-I think progress can be made.  That as far as I know takes talent.
-
-If we wind up with a situation where we have to continually review
-unacceptable solutions the choices are either get negative about it
-and reject everything, or give up and let something through.  Since
-I think giving up in this situation is irresponsible and likely to
-make a worse kernel I am leaning very strongly towards NAK'ing
-everything because I have seen so many problematic proposals that did
-not look like they were on the path to something reasonable.
-
-Eric
+-- 
 
 _______________________________________________
 kexec mailing list
