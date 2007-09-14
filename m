@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IVrL6-0001JW-7f
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 17:14:51 +0100
-Message-Id: <20070913161430.416849478@strauss.suse.de>
-References: <20070913161428.343951643@strauss.suse.de>
-Date: Thu, 13 Sep 2007 18:14:34 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 6/7] Use extended crashkernel command line on sh
-Content-Disposition: inline; filename=crashkernel-sh
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IW1JX-00029e-Le
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 22:54:03 -0400
+Message-Id: <46E9F7C1.3050004@mxs.nes.nec.co.jp>
+Date: Fri, 14 Sep 2007 11:53:53 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: [PATCH 1/4] [-mm patch] Cleanup the coding style according to Andrew's
+	comments
+References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
+In-Reply-To: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,113 +19,119 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, linuxsh-dev@lists.sourceforge.net
-
-This patch removes the crashkernel parsing from arch/sh/kernel/machine_kexec.c
-and calls the generic function, introduced in the generic patch, in
-setup_bootmem_allocator().
-
-This is necessary because the amount of System RAM must be known in this
-function now because of the new syntax.
-
-NOTE: Due to the lack of a SH processor, this patch is untested (and
-uncompiled). Because the code in that area is quite similar as i386/x86_64
-(contrary to PPC and IA64), it should compile and work. However, if someone of
-the SH people could test for me and provide feedback, that would be very nice.
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Adrian Bunk <bunk@kernel.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+[1/4] Cleanup the coding style according to Andrew's comments:
+http://lists.infradead.org/pipermail/kexec/2007-August/000522.html
+- vmcoreinfo_append_str() should have suitable __attribute__s so that
+   the compiler can check its use.
+- vmcoreinfo_max_size should have size_t.
+- Use get_seconds() instead of xtime.tv_sec.
+- Use init_uts_ns.name.release instead of UTS_RELEASE.
+
+
+Thanks
+Ken'ichi Ohmichi
 
 ---
- arch/sh/kernel/machine_kexec.c |   21 ---------------------
- arch/sh/kernel/setup.c         |   34 +++++++++++++++++++++++++++++-----
- 2 files changed, 29 insertions(+), 26 deletions(-)
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 
---- a/arch/sh/kernel/machine_kexec.c
-+++ b/arch/sh/kernel/machine_kexec.c
-@@ -104,24 +104,3 @@ NORET_TYPE void machine_kexec(struct kim
- 	(*rnk)(page_list, reboot_code_buffer, image->start, vbr_reg);
- }
- 
--/* crashkernel=size@addr specifies the location to reserve for
-- * a crash kernel.  By reserving this memory we guarantee
-- * that linux never sets it up as a DMA target.
-- * Useful for holding code to do something appropriate
-- * after a kernel panic.
-- */
--static int __init parse_crashkernel(char *arg)
--{
--	unsigned long size, base;
--	size = memparse(arg, &arg);
--	if (*arg == '@') {
--		base = memparse(arg+1, &arg);
--		/* FIXME: Do I want a sanity check
--		 * to validate the memory range?
--		 */
--		crashk_res.start = base;
--		crashk_res.end   = base + size - 1;
--	}
--	return 0;
--}
--early_param("crashkernel", parse_crashkernel);
---- a/arch/sh/kernel/setup.c
-+++ b/arch/sh/kernel/setup.c
-@@ -121,6 +121,33 @@ static void __init register_bootmem_low_
- 	free_bootmem(PFN_PHYS(curr_pfn), PFN_PHYS(pages));
- }
- 
-+#ifdef CONFIG_KEXEC
-+static void reserve_crashkernel(void)
-+{
-+	unsigned long long 	free_mem;
-+	unsigned long long 	crash_size, crash_base;
-+	int			ret;
-+
-+	free_mem = (max_low_pfn - min_low_pfn) << PAGE_SHIFT;
-+
-+	ret = parse_crashkernel(boot_command_line, free_mem,
-+			&crash_size, &crash_base);
-+	if (ret == 0 && crash_size > 0 && crash_base > 0) {
-+		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+				"for crashkernel (System RAM: %ldMB)\n",
-+				(unsigned long)(crash_size >> 20),
-+				(unsigned long)(crash_base >> 20),
-+				(unsigned long)(free_mem >> 20));
-+		crashk_res.start = crash_base;
-+		crashk_res.end   = crash_base + crash_size - 1;
-+		reserve_bootmem(crash_base, crash_size);
-+	}
-+}
-+#else
-+static inline void reserve_crashkernel(void)
-+{}
-+#endif
-+
- void __init setup_bootmem_allocator(unsigned long free_pfn)
- {
- 	unsigned long bootmap_size;
-@@ -182,11 +209,8 @@ void __init setup_bootmem_allocator(unsi
- 		}
- 	}
- #endif
--#ifdef CONFIG_KEXEC
--	if (crashk_res.start != crashk_res.end)
--		reserve_bootmem(crashk_res.start,
--			crashk_res.end - crashk_res.start + 1);
--#endif
-+
-+	reserve_crashkernel();
- }
- 
- #ifndef CONFIG_NEED_MULTIPLE_NODES
+---
+diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
+--- a/include/linux/kexec.h	2007-09-10 19:37:59.000000000 +0900
++++ b/include/linux/kexec.h	2007-09-10 23:09:37.000000000 +0900
+@@ -123,18 +123,20 @@ int kexec_should_crash(struct task_struc
+  void crash_save_cpu(struct pt_regs *regs, int cpu);
+  void crash_save_vmcoreinfo(void);
+  void arch_crash_save_vmcoreinfo(void);
+-void vmcoreinfo_append_str(const char *fmt, ...);
++void vmcoreinfo_append_str(const char *fmt, ...)
++	__attribute__ ((format (printf, 1, 2)));
+  unsigned long paddr_vmcoreinfo_note(void);
 
--- 
+  #define SYMBOL(name) \
+  	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+  #define SIZE(name) \
+-	vmcoreinfo_append_str("SIZE(%s)=%d\n", #name, sizeof(struct name))
++	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
++			      (unsigned long)sizeof(struct name))
+  #define OFFSET(name, field) \
+-	vmcoreinfo_append_str("OFFSET(%s.%s)=%d\n", #name, #field, \
+-			      &(((struct name *)0)->field))
++	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
++			      (unsigned long)&(((struct name *)0)->field))
+  #define LENGTH(name, value) \
+-	vmcoreinfo_append_str("LENGTH(%s)=%d\n", #name, value)
++	vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
+  #define CONFIG(name) \
+  	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+
+@@ -177,8 +179,8 @@ extern struct resource crashk_res;
+  typedef u32 note_buf_t[KEXEC_NOTE_BYTES/4];
+  extern note_buf_t *crash_notes;
+  extern u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+-extern unsigned int vmcoreinfo_size;
+-extern unsigned int vmcoreinfo_max_size;
++extern size_t vmcoreinfo_size;
++extern size_t vmcoreinfo_max_size;
+
+
+  #else /* !CONFIG_KEXEC */
+diff -rpuN a/kernel/kexec.c b/kernel/kexec.c
+--- a/kernel/kexec.c	2007-09-10 19:38:00.000000000 +0900
++++ b/kernel/kexec.c	2007-09-10 23:09:58.000000000 +0900
+@@ -38,8 +38,8 @@ note_buf_t* crash_notes;
+  /* vmcoreinfo stuff */
+  unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+  u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+-unsigned int vmcoreinfo_size = 0;
+-unsigned int vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
++size_t vmcoreinfo_size;
++size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+
+  /* Location of the reserved area for the crash kernel */
+  struct resource crashk_res = {
+@@ -1153,7 +1153,7 @@ void crash_save_vmcoreinfo(void)
+  	if (!vmcoreinfo_size)
+  		return;
+
+-	vmcoreinfo_append_str("CRASHTIME=%d", xtime.tv_sec);
++	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
+
+  	buf = (u32 *)vmcoreinfo_note;
+
+@@ -1195,8 +1195,8 @@ unsigned long __attribute__ ((weak)) pad
+
+  static int __init crash_save_vmcoreinfo_init(void)
+  {
+-	vmcoreinfo_append_str("OSRELEASE=%s\n", UTS_RELEASE);
+-	vmcoreinfo_append_str("PAGESIZE=%d\n", PAGE_SIZE);
++	vmcoreinfo_append_str("OSRELEASE=%s\n", init_uts_ns.name.release);
++	vmcoreinfo_append_str("PAGESIZE=%ld\n", PAGE_SIZE);
+
+  	SYMBOL(init_uts_ns);
+  	SYMBOL(node_online_map);
+diff -rpuN a/kernel/ksysfs.c b/kernel/ksysfs.c
+--- a/kernel/ksysfs.c	2007-09-10 19:38:00.000000000 +0900
++++ b/kernel/ksysfs.c	2007-09-10 23:09:07.000000000 +0900
+@@ -65,7 +65,7 @@ static ssize_t vmcoreinfo_show(struct ks
+  {
+  	return sprintf(page, "%lx %x\n",
+  		       paddr_vmcoreinfo_note(),
+-		       vmcoreinfo_max_size);
++		       (unsigned int)vmcoreinfo_max_size);
+  }
+  KERNEL_ATTR_RO(vmcoreinfo);
+
+_
+
 
 _______________________________________________
 kexec mailing list
