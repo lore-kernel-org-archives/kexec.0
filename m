@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from smtp.ocgnet.org ([64.20.243.3])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IW1FE-00026W-7t
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 22:49:27 -0400
-Message-Id: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
-Date: Fri, 14 Sep 2007 11:49:13 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1IW1sr-0002PI-FS
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 23:30:25 -0400
+Date: Fri, 14 Sep 2007 12:30:05 +0900
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [patch 6/7] Use extended crashkernel command line on sh
+Message-ID: <20070914033005.GA3445@linux-sh.org>
+References: <20070913161428.343951643@strauss.suse.de>
+	<20070913161430.416849478@strauss.suse.de>
 MIME-Version: 1.0
-Subject: [PATCH 0/4] [-mm patch]  Cleanup add-vmcoreinfo.patch v2
+Content-Disposition: inline
+In-Reply-To: <20070913161430.416849478@strauss.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,52 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Adrian Bunk <bunk@kernel.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxsh-dev@lists.sourceforge.net
 
+On Thu, Sep 13, 2007 at 06:14:34PM +0200, Bernhard Walle wrote:
+> This patch removes the crashkernel parsing from arch/sh/kernel/machine_kexec.c
+> and calls the generic function, introduced in the generic patch, in
+> setup_bootmem_allocator().
+> 
+> This is necessary because the amount of System RAM must be known in this
+> function now because of the new syntax.
+> 
+> NOTE: Due to the lack of a SH processor, this patch is untested (and
+> uncompiled). Because the code in that area is quite similar as i386/x86_64
+> (contrary to PPC and IA64), it should compile and work. However, if someone of
+> the SH people could test for me and provide feedback, that would be very nice.
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> 
+Works fine on SH.
 
-Hi Andrew,
-
-I updated the cleanup patchset for add-vmcoreinfo.patch.
-* Cleanup add-vmcoreinfo.patch v1:
-http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/0318.html
-
-This patchset (v2) includes a new patch[4/4] for adding a prefix
-"VMCOREINFO_" to the vmcoreinfo macros. Other patches ([1/4]-[3/4])
-don't have any changes.
-
-Changelog:
-  - Add "Add a prefix VMCOREINFO_ to the vmcoreinfo macros" patch.
-
-Patchset:
-[1/4] Cleanup the coding style according to Andrew's comments:
-  http://lists.infradead.org/pipermail/kexec/2007-August/000522.html
-  - vmcoreinfo_append_str() should have suitable __attribute__s so that
-    the compiler can check its use.
-  - vmcoreinfo_max_size should have size_t.
-  - Use get_seconds() instead of xtime.tv_sec.
-  - Use init_uts_ns.name.release instead of UTS_RELEASE.
-
-[2/4] Add nodemask_t's size and NR_FREE_PAGES's value to vmcoreinfo_data.
-  The dump filetering command 'makedumpfile'(v1.1.6 or before) had assumed
-  the above values, and it was not good from the reliability viewpoint.
-  So makedumpfile v1.2.0 came to need these values and I created the patch
-  to let the kernel output them.
-  makedumpfile site:
-  https://sourceforge.net/projects/makedumpfile/
-
-[3/4] Use the existing ia64_tpa() instead of asm code.
-
-[4/4] Add a prefix "VMCOREINFO_" to the vmcoreinfo macros.
-  Old vmcoreinfo macros were defined as generic names SYMBOL/SIZE/OFFSET
-  /LENGTH/CONFIG, and it is impossible to grep for them. So these names
-  should be changed. This discussion is the following:
-  http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/0415.html
-
-
-Thanks
-Ken'ichi Ohmichi
-
+Acked-by: Paul Mundt <lethal@linux-sh.org>
 
 _______________________________________________
 kexec mailing list
