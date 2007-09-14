@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.ocgnet.org ([64.20.243.3])
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IW1sr-0002PI-FS
-	for kexec@lists.infradead.org; Thu, 13 Sep 2007 23:30:25 -0400
-Date: Fri, 14 Sep 2007 12:30:05 +0900
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [patch 6/7] Use extended crashkernel command line on sh
-Message-ID: <20070914033005.GA3445@linux-sh.org>
-References: <20070913161428.343951643@strauss.suse.de>
-	<20070913161430.416849478@strauss.suse.de>
+Received: from smtp-out.google.com ([216.239.45.13])
+	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IW1zM-0002T4-8N
+	for kexec@lists.infradead.org; Thu, 13 Sep 2007 23:37:07 -0400
+Date: Thu, 13 Sep 2007 20:36:42 -0700 (PDT)
+From: David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH 2/4] [-mm patch] Add nodemask_t's size and NR_FREE_PAGES's
+	value to vmcoreinfo_data.
+In-Reply-To: <46E9F854.9030804@mxs.nes.nec.co.jp>
+Message-ID: <alpine.DEB.0.9999.0709132034540.30494@chino.kir.corp.google.com>
+References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
+	<46E9F854.9030804@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070913161430.416849478@strauss.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxsh-dev@lists.sourceforge.net
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec-ml <kexec@lists.infradead.org>, Adrian Bunk <bunk@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 
-On Thu, Sep 13, 2007 at 06:14:34PM +0200, Bernhard Walle wrote:
-> This patch removes the crashkernel parsing from arch/sh/kernel/machine_kexec.c
-> and calls the generic function, introduced in the generic patch, in
-> setup_bootmem_allocator().
-> 
-> This is necessary because the amount of System RAM must be known in this
-> function now because of the new syntax.
-> 
-> NOTE: Due to the lack of a SH processor, this patch is untested (and
-> uncompiled). Because the code in that area is quite similar as i386/x86_64
-> (contrary to PPC and IA64), it should compile and work. However, if someone of
-> the SH people could test for me and provide feedback, that would be very nice.
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-Works fine on SH.
+On Fri, 14 Sep 2007, Ken'ichi Ohmichi wrote:
 
-Acked-by: Paul Mundt <lethal@linux-sh.org>
+> diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
+> --- a/include/linux/kexec.h	2007-09-10 23:28:42.000000000 +0900
+> +++ b/include/linux/kexec.h	2007-09-10 23:29:52.000000000 +0900
+> @@ -132,11 +132,16 @@ unsigned long paddr_vmcoreinfo_note(void
+>  #define SIZE(name) \
+>  	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>  			      (unsigned long)sizeof(struct name))
+> +#define TYPEDEF_SIZE(name) \
+> +	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+> +			      (unsigned long)sizeof(name))
+>   #define OFFSET(name, field) \
+>  	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+>  			      (unsigned long)&(((struct name *)0)->field))
+>  #define LENGTH(name, value) \
+>  	vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
+> +#define NUMBER(name) \
+> +	vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+>  #define CONFIG(name) \
+>  	vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+> 
+
+The #define SIZE() should be renamed STRUCT_SIZE() since it's always 
+returning the size of the struct with a given name.  This would allow 
+TYPEDEF_SIZE() to simply become SIZE() since it need not be used 
+exclusively for typedefs.
 
 _______________________________________________
 kexec mailing list
