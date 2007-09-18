@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e4.ny.us.ibm.com ([32.97.182.144])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IXUoW-0007aI-JZ
-	for kexec@lists.infradead.org; Tue, 18 Sep 2007 00:36:01 -0400
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IXUh9-0006WW-4H
+	for kexec@lists.infradead.org; Tue, 18 Sep 2007 05:28:23 +0100
 Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e4.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8I4ZsqY026651
-	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:35:54 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8I4S3kX026957
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:28:03 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
 	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l8I4Zsik559462
-	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:35:54 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l8I4ZsXm016339
-	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:35:54 -0400
-Date: Tue, 18 Sep 2007 10:06:07 +0530
+	l8I4S3is505854
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:28:03 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l8I4S2jH021244
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 00:28:03 -0400
+Date: Tue, 18 Sep 2007 09:58:22 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [patch 2/7] Use extended crashkernel command line on i386
-Message-ID: <20070918043607.GB4842@in.ibm.com>
-References: <20070913161428.343951643@strauss.suse.de>
-	<20070913161429.087964162@strauss.suse.de>
+Subject: Re: My position on general ``RAS'' tool support infrastructure
+Message-ID: <20070918042822.GA4842@in.ibm.com>
+References: <46E8B06D.9080006@bluelane.com>
+	<m1abrq7lbt.fsf@ebiederm.dsl.xmission.com>
+	<20070917183853.42f29393.randy.dunlap@oracle.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070913161429.087964162@strauss.suse.de>
+In-Reply-To: <20070917183853.42f29393.randy.dunlap@oracle.com>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -36,52 +37,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Randy Dunlap <randy.dunlap@oracle.com>
+Cc: kdb@oss.sgi.com, jlan@sgi.com, Amit Kale <amitkale@linsyssoft.com>, Jason Wessel <jason.wessel@windriver.com>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Matt Mackall <mpm@selenic.com>, pete@bluelane.com, Andrew Morton <akpm@linux-foundation.org>
 
-On Thu, Sep 13, 2007 at 06:14:30PM +0200, Bernhard Walle wrote:
-> -
->  void arch_crash_save_vmcoreinfo(void)
->  {
->  #ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-> --- a/arch/i386/kernel/setup.c
-> +++ b/arch/i386/kernel/setup.c
-> @@ -381,6 +381,33 @@ extern unsigned long __init setup_memory
->  extern void zone_sizes_init(void);
->  #endif /* !CONFIG_NEED_MULTIPLE_NODES */
+On Mon, Sep 17, 2007 at 06:38:53PM -0700, Randy Dunlap wrote:
+> On Thu, 13 Sep 2007 07:21:10 -0600 Eric W. Biederman wrote:
 > 
-> +#ifdef CONFIG_KEXEC
-> +static void reserve_crashkernel(void)
-> +{
-> +	unsigned long long 	free_mem;
-> +	unsigned long long 	crash_size, crash_base;
-> +	int			ret;
-> +
-> +	free_mem = (max_low_pfn + highend_pfn - highstart_pfn) << PAGE_SHIFT;
-> +
-> +	ret = parse_crashkernel(boot_command_line, free_mem,
-> +			&crash_size, &crash_base);
-> +	if (ret == 0 && crash_size > 0 && crash_base > 0) {
-> +		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-> +				"for crashkernel (System RAM: %ldMB)\n",
-> +				(unsigned long)(crash_size >> 20),
-> +				(unsigned long)(crash_base >> 20),
-> +				(unsigned long)(free_mem >> 20));
-> +		crashk_res.start = crash_base;
-> +		crashk_res.end   = crash_base + crash_size - 1;
-> +		reserve_bootmem(crash_base, crash_size);
+> > Pete/Piet Delaney <pete@bluelane.com> writes:
+> > 
+> > > Jason, Eric:
+> > >
+> > > Did you read Keith Owens suggestion on RAS tools from:
+> 
+> 
+> Yes.  and I re-read it.
+> 
+> There are several things in Keith's email that make sense:
+> 
+> a.  all RAS tools should use a common interface
+> b.  it's not the kernel's job to decide which RAS tool runs first
+> 
+> 
+> Eric makes some good points too.  I'm mostly similar to Eric:
+> paranoid about trusting software/hardware after a panic (or oops).
+> 
+> So if someone wants to use multiple RAS tools on a panic event,
+> enabling an admin to set priorities is OK with me, but I'll only
+> trust the first one that is used, and even that one may have
+> problems.  IOW, I don't see a big need to support multiple RAS
+> tools at one time.  (speaking for myself)
+> 
 
-Hi Bernhard,
+I would be nice to have a kernel debugger co-exist with crash dumping.
 
-I think we might need to do more here. Because [offset] is optional, one
-would assume that things will work even if offset is not specified. But
-in this patchset, that's not the case for i386 and x86_64. It will silently
-fail if a user does not specify the offset. No memory will be reserved for
-capture kernel.
+I like Eric's idea of debugger putting a break point on panic(). This
+would mean that rest of the post panic() actions have to be performed
+by second kernel which can perform those actions much more reliably.
 
-I think we either need to make offset mandatory or put in additional
-intelligence here to choose the offset automatically based on the memory
-available.
+But this also brings in the additional requirement of passing all the
+required context to second kernel. For example, in the past somebody wanted
+to send a message to a remote node that sytem crashed so that standby can
+take over.  If the same job has to be done in second kernel, it requires all
+the relavant information like remote host IP, port etc passed to the second
+kernel which I think makes the job little harder. May be one can pre-configure
+these parameters in user space and let the job be done either from initrd
+or user space scripts in second kernel.
 
 Thanks
 Vivek
