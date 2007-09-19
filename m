@@ -1,30 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e2.ny.us.ibm.com ([32.97.182.142])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IXrAy-000207-90
-	for kexec@lists.infradead.org; Wed, 19 Sep 2007 00:28:40 -0400
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8J4SWLh014814
-	for <kexec@lists.infradead.org>; Wed, 19 Sep 2007 00:28:32 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l8J4SWoP511054
-	for <kexec@lists.infradead.org>; Wed, 19 Sep 2007 00:28:32 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l8J4SWIG018119
-	for <kexec@lists.infradead.org>; Wed, 19 Sep 2007 00:28:32 -0400
-Date: Wed, 19 Sep 2007 09:58:40 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: kdump info request
-Message-ID: <20070919042840.GB7068@in.ibm.com>
+Received: from mail0.lsil.com ([147.145.40.20])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IXqnf-0001py-8F
+	for kexec@lists.infradead.org; Wed, 19 Sep 2007 00:04:35 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Subject: RE: kdump info request
+Date: Tue, 18 Sep 2007 22:04:21 -0600
+Message-ID: <9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
 References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
 	<20070919035337.GA7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
-Reply-To: vgoyal@in.ibm.com
+From: "Mukker, Atul" <Atul.Mukker@lsi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,80 +19,187 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0373959759=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Mukker, Atul" <Atul.Mukker@lsi.com>
+To: vgoyal@in.ibm.com
 Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Tue, Sep 18, 2007 at 10:04:21PM -0600, Mukker, Atul wrote:
-> Thanks for the reply. I guess we have pretty much nailed down device bringup sequence when loading under capture kernel. Our concern is: the capture kernel has a significant smaller memory footprint. Our RAID driver itself has a large memory requirement, some of which could fail allocation when loaded under the capture kernel.
-> 
-> If we could somehow determine that we are being called in context of capture kernel, we can dynamically lower driver memory requirement (at cost of lower IO throughout of-course, which is ok for this brief context).
+This is a multi-part message in MIME format.
 
-You can parse the command line and look for presence of elfcorehdr= option.
-This is internally appended to command line by kexec tools to tell capture
-kernel the address of ELF core headers.
+--===============0373959759==
+Content-class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C7FA72.285A969E"
 
-What's the memory allocation requirement of current RAID driver? How much
-memory you are reserving for capture kernel? Are you already seeing the
-memory allocation failure?
+This is a multi-part message in MIME format.
 
-I feel until and unless memory requirements are huge, we should not
-compromise with IO throughput. Capability to save the dump to disk as fast
-as possible to reduce the down time is also an important consideration.
+------_=_NextPart_001_01C7FA72.285A969E
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Thanks for the reply. I guess we have pretty much nailed down device =
+bringup sequence when loading under capture kernel. Our concern is: the =
+capture kernel has a significant smaller memory footprint. Our RAID =
+driver itself has a large memory requirement, some of which could fail =
+allocation when loaded under the capture kernel.
+
+If we could somehow determine that we are being called in context of =
+capture kernel, we can dynamically lower driver memory requirement (at =
+cost of lower IO throughout of-course, which is ok for this brief =
+context).
+
+Thanks
+-Atul
+
+-----Original Message-----
+From: Vivek Goyal [mailto:vgoyal@in.ibm.com]
+Sent: Tue 9/18/2007 9:53 PM
+To: Mukker, Atul
+Cc: vgoyal@in.ibm.com; Kexec Mailing List
+Subject: Re: kdump info request
+=20
+On Tue, Sep 18, 2007 at 03:13:42PM -0600, Mukker, Atul wrote:
+> Hello Vivek, Hari:
+>=20
+> =20
+>=20
+> Excuse me for contacting you direct, but seems like you 2 can point me
+> to a right direction for a kdump question we have.
+>=20
+> =20
+>=20
+> We are trying to make sure our RAID driver works ok when kernel is
+> loaded with kdump. Is there a way for driver to detect this condition;
+> that is, current kernel is running with kdump. We need this =
+information
+> so we can scale down certain operations in the driver.
+>=20
+
+Hi Atul,
+
+What do you mean by detecting if current kernel is running with kdump? =
+Do=20
+you mean that you want to know the moment somebody loads a capture =
+kernel
+by kexec -p and driver will change some of its behaviour?
+
+I think that's not the right way to go about. Explain the issue
+a little bit in detail.
+
+Generally drivers run into issues while initializing in second kernel =
+and
+one of the way to handle it is reset the device before going further =
+with
+initialization. I am hoping your RAID controller provides some kind of
+reset mechanism from software.
 
 Thanks
 Vivek
 
-> 
-> Thanks
-> -Atul
-> 
-> -----Original Message-----
-> From: Vivek Goyal [mailto:vgoyal@in.ibm.com]
-> Sent: Tue 9/18/2007 9:53 PM
-> To: Mukker, Atul
-> Cc: vgoyal@in.ibm.com; Kexec Mailing List
-> Subject: Re: kdump info request
->  
-> On Tue, Sep 18, 2007 at 03:13:42PM -0600, Mukker, Atul wrote:
-> > Hello Vivek, Hari:
-> > 
-> >  
-> > 
-> > Excuse me for contacting you direct, but seems like you 2 can point me
-> > to a right direction for a kdump question we have.
-> > 
-> >  
-> > 
-> > We are trying to make sure our RAID driver works ok when kernel is
-> > loaded with kdump. Is there a way for driver to detect this condition;
-> > that is, current kernel is running with kdump. We need this information
-> > so we can scale down certain operations in the driver.
-> > 
-> 
-> Hi Atul,
-> 
-> What do you mean by detecting if current kernel is running with kdump? Do 
-> you mean that you want to know the moment somebody loads a capture kernel
-> by kexec -p and driver will change some of its behaviour?
-> 
-> I think that's not the right way to go about. Explain the issue
-> a little bit in detail.
-> 
-> Generally drivers run into issues while initializing in second kernel and
-> one of the way to handle it is reset the device before going further with
-> initialization. I am hoping your RAID controller provides some kind of
-> reset mechanism from software.
-> 
-> Thanks
-> Vivek
-> 
-> 
+
+
+------_=_NextPart_001_01C7FA72.285A969E
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.5.7651.59">
+<TITLE>RE: kdump info request</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+
+<P><FONT SIZE=3D2>Thanks for the reply. I guess we have pretty much =
+nailed down device bringup sequence when loading under capture kernel. =
+Our concern is: the capture kernel has a significant smaller memory =
+footprint. Our RAID driver itself has a large memory requirement, some =
+of which could fail allocation when loaded under the capture kernel.<BR>
+<BR>
+If we could somehow determine that we are being called in context of =
+capture kernel, we can dynamically lower driver memory requirement (at =
+cost of lower IO throughout of-course, which is ok for this brief =
+context).<BR>
+<BR>
+Thanks<BR>
+-Atul<BR>
+<BR>
+-----Original Message-----<BR>
+From: Vivek Goyal [<A =
+HREF=3D"mailto:vgoyal@in.ibm.com">mailto:vgoyal@in.ibm.com</A>]<BR>
+Sent: Tue 9/18/2007 9:53 PM<BR>
+To: Mukker, Atul<BR>
+Cc: vgoyal@in.ibm.com; Kexec Mailing List<BR>
+Subject: Re: kdump info request<BR>
+<BR>
+On Tue, Sep 18, 2007 at 03:13:42PM -0600, Mukker, Atul wrote:<BR>
+&gt; Hello Vivek, Hari:<BR>
+&gt;<BR>
+&gt;&nbsp;<BR>
+&gt;<BR>
+&gt; Excuse me for contacting you direct, but seems like you 2 can point =
+me<BR>
+&gt; to a right direction for a kdump question we have.<BR>
+&gt;<BR>
+&gt;&nbsp;<BR>
+&gt;<BR>
+&gt; We are trying to make sure our RAID driver works ok when kernel =
+is<BR>
+&gt; loaded with kdump. Is there a way for driver to detect this =
+condition;<BR>
+&gt; that is, current kernel is running with kdump. We need this =
+information<BR>
+&gt; so we can scale down certain operations in the driver.<BR>
+&gt;<BR>
+<BR>
+Hi Atul,<BR>
+<BR>
+What do you mean by detecting if current kernel is running with kdump? =
+Do<BR>
+you mean that you want to know the moment somebody loads a capture =
+kernel<BR>
+by kexec -p and driver will change some of its behaviour?<BR>
+<BR>
+I think that's not the right way to go about. Explain the issue<BR>
+a little bit in detail.<BR>
+<BR>
+Generally drivers run into issues while initializing in second kernel =
+and<BR>
+one of the way to handle it is reset the device before going further =
+with<BR>
+initialization. I am hoping your RAID controller provides some kind =
+of<BR>
+reset mechanism from software.<BR>
+<BR>
+Thanks<BR>
+Vivek<BR>
+<BR>
+<BR>
+</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C7FA72.285A969E--
+
+
+--===============0373959759==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0373959759==--
+
