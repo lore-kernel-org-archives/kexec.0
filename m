@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
-	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IXmKn-0008L0-DG
-	for kexec@lists.infradead.org; Tue, 18 Sep 2007 19:18:29 -0400
-Received: from [172.16.3.12] (vagw.valinux.co.jp [210.128.90.14])
-	by mail.valinux.co.jp (Postfix) with ESMTP id 215A82DC884
-	for <kexec@lists.infradead.org>; Wed, 19 Sep 2007 08:18:21 +0900 (JST)
-Date: Wed, 19 Sep 2007 08:18:28 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: Re: XenDump
-In-Reply-To: <20070918131128.GA22635@suse.de>
-References: <20070918131128.GA22635@suse.de>
-Message-Id: <20070919081210.6E16.ODA@valinux.co.jp>
-MIME-Version: 1.0
+Received: from e36.co.us.ibm.com ([32.97.110.154])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IXqdk-0005C0-4S
+	for kexec@lists.infradead.org; Wed, 19 Sep 2007 04:54:20 +0100
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e36.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8J3rN8r004747
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 23:53:23 -0400
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l8J3rNhC400968
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 21:53:23 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l8J3rMr8006974
+	for <kexec@lists.infradead.org>; Tue, 18 Sep 2007 21:53:22 -0600
+Date: Wed, 19 Sep 2007 09:23:37 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: kdump info request
+Message-ID: <20070919035337.GA7068@in.ibm.com>
+References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +36,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Mukker, Atul" <Atul.Mukker@lsi.com>
+Cc: vgoyal@in.ibm.com, Kexec Mailing List <kexec@lists.infradead.org>
 
-Hi,
-
-dom0cut is obsolate.
-crash command can use a vmcore directly for both dom-0 and
-hypervisor analysis.
-You can use makedumpfile command to reduce the size of a vmcore.
-It can select only dom-0 and hypervisor part.
-
-Thanks.
-
-On Tue, 18 Sep 2007 15:11:28 +0200
-Bernhard Walle <bwalle@suse.de> wrote:
-
-> Hello,
+On Tue, Sep 18, 2007 at 03:13:42PM -0600, Mukker, Atul wrote:
+> Hello Vivek, Hari:
 > 
-> does somebody know where the software from
-> http://wiki.xensource.com/xenwiki/XenKdumpAnalysis is available now?
-> Only dead links ...
+>  
 > 
+> Excuse me for contacting you direct, but seems like you 2 can point me
+> to a right direction for a kdump question we have.
 > 
-> Thanks,
->    Bernhard
+>  
 > 
+> We are trying to make sure our RAID driver works ok when kernel is
+> loaded with kdump. Is there a way for driver to detect this condition;
+> that is, current kernel is running with kdump. We need this information
+> so we can scale down certain operations in the driver.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
--- 
-Itsuro ODA <oda@valinux.co.jp>
+Hi Atul,
+
+What do you mean by detecting if current kernel is running with kdump? Do 
+you mean that you want to know the moment somebody loads a capture kernel
+by kexec -p and driver will change some of its behaviour?
+
+I think that's not the right way to go about. Explain the issue
+a little bit in detail.
+
+Generally drivers run into issues while initializing in second kernel and
+one of the way to handle it is reset the device before going further with
+initialization. I am hoping your RAID controller provides some kind of
+reset mechanism from software.
+
+Thanks
+Vivek
 
 
 _______________________________________________
