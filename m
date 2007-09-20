@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp2.linux-foundation.org ([207.189.120.14])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IY86u-00057K-IQ
-	for kexec@lists.infradead.org; Wed, 19 Sep 2007 18:33:42 -0400
-Date: Wed, 19 Sep 2007 15:33:29 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [patch 3/7] Use extended crashkernel command line on x86_64
-Message-Id: <20070919153329.cfe714e3.akpm@linux-foundation.org>
-In-Reply-To: <20070913161429.387888398@strauss.suse.de>
-References: <20070913161428.343951643@strauss.suse.de>
-	<20070913161429.387888398@strauss.suse.de>
-Mime-Version: 1.0
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IYEPC-0007dl-D6
+	for kexec@lists.infradead.org; Thu, 20 Sep 2007 01:16:57 -0400
+Message-Id: <46F20233.1040209@mxs.nes.nec.co.jp>
+Date: Thu, 20 Sep 2007 14:16:35 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] [-mm patch] Add nodemask_t's size and NR_FREE_PAGES's
+	value to vmcoreinfo_data.
+References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
+	<46E9F854.9030804@mxs.nes.nec.co.jp>
+	<alpine.DEB.0.9999.0709132034540.30494@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.0.9999.0709132034540.30494@chino.kir.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +25,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, discuss@x86-64.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: David Rientjes <rientjes@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec-ml <kexec@lists.infradead.org>, Adrian Bunk <bunk@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 
-On Thu, 13 Sep 2007 18:14:31 +0200
-Bernhard Walle <bwalle@suse.de> wrote:
 
-> +#ifdef CONFIG_KEXEC
-> +static inline void reserve_crashkernel(void)
-> +{
+Hi David,
 
-The x86_64 function was made inline, so it will actually end up in
-.text.init.  But the i386 equivalent function was not inlined so I'm not
-sure whether it will end up in .text or in .text.init.
+David Rientjes wrote:
+> On Fri, 14 Sep 2007, Ken'ichi Ohmichi wrote:
+>
+>> diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
+>> --- a/include/linux/kexec.h    2007-09-10 23:28:42.000000000 +0900
+>> +++ b/include/linux/kexec.h    2007-09-10 23:29:52.000000000 +0900
+>> @@ -132,11 +132,16 @@ unsigned long paddr_vmcoreinfo_note(void
+>>  #define SIZE(name) \
+>>      vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>>                    (unsigned long)sizeof(struct name))
+>> +#define TYPEDEF_SIZE(name) \
+>> +    vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>> +                  (unsigned long)sizeof(name))
+>>   #define OFFSET(name, field) \
+>>      vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+>>                    (unsigned long)&(((struct name *)0)->field))
+>>  #define LENGTH(name, value) \
+>>      vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
+>> +#define NUMBER(name) \
+>> +    vmcoreinfo_append_str("NUMBER(%s)=%ld\n", #name, (long)name)
+>>  #define CONFIG(name) \
+>>      vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+>>
+>
+> The #define SIZE() should be renamed STRUCT_SIZE() since it's always returning the size of the struct with a given name.  This would allow TYPEDEF_SIZE() to simply become SIZE() since it need not be used exclusively for typedefs.
 
-Could you fix all that up please?
+Thank you for the comment.
+That sounds good, I'll post a new patch including it.
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
