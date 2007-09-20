@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mga03.intel.com ([143.182.124.21])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYEaQ-0007jN-Vh
-	for kexec@lists.infradead.org; Thu, 20 Sep 2007 01:28:30 -0400
-Message-Id: <46F204FD.6040303@mxs.nes.nec.co.jp>
-Date: Thu, 20 Sep 2007 14:28:29 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH 4/4] [-mm patch] Add a prefix "VMCOREINFO_" to the
-	vmcoreinfo macros.
-References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>	<46E9F942.5070007@mxs.nes.nec.co.jp>
-	<20070914190350.011cdadb.akpm@linux-foundation.org>
-In-Reply-To: <20070914190350.011cdadb.akpm@linux-foundation.org>
+	id 1IYEeN-0007md-Dh
+	for kexec@lists.infradead.org; Thu, 20 Sep 2007 01:32:36 -0400
+Subject: [RFC][PATCH 2/2 -mm] kexec based hibernation -v3: kexec restore
+From: "Huang, Ying" <ying.huang@intel.com>
+Date: Thu, 20 Sep 2007 13:34:10 +0800
+Message-Id: <1190266450.21818.18.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +20,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Joe Perches <joe@perches.com>, Adrian Bunk <bunk@kernel.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, David Rientjes <rientjes@google.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
+This patch adds writing support for /dev/oldmem. This is used to
+restore the memory contents of hibernated system.
 
-Hi Andrew,
+Signed-off-by: Huang Ying <ying.huang@intel.com>
 
-Andrew Morton wrote:
-> > On Fri, 14 Sep 2007 12:00:18 +0900 "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
-> > 
->> >> [4/4] Add a prefix "VMCOREINFO_" to the vmcoreinfo macros.
->> >>    Old vmcoreinfo macros were defined as generic names SYMBOL/SIZE/OFFSET
->> >>    /LENGTH/CONFIG, and it is impossible to grep for them. So these names
->> >>    should be changed. This discussion is the following:
->> >>    http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/0415.html
-> > 
-> > I already had these patches, except for #4.
-> > 
-> > Your email client is space-stuffing the patches, so I have to do s/^ / /g
-> > to apply them.  Please see
-> > http://mbligh.org/linuxdocs/Email/Clients/Thunderbird and/or the
-> > soon-to-be-merged Documentation/email-clients.txt
+---
 
-Sorry for wasting your time.
-I changed my thunderbird's setting according to the above site.
+ arch/i386/kernel/crash_dump.c |   27 +++++++++++++++++++++++++++
+ drivers/char/mem.c            |   32 ++++++++++++++++++++++++++++++++
+ include/linux/crash_dump.h    |    2 ++
+ 3 files changed, 61 insertions(+)
 
-
-> > I plan on folding all of
-> > 
-> > add-vmcoreinfo.patch
-> > add-vmcore-cleanup-the-coding-style-according-to-andrews-comments.patch
-> > add-vmcore-add-nodemask_ts-size-and-nr_free_pagess-value-to-vmcoreinfo_data.patch
-> > add-vmcore-use-the-existing-ia64_tpa-instead-of-asm-code.patch
-> > add-vmcore-add-a-prefix-vmcoreinfo_-to-the-vmcoreinfo-macros.patch
-> > 
-> > into a single patch for upstream.
-
-Thank you for merging them into linux-2.6.23-rc6-mm1.
-Additionally, could you merge the following patches to clean up
-add-vmcoreinfo.patch ?
-
-[PATCH 5/4] [-mm patch] Rename macros returning the size.
- The #define SIZE() should be renamed STRUCT_SIZE() since it's always 
- returning the size of the struct with a given name.  This would allow 
- TYPEDEF_SIZE() to simply become SIZE() since it need not be used 
- exclusively for typedefs. This idea is David Rientjes's.
- http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/1964.html
+Index: linux-2.6.23-rc4/arch/i386/kernel/crash_dump.c
+===================================================================
+--- linux-2.6.23-rc4.orig/arch/i386/kernel/crash_dump.c	2007-09-11 16:52:14.000000000 +0800
++++ linux-2.6.23-rc4/arch/i386/kernel/crash_dump.c	2007-09-20 09:48:10.000000000 +0800
+@@ -58,6 +58,33 @@
+ 	return csize;
+ }
  
-[PATCH 6/4] [-mm patch] use the existing offsetof().
- It is better that offsetof() is used for VMCOREINFO_OFFSET().
- This idea is Joe Perches's.
-
-
-Thanks
-Ken'ichi Ohmichi 
-
++ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
++			  size_t csize, unsigned long offset, int userbuf)
++{
++	void  *vaddr;
++
++	if (!csize)
++		return 0;
++
++	if (!userbuf) {
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, buf, csize);
++	} else {
++		if (!kdump_buf_page) {
++			printk(KERN_WARNING "Kdump: Kdump buffer page not"
++				" allocated\n");
++			return -EFAULT;
++		}
++		if (copy_from_user(kdump_buf_page, buf, csize))
++			return -EFAULT;
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, kdump_buf_page, csize);
++	}
++	kunmap_atomic(vaddr, KM_PTE0);
++
++	return csize;
++}
++
+ static int __init kdump_buf_page_init(void)
+ {
+ 	int ret = 0;
+Index: linux-2.6.23-rc4/include/linux/crash_dump.h
+===================================================================
+--- linux-2.6.23-rc4.orig/include/linux/crash_dump.h	2007-09-11 16:52:14.000000000 +0800
++++ linux-2.6.23-rc4/include/linux/crash_dump.h	2007-09-20 09:48:10.000000000 +0800
+@@ -11,6 +11,8 @@
+ extern unsigned long long elfcorehdr_addr;
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+ 						unsigned long, int);
++extern ssize_t write_oldmem_page(unsigned long, const char *, size_t,
++				 unsigned long, int);
+ extern const struct file_operations proc_vmcore_operations;
+ extern struct proc_dir_entry *proc_vmcore;
+ 
+Index: linux-2.6.23-rc4/drivers/char/mem.c
+===================================================================
+--- linux-2.6.23-rc4.orig/drivers/char/mem.c	2007-09-11 16:52:14.000000000 +0800
++++ linux-2.6.23-rc4/drivers/char/mem.c	2007-09-20 09:48:10.000000000 +0800
+@@ -348,6 +348,37 @@
+ 	}
+ 	return read;
+ }
++
++/*
++ * Write memory corresponding to the old kernel.
++ */
++static ssize_t write_oldmem(struct file *file, const char __user *buf,
++			    size_t count, loff_t *ppos)
++{
++	unsigned long pfn, offset;
++	size_t write = 0, csize;
++	int rc = 0;
++
++	while (count) {
++		pfn = *ppos / PAGE_SIZE;
++		if (pfn > saved_max_pfn)
++			return write;
++
++		offset = (unsigned long)(*ppos % PAGE_SIZE);
++		if (count > PAGE_SIZE - offset)
++			csize = PAGE_SIZE - offset;
++		else
++			csize = count;
++		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
++		if (rc < 0)
++			return rc;
++		buf += csize;
++		*ppos += csize;
++		write += csize;
++		count -= csize;
++	}
++	return write;
++}
+ #endif
+ 
+ extern long vread(char *buf, char *addr, unsigned long count);
+@@ -783,6 +814,7 @@
+ #ifdef CONFIG_CRASH_DUMP
+ static const struct file_operations oldmem_fops = {
+ 	.read	= read_oldmem,
++	.write	= write_oldmem,
+ 	.open	= open_oldmem,
+ };
+ #endif
 
 _______________________________________________
 kexec mailing list
