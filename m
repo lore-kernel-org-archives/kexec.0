@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
+Received: from mga03.intel.com ([143.182.124.21])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYHC3-0001oj-Lp
-	for kexec@lists.infradead.org; Thu, 20 Sep 2007 04:15:31 -0400
-Date: Thu, 20 Sep 2007 10:15:24 +0200
-From: Pavel Machek <pavel@ucw.cz>
+	id 1IYHEP-0001r3-Oz
+	for kexec@lists.infradead.org; Thu, 20 Sep 2007 04:17:58 -0400
 Subject: Re: [RFC][PATCH 2/2 -mm] kexec based hibernation -v3: kexec restore
-Message-ID: <20070920081524.GA8732@atrey.karlin.mff.cuni.cz>
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20070920081524.GA8732@atrey.karlin.mff.cuni.cz>
 References: <1190266450.21818.18.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1190266450.21818.18.camel@caritas-dev.intel.com>
+	<20070920081524.GA8732@atrey.karlin.mff.cuni.cz>
+Date: Thu, 20 Sep 2007 16:19:41 +0800
+Message-Id: <1190276381.21818.21.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,19 +23,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
+To: Pavel Machek <pavel@ucw.cz>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-> This patch adds writing support for /dev/oldmem. This is used to
-> restore the memory contents of hibernated system.
+On Thu, 2007-09-20 at 10:15 +0200, Pavel Machek wrote:
+> > This patch adds writing support for /dev/oldmem. This is used to
+> > restore the memory contents of hibernated system.
+> > 
+> > Signed-off-by: Huang Ying <ying.huang@intel.com>
 > 
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> ACK. (And this can even go in before the patch #1, right?)
 
-ACK. (And this can even go in before the patch #1, right?)
-								Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Yes. This patch does not depend on patch #1.
+
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
