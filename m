@@ -1,50 +1,35 @@
-From: Randy Dunlap <randy.dunlap@oracle.com>
-Date: Mon, 17 Sep 2007 18:38:53 -0700
-Subject: My position on general ``RAS'' tool support infrastructure
-In-Reply-To: <m1abrq7lbt.fsf@ebiederm.dsl.xmission.com>
-References: <46E8B06D.9080006@bluelane.com>
-	<m1abrq7lbt.fsf@ebiederm.dsl.xmission.com>
-Message-ID: <20070917183853.42f29393.randy.dunlap@oracle.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Date: Thu, 20 Sep 2007 18:06:23 -0700
+Subject: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
+In-Reply-To: <200709211024.35991.nigel@nigel.suspend2.net>
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<20070920100941.GA12157@atrey.karlin.mff.cuni.cz>
+	<200709211024.35991.nigel@nigel.suspend2.net>
+Message-ID: <20070920180623.5d7da7b9.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, 13 Sep 2007 07:21:10 -0600 Eric W. Biederman wrote:
+On Fri, 21 Sep 2007 10:24:34 +1000 Nigel Cunningham <nigel@nigel.suspend2.net> wrote:
 
-> Pete/Piet Delaney <pete@bluelane.com> writes:
+> Hi Andrew.
 > 
-> > Jason, Eric:
-> >
-> > Did you read Keith Owens suggestion on RAS tools from:
+> On Thursday 20 September 2007 20:09:41 Pavel Machek wrote:
+> > Seems like good enough for -mm to me.
+> > 
+> > 									Pavel
+> 
+> Andrew, if I recall correctly, you said a while ago that you didn't want 
+> another hibernation implementation in the vanilla kernel. If you're going to 
+> consider merging this kexec code, will you also please consider merging 
+> TuxOnIce?
+> 
 
+The theory is that kexec-based hibernation will mainly use preexisting
+kexec code and will permit us to delete the existing hibernation
+implementation.
 
-Yes.  and I re-read it.
-
-There are several things in Keith's email that make sense:
-
-a.  all RAS tools should use a common interface
-b.  it's not the kernel's job to decide which RAS tool runs first
-
-
-Eric makes some good points too.  I'm mostly similar to Eric:
-paranoid about trusting software/hardware after a panic (or oops).
-
-So if someone wants to use multiple RAS tools on a panic event,
-enabling an admin to set priorities is OK with me, but I'll only
-trust the first one that is used, and even that one may have
-problems.  IOW, I don't see a big need to support multiple RAS
-tools at one time.  (speaking for myself)
-
-
-> So if someone who is suggesting an implementation can absorb 
-> and understand the requirements of the different groups and come
-> up with solutions that meet the requirements of the different projects
-> I think progress can be made.  That as far as I know takes talent.
-
-Ack that.
-
----
-~Randy
+That's different from replacing it.
 
