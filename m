@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nz-out-0506.google.com ([64.233.162.227])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYioW-0001UW-Om
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 09:45:04 -0400
-Received: by nz-out-0506.google.com with SMTP id z3so637946nzf
-	for <kexec@lists.infradead.org>; Fri, 21 Sep 2007 06:44:59 -0700 (PDT)
-Message-ID: <851fc09e0709210644y4a859a2bp223ef56b08a27f0@mail.gmail.com>
-Date: Fri, 21 Sep 2007 21:44:57 +0800
-From: "huang ying" <huang.ying.caritas@gmail.com>
-Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation -v3
-In-Reply-To: <46F39345.3040201@kolumbus.fi>
+	id 1IYjKq-0002Tp-MX
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 10:19:10 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Date: Fri, 21 Sep 2007 16:31:18 +0200
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<200709211409.25008.rjw@sisk.pl>
+	<851fc09e0709210614q33cf3c81u1441fda17a66a6fd@mail.gmail.com>
+In-Reply-To: <851fc09e0709210614q33cf3c81u1441fda17a66a6fd@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <1190266440.21818.16.camel@caritas-dev.intel.com>
-	<46F39345.3040201@kolumbus.fi>
+Message-Id: <200709211631.19130.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,74 +22,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@kolumbus.fi>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: huang ying <huang.ying.caritas@gmail.com>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, Len Brown <lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-T24gOS8yMS8wNywgTWlrYSBQZW50dGlsw6QgPG1pa2EucGVudHRpbGFAa29sdW1idXMuZmk+IHdy
-b3RlOgo+Cj4gPiBVc2FnZToKPiA+Cj4gPiAxLiBDb21waWxlIGtlcm5lbCB3aXRoIGZvbGxvd2lu
-ZyBvcHRpb25zIHNlbGVjdGVkOgo+ID4KPiA+IENPTkZJR19YODZfMzI9eQo+ID4gQ09ORklHX1JF
-TE9DQVRBQkxFPXkgIyBub3QgbmVlZGVkIHN0cmljdGx5LCBidXQgaXQgaXMgbW9yZSBjb252ZW5p
-ZW50IHdpdGggaXQKPiA+IENPTkZJR19LRVhFQz15Cj4gPiBDT05GSUdfQ1JBU0hfRFVNUD15ICMg
-b25seSBuZWVkZWQgYnkga2V4ZWNlZCBrZXJuZWwgdG8gc2F2ZS9yZXN0b3JlIG1lbW9yeSBpbWFn
-ZQo+ID4gQ09ORklHX1BNPXkKPiA+IENPTkZJR19LRVhFQ19KVU1QPXkKPiA+Cj4gPiAyLiBEb3du
-bG9hZCB0aGUga2V4ZWMtdG9vbHMtdGVzdGluZyBnaXQgdHJlZSwgYXBwbHkgdGhlIGtleGVjLXRv
-b2xzCj4gPiAgICBranVtcCBwYXRjaGVzIChvciBkb3dubG9hZCB0aGUgc291cmNlIHRhciBiYWxs
-IGRpcmVjdGx5KSBhbmQKPiA+ICAgIGNvbXBpbGUuCj4gPgo+ID4gMy4gRG93bmxvYWQgYW5kIGNv
-bXBpbGUgdGhlIGtyZXN0b3JlIHRvb2wuCj4gPgo+ID4gNC4gUHJlcGFyZSAyIHJvb3QgcGFydGl0
-aW9uIHVzZWQgYnkga2VybmVsIEEgYW5kIGtlcm5lbCBCL0MsIHJlZmVycmVkCj4gPiAgICBhcyAv
-ZGV2L2hkYSwgL2Rldi9oZGIgaW4gZm9sbG93aW5nIHRleHQuIFRoaXMgaXMgbm90IHN0cmljdGx5
-Cj4gPiAgICBuZWNlc3NhcnksIEkgdXNlIHRoaXMgc2NoZW1lIGZvciB0ZXN0aW5nIGR1cmluZyBk
-ZXZlbG9wbWVudC4KPiA+Cj4gPiA1LiBCb290IGtlcm5lbCBjb21waWxlZCBmb3Igbm9ybWFsIHVz
-YWdlIChrZXJuYWwgQSkuCj4gPgo+ID4gNi4gTG9hZCBrZXJuZWwgY29tcGlsZWQgZm9yIGhpYmVy
-bmF0aW5nL3Jlc3RvcmUgdXNhZ2UgKGtlcm5lbCBCKSB3aXRoCj4gPiAgICBrZXhlYywgdGhlIHNh
-bWUga2VybmVsIGFzIHRoYXQgb2YgNSBjYW4gYmUgdXNlZCBpZgo+ID4gICAgQ09ORklHX1JFTE9D
-QVRBQkxFPXkgYW5kIENPTkZJR19DUkFTSF9EVU1QPXkgYXJlIHNlbGVjdGVkLgo+ID4KPiA+ICAg
-IFRoZSAtLWVsZjY0LWNvcmUtaGVhZGVycyBzaG91bGQgYmUgc3BlY2lmaWVkIGluIGNvbW1hbmQg
-bGluZSBvZgo+ID4gICAga2V4ZWMsIGJlY2F1c2Ugb25seSB0aGUgNjRiaXQgRUxGIGlzIHN1cHBv
-cnRlZCBieSBrcmVzdG9yZSB0b29sLgo+ID4KPiA+ICAgIEZvciBleGFtcGxlLCB0aGUgc2hlbGwg
-Y29tbWFuZCBsaW5lIGNhbiBiZSBhcyBmb2xsb3c6Cj4gPgo+ID4gICAga2V4ZWMgLXAgLW4gL2Jv
-b3QvYnpJbWFnZSAtLW1lbS1taW49MHgxMDAwMDAgLS1tZW0tbWF4PTB4ZmZmZmZmCj4gPiAgICAg
-ICAgLS1lbGY2NC1jb3JlLWhlYWRlcnMgLS1hcHBlbmQ9InJvb3Q9L2Rldi9oZGIgc2luZ2xlIgo+
-ID4KPiA+IDcuIEp1bXAgdG8gdGhlIGhpYmVybmF0aW5nIGtlcm5lbCAoa2VybmVsIEIpIHdpdGgg
-Zm9sbG93aW5nIHNoZWxsCj4gPiAgICBjb21tYW5kIGxpbmU6Cj4gPgo+ID4gICAga2V4ZWMgLWoK
-PiA+Cj4gPiA4LiBJbiB0aGUgaGliZXJuYXRpbmcga2VybmVsIChrZXJuZWwgQiksIHRoZSBtZW1v
-cnkgaW1hZ2Ugb2YKPiA+ICAgIGhpYmVybmF0ZWQga2VybmVsIChrZXJuZWwgQSkgY2FuIGJlIHNh
-dmVkIGFzIGZvbGxvdzoKPiA+Cj4gPiAgICBjcCAvcHJvYy92bWNvcmUgLgo+ID4gICAgY3AgL3N5
-cy9rZXJuZWwva2V4ZWNfanVtcF9iYWNrX2VudHJ5IC4KPiA+Cj4gSGVyZSB3ZSBzYXZlIGFsc28g
-a2VybmVsIEIncyBwYWdlcy4KCk5vLCB0aGUga2VybmVsIEIncyBwYWdlcyB3aWxsIG5vdCBiZSBz
-YXZlZC4gQmVjYXVzZSB3aGVuIHdlIGJ1aWxkIHRoZQplbGZjb3JlICgvcHJvYy92bWNvcmUpIGhl
-YWRlciwgd2UgZXhjbHVkZSBtZW1vcnkgYXJlYSB1c2VkIGJ5IGtlcm5lbApCLiBUaGUgZGV0YWls
-cyBjYW4gYmUgZm91bmQgaW4ga2V4ZWMtdG9vbHMgcGF0Y2hlcy4KCj4gPiA5LiBTaHV0ZG93biBv
-ciByZWJvb3QgaW4gaGliZXJuYXRpbmcga2VybmVsIChrZXJuZWwgQikuCj4gPgo+ID4gMTAuIEJv
-b3Qga2VybmVsIChrZXJuZWwgQykgY29tcGlsZWQgZm9yIGhpYmVybmF0aW5nL3Jlc3RvcmUgdXNh
-Z2Ugb24KPiA+ICAgICB0aGUgcm9vdCBmaWxlIHN5c3RlbSAvZGV2L2hkYiBpbiBtZW1vcnkgcmFu
-Z2Ugb2Yga2VybmVsIEIuCj4gPgo+ID4gICAgIEZvciBleGFtcGxlLCB0aGUgZm9sbG93aW5nIGtl
-cm5lbCBjb21tYW5kIGxpbmUgcGFyYW1ldGVycyBjYW4gYmUKPiA+ICAgICB1c2VkOgo+ID4KPiA+
-ICAgICByb290PS9kZXYvaGRiIHNpbmdsZSBtZW1tYXA9ZXhhY3RtYXAgbWVtbWFwPTY0MEtAMEsg
-bWVtbWFwPTE1TUAxTQo+ID4KPiAwLTY0MEsgZnJvbSBrZXJuZWwgQSBvdmVycmlkZXMgMC02NDBL
-IG9mIGtlcm5lbCBDIGF0IHJlc3RvcmUgdGltZS4KCk5vLiBUaGUgMC02NDBLIGlzIG5vdCBpbiB0
-aGUgbWVtb3J5IGltYWdlIG9mIGtlcm5lbCBBLiBJdCBpcyBleGNsdWRlZApmcm9tIG1lbW9yeSBp
-bWFnZSBvZiBrZXJuZWwgQSBpbiAvc2Jpbi9rZXhlYy4gTm90IHZlcnkgc3RyaWN0bHksIHRoZXJl
-CmlzIG9uZSBiYWNrdXAgcGFnZSBmb3IgZWFjaCBwYWdlIGluIDAtNjQwSywgYWZ0ZXIganVtcCBi
-YWNrLCB0aGUKYmFja3VwIHBhZ2Ugd2lsbCBiZSBzd2FwcGVkIHdpdGggdGhlIHRhcmdldCBwYWdl
-IChpbiAwLTY0MEspLiBObwppbmZvcm1hdGlvbiBpcyBsb3N0LiBTbyB5b3UgY2FuIGp1bXAgYmFj
-ayBhbmQgZm9ydGgsIGZvciBhcmJpdHJhcnkKdGltZXMuCgo+ID4gMTEuIEluIHJlc3RvcmUga2Vy
-bmVsIChrZXJuZWwgQyksIHRoZSBtZW1vcnkgaW1hZ2Ugb2Yga2VybmVsIEEgY2FuIGJlCj4gPiAg
-ICAgcmVzdG9yZWQgYXMgZm9sbG93Ogo+ID4KPiA+ICAgICBjcCBrZXhlY19qdW1wX2JhY2tfZW50
-cnkgL3N5cy9rZXJuZWwva2V4ZWNfanVtcF9iYWNrX2VudHJ5Cj4gPiAgICAga3Jlc3RvcmUgdm1j
-b3JlCj4gPgo+ID4KPiBUaGlzIHN0ZXBzIHJlcGxhY2VzIGtlcm5lbCBDJ3MgcGFnZXMgd2l0aCBr
-ZXJuZWwgQidzIChhdCBsZWFzdCAxNW0tMTZtKSwKPiBzYXZlZCBhdCBzdGVwIDgsIHNvIHRoZXNl
-IGtlcm5lbHMgc2hvdWxkIGJlIGVxdWFsPyBPciB0aGV5IG11c3QgYmUKPiBwaHlzaWNhbGx5IGxv
-Y2F0ZWQgaW4gbm9uLW92ZXJsYXBwaW5nIHJlZ2lvbnMgc3VjaCB0aGF0IEMgaXMgaW4gQidzCj4g
-bWVtb3J5IHJhbmdlIGJ1dCBub24tb3ZlcmxhcHBpbmcuIFRoZSBwcm9wb3NlZCBzZXR1cCBkb2Vz
-bid0IGd1YXJhdGVlCj4gdGhpcyBhZmFpY3MuCgpOby4gVGhlc2UgcGFnZXMgYXJlIGV4Y2x1ZGVk
-IGZyb20gL3Byb2Mvdm1jb3JlLiBUaGVzZSBrZXJuZWxzIG5lZWQgbm90CnRvIGJlIGVxdWFsLgoK
-PiA+IDEyLiBKdW1wIGJhY2sgdG8gaGliZXJuYXRlZCBrZXJuZWwgKGtlcm5lbCBBKQo+ID4KPiA+
-ICAgICBrZXhlYyAtYgo+ID4KCkJlc3QgUmVnYXJkcywKSHVhbmcgWWluZwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+On Friday, 21 September 2007 15:14, huang ying wrote:
+> On 9/21/07, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> > On Friday, 21 September 2007 05:33, Eric W. Biederman wrote:
+> > > Nigel Cunningham <nigel@nigel.suspend2.net> writes:
+[--snip--]
+> > >
+> > > No one has yet attacked the hard problem of coming up with separate
+> > > hibernate methods for drivers.
+> >
+> > Well, I've been playing a bit with that for some time, but it's not easy by any
+> > means.
+> >
+> > In short, I'm seeing some problems related to the handling of ACPI that seem to
+> > shatter the entire idea of having separate hibernate methods, at least as far
+> > as ACPI systems are concerned.
+> 
+> So sadly to hear this. Can you details it a little? Or a link?
+
+Well, the problem is that apparently some systems (eg. my HP nx6325) expect us
+to execute the _PTS ACPI global control method before creating the image _and_
+to execute acpi_enter_sleep_state(ACPI_STATE_S4) in order to finally put the
+system into the sleep state.  In particular, on nx6325, if we don't do that,
+then after the restore the status of the AC power will not be reported
+correctly (and if you replace the battery while in the sleep state, the
+battery status will not be updated correctly after the restore).  Similar
+issues have been reported for other machines.
+
+Now, the ACPI specification requires us to put devices into low power states
+before executing _PTS and that's exactly what we're doing before a suspend to
+RAM.  Thus, it seems that in general we need to do the same for hibernation on
+ACPI systems.
+
+Greetings,
+Rafael
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
