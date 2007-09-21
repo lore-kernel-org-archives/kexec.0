@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out.google.com ([216.239.45.13])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYQy7-0008AC-OF
-	for kexec@lists.infradead.org; Thu, 20 Sep 2007 14:41:47 -0400
-Date: Thu, 20 Sep 2007 11:40:41 -0700 (PDT)
-From: David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH 5/4] [-mm patch] Rename macros returning the size.
-In-Reply-To: <alpine.LFD.0.999.0709201746090.17093@enigma.security.iitk.ac.in>
-Message-ID: <alpine.DEB.0.9999.0709201139000.14644@chino.kir.corp.google.com>
-References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>
-	<46E9F942.5070007@mxs.nes.nec.co.jp>
-	<20070914190350.011cdadb.akpm@linux-foundation.org>
-	<46F204FD.6040303@mxs.nes.nec.co.jp>
-	<46F2056E.6080601@mxs.nes.nec.co.jp>
-	<alpine.LFD.0.999.0709201746090.17093@enigma.security.iitk.ac.in>
+Received: from home.nigel.suspend2.net ([203.171.70.205])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IYWLx-0002yN-UP
+	for kexec@lists.infradead.org; Thu, 20 Sep 2007 20:26:44 -0400
+From: Nigel Cunningham <nigel@nigel.suspend2.net>
+Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
+Date: Fri, 21 Sep 2007 10:24:34 +1000
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<20070920100941.GA12157@atrey.karlin.mff.cuni.cz>
+In-Reply-To: <20070920100941.GA12157@atrey.karlin.mff.cuni.cz>
 MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200709211024.35991.nigel@nigel.suspend2.net>
+Reply-To: nigel@suspend2.net
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,36 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Satyam Sharma <satyam@infradead.org>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Adrian Bunk <bunk@kernel.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Thu, 20 Sep 2007, Satyam Sharma wrote:
+Hi Andrew.
 
-> > [PATCH 5/4] [-mm patch] Rename macros returning the size.
-> >  The #define SIZE() should be renamed STRUCT_SIZE() since it's always 
-> >  returning the size of the struct with a given name.  This would allow 
-> >  TYPEDEF_SIZE() to simply become SIZE() since it need not be used 
-> >  exclusively for typedefs. This idea is David Rientjes's.
-> >  http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/1964.html
-> > 
-> > Thanks
-> > Ken'ichi Ohmichi
-> > 
-> > ---
-> > Signed-off-by: David Rientjes <rientjes@google.com>
+On Thursday 20 September 2007 20:09:41 Pavel Machek wrote:
+> Seems like good enough for -mm to me.
 > 
-> Hmm, I think adding a s-o-b line for David here isn't quite correct.
-> When someone reviews a patch and gives a suggestion, you only need to
-> copy him on the next iteration (and he may ack it or whatever, if he
-> wants) -- but adding a s-o-b line like that ends up (incorrectly)
-> denoting that he came between the author-to-git-commit chain ...
-> 
+> 									Pavel
 
-Feel free to add
+Andrew, if I recall correctly, you said a while ago that you didn't want 
+another hibernation implementation in the vanilla kernel. If you're going to 
+consider merging this kexec code, will you also please consider merging 
+TuxOnIce?
 
-	Acked-by: David Rientjes <rientjes@google.com>
+Regards,
 
-since I've reviewed the patch and agree with it.
+Nigel
+-- 
+See http://www.tuxonice.net for Howtos, FAQs, mailing
+lists, wiki and bugzilla info.
 
 _______________________________________________
 kexec mailing list
