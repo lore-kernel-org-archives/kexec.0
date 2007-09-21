@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IZ26o-0005fv-Gj
-	for kexec@lists.infradead.org; Sat, 22 Sep 2007 06:21:14 -0400
+	id 1IYnX2-0005v2-7C
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 14:47:20 -0400
 From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
 	kexec jump
-Date: Sat, 22 Sep 2007 12:34:17 +0200
-References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
-	<878x6z67n8.fsf@jbms.ath.cx>
-	<BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
-In-Reply-To: <BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
+Date: Fri, 21 Sep 2007 21:00:09 +0200
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<200709211631.19130.rjw@sisk.pl> <87sl576g8q.fsf@jbms.ath.cx>
+In-Reply-To: <87sl576g8q.fsf@jbms.ath.cx>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200709221234.18426.rjw@sisk.pl>
+Message-Id: <200709212100.11050.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +25,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Kyle Moffett <mrmacman_g4@mac.com>
-Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
-	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Len Brown <lenb@kernel.org>
 
-On Saturday, 22 September 2007 01:19, Kyle Moffett wrote:
-> On Sep 21, 2007, at 17:16:59, Jeremy Maitin-Shepard wrote:
-> > "Rafael J. Wysocki" <rjw@sisk.pl> writes:
-> >> The ACPI platform firmware is allowed to preserve information  
-> >> accross the hibernation-resume cycle, so this need not be the same.
-> >
-> > All of my comments related to the case where S4 is not being used  
-> > (instead the system is just powered off normally), and a boot  
-> > kernel that does not initialize ACPI is used.  In that case, the  
-> > ACPI platform firmware should not be able to distinguish a normal  
-> > boot from a resume from hibernation.
+On Friday, 21 September 2007 20:11, Jeremy Maitin-Shepard wrote:
+> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
 > 
-> I think that in order for this to work, there would need to be some  
-> ABI whereby the resume-ing kernel can pass its entire ACPI state and  
-> a bunch of other ACPI-related device details to the resume-ed kernel,  
-> which I believe it does not do at the moment.
+> > On Friday, 21 September 2007 15:14, huang ying wrote:
+> >> On 9/21/07, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> >> > On Friday, 21 September 2007 05:33, Eric W. Biederman wrote:
+> >> > > Nigel Cunningham <nigel@nigel.suspend2.net> writes:
+> > [--snip--]
+> >> > >
+> >> > > No one has yet attacked the hard problem of coming up with separate
+> >> > > hibernate methods for drivers.
+> >> >
+> >> > Well, I've been playing a bit with that for some time, but it's not easy by
+> > any
+> >> > means.
+> >> >
+> >> > In short, I'm seeing some problems related to the handling of ACPI that seem
+> > to
+> >> > shatter the entire idea of having separate hibernate methods, at least as
+> > far
+> >> > as ACPI systems are concerned.
+> >> 
+> >> So sadly to hear this. Can you details it a little? Or a link?
+> 
+> > Well, the problem is that apparently some systems (eg. my HP nx6325) expect us
+> > to execute the _PTS ACPI global control method before creating the image _and_
+> > to execute acpi_enter_sleep_state(ACPI_STATE_S4) in order to finally put the
+> > system into the sleep state.  In particular, on nx6325, if we don't do that,
+> > then after the restore the status of the AC power will not be reported
+> > correctly (and if you replace the battery while in the sleep state, the
+> > battery status will not be updated correctly after the restore).  Similar
+> > issues have been reported for other machines.
+> 
+> Suppose that instead of using ACPI S4 state at all, you instead just
+> power off.  Yes, you'll lose wakeup event functionality, and flashy
+> LEDs, but doesn't this take care of the problem?
 
-In fact we don't need to do this.
+Nope.
 
-The solution is not to touch ACPI in the boot kernel (ie. the one that loads
-the image) and pass control to the image kernel.  This is how it's supposed
-to work according to the spec, more or less (well, there are some ugly details
-that need handling, like the restoration of the NVS area).
+> The firmware shouldn't see the hibernate as anything other than a shutdown
+> and reboot.
 
-> I believe that what causes problems is the ACPI state data that the kernel
-> stores is *different* between identical sequential boots, especially when
-> you add/remove/replace batteries, AC, etc.
+Actually, this assumption is apparently wrong.
 
-Rather the ACPI state data that the platform firmware stores may be different,
-depending on whether you enter S4 or S5 during "power off" and that determines
-the interactions between the kernel and the firmware after the next boot.
+> ACPI should be initialized normally when resuming, which should take care of
+> getting AC power status reported properly.
+
+Well, that doesn't work.  I've tested it, really. :-)
+
+> This should be the behavior, anyway, on the many systems that do not
+> support S4.
+> 
+> > Now, the ACPI specification requires us to put devices into low power states
+> > before executing _PTS and that's exactly what we're doing before a suspend to
+> > RAM.  Thus, it seems that in general we need to do the same for hibernation on
+> > ACPI systems.
+> 
+> It seems that if ACPI S4 is going to be used, Switching to low power
+> state is something that should be done only immediately before entering
+> that state (i.e. after the image has already been saved).
+
+Doesn't.  Work.
+
+> In particular, it should not be done just before the atomic copy.  It is
+> true that (during resume) after the atomic copy snapshot is restored,
+> drivers will need to be prepared (i.e. have saved whatever information
+> is necessary) to _resume_ devices from the low power state, but that
+> does not mean they have to actually be put into that low power state
+> before the copy is made.
+> 
+> I agree that for the kexec implementation there may be additional
+> issues.  For swsusp, uswsusp, and tuxonice, though, I don't see why
+> there should be a problem.  I think that, as was recognized before, all
+> of the issues are resolved by properly considering exactly what each
+> callback should do and when it should be called.  The problems stem from
+> ambiguous specifications, or trying to use the same callback for two
+> different purposes or in two different cases.
+> 
+> Let me know if I'm mistaken.
+
+See above. :-)
 
 Greetings,
 Rafael
