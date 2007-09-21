@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0910.google.com ([209.85.198.187])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYkCY-0003I7-Go
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 11:13:57 -0400
-Received: by rv-out-0910.google.com with SMTP id c24so865498rvf
-	for <kexec@lists.infradead.org>; Fri, 21 Sep 2007 08:13:53 -0700 (PDT)
-Message-ID: <851fc09e0709210813s1bb3fb02y6096c74fdc9dc35d@mail.gmail.com>
-Date: Fri, 21 Sep 2007 23:13:53 +0800
-From: "huang ying" <huang.ying.caritas@gmail.com>
-Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation -v3
-In-Reply-To: <46F3DBAB.9010308@kolumbus.fi>
+	id 1IYkZg-00043p-CI
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 11:38:35 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Date: Fri, 21 Sep 2007 17:50:16 +0200
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<200709211631.19130.rjw@sisk.pl>
+	<851fc09e0709210802o3be2789s8e93410fa07f7066@mail.gmail.com>
+In-Reply-To: <851fc09e0709210802o3be2789s8e93410fa07f7066@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <1190266440.21818.16.camel@caritas-dev.intel.com>
-	<46F39345.3040201@kolumbus.fi>
-	<851fc09e0709210644y4a859a2bp223ef56b08a27f0@mail.gmail.com>
-	<46F3DBAB.9010308@kolumbus.fi>
+Message-Id: <200709211750.17238.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,58 +22,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@kolumbus.fi>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: huang ying <huang.ying.caritas@gmail.com>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, Len Brown <lenb@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-T24gOS8yMS8wNywgTWlrYSBQZW50dGlsw6QgPG1pa2EucGVudHRpbGFAa29sdW1idXMuZmk+IHdy
-b3RlOgo+IGh1YW5nIHlpbmcgd3JvdGU6Cj4gPiBPbiA5LzIxLzA3LCBNaWthIFBlbnR0aWzDpCA8
-bWlrYS5wZW50dGlsYUBrb2x1bWJ1cy5maT4gd3JvdGU6Cj4gPgo+ID4+PiBVc2FnZToKPiA+Pj4K
-PiA+Pj4gMS4gQ29tcGlsZSBrZXJuZWwgd2l0aCBmb2xsb3dpbmcgb3B0aW9ucyBzZWxlY3RlZDoK
-PiA+Pj4KPiA+Pj4gQ09ORklHX1g4Nl8zMj15Cj4gPj4+IENPTkZJR19SRUxPQ0FUQUJMRT15ICMg
-bm90IG5lZWRlZCBzdHJpY3RseSwgYnV0IGl0IGlzIG1vcmUgY29udmVuaWVudCB3aXRoIGl0Cj4g
-Pj4+IENPTkZJR19LRVhFQz15Cj4gPj4+IENPTkZJR19DUkFTSF9EVU1QPXkgIyBvbmx5IG5lZWRl
-ZCBieSBrZXhlY2VkIGtlcm5lbCB0byBzYXZlL3Jlc3RvcmUgbWVtb3J5IGltYWdlCj4gPj4+IENP
-TkZJR19QTT15Cj4gPj4+IENPTkZJR19LRVhFQ19KVU1QPXkKPiA+Pj4KPiA+Pj4gMi4gRG93bmxv
-YWQgdGhlIGtleGVjLXRvb2xzLXRlc3RpbmcgZ2l0IHRyZWUsIGFwcGx5IHRoZSBrZXhlYy10b29s
-cwo+ID4+PiAgICBranVtcCBwYXRjaGVzIChvciBkb3dubG9hZCB0aGUgc291cmNlIHRhciBiYWxs
-IGRpcmVjdGx5KSBhbmQKPiA+Pj4gICAgY29tcGlsZS4KPiA+Pj4KPiA+Pj4gMy4gRG93bmxvYWQg
-YW5kIGNvbXBpbGUgdGhlIGtyZXN0b3JlIHRvb2wuCj4gPj4+Cj4gPj4+IDQuIFByZXBhcmUgMiBy
-b290IHBhcnRpdGlvbiB1c2VkIGJ5IGtlcm5lbCBBIGFuZCBrZXJuZWwgQi9DLCByZWZlcnJlZAo+
-ID4+PiAgICBhcyAvZGV2L2hkYSwgL2Rldi9oZGIgaW4gZm9sbG93aW5nIHRleHQuIFRoaXMgaXMg
-bm90IHN0cmljdGx5Cj4gPj4+ICAgIG5lY2Vzc2FyeSwgSSB1c2UgdGhpcyBzY2hlbWUgZm9yIHRl
-c3RpbmcgZHVyaW5nIGRldmVsb3BtZW50Lgo+ID4+Pgo+ID4+PiA1LiBCb290IGtlcm5lbCBjb21w
-aWxlZCBmb3Igbm9ybWFsIHVzYWdlIChrZXJuYWwgQSkuCj4gPj4+Cj4gPj4+IDYuIExvYWQga2Vy
-bmVsIGNvbXBpbGVkIGZvciBoaWJlcm5hdGluZy9yZXN0b3JlIHVzYWdlIChrZXJuZWwgQikgd2l0
-aAo+ID4+PiAgICBrZXhlYywgdGhlIHNhbWUga2VybmVsIGFzIHRoYXQgb2YgNSBjYW4gYmUgdXNl
-ZCBpZgo+ID4+PiAgICBDT05GSUdfUkVMT0NBVEFCTEU9eSBhbmQgQ09ORklHX0NSQVNIX0RVTVA9
-eSBhcmUgc2VsZWN0ZWQuCj4gPj4+Cj4gPj4+ICAgIFRoZSAtLWVsZjY0LWNvcmUtaGVhZGVycyBz
-aG91bGQgYmUgc3BlY2lmaWVkIGluIGNvbW1hbmQgbGluZSBvZgo+ID4+PiAgICBrZXhlYywgYmVj
-YXVzZSBvbmx5IHRoZSA2NGJpdCBFTEYgaXMgc3VwcG9ydGVkIGJ5IGtyZXN0b3JlIHRvb2wuCj4g
-Pj4+Cj4gPj4+ICAgIEZvciBleGFtcGxlLCB0aGUgc2hlbGwgY29tbWFuZCBsaW5lIGNhbiBiZSBh
-cyBmb2xsb3c6Cj4gPj4+Cj4gPj4+ICAgIGtleGVjIC1wIC1uIC9ib290L2J6SW1hZ2UgLS1tZW0t
-bWluPTB4MTAwMDAwIC0tbWVtLW1heD0weGZmZmZmZgo+ID4+PiAgICAgICAgLS1lbGY2NC1jb3Jl
-LWhlYWRlcnMgLS1hcHBlbmQ9InJvb3Q9L2Rldi9oZGIgc2luZ2xlIgo+ID4+Pgo+ID4+PiA3LiBK
-dW1wIHRvIHRoZSBoaWJlcm5hdGluZyBrZXJuZWwgKGtlcm5lbCBCKSB3aXRoIGZvbGxvd2luZyBz
-aGVsbAo+ID4+PiAgICBjb21tYW5kIGxpbmU6Cj4gPj4+Cj4gPj4+ICAgIGtleGVjIC1qCj4gPj4+
-Cj4gPj4+IDguIEluIHRoZSBoaWJlcm5hdGluZyBrZXJuZWwgKGtlcm5lbCBCKSwgdGhlIG1lbW9y
-eSBpbWFnZSBvZgo+ID4+PiAgICBoaWJlcm5hdGVkIGtlcm5lbCAoa2VybmVsIEEpIGNhbiBiZSBz
-YXZlZCBhcyBmb2xsb3c6Cj4gPj4+Cj4gPj4+ICAgIGNwIC9wcm9jL3ZtY29yZSAuCj4gPj4+ICAg
-IGNwIC9zeXMva2VybmVsL2tleGVjX2p1bXBfYmFja19lbnRyeSAuCj4gPj4+Cj4gPj4+Cj4gPj4g
-SGVyZSB3ZSBzYXZlIGFsc28ga2VybmVsIEIncyBwYWdlcy4KPiA+Pgo+ID4KPiA+IE5vLCB0aGUg
-a2VybmVsIEIncyBwYWdlcyB3aWxsIG5vdCBiZSBzYXZlZC4gQmVjYXVzZSB3aGVuIHdlIGJ1aWxk
-IHRoZQo+ID4gZWxmY29yZSAoL3Byb2Mvdm1jb3JlKSBoZWFkZXIsIHdlIGV4Y2x1ZGUgbWVtb3J5
-IGFyZWEgdXNlZCBieSBrZXJuZWwKPiA+IEIuIFRoZSBkZXRhaWxzIGNhbiBiZSBmb3VuZCBpbiBr
-ZXhlYy10b29scyBwYXRjaGVzLgo+ID4KPiA+Cj4gT2sgSSBzZWUuIEJ1dCBzaG91bGQgdGhlIGtl
-cm5lbCBCJ3MgZTgyMCBtZW0gbWFwIGJlIGxpbWl0ZWQgdG8gMW0tMTZtIGluCj4gb3JkZXIgbm90
-IHRvIGFsbG9jYXRlIHBhZ2VzIGZvdW5kIGFsc28gaW4gQSdzIHNwYWNlPyBPciBkb2VzIGRvZXMg
-dGhlCj4gLS1tZW0tbWluIGFuZCAtLW1lbS1tYXggZG8gdGhhdCBhbHNvPwoKVGhhdCBpcyB3aGF0
-ICJtZW1tYXA9ZXhhY3RtYXAgbWVtbWFwPTY0MEtAMEsgbWVtbWFwPTE1TUAxTSIgZm9yLiBUaGUK
-Y29udGVudHMgb2YgZTgyMCBtZW1tYXAgd2lsbCBiZSBvdmVycmlkZWQgd2hlbiB0aGVzZSBrZXJu
-ZWwgcGFyYW1ldGVycwphcmUgc3BlY2lmaWVkLgoKQmVzdCBSZWdhcmRzLApIdWFuZyBZaW5nCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Friday, 21 September 2007 17:02, huang ying wrote:
+> On 9/21/07, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> > On Friday, 21 September 2007 15:14, huang ying wrote:
+> > > On 9/21/07, Rafael J. Wysocki <rjw@sisk.pl> wrote:
+> > > > On Friday, 21 September 2007 05:33, Eric W. Biederman wrote:
+> > > > > Nigel Cunningham <nigel@nigel.suspend2.net> writes:
+> > [--snip--]
+> > > > >
+> > > > > No one has yet attacked the hard problem of coming up with separate
+> > > > > hibernate methods for drivers.
+> > > >
+> > > > Well, I've been playing a bit with that for some time, but it's not easy by any
+> > > > means.
+> > > >
+> > > > In short, I'm seeing some problems related to the handling of ACPI that seem to
+> > > > shatter the entire idea of having separate hibernate methods, at least as far
+> > > > as ACPI systems are concerned.
+> > >
+> > > So sadly to hear this. Can you details it a little? Or a link?
+> >
+> > Well, the problem is that apparently some systems (eg. my HP nx6325) expect us
+> > to execute the _PTS ACPI global control method before creating the image _and_
+> > to execute acpi_enter_sleep_state(ACPI_STATE_S4) in order to finally put the
+> > system into the sleep state.  In particular, on nx6325, if we don't do that,
+> > then after the restore the status of the AC power will not be reported
+> > correctly (and if you replace the battery while in the sleep state, the
+> > battery status will not be updated correctly after the restore).  Similar
+> > issues have been reported for other machines.
+> >
+> > Now, the ACPI specification requires us to put devices into low power states
+> > before executing _PTS and that's exactly what we're doing before a suspend to
+> > RAM.  Thus, it seems that in general we need to do the same for hibernation on
+> > ACPI systems.
+> 
+> Then, is it possible to separate device quiesce from device suspend.
+
+It surely is possible, but I'm not sure if it's going to be useful.
+
+I mean, if we need to do exactly the same thing before a suspend to RAM and
+before a hibernation (ie. to put devices into low power states), why would we
+want to use different methods for that in both cases?
+
+> Perhaps not for swsusp, but for kexec based hibernation?
+
+Frankly, I don't know.
+
+Generally, changing the way in which device drivers handle suspend (to RAM)
+and hibernation is a huge task.  After considering this issue for some time
+I think that we really should start from hardening suspend (to RAM) so that it
+doesn't need the freezer any more, because _that_ would require us to change
+the suspend-related drivers' callbacks anyway.
+
+When we are sure how we are going to eliminate the freezer from suspend
+(to RAM), we'll know how that affects hibernation and what to do about it.
+
+Greetings,
+Rafael
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
