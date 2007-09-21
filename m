@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from home.nigel.suspend2.net ([203.171.70.205])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYY4k-0003wH-Sd
-	for kexec@lists.infradead.org; Thu, 20 Sep 2007 22:17:08 -0400
+	id 1IYYD7-000416-AY
+	for kexec@lists.infradead.org; Thu, 20 Sep 2007 22:25:47 -0400
+From: Nigel Cunningham <nigel@nigel.suspend2.net>
 Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <200709211157.28622.nigel@nigel.suspend2.net>
+Date: Fri, 21 Sep 2007 12:25:24 +1000
 References: <1190266447.21818.17.camel@caritas-dev.intel.com>
-	<200709211120.00448.ncunningham@crca.org.au>
-	<20070920184106.79e1858a.akpm@linux-foundation.org>
 	<200709211157.28622.nigel@nigel.suspend2.net>
-Date: Fri, 21 Sep 2007 10:18:57 +0800
-Message-Id: <1190341137.21818.52.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	<1190341137.21818.52.camel@caritas-dev.intel.com>
+In-Reply-To: <1190341137.21818.52.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200709211225.25874.nigel@nigel.suspend2.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,84 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Nigel Cunningham <nigel@nigel.suspend2.net>
+To: "Huang, Ying" <ying.huang@intel.com>
 Cc: nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Fri, 2007-09-21 at 11:57 +1000, Nigel Cunningham wrote:
-> Hi.
+Hi.
+
+On Friday 21 September 2007 12:18:57 Huang, Ying wrote:
+> > That's not true. Kexec will itself be an implementation, otherwise you'd 
+end 
+> > up with people screaming about no hibernation support. And it won't result 
+in 
+> > the complete removal of the existing hibernation code from the kernel. At 
+the 
+> > very least, it's going to want the kernel being hibernated to have an 
+> > interface by which it can find out which pages need to be saved. I 
+wouldn't 
 > 
-> On Friday 21 September 2007 11:41:06 Andrew Morton wrote:
-> > > On Friday 21 September 2007 11:06:23 Andrew Morton wrote:
-> > > > On Fri, 21 Sep 2007 10:24:34 +1000 Nigel Cunningham 
-> > > <nigel@nigel.suspend2.net> wrote:
-> > > > 
-> > > > > Hi Andrew.
-> > > > > 
-> > > > > On Thursday 20 September 2007 20:09:41 Pavel Machek wrote:
-> > > > > > Seems like good enough for -mm to me.
-> > > > > > 
-> > > > > > 									Pavel
-> > > > > 
-> > > > > Andrew, if I recall correctly, you said a while ago that you didn't 
-> want 
-> > > > > another hibernation implementation in the vanilla kernel. If you're 
-> going 
-> > > to 
-> > > > > consider merging this kexec code, will you also please consider 
-> merging 
-> > > > > TuxOnIce?
-> > > > > 
-> > > > 
-> > > > The theory is that kexec-based hibernation will mainly use preexisting
-> > > > kexec code and will permit us to delete the existing hibernation
-> > > > implementation.
-> > > > 
-> > > > That's different from replacing it.
-> > > 
-> > > TuxOnIce doesn't remove the existing implementation either. It can 
-> > > transparently replace it, but you can enable/disable that at compile time.
-> > 
-> > Right.  So we end up with two implementations in-tree.  Whereas
-> > kexec-based-hibernation leads us to having zero implementations in-tree.
-> > 
-> > See, it's different.
+> This has been done by kexec/kdump guys. There is a makedumpfile utility
+> and vmcoreinfo kernel mechanism to implement this. We can just reuse the
+> work of kexec/kdump.
+
+You've already said that you are currently saving all pages. How are you going 
+to avoid saving free pages if you don't get the information from the kernel 
+being saved? This will require more than just code reuse.
+
+> > be surprised if it also ends up with an interface in which the kernel 
+being 
+> > hibernated tells it what bdev/sectors in which to save the image as well 
+> > (otherwise you're going to need a dedicated, otherwise untouched partition 
+> > exclusively for the kexec'd kernel to use), or what network settings to 
+use 
+> > if it wants to try to save the image to a network storage device. On top 
+of
 > 
-> That's not true. Kexec will itself be an implementation, otherwise you'd end 
-> up with people screaming about no hibernation support. And it won't result in 
-> the complete removal of the existing hibernation code from the kernel. At the 
-> very least, it's going to want the kernel being hibernated to have an 
-> interface by which it can find out which pages need to be saved. I wouldn't 
+> These can be done in user space. The image writing will be done in user
+> space for kexec base hibernation.
 
-This has been done by kexec/kdump guys. There is a makedumpfile utility
-and vmcoreinfo kernel mechanism to implement this. We can just reuse the
-work of kexec/kdump.
+That only complicates things more. Now you need to get the information on 
+where to save the image from the kernel being saved, then transfer it to 
+userspace after switching to the kexec kernel. That's more kernel code, not 
+less.
 
-> be surprised if it also ends up with an interface in which the kernel being 
-> hibernated tells it what bdev/sectors in which to save the image as well 
-> (otherwise you're going to need a dedicated, otherwise untouched partition 
-> exclusively for the kexec'd kernel to use), or what network settings to use 
-> if it wants to try to save the image to a network storage device. On top of
+> > that, there are all the issues related to device reinitialisation and so 
+on, 
+> 
+> Yes. Device reinitialisation is needed. But all in all, kexec based
+> hibernation can be much simpler on the kernel side.
 
-These can be done in user space. The image writing will be done in user
-space for kexec base hibernation.
+Sorry, but I'm yet to be convinced. I'm not unwilling, I'm just not there yet.
+ 
+> > and it looks like there's greatly increased pain for users wanting to 
+> > configure this new implementation. Kexec is by no means proven to be the 
+> > panacea for all the issues.
+> 
+> Configuration is a problem, we will work on it.
+> 
+> But, because it is based on kexec/kdump instead of starting from
+> scratch, the duplicated part between hibernation and kexec/kdump can be
+> eliminated.
 
-> that, there are all the issues related to device reinitialisation and so on, 
+Regards,
 
-Yes. Device reinitialisation is needed. But all in all, kexec based
-hibernation can be much simpler on the kernel side.
-
-> and it looks like there's greatly increased pain for users wanting to 
-> configure this new implementation. Kexec is by no means proven to be the 
-> panacea for all the issues.
-
-Configuration is a problem, we will work on it.
-
-But, because it is based on kexec/kdump instead of starting from
-scratch, the duplicated part between hibernation and kexec/kdump can be
-eliminated.
-
-Best Regards,
-Huang Ying
+Nigel
+-- 
+Nigel, Michelle and Alisdair Cunningham
+5 Mitchell Street
+Cobden 3266
+Victoria, Australia
 
 _______________________________________________
 kexec mailing list
