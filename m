@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [194.100.131.6] (helo=smtp.mermit.fi)
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYfPs-00085H-Ik
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 06:07:27 -0400
-Message-ID: <46F39345.3040201@kolumbus.fi>
-Date: Fri, 21 Sep 2007 12:47:49 +0300
-From: =?ISO-8859-1?Q?Mika_Penttil=E4?= <mika.penttila@kolumbus.fi>
+	id 1IYgve-0000Ic-Lq
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 07:44:18 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
+Date: Fri, 21 Sep 2007 13:56:29 +0200
+References: <1190266447.21818.17.camel@caritas-dev.intel.com>
+	<200709211120.00448.ncunningham@crca.org.au>
+	<20070920184106.79e1858a.akpm@linux-foundation.org>
+In-Reply-To: <20070920184106.79e1858a.akpm@linux-foundation.org>
 MIME-Version: 1.0
-Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation -v3
-References: <1190266440.21818.16.camel@caritas-dev.intel.com>
-In-Reply-To: <1190266440.21818.16.camel@caritas-dev.intel.com>
+Content-Disposition: inline
+Message-Id: <200709211356.30291.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,95 +25,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nigel Cunningham <ncunningham@crca.org.au>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, Len Brown <lenb@kernel.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
+Hi Andrew,
 
-> Usage:
->
-> 1. Compile kernel with following options selected:
->
-> CONFIG_X86_32=y
-> CONFIG_RELOCATABLE=y # not needed strictly, but it is more convenient with it
-> CONFIG_KEXEC=y
-> CONFIG_CRASH_DUMP=y # only needed by kexeced kernel to save/restore memory image
-> CONFIG_PM=y
-> CONFIG_KEXEC_JUMP=y
->
-> 2. Download the kexec-tools-testing git tree, apply the kexec-tools
->    kjump patches (or download the source tar ball directly) and
->    compile.
->
-> 3. Download and compile the krestore tool.
->
-> 4. Prepare 2 root partition used by kernel A and kernel B/C, referred
->    as /dev/hda, /dev/hdb in following text. This is not strictly
->    necessary, I use this scheme for testing during development.
->
-> 5. Boot kernel compiled for normal usage (kernal A).
->
-> 6. Load kernel compiled for hibernating/restore usage (kernel B) with
->    kexec, the same kernel as that of 5 can be used if
->    CONFIG_RELOCATABLE=y and CONFIG_CRASH_DUMP=y are selected.
->
->    The --elf64-core-headers should be specified in command line of
->    kexec, because only the 64bit ELF is supported by krestore tool.
->
->    For example, the shell command line can be as follow:
->
->    kexec -p -n /boot/bzImage --mem-min=0x100000 --mem-max=0xffffff
->        --elf64-core-headers --append="root=/dev/hdb single"
->
-> 7. Jump to the hibernating kernel (kernel B) with following shell
->    command line:
->
->    kexec -j
->
-> 8. In the hibernating kernel (kernel B), the memory image of
->    hibernated kernel (kernel A) can be saved as follow:
->
->    cp /proc/vmcore .
->    cp /sys/kernel/kexec_jump_back_entry .
->   
-Here we save also kernel B's pages.
-> 9. Shutdown or reboot in hibernating kernel (kernel B).
->
-> 10. Boot kernel (kernel C) compiled for hibernating/restore usage on
->     the root file system /dev/hdb in memory range of kernel B.
->
->     For example, the following kernel command line parameters can be
->     used:
->
->     root=/dev/hdb single memmap=exactmap memmap=640K@0K memmap=15M@1M
->   
-0-640K from kernel A overrides 0-640K of kernel C at restore time.
-> 11. In restore kernel (kernel C), the memory image of kernel A can be
->     restored as follow:
->
->     cp kexec_jump_back_entry /sys/kernel/kexec_jump_back_entry
->     krestore vmcore
->
->   
-This steps replaces kernel C's pages with kernel B's (at least 15m-16m), 
-saved at step 8, so these kernels should be equal? Or they must be 
-physically located in non-overlapping regions such that C is in B's 
-memory range but non-overlapping. The proposed setup doesn't guaratee 
-this afaics.
-> 12. Jump back to hibernated kernel (kernel A)
->
->     kexec -b
->
-> Best Regards,
-> Huang Ying
-> _______________________________________________
-> linux-pm mailing list
-> linux-pm@lists.linux-foundation.org
-> https://lists.linux-foundation.org/mailman/listinfo/linux-pm
->
->   
---Mika
+On Friday, 21 September 2007 03:41, Andrew Morton wrote:
+> On Fri, 21 Sep 2007 11:19:59 +1000 Nigel Cunningham <ncunningham@crca.org.au> wrote:
+> 
+> > Hi.
+> > 
+> > On Friday 21 September 2007 11:06:23 Andrew Morton wrote:
+> > > On Fri, 21 Sep 2007 10:24:34 +1000 Nigel Cunningham 
+> > <nigel@nigel.suspend2.net> wrote:
+> > > 
+> > > > Hi Andrew.
+> > > > 
+> > > > On Thursday 20 September 2007 20:09:41 Pavel Machek wrote:
+> > > > > Seems like good enough for -mm to me.
+> > > > > 
+> > > > > 									Pavel
+> > > > 
+> > > > Andrew, if I recall correctly, you said a while ago that you didn't want 
+> > > > another hibernation implementation in the vanilla kernel. If you're going 
+> > to 
+> > > > consider merging this kexec code, will you also please consider merging 
+> > > > TuxOnIce?
+> > > > 
+> > > 
+> > > The theory is that kexec-based hibernation will mainly use preexisting
+> > > kexec code and will permit us to delete the existing hibernation
+> > > implementation.
+> > > 
+> > > That's different from replacing it.
+> > 
+> > TuxOnIce doesn't remove the existing implementation either. It can 
+> > transparently replace it, but you can enable/disable that at compile time.
+> 
+> Right.  So we end up with two implementations in-tree.  Whereas
+> kexec-based-hibernation leads us to having zero implementations in-tree.
 
+Well, I don't quite agree.
 
+For now, the kexec-based approach is missing the handling of devices, AFAICS.
+Namely, it's quite easy to snapshot memory with the help of kexec, but the
+state of devices gets trashed in the process, so you need some additional code
+saving the state of devices for you, executed before the kexec.
+
+Moreover, on ACPI systems the transition to the S4 sleep state and back to S0
+(working state) is more complicated than a system checkpointing, because we
+are supposed to take the platform firmware into consideration in that case.
+The more I think about this, the more it seems to me that it just can't be done
+on top of kexec in a reasonable fashion.  Of course, we could avoid handling
+the ACPI S4, but that would leave some people (including me ;-)) with
+semi-working hardware after the "restore".  I don't think that's generally
+acceptable in the long run.
+
+IMHO, for ACPI systems the way to go is to harden suspend to RAM (with s2ram
+in place and the graphics adapters specifications from Intel and AMD released
+we are in a good position to do that) and build the S4 transition mechanism
+on top of that.  It can be done easlily by adapting the current hibernation
+code, but not on top of kexec (I'm afraid).
+
+[Besides, the current hibernation userland interface is used by default by
+openSUSE and it's also used by quite some Debian users, so we can't drop
+it overnight and it can't be implemented in a compatible way on top of the
+kexec-based solution.]
 
 _______________________________________________
 kexec mailing list
