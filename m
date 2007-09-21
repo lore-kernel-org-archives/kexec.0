@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pne-smtpout4-sn2.hy.skanova.net ([81.228.8.154])
+Received: from smtpoutm.mac.com ([17.148.16.72])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYkKA-0003MX-3R
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 11:21:50 -0400
-Message-ID: <46F3DFA4.90909@kolumbus.fi>
-Date: Fri, 21 Sep 2007 18:13:40 +0300
-From: =?UTF-8?B?TWlrYSBQZW50dGlsw6Q=?= <mika.penttila@kolumbus.fi>
-MIME-Version: 1.0
-Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation -v3
-References: <1190266440.21818.16.camel@caritas-dev.intel.com>	
-	<46F39345.3040201@kolumbus.fi>	
-	<851fc09e0709210644y4a859a2bp223ef56b08a27f0@mail.gmail.com>	
-	<46F3DBAB.9010308@kolumbus.fi>
-	<851fc09e0709210813s1bb3fb02y6096c74fdc9dc35d@mail.gmail.com>
-In-Reply-To: <851fc09e0709210813s1bb3fb02y6096c74fdc9dc35d@mail.gmail.com>
+	id 1IYrrz-00084D-Lp
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 19:25:16 -0400
+In-Reply-To: <878x6z67n8.fsf@jbms.ath.cx>
+References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
+	<200709212253.02158.rjw@sisk.pl> <87d4wb680u.fsf@jbms.ath.cx>
+	<200709212325.39599.rjw@sisk.pl> <878x6z67n8.fsf@jbms.ath.cx>
+Mime-Version: 1.0 (Apple Message framework v752.2)
+Message-Id: <BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
+From: Kyle Moffett <mrmacman_g4@mac.com>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Date: Fri, 21 Sep 2007 19:19:18 -0400
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,63 +21,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: huang ying <huang.ying.caritas@gmail.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
 
-aHVhbmcgeWluZyB3cm90ZToKPiBPbiA5LzIxLzA3LCBNaWthIFBlbnR0aWzDpCA8bWlrYS5wZW50
-dGlsYUBrb2x1bWJ1cy5maT4gd3JvdGU6Cj4gICAKPj4gaHVhbmcgeWluZyB3cm90ZToKPj4gICAg
-IAo+Pj4gT24gOS8yMS8wNywgTWlrYSBQZW50dGlsw6QgPG1pa2EucGVudHRpbGFAa29sdW1idXMu
-Zmk+IHdyb3RlOgo+Pj4KPj4+ICAgICAgIAo+Pj4+PiBVc2FnZToKPj4+Pj4KPj4+Pj4gMS4gQ29t
-cGlsZSBrZXJuZWwgd2l0aCBmb2xsb3dpbmcgb3B0aW9ucyBzZWxlY3RlZDoKPj4+Pj4KPj4+Pj4g
-Q09ORklHX1g4Nl8zMj15Cj4+Pj4+IENPTkZJR19SRUxPQ0FUQUJMRT15ICMgbm90IG5lZWRlZCBz
-dHJpY3RseSwgYnV0IGl0IGlzIG1vcmUgY29udmVuaWVudCB3aXRoIGl0Cj4+Pj4+IENPTkZJR19L
-RVhFQz15Cj4+Pj4+IENPTkZJR19DUkFTSF9EVU1QPXkgIyBvbmx5IG5lZWRlZCBieSBrZXhlY2Vk
-IGtlcm5lbCB0byBzYXZlL3Jlc3RvcmUgbWVtb3J5IGltYWdlCj4+Pj4+IENPTkZJR19QTT15Cj4+
-Pj4+IENPTkZJR19LRVhFQ19KVU1QPXkKPj4+Pj4KPj4+Pj4gMi4gRG93bmxvYWQgdGhlIGtleGVj
-LXRvb2xzLXRlc3RpbmcgZ2l0IHRyZWUsIGFwcGx5IHRoZSBrZXhlYy10b29scwo+Pj4+PiAgICBr
-anVtcCBwYXRjaGVzIChvciBkb3dubG9hZCB0aGUgc291cmNlIHRhciBiYWxsIGRpcmVjdGx5KSBh
-bmQKPj4+Pj4gICAgY29tcGlsZS4KPj4+Pj4KPj4+Pj4gMy4gRG93bmxvYWQgYW5kIGNvbXBpbGUg
-dGhlIGtyZXN0b3JlIHRvb2wuCj4+Pj4+Cj4+Pj4+IDQuIFByZXBhcmUgMiByb290IHBhcnRpdGlv
-biB1c2VkIGJ5IGtlcm5lbCBBIGFuZCBrZXJuZWwgQi9DLCByZWZlcnJlZAo+Pj4+PiAgICBhcyAv
-ZGV2L2hkYSwgL2Rldi9oZGIgaW4gZm9sbG93aW5nIHRleHQuIFRoaXMgaXMgbm90IHN0cmljdGx5
-Cj4+Pj4+ICAgIG5lY2Vzc2FyeSwgSSB1c2UgdGhpcyBzY2hlbWUgZm9yIHRlc3RpbmcgZHVyaW5n
-IGRldmVsb3BtZW50Lgo+Pj4+Pgo+Pj4+PiA1LiBCb290IGtlcm5lbCBjb21waWxlZCBmb3Igbm9y
-bWFsIHVzYWdlIChrZXJuYWwgQSkuCj4+Pj4+Cj4+Pj4+IDYuIExvYWQga2VybmVsIGNvbXBpbGVk
-IGZvciBoaWJlcm5hdGluZy9yZXN0b3JlIHVzYWdlIChrZXJuZWwgQikgd2l0aAo+Pj4+PiAgICBr
-ZXhlYywgdGhlIHNhbWUga2VybmVsIGFzIHRoYXQgb2YgNSBjYW4gYmUgdXNlZCBpZgo+Pj4+PiAg
-ICBDT05GSUdfUkVMT0NBVEFCTEU9eSBhbmQgQ09ORklHX0NSQVNIX0RVTVA9eSBhcmUgc2VsZWN0
-ZWQuCj4+Pj4+Cj4+Pj4+ICAgIFRoZSAtLWVsZjY0LWNvcmUtaGVhZGVycyBzaG91bGQgYmUgc3Bl
-Y2lmaWVkIGluIGNvbW1hbmQgbGluZSBvZgo+Pj4+PiAgICBrZXhlYywgYmVjYXVzZSBvbmx5IHRo
-ZSA2NGJpdCBFTEYgaXMgc3VwcG9ydGVkIGJ5IGtyZXN0b3JlIHRvb2wuCj4+Pj4+Cj4+Pj4+ICAg
-IEZvciBleGFtcGxlLCB0aGUgc2hlbGwgY29tbWFuZCBsaW5lIGNhbiBiZSBhcyBmb2xsb3c6Cj4+
-Pj4+Cj4+Pj4+ICAgIGtleGVjIC1wIC1uIC9ib290L2J6SW1hZ2UgLS1tZW0tbWluPTB4MTAwMDAw
-IC0tbWVtLW1heD0weGZmZmZmZgo+Pj4+PiAgICAgICAgLS1lbGY2NC1jb3JlLWhlYWRlcnMgLS1h
-cHBlbmQ9InJvb3Q9L2Rldi9oZGIgc2luZ2xlIgo+Pj4+Pgo+Pj4+PiA3LiBKdW1wIHRvIHRoZSBo
-aWJlcm5hdGluZyBrZXJuZWwgKGtlcm5lbCBCKSB3aXRoIGZvbGxvd2luZyBzaGVsbAo+Pj4+PiAg
-ICBjb21tYW5kIGxpbmU6Cj4+Pj4+Cj4+Pj4+ICAgIGtleGVjIC1qCj4+Pj4+Cj4+Pj4+IDguIElu
-IHRoZSBoaWJlcm5hdGluZyBrZXJuZWwgKGtlcm5lbCBCKSwgdGhlIG1lbW9yeSBpbWFnZSBvZgo+
-Pj4+PiAgICBoaWJlcm5hdGVkIGtlcm5lbCAoa2VybmVsIEEpIGNhbiBiZSBzYXZlZCBhcyBmb2xs
-b3c6Cj4+Pj4+Cj4+Pj4+ICAgIGNwIC9wcm9jL3ZtY29yZSAuCj4+Pj4+ICAgIGNwIC9zeXMva2Vy
-bmVsL2tleGVjX2p1bXBfYmFja19lbnRyeSAuCj4+Pj4+Cj4+Pj4+Cj4+Pj4+ICAgICAgICAgICAK
-Pj4+PiBIZXJlIHdlIHNhdmUgYWxzbyBrZXJuZWwgQidzIHBhZ2VzLgo+Pj4+Cj4+Pj4gICAgICAg
-ICAKPj4+IE5vLCB0aGUga2VybmVsIEIncyBwYWdlcyB3aWxsIG5vdCBiZSBzYXZlZC4gQmVjYXVz
-ZSB3aGVuIHdlIGJ1aWxkIHRoZQo+Pj4gZWxmY29yZSAoL3Byb2Mvdm1jb3JlKSBoZWFkZXIsIHdl
-IGV4Y2x1ZGUgbWVtb3J5IGFyZWEgdXNlZCBieSBrZXJuZWwKPj4+IEIuIFRoZSBkZXRhaWxzIGNh
-biBiZSBmb3VuZCBpbiBrZXhlYy10b29scyBwYXRjaGVzLgo+Pj4KPj4+Cj4+PiAgICAgICAKPj4g
-T2sgSSBzZWUuIEJ1dCBzaG91bGQgdGhlIGtlcm5lbCBCJ3MgZTgyMCBtZW0gbWFwIGJlIGxpbWl0
-ZWQgdG8gMW0tMTZtIGluCj4+IG9yZGVyIG5vdCB0byBhbGxvY2F0ZSBwYWdlcyBmb3VuZCBhbHNv
-IGluIEEncyBzcGFjZT8gT3IgZG9lcyBkb2VzIHRoZQo+PiAtLW1lbS1taW4gYW5kIC0tbWVtLW1h
-eCBkbyB0aGF0IGFsc28/Cj4+ICAgICAKPgo+IFRoYXQgaXMgd2hhdCAibWVtbWFwPWV4YWN0bWFw
-IG1lbW1hcD02NDBLQDBLIG1lbW1hcD0xNU1AMU0iIGZvci4gVGhlCj4gY29udGVudHMgb2YgZTgy
-MCBtZW1tYXAgd2lsbCBiZSBvdmVycmlkZWQgd2hlbiB0aGVzZSBrZXJuZWwgcGFyYW1ldGVycwo+
-IGFyZSBzcGVjaWZpZWQuCj4KPiBCZXN0IFJlZ2FyZHMsCj4gSHVhbmcgWWluZwo+ICAgClllcywg
-eW91IGp1c3QgZGlkbid0IHNwZWNpZnkgZXhhY3RtYXAgZm9yIGtlcm5lbCBCIGluIHlvdXIgaW5z
-dHJ1Y3Rpb25zLCAKYnV0IG9ubHkgZm9yIEMuIEJ1dCBpdCBpcyBhbHNvIHJlcXVpcmVkIGZvciBr
-ZXJuZWwgQiB0aGVuPwoKVGhhbmtzLApNaWthCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+On Sep 21, 2007, at 17:16:59, Jeremy Maitin-Shepard wrote:
+> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
+>> The ACPI platform firmware is allowed to preserve information  
+>> accross the hibernation-resume cycle, so this need not be the same.
+>
+> All of my comments related to the case where S4 is not being used  
+> (instead the system is just powered off normally), and a boot  
+> kernel that does not initialize ACPI is used.  In that case, the  
+> ACPI platform firmware should not be able to distinguish a normal  
+> boot from a resume from hibernation.
+
+I think that in order for this to work, there would need to be some  
+ABI whereby the resume-ing kernel can pass its entire ACPI state and  
+a bunch of other ACPI-related device details to the resume-ed kernel,  
+which I believe it does not do at the moment.  I believe that what  
+causes problems is the ACPI state data that the kernel stores is  
+*different* between identical sequential boots, especially when you  
+add/remove/replace batteries, AC, etc.
+
+Since we currently throw away most of that in-kernel ACPI interpreter  
+state data when we load the to-be-resumed image and replace it with  
+the state from the previous boot it looks to the ACPI code and  
+firmware like our system's hardware magically changed behind its  
+back.  The result is that the ACPI and firmware code is justifiably  
+confused (although probably it should be more idempotent to begin  
+with).  There's 2 potential solutions:
+   1) Formalize and copy a *lot* of ACPI state from the resume-ing  
+kernel to the resume-ed kernel.
+   2) Properly call the ACPI S4 methods in the proper order
+
+Neither one is particularly easy or particularly pleasant, especially  
+given all the vendor bugs in this general area.  Theoretically we  
+should be able to do both, since one will be more reliable than the  
+other on different systems depending on what kinds of firmware bugs  
+they have.
+
+Cheers,
+Kyle Moffett
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
