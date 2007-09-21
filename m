@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYz4C-00044H-Na
-	for kexec@lists.infradead.org; Sat, 22 Sep 2007 03:06:21 -0400
-Date: Sat, 22 Sep 2007 09:06:13 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [patch 7/7] Add documentation for extended crashkernel syntax
-Message-ID: <20070922070612.GA6125@suse.de>
-References: <20070913161428.343951643@strauss.suse.de>
-	<20070913161430.686458007@strauss.suse.de>
-	<20070918172108.GD5966@ucw.cz>
+Received: from pne-smtpout3-sn1.fre.skanova.net ([81.228.11.120])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IYk3N-0003D6-Lq
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 11:04:35 -0400
+Message-ID: <46F3DBAB.9010308@kolumbus.fi>
+Date: Fri, 21 Sep 2007 17:56:43 +0300
+From: =?UTF-8?B?TWlrYSBQZW50dGlsw6Q=?= <mika.penttila@kolumbus.fi>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070918172108.GD5966@ucw.cz>
+Subject: Re: [linux-pm] [RFC][PATCH 0/2 -mm] kexec based hibernation -v3
+References: <1190266440.21818.16.camel@caritas-dev.intel.com>	
+	<46F39345.3040201@kolumbus.fi>
+	<851fc09e0709210644y4a859a2bp223ef56b08a27f0@mail.gmail.com>
+In-Reply-To: <851fc09e0709210644y4a859a2bp223ef56b08a27f0@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,45 +20,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-arch@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: huang ying <huang.ying.caritas@gmail.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-* Pavel Machek <pavel@ucw.cz> [2007-09-18 19:21]:
-> > This adds the documentation for the extended crashkernel syntax into
-> > Documentation/kdump/kdump.txt.
-> 
-> Should you also update kernel-parameters.txt?
-
-Ok, I'll do.
-
-> > +For example:
-> > +
-> > +    crashkernel=512M-2G:64M,2G-:128M
-> > +
-> > +This would mean:
-> > +
-> > +    1) if the RAM is smaller than 512M, then don't reserve anything
-> > +       (this is the "rescue" case)
-> > +    2) if the RAM size is between 512M and 2G, then reserve 64M
-> > +    3) if the RAM size is larger than 2G, then reserve 128M
-> 
-> Why is this useful? I mean... if 64M is enough to save a dump, why use
-> 128M? ...or does the required size somehow scale with memory in
-> machine? (pagetables?)
-
-A bit, yes (ELF core headers, DISCONT memory, per-CPU data), but
-consider also that saving may be faster if you have more RAM (e.g.
-saving over SSH, encryption, ...).
-
-
-Thanks,
-   Bernhard
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+aHVhbmcgeWluZyB3cm90ZToKPiBPbiA5LzIxLzA3LCBNaWthIFBlbnR0aWzDpCA8bWlrYS5wZW50
+dGlsYUBrb2x1bWJ1cy5maT4gd3JvdGU6Cj4gICAKPj4+IFVzYWdlOgo+Pj4KPj4+IDEuIENvbXBp
+bGUga2VybmVsIHdpdGggZm9sbG93aW5nIG9wdGlvbnMgc2VsZWN0ZWQ6Cj4+Pgo+Pj4gQ09ORklH
+X1g4Nl8zMj15Cj4+PiBDT05GSUdfUkVMT0NBVEFCTEU9eSAjIG5vdCBuZWVkZWQgc3RyaWN0bHks
+IGJ1dCBpdCBpcyBtb3JlIGNvbnZlbmllbnQgd2l0aCBpdAo+Pj4gQ09ORklHX0tFWEVDPXkKPj4+
+IENPTkZJR19DUkFTSF9EVU1QPXkgIyBvbmx5IG5lZWRlZCBieSBrZXhlY2VkIGtlcm5lbCB0byBz
+YXZlL3Jlc3RvcmUgbWVtb3J5IGltYWdlCj4+PiBDT05GSUdfUE09eQo+Pj4gQ09ORklHX0tFWEVD
+X0pVTVA9eQo+Pj4KPj4+IDIuIERvd25sb2FkIHRoZSBrZXhlYy10b29scy10ZXN0aW5nIGdpdCB0
+cmVlLCBhcHBseSB0aGUga2V4ZWMtdG9vbHMKPj4+ICAgIGtqdW1wIHBhdGNoZXMgKG9yIGRvd25s
+b2FkIHRoZSBzb3VyY2UgdGFyIGJhbGwgZGlyZWN0bHkpIGFuZAo+Pj4gICAgY29tcGlsZS4KPj4+
+Cj4+PiAzLiBEb3dubG9hZCBhbmQgY29tcGlsZSB0aGUga3Jlc3RvcmUgdG9vbC4KPj4+Cj4+PiA0
+LiBQcmVwYXJlIDIgcm9vdCBwYXJ0aXRpb24gdXNlZCBieSBrZXJuZWwgQSBhbmQga2VybmVsIEIv
+QywgcmVmZXJyZWQKPj4+ICAgIGFzIC9kZXYvaGRhLCAvZGV2L2hkYiBpbiBmb2xsb3dpbmcgdGV4
+dC4gVGhpcyBpcyBub3Qgc3RyaWN0bHkKPj4+ICAgIG5lY2Vzc2FyeSwgSSB1c2UgdGhpcyBzY2hl
+bWUgZm9yIHRlc3RpbmcgZHVyaW5nIGRldmVsb3BtZW50Lgo+Pj4KPj4+IDUuIEJvb3Qga2VybmVs
+IGNvbXBpbGVkIGZvciBub3JtYWwgdXNhZ2UgKGtlcm5hbCBBKS4KPj4+Cj4+PiA2LiBMb2FkIGtl
+cm5lbCBjb21waWxlZCBmb3IgaGliZXJuYXRpbmcvcmVzdG9yZSB1c2FnZSAoa2VybmVsIEIpIHdp
+dGgKPj4+ICAgIGtleGVjLCB0aGUgc2FtZSBrZXJuZWwgYXMgdGhhdCBvZiA1IGNhbiBiZSB1c2Vk
+IGlmCj4+PiAgICBDT05GSUdfUkVMT0NBVEFCTEU9eSBhbmQgQ09ORklHX0NSQVNIX0RVTVA9eSBh
+cmUgc2VsZWN0ZWQuCj4+Pgo+Pj4gICAgVGhlIC0tZWxmNjQtY29yZS1oZWFkZXJzIHNob3VsZCBi
+ZSBzcGVjaWZpZWQgaW4gY29tbWFuZCBsaW5lIG9mCj4+PiAgICBrZXhlYywgYmVjYXVzZSBvbmx5
+IHRoZSA2NGJpdCBFTEYgaXMgc3VwcG9ydGVkIGJ5IGtyZXN0b3JlIHRvb2wuCj4+Pgo+Pj4gICAg
+Rm9yIGV4YW1wbGUsIHRoZSBzaGVsbCBjb21tYW5kIGxpbmUgY2FuIGJlIGFzIGZvbGxvdzoKPj4+
+Cj4+PiAgICBrZXhlYyAtcCAtbiAvYm9vdC9iekltYWdlIC0tbWVtLW1pbj0weDEwMDAwMCAtLW1l
+bS1tYXg9MHhmZmZmZmYKPj4+ICAgICAgICAtLWVsZjY0LWNvcmUtaGVhZGVycyAtLWFwcGVuZD0i
+cm9vdD0vZGV2L2hkYiBzaW5nbGUiCj4+Pgo+Pj4gNy4gSnVtcCB0byB0aGUgaGliZXJuYXRpbmcg
+a2VybmVsIChrZXJuZWwgQikgd2l0aCBmb2xsb3dpbmcgc2hlbGwKPj4+ICAgIGNvbW1hbmQgbGlu
+ZToKPj4+Cj4+PiAgICBrZXhlYyAtago+Pj4KPj4+IDguIEluIHRoZSBoaWJlcm5hdGluZyBrZXJu
+ZWwgKGtlcm5lbCBCKSwgdGhlIG1lbW9yeSBpbWFnZSBvZgo+Pj4gICAgaGliZXJuYXRlZCBrZXJu
+ZWwgKGtlcm5lbCBBKSBjYW4gYmUgc2F2ZWQgYXMgZm9sbG93Ogo+Pj4KPj4+ICAgIGNwIC9wcm9j
+L3ZtY29yZSAuCj4+PiAgICBjcCAvc3lzL2tlcm5lbC9rZXhlY19qdW1wX2JhY2tfZW50cnkgLgo+
+Pj4KPj4+ICAgICAgIAo+PiBIZXJlIHdlIHNhdmUgYWxzbyBrZXJuZWwgQidzIHBhZ2VzLgo+PiAg
+ICAgCj4KPiBObywgdGhlIGtlcm5lbCBCJ3MgcGFnZXMgd2lsbCBub3QgYmUgc2F2ZWQuIEJlY2F1
+c2Ugd2hlbiB3ZSBidWlsZCB0aGUKPiBlbGZjb3JlICgvcHJvYy92bWNvcmUpIGhlYWRlciwgd2Ug
+ZXhjbHVkZSBtZW1vcnkgYXJlYSB1c2VkIGJ5IGtlcm5lbAo+IEIuIFRoZSBkZXRhaWxzIGNhbiBi
+ZSBmb3VuZCBpbiBrZXhlYy10b29scyBwYXRjaGVzLgo+Cj4gICAKT2sgSSBzZWUuIEJ1dCBzaG91
+bGQgdGhlIGtlcm5lbCBCJ3MgZTgyMCBtZW0gbWFwIGJlIGxpbWl0ZWQgdG8gMW0tMTZtIGluIApv
+cmRlciBub3QgdG8gYWxsb2NhdGUgcGFnZXMgZm91bmQgYWxzbyBpbiBBJ3Mgc3BhY2U/IE9yIGRv
+ZXMgZG9lcyB0aGUgCi0tbWVtLW1pbiBhbmQgLS1tZW0tbWF4IGRvIHRoYXQgYWxzbz8KVGhhbmtz
+LApNaWthCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
