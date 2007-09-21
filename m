@@ -1,16 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYZkF-0004wb-KR
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 00:04:02 -0400
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
-References: <1190266447.21818.17.camel@caritas-dev.intel.com>
-Date: Thu, 20 Sep 2007 22:01:27 -0600
-In-Reply-To: <1190266447.21818.17.camel@caritas-dev.intel.com> (Ying Huang's
-	message of "Thu, 20 Sep 2007 13:34:07 +0800")
-Message-ID: <m1y7f0k6p4.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+Received: from e36.co.us.ibm.com ([32.97.110.154])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IYZvi-0005KM-RG
+	for kexec@lists.infradead.org; Fri, 21 Sep 2007 05:15:55 +0100
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e36.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8L4ElJD001184
+	for <kexec@lists.infradead.org>; Fri, 21 Sep 2007 00:14:47 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l8L4ElbL488260
+	for <kexec@lists.infradead.org>; Thu, 20 Sep 2007 22:14:47 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l8L4ElI2018700
+	for <kexec@lists.infradead.org>; Thu, 20 Sep 2007 22:14:47 -0600
+Date: Fri, 21 Sep 2007 09:45:06 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: kdump info request
+Message-ID: <20070921041506.GB6156@in.ibm.com>
+References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
+	<20070919035337.GA7068@in.ibm.com>
+	<9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
+	<20070919042840.GB7068@in.ibm.com>
+	<9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,134 +40,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: "Mukker, Atul" <Atul.Mukker@lsi.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Moore,
+	Eric" <Eric.Moore@lsil.com>
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
+[..]
+> > 
+> > If we could somehow determine that we are being called in context of
+> capture kernel, we can dynamically lower driver memory requirement (at
+> cost of lower IO throughout of-course, which is ok for this brief
+> context).
+> 
+> You can parse the command line and look for presence of elfcorehdr=
+> option.
+> This is internally appended to command line by kexec tools to tell
+> capture
+> kernel the address of ELF core headers.
+> 
+> 
+> [AM] Is this a standard way? Doesn't look like one. According to
+> kernel-parameters.txt, kexec would "generally" pass this option to
+> kernel command line. Can we look at "struct resource crashk_res" and
+> check if start and end member have different value, which indicates
+> capture kernel?
+> 
 
-> Index: linux-2.6.23-rc6/include/linux/kexec.h
-> ===================================================================
-> --- linux-2.6.23-rc6.orig/include/linux/kexec.h 2007-09-20 11:24:25.000000000
-> +0800
-> +++ linux-2.6.23-rc6/include/linux/kexec.h 2007-09-20 11:26:03.000000000 +0800
-> @@ -83,6 +83,7 @@
->  
->  	unsigned long start;
->  	struct page *control_code_page;
-> +	struct page *swap_page;
->  
->  	unsigned long nr_segments;
->  	struct kexec_segment segment[KEXEC_SEGMENT_MAX];
-> @@ -194,4 +195,12 @@
->  static inline void crash_kexec(struct pt_regs *regs) { }
->  static inline int kexec_should_crash(struct task_struct *p) { return 0; }
->  #endif /* CONFIG_KEXEC */
-> +
-> +#ifdef CONFIG_KEXEC_JUMP
-> +extern int machine_kexec_jump(struct kimage *image);
-> +extern unsigned long kexec_jump_back_entry;
-> +extern int kexec_jump(void);
-> +#else /* !CONFIG_KEXEC_JUMP */
-> +static inline int kexec_jump(void) { return 0; }
-> +#endif /* CONFIG_KEXEC_JUMP */
->  #endif /* LINUX_KEXEC_H */
+Well, nobody else so far has had such requirements so can't say if this
+is standard way. But this is the best way I can think of so far.
 
-Please the kexec_jump code just be triggered off of a flag in
-struct kimage.  We just need to define an extra flag to sys_kexec_load
-say KEXEC_RETURNS.  Ideally in the long term we would not have to
-do anything except to accept the flag.  Adding a flag makes
-a nice feature test if you want to see if your kernel supports
-the extended version of kexec.
+Using crashk_res will not work. Not all users will use kdump and will not
+reserve any memory for capture kernel. In that case crashk_res will be 
+zero for start and end and you don't want to trim down the functionality
+of your driver.
 
-Until we get the hibernation methods sorted out storing the flag in
-struct kimage and making the methods that we call conditional feels
-like a more maintainable interface.  Especially since we have to
-know at kexec image load time what we are going to do with the
-kexec image.
+> What's the memory allocation requirement of current RAID driver? How
+> much
+> memory you are reserving for capture kernel? Are you already seeing the
+> memory allocation failure?
+> 
+> [AM] Our normal runtime memory is about 20MB. For the test beds, we use
+> "crashkernel=192M@16M". We have not yet seen the allocation failure but
+> we would like to build the fallback mechanism if it does fail under
+> capture kernel. Only if we are not able to get the normal runtime
+> memory, we plan to switch to a lower memory model.
+> 
 
-> +#ifdef CONFIG_KEXEC_JUMP
-> +unsigned long kexec_jump_back_entry;
-> +
-> +int kexec_jump(void)
-> +{
-> +	int error;
-> +
-> +	if (!kexec_image)
-> +		return -EINVAL;
+20MB is huge. I agree that it is a good idea to bring it down for capture
+kernel if performance is not significantly impacted.
 
-I understand where you are coming from with this implementation of
-kexec_jump but it looks like this is one of the big parts of this
-patch that have not reached their final form.
+> I feel until and unless memory requirements are huge, we should not
+> compromise with IO throughput. Capability to save the dump to disk as
+> fast
+> as possible to reduce the down time is also an important consideration.
+> 
+> [AM] We believe our normal runtime memory requirement is significant.
+> Also, even with the lower memory, there would not be a noticeable dump
+> time difference since lot of memory is for supporting multiple
+> outstanding commands in driver's raid core and other raid operations,
+> which will not be running under capture kernel. Thanks again for your
+> feedback.
+> 
 
-The line above is racy with sys_kexec_load.
+Makes sense.
 
-> +	pm_prepare_console();
-> +	suspend_console();
-> +	error = device_suspend(PMSG_FREEZE);
-> +	if (error)
-> +		goto Resume_console;
-
-This as everyone knows needs to be device_shutdown or a better hibernation
-replacement.
-
-> +	error = disable_nonboot_cpus();
-> +	if (error)
-> +		goto Resume_devices;
-
-Can't we just catch the noboot cpu's in a mutex.
-disable_nonboot_cpus is actually impossible to implement 100% reliably
-with current hardware.  But something smp_call_function so we trap them
-at a specific location and then the equivalent when we come back should
-be simple.  I guess the tricky part is bringing the cpus back up again.
-
-Using the broken by design version of cpu hotplug really annoys me here.
-
-> +	local_irq_disable();
-> +	/* At this point, device_suspend() has been called, but *not*
-> +	 * device_power_down(). We *must* device_power_down() now.
-> +	 * Otherwise, drivers for some devices (e.g. interrupt controllers)
-> +	 * become desynchronized with the actual state of the hardware
-> +	 * at resume time, and evil weirdness ensues.
-> +	 */
-> +	error = device_power_down(PMSG_FREEZE);
-> +	if (error)
-> +		goto Enable_irqs;
-
-This of course should go away when we have the proper methods.
-
-> +	save_processor_state();
-This line might even be reasonable.
-> +	error = machine_kexec_jump(kexec_image);
-> +	restore_processor_state();
->
-> +	/* NOTE:  device_power_up() is just a resume() for devices
-> +	 * that suspended with irqs off ... no overall powerup.
-> +	 */
-> +	device_power_up();
-Yep this can go away.
-> + Enable_irqs:
-> +	local_irq_enable();
-> +	enable_nonboot_cpus();
-
-I haven't looked at the cpu start up code yet to see if it
-is generally implementable.  I would think so, but I guess
-we need to be careful with our data structures.
-
-> + Resume_devices:
-> +	device_resume();
-This of course should change.
-> + Resume_console:
-> +	resume_console();
-> +	pm_restore_console();
-
-Odd.  I'm a little surprised that the console is the last
-thing we restore.  But it does make sense to treat it specially.
-
-> +	return error;
-> +}
-> +#endif /* CONFIG_KEXEC_JUMP */
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
