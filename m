@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IZ9fz-0001G7-6z
-	for kexec@lists.infradead.org; Sat, 22 Sep 2007 14:26:03 -0400
-Date: Sat, 22 Sep 2007 20:25:56 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Add extended crashkernel syntax to kernel-parameters.txt
-Message-ID: <20070922182556.GA3353@suse.de>
+Received: from ogre.sisk.pl ([217.79.144.158])
+	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IZCgb-0002Yp-PR
+	for kexec@lists.infradead.org; Sat, 22 Sep 2007 17:38:54 -0400
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Date: Sat, 22 Sep 2007 23:51:30 +0200
+References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
+	<200709221234.18426.rjw@sisk.pl>
+	<3BCF760C-D77D-417A-809A-B20D04DD01D3@mac.com>
+In-Reply-To: <3BCF760C-D77D-417A-809A-B20D04DD01D3@mac.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <200709222351.32137.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +26,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org, kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+To: Kyle Moffett <mrmacman_g4@mac.com>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-This adds the documentation for the extended crashkernel syntax into
-Documentation/kernel-parameters.txt.
+On Saturday, 22 September 2007 20:00, Kyle Moffett wrote:
+> On Sep 22, 2007, at 06:34:17, Rafael J. Wysocki wrote:
+> > On Saturday, 22 September 2007 01:19, Kyle Moffett wrote:
+> >> On Sep 21, 2007, at 17:16:59, Jeremy Maitin-Shepard wrote:
+> >>> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
+> >>>> The ACPI platform firmware is allowed to preserve information  
+> >>>> accross the hibernation-resume cycle, so this need not be the same.
+> >>>
+> >>> All of my comments related to the case where S4 is not being used  
+> >>> (instead the system is just powered off normally), and a boot  
+> >>> kernel that does not initialize ACPI is used.  In that case, the  
+> >>> ACPI platform firmware should not be able to distinguish a normal  
+> >>> boot from a resume from hibernation.
+> >>
+> >> I think that in order for this to work, there would need to be  
+> >> some ABI whereby the resume-ing kernel can pass its entire ACPI  
+> >> state and a bunch of other ACPI-related device details to the  
+> >> resume-ed kernel, which I believe it does not do at the moment.
+> >
+> > In fact we don't need to do this.
+> >
+> > The solution is not to touch ACPI in the boot kernel (ie. the one  
+> > that loads the image) and pass control to the image kernel.  This  
+> > is how it's supposed to work according to the spec, more or less  
+> > (well, there are some ugly details  that need handling, like the  
+> > restoration of the NVS area).
+> 
+> First of all, we will need to make the resumed kernel throw away  
+> *ALL* of its ACPI state on S5 and completely reinitialize ACPI as  
+> though it was booting for the first time on resume.
 
+Yes, if we entered S5 in the last step of the hibernation sequence, the right
+thing to do would be to make the resumed kernel reinitialize ACPI from
+scratch.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> From what I can tell, we "throw away" all the ACPI state in the boot kernel
+> and reinitialize it there, but then the reinitialized state is  
+> overwritten with the resumed kernel's state and the two don't always  
+> happen to be the same.  (Like if a battery got replaced or AC status  
+> changed).
 
----
- Documentation/kernel-parameters.txt |    7 +++++++
- 1 file changed, 7 insertions(+)
+Usually it goes like that.  Still, you can pass "acpi=off" to the boot kernel,
+in which case it won't reinitialize ACPI.
 
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -498,6 +498,13 @@ and is between 256 and 4096 characters. 
- 			[KNL] Reserve a chunk of physical memory to
- 			hold a kernel to switch to with kexec on panic.
+> Umm, I don't see how that can possibly work properly.  For a laptop,  
+> for example, the restore kernel will need to access the disk, the LCD  
+> display, and possibly the AC/battery and current CPU frequency.  From  
+> what I understand of ACPI, both of the former may need ACPI code to  
+> operate properly (Isn't there an ATA taskfile object of some kind?)  
+> and the latter two almost definitely need ACPI.
+
+Well, this is not the case on any systems that I have access to, including
+two quite modern notebooks.  Apparently, everything works without ACPI on
+these machines.
+
+Besides, in theory, it's possible to use an "intelligent" boot loader to read
+the hibernation image and that doesn't need ACPI for anything.
+
+> Ergo the boot kernel may need to initialize and use ACPI just to run an ATA
+> taskfile so it can read from the HDD efficiently.
+
+It is possible, but I haven't seen that yet.
  
-+	crashkernel=range1:size1[,range2:size2,...][@offset]
-+			[KNL] Same as above, but depends on the memory
-+			in the running system. The syntax of range is
-+			start-[end] where start and end are both
-+			a memory unit (amount[KMG]). See also
-+			Documentation/kdump/kdump.txt for a example.
-+
- 	cs4232=		[HW,OSS]
- 			Format: <io>,<irq>,<dma>,<dma2>,<mpuio>,<mpuirq>
- 
+> >> I believe that what causes problems is the ACPI state data that  
+> >> the kernel stores is *different* between identical sequential  
+> >> boots, especially when you add/remove/replace batteries, AC, etc.
+> >
+> > Rather the ACPI state data that the platform firmware stores may be  
+> > different, depending on whether you enter S4 or S5 during "power  
+> > off" and that determines the interactions between the kernel and  
+> > the firmware after the next boot.
+> 
+> That's not what he was talking about.  The problem discussed was:
+>    (A) You hibernate your box, entering S5 (IE: power off)
+>    (B) You resume the box and the boot kernel inits all the ACPI stuff.
+>    (C) The boot kernel's ACPI state is completely replaced by the  
+> resumed kernel's state.
+>    (D) Hardware stops working mysteriously because of ACPI problems.
+> 
+> The only possible conclusion is that the state between the boot  
+> kernel and the resume kernel was *different* and so the device failed  
+> because the ACPI state in the resume kernel doesn't match the actual  
+> state of the hardware.
+
+I think it's even more complicated.  The ACPI state of the resumed kernel
+has to match whatever is preserved by the platform.
+
+Well, my impression is that our current ACPI resume code actually expects
+the platform to preserve something and if that's missing the devices in
+question are not handled properly.  If that really is the case, there is the
+question whether we can do something about it in a reasonable way and I can't
+answer it right now.
+
+Besides, I really think that we should use the ACPI S4 state, because machines
+generally support that.
+
+Greetings,
+Rafael
 
 _______________________________________________
 kexec mailing list
