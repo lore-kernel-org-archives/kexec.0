@@ -1,74 +1,124 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Date: Thu, 20 Sep 2007 21:16:27 -0700
-Subject: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3: kexec jump
-In-Reply-To: <200709211157.28622.nigel@nigel.suspend2.net>
-References: <1190266447.21818.17.camel@caritas-dev.intel.com>
-	<200709211120.00448.ncunningham@crca.org.au>
-	<20070920184106.79e1858a.akpm@linux-foundation.org>
-	<200709211157.28622.nigel@nigel.suspend2.net>
-Message-ID: <20070920211627.d18f97f9.akpm@linux-foundation.org>
+From: Randy Dunlap <rdunlap@xenotime.net>
+Date: Sat, 22 Sep 2007 11:35:53 -0700
+Subject: kdump info request
+In-Reply-To: <9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
+References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
+	<20070919035337.GA7068@in.ibm.com>
+	<9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
+	<20070919042840.GB7068@in.ibm.com>
+	<9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
+	<20070921041506.GB6156@in.ibm.com>
+	<9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
+Message-ID: <20070922113553.6898978d.rdunlap@xenotime.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, 21 Sep 2007 11:57:26 +1000 Nigel Cunningham <nigel@nigel.suspend2.net> wrote:
+On Fri, 21 Sep 2007 06:48:01 -0600 Mukker, Atul wrote:
 
-> Hi.
+> One more question, and hopefully I will not bug you further on this :-)
 > 
-> On Friday 21 September 2007 11:41:06 Andrew Morton wrote:
-> > > On Friday 21 September 2007 11:06:23 Andrew Morton wrote:
-> > > > On Fri, 21 Sep 2007 10:24:34 +1000 Nigel Cunningham 
-> > > <nigel@nigel.suspend2.net> wrote:
-> > > > 
-> > > > > Hi Andrew.
-> > > > > 
-> > > > > On Thursday 20 September 2007 20:09:41 Pavel Machek wrote:
-> > > > > > Seems like good enough for -mm to me.
-> > > > > > 
-> > > > > > 									Pavel
-> > > > > 
-> > > > > Andrew, if I recall correctly, you said a while ago that you didn't 
-> want 
-> > > > > another hibernation implementation in the vanilla kernel. If you're 
-> going 
-> > > to 
-> > > > > consider merging this kexec code, will you also please consider 
-> merging 
-> > > > > TuxOnIce?
-> > > > > 
-> > > > 
-> > > > The theory is that kexec-based hibernation will mainly use preexisting
-> > > > kexec code and will permit us to delete the existing hibernation
-> > > > implementation.
-> > > > 
-> > > > That's different from replacing it.
+> How exactly do you parse the kernel parameters? I thought it would be
+> plain simple, but seems like the command line string is not available to
+> SCSI driver like ours, or I am missing something?
+
+#include <linux/init.h>  // for extern of 'saved_command_line' pointer.
+
+and use calls to any functions in lib/cmdline.c or write your
+own functions.  Should be fairly simple to scan for a fixed string
+of "elfcorehdr=".
+You don't care about the variable parameters.. or do you?
+
+
+> Thanks
+> -Atul 
+> 
+> -----Original Message-----
+> From: Vivek Goyal [mailto:vgoyal at in.ibm.com] 
+> Sent: Friday, September 21, 2007 12:15 AM
+> To: Mukker, Atul
+> Cc: Kexec Mailing List; Moore, Eric
+> Subject: Re: kdump info request
+> 
+> On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
+> [..]
 > > > 
-> > > TuxOnIce doesn't remove the existing implementation either. It can 
-> > > transparently replace it, but you can enable/disable that at compile time.
+> > > If we could somehow determine that we are being called in context of
+> > capture kernel, we can dynamically lower driver memory requirement (at
+> > cost of lower IO throughout of-course, which is ok for this brief
+> > context).
 > > 
-> > Right.  So we end up with two implementations in-tree.  Whereas
-> > kexec-based-hibernation leads us to having zero implementations in-tree.
+> > You can parse the command line and look for presence of elfcorehdr=
+> > option.
+> > This is internally appended to command line by kexec tools to tell
+> > capture
+> > kernel the address of ELF core headers.
 > > 
-> > See, it's different.
+> > 
+> > [AM] Is this a standard way? Doesn't look like one. According to
+> > kernel-parameters.txt, kexec would "generally" pass this option to
+> > kernel command line. Can we look at "struct resource crashk_res" and
+> > check if start and end member have different value, which indicates
+> > capture kernel?
+> > 
 > 
-> That's not true. Kexec will itself be an implementation, otherwise you'd end 
-> up with people screaming about no hibernation support. And it won't result in 
-> the complete removal of the existing hibernation code from the kernel. At the 
-> very least, it's going to want the kernel being hibernated to have an 
-> interface by which it can find out which pages need to be saved. I wouldn't 
-> be surprised if it also ends up with an interface in which the kernel being 
-> hibernated tells it what bdev/sectors in which to save the image as well 
-> (otherwise you're going to need a dedicated, otherwise untouched partition 
-> exclusively for the kexec'd kernel to use), or what network settings to use 
-> if it wants to try to save the image to a network storage device. On top of 
-> that, there are all the issues related to device reinitialisation and so on, 
-> and it looks like there's greatly increased pain for users wanting to 
-> configure this new implementation. Kexec is by no means proven to be the 
-> panacea for all the issues.
+> Well, nobody else so far has had such requirements so can't say if this
+> is standard way. But this is the best way I can think of so far.
+> 
+> Using crashk_res will not work. Not all users will use kdump and will
+> not
+> reserve any memory for capture kernel. In that case crashk_res will be 
+> zero for start and end and you don't want to trim down the functionality
+> of your driver.
+> 
+> > What's the memory allocation requirement of current RAID driver? How
+> > much
+> > memory you are reserving for capture kernel? Are you already seeing
+> the
+> > memory allocation failure?
+> > 
+> > [AM] Our normal runtime memory is about 20MB. For the test beds, we
+> use
+> > "crashkernel=192M at 16M". We have not yet seen the allocation failure
+> but
+> > we would like to build the fallback mechanism if it does fail under
+> > capture kernel. Only if we are not able to get the normal runtime
+> > memory, we plan to switch to a lower memory model.
+> > 
+> 
+> 20MB is huge. I agree that it is a good idea to bring it down for
+> capture
+> kernel if performance is not significantly impacted.
+> 
+> > I feel until and unless memory requirements are huge, we should not
+> > compromise with IO throughput. Capability to save the dump to disk as
+> > fast
+> > as possible to reduce the down time is also an important
+> consideration.
+> > 
+> > [AM] We believe our normal runtime memory requirement is significant.
+> > Also, even with the lower memory, there would not be a noticeable dump
+> > time difference since lot of memory is for supporting multiple
+> > outstanding commands in driver's raid core and other raid operations,
+> > which will not be running under capture kernel. Thanks again for your
+> > feedback.
+> > 
+> 
+> Makes sense.
+> 
+> Thanks
+> Vivek
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec at lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
 
-Maybe, maybe not, dunno.  That's why we haven't merged it yet.  If it ends
-up being no good, we won't merge it!
+
+---
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code ***
 
