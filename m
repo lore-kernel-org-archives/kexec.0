@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ogre.sisk.pl ([217.79.144.158])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IYpo2-000714-NF
-	for kexec@lists.infradead.org; Fri, 21 Sep 2007 17:13:02 -0400
+	id 1IZ2Ca-0005io-RN
+	for kexec@lists.infradead.org; Sat, 22 Sep 2007 06:27:12 -0400
 From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
 	kexec jump
-Date: Fri, 21 Sep 2007 23:25:37 +0200
+Date: Sat, 22 Sep 2007 12:40:24 +0200
 References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
-	<200709212253.02158.rjw@sisk.pl> <87d4wb680u.fsf@jbms.ath.cx>
-In-Reply-To: <87d4wb680u.fsf@jbms.ath.cx>
+	<BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
+	<200709220947.58872.nigel@nigel.suspend2.net>
+In-Reply-To: <200709220947.58872.nigel@nigel.suspend2.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200709212325.39599.rjw@sisk.pl>
+Message-Id: <200709221240.25614.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Maitin-Shepard <jbms@cmu.edu>
-Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
-	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Nigel Cunningham <nigel@nigel.suspend2.net>
+Cc: nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kyle Moffett <mrmacman_g4@mac.com>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Friday, 21 September 2007 23:08, Jeremy Maitin-Shepard wrote:
-> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
+On Saturday, 22 September 2007 01:47, Nigel Cunningham wrote:
+> Hi.
 > 
-> > On Friday, 21 September 2007 22:26, Jeremy Maitin-Shepard wrote:
-> >> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
-> >> 
-> >> [snip]
-> >> 
-> >> > The ACPI NVS area is explicitly marked as reserved and we don't save it.
-> >> > On x86_64 we don't save any memory areas marked as reserved and yet the
-> > above
-> >> > happens.
-> >> 
-> >> I think you have mentioned before, though, that ACPI is first
-> >> initialized by the boot kernel, before it is later initialized by
-> >> resuming kernel.  This could well be the source of the problem.
+> On Saturday 22 September 2007 09:19:18 Kyle Moffett wrote:
+> > I think that in order for this to work, there would need to be some  
+> > ABI whereby the resume-ing kernel can pass its entire ACPI state and  
+> > a bunch of other ACPI-related device details to the resume-ed kernel,  
+> > which I believe it does not do at the moment.  I believe that what  
+> > causes problems is the ACPI state data that the kernel stores is  
+> > *different* between identical sequential boots, especially when you  
+> > add/remove/replace batteries, AC, etc.
 > 
-> > No, it's not.  I have tested that too with an ACPI-less boot kernel.
+> That's certainly possible. We already pass a very small amount of data between 
+> the boot and resuming kernels at the moment, and it's done quite simply - by 
+> putting the variables we want to 'transfer' in a nosave page/section.
+
+Well, if the boot and image kernels are different, which is now possible on
+x86_64 with some recent patches (currently in -mm), the nosave trick won't
+work.
+
+Still, I don't think we need to pass anything from the boot to the image
+kernel.  Moreover, we shouldn't do that, IMO (arguably, the boot kernel
+could be replaced with a resume-aware boot loader).
+
+> I could  conceive of a scheme wherein this was extended for driver data.
+> Since the memory needed would depend on the drivers loaded, it would
+> probably require that the space be allocated when hibernating, and the
+> locations of structures be stored in the image header and then drivers
+> notified of the locations to use when preparing to resume, but it could
+> work... 
+>  
+> > Since we currently throw away most of that in-kernel ACPI interpreter  
+> > state data when we load the to-be-resumed image and replace it with  
+> > the state from the previous boot it looks to the ACPI code and  
+> > firmware like our system's hardware magically changed behind its  
+> > back.  The result is that the ACPI and firmware code is justifiably  
+> > confused (although probably it should be more idempotent to begin  
+> > with).  There's 2 potential solutions:
+> >    1) Formalize and copy a *lot* of ACPI state from the resume-ing  
+> > kernel to the resume-ed kernel.
+> >    2) Properly call the ACPI S4 methods in the proper order
 > 
-> Well, it seems that there just must be some other bug.  I would define
-> anything that differs between the post-resume initialization of ACPI
+> ... that said, I don't think the above should be necessary in most cases. I 
+> believe we're already calling the ACPI S4 methods in the proper order. If I 
+> understood correctly, Rafael put a lot of effort into learning what that was, 
+> and into ensuring it does get done.
 
-I'm not sure what you mean.
-
-> from the normal boot initialization of ACPI as a bug.  If the interaction
-> with the hardware is the same, then the behavior will be the same.
-
-The ACPI platform firmware is allowed to preserve information accross the
-hibernation-resume cycle, so this need not be the same.
+Yes, I did, but I can be wrong nevertheless. ;-)
 
 Greetings,
 Rafael
