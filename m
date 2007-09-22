@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IZ9fa-0001Eb-5v
-	for kexec@lists.infradead.org; Sat, 22 Sep 2007 14:25:37 -0400
-Date: Sat, 22 Sep 2007 20:25:31 +0200
+	id 1IZ9fz-0001G7-6z
+	for kexec@lists.infradead.org; Sat, 22 Sep 2007 14:26:03 -0400
+Date: Sat, 22 Sep 2007 20:25:56 +0200
 From: Bernhard Walle <bwalle@suse.de>
 Subject: [PATCH] Add extended crashkernel syntax to kernel-parameters.txt
-Message-ID: <20070922182530.GA4765@suse.de>
-Mime-Version: 1.0
+Message-ID: <20070922182556.GA3353@suse.de>
+MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
