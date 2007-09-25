@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IaF3m-0003Yz-It
-	for kexec@lists.infradead.org; Tue, 25 Sep 2007 14:23:07 -0400
-Message-Id: <20070925182259.398924232@strauss.suse.de>
+Received: from mx1.suse.de ([195.135.220.2])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IaF48-0000mR-IR
+	for kexec@lists.infradead.org; Tue, 25 Sep 2007 19:23:29 +0100
+Message-Id: <20070925182259.856342893@strauss.suse.de>
 References: <20070925182257.900701776@strauss.suse.de>
-Date: Tue, 25 Sep 2007 20:23:02 +0200
+Date: Tue, 25 Sep 2007 20:23:04 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 5/7] Use extended crashkernel command line on ppc64
-Content-Disposition: inline; filename=crashkernel-ppc64
+Subject: [patch 7/7] Add documentation for extended crashkernel syntax
+Content-Disposition: inline; filename=crashkernel-documentation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,100 +23,69 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, akpm@linux-foundation.org
-Cc: linux-arch@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 
-This patch adapts the ppc64 code to use the generic parse_crashkernel()
-function introduced in the generic patch of that series.
-
+This adds the documentation for the extended crashkernel syntax into
+Documentation/kdump/kdump.txt.
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
 ---
- arch/powerpc/kernel/machine_kexec.c |   52 ++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ Documentation/kdump/kdump.txt       |   26 ++++++++++++++++++++++++++
+ Documentation/kernel-parameters.txt |    7 +++++++
+ 2 files changed, 33 insertions(+)
 
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -61,45 +61,39 @@ NORET_TYPE void machine_kexec(struct kim
- 	for(;;);
- }
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -231,6 +231,32 @@ Dump-capture kernel config options (Arch
+   any space below the alignment point will be wasted.
  
--static int __init early_parse_crashk(char *p)
-+void __init reserve_crashkernel(void)
- {
--	unsigned long size;
--
--	if (!p)
--		return 1;
--
--	size = memparse(p, &p);
-+	unsigned long long crash_size, crash_base;
-+	int ret;
  
--	if (*p == '@')
--		crashk_res.start = memparse(p + 1, &p);
--	else
--		crashk_res.start = KDUMP_KERNELBASE;
--
--	crashk_res.end = crashk_res.start + size - 1;
--
--	return 0;
--}
--early_param("crashkernel", early_parse_crashk);
-+	/* this is necessary because of lmb_phys_mem_size() */
-+	lmb_analyze();
- 
--void __init reserve_crashkernel(void)
--{
--	unsigned long size;
-+	/* use common parsing */
-+	ret = parse_crashkernel(boot_command_line, lmb_phys_mem_size(),
-+			&crash_size, &crash_base);
-+	if (ret == 0 && crash_size > 0) {
-+		if (crash_base == 0)
-+			crash_base = KDUMP_KERNELBASE;
-+		crashk_res.start = crash_base;
-+	} else {
-+		/* handle the device tree */
-+		crash_size = crashk_res.end - crashk_res.start + 1;
-+	}
- 
--	if (crashk_res.start == 0)
-+	if (crash_size == 0)
- 		return;
- 
- 	/* We might have got these values via the command line or the
- 	 * device tree, either way sanitise them now. */
- 
--	size = crashk_res.end - crashk_res.start + 1;
--
- 	if (crashk_res.start != KDUMP_KERNELBASE)
- 		printk("Crash kernel location must be 0x%x\n",
- 				KDUMP_KERNELBASE);
- 
- 	crashk_res.start = KDUMP_KERNELBASE;
--	size = PAGE_ALIGN(size);
--	crashk_res.end = crashk_res.start + size - 1;
-+	crash_size = PAGE_ALIGN(crash_size);
-+	crashk_res.end = crashk_res.start + crash_size - 1;
- 
- 	/* Crash kernel trumps memory limit */
- 	if (memory_limit && memory_limit <= crashk_res.end) {
-@@ -108,7 +102,13 @@ void __init reserve_crashkernel(void)
- 				memory_limit);
- 	}
- 
--	lmb_reserve(crashk_res.start, size);
-+	printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+			"for crashkernel (System RAM: %ldMB)\n",
-+			(unsigned long)(crash_size >> 20),
-+			(unsigned long)(crashk_res.start >> 20),
-+			(unsigned long)(lmb_phys_mem_size() >> 20));
++Extended crashkernel syntax
++===========================
 +
-+	lmb_reserve(crashk_res.start, crash_size);
- }
++While the "crashkernel=size[@offset]" syntax is sufficient for most
++configurations, sometimes it's handy to have the reserved memory dependent
++on the value of System RAM -- that's mostly for distributors that pre-setup
++the kernel command line to avoid a unbootable system after some memory has
++been removed from the machine.
++
++The syntax is:
++
++    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++    range=start-[end]
++
++For example:
++
++    crashkernel=512M-2G:64M,2G-:128M
++
++This would mean:
++
++    1) if the RAM is smaller than 512M, then don't reserve anything
++       (this is the "rescue" case)
++    2) if the RAM size is between 512M and 2G, then reserve 64M
++    3) if the RAM size is larger than 2G, then reserve 128M
++
++
+ Boot into System Kernel
+ =======================
  
- int overlaps_crashkernel(unsigned long start, unsigned long size)
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -495,6 +495,13 @@ and is between 256 and 4096 characters. 
+ 			[KNL] Reserve a chunk of physical memory to
+ 			hold a kernel to switch to with kexec on panic.
+ 
++	crashkernel=range1:size1[,range2:size2,...][@offset]
++			[KNL] Same as above, but depends on the memory
++			in the running system. The syntax of range is
++			start-[end] where start and end are both
++			a memory unit (amount[KMG]). See also
++			Documentation/kdump/kdump.txt for a example.
++
+ 	cs4232=		[HW,OSS]
+ 			Format: <io>,<irq>,<dma>,<dma2>,<mpuio>,<mpuirq>
+ 
 
 -- 
 
