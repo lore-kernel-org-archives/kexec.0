@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail0.lsil.com ([147.145.40.20])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IZBB7-0001vZ-Ht
-	for kexec@lists.infradead.org; Sat, 22 Sep 2007 16:02:19 -0400
-Content-class: urn:content-classes:message
+	id 1Ia66n-0007lP-2O
+	for kexec@lists.infradead.org; Tue, 25 Sep 2007 04:49:35 -0400
+Message-Id: <46F8CB88.10905@mxs.nes.nec.co.jp>
+Date: Tue, 25 Sep 2007 17:49:12 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: kdump info request
-Date: Sat, 22 Sep 2007 14:01:56 -0600
-Message-ID: <9738BCBE884FDB42801FAD8A7769C26589D64C@NAMAIL1.ad.lsil.com>
-From: "Mukker, Atul" <Atul.Mukker@lsi.com>
+Subject: Re: [PATCH 5/4] [-mm patch] Rename macros returning the size.
+References: <46E9F6A9.8060500@mxs.nes.nec.co.jp>	<46E9F942.5070007@mxs.nes.nec.co.jp>	<20070914190350.011cdadb.akpm@linux-foundation.org>	<46F204FD.6040303@mxs.nes.nec.co.jp>	<46F2056E.6080601@mxs.nes.nec.co.jp>
+	<alpine.LFD.0.999.0709201746090.17093@enigma.security.iitk.ac.in>
+In-Reply-To: <alpine.LFD.0.999.0709201746090.17093@enigma.security.iitk.ac.in>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,216 +19,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2026435901=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: rdunlap@xenotime.net
-Cc: kexec@lists.infradead.org, vgoyal@in.ibm.com, "Moore,
-	Eric" <Eric.Moore@lsi.com>
-
-This is a multi-part message in MIME format.
-
---===============2026435901==
-Content-class: urn:content-classes:message
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C7FD53.6DB0E96C"
-
-This is a multi-part message in MIME format.
-
-------_=_NextPart_001_01C7FD53.6DB0E96C
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-
-V2lsbCB0cnkuDQoNClRoYW5rcw0KQXR1bA0KDQoNCi0tLS0tIE9yaWdpbmFsIE1lc3NhZ2UgLS0t
-LS0NCkZyb206IFJhbmR5IER1bmxhcCA8cmR1bmxhcEB4ZW5vdGltZS5uZXQ+DQpUbzogTXVra2Vy
-LCBBdHVsDQpDYzogdmdveWFsQGluLmlibS5jb20gPHZnb3lhbEBpbi5pYm0uY29tPjsgTW9vcmUs
-IEVyaWM7IEtleGVjIE1haWxpbmcgTGlzdCA8a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZz4NClNl
-bnQ6IFNhdCBTZXAgMjIgMTI6MzU6NTMgMjAwNw0KU3ViamVjdDogUmU6IGtkdW1wIGluZm8gcmVx
-dWVzdA0KDQpPbiBGcmksIDIxIFNlcCAyMDA3IDA2OjQ4OjAxIC0wNjAwIE11a2tlciwgQXR1bCB3
-cm90ZToNCg0KPiBPbmUgbW9yZSBxdWVzdGlvbiwgYW5kIGhvcGVmdWxseSBJIHdpbGwgbm90IGJ1
-ZyB5b3UgZnVydGhlciBvbiB0aGlzIDotKQ0KPiANCj4gSG93IGV4YWN0bHkgZG8geW91IHBhcnNl
-IHRoZSBrZXJuZWwgcGFyYW1ldGVycz8gSSB0aG91Z2h0IGl0IHdvdWxkIGJlDQo+IHBsYWluIHNp
-bXBsZSwgYnV0IHNlZW1zIGxpa2UgdGhlIGNvbW1hbmQgbGluZSBzdHJpbmcgaXMgbm90IGF2YWls
-YWJsZSB0bw0KPiBTQ1NJIGRyaXZlciBsaWtlIG91cnMsIG9yIEkgYW0gbWlzc2luZyBzb21ldGhp
-bmc/DQoNCiNpbmNsdWRlIDxsaW51eC9pbml0Lmg+ICAvLyBmb3IgZXh0ZXJuIG9mICdzYXZlZF9j
-b21tYW5kX2xpbmUnIHBvaW50ZXIuDQoNCmFuZCB1c2UgY2FsbHMgdG8gYW55IGZ1bmN0aW9ucyBp
-biBsaWIvY21kbGluZS5jIG9yIHdyaXRlIHlvdXINCm93biBmdW5jdGlvbnMuICBTaG91bGQgYmUg
-ZmFpcmx5IHNpbXBsZSB0byBzY2FuIGZvciBhIGZpeGVkIHN0cmluZw0Kb2YgImVsZmNvcmVoZHI9
-Ii4NCllvdSBkb24ndCBjYXJlIGFib3V0IHRoZSB2YXJpYWJsZSBwYXJhbWV0ZXJzLi4gb3IgZG8g
-eW91Pw0KDQoNCj4gVGhhbmtzDQo+IC1BdHVsIA0KPiANCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogVml2ZWsgR295YWwgW21haWx0bzp2Z295YWxAaW4uaWJtLmNvbV0gDQo+
-IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDIxLCAyMDA3IDEyOjE1IEFNDQo+IFRvOiBNdWtrZXIs
-IEF0dWwNCj4gQ2M6IEtleGVjIE1haWxpbmcgTGlzdDsgTW9vcmUsIEVyaWMNCj4gU3ViamVjdDog
-UmU6IGtkdW1wIGluZm8gcmVxdWVzdA0KPiANCj4gT24gV2VkLCBTZXAgMTksIDIwMDcgYXQgMDc6
-MjY6MTlBTSAtMDYwMCwgTXVra2VyLCBBdHVsIHdyb3RlOg0KPiBbLi5dDQo+ID4gPiANCj4gPiA+
-IElmIHdlIGNvdWxkIHNvbWVob3cgZGV0ZXJtaW5lIHRoYXQgd2UgYXJlIGJlaW5nIGNhbGxlZCBp
-biBjb250ZXh0IG9mDQo+ID4gY2FwdHVyZSBrZXJuZWwsIHdlIGNhbiBkeW5hbWljYWxseSBsb3dl
-ciBkcml2ZXIgbWVtb3J5IHJlcXVpcmVtZW50IChhdA0KPiA+IGNvc3Qgb2YgbG93ZXIgSU8gdGhy
-b3VnaG91dCBvZi1jb3Vyc2UsIHdoaWNoIGlzIG9rIGZvciB0aGlzIGJyaWVmDQo+ID4gY29udGV4
-dCkuDQo+ID4gDQo+ID4gWW91IGNhbiBwYXJzZSB0aGUgY29tbWFuZCBsaW5lIGFuZCBsb29rIGZv
-ciBwcmVzZW5jZSBvZiBlbGZjb3JlaGRyPQ0KPiA+IG9wdGlvbi4NCj4gPiBUaGlzIGlzIGludGVy
-bmFsbHkgYXBwZW5kZWQgdG8gY29tbWFuZCBsaW5lIGJ5IGtleGVjIHRvb2xzIHRvIHRlbGwNCj4g
-PiBjYXB0dXJlDQo+ID4ga2VybmVsIHRoZSBhZGRyZXNzIG9mIEVMRiBjb3JlIGhlYWRlcnMuDQo+
-ID4gDQo+ID4gDQo+ID4gW0FNXSBJcyB0aGlzIGEgc3RhbmRhcmQgd2F5PyBEb2Vzbid0IGxvb2sg
-bGlrZSBvbmUuIEFjY29yZGluZyB0bw0KPiA+IGtlcm5lbC1wYXJhbWV0ZXJzLnR4dCwga2V4ZWMg
-d291bGQgImdlbmVyYWxseSIgcGFzcyB0aGlzIG9wdGlvbiB0bw0KPiA+IGtlcm5lbCBjb21tYW5k
-IGxpbmUuIENhbiB3ZSBsb29rIGF0ICJzdHJ1Y3QgcmVzb3VyY2UgY3Jhc2hrX3JlcyIgYW5kDQo+
-ID4gY2hlY2sgaWYgc3RhcnQgYW5kIGVuZCBtZW1iZXIgaGF2ZSBkaWZmZXJlbnQgdmFsdWUsIHdo
-aWNoIGluZGljYXRlcw0KPiA+IGNhcHR1cmUga2VybmVsPw0KPiA+IA0KPiANCj4gV2VsbCwgbm9i
-b2R5IGVsc2Ugc28gZmFyIGhhcyBoYWQgc3VjaCByZXF1aXJlbWVudHMgc28gY2FuJ3Qgc2F5IGlm
-IHRoaXMNCj4gaXMgc3RhbmRhcmQgd2F5LiBCdXQgdGhpcyBpcyB0aGUgYmVzdCB3YXkgSSBjYW4g
-dGhpbmsgb2Ygc28gZmFyLg0KPiANCj4gVXNpbmcgY3Jhc2hrX3JlcyB3aWxsIG5vdCB3b3JrLiBO
-b3QgYWxsIHVzZXJzIHdpbGwgdXNlIGtkdW1wIGFuZCB3aWxsDQo+IG5vdA0KPiByZXNlcnZlIGFu
-eSBtZW1vcnkgZm9yIGNhcHR1cmUga2VybmVsLiBJbiB0aGF0IGNhc2UgY3Jhc2hrX3JlcyB3aWxs
-IGJlIA0KPiB6ZXJvIGZvciBzdGFydCBhbmQgZW5kIGFuZCB5b3UgZG9uJ3Qgd2FudCB0byB0cmlt
-IGRvd24gdGhlIGZ1bmN0aW9uYWxpdHkNCj4gb2YgeW91ciBkcml2ZXIuDQo+IA0KPiA+IFdoYXQn
-cyB0aGUgbWVtb3J5IGFsbG9jYXRpb24gcmVxdWlyZW1lbnQgb2YgY3VycmVudCBSQUlEIGRyaXZl
-cj8gSG93DQo+ID4gbXVjaA0KPiA+IG1lbW9yeSB5b3UgYXJlIHJlc2VydmluZyBmb3IgY2FwdHVy
-ZSBrZXJuZWw/IEFyZSB5b3UgYWxyZWFkeSBzZWVpbmcNCj4gdGhlDQo+ID4gbWVtb3J5IGFsbG9j
-YXRpb24gZmFpbHVyZT8NCj4gPiANCj4gPiBbQU1dIE91ciBub3JtYWwgcnVudGltZSBtZW1vcnkg
-aXMgYWJvdXQgMjBNQi4gRm9yIHRoZSB0ZXN0IGJlZHMsIHdlDQo+IHVzZQ0KPiA+ICJjcmFzaGtl
-cm5lbD0xOTJNQDE2TSIuIFdlIGhhdmUgbm90IHlldCBzZWVuIHRoZSBhbGxvY2F0aW9uIGZhaWx1
-cmUNCj4gYnV0DQo+ID4gd2Ugd291bGQgbGlrZSB0byBidWlsZCB0aGUgZmFsbGJhY2sgbWVjaGFu
-aXNtIGlmIGl0IGRvZXMgZmFpbCB1bmRlcg0KPiA+IGNhcHR1cmUga2VybmVsLiBPbmx5IGlmIHdl
-IGFyZSBub3QgYWJsZSB0byBnZXQgdGhlIG5vcm1hbCBydW50aW1lDQo+ID4gbWVtb3J5LCB3ZSBw
-bGFuIHRvIHN3aXRjaCB0byBhIGxvd2VyIG1lbW9yeSBtb2RlbC4NCj4gPiANCj4gDQo+IDIwTUIg
-aXMgaHVnZS4gSSBhZ3JlZSB0aGF0IGl0IGlzIGEgZ29vZCBpZGVhIHRvIGJyaW5nIGl0IGRvd24g
-Zm9yDQo+IGNhcHR1cmUNCj4ga2VybmVsIGlmIHBlcmZvcm1hbmNlIGlzIG5vdCBzaWduaWZpY2Fu
-dGx5IGltcGFjdGVkLg0KPiANCj4gPiBJIGZlZWwgdW50aWwgYW5kIHVubGVzcyBtZW1vcnkgcmVx
-dWlyZW1lbnRzIGFyZSBodWdlLCB3ZSBzaG91bGQgbm90DQo+ID4gY29tcHJvbWlzZSB3aXRoIElP
-IHRocm91Z2hwdXQuIENhcGFiaWxpdHkgdG8gc2F2ZSB0aGUgZHVtcCB0byBkaXNrIGFzDQo+ID4g
-ZmFzdA0KPiA+IGFzIHBvc3NpYmxlIHRvIHJlZHVjZSB0aGUgZG93biB0aW1lIGlzIGFsc28gYW4g
-aW1wb3J0YW50DQo+IGNvbnNpZGVyYXRpb24uDQo+ID4gDQo+ID4gW0FNXSBXZSBiZWxpZXZlIG91
-ciBub3JtYWwgcnVudGltZSBtZW1vcnkgcmVxdWlyZW1lbnQgaXMgc2lnbmlmaWNhbnQuDQo+ID4g
-QWxzbywgZXZlbiB3aXRoIHRoZSBsb3dlciBtZW1vcnksIHRoZXJlIHdvdWxkIG5vdCBiZSBhIG5v
-dGljZWFibGUgZHVtcA0KPiA+IHRpbWUgZGlmZmVyZW5jZSBzaW5jZSBsb3Qgb2YgbWVtb3J5IGlz
-IGZvciBzdXBwb3J0aW5nIG11bHRpcGxlDQo+ID4gb3V0c3RhbmRpbmcgY29tbWFuZHMgaW4gZHJp
-dmVyJ3MgcmFpZCBjb3JlIGFuZCBvdGhlciByYWlkIG9wZXJhdGlvbnMsDQo+ID4gd2hpY2ggd2ls
-bCBub3QgYmUgcnVubmluZyB1bmRlciBjYXB0dXJlIGtlcm5lbC4gVGhhbmtzIGFnYWluIGZvciB5
-b3VyDQo+ID4gZmVlZGJhY2suDQo+ID4gDQo+IA0KPiBNYWtlcyBzZW5zZS4NCj4gDQo+IFRoYW5r
-cw0KPiBWaXZlaw0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18NCj4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcNCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYw0K
-PiANCg0KDQotLS0NCn5SYW5keQ0KKioqIFJlbWVtYmVyIHRvIHVzZSBEb2N1bWVudGF0aW9uL1N1
-Ym1pdENoZWNrbGlzdCB3aGVuIHRlc3RpbmcgeW91ciBjb2RlICoqKg0K
-
-------_=_NextPart_001_01C7FD53.6DB0E96C
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDMuMi8vRU4iPg0KPEhUTUw+
-DQo8SEVBRD4NCjxNRVRBIEhUVFAtRVFVSVY9IkNvbnRlbnQtVHlwZSIgQ09OVEVOVD0idGV4dC9o
-dG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxNRVRBIE5BTUU9IkdlbmVyYXRvciIgQ09OVEVOVD0iTVMg
-RXhjaGFuZ2UgU2VydmVyIHZlcnNpb24gNi41Ljc2NTEuNTkiPg0KPFRJVExFPlJlOiBrZHVtcCBp
-bmZvIHJlcXVlc3Q8L1RJVExFPg0KPC9IRUFEPg0KPEJPRFk+DQo8IS0tIENvbnZlcnRlZCBmcm9t
-IHRleHQvcGxhaW4gZm9ybWF0IC0tPg0KDQo8UD48Rk9OVCBTSVpFPTI+V2lsbCB0cnkuPEJSPg0K
-PEJSPg0KVGhhbmtzPEJSPg0KQXR1bDxCUj4NCjxCUj4NCjxCUj4NCi0tLS0tIE9yaWdpbmFsIE1l
-c3NhZ2UgLS0tLS08QlI+DQpGcm9tOiBSYW5keSBEdW5sYXAgJmx0O3JkdW5sYXBAeGVub3RpbWUu
-bmV0Jmd0OzxCUj4NClRvOiBNdWtrZXIsIEF0dWw8QlI+DQpDYzogdmdveWFsQGluLmlibS5jb20g
-Jmx0O3Znb3lhbEBpbi5pYm0uY29tJmd0OzsgTW9vcmUsIEVyaWM7IEtleGVjIE1haWxpbmcgTGlz
-dCAmbHQ7a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZyZndDs8QlI+DQpTZW50OiBTYXQgU2VwIDIy
-IDEyOjM1OjUzIDIwMDc8QlI+DQpTdWJqZWN0OiBSZToga2R1bXAgaW5mbyByZXF1ZXN0PEJSPg0K
-PEJSPg0KT24gRnJpLCAyMSBTZXAgMjAwNyAwNjo0ODowMSAtMDYwMCBNdWtrZXIsIEF0dWwgd3Jv
-dGU6PEJSPg0KPEJSPg0KJmd0OyBPbmUgbW9yZSBxdWVzdGlvbiwgYW5kIGhvcGVmdWxseSBJIHdp
-bGwgbm90IGJ1ZyB5b3UgZnVydGhlciBvbiB0aGlzIDotKTxCUj4NCiZndDs8QlI+DQomZ3Q7IEhv
-dyBleGFjdGx5IGRvIHlvdSBwYXJzZSB0aGUga2VybmVsIHBhcmFtZXRlcnM/IEkgdGhvdWdodCBp
-dCB3b3VsZCBiZTxCUj4NCiZndDsgcGxhaW4gc2ltcGxlLCBidXQgc2VlbXMgbGlrZSB0aGUgY29t
-bWFuZCBsaW5lIHN0cmluZyBpcyBub3QgYXZhaWxhYmxlIHRvPEJSPg0KJmd0OyBTQ1NJIGRyaXZl
-ciBsaWtlIG91cnMsIG9yIEkgYW0gbWlzc2luZyBzb21ldGhpbmc/PEJSPg0KPEJSPg0KI2luY2x1
-ZGUgJmx0O2xpbnV4L2luaXQuaCZndDsmbmJzcDsgLy8gZm9yIGV4dGVybiBvZiAnc2F2ZWRfY29t
-bWFuZF9saW5lJyBwb2ludGVyLjxCUj4NCjxCUj4NCmFuZCB1c2UgY2FsbHMgdG8gYW55IGZ1bmN0
-aW9ucyBpbiBsaWIvY21kbGluZS5jIG9yIHdyaXRlIHlvdXI8QlI+DQpvd24gZnVuY3Rpb25zLiZu
-YnNwOyBTaG91bGQgYmUgZmFpcmx5IHNpbXBsZSB0byBzY2FuIGZvciBhIGZpeGVkIHN0cmluZzxC
-Uj4NCm9mICZxdW90O2VsZmNvcmVoZHI9JnF1b3Q7LjxCUj4NCllvdSBkb24ndCBjYXJlIGFib3V0
-IHRoZSB2YXJpYWJsZSBwYXJhbWV0ZXJzLi4gb3IgZG8geW91PzxCUj4NCjxCUj4NCjxCUj4NCiZn
-dDsgVGhhbmtzPEJSPg0KJmd0OyAtQXR1bDxCUj4NCiZndDs8QlI+DQomZ3Q7IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tPEJSPg0KJmd0OyBGcm9tOiBWaXZlayBHb3lhbCBbPEEgSFJFRj0ibWFp
-bHRvOnZnb3lhbEBpbi5pYm0uY29tIj5tYWlsdG86dmdveWFsQGluLmlibS5jb208L0E+XTxCUj4N
-CiZndDsgU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMDcgMTI6MTUgQU08QlI+DQomZ3Q7
-IFRvOiBNdWtrZXIsIEF0dWw8QlI+DQomZ3Q7IENjOiBLZXhlYyBNYWlsaW5nIExpc3Q7IE1vb3Jl
-LCBFcmljPEJSPg0KJmd0OyBTdWJqZWN0OiBSZToga2R1bXAgaW5mbyByZXF1ZXN0PEJSPg0KJmd0
-OzxCUj4NCiZndDsgT24gV2VkLCBTZXAgMTksIDIwMDcgYXQgMDc6MjY6MTlBTSAtMDYwMCwgTXVr
-a2VyLCBBdHVsIHdyb3RlOjxCUj4NCiZndDsgWy4uXTxCUj4NCiZndDsgJmd0OyAmZ3Q7PEJSPg0K
-Jmd0OyAmZ3Q7ICZndDsgSWYgd2UgY291bGQgc29tZWhvdyBkZXRlcm1pbmUgdGhhdCB3ZSBhcmUg
-YmVpbmcgY2FsbGVkIGluIGNvbnRleHQgb2Y8QlI+DQomZ3Q7ICZndDsgY2FwdHVyZSBrZXJuZWws
-IHdlIGNhbiBkeW5hbWljYWxseSBsb3dlciBkcml2ZXIgbWVtb3J5IHJlcXVpcmVtZW50IChhdDxC
-Uj4NCiZndDsgJmd0OyBjb3N0IG9mIGxvd2VyIElPIHRocm91Z2hvdXQgb2YtY291cnNlLCB3aGlj
-aCBpcyBvayBmb3IgdGhpcyBicmllZjxCUj4NCiZndDsgJmd0OyBjb250ZXh0KS48QlI+DQomZ3Q7
-ICZndDs8QlI+DQomZ3Q7ICZndDsgWW91IGNhbiBwYXJzZSB0aGUgY29tbWFuZCBsaW5lIGFuZCBs
-b29rIGZvciBwcmVzZW5jZSBvZiBlbGZjb3JlaGRyPTxCUj4NCiZndDsgJmd0OyBvcHRpb24uPEJS
-Pg0KJmd0OyAmZ3Q7IFRoaXMgaXMgaW50ZXJuYWxseSBhcHBlbmRlZCB0byBjb21tYW5kIGxpbmUg
-Ynkga2V4ZWMgdG9vbHMgdG8gdGVsbDxCUj4NCiZndDsgJmd0OyBjYXB0dXJlPEJSPg0KJmd0OyAm
-Z3Q7IGtlcm5lbCB0aGUgYWRkcmVzcyBvZiBFTEYgY29yZSBoZWFkZXJzLjxCUj4NCiZndDsgJmd0
-OzxCUj4NCiZndDsgJmd0OzxCUj4NCiZndDsgJmd0OyBbQU1dIElzIHRoaXMgYSBzdGFuZGFyZCB3
-YXk/IERvZXNuJ3QgbG9vayBsaWtlIG9uZS4gQWNjb3JkaW5nIHRvPEJSPg0KJmd0OyAmZ3Q7IGtl
-cm5lbC1wYXJhbWV0ZXJzLnR4dCwga2V4ZWMgd291bGQgJnF1b3Q7Z2VuZXJhbGx5JnF1b3Q7IHBh
-c3MgdGhpcyBvcHRpb24gdG88QlI+DQomZ3Q7ICZndDsga2VybmVsIGNvbW1hbmQgbGluZS4gQ2Fu
-IHdlIGxvb2sgYXQgJnF1b3Q7c3RydWN0IHJlc291cmNlIGNyYXNoa19yZXMmcXVvdDsgYW5kPEJS
-Pg0KJmd0OyAmZ3Q7IGNoZWNrIGlmIHN0YXJ0IGFuZCBlbmQgbWVtYmVyIGhhdmUgZGlmZmVyZW50
-IHZhbHVlLCB3aGljaCBpbmRpY2F0ZXM8QlI+DQomZ3Q7ICZndDsgY2FwdHVyZSBrZXJuZWw/PEJS
-Pg0KJmd0OyAmZ3Q7PEJSPg0KJmd0OzxCUj4NCiZndDsgV2VsbCwgbm9ib2R5IGVsc2Ugc28gZmFy
-IGhhcyBoYWQgc3VjaCByZXF1aXJlbWVudHMgc28gY2FuJ3Qgc2F5IGlmIHRoaXM8QlI+DQomZ3Q7
-IGlzIHN0YW5kYXJkIHdheS4gQnV0IHRoaXMgaXMgdGhlIGJlc3Qgd2F5IEkgY2FuIHRoaW5rIG9m
-IHNvIGZhci48QlI+DQomZ3Q7PEJSPg0KJmd0OyBVc2luZyBjcmFzaGtfcmVzIHdpbGwgbm90IHdv
-cmsuIE5vdCBhbGwgdXNlcnMgd2lsbCB1c2Uga2R1bXAgYW5kIHdpbGw8QlI+DQomZ3Q7IG5vdDxC
-Uj4NCiZndDsgcmVzZXJ2ZSBhbnkgbWVtb3J5IGZvciBjYXB0dXJlIGtlcm5lbC4gSW4gdGhhdCBj
-YXNlIGNyYXNoa19yZXMgd2lsbCBiZTxCUj4NCiZndDsgemVybyBmb3Igc3RhcnQgYW5kIGVuZCBh
-bmQgeW91IGRvbid0IHdhbnQgdG8gdHJpbSBkb3duIHRoZSBmdW5jdGlvbmFsaXR5PEJSPg0KJmd0
-OyBvZiB5b3VyIGRyaXZlci48QlI+DQomZ3Q7PEJSPg0KJmd0OyAmZ3Q7IFdoYXQncyB0aGUgbWVt
-b3J5IGFsbG9jYXRpb24gcmVxdWlyZW1lbnQgb2YgY3VycmVudCBSQUlEIGRyaXZlcj8gSG93PEJS
-Pg0KJmd0OyAmZ3Q7IG11Y2g8QlI+DQomZ3Q7ICZndDsgbWVtb3J5IHlvdSBhcmUgcmVzZXJ2aW5n
-IGZvciBjYXB0dXJlIGtlcm5lbD8gQXJlIHlvdSBhbHJlYWR5IHNlZWluZzxCUj4NCiZndDsgdGhl
-PEJSPg0KJmd0OyAmZ3Q7IG1lbW9yeSBhbGxvY2F0aW9uIGZhaWx1cmU/PEJSPg0KJmd0OyAmZ3Q7
-PEJSPg0KJmd0OyAmZ3Q7IFtBTV0gT3VyIG5vcm1hbCBydW50aW1lIG1lbW9yeSBpcyBhYm91dCAy
-ME1CLiBGb3IgdGhlIHRlc3QgYmVkcywgd2U8QlI+DQomZ3Q7IHVzZTxCUj4NCiZndDsgJmd0OyAm
-cXVvdDtjcmFzaGtlcm5lbD0xOTJNQDE2TSZxdW90Oy4gV2UgaGF2ZSBub3QgeWV0IHNlZW4gdGhl
-IGFsbG9jYXRpb24gZmFpbHVyZTxCUj4NCiZndDsgYnV0PEJSPg0KJmd0OyAmZ3Q7IHdlIHdvdWxk
-IGxpa2UgdG8gYnVpbGQgdGhlIGZhbGxiYWNrIG1lY2hhbmlzbSBpZiBpdCBkb2VzIGZhaWwgdW5k
-ZXI8QlI+DQomZ3Q7ICZndDsgY2FwdHVyZSBrZXJuZWwuIE9ubHkgaWYgd2UgYXJlIG5vdCBhYmxl
-IHRvIGdldCB0aGUgbm9ybWFsIHJ1bnRpbWU8QlI+DQomZ3Q7ICZndDsgbWVtb3J5LCB3ZSBwbGFu
-IHRvIHN3aXRjaCB0byBhIGxvd2VyIG1lbW9yeSBtb2RlbC48QlI+DQomZ3Q7ICZndDs8QlI+DQom
-Z3Q7PEJSPg0KJmd0OyAyME1CIGlzIGh1Z2UuIEkgYWdyZWUgdGhhdCBpdCBpcyBhIGdvb2QgaWRl
-YSB0byBicmluZyBpdCBkb3duIGZvcjxCUj4NCiZndDsgY2FwdHVyZTxCUj4NCiZndDsga2VybmVs
-IGlmIHBlcmZvcm1hbmNlIGlzIG5vdCBzaWduaWZpY2FudGx5IGltcGFjdGVkLjxCUj4NCiZndDs8
-QlI+DQomZ3Q7ICZndDsgSSBmZWVsIHVudGlsIGFuZCB1bmxlc3MgbWVtb3J5IHJlcXVpcmVtZW50
-cyBhcmUgaHVnZSwgd2Ugc2hvdWxkIG5vdDxCUj4NCiZndDsgJmd0OyBjb21wcm9taXNlIHdpdGgg
-SU8gdGhyb3VnaHB1dC4gQ2FwYWJpbGl0eSB0byBzYXZlIHRoZSBkdW1wIHRvIGRpc2sgYXM8QlI+
-DQomZ3Q7ICZndDsgZmFzdDxCUj4NCiZndDsgJmd0OyBhcyBwb3NzaWJsZSB0byByZWR1Y2UgdGhl
-IGRvd24gdGltZSBpcyBhbHNvIGFuIGltcG9ydGFudDxCUj4NCiZndDsgY29uc2lkZXJhdGlvbi48
-QlI+DQomZ3Q7ICZndDs8QlI+DQomZ3Q7ICZndDsgW0FNXSBXZSBiZWxpZXZlIG91ciBub3JtYWwg
-cnVudGltZSBtZW1vcnkgcmVxdWlyZW1lbnQgaXMgc2lnbmlmaWNhbnQuPEJSPg0KJmd0OyAmZ3Q7
-IEFsc28sIGV2ZW4gd2l0aCB0aGUgbG93ZXIgbWVtb3J5LCB0aGVyZSB3b3VsZCBub3QgYmUgYSBu
-b3RpY2VhYmxlIGR1bXA8QlI+DQomZ3Q7ICZndDsgdGltZSBkaWZmZXJlbmNlIHNpbmNlIGxvdCBv
-ZiBtZW1vcnkgaXMgZm9yIHN1cHBvcnRpbmcgbXVsdGlwbGU8QlI+DQomZ3Q7ICZndDsgb3V0c3Rh
-bmRpbmcgY29tbWFuZHMgaW4gZHJpdmVyJ3MgcmFpZCBjb3JlIGFuZCBvdGhlciByYWlkIG9wZXJh
-dGlvbnMsPEJSPg0KJmd0OyAmZ3Q7IHdoaWNoIHdpbGwgbm90IGJlIHJ1bm5pbmcgdW5kZXIgY2Fw
-dHVyZSBrZXJuZWwuIFRoYW5rcyBhZ2FpbiBmb3IgeW91cjxCUj4NCiZndDsgJmd0OyBmZWVkYmFj
-ay48QlI+DQomZ3Q7ICZndDs8QlI+DQomZ3Q7PEJSPg0KJmd0OyBNYWtlcyBzZW5zZS48QlI+DQom
-Z3Q7PEJSPg0KJmd0OyBUaGFua3M8QlI+DQomZ3Q7IFZpdmVrPEJSPg0KJmd0OzxCUj4NCiZndDsg
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188QlI+DQomZ3Q7
-IGtleGVjIG1haWxpbmcgbGlzdDxCUj4NCiZndDsga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZzxC
-Uj4NCiZndDsgPEEgSFJFRj0iaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYyI+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYzwvQT48QlI+DQomZ3Q7PEJSPg0KPEJSPg0KPEJSPg0KLS0tPEJSPg0KflJhbmR5PEJSPg0K
-KioqIFJlbWVtYmVyIHRvIHVzZSBEb2N1bWVudGF0aW9uL1N1Ym1pdENoZWNrbGlzdCB3aGVuIHRl
-c3RpbmcgeW91ciBjb2RlICoqKjxCUj4NCjwvRk9OVD4NCjwvUD4NCg0KPC9CT0RZPg0KPC9IVE1M
-Pg==
-
-------_=_NextPart_001_01C7FD53.6DB0E96C--
+To: Satyam Sharma <satyam@infradead.org>
+Cc: Adrian Bunk <bunk@kernel.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, David Rientjes <rientjes@google.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>
 
 
---===============2026435901==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi Satyam,
+
+Satyam Sharma wrote:
+> > On Thu, 20 Sep 2007, Ken'ichi Ohmichi wrote:
+>> >> [PATCH 5/4] [-mm patch] Rename macros returning the size.
+>> >>  The #define SIZE() should be renamed STRUCT_SIZE() since it's always 
+>> >>  returning the size of the struct with a given name.  This would allow 
+>> >>  TYPEDEF_SIZE() to simply become SIZE() since it need not be used 
+>> >>  exclusively for typedefs. This idea is David Rientjes's.
+>> >>  http://www.ussg.iu.edu/hypermail/linux/kernel/0709.1/1964.html
+>> >>
+>> >> Thanks
+>> >> Ken'ichi Ohmichi
+>> >>
+>> >> ---
+>> >> Signed-off-by: David Rientjes <rientjes@google.com>
+> > 
+> > Hmm, I think adding a s-o-b line for David here isn't quite correct.
+> > When someone reviews a patch and gives a suggestion, you only need to
+> > copy him on the next iteration (and he may ack it or whatever, if he
+> > wants) -- but adding a s-o-b line like that ends up (incorrectly)
+> > denoting that he came between the author-to-git-commit chain ...
+
+Thank you for kind explanation.
+I can understand s-o-b clearly.
+
+
+>> >> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+> > 
+>> >> --- a/include/linux/kexec.h	2007-09-18 15:22:19.000000000 +0900
+>> >> +++ b/include/linux/kexec.h	2007-09-18 15:23:22.000000000 +0900
+>> >> @@ -131,10 +131,10 @@ unsigned long paddr_vmcoreinfo_note(void
+>> >>  	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+>> >>  #define VMCOREINFO_SIZE(name) \
+>> >>  	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>> >> -			      (unsigned long)sizeof(struct name))
+>> >> -#define VMCOREINFO_TYPEDEF_SIZE(name) \
+>> >> -	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>> >>  			      (unsigned long)sizeof(name))
+>> >> +#define VMCOREINFO_STRUCT_SIZE(name) \
+>> >> +	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>> >> +			      (unsigned long)sizeof(struct name))
+>> >>  #define VMCOREINFO_OFFSET(name, field) \
+>> >>  	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+>> >>  			      (unsigned long)&(((struct name *)0)->field))
+> > 
+> > Please use %zu and lose all the ugly (unsigned long) casts here.
+
+That sounds good.
+I updated the patch according to your comment.
+
+
+Thanks
+Ken'ichi Ohmichi 
+
+---
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Acked-by: David Rientjes <rientjes@google.com>
+
+---
+diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+--- a/arch/ia64/kernel/machine_kexec.c	2007-09-21 09:25:35.000000000 +0900
++++ b/arch/ia64/kernel/machine_kexec.c	2007-09-21 09:26:13.000000000 +0900
+@@ -137,7 +137,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 
+ 	VMCOREINFO_SYMBOL(node_memblk);
+ 	VMCOREINFO_LENGTH(node_memblk, NR_NODE_MEMBLKS);
+-	VMCOREINFO_SIZE(node_memblk_s);
++	VMCOREINFO_STRUCT_SIZE(node_memblk_s);
+ 	VMCOREINFO_OFFSET(node_memblk_s, start_paddr);
+ 	VMCOREINFO_OFFSET(node_memblk_s, size);
+ #endif
+diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
+--- a/include/linux/kexec.h	2007-09-21 09:25:32.000000000 +0900
++++ b/include/linux/kexec.h	2007-09-21 09:27:23.000000000 +0900
+@@ -130,11 +130,9 @@ unsigned long paddr_vmcoreinfo_note(void
+ #define VMCOREINFO_SYMBOL(name) \
+ 	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
+ #define VMCOREINFO_SIZE(name) \
+-	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+-			      (unsigned long)sizeof(struct name))
+-#define VMCOREINFO_TYPEDEF_SIZE(name) \
+-	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+-			      (unsigned long)sizeof(name))
++	vmcoreinfo_append_str("SIZE(%s)=%zu\n", #name, sizeof(name))
++#define VMCOREINFO_STRUCT_SIZE(name) \
++	vmcoreinfo_append_str("SIZE(%s)=%zu\n", #name, sizeof(struct name))
+ #define VMCOREINFO_OFFSET(name, field) \
+ 	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+ 			      (unsigned long)&(((struct name *)0)->field))
+diff -rpuN a/kernel/kexec.c b/kernel/kexec.c
+--- a/kernel/kexec.c	2007-09-21 09:25:27.000000000 +0900
++++ b/kernel/kexec.c	2007-09-21 09:26:13.000000000 +0900
+@@ -1210,15 +1210,15 @@ static int __init crash_save_vmcoreinfo_
+ #ifdef CONFIG_SPARSEMEM
+ 	VMCOREINFO_SYMBOL(mem_section);
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+-	VMCOREINFO_SIZE(mem_section);
++	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+ #endif
+-	VMCOREINFO_SIZE(page);
+-	VMCOREINFO_SIZE(pglist_data);
+-	VMCOREINFO_SIZE(zone);
+-	VMCOREINFO_SIZE(free_area);
+-	VMCOREINFO_SIZE(list_head);
+-	VMCOREINFO_TYPEDEF_SIZE(nodemask_t);
++	VMCOREINFO_STRUCT_SIZE(page);
++	VMCOREINFO_STRUCT_SIZE(pglist_data);
++	VMCOREINFO_STRUCT_SIZE(zone);
++	VMCOREINFO_STRUCT_SIZE(free_area);
++	VMCOREINFO_STRUCT_SIZE(list_head);
++	VMCOREINFO_SIZE(nodemask_t);
+ 	VMCOREINFO_OFFSET(page, flags);
+ 	VMCOREINFO_OFFSET(page, _count);
+ 	VMCOREINFO_OFFSET(page, mapping);
+_
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2026435901==--
-
