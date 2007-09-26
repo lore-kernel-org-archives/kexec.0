@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from barikada.upol.cz ([158.194.242.200])
+Received: from mga01.intel.com ([192.55.52.88])
 	by canuck.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IaHAK-0004gL-Dt
-	for kexec@lists.infradead.org; Tue, 25 Sep 2007 16:38:00 -0400
-Subject: Re: [patch 1/7] Extended crashkernel command line
-In-Reply-To: <20070925182258.175348676@strauss.suse.de>
-References: <20070925182257.900701776@strauss.suse.de>
-	<20070925182258.175348676@strauss.suse.de>
-Date: Tue, 25 Sep 2007 22:53:36 +0200
-Message-Id: <E1IaHPU-00089b-Bc@flower>
-From: Oleg Verych <olecom@flower.upol.cz>
+	id 1IaRNX-0001Oz-4q
+	for kexec@lists.infradead.org; Wed, 26 Sep 2007 03:32:20 -0400
+Subject: crash by normal: crashdump without reserving memory during system boot
+From: "Huang, Ying" <ying.huang@intel.com>
+Date: Wed, 26 Sep 2007 15:34:10 +0800
+Message-Id: <1190792050.21818.284.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,134 +16,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: linux-arch@vger.kernel.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Kexec Mailing List <kexec@lists.infradead.org>
 
-* Tue, 25 Sep 2007 20:22:58 +0200
->
-> This is the generic part of the patch. It adds a parse_crashkernel() function
-> in kernel/kexec.c that is called by the architecture specific code that
-> actually reserves the memory. That function takes the whole command line and
-> looks itself for "crashkernel=" in it.
-[]
-> +++ b/include/linux/kexec.h
-> @@ -187,6 +187,8 @@ extern u32 vmcoreinfo_note[VMCOREINFO_NO
->  extern size_t vmcoreinfo_size;
->  extern size_t vmcoreinfo_max_size;
->  
-> +int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
-> +		unsigned long long *crash_size, unsigned long long *crash_base);
+Hi,
 
-I still want to point out my consernes about `unsigned long long long'
-bloat.
+I have a proposal to do crashdump without reserving memory during system
+boot. The method is as follow:
 
->  #else /* !CONFIG_KEXEC */
->  struct pt_regs;
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-[]
-> +/*
-> + * This function parses command lines in the format
-> + *
-> + *   crashkernel=<ramsize-range>:<size>[,...][@<base>]
+1. Do not reserve memory during system boot, that is
+crashkernel=<XX>@<YY> is not used in kernel command line.
 
-#v+
-olecom@flower:/tmp$ grep '@offset' <extended-crashkernel-cmdline.mbox
-    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
--       /* crashkernel=size@offset specifies the size to reserve for a crash
-+While the "crashkernel=size[@offset]" syntax is sufficient for most
-+    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-+       crashkernel=range1:size1[,range2:size2,...][@offset]
-olecom@flower:/tmp$ grep '@base' <extended-crashkernel-cmdline.mbox
-+ *     crashkernel=size[@base]
-olecom@flower:/tmp$ grep '@<base' <extended-crashkernel-cmdline.mbox
-+ *   crashkernel=<ramsize-range>:<size>[,...][@<base>]
-olecom@flower:/tmp$ grep '@<offset' <extended-crashkernel-cmdline.mbox
-olecom@flower:/tmp$
-#v-
+2. A new kexec flag named KEXEC_CRASH_BY_NORMAL is defined for
+sys_kexec_load system call. When this flag is specified, the
+sys_kexec_load works as normal kexec (not crash kexec), except the
+destination image is kexec_crash_image instead of kexec_image.
 
-> + *
-> + * The function returns 0 on success and -EINVAL on failure.
-> + */
-> +static int __init parse_crashkernel_mem(char 			*cmdline,
-> +					unsigned long long	system_ram,
-> +					unsigned long long	*crash_size,
-> +					unsigned long long	*crash_base)
-> +{
-> +	char *cur = cmdline;
-> +
-> +	/* for each entry of the comma-separated list */
-> +	do {
-> +		unsigned long long start = 0, end = ULLONG_MAX;
-> +		unsigned long long size = -1;
+3. In kexec-tools (/sbin/kexec), --mem-min=<addr1> and --mem-max=<addr2>
+is used to specify the memory area used by crashdump kernel. That is,
+the image, elf core header, available memory of crashdump kernel is
+within <addr1> ~ <addr2>.
 
-memparse(), as a wrapper for somple_strtoll(), always have a return value
-(zero by default).
-<http://article.gmane.org/gmane.linux.kernel/583426>
+4. In kexec-tools, in addition to kernel image, elf core header, etc are
+loaded, the available memory of crashdump kernel is loaded too. For
+example, the segments for sys_kexec_load for crashdump kernel can be:
 
-Consider coded error path now, please.
+--mem-min=0x100000
+--mem-max=0xffffff
 
-And why not to make overall result reliable? This is kernel after all.
+No.	buf		bufsz		mem		memsz
+0	NULL		0		0x1000		0x9e000
+1	0x881fe88	0x289b		0x100000	0x3000
+2	NULL		0		0x103000	0xfd000
+3	0xb7bfa808	0xb7c00		0x200000	0xb8000
+4	NULL		0		0x2b8000	0xd39000
+5	0x8818d38	0x7120		0xff1000	0x9000
+6	NULL		0		0xffa000	0x1000
+7	0x8818268	0x400		0xffb000	0x4000
+8	NULL		0		0xfff000	0x1000
 
-I.e. if there's valid `crashkernel=' option, but some parsing errors, why
-not to apply some heuristics with warning in syslog, if user have some
-conf, bootloader (random) errors, but feature still works?
+5. In relocate_kernel of Linux kernel, instead of copy the source page
+to destination page, the contents of source page and the destination
+page are swapped. (The destination page -> source page map is in
+kexec_crash_image->head) The memory area used by crashdump kernel is
+backupped to source page.
 
-> +
-> +		/* get the start of the range */
-> +		start = memparse(cur, &cur);
-> +		if (*cur != '-') {
-> +			printk(KERN_WARNING "crashkernel: '-' expected\n");
-> +			return -EINVAL;
-> +		}
-> +		cur++;
-> +
-> +		/* if no ':' is here, than we read the end */
-> +		if (*cur != ':') {
-> +			end = memparse(cur, &cur);
-> +			if (end <= start) {
-> +				printk(KERN_WARNING "crashkernel: end <= start\n");
-> +				return -EINVAL;
-> +			}
-> +		}
-> +
-> +		if (*cur != ':') {
-> +			printk(KERN_WARNING "crashkernel: ':' expected\n");
-> +			return -EINVAL;
-> +		}
-> +		cur++;
-> +
-> +		size = memparse(cur, &cur);
-> +		if (size < 0) {
-> +			printk(KERN_WARNING "crashkernel: invalid size\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* match ? */
-> +		if (system_ram >= start  && system_ram <= end) {
-> +			*crash_size = size;
-> +			break;
-> +		}
-> +	} while (*cur++ == ',');
-> +
-> +	if (*crash_size > 0) {
-> +		while (*cur != ' ' && *cur != '@')
-> +			cur++;
-> +		if (*cur == '@')
-> +			*crash_base = memparse(cur+1, &cur);
-> +	}
-> +
-> +	return 0;
-> +}
---
--o--=O`C
- #oo'L O
-<___=E M
+
+In original crashdump implementation, the crashdump kernel run in
+reserved memory area. The reserved memory pages are reserved memory
+pages in primary (original) kernel.
+
+In this proposed implementation, the crashdump kernel run in specified
+memory area, the contents of destination memory area is backupped before
+crashdump kernel running. The backup pages are allocated memory pages in
+primary (original) kernel.
+
+
+The pros and cons of proposed implementation:
+
+Pros:
+- The memory used by crashdump kernel need not to be reserved during
+boot time.
+- The memory used by crashdump kernel can be specified during
+sys_kexec_load
+- The memory used by crashdump kernel can be freed after unloading.
+
+Cons:
+- The memory used by crashdump kernel can be the DMA destination, their
+contents may be ruined by devices during the boot of crashdump kernel.
+(Is it possible to turn off DMA for some memory area other than
+reserving it?)
+
+
+In fact, almost all mechanism for this proposal has been implemented by
+my previous patch: "kexec jump" in "kexec based hibernation".
+
+
+Any comment is welcome.
+
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
