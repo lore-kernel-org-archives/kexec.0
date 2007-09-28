@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from mail0.lsil.com ([147.145.40.20])
+Received: from outbound.mse2.exchange.ms ([69.25.50.247]
+	helo=mse2fe1.mse2.exchange.ms)
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcNPv-0000gp-TE
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 16:42:48 +0100
-Content-class: urn:content-classes:message
+	id 1IbNeW-0000oD-QD
+	for kexec@lists.infradead.org; Fri, 28 Sep 2007 22:45:44 +0100
+Message-ID: <46FD75E1.3090602@bluelane.com>
+Date: Fri, 28 Sep 2007 14:45:05 -0700
+From: Pete/Piet Delaney <pete@bluelane.com>
 MIME-Version: 1.0
-Subject: RE: kdump info request
-Date: Mon, 1 Oct 2007 09:35:04 -0600
-Message-ID: <9738BCBE884FDB42801FAD8A7769C26501B7F4A7@NAMAIL1.ad.lsil.com>
-In-Reply-To: <20071001081327.d325959d.rdunlap@xenotime.net>
-References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com><20070919035337.GA7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com><20070919042840.GB7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com><20070921041506.GB6156@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com><20070922113553.6898978d.rdunlap@xenotime.net><9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-	<20071001081327.d325959d.rdunlap@xenotime.net>
-From: "Mukker, Atul" <Atul.Mukker@lsi.com>
+Subject: Re: [Kgdb-bugreport] Problem getting kgdb to read kernel symbols.
+	addresses shifted?
+References: <sjmabr8j6d7.fsf@pgpdev.ihtfp.org>	<46FD03CD.9060404@windriver.com>	<sjmve9uj3d2.fsf@pgpdev.ihtfp.org>	<46FD1B6A.3000500@windriver.com>	<20070928114522.n0cdrcebykkgg408@webmail.mit.edu>
+	<46FD2CFB.9010404@windriver.com>
+In-Reply-To: <46FD2CFB.9010404@windriver.com>
+Reply-To: pete@bluelane.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,240 +26,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Moore,
-	Eric" <Eric.Moore@lsi.com>
+To: Jason Wessel <jason.wessel@windriver.com>
+Cc: Derek Atkins <warlord@mit.edu>, kgdb-bugreport@lists.sourceforge.net, Dave Anderson <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Thanks for the information and the effort.
+Jason Wessel wrote:
 
-We need to support all currently shipping products with kdump support
-available (read Red Hat and SuSE) so sooner it makes into to the
-upstream kernel the better it is.
+Shouldn't crash, kdump and kgdb take into consideration a
+shift in the kernel so that gdb works normally?
 
-So, today there is no alternative way to find out if the driver is being
-loaded under kdump restrictive environment?
+Seems that having the kgdb stub knowledgeable of a shift
+in the kernel might be easy to compensate for. Perhaps
+just mapping all reads and writes that lie within the
+original kernel segments to the shifted addresses.
 
-Thanks
--Atul
+-piet
 
------Original Message-----
-From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
-Sent: Monday, October 01, 2007 11:13 AM
-To: Mukker, Atul
-Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
-Subject: Re: kdump info request
+> Derek Atkins wrote:
+>> Quoting Jason Wessel <jason.wessel@windriver.com>:
+>>
+>>>> Um, okay.....  How do I do that?  My GDB Fu is weak here; how do I
+>>>> tell gdb that the symbols in vmlinux are all offset?  Or how do I
+>>>> manipulate the vmlinux binary to offset the symbols?
+>>>>
+>>> Start gdb with no file.  And do something like:  add-symbol-file vmlinux
+>>> 0xBFA00000
+>> Um, where did you get "0xBFA0000" from?  Unfortunately this didn't
+>> work at all.  I would think to get my numbers to work I'd need to
+>> use 0xC0400000 to get sys_close to appear at 0xc047d341.  And
+>> viola, that seems to work!  Or at least I got a reasonable breakpoint
+>> from the 'target remote'
+> 
+> It was an example.  You had previously stated it was an offset of
+> 0x600000 so it was a subtraction of 0x600000 from 0xc0000000.
+> 
+> Jaosn.
+> 
+> -------------------------------------------------------------------------
+> This SF.net email is sponsored by: Microsoft
+> Defy all challenges. Microsoft(R) Visual Studio 2005.
+> http://clk.atdmt.com/MRT/go/vse0120000070mrt/direct/01/
+> _______________________________________________
+> Kgdb-bugreport mailing list
+> Kgdb-bugreport@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/kgdb-bugreport
+> 
 
-On Mon, 1 Oct 2007 08:35:28 -0600 Mukker, Atul wrote:
-
-> Hello Randy,
-> 
-> I tried this today but did not succeed :-( Can you please see the logs
-> appended below and point out what I might be doing wrong? This is on a
-> Red Hat 5 system.
-> 
-> Thanks
-> -Atul
-
-Hi Atul,
-
-I can see the problem without looking at your module.
-'saved_command_line' is only exported for modules in the sparc & 
-sparc64 architectures.  What kernel version(s) do you need this
-for?  Is 2.6.24 and later good enough if we can get the symbol
-exported in that timeframe?
-
-Vivek, do you want to submit a patch for this and also remove these
-lines:
-./arch/sparc/kernel/sparc_ksyms.c:231:EXPORT_SYMBOL(saved_command_line);
-./arch/sparc64/kernel/sparc64_ksyms.c:250:EXPORT_SYMBOL(saved_command_li
-ne);
-
-or should I attempt it?
-
-
-> +++++++++++
-> Sample code
-> +++++++++++
-> #include <linux/init.h>
-> #include <linux/version.h>
-> #include <linux/module.h>
-> 
-> MODULE_AUTHOR("LSI Corporation");
-> MODULE_VERSION("1.0");
-> MODULE_DESCRIPTION("Kernel Command Line");
-> MODULE_LICENSE("GPL");
-> 
-> static int __init cline_init(void)
-> {
-> 	printk("enter module:[%s]\n", saved_command_line);
-> 	return 0;
-> }
-> 
-> static void __exit cline_exit(void)
-> {
-> 	printk("exit module.\n");
-> }
-> 
-> module_init(cline_init);
-> module_exit(cline_exit);
-> 
-> ++++++++
-> Makefile
-> ++++++++
-> obj-m	+= cline.o
-> 
-> +++++++++
-> Build log
-> +++++++++
-> 
-> make: Entering directory `/usr/src/kernels/2.6.18-8.el5-i686'
->   LD
-> /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/built-in.o
->   CC [M]
-/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
->   Building modules, stage 2.
->   MODPOST
-> WARNING: "saved_command_line"
-> [/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko]
-> undefined!
->   CC
-> /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.mod.o
->   LD [M]
-/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
-> make: Leaving directory `/usr/src/kernels/2.6.18-8.el5-i686'
-> 
-> 
-> -----Original Message-----
-> From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
-> Sent: Saturday, September 22, 2007 2:36 PM
-> To: Mukker, Atul
-> Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
-> Subject: Re: kdump info request
-> 
-> On Fri, 21 Sep 2007 06:48:01 -0600 Mukker, Atul wrote:
-> 
-> > One more question, and hopefully I will not bug you further on this
-> :-)
-> > 
-> > How exactly do you parse the kernel parameters? I thought it would
-be
-> > plain simple, but seems like the command line string is not
-available
-> to
-> > SCSI driver like ours, or I am missing something?
-> 
-> #include <linux/init.h>  // for extern of 'saved_command_line'
-pointer.
-> 
-> and use calls to any functions in lib/cmdline.c or write your
-> own functions.  Should be fairly simple to scan for a fixed string
-> of "elfcorehdr=".
-> You don't care about the variable parameters.. or do you?
-> 
-> 
-> > Thanks
-> > -Atul 
-> > 
-> > -----Original Message-----
-> > From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
-> > Sent: Friday, September 21, 2007 12:15 AM
-> > To: Mukker, Atul
-> > Cc: Kexec Mailing List; Moore, Eric
-> > Subject: Re: kdump info request
-> > 
-> > On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
-> > [..]
-> > > > 
-> > > > If we could somehow determine that we are being called in
-context
-> of
-> > > capture kernel, we can dynamically lower driver memory requirement
-> (at
-> > > cost of lower IO throughout of-course, which is ok for this brief
-> > > context).
-> > > 
-> > > You can parse the command line and look for presence of
-elfcorehdr=
-> > > option.
-> > > This is internally appended to command line by kexec tools to tell
-> > > capture
-> > > kernel the address of ELF core headers.
-> > > 
-> > > 
-> > > [AM] Is this a standard way? Doesn't look like one. According to
-> > > kernel-parameters.txt, kexec would "generally" pass this option to
-> > > kernel command line. Can we look at "struct resource crashk_res"
-and
-> > > check if start and end member have different value, which
-indicates
-> > > capture kernel?
-> > > 
-> > 
-> > Well, nobody else so far has had such requirements so can't say if
-> this
-> > is standard way. But this is the best way I can think of so far.
-> > 
-> > Using crashk_res will not work. Not all users will use kdump and
-will
-> > not
-> > reserve any memory for capture kernel. In that case crashk_res will
-be
-> 
-> > zero for start and end and you don't want to trim down the
-> functionality
-> > of your driver.
-> > 
-> > > What's the memory allocation requirement of current RAID driver?
-How
-> > > much
-> > > memory you are reserving for capture kernel? Are you already
-seeing
-> > the
-> > > memory allocation failure?
-> > > 
-> > > [AM] Our normal runtime memory is about 20MB. For the test beds,
-we
-> > use
-> > > "crashkernel=192M@16M". We have not yet seen the allocation
-failure
-> > but
-> > > we would like to build the fallback mechanism if it does fail
-under
-> > > capture kernel. Only if we are not able to get the normal runtime
-> > > memory, we plan to switch to a lower memory model.
-> > > 
-> > 
-> > 20MB is huge. I agree that it is a good idea to bring it down for
-> > capture
-> > kernel if performance is not significantly impacted.
-> > 
-> > > I feel until and unless memory requirements are huge, we should
-not
-> > > compromise with IO throughput. Capability to save the dump to disk
-> as
-> > > fast
-> > > as possible to reduce the down time is also an important
-> > consideration.
-> > > 
-> > > [AM] We believe our normal runtime memory requirement is
-> significant.
-> > > Also, even with the lower memory, there would not be a noticeable
-> dump
-> > > time difference since lot of memory is for supporting multiple
-> > > outstanding commands in driver's raid core and other raid
-> operations,
-> > > which will not be running under capture kernel. Thanks again for
-> your
-> > > feedback.
-> > > 
-> > 
-> > Makes sense.
-> > 
-> > Thanks
-> > Vivek
-
----
-~Randy
 
 _______________________________________________
 kexec mailing list
