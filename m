@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from e33.co.us.ibm.com ([32.97.110.151])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcGsA-0003qv-Uu
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 09:43:31 +0100
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e33.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l918e9IM028050
-	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 04:40:09 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l918e9i2480606
-	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 02:40:09 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l918e8H6010830
-	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 02:40:08 -0600
-Date: Mon, 1 Oct 2007 14:10:24 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: crash by normal: crashdump without reserving memory during system
-	boot
-Message-ID: <20071001084024.GF4933@in.ibm.com>
-References: <1190792050.21818.284.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1190792050.21818.284.camel@caritas-dev.intel.com>
-Reply-To: vgoyal@in.ibm.com
+Received: from mail0.lsil.com ([147.145.40.20])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IcMUJ-0008Mj-8B
+	for kexec@lists.infradead.org; Mon, 01 Oct 2007 15:43:15 +0100
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Subject: RE: kdump info request
+Date: Mon, 1 Oct 2007 08:35:28 -0600
+Message-ID: <9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
+In-Reply-To: <20070922113553.6898978d.rdunlap@xenotime.net>
+References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com><20070919035337.GA7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com><20070919042840.GB7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com><20070921041506.GB6156@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
+	<20070922113553.6898978d.rdunlap@xenotime.net>
+From: "Mukker, Atul" <Atul.Mukker@lsi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,130 +24,194 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: Randy Dunlap <rdunlap@xenotime.net>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Moore,
+	Eric" <Eric.Moore@lsi.com>
 
-On Wed, Sep 26, 2007 at 03:34:10PM +0800, Huang, Ying wrote:
-> Hi,
-> 
-> I have a proposal to do crashdump without reserving memory during system
-> boot. The method is as follow:
-> 
-> 1. Do not reserve memory during system boot, that is
-> crashkernel=<XX>@<YY> is not used in kernel command line.
-> 
-> 2. A new kexec flag named KEXEC_CRASH_BY_NORMAL is defined for
-> sys_kexec_load system call. When this flag is specified, the
-> sys_kexec_load works as normal kexec (not crash kexec), except the
-> destination image is kexec_crash_image instead of kexec_image.
-> 
-> 3. In kexec-tools (/sbin/kexec), --mem-min=<addr1> and --mem-max=<addr2>
-> is used to specify the memory area used by crashdump kernel. That is,
-> the image, elf core header, available memory of crashdump kernel is
-> within <addr1> ~ <addr2>.
-> 
+Hello Randy,
 
-Probably this can be an optional thing. Anyway if destination pages are
-going to be backed up in source pages, a user does not have to specify
---mem-min and --mem-max.
- 
-> 4. In kexec-tools, in addition to kernel image, elf core header, etc are
-> loaded, the available memory of crashdump kernel is loaded too. For
-> example, the segments for sys_kexec_load for crashdump kernel can be:
-> 
-> --mem-min=0x100000
-> --mem-max=0xffffff
-> 
-> No.	buf		bufsz		mem		memsz
-> 0	NULL		0		0x1000		0x9e000
-> 1	0x881fe88	0x289b		0x100000	0x3000
-> 2	NULL		0		0x103000	0xfd000
-> 3	0xb7bfa808	0xb7c00		0x200000	0xb8000
-> 4	NULL		0		0x2b8000	0xd39000
-> 5	0x8818d38	0x7120		0xff1000	0x9000
-> 6	NULL		0		0xffa000	0x1000
-> 7	0x8818268	0x400		0xffb000	0x4000
-> 8	NULL		0		0xfff000	0x1000
-> 
-
-May be user also need to specify how much memory to allocate for second
-kernel execution.
-
-> 5. In relocate_kernel of Linux kernel, instead of copy the source page
-> to destination page, the contents of source page and the destination
-> page are swapped. (The destination page -> source page map is in
-> kexec_crash_image->head) The memory area used by crashdump kernel is
-> backupped to source page.
-> 
-> 
-
-Interesting. Just that it introduces more code in crash path.
-
-> In original crashdump implementation, the crashdump kernel run in
-> reserved memory area. The reserved memory pages are reserved memory
-> pages in primary (original) kernel.
-> 
-> In this proposed implementation, the crashdump kernel run in specified
-> memory area, the contents of destination memory area is backupped before
-> crashdump kernel running. The backup pages are allocated memory pages in
-> primary (original) kernel.
-> 
-
-How would you prepare ELF headers for backed up memory. ELF headers are
-created in user space and before sys_kexec_load is executed, kexec-tools
-need to know the address of physical memory where the actual data is. But
-in this scheme, source pages will be allocated only after sys_kexec_load
-has been called.
-
-These source page addresses will have to be exported to user space so
-that kexec tools can fill up ELF headers accordingly.
-
-> 
-> The pros and cons of proposed implementation:
-> 
-> Pros:
-> - The memory used by crashdump kernel need not to be reserved during
-> boot time.
-> - The memory used by crashdump kernel can be specified during
-> sys_kexec_load
-> - The memory used by crashdump kernel can be freed after unloading.
-> 
-> Cons:
-> - The memory used by crashdump kernel can be the DMA destination, their
-> contents may be ruined by devices during the boot of crashdump kernel.
-> (Is it possible to turn off DMA for some memory area other than
-> reserving it?)
-
-Potential corruption because of DMA was a big issue and that's why the
-exclusive reserved area and relocatable kernel came into the picture.
-
-Eric in the past had tried disabling DMA at PCI level, but I think it
-did not work for him.
-
-- There is no gurantee that one will get sufficient memory allocated
-  when needed. so loading kdump kernel might fail.
-
-- More code in crash path and potentially reduces the relibaility of
-  the mechanism.
-
-> 
-> 
-> In fact, almost all mechanism for this proposal has been implemented by
-> my previous patch: "kexec jump" in "kexec based hibernation".
-> 
-> 
-> Any comment is welcome.
-> 
-
-Idea is interesting. But at the same time it reduces the reliability of
-kdump. I am especially concerned about DMA issue more code in crash path.
-
-I will rather try to find out if I can create some mechanisms to do large
-contiguous memory area allocation from user space at run time instead of
-doing it at boot time.
+I tried this today but did not succeed :-( Can you please see the logs
+appended below and point out what I might be doing wrong? This is on a
+Red Hat 5 system.
 
 Thanks
-Vivek
+-Atul
+
++++++++++++
+Sample code
++++++++++++
+#include <linux/init.h>
+#include <linux/version.h>
+#include <linux/module.h>
+
+MODULE_AUTHOR("LSI Corporation");
+MODULE_VERSION("1.0");
+MODULE_DESCRIPTION("Kernel Command Line");
+MODULE_LICENSE("GPL");
+
+static int __init cline_init(void)
+{
+	printk("enter module:[%s]\n", saved_command_line);
+	return 0;
+}
+
+static void __exit cline_exit(void)
+{
+	printk("exit module.\n");
+}
+
+module_init(cline_init);
+module_exit(cline_exit);
+
+++++++++
+Makefile
+++++++++
+obj-m	+= cline.o
+
++++++++++
+Build log
++++++++++
+
+make: Entering directory `/usr/src/kernels/2.6.18-8.el5-i686'
+  LD
+/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/built-in.o
+  CC [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
+  Building modules, stage 2.
+  MODPOST
+WARNING: "saved_command_line"
+[/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko]
+undefined!
+  CC
+/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.mod.o
+  LD [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
+make: Leaving directory `/usr/src/kernels/2.6.18-8.el5-i686'
+
+
+-----Original Message-----
+From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
+Sent: Saturday, September 22, 2007 2:36 PM
+To: Mukker, Atul
+Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
+Subject: Re: kdump info request
+
+On Fri, 21 Sep 2007 06:48:01 -0600 Mukker, Atul wrote:
+
+> One more question, and hopefully I will not bug you further on this
+:-)
+> 
+> How exactly do you parse the kernel parameters? I thought it would be
+> plain simple, but seems like the command line string is not available
+to
+> SCSI driver like ours, or I am missing something?
+
+#include <linux/init.h>  // for extern of 'saved_command_line' pointer.
+
+and use calls to any functions in lib/cmdline.c or write your
+own functions.  Should be fairly simple to scan for a fixed string
+of "elfcorehdr=".
+You don't care about the variable parameters.. or do you?
+
+
+> Thanks
+> -Atul 
+> 
+> -----Original Message-----
+> From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
+> Sent: Friday, September 21, 2007 12:15 AM
+> To: Mukker, Atul
+> Cc: Kexec Mailing List; Moore, Eric
+> Subject: Re: kdump info request
+> 
+> On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
+> [..]
+> > > 
+> > > If we could somehow determine that we are being called in context
+of
+> > capture kernel, we can dynamically lower driver memory requirement
+(at
+> > cost of lower IO throughout of-course, which is ok for this brief
+> > context).
+> > 
+> > You can parse the command line and look for presence of elfcorehdr=
+> > option.
+> > This is internally appended to command line by kexec tools to tell
+> > capture
+> > kernel the address of ELF core headers.
+> > 
+> > 
+> > [AM] Is this a standard way? Doesn't look like one. According to
+> > kernel-parameters.txt, kexec would "generally" pass this option to
+> > kernel command line. Can we look at "struct resource crashk_res" and
+> > check if start and end member have different value, which indicates
+> > capture kernel?
+> > 
+> 
+> Well, nobody else so far has had such requirements so can't say if
+this
+> is standard way. But this is the best way I can think of so far.
+> 
+> Using crashk_res will not work. Not all users will use kdump and will
+> not
+> reserve any memory for capture kernel. In that case crashk_res will be
+
+> zero for start and end and you don't want to trim down the
+functionality
+> of your driver.
+> 
+> > What's the memory allocation requirement of current RAID driver? How
+> > much
+> > memory you are reserving for capture kernel? Are you already seeing
+> the
+> > memory allocation failure?
+> > 
+> > [AM] Our normal runtime memory is about 20MB. For the test beds, we
+> use
+> > "crashkernel=192M@16M". We have not yet seen the allocation failure
+> but
+> > we would like to build the fallback mechanism if it does fail under
+> > capture kernel. Only if we are not able to get the normal runtime
+> > memory, we plan to switch to a lower memory model.
+> > 
+> 
+> 20MB is huge. I agree that it is a good idea to bring it down for
+> capture
+> kernel if performance is not significantly impacted.
+> 
+> > I feel until and unless memory requirements are huge, we should not
+> > compromise with IO throughput. Capability to save the dump to disk
+as
+> > fast
+> > as possible to reduce the down time is also an important
+> consideration.
+> > 
+> > [AM] We believe our normal runtime memory requirement is
+significant.
+> > Also, even with the lower memory, there would not be a noticeable
+dump
+> > time difference since lot of memory is for supporting multiple
+> > outstanding commands in driver's raid core and other raid
+operations,
+> > which will not be running under capture kernel. Thanks again for
+your
+> > feedback.
+> > 
+> 
+> Makes sense.
+> 
+> Thanks
+> Vivek
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+
+---
+~Randy
+*** Remember to use Documentation/SubmitChecklist when testing your code
+***
 
 _______________________________________________
 kexec mailing list
