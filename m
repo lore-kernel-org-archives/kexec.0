@@ -1,19 +1,29 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IbClt-0000rA-TS
-	for kexec@lists.infradead.org; Fri, 28 Sep 2007 11:08:36 +0100
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l8SA6Q5u020474
-	for <kexec@lists.infradead.org>; Fri, 28 Sep 2007 19:06:26 +0900 (JST)
-Message-Id: <46FCD1BD.2080502@mxs.nes.nec.co.jp>
-Date: Fri, 28 Sep 2007 19:04:45 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [Xen-devel] [makedumpfile] extract vmcoreinfo from /proc/vmcore
-	for	Xen
-References: <20070928090647.6EA9.ODA@valinux.co.jp>
-In-Reply-To: <20070928090647.6EA9.ODA@valinux.co.jp>
+Received: from e31.co.us.ibm.com ([32.97.110.149])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IcF2q-0002cn-5M
+	for kexec@lists.infradead.org; Mon, 01 Oct 2007 07:46:24 +0100
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l916gvuV029015
+	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 02:42:57 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l916guJe391068
+	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 00:42:56 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l916guej004932
+	for <kexec@lists.infradead.org>; Mon, 1 Oct 2007 00:42:56 -0600
+Date: Mon, 1 Oct 2007 12:13:09 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: using bios after linux
+Message-ID: <20071001064309.GC4933@in.ibm.com>
+References: <5bf40e35adf3a20c89b5976850af992a@sundius.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5bf40e35adf3a20c89b5976850af992a@sundius.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,140 +32,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Itsuro ODA <oda@valinux.co.jp>
-Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
+To: C Michael Sundius <msundius@sundius.com>
+Cc: kexec@lists.infradead.org
+
+On Thu, Sep 27, 2007 at 06:57:30AM -0700, C Michael Sundius wrote:
+> =
+
+> Hi,
+> =
+
+>   I've been working on a project where we are using linux as an =
+
+> operating environment for some
+>   setup work prior to booting windows. our control flow looks like this
+> =
+
+>   reset =3D> (1)linux & linux aplication=A0 =3D>
+>   (2)kexec =3D> (3)proprietery 16bit real code (uses bios) =3D>
+>   (4)ntloader =3D> (5)Windows
+> =
 
 
-Hi,
+Interesting. Just curious to know that how above setup is useful?
 
-Itsuro ODA wrote:
-> > I'd like to support the "extract vmcoreinfo from /proc/vmcore"
-> > function for the Xen extraction too.
-> >
-> > I think a way of supporting this as follows:
-> > 
-> > * The hypervisor makes its vmcoreinfo at the initialize.
-> > * add a new hypervisor call to get the hypervisor's vmcoreinfo.
-> >   The hypercall would be a subcommand of the kexec hypercall.
-> > * dom-0 exposes the hypervisor's vmcoreinfo via 
-> >   /sys/hypervisor/vmcoreinfo
-> > * kexec-tool looks /sys/hypervisor/vmcoreinfo and makes an elf-note
-> >   according it
+>   I have come into this project in the middle, however I've seen enough =
 
-That sounds good.
+> to understand that its not an easy
+>   task to run bios calls after linux, especially int13 and power =
 
-BTW, the testing tree of kexec-tools has not contain the patch for
-vmcoreinfo yet. I think the tree is mainline now, and I hope the
-patch is merged into the tree  ;-) 
+> management stuff. The contractor that
+>   has been working on this prior to me, used Grub-for-DOS as glue code =
 
+> to get most machines to boot correctly.
+>   i.e. kexec-tools loads Grub-for-DOS (GFD) and our proprietery =
+
+> pre-windows real mode code (I'll call that the
+>   real mode "stuff" from here on); kexec starts GFD, which then starts =
+
+> the RM "stuff" that does some thing
+>   and then finally kicks off ntloader and Windows.
+> =
+
+>   It seems as though Grub-for-DOS does some magic since if we simply =
+
+> load our RM STUFF using some simple
+>   pergetory code to switch us into real mode the processor goes off into =
+
+> the weeds when we call BIOS
+>   int13; not on all machines of course, but many more than with GFD.
+> =
+
+
+I have never done that but Eric Biederman in the past had mentioned that
+it is not reliable to call BIOS routines once linux as taken control and
+we are out of real mode.
+
+>   I'll also say that we are working off of an older version of =
+
+> kexec-tools, say 6mo to 1year ago.
+> =
+
+>   QUESTIONS:
+>   1) Is GFD the defacto way of running BIOS calls after linux (chain =
+
+> booting DOS or windows) or has
+>   the kexec team or anyone else gotten some a simpler program to go from =
+
+> linux to realmode (and BIOS)?
+>   Any pointers to previous work or helpful hints would be greatly =
+
+> appreciated.
+> =
+
+
+Kexec does provide option for real mode entry. It will drop to real mode
+and then new kernel will execute real mode code (including bios calls). Not
+sure how reliable is that.
+
+I had tried something similar in the past. Drop to real mode and then try
+to invoke BIOS calls to rest the display. I think I had partial success.
+ =
+
+> =
+
+>   2) It would be best if our linux application that runs before kexec =
+
+> call kexec directly*. Thus has anyone
+>   thought to provide a kexec-tools-lib and an api such that programs can =
+
+> acess the same high level utility of
+>   the kexec program just as easily as from the shell? This would be a =
+
+> great help.=A0 Are the
+>   "kexec-tools-powers-that-be" interested in that being integrated into =
+
+> your project? (if we contributed it or
+>   part of it)
+> =
+
+>   * I'll just add that we would like to pass pointers to the buffer (of =
+
+> code that is loaded) directly to
+>   the kexec user program instead of having to store them somewhere (in a =
+
+> file) and then let the kexec
+>   program retrieve them (i'm talking about our Real Mode STUFF that runs =
+
+> before windows and after linux).
+> =
+
+
+So you want library just because you don't want to put real mode code in =
+
+a file and then pass it to kexec? You want these to be dynamic options =
+
+and pass the buffers. I would say, easier way is to put everything into
+a file and then let kexec read/parse it.
 
 Thanks
-Ken'ichi Ohmichi 
-
-Signed-off-by: Dan Aloni <da-x@monatomic.org>
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-
----
-diff -rpuN a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
---- a/kexec/crashdump-elf.c	2007-03-30 13:34:36.000000000 +0900
-+++ b/kexec/crashdump-elf.c	2007-09-07 22:58:18.000000000 +0900
-@@ -36,6 +36,8 @@ int FUNC(struct kexec_info *info,
- 	char *bufp;
- 	long int nr_cpus = 0;
- 	uint64_t notes_addr, notes_len;
-+	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
-+	int has_vmcoreinfo = 0;
- 	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
- 
- 	if (xen_present())
-@@ -47,7 +49,11 @@ int FUNC(struct kexec_info *info,
- 		return -1;
- 	}
- 
--	sz = sizeof(EHDR) + nr_cpus * sizeof(PHDR) + ranges * sizeof(PHDR);
-+	if (get_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len) == 0) {
-+		has_vmcoreinfo = 1;
-+	}
-+
-+	sz = sizeof(EHDR) + (nr_cpus + has_vmcoreinfo) * sizeof(PHDR) + ranges * sizeof(PHDR);
- 
- 	/*
- 	 * Certain architectures such as x86_64 and ia64 require a separate
-@@ -148,6 +154,21 @@ int FUNC(struct kexec_info *info,
- 		dfprintf_phdr(stdout, "Elf header", phdr);
- 	}
- 
-+	if (has_vmcoreinfo) {
-+		phdr = (PHDR *) bufp;
-+		bufp += sizeof(PHDR);
-+		phdr->p_type	= PT_NOTE;
-+		phdr->p_flags	= 0;
-+		phdr->p_offset  = phdr->p_paddr = vmcoreinfo_addr;
-+		phdr->p_vaddr   = 0;
-+		phdr->p_filesz	= phdr->p_memsz	= vmcoreinfo_len;
-+		/* Do we need any alignment of segments? */
-+		phdr->p_align	= 0;
-+
-+		(elf->e_phnum)++;
-+		dfprintf_phdr(stdout, "vmcoreinfo header", phdr);
-+	}
-+
- 	/* Setup an PT_LOAD type program header for the region where
- 	 * Kernel is mapped if info->kern_size is non-zero.
- 	 */
-diff -rpuN a/kexec/crashdump.c b/kexec/crashdump.c
---- a/kexec/crashdump.c	2007-03-30 13:34:36.000000000 +0900
-+++ b/kexec/crashdump.c	2007-09-07 23:03:55.000000000 +0900
-@@ -108,3 +108,32 @@ int get_crash_notes_per_cpu(int cpu, uin
- 
- 	return 0;
- }
-+
-+/* Returns the physical address of start of crash notes buffer for a kernel. */
-+int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
-+{
-+	char kdump_info[PATH_MAX];
-+	char line[MAX_LINE];
-+	int count;
-+	FILE *fp;
-+	unsigned long long temp, temp2;
-+
-+	*addr = 0;
-+	*len = 0;
-+
-+	sprintf(kdump_info, "/sys/kernel/vmcoreinfo");
-+	fp = fopen(kdump_info, "r");
-+	if (!fp)
-+		return 0;
-+
-+	if (!fgets(line, sizeof(line), fp))
-+		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
-+	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
-+	if (count != 2)
-+		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
-+
-+	*addr = (uint64_t) temp;
-+	*len = (uint64_t) temp2;
-+
-+	return 0;
-+}
-diff -rpuN a/kexec/crashdump.h b/kexec/crashdump.h
---- a/kexec/crashdump.h	2007-03-30 13:34:36.000000000 +0900
-+++ b/kexec/crashdump.h	2007-09-07 22:58:18.000000000 +0900
-@@ -2,6 +2,7 @@
- #define CRASHDUMP_H
- 
- extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
-+extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
- 
- /* Need to find a better way to determine per cpu notes section size. */
- #define MAX_NOTE_BYTES		1024
-_
-
+Vivek
 
 _______________________________________________
 kexec mailing list
