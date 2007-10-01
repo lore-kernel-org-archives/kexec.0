@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from xenotime.net ([66.160.160.81])
-	by pentafluge.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcN0s-0000Mp-8r
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 16:16:55 +0100
-Received: from midway.site ([71.117.233.180]) by xenotime.net for
-	<kexec@lists.infradead.org>; Mon, 1 Oct 2007 08:13:27 -0700
-Date: Mon, 1 Oct 2007 08:13:27 -0700
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Re: kdump info request
-Message-Id: <20071001081327.d325959d.rdunlap@xenotime.net>
-In-Reply-To: <9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
-	<20070919035337.GA7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
-	<20070919042840.GB7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
-	<20070921041506.GB6156@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
-	<20070922113553.6898978d.rdunlap@xenotime.net>
-	<9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-Mime-Version: 1.0
+Received: from mail0.lsil.com ([147.145.40.20])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IcNPv-0000gp-TE
+	for kexec@lists.infradead.org; Mon, 01 Oct 2007 16:42:48 +0100
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Subject: RE: kdump info request
+Date: Mon, 1 Oct 2007 09:35:04 -0600
+Message-ID: <9738BCBE884FDB42801FAD8A7769C26501B7F4A7@NAMAIL1.ad.lsil.com>
+In-Reply-To: <20071001081327.d325959d.rdunlap@xenotime.net>
+References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com><20070919035337.GA7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com><20070919042840.GB7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com><20070921041506.GB6156@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com><20070922113553.6898978d.rdunlap@xenotime.net><9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
+	<20071001081327.d325959d.rdunlap@xenotime.net>
+From: "Mukker, Atul" <Atul.Mukker@lsi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,9 +24,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: "Mukker, Atul" <Atul.Mukker@lsi.com>
+To: Randy Dunlap <rdunlap@xenotime.net>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Moore,
 	Eric" <Eric.Moore@lsi.com>
+
+Thanks for the information and the effort.
+
+We need to support all currently shipping products with kdump support
+available (read Red Hat and SuSE) so sooner it makes into to the
+upstream kernel the better it is.
+
+So, today there is no alternative way to find out if the driver is being
+loaded under kdump restrictive environment?
+
+Thanks
+-Atul
+
+-----Original Message-----
+From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
+Sent: Monday, October 01, 2007 11:13 AM
+To: Mukker, Atul
+Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
+Subject: Re: kdump info request
 
 On Mon, 1 Oct 2007 08:35:28 -0600 Mukker, Atul wrote:
 
@@ -58,7 +69,8 @@ exported in that timeframe?
 Vivek, do you want to submit a patch for this and also remove these
 lines:
 ./arch/sparc/kernel/sparc_ksyms.c:231:EXPORT_SYMBOL(saved_command_line);
-./arch/sparc64/kernel/sparc64_ksyms.c:250:EXPORT_SYMBOL(saved_command_line);
+./arch/sparc64/kernel/sparc64_ksyms.c:250:EXPORT_SYMBOL(saved_command_li
+ne);
 
 or should I attempt it?
 
@@ -101,7 +113,8 @@ or should I attempt it?
 > make: Entering directory `/usr/src/kernels/2.6.18-8.el5-i686'
 >   LD
 > /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/built-in.o
->   CC [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
+>   CC [M]
+/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
 >   Building modules, stage 2.
 >   MODPOST
 > WARNING: "saved_command_line"
@@ -109,7 +122,8 @@ or should I attempt it?
 > undefined!
 >   CC
 > /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.mod.o
->   LD [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
+>   LD [M]
+/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
 > make: Leaving directory `/usr/src/kernels/2.6.18-8.el5-i686'
 > 
 > 
@@ -125,12 +139,15 @@ or should I attempt it?
 > > One more question, and hopefully I will not bug you further on this
 > :-)
 > > 
-> > How exactly do you parse the kernel parameters? I thought it would be
-> > plain simple, but seems like the command line string is not available
+> > How exactly do you parse the kernel parameters? I thought it would
+be
+> > plain simple, but seems like the command line string is not
+available
 > to
 > > SCSI driver like ours, or I am missing something?
 > 
-> #include <linux/init.h>  // for extern of 'saved_command_line' pointer.
+> #include <linux/init.h>  // for extern of 'saved_command_line'
+pointer.
 > 
 > and use calls to any functions in lib/cmdline.c or write your
 > own functions.  Should be fairly simple to scan for a fixed string
@@ -151,14 +168,16 @@ or should I attempt it?
 > > On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
 > > [..]
 > > > > 
-> > > > If we could somehow determine that we are being called in context
+> > > > If we could somehow determine that we are being called in
+context
 > of
 > > > capture kernel, we can dynamically lower driver memory requirement
 > (at
 > > > cost of lower IO throughout of-course, which is ok for this brief
 > > > context).
 > > > 
-> > > You can parse the command line and look for presence of elfcorehdr=
+> > > You can parse the command line and look for presence of
+elfcorehdr=
 > > > option.
 > > > This is internally appended to command line by kexec tools to tell
 > > > capture
@@ -167,8 +186,10 @@ or should I attempt it?
 > > > 
 > > > [AM] Is this a standard way? Doesn't look like one. According to
 > > > kernel-parameters.txt, kexec would "generally" pass this option to
-> > > kernel command line. Can we look at "struct resource crashk_res" and
-> > > check if start and end member have different value, which indicates
+> > > kernel command line. Can we look at "struct resource crashk_res"
+and
+> > > check if start and end member have different value, which
+indicates
 > > > capture kernel?
 > > > 
 > > 
@@ -176,25 +197,32 @@ or should I attempt it?
 > this
 > > is standard way. But this is the best way I can think of so far.
 > > 
-> > Using crashk_res will not work. Not all users will use kdump and will
+> > Using crashk_res will not work. Not all users will use kdump and
+will
 > > not
-> > reserve any memory for capture kernel. In that case crashk_res will be
+> > reserve any memory for capture kernel. In that case crashk_res will
+be
 > 
 > > zero for start and end and you don't want to trim down the
 > functionality
 > > of your driver.
 > > 
-> > > What's the memory allocation requirement of current RAID driver? How
+> > > What's the memory allocation requirement of current RAID driver?
+How
 > > > much
-> > > memory you are reserving for capture kernel? Are you already seeing
+> > > memory you are reserving for capture kernel? Are you already
+seeing
 > > the
 > > > memory allocation failure?
 > > > 
-> > > [AM] Our normal runtime memory is about 20MB. For the test beds, we
+> > > [AM] Our normal runtime memory is about 20MB. For the test beds,
+we
 > > use
-> > > "crashkernel=192M@16M". We have not yet seen the allocation failure
+> > > "crashkernel=192M@16M". We have not yet seen the allocation
+failure
 > > but
-> > > we would like to build the fallback mechanism if it does fail under
+> > > we would like to build the fallback mechanism if it does fail
+under
 > > > capture kernel. Only if we are not able to get the normal runtime
 > > > memory, we plan to switch to a lower memory model.
 > > > 
@@ -203,7 +231,8 @@ or should I attempt it?
 > > capture
 > > kernel if performance is not significantly impacted.
 > > 
-> > > I feel until and unless memory requirements are huge, we should not
+> > > I feel until and unless memory requirements are huge, we should
+not
 > > > compromise with IO throughput. Capability to save the dump to disk
 > as
 > > > fast
