@@ -1,38 +1,25 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from e31.co.us.ibm.com ([32.97.110.149])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcvhJ-0006hj-6D
-	for kexec@lists.infradead.org; Wed, 03 Oct 2007 05:19:01 +0100
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l934FNq1019766
-	for <kexec@lists.infradead.org>; Wed, 3 Oct 2007 00:15:23 -0400
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l934FNOG470460
-	for <kexec@lists.infradead.org>; Tue, 2 Oct 2007 22:15:23 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l934FNR0008919
-	for <kexec@lists.infradead.org>; Tue, 2 Oct 2007 22:15:23 -0600
-Date: Wed, 3 Oct 2007 09:45:45 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: kdump info request
-Message-ID: <20071003041545.GA5343@in.ibm.com>
-References: <9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
-	<20070919042840.GB7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
-	<20070921041506.GB6156@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
-	<20070922113553.6898978d.rdunlap@xenotime.net>
-	<9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-	<20071001081327.d325959d.rdunlap@xenotime.net>
-	<9738BCBE884FDB42801FAD8A7769C26501B7F4A7@NAMAIL1.ad.lsil.com>
-	<20071001093145.7205773d.rdunlap@xenotime.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20071001093145.7205773d.rdunlap@xenotime.net>
-Reply-To: vgoyal@in.ibm.com
+Received: from mail.ihtfp.org ([204.107.200.6])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IcQG3-00032E-6H
+	for kexec@lists.infradead.org; Mon, 01 Oct 2007 19:44:46 +0100
+Subject: Re: [Kgdb-bugreport] Problem getting kgdb to read kernel symbols.
+	addresses shifted?
+References: <sjmabr8j6d7.fsf@pgpdev.ihtfp.org>
+	<46FD03CD.9060404@windriver.com> <sjmve9uj3d2.fsf@pgpdev.ihtfp.org>
+	<46FD1B6A.3000500@windriver.com>
+	<20070928114522.n0cdrcebykkgg408@webmail.mit.edu>
+	<46FD2CFB.9010404@windriver.com> <46FD75E1.3090602@bluelane.com>
+	<m18x6qbfip.fsf@ebiederm.dsl.xmission.com>
+	<sjm641uid1x.fsf@pgpdev.ihtfp.org>
+	<m11wcibbpq.fsf@ebiederm.dsl.xmission.com>
+	<20070930053813.GC16593@in.ibm.com> <4700F79F.5080502@redhat.com>
+From: Derek Atkins <warlord@MIT.EDU>
+Date: Mon, 01 Oct 2007 14:44:06 -0400
+In-Reply-To: <4700F79F.5080502@redhat.com> (Dave Anderson's message of "Mon\,
+	01 Oct 2007 09\:35\:27 -0400")
+Message-ID: <sjmve9qekug.fsf@pgpdev.ihtfp.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -45,65 +32,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: "Mukker, Atul" <Atul.Mukker@lsi.com>, balbir@in.ibm.com, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>, "Moore, Eric" <Eric.Moore@lsi.com>
+To: Dave Anderson <anderson@redhat.com>
+Cc: kgdb-bugreport@lists.sourceforge.net, Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Jason Wessel <jason.wessel@windriver.com>, pete@bluelane.com
 
-On Mon, Oct 01, 2007 at 09:31:45AM -0700, Randy Dunlap wrote:
-> On Mon, 1 Oct 2007 09:35:04 -0600 Mukker, Atul wrote:
-> 
-> > Thanks for the information and the effort.
-> > 
-> > We need to support all currently shipping products with kdump support
-> > available (read Red Hat and SuSE) so sooner it makes into to the
-> > upstream kernel the better it is.
-> > 
-> > So, today there is no alternative way to find out if the driver is being
-> > loaded under kdump restrictive environment?
-> > 
-> > Thanks
-> > -Atul
-> 
-> I'm not the right person to answer that, but going forward, it would
-> be nice to have that information and it would be good to do correctly.
-> 
-> I think that scanning <saved_command_line> is not actually the good/right
-> way to do this.  It should just be a flag somewhere, and the flag should
-> be available in all (future) kernels (and likely easily backportable
-> as well, if that matters), meaning those built without kdump support.
-> 
-> But it's still up to the kexec developers...
-> 
-> 
+Dave Anderson <anderson@redhat.com> writes:
 
-Hi Atul/Randy,
+>> Hi Eric and others,
+>>
+>> I think we might be running into the issues because i386, FC7 relocatable
+>> kernel has been compiled for 16MB physical address but effectively it
+>> runs at 4MB physical address. So kernel does not run at compiled address
+>> and any kind of debugging tools reading symbol address from System.map
+>> or rom vmlinux will fail as run time symbol addresses are different.
+>>
+>> /proc/kallsyms should help though. This is one problem with shift in run
+>> time virtual address while relocating the kernel. We should be running kernel
+>> at compiled address to be able to debug it. Or enable any tools to parse
+>> /proc/kallsyms to read the shift in symbol addresses and adjust accordingly.
+>>
+>> Thanks
+>> Vivek
+>
+> Right, crash was updated in version 4.0-4.5 to allow the use
+> of /proc/kallsyms as an alternative to the System.map file,
+> as well as adding a new --reloc command line argument.  After
+> bringing up the vmlinux file in gdb (with the "wrong" addresses),
+> all of the minimal_symbol data structures in the gdb module are
+> back-patched with the /proc/kallsyms values:
+>
+>  http://people.redhat.com/anderson/crash.changelog.html#4_0_4_5
+>
+> It seems the benefit of configuring the kernel that way is debatable,
+> and I will do all I can to convince the RHEL-6 and beyond kernel
+> maintainers from doing it that way in the future.  But Fedora goes
+> its own way.  Seems totally lame to issue a bogus System.map file
+> though...
 
-[CCing to LKML]
+Well, this is kgdb, so "/proc/kallsyms" is on the target machine,
+not the host machine.  So, 'gdb' cannot read /proc/kallsyms, because,
+well, it's not local.
 
-Thinking more about it, looks like scanning command line is not a very good
-idea.
+However, I AM building my own kernel -- so I can certainly reconfigure
+it as necessary.  What do I need to do to reconfigure my kernel to
+run at the same place it was built for?  I.e., what's changing the
+runtime from 16M to 4M and how do I make it consistent?
 
-I think we should instead look for if total available RAM in the system and
-then let driver make a decision about how much memory to allocate. Pavel
-already suggested it on LKML and I like the idea.
+Thanks!
 
-This is more generic and can be applied to kdump, kexec based hibernation and
-all the future users of kexec on panic infrstrcuture which will boot a 
-second kernel in restricted amount of RAM.
+> Dave
 
-I am not sure what's the best way to determine the total RAM in the system
-in arch independent manner. Some VM guys can tell it better. One of the ways
-could be to parse /proc/iomem, the way kexec-tools does. Balbir mentioned
-that traverse through the nodes and sum up present_pages. 
+-derek
 
-Any suggestions, what's the best way to determine total amount of RAM
-in the system in kernel?
-
-Right now this seems to be one odd case so this code can be inside module.
-If there are more users of it then we can probably create a flag inside
-kernel and export it.
-
-Thanks
-Vivek
+-- 
+       Derek Atkins, SB '93 MIT EE, SM '95 MIT Media Laboratory
+       Member, MIT Student Information Processing Board  (SIPB)
+       URL: http://web.mit.edu/warlord/    PP-ASEL-IA     N1NWH
+       warlord@MIT.EDU                        PGP key available
 
 _______________________________________________
 kexec mailing list
