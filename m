@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+Received: from [67.15.197.40] (helo=web2mail.com)
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IdfS4-0001il-TA
-	for kexec@lists.infradead.org; Fri, 05 Oct 2007 06:10:19 +0100
-Received: from tyo201.gate.nec.co.jp ([10.7.69.201])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9558FeW028579
-	for <kexec@lists.infradead.org>; Fri, 5 Oct 2007 14:08:15 +0900 (JST)
-Message-ID: <4705C63E.7020408@ah.jp.nec.com>
-Date: Fri, 05 Oct 2007 14:06:06 +0900
-From: Takenori Nagano <t-nagano@ah.jp.nec.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] add tunable_notifier function
-References: <4704D0BA.4090507@ah.jp.nec.com>
-	<20071004091157.c35f3513.randy.dunlap@oracle.com>
-In-Reply-To: <20071004091157.c35f3513.randy.dunlap@oracle.com>
+	id 1Ickih-0007U5-SS
+	for kexec@lists.infradead.org; Tue, 02 Oct 2007 17:35:44 +0100
+Subject: using bios after linux
+From: msundius@u1.netgate.com
+Message-Id: <20071002161238.25C524700E1@web2mail.com>
+Date: Tue,  2 Oct 2007 16:12:38 +0000 (GMT)
+Reply-To: msundius@u1.netgate.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,43 +16,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Randy Dunlap <randy.dunlap@oracle.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: vygoyal@in.ibm.com
+Cc: kexec@lists.infradead.org
 
-Randy Dunlap wrote:
-> On Thu, 04 Oct 2007 20:38:34 +0900 Takenori Nagano wrote:
->> diff -uprN linux-2.6.23-rc9.orig/kernel/sys.c linux-2.6.23-rc9/kernel/sys.c
->> --- linux-2.6.23-rc9.orig/kernel/sys.c	2007-10-02 12:24:52.000000000 +0900
->> +++ linux-2.6.23-rc9/kernel/sys.c	2007-10-03 14:48:15.160000000 +0900
->> @@ -38,6 +38,7 @@
->>  #include <linux/syscalls.h>
->>  #include <linux/kprobes.h>
->>  #include <linux/user_namespace.h>
->> +#include <linux/debugfs.h>
->>
->>  #include <asm/uaccess.h>
->>  #include <asm/io.h>
->> @@ -393,6 +394,234 @@ int blocking_notifier_call_chain(struct
-> 
->> +/**
->> + *	tunable_notifier_chain_register - Add notifier to an tunable notifier chain
->> + *	@nh: Pointer to head of the tunable notifier chain
->> + *	@n: New entry in notifier chain
->> + *	@name: Pointer to the name of this notifier chain
-> 
-> Is @name the name of a notifier chain or of the new notifier entry?
+--------------------------------------------------
+Here is a message for you from http://web2mail.com
+The easy way to read and send POP email on the web
+--------------------------------------------------
 
-Hi Randy,
+Vivek,
 
-@name: Pointer to the name of the new notifier entry.
 
-I'll change the explanation.
 
-Thanks,
+Thank you for your reply.
+
+
+
+I can't really say what our application is, as I'm a contractor and paid to keep my mouth shut.
+
+
+
+As for the question of kexec as a library. yes it would be easier for me,
+
+but we are not always paid to do the easy thing. My client 
+
+wants to be sure that it is difficult for others to find the payload of
+
+kexec. that means not writing it to a file. I also think that enough
+
+applications will eventually exist out there that want to restart 
+
+the OS that a library call is warrented.
+
+
+
+Other questions:.. what happened to lists.infradead.org? seems to have been 
+
+vaporized. 
+
+
+
+more importantly, yes, I've read in the archives that Eric gave up on 
+
+calling bios after linux. Was this because linux stomped on the state of 
+
+bios, or that linux (its drivers really) leaves the physical hardware 
+
+(devices) in such an undeterminate state such that  bios cannot handle 
+
+the sudden change or complicated confiuration. 
+
+
+
+Before you answer, that last one, I realize that it is largely symantic, 
+
+but what I mean is that is this more of a problem inherent in how some
+
+bios' are not well behaved and should be fixed or is it that linux does
+
+not close down nicely and therefore should be fixed? we will never 
+
+shutdown as in the case of a crash dump, but rather do our best to clean
+
+up after ourselves. 
+
+
+
+Thus, we probably don't have a problem fixing a bug or two to make that happen
+
+so bios runs.  on the other hand the decision makers want to avoid having
+
+a whole army of people fixing drivers to make them turn off correctly.
+
+
+
+(or better, am I on a fools errend or should I keep up the fight?)
+
+
+
+well, thanks for your input. 
+
+
+
+Mike
+
+
+
+ps sorry for not quoting the original email, I'm not on my normal computer
+
+and am writing from web2mail :[
+
+
+
+ 
+
+
+
+
 
 _______________________________________________
 kexec mailing list
