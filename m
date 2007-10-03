@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from xenotime.net ([66.160.160.81])
-	by pentafluge.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcOEX-0001P4-Pm
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 17:35:06 +0100
-Received: from midway.site ([71.117.233.180]) by xenotime.net for
-	<kexec@lists.infradead.org>; Mon, 1 Oct 2007 09:31:46 -0700
-Date: Mon, 1 Oct 2007 09:31:45 -0700
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Re: kdump info request
-Message-Id: <20071001093145.7205773d.rdunlap@xenotime.net>
-In-Reply-To: <9738BCBE884FDB42801FAD8A7769C26501B7F4A7@NAMAIL1.ad.lsil.com>
-References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com>
-	<20070919035337.GA7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com>
-	<20070919042840.GB7068@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com>
-	<20070921041506.GB6156@in.ibm.com>
-	<9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
-	<20070922113553.6898978d.rdunlap@xenotime.net>
-	<9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-	<20071001081327.d325959d.rdunlap@xenotime.net>
-	<9738BCBE884FDB42801FAD8A7769C26501B7F4A7@NAMAIL1.ad.lsil.com>
-Mime-Version: 1.0
+Received: from wa-out-1112.google.com ([209.85.146.180])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Icu3Q-0004dL-LG
+	for kexec@lists.infradead.org; Wed, 03 Oct 2007 03:33:43 +0100
+Received: by wa-out-1112.google.com with SMTP id v33so5036372wah
+	for <kexec@lists.infradead.org>; Tue, 02 Oct 2007 19:33:08 -0700 (PDT)
+Message-ID: <fdaac4d50710021933u144595f0nc9f96e1eb9169071@mail.gmail.com>
+Date: Wed, 3 Oct 2007 11:33:08 +0900
+From: "Jun Koi" <junkoi2004@gmail.com>
+Subject: My kernel fails with kexec
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,250 +23,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: "Mukker, Atul" <Atul.Mukker@lsi.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Moore,
-	Eric" <Eric.Moore@lsi.com>
+To: kexec@lists.infradead.org
 
-On Mon, 1 Oct 2007 09:35:04 -0600 Mukker, Atul wrote:
+Hi,
 
-> Thanks for the information and the effort.
-> 
-> We need to support all currently shipping products with kdump support
-> available (read Red Hat and SuSE) so sooner it makes into to the
-> upstream kernel the better it is.
-> 
-> So, today there is no alternative way to find out if the driver is being
-> loaded under kdump restrictive environment?
-> 
-> Thanks
-> -Atul
+I have a kernel (which is not Linux kernel), and want to have it
+worked with kexec. Fortunately, kexec crashes when booting it. (kexec
+-e command)
 
-I'm not the right person to answer that, but going forward, it would
-be nice to have that information and it would be good to do correctly.
+My suspect is that my kernel is not written to "support" kexec. So
+could anybody tell me what is the requirement of a kernel, so it works
+with kexec?
 
-I think that scanning <saved_command_line> is not actually the good/right
-way to do this.  It should just be a flag somewhere, and the flag should
-be available in all (future) kernels (and likely easily backportable
-as well, if that matters), meaning those built without kdump support.
-
-But it's still up to the kexec developers...
+kexec spits out the below message on QEMU when booting my kernel. Any
+hint on how to debug the problem?
 
 
-> -----Original Message-----
-> From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
-> Sent: Monday, October 01, 2007 11:13 AM
-> To: Mukker, Atul
-> Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
-> Subject: Re: kdump info request
-> 
-> On Mon, 1 Oct 2007 08:35:28 -0600 Mukker, Atul wrote:
-> 
-> > Hello Randy,
-> > 
-> > I tried this today but did not succeed :-( Can you please see the logs
-> > appended below and point out what I might be doing wrong? This is on a
-> > Red Hat 5 system.
-> > 
-> > Thanks
-> > -Atul
-> 
-> Hi Atul,
-> 
-> I can see the problem without looking at your module.
-> 'saved_command_line' is only exported for modules in the sparc & 
-> sparc64 architectures.  What kernel version(s) do you need this
-> for?  Is 2.6.24 and later good enough if we can get the symbol
-> exported in that timeframe?
-> 
-> Vivek, do you want to submit a patch for this and also remove these
-> lines:
-> ./arch/sparc/kernel/sparc_ksyms.c:231:EXPORT_SYMBOL(saved_command_line);
-> ./arch/sparc64/kernel/sparc64_ksyms.c:250:EXPORT_SYMBOL(saved_command_li
-> ne);
-> 
-> or should I attempt it?
-> 
-> 
-> > +++++++++++
-> > Sample code
-> > +++++++++++
-> > #include <linux/init.h>
-> > #include <linux/version.h>
-> > #include <linux/module.h>
-> > 
-> > MODULE_AUTHOR("LSI Corporation");
-> > MODULE_VERSION("1.0");
-> > MODULE_DESCRIPTION("Kernel Command Line");
-> > MODULE_LICENSE("GPL");
-> > 
-> > static int __init cline_init(void)
-> > {
-> > 	printk("enter module:[%s]\n", saved_command_line);
-> > 	return 0;
-> > }
-> > 
-> > static void __exit cline_exit(void)
-> > {
-> > 	printk("exit module.\n");
-> > }
-> > 
-> > module_init(cline_init);
-> > module_exit(cline_exit);
-> > 
-> > ++++++++
-> > Makefile
-> > ++++++++
-> > obj-m	+= cline.o
-> > 
-> > +++++++++
-> > Build log
-> > +++++++++
-> > 
-> > make: Entering directory `/usr/src/kernels/2.6.18-8.el5-i686'
-> >   LD
-> > /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/built-in.o
-> >   CC [M]
-> /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
-> >   Building modules, stage 2.
-> >   MODPOST
-> > WARNING: "saved_command_line"
-> > [/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko]
-> > undefined!
-> >   CC
-> > /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.mod.o
-> >   LD [M]
-> /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
-> > make: Leaving directory `/usr/src/kernels/2.6.18-8.el5-i686'
-> > 
-> > 
-> > -----Original Message-----
-> > From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
-> > Sent: Saturday, September 22, 2007 2:36 PM
-> > To: Mukker, Atul
-> > Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
-> > Subject: Re: kdump info request
-> > 
-> > On Fri, 21 Sep 2007 06:48:01 -0600 Mukker, Atul wrote:
-> > 
-> > > One more question, and hopefully I will not bug you further on this
-> > :-)
-> > > 
-> > > How exactly do you parse the kernel parameters? I thought it would
-> be
-> > > plain simple, but seems like the command line string is not
-> available
-> > to
-> > > SCSI driver like ours, or I am missing something?
-> > 
-> > #include <linux/init.h>  // for extern of 'saved_command_line'
-> pointer.
-> > 
-> > and use calls to any functions in lib/cmdline.c or write your
-> > own functions.  Should be fairly simple to scan for a fixed string
-> > of "elfcorehdr=".
-> > You don't care about the variable parameters.. or do you?
-> > 
-> > 
-> > > Thanks
-> > > -Atul 
-> > > 
-> > > -----Original Message-----
-> > > From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
-> > > Sent: Friday, September 21, 2007 12:15 AM
-> > > To: Mukker, Atul
-> > > Cc: Kexec Mailing List; Moore, Eric
-> > > Subject: Re: kdump info request
-> > > 
-> > > On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
-> > > [..]
-> > > > > 
-> > > > > If we could somehow determine that we are being called in
-> context
-> > of
-> > > > capture kernel, we can dynamically lower driver memory requirement
-> > (at
-> > > > cost of lower IO throughout of-course, which is ok for this brief
-> > > > context).
-> > > > 
-> > > > You can parse the command line and look for presence of
-> elfcorehdr=
-> > > > option.
-> > > > This is internally appended to command line by kexec tools to tell
-> > > > capture
-> > > > kernel the address of ELF core headers.
-> > > > 
-> > > > 
-> > > > [AM] Is this a standard way? Doesn't look like one. According to
-> > > > kernel-parameters.txt, kexec would "generally" pass this option to
-> > > > kernel command line. Can we look at "struct resource crashk_res"
-> and
-> > > > check if start and end member have different value, which
-> indicates
-> > > > capture kernel?
-> > > > 
-> > > 
-> > > Well, nobody else so far has had such requirements so can't say if
-> > this
-> > > is standard way. But this is the best way I can think of so far.
-> > > 
-> > > Using crashk_res will not work. Not all users will use kdump and
-> will
-> > > not
-> > > reserve any memory for capture kernel. In that case crashk_res will
-> be
-> > 
-> > > zero for start and end and you don't want to trim down the
-> > functionality
-> > > of your driver.
-> > > 
-> > > > What's the memory allocation requirement of current RAID driver?
-> How
-> > > > much
-> > > > memory you are reserving for capture kernel? Are you already
-> seeing
-> > > the
-> > > > memory allocation failure?
-> > > > 
-> > > > [AM] Our normal runtime memory is about 20MB. For the test beds,
-> we
-> > > use
-> > > > "crashkernel=192M@16M". We have not yet seen the allocation
-> failure
-> > > but
-> > > > we would like to build the fallback mechanism if it does fail
-> under
-> > > > capture kernel. Only if we are not able to get the normal runtime
-> > > > memory, we plan to switch to a lower memory model.
-> > > > 
-> > > 
-> > > 20MB is huge. I agree that it is a good idea to bring it down for
-> > > capture
-> > > kernel if performance is not significantly impacted.
-> > > 
-> > > > I feel until and unless memory requirements are huge, we should
-> not
-> > > > compromise with IO throughput. Capability to save the dump to disk
-> > as
-> > > > fast
-> > > > as possible to reduce the down time is also an important
-> > > consideration.
-> > > > 
-> > > > [AM] We believe our normal runtime memory requirement is
-> > significant.
-> > > > Also, even with the lower memory, there would not be a noticeable
-> > dump
-> > > > time difference since lot of memory is for supporting multiple
-> > > > outstanding commands in driver's raid core and other raid
-> > operations,
-> > > > which will not be running under capture kernel. Thanks again for
-> > your
-> > > > feedback.
-> > > > 
-> > > 
-> > > Makes sense.
-> > > 
-> > > Thanks
-> > > Vivek
+(qemu) qemu: fatal: triple fault
+EAX=00001500 EBX=001001f1 ECX=00000000 EDX=00004081
+ESI=002ae8c0 EDI=002ac8c0 EBP=0000e098 ESP=00008ffe
+EIP=00000d05 EFL=00000002 [-------] CPL=0 II=0 A20=1 SMM=0 HLT=0
+ES =0018 00000000 ffffffff 00cf9300
+CS =4020 00040200 ffffffff 008f9f00
+SS =4000 00040000 0000ffff 00009300
+DS =0018 00000000 ffffffff 00cf9300
+FS =0018 00000000 ffffffff 00cf9300
+GS =0018 00000000 ffffffff 00cf9300
+LDT=0000 00000000 00000000 00008000
+TR =0080 c1fd7000 00002073 c10089fd
+GDT=     0040a938 00000017
+IDT=     c0000000 00000000
+CR0=00000010 CR2=b7ed6200 CR3=00000000 CR4=00000000
+CCS=00008000 CCD=00004000 CCO=SARL
+FCW=037f FSW=0000 [ST=0] FTW=00 MXCSR=00001f80
+FPR0=0000000000000000 0000 FPR1=0000000000000000 0000
+FPR2=0000000000000000 0000 FPR3=0000000000000000 0000
+FPR4=0000000000000000 0000 FPR5=0000000000000000 0000
+FPR6=f424000000000000 4012 FPR7=0000000000000000 0000
+XMM00=00000000000000000000000000000000 XMM01=00000000000000000000000000000000
+XMM02=00000000000000000000000000000000 XMM03=00000000000000000000000000000000
+XMM04=00000000000000000000000000000000 XMM05=00000000000000000000000000000000
+XMM06=00000000000000000000000000000000 XMM07=00000000000000000000000000000000
+
+
+(Please CC, as I am not a list subscriber)
+
+Many thanks,
+Jun
 
 _______________________________________________
 kexec mailing list
