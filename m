@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from rgminet01.oracle.com ([148.87.113.118])
 	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IdmoR-0007nN-K3
-	for kexec@lists.infradead.org; Fri, 05 Oct 2007 14:01:53 +0100
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH 0/2] add new notifier function
-References: <4704D09D.6080503@ah.jp.nec.com>
-Date: Fri, 05 Oct 2007 07:01:17 -0600
-In-Reply-To: <4704D09D.6080503@ah.jp.nec.com> (Takenori Nagano's message of
-	"Thu, 04 Oct 2007 20:38:05 +0900")
-Message-ID: <m1641llnqa.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	id 1IdTNi-0005vk-1A
+	for kexec@lists.infradead.org; Thu, 04 Oct 2007 17:17:02 +0100
+Date: Thu, 4 Oct 2007 09:07:11 -0700
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: Re: [PATCH 2/2] implement new notifier function to panic_notifier_list
+Message-Id: <20071004090711.456b6338.randy.dunlap@oracle.com>
+In-Reply-To: <4704D0CA.4080001@ah.jp.nec.com>
+References: <4704D0CA.4080001@ah.jp.nec.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,28 +23,60 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
 To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+On Thu, 04 Oct 2007 20:38:50 +0900 Takenori Nagano wrote:
 
-> Hi,
->
-> These patches add new notifier function and implement it to panic_notifier_list.
-> We used the hardcoded notifier chain so far, but it was not flexible. New
-> notifier is very flexible, because user can change a list of order by debugfs.
+> This patch implements new notifier function to panic_notifier_list. We can
+> change the list of order by debugfs.
+> 
+> Thanks,
+> 
+> ---
+> 
+> Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
+> 
+> ---
 
-How is the lack of flexibility a problem?
-Specifics please.
+...
 
-My impression is that the purpose of this patchset is to build
-infrastructure to sort out a conflict between kdb and the kexec code,
-which it does not do, and it can not do if it does not own up to
-it's real purpose.
+> diff -uprN linux-2.6.23-rc9.orig/kernel/softlockup.c
+> linux-2.6.23-rc9/kernel/softlockup.c
+> --- linux-2.6.23-rc9.orig/kernel/softlockup.c	2007-10-02 12:24:52.000000000 +0900
+> +++ linux-2.6.23-rc9/kernel/softlockup.c	2007-10-04 09:46:25.784000000 +0900
+> @@ -31,10 +31,18 @@ softlock_panic(struct notifier_block *th
+>  	return NOTIFY_DONE;
+>  }
+> 
+> -static struct notifier_block panic_block = {
+> +static struct notifier_block panic_block_base = {
+>  	.notifier_call = softlock_panic,
+>  };
+> 
+> +static struct tunable_notifier_block panic_block = {
+> +	.nb		= &panic_block_base,
+> +	.head		= NULL,
+> +	.dir		= NULL,
+> +	.pri_dentry	= NULL,
+> +	.desc_dentry	= NULL
+> +};
+> +
+>  /*
+>   * Returns seconds, approximately.  We don't need nanosecond
+>   * resolution, and we don't need to waste time with a big divide when
+> @@ -193,5 +201,6 @@ __init void spawn_softlockup_task(void)
+>  	cpu_callback(&cpu_nfb, CPU_ONLINE, cpu);
+>  	register_cpu_notifier(&cpu_nfb);
+> 
+> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
+> +	tunable_notifier_chain_register(&panic_notifier_list, &panic_block,
+> +						"softlookup", NULL);
+>  }
 
-If I am correct in understanding the purpose of this patchset it does
-not even address the problem it is aimed at solving.
+                                                "softlockup"
 
-Eric
+---
+~Randy
 
 _______________________________________________
 kexec mailing list
