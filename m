@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from mail0.lsil.com ([147.145.40.20])
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcMUJ-0008Mj-8B
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 15:43:15 +0100
-Content-class: urn:content-classes:message
+	id 1IdP6U-0001f0-G9
+	for kexec@lists.infradead.org; Thu, 04 Oct 2007 12:42:57 +0100
+Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l94BeofD016274
+	for <kexec@lists.infradead.org>; Thu, 4 Oct 2007 20:40:51 +0900 (JST)
+Message-ID: <4704D0BA.4090507@ah.jp.nec.com>
+Date: Thu, 04 Oct 2007 20:38:34 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Subject: RE: kdump info request
-Date: Mon, 1 Oct 2007 08:35:28 -0600
-Message-ID: <9738BCBE884FDB42801FAD8A7769C26501B7F450@NAMAIL1.ad.lsil.com>
-In-Reply-To: <20070922113553.6898978d.rdunlap@xenotime.net>
-References: <9738BCBE884FDB42801FAD8A7769C26501B2C43C@NAMAIL1.ad.lsil.com><20070919035337.GA7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C2657E2A01@NAMAIL1.ad.lsil.com><20070919042840.GB7068@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C4DA@NAMAIL1.ad.lsil.com><20070921041506.GB6156@in.ibm.com><9738BCBE884FDB42801FAD8A7769C26501B2C8D3@NAMAIL1.ad.lsil.com>
-	<20070922113553.6898978d.rdunlap@xenotime.net>
-From: "Mukker, Atul" <Atul.Mukker@lsi.com>
+Subject: [PATCH 1/2] add tunable_notifier function
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,194 +23,373 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Randy Dunlap <rdunlap@xenotime.net>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Moore,
-	Eric" <Eric.Moore@lsi.com>
+To: linux-kernel@vger.kernel.org
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-Hello Randy,
+This patch adds new notifier function tunable_notifier_chain. Its base is
+atomic_notifier_chain.
 
-I tried this today but did not succeed :-( Can you please see the logs
-appended below and point out what I might be doing wrong? This is on a
-Red Hat 5 system.
-
-Thanks
--Atul
-
-+++++++++++
-Sample code
-+++++++++++
-#include <linux/init.h>
-#include <linux/version.h>
-#include <linux/module.h>
-
-MODULE_AUTHOR("LSI Corporation");
-MODULE_VERSION("1.0");
-MODULE_DESCRIPTION("Kernel Command Line");
-MODULE_LICENSE("GPL");
-
-static int __init cline_init(void)
-{
-	printk("enter module:[%s]\n", saved_command_line);
-	return 0;
-}
-
-static void __exit cline_exit(void)
-{
-	printk("exit module.\n");
-}
-
-module_init(cline_init);
-module_exit(cline_exit);
-
-++++++++
-Makefile
-++++++++
-obj-m	+= cline.o
-
-+++++++++
-Build log
-+++++++++
-
-make: Entering directory `/usr/src/kernels/2.6.18-8.el5-i686'
-  LD
-/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/built-in.o
-  CC [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.o
-  Building modules, stage 2.
-  MODPOST
-WARNING: "saved_command_line"
-[/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko]
-undefined!
-  CC
-/usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.mod.o
-  LD [M]  /usr/src/kernels/2.6.18-8.el5-i686/drivers/scsi/cline/cline.ko
-make: Leaving directory `/usr/src/kernels/2.6.18-8.el5-i686'
-
-
------Original Message-----
-From: Randy Dunlap [mailto:rdunlap@xenotime.net] 
-Sent: Saturday, September 22, 2007 2:36 PM
-To: Mukker, Atul
-Cc: vgoyal@in.ibm.com; Moore, Eric; Kexec Mailing List
-Subject: Re: kdump info request
-
-On Fri, 21 Sep 2007 06:48:01 -0600 Mukker, Atul wrote:
-
-> One more question, and hopefully I will not bug you further on this
-:-)
-> 
-> How exactly do you parse the kernel parameters? I thought it would be
-> plain simple, but seems like the command line string is not available
-to
-> SCSI driver like ours, or I am missing something?
-
-#include <linux/init.h>  // for extern of 'saved_command_line' pointer.
-
-and use calls to any functions in lib/cmdline.c or write your
-own functions.  Should be fairly simple to scan for a fixed string
-of "elfcorehdr=".
-You don't care about the variable parameters.. or do you?
-
-
-> Thanks
-> -Atul 
-> 
-> -----Original Message-----
-> From: Vivek Goyal [mailto:vgoyal@in.ibm.com] 
-> Sent: Friday, September 21, 2007 12:15 AM
-> To: Mukker, Atul
-> Cc: Kexec Mailing List; Moore, Eric
-> Subject: Re: kdump info request
-> 
-> On Wed, Sep 19, 2007 at 07:26:19AM -0600, Mukker, Atul wrote:
-> [..]
-> > > 
-> > > If we could somehow determine that we are being called in context
-of
-> > capture kernel, we can dynamically lower driver memory requirement
-(at
-> > cost of lower IO throughout of-course, which is ok for this brief
-> > context).
-> > 
-> > You can parse the command line and look for presence of elfcorehdr=
-> > option.
-> > This is internally appended to command line by kexec tools to tell
-> > capture
-> > kernel the address of ELF core headers.
-> > 
-> > 
-> > [AM] Is this a standard way? Doesn't look like one. According to
-> > kernel-parameters.txt, kexec would "generally" pass this option to
-> > kernel command line. Can we look at "struct resource crashk_res" and
-> > check if start and end member have different value, which indicates
-> > capture kernel?
-> > 
-> 
-> Well, nobody else so far has had such requirements so can't say if
-this
-> is standard way. But this is the best way I can think of so far.
-> 
-> Using crashk_res will not work. Not all users will use kdump and will
-> not
-> reserve any memory for capture kernel. In that case crashk_res will be
-
-> zero for start and end and you don't want to trim down the
-functionality
-> of your driver.
-> 
-> > What's the memory allocation requirement of current RAID driver? How
-> > much
-> > memory you are reserving for capture kernel? Are you already seeing
-> the
-> > memory allocation failure?
-> > 
-> > [AM] Our normal runtime memory is about 20MB. For the test beds, we
-> use
-> > "crashkernel=192M@16M". We have not yet seen the allocation failure
-> but
-> > we would like to build the fallback mechanism if it does fail under
-> > capture kernel. Only if we are not able to get the normal runtime
-> > memory, we plan to switch to a lower memory model.
-> > 
-> 
-> 20MB is huge. I agree that it is a good idea to bring it down for
-> capture
-> kernel if performance is not significantly impacted.
-> 
-> > I feel until and unless memory requirements are huge, we should not
-> > compromise with IO throughput. Capability to save the dump to disk
-as
-> > fast
-> > as possible to reduce the down time is also an important
-> consideration.
-> > 
-> > [AM] We believe our normal runtime memory requirement is
-significant.
-> > Also, even with the lower memory, there would not be a noticeable
-dump
-> > time difference since lot of memory is for supporting multiple
-> > outstanding commands in driver's raid core and other raid
-operations,
-> > which will not be running under capture kernel. Thanks again for
-your
-> > feedback.
-> > 
-> 
-> Makes sense.
-> 
-> Thanks
-> Vivek
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+Thanks,
 
 ---
-~Randy
-*** Remember to use Documentation/SubmitChecklist when testing your code
-***
+
+Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
+
+---
+diff -uprN linux-2.6.23-rc9.orig/include/linux/notifier.h
+linux-2.6.23-rc9/include/linux/notifier.h
+--- linux-2.6.23-rc9.orig/include/linux/notifier.h	2007-10-02 12:24:52.000000000
++0900
++++ linux-2.6.23-rc9/include/linux/notifier.h	2007-10-03 14:48:04.288000000 +0900
+@@ -13,6 +13,7 @@
+ #include <linux/mutex.h>
+ #include <linux/rwsem.h>
+ #include <linux/srcu.h>
++#include <linux/kobject.h>
+
+ /*
+  * Notifier chains are of four types:
+@@ -53,6 +54,14 @@ struct notifier_block {
+ 	int priority;
+ };
+
++struct tunable_notifier_block {
++	struct notifier_block *nb;
++	struct tunable_notifier_head *head;
++	struct dentry *dir;
++	struct dentry *pri_dentry;
++	struct dentry *desc_dentry;
++};
++
+ struct atomic_notifier_head {
+ 	spinlock_t lock;
+ 	struct notifier_block *head;
+@@ -63,6 +72,13 @@ struct blocking_notifier_head {
+ 	struct notifier_block *head;
+ };
+
++struct tunable_notifier_head {
++	spinlock_t lock;
++	struct notifier_block *head;
++	char *name;
++	struct dentry *dir;
++};
++
+ struct raw_notifier_head {
+ 	struct notifier_block *head;
+ };
+@@ -81,6 +97,12 @@ struct srcu_notifier_head {
+ 		init_rwsem(&(name)->rwsem);	\
+ 		(name)->head = NULL;		\
+ 	} while (0)
++#define TUNABLE_INIT_NOTIFIER(val1, val2) do {	\
++		spin_lock_init(&(val1)->lock);		\
++		(val1)->head = NULL;			\
++		(val1)->name = val2;			\
++		(val1)->dir = NULL;			\
++	} while (0)
+ #define RAW_INIT_NOTIFIER_HEAD(name) do {	\
+ 		(name)->head = NULL;		\
+ 	} while (0)
+@@ -96,6 +118,11 @@ extern void srcu_init_notifier_head(stru
+ #define BLOCKING_NOTIFIER_INIT(name) {				\
+ 		.rwsem = __RWSEM_INITIALIZER((name).rwsem),	\
+ 		.head = NULL }
++#define TUNABLE_NOTIFIER_INIT(val1, val2) {			\
++		.lock =__SPIN_LOCK_UNLOCKED(val1.lock),		\
++		.head = NULL,					\
++		.name = val2,						\
++		.dir = NULL }
+ #define RAW_NOTIFIER_INIT(name)	{				\
+ 		.head = NULL }
+ /* srcu_notifier_heads cannot be initialized statically */
+@@ -106,6 +133,9 @@ extern void srcu_init_notifier_head(stru
+ #define BLOCKING_NOTIFIER_HEAD(name)				\
+ 	struct blocking_notifier_head name =			\
+ 		BLOCKING_NOTIFIER_INIT(name)
++#define TUNABLE_NOTIFIER_HEAD(name, val)			\
++	struct tunable_notifier_head name =			\
++		TUNABLE_NOTIFIER_INIT(name, val)
+ #define RAW_NOTIFIER_HEAD(name)					\
+ 	struct raw_notifier_head name =				\
+ 		RAW_NOTIFIER_INIT(name)
+@@ -116,6 +146,8 @@ extern int atomic_notifier_chain_registe
+ 		struct notifier_block *nb);
+ extern int blocking_notifier_chain_register(struct blocking_notifier_head *nh,
+ 		struct notifier_block *nb);
++extern int tunable_notifier_chain_register(struct tunable_notifier_head *nh,
++		struct tunable_notifier_block *nb, char *name, char *desc);
+ extern int raw_notifier_chain_register(struct raw_notifier_head *nh,
+ 		struct notifier_block *nb);
+ extern int srcu_notifier_chain_register(struct srcu_notifier_head *nh,
+@@ -125,6 +157,8 @@ extern int atomic_notifier_chain_unregis
+ 		struct notifier_block *nb);
+ extern int blocking_notifier_chain_unregister(struct blocking_notifier_head *nh,
+ 		struct notifier_block *nb);
++extern int tunable_notifier_chain_unregister(struct tunable_notifier_head *nh,
++		struct tunable_notifier_block *nb);
+ extern int raw_notifier_chain_unregister(struct raw_notifier_head *nh,
+ 		struct notifier_block *nb);
+ extern int srcu_notifier_chain_unregister(struct srcu_notifier_head *nh,
+@@ -138,6 +172,10 @@ extern int blocking_notifier_call_chain(
+ 		unsigned long val, void *v);
+ extern int __blocking_notifier_call_chain(struct blocking_notifier_head *nh,
+ 	unsigned long val, void *v, int nr_to_call, int *nr_calls);
++extern int tunable_notifier_call_chain(struct tunable_notifier_head *nh,
++		unsigned long val, void *v);
++extern int __tunable_notifier_call_chain(struct tunable_notifier_head *nh,
++	unsigned long val, void *v, int nr_to_call, int *nr_calls);
+ extern int raw_notifier_call_chain(struct raw_notifier_head *nh,
+ 		unsigned long val, void *v);
+ extern int __raw_notifier_call_chain(struct raw_notifier_head *nh,
+diff -uprN linux-2.6.23-rc9.orig/kernel/sys.c linux-2.6.23-rc9/kernel/sys.c
+--- linux-2.6.23-rc9.orig/kernel/sys.c	2007-10-02 12:24:52.000000000 +0900
++++ linux-2.6.23-rc9/kernel/sys.c	2007-10-03 14:48:15.160000000 +0900
+@@ -38,6 +38,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/kprobes.h>
+ #include <linux/user_namespace.h>
++#include <linux/debugfs.h>
+
+ #include <asm/uaccess.h>
+ #include <asm/io.h>
+@@ -393,6 +394,234 @@ int blocking_notifier_call_chain(struct
+ EXPORT_SYMBOL_GPL(blocking_notifier_call_chain);
+
+ /*
++ *	Tunable notifier chain routines. Registration and unregistration
++ *	use a spinlock, and call_chain is synchronized by RCU (no locks).
++ *	User can change the list order to use /sys/kernel/debug/list-name/.
++ */
++
++static ssize_t priority_read(struct file *file,
++			char __user *user_buf, size_t count, loff_t *ppos)
++{
++	struct tunable_notifier_block *n = file->f_dentry->d_inode->i_private;
++	int priority = n->nb->priority;
++	char buf[64], *s;
++
++	s = buf;
++	s += sprintf(s, "%d\n", priority);
++
++	return simple_read_from_buffer((void __user *)user_buf, count,
++							ppos, buf, s - buf);
++}
++
++static ssize_t priority_write(struct file *file,
++		const char __user *user_buf, size_t count, loff_t *ppos)
++{
++	struct tunable_notifier_block *n = file->f_dentry->d_inode->i_private;
++	struct tunable_notifier_head *nh = n->head;
++	char *buf, *end;
++	int ret = -ENOMEM, priority;
++	unsigned long tmp, flags;
++
++	buf = kmalloc(count + 1, GFP_KERNEL);
++	if (!buf)
++		goto out;
++
++	buf[count] = 0;
++	ret = -EFAULT;
++	if (copy_from_user(buf, user_buf, count))
++		goto out_free;
++
++	ret = -EINVAL;
++	tmp = simple_strtoul(buf, &end, 10);
++	if ((end == buf) || (tmp > INT_MAX))
++		goto out_free;
++
++	priority = (int)tmp;
++	n->nb->priority = priority;
++
++	spin_lock_irqsave(&nh->lock, flags);
++	ret = notifier_chain_unregister(&nh->head, n->nb);
++	if (ret)
++		goto out_unlock;
++	ret = notifier_chain_register(&nh->head, n->nb);
++	if (!ret)
++		ret = count;
++
++out_unlock:
++	spin_unlock_irqrestore(&nh->lock, flags);
++out_free:
++	kfree(buf);
++out:
++	return ret;
++
++}
++
++static const struct file_operations pri_fops = {
++	.read = priority_read,
++	.write = priority_write,
++};
++
++static ssize_t description_read(struct file *file,
++			char __user *user_buf, size_t count, loff_t *ppos)
++{
++	char *desc = file->f_dentry->d_inode->i_private;
++	int avail = strlen(desc);
++
++	return simple_read_from_buffer(user_buf, count, ppos, desc, avail);
++}
++
++static const struct file_operations desc_fops = {
++	.read = description_read,
++};
++
++/**
++ *	tunable_notifier_chain_register - Add notifier to an tunable notifier chain
++ *	@nh: Pointer to head of the tunable notifier chain
++ *	@n: New entry in notifier chain
++ *	@name: Pointer to the name of this notifier chain
++ *	@desc: Pointer to the description of new entry
++ *
++ *	Adds a notifier to an tunable notifier chain and makes control dir.
++ *
++ *	Returns zero on success or %-ENODEV on failure.
++ */
++
++int tunable_notifier_chain_register(struct tunable_notifier_head *nh,
++		struct tunable_notifier_block *n, char *name, char *desc)
++{
++	unsigned long flags;
++	int ret = -EINVAL;
++	struct dentry *nh_dir, *nb_dir, *pri_dentry, *desc_dentry = NULL;
++
++	if (!name)
++		goto nb_fail;
++
++	ret = -ENOMEM;
++	if (!nh->dir) {
++		nh_dir = debugfs_create_dir(nh->name, NULL);
++		if (!nh_dir)
++			return ret;
++		nh->dir = nh_dir;
++	} else
++		nh_dir = nh->dir;
++
++	nb_dir = debugfs_create_dir(name, nh_dir);
++	if (!nb_dir)
++		goto nb_fail;
++	n->dir = nb_dir;
++
++	pri_dentry = debugfs_create_file("priority",0600, nb_dir, n, &pri_fops);
++	if (!pri_dentry)
++		goto pri_fail;
++	n->pri_dentry = pri_dentry;
++
++	if (desc) {
++		desc_dentry = debugfs_create_file("description", 0400, nb_dir,
++							desc, &desc_fops);
++		if (!desc_dentry)
++			goto desc_fail;
++		n->desc_dentry = desc_dentry;
++	}
++
++	spin_lock_irqsave(&nh->lock, flags);
++	ret = notifier_chain_register(&nh->head, n->nb);
++	spin_unlock_irqrestore(&nh->lock, flags);
++
++	if (ret)
++		goto reg_fail;
++	
++	n->head = nh;
++
++	return ret;
++
++reg_fail:
++	debugfs_remove(desc_dentry);
++desc_fail:
++	debugfs_remove(pri_dentry);
++pri_fail:
++	debugfs_remove(nb_dir);
++nb_fail:
++	return ret;
++}
++
++EXPORT_SYMBOL_GPL(tunable_notifier_chain_register);
++
++/**
++ *	tunable_notifier_chain_unregister - Remove notifier from a tunable notifier
+chain
++ *	@nh: Pointer to head of the tunable notifier chain
++ *	@n: Entry to remove from notifier chain
++ *
++ *	Removes a notifier from a tunable notifier chain.
++ *
++ *	Retunrns zero on success or %-ENOENT on failure.
++ */
++
++int tunable_notifier_chain_unregister(struct tunable_notifier_head *nh,
++		struct tunable_notifier_block *n)
++{
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&nh->lock, flags);
++	ret = notifier_chain_unregister(&nh->head, n->nb);
++	spin_unlock_irqrestore(&nh->lock, flags);
++	synchronize_rcu();
++
++	if (ret)
++		return ret;
++
++	debugfs_remove(n->desc_dentry);
++	debugfs_remove(n->pri_dentry);
++	debugfs_remove(n->dir);
++
++	return 0;
++}
++
++EXPORT_SYMBOL_GPL(tunable_notifier_chain_unregister);
++
++/**
++ *	__tunable_notifier_call_chain - Call functions in a tunable notifier chain
++ *	@nh: Pointer to head of the tunable notifier chain
++ *	@val: Value passed unmodified to notifier function
++ *	@v: Pointer passed unmodified to notifier function
++ *	@nt_to_call: See the comment for notifier_call_chain
++ *	@nr_calls: See the comment for notifier_call_chain
++ *
++ *	Calls each function in a notifier chain in turn. The functions
++ *	run in an atomic context, so they must not block.
++ *	This routine uses RCU to synchronize with changes to the chain.
++ *
++ *	If the return value of the notifier can be and'ed
++ *	with %NOTIFY_STOP_MASK then tunable_notifier_call_chain()
++ *	will return immediately, with the return value of
++ *	the notifier function which halted execution.
++ *	Otherwise the return value is the return value
++ *	of the last notifier function called.
++ */
++
++int __kprobes __tunable_notifier_call_chain(struct tunable_notifier_head *nh,
++					unsigned long val, void *v,
++					int nr_to_call, int *nr_calls)
++{
++	int ret;
++
++	rcu_read_lock();
++	ret = notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
++	rcu_read_unlock();
++	return ret;
++}
++
++EXPORT_SYMBOL_GPL(__tunable_notifier_call_chain);
++
++int __kprobes tunable_notifier_call_chain(struct tunable_notifier_head *nh,
++						unsigned long val, void *v)
++{
++	return __tunable_notifier_call_chain(nh, val, v, -1, NULL);
++}
++
++EXPORT_SYMBOL_GPL(tunable_notifier_call_chain);
++
++/*
+  *	Raw notifier chain routines.  There is no protection;
+  *	the caller must provide it.  Use at your own risk!
+  */
+
 
 _______________________________________________
 kexec mailing list
