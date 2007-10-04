@@ -1,25 +1,22 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from mail.ihtfp.org ([204.107.200.6])
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcQG3-00032E-6H
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 19:44:46 +0100
-Subject: Re: [Kgdb-bugreport] Problem getting kgdb to read kernel symbols.
-	addresses shifted?
-References: <sjmabr8j6d7.fsf@pgpdev.ihtfp.org>
-	<46FD03CD.9060404@windriver.com> <sjmve9uj3d2.fsf@pgpdev.ihtfp.org>
-	<46FD1B6A.3000500@windriver.com>
-	<20070928114522.n0cdrcebykkgg408@webmail.mit.edu>
-	<46FD2CFB.9010404@windriver.com> <46FD75E1.3090602@bluelane.com>
-	<m18x6qbfip.fsf@ebiederm.dsl.xmission.com>
-	<sjm641uid1x.fsf@pgpdev.ihtfp.org>
-	<m11wcibbpq.fsf@ebiederm.dsl.xmission.com>
-	<20070930053813.GC16593@in.ibm.com> <4700F79F.5080502@redhat.com>
-From: Derek Atkins <warlord@MIT.EDU>
-Date: Mon, 01 Oct 2007 14:44:06 -0400
-In-Reply-To: <4700F79F.5080502@redhat.com> (Dave Anderson's message of "Mon\,
-	01 Oct 2007 09\:35\:27 -0400")
-Message-ID: <sjmve9qekug.fsf@pgpdev.ihtfp.org>
+	id 1IdOyZ-0001N5-1I
+	for kexec@lists.infradead.org; Thu, 04 Oct 2007 12:34:45 +0100
+Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l94BWaaB012920
+	for <kexec@lists.infradead.org>; Thu, 4 Oct 2007 20:32:36 +0900 (JST)
+Message-ID: <4704CEC5.3020306@ah.jp.nec.com>
+Date: Thu, 04 Oct 2007 20:30:13 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
+Subject: Re: [patch] add kdump_after_notifier
+References: <20070802112852.GA7054@in.ibm.com>	<31687.1186113947@kao2.melbourne.sgi.com>	<20070805110746.GA12540@in.ibm.com>	<46C1691E.7090708@ah.jp.nec.com>
+	<20070814083710.GA14538@suse.de>	<20070814132454.GA8293@in.ibm.com>
+	<46C4184B.5030303@ah.jp.nec.com>	<20070817105630.GA18167@in.ibm.com>
+	<46CAE627.7070908@sgi.com> <20070823035629.GB365@in.ibm.com>
+	<46CDC51D.5070206@sgi.com>
+In-Reply-To: <46CDC51D.5070206@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,62 +29,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: kgdb-bugreport@lists.sourceforge.net, Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Jason Wessel <jason.wessel@windriver.com>, pete@bluelane.com
+To: Jay Lan <jlan@sgi.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-Dave Anderson <anderson@redhat.com> writes:
+Hi all,
 
->> Hi Eric and others,
->>
->> I think we might be running into the issues because i386, FC7 relocatable
->> kernel has been compiled for 16MB physical address but effectively it
->> runs at 4MB physical address. So kernel does not run at compiled address
->> and any kind of debugging tools reading symbol address from System.map
->> or rom vmlinux will fail as run time symbol addresses are different.
->>
->> /proc/kallsyms should help though. This is one problem with shift in run
->> time virtual address while relocating the kernel. We should be running kernel
->> at compiled address to be able to debug it. Or enable any tools to parse
->> /proc/kallsyms to read the shift in symbol addresses and adjust accordingly.
->>
+I finished to implement this function. I will send patches after this mail.
+Please review them and give some comments.
+
+Thanks,
+
+Jay Lan wrote:
+> Vivek Goyal wrote:
+>> On Tue, Aug 21, 2007 at 06:18:31AM -0700, Jay Lan wrote:
+>> [..]
+>>>>>> Now user will be able to view all the die_chain users through sysfs and
+>>>>>> be able to modify the order in which these should run by modifying their
+>>>>>> priority. Hence all the RAS tools can co-exist.
+>>>>> This is my image of your proposal.
+>>>>>
+>>>>> - Print current order
+>>>>>
+>>>>> # cat /sys/class/misc/debug/panic_notifier_list
+>>>>> priority   name
+>>>>> 1          IPMI
+>>>>> 2          watchdog
+>>>>> 3          Kdb
+>>>>> 4          Kdump
+>>>>>
+>>>> I think Bernhard's suggestion looks better here. I noticed that 
+>>>> /sys/kernel/debug is already present. So how about following.
+>>>>
+>>>> /sys/kernel/debug/kdump/priority
+>>>> /sys/kernel/debug/kdb/priority
+>>>> /sys/kernel/debug/IPMI/priority
+>>> Why separate priority files is better than a central file?
+>>> At least i think you get a grand picture of priority being
+>>> defined for all parties with a central file?
+>>>
+>> I thought of couple of reasons.
+>> - A very different syntax to modify the priority.
+>> - Separate directories allow easy future extensions in terms of more
+>>   files. For example, putting a small "description" file in each dir
+>>   where each registered user can specify what does it do.
+> 
+> The first can be easily resolved by providing a comment section in the
+> file with real examples. Users can simply uncomment a line to activate.
+> But future expansion is certainly is a good reason for this layout.
+> 
+>> But I agree that a single file is good for consolidated view. As bernhard
+>> suggested, may be we should also implement a read only file where one
+>> will get a consolidated view.
+> 
+> Yep, this will help!
+> 
+>>> What do we decide priority if more than one component has
+>>> the same priority value?
+>>>
+>> I think first come first serve would be appropriate in this case instead of
+>> returning -EINVAL.
+> 
+> How does the kernel process the configuration files? By alphabetic order
+> of the filename? Either way, i think a clear failure/warning dmesg is
+> very important.
+> 
+> Thanks,
+>  - jay
+> 
 >> Thanks
 >> Vivek
->
-> Right, crash was updated in version 4.0-4.5 to allow the use
-> of /proc/kallsyms as an alternative to the System.map file,
-> as well as adding a new --reloc command line argument.  After
-> bringing up the vmlinux file in gdb (with the "wrong" addresses),
-> all of the minimal_symbol data structures in the gdb module are
-> back-patched with the /proc/kallsyms values:
->
->  http://people.redhat.com/anderson/crash.changelog.html#4_0_4_5
->
-> It seems the benefit of configuring the kernel that way is debatable,
-> and I will do all I can to convince the RHEL-6 and beyond kernel
-> maintainers from doing it that way in the future.  But Fedora goes
-> its own way.  Seems totally lame to issue a bogus System.map file
-> though...
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
 
-Well, this is kgdb, so "/proc/kallsyms" is on the target machine,
-not the host machine.  So, 'gdb' cannot read /proc/kallsyms, because,
-well, it's not local.
-
-However, I AM building my own kernel -- so I can certainly reconfigure
-it as necessary.  What do I need to do to reconfigure my kernel to
-run at the same place it was built for?  I.e., what's changing the
-runtime from 16M to 4M and how do I make it consistent?
-
-Thanks!
-
-> Dave
-
--derek
-
--- 
-       Derek Atkins, SB '93 MIT EE, SM '95 MIT Media Laboratory
-       Member, MIT Student Information Processing Board  (SIPB)
-       URL: http://web.mit.edu/warlord/    PP-ASEL-IA     N1NWH
-       warlord@MIT.EDU                        PGP key available
 
 _______________________________________________
 kexec mailing list
