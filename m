@@ -1,19 +1,28 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IcQUb-0003H9-CA
-	for kexec@lists.infradead.org; Mon, 01 Oct 2007 19:59:47 +0100
-Message-ID: <4701448D.7070208@redhat.com>
-Date: Mon, 01 Oct 2007 15:03:41 -0400
-From: Dave Anderson <anderson@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [Kgdb-bugreport] Problem getting kgdb to read kernel symbols.
-	addresses shifted?
-References: <sjmabr8j6d7.fsf@pgpdev.ihtfp.org>	<46FD03CD.9060404@windriver.com>
-	<sjmve9uj3d2.fsf@pgpdev.ihtfp.org>	<46FD1B6A.3000500@windriver.com>	<20070928114522.n0cdrcebykkgg408@webmail.mit.edu>	<46FD2CFB.9010404@windriver.com>
-	<46FD75E1.3090602@bluelane.com>	<m18x6qbfip.fsf@ebiederm.dsl.xmission.com>	<sjm641uid1x.fsf@pgpdev.ihtfp.org>	<m11wcibbpq.fsf@ebiederm.dsl.xmission.com>	<20070930053813.GC16593@in.ibm.com>
-	<4700F79F.5080502@redhat.com> <sjmve9qekug.fsf@pgpdev.ihtfp.org>
-In-Reply-To: <sjmve9qekug.fsf@pgpdev.ihtfp.org>
+Received: from e6.ny.us.ibm.com ([32.97.182.146])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Idfzr-00029g-Sj
+	for kexec@lists.infradead.org; Fri, 05 Oct 2007 06:45:16 +0100
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l955hQLY027206
+	for <kexec@lists.infradead.org>; Fri, 5 Oct 2007 01:43:26 -0400
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l955fu3m664464
+	for <kexec@lists.infradead.org>; Fri, 5 Oct 2007 01:41:56 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l955fpts012137
+	for <kexec@lists.infradead.org>; Fri, 5 Oct 2007 01:41:51 -0400
+Date: Fri, 5 Oct 2007 11:12:05 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [PATCH 1/2] add tunable_notifier function
+Message-ID: <20071005054205.GB4893@in.ibm.com>
+References: <4704D0BA.4090507@ah.jp.nec.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4704D0BA.4090507@ah.jp.nec.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,83 +35,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Derek Atkins <warlord@MIT.EDU>
-Cc: kgdb-bugreport@lists.sourceforge.net, Kexec Mailing List <kexec@lists.infradead.org>, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Jason Wessel <jason.wessel@windriver.com>, pete@bluelane.com
+To: Takenori Nagano <t-nagano@ah.jp.nec.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-Derek Atkins wrote:
-> Dave Anderson <anderson@redhat.com> writes:
+On Thu, Oct 04, 2007 at 08:38:34PM +0900, Takenori Nagano wrote:
+> This patch adds new notifier function tunable_notifier_chain. Its base is
+> atomic_notifier_chain.
 > 
+> Thanks,
 > 
->>>Hi Eric and others,
->>>
->>>I think we might be running into the issues because i386, FC7 relocatable
->>>kernel has been compiled for 16MB physical address but effectively it
->>>runs at 4MB physical address. So kernel does not run at compiled address
->>>and any kind of debugging tools reading symbol address from System.map
->>>or rom vmlinux will fail as run time symbol addresses are different.
->>>
->>>/proc/kallsyms should help though. This is one problem with shift in run
->>>time virtual address while relocating the kernel. We should be running kernel
->>>at compiled address to be able to debug it. Or enable any tools to parse
->>>/proc/kallsyms to read the shift in symbol addresses and adjust accordingly.
->>>
->>>Thanks
->>>Vivek
->>
->>Right, crash was updated in version 4.0-4.5 to allow the use
->>of /proc/kallsyms as an alternative to the System.map file,
->>as well as adding a new --reloc command line argument.  After
->>bringing up the vmlinux file in gdb (with the "wrong" addresses),
->>all of the minimal_symbol data structures in the gdb module are
->>back-patched with the /proc/kallsyms values:
->>
->> http://people.redhat.com/anderson/crash.changelog.html#4_0_4_5
->>
->>It seems the benefit of configuring the kernel that way is debatable,
->>and I will do all I can to convince the RHEL-6 and beyond kernel
->>maintainers from doing it that way in the future.  But Fedora goes
->>its own way.  Seems totally lame to issue a bogus System.map file
->>though...
+> ---
 > 
+> Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
 > 
-> Well, this is kgdb, so "/proc/kallsyms" is on the target machine,
-> not the host machine.  So, 'gdb' cannot read /proc/kallsyms, because,
-> well, it's not local.
-
-Well, you could just grab a copy of it, although I don't know what
-gdb alone would be able to do with it...
-
+> ---
+> diff -uprN linux-2.6.23-rc9.orig/include/linux/notifier.h
+> linux-2.6.23-rc9/include/linux/notifier.h
+> --- linux-2.6.23-rc9.orig/include/linux/notifier.h	2007-10-02 12:24:52.000000000
+> +0900
+> +++ linux-2.6.23-rc9/include/linux/notifier.h	2007-10-03 14:48:04.288000000 +0900
+> @@ -13,6 +13,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/rwsem.h>
+>  #include <linux/srcu.h>
+> +#include <linux/kobject.h>
 > 
-> However, I AM building my own kernel -- so I can certainly reconfigure
-> it as necessary.  What do I need to do to reconfigure my kernel to
-> run at the same place it was built for?  I.e., what's changing the
-> runtime from 16M to 4M and how do I make it consistent?
+>  /*
+>   * Notifier chains are of four types:
+> @@ -53,6 +54,14 @@ struct notifier_block {
+>  	int priority;
+>  };
 > 
-> Thanks!
+> +struct tunable_notifier_block {
+> +	struct notifier_block *nb;
+> +	struct tunable_notifier_head *head;
+> +	struct dentry *dir;
+> +	struct dentry *pri_dentry;
+> +	struct dentry *desc_dentry;
+> +};
+> +
 
-Configure the kernel with CONFIG_PHYSICAL_START less than
-or equal to CONFIG_PHYSICAL_ALIGN.  Upon rebuilding my FC7
-kernel with CONFIG_PHYSICAL_START changed from 16MB to 1MB,
-with CONFIG_PHYSICAL_ALIGN left at 4MB, i.e.:
+Should this be tunable_atomic_notifier_block? I think there are two kind
+of lists. One where handlers have to be atomic and other one where handlers
+can be blocking one. I think you are making atomic one tunable. If that's
+the case it should be reflected in the naming everywhere.
 
-   CONFIG_PHYSICAL_START=0x100000
-   CONFIG_PHYSICAL_ALIGN=0x400000
-
-The kernel gets compiled for, and runs at, a 4MB physical address:
-
-   $ nm -Bn vmlinux | grep "^c04"
-   c0400000 T _text
-   c0400000 T startup_32
-   c0401000 T startup_32_smp
-   c0401080 t checkCPUtype
-   c0401101 t is486
-   ...
-
-Setting both of them to 0x400000 also works.
-
-Dave
-
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
