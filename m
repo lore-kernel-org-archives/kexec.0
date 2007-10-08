@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1If9lb-0003EH-4B
-	for kexec@lists.infradead.org; Tue, 09 Oct 2007 08:44:39 +0100
-Received: from tyo201.gate.nec.co.jp ([10.7.69.201])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l997gRMo017196
-	for <kexec@lists.infradead.org>; Tue, 9 Oct 2007 16:42:27 +0900 (JST)
-Message-ID: <470B3008.9040003@ah.jp.nec.com>
-Date: Tue, 09 Oct 2007 16:38:48 +0900
-From: Takenori Nagano <t-nagano@ah.jp.nec.com>
+	id 1IehV5-0001YV-Ld
+	for kexec@lists.infradead.org; Mon, 08 Oct 2007 02:33:44 +0100
+Received: from natsuko.shinjuku.tokyo.vergenet.net
+	(91.13.168.202.dial.dynamic.acc11-kent-syd.comindico.com.au
+	[202.168.13.91])
+	by koto.vergenet.net (Postfix) with ESMTP id E137934077
+	for <kexec@lists.infradead.org>; Mon,  8 Oct 2007 10:11:26 +0900 (JST)
+Date: Mon, 8 Oct 2007 11:11:19 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Use fclose() to close the file pointer
+Message-ID: <20071008011104.GI2497@verge.net.au>
+References: <20071006184138.GA16948@suse.de>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] add new notifier function
-References: <4704D09D.6080503@ah.jp.nec.com>
-	<m1641llnqa.fsf@ebiederm.dsl.xmission.com>
-In-Reply-To: <m1641llnqa.fsf@ebiederm.dsl.xmission.com>
+Content-Disposition: inline
+In-Reply-To: <20071006184138.GA16948@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +28,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
 
-Eric W. Biederman wrote:
-> Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+On Sat, Oct 06, 2007 at 08:41:38PM +0200, Bernhard Walle wrote:
+> Just use fclose() instead of close() to close a pointer of type FILE *.
+> That fixes the compile warning
 > 
->> Hi,
->>
->> These patches add new notifier function and implement it to panic_notifier_list.
->> We used the hardcoded notifier chain so far, but it was not flexible. New
->> notifier is very flexible, because user can change a list of order by debugfs.
-> 
-> How is the lack of flexibility a problem?
-> Specifics please.
+> kexec/kexec.c: In function 'check_reuse_initrd':
+> kexec/kexec.c:793: warning: passing argument 1 of 'close' makes integer from pointer without a cast
 
-Please read this again.
-http://www.gossamer-threads.com/lists/linux/kernel/797220?do=post_view_threaded#797220
+Thanks Bernhard, I have applied this change.
 
-Keith Owen said,
+-- 
+Horms
+  H: http://www.vergenet.net/~horms/
+  W: http://www.valinux.co.jp/en/
 
-> My stance is that _all_ the RAS tools (kdb, kgdb, nlkd, netdump, lkcd,
-> crash, kdump etc.) should be using a common interface that safely puts
-> the entire system in a stopped state and saves the state of each cpu.
-> Then each tool can do what it likes, instead of every RAS tool doing
-> its own thing and they all conflict with each other, which is why this
-> thread started.
-> 
-> It is not the kernel's job to decide which RAS tool runs first, second
-> etc., it is the user's decision to set that policy. Different sites
-> will want different orders, some will say "go straight to kdump", other
-> sites will want to invoke a debugger first. Sites must be able to
-> define that policy, but we hard code the policy into the kernel. 
-
-I agreed with him and I made new notifier function.
-
-> 
-> My impression is that the purpose of this patchset is to build
-> infrastructure to sort out a conflict between kdb and the kexec code,
-> which it does not do, and it can not do if it does not own up to
-> it's real purpose.
-
-My motivation does not change. But I don't think kdump have to use notifer.
-I want to resolve this adopting the way which satisfy all users.
-
-Thanks,
-
-Takenori Nagano <t-nagano@ah.jp.nec.com>
 
 _______________________________________________
 kexec mailing list
