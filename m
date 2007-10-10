@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IbPVv-0001sD-4z
-	for kexec@lists.infradead.org; Sat, 29 Sep 2007 00:44:56 +0100
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [Kgdb-bugreport] Problem getting kgdb to read kernel symbols.
-	addresses shifted?
-References: <sjmabr8j6d7.fsf@pgpdev.ihtfp.org>
-	<46FD03CD.9060404@windriver.com> <sjmve9uj3d2.fsf@pgpdev.ihtfp.org>
-	<46FD1B6A.3000500@windriver.com>
-	<20070928114522.n0cdrcebykkgg408@webmail.mit.edu>
-	<46FD2CFB.9010404@windriver.com> <46FD75E1.3090602@bluelane.com>
-	<m18x6qbfip.fsf@ebiederm.dsl.xmission.com>
-	<sjm641uid1x.fsf@pgpdev.ihtfp.org>
-Date: Fri, 28 Sep 2007 17:40:33 -0600
-In-Reply-To: <sjm641uid1x.fsf@pgpdev.ihtfp.org> (Derek Atkins's message of
-	"Fri, 28 Sep 2007 19:29:46 -0400")
-Message-ID: <m11wcibbpq.fsf@ebiederm.dsl.xmission.com>
+Received: from rv-out-0910.google.com ([209.85.198.184])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IfTf2-0002E4-FL
+	for kexec@lists.infradead.org; Wed, 10 Oct 2007 05:59:10 +0100
+Received: by rv-out-0910.google.com with SMTP id c24so88804rvf
+	for <kexec@lists.infradead.org>; Tue, 09 Oct 2007 21:58:47 -0700 (PDT)
+Message-ID: <2ea3fae10710092158l72241a04w28e1207dc26c3ed1@mail.gmail.com>
+Date: Tue, 9 Oct 2007 21:58:46 -0700
+From: yhlu <yinghailu@gmail.com>
+Subject: Re: using bios after linux
+In-Reply-To: <20071001064309.GC4933@in.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+References: <5bf40e35adf3a20c89b5976850af992a@sundius.com>
+	<20071001064309.GC4933@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,36 +26,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Derek Atkins <warlord@MIT.EDU>
-Cc: kgdb-bugreport@lists.sourceforge.net, Kexec Mailing List <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Jason Wessel <jason.wessel@windriver.com>, pete@bluelane.com
+To: vgoyal@in.ibm.com
+Cc: C Michael Sundius <msundius@sundius.com>, kexec@lists.infradead.org
 
-Derek Atkins <warlord@MIT.EDU> writes:
+On 9/30/07, Vivek Goyal <vgoyal@in.ibm.com> wrote:
+> On Thu, Sep 27, 2007 at 06:57:30AM -0700, C Michael Sundius wrote:
+> >
+> > Hi,
+> >
+> >   I've been working on a project where we are using linux as an
+> > operating environment for some
+> >   setup work prior to booting windows. our control flow looks like this
+> >
+> >   reset => (1)linux & linux aplication =>
+> >   (2)kexec => (3)proprietery 16bit real code (uses bios) =>
+> >   (4)ntloader => (5)Windows
+> >
+>
+> Interesting. Just curious to know that how above setup is useful?
 
-> Well, gdb agrees with System.map, so I'm sure that gdb itself is
-> okay.  It's certainly possible that that the kgdb stub is weird,
-> but /proc/kallsyms doesn't match System.map, and THAT'S what's
-> confusing me most of all.
+is it possible to use some emulator under linux and at some point to
+exit the emulator and jump the entry..
 
-Ok.  So we must have a relocatable kernel that figures it has been
-relocated.  Interesting.  
-
-What is your bootloader?
-What is your kernel version?
-What is your kernel config?
-
-The only time I would expect to see what you are seeing is if
-you are debugging the kdump kernel, which doesn't sound like
-the case.
-
-If we actually have a truly offset kernel then while things
-may not be perfect this is at least expected.  I don't think
-I have heard of anyone handling this case very well.
-
-> Which was how long ago?  ;)
-
-Long enough ago that I don't remember when ;)
-
-Eric
+YH
 
 _______________________________________________
 kexec mailing list
