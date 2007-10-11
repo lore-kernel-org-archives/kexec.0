@@ -1,28 +1,13 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+Received: from mga03.intel.com ([143.182.124.21])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IfVxW-00071H-6d
-	for kexec@lists.infradead.org; Wed, 10 Oct 2007 08:26:25 +0100
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9A7ODGW027572
-	for <kexec@lists.infradead.org>; Wed, 10 Oct 2007 16:24:13 +0900 (JST)
-Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.160])
-	by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9A7MCwI011079
-	for <kexec@lists.infradead.org>; Wed, 10 Oct 2007 16:22:12 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
-	(8.11.7/3.7W-MAILGATE-NEC)
-	id l9A7MCu18613 for kexec@lists.infradead.org;
-	Wed, 10 Oct 2007 16:22:12 +0900 (JST)
-Received: from yonosuke.jp.nec.com (yonosuke.jp.nec.com [10.26.220.15]) by
-	mailsv3.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
-	id l9A7MCB20910 for <kexec@lists.infradead.org>;
-	Wed, 10 Oct 2007 16:22:12 +0900 (JST)
-Message-Id: <470C7DC0.7070801@mxs.nes.nec.co.jp>
-Date: Wed, 10 Oct 2007 16:22:40 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: makedumpfile-1.2.1: Add virtual memmap support for x86_64 sparsemem
-	kernel.
+	id 1IfnY5-0005YL-W5
+	for kexec@lists.infradead.org; Thu, 11 Oct 2007 03:13:21 +0100
+Subject: [PATCH 2/2 -mm] kexec based hibernation -v5: kexec restore
+From: "Huang, Ying" <ying.huang@intel.com>
+Date: Thu, 11 Oct 2007 10:14:17 +0800
+Message-Id: <1192068857.27482.15.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,90 +20,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
+This patch adds writing support for /dev/oldmem. This is used to
+restore the memory contents of hibernated system.
 
-Hi,
+Signed-off-by: Huang Ying <ying.huang@intel.com>
 
-makedumpfile version 1.2.1 is released.
-Please test it. Your opinions/comments are welcome.
+---
 
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Changelog:
-o Add virtual memmap support for x86_64 sparsemem kernel.
-  On linux-2.6.24, virtual memmap will be implemented, and x86_64
-  sparsemem kernel will have "struct page" in virtual memmap area.
-  To support virtual memmap, the feature which translates virtual
-  address into physical address by 4-levels-paging is added.
-
-o Add the message_level (16) for printing the report message.
-  Example:
-   Printing progress indicator(1), common message(2), error message(4),
-   and report message(16).
-
-   # makedumpfile --message-level 23 -d 31 -x vmlinux /proc/vmcore dumpfile
-   [100 %]
-   Original pages  : 0x0000000000137f10
-     Excluded pages   : 0x000000000012a9cd
-       Pages filled with zero  : 0x0000000000120579
-       Cache pages             : 0x00000000000067e2
-       Cache pages + private   : 0x00000000000010a3
-       User process data pages : 0x000000000000249a
-       Free pages              : 0x0000000000000735
-     Remaining pages  : 0x000000000000d543
-     (The number of pages is reduced to 4%.)
-   Memory Hole     : 0x00000000000380f0
-   --------------------------------------------------
-   Total pages     : 0x0000000000170000
-   
-   The dumpfile is saved to dumpfile.
-   
-   makedumpfile Completed.
-   #
-
-o Add linux-2.6.23 support because makedumpfile was tested on linux-2.6.23.
-
-o Change the common/debug message output to STDOUT from STDERR if not
-  specifying '-F' option, so that users can read the help message easily.
-  ('-F' option outputs the dump data to STDOUT for piping it by ssh
-  command etc.)
-
-o Some cleanups
-  - Rename read_vmcoreinfo_structure() to read_vmcoreinfo_long() because
-    the function is used also for the usages other than structures.
-  - Cleanup the code for translating virtual address to physical address.
-
-
-You can download the latest makedumpfile(ver. 1.2.1) from the following URL.
-Details of the change are written on the CVS page of the following site.
-https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-1.2.1.tar.gz"
-  2. "cd makedumpfile"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
-
-
-Thanks
-Ken'ichi Ohmichi
-
+Index: linux-2.6.23-rc6/arch/i386/kernel/crash_dump.c
+===================================================================
+--- linux-2.6.23-rc6.orig/arch/i386/kernel/crash_dump.c	2007-09-28 09:46:22.000000000 +0800
++++ linux-2.6.23-rc6/arch/i386/kernel/crash_dump.c	2007-09-28 09:46:25.000000000 +0800
+@@ -58,6 +58,33 @@
+ 	return csize;
+ }
+ 
++ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
++			  size_t csize, unsigned long offset, int userbuf)
++{
++	void  *vaddr;
++
++	if (!csize)
++		return 0;
++
++	if (!userbuf) {
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, buf, csize);
++	} else {
++		if (!kdump_buf_page) {
++			printk(KERN_WARNING "Kdump: Kdump buffer page not"
++				" allocated\n");
++			return -EFAULT;
++		}
++		if (copy_from_user(kdump_buf_page, buf, csize))
++			return -EFAULT;
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, kdump_buf_page, csize);
++	}
++	kunmap_atomic(vaddr, KM_PTE0);
++
++	return csize;
++}
++
+ static int __init kdump_buf_page_init(void)
+ {
+ 	int ret = 0;
+Index: linux-2.6.23-rc6/include/linux/crash_dump.h
+===================================================================
+--- linux-2.6.23-rc6.orig/include/linux/crash_dump.h	2007-09-28 09:46:22.000000000 +0800
++++ linux-2.6.23-rc6/include/linux/crash_dump.h	2007-09-28 09:46:25.000000000 +0800
+@@ -11,6 +11,8 @@
+ extern unsigned long long elfcorehdr_addr;
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+ 						unsigned long, int);
++extern ssize_t write_oldmem_page(unsigned long, const char *, size_t,
++				 unsigned long, int);
+ extern const struct file_operations proc_vmcore_operations;
+ extern struct proc_dir_entry *proc_vmcore;
+ 
+Index: linux-2.6.23-rc6/drivers/char/mem.c
+===================================================================
+--- linux-2.6.23-rc6.orig/drivers/char/mem.c	2007-09-28 09:46:22.000000000 +0800
++++ linux-2.6.23-rc6/drivers/char/mem.c	2007-09-28 09:46:25.000000000 +0800
+@@ -348,6 +348,37 @@
+ 	}
+ 	return read;
+ }
++
++/*
++ * Write memory corresponding to the old kernel.
++ */
++static ssize_t write_oldmem(struct file *file, const char __user *buf,
++			    size_t count, loff_t *ppos)
++{
++	unsigned long pfn, offset;
++	size_t write = 0, csize;
++	int rc = 0;
++
++	while (count) {
++		pfn = *ppos / PAGE_SIZE;
++		if (pfn > saved_max_pfn)
++			return write;
++
++		offset = (unsigned long)(*ppos % PAGE_SIZE);
++		if (count > PAGE_SIZE - offset)
++			csize = PAGE_SIZE - offset;
++		else
++			csize = count;
++		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
++		if (rc < 0)
++			return rc;
++		buf += csize;
++		*ppos += csize;
++		write += csize;
++		count -= csize;
++	}
++	return write;
++}
+ #endif
+ 
+ extern long vread(char *buf, char *addr, unsigned long count);
+@@ -783,6 +814,7 @@
+ #ifdef CONFIG_CRASH_DUMP
+ static const struct file_operations oldmem_fops = {
+ 	.read	= read_oldmem,
++	.write	= write_oldmem,
+ 	.open	= open_oldmem,
+ };
+ #endif
 
 _______________________________________________
 kexec mailing list
