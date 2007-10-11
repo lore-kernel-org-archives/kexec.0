@@ -1,29 +1,20 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from e2.ny.us.ibm.com ([32.97.182.142])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IkcAF-0000lv-8T
-	for kexec@lists.infradead.org; Wed, 24 Oct 2007 10:04:39 +0100
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l9O91M2S000392
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 05:01:22 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l9O91L32136588
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 05:01:21 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l9O91LK7011341
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 05:01:21 -0400
-Date: Wed, 24 Oct 2007 14:31:28 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [PATCH 2/3] x86: add safe_smp_processor_id for x86_64
-Message-ID: <20071024090128.GA4809@in.ibm.com>
-References: <47195763.1090803@ct.jp.nec.com> <47195876.7080208@ct.jp.nec.com>
-	<20071024063141.GB4622@in.ibm.com>
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Ikixa-0007y6-8y
+	for kexec@lists.infradead.org; Wed, 24 Oct 2007 17:20:04 +0100
+Date: Thu, 11 Oct 2007 20:54:45 +0000
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Message-ID: <20071011205445.GA3975@ucw.cz>
+References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
+	<BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
+	<200709220947.58872.nigel@nigel.suspend2.net>
+	<200709221240.25614.rjw@sisk.pl>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071024063141.GB4622@in.ibm.com>
-Reply-To: vgoyal@in.ibm.com
+In-Reply-To: <200709221240.25614.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,45 +27,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: h-shimamoto@ct.jp.nec.com
-Cc: hbabu@us.ibm.com, tglx@linutronix.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Fernando Luis Vazquez Cao <fernando@intellilink.co.jp>
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kyle Moffett <mrmacman_g4@mac.com>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Wed, Oct 24, 2007 at 12:01:41PM +0530, Vivek Goyal wrote:
-> On Fri, Oct 19, 2007 at 06:23:02PM -0700, Hiroshi Shimamoto wrote:
-> > From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
-> > 
-> > Signed-off-by: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
-> > ---
-> >  include/asm-x86/smp_64.h |    2 ++
-> >  1 files changed, 2 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/include/asm-x86/smp_64.h b/include/asm-x86/smp_64.h
-> > index 6f0e027..ab612b0 100644
-> > --- a/include/asm-x86/smp_64.h
-> > +++ b/include/asm-x86/smp_64.h
-> > @@ -76,6 +76,8 @@ extern unsigned __cpuinitdata disabled_cpus;
-> > 
-> >  #endif /* CONFIG_SMP */
-> > 
-> > +#define safe_smp_processor_id()		smp_processor_id()
-> > +
+Hi!
+
+> > That's certainly possible. We already pass a very small amount of data between 
+> > the boot and resuming kernels at the moment, and it's done quite simply - by 
+> > putting the variables we want to 'transfer' in a nosave page/section.
 > 
-> Can you please implement a patch for safe_smp_processor_id() instead of
-> using smp_processor_id(). safe_smp_processor_id() was introduced to make
-> sure that we are not dependent on the stack of threads after kernel has
-> crashed instead read the apic id and convert it to cpu id with other
-> data structures. This helped in stack overflow case.
-> 
-> Hardcoding it to smp_processor_id() will give the false impression.
-> 
+> Well, if the boot and image kernels are different, which is now possible on
+> x86_64 with some recent patches (currently in -mm), the nosave trick won't
+> work.
 
-Just now Aneesh pointed that x86_64 using pda for retrieving processor id
-and not kernel stack.
+I guess we should remove the nosave.... at least from x86-64. If
+someone tries to use it, he'll get a nasty surprise.
 
-I think it is fine then.
-
-Thanks
-Vivek
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
