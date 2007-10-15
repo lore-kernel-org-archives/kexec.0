@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
 	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IhOU4-0003Gw-Gf
-	for kexec@lists.infradead.org; Mon, 15 Oct 2007 12:51:47 +0100
-Message-Id: <20071015115042.391348549@strauss.suse.de>
-Date: Mon, 15 Oct 2007 13:50:42 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [patch 0/2] Protect crashkernel against BSS overlap
+	id 1IhUjg-0000ej-Ue
+	for kexec@lists.infradead.org; Mon, 15 Oct 2007 19:32:21 +0100
+Date: Mon, 15 Oct 2007 11:32:06 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [patch 1/2] Add BSS to resource tree
+Message-Id: <20071015113206.36c06361.akpm@linux-foundation.org>
+In-Reply-To: <20071015115042.958614570@strauss.suse.de>
+References: <20071015115042.391348549@strauss.suse.de>
+	<20071015115042.958614570@strauss.suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,48 +19,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: akpm@linux-foundation.org, ak@suse.de
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de
 
-I observed the problem that even when you choose the default 16M as
-crashkernel base address and the kernel is very big, the reserved area may
-overlap with the kernel BSS. Currently, this is not checked at runtime, so the
-kernel just crashes when you load the panic kernel in the sys_kexec call.
+On Mon, 15 Oct 2007 13:50:43 +0200
+Bernhard Walle <bwalle@suse.de> wrote:
 
-This two patches check this at runtime. The patches are against current git,
-but with the patches
+> --- a/arch/x86/kernel/e820_32.c
+> +++ b/arch/x86/kernel/e820_32.c
+> @@ -51,6 +51,13 @@ struct resource code_resource = {
+>  	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+>  };
+>  
+> +struct resource bss_resource = {
+> +	.name	= "Kernel bss",
+> +	.start	= 0,
+> +	.end	= 0,
+> +	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+> +};
+> +
+>  static struct resource system_rom_resource = {
+>  	.name	= "System ROM",
+>  	.start	= 0xf0000,
+> @@ -287,6 +294,7 @@ legacy_init_iomem_resources(struct resou
+>  			 */
+>  			request_resource(res, code_resource);
+>  			request_resource(res, data_resource);
+> +			request_resource(res, &bss_resource);
 
-    extended-crashkernel-command-line.patch
-    extended-crashkernel-command-line-update.patch
-    extended-crashkernel-command-line-comment-fix.patch
-    extended-crashkernel-command-line-improve-error-handling-in-parse_crashkernel_mem.patch
-    use-extended-crashkernel-command-line-on-i386.patch
-    use-extended-crashkernel-command-line-on-i386-update.patch
-    use-extended-crashkernel-command-line-on-x86_64.patch
-    use-extended-crashkernel-command-line-on-x86_64-update.patch
-    use-extended-crashkernel-command-line-on-ia64.patch
-    use-extended-crashkernel-command-line-on-ia64-fix.patch
-    use-extended-crashkernel-command-line-on-ia64-update.patch
-    use-extended-crashkernel-command-line-on-ppc64.patch
-    use-extended-crashkernel-command-line-on-ppc64-update.patch
-    use-extended-crashkernel-command-line-on-sh.patch
-    use-extended-crashkernel-command-line-on-sh-update.patch
-
-from -mm tree applied since they are marked to be merged in 2.6.24.
-
-I know that the implementation of both patches is only x86 (i386 and x86-64),
-but if you agree that it's the way to go, I can add the BSS resource
-and the check for all other architectures that apply.
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
--- 
+Looks ungainly, doesn't it?  Perhaps we should add a third arg to
+legacy_init_iomem_resources(), or change legacy_init_iomem_resources() to
+take zero args?  
 
 _______________________________________________
 kexec mailing list
