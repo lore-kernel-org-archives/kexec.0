@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from pasmtpa.tele.dk ([80.160.77.114])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IhuXU-0007ST-Kk
-	for kexec@lists.infradead.org; Tue, 16 Oct 2007 23:05:27 +0100
-Date: Wed, 17 Oct 2007 00:06:23 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: kexec: Cannot determine the file type of arch/x86/boot/bzImage
-Message-ID: <20071016220623.GB3035@uranus.ravnborg.org>
-References: <47151631.9000307@m3y3r.de>
-	<20071016130657.8cc17011.randy.dunlap@oracle.com>
-	<47152FE6.3050204@m3y3r.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <47152FE6.3050204@m3y3r.de>
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IhpIt-0001Ii-TG
+	for kexec@lists.infradead.org; Tue, 16 Oct 2007 17:30:06 +0100
+Message-Id: <20071016162858.885007065@strauss.suse.de>
+References: <20071016162857.635479952@strauss.suse.de>
+Date: Tue, 16 Oct 2007 18:29:00 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [patch 3/3] Use BOOTMEM_EXCLUSIVE on x86
+Content-Disposition: inline; filename=bootmem-alloc-use-crashkernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +17,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Thomas Meyer <thomas@m3y3r.de>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: akpm@linux-foundation.org, ak@suse.de
 
-On Tue, Oct 16, 2007 at 11:40:54PM +0200, Thomas Meyer wrote:
-> >> How to solve this error?
+This patch uses the BOOTMEM_EXCLUSIVE, introduced in the previous patch,
+to avoid conflicts while reserving the memory for the kdump carpture kernel
+(crashkernel=).
 
-Fixed by following patch.
-Sorry for the inconvinience.
+The modification has been tested on i386.
 
-	Sam
 
-From 7eebb9348655b55553d65fc7cb6cfad292d28dbb Mon Sep 17 00:00:00 2001
-From: Sam Ravnborg <sam@neptun.(none)>
-Date: Tue, 16 Oct 2007 23:50:33 +0200
-Subject: [PATCH] x86: fix boot error introduced by kbuild
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-x86 uses target specific assignment of EXTRA_AFLAGS,
-EXTRA_CFLAGS - this caused troubles with
-introducing asflags-y, ccflags-y.
-
-Fixed the target specific assignments in arch/x86/boot/Makefile
-and auditted the rest of the kernel for similar usage.
-
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 ---
- arch/x86/boot/Makefile |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/setup_32.c |   28 ++++++++++++++++++----------
+ arch/x86/kernel/setup_64.c |   34 +++++++++++++++++++++-------------
+ 2 files changed, 39 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index d6ed8e5..e8756e5 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -64,10 +64,10 @@ KBUILD_CFLAGS	:= $(LINUXINCLUDE) -g -Os -D_SETUP -D__KERNEL__ \
- KBUILD_AFLAGS	:= $(KBUILD_CFLAGS) -D__ASSEMBLY__
+--- a/arch/x86/kernel/setup_32.c
++++ b/arch/x86/kernel/setup_32.c
+@@ -403,18 +403,26 @@ static void __init reserve_crashkernel(v
+ 	ret = parse_crashkernel(boot_command_line, total_mem,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size > 0) {
+-		if (crash_base > 0) {
+-			printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
+-					"for crashkernel (System RAM: %ldMB)\n",
+-					(unsigned long)(crash_size >> 20),
+-					(unsigned long)(crash_base >> 20),
+-					(unsigned long)(total_mem >> 20));
+-			crashk_res.start = crash_base;
+-			crashk_res.end   = crash_base + crash_size - 1;
+-			reserve_bootmem(crash_base, crash_size);
+-		} else
++		if (crash_base <= 0) {
+ 			printk(KERN_INFO "crashkernel reservation failed - "
+ 					"you have to specify a base address\n");
++			return;
++		}
++
++		if (reserve_bootmem(crash_base, crash_size,
++					BOOTMEM_EXCLUSIVE) < 0) {
++			printk(KERN_INFO "crashkernel reservation failed - "
++					"memory is in use\n");
++			return;
++		}
++
++		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
++				"for crashkernel (System RAM: %ldMB)\n",
++				(unsigned long)(crash_size >> 20),
++				(unsigned long)(crash_base >> 20),
++				(unsigned long)(total_mem >> 20));
++		crashk_res.start = crash_base;
++		crashk_res.end   = crash_base + crash_size - 1;
+ 	}
+ }
+ #else
+--- a/arch/x86/kernel/setup_64.c
++++ b/arch/x86/kernel/setup_64.c
+@@ -201,27 +201,35 @@ static inline void copy_edd(void)
+ #ifdef CONFIG_KEXEC
+ static void __init reserve_crashkernel(void)
+ {
+-	unsigned long long free_mem;
++	unsigned long long total_mem;
+ 	unsigned long long crash_size, crash_base;
+ 	int ret;
  
- $(obj)/zImage:  IMAGE_OFFSET := 0x1000
--$(obj)/zImage:  EXTRA_AFLAGS := $(SVGA_MODE) $(RAMDISK)
-+$(obj)/zImage:  asflags-y := $(SVGA_MODE) $(RAMDISK)
- $(obj)/bzImage: IMAGE_OFFSET := 0x100000
--$(obj)/bzImage: EXTRA_CFLAGS := -D__BIG_KERNEL__
--$(obj)/bzImage: EXTRA_AFLAGS := $(SVGA_MODE) $(RAMDISK) -D__BIG_KERNEL__
-+$(obj)/bzImage: ccflags-y := -D__BIG_KERNEL__
-+$(obj)/bzImage: asflags-y := $(SVGA_MODE) $(RAMDISK) -D__BIG_KERNEL__
- $(obj)/bzImage: BUILDFLAGS   := -b
+-	free_mem = ((unsigned long long)max_low_pfn - min_low_pfn) << PAGE_SHIFT;
++	total_mem = ((unsigned long long)max_low_pfn - min_low_pfn) << PAGE_SHIFT;
  
- quiet_cmd_image = BUILD   $@
+-	ret = parse_crashkernel(boot_command_line, free_mem,
++	ret = parse_crashkernel(boot_command_line, total_mem,
+ 			&crash_size, &crash_base);
+ 	if (ret == 0 && crash_size) {
+-		if (crash_base > 0) {
+-			printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
+-					"for crashkernel (System RAM: %ldMB)\n",
+-					(unsigned long)(crash_size >> 20),
+-					(unsigned long)(crash_base >> 20),
+-					(unsigned long)(free_mem >> 20));
+-			crashk_res.start = crash_base;
+-			crashk_res.end   = crash_base + crash_size - 1;
+-			reserve_bootmem(crash_base, crash_size, 0);
+-		} else
++		if (crash_base <= 0) {
+ 			printk(KERN_INFO "crashkernel reservation failed - "
+ 					"you have to specify a base address\n");
++			return;
++		}
++
++		if (reserve_bootmem(crash_base, crash_size,
++					BOOTMEM_EXCLUSIVE) < 0) {
++			printk(KERN_INFO "crashkernel reservation failed - "
++					"memory is in use\n");
++			return;
++		}
++
++		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
++				"for crashkernel (System RAM: %ldMB)\n",
++				(unsigned long)(crash_size >> 20),
++				(unsigned long)(crash_base >> 20),
++				(unsigned long)(total_mem >> 20));
++		crashk_res.start = crash_base;
++		crashk_res.end   = crash_base + crash_size - 1;
+ 	}
+ }
+ #else
+
 -- 
-1.5.2.4
-
 
 _______________________________________________
 kexec mailing list
