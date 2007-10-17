@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from dsl022.labridge.com ([206.117.136.22] helo=perches.com)
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IhyjE-0004iL-AF
-	for kexec@lists.infradead.org; Wed, 17 Oct 2007 03:33:52 +0100
-Date: Wed, 17 Oct 2007 11:33:07 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
-Message-ID: <20071017023305.GC6709@verge.net.au>
-References: <20070822210838oomichi@mail.jp.nec.com>
-	<20070822211339oomichi@mail.jp.nec.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20070822211339oomichi@mail.jp.nec.com>
+	id 1Ihz8M-0005OL-6B
+	for kexec@lists.infradead.org; Wed, 17 Oct 2007 03:59:49 +0100
+Subject: Re: [PATCH] [275/2many] MAINTAINERS - KDUMP
+From: Joe Perches <joe@perches.com>
+In-Reply-To: <20071017021902.GB6709@verge.net.au>
+References: <46bffa99.nQ27DQOgkKo2uOy+%joe@perches.com>
+	<46bffa8e.NHuk7h7puR+3eDXo%joe@perches.com>
+	<20071017021902.GB6709@verge.net.au>
+Date: Tue, 16 Oct 2007 19:45:34 -0700
+Message-Id: <1192589134.9998.93.camel@localhost>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,138 +24,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org
 
-On Wed, Aug 22, 2007 at 09:13:39PM +0900, Ken'ichi Ohmichi wrote:
-> 
-> [2/3] [kexec-tools] Pass vmcoreinfo's address and size
-> The patch is for kexec-tools-testing-20070330.
-> (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
-> kexec command gets the address and size of the vmcoreinfo data from
-> /sys/kernel/vmcoreinfo, and passes them to the second kernel through
-> ELF header of /proc/vmcore. When the second kernel is booting, the
-> kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
-> segment into /proc/vmcore.
+On Wed, 2007-10-17 at 11:19 +0900, Simon Horman wrote:
 
-Sorry for the long delay, I completely missed this patch.
+> I take it that these changes got shelved or canned,
+> as I still don't seem them in Linus' tree.
 
-The kexec-tools change seems ok to me. What is the status of
-the kernel portion of the change? Do you still want the
-kexec-tools portion applied?
+I have all the changes kept up-to-date.
+I still hope to get some variant into a future release.
 
-> 
-> Thanks
-> Ken'ichi Ohmichi
-> 
-> ---
-> Signed-off-by: Dan Aloni <da-x@monatomic.org>
-> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-> 
-> ---
-> diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c kexec-tools/kexec/crashdump-elf.c
-> --- backup/kexec-tools-testing-20070330/kexec/crashdump-elf.c	2007-03-30 13:34:36.000000000 +0900
-> +++ kexec-tools/kexec/crashdump-elf.c	2007-08-03 14:45:47.000000000 +0900
-> @@ -36,6 +36,8 @@ int FUNC(struct kexec_info *info,
->  	char *bufp;
->  	long int nr_cpus = 0;
->  	uint64_t notes_addr, notes_len;
-> +	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
-> +	int has_vmcoreinfo = 0;
->  	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
->  
->  	if (xen_present())
-> @@ -47,7 +49,11 @@ int FUNC(struct kexec_info *info,
->  		return -1;
->  	}
->  
-> -	sz = sizeof(EHDR) + nr_cpus * sizeof(PHDR) + ranges * sizeof(PHDR);
-> +	if (get_kernel_vmcoreinfo(&vmcoreinfo_addr, &vmcoreinfo_len) == 0) {
-> +		has_vmcoreinfo = 1;
-> +	}
-> +
-> +	sz = sizeof(EHDR) + (nr_cpus + has_vmcoreinfo) * sizeof(PHDR) + ranges * sizeof(PHDR);
->  
->  	/*
->  	 * Certain architectures such as x86_64 and ia64 require a separate
-> @@ -148,6 +154,21 @@ int FUNC(struct kexec_info *info,
->  		dfprintf_phdr(stdout, "Elf header", phdr);
->  	}
->  
-> +	if (has_vmcoreinfo) {
-> +		phdr = (PHDR *) bufp;
-> +		bufp += sizeof(PHDR);
-> +		phdr->p_type	= PT_NOTE;
-> +		phdr->p_flags	= 0;
-> +		phdr->p_offset  = phdr->p_paddr = vmcoreinfo_addr;
-> +		phdr->p_vaddr   = 0;
-> +		phdr->p_filesz	= phdr->p_memsz	= vmcoreinfo_len;
-> +		/* Do we need any alignment of segments? */
-> +		phdr->p_align	= 0;
-> +
-> +		(elf->e_phnum)++;
-> +		dfprintf_phdr(stdout, "vmcoreinfo header", phdr);
-> +	}
-> +
->  	/* Setup an PT_LOAD type program header for the region where
->  	 * Kernel is mapped if info->kern_size is non-zero.
->  	 */
-> diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.c kexec-tools/kexec/crashdump.c
-> --- backup/kexec-tools-testing-20070330/kexec/crashdump.c	2007-03-30 13:34:36.000000000 +0900
-> +++ kexec-tools/kexec/crashdump.c	2007-08-03 14:45:05.000000000 +0900
-> @@ -108,3 +108,35 @@ int get_crash_notes_per_cpu(int cpu, uin
->  
->  	return 0;
->  }
-> +
-> +/* Returns the physical address of start of crash notes buffer for a kernel. */
-> +int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len)
-> +{
-> +	char kdump_info[PATH_MAX];
-> +	char line[MAX_LINE];
-> +	int count;
-> +	FILE *fp;
-> +	unsigned long long temp, temp2;
-> +
-> +	*addr = 0;
-> +	*len = 0;
-> +
-> +	sprintf(kdump_info, "/sys/kernel/vmcoreinfo");
-> +	fp = fopen(kdump_info, "r");
-> +	if (!fp) {
-> +		die("Could not open \"%s\": %s\n", kdump_info,
-> +		    strerror(errno));
-> +		return -1;
-> +	}
-> +
-> +	if (!fgets(line, sizeof(line), fp))
-> +		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
-> +	count = sscanf(line, "%Lx %Lx", &temp, &temp2);
-> +	if (count != 2)
-> +		die("Cannot parse %s: %s\n", kdump_info, strerror(errno));
-> +
-> +	*addr = (uint64_t) temp;
-> +	*len = (uint64_t) temp2;
-> +
-> +	return 0;
-> +}
-> diff -rpuN backup/kexec-tools-testing-20070330/kexec/crashdump.h kexec-tools/kexec/crashdump.h
-> --- backup/kexec-tools-testing-20070330/kexec/crashdump.h	2007-03-30 13:34:36.000000000 +0900
-> +++ kexec-tools/kexec/crashdump.h	2007-08-03 14:45:05.000000000 +0900
-> @@ -2,6 +2,7 @@
->  #define CRASHDUMP_H
->  
->  extern int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len);
-> +extern int get_kernel_vmcoreinfo(uint64_t *addr, uint64_t *len);
->  
->  /* Need to find a better way to determine per cpu notes section size. */
->  #define MAX_NOTE_BYTES		1024
-> _
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> But just for the record, the file lists seem
+> to be somewhat sort. I'm not sure exactly what the criteria is, but for
+> starters, shouldn't all the architecture specific files that only
+> contain kexec or kdump code be in there too?
+
+If one of the maintainers, Vivek Goyal or Haren Myneni, cared
+to improve the kdump list of files, I'd happily accept it.
+
+My maintainer entry for kdump is:
+
+KDUMP
+P:	Vivek Goyal
+M:	vgoyal@in.ibm.com
+P:	Haren Myneni
+M:	hbabu@us.ibm.com
+L:	kexec@lists.infradead.org
+L:	linux-kernel@vger.kernel.org
+W:	http://lse.sourceforge.net/kdump/
+S:	Maintained
+F:	Documentation/kdump
+
+and if Eric Biederman wants to improve kexec:
+
+KEXEC
+P:	Eric Biederman
+M:	ebiederm@xmission.com
+W:	http://www.xmission.com/~ebiederm/files/kexec/
+L:	linux-kernel@vger.kernel.org
+L:	kexec@lists.infradead.org
+S:	Maintained
+F:	include/linux/kexec.h
+F:	kernel/kexec.c
+
+
+
 
 _______________________________________________
 kexec mailing list
