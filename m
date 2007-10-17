@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Ii1LA-0002e9-6W
-	for kexec@lists.infradead.org; Wed, 17 Oct 2007 06:21:10 +0100
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9H5J2YR017690
-	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 14:19:02 +0900 (JST)
-Message-Id: <47159AA3.10305@mxs.nes.nec.co.jp>
-Date: Wed, 17 Oct 2007 14:16:19 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
-References: <20070822210838oomichi@mail.jp.nec.com>
-	<20070822211339oomichi@mail.jp.nec.com>
-	<20071017023305.GC6709@verge.net.au>
-In-Reply-To: <20071017023305.GC6709@verge.net.au>
+Received: from e6.ny.us.ibm.com ([32.97.182.146])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Ii6lx-0007wT-Lj
+	for kexec@lists.infradead.org; Wed, 17 Oct 2007 12:09:14 +0100
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l9HB7Qr7002170
+	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 07:07:26 -0400
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l9HB5tcC569302
+	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 07:05:55 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l9HB5ivq005196
+	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 07:05:45 -0400
+Date: Wed, 17 Oct 2007 16:35:51 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [patch 2/3] Introduce BOOTMEM_EXCLUSIVE
+Message-ID: <20071017110550.GB17565@in.ibm.com>
+References: <20071016162857.635479952@strauss.suse.de>
+	<20071016162858.545617122@strauss.suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20071016162858.545617122@strauss.suse.de>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,42 +36,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de
 
 
-Hi Simon,
+[..]
+> +/*
+> + * If flags is 0, then the return value is always 0 (success). If
+> + * flags contains BOOTMEM_EXCLUSIVE, then -EBUSY is returned if the
+> + * memory already was reserved.
+> + */
+> +extern int reserve_bootmem(unsigned long addr, unsigned long size, int flags);
+>  #define alloc_bootmem(x) \
+>  	__alloc_bootmem(x, SMP_CACHE_BYTES, __pa(MAX_DMA_ADDRESS))
+>  #define alloc_bootmem_low(x) \
+> --- a/mm/bootmem.c
+> +++ b/mm/bootmem.c
+> @@ -111,8 +111,8 @@ static unsigned long __init init_bootmem
+>   * might be used for boot-time allocations - or it might get added
+>   * to the free page pool later on.
+>   */
+> -static void __init reserve_bootmem_core(bootmem_data_t *bdata, unsigned long addr,
+> -					unsigned long size)
+> +static int __init reserve_bootmem_core(bootmem_data_t *bdata, unsigned long addr,
+> +					unsigned long size, int flags)
+>  {
+>  	unsigned long sidx, eidx;
+>  	unsigned long i;
+> @@ -133,7 +133,11 @@ static void __init reserve_bootmem_core(
+>  #ifdef CONFIG_DEBUG_BOOTMEM
+>  			printk("hm, page %08lx reserved twice.\n", i*PAGE_SIZE);
+>  #endif
+> +			if (flags & BOOTMEM_EXCLUSIVE)
+> +				return -EBUSY;
 
-Simon Horman wrote:
-> On Wed, Aug 22, 2007 at 09:13:39PM +0900, Ken'ichi Ohmichi wrote:
->> [2/3] [kexec-tools] Pass vmcoreinfo's address and size
->> The patch is for kexec-tools-testing-20070330.
->> (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
->> kexec command gets the address and size of the vmcoreinfo data from
->> /sys/kernel/vmcoreinfo, and passes them to the second kernel through
->> ELF header of /proc/vmcore. When the second kernel is booting, the
->> kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
->> segment into /proc/vmcore.
-> 
-> Sorry for the long delay, I completely missed this patch.
-> 
-> The kexec-tools change seems ok to me. What is the status of
-> the kernel portion of the change?
-
-The kernel portion is merged into linux-2.6.23-mm1.
-According to Andrew's mail "-mm merge plans for 2.6.24",  its status is
-"The infamous misc.  Will re-review and will merge basically all of them".
-
-http://www.ussg.iu.edu/hypermail/linux/kernel/0710.0/0313.html
-
-
-> Do you still want the kexec-tools portion applied?
-
-Yes, I hope so.
-
+I think we should unreserve the chunks of memory we have reserved so
+far (Memory reserved from sidx to i), in case of error.
 
 Thanks
-Ken'ichi Ohmichi
+Vivek
 
 _______________________________________________
 kexec mailing list
