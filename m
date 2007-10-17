@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from dsl022.labridge.com ([206.117.136.22] helo=perches.com)
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Ii0Vm-00009E-St
-	for kexec@lists.infradead.org; Wed, 17 Oct 2007 05:28:06 +0100
-Date: Wed, 17 Oct 2007 13:27:22 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools-testing v20071017-rc
-Message-ID: <20071017042720.GA28946@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+	id 1Ii1A8-0001hm-3c
+	for kexec@lists.infradead.org; Wed, 17 Oct 2007 06:09:47 +0100
+Subject: Re: [PATCH] [275/2many] MAINTAINERS - KDUMP
+From: Joe Perches <joe@perches.com>
+In-Reply-To: <20071017034840.GA28414@verge.net.au>
+References: <46bffa99.nQ27DQOgkKo2uOy+%joe@perches.com>
+	<46bffa8e.NHuk7h7puR+3eDXo%joe@perches.com>
+	<20071017021902.GB6709@verge.net.au>
+	<1192589134.9998.93.camel@localhost>
+	<20071017034840.GA28414@verge.net.au>
+Date: Tue, 16 Oct 2007 21:56:19 -0700
+Message-Id: <1192596979.9998.143.camel@localhost>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,159 +26,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Vivek Goyal <vgoyal@in.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org
 
-Hi all,
+On Wed, 2007-10-17 at 12:48 +0900, Simon Horman wrote:
+> Do you have a criteria for including files.
 
-its been a long time between drinks, so I thought that it be about
-time to put out another release of kexec-tools. To this end I have
-made an RC release, kexec-tools-testing v20071017-rc.
+A file or file pattern specific to a maintained "subsystem".
 
-I intend to call the release kexec-tools-testing vYYYYMMDD, though
-ultimately I would like to release kexec-tools 2.0, Eric, I'd appreciate
-your ideas on what needs to be done in order to make that happen.
+Any time a subsystem file pattern matches a file,
+maintainers would be cc'd.  The matching is non-exclusive.
+Multiple subsystems can include the same file pattern.
 
-The RC release can be downloaded as a tarball:
+For KDUMP, maybe a file pattern should be:
 
-http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/kexec-tools-testing-20071017-rc.tar.gz
-http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/
+F:	arch/*/kernel/crash_dump.c
+F:	include/linux/crash_dump.h
 
-I have also tagged it in git:
-git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
-http://git.kernel.org/?p=linux/kernel/git/horms/kexec-tools-testing.git
+> Are they files that only apply to KEXEC/KDUMP,
+> or files that have KEXEC/KDUMP code and other code?
 
-A summary of the changes since v20070330 is below:
+I think it should be files specific to KDUMP and not
+files shared with other subsystems but perhaps it's
+maintainer taste.
 
-commit 6282f6f4e662ca7c8fa9c53d31f1e1057c3d6192
-Author: Simon Horman <horms@verge.net.au>
+If the files patterns are not specific to kdump,
+the kdump maintainers will be cc'd on patches that
+change files where kdump functions aren't modified.
 
-    kexec-tools-testing 20071017-rc
+The list of files that include crash_dump.h is pretty long.
 
-commit d955779f2aec43e9926866f2c9d2b1ba5b989c79
-Author: Simon Horman <horms@verge.net.au>
+        $ grep -P -l -r --include=*.[ch] crash_dump.h *
+        arch/i386/kernel/crash_dump.c
+        arch/i386/kernel/setup.c
+        arch/ia64/hp/common/sba_iommu.c
+        arch/ia64/kernel/crash.c
+        arch/ia64/kernel/setup.c
+        arch/powerpc/kernel/crash.c
+        arch/powerpc/kernel/crash_dump.c
+        arch/sh/kernel/crash_dump.c
+        arch/x86_64/kernel/crash_dump.c
+        arch/x86_64/kernel/setup.c
+        drivers/char/mem.c
+        fs/proc/proc_misc.c
+        fs/proc/vmcore.c
+        
+The list of files that use CONFIG_CRASH_DUMP is also
+pretty long and seemingly unrelated.
 
-    Set alternate location for /proc/iomem on ia64 xen
+        $ grep -P -l -r --include=*.[ch] CONFIG_CRASH_DUMP *
+        arch/i386/kernel/apic.c
+        arch/i386/kernel/e820.c
+        arch/ia64/hp/common/sba_iommu.c
+        arch/ia64/kernel/efi.c
+        arch/powerpc/kernel/iommu.c
+        arch/powerpc/platforms/cell/ras.c
+        arch/powerpc/platforms/pseries/iommu.c
+        arch/x86_64/kernel/e820.c
+        drivers/char/mem.c
+        include/asm-powerpc/kdump.h
+        include/linux/bootmem.h
+        include/linux/crash_dump.h
+        mm/bootmem.c
 
-commit 6dfe4858e2db01b49d52a4cf2bb0dce18324d787
-Author: Simon Horman <horms@verge.net.au>
 
-    Allow architectures to specify the location of /proc/iomem
 
-commit de12fd1c7133edfc4be1d94f63295e30ae1dc526
-Author: Bernhard Walle <bwalle@suse.de>
-
-    Use fclose() to close the file pointer
-
-commit ddbc4830ad70598070e891e10508ca09567bca60
-Author: Randy Dunlap <randy.dunlap@oracle.com>
-
-    kexec-tools: fix typos
-
-commit b9c3648e690ad0dad12389659673206213a09760
-Author: Bernhard Walle <bwalle@suse.de>
-
-    Determine ELF32/ELF64 automatically on i386
-
-commit b84b87747a16f0afbef6f6802bb794a94f4961d9
-Author: Michael Neuling <mikey@neuling.org>
-
-    kexec ppc64: fix misaligned cmdline
-
-commit 1a1dea172782db6b9ce20b3afe5ca046120a78bc
-Author: Michael Neuling <mikey@neuling.org>
-
-    minor cleanup in check_reuse_initrd
-
-commit f76d598edc5050bc70902446294cb1522479bdfd
-Author: Maneesh Soni <maneesh@in.ibm.com>
-
-    fix kexec-tools options
-
-commit 02f4088ffded3d6f99a0c9f835727943d102b3df
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec fix ppc64 device-tree mem node
-
-commit 13ceb63c96c26e1964dea12576d7245853a83842
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec rename dprintf to dbgprintf
-
-commit e6a23f7d355685f01f6a4ce7c9d37deb7458cf90
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec remove last remaining dfprintf
-
-commit f7129ad11f75ef27416784c39c29b0e8906d8844
-Author: Simon Horman <horms@verge.net.au>
-
-    Handle maloc() failure in xen_get_nr_phys_cpus()
-
-commit c58ed3b1b4f538bbd784ee3087e4d5e467637fcf
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec fix prototypes for ppc64
-
-commit df5a80b73b34da3c8021608489400cb949e2f2e3
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec add strict-prototypes
-
-commit ee2bd75816cb20c266ad27e417589e8e6ee7a39e
-Author: Simon Horman <horms@verge.net.au>
-
-    use dprintf
-
-commit 17be877eabcad87dd93980da6375fdaba271204f
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec debug output improvments
-
-commit 536dd73ce38cb68828d362b0cca1a8e8b377b97e
-Author: Geoff Levand <geoffrey.levand@am.sony.com>
-
-    kexec improve build for ppc64
-
-commit 1f5e46311bc9f00449f1ffb4fef4901664d3061e
-Author: Michael Neuling <mikey@neuling.org>
-
-    kexec ppc64: cleanup get_devtree_details
-
-commit e2dcef05eadaee65805178a775fa31aac18edc8c
-Author: Michael Neuling <mikey@neuling.org>
-
-    kexec ppc64: Add arch specific --reuseinitrd hooks
-
-commit 8ec6347996ce83c369edeee4bed0498dedda6b41
-Author: Michael Neuling <mikey@neuling.org>
-
-    kexec: Added generic --reuseinitrd option
-
-commit b42483a7f148456186212abed9d3c4b2535d1d60
-Author: Michael Neuling <mikey@neuling.org>
-
-    kexec-tools: remove initrd_found
-
-commit 0ed5c286ef2d83a55d1b2aff2c153ac95f9744ea
-Author: Simon Horman <horms@verge.net.au>
-
-    kexec-tools: Add distclean and maintainerclean targets
-
-commit c8d973a3eca741f036f0240fd9d67c1848cfc7f7
-Author: Milton Miller <miltonm@bga.com>
-
-    kexec-tools: ppc64: use kernels slave loop for purgatory
-
-commit c89a1770572654ef01ea9b12519c7f9fe05514f1
-Author: Milton Miller <miltonm@bga.com>
-
-    kexec-tools: ppc64: correct @ha relocation
-
-commit 1223d194299dbd43d583e094e71ebf5e79856e9e
-Author: Simon Horman <horms@verge.net.au>
-
-    kexec-tools: Add -git to version so it doesn't look like a release
 
 _______________________________________________
 kexec mailing list
