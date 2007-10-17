@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IhzuO-0007Pk-4R
-	for kexec@lists.infradead.org; Wed, 17 Oct 2007 04:49:28 +0100
-Date: Wed, 17 Oct 2007 12:48:41 +0900
+	id 1Ii0Vm-00009E-St
+	for kexec@lists.infradead.org; Wed, 17 Oct 2007 05:28:06 +0100
+Date: Wed, 17 Oct 2007 13:27:22 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] [275/2many] MAINTAINERS - KDUMP
-Message-ID: <20071017034840.GA28414@verge.net.au>
-References: <46bffa99.nQ27DQOgkKo2uOy+%joe@perches.com>
-	<46bffa8e.NHuk7h7puR+3eDXo%joe@perches.com>
-	<20071017021902.GB6709@verge.net.au>
-	<1192589134.9998.93.camel@localhost>
+Subject: [ANNOUNCE] kexec-tools-testing v20071017-rc
+Message-ID: <20071017042720.GA28946@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1192589134.9998.93.camel@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,69 +21,159 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Joe Perches <joe@perches.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com, ebiederm@xmission.com, akpm@linux-foundation.org, torvalds@linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: Vivek Goyal <vgoyal@in.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Tue, Oct 16, 2007 at 07:45:34PM -0700, Joe Perches wrote:
-> On Wed, 2007-10-17 at 11:19 +0900, Simon Horman wrote:
-> 
-> > I take it that these changes got shelved or canned,
-> > as I still don't seem them in Linus' tree.
-> 
-> I have all the changes kept up-to-date.
-> I still hope to get some variant into a future release.
-> 
-> > But just for the record, the file lists seem
-> > to be somewhat sort. I'm not sure exactly what the criteria is, but for
-> > starters, shouldn't all the architecture specific files that only
-> > contain kexec or kdump code be in there too?
-> 
-> If one of the maintainers, Vivek Goyal or Haren Myneni, cared
-> to improve the kdump list of files, I'd happily accept it.
+Hi all,
 
-Understood. I'm happy to make a start on that.
-Do you have a criteria for including files.
-Are they files that only apply to KEXEC/KDUMP,
-or files that have KEXEC/KDUMP code and other code?
+its been a long time between drinks, so I thought that it be about
+time to put out another release of kexec-tools. To this end I have
+made an RC release, kexec-tools-testing v20071017-rc.
 
-> My maintainer entry for kdump is:
-> 
-> KDUMP
-> P:	Vivek Goyal
-> M:	vgoyal@in.ibm.com
-> P:	Haren Myneni
-> M:	hbabu@us.ibm.com
-> L:	kexec@lists.infradead.org
-> L:	linux-kernel@vger.kernel.org
-> W:	http://lse.sourceforge.net/kdump/
-> S:	Maintained
-> F:	Documentation/kdump
-> 
-> and if Eric Biederman wants to improve kexec:
-> 
-> KEXEC
-> P:	Eric Biederman
-> M:	ebiederm@xmission.com
-> W:	http://www.xmission.com/~ebiederm/files/kexec/
-> L:	linux-kernel@vger.kernel.org
-> L:	kexec@lists.infradead.org
-> S:	Maintained
-> F:	include/linux/kexec.h
-> F:	kernel/kexec.c
-> 
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+I intend to call the release kexec-tools-testing vYYYYMMDD, though
+ultimately I would like to release kexec-tools 2.0, Eric, I'd appreciate
+your ideas on what needs to be done in order to make that happen.
 
--- 
-Horms
-  H: http://www.vergenet.net/~horms/
-  W: http://www.valinux.co.jp/en/
+The RC release can be downloaded as a tarball:
 
+http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/kexec-tools-testing-20071017-rc.tar.gz
+http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/
+
+I have also tagged it in git:
+git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
+http://git.kernel.org/?p=linux/kernel/git/horms/kexec-tools-testing.git
+
+A summary of the changes since v20070330 is below:
+
+commit 6282f6f4e662ca7c8fa9c53d31f1e1057c3d6192
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools-testing 20071017-rc
+
+commit d955779f2aec43e9926866f2c9d2b1ba5b989c79
+Author: Simon Horman <horms@verge.net.au>
+
+    Set alternate location for /proc/iomem on ia64 xen
+
+commit 6dfe4858e2db01b49d52a4cf2bb0dce18324d787
+Author: Simon Horman <horms@verge.net.au>
+
+    Allow architectures to specify the location of /proc/iomem
+
+commit de12fd1c7133edfc4be1d94f63295e30ae1dc526
+Author: Bernhard Walle <bwalle@suse.de>
+
+    Use fclose() to close the file pointer
+
+commit ddbc4830ad70598070e891e10508ca09567bca60
+Author: Randy Dunlap <randy.dunlap@oracle.com>
+
+    kexec-tools: fix typos
+
+commit b9c3648e690ad0dad12389659673206213a09760
+Author: Bernhard Walle <bwalle@suse.de>
+
+    Determine ELF32/ELF64 automatically on i386
+
+commit b84b87747a16f0afbef6f6802bb794a94f4961d9
+Author: Michael Neuling <mikey@neuling.org>
+
+    kexec ppc64: fix misaligned cmdline
+
+commit 1a1dea172782db6b9ce20b3afe5ca046120a78bc
+Author: Michael Neuling <mikey@neuling.org>
+
+    minor cleanup in check_reuse_initrd
+
+commit f76d598edc5050bc70902446294cb1522479bdfd
+Author: Maneesh Soni <maneesh@in.ibm.com>
+
+    fix kexec-tools options
+
+commit 02f4088ffded3d6f99a0c9f835727943d102b3df
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec fix ppc64 device-tree mem node
+
+commit 13ceb63c96c26e1964dea12576d7245853a83842
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec rename dprintf to dbgprintf
+
+commit e6a23f7d355685f01f6a4ce7c9d37deb7458cf90
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec remove last remaining dfprintf
+
+commit f7129ad11f75ef27416784c39c29b0e8906d8844
+Author: Simon Horman <horms@verge.net.au>
+
+    Handle maloc() failure in xen_get_nr_phys_cpus()
+
+commit c58ed3b1b4f538bbd784ee3087e4d5e467637fcf
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec fix prototypes for ppc64
+
+commit df5a80b73b34da3c8021608489400cb949e2f2e3
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec add strict-prototypes
+
+commit ee2bd75816cb20c266ad27e417589e8e6ee7a39e
+Author: Simon Horman <horms@verge.net.au>
+
+    use dprintf
+
+commit 17be877eabcad87dd93980da6375fdaba271204f
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec debug output improvments
+
+commit 536dd73ce38cb68828d362b0cca1a8e8b377b97e
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec improve build for ppc64
+
+commit 1f5e46311bc9f00449f1ffb4fef4901664d3061e
+Author: Michael Neuling <mikey@neuling.org>
+
+    kexec ppc64: cleanup get_devtree_details
+
+commit e2dcef05eadaee65805178a775fa31aac18edc8c
+Author: Michael Neuling <mikey@neuling.org>
+
+    kexec ppc64: Add arch specific --reuseinitrd hooks
+
+commit 8ec6347996ce83c369edeee4bed0498dedda6b41
+Author: Michael Neuling <mikey@neuling.org>
+
+    kexec: Added generic --reuseinitrd option
+
+commit b42483a7f148456186212abed9d3c4b2535d1d60
+Author: Michael Neuling <mikey@neuling.org>
+
+    kexec-tools: remove initrd_found
+
+commit 0ed5c286ef2d83a55d1b2aff2c153ac95f9744ea
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools: Add distclean and maintainerclean targets
+
+commit c8d973a3eca741f036f0240fd9d67c1848cfc7f7
+Author: Milton Miller <miltonm@bga.com>
+
+    kexec-tools: ppc64: use kernels slave loop for purgatory
+
+commit c89a1770572654ef01ea9b12519c7f9fe05514f1
+Author: Milton Miller <miltonm@bga.com>
+
+    kexec-tools: ppc64: correct @ha relocation
+
+commit 1223d194299dbd43d583e094e71ebf5e79856e9e
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools: Add -git to version so it doesn't look like a release
 
 _______________________________________________
 kexec mailing list
