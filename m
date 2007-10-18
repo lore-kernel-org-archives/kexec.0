@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IiO5O-0005Kv-Qo
-	for kexec@lists.infradead.org; Thu, 18 Oct 2007 06:38:26 +0100
-Date: Thu, 18 Oct 2007 14:37:41 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
-Message-ID: <20071018053739.GA31244@verge.net.au>
-References: <20070822210838oomichi@mail.jp.nec.com>
-	<20070822211339oomichi@mail.jp.nec.com>
-	<20071017023305.GC6709@verge.net.au>
-	<47159AA3.10305@mxs.nes.nec.co.jp>
+	id 1IiPD1-0007xE-BO
+	for kexec@lists.infradead.org; Thu, 18 Oct 2007 07:50:22 +0100
+Received: from tyo201.gate.nec.co.jp ([10.7.69.201])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9I6lldJ015858
+	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 15:47:47 +0900 (JST)
+Message-ID: <471700F4.1080200@ah.jp.nec.com>
+Date: Thu, 18 Oct 2007 15:45:08 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <47159AA3.10305@mxs.nes.nec.co.jp>
+Subject: [PATCH 0/2] add new notifier function ,take2
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +23,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: linux-kernel@vger.kernel.org
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-On Wed, Oct 17, 2007 at 02:16:19PM +0900, Ken'ichi Ohmichi wrote:
-> 
-> Hi Simon,
-> 
-> Simon Horman wrote:
-> > On Wed, Aug 22, 2007 at 09:13:39PM +0900, Ken'ichi Ohmichi wrote:
-> >> [2/3] [kexec-tools] Pass vmcoreinfo's address and size
-> >> The patch is for kexec-tools-testing-20070330.
-> >> (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
-> >> kexec command gets the address and size of the vmcoreinfo data from
-> >> /sys/kernel/vmcoreinfo, and passes them to the second kernel through
-> >> ELF header of /proc/vmcore. When the second kernel is booting, the
-> >> kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
-> >> segment into /proc/vmcore.
-> > 
-> > Sorry for the long delay, I completely missed this patch.
-> > 
-> > The kexec-tools change seems ok to me. What is the status of
-> > the kernel portion of the change?
-> 
-> The kernel portion is merged into linux-2.6.23-mm1.
-> According to Andrew's mail "-mm merge plans for 2.6.24",  its status is
-> "The infamous misc.  Will re-review and will merge basically all of them".
-> 
-> http://www.ussg.iu.edu/hypermail/linux/kernel/0710.0/0313.html
-> 
-> 
-> > Do you still want the kexec-tools portion applied?
-> 
-> Yes, I hope so.
+Hi,
 
-Thanks, applied :-)
+A big thanks to everybody who read and replied to first version. I have tried to
+incorporate reviewer's comments and suggestions.
+
+changelog take1 -> take2
+
+- Rebased 2.6.23
+- comment updated
+- renamed the notifiner name "tunable_notifier" to "tunable_atomic_notifier"
+- fixed typo
+
+
+These patches add new notifier function and implement it to panic_notifier_list.
+We used the hardcoded notifier chain so far, but it was not flexible. New
+notifier is very flexible, because user can change a list of order by debugfs.
+
+Thanks,
+
+Example)
+
+# cd /sys/kernel/debug/
+# ls
+kprobes  pktcdvd
+# insmod ipmi_msghandler.ko
+# ls
+kprobes  panic_notifier_list  pktcdvd
+# cd panic_notifier_list/
+# ls
+ipmi_msghandler
+# insmod ipmi_watchdog.ko
+# ls
+ipmi_msghandler  ipmi_wdog
+# cat ipmi_msghandler/priority
+200
+# cat ipmi_wdog/priority
+150
+#
+Kernel panic - not syncing: panic
+ipmi_msghandler : notifier calls panic_event().
+ipmi_watchdog : notifier calls wdog_panic_handler().
+
+.....(reboot)
+
+# cat ipmi_msghandler/priority
+200
+# cat ipmi_wdog/priority
+150
+# echo 300 > ipmi_wdog/priority
+#
+Kernel panic - not syncing: panic
+ipmi_watchdog : notifier calls wdog_panic_handler().
+ipmi_msghandler : notifier calls panic_event().
+
+--
+Takenori Nagano <t-nagano@ah.jp.nec.com>
 
 _______________________________________________
 kexec mailing list
