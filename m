@@ -1,28 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from e5.ny.us.ibm.com ([32.97.182.145])
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
 	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IiUQK-0004Rq-FA
-	for kexec@lists.infradead.org; Thu, 18 Oct 2007 13:24:28 +0100
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l9ICKmVU007229
-	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 08:20:48 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l9ICKlnM075374
-	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 08:20:48 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l9ICKl7U005859
-	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 08:20:47 -0400
-Date: Thu, 18 Oct 2007 17:51:03 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [PATCH] kmap leak fix for x86_32 kdump
-Message-ID: <20071018122103.GD8779@in.ibm.com>
-References: <1192705816.23637.12.camel@sebastian.kern.oss.ntt.co.jp>
+	id 1IictT-0000kR-Hc
+	for kexec@lists.infradead.org; Thu, 18 Oct 2007 22:27:07 +0100
+Date: Thu, 18 Oct 2007 14:26:42 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [patch 1/3] Add BSS to resource tree
+Message-Id: <20071018142642.5b3f6ba4.akpm@linux-foundation.org>
+In-Reply-To: <20071018111535.883533731@strauss.suse.de>
+References: <20071018111535.356215664@strauss.suse.de>
+	<20071018111535.883533731@strauss.suse.de>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1192705816.23637.12.camel@sebastian.kern.oss.ntt.co.jp>
-Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,42 +19,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Fernando Luis =?iso-8859-1?Q?V=E1zquez?= Cao <fernando@oss.ntt.co.jp>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de
 
-On Thu, Oct 18, 2007 at 08:10:16PM +0900, Fernando Luis V=E1zquez Cao wrote:
-> copy_oldmem_page should not return leaving a page frame from the
-> previous kernel mapped.
-> =
+On Thu, 18 Oct 2007 13:15:36 +0200
+Bernhard Walle <bwalle@suse.de> wrote:
 
-> Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
-> ---
-> =
-
-> diff -urNp linux-2.6.23-git13-orig/arch/x86/kernel/crash_dump_32.c linux-=
-2.6.23-git13/arch/x86/kernel/crash_dump_32.c
-> --- linux-2.6.23-git13-orig/arch/x86/kernel/crash_dump_32.c	2007-10-18 19=
-:42:54.000000000 +0900
-> +++ linux-2.6.23-git13/arch/x86/kernel/crash_dump_32.c	2007-10-18 19:49:2=
-5.000000000 +0900
-> @@ -47,6 +47,7 @@ ssize_t copy_oldmem_page(unsigned long p
->  		if (!kdump_buf_page) {
->  			printk(KERN_WARNING "Kdump: Kdump buffer page not"
->  				" allocated\n");
-> +			kunmap_atomic(vaddr, KM_PTE0);
->  			return -EFAULT;
->  		}
->  		copy_page(kdump_buf_page, vaddr);
+> This patch adds the BSS to the resource tree just as kernel text and kernel
+> data are in the resource tree. The main reason behind this is to avoid
+> crashkernel reservation in that area.
+> 
+> While it's not strictly necessary to have the BSS in the resource tree
+> (the actual collision detection is done in the reserve_bootmem() function
+> before), the usage of the BSS resource should be presented to the user
+> in /proc/iomem just as Kernel data and Kernel code.
+> 
+> Note: The patch currently is only implemented for x86 and ia64 (because
+> efi_initialize_iomem_resources() has the same signature on i386 and
+> ia64).
+> 
+> 
+> ...
 >
+> -extern char _text[], _end[], _etext[];
+> +
+> +static struct resource bss_resource = {
+> +	.name	= "Kernel bss",
+> +	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+> +};
+> +extern char _text[], _end[], _etext[], _edata[], _bss[];
 
-Thanks Fernando. This makes sense.
+These should be in a header file.
 
-Vivek
- =
+> --- a/arch/x86/kernel/e820_64.c
+> +++ b/arch/x86/kernel/e820_64.c
+> @@ -47,7 +47,7 @@ unsigned long end_pfn_map; 
+>   */
+>  static unsigned long __initdata end_user_pfn = MAXMEM>>PAGE_SHIFT;
+>  
+> -extern struct resource code_resource, data_resource;
+> +extern struct resource code_resource, data_resource, bss_resource;
+
+As should these.  afaik they're the same on all architectures and even if
+they have different names on some weird arch, an unused declaration won't
+hurt.
+
+> --- a/arch/x86/kernel/setup_32.c
+> +++ b/arch/x86/kernel/setup_32.c
+> @@ -73,6 +74,7 @@ int disable_pse __devinitdata = 0;
+>   */
+>  extern struct resource code_resource;
+>  extern struct resource data_resource;
+> +extern struct resource bss_resource;
+
+See, we keep on adding the same thing over and over again.
+
+
+These problems are not introduced by your changes, of course.  But we really
+should degunk this stuff sometime.
 
 
 _______________________________________________
