@@ -1,36 +1,19 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from over.ny.us.ibm.com ([32.97.182.150])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IiNOv-0003kl-Og
-	for kexec@lists.infradead.org; Thu, 18 Oct 2007 05:54:34 +0100
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-	by pokfb.esmtp.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l9I4ZpSr001129
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
-	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 00:35:52 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l9I4WRp8022627
-	for <kexec@lists.infradead.org>; Thu, 18 Oct 2007 00:32:27 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l9I4WR1K425404
-	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 22:32:27 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l9I4WRr3017692
-	for <kexec@lists.infradead.org>; Wed, 17 Oct 2007 22:32:27 -0600
-Date: Thu, 18 Oct 2007 10:02:37 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [patch 2/3] Introduce BOOTMEM_EXCLUSIVE
-Message-ID: <20071018043237.GA8779@in.ibm.com>
-References: <20071016162857.635479952@strauss.suse.de>
-	<20071016162858.545617122@strauss.suse.de>
-	<20071017110550.GB17565@in.ibm.com> <20071017113651.GA6963@suse.de>
-Mime-Version: 1.0
+Received: from koto.vergenet.net ([210.128.90.7])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IiO5O-0005Kv-Qo
+	for kexec@lists.infradead.org; Thu, 18 Oct 2007 06:38:26 +0100
+Date: Thu, 18 Oct 2007 14:37:41 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
+Message-ID: <20071018053739.GA31244@verge.net.au>
+References: <20070822210838oomichi@mail.jp.nec.com>
+	<20070822211339oomichi@mail.jp.nec.com>
+	<20071017023305.GC6709@verge.net.au>
+	<47159AA3.10305@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071017113651.GA6963@suse.de>
-Reply-To: vgoyal@in.ibm.com
+In-Reply-To: <47159AA3.10305@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -43,44 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, ak@suse.de
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Don Zickus <dzickus@redhat.com>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Wed, Oct 17, 2007 at 01:36:51PM +0200, Bernhard Walle wrote:
-[..]
-> > > +static int __init reserve_bootmem_core(bootmem_data_t *bdata, unsigned long addr,
-> > > +					unsigned long size, int flags)
-> > >  {
-> > >  	unsigned long sidx, eidx;
-> > >  	unsigned long i;
-> > > @@ -133,7 +133,11 @@ static void __init reserve_bootmem_core(
-> > >  #ifdef CONFIG_DEBUG_BOOTMEM
-> > >  			printk("hm, page %08lx reserved twice.\n", i*PAGE_SIZE);
-> > >  #endif
-> > > +			if (flags & BOOTMEM_EXCLUSIVE)
-> > > +				return -EBUSY;
+On Wed, Oct 17, 2007 at 02:16:19PM +0900, Ken'ichi Ohmichi wrote:
+> 
+> Hi Simon,
+> 
+> Simon Horman wrote:
+> > On Wed, Aug 22, 2007 at 09:13:39PM +0900, Ken'ichi Ohmichi wrote:
+> >> [2/3] [kexec-tools] Pass vmcoreinfo's address and size
+> >> The patch is for kexec-tools-testing-20070330.
+> >> (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
+> >> kexec command gets the address and size of the vmcoreinfo data from
+> >> /sys/kernel/vmcoreinfo, and passes them to the second kernel through
+> >> ELF header of /proc/vmcore. When the second kernel is booting, the
+> >> kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
+> >> segment into /proc/vmcore.
 > > 
-> > I think we should unreserve the chunks of memory we have reserved so
-> > far (Memory reserved from sidx to i), in case of error.
+> > Sorry for the long delay, I completely missed this patch.
+> > 
+> > The kexec-tools change seems ok to me. What is the status of
+> > the kernel portion of the change?
 > 
-> Unfortunately, that's not possible without using a lock (or counters
-> instead of a bitmap) any more. If we just do
+> The kernel portion is merged into linux-2.6.23-mm1.
+> According to Andrew's mail "-mm merge plans for 2.6.24",  its status is
+> "The infamous misc.  Will re-review and will merge basically all of them".
 > 
-> 	for (i--; i >= sidx; i--)
-> 		clear_bit(i, bdata->node_bootmem_map);
+> http://www.ussg.iu.edu/hypermail/linux/kernel/0710.0/0313.html
 > 
-> then another thread of execution could reserve the memory (without
-> BOOTMEM_EXCLUSIVE) in between -- and the code would free the memory
-> which is already reserved.
 > 
-> I think that could be modelled with a rwlock, not changing the default
-> case where BOOTMEM_EXCLUSIVE is not specified.
+> > Do you still want the kexec-tools portion applied?
+> 
+> Yes, I hope so.
 
-SMP initialization takes place after bootmem allocator has retired. That
-would mean only one thread will be using bootmem allocator. Hence I think
-unreserving memory without any kind of locking should be safe.
-
-Thanks
-Vivek
+Thanks, applied :-)
 
 _______________________________________________
 kexec mailing list
