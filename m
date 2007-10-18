@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
 	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IidkI-0002yf-RE
-	for kexec@lists.infradead.org; Thu, 18 Oct 2007 23:21:42 +0100
-Date: Fri, 19 Oct 2007 00:20:37 +0200
-From: Andi Kleen <ak@suse.de>
+	id 1Iie0J-0003Xv-K7
+	for kexec@lists.infradead.org; Thu, 18 Oct 2007 23:38:15 +0100
+Date: Thu, 18 Oct 2007 15:37:51 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [patch 1/3] Add BSS to resource tree
-Message-ID: <20071018222037.GC3459@bingen.suse.de>
+Message-Id: <20071018153751.c9c458c8.akpm@linux-foundation.org>
+In-Reply-To: <20071018221813.GA23801@uranus.ravnborg.org>
 References: <20071018111535.356215664@strauss.suse.de>
 	<20071018111535.883533731@strauss.suse.de>
 	<20071018142642.5b3f6ba4.akpm@linux-foundation.org>
@@ -14,9 +15,7 @@ References: <20071018111535.356215664@strauss.suse.de>
 	<20071018215827.GB23708@uranus.ravnborg.org>
 	<20071018220048.GB3459@bingen.suse.de>
 	<20071018221813.GA23801@uranus.ravnborg.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20071018221813.GA23801@uranus.ravnborg.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,15 +29,35 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
 To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, Andrew Morton <akpm@linux-foundation.org>
+Cc: bwalle@suse.de, vgoyal@in.ibm.com, kexec@lists.infradead.org, ak@suse.de, linux-kernel@vger.kernel.org
 
-> Grepping for _text shows that there are plenty of different ways to declare
-> that symbol extern - this does not look correct.
+On Fri, 19 Oct 2007 00:18:13 +0200
+Sam Ravnborg <sam@ravnborg.org> wrote:
 
-They really don't have a specific type and using the type that happens to be convenient 
-to whatever calculation you want to do with it is useful.
+> And I recall that extern char sym[] is considered correct by binutils 
+> people - but I'm not 100% sure and google did not give me an appropriate hit.
 
--Andi
+An ancient memory tells me that these things are traditionally
+declared as plain old int:
+
+extern int start;
+extern int edata;
+
+etc.
+
+However
+http://techpubs.sgi.com/library/tpl/cgi-bin/getdoc.cgi?coll=0650&db=man&fname=/usr/share/catman/p_man/cat3/standard/_rt_symbol_table_size.z
+disagrees with me.
+
+http://www.psych.upenn.edu/~saul/parasite/man/man3/end.3.html agrees with me
+
+http://docsrv.sco.com:507/en/man/html.S/end.S.html agrees with me
+
+http://www.rocketaware.com/man/man3/end.3.htm agrees with me
+
+http://bama.ua.edu/cgi-bin/man-cgi?etext+3C agrees with me
+
+
 
 _______________________________________________
 kexec mailing list
