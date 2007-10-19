@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Iiihm-0002VY-UZ
-	for kexec@lists.infradead.org; Fri, 19 Oct 2007 04:39:26 +0100
-Date: Fri, 19 Oct 2007 12:38:42 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] [kexec-tools] Pass vmcoreinfo's address and size
-Message-ID: <20071019033842.GG692@verge.net.au>
-References: <20071018053739.GA31244@verge.net.au>
-	<20071018181407tachibana@mail.jp.nec.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IirMV-0007jX-NV
+	for kexec@lists.infradead.org; Fri, 19 Oct 2007 13:54:03 +0100
+Date: Fri, 19 Oct 2007 14:52:53 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [patch 1/3] Add BSS to resource tree
+Message-ID: <20071019125253.GA5442@suse.de>
+References: <20071018111535.356215664@strauss.suse.de>
+	<20071018111535.883533731@strauss.suse.de>
+	<20071018142642.5b3f6ba4.akpm@linux-foundation.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071018181407tachibana@mail.jp.nec.com>
+In-Reply-To: <20071018142642.5b3f6ba4.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,67 +25,455 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: tachibana@mxm.nes.nec.co.jp
-Cc: Don Zickus <dzickus@redhat.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Neil Horman <nhorman@redhat.com>, Dan Aloni <da-x@monatomic.org>, Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@in.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ak@suse.de
 
-On Thu, Oct 18, 2007 at 06:14:07PM +0900, tachibana@mxm.nes.nec.co.jp wrote:
+* Andrew Morton <akpm@linux-foundation.org> [2007-10-18 23:26]:
 > 
-> Hi Simon,
+> > --- a/arch/x86/kernel/e820_64.c
+> > +++ b/arch/x86/kernel/e820_64.c
+> > @@ -47,7 +47,7 @@ unsigned long end_pfn_map; 
+> >   */
+> >  static unsigned long __initdata end_user_pfn = MAXMEM>>PAGE_SHIFT;
+> >  
+> > -extern struct resource code_resource, data_resource;
+> > +extern struct resource code_resource, data_resource, bss_resource;
 > 
-> On Thu, 18 Oct 2007 14:37:41 +0900, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Oct 17, 2007 at 02:16:19PM +0900, Ken'ichi Ohmichi wrote:
-> > > 
-> > > Hi Simon,
-> > > 
-> > > Simon Horman wrote:
-> > > > On Wed, Aug 22, 2007 at 09:13:39PM +0900, Ken'ichi Ohmichi wrote:
-> > > >> [2/3] [kexec-tools] Pass vmcoreinfo's address and size
-> > > >> The patch is for kexec-tools-testing-20070330.
-> > > >> (http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/)
-> > > >> kexec command gets the address and size of the vmcoreinfo data from
-> > > >> /sys/kernel/vmcoreinfo, and passes them to the second kernel through
-> > > >> ELF header of /proc/vmcore. When the second kernel is booting, the
-> > > >> kernel gets them from the ELF header and creates vmcoreinfo's PT_NOTE
-> > > >> segment into /proc/vmcore.
-> > > > 
-> > > > Sorry for the long delay, I completely missed this patch.
-> > > > 
-> > > > The kexec-tools change seems ok to me. What is the status of
-> > > > the kernel portion of the change?
-> > > 
-> > > The kernel portion is merged into linux-2.6.23-mm1.
-> > > According to Andrew's mail "-mm merge plans for 2.6.24",  its status is
-> > > "The infamous misc.  Will re-review and will merge basically all of them".
-> > > 
-> > > http://www.ussg.iu.edu/hypermail/linux/kernel/0710.0/0313.html
-> > > 
-> > > 
-> > > > Do you still want the kexec-tools portion applied?
-> > > 
-> > > Yes, I hope so.
-> > 
-> > Thanks, applied :-)
-> 
-> Thank you for applying ;-)
-> 
-> But it has the compatibility problem that the kexec command fails on
-> kernels which don't have /sys/kernel/vmcoreinfo:
-> 
->  # ls /sys/kernel/
->  debug  kexec_crash_loaded  kexec_loaded  security  uevent_helper 
->  uevent_seqnum
->  #
->  (There is not /sys/kernel/vmcoreinfo.)
-> 
->  #
->  # kexec -p --args-linux vmlinuz --initrd=initrd.img
->  Could not open "/sys/kernel/vmcoreinfo": No such file or directory
->  #
-> 
-> To fix the problem, could you please apply the attached patch ?
-> The fixed part is the same as the patch in the following mail.
+> As should these.  afaik they're the same on all architectures and even if
+> they have different names on some weird arch, an unused declaration won't
+> hurt.
 
-Thanks, applied.
+It's different on every architectures. Some don't have it at all (like
+PPC64), and most of them have code_resource and data_resource static.
+Instead of making the data on all architectures (that have it) global,
+I'd like to make it static on x86.
+
+See my attached patch.
+
+
+
+Thanks,
+   Bernhard
+
+---
+
+[PATCH] Remove extern declarations for code/data/bss resource
+
+This patch removes the extern struct resource declarations for
+data_resource, code_resource and bss_resource on x86 and declares
+that three structures as static as done on other architectures like IA64.
+
+On i386, these structures are moved to setup_32.c (from e820_32.c) because
+that's code that is not specific to e820 and also required on EFI systems.
+That makes the "extern" reference superfluous.
+
+On x86_64, data_resource, code_resource and bss_resource are passed to
+e820_reserve_resources() as arguments just as done on i386 and IA64. That also
+avoids the "extern" reference and it's possible to make it static.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+---
+ arch/x86/kernel/e820_32.c  |   49 --------------------
+ arch/x86/kernel/e820_64.c  |   11 ++--
+ arch/x86/kernel/setup_32.c |  106 +++++++++++++++++++++++++++++++++++++++++++--
+ arch/x86/kernel/setup_64.c |    6 +-
+ 4 files changed, 111 insertions(+), 61 deletions(-)
+
+--- a/arch/x86/kernel/e820_32.c
++++ b/arch/x86/kernel/e820_32.c
+@@ -37,26 +37,6 @@ unsigned long pci_mem_start = 0x10000000
+ EXPORT_SYMBOL(pci_mem_start);
+ #endif
+ extern int user_defined_memmap;
+-struct resource data_resource = {
+-	.name	= "Kernel data",
+-	.start	= 0,
+-	.end	= 0,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+-};
+-
+-struct resource code_resource = {
+-	.name	= "Kernel code",
+-	.start	= 0,
+-	.end	= 0,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+-};
+-
+-struct resource bss_resource = {
+-	.name	= "Kernel bss",
+-	.start	= 0,
+-	.end	= 0,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+-};
+ 
+ static struct resource system_rom_resource = {
+ 	.name	= "System ROM",
+@@ -111,60 +91,6 @@ static struct resource video_rom_resourc
+ 	.flags	= IORESOURCE_BUSY | IORESOURCE_READONLY | IORESOURCE_MEM
+ };
+ 
+-static struct resource video_ram_resource = {
+-	.name	= "Video RAM area",
+-	.start	= 0xa0000,
+-	.end	= 0xbffff,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
+-};
+-
+-static struct resource standard_io_resources[] = { {
+-	.name	= "dma1",
+-	.start	= 0x0000,
+-	.end	= 0x001f,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "pic1",
+-	.start	= 0x0020,
+-	.end	= 0x0021,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name   = "timer0",
+-	.start	= 0x0040,
+-	.end    = 0x0043,
+-	.flags  = IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name   = "timer1",
+-	.start  = 0x0050,
+-	.end    = 0x0053,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "keyboard",
+-	.start	= 0x0060,
+-	.end	= 0x006f,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "dma page reg",
+-	.start	= 0x0080,
+-	.end	= 0x008f,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "pic2",
+-	.start	= 0x00a0,
+-	.end	= 0x00a1,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "dma2",
+-	.start	= 0x00c0,
+-	.end	= 0x00df,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-}, {
+-	.name	= "fpu",
+-	.start	= 0x00f0,
+-	.end	= 0x00ff,
+-	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
+-} };
+-
+ #define ROMSIGNATURE 0xaa55
+ 
+ static int __init romsignature(const unsigned char *rom)
+@@ -260,10 +186,9 @@ static void __init probe_roms(void)
+  * Request address space for all standard RAM and ROM resources
+  * and also for regions reported as reserved by the e820.
+  */
+-static void __init
+-legacy_init_iomem_resources(struct resource *code_resource,
+-			    struct resource *data_resource,
+-			    struct resource *bss_resource)
++void __init legacy_init_iomem_resources(struct resource *code_resource,
++		struct resource *data_resource,
++		struct resource *bss_resource)
+ {
+ 	int i;
+ 
+@@ -305,35 +230,6 @@ legacy_init_iomem_resources(struct resou
+ 	}
+ }
+ 
+-/*
+- * Request address space for all standard resources
+- *
+- * This is called just before pcibios_init(), which is also a
+- * subsys_initcall, but is linked in later (in arch/i386/pci/common.c).
+- */
+-static int __init request_standard_resources(void)
+-{
+-	int i;
+-
+-	printk("Setting up standard PCI resources\n");
+-	if (efi_enabled)
+-		efi_initialize_iomem_resources(&code_resource,
+-				&data_resource, &bss_resource);
+-	else
+-		legacy_init_iomem_resources(&code_resource,
+-				&data_resource, &bss_resource);
+-
+-	/* EFI systems may still have VGA */
+-	request_resource(&iomem_resource, &video_ram_resource);
+-
+-	/* request I/O space for devices used on all i[345]86 PCs */
+-	for (i = 0; i < ARRAY_SIZE(standard_io_resources); i++)
+-		request_resource(&ioport_resource, &standard_io_resources[i]);
+-	return 0;
+-}
+-
+-subsys_initcall(request_standard_resources);
+-
+ #if defined(CONFIG_PM) && defined(CONFIG_HIBERNATION)
+ /**
+  * e820_mark_nosave_regions - Find the ranges of physical addresses that do not
+--- a/arch/x86/kernel/e820_64.c
++++ b/arch/x86/kernel/e820_64.c
+@@ -47,8 +47,6 @@ unsigned long end_pfn_map; 
+  */
+ static unsigned long __initdata end_user_pfn = MAXMEM>>PAGE_SHIFT;
+ 
+-extern struct resource code_resource, data_resource, bss_resource;
+-
+ /* Check for some hardcoded bad areas that early boot is not allowed to touch */ 
+ static inline int bad_addr(unsigned long *addrp, unsigned long size)
+ { 
+@@ -201,7 +199,8 @@ unsigned long __init e820_end_of_ram(voi
+ /*
+  * Mark e820 reserved areas as busy for the resource manager.
+  */
+-void __init e820_reserve_resources(void)
++void __init e820_reserve_resources(struct resource *code_resource,
++		struct resource *data_resource, struct resource *bss_resource)
+ {
+ 	int i;
+ 	for (i = 0; i < e820.nr_map; i++) {
+@@ -223,9 +222,9 @@ void __init e820_reserve_resources(void)
+ 			 *  so we try it repeatedly and let the resource manager
+ 			 *  test it.
+ 			 */
+-			request_resource(res, &code_resource);
+-			request_resource(res, &data_resource);
+-			request_resource(res, &bss_resource);
++			request_resource(res, code_resource);
++			request_resource(res, data_resource);
++			request_resource(res, bss_resource);
+ #ifdef CONFIG_KEXEC
+ 			if (crashk_res.start != crashk_res.end)
+ 				request_resource(res, &crashk_res);
+--- a/arch/x86/kernel/setup_32.c
++++ b/arch/x86/kernel/setup_32.c
+@@ -72,9 +72,80 @@ int disable_pse __devinitdata = 0;
+ /*
+  * Machine setup..
+  */
+-extern struct resource code_resource;
+-extern struct resource data_resource;
+-extern struct resource bss_resource;
++static struct resource data_resource = {
++	.name	= "Kernel data",
++	.start	= 0,
++	.end	= 0,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
++};
++
++static struct resource code_resource = {
++	.name	= "Kernel code",
++	.start	= 0,
++	.end	= 0,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
++};
++
++static struct resource bss_resource = {
++	.name	= "Kernel bss",
++	.start	= 0,
++	.end	= 0,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
++};
++
++static struct resource video_ram_resource = {
++	.name	= "Video RAM area",
++	.start	= 0xa0000,
++	.end	= 0xbffff,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_MEM
++};
++
++static struct resource standard_io_resources[] = { {
++	.name	= "dma1",
++	.start	= 0x0000,
++	.end	= 0x001f,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "pic1",
++	.start	= 0x0020,
++	.end	= 0x0021,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name   = "timer0",
++	.start	= 0x0040,
++	.end    = 0x0043,
++	.flags  = IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name   = "timer1",
++	.start  = 0x0050,
++	.end    = 0x0053,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "keyboard",
++	.start	= 0x0060,
++	.end	= 0x006f,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "dma page reg",
++	.start	= 0x0080,
++	.end	= 0x008f,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "pic2",
++	.start	= 0x00a0,
++	.end	= 0x00a1,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "dma2",
++	.start	= 0x00c0,
++	.end	= 0x00df,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++}, {
++	.name	= "fpu",
++	.start	= 0x00f0,
++	.end	= 0x00ff,
++	.flags	= IORESOURCE_BUSY | IORESOURCE_IO
++} };
+ 
+ /* cpu data as detected by the assembly code in head.S */
+ struct cpuinfo_x86 new_cpu_data __cpuinitdata = { 0, 0, 0, 0, -1, 1, 0, 0, -1 };
+@@ -706,3 +777,32 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ #endif
+ }
++
++/*
++ * Request address space for all standard resources
++ *
++ * This is called just before pcibios_init(), which is also a
++ * subsys_initcall, but is linked in later (in arch/i386/pci/common.c).
++ */
++static int __init request_standard_resources(void)
++{
++	int i;
++
++	printk(KERN_INFO "Setting up standard PCI resources\n");
++	if (efi_enabled)
++		efi_initialize_iomem_resources(&code_resource,
++				&data_resource, &bss_resource);
++	else
++		legacy_init_iomem_resources(&code_resource,
++				&data_resource, &bss_resource);
++
++	/* EFI systems may still have VGA */
++	request_resource(&iomem_resource, &video_ram_resource);
++
++	/* request I/O space for devices used on all i[345]86 PCs */
++	for (i = 0; i < ARRAY_SIZE(standard_io_resources); i++)
++		request_resource(&ioport_resource, &standard_io_resources[i]);
++	return 0;
++}
++
++subsys_initcall(request_standard_resources);
+--- a/arch/x86/kernel/setup_64.c
++++ b/arch/x86/kernel/setup_64.c
+@@ -122,19 +122,19 @@ struct resource standard_io_resources[] 
+ 
+ #define IORESOURCE_RAM (IORESOURCE_BUSY | IORESOURCE_MEM)
+ 
+-struct resource data_resource = {
++static struct resource data_resource = {
+ 	.name = "Kernel data",
+ 	.start = 0,
+ 	.end = 0,
+ 	.flags = IORESOURCE_RAM,
+ };
+-struct resource code_resource = {
++static struct resource code_resource = {
+ 	.name = "Kernel code",
+ 	.start = 0,
+ 	.end = 0,
+ 	.flags = IORESOURCE_RAM,
+ };
+-struct resource bss_resource = {
++static struct resource bss_resource = {
+ 	.name = "Kernel bss",
+ 	.start = 0,
+ 	.end = 0,
+@@ -437,7 +437,7 @@ void __init setup_arch(char **cmdline_p)
+ 	/*
+ 	 * We trust e820 completely. No explicit ROM probing in memory.
+  	 */
+-	e820_reserve_resources(); 
++	e820_reserve_resources(&code_resource, &data_resource, &bss_resource);
+ 	e820_mark_nosave_regions();
+ 
+ 	{
+--- a/include/asm-x86/e820_32.h
++++ b/include/asm-x86/e820_32.h
+@@ -12,6 +12,8 @@
+ #ifndef __E820_HEADER
+ #define __E820_HEADER
+ 
++#include <linux/ioport.h>
++
+ #define E820MAP	0x2d0		/* our map */
+ #define E820MAX	128		/* number of entries in E820MAP */
+ #define E820NR	0x1e8		/* # entries in E820MAP */
+@@ -46,6 +48,9 @@ extern void register_bootmem_low_pages(u
+ extern void e820_register_memory(void);
+ extern void limit_regions(unsigned long long size);
+ extern void print_memory_map(char *who);
++extern void legacy_init_iomem_resources(struct resource *code_resource,
++			    struct resource *data_resource,
++			    struct resource *bss_resource);
+ 
+ #if defined(CONFIG_PM) && defined(CONFIG_HIBERNATION)
+ extern void e820_mark_nosave_regions(void);
+@@ -55,6 +60,7 @@ static inline void e820_mark_nosave_regi
+ }
+ #endif
+ 
++
+ #endif/*!__ASSEMBLY__*/
+ 
+ #endif/*__E820_HEADER*/
+--- a/include/asm-x86/e820_64.h
++++ b/include/asm-x86/e820_64.h
+@@ -11,6 +11,8 @@
+ #ifndef __E820_HEADER
+ #define __E820_HEADER
+ 
++#include <linux/ioport.h>
++
+ #define E820MAP	0x2d0		/* our map */
+ #define E820MAX	128		/* number of entries in E820MAP */
+ #define E820NR	0x1e8		/* # entries in E820MAP */
+@@ -39,7 +41,8 @@ extern void add_memory_region(unsigned l
+ extern void setup_memory_region(void);
+ extern void contig_e820_setup(void); 
+ extern unsigned long e820_end_of_ram(void);
+-extern void e820_reserve_resources(void);
++extern void e820_reserve_resources(struct resource *code_resource,
++		struct resource *data_resource, struct resource *bss_resource);
+ extern void e820_mark_nosave_regions(void);
+ extern void e820_print_map(char *who);
+ extern int e820_any_mapped(unsigned long start, unsigned long end, unsigned type);
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -8,6 +8,7 @@
+ #ifndef _LINUX_IOPORT_H
+ #define _LINUX_IOPORT_H
+ 
++#ifndef __ASSEMBLY__
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+ /*
+@@ -153,4 +154,5 @@ extern struct resource * __devm_request_
+ extern void __devm_release_region(struct device *dev, struct resource *parent,
+ 				  resource_size_t start, resource_size_t n);
+ 
++#endif /* __ASSEMBLY__ */
+ #endif	/* _LINUX_IOPORT_H */
 
 _______________________________________________
 kexec mailing list
