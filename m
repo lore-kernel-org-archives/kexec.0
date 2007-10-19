@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IitE1-0004NJ-Ju
-	for kexec@lists.infradead.org; Fri, 19 Oct 2007 15:53:24 +0100
-Date: Fri, 19 Oct 2007 16:52:20 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Use BOOTMEM_EXCLUSIVE for crashkernel reservation
-Message-ID: <20071019145220.GA14691@suse.de>
+Received: from iriserv.iradimed.com ([72.242.190.170] helo=iradimed.com)
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IixuM-00012t-US
+	for kexec@lists.infradead.org; Fri, 19 Oct 2007 20:53:25 +0100
+Message-ID: <47190B28.6070405@cfl.rr.com>
+Date: Fri, 19 Oct 2007 15:53:12 -0400
+From: Phillip Susi <psusi@cfl.rr.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH 0/2 -mm] kexec based hibernation -v5
+References: <1192068833.27482.13.camel@caritas-dev.intel.com>
+In-Reply-To: <1192068833.27482.13.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,63 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: akpm@linux-foundation.org
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxsh-dev@lists.sourceforge.net
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-This patch implements the usage of BOOTMEM_EXCLUSIVE for crashkernel
-reservation on other architectures. The only architecture that applies
-is sh.
+Huang, Ying wrote:
+> The hibernation procedure with the patch set is as follow:
+> 
+> 1. Boot a kernel A
+> 
+> 2. Work under kernel A
+> 
+> 3. Kexec another kernel B (crash dump enabled) in kernel A.
+> 
+> 4. Save the memory image of kernel A through crash dump (such as "cp
+>    /proc/vmcore ~"). Save the "jump back entry".
 
-The patch is based on current git tree plus
-kexec-introduce-bootmem_exclusive.patch from -mm tree.
+Doesn't this also save the memory of kernel B?
+
+> 5. Shutdown or reboot
+> 
+> 
+> The restore process with the patch set is as follow:
+> 
+> 1. Boot a kernel C (crash dump enabled), the memory area used by
+>    kernel C must be a subset of memory area used by kernel B.
+
+Why is a third kernel needed?  Why can't kernel B be used for this as 
+well?  In fact, if kernel A has been compiled to be relocatable and 
+crash dump enabled, why wouldn't it suffice for all 3 instances?
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
----
- arch/sh/kernel/setup.c |   29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
-
---- a/arch/sh/kernel/setup.c
-+++ b/arch/sh/kernel/setup.c
-@@ -140,19 +140,26 @@ static void __init reserve_crashkernel(v
- 	ret = parse_crashkernel(boot_command_line, free_mem,
- 			&crash_size, &crash_base);
- 	if (ret == 0 && crash_size) {
--		if (crash_base > 0) {
--			printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
--					"for crashkernel (System RAM: %ldMB)\n",
--					(unsigned long)(crash_size >> 20),
--					(unsigned long)(crash_base >> 20),
--					(unsigned long)(free_mem >> 20));
--			crashk_res.start = crash_base;
--			crashk_res.end   = crash_base + crash_size - 1;
--			reserve_bootmem(crash_base, crash_size,
--					BOOTMEM_DEFAULT);
--		} else
-+		if (crash_base <= 0) {
- 			printk(KERN_INFO "crashkernel reservation failed - "
- 					"you have to specify a base address\n");
-+			return;
-+		}
-+
-+		if (reserve_bootmem(crash_base, crash_size,
-+					BOOTMEM_EXCLUSIVE) < 0) {
-+			printk(KERN_INFO "crashkernel reservation failed - "
-+					"memory is in use\n");
-+			return;
-+		}
-+
-+		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+				"for crashkernel (System RAM: %ldMB)\n",
-+				(unsigned long)(crash_size >> 20),
-+				(unsigned long)(crash_base >> 20),
-+				(unsigned long)(free_mem >> 20));
-+		crashk_res.start = crash_base;
-+		crashk_res.end   = crash_base + crash_size - 1;
- 	}
- }
- #else
 
 _______________________________________________
 kexec mailing list
