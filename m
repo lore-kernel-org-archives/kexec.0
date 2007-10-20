@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from gateway-1237.mvista.com ([63.81.120.158])
-	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Ij328-0007NQ-HI
-	for kexec@lists.infradead.org; Sat, 20 Oct 2007 02:21:46 +0100
-Message-ID: <47195807.6030809@ct.jp.nec.com>
-Date: Fri, 19 Oct 2007 18:21:11 -0700
-From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+Received: from dsl081-033-126.lax1.dsl.speakeasy.net ([64.81.33.126]
+	helo=bifrost.lang.hm)
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1Ij3Sn-0008SP-Ad
+	for kexec@lists.infradead.org; Sat, 20 Oct 2007 02:49:19 +0100
+Date: Fri, 19 Oct 2007 18:53:55 -0700 (PDT)
+From: david@lang.hm
+Subject: Re: [PATCH 0/2 -mm] kexec based hibernation -v5
+In-Reply-To: <47190B28.6070405@cfl.rr.com>
+Message-ID: <Pine.LNX.4.64.0710191852560.1538@asgard.lang.hm>
+References: <1192068833.27482.13.camel@caritas-dev.intel.com>
+	<47190B28.6070405@cfl.rr.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] x86: add lapic_shutdown for x86_64
-References: <47195763.1090803@ct.jp.nec.com>
-In-Reply-To: <47195763.1090803@ct.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,56 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: vgoyal@in.ibm.com, hbabu@us.ibm.com, tglx@linutronix.de
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Phillip Susi <psusi@cfl.rr.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+On Fri, 19 Oct 2007, Phillip Susi wrote:
 
-Signed-off-by: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
----
- arch/x86/kernel/apic_64.c |   14 ++++++++++++++
- include/asm-x86/apic_64.h |    1 +
- 2 files changed, 15 insertions(+), 0 deletions(-)
+> Huang, Ying wrote:
+>> 
+>> 
+>> The restore process with the patch set is as follow:
+>> 
+>> 1. Boot a kernel C (crash dump enabled), the memory area used by
+>>    kernel C must be a subset of memory area used by kernel B.
+>
+> Why is a third kernel needed?  Why can't kernel B be used for this as well? 
+> In fact, if kernel A has been compiled to be relocatable and crash dump 
+> enabled, why wouldn't it suffice for all 3 instances?
 
-diff --git a/arch/x86/kernel/apic_64.c b/arch/x86/kernel/apic_64.c
-index f47bc49..f28ccb5 100644
---- a/arch/x86/kernel/apic_64.c
-+++ b/arch/x86/kernel/apic_64.c
-@@ -287,6 +287,20 @@ void disable_local_APIC(void)
- 	apic_write(APIC_SPIV, value);
- }
- 
-+void lapic_shutdown(void)
-+{
-+	unsigned long flags;
-+
-+	if (!cpu_has_apic)
-+		return;
-+
-+	local_irq_save(flags);
-+
-+	disable_local_APIC();
-+
-+	local_irq_restore(flags);
-+}
-+
- /*
-  * This is to verify that we're looking at a real local APIC.
-  * Check these against your board if the CPUs aren't getting
-diff --git a/include/asm-x86/apic_64.h b/include/asm-x86/apic_64.h
-index 3c8f21e..2747a11 100644
---- a/include/asm-x86/apic_64.h
-+++ b/include/asm-x86/apic_64.h
-@@ -69,6 +69,7 @@ extern void clear_local_APIC (void);
- extern void connect_bsp_APIC (void);
- extern void disconnect_bsp_APIC (int virt_wire_setup);
- extern void disable_local_APIC (void);
-+extern void lapic_shutdown (void);
- extern int verify_local_APIC (void);
- extern void cache_APIC_registers (void);
- extern void sync_Arb_IDs (void);
--- 
-1.5.2.3
+you could use one kernel for all three, or you could use three different 
+kernels, and three different sets of userspace if it's appropriate.
+
+David Lang
 
 _______________________________________________
 kexec mailing list
