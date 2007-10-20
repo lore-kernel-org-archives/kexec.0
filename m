@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from dsl081-033-126.lax1.dsl.speakeasy.net ([64.81.33.126]
-	helo=bifrost.lang.hm)
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1Ij3Sn-0008SP-Ad
-	for kexec@lists.infradead.org; Sat, 20 Oct 2007 02:49:19 +0100
-Date: Fri, 19 Oct 2007 18:53:55 -0700 (PDT)
-From: david@lang.hm
-Subject: Re: [PATCH 0/2 -mm] kexec based hibernation -v5
-In-Reply-To: <47190B28.6070405@cfl.rr.com>
-Message-ID: <Pine.LNX.4.64.0710191852560.1538@asgard.lang.hm>
-References: <1192068833.27482.13.camel@caritas-dev.intel.com>
-	<47190B28.6070405@cfl.rr.com>
+Received: from gateway-1237.mvista.com ([63.81.120.158])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1Ij33w-0007PB-I7
+	for kexec@lists.infradead.org; Sat, 20 Oct 2007 02:23:38 +0100
+Message-ID: <47195876.7080208@ct.jp.nec.com>
+Date: Fri, 19 Oct 2007 18:23:02 -0700
+From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
 MIME-Version: 1.0
+Subject: [PATCH 2/3] x86: add safe_smp_processor_id for x86_64
+References: <47195763.1090803@ct.jp.nec.com>
+In-Reply-To: <47195763.1090803@ct.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +22,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Phillip Susi <psusi@cfl.rr.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: vgoyal@in.ibm.com, hbabu@us.ibm.com, tglx@linutronix.de
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, 19 Oct 2007, Phillip Susi wrote:
+From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
 
-> Huang, Ying wrote:
->> 
->> 
->> The restore process with the patch set is as follow:
->> 
->> 1. Boot a kernel C (crash dump enabled), the memory area used by
->>    kernel C must be a subset of memory area used by kernel B.
->
-> Why is a third kernel needed?  Why can't kernel B be used for this as well? 
-> In fact, if kernel A has been compiled to be relocatable and crash dump 
-> enabled, why wouldn't it suffice for all 3 instances?
+Signed-off-by: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+---
+ include/asm-x86/smp_64.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-you could use one kernel for all three, or you could use three different 
-kernels, and three different sets of userspace if it's appropriate.
-
-David Lang
+diff --git a/include/asm-x86/smp_64.h b/include/asm-x86/smp_64.h
+index 6f0e027..ab612b0 100644
+--- a/include/asm-x86/smp_64.h
++++ b/include/asm-x86/smp_64.h
+@@ -76,6 +76,8 @@ extern unsigned __cpuinitdata disabled_cpus;
+ 
+ #endif /* CONFIG_SMP */
+ 
++#define safe_smp_processor_id()		smp_processor_id()
++
+ static inline int hard_smp_processor_id(void)
+ {
+ 	/* we don't want to mark this access volatile - bad code generation */
+-- 
+1.5.2.3
 
 _______________________________________________
 kexec mailing list
