@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from www.tglx.de ([62.245.132.106])
-	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IjBvQ-0007wz-Bi
-	for kexec@lists.infradead.org; Sat, 20 Oct 2007 11:51:26 +0100
-Date: Sat, 20 Oct 2007 12:50:03 +0200 (CEST)
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 0/3] x86: unify crash_32/64.c
-In-Reply-To: <47195763.1090803@ct.jp.nec.com>
-Message-ID: <alpine.LFD.0.9999.0710201249050.22770@localhost.localdomain>
-References: <47195763.1090803@ct.jp.nec.com>
+Received: from smtp101.mail.mud.yahoo.com ([209.191.85.211])
+	by pentafluge.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IjlIN-0003aF-JD
+	for kexec@lists.infradead.org; Mon, 22 Oct 2007 01:37:31 +0100
+From: Nick Piggin <nickpiggin@yahoo.com.au>
+Subject: Re: [PATCH 0/2] add new notifier function ,take2
+Date: Sun, 21 Oct 2007 22:00:03 +1000
+References: <471700F4.1080200@ah.jp.nec.com> <20071018080621.GB8779@in.ibm.com>
+	<47171ED9.7010907@ah.jp.nec.com>
+In-Reply-To: <47171ED9.7010907@ah.jp.nec.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200710212200.04361.nickpiggin@yahoo.com.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,29 +24,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
-Cc: hbabu@us.ibm.com, vgoyal@in.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Takenori Nagano <t-nagano@ah.jp.nec.com>
+Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
 
-On Fri, 19 Oct 2007, Hiroshi Shimamoto wrote:
+On Thursday 18 October 2007 18:52, Takenori Nagano wrote:
+> Vivek Goyal wrote:
 
-> Hi,
-> 
-> I made patches to unify crash_32/64.c.
-> There are three patches;
-> 1. add lapic_shutdown for x86_64
-> 2. add safe_smp_processor_id for x86_64
-> 3. unify crash_32/64.c
-> 
-> I'm not sure that it's good to split to these patches.
+> > > My stance is that _all_ the RAS tools (kdb, kgdb, nlkd, netdump, lkcd,
+> > > crash, kdump etc.) should be using a common interface that safely puts
+> > > the entire system in a stopped state and saves the state of each cpu.
+> > > Then each tool can do what it likes, instead of every RAS tool doing
+> > > its own thing and they all conflict with each other, which is why this
+> > > thread started.
+> > >
+> > > It is not the kernel's job to decide which RAS tool runs first, second
+> > > etc., it is the user's decision to set that policy. Different sites
+> > > will want different orders, some will say "go straight to kdump", other
+> > > sites will want to invoke a debugger first. Sites must be able to
+> > > define that policy, but we hard code the policy into the kernel.
+>
+> I agreed with him and I made new notifier function that users can change
+> the order. Priority value in notifier blocks are hardcoded. If users want
+> to change list order, they have to rebuild kernel. I think it is very
+> unhappy.
 
-It's fine. So the steps leading to unification are clear.
+Is it possible to use a single bit of common code and a single
+notifier for these things? Or is it too difficult?
 
-Applied. Thanks,
-
-	 tglx
-
-
-	
+One thing I'd suggest is not to use debugfs, if it is going to
+be a useful end-user feature.
 
 _______________________________________________
 kexec mailing list
