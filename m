@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from smtp101.mail.mud.yahoo.com ([209.191.85.211])
-	by pentafluge.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IjlIN-0003aF-JD
-	for kexec@lists.infradead.org; Mon, 22 Oct 2007 01:37:31 +0100
-From: Nick Piggin <nickpiggin@yahoo.com.au>
-Subject: Re: [PATCH 0/2] add new notifier function ,take2
-Date: Sun, 21 Oct 2007 22:00:03 +1000
-References: <471700F4.1080200@ah.jp.nec.com> <20071018080621.GB8779@in.ibm.com>
-	<47171ED9.7010907@ah.jp.nec.com>
-In-Reply-To: <47171ED9.7010907@ah.jp.nec.com>
-MIME-Version: 1.0
+Received: from e32.co.us.ibm.com ([32.97.110.150])
+	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
+	id 1IkZnI-0007X5-Jl
+	for kexec@lists.infradead.org; Wed, 24 Oct 2007 07:32:49 +0100
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e32.co.us.ibm.com (8.12.11.20060308/8.13.8) with ESMTP id
+	l9O5KL4u029890
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 01:20:21 -0400
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l9O6TMlc118216
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 00:29:27 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l9O6TMWg011877
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 00:29:22 -0600
+Date: Wed, 24 Oct 2007 11:59:33 +0530
+From: Vivek Goyal <vgoyal@in.ibm.com>
+Subject: Re: [PATCH 1/3] x86: add lapic_shutdown for x86_64
+Message-ID: <20071024062933.GA4622@in.ibm.com>
+References: <47195763.1090803@ct.jp.nec.com> <47195807.6030809@ct.jp.nec.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200710212200.04361.nickpiggin@yahoo.com.au>
+In-Reply-To: <47195807.6030809@ct.jp.nec.com>
+Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,35 +37,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+Cc: hbabu@us.ibm.com, tglx@linutronix.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Thursday 18 October 2007 18:52, Takenori Nagano wrote:
-> Vivek Goyal wrote:
+On Fri, Oct 19, 2007 at 06:21:11PM -0700, Hiroshi Shimamoto wrote:
+> From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+> 
+> Signed-off-by: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+> ---
+>  arch/x86/kernel/apic_64.c |   14 ++++++++++++++
+>  include/asm-x86/apic_64.h |    1 +
+>  2 files changed, 15 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/apic_64.c b/arch/x86/kernel/apic_64.c
+> index f47bc49..f28ccb5 100644
+> --- a/arch/x86/kernel/apic_64.c
+> +++ b/arch/x86/kernel/apic_64.c
+> @@ -287,6 +287,20 @@ void disable_local_APIC(void)
+>  	apic_write(APIC_SPIV, value);
+>  }
+> 
+> +void lapic_shutdown(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (!cpu_has_apic)
+> +		return;
+> +
+> +	local_irq_save(flags);
+> +
+> +	disable_local_APIC();
+> +
+> +	local_irq_restore(flags);
+> +}
+> +
+>  /*
 
-> > > My stance is that _all_ the RAS tools (kdb, kgdb, nlkd, netdump, lkcd,
-> > > crash, kdump etc.) should be using a common interface that safely puts
-> > > the entire system in a stopped state and saves the state of each cpu.
-> > > Then each tool can do what it likes, instead of every RAS tool doing
-> > > its own thing and they all conflict with each other, which is why this
-> > > thread started.
-> > >
-> > > It is not the kernel's job to decide which RAS tool runs first, second
-> > > etc., it is the user's decision to set that policy. Different sites
-> > > will want different orders, some will say "go straight to kdump", other
-> > > sites will want to invoke a debugger first. Sites must be able to
-> > > define that policy, but we hard code the policy into the kernel.
->
-> I agreed with him and I made new notifier function that users can change
-> the order. Priority value in notifier blocks are hardcoded. If users want
-> to change list order, they have to rebuild kernel. I think it is very
-> unhappy.
+Do we really have to introduce this function for 64bit? I remember some
+issues were faced on i386 w.r.t kernel enabling the LAPIC against the
+wishes of BIOS hence kernel was disabling it while shutting down. No
+such problems were reported for x86_64 hence this function existed only
+for i386.
 
-Is it possible to use a single bit of common code and a single
-notifier for these things? Or is it too difficult?
+If that is the case, probably we don't have to introduce lapic_shutdown()
+for x86_64. Instead call lapic_shutdown() for X86_32, and disble_local_APIC()
+otherwise?
 
-One thing I'd suggest is not to use debugfs, if it is going to
-be a useful end-user feature.
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
