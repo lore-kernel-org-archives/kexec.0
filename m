@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
+Received: from gateway-1237.mvista.com ([63.81.120.158])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1Ikixa-0007y6-8y
-	for kexec@lists.infradead.org; Wed, 24 Oct 2007 17:20:04 +0100
-Date: Thu, 11 Oct 2007 20:54:45 +0000
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
-	kexec jump
-Message-ID: <20071011205445.GA3975@ucw.cz>
-References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
-	<BF08447B-234F-4851-89BF-92A57EA801C6@mac.com>
-	<200709220947.58872.nigel@nigel.suspend2.net>
-	<200709221240.25614.rjw@sisk.pl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200709221240.25614.rjw@sisk.pl>
+	id 1Ikj6G-00008m-3R
+	for kexec@lists.infradead.org; Wed, 24 Oct 2007 17:28:58 +0100
+Message-ID: <471F72AD.8030902@ct.jp.nec.com>
+Date: Wed, 24 Oct 2007 09:28:29 -0700
+From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] x86: unify crash_32/64.c
+References: <47195763.1090803@ct.jp.nec.com> <20071024063434.GC4622@in.ibm.com>
+In-Reply-To: <20071024063434.GC4622@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +22,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kyle Moffett <mrmacman_g4@mac.com>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
-	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: vgoyal@in.ibm.com
+Cc: hbabu@us.ibm.com, tglx@linutronix.de, Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi!
-
-> > That's certainly possible. We already pass a very small amount of data between 
-> > the boot and resuming kernels at the moment, and it's done quite simply - by 
-> > putting the variables we want to 'transfer' in a nosave page/section.
+Vivek Goyal wrote:
+> On Fri, Oct 19, 2007 at 06:18:27PM -0700, Hiroshi Shimamoto wrote:
+>> Hi,
+>>
+>> I made patches to unify crash_32/64.c.
+>> There are three patches;
+>> 1. add lapic_shutdown for x86_64
+>> 2. add safe_smp_processor_id for x86_64
+>> 3. unify crash_32/64.c
+>>
+>> I'm not sure that it's good to split to these patches.
+>>
+>> I've compiled on both of 32bit and 64bit, and tested
+>> kdump on 64bit.
+>>
 > 
-> Well, if the boot and image kernels are different, which is now possible on
-> x86_64 with some recent patches (currently in -mm), the nosave trick won't
-> work.
+> Hi Hiroshi,
+> 
+> Thanks for the patches. Can you please also test it on 32bit to make
+> sure nothing is broken.
 
-I guess we should remove the nosave.... at least from x86-64. If
-someone tries to use it, he'll get a nasty surprise.
+Okay, I'll test it on 32bit.
+A build problem already has been found on 32bit.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Thanks,
+Hiroshi
 
 _______________________________________________
 kexec mailing list
