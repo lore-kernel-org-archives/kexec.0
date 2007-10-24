@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from xenotime.net ([66.160.160.81])
-	by pentafluge.infradead.org with smtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IkkpZ-0002Wu-8Z
-	for kexec@lists.infradead.org; Wed, 24 Oct 2007 19:19:52 +0100
-Received: from midway.site ([71.117.233.180]) by xenotime.net for
-	<kexec@lists.infradead.org>; Wed, 24 Oct 2007 11:16:30 -0700
-Date: Wed, 24 Oct 2007 11:16:29 -0700
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Re: [PATCH 1/2] add tunable_notifier function ,take2
-Message-Id: <20071024111629.3e28b452.rdunlap@xenotime.net>
-In-Reply-To: <47171EEC.4030408@ah.jp.nec.com>
-References: <4716FFDB.7090502@ah.jp.nec.com> <47171EEC.4030408@ah.jp.nec.com>
-Mime-Version: 1.0
+Received: from ogre.sisk.pl ([217.79.144.158])
+	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
+	id 1IkmkM-0004HD-Nw
+	for kexec@lists.infradead.org; Wed, 24 Oct 2007 21:22:38 +0100
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [linux-pm] Re: [RFC][PATCH 1/2 -mm] kexec based hibernation -v3:
+	kexec jump
+Date: Wed, 24 Oct 2007 22:38:02 +0200
+References: <Pine.LNX.4.44L0.0709211540100.5816-100000@iolanthe.rowland.org>
+	<200709221240.25614.rjw@sisk.pl> <20071011205445.GA3975@ucw.cz>
+In-Reply-To: <20071011205445.GA3975@ucw.cz>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200710242238.02978.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,129 +25,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: k-miyoshi@cb.jp.nec.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, nigel@suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kyle Moffett <mrmacman_g4@mac.com>, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, huang ying <huang.ying.caritas@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Thu, 18 Oct 2007 17:53:00 +0900 Takenori Nagano wrote:
-
-> This patch adds new notifier function tunable_notifier_chain. Its base is
-> atomic_notifier_chain.
+On Thursday, 11 October 2007 22:54, Pavel Machek wrote:
+> Hi!
 > 
-> Thanks,
+> > > That's certainly possible. We already pass a very small amount of data between 
+> > > the boot and resuming kernels at the moment, and it's done quite simply - by 
+> > > putting the variables we want to 'transfer' in a nosave page/section.
+> > 
+> > Well, if the boot and image kernels are different, which is now possible on
+> > x86_64 with some recent patches (currently in -mm), the nosave trick won't
+> > work.
 > 
-> ---
-> 
-> Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
-> 
-> ---
-> diff -uprN linux-2.6.23.orig/kernel/sys.c linux-2.6.23/kernel/sys.c
-> --- linux-2.6.23.orig/kernel/sys.c	2007-10-10 05:31:38.000000000 +0900
-> +++ linux-2.6.23/kernel/sys.c	2007-10-18 10:08:52.728000000 +0900
-> @@ -38,6 +38,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/kprobes.h>
->  #include <linux/user_namespace.h>
-> +#include <linux/debugfs.h>
->  
->  #include <asm/uaccess.h>
->  #include <asm/io.h>
-> @@ -393,6 +394,243 @@ int blocking_notifier_call_chain(struct 
->  EXPORT_SYMBOL_GPL(blocking_notifier_call_chain);
+> I guess we should remove the nosave.... at least from x86-64. If
+> someone tries to use it, he'll get a nasty surprise.
 
-> +/**
-> + *	tunable_atomic_notifier_chain_register
-> + *				- Add notifier to an tunable notifier chain
+Agreed.
 
-Function name & short description must be on one (long?) line.  :(
+I'll try to prepare a patch for that when I have a bit of time.
 
-> + *	@nh: Pointer to head of the tunable notifier chain
-> + *	@n: New entry in notifier chain
-> + *	@name: Pointer to the name of the new notifier entry
-> + *	@desc: Pointer to the description of new entry
-> + *
-> + *	Adds a notifier to an tunable notifier chain and makes control dir.
-> + *
-> + *	Returns zero on success or %-ENODEV on failure.
-> + */
-> +
-> +int tunable_atomic_notifier_chain_register(
-> +		struct tunable_atomic_notifier_head *nh,
-> +		struct tunable_atomic_notifier_block *n, char *name, char *desc)
-> +{
-
-> +}
-> +
-> +EXPORT_SYMBOL_GPL(tunable_atomic_notifier_chain_register);
-> +
-> +/**
-> + *	tunable_atomic_notifier_chain_unregister
-> + *				- Remove notifier from a tunable notifier chain
-
-Ditto.
-
-> + *	@nh: Pointer to head of the tunable notifier chain
-> + *	@n: Entry to remove from notifier chain
-> + *
-> + *	Removes a notifier from a tunable notifier chain.
-> + *
-> + *	Retunrns zero on success or %-ENOENT on failure.
-> + */
-> +
-> +int tunable_atomic_notifier_chain_unregister(
-> +				struct tunable_atomic_notifier_head *nh,
-> +				struct tunable_atomic_notifier_block *n)
-> +{
-
-> +}
-> +
-> +EXPORT_SYMBOL_GPL(tunable_atomic_notifier_chain_unregister);
-> +
-> +/**
-> + *	__tunable_atomic_notifier_call_chain
-> + *				- Call functions in a tunable notifier chain
-
-Same.
-
-> + *	@nh: Pointer to head of the tunable notifier chain
-> + *	@val: Value passed unmodified to notifier function
-> + *	@v: Pointer passed unmodified to notifier function
-> + *	@nt_to_call: See the comment for notifier_call_chain
-
-	@nr_to_call: ...
-
-> + *	@nr_calls: See the comment for notifier_call_chain
-> + *
-> + *	Calls each function in a notifier chain in turn. The functions
-> + *	run in an atomic context, so they must not block.
-> + *	This routine uses RCU to synchronize with changes to the chain.
-> + *
-> + *	If the return value of the notifier can be and'ed
-> + *	with %NOTIFY_STOP_MASK then tunable_atomic_notifier_call_chain()
-> + *	will return immediately, with the return value of
-> + *	the notifier function which halted execution.
-> + *	Otherwise the return value is the return value
-> + *	of the last notifier function called.
-> + */
-> +
-> +int __kprobes __tunable_atomic_notifier_call_chain(
-> +					struct tunable_atomic_notifier_head *nh,
-> +					unsigned long val, void *v,
-> +					int nr_to_call, int *nr_calls)
-> +{
-> +	int ret;
-> +
-> +	rcu_read_lock();
-> +	ret = notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
-> +	rcu_read_unlock();
-> +	return ret;
-> +}
-> +
-> +EXPORT_SYMBOL_GPL(__tunable_atomic_notifier_call_chain);
-
-Blank line is usually omitted before EXPORT_SYMBOL....
-
----
-~Randy
+Greetings,
+Rafael
 
 _______________________________________________
 kexec mailing list
