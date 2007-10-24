@@ -1,29 +1,27 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
+Received: from e6.ny.us.ibm.com ([32.97.182.146])
 	by pentafluge.infradead.org with esmtps (Exim 4.63 #1 (Red Hat Linux))
-	id 1IkZnI-0007X5-Jl
-	for kexec@lists.infradead.org; Wed, 24 Oct 2007 07:32:49 +0100
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e32.co.us.ibm.com (8.12.11.20060308/8.13.8) with ESMTP id
-	l9O5KL4u029890
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 01:20:21 -0400
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l9O6TMlc118216
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 00:29:27 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l9O6TMWg011877
-	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 00:29:22 -0600
-Date: Wed, 24 Oct 2007 11:59:33 +0530
+	id 1IkZp9-0007Ys-Pg
+	for kexec@lists.infradead.org; Wed, 24 Oct 2007 07:34:44 +0100
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id l9O6WwF8020569
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 02:32:58 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l9O6VQcm091632
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 02:31:26 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l9O6VPsD009461
+	for <kexec@lists.infradead.org>; Wed, 24 Oct 2007 02:31:25 -0400
+Date: Wed, 24 Oct 2007 12:01:41 +0530
 From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: [PATCH 1/3] x86: add lapic_shutdown for x86_64
-Message-ID: <20071024062933.GA4622@in.ibm.com>
-References: <47195763.1090803@ct.jp.nec.com> <47195807.6030809@ct.jp.nec.com>
+Subject: Re: [PATCH 2/3] x86: add safe_smp_processor_id for x86_64
+Message-ID: <20071024063141.GB4622@in.ibm.com>
+References: <47195763.1090803@ct.jp.nec.com> <47195876.7080208@ct.jp.nec.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <47195807.6030809@ct.jp.nec.com>
+In-Reply-To: <47195876.7080208@ct.jp.nec.com>
 Reply-To: vgoyal@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -38,50 +36,34 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
 To: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
-Cc: hbabu@us.ibm.com, tglx@linutronix.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: hbabu@us.ibm.com, tglx@linutronix.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Fernando Luis Vazquez Cao <fernando@intellilink.co.jp>
 
-On Fri, Oct 19, 2007 at 06:21:11PM -0700, Hiroshi Shimamoto wrote:
+On Fri, Oct 19, 2007 at 06:23:02PM -0700, Hiroshi Shimamoto wrote:
 > From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
 > 
 > Signed-off-by: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
 > ---
->  arch/x86/kernel/apic_64.c |   14 ++++++++++++++
->  include/asm-x86/apic_64.h |    1 +
->  2 files changed, 15 insertions(+), 0 deletions(-)
+>  include/asm-x86/smp_64.h |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/apic_64.c b/arch/x86/kernel/apic_64.c
-> index f47bc49..f28ccb5 100644
-> --- a/arch/x86/kernel/apic_64.c
-> +++ b/arch/x86/kernel/apic_64.c
-> @@ -287,6 +287,20 @@ void disable_local_APIC(void)
->  	apic_write(APIC_SPIV, value);
->  }
+> diff --git a/include/asm-x86/smp_64.h b/include/asm-x86/smp_64.h
+> index 6f0e027..ab612b0 100644
+> --- a/include/asm-x86/smp_64.h
+> +++ b/include/asm-x86/smp_64.h
+> @@ -76,6 +76,8 @@ extern unsigned __cpuinitdata disabled_cpus;
 > 
-> +void lapic_shutdown(void)
-> +{
-> +	unsigned long flags;
+>  #endif /* CONFIG_SMP */
+> 
+> +#define safe_smp_processor_id()		smp_processor_id()
 > +
-> +	if (!cpu_has_apic)
-> +		return;
-> +
-> +	local_irq_save(flags);
-> +
-> +	disable_local_APIC();
-> +
-> +	local_irq_restore(flags);
-> +}
-> +
->  /*
 
-Do we really have to introduce this function for 64bit? I remember some
-issues were faced on i386 w.r.t kernel enabling the LAPIC against the
-wishes of BIOS hence kernel was disabling it while shutting down. No
-such problems were reported for x86_64 hence this function existed only
-for i386.
+Can you please implement a patch for safe_smp_processor_id() instead of
+using smp_processor_id(). safe_smp_processor_id() was introduced to make
+sure that we are not dependent on the stack of threads after kernel has
+crashed instead read the apic id and convert it to cpu id with other
+data structures. This helped in stack overflow case.
 
-If that is the case, probably we don't have to introduce lapic_shutdown()
-for x86_64. Instead call lapic_shutdown() for X86_32, and disble_local_APIC()
-otherwise?
+Hardcoding it to smp_processor_id() will give the false impression.
 
 Thanks
 Vivek
