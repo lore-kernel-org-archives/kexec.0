@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+Received: from gateway-1237.mvista.com ([63.81.120.158])
 	by pentafluge.infradead.org with esmtp (Exim 4.63 #1 (Red Hat Linux))
-	id 1IlHf7-0002wY-Hu
-	for kexec@lists.infradead.org; Fri, 26 Oct 2007 06:23:16 +0100
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id l9Q5L3lR029854
-	for <kexec@lists.infradead.org>; Fri, 26 Oct 2007 14:21:03 +0900 (JST)
-Message-Id: <472178DE.9080409@mxs.nes.nec.co.jp>
-Date: Fri, 26 Oct 2007 14:19:26 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1IlWxx-0003Ng-Pt
+	for kexec@lists.infradead.org; Fri, 26 Oct 2007 22:43:47 +0100
+Message-ID: <47225F6C.5000708@ct.jp.nec.com>
+Date: Fri, 26 Oct 2007 14:43:08 -0700
+From: Hiroshi Shimamoto <h-shimamoto@ct.jp.nec.com>
 MIME-Version: 1.0
-Subject: [PATCH] Dump filtering supports x86_64 sparsemem(Re: Linux
-	v2.6.24-rc1)
-References: <alpine.LFD.0.999.0710232057080.30120@woody.linux-foundation.org>
-In-Reply-To: <alpine.LFD.0.999.0710232057080.30120@woody.linux-foundation.org>
+Subject: Re: [PATCH 0/3] x86: unify crash_32/64.c
+References: <47195763.1090803@ct.jp.nec.com> <20071024063434.GC4622@in.ibm.com>
+	<471F72AD.8030902@ct.jp.nec.com> <4720D933.3080703@ct.jp.nec.com>
+In-Reply-To: <4720D933.3080703@ct.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,54 +23,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces@lists.infradead.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: vgoyal@in.ibm.com, tglx@linutronix.de
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
+> I'm now testing crash on 32bit, but there is an issue before
+> applying the patches. My machine stopped at checking 'hlt'
+> after kexec, showing below message.
+> 
+> CPU: Intel(R) Xeon(TM) CPU 3.80GHz stepping 0a
+> Checking 'hlt' instruction...
+> 
+> v2.6.23.1 works fine for 1st kernel.
+> I'm investigating it..
 
-Hi,
+I found that the following patch makes my machine stopped.
+bfe0c1cc6456bba1f4e3cc1fe29c0ea578ac763a
+x86: HPET force enable for ICH5
 
-This patch adds the symbol "init_level4_pgt" to the vmcoreinfo data so
-that makedumpfile (dump filtering command) supports x86_64 sparsemem 
-kernel of linux-2.6.24.
+It means that after applied this patch, HPET is enabled
+automatically on 1st kernel and after crash/kexec the 2nd
+kernel stopped at checking 'hlt'.
 
-makedumpfile creates a small dumpfile by excluding unnecessary pages for
-the analysis. It checks attributes in page structures and distinguishes
-necessary pages and unnecessary ones. To check them, makedumpfile gets
-the vmcoreinfo data which has the minimum debugging information only for
-dump filtering.
-
-For older x86_64 kernel (linux-2.6.23 or before), makedumpfile translates
-the virtual address of page structure into physical address by subtracting
-PAGE_OFFSET from virtual address, but this translation isn't effective for
-linux-2.6.24 sparsemem kernel, because its page structures are in virtual
-memmap area. makedumpfile should translate their virtual address by 4-levels
-paging and it needs the symbol "init_level4_pgt".
-
+I also tested the latest kernel(2.6.24-rc1-gec3b67c1).
+Boot parameter "nohpet" resolves this issue and kdump
+works well on 32bit.
+So I guess HPET affects this.
+But I don't know why 64bit kernel with HPET is OK.
 
 Thanks
-Ken'ichi Ohmichi 
-
----
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-
----
-diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
---- a/arch/x86/kernel/machine_kexec_64.c	2007-10-26 11:05:34.000000000 +0900
-+++ b/arch/x86/kernel/machine_kexec_64.c	2007-10-26 11:16:24.000000000 +0900
-@@ -233,6 +233,8 @@ NORET_TYPE void machine_kexec(struct kim
- 
- void arch_crash_save_vmcoreinfo(void)
- {
-+	VMCOREINFO_SYMBOL(init_level4_pgt);
-+
- #ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
- 	VMCOREINFO_SYMBOL(node_data);
- 	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
-_
-
-
-
-
+Hiroshi Shimamoto
 
 _______________________________________________
 kexec mailing list
