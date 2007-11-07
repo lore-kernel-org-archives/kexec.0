@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.66 #1 (Red Hat Linux))
-	id 1Intrn-00033g-Lh
-	for kexec@lists.infradead.org; Fri, 02 Nov 2007 06:35:14 -0400
-Received: from mailgate3.nec.co.jp (mailgate54.nec.co.jp [10.7.69.193])
-	by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lA2AZ47f001284
-	for <kexec@lists.infradead.org>; Fri, 2 Nov 2007 19:35:04 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
-	(8.11.7/3.7W-MAILGATE-NEC)
-	id lA2AZ3w07730 for kexec@lists.infradead.org;
-	Fri, 2 Nov 2007 19:35:03 +0900 (JST)
-Received: from togyo.jp.nec.com (togyo.jp.nec.com [10.26.220.4]) by
-	mailsv.nec.co.jp (8.11.7/3.7W-MAILSV-NEC) with ESMTP
-	id lA2AZ3C02356 for <kexec@lists.infradead.org>;
-	Fri, 2 Nov 2007 19:35:03 +0900 (JST)
-Message-Id: <472AFD76.5070304@mxs.nes.nec.co.jp>
-Date: Fri, 02 Nov 2007 19:35:34 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1IplRx-0007u6-IA
+	for kexec@lists.infradead.org; Wed, 07 Nov 2007 09:00:16 -0500
+Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
+	[172.16.52.254])
+	by mx1.redhat.com (8.13.8/8.13.1) with ESMTP id lA7E086L009294
+	for <kexec@lists.infradead.org>; Wed, 7 Nov 2007 09:00:08 -0500
+Date: Wed, 7 Nov 2007 09:00:06 -0500
+From: Neil Horman <nhorman@redhat.com>
+Subject: Timer interrupt lost on some x86_64 systems
+Message-ID: <20071107140006.GC14371@hmsendeavour.rdu.redhat.com>
 MIME-Version: 1.0
-Subject: makedumpfile-1.2.2: Fix the problem that vmcoreinfo cannot be
-	extracted from ELF32 /proc/vmcore
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,78 +21,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0543794330=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: nhorman@redhat.com
 
---===============0543794330==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Hey all-
+	I've been getting reports of some x86_64 systems that, on kdump kernel
+boot get stuck in calibrate_delay(),  in both RHEL kernels and upstream kernels.
+The current thinking is that the lapic timer interrupt is no longer getting
+delivered, likely because we handle a crash condition on a cpu that isn't the
+boot cpu.  One known offender is this motherboard:
+http://www.supermicro.com/Aplus/motherboard/Opteron8000/MCP55/H8QM8-2.cfm
+My current thought is that the TIMER_LVT entry is masked on all but the boot cpu
+on this system (which is strange, as I was under the impression that the timer
+interrupt was supposed to be enabled on all CPU's nominally.  At any rate, I was
+going to try to read/write the TIMER_LVT on the crashing processor before we
+jump to purgatory, or in purgatory itself, to see if that fixes the problem, but
+I wanted to report the issue here to see if anyone had any alternate thoughts.
+I know that intel ioapics had a timer related problem recently that caused the
+same issue, but the fix doesn't seem to help in this case.
 
+Thanks & Regards
+Neil
 
-Hi,
-
-makedumpfile version 1.2.2 is released.
-Please test it. Your opinions/comments are welcome.
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Changelog:
-o Fix the problem that vmcoreinfo cannot be extracted from ELF32 /proc/vmcore.
-  There was a problem that makedumpfile cannot extract vmcoreinfo from
-  an ELF32 /proc/vmcore:
-    # makedumpfile -cd31 /proc/vmcore dumpfile
-    get_pt_note_info: Can't find PT_NOTE Phdr.
-    
-    makedumpfile Failed.
-    #
-  The cause was that makedumpfile checked the address of flag_elf64 instead of
-  the value.
-
-
-Download:
-  You can download the latest makedumpfile(ver. 1.2.2) from the following URL.
-  Details of the change are written on the CVS page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-1.2.2.tar.gz"
-  2. "cd makedumpfile"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
-
-
---===============0543794330==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0543794330==--
