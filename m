@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Irt5s-0007T8-O4
-	for kexec@lists.infradead.org; Tue, 13 Nov 2007 05:34:15 -0500
-Received: from mailgate3.nec.co.jp (mailgate54.nec.co.jp [10.7.69.195])
-	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lADAY7oG008030
-	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 19:34:07 +0900 (JST)
+	id 1Irt0l-00078G-24
+	for kexec@lists.infradead.org; Tue, 13 Nov 2007 05:28:57 -0500
+Received: from mailgate3.nec.co.jp (mailgate53.nec.co.jp [10.7.69.161])
+	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lADASjfq001430
+	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 19:28:45 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
 	(8.11.7/3.7W-MAILGATE-NEC)
-	id lADAY7S05599 for kexec@lists.infradead.org;
-	Tue, 13 Nov 2007 19:34:07 +0900 (JST)
-Received: from kuichi.jp.nec.com (kuichi.jp.nec.com [10.26.220.17]) by
-	mailsv.nec.co.jp (8.11.7/3.7W-MAILSV-NEC) with ESMTP
-	id lADAY6C24719 for <kexec@lists.infradead.org>;
-	Tue, 13 Nov 2007 19:34:06 +0900 (JST)
-Message-Id: <47397DBC.8080308@mxs.nes.nec.co.jp>
-Date: Tue, 13 Nov 2007 19:34:36 +0900
+	id lADASio19933 for kexec@lists.infradead.org;
+	Tue, 13 Nov 2007 19:28:44 +0900 (JST)
+Received: from saigo.jp.nec.com (saigo.jp.nec.com [10.26.220.6]) by
+	mailsv3.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
+	id lADASiB17314 for <kexec@lists.infradead.org>;
+	Tue, 13 Nov 2007 19:28:44 +0900 (JST)
+Message-Id: <47397C7C.1020504@mxs.nes.nec.co.jp>
+Date: Tue, 13 Nov 2007 19:29:16 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
 Subject: [PATCH] Fix the feature determining ELF32/ELF64 automatically
@@ -27,12 +27,12 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0285242001=="
+Content-Type: multipart/mixed; boundary="===============0942873021=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
+To: 
 
---===============0285242001==
+--===============0942873021==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
@@ -69,8 +69,7 @@ _
 
 
 
-
---===============0285242001==
+--===============0942873021==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -81,4 +80,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0285242001==--
+--===============0942873021==--
