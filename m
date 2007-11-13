@@ -1,31 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e3.ny.us.ibm.com ([32.97.182.143])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1IrqF0-0002JB-Hb
-	for kexec@lists.infradead.org; Tue, 13 Nov 2007 02:31:29 -0500
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e3.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id lAD7VLBk025501
-	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 02:31:21 -0500
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.6) with ESMTP id
-	lAD7VLNX493530
-	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 02:31:21 -0500
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	lAD7VLvZ009953
-	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 02:31:21 -0500
-Date: Tue, 13 Nov 2007 13:01:28 +0530
-From: Vivek Goyal <vgoyal@in.ibm.com>
-Subject: Re: Timer interrupt lost on some x86_64 systems
-Message-ID: <20071113073128.GB24067@in.ibm.com>
-References: <20071107140006.GC14371@hmsendeavour.rdu.redhat.com>
-	<20071112044903.GA6433@in.ibm.com>
-	<20071112151721.GB11751@hmsendeavour.rdu.redhat.com>
-	<20071112154119.GC11751@hmsendeavour.rdu.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20071112154119.GC11751@hmsendeavour.rdu.redhat.com>
-Reply-To: vgoyal@in.ibm.com
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Irt5s-0007T8-O4
+	for kexec@lists.infradead.org; Tue, 13 Nov 2007 05:34:15 -0500
+Received: from mailgate3.nec.co.jp (mailgate54.nec.co.jp [10.7.69.195])
+	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lADAY7oG008030
+	for <kexec@lists.infradead.org>; Tue, 13 Nov 2007 19:34:07 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+	(8.11.7/3.7W-MAILGATE-NEC)
+	id lADAY7S05599 for kexec@lists.infradead.org;
+	Tue, 13 Nov 2007 19:34:07 +0900 (JST)
+Received: from kuichi.jp.nec.com (kuichi.jp.nec.com [10.26.220.17]) by
+	mailsv.nec.co.jp (8.11.7/3.7W-MAILSV-NEC) with ESMTP
+	id lADAY6C24719 for <kexec@lists.infradead.org>;
+	Tue, 13 Nov 2007 19:34:06 +0900 (JST)
+Message-Id: <47397DBC.8080308@mxs.nes.nec.co.jp>
+Date: Tue, 13 Nov 2007 19:34:36 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: [PATCH] Fix the feature determining ELF32/ELF64 automatically
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,37 +27,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0285242001=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: kexec@lists.infradead.org
+To: kexec-ml <kexec@lists.infradead.org>
 
-On Mon, Nov 12, 2007 at 10:41:19AM -0500, Neil Horman wrote:
-[..]
-> 
-> 
-> Although, as I look at it, it would appear that time_init from start_kernel does
-> seem to init the hpet if its available, and it silently fails if that doesn't
-> work, moving on to the pmtimer and pit.  I wonder if there is some extra magic
-> to resetting the hpet to run on a different cpu for some systems...
-> Neil
-> 
+--===============0285242001==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-Any idea what kind of timer devices this motherborad has got? Which timer
-device gets activated in first kernel? Then we can focus on why the
-interrupts from same device are not coming in second kernel.
 
-In the past I have found issues with interrupt routing on IOPAPIC and
-interrupt lockup on LAPIC. But these issues are already solved. I would
-also think of priting LAPIC and IOAPIC entries to see how timer interrupt
-routing changes from first kernel to second.
+Hi,
+
+This patch fixes the problem that the kexec command cannot determine
+ELF32/ELF64 automatically.
+
+On i386 system, the kexec command always determined an ELF32 /proc/vmcore
+even if the memory is 4GB or larger, because of referring the outside
+of the array "range[]".
+
 
 Thanks
-Vivek
+Ken'ichi Ohmichi
+
+
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+---
+diff -rpuN a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+--- a/kexec/arch/i386/crashdump-x86.c	2007-11-13 18:06:05.000000000 +0900
++++ b/kexec/arch/i386/crashdump-x86.c	2007-11-13 18:13:09.000000000 +0900
+@@ -496,7 +496,7 @@ static enum coretype get_core_type(struc
+ 		if (ranges == 0)
+ 			return CORE_TYPE_ELF64;
+ 
+-		if (range[ranges].end > 0xFFFFFFFFUL)
++		if (range[ranges - 1].end > 0xFFFFFFFFUL)
+ 			return CORE_TYPE_ELF64;
+ 		else
+ 			return CORE_TYPE_ELF32;
+_
+
+
+
+
+--===============0285242001==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0285242001==--
