@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Isr0Q-0007Wy-Fh
-	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:32:37 -0500
-Message-Id: <473D0156.3000203@mxs.nes.nec.co.jp>
-Date: Fri, 16 Nov 2007 11:32:54 +0900
+	id 1Isr0l-0007cT-JK
+	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:32:58 -0500
+Message-Id: <473D0170.1060304@mxs.nes.nec.co.jp>
+Date: Fri, 16 Nov 2007 11:33:20 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH 0/5] vmcoreinfo patches for linux-2.6.24-rc3
+Subject: [PATCH 4/5] Fix the configuration dependencies
+References: <473CFE14.3010400@mxs.nes.nec.co.jp>
+In-Reply-To: <473CFE14.3010400@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,59 +18,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1737520464=="
+Content-Type: multipart/mixed; boundary="===============0799721319=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: lkml <linux-kernel@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>
 
---===============1737520464==
+--===============0799721319==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi,
+This patch fixes the configuration dependencies in the vmcoreinfo data.
 
-This patchset is for the vmcoreinfo data.
+i386's "node_data" is defined in arch/x86/mm/discontig_32.c,
+and x86_64's one is defined in arch/x86/mm/numa_64.c.
+They depend on CONFIG_NUMA:
+  arch/x86/mm/Makefile_32:7
+    obj-$(CONFIG_NUMA) += discontig_32.o
+  arch/x86/mm/Makefile_64:7
+    obj-$(CONFIG_NUMA) += numa_64.o
 
-The vmcoreinfo data has the minimum debugging information only
-for dump filtering. makedumpfile (dump filtering command) gets
-it to distinguish unnecessary pages, and makedumpfile creates
-a small dumpfile.
+ia64's "pgdat_list" is defined in arch/ia64/mm/discontig.c,
+and it depends on CONFIG_DISCONTIGMEM and CONFIG_SPARSEMEM:
+  arch/ia64/mm/Makefile:9-10
+    obj-$(CONFIG_DISCONTIGMEM) += discontig.o
+    obj-$(CONFIG_SPARSEMEM)    += discontig.o
 
-[PATCH 1/5] Rename vmcoreinfo's macros returning the size
-[PATCH 2/5] Use the existing offsetof() for VMCOREINFO_OFFSET()
-[PATCH 3/5] Add "VMCOREINFO_" to all the call for vmcoreinfo_append_str()
-[PATCH 4/5] Fix the configuration dependencies
-[PATCH 5/5] Add the array length of "free_list" for filtering free pages
+ia64's "node_memblk" is defined in arch/ia64/mm/numa.c,
+and it depends on CONFIG_NUMA:
+  arch/ia64/mm/Makefile:8
+    obj-$(CONFIG_NUMA)         += numa.o
 
-Patch 1-3 are cleanup patches, and they are the same as I sent before:
- http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0582.html
- http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0584.html
- http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0586.html
-Patch 4 is a new patch for fixing the configuration dependencies.
-Patch 5 is a new patch for filtering free pages of linux-2.6.24.
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+---
+diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+--- a/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:39:06.000000000 +0900
++++ b/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:41:41.000000000 +0900
+@@ -129,10 +129,11 @@ void machine_kexec(struct kimage *image)
+ 
+ void arch_crash_save_vmcoreinfo(void)
+ {
+-#if defined(CONFIG_ARCH_DISCONTIGMEM_ENABLE) && defined(CONFIG_NUMA)
++#if defined(CONFIG_DISCONTIGMEM) || defined(CONFIG_SPARSEMEM)
+ 	VMCOREINFO_SYMBOL(pgdat_list);
+ 	VMCOREINFO_LENGTH(pgdat_list, MAX_NUMNODES);
+-
++#endif
++#ifdef CONFIG_NUMA
+ 	VMCOREINFO_SYMBOL(node_memblk);
+ 	VMCOREINFO_LENGTH(node_memblk, NR_NODE_MEMBLKS);
+ 	VMCOREINFO_STRUCT_SIZE(node_memblk_s);
+diff -rpuN a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+--- a/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:19.000000000 +0900
++++ b/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:33.000000000 +0900
+@@ -151,7 +151,7 @@ NORET_TYPE void machine_kexec(struct kim
+ 
+ void arch_crash_save_vmcoreinfo(void)
+ {
+-#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
++#ifdef CONFIG_NUMA
+ 	VMCOREINFO_SYMBOL(node_data);
+ 	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+ #endif
+diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+--- a/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:19.000000000 +0900
++++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:33.000000000 +0900
+@@ -235,7 +235,7 @@ void arch_crash_save_vmcoreinfo(void)
+ {
+ 	VMCOREINFO_SYMBOL(init_level4_pgt);
+ 
+-#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
++#ifdef CONFIG_NUMA
+ 	VMCOREINFO_SYMBOL(node_data);
+ 	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+ #endif
+_
 
-Their details are explained in each patch.
-
-I confirmed that their coding styles are right by checkpatch.pl and tested
-them on my i386, x86_64 and ia64.
-
-
-Thanks
-Ken'ichi Ohmichi
 
 
 
-
-
-
-
-
-
-
-
-
---===============1737520464==
+--===============0799721319==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -79,4 +108,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1737520464==--
+--===============0799721319==--
