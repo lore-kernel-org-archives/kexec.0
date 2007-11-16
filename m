@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Isr0w-0007cn-7M
-	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:33:09 -0500
-Message-Id: <473D0176.6090702@mxs.nes.nec.co.jp>
-Date: Fri, 16 Nov 2007 11:33:26 +0900
+	id 1Isr2d-0007iW-Q2
+	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:34:54 -0500
+Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lAG2Ykk1005604
+	for <kexec@lists.infradead.org>; Fri, 16 Nov 2007 11:34:46 +0900 (JST)
+Message-Id: <473D0163.5070602@mxs.nes.nec.co.jp>
+Date: Fri, 16 Nov 2007 11:33:07 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH 5/5] Add the array length of "free_list" for filtering free
-	pages
+Subject: [PATCH 2/5] Use the existing offsetof() for VMCOREINFO_OFFSET()
 References: <473CFE14.3010400@mxs.nes.nec.co.jp>
 In-Reply-To: <473CFE14.3010400@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
@@ -19,48 +21,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0554134197=="
+Content-Type: multipart/mixed; boundary="===============1663876181=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: lkml <linux-kernel@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>
 
---===============0554134197==
+--===============1663876181==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-This patch adds the array length of "free_area.free_list" to the vmcoreinfo
-data so that makedumpfile (dump filtering command) can exclude all free pages
-in linux-2.6.24.
+It is better that the existing offsetof() is used for VMCOREINFO_OFFSET().
 
-makedumpfile creates a small dumpfile by excluding unnecessary pages for the
-analysis. To distinguish unnecessary pages, makedumpfile gets the vmcoreinfo
-data which has the minimum debugging information only for dump filtering.
+This discussion is the following:
+http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0584.html
 
-In 2.6.24-rc1 or later, the free_area.free_list is an array which has one list
-for each migrate types instead of a single list. makedumpfile needs the array
-length of "free_area.free_list" and the vmcoreinfo data should contain it.
-
-
-Signed-off-by: Huang Ying <ying.huang@intel.com>
-Tested-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 ---
-diff -rpuN a/kernel/kexec.c b/kernel/kexec.c
---- a/kernel/kexec.c	2007-11-12 11:15:26.000000000 +0900
-+++ b/kernel/kexec.c	2007-11-12 11:16:09.000000000 +0900
-@@ -1404,6 +1404,7 @@ static int __init crash_save_vmcoreinfo_
- 	VMCOREINFO_OFFSET(list_head, next);
- 	VMCOREINFO_OFFSET(list_head, prev);
- 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
-+	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
- 
- 	arch_crash_save_vmcoreinfo();
+diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
+--- a/include/linux/kexec.h	2007-11-12 11:03:31.000000000 +0900
++++ b/include/linux/kexec.h	2007-11-12 11:03:43.000000000 +0900
+@@ -137,7 +137,7 @@ unsigned long paddr_vmcoreinfo_note(void
+ 			      (unsigned long)sizeof(struct name))
+ #define VMCOREINFO_OFFSET(name, field) \
+ 	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+-			      (unsigned long)&(((struct name *)0)->field))
++			      (unsigned long)offsetof(struct name, field))
+ #define VMCOREINFO_LENGTH(name, value) \
+ 	vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
+ #define VMCOREINFO_NUMBER(name) \
 _
 
 
 
---===============0554134197==
+--===============1663876181==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -71,4 +65,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0554134197==--
+--===============1663876181==--
