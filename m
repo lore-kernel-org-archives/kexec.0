@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1IsPyw-0003R3-BB
-	for kexec@lists.infradead.org; Wed, 14 Nov 2007 16:41:17 -0500
-Date: Wed, 14 Nov 2007 13:40:49 -0800
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix the feature determining ELF32/ELF64 automatically
-Message-ID: <20071114214044.GD2368@verge.net.au>
-References: <47397DBC.8080308@mxs.nes.nec.co.jp>
+	id 1Isr0Q-0007Wy-Fh
+	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:32:37 -0500
+Message-Id: <473D0156.3000203@mxs.nes.nec.co.jp>
+Date: Fri, 16 Nov 2007 11:32:54 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <47397DBC.8080308@mxs.nes.nec.co.jp>
+Subject: [PATCH 0/5] vmcoreinfo patches for linux-2.6.24-rc3
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,34 +16,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0147215963=="
+Content-Type: multipart/mixed; boundary="===============1737520464=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: lkml <linux-kernel@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>
 
---===============0147215963==
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Disposition: inline
-
-On Tue, Nov 13, 2007 at 07:34:36PM +0900, Ken'ichi Ohmichi wrote:
-> 
-> Hi,
-> 
-> This patch fixes the problem that the kexec command cannot determine
-> ELF32/ELF64 automatically.
-> 
-> On i386 system, the kexec command always determined an ELF32 /proc/vmcore
-> even if the memory is 4GB or larger, because of referring the outside
-> of the array "range[]".
-
-Thanks, applied.
-
--- 
-宝曼 西門 (ホウマン・サイモン) | Simon Horman (Horms)
+--===============1737520464==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
 
---===============0147215963==
+Hi,
+
+This patchset is for the vmcoreinfo data.
+
+The vmcoreinfo data has the minimum debugging information only
+for dump filtering. makedumpfile (dump filtering command) gets
+it to distinguish unnecessary pages, and makedumpfile creates
+a small dumpfile.
+
+[PATCH 1/5] Rename vmcoreinfo's macros returning the size
+[PATCH 2/5] Use the existing offsetof() for VMCOREINFO_OFFSET()
+[PATCH 3/5] Add "VMCOREINFO_" to all the call for vmcoreinfo_append_str()
+[PATCH 4/5] Fix the configuration dependencies
+[PATCH 5/5] Add the array length of "free_list" for filtering free pages
+
+Patch 1-3 are cleanup patches, and they are the same as I sent before:
+ http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0582.html
+ http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0584.html
+ http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0586.html
+Patch 4 is a new patch for fixing the configuration dependencies.
+Patch 5 is a new patch for filtering free pages of linux-2.6.24.
+
+Their details are explained in each patch.
+
+I confirmed that their coding styles are right by checkpatch.pl and tested
+them on my i386, x86_64 and ia64.
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+
+
+
+
+
+
+
+
+
+
+--===============1737520464==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -56,4 +79,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0147215963==--
+--===============1737520464==--
