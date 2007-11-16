@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo200.gate.nec.co.jp ([210.143.35.50])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Isr2o-0007iY-BR
-	for kexec@lists.infradead.org; Thu, 15 Nov 2007 21:35:05 -0500
-Received: from tyo202.gate.nec.co.jp ([10.7.69.202])
-	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id lAG2Yppp005616
-	for <kexec@lists.infradead.org>; Fri, 16 Nov 2007 11:34:51 +0900 (JST)
-Message-Id: <473D016A.7010107@mxs.nes.nec.co.jp>
-Date: Fri, 16 Nov 2007 11:33:14 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: [PATCH 3/5] Add "VMCOREINFO_" to all the call for
-	vmcoreinfo_append_str()
+	id 1It40e-0001Km-Lt
+	for kexec@lists.infradead.org; Fri, 16 Nov 2007 11:25:43 -0500
+Date: Fri, 16 Nov 2007 08:25:21 -0800
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/5] Fix the configuration dependencies
+Message-ID: <20071116162511.GB2658@verge.net.au>
 References: <473CFE14.3010400@mxs.nes.nec.co.jp>
-In-Reply-To: <473CFE14.3010400@mxs.nes.nec.co.jp>
+	<473D0170.1060304@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+In-Reply-To: <473D0170.1060304@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +19,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1953167750=="
+Content-Type: multipart/mixed; boundary="===============2032080142=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: lkml <linux-kernel@vger.kernel.org>, kexec-ml <kexec@lists.infradead.org>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
---===============1953167750==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+--===============2032080142==
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Disposition: inline
+
+On Fri, Nov 16, 2007 at 11:33:20AM +0900, Ken'ichi Ohmichi wrote:
+> 
+> This patch fixes the configuration dependencies in the vmcoreinfo data.
+> 
+> i386's "node_data" is defined in arch/x86/mm/discontig_32.c,
+> and x86_64's one is defined in arch/x86/mm/numa_64.c.
+> They depend on CONFIG_NUMA:
+>   arch/x86/mm/Makefile_32:7
+>     obj-$(CONFIG_NUMA) += discontig_32.o
+>   arch/x86/mm/Makefile_64:7
+>     obj-$(CONFIG_NUMA) += numa_64.o
+> 
+> ia64's "pgdat_list" is defined in arch/ia64/mm/discontig.c,
+> and it depends on CONFIG_DISCONTIGMEM and CONFIG_SPARSEMEM:
+>   arch/ia64/mm/Makefile:9-10
+>     obj-$(CONFIG_DISCONTIGMEM) += discontig.o
+>     obj-$(CONFIG_SPARSEMEM)    += discontig.o
+> 
+> ia64's "node_memblk" is defined in arch/ia64/mm/numa.c,
+> and it depends on CONFIG_NUMA:
+>   arch/ia64/mm/Makefile:8
+>     obj-$(CONFIG_NUMA)         += numa.o
+> 
+> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+
+This appears correct to me, checking through the symbols and the
+location of their deffinitions, though I have not had a chance to run
+many build checks.
+
+I also note that CONFIG_ARCH_DISCONTIGMEM_ENABLE does not even
+appear to exist on i386, so it looks that without this change
+the code in question whould never be enabled.
+
+Acked-by: Simon Horman <horms@verge.net.au>
+
+> ---
+> diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+> --- a/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:39:06.000000000 +0900
+> +++ b/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:41:41.000000000 +0900
+> @@ -129,10 +129,11 @@ void machine_kexec(struct kimage *image)
+>  
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> -#if defined(CONFIG_ARCH_DISCONTIGMEM_ENABLE) && defined(CONFIG_NUMA)
+> +#if defined(CONFIG_DISCONTIGMEM) || defined(CONFIG_SPARSEMEM)
+>  	VMCOREINFO_SYMBOL(pgdat_list);
+>  	VMCOREINFO_LENGTH(pgdat_list, MAX_NUMNODES);
+> -
+> +#endif
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_memblk);
+>  	VMCOREINFO_LENGTH(node_memblk, NR_NODE_MEMBLKS);
+>  	VMCOREINFO_STRUCT_SIZE(node_memblk_s);
+> diff -rpuN a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+> --- a/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:19.000000000 +0900
+> +++ b/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:33.000000000 +0900
+> @@ -151,7 +151,7 @@ NORET_TYPE void machine_kexec(struct kim
+>  
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+>  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+>  #endif
+> diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> --- a/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:19.000000000 +0900
+> +++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:33.000000000 +0900
+> @@ -235,7 +235,7 @@ void arch_crash_save_vmcoreinfo(void)
+>  {
+>  	VMCOREINFO_SYMBOL(init_level4_pgt);
+>  
+> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+>  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+>  #endif
+> _
+> 
+> 
+> 
+
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 
-For readability, all the calls to vmcoreinfo_append_str() are changed to macros
-having a prefix "VMCOREINFO_".
-
-This discussion is the following:
-http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0584.html
-
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
----
-diff -rpuN a/include/linux/kexec.h b/include/linux/kexec.h
---- a/include/linux/kexec.h	2007-11-12 11:04:09.000000000 +0900
-+++ b/include/linux/kexec.h	2007-11-12 11:04:22.000000000 +0900
-@@ -127,6 +127,10 @@ void vmcoreinfo_append_str(const char *f
- 	__attribute__ ((format (printf, 1, 2)));
- unsigned long paddr_vmcoreinfo_note(void);
- 
-+#define VMCOREINFO_OSRELEASE(name) \
-+	vmcoreinfo_append_str("OSRELEASE=%s\n", #name)
-+#define VMCOREINFO_PAGESIZE(value) \
-+	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
- 	vmcoreinfo_append_str("SYMBOL(%s)=%lx\n", #name, (unsigned long)&name)
- #define VMCOREINFO_SIZE(name) \
-diff -rpuN a/kernel/kexec.c b/kernel/kexec.c
---- a/kernel/kexec.c	2007-11-12 11:04:11.000000000 +0900
-+++ b/kernel/kexec.c	2007-11-12 11:04:22.000000000 +0900
-@@ -1361,8 +1361,8 @@ unsigned long __attribute__ ((weak)) pad
- 
- static int __init crash_save_vmcoreinfo_init(void)
- {
--	vmcoreinfo_append_str("OSRELEASE=%s\n", init_uts_ns.name.release);
--	vmcoreinfo_append_str("PAGESIZE=%ld\n", PAGE_SIZE);
-+	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-+	VMCOREINFO_PAGESIZE(PAGE_SIZE);
- 
- 	VMCOREINFO_SYMBOL(init_uts_ns);
- 	VMCOREINFO_SYMBOL(node_online_map);
-_
+-- 
+宝曼 西門 (ホウマン・サイモン) | Simon Horman (Horms)
 
 
-
-
---===============1953167750==
+--===============2032080142==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -84,4 +132,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1953167750==--
+--===============2032080142==--
