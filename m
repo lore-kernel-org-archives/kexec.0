@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1It40e-0001Km-Lt
-	for kexec@lists.infradead.org; Fri, 16 Nov 2007 11:25:43 -0500
-Date: Fri, 16 Nov 2007 08:25:21 -0800
+	id 1It5uF-0006jS-Je
+	for kexec@lists.infradead.org; Fri, 16 Nov 2007 13:27:13 -0500
+Date: Fri, 16 Nov 2007 10:26:51 -0800
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 4/5] Fix the configuration dependencies
-Message-ID: <20071116162511.GB2658@verge.net.au>
+Subject: Re: [PATCH 1/5] Rename vmcoreinfo's macros returning the size
+Message-ID: <20071116182646.GA8971@verge.net.au>
 References: <473CFE14.3010400@mxs.nes.nec.co.jp>
-	<473D0170.1060304@mxs.nes.nec.co.jp>
+	<473D015E.4030908@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <473D0170.1060304@mxs.nes.nec.co.jp>
+Content-Disposition: inline
+In-Reply-To: <473D015E.4030908@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,117 +20,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2032080142=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
---===============2032080142==
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Disposition: inline
-
-On Fri, Nov 16, 2007 at 11:33:20AM +0900, Ken'ichi Ohmichi wrote:
+On Fri, Nov 16, 2007 at 11:33:02AM +0900, Ken'ichi Ohmichi wrote:
 > 
-> This patch fixes the configuration dependencies in the vmcoreinfo data.
+> VMCOREINFO_SIZE() should be renamed VMCOREINFO_STRUCT_SIZE() since it's always
+> returning the size of the struct with a given name. This change would allow
+> VMCOREINFO_TYPEDEF_SIZE() to simply become VMCOREINFO_SIZE() since it need not
+> be used exclusively for typedefs.
 > 
-> i386's "node_data" is defined in arch/x86/mm/discontig_32.c,
-> and x86_64's one is defined in arch/x86/mm/numa_64.c.
-> They depend on CONFIG_NUMA:
->   arch/x86/mm/Makefile_32:7
->     obj-$(CONFIG_NUMA) += discontig_32.o
->   arch/x86/mm/Makefile_64:7
->     obj-$(CONFIG_NUMA) += numa_64.o
-> 
-> ia64's "pgdat_list" is defined in arch/ia64/mm/discontig.c,
-> and it depends on CONFIG_DISCONTIGMEM and CONFIG_SPARSEMEM:
->   arch/ia64/mm/Makefile:9-10
->     obj-$(CONFIG_DISCONTIGMEM) += discontig.o
->     obj-$(CONFIG_SPARSEMEM)    += discontig.o
-> 
-> ia64's "node_memblk" is defined in arch/ia64/mm/numa.c,
-> and it depends on CONFIG_NUMA:
->   arch/ia64/mm/Makefile:8
->     obj-$(CONFIG_NUMA)         += numa.o
+> This discussion is the following:
+> http://www.ussg.iu.edu/hypermail/linux/kernel/0709.3/0582.html
 > 
 > Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+> Acked-by: David Rientjes <rientjes@google.com>
 
-This appears correct to me, checking through the symbols and the
-location of their deffinitions, though I have not had a chance to run
-many build checks.
-
-I also note that CONFIG_ARCH_DISCONTIGMEM_ENABLE does not even
-appear to exist on i386, so it looks that without this change
-the code in question whould never be enabled.
+As far as name changes go, this one looks good to me.
 
 Acked-by: Simon Horman <horms@verge.net.au>
-
-> ---
-> diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-> --- a/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:39:06.000000000 +0900
-> +++ b/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:41:41.000000000 +0900
-> @@ -129,10 +129,11 @@ void machine_kexec(struct kimage *image)
->  
->  void arch_crash_save_vmcoreinfo(void)
->  {
-> -#if defined(CONFIG_ARCH_DISCONTIGMEM_ENABLE) && defined(CONFIG_NUMA)
-> +#if defined(CONFIG_DISCONTIGMEM) || defined(CONFIG_SPARSEMEM)
->  	VMCOREINFO_SYMBOL(pgdat_list);
->  	VMCOREINFO_LENGTH(pgdat_list, MAX_NUMNODES);
-> -
-> +#endif
-> +#ifdef CONFIG_NUMA
->  	VMCOREINFO_SYMBOL(node_memblk);
->  	VMCOREINFO_LENGTH(node_memblk, NR_NODE_MEMBLKS);
->  	VMCOREINFO_STRUCT_SIZE(node_memblk_s);
-> diff -rpuN a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-> --- a/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:19.000000000 +0900
-> +++ b/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:33.000000000 +0900
-> @@ -151,7 +151,7 @@ NORET_TYPE void machine_kexec(struct kim
->  
->  void arch_crash_save_vmcoreinfo(void)
->  {
-> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-> +#ifdef CONFIG_NUMA
->  	VMCOREINFO_SYMBOL(node_data);
->  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
->  #endif
-> diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> --- a/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:19.000000000 +0900
-> +++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:33.000000000 +0900
-> @@ -235,7 +235,7 @@ void arch_crash_save_vmcoreinfo(void)
->  {
->  	VMCOREINFO_SYMBOL(init_level4_pgt);
->  
-> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
-> +#ifdef CONFIG_NUMA
->  	VMCOREINFO_SYMBOL(node_data);
->  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
->  #endif
-> _
-> 
-> 
-> 
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
--- 
-宝曼 西門 (ホウマン・サイモン) | Simon Horman (Horms)
-
-
---===============2032080142==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2032080142==--
