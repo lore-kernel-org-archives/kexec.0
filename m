@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Iu0ck-0003km-J9
-	for kexec@lists.infradead.org; Mon, 19 Nov 2007 02:00:58 -0500
-Subject: [PATCH 0/3 -mm] kexec based hibernation -v6
-From: "Huang, Ying" <ying.huang@intel.com>
-Date: Mon, 19 Nov 2007 15:02:38 +0800
-Message-Id: <1195455758.10291.23.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1IuB0D-0005yV-FZ
+	for kexec@lists.infradead.org; Mon, 19 Nov 2007 13:05:52 -0500
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 3/3 -mm] kexec based hibernation -v6: kexec
+	hibernate/resume
+Date: Mon, 19 Nov 2007 19:22:43 +0100
+References: <1195455769.10291.26.camel@caritas-dev.intel.com>
+In-Reply-To: <1195455769.10291.26.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200711191922.44008.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,253 +24,327 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
-Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
-
-khibernation - kexec based hibernation
-
-
-Kexec base hibernation has some potential advantages over u/swsusp and
-TuxOnIce (suspend2). Some of them are as follow:
-
-1. The hibernation image size can exceed half of memory size
-   easily. This is possible with TuxOnIce, but impossible with
-   u/swsusp.
-
-2. It is possible to eliminate freezer from kexec based hibernation
-   implementation, after corresponding changes to device drivers are
-   done.
-
-3. Based on kexec/kdump implementation, the kernel code needed is
-   less.
-
-
-Now, only the i386 architecture is supported. The patchset is based on
-Linux kernel 2.6.24-rc2-mm1, and has been tested on IBM T42 with ACPI
-on and off.
-
-
-The following user-space tools are needed to implement hibernation and
-resume.
-
-1. kexec-tools needs to be patched to support khibernation. The patches
-   and the precompiled kexec can be download from the following URL:
-       source: http://khibernation.sourceforge.net/download/release_v6/kexec-tools/kexec-tools-src_git_kh6.tar.bz2
-       patches: http://khibernation.sourceforge.net/download/release_v6/kexec-tools/kexec-tools-patches_git_kh6.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v6/kexec-tools/kexec_git_kh6
-
-2. makedumpfile with patches are used as memory image saving tool, it
-   can exclude free pages from hibernation image file. The patches and
-   the precompiled makedumpfile can be download from the following
-   URL:
-       source: http://khibernation.sourceforge.net/download/release_v6/makedumpfile/makedumpfile-src_cvs_kh6.tar.bz2
-       patches: http://khibernation.sourceforge.net/download/release_v6/makedumpfile/makedumpfile-patches_cvs_kh6.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v6/makedumpfile/makedumpfile_cvs_kh6
-
-3. A simplest memory image restoring tool named "krestore" is
-   implemented. It can be downloaded from the following URL:
-       source: http://khibernation.sourceforge.net/download/release_v6/krestore/krestore-src_cvs_kh6.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v6/krestore/krestore_cvs_kh6
-
-4. A simplest jumping back image (hibernation image is a kind of
-   jumping back image) parameter dump tool name "kjump_back_param" is
-   implemented. It can be download from the following URL:
-       source: http://khibernation.sourceforge.net/download/release_v6/kjump_back_param/kjump_back_param-src_cvs_kh6.tar.bz2
-       source: http://khibernation.sourceforge.net/download/release_v6/kjump_back_param/kjump_back_param_cvs_kh6
-
-
-Usage:
-
-1. Compile and install patched kernel with following options selected:
-
-CONFIG_X86_32=y
-CONFIG_RELOCATABLE=y # not needed strictly, but it is more convenient with it
-CONFIG_KEXEC=y
-CONFIG_CRASH_DUMP=y # only needed by kexeced kernel to save/restore memory image
-CONFIG_PM=y
-CONFIG_HIBERNATION=y
-
-2. Download, compile and install needed user-space tools. You can
-   download the git/cvs version and apply the patches, or download the
-   source tar ball directly. Required user-space tool include
-   kexec-tools, makedumpfile, krestore and kjump_back_param.
-
-3. Prepare 2 root partition used by kernel A and kernel B/C, referred
-   to as /dev/hda, /dev/hdb in following text. This is not strictly
-   necessary, I use this setup for testing during development.
-
-4. Boot kernel compiled for normal usage (kernel A).
-
-5. Load kernel compiled for hibernating/resuming usage (kernel B) with
-   kexec, the same kernel as that of 4 can be used if
-   CONFIG_RELOCATABLE=y and CONFIG_CRASH_DUMP=y are selected.
-
-   The --elf64-core-headers should be specified in command line of
-   kexec, because only the 64bit ELF is supported by krestore tool.
-
-   For example, the shell command line can be as follow:
-
-   kexec --load-jump-back /boot/bzImage --mem-min=0x100000 --mem-max=0xffffff
-       --elf64-core-headers --append="root=/dev/hdb single"
-
-6. Jump to the hibernating kernel (kernel B) with following shell
-   command line:
-
-   kexec -e
-
-7. In the hibernating kernel (kernel B), jump back to hibernated
-   kernel (kernel A) with following shell command line:
-
-   cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '=' -f 2 > kexec_jump_back_entry
-   kexec --load-jump-back-helper --jump-back-entry=`cat kexec_jump_back_entry`
-   kexec -e
-
-   In step 6 and 7, the hibernating kernel (kernel B) is booted
-   without disturbing the ACPI state.
-
-8. In the to be hibernated kernel (kernel A), start the real
-   hibernating process with following shell command line:
-
-   kexec --hibernate
-
-   The to be hibernated kernel will execute necessary ACPI methods and
-   jump to hibernating kernel (kernel B) again.
-
-9. In the hibernating kernel (kernel B), the memory image of
-   hibernated kernel (kernel A) can be saved as follow:
-
-   kjump_back_param -j `cat kexec_jump_back_entry` /proc/vmcore > jump_back_param
-   grep arg2 jump_back_param | cut -d '=' -f 2 > backup_pages_map_root_entry
-   vmcoreinfo_addr=`grep arg3 jump_back_param | cut -d '=' -f 2`
-   vmcoreinfo_size=`grep arg4 jump_back_param | cut -d '=' -f 2`
-   ./makedumpfile -D -E -d 16 -o $vmcoreinfo_size@$vmcoreinfo_addr -j `cat kexec_jump_back_entry` -M `cat backup_pages_map_root_entry` /proc/vmcore dump.elf
-
-10. Entering ACPI S4 state with following command line:
-
-    kexec -e -c 0x6b630002
-
-    The hibernating kernel (kernel B) will jump back to hibernated
-    kernel again with a special command (0x6b630002: hibernate shut
-    down), and the hibernated kernel (kernel A) will entering ACPI S4
-    state.
-
-11. Boot kernel (kernel C) compiled for hibernating/resuming usage on
-    the root file system /dev/hdb in memory range of kernel B.
-
-    For example, the following kernel command line parameters can be
-    used:
-
-    root=/dev/hdb single memmap=exactmap memmap=640K@0K memmap=15M@1M
-
-12. In resuming kernel (kernel C), the memory image of kernel A can be
-    restored as follow:
-
-    krestore dump.elf
-
-13. Resume the hibernated kernel (kernel A)
-
-    kexec --load-jump-back-helper --jump-back-entry=`cat kexec_jump_back_entry`
-    kexec --resume
-
-    The resuming kernel (kernel C) will jump back to hibernating
-    kernel (kernel A), and necessary ACPI methods will be executed.
-
-
-Known issues:
-
-- The suspend/resume callback of device drivers are used to put
-  devices into quiescent state. This will unnecessarily (possibly
-  harmfully) put devices into low power state. This is intended to be
-  solved by separating device quiesce/unquiesce callback from the
-  device suspend/resume callback.
-
-- The memory image of hibernated kernel must be saved in a separate
-  partition not used by hibernated kernel. This is planned to be
-  solved through make hibernating/resuming kernel work on initramfs
-  and write the memory image to a file in partition used by hibernated
-  kernel through block list instead of ordinary file system operating.
-
-- The setup of hibernate/resume is fairly complex. I will continue
-  working on simplifying.
-
-
-TODO:
-
-- Implement sys_kexec_store, that is, store the memory image of
-  kexeced kernel.
-
-- Write the memory image to a file through block list instead of
-  ordinary file system operating.
-
-- Simplify hibernate/resume setup.
-
-- Resume from hibernation with bootloader.
-
-
-ChangeLog:
-
-v6:
-
-- Add ACPI support.
-
-- Refactor kexec jump to be a general facility to call real mode code.
-
-v5:
-
-- A flag (KEXEC_JUMP_BACK) is added to indicate the loaded kernel
-  image is used for jumping back. The reboot command for jumping back
-  is removed. This interface is more stable (proposed by Eric
-  Biederman).
-
-- NX bit handling support for kexec is added.
-
-- Merge machine_kexec and machine_kexec_jump, remove NO_RET attribute
-  from machine_kexec.
-
-- Passing jump back entry to kexeced kernel via kernel command line
-  (parsed by user space tool via /proc/cmdline instead of
-  kernel). Original corresponding boot parameter and sysfs code is
-  removed.
-
-v4:
-
-- Two reboot command are merged back to one because the underlying
-  implementation is same.
-
-- Jumping without reserving memory is implemented. As a side effect,
-  two direction jumping is implemented.
-
-- A jump back protocol is defined and documented. The original kernel
-  and kexeced kernel are more independent from each other.
-
-- The CPU state save/restore code are merged into relocate_kernel.S.
-
-v3:
-
-- The reboot command LINUX_REBOOT_CMD_KJUMP is split into to two
-  reboot command to reflect the different function.
-
-- Document is added for added kernel parameters.
-
-- /sys/kernel/kexec_jump_buf_pfn is made writable, it is used for
-  memory image restoring.
-
-- Console restoring after jumping back is implemented.
-
-- Writing support is added for /dev/oldmem, to restore memory contents
-  of hibernated system.
-
-v2:
-
-- The kexec jump implementation is put into the kexec/kdump framework
-  instead of software suspend framework. The device and CPU state
-  save/restore code of software suspend is called when needed.
-
-- The same code path is used for both kexec a new kernel and jump back
-  to original kernel.
-
-Best Regards,
-Huang Ying
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+
+On Monday, 19 of November 2007, Huang, Ying wrote:
+> This patch implements kexec based hibernate/resume. This is based on
+> the facility provided by kexec_jump. The ACPI methods are called at
+> specified environment to conform the ACPI specification. Two new
+> reboot commands are added to trigger hibernate/resume.
+> 
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> 
+> ---
+>  include/linux/kexec.h   |    5 +
+>  include/linux/reboot.h  |    2 
+>  include/linux/suspend.h |    9 ++
+>  kernel/power/disk.c     |  155 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/sys.c            |   42 +++++++++++++
+>  5 files changed, 212 insertions(+), 1 deletion(-)
+> 
+> --- a/kernel/power/disk.c
+> +++ b/kernel/power/disk.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/console.h>
+>  #include <linux/cpu.h>
+>  #include <linux/freezer.h>
+> +#include <linux/kexec.h>
+>  
+>  #include "power.h"
+>  
+> @@ -438,6 +439,160 @@ int hibernate(void)
+>  	return error;
+>  }
+>  
+> +#ifdef CONFIG_KEXEC
+> +static void kexec_hibernate_power_down(void)
+> +{
+> +	switch (hibernation_mode) {
+> +	case HIBERNATION_TEST:
+> +	case HIBERNATION_TESTPROC:
+> +		break;
+> +	case HIBERNATION_REBOOT:
+> +		machine_restart(NULL);
+> +		break;
+> +	case HIBERNATION_PLATFORM:
+> +		if (!hibernation_ops)
+> +			break;
+> +		hibernation_ops->enter();
+
+hibernation_platform_enter() should be used here (as of the current mainline).
+
+> +		/* We should never get here */
+> +		while (1);
+> +		break;
+> +	case HIBERNATION_SHUTDOWN:
+> +		machine_power_off();
+> +		break;
+> +	}
+> +	machine_halt();
+> +	/*
+> +	 * Valid image is on the disk, if we continue we risk serious data
+> +	 * corruption after resume.
+> +	 */
+> +	printk(KERN_CRIT "Please power me down manually\n");
+> +	while (1);
+> +}
+
+Hm, what's the difference between the above function and power_down(),
+actually?
+
+> +
+> +int kexec_hibernate(struct kimage *image)
+> +{
+> +	int error;
+> +	int platform_mode = (hibernation_mode == HIBERNATION_PLATFORM);
+> +	unsigned long cmd_ret;
+> +
+> +	mutex_lock(&pm_mutex);
+> +
+> +	pm_prepare_console();
+> +	suspend_console();
+> +
+> +	error = pm_notifier_call_chain(PM_HIBERNATION_PREPARE);
+> +	if (error)
+> +		goto Resume_console;
+> +
+> +	error = platform_start(platform_mode);
+> +	if (error)
+> +		goto Resume_console;
+> +
+> +	error = device_suspend(PMSG_FREEZE);
+> +	if (error)
+> +		goto Resume_console;
+> +
+> +	error = platform_pre_snapshot(platform_mode);
+> +	if (error)
+> +		goto Resume_devices;
+> +
+> +	error = disable_nonboot_cpus();
+> +	if (error)
+> +		goto Resume_devices;
+
+I wonder if it's viable to merge the above with hibernate() and
+hibernation_snapshot() somehow, to avoid code duplication?
+
+> +	local_irq_disable();
+> +	/* At this point, device_suspend() has been called, but *not*
+> +	 * device_power_down(). We *must* device_power_down() now.
+> +	 * Otherwise, drivers for some devices (e.g. interrupt
+> +	 * controllers) become desynchronized with the actual state of
+> +	 * the hardware at resume time, and evil weirdness ensues.
+> +	 */
+> +	error = device_power_down(PMSG_FREEZE);
+> +	if (error)
+> +		goto Enable_irqs;
+> +
+> +	save_processor_state();
+> +	error = machine_kexec_jump(image, &cmd_ret,
+> +				   KJUMP_CMD_HIBERNATE_WRITE_IMAGE);
+
+It looks like machine_kexec_jump() simply replaces the call to
+swsusp_arch_suspend() in create_image().  Is it really necessary to duplicate
+all that code?
+
+> +	restore_processor_state();
+> +
+> +	if (cmd_ret == KJUMP_CMD_HIBERNATE_POWER_DOWN)
+> +		kexec_hibernate_power_down();
+> +
+> +	platform_leave(platform_mode);
+> +
+> +	/* NOTE:  device_power_up() is just a resume() for devices
+> +	 * that suspended with irqs off ... no overall powerup.
+> +	 */
+> +	device_power_up();
+> + Enable_irqs:
+> +	local_irq_enable();
+> +	enable_nonboot_cpus();
+> + Resume_devices:
+> +	platform_finish(platform_mode);
+> +	device_resume();
+> + Resume_console:
+> +	pm_notifier_call_chain(PM_POST_HIBERNATION);
+> +	resume_console();
+> +	pm_restore_console();
+> +	mutex_unlock(&pm_mutex);
+> +	return error;
+> +}
+> +
+> +int kexec_resume(struct kimage *image)
+> +{
+> +	int error;
+> +	int platform_mode = (hibernation_mode == HIBERNATION_PLATFORM);
+> +
+> +	mutex_lock(&pm_mutex);
+> +
+> +	pm_prepare_console();
+> +	suspend_console();
+> +
+> +	error = device_suspend(PMSG_PRETHAW);
+> +	if (error)
+> +		goto Resume_console;
+> +
+> +	error = platform_pre_restore(platform_mode);
+> +	if (error)
+> +		goto Resume_devices;
+> +
+> +	error = disable_nonboot_cpus();
+> +	if (error)
+> +		goto Resume_devices;
+> +	local_irq_disable();
+> +	/* At this point, device_suspend() has been called, but *not*
+> +	 * device_power_down(). We *must* device_power_down() now.
+> +	 * Otherwise, drivers for some devices (e.g. interrupt controllers)
+> +	 * become desynchronized with the actual state of the hardware
+> +	 * at resume time, and evil weirdness ensues.
+> +	 */
+> +	error = device_power_down(PMSG_PRETHAW);
+> +	if (error)
+> +		goto Enable_irqs;
+> +
+> +	save_processor_state();
+> +	error = machine_kexec_jump(image, NULL, KJUMP_CMD_HIBERNATE_RESUME);
+
+Same here.  Much of the code in this function duplicates the existing code.  Is
+this really necessary?
+
+> +	restore_processor_state();
+> +
+> +	platform_leave(platform_mode);
+> +
+> +	/* NOTE:  device_power_up() is just a resume() for devices
+> +	 * that suspended with irqs off ... no overall powerup.
+> +	 */
+> +	device_power_up();
+> + Enable_irqs:
+> +	local_irq_enable();
+> +	enable_nonboot_cpus();
+> + Resume_devices:
+> +	platform_restore_cleanup(platform_mode);
+> +	device_resume();
+> + Resume_console:
+> +	resume_console();
+> +	pm_restore_console();
+> +	mutex_unlock(&pm_mutex);
+> +	return error;
+> +}
+> +#endif
+>  
+>  /**
+>   *	software_resume - Resume from a saved image.
+
+Apart from the above, there's some new debug code to be added to disk.c
+in 2.6.25.  It's in the ACPI test tree right now and you can get it as
+individual patches from:
+http://www.sisk.pl/kernel/hibernation_and_suspend/2.6.24-rc2/patches/
+(patches 10-12).
+
+Please base your changes on top of that.
+
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -207,6 +207,15 @@ static inline void hibernation_set_ops(s
+>  static inline int hibernate(void) { return -ENOSYS; }
+>  #endif /* CONFIG_HIBERNATION */
+>  
+> +struct kimage;
+> +#if defined(CONFIG_HIBERNATION) && defined(CONFIG_KEXEC)
+> +extern int kexec_hibernate(struct kimage *image);
+> +extern int kexec_resume(struct kimage *image);
+> +#else
+> +static inline int kexec_hibernate(struct kimage *image) { return -ENOSYS; }
+> +static inline int kexec_resume(struct kimage *image) { return -ENOSYS; }
+> +#endif
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  void save_processor_state(void);
+>  void restore_processor_state(void);
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -321,6 +321,34 @@ static int kernel_kexec(unsigned long cm
+>  	return ret;
+>  }
+>  
+> +static int kernel_kexec_hibernate(void)
+> +{
+> +	int ret = -ENOSYS;
+> +#if defined(CONFIG_KEXEC) && defined(CONFIG_HIBERNATION)
+> +	struct kimage *image;
+> +	image = xchg(&kexec_image, NULL);
+> +	if (!image)
+> +		return -EINVAL;
+> +	ret = kexec_hibernate(image);
+> +	kimage_free(image);
+> +#endif
+> +	return ret;
+> +}
+> +
+> +static int kernel_kexec_resume(void)
+> +{
+> +	int ret = -ENOSYS;
+> +#if defined(CONFIG_KEXEC) && defined(CONFIG_HIBERNATION)
+> +	struct kimage *image;
+> +	image = xchg(&kexec_image, NULL);
+> +	if (!image)
+> +		return -EINVAL;
+> +	ret = kexec_resume(image);
+> +	kimage_free(image);
+> +#endif
+> +	return ret;
+> +}
+> +
+>  static void kernel_shutdown_prepare(enum system_states state)
+>  {
+>  	blocking_notifier_call_chain(&reboot_notifier_list,
+> @@ -442,6 +470,20 @@ asmlinkage long sys_reboot(int magic1, i
+>  		}
+>  #endif
+>  
+> +	case LINUX_REBOOT_CMD_KEXEC_HIBERNATE:
+> +		{
+> +			int ret = kernel_kexec_hibernate();
+> +			unlock_kernel();
+> +			return ret;
+> +		}
+> +
+> +	case LINUX_REBOOT_CMD_KEXEC_RESUME:
+> +		{
+> +			int ret = kernel_kexec_resume();
+> +			unlock_kernel();
+> +			return ret;
+> +		}
+> +
+>  	default:
+>  		unlock_kernel();
+>  		return -EINVAL;
+> --- a/include/linux/reboot.h
+> +++ b/include/linux/reboot.h
+> @@ -33,6 +33,8 @@
+>  #define	LINUX_REBOOT_CMD_RESTART2	0xA1B2C3D4
+>  #define	LINUX_REBOOT_CMD_SW_SUSPEND	0xD000FCE2
+>  #define	LINUX_REBOOT_CMD_KEXEC		0x45584543
+> +#define LINUX_REBOOT_CMD_KEXEC_HIBERNATE 0xE4390DF3
+> +#define LINUX_REBOOT_CMD_KEXEC_RESUME	0xF5A41C2E
+>  
+>  
+>  #ifdef __KERNEL__
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -129,7 +129,10 @@ extern int machine_kexec_jump(struct kim
+>  			      unsigned long cmd);
+>  extern int kexec_jump(struct kimage *image, unsigned long *cmd_ret,
+>  		      unsigned long cmd);
+> -#define KJUMP_CMD_NONE 0
+> +#define KJUMP_CMD_NONE			0x0
+> +#define KJUMP_CMD_HIBERNATE_WRITE_IMAGE	0x6b630001
+> +#define KJUMP_CMD_HIBERNATE_POWER_DOWN	0x6b630002
+> +#define KJUMP_CMD_HIBERNATE_RESUME	0x6b630003
+>  #ifdef CONFIG_COMPAT
+>  extern asmlinkage long compat_sys_kexec_load(unsigned long entry,
+>  				unsigned long nr_segments,
+> 
 
 _______________________________________________
 kexec mailing list
