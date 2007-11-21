@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Iufeh-0002yY-FM
-	for kexec@lists.infradead.org; Tue, 20 Nov 2007 21:49:42 -0500
-Message-Id: <47439CDB.4080004@mxs.nes.nec.co.jp>
-Date: Wed, 21 Nov 2007 11:50:03 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH 4/5] Fix the configuration dependencies
-References: <473CFE14.3010400@mxs.nes.nec.co.jp>	<473D0170.1060304@mxs.nes.nec.co.jp>
-	<20071116162511.GB2658@verge.net.au>
-In-Reply-To: <20071116162511.GB2658@verge.net.au>
+	id 1IukWw-0003rG-K7
+	for kexec@lists.infradead.org; Wed, 21 Nov 2007 03:02:01 -0500
+Subject: Re: [PATCH 3/3 -mm] kexec based hibernation -v6: kexec
+	hibernate/resume
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <200711210100.32631.rjw@sisk.pl>
+References: <1195455769.10291.26.camel@caritas-dev.intel.com>
+	<200711200324.31180.rjw@sisk.pl>
+	<1195527033.11955.50.camel@caritas-dev.intel.com>
+	<200711210100.32631.rjw@sisk.pl>
+Date: Wed, 21 Nov 2007 16:05:06 +0800
+Message-Id: <1195632306.29280.7.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,72 +22,126 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0170600201=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
---===============0170600201==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-
-Hi Simon,
-
-Thank you for reviewing and your "Acked-by" signs.
-
-Simon Horman wrote:
-> On Fri, Nov 16, 2007 at 11:33:20AM +0900, Ken'ichi Ohmichi wrote:
->> This patch fixes the configuration dependencies in the vmcoreinfo data.
->>
->> i386's "node_data" is defined in arch/x86/mm/discontig_32.c,
->> and x86_64's one is defined in arch/x86/mm/numa_64.c.
->> They depend on CONFIG_NUMA:
->>   arch/x86/mm/Makefile_32:7
->>     obj-$(CONFIG_NUMA) += discontig_32.o
->>   arch/x86/mm/Makefile_64:7
->>     obj-$(CONFIG_NUMA) += numa_64.o
->>
->> ia64's "pgdat_list" is defined in arch/ia64/mm/discontig.c,
->> and it depends on CONFIG_DISCONTIGMEM and CONFIG_SPARSEMEM:
->>   arch/ia64/mm/Makefile:9-10
->>     obj-$(CONFIG_DISCONTIGMEM) += discontig.o
->>     obj-$(CONFIG_SPARSEMEM)    += discontig.o
->>
->> ia64's "node_memblk" is defined in arch/ia64/mm/numa.c,
->> and it depends on CONFIG_NUMA:
->>   arch/ia64/mm/Makefile:8
->>     obj-$(CONFIG_NUMA)         += numa.o
->>
->> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+On Wed, 2007-11-21 at 01:00 +0100, Rafael J. Wysocki wrote:
+> On Tuesday, 20 of November 2007, Huang, Ying wrote:
+> > On Tue, 2007-11-20 at 03:24 +0100, Rafael J. Wysocki wrote:
+> > > On Tuesday, 20 of November 2007, Huang, Ying wrote:
+> > > > On Mon, 2007-11-19 at 19:22 +0100, Rafael J. Wysocki wrote:
+> > > > > > +#ifdef CONFIG_KEXEC
+> > > > > > +static void kexec_hibernate_power_down(void)
+> > > > > > +{
+> > > > > > +	switch (hibernation_mode) {
+> > > > > > +	case HIBERNATION_TEST:
+> > > > > > +	case HIBERNATION_TESTPROC:
+> > > > > > +		break;
+> > > > > > +	case HIBERNATION_REBOOT:
+> > > > > > +		machine_restart(NULL);
+> > > > > > +		break;
+> > > > > > +	case HIBERNATION_PLATFORM:
+> > > > > > +		if (!hibernation_ops)
+> > > > > > +			break;
+> > > > > > +		hibernation_ops->enter();
+> > > > > 
+> > > > > hibernation_platform_enter() should be used here (as of the current mainline).
+> > > > 
+> > > > The power_down will be called with interrupt disabled, device suspended,
+> > > > non-boot CPU disabled. But the latest hibernate_platform_enter calls the
+> > > > device_suspend, disable_nonboot_cpus etc function. So, I use
+> > > > hibernation_ops->enter() directly instead of
+> > > > hibernation_platform_enter().
+> > > 
+> > > Hm, you need to call device_power_down(PMSG_SUSPEND) before
+> > > hibernation_ops->enter().
+> > > 
+> > > Also, all of the ACPI global calls need to be carried out before that and the
+> > > devices should be suspended rather than shut down in that case.
+> > > 
+> > > That's why hibernation_platform_enter() has been introduced, BTW.
+> > 
+> > Situation is a little different between u/swsusp and khiberantion.
+> > 
+> > u/swsusp:
+> > 
+> > platform_start();
+> > suspend console();
+> > device_suspend(PMSG_FREEZE);
+> > platform_pre_snapshot();
+> > disable_nonboot_cpus();
+> > local_irq_disable();
+> > device_power_down(PMSG_FREEZE);
+> > /* create snapshot */
+> > device_power_up();
+> > local_irq_enable();
+> > enable_nonboot_cpus();
+> > platform_finish();
+> > device_resume();
+> > resume_console();
+> > /* write the image out */
+> > hibernation_ops->start();
+> > suspend_console();
+> > device_suspend(PMSG_SUSPEND);
+> > hibernation_ops->prepare();
+> > disable_nonboot_cpus();
+> > local_irq_disable();
+> > device_power_down(PMSG_SUSPEND);
+> > hibernation_ops->enter();
+> > 
+> > khibernation:
+> > 
+> > suspend_console();
+> > platform_start();
+> > device_suspend(PMSG_FREEZE);
+> > platform_pre_snapshot();
+> > disable_nonboot_cpus();
+> > local_irq_disable();
+> > device_power_down(PMSG_FREEZE);
+> > /* jump to kexeced (hibernating) kernel */
+> > /* in kexeced kernel */
+> > device_power_up();
+> > local_irq_eanble();
+> > enable_nonboot_cpus();
 > 
-> This appears correct to me, checking through the symbols and the
-> location of their deffinitions, though I have not had a chance to run
-> many build checks.
+> You should call platform_finish() here, or device_resume() will not work
+> appropriately on some systems.
 > 
-> I also note that CONFIG_ARCH_DISCONTIGMEM_ENABLE does not even
-> appear to exist on i386, so it looks that without this change
-> the code in question whould never be enabled.
+> However, after platform_finish() has been executed, the ACPI firmware will
+> assume that the hibernation has been canceled, so you need to tell it that
+> you'd like to go into the low power state after all.
+> 
+> > device_resume();
+> > resume_console();
+> > /* write the image */
+> 
+> For this reason, you have to call hibernation_ops->start() once again
+> and the other functions like in the swsusp case, in that order.
+> 
+> > suspend_console();
+> > device_suspend(PMSG_FREEZE);
+> > disable_nonboot_cpus();
+> > local_irq_disable();
+> > device_power_down(PMSG_FREEZE);
+> > /* jump to original (hibernated) kernel */
+> 
+> This looks too fragile to my eyes.
+> 
+> Why don't you call hibernation_ops->enter() directly from the "kexeced" kernel?
 
-If you enable "Numa Memory Allocation and Scheduler Support" in i386's
-menuconfig, CONFIG_ARCH_DISCONTIGMEM_ENABLE is enabled.
+I don't know whether there are ACPI global state inside Linux kernel. So
+I restrict all ACPI method calling in original kernel. If the ACPI
+global state in Linux kernel is not a issue, I can call
+hibernation_ops->enter() directly in the "kexeced" kernel.
 
-
-Thanks
-Ken'ichi Ohmichi 
-
-
-
---===============0170600201==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0170600201==--
