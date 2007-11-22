@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Iuvbt-0003ub-Vw
-	for kexec@lists.infradead.org; Wed, 21 Nov 2007 14:51:53 -0500
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH 3/3 -mm] kexec based hibernation -v6: kexec
-	hibernate/resume
-Date: Wed, 21 Nov 2007 21:09:31 +0100
-References: <1195455769.10291.26.camel@caritas-dev.intel.com>
-	<200711210100.32631.rjw@sisk.pl>
-	<1195632306.29280.7.camel@caritas-dev.intel.com>
-In-Reply-To: <1195632306.29280.7.camel@caritas-dev.intel.com>
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1IvIJ3-000792-Oz
+	for kexec@lists.infradead.org; Thu, 22 Nov 2007 15:05:50 -0500
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: Timer interrupt lost on some x86_64 systems
+References: <20071107140006.GC14371@hmsendeavour.rdu.redhat.com>
+	<20071112044903.GA6433@in.ibm.com>
+	<20071112151721.GB11751@hmsendeavour.rdu.redhat.com>
+	<20071112154119.GC11751@hmsendeavour.rdu.redhat.com>
+	<20071113073128.GB24067@in.ibm.com>
+	<20071113143330.GA16830@hmsendeavour.rdu.redhat.com>
+	<20071114063939.GA4349@in.ibm.com>
+	<20071114115132.GA21411@hmsendeavour.rdu.redhat.com>
+Date: Thu, 22 Nov 2007 13:04:38 -0700
+In-Reply-To: <20071114115132.GA21411@hmsendeavour.rdu.redhat.com> (Neil
+	Horman's message of "Wed, 14 Nov 2007 06:51:32 -0500")
+Message-ID: <m163zuoxm1.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200711212109.32925.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,130 +30,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: Neil Horman <nhorman@redhat.com>
+Cc: Vivek Goyal <vgoyal@in.ibm.com>, kexec@lists.infradead.org
 
-On Wednesday, 21 of November 2007, Huang, Ying wrote:
-> On Wed, 2007-11-21 at 01:00 +0100, Rafael J. Wysocki wrote:
-> > On Tuesday, 20 of November 2007, Huang, Ying wrote:
-> > > On Tue, 2007-11-20 at 03:24 +0100, Rafael J. Wysocki wrote:
-> > > > On Tuesday, 20 of November 2007, Huang, Ying wrote:
-> > > > > On Mon, 2007-11-19 at 19:22 +0100, Rafael J. Wysocki wrote:
-> > > > > > > +#ifdef CONFIG_KEXEC
-> > > > > > > +static void kexec_hibernate_power_down(void)
-> > > > > > > +{
-> > > > > > > +	switch (hibernation_mode) {
-> > > > > > > +	case HIBERNATION_TEST:
-> > > > > > > +	case HIBERNATION_TESTPROC:
-> > > > > > > +		break;
-> > > > > > > +	case HIBERNATION_REBOOT:
-> > > > > > > +		machine_restart(NULL);
-> > > > > > > +		break;
-> > > > > > > +	case HIBERNATION_PLATFORM:
-> > > > > > > +		if (!hibernation_ops)
-> > > > > > > +			break;
-> > > > > > > +		hibernation_ops->enter();
-> > > > > > 
-> > > > > > hibernation_platform_enter() should be used here (as of the current mainline).
-> > > > > 
-> > > > > The power_down will be called with interrupt disabled, device suspended,
-> > > > > non-boot CPU disabled. But the latest hibernate_platform_enter calls the
-> > > > > device_suspend, disable_nonboot_cpus etc function. So, I use
-> > > > > hibernation_ops->enter() directly instead of
-> > > > > hibernation_platform_enter().
-> > > > 
-> > > > Hm, you need to call device_power_down(PMSG_SUSPEND) before
-> > > > hibernation_ops->enter().
-> > > > 
-> > > > Also, all of the ACPI global calls need to be carried out before that and the
-> > > > devices should be suspended rather than shut down in that case.
-> > > > 
-> > > > That's why hibernation_platform_enter() has been introduced, BTW.
-> > > 
-> > > Situation is a little different between u/swsusp and khiberantion.
-> > > 
-> > > u/swsusp:
-> > > 
-> > > platform_start();
-> > > suspend console();
-> > > device_suspend(PMSG_FREEZE);
-> > > platform_pre_snapshot();
-> > > disable_nonboot_cpus();
-> > > local_irq_disable();
-> > > device_power_down(PMSG_FREEZE);
-> > > /* create snapshot */
-> > > device_power_up();
-> > > local_irq_enable();
-> > > enable_nonboot_cpus();
-> > > platform_finish();
-> > > device_resume();
-> > > resume_console();
-> > > /* write the image out */
-> > > hibernation_ops->start();
-> > > suspend_console();
-> > > device_suspend(PMSG_SUSPEND);
-> > > hibernation_ops->prepare();
-> > > disable_nonboot_cpus();
-> > > local_irq_disable();
-> > > device_power_down(PMSG_SUSPEND);
-> > > hibernation_ops->enter();
-> > > 
-> > > khibernation:
-> > > 
-> > > suspend_console();
-> > > platform_start();
-> > > device_suspend(PMSG_FREEZE);
-> > > platform_pre_snapshot();
-> > > disable_nonboot_cpus();
-> > > local_irq_disable();
-> > > device_power_down(PMSG_FREEZE);
-> > > /* jump to kexeced (hibernating) kernel */
-> > > /* in kexeced kernel */
-> > > device_power_up();
-> > > local_irq_eanble();
-> > > enable_nonboot_cpus();
-> > 
-> > You should call platform_finish() here, or device_resume() will not work
-> > appropriately on some systems.
-> > 
-> > However, after platform_finish() has been executed, the ACPI firmware will
-> > assume that the hibernation has been canceled, so you need to tell it that
-> > you'd like to go into the low power state after all.
-> > 
-> > > device_resume();
-> > > resume_console();
-> > > /* write the image */
-> > 
-> > For this reason, you have to call hibernation_ops->start() once again
-> > and the other functions like in the swsusp case, in that order.
-> > 
-> > > suspend_console();
-> > > device_suspend(PMSG_FREEZE);
-> > > disable_nonboot_cpus();
-> > > local_irq_disable();
-> > > device_power_down(PMSG_FREEZE);
-> > > /* jump to original (hibernated) kernel */
-> > 
-> > This looks too fragile to my eyes.
-> > 
-> > Why don't you call hibernation_ops->enter() directly from the "kexeced" kernel?
-> 
-> I don't know whether there are ACPI global state inside Linux kernel. So
-> I restrict all ACPI method calling in original kernel. If the ACPI
-> global state in Linux kernel is not a issue, I can call
-> hibernation_ops->enter() directly in the "kexeced" kernel.
+Neil Horman <nhorman@redhat.com> writes:
 
-Well, I can't say to what extent the Linux ACPI tracks the global state.
-Still, even if it does, you don't need to jump back to the hibernated kernel
-just to power off the system.
+> On Wed, Nov 14, 2007 at 12:09:39PM +0530, Vivek Goyal wrote:
+>> On Tue, Nov 13, 2007 at 09:33:30AM -0500, Neil Horman wrote:
+>> 
+>> [..]
+>> > > In the past I have found issues with interrupt routing on IOPAPIC and
+>> > > interrupt lockup on LAPIC. But these issues are already solved. I would
+>> > > also think of priting LAPIC and IOAPIC entries to see how timer interrupt
+>> > > routing changes from first kernel to second.
+>> > > 
+>> > I recently read the ioapic section in the opteron processor guide and noted
+> the
+>> > ioapic routing field in the config registers, so I'll be looking at that.
+> We
+>> > also not that in the failing case on the systems in question the boot cpu is
+>> > _not_ the cpu that boots the kdump kernel, and its APIC ID is 1 not 0, IIRC
+>> > 
+>> 
+>> Failing on non-boot cpu should not be an issue. I had fixed an issue in the
+>> past where non-boot cpu was not receiving the timer interrupts because of
+>> IOAPIC settings where timer interrupts were always routed to boot cpu (cpu0).
+>> 
+>> Now it has been modified and while going down we determine which cpu we
+>> are crashing on and setup IOAPIC entry accordingly. See disable_IO_APIC().
+>> 
+>
+> I see the call to it in machine_crash_shutdown, but for whatever reason, it
+> doesn't seem to be having the desired effect in this case....hmmmmm...
 
-Actually, if you really want to include ACPI into the picture, which I'm not
-sure is the best idea at this point, you should use all of the appropriate
-ACPI hooks in the kexeced kernel and you shouldn't get back to the hibernated
-kernel after you've saved the image.
+I don't know if anything has happened.  However a lot of this looks like
+going back to the current todo list item of getting the kernel to come up
+initially in ioapic mode.
 
-Regards,
-Rafael
+That simultaneously removes the need for machine_kexec to reprogram interrupts
+in virtual wire mode and it should ultimately simplify and make more robust
+irq initialization.  At the very least reducing the amount of magic in
+early irq processing.
+
+Eric
 
 _______________________________________________
 kexec mailing list
