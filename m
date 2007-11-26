@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from smtp2.linux-foundation.org ([207.189.120.14])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1IvIJ3-000792-Oz
-	for kexec@lists.infradead.org; Thu, 22 Nov 2007 15:05:50 -0500
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: Timer interrupt lost on some x86_64 systems
-References: <20071107140006.GC14371@hmsendeavour.rdu.redhat.com>
-	<20071112044903.GA6433@in.ibm.com>
-	<20071112151721.GB11751@hmsendeavour.rdu.redhat.com>
-	<20071112154119.GC11751@hmsendeavour.rdu.redhat.com>
-	<20071113073128.GB24067@in.ibm.com>
-	<20071113143330.GA16830@hmsendeavour.rdu.redhat.com>
-	<20071114063939.GA4349@in.ibm.com>
-	<20071114115132.GA21411@hmsendeavour.rdu.redhat.com>
-Date: Thu, 22 Nov 2007 13:04:38 -0700
-In-Reply-To: <20071114115132.GA21411@hmsendeavour.rdu.redhat.com> (Neil
-	Horman's message of "Wed, 14 Nov 2007 06:51:32 -0500")
-Message-ID: <m163zuoxm1.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	id 1IwYri-0001xO-PG
+	for kexec@lists.infradead.org; Mon, 26 Nov 2007 02:58:59 -0500
+Date: Sun, 25 Nov 2007 23:58:43 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/5] Fix the configuration dependencies
+Message-Id: <20071125235843.69440d4a.akpm@linux-foundation.org>
+In-Reply-To: <473D0170.1060304@mxs.nes.nec.co.jp>
+References: <473CFE14.3010400@mxs.nes.nec.co.jp>
+	<473D0170.1060304@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,49 +23,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Vivek Goyal <vgoyal@in.ibm.com>, kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
-Neil Horman <nhorman@redhat.com> writes:
+On Fri, 16 Nov 2007 11:33:20 +0900 "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
 
-> On Wed, Nov 14, 2007 at 12:09:39PM +0530, Vivek Goyal wrote:
->> On Tue, Nov 13, 2007 at 09:33:30AM -0500, Neil Horman wrote:
->> 
->> [..]
->> > > In the past I have found issues with interrupt routing on IOPAPIC and
->> > > interrupt lockup on LAPIC. But these issues are already solved. I would
->> > > also think of priting LAPIC and IOAPIC entries to see how timer interrupt
->> > > routing changes from first kernel to second.
->> > > 
->> > I recently read the ioapic section in the opteron processor guide and noted
-> the
->> > ioapic routing field in the config registers, so I'll be looking at that.
-> We
->> > also not that in the failing case on the systems in question the boot cpu is
->> > _not_ the cpu that boots the kdump kernel, and its APIC ID is 1 not 0, IIRC
->> > 
->> 
->> Failing on non-boot cpu should not be an issue. I had fixed an issue in the
->> past where non-boot cpu was not receiving the timer interrupts because of
->> IOAPIC settings where timer interrupts were always routed to boot cpu (cpu0).
->> 
->> Now it has been modified and while going down we determine which cpu we
->> are crashing on and setup IOAPIC entry accordingly. See disable_IO_APIC().
->> 
->
-> I see the call to it in machine_crash_shutdown, but for whatever reason, it
-> doesn't seem to be having the desired effect in this case....hmmmmm...
+> 
+> This patch fixes the configuration dependencies in the vmcoreinfo data.
+> 
+> i386's "node_data" is defined in arch/x86/mm/discontig_32.c,
+> and x86_64's one is defined in arch/x86/mm/numa_64.c.
+> They depend on CONFIG_NUMA:
+>   arch/x86/mm/Makefile_32:7
+>     obj-$(CONFIG_NUMA) += discontig_32.o
+>   arch/x86/mm/Makefile_64:7
+>     obj-$(CONFIG_NUMA) += numa_64.o
+> 
+> ia64's "pgdat_list" is defined in arch/ia64/mm/discontig.c,
+> and it depends on CONFIG_DISCONTIGMEM and CONFIG_SPARSEMEM:
+>   arch/ia64/mm/Makefile:9-10
+>     obj-$(CONFIG_DISCONTIGMEM) += discontig.o
+>     obj-$(CONFIG_SPARSEMEM)    += discontig.o
+> 
+> ia64's "node_memblk" is defined in arch/ia64/mm/numa.c,
+> and it depends on CONFIG_NUMA:
+>   arch/ia64/mm/Makefile:8
+>     obj-$(CONFIG_NUMA)         += numa.o
+> 
+> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+> ---
+> diff -rpuN a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+> --- a/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:39:06.000000000 +0900
+> +++ b/arch/ia64/kernel/machine_kexec.c	2007-11-14 15:41:41.000000000 +0900
+> @@ -129,10 +129,11 @@ void machine_kexec(struct kimage *image)
+>  
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> -#if defined(CONFIG_ARCH_DISCONTIGMEM_ENABLE) && defined(CONFIG_NUMA)
+> +#if defined(CONFIG_DISCONTIGMEM) || defined(CONFIG_SPARSEMEM)
+>  	VMCOREINFO_SYMBOL(pgdat_list);
+>  	VMCOREINFO_LENGTH(pgdat_list, MAX_NUMNODES);
+> -
+> +#endif
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_memblk);
+>  	VMCOREINFO_LENGTH(node_memblk, NR_NODE_MEMBLKS);
+>  	VMCOREINFO_STRUCT_SIZE(node_memblk_s);
+> diff -rpuN a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
+> --- a/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:19.000000000 +0900
+> +++ b/arch/x86/kernel/machine_kexec_32.c	2007-11-14 15:39:33.000000000 +0900
+> @@ -151,7 +151,7 @@ NORET_TYPE void machine_kexec(struct kim
+>  
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+>  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+>  #endif
+> diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> --- a/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:19.000000000 +0900
+> +++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:33.000000000 +0900
+> @@ -235,7 +235,7 @@ void arch_crash_save_vmcoreinfo(void)
+>  {
+>  	VMCOREINFO_SYMBOL(init_level4_pgt);
+>  
+> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+> +#ifdef CONFIG_NUMA
+>  	VMCOREINFO_SYMBOL(node_data);
+>  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+>  #endif
+> _
+> 
 
-I don't know if anything has happened.  However a lot of this looks like
-going back to the current todo list item of getting the kernel to come up
-initially in ioapic mode.
+x86_64-make-sparsemem-vmemmap-the-default-memory-model-v2.patch removes the
+`VMCOREINFO_SYMBOL(node_data);' from arch/x86/kernel/machine_kexec_64.c
+altogether, so I dropped that part of your patch.
 
-That simultaneously removes the need for machine_kexec to reprogram interrupts
-in virtual wire mode and it should ultimately simplify and make more robust
-irq initialization.  At the very least reducing the amount of magic in
-early irq processing.
-
-Eric
 
 _______________________________________________
 kexec mailing list
