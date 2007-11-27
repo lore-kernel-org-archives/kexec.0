@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1IwsOw-0006wk-FZ
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 04:50:26 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-References: <20071127014740.GA28622@hmsreliant.think-freely.org>
-Date: Mon, 26 Nov 2007 21:12:25 -0700
-In-Reply-To: <20071127014740.GA28622@hmsreliant.think-freely.org> (Neil
-	Horman's message of "Mon, 26 Nov 2007 20:47:40 -0500")
-Message-ID: <m1d4twmimu.fsf@ebiederm.dsl.xmission.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Iwwt0-0000sF-SF
+	for kexec@lists.infradead.org; Tue, 27 Nov 2007 09:37:53 +0000
+Message-Id: <474BE583.2080000@mxs.nes.nec.co.jp>
+Date: Tue, 27 Nov 2007 18:38:11 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
+Subject: Re: [PATCH 4/5] Fix the configuration dependencies
+References: <473CFE14.3010400@mxs.nes.nec.co.jp>	<473D0170.1060304@mxs.nes.nec.co.jp>
+	<20071125235843.69440d4a.akpm@linux-foundation.org>
+In-Reply-To: <20071125235843.69440d4a.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,48 +19,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1735099709=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: hbabu@us.ibm.com, vgoyal@in.ibm.com, kexec@lists.infradead.org, ak@suse.de, linux-kernel@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Christoph Lameter <clameter@sgi.com>
 
-Neil Horman <nhorman@tuxdriver.com> writes:
+--===============1735099709==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-> Hey all-
-> 	I've been working on an issue lately involving multi socket x86_64
-> systems connected via hypertransport bridges.  It appears that some systems,
-> disable the hypertransport connections during a kdump operation when all but the
-> crashing processor gets halted in machine_crash_shutdown.  This becomes a
-> problem when the ioapic attempts to route interrupts to the only remaining
-> processor.  Even though the active processor is targeted for interrupt
-> reception, the fact that the hypertransport connections are inactive result in
-> interrupts not getting delivered.  The effective result is that timer interrupts
-> are not delivered to the running cpu, and the system hangs on reboot into the
-> kdump kernel during calibrate_delay.  I've found that I've been able to avoid
-> this hang, by forcing a transition to the bios defined boot cpu during the
-> crashing kernel shutdown.  This patch accomplished that.  Tested by myself and
-> the origional reporter with successful results.
 
-If you can get to calibrate_delay hypertransport is still routing traffic.
-Your diagnosis of the problem is wrong.  Most likely it is just an ioapic
-programming error in restoring the system to PIC mode.
+Hi Andrew,
 
-I agree that there is a problem.
+Andrew Morton wrote:
+>> diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>> --- a/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:19.000000000 +0900
+>> +++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-14 15:39:33.000000000 +0900
+>> @@ -235,7 +235,7 @@ void arch_crash_save_vmcoreinfo(void)
+>>  {
+>>  	VMCOREINFO_SYMBOL(init_level4_pgt);
+>>  
+>> -#ifdef CONFIG_ARCH_DISCONTIGMEM_ENABLE
+>> +#ifdef CONFIG_NUMA
+>>  	VMCOREINFO_SYMBOL(node_data);
+>>  	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+>>  #endif
+>> _
+>>
+> 
+> x86_64-make-sparsemem-vmemmap-the-default-memory-model-v2.patch removes the
+> `VMCOREINFO_SYMBOL(node_data);' from arch/x86/kernel/machine_kexec_64.c
+> altogether, so I dropped that part of your patch.
 
-The reliable fix is to totally skip the PIC interrupt mode and go directly
-to apic mode.
+The above part is necessary for a NUMA kernel.
+Could you please merge the attached patch ?
 
-To make the code kexec on panic code path reliable we need to remove code
-not add it.
+I guess that Christoph Lameter deleted the above part (which is added
+by the attached patch again) with the other part of discontigmem lines,
+because it depended on CONFIG_ARCH_DISCONTIGMEM_ENABLE.
+But the dependency was wrong, and it should depend on CONFIG_NUMA.
+The part is necessary for a NUMA kernel even if sparsemem.
 
-Frankly I think switching cpus is one of the least reliable things that
-we can do in general.
 
-Eric
+Thanks
+Ken'ichi Ohmichi
+
+---
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+---
+diff -rpuN a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+--- a/arch/x86/kernel/machine_kexec_64.c	2007-11-27 13:36:32.000000000 +0900
++++ b/arch/x86/kernel/machine_kexec_64.c	2007-11-27 13:37:37.000000000 +0900
+@@ -234,5 +234,10 @@ NORET_TYPE void machine_kexec(struct kim
+ void arch_crash_save_vmcoreinfo(void)
+ {
+ 	VMCOREINFO_SYMBOL(init_level4_pgt);
++
++#ifdef CONFIG_NUMA
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#endif
+ }
+ 
+_
+
+
+--===============1735099709==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1735099709==--
