@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ix1wN-0004WF-SS
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 15:01:42 +0000
+	id 1Ix2Py-00067J-TE
+	for kexec@lists.infradead.org; Tue, 27 Nov 2007 15:32:11 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
 	cpu
 References: <20071127014740.GA28622@hmsreliant.think-freely.org>
-	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>
-	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>
 	<200711271445.56792.ak@suse.de>
-Date: Tue, 27 Nov 2007 07:56:44 -0700
-In-Reply-To: <200711271445.56792.ak@suse.de> (Andi Kleen's message of "Tue, 27
-	Nov 2007 14:45:56 +0100")
-Message-ID: <m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
+	<20071127142826.GB31376@hmsreliant.think-freely.org>
+	<200711271543.11809.ak@suse.de>
+	<20071127144856.GC31376@hmsreliant.think-freely.org>
+Date: Tue, 27 Nov 2007 08:30:47 -0700
+In-Reply-To: <20071127144856.GC31376@hmsreliant.think-freely.org> (Neil
+	Horman's message of "Tue, 27 Nov 2007 09:48:56 -0500")
+Message-ID: <m14pf7k8ns.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -27,69 +28,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <ak@suse.de>
-Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
 
-Andi Kleen <ak@suse.de> writes:
+Neil Horman <nhorman@tuxdriver.com> writes:
 
-> his is any less reliable that what we have currently.
->> 
->> It doesn't make things more reliable, and it adds code to a code path
->> that already has to much code to be solid reliable (thus your
->> problem). 
->> 
->> Putting the system back in PIC legacy mode on the kexec on panic path
->> was supposed to be a short term hack until we could remove the need
->> by always deliver interrupts in apic mode.
->> 
->> If you can't root cause your problem and figure out how the apics
->> are misconfigured for legacy mode
->
-> Probably legacy mode always routes to CPU #0. Makes sense and is
-> not really a misconfiguration of legacy mode.
+> So, it sounds to me then, like unless I'm willing to really re-write the APIC
+> setup code (which I don't feel qualified to do quite yet), that the immediate
+> solution would be to not rely on interrupts in legacy mode, which was according
+> to my understanding, what the use of the irqpoll command line option was
+> supposed to enable.  Any thoughts as to why that might not be working in this
+> case, or suggested tests to determine a cause there?
 
-Possible. So far I have not seen a hardware setup that would force
-interrupts to cpu #0 in legacy mode.  But I would not be truly
-surprised if it happened that there was hardware that only worked that
-way.
+Hmm.  It looks like irqpoll expects to have at least one irq working.
+I wonder if we can fix that.
 
-> But if CPU #0 has interrupts disabled no interrupts get delivered.
->
-> So choices are:
-> - Move to CPU #0
-> - Do not use legacy mode during shutdown.
-    (Do not use legacy mode in the kdump kernel. removing it from shutdown
-     is just minor optimization)
-> - Or do not rely on interrupts after enabling legacy mode
-> - Or do not disable interrupts on the other CPUs when they're
-> halted.
->
-> First and last option are probably unreliable for the kdump case.
-> Second or third sound best. 
->
-> I suspect the real fix would be to enable IOAPIC mode really
-> early and never use the timers in legacy mode. Then the kdump
-> kernel wouldn't care about the legacy mode pointing to the wrong CPU.
+Looking at it from the other direction what does this line
+from check_timer() look like when you boot a normal kernel?
 
-Exactly.  If we can work out the details that should be a much more reliable
-mode of operation.
+	apic_printk(APIC_VERBOSE,KERN_INFO "..TIMER: vector=0x%02X apic1=%d pin1=%d apic2=%d pin2=%d\n",
+		cfg->vector, apic1, pin1, apic2, pin2);
 
-> IIrc Eric even had  a patch for that a long time ago, but it broke some 
-> things so it wasn't included. But perhaps it should be revisited.
+I'm curious what values we see at boot for the legacy mode the first
+time it is setup, and possibly what chipset you are on.
+I know we have had a few times where we have failed to reprogram
+the ioapic properly at shutdown.  So it can't hurt to look at
+that possibility one last time.
 
-My real problem was the failure case was obscure (a bad interaction
-with ACPI on Linus's laptop) and I didn't have the time to track it
-down when it showed up.
 
-My patch had two parts.  Some cleanups to enable the code to be enabled
-early, and the actually early enable.  I figure if we can get the
-cleanups in one major kernel version and then in the next enable
-the apic mode before we start getting interrupts we should be in good
-shape.
+For whatever it is worth my original attempt at using only the
+apic mode was commit: f2b36db692b7ff6972320ad9839ae656a3b0ee3e
+Looks like I didn't have an x86_64 version.
 
-I expect with x86 becoming an embedded platform with multiple cpus we
-may start seeing systems that don't actually support legacy PIC mode
-for interrupt delivery.
+It looks like about half the cleanups I needed was to decouple
+smp cpu startup and apic initialization.  I think the hotplug cpu
+case has done a more thorough version of that now.
+
+There was a bit of reshuffling needed to get the everything initialized
+in the right order when we started apic mode sooner.
+
+Anyway I might just take another look at this if I can find enough
+moments to string together.
 
 Eric
 
