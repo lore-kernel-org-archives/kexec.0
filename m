@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ix6bO-0005L1-0p
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 20:00:20 +0000
-Date: Tue, 27 Nov 2007 15:00:11 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
-	boot cpu
-Message-ID: <20071127200011.GA3703@redhat.com>
-References: <20071127014740.GA28622@hmsreliant.think-freely.org>
-	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>
-	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>
-	<200711271445.56792.ak@suse.de>
-	<m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
-	<474C64CB.7080004@redhat.com>
-	<20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
+	id 1Ix7NB-0008Te-AE
+	for kexec@lists.infradead.org; Tue, 27 Nov 2007 20:49:43 +0000
+Message-ID: <474C832C.1060903@redhat.com>
+Date: Tue, 27 Nov 2007 12:50:52 -0800
+From: Ben Woodard <woodard@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
+	cpu
+References: <20071127014740.GA28622@hmsreliant.think-freely.org>	<200711271445.56792.ak@suse.de>	<20071127142826.GB31376@hmsreliant.think-freely.org>	<200711271543.11809.ak@suse.de>	<20071127144856.GC31376@hmsreliant.think-freely.org>
+	<m14pf7k8ns.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m14pf7k8ns.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,70 +24,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
 
-On Tue, Nov 27, 2007 at 02:42:20PM -0500, Neil Horman wrote:
-
-[..]
+Eric W. Biederman wrote:
+> Neil Horman <nhorman@tuxdriver.com> writes:
 > 
-> Ben I tend to agree.  I think re-enabling the APIC early in the boot process
-> provides a greater degree of reliability in that it more quickly restores the
-> system to a state where booting on a cpu other than cpu0 will be more likely to
-> work, but I have to say that overall it seems like booting a secondary kernel on
-> cpu0, when possible offers the highest degree of reliability.
+>> So, it sounds to me then, like unless I'm willing to really re-write the APIC
+>> setup code (which I don't feel qualified to do quite yet), that the immediate
+>> solution would be to not rely on interrupts in legacy mode, which was according
+>> to my understanding, what the use of the irqpoll command line option was
+>> supposed to enable.  Any thoughts as to why that might not be working in this
+>> case, or suggested tests to determine a cause there?
 > 
-> Perhaps what we need is a 'both solution'.  Re-enabling the apic to full smp
-> functionality early in the boot process is a good solution for the problems
-> which we are hypothesizing here, and would be a good thing to do in general, but
-> it doesn't preclude also attmpting to switch back to cpu0 during a crash.
+> Hmm.  It looks like irqpoll expects to have at least one irq working.
+> I wonder if we can fix that.
 > 
-> Perhaps it would be worthwhile to:
+> Looking at it from the other direction what does this line
+> from check_timer() look like when you boot a normal kernel?
 > 
-> 1) Investigate the early enablement of the ioapic for x86[_64]
-> 2) implement my prevoiusly proposed patch with the addition of a handshake
-> element, such that:
-> 	a) when the boot cpu gets the ipi from machine_crash_shutdown it flags
-> 	   the fact that it is going to boot the kexec kernel with a global
-> 	   variable
-> 	b) the crashing cpu loops waiting for either:
-> 		I) a timeout of 1 second
-> 		II) a reduction of the halt count to zero
-> 		III) the setting of the flag mentioned in (a)
-> 	c) the crashing cpu, if it sees that it is not the boot cpu AND
-> 	   that the flag in (III) is set, will halt itself, otherwise it
-> 	   will set the flag and boot the kexec image itself.
-> 
-> With this modification, we can try to relocate to cpu0,  and if we fail, we fall
-> back to booting on the crashing processor.
-> 
-> I'll work up a patch that implements (2), unless there are strong objections.  I
-> see no reason why we can't implment this 'both' solution.
+> 	apic_printk(APIC_VERBOSE,KERN_INFO "..TIMER: vector=0x%02X apic1=%d pin1=%d apic2=%d pin2=%d\n",
+> 		cfg->vector, apic1, pin1, apic2, pin2);
 > 
 
-Hi Neil,
+Here is what I get on a normal boot of the problem motherboard:
 
-If we implement first solution, we don't have to implement second. Problem
-will automatically be solved.
+..TIMER: vector=0x31 apic1=0 pin1=2 apic2=-1 pin2=-1
 
-In general adding more code in crash shutdown path is not good. We are
-trying to make that code path as small as possible.
 
-OTOH, I think we have not root caused this problem yet. We don't know yet
-why interrupts are not coming to non-boot cpu. I think we can go little
-deeper to compare the system state in normal boot and kdump boot and see
-what has changed. System state would include, LAPIC and IOAPIC entries
-etc.
+> I'm curious what values we see at boot for the legacy mode the first
+> time it is setup, and possibly what chipset you are on.
+> I know we have had a few times where we have failed to reprogram
+> the ioapic properly at shutdown.  So it can't hurt to look at
+> that possibility one last time.
+> 
+> 
+> For whatever it is worth my original attempt at using only the
+> apic mode was commit: f2b36db692b7ff6972320ad9839ae656a3b0ee3e
+> Looks like I didn't have an x86_64 version.
+> 
+> It looks like about half the cleanups I needed was to decouple
+> smp cpu startup and apic initialization.  I think the hotplug cpu
+> case has done a more thorough version of that now.
+> 
+> There was a bit of reshuffling needed to get the everything initialized
+> in the right order when we started apic mode sooner.
+> 
+> Anyway I might just take another look at this if I can find enough
+> moments to string together.
+> 
+> Eric
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-Are we putting the system back in PIC mode or virtual wire mode? I have
-not seen systems which support PIC mode. All latest systems seems
-to be having virtual wire mode. I think in case of PIC mode, interrupts
-can be delivered to cpu0 only. In virt wire mode, one can program IOAPIC
-to deliver interrupt to any of the cpus and that's what we have been
-relying on  until and unless there is something board specific.
 
-Thanks
-Vivek
+-- 
+-ben
+-=-
 
 _______________________________________________
 kexec mailing list
