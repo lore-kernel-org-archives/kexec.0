@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ix6KL-00043m-AH
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 19:42:43 +0000
-Date: Tue, 27 Nov 2007 14:42:20 -0500
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-Message-ID: <20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
+	id 1Ix6bO-0005L1-0p
+	for kexec@lists.infradead.org; Tue, 27 Nov 2007 20:00:20 +0000
+Date: Tue, 27 Nov 2007 15:00:11 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
+	boot cpu
+Message-ID: <20071127200011.GA3703@redhat.com>
 References: <20071127014740.GA28622@hmsreliant.think-freely.org>
 	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>
 	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>
 	<200711271445.56792.ak@suse.de>
 	<m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
 	<474C64CB.7080004@redhat.com>
+	<20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <474C64CB.7080004@redhat.com>
+In-Reply-To: <20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,79 +30,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ben Woodard <woodard@redhat.com>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Neil Horman <nhorman@redhat.com>
+Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Tue, Nov 27, 2007 at 10:41:15AM -0800, Ben Woodard wrote:
-> >>But if CPU #0 has interrupts disabled no interrupts get delivered.
-> >>
-> >>So choices are:
-> >>- Move to CPU #0
-> >>- Do not use legacy mode during shutdown.
-> >    (Do not use legacy mode in the kdump kernel. removing it from shutdown
-> >     is just minor optimization)
-> >>- Or do not rely on interrupts after enabling legacy mode
-> >>- Or do not disable interrupts on the other CPUs when they're
-> >>halted.
-> >>
-> >>First and last option are probably unreliable for the kdump case.
-> >>Second or third sound best. 
-> >>
+On Tue, Nov 27, 2007 at 02:42:20PM -0500, Neil Horman wrote:
+
+[..]
 > 
-> I can agree with the fourth option being a very bad one but I really 
-> haven't seen anything in this discussion which supports the assertion 
-> that "Move to the CPU that the BIOS originally called CPU#0" is going to 
-> be unreliable. Admittedly we haven't tried this on every single x86_64 
-> platform that we have but on the handful that we have tried so far, it 
-> hasn't been a problem. Why is everybody jumping to the assumption that 
-> it will be less reliable?
+> Ben I tend to agree.  I think re-enabling the APIC early in the boot process
+> provides a greater degree of reliability in that it more quickly restores the
+> system to a state where booting on a cpu other than cpu0 will be more likely to
+> work, but I have to say that overall it seems like booting a secondary kernel on
+> cpu0, when possible offers the highest degree of reliability.
+> 
+> Perhaps what we need is a 'both solution'.  Re-enabling the apic to full smp
+> functionality early in the boot process is a good solution for the problems
+> which we are hypothesizing here, and would be a good thing to do in general, but
+> it doesn't preclude also attmpting to switch back to cpu0 during a crash.
+> 
+> Perhaps it would be worthwhile to:
+> 
+> 1) Investigate the early enablement of the ioapic for x86[_64]
+> 2) implement my prevoiusly proposed patch with the addition of a handshake
+> element, such that:
+> 	a) when the boot cpu gets the ipi from machine_crash_shutdown it flags
+> 	   the fact that it is going to boot the kexec kernel with a global
+> 	   variable
+> 	b) the crashing cpu loops waiting for either:
+> 		I) a timeout of 1 second
+> 		II) a reduction of the halt count to zero
+> 		III) the setting of the flag mentioned in (a)
+> 	c) the crashing cpu, if it sees that it is not the boot cpu AND
+> 	   that the flag in (III) is set, will halt itself, otherwise it
+> 	   will set the flag and boot the kexec image itself.
+> 
+> With this modification, we can try to relocate to cpu0,  and if we fail, we fall
+> back to booting on the crashing processor.
+> 
+> I'll work up a patch that implements (2), unless there are strong objections.  I
+> see no reason why we can't implment this 'both' solution.
 > 
 
-Ben I tend to agree.  I think re-enabling the APIC early in the boot process
-provides a greater degree of reliability in that it more quickly restores the
-system to a state where booting on a cpu other than cpu0 will be more likely to
-work, but I have to say that overall it seems like booting a secondary kernel on
-cpu0, when possible offers the highest degree of reliability.
+Hi Neil,
 
-Perhaps what we need is a 'both solution'.  Re-enabling the apic to full smp
-functionality early in the boot process is a good solution for the problems
-which we are hypothesizing here, and would be a good thing to do in general, but
-it doesn't preclude also attmpting to switch back to cpu0 during a crash.
+If we implement first solution, we don't have to implement second. Problem
+will automatically be solved.
 
-Perhaps it would be worthwhile to:
+In general adding more code in crash shutdown path is not good. We are
+trying to make that code path as small as possible.
 
-1) Investigate the early enablement of the ioapic for x86[_64]
-2) implement my prevoiusly proposed patch with the addition of a handshake
-element, such that:
-	a) when the boot cpu gets the ipi from machine_crash_shutdown it flags
-	   the fact that it is going to boot the kexec kernel with a global
-	   variable
-	b) the crashing cpu loops waiting for either:
-		I) a timeout of 1 second
-		II) a reduction of the halt count to zero
-		III) the setting of the flag mentioned in (a)
-	c) the crashing cpu, if it sees that it is not the boot cpu AND
-	   that the flag in (III) is set, will halt itself, otherwise it
-	   will set the flag and boot the kexec image itself.
+OTOH, I think we have not root caused this problem yet. We don't know yet
+why interrupts are not coming to non-boot cpu. I think we can go little
+deeper to compare the system state in normal boot and kdump boot and see
+what has changed. System state would include, LAPIC and IOAPIC entries
+etc.
 
-With this modification, we can try to relocate to cpu0,  and if we fail, we fall
-back to booting on the crashing processor.
+Are we putting the system back in PIC mode or virtual wire mode? I have
+not seen systems which support PIC mode. All latest systems seems
+to be having virtual wire mode. I think in case of PIC mode, interrupts
+can be delivered to cpu0 only. In virt wire mode, one can program IOAPIC
+to deliver interrupt to any of the cpus and that's what we have been
+relying on  until and unless there is something board specific.
 
-I'll work up a patch that implements (2), unless there are strong objections.  I
-see no reason why we can't implment this 'both' solution.
-
-Regards
-Neil
-
--- 
-/***************************************************
- *Neil Horman
- *Software Engineer
- *Red Hat, Inc.
- *nhorman@redhat.com
- *gpg keyid: 1024D / 0x92A74FA1
- *http://pgp.mit.edu
- ***************************************************/
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
