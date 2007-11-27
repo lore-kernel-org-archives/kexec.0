@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
-	helo=relay.sgi.com)
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ix50u-00070v-D2
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 18:18:35 +0000
-Date: Tue, 27 Nov 2007 10:18:24 -0800 (PST)
-From: Christoph Lameter <clameter@sgi.com>
-Subject: Re: [PATCH 4/5] Fix the configuration dependencies
-In-Reply-To: <474BE583.2080000@mxs.nes.nec.co.jp>
-Message-ID: <Pine.LNX.4.64.0711271017440.2310@schroedinger.engr.sgi.com>
-References: <473CFE14.3010400@mxs.nes.nec.co.jp>
-	<473D0170.1060304@mxs.nes.nec.co.jp>
-	<20071125235843.69440d4a.akpm@linux-foundation.org>
-	<474BE583.2080000@mxs.nes.nec.co.jp>
+	id 1Ix5Lt-0008Qh-Ie
+	for kexec@lists.infradead.org; Tue, 27 Nov 2007 18:40:15 +0000
+Message-ID: <474C64CB.7080004@redhat.com>
+Date: Tue, 27 Nov 2007 10:41:15 -0800
+From: Ben Woodard <woodard@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
+	cpu
+References: <20071127014740.GA28622@hmsreliant.think-freely.org>	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>	<200711271445.56792.ak@suse.de>
+	<m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,18 +24,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
 
-On Tue, 27 Nov 2007, Ken'ichi Ohmichi wrote:
+Eric W. Biederman wrote:
+> Andi Kleen <ak@suse.de> writes:
+> 
+>> his is any less reliable that what we have currently.
+>>> It doesn't make things more reliable, and it adds code to a code path
+>>> that already has to much code to be solid reliable (thus your
+>>> problem). 
+>>>
+>>> Putting the system back in PIC legacy mode on the kexec on panic path
+>>> was supposed to be a short term hack until we could remove the need
+>>> by always deliver interrupts in apic mode.
+>>>
+>>> If you can't root cause your problem and figure out how the apics
+>>> are misconfigured for legacy mode
+>> Probably legacy mode always routes to CPU #0. Makes sense and is
+>> not really a misconfiguration of legacy mode.
+> 
 
-> I guess that Christoph Lameter deleted the above part (which is added
-> by the attached patch again) with the other part of discontigmem lines,
-> because it depended on CONFIG_ARCH_DISCONTIGMEM_ENABLE.
-> But the dependency was wrong, and it should depend on CONFIG_NUMA.
-> The part is necessary for a NUMA kernel even if sparsemem.
+The BIOS and kernel writer's guide for Opteron explicitly states that 
+the platform will boot on CPU0 kind of by definition. So this seems like 
+a fair statement. I can easily see BIOS writers or hardware designers 
+interpreting that to mean that they only have to make sure that 
+interrupts get to the CPU that the BIOS thinks of as CPU0 when the APIC 
+is in legacy mode.
 
-Acked-by: Christoph Lameter <clameter@sgi.com>
+I have a query out to some SuperMicro engineers to find out if it is a 
+hardware limitation or if it is APIC misconfiguration. Maybe we can 
+solve this problem with a BIOS update.
+
+> Possible. So far I have not seen a hardware setup that would force
+> interrupts to cpu #0 in legacy mode.  But I would not be truly
+> surprised if it happened that there was hardware that only worked that
+> way.
+> 
+>> But if CPU #0 has interrupts disabled no interrupts get delivered.
+>>
+>> So choices are:
+>> - Move to CPU #0
+>> - Do not use legacy mode during shutdown.
+>     (Do not use legacy mode in the kdump kernel. removing it from shutdown
+>      is just minor optimization)
+>> - Or do not rely on interrupts after enabling legacy mode
+>> - Or do not disable interrupts on the other CPUs when they're
+>> halted.
+>>
+>> First and last option are probably unreliable for the kdump case.
+>> Second or third sound best. 
+>>
+
+I can agree with the fourth option being a very bad one but I really 
+haven't seen anything in this discussion which supports the assertion 
+that "Move to the CPU that the BIOS originally called CPU#0" is going to 
+be unreliable. Admittedly we haven't tried this on every single x86_64 
+platform that we have but on the handful that we have tried so far, it 
+hasn't been a problem. Why is everybody jumping to the assumption that 
+it will be less reliable?
+
+>> I suspect the real fix would be to enable IOAPIC mode really
+>> early and never use the timers in legacy mode. Then the kdump
+>> kernel wouldn't care about the legacy mode pointing to the wrong CPU.
+> 
+> Exactly.  If we can work out the details that should be a much more reliable
+> mode of operation.
+> 
+>> IIrc Eric even had  a patch for that a long time ago, but it broke some 
+>> things so it wasn't included. But perhaps it should be revisited.
+> 
+> My real problem was the failure case was obscure (a bad interaction
+> with ACPI on Linus's laptop) and I didn't have the time to track it
+> down when it showed up.
+> 
+> My patch had two parts.  Some cleanups to enable the code to be enabled
+> early, and the actually early enable.  I figure if we can get the
+> cleanups in one major kernel version and then in the next enable
+> the apic mode before we start getting interrupts we should be in good
+> shape.
+> 
+> I expect with x86 becoming an embedded platform with multiple cpus we
+> may start seeing systems that don't actually support legacy PIC mode
+> for interrupt delivery.
+> 
+> Eric
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+-- 
+-ben
+-=-
 
 _______________________________________________
 kexec mailing list
