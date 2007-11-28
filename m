@@ -1,26 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from one.firstfloor.org ([213.235.205.2])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1IxAHk-0004Ji-74
-	for kexec@lists.infradead.org; Tue, 27 Nov 2007 23:56:18 +0000
-Date: Wed, 28 Nov 2007 00:56:10 +0100
-From: Andi Kleen <andi@firstfloor.org>
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1IxAb5-0005eC-Bq
+	for kexec@lists.infradead.org; Wed, 28 Nov 2007 00:16:15 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
 	cpu
-Message-ID: <20071127235610.GD31491@one.firstfloor.org>
 References: <20071127014740.GA28622@hmsreliant.think-freely.org>
-	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>
-	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>
 	<200711271445.56792.ak@suse.de>
-	<m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
-	<474C64CB.7080004@redhat.com>
-	<20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
-	<20071127200011.GA3703@redhat.com>
-	<20071127222408.GH24223@one.firstfloor.org>
-	<474CA733.9050908@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <474CA733.9050908@redhat.com>
+	<20071127142826.GB31376@hmsreliant.think-freely.org>
+	<200711271543.11809.ak@suse.de>
+	<20071127144856.GC31376@hmsreliant.think-freely.org>
+	<m14pf7k8ns.fsf@ebiederm.dsl.xmission.com>
+	<474C832C.1060903@redhat.com>
+	<20071127210558.GI14887@hmsendeavour.rdu.redhat.com>
+	<m1r6ibia9v.fsf@ebiederm.dsl.xmission.com> <474CA520.60804@redhat.com>
+Date: Tue, 27 Nov 2007 17:15:06 -0700
+In-Reply-To: <474CA520.60804@redhat.com> (Ben Woodard's message of "Tue, 27
+	Nov 2007 15:15:44 -0800")
+Message-ID: <m1d4tvi5th.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,30 +33,32 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Ben Woodard <woodard@redhat.com>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
 
-> Would anyone have any problems with code that simply verified that the 
-> state which we are restoring allowed interrupts to get to the processor 
-> that we are currently crashing on and if not, poked in a reasonable value.
+Ben Woodard <woodard@redhat.com> writes:
 
-Sounds reasonable by itself.
+> Eric W. Biederman wrote:
+>> Neil Horman <nhorman@redhat.com> writes:
+>>
+>>>> ..TIMER: vector=0x31 apic1=0 pin1=2 apic2=-1 pin2=-1
+>>
+>> Ben, what chipset is this?
+>
+> nVidia MCP55 pro
+>
+> It is the original version of
+> http://www.supermicro.com/Aplus/motherboard/Opteron8000/MCP55/H8QM8-2.cfm
+>
+> i.e. not the -2. However, they don't seem to advertise the original
+> version. Supermicro assures me that they are practically the same but I haven't
+> played with the -2 version yet.
+>
 
-> 
-> Yes this would add some complexity to the code paths where we were 
-> crashing but it could prevent the problem that we are seeing. It seems 
-> like a small fairly safe change rather than a big disruptive change like 
-> moving the initialization of the IOAPIC earlier in the boot process.
+That is enough for an initial approximation.  Unless something has
+changed radically the Nvidia chipsets can put the ioapic instead of
+the local apic in virtual wire mode so that is worth testing.
 
-But longer (or not so long) term moving the IOAPIC earlier is the better option, 
-simply because the short use of PIC mode traditionally was a source of problems
-on a lot of boxes.
-
-And it does not really make sense to keep this source of trouble just for a short 
-time during boot when we could as well go directly into IO-APIC mode. This would 
-probably also match what other OS are doing better and that is always a good idea
-for stable operation.
-
--Andi
+Eric
 
 _______________________________________________
 kexec mailing list
