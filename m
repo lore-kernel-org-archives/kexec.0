@@ -1,26 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1IxB2G-0007LA-DZ
-	for kexec@lists.infradead.org; Wed, 28 Nov 2007 00:44:16 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1IxOy6-0005Ur-Nd
+	for kexec@lists.infradead.org; Wed, 28 Nov 2007 15:37:00 +0000
+Date: Wed, 28 Nov 2007 10:36:49 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
+	boot cpu
+Message-ID: <20071128153649.GC3192@redhat.com>
 References: <20071127014740.GA28622@hmsreliant.think-freely.org>
+	<20071127131355.GA14887@hmsendeavour.rdu.redhat.com>
+	<m1y7cjkec2.fsf@ebiederm.dsl.xmission.com>
 	<200711271445.56792.ak@suse.de>
-	<20071127142826.GB31376@hmsreliant.think-freely.org>
-	<200711271543.11809.ak@suse.de>
-	<20071127144856.GC31376@hmsreliant.think-freely.org>
-	<m14pf7k8ns.fsf@ebiederm.dsl.xmission.com>
-	<474C832C.1060903@redhat.com>
-	<20071127210558.GI14887@hmsendeavour.rdu.redhat.com>
-	<m1r6ibia9v.fsf@ebiederm.dsl.xmission.com>
-	<20071127234037.GA16756@hmsendeavour.rdu.redhat.com>
-Date: Tue, 27 Nov 2007 17:43:15 -0700
-In-Reply-To: <20071127234037.GA16756@hmsendeavour.rdu.redhat.com> (Neil
-	Horman's message of "Tue, 27 Nov 2007 18:40:37 -0500")
-Message-ID: <m14pf7i4ik.fsf@ebiederm.dsl.xmission.com>
+	<m1lk8jka8j.fsf@ebiederm.dsl.xmission.com>
+	<474C64CB.7080004@redhat.com>
+	<20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
+	<20071127200011.GA3703@redhat.com>
+	<20071127222408.GH24223@one.firstfloor.org>
+	<474CA733.9050908@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <474CA733.9050908@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,106 +33,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, vgoyal@in.ibm.com
+To: Ben Woodard <woodard@redhat.com>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Neil Horman <nhorman@redhat.com> writes:
-
->> Close.  There are two options with virtual wire mode.  
->> - Either the local apic is in virtual wire mode, and somehow the
->>   legacy interrupts make it to the local cpu.
-
-> I assume this is the case if the ioapic is also in virtual wire
-> mode.
-
-No.  The ioapic is completely disabled in this case.
-
-> and the
-> destination field for the appropriate interrupt(s) (the timer interrupt in this
-> case) is set to either physical mode with a destination id of the lapic for the
-> running cpu, or if it is set to logical mode and the destination id has the
-> corresponding bit for the running cpu set.  Is that right?
-
-No.  All of the ioapic routing entries are disabled.
-
->> - Or an ioapic is in virtual wire mode and the legacy interrupt
->>   controller is connected to it.
->> 
-> I thought we only had one ioapic in this system (Ben correct me if I'm wrong on
-> that please).  I thought the above printk told us that, because apic2 and pin2
-> are both -1, that means that the 8259 isn't physically connected to any cpu, and
-> instead is routed through apic 0, and asserts on pin 2 of that ioapic. 
+On Tue, Nov 27, 2007 at 03:24:35PM -0800, Ben Woodard wrote:
+> Andi Kleen wrote:
+>>> Are we putting the system back in PIC mode or virtual wire mode? I have
+>>> not seen systems which support PIC mode. All latest systems seems
+>>> to be having virtual wire mode. I think in case of PIC mode, interrupts
+>>
+>> Yes it's probably virtual wire. For real PIC mode we would need really
+>> old systems without APIC.
+>>
+>>> can be delivered to cpu0 only. In virt wire mode, one can program IOAPIC
+>>> to deliver interrupt to any of the cpus and that's what we have been
+>>
+>> The code doesn't try to program anything specific, it just restores the state
+>> that was left over originally by the BIOS.
+>>
 >
->> So I guess fundamentally for any SMP system that only supports the
->> cpu being in local apic mode and only routes interrupts to the boot
->> strap processor we could be in trouble.  That is what our current
->> information about your system suggests.
->> 
-> If that were the case, then we would need to support moving kexec boot to cpu0,
-> at least in some limited cases.  I've got a patch together that enables the
-> handshaking I was brainstorming earlier, which should allow an attempted jump to
-> cpu0 on a crash, with a fallback to booting on the crashing processor.  If we
-> wind up confirming the above case, then I'll post it.
+> So if the BIOS originally left the IOAPIC in a state where the timer 
+> interrupts were only going to CPU0 then by restoring that state we could be 
+> bringing this problem upon ourselves when we restore that state.
 >
->> However most systems actually connect the i8254 PIC interrupt
-> Sorry, to split hairs here, but you mean the 8259 right? 
 
-Grr. Yes. The i8259.  Got the timer and the PIC numbers confused Oops.
-The legacy configuration is the timer to the PIC to either the local
-or the ioapic.
+Hi Ben,
 
-> Just want to be sure I'm clear on whats going on.  I thought the
-> 8254 was the external timer. 
+Apart from restoring the original state (Bring APICS back to virtual wire
+mode), we also reprogram IOAPIC so that timer interrupt can go to crashing
+cpu (and not necessarily cpu0). Look at following code in disable_IO_APIC.
 
-Yep.  You have it straight.
+                entry.dest.physical.physical_dest =
+                                        GET_APIC_ID(apic_read(APIC_ID));
 
->> controller to the ioapic in virtual wire mode.  As I recall the
->> standard mapping is to ioapic 0, pin 0.  With ioapic 0, pin 2 being
->> the timer interrupt (Possibly it is the other way around).
->> 
->> So as a test we could feed those values into ioapic_8259 and see
->> if the kdump case works.  I believe we prefer putting the ioapic
->> into virtual wire mode over putting the cpu into virtual wire
->> mode.  We can only control which cpu receives the legacy interrupts if
->> we are putting the ioapic in virtual wire mode.
->> 
-> I'm sorry, I can't find ioapic_8259 defined anywhere.  Where is that supposed to
-> be?  Show me where its defined and I'll happily write the patch.
+Here we read the apic id of crashing cpu and program IOAPIC accordingly.
+This will make sure that even in virtual wire mode, timer interrupts
+will be delivered to crashing cpu APIC.
 
-Grr.  That should have been ioapic_i8259.  The second value we print out
-in the ..Timer printk.
+I think we need to go deeper and compare the state of system (APICS,
+timer etc) during normal boot and kdump boot and see where is the
+difference. This is how I solved some of the timer interrupt related
+issues in the past.
 
->> It may also be an interesting test to just enable the timer for the
->> ioapic in early boot, as you have suggested.  I don't have a clue what
->> that will do.
->> 
-> Unfortunately nothing.  We've tried using the local apic timer in a previous
-> test, and it resulted in no change, as did transitioning the cpu to the apic
-> timer via a call to switch_ipi_to_APIC_timer.  Its possible I did something
-> wrong however.
-
-Well if you didn't have the local apic enabled beyond virtual wire
-mode that could have cause problems.
-
-Sure.  I suspect the probably is that you were still in a legacy irq
-mode.
-
-> Currently I'm writing a patch that calls setup_ioapic_dest after we call
-> disable_IO_APIC.  Looking at the implementation, it appears that calling this
-> function should rewrite the irq routing table in the ioapic to deliver
-> interrupts to the set of online cpus, as defined by the TARGET_CPUS macro.  I
-> asusme that if the ioapic is in virtual wire mode from the call to
-> disablie_IO_APIC, then calling setup_ioapic_dest will force interrupts to be
-> delivered to the crashing cpu, as it should be the only bit set in the online
-> cpu mask.  Please feel free to poke holes in this idea.
-
-Just try and make certain: ioapic_i8259.pin != -1
-Which should cause disable_IO_APIC to put the ioapic and not the local
-apic in virtual wire mode.
-
-Anything else is likely to do strange things.
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
