@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J0OTS-0005DQ-RJ
-	for kexec@lists.infradead.org; Thu, 06 Dec 2007 21:41:46 +0000
-Date: Thu, 6 Dec 2007 16:39:51 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J0Owh-0007F9-Ko
+	for kexec@lists.infradead.org; Thu, 06 Dec 2007 22:11:57 +0000
+Date: Thu, 6 Dec 2007 17:11:43 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
 	boot cpu
-Message-ID: <20071206213951.GB28898@hmsreliant.think-freely.org>
-References: <20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
-	<20071127200011.GA3703@redhat.com>
+Message-ID: <20071206221143.GC2863@redhat.com>
+References: <20071127200011.GA3703@redhat.com>
 	<20071127222408.GH24223@one.firstfloor.org>
 	<474CA733.9050908@redhat.com> <20071128153649.GC3192@redhat.com>
 	<20071128160206.GA21286@hmsendeavour.rdu.redhat.com>
 	<20071128190525.GD3192@redhat.com> <474F7177.7050306@redhat.com>
 	<20071130144250.GC23810@redhat.com>
 	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
+	<20071206213951.GB28898@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
+In-Reply-To: <20071206213951.GB28898@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,127 +31,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, Nov 30, 2007 at 09:51:31AM -0500, Neil Horman wrote:
-> On Fri, Nov 30, 2007 at 09:42:50AM -0500, Vivek Goyal wrote:
-<snip>
-> 
-> Thats what I'm doing at the moment.  I'm working on a RHEL5 patch at the moment
-> (since thats whats on the production system thats failing), and will forward
-> port it once its working
-> 
-> And not to split hairs, but techically thats not our _only_ choice.  We could
-> force kdump boots on cpu0 as well ;)
-> 
-> Thanks
-> Neil
-> 
+On Thu, Dec 06, 2007 at 04:39:51PM -0500, Neil Horman wrote:
+> On Fri, Nov 30, 2007 at 09:51:31AM -0500, Neil Horman wrote:
+> > On Fri, Nov 30, 2007 at 09:42:50AM -0500, Vivek Goyal wrote:
+> <snip>
+> > 
+> > Thats what I'm doing at the moment.  I'm working on a RHEL5 patch at the moment
+> > (since thats whats on the production system thats failing), and will forward
+> > port it once its working
+> > 
+> > And not to split hairs, but techically thats not our _only_ choice.  We could
+> > force kdump boots on cpu0 as well ;)
+> > 
 > > Thanks
-> > Vivek
+> > Neil
+> > 
+> > > Thanks
+> > > Vivek
+> > 
+> 
+> 
+> Sorry to have been quiet on this issue for a few days. Interesting news to
+> report, though.  So I was working on a patch to do early apic enabling on
+> x86_64, and had something working for the old 2.6.18 kernel that we were
+> origionally testing on.  Unfortunately while it worked on 2.6.18 it failed
+> miserably on 2.6.24-rc3-mm2, causing check_timer to consistently report that the
+> timer interrupt wasn't getting received (even though we could successfully run
+> calibrate_delay).  Vivek and I were digging into this, when I ran accross the
+> description of the hypertransport configuration register in the opteron
+> specification.  It contains a bit that, suprise, configures the ht bus to either
+> unicast interrupts delivered accross the ht bus to a single cpu, or to broadcast
+> it to all cpus.  Since it seemed more likely that the 8259 in the nvidia
+> southbridge was transporting legacy mode interrupts over the ht bus than
+> directly to cpu0 via an actual wire, I wrote the attached patch to add a quirk
+> for nvidia chipsets, which scanned for hypertransport controllers, and ensured
+> that that broadcast bit was set.  Test results indicate that this solves the
+> problem, and kdump kernels boot just fine on the affected system.
 > 
 
+Hi Neil,
 
-Sorry to have been quiet on this issue for a few days. Interesting news to
-report, though.  So I was working on a patch to do early apic enabling on
-x86_64, and had something working for the old 2.6.18 kernel that we were
-origionally testing on.  Unfortunately while it worked on 2.6.18 it failed
-miserably on 2.6.24-rc3-mm2, causing check_timer to consistently report that the
-timer interrupt wasn't getting received (even though we could successfully run
-calibrate_delay).  Vivek and I were digging into this, when I ran accross the
-description of the hypertransport configuration register in the opteron
-specification.  It contains a bit that, suprise, configures the ht bus to either
-unicast interrupts delivered accross the ht bus to a single cpu, or to broadcast
-it to all cpus.  Since it seemed more likely that the 8259 in the nvidia
-southbridge was transporting legacy mode interrupts over the ht bus than
-directly to cpu0 via an actual wire, I wrote the attached patch to add a quirk
-for nvidia chipsets, which scanned for hypertransport controllers, and ensured
-that that broadcast bit was set.  Test results indicate that this solves the
-problem, and kdump kernels boot just fine on the affected system.
+Should we disable this broadcasting feature once we are through? Otherwise
+in normal systems it might mean extra traffic on hypertransport. There
+is no need for every interrupt to be broadcasted in normal systems?
 
-I understand that enabling the apic early in the boot process is a nice general
-solution, but given the wide range of apic configurations possible, and the
-need for large amounts of testing of such a change, this approach seems like it
-might be the better way to go, as it corrects a bad behavior only in systems
-that would be affected by this problem.  It introduces no further complexity in
-the kdump shutdown path, and creates no additional instability in systems that
-would otherwise be unaffected by this bug. 
-
-I think this is the best way for us to go forward.  Attached patch applies
-cleanly against 2.6.24-rc3-mm2 and works for me on serveral systems unaffected
-by the kdump crash problem I origionally reported and fixes the bug on the
-affected system.
-
-Thanks & Regards
-Neil
-
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-
- 
- early-quirks.c |   41 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index 88bb83e..ea16b53 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -44,6 +44,45 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
- #endif /* CONFIG_X86_IO_APIC */
- #endif /* CONFIG_ACPI */
- 
-+static void __init fix_hypertransport_config(int num, int slot, int func)
-+{
-+	u32 htcfg;
-+	/*
-+	 *we found a hypertransport bus
-+	 *make sure that are broadcasting
-+	 *interrupts to all cpus on the ht bus
-+	 */
-+	htcfg = read_pci_config(num, slot, func, 0x68);
-+	if ((htcfg & (1 << 17)) == 0)	
-+		printk(KERN_INFO "Enabling hypertransport interrupt broadcast\n");
-+	htcfg |= (1 << 17);
-+	write_pci_config(num, slot, func, 0x68, htcfg);
-+	
-+}
-+
-+static void __init check_hypertransport_config()
-+{
-+	int num, slot, func;
-+	u32 device, vendor;
-+	func = 0;
-+	for (num = 0; num < 32; num++) {
-+		for (slot = 0; slot < 32; slot++) {
-+			vendor = read_pci_config(num,slot,func,
-+						PCI_VENDOR_ID); 
-+			device = read_pci_config(num,slot,func,
-+						PCI_DEVICE_ID);
-+			vendor &= 0x0000ffff;
-+			device >>= 16;
-+			if ((vendor == PCI_VENDOR_ID_AMD) &&
-+			    (device == PCI_DEVICE_ID_AMD_K8_NB))
-+				fix_hypertransport_config(num,slot,func);
-+		}
-+	}
-+
-+	return;
-+
-+}
-+
- static void __init nvidia_bugs(void)
- {
- #ifdef CONFIG_ACPI
-@@ -69,7 +108,7 @@ static void __init nvidia_bugs(void)
- #endif
- #endif
- 	/* RED-PEN skip them on mptables too? */
--
-+	check_hypertransport_config();
- }
- 
- static void __init ati_bugs(void)
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
