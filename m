@@ -1,26 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e6.ny.us.ibm.com ([32.97.182.146])
+Received: from ra.tuxdriver.com ([70.61.120.52])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Iz9Ud-0004EJ-L3
-	for kexec@lists.infradead.org; Mon, 03 Dec 2007 11:29:50 +0000
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id lB3BVLQI029660
-	for <kexec@lists.infradead.org>; Mon, 3 Dec 2007 06:31:21 -0500
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	lB3BTdZs131762
-	for <kexec@lists.infradead.org>; Mon, 3 Dec 2007 06:29:39 -0500
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	lB3BTdl7002450
-	for <kexec@lists.infradead.org>; Mon, 3 Dec 2007 06:29:39 -0500
-Subject: [ANNOUNCE] The Linux Test Project has been Released for NOVEMBER 2007
-From: Subrata Modak <subrata@linux.vnet.ibm.com>
-Content-Type: multipart/mixed; boundary="=-ZRx1x+99VaVn3d5g8rlX"
-Date: Mon, 03 Dec 2007 16:59:30 +0530
-Message-Id: <1196681370.4417.28.camel@subratamodak.linux.ibm.com>
-Mime-Version: 1.0
-Reply-To: subrata@linux.vnet.ibm.com
+	id 1J0OTS-0005DQ-RJ
+	for kexec@lists.infradead.org; Thu, 06 Dec 2007 21:41:46 +0000
+Date: Thu, 6 Dec 2007 16:39:51 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
+	boot cpu
+Message-ID: <20071206213951.GB28898@hmsreliant.think-freely.org>
+References: <20071127194220.GG14887@hmsendeavour.rdu.redhat.com>
+	<20071127200011.GA3703@redhat.com>
+	<20071127222408.GH24223@one.firstfloor.org>
+	<474CA733.9050908@redhat.com> <20071128153649.GC3192@redhat.com>
+	<20071128160206.GA21286@hmsendeavour.rdu.redhat.com>
+	<20071128190525.GD3192@redhat.com> <474F7177.7050306@redhat.com>
+	<20071130144250.GC23810@redhat.com>
+	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,369 +27,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel <linux-kernel@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec@lists.infradead.org, redhat-lspp@redhat.com
+To: Neil Horman <nhorman@redhat.com>
+Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+
+On Fri, Nov 30, 2007 at 09:51:31AM -0500, Neil Horman wrote:
+> On Fri, Nov 30, 2007 at 09:42:50AM -0500, Vivek Goyal wrote:
+<snip>
+> 
+> Thats what I'm doing at the moment.  I'm working on a RHEL5 patch at the moment
+> (since thats whats on the production system thats failing), and will forward
+> port it once its working
+> 
+> And not to split hairs, but techically thats not our _only_ choice.  We could
+> force kdump boots on cpu0 as well ;)
+> 
+> Thanks
+> Neil
+> 
+> > Thanks
+> > Vivek
+> 
 
 
---=-ZRx1x+99VaVn3d5g8rlX
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Sorry to have been quiet on this issue for a few days. Interesting news to
+report, though.  So I was working on a patch to do early apic enabling on
+x86_64, and had something working for the old 2.6.18 kernel that we were
+origionally testing on.  Unfortunately while it worked on 2.6.18 it failed
+miserably on 2.6.24-rc3-mm2, causing check_timer to consistently report that the
+timer interrupt wasn't getting received (even though we could successfully run
+calibrate_delay).  Vivek and I were digging into this, when I ran accross the
+description of the hypertransport configuration register in the opteron
+specification.  It contains a bit that, suprise, configures the ht bus to either
+unicast interrupts delivered accross the ht bus to a single cpu, or to broadcast
+it to all cpus.  Since it seemed more likely that the 8259 in the nvidia
+southbridge was transporting legacy mode interrupts over the ht bus than
+directly to cpu0 via an actual wire, I wrote the attached patch to add a quirk
+for nvidia chipsets, which scanned for hypertransport controllers, and ensured
+that that broadcast bit was set.  Test results indicate that this solves the
+problem, and kdump kernels boot just fine on the affected system.
 
-Dear All,
+I understand that enabling the apic early in the boot process is a nice general
+solution, but given the wide range of apic configurations possible, and the
+need for large amounts of testing of such a change, this approach seems like it
+might be the better way to go, as it corrects a bad behavior only in systems
+that would be affected by this problem.  It introduces no further complexity in
+the kdump shutdown path, and creates no additional instability in systems that
+would otherwise be unaffected by this bug. 
 
-The Linux Test Project test suite has been released for the month of
-NOVEMBER 2007. The latest version of the test-suite contains 3000+
-tests for the Linux OS and can be found at http://ltp.sourceforge.net/.
-Latest happenings in LTP can also be found at:
-http://ltp.sourceforge.net/wiki/,
-http://ltp.sourceforge.net/wikiArchives.php, and,
-IRC: irc.freenode.org #ltp.
+I think this is the best way for us to go forward.  Attached patch applies
+cleanly against 2.6.24-rc3-mm2 and works for me on serveral systems unaffected
+by the kdump crash problem I origionally reported and fixes the bug on the
+affected system.
 
-Our web site also contains other information such as:
-- A Linux test tools matrix
-- Technical papers
-- How To's on Linux testing
-- Code coverage analysis tool.
+Thanks & Regards
+Neil
 
-Release Highlights:
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 
-* Several Network Test Cases has been updated to be run on different
-subnet configuration,
-* Updated lot of Test Cases to enable them run on NFS,
-* Addition of posix_fadvise, fadvise64, madvise03, sendfile64 &
-sendfile04 Test Cases to LTP
-* Existing code in LTP-Kdump has been enhanced to test dump on Network
-and different partitions, added IA64 support to KDUMP and lots of
-changes in KDUMP scripts for error correction and improvement,
-* Option to generate more parsible output in HTML format has been added,
-* Option to automatically mail back LTP reports has been added,
-* OpenHPI 2.10.1 has been integrated to LTP,
-* Updated several Test Cases for suiting to proper GPLv2 License,
-
-
-Note(s) from the Maintainer:
-LTP has seen heightened activity in the month of Nov 2007. Thanks for
-your efforts and contributions. Steps taken to improve LTP
-infrastructure in various dimensions has seen efforts becoming fruitful.
-We have added HTML output and auto-mail back option this month. We will
-continue to work on XML output in coming days and also evaluate and
-finally integrate auto build of kernel and test to LTP in future. New
-test cases will continue to get added from community and soon we will
-start to investigate all existing test cases for their overall
-effectiveness in functionality testing. Your support to improve LTP is
-extremely essential and i am expecting more support from you on this.
+ 
+ early-quirks.c |   41 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
 
-We would encourage the community to post results to
-ltp-results@lists.sf.net,
-patches, new tests, bugs or comments/questions to ltp-list@lists.sf.net,
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=103382
-(for New Bug(s)),
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=303382
-(for New Patch(s)),
-http://sourceforge.net/tracker/?func=add&group_id=3382&atid=353382
-(for New Feature Request(s))
-
-Please also see the Change Log Attached (NOVEMBER 2007):
-
-Happy testing, 
-Regards-- 
-Subrata,
-
-
---=-ZRx1x+99VaVn3d5g8rlX
-Content-Disposition: attachment; filename=Nov-2007-ChangeLog.txt
-Content-Type: text/plain; name=Nov-2007-ChangeLog.txt; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-1)  Log Message: lcov: fix for problem resulting in lcov aborting with "ERROR: reading string"
-File(s) Affected:
-/cvsroot/ltp/utils/analysis/lcov/bin
-
-2) Log Message: Update to OpenHPI 2.10.1 (see www.openhpi.org for more info)
-File(s) Affected:
-ltp/testcases/open_hpi_testsuite
-
-3) Log Message: This patch by Jeff Mahoney <jeffm@suse.com> changes the test to use the read-only end of the pipe with PROT_READ permissions, which passes the FMODE_READ check on the file descriptor and returns -ENODEV.
-File(s) Affected:
-ltp/testcases/open_posix_testsuite/conformance/interfaces/mmap/23-1.c
-
-4) Log Message: Yi Yang <yang.y.yi@gmail.com> fixed some anomalies for ext2/ext3 and creat system call
-File(s) Affected:
-ltp/testcases/kernel/fs/doio/growfiles.c
-ltp/testcases/kernel/syscalls/creat/creat05.c
-
-5) Log Message: Removing Propreitary and Confidential Information to Suit to GPLv2 License
-File(s) Affected:
-testcases/kernel/ipc/ipc_stress/message_queue_test_01.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_02_ctl.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_02_get.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_02_rcv.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_02_snd.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_04.c
-testcases/kernel/ipc/ipc_stress/message_queue_test_05.c
-testcases/kernel/ipc/ipc_stress/pipe_test_01.c
-testcases/kernel/ipc/ipc_stress/pipe_test_02.c
-testcases/kernel/ipc/ipc_stress/semaphore_test_01.c
-testcases/kernel/ipc/ipc_stress/semaphore_test_02.c
-testcases/kernel/ipc/ipc_stress/semaphore_test_03.c
-testcases/kernel/ipc/ipc_stress/shmem_test_01.c
-testcases/kernel/ipc/ipc_stress/shmem_test_02.c
-testcases/kernel/ipc/ipc_stress/shmem_test_03.c
-testcases/kernel/ipc/ipc_stress/shmem_test_04.c
-testcases/kernel/ipc/ipc_stress/shmem_test_05.c
-testcases/kernel/ipc/ipc_stress/shmem_test_06.c
-testcases/kernel/ipc/ipc_stress/shmem_test_07.c
-testcases/kernel/ipc/ipc_stress/signal_test_01.c
-testcases/kernel/ipc/ipc_stress/signal_test_02.c
-testcases/kernel/ipc/ipc_stress/signal_test_03.c
-testcases/kernel/ipc/ipc_stress/signal_test_04.c
-testcases/kernel/ipc/ipc_stress/signal_test_05.c
-testcases/kernel/ipc/ipc_stress/signal_test_06.c
-testcases/kernel/ipc/ipc_stress/signal_test_07.c
-testcases/kernel/sched/clisrv/pthserv.c
-testcases/kernel/sched/clisrv/readline.c
-testcases/kernel/sched/clisrv/writen.c
-testcases/kernel/sched/sched_stress/sched_driver.c
-testcases/kernel/sched/sched_stress/sched.c
-testcases/kernel/sched/sched_stress/sched.h
-testcases/kernel/sched/sched_stress/sched_tc0.c
-testcases/kernel/sched/sched_stress/sched_tc1.c
-testcases/kernel/sched/sched_stress/sched_tc2.c
-testcases/kernel/sched/sched_stress/sched_tc3.c
-testcases/kernel/sched/sched_stress/sched_tc4.c
-testcases/kernel/sched/sched_stress/sched_tc5.c
-testcases/kernel/sched/sched_stress/sched_tc6.c
-
-6) Log Message: Make the test working on busybox system, where 'df' command
-doesn't support -P option, neither accept a directory as input,
-Submitted by Carmelo AMOROSO <carmelo.amoroso@st.com>
-File(s) Affected:
-ltp/testcases/kernel/fs/doio/rwtest.sh
-
-7) Log Message:
-This patch allows network stress tests to be run on different subnet
-configuration by using some macros for IP addresses configuration.
-It doesn't affect default values.
-Submitted by Carmelo AMOROSO <carmelo.amoroso@st.com>
-File(s) Affected:
-ltp/testcases/network/stress/broken_ip/broken_ip4-checksum
-ltp/testcases/network/stress/broken_ip/broken_ip4-dstaddr
-ltp/testcases/network/stress/broken_ip/broken_ip4-fragment
-ltp/testcases/network/stress/broken_ip/broken_ip4-ihl
-ltp/testcases/network/stress/broken_ip/broken_ip4-protcol
-ltp/testcases/network/stress/broken_ip/broken_ip4-totlen
-ltp/testcases/network/stress/broken_ip/broken_ip4-version
-ltp/testcases/network/stress/dns/dns4-stress
-ltp/testcases/network/stress/ftp/ftp4-download-stress
-ltp/testcases/network/stress/ftp/ftp4-upload-stress
-ltp/testcases/network/stress/http/http4-stress
-ltp/testcases/network/stress/icmp/uni-basic/icmp4-uni-basic01
-ltp/testcases/network/stress/interface/if4-addr-change
-ltp/testcases/network/stress/interface/if4-alias-adddel
-ltp/testcases/network/stress/interface/if4-alias-addlarge
-ltp/testcases/network/stress/interface/if4-mtu-change
-ltp/testcases/network/stress/interface/if4-route-adddel
-ltp/testcases/network/stress/interface/if4-route-addlarge
-ltp/testcases/network/stress/interface/if4-updown
-ltp/testcases/network/stress/multicast/grp-operation/mcast4-grpope01
-ltp/testcases/network/stress/multicast/grp-operation/mcast4-grpope02
-ltp/testcases/network/stress/multicast/grp-operation/mcast4-grpope03
-ltp/testcases/network/stress/multicast/grp-operation/mcast4-grpope04
-ltp/testcases/network/stress/multicast/packet-flood/mcast4-pktfld01
-ltp/testcases/network/stress/multicast/packet-flood/mcast4-pktfld02
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld01
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld02
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld03
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld04
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld05
-ltp/testcases/network/stress/multicast/query-flood/mcast4-queryfld06
-ltp/testcases/network/stress/route/route4-change-dst
-ltp/testcases/network/stress/route/route4-change-gw
-ltp/testcases/network/stress/route/route4-change-if
-ltp/testcases/network/stress/route/route4-ifdown
-ltp/testcases/network/stress/route/route4-redirect
-ltp/testcases/network/stress/route/route4-rmmod
-ltp/testcases/network/stress/ssh/ssh4-stress
-ltp/testcases/network/stress/tcp/multi-diffport/tcp4-multi-diffport01
-ltp/testcases/network/stress/tcp/multi-sameport/tcp4-multi-sameport01
-ltp/testcases/network/stress/tcp/uni-basic/tcp4-uni-basic01
-ltp/testcases/network/stress/udp/multi-diffport/udp4-multi-diffport01
-ltp/testcases/network/stress/udp/uni-basic/udp4-uni-basic01
-testscripts/networkstress.sh
-
-8) Log Message: Patch to check file permission first, and then skip write-only
-files,and report them as INFO. Submitted by Cai Qian <qcai@redhat.com>
-File(s) Affected:
-ltp/testcases/kernel/fs/proc/proc01.c
-
-9) Log Message:
-Patch to skip read of all /proc/<pid> directories except /proc/self.
-Therefore, it make sure that at least one /proc/<pid> has been read,
-and also the directory will stay as long as the life time of the test.
-Submitted by Cai Qian <qcai@redhat.com>
-File(s) Affected:
-ltp/testcases/kernel/fs/proc/proc01.c
-
-10) Log Message: Create testfile in tmpdir to be consistent with other tests by Kumar Gala <galak@kernel.crashing.org>
-File(s) Affected:
-ltp/testcases/kernel/syscalls/splice/splice01.c
-ltp/testcases/kernel/syscalls/tee/tee01.c
-
-11) Log Message: Close the fd's we open when running on NFS to avoid warnings, submitted by Kumar Gala <galak@kernel.crashing.org>
-File(s) Affected:
-ltp/testcases/kernel/syscalls/creat/creat01.c
-ltp/testcases/kernel/syscalls/open/open04.c
-ltp/testcases/kernel/syscalls/writev/writev06.c
-
-12) Log Message:Close fd's to make running on NFS work, submitted by Kumar Gala <galak@kernel.crashing.org>
-File(s) Affected:
-ltp/testcases/kernel/syscalls/creat/creat05.c
-
-13) Log Message: Add a lib routine to tell us if we are running on NFS Submitted by Kumar Gala <galak@kernel.crashing.org>
-File(s) Affected:
-ltp/include/test.h
-File(s) Added:
-ltp/lib/tst_is_cwd_nfs.c
-
-14) Log Message: Adds arm to the architectures where SHMBLA != PAGESIZE, submitted by Khem Raj <kraj@mvista.com>
-File(s) Affected:
-ltp/testcases/kernel/mem/shmt/shmt09.c
-
-15) Log Message: New posix_fadvise and fadvise64 Testcases contributed by Masatake YAMATO <yamato@redhat.com>
-File(s) Affected:
-ltp/runtest/syscalls
-New File(s) Addes:
-ltp/testcases/kernel/syscalls/fadvise/Makefile
-ltp/testcases/kernel/syscalls/fadvise/posix_fadvise01.c
-ltp/testcases/kernel/syscalls/fadvise/posix_fadvise02.c
-ltp/testcases/kernel/syscalls/fadvise/posix_fadvise03.c
-ltp/testcases/kernel/syscalls/fadvise/posix_fadvise04.c
-
-16) Log Message:
-Existing code in LTP Kdump has been enhanced to test dump on network and
-different partitions. The attached patch supports following features
--Dump on EXT3 partition, partition referenced by partition name, Label and
-UUID
--Dump on raw partition
--Dump on Network dump server
--Test dump filtering feature of Kdump
--Test Link Delay feature of Kdump
--Result analysis has been implemented  for local dumping and network
-dumping.
--Result analysis has been implemented for filtering as well as link delay.
-But the analysis part can be enahnced further
--'setup' file has been modified
-      * To accept inputs from user or file
-      * To automate configuration of bootloader file to reserve memory for
-crashkernel
-      * To test basic or exchausted list of LKDTM test
-      * To accept user inputs for dumping on different partitions and for
-network dumping
--'master' file has been modified
-      *To invoke result analysis code of dumping in different destinations
-      *to remove cronjob when execution is done, this is a bug fix
--'test' file has been modifed
-      *To set kdump.conf file based on user input and trigger crash
--'Makefile' has been modified not to run 'setup'
--Added new files
-      *kdump_propogate ->To add ssh public keys to network dump server
-      *verify_dump ->To verify dump in different partitions and network
-dumping
-      *lkdtm.orig is replaced with lkdtm.base for basic testcases of lkdtm,
-lkdtm.exha for exhausted list of lkdtm testcases.
-
-Submitted by: Poornima Nayak <Poornima.Nayak@in.ibm.com>
-
-File(s) Affected:
-ltp/testcases/kdump/Makefile ltp/testcases/kdump/README
-ltp/testcases/kdump/TEST_PLAN.txt ltp/testcases/kdump/master
-ltp/testcases/kdump/setup ltp/testcases/kdump/test
-File(s) Added:
-ltp/testcases/kdump/kdump_propagate
-ltp/testcases/kdump/verify_dump
-ltp/testcases/kdump/testlists/lkdtm.base
-ltp/testcases/kdump/testlists/lkdtm.exha
-File(s) Removed:
-ltp/testcases/kdump/testlists/lkdtm.orig
-
-17) Log Message: Fix endless loop hit messages for kdump test case, by Cai Qian <qcai@redhat.com>
-File(s) Affected:
-ltp/testcases/kdump/rhtools/lkdtm_mod/lkdtm.c
-
-18) Log Message: Fix for vmcore generation and vmcore verification are at different hours, by Cai Qian <qcai@redhat.com>
-File(s) Affected:
-ltp/testcases/kdump/master
-
-19) Log Message: Changes that allows adp to run top on batch mode instead of interactively, submitted by Rafael Folco <rfolco@linux.vnet.ibm.com>
-File(s) Affected:
-ltp/testscripts/adp.sh
-
-20) Log Message: Changes to prevent fcntl14 test case to crash on uclinux on blackfin board, submitted by Vivi <violetleigh@gmail.com>
-File(s) Affected:
-ltp/testcases/kernel/syscalls/fcntl/fcntl14.c
-
-21) Log Message: New HTML format for LTP Output
-File(s) Affected:
-ltp/runltp
-File(s) Added:
-ltp/tools/genhtml.pl
-ltp/tools/html_report_header.txt
-
-22) Log Message: Add IA64 support to kdump test case, submitted by Cai Qian <qcai@redhat.com>
-File(s) Affected:
-ltp/testcases/kdump/setup
-
-23) Log Message: Patch to fix summary script of LTP kdump (can't retrieve LOG correctly), submitted by Lin Feng Shen (shenlinf@cn.ibm.com)
-File(s) Affected:
-ltp/testcases/kdump/summary
-
-24) Log Message: Fix for master script of LTP kdump (Which tries to copy /proc/config.gz though it's not available), submitted by Cijurajan Kollanoor (cijurajan@in.ibm.com)
-File(s) Affected:
-ltp/testcases/kdump/master
-
-25) Log Message: Report TCONF for swapon/off test when run on tmpfs or nfs, submitted by Kumar Gala <galak@kernel.crashing.org>
-File(s) Affected:
-testcases/kernel/syscalls/swapoff/swapoff01.c
-testcases/kernel/syscalls/swapoff/swapoff02.c
-testcases/kernel/syscalls/swapon/swapon01.c
-testcases/kernel/syscalls/swapon/swapon02.c
-testcases/kernel/syscalls/swapon/swapon03.c
-
-26) Log Message: This does testing for the missing functionalities of MADV_REMOVE, MADV_DONTFORK & MADV_DOFORK, submitted by Pavan, pnaregun@in.ibm.com
-File(s) Added:
-ltp/testcases/kernel/syscalls/madvise/madvise03.c
-
-27) Log Message: Added an Option to mail-back LTP reports, by Subrata Modak <subrata@linux.vnet.ibm.com>
-File(s) Affected:
-ltp/runltp
-
-28) Log Message: Added sendfile64 support and new testcase sendfile04.c in this regard, by Masatake YAMATO <yamato@redhat.com>
-File(s) Affected:
-runtest/syscalls
-testcases/kernel/syscalls/sendfile/Makefile
-testcases/kernel/syscalls/sendfile/sendfile02.c
-testcases/kernel/syscalls/sendfile/sendfile03.c
-File(s) Added:
-ltp/testcases/kernel/syscalls/sendfile/sendfile04.c
-
-29) Log Message: Proper Inputs for Memory Reservation for Crask Kernel on various architectures, by Poornima Nayak <Poornima.Nayak@in.ibm.com>
-File(s) Affected:
-ltp/testcases/kdump/setup
-
-
---=-ZRx1x+99VaVn3d5g8rlX
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 88bb83e..ea16b53 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -44,6 +44,45 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
+ #endif /* CONFIG_X86_IO_APIC */
+ #endif /* CONFIG_ACPI */
+ 
++static void __init fix_hypertransport_config(int num, int slot, int func)
++{
++	u32 htcfg;
++	/*
++	 *we found a hypertransport bus
++	 *make sure that are broadcasting
++	 *interrupts to all cpus on the ht bus
++	 */
++	htcfg = read_pci_config(num, slot, func, 0x68);
++	if ((htcfg & (1 << 17)) == 0)	
++		printk(KERN_INFO "Enabling hypertransport interrupt broadcast\n");
++	htcfg |= (1 << 17);
++	write_pci_config(num, slot, func, 0x68, htcfg);
++	
++}
++
++static void __init check_hypertransport_config()
++{
++	int num, slot, func;
++	u32 device, vendor;
++	func = 0;
++	for (num = 0; num < 32; num++) {
++		for (slot = 0; slot < 32; slot++) {
++			vendor = read_pci_config(num,slot,func,
++						PCI_VENDOR_ID); 
++			device = read_pci_config(num,slot,func,
++						PCI_DEVICE_ID);
++			vendor &= 0x0000ffff;
++			device >>= 16;
++			if ((vendor == PCI_VENDOR_ID_AMD) &&
++			    (device == PCI_DEVICE_ID_AMD_K8_NB))
++				fix_hypertransport_config(num,slot,func);
++		}
++	}
++
++	return;
++
++}
++
+ static void __init nvidia_bugs(void)
+ {
+ #ifdef CONFIG_ACPI
+@@ -69,7 +108,7 @@ static void __init nvidia_bugs(void)
+ #endif
+ #endif
+ 	/* RED-PEN skip them on mptables too? */
+-
++	check_hypertransport_config();
+ }
+ 
+ static void __init ati_bugs(void)
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---=-ZRx1x+99VaVn3d5g8rlX--
-
-
