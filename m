@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0910.google.com ([209.85.198.185])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J0ZPL-0001Ks-16
-	for kexec@lists.infradead.org; Fri, 07 Dec 2007 09:22:13 +0000
-Received: by rv-out-0910.google.com with SMTP id c24so622058rvf
-	for <kexec@lists.infradead.org>; Fri, 07 Dec 2007 01:22:06 -0800 (PST)
-Message-ID: <86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
-Date: Fri, 7 Dec 2007 01:22:04 -0800
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-In-Reply-To: <86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+	id 1J0c6A-0004ep-Lq
+	for kexec@lists.infradead.org; Fri, 07 Dec 2007 12:14:38 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 4/4 -mm] kexec based hibernation -v7 : kimgcore
+Date: Fri, 7 Dec 2007 13:33:05 +0100
+References: <1197042824.24045.64.camel@caritas-dev.intel.com>
+In-Reply-To: <1197042824.24045.64.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <20071127200011.GA3703@redhat.com>
-	<20071128160206.GA21286@hmsendeavour.rdu.redhat.com>
-	<20071128190525.GD3192@redhat.com> <474F7177.7050306@redhat.com>
-	<20071130144250.GC23810@redhat.com>
-	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
-	<20071206213951.GB28898@hmsreliant.think-freely.org>
-	<20071206221143.GC2863@redhat.com>
-	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
-	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+Message-Id: <200712071333.06836.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,49 +23,305 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Vivek Goyal <vgoyal@redhat.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Dec 7, 2007 12:50 AM, Yinghai Lu <yhlu.kernel@gmail.com> wrote:
->
-> On Dec 6, 2007 4:33 PM, Eric W. Biederman <ebiederm@xmission.com> wrote:
-...
-> >
-> > My feel is that if it is for legacy interrupts only it should not be a problem.
-> > Let's investigate and see if we can unconditionally enable this quirk
-> > for all opteron systems.
->
-> i checked that bit
->
-> http://www.openbios.org/viewvc/trunk/LinuxBIOSv2/src/northbridge/amd/amdk8/coherent_ht.c?revision=2596&view=markup
->
-> static void enable_apic_ext_id(u8 node)
-> {
-> #if ENABLE_APIC_EXT_ID==1
-> #warning "FIXME Is the right place to enable apic ext id here?"
->
->       u32 val;
->
->         val = pci_read_config32(NODE_HT(node), 0x68);
->         val |= (HTTC_APIC_EXT_SPUR | HTTC_APIC_EXT_ID | HTTC_APIC_EXT_BRD_CST);
->         pci_write_config32(NODE_HT(node), 0x68, val);
-> #endif
-> }
->
-> that bit only be should be set when apic id is lifted and cpu apid is
-> using 8 bits and that mean broadcast is 0xff instead 0x0f.
-> for example 8 socket dual core system or 4 socket quad core
-> system,that you should make BSP start from 0x04, so cpus apic id will
-> be [0x04, 0x13)
->
->
-> So if you want to enable that in early_quirk, you need to
-> make sure apic id is using 8 bits by check if the bit 16 (HTTC_APIC_ID) is set.
+On Friday, 7 of December 2007, Huang, Ying wrote:
+> This patch adds a file in proc file system to access the loaded
+> kexec_image, which may contains the memory image of kexeced
+> system. This can be used by kexec based hibernation to create a file
+> image of hibernating kernel, so that a kernel booting process is not
+> needed for each hibernating.
 
-it should be bit 18 (HTTC_APIC_EXT_ID)
+Hm, I'm not sure what you mean.
+
+Can you explain a bit, please?
 
 
-YH
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> 
+> ---
+>  fs/proc/Makefile      |    1 
+>  fs/proc/kimgcore.c    |  204 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/proc/proc_misc.c   |    5 +
+>  include/linux/kexec.h |    7 +
+>  kernel/kexec.c        |    5 -
+>  5 files changed, 217 insertions(+), 5 deletions(-)
+> 
+> --- /dev/null
+> +++ b/fs/proc/kimgcore.c
+> @@ -0,0 +1,204 @@
+> +/*
+> + * fs/proc/kimgcore.c - Interface for accessing the loaded
+> + * kexec_image, which may contains the memory image of kexeced system.
+> + * Heavily borrowed from fs/proc/kcore.c
+> + *
+> + * Copyright (C) 2007, Intel Corp.
+> + *      Huang Ying <ying.huang@intel.com>
+> + *
+> + * This file is released under the GPLv2
+> + */
+> +
+> +#include <linux/mm.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/user.h>
+> +#include <linux/elf.h>
+> +#include <linux/init.h>
+> +#include <linux/kexec.h>
+> +#include <linux/io.h>
+> +#include <linux/highmem.h>
+> +#include <asm/uaccess.h>
+> +
+> +struct proc_dir_entry *proc_root_kimgcore;
+> +
+> +static u32 kimgcore_size;
+> +
+> +static char *elfcorebuf;
+> +static size_t elfcorebuf_sz;
+> +
+> +static void *buf_page;
+> +
+> +static ssize_t kimage_copy_to_user(struct kimage *image, char __user *buf,
+> +				  unsigned long offset, size_t count)
+> +{
+> +	kimage_entry_t *ptr, entry;
+> +	unsigned long off = 0, offinp, trunk;
+> +	struct page *page;
+> +	void *vaddr;
+> +
+> +	for_each_kimage_entry(image, ptr, entry) {
+> +		if (!(entry & IND_SOURCE))
+> +			continue;
+> +		if (off + PAGE_SIZE > offset) {
+> +			offinp = offset - off;
+> +			if (count > PAGE_SIZE - offinp)
+> +				trunk = PAGE_SIZE - offinp;
+> +			else
+> +				trunk = count;
+> +			page = pfn_to_page(entry >> PAGE_SHIFT);
+> +			if (PageHighMem(page)) {
+> +				vaddr = kmap(page);
+> +				memcpy(buf_page, vaddr+offinp, trunk);
+> +				kunmap(page);
+> +				vaddr = buf_page;
+> +			} else
+> +				vaddr = __va(entry & PAGE_MASK) + offinp;
+> +			if (copy_to_user(buf, vaddr, trunk))
+> +				return -EFAULT;
+> +			buf += trunk;
+> +			offset += trunk;
+> +			count -= trunk;
+> +			if (!count)
+> +				break;
+> +		}
+> +		off += PAGE_SIZE;
+> +	}
+> +	return count;
+> +}
+> +
+> +static ssize_t read_kimgcore(struct file *file, char __user *buffer,
+> +			     size_t buflen, loff_t *fpos)
+> +{
+> +	size_t acc = 0;
+> +	size_t tsz;
+> +	ssize_t ssz;
+> +
+> +	if (buflen == 0 || *fpos >= kimgcore_size)
+> +		return 0;
+> +
+> +	/* trim buflen to not go beyond EOF */
+> +	if (buflen > kimgcore_size - *fpos)
+> +		buflen = kimgcore_size - *fpos;
+> +	/* Read ELF core header */
+> +	if (*fpos < elfcorebuf_sz) {
+> +		tsz = elfcorebuf_sz - *fpos;
+> +		if (buflen < tsz)
+> +			tsz = buflen;
+> +		if (copy_to_user(buffer, elfcorebuf + *fpos, tsz))
+> +			return -EFAULT;
+> +		buflen -= tsz;
+> +		*fpos += tsz;
+> +		buffer += tsz;
+> +		acc += tsz;
+> +
+> +		/* leave now if filled buffer already */
+> +		if (buflen == 0)
+> +			return acc;
+> +	}
+> +
+> +	ssz = kimage_copy_to_user(kexec_image, buffer,
+> +				  *fpos - elfcorebuf_sz, buflen);
+> +	if (ssz < 0)
+> +		return ssz;
+> +
+> +	*fpos += (buflen - ssz);
+> +	acc += (buflen - ssz);
+> +
+> +	return acc;
+> +}
+> +
+> +static int init_kimgcore(void)
+> +{
+> +	Elf64_Ehdr *ehdr;
+> +	Elf64_Phdr *phdr;
+> +	struct kexec_segment *seg;
+> +	Elf64_Off off;
+> +	unsigned long i;
+> +
+> +	elfcorebuf_sz = sizeof(Elf64_Ehdr) +
+> +		kexec_image->nr_segments * sizeof(Elf64_Phdr);
+> +	elfcorebuf = kzalloc(elfcorebuf_sz, GFP_KERNEL);
+> +	if (!elfcorebuf)
+> +		return -ENOMEM;
+> +	ehdr = (Elf64_Ehdr *)elfcorebuf;
+> +	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
+> +	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
+> +	ehdr->e_ident[EI_DATA]	= ELFDATA2LSB;
+> +	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
+> +	ehdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
+> +	memset(ehdr->e_ident+EI_PAD, 0, EI_NIDENT-EI_PAD);
+> +	ehdr->e_type = ET_CORE;
+> +	ehdr->e_machine = ELF_ARCH;
+> +	ehdr->e_version = EV_CURRENT;
+> +	ehdr->e_entry = kexec_image->start;
+> +	ehdr->e_phoff = sizeof(Elf64_Ehdr);
+> +	ehdr->e_shoff = 0;
+> +	ehdr->e_flags = 0;
+> +	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
+> +	ehdr->e_phentsize = sizeof(Elf64_Phdr);
+> +	ehdr->e_phnum = kexec_image->nr_segments;
+> +	ehdr->e_shentsize = 0;
+> +	ehdr->e_shnum = 0;
+> +	ehdr->e_shstrndx = 0;
+> +
+> +	off = elfcorebuf_sz;
+> +	phdr = (Elf64_Phdr *)(elfcorebuf + sizeof(Elf64_Ehdr));
+> +	seg = kexec_image->segment;
+> +	for (i = 0; i < kexec_image->nr_segments; i++, phdr++, seg++) {
+> +		phdr->p_type = PT_LOAD;
+> +		phdr->p_flags = PF_R|PF_W|PF_X;
+> +		phdr->p_offset = off;
+> +		phdr->p_paddr = seg->mem;
+> +		phdr->p_filesz = seg->memsz;
+> +		phdr->p_memsz = seg->memsz;
+> +		phdr->p_align = PAGE_SIZE;
+> +		off += seg->memsz;
+> +	}
+> +	kimgcore_size = off;
+> +
+> +	buf_page = (void *)__get_free_page(GFP_KERNEL);
+> +	if (!buf_page) {
+> +		kfree(elfcorebuf);
+> +		return -ENOMEM;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static void destroy_kimgcore(void)
+> +{
+> +	kfree(elfcorebuf);
+> +	free_page((unsigned long)buf_page);
+> +	elfcorebuf_sz = 0;
+> +	kimgcore_size = 0;
+> +}
+> +
+> +static int open_kimgcore(struct inode *inode, struct file *filp)
+> +{
+> +	int ret;
+> +	if (xchg(&kexec_lock, 1))
+> +		return -EBUSY;
+> +	if (!kexec_image) {
+> +		ret = -ENOENT;
+> +		goto unlock;
+> +	}
+> +	ret = init_kimgcore();
+> +	if (ret)
+> +		goto unlock;
+> +	return 0;
+> +unlock:
+> +	xchg(&kexec_lock, 0);
+> +	return ret;
+> +}
+> +
+> +static int release_kimgcore(struct inode *inode, struct file *filp)
+> +{
+> +	destroy_kimgcore();
+> +	xchg(&kexec_lock, 0);
+> +	return 0;
+> +}
+> +
+> +const struct file_operations proc_kimgcore_operations = {
+> +	.read = read_kimgcore,
+> +	.open = open_kimgcore,
+> +	.release = release_kimgcore,
+> +};
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -10,6 +10,7 @@
+>  #include <linux/elfcore.h>
+>  #include <linux/elf.h>
+>  #include <linux/notifier.h>
+> +#include <linux/proc_fs.h>
+>  #include <asm/kexec.h>
+>  
+>  /* Verify architecture specific macros are defined */
+> @@ -108,6 +109,10 @@ struct kimage {
+>  };
+>  
+>  
+> +#define for_each_kimage_entry(image, ptr, entry) \
+> +	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
+> +		ptr = (entry & IND_INDIRECTION)? \
+> +			phys_to_virt((entry & PAGE_MASK)): ptr + 1)
+>  
+>  /* kexec interface functions */
+>  extern void machine_kexec(struct kimage *image);
+> @@ -228,6 +233,8 @@ extern size_t vmcoreinfo_max_size;
+>  int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  
+> +extern const struct file_operations proc_kimgcore_operations;
+> +extern struct proc_dir_entry *proc_root_kimgcore;
+>  #else /* !CONFIG_KEXEC */
+>  struct pt_regs;
+>  struct task_struct;
+> --- a/fs/proc/Makefile
+> +++ b/fs/proc/Makefile
+> @@ -14,5 +14,6 @@ proc-$(CONFIG_PROC_SYSCTL)	+= proc_sysct
+>  proc-$(CONFIG_NET)		+= proc_net.o
+>  proc-$(CONFIG_PROC_KCORE)	+= kcore.o
+>  proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
+> +proc-$(CONFIG_KEXEC)		+= kimgcore.o
+>  proc-$(CONFIG_PROC_DEVICETREE)	+= proc_devtree.o
+>  proc-$(CONFIG_PRINTK)	+= kmsg.o
+> --- a/fs/proc/proc_misc.c
+> +++ b/fs/proc/proc_misc.c
+> @@ -1034,6 +1034,11 @@ void __init proc_misc_init(void)
+>  	if (proc_vmcore)
+>  		proc_vmcore->proc_fops = &proc_vmcore_operations;
+>  #endif
+> +#ifdef CONFIG_KEXEC
+> +	proc_root_kimgcore = create_proc_entry("kimgcore", S_IRUSR, NULL);
+> +	if (proc_root_kimgcore)
+> +		proc_root_kimgcore->proc_fops = &proc_kimgcore_operations;
+> +#endif
+>  #ifdef CONFIG_MAGIC_SYSRQ
+>  	{
+>  		struct proc_dir_entry *entry;
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -614,11 +614,6 @@ static int kimage_terminate(struct kimag
+>  	return 0;
+>  }
+>  
+> -#define for_each_kimage_entry(image, ptr, entry) \
+> -	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
+> -		ptr = (entry & IND_INDIRECTION)? \
+> -			phys_to_virt((entry & PAGE_MASK)): ptr +1)
+> -
+>  static void kimage_free_entry(kimage_entry_t entry)
+>  {
+>  	struct page *page;
 
 _______________________________________________
 kexec mailing list
