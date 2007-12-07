@@ -1,24 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J0SZT-00068f-DG
-	for kexec@lists.infradead.org; Fri, 07 Dec 2007 02:04:13 +0000
-Date: Thu, 6 Dec 2007 21:04:00 -0500
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-Message-ID: <20071207020400.GA7650@hmsendeavour.rdu.redhat.com>
-References: <474CA733.9050908@redhat.com> <20071128153649.GC3192@redhat.com>
-	<20071128160206.GA21286@hmsendeavour.rdu.redhat.com>
-	<20071128190525.GD3192@redhat.com> <474F7177.7050306@redhat.com>
-	<20071130144250.GC23810@redhat.com>
-	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
-	<20071206213951.GB28898@hmsreliant.think-freely.org>
-	<20071206221143.GC2863@redhat.com>
-	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
+	id 1J0Y2F-0003jU-Mo
+	for kexec@lists.infradead.org; Fri, 07 Dec 2007 07:54:18 +0000
+Subject: [PATCH 2/4 -mm] kexec based hibernation -v7 : kexec restore
+From: "Huang, Ying" <ying.huang@intel.com>
+Date: Fri, 07 Dec 2007 15:53:34 +0000
+Message-Id: <1197042814.24045.62.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,89 +20,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Jeremy Maitin-Shepard <jbms@cmu.edu>
+Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-On Thu, Dec 06, 2007 at 05:33:31PM -0700, Eric W. Biederman wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > On Thu, Dec 06, 2007 at 04:39:51PM -0500, Neil Horman wrote:
-> >> On Fri, Nov 30, 2007 at 09:51:31AM -0500, Neil Horman wrote:
-> >> > On Fri, Nov 30, 2007 at 09:42:50AM -0500, Vivek Goyal wrote:
-> >> <snip>
-> >> > 
-> >> > Thats what I'm doing at the moment.  I'm working on a RHEL5 patch at the
-> > moment
-> >> > (since thats whats on the production system thats failing), and will forward
-> >> > port it once its working
-> >> > 
-> >> > And not to split hairs, but techically thats not our _only_ choice.  We
-> > could
-> >> > force kdump boots on cpu0 as well ;)
-> >> > 
-> >> > Thanks
-> >> > Neil
-> >> > 
-> >> > > Thanks
-> >> > > Vivek
-> >> > 
-> >> 
-> >> 
-> >> Sorry to have been quiet on this issue for a few days. Interesting news to
-> >> report, though.  So I was working on a patch to do early apic enabling on
-> >> x86_64, and had something working for the old 2.6.18 kernel that we were
-> >> origionally testing on.  Unfortunately while it worked on 2.6.18 it failed
-> >> miserably on 2.6.24-rc3-mm2, causing check_timer to consistently report that
-> > the
-> >> timer interrupt wasn't getting received (even though we could successfully run
-> >> calibrate_delay).  Vivek and I were digging into this, when I ran accross the
-> >> description of the hypertransport configuration register in the opteron
-> >> specification.  It contains a bit that, suprise, configures the ht bus to
-> > either
-> >> unicast interrupts delivered accross the ht bus to a single cpu, or to
-> > broadcast
-> >> it to all cpus.  Since it seemed more likely that the 8259 in the nvidia
-> >> southbridge was transporting legacy mode interrupts over the ht bus than
-> >> directly to cpu0 via an actual wire, I wrote the attached patch to add a quirk
-> >> for nvidia chipsets, which scanned for hypertransport controllers, and ensured
-> >> that that broadcast bit was set.  Test results indicate that this solves the
-> >> problem, and kdump kernels boot just fine on the affected system.
-> >> 
-> >
-> > Hi Neil,
-> >
-> > Should we disable this broadcasting feature once we are through? Otherwise
-> > in normal systems it might mean extra traffic on hypertransport. There
-> > is no need for every interrupt to be broadcasted in normal systems?
-> 
-> My feel is that if it is for legacy interrupts only it should not be a problem.
-> Let's investigate and see if we can unconditionally enable this quirk
-> for all opteron systems.
-> 
-> Eric
+This patch adds writing support for /dev/oldmem. This is used to
+restore the memory contents of hibernated system.
 
-Copy that.  Thus far, I've tested it on a pure AMD engineering sample, an intel
-x86_64 box, and the affected system, a quad socket dual core AMD system with an
-nvidia chipset.  That last system is currently the only system that this patch
-will check/enable the broadcast flag on.  I did try a variant of the patch on
-the AMD engineering sample where it enabled the bit unconditionally.
-Interestingly enough, the bit was already turned on on that system.  I'm
-wondering if most systems don't already have this bit turned on.  You should be
-able to universally enable this bit, by moving the call to
-check_hypertransport_config to the top of early_quirks()
+Signed-off-by: Huang Ying <ying.huang@intel.com>
 
-Regards
-Neil
+---
+ arch/x86/kernel/crash_dump_32.c |   27 +++++++++++++++++++++++++++
+ drivers/char/mem.c              |   32 ++++++++++++++++++++++++++++++++
+ include/linux/crash_dump.h      |    2 ++
+ 3 files changed, 61 insertions(+)
 
--- 
-/***************************************************
- *Neil Horman
- *Software Engineer
- *Red Hat, Inc.
- *nhorman@redhat.com
- *gpg keyid: 1024D / 0x92A74FA1
- *http://pgp.mit.edu
- ***************************************************/
+--- a/arch/x86/kernel/crash_dump_32.c
++++ b/arch/x86/kernel/crash_dump_32.c
+@@ -59,6 +59,33 @@ ssize_t copy_oldmem_page(unsigned long p
+ 	return csize;
+ }
+ 
++ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
++			  size_t csize, unsigned long offset, int userbuf)
++{
++	void  *vaddr;
++
++	if (!csize)
++		return 0;
++
++	if (!userbuf) {
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, buf, csize);
++	} else {
++		if (!kdump_buf_page) {
++			printk(KERN_WARNING "Kdump: Kdump buffer page not"
++				" allocated\n");
++			return -EFAULT;
++		}
++		if (copy_from_user(kdump_buf_page, buf, csize))
++			return -EFAULT;
++		vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++		memcpy(vaddr + offset, kdump_buf_page, csize);
++	}
++	kunmap_atomic(vaddr, KM_PTE0);
++
++	return csize;
++}
++
+ static int __init kdump_buf_page_init(void)
+ {
+ 	int ret = 0;
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -11,6 +11,8 @@
+ extern unsigned long long elfcorehdr_addr;
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+ 						unsigned long, int);
++extern ssize_t write_oldmem_page(unsigned long, const char *, size_t,
++				 unsigned long, int);
+ extern const struct file_operations proc_vmcore_operations;
+ extern struct proc_dir_entry *proc_vmcore;
+ 
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -348,6 +348,37 @@ static ssize_t read_oldmem(struct file *
+ 	}
+ 	return read;
+ }
++
++/*
++ * Write memory corresponding to the old kernel.
++ */
++static ssize_t write_oldmem(struct file *file, const char __user *buf,
++			    size_t count, loff_t *ppos)
++{
++	unsigned long pfn, offset;
++	size_t write = 0, csize;
++	int rc = 0;
++
++	while (count) {
++		pfn = *ppos / PAGE_SIZE;
++		if (pfn > saved_max_pfn)
++			return write;
++
++		offset = (unsigned long)(*ppos % PAGE_SIZE);
++		if (count > PAGE_SIZE - offset)
++			csize = PAGE_SIZE - offset;
++		else
++			csize = count;
++		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
++		if (rc < 0)
++			return rc;
++		buf += csize;
++		*ppos += csize;
++		write += csize;
++		count -= csize;
++	}
++	return write;
++}
+ #endif
+ 
+ extern long vread(char *buf, char *addr, unsigned long count);
+@@ -783,6 +814,7 @@ static const struct file_operations full
+ #ifdef CONFIG_CRASH_DUMP
+ static const struct file_operations oldmem_fops = {
+ 	.read	= read_oldmem,
++	.write	= write_oldmem,
+ 	.open	= open_oldmem,
+ };
+ #endif
 
 _______________________________________________
 kexec mailing list
