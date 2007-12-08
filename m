@@ -1,26 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J0jai-0004t3-5D
-	for kexec@lists.infradead.org; Fri, 07 Dec 2007 20:14:38 +0000
-Date: Fri, 7 Dec 2007 15:13:33 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
-	boot cpu
-Message-ID: <20071207201333.GC18485@hmsreliant.think-freely.org>
-References: <20071130144250.GC23810@redhat.com>
-	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
-	<20071206213951.GB28898@hmsreliant.think-freely.org>
-	<20071206221143.GC2863@redhat.com>
-	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
-	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
-	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
-	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
-	<20071207175832.GA18485@hmsreliant.think-freely.org>
-	<2ea3fae10712071119h7c169b6egd9a7046eab1f136b@mail.gmail.com>
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J19To-0000Hp-RE
+	for kexec@lists.infradead.org; Sat, 08 Dec 2007 23:53:15 +0000
+Date: Sun, 9 Dec 2007 00:53:44 +0100
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
+Message-ID: <20071208235344.GA17005@elf.ucw.cz>
+References: <1197042810.24045.61.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2ea3fae10712071119h7c169b6egd9a7046eab1f136b@mail.gmail.com>
+In-Reply-To: <1197042810.24045.61.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,209 +23,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: yhlu <yinghailu@gmail.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Fri, Dec 07, 2007 at 11:19:10AM -0800, yhlu wrote:
-> On Dec 7, 2007 9:58 AM, Neil Horman <nhorman@tuxdriver.com> wrote:
-> > On Fri, Dec 07, 2007 at 09:21:44AM -0500, Neil Horman wrote:
-> > > On Fri, Dec 07, 2007 at 01:22:04AM -0800, Yinghai Lu wrote:
-> > > > On Dec 7, 2007 12:50 AM, Yinghai Lu <yhlu.kernel@gmail.com> wrote:
-> > > > >
-> > > > > On Dec 6, 2007 4:33 PM, Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > > > ...
-> > > > > >
-> > > > > > My feel is that if it is for legacy interrupts only it should not be a problem.
-> > > > > > Let's investigate and see if we can unconditionally enable this quirk
-> > > > > > for all opteron systems.
-> > > > >
-> > > > > i checked that bit
-> > > > >
-> > > > > http://www.openbios.org/viewvc/trunk/LinuxBIOSv2/src/northbridge/amd/amdk8/coherent_ht.c?revision=2596&view=markup
-> > <snip>
-> > > >
-> > > > it should be bit 18 (HTTC_APIC_EXT_ID)
-> > > >
-> > > >
-> > > > YH
-> > >
-> > > this seems reasonable, I can reroll the patch for this.  As I think about it I'm
-> > > also going to update the patch to make this check occur for any pci class 0600
-> > > device from vendor AMD, since its possible that more than just nvidia chipsets
-> > > can be affected.
-> > >
-> > > I'll repost as soon as I've tested, thanks!
-> > > Neil
-> >
-> >
-> > Ok, New patch attached.  It preforms the same function as previously described,
-> > but is more restricted in its application.  As Yinghai pointed out, the
-> > broadcast mask bit (bit 17 in the htcfg register) should only be enabled, if the
-> > extened apic id bit (bit 18 in the same register) is also set.  So this patch
-> > now check for that bit to be turned on first.  Also, this patch now adds an
-> > independent quirk check for all AMD hypertransport host controllers, since its
-> > possible for this misconfiguration to be present in systems other than nvidias.
-> > The net effect of these changes is, that its now applicable to all AMD systems
-> > containing hypertransport busses, and is only activated if extended apic ids are
-> > in use, meaning that this quirk guarantees that all processors in a system are
-> > elligible to receive interrupts from the ioapic, even if their apicid extends
-> > beyond the nominal 4 bit limitation.  Tested successfully by me.
-> >
-> > Thanks & Regards
-> > Neil
-> >
-> > Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> >
-> >
-> >  early-quirks.c |   83 ++++++++++++++++++++++++++++++++++++++++++++++++++++-----
-> >  1 file changed, 76 insertions(+), 7 deletions(-)
-> >
-> >
-> >
-> > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> > index 88bb83e..d5a7b30 100644
-> > --- a/arch/x86/kernel/early-quirks.c
-> > +++ b/arch/x86/kernel/early-quirks.c
-> > @@ -44,6 +44,50 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
-> >  #endif /* CONFIG_X86_IO_APIC */
-> >  #endif /* CONFIG_ACPI */
-> >
-> > +static void __init fix_hypertransport_config(int num, int slot, int func)
-> > +{
-> > +       u32 htcfg;
-> > +       /*
-> > +        *we found a hypertransport bus
-> > +        *make sure that are broadcasting
-> > +        *interrupts to all cpus on the ht bus
-> > +        *if we're using extended apic ids
-> > +        */
-> > +       htcfg = read_pci_config(num, slot, func, 0x68);
-> > +       if ((htcfg & (1 << 18)) == 1) {
-> > +               printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
-> > +               if ((htcfg & (1 << 17)) == 0) {
-> > +                       printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
-> > +                       htcfg |= (1 << 17);
-> > +                       write_pci_config(num, slot, func, 0x68, htcfg);
-> > +               }
-> > +       }
-> > +
-> > +}
-> > +
-> > +static void __init check_hypertransport_config()
-> > +{
-> > +       int num, slot, func;
-> > +       u32 device, vendor;
-> > +       func = 0;
-> > +       for (num = 0; num < 32; num++) {
-> > +               for (slot = 0; slot < 32; slot++) {
-> > +                       vendor = read_pci_config(num,slot,func,
-> > +                                               PCI_VENDOR_ID);
-> > +                       device = read_pci_config(num,slot,func,
-> > +                                               PCI_DEVICE_ID);
-> > +                       vendor &= 0x0000ffff;
-> > +                       device >>= 16;
-> > +                       if ((vendor == PCI_VENDOR_ID_AMD) &&
-> > +                           (device == PCI_DEVICE_ID_AMD_K8_NB))
-> > +                               fix_hypertransport_config(num,slot,func);
-> > +               }
-> > +       }
-> > +
-> > +       return;
-> > +
-> > +}
-> > +
-> >  static void __init nvidia_bugs(void)
-> >  {
-> >  #ifdef CONFIG_ACPI
-> > @@ -83,6 +127,12 @@ static void __init ati_bugs(void)
-> >  #endif
-> >  }
-> >
-> > +static void __init amd_host_bugs(void)
-> > +{
-> > +       printk(KERN_CRIT "IN AMD_HOST_BUGS\n");
-> > +       check_hypertransport_config();
-> > +}
-> > +
-> >  struct chipset {
-> >         u16 vendor;
-> >         void (*f)(void);
-> > @@ -95,9 +145,16 @@ static struct chipset early_qrk[] __initdata = {
-> >         {}
-> >  };
-> >
-> > +static struct chipset early_host_qrk[] __initdata = {
-> > +       { PCI_VENDOR_ID_AMD, amd_host_bugs},
-> > +       {}
-> > +};
-> > +
-> >  void __init early_quirks(void)
-> >  {
-> >         int num, slot, func;
-> > +       u8 found_bridge = 0;
-> > +       u8 found_host = 0;
-> >
-> >         if (!early_pci_allowed())
-> >                 return;
-> > @@ -115,18 +172,30 @@ void __init early_quirks(void)
-> >                                 if (class == 0xffffffff)
-> >                                         break;
-> >
-> > -                               if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
-> > +                               class >>= 16;
-> > +                               if ((class != PCI_CLASS_BRIDGE_PCI) &&
-> > +                                   (class != PCI_CLASS_BRIDGE_HOST))
-> >                                         continue;
-> >
-> >                                 vendor = read_pci_config(num, slot, func,
-> >                                                          PCI_VENDOR_ID);
-> >                                 vendor &= 0xffff;
-> > -
-> > -                               for (i = 0; early_qrk[i].f; i++)
-> > -                                       if (early_qrk[i].vendor == vendor) {
-> > -                                               early_qrk[i].f();
-> > -                                               return;
-> > -                                       }
-> > +                               if ((class == PCI_CLASS_BRIDGE_PCI) && (!found_bridge)) {
-> > +                                       for (i = 0; early_qrk[i].f; i++)
-> > +                                               if (early_qrk[i].vendor == vendor) {
-> > +                                                       early_qrk[i].f();
-> > +                                                       found_bridge = 1;;
-> > +                                               }
-> > +                               } else if (!found_host) {
-> > +                                       for (i = 0; early_host_qrk[i].f; i++)
-> > +                                               if (early_host_qrk[i].vendor == vendor) {
-> > +                                                       early_host_qrk[i].f();
-> > +                                                       found_host = 1;
-> > +                                               }
-> > +                               }
-> > +
-> > +                               if (found_bridge && found_host)
-> > +                                       return;
-> >
-> >                                 type = read_pci_config_byte(num, slot, func,
-> >                                                             PCI_HEADER_TYPE);
-> >
-> >
-> 
-> 1. k8 northbridge always on bus 00, and dev0x18~dev0x1f, some time
-> later it could be on bus 0xff
-> 2. need to check for first node (BSP) bit 18 and bit 17 is already
-> set, then don't need to go wild to check and set all over the bus.
-> 
-Not really sure what you're saying here.  I understand that the k8 northbridge
-will for the forseeable future be on bus 00, but why not look for all ht hosts?
-If we find an ht host, and bit 18 is set while bit 17 is not, we can safely
-correct it.
+Hi!
 
-Neil
-
-> YH
+> This patch implements the functionality of jumping between the kexeced
+> kernel and the original kernel.
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> To support jumping between two kernels, before jumping to (executing)
+> the new kernel and jumping back to the original kernel, the devices
+> are put into quiescent state, and the state of devices and CPU is
+> saved. After jumping back from kexeced kernel and jumping to the new
+> kernel, the state of devices and CPU are restored accordingly. The
+> devices/CPU state save/restore code of software suspend is called to
+> implement corresponding function.
+> 
+> To support jumping without reserving memory. One shadow backup page
+> (source page) is allocated for each page used by new (kexeced) kernel
+> (destination page). When do kexec_load, the image of new kernel is
+> loaded into source pages, and before executing, the destination pages
+> and the source pages are swapped, so the contents of destination pages
+> are backupped. Before jumping to the new (kexeced) kernel and after
+> jumping back to the original kernel, the destination pages and the
+> source pages are swapped too.
+> 
+> A jump back protocol for kexec is defined and documented. It is an
+> extension to ordinary function calling protocol. So, the facility
+> provided by this patch can be used to call ordinary C function in real
+> mode.
+> 
+> A set of flags for sys_kexec_load are added to control which state are
+> saved/restored before/after real mode code executing. For example, you
+> can specify the device state and FPU state are saved/restored
+> before/after real mode code executing.
+> 
+> The states (exclude CPU state) save/restore code can be overridden
+> based on the "command" parameter of kexec jump. Because more states
+> need to be saved/restored by hibernating/resuming.
+> 
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+
+I'm not kexec hacker... but maybe this is in good enough state to be
+merged? It is useful on its own: kexec jump and back means we can dump
+system then continue running, for example...
+
+								Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
