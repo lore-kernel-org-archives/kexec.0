@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J1klX-0004g9-Ft
-	for kexec@lists.infradead.org; Mon, 10 Dec 2007 15:42:01 +0000
-Date: Mon, 10 Dec 2007 10:39:59 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J1lMn-0003Af-SE
+	for kexec@lists.infradead.org; Mon, 10 Dec 2007 16:20:32 +0000
+Date: Mon, 10 Dec 2007 11:20:12 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
 	boot cpu
-Message-ID: <20071210153959.GA23290@hmsreliant.think-freely.org>
-References: <474F7177.7050306@redhat.com> <20071130144250.GC23810@redhat.com>
+Message-ID: <20071210162009.GA27124@redhat.com>
+References: <20071130144250.GC23810@redhat.com>
 	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
 	<20071206213951.GB28898@hmsreliant.think-freely.org>
 	<20071206221143.GC2863@redhat.com>
@@ -17,9 +17,10 @@ References: <474F7177.7050306@redhat.com> <20071130144250.GC23810@redhat.com>
 	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
 	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
 	<20071207175832.GA18485@hmsreliant.think-freely.org>
+	<20071210153959.GA23290@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071207175832.GA18485@hmsreliant.think-freely.org>
+In-Reply-To: <20071210153959.GA23290@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,170 +33,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, Dec 07, 2007 at 12:58:32PM -0500, Neil Horman wrote:
+On Mon, Dec 10, 2007 at 10:39:59AM -0500, Neil Horman wrote:
+> On Fri, Dec 07, 2007 at 12:58:32PM -0500, Neil Horman wrote:
+> > 
+> > Ok, New patch attached.  It preforms the same function as previously described,
+> > but is more restricted in its application.  As Yinghai pointed out, the
+> > broadcast mask bit (bit 17 in the htcfg register) should only be enabled, if the
+> > extened apic id bit (bit 18 in the same register) is also set.  So this patch
+> > now check for that bit to be turned on first.  Also, this patch now adds an
+> > independent quirk check for all AMD hypertransport host controllers, since its
+> > possible for this misconfiguration to be present in systems other than nvidias.
+> > The net effect of these changes is, that its now applicable to all AMD systems
+> > containing hypertransport busses, and is only activated if extended apic ids are
+> > in use, meaning that this quirk guarantees that all processors in a system are
+> > elligible to receive interrupts from the ioapic, even if their apicid extends
+> > beyond the nominal 4 bit limitation.  Tested successfully by me.
+> > 
+> > Thanks & Regards
+> > Neil
+> > 
+> > Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> > 
+> > 
+> >  early-quirks.c |   83 ++++++++++++++++++++++++++++++++++++++++++++++++++++-----
+> >  1 file changed, 76 insertions(+), 7 deletions(-)
+> > 
+> > 
+> > 
+> > diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> > index 88bb83e..d5a7b30 100644
+> > --- a/arch/x86/kernel/early-quirks.c
+> > +++ b/arch/x86/kernel/early-quirks.c
+> > @@ -44,6 +44,50 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
+> >  #endif /* CONFIG_X86_IO_APIC */
+> >  #endif /* CONFIG_ACPI */
+> >  
+> > +static void __init fix_hypertransport_config(int num, int slot, int func)
+> > +{
+> > +	u32 htcfg;
+> > +	/*
+> > +	 *we found a hypertransport bus
+> > +	 *make sure that are broadcasting
+> > +	 *interrupts to all cpus on the ht bus
+> > +	 *if we're using extended apic ids
+> > +	 */
+> > +	htcfg = read_pci_config(num, slot, func, 0x68);
+> > +	if ((htcfg & (1 << 18)) == 1) {	
+> > +		printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
+> > +		if ((htcfg & (1 << 17)) == 0) {
+> > +			printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
+> > +			htcfg |= (1 << 17);
+> > +			write_pci_config(num, slot, func, 0x68, htcfg);
+> > +		}
+> > +	}
+> > +	
+> > +}
+> > +
+> > +static void __init check_hypertransport_config()
+> > +{
+> > +	int num, slot, func;
+> > +	u32 device, vendor;
+> > +	func = 0;
+> > +	for (num = 0; num < 32; num++) {
+> > +		for (slot = 0; slot < 32; slot++) {
+> > +			vendor = read_pci_config(num,slot,func,
+> > +						PCI_VENDOR_ID); 
+> > +			device = read_pci_config(num,slot,func,
+> > +						PCI_DEVICE_ID);
+> > +			vendor &= 0x0000ffff;
+> > +			device >>= 16;
+> > +			if ((vendor == PCI_VENDOR_ID_AMD) &&
+> > +			    (device == PCI_DEVICE_ID_AMD_K8_NB))
+> > +				fix_hypertransport_config(num,slot,func);
+> > +		}
+> > +	}
+> > +
+> > +	return;
+> > +
+> > +}
+> > +
+> >  static void __init nvidia_bugs(void)
+> >  {
+> >  #ifdef CONFIG_ACPI
+> > @@ -83,6 +127,12 @@ static void __init ati_bugs(void)
+> >  #endif
+> >  }
+> >  
+> > +static void __init amd_host_bugs(void)
+> > +{
+> > +	printk(KERN_CRIT "IN AMD_HOST_BUGS\n");
+> > +	check_hypertransport_config();
+> > +}
+> > +
+> >  struct chipset {
+> >  	u16 vendor;
+> >  	void (*f)(void);
+> > @@ -95,9 +145,16 @@ static struct chipset early_qrk[] __initdata = {
+> >  	{}
+> >  };
+> >  
+> > +static struct chipset early_host_qrk[] __initdata = {
+> > +	{ PCI_VENDOR_ID_AMD, amd_host_bugs},
+> > +	{}
+> > +};
+> > +
+> >  void __init early_quirks(void)
+> >  {
+> >  	int num, slot, func;
+> > +	u8 found_bridge = 0;
+> > +	u8 found_host = 0;
+> >  
+> >  	if (!early_pci_allowed())
+> >  		return;
+> > @@ -115,18 +172,30 @@ void __init early_quirks(void)
+> >  				if (class == 0xffffffff)
+> >  					break;
+> >  
+> > -				if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
+> > +				class >>= 16;
+> > +				if ((class != PCI_CLASS_BRIDGE_PCI) &&
+> > +				    (class != PCI_CLASS_BRIDGE_HOST))
+> >  					continue;
+> >  
+> >  				vendor = read_pci_config(num, slot, func,
+> >  							 PCI_VENDOR_ID);
+> >  				vendor &= 0xffff;
+> > -
+> > -				for (i = 0; early_qrk[i].f; i++)
+> > -					if (early_qrk[i].vendor == vendor) {
+> > -						early_qrk[i].f();
+> > -						return;
+> > -					}
+> > +				if ((class == PCI_CLASS_BRIDGE_PCI) && (!found_bridge)) {
+> > +					for (i = 0; early_qrk[i].f; i++)
+> > +						if (early_qrk[i].vendor == vendor) {
+> > +							early_qrk[i].f();
+> > +							found_bridge = 1;;
+> > +						}
+> > +				} else if (!found_host) {
+> > +					for (i = 0; early_host_qrk[i].f; i++)
+> > +						if (early_host_qrk[i].vendor == vendor) {
+> > +							early_host_qrk[i].f();
+> > +							found_host = 1;
+> > +						}
+> > +				}
+> > +
+> > +				if (found_bridge && found_host)
+> > +					return;
+> >  
+> >  				type = read_pci_config_byte(num, slot, func,
+> >  							    PCI_HEADER_TYPE);
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> Ok, New patch attached.  It preforms the same function as previously described,
-> but is more restricted in its application.  As Yinghai pointed out, the
-> broadcast mask bit (bit 17 in the htcfg register) should only be enabled, if the
-> extened apic id bit (bit 18 in the same register) is also set.  So this patch
-> now check for that bit to be turned on first.  Also, this patch now adds an
-> independent quirk check for all AMD hypertransport host controllers, since its
-> possible for this misconfiguration to be present in systems other than nvidias.
-> The net effect of these changes is, that its now applicable to all AMD systems
-> containing hypertransport busses, and is only activated if extended apic ids are
-> in use, meaning that this quirk guarantees that all processors in a system are
-> elligible to receive interrupts from the ioapic, even if their apicid extends
-> beyond the nominal 4 bit limitation.  Tested successfully by me.
+> Sorry to reply to myself, but do we have consensus on this patch?  I'd like to
+> figure out its disposition if possible.  
 > 
-> Thanks & Regards
-> Neil
-> 
-> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> 
-> 
->  early-quirks.c |   83 ++++++++++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 76 insertions(+), 7 deletions(-)
-> 
-> 
-> 
-> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-> index 88bb83e..d5a7b30 100644
-> --- a/arch/x86/kernel/early-quirks.c
-> +++ b/arch/x86/kernel/early-quirks.c
-> @@ -44,6 +44,50 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
->  #endif /* CONFIG_X86_IO_APIC */
->  #endif /* CONFIG_ACPI */
->  
-> +static void __init fix_hypertransport_config(int num, int slot, int func)
-> +{
-> +	u32 htcfg;
-> +	/*
-> +	 *we found a hypertransport bus
-> +	 *make sure that are broadcasting
-> +	 *interrupts to all cpus on the ht bus
-> +	 *if we're using extended apic ids
-> +	 */
-> +	htcfg = read_pci_config(num, slot, func, 0x68);
-> +	if ((htcfg & (1 << 18)) == 1) {	
-> +		printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
-> +		if ((htcfg & (1 << 17)) == 0) {
-> +			printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
-> +			htcfg |= (1 << 17);
-> +			write_pci_config(num, slot, func, 0x68, htcfg);
-> +		}
-> +	}
-> +	
-> +}
-> +
-> +static void __init check_hypertransport_config()
-> +{
-> +	int num, slot, func;
-> +	u32 device, vendor;
-> +	func = 0;
-> +	for (num = 0; num < 32; num++) {
-> +		for (slot = 0; slot < 32; slot++) {
-> +			vendor = read_pci_config(num,slot,func,
-> +						PCI_VENDOR_ID); 
-> +			device = read_pci_config(num,slot,func,
-> +						PCI_DEVICE_ID);
-> +			vendor &= 0x0000ffff;
-> +			device >>= 16;
-> +			if ((vendor == PCI_VENDOR_ID_AMD) &&
-> +			    (device == PCI_DEVICE_ID_AMD_K8_NB))
-> +				fix_hypertransport_config(num,slot,func);
-> +		}
-> +	}
-> +
-> +	return;
-> +
-> +}
-> +
->  static void __init nvidia_bugs(void)
->  {
->  #ifdef CONFIG_ACPI
-> @@ -83,6 +127,12 @@ static void __init ati_bugs(void)
->  #endif
->  }
->  
-> +static void __init amd_host_bugs(void)
-> +{
-> +	printk(KERN_CRIT "IN AMD_HOST_BUGS\n");
-> +	check_hypertransport_config();
-> +}
-> +
->  struct chipset {
->  	u16 vendor;
->  	void (*f)(void);
-> @@ -95,9 +145,16 @@ static struct chipset early_qrk[] __initdata = {
->  	{}
->  };
->  
-> +static struct chipset early_host_qrk[] __initdata = {
-> +	{ PCI_VENDOR_ID_AMD, amd_host_bugs},
-> +	{}
-> +};
-> +
->  void __init early_quirks(void)
->  {
->  	int num, slot, func;
-> +	u8 found_bridge = 0;
-> +	u8 found_host = 0;
->  
->  	if (!early_pci_allowed())
->  		return;
-> @@ -115,18 +172,30 @@ void __init early_quirks(void)
->  				if (class == 0xffffffff)
->  					break;
->  
-> -				if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
-> +				class >>= 16;
-> +				if ((class != PCI_CLASS_BRIDGE_PCI) &&
-> +				    (class != PCI_CLASS_BRIDGE_HOST))
->  					continue;
->  
->  				vendor = read_pci_config(num, slot, func,
->  							 PCI_VENDOR_ID);
->  				vendor &= 0xffff;
-> -
-> -				for (i = 0; early_qrk[i].f; i++)
-> -					if (early_qrk[i].vendor == vendor) {
-> -						early_qrk[i].f();
-> -						return;
-> -					}
-> +				if ((class == PCI_CLASS_BRIDGE_PCI) && (!found_bridge)) {
-> +					for (i = 0; early_qrk[i].f; i++)
-> +						if (early_qrk[i].vendor == vendor) {
-> +							early_qrk[i].f();
-> +							found_bridge = 1;;
-> +						}
-> +				} else if (!found_host) {
-> +					for (i = 0; early_host_qrk[i].f; i++)
-> +						if (early_host_qrk[i].vendor == vendor) {
-> +							early_host_qrk[i].f();
-> +							found_host = 1;
-> +						}
-> +				}
-> +
-> +				if (found_bridge && found_host)
-> +					return;
->  
->  				type = read_pci_config_byte(num, slot, func,
->  							    PCI_HEADER_TYPE);
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
-Sorry to reply to myself, but do we have consensus on this patch?  I'd like to
-figure out its disposition if possible.  
+I agree with the approach taken. Somebody needs to review the changes done
+for applying early_quirks. I am not well versed with it.
 
-Thanks & Regards
-Neil
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
