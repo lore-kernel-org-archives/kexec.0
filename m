@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J1oVB-0005L2-LW
-	for kexec@lists.infradead.org; Mon, 10 Dec 2007 19:41:23 +0000
-Message-ID: <475D95EB.4000006@redhat.com>
-Date: Mon, 10 Dec 2007 11:39:23 -0800
-From: Ben Woodard <woodard@redhat.com>
+	id 1J1ojX-0007pb-Oy
+	for kexec@lists.infradead.org; Mon, 10 Dec 2007 19:56:13 +0000
+Date: Mon, 10 Dec 2007 14:55:53 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
+Message-ID: <20071210195553.GB27124@redhat.com>
+References: <1197042810.24045.61.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on	boot
-	cpu
-References: <474F7177.7050306@redhat.com> <20071130144250.GC23810@redhat.com>
-	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
-	<20071206213951.GB28898@hmsreliant.think-freely.org>
-	<20071206221143.GC2863@redhat.com>
-	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
-	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
-	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
-	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
-	<m1y7c6qrlh.fsf@ebiederm.dsl.xmission.com>
-	<20071207184810.GB18485@hmsreliant.think-freely.org>
-In-Reply-To: <20071207184810.GB18485@hmsreliant.think-freely.org>
+Content-Disposition: inline
+In-Reply-To: <1197042810.24045.61.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,56 +23,174 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-Neil Horman wrote:
-> On Fri, Dec 07, 2007 at 11:36:58AM -0700, Eric W. Biederman wrote:
->> Neil Horman <nhorman@redhat.com> writes:
->>
->>> this seems reasonable, I can reroll the patch for this.  As I think about it I'm
->>> also going to update the patch to make this check occur for any pci class 0600
->>> device from vendor AMD, since its possible that more than just nvidia chipsets
->>> can be affected.
->>>
->>> I'll repost as soon as I've tested, thanks!
->> Thanks.
->>
->> Neil in your testing please confirm the preconditions for setting 
->> the Apic Extended Broadcast flag (bit 17) are present.
->>
-> The systems that I have here do _not_ in fact have that precondition, but the
-> systems from Ben, who originoally reported the problem do have that
-> precondition, and he has reported that this fixes the hang in the kdump boot.
+On Fri, Dec 07, 2007 at 03:53:30PM +0000, Huang, Ying wrote:
+> This patch implements the functionality of jumping between the kexeced
+> kernel and the original kernel.
 > 
->> If that is the case it makes sense to always set that bit on conforming
->> systems but we will also want to print a message noting that the
->> BIOS has a bug, and we are working around it.
->>
-> I've got two printk's in this patch, one that indicates that Extended APIC ID's
-> are in use, and a second that indicates that there is a mismatch between the use
-> of extended APIC ids (bit 18) and the lack of an extended APIC id dest mask for
-> interrupt packets (bit 17).  Not sure if that meets you're requirements, but I
-> think its sufficient.  If you disagree, let me know and we can enhance them.
+
+Hi,
+
+I am just going through your patches and trying to understand it. Don't
+understand many things. Asking is easy so here you go...
+
+> To support jumping between two kernels, before jumping to (executing)
+> the new kernel and jumping back to the original kernel, the devices
+> are put into quiescent state, and the state of devices and CPU is
+> saved. After jumping back from kexeced kernel and jumping to the new
+> kernel, the state of devices and CPU are restored accordingly. The
+> devices/CPU state save/restore code of software suspend is called to
+> implement corresponding function.
 > 
-> Thanks
-> Neil
+
+I need jumping back to restore a already hibernated kernel image? Can
+you please tell little more about jumping back and why it is needed?
+
+> To support jumping without reserving memory. One shadow backup page
+> (source page) is allocated for each page used by new (kexeced) kernel
+> (destination page). When do kexec_load, the image of new kernel is
+> loaded into source pages, and before executing, the destination pages
+> and the source pages are swapped, so the contents of destination pages
+> are backupped. Before jumping to the new (kexeced) kernel and after
+> jumping back to the original kernel, the destination pages and the
+> source pages are swapped too.
 > 
-Is enough to say if the machine has 8 cpus and it is using a broadcast
-of 0x0f then there is a BIOS bug?
 
-- -ben
+Ok, so due to swapping of source and destination pages first kernel's data
+is still preserved.  How do I get the dynamic memory required for second
+kernel boot (without writing first kernel's data)?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+> A jump back protocol for kexec is defined and documented. It is an
+> extension to ordinary function calling protocol. So, the facility
+> provided by this patch can be used to call ordinary C function in real
+> mode.
+> 
+> A set of flags for sys_kexec_load are added to control which state are
+> saved/restored before/after real mode code executing. For example, you
+> can specify the device state and FPU state are saved/restored
+> before/after real mode code executing.
+> 
+> The states (exclude CPU state) save/restore code can be overridden
+> based on the "command" parameter of kexec jump. Because more states
+> need to be saved/restored by hibernating/resuming.
+> 
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> 
+> ---
+>  Documentation/i386/jump_back_protocol.txt |  103 ++++++++++++++
+>  arch/powerpc/kernel/machine_kexec.c       |    2 
+>  arch/ppc/kernel/machine_kexec.c           |    2 
+>  arch/sh/kernel/machine_kexec.c            |    2 
+>  arch/x86/kernel/machine_kexec_32.c        |   88 +++++++++---
+>  arch/x86/kernel/machine_kexec_64.c        |    2 
+>  arch/x86/kernel/relocate_kernel_32.S      |  214 +++++++++++++++++++++++++++---
+>  include/asm-x86/kexec_32.h                |   39 ++++-
+>  include/linux/kexec.h                     |   40 +++++
+>  kernel/kexec.c                            |  188 ++++++++++++++++++++++++++
+>  kernel/power/Kconfig                      |    2 
+>  kernel/sys.c                              |   35 +++-
+>  12 files changed, 648 insertions(+), 69 deletions(-)
+> 
+> --- a/arch/x86/kernel/machine_kexec_32.c
+> +++ b/arch/x86/kernel/machine_kexec_32.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/cpufeature.h>
+>  #include <asm/desc.h>
+>  #include <asm/system.h>
+> +#include <asm/cacheflush.h>
+>  
+>  #define PAGE_ALIGNED __attribute__ ((__aligned__(PAGE_SIZE)))
+>  static u32 kexec_pgd[1024] PAGE_ALIGNED;
+> @@ -83,10 +84,14 @@ static void load_segments(void)
+>   * reboot code buffer to allow us to avoid allocations
+>   * later.
+>   *
+> - * Currently nothing.
+> + * Turn off NX bit for control page.
+>   */
+>  int machine_kexec_prepare(struct kimage *image)
+>  {
+> +	if (nx_enabled) {
+> +		change_page_attr(image->control_code_page, 1, PAGE_KERNEL_EXEC);
+> +		global_flush_tlb();
+> +	}
+>  	return 0;
+>  }
+>  
+> @@ -96,25 +101,59 @@ int machine_kexec_prepare(struct kimage 
+>   */
+>  void machine_kexec_cleanup(struct kimage *image)
+>  {
+> +	if (nx_enabled) {
+> +		change_page_attr(image->control_code_page, 1, PAGE_KERNEL);
+> +		global_flush_tlb();
+> +	}
+> +}
+> +
+> +void machine_kexec(struct kimage *image)
+> +{
+> +	machine_kexec_call(image, NULL, 0);
+>  }
+>  
+>  /*
+>   * Do not allocate memory (or fail in any way) in machine_kexec().
+>   * We are past the point of no return, committed to rebooting now.
+>   */
+> -NORET_TYPE void machine_kexec(struct kimage *image)
+> +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
+> +			 unsigned int argc, va_list args)
+>  {
+>  	unsigned long page_list[PAGES_NR];
+>  	void *control_page;
+> +	asmlinkage NORET_TYPE void
+> +		(*relocate_kernel_ptr)(unsigned long indirection_page,
+> +				       unsigned long control_page,
+> +				       unsigned long start_address,
+> +				       unsigned int has_pae) ATTRIB_NORET;
+>  
+>  	/* Interrupts aren't acceptable while we reboot */
+>  	local_irq_disable();
+>  
+>  	control_page = page_address(image->control_code_page);
+> -	memcpy(control_page, relocate_kernel, PAGE_SIZE);
+> +	memcpy(control_page, relocate_page, PAGE_SIZE/2);
+> +	KCALL_MAGIC(control_page) = 0;
+>  
 
-iD8DBQFHXZXrugekqaRDL9cRAvkUAKCBLq+vXPqjOgDxD+tsYRU8W2rDwgCfR8S/
-K9B5vS1dwGZxeMeMceSxpdE=
-=9oKY
------END PGP SIGNATURE-----
+Is 2K sufficient for all the code in relocate_kernel_32.S? What's the
+current size?
+
+> +	if (image->preserve_cpu) {
+> +		unsigned int i;
+> +		KCALL_MAGIC(control_page) = KCALL_MAGIC_NUMBER;
+> +		KCALL_ARGC(control_page) = argc;
+> +		for (i = 0; i < argc; i++)
+> +			KCALL_ARGS(control_page)[i] = \
+> +				va_arg(args, unsigned long);
+> +
+> +		if (kexec_call_save_cpu(control_page)) {
+> +			image->start = KCALL_ENTRY(control_page);
+
+Who fills the entry point at offset 0x200?
+
+
+[..]
+>  extern int machine_kexec_prepare(struct kimage *image);
+>  extern void machine_kexec_cleanup(struct kimage *image);
+>  extern asmlinkage long sys_kexec_load(unsigned long entry,
+>  					unsigned long nr_segments,
+>  					struct kexec_segment __user *segments,
+>  					unsigned long flags);
+> +extern int kexec_call(struct kimage *image, unsigned long *ret,
+> +		      unsigned int argc, ...);
+
+Who is using kexec_call(). I can't seem to locate the caller of it.
+
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
