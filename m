@@ -1,16 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from ra.tuxdriver.com ([70.61.120.52])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J1uq5-0002e1-CL
-	for kexec@lists.infradead.org; Tue, 11 Dec 2007 02:27:18 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
-References: <1197042810.24045.61.camel@caritas-dev.intel.com>
-Date: Mon, 10 Dec 2007 19:25:43 -0700
-In-Reply-To: <1197042810.24045.61.camel@caritas-dev.intel.com> (Ying Huang's
-	message of "Fri, 07 Dec 2007 15:53:30 +0000")
-Message-ID: <m1tzmq0xy0.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+	id 1J1w35-0007KF-Tg
+	for kexec@lists.infradead.org; Tue, 11 Dec 2007 03:44:55 +0000
+Date: Mon, 10 Dec 2007 22:43:49 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
+	cpu
+Message-ID: <20071211034349.GA3635@localhost.localdomain>
+References: <20071130144250.GC23810@redhat.com>
+	<20071130145131.GB5822@hmsendeavour.rdu.redhat.com>
+	<20071206213951.GB28898@hmsreliant.think-freely.org>
+	<20071206221143.GC2863@redhat.com>
+	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
+	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
+	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
+	<20071207175832.GA18485@hmsreliant.think-freely.org>
+	<m1k5nm2g3w.fsf@ebiederm.dsl.xmission.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1k5nm2g3w.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,216 +33,207 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+On Mon, Dec 10, 2007 at 06:08:03PM -0700, Eric W. Biederman wrote:
+> Neil Horman <nhorman@tuxdriver.com> writes:
+> 
+<snip>
+> 
+> Ok.  This test is broken.  Please remove the == 1.  You are looking
+> for == (1 << 18).  So just saying: "if (htcfg & (1 << 18))" should be clearer.
+> 
+Fixed.  Thanks!
 
-> This patch implements the functionality of jumping between the kexeced
-> kernel and the original kernel.
->
-> To support jumping between two kernels, before jumping to (executing)
-> the new kernel and jumping back to the original kernel, the devices
-> are put into quiescent state, and the state of devices and CPU is
-> saved. After jumping back from kexeced kernel and jumping to the new
-> kernel, the state of devices and CPU are restored accordingly. The
-> devices/CPU state save/restore code of software suspend is called to
-> implement corresponding function.
->
-> To support jumping without reserving memory. One shadow backup page
-> (source page) is allocated for each page used by new (kexeced) kernel
-> (destination page). When do kexec_load, the image of new kernel is
-> loaded into source pages, and before executing, the destination pages
-> and the source pages are swapped, so the contents of destination pages
-> are backupped. Before jumping to the new (kexeced) kernel and after
-> jumping back to the original kernel, the destination pages and the
-> source pages are swapped too.
->
-> A jump back protocol for kexec is defined and documented. It is an
-> extension to ordinary function calling protocol. So, the facility
-> provided by this patch can be used to call ordinary C function in real
-> mode.
->
-> A set of flags for sys_kexec_load are added to control which state are
-> saved/restored before/after real mode code executing. For example, you
-> can specify the device state and FPU state are saved/restored
-> before/after real mode code executing.
->
-> The states (exclude CPU state) save/restore code can be overridden
-> based on the "command" parameter of kexec jump. Because more states
-> need to be saved/restored by hibernating/resuming.
->
+> > + printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
+> > +		if ((htcfg & (1 << 17)) == 0) {
+> > + printk(KERN_INFO "Enabling hypertransport extended apic interrupt
+> > broadcast\n");
+> > +			htcfg |= (1 << 17);
+> > +			write_pci_config(num, slot, func, 0x68, htcfg);
+> > +		}
+> > +	}
+> > +	
+> > +}
+> 
+> The rest of this quirk looks fine, include the fact it is only intended
+> to be applied to PCI_VENDOR_ID_AMD PCI_DEVICE_ID_AMD_K8_NB.
+> 
+Copy that.
 
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
->
-> ---
->  Documentation/i386/jump_back_protocol.txt |  103 ++++++++++++++
->  arch/powerpc/kernel/machine_kexec.c       |    2 
->  arch/ppc/kernel/machine_kexec.c           |    2 
->  arch/sh/kernel/machine_kexec.c            |    2 
->  arch/x86/kernel/machine_kexec_32.c        |   88 +++++++++---
->  arch/x86/kernel/machine_kexec_64.c        |    2 
->  arch/x86/kernel/relocate_kernel_32.S | 214 +++++++++++++++++++++++++++---
->  include/asm-x86/kexec_32.h                |   39 ++++-
->  include/linux/kexec.h                     |   40 +++++
->  kernel/kexec.c                            |  188 ++++++++++++++++++++++++++
->  kernel/power/Kconfig                      |    2 
->  kernel/sys.c                              |   35 +++-
->  12 files changed, 648 insertions(+), 69 deletions(-)
->
-> --- a/arch/x86/kernel/machine_kexec_32.c
-> +++ b/arch/x86/kernel/machine_kexec_32.c
-> @@ -20,6 +20,7 @@
->  #include <asm/cpufeature.h>
->  #include <asm/desc.h>
->  #include <asm/system.h>
-> +#include <asm/cacheflush.h>
->  
->  #define PAGE_ALIGNED __attribute__ ((__aligned__(PAGE_SIZE)))
->  static u32 kexec_pgd[1024] PAGE_ALIGNED;
-> @@ -83,10 +84,14 @@ static void load_segments(void)
->   * reboot code buffer to allow us to avoid allocations
->   * later.
->   *
-> - * Currently nothing.
-> + * Turn off NX bit for control page.
->   */
->  int machine_kexec_prepare(struct kimage *image)
->  {
-> +	if (nx_enabled) {
-> + change_page_attr(image->control_code_page, 1, PAGE_KERNEL_EXEC);
-> +		global_flush_tlb();
-> +	}
->  	return 0;
->  }
->  
-> @@ -96,25 +101,59 @@ int machine_kexec_prepare(struct kimage 
->   */
->  void machine_kexec_cleanup(struct kimage *image)
->  {
-> +	if (nx_enabled) {
-> +		change_page_attr(image->control_code_page, 1, PAGE_KERNEL);
-> +		global_flush_tlb();
-> +	}
-> +}
-> +
-> +void machine_kexec(struct kimage *image)
-> +{
-> +	machine_kexec_call(image, NULL, 0);
->  }
->  
->  /*
->   * Do not allocate memory (or fail in any way) in machine_kexec().
->   * We are past the point of no return, committed to rebooting now.
->   */
-> -NORET_TYPE void machine_kexec(struct kimage *image)
-> +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
-> +			 unsigned int argc, va_list args)
->  {
+> 
+> For what is below I don't like the way the infrastructure has been
+> extended as what you are doing quickly devolves into a big mess.
+> 
+> Please extend struct chipset to be something like:
+> struct chipset {
+> 	u16 vendor;
+> 	u16 device;
+>         u32 class, class_mask;
+> 	void (*f)(void);
+> };
+> 
+> And then the test for matching the chipset can be something like:
+> 	if ((id->vendor == PCI_ANY_ID || id->vendor == dev->vendor) &&
+> 	    (id->device == PCI_ANY_ID || id->device == dev->device) &&
+> 	    !((id->class ^ dev->class) & id->class_mask))
+> 
+> Essentially a subset of pci_match_one_device from drivers/pci/pci.h
+> 
+> That way you don't need to increase the number of tables or the
+> number of passes through the pci busses, just update the early_qrk
+> table with a few more bits of information.
+> 
+copy that.  Fixed.  Thanks!
 
-Why do we need var arg support?
-Can't we do that with a shim we load from user space?
+> The extended form should be much more maintainable in the long
+> run.  Given that we may want this before we enable the timer
+> which is very early doing this in the pci early quirks seems
+> to make sense.
+> 
+> Eric
 
->  	unsigned long page_list[PAGES_NR];
->  	void *control_page;
-> +	asmlinkage NORET_TYPE void
-> +		(*relocate_kernel_ptr)(unsigned long indirection_page,
-> +				       unsigned long control_page,
-> +				       unsigned long start_address,
-> +				       unsigned int has_pae) ATTRIB_NORET;
->  
->  	/* Interrupts aren't acceptable while we reboot */
->  	local_irq_disable();
->  
->  	control_page = page_address(image->control_code_page);
-> -	memcpy(control_page, relocate_kernel, PAGE_SIZE);
-> +	memcpy(control_page, relocate_page, PAGE_SIZE/2);
-> +	KCALL_MAGIC(control_page) = 0;
->  
-> +	if (image->preserve_cpu) {
-> +		unsigned int i;
-> +		KCALL_MAGIC(control_page) = KCALL_MAGIC_NUMBER;
-> +		KCALL_ARGC(control_page) = argc;
-> +		for (i = 0; i < argc; i++)
-> +			KCALL_ARGS(control_page)[i] = \
-> +				va_arg(args, unsigned long);
-> +
-> +		if (kexec_call_save_cpu(control_page)) {
-> +			image->start = KCALL_ENTRY(control_page);
-> +			if (ret)
-> +				*ret = KCALL_ARGS(control_page)[0];
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	relocate_kernel_ptr = control_page +
-> +		((void *)relocate_kernel - (void *)relocate_page);
->  	page_list[PA_CONTROL_PAGE] = __pa(control_page);
-> -	page_list[VA_CONTROL_PAGE] = (unsigned long)relocate_kernel;
-> +	page_list[VA_CONTROL_PAGE] = (unsigned long)control_page;
->  	page_list[PA_PGD] = __pa(kexec_pgd);
->  	page_list[VA_PGD] = (unsigned long)kexec_pgd;
->  #ifdef CONFIG_X86_PAE
-> @@ -127,26 +166,33 @@ NORET_TYPE void machine_kexec(struct kim
->  	page_list[VA_PTE_0] = (unsigned long)kexec_pte0;
->  	page_list[PA_PTE_1] = __pa(kexec_pte1);
->  	page_list[VA_PTE_1] = (unsigned long)kexec_pte1;
-> + page_list[PA_SWAP_PAGE] = (page_to_pfn(image->swap_page) << PAGE_SHIFT);
->  
-> -	/* The segment registers are funny things, they have both a
-> -	 * visible and an invisible part.  Whenever the visible part is
-> -	 * set to a specific selector, the invisible part is loaded
-> -	 * with from a table in memory.  At no other time is the
-> -	 * descriptor table in memory accessed.
-> -	 *
-> -	 * I take advantage of this here by force loading the
-> -	 * segments, before I zap the gdt with an invalid value.
-> -	 */
-> -	load_segments();
-> -	/* The gdt & idt are now invalid.
-> -	 * If you want to load them you must set up your own idt & gdt.
-> -	 */
-> -	set_gdt(phys_to_virt(0),0);
-> -	set_idt(phys_to_virt(0),0);
-> +	if (image->preserve_cpu_ext) {
-> +		/* The segment registers are funny things, they have
-> +		 * both a visible and an invisible part.  Whenever the
-> +		 * visible part is set to a specific selector, the
-> +		 * invisible part is loaded with from a table in
-> +		 * memory.  At no other time is the descriptor table
-> +		 * in memory accessed.
-> +		 *
-> +		 * I take advantage of this here by force loading the
-> +		 * segments, before I zap the gdt with an invalid
-> +		 * value.
-> +		 */
-> +		load_segments();
-> +		/* The gdt & idt are now invalid.  If you want to load
-> +		 * them you must set up your own idt & gdt.
-> +		 */
-> +		set_gdt(phys_to_virt(0), 0);
-> +		set_idt(phys_to_virt(0), 0);
-> +	}
 
-We can't keep the same idt and gdt as the pages they are on will be
-overwritten/reused.  So explictily stomping on them sounds better
-so they never work.  We can restore them on kernel reentry.
+New patch attached, with suggestions incorporated.
 
->  	/* now call it */
-> -	relocate_kernel((unsigned long)image->head, (unsigned long)page_list,
-> -			image->start, cpu_has_pae);
-> +	relocate_kernel_ptr((unsigned long)image->head,
-> +			    (unsigned long)page_list,
-> +			    image->start, cpu_has_pae);
+Thanks & regards
+Neil
 
-Why rename relocate_kernel?
-Ah.  I see.  You need to make it into a pointer again.  The crazy don't
-stop the pgd support strikes again.  It used to be named rnk.
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 
-More later.
 
-Eric
+ early-quirks.c |   82 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 73 insertions(+), 9 deletions(-)
 
+
+
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 88bb83e..4b0cee1 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -44,6 +44,50 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
+ #endif /* CONFIG_X86_IO_APIC */
+ #endif /* CONFIG_ACPI */
+ 
++static void __init fix_hypertransport_config(int num, int slot, int func)
++{
++	u32 htcfg;
++	/*
++	 *we found a hypertransport bus
++	 *make sure that are broadcasting
++	 *interrupts to all cpus on the ht bus
++	 *if we're using extended apic ids
++	 */
++	htcfg = read_pci_config(num, slot, func, 0x68);
++	if (htcfg & (1 << 18)) {	
++		printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
++		if ((htcfg & (1 << 17)) == 0) {
++			printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
++			htcfg |= (1 << 17);
++			write_pci_config(num, slot, func, 0x68, htcfg);
++		}
++	}
++	
++}
++
++static void __init check_hypertransport_config()
++{
++	int num, slot, func;
++	u32 device, vendor;
++	func = 0;
++	for (num = 0; num < 32; num++) {
++		for (slot = 0; slot < 32; slot++) {
++			vendor = read_pci_config(num,slot,func,
++						PCI_VENDOR_ID); 
++			device = read_pci_config(num,slot,func,
++						PCI_DEVICE_ID);
++			vendor &= 0x0000ffff;
++			device >>= 16;
++			if ((vendor == PCI_VENDOR_ID_AMD) &&
++			    (device == PCI_DEVICE_ID_AMD_K8_NB))
++				fix_hypertransport_config(num,slot,func);
++		}
++	}
++
++	return;
++
++}
++
+ static void __init nvidia_bugs(void)
+ {
+ #ifdef CONFIG_ACPI
+@@ -83,15 +127,25 @@ static void __init ati_bugs(void)
+ #endif
+ }
+ 
++static void __init amd_host_bugs(void)
++{
++	printk(KERN_CRIT "IN AMD_HOST_BUGS\n");
++	check_hypertransport_config();
++}
++
+ struct chipset {
+ 	u16 vendor;
++	u16 device;
++	u32 class;
++	u32 class_mask;
+ 	void (*f)(void);
+ };
+ 
+ static struct chipset early_qrk[] __initdata = {
+-	{ PCI_VENDOR_ID_NVIDIA, nvidia_bugs },
+-	{ PCI_VENDOR_ID_VIA, via_bugs },
+-	{ PCI_VENDOR_ID_ATI, ati_bugs },
++	{ PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, nvidia_bugs },
++	{ PCI_VENDOR_ID_VIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, via_bugs },
++	{ PCI_VENDOR_ID_ATI, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, ati_bugs },
++	{ PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB, PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, amd_host_bugs },
+ 	{}
+ };
+ 
+@@ -108,25 +162,35 @@ void __init early_quirks(void)
+ 			for (func = 0; func < 8; func++) {
+ 				u32 class;
+ 				u32 vendor;
++				u32 device;
+ 				u8 type;
+ 				int i;
++
+ 				class = read_pci_config(num,slot,func,
+ 							PCI_CLASS_REVISION);
+ 				if (class == 0xffffffff)
+ 					break;
+ 
+-				if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
+-					continue;
++				class >>= 16;
+ 
+ 				vendor = read_pci_config(num, slot, func,
+ 							 PCI_VENDOR_ID);
+ 				vendor &= 0xffff;
+ 
+-				for (i = 0; early_qrk[i].f; i++)
+-					if (early_qrk[i].vendor == vendor) {
+-						early_qrk[i].f();
+-						return;
++				device = read_pci_config(num, slot, func,
++							PCI_DEVICE_ID);
++				device >>= 16;
++
++				for(i=0;early_qrk[i].f != NULL;i++) {
++					if (((early_qrk[i].vendor == PCI_ANY_ID) ||
++					    (early_qrk[i].vendor == vendor)) &&
++					   ((early_qrk[i].device == PCI_ANY_ID) ||
++					    (early_qrk[i].device == device)) &&
++					   ((early_qrk[i].class ^ class) & 
++					     early_qrk[i].class_mask)) {
++						early_qrk[i].f();
+ 					}
++				}
+ 
+ 				type = read_pci_config_byte(num, slot, func,
+ 							    PCI_HEADER_TYPE);
 
 _______________________________________________
 kexec mailing list
