@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0910.google.com ([209.85.198.191])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J2A6J-0001i3-8W
-	for kexec@lists.infradead.org; Tue, 11 Dec 2007 18:45:09 +0000
-Received: by rv-out-0910.google.com with SMTP id c24so2145320rvf
-	for <kexec@lists.infradead.org>; Tue, 11 Dec 2007 10:45:01 -0800 (PST)
-Message-ID: <86802c440712111045j1384930ak77f06f4c7336aae7@mail.gmail.com>
-Date: Tue, 11 Dec 2007 10:45:01 -0800
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1J2A9F-0001wQ-B3
+	for kexec@lists.infradead.org; Tue, 11 Dec 2007 18:48:06 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
 	cpu
-In-Reply-To: <20071211182951.GC10999@hmsreliant.think-freely.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+References: <m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
+	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
 	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
 	<20071207175832.GA18485@hmsreliant.think-freely.org>
 	<m1k5nm2g3w.fsf@ebiederm.dsl.xmission.com>
@@ -21,8 +16,12 @@ References: <86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
 	<m1ejdt25x0.fsf@ebiederm.dsl.xmission.com>
 	<20071211143910.GA10999@hmsreliant.think-freely.org>
 	<m1ve75z1v3.fsf@ebiederm.dsl.xmission.com>
-	<86802c440712111000l39291faaka797bc4ee22f798a@mail.gmail.com>
-	<20071211182951.GC10999@hmsreliant.think-freely.org>
+	<20071211182254.GB10999@hmsreliant.think-freely.org>
+Date: Tue, 11 Dec 2007 11:46:34 -0700
+In-Reply-To: <20071211182254.GB10999@hmsreliant.think-freely.org> (Neil
+	Horman's message of "Tue, 11 Dec 2007 13:22:54 -0500")
+Message-ID: <m1ejdtysqd.fsf@ebiederm.dsl.xmission.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,37 +35,213 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Neil Horman <nhorman@tuxdriver.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>
 
-On Dec 11, 2007 10:29 AM, Neil Horman <nhorman@tuxdriver.com> wrote:
+Neil Horman <nhorman@tuxdriver.com> writes:
+
+> On Tue, Dec 11, 2007 at 08:29:20AM -0700, Eric W. Biederman wrote:
+>> Neil Horman <nhorman@tuxdriver.com> writes:
+>> 
+>> > On Mon, Dec 10, 2007 at 09:48:11PM -0700, Eric W. Biederman wrote:
+>> >> Neil Horman <nhorman@tuxdriver.com> writes:
+>> 
+>> Ok.  I just looked at read_pci_config.  It doesn't do the right thing for
+>> a non-aligned 32bit access.  (Not that I am convinced there is a right
+>> thing we can do).  Please make this read_pci_config_16 instead
+>> and you won't need the shift.
+>> 
+>> Either that or as I earlier suggested just do a 32bit read from offset 0
+>> and use shifts and masks to get vendor and device fields.
+>> 
 >
-> On Tue, Dec 11, 2007 at 10:00:00AM -0800, Yinghai Lu wrote:
-> > On Dec 11, 2007 7:29 AM, Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > >
-> > > I'm actually inclined to remove the return magic and just do something
-> > > like:
-> > >         static fix_applied;
-> > >         if (fix_applied++)
-> > >                 return;
-> > > In those functions that should be called only once.
-> >
-> > it seems we need to have two tables. one for northbridge (sweep all
-> > the NB_K8) and another for SB ( like Nvidia, ati..., one touch and
-> > leave)
-> >
-> > YH
-> >
-> I like Erics idea better I think.  My origional patch had two tables, and it
-> seems that it made the early quirk detection logic that much more convoluted.
-> This way each quirk can determine if it needs to be applied to more than one pci
-> device.
 >
+> The former seems like a reasonable solution to me.  Corrected in this updated
+> patch.
+>
+>> You almost got YH's comment.  You need return 2 for the old functions
+>> so we don't try and apply a per chipset fixup for every device in
+>> the system.
+>> 
+>> I'm actually inclined to remove the return magic and just do something
+>> like:
+>> 	static fix_applied;
+>> 	if (fix_applied++)
+>>         	return;
+>> In those functions that should be called only once.
+>> 
+>
+> I like the latter approach better.  It seems less convoluted to me.
+>
+> New patch attached.
 
-nvidia or ati chip will come first, and then amd NB ( K8). So you need
-to make sure "fix_applied return" is not going to skip your fix to
-K8_NB.
+Ok. My only remaining nit to pick is that fix_hypertransport_config
+is right in the middle of the nvidia quirks, which can be a bit
+confusing when reading through the code.  Otherwise I think this
+is a version that we can merge.
 
-YH
+Let's get a clean description on this thing and send it to the
+current x86 maintainers. Thomas, Ingo, and HPA
+
+
+> Thanks & Regards
+> Neil
+>
+> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+>
+>
+>  early-quirks.c | 90 +++++++++++++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 69 insertions(+), 21 deletions(-)
+>
+>
+> diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+> index 88bb83e..f307285 100644
+> --- a/arch/x86/kernel/early-quirks.c
+> +++ b/arch/x86/kernel/early-quirks.c
+> @@ -21,8 +21,13 @@
+>  #include <asm/gart.h>
+>  #endif
+>  
+> -static void __init via_bugs(void)
+> +static void __init via_bugs(int  num, int slot, int func)
+>  {
+> +	static int fix_applied = 0;
+> +
+> +	if (fix_applied++)
+> +		return;
+> +
+>  #ifdef CONFIG_GART_IOMMU
+>  	if ((end_pfn > MAX_DMA32_PFN ||  force_iommu) &&
+>  	    !gart_iommu_aperture_allowed) {
+> @@ -44,8 +49,36 @@ static int __init nvidia_hpet_check(struct acpi_table_header
+> *header)
+>  #endif /* CONFIG_X86_IO_APIC */
+>  #endif /* CONFIG_ACPI */
+>  
+> -static void __init nvidia_bugs(void)
+> +static void __init fix_hypertransport_config(int num, int slot, int func)
+>  {
+> +	u32 htcfg;
+> +	/*
+> +	 *we found a hypertransport bus
+> +	 *make sure that are broadcasting
+> +	 *interrupts to all cpus on the ht bus
+> +	 *if we're using extended apic ids
+> +	 */
+> +	htcfg = read_pci_config(num, slot, func, 0x68);
+> +	if (htcfg & (1 << 18)) {	
+> + printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
+> +		if ((htcfg & (1 << 17)) == 0) {
+> + printk(KERN_INFO "Enabling hypertransport extended apic interrupt
+> broadcast\n");
+> + printk(KERN_INFO "Note this is a bios bug, please contact your hw vendor\n");
+> +			htcfg |= (1 << 17);
+> +			write_pci_config(num, slot, func, 0x68, htcfg);
+> +		}
+> +	}
+> +
+> +	
+> +}
+> +
+> +static void __init nvidia_bugs(int num, int slot, int func)
+> +{
+> +	static int fix_applied = 0;
+> +
+> +	if (fix_applied++)
+> +		return;
+> +
+>  #ifdef CONFIG_ACPI
+>  #ifdef CONFIG_X86_IO_APIC
+>  	/*
+> @@ -72,8 +105,13 @@ static void __init nvidia_bugs(void)
+>  
+>  }
+>  
+> -static void __init ati_bugs(void)
+> +static void __init ati_bugs(int num, int slot, int func)
+>  {
+> +	static int fix_applied = 0;
+> +
+> +	if (fix_applied++)
+> +		return;
+> +
+>  #ifdef CONFIG_X86_IO_APIC
+>  	if (timer_over_8254 == 1) {
+>  		timer_over_8254 = 0;
+> @@ -84,14 +122,18 @@ static void __init ati_bugs(void)
+>  }
+>  
+>  struct chipset {
+> -	u16 vendor;
+> -	void (*f)(void);
+> +	u32 vendor;
+> +	u32 device;
+> +	u32 class;
+> +	u32 class_mask;
+> +	void (*f)(int num, int slot, int func);
+>  };
+>  
+>  static struct chipset early_qrk[] __initdata = {
+> -	{ PCI_VENDOR_ID_NVIDIA, nvidia_bugs },
+> -	{ PCI_VENDOR_ID_VIA, via_bugs },
+> -	{ PCI_VENDOR_ID_ATI, ati_bugs },
+> + { PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID,
+> nvidia_bugs },
+> + { PCI_VENDOR_ID_VIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, via_bugs },
+> + { PCI_VENDOR_ID_ATI, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, ati_bugs },
+> + { PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB, PCI_CLASS_BRIDGE_HOST,
+> PCI_ANY_ID, fix_hypertransport_config },
+>  	{}
+>  };
+>  
+> @@ -106,27 +148,33 @@ void __init early_quirks(void)
+>  	for (num = 0; num < 32; num++) {
+>  		for (slot = 0; slot < 32; slot++) {
+>  			for (func = 0; func < 8; func++) {
+> -				u32 class;
+> -				u32 vendor;
+> +				u16 class;
+> +				u16 vendor;
+> +				u16 device;
+>  				u8 type;
+>  				int i;
+> -				class = read_pci_config(num,slot,func,
+> +
+> +				class = read_pci_config_16(num,slot,func,
+>  							PCI_CLASS_REVISION);
+> -				if (class == 0xffffffff)
+> +				if (class == 0xffff)
+>  					break;
+>  
+> -				if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
+> -					continue;
+> -
+> -				vendor = read_pci_config(num, slot, func,
+> +				vendor = read_pci_config_16(num, slot, func,
+>  							 PCI_VENDOR_ID);
+> -				vendor &= 0xffff;
+>  
+> -				for (i = 0; early_qrk[i].f; i++)
+> -					if (early_qrk[i].vendor == vendor) {
+> -						early_qrk[i].f();
+> -						return;
+> +				device = read_pci_config_16(num, slot, func,
+> +							PCI_DEVICE_ID);
+> +
+> +				for(i=0;early_qrk[i].f != NULL;i++) {
+> + if (((early_qrk[i].vendor == PCI_ANY_ID) ||
+> +					    (early_qrk[i].vendor == vendor)) &&
+> + ((early_qrk[i].device == PCI_ANY_ID) ||
+> +					    (early_qrk[i].device == device)) &&
+> +					   (!((early_qrk[i].class ^ class) & 
+> +					     early_qrk[i].class_mask))) {
+> + early_qrk[i].f(num, slot, func);
+>  					}
+> +				}
+>  
+>  				type = read_pci_config_byte(num, slot, func,
+>  							    PCI_HEADER_TYPE);
 
 _______________________________________________
 kexec mailing list
