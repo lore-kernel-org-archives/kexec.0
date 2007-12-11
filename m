@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
+Received: from ra.tuxdriver.com ([70.61.120.52])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J21QP-0002Jj-Ep
-	for kexec@lists.infradead.org; Tue, 11 Dec 2007 09:29:14 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
-References: <1197042810.24045.61.camel@caritas-dev.intel.com>
-	<m1tzmq0xy0.fsf@ebiederm.dsl.xmission.com>
-	<1197388219.11506.32.camel@caritas-dev.intel.com>
-Date: Tue, 11 Dec 2007 02:27:44 -0700
-In-Reply-To: <1197388219.11506.32.camel@caritas-dev.intel.com> (Ying Huang's
-	message of "Tue, 11 Dec 2007 15:50:19 +0000")
-Message-ID: <m163z51sz3.fsf@ebiederm.dsl.xmission.com>
+	id 1J26HG-000177-Fj
+	for kexec@lists.infradead.org; Tue, 11 Dec 2007 14:40:13 +0000
+Date: Tue, 11 Dec 2007 09:39:10 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
+	boot cpu
+Message-ID: <20071211143910.GA10999@hmsreliant.think-freely.org>
+References: <20071206213951.GB28898@hmsreliant.think-freely.org>
+	<20071206221143.GC2863@redhat.com>
+	<m1bq93s5r8.fsf@ebiederm.dsl.xmission.com>
+	<86802c440712070050s3c5017a4w8e747a7035d10d3a@mail.gmail.com>
+	<86802c440712070122q6e5824bcp12e1c3f560e2ab53@mail.gmail.com>
+	<20071207142144.GA10389@hmsendeavour.rdu.redhat.com>
+	<20071207175832.GA18485@hmsreliant.think-freely.org>
+	<m1k5nm2g3w.fsf@ebiederm.dsl.xmission.com>
+	<20071211034349.GA3635@localhost.localdomain>
+	<m1ejdt25x0.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1ejdt25x0.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,164 +33,220 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+On Mon, Dec 10, 2007 at 09:48:11PM -0700, Eric W. Biederman wrote:
+> Neil Horman <nhorman@tuxdriver.com> writes:
+> 
+> Almost there.
+cool! :)
 
-> On Mon, 2007-12-10 at 19:25 -0700, Eric W. Biederman wrote:
->> "Huang, Ying" <ying.huang@intel.com> writes:
-> [...]
->> >  /*
->> >   * Do not allocate memory (or fail in any way) in machine_kexec().
->> >   * We are past the point of no return, committed to rebooting now.
->> >   */
->> > -NORET_TYPE void machine_kexec(struct kimage *image)
->> > +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
->> > +			 unsigned int argc, va_list args)
->> >  {
->> 
->> Why do we need var arg support?
->> Can't we do that with a shim we load from user space?
->
-> If all parameters are provided in user space, the usage model may be as
-> follow:
->
-> - sys_kexec_load() /* with executable/data/parameters(A) loaded */
-> - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
-> parameters(A)*/
-> - /* jump back */
-> - sys_kexec_load() /* with executable/data/parameters(B) loaded */
-> - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
-> parameters(B)*/
-> - /* jump back */
->
-> That is, the kexec image should be re-loaded if the parameters are
-> different, and there can be no state reserved in kexec image. This is OK
-> for original kexec implementation, because there is no jumping back.
-> But, for kexec with jumping back, another usage model may be useful too.
->
-> - sys_kexec_load() /* with executable/data loaded */
-> - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(A)) /* execute physical mode
-> code with parameters(A)*/
-> - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(B)) /* execute physical mode
-> code with parameters(B)*/
->
-> This way the kexec image need not to be re-loaded, and the state of
-> kexec image can be reserved across several invoking.
+<snip>
+> 
+> We should not need check_hypertransport_config as the generic loop
+> now does the work for us.
+> > +
+> >  static void __init nvidia_bugs(void)
+> >  {
+> >  #ifdef CONFIG_ACPI
+> > @@ -83,15 +127,25 @@ static void __init ati_bugs(void)
+> >  #endif
+> >  }
+> >  
+> > +static void __init amd_host_bugs(void)
+> > +{
+> > +	printk(KERN_CRIT "IN AMD_HOST_BUGS\n");
+> > +	check_hypertransport_config();
+> > +}
+> 
+> Likewise this function is unneeded and the printk is likely confusing
+> for users.
+> 
+Copy that. Fixed
 
-Interesting.  We wind up preserving the code in between invocations.
+<snip>
+> >  	{}
+> So make that fix_hypertransport_config and we should be good.
+Done
 
-I don't know about your particular issue, but I can see that clearly
-we need a way to read values back from our target image.
+> 
+> We don't need to shift device.  Although we can do:
+> device_vendor = read_pci_config(num, slot, func, PCI_VENDOR_ID);
+> device = device_vendor >> 16;
+> vendor = device_vendor & 0xffff;
+> 
+I'm not so sure about this.  In my testing, it was clear that I needed to do a
+shift on device to make valid comparisons to the defined PCI_DEVICE_* macros.
+The origional code had to do the same thing with the class field, which is
+simmilarly positioned in the pci config space.
 
-And if we can read everything back one way to proceed is to read
-everything out modify it and then write it back.
 
-Amending a kexec image that is already stored may also make sense.
+Other than that, new patch attached.  Enables the detection of AMD
+hypertransport functions and checks for the proper quirk just as before, and
+incoporates your comments above Eric, as well as yours Yinghai.
 
-I'm not convinced that the var arg parameters make sense, but you
-added them because of a real need.
+Thanks & Regards
+Neil
 
-The kexec function is split into two separate calls so that we can
-unmount the filesystem the kexec image comes from before actually
-doing the kexec.
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 
-If extensive user space shutdown or startup is needed I will argue
-that doing the work in the sys_reboot call is the wrong place to
-do it.  Although if a jump back is happening we should not need
-much restart.
 
-Can you generate a minimal patch with just the minimal necessary
-support to return from a kexec operation?
+ early-quirks.c |   76 +++++++++++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 61 insertions(+), 15 deletions(-)
 
-> Another usage model may be useful is invoking the kexec image (such as
-> firmware) from kernel space.
->
-> - kmalloc the needed memory and loaded the firmware image (if needed)
-> - sys_kexec_load() with a fake image (one segment with size 0), the
-> entry point of the fake image is the entry point of the firmware image.
-> - kexec_call(fake_image, ...) /* maybe change entry point if needed */
->
-> This way, some kernel code can invoke the firmware in physical mode just
-> like invoking an ordinary function.
 
-That certainly seems interesting.  But that doesn't justify the vararg
-part of this.
 
-> [...]
->> > -	/* The segment registers are funny things, they have both a
->> > -	 * visible and an invisible part.  Whenever the visible part is
->> > -	 * set to a specific selector, the invisible part is loaded
->> > -	 * with from a table in memory.  At no other time is the
->> > -	 * descriptor table in memory accessed.
->> > -	 *
->> > -	 * I take advantage of this here by force loading the
->> > -	 * segments, before I zap the gdt with an invalid value.
->> > -	 */
->> > -	load_segments();
->> > -	/* The gdt & idt are now invalid.
->> > -	 * If you want to load them you must set up your own idt & gdt.
->> > -	 */
->> > -	set_gdt(phys_to_virt(0),0);
->> > -	set_idt(phys_to_virt(0),0);
->> > +	if (image->preserve_cpu_ext) {
->> > +		/* The segment registers are funny things, they have
->> > +		 * both a visible and an invisible part.  Whenever the
->> > +		 * visible part is set to a specific selector, the
->> > +		 * invisible part is loaded with from a table in
->> > +		 * memory.  At no other time is the descriptor table
->> > +		 * in memory accessed.
->> > +		 *
->> > +		 * I take advantage of this here by force loading the
->> > +		 * segments, before I zap the gdt with an invalid
->> > +		 * value.
->> > +		 */
->> > +		load_segments();
->> > +		/* The gdt & idt are now invalid.  If you want to load
->> > +		 * them you must set up your own idt & gdt.
->> > +		 */
->> > +		set_gdt(phys_to_virt(0), 0);
->> > +		set_idt(phys_to_virt(0), 0);
->> > +	}
->> 
->> We can't keep the same idt and gdt as the pages they are on will be
->> overwritten/reused.  So explictily stomping on them sounds better
->> so they never work.  We can restore them on kernel reentry.
->
-> The original idea about this code is:
->
-> If the kexec image is claimed that it need not to "perserving extensive
-> CPU state" (such as FPU/MMX/GDT/LDT/IDT/CS/DS/ES/FS/GS/SS etc), the
-> IDT/GDT/CS/DS/ES/FS/GS/SS are not touched in kexec image code. So the
-> segment registers need not to be set.
->
-> But this is not clear. At least more description should be provided for
-> each preserve flag.
-
-yes.
-
->> >  	/* now call it */
->> > -	relocate_kernel((unsigned long)image->head, (unsigned long)page_list,
->> > -			image->start, cpu_has_pae);
->> > +	relocate_kernel_ptr((unsigned long)image->head,
->> > +			    (unsigned long)page_list,
->> > +			    image->start, cpu_has_pae);
->> 
->> Why rename relocate_kernel?
->> Ah.  I see.  You need to make it into a pointer again.  The crazy don't
->> stop the pgd support strikes again.  It used to be named rnk.
->
-> You mean I should change the function pointer name to rnk to keep
-> consistency? I find rnk in IA64 implementation.
-
-You were changing something that used to be a pointer back to a pointer
-and I found that confusing.    See the last one or two commits to
-machine_kexec_32.c for when this happened.  I get the feeling that we
-need to put the page table creation logic into machine_kexec_prepare,
-instead of in assembly.
-
-Eric
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 88bb83e..e13c999 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -21,7 +21,7 @@
+ #include <asm/gart.h>
+ #endif
+ 
+-static void __init via_bugs(void)
++static int __init via_bugs(int  num, int slot, int func)
+ {
+ #ifdef CONFIG_GART_IOMMU
+ 	if ((end_pfn > MAX_DMA32_PFN ||  force_iommu) &&
+@@ -32,6 +32,7 @@ static void __init via_bugs(void)
+ 		gart_iommu_aperture_disabled = 1;
+ 	}
+ #endif
++	return 1;
+ }
+ 
+ #ifdef CONFIG_ACPI
+@@ -44,7 +45,31 @@ static int __init nvidia_hpet_check(struct acpi_table_header *header)
+ #endif /* CONFIG_X86_IO_APIC */
+ #endif /* CONFIG_ACPI */
+ 
+-static void __init nvidia_bugs(void)
++static int __init fix_hypertransport_config(int num, int slot, int func)
++{
++	u32 htcfg;
++	/*
++	 *we found a hypertransport bus
++	 *make sure that are broadcasting
++	 *interrupts to all cpus on the ht bus
++	 *if we're using extended apic ids
++	 */
++	htcfg = read_pci_config(num, slot, func, 0x68);
++	if (htcfg & (1 << 18)) {	
++		printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
++		if ((htcfg & (1 << 17)) == 0) {
++			printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
++			printk(KERN_INFO "Note this is a bios bug, please contact your hw vendor\n");
++			htcfg |= (1 << 17);
++			write_pci_config(num, slot, func, 0x68, htcfg);
++		}
++	}
++
++	return 1;
++	
++}
++
++static int __init nvidia_bugs(int num, int slot, int func)
+ {
+ #ifdef CONFIG_ACPI
+ #ifdef CONFIG_X86_IO_APIC
+@@ -56,7 +81,7 @@ static void __init nvidia_bugs(void)
+ 	 * at least allow a command line override.
+ 	 */
+ 	if (acpi_use_timer_override)
+-		return;
++		return 1;
+ 
+ 	if (acpi_table_parse(ACPI_SIG_HPET, nvidia_hpet_check)) {
+ 		acpi_skip_timer_override = 1;
+@@ -70,9 +95,10 @@ static void __init nvidia_bugs(void)
+ #endif
+ 	/* RED-PEN skip them on mptables too? */
+ 
++	return 1;
+ }
+ 
+-static void __init ati_bugs(void)
++static int __init ati_bugs(int num, int slot, int func)
+ {
+ #ifdef CONFIG_X86_IO_APIC
+ 	if (timer_over_8254 == 1) {
+@@ -81,17 +107,22 @@ static void __init ati_bugs(void)
+ 		"ATI board detected. Disabling timer routing over 8254.\n");
+ 	}
+ #endif
++	return 1;
+ }
+ 
+ struct chipset {
+-	u16 vendor;
+-	void (*f)(void);
++	u32 vendor;
++	u32 device;
++	u32 class;
++	u32 class_mask;
++	int (*f)(int num, int slot, int func);
+ };
+ 
+ static struct chipset early_qrk[] __initdata = {
+-	{ PCI_VENDOR_ID_NVIDIA, nvidia_bugs },
+-	{ PCI_VENDOR_ID_VIA, via_bugs },
+-	{ PCI_VENDOR_ID_ATI, ati_bugs },
++	{ PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, nvidia_bugs },
++	{ PCI_VENDOR_ID_VIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, via_bugs },
++	{ PCI_VENDOR_ID_ATI, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, ati_bugs },
++	{ PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB, PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, fix_hypertransport_config },
+ 	{}
+ };
+ 
+@@ -108,25 +139,40 @@ void __init early_quirks(void)
+ 			for (func = 0; func < 8; func++) {
+ 				u32 class;
+ 				u32 vendor;
++				u32 device;
+ 				u8 type;
++				int ret;
+ 				int i;
++
+ 				class = read_pci_config(num,slot,func,
+ 							PCI_CLASS_REVISION);
+ 				if (class == 0xffffffff)
+ 					break;
+ 
+-				if ((class >> 16) != PCI_CLASS_BRIDGE_PCI)
+-					continue;
++				class >>= 16;
+ 
+ 				vendor = read_pci_config(num, slot, func,
+ 							 PCI_VENDOR_ID);
+ 				vendor &= 0xffff;
+ 
+-				for (i = 0; early_qrk[i].f; i++)
+-					if (early_qrk[i].vendor == vendor) {
+-						early_qrk[i].f();
+-						return;
++				device = read_pci_config(num, slot, func,
++							PCI_DEVICE_ID);
++				device >>= 16;
++
++				for(i=0;early_qrk[i].f != NULL;i++) {
++					if (((early_qrk[i].vendor == PCI_ANY_ID) ||
++					    (early_qrk[i].vendor == vendor)) &&
++					   ((early_qrk[i].device == PCI_ANY_ID) ||
++					    (early_qrk[i].device == device)) &&
++					   (!((early_qrk[i].class ^ class) & 
++					     early_qrk[i].class_mask))) {
++						ret = early_qrk[i].f(num, slot, func);
++						if (ret == 1)
++							break;
++						if (ret == 2)
++							return;
+ 					}
++				}
+ 
+ 				type = read_pci_config_byte(num, slot, func,
+ 							    PCI_HEADER_TYPE);
 
 _______________________________________________
 kexec mailing list
