@@ -1,13 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J2U7M-0001YE-7p
-	for kexec@lists.infradead.org; Wed, 12 Dec 2007 16:07:35 +0000
-Date: Wed, 12 Dec 2007 17:07:22 +0100
-From: Andi Kleen <ak@suse.de>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
-	boot cpu
-Message-ID: <20071212160722.GD4889@bingen.suse.de>
+	id 1J2XW4-0005qc-01
+	for kexec@lists.infradead.org; Wed, 12 Dec 2007 19:45:12 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
+	cpu
 References: <m1ejdt25x0.fsf@ebiederm.dsl.xmission.com>
 	<20071211143910.GA10999@hmsreliant.think-freely.org>
 	<m1ve75z1v3.fsf@ebiederm.dsl.xmission.com>
@@ -18,9 +16,12 @@ References: <m1ejdt25x0.fsf@ebiederm.dsl.xmission.com>
 	<20071211205955.GF10999@hmsreliant.think-freely.org>
 	<20071212142132.GC4889@bingen.suse.de>
 	<20071212155515.GA29735@hmsendeavour.rdu.redhat.com>
+	<20071212160722.GD4889@bingen.suse.de>
+Date: Wed, 12 Dec 2007 12:43:34 -0700
+In-Reply-To: <20071212160722.GD4889@bingen.suse.de> (Andi Kleen's message of
+	"Wed, 12 Dec 2007 17:07:22 +0100")
+Message-ID: <m1prxbu2ah.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20071212155515.GA29735@hmsendeavour.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,51 +34,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Andi Kleen <ak@suse.de>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com
 
-On Wed, Dec 12, 2007 at 10:55:15AM -0500, Neil Horman wrote:
-> On Wed, Dec 12, 2007 at 03:21:32PM +0100, Andi Kleen wrote:
-> > > +	htcfg = read_pci_config(num, slot, func, 0x68);
-> > > +	if (htcfg & (1 << 18)) {	
-> > > +		printk(KERN_INFO "Detected use of extended apic ids on hypertransport bus\n");
-> > > +		if ((htcfg & (1 << 17)) == 0) {
-> > > +			printk(KERN_INFO "Enabling hypertransport extended apic interrupt broadcast\n");
-> > > +			printk(KERN_INFO "Note this is a bios bug, please contact your hw vendor\n");
-> > 
-> > I'm not convinced the message is correct. e.g. on a system with only a dual core not enabling
-> > that is fine, but the extended IDs might be still set.
-> > 
-> I'm not sure that would be fine.  In the situation you describe, not setting
-> this bit means the second core won't receive interrupts.  If we crash on that
-> core and boot the kdump kernel with it, we get exactly the same problem that we
-> currently see.
+Andi Kleen <ak@suse.de> writes:
+>
+> It could enable the extended APIC IDs but not use them? 
 
-It could enable the extended APIC IDs but not use them? 
+In which case complaining is still correct (the BIOS was out of sync),
+enabling bit 17 is still correct and we are just in overkill mode.
 
+> Anyways I haven't got docs on that NV bridge so I might be wrong.
 
-Anyways I haven't got docs on that NV bridge so I might be wrong.
+This has everything to do with how AMD coherent hypertransport works and
+little if anything to do with how the NV bridge operated.
 
-> > >  #endif /* CONFIG_ACPI */
-> > >  
-> > > -static void __init nvidia_bugs(void)
-> > > +static void __init nvidia_bugs(int num, int slot, int func)
-> > >  {
-> > > +	static int fix_applied = 0;
-> > > +
-> > > +	if (fix_applied++)
-> > > +		return;
-> > 
-> > This looks like the wrong place to do this. Better add a flag or something
-> > in the structure. Dito others.
-> > 
-> I suppose I can, but I'm not sure what benefit that provides.  Can you
-> elaborate?
+Basically the NV bridge seems to be sending a standard hypertransport
+x86 legacy interrupt packet (that doesn't have any target information)
+and when that packet  hits the coherent hypertransport domain it isn't
+being converted into whatever would send it to all cpus. 
 
-The code would be smaller and cleaner.
+.....
 
--Andi
+The real practical problem is if somehow the BIOS goofs up this way
+and it then decides to ask us to boot on one of these cpus with
+an extended apic id.  We will hang in calibrate_delay.  So far
+this only seems to happen in the kdump case but in theory the BIOS
+could be completely crazy.
 
+Eric
 
 _______________________________________________
 kexec mailing list
