@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J2ZDC-0003RV-4u
-	for kexec@lists.infradead.org; Wed, 12 Dec 2007 21:33:50 +0000
+	id 1J2aTO-0007wl-Su
+	for kexec@lists.infradead.org; Wed, 12 Dec 2007 22:54:39 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-References: <m1ve75z1v3.fsf@ebiederm.dsl.xmission.com>
-	<20071211182254.GB10999@hmsreliant.think-freely.org>
-	<m1ejdtysqd.fsf@ebiederm.dsl.xmission.com>
-	<20071211192434.GD10999@hmsreliant.think-freely.org>
-	<86802c440712111151t29acd38kf9fac8e41743f3e4@mail.gmail.com>
-	<20071211205955.GF10999@hmsreliant.think-freely.org>
-	<20071212142132.GC4889@bingen.suse.de>
-	<20071212155515.GA29735@hmsendeavour.rdu.redhat.com>
-	<20071212160722.GD4889@bingen.suse.de>
-	<m1prxbu2ah.fsf@ebiederm.dsl.xmission.com>
-	<20071212202215.GB29735@hmsendeavour.rdu.redhat.com>
-Date: Wed, 12 Dec 2007 14:32:02 -0700
-In-Reply-To: <20071212202215.GB29735@hmsendeavour.rdu.redhat.com> (Neil
-	Horman's message of "Wed, 12 Dec 2007 15:22:15 -0500")
-Message-ID: <m1lk7ztx9p.fsf@ebiederm.dsl.xmission.com>
+Subject: Re: [PATCH -mm -v2] x86 boot : export boot_params via sysfs
+References: <1197449991.14443.88.camel@caritas-dev.intel.com>
+	<20071212174613.GC16049@kroah.com> <47602044.9010104@zytor.com>
+	<20071212185935.GA5941@kroah.com> <47603109.6080909@zytor.com>
+	<20071212222146.GC16474@kroah.com>
+Date: Wed, 12 Dec 2007 15:52:51 -0700
+In-Reply-To: <20071212222146.GC16474@kroah.com> (Greg KH's message of "Wed, 12
+	Dec 2007 14:21:46 -0800")
+Message-ID: <m1ejdrttj0.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -34,23 +26,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, Yinghai Lu <yhlu.kernel@gmail.com>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com
+To: Greg KH <greg@kroah.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Kexec Mailing List <kexec@lists.infradead.org>, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "Huang,
+	Ying" <ying.huang@intel.com>, akpm@linux-foundation.org, Thomas Gleixner <tglx@linutronix.de>
 
-Neil Horman <nhorman@tuxdriver.com> writes:
+Greg KH <greg@kroah.com> writes:
 
-> I think this just leaves us with deciding on a mechanism for how to do
-> single-application quirks.  I take Andi's point that adding a flag set to the
-> quirk data structure is a fine solution, but I'm really ok with static integers
-> in individual functions.  Do we have consensus on how to handle that?  I'm happy
-> either way, but I'd rather have agreement on how to handle it before I post
-> another iteration of this patch.  
+> On Wed, Dec 12, 2007 at 11:05:45AM -0800, H. Peter Anvin wrote:
+>> Greg KH wrote:
+>>>> This is a binary structure defined by protocol;
+>>> What protocol?  Is this a "standard" documented somewhere?
+>>
+>> Yes, see Documentation/i386/* (although some of it is documented by 
+>> reference to include/asm-x86/boot_params.h).
+>
+> Ah, so the structure has changed over the years, making this not so much
+> a "firmware" field as originally thought :)
 
-As long as the solution is simple, small and concise I don't care.
+The structure has grown and fields have been added in a backwards
+compatible way.  It is very much an ABI from the bootloader to the
+kernel.
 
-And since what will make Andi happy seems to meet those criteria,
-that should be fine.
+>> I believe kexec currently tries to reconstitute it from what data is 
+>> available to it.  This is incomplete, though, and has been flagged as a 
+>> problem for kexec.
+>
+> Can't kexec get this from within the kernel itself when it is running?
+> It doesn't need to get this from userspace, does it?
 
+/proc/kmem?  All of this work happens in user space.  The kexec
+syscall interface is just load these chunks of data at this these
+addresses and finally jump to this address.
+
+All of the interesting kexec work happens in user space, and it needs
+to stay that way.  Otherwise we loose the flexibility and simplicity
+on the kernel side.
+
+>> It can pick it up from <asm/boot_params.h> (which is now userspace-safe); 
+>> or it can decode it itself.  Programs like kexec can pass through most of 
+>> the data without examining it, this is the main reason for having it as a 
+>> blob.
+>
+> I just don't want kernel structures exported in binary fashions in
+> sysfs.  If there are specific portions that kexec currently can't figure
+> out, why not just export those fields?
+
+So all of the fields are binary.
+The entire structure is binary.
+The native format is binary.
+
+So either we need to export the processed and chewed up version of the
+information like we do today in /proc/iomem.  Or we need to export the
+raw binary format.
+
+> And, by exporting the different fields (yeah, lots of files, no big
+> deal), you can handle the change in the structure over time much easier
+> than trying to "know" the layout of the binary blob.
+
+Well /sbin/kexec fundamentally has to "know" the layout of that binary
+blob because it generates it and hands it to the kernel.
+
+Greg I think I am with you on this one.  If something other then
+/sbin/kexec is going to use that information we need to split it
+by field, although I expect the fields to remain binary.  Things
+like the e820 memory map and most of the other fields are binary
+structures defined to be returned by the firmware so at that level
+we have extremely well defined binary blobs, that may possibly
+be used for other things.
+
+/sbin/kexec needs to retain the ability to parse and understand the
+information because frequently it needs to change little things like
+the memory map and the command line and possibly other things so it
+can't blindly pass this information through.
 
 Eric
 
