@@ -1,28 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0910.google.com ([209.85.198.187])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J2G4G-00024K-7N
-	for kexec@lists.infradead.org; Wed, 12 Dec 2007 01:07:26 +0000
-Received: by rv-out-0910.google.com with SMTP id c24so25542rvf.42
-	for <kexec@lists.infradead.org>; Tue, 11 Dec 2007 17:07:19 -0800 (PST)
-Message-ID: <86802c440712111707s2a7d0a1dy684b093e64c9f398@mail.gmail.com>
-Date: Tue, 11 Dec 2007 17:07:18 -0800
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-In-Reply-To: <20071212005202.GA19016@hmsreliant.think-freely.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <20071211034349.GA3635@localhost.localdomain>
-	<20071211143910.GA10999@hmsreliant.think-freely.org>
-	<m1ve75z1v3.fsf@ebiederm.dsl.xmission.com>
-	<20071211182254.GB10999@hmsreliant.think-freely.org>
-	<m1ejdtysqd.fsf@ebiederm.dsl.xmission.com>
-	<20071211192434.GD10999@hmsreliant.think-freely.org>
-	<86802c440712111151t29acd38kf9fac8e41743f3e4@mail.gmail.com>
-	<20071211205955.GF10999@hmsreliant.think-freely.org>
-	<475F2860.2080203@redhat.com>
-	<20071212005202.GA19016@hmsreliant.think-freely.org>
+	id 1J2L4d-0006mT-Vx
+	for kexec@lists.infradead.org; Wed, 12 Dec 2007 06:28:11 +0000
+Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <m163z51sz3.fsf@ebiederm.dsl.xmission.com>
+References: <1197042810.24045.61.camel@caritas-dev.intel.com>
+	<m1tzmq0xy0.fsf@ebiederm.dsl.xmission.com>
+	<1197388219.11506.32.camel@caritas-dev.intel.com>
+	<m163z51sz3.fsf@ebiederm.dsl.xmission.com>
+Date: Wed, 12 Dec 2007 14:27:36 +0800
+Message-Id: <1197440856.14443.53.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,83 +25,234 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: Ben Woodard <woodard@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-On Dec 11, 2007 4:52 PM, Neil Horman <nhorman@tuxdriver.com> wrote:
-> On Tue, Dec 11, 2007 at 04:16:32PM -0800, Ben Woodard wrote:
-> > We may need to go back and do some additional work on this. It doesn't
-> > seem to be quite as cut and dried as we initially thought.
+On Tue, 2007-12-11 at 02:27 -0700, Eric W. Biederman wrote:
+> "Huang, Ying" <ying.huang@intel.com> writes:
+> 
+> > On Mon, 2007-12-10 at 19:25 -0700, Eric W. Biederman wrote:
+> >> "Huang, Ying" <ying.huang@intel.com> writes:
+> > [...]
+> >> >  /*
+> >> >   * Do not allocate memory (or fail in any way) in machine_kexec().
+> >> >   * We are past the point of no return, committed to rebooting now.
+> >> >   */
+> >> > -NORET_TYPE void machine_kexec(struct kimage *image)
+> >> > +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
+> >> > +			 unsigned int argc, va_list args)
+> >> >  {
+> >> 
+> >> Why do we need var arg support?
+> >> Can't we do that with a shim we load from user space?
 > >
-> > This quirk doesn't appear to work on virtually the same motherboard with
-> > the barcelona processors in it. It also may be sensitive to the firmware
-> > version.  More extensive testing on a larger number of pre-production is
-> > not showing it to be as effective as it appeared to be initially on the
-> > testbed.
+> > If all parameters are provided in user space, the usage model may be as
+> > follow:
 > >
-> > I'm doing some retesting to figure out what exact situations and
-> > collection of patches were able to make it work before.
+> > - sys_kexec_load() /* with executable/data/parameters(A) loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
+> > parameters(A)*/
+> > - /* jump back */
+> > - sys_kexec_load() /* with executable/data/parameters(B) loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
+> > parameters(B)*/
+> > - /* jump back */
 > >
-> Ben, please lets be clear about this.  You say this patch doesn't help on a new
-> system.  Even thought its almost the exact same system, its not the same system.
-> Does this patch work consistently on the system you initially reported the
-> problem on?  I've done enough work on this at this point that I'm invested in
-> not abandoning this fix.  If this solves the problem on dual core system, but
-> not quad core, I'd much rather move forward with this fix and address your quad
-> core problem as a separate issue.
->
-> Neil
->
->
-> > -ben
+> > That is, the kexec image should be re-loaded if the parameters are
+> > different, and there can be no state reserved in kexec image. This is OK
+> > for original kexec implementation, because there is no jumping back.
+> > But, for kexec with jumping back, another usage model may be useful too.
 > >
+> > - sys_kexec_load() /* with executable/data loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(A)) /* execute physical mode
+> > code with parameters(A)*/
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(B)) /* execute physical mode
+> > code with parameters(B)*/
 > >
-> >
-> > Neil Horman wrote:
-> > > Recently a kdump bug was discovered in which a system would hang inside
-> > > calibrate_delay during the booting of the kdump kernel.  This was caused by the
-> > > fact that the jiffies counter was not being incremented during timer
-> > > calibration.  The root cause of this problem was found to be a bios
-> > > misconfiguration of the hypertransport bus.  On system affected by this hang,
-> > > the bios had assigned APIC ids which used extended apic bits (more than the
-> > > nominal 4 bit ids's), but failed to configure bit 17 of the hypertransport
-> > > transaction config register, which indicated that the mask for the destination
-> > > field of interrupt packets accross the ht bus (see section 3.3.9 of
-> > > http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/26094.PDF).
-> > > If a crash occurs on a cpu with an APIC id that extends beyond 4 bits, it will
-> > > not recieve interrupts during the kdump kernel boot, and this hang will be the
-> > > result.  The fix is to add this patch, whcih add an early pci quirk check, to
-> > > forcibly enable this bit in the httcfg register.  This enables all cpus on a
-> > > system to receive interrupts, and allows kdump kernel bootup to procede
-> > > normally.
-> > >
-> > > Regards
-> > > Neil
-> > >
-> > >
-> > > Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> > >
-...
-> > >  static struct chipset early_qrk[] __initdata = {
-> > > -   { PCI_VENDOR_ID_NVIDIA, nvidia_bugs },
-> > > -   { PCI_VENDOR_ID_VIA, via_bugs },
-> > > -   { PCI_VENDOR_ID_ATI, ati_bugs },
-> > > +   { PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, nvidia_bugs },
-> > > +   { PCI_VENDOR_ID_VIA, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, via_bugs },
-> > > +   { PCI_VENDOR_ID_ATI, PCI_ANY_ID, PCI_CLASS_BRIDGE_PCI, PCI_ANY_ID, ati_bugs },
-> > > +   { PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB, PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, fix_hypertransport_config },
+> > This way the kexec image need not to be re-loaded, and the state of
+> > kexec image can be reserved across several invoking.
+> 
+> Interesting.  We wind up preserving the code in between invocations.
+> 
+> I don't know about your particular issue, but I can see that clearly
+> we need a way to read values back from our target image.
+> 
+> And if we can read everything back one way to proceed is to read
+> everything out modify it and then write it back.
+> 
+> Amending a kexec image that is already stored may also make sense.
+> 
+> I'm not convinced that the var arg parameters make sense, but you
+> added them because of a real need.
+> 
+> The kexec function is split into two separate calls so that we can
+> unmount the filesystem the kexec image comes from before actually
+> doing the kexec.
 
-==>
+Yes. Reading/Modifying the loaded kexec image is another way to do
+necessary communication between the first kernel and the second kernel.
+In fact, the patch [4/4] of this series with title:
 
-+   { PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_K8_NB,
-PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, fix_hypertransport_config },
-+   { PCI_VENDOR_ID_AMD, 0x1200 , PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID,
-fix_hypertransport_config },
+[PATCH 4/4 -mm] kexec based hibernation -v7 : kimgcore
 
-I still think good way is that you ask Supermicro to update their BIOS
-to use newer code from AMD.
+provide a ELF CORE file in /proc (/proc/kimgcore) to read the loaded
+kexec image. The writing function can be added easily.
 
-YH
+But I think communication between the first kernel and the second kernel
+via reading/modifying the loaded kernel image is not very convenient
+way. The usage mode may be as follow:
+
+- sys_kexec_load() /* with executable/data loaded */
+- modify the loaded kexec image to set the parameters (A)
+- sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with parameters(A)*/
+- In physical mode code, check the parameters A and executing accordingly
+- modify the loaded kexec image to set the parameters (B)
+- sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with parameters(B)*/
+- In physical mode code, check the parameters B and executing accordingly
+
+There are some issues with this usage model:
+
+- Some parameters in kernel needed to be exported (such as the
+kimage->head to let the second kernel to read the memory contents of
+backupped memory).
+
+- The physical mode code invoker (the first kernel) need to know where
+to write the parameters. A common protocol or a protocol case by case
+should be defined. For example, the memory address after the entry point
+of kexec image is a good candidate. But for Linux kernel, there are two
+types of entry point, the "jump back entry" or "purgatory". Maybe
+different protocol should be defined for these two types of entry point.
+
+- For the user space of the second kernel to get the parameters. A
+interface (maybe a file in /proc or /sys) should be provided to export
+the parameters to user space.
+
+So I think the current parameters passing mechanism may be more simple
+and convenient (defined in Document/i386/jump_back_protocol.txt in the
+patch).
+
+There is only one user of var args. But I think it is simple to be
+implemented and may be used by others.
+
+> If extensive user space shutdown or startup is needed I will argue
+> that doing the work in the sys_reboot call is the wrong place to
+> do it.  Although if a jump back is happening we should not need
+> much restart.
+
+Now, the user space is not shut down or started up across kexec/jump
+back, just the sys_reboot call is used to trigger the kexec/jump back.
+Maybe sys_reboot is not the right place to do this. Can you recommended
+a more suitable place?
+
+> Can you generate a minimal patch with just the minimal necessary
+> support to return from a kexec operation?
+
+I plan to reduce the KEXEC_PRESERVE_XXX flags into one
+KEXEC_PRESERVE_CONTEXT. The var args part may be changed if we have the
+consensus.
+
+> > Another usage model may be useful is invoking the kexec image (such as
+> > firmware) from kernel space.
+> >
+> > - kmalloc the needed memory and loaded the firmware image (if needed)
+> > - sys_kexec_load() with a fake image (one segment with size 0), the
+> > entry point of the fake image is the entry point of the firmware image.
+> > - kexec_call(fake_image, ...) /* maybe change entry point if needed */
+> >
+> > This way, some kernel code can invoke the firmware in physical mode just
+> > like invoking an ordinary function.
+> 
+> That certainly seems interesting.  But that doesn't justify the vararg
+> part of this.
+> 
+> > [...]
+> >> > -	/* The segment registers are funny things, they have both a
+> >> > -	 * visible and an invisible part.  Whenever the visible part is
+> >> > -	 * set to a specific selector, the invisible part is loaded
+> >> > -	 * with from a table in memory.  At no other time is the
+> >> > -	 * descriptor table in memory accessed.
+> >> > -	 *
+> >> > -	 * I take advantage of this here by force loading the
+> >> > -	 * segments, before I zap the gdt with an invalid value.
+> >> > -	 */
+> >> > -	load_segments();
+> >> > -	/* The gdt & idt are now invalid.
+> >> > -	 * If you want to load them you must set up your own idt & gdt.
+> >> > -	 */
+> >> > -	set_gdt(phys_to_virt(0),0);
+> >> > -	set_idt(phys_to_virt(0),0);
+> >> > +	if (image->preserve_cpu_ext) {
+> >> > +		/* The segment registers are funny things, they have
+> >> > +		 * both a visible and an invisible part.  Whenever the
+> >> > +		 * visible part is set to a specific selector, the
+> >> > +		 * invisible part is loaded with from a table in
+> >> > +		 * memory.  At no other time is the descriptor table
+> >> > +		 * in memory accessed.
+> >> > +		 *
+> >> > +		 * I take advantage of this here by force loading the
+> >> > +		 * segments, before I zap the gdt with an invalid
+> >> > +		 * value.
+> >> > +		 */
+> >> > +		load_segments();
+> >> > +		/* The gdt & idt are now invalid.  If you want to load
+> >> > +		 * them you must set up your own idt & gdt.
+> >> > +		 */
+> >> > +		set_gdt(phys_to_virt(0), 0);
+> >> > +		set_idt(phys_to_virt(0), 0);
+> >> > +	}
+> >> 
+> >> We can't keep the same idt and gdt as the pages they are on will be
+> >> overwritten/reused.  So explictily stomping on them sounds better
+> >> so they never work.  We can restore them on kernel reentry.
+> >
+> > The original idea about this code is:
+> >
+> > If the kexec image is claimed that it need not to "perserving extensive
+> > CPU state" (such as FPU/MMX/GDT/LDT/IDT/CS/DS/ES/FS/GS/SS etc), the
+> > IDT/GDT/CS/DS/ES/FS/GS/SS are not touched in kexec image code. So the
+> > segment registers need not to be set.
+> >
+> > But this is not clear. At least more description should be provided for
+> > each preserve flag.
+> 
+> yes.
+> 
+> >> >  	/* now call it */
+> >> > -	relocate_kernel((unsigned long)image->head, (unsigned long)page_list,
+> >> > -			image->start, cpu_has_pae);
+> >> > +	relocate_kernel_ptr((unsigned long)image->head,
+> >> > +			    (unsigned long)page_list,
+> >> > +			    image->start, cpu_has_pae);
+> >> 
+> >> Why rename relocate_kernel?
+> >> Ah.  I see.  You need to make it into a pointer again.  The crazy don't
+> >> stop the pgd support strikes again.  It used to be named rnk.
+> >
+> > You mean I should change the function pointer name to rnk to keep
+> > consistency? I find rnk in IA64 implementation.
+> 
+> You were changing something that used to be a pointer back to a pointer
+> and I found that confusing.    See the last one or two commits to
+> machine_kexec_32.c for when this happened.
+
+After checking the history of machine_kexec_32.c, I find the pointer is
+removed because a specific PGD is used. My reason is a little different.
+I need save some information (the preserving registers, some control
+registers, swap page address etc) in control_page, it is more convenient
+to execute on identity map of control_page. I think it is not a big
+issue. In fact, my code can work without making relocate_kernel to
+pointer with some changes.
+
+> I get the feeling that we
+> need to put the page table creation logic into machine_kexec_prepare,
+> instead of in assembly.
+
+Yes. I think this is a good idea, and the kexec_pgd, kexec_pmd0/1,
+kexec_pte0/1 can be allocated in machine_kexec_prepare too to save the
+static memory usage.
+
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
