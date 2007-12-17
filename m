@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
+Received: from mx3.mail.elte.hu ([157.181.1.138])
 	by pentafluge.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4EM1-0005J8-6I
-	for kexec@lists.infradead.org; Mon, 17 Dec 2007 11:41:56 +0000
-Date: Mon, 17 Dec 2007 06:38:26 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
+	id 1J4Hmg-0008BO-B1
+	for kexec@lists.infradead.org; Mon, 17 Dec 2007 15:21:41 +0000
+Date: Mon, 17 Dec 2007 16:16:42 +0100
+From: Ingo Molnar <mingo@elte.hu>
 Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on
 	boot cpu
-Message-ID: <20071217113826.GA21307@hmsreliant.think-freely.org>
-References: <20071211205955.GF10999@hmsreliant.think-freely.org>
+Message-ID: <20071217151642.GA25081@elte.hu>
+References: <20071211192434.GD10999@hmsreliant.think-freely.org>
+	<86802c440712111151t29acd38kf9fac8e41743f3e4@mail.gmail.com>
+	<20071211205955.GF10999@hmsreliant.think-freely.org>
 	<20071212142132.GC4889@bingen.suse.de>
 	<20071212155515.GA29735@hmsendeavour.rdu.redhat.com>
 	<20071212160722.GD4889@bingen.suse.de>
@@ -16,11 +18,9 @@ References: <20071211205955.GF10999@hmsreliant.think-freely.org>
 	<20071212202215.GB29735@hmsendeavour.rdu.redhat.com>
 	<m1lk7ztx9p.fsf@ebiederm.dsl.xmission.com>
 	<20071213143922.GA4674@hmsreliant.think-freely.org>
-	<20071213151629.GB31269@one.firstfloor.org>
-	<20071213153222.GB4674@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071213153222.GB4674@hmsreliant.think-freely.org>
+In-Reply-To: <20071213143922.GA4674@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,37 +33,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, Yinghai Lu <yhlu.kernel@gmail.com>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@suse.de>, hbabu@us.ibm.com, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, Yinghai Lu <yhlu.kernel@gmail.com>
 
-On Thu, Dec 13, 2007 at 10:32:22AM -0500, Neil Horman wrote:
-> On Thu, Dec 13, 2007 at 04:16:29PM +0100, Andi Kleen wrote:
-> > On Thu, Dec 13, 2007 at 09:39:22AM -0500, Neil Horman wrote:
-> > > 
-> > > Ok, new patch attached, taking into account Andi's request for a cleaner method
-> > 
-> > Sorry for not noticing that earlier, but was there a specific reason this needs
-> > to be an early quirk at all? kexec can only happen after the standard quirks ran.
-> > I think it should be fine as a standard "late" quirk.
-> > 
-> > -Andi
-> > 
-> Early quirk seemed like the right thing to do to me.  Starting from boot up,
-> this (mis)configuration by the bios can mean that come cpus just don't get
-> interrupts.  I could imagine situations like serial console not working if the
-> serial port interrupt was routed to a cpu that used extended APIC id.  I've
-> never actually observed it happening, but making sure that all cpus were
-> eligible to get interrupts early in the boot process made sense to me.
-> 
-> Neil
-> 
 
-Sorry to push on this, but do we have a consensus on this fix?  Andi, do you
-still feel this needs to be a late quirk given my previous arguments?
+* Neil Horman <nhorman@tuxdriver.com> wrote:
 
-Regards
-Neil
+> Ok, new patch attached, taking into account Andi's request for a 
+> cleaner method to implement single application quirks.  I've spoken 
+> with Ben, who is continuing to retest, and reports that clean 
+> methodical testing results in success with this patch.
 
+thanks, i've added your patch to x86.git#mm - queued up for v2.6.25 
+merging. But v2.6.24 merging would be too risky i think: it's not a 
+regression fix and for a regular fix it's a bit late in the cycle for a 
+bugfix that changes so many aspects of the early quirk code.
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
