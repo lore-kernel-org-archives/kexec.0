@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4Y7l-0008E5-Ux
+	id 1J4Y7m-0008E7-1l
 	for kexec@lists.infradead.org; Tue, 18 Dec 2007 08:48:36 +0000
 MIME-Version: 1.0
-Subject: [PATCH 7/8] removed partially duplicated system headers
-Message-Id: <1197967675.863698.29684842564.7.gpush@pokey>
+Subject: [PATCH 1/8] Enable building a 32 bit binary for ppc64 platforms.
+Message-Id: <1197967675.855616.615518870292.1.gpush@pokey>
 In-Reply-To: <1197967675.854275.930419561848.0.gpush@pokey>
 From: Jeremy Kerr <jk@ozlabs.org>
 Date: Tue, 18 Dec 2007 17:47:55 +0900
@@ -23,874 +23,279 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-From: Simon Horman <horms@verge.net.au>
+From: David Woodhouse <dwmw2@infradead.org>
 
-Purgatory seems to partially duplicate system headers.
-It seems a log cleaner not to do so.
+Based on
+http://cvs.fedora.redhat.com/viewcvs/rpms/kexec-tools/devel/kexec-tools-1.101-ppc-boots-ppc64.patch?rev=1.2&view=auto
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+64 bit: OK
+32 bit: purgatory build fails
+
+Work-in-progress-by: Geoff Levand <geoffrey.levand@am.sony.com>
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
 ---
- purgatory/arch/alpha/include/limits.h    |   57 -----------------------------
- purgatory/arch/alpha/include/stdint.h    |   16 --------
- purgatory/arch/i386/console-x86.c        |    3 +
- purgatory/arch/i386/include/limits.h     |   58 ------------------------------
- purgatory/arch/i386/include/stdint.h     |   16 --------
- purgatory/arch/i386/pic.c                |    2 -
- purgatory/arch/i386/purgatory-x86.c      |    2 -
- purgatory/arch/i386/timer.c              |    1 
- purgatory/arch/i386/vga.c                |    2 -
- purgatory/arch/ia64/include/limits.h     |   57 -----------------------------
- purgatory/arch/ia64/include/stdint.h     |   16 --------
- purgatory/arch/ppc/include/limits.h      |   58 ------------------------------
- purgatory/arch/ppc/include/stdint.h      |   16 --------
- purgatory/arch/ppc64/include/limits.h    |   57 -----------------------------
- purgatory/arch/ppc64/include/stdint.h    |   16 --------
- purgatory/arch/s390/include/limits.h     |   54 ----------------------------
- purgatory/arch/s390/include/stdint.h     |   24 ------------
- purgatory/arch/sh/include/limits.h       |   58 ------------------------------
- purgatory/arch/sh/include/stdint.h       |   16 --------
- purgatory/arch/x86_64/include/arch/io.h  |   59 -------------------------------
- purgatory/arch/x86_64/include/limits.h   |   57 -----------------------------
- purgatory/arch/x86_64/include/stdint.h   |   16 --------
- purgatory/arch/x86_64/purgatory-x86_64.c |    2 -
- util_lib/include/sha256.h                |    1 
- 24 files changed, 7 insertions(+), 657 deletions(-)
+ kexec/arch/ppc64/crashdump-ppc64.h     |    4 ++--
+ kexec/arch/ppc64/kexec-elf-ppc64.c     |   26 +++++++++++++-------------
+ kexec/arch/ppc64/kexec-elf-rel-ppc64.c |    4 ++--
+ kexec/arch/ppc64/kexec-ppc64.c         |   20 ++++++++++----------
+ kexec/arch/ppc64/kexec-ppc64.h         |    2 +-
+ kexec/kexec-sha256.h                   |    4 ++--
+ purgatory/arch/ppc64/Makefile          |    2 ++
+ purgatory/purgatory.c                  |    2 ++
+ 8 files changed, 34 insertions(+), 30 deletions(-)
 
-diff --git a/purgatory/arch/alpha/include/limits.h b/purgatory/arch/alpha/include/limits.h
-deleted file mode 100644
-index 0c6f21f..0000000
---- a/purgatory/arch/alpha/include/limits.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	9223372036854775807L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	18446744073709551615UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/alpha/include/stdint.h b/purgatory/arch/alpha/include/stdint.h
-deleted file mode 100644
-index 2f9c592..0000000
---- a/purgatory/arch/alpha/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long      uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long        int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
-index 128f202..68f5daf 100644
---- a/purgatory/arch/i386/console-x86.c
-+++ b/purgatory/arch/i386/console-x86.c
-@@ -1,4 +1,5 @@
--#include <arch/io.h>
-+#include <stdint.h>
-+#include <sys/io.h>
- #include <purgatory.h>
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.h b/kexec/arch/ppc64/crashdump-ppc64.h
+index 583338a..0ce9c46 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.h
++++ b/kexec/arch/ppc64/crashdump-ppc64.h
+@@ -23,8 +23,8 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size);
+ #define _ALIGN_UP(addr,size)	(((addr)+((size)-1))&(~((size)-1)))
+ #define _ALIGN_DOWN(addr,size)	((addr)&(~((size)-1)))
  
- /*
-diff --git a/purgatory/arch/i386/include/limits.h b/purgatory/arch/i386/include/limits.h
-deleted file mode 100644
-index d5a5a02..0000000
---- a/purgatory/arch/i386/include/limits.h
-+++ /dev/null
-@@ -1,58 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	2147483647L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	4294967295UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/i386/include/stdint.h b/purgatory/arch/i386/include/stdint.h
-deleted file mode 100644
-index 79262c2..0000000
---- a/purgatory/arch/i386/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long long uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long long   int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/i386/pic.c b/purgatory/arch/i386/pic.c
-index 1b73ea9..c23c459 100644
---- a/purgatory/arch/i386/pic.c
-+++ b/purgatory/arch/i386/pic.c
-@@ -16,7 +16,7 @@
-  * along with this program; if not, write to the Free Software
-  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-  */
--#include <arch/io.h>
-+#include <sys/io.h>
- #include <purgatory.h>
- #include "purgatory-x86.h"
+-extern unsigned long long crash_base;
+-extern unsigned long long crash_size;
++extern uint64_t crash_base;
++extern uint64_t crash_size;
+ extern unsigned int rtas_base;
+ extern unsigned int rtas_size;
  
-diff --git a/purgatory/arch/i386/purgatory-x86.c b/purgatory/arch/i386/purgatory-x86.c
-index 5ad0740..4d2c5c7 100644
---- a/purgatory/arch/i386/purgatory-x86.c
-+++ b/purgatory/arch/i386/purgatory-x86.c
-@@ -1,4 +1,4 @@
--#include <arch/io.h>
-+#include <stdint.h>
- #include <purgatory.h>
- #include "purgatory-x86.h"
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index 65f289b..165a0f6 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -42,7 +42,7 @@
+ #define BOOTLOADER         "kexec"
+ #define BOOTLOADER_VERSION VERSION
  
-diff --git a/purgatory/arch/i386/timer.c b/purgatory/arch/i386/timer.c
-index dec5938..7a4bdaa 100644
---- a/purgatory/arch/i386/timer.c
-+++ b/purgatory/arch/i386/timer.c
-@@ -1,4 +1,3 @@
--#include <arch/io.h>
- #include <purgatory.h>
- #include "purgatory-x86.h"
+-unsigned long initrd_base, initrd_size;
++uint64_t initrd_base, initrd_size;
+ unsigned char reuse_initrd = 0;
+ const char *ramdisk;
  
-diff --git a/purgatory/arch/i386/vga.c b/purgatory/arch/i386/vga.c
-index effa8ff..e65976c 100644
---- a/purgatory/arch/i386/vga.c
-+++ b/purgatory/arch/i386/vga.c
-@@ -1,4 +1,4 @@
--#include <arch/io.h>
-+#include <sys/io.h>
- #include <purgatory.h>
- #include "purgatory-x86.h"
+@@ -83,19 +83,19 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	char *cmdline, *modified_cmdline;
+ 	const char *devicetreeblob;
+ 	int cmdline_len, modified_cmdline_len;
+-	unsigned long long max_addr, hole_addr;
++	uint64_t max_addr, hole_addr;
+ 	unsigned char *seg_buf = NULL;
+ 	off_t seg_size = 0;
+ 	struct mem_phdr *phdr;
+ 	size_t size;
+-	unsigned long long *rsvmap_ptr;
++	uint64_t *rsvmap_ptr;
+ 	struct bootblock *bb_ptr;
+ 	unsigned int nr_segments, i;
+ 	int result, opt;
+-	unsigned long my_kernel, my_dt_offset;
++	uint64_t my_kernel, my_dt_offset;
+ 	unsigned int my_panic_kernel;
+-	unsigned long my_stack, my_backup_start;
+-	unsigned long toc_addr;
++	uint64_t my_stack, my_backup_start;
++	uint64_t toc_addr;
+ 	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
  
-diff --git a/purgatory/arch/ia64/include/limits.h b/purgatory/arch/ia64/include/limits.h
-deleted file mode 100644
-index 0c6f21f..0000000
---- a/purgatory/arch/ia64/include/limits.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	9223372036854775807L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	18446744073709551615UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/ia64/include/stdint.h b/purgatory/arch/ia64/include/stdint.h
-deleted file mode 100644
-index 2f9c592..0000000
---- a/purgatory/arch/ia64/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long      uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long        int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/ppc/include/limits.h b/purgatory/arch/ppc/include/limits.h
-deleted file mode 100644
-index d5a5a02..0000000
---- a/purgatory/arch/ppc/include/limits.h
-+++ /dev/null
-@@ -1,58 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	2147483647L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	4294967295UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/ppc/include/stdint.h b/purgatory/arch/ppc/include/stdint.h
-deleted file mode 100644
-index 79262c2..0000000
---- a/purgatory/arch/ppc/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long long uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long long   int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/ppc64/include/limits.h b/purgatory/arch/ppc64/include/limits.h
-deleted file mode 100644
-index 0c6f21f..0000000
---- a/purgatory/arch/ppc64/include/limits.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	9223372036854775807L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	18446744073709551615UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/ppc64/include/stdint.h b/purgatory/arch/ppc64/include/stdint.h
-deleted file mode 100644
-index 2f9c592..0000000
---- a/purgatory/arch/ppc64/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long      uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long        int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/s390/include/limits.h b/purgatory/arch/s390/include/limits.h
-deleted file mode 100644
-index 3424298..0000000
---- a/purgatory/arch/s390/include/limits.h
-+++ /dev/null
-@@ -1,54 +0,0 @@
--#ifndef _LIMITS_H_
--#define _LIMITS_H_
--
--/* Number of bits in a `char'.	*/
--#  define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold.  */
--#  define SCHAR_MIN	(-128)
--#  define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold.  (Minimum is 0.)  */
--#  define UCHAR_MAX	255
--
--#  define CHAR_MIN	SCHAR_MIN
--#  define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold.  */
--#  define SHRT_MIN	(-32768)
--#  define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short int' can hold.  (Minimum is 0.)  */
--#  define USHRT_MAX	65535
--
--/* Minimum and maximum values a `signed int' can hold.  */
--#  define INT_MIN	(-INT_MAX - 1)
--#  define INT_MAX	2147483647
--
--/* Maximum value an `unsigned int' can hold.  (Minimum is 0.)  */
--#  define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long int' can hold.  */
--#ifdef __s390x__
--#   define LONG_MAX	9223372036854775807L
--#else
--#   define LONG_MAX	2147483647L
--#endif
--
--#  define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
--#ifdef __s390x__
--#   define ULONG_MAX	18446744073709551615UL
--#else
--#   define ULONG_MAX	4294967295UL
--#endif
--
--/* Minimum and maximum values a `signed long long int' can hold.  */
--#   define LLONG_MAX	9223372036854775807LL
--#   define LLONG_MIN	(-LLONG_MAX - 1LL)
--
--/* Maximum value an `unsigned long long int' can hold.  (Minimum is 0.)  */
--#   define ULLONG_MAX	18446744073709551615ULL
--
--#endif	/* !_LIMITS_H_ */
-diff --git a/purgatory/arch/s390/include/stdint.h b/purgatory/arch/s390/include/stdint.h
-deleted file mode 100644
-index a713cf5..0000000
---- a/purgatory/arch/s390/include/stdint.h
-+++ /dev/null
-@@ -1,24 +0,0 @@
--#ifndef _STDINT_H
--#define _STDINT_H
--
--typedef unsigned long		size_t;
--
--typedef unsigned char		uint8_t;
--typedef unsigned short		uint16_t;
--typedef unsigned int		uint32_t;
--#ifdef __s390x__
--typedef unsigned long		uint64_t;
--#else
--typedef unsigned long long	uint64_t;
--#endif
--
--typedef signed char 		int8_t;
--typedef short 			int16_t;
--typedef int 			int32_t;
--#ifdef __s390x__
--typedef long			int64_t;
--#else
--typedef long long		int64_t;
--#endif
--
--#endif
-diff --git a/purgatory/arch/sh/include/limits.h b/purgatory/arch/sh/include/limits.h
-deleted file mode 100644
-index d5a5a02..0000000
---- a/purgatory/arch/sh/include/limits.h
-+++ /dev/null
-@@ -1,58 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	2147483647L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	4294967295UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/sh/include/stdint.h b/purgatory/arch/sh/include/stdint.h
-deleted file mode 100644
-index 79262c2..0000000
---- a/purgatory/arch/sh/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long long uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long long   int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/x86_64/include/arch/io.h b/purgatory/arch/x86_64/include/arch/io.h
-index 13ad887..dcd01bf 100644
---- a/purgatory/arch/x86_64/include/arch/io.h
-+++ b/purgatory/arch/x86_64/include/arch/io.h
-@@ -2,65 +2,6 @@
- #define ARCH_IO_H
+ #define OPT_APPEND     (OPT_ARCH_MAX+0)
+@@ -237,10 +237,10 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 		}
+ 		seg_buf = (unsigned char *)slurp_file(ramdisk, &seg_size);
+ 		add_buffer(info, seg_buf, seg_size, seg_size, 0, 0, max_addr, 1);
+-		hole_addr = (unsigned long long)
++		hole_addr = (uint64_t)
+ 			info->segment[info->nr_segments-1].mem;
+ 		initrd_base = hole_addr;
+-		initrd_size = (unsigned long long)
++		initrd_size = (uint64_t)
+ 			info->segment[info->nr_segments-1].memsz;
+ 	} /* ramdisk */
  
- #include <stdint.h>
--/* Helper functions for directly doing I/O */
--
--extern inline uint8_t inb(uint16_t port)
--{
--	uint8_t result;
--
--	__asm__ __volatile__ (
--		"inb %w1,%0"
--		:"=a" (result)
--		:"Nd" (port));
--	return result;
--}
--
--extern inline uint16_t inw(uint16_t port)
--{
--	uint16_t result;
--
--	__asm__ __volatile__ (
--		"inw %w1,%0"
--		:"=a" (result)
--		:"Nd" (port));
--	return result;
--}
--
--extern inline uint32_t inl(uint32_t port)
--{
--	uint32_t result;
--
--	__asm__ __volatile__ (
--		"inl %w1,%0"
--		:"=a" (result)
--		:"Nd" (port));
--	return result;
--}
--
--extern inline void outb (uint8_t value, uint16_t port)
--{
--	__asm__ __volatile__ (
--		"outb %b0,%w1"
--		:
--		:"a" (value), "Nd" (port));
--}
--
--extern inline void outw (uint16_t value, uint16_t port)
--{
--	__asm__ __volatile__ (
--		"outw %w0,%w1"
--		:
--		:"a" (value), "Nd" (port));
--}
--
--extern inline void outl (uint32_t value, uint16_t port)
--{
--	__asm__ __volatile__ (
--		"outl %0,%w1"
--		:
--		:"a" (value), "Nd" (port));
--}
--
+@@ -270,25 +270,25 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	 */
+ 	bb_ptr = (struct bootblock *)(
+ 		(unsigned char *)info->segment[(info->nr_segments)-1].buf);
+-	rsvmap_ptr = (unsigned long long *)(
++	rsvmap_ptr = (uint64_t *)(
+ 		(unsigned char *)info->segment[(info->nr_segments)-1].buf +
+ 		bb_ptr->off_mem_rsvmap);
+ 	while (*rsvmap_ptr || *(rsvmap_ptr+1))
+ 		rsvmap_ptr += 2;
+ 	rsvmap_ptr -= 2;
+-	*rsvmap_ptr = (unsigned long long)(
++	*rsvmap_ptr = (uint64_t)(
+ 		info->segment[(info->nr_segments)-1].mem);
+ 	rsvmap_ptr++;
+-	*rsvmap_ptr = (unsigned long long)bb_ptr->totalsize;
++	*rsvmap_ptr = (uint64_t)bb_ptr->totalsize;
  
- /*
-  * readX/writeX() are used to access memory mapped devices. On some
-diff --git a/purgatory/arch/x86_64/include/limits.h b/purgatory/arch/x86_64/include/limits.h
-deleted file mode 100644
-index 0c6f21f..0000000
---- a/purgatory/arch/x86_64/include/limits.h
-+++ /dev/null
-@@ -1,57 +0,0 @@
--#ifndef LIMITS_H
--#define LIMITS_H	1
--
--/* Number of bits in a `char' */
--#define CHAR_BIT	8
--
--/* Minimum and maximum values a `signed char' can hold */
--#define SCHAR_MIN	(-128)
--#define SCHAR_MAX	127
--
--/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
--#define UCHAR_MAX	255
--
--/* Minimum and maximum values a `char' can hold */
--#define CHAR_MIN	SCHAR_MIN
--#define CHAR_MAX	SCHAR_MAX
--
--/* Minimum and maximum values a `signed short int' can hold */
--#define SHRT_MIN	(-32768)
--#define SHRT_MAX	32767
--
--/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
--#define USHRT_MAX	65535
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--
--/* Minimum and maximum values a `signed int' can hold */
--#define INT_MIN		(-INT_MAX - 1)
--#define INT_MAX		2147483647
--
--/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
--#define UINT_MAX	4294967295U
--
--/* Minimum and maximum values a `signed long' can hold */
--#define LONG_MAX	9223372036854775807L
--#define LONG_MIN	(-LONG_MAX - 1L)
--
--/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
--#define ULONG_MAX	18446744073709551615UL
--
--/* Minimum and maximum values a `signed long long' can hold */
--#define LLONG_MAX	9223372036854775807LL
--#define LLONG_MIN	(-LONG_MAX - 1LL)
--
--
--/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
--#define ULLONG_MAX	18446744073709551615ULL
--
--
--#endif /* LIMITS_H */
-diff --git a/purgatory/arch/x86_64/include/stdint.h b/purgatory/arch/x86_64/include/stdint.h
-deleted file mode 100644
-index 2f9c592..0000000
---- a/purgatory/arch/x86_64/include/stdint.h
-+++ /dev/null
-@@ -1,16 +0,0 @@
--#ifndef STDINT_H
--#define STDINT_H
--
--typedef unsigned long      size_t;
--
--typedef unsigned char      uint8_t;
--typedef unsigned short     uint16_t;
--typedef unsigned int       uint32_t;
--typedef unsigned long      uint64_t;
--
--typedef signed char        int8_t;
--typedef signed short       int16_t;
--typedef signed int         int32_t;
--typedef signed long        int64_t;
--
--#endif /* STDINT_H */
-diff --git a/purgatory/arch/x86_64/purgatory-x86_64.c b/purgatory/arch/x86_64/purgatory-x86_64.c
-index b159ed3..374b554 100644
---- a/purgatory/arch/x86_64/purgatory-x86_64.c
-+++ b/purgatory/arch/x86_64/purgatory-x86_64.c
-@@ -1,4 +1,4 @@
--#include <arch/io.h>
-+#include <stdint.h>
- #include <purgatory.h>
- #include "purgatory-x86_64.h"
+ 	nr_segments = info->nr_segments;
  
-diff --git a/util_lib/include/sha256.h b/util_lib/include/sha256.h
-index b8278a1..467fb22 100644
---- a/util_lib/include/sha256.h
-+++ b/util_lib/include/sha256.h
-@@ -1,6 +1,7 @@
- #ifndef SHA256_H
- #define SHA256_H
+ 	/* Set kernel */
+-	my_kernel = (unsigned long )info->segment[0].mem;
++	my_kernel = (uint64_t)info->segment[0].mem;
+ 	elf_rel_set_symbol(&info->rhdr, "kernel", &my_kernel, sizeof(my_kernel));
  
-+#include <sys/types.h>
- #include <stdint.h>
+ 	/* Set dt_offset */
+-	my_dt_offset = (unsigned long )info->segment[nr_segments-1].mem;
++	my_dt_offset = (uint64_t)info->segment[nr_segments-1].mem;
+ 	elf_rel_set_symbol(&info->rhdr, "dt_offset", &my_dt_offset,
+ 				sizeof(my_dt_offset));
  
- typedef struct
+diff --git a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+index c5fd561..1c9fce5 100644
+--- a/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+@@ -101,10 +101,10 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
+ 		break;
+ 
+ 	case R_PPC64_ADDR16_HIGHEST:
+-		*(uint16_t *)location = ((value>>48)  & 0xffff);
++		*(uint16_t *)location = (((uint64_t)value>>48)  & 0xffff);
+ 		break;
+ 	case R_PPC64_ADDR16_HIGHER:
+-		*(uint16_t *)location = ((value>>32)  & 0xffff);
++		*(uint16_t *)location = (((uint64_t)value>>32)  & 0xffff);
+ 		break;
+ 
+ 	default:
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 3d233cf..9333f29 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -41,7 +41,7 @@ static struct memory_range *base_memory_range = NULL;
+ static unsigned long long rmo_top;
+ unsigned long long memory_max = 0;
+ static int nr_memory_ranges, nr_exclude_ranges;
+-unsigned long long crash_base, crash_size;
++uint64_t crash_base, crash_size;
+ unsigned int rtas_base, rtas_size;
+ int max_memory_ranges;
+ 
+@@ -203,10 +203,10 @@ static int get_base_ranges(void)
+ 				break;
+ 			}
+ 			base_memory_range[local_memory_ranges].start =
+-				((unsigned long long *)buf)[0];
++				((uint64_t *)buf)[0];
+ 			base_memory_range[local_memory_ranges].end  =
+ 				base_memory_range[local_memory_ranges].start +
+-				((unsigned long long *)buf)[1];
++				((uint64_t *)buf)[1];
+ 			base_memory_range[local_memory_ranges].type = RANGE_RAM;
+ 			local_memory_ranges++;
+ 			dbgprintf("%016llx-%016llx : %x\n",
+@@ -231,7 +231,7 @@ static int get_base_ranges(void)
+ static int sort_ranges(void)
+ {
+ 	int i, j;
+-	unsigned long long tstart, tend;
++	uint64_t tstart, tend;
+ 	for (i = 0; i < nr_exclude_ranges - 1; i++) {
+ 		for (j = 0; j < nr_exclude_ranges - i - 1; j++) {
+ 			if (exclude_range[j].start > exclude_range[j+1].start) {
+@@ -292,7 +292,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				perror(fname);
+ 				goto error_opencdir;
+ 			}
+-			if (fread(&kernel_end, sizeof(unsigned long), 1, file) != 1) {
++			if (fread(&kernel_end, sizeof(uint64_t), 1, file) != 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+ 			}
+@@ -312,7 +312,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 					perror(fname);
+ 					goto error_opencdir;
+ 				}
+-				if (fread(&crash_base, sizeof(unsigned long), 1,
++				if (fread(&crash_base, sizeof(uint64_t), 1,
+ 						file) != 1) {
+ 					perror(fname);
+ 					goto error_openfile;
+@@ -327,7 +327,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 					perror(fname);
+ 					goto error_opencdir;
+ 				}
+-				if (fread(&crash_size, sizeof(unsigned long), 1,
++				if (fread(&crash_size, sizeof(uint64_t), 1,
+ 						file) != 1) {
+ 					perror(fname);
+ 					goto error_openfile;
+@@ -356,7 +356,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				perror(fname);
+ 				goto error_opendir;
+ 			}
+-			if (fread(&htab_base, sizeof(unsigned long), 1, file) != 1) {
++			if (fread(&htab_base, sizeof(uint64_t), 1, file) != 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+ 			}
+@@ -368,7 +368,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				perror(fname);
+ 				goto error_opencdir;
+ 			}
+-			if (fread(&htab_size, sizeof(unsigned long), 1, file) != 1) {
++			if (fread(&htab_size, sizeof(uint64_t), 1, file) != 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+ 			}
+@@ -487,7 +487,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				perror(fname);
+ 				goto error_opendir;
+ 			}
+-			if (fread(&tce_base, sizeof(unsigned long), 1, file) != 1) {
++			if (fread(&tce_base, sizeof(uint64_t), 1, file) != 1) {
+ 				perror(fname);
+ 				goto error_openfile;
+ 				return -1;
+diff --git a/kexec/arch/ppc64/kexec-ppc64.h b/kexec/arch/ppc64/kexec-ppc64.h
+index 26c70ba..242947b 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.h
++++ b/kexec/arch/ppc64/kexec-ppc64.h
+@@ -14,7 +14,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ void elf_ppc64_usage(void);
+ void reserve(unsigned long long where, unsigned long long length);
+ 
+-extern unsigned long initrd_base, initrd_size;
++extern uint64_t initrd_base, initrd_size;
+ extern int max_memory_ranges;
+ extern unsigned char reuse_initrd;
+ 
+diff --git a/kexec/kexec-sha256.h b/kexec/kexec-sha256.h
+index d414ec5..b4bb856 100644
+--- a/kexec/kexec-sha256.h
++++ b/kexec/kexec-sha256.h
+@@ -2,8 +2,8 @@
+ #define KEXEC_SHA256_H
+ 
+ struct sha256_region {
+-	const void *start;
+-	unsigned long len;
++	uint64_t start;
++	uint64_t len;
+ };
+ 
+ #define SHA256_REGIONS 16
+diff --git a/purgatory/arch/ppc64/Makefile b/purgatory/arch/ppc64/Makefile
+index 82b1654..0406278 100644
+--- a/purgatory/arch/ppc64/Makefile
++++ b/purgatory/arch/ppc64/Makefile
+@@ -6,3 +6,5 @@ PURGATORY_S_SRCS+= purgatory/arch/ppc64/v2wrap.S
+ PURGATORY_C_SRCS += purgatory/arch/ppc64/purgatory-ppc64.c
+ PURGATORY_C_SRCS += purgatory/arch/ppc64/console-ppc64.c
+ PURGATORY_C_SRCS += purgatory/arch/ppc64/crashdump_backup.c
++
++PCFLAGS += -m64 -mcall-aixdesc
+diff --git a/purgatory/purgatory.c b/purgatory/purgatory.c
+index ad0cac2..aacbb3b 100644
+--- a/purgatory/purgatory.c
++++ b/purgatory/purgatory.c
+@@ -46,3 +46,5 @@ void purgatory(void)
+ 	verify_sha256_digest();
+ 	post_verification_setup_arch();
+ }
++
++#include "../util_lib/sha256.c"
 
 _______________________________________________
 kexec mailing list
