@@ -1,27 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:a646:1c45::1] (helo=ebiederm.dsl.xmission.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4Q6F-0004EW-0j
-	for kexec@lists.infradead.org; Tue, 18 Dec 2007 00:14:19 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] kexec: force x86_64 arches to boot kdump kernels on boot
-	cpu
-References: <20071211192434.GD10999@hmsreliant.think-freely.org>
-	<86802c440712111151t29acd38kf9fac8e41743f3e4@mail.gmail.com>
-	<20071211205955.GF10999@hmsreliant.think-freely.org>
-	<20071212142132.GC4889@bingen.suse.de>
-	<20071212155515.GA29735@hmsendeavour.rdu.redhat.com>
-	<20071212160722.GD4889@bingen.suse.de>
-	<m1prxbu2ah.fsf@ebiederm.dsl.xmission.com>
-	<20071212202215.GB29735@hmsendeavour.rdu.redhat.com>
-	<m1lk7ztx9p.fsf@ebiederm.dsl.xmission.com>
-	<20071213143922.GA4674@hmsreliant.think-freely.org>
-	<20071213151629.GB31269@one.firstfloor.org>
-Date: Mon, 17 Dec 2007 17:13:25 -0700
-In-Reply-To: <20071213151629.GB31269@one.firstfloor.org> (Andi Kleen's message
-	of "Thu, 13 Dec 2007 16:16:29 +0100")
-Message-ID: <m1tzmgdfmi.fsf@ebiederm.dsl.xmission.com>
-MIME-Version: 1.0
+Received: from mga01.intel.com ([192.55.52.88])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J4XyG-0007ZI-TM
+	for kexec@lists.infradead.org; Tue, 18 Dec 2007 08:38:44 +0000
+Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <m163z51sz3.fsf@ebiederm.dsl.xmission.com>
+References: <1197042810.24045.61.camel@caritas-dev.intel.com>
+	<m1tzmq0xy0.fsf@ebiederm.dsl.xmission.com>
+	<1197388219.11506.32.camel@caritas-dev.intel.com>
+	<m163z51sz3.fsf@ebiederm.dsl.xmission.com>
+Date: Tue, 18 Dec 2007 16:34:22 +0800
+Message-Id: <1197966862.12999.68.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,33 +25,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Ben Woodard <woodard@redhat.com>, Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, Andi Kleen <ak@suse.de>, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, Yinghai Lu <yhlu.kernel@gmail.com>, hpa@zytor.com, tglx@linutronix.de
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
 
-Andi Kleen <andi@firstfloor.org> writes:
+On Tue, 2007-12-11 at 02:27 -0700, Eric W. Biederman wrote:
+> "Huang, Ying" <ying.huang@intel.com> writes:
+> 
+> > On Mon, 2007-12-10 at 19:25 -0700, Eric W. Biederman wrote:
+> >> "Huang, Ying" <ying.huang@intel.com> writes:
+> > [...]
+> >> >  /*
+> >> >   * Do not allocate memory (or fail in any way) in machine_kexec().
+> >> >   * We are past the point of no return, committed to rebooting now.
+> >> >   */
+> >> > -NORET_TYPE void machine_kexec(struct kimage *image)
+> >> > +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
+> >> > +			 unsigned int argc, va_list args)
+> >> >  {
+> >> 
+> >> Why do we need var arg support?
+> >> Can't we do that with a shim we load from user space?
+> >
+> > If all parameters are provided in user space, the usage model may be as
+> > follow:
+> >
+> > - sys_kexec_load() /* with executable/data/parameters(A) loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
+> > parameters(A)*/
+> > - /* jump back */
+> > - sys_kexec_load() /* with executable/data/parameters(B) loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
+> > parameters(B)*/
+> > - /* jump back */
+> >
+> > That is, the kexec image should be re-loaded if the parameters are
+> > different, and there can be no state reserved in kexec image. This is OK
+> > for original kexec implementation, because there is no jumping back.
+> > But, for kexec with jumping back, another usage model may be useful too.
+> >
+> > - sys_kexec_load() /* with executable/data loaded */
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(A)) /* execute physical mode
+> > code with parameters(A)*/
+> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(B)) /* execute physical mode
+> > code with parameters(B)*/
+> >
+> > This way the kexec image need not to be re-loaded, and the state of
+> > kexec image can be reserved across several invoking.
+> 
+> Interesting.  We wind up preserving the code in between invocations.
+> 
+> I don't know about your particular issue, but I can see that clearly
+> we need a way to read values back from our target image.
+> 
+> And if we can read everything back one way to proceed is to read
+> everything out modify it and then write it back.
+> 
+> Amending a kexec image that is already stored may also make sense.
+> 
+> I'm not convinced that the var arg parameters make sense, but you
+> added them because of a real need.
+> 
+> The kexec function is split into two separate calls so that we can
+> unmount the filesystem the kexec image comes from before actually
+> doing the kexec.
 
-> On Thu, Dec 13, 2007 at 09:39:22AM -0500, Neil Horman wrote:
->> 
->> Ok, new patch attached, taking into account Andi's request for a cleaner
-> method
->
-> Sorry for not noticing that earlier, but was there a specific reason this needs
-> to be an early quirk at all? kexec can only happen after the standard quirks
-> ran.
-> I think it should be fine as a standard "late" quirk.
+My real issue is that I need a kind of "kernel to kernel" communication
+method. The var args is just a convenient way to pass an array of
+unsigned longs between two kernels. The reason is as follow:
 
-Just to document things.  The important thing is this quirk happens
-before calibrate_delay().  Which is still before the normal pci
-subsystem gets initialized.  So that seems to require an early_quirk
-as the pci subsystem is not initialized by that point.
+The kexec based hibernating process is as follow:
 
-The only case we are likely to hit this is kdump because BIOS almost
-always boot us on the cpu with apic id  == 0.  However in the case
-of this bug if we happen to boot on a cpu with apic id >= 16 we
-won't be able to boot the linux kernel either, because calibrate_delay
-will fail.
+h1. put devices in quiescent state
+h2. save devices/CPU state
+h3. jump to kexeced kernel (kernel B)
+*h4. normal kernel boot of kernel B
+*h5. save devices/CPU state
+*h6. jump back to original kernel (kernel A)
+h7. restore devices/CPU state
+h8. put devices in quiescent state
+h9. put devices in low power state
+h10. execute necessary ACPI method (prepare to sleep)
+h11. save devices/CPU state
+h12. jump to kernel B
+*h13. execute necessary ACPI method (wake up)
+*h14. restore devices/CPU state
+*h15. put devices in normal power state
+*h16. write memory image of kernel A into disk
+*h17. put system into ACPI S4 state
 
-Eric
+The kexec based resuming process is as follow:
+
+*r1. boot the resuming kernel (kernel C)
+*r2. restore the memory image of kernel A
+*r3. put devices in quiescent state
+*r4. execute necessary ACPI method (prepare to resume)
+*r5. jump to kernel A
+r6. execute necessary ACPI method (wake up)
+r7. restore devices/CPU state
+
+Where, line begin with "*" is executed in kernel B and kernel C, others
+are executed in kernel A.
+
+The kernel A need to distinguish the difference between h7 and r6, while
+the kernel B/C need to distinguish between *h13 and normal jump back.
+The different kernel action need to be taken depends on the action of
+peer kernel. Now, this is solved by kernel-kernel communication, a
+command word is passed to peer kernel to inform the action required.
+
+I remember you have said before that you think it is better to use only
+"user space to user space" communication between kernel A and kernel B.
+This is OK for normal kexec. But if the kexec jump is used for multiple
+functions with early kernel action involved (normal kexec jump, kexec
+jump to hibernate, kexec jump to resume), it is necessary to use "kernel
+to kernel" communication.
+
+The var args in the patch is just an array of unsigned longs, it can be
+expresses as follow too.
+
+int kexec_call(struct kimage *image, unsigned long *ret, unsigned int
+argc, unsigned long argv[]);
+
+The var args version is as follow.
+
+int kexec_call(struct kimage *image, unsigned long *ret, unsigned int
+argc, ...);
+
+Best Regards,
+Huang Ying
+
 
 _______________________________________________
 kexec mailing list
