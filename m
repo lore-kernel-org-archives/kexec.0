@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4XyG-0007ZI-TM
-	for kexec@lists.infradead.org; Tue, 18 Dec 2007 08:38:44 +0000
-Subject: Re: [PATCH 1/4 -mm] kexec based hibernation -v7 : kexec jump
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <m163z51sz3.fsf@ebiederm.dsl.xmission.com>
-References: <1197042810.24045.61.camel@caritas-dev.intel.com>
-	<m1tzmq0xy0.fsf@ebiederm.dsl.xmission.com>
-	<1197388219.11506.32.camel@caritas-dev.intel.com>
-	<m163z51sz3.fsf@ebiederm.dsl.xmission.com>
-Date: Tue, 18 Dec 2007 16:34:22 +0800
-Message-Id: <1197966862.12999.68.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1J4Y7b-0008Dp-L2
+	for kexec@lists.infradead.org; Tue, 18 Dec 2007 08:48:23 +0000
+MIME-Version: 1.0
+Subject: [PATCH 2/8] Use --target for target architecture specification
+Message-Id: <1197967675.856377.756334005541.2.gpush@pokey>
+In-Reply-To: <1197967675.854275.930419561848.0.gpush@pokey>
+From: Jeremy Kerr <jk@ozlabs.org>
+Date: Tue, 18 Dec 2007 17:47:55 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,134 +21,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Jeremy Maitin-Shepard <jbms@cmu.edu>
+To: kexec@lists.infradead.org
 
-On Tue, 2007-12-11 at 02:27 -0700, Eric W. Biederman wrote:
-> "Huang, Ying" <ying.huang@intel.com> writes:
-> 
-> > On Mon, 2007-12-10 at 19:25 -0700, Eric W. Biederman wrote:
-> >> "Huang, Ying" <ying.huang@intel.com> writes:
-> > [...]
-> >> >  /*
-> >> >   * Do not allocate memory (or fail in any way) in machine_kexec().
-> >> >   * We are past the point of no return, committed to rebooting now.
-> >> >   */
-> >> > -NORET_TYPE void machine_kexec(struct kimage *image)
-> >> > +int machine_kexec_vcall(struct kimage *image, unsigned long *ret,
-> >> > +			 unsigned int argc, va_list args)
-> >> >  {
-> >> 
-> >> Why do we need var arg support?
-> >> Can't we do that with a shim we load from user space?
-> >
-> > If all parameters are provided in user space, the usage model may be as
-> > follow:
-> >
-> > - sys_kexec_load() /* with executable/data/parameters(A) loaded */
-> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
-> > parameters(A)*/
-> > - /* jump back */
-> > - sys_kexec_load() /* with executable/data/parameters(B) loaded */
-> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,) /* execute physical mode code with
-> > parameters(B)*/
-> > - /* jump back */
-> >
-> > That is, the kexec image should be re-loaded if the parameters are
-> > different, and there can be no state reserved in kexec image. This is OK
-> > for original kexec implementation, because there is no jumping back.
-> > But, for kexec with jumping back, another usage model may be useful too.
-> >
-> > - sys_kexec_load() /* with executable/data loaded */
-> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(A)) /* execute physical mode
-> > code with parameters(A)*/
-> > - sys_reboot(,,LINUX_REBOOT_CMD_KEXEC,parameters(B)) /* execute physical mode
-> > code with parameters(B)*/
-> >
-> > This way the kexec image need not to be re-loaded, and the state of
-> > kexec image can be reserved across several invoking.
-> 
-> Interesting.  We wind up preserving the code in between invocations.
-> 
-> I don't know about your particular issue, but I can see that clearly
-> we need a way to read values back from our target image.
-> 
-> And if we can read everything back one way to proceed is to read
-> everything out modify it and then write it back.
-> 
-> Amending a kexec image that is already stored may also make sense.
-> 
-> I'm not convinced that the var arg parameters make sense, but you
-> added them because of a real need.
-> 
-> The kexec function is split into two separate calls so that we can
-> unmount the filesystem the kexec image comes from before actually
-> doing the kexec.
+Instead of using a combination of ARCH and --host, use --target.
 
-My real issue is that I need a kind of "kernel to kernel" communication
-method. The var args is just a convenient way to pass an array of
-unsigned longs between two kernels. The reason is as follow:
+It's possible to have host != target. For example, building a ppc
+kexec binary for a ppc64 kernel. In this case, the kexec binary is
+compiled for 32-bit, while the purgatory object is 64-bit.
 
-The kexec based hibernating process is as follow:
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
-h1. put devices in quiescent state
-h2. save devices/CPU state
-h3. jump to kexeced kernel (kernel B)
-*h4. normal kernel boot of kernel B
-*h5. save devices/CPU state
-*h6. jump back to original kernel (kernel A)
-h7. restore devices/CPU state
-h8. put devices in quiescent state
-h9. put devices in low power state
-h10. execute necessary ACPI method (prepare to sleep)
-h11. save devices/CPU state
-h12. jump to kernel B
-*h13. execute necessary ACPI method (wake up)
-*h14. restore devices/CPU state
-*h15. put devices in normal power state
-*h16. write memory image of kernel A into disk
-*h17. put system into ACPI S4 state
+---
+ configure.ac |   40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-The kexec based resuming process is as follow:
-
-*r1. boot the resuming kernel (kernel C)
-*r2. restore the memory image of kernel A
-*r3. put devices in quiescent state
-*r4. execute necessary ACPI method (prepare to resume)
-*r5. jump to kernel A
-r6. execute necessary ACPI method (wake up)
-r7. restore devices/CPU state
-
-Where, line begin with "*" is executed in kernel B and kernel C, others
-are executed in kernel A.
-
-The kernel A need to distinguish the difference between h7 and r6, while
-the kernel B/C need to distinguish between *h13 and normal jump back.
-The different kernel action need to be taken depends on the action of
-peer kernel. Now, this is solved by kernel-kernel communication, a
-command word is passed to peer kernel to inform the action required.
-
-I remember you have said before that you think it is better to use only
-"user space to user space" communication between kernel A and kernel B.
-This is OK for normal kexec. But if the kexec jump is used for multiple
-functions with early kernel action involved (normal kexec jump, kexec
-jump to hibernate, kexec jump to resume), it is necessary to use "kernel
-to kernel" communication.
-
-The var args in the patch is just an array of unsigned longs, it can be
-expresses as follow too.
-
-int kexec_call(struct kimage *image, unsigned long *ret, unsigned int
-argc, unsigned long argv[]);
-
-The var args version is as follow.
-
-int kexec_call(struct kimage *image, unsigned long *ret, unsigned int
-argc, ...);
-
-Best Regards,
-Huang Ying
-
+diff --git a/configure.ac b/configure.ac
+index bcfbc58..032d9de 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -14,50 +14,40 @@ dnl as there are only a small number of targets that kexec
+ dnl can support on a given host system.  If it stops making
+ dnl sense compile support for all possible targets a given
+ dnl host can support AC_CANONICAL_TARGET may help
+-dnl AC_CANONICAL_TARGET
++AC_CANONICAL_TARGET
+ 
+ 
+-dnl Compute host cpu
+-case $host_cpu in 
+-	i?86 )	
+-		host_cpu="i386"
++dnl Compute ARCH from target cpu info
++case $target_cpu in
++	i?86 )
++		ARCH="i386"
+ 		;;
+ 	powerpc )
+-		host_cpu="ppc"
++		ARCH="ppc"
+ 		;;
+ 	powerpc64 )
+-		host_cpu="ppc64"
++		ARCH="ppc64"
+ 		;;
+-	s390x )
+-		host_cpu="s390"
++	s390x|s390 )
++		ARCH="s390"
+ 		;;
+-	sh4|sh4a|sh3 )
+-		host_cpu="sh"
++	sh4|sh4a|sh3|sh )
++		ARCH="sh"
+ 		;;
+-	* ) 
+-		host_cpu="$host_cpu"
+-		;;
+-esac
+-case $host_cpu in
+-	i386|ppc|x86_64|alpha|ppc64|ia64|s390|sh)
++	ia64|x86_64|alpha )
++		ARCH="$target_cpu"
+ 		;;
+ 	* )
+-		AC_MSG_ERROR([ unsupported architecture $host_cpu])
++		AC_MSG_ERROR([unsupported architecture $target_cpu])
+ 		;;
+ esac
+ 
+-dnl Try to guess the kernel ARCH based on the autoconf host_cpu variable.
+-
+-if ! test "${ARCH}" ; then
+-	ARCH=$host_cpu
+-fi
+-
+ dnl ---Options
+ 
+ OBJDIR=`pwd`/objdir
+ if test "${host_alias}" ; then
+ 	OBJDIR="$OBJDIR-${host_alias}"
+-fi 
++fi
+ 
+ EXTRA_CFLAGS='-Wall -g -fno-strict-aliasing -Wstrict-prototypes $(CPPFLAGS) $(EXTRA_CPPFLAGS)'
+ BUILD_CFLAGS='-O2 -Wall $(CPPFLAGS)'
 
 _______________________________________________
 kexec mailing list
