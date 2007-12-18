@@ -1,11 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4Y7l-0008E4-Up
+	id 1J4Y7m-0008E6-1n
 	for kexec@lists.infradead.org; Tue, 18 Dec 2007 08:48:32 +0000
 MIME-Version: 1.0
-Subject: [PATCH 3/8] Consolidate BOOTLOADER defines
-Message-Id: <1197967675.857024.533881457160.3.gpush@pokey>
+Subject: [PATCH 5/8] Add gamecube to config.h defines
+Message-Id: <1197967675.858281.846953540174.5.gpush@pokey>
 In-Reply-To: <1197967675.854275.930419561848.0.gpush@pokey>
 From: Jeremy Kerr <jk@ozlabs.org>
 Date: Tue, 18 Dec 2007 17:47:55 +0900
@@ -23,72 +23,77 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-The BOOTLOADER and BOOTLOADER_VERSION #defines are repeated in multiple
-files. This change removes the unnecessary definition of these, and
-keeps the kexec/kexec.h as the main source.
+.. instead of messing with CFLAGS.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
 ---
- kexec/arch/i386/kexec-multiboot-x86.c |    2 --
- kexec/arch/ppc/kexec-dol-ppc.c        |    2 --
- kexec/arch/ppc/kexec-elf-ppc.c        |    2 --
- kexec/arch/ppc64/kexec-elf-ppc64.c    |    3 ---
- 4 files changed, 9 deletions(-)
+ configure.ac                   |    6 ++++--
+ kexec/arch/ppc/kexec-elf-ppc.c |    4 +++-
+ kexec/arch/ppc/kexec-ppc.c     |    4 +++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
-index 8ec8bba..5ad279a 100644
---- a/kexec/arch/i386/kexec-multiboot-x86.c
-+++ b/kexec/arch/i386/kexec-multiboot-x86.c
-@@ -61,8 +61,6 @@
- static char headerbuf[MULTIBOOT_SEARCH];
- static struct multiboot_header *mbh = NULL;
+diff --git a/configure.ac b/configure.ac
+index d036ba1..8574bc6 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -70,8 +70,10 @@ fi;
+ AC_ARG_WITH([objdir], AC_HELP_STRING([--with-objdir=<dir>],[select directory for object files]),
+ 	[ OBJDIR="$withval" ], [ OBJDIR="$OBJDIR" ])
  
--#define BOOTLOADER "kexec"
--#define BOOTLOADER_VERSION VERSION
- #define MIN(_x,_y) (((_x)<=(_y))?(_x):(_y))
+-AC_ARG_WITH([gamecube], AC_HELP_STRING([--with-gamecube],[enable gamecube support]),
+-	[ EXTRA_CFLAGS="$EXTRA_CFLAGS -DCONFIG_GAMECUBE=1" ])
++AC_ARG_WITH([gamecube],
++		AC_HELP_STRING([--with-gamecube],[enable gamecube support]),
++		AC_DEFINE(WITH_GAMECUBE, 1,
++			[Define to include gamecube support]))
  
- 
-diff --git a/kexec/arch/ppc/kexec-dol-ppc.c b/kexec/arch/ppc/kexec-dol-ppc.c
-index 1b34f2a..5e7e078 100644
---- a/kexec/arch/ppc/kexec-dol-ppc.c
-+++ b/kexec/arch/ppc/kexec-dol-ppc.c
-@@ -90,8 +90,6 @@ typedef struct {
- #define PAGE_MASK		(~((1 << PAGE_SHIFT) - 1))
- #define PAGE_ALIGN(addr)	(((addr) + PAGE_SIZE - 1) & PAGE_MASK)
- 
--#define BOOTLOADER         "kexec"
--#define BOOTLOADER_VERSION VERSION
- #define MAX_COMMAND_LINE   256
- 
- #define UPSZ(X) ((sizeof(X) + 3) & ~3)
+ AC_ARG_WITH([zlib], AC_HELP_STRING([--without-zlib],[disable zlib support]),
+ 	[ with_zlib="$withval"], [ with_zlib=yes ] )
 diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index e5e5ebd..241c803 100644
+index 241c803..571349d 100644
 --- a/kexec/arch/ppc/kexec-elf-ppc.c
 +++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -27,8 +27,6 @@
- 
- static const int probe_debug = 0;
- 
--#define BOOTLOADER         "kexec"
--#define BOOTLOADER_VERSION VERSION
- #define MAX_COMMAND_LINE   256
- 
- #define UPSZ(X) ((sizeof(X) + 3) & ~3)
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 165a0f6..a8df885 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -39,9 +39,6 @@
- #include "crashdump-ppc64.h"
+@@ -25,6 +25,8 @@
+ #include "kexec-ppc.h"
  #include <arch/options.h>
  
--#define BOOTLOADER         "kexec"
--#define BOOTLOADER_VERSION VERSION
--
- uint64_t initrd_base, initrd_size;
- unsigned char reuse_initrd = 0;
- const char *ramdisk;
++#include "config.h"
++
+ static const int probe_debug = 0;
+ 
+ #define MAX_COMMAND_LINE   256
+@@ -135,7 +137,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	unsigned char *setup_start;
+ 	uint32_t setup_size;
+ 	int result;
+-#ifdef CONFIG_GAMECUBE
++#ifdef WITH_GAMECUBE
+ 	int target_is_gamecube = 1;
+ #else
+ 	int target_is_gamecube = 0;
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index df05212..9a88f9c 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -18,6 +18,8 @@
+ #include "kexec-ppc.h"
+ #include <arch/options.h>
+ 
++#include "config.h"
++
+ #define MAX_MEMORY_RANGES  64
+ static struct memory_range memory_range[MAX_MEMORY_RANGES];
+ 
+@@ -26,7 +28,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 					unsigned long kexec_flags)
+ {
+ 	int memory_ranges = 0;
+-#ifdef CONFIG_GAMECUBE
++#ifdef WITH_GAMECUBE
+ 	/* RAM - lowmem used by DOLs - framebuffer */
+ 	memory_range[memory_ranges].start = 0x00003000;
+ 	memory_range[memory_ranges].end = 0x0174bfff;
 
 _______________________________________________
 kexec mailing list
