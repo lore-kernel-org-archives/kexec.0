@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-wa4.frontbridge.com ([216.32.181.16]
-	helo=outbound2-wa4-R.bigfish.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4s0Z-0000ln-4F
-	for kexec@lists.infradead.org; Wed, 19 Dec 2007 06:02:26 +0000
-Message-ID: <4768B3E2.8070804@am.sony.com>
-Date: Tue, 18 Dec 2007 22:02:10 -0800
-From: Geoff Levand <geoffrey.levand@am.sony.com>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J4s2i-0000oT-LB
+	for kexec@lists.infradead.org; Wed, 19 Dec 2007 06:04:39 +0000
+Date: Wed, 19 Dec 2007 15:04:26 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/8] kexec build system updates, to allow cross-kexec()ing
+Message-ID: <20071219060425.GD12773@verge.net.au>
+References: <1197967675.854275.930419561848.0.gpush@pokey>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/8] Enable building a 32 bit binary for ppc64 platforms.
-References: <1197967675.855616.615518870292.1.gpush@pokey>
-In-Reply-To: <1197967675.855616.615518870292.1.gpush@pokey>
+Content-Disposition: inline
+In-Reply-To: <1197967675.854275.930419561848.0.gpush@pokey>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,21 +26,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: Jeremy Kerr <jk@ozlabs.org>
 Cc: kexec@lists.infradead.org
 
-On 12/18/2007 12:47 AM, Jeremy Kerr wrote:
-> From: David Woodhouse <dwmw2@infradead.org>
+On Tue, Dec 18, 2007 at 05:47:55PM +0900, Jeremy Kerr wrote:
+> Hi all,
 > 
-> Based on
-> http://cvs.fedora.redhat.com/viewcvs/rpms/kexec-tools/devel/kexec-tools-1.101-ppc-boots-ppc64.patch?rev=1.2&view=auto
+> This series of patches is aimed at simplifying the kexec build system,
+> mainly in order to make cross-compilation much easier.
 > 
-> 64 bit: OK
-> 32 bit: purgatory build fails
+> As well as cross-compiling, this makes it possible to separate the
+> 'host' architecture (ie, the arch of the kexec binary built), and the
+> 'target' architecture (ie, the arch of the kernel that we're kexecing).
+> We can specify these with the standard --host and --target arguments
+> to configure.
 > 
-> Work-in-progress-by: Geoff Levand <geoffrey.levand@am.sony.com>
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> This allows us to kexec a powerpc64 kernel from a powerpc userspace.
+> x86{,_64} users might find this handy too, but I don't have hardware
+> to test.
+> 
+> Any comments are most welcome - if you're able to test on your
+> arch, that would be great too.
 
-I think we need to clean these commit comments up.
+Thanks Jeremy,
 
--Geoff
+I've run these patches through the build for all supported architectures
+and they seem clean to me. So I have gone ahead and applied them. If
+anyone notices any breakage please let Jeremy and/or myself know.
+
+-- 
+Horms
 
 
 _______________________________________________
