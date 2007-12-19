@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J4s2i-0000oT-LB
-	for kexec@lists.infradead.org; Wed, 19 Dec 2007 06:04:39 +0000
-Date: Wed, 19 Dec 2007 15:04:26 +0900
-From: Simon Horman <horms@verge.net.au>
+	id 1J4zqb-0005QI-7T
+	for kexec@lists.infradead.org; Wed, 19 Dec 2007 14:24:39 +0000
+Date: Wed, 19 Dec 2007 06:38:22 -0800
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
 Subject: Re: [PATCH 0/8] kexec build system updates, to allow cross-kexec()ing
-Message-ID: <20071219060425.GD12773@verge.net.au>
+Message-ID: <20071219143822.GA17705@nlxdcldnl2.cl.intel.com>
 References: <1197967675.854275.930419561848.0.gpush@pokey>
-MIME-Version: 1.0
+	<20071218232558.GA14092@redhat.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1197967675.854275.930419561848.0.gpush@pokey>
+In-Reply-To: <20071218232558.GA14092@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Kerr <jk@ozlabs.org>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>
 
-On Tue, Dec 18, 2007 at 05:47:55PM +0900, Jeremy Kerr wrote:
-> Hi all,
+On Tue, Dec 18, 2007 at 06:25:58PM -0500, Vivek Goyal wrote:
+> On Tue, Dec 18, 2007 at 05:47:55PM +0900, Jeremy Kerr wrote:
 > 
-> This series of patches is aimed at simplifying the kexec build system,
-> mainly in order to make cross-compilation much easier.
+> > This allows us to kexec a powerpc64 kernel from a powerpc userspace.
+> > x86{,_64} users might find this handy too, but I don't have hardware
+> > to test.
 > 
-> As well as cross-compiling, this makes it possible to separate the
-> 'host' architecture (ie, the arch of the kexec binary built), and the
-> 'target' architecture (ie, the arch of the kernel that we're kexecing).
-> We can specify these with the standard --host and --target arguments
-> to configure.
-> 
-> This allows us to kexec a powerpc64 kernel from a powerpc userspace.
-> x86{,_64} users might find this handy too, but I don't have hardware
-> to test.
-> 
-> Any comments are most welcome - if you're able to test on your
-> arch, that would be great too.
+> I think x86 it already happens. I think I can launch 64bit kernel from
+> a 32bit kexec.
 
-Thanks Jeremy,
-
-I've run these patches through the build for all supported architectures
-and they seem clean to me. So I have gone ahead and applied them. If
-anyone notices any breakage please let Jeremy and/or myself know.
+You certainly can...
 
 -- 
-Horms
-
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
