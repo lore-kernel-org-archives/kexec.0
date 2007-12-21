@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=amd.ucw.cz)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J5dhh-0003KN-0c
-	for kexec@lists.infradead.org; Fri, 21 Dec 2007 08:58:08 +0000
-Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <476B7ACF.8020602@nigel.suspend2.net>
-References: <1198222399.1965.15.camel@caritas-dev.intel.com>
-	<476B7ACF.8020602@nigel.suspend2.net>
-Date: Fri, 21 Dec 2007 16:53:27 +0800
-Message-Id: <1198227207.25346.11.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1J5ex1-0000t8-RI
+	for kexec@lists.infradead.org; Fri, 21 Dec 2007 10:18:02 +0000
+Date: Fri, 21 Dec 2007 11:17:10 +0100
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/3 -mm] kexec jump -v8 : add write support to oldmem
+	device
+Message-ID: <20071221101710.GB10573@elf.ucw.cz>
+References: <1198222420.1965.21.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1198222420.1965.21.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +24,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: nigel@nigel.suspend2.net
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Fri, 2007-12-21 at 19:35 +1100, Nigel Cunningham wrote:
-> Hi.
+Hi!
+
+> This patch adds writing support for /dev/oldmem. This can be used to
 > 
-> Huang, Ying wrote:
-> > This patchset provides an enhancement to kexec/kdump. It implements
-> > the following features:
-> > 
-> > - Backup/restore memory used both by the original kernel and the
-> >   kexeced kernel.
+> - Communicate between original kernel and kexeced kernel through write
+>   to some pages in original kernel.
 > 
-> Why the kexeced kernel as well?
-
-The memory range used by kexeced kernel is also the usable memory range
-in original kernel. Maybe should be: backup/restore memory used by both
-the original kernel and the kexeced kernel. My English is poor.
-
-> [...]
+> - Restore the memory contents of hibernated system in kexec based
+>   hibernation.
 > 
-> > The features of this patchset can be used as follow:
-> > 
-> > - Kernel/system debug through making system snapshot. You can make
-> >   system snapshot, jump back, do some thing and make another system
-> >   snapshot.
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
 > 
-> Are you somehow recording all the filesystem changes after the first
-> snapshot? If not, this is pointless (you'll end up with filesystem
-> corruption).
+> --- a/arch/x86/kernel/crash_dump_32.c
+> +++ b/arch/x86/kernel/crash_dump_32.c
+> +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
+> +			  size_t csize, unsigned long offset, int
+> userbuf)
 
-This snapshot is not used for restore/resume. It is just used for
-debugging. You can check the system state with these snapshots. So I
-think it is useful even without recording filesystem changes.
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -348,6 +348,37 @@ static ssize_t read_oldmem(struct file *
+>  	}
+>  	return read;
+>  }
+> +
+> +/*
+> + * Write memory corresponding to the old kernel.
+> + */
+> +static ssize_t write_oldmem(struct file *file, const char __user *buf,
+> +			    size_t count, loff_t *ppos)
+> +{
+...
+> +		rc = write_oldmem_page(pfn, buf, csize, offset, 1);
 
-> [...]
-> 
-> > - Cooperative multi-kernel/system. With kexec jump, you can switch
-> >   between several kernels/systems quickly without boot process except
-> >   the first time. This appears like swap a whole kernel/system out/in.
-> 
-> How is this useful to the end user?
-
-I am not sure how useful is this. Maybe I can run a Redhat and a Debian
-on my machine and switch between them.
-
-Best Regards,
-Huang Ying
-
+I believe this is going to break compilation on non-32bit
+machines. Or is crashdump only supported on i386?
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
