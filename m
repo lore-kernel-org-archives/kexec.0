@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J5fab-0003e4-SA
-	for kexec@lists.infradead.org; Fri, 21 Dec 2007 10:58:57 +0000
-Date: Fri, 21 Dec 2007 11:58:45 +0100
-From: Bernhard Walle <bwalle@suse.de>
+Received: from an-out-0708.google.com ([209.85.132.243])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J5hKW-0004WV-IY
+	for kexec@lists.infradead.org; Fri, 21 Dec 2007 12:50:26 +0000
+Received: by an-out-0708.google.com with SMTP id c3so61127ana.99
+	for <kexec@lists.infradead.org>; Fri, 21 Dec 2007 04:50:19 -0800 (PST)
+Message-ID: <851fc09e0712210450i1c39a37fxe716ffcd5de59850@mail.gmail.com>
+Date: Fri, 21 Dec 2007 20:50:19 +0800
+From: "huang ying" <huang.ying.caritas@gmail.com>
 Subject: Re: [PATCH 2/3 -mm] kexec jump -v8 : add write support to oldmem
 	device
-Message-ID: <20071221105845.GA27465@suse.de>
-References: <1198222420.1965.21.camel@caritas-dev.intel.com>
-	<20071221101710.GB10573@elf.ucw.cz>
+In-Reply-To: <20071221101710.GB10573@elf.ucw.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071221101710.GB10573@elf.ucw.cz>
+References: <1198222420.1965.21.camel@caritas-dev.intel.com>
+	<20071221101710.GB10573@elf.ucw.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,16 +27,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-* Pavel Machek <pavel@ucw.cz> [2007-12-21 11:17]:
-> Or is crashdump only supported on i386?
+On Dec 21, 2007 6:17 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> Hi!
+>
+> > This patch adds writing support for /dev/oldmem. This can be used to
+> >
+> > - Communicate between original kernel and kexeced kernel through write
+> >   to some pages in original kernel.
+> >
+> > - Restore the memory contents of hibernated system in kexec based
+> >   hibernation.
+> >
+> > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> >
+> > --- a/arch/x86/kernel/crash_dump_32.c
+> > +++ b/arch/x86/kernel/crash_dump_32.c
+> > +ssize_t write_oldmem_page(unsigned long pfn, const char *buf,
+> > +                       size_t csize, unsigned long offset, int
+> > userbuf)
+>
+> > --- a/drivers/char/mem.c
+> > +++ b/drivers/char/mem.c
+> > @@ -348,6 +348,37 @@ static ssize_t read_oldmem(struct file *
+> >       }
+> >       return read;
+> >  }
+> > +
+> > +/*
+> > + * Write memory corresponding to the old kernel.
+> > + */
+> > +static ssize_t write_oldmem(struct file *file, const char __user *buf,
+> > +                         size_t count, loff_t *ppos)
+> > +{
+> ...
+> > +             rc = write_oldmem_page(pfn, buf, csize, offset, 1);
+>
+> I believe this is going to break compilation on non-32bit
+> machines.
 
-No.
+Yes, I will fix this.
 
-
-Thanks,
-   Bernhard
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
