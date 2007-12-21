@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga03.intel.com ([143.182.124.21])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J5cTX-00069r-3u
-	for kexec@lists.infradead.org; Fri, 21 Dec 2007 07:39:26 +0000
-Subject: [PATCH 0/3 -mm] kexec jump -v8
+	id 1J5cXC-0006VE-FR
+	for kexec@lists.infradead.org; Fri, 21 Dec 2007 07:43:13 +0000
+Subject: [PATCH 3/3 -mm] kexec jump -v8 : access memory image of kexec_image
 From: "Huang, Ying" <ying.huang@intel.com>
-Date: Fri, 21 Dec 2007 15:33:19 +0800
-Message-Id: <1198222399.1965.15.camel@caritas-dev.intel.com>
+Date: Fri, 21 Dec 2007 15:33:43 +0800
+Message-Id: <1198222424.1965.22.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,227 +23,387 @@ Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-This patchset provides an enhancement to kexec/kdump. It implements
-the following features:
-
-- Backup/restore memory used both by the original kernel and the
-  kexeced kernel.
-
-- Jumping between the original kernel and the kexeced kernel.
-
-- Read/write memory image of the kexeced kernel in the original kernel
-  and write memory image of the original kernel in the kexeced
-  kernel. This can be used as a communication method between the
-  kexeced kernel and the original kernel.
-
-
-The features of this patchset can be used as follow:
-
-- Kernel/system debug through making system snapshot. You can make
-  system snapshot, jump back, do some thing and make another system
-  snapshot.
-
-- A simple hibernation implementation without ACPI support. You can
-  kexec a hibernating kernel, save the memory image of original system
-  and shutdown the system. When resuming, you boot a resuming kernel
-  in memory range of kexeced kernel, restore the memory image of
-  original system and jump back.
-
-- Cooperative multi-kernel/system. With kexec jump, you can switch
-  between several kernels/systems quickly without boot process except
-  the first time. This appears like swap a whole kernel/system out/in.
-
-- A general method to call program in physical mode. This can be used
-  to invoke some BIOS code under Linux.
-
-- The basis of a full kexec based hibernation implementation with ACPI
-  support. The full kexec based hibernation implementation is provided
-  in another patchset named kexec based hibernation.
-
-
-Now, only the i386 architecture is supported. The patchset is based on
-Linux kernel 2.6.24-rc5-mm1, and has been tested on IBM T42 with ACPI
-on and off.
-
-
-The following user-space tools can be used with kexec jump.
-
-1. kexec-tools needs to be patched to support kexec jump. The patches
-   and the precompiled kexec can be download from the following URL:
-       source: http://khibernation.sourceforge.net/download/release_v8/kexec-tools/kexec-tools-src_git_kh8.tar.bz2
-       patches: http://khibernation.sourceforge.net/download/release_v8/kexec-tools/kexec-tools-patches_git_kh8.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v8/kexec-tools/kexec_git_kh8
-
-2. makedumpfile with patches are used as memory image saving tool, it
-   can exclude free pages from original kernel memory image file. The
-   patches and the precompiled makedumpfile can be download from the
-   following URL:
-       source: http://khibernation.sourceforge.net/download/release_v8/makedumpfile/makedumpfile-src_cvs_kh8.tar.bz2
-       patches: http://khibernation.sourceforge.net/download/release_v8/makedumpfile/makedumpfile-patches_cvs_kh8.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v8/makedumpfile/makedumpfile_cvs_kh8
-
-3. A simplest memory image restoring tool named "krestore" is
-   implemented. It can be downloaded from the following URL:
-       source: http://khibernation.sourceforge.net/download/release_v8/krestore/krestore-src_cvs_kh8.tar.bz2
-       binary: http://khibernation.sourceforge.net/download/release_v8/krestore/krestore_cvs_kh8
-
-An initramfs image can be used as the root file system of kexeced
-kernel. An initramfs image built with "BuildRoot" can be downloaded
-from the following URL:
-    initramfs image: http://khibernation.sourceforge.net/download/release_v8/initramfs/rootfs_cvs_kh8.gz
-All user space tools above are included in the initramfs image.
-
-
-Usage example of jumping between original and kexeced kernel:
-
-1. Compile and install patched kernel with following options selected:
-
-CONFIG_X86_32=y
-CONFIG_RELOCATABLE=y
-CONFIG_KEXEC=y
-CONFIG_CRASH_DUMP=y
-CONFIG_PM=y
-
-2. Build an initramfs image contains kexec-tool, or download the
-   pre-built initramfs image, called rootfs.gz in following text.
-
-3. Boot kernel compiled in step 1.
-
-4. Load kernel compiled in step 1 with /sbin/kexec. If You want to use
-   "krestore" tool, the --elf64-core-headers should be specified in
-   command line of /sbin/kexec. The shell command line can be as
-   follow:
-
-   /sbin/kexec --load-jump-back /boot/bzImage --mem-min=0x100000
-     --mem-max=0xffffff --elf64-core-headers --initrd=rootfs.gz
-
-5. Boot the kexeced kernel with following shell command line:
-
-   /sbin/kexec -e
-
-6. The kexeced kernel will boot as normal kexec. In kexeced kernel the
-   memory image of original kernel can read via /proc/vmcore or
-   /dev/oldmem, and can be written via /dev/oldmem. You can
-   save/restore/modify it as you want to.
-
-7. Prepare jumping back from kexeced kernel with following shell
-   command lines:
-
-   jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
-   /sbin/kexec --load-jump-back-helper=$jump_back_entry
-
-8. Jump back to the original kernel with following shell command line:
-
-   /sbin/kexec -e
-
-9. Now, you are in the original kernel again. You can read/write the
-   memory image of kexeced kernel via /proc/kimgcore.
-
-10. You can jump between the original kernel and kexeced kernel as you
-    want to via the following shell command line:
-
-    /sbin/kexec -e
-
-
-Known issues:
-
-- The suspend/resume callback of device drivers are used to put
-  devices into quiescent state. This will unnecessarily (possibly
-  harmfully) put devices into low power state. This is intended to be
-  solved by separating device quiesce/unquiesce callback from the
-  device suspend/resume callback.
-
-
-ChangeLog:
-
-v8:
-
-- Split kexec jump patchset from kexec based hibernation patchset.
-
-- Add writing support to kimgcore. This can be used as a communication
-  method between kexeced kernel and original kernel.
-
-- Merge various KEXEC_PRESERVE_* flags into one KEXEC_PRESERVE_CONTEXT
-  because there is no need for such subtle control.
-
-- Delete variable argument based "kernel to kernel" communication
-  mechanism from basic kexec jump patchset.
-
-v7:
-
-- Add an interface to dump the loaded kexec_image, which may contains
-  the memory image of kexeced system. This is used to accelerate kexec
-  based hibernation.
-
-- Refactor kexec jump to be a command driven programming model.
-
-- Adjust ACPI support to mimic the ACPI support of u/swsusp.
-
-- Use kexec_lock to do synchronization.
-
-v6:
-
-- Add ACPI support.
-
-- Refactor kexec jump to be a general facility to call real mode code.
-
-v5:
-
-- A flag (KEXEC_JUMP_BACK) is added to indicate the loaded kernel
-  image is used for jumping back. The reboot command for jumping back
-  is removed. This interface is more stable (proposed by Eric
-  Biederman).
-
-- NX bit handling support for kexec is added.
-
-- Merge machine_kexec and machine_kexec_jump, remove NO_RET attribute
-  from machine_kexec.
-
-- Passing jump back entry to kexeced kernel via kernel command line
-  (parsed by user space tool via /proc/cmdline instead of
-  kernel). Original corresponding boot parameter and sysfs code is
-  removed.
-
-v4:
-
-- Two reboot command are merged back to one because the underlying
-  implementation is same.
-
-- Jumping without reserving memory is implemented. As a side effect,
-  two direction jumping is implemented.
-
-- A jump back protocol is defined and documented. The original kernel
-  and kexeced kernel are more independent from each other.
-
-- The CPU state save/restore code are merged into relocate_kernel.S.
-
-v3:
-
-- The reboot command LINUX_REBOOT_CMD_KJUMP is split into to two
-  reboot command to reflect the different function.
-
-- Document is added for added kernel parameters.
-
-- /sys/kernel/kexec_jump_buf_pfn is made writable, it is used for
-  memory image restoring.
-
-- Console restoring after jumping back is implemented.
-
-- Writing support is added for /dev/oldmem, to restore memory contents
-  of hibernated system.
-
-v2:
-
-- The kexec jump implementation is put into the kexec/kdump framework
-  instead of software suspend framework. The device and CPU state
-  save/restore code of software suspend is called when needed.
-
-- The same code path is used for both kexec a new kernel and jump back
-  to original kernel.
-
-
-Best Regards,
-Huang Ying
+This patch adds a file in proc file system to access the loaded
+kexec_image, which may contains the memory image of kexeced
+system. This can be used to:
+
+- Communicate between original kernel and kexeced kernel through write
+  to some pages in original kernel.
+
+- Communicate between original kernel and kexeced kernel through read
+  memory image of kexeced kernel, amend the image, and reload the
+  amended image.
+
+- Accelerate boot of kexeced kernel. If you have a memory image of
+  kexeced kernel, you need not a normal boot process to jump to the
+  kexeced kernel, just load the memory image, jump to the point where
+  you leave last time in kexeced kernel.
+
+Signed-off-by: Huang Ying <ying.huang@intel.com>
+
+---
+ fs/proc/Makefile      |    1 
+ fs/proc/kimgcore.c    |  277 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/proc/proc_misc.c   |    6 +
+ include/linux/kexec.h |    7 +
+ kernel/kexec.c        |    5 
+ 5 files changed, 291 insertions(+), 5 deletions(-)
+
+--- /dev/null
++++ b/fs/proc/kimgcore.c
+@@ -0,0 +1,277 @@
++/*
++ * fs/proc/kimgcore.c - Interface for accessing the loaded
++ * kexec_image, which may contains the memory image of kexeced system.
++ * Heavily borrowed from fs/proc/kcore.c
++ *
++ * Copyright (C) 2007, Intel Corp.
++ *      Huang Ying <ying.huang@intel.com>
++ *
++ * This file is released under the GPLv2
++ */
++
++#include <linux/mm.h>
++#include <linux/proc_fs.h>
++#include <linux/user.h>
++#include <linux/elf.h>
++#include <linux/init.h>
++#include <linux/kexec.h>
++#include <linux/io.h>
++#include <linux/highmem.h>
++#include <linux/page-flags.h>
++#include <asm/uaccess.h>
++
++struct proc_dir_entry *proc_root_kimgcore;
++
++static u32 kimgcore_size;
++
++static char *elfcorebuf;
++static size_t elfcorebuf_sz;
++
++static void *buf_page;
++
++static ssize_t kimage_copy_to_user(struct kimage *image, char __user *buf,
++				   unsigned long offset, size_t count)
++{
++	kimage_entry_t *ptr, entry;
++	unsigned long off = 0, offinp, trunk;
++	struct page *page;
++	void *vaddr;
++
++	for_each_kimage_entry(image, ptr, entry) {
++		if (!(entry & IND_SOURCE))
++			continue;
++		if (off + PAGE_SIZE > offset) {
++			offinp = offset - off;
++			if (count > PAGE_SIZE - offinp)
++				trunk = PAGE_SIZE - offinp;
++			else
++				trunk = count;
++			page = pfn_to_page(entry >> PAGE_SHIFT);
++			if (PageHighMem(page)) {
++				vaddr = kmap(page);
++				memcpy(buf_page, vaddr+offinp, trunk);
++				kunmap(page);
++				vaddr = buf_page;
++			} else
++				vaddr = __va(entry & PAGE_MASK) + offinp;
++			if (copy_to_user(buf, vaddr, trunk))
++				return -EFAULT;
++			buf += trunk;
++			offset += trunk;
++			count -= trunk;
++			if (!count)
++				break;
++		}
++		off += PAGE_SIZE;
++	}
++	return count;
++}
++
++static ssize_t kimage_copy_from_user(struct kimage *image,
++				     const char __user *buf,
++				     unsigned long offset,
++				     size_t count)
++{
++	kimage_entry_t *ptr, entry;
++	unsigned long off = 0, offinp, trunk;
++	struct page *page;
++	void *vaddr;
++
++	for_each_kimage_entry(image, ptr, entry) {
++		if (!(entry & IND_SOURCE))
++			continue;
++		if (off + PAGE_SIZE > offset) {
++			offinp = offset - off;
++			if (count > PAGE_SIZE - offinp)
++				trunk = PAGE_SIZE - offinp;
++			else
++				trunk = count;
++			page = pfn_to_page(entry >> PAGE_SHIFT);
++			if (PageHighMem(page))
++				vaddr = buf_page;
++			else
++				vaddr = __va(entry & PAGE_MASK) + offinp;
++			if (copy_from_user(vaddr, buf, trunk))
++				return -EFAULT;
++			if (PageHighMem(page)) {
++				vaddr = kmap(page);
++				memcpy(vaddr+offinp, buf_page, trunk);
++				kunmap(page);
++			}
++			buf += trunk;
++			offset += trunk;
++			count -= trunk;
++			if (!count)
++				break;
++		}
++		off += PAGE_SIZE;
++	}
++	return count;
++}
++
++static ssize_t read_kimgcore(struct file *file, char __user *buffer,
++			     size_t buflen, loff_t *fpos)
++{
++	size_t acc = 0;
++	size_t tsz;
++	ssize_t ssz;
++
++	if (buflen == 0 || *fpos >= kimgcore_size)
++		return 0;
++
++	/* trim buflen to not go beyond EOF */
++	if (buflen > kimgcore_size - *fpos)
++		buflen = kimgcore_size - *fpos;
++	/* Read ELF core header */
++	if (*fpos < elfcorebuf_sz) {
++		tsz = elfcorebuf_sz - *fpos;
++		if (buflen < tsz)
++			tsz = buflen;
++		if (copy_to_user(buffer, elfcorebuf + *fpos, tsz))
++			return -EFAULT;
++		buflen -= tsz;
++		*fpos += tsz;
++		buffer += tsz;
++		acc += tsz;
++
++		/* leave now if filled buffer already */
++		if (buflen == 0)
++			return acc;
++	}
++
++	ssz = kimage_copy_to_user(kexec_image, buffer,
++				  *fpos - elfcorebuf_sz, buflen);
++	if (ssz < 0)
++		return ssz;
++
++	*fpos += (buflen - ssz);
++	acc += (buflen - ssz);
++
++	return acc;
++}
++
++static ssize_t write_kimgcore(struct file *file, const char __user *buffer,
++			      size_t count, loff_t *fpos)
++{
++	ssize_t ssz;
++
++	if (count == 0)
++		return 0;
++
++	/* Can not write to ELF core header or write beyond EOF */
++	if (*fpos < elfcorebuf_sz || *fpos >= kimgcore_size)
++		return -EFAULT;
++	/* trim count to not go beyond EOF */
++	if (count > kimgcore_size - *fpos)
++		count = kimgcore_size - *fpos;
++
++	ssz = kimage_copy_from_user(kexec_image, buffer,
++				    *fpos - elfcorebuf_sz, count);
++	if (ssz >= 0)
++		*fpos += (count - ssz);
++
++	return count - ssz;
++}
++
++static int init_kimgcore(void)
++{
++	Elf64_Ehdr *ehdr;
++	Elf64_Phdr *phdr;
++	struct kexec_segment *seg;
++	Elf64_Off off;
++	unsigned long i;
++
++	elfcorebuf_sz = sizeof(Elf64_Ehdr) +
++		kexec_image->nr_segments * sizeof(Elf64_Phdr);
++	elfcorebuf = kzalloc(elfcorebuf_sz, GFP_KERNEL);
++	if (!elfcorebuf)
++		return -ENOMEM;
++	ehdr = (Elf64_Ehdr *)elfcorebuf;
++	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
++	ehdr->e_ident[EI_CLASS] = ELFCLASS64;
++	ehdr->e_ident[EI_DATA]	= ELFDATA2LSB;
++	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
++	ehdr->e_ident[EI_OSABI] = ELFOSABI_NONE;
++	memset(ehdr->e_ident+EI_PAD, 0, EI_NIDENT-EI_PAD);
++	ehdr->e_type = ET_CORE;
++	ehdr->e_machine = ELF_ARCH;
++	ehdr->e_version = EV_CURRENT;
++	ehdr->e_entry = kexec_image->start;
++	ehdr->e_phoff = sizeof(Elf64_Ehdr);
++	ehdr->e_shoff = 0;
++	ehdr->e_flags = 0;
++	ehdr->e_ehsize = sizeof(Elf64_Ehdr);
++	ehdr->e_phentsize = sizeof(Elf64_Phdr);
++	ehdr->e_phnum = kexec_image->nr_segments;
++	ehdr->e_shentsize = 0;
++	ehdr->e_shnum = 0;
++	ehdr->e_shstrndx = 0;
++
++	off = elfcorebuf_sz;
++	phdr = (Elf64_Phdr *)(elfcorebuf + sizeof(Elf64_Ehdr));
++	seg = kexec_image->segment;
++	for (i = 0; i < kexec_image->nr_segments; i++, phdr++, seg++) {
++		phdr->p_type = PT_LOAD;
++		phdr->p_flags = PF_R|PF_W|PF_X;
++		phdr->p_offset = off;
++		phdr->p_paddr = seg->mem;
++		phdr->p_filesz = seg->memsz;
++		phdr->p_memsz = seg->memsz;
++		phdr->p_align = PAGE_SIZE;
++		if (seg->mem < (unsigned long)high_memory)
++			phdr->p_vaddr = (unsigned long)__va(seg->mem);
++		off += seg->memsz;
++	}
++	kimgcore_size = off;
++
++#ifdef CONFIG_HIGHMEM
++	buf_page = (void *)__get_free_page(GFP_KERNEL);
++	if (!buf_page) {
++		kfree(elfcorebuf);
++		return -ENOMEM;
++	}
++#endif
++	return 0;
++}
++
++static void destroy_kimgcore(void)
++{
++	kfree(elfcorebuf);
++#ifdef CONFIG_HIGHMEM
++	free_page((unsigned long)buf_page);
++#endif
++	elfcorebuf_sz = 0;
++	kimgcore_size = 0;
++}
++
++static int open_kimgcore(struct inode *inode, struct file *filp)
++{
++	int ret;
++	if (xchg(&kexec_lock, 1))
++		return -EBUSY;
++	if (!kexec_image) {
++		ret = -ENOENT;
++		goto unlock;
++	}
++	ret = init_kimgcore();
++	if (ret)
++		goto unlock;
++	return 0;
++unlock:
++	xchg(&kexec_lock, 0);
++	return ret;
++}
++
++static int release_kimgcore(struct inode *inode, struct file *filp)
++{
++	destroy_kimgcore();
++	xchg(&kexec_lock, 0);
++	return 0;
++}
++
++const struct file_operations proc_kimgcore_operations = {
++	.read = read_kimgcore,
++	.write = write_kimgcore,
++	.open = open_kimgcore,
++	.release = release_kimgcore,
++};
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -9,6 +9,7 @@
+ #include <linux/ioport.h>
+ #include <linux/elfcore.h>
+ #include <linux/elf.h>
++#include <linux/proc_fs.h>
+ #include <asm/kexec.h>
+ 
+ /* Verify architecture specific macros are defined */
+@@ -103,6 +104,10 @@ struct kimage {
+ };
+ 
+ 
++#define for_each_kimage_entry(image, ptr, entry) \
++	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
++		ptr = (entry & IND_INDIRECTION)? \
++			phys_to_virt((entry & PAGE_MASK)): ptr + 1)
+ 
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+@@ -200,6 +205,8 @@ extern size_t vmcoreinfo_max_size;
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+ 
++extern const struct file_operations proc_kimgcore_operations;
++extern struct proc_dir_entry *proc_root_kimgcore;
+ #else /* !CONFIG_KEXEC */
+ struct pt_regs;
+ struct task_struct;
+--- a/fs/proc/Makefile
++++ b/fs/proc/Makefile
+@@ -14,5 +14,6 @@ proc-$(CONFIG_PROC_SYSCTL)	+= proc_sysct
+ proc-$(CONFIG_NET)		+= proc_net.o
+ proc-$(CONFIG_PROC_KCORE)	+= kcore.o
+ proc-$(CONFIG_PROC_VMCORE)	+= vmcore.o
++proc-$(CONFIG_KEXEC)		+= kimgcore.o
+ proc-$(CONFIG_PROC_DEVICETREE)	+= proc_devtree.o
+ proc-$(CONFIG_PRINTK)	+= kmsg.o
+--- a/fs/proc/proc_misc.c
++++ b/fs/proc/proc_misc.c
+@@ -48,6 +48,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/pid_namespace.h>
+ #include <linux/bootmem.h>
++#include <linux/kexec.h>
+ #include <asm/uaccess.h>
+ #include <asm/pgtable.h>
+ #include <asm/io.h>
+@@ -1034,6 +1035,11 @@ void __init proc_misc_init(void)
+ 	if (proc_vmcore)
+ 		proc_vmcore->proc_fops = &proc_vmcore_operations;
+ #endif
++#ifdef CONFIG_KEXEC
++	proc_root_kimgcore = create_proc_entry("kimgcore", S_IRUSR, NULL);
++	if (proc_root_kimgcore)
++		proc_root_kimgcore->proc_fops = &proc_kimgcore_operations;
++#endif
+ #ifdef CONFIG_MAGIC_SYSRQ
+ 	{
+ 		struct proc_dir_entry *entry;
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -611,11 +611,6 @@ static int kimage_terminate(struct kimag
+ 	return 0;
+ }
+ 
+-#define for_each_kimage_entry(image, ptr, entry) \
+-	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
+-		ptr = (entry & IND_INDIRECTION)? \
+-			phys_to_virt((entry & PAGE_MASK)): ptr +1)
+-
+ static void kimage_free_entry(kimage_entry_t entry)
+ {
+ 	struct page *page;
 
 
 _______________________________________________
