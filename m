@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from xenotime.net ([66.160.160.81])
-	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J7iOg-0006lx-P6
-	for kexec@lists.infradead.org; Thu, 27 Dec 2007 02:23:06 +0000
-Received: from midway.site ([71.117.233.180]) by xenotime.net for
-	<kexec@lists.infradead.org>; Wed, 26 Dec 2007 18:15:41 -0800
-Date: Wed, 26 Dec 2007 18:15:41 -0800
-From: Randy Dunlap <rdunlap@xenotime.net>
-Subject: Fw: [Bugme-new] [Bug 9641] New: kexec userspace utilities cannot
-	handle a kernel command line longer than 256 chars
-Message-Id: <20071226181541.ef35531b.rdunlap@xenotime.net>
+Received: from mga11.intel.com ([192.55.52.93])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J7iYN-0007Vi-Ky
+	for kexec@lists.infradead.org; Thu, 27 Dec 2007 02:33:06 +0000
+Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20071227015716.GA6718@redhat.com>
+References: <1198222399.1965.15.camel@caritas-dev.intel.com>
+	<20071227015716.GA6718@redhat.com>
+Date: Thu, 27 Dec 2007 10:33:13 +0800
+Message-Id: <1198722793.7320.15.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,53 +23,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
+On Wed, 2007-12-26 at 20:57 -0500, Vivek Goyal wrote:
+[...]
+> > 9. Now, you are in the original kernel again. You can read/write the
+> >    memory image of kexeced kernel via /proc/kimgcore.
+> > 
+> 
+> Why do we need two interfaces, /proc/vmcore and /proc/kimgcore? Can't
+> we have just one say /proc/vmcore. Irrespective of what kernel you are
+> in /proc/vmcore gives you the access to the memory of kernel which was
+> previously booted.
 
-Begin forwarded message:
+In theory we can kexec another kernel even in a kexeced kernel, that is,
+in kernel A kexec kernel B, and in kernel B kexec another kernel C. In
+this situation, both /proc/vmcore and /proc/kimgcore has valid contents.
+So I think, it may be better to keep two interfaces.
 
-Date: Wed, 26 Dec 2007 16:26:36 -0800 (PST)
-From: bugme-daemon@bugzilla.kernel.org
-To: bugme-new@lists.osdl.org
-Subject: [Bugme-new] [Bug 9641] New: kexec userspace utilities cannot handle a kernel command line longer than 256 chars
+In fact, current kexec jump implementation use a dummy "jump back helper
+image" in kexeced kernel to jump back to the original kernel. The "jump
+back helper image" has no PT_LOAD segment, it is used to provide a
+struct kimage (including control page, swap page) and entry point to
+jump back.
 
-
-http://bugzilla.kernel.org/show_bug.cgi?id=9641
-
-           Summary: kexec userspace utilities cannot handle a kernel command
-                    line longer than 256 chars
-           Product: Other
-           Version: 2.5
-     KernelVersion: 2.6.23
-          Platform: All
-        OS/Version: Linux
-              Tree: Mainline
-            Status: NEW
-          Severity: normal
-          Priority: P1
-         Component: Other
-        AssignedTo: other_other@kernel-bugs.osdl.org
-        ReportedBy: bluebird@mnet-online.de
-
-
-This doesn't affect the kernel but the userspace utilities from
-http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
-
-Since 2.6.21 the maximum length of the kernel command line is 2048 for x86 and
-x86_64 but the kexec-tools still assume it's 256 therefore a command line
-longer than 256 chars is truncated upon kexec-reboot.
-
-Steps to reproduce:
-- Boot kernel with a command line longer than 256 chars
-- cat /proc/cmdline | wc -c
-- kexec-reboot
-- cat /proc/cmdline | wc -c
-
-
--- 
-Configure bugmail: http://bugzilla.kernel.org/userprefs.cgi?tab=email
-------- You are receiving this mail because: -------
-You are on the CC list for the bug, or are watching someone who is.
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
