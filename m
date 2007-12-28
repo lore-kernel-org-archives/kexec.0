@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
-	by pentafluge.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J8GKo-0005Lm-N1
-	for kexec@lists.infradead.org; Fri, 28 Dec 2007 14:37:21 +0000
-Date: Fri, 28 Dec 2007 09:27:39 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J8LIJ-0000dp-Bp
+	for kexec@lists.infradead.org; Fri, 28 Dec 2007 19:55:05 +0000
+Date: Fri, 28 Dec 2007 14:54:45 -0500
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: kexec refuses to boot latest -mm
-Message-ID: <20071228142739.GA4560@redhat.com>
+Message-ID: <20071228195445.GA6245@hmsendeavour.rdu.redhat.com>
 References: <20071228124532.GB32643@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -24,7 +24,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
-Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, vgoyal@redhat.com
 
 On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
 > Hi Vivek,
@@ -35,22 +35,33 @@ On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
 > It does boot normally when booted as the first kernel.
 > 
 > Any hints debugging? (x86 architecture)
+> 
+> -- 
+> regards,
+> Dhaval
+> 
+Out of curiosity, how are you booting the kexec kernel?  Are you doing a kexec
+-l, or a kexec -p, followed by a system panic?  If its the later, what are you
+doing to panic the system?  sysrq-c, custom module executing explicit
+crash-code, hang followed by nmi panic?
 
-I generally try few things.
+Regards
+Neil
 
-- Specify earlyprintk= parameter for second kernel and see if control
-  is reaching to second kernel.
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-- Otherwise specify --console-serial parameter on "kexec -l" commandline
-  and it should display a message "I am in purgatory" on serial console.
-  This will just mean that control has reached at least till purgatory.
-
-- If that also does not work, then most likely first kernel itself got
-  stuck somewhere and we need to put some printks in first kernel
-  to find out what's wrong.
-
-Thanks
-Vivek
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
