@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J89ij-000573-HZ
-	for kexec@lists.infradead.org; Fri, 28 Dec 2007 07:33:36 +0000
-Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20071227181218.GA15084@redhat.com>
-References: <1198222399.1965.15.camel@caritas-dev.intel.com>
-	<20071227015716.GA6718@redhat.com>
-	<1198722793.7320.15.camel@caritas-dev.intel.com>
-	<20071227181218.GA15084@redhat.com>
-Date: Fri, 28 Dec 2007 15:30:53 +0800
-Message-Id: <1198827053.7320.33.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e23smtp04.au.ibm.com ([202.81.18.173])
+	by pentafluge.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1J8Eh4-0003cR-UC
+	for kexec@lists.infradead.org; Fri, 28 Dec 2007 12:52:14 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
+	by e23smtp04.au.ibm.com (8.13.1/8.13.1) with ESMTP id lBSCjcdA023074
+	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:38 +1100
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	lBSCjohF3571938
+	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:50 +1100
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+	by d23av02.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	lBSCjoCR007951
+	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:50 +1100
+Date: Fri, 28 Dec 2007 18:15:32 +0530
+From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Subject: kexec refuses to boot latest -mm
+Message-ID: <20071228124532.GB32643@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,53 +33,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: vgoyal@redhat.com, hbabu@us.ibm.com
+Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
 
-On Thu, 2007-12-27 at 13:12 -0500, Vivek Goyal wrote:
-> On Thu, Dec 27, 2007 at 10:33:13AM +0800, Huang, Ying wrote:
-> > On Wed, 2007-12-26 at 20:57 -0500, Vivek Goyal wrote:
-> > [...]
-> > > > 9. Now, you are in the original kernel again. You can read/write the
-> > > >    memory image of kexeced kernel via /proc/kimgcore.
-> > > > 
-> > > 
-> > > Why do we need two interfaces, /proc/vmcore and /proc/kimgcore? Can't
-> > > we have just one say /proc/vmcore. Irrespective of what kernel you are
-> > > in /proc/vmcore gives you the access to the memory of kernel which was
-> > > previously booted.
-> > 
-> > In theory we can kexec another kernel even in a kexeced kernel, that is,
-> > in kernel A kexec kernel B, and in kernel B kexec another kernel C. In
-> > this situation, both /proc/vmcore and /proc/kimgcore has valid contents.
-> > So I think, it may be better to keep two interfaces.
-> > 
-> 
-> In those situations I think only one interface is better. For example, 
-> above will be broken if somebody kexec 4 kernels.
-> 
-> A-->B--->C--->D
+Hi Vivek,
 
-I don't think the two interfaces will be broken if somebody kexec 4
-kernels. For example, when kexec D from C, the /proc/vmcore is contents
-of B, /proc/kimgcore is contents of D. To jump back from C to B, the D
-is unloaded, and a jump back helper image is loaded.
+I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
+kexec. It just gets stuck at "Starting new kernel".
 
-> I think better option might be if it is stack like situation. A kernel
-> shows you only the previous kernel's memory contents through /proc/vmcore
-> interface. So If I am in kernel D, I see only kernel C's memory image.
-> To see kernel B's memory image, one shall have to go back to kernel C.
+It does boot normally when booted as the first kernel.
 
-Maybe it is not sufficient to only show the previous kernel's memory
-contents. In kernel C, you maybe need to access the memory image of
-kernel B and memory image of kernel D.
+Any hints debugging? (x86 architecture)
 
-That is, /proc/vmcore is the memory image of the previous kernel,
-and /proc/kimgcore is the memory image of the next kernel.
-
-Best Regards,
-Huang Ying
-
+-- 
+regards,
+Dhaval
 
 _______________________________________________
 kexec mailing list
