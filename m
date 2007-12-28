@@ -1,26 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp04.au.ibm.com ([202.81.18.173])
-	by pentafluge.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J8Eh4-0003cR-UC
-	for kexec@lists.infradead.org; Fri, 28 Dec 2007 12:52:14 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
-	by e23smtp04.au.ibm.com (8.13.1/8.13.1) with ESMTP id lBSCjcdA023074
-	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:38 +1100
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	lBSCjohF3571938
-	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:50 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
-	by d23av02.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	lBSCjoCR007951
-	for <kexec@lists.infradead.org>; Fri, 28 Dec 2007 23:45:50 +1100
-Date: Fri, 28 Dec 2007 18:15:32 +0530
-From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
-Subject: kexec refuses to boot latest -mm
-Message-ID: <20071228124532.GB32643@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by pentafluge.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J8GKo-0005Lm-N1
+	for kexec@lists.infradead.org; Fri, 28 Dec 2007 14:37:21 +0000
+Date: Fri, 28 Dec 2007 09:27:39 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: kexec refuses to boot latest -mm
+Message-ID: <20071228142739.GA4560@redhat.com>
+References: <20071228124532.GB32643@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+In-Reply-To: <20071228124532.GB32643@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,21 +23,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com, hbabu@us.ibm.com
-Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
+To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
 
-Hi Vivek,
+On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
+> Hi Vivek,
+> 
+> I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
+> kexec. It just gets stuck at "Starting new kernel".
+> 
+> It does boot normally when booted as the first kernel.
+> 
+> Any hints debugging? (x86 architecture)
 
-I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
-kexec. It just gets stuck at "Starting new kernel".
+I generally try few things.
 
-It does boot normally when booted as the first kernel.
+- Specify earlyprintk= parameter for second kernel and see if control
+  is reaching to second kernel.
 
-Any hints debugging? (x86 architecture)
+- Otherwise specify --console-serial parameter on "kexec -l" commandline
+  and it should display a message "I am in purgatory" on serial console.
+  This will just mean that control has reached at least till purgatory.
 
--- 
-regards,
-Dhaval
+- If that also does not work, then most likely first kernel itself got
+  stuck somewhere and we need to put some printks in first kernel
+  to find out what's wrong.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
