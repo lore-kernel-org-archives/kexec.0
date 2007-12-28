@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga01.intel.com ([192.55.52.88])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J7xDU-0001XZ-Nt
-	for kexec@lists.infradead.org; Thu, 27 Dec 2007 18:12:30 +0000
-Date: Thu, 27 Dec 2007 13:12:18 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1J89ij-000573-HZ
+	for kexec@lists.infradead.org; Fri, 28 Dec 2007 07:33:36 +0000
 Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
-Message-ID: <20071227181218.GA15084@redhat.com>
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20071227181218.GA15084@redhat.com>
 References: <1198222399.1965.15.camel@caritas-dev.intel.com>
 	<20071227015716.GA6718@redhat.com>
 	<1198722793.7320.15.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1198722793.7320.15.camel@caritas-dev.intel.com>
+	<20071227181218.GA15084@redhat.com>
+Date: Fri, 28 Dec 2007 15:30:53 +0800
+Message-Id: <1198827053.7320.33.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +25,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Thu, Dec 27, 2007 at 10:33:13AM +0800, Huang, Ying wrote:
-> On Wed, 2007-12-26 at 20:57 -0500, Vivek Goyal wrote:
-> [...]
-> > > 9. Now, you are in the original kernel again. You can read/write the
-> > >    memory image of kexeced kernel via /proc/kimgcore.
+On Thu, 2007-12-27 at 13:12 -0500, Vivek Goyal wrote:
+> On Thu, Dec 27, 2007 at 10:33:13AM +0800, Huang, Ying wrote:
+> > On Wed, 2007-12-26 at 20:57 -0500, Vivek Goyal wrote:
+> > [...]
+> > > > 9. Now, you are in the original kernel again. You can read/write the
+> > > >    memory image of kexeced kernel via /proc/kimgcore.
+> > > > 
 > > > 
+> > > Why do we need two interfaces, /proc/vmcore and /proc/kimgcore? Can't
+> > > we have just one say /proc/vmcore. Irrespective of what kernel you are
+> > > in /proc/vmcore gives you the access to the memory of kernel which was
+> > > previously booted.
 > > 
-> > Why do we need two interfaces, /proc/vmcore and /proc/kimgcore? Can't
-> > we have just one say /proc/vmcore. Irrespective of what kernel you are
-> > in /proc/vmcore gives you the access to the memory of kernel which was
-> > previously booted.
+> > In theory we can kexec another kernel even in a kexeced kernel, that is,
+> > in kernel A kexec kernel B, and in kernel B kexec another kernel C. In
+> > this situation, both /proc/vmcore and /proc/kimgcore has valid contents.
+> > So I think, it may be better to keep two interfaces.
+> > 
 > 
-> In theory we can kexec another kernel even in a kexeced kernel, that is,
-> in kernel A kexec kernel B, and in kernel B kexec another kernel C. In
-> this situation, both /proc/vmcore and /proc/kimgcore has valid contents.
-> So I think, it may be better to keep two interfaces.
+> In those situations I think only one interface is better. For example, 
+> above will be broken if somebody kexec 4 kernels.
 > 
+> A-->B--->C--->D
 
-In those situations I think only one interface is better. For example, 
-above will be broken if somebody kexec 4 kernels.
+I don't think the two interfaces will be broken if somebody kexec 4
+kernels. For example, when kexec D from C, the /proc/vmcore is contents
+of B, /proc/kimgcore is contents of D. To jump back from C to B, the D
+is unloaded, and a jump back helper image is loaded.
 
-A-->B--->C--->D
+> I think better option might be if it is stack like situation. A kernel
+> shows you only the previous kernel's memory contents through /proc/vmcore
+> interface. So If I am in kernel D, I see only kernel C's memory image.
+> To see kernel B's memory image, one shall have to go back to kernel C.
 
-I think better option might be if it is stack like situation. A kernel
-shows you only the previous kernel's memory contents through /proc/vmcore
-interface. So If I am in kernel D, I see only kernel C's memory image.
-To see kernel B's memory image, one shall have to go back to kernel C.
+Maybe it is not sufficient to only show the previous kernel's memory
+contents. In kernel C, you maybe need to access the memory image of
+kernel B and memory image of kernel D.
 
-Thanks
-Vivek
+That is, /proc/vmcore is the memory image of the previous kernel,
+and /proc/kimgcore is the memory image of the next kernel.
+
+Best Regards,
+Huang Ying
+
 
 _______________________________________________
 kexec mailing list
