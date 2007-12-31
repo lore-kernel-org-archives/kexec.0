@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J9Nbn-0004QC-Ue
-	for kexec@lists.infradead.org; Mon, 31 Dec 2007 16:35:30 +0000
-Date: Mon, 31 Dec 2007 11:35:10 -0500
+	id 1J9QHR-0007Ia-Rc
+	for kexec@lists.infradead.org; Mon, 31 Dec 2007 19:26:40 +0000
+Date: Mon, 31 Dec 2007 14:26:21 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kexec refuses to boot latest -mm
-Message-ID: <20071231163510.GC27060@redhat.com>
-References: <20071228124532.GB32643@linux.vnet.ibm.com>
-	<20071228142739.GA4560@redhat.com>
-	<20071229054113.GB17426@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
+Message-ID: <20071231192621.GD27060@redhat.com>
+References: <1198222399.1965.15.camel@caritas-dev.intel.com>
+	<20071228213331.GB4560@redhat.com>
+	<1198893644.17317.36.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071229054113.GB17426@linux.vnet.ibm.com>
+In-Reply-To: <1198893644.17317.36.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,210 +25,277 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
-Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Sat, Dec 29, 2007 at 11:11:13AM +0530, Dhaval Giani wrote:
-> On Fri, Dec 28, 2007 at 09:27:39AM -0500, Vivek Goyal wrote:
-> > On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
-> > > Hi Vivek,
+On Sat, Dec 29, 2007 at 10:00:44AM +0800, Huang, Ying wrote:
+> On Fri, 2007-12-28 at 16:33 -0500, Vivek Goyal wrote:
+> > On Fri, Dec 21, 2007 at 03:33:19PM +0800, Huang, Ying wrote:
+> > > This patchset provides an enhancement to kexec/kdump. It implements
+> > > the following features:
 > > > 
-> > > I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
-> > > kexec. It just gets stuck at "Starting new kernel".
+> > > - Backup/restore memory used both by the original kernel and the
+> > >   kexeced kernel.
 > > > 
-> > > It does boot normally when booted as the first kernel.
+> > > - Jumping between the original kernel and the kexeced kernel.
 > > > 
-> > > Any hints debugging? (x86 architecture)
+> > > - Read/write memory image of the kexeced kernel in the original kernel
+> > >   and write memory image of the original kernel in the kexeced
+> > >   kernel. This can be used as a communication method between the
+> > >   kexeced kernel and the original kernel.
+> > > 
+> > > 
+> > > The features of this patchset can be used as follow:
+> > > 
+> > > - Kernel/system debug through making system snapshot. You can make
+> > >   system snapshot, jump back, do some thing and make another system
+> > >   snapshot.
+> > > 
 > > 
-> > I generally try few things.
+> > How do you differentiate between whether a core is resumable or not.
+> > IOW, how do you know the generated /proc/vmcore has been generated after
+> > a real crash hence can't be resumed (using krestore) or it has been 
+> > generated because of hibernation/debug purposes and can be resumed?
 > > 
-> > - Specify earlyprintk= parameter for second kernel and see if control
-> >   is reaching to second kernel.
-> > 
-> > - Otherwise specify --console-serial parameter on "kexec -l" commandline
-> >   and it should display a message "I am in purgatory" on serial console.
-> >   This will just mean that control has reached at least till purgatory.
-> > 
+> > I think you might have to add an extra ELF NOTE to vmcore which can help
+> > decide whether kernel memory snapshot is resumable or not.
 > 
-> Ok, so it reaches till here. I get "I'm in purgatory" on the console.
+> The current solution is as follow:
+> 
+> 1. The original kernel will set %edi to jump back entry if resumable and
+> set %edi to 0 if not.
+> 
+> 2. The purgatory of loaded kernel will check %edi, if it is not zero,
+> the string "jump_back_entry=<jump_back_entry>" will be appended to
+> kernel command line parameter.
+> 
+> 3. In kexeced kernel, if there is "jump_back_entry=<jump_back_entry>"
+> in /proc/cmdline, the previous kernel is resumable, otherwise not.
+> 
 
-Hmm..., I just tried kexeing a 2.6.24-rc6-mm1 kernel from 2.6.24-rc6 on a
-32bit box and it is working for me. That's a different thing 2.6.24-rc6-mm1
-crashes later because of other problems.
+Ok. But If I copy the /proc/vmcore to disk. Then I reboot the system 
+and boot back into a kernel which is supposed to resume the hibernated
+image. This kernel will not have any command line option jump_back_entry.
+I  need to resume using krestore tool. How will a krestore tool decide that
+image one wants to restore is a core file or a hibernated image?
 
-Which kexec-tools are you using?  I am using kexec-tools-testing-20071030.
+In this context I thought an PT_NOTE might be useful.
 
+> As for ELF NOTE, in fact, the ELF NOTE does not work for resumable
+> kernel. Because the contents of source page and destination page is
+> swapped during kexec, and the kernel access the destination page
+> directly during parsing ELF NOTE. All memory that is swapped need to be
+> accessed via the backup pages map (image->head). I think these
+> information can be exchanged between two kernels via kernel command line
+> or /proc/kimgcore.
+> 
+
+Why should we exchange backup page map information between two kernels?
+What data has been swapped and how to restore it back should be known
+to the kernel who did it. I think the memory info and address of ELF
+headers we can still pass to second kernel the same way we do for
+/proc/vmcore. The only difference is that purgatory shall have to modify 
+the command line to reflect the new address of ELF headers just before
+jumping to new kernel (because of swapping).
+
+We can also modify the actual ELF headers in purgatory to reflect the
+right data (because of swapping) and new kernel will not have to know
+anything about swapping.
+
+So I thought of following sequence.
+
+Lets say there is production kernel A and there is helper kernel B (B
+will save the hibernated image of A).
+
+- Boot into A.
+- Load kernel B using --load-preserve-context.
+- This load operation can also create the Elf headers.   
+- Kexec -e will start hibernation of A. Pages shall be swapped. Control
+  will be transferred to purgatory.
+- Purgatory will readjust the ELF headers and command line based on 
+  the swapping done and jump to new kernel.
+- New kernel will retrieve the elf headers and export the memory of
+  hibernated kernel through /proc/vmcore.
+
+Hence there is no need to communicate swapped pages map between two
+kernels.
+
+
+> > [..]
+> > > 2. Build an initramfs image contains kexec-tool, or download the
+> > >    pre-built initramfs image, called rootfs.gz in following text.
+> > > 
+> > > 3. Boot kernel compiled in step 1.
+> > > 
+> > > 4. Load kernel compiled in step 1 with /sbin/kexec. If You want to use
+> > >    "krestore" tool, the --elf64-core-headers should be specified in
+> > >    command line of /sbin/kexec. The shell command line can be as
+> > >    follow:
+> > > 
+> > >    /sbin/kexec --load-jump-back /boot/bzImage --mem-min=0x100000
+> > >      --mem-max=0xffffff --elf64-core-headers --initrd=rootfs.gz
+> > > 
+> > 
+> > How about a different name like "--load-preserve-context". This will
+> > just mean that kexec need to preserve the context while kexeing to 
+> > image being loaded. Combination of --load-jump-back and
+> > --load-jump-back-helper is becoming little confusing.
+> 
+> Yes, this is better. I will change it.
+> 
+> > > 5. Boot the kexeced kernel with following shell command line:
+> > > 
+> > >    /sbin/kexec -e
+> > > 
+> > > 6. The kexeced kernel will boot as normal kexec. In kexeced kernel the
+> > >    memory image of original kernel can read via /proc/vmcore or
+> > >    /dev/oldmem, and can be written via /dev/oldmem. You can
+> > >    save/restore/modify it as you want to.
+> > > 
+> > 
+> > Restoring a hibernated image using /dev/oldmem should be easy and I 
+> > think one should be able to launch it back using --load-jump-back-helper.
+> 
+> Yes. I think so too. The current implementation of krestore restoring
+> the hibernated image using /dev/oldmem. And the hibernated image can be
+> launched using --load-jump-back-helper.
+> 
+> > How do you restore already kexeced kernel? For example if I got two
+> > kernels A and B. A is the one which will hibernate and B will be used
+> > to store the hibernated kernel. I think as per the procedure one needs
+> > to first boot into kernel B and then jump back to kernel A. This will
+> > make image of B available in /proc/kimgcore. If I save /proc/kimgcore
+> > to disk and want to jump back to it, how do I do it? I guess I need
+> > to kexec again using --load-jump-back and not restore using krestore?
+> 
+> The image of B is made as you said. And it can be restored as follow:
+> 
+> /sbin/kexec -l --args-none --flags=0x2 <kimgecore>
+> /sbin/kexec -e
+> 
+> That is, the image of B is loaded as a ordinary ELF file. A option
+> to /sbin/kexec named --flags are added to specify the
+> KEXEC_PRESERVE_CONTEXT flags for sys_kexec_load. This has been tested.
+
+Shouldn't we be able to load this image using --load-preseve-context? Why
+to create another otion --flags.
+
+So there seems to be two different kind of load options for resuming
+for two different kind of images.
+
+- For /proc/vmcore kind of images use krestore (which will use
+  --load-jump-back-helper)
+
+- For /proc/kimgcore kind of images use normal kexec -l.
+
+This is little confusing. How will one differentiate between two kind
+of files? In fact the semantics between two kind of files are not very
+clear. We need to do some kind of unification here and make the whole
+thing somewhat simple.
+
+
+> 
+> > > 7. Prepare jumping back from kexeced kernel with following shell
+> > >    command lines:
+> > > 
+> > >    jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
+> > >    /sbin/kexec --load-jump-back-helper=$jump_back_entry
+> > > 
+> > 
+> > How about decoupling entry point from --load-jump-back-helper. We can
+> > introduce a separate option for entry point. Something like.
+> > 
+> > kexec --load-jump-back-helper --entry=$jump_back_entry
+> > 
+> > May be we can generalize the --entry so that a user can override the 
+> > entry point of the normal kexec image using above.
+> 
+> Yes. This is better. I will change it.
+> 
+> > > 8. Jump back to the original kernel with following shell command line:
+> > > 
+> > >    /sbin/kexec -e
+> > > 
+> > > 9. Now, you are in the original kernel again. You can read/write the
+> > >    memory image of kexeced kernel via /proc/kimgcore.
+> > > 
+> > > 10. You can jump between the original kernel and kexeced kernel as you
+> > >     want to via the following shell command line:
+> > > 
+> > >     /sbin/kexec -e
+> > > 
+> > > 
+> > > Known issues:
+> > > 
+> > > - The suspend/resume callback of device drivers are used to put
+> > >   devices into quiescent state. This will unnecessarily (possibly
+> > >   harmfully) put devices into low power state. This is intended to be
+> > >   solved by separating device quiesce/unquiesce callback from the
+> > >   device suspend/resume callback.
+> > > 
+> > > 
+> > > ChangeLog:
+> > > 
+> > > v8:
+> > > 
+> > > - Split kexec jump patchset from kexec based hibernation patchset.
+> > > 
+> > > - Add writing support to kimgcore. This can be used as a communication
+> > >   method between kexeced kernel and original kernel.
+> > > 
+> > 
+> > What are we communicating between two kernels using kimgcore?
+> 
+> An example:
+> 
+> 1. kernel A kexec kernel B, provides vmcoreinfo in kernel command line.
+
+I think vmcoreinfo is stored in a PT_NOTE and passed to second kernel
+parses it while parsing all ELF headers? No separate ptr or anything
+else is passed to second kernel on command line.
+
+> 2. kernel B jump back to kernel A
+> 3. in kernel A, the memory image of kernel B is saved via /proc/kimgcore
+> 4. system reboot, kernel C is booted
+> 5. kernel C load the memory image of kernel B, and jump back to kernel B
+> 
+> In step 5, the vmcoreinfo provided in step 1 is invalid, so a
+> communication method is needed to tell kernel B the new one. This can be
+> done via amending /proc/kimgcore. For example, change the memory of the
+> kernel command line of kernel B.
+
+I think modifying a kernel's data structures externally without kernel
+knowing it is dangerous. 
+
+I would think that initially we can keep it simple and not suppot
+resuming. Resuming is little tough as you need to make sure kernel's
+complete env has been restored back. But in this case, we are playing
+with resume env, for example, changing of vmcoreinfo etc.
+
+Capability to resume the already booted kernel (Kernel B here), creates
+a coupling with the kernel it has booted with in the past (Kernel A) and
+that's why you end up modifying various things once you swith to B 
+from C. I think we should boot B fresh all the time to save the hibernated
+image of kernel A or C (Though it will take more time for hibernation).
+It keeps things simple.
+
+If you still want to support resuming the kernel, then I would think that in
+resume path kernel should re-initialize/re-construct /proc/vmcore
+(parse vmcoreinfo again) etc, instead of modifying the image of loaded kernel
+through /proc/kimgcore interface.
+
+We can probably think of a setup page where all the needed data is put and
+this page is used as a communication medium between two kernels (Something
+like the way, a page of data is passed between boot-loader and kernel to
+communicate the info like command line etc).
+
+So in the above example, kernel C will pass some data to kernel B (on
+setup page). This data will also include the pointer to new ELF headers
+(which also includes vmcoreinfo PT_NOTE). Resume path of kernel B
+will parse this data and re-initialize vmcore accordingly.
 
 Thanks
 Vivek
-
-2.6.24-rc6-mm1 boot BUG()
-
-
-Creating block device nodes.                                                    
-Creating root device.                                                           
-end_request: I/O error, dev fd0, sector 0                                       
-input: ImPS/2 Generic Wheel Mouse as /class/input/input3                        
-Mounting root filesystem.                                                       
-end_request: I/O error, dev fd0, sector 0                                       
-------------[ cut here ]------------                                            
-kernel BUG at fs/buffer.c:1282!                                                 
-invalid opcode: 0000 [#1] SMP                                                   
-last sysfs file: /sys/block/hdc/dev                                             
-Modules linked in:                                                              
-                                                                                
-Pid: 1, comm: init Not tainted (2.6.24-rc6-mm1 #2)                              
-EIP: 0060:[<c017e98b>] EFLAGS: 00010046 CPU: 0                                  
-EIP is at __find_get_block+0x1b/0x143                                           
-EAX: 00000086 EBX: 00000000 ECX: 00000400 EDX: 00000001                         
-ESI: 00000001 EDI: f78bc000 EBP: f746e380 ESP: f7823c60                         
- DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068                                   
-Process init (pid: 1, ti=f7822000 task=f7820000 task.ti=f7822000)               
-Stack: 00000001 00000000 c014b17e 00000003 0000000a 0000c0d0 c16e2e00 c16e2ee0  
-       f7177000 c16e2e00 c014bec4 00000000 00000001 f78bc000 f746e380 c017ecbd  
-       00000400 00000001 00000000 00000000 00000000 0000c0d0 0000c0d0 c0560798  
-Call Trace:                                                                     
- [<c014b17e>] __rmqueue+0x13/0x174                                              
- [<c014bec4>] get_page_from_freelist+0x2d1/0x344                                
- [<c017ecbd>] __getblk+0x21/0x295                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c018089b>] __bread+0xa/0x78                                                  
- [<c01c2353>] ext3_fill_super+0x138/0x1335                                      
- [<c0218d9e>] vsnprintf+0x407/0x445                                             
- [<c0218e52>] snprintf+0x1c/0x1f                                                
- [<c0194a0d>] disk_name+0x51/0x5b                                               
- [<c01665a1>] get_sb_bdev+0xce/0x10c                                            
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c0161c26>] __kmalloc+0x2f/0x9b                                               
- [<c01c0e06>] ext3_get_sb+0x12/0x16                                             
- [<c01c221b>] ext3_fill_super+0x0/0x1335                                        
- [<c01660ee>] vfs_kern_mount+0x39/0x72                                          
- [<c0166165>] do_kern_mount+0x2f/0xb4                                           
- [<c0176b00>] do_mount+0x5bf/0x621                                              
- [<c0175b12>] mntput_no_expire+0x11/0x85                                        
- [<c016c161>] link_path_walk+0x86/0x8f                                          
- [<c02d4e4a>] ide_disk_put+0x1c/0x27                                            
- [<c01672d9>] sys_stat64+0xf/0x23                                               
- [<c016534a>] put_filp+0x3c/0x9a                                                
- [<c014bc5c>] get_page_from_freelist+0x69/0x344                                 
- [<c0413309>] mutex_lock+0xb/0x1a                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c01757b2>] copy_mount_options+0x26/0x109                                     
- [<c0176bcf>] sys_mount+0x6d/0xaa                                               
- [<c01038e6>] syscall_call+0x7/0xb                                              
- =======================                                                        
-Code: 24 04 e8 49 f9 fc ff 89 d8 5b 5e 5b 5e 5f 5d c3 55 89 c5 57 56 53 83 ec 2c
- 89 4c 24 04 8b 4c 24 40 89 14 24 9c 58 f6 c4 02 75 04 <0f> 0b eb fe fa b8 00 bf
- 5f c0 31 ff 64 8b 15 10 a1 5f c0 01 c2                                         
-EIP: [<c017e98b>] __find_get_block+0x1b/0x143 SS:ESP 0068:f7823c60              
----[ end trace bca1d6c3657fce65 ]---                                            
-Kernel panic - not syncing: Attempted to kill init!                             
-WARNING: at arch/x86/kernel/smp_32.c:475 native_smp_send_reschedule()           
-Pid: 1, comm: init Tainted: G      D 2.6.24-rc6-mm1 #2                          
- [<c0115784>] native_smp_send_reschedule+0x2e/0x4d                              
- [<c011cfae>] resched_task+0x56/0x58                                            
- [<c011e420>] resched_cpu+0x3c/0x49                                             
- [<c0120e22>] scheduler_tick+0x124/0x198                                        
- [<c012bff7>] update_process_times+0x3a/0x44                                    
- [<c013b380>] tick_sched_timer+0x73/0xb0                                        
- [<c0136c39>] hrtimer_interrupt+0x11f/0x1aa                                     
- [<c013b30d>] tick_sched_timer+0x0/0xb0                                         
- [<c01178d0>] smp_apic_timer_interrupt+0x69/0x78                                
- [<c010434c>] apic_timer_interrupt+0x28/0x30                                    
- [<c041007b>] rpc_pipe_read+0xeb/0x100                                          
- [<c01243a4>] panic+0xc6/0xe6                                                   
- [<c0126d8f>] do_exit+0x6b/0x5a7                                                
- [<c0104b74>] die+0x1c5/0x1ca                                                   
- [<c0104cfd>] do_invalid_op+0x0/0x6b                                            
- [<c0104d5f>] do_invalid_op+0x62/0x6b                                           
- [<c017e98b>] __find_get_block+0x1b/0x143                                       
- [<c041437a>] error_code+0x72/0x78                                              
- [<c014007b>] sys_init_module+0x379/0x1602                                      
- [<c017e98b>] __find_get_block+0x1b/0x143                                       
- [<c014b17e>] __rmqueue+0x13/0x174                                              
- [<c014bec4>] get_page_from_freelist+0x2d1/0x344                                
- [<c017ecbd>] __getblk+0x21/0x295                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c018089b>] __bread+0xa/0x78                                                  
- [<c01c2353>] ext3_fill_super+0x138/0x1335                                      
- [<c0218d9e>] vsnprintf+0x407/0x445                                             
- [<c0218e52>] snprintf+0x1c/0x1f                                                
- [<c0194a0d>] disk_name+0x51/0x5b                                               
- [<c01665a1>] get_sb_bdev+0xce/0x10c                                            
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c0161c26>] __kmalloc+0x2f/0x9b                                               
- [<c01c0e06>] ext3_get_sb+0x12/0x16                                             
- [<c01c221b>] ext3_fill_super+0x0/0x1335                                        
- [<c01660ee>] vfs_kern_mount+0x39/0x72                                          
- [<c0166165>] do_kern_mount+0x2f/0xb4                                           
- [<c0176b00>] do_mount+0x5bf/0x621                                              
- [<c0175b12>] mntput_no_expire+0x11/0x85                                        
- [<c016c161>] link_path_walk+0x86/0x8f                                          
- [<c02d4e4a>] ide_disk_put+0x1c/0x27                                            
- [<c01672d9>] sys_stat64+0xf/0x23                                               
- [<c016534a>] put_filp+0x3c/0x9a                                                
- [<c014bc5c>] get_page_from_freelist+0x69/0x344                                 
- [<c0413309>] mutex_lock+0xb/0x1a                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c01757b2>] copy_mount_options+0x26/0x109                                     
- [<c0176bcf>] sys_mount+0x6d/0xaa                                               
- [<c01038e6>] syscall_call+0x7/0xb                                              
- =======================                                                        
-WARNING: at arch/x86/kernel/smp_32.c:209 send_IPI_mask_bitmask()                
-Pid: 1, comm: init Tainted: G      D 2.6.24-rc6-mm1 #2                          
- [<c0115bbb>] send_IPI_mask_bitmask+0x33/0x80                                   
- [<c01157a1>] native_smp_send_reschedule+0x4b/0x4d                              
- [<c011cfae>] resched_task+0x56/0x58                                            
- [<c011e420>] resched_cpu+0x3c/0x49                                             
- [<c0120e22>] scheduler_tick+0x124/0x198                                        
- [<c012bff7>] update_process_times+0x3a/0x44                                    
- [<c013b380>] tick_sched_timer+0x73/0xb0                                        
- [<c0136c39>] hrtimer_interrupt+0x11f/0x1aa                                     
- [<c013b30d>] tick_sched_timer+0x0/0xb0                                         
- [<c01178d0>] smp_apic_timer_interrupt+0x69/0x78                                
- [<c010434c>] apic_timer_interrupt+0x28/0x30                                    
- [<c041007b>] rpc_pipe_read+0xeb/0x100                                          
- [<c01243a4>] panic+0xc6/0xe6                                                   
- [<c0126d8f>] do_exit+0x6b/0x5a7                                                
- [<c0104b74>] die+0x1c5/0x1ca                                                   
- [<c0104cfd>] do_invalid_op+0x0/0x6b                                            
- [<c0104d5f>] do_invalid_op+0x62/0x6b                                           
- [<c017e98b>] __find_get_block+0x1b/0x143                                       
- [<c041437a>] error_code+0x72/0x78                                              
- [<c014007b>] sys_init_module+0x379/0x1602                                      
- [<c017e98b>] __find_get_block+0x1b/0x143                                       
- [<c014b17e>] __rmqueue+0x13/0x174                                              
- [<c014bec4>] get_page_from_freelist+0x2d1/0x344                                
- [<c017ecbd>] __getblk+0x21/0x295                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c018089b>] __bread+0xa/0x78                                                  
- [<c01c2353>] ext3_fill_super+0x138/0x1335                                      
- [<c0218d9e>] vsnprintf+0x407/0x445                                             
- [<c0218e52>] snprintf+0x1c/0x1f                                                
- [<c0194a0d>] disk_name+0x51/0x5b                                               
- [<c01665a1>] get_sb_bdev+0xce/0x10c                                            
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c0161c26>] __kmalloc+0x2f/0x9b                                               
- [<c01c0e06>] ext3_get_sb+0x12/0x16                                             
- [<c01c221b>] ext3_fill_super+0x0/0x1335                                        
- [<c01660ee>] vfs_kern_mount+0x39/0x72                                          
- [<c0166165>] do_kern_mount+0x2f/0xb4                                           
- [<c0176b00>] do_mount+0x5bf/0x621                                              
- [<c0175b12>] mntput_no_expire+0x11/0x85                                        
- [<c016c161>] link_path_walk+0x86/0x8f                                          
- [<c02d4e4a>] ide_disk_put+0x1c/0x27                                            
- [<c01672d9>] sys_stat64+0xf/0x23                                               
- [<c016534a>] put_filp+0x3c/0x9a                                                
- [<c014bc5c>] get_page_from_freelist+0x69/0x344                                 
- [<c0413309>] mutex_lock+0xb/0x1a                                               
- [<c014bfb0>] __alloc_pages+0x67/0x2c5                                          
- [<c01757b2>] copy_mount_options+0x26/0x109                                     
- [<c0176bcf>] sys_mount+0x6d/0xaa                                               
- [<c01038e6>] syscall_call+0x7/0xb                                              
- =======================                                                        
-
-
-
 
 _______________________________________________
 kexec mailing list
