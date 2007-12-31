@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J9MGk-0005TK-R0
-	for kexec@lists.infradead.org; Mon, 31 Dec 2007 15:09:40 +0000
-Date: Mon, 31 Dec 2007 10:06:58 -0500
+	id 1J9MGy-0005rS-1z
+	for kexec@lists.infradead.org; Mon, 31 Dec 2007 15:09:54 +0000
+Date: Mon, 31 Dec 2007 10:08:43 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: kexec refuses to boot latest -mm
-Message-ID: <20071231150658.GA27060@redhat.com>
+Message-ID: <20071231150843.GB27060@redhat.com>
 References: <20071228124532.GB32643@linux.vnet.ibm.com>
 	<20071228142739.GA4560@redhat.com>
 	<20071229054113.GB17426@linux.vnet.ibm.com>
@@ -51,17 +51,8 @@ On Sat, Dec 29, 2007 at 11:11:13AM +0530, Dhaval Giani wrote:
 > > 
 > 
 > Ok, so it reaches till here. I get "I'm in purgatory" on the console.
-> 
 
-Ok. So it atleast reaches till purgatory. My hunch is that it also reaches
-the second kernel but dies early in that kernel before any message can
-be printed on screen.
-
-Can you put some "outb()" messages on serial console in start_kernel() in
-second kernel and see up to what point do you reach.
-
-My 2.6.24-rc6-mm1 kernel panics during boot on 32bit box. Let me try it on
-64 bit box.
+One more thing. Is 2.6.24-rc6 working properly?
 
 Thanks
 Vivek
