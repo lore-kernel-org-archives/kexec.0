@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp04.au.ibm.com ([202.81.18.173])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1J8USI-0001dc-Tq
-	for kexec@lists.infradead.org; Sat, 29 Dec 2007 05:42:02 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
-	by e23smtp04.au.ibm.com (8.13.1/8.13.1) with ESMTP id lBT5fd5x029421
-	for <kexec@lists.infradead.org>; Sat, 29 Dec 2007 16:41:39 +1100
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	lBT5fpMc1257718
-	for <kexec@lists.infradead.org>; Sat, 29 Dec 2007 16:41:52 +1100
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	lBT5fZno009852
-	for <kexec@lists.infradead.org>; Sat, 29 Dec 2007 16:41:35 +1100
-Date: Sat, 29 Dec 2007 11:11:13 +0530
-From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1J9MGk-0005TK-R0
+	for kexec@lists.infradead.org; Mon, 31 Dec 2007 15:09:40 +0000
+Date: Mon, 31 Dec 2007 10:06:58 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: kexec refuses to boot latest -mm
-Message-ID: <20071229054113.GB17426@linux.vnet.ibm.com>
+Message-ID: <20071231150658.GA27060@redhat.com>
 References: <20071228124532.GB32643@linux.vnet.ibm.com>
 	<20071228142739.GA4560@redhat.com>
+	<20071229054113.GB17426@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20071228142739.GA4560@redhat.com>
-Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+In-Reply-To: <20071229054113.GB17426@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,35 +25,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
 Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
 
-On Fri, Dec 28, 2007 at 09:27:39AM -0500, Vivek Goyal wrote:
-> On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
-> > Hi Vivek,
+On Sat, Dec 29, 2007 at 11:11:13AM +0530, Dhaval Giani wrote:
+> On Fri, Dec 28, 2007 at 09:27:39AM -0500, Vivek Goyal wrote:
+> > On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
+> > > Hi Vivek,
+> > > 
+> > > I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
+> > > kexec. It just gets stuck at "Starting new kernel".
+> > > 
+> > > It does boot normally when booted as the first kernel.
+> > > 
+> > > Any hints debugging? (x86 architecture)
 > > 
-> > I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
-> > kexec. It just gets stuck at "Starting new kernel".
+> > I generally try few things.
 > > 
-> > It does boot normally when booted as the first kernel.
+> > - Specify earlyprintk= parameter for second kernel and see if control
+> >   is reaching to second kernel.
 > > 
-> > Any hints debugging? (x86 architecture)
+> > - Otherwise specify --console-serial parameter on "kexec -l" commandline
+> >   and it should display a message "I am in purgatory" on serial console.
+> >   This will just mean that control has reached at least till purgatory.
+> > 
 > 
-> I generally try few things.
-> 
-> - Specify earlyprintk= parameter for second kernel and see if control
->   is reaching to second kernel.
-> 
-> - Otherwise specify --console-serial parameter on "kexec -l" commandline
->   and it should display a message "I am in purgatory" on serial console.
->   This will just mean that control has reached at least till purgatory.
+> Ok, so it reaches till here. I get "I'm in purgatory" on the console.
 > 
 
-Ok, so it reaches till here. I get "I'm in purgatory" on the console.
+Ok. So it atleast reaches till purgatory. My hunch is that it also reaches
+the second kernel but dies early in that kernel before any message can
+be printed on screen.
 
--- 
-regards,
-Dhaval
+Can you put some "outb()" messages on serial console in start_kernel() in
+second kernel and see up to what point do you reach.
+
+My 2.6.24-rc6-mm1 kernel panics during boot on 32bit box. Let me try it on
+64 bit box.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
