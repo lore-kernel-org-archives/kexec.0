@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1J9QHR-0007Ia-Rc
-	for kexec@lists.infradead.org; Mon, 31 Dec 2007 19:26:40 +0000
-Date: Mon, 31 Dec 2007 14:26:21 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
-Message-ID: <20071231192621.GD27060@redhat.com>
-References: <1198222399.1965.15.camel@caritas-dev.intel.com>
-	<20071228213331.GB4560@redhat.com>
-	<1198893644.17317.36.camel@caritas-dev.intel.com>
+Received: from e28smtp07.in.ibm.com ([59.145.155.7] helo=e28esmtp07.in.ibm.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1J9R9Z-0002Y6-Mz
+	for kexec@lists.infradead.org; Mon, 31 Dec 2007 20:22:38 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28esmtp07.in.ibm.com (8.13.1/8.13.1) with ESMTP id lBVKMM6S018366
+	for <kexec@lists.infradead.org>; Tue, 1 Jan 2008 01:52:22 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	lBVKMMgI872614
+	for <kexec@lists.infradead.org>; Tue, 1 Jan 2008 01:52:22 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.13.1/8.13.3) with ESMTP id lBVKMOlO002238
+	for <kexec@lists.infradead.org>; Mon, 31 Dec 2007 20:22:24 GMT
+Date: Tue, 1 Jan 2008 01:52:12 +0530
+From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Subject: Re: kexec refuses to boot latest -mm
+Message-ID: <20071231202212.GA27601@linux.vnet.ibm.com>
+References: <20071228124532.GB32643@linux.vnet.ibm.com>
+	<20071228142739.GA4560@redhat.com>
+	<20071229054113.GB17426@linux.vnet.ibm.com>
+	<20071231150658.GA27060@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1198893644.17317.36.camel@caritas-dev.intel.com>
+In-Reply-To: <20071231150658.GA27060@redhat.com>
+Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,277 +37,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>
 
-On Sat, Dec 29, 2007 at 10:00:44AM +0800, Huang, Ying wrote:
-> On Fri, 2007-12-28 at 16:33 -0500, Vivek Goyal wrote:
-> > On Fri, Dec 21, 2007 at 03:33:19PM +0800, Huang, Ying wrote:
-> > > This patchset provides an enhancement to kexec/kdump. It implements
-> > > the following features:
+On Mon, Dec 31, 2007 at 10:06:58AM -0500, Vivek Goyal wrote:
+> On Sat, Dec 29, 2007 at 11:11:13AM +0530, Dhaval Giani wrote:
+> > On Fri, Dec 28, 2007 at 09:27:39AM -0500, Vivek Goyal wrote:
+> > > On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
+> > > > Hi Vivek,
+> > > > 
+> > > > I can't seem to get the latest -mm (2.6.24-rc6-mm1) to boot with
+> > > > kexec. It just gets stuck at "Starting new kernel".
+> > > > 
+> > > > It does boot normally when booted as the first kernel.
+> > > > 
+> > > > Any hints debugging? (x86 architecture)
 > > > 
-> > > - Backup/restore memory used both by the original kernel and the
-> > >   kexeced kernel.
+> > > I generally try few things.
 > > > 
-> > > - Jumping between the original kernel and the kexeced kernel.
+> > > - Specify earlyprintk= parameter for second kernel and see if control
+> > >   is reaching to second kernel.
 > > > 
-> > > - Read/write memory image of the kexeced kernel in the original kernel
-> > >   and write memory image of the original kernel in the kexeced
-> > >   kernel. This can be used as a communication method between the
-> > >   kexeced kernel and the original kernel.
-> > > 
-> > > 
-> > > The features of this patchset can be used as follow:
-> > > 
-> > > - Kernel/system debug through making system snapshot. You can make
-> > >   system snapshot, jump back, do some thing and make another system
-> > >   snapshot.
+> > > - Otherwise specify --console-serial parameter on "kexec -l" commandline
+> > >   and it should display a message "I am in purgatory" on serial console.
+> > >   This will just mean that control has reached at least till purgatory.
 > > > 
 > > 
-> > How do you differentiate between whether a core is resumable or not.
-> > IOW, how do you know the generated /proc/vmcore has been generated after
-> > a real crash hence can't be resumed (using krestore) or it has been 
-> > generated because of hibernation/debug purposes and can be resumed?
+> > Ok, so it reaches till here. I get "I'm in purgatory" on the console.
 > > 
-> > I think you might have to add an extra ELF NOTE to vmcore which can help
-> > decide whether kernel memory snapshot is resumable or not.
 > 
-> The current solution is as follow:
+> Ok. So it atleast reaches till purgatory. My hunch is that it also reaches
+> the second kernel but dies early in that kernel before any message can
+> be printed on screen.
 > 
-> 1. The original kernel will set %edi to jump back entry if resumable and
-> set %edi to 0 if not.
+> Can you put some "outb()" messages on serial console in start_kernel() in
+> second kernel and see up to what point do you reach.
 > 
-> 2. The purgatory of loaded kernel will check %edi, if it is not zero,
-> the string "jump_back_entry=<jump_back_entry>" will be appended to
-> kernel command line parameter.
-> 
-> 3. In kexeced kernel, if there is "jump_back_entry=<jump_back_entry>"
-> in /proc/cmdline, the previous kernel is resumable, otherwise not.
+> My 2.6.24-rc6-mm1 kernel panics during boot on 32bit box. Let me try it on
+> 64 bit box.
 > 
 
-Ok. But If I copy the /proc/vmcore to disk. Then I reboot the system 
-and boot back into a kernel which is supposed to resume the hibernated
-image. This kernel will not have any command line option jump_back_entry.
-I  need to resume using krestore tool. How will a krestore tool decide that
-image one wants to restore is a core file or a hibernated image?
+Apply the hotfixes :-)
 
-In this context I thought an PT_NOTE might be useful.
-
-> As for ELF NOTE, in fact, the ELF NOTE does not work for resumable
-> kernel. Because the contents of source page and destination page is
-> swapped during kexec, and the kernel access the destination page
-> directly during parsing ELF NOTE. All memory that is swapped need to be
-> accessed via the backup pages map (image->head). I think these
-> information can be exchanged between two kernels via kernel command line
-> or /proc/kimgcore.
-> 
-
-Why should we exchange backup page map information between two kernels?
-What data has been swapped and how to restore it back should be known
-to the kernel who did it. I think the memory info and address of ELF
-headers we can still pass to second kernel the same way we do for
-/proc/vmcore. The only difference is that purgatory shall have to modify 
-the command line to reflect the new address of ELF headers just before
-jumping to new kernel (because of swapping).
-
-We can also modify the actual ELF headers in purgatory to reflect the
-right data (because of swapping) and new kernel will not have to know
-anything about swapping.
-
-So I thought of following sequence.
-
-Lets say there is production kernel A and there is helper kernel B (B
-will save the hibernated image of A).
-
-- Boot into A.
-- Load kernel B using --load-preserve-context.
-- This load operation can also create the Elf headers.   
-- Kexec -e will start hibernation of A. Pages shall be swapped. Control
-  will be transferred to purgatory.
-- Purgatory will readjust the ELF headers and command line based on 
-  the swapping done and jump to new kernel.
-- New kernel will retrieve the elf headers and export the memory of
-  hibernated kernel through /proc/vmcore.
-
-Hence there is no need to communicate swapped pages map between two
-kernels.
-
-
-> > [..]
-> > > 2. Build an initramfs image contains kexec-tool, or download the
-> > >    pre-built initramfs image, called rootfs.gz in following text.
-> > > 
-> > > 3. Boot kernel compiled in step 1.
-> > > 
-> > > 4. Load kernel compiled in step 1 with /sbin/kexec. If You want to use
-> > >    "krestore" tool, the --elf64-core-headers should be specified in
-> > >    command line of /sbin/kexec. The shell command line can be as
-> > >    follow:
-> > > 
-> > >    /sbin/kexec --load-jump-back /boot/bzImage --mem-min=0x100000
-> > >      --mem-max=0xffffff --elf64-core-headers --initrd=rootfs.gz
-> > > 
-> > 
-> > How about a different name like "--load-preserve-context". This will
-> > just mean that kexec need to preserve the context while kexeing to 
-> > image being loaded. Combination of --load-jump-back and
-> > --load-jump-back-helper is becoming little confusing.
-> 
-> Yes, this is better. I will change it.
-> 
-> > > 5. Boot the kexeced kernel with following shell command line:
-> > > 
-> > >    /sbin/kexec -e
-> > > 
-> > > 6. The kexeced kernel will boot as normal kexec. In kexeced kernel the
-> > >    memory image of original kernel can read via /proc/vmcore or
-> > >    /dev/oldmem, and can be written via /dev/oldmem. You can
-> > >    save/restore/modify it as you want to.
-> > > 
-> > 
-> > Restoring a hibernated image using /dev/oldmem should be easy and I 
-> > think one should be able to launch it back using --load-jump-back-helper.
-> 
-> Yes. I think so too. The current implementation of krestore restoring
-> the hibernated image using /dev/oldmem. And the hibernated image can be
-> launched using --load-jump-back-helper.
-> 
-> > How do you restore already kexeced kernel? For example if I got two
-> > kernels A and B. A is the one which will hibernate and B will be used
-> > to store the hibernated kernel. I think as per the procedure one needs
-> > to first boot into kernel B and then jump back to kernel A. This will
-> > make image of B available in /proc/kimgcore. If I save /proc/kimgcore
-> > to disk and want to jump back to it, how do I do it? I guess I need
-> > to kexec again using --load-jump-back and not restore using krestore?
-> 
-> The image of B is made as you said. And it can be restored as follow:
-> 
-> /sbin/kexec -l --args-none --flags=0x2 <kimgecore>
-> /sbin/kexec -e
-> 
-> That is, the image of B is loaded as a ordinary ELF file. A option
-> to /sbin/kexec named --flags are added to specify the
-> KEXEC_PRESERVE_CONTEXT flags for sys_kexec_load. This has been tested.
-
-Shouldn't we be able to load this image using --load-preseve-context? Why
-to create another otion --flags.
-
-So there seems to be two different kind of load options for resuming
-for two different kind of images.
-
-- For /proc/vmcore kind of images use krestore (which will use
-  --load-jump-back-helper)
-
-- For /proc/kimgcore kind of images use normal kexec -l.
-
-This is little confusing. How will one differentiate between two kind
-of files? In fact the semantics between two kind of files are not very
-clear. We need to do some kind of unification here and make the whole
-thing somewhat simple.
-
-
-> 
-> > > 7. Prepare jumping back from kexeced kernel with following shell
-> > >    command lines:
-> > > 
-> > >    jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
-> > >    /sbin/kexec --load-jump-back-helper=$jump_back_entry
-> > > 
-> > 
-> > How about decoupling entry point from --load-jump-back-helper. We can
-> > introduce a separate option for entry point. Something like.
-> > 
-> > kexec --load-jump-back-helper --entry=$jump_back_entry
-> > 
-> > May be we can generalize the --entry so that a user can override the 
-> > entry point of the normal kexec image using above.
-> 
-> Yes. This is better. I will change it.
-> 
-> > > 8. Jump back to the original kernel with following shell command line:
-> > > 
-> > >    /sbin/kexec -e
-> > > 
-> > > 9. Now, you are in the original kernel again. You can read/write the
-> > >    memory image of kexeced kernel via /proc/kimgcore.
-> > > 
-> > > 10. You can jump between the original kernel and kexeced kernel as you
-> > >     want to via the following shell command line:
-> > > 
-> > >     /sbin/kexec -e
-> > > 
-> > > 
-> > > Known issues:
-> > > 
-> > > - The suspend/resume callback of device drivers are used to put
-> > >   devices into quiescent state. This will unnecessarily (possibly
-> > >   harmfully) put devices into low power state. This is intended to be
-> > >   solved by separating device quiesce/unquiesce callback from the
-> > >   device suspend/resume callback.
-> > > 
-> > > 
-> > > ChangeLog:
-> > > 
-> > > v8:
-> > > 
-> > > - Split kexec jump patchset from kexec based hibernation patchset.
-> > > 
-> > > - Add writing support to kimgcore. This can be used as a communication
-> > >   method between kexeced kernel and original kernel.
-> > > 
-> > 
-> > What are we communicating between two kernels using kimgcore?
-> 
-> An example:
-> 
-> 1. kernel A kexec kernel B, provides vmcoreinfo in kernel command line.
-
-I think vmcoreinfo is stored in a PT_NOTE and passed to second kernel
-parses it while parsing all ELF headers? No separate ptr or anything
-else is passed to second kernel on command line.
-
-> 2. kernel B jump back to kernel A
-> 3. in kernel A, the memory image of kernel B is saved via /proc/kimgcore
-> 4. system reboot, kernel C is booted
-> 5. kernel C load the memory image of kernel B, and jump back to kernel B
-> 
-> In step 5, the vmcoreinfo provided in step 1 is invalid, so a
-> communication method is needed to tell kernel B the new one. This can be
-> done via amending /proc/kimgcore. For example, change the memory of the
-> kernel command line of kernel B.
-
-I think modifying a kernel's data structures externally without kernel
-knowing it is dangerous. 
-
-I would think that initially we can keep it simple and not suppot
-resuming. Resuming is little tough as you need to make sure kernel's
-complete env has been restored back. But in this case, we are playing
-with resume env, for example, changing of vmcoreinfo etc.
-
-Capability to resume the already booted kernel (Kernel B here), creates
-a coupling with the kernel it has booted with in the past (Kernel A) and
-that's why you end up modifying various things once you swith to B 
-from C. I think we should boot B fresh all the time to save the hibernated
-image of kernel A or C (Though it will take more time for hibernation).
-It keeps things simple.
-
-If you still want to support resuming the kernel, then I would think that in
-resume path kernel should re-initialize/re-construct /proc/vmcore
-(parse vmcoreinfo again) etc, instead of modifying the image of loaded kernel
-through /proc/kimgcore interface.
-
-We can probably think of a setup page where all the needed data is put and
-this page is used as a communication medium between two kernels (Something
-like the way, a page of data is passed between boot-loader and kernel to
-communicate the info like command line etc).
-
-So in the above example, kernel C will pass some data to kernel B (on
-setup page). This data will also include the pointer to new ELF headers
-(which also includes vmcoreinfo PT_NOTE). Resume path of kernel B
-will parse this data and re-initialize vmcore accordingly.
-
-Thanks
-Vivek
+-- 
+regards,
+Dhaval
 
 _______________________________________________
 kexec mailing list
