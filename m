@@ -1,18 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JAonc-0006Md-Sv
-	for kexec@lists.infradead.org; Fri, 04 Jan 2008 15:49:39 +0000
-Date: Fri, 4 Jan 2008 10:49:31 -0500
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: kdump from x86_64 using i386 capture kernel
-Message-ID: <20080104154931.GA8804@hmsendeavour.rdu.redhat.com>
-References: <200801041346.38120.stf_xl@wp.pl>
-	<20080104135516.GB8380@hmsendeavour.rdu.redhat.com>
-	<200801041600.26866.stf_xl@wp.pl>
+Received: from e28smtp07.in.ibm.com ([59.145.155.7] helo=e28esmtp07.in.ibm.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JAosf-00072H-L2
+	for kexec@lists.infradead.org; Fri, 04 Jan 2008 15:54:59 +0000
+Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
+	by e28esmtp07.in.ibm.com (8.13.1/8.13.1) with ESMTP id m04FsO3G022898
+	for <kexec@lists.infradead.org>; Fri, 4 Jan 2008 21:24:24 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m04FsONb1052754
+	for <kexec@lists.infradead.org>; Fri, 4 Jan 2008 21:24:24 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+	by d28av03.in.ibm.com (8.13.1/8.13.3) with ESMTP id m04FsNWc017639
+	for <kexec@lists.infradead.org>; Fri, 4 Jan 2008 15:54:24 GMT
+Date: Fri, 4 Jan 2008 21:24:15 +0530
+From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Subject: Re: kexec refuses to boot latest -mm
+Message-ID: <20080104155415.GC6007@linux.vnet.ibm.com>
+References: <20071228124532.GB32643@linux.vnet.ibm.com>
+	<20071231150843.GB27060@redhat.com>
+	<20080103195201.GC6392@linux.vnet.ibm.com>
+	<200801032242.01425.rjw@sisk.pl>
+	<20080104122816.GF4514@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200801041600.26866.stf_xl@wp.pl>
+In-Reply-To: <20080104122816.GF4514@linux.vnet.ibm.com>
+Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,50 +38,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: maneesh@linux.vnet.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, hbabu@us.ibm.com, tglx@linutronix.de, Ingo Molnar <mingo@elte.hu>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Jan 04, 2008 at 04:00:26PM +0100, Stanislaw Gruszka wrote:
-> On Friday 04 January 2008 14:55, Neil Horman wrote:
-> > > It is possible to achieve valid vmcore when first is x86_64 and capture 
-> > > is i386 ?
-> > Possible I think, but not reliable.  If oldmem has regions to capture above the
-> > 4GB range, a 386 kernel won't be able to access those addresses, and as such,
-> > you won't get a complete vmcore.
-> Uffff, I missed this fact. 
+On Fri, Jan 04, 2008 at 05:58:16PM +0530, Dhaval Giani wrote:
+> On Thu, Jan 03, 2008 at 10:42:00PM +0100, Rafael J. Wysocki wrote:
+> > On Thursday, 3 of January 2008, Dhaval Giani wrote:
+> > > On Mon, Dec 31, 2007 at 10:08:43AM -0500, Vivek Goyal wrote:
+> > > > On Sat, Dec 29, 2007 at 11:11:13AM +0530, Dhaval Giani wrote:
+> > > > > On Fri, Dec 28, 2007 at 09:27:39AM -0500, Vivek Goyal wrote:
+> > > > > > On Fri, Dec 28, 2007 at 06:15:32PM +0530, Dhaval Giani wrote:
+> > > > > > > Hi Vivek,
+> > > > > > > 
 > 
-> > I'm also confused about what exactly you are trying to accomplish.  Why are you
-> > trying to use an x86 kernel to capture a x86_64 vmcore?  The available
-> System load from flash and there is limited space. I tried to do one capture
-> kernel, but see this was bad idea. I will scarify another 2MB and make separate
-> image for x86_64. 
+> I've no clue what I managed to do wrong last night, probably tried to boot
+> 2.6.24-rc6-mm1 thinking it was 2.6.24-rc6. 2.6.24-rc6 boots, but -mm
+> does not. Sorry for the noise.
 > 
 
-I'm still not quite understanding, the kernel image that you used to initally
-boot the box should be suitable for loading as the kdump image.  Even if you're
-using i386 instead of x86_64 as your kdump kernel, you still need to maintain
-two images.
+So I went ahead and bisected -mm, and the culprit is git-x86. It boots
+fine before it, but with git-x86 applied, it fails to boot.
 
-> > kexec-tools package in Fedora and RHEL provides a arch independent utility to
-> > build a minimal initrd to capute vmcores via a number of targets, including via
-> > nfs and ssh already (mkdumprd), have you looked at the Fedora package?  It may
-> > well provide most/all of what you are trying to do.
-> I will see, thanks.
-> 
-Let me know if you have questions.
-Neil
-
-> Stanislaw Gruszka
+Ingo/Thomas, could you please point me to the git-x86 tree so that I can
+bisect it? (with instructions on how to pull the -mm branch, I managed
+to pull the master branch, but not the -mm branch)
 
 -- 
-/***************************************************
- *Neil Horman
- *Software Engineer
- *Red Hat, Inc.
- *nhorman@redhat.com
- *gpg keyid: 1024D / 0x92A74FA1
- *http://pgp.mit.edu
- ***************************************************/
+regards,
+Dhaval
 
 _______________________________________________
 kexec mailing list
