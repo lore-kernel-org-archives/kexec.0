@@ -1,20 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JBn5n-0003uz-Lb
-	for kexec@lists.infradead.org; Mon, 07 Jan 2008 08:12:27 +0000
-Subject: Re: [PATCH 0/3 -mm] kexec jump -v8
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080106204925.GA19601@redhat.com>
-References: <1198222399.1965.15.camel@caritas-dev.intel.com>
-	<20071228213331.GB4560@redhat.com>
-	<1198893644.17317.36.camel@caritas-dev.intel.com>
-	<20071231192621.GD27060@redhat.com>
-	<1199349746.6288.119.camel@caritas-dev.intel.com>
-	<20080106204925.GA19601@redhat.com>
-Date: Mon, 07 Jan 2008 16:12:55 +0800
-Message-Id: <1199693575.8224.50.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e23smtp03.au.ibm.com ([202.81.18.172])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JBo9B-0000O5-28
+	for kexec@lists.infradead.org; Mon, 07 Jan 2008 09:20:00 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp03.au.ibm.com (8.13.1/8.13.1) with ESMTP id m079J2QT013977
+	for <kexec@lists.infradead.org>; Mon, 7 Jan 2008 20:19:02 +1100
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m079N5HX267982
+	for <kexec@lists.infradead.org>; Mon, 7 Jan 2008 20:23:05 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m079JCcR022816
+	for <kexec@lists.infradead.org>; Mon, 7 Jan 2008 20:19:13 +1100
+Date: Mon, 7 Jan 2008 14:48:38 +0530
+From: Dhaval Giani <dhaval@linux.vnet.ibm.com>
+Subject: Re: kexec refuses to boot latest -mm
+Message-ID: <20080107091838.GA30865@linux.vnet.ibm.com>
+References: <20071228124532.GB32643@linux.vnet.ibm.com>
+	<20071231150843.GB27060@redhat.com>
+	<20080103195201.GC6392@linux.vnet.ibm.com>
+	<200801032242.01425.rjw@sisk.pl>
+	<20080104122816.GF4514@linux.vnet.ibm.com>
+	<20080104155415.GC6007@linux.vnet.ibm.com>
+	<20080106133729.GB2481@elte.hu>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080106133729.GB2481@elte.hu>
+Reply-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,169 +41,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Ingo Molnar <mingo@elte.hu>
+Cc: maneesh@linux.vnet.ibm.com, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, hbabu@us.ibm.com, hpa@zytor.com, Andrew Morton <akpm@linux-foundation.org>, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-On Sun, 2008-01-06 at 15:49 -0500, Vivek Goyal wrote:
-> > > Why should we exchange backup page map information between two kernels?
-> > > What data has been swapped and how to restore it back should be known
-> > > to the kernel who did it. I think the memory info and address of ELF
-> > > headers we can still pass to second kernel the same way we do for
-> > > /proc/vmcore. The only difference is that purgatory shall have to modify 
-> > > the command line to reflect the new address of ELF headers just before
-> > > jumping to new kernel (because of swapping).
-> > > 
-> > > We can also modify the actual ELF headers in purgatory to reflect the
-> > > right data (because of swapping) and new kernel will not have to know
-> > > anything about swapping.
-> > >
-[...]
->  
-> > In addition to revising the ELF headers in purgatory, the /proc/kimgcore
-> > interface can also be used to revise the ELF headers in kernel A. But
-> > this needs to export backup pages map information to user space (another
-> > sysfs/procfs file?).
+On Sun, Jan 06, 2008 at 02:37:29PM +0100, Ingo Molnar wrote:
 > 
-> This is kind of two step load process. Load image, then export backup
-> page info to user space and then readjust the headers through
-> /proc/kimgcore. I think purgatory doing it is cleaner.
-[...] 
-> > I think there may be no difference between two kinds of files. Nothing
-> > prevents hibernated image produced through /proc/vmcore loaded with
-> > normal kexec -l. I have just tested it. This means we need not use
-> > krestore to resume the hibernated kernel after enhancing /sbin/kexec
-> > (because it uses too much anonymous memory). And, the resuming process
-> > will be more smooth.
+> * Dhaval Giani <dhaval@linux.vnet.ibm.com> wrote:
+> 
+> > So I went ahead and bisected -mm, and the culprit is git-x86. It boots 
+> > fine before it, but with git-x86 applied, it fails to boot.
 > > 
+> > Ingo/Thomas, could you please point me to the git-x86 tree so that I 
+> > can bisect it? (with instructions on how to pull the -mm branch, I 
+> > managed to pull the master branch, but not the -mm branch)
 > 
-> Ok. So in a nutshell, any resumable image (be it is generated through
-> /proc/vmcore or /proc/kimgcore) can be launched in the same way  (I think
-> kexec --load-preserve-context). ?
+> sure:
 > 
-> In fact, if we are modifying the ELF headers in purgatory to reflect the
-> swapped page action, then we don't require /proc/kimgcore interface
-> at all?
-
-But, how can purgatory get the "backup pages map" information? Which is
-not available when purgatory is loaded. I think there are two methods:
-
-Method1:
-
-- A setup page is setup by original kernel, and the address of setup
-page is passed to purgatory using a pre-defined protocol (such as in a
-register). The "backup pages map" is in setup page.
-- Purgatory uses the information in setup page to modify ELF headers
-- kexeced kernel use ELF headers to build /proc/vmcore
-
-Method2:
-
-- A setup page is setup by /sbin/kexec
-- The "backup pages map" information is written to purgatory
-via /proc/kimgcore.
-- Purgatory uses the information to modify ELF headers
-- kexeced kernel use ELF headers to build /proc/vmcore
-
-
-But, why not just exchanging the "backup pages map" information between
-two kernels via the "setup page"? It is as follow:
-
-- A setup page is setup by original kernel, and the address of setup
-page is passed to kexeced kernel using a pre-defined protocol (such as
-in a register). The "backup pages map" is in setup page.
-- kexec kernel use "backup pages map" to build /proc/vmcore.
-
-To keep it simple, another choice is not passing this "backup pages map"
-information between two kernels now. The biggest issue is makedumpfile
-can not exclude free pages without it, resulting in big hibernated
-image. Another issue is that the information in /proc/vmcore is not
-accurate, but that does not affect the hibernation implementation.
-
-> In fact, if we are modifying the ELF headers in purgatory to reflect the
-> swapped page action, then we don't require /proc/kimgcore interface
-> at all?
-
-/proc/kimgcore is mainly used to save the memory image of the kexeced
-kernel. If this is not to be supported, /proc/kimgcore is not needed.
-But, I think this is useful to accelerate the hibernating (no another
-boot is needed for each hibernating).
-
-> > For completion (although may be not a big issue now):
-> > 
-> > Whether using "krestore" or normal "kexec -l" depends on the memory used
-> > by current kernel (/proc/iomem) and memory in image file (PT_LOAD
-> > headers). If all memory in image file is outside memory used by current
-> > kernel, "krestore" should be used. If all memory in image file is inside
-> > memory used by current kernel, normal "kexec -l" should be used. If
-> > there is intersection set between memory in image file and memory of
-> > current kernel, the image file can not be loaded.
-> > 
+> --------------{ x86.git instructions }---------->
 > 
-> I think kexec should mask that difference. A user should be able to load
-> a resumable image either by using "kexec -l" or "kexec
-> --load-preserve-context" depending on whether user wants to come back to
-> orignal kernel in future or not. Kexec-tools should recognize the image
-> as resumable. Any page outside the current kernel can be written to
-> final location through /dev/oldmem. And any pages which overlap with the
-> current kernel, should be moved to destination when actual kexec 
-> happens (existing functionality).
+>  git-clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git linux-2.6.git
+>  cd linux-2.6.git
+>  git-branch x86
+>  git-checkout x86
+>  git-pull git://git.kernel.org/pub/scm/linux/kernel/git/x86/linux-2.6-x86.git mm
+>  git-log HEAD@{1}.. # see what's in #mm
 > 
-> This will require merging krestore and kexec user space functionality
-> so that resuming a hibernated image is effectively a "Kexec -l"
-> operation.
-> 
-> So a user will not worry about whether he is kexecing a fresh kernel
-> (bzImage or vmlinux) or resuming a already booted kernel. Kexec tools
-> should determine that and setup the entry point accordingly (might
-> require some purgatory changes to take care of transition while jumping
-> to resume hibernated image).
 
-Yes. This is a good idea. I will do it.
+Thanks for the instructions. I went ahead and did the bisect, and
 
-> > And, it is more useful for "invoking some code in physical mode". The
-> > procedure is something as follow:
-> > 
-> > 1. load some code executing in physical mode via kexec --load-preserve-context.
-> > 2. setup the parameters via amending /proc/kimgcore
-> > 3. execute the code in physical mode via kexec -e
-> > 4. get the result via reading /proc/kimgcore
-> > 5. setup another groups of parameters via amending /proc/kimgcore
-> > ...
-> 
-> This seems to be extended functionlity. If your focus is "Kexec based
-> hibernation" then I would think of initially keeping the implementation
-> simple and keeping patches small. Make kexec based hibernation work
-> and then extend functionality for other purposes.
+commit 7dd838ea7afa42a8840cf0e262d5892346ecf379
+Author: H. Peter Anvin <hpa@zytor.com>
+Date:   Sat Jan 5 13:27:04 2008 +0100
 
-I think this is a important use case of "kexec jump" besides "kexec
-based hibernation". But it can be separated from initial "kexec jump"
-patchset if necessary.
- 
-[...]
-> > The main issue of this mechanism is that: it is a kernel-to-kernel
-> > communication mechanism, while Eric Biederman thinks we should use only
-> > user-to-user communication mechanism. And he is not persuaded now.
-> > 
-> > Because kernel operations such as re-initialize/re-construct
-> > the /proc/vmcore, etc are needed for kexec jump or resuming. I think a
-> > "kernel-to-kernel" mechanism may be needed. But I don't know if Eric
-> > Biederman will agree with this.
-> 
-> Hmm... Personally I am more inclined to exchanging information between
-> two kernels on setup page, in a standard format (using ELF headers etc).
-> This information can be prepared by kexec-tools in user space and be). 
-> modified by purgatory (during transition to reflect the swapped pages.
-> Alternatively, one can modify this setup page info from user space through
-> some /proc/kimgcore like interface.  I prefer the first one...
+is the first bad commit.
 
-Some information (such as "backup pages map") is not available
-when /sbin/kexec is executed. So there should be a method to pass such
-information to purgatory from original kernel. So why not change the
-information between two kernel via "setup page" directly (need not
-purgatory).
+git bisect log
 
-Best Regards,
-Huang Ying
+dhaval@kernel:~/mm$ git bisect log
+git-bisect start
+# good: [439f61b9f9ebbf84fb7e6b3539fc3794e046bbb9] Merge
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-2.6
+git-bisect good 439f61b9f9ebbf84fb7e6b3539fc3794e046bbb9
+# bad: [5c9b01f1566f4989bb732a46c9a9c86f3e7ef9ae] x86: unregister PIT
+clocksource when PIT is disabled
+git-bisect bad 5c9b01f1566f4989bb732a46c9a9c86f3e7ef9ae
+# good: [203bcdc3d2725751e4dc0e3749edbab3c8bf9132] move switch_to macro
+to system.h
+git-bisect good 203bcdc3d2725751e4dc0e3749edbab3c8bf9132
+# good: [81886a1b16eec7a27f3ec94f06f585685ad08bf2] x86: i387 renaming
+git-bisect good 81886a1b16eec7a27f3ec94f06f585685ad08bf2
+# bad: [fc0ed2251da6ef8ad3295a02b39bed9859dc0cfc] x86: unify
+arch/x86/kernel/Makefile(s)
+git-bisect bad fc0ed2251da6ef8ad3295a02b39bed9859dc0cfc
+# good: [6fa16686ee2b0cc6b02a59671ecb9d4c85beae64] change assembly
+definition of paravirt_patch_site
+git-bisect good 6fa16686ee2b0cc6b02a59671ecb9d4c85beae64
+# bad: [1184caa02fcc2ecd780b145f4c69cc4484a8cde4] git-x86:
+arch/x86/math-emu/errors.c: fix printk warnings
+git-bisect bad 1184caa02fcc2ecd780b145f4c69cc4484a8cde4
+# good: [e8189d0ca1970578f4b28f92928581313633be5a] x86_64 patching
+functions
+git-bisect good e8189d0ca1970578f4b28f92928581313633be5a
+# bad: [7dd838ea7afa42a8840cf0e262d5892346ecf379] i386: handle an initrd
+in highmem
+git-bisect bad 7dd838ea7afa42a8840cf0e262d5892346ecf379
+# good: [8cff7d1301d37b15add1dabe6ac8a92e6c0a1c7f] i386 EFI runtime
+service support: fixes in sync with x86_64 support
+git-bisect good 8cff7d1301d37b15add1dabe6ac8a92e6c0a1c7f
+# good: [ac3836d03c718a553634ff21c1157bb823567f4f] x86:
+arch/x86/kernel/setup_32.c whitespace fixes
+git-bisect good ac3836d03c718a553634ff21c1157bb823567f4f
 
+-- 
+regards,
+Dhaval
 
 _______________________________________________
 kexec mailing list
