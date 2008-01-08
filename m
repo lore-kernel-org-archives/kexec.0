@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from terminus.zytor.com ([198.137.202.10])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JBxPR-00050O-0J
-	for kexec@lists.infradead.org; Mon, 07 Jan 2008 19:13:24 +0000
-Message-ID: <478278C9.8030006@zytor.com>
-Date: Mon, 07 Jan 2008 11:08:57 -0800
+	id 1JC6fO-00048z-T2
+	for kexec@lists.infradead.org; Tue, 08 Jan 2008 05:06:30 +0000
+Date: Mon, 7 Jan 2008 21:02:53 -0800
+Message-Id: <200801080502.m0852rhW017142@tazenda.hos.anvin.org>
 From: "H. Peter Anvin" <hpa@zytor.com>
-MIME-Version: 1.0
-Subject: Re: crashing on lowmem-only config (was: kexec refuses to boot latest
-	-mm)
-References: <20071228124532.GB32643@linux.vnet.ibm.com>
-	<478264CA.5090300@zytor.com>
-	<20080107175303.GA9319@linux.vnet.ibm.com>
-In-Reply-To: <20080107175303.GA9319@linux.vnet.ibm.com>
+Subject: [PATCH] i386: handle an initrd in highmem (version 2)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,64 +15,253 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Dhaval Giani <dhaval@linux.vnet.ibm.com>
-Cc: kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, hbabu@us.ibm.com, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, vgoyal@redhat.com
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixer <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, Dhaval Giani <dhaval@linux.vnet.ibm.com>, vgoyal@redhat.com
 
-Dhaval Giani wrote:
-> 
-> .config
-> 
+The boot protocol has until now required that the initrd be located in
+lowmem, which makes the lowmem/highmem boundary visible to the boot
+loader.  This was exported to the bootloader via a compile-time
+field.  Unfortunately, the vmalloc= command-line option breaks this
+part of the protocol; instead of adding yet another hack that affects
+the bootloader, have the kernel relocate the initrd down below the
+lowmem boundary inside the kernel itself.
 
-This appears to be unrelated, but booting this configuration on a stock 
-2.6.24-rc7 kernel crashes during bootup with no initrd if the memory 
-size is 896 MB or less (i.e. lowmem only):
+Note that this does not rely on HIGHMEM being enabled in the kernel.
 
-Bad page state in process 'swapper'
-page:c1b59800 flags:0xdead4aad mapping:00000000 mapcount:0 count:0
-Trying to fix it up, but a reboot is needed
-Backtrace:
-Pid: 0, comm: swapper Not tainted 2.6.24-rc7 #1
-  [<c0105ff3>] show_trace_log_lvl+0x1a/0x2f
-  [<c0106885>] show_trace+0x12/0x14
-  [<c0106b7b>] dump_stack+0x6c/0x72
-  [<c015c5c3>] bad_page+0x67/0x93
-  [<c015d33e>] __free_pages_ok+0x63/0x2f3
-  [<c015d5f2>] __free_pages+0x24/0x26
-  [<c05c70ea>] __free_pages_bootmem+0x5f/0x63
-  [<c05c57c9>] free_all_bootmem_core+0xcd/0x1a4
-  [<c05c58ad>] free_all_bootmem+0xd/0xf
-  [<c05c244c>] mem_init+0x81/0x31b
-  [<c05b4639>] start_kernel+0x2af/0x335
-  [<00000000>] 0x0
-  =======================
-Bad page state in process 'swapper'
-[...]
-  =======================
-BUG: spinlock lockup on CPU#0, swapper/0, 00000e28
-Pid: 0, comm: swapper Tainted: G    B   2.6.24-rc7 #1
-  [<c0105ff3>] show_trace_log_lvl+0x1a/0x2f
-  [<c0106885>] show_trace+0x12/0x14
-  [<c0106b7b>] dump_stack+0x6c/0x72
-  [<c024b9a9>] _raw_spin_lock+0xc1/0xe2
-  [<c0411d08>] _spin_lock+0x32/0x38
-  [<c015d3f9>] __free_pages_ok+0x11e/0x2f3
-  [<c015d5f2>] __free_pages+0x24/0x26
-  [<c05c70ea>] __free_pages_bootmem+0x5f/0x63
-  [<c05c57c9>] free_all_bootmem_core+0xcd/0x1a4
-  [<c05c58ad>] free_all_bootmem+0xd/0xf
-  [<c05c244c>] mem_init+0x81/0x31b
-  [<c05b4639>] start_kernel+0x2af/0x335
-  [<00000000>] 0x0
-  =======================
-[hang]
+Signed-off-by: H. Peter Anvin <hpa@zytor.com>
+---
+Fix crash on NUMA reported by Dhaval Giani (reported as being a kexec issue.)
 
-Booting with > 896 MB works...
+ arch/x86/boot/header.S     |    5 ++-
+ arch/x86/kernel/setup_32.c |  128 ++++++++++++++++++++++++++++++++++++--------
+ arch/x86/mm/discontig_32.c |    4 +-
+ 3 files changed, 111 insertions(+), 26 deletions(-)
 
-	-hpa
+diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+index 4cc5b04..64ad901 100644
+--- a/arch/x86/boot/header.S
++++ b/arch/x86/boot/header.S
+@@ -195,10 +195,13 @@ cmd_line_ptr:	.long	0		# (Header version 0x0202 or later)
+ 					# can be located anywhere in
+ 					# low memory 0x10000 or higher.
+ 
+-ramdisk_max:	.long (-__PAGE_OFFSET-(512 << 20)-1) & 0x7fffffff
++ramdisk_max:	.long 0x7fffffff
+ 					# (Header version 0x0203 or later)
+ 					# The highest safe address for
+ 					# the contents of an initrd
++					# The current kernel allows up to 4 GB,
++					# but leave it at 2 GB to avoid
++					# possible bootloader bugs.
+ 
+ kernel_alignment:  .long CONFIG_PHYSICAL_ALIGN	#physical addr alignment
+ 						#required for protected mode
+diff --git a/arch/x86/kernel/setup_32.c b/arch/x86/kernel/setup_32.c
+index 9c24b45..8a8b13d 100644
+--- a/arch/x86/kernel/setup_32.c
++++ b/arch/x86/kernel/setup_32.c
+@@ -116,9 +116,9 @@ extern int root_mountflags;
+ 
+ unsigned long saved_videomode;
+ 
+-#define RAMDISK_IMAGE_START_MASK  	0x07FF
++#define RAMDISK_IMAGE_START_MASK	0x07FF
+ #define RAMDISK_PROMPT_FLAG		0x8000
+-#define RAMDISK_LOAD_FLAG		0x4000	
++#define RAMDISK_LOAD_FLAG		0x4000
+ 
+ static char __initdata command_line[COMMAND_LINE_SIZE];
+ 
+@@ -176,7 +176,7 @@ static int __init parse_mem(char *arg)
+ 		 * trim the existing memory map.
+ 		 */
+ 		unsigned long long mem_size;
+- 
++
+ 		mem_size = memparse(arg, &arg);
+ 		limit_regions(mem_size);
+ 		user_defined_memmap = 1;
+@@ -315,7 +315,7 @@ static void __init reserve_ebda_region(void)
+ 	unsigned int addr;
+ 	addr = get_bios_ebda();
+ 	if (addr)
+-		reserve_bootmem(addr, PAGE_SIZE);	
++		reserve_bootmem(addr, PAGE_SIZE);
+ }
+ 
+ #ifndef CONFIG_NEED_MULTIPLE_NODES
+@@ -420,6 +420,100 @@ static inline void __init reserve_crashkernel(void)
+ {}
+ #endif
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++
++static bool do_relocate_initrd = false;
++
++static void __init reserve_initrd(void)
++{
++	unsigned long ramdisk_image = boot_params.hdr.ramdisk_image;
++	unsigned long ramdisk_size  = boot_params.hdr.ramdisk_size;
++	unsigned long ramdisk_end   = ramdisk_image + ramdisk_size;
++	unsigned long end_of_lowmem = max_low_pfn << PAGE_SHIFT;
++	unsigned long ramdisk_here;
++
++	initrd_start = 0;
++
++	if (!boot_params.hdr.type_of_loader ||
++	    !ramdisk_image || !ramdisk_size)
++		return;		/* No initrd provided by bootloader */
++
++	if (ramdisk_end < ramdisk_image) {
++		printk(KERN_ERR "initrd wraps around end of memory, "
++		       "disabling initrd\n");
++		return;
++	}
++	if (ramdisk_size >= end_of_lowmem/2) {
++		printk(KERN_ERR "initrd too large to handle, "
++		       "disabling initrd\n");
++		return;
++	}
++	if (ramdisk_end <= end_of_lowmem) {
++		/* All in lowmem, easy case */
++		reserve_bootmem(ramdisk_image, ramdisk_size);
++		initrd_start = ramdisk_image + PAGE_OFFSET;
++		initrd_end = initrd_start+ramdisk_size;
++		return;
++	}
++
++	/* We need to move the initrd down into lowmem */
++	ramdisk_here = (end_of_lowmem - ramdisk_size) & PAGE_MASK;
++
++	/* Note: this includes all the lowmem currently occupied by
++	   the initrd, we rely on that fact to keep the data intact. */
++	reserve_bootmem(ramdisk_here, ramdisk_size);
++	initrd_start = ramdisk_here + PAGE_OFFSET;
++	initrd_end   = initrd_start + ramdisk_size;
++
++	do_relocate_initrd = true;
++}
++
++#define MAX_MAP_CHUNK	(NR_FIX_BTMAPS << PAGE_SHIFT)
++
++static void __init relocate_initrd(void)
++{
++	unsigned long ramdisk_image = boot_params.hdr.ramdisk_image;
++	unsigned long ramdisk_size  = boot_params.hdr.ramdisk_size;
++	unsigned long end_of_lowmem = max_low_pfn << PAGE_SHIFT;
++	unsigned long ramdisk_here;
++	unsigned long slop, clen, mapaddr;
++	char *p, *q;
++
++	if (!do_relocate_initrd)
++		return;
++
++	ramdisk_here = initrd_start - PAGE_OFFSET;
++
++	q = (char *)initrd_start;
++
++	/* Copy any lowmem portion of the initrd */
++	if (ramdisk_image < end_of_lowmem) {
++		clen = end_of_lowmem - ramdisk_image;
++		p = (char *)__va(ramdisk_image);
++		memcpy(q, p, clen);
++		q += clen;
++		ramdisk_image += clen;
++		ramdisk_size  -= clen;
++	}
++
++	/* Copy the highmem portion of the initrd */
++	while (ramdisk_size) {
++		slop = ramdisk_image & ~PAGE_MASK;
++		clen = ramdisk_size;
++		if (clen > MAX_MAP_CHUNK-slop)
++			clen = MAX_MAP_CHUNK-slop;
++		mapaddr = ramdisk_image & PAGE_MASK;
++		p = bt_ioremap(mapaddr, clen+slop);
++		memcpy(q, p+slop, clen);
++		bt_iounmap(p, clen+slop);
++		q += clen;
++		ramdisk_image += clen;
++		ramdisk_size  -= clen;
++	}
++}
++
++#endif /* CONFIG_BLK_DEV_INITRD */
++
+ void __init setup_bootmem_allocator(void)
+ {
+ 	unsigned long bootmap_size;
+@@ -475,26 +569,10 @@ void __init setup_bootmem_allocator(void)
+ 	 */
+ 	find_smp_config();
+ #endif
+-	numa_kva_reserve();
+ #ifdef CONFIG_BLK_DEV_INITRD
+-	if (boot_params.hdr.type_of_loader && boot_params.hdr.ramdisk_image) {
+-		unsigned long ramdisk_image = boot_params.hdr.ramdisk_image;
+-		unsigned long ramdisk_size  = boot_params.hdr.ramdisk_size;
+-		unsigned long ramdisk_end   = ramdisk_image + ramdisk_size;
+-		unsigned long end_of_lowmem = max_low_pfn << PAGE_SHIFT;
+-
+-		if (ramdisk_end <= end_of_lowmem) {
+-			reserve_bootmem(ramdisk_image, ramdisk_size);
+-			initrd_start = ramdisk_image + PAGE_OFFSET;
+-			initrd_end = initrd_start+ramdisk_size;
+-		} else {
+-			printk(KERN_ERR "initrd extends beyond end of memory "
+-			       "(0x%08lx > 0x%08lx)\ndisabling initrd\n",
+-			       ramdisk_end, end_of_lowmem);
+-			initrd_start = 0;
+-		}
+-	}
++	reserve_initrd();
+ #endif
++	numa_kva_reserve();
+ 	reserve_crashkernel();
+ }
+ 
+@@ -644,13 +722,17 @@ void __init setup_arch(char **cmdline_p)
+ 	 * NOTE: at this point the bootmem allocator is fully available.
+ 	 */
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++	relocate_initrd();
++#endif
++
+ 	paravirt_post_allocator_init();
+ 
+ 	dmi_scan_machine();
+ 
+ #ifdef CONFIG_X86_GENERICARCH
+ 	generic_apic_probe();
+-#endif	
++#endif
+ 	if (efi_enabled)
+ 		efi_map_memmap();
+ 
+diff --git a/arch/x86/mm/discontig_32.c b/arch/x86/mm/discontig_32.c
+index 13a474d..88a7499 100644
+--- a/arch/x86/mm/discontig_32.c
++++ b/arch/x86/mm/discontig_32.c
+@@ -288,8 +288,8 @@ unsigned long __init setup_memory(void)
+ 
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	/* Numa kva area is below the initrd */
+-	if (boot_params.hdr.type_of_loader && boot_params.hdr.ramdisk_image)
+-		kva_start_pfn = PFN_DOWN(boot_params.hdr.ramdisk_image)
++	if (initrd_start)
++		kva_start_pfn = PFN_DOWN(initrd_start - PAGE_OFFSET)
+ 			- kva_pages;
+ #endif
+ 	kva_start_pfn -= kva_start_pfn & (PTRS_PER_PTE-1);
+-- 
+1.5.3.6
+
 
 _______________________________________________
 kexec mailing list
