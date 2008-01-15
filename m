@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JEfVr-0006DN-5e
-	for kexec@lists.infradead.org; Tue, 15 Jan 2008 06:43:07 +0000
-Subject: [PATCH -mm 2/2 -v2] kexec/i386: kexec page table code clean up -
-	page table setup in C
-From: "Huang, Ying" <ying.huang@intel.com>
-Date: Tue, 15 Jan 2008 14:05:49 +0800
-Message-Id: <1200377149.3505.51.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1JEmKm-0001BQ-31
+	for kexec@lists.infradead.org; Tue, 15 Jan 2008 14:00:08 +0000
+Date: Tue, 15 Jan 2008 08:56:30 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm 0/2 -v2] kexec/i386: kexec page table code clean up
+Message-ID: <20080115135630.GA23722@redhat.com>
+References: <1200377142.3505.49.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1200377142.3505.49.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,264 +23,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>, Ian Campbell <Ian.Campbell@citrix.com>, Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: Ian Campbell <Ian.Campbell@citrix.com>, kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 
-This patch transforms the kexec page tables setup code from assembler
-code to C code in machine_kexec_prepare. This improves readability and
-reduces code line number.
+On Tue, Jan 15, 2008 at 02:05:42PM +0800, Huang, Ying wrote:
+> This patchset cleans up page table setup code of kexec on i386.
+> 
+> This patchset is based on 2.6.24-rc5-mm1 and has been tested on i386
+> with/without PAE enabled.
+> 
+> 
+> v2:
+> 
+> - Rename some function names, such as alloc_page_tables ->
+>   machine_kexec_alloc_page_tables, etc.
+> 
+> - Cleanup error processing for machine_alloc_page_tables.
+> 
+> 
 
-Signed-off-by: Huang Ying <ying.huang@intel.com>
+Looks good to me.
 
----
- arch/x86/kernel/machine_kexec_32.c   |   59 ++++++++++++++----
- arch/x86/kernel/relocate_kernel_32.S |  114 -----------------------------------
- include/asm-x86/kexec_32.h           |   18 -----
- 3 files changed, 48 insertions(+), 143 deletions(-)
-
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -97,6 +97,45 @@ static int machine_kexec_alloc_page_tabl
- 	return 0;
- }
- 
-+static void machine_kexec_page_table_set_one(
-+	pgd_t *pgd, pmd_t *pmd, pte_t *pte,
-+	unsigned long vaddr, unsigned long paddr)
-+{
-+	pud_t *pud;
-+
-+	pgd += pgd_index(vaddr);
-+#ifdef CONFIG_X86_PAE
-+	if (!(pgd_val(*pgd) & _PAGE_PRESENT))
-+		set_pgd(pgd, __pgd(__pa(pmd) | _PAGE_PRESENT));
-+#endif
-+	pud = pud_offset(pgd, vaddr);
-+	pmd = pmd_offset(pud, vaddr);
-+	if (!(pmd_val(*pmd) & _PAGE_PRESENT))
-+		set_pmd(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
-+	pte = pte_offset_kernel(pmd, vaddr);
-+	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
-+}
-+
-+static void machine_kexec_prepare_page_tables(struct kimage *image)
-+{
-+	void *control_page;
-+	pmd_t *pmd = 0;
-+
-+	control_page = page_address(image->control_code_page);
-+#ifdef CONFIG_X86_PAE
-+	pmd = image->arch_kimage.pmd0;
-+#endif
-+	machine_kexec_page_table_set_one(
-+		image->arch_kimage.pgd, pmd, image->arch_kimage.pte0,
-+		(unsigned long)relocate_kernel, __pa(control_page));
-+#ifdef CONFIG_X86_PAE
-+	pmd = image->arch_kimage.pmd1;
-+#endif
-+	machine_kexec_page_table_set_one(
-+		image->arch_kimage.pgd, pmd, image->arch_kimage.pte1,
-+		__pa(control_page), __pa(control_page));
-+}
-+
- /*
-  * A architecture hook called to validate the
-  * proposed image and prepare the control pages
-@@ -109,10 +148,16 @@ static int machine_kexec_alloc_page_tabl
-  * later.
-  *
-  * - Allocate page tables
-+ * - Setup page tables
-  */
- int machine_kexec_prepare(struct kimage *image)
- {
--	return machine_kexec_alloc_page_tables(image);
-+	int error;
-+	error = machine_kexec_alloc_page_tables(image);
-+	if (error)
-+		return error;
-+	machine_kexec_prepare_page_tables(image);
-+	return 0;
- }
- 
- /*
-@@ -140,19 +185,7 @@ NORET_TYPE void machine_kexec(struct kim
- 	memcpy(control_page, relocate_kernel, PAGE_SIZE);
- 
- 	page_list[PA_CONTROL_PAGE] = __pa(control_page);
--	page_list[VA_CONTROL_PAGE] = (unsigned long)relocate_kernel;
- 	page_list[PA_PGD] = __pa(image->arch_kimage.pgd);
--	page_list[VA_PGD] = (unsigned long)image->arch_kimage.pgd;
--#ifdef CONFIG_X86_PAE
--	page_list[PA_PMD_0] = __pa(image->arch_kimage.pmd0);
--	page_list[VA_PMD_0] = (unsigned long)image->arch_kimage.pmd0;
--	page_list[PA_PMD_1] = __pa(image->arch_kimage.pmd1);
--	page_list[VA_PMD_1] = (unsigned long)image->arch_kimage.pmd1;
--#endif
--	page_list[PA_PTE_0] = __pa(image->arch_kimage.pte0);
--	page_list[VA_PTE_0] = (unsigned long)image->arch_kimage.pte0;
--	page_list[PA_PTE_1] = __pa(image->arch_kimage.pte1);
--	page_list[VA_PTE_1] = (unsigned long)image->arch_kimage.pte1;
- 
- 	/* The segment registers are funny things, they have both a
- 	 * visible and an invisible part.  Whenever the visible part is
---- a/arch/x86/kernel/relocate_kernel_32.S
-+++ b/arch/x86/kernel/relocate_kernel_32.S
-@@ -16,126 +16,12 @@
- 
- #define PTR(x) (x << 2)
- #define PAGE_ALIGNED (1 << PAGE_SHIFT)
--#define PAGE_ATTR 0x63 /* _PAGE_PRESENT|_PAGE_RW|_PAGE_ACCESSED|_PAGE_DIRTY */
--#define PAE_PGD_ATTR 0x01 /* _PAGE_PRESENT */
- 
- 	.text
- 	.align PAGE_ALIGNED
- 	.globl relocate_kernel
- relocate_kernel:
- 	movl	8(%esp), %ebp /* list of pages */
--
--#ifdef CONFIG_X86_PAE
--	/* map the control page at its virtual address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xc0000000, %eax
--	shrl	$27, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PMD_0)(%ebp), %edx
--	orl	$PAE_PGD_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PMD_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x3fe00000, %eax
--	shrl	$18, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_0)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x001ff000, %eax
--	shrl	$9, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	/* identity map the control page at its physical address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xc0000000, %eax
--	shrl	$27, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PMD_1)(%ebp), %edx
--	orl	$PAE_PGD_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PMD_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x3fe00000, %eax
--	shrl	$18, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_1)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x001ff000, %eax
--	shrl	$9, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--#else
--	/* map the control page at its virtual address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xffc00000, %eax
--	shrl	$20, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_0)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x003ff000, %eax
--	shrl	$10, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	/* identity map the control page at its physical address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xffc00000, %eax
--	shrl	$20, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_1)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x003ff000, %eax
--	shrl	$10, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--#endif
--
--relocate_new_kernel:
- 	/* read the arguments and say goodbye to the stack */
- 	movl  4(%esp), %ebx /* page_list */
- 	movl  8(%esp), %ebp /* list of pages */
---- a/include/asm-x86/kexec_32.h
-+++ b/include/asm-x86/kexec_32.h
-@@ -2,22 +2,8 @@
- #define _I386_KEXEC_H
- 
- #define PA_CONTROL_PAGE  0
--#define VA_CONTROL_PAGE  1
--#define PA_PGD           2
--#define VA_PGD           3
--#define PA_PTE_0         4
--#define VA_PTE_0         5
--#define PA_PTE_1         6
--#define VA_PTE_1         7
--#ifdef CONFIG_X86_PAE
--#define PA_PMD_0         8
--#define VA_PMD_0         9
--#define PA_PMD_1         10
--#define VA_PMD_1         11
--#define PAGES_NR         12
--#else
--#define PAGES_NR         8
--#endif
-+#define PA_PGD           1
-+#define PAGES_NR         2
- 
- #ifndef __ASSEMBLY__
- 
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
