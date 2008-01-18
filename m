@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp03.in.ibm.com ([59.145.155.3] helo=e28esmtp03.in.ibm.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JFjLY-00051O-9R
-	for kexec@lists.infradead.org; Fri, 18 Jan 2008 05:01:00 +0000
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
-	by e28esmtp03.in.ibm.com (8.13.1/8.13.1) with ESMTP id m0I50jID000597
-	for <kexec@lists.infradead.org>; Fri, 18 Jan 2008 10:30:45 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m0I50jsp1081550
-	for <kexec@lists.infradead.org>; Fri, 18 Jan 2008 10:30:45 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.13.1/8.13.3) with ESMTP id m0I50lxv008871
-	for <kexec@lists.infradead.org>; Fri, 18 Jan 2008 05:00:47 GMT
-Message-ID: <47903281.5020508@in.ibm.com>
-Date: Fri, 18 Jan 2008 10:30:49 +0530
-From: "Sachin P. Sant" <sachinp@in.ibm.com>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JFjeH-0006HY-OP
+	for kexec@lists.infradead.org; Fri, 18 Jan 2008 05:20:19 +0000
+Date: Fri, 18 Jan 2008 14:20:05 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: Build failure with latest kexec tools git code.
+Message-ID: <20080118052003.GA8223@verge.net.au>
+References: <47903281.5020508@in.ibm.com>
 MIME-Version: 1.0
-Subject: Build failure with latest kexec tools git code.
+Content-Disposition: inline
+In-Reply-To: <47903281.5020508@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,28 +23,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: "Sachin P. Sant" <sachinp@in.ibm.com>
+Cc: kexec@lists.infradead.org
 
-I came across a build failure with the latest kexec tools git code.
-Not sure if something is wrong with my build setup.
+On Fri, Jan 18, 2008 at 10:30:49AM +0530, Sachin P. Sant wrote:
+> I came across a build failure with the latest kexec tools git code.
+> Not sure if something is wrong with my build setup.
+>
+> [ kexec-tools-git-stable]$ autoconf
+> [ kexec-tools-git-stable]$ ./configure
+> checking build system type... i686-pc-linux-gnu
+> checking host system type... i686-pc-linux-gnu
+> .......
+> .......
+> config.status: creating Makefile
+> config.status: creating include/config.h
+> config.status: error: cannot find input file: include/config.h.in
+>
+> Observed this build failure on i386 as well as ppc64 box.
 
-[ kexec-tools-git-stable]$ autoconf
-[ kexec-tools-git-stable]$ ./configure
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
-.......
-.......
-config.status: creating Makefile
-config.status: creating include/config.h
-config.status: error: cannot find input file: include/config.h.in
+Hi,
 
-Observed this build failure on i386 as well as ppc64 box.
+I think that you need to run autoheader to create include/config.h.in.
+I will update the documentation accordingly.
 
-Thanks
--Sachin
-
-
+-- 
+Horms
 
 
 _______________________________________________
