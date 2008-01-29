@@ -1,34 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
-	by pentafluge.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JJqQN-0000Jn-LY
-	for kexec@lists.infradead.org; Tue, 29 Jan 2008 13:22:59 +0000
-Received: from m6.gw.fujitsu.co.jp ([10.0.50.76])
-	by fgwmail6.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	m0TDKuEs016967 for <kexec@lists.infradead.org> (envelope-from
-	takebe_akio@jp.fujitsu.com); Tue, 29 Jan 2008 22:20:56 +0900
-Received: from smail (m6 [127.0.0.1])
-	by outgoing.m6.gw.fujitsu.co.jp (Postfix) with ESMTP id 1C8EB53C06E
-	for <kexec@lists.infradead.org>; Tue, 29 Jan 2008 22:20:56 +0900 (JST)
-Received: from s8.gw.fujitsu.co.jp (s8.gw.fujitsu.co.jp [10.0.50.98])
-	by m6.gw.fujitsu.co.jp (Postfix) with ESMTP id E6026240080
-	for <kexec@lists.infradead.org>; Tue, 29 Jan 2008 22:20:55 +0900 (JST)
-Received: from s8.gw.fujitsu.co.jp (s8 [127.0.0.1])
-	by s8.gw.fujitsu.co.jp (Postfix) with ESMTP id B5F3E1718044
-	for <kexec@lists.infradead.org>; Tue, 29 Jan 2008 22:20:55 +0900 (JST)
-Received: from fjm506.ms.jp.fujitsu.com (fjm506.ms.jp.fujitsu.com
-	[10.56.99.86])
-	by s8.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C8E41718041
-	for <kexec@lists.infradead.org>; Tue, 29 Jan 2008 22:20:55 +0900 (JST)
-Received: from fjmscan503.ms.jp.fujitsu.com (fjmscan503.ms.jp.fujitsu.com
-	[10.56.99.143])by fjm506.ms.jp.fujitsu.com with ESMTP id
-	m0TDKDmn009532
-	for <kexec@lists.infradead.org>; Tue, 29 Jan 2008 22:20:13 +0900
-From: Akio Takebe <takebe_akio@jp.fujitsu.com>
-Subject: [Patch] makedumpfile: support -F option on xen
-Date: Tue, 29 Jan 2008 22:20:11 +0900
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JJsdS-0002io-Rs
+	for kexec@lists.infradead.org; Tue, 29 Jan 2008 15:44:31 +0000
+Date: Tue, 29 Jan 2008 10:41:04 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kexec command line length
+Message-ID: <20080129154104.GA12219@redhat.com>
+References: <20080125195058.GE28683@hmsendeavour.rdu.redhat.com>
+	<20080125201305.GG13287@redhat.com>
+	<20080125205450.GG28683@hmsendeavour.rdu.redhat.com>
+	<20080128170811.GA1174@hmsreliant.think-freely.org>
+	<20080128193741.GB32765@redhat.com>
+	<20080128200702.GB1174@hmsreliant.think-freely.org>
+	<20080128202041.GD32765@redhat.com>
+	<20080128205324.GC1174@hmsreliant.think-freely.org>
+	<20080128212910.GA21889@suse.de>
+	<20080129010122.GA11935@hmsreliant.think-freely.org>
 MIME-Version: 1.0
-Message-Id: <94C86279ACDA80takebe_akio@jp.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20080129010122.GA11935@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,45 +32,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: kexec@lists.infradead.org
 
-Hi,
+On Mon, Jan 28, 2008 at 08:01:22PM -0500, Neil Horman wrote:
+> On Mon, Jan 28, 2008 at 10:29:10PM +0100, Bernhard Walle wrote:
+> > * Neil Horman <nhorman@tuxdriver.com> [2008-01-28 21:53]:
+> > >  		return -1;
+> > >  	}
+> > >  
+> > > +	if (setup_header.protocol_version >= 0x0206) {
+> > > +		if (command_line_len > setup_header.cmdline_size) {
+> > > +			dbgprintf("Kernel command line too long for kernel!\n");
+> > > +			return -1;
+> > > +		}
+> > > +	}
+> > > +
+> > >  	if (setup_header.protocol_version >= 0x0205) {
+> > >  		relocatable_kernel = setup_header.relocatable_kernel;
+> > >  		dbgprintf("bzImage is relocatable\n");
+> > 
+> > I know that there was a kernel release with 2048 _and_ still the old
+> > boot protocol, but wouldn't it be better to warn the user if the size
+> > is beyond 256 and the old kernel is used? I think new kexec-tools
+> > should still support old kernels without problems ...
+> > 
+> 
+> I don't know how important that really is, but I don't see a particular problem 
+> with it either.  From my reading of i386/boot.txt, versions prior to boot 
+> protocol 2.02 only supported a 256 bytes command line patch, so what if we just 
+> add an extra check in do_bzImage_load.  If the protocol version of the boot 
+> header is lexx than 0x0202, then we fail if the command line length is more than 
+> 256 bytes.  Note there are two other locations where we use a linux boot 
+> protocol header, but they are both constructed heders, not read headers, and use 
+> protocol version 2.03, which support 2048 byte command lines.
+> 
 
-makdumpfile doesn't support -F option on xen.
-The following patch support it.
+I think 2048 command line support came much later. I think it came between
+version 2.05 and 2.06 (But somebody needs to dive into archive to verify).
+Because command line size could go beyond 256, we introduced cmdline_size
+parameter in version 2.06 to let a boot loader know.
 
-Signed-off-by: Akio Takebe <takebe_akio@jp.fujitsu.com>
+What Bernanrd seems to be talking about a small window where boot protocol
+was 2.05 but supported command line size was still 2048.
 
-Best Regards,
+I think if we are loading any kernel older than 2.06 (and newer than
+2.05?), and if command line size is greater than 256, we just might want to
+give a debug warning to user, saying command line is great than 256 and kernel
+does not tell me what's the supported command line size. (Somthing like that).
 
-Akio Takebe
+So it might look something like this.
 
---- makedumpfile/makedumpfile.c.orig	2007-11-14 20:34:36.000000000 +0900
-+++ makedumpfile/makedumpfile.c	2008-01-28 13:50:34.000000000 +0900
-@@ -5803,12 +5803,22 @@ handle_xen()
- 	if (!create_dump_bitmap_xen())
- 		goto out;
- 
-+	if (info->flag_flatten) {
-+		if (!write_start_flat_header())
-+			goto out;
-+	}
-+
- 	if (!write_elf_header())
- 		goto out;
- 
- 	if (!write_elf_pages())
- 		goto out;
- 
-+	if (info->flag_flatten) {
-+		if (!write_end_flat_header())
-+			goto out;
-+	}
-+
- 	if (!close_files_for_creating_dumpfile())
- 		goto out;
- 
+if (protocol version > 2.06)
+	error user depending on cmdline_size;
+else if (protocol version > 2.05 && protocol version < 2.06)
+	warn on cmdline being more than 256. We don't know for sure.
+else
+	error out if cmdline is greater than 256
 
+I am not very sure about the boundary version 2.05, somebody needs to
+verify.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
