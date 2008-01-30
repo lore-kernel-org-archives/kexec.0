@@ -1,24 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from xgate.elsag.it ([151.89.15.2])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JKKkm-00055B-GF
-	for kexec@lists.infradead.org; Wed, 30 Jan 2008 21:46:03 +0000
-Date: Wed, 30 Jan 2008 16:45:51 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Kexec command line length
-Message-ID: <20080130214551.GC15415@redhat.com>
-References: <20080128205324.GC1174@hmsreliant.think-freely.org>
-	<20080128212910.GA21889@suse.de>
-	<20080129010122.GA11935@hmsreliant.think-freely.org>
-	<20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
-	<20080129195753.GB21530@hmsreliant.think-freely.org>
-	<20080130205323.GA15415@redhat.com>
-	<20080130205947.GA5660@hmsendeavour.rdu.redhat.com>
-	<20080130210815.GB15415@redhat.com>
-	<20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
+	id 1JKJtP-0000Gz-W6
+	for kexec@lists.infradead.org; Wed, 30 Jan 2008 20:50:54 +0000
+Received: from elgasmtp01.elsag.it ([172.19.5.43])
+	by xgate.elsag.it (8.13.6-Elsag/8.13.6) with ESMTP id m0UIbkUo007074
+	for <kexec@lists.infradead.org>; Wed, 30 Jan 2008 19:37:46 +0100 (MET)
+Received: from els00wmx04.elsag.it (localhost [127.0.0.1])
+	by elgasmtp01.elsag.it (8.12.10-Elsag/8.12.10) with ESMTP id
+	m0UIXm5D029725
+	for <kexec@lists.infradead.org>; Wed, 30 Jan 2008 19:33:49 +0100
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
+Subject: kexec problem on SH platform
+Date: Wed, 30 Jan 2008 19:33:13 +0100
+Message-ID: <C103D39FF74DF4469EEAE6D38AA9E0B5D529A3@els00wmx04.elsag.it>
+From: "Cortesi Paolo" <Paolo.Cortesi@elsagdatamat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,75 +24,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1012925237=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, Neil Horman <nhorman@tuxdriver.com>
+To: kexec@lists.infradead.org
+Cc: Pampolini Matteo <matteo.pampolini@elsagdatamat.com>
 
-On Wed, Jan 30, 2008 at 04:18:34PM -0500, Neil Horman wrote:
-> On Wed, Jan 30, 2008 at 04:08:15PM -0500, Vivek Goyal wrote:
-> > On Wed, Jan 30, 2008 at 03:59:47PM -0500, Neil Horman wrote:
-> > > On Wed, Jan 30, 2008 at 03:53:23PM -0500, Vivek Goyal wrote:
-> > > > On Tue, Jan 29, 2008 at 02:57:53PM -0500, Neil Horman wrote:
-> > > > > 
-> > > > > Ok, I've got a new patch here.  In response to Bernhard and Viveks concerns,
-> > > > > I've added a few checks.  Bernhard, thank you for digging into the history of
-> > > > > the addition of the 2048 byte command line.  As I understand what you've posted
-> > > > > heres what we need to capture:
-> > > > > 
-> > > > > On X86:
-> > > > > 	Boot loader version >= 2.06
-> > > > > 		error if cmdline_len > setup_header.cmdline_size
-> > > > > 	2.05 > Boot loader version > 2.06
-> > > > > 		warn if cmdline_len > 255
-> > > > > 	Boot loader version < 2.05
-> > > > > 		error if cmdline_len > 255
-> > > > > 
-> > > > > on X86_64:
-> > > > > 	Boot loader version >= 2.04
-> > > > > 		error if cmdline_len > setup_header.cmdline_size
-> > > > 
-> > > > cmdline_size was introduced only in version 2.06. So this will run
-> > > > into trouble on x86_64 version 2.04 and 2.05, isn't it?
-> > > > 
-> > > Then how did version 2.04 on x86_64 determine its maximum command line length?
-> > > Or did it just assume a max length of 2048 bytes?
-> > 
-> > I think it just did not tell. There was no way for a kernel bzImage to
-> > tell boot-loader what's the supported command line size is (Pre 2.06).
-> > 
-> So, for 2.04 on x86_64, we should just assume a 2048 byte command line length
-> then?
-> 
+--===============1012925237==
+Content-class: urn:content-classes:message
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-No. 2.04 is really old. As per boot.txt, it was introduced in 2.6.14.
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.5.7638.1">
+<TITLE>kexec problem on SH platform</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
 
-Anyway, thinking about it more, Large command lines were introduced in
-2.6.21 kernel (for both i386 and x86_64). cmdline_size was introduced
-in 2.6.22 (for both i386 and x86_64). So how about following test
-condition for both the arch.
+<P><FONT SIZE=3D2>Hi,<BR>
+my name is Paolo Cortesi. I'am working over one SH4 platform board =
+ST71XX with linux kernel 2.6.17.<BR>
+<BR>
+I need to spawn a new Linux kernel over the Linux Kernel which is =
+running, without the overhead of boot firmware, and I think that your =
+kexec-tool could be suitable for this target.<BR>
+<BR>
+I try to use kexec following the steps:<BR>
+<BR>
+1) I select the CONFIG_KEXEC option while building the runnig =
+kernel.<BR>
+<BR>
+2) I download your last recent version of kexec-tool which support SH4 =
+platform<BR>
+<BR>
+&nbsp;&nbsp; I used your .gz reachable by link:&nbsp;&nbsp;&nbsp;<BR>
+&nbsp;&nbsp; <A =
+HREF=3D"http://www.vergenet.net/linux/kexec/kexec-tools/">http://www.verg=
+enet.net/linux/kexec/kexec-tools/</A><BR>
+<BR>
+3) I launch the the configure by my script:<BR>
+<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
+CC=3Dsh4-linux-uclibc-gcc<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
+LD=3Dsh4-linux-uclibc-ld<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
+AR=3Dsh4-linux-uclibc-ar<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
+CFLAGS=3D&quot;-DSHLINUX -D__SHLINUX__ -Wall -O2 -ml -m4 -pipe =
+-fomit-frame-pointer -fno-strict-aliasing&quot;<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./configure =
+--host=3Dsh4-linux<BR>
+<BR>
+4) I cross compile. During compilation I comment the invoke of =
+/*crash_setup_regs(&amp;fixed_regs, regs);*/ procedure that's called in =
+crash_kexec procedure of kernel/kexec.c file (I could not find any =
+implementation of this procedure).<BR>
+<BR>
+5) I launch the runnig kernel, which execute:<BR>
+&nbsp;&nbsp; kexec -l &lt;new_zImage&gt; --type=3DzImage-sh =
+--append=3D&quot;command_line&quot;<BR>
+&nbsp;&nbsp; kexec -e<BR>
+<BR>
+Should be the wright procedure.<BR>
+<BR>
+But I have one NULL pointer deferenced when it=B4s called the last =
+assembler procedure reboot_code_buffer (relocate_new_kernel) which is =
+invoked in the kernel C procedure arch/sh/... machine_kexec.c<BR>
+<BR>
+Have you got an idea of the problem? Have you ever used your tool using =
+one intrd kernel running<BR>
+<BR>
+Thanks in advance.<BR>
+<BR>
+Paolo Cortesi.<BR>
+<BR>
+</FONT>
+</P>
 
-if (boot_protocol >= 2.06)
-	error message based on cmdline_size field
-else
-	Warn user if command line is more than 256 but continue to work.
-  	Let the user know that it is not known if kernel being loaded
-	supports command line size greater than 256. Command line will
-	be truncated by destination kernel if it does not support large
-	command lines. User is taking a chance
+</BODY>
+</HTML>
 
-I think above will work both for i386 and x86_64. This is not precise
-message. If we want to do better, then we shall have to rely on linux
-version string. But If somebody is building custom kernel with their
-own versioning, then we will run into issues. So I think, for the time
-being we are good with above simple condition.
 
-Thanks
-Vivek
+--===============1012925237==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1012925237==--
