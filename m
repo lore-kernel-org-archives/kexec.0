@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JJvdn-0005tK-3k
-	for kexec@lists.infradead.org; Tue, 29 Jan 2008 18:57:03 +0000
-Date: Tue, 29 Jan 2008 13:52:11 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: Kexec command line length
-Message-ID: <20080129185211.GA21530@hmsreliant.think-freely.org>
-References: <20080125205450.GG28683@hmsendeavour.rdu.redhat.com>
-	<20080128170811.GA1174@hmsreliant.think-freely.org>
-	<20080128193741.GB32765@redhat.com>
-	<20080128200702.GB1174@hmsreliant.think-freely.org>
-	<20080128202041.GD32765@redhat.com>
-	<20080128205324.GC1174@hmsreliant.think-freely.org>
-	<20080128212910.GA21889@suse.de>
-	<20080129010122.GA11935@hmsreliant.think-freely.org>
-	<20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JK4Rg-0005mX-IK
+	for kexec@lists.infradead.org; Wed, 30 Jan 2008 04:21:15 +0000
+Message-Id: <479FFB5C.7080904@mxs.nes.nec.co.jp>
+Date: Wed, 30 Jan 2008 13:21:48 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080129181701.GB535@suse.de>
+Subject: Re: [Patch] makedumpfile: support -F option on xen
+References: <94C86279ACDA80takebe_akio@jp.fujitsu.com>
+In-Reply-To: <94C86279ACDA80takebe_akio@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,77 +18,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0773406856=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Akio Takebe <takebe_akio@jp.fujitsu.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-On Tue, Jan 29, 2008 at 07:17:01PM +0100, Bernhard Walle wrote:
-> * Vivek Goyal <vgoyal@redhat.com> [2008-01-29 16:41]:
-> > 
-> > I think 2048 command line support came much later. I think it came between
-> > version 2.05 and 2.06 (But somebody needs to dive into archive to verify).
-> > Because command line size could go beyond 256, we introduced cmdline_size
-> > parameter in version 2.06 to let a boot loader know.
+--===============0773406856==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+Hi Takebe-san,
+
+Thank you for the patch.
+I confirmed that your patch is right on x86_64 xen machine.
+I will merge your patch into the next release.
+
+
+Thanks
+Ken'ichi Ohmichi 
+
+
+Akio Takebe wrote:
+> Hi,
 > 
-> Large command line support was added with
+> makdumpfile doesn't support -F option on xen.
+> The following patch support it.
 > 
->     cca97de1184f6000d22b4106d47687b31cca1fa3
->     v2.6.20-1929-gcca97de
+> Signed-off-by: Akio Takebe <takebe_akio@jp.fujitsu.com>
 > 
-> which means that it was merged 2.6.21.
+> Best Regards,
 > 
-> > What Bernanrd seems to be talking about a small window where boot protocol
-> > was 2.05 but supported command line size was still 2048.
+> Akio Takebe
 > 
-> 2.05 was added with
-> 
->     be274eeaf20b4c7155242645d5e2c48b023e609b
->     v2.6.19-1394-gbe274ee
-> 
-> which means that it was merged 2.6.20. But it got implemented for i386
-> only that time, so x86_64 still had the 2.04 version.
-> 
-> The command line length in the boot protocol was added with
-> 
->     8f9aeca7a081d81c4c9862be1e04f15b5ab5461f
->     v2.6.21-1864-g8f9aeca
-> 
-> which menas that it was merged 2.6.22.
-> 
-> > if (protocol version > 2.06)
-> > 	error user depending on cmdline_size;
-> > else if (protocol version > 2.05 && protocol version < 2.06)
-> > 	warn on cmdline being more than 256. We don't know for sure.
-> > else
-> > 	error out if cmdline is greater than 256
-> 
-> The problem is 2.6.21: It had on x86_64 2.04 boot protocol but
-> 2048 command line size. I just verified this via the tarball. :(
-> 
-> Maybe it could be implemented with versions ...
+> --- makedumpfile/makedumpfile.c.orig	2007-11-14 20:34:36.000000000 +0900
+> +++ makedumpfile/makedumpfile.c	2008-01-28 13:50:34.000000000 +0900
+> @@ -5803,12 +5803,22 @@ handle_xen()
+>  	if (!create_dump_bitmap_xen())
+>  		goto out;
+>  
+> +	if (info->flag_flatten) {
+> +		if (!write_start_flat_header())
+> +			goto out;
+> +	}
+> +
+>  	if (!write_elf_header())
+>  		goto out;
+>  
+>  	if (!write_elf_pages())
+>  		goto out;
+>  
+> +	if (info->flag_flatten) {
+> +		if (!write_end_flat_header())
+> +			goto out;
+> +	}
+> +
+>  	if (!close_files_for_creating_dumpfile())
+>  		goto out;
+>  
 > 
 
-Ugh.  Ok, on the bright side we only need to worry about this for bzImage files,
-since we generate the header for elf files, and we can just force the header we
-generate to be version 2.06 and fill it out appropriately.  For bzImage files, I
-think in do_bzImage_load we can just check both our arch and the boot protocol
-version for the appropriate value.  I'm testing a patch currenly and will post
-shortly.
 
-Neil
-
-> 
->         Bernhard
-
--- 
-/****************************************************
- * Neil Horman <nhorman@tuxdriver.com>
- * Software Engineer, Red Hat
- ****************************************************/
+--===============0773406856==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0773406856==--
