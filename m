@@ -1,15 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JK4Rg-0005mX-IK
-	for kexec@lists.infradead.org; Wed, 30 Jan 2008 04:21:15 +0000
-Message-Id: <479FFB5C.7080904@mxs.nes.nec.co.jp>
-Date: Wed, 30 Jan 2008 13:21:48 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1JKJvz-0000Jk-Pq
+	for kexec@lists.infradead.org; Wed, 30 Jan 2008 20:53:33 +0000
+Date: Wed, 30 Jan 2008 15:53:23 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kexec command line length
+Message-ID: <20080130205323.GA15415@redhat.com>
+References: <20080128170811.GA1174@hmsreliant.think-freely.org>
+	<20080128193741.GB32765@redhat.com>
+	<20080128200702.GB1174@hmsreliant.think-freely.org>
+	<20080128202041.GD32765@redhat.com>
+	<20080128205324.GC1174@hmsreliant.think-freely.org>
+	<20080128212910.GA21889@suse.de>
+	<20080129010122.GA11935@hmsreliant.think-freely.org>
+	<20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
+	<20080129195753.GB21530@hmsreliant.think-freely.org>
 MIME-Version: 1.0
-Subject: Re: [Patch] makedumpfile: support -F option on xen
-References: <94C86279ACDA80takebe_akio@jp.fujitsu.com>
-In-Reply-To: <94C86279ACDA80takebe_akio@jp.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20080129195753.GB21530@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,77 +27,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0773406856=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Akio Takebe <takebe_akio@jp.fujitsu.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
---===============0773406856==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+On Tue, Jan 29, 2008 at 02:57:53PM -0500, Neil Horman wrote:
+> 
+> Ok, I've got a new patch here.  In response to Bernhard and Viveks concerns,
+> I've added a few checks.  Bernhard, thank you for digging into the history of
+> the addition of the 2048 byte command line.  As I understand what you've posted
+> heres what we need to capture:
+> 
+> On X86:
+> 	Boot loader version >= 2.06
+> 		error if cmdline_len > setup_header.cmdline_size
+> 	2.05 > Boot loader version > 2.06
+> 		warn if cmdline_len > 255
+> 	Boot loader version < 2.05
+> 		error if cmdline_len > 255
+> 
+> on X86_64:
+> 	Boot loader version >= 2.04
+> 		error if cmdline_len > setup_header.cmdline_size
 
-
-Hi Takebe-san,
-
-Thank you for the patch.
-I confirmed that your patch is right on x86_64 xen machine.
-I will merge your patch into the next release.
-
+cmdline_size was introduced only in version 2.06. So this will run
+into trouble on x86_64 version 2.04 and 2.05, isn't it?
 
 Thanks
-Ken'ichi Ohmichi 
-
-
-Akio Takebe wrote:
-> Hi,
-> 
-> makdumpfile doesn't support -F option on xen.
-> The following patch support it.
-> 
-> Signed-off-by: Akio Takebe <takebe_akio@jp.fujitsu.com>
-> 
-> Best Regards,
-> 
-> Akio Takebe
-> 
-> --- makedumpfile/makedumpfile.c.orig	2007-11-14 20:34:36.000000000 +0900
-> +++ makedumpfile/makedumpfile.c	2008-01-28 13:50:34.000000000 +0900
-> @@ -5803,12 +5803,22 @@ handle_xen()
->  	if (!create_dump_bitmap_xen())
->  		goto out;
->  
-> +	if (info->flag_flatten) {
-> +		if (!write_start_flat_header())
-> +			goto out;
-> +	}
-> +
->  	if (!write_elf_header())
->  		goto out;
->  
->  	if (!write_elf_pages())
->  		goto out;
->  
-> +	if (info->flag_flatten) {
-> +		if (!write_end_flat_header())
-> +			goto out;
-> +	}
-> +
->  	if (!close_files_for_creating_dumpfile())
->  		goto out;
->  
-> 
-
-
---===============0773406856==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Vivek
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0773406856==--
