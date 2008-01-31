@@ -1,21 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from xgate.elsag.it ([151.89.15.2])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JKJtP-0000Gz-W6
-	for kexec@lists.infradead.org; Wed, 30 Jan 2008 20:50:54 +0000
-Received: from elgasmtp01.elsag.it ([172.19.5.43])
-	by xgate.elsag.it (8.13.6-Elsag/8.13.6) with ESMTP id m0UIbkUo007074
-	for <kexec@lists.infradead.org>; Wed, 30 Jan 2008 19:37:46 +0100 (MET)
-Received: from els00wmx04.elsag.it (localhost [127.0.0.1])
-	by elgasmtp01.elsag.it (8.12.10-Elsag/8.12.10) with ESMTP id
-	m0UIXm5D029725
-	for <kexec@lists.infradead.org>; Wed, 30 Jan 2008 19:33:49 +0100
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: kexec problem on SH platform
-Date: Wed, 30 Jan 2008 19:33:13 +0100
-Message-ID: <C103D39FF74DF4469EEAE6D38AA9E0B5D529A3@els00wmx04.elsag.it>
-From: "Cortesi Paolo" <Paolo.Cortesi@elsagdatamat.com>
+Received: from ra.tuxdriver.com ([70.61.120.52])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JKN2X-00046L-Oi
+	for kexec@lists.infradead.org; Thu, 31 Jan 2008 00:12:33 +0000
+Date: Wed, 30 Jan 2008 19:10:45 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: Kexec command line length
+Message-ID: <20080131000926.GA15474@localhost.localdomain>
+References: <20080128212910.GA21889@suse.de>
+	<20080129010122.GA11935@hmsreliant.think-freely.org>
+	<20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
+	<20080129195753.GB21530@hmsreliant.think-freely.org>
+	<20080130205323.GA15415@redhat.com>
+	<20080130205947.GA5660@hmsendeavour.rdu.redhat.com>
+	<20080130210815.GB15415@redhat.com>
+	<20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
+	<20080130214551.GC15415@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080130214551.GC15415@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,104 +27,131 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1012925237=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Pampolini Matteo <matteo.pampolini@elsagdatamat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Neil Horman <nhorman@redhat.com>, horms@verge.net.au, kexec@lists.infradead.org
 
---===============1012925237==
-Content-class: urn:content-classes:message
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Diso-8859-1">
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-6.5.7638.1">
-<TITLE>kexec problem on SH platform</TITLE>
-</HEAD>
-<BODY>
-<!-- Converted from text/plain format -->
-
-<P><FONT SIZE=3D2>Hi,<BR>
-my name is Paolo Cortesi. I'am working over one SH4 platform board =
-ST71XX with linux kernel 2.6.17.<BR>
-<BR>
-I need to spawn a new Linux kernel over the Linux Kernel which is =
-running, without the overhead of boot firmware, and I think that your =
-kexec-tool could be suitable for this target.<BR>
-<BR>
-I try to use kexec following the steps:<BR>
-<BR>
-1) I select the CONFIG_KEXEC option while building the runnig =
-kernel.<BR>
-<BR>
-2) I download your last recent version of kexec-tool which support SH4 =
-platform<BR>
-<BR>
-&nbsp;&nbsp; I used your .gz reachable by link:&nbsp;&nbsp;&nbsp;<BR>
-&nbsp;&nbsp; <A =
-HREF=3D"http://www.vergenet.net/linux/kexec/kexec-tools/">http://www.verg=
-enet.net/linux/kexec/kexec-tools/</A><BR>
-<BR>
-3) I launch the the configure by my script:<BR>
-<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
-CC=3Dsh4-linux-uclibc-gcc<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
-LD=3Dsh4-linux-uclibc-ld<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
-AR=3Dsh4-linux-uclibc-ar<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; export =
-CFLAGS=3D&quot;-DSHLINUX -D__SHLINUX__ -Wall -O2 -ml -m4 -pipe =
--fomit-frame-pointer -fno-strict-aliasing&quot;<BR>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./configure =
---host=3Dsh4-linux<BR>
-<BR>
-4) I cross compile. During compilation I comment the invoke of =
-/*crash_setup_regs(&amp;fixed_regs, regs);*/ procedure that's called in =
-crash_kexec procedure of kernel/kexec.c file (I could not find any =
-implementation of this procedure).<BR>
-<BR>
-5) I launch the runnig kernel, which execute:<BR>
-&nbsp;&nbsp; kexec -l &lt;new_zImage&gt; --type=3DzImage-sh =
---append=3D&quot;command_line&quot;<BR>
-&nbsp;&nbsp; kexec -e<BR>
-<BR>
-Should be the wright procedure.<BR>
-<BR>
-But I have one NULL pointer deferenced when it=B4s called the last =
-assembler procedure reboot_code_buffer (relocate_new_kernel) which is =
-invoked in the kernel C procedure arch/sh/... machine_kexec.c<BR>
-<BR>
-Have you got an idea of the problem? Have you ever used your tool using =
-one intrd kernel running<BR>
-<BR>
-Thanks in advance.<BR>
-<BR>
-Paolo Cortesi.<BR>
-<BR>
-</FONT>
-</P>
-
-</BODY>
-</HTML>
+Fine, New patch attached.
 
 
---===============1012925237==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+This patch does 5 things:
+1) moves command line out of the zero page (struct bootparam)
+
+2) extends command line length to support 2K command lines
+
+3) adds a check to ensure that command line length is reasonably sized for new
+boot protocols
+
+4) adds a check to ensure that command line length is reasonably sized for old
+boot protocols
+
+5) imports variables from latest struct setup_header in kernel bootparams.h
+
+Incorporates simplified version checking for boot protocol and conservatively
+warns if the kernels boot protocol is below version 2.06 which is guaranteed to
+have 2K commandlines (even though some arches  may have that support in
+older boot protocols)
+
+
+Neil
+
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+
+
+ include/x86/x86-linux.h           |   20 ++++++++++++++------
+ kexec/arch/i386/kexec-bzImage.c   |   11 +++++++++++
+ kexec/arch/i386/x86-linux-setup.c |    3 ++-
+ 3 files changed, 27 insertions(+), 7 deletions(-)
+
+
+
+diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
+index afe66bd..4f3507e 100644
+--- a/include/x86/x86-linux.h
++++ b/include/x86/x86-linux.h
+@@ -144,18 +144,22 @@ struct x86_linux_param_header {
+ 	/* 2.04+ */
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  reserved15[0x2d0 - 0x235];	/* 0x230 */
++	uint8_t  reserved15[3];			/* 0x235 */
++	uint32_t cmdline_size;			/* 0x238 */
++	uint32_t hardware_subarch;		/* 0x23C */
++	uint64_t hardware_subarch_data;		/* 0x240 */
++	uint8_t  reserved16[0x2d0 - 0x248];	/* 0x248 */
+ #endif
+ 	struct e820entry e820_map[E820MAX];	/* 0x2d0 */
+ 						/* 0x550 */
+-#define COMMAND_LINE_SIZE 256
++#define COMMAND_LINE_SIZE 2048 
+ };
+ 
+ struct x86_linux_faked_param_header {
+ 	struct x86_linux_param_header hdr;	/* 0x00 */
+-	uint8_t reserved16[688];		/* 0x550 */
+-	uint8_t command_line[COMMAND_LINE_SIZE]; /* 0x800 */
+-	uint8_t reserved17[1792];		/* 0x900 - 0x1000 */
++	uint8_t reserved17[0xab0];		/* 0x550 */
++	uint8_t command_line[COMMAND_LINE_SIZE]; /* 0x1000 */
++	uint8_t reserved18[0x200];		/* 0x1800 - 0x2000 */
+ };
+ 
+ struct x86_linux_header {
+@@ -206,7 +210,11 @@ struct x86_linux_header {
+ #else
+ 	uint32_t kernel_alignment;		/* 0x230 */
+ 	uint8_t  relocatable_kernel;		/* 0x234 */
+-	uint8_t  tail[32*1024 - 0x235];		/* 0x230 */
++	uint8_t  reserved6[3];			/* 0x235 */
++	uint32_t cmdline_size;                  /* 0x238 */
++	uint32_t hardware_subarch;              /* 0x23C */
++	uint64_t hardware_subarch_data;         /* 0x240 */
++	uint8_t  tail[32*1024 - 0x248];		/* 0x248 */
+ #endif
+ } PACKED;
+ 
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 8fde799..93e37a4 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -134,6 +134,17 @@ int do_bzImage_load(struct kexec_info *info,
+ 		return -1;
+ 	}
+ 
++	if (setup_header.protocol_version >= 0x0206) {
++		if (command_line_len > setup_header.cmdline_size) {
++			dbgprintf("Kernel command line too long for kernel!\n");
++			return -1;
++		}
++	} else {
++		if (command_line_len > 255) {
++			dbgprintf("WARNING: This kernel may only support 255 byte command lines\n");
++		}
++	}
++
+ 	if (setup_header.protocol_version >= 0x0205) {
+ 		relocatable_kernel = setup_header.relocatable_kernel;
+ 		dbgprintf("bzImage is relocatable\n");
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index df2f5c0..68234fa 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -38,8 +38,9 @@ void init_linux_parameters(struct x86_linux_param_header *real_mode)
+ 
+ 	/* Boot block magic */
+ 	memcpy(real_mode->header_magic, "HdrS", 4);
+-	real_mode->protocol_version = 0x0203;
++	real_mode->protocol_version = 0x0206;
+ 	real_mode->initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
++	real_mode->cmdline_size = COMMAND_LINE_SIZE;
+ }
+ 
+ void setup_linux_bootloader_parameters(
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1012925237==--
