@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JKVfj-00027Q-Tr
-	for kexec@lists.infradead.org; Thu, 31 Jan 2008 09:25:35 +0000
-Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id AFE7627808
-	for <kexec@lists.infradead.org>; Thu, 31 Jan 2008 10:25:25 +0100 (CET)
-Message-ID: <47A19405.7080109@suse.de>
-Date: Thu, 31 Jan 2008 10:25:25 +0100
-From: Stefan Assmann <sassmann@suse.de>
+Received: from smtp-out1.libero.it ([212.52.84.41])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JKsqF-0001ZT-Bb
+	for kexec@lists.infradead.org; Fri, 01 Feb 2008 10:09:57 +0000
+Received: from mailrelay12.libero.it (192.168.32.131) by smtp-out1.libero.it
+	(7.3.120) id 47137F850A3A18ED for kexec@lists.infradead.org;
+	Fri, 1 Feb 2008 11:09:50 +0100
+Date: Fri,  1 Feb 2008 11:08:01 +0100
+Message-Id: <JVK1HD$5366A883E65055C12EDC0F157808300E@libero.it>
+Subject: kexec problem on SH platform nr 2
 MIME-Version: 1.0
-Subject: kexec buffer overflow on ppc platform
-Content-Type: multipart/mixed; boundary="------------060606010200090906050305"
+From: "paolo\.cortesi\@inwind\.it" <paolo.cortesi@inwind.it>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,91 +19,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-
-This is a multi-part message in MIME format.
---------------060606010200090906050305
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: kexec <kexec@lists.infradead.org>
 
 Hi,
+my name is Paolo Cortesi I'am working over one SH4 platform board ST71XX wi=
+th linux kernel 2.6.17.
 
-this patch fixes a buffer overflow on ppc.
+I need to spawn a new Linux kernel over the Linux Kernel which is running, =
+without the overhead of boot firmware, and I think that your kexec-tool cou=
+ld be suitable for this target.
+ =
 
-    Stefan
+I try to use kexec following the steps:
 
--- 
-Stefan Assmann          | SUSE LINUX Products GmbH
-Software Engineer       | Maxfeldstr. 5, D-90409 Nuernberg
-Mail : sassmann@suse.de | GF: Markus Rex, HRB 16746 (AG Nuernberg)
+1) I select the CONFIG_KEXEC option while building the runnig kernel.
 
+2) I download your last recent version of kexec-tool which support SH4 plat=
+form
 
+   I used your .gz reachable by link:    =
 
+   http://www.vergenet.net/linux/kexec/kexec-tools/
 
---------------060606010200090906050305
-Content-Type: text/x-patch;
- name="kexec-tools.fread-buffer-overflow.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline; filename="kexec-tools.fread-buffer-overflow.patch"
+3) I launch the the configure by my script:
 
-This patch fixes buffer overflows when buf is allocated MAXBYTES-1 and fread(buf, 1, MAXBYTES, file) is invoked.
-
-Signed-off-by: Stefan Assmann <sassmann@suse.de>
----
- kexec/arch/ppc64/crashdump-ppc64.c |    2 +-
- kexec/arch/ppc64/kexec-ppc64.c     |    4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-Index: b/kexec/arch/ppc64/kexec-ppc64.c
-===================================================================
---- a/kexec/arch/ppc64/kexec-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-ppc64.c
-@@ -160,7 +160,7 @@ static int get_base_ranges(void)
- 	int local_memory_ranges = 0;
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
- 	DIR *dir, *dmem;
- 	FILE *file;
- 	struct dirent *dentry, *mentry;
-@@ -258,7 +258,7 @@ static int get_devtree_details(unsigned
- 	unsigned long long htab_base, htab_size;
- 	unsigned long long kernel_end;
- 	unsigned long long initrd_start, initrd_end;
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
- 	DIR *dir, *cdir;
-Index: b/kexec/arch/ppc64/crashdump-ppc64.c
-===================================================================
---- a/kexec/arch/ppc64/crashdump-ppc64.c
-+++ b/kexec/arch/ppc64/crashdump-ppc64.c
-@@ -101,7 +101,7 @@ static int get_crash_memory_ranges(struc
- 	int memory_ranges = 0;
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
- 	DIR *dir, *dmem;
- 	FILE *file;
- 	struct dirent *dentry, *mentry;
+	export CC=3Dsh4-linux-uclibc-gcc
+	export LD=3Dsh4-linux-uclibc-ld
+	export AR=3Dsh4-linux-uclibc-ar
+	export CFLAGS=3D"-DSHLINUX -D__SHLINUX__ -Wall -O2 -ml -m4 -pipe -fomit-fr=
+ame-pointer -fno-strict-aliasing"
+	./configure --host=3Dsh4-linux =
 
 
+4) I cross compile. During compilation I comment the invoke of /*crash_setu=
+p_regs(&fixed_regs, regs);*/ procedure that's called in crash_kexec procedu=
+re of kernel/kexec.c file (I could not find any implementation of this proc=
+edure).
 
---------------060606010200090906050305
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+5) I launch the runnig kernel, which execute:
+   kexec -l new_zImage --./kexec -l zImage --type=3DzImage-sh --append=3D"c=
+ommand_line"
+   kexec -e
+
+Should be the wright procedure.
+
+But I have one NULL pointer deferenced when it=B4s called the last assemble=
+r procedure
+reboot_code_buffer (relocate_new_kernel) which is invoked in the kernel C p=
+rocedure arch/sh/... machine_kexec.c
+
+Have you got an idea of the problem? Have you ever run your tool using one =
+intrd kernel running
+
+Thanks in advance.
+
+Paolo Cortesi.
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------060606010200090906050305--
-
