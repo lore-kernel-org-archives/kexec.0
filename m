@@ -1,13 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tim.rpsys.net ([194.106.48.114])
+Received: from e23smtp04.au.ibm.com ([202.81.18.173])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JM8nX-0004LF-80
-	for kexec@lists.infradead.org; Mon, 04 Feb 2008 21:24:23 +0000
-Subject: [PATCH] Add ARM support to kexec
-From: Richard Purdie <rpurdie@rpsys.net>
-Date: Mon, 04 Feb 2008 21:24:03 +0000
-Message-Id: <1202160243.4788.103.camel@localhost.localdomain>
-Mime-Version: 1.0
+	id 1JM3ug-0007va-Pg
+	for kexec@lists.infradead.org; Mon, 04 Feb 2008 16:11:26 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
+	by e23smtp04.au.ibm.com (8.13.1/8.13.1) with ESMTP id m14GAsBf004359
+	for <kexec@lists.infradead.org>; Tue, 5 Feb 2008 03:10:54 +1100
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m14GBD6I3895474
+	for <kexec@lists.infradead.org>; Tue, 5 Feb 2008 03:11:13 +1100
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+	by d23av01.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m14GBDZL031324
+	for <kexec@lists.infradead.org>; Tue, 5 Feb 2008 03:11:13 +1100
+Message-ID: <47A7391F.2020408@in.ibm.com>
+Date: Mon, 04 Feb 2008 21:41:11 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
+MIME-Version: 1.0
+Subject: [mm] Crashkernel memory reservation fails with 2.6.24-rc8-mm1
+Content-Type: multipart/mixed; boundary="------------080006030209040204000908"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,592 +28,258 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, ebiederm@xmission.com
-Cc: Uli Luckas <u.luckas@road.de>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-Add ARM support to kexec including commandline support through ATAGs.
-The kernel syscall support has already been merged and kernel ATAG
-exporting is queued for 2.6.25 (its optional for kexec).
+This is a multi-part message in MIME format.
+--------------080006030209040204000908
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Based on work by various people, notably Uli Luckas <u.luckas@road.de>
-for adding ATAG support.
+While trying to configure kdump with 2.6.24-rc8-mm1 [ on a x86-64 box ]
+i ran into this problem. Here is the snippet from dmesg during the
+failure. [ dmesg log attached ]
 
-Signed-off-by: Richard Purdie <rpurdie@rpsys.net>
+early_ioremap(000000000000040e, 00000002) => -000002103442418
+early_iounmap(ffffffff82a0040e, 00000002)
+early_ioremap(000000000009dc00, 00001000) => -000002102797312
+early_iounmap(ffffffff82a9dc00, 00001000)
+crashkernel reservation failed - memory is in use
+ [ffffe20000000000-ffffe200001fffff] PMD ->ffff810001200000 on node 0
+ [ffffe20000200000-ffffe200003fffff] PMD ->ffff810001600000 on node 0
+ [ffffe20000400000-ffffe200005fffff] PMD ->ffff810001a00000 on node 0
+ [ffffe20000600000-ffffe200007fffff] PMD ->ffff810001e00000 on node 0
 
-diff --git a/configure.ac b/configure.ac
-index 6f0dbd6..5b0ca64 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -29,6 +29,9 @@ case $target_cpu in
- 	powerpc64 )
- 		ARCH="ppc64"
- 		;;
-+	arm* )
-+		ARCH="arm"
-+		;;
- 	s390x|s390 )
- 		ARCH="s390"
- 		;;
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-new file mode 100644
-index 0000000..a58f791
---- /dev/null
-+++ b/kexec/arch/arm/Makefile
-@@ -0,0 +1,6 @@
-+#
-+# kexec arm (linux booting linux)
-+#
-+KEXEC_SRCS+= kexec/arch/arm/kexec-elf-rel-arm.c
-+KEXEC_SRCS+= kexec/arch/arm/kexec-zImage-arm.c 
-+KEXEC_SRCS+= kexec/arch/arm/kexec-arm.c 
-diff --git a/kexec/arch/arm/include/arch/options.h b/kexec/arch/arm/include/arch/options.h
-new file mode 100644
-index 0000000..248230b
---- /dev/null
-+++ b/kexec/arch/arm/include/arch/options.h
-@@ -0,0 +1,11 @@
-+#ifndef KEXEC_ARCH_ARM_OPTIONS_H
-+#define KEXEC_ARCH_ARM_OPTIONS_H
-+
-+#define OPT_ARCH_MAX   (OPT_MAX+0)
-+
-+#define KEXEC_ARCH_OPTIONS \
-+	KEXEC_OPTIONS \
-+
-+#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
-+
-+#endif /* KEXEC_ARCH_ARM_OPTIONS_H */
-diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
-new file mode 100644
-index 0000000..16072b7
---- /dev/null
-+++ b/kexec/arch/arm/kexec-arm.c
-@@ -0,0 +1,142 @@
-+/*
-+ * kexec: Linux boots Linux
-+ *
-+ * modified from kexec-ppc.c
-+ *
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stddef.h>
-+#include <stdio.h>
-+#include <errno.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <getopt.h>
-+#include <sys/utsname.h>
-+#include "../../kexec.h"
-+#include "../../kexec-syscall.h"
-+#include "kexec-arm.h"
-+#include <arch/options.h>
-+
-+#define MAX_MEMORY_RANGES 64
-+#define MAX_LINE 160
-+static struct memory_range memory_range[MAX_MEMORY_RANGES];
-+
-+/* Return a sorted list of available memory ranges. */
-+int get_memory_ranges(struct memory_range **range, int *ranges, 
-+		unsigned long kexec_flags)
-+{
-+	const char iomem[]= "/proc/iomem";
-+	int memory_ranges = 0;
-+	char line[MAX_LINE];
-+	FILE *fp;
-+	fp = fopen(iomem, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s: %s\n", 
-+			iomem, strerror(errno));
-+		return -1;
-+	}
-+
-+	while(fgets(line, sizeof(line), fp) != 0) {
-+		unsigned long long start, end;
-+		char *str;
-+		int type;
-+		int consumed;
-+		int count;
-+		if (memory_ranges >= MAX_MEMORY_RANGES)
-+			break;
-+		count = sscanf(line, "%Lx-%Lx : %n",
-+			&start, &end, &consumed);
-+		if (count != 2) 
-+			continue;
-+		str = line + consumed;
-+		end = end + 1;
-+
-+		if (memcmp(str, "System RAM\n", 11) == 0) {
-+			type = RANGE_RAM;
-+		} 
-+		else if (memcmp(str, "reserved\n", 9) == 0) {
-+			type = RANGE_RESERVED;
-+		}
-+		else {
-+			continue;
-+		}
-+
-+		memory_range[memory_ranges].start = start;
-+		memory_range[memory_ranges].end = end;
-+		memory_range[memory_ranges].type = type;
-+		memory_ranges++;
-+	}
-+	fclose(fp);
-+	*range = memory_range;
-+	*ranges = memory_ranges;
-+	return 0;
-+}
-+
-+/* Supported file types and callbacks */
-+struct file_type file_type[] = {
-+	{"zImage", zImage_arm_probe, zImage_arm_load, zImage_arm_usage},
-+};
-+int file_types = sizeof(file_type) / sizeof(file_type[0]);
-+
-+
-+void arch_usage(void)
-+{
-+}
-+
-+static struct {
-+} arch_options = {
-+};
-+int arch_process_options(int argc, char **argv)
-+{
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ 0, 			0, NULL, 0 },
-+	};
-+	static const char short_options[] = KEXEC_ARCH_OPT_STR;
-+	int opt;
-+
-+	opterr = 0; /* Don't complain about unrecognized options here */
-+	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-+		switch(opt) {
-+		default:
-+			break;
-+		}
-+	}
-+	/* Reset getopt for the next pass; called in other source modules */
-+	opterr = 1;
-+	optind = 1;
-+	return 0;
-+}
-+
-+int arch_compat_trampoline(struct kexec_info *info)
-+{
-+	int result;
-+	struct utsname utsname;
-+	result = uname(&utsname);
-+	if (result < 0) {
-+		fprintf(stderr, "uname failed: %s\n",
-+			strerror(errno));
-+		return -1;
-+	}
-+	if (strncmp(utsname.machine, "arm",3) == 0)
-+	{
-+		info->kexec_flags |= KEXEC_ARCH_ARM;
-+	}
-+	else {
-+		fprintf(stderr, "Unsupported machine type: %s\n",
-+			utsname.machine);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
-+void arch_update_purgatory(struct kexec_info *info)
-+{
-+}
-+
-+int is_crashkernel_mem_reserved(void)
-+{
-+	return 0; /* kdump is not supported on this platform (yet) */
-+}
-+	
-\ No newline at end of file
-diff --git a/kexec/arch/arm/kexec-arm.h b/kexec/arch/arm/kexec-arm.h
-new file mode 100644
-index 0000000..bb41ce0
---- /dev/null
-+++ b/kexec/arch/arm/kexec-arm.h
-@@ -0,0 +1,9 @@
-+#ifndef KEXEC_ARM_H
-+#define KEXEC_ARM_H
-+
-+int zImage_arm_probe(const char *buf, off_t len);
-+int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-+		        struct kexec_info *info);
-+void zImage_arm_usage(void);
-+
-+#endif /* KEXEC_ARM_H */
-diff --git a/kexec/arch/arm/kexec-elf-rel-arm.c b/kexec/arch/arm/kexec-elf-rel-arm.c
-new file mode 100644
-index 0000000..4e3ffd7
---- /dev/null
-+++ b/kexec/arch/arm/kexec-elf-rel-arm.c
-@@ -0,0 +1,35 @@
-+#include <stdio.h>
-+#include <elf.h>
-+#include "../../kexec.h"
-+#include "../../kexec-elf.h"
-+
-+int machine_verify_elf_rel(struct mem_ehdr *ehdr)
-+{
-+	if (ehdr->ei_data != ELFDATA2MSB) {
-+		return 0;
-+	}
-+	if (ehdr->ei_class != ELFCLASS32) {
-+		return 0;
-+	}
-+	if (ehdr->e_machine != EM_ARM) 
-+	{
-+		return 0;
-+	}
-+	return 1;
-+}
-+
-+void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
-+	void *location, unsigned long address, unsigned long value)
-+{
-+	switch(r_type) {
-+	case R_ARM_ABS32:
-+		*((uint32_t *)location) += value;
-+		break;
-+	case R_ARM_REL32:
-+		*((uint32_t *)location) += value - address;
-+		break;
-+	default:
-+		die("Unknown rel relocation: %lu\n", r_type);
-+		break;
-+	}
-+}
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-new file mode 100644
-index 0000000..440ad73
---- /dev/null
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -0,0 +1,279 @@
-+/*
-+ * - 08/21/2007 ATAG support added by Uli Luckas <u.luckas@road.de>
-+ *
-+ */
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <limits.h>
-+#include <stdint.h>
-+#include <getopt.h>
-+#include <arch/options.h>
-+#include <asm/page.h>
-+#include "../../kexec.h"
-+
-+#define COMMAND_LINE_SIZE 1024
-+#define BOOT_PARAMS_SIZE 1536
-+
-+struct tag_header {
-+	uint32_t size;
-+	uint32_t tag;
-+};
-+
-+/* The list must start with an ATAG_CORE node */
-+#define ATAG_CORE       0x54410001
-+
-+struct tag_core {
-+	uint32_t flags;	    /* bit 0 = read-only */
-+	uint32_t pagesize;
-+	uint32_t rootdev;
-+};
-+
-+/* it is allowed to have multiple ATAG_MEM nodes */
-+#define ATAG_MEM	0x54410002
-+
-+struct tag_mem32 {
-+	uint32_t   size;
-+	uint32_t   start;  /* physical start address */
-+};
-+
-+/* describes where the compressed ramdisk image lives (virtual address) */
-+/*
-+ * this one accidentally used virtual addresses - as such,
-+ * it's deprecated.
-+ */
-+#define ATAG_INITRD     0x54410005
-+
-+/* describes where the compressed ramdisk image lives (physical address) */
-+#define ATAG_INITRD2    0x54420005
-+
-+struct tag_initrd {
-+        uint32_t start;    /* physical start address */
-+        uint32_t size;     /* size of compressed ramdisk image in bytes */
-+};
-+
-+/* command line: \0 terminated string */
-+#define ATAG_CMDLINE    0x54410009
-+
-+struct tag_cmdline {
-+	char    cmdline[1];     /* this is the minimum size */
-+};
-+
-+/* The list ends with an ATAG_NONE node. */
-+#define ATAG_NONE       0x00000000
-+
-+struct tag {
-+	struct tag_header hdr;
-+	union {
-+		struct tag_core	 core;
-+		struct tag_mem32	mem;
-+		struct tag_initrd       initrd;
-+		struct tag_cmdline      cmdline;
-+	} u;
-+};
-+
-+#define tag_next(t)     ((struct tag *)((uint32_t *)(t) + (t)->hdr.size))
-+#define byte_size(t)    ((t)->hdr.size << 2)
-+#define tag_size(type)  ((sizeof(struct tag_header) + sizeof(struct type) + 3) >> 2)
-+
-+int zImage_arm_probe(const char *buf, off_t len)
-+{
-+	/* 
-+	 * Only zImage loading is supported. Do not check if
-+	 * the buffer is valid kernel image
-+	 */	
-+	return 0;
-+}
-+
-+void zImage_arm_usage(void)
-+{
-+	printf(	"     --command-line=STRING Set the kernel command line to STRING.\n"
-+		"     --append=STRING       Set the kernel command line to STRING.\n"
-+		"     --initrd=FILE         Use FILE as the kernel's initial ramdisk.\n"
-+		"     --ramdisk=FILE        Use FILE as the kernel's initial ramdisk.\n"
-+		);
-+}
-+
-+static
-+struct tag * atag_read_tags(void)
-+{
-+	static unsigned long buf[BOOT_PARAMS_SIZE];
-+	const char fn[]= "/proc/atags";
-+	FILE *fp;
-+	fp = fopen(fn, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s: %s\n", 
-+			fn, strerror(errno));
-+		return NULL;
-+	}
-+
-+	fread(buf, sizeof(buf[1]), BOOT_PARAMS_SIZE, fp);
-+	if (ferror(fp)) {
-+		fprintf(stderr, "Cannot read %s: %s\n",
-+			fn, strerror(errno));
-+		fclose(fp);
-+		return NULL;
-+	}
-+
-+	fclose(fp);
-+	return (struct tag *) buf;
-+}
-+
-+
-+static
-+int atag_arm_load(struct kexec_info *info, unsigned long base,
-+	const char *command_line, off_t command_line_len,
-+	const char *initrd, off_t initrd_len)
-+{
-+	struct tag *saved_tags = atag_read_tags();
-+	char *buf;
-+	off_t len;
-+	struct tag *params;
-+	uint32_t *initrd_start;
-+	
-+	buf = xmalloc(getpagesize());
-+	if (!buf) {
-+		fprintf(stderr, "Compiling ATAGs: out of memory\n");
-+		return -1;
-+	}
-+
-+	memset(buf, 0xff, getpagesize());
-+	params = (struct tag *)buf;
-+
-+	if (saved_tags) {
-+		// Copy tags
-+		saved_tags = (struct tag *) saved_tags;
-+		while(byte_size(saved_tags)) {
-+			switch (saved_tags->hdr.tag) {
-+			case ATAG_INITRD:
-+			case ATAG_INITRD2:
-+			case ATAG_CMDLINE:
-+			case ATAG_NONE:
-+				// skip these tags
-+				break;
-+			default:
-+				// copy all other tags
-+				memcpy(params, saved_tags, byte_size(saved_tags));
-+				params = tag_next(params);
-+			}
-+			saved_tags = tag_next(saved_tags);
-+		}
-+	} else {
-+		params->hdr.size = 2;
-+		params->hdr.tag = ATAG_CORE;
-+		params = tag_next(params);
-+	}
-+
-+	if (initrd) {
-+		params->hdr.size = tag_size(tag_initrd);
-+		params->hdr.tag = ATAG_INITRD2;
-+		initrd_start = &params->u.initrd.start;
-+		params->u.initrd.size = initrd_len;
-+		params = tag_next(params);
-+	}
-+
-+	if (command_line) {
-+		params->hdr.size = (sizeof(struct tag_header) + command_line_len + 3) >> 2;
-+		params->hdr.tag = ATAG_CMDLINE;
-+		memcpy(params->u.cmdline.cmdline, command_line,
-+			command_line_len);
-+		params->u.cmdline.cmdline[command_line_len - 1] = '\0';
-+		params = tag_next(params);
-+	}
-+
-+	params->hdr.size = 0;
-+	params->hdr.tag = ATAG_NONE;
-+
-+	len = ((char *)params - buf) + sizeof(struct tag_header);
-+
-+	add_segment(info, buf, len, base, len);
-+
-+	if (initrd) {
-+		struct memory_range *range;
-+		int ranges;
-+		get_memory_ranges(&range, &ranges, info->kexec_flags);
-+		*initrd_start = locate_hole(info, initrd_len, getpagesize(), range[0].start + 0x800000, ULONG_MAX, INT_MAX);
-+		if (*initrd_start == ULONG_MAX)
-+			return -1;
-+		add_segment(info, initrd, initrd_len, *initrd_start, initrd_len);
-+	}
-+
-+	return 0;
-+}
-+
-+int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-+	struct kexec_info *info)
-+{
-+	unsigned long base;
-+	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
-+	unsigned int offset = 0x8000;      /* 32k offset from memory start */
-+	const char *command_line;
-+	off_t command_line_len;
-+	const char *ramdisk;
-+	char *ramdisk_buf;
-+	off_t ramdisk_length;
-+	int opt;
-+#define OPT_APPEND	'a'
-+#define OPT_RAMDISK	'r'
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ "command-line",	1, 0, OPT_APPEND },
-+		{ "append",		1, 0, OPT_APPEND },
-+		{ "initrd",		1, 0, OPT_RAMDISK },
-+		{ "ramdisk",		1, 0, OPT_RAMDISK },
-+		{ 0, 			0, 0, 0 },
-+	};
-+	static const char short_options[] = KEXEC_ARCH_OPT_STR "a:r:";
-+
-+	/*
-+	 * Parse the command line arguments
-+	 */
-+	command_line = 0;
-+	command_line_len = 0;
-+	ramdisk = 0;
-+	ramdisk_buf = 0;
-+	ramdisk_length = 0;
-+	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-+		switch(opt) {
-+		default:
-+			/* Ignore core options */
-+			if (opt < OPT_ARCH_MAX) {
-+				break;
-+			}
-+		case '?':
-+			usage();
-+			return -1;
-+		case OPT_APPEND:
-+			command_line = optarg;
-+			break;
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
-+		}
-+	}
-+	if (command_line) {
-+		command_line_len = strlen(command_line) + 1;
-+		if (command_line_len > COMMAND_LINE_SIZE)
-+			command_line_len = COMMAND_LINE_SIZE;
-+	}
-+	if (ramdisk) {
-+		ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
-+	}
-+
-+	base = locate_hole(info,len+offset,0,0,ULONG_MAX,INT_MAX);
-+	if (base == ULONG_MAX)
-+		return -1;
-+
-+	if (atag_arm_load(info, base + atag_offset,
-+			 command_line, command_line_len,
-+			 ramdisk_buf, ramdisk_length)    == -1)
-+		return -1;
-+
-+	add_segment(info, buf, len, base + offset, len);
-+
-+	info->entry = (void*)base + offset;
-+
-+	return 0;
-+}
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index 0ca3984..8d93047 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -46,6 +46,9 @@
- #ifdef __s390__
- #define __NR_kexec_load		277
- #endif
-+#ifdef __arm__
-+#define __NR_kexec_load		__NR_SYSCALL_BASE + 347  
-+#endif
- #ifndef __NR_kexec_load
- #error Unknown processor architecture.  Needs a kexec_load syscall number.
- #endif
-@@ -77,6 +80,7 @@ static inline long kexec_reboot(void)
- #define KEXEC_ARCH_PPC64   (21 << 16)
- #define KEXEC_ARCH_IA_64   (50 << 16)
- #define KEXEC_ARCH_S390    (22 << 16)
-+#define KEXEC_ARCH_ARM     (40 << 16)
- 
- #define KEXEC_MAX_SEGMENTS 16
- 
-diff --git a/purgatory/arch/arm/Makefile b/purgatory/arch/arm/Makefile
-new file mode 100644
-index 0000000..566ff42
---- /dev/null
-+++ b/purgatory/arch/arm/Makefile
-@@ -0,0 +1,6 @@
-+#
-+# Purgatory arm
-+#
-+
-+PURGATORY_SRCS += 
-+
+I am using 128M@32M value for crashkernel parameter.
 
+Thanks
+-Sachin
+
+
+
+--------------080006030209040204000908
+Content-Type: text/plain;
+ name="dmesg-log-2624rc8mm1"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="dmesg-log-2624rc8mm1"
+
+Linux version 2.6.24-rc8-mm1 (root@xxxxxxxxxx) (gcc version 4.1.1 20070105 (Red Hat 4.1.1-52)) #2 SMP Mon Feb 4 20:24:24 IST 2008
+Command line: root=/dev/sdd1 console=tty0 console=ttyS0,38400 crashkernel=128M@32M selinux=0
+BIOS-provided physical RAM map:
+ BIOS-e820: 0000000000000000 - 000000000009dc00 (usable)
+ BIOS-e820: 000000000009dc00 - 00000000000a0000 (reserved)
+ BIOS-e820: 00000000000e0000 - 0000000000100000 (reserved)
+ BIOS-e820: 0000000000100000 - 00000000c7fcae00 (usable)
+ BIOS-e820: 00000000c7fcae00 - 00000000c7fcf800 (ACPI data)
+ BIOS-e820: 00000000c7fcf800 - 00000000c8000000 (reserved)
+ BIOS-e820: 00000000fec00000 - 0000000100000000 (reserved)
+ BIOS-e820: 0000000100000000 - 0000000238000000 (usable)
+Entering add_active_range(0, 0, 157) 0 entries of 3200 used
+Entering add_active_range(0, 256, 819146) 1 entries of 3200 used
+Entering add_active_range(0, 1048576, 2326528) 2 entries of 3200 used
+end_pfn_map = 2326528
+early_ioremap(000000000000040e, 00000002) => -000002105539570
+early_iounmap(ffffffff8280040e, 00000002)
+early_ioremap(000000000009dc00, 00000002) => -000002104894464
+early_iounmap(ffffffff8289dc00, 00000002)
+early_ioremap(0000000000008000, 00001000) => -000002105507840
+early_ioremap(0000000000009000, 00001000) => -000002103406592
+early_iounmap(ffffffff82a09000, 00001000)
+early_ioremap(000000000000a000, 00001000) => -000002103402496
+early_iounmap(ffffffff82a0a000, 00001000)
+early_ioremap(000000000000b000, 00001000) => -000002103398400
+early_iounmap(ffffffff82a0b000, 00001000)
+early_ioremap(000000000000c000, 00001000) => -000002103394304
+early_iounmap(ffffffff82a0c000, 00001000)
+early_ioremap(000000000000d000, 00001000) => -000002103390208
+early_iounmap(ffffffff82a0d000, 00001000)
+early_ioremap(000000000000e000, 00001000) => -000002103386112
+early_iounmap(ffffffff82a0e000, 00001000)
+early_ioremap(000000000000f000, 00001000) => -000002103382016
+early_iounmap(ffffffff82a0f000, 00001000)
+early_ioremap(0000000000010000, 00001000) => -000002103377920
+early_iounmap(ffffffff82a10000, 00001000)
+early_ioremap(0000000000011000, 00001000) => -000002103373824
+early_iounmap(ffffffff82a11000, 00001000)
+early_iounmap(ffffffff82808000, 00001000)
+early_ioremap(00000000000f0000, 00010000) => -000002104557568
+
+DMI 2.3 present.
+early_ioremap(00000000000f83eb, 000009e1) => -000002102426645
+early_iounmap(ffffffff82af83eb, 000009e1)
+early_iounmap(ffff81000000040e, 00000002)
+early_iounmap(ffff81000009dc00, 00000400)
+early_iounmap(ffff8100000e0000, 00020000)
+ACPI: RSDP 000FDFB0, 0024 (r2 IBM   )
+early_iounmap(ffff8100000fdfb0, 00000024)
+early_iounmap(ffff8100c7fcf700, 00000024)
+early_iounmap(ffff8100c7fcf700, 0000003c)
+ACPI: XSDT C7FCF700, 003C (r1 IBM    SERONYXP     1001 IBM  45444F43)
+early_iounmap(ffff8100c7fcf700, 00000024)
+early_iounmap(ffff8100c7fcf700, 0000003c)
+ACPI: FACP C7FCF640, 0084 (r2 IBM    SERONYXP     1001 IBM  45444F43)
+early_iounmap(ffff8100c7fcf640, 00000024)
+early_iounmap(ffff8100c7fcf640, 00000084)
+ACPI: DSDT C7FCAE00, 4168 (r2 IBM    SERGEODE     1000 INTL 20041203)
+early_iounmap(ffff8100c7fcae00, 00000024)
+ACPI: FACS C7FCF500, 0040
+early_iounmap(ffff8100c7fcf500, 00000024)
+ACPI: APIC C7FCF580, 009C (r1 IBM    SERONYXP     1001 IBM  45444F43)
+early_iounmap(ffff8100c7fcf580, 00000024)
+ACPI: MCFG C7FCF540, 003C (r1 IBM    SERONYXP     1001 IBM  45444F43)
+early_iounmap(ffff8100c7fcf540, 00000024)
+early_iounmap(ffff8100c7fcae00, 00000024)
+early_iounmap(ffff8100c7fcae00, 00000024)
+early_iounmap(ffff8100c7fcae00, 00000024)
+early_iounmap(ffff8100c7fcae00, 00000024)
+No NUMA configuration found
+Faking a node at 0000000000000000-0000000238000000
+Entering add_active_range(0, 0, 157) 0 entries of 3200 used
+Entering add_active_range(0, 256, 819146) 1 entries of 3200 used
+Entering add_active_range(0, 1048576, 2326528) 2 entries of 3200 used
+Bootmem setup node 0 0000000000000000-0000000238000000
+early_ioremap(0000000000000000, 00000400) => -000002103443456
+early_iounmap(ffffffff82a00000, 00000400)
+early_ioremap(000000000009fc00, 00000400) => -000002102789120
+early_iounmap(ffffffff82a9fc00, 00000400)
+early_ioremap(00000000000f0000, 00010000) => -000002102460416
+early_iounmap(ffffffff82af0000, 00010000)
+early_ioremap(000000000000040e, 00000002) => -000002103442418
+early_iounmap(ffffffff82a0040e, 00000002)
+early_ioremap(000000000009dc00, 00001000) => -000002102797312
+early_iounmap(ffffffff82a9dc00, 00001000)
+DEBUG crash_base = 2000000 crash_size = 8000000
+hm, page 02a9d000 reserved twice.
+crashkernel reservation failed - memory is in use
+ [ffffe20000000000-ffffe200001fffff] PMD ->ffff810001200000 on node 0
+ [ffffe20000200000-ffffe200003fffff] PMD ->ffff810001600000 on node 0
+ [ffffe20000400000-ffffe200005fffff] PMD ->ffff810001a00000 on node 0
+ [ffffe20000600000-ffffe200007fffff] PMD ->ffff810001e00000 on node 0
+ [ffffe20000800000-ffffe200009fffff] PMD ->ffff810002200000 on node 0
+ [ffffe20000a00000-ffffe20000bfffff] PMD ->ffff810002600000 on node 0
+ [ffffe20000c00000-ffffe20000dfffff] PMD ->ffff810002e00000 on node 0
+ [ffffe20000e00000-ffffe20000ffffff] PMD ->ffff810003200000 on node 0
+ [ffffe20001000000-ffffe200011fffff] PMD ->ffff810003600000 on node 0
+ [ffffe20001200000-ffffe200013fffff] PMD ->ffff810003a00000 on node 0
+ [ffffe20001400000-ffffe200015fffff] PMD ->ffff810003e00000 on node 0
+ [ffffe20001600000-ffffe200017fffff] PMD ->ffff810004200000 on node 0
+ [ffffe20001800000-ffffe200019fffff] PMD ->ffff810004600000 on node 0
+ [ffffe20001a00000-ffffe20001bfffff] PMD ->ffff810004a00000 on node 0
+ [ffffe20001c00000-ffffe20001dfffff] PMD ->ffff810004e00000 on node 0
+ [ffffe20001e00000-ffffe20001ffffff] PMD ->ffff810005200000 on node 0
+ [ffffe20002000000-ffffe200021fffff] PMD ->ffff810005600000 on node 0
+ [ffffe20002200000-ffffe200023fffff] PMD ->ffff810005a00000 on node 0
+ [ffffe20002400000-ffffe200025fffff] PMD ->ffff810005e00000 on node 0
+ [ffffe20002600000-ffffe200027fffff] PMD ->ffff810006200000 on node 0
+ [ffffe20002800000-ffffe200029fffff] PMD ->ffff810006600000 on node 0
+ [ffffe20002a00000-ffffe20002bfffff] PMD ->ffff810006a00000 on node 0
+ [ffffe20003800000-ffffe200039fffff] PMD ->ffff810006e00000 on node 0
+ [ffffe20003a00000-ffffe20003bfffff] PMD ->ffff810007200000 on node 0
+ [ffffe20003c00000-ffffe20003dfffff] PMD ->ffff810007600000 on node 0
+ [ffffe20003e00000-ffffe20003ffffff] PMD ->ffff810007a00000 on node 0
+ [ffffe20004000000-ffffe200041fffff] PMD ->ffff810007e00000 on node 0
+ [ffffe20004200000-ffffe200043fffff] PMD ->ffff810008200000 on node 0
+ [ffffe20004400000-ffffe200045fffff] PMD ->ffff810008600000 on node 0
+ [ffffe20004600000-ffffe200047fffff] PMD ->ffff810008a00000 on node 0
+ [ffffe20004800000-ffffe200049fffff] PMD ->ffff810008e00000 on node 0
+ [ffffe20004a00000-ffffe20004bfffff] PMD ->ffff810009200000 on node 0
+ [ffffe20004c00000-ffffe20004dfffff] PMD ->ffff810009600000 on node 0
+ [ffffe20004e00000-ffffe20004ffffff] PMD ->ffff810009a00000 on node 0
+ [ffffe20005000000-ffffe200051fffff] PMD ->ffff810009e00000 on node 0
+ [ffffe20005200000-ffffe200053fffff] PMD ->ffff81000a200000 on node 0
+ [ffffe20005400000-ffffe200055fffff] PMD ->ffff81000a600000 on node 0
+ [ffffe20005600000-ffffe200057fffff] PMD ->ffff81000aa00000 on node 0
+ [ffffe20005800000-ffffe200059fffff] PMD ->ffff81000ae00000 on node 0
+ [ffffe20005a00000-ffffe20005bfffff] PMD ->ffff81000b200000 on node 0
+ [ffffe20005c00000-ffffe20005dfffff] PMD ->ffff81000b600000 on node 0
+ [ffffe20005e00000-ffffe20005ffffff] PMD ->ffff81000ba00000 on node 0
+ [ffffe20006000000-ffffe200061fffff] PMD ->ffff81000be00000 on node 0
+ [ffffe20006200000-ffffe200063fffff] PMD ->ffff81000c200000 on node 0
+ [ffffe20006400000-ffffe200065fffff] PMD ->ffff81000c600000 on node 0
+ [ffffe20006600000-ffffe200067fffff] PMD ->ffff81000ca00000 on node 0
+ [ffffe20006800000-ffffe200069fffff] PMD ->ffff81000ce00000 on node 0
+ [ffffe20006a00000-ffffe20006bfffff] PMD ->ffff81000d200000 on node 0
+ [ffffe20006c00000-ffffe20006dfffff] PMD ->ffff81000d600000 on node 0
+ [ffffe20006e00000-ffffe20006ffffff] PMD ->ffff81000da00000 on node 0
+ [ffffe20007000000-ffffe200071fffff] PMD ->ffff81000de00000 on node 0
+ [ffffe20007200000-ffffe200073fffff] PMD ->ffff81000e200000 on node 0
+ [ffffe20007400000-ffffe200075fffff] PMD ->ffff81000e600000 on node 0
+ [ffffe20007600000-ffffe200077fffff] PMD ->ffff81000ea00000 on node 0
+ [ffffe20007800000-ffffe200079fffff] PMD ->ffff81000ee00000 on node 0
+ [ffffe20007a00000-ffffe20007bfffff] PMD ->ffff81000f200000 on node 0
+ [ffffe20007c00000-ffffe20007dfffff] PMD ->ffff81000f600000 on node 0
+sizeof(struct page) = 56
+Zone PFN ranges:
+  DMA             0 ->     4096
+  DMA32        4096 ->  1048576
+  Normal    1048576 ->  2326528
+Movable zone start PFN for each node
+early_node_map[3] active PFN ranges
+    0:        0 ->      157
+    0:      256 ->   819146
+    0:  1048576 ->  2326528
+On node 0 totalpages: 2096999
+  DMA zone: 56 pages used for memmap
+  DMA zone: 1959 pages reserved
+  DMA zone: 1982 pages, LIFO batch:0
+  DMA32 zone: 14280 pages used for memmap
+  DMA32 zone: 800770 pages, LIFO batch:31
+  Normal zone: 17472 pages used for memmap
+  Normal zone: 1260480 pages, LIFO batch:31
+  Movable zone: 0 pages used for memmap
+ACPI: PM-Timer IO Port: 0x588
+ACPI: Local APIC address 0xfee00000
+ACPI: LAPIC (acpi_id[0x00] lapic_id[0x00] enabled)
+Processor #0 (Bootup-CPU)
+ACPI: LAPIC (acpi_id[0x01] lapic_id[0x06] enabled)
+Processor #6
+ACPI: LAPIC (acpi_id[0x02] lapic_id[0x01] enabled)
+Processor #1
+ACPI: LAPIC (acpi_id[0x03] lapic_id[0x07] enabled)
+Processor #7
+ACPI: LAPIC_NMI (acpi_id[0x00] dfl dfl lint[0x1])
+ACPI: LAPIC_NMI (acpi_id[0x01] dfl dfl lint[0x1])
+ACPI: LAPIC_NMI (acpi_id[0x02] dfl dfl lint[0x1])
+ACPI: LAPIC_NMI (acpi_id[0x03] dfl dfl lint[0x1])
+ACPI: IOAPIC (id[0x0e] address[0xfec00000] gsi_base[0])
+IOAPIC[0]: apic_id 14, address 0xfec00000, GSI 0-23
+ACPI: IOAPIC (id[0x0d] address[0xfec80000] gsi_base[24])
+IOAPIC[1]: apic_id 13, address 0xfec80000, GSI 24-47
+ACPI: IOAPIC (id[0x0c] address[0xfec80400] gsi_base[48])
+IOAPIC[2]: apic_id 12, address 0xfec80400, GSI 48-71
+ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 high level)
+ACPI: IRQ0 used by override.
+ACPI: IRQ2 used by override.
+ACPI: IRQ9 used by override.
+Setting APIC routing to flat
+Using ACPI (MADT) for SMP configuration information
+Allocating PCI resources starting at cc000000 (gap: c8000000:36c00000)
+SMP: Allowing 4 CPUs, 0 hotplug CPUs
+PERCPU: Allocating 66848 bytes of per cpu data
+Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 2063232
+Policy zone: Normal
+Kernel command line: root=/dev/sdd1 console=tty0 console=ttyS0,38400 crashkernel=128M@32M selinux=0
+Initializing CPU#0
+PID hash table entries: 4096 (order: 12, 32768 bytes)
+TSC calibrated against PM_TIMER
+Marking TSC unstable due to TSCs unsynchronized
+
+<< Rest of the log messages were removed >>
+
+--------------080006030209040204000908
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------080006030209040204000908--
+
