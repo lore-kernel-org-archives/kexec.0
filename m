@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pip23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JLsye-0002Vx-Pw
-	for kexec@lists.infradead.org; Mon, 04 Feb 2008 04:30:48 +0000
-Date: Mon, 4 Feb 2008 13:29:32 +0900
+	id 1JLt4G-0002rp-6k
+	for kexec@lists.infradead.org; Mon, 04 Feb 2008 04:36:35 +0000
+Date: Mon, 4 Feb 2008 13:35:31 +0900
 From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: Still on kexec for SH4 architecture, please help
-Message-ID: <20080204042932.GA27300@linux-sh.org>
-References: <971512.87994.qm@web26713.mail.ukl.yahoo.com>
+Subject: [PATCH] sh: Remove hardcoded PAGE_SIZE in NetBSD loader
+Message-ID: <20080204043531.GB27300@linux-sh.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <971512.87994.qm@web26713.mail.ukl.yahoo.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,60 +21,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Matteo Pampolini <matteo_pampolini@yahoo.it>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Horms <horms@verge.net.au>
 
-On Fri, Feb 01, 2008 at 02:35:57PM +0100, Matteo Pampolini wrote:
-> ./kexec --load --type=zImage-sh
-> --append="console=ttyAS1,115200" --empty-zero=84401000
-> 
-[snip]
+The Linux host supports a multitude of page sizes, so having this
+hardcoded doesn't really help matters. This also has the benefit of
+killing off dependence on asm/ headers when none is needed. While
+I'm not suggesting that anyone actually boot NetBSD, without this,
+my build also ends up breaking.
 
-> Starting new kernel
-> kexec information
->   segment[0]: 0x0c001000 - 0x0c002000 (0x00001000)
->   segment[1]: 0x0c210000 - 0x0c387000 (0x00177000)
->   start     : 0x8c210000
-> 
-> illegal slot instruction: 01a0 [#1]
-> 
-> Pid : 92, Comm:                kexec
-> PC is at 0x8c210008
-> PC  : 8c210008 SP  : 8a710000 SR  : 400080f0 TEA :
-> 2966e480    Not tainted
-> R0  : 00000004 R1  : fffffff0 R2  : a0000000 R3  :
-> 00000000
-> R4  : aa7105ec R5  : ac387000 R6  : 8c210000 R7  :
-> 80000000
-> R8  : 00001000 R9  : a0000000 R10 : 8a89c600 R11 :
-> 8a70f000
-> R12 : 8441ab00 R13 : 0a710002 R14 : 00000000
-> MACH: 00000000 MACL: 00000000 GBR : 29573b18 PR  :
-> 84411b02
-> 
-Yes, that's fairly obvious. kexec is trying to load the zImage in to RAM
-which simply doesn't exist at this location on your platform. The
-original kexec/SH port was done on a landisk, if you take a look at
-arch/sh/configs/landisk_defconfig in the kernel you can see where these
-values come from.
+Signed-off-by: Paul Mundt <lethal@linux-sh.org>
 
-kexec/arch/sh/kexec-zImage-sh.c is pretty sparse at the moment, and only
-factors in the empty zero page. You likely want to extend this for things
-like the boot link offset and other values specific to your platform.
+---
 
-> The empty_zero value is grabbed from System.map, but
-> please tell me, why start is 8c210000? I had a look at
+ kexec/arch/sh/kexec-netbsd-sh.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-P1 (0x80000000) + memory start (0x0c000000) + 0x00210000 which is or'ed
-in in zImage_sh_load().
-
-> kexec sources for SH, saw that some masks are applied
-> to addresses, but did not understand why.
-> 
-Mostly because it was written with one target in mind, and is in need of
-some hacking so it's more generally useful. I suggest you follow the
-approach that the empty zero page definition uses, and apply that for
-things like the boot link offset and the other relevant values.
+diff --git a/kexec/arch/sh/kexec-netbsd-sh.c b/kexec/arch/sh/kexec-netbsd-sh.c
+index a751420..07c7f26 100644
+--- a/kexec/arch/sh/kexec-netbsd-sh.c
++++ b/kexec/arch/sh/kexec-netbsd-sh.c
+@@ -25,13 +25,10 @@
+ #include "../../kexec.h"
+ #include "../../kexec-elf.h"
+ #include <arch/options.h>
+-#include <asm/page.h>
+ 
+ static const int probe_debug = 0;
+ const extern unsigned char netbsd_booter[];
+ 
+-#define PAGE_ALIGN(addr)        (((addr)+PAGE_SIZE-1)&PAGE_MASK)
+-
+ /*
+  * netbsd_sh_probe - sanity check the elf image
+  *
+@@ -62,7 +59,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
+ {
+ 	const char *howto, *miniroot;
+-	unsigned long entry, start, size;
++	unsigned long entry, start, size, psz;
+ 	char *miniroot_buf;
+ 	off_t miniroot_length;
+ 	unsigned int howto_value;
+@@ -105,6 +102,8 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 	        howto_value = strtol(howto, NULL, 0);
+ 	}
+ 
++	psz = getpagesize();
++
+ 	/* Parse the Elf file */
+ 	{
+ 	        Elf32_Ehdr *ehdr;
+@@ -122,7 +121,8 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 		if(size < bbs){
+ 		        size = bbs;
+ 		}
+-		size  = PAGE_ALIGN(size);
++
++		size = (size + psz - 1) & ~(psz - 1);
+ 		memset(&img[bbs], 0, size-bbs);
+ 		add_segment(info, img, size, start, size);
+ 		start += size;
+@@ -133,7 +133,7 @@ int netbsd_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (miniroot) {
+ 		miniroot_buf = slurp_file(miniroot, &miniroot_length);
+ 		howto_value |= 0x200;
+-		size = PAGE_ALIGN(miniroot_length);
++		size = (miniroot_length + psz - 1) & ~(psz - 1);
+ 		add_segment(info, miniroot_buf, size, start, size);
+ 		start += size;
+ 	}
 
 _______________________________________________
 kexec mailing list
