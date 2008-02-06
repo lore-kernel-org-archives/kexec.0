@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JMIra-0007Tx-6p
-	for kexec@lists.infradead.org; Tue, 05 Feb 2008 08:09:13 +0000
-Date: Tue, 5 Feb 2008 09:09:00 +0100
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [mm] Crashkernel memory reservation fails with 2.6.24-rc8-mm1
-Message-ID: <20080205080900.GB30563@suse.de>
-References: <47A7391F.2020408@in.ibm.com> <20080204183810.GE16021@redhat.com>
-	<20080204193524.GA11104@suse.de> <47A7F53C.8090606@in.ibm.com>
+Received: from smtp-out2.libero.it ([212.52.84.42])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JMpl5-0001bm-9z
+	for kexec@lists.infradead.org; Wed, 06 Feb 2008 19:16:41 +0000
+Received: from MailRelay10.libero.it (192.168.32.119) by smtp-out2.libero.it
+	(7.3.120) id 4688F31B166966DA for kexec@lists.infradead.org;
+	Wed, 6 Feb 2008 19:50:00 +0100
+Date: Wed,  6 Feb 2008 19:50:00 +0100
+Message-Id: <JVTYZC$E64E1D094E8A300A7302EDC040AEE85A@libero.it>
+Subject: Re: Still on kexec for SH4 architecture, please help
 MIME-Version: 1.0
-In-Reply-To: <47A7F53C.8090606@in.ibm.com>
+From: "paolo\.cortesi\@inwind\.it" <paolo.cortesi@inwind.it>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +19,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0709787498=="
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Sachin P. Sant" <sachinp@in.ibm.com>
-Cc: kexec@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: lethal <lethal@linux-sh.org>
+Cc: kexec <kexec@lists.infradead.org>, matteo_pampolini <matteo_pampolini@yahoo.it>
+
+Hello Paul,
+I am a collegue of Matteo Pampolini; thanks a lot about your last suggest, =
+but I have still one problem.
+
+I changed the:
+P1 (0x80000000) + memory start (0x0c000000) + 0x00210000 or'ed in zImage_sh=
+_load() that you suggested
+in such way:
+CONFIG_PAGE_OFFSET(0x80000000) + CONFIG_MEMORY_START (0x04400000) + CONFIG_=
+BOOT_LINK_OFFSET (0x0080000)
+
+and I changed the initiliaziation start memory range to set available my CO=
+NFIG_MEMORY_START address.
+
+The log that I got is the follow and I can=B4t see the new kernel really re=
+stating:
+
+./kexec -l new_zImage --type=3DzImage-sh --append=3D"console=3DttyAS1,11520=
+0" --empty-zero=3D84401000
+
+....
+....
+empty_zero =3D 0x04401000
+area =3D 0x04400000
+Starting new kernel
+kexec information
+  segment[0]: 0x04401000 - 0x04402000 (0x00001000)
+  segment[1]: 0x04c00000 - 0x04d5a000 (0x0015a000)
+  start     : 0x84c00000
+
+Do you still see any error?
+
+Sincerely
+
+Paolo Cortesi
 
 
---===============0709787498==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+pHx0qQiF2pBVqBT"
-Content-Disposition: inline
-
-
---+pHx0qQiF2pBVqBT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-* Sachin P. Sant <sachinp@in.ibm.com> [2008-02-05 06:33]:
-> Bernhard Walle wrote:
->> * Vivek Goyal <vgoyal@redhat.com> [2008-02-04 19:38]:
->>  =20
->>> Bernahard, any idea who is the competitor here?
->>>    =20
->> Hm ..., can you boot the kernel without crashkernel=3D and provide the
->> /proc/iomem?
->>  =20
-> Attached is the /proc/iomem output with and without crashkernel
-> parameter.
-
-Looks ok. In my case when I added the warning message the kernel BSS
-was too large. But that doesn't seem to be the case here, BSS ends
-with 9M and you use 16M as start address for the crashkernel.
-
-
-        Bernhard
-
---+pHx0qQiF2pBVqBT
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.4-svn0 (GNU/Linux)
-
-iD8DBQFHqBmciGU2lt2vZFQRAmWeAJ9llKxtEBcATo8q/CHr0AjvAUsfZACgnDIc
-F4jkDcLlPNKMrX7yRDuXST0=
-=3qDb
------END PGP SIGNATURE-----
-
---+pHx0qQiF2pBVqBT--
-
-
---===============0709787498==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0709787498==--
-
