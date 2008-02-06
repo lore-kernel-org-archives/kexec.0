@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JMqzt-0006PR-7T
-	for kexec@lists.infradead.org; Wed, 06 Feb 2008 20:36:03 +0000
-Date: Wed, 6 Feb 2008 15:35:51 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH], issue EOI to APIC prior to calling crash_kexec in
-	die_nmi path
-Message-ID: <20080206203551.GB11886@redhat.com>
+	id 1JMrRF-0001L2-7q
+	for kexec@lists.infradead.org; Wed, 06 Feb 2008 21:04:19 +0000
+Date: Wed, 6 Feb 2008 16:04:07 -0500
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH],
+	issue EOI to APIC prior to calling crash_kexec in die_nmi path
+Message-ID: <20080206210407.GB25183@hmsendeavour.rdu.redhat.com>
 References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
 	<20080206194040.GA11886@redhat.com>
 	<20080206201223.GA25183@hmsendeavour.rdu.redhat.com>
+	<47AA16CA.6000003@zytor.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080206201223.GA25183@hmsendeavour.rdu.redhat.com>
+In-Reply-To: <47AA16CA.6000003@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +27,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Feb 06, 2008 at 03:12:23PM -0500, Neil Horman wrote:
-> On Wed, Feb 06, 2008 at 02:40:40PM -0500, Vivek Goyal wrote:
-> > On Wed, Feb 06, 2008 at 02:25:55PM -0500, Neil Horman wrote:
-> > > Hey all-
-> > > 	A hang on kdump was reported to me awhile back, only when systems died
-> > > via nmi watchdog panic.  The hang wouldn't always be in the same place, but it
-> > > would usually be somewhere down in purgatory.  In looking at the code, it
-> > > occured to me that since, during an nmi interrupt, we won't be able to handle
-> > > additional interrupts, that we won't be able to halt the other processors on a
-> > > system like we try to do in machine_crash_shutdown.  As such, it appears that
-> > > leaving the other cpus running exposes us to the risk that another processor
-> > > will encounter an error and halt the system while we are trying to boot the
-> > > kdump kernel, and that can result in a hang.  I wrote the attached patch to end
-> > > the nmi interrupt prior to calling crash_kexec from within die_nmi, and testing
-> > > here has proven successfull.
-> > > 
-> > 
-> > Hi Neil,
-> > 
-> > Why wouldn't I be able to stop other cpus if I am inside an NMI handler? I
-> > just need to send an NMI IPI to other cpus and they should be able to
-> > receive and handle it?
-> > 
-> > Thanks
-> > Vivek
-> > 
-> Can an APIC accept an NMI while already handling an NMI?  I didn't think they
-> would interrupt one another, but rather, pend until such time as the previous
-> NMI was cleared
-> Neil
+On Wed, Feb 06, 2008 at 12:21:30PM -0800, H. Peter Anvin wrote:
+> Neil Horman wrote:
+> >Can an APIC accept an NMI while already handling an NMI?  I didn't think 
+> >they
+> >would interrupt one another, but rather, pend until such time as the 
+> >previous
+> >NMI was cleared
+> 
+> The CPU certainly won't (there is a hidden flag that's cleared on IRET 
+> which disables NMI; it's possible to re-enable NMI by executing a dummy 
+> IRET inside the NMI handler.)
+> 
+> 	-hpa
 
-Hi Neil,
+So that would be another solution I would expect.  Would you rather I
+investigate that, or is the proposed solution more reasonable?
 
-CPU will not accept another NMI if it is already handling the NMI but in
-this case only crashing CPU is in NMI. Other cpus are not and they will
-accept the NMI (When crashing cpu sends NMI IPI for stopping these).
+Neil
 
-So I am not able to understand how clearing the NMI on crashing cpu is
-helpful?
 
-Thanks
-Vivek
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
