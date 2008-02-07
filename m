@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9])
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JMuna-0003tG-Q7
-	for kexec@lists.infradead.org; Thu, 07 Feb 2008 00:39:38 +0000
-Date: Thu, 7 Feb 2008 01:39:18 +0100
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH], issue EOI to APIC prior to calling crash_kexec in
-	die_nmi path
-Message-ID: <20080207003918.GA29943@elte.hu>
+	id 1JMvdr-0001dL-5h
+	for kexec@lists.infradead.org; Thu, 07 Feb 2008 01:33:37 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH],
+	issue EOI to APIC prior to calling crash_kexec in die_nmi path
 References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
-	<20080206220001.GA15155@elte.hu>
-	<20080206224805.GD11886@redhat.com>
+	<20080206220001.GA15155@elte.hu> <20080206224805.GD11886@redhat.com>
 	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
 	<m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
+	<20080207003918.GA29943@elte.hu>
+Date: Wed, 06 Feb 2008 18:30:21 -0700
+In-Reply-To: <20080207003918.GA29943@elte.hu> (Ingo Molnar's message of "Thu, 
+	7 Feb 2008 01:39:18 +0100")
+Message-ID: <m1bq6td042.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +28,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ingo Molnar <mingo@elte.hu>
 Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
+Ingo Molnar <mingo@elte.hu> writes:
 
-* Eric W. Biederman <ebiederm@xmission.com> wrote:
+> * Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+>> Looking at the patch the local_irq_enable() is totally bogus.  As soon 
+>> was we hit machine_crash_shutdown the first thing we do is disable 
+>> irqs.
+>
+> yeah.
+>
+>> I'm wondering if someone was using the switch cpus on crash patch that 
+>> was floating around.  That would require the ipis to work.
+>> 
+>> I don't know if nmi_exit makes sense.  There are enough layers of 
+>> abstraction in that piece of code I can't quickly spot the part that 
+>> is banging the hardware.
+>> 
+>> The location of nmi_exit in the patch is clearly wrong.  crash_kexec 
+>> is a noop if we don't have a crash kernel loaded (and if we are not 
+>> the first cpu into it), so if we don't execute the crash code 
+>> something weird may happen.  Further the code is just more 
+>> maintainable if that kind of code lives in machine_crash_shutdown.
+>
+> nmi_exit() has no hw effects - it's just our own bookeeping.
 
-> Looking at the patch the local_irq_enable() is totally bogus.  As soon 
-> was we hit machine_crash_shutdown the first thing we do is disable 
-> irqs.
+Alright so that should have no hardware effect then.
 
-yeah.
+> the hw knows that we finished the NMI when we do an iret. Perhaps that's 
+> the bug or side-effect that made the difference: via enabling irqs we 
+> get an irq entry, and that does an iret and clears the NMI nested state 
+> - allowing the kexec context to proceed? I suspect kexec() will do an 
+> iret eventually (at minimum in the booted up kernel's context) - all 
+> NMIs are blocked up to that point and maybe the APIC doesnt really like 
+> being frobbed in that state? In any case, the local_irq_enable() is just 
+> wrong - it's the worst thing a crashing kernel can do. Perhaps doing an 
+> intentional iret with a prepared stack-let that just restores to 
+> still-irqs-off state and jumps to the next instruction could 'exit' the 
+> NMI context without really having to exit it in the kernel code flow?
 
-> I'm wondering if someone was using the switch cpus on crash patch that 
-> was floating around.  That would require the ipis to work.
-> 
-> I don't know if nmi_exit makes sense.  There are enough layers of 
-> abstraction in that piece of code I can't quickly spot the part that 
-> is banging the hardware.
-> 
-> The location of nmi_exit in the patch is clearly wrong.  crash_kexec 
-> is a noop if we don't have a crash kernel loaded (and if we are not 
-> the first cpu into it), so if we don't execute the crash code 
-> something weird may happen.  Further the code is just more 
-> maintainable if that kind of code lives in machine_crash_shutdown.
+Well I think this is slightly on the wrong track.  The original patch description
+said  we get as far as purgatory.  Purgatory is the bit of C code form
+/sbin/kexec that runs just before our second kernel.  It sets up
+arguments and verify the target kernel has a valid sha256sum.  If
+purgatory detects data corruption it spins, to prevent a corrupt
+recovery kernel from doing something nasty.
 
-nmi_exit() has no hw effects - it's just our own bookeeping.
+It appears that the primary crash_kexec path is working fine.
 
-the hw knows that we finished the NMI when we do an iret. Perhaps that's 
-the bug or side-effect that made the difference: via enabling irqs we 
-get an irq entry, and that does an iret and clears the NMI nested state 
-- allowing the kexec context to proceed? I suspect kexec() will do an 
-iret eventually (at minimum in the booted up kernel's context) - all 
-NMIs are blocked up to that point and maybe the APIC doesnt really like 
-being frobbed in that state? In any case, the local_irq_enable() is just 
-wrong - it's the worst thing a crashing kernel can do. Perhaps doing an 
-intentional iret with a prepared stack-let that just restores to 
-still-irqs-off state and jumps to the next instruction could 'exit' the 
-NMI context without really having to exit it in the kernel code flow?
+The original description speculated that we had non-stopped cpus that
+were telling the hardware to shut off.
 
-	Ingo
+I don't see what the hang is.  However the goal apparently is to make
+the kexec on panic path more robust so that we can take crash dumps in
+more strange cases.
+
+We can get NMI from the nmi watchdogs so it is possible this happens
+on legitimate hardware so there is a chance this is deterministic and
+that we can get enough information to debug and fix the original
+error.
+
+If part of the problem is getting to crash_kexec my inclination is to
+move the call to crash_kexec up as early as possible in die_nmi.  As
+we may simply be hanging in printk or something stupid like that.
+
+It is weird that only the 32bit die_nmi path calls bust_spinlocks.
+
+I'm not really happy with the secondary cpus taking whole notify_die
+path as that is more general purpose infrastructure that might go
+bad.  However it doesn't appear broken, and it should not be critical
+to the crash dump process.
+
+Eric
 
 _______________________________________________
 kexec mailing list
