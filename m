@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JMvdr-0001dL-5h
-	for kexec@lists.infradead.org; Thu, 07 Feb 2008 01:33:37 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH],
-	issue EOI to APIC prior to calling crash_kexec in die_nmi path
-References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
-	<20080206220001.GA15155@elte.hu> <20080206224805.GD11886@redhat.com>
-	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
-	<m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
-	<20080207003918.GA29943@elte.hu>
-Date: Wed, 06 Feb 2008 18:30:21 -0700
-In-Reply-To: <20080207003918.GA29943@elte.hu> (Ingo Molnar's message of "Thu, 
-	7 Feb 2008 01:39:18 +0100")
-Message-ID: <m1bq6td042.fsf@ebiederm.dsl.xmission.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JMxFO-0002Ed-Pm
+	for kexec@lists.infradead.org; Thu, 07 Feb 2008 03:16:29 +0000
+Message-Id: <47AA7832.9080909@mxs.nes.nec.co.jp>
+Date: Thu, 07 Feb 2008 12:17:06 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
+Subject: makedumpfile-1.2.4: Add linux-2.6.24 support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,87 +16,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1010948319=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Nguyen Anh Quynh <aquynh@gmail.com>, Akio Takebe <takebe_akio@jp.fujitsu.com>
 
-Ingo Molnar <mingo@elte.hu> writes:
+--===============1010948319==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-> * Eric W. Biederman <ebiederm@xmission.com> wrote:
->
->> Looking at the patch the local_irq_enable() is totally bogus.  As soon 
->> was we hit machine_crash_shutdown the first thing we do is disable 
->> irqs.
->
-> yeah.
->
->> I'm wondering if someone was using the switch cpus on crash patch that 
->> was floating around.  That would require the ipis to work.
->> 
->> I don't know if nmi_exit makes sense.  There are enough layers of 
->> abstraction in that piece of code I can't quickly spot the part that 
->> is banging the hardware.
->> 
->> The location of nmi_exit in the patch is clearly wrong.  crash_kexec 
->> is a noop if we don't have a crash kernel loaded (and if we are not 
->> the first cpu into it), so if we don't execute the crash code 
->> something weird may happen.  Further the code is just more 
->> maintainable if that kind of code lives in machine_crash_shutdown.
->
-> nmi_exit() has no hw effects - it's just our own bookeeping.
+Hi,
 
-Alright so that should have no hardware effect then.
+makedumpfile version 1.2.4 is released.
+Please test it. Your opinions/comments are welcome.
 
-> the hw knows that we finished the NMI when we do an iret. Perhaps that's 
-> the bug or side-effect that made the difference: via enabling irqs we 
-> get an irq entry, and that does an iret and clears the NMI nested state 
-> - allowing the kexec context to proceed? I suspect kexec() will do an 
-> iret eventually (at minimum in the booted up kernel's context) - all 
-> NMIs are blocked up to that point and maybe the APIC doesnt really like 
-> being frobbed in that state? In any case, the local_irq_enable() is just 
-> wrong - it's the worst thing a crashing kernel can do. Perhaps doing an 
-> intentional iret with a prepared stack-let that just restores to 
-> still-irqs-off state and jumps to the next instruction could 'exit' the 
-> NMI context without really having to exit it in the kernel code flow?
+Changelog:
+o Add linux-2.6.24 support.
+  An old makedumpfile didn't support linux-2.6.24, and it displays the
+  following message on linux-2.6.24:
+    The kernel version is not supported.
+    The created dumpfile may be incomplete.
 
-Well I think this is slightly on the wrong track.  The original patch description
-said  we get as far as purgatory.  Purgatory is the bit of C code form
-/sbin/kexec that runs just before our second kernel.  It sets up
-arguments and verify the target kernel has a valid sha256sum.  If
-purgatory detects data corruption it spins, to prevent a corrupt
-recovery kernel from doing something nasty.
+  A new makedumpfile was confirmed that it runs currently on linux-2.6.24,
+  and it supports linux-2.6.24. So it doesn't display the above message.
 
-It appears that the primary crash_kexec path is working fine.
+o Add xen kernel support to the STDOUT feature (-F option).
+  This patch was provided by Akio Takebe.
+  http://lists.infradead.org/pipermail/kexec/2008-January/001250.html
 
-The original description speculated that we had non-stopped cpus that
-were telling the hardware to shut off.
+o Fix the method looking for .debug_info section in get_debug_info().
+  An old makedumpfile didn't quit the loop even if finding .debug_info
+  section. The bug doesn't affect the program's functionality, but it
+  should be fixed.
+  This patch was provided by Nguyen Anh Quynh.
 
-I don't see what the hang is.  However the goal apparently is to make
-the kexec on panic path more robust so that we can take crash dumps in
-more strange cases.
+o Fix the problem that -d1 option cannot be specified without -x/-i option.
+  -d1 option excludes pages filled with zero, and it should be able to run
+  without -x/-i option.
 
-We can get NMI from the nmi watchdogs so it is possible this happens
-on legitimate hardware so there is a chance this is deterministic and
-that we can get enough information to debug and fix the original
-error.
 
-If part of the problem is getting to crash_kexec my inclination is to
-move the call to crash_kexec up as early as possible in die_nmi.  As
-we may simply be hanging in printk or something stupid like that.
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
 
-It is weird that only the 32bit die_nmi path calls bust_spinlocks.
+Download:
+  You can download the latest makedumpfile(ver. 1.2.4) from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
 
-I'm not really happy with the secondary cpus taking whole notify_die
-path as that is more general purpose infrastructure that might go
-bad.  However it doesn't appear broken, and it should not be critical
-to the crash dump process.
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-1.2.4.tar.gz"
+  2. "cd makedumpfile"
+  3. "make; make install"
 
-Eric
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+
+--===============1010948319==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1010948319==--
