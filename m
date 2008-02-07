@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JMu2h-0005OT-Go
-	for kexec@lists.infradead.org; Wed, 06 Feb 2008 23:51:09 +0000
-Date: Wed, 6 Feb 2008 18:50:47 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH], issue EOI to APIC prior to calling crash_kexec in
-	die_nmi path
-Message-ID: <20080206235047.GE11886@redhat.com>
+Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JMuj8-0003WJ-50
+	for kexec@lists.infradead.org; Thu, 07 Feb 2008 00:35:00 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [PATCH],
+	issue EOI to APIC prior to calling crash_kexec in die_nmi path
 References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
-	<20080206220001.GA15155@elte.hu>
-	<20080206224805.GD11886@redhat.com>
+	<20080206220001.GA15155@elte.hu> <20080206224805.GD11886@redhat.com>
 	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
+Date: Wed, 06 Feb 2008 17:31:11 -0700
+In-Reply-To: <20080206233657.GB12393@elte.hu> (Ingo Molnar's message of "Thu, 
+	7 Feb 2008 00:36:57 +0100")
+Message-ID: <m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080206233657.GB12393@elte.hu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,18 +27,18 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
 To: Ingo Molnar <mingo@elte.hu>
-Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de
+Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Feb 07, 2008 at 12:36:57AM +0100, Ingo Molnar wrote:
-> 
+Ingo Molnar <mingo@elte.hu> writes:
+
 > * H. Peter Anvin <hpa@zytor.com> wrote:
-> 
-> >> I am wondering if interrupts are disabled on crashing cpu or if 
-> >> crashing cpu is inside die_nmi(), how would it stop/prevent delivery 
-> >> of NMI IPI to other cpus.
-> >
-> > I don't see how it would.
-> 
+>
+>>> I am wondering if interrupts are disabled on crashing cpu or if 
+>>> crashing cpu is inside die_nmi(), how would it stop/prevent delivery 
+>>> of NMI IPI to other cpus.
+>>
+>> I don't see how it would.
+>
 > cross-CPU IPIs are a bit fragile on some PC platforms. So if the kexec 
 > code relies on getting IPIs to all other CPUs, it might not be able to 
 > do it reliably. There might be limitations on how many APIC irqs there 
@@ -47,24 +46,45 @@ On Thu, Feb 07, 2008 at 12:36:57AM +0100, Ingo Molnar wrote:
 > not servicing irqs then stuff gets retried. This might even affect NMIs 
 > sent via APIC messages - not sure about that.
 
-- Kexec code does not wait infinitely for destination cpu to respond to
-  NMI. If destination cpu does not reposond in certain amount of time,
-  execution continues. So even if NMI was not delivered to destination
-  cpu kexec code should have continued. (Dangerous though, as we don't
-  know what other cpu will be doing in the mean time.)
 
-- Even if there is a limitation on how many interrupts can be queued up
-  (including NMI), I am not sure how this patch will help that situation.
-  This patch is not doing anything on destination cpu (assuming destination
-  cpu is also not executing die_nmi() at the same time)
 
-  In fact, even if other cpus are servicing die_nmi() they will end up
-  spinning on kexec_lock inside crash_kexec().
+The design was as follows:
+- Doing anything in the crashing kernel is unreliable.
+- We do not have the information to do anything useful in the recovery/target
+  kernel.
+- Having the other cpus stopped is very nice as it reduces the amount of
+  weirdness happening.  We do not share the same text or data addresses
+  so stopping the other cpus is not mandatory.  On some other architectures
+  there are cpu tables that must live at a fixed address but this is not
+  the case on x86.
+- Having the location the other cpus were running at is potentially very
+  interesting debugging information.
 
-I think there is more to this problem then just EOI stuff.
+Therefore the intent of the code is to send an NMI to each other cpu.  With
+a timeout of a second or so.  So that if the NMI do not get sent we continue
+on.
 
-Thanks
-Vivek
+There is certainly still room for improving the robustness by not shutting
+down the ioapics and using less general infrastructure code on that path.
+That said I would be a little surprised if that is what is biting us.
+
+Looking at the patch the local_irq_enable() is totally bogus.  As soon
+was we hit machine_crash_shutdown the first thing we do is disable irqs.
+
+I'm wondering if someone was using the switch cpus on crash patch that was
+floating around.  That would require the ipis to work.
+
+I don't know if nmi_exit makes sense.  There are enough layers of abstraction
+in that piece of code I can't quickly spot the part that is banging the hardware.
+
+The location of nmi_exit in the patch is clearly wrong.  crash_kexec is a noop
+if we don't have a crash kernel loaded (and if we are not the first cpu into it),
+so if we don't execute the crash code something weird may happen.  Further the
+code is just more maintainable if that kind of code lives in machine_crash_shutdown.
+
+
+
+Eric
 
 _______________________________________________
 kexec mailing list
