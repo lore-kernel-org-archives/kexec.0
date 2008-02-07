@@ -1,15 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.syneticon.net ([213.239.212.131] helo=mail2.syneticon.net)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JNA5q-0005pS-4V
-	for kexec@lists.infradead.org; Thu, 07 Feb 2008 16:59:28 +0000
-Message-ID: <47AB38E2.9050509@wpkg.org>
-Date: Thu, 07 Feb 2008 17:59:14 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+Received: from ra.tuxdriver.com ([70.61.120.52])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JNDX0-0002cY-Bm
+	for kexec@lists.infradead.org; Thu, 07 Feb 2008 20:39:45 +0000
+Date: Thu, 7 Feb 2008 15:37:37 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH], issue EOI to APIC prior to calling crash_kexec in
+	die_nmi path
+Message-ID: <20080207203737.GB29279@hmsreliant.think-freely.org>
+References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
+	<20080206220001.GA15155@elte.hu>
+	<20080206224805.GD11886@redhat.com>
+	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
+	<m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
+	<20080207121719.GA29279@hmsreliant.think-freely.org>
+	<20080207122404.GA8195@elte.hu>
 MIME-Version: 1.0
-Subject: Re: why kexec insists on syncing with recent kernels?
-References: <47AB120A.1000600@wpkg.org> <20080207163752.GD11969@redhat.com>
-In-Reply-To: <20080207163752.GD11969@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20080207122404.GA8195@elte.hu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,85 +30,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Horms <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>
+To: Ingo Molnar <mingo@elte.hu>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de, Vivek Goyal <vgoyal@redhat.com>
 
-Vivek Goyal schrieb:
-> On Thu, Feb 07, 2008 at 03:13:30PM +0100, Tomasz Chmielewski wrote:
->> According to kernel/kexec.c:
->>
->>  * kexec does not sync, or unmount filesystems so if you need
->>  * that to happen you need to do that yourself.
->>
->>
+On Thu, Feb 07, 2008 at 01:24:04PM +0100, Ingo Molnar wrote:
 > 
-> In latest kexec code I do see it syncing. But it does not unmount the
-> filesystems. So this comment looks like partially wrong.
+> * Neil Horman <nhorman@tuxdriver.com> wrote:
 > 
->> I saw this was true with 2.6.18 kernel (i.e., it didn't sync), but kexec 
->> syncs with recent kernels (I checked 2.6.23.14 and 2.6.24):
->>
->> # kexec -e
->> md: stopping all md devices
->> sd 2:0:0:0: [sdb] Synchronizing SCSI cache
+> > Ingo noted a few posts down the nmi_exit doesn't actually write to the 
+> > APIC EOI register, so yeah, I agree, its bogus (and I apologize, I 
+> > should have checked that more carefully).  Nevertheless, this patch 
+> > consistently allowed a hangning machine to boot through an Nmi lockup.  
+> > So I'm forced to wonder whats going on then that this patch helps 
+> > with.  perhaps its a just a very fragile timing issue, I'll need to 
+> > look more closely.
 > 
-> Which kexec-tools you are using? 
-
-# kexec -v
-kexec 1.101 released 15 February 2005
-
-
-> syncing is initiated by user space so changing kernel will not have
-> any effect (as long as user space is same). I think just that message
-> are spitted by kernel, so probably 2.6.18 did not spit any message and
-> 2.6.24 does.
-
-Yes and no.
-I just booted 2.6.24 on a diskless system (Mandriva) I normally use with 
-2.6.18 kernel, did kexec -e... And it executed the kernel immediately, 
-without any syncing.
-On Debian, with the same 2.6.24 kernel, it does sync.
-
-So what user space part does the syncing (and how to prevent it)?
-
-(...)
-
-
->> The way kexec works now makes rebooting unreliable again:
->> - network interfaces are brought down,
->> - kernel tries to sync - it never will, as we're booted off network, which 
->> is down
->>
+> try a dummy iret, something like:
 > 
-> Kexec has got an option -x --no-ifdown, which will not bring the network
-> down. Try that. "kexec- -e -x"
-
-It does seem to help, thanks.
-
-Why it has to be the last option specified?
-
-I tried -f option before (don't call shutdown), but it didn't help.
-
-
->> Any ideas why kexec insists on syncing?
+>   asm volatile ("pushf; push $1f; iret; 1: \n");
 > 
-> To me it makes sense. Just making sure that cache changes make to the file
-> system before you boot into new kernel.
+> to get the CPU out of its 'nested NMI' state. (totally untested)
 > 
-> In latest kexec-tools, I do see sync() is done first and then network
-> interfaces are brought down. 
+> the idea is to push down an iret frame to the kernel stack that will 
+> just jump to the next instruction and gets it out of the NMI nesting. 
+> Note: interrupts will/must still be disabled, despite the iret. (the 
+> ordering of the pushes might be wrong, we might need more than that for 
+> a valid iret, etc. etc.)
 > 
-> Try latest kexec tools from:
-> 
-> http://www.vergenet.net/~horms/linux/kexec/kexec-tools/testing/kexec-tools-testing-20071017-rc.tar.gz
+> 	Ingo
 
-Good to have a newer version, I'll try that, too.
-
+Will do.  I'll report results as soon as I have them,.  Thanks!
+Neil
 
 -- 
-Tomasz Chmielewski
-http://wpkg.org
-
+/****************************************************
+ * Neil Horman <nhorman@tuxdriver.com>
+ * Software Engineer, Red Hat
+ ****************************************************/
 
 _______________________________________________
 kexec mailing list
