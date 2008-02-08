@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from blaine.gmane.org ([80.91.229.8] helo=hugh.gmane.org)
+Received: from rgminet01.oracle.com ([148.87.113.118])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JNWVW-0004I9-26
-	for kexec@lists.infradead.org; Fri, 08 Feb 2008 16:55:29 +0000
-Received: from public by hugh.gmane.org with local (Exim 4.63)
-	(envelope-from <public@hugh.gmane.org>) id 1JNWVD-0008Pm-6b
-	for kexec@lists.infradead.org; Fri, 08 Feb 2008 17:55:03 +0100
-Subject: Re: [PATCH],
-	issue EOI to APIC prior to calling crash_kexec in die_nmi path
-From: Andi Kleen <andi@firstfloor.org>
-References: <20080206192555.GA24910@hmsendeavour.rdu.redhat.com>
-	<20080206220001.GA15155@elte.hu> <20080206224805.GD11886@redhat.com>
-	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
-	<m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
-	<20080207121719.GA29279@hmsreliant.think-freely.org>
-	<20080207122404.GA8195@elte.hu>
-Date: Fri, 08 Feb 2008 17:54:29 +0100
-In-Reply-To: <20080207122404.GA8195@elte.hu> (Ingo Molnar's message of "Thu\,
-	7 Feb 2008 13\:24\:04 +0100")
-Message-ID: <p73ir0z2xtm.fsf@bingen.suse.de>
-MIME-Version: 1.0
+	id 1JNWej-0000yP-M2
+	for kexec@lists.infradead.org; Fri, 08 Feb 2008 17:05:00 +0000
+Date: Fri, 8 Feb 2008 09:04:07 -0800
+From: Randy Dunlap <randy.dunlap@oracle.com>
+Subject: Re: why kexec insists on syncing with recent kernels?
+Message-Id: <20080208090407.4ab240f1.randy.dunlap@oracle.com>
+In-Reply-To: <20080208160408.GB18782@redhat.com>
+References: <47AB120A.1000600@wpkg.org> <20080207163752.GD11969@redhat.com>
+	<47AB38E2.9050509@wpkg.org> <20080208160408.GB18782@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,29 +23,105 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <public-mingo-X9Un+BFzKDI@hugh.gmane.org>
-Cc: public-kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@hugh.gmane.org, Neil Horman <public-nhorman-2XuSBdqkA4R54TAoqtyWWQ@hugh.gmane.org>, "Eric W. Biederman" <public-ebiederm-aS9lmoZGLiVWk0Htik3J/w@hugh.gmane.org>, public-linux-kernel-u79uwXL29TY76Z2rM5mHXA@hugh.gmane.org, public-mingo-H+wXaHxf7aLQT0dZR+AlfA@hugh.gmane.org, Vivek Goyal <public-vgoyal-H+wXaHxf7aLQT0dZR+AlfA@hugh.gmane.org>, public-tglx-hfZtesqFncYOwBW4kG4KsQ@hugh.gmane.org, "H. Peter Anvin" <public-hpa-YMNOUZJC4hwAvxtiuMwx3w@hugh.gmane.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Tomasz Chmielewski <mangoo@wpkg.org>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Horms <horms@verge.net.au>
+
+On Fri, 8 Feb 2008 11:04:08 -0500 Vivek Goyal wrote:
+
+> On Thu, Feb 07, 2008 at 05:59:14PM +0100, Tomasz Chmielewski wrote:
+> > Vivek Goyal schrieb:
+> >> On Thu, Feb 07, 2008 at 03:13:30PM +0100, Tomasz Chmielewski wrote:
+> >>> According to kernel/kexec.c:
+> >>>
+> >>>  * kexec does not sync, or unmount filesystems so if you need
+> >>>  * that to happen you need to do that yourself.
+> >>>
+> >>>
+> >>
+> >> In latest kexec code I do see it syncing. But it does not unmount the
+> >> filesystems. So this comment looks like partially wrong.
+> >>
+> >>> I saw this was true with 2.6.18 kernel (i.e., it didn't sync), but kexec 
+> >>> syncs with recent kernels (I checked 2.6.23.14 and 2.6.24):
+> >>>
+> >>> # kexec -e
+> >>> md: stopping all md devices
+> >>> sd 2:0:0:0: [sdb] Synchronizing SCSI cache
+> >>
+> >> Which kexec-tools you are using? 
+> >
+> > # kexec -v
+> > kexec 1.101 released 15 February 2005
+> >
+> >
+> >> syncing is initiated by user space so changing kernel will not have
+> >> any effect (as long as user space is same). I think just that message
+> >> are spitted by kernel, so probably 2.6.18 did not spit any message and
+> >> 2.6.24 does.
+> >
+> > Yes and no.
+> > I just booted 2.6.24 on a diskless system (Mandriva) I normally use with 
+> > 2.6.18 kernel, did kexec -e... And it executed the kernel immediately, 
+> > without any syncing.
+> > On Debian, with the same 2.6.24 kernel, it does sync.
+> >
+> > So what user space part does the syncing (and how to prevent it)?
+> 
+> Syncing is initiated by kexec-tools. Following is the code in
+> kexec/kexec.c in kexec-tools-testing.tar.gz
+> 
+> 
+>         if ((result == 0) && do_sync) {
+>                 sync();
+> 
+> I think this problem has nothing to do with syncing. There seems to be
+> some dependency on not shutting down network here. You might want to 
+> debug, exactly where does it get stuck.
+> 
+> - Specify earlyprintk= parameter for second kernel and see if control
+>   is reaching to second kernel.
+> 
+> - Otherwise specify --console-serial parameter on "kexec -l" commandline
+>   and it should display a message "I am in purgatory" on serial console.
+>   This will just mean that control has reached at least till purgatory.
+> 
+> Right now  there does not seem to be any option to prevent syncing and 
+> I don't know why would one like to have one.
+> 
+> > (...)
+> >
+> >
+> >>> The way kexec works now makes rebooting unreliable again:
+> >>> - network interfaces are brought down,
+> >>> - kernel tries to sync - it never will, as we're booted off network, 
+> >>> which is down
+> >>>
+> >>
+> >> Kexec has got an option -x --no-ifdown, which will not bring the network
+> >> down. Try that. "kexec- -e -x"
+> >
+> > It does seem to help, thanks.
+> >
+> > Why it has to be the last option specified?
+> >
+> 
+> I have no idea. This might be an stale comment. Try putting -x before -e.
+> 
+> > I tried -f option before (don't call shutdown), but it didn't help.
+> >
+> 
+> Even if you did -f, it must have shutdown the network. I think somehow
+> in latest kernels there is some dependency on network and that's why
+> not shutting down network in this case is helping you.
+
+I'm seeing NFS mounts take forever to unmount (at shutdown/reboot).
+(forever => 1 hour ... or never completes)
+
+Is this similar to the problem that the OP is asking about?
 
 
-
-Ingo Molnar <mingo-X9Un+BFzKDI@public.gmane.org> writes:
->
-> try a dummy iret, something like:
->
->   asm volatile ("pushf; push $1f; iret; 1: \n");
->
-> to get the CPU out of its 'nested NMI' state. (totally untested)
-
-Just if you do this while running on the NMI stack (and I think
-you do if you insert it at the same place as Neil's original patch)
-and another NMI happens for some reason you will be dead
-because your stack will corrupt.
-
-If you really want nested NMIs you would need to fix up the NMI
-stacks first by pointing them below your own stack.
-
--Andi
-
+---
+~Randy
 
 _______________________________________________
 kexec mailing list
