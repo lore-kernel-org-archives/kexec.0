@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JP2Qo-0005WN-Oc
-	for kexec@lists.infradead.org; Tue, 12 Feb 2008 21:12:53 +0000
-Date: Tue, 12 Feb 2008 16:11:57 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: Kexec command line length
-Message-ID: <20080212211157.GB1862@hmsreliant.think-freely.org>
-References: <20080129010122.GA11935@hmsreliant.think-freely.org>
-	<20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
-	<20080129195753.GB21530@hmsreliant.think-freely.org>
-	<20080130205323.GA15415@redhat.com>
-	<20080130205947.GA5660@hmsendeavour.rdu.redhat.com>
-	<20080130210815.GB15415@redhat.com>
-	<20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
-	<20080130214551.GC15415@redhat.com>
-	<20080131071625.GA11164@suse.de>
+Received: from edna.telenet-ops.be ([195.130.132.58])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JOXuY-0003eR-0X
+	for kexec@lists.infradead.org; Mon, 11 Feb 2008 12:37:32 +0000
+Date: Mon, 11 Feb 2008 13:36:58 +0100 (CET)
+From: Geert Uytterhoeven <Geert.Uytterhoeven@sonycom.com>
+Subject: Re: why kexec insists on syncing with recent kernels?
+In-Reply-To: <47AC8F34.3020705@wpkg.org>
+Message-ID: <Pine.LNX.4.64.0802111335000.31167@anakin>
+References: <47AB120A.1000600@wpkg.org> <20080207163752.GD11969@redhat.com>
+	<47AB38E2.9050509@wpkg.org> <20080208160408.GB18782@redhat.com>
+	<20080208090407.4ab240f1.randy.dunlap@oracle.com>
+	<47AC8F34.3020705@wpkg.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080131071625.GA11164@suse.de>
+Content-Type: MULTIPART/MIXED;
+	BOUNDARY="-1463808512-662959786-1202733418=:31167"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,56 +23,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: Tomasz Chmielewski <mangoo@wpkg.org>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, Horms <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Jan 31, 2008 at 08:16:25AM +0100, Bernhard Walle wrote:
-> * Vivek Goyal <vgoyal@redhat.com> [2008-01-30 22:45]:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+---1463808512-662959786-1202733418=:31167
+Content-Type: TEXT/PLAIN; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+On Fri, 8 Feb 2008, Tomasz Chmielewski wrote:
+> Randy Dunlap schrieb:
+> 
+> (...)
+> 
+> > > Even if you did -f, it must have shutdown the network. I think somehow
+> > > in latest kernels there is some dependency on network and that's why
+> > > not shutting down network in this case is helping you.
 > > 
-> > No. 2.04 is really old. As per boot.txt, it was introduced in 2.6.14.
+> > I'm seeing NFS mounts take forever to unmount (at shutdown/reboot).
+> > (forever => 1 hour ... or never completes)
 > > 
-> > Anyway, thinking about it more, Large command lines were introduced in
-> > 2.6.21 kernel (for both i386 and x86_64). cmdline_size was introduced
-> > in 2.6.22 (for both i386 and x86_64). So how about following test
-> > condition for both the arch.
-> > 
-> > if (boot_protocol >= 2.06)
-> > 	error message based on cmdline_size field
-> > else
-> > 	Warn user if command line is more than 256 but continue to work.
-> >   	Let the user know that it is not known if kernel being loaded
-> > 	supports command line size greater than 256. Command line will
-> > 	be truncated by destination kernel if it does not support large
-> > 	command lines. User is taking a chance
+> > Is this similar to the problem that the OP is asking about?
 > 
-> Yes, I also think that's sufficient.
+> Is it a diskless station?
 > 
-> 
->         Bernhard
-> 
-So, has anyone heard out of Simon?  I've noted that he hasn't updated the git
-tree for kexec-tools nor has he posted to the list is almost 3 weeks.  Anyone
-know if he's ok?  Simon, if you're out there, give us a shout! :)
+> Even in not, just make sure you don't shut the network down before NFS is
+> actually unmounted...?
 
-Thanks & Regards
-Neil
+JFYI, on PS3, kexec works fine with NFS root.
 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+With kind regards,
+ 
+Geert Uytterhoeven
+Software Architect
 
--- 
-/****************************************************
- * Neil Horman <nhorman@tuxdriver.com>
- * Software Engineer, Red Hat
- ****************************************************/
+Sony Network and Software Technology Center Europe
+The Corporate Village · Da Vincilaan 7-D1 · B-1935 Zaventem · Belgium
+ 
+Phone:    +32 (0)2 700 8453	
+Fax:      +32 (0)2 700 8622	
+E-mail:   Geert.Uytterhoeven@sonycom.com	
+Internet: http://www.sony-europe.com/
+ 	
+Sony Network and Software Technology Center Europe	
+A division of Sony Service Centre (Europe) N.V.	
+Registered office: Technologielaan 7 · B-1840 Londerzeel · Belgium	
+VAT BE 0413.825.160 · RPR Brussels	
+Fortis Bank Zaventem · Swift GEBABEBB08A · IBAN BE39001382358619
+---1463808512-662959786-1202733418=:31167
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+---1463808512-662959786-1202733418=:31167--
+
