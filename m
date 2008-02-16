@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mail.syneticon.net ([213.239.212.131] helo=mail2.syneticon.net)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JQPzK-00046q-04
-	for kexec@lists.infradead.org; Sat, 16 Feb 2008 16:34:07 +0000
-Date: Sun, 17 Feb 2008 01:33:57 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec tools mipsel port
-Message-ID: <20080216163357.GA32373@verge.net.au>
-References: <47B6CE01.60701@wpkg.org>
+	id 1JQThH-0004vB-9u
+	for kexec@lists.infradead.org; Sat, 16 Feb 2008 20:31:43 +0000
+Message-ID: <47B74826.8090707@wpkg.org>
+Date: Sat, 16 Feb 2008 21:31:34 +0100
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <47B6CE01.60701@wpkg.org>
+Subject: Re: [PATCH] kexec tools mipsel port
+References: <47B6CE01.60701@wpkg.org> <20080216163357.GA32373@verge.net.au>
+In-Reply-To: <20080216163357.GA32373@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org+dwmw2=infradead.org@lists.infradead.org
-To: Tomasz Chmielewski <mangoo@wpkg.org>
+To: Simon Horman <horms@verge.net.au>
 Cc: francesco.chiechi@colibre.it, Kexec Mailing List <kexec@lists.infradead.org>
 
-On Sat, Feb 16, 2008 at 12:50:25PM +0100, Tomasz Chmielewski wrote:
->>> We developed a patch to port kexec-tools to mips arch and included
->>> support for command line passing through elf boot notes.  We did it
->>> for a customer of ours on a specific platform derived from toshiba
->>> tx4938 (so we think it should work at least for tx4938 evaluation
->>> board also).  We would like to contribute it in case somebody else
->>> needs it or wants to improve it.  This patch works for us but the
->>> assembler part in particular, should be considered as a starting point
->>> because my assembly knowledge is not too deep.
->>
->> thanks for the patch. Sending them to this list is indeed the right
->> thing to do. You can also CC me (who makes the commits) to be sure
->> to get my attention.
->
-> Hi,
->
-> There was a thread about kexec-tools mipsel port on Kexec Mailing List  
-> in June 2007.
->
-> What's the current state of this patch?
->
-> Is it working, will be merged, will not be merged?
+Simon Horman schrieb:
+> On Sat, Feb 16, 2008 at 12:50:25PM +0100, Tomasz Chmielewski wrote:
+>>>> We developed a patch to port kexec-tools to mips arch and included
+>>>> support for command line passing through elf boot notes.  We did it
 
-Its still very much in the state of needing someone to
-nurse it into a merge.
+(...)
+
+>> There was a thread about kexec-tools mipsel port on Kexec Mailing List  
+>> in June 2007.
+>>
+>> What's the current state of this patch?
+>>
+>> Is it working, will be merged, will not be merged?
+> 
+> Its still very much in the state of needing someone to
+> nurse it into a merge.
+
+Funny thing is, kernel supports kexec, but there is no userland support 
+for it (well, unless you patch kexec-tools with the patches you found 
+somewhere on the internet).
+
+I'll try to see if the old patches posted to this list work for me.
+
 
 -- 
-Horms
-
+Tomasz Chmielewski
+http://wpkg.org
 
 _______________________________________________
 kexec mailing list
