@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from jack.tiscali.it ([213.205.33.53])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JQreD-0004dN-37
-	for kexec@lists.infradead.org; Sun, 17 Feb 2008 22:06:09 +0000
-From: Francesco Chiechi <francesco.chiechi@colibre.it>
-Subject: Re: [PATCH] kexec tools mipsel port
-Date: Sun, 17 Feb 2008 23:05:57 +0100
-References: <47B6CE01.60701@wpkg.org> <47B74826.8090707@wpkg.org>
-	<20080217045634.GA4098@verge.net.au>
-In-Reply-To: <20080217045634.GA4098@verge.net.au>
+	id 1JQwSe-0005oU-Kj
+	for kexec@lists.infradead.org; Mon, 18 Feb 2008 03:14:33 +0000
+Date: Mon, 18 Feb 2008 12:14:20 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: Kexec command line length
+Message-ID: <20080218031418.GC7057@verge.net.au>
+References: <20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
+	<20080129195753.GB21530@hmsreliant.think-freely.org>
+	<20080130205323.GA15415@redhat.com>
+	<20080130205947.GA5660@hmsendeavour.rdu.redhat.com>
+	<20080130210815.GB15415@redhat.com>
+	<20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
+	<20080130214551.GC15415@redhat.com>
+	<20080131071625.GA11164@suse.de>
+	<20080212211157.GB1862@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200802172305.57993.francesco.chiechi@colibre.it>
+In-Reply-To: <20080212211157.GB1862@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +31,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>, Tomasz Chmielewski <mangoo@wpkg.org>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: kexec@lists.infradead.org
 
-On Sunday 17 February 2008 05:56:36 Simon Horman wrote:
-> On Sat, Feb 16, 2008 at 09:31:34PM +0100, Tomasz Chmielewski wrote:
-> > Simon Horman schrieb:
-> >> On Sat, Feb 16, 2008 at 12:50:25PM +0100, Tomasz Chmielewski wrote:
-> >>>>> We developed a patch to port kexec-tools to mips arch and included
-> >>>>> support for command line passing through elf boot notes.  We did it
-> >
-> > (...)
-> >
-> >>> There was a thread about kexec-tools mipsel port on Kexec Mailing
-> >>> List  in June 2007.
-> >>>
-> >>> What's the current state of this patch?
-> >>>
-> >>> Is it working, will be merged, will not be merged?
-> >>
-> >> Its still very much in the state of needing someone to
-> >> nurse it into a merge.
-> >
-> > Funny thing is, kernel supports kexec, but there is no userland support
-> > for it (well, unless you patch kexec-tools with the patches you found
-> > somewhere on the internet).
-> >
-> > I'll try to see if the old patches posted to this list work for me.
->
-> I'm quite happy to accept patches to add mipsel to kexec-tools
-> (for the kexec-tools-testing tree that I maintain) and include
-> it in the next release.
->
-> The problem is that I'm not sure what state the patches are in.
+On Tue, Feb 12, 2008 at 04:11:57PM -0500, Neil Horman wrote:
+> On Thu, Jan 31, 2008 at 08:16:25AM +0100, Bernhard Walle wrote:
+> > * Vivek Goyal <vgoyal@redhat.com> [2008-01-30 22:45]:
+> > > 
+> > > No. 2.04 is really old. As per boot.txt, it was introduced in 2.6.14.
+> > > 
+> > > Anyway, thinking about it more, Large command lines were introduced in
+> > > 2.6.21 kernel (for both i386 and x86_64). cmdline_size was introduced
+> > > in 2.6.22 (for both i386 and x86_64). So how about following test
+> > > condition for both the arch.
+> > > 
+> > > if (boot_protocol >= 2.06)
+> > > 	error message based on cmdline_size field
+> > > else
+> > > 	Warn user if command line is more than 256 but continue to work.
+> > >   	Let the user know that it is not known if kernel being loaded
+> > > 	supports command line size greater than 256. Command line will
+> > > 	be truncated by destination kernel if it does not support large
+> > > 	command lines. User is taking a chance
+> > 
+> > Yes, I also think that's sufficient.
+> > 
+> > 
+> >         Bernhard
+> > 
+> So, has anyone heard out of Simon?  I've noted that he hasn't updated the git
+> tree for kexec-tools nor has he posted to the list is almost 3 weeks.  Anyone
+> know if he's ok?  Simon, if you're out there, give us a shout! :)
 
-Hi,
+Hi All,
 
-I'm really sorry because I did not have time to work again on the patch, which 
-I confirm is working for the application we developed it for.
+sorry to be quiet. I've been travling + other modes of busy.
 
-There were surely a couple of problems that made it difficult to be for 
-general use:
+I won't pretend to be an expert on the x86 boot protocol,
+but this patch does look clean to me.
 
-the first (probably simple to solve) is about physical/virtual mapping, Simon 
-suggestion was about removing #ifdef __MIPSEL__ stuff in kexec.c
-
-the second, a bit harder (for me at least), is that I had to insert cache 
-flushing code in kexec tools assembly part because leaving the job to the 
-kernel did not work
-
-I don't know if I will have time for it in the near future because it implies 
-quite a bit of studying for me... anyway I'll keep an eye on it but I cannot 
-promise
-
-bye
-
-Francesco
+-- 
+Horms
 
 
 _______________________________________________
