@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from smtp-out2.libero.it ([212.52.84.42])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JQwSe-0005oU-Kj
-	for kexec@lists.infradead.org; Mon, 18 Feb 2008 03:14:33 +0000
-Date: Mon, 18 Feb 2008 12:14:20 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Kexec command line length
-Message-ID: <20080218031418.GC7057@verge.net.au>
-References: <20080129154104.GA12219@redhat.com> <20080129181701.GB535@suse.de>
-	<20080129195753.GB21530@hmsreliant.think-freely.org>
-	<20080130205323.GA15415@redhat.com>
-	<20080130205947.GA5660@hmsendeavour.rdu.redhat.com>
-	<20080130210815.GB15415@redhat.com>
-	<20080130211834.GC5660@hmsendeavour.rdu.redhat.com>
-	<20080130214551.GC15415@redhat.com>
-	<20080131071625.GA11164@suse.de>
-	<20080212211157.GB1862@hmsreliant.think-freely.org>
+	id 1JR9IG-0003oG-6V
+	for kexec@lists.infradead.org; Mon, 18 Feb 2008 16:56:40 +0000
+Received: from MailRelay10.libero.it (192.168.32.119) by smtp-out2.libero.it
+	(7.3.120) id 4688F31B177639AC for kexec@lists.infradead.org;
+	Mon, 18 Feb 2008 17:48:31 +0100
+Date: Mon, 18 Feb 2008 17:44:06 +0100
+Message-Id: <JWG15I$EBDC9FA8F8CDE357E3E6CD9A2C5E20CF@libero.it>
+Subject: Re:kexec problem on SH platform nr 2
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080212211157.GB1862@hmsreliant.think-freely.org>
+From: "paolo\.cortesi\@inwind\.it" <paolo.cortesi@inwind.it>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,51 +19,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: kexec@lists.infradead.org
+To: kexec <kexec@lists.infradead.org>
+Cc: "matteo.pampolini" <matteo.pampolini@elsagdatamat.com>
 
-On Tue, Feb 12, 2008 at 04:11:57PM -0500, Neil Horman wrote:
-> On Thu, Jan 31, 2008 at 08:16:25AM +0100, Bernhard Walle wrote:
-> > * Vivek Goyal <vgoyal@redhat.com> [2008-01-30 22:45]:
-> > > 
-> > > No. 2.04 is really old. As per boot.txt, it was introduced in 2.6.14.
-> > > 
-> > > Anyway, thinking about it more, Large command lines were introduced in
-> > > 2.6.21 kernel (for both i386 and x86_64). cmdline_size was introduced
-> > > in 2.6.22 (for both i386 and x86_64). So how about following test
-> > > condition for both the arch.
-> > > 
-> > > if (boot_protocol >= 2.06)
-> > > 	error message based on cmdline_size field
-> > > else
-> > > 	Warn user if command line is more than 256 but continue to work.
-> > >   	Let the user know that it is not known if kernel being loaded
-> > > 	supports command line size greater than 256. Command line will
-> > > 	be truncated by destination kernel if it does not support large
-> > > 	command lines. User is taking a chance
-> > 
-> > Yes, I also think that's sufficient.
-> > 
-> > 
-> >         Bernhard
-> > 
-> So, has anyone heard out of Simon?  I've noted that he hasn't updated the git
-> tree for kexec-tools nor has he posted to the list is almost 3 weeks.  Anyone
-> know if he's ok?  Simon, if you're out there, give us a shout! :)
+Please please help me.
 
-Hi All,
+Hello,
+I am still hacking the kexec-tool over SH4 platform using Paul suggests, bu=
+t I have still the problem.
 
-sorry to be quiet. I've been travling + other modes of busy.
+First I try to change the flags passed to kexec_load(..,..,..,kexec_flags).
+In kexec-tools it was set to KEXEC_ARCH_DEFAULT; I set it KEXEC_ARCH_SH as =
+well as in kernel include/linux/kexec.h =
 
-I won't pretend to be an expert on the x86 boot protocol,
-but this patch does look clean to me.
 
--- 
-Horms
+Then I changed the:
+P1 (0x80000000) + memory start (0x0c000000) + 0x00210000 or'ed in zImage_sh=
+_load() that you suggested
+in such way:
+CONFIG_PAGE_OFFSET(0x80000000) + CONFIG_MEMORY_START (0x04400000) + CONFIG_=
+BOOT_LINK_OFFSET (0x0080000)
+
+and I changed the initiliaziation start memory range to set available my CO=
+NFIG_MEMORY_START address.
+
+The log that I got is the follow and I can=B4t see the new kernel really re=
+stating, after I lauch
+
+./kexec -l new_zImage --type=3DzImage-sh --append=3D"console=3DttyAS1,11520=
+0" --empty-zero=3D84401000
+
+
+The log....
+....
+empty_zero =3D 0x04401000
+area =3D 0x04400000
+Starting new kernel
+kexec information
+  segment[0]: 0x04401000 - 0x04402000 (0x00001000)
+  segment[1]: 0x04c00000 - 0x04d5a000 (0x0015a000)
+  start     : 0x84c00000
+
+Can you still see any error?
+
+Sincerely
+
+Paolo Cortesi
+
+
+> Hi,
+> my name is Paolo Cortesi I'am working over one SH4 platform board ST71XX =
+with linux kernel 2.6.17.
+> =
+
+> I need to spawn a new Linux kernel over the Linux Kernel which is running=
+, without the overhead of boot firmware, and I think that your kexec-tool c=
+ould be suitable for this target.
+>  =
+
+> I try to use kexec following the steps:
+> =
+
+> 1) I select the CONFIG_KEXEC option while building the runnig kernel.
+> =
+
+> 2) I download your last recent version of kexec-tool which support SH4 pl=
+atform
+> =
+
+>    I used your .gz reachable by link:    =
+
+>    http://www.vergenet.net/linux/kexec/kexec-tools/
+> =
+
+> 3) I launch the the configure by my script:
+> =
+
+> 	export CC=3Dsh4-linux-uclibc-gcc
+> 	export LD=3Dsh4-linux-uclibc-ld
+> 	export AR=3Dsh4-linux-uclibc-ar
+> 	export CFLAGS=3D"-DSHLINUX -D__SHLINUX__ -Wall -O2 -ml -m4 -pipe -fomit-=
+frame-pointer -fno-strict-aliasing"
+> 	./configure --host=3Dsh4-linux =
+
+> =
+
+> 4) I cross compile. During compilation I comment the invoke of /*crash_se=
+tup_regs(&fixed_regs, regs);*/ procedure that's called in crash_kexec proce=
+dure of kernel/kexec.c file (I could not find any implementation of this pr=
+ocedure).
+> =
+
+> 5) I launch the runnig kernel, which execute:
+>    kexec -l new_zImage --./kexec -l zImage --type=3DzImage-sh --append=3D=
+"command_line"
+>    kexec -e
+> =
+
+> Should be the wright procedure.
+> =
+
+> But I have one NULL pointer deferenced when it=B4s called the last assemb=
+ler procedure
+> reboot_code_buffer (relocate_new_kernel) which is invoked in the kernel C=
+ procedure arch/sh/... machine_kexec.c
+> =
+
+> Have you got an idea of the problem? Have you ever run your tool using on=
+e intrd kernel running
+> =
+
+> Thanks in advance.
+> =
+
+> Paolo Cortesi.
+> =
+
+> =
+
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> =
+
 
 
 _______________________________________________
