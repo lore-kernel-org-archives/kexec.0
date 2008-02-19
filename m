@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out2.libero.it ([212.52.84.42])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JR9IG-0003oG-6V
-	for kexec@lists.infradead.org; Mon, 18 Feb 2008 16:56:40 +0000
-Received: from MailRelay10.libero.it (192.168.32.119) by smtp-out2.libero.it
-	(7.3.120) id 4688F31B177639AC for kexec@lists.infradead.org;
-	Mon, 18 Feb 2008 17:48:31 +0100
-Date: Mon, 18 Feb 2008 17:44:06 +0100
-Message-Id: <JWG15I$EBDC9FA8F8CDE357E3E6CD9A2C5E20CF@libero.it>
-Subject: Re:kexec problem on SH platform nr 2
-MIME-Version: 1.0
-From: "paolo\.cortesi\@inwind\.it" <paolo.cortesi@inwind.it>
+	id 1JRKJ6-0001ZD-Sj
+	for kexec@lists.infradead.org; Tue, 19 Feb 2008 04:42:17 +0000
+From: Simon Horman <horms@verge.net.au>
+Subject: Use zlib if present
+Message-Id: <20080219044208.278434FB0B@tabatha.lab.ultramonkey.org>
+Date: Tue, 19 Feb 2008 13:42:08 +0900 (JST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,135 +15,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec <kexec@lists.infradead.org>
-Cc: "matteo.pampolini" <matteo.pampolini@elsagdatamat.com>
+To: kexec@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>
 
-Please please help me.
+Hi,
 
-Hello,
-I am still hacking the kexec-tool over SH4 platform using Paul suggests, bu=
-t I have still the problem.
+This fixes a minor regression that occured with Jeremy's recent
+reworking of the build system. I guess he wasn't dealing with
+compressed images and thus didn't notice that zlib support had
+been disabled.
 
-First I try to change the flags passed to kexec_load(..,..,..,kexec_flags).
-In kexec-tools it was set to KEXEC_ARCH_DEFAULT; I set it KEXEC_ARCH_SH as =
-well as in kernel include/linux/kexec.h =
+The fix involves updating an #ifdef to use the new symbol,
+and ensuring that -lz is passed to the linker as neccessary.
 
+Cc: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Then I changed the:
-P1 (0x80000000) + memory start (0x0c000000) + 0x00210000 or'ed in zImage_sh=
-_load() that you suggested
-in such way:
-CONFIG_PAGE_OFFSET(0x80000000) + CONFIG_MEMORY_START (0x04400000) + CONFIG_=
-BOOT_LINK_OFFSET (0x0080000)
+--- 
 
-and I changed the initiliaziation start memory range to set available my CO=
-NFIG_MEMORY_START address.
-
-The log that I got is the follow and I can=B4t see the new kernel really re=
-stating, after I lauch
-
-./kexec -l new_zImage --type=3DzImage-sh --append=3D"console=3DttyAS1,11520=
-0" --empty-zero=3D84401000
-
-
-The log....
-....
-empty_zero =3D 0x04401000
-area =3D 0x04400000
-Starting new kernel
-kexec information
-  segment[0]: 0x04401000 - 0x04402000 (0x00001000)
-  segment[1]: 0x04c00000 - 0x04d5a000 (0x0015a000)
-  start     : 0x84c00000
-
-Can you still see any error?
-
-Sincerely
-
-Paolo Cortesi
-
-
-> Hi,
-> my name is Paolo Cortesi I'am working over one SH4 platform board ST71XX =
-with linux kernel 2.6.17.
-> =
-
-> I need to spawn a new Linux kernel over the Linux Kernel which is running=
-, without the overhead of boot firmware, and I think that your kexec-tool c=
-ould be suitable for this target.
->  =
-
-> I try to use kexec following the steps:
-> =
-
-> 1) I select the CONFIG_KEXEC option while building the runnig kernel.
-> =
-
-> 2) I download your last recent version of kexec-tool which support SH4 pl=
-atform
-> =
-
->    I used your .gz reachable by link:    =
-
->    http://www.vergenet.net/linux/kexec/kexec-tools/
-> =
-
-> 3) I launch the the configure by my script:
-> =
-
-> 	export CC=3Dsh4-linux-uclibc-gcc
-> 	export LD=3Dsh4-linux-uclibc-ld
-> 	export AR=3Dsh4-linux-uclibc-ar
-> 	export CFLAGS=3D"-DSHLINUX -D__SHLINUX__ -Wall -O2 -ml -m4 -pipe -fomit-=
-frame-pointer -fno-strict-aliasing"
-> 	./configure --host=3Dsh4-linux =
-
-> =
-
-> 4) I cross compile. During compilation I comment the invoke of /*crash_se=
-tup_regs(&fixed_regs, regs);*/ procedure that's called in crash_kexec proce=
-dure of kernel/kexec.c file (I could not find any implementation of this pr=
-ocedure).
-> =
-
-> 5) I launch the runnig kernel, which execute:
->    kexec -l new_zImage --./kexec -l zImage --type=3DzImage-sh --append=3D=
-"command_line"
->    kexec -e
-> =
-
-> Should be the wright procedure.
-> =
-
-> But I have one NULL pointer deferenced when it=B4s called the last assemb=
-ler procedure
-> reboot_code_buffer (relocate_new_kernel) which is invoked in the kernel C=
- procedure arch/sh/... machine_kexec.c
-> =
-
-> Have you got an idea of the problem? Have you ever run your tool using on=
-e intrd kernel running
-> =
-
-> Thanks in advance.
-> =
-
-> Paolo Cortesi.
-> =
-
-> =
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> =
-
-
+ kexec/Makefile |    1 +
+ kexec/kexec.c  |    4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+Index: kexec-tools-testing/kexec/kexec.c
+===================================================================
+--- kexec-tools-testing.orig/kexec/kexec.c	2008-02-19 12:21:04.000000000 +0900
++++ kexec-tools-testing/kexec/kexec.c	2008-02-19 12:21:15.000000000 +0900
+@@ -32,7 +32,7 @@
+ 
+ #include "config.h"
+ 
+-#ifdef HAVE_ZLIB_H
++#ifdef HAVE_LIBZ
+ #include <zlib.h>
+ #endif
+ #include <sha256.h>
+@@ -446,7 +446,7 @@ char *slurp_file_len(const char *filenam
+ 	return buf;
+ }
+ 
+-#if HAVE_ZLIB_H
++#if HAVE_LIBZ
+ char *slurp_decompress_file(const char *filename, off_t *r_size)
+ {
+ 	gzFile fp;
+Index: kexec-tools-testing/kexec/Makefile
+===================================================================
+--- kexec-tools-testing.orig/kexec/Makefile	2008-02-19 12:40:05.000000000 +0900
++++ kexec-tools-testing/kexec/Makefile	2008-02-19 12:41:23.000000000 +0900
+@@ -36,6 +36,7 @@ KEXEC_MANPAGE = $(MANDIR)/man8/kexec.8
+ 
+ -include $(KEXEC_DEPS)
+ 
++$(KEXEC): LDFLAGS+=$(LIBS)
+ $(KEXEC): $(KEXEC_OBJS) $(UTIL_LIB)
+ 	@$(MKDIR) -p $(@D)
+ 	$(LINK.o) -o $@ $^
 
 _______________________________________________
 kexec mailing list
