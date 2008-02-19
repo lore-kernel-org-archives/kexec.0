@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JRKal-0003ke-Bq
-	for kexec@lists.infradead.org; Tue, 19 Feb 2008 05:00:31 +0000
-From: Jeremy Kerr <jk@ozlabs.org>
-Subject: Re: Use zlib if present
-Date: Tue, 19 Feb 2008 15:59:41 +1100
-References: <20080219044208.278434FB0B@tabatha.lab.ultramonkey.org>
-In-Reply-To: <20080219044208.278434FB0B@tabatha.lab.ultramonkey.org>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JRLZX-0008LC-1D
+	for kexec@lists.infradead.org; Tue, 19 Feb 2008 06:03:19 +0000
+Date: Tue, 19 Feb 2008 15:03:12 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec buffer overflow on ppc platform
+Message-ID: <20080219060312.GA8917@verge.net.au>
+References: <47A19405.7080109@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200802191559.42445.jk@ozlabs.org>
+In-Reply-To: <47A19405.7080109@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +23,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Stefan Assmann <sassmann@suse.de>
+Cc: kexec@lists.infradead.org
 
-Hi Simon,
+On Thu, Jan 31, 2008 at 10:25:25AM +0100, Stefan Assmann wrote:
+> Hi,
+> 
+> this patch fixes a buffer overflow on ppc.
 
-> This fixes a minor regression that occured with Jeremy's recent
-> reworking of the build system. I guess he wasn't dealing with
-> compressed images and thus didn't notice that zlib support had
-> been disabled.
+Thanks, applied.
 
-eep, sorry about that. I wasn't using compressed images.
+-- 
+Horms
 
-> The fix involves updating an #ifdef to use the new symbol,
-> and ensuring that -lz is passed to the linker as neccessary.
-
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-
-Cheers,
-
-
-Jeremy
 
 _______________________________________________
 kexec mailing list
