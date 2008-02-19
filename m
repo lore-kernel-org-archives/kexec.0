@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JRLZX-0008LC-1D
-	for kexec@lists.infradead.org; Tue, 19 Feb 2008 06:03:19 +0000
-Date: Tue, 19 Feb 2008 15:03:12 +0900
+	id 1JRLdb-0008Qe-BC
+	for kexec@lists.infradead.org; Tue, 19 Feb 2008 06:07:31 +0000
+Date: Tue, 19 Feb 2008 15:07:27 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec buffer overflow on ppc platform
-Message-ID: <20080219060312.GA8917@verge.net.au>
-References: <47A19405.7080109@suse.de>
+Subject: Re: [PATCH] sh: Remove hardcoded PAGE_SIZE in NetBSD loader
+Message-ID: <20080219060725.GB8917@verge.net.au>
+References: <20080204043531.GB27300@linux-sh.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <47A19405.7080109@suse.de>
+In-Reply-To: <20080204043531.GB27300@linux-sh.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,15 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stefan Assmann <sassmann@suse.de>
+To: Paul Mundt <lethal@linux-sh.org>
 Cc: kexec@lists.infradead.org
 
-On Thu, Jan 31, 2008 at 10:25:25AM +0100, Stefan Assmann wrote:
-> Hi,
-> 
-> this patch fixes a buffer overflow on ppc.
+On Mon, Feb 04, 2008 at 01:35:31PM +0900, Paul Mundt wrote:
+> The Linux host supports a multitude of page sizes, so having this
+> hardcoded doesn't really help matters. This also has the benefit of
+> killing off dependence on asm/ headers when none is needed. While
+> I'm not suggesting that anyone actually boot NetBSD, without this,
+> my build also ends up breaking.
 
-Thanks, applied.
+Thanks, Paul. Applied.
 
 -- 
 Horms
