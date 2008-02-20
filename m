@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JRjl1-0000LW-TV
-	for kexec@lists.infradead.org; Wed, 20 Feb 2008 07:52:48 +0000
-Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	id 1JRjzh-0002dX-Ej
+	for kexec@lists.infradead.org; Wed, 20 Feb 2008 08:07:57 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id A65FB37445
-	for <kexec@lists.infradead.org>; Wed, 20 Feb 2008 08:52:45 +0100 (CET)
-Date: Wed, 20 Feb 2008 08:52:45 +0100
+	by mx2.suse.de (Postfix) with ESMTP id 071503711D
+	for <kexec@lists.infradead.org>; Wed, 20 Feb 2008 09:07:56 +0100 (CET)
+Date: Wed, 20 Feb 2008 09:07:55 +0100
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [ANNOUNCE] kexec-tools-testing v20071017-rc
-Message-ID: <20080220075245.GA5542@suse.de>
-References: <20080219081130.GA3919@verge.net.au>
-	<20080219160512.GA15701@suse.de>
-	<20080220015114.GC18944@verge.net.au>
+Subject: [PATCH] Fix compilation warning
+Message-ID: <20080220080755.GB5542@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080220015114.GC18944@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,22 +28,28 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-* Simon Horman <horms@verge.net.au> [2008-02-20 02:51]:
-> > 
-> > Can you fix this? :)
-> 
-> Appologies. This has now been fixed.
+This patch fixes following compilation warning:
 
-Thanks! I also get following error when trying to build
-
-$ make
-make: *** No rule to make target `/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/bin/../lib/gcc/i686-unknown-linux-gnu/3.4.5/../../../../i686-unknown-linux-gnu/sys-include/stdio.h', needed by `kexec/kexec.o'.  Stop.
-
-"make clean" before works.
+purgatory/purgatory.c:21: warning: passing argument 2 of 'sha256_update' makes pointer from integer without a cast
 
 
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-        Bernhard
+---
+ purgatory/purgatory.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/purgatory/purgatory.c
++++ b/purgatory/purgatory.c
+@@ -18,7 +18,7 @@ void verify_sha256_digest(void)
+ 	sha256_starts(&ctx);
+ 	end = &sha256_regions[sizeof(sha256_regions)/sizeof(sha256_regions[0])];
+ 	for(ptr = sha256_regions; ptr < end; ptr++) {
+-		sha256_update(&ctx, ptr->start, ptr->len);
++		sha256_update(&ctx, (uint8_t *)ptr->start, ptr->len);
+ 	}
+ 	sha256_finish(&ctx, digest);
+ 	if (memcmp(digest, sha256_digest, sizeof(digest)) != 0) {
 
 _______________________________________________
 kexec mailing list
