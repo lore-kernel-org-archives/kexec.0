@@ -1,25 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ra.tuxdriver.com ([70.61.120.52])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JRqQF-0000NU-79
-	for kexec@lists.infradead.org; Wed, 20 Feb 2008 14:59:47 +0000
-Date: Wed, 20 Feb 2008 09:57:36 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH],
-	issue EOI to APIC prior to calling crash_kexec in die_nmi path
-Message-ID: <20080220145736.GA3771@localhost.localdomain>
-References: <20080206220001.GA15155@elte.hu>
-	<20080206224805.GD11886@redhat.com>
-	<47AA3B16.7000507@zytor.com> <20080206233657.GB12393@elte.hu>
-	<m1r6fpd2uo.fsf@ebiederm.dsl.xmission.com>
-	<20080207121719.GA29279@hmsreliant.think-freely.org>
-	<20080207122404.GA8195@elte.hu>
-	<20080208161422.GA32204@hmsreliant.think-freely.org>
-	<20080208164544.GA23772@redhat.com>
-	<20080212210816.GA1862@hmsreliant.think-freely.org>
-Mime-Version: 1.0
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JS7Xp-0001ga-Du
+	for kexec@lists.infradead.org; Thu, 21 Feb 2008 09:16:47 +0000
+Date: Thu, 21 Feb 2008 18:16:30 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools-testing v20080221-rc
+Message-ID: <20080221091628.GA15981@verge.net.au>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080212210816.GA1862@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,55 +21,226 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, tglx@linutronix.de
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>, Vivek Goyal <vgoyal@in.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Neil Horman <nhorman@tuxdriver.com>, Jeremy Kerr <jk@ozlabs.org>
 
-On Tue, Feb 12, 2008 at 04:08:16PM -0500, Neil Horman wrote:
-> > 
-> > Neil, is it possible to do some serial console debugging to find out
-> > where exactly we are hanging? Beats me, what's that operation which can
-> > not be executed while being in NMI handler and makes system to hang. I am
-> > also curious to know if it is nested NMI case.
-> > 
-> > Thanks
-> > Vivek
-> > 
-> 
-> 
-> Hey-
-> 	Some intermediate results:
-> 
-> I've instrumented head.S in the kernel with the following code:
-> #define SEROUT(z) \     
-> mov $0x3F8,%dx;\
-> movb z,%al;\
-> outb %dx
-> 
-> 
-> And peppered different ascii characters throughout the startup code from
-> startup_32 to right before the jump to start_kernel.  When I panic the system
-> via an:
-> echo c > /proc/sysrq_trigger
-> I see an appropriate sequence of characters on the serial console
-> 
-> When I panic the box by forcing an NMI watchdog timeout however, I see nothing.
->  The machine will either hang, or reset into the bios.  I think this is
-> reasonably conclusive in its indication that we're not getting into the second
-> kernel when this problem occurs.  Next I'll instrument the purgatory code in a
-> simmilar way.
-> 
-> Regards
-> Neil
-> 
-Hey, further update.  I instrumented purgatory, and turned on the console
-options that Eric mentioned, which resulted in no output to the console, so I've
-concluded that we don't get to purgatory at all.  Further instrumenting shows
-that the last C level printk I can issue is right before we call
-relocate_kernel.  So it appears that we hang/reset somewhere in there.  I'll
-instrument down that path shortly.
+Hi all,
 
-Regards
-Neil
+I've decided to make another rc release as there were a few problems
+with the previous one - in particular the tarball included lots of stuff
+that it shouldn't have.
+
+This RC also includes the command line length patch
+by Neil Horman (no relation).
+
+The release can be downloaded as a tarball:
+
+http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/kexec-tools-testing-20080221-rc.tar.gz
+http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/testing/
+
+I have also tagged it in git:
+git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
+http://git.kernel.org/?p=linux/kernel/git/horms/kexec-tools-testing.git
+
+
+A summary of the changes since 20071030 is below:
+
+commit 0825a890d39599f9f2ca11495317923aec540306
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools-testing 20080221-rc
+
+
+commit e959e493753c740eb7554bc2191c58b079761e11
+Author: Simon Horman <horms@verge.net.au>
+
+    Only include needed files in distribution tarball
+
+ create mode 100644 doc/Makefile
+ create mode 100644 include/Makefile
+ create mode 100644 kexec/arch/alpha/Makefile
+
+commit d098d61ba4e32f3e5786cb8037e949c2ea5a5b64
+Author: Simon Horman <horms@verge.net.au>
+
+    Clean up whitespace in include/x86/x86-linux.h
+
+
+commit b5c2ed5e02cfe862eded56be7f6c1106e84e6e6c
+Author: Neil Horman <nhorman@tuxdriver.com>
+
+    Kexec command line length
+
+
+commit 162cecf91f6ac99d5af35ac6488415cdfa98ac58
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools-testing 20080219-git
+
+
+commit f797af18bf3d4b40d3b711b9f7620d37c25c96a8
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools-testing 20080219-rc
+
+
+commit 648fdfaa9977fc63ddb476bbd9a5cf67bc79d752
+Author: Simon Horman <horms@verge.net.au>
+
+    kexec-tools-testing 20071019-rc
+
+
+commit 9de031269fc0a2551bb4a3cb488bd8377cbece88
+Author: Geoff Levand <geoffrey.levand@am.sony.com>
+
+    kexec: Use target linker for purgatory
+
+
+commit 28d4817dcd2bfc9eb9c8baf90888d9ba358bd58c
+Author: Simon Horman <horms@verge.net.au>
+
+    Remove some extraneous whitespace
+
+
+commit 83a9d171329ce791d734117e6894cccc244893a2
+Author: Richard Purdie <rpurdie@rpsys.net>
+
+    Add ARM support to kexec
+
+ create mode 100644 kexec/arch/arm/Makefile
+ create mode 100644 kexec/arch/arm/include/arch/options.h
+ create mode 100644 kexec/arch/arm/kexec-arm.c
+ create mode 100644 kexec/arch/arm/kexec-arm.h
+ create mode 100644 kexec/arch/arm/kexec-elf-rel-arm.c
+ create mode 100644 kexec/arch/arm/kexec-zImage-arm.c
+ create mode 100644 purgatory/arch/arm/Makefile
+
+commit b5ee3392dc71c53f93716cb387abacb544d9cf9c
+Author: Paul Mundt <lethal@linux-sh.org>
+
+    sh: Remove hardcoded PAGE_SIZE in NetBSD loader
+
+
+commit ab2df5cd479da9935e23cd7042d69a39f5cec3b0
+Author: Stefan Assmann <sassmann@suse.de>
+
+    kexec buffer overflow on ppc platform
+
+
+commit ffde99f4920fe60798d527c2bcdf91d1d2385b86
+Author: Simon Horman <horms@verge.net.au>
+
+    Use zlib if present
+
+
+commit 487794c3a650dac933e8aeaaf618b466cc306519
+Author: Kevin Tegtmeier <kevint@lanl.gov>
+
+    Log unknown reloc name instead of its number
+
+
+commit 956e3295b400a5d1ea3535602ed25d7866412110
+Author: Simon Horman <horms@verge.net.au>
+
+    Subject: [doc] Add documentation on creating include/config.h.in to INSTALL
+
+
+commit 34d679b268a9ce6d334197b69392f85f46a996b9
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Don't assume we can re-make Makefile
+
+
+commit 4b3340f33467aa1bebfa05791dc53bbaf1028381
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    make clean cleanup
+
+
+commit 3f871456d4d350b5abdb2b7fdcfedec5743d6db2
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Use general _SRCS and _OBJS, rather and _C_{SRCS, OBJS} and _S_{SRCS, OBJS}
+
+
+commit d0a33ac6d578f5aa5378f02d8b7aa3a6b635cae4
+Author: Simon Horman <horms@verge.net.au>
+
+    removed partially duplicated system headers
+
+ delete mode 100644 purgatory/arch/alpha/include/limits.h
+ delete mode 100644 purgatory/arch/alpha/include/stdint.h
+ delete mode 100644 purgatory/arch/i386/include/limits.h
+ delete mode 100644 purgatory/arch/i386/include/stdint.h
+ delete mode 100644 purgatory/arch/ia64/include/limits.h
+ delete mode 100644 purgatory/arch/ia64/include/stdint.h
+ delete mode 100644 purgatory/arch/ppc/include/limits.h
+ delete mode 100644 purgatory/arch/ppc/include/stdint.h
+ delete mode 100644 purgatory/arch/ppc64/include/limits.h
+ delete mode 100644 purgatory/arch/ppc64/include/stdint.h
+ delete mode 100644 purgatory/arch/s390/include/limits.h
+ delete mode 100644 purgatory/arch/s390/include/stdint.h
+ delete mode 100644 purgatory/arch/sh/include/limits.h
+ delete mode 100644 purgatory/arch/sh/include/stdint.h
+ delete mode 100644 purgatory/arch/x86_64/include/limits.h
+ delete mode 100644 purgatory/arch/x86_64/include/stdint.h
+
+commit adf85cbc1756e56c1f52f56235a3c08b3c5b8e05
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Build system simplification/standardisation
+
+ delete mode 100644 Makefile
+ delete mode 100644 Makefile.conf.in
+ create mode 100644 Makefile.in
+
+commit ac12ceecf15f637e024e6be9a030497e732a74eb
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Add gamecube to config.h defines
+
+
+commit f5d08e9fa6464c876ab00c03fadc09a64edb5bb5
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Use config.h for defines
+
+
+commit 0151e38f0d87528c8856fcb0b4d53ed547c139b0
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Consolidate BOOTLOADER defines
+
+
+commit 1db6397fc7a335decfa7ed95a95225476a030390
+Author: Jeremy Kerr <jk@ozlabs.org>
+
+    Use --target for target architecture specification
+
+
+commit 3b34f687a851f84216bc0bbd601b82c40b197a61
+Author: David Woodhouse <dwmw2@infradead.org>
+
+    Enable building a 32 bit binary for ppc64 platforms.
+
+
+commit 7b429d23bca943dc5772ed80160c144930e8904c
+Author: Simon Horman <horms@verge.net.au>
+
+    Update mailing list contact to kexec@lists.infradead.org
+
+
+commit b41eacb1069eeefd630d807b1587247e6d89628c
+Author: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+
+    Fix the feature determining ELF32/ELF64 automatically
+
+
+commit c87f78372ebdb4f1ef7a37fd5628e5e1dfd571d0
+Author: Simon Horman <horms@verge.net.au>
+
+    20071030-git
+
 
 
 _______________________________________________
