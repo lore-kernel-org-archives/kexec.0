@@ -1,24 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JTuhy-0004Sb-GB
-	for kexec@lists.infradead.org; Tue, 26 Feb 2008 07:58:38 +0000
-Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 9BDDC31360
-	for <kexec@lists.infradead.org>; Tue, 26 Feb 2008 08:58:35 +0100 (CET)
-Date: Tue, 26 Feb 2008 08:58:35 +0100
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Fix compilation warning
-Message-ID: <20080226075834.GA3662@suse.de>
-References: <20080220080755.GB5542@suse.de>
-	<20080221092153.GB15981@verge.net.au>
-	<20080221092832.GA22609@suse.de>
-	<20080222090239.GA25249@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080222090239.GA25249@verge.net.au>
+	id 1JTw92-0007zj-Jn
+	for kexec@lists.infradead.org; Tue, 26 Feb 2008 09:30:41 +0000
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: [PATCH] fix valid_memory_range region merging 
+In-reply-to: <20080226022933.GA12270@verge.net.au> 
+References: <1165.1177570234@neuling.org> <20080226022933.GA12270@verge.net.au>
+Date: Tue, 26 Feb 2008 10:29:28 +0100
+Message-ID: <23516.1204018168@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,58 +17,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-* Simon Horman <horms@verge.net.au> [2008-02-22 10:02]:
-> On Thu, Feb 21, 2008 at 10:28:33AM +0100, Bernhard Walle wrote:
-> > * Simon Horman <horms@verge.net.au> [2008-02-21 10:21]:
-> > > On Wed, Feb 20, 2008 at 09:07:55AM +0100, Bernhard Walle wrote:
-> > > > This patch fixes following compilation warning:
-> > > > 
-> > > > purgatory/purgatory.c:21: warning: passing argument 2 of 'sha256_update' makes pointer from integer without a cast
-> > > > 
-> > > 
-> > > Thanks Bernhard, I have queued that up.
-> > > Although I notice that on arm the warning turns into
-> > > 
-> > > purgatory/purgatory.c: In function 'verify_sha256_digest':
-> > > purgatory/purgatory.c:21: warning: cast to pointer from integer of different size
+In message <20080226022933.GA12270@verge.net.au> you wrote:
+> On Thu, Apr 26, 2007 at 04:50:34PM +1000, Michael Neuling wrote:
+> > Check the next region we are including is type RANGE_RAM as well.
 > > 
-> > Isn't this the case on every 32 bit system?
+> > Signed-off-by: Michael Neuling <mikey@neuling.org>
+> > ---
+> > I've not actually seen this cause a problem, but it looks wrong.  We
+> > should probably merge regions properly and solve this problem for real. 
 > 
-> Yes, now you mention it, I expect so. I guess its not a problem.
+> Hi Michael,
+> 
+> appologies for this blast-from-the-past. This mail somehow
+> ended up filed in the wrong place and I chanced upon it just now.
+> 
+> This fix does seem correct to me, though I haven't seen it cause
+> any problems either. I'm happy to merge it (better late than never,
+> right?) if you are still happy with it.
 
-But you didn't merge the patch. ;) Here's a version that should not
-give any warnings ...
+Sweet thanks, I'd well and truly forgotten about it.  I think it was
+just a random code cleanup, so if it still applies it should be fine to
+merge.
 
-----------------------------
+Mikey
 
-This patch fixes following compilation warning:
-
-purgatory/purgatory.c:21: warning: passing argument 2 of 'sha256_update' makes pointer from integer without a cast
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
----
- purgatory/purgatory.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/purgatory/purgatory.c
-+++ b/purgatory/purgatory.c
-@@ -18,7 +18,7 @@ void verify_sha256_digest(void)
- 	sha256_starts(&ctx);
- 	end = &sha256_regions[sizeof(sha256_regions)/sizeof(sha256_regions[0])];
- 	for(ptr = sha256_regions; ptr < end; ptr++) {
--		sha256_update(&ctx, ptr->start, ptr->len);
-+		sha256_update(&ctx, (uint8_t *)((uintptr_t)ptr->start), ptr->len);
- 	}
- 	sha256_finish(&ctx, digest);
- 	if (memcmp(digest, sha256_digest, sizeof(digest)) != 0) {
+> 
+> > 
+> >  kexec/kexec.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > Index: kexec-tools-testing/kexec/kexec.c
+> > ===================================================================
+> > --- kexec-tools-testing.orig/kexec/kexec.c
+> > +++ kexec-tools-testing/kexec/kexec.c
+> > @@ -96,7 +96,8 @@ int valid_memory_range(struct kexec_info
+> >  		mstart = info->memory_range[i].start;
+> >  		mend = info->memory_range[i].end;
+> >  		if (i < info->memory_ranges - 1
+> > -		    && mend == info->memory_range[i+1].start)
+> > +		    && mend == info->memory_range[i+1].start
+> > +		    && info->memory_range[i+1].type == RANGE_RAM)
+> >  			mend = info->memory_range[i+1].end;
+> >  
+> >  		/* Check to see if we are fully contained */
+> 
+> -- 
+> Horms
+> 
 
 _______________________________________________
 kexec mailing list
