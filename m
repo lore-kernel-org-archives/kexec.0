@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JUGBv-0003VN-Hr
-	for kexec@lists.infradead.org; Wed, 27 Feb 2008 06:54:59 +0000
+	id 1JUGBt-0003V7-MU
+	for kexec@lists.infradead.org; Wed, 27 Feb 2008 06:54:58 +0000
 Received: from tabatha.lab.ultramonkey.org (vagw.valinux.co.jp [210.128.90.14])
-	by koto.vergenet.net (Postfix) with ESMTP id 5BA57341C2
+	by koto.vergenet.net (Postfix) with ESMTP id 7E046341D3
 	for <kexec@lists.infradead.org>; Wed, 27 Feb 2008 15:54:52 +0900 (JST)
-Message-Id: <20080227065343.079523630@vergenet.net>
-References: <20080227065154.518014550@vergenet.net>
-Date: Wed, 27 Feb 2008 15:51:57 +0900
+Message-Id: <20080227065154.518014550@vergenet.net>
+Date: Wed, 27 Feb 2008 15:51:54 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 3/5] kexec-tools: use proc_iomem()
-Content-Disposition: inline; filename=arm-proc_iomem.patch
+Subject: [patch 0/5] Iomem fixes
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,30 +25,12 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Use proc_iomem() on arm for consistency with other architectures.
+Hi,
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
---- 
-
- kexec/arch/arm/kexec-arm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: kexec-tools-testing-ia64-xen/kexec/arch/arm/kexec-arm.c
-===================================================================
---- kexec-tools-testing-ia64-xen.orig/kexec/arch/arm/kexec-arm.c	2008-02-26 16:21:04.000000000 +0900
-+++ kexec-tools-testing-ia64-xen/kexec/arch/arm/kexec-arm.c	2008-02-26 16:24:17.000000000 +0900
-@@ -26,7 +26,7 @@ static struct memory_range memory_range[
- int get_memory_ranges(struct memory_range **range, int *ranges,
- 		unsigned long kexec_flags)
- {
--	const char iomem[]= "/proc/iomem";
-+	const char iomem[]= proc_iomem();
- 	int memory_ranges = 0;
- 	char line[MAX_LINE];
- 	FILE *fp;
-
--- 
+while working on the xen ia64 port of kexec I stumbled upon
+a couple of problems with the handling of iomem. This patch
+series resolves this problems (I hope) and also fixes up
+a few related cosmetic problems.
 
 -- 
 Horms
