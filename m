@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JUJmV-0002XQ-Ah
-	for kexec@lists.infradead.org; Wed, 27 Feb 2008 10:44:59 +0000
-Message-Id: <20080227104402.781722067@vergenet.net>
+	id 1JUJmV-0002XP-Ak
+	for kexec@lists.infradead.org; Wed, 27 Feb 2008 10:45:00 +0000
+Message-Id: <20080227104402.106624740@vergenet.net>
 References: <20080227103536.406746333@vergenet.net>
-Date: Wed, 27 Feb 2008 19:35:41 +0900
+Date: Wed, 27 Feb 2008 19:35:38 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 5/7] kexec-tools: Remove duplication declaration of
-	BOOTLOADER_VERSION
-Content-Disposition: inline; filename=mips-duplicate-BOOTLOADER_VERSION.patch
+Subject: [patch 2/7] kexec-tools: Remove purgatory/arch/mipsel/include/stdint.h
+Content-Disposition: inline; filename=mips-dup_stdint.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,27 +25,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Tomasz Chmielewski <mangoo@wpkg.org>, Francesco Chiechi <francesco.chiechi@colibre.it>
 Cc: kexec@lists.infradead.org
 
-BOOTLOADER_VERSION is defined in kexec.h
+Remove purgatory/arch/mipsel/include/stdint.h as it just duplicates
+things found in system header files.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
 --- 
 
- kexec/arch/mipsel/kexec-elf-mipsel.c |    1 -
- 1 file changed, 1 deletion(-)
+ purgatory/arch/mipsel/include/stdint.h |   16 ----------------
+ 1 file changed, 16 deletions(-)
 
-Index: kexec-tools-mips/kexec/arch/mipsel/kexec-elf-mipsel.c
+Index: kexec-tools-mips/purgatory/arch/mipsel/include/stdint.h
 ===================================================================
---- kexec-tools-mips.orig/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-02-27 19:15:41.000000000 +0900
-+++ kexec-tools-mips/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-02-27 19:18:10.000000000 +0900
-@@ -32,7 +32,6 @@
- static const int probe_debug = 0;
- 
- #define BOOTLOADER         "kexec"
--#define BOOTLOADER_VERSION VERSION
- #define MAX_COMMAND_LINE   256
- 
- #define UPSZ(X) ((sizeof(X) + 3) & ~3)
+--- kexec-tools-mips.orig/purgatory/arch/mipsel/include/stdint.h	2008-02-27 19:02:34.000000000 +0900
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,16 +0,0 @@
+-#ifndef STDINT_H
+-#define STDINT_H
+-
+-typedef unsigned long      size_t;
+-
+-typedef unsigned char      uint8_t;
+-typedef unsigned short     uint16_t;
+-typedef unsigned int       uint32_t;
+-typedef unsigned long long uint64_t;
+-
+-typedef signed char        int8_t;
+-typedef signed short       int16_t;
+-typedef signed int         int32_t;
+-typedef signed long long   int64_t;
+-
+-#endif /* STDINT_H */
 
 -- 
 
