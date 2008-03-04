@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JWD1z-0001Hv-Fs
-	for kexec@lists.infradead.org; Mon, 03 Mar 2008 15:56:47 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id EB7D23983B
-	for <kexec@lists.infradead.org>; Mon,  3 Mar 2008 16:56:44 +0100 (CET)
-Date: Mon, 3 Mar 2008 16:56:44 +0100
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] reduce alignment constraint on ia64 elf core header
-Message-ID: <20080303155644.GB30167@suse.de>
-References: <20080303143026.GA15484@hmsreliant.think-freely.org>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JWNGM-000718-Na
+	for kexec@lists.infradead.org; Tue, 04 Mar 2008 02:52:19 +0000
+Date: Tue, 4 Mar 2008 11:52:13 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ia64 kern_vaddr_start was calculated incorrectly
+Message-ID: <20080304025210.GA8331@verge.net.au>
+References: <47CCAB96.2030207@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080303143026.GA15484@hmsreliant.think-freely.org>
+In-Reply-To: <47CCAB96.2030207@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,24 +23,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org, Jonathan Lim <jlim@sgi.com>
 
-* Neil Horman <nhorman@tuxdriver.com> [2008-03-03 15:30]:
-> Hey all-
-> 	Patch to reduce the alignment constraints on ia64 elf core headers.
-> >From what I can see there is no need to align the elf core header structure to
-> the EFI_PAGE_SIZE (given that the EFI will never read this data, only the kernel
-> will when booting a kdump kernel).  And since this is going into our reserved
-> memory, it saves us 3K (4K vs 1K alignment).  Tested successfully by myself on
-> several ia64 boxes.
+On Mon, Mar 03, 2008 at 05:53:26PM -0800, Jay Lan wrote:
+> I tested in a rhel5.1 root with:
+>    2.6.24 kernel
+>    kexec-tools-testing-20080227
+>    crash-4.0-5.1
+> 
+> Crash failed to initialize:
+> 
+> crash: read error: kernel virtual address: a0000001007f0868  type:
+> "kernel_config_data"
+> WARNING: cannot read kernel_config_data
+> crash: read error: kernel virtual address: a000000100f370b0  type: "xtime"
+> 
+> It turned out that the kexec sets info->kern_vaddr_start incorrectly
+> on ia64 platform.
+> 
+> Jonathan Lim posted a fix to the fastboot list in March 2007:
+> https://lists.linux-foundation.org/pipermail/fastboot/2007-March/013645.html
+> This patch derived from Jonathan's patch, but fixes the problem at
+> kexec/arch/ia64/crashdump-ia64.c.
+> 
+> 
+> Signed-off-by: Jay Lan  <jlan@sgi.com>
 
-This is wrong. Please read this thead:
+Thanks Jay, Thanks Jonathan.
 
-https://lists.linux-foundation.org/pipermail/fastboot/2007-February/012882.html
+Sorry for not picking this up earlier. I have applied it now.
 
+-- 
+Horms
 
-
-        Bernhard
 
 _______________________________________________
 kexec mailing list
