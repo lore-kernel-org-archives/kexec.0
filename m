@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JXCr6-0006YY-5K
-	for kexec@lists.infradead.org; Thu, 06 Mar 2008 09:57:40 +0000
-Message-Id: <20080306094759.405831871@vergenet.net>
+	id 1JXCrA-0006sQ-1I
+	for kexec@lists.infradead.org; Thu, 06 Mar 2008 09:57:44 +0000
+Message-Id: <20080306094800.680153069@vergenet.net>
 References: <20080306094637.669665743@vergenet.net>
-Date: Thu, 06 Mar 2008 18:46:43 +0900
+Date: Thu, 06 Mar 2008 18:46:49 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 06/12] kexec-tools: mipsel: Remove unused variables from
-	elf_mipsel_load
+Subject: [patch 12/12] kexec-tools: mipsel: Define OPT_APPEND outside of any
+	function
 Content-Disposition: inline;
-	filename=mips-elf_mipsel_load-unused-variables.patch
+	filename=mipsel-opt-defines-outside-of-function.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,23 +31,30 @@ Signed-off-by: Simon Horman <horms@verge.net.au>
 
 --- 
 
- kexec/arch/mipsel/kexec-elf-mipsel.c |    2 --
- 1 file changed, 2 deletions(-)
+ kexec/arch/mipsel/kexec-elf-mipsel.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Index: kexec-tools-mips/kexec/arch/mipsel/kexec-elf-mipsel.c
+Index: kexec-tools-testing-mips/kexec/arch/mipsel/kexec-elf-mipsel.c
 ===================================================================
---- kexec-tools-mips.orig/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-02-27 19:17:47.000000000 +0900
-+++ kexec-tools-mips/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-02-27 19:17:49.000000000 +0900
-@@ -116,9 +116,7 @@ int elf_mipsel_load(int argc, char **arg
- 	int command_line_len;
+--- kexec-tools-testing-mips.orig/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-03-06 18:39:51.000000000 +0900
++++ kexec-tools-testing-mips/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-03-06 18:39:51.000000000 +0900
+@@ -70,6 +70,8 @@ static struct boot_notes {
+ };
+ 
+ 
++#define OPT_APPEND	(OPT_ARCH_MAX+0)
++
+ int elf_mipsel_probe(const char *buf, off_t len)
+ {
+ 
+@@ -117,7 +119,6 @@ int elf_mipsel_load(int argc, char **arg
  	unsigned char *setup_start;
  	uint32_t setup_size;
--	int result;
  	int opt;
--	int i;
- #define OPT_APPEND     (OPT_ARCH_MAX+0)
+-#define OPT_APPEND     (OPT_ARCH_MAX+0)
  	static const struct option options[] = {
  		KEXEC_ARCH_OPTIONS
+ 		{"command-line", 1, 0, OPT_APPEND},
 
 -- 
 
