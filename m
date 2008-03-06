@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JXCrA-0006sS-1M
+	id 1JXCrA-0006sR-1K
 	for kexec@lists.infradead.org; Thu, 06 Mar 2008 09:57:44 +0000
-Message-Id: <20080306094800.249412632@vergenet.net>
+Message-Id: <20080306094800.038871930@vergenet.net>
 References: <20080306094637.669665743@vergenet.net>
-Date: Thu, 06 Mar 2008 18:46:47 +0900
+Date: Thu, 06 Mar 2008 18:46:46 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 10/12] kexec-tools: mipsel: Fit elf_mipsel_usage() into 80
-	columns
-Content-Disposition: inline; filename=elf_mipsel_usage-80col.patch
+Subject: [patch 09/12] kexec-tools: mipsel: Remove
+	purgatory/arch/mipsel/include/limits.h
+Content-Disposition: inline; filename=mips-no-limits.h.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,32 +26,78 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-mips@linux-mips.org
 Cc: Tomasz Chmielewski <mangoo@wpkg.org>, Francesco Chiechi <francesco.chiechi@colibre.it>
 
+Remove purgatory/arch/mipsel/include/limits.h as it is not needed.
+
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
 --- 
 
- kexec/arch/mipsel/kexec-elf-mipsel.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ purgatory/arch/mipsel/include/limits.h |   58 --------------------------------
+ 1 file changed, 58 deletions(-)
 
-Index: kexec-tools-testing-mips/kexec/arch/mipsel/kexec-elf-mipsel.c
+Index: kexec-tools-testing-mips/purgatory/arch/mipsel/include/limits.h
 ===================================================================
---- kexec-tools-testing-mips.orig/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-03-05 11:12:44.000000000 +0900
-+++ kexec-tools-testing-mips/kexec/arch/mipsel/kexec-elf-mipsel.c	2008-03-05 11:18:34.000000000 +0900
-@@ -97,10 +97,10 @@ int elf_mipsel_probe(const char *buf, of
- 
- void elf_mipsel_usage(void)
- {
--	printf
--	    (
--	     "    --command-line=STRING Set the kernel command line to STRING.  \n"
--	     "    --append=STRING       Set the kernel command line to STRING.  \n");
-+	printf("    --command-line=STRING Set the kernel command line to "
-+			"STRING.\n"
-+	       "    --append=STRING       Set the kernel command line to "
-+			"STRING.\n");
- }
- 
- int elf_mipsel_load(int argc, char **argv, const char *buf, off_t len,
+--- kexec-tools-testing-mips.orig/purgatory/arch/mipsel/include/limits.h	2008-03-05 13:59:49.000000000 +0900
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,58 +0,0 @@
+-#ifndef LIMITS_H
+-#define LIMITS_H       1
+-
+-
+-/* Number of bits in a `char' */
+-#define CHAR_BIT       8
+-
+-/* Minimum and maximum values a `signed char' can hold */
+-#define SCHAR_MIN      (-128)
+-#define SCHAR_MAX      127
+-
+-/* Maximum value an `unsigned char' can hold. (Minimum is 0.) */
+-#define UCHAR_MAX      255
+-
+-/* Minimum and maximum values a `char' can hold */
+-#define CHAR_MIN       SCHAR_MIN
+-#define CHAR_MAX       SCHAR_MAX
+-
+-/* Minimum and maximum values a `signed short int' can hold */
+-#define SHRT_MIN       (-32768)
+-#define SHRT_MAX       32767
+-
+-/* Maximum value an `unsigned short' can hold. (Minimum is 0.) */
+-#define USHRT_MAX      65535
+-
+-
+-/* Minimum and maximum values a `signed int' can hold */
+-#define INT_MIN                (-INT_MAX - 1)
+-#define INT_MAX                2147483647
+-
+-/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
+-#define UINT_MAX       4294967295U
+-
+-
+-/* Minimum and maximum values a `signed int' can hold */
+-#define INT_MIN                (-INT_MAX - 1)
+-#define INT_MAX                2147483647
+-
+-/* Maximum value an `unsigned int' can hold. (Minimum is 0.) */
+-#define UINT_MAX       4294967295U
+-
+-/* Minimum and maximum values a `signed long' can hold */
+-#define LONG_MAX       2147483647L
+-#define LONG_MIN       (-LONG_MAX - 1L)
+-
+-/* Maximum value an `unsigned long' can hold. (Minimum is 0.) */
+-#define ULONG_MAX      4294967295UL
+-
+-/* Minimum and maximum values a `signed long long' can hold */
+-#define LLONG_MAX      9223372036854775807LL
+-#define LLONG_MIN      (-LONG_MAX - 1LL)
+-
+-
+-/* Maximum value an `unsigned long long' can hold. (Minimum is 0.) */
+-#define ULLONG_MAX     18446744073709551615ULL
+-
+-
+-#endif /* LIMITS_H */
 
 -- 
 
