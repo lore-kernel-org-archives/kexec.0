@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-dub.frontbridge.com ([213.199.154.16]
-	helo=outbound6-dub-R.bigfish.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZ9Wq-0002d7-3O
-	for kexec@lists.infradead.org; Tue, 11 Mar 2008 18:48:48 +0000
-Message-ID: <47D6D406.8050209@am.sony.com>
-Date: Tue, 11 Mar 2008 11:48:38 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JZBkD-0002I1-Vt
+	for kexec@lists.infradead.org; Tue, 11 Mar 2008 21:10:46 +0000
+Date: Tue, 11 Mar 2008 17:10:04 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm] kexec jump -v9
+Message-ID: <20080311211004.GA30164@redhat.com>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Subject: Re: Fwd: Kexec support for PS3 (ppc64)
-References: <C5065F118AFB3D478B052FC1E9810D9CA9041B@tec-mail.ttec.soc-soft.com>	
-	<4574cb3d0803062155k7da6be9al30ee3f35d01f9f0@mail.gmail.com>	
-	<47D19114.1090700@am.sony.com>
-	<4574cb3d0803110325u759a411ckbae3ff69557b0230@mail.gmail.com>
-	<47D6B92D.2020205@am.sony.com>
-In-Reply-To: <47D6B92D.2020205@am.sony.com>
+Content-Disposition: inline
+In-Reply-To: <1204773188.4707.109.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,60 +19,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rajasekaran P <rajasekaran83@gmail.com>
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-Geoff Levand wrote:
-> Rajasekaran P wrote:
->> Hi Geoff,
->> Thanks for your information.
->> =
+On Thu, Mar 06, 2008 at 11:13:08AM +0800, Huang, Ying wrote:
+> This is a minimal patch with only the essential features. All
+> additional features are split out and can be discussed later. I think
+> it may be easier to get consensus on this minimal patch.
+> 
 
->> I used latest kexec tools with 2.6.23 kernel built with ps3_defconfig.
->> This kernel boots normally on PS3. But when I  add "crashkernel"
->> argument, it goes on hang.
->> =
+Hi Huang,
 
->> # kexec --command-line=3D"video=3Dps3fb:mode:166 rhgb root=3D/dev/ps3da3
->> crashkernel=3D128M@32M" \
->> --initrd=3D/boot/initrd-2.6.23.img \
->> -l /boot/vmlinux-2.6.23
->> =
+This patchset is slowly getting better. True that first we need to come
+up with minimal infrastructure patch and then think of building more
+functionality on top of it.
 
->> # taskset 1 kexec =96e
->> =
 
->> Nothing happens after this. As you said earlier in your mail, I am not
->> getting any PRINTK outputs from kernel on screen.
-> =
+> This patch provides an enhancement to kexec/kdump. It implements
+> the following features:
+> 
+> - Jumping between the original kernel and the kexeced kernel.
+> 
+> - Backup/restore memory used by both the original kernel and the
+>   kexeced kernel.
+> 
+> - Save/restore CPU and devices state before after kexec.
+> 
+> 
+> The features of this patch can be used for as follow:
+> 
+> - A simple hibernation implementation without ACPI support. You can
+>   kexec a hibernating kernel, save the memory image of original system
+>   and shutdown the system. When resuming, you restore the memory image
+>   of original system via ordinary kexec load then jump back.
+> 
 
-> As I said, this usage is currently unsupported.  Could you tell me what y=
-ou
-> want to do?  I mean, why do you want to use this 'crashkernel=3D' option?
-> =
+The main usage of this functionality is for hibernation. I am not sure
+what has been the conclusion of previous discussions.
 
-> As a note, the ps3 has 128MiB of boot memory, so I guess 128M@32M won't
-> work.
+Rafael/Pavel, does the approach of doing hibernation using a separate
+kernel holds promise?
 
-Just FYI, I tried this and the kernel booted:
+[..]
+> Usage example of simple hibernation:
+> 
+> 1. Compile and install patched kernel with following options selected:
+> 
+> CONFIG_X86_32=y
+> CONFIG_RELOCATABLE=y
+> CONFIG_KEXEC=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_PM=y
+> 
+> 2. Build an initramfs image contains kexec-tool and makedumpfile, or
+>    download the pre-built initramfs image, called rootfs.gz in
+>    following text.
+> 
+> 3. Prepare a partition to save memory image of original kernel, called
+>    hibernating partition in following text.
+> 
+> 3. Boot kernel compiled in step 1 (kernel A).
+> 
+> 4. In the kernel A, load kernel compiled in step 1 (kernel B) with
+>    /sbin/kexec. The shell command line can be as follow:
+> 
+>    /sbin/kexec --load-preserve-context /boot/bzImage --mem-min=0x100000
+>      --mem-max=0xffffff --initrd=rootfs.gz
+> 
+> 5. Boot the kernel B with following shell command line:
+> 
+>    /sbin/kexec -e
+> 
+> 6. The kernel B will boot as normal kexec. In kernel B the memory
+>    image of kernel A can be saved into hibernating partition as
+>    follow:
+> 
+>    jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
+>    echo $jump_back_entry > kexec_jump_back_entry
+>    cp /proc/vmcore dump.elf
+> 
 
-./kexec -l -t elf-ppc64 --append=3D'crashkernel=3D64M@32M root=3D/dev/nfs r=
-w ip=3Ddhcp video=3Dwuxga' /boot/vmlinux.strip
+Why not store the entry point in dump.elf itself, instead of storing it
+in a separate file?
 
-I saw this output:
+I think this is more like a resumable core file. Something similar to
+functionality what qemu does for resuming an already booted kernel image.
+So we might have to introduce an ELF_NOTE to mark an image as resumable
+core. 
 
-kexec: waiting for cpu 1 (physical 1) to go down
-Reserving 64MB of memory at 32MB for crashkernel (System RAM: 128MB)
-...
-Kernel command line: crashkernel=3D64M@32M root=3D/dev/nfs rw ip=3Ddhcp vid=
-eo=3Dwuxga
+>    Then you can shutdown the machine as normal.
+> 
+> 7. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
+>    root file system.
+> 
+> 8. In kernel C, load the memory image of kernel A as follow:
+> 
+>    /sbin/kexec -l --args-none --entry=`cat kexec_jump_back_entry` dump.elf
+> 
 
--Geoff
+How the memory segments of dump.elf loaded? Normal kexec way? Memory
+segments of dump.elf are first stored somewhere and then moved to
+destination at "kexec -e" time?
 
+Does this really work? If we have 4G RAM, what will be the size of
+dump.elf? And when we load it back for resuming, do we have sufficient
+memory left?
+
+May be we can have a separate load flag (--load-resume-image) to mark
+that we are resuming an hibernated image and kexec does not have to
+prepare commandline, does not have to prepare zero page/setup page etc.
+
+
+I have thought through it again and try to put together some of the
+new kexec options we can introduce to make the whole thing work. I am 
+considering a simple case where a user boots the kernel A and then
+launches kernel B using "kexec --load-preseve-context". Now a user
+might save the hibernated image or might want to come back to A.
+
+- kexec -l <kernel-image>
+        Normal kexec functionality. Boot a new kernel, without preserving
+        existing kernel's context.
+
+- kexec --load-preserve-context <kernel-image>
+        Boot a new kernel while preserving existing kernel's context.
+
+        Will be used for booting kernel B for the first time.
+
+- kexec --load-resume-image <resumable-core>
+        Resumes an hibernated image. Load a ELF64 hibernated image.
+
+	Context of first kernel/boot-loader will not be preserved.
+
+	First kernel will not save cpu states. Will put devices into
+	suspended state though so that these can be resumed by resumable
+	core
+
+        This option can be used by kboot or kernel C to resume an hibernated
+	image.
+
+- kexec --load-resume-entry <entry-point>
+        Image is already loaded. Just prepare the entry point so that one
+        can enter back to previous image. cpu states will be saved and devices
+        will be put to suspended states.
+
+        will be used for A --> B and B ---> A transitions. Both A and B are
+        booted. This is just for switching back and forth between A and B.
+
+- kexec -e
+        Transition into the new kernel
+
+This patch looks in pretty decent shape. Once there is some sort of
+understanding that this approach is promising for hibernation and we
+have consensus on high level interface, then we can get into line by 
+line review of the patch set. 
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
