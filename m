@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZCp9-0008C3-Oj
-	for kexec@lists.infradead.org; Tue, 11 Mar 2008 22:19:56 +0000
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
+	id 1JZDpF-0008Hf-7G
+	for kexec@lists.infradead.org; Tue, 11 Mar 2008 23:24:06 +0000
+Date: Wed, 12 Mar 2008 00:24:15 +0100
+From: Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH -mm] kexec jump -v9
-Date: Tue, 11 Mar 2008 23:18:27 +0100
+Message-ID: <20080311232415.GA26320@elf.ucw.cz>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 	<20080311211004.GA30164@redhat.com>
-In-Reply-To: <20080311211004.GA30164@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200803112318.28120.rjw@sisk.pl>
+In-Reply-To: <20080311211004.GA30164@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,10 +25,11 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Tuesday, 11 of March 2008, Vivek Goyal wrote:
-> On Thu, Mar 06, 2008 at 11:13:08AM +0800, Huang, Ying wrote:
+Hi!
+
 > > This is a minimal patch with only the essential features. All
 > > additional features are split out and can be discussed later. I think
 > > it may be easier to get consensus on this minimal patch.
@@ -40,18 +41,7 @@ On Tuesday, 11 of March 2008, Vivek Goyal wrote:
 > up with minimal infrastructure patch and then think of building more
 > functionality on top of it.
 > 
-> 
-> > This patch provides an enhancement to kexec/kdump. It implements
-> > the following features:
-> > 
-> > - Jumping between the original kernel and the kexeced kernel.
-> > 
-> > - Backup/restore memory used by both the original kernel and the
-> >   kexeced kernel.
-> > 
-> > - Save/restore CPU and devices state before after kexec.
-> > 
-> > 
+...
 > > The features of this patch can be used for as follow:
 > > 
 > > - A simple hibernation implementation without ACPI support. You can
@@ -66,24 +56,25 @@ On Tuesday, 11 of March 2008, Vivek Goyal wrote:
 > Rafael/Pavel, does the approach of doing hibernation using a separate
 > kernel holds promise?
 
-Well, what can I say?
+Its certainly "more traditional" method of doing hibernation than
+tricks swsusp currently plays. Yes, I'd like these patches to go in,
+being able to switch kernels seems like useful tool.
 
-I haven't been a big fan of doing hibernation this way since the very beginning
-and I still have the same reservations.  Namely, my opinion is that the
-hibernation-related problems we have are not just solvable this way.  For one
-example, in order to stop using the freezer for suspend/hibernation we first
-need to revamp the suspending/resuming of devices (uder way) and the
-kexec-based approach doesn't help us here.  I wouldn't like to start another
-discussion about it though.
+Now, I guess they are some difficulties, like ACPI integration, and
+some basic drawbacks, like few seconds needed to boot second kernel
+during suspend.
 
-That said, I can imagine some applications of the $subject functionality
-not directly related to hibernation.  For example, one can use it for kernel
-debgging (jump to a new kernel, change something in the old kernel's
-data, jump back and see what happens etc.).  Also, in principle it may be used
-for such things as live migration of VMs.
+...OTOH this is probably only chance to eliminate freezer from
+swsusp...
 
-Thanks,
-Rafael
+Yes, I'd like to see this to go ahead.
+
+No, this does not make swsusp obsolete just yet.
+								Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
