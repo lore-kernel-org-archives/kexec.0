@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.crca.org.au ([67.207.131.56] helo=crca.org.au)
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZCVH-0007t1-39
-	for kexec@lists.infradead.org; Tue, 11 Mar 2008 21:59:23 +0000
+	id 1JZCp9-0008C3-Oj
+	for kexec@lists.infradead.org; Tue, 11 Mar 2008 22:19:56 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [PATCH -mm] kexec jump -v9
-From: Nigel Cunningham <ncunningham@crca.org.au>
-In-Reply-To: <20080311211004.GA30164@redhat.com>
+Date: Tue, 11 Mar 2008 23:18:27 +0100
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 	<20080311211004.GA30164@redhat.com>
-Date: Wed, 12 Mar 2008 08:59:18 +1100
-Message-Id: <1205272758.7990.37.camel@nigel-laptop>
-Mime-Version: 1.0
+In-Reply-To: <20080311211004.GA30164@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200803112318.28120.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +25,65 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-Hi all.
+On Tuesday, 11 of March 2008, Vivek Goyal wrote:
+> On Thu, Mar 06, 2008 at 11:13:08AM +0800, Huang, Ying wrote:
+> > This is a minimal patch with only the essential features. All
+> > additional features are split out and can be discussed later. I think
+> > it may be easier to get consensus on this minimal patch.
+> > 
+> 
+> Hi Huang,
+> 
+> This patchset is slowly getting better. True that first we need to come
+> up with minimal infrastructure patch and then think of building more
+> functionality on top of it.
+> 
+> 
+> > This patch provides an enhancement to kexec/kdump. It implements
+> > the following features:
+> > 
+> > - Jumping between the original kernel and the kexeced kernel.
+> > 
+> > - Backup/restore memory used by both the original kernel and the
+> >   kexeced kernel.
+> > 
+> > - Save/restore CPU and devices state before after kexec.
+> > 
+> > 
+> > The features of this patch can be used for as follow:
+> > 
+> > - A simple hibernation implementation without ACPI support. You can
+> >   kexec a hibernating kernel, save the memory image of original system
+> >   and shutdown the system. When resuming, you restore the memory image
+> >   of original system via ordinary kexec load then jump back.
+> > 
+> 
+> The main usage of this functionality is for hibernation. I am not sure
+> what has been the conclusion of previous discussions.
+> 
+> Rafael/Pavel, does the approach of doing hibernation using a separate
+> kernel holds promise?
 
-I hope kexec turns out to be a good, usable solution. Unfortunately,
-however, I still have some areas where I'm not convinced that kexec is
-going to work or work well:
+Well, what can I say?
 
-1. Reliability.
+I haven't been a big fan of doing hibernation this way since the very beginning
+and I still have the same reservations.  Namely, my opinion is that the
+hibernation-related problems we have are not just solvable this way.  For one
+example, in order to stop using the freezer for suspend/hibernation we first
+need to revamp the suspending/resuming of devices (uder way) and the
+kexec-based approach doesn't help us here.  I wouldn't like to start another
+discussion about it though.
 
-It's being sold as a replacement for freezing processes, yet AFAICS it's
-still going to require the freezer in order to be reliable. In the
-normal case, there isn't much of an issue with freeing memory or
-allocating swap, and so these steps can be expected to progress without
-pain. Imagine, however, the situation where another process or processes
-are trying to allocate large amounts of memory at the same time, or the
-system is swapping heavily. Although such situations will not be common,
-they are entirely conceivable, and any implementation ought to be able
-to handle such a situation efficiently. If the freezer is removed, any
-hibernation implementation - not just kexec - is going to have a much
-harder job of being reliable in all circumstances. AFAICS, the only way
-a kexec based solution is going to be able to get around this will be to
-not have to allocate memory, but that will require permanent allocation
-of memory for the kexec kernel and it's work area as well as the
-permanent, exclusive allocation of storage for the kexec hibernation
-implementation that's currently in place (making the LCA complaint about
-not being able to hibernate to swap on NTFS on fuse equally relevant). 
+That said, I can imagine some applications of the $subject functionality
+not directly related to hibernation.  For example, one can use it for kernel
+debgging (jump to a new kernel, change something in the old kernel's
+data, jump back and see what happens etc.).  Also, in principle it may be used
+for such things as live migration of VMs.
 
-While this might be feasible on machines with larger amounts of memory
-(you might validly be able to argue that a user won't miss 10MB of RAM),
-it does make hibernation less viable or unviable for systems with less
-memory (embedded!). It also means that there are 10MB of RAM (or
-whatever amount) that the user has paid good money for, but which are
-probably only used for 30s at a time a couple of times a day.
-
-Any attempt to start to use storage available to the hibernating kernel
-is also going to have these race issues.
-
-2. Lack of ACPI support.
-
-At the moment, noone is going to want to use kexec based hibernation if
-they have an ACPI system. This needs to be addressed before it can be
-considered a serious contender.
-
-3. Usability.
-
-Right now, kexec based hibernation looks quite complicated to configure,
-and the user is apparently going to have to remember to boot a different
-kernel or at least a different bootloader entry in order to resume. Not
-a plus. It would be good if you could find a way to use one bootloader
-entry, resuming if there's an image, booting normally if there's not.
-
-Nigel
-
+Thanks,
+Rafael
 
 _______________________________________________
 kexec mailing list
