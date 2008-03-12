@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZWln-0005Iz-4A
-	for kexec@lists.infradead.org; Wed, 12 Mar 2008 19:37:48 +0000
-Date: Wed, 12 Mar 2008 15:37:40 -0400
+	id 1JZWvd-0006ly-WF
+	for kexec@lists.infradead.org; Wed, 12 Mar 2008 19:47:58 +0000
+Date: Wed, 12 Mar 2008 15:47:51 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH -mm] kexec jump -v9
-Message-ID: <20080312193740.GE13549@redhat.com>
+Message-ID: <20080312194751.GF13549@redhat.com>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 	<20080311211004.GA30164@redhat.com>
 	<1205286326.29069.16.camel@caritas-dev.intel.com>
-	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <1205286326.29069.16.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,95 +25,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Tue, Mar 11, 2008 at 08:17:45PM -0600, Eric W. Biederman wrote:
-> "Huang, Ying" <ying.huang@intel.com> writes:
+On Wed, Mar 12, 2008 at 09:45:26AM +0800, Huang, Ying wrote:
+
+[..]
+> > I have thought through it again and try to put together some of the
+> > new kexec options we can introduce to make the whole thing work. I am 
+> > considering a simple case where a user boots the kernel A and then
+> > launches kernel B using "kexec --load-preseve-context". Now a user
+> > might save the hibernated image or might want to come back to A.
+> > 
+> > - kexec -l <kernel-image>
+> >         Normal kexec functionality. Boot a new kernel, without preserving
+> >         existing kernel's context.
+> > 
+> > - kexec --load-preserve-context <kernel-image>
+> >         Boot a new kernel while preserving existing kernel's context.
+> > 
+> >         Will be used for booting kernel B for the first time.
+> > 
+> > - kexec --load-resume-image <resumable-core>
 > 
-> > Yes. The entry point should be saved in dump.elf itself, this can be
-> > done via a user-space tool such as "makedumpfile". Because
-> > "makedumpfile" is also used to exclude free pages from disk image, it
-> > needs a communication method between two kernels (to get backup pages
-> > map or something like that from kernel A). We have talked about this
-> > before.
-> >
-> > - Your opinion is to communicate via the purgatory. (But I don't know
-> > how to communicate between kernel A and purgatory).
+> In original kexec-tools, this can be done through:
+> kexec -l --args-none <resumable-core>
 > 
-> How about the return address on the stack?
-> 
+> Do you need to define an alias for it?
 
-I think he needs to pass on much more data than just return address. 
-
-IIUC, he needs to pass backup pages map to new kernel, so that any
-user space tool can use backup pages map to reconstruct/rearrange the
-first kernel's memory core and tools like makedumpfile can do filtering
-before hibernated images is saved.
-
-This brings me to a random thought. Can we break the process of loading
-a hibernation kernel in two steps.
-
-- In first step just do the memory reservation for running second kernel.
-  (kexec -l <dummpy-file-for-reserving-memory>)
-
-- This memory map of reserved pages is exported to user space.
-
-- Use this memory map and regenerate the hibernation kernel initrd
-  (rootfs.gz) and put the memory map there. This memory map can be used
-  by makedumpfile in second kernel for filtering.
-
-This way it will user space to user space communication of information 
-which gets fixed at kernel loading time.
-
-> > - Eric's opinion is to communicate between the user space in kernel A
-> > and user space in kernel B.
-> 
-> Purgatory is for all intents and purposes user space.  Because the
-> return address falls on the trampoline page we won't know it's
-> address before we call kexec.  But a return address and a stack
-> on that page should be a perfectly good way to communicate.
-> 
-> > - My opinion is to communicate between two kernel directly.
-> >
-> > I think as a minimal infrastructure patch, we can communicate minimal
-> > information between user space of two kernels. When we have consensus on
-> > this topic, we can use makedumpfile for both excluding free pages and
-> > saving the entry point. Now, we can save the entry point in a separate
-> > file or I can write a simple tool to do this.
-> 
-> We need a fixed protocol so we do not make assumptions about how things
-> will be implemented, allowing kernels to diverge and kinds of other
-> good things.
-> 
-> For communicating extra information from the kernel being shut down
-> we have elf notes.
-> 
-> Direct kernel to kernel communication is forbidden.  We must have
-> a well defined protocol.  Allowing the implementations to change
-> at their different speeds, and still work together.
-> 
-
-Agreed. Without a proper protocol, we will often run into issues that
-X version of kernel does not work with Y version of hibernation kernel
-etc.
-
-> >> May be we can have a separate load flag (--load-resume-image) to mark
-> >> that we are resuming an hibernated image and kexec does not have to
-> >> prepare commandline, does not have to prepare zero page/setup page etc.
-> >
-> > There is already similar flag in original kexec-tools implementation:
-> > "--args-none". If it is specified, kexec-tools does not prepare command
-> > line and zero page/setup page etc. I think we can just re-use this flag.
-> > And If it is desired an alias is good for me too.
-> 
-> My gut feel is we look at the image and detect what kind it is, and simply
-> not enable image processing after we have read the note that says it
-> is a resumable core or whatever.
-> 
-
-That makes sense. Just that we shall have to put some kind of ELF NOTE
-or some other identifier in resumable core file to identify it.
+Ok, we can get rid of --load-resume-image and go by the Eric's idea
+of detecting image type and taking action accordingly.
 
 Thanks
 Vivek
