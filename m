@@ -1,16 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZGgI-0004E5-2M
-	for kexec@lists.infradead.org; Wed, 12 Mar 2008 02:27:02 +0000
-Subject: Re: [PATCH -mm] kexec jump -v9
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <200803112318.28120.rjw@sisk.pl>
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<20080311211004.GA30164@redhat.com>  <200803112318.28120.rjw@sisk.pl>
-Date: Wed, 12 Mar 2008 10:26:28 +0800
-Message-Id: <1205288788.29875.28.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e34.co.us.ibm.com ([32.97.110.152])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JZJSx-00044h-DM
+	for kexec@lists.infradead.org; Wed, 12 Mar 2008 05:25:27 +0000
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m2C5OQG6016878
+	for <kexec@lists.infradead.org>; Wed, 12 Mar 2008 01:24:26 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m2C5PMpT143462
+	for <kexec@lists.infradead.org>; Tue, 11 Mar 2008 23:25:22 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m2C5PM1x022205
+	for <kexec@lists.infradead.org>; Tue, 11 Mar 2008 23:25:22 -0600
+Date: Wed, 12 Mar 2008 10:55:09 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
+Subject: Re: Fwd: Kexec support for PS3 (ppc64)
+Message-ID: <20080312052509.GC409@in.ibm.com>
+References: <C5065F118AFB3D478B052FC1E9810D9CA9041B@tec-mail.ttec.soc-soft.com>
+	<4574cb3d0803062155k7da6be9al30ee3f35d01f9f0@mail.gmail.com>
+	<47D19114.1090700@am.sony.com>
+	<4574cb3d0803110325u759a411ckbae3ff69557b0230@mail.gmail.com>
+	<47D6B92D.2020205@am.sony.com> <47D6D406.8050209@am.sony.com>
+	<47D73003.8060208@bluelane.com> <47D7349E.90409@am.sony.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <47D7349E.90409@am.sony.com>
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,32 +41,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Geoff Levand <geoffrey.levand@am.sony.com>
+Cc: Rajasekaran P <rajasekaran83@gmail.com>, kexec@lists.infradead.org, piet@bluelane.com
 
-On Tue, 2008-03-11 at 23:18 +0100, Rafael J. Wysocki wrote:
-> On Tuesday, 11 of March 2008, Vivek Goyal wrote:
-[...]
-> > Rafael/Pavel, does the approach of doing hibernation using a separate
-> > kernel holds promise?
-> 
-> Well, what can I say?
-> 
-> I haven't been a big fan of doing hibernation this way since the very beginning
-> and I still have the same reservations.  Namely, my opinion is that the
-> hibernation-related problems we have are not just solvable this way.  For one
-> example, in order to stop using the freezer for suspend/hibernation we first
-> need to revamp the suspending/resuming of devices (uder way) and the
-> kexec-based approach doesn't help us here.  I wouldn't like to start another
-> discussion about it though.
+On Tue, Mar 11, 2008 at 06:40:46PM -0700, Geoff Levand wrote:
+> When the first stage kernel goes down it releases all hypervisor
+> resources so that whatever boots next can successful open those
+> resources.  The frame buffer is one of those resources that are
+> released, and after it is, there will be no more output to the
+> display until the second stage image brings up its display.  It
+> is not a matter of adding print statements or string formatting.
+>
 
-Yes. We need to work on device drivers for all hibernation
-implementations. And kexec-based hibernation provides a possible method
-to avoid freezer after driver works done.
+Geoff,
 
-Best Regards,
-Huang Ying
+What about using Hypervisor call H_PUT_TERM_CHAR?
 
+I used this call to debug the first kernel kexec shutdown sequence.
+
+Regards,
+Mohan.
 
 _______________________________________________
 kexec mailing list
