@@ -1,34 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e1.ny.us.ibm.com ([32.97.182.141])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZJx0-0006G8-QR
-	for kexec@lists.infradead.org; Wed, 12 Mar 2008 05:56:31 +0000
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m2C5uR9x030230
-	for <kexec@lists.infradead.org>; Wed, 12 Mar 2008 01:56:27 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m2C5uRJp311262
-	for <kexec@lists.infradead.org>; Wed, 12 Mar 2008 01:56:27 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m2C5uRch016481
-	for <kexec@lists.infradead.org>; Wed, 12 Mar 2008 01:56:27 -0400
-Date: Wed, 12 Mar 2008 11:26:23 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
-Subject: Re: Fwd: Kexec support for PS3 (ppc64)
-Message-ID: <20080312055623.GD409@in.ibm.com>
-References: <C5065F118AFB3D478B052FC1E9810D9CA9041B@tec-mail.ttec.soc-soft.com>
-	<4574cb3d0803062155k7da6be9al30ee3f35d01f9f0@mail.gmail.com>
-	<47D19114.1090700@am.sony.com>
-	<4574cb3d0803110325u759a411ckbae3ff69557b0230@mail.gmail.com>
-	<47D6B92D.2020205@am.sony.com> <47D6D406.8050209@am.sony.com>
-	<47D73003.8060208@bluelane.com> <47D7349E.90409@am.sony.com>
-	<20080312052509.GC409@in.ibm.com> <47D76CC9.5080200@am.sony.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <47D76CC9.5080200@am.sony.com>
-Reply-To: mohan@in.ibm.com
+Received: from mga02.intel.com ([134.134.136.20])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JZKpn-0004jj-QG
+	for kexec@lists.infradead.org; Wed, 12 Mar 2008 06:53:08 +0000
+Subject: Re: [PATCH -mm] kexec jump -v9
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	<20080311211004.GA30164@redhat.com>
+	<1205286326.29069.16.camel@caritas-dev.intel.com>
+	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
+Date: Wed, 12 Mar 2008 14:54:48 +0800
+Message-Id: <1205304888.10239.0.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,23 +25,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoffrey.levand@am.sony.com>
-Cc: Rajasekaran P <rajasekaran83@gmail.com>, kexec@lists.infradead.org, piet@bluelane.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Mar 11, 2008 at 10:40:25PM -0700, Geoff Levand wrote:
-> That is for the IBM pSeries.  I can't see how it would work
-> on the ps3.  ps3 hvcalls are in lv1calls.h.
-
-Oh, okay.
-
+On Tue, 2008-03-11 at 20:17 -0600, Eric W. Biederman wrote:
+> "Huang, Ying" <ying.huang@intel.com> writes:
 > 
-> Just out of curiosity, how exactly did you 'use' it?
+> > Yes. The entry point should be saved in dump.elf itself, this can be
+> > done via a user-space tool such as "makedumpfile". Because
+> > "makedumpfile" is also used to exclude free pages from disk image, it
+> > needs a communication method between two kernels (to get backup pages
+> > map or something like that from kernel A). We have talked about this
+> > before.
+> >
+> > - Your opinion is to communicate via the purgatory. (But I don't know
+> > how to communicate between kernel A and purgatory).
 > 
+> How about the return address on the stack?
+> 
+> > - Eric's opinion is to communicate between the user space in kernel A
+> > and user space in kernel B.
+> 
+> Purgatory is for all intents and purposes user space.  Because the
+> return address falls on the trampoline page we won't know it's
+> address before we call kexec.  But a return address and a stack
+> on that page should be a perfectly good way to communicate.
+> 
+> > - My opinion is to communicate between two kernel directly.
+> >
+> > I think as a minimal infrastructure patch, we can communicate minimal
+> > information between user space of two kernels. When we have consensus on
+> > this topic, we can use makedumpfile for both excluding free pages and
+> > saving the entry point. Now, we can save the entry point in a separate
+> > file or I can write a simple tool to do this.
+> 
+> We need a fixed protocol so we do not make assumptions about how things
+> will be implemented, allowing kernels to diverge and kinds of other
+> good things.
+> 
+> For communicating extra information from the kernel being shut down
+> we have elf notes.
+> 
+> Direct kernel to kernel communication is forbidden.  We must have
+> a well defined protocol.  Allowing the implementations to change
+> at their different speeds, and still work together.
 
-We used the function plpar_put_term_char
+This sounds reasonable. But after some initial trying I found it is
+fairly difficult for me to define a communication protocol to be back
+compatible with original kexec/kdump, doing work in user space as far as
+possible, dealing with some special scenario (such as: A kexec B, then B
+kexec C). So I will try my best to work on this, and propose a
+communication protocol combining the proposals from you and Vivek in
+several days.
 
-Regards,
-Mohan.
+> >> May be we can have a separate load flag (--load-resume-image) to mark
+> >> that we are resuming an hibernated image and kexec does not have to
+> >> prepare commandline, does not have to prepare zero page/setup page etc.
+> >
+> > There is already similar flag in original kexec-tools implementation:
+> > "--args-none". If it is specified, kexec-tools does not prepare command
+> > line and zero page/setup page etc. I think we can just re-use this flag.
+> > And If it is desired an alias is good for me too.
+> 
+> My gut feel is we look at the image and detect what kind it is, and simply
+> not enable image processing after we have read the note that says it
+> is a resumable core or whatever.
+
+Yes. This sounds good.
+
+Best Regards,
+Huang Ying
+
 
 _______________________________________________
 kexec mailing list
