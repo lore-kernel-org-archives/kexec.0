@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JZW66-0002GP-PP
-	for kexec@lists.infradead.org; Wed, 12 Mar 2008 18:54:43 +0000
-Date: Wed, 12 Mar 2008 14:53:56 -0400
+	id 1JZWln-0005Iz-4A
+	for kexec@lists.infradead.org; Wed, 12 Mar 2008 19:37:48 +0000
+Date: Wed, 12 Mar 2008 15:37:40 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH -mm] kexec jump -v9
-Message-ID: <20080312185356.GD13549@redhat.com>
+Message-ID: <20080312193740.GE13549@redhat.com>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 	<20080311211004.GA30164@redhat.com>
-	<1205272758.7990.37.camel@nigel-laptop>
-	<1205288074.29875.22.camel@caritas-dev.intel.com>
+	<1205286326.29069.16.camel@caritas-dev.intel.com>
+	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1205288074.29875.22.camel@caritas-dev.intel.com>
+In-Reply-To: <m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,93 +26,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Nigel Cunningham <ncunningham@crca.org.au>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Wed, Mar 12, 2008 at 10:14:34AM +0800, Huang, Ying wrote:
-> On Wed, 2008-03-12 at 08:59 +1100, Nigel Cunningham wrote:
-> > Hi all.
-> > 
-> > I hope kexec turns out to be a good, usable solution. Unfortunately,
-> > however, I still have some areas where I'm not convinced that kexec is
-> > going to work or work well:
-> > 
-> > 1. Reliability.
-> > 
-> > It's being sold as a replacement for freezing processes, yet AFAICS it's
-> > still going to require the freezer in order to be reliable. In the
-> > normal case, there isn't much of an issue with freeing memory or
-> > allocating swap, and so these steps can be expected to progress without
-> > pain. Imagine, however, the situation where another process or processes
-> > are trying to allocate large amounts of memory at the same time, or the
-> > system is swapping heavily. Although such situations will not be common,
-> > they are entirely conceivable, and any implementation ought to be able
-> > to handle such a situation efficiently. If the freezer is removed, any
-> > hibernation implementation - not just kexec - is going to have a much
-> > harder job of being reliable in all circumstances. AFAICS, the only way
-> > a kexec based solution is going to be able to get around this will be to
-> > not have to allocate memory, but that will require permanent allocation
-> > of memory for the kexec kernel and it's work area as well as the
-> > permanent, exclusive allocation of storage for the kexec hibernation
-> > implementation that's currently in place (making the LCA complaint about
-> > not being able to hibernate to swap on NTFS on fuse equally relevant).
+On Tue, Mar 11, 2008 at 08:17:45PM -0600, Eric W. Biederman wrote:
+> "Huang, Ying" <ying.huang@intel.com> writes:
 > 
-> As Eric said kexec need only to allocate memory during loading, not
-> executing.
-
-Yes. But this memory gets reserved at loading time and then this memory
-remains unused for the whole duration (except hibernation).
-
-In the example you gave, looks like you are reserving 15MB of memory for
-second kernel. In practice, we we finding it difficult to boot a regular
-kernel in 16MB of memory in kdump. We are now reserving 128MB of memory
-for kdump kernel on x86 arch, otheriwse OOM kill kicks in during init
-or while core is being copied.
-
-Kexec based hibernation does not look any different than kdump in terms
-of memory requirements. The only difference seems to be that kdump does
-the contiguous memory reservation at boot time and kexec based hibernation
-does the memory reservation at kernel loading time.
-
-The only difference I can think of is, kdump will generally run on servers
-and hibernation will be required on desktops/laptops and run time memory
-requirements might be little different. I don't have numbers though.
-
-At the same time carrying a separate kernel binary just for hibernation
-purposes does not sound very good.
-  
-[..]
-> > 3. Usability.
-> > 
-> > Right now, kexec based hibernation looks quite complicated to configure,
-> > and the user is apparently going to have to remember to boot a different
-> > kernel or at least a different bootloader entry in order to resume. Not
+> > Yes. The entry point should be saved in dump.elf itself, this can be
+> > done via a user-space tool such as "makedumpfile". Because
+> > "makedumpfile" is also used to exclude free pages from disk image, it
+> > needs a communication method between two kernels (to get backup pages
+> > map or something like that from kernel A). We have talked about this
+> > before.
+> >
+> > - Your opinion is to communicate via the purgatory. (But I don't know
+> > how to communicate between kernel A and purgatory).
 > 
-> No, the newest implementation need not to boot a different kernel or
-> different bootloader entry. You just use one bootloader entry, it will
-> resume if there's an image, booting normally if there's not. You can
-> look at the newest hibernation example description.
+> How about the return address on the stack?
 > 
 
-Following is the step from new method you have given.
+I think he needs to pass on much more data than just return address. 
 
-7. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
-   root file system.
+IIUC, he needs to pass backup pages map to new kernel, so that any
+user space tool can use backup pages map to reconstruct/rearrange the
+first kernel's memory core and tools like makedumpfile can do filtering
+before hibernated images is saved.
 
-This mentions that use rootfs.gz as initrd. Without modifying the boot
-loader entry, how would I switch the initrd dynamically.
+This brings me to a random thought. Can we break the process of loading
+a hibernation kernel in two steps.
 
-Looks like it might be a typo. So basically we can just boot back into
-normal kernel and then a user can load the resumable core file and kexec
-to it?
+- In first step just do the memory reservation for running second kernel.
+  (kexec -l <dummpy-file-for-reserving-memory>)
 
-I think all this functionality can be packed into normal initrd itself
-to make user interface better.
+- This memory map of reserved pages is exported to user space.
 
-A user can configure the destination for hibernated image at system
-installation time and initrd will be modified accordingly to save the
-hibernated image as well to check that user specfied location to find out
-if a hibernation image is available and needs to be resumed.
+- Use this memory map and regenerate the hibernation kernel initrd
+  (rootfs.gz) and put the memory map there. This memory map can be used
+  by makedumpfile in second kernel for filtering.
+
+This way it will user space to user space communication of information 
+which gets fixed at kernel loading time.
+
+> > - Eric's opinion is to communicate between the user space in kernel A
+> > and user space in kernel B.
+> 
+> Purgatory is for all intents and purposes user space.  Because the
+> return address falls on the trampoline page we won't know it's
+> address before we call kexec.  But a return address and a stack
+> on that page should be a perfectly good way to communicate.
+> 
+> > - My opinion is to communicate between two kernel directly.
+> >
+> > I think as a minimal infrastructure patch, we can communicate minimal
+> > information between user space of two kernels. When we have consensus on
+> > this topic, we can use makedumpfile for both excluding free pages and
+> > saving the entry point. Now, we can save the entry point in a separate
+> > file or I can write a simple tool to do this.
+> 
+> We need a fixed protocol so we do not make assumptions about how things
+> will be implemented, allowing kernels to diverge and kinds of other
+> good things.
+> 
+> For communicating extra information from the kernel being shut down
+> we have elf notes.
+> 
+> Direct kernel to kernel communication is forbidden.  We must have
+> a well defined protocol.  Allowing the implementations to change
+> at their different speeds, and still work together.
+> 
+
+Agreed. Without a proper protocol, we will often run into issues that
+X version of kernel does not work with Y version of hibernation kernel
+etc.
+
+> >> May be we can have a separate load flag (--load-resume-image) to mark
+> >> that we are resuming an hibernated image and kexec does not have to
+> >> prepare commandline, does not have to prepare zero page/setup page etc.
+> >
+> > There is already similar flag in original kexec-tools implementation:
+> > "--args-none". If it is specified, kexec-tools does not prepare command
+> > line and zero page/setup page etc. I think we can just re-use this flag.
+> > And If it is desired an alias is good for me too.
+> 
+> My gut feel is we look at the image and detect what kind it is, and simply
+> not enable image processing after we have read the note that says it
+> is a resumable core or whatever.
+> 
+
+That makes sense. Just that we shall have to put some kind of ELF NOTE
+or some other identifier in resumable core file to identify it.
 
 Thanks
 Vivek
