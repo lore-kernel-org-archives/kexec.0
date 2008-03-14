@@ -1,35 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e2.ny.us.ibm.com ([32.97.182.142])
+Received: from e28smtp02.in.ibm.com ([59.145.155.2] helo=e28esmtp02.in.ibm.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ja7zp-0006uX-Gv
-	for kexec@lists.infradead.org; Fri, 14 Mar 2008 11:22:46 +0000
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m2EBMiDZ017581
-	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:22:44 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m2EBMiTe392804
-	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:22:44 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m2EBMhTc027165
-	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:22:44 -0400
-Date: Fri, 14 Mar 2008 16:52:41 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
-Subject: Re: Fwd: Kexec support for PS3 (ppc64)
-Message-ID: <20080314112241.GC9643@in.ibm.com>
-References: <C5065F118AFB3D478B052FC1E9810D9CA9041B@tec-mail.ttec.soc-soft.com>
-	<4574cb3d0803062155k7da6be9al30ee3f35d01f9f0@mail.gmail.com>
-	<47D19114.1090700@am.sony.com>
-	<4574cb3d0803110325u759a411ckbae3ff69557b0230@mail.gmail.com>
-	<47D6B92D.2020205@am.sony.com> <47D6D406.8050209@am.sony.com>
-	<4574cb3d0803140336g59236cf2w7e14405b2dc795a5@mail.gmail.com>
-	<20080314110212.GA9643@in.ibm.com>
-	<4574cb3d0803140418t41a84b93g9e25694b4c919e74@mail.gmail.com>
+	id 1Ja62O-0007az-OF
+	for kexec@lists.infradead.org; Fri, 14 Mar 2008 09:17:20 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28esmtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m2E9H0Gn016965
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 14:47:00 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m2E9H0HW1171662
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 14:47:00 +0530
+Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
+	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m2E9H0dl013119
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 09:17:00 GMT
+Message-ID: <47DA428C.3040608@in.ibm.com>
+Date: Fri, 14 Mar 2008 14:47:00 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4574cb3d0803140418t41a84b93g9e25694b4c919e74@mail.gmail.com>
-Reply-To: mohan@in.ibm.com
+Subject: [PATCH] x86_64 purgatory Makefile typo fix.
+Content-Type: multipart/mixed; boundary="------------070802080300050605000309"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,38 +27,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rajasekaran P <rajasekaran83@gmail.com>
-Cc: kexec@lists.infradead.org, Geoff Levand <geoffrey.levand@am.sony.com>
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Fri, Mar 14, 2008 at 04:18:52AM -0700, Rajasekaran P wrote:
-> Yes,I built this kernel with CRASH_DUMP and VMCORE file system  enabled.
-> Moreover, I disabled SMP as well.
-> My system kernel is (First kernel) is SMP enabled, does it matter?
+This is a multi-part message in MIME format.
+--------------070802080300050605000309
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-It should not matter.
+While trying to test latest kexec tools git code on a x86_64
+box i ran into following issue. Kexec refused to load both
+kexec and kdump kernels.
 
-> 
-> I dont get any message from dump capture kernel.
-> 
-> I trigger crash dump using :
-> 
-> echo c > /proc/sysrq-trigger
+# ./build/sbin/kexec -l /boot/vmlinuz-2.6.25-rc5 --initrd=/boot/initrd-2.6.25-rc5 
+Symbol: entry32_regs not found cannot get
 
-While triggering the dump, don't you get any message, like sending IPI
-to cpu?
+#
+# ./build/kexec -p /boot/vmlinux-kdump --initrd=/boot/initrd-kdump
+ --append="...."
+Symbol: entry64_regs not found cannot get
 
-> Initially capture kernel was loaded into 32MB only, but still it was not
-> booting. So I tweaked the KDUMP_KERNELBASE macro to load capture kernel to
-> 64MB ( My idea is, first 64MB for system kernel and second 64MB for capture
-> kernel). Should it be 32MB only?
+#
 
-You can't do that. It should be at 32MB only.
+It turns out that entry64.S file under purgatory/arch/x86_64 was not
+compiled. The original x86_64_PURGATORY_SRCS were being overwritten
+in the Makefile.
+
+Here is a patch to fix this issue. 
+
+Thanks
+-Sachin
+
+
+--------------070802080300050605000309
+Content-Type: text/x-patch;
+	name="kexec-tools-x86_64_purgatory_makefile_fix.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+	filename="kexec-tools-x86_64_purgatory_makefile_fix.patch"
+
+* This patch fixes a typo in x86_64 purgatory makefile
+
+Signed Off By : Sachin Sant (sachinp@in.ibm.com)
+---
+
+
+diff -Naurp old/purgatory/arch/x86_64/Makefile new/purgatory/arch/x86_64/Makefile
+--- old/purgatory/arch/x86_64/Makefile	2008-03-07 11:18:10.000000000 +0530
++++ new/purgatory/arch/x86_64/Makefile	2008-03-14 14:24:50.000000000 +0530
+@@ -14,7 +14,7 @@ dist += purgatory/arch/x86_64/Makefile $
+ 	purgatory/arch/x86_64/purgatory-x86_64.h
+ 
+ # Done add sources in i386/ to dist, as i386/Makefile adds them
+-x86_64_PURGATORY_SRCS =  purgatory/arch/i386/entry32-16.S
++x86_64_PURGATORY_SRCS +=  purgatory/arch/i386/entry32-16.S
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16-debug.S
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
+ x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
+
+--------------070802080300050605000309
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------070802080300050605000309--
+
