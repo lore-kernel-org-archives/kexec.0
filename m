@@ -1,19 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ja4um-0004QP-TU
-	for kexec@lists.infradead.org; Fri, 14 Mar 2008 08:05:21 +0000
-Subject: Re: [PATCH -mm] kexec jump -v9
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080312193740.GE13549@redhat.com>
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<20080311211004.GA30164@redhat.com>
-	<1205286326.29069.16.camel@caritas-dev.intel.com>
-	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
-	<20080312193740.GE13549@redhat.com>
-Date: Fri, 14 Mar 2008 16:03:28 +0800
-Message-Id: <1205481808.867.0.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ja7g1-0000dX-La
+	for kexec@lists.infradead.org; Fri, 14 Mar 2008 11:02:18 +0000
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m2EB2Hrf028220
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:02:17 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m2EB2HpB249196
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:02:17 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m2EB2Gff011270
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 07:02:16 -0400
+Date: Fri, 14 Mar 2008 16:32:12 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
+Subject: Re: Fwd: Kexec support for PS3 (ppc64)
+Message-ID: <20080314110212.GA9643@in.ibm.com>
+References: <C5065F118AFB3D478B052FC1E9810D9CA9041B@tec-mail.ttec.soc-soft.com>
+	<4574cb3d0803062155k7da6be9al30ee3f35d01f9f0@mail.gmail.com>
+	<47D19114.1090700@am.sony.com>
+	<4574cb3d0803110325u759a411ckbae3ff69557b0230@mail.gmail.com>
+	<47D6B92D.2020205@am.sony.com> <47D6D406.8050209@am.sony.com>
+	<4574cb3d0803140336g59236cf2w7e14405b2dc795a5@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4574cb3d0803140336g59236cf2w7e14405b2dc795a5@mail.gmail.com>
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,115 +40,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Rajasekaran P <rajasekaran83@gmail.com>
+Cc: kexec@lists.infradead.org, Geoff Levand <geoffrey.levand@am.sony.com>
 
-On Wed, 2008-03-12 at 15:37 -0400, Vivek Goyal wrote:
-> On Tue, Mar 11, 2008 at 08:17:45PM -0600, Eric W. Biederman wrote:
-> > "Huang, Ying" <ying.huang@intel.com> writes:
-> > 
-> > > Yes. The entry point should be saved in dump.elf itself, this can be
-> > > done via a user-space tool such as "makedumpfile". Because
-> > > "makedumpfile" is also used to exclude free pages from disk image, it
-> > > needs a communication method between two kernels (to get backup pages
-> > > map or something like that from kernel A). We have talked about this
-> > > before.
-> > >
-> > > - Your opinion is to communicate via the purgatory. (But I don't know
-> > > how to communicate between kernel A and purgatory).
-> > 
-> > How about the return address on the stack?
-> > 
+On Fri, Mar 14, 2008 at 03:36:58AM -0700, Rajasekaran P wrote:
+> On Tue, Mar 11, 2008 at 11:48 AM, Geoff Levand <geoffrey.levand@am.sony.com>
+> wrote:
 > 
-> I think he needs to pass on much more data than just return address. 
+> Initially I made mistake by referring /proc/meminfo and thought the total
+> RAM was > 200M iB (actually it shows around 211MiB in /proc/meminfo
+> excluding swap space). But actual available memory is 128MiB only. Thats why
+> reserving 128MiB on 32MiB failed and kernel was not booting up.
 > 
-> IIUC, he needs to pass backup pages map to new kernel, so that any
-> user space tool can use backup pages map to reconstruct/rearrange the
-> first kernel's memory core and tools like makedumpfile can do filtering
-> before hibernated images is saved.
+> Now "crashkernel" argument works properly for 64MB@64MB and kernel reserves
+> 64MB for crash dump capture kernel.
+
+In PPC64, crashkernel base address is hard coded i.e it is always loaded
+at 32MB, even though you have passed 64MB@64MB. Did you get any warning
+message like crashkernel reserved at 32MB?
+
 > 
-> This brings me to a random thought. Can we break the process of loading
-> a hibernation kernel in two steps.
+> This memory is reserved for "dump capture kernel" which will be loaded later
+> by using kexec. Please refer linux_src/Documentation/kdump/kdump.txt for
+> more information.
 > 
-> - In first step just do the memory reservation for running second kernel.
->   (kexec -l <dummpy-file-for-reserving-memory>)
+> I tried to load dump capture configured kernel and facing similar kind of
+> problem. After successful loading, Dump capture kernel is NOT BOOTING UP
+> upon kernel crash.
+
+Do you get any message from the dump capture kernel? How do you trigger
+the dump?
+
+> I used the following command to load:
 > 
-> - This memory map of reserved pages is exported to user space.
-> 
-> - Use this memory map and regenerate the hibernation kernel initrd
->   (rootfs.gz) and put the memory map there. This memory map can be used
->   by makedumpfile in second kernel for filtering.
-> 
-> This way it will user space to user space communication of information 
-> which gets fixed at kernel loading time.
+> # kexec -t elf-ppc64 --append="video=ps3fb:mode:166 rhgb root=/dev/ps3da3
+> single maxcpus=1 noirqdistrib" \
+>  --initrd=/boot/initrd-2.6.23-kdump.img \
+>  -p vmlinux.strip.kdump
 
-Doing kexec load in two steps is a possible solution. Although this is a
-little complex, we can wrap the two steps into one /sbin/kexec invoking.
-That is, When do /sbin/kexec --load-preserve-context
-<kernel-image>, /sbin/kexec first call sys_kexec_load() to load the
-kernel image and reserving memory, then amend the memory image of loaded
-kernel (B) according to the new information available such as return
-address and backup pages map. For this solution, something still need to
-be solved is how to pass some information back from kernel B
-(hibernating kernel) to kernel A (original kernel) and how to pass some
-information from kernel C (resuming kernel) to kernel A (original
-kernel).
+	^^ Is this kernel compiled with CRASH_DUMP enabled? If yes, it
+should build the kernel for 32MB.
 
------------------------------------------------------------------
+> *
+> Output:*
+> *setup_memory_ranges memory_range[0] start:585001, end:8000000
+> get memory ranges:1
+> setup_memory_ranges memory_range[0] start:585001, end:8000000
+> Modified cmdline:video=ps3fb:mode:166 rhgb root=/dev/ps3da3 single maxcpus=1
+> noirqdistrib elfcorehdr=71068K savemaxmem=64M
+> segment[0].mem:0x4000000 memsz:5599232
 
-Another possible solution to pass information between kernels (in user
-space): needed information from kernel are passed in stack, and a
-special ELF_NOTES is used to access the information in peer kernel.
-Details is as follow:
-
-1. Possible information need to be passed:
-
-1.1 From user space (known before sys_kexec_load):
-
-a. ELF core header
-b. vmcoreinfo (pointer only)
-
-1.2 From kernel space (known after sys_kexec_load):
-
-a. jump back entry (return address)
-b. backup pages map
-
-
-2. When jumping from kernel A to kernel B:
-
-2.1 In /sbin/kexec --load-preserve-context <kernel-image>, /sbin/kexec
-allocate a special ELF_NOTES (ELF NOTES kernel) for information from
-kernel space.
-
-2.2 When doing sys_reboot(REBOOT_CMD_KEXEC), kernel put needed
-information and physical address of ELF core header onto stack just
-before jump to purgatory.
-
-2.3 After jumping to purgatory, purgatory fills "ELF NOTES kernel" with
-corresponding address in stack.
-
-2.4 When kernel B is booted, /proc/vmcore is created and the information
-form ELF NOTES kernel is available too.
-
-
-3. When jumping back from kernel B to kernel A and jumping from kernel C
-to kernel A:
-
-3.1 Same as 2.1
-
-3.2 Same as 2.2, but there is no purgatory in kernel A, so when
-information are put on stack, jump to "jump back entry" of kernel A
-directly.
-
-3.3 The code on jump back entry of kernel A will work as a purgatory to
-fill "ELF NOTES kernel" with corresponding address in stack.
-Then /proc/vmcore reset code is called again to (re-)construct
-the /proc/vmcore with new information.
-
-
-Best Regards,
-Huang Ying
-
+			^^ Says the vmlinux is loaded at 64MB
+> segment[1].mem:0x4557000 memsz:65536
+> segment[2].mem:0x4567000 memsz:4096
+> segment[3].mem:0x4568000 memsz:36864
+> segment[4].mem:0x4571000 memsz:3469312
+> segment[5].mem:0x7fff000 memsz:4096
+> *
+> One more thing I confirmed was, this same dump capture kernel boots up
+> properly when I load it on normal mode (kexec -l and then kexec -e). I am
+> having no clue on this..
 
 _______________________________________________
 kexec mailing list
