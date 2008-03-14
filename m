@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from main.gmane.org ([80.91.229.2] helo=ciao.gmane.org)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JaDAP-0007jm-UK
-	for kexec@lists.infradead.org; Fri, 14 Mar 2008 16:54:02 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id 443C03B9CB
-	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 17:53:59 +0100 (CET)
-Date: Fri, 14 Mar 2008 17:53:58 +0100
+	id 1JaDGM-0003oH-JA
+	for kexec@lists.infradead.org; Fri, 14 Mar 2008 17:00:12 +0000
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1JaDGE-0000XP-OG
+	for kexec@lists.infradead.org; Fri, 14 Mar 2008 17:00:02 +0000
+Received: from charybdis-ext.suse.de ([195.135.221.2])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 17:00:02 +0000
+Received: from bwalle by charybdis-ext.suse.de with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Fri, 14 Mar 2008 17:00:02 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Fix kexec-tools on x86_64
-Message-ID: <20080314165358.GA10674@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH] x86_64 purgatory Makefile typo fix.
+Date: Fri, 14 Mar 2008 17:56:03 +0100
+Message-ID: <frean3$i63$1@ger.gmane.org>
+References: <47DA428C.3040608@in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,65 +33,21 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This patch fixes kexec-tools on x86_64. The build had two problems:
+* Sachin P. Sant [2008-03-14 10:17]:
+> 
+> It turns out that entry64.S file under purgatory/arch/x86_64 was not
+> compiled. The original x86_64_PURGATORY_SRCS were being overwritten
+> in the Makefile.
+> 
+> Here is a patch to fix this issue.
 
- 1. The distribution missed the files
+*arg* Didn't see that posting and fixed it myself. ;-) Anyway, you
+didn't catch the missing files since you don't use the tarball, so my
+work was not completely superflous.
 
-        purgatory/arch/x86_64/entry64-32.S,
-        purgatory/arch/x86_64/entry64.S,
-        purgatory/arch/x86_64/setup-x86_64.S,
-        purgatory/arch/x86_64/stack.S,
-        purgatory/arch/x86_64/purgatory-x86_64.c
 
-    The problem was that variable expansion in a Makefile is a bit different
-    from the expectation, i.e. the final value is used even if the variable is
-    used in the middle.
+        Bernhard
 
- 2. The build didn't include the files mentioned above. This was because of
-    using '=' instead of '+=' in the 2nd part of the Makefile.
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- purgatory/arch/x86_64/Makefile |   20 +++++++++++---------
- 1 files changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/purgatory/arch/x86_64/Makefile b/purgatory/arch/x86_64/Makefile
-index 01fbbf3..af25cd3 100644
---- a/purgatory/arch/x86_64/Makefile
-+++ b/purgatory/arch/x86_64/Makefile
-@@ -2,19 +2,21 @@
- # Purgatory x86_64
- #
- 
--x86_64_PURGATORY_SRCS += purgatory/arch/x86_64/entry64-32.S
--x86_64_PURGATORY_SRCS += purgatory/arch/x86_64/entry64.S
--x86_64_PURGATORY_SRCS += purgatory/arch/x86_64/setup-x86_64.S
--x86_64_PURGATORY_SRCS += purgatory/arch/x86_64/stack.S
--x86_64_PURGATORY_SRCS += purgatory/arch/x86_64/purgatory-x86_64.c
-+x86_64_PURGATORY_SRCS_native = purgatory/arch/x86_64/entry64-32.S
-+x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/entry64.S
-+x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/setup-x86_64.S
-+x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/stack.S
-+x86_64_PURGATORY_SRCS_native += purgatory/arch/x86_64/purgatory-x86_64.c
- 
--dist += purgatory/arch/x86_64/Makefile $(x86_64_PURGATORY_SRCS) \
--	purgatory/arch/x86_64/include/arch/io.h			\
--	purgatory/arch/x86_64/include/arch/debug.h		\
-+x86_64_PURGATORY_SRCS += $(x86_64_PURGATORY_SRCS_native)
-+
-+dist += purgatory/arch/x86_64/Makefile $(x86_64_PURGATORY_SRCS_native) 	\
-+	purgatory/arch/x86_64/include/arch/io.h				\
-+	purgatory/arch/x86_64/include/arch/debug.h			\
- 	purgatory/arch/x86_64/purgatory-x86_64.h
- 
- # Done add sources in i386/ to dist, as i386/Makefile adds them
--x86_64_PURGATORY_SRCS =  purgatory/arch/i386/entry32-16.S
-+x86_64_PURGATORY_SRCS +=  purgatory/arch/i386/entry32-16.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/entry32-16-debug.S
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/crashdump_backup.c
- x86_64_PURGATORY_SRCS += purgatory/arch/i386/console-x86.c
--- 
-1.5.3.8
 
 
 _______________________________________________
