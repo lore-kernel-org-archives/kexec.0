@@ -1,24 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from main.gmane.org ([80.91.229.2] helo=ciao.gmane.org)
+Received: from e23smtp02.au.ibm.com ([202.81.18.163])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbBJr-0005Zv-SC
-	for kexec@lists.infradead.org; Mon, 17 Mar 2008 09:07:48 +0000
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1JbBJn-0002xQ-W8
-	for kexec@lists.infradead.org; Mon, 17 Mar 2008 09:07:44 +0000
-Received: from charybdis-ext.suse.de ([195.135.221.2])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 09:07:43 +0000
-Received: from bwalle by charybdis-ext.suse.de with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 09:07:43 +0000
-From: Bernhard Walle <bwalle@suse.de>
+	id 1JbBRx-0001IF-KC
+	for kexec@lists.infradead.org; Mon, 17 Mar 2008 09:16:10 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp02.au.ibm.com (8.13.1/8.13.1) with ESMTP id m2H9GDnP005686
+	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:16:13 +1100
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m2H9Jnd8203222
+	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:19:49 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m2H9G4P9011285
+	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:16:04 +1100
+Message-ID: <47DE36D0.50600@in.ibm.com>
+Date: Mon, 17 Mar 2008 14:46:00 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
+MIME-Version: 1.0
 Subject: Re: [PATCH] x86_64 purgatory Makefile typo fix.
-Date: Mon, 17 Mar 2008 10:07:36 +0100
-Message-ID: <frlcco$7u5$1@ger.gmane.org>
 References: <47DA428C.3040608@in.ibm.com> <20080317004922.GC1433@verge.net.au>
-Mime-Version: 1.0
+In-Reply-To: <20080317004922.GC1433@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,25 +29,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-SGkgU2ltb24sCgoqIFNpbW9uIEhvcm1hbiBbMjAwOC0wMy0xNyAwMTo0OV06Cj4gCj4gT29vcHMs
-IHNvcnJ5IGFib3V0IHRoYXQuCj4gCj4gUGVyaGFwcyB0aGlzIGlzIHdvcnRoeSBvZiBhIGZyZXNo
-IHJlbGVhc2U/CgpJTU8geWVzIHNpbmNlIHRoZSBjdXJyZW50IHJlbGVhc2UgaXMgdW51c2FibGUg
-b24geDg2XzY0LiBCdXQgcGxlYXNlIG1ha2UKc3VyZSB0byBhbHNvIGluY2x1ZGUgdGhlCgrCoDEu
-IFRoZSBkaXN0cmlidXRpb24gbWlzc2VkIHRoZSBmaWxlcwoKwqAgwqAgwqAgwqAgcHVyZ2F0b3J5
-L2FyY2gveDg2XzY0L2VudHJ5NjQtMzIuUywKwqAgwqAgwqAgwqAgcHVyZ2F0b3J5L2FyY2gveDg2
-XzY0L2VudHJ5NjQuUywKwqAgwqAgwqAgwqAgcHVyZ2F0b3J5L2FyY2gveDg2XzY0L3NldHVwLXg4
-Nl82NC5TLArCoCDCoCDCoCDCoCBwdXJnYXRvcnkvYXJjaC94ODZfNjQvc3RhY2suUywKwqAgwqAg
-wqAgwqAgcHVyZ2F0b3J5L2FyY2gveDg2XzY0L3B1cmdhdG9yeS14ODZfNjQuYwoKwqAgwqAgVGhl
-IHByb2JsZW0gd2FzIHRoYXQgdmFyaWFibGUgZXhwYW5zaW9uIGluIGEgTWFrZWZpbGUgaXMgYSBi
-aXQgICAKICAgIGRpZmZlcmVudCBmcm9tIHRoZSBleHBlY3RhdGlvbiwgaS5lLiB0aGUgZmluYWwg
-dmFsdWUgaXMgdXNlZCBldmVuIGlmCiAgICB0aGUgdmFyaWFibGUgaXMgdXNlZCBpbiB0aGUgbWlk
-ZGxlLgoKcGFydCBvZiBteSBmaXguCgoKICAgICAgICBCZXJuaGFyZAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+Simon Horman wrote:
+> Ooops, sorry about that.
+>
+> Perhaps this is worthy of a fresh release?
+>   
+I think so. Current release is unusable on x86-64. Bernhard also submitted
+a similar patch. You might want to club both of them together.
+
+Thanks
+-Sachin
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
