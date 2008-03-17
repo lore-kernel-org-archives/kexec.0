@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jb3un-0005nT-3d
-	for kexec@lists.infradead.org; Mon, 17 Mar 2008 01:13:27 +0000
-Subject: [patch] kexec-tools: mips: support big-endian mips
-Date: Mon, 17 Mar 2008 10:13:13 +0900
+	id 1Jb46t-0007t7-Vt
+	for kexec@lists.infradead.org; Mon, 17 Mar 2008 01:25:58 +0000
+Subject: [patch] kexec-tools: mips: support big-endian mips (repost)
+Date: Mon, 17 Mar 2008 10:25:43 +0900
 From: Simon Horman <horms@verge.net.au>
-Message-Id: <20080317011319.915F54FA83@tabatha.lab.ultramonkey.org>
+Message-Id: <20080317012550.3A1D34FA83@tabatha.lab.ultramonkey.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,8 +20,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-mips@linux-mips.or
+To: kexec@lists.infradead.org, linux-mips@linux-mips.org
 Cc: Tomasz Chmielewski <mangoo@wpkg.org>
+
+[ Reposted with correct linux-mips address ]
 
 Hi,
 
