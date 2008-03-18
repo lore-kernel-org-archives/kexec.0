@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ebiederm.dsl.xmission.com ([166.70.28.69])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbfBD-0002HX-7h
-	for kexec@lists.infradead.org; Tue, 18 Mar 2008 17:00:51 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
-References: <Pine.LNX.4.44L0.0803121055510.4595-100000@iolanthe.rowland.org>
-	<200803131803.31120.rjw@sisk.pl>
-	<m1ejaew7dm.fsf@ebiederm.dsl.xmission.com>
-	<200803140231.39282.rjw@sisk.pl>
-Date: Tue, 18 Mar 2008 10:56:09 -0600
-In-Reply-To: <200803140231.39282.rjw@sisk.pl> (Rafael J. Wysocki's message of
-	"Fri, 14 Mar 2008 02:31:38 +0100")
-Message-ID: <m1prtsug2e.fsf@ebiederm.dsl.xmission.com>
+Received: from relay2.sgi.com ([192.48.171.30] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JbfZi-0001l3-Oi
+	for kexec@lists.infradead.org; Tue, 18 Mar 2008 17:26:10 +0000
+Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
+	by relay2.corp.sgi.com (Postfix) with ESMTP id 9BFC7304074
+	for <kexec@lists.infradead.org>; Tue, 18 Mar 2008 10:26:08 -0700 (PDT)
+Message-ID: <47DFFB45.3060106@sgi.com>
+Date: Tue, 18 Mar 2008 10:26:29 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
+Subject: force a dump on a hung system?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,92 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Huang,
-	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
+To: kexec@lists.infradead.org
 
-"Rafael J. Wysocki" <rjw@sisk.pl> writes:
+How do i force a dump on a hung system when
+1) it does not respond to the serial console, and
+2) there is no hardware button to trigger an NMI
 
-> On Friday, 14 of March 2008, Eric W. Biederman wrote:
->
->> > Still, it would be sufficient if we disconnected the drivers from the
-> hardware
->> > and thus prevented applications from accessing that hardware.
->> 
->> My gut feeling is that except for a handful of drivers we could even
->> get away with simply implementing hot unplug and hot replug.  Disks
->> are the big exception here.
->> 
->> Which suggests to me that it is at least possible that the methods we
->> want for a kexec jump hibernation may be different from an in-kernel
->> hibernation and quite possibly are easier to implement.
->
-> I'm not sure about the "easier" part, quite frankly.  Also, with our current
-> ordering of code the in-kernel hibernation will need the same callbacks
-> as the kexec-based thing.  However, with the in-kernel approach we can
-> attempt (in the future) to be more ACPI compliant, so to speak, but with the
-> kexec-based approach that won't be possible.
->
-> Whether it's a good idea to follow ACPI, as far as hibernation is concerned, is
-> a separate question, but IMO we won't be able to answer it without _lots_ of
-> testing on vaious BIOS/firmware configurations.  Our experience so far
-> indicates that at least some BIOSes expect us to follow ACPI and misbehave
-> otherwise, so for those systems there should be an "ACPI way" available.
-> [Others just don't work well if we try to follow ACPI and those may be handled
-> using the kexec-based approach, but that doesn't mean that we can just ignore
-> the ACPI compliance issue, at least for now.]
+Am i out of luck?
 
-If we do use the ACPI S4 state I completely agree we should be at
-least spec compliant in how we use it.
+Thanks,
+ - jay
 
-I took a quick skim through my copy of the ACPI spec so I could get a
-feel for this issue.  Hibernation maps to the ACPI S4 state.  The only
-thing we appear to gain from S4 is the ability to tell the BIOS (so it
-can tell a bootloader) that this was a hibernation power off instead
-of simply a software power off.
-
-It looks like entering the ACPI S4 state has a few advantages with
-respect to how the system wakes up.  In general using the ACPI S5
-state (soft off) appears simpler, and potentially more reliable.
-
-The sequence we appear to want is:
-- Disconnecting drivers from devices.
-- Saving the image.
-- Placing the system in a low power or off state.
-
-- Coming out of the low power state.
-- Restoring the image.
-- Reconnecting drivers to devices.
-  (We must assume the device state could have changed here
-   no matter what we do)
-
-It is mostly a matter of where we place the code.
-
-Right now I don't see a limitation either with a kexec based approach
-or without one.  Especially since the common case would be using
-the same kernel with the same drivers both before and after the
-hibernation event.
-
-The low power states for S4 seem to be just so that we can
-decide which devices have enough life that they can wake up
-the system.  If we handle all of that as a second pass after
-we have the system in a state where we have saved it we should
-be in good shape.
-
-My inclination is to just use S5 (soft off).
-
-One of the cool things about hibernation to disk was that we were
-supposed to get the BIOS totally out of that path so we could get
-something that was rock solid and reliable.  I don't see why we should
-use ACPI S4 when the BIOS doesn't seem to give us anything useful, and
-causes us headaches we should even consider using S4.
-
-Does using the S4 state have advantages that I currently do not
-see?
-
-Len? Rafael? Anyone?
-
-Eric
 
 _______________________________________________
 kexec mailing list
