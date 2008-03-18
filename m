@@ -1,26 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.18.163])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbBRx-0001IF-KC
-	for kexec@lists.infradead.org; Mon, 17 Mar 2008 09:16:10 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp02.au.ibm.com (8.13.1/8.13.1) with ESMTP id m2H9GDnP005686
-	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:16:13 +1100
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m2H9Jnd8203222
-	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:19:49 +1100
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m2H9G4P9011285
-	for <kexec@lists.infradead.org>; Mon, 17 Mar 2008 20:16:04 +1100
-Message-ID: <47DE36D0.50600@in.ibm.com>
-Date: Mon, 17 Mar 2008 14:46:00 +0530
-From: "Sachin P. Sant" <sachinp@in.ibm.com>
-MIME-Version: 1.0
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JbS6n-0001t1-CO
+	for kexec@lists.infradead.org; Tue, 18 Mar 2008 03:03:25 +0000
+Date: Tue, 18 Mar 2008 12:03:19 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] x86_64 purgatory Makefile typo fix.
+Message-ID: <20080318030317.GA12309@verge.net.au>
 References: <47DA428C.3040608@in.ibm.com> <20080317004922.GC1433@verge.net.au>
-In-Reply-To: <20080317004922.GC1433@verge.net.au>
+	<frlcco$7u5$1@ger.gmane.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <frlcco$7u5$1@ger.gmane.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,24 +20,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Bernhard Walle <bwalle@suse.de>
 Cc: kexec@lists.infradead.org
 
-Simon Horman wrote:
-> Ooops, sorry about that.
->
-> Perhaps this is worthy of a fresh release?
->   
-I think so. Current release is unusable on x86-64. Bernhard also submitted
-a similar patch. You might want to club both of them together.
+On Mon, Mar 17, 2008 at 10:07:36AM +0100, Bernhard Walle wrote:
+> Hi Simon,
+> =
 
-Thanks
--Sachin
+> * Simon Horman [2008-03-17 01:49]:
+> > =
 
+> > Ooops, sorry about that.
+> > =
+
+> > Perhaps this is worthy of a fresh release?
+> =
+
+> IMO yes since the current release is unusable on x86_64. But please make
+> sure to also include the
+> =
+
+> =A01. The distribution missed the files
+> =
+
+> =A0 =A0 =A0 =A0 purgatory/arch/x86_64/entry64-32.S,
+> =A0 =A0 =A0 =A0 purgatory/arch/x86_64/entry64.S,
+> =A0 =A0 =A0 =A0 purgatory/arch/x86_64/setup-x86_64.S,
+> =A0 =A0 =A0 =A0 purgatory/arch/x86_64/stack.S,
+> =A0 =A0 =A0 =A0 purgatory/arch/x86_64/purgatory-x86_64.c
+> =
+
+> =A0 =A0 The problem was that variable expansion in a Makefile is a bit   =
+
+>     different from the expectation, i.e. the final value is used even if
+>     the variable is used in the middle.
+> =
+
+> part of my fix.
+
+Thanks, I wasn't aware that was how make variables work.
+I've merged your change.
+
+-- =
+
+Horms
 
 
 _______________________________________________
