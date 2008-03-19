@@ -1,12 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbrnR-0006nk-CW
+	id 1JbrnR-0006nj-CP
 	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:29:09 +0000
 MIME-Version: 1.0
-Subject: [PATCH 2/3] Use separate LDFLAGS for bin-to-hex
-Message-Id: <1205908147.932697.715535782921.2.gpush@pokey>
-In-Reply-To: <1205908147.931964.895312651655.1.gpush@pokey>
+Subject: [PATCH 1/3] Use separate CPPFLAGS and LDFLAGS for purgatory
+Message-Id: <1205908147.931964.895312651655.1.gpush@pokey>
 From: Jeremy Kerr <jk@ozlabs.org>
 Date: Wed, 19 Mar 2008 17:29:07 +1100
 List-Id: <kexec.lists.infradead.org>
@@ -23,26 +22,38 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-We don't need the general -L and -l flags for the bin-to-hex util.
+Currently, CPPFLAGS and LDFLAGS can 'leak' into the purgatory build
+from the main kexec/kexec object. Because of this, the purgatory
+is build with -lz, but we may not have a zlib present for the
+architecture of the purgatory object.
+
+This change uses fresh CPPFLAGS and LDFLAGS for the purgatory object.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
 ---
- util/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+ purgatory/Makefile |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/util/Makefile b/util/Makefile
-index 89732a1..11d82fd 100644
---- a/util/Makefile
-+++ b/util/Makefile
-@@ -6,6 +6,7 @@ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index 6c747b1..ac58719 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -49,11 +49,12 @@ $(PURGATORY): CFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 		      -Os -fno-builtin -ffreestanding \
+ 		      -fno-zero-initialized-in-bss
  
- $(BIN_TO_HEX): CC=$(BUILD_CC)
- $(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
-+$(BIN_TO_HEX): LDFLAGS=
+-$(PURGATORY): CPPFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
++$(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 			-I$(srcdir)/purgatory/include \
+ 			-I$(srcdir)/purgatory/arch/$(ARCH)/include \
++			-I$(srcdir)/util_lib/include \
+ 			-I$(shell $(CC) -print-file-name=include)
+-$(PURGATORY): LDFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
++$(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
+ 			--no-undefined -nostartfiles -nostdlib -nodefaultlibs \
+ 			-e purgatory_start -r
  
- dist += util/Makefile util/bin-to-hex.c
- clean += util/bin-to-hex.o $(BIN_TO_HEX)
 
 _______________________________________________
 kexec mailing list
