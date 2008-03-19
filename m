@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbrnR-0006nj-CP
-	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:29:09 +0000
+	id 1JbrnR-0006nl-CT
+	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:29:11 +0000
 MIME-Version: 1.0
-Subject: [PATCH 1/3] Use separate CPPFLAGS and LDFLAGS for purgatory
-Message-Id: <1205908147.931964.895312651655.1.gpush@pokey>
+Subject: [PATCH 3/3] Give installed files user-writable permission
+Message-Id: <1205908147.934035.815301919033.3.gpush@pokey>
+In-Reply-To: <1205908147.931964.895312651655.1.gpush@pokey>
 From: Jeremy Kerr <jk@ozlabs.org>
 Date: Wed, 19 Mar 2008 17:29:07 +1100
 List-Id: <kexec.lists.infradead.org>
@@ -22,37 +23,130 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Currently, CPPFLAGS and LDFLAGS can 'leak' into the purgatory build
-from the main kexec/kexec object. Because of this, the purgatory
-is build with -lz, but we may not have a zlib present for the
-architecture of the purgatory object.
+Currently we install all files as 0555 or 0444. This means that we
+can't easily do any post-install modification to the files (eg.
+stripping, as is done with OpenWRT).
 
-This change uses fresh CPPFLAGS and LDFLAGS for the purgatory object.
+This change installs the files with the user write bit set
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
 ---
- purgatory/Makefile |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Makefile.in |   42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/purgatory/Makefile b/purgatory/Makefile
-index 6c747b1..ac58719 100644
---- a/purgatory/Makefile
-+++ b/purgatory/Makefile
-@@ -49,11 +49,12 @@ $(PURGATORY): CFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
- 		      -Os -fno-builtin -ffreestanding \
- 		      -fno-zero-initialized-in-bss
- 
--$(PURGATORY): CPPFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
-+$(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
- 			-I$(srcdir)/purgatory/include \
- 			-I$(srcdir)/purgatory/arch/$(ARCH)/include \
-+			-I$(srcdir)/util_lib/include \
- 			-I$(shell $(CC) -print-file-name=include)
--$(PURGATORY): LDFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
-+$(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
- 			--no-undefined -nostartfiles -nostdlib -nodefaultlibs \
- 			-e purgatory_start -r
+diff --git a/Makefile.in b/Makefile.in
+index 306d6e9..037f9a4 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -237,87 +237,87 @@ install: $(TARGETS)
+ 	for file in $(TARGETS) ; do \
+ 		if test `$(DIRNAME) $$file` =     "$(SBINDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(sbindir)/; \
+-			$(INSTALL) -m 555  $$file $(DESTDIR)/$(sbindir)/; \
++			$(INSTALL) -m 755  $$file $(DESTDIR)/$(sbindir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(BINDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(bindir)/; \
+-			$(INSTALL) -m 555 $$file $(DESTDIR)/$(bindir)/; \
++			$(INSTALL) -m 755 $$file $(DESTDIR)/$(bindir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(LIBEXECDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(libexecdir)/; \
+-			$(INSTALL) -m 555 $$file $(DESTDIR)/$(libexecdir)/; \
++			$(INSTALL) -m 755 $$file $(DESTDIR)/$(libexecdir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(DATADIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(datadir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(datadir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(datadir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(SYSCONFDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(sysconfdir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(sysconfdir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(sysconfdir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(SHAREDSTATEDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(sharedstatedir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(sharedstatedir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(sharedstatedir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(LOCALSTATEDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(localstatedir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(localstatedir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(localstatedir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(LIBDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(libdir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(libdir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(libdir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(INFODIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(infodir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(infodir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(infodir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN1DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man1; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man1; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man1; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN2DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man2; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man2; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man2; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN3DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man3/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man3/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man3/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN4DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man4/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man4/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man4/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN5DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man5/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man5/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man5/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN6DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man6/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man6/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man6/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN7DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man7/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man7/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man7/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(MAN8DIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man8/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man8/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man8/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(INCLUDEDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(includedir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(includedir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(includedir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(PKGDATADIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(pkgdatadir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkgdatadir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkgdatadir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(PKGLIBDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(pkglibdir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkglibdir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkglibdir)/; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(PKGINCLUDEDIR)" ; then \
+ 			$(MKDIR) -p     $(DESTDIR)/$(pkgincludedir)/; \
+-			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkgincludedir)/; \
++			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkgincludedir)/; \
+ 		fi; \
+ 	done
  
 
 _______________________________________________
