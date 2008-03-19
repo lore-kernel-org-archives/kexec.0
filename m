@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wf-out-1314.google.com ([209.85.200.173])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbrQq-0005bx-26
-	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:05:48 +0000
-Received: by wf-out-1314.google.com with SMTP id 29so261526wff.24
-	for <kexec@lists.infradead.org>; Tue, 18 Mar 2008 23:05:46 -0700 (PDT)
-Message-ID: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
-Date: Wed, 19 Mar 2008 02:05:46 -0400
-From: "Mike Snitzer" <snitzer@gmail.com>
-Subject: kexec won't --load-panic a 2.6.22 relocatable kernel?
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JbrnR-0006nk-CW
+	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:29:09 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: [PATCH 2/3] Use separate LDFLAGS for bin-to-hex
+Message-Id: <1205908147.932697.715535782921.2.gpush@pokey>
+In-Reply-To: <1205908147.931964.895312651655.1.gpush@pokey>
+From: Jeremy Kerr <jk@ozlabs.org>
+Date: Wed, 19 Mar 2008 17:29:07 +1100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +23,26 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-I'm building a x86_64 2.6.22 kernel with the following options set:
+We don't need the general -L and -l flags for the bin-to-hex util.
 
-CONFIG_KEXEC=y
-CONFIG_CRASH_DUMP=y
-CONFIG_RELOCATABLE=y
-CONFIG_PHYSICAL_START=0x200000
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
-If I try to load the kernel with the following I get:
+---
+ util/Makefile |    1 +
+ 1 file changed, 1 insertion(+)
 
-./kexec --args-linux -p '--command-line=ro root=LABEL=/1 rhgb quiet
-irqpoll maxcpus=1' --initrd=/boot/initrd-2.6.22.19.img
-/boot/vmlinuz-2.6.22.19
-
-./kexec: unrecognized option `--args-linux'
-kexec-tools-testing 20080318-rc released 18th March 2008
-Usage: kexec [OPTION]... [kernel]
-...
-Cannot load /boot/vmlinuz-2.6.22.19
-
-Now if I remove --args-linux kexec successfully loads the panic kernel
-but when I trigger a crash it just loads the kernel and doesn't
-actually perform a kdump.  So this proves the relocatable nature of
-the kernel is working right?  Its just not passing args as would be
-needed to trigger a crash dump?
-
-If I use the same commandline above (--args-linux included) with a
-RHEL5U1 kernel kexec will load the panic kernel without problems and
-kdump will work when I enduce a crash.
-
-So long story short:  is there some fix that went in upstream after
-2.6.22 was released that would enable kexec to load a relocatable
-x86_64 kernel with the --args-linux option?  Nothing stands out to me
-but I could easily be overlooking something...
-
-Mike
+diff --git a/util/Makefile b/util/Makefile
+index 89732a1..11d82fd 100644
+--- a/util/Makefile
++++ b/util/Makefile
+@@ -6,6 +6,7 @@ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 
+ $(BIN_TO_HEX): CC=$(BUILD_CC)
+ $(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
++$(BIN_TO_HEX): LDFLAGS=
+ 
+ dist += util/Makefile util/bin-to-hex.c
+ clean += util/bin-to-hex.o $(BIN_TO_HEX)
 
 _______________________________________________
 kexec mailing list
