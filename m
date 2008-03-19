@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JbrnR-0006nl-CT
-	for kexec@lists.infradead.org; Wed, 19 Mar 2008 06:29:11 +0000
+Received: from netrider.rowland.org ([192.131.102.5])
+	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jbzmn-000503-7c
+	for kexec@lists.infradead.org; Wed, 19 Mar 2008 15:01:06 +0000
+Date: Wed, 19 Mar 2008 11:01:00 -0400 (EDT)
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
+In-Reply-To: <m1ve3jtmxk.fsf@ebiederm.dsl.xmission.com>
+Message-ID: <Pine.LNX.4.44L0.0803191057270.4958-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Subject: [PATCH 3/3] Give installed files user-writable permission
-Message-Id: <1205908147.934035.815301919033.3.gpush@pokey>
-In-Reply-To: <1205908147.931964.895312651655.1.gpush@pokey>
-From: Jeremy Kerr <jk@ozlabs.org>
-Date: Wed, 19 Mar 2008 17:29:07 +1100
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,133 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
 
-Currently we install all files as 0555 or 0444. This means that we
-can't easily do any post-install modification to the files (eg.
-stripping, as is done with OpenWRT).
+On Tue, 18 Mar 2008, Eric W. Biederman wrote:
 
-This change installs the files with the user write bit set
+> Alan Stern <stern@rowland.harvard.edu> writes:
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> > Could it be connected with the way the boot kernel hands control over
+> > to the image kernel?  Presumably ACPI isn't prepared to deal with that
+> > sort of thing during a boot from S5.  It would have to be fooled into
+> > thinking the two kernels were one and the same.
+> 
+> It should be easy to test if it is a hand over problem, by turning off
+> the laptop by placing it in S5 (shutdown -h now) and then booting same
+> kernel again.
 
----
- Makefile.in |   42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+?  Doesn't this happen every time Rafael turns the computer off and 
+then turns it back on?
 
-diff --git a/Makefile.in b/Makefile.in
-index 306d6e9..037f9a4 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -237,87 +237,87 @@ install: $(TARGETS)
- 	for file in $(TARGETS) ; do \
- 		if test `$(DIRNAME) $$file` =     "$(SBINDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(sbindir)/; \
--			$(INSTALL) -m 555  $$file $(DESTDIR)/$(sbindir)/; \
-+			$(INSTALL) -m 755  $$file $(DESTDIR)/$(sbindir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(BINDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(bindir)/; \
--			$(INSTALL) -m 555 $$file $(DESTDIR)/$(bindir)/; \
-+			$(INSTALL) -m 755 $$file $(DESTDIR)/$(bindir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(LIBEXECDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(libexecdir)/; \
--			$(INSTALL) -m 555 $$file $(DESTDIR)/$(libexecdir)/; \
-+			$(INSTALL) -m 755 $$file $(DESTDIR)/$(libexecdir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(DATADIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(datadir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(datadir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(datadir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(SYSCONFDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(sysconfdir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(sysconfdir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(sysconfdir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(SHAREDSTATEDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(sharedstatedir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(sharedstatedir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(sharedstatedir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(LOCALSTATEDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(localstatedir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(localstatedir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(localstatedir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(LIBDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(libdir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(libdir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(libdir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(INFODIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(infodir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(infodir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(infodir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN1DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man1; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man1; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man1; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN2DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man2; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man2; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man2; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN3DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man3/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man3/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man3/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN4DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man4/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man4/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man4/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN5DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man5/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man5/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man5/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN6DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man6/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man6/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man6/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN7DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man7/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man7/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man7/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(MAN8DIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(mandir)/man8/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(mandir)/man8/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(mandir)/man8/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(INCLUDEDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(includedir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(includedir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(includedir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(PKGDATADIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(pkgdatadir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkgdatadir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkgdatadir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(PKGLIBDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(pkglibdir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkglibdir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkglibdir)/; \
- 		fi; \
- 		if test `$(DIRNAME) $$file` =     "$(PKGINCLUDEDIR)" ; then \
- 			$(MKDIR) -p     $(DESTDIR)/$(pkgincludedir)/; \
--			$(INSTALL) -m 444 $$file $(DESTDIR)/$(pkgincludedir)/; \
-+			$(INSTALL) -m 644 $$file $(DESTDIR)/$(pkgincludedir)/; \
- 		fi; \
- 	done
- 
+Do you mean that Rafael should do an S5-type hibernate, but then reboot 
+in such a way that the image isn't loaded and resumed?
+
+Alan Stern
+
 
 _______________________________________________
 kexec mailing list
