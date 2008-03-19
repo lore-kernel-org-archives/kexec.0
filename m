@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JblbL-0006UM-Ej
-	for kexec@lists.infradead.org; Tue, 18 Mar 2008 23:52:21 +0000
-Date: Wed, 19 Mar 2008 00:52:38 +0100
-From: Pavel Machek <pavel@ucw.cz>
+	id 1Jblro-0004vK-DO
+	for kexec@lists.infradead.org; Wed, 19 Mar 2008 00:09:16 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
-Message-ID: <20080318235238.GA1779@elf.ucw.cz>
+Date: Wed, 19 Mar 2008 01:08:03 +0100
 References: <Pine.LNX.4.44L0.0803121055510.4595-100000@iolanthe.rowland.org>
-	<200803131803.31120.rjw@sisk.pl>
-	<m1ejaew7dm.fsf@ebiederm.dsl.xmission.com>
 	<200803140231.39282.rjw@sisk.pl>
 	<m1prtsug2e.fsf@ebiederm.dsl.xmission.com>
+In-Reply-To: <m1prtsug2e.fsf@ebiederm.dsl.xmission.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m1prtsug2e.fsf@ebiederm.dsl.xmission.com>
+Message-Id: <200803190108.05004.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,22 +26,100 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Huang,
+	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>, Len Brown <lenb@kernel.org>
 
+On Tuesday, 18 of March 2008, Eric W. Biederman wrote:
+> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
+> 
+> > On Friday, 14 of March 2008, Eric W. Biederman wrote:
+> >
+> >> > Still, it would be sufficient if we disconnected the drivers from the
+> > hardware
+> >> > and thus prevented applications from accessing that hardware.
+> >> 
+> >> My gut feeling is that except for a handful of drivers we could even
+> >> get away with simply implementing hot unplug and hot replug.  Disks
+> >> are the big exception here.
+> >> 
+> >> Which suggests to me that it is at least possible that the methods we
+> >> want for a kexec jump hibernation may be different from an in-kernel
+> >> hibernation and quite possibly are easier to implement.
+> >
+> > I'm not sure about the "easier" part, quite frankly.  Also, with our current
+> > ordering of code the in-kernel hibernation will need the same callbacks
+> > as the kexec-based thing.  However, with the in-kernel approach we can
+> > attempt (in the future) to be more ACPI compliant, so to speak, but with the
+> > kexec-based approach that won't be possible.
+> >
+> > Whether it's a good idea to follow ACPI, as far as hibernation is concerned, is
+> > a separate question, but IMO we won't be able to answer it without _lots_ of
+> > testing on vaious BIOS/firmware configurations.  Our experience so far
+> > indicates that at least some BIOSes expect us to follow ACPI and misbehave
+> > otherwise, so for those systems there should be an "ACPI way" available.
+> > [Others just don't work well if we try to follow ACPI and those may be handled
+> > using the kexec-based approach, but that doesn't mean that we can just ignore
+> > the ACPI compliance issue, at least for now.]
+> 
+> If we do use the ACPI S4 state I completely agree we should be at
+> least spec compliant in how we use it.
+> 
+> I took a quick skim through my copy of the ACPI spec so I could get a
+> feel for this issue.  Hibernation maps to the ACPI S4 state.  The only
+> thing we appear to gain from S4 is the ability to tell the BIOS (so it
+> can tell a bootloader) that this was a hibernation power off instead
+> of simply a software power off.
+> 
+> It looks like entering the ACPI S4 state has a few advantages with
+> respect to how the system wakes up.  In general using the ACPI S5
+> state (soft off) appears simpler, and potentially more reliable.
+> 
+> The sequence we appear to want is:
+> - Disconnecting drivers from devices.
+> - Saving the image.
+> - Placing the system in a low power or off state.
+> 
+> - Coming out of the low power state.
+> - Restoring the image.
+> - Reconnecting drivers to devices.
+>   (We must assume the device state could have changed here
+>    no matter what we do)
+> 
+> It is mostly a matter of where we place the code.
+> 
+> Right now I don't see a limitation either with a kexec based approach
+> or without one.  Especially since the common case would be using
+> the same kernel with the same drivers both before and after the
+> hibernation event.
+> 
+> The low power states for S4 seem to be just so that we can
+> decide which devices have enough life that they can wake up
+> the system.  If we handle all of that as a second pass after
+> we have the system in a state where we have saved it we should
+> be in good shape.
+> 
+> My inclination is to just use S5 (soft off).
+> 
+> One of the cool things about hibernation to disk was that we were
+> supposed to get the BIOS totally out of that path so we could get
+> something that was rock solid and reliable.  I don't see why we should
+> use ACPI S4 when the BIOS doesn't seem to give us anything useful, and
+> causes us headaches we should even consider using S4.
+> 
 > Does using the S4 state have advantages that I currently do not
 > see?
+> 
+> Len? Rafael? Anyone?
 
-Yes. S5 confuses BIOSes on some machines (HP nx5000), and they report
-stale values for AC/battery power (and worse, like thermal management
-broken).
+Well, I've been saying that for I-don't-remember-how-long: on my box, if you
+use S5 instead of entering S4, the fan doesn't work correctly after the
+resume.  Plain and simple.
 
-But this should not stop kexec/kjump.
-									Pavel
+Perhaps there's a problem with our ACPI drivers that causes this to happen,
+but I have no idea what that can be at the moment.
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-pomozte zachranit klanovicky les:  http://www.ujezdskystrom.info/
+Thanks,
+Rafael
 
 _______________________________________________
 kexec mailing list
