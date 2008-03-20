@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JcRl7-00076H-LP
-	for kexec@lists.infradead.org; Thu, 20 Mar 2008 20:53:11 +0000
-Date: Thu, 20 Mar 2008 11:40:19 +0100
-From: Pavel Machek <pavel@ucw.cz>
+	id 1JcTWR-0005PC-9c
+	for kexec@lists.infradead.org; Thu, 20 Mar 2008 22:46:08 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
-Message-ID: <20080320104019.GA6870@elf.ucw.cz>
+Date: Thu, 20 Mar 2008 23:45:23 +0100
 References: <Pine.LNX.4.44L0.0803182228520.10154-100000@netrider.rowland.org>
 	<m1ve3jtmxk.fsf@ebiederm.dsl.xmission.com>
+	<20080320104019.GA6870@elf.ucw.cz>
+In-Reply-To: <20080320104019.GA6870@elf.ucw.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m1ve3jtmxk.fsf@ebiederm.dsl.xmission.com>
+Message-Id: <200803202345.25083.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +25,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue 2008-03-18 21:25:27, Eric W. Biederman wrote:
-> Alan Stern <stern@rowland.harvard.edu> writes:
+On Thursday, 20 of March 2008, Pavel Machek wrote:
+> On Tue 2008-03-18 21:25:27, Eric W. Biederman wrote:
+> > Alan Stern <stern@rowland.harvard.edu> writes:
+> > 
+> > > On Wed, 19 Mar 2008, Rafael J. Wysocki wrote:
+> > >
+> > >> Well, I've been saying that for I-don't-remember-how-long: on my box, if you
+> > >> use S5 instead of entering S4, the fan doesn't work correctly after the
+> > >> resume.  Plain and simple.
+> > >> 
+> > >> Perhaps there's a problem with our ACPI drivers that causes this to happen,
+> > >> but I have no idea what that can be at the moment.
+> > >
+> > > IMO it would be worthwhile to track this down.  It's a clear indication 
+> > > that something is wrong somewhere.
+> > >
+> > > Could it be connected with the way the boot kernel hands control over
+> > > to the image kernel?  Presumably ACPI isn't prepared to deal with that
+> > > sort of thing during a boot from S5.  It would have to be fooled into
+> > > thinking the two kernels were one and the same.
+> > 
+> > It should be easy to test if it is a hand over problem, by turning off
+> > the laptop by placing it in S5 (shutdown -h now) and then booting same
+> > kernel again.
 > 
-> > On Wed, 19 Mar 2008, Rafael J. Wysocki wrote:
-> >
-> >> Well, I've been saying that for I-don't-remember-how-long: on my box, if you
-> >> use S5 instead of entering S4, the fan doesn't work correctly after the
-> >> resume.  Plain and simple.
-> >> 
-> >> Perhaps there's a problem with our ACPI drivers that causes this to happen,
-> >> but I have no idea what that can be at the moment.
-> >
-> > IMO it would be worthwhile to track this down.  It's a clear indication 
-> > that something is wrong somewhere.
-> >
-> > Could it be connected with the way the boot kernel hands control over
-> > to the image kernel?  Presumably ACPI isn't prepared to deal with that
-> > sort of thing during a boot from S5.  It would have to be fooled into
-> > thinking the two kernels were one and the same.
+> Feel free to help with testing.
 > 
-> It should be easy to test if it is a hand over problem, by turning off
-> the laptop by placing it in S5 (shutdown -h now) and then booting same
-> kernel again.
+> I believe ACPI is simply getting confused by us overwriting memory
+> with that from old image. I don't see how you can emulate it with
+> shutdown.
 
-Feel free to help with testing.
+Well, in fact ACPI has something called the NVS memory, which we're supposed
+to restore during the resume and which we're not doing.  The problem may be
+related to this.
 
-I believe ACPI is simply getting confused by us overwriting memory
-with that from old image. I don't see how you can emulate it with
-shutdown.
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-pomozte zachranit klanovicky les:  http://www.ujezdskystrom.info/
+I have fixing that on my todo list, but frankly there's many different things
+in there. :-)
+
+Thanks,
+Rafael
 
 _______________________________________________
 kexec mailing list
