@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JcZrv-0002v9-PA
-	for kexec@lists.infradead.org; Fri, 21 Mar 2008 05:32:44 +0000
-Date: Fri, 21 Mar 2008 14:32:36 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec won't --load-panic a 2.6.22 relocatable kernel?
-Message-ID: <20080321053236.GA29330@verge.net.au>
-References: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
+	id 1JcmfS-0002YE-D9
+	for kexec@lists.infradead.org; Fri, 21 Mar 2008 19:12:43 +0000
+Date: Fri, 21 Mar 2008 15:12:26 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm] kexec jump -v9
+Message-ID: <20080321191226.GA12609@redhat.com>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	<20080311211004.GA30164@redhat.com>
+	<1205286326.29069.16.camel@caritas-dev.intel.com>
+	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
+	<20080312193740.GE13549@redhat.com>
+	<1205481808.867.0.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
+In-Reply-To: <1205481808.867.0.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,41 +28,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Snitzer <snitzer@gmail.com>
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Wed, Mar 19, 2008 at 02:05:46AM -0400, Mike Snitzer wrote:
-> I'm building a x86_64 2.6.22 kernel with the following options set:
+On Fri, Mar 14, 2008 at 04:03:28PM +0800, Huang, Ying wrote:
+> On Wed, 2008-03-12 at 15:37 -0400, Vivek Goyal wrote:
+> > On Tue, Mar 11, 2008 at 08:17:45PM -0600, Eric W. Biederman wrote:
+> > > "Huang, Ying" <ying.huang@intel.com> writes:
+> > > 
+> > > > Yes. The entry point should be saved in dump.elf itself, this can be
+> > > > done via a user-space tool such as "makedumpfile". Because
+> > > > "makedumpfile" is also used to exclude free pages from disk image, it
+> > > > needs a communication method between two kernels (to get backup pages
+> > > > map or something like that from kernel A). We have talked about this
+> > > > before.
+> > > >
+> > > > - Your opinion is to communicate via the purgatory. (But I don't know
+> > > > how to communicate between kernel A and purgatory).
+> > > 
+> > > How about the return address on the stack?
+> > > 
+> > 
+> > I think he needs to pass on much more data than just return address. 
+> > 
+> > IIUC, he needs to pass backup pages map to new kernel, so that any
+> > user space tool can use backup pages map to reconstruct/rearrange the
+> > first kernel's memory core and tools like makedumpfile can do filtering
+> > before hibernated images is saved.
+> > 
+> > This brings me to a random thought. Can we break the process of loading
+> > a hibernation kernel in two steps.
+> > 
+> > - In first step just do the memory reservation for running second kernel.
+> >   (kexec -l <dummpy-file-for-reserving-memory>)
+> > 
+> > - This memory map of reserved pages is exported to user space.
+> > 
+> > - Use this memory map and regenerate the hibernation kernel initrd
+> >   (rootfs.gz) and put the memory map there. This memory map can be used
+> >   by makedumpfile in second kernel for filtering.
+> > 
+> > This way it will user space to user space communication of information 
+> > which gets fixed at kernel loading time.
 > 
-> CONFIG_KEXEC=y
-> CONFIG_CRASH_DUMP=y
-> CONFIG_RELOCATABLE=y
-> CONFIG_PHYSICAL_START=0x200000
+> Doing kexec load in two steps is a possible solution. Although this is a
+> little complex, we can wrap the two steps into one /sbin/kexec invoking.
+> That is, When do /sbin/kexec --load-preserve-context
+> <kernel-image>, /sbin/kexec first call sys_kexec_load() to load the
+> kernel image and reserving memory, then amend the memory image of loaded
+> kernel (B) according to the new information available such as return
+> address and backup pages map. For this solution, something still need to
+> be solved is how to pass some information back from kernel B
+> (hibernating kernel) to kernel A (original kernel) and how to pass some
+> information from kernel C (resuming kernel) to kernel A (original
+> kernel).
 > 
-> If I try to load the kernel with the following I get:
-> 
-> ./kexec --args-linux -p '--command-line=ro root=LABEL=/1 rhgb quiet
-> irqpoll maxcpus=1' --initrd=/boot/initrd-2.6.22.19.img
-> /boot/vmlinuz-2.6.22.19
-> 
-> ./kexec: unrecognized option `--args-linux'
-> kexec-tools-testing 20080318-rc released 18th March 2008
-> Usage: kexec [OPTION]... [kernel]
-> ...
-> Cannot load /boot/vmlinuz-2.6.22.19
 
-Hi Mike,
+Hi Huang,
 
-that looks a lot like a problem with kexec-tools parsing command line
-arguments to me. However I'm not having much luck reproducing it here.
-I'll poke a bit more.
+I am kind of ok with both the methods.
 
-Did you get kexec-tools-testing 20080318-rc as a tarball from
-kernel.org? I just want to make sure we are looking at the same code.
+- Communicate information between two kernels using an ELF NOTE
+  prepared by kernel.
 
--- 
-Horms
+- Communicate information between user space tools using initrd.
 
+But which method to use will depend on what information we want to 
+exchange between two kernels. 
+
+For example, re-entry points can be on stack or in ELF NOTE.
+
+Backup page map probably can be communicated using initrd as only user
+space need to access that (ELF Core headers can be put in a memory area
+which is not swapped during transition from kernel A to B. This way
+kernel B never needs to know that kernel A had done some swapping of
+pages?). 
+
+So far I have understood only following.
+
+1. We need to pass around entry/re-entry points between kernels.
+
+2. We need to pass backup pages map from kernel A to kernel B, so that user
+  space tool can do filtering.
+
+3. We need to pass address of ELF core headers from kernel A to kernel B so
+  that a valid vmcore of kernel A can be exported.
+
+	- For first time boot of kernel B, address of ELF core header is
+	  passed through command line.
+
+	- For re-entry into B, ELF core header address can be passed
+ 	  using some register, or on stack or using kernel ELF NOTE.
+
+What else? What information do we need to communicate from kernel B to 
+kernel A or from kernel C to kernel A?
+
+I am sure that you have told it in the past. Just that I don't recollect
+it.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
