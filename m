@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JcXjB-0002w4-3P
-	for kexec@lists.infradead.org; Fri, 21 Mar 2008 03:15:34 +0000
-Date: Fri, 21 Mar 2008 12:15:25 +0900
+	id 1JcZrv-0002v9-PA
+	for kexec@lists.infradead.org; Fri, 21 Mar 2008 05:32:44 +0000
+Date: Fri, 21 Mar 2008 14:32:36 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] Use separate CPPFLAGS and LDFLAGS for purgatory
-Message-ID: <20080321031524.GA20730@verge.net.au>
-References: <1205908147.931964.895312651655.1.gpush@pokey>
+Subject: Re: kexec won't --load-panic a 2.6.22 relocatable kernel?
+Message-ID: <20080321053236.GA29330@verge.net.au>
+References: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1205908147.931964.895312651655.1.gpush@pokey>
+In-Reply-To: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +23,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Kerr <jk@ozlabs.org>
+To: Mike Snitzer <snitzer@gmail.com>
 Cc: kexec@lists.infradead.org
 
-On Wed, Mar 19, 2008 at 05:29:07PM +1100, Jeremy Kerr wrote:
-> Currently, CPPFLAGS and LDFLAGS can 'leak' into the purgatory build
-> from the main kexec/kexec object. Because of this, the purgatory
-> is build with -lz, but we may not have a zlib present for the
-> architecture of the purgatory object.
+On Wed, Mar 19, 2008 at 02:05:46AM -0400, Mike Snitzer wrote:
+> I'm building a x86_64 2.6.22 kernel with the following options set:
 > 
-> This change uses fresh CPPFLAGS and LDFLAGS for the purgatory object.
+> CONFIG_KEXEC=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_RELOCATABLE=y
+> CONFIG_PHYSICAL_START=0x200000
 > 
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> If I try to load the kernel with the following I get:
+> 
+> ./kexec --args-linux -p '--command-line=ro root=LABEL=/1 rhgb quiet
+> irqpoll maxcpus=1' --initrd=/boot/initrd-2.6.22.19.img
+> /boot/vmlinuz-2.6.22.19
+> 
+> ./kexec: unrecognized option `--args-linux'
+> kexec-tools-testing 20080318-rc released 18th March 2008
+> Usage: kexec [OPTION]... [kernel]
+> ...
+> Cannot load /boot/vmlinuz-2.6.22.19
 
-Thanks Jeremy, I have queued this up and will apply it after the next
-release gets out the door.  Ditto for the other 2 patches in the series.
+Hi Mike,
+
+that looks a lot like a problem with kexec-tools parsing command line
+arguments to me. However I'm not having much luck reproducing it here.
+I'll poke a bit more.
+
+Did you get kexec-tools-testing 20080318-rc as a tarball from
+kernel.org? I just want to make sure we are looking at the same code.
 
 -- 
 Horms
