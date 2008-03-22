@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wf-out-1314.google.com ([209.85.200.173])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jcr4C-0000tJ-Au
-	for kexec@lists.infradead.org; Fri, 21 Mar 2008 23:54:32 +0000
-Received: by wf-out-1314.google.com with SMTP id 29so1809860wff.24
-	for <kexec@lists.infradead.org>; Fri, 21 Mar 2008 16:54:30 -0700 (PDT)
-Message-ID: <170fa0d20803211654t77b988f3p94868b870c827a1a@mail.gmail.com>
-Date: Fri, 21 Mar 2008 19:54:30 -0400
-From: "Mike Snitzer" <snitzer@gmail.com>
-Subject: Re: kexec won't --load-panic a 2.6.22 relocatable kernel?
-In-Reply-To: <20080321053236.GA29330@verge.net.au>
+Received: from e6.ny.us.ibm.com ([32.97.182.146])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JcrtH-00086V-Kn
+	for kexec@lists.infradead.org; Sat, 22 Mar 2008 00:47:20 +0000
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m2M0gua3025572
+	for <kexec@lists.infradead.org>; Fri, 21 Mar 2008 20:42:56 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m2M0esrG1085448
+	for <kexec@lists.infradead.org>; Fri, 21 Mar 2008 20:40:54 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m2M0esc2031216
+	for <kexec@lists.infradead.org>; Fri, 21 Mar 2008 20:40:54 -0400
+Message-ID: <47E45595.6060509@austin.ibm.com>
+Date: Fri, 21 Mar 2008 19:40:53 -0500
+From: Manish Ahuja <ahuja@austin.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <170fa0d20803182305x3b16f7bt198d767a53553c8e@mail.gmail.com>
-	<20080321053236.GA29330@verge.net.au>
+Subject: [PATCH 2/2] pseries: phyp dump: inform kdump, phyp-dump is loaded.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,50 +31,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, paulus@samba.org
+Cc: mahuja@us.ibm.com, smaneesh@in.ibm.com, linasvepstas@gmail.com, ssant@in.ibm.com
 
-On Fri, Mar 21, 2008 at 1:32 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Mar 19, 2008 at 02:05:46AM -0400, Mike Snitzer wrote:
->  > I'm building a x86_64 2.6.22 kernel with the following options set:
->  >
->  > CONFIG_KEXEC=y
->  > CONFIG_CRASH_DUMP=y
->  > CONFIG_RELOCATABLE=y
->  > CONFIG_PHYSICAL_START=0x200000
->  >
->  > If I try to load the kernel with the following I get:
->  >
->  > ./kexec --args-linux -p '--command-line=ro root=LABEL=/1 rhgb quiet
->  > irqpoll maxcpus=1' --initrd=/boot/initrd-2.6.22.19.img
->  > /boot/vmlinuz-2.6.22.19
->  >
->  > ./kexec: unrecognized option `--args-linux'
->  > kexec-tools-testing 20080318-rc released 18th March 2008
->  > Usage: kexec [OPTION]... [kernel]
->  > ...
->  > Cannot load /boot/vmlinuz-2.6.22.19
->
->  Hi Mike,
->
->  that looks a lot like a problem with kexec-tools parsing command line
->  arguments to me. However I'm not having much luck reproducing it here.
->  I'll poke a bit more.
 
-I agree it does look like a parsing bug but if I use the same
-commandline with a different kernel (e.g. RHEL5's kernel) kexec
-doesn't error out.
+Patch 2:
 
->  Did you get kexec-tools-testing 20080318-rc as a tarball from
->  kernel.org? I just want to make sure we are looking at the same code.
+Addition of /sys/kernel/phyp_dump_active so that kdump init scripts may 
+look for it and take appropriate action if this file is found. This
+file is only loaded when phyp_dump has been registered.
 
-Yes, I got 20080318-rc from kernel.org.
+Signed-off-by: Manish Ahuja <mahuja@us.ibm.com>
 
-I can provide the problematic vmlinuz offlist if you'd like.  I've not
-yet had a chance to trace kexec with gdb and really dig into this
-issue.
+---
+ arch/powerpc/platforms/pseries/phyp_dump.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Mike
+Index: 2.6.25-rc1/arch/powerpc/platforms/pseries/phyp_dump.c
+===================================================================
+--- 2.6.25-rc1.orig/arch/powerpc/platforms/pseries/phyp_dump.c	2008-03-22 01:07:43.000000000 -0500
++++ 2.6.25-rc1/arch/powerpc/platforms/pseries/phyp_dump.c	2008-03-22 01:08:56.000000000 -0500
+@@ -182,6 +182,18 @@ static void print_dump_header(const stru
+ #endif
+ }
+ 
++static ssize_t show_phyp_dump_active(struct kobject *kobj,
++			struct kobj_attribute *attr, char *buf)
++{
++
++	/* create filesystem entry so kdump is phyp-dump aware */
++	return sprintf(buf, "%lx\n", phyp_dump_info->phyp_dump_at_boot);
++}
++
++static struct kobj_attribute pdl = __ATTR(phyp_dump_active, 0600,
++					show_phyp_dump_active,
++					NULL);
++
+ static void register_dump_area(struct phyp_dump_header *ph, unsigned long addr)
+ {
+ 	int rc;
+@@ -204,7 +216,13 @@ static void register_dump_area(struct ph
+ 		printk(KERN_ERR "phyp-dump: unexpected error (%d) on "
+ 						"register\n", rc);
+ 		print_dump_header(ph);
++		return;
+ 	}
++
++	rc = sysfs_create_file(kernel_kobj, &pdl.attr);
++	if (rc)
++		printk(KERN_ERR "phyp-dump: unable to create sysfs"
++				" file (%d)\n", rc);
+ }
+ 
+ static
 
 _______________________________________________
 kexec mailing list
