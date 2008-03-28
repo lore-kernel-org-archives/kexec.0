@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Je3XK-0004v8-1Q
-	for kexec@lists.infradead.org; Tue, 25 Mar 2008 07:25:34 +0000
-Subject: Re: [PATCH -mm] kexec jump -v9
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080321191226.GA12609@redhat.com>
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<20080311211004.GA30164@redhat.com>
-	<1205286326.29069.16.camel@caritas-dev.intel.com>
-	<m1abl4znw6.fsf@ebiederm.dsl.xmission.com>
-	<20080312193740.GE13549@redhat.com>
-	<1205481808.867.0.camel@caritas-dev.intel.com>
-	<20080321191226.GA12609@redhat.com>
-Date: Tue, 25 Mar 2008 15:25:10 +0800
-Message-Id: <1206429910.29518.32.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1JfB8M-00049l-Mf
+	for kexec@lists.infradead.org; Fri, 28 Mar 2008 09:44:27 +0000
+Received: from mailgate3.nec.co.jp (mailgate53E.nec.co.jp [10.7.69.161])
+	by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id m2S9iMHb018551
+	for <kexec@lists.infradead.org>; Fri, 28 Mar 2008 18:44:22 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+	(8.11.7/3.7W-MAILGATE-NEC)
+	id m2S9iMj19808 for kexec@lists.infradead.org;
+	Fri, 28 Mar 2008 18:44:22 +0900 (JST)
+Received: from kaishu.jp.nec.com (kaishu.jp.nec.com [10.26.220.5])
+	by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id m2S9iLDI029193
+	for <kexec@lists.infradead.org>; Fri, 28 Mar 2008 18:44:21 +0900 (JST)
+Message-Id: <47ECBDF5.4060200@mxs.nes.nec.co.jp>
+Date: Fri, 28 Mar 2008 18:44:21 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: makedumpfile-1.2.5: Follow the changes of page flags
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,93 +26,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0543980550=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: kexec-ml <kexec@lists.infradead.org>
 
-On Fri, 2008-03-21 at 15:12 -0400, Vivek Goyal wrote:
-[...]
-> Hi Huang,
-> 
-> I am kind of ok with both the methods.
-> 
-> - Communicate information between two kernels using an ELF NOTE
->   prepared by kernel.
-> 
-> - Communicate information between user space tools using initrd.
+--===============0543980550==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-I think the ELF_NOTES mechanism is sufficient for communication between
-two kernel. Because it can be written from user space tool in the kernel
-A (/sbin/kexec via sys_kexec_load), and read from user space tool in the
-kernel B (via /proc/vmcore). It can be used as user space communication
-mechanism. So I think it may be not necessary to communicate with
-initrd.
 
-If we want to load the hibernated image with sys_kexec_load (/sbin/kexec
--l), we must add "multiple stages loading" feature to sys_kexec_load.
-Because the segments in the hibernated image can exceed
-KEXEC_SEGMENT_MAX (16) easily, considering there will be many memory
-holes when free pages are excluded. Multiple sys_kexec_load must be used
-to load a normal hibernated image. If multiple stage loading is
-unavoidable, I think the better method to communicate information like
-"jump back entry" and "backup pages map" is "multiple stage loading"
-like you said in previous mail. And they can be encapsulated as
-ELF_NOTES. So the only information need to be passed on stack is address
-of ELF core header.
+Hi,
 
-> But which method to use will depend on what information we want to 
-> exchange between two kernels. 
-> 
-> For example, re-entry points can be on stack or in ELF NOTE.
-> 
-> Backup page map probably can be communicated using initrd as only user
-> space need to access that (ELF Core headers can be put in a memory area
-> which is not swapped during transition from kernel A to B. This way
-> kernel B never needs to know that kernel A had done some swapping of
-> pages?). 
+makedumpfile version 1.2.5 is released.
+Please test it. Your opinions/comments are welcome.
 
-ELF core headers are in destination memory range of kernel B, so they
-can be accessed by kernel B directly without knowing pages swapping in
-kernel A.
+Changelog:
+ o New feature
+   - follow the changes of page flags.
+     To follow the changes of page flags in linux kernel, a new
+     makedumpfile can get these values from the vmcoreinfo data.
+ o Code Cleanup
+   - delete unnecessary flag.
+   - add create_dumpfile() for readability.
+ o Bugfix
+   - fix error return values of vtop().
 
-> So far I have understood only following.
-> 
-> 1. We need to pass around entry/re-entry points between kernels.
-> 
-> 2. We need to pass backup pages map from kernel A to kernel B, so that user
->   space tool can do filtering.
-> 
-> 3. We need to pass address of ELF core headers from kernel A to kernel B so
->   that a valid vmcore of kernel A can be exported.
-> 
-> 	- For first time boot of kernel B, address of ELF core header is
-> 	  passed through command line.
-> 
-> 	- For re-entry into B, ELF core header address can be passed
->  	  using some register, or on stack or using kernel ELF NOTE.
-> 
-> What else? What information do we need to communicate from kernel B to 
-> kernel A or from kernel C to kernel A?
-> 
-> I am sure that you have told it in the past. Just that I don't recollect
-> it.
 
-For now, there is no information need to be passed from kernel B/C to
-kernel A. But I think in the future, there should be some ACPI related
-information need to be passed in this way, such as from kernel C to
-kernel A: whether system is restored from ACPI S4 or ACPI S5. So I think
-it is necessary to make it possible to pass some information from kernel
-B/C to kernel A. But I think an ELF core header and some memory is
-sufficient to do this.
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
 
-Best Regards,
-Huang Ying
+Download:
+  You can download the latest makedumpfile(ver. 1.2.5) from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
 
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-1.2.5.tar.gz"
+  2. "cd makedumpfile"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+
+--===============0543980550==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0543980550==--
