@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JgBvF-00083Z-UD
-	for kexec@lists.infradead.org; Mon, 31 Mar 2008 04:47:06 +0000
-Date: Mon, 31 Mar 2008 13:24:57 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: [PATCH 0/4] extract vmcoreinfo from /proc/vmcore for Xen
-In-Reply-To: <20070928090647.6EA9.ODA@valinux.co.jp>
-References: <20070928090647.6EA9.ODA@valinux.co.jp>
-Message-Id: <20080331125116.DDC7.ODA@valinux.co.jp>
+	id 1JgCZN-0000pj-6V
+	for kexec@lists.infradead.org; Mon, 31 Mar 2008 05:28:33 +0000
+Date: Mon, 31 Mar 2008 14:28:26 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/4] extract vmcoreinfo from /proc/vmcore for Xen
+Message-ID: <20080331052826.GC13693@verge.net.au>
+References: <20080331131512.DDCD.ODA@valinux.co.jp>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080331131512.DDCD.ODA@valinux.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +23,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xensource.com
-Cc: kexec@lists.infradead.org
+To: Itsuro ODA <oda@valinux.co.jp>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-Hi,
+On Mon, Mar 31, 2008 at 01:25:19PM +0900, Itsuro ODA wrote:
+> This patch is for xen-3.2.0.
+> 
+> --- common/kexec.c.org	2008-03-25 09:29:39.000000000 +0900
+> +++ common/kexec.c	2008-03-28 12:50:33.000000000 +0900
+> @@ -43,6 +43,9 @@
 
-The following patchset is to support extracting vmcoreinfo from
-/proc/vmcore for Xen.
+[snip]
 
-This is for xen-3.2.0.
+> +void vmcoreinfo_append_str(const char *fmt, ...)
+> +{
+> +    va_list args;
+> +    char buf[0x50];
+> +    int r;
+> +    size_t note_size = sizeof(Elf_Note) + ELFNOTE_ALIGN(strlen(VMCOREINFO_NOTE_NAME) + 1);
+> +
+> +    va_start(args, fmt);
+> +    r = vsnprintf(buf, sizeof(buf), fmt, args);
+> +    va_end(args);
+> +
+> +    if (r + vmcoreinfo_size + note_size > VMCOREINFO_BYTES)
+> +	r = VMCOREINFO_BYTES - vmcoreinfo_size - note_size;
+> +
+> +    memcpy(&vmcoreinfo_data[note_size + vmcoreinfo_size], buf, r);
+> +
+> +    vmcoreinfo_size += r;
+> +}
 
-[PATCH 1/4] patch for xen hypervisor (xen-3.2.0)
-[PATCH 2/4] patch for linux (linux-2.6.18-xen-3.2.0)
-[PATCH 3/4] patch for kexec-tools (kexec-tools-testing-20080324)
-[PATCH 4/4] patch for makedumpfile (makedumpfile-1.2.4)
+Hi Oda-san,
 
---- background ----------------------------------------------------
-* what the makedumpfile is:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-* Xen extraction 
-  makedumpfile also has a feature that extracting the part of
-  xen hypervisor and domain-0 from /proc/vmcore taken under xen
-  environment. In most cases under xen environment, it is enough to
-  analyze a cause of system crash.
-* extract vmcoreinfo from /proc/vmcore
-  makedumpfile 1.2.0 supports to extract the vmcoreinfo data from
-  /proc/vmcore and uses it for dump filtering. (for a vmcore taken
-  under the native environment.)
-------------------------------------------------------------------
+It looks like it is possible for both vsnprintf() and
+the "if (r + vmcoreinfo_size + note_size > VMCOREINFO_BYTES)" logic
+to truncate a feild. Is this likely to be a problem in practice,
+or is the code just guarding against malformed input?
 
-note: makedumpfile command and crash command needs some fixes for
-  xen-3.2.0 (which are independent of vmcoreinfo). I will post
-  these fixes near future.
 
-Thanks.
+Also, this code looks like it will be need to up-ported due to changes
+that I recently made to common/kexec.c and the range fetching portion of
+the hypercall in unstable.  This shouldn't be a big deal, just something
+that is worth mentioning.
+
 -- 
-Itsuro ODA <oda@valinux.co.jp>
-
+Horms
 
 _______________________________________________
 kexec mailing list
