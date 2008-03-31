@@ -1,13 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JgHlI-0003Kq-Ki
-	for kexec@lists.infradead.org; Mon, 31 Mar 2008 11:01:14 +0000
-Message-Id: <47F0C449.9000204@mxs.nes.nec.co.jp>
-Date: Mon, 31 Mar 2008 20:00:25 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1JgNlj-0003Zb-2d
+	for kexec@lists.infradead.org; Mon, 31 Mar 2008 17:26:04 +0000
+Received: from m6.gw.fujitsu.co.jp ([10.0.50.76])
+	by fgwmail6.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
+	m2VHQ0s7012161 for <kexec@lists.infradead.org> (envelope-from
+	takebe_akio@jp.fujitsu.com); Tue, 1 Apr 2008 02:26:01 +0900
+Received: from smail (m6 [127.0.0.1])
+	by outgoing.m6.gw.fujitsu.co.jp (Postfix) with ESMTP id 8A7D353C033
+	for <kexec@lists.infradead.org>; Tue,  1 Apr 2008 02:26:00 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+	by m6.gw.fujitsu.co.jp (Postfix) with ESMTP id 65A7724014E
+	for <kexec@lists.infradead.org>; Tue,  1 Apr 2008 02:26:00 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1 [127.0.0.1])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C8B5133C020
+	for <kexec@lists.infradead.org>; Tue,  1 Apr 2008 02:26:00 +0900 (JST)
+Received: from fjm505.ms.jp.fujitsu.com (fjm505.ms.jp.fujitsu.com
+	[10.56.99.83])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 0ACE5133C018
+	for <kexec@lists.infradead.org>; Tue,  1 Apr 2008 02:26:00 +0900 (JST)
+Received: from fjmscan502.ms.jp.fujitsu.com (fjmscan502.ms.jp.fujitsu.com
+	[10.56.99.142])by fjm505.ms.jp.fujitsu.com with ESMTP id
+	m2VHPgxa024828
+	for <kexec@lists.infradead.org>; Tue, 1 Apr 2008 02:25:42 +0900
+From: Akio Takebe <takebe_akio@jp.fujitsu.com>
+Subject: [Patch] fix error case of xen
+Date: Tue, 01 Apr 2008 02:24:32 +0900
 MIME-Version: 1.0
-Subject: [PATCH] Add the symbol "phys_base" to vmcoreinfo
+Message-Id: <A7C89354154DF3takebe_akio@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,79 +37,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2088117189=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec-ml <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, "IKEDA,
-	Munehiro" <m-ikeda@ds.jp.nec.com>
+To: kexec-ml <kexec@lists.infradead.org>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
---===============2088117189==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Hi,
 
+Curret kdump-xen with makdumpfile always return 0.
+So if we fail to kdump, we will get $?=0.
+This patch improve it.
 
-Hi Andrew,
+Signed-off-by: Akio Takebe <takebe_akio@jp.fujitsu.com>
 
-This patch fixes the problem that makedumpfile sometimes fails
-on x86_64 machine. I hope that this patch will be merged to both
-linux-2.6.25 and linux-2.6.24.5.
-
-This patch adds the symbol "phys_base" to a vmcoreinfo data.
-The vmcoreinfo data has the minimum debugging information only
-for dump filtering. makedumpfile (dump filtering command) gets
-it to distinguish unnecessary pages, and makedumpfile creates
-a small dumpfile.
-
-On x86_64 kernel which compiled with CONFIG_PHYSICAL_START=0x0
-and CONFIG_RELOCATABLE=y, makedumpfile fails like the following:
-
- # makedumpfile -d31 /proc/vmcore dumpfile
- The kernel version is not supported.
- The created dumpfile may be incomplete.
- _exclude_free_page: Can't get next online node.
-
- makedumpfile Failed.
- #
-
-The cause is the lack of the symbol "phys_base" in a vmcoreinfo
-data. If the symbol "phys_base" does not exist, makedumpfile
-considers an x86_64 kernel as non relocatable. As the result,
-makedumpfile misunderstands the physical address where the kernel
-is loaded, and it cannot translate a kernel virtual address to
-physical address correctly. To fix this proble, the attached
-patch which adds the symbol "phys_base" to a vmcoreinfo data.
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
----
-diff -rpuN linux-2.6.25-rc7.orig/arch/x86/kernel/machine_kexec_64.c linux-2.6.25-rc7/arch/x86/kernel/machine_kexec_64.c
---- linux-2.6.25-rc7.orig/arch/x86/kernel/machine_kexec_64.c	2008-03-26 14:55:29.000000000 +0900
-+++ linux-2.6.25-rc7/arch/x86/kernel/machine_kexec_64.c	2008-03-26 14:52:52.000000000 +0900
-@@ -233,6 +233,7 @@ NORET_TYPE void machine_kexec(struct kim
+--- makedumpfile/makedumpfile.c	2008-03-28 11:32:51.000000000 +0900
++++ makedumpfile.mod/makedumpfile.c	2008-04-01 02:14:12.000000000 +0900
+@@ -993,6 +993,8 @@ get_symbol_addr(char *symname)
+ 		if (!strcmp(sym_name, symname)) {
+ 			symbol = sym.st_value;
+ 			break;
++		} else if (i >= (shdr.sh_size/shdr.sh_entsize)-1) {
++			DEBUG_MSG("Can't get symbol of %s.\n", symname);
+ 		}
+ 	}
+ out:
+@@ -6146,7 +6148,8 @@ main(int argc, char *argv[])
+ 			goto out;
+ 		}
+ 		info->dump_level |= DL_EXCLUDE_XEN;
+-		return handle_xen();
++		if (!handle_xen())
++			goto out;
  
- void arch_crash_save_vmcoreinfo(void)
- {
-+	VMCOREINFO_SYMBOL(phys_base);
- 	VMCOREINFO_SYMBOL(init_level4_pgt);
- 
- #ifdef CONFIG_NUMA
+ 	} else if (info->flag_rearrange) {
+ 		if (!open_files_for_rearranging_dumpdata())
 
 
+Best Regards,
 
---===============2088117189==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Akio Takebe
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2088117189==--
