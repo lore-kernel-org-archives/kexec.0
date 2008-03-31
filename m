@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JgCbp-00019l-JX
-	for kexec@lists.infradead.org; Mon, 31 Mar 2008 05:31:05 +0000
-Date: Mon, 31 Mar 2008 14:31:01 +0900
-From: Simon Horman <horms@verge.net.au>
+	id 1JgD6g-0004Nu-Uu
+	for kexec@lists.infradead.org; Mon, 31 Mar 2008 06:02:59 +0000
+Date: Mon, 31 Mar 2008 15:02:56 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
 Subject: Re: [PATCH 3/4] extract vmcoreinfo from /proc/vmcore for Xen
-Message-ID: <20080331053059.GD13693@verge.net.au>
+In-Reply-To: <20080331053059.GD13693@verge.net.au>
 References: <20080331131818.DDD1.ODA@valinux.co.jp>
+	<20080331053059.GD13693@verge.net.au>
+Message-Id: <20080331150057.DDDE.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080331131818.DDD1.ODA@valinux.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,20 +23,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Itsuro ODA <oda@valinux.co.jp>
+To: Simon Horman <horms@verge.net.au>
 Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-On Mon, Mar 31, 2008 at 01:26:04PM +0900, Itsuro ODA wrote:
-> This patch is for kexec-tools-testing-20080324.
+Hi,
 
-This looks fine to me. Are you expecting any compatibility issues
-to crop up? If not, I'm happy to go ahead an merge this code.
+On Mon, 31 Mar 2008 14:31:01 +0900
+Simon Horman <horms@verge.net.au> wrote:
 
-full disclosure: Oda-san and I both work at VA Linux Japan, so if
-someone else wants to review the code please feel free.
+> On Mon, Mar 31, 2008 at 01:26:04PM +0900, Itsuro ODA wrote:
+> > This patch is for kexec-tools-testing-20080324.
+> 
+> This looks fine to me. Are you expecting any compatibility issues
+> to crop up? If not, I'm happy to go ahead an merge this code.
 
+no compatibility issue.
+
+> full disclosure: Oda-san and I both work at VA Linux Japan, so if
+> someone else wants to review the code please feel free.
+> 
+> -- 
+> Horms
+> 
+
+Thanks.
 -- 
-Horms
+Itsuro ODA <oda@valinux.co.jp>
+
 
 _______________________________________________
 kexec mailing list
