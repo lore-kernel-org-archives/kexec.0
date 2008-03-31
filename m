@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JgCZN-0000pj-6V
-	for kexec@lists.infradead.org; Mon, 31 Mar 2008 05:28:33 +0000
-Date: Mon, 31 Mar 2008 14:28:26 +0900
+	id 1JgCbp-00019l-JX
+	for kexec@lists.infradead.org; Mon, 31 Mar 2008 05:31:05 +0000
+Date: Mon, 31 Mar 2008 14:31:01 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/4] extract vmcoreinfo from /proc/vmcore for Xen
-Message-ID: <20080331052826.GC13693@verge.net.au>
-References: <20080331131512.DDCD.ODA@valinux.co.jp>
+Subject: Re: [PATCH 3/4] extract vmcoreinfo from /proc/vmcore for Xen
+Message-ID: <20080331053059.GD13693@verge.net.au>
+References: <20080331131818.DDD1.ODA@valinux.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080331131512.DDCD.ODA@valinux.co.jp>
+In-Reply-To: <20080331131818.DDD1.ODA@valinux.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +26,14 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Itsuro ODA <oda@valinux.co.jp>
 Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-On Mon, Mar 31, 2008 at 01:25:19PM +0900, Itsuro ODA wrote:
-> This patch is for xen-3.2.0.
-> 
-> --- common/kexec.c.org	2008-03-25 09:29:39.000000000 +0900
-> +++ common/kexec.c	2008-03-28 12:50:33.000000000 +0900
-> @@ -43,6 +43,9 @@
+On Mon, Mar 31, 2008 at 01:26:04PM +0900, Itsuro ODA wrote:
+> This patch is for kexec-tools-testing-20080324.
 
-[snip]
+This looks fine to me. Are you expecting any compatibility issues
+to crop up? If not, I'm happy to go ahead an merge this code.
 
-> +void vmcoreinfo_append_str(const char *fmt, ...)
-> +{
-> +    va_list args;
-> +    char buf[0x50];
-> +    int r;
-> +    size_t note_size = sizeof(Elf_Note) + ELFNOTE_ALIGN(strlen(VMCOREINFO_NOTE_NAME) + 1);
-> +
-> +    va_start(args, fmt);
-> +    r = vsnprintf(buf, sizeof(buf), fmt, args);
-> +    va_end(args);
-> +
-> +    if (r + vmcoreinfo_size + note_size > VMCOREINFO_BYTES)
-> +	r = VMCOREINFO_BYTES - vmcoreinfo_size - note_size;
-> +
-> +    memcpy(&vmcoreinfo_data[note_size + vmcoreinfo_size], buf, r);
-> +
-> +    vmcoreinfo_size += r;
-> +}
-
-Hi Oda-san,
-
-It looks like it is possible for both vsnprintf() and
-the "if (r + vmcoreinfo_size + note_size > VMCOREINFO_BYTES)" logic
-to truncate a feild. Is this likely to be a problem in practice,
-or is the code just guarding against malformed input?
-
-
-Also, this code looks like it will be need to up-ported due to changes
-that I recently made to common/kexec.c and the range fetching portion of
-the hypercall in unstable.  This shouldn't be a big deal, just something
-that is worth mentioning.
+full disclosure: Oda-san and I both work at VA Linux Japan, so if
+someone else wants to review the code please feel free.
 
 -- 
 Horms
