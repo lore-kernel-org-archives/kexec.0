@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JgusO-0007Y3-LJ
-	for kexec@lists.infradead.org; Wed, 02 Apr 2008 04:47:09 +0000
-Message-Id: <47F30FC8.7040408@mxs.nes.nec.co.jp>
-Date: Wed, 02 Apr 2008 13:47:04 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1JgxWx-0002Nw-NA
+	for kexec@lists.infradead.org; Wed, 02 Apr 2008 07:37:12 +0000
+Date: Wed, 2 Apr 2008 16:37:07 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 3/4] extract vmcoreinfo from /proc/vmcore for Xen
+Message-ID: <20080402073704.GB8272@verge.net.au>
+References: <20080331131818.DDD1.ODA@valinux.co.jp>
+	<20080331053059.GD13693@verge.net.au>
 MIME-Version: 1.0
-Subject: Re: [Patch] fix error case of xen
-References: <A7C89354154DF3takebe_akio@jp.fujitsu.com>	<47F1D054.9080307@mxs.nes.nec.co.jp>
-	<ACC89460E5F00Dtakebe_akio@jp.fujitsu.com>
-In-Reply-To: <ACC89460E5F00Dtakebe_akio@jp.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20080331053059.GD13693@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,43 +20,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1890193655=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Akio Takebe <takebe_akio@jp.fujitsu.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Itsuro ODA <oda@valinux.co.jp>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
---===============1890193655==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-
-Hi Takebe-san,
-
-Akio Takebe wrote:
->> I guess that the above code is not enough. If handle_xen() succeeds,
->> it should return TRUE instead of COMPLETED like the attached patch, right ?
+On Mon, Mar 31, 2008 at 02:31:01PM +0900, Simon Horman wrote:
+> On Mon, Mar 31, 2008 at 01:26:04PM +0900, Itsuro ODA wrote:
+> > This patch is for kexec-tools-testing-20080324.
 > 
-> You're right!
-> Your patch looks good, thank you very much for your review.
+> This looks fine to me. Are you expecting any compatibility issues
+> to crop up? If not, I'm happy to go ahead an merge this code.
+> 
+> full disclosure: Oda-san and I both work at VA Linux Japan, so if
+> someone else wants to review the code please feel free.
 
-Thank you for the comment.
-I'll release the next makedumpfile which includes it.
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
---===============1890193655==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+As there wasn't any further discussion I have gone ahead and
+applied this patch.
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1890193655==--
