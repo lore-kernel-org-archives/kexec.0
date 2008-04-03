@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JhCsY-0000Xf-GN
-	for kexec@lists.infradead.org; Thu, 03 Apr 2008 00:00:31 +0000
-Message-Id: <47F41E18.2060006@mxs.nes.nec.co.jp>
-Date: Thu, 03 Apr 2008 09:00:24 +0900
+	id 1JhLIs-0008MZ-O1
+	for kexec@lists.infradead.org; Thu, 03 Apr 2008 09:00:15 +0000
+Message-Id: <47F49C8A.1020906@mxs.nes.nec.co.jp>
+Date: Thu, 03 Apr 2008 17:59:54 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Add the symbol "phys_base" to vmcoreinfo
-References: <47F0C449.9000204@mxs.nes.nec.co.jp>
-	<20080402173908.GL668@redhat.com>
-In-Reply-To: <20080402173908.GL668@redhat.com>
+Subject: Re: [PATCH 4/4] extract vmcoreinfo from /proc/vmcore for Xen
+References: <20080331132027.DDD3.ODA@valinux.co.jp>
+In-Reply-To: <20080331132027.DDD3.ODA@valinux.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,88 +18,319 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1385243162=="
+Content-Type: multipart/mixed; boundary="===============1047278623=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Dave Anderson <anderson@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>, "IKEDA,
-	Munehiro" <m-ikeda@ds.jp.nec.com>
+To: Itsuro ODA <oda@valinux.co.jp>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
---===============1385243162==
+--===============1047278623==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi Vivek,
+Hi ODA-san,
 
-Vivek Goyal wrote:
-> On Mon, Mar 31, 2008 at 08:00:25PM +0900, Ken'ichi Ohmichi wrote:
->> Hi Andrew,
->>
->> This patch fixes the problem that makedumpfile sometimes fails
->> on x86_64 machine. I hope that this patch will be merged to both
->> linux-2.6.25 and linux-2.6.24.5.
->>
->> This patch adds the symbol "phys_base" to a vmcoreinfo data.
->> The vmcoreinfo data has the minimum debugging information only
->> for dump filtering. makedumpfile (dump filtering command) gets
->> it to distinguish unnecessary pages, and makedumpfile creates
->> a small dumpfile.
->>
->> On x86_64 kernel which compiled with CONFIG_PHYSICAL_START=0x0
->> and CONFIG_RELOCATABLE=y, makedumpfile fails like the following:
->>
->>  # makedumpfile -d31 /proc/vmcore dumpfile
->>  The kernel version is not supported.
->>  The created dumpfile may be incomplete.
->>  _exclude_free_page: Can't get next online node.
->>
->>  makedumpfile Failed.
->>  #
->>
->> The cause is the lack of the symbol "phys_base" in a vmcoreinfo
->> data. If the symbol "phys_base" does not exist, makedumpfile
->> considers an x86_64 kernel as non relocatable. As the result,
->> makedumpfile misunderstands the physical address where the kernel
->> is loaded, and it cannot translate a kernel virtual address to
->> physical address correctly. To fix this proble, the attached
->> patch which adds the symbol "phys_base" to a vmcoreinfo data.
->>
->>
->> Thanks
->> Ken'ichi Ohmichi
->>
->>
->> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
->> ---
->> diff -rpuN linux-2.6.25-rc7.orig/arch/x86/kernel/machine_kexec_64.c linux-2.6.25-rc7/arch/x86/kernel/machine_kexec_64.c
->> --- linux-2.6.25-rc7.orig/arch/x86/kernel/machine_kexec_64.c	2008-03-26 14:55:29.000000000 +0900
->> +++ linux-2.6.25-rc7/arch/x86/kernel/machine_kexec_64.c	2008-03-26 14:52:52.000000000 +0900
->> @@ -233,6 +233,7 @@ NORET_TYPE void machine_kexec(struct kim
->>  
->>  void arch_crash_save_vmcoreinfo(void)
->>  {
->> +	VMCOREINFO_SYMBOL(phys_base);
->>  	VMCOREINFO_SYMBOL(init_level4_pgt);
-> 
-> CCing to LKML.
-> 
-> Looks good to me. Given a vmcore file, one needs to know about
-> the shift between compile address and run time address of kernel
-> to be able to do filtering. This shift (phys_base) will vary
-> based on kernel config options and based on where boot loader
-> has loaded a kernel.
-> 
-> Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Itsuro ODA wrote:
+> This patch is for makedumpfile-1.2.4.
 
-Thank you so much for your review and "Acked-by" :-)
+Thank you very much for the patch.
+I have reviewed your patch and it is almost fine, but I have one concern.
+Please let me know your opinion.
+
+If your patch is merged and /proc/vmcore contains VMCOREINFO_XEN,
+makedumpfile excludes all the user domain's pages automatically
+without any options. So somebody may use makedumpfile only for
+printing progress indicator[1] without excluding pages, but it
+will be impossible.
+
+So I think it is better that a new option is added for excluding
+user domain's pages. For example, there are 2 following plans.
+
+Plan1: Add a new "--exclude-xen-user-domain" option
+Plan2: Add a new dump_level '32'
+
+What do you think it ?
 
 
 Thanks
 Ken'ichi Ohmichi
 
+---
+[1] progress indicator
+  # makedumpfile /proc/vmcore dumpfile
+  [100 %]  <- *THIS*
 
---===============1385243162==
+
+> --- makedumpfile.c.org	2008-03-25 13:35:03.000000000 +0900
+> +++ makedumpfile.c	2008-03-27 11:32:03.000000000 +0900
+> @@ -2389,7 +2389,7 @@
+>  	off_t offset, off_note;
+>  	int flag_elf64;
+>  	unsigned long sz_note;
+> -	char buf[VMCOREINFO_NOTE_NAME_BYTES];
+> +	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
+>  	Elf64_Nhdr note64;
+>  	Elf32_Nhdr note32;
+>  
+> @@ -2430,30 +2430,40 @@
+>  			    info->name_memory, strerror(errno));
+>  			return FALSE;
+>  		}
+> -		if (strncmp(VMCOREINFO_NOTE_NAME, buf,
+> +		if (!strncmp(VMCOREINFO_XEN_NOTE_NAME, buf,
+> +		    VMCOREINFO_XEN_NOTE_NAME_BYTES)) { /* must be first */
+> +			if (flag_elf64) {
+> +				info->offset_vmcoreinfo_xen = offset + (sizeof(note64)
+> +				    + ((note64.n_namesz + 3) & ~3));
+> +				info->size_vmcoreinfo_xen = note64.n_descsz;
+> +			} else {
+> +				info->offset_vmcoreinfo_xen = offset + (sizeof(note32)
+> +				    + ((note32.n_namesz + 3) & ~3));
+> +				info->size_vmcoreinfo_xen = note32.n_descsz;
+> +			}
+> +			(*flag_found) |= VMCOREINFO_XEN;
+> +		} else if (!strncmp(VMCOREINFO_NOTE_NAME, buf,
+>  		    VMCOREINFO_NOTE_NAME_BYTES)) {
+>  			if (flag_elf64) {
+> -				offset += sizeof(Elf64_Nhdr)
+> -				    + ((note64.n_namesz + 3) & ~3)
+> -				    + ((note64.n_descsz + 3) & ~3);
+> +				info->offset_vmcoreinfo = offset + (sizeof(note64)
+> +				    + ((note64.n_namesz + 3) & ~3));
+> +				info->size_vmcoreinfo = note64.n_descsz;
+>  			} else {
+> -				offset += sizeof(Elf32_Nhdr)
+> -				    + ((note32.n_namesz + 3) & ~3)
+> -				    + ((note32.n_descsz + 3) & ~3);
+> +				info->offset_vmcoreinfo = offset + (sizeof(note32)
+> +				    + ((note32.n_namesz + 3) & ~3));
+> +				info->size_vmcoreinfo = note32.n_descsz;
+>  			}
+> -			continue;
+> +			(*flag_found) |= VMCOREINFO_LINUX;
+>  		}
+>  		if (flag_elf64) {
+> -			info->offset_vmcoreinfo = offset + (sizeof(note64)
+> -			    + ((note64.n_namesz + 3) & ~3));
+> -			info->size_vmcoreinfo = note64.n_descsz;
+> +			offset += sizeof(Elf64_Nhdr)
+> +			    + ((note64.n_namesz + 3) & ~3)
+> +			    + ((note64.n_descsz + 3) & ~3);
+>  		} else {
+> -			info->offset_vmcoreinfo = offset + (sizeof(note32)
+> -			    + ((note32.n_namesz + 3) & ~3));
+> -			info->size_vmcoreinfo = note32.n_descsz;
+> +			offset += sizeof(Elf32_Nhdr)
+> +			    + ((note32.n_namesz + 3) & ~3)
+> +			    + ((note32.n_descsz + 3) & ~3);
+>  		}
+> -		(*flag_found) = TRUE;
+> -		break;
+>  	}
+>  	return TRUE;
+>  }
+> @@ -2501,6 +2511,46 @@
+>  	return TRUE;
+>  }
+>  
+> +int
+> +copy_vmcoreinfo_xen()
+> +{
+> +	int fd;
+> +	char buf[VMCOREINFO_BYTES];
+> +	const off_t failed = (off_t)-1;
+> +
+> +	if (!info->offset_vmcoreinfo_xen || !info->size_vmcoreinfo_xen)
+> +		return FALSE;
+> +
+> +	if ((fd = mkstemp(info->name_vmcoreinfo)) < 0) {
+> +		ERRMSG("Can't open the vmcoreinfo file(%s). %s\n",
+> +		    info->name_vmcoreinfo, strerror(errno));
+> +		return FALSE;
+> +	}
+> +	if (lseek(info->fd_memory, info->offset_vmcoreinfo_xen, SEEK_SET)
+> +	    == failed) {
+> +		ERRMSG("Can't seek the dump memory(%s). %s\n",
+> +		    info->name_memory, strerror(errno));
+> +		return FALSE;
+> +	}
+> +	if (read(info->fd_memory, &buf, info->size_vmcoreinfo_xen)
+> +	    != info->size_vmcoreinfo_xen) {
+> +		ERRMSG("Can't read the dump memory(%s). %s\n",
+> +		    info->name_memory, strerror(errno));
+> +		return FALSE;
+> +	}
+> +	if (write(fd, &buf, info->size_vmcoreinfo_xen) != info->size_vmcoreinfo_xen) {
+> +		ERRMSG("Can't write the vmcoreinfo file(%s). %s\n",
+> +		    info->name_vmcoreinfo, strerror(errno));
+> +		return FALSE;
+> +	}
+> +	if (close(fd) < 0) {
+> +		ERRMSG("Can't close the vmcoreinfo file(%s). %s\n",
+> +		    info->name_vmcoreinfo, strerror(errno));
+> +		return FALSE;
+> +	}
+> +	return TRUE;
+> +}
+> +
+>  /*
+>   * Get the number of online nodes.
+>   */
+> @@ -3182,8 +3232,6 @@
+>  int
+>  initial()
+>  {
+> -	int vmcoreinfo_in_vmcore = FALSE;
+> -
+>  	if (!get_elf_info())
+>  		return FALSE;
+>  
+> @@ -3208,48 +3256,8 @@
+>  
+>  		if (!get_srcfile_info())
+>  			return FALSE;
+> -	/*
+> -	 * Get the debug information for analysis from /proc/vmcore
+> -	 */
+> -	} else {
+> -		/*
+> -		 * Check whether /proc/vmcore contains vmcoreinfo,
+> -		 * and get both the offset and the size.
+> -		 */
+> -		if (!is_vmcoreinfo_in_vmcore(&vmcoreinfo_in_vmcore))
+> -			return FALSE;
+> -
+> -		if (!vmcoreinfo_in_vmcore) {
+> -			if (info->dump_level <= DL_EXCLUDE_ZERO)
+> -				goto out;
+> -
+> -			MSG("%s doesn't contain vmcoreinfo.\n",
+> -			    info->name_memory);
+> -			MSG("'-x' or '-i' must be specified.\n");
+> -			return FALSE;
+> -		}
+> -		/*
+> -		 * Copy vmcoreinfo to /tmp/vmcoreinfoXXXXXX.
+> -		 */
+> -		if ((info->name_vmcoreinfo
+> -		    = malloc(sizeof(FILENAME_VMCOREINFO))) == NULL) {
+> -			ERRMSG("Can't allocate memory for the name(%s). %s\n",
+> -			    FILENAME_VMCOREINFO, strerror(errno));
+> -			return FALSE;
+> -		}
+> -		strcpy(info->name_vmcoreinfo, FILENAME_VMCOREINFO);
+> -		if (!copy_vmcoreinfo())
+> -			return FALSE;
+> -		/*
+> -		 * Read vmcoreinfo from /tmp/vmcoreinfoXXXXXX.
+> -		 */
+> -		if (!open_vmcoreinfo("r"))
+> -			return FALSE;
+> -		if (!read_vmcoreinfo())
+> -			return FALSE;
+> -		unlink(info->name_vmcoreinfo);
+>  	}
+> -out:
+> +
+>  	if (info->dump_level <= DL_EXCLUDE_ZERO) {
+>  		if (!get_mem_map_without_mm())
+>  			return FALSE;
+> @@ -5880,6 +5888,7 @@
+>  main(int argc, char *argv[])
+>  {
+>  	int opt, flag_debug = FALSE;
+> +	int vmcoreinfo_in_vmcore = FALSE;
+>  
+>  	if ((info = calloc(1, sizeof(struct DumpInfo))) == NULL) {
+>  		ERRMSG("Can't allocate memory for the pagedesc cache. %s.\n",
+> @@ -6043,6 +6052,39 @@
+>  			print_usage();
+>  			goto out;
+>  		}
+> +		if (!info->flag_vmlinux && !info->flag_read_vmcoreinfo
+> +		    && !info->flag_rearrange) {
+> +			if (!open_dump_memory())
+> +				goto out;
+> +			if (!is_vmcoreinfo_in_vmcore(&vmcoreinfo_in_vmcore))
+> +				goto out;
+> +			if (!vmcoreinfo_in_vmcore && info->dump_level > DL_EXCLUDE_ZERO) {
+> +				MSG("%s doesn't contain vmcoreinfo.\n",
+> +				    info->name_memory);
+> +				MSG("'-x' or '-i' must be specified.\n");
+> +				goto out;
+> +			}
+> +			/*
+> +			 * Copy vmcoreinfo to /tmp/vmcoreinfoXXXXXX.
+> +			 */
+> +			if ((info->name_vmcoreinfo
+> +			    = malloc(sizeof(FILENAME_VMCOREINFO))) == NULL) {
+> +				ERRMSG("Can't allocate memory for the name(%s). %s\n",
+> +				    FILENAME_VMCOREINFO, strerror(errno));
+> +				goto out;
+> +			}
+> +			strcpy(info->name_vmcoreinfo, FILENAME_VMCOREINFO);
+> +			if (vmcoreinfo_in_vmcore & VMCOREINFO_XEN) {
+> +				info->flag_xen = 1;
+> +				if (!copy_vmcoreinfo_xen())
+> +					goto out;
+> +			} else {
+> +				if (!copy_vmcoreinfo())
+> +					goto out;
+> +			}
+> +			info->flag_read_vmcoreinfo = 1;
+> +			close_dump_memory();
+> +		}
+>  	}
+>  
+>  	if (elf_version(EV_CURRENT) == EV_NONE ) {
+> @@ -6081,7 +6123,8 @@
+>  			goto out;
+>  		}
+>  		info->dump_level |= DL_EXCLUDE_XEN;
+> -		return handle_xen();
+> +		retcd = handle_xen();
+> +		goto out;
+>  
+>  	} else if (info->flag_rearrange) {
+>  		if (!open_files_for_rearranging_dumpdata())
+> @@ -6155,6 +6198,9 @@
+>  		free(info->mem_map_data);
+>  	if (info->dump_header != NULL)
+>  		free(info->dump_header);
+> +	if (vmcoreinfo_in_vmcore && info->name_vmcoreinfo) {
+> +		unlink(info->name_vmcoreinfo);
+> +	}
+>  	if (info != NULL)
+>  		free(info);
+>  
+> --- makedumpfile.h.org	2008-03-25 13:35:19.000000000 +0900
+> +++ makedumpfile.h	2008-03-25 14:29:33.000000000 +0900
+> @@ -430,7 +430,11 @@
+>  #define VMCOREINFO_BYTES		(4096)
+>  #define VMCOREINFO_NOTE_NAME		"VMCOREINFO"
+>  #define VMCOREINFO_NOTE_NAME_BYTES	(sizeof(VMCOREINFO_NOTE_NAME))
+> +#define VMCOREINFO_XEN_NOTE_NAME	"VMCOREINFO_XEN"
+> +#define VMCOREINFO_XEN_NOTE_NAME_BYTES	(sizeof(VMCOREINFO_XEN_NOTE_NAME))
+>  #define FILENAME_VMCOREINFO		"/tmp/vmcoreinfoXXXXXX"
+> +#define VMCOREINFO_LINUX	(0x01)
+> +#define VMCOREINFO_XEN		(0x02)
+>  
+>  /*
+>   * field name of vmcoreinfo file
+> @@ -762,6 +766,8 @@
+>  	 */
+>  	off_t			offset_vmcoreinfo;
+>  	unsigned long		size_vmcoreinfo;
+> +	off_t			offset_vmcoreinfo_xen;
+> +	unsigned long		size_vmcoreinfo_xen;
+>  
+>  	/*
+>  	 * for Xen extraction
+> 
+
+
+--===============1047278623==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -111,4 +341,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1385243162==--
+--===============1047278623==--
