@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JhjVg-0000RV-2p
-	for kexec@lists.infradead.org; Fri, 04 Apr 2008 10:51:05 +0000
-From: Akio Takebe <takebe_akio@jp.fujitsu.com>
-Subject: Re: [Patch][RFC] makedumpfile: fix for xen-3.1.2
-Date: Fri, 04 Apr 2008 19:48:47 +0900
+	id 1Jig57-0007WD-So
+	for kexec@lists.infradead.org; Mon, 07 Apr 2008 01:23:34 +0000
+Date: Mon, 07 Apr 2008 10:23:21 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: Re: [PATCH 4/4] extract vmcoreinfo from /proc/vmcore for Xen
+In-Reply-To: <47F5E51D.7010204@mxs.nes.nec.co.jp>
+References: <20080404072106.DE06.ODA@valinux.co.jp>
+	<47F5E51D.7010204@mxs.nes.nec.co.jp>
+Message-Id: <20080407102237.BD25.ODA@valinux.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <47F5FD6C.50702@mxs.nes.nec.co.jp>
-References: <D4C895FC097B62takebe_akio@jp.fujitsu.com>
-	<47F5FD6C.50702@mxs.nes.nec.co.jp>
-Message-Id: <DBC89641760820takebe_akio@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,48 +23,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, xen-devel <xen-devel@lists.xensource.com>, kexec-ml <kexec@lists.infradead.org>
-Cc: Itsuro ODA <oda@valinux.co.jp>, Akio Takebe <takebe_akio@jp.fujitsu.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-Hi, Ohmichi-san
+Hi Ken'ichi,
 
-Thank you very much for you report.
+I agree with you.
 
->Akio Takebe wrote:
->> This patch fixes makedumpfile for xen-3.1.
->> xen-3.1.2+ hypervisor doesn't have idle_pg_table_l3,
->> we need to find a symbole of idle_pg_table.
->
->Thank you for the patch !
->I tested your patch with RHEL5.2-beta, and it worked fine on i386 machine.
->But it doesn't work on x86_64 machine. makedumpfile went to the loop in
->kvtop_xen_x86_64(), and it failed with a segmentation fault:
->
->makedumpfile/x86_64.c
-> 196         if ((dirp = kvtop_xen_x86_64(SYMBOL(pgd_l4))) == NOT_PADDR) <- 
->*HERE*
-> 197                 return NOT_PADDR;
->
->
->If you know, please teach me. Should this patch fix the problem for
->not only the upstream but also RHEL5.2 ?
->Unfortunately I don't know the detail of xen, and I haven't used the
->upstream xen yet. 
-Sorry for that. 
-Yes, this patch will fix also RHEL5.2 because the base is 3.1.2.
-https://www.redhat.com/archives/rhelv5-list/2008-March/msg00111.html
+Thanks.
+Itsuro Oda
 
-The bug may be occurred by changing __XEN_VIRT_START.
-http://xenbits.xensource.com/xen-3.1-testing.hg?rev/a06a28ebad5d
+On Fri, 04 Apr 2008 17:21:49 +0900
+"Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
 
-So we may be able to fix it by changing DIRECTMAP_VIRT_START.
+> 
+> Hi ODA-san,
+> 
+> Itsuro ODA wrote:
+> > Hi,
+> > 
+> > I like the Plan2 since it is simple.
+> 
+> Thank you for the comment.
+> 
+> I considered about it well, and think that a new option '-X' is
+> good for excluding all the user domain pages. I will merge your
+> patch with this option.
+> 
+> I think it is better that the dump_level is used for excluding
+> only linux's pages. If the dump_level for linux is added after
+> the one for xen, the dump_level probably becomes strange like
+> the following:
+> 
+>        |               linux              | Xen | linux
+>        +----------------------------------+-----+-------
+>  Dump  | zero  cache  cache    user  free |     | some
+>  Level | page  page   private  data  page | Xen | page
+> -------+----------------------------------+-----+-------
+>     1  |  X
+>     2  |        X
+>     4  |        X      X
+>     8  |                        X
+>    16  |                              X
+>    32  |                                     X
+>    64  |                                           X
+> 
+> Sorry, I should have considered about it before posting the last mail.
+> 
+> 
+> Thanks
+> Ken'ichi Ohmichi
+> 
 
-I didn't have x86_64 system.
-I'll setup x86_64 system, and try to investigate it next week.
-
-Best Regards,
-
-Akio Takebe
+-- 
+Itsuro ODA <oda@valinux.co.jp>
 
 
 _______________________________________________
