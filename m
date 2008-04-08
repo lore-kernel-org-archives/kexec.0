@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jig57-0007WD-So
-	for kexec@lists.infradead.org; Mon, 07 Apr 2008 01:23:34 +0000
-Date: Mon, 07 Apr 2008 10:23:21 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: Re: [PATCH 4/4] extract vmcoreinfo from /proc/vmcore for Xen
-In-Reply-To: <47F5E51D.7010204@mxs.nes.nec.co.jp>
-References: <20080404072106.DE06.ODA@valinux.co.jp>
-	<47F5E51D.7010204@mxs.nes.nec.co.jp>
-Message-Id: <20080407102237.BD25.ODA@valinux.co.jp>
+Received: from g4t0014.houston.hp.com ([15.201.24.17])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JjJ8M-00068G-14
+	for kexec@lists.infradead.org; Tue, 08 Apr 2008 19:05:30 +0000
+Received: from g4t0014.houston.hp.com (localhost.localdomain [127.0.0.1])
+	by receive-from-antispam-filter (Postfix) with SMTP id 5C091242C6
+	for <kexec@lists.infradead.org>; Tue,  8 Apr 2008 19:05:23 +0000 (UTC)
+Received: from smtp1.fc.hp.com (smtp.cnd.hp.com [15.15.136.127])
+	by g4t0014.houston.hp.com (Postfix) with ESMTP id 3F4D7247F3
+	for <kexec@lists.infradead.org>; Tue,  8 Apr 2008 19:05:23 +0000 (UTC)
+Message-ID: <47FBC1F0.5030105@hp.com>
+Date: Tue, 08 Apr 2008 15:05:20 -0400
+From: "Alan D. Brunelle" <Alan.Brunelle@hp.com>
 MIME-Version: 1.0
+Subject: Bad IRQs & SATA ADMA failures
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,61 +26,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-Hi Ken'ichi,
+I'm new to the KEXEC/KDUMP world - just started out today. I believe
+that I have things set up right, but I'm running into two issues:
 
-I agree with you.
+1. A few seconds into the boot, I see:
 
-Thanks.
-Itsuro Oda
+[    3.400435] ata1: SATA max UDMA/133 cmd 0x28d0 ctl 0x28f8 bmdma
+0x28b0 irq 5
+[    3.410435] ata2: SATA max UDMA/133 cmd 0x28d8 ctl 0x28fc bmdma
+0x28b8 irq 5
+[    3.864522] irq 5: nobody cared (try booting with the "irqpoll" option)
+[    3.864522] Pid: 0, comm: swapper Not tainted 2.6.25-rc8-bannor-kexec #1
+[    3.864522
+[    3.864522] Call Trace:
+[    3.864522]  <IRQ> [<ffffffff8024da5e>] __report_bad_irq+0x1e/0x80
+[    3.864522] [<ffffffff8024dd2f>] note_interrupt+0x26f/0x2a0
+[    3.864522] [<ffffffff8024e2b1>] handle_fasteoi_irq+0x71/0xa0
+[    3.864522] [<ffffffff8020ed8c>] do_IRQ+0x5c/0xc0
+[    3.864522] [<ffffffff8020c471>] ret_from_intr+0x0/0xa
+[    3.864522]  <EOI> [<ffffffff803bc610>] nv_scr_read+0x0/0x30
+[    3.864522] [<ffffffff8020afbe>] default_idle+0x2e/0x60
+[    3.864522] [<ffffffff8020afb9>] default_idle+0x29/0x60
+[    3.864522] [<ffffffff8020af90>] default_idle+0x0/0x60
+[    3.864522] [<ffffffff8020b032>] cpu_idle+0x42/0x70
+[    3.864522] [<ffffffff80501aaa>] start_kernel+0x23a/0x280
+[    3.864522] [<ffffffff805011a5>] _sinittext+0x1a5/0x1f0
+[    3.864522]
+[    3.864522] handlers:
+[    3.864522] [<ffffffff803bd950>] (nv_adma_interrupt+0x0/0x4c0)
+[    3.864522] Disabling IRQ #5
 
-On Fri, 04 Apr 2008 17:21:49 +0900
-"Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
 
-> 
-> Hi ODA-san,
-> 
-> Itsuro ODA wrote:
-> > Hi,
-> > 
-> > I like the Plan2 since it is simple.
-> 
-> Thank you for the comment.
-> 
-> I considered about it well, and think that a new option '-X' is
-> good for excluding all the user domain pages. I will merge your
-> patch with this option.
-> 
-> I think it is better that the dump_level is used for excluding
-> only linux's pages. If the dump_level for linux is added after
-> the one for xen, the dump_level probably becomes strange like
-> the following:
-> 
->        |               linux              | Xen | linux
->        +----------------------------------+-----+-------
->  Dump  | zero  cache  cache    user  free |     | some
->  Level | page  page   private  data  page | Xen | page
-> -------+----------------------------------+-----+-------
->     1  |  X
->     2  |        X
->     4  |        X      X
->     8  |                        X
->    16  |                              X
->    32  |                                     X
->    64  |                                           X
-> 
-> Sorry, I should have considered about it before posting the last mail.
-> 
-> 
-> Thanks
-> Ken'ichi Ohmichi
-> 
+2. Very soon thereafter, I start seeing:
 
--- 
-Itsuro ODA <oda@valinux.co.jp>
+[    4.671112]  sda:<3>ata1: EH in ADMA mode, notifier 0x1
+notifier_error 0x0 g0
+[   34.681112] ata1: CPB 0: ctl_flags 0xd, resp_flags 0x1
+[   34.681112] ata1.00: exception Emask 0x0 SAct 0x0 SErr 0x0 action 0x2
+frozen
+[   34.691112] ata1.00: cmd c8/00:08:00:00:00/00:00:00:00:00/e0 tag 0
+dma 4096 n
+[   34.691112]          res 40/00:00:00:00:00/00:00:00:00:00/00 Emask
+0x4 (time)
+[   34.701112] ata1.00: status: { DRDY }
+[   35.051112] ata1: soft resetting link
+[   35.211112] ata1: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+[   35.251112] ata1.00: configured for UDMA/100
+[   35.251112] ata1: EH complete
 
+This goes on "forever" - and the system fails to boot.
+
+This script is used to set up kexec:
+
+root="root=/dev/sda1"
+gen_args="1 irqpoll maxcpus=1 reset_devices"
+bannor_args="acpi=off console=tty0 console=ttyS2,115200n8"
+
+/usr/local/sbin/kexec -l /boot/vmlinuz-2.6.25-rc8-bannor-kexec \
+                      --append="${root} ${gen_args} ${bannor_args}"
+
+Some other notes:
+
+o  I have the kernel gen'd w/out an initrd
+
+o  Kernel is gen'd w/out CONFIG_SMP
+
+o  I added the 'acpi=off' as one site I google'd had that as a possible
+fix for a problem like this.
+
+I do not know if the two problems mentioned above are related, but in
+any case, I'm wondering if there are any pointers out there to help get
+this going.
+
+I have the output from 'lspci' and the console log during a failed boot
+up on : http://free.linux.hp.com/~adb/kexec/bootlog.txt
+
+Thanks,
+Alan
 
 _______________________________________________
 kexec mailing list
