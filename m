@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JkDzS-0002nS-Rc
-	for kexec@lists.infradead.org; Fri, 11 Apr 2008 07:48:12 +0000
-Subject: Re: [KEXEC] [ARM]
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-In-Reply-To: <9b8644470804102121k43362a86i92d4d80275569dc4@mail.gmail.com>
-References: <9b8644470804102121k43362a86i92d4d80275569dc4@mail.gmail.com>
-Date: Fri, 11 Apr 2008 00:48:00 -0700
-Message-Id: <1207900080.15605.14.camel@x61.ebiederm.org>
-Mime-Version: 1.0
+	id 1JkE5I-0003Bb-0h
+	for kexec@lists.infradead.org; Fri, 11 Apr 2008 07:54:08 +0000
+Message-ID: <47FF190B.6030406@ah.jp.nec.com>
+Date: Fri, 11 Apr 2008 16:53:47 +0900
+From: Takenori Nagano <t-nagano@ah.jp.nec.com>
+MIME-Version: 1.0
+Subject: [PATCH 0/2] add new notifier function ,take3
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,106 +16,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2022329177=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sundeep Borra <sundeep471@gmail.com>, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: nickpiggin@yahoo.com.au, k-miyoshi@cb.jp.nec.com, greg@kroah.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, Randy Dunlap <rdunlap@xenotime.net>, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>
 
-I've added the kexec list as there may be other people that can help
-out.
+--===============2022329177==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-On Fri, 2008-04-11 at 09:51 +0530, Sundeep Borra wrote:
-> Dear Eric,
-> 
-> I am working on KEXEC tool for ARM platform with linux-2.6.22.6.
-> I have problem loading and running the zImage that is compiled with
-> kexec_syscall support.
-> 
-> I found no code related to ARM architecture either in pugatory or in
-> other branch of Kexec-tools source tree.
+Hi,
 
-Have you looked at the kexec-tools-testing repository.  That is where
-the work has been happening lately.
+A big thanks to everybody who read and replied to previous version.
 
-> I searched for Corresponding Patches on Net and those patches had
-> nothign significant about ARM support on Purgatory,
-> 
-> Where to start from, inorder to get ARm specific purgatory code.
+changelog take2 -> take3
 
-Well we compile purgatory as a relocatable object file and then 
-process the relocations so we can put it in memory wherever we want
-so there is relocation support.
+- Rebased 2.6.25-rc8-mm1
+- comment updated
+- renamed the notifiner name "tunable_notifier" to "tunable_atomic_notifier"
+- fixed typo
+- move control files debugfs to /sys/kernel
 
-Beyond that for purgatory it should just be a handful of stubs from
-assembly to C that should be straight forward to write if you know
-the architecture.
+These patches add new notifier function and implement it to panic_notifier_list.
+We used the hardcoded notifier chain so far, but it was not flexible. New
+notifier is very flexible, because user can change a list of order by control files.
 
-> I would like to donate ARM specific code if one doesn't exist
+Example)
 
-Well.  I don't know a lot about the ARM architecture but I can give some
-general guidance.
+# cd /sys/kernel/notifiers/
+# ls
+panic_notifier_list
+# cd panic_notifier_list/
+# ls
+ipmi_msghandler  ipmi_wdog
+# insmod notifier_test.ko
+# ls
+ipmi_msghandler  ipmi_wdog  notifier_test1  notifier_test2
+# cat */priority
+200
+150
+500
+1000
+Kernel panic - not syncing: Panic by panic_module.
+__tunable_atomic_notifier_call_chain enter
+notifier_test: notifier_test_panic2() is called.
+notifier_test: notifier_test_panic() is called.
+msg_handler:panic_event was called.
+ipmi_wdog:wdog_panic_handler was called.
 
-As I recall ARM has the option to disable the MMU like x86 and the
-kernel starts in that mode by default which makes things straight 
-forward.
+.....(reboot)
 
-The biggest part is to figure out the format that the ARM kernel
-accepts arguments in and generate those arguments when you load
-an ARM kernel.  Basically that the kexec code really does collect
-up the information a boot loader would pass and it passes it to the
-kernel.
+# cd /sys/kernel/notifiers/panic_notifier_list/
+# ls
+ipmi_msghandler  ipmi_wdog  notifier_test1  notifier_test2
+# cat */priority
+200
+150
+500
+1000
+# echo 10000 > ipmi_msghandler/priority
+# echo 5000 > ipmi_wdog/priority
+# echo 3000 > notifier_test1/priority
+# echo 1500 > notifier_test2/priority
+# cat */priority
+10000
+5000
+3000
+1500
+Kernel panic - not syncing: Panic by panic_module.
+__tunable_atomic_notifier_call_chain enter
+msg_handler:panic_event was called.
+ipmi_wdog:wdog_panic_handler was called.
+notifier_test: notifier_test_panic() is called.
+notifier_test: notifier_test_panic2() is called.
 
-
-> -----------------------------------------------------------------------------------------------------
-> KEXEC-tools Version: 1.101
-> ----------------------------------------
-> 
-> PLATFORM: ARM926
-> --------------------------------
-> 
-> COMMAND:
-> ------------------
-> ./kexec -l vmlinux
-> 
-> 
-> ERROR:
-> ------------
-> 
-> kernel: 0x4012c008 kernel_size: 191e72
-> kexec_load: entry = 0xa0008000 flags = 280000
-> nr_segments = 1
-> segment[0].buf   = 0x4012c008
-> segment[0].bufsz = 191e72
-> segment[0].mem   = 0xa0008000
-> segment[0].memsz = 192000
-> kexec_load failed: Function not implemented
--ENOSYS?
-
-Is the kernel portion of kexec implemented on ARM?
-
-> entry       = 0xa0008000 flags = 280000
-> nr_segments = 1
-> segment[0].buf   = 0x4012c008
-> segment[0].bufsz = 191e72
-> segment[0].mem   = 0xa0008000
-> segment[0].memsz = 192000
-> 
-> 
-> CAUSE: syscall is failing in file kexec/kexec.c
-> 
-> -----------------------------------------------------------------------------------------------------
-> Please help me in this regard,
-> 
-> Thanks in advance.
-
-Hope this helps some.
-
-Eric
+--
+Takenori Nagano <t-nagano@ah.jp.nec.com>
 
 
+
+--===============2022329177==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2022329177==--
