@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JkX2C-0002tl-A5
-	for kexec@lists.infradead.org; Sat, 12 Apr 2008 04:08:12 +0000
-Date: Fri, 11 Apr 2008 21:07:51 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JlP1W-00012J-7S
+	for kexec@lists.infradead.org; Mon, 14 Apr 2008 13:47:07 +0000
+Date: Mon, 14 Apr 2008 09:46:22 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH 0/2] add new notifier function ,take3
-Message-Id: <20080411210751.e4a468b2.akpm@linux-foundation.org>
-In-Reply-To: <47FF190B.6030406@ah.jp.nec.com>
+Message-ID: <20080414134622.GB6941@redhat.com>
 References: <47FF190B.6030406@ah.jp.nec.com>
-Mime-Version: 1.0
+	<20080411210751.e4a468b2.akpm@linux-foundation.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080411210751.e4a468b2.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,87 +24,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: nickpiggin@yahoo.com.au, k-miyoshi@cb.jp.nec.com, greg@kroah.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, vgoyal@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: nickpiggin@yahoo.com.au, k-miyoshi@cb.jp.nec.com, greg@kroah.com, Bernhard Walle <bwalle@suse.de>, kdb@oss.sgi.com, kexec@lists.infradead.org, Takenori Nagano <t-nagano@ah.jp.nec.com>, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>
 
-On Fri, 11 Apr 2008 16:53:47 +0900 Takenori Nagano <t-nagano@ah.jp.nec.com> wrote:
+On Fri, Apr 11, 2008 at 09:07:51PM -0700, Andrew Morton wrote:
 
-> Hi,
+[..]
+> > Kernel panic - not syncing: Panic by panic_module.
+> > __tunable_atomic_notifier_call_chain enter
+> > msg_handler:panic_event was called.
+> > ipmi_wdog:wdog_panic_handler was called.
+> > notifier_test: notifier_test_panic() is called.
+> > notifier_test: notifier_test_panic2() is called.
 > 
-> A big thanks to everybody who read and replied to previous version.
+> OK.  But I don't see anywhere in here the most important piece of
+> information: why do we need this feature in Linux?
 > 
-> changelog take2 -> take3
+> What are the use-cases?  What is the value?  etc.
 > 
-> - Rebased 2.6.25-rc8-mm1
-> - comment updated
-> - renamed the notifiner name "tunable_notifier" to "tunable_atomic_notifier"
-> - fixed typo
-> - move control files debugfs to /sys/kernel
+> Often I can guess (but I like the originator to remove the guesswork).  In
+> this case I'm stumped - I can't see any reason why anyone would want this.
 > 
-> These patches add new notifier function and implement it to panic_notifier_list.
-> We used the hardcoded notifier chain so far, but it was not flexible. New
-> notifier is very flexible, because user can change a list of order by control files.
-> 
-> Example)
-> 
-> # cd /sys/kernel/notifiers/
-> # ls
-> panic_notifier_list
-> # cd panic_notifier_list/
-> # ls
-> ipmi_msghandler  ipmi_wdog
-> # insmod notifier_test.ko
-> # ls
-> ipmi_msghandler  ipmi_wdog  notifier_test1  notifier_test2
-> # cat */priority
-> 200
-> 150
-> 500
-> 1000
-> Kernel panic - not syncing: Panic by panic_module.
-> __tunable_atomic_notifier_call_chain enter
-> notifier_test: notifier_test_panic2() is called.
-> notifier_test: notifier_test_panic() is called.
-> msg_handler:panic_event was called.
-> ipmi_wdog:wdog_panic_handler was called.
-> 
-> .....(reboot)
-> 
-> # cd /sys/kernel/notifiers/panic_notifier_list/
-> # ls
-> ipmi_msghandler  ipmi_wdog  notifier_test1  notifier_test2
-> # cat */priority
-> 200
-> 150
-> 500
-> 1000
-> # echo 10000 > ipmi_msghandler/priority
-> # echo 5000 > ipmi_wdog/priority
-> # echo 3000 > notifier_test1/priority
-> # echo 1500 > notifier_test2/priority
-> # cat */priority
-> 10000
-> 5000
-> 3000
-> 1500
-> Kernel panic - not syncing: Panic by panic_module.
-> __tunable_atomic_notifier_call_chain enter
-> msg_handler:panic_event was called.
-> ipmi_wdog:wdog_panic_handler was called.
-> notifier_test: notifier_test_panic() is called.
-> notifier_test: notifier_test_panic2() is called.
 
-OK.  But I don't see anywhere in here the most important piece of
-information: why do we need this feature in Linux?
+Hi Andrew,
 
-What are the use-cases?  What is the value?  etc.
+To begin with, he wants kdb, kgdb etc to co-exist with kdump. He wants
+to put all the RAS tools (who are interested in panic event) on a list
+and export it to user space and let user decide in what order do the tool get
+executed at panic time (based on priority).
 
-Often I can guess (but I like the originator to remove the guesswork).  In
-this case I'm stumped - I can't see any reason why anyone would want this.
+This brings in little bit reliability concerns for kdump due to notifier
+code being run after panic.
 
-Awaiting enlightenment ;)
+I think people want to use this infrastrutucure beyond RAS tools. I
+remember somebody wanting to send a message to remote node after a
+panic (before kdump kicks in)  so that remote node can initiate failover
+etc.
 
-Thanks.
+Ideally, doing any operation after panic is not safe and one should avoid
+such things and any action required should be done in next kernel (like
+sending messages to remote nodes etc). Having said that, it makes the
+job harder as one needs to pass all the required data to second kernel.
+
+So it will not left to user whether he should execute the code after
+panic in first kernel or create required bits to execute code in second
+kernel. Things should be more reliable in second kernel. 
+
+I am not very sure how paranoid one should be about this additional bit of
+notifier code being executed after panic. Probably we can take this in
+to make user's life easier.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
