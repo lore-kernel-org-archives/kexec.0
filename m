@@ -2,10 +2,10 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from outbound.mse2.exchange.ms ([69.25.50.247]
 	helo=mse2fe1.mse2.exchange.ms)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jmwrc-00060k-MD
-	for kexec@lists.infradead.org; Fri, 18 Apr 2008 20:07:17 +0000
-Message-ID: <4808FF6C.7040604@bluelane.com>
-Date: Fri, 18 Apr 2008 13:07:08 -0700
+	id 1Jmxkg-0001JW-AG
+	for kexec@lists.infradead.org; Fri, 18 Apr 2008 21:04:10 +0000
+Message-ID: <48090CC3.20108@bluelane.com>
+Date: Fri, 18 Apr 2008 14:04:03 -0700
 From: Piet Delaney <pdelaney@bluelane.com>
 MIME-Version: 1.0
 Subject: Re: Accessing Thread Information in kernel crash dumps with ddd+gdb
@@ -20,19 +20,19 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0785594466=="
+Content-Type: multipart/mixed; boundary="===============1256237562=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: Bernhard Kaindl <bk@suse.de>, Andrew Morton <akpm@osdl.org>, V Srivatsa <vatsa@in.ibm.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, Milind Dumbare <jhumo2002@yahoo.com>, "Amit S. Kale" <amitkale@linsyssoft.com>, Jason Wessel <jason.wessel@windriver.com>, kexec@lists.infradead.org, Andrew Cagney <ac131313@cygnus.com>, Bernhard Walle <bwalle@suse.de>, George Anzinger <george@mvista.com>, Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Maneesh Soni <maneesh@in.ibm.com>, Castor Fu <Castor.Fu@3PAR.com>, Alexander Nyberg <alexn@telia.com>, Joel Brobecker <brobecker@adacore.com>, Daniel Jacobowitz <drow@false.org>
 
 This is a multi-part message in MIME format.
---===============0785594466==
+--===============1256237562==
 Content-Type: multipart/alternative;
-	boundary="------------000604040400040204000609"
+	boundary="------------070908020702030802000608"
 
 This is a multi-part message in MIME format.
---------------000604040400040204000609
+--------------070908020702030802000608
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
 
@@ -41,6 +41,19 @@ Vivek Goyal wrote:
 >On Thu, Apr 17, 2008 at 05:16:55PM -0700, Piet Delaney wrote:
 >  
 >
+
+I was thinking over lunch that the largest risk to whacking
+the task list might be a stack overflows. Perhaps a list of crash
+notes could be maintained with the allocation/freeing of the
+task structures. With the notes being so small it might not
+be too bad just to allocate an array based on some configurable
+maximum. Being able to dump say up to 1000 task notes would
+be more that sufficient for our systems. The wasted memory
+of allocating more memory than actually needed would be a
+small cost to ensure well debugged kernels.
+
+-piet
+
 >>Hey Guys:
 >>
 >>I've been using kgdb for a while with our 2.6.12 and now 2.6.16 kernel
@@ -87,76 +100,29 @@ Vivek Goyal wrote:
 >>
 >
 >IIUC, you are suggesting that we create elf notes even for non-active
->tasks in vmcore.
->
-Yep.
-
-> We should not be doing that.
+>tasks in vmcore. We should not be doing that.
 >
 >- It is not safe to traverse through task list after system has crashed.
->  
->
-I agree it's not 100% safe, but for many developers it's a risk
-worth taking. For example we make a lot of changes in the
-TCP/IP stack for implementing a proxy for filtering network
-traffic. Virtually all bugs are ones we make in the networking
-code and having a precise view of each stack would be helpful.
-It's extremely unlikely that the task structures have been whacked
-in our case; and likely for many other developers.
-
 >- We reserve the memory for elf notes at system boot. At that time we
 >  have no idea how many task system will have at the time of crash.
->  
 >
-How about reserving memory with each task structure for the
-ELF notes? With Solaris I reserved a page for each CPU to be
-able to store the register windows during a stack overflow so
-I could map it in during the stack overflow. It's not unreasonable
-to allocate the space with the task; especially if it's a kernel
-config option. If no one used it we could remove it and go for
-an alternate approach.
-
 >I think following can be a way forward for your requirement.
 >
 >- Either gdb should provide a SunOS kind of facility where one can 
 >  provide stack pointer and switch the task context. ( I don't know
 >  if there is already a way to do that).
->  
 >
-I'll talk on the gdb mailing list about it. Perhaps we could
-initially get it in as a developer maintance function to allow
-the registers to be changed for a thread in a core dump.
-
 >- Or one can write a user space tool, which parses original vmcore,
 >  walks through task list, prepare elf notes for all the tasks and emit
 >  a new vmcore which is fetched to gdb.
->  
 >
-Sounds difficult. I was talking to Dave Anderson about having
-crash provide task info to his embedded gdb process but he
-wasn't supportive of that approach.
-
-Having a peace of code that has to walk thru the task list and
-modify the elf notes seems a lot harder than just having the kernel
-do it. More code that has to be maintained.
-
-Isn't there precedence with other kernels like freebsd and Solaris
-having the core dumps provide task information? If it was conditional
-we could see just how many developers find the risk of causing a problem
-during the crash dump a issue.
-
-Looks to me like the size of the ELF notes is quite small and wouldn't
-be a significant burden to add to the task structure.
-
--piet
-
 >Thanks
 >Vivek
 >  
 >
 
 
---------------000604040400040204000609
+--------------070908020702030802000608
 Content-Type: text/html; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 
@@ -171,6 +137,21 @@ Vivek Goyal wrote:
 <blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
   <pre wrap="">On Thu, Apr 17, 2008 at 05:16:55PM -0700, Piet Delaney wrote:
   </pre>
+</blockquote>
+<br>
+I was thinking over lunch that the largest risk to whacking<br>
+the task list might be a stack overflows. Perhaps a list of crash<br>
+notes could be maintained with the allocation/freeing of the<br>
+task structures. With the notes being so small it might not<br>
+be too bad just to allocate an array based on some configurable<br>
+maximum. Being able to dump say up to 1000 task notes would<br>
+be more that sufficient for our systems. The wasted memory<br>
+of allocating more memory than actually needed would be a <br>
+small cost to ensure well debugged kernels.<br>
+<br>
+-piet<br>
+<br>
+<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
   <blockquote type="cite">
     <pre wrap="">Hey Guys:
 
@@ -218,76 +199,22 @@ to the experience with kgdb.
   </blockquote>
   <pre wrap=""><!---->
 IIUC, you are suggesting that we create elf notes even for non-active
-tasks in vmcore.</pre>
-</blockquote>
-Yep.<br>
-<br>
-<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
-  <pre wrap=""> We should not be doing that.
+tasks in vmcore. We should not be doing that.
 
 - It is not safe to traverse through task list after system has crashed.
-  </pre>
-</blockquote>
-I agree it's not 100% safe, but for many developers it's a risk<br>
-worth taking. For example we make a lot of changes in the<br>
-TCP/IP stack for implementing a proxy for filtering network<br>
-traffic. Virtually all bugs are ones we make in the networking<br>
-code and having a precise view of each stack would be helpful.<br>
-It's extremely unlikely that the task structures have been whacked<br>
-in our case; and likely for many other developers.<br>
-<br>
-<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
-  <pre wrap="">- We reserve the memory for elf notes at system boot. At that time we
+- We reserve the memory for elf notes at system boot. At that time we
   have no idea how many task system will have at the time of crash.
-  </pre>
-</blockquote>
-How about reserving memory with each task structure for the<br>
-ELF notes? With Solaris I reserved a page for each CPU to be<br>
-able to store the register windows during a stack overflow so<br>
-I could map it in during the stack overflow. It's not unreasonable<br>
-to allocate the space with the task; especially if it's a kernel<br>
-config option. If no one used it we could remove it and go for<br>
-an alternate approach.<br>
-<br>
-<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
-  <pre wrap="">
+
 I think following can be a way forward for your requirement.
 
 - Either gdb should provide a SunOS kind of facility where one can 
   provide stack pointer and switch the task context. ( I don't know
   if there is already a way to do that).
-  </pre>
-</blockquote>
-I'll talk on the gdb mailing list about it. Perhaps we could<br>
-initially get it in as a developer maintance function to allow <br>
-the registers to be changed for a thread in a core dump. <br>
-<br>
-<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
-  <pre wrap="">
+
 - Or one can write a user space tool, which parses original vmcore,
   walks through task list, prepare elf notes for all the tasks and emit
   a new vmcore which is fetched to gdb.
-  </pre>
-</blockquote>
-Sounds difficult. I was talking to Dave Anderson about having<br>
-crash provide task info to his embedded gdb process but he<br>
-wasn't supportive of that approach. <br>
-<br>
-Having a peace of code that has to walk thru the task list and<br>
-modify the elf notes seems a lot harder than just having the kernel<br>
-do it. More code that has to be maintained.&nbsp; <br>
-<br>
-Isn't there precedence with other kernels like freebsd and Solaris<br>
-having the core dumps provide task information? If it was conditional<br>
-we could see just how many developers find the risk of causing a problem<br>
-during the crash dump a issue.<br>
-<br>
-Looks to me like the size of the ELF notes is quite small and wouldn't<br>
-be a significant burden to add to the task structure.<br>
-<br>
--piet<br>
-<blockquote cite="mid20080418141028.GB1983@redhat.com" type="cite">
-  <pre wrap="">
+
 Thanks
 Vivek
   </pre>
@@ -296,10 +223,10 @@ Vivek
 </body>
 </html>
 
---------------000604040400040204000609--
+--------------070908020702030802000608--
 
 
---===============0785594466==
+--===============1256237562==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -310,5 +237,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0785594466==--
+--===============1256237562==--
 
