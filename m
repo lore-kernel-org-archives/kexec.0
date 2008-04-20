@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JmrMt-0002PC-1s
-	for kexec@lists.infradead.org; Fri, 18 Apr 2008 14:15:11 +0000
-Date: Fri, 18 Apr 2008 10:10:28 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Accessing Thread Information in kernel crash dumps with ddd+gdb
-Message-ID: <20080418141028.GB1983@redhat.com>
-References: <4807E877.8000404@bluelane.com>
+	id 1JnRJO-0007UA-8a
+	for kexec@lists.infradead.org; Sun, 20 Apr 2008 04:37:58 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <4807E877.8000404@bluelane.com> <20080418141028.GB1983@redhat.com>
+	<4808FF6C.7040604@bluelane.com>
+Date: Sat, 19 Apr 2008 21:37:35 -0700
+In-Reply-To: <4808FF6C.7040604@bluelane.com> (Piet Delaney's message of "Fri, 
+	18 Apr 2008 13:07:08 -0700")
+Message-ID: <m1prslrvjk.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4807E877.8000404@bluelane.com>
+Subject: Re: Accessing Thread Information in kernel crash dumps with ddd+gdb
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +24,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Piet Delaney <pdelaney@bluelane.com>
-Cc: Bernhard Kaindl <bk@suse.de>, Andrew Morton <akpm@osdl.org>, V Srivatsa <vatsa@in.ibm.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, Milind Dumbare <jhumo2002@yahoo.com>, "Amit S. Kale" <amitkale@linsyssoft.com>, Jason Wessel <jason.wessel@windriver.com>, kexec@lists.infradead.org, Andrew Cagney <ac131313@cygnus.com>, Bernhard Walle <bwalle@suse.de>, George Anzinger <george@mvista.com>, Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Maneesh Soni <maneesh@in.ibm.com>, Castor Fu <Castor.Fu@3PAR.com>, Alexander Nyberg <alexn@telia.com>, Joel Brobecker <brobecker@adacore.com>, Daniel Jacobowitz <drow@false.org>
+To: pdelaney@bluelane.com
+Cc: Bernhard Kaindl <bk@suse.de>, Andrew Morton <akpm@osdl.org>, V Srivatsa <vatsa@in.ibm.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, Milind Dumbare <jhumo2002@yahoo.com>, "Amit S. Kale" <amitkale@linsyssoft.com>, Jason Wessel <jason.wessel@windriver.com>, kexec@lists.infradead.org, Andrew Cagney <ac131313@cygnus.com>, Bernhard Walle <bwalle@suse.de>, George Anzinger <george@mvista.com>, Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Joel Brobecker <brobecker@adacore.com>, Ingo Molnar <mingo@elte.hu>, Maneesh Soni <maneesh@in.ibm.com>, Castor Fu <Castor.Fu@3PAR.com>, Alexander Nyberg <alexn@telia.com>, Vivek Goyal <vgoyal@redhat.com>, Daniel Jacobowitz <drow@false.org>
 
-On Thu, Apr 17, 2008 at 05:16:55PM -0700, Piet Delaney wrote:
-> Hey Guys:
-> 
-> I've been using kgdb for a while with our 2.6.12 and now 2.6.16 kernel
-> as well as kdump/kexec with our 2.6.16 kernel. I'm a bit disappointed
-> with the visibility of local variables on the threads/tasks not currently
-> running on CPUs. Both crash, and the gdb macros that you guys wrote,
-> show the most important stuff but I'd prefer to be able to see everything
-> with gdb/ddd as I can with kgdb; including all local variables and formal
-> parameters at each stack frame.
-> 
-> A long time ago I used gdb on SunOS 4.1.4 and use to simply set $fp
-> and $sp from the saved information in the U-block to view a process.
-> I wish gdb would allow be to run your macros, btt for example, and extract
-> the stackp from task.thread.esp assign it temporally to $sp for the 
-> current task,
-> do the backtrace command and see everything. Changing $sp and $fp for a 
-> while
-> like I use to do with gdb on SunOS 4.1.4 and then using ddd+gdb to 
-> browse the
-> stack formals and locals would be nice. Just doing a 'set write on' 
-> isn't sufficient,
-> gdb wants a process and I can't see to satisfy it with simply setting 
-> the current
-> thread.
-> 
-> I was wondering if any of you guys have been thinking of anything like this
-> and had and hacks or ideas on how to see the locals and formals for all 
-> tasks.
-> 
-> One thought I had was a minor hack of the kexec code to do something 
-> like your gdb macros
-> and walk thru the task list and then append a ELF Notes, like done by 
-> crash_save_this_cpu(),
-> for each task. I have no idea if gdb has a limit on the number of 
-> elf_prstatus structures
-> that can be provided. I suppose I'd leave it a KEXEC config variable to 
-> enable this, as
-> some would argue that it's not as save as simply saving the regs for the 
-> active CPUs.
-> This would leave 'info threads' with gdb similar to 'ps' with crash and 
-> virtually identical
-> to the experience with kgdb.
+Piet Delaney <pdelaney@bluelane.com> writes:
 
-IIUC, you are suggesting that we create elf notes even for non-active
-tasks in vmcore. We should not be doing that.
+> I agree it's not 100% safe, but for many developers it's a risk
+> worth taking. For example we make a lot of changes in the
+> TCP/IP stack for implementing a proxy for filtering network
+> traffic. Virtually all bugs are ones we make in the networking
+> code and having a precise view of each stack would be helpful.
+> It's extremely unlikely that the task structures have been whacked
+> in our case; and likely for many other developers.
 
-- It is not safe to traverse through task list after system has crashed.
-- We reserve the memory for elf notes at system boot. At that time we
-  have no idea how many task system will have at the time of crash.
+Kernel crash dumps in development?
+Relying on debuggers in kernel development?
 
-I think following can be a way forward for your requirement.
+There is something that smells horribly like the debug it until
+it works version of code development instead of stopping and
+understanding what the code does.
 
-- Either gdb should provide a SunOS kind of facility where one can 
-  provide stack pointer and switch the task context. ( I don't know
-  if there is already a way to do that).
+> How about reserving memory with each task structure for the
+> ELF notes? 
 
-- Or one can write a user space tool, which parses original vmcore,
-  walks through task list, prepare elf notes for all the tasks and emit
-  a new vmcore which is fetched to gdb.
+Doesn't fly we need to know where the memory is before the kernel
+crashes.  You have just required the task list walker you are
+trying to avoid be present to gather up your ELF notes.  If you
+need the walker anyway there is no point in generating the notes
+a priori.
 
-Thanks
-Vivek
+> With Solaris I reserved a page for each CPU to be
+> able to store the register windows during a stack overflow so
+> I could map it in during the stack overflow. It's not unreasonable
+> to allocate the space with the task; especially if it's a kernel
+> config option. If no one used it we could remove it and go for
+> an alternate approach.
+
+In some sense we have already been where you are suggesting.  Having
+a nice crash dump facility in the kernel proved to fail to capture
+crash dumps in real world failure scenarios.
+
+>     I think following can be a way forward for your requirement.
+>
+>     - Either gdb should provide a SunOS kind of facility where one can
+>       provide stack pointer and switch the task context. ( I don't know
+>       if there is already a way to do that).
+>
+>
+>
+> I'll talk on the gdb mailing list about it. Perhaps we could
+> initially get it in as a developer maintance function to allow
+> the registers to be changed for a thread in a core dump.
+>
+>
+>     - Or one can write a user space tool, which parses original vmcore,
+>       walks through task list, prepare elf notes for all the tasks and emit
+>       a new vmcore which is fetched to gdb.
+>
+>
+>
+> Sounds difficult. I was talking to Dave Anderson about having
+> crash provide task info to his embedded gdb process but he
+> wasn't supportive of that approach.
+>
+> Having a peace of code that has to walk thru the task list and
+> modify the elf notes seems a lot harder than just having the kernel
+> do it. More code that has to be maintained. 
+
+Totally Wrong.
+
+It is critical that the kexec on panic code path remains as small
+as possible to maintain reliability.
+
+Doing just about anything elsewhere is less work then on that code
+path because we need to assume just about any part of the kernel
+is busted and wrong.
+
+Further there is no significant benefit (except possibly the code being
+more visible to kernel developers) to doing the work in the kernel.
+If that is a real concern placing a debug utility in the kernel source
+that finds the task list and walks it should provide the same benefit.
+
+Debuggers do have perfect information about the structure layouts,
+as normal dwarf2 debugging information can record it.
+
+So forget the notion of doing this on the kexec on panic code path
+and see if you can make one of one of Vivek's ideas fly.  If nothing
+is busted walking the task list is just a stupid linked list walk
+easy, and not at all fatal if you get it wrong in user space, and
+easy to fix.  A mysterious failure that takes weeks of work if you
+are not perfectly paranoid in the kexec on panic code path.
+
+
+Eric
 
 _______________________________________________
 kexec mailing list
