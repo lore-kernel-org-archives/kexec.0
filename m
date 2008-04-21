@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JnRJO-0007UA-8a
-	for kexec@lists.infradead.org; Sun, 20 Apr 2008 04:37:58 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <4807E877.8000404@bluelane.com> <20080418141028.GB1983@redhat.com>
-	<4808FF6C.7040604@bluelane.com>
-Date: Sat, 19 Apr 2008 21:37:35 -0700
-In-Reply-To: <4808FF6C.7040604@bluelane.com> (Piet Delaney's message of "Fri, 
-	18 Apr 2008 13:07:08 -0700")
-Message-ID: <m1prslrvjk.fsf@frodo.ebiederm.org>
+Received: from imx9.toshiba.co.jp ([202.33.96.51])
+	by pentafluge.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JnoZM-0003RZ-Ki
+	for kexec@lists.infradead.org; Mon, 21 Apr 2008 05:28:03 +0000
+Received: from imx2.toshiba.co.jp (imx2 [202.33.96.24])
+	by imx9.toshiba.co.jp  with ESMTP id m3L5KFwZ007557
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <kexec@lists.infradead.org>; Mon, 21 Apr 2008 14:20:15 +0900 (JST)
+Received: from arc1.toshiba.co.jp ([133.199.194.235])
+	by imx2.toshiba.co.jp  with ESMTP id m3L5Hrso008039
+	for <kexec@lists.infradead.org>; Mon, 21 Apr 2008 14:17:53 +0900 (JST)
+Received: (from root@localhost) by arc1.toshiba.co.jp  id m3L5HrgN009847
+	for kexec@lists.infradead.org; Mon, 21 Apr 2008 14:17:53 +0900 (JST)
+Received: from mx12.toshiba.co.jp (localhost [127.0.0.1])
+	by ovp2.toshiba.co.jp  with ESMTP id m3L5HqDV018919
+	for <kexec@lists.infradead.org>; Mon, 21 Apr 2008 14:17:52 +0900 (JST)
+From: "gib" <suchada.pitchayasamanya@toshiba.co.jp>
+Subject: Question about forcing kernel panic on PowerMac G5 by kexec command
+Date: Mon, 21 Apr 2008 14:17:54 +0900
+Message-Id: <200804210517.m3L5Hq61011769@toshiba.co.jp>
 MIME-Version: 1.0
-Subject: Re: Accessing Thread Information in kernel crash dumps with ddd+gdb
+Content-Language: ja
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,105 +29,206 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0311674094=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pdelaney@bluelane.com
-Cc: Bernhard Kaindl <bk@suse.de>, Andrew Morton <akpm@osdl.org>, V Srivatsa <vatsa@in.ibm.com>, Sergei Shtylyov <sshtylyov@ru.mvista.com>, Milind Dumbare <jhumo2002@yahoo.com>, "Amit S. Kale" <amitkale@linsyssoft.com>, Jason Wessel <jason.wessel@windriver.com>, kexec@lists.infradead.org, Andrew Cagney <ac131313@cygnus.com>, Bernhard Walle <bwalle@suse.de>, George Anzinger <george@mvista.com>, Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Joel Brobecker <brobecker@adacore.com>, Ingo Molnar <mingo@elte.hu>, Maneesh Soni <maneesh@in.ibm.com>, Castor Fu <Castor.Fu@3PAR.com>, Alexander Nyberg <alexn@telia.com>, Vivek Goyal <vgoyal@redhat.com>, Daniel Jacobowitz <drow@false.org>
+To: kexec@lists.infradead.org
 
-Piet Delaney <pdelaney@bluelane.com> writes:
+1jM MIME `.L}`p[g bZ[WE7B
 
-> I agree it's not 100% safe, but for many developers it's a risk
-> worth taking. For example we make a lot of changes in the
-> TCP/IP stack for implementing a proxy for filtering network
-> traffic. Virtually all bugs are ones we make in the networking
-> code and having a precise view of each stack would be helpful.
-> It's extremely unlikely that the task structures have been whacked
-> in our case; and likely for many other developers.
+--===============0311674094==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000A_01C8A3BA.7D74A4A0"
+Content-Language: ja
 
-Kernel crash dumps in development?
-Relying on debuggers in kernel development?
+1jM MIME `.L}`p[g bZ[WE7B
 
-There is something that smells horribly like the debug it until
-it works version of code development instead of stopping and
-understanding what the code does.
+------=_NextPart_000_000A_01C8A3BA.7D74A4A0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-> How about reserving memory with each task structure for the
-> ELF notes? 
+Hello all,
 
-Doesn't fly we need to know where the memory is before the kernel
-crashes.  You have just required the task list walker you are
-trying to avoid be present to gather up your ELF notes.  If you
-need the walker anyway there is no point in generating the notes
-a priori.
+ 
 
-> With Solaris I reserved a page for each CPU to be
-> able to store the register windows during a stack overflow so
-> I could map it in during the stack overflow. It's not unreasonable
-> to allocate the space with the task; especially if it's a kernel
-> config option. If no one used it we could remove it and go for
-> an alternate approach.
+I'm working on PowerMac G5 complied with CONFIG_KEXEC = y.
 
-In some sense we have already been where you are suggesting.  Having
-a nice crash dump facility in the kernel proved to fail to capture
-crash dumps in real world failure scenarios.
+It's work fine with Kexec command option l ( kexec -l /boot/vmlinux. ) but
+after the capture kernel pre-loading ( by kexec -p /boot/vmlinux. ), 
 
->     I think following can be a way forward for your requirement.
->
->     - Either gdb should provide a SunOS kind of facility where one can
->       provide stack pointer and switch the task context. ( I don't know
->       if there is already a way to do that).
->
->
->
-> I'll talk on the gdb mailing list about it. Perhaps we could
-> initially get it in as a developer maintance function to allow
-> the registers to be changed for a thread in a core dump.
->
->
->     - Or one can write a user space tool, which parses original vmcore,
->       walks through task list, prepare elf notes for all the tasks and emit
->       a new vmcore which is fetched to gdb.
->
->
->
-> Sounds difficult. I was talking to Dave Anderson about having
-> crash provide task info to his embedded gdb process but he
-> wasn't supportive of that approach.
->
-> Having a peace of code that has to walk thru the task list and
-> modify the elf notes seems a lot harder than just having the kernel
-> do it. More code that has to be maintained. 
+when I forced kernel panic by "echo c > /proc/sysrq-trigger" the console
+kept showing "Sending IPI to other CPU" and did not go to the next step.
 
-Totally Wrong.
+ 
 
-It is critical that the kexec on panic code path remains as small
-as possible to maintain reliability.
+According to this list there was some problem about kdump in ppc970 based
+CPU which PowerMac's CPU are.
 
-Doing just about anything elsewhere is less work then on that code
-path because we need to assume just about any part of the kernel
-is busted and wrong.
+Does anybody know about this issue? It would be very helpful for me.
 
-Further there is no significant benefit (except possibly the code being
-more visible to kernel developers) to doing the work in the kernel.
-If that is a real concern placing a debug utility in the kernel source
-that finds the task list and walks it should provide the same benefit.
+ 
 
-Debuggers do have perfect information about the structure layouts,
-as normal dwarf2 debugging information can record it.
+Thanks in advance.
 
-So forget the notion of doing this on the kexec on panic code path
-and see if you can make one of one of Vivek's ideas fly.  If nothing
-is busted walking the task list is just a stupid linked list walk
-easy, and not at all fatal if you get it wrong in user space, and
-easy to fix.  A mysterious failure that takes weeks of work if you
-are not perfectly paranoid in the kexec on panic code path.
+Suchada
 
 
-Eric
+------=_NextPart_000_000A_01C8A3BA.7D74A4A0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+@font-face
+	{font-family:"Cordia New";
+	panose-1:2 11 3 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"Cordia New";
+	panose-1:2 11 3 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0mm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	font-size:10.0pt;
+	font-family:"Arial","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML \66F8\5F0F\4ED8\304D \(\6587\5B57\)";
+	margin:0mm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"MS Gothic";}
+span.17
+	{mso-style-type:personal-compose;
+	font-family:"Arial","sans-serif";
+	color:windowtext;}
+span.HTML
+	{mso-style-name:"HTML \66F8\5F0F\4ED8\304D \(\6587\5B57\)";
+	mso-style-priority:99;
+	mso-style-link:"HTML \66F8\5F0F\4ED8\304D";
+	font-family:"MS Gothic";}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+ /* Page Definitions */
+ @page Section1
+	{size:612.0pt 792.0pt;
+	margin:99.25pt 30.0mm 30.0mm 30.0mm;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026">
+  <v:textbox inset=3D"5.85pt,.7pt,5.85pt,.7pt" />
+ </o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DJA link=3Dblue vlink=3Dpurple =
+style=3D'text-justify-trim:punctuation'>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Hello all,<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>I&#8217;m
+working on PowerMac G5 complied with CONFIG_KEXEC =3D =
+y.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>It&#8217;s
+work fine with Kexec command option l ( kexec &#8211;l =
+/boot/vmlinux&#8230; )
+but after the capture kernel pre-loading ( by kexec &#8211;p =
+/boot/vmlinux&#8230;
+), <o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>when I forced
+kernel panic by &#8220;echo c &gt; /proc/sysrq-trigger&#8221; the =
+console kept
+showing &#8220;Sending IPI to other CPU&#8221; and did not go to the =
+next step.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<pre><span lang=3DEN-US style=3D'font-size:10.0pt'>According to this =
+list there was some problem about kdump in ppc970 based CPU which =
+PowerMac&#8217;s CPU are.<o:p></o:p></span></pre>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Does
+anybody know about this issue? It would be very helpful for =
+me.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Thanks in
+advance.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Suchada<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_000A_01C8A3BA.7D74A4A0--
+
+
+
+--===============0311674094==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0311674094==--
+
+
