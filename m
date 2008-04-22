@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wr-out-0506.google.com ([64.233.184.225])
+Received: from wr-out-0506.google.com ([64.233.184.239])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoRzN-00070N-Ec
+	id 1JoRzN-00070O-Eo
 	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:33:29 +0000
-Received: by wr-out-0506.google.com with SMTP id c46so2299713wra.18
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:33:28 -0700 (PDT)
+Received: by wr-out-0506.google.com with SMTP id c46so2299719wra.18
+	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:33:29 -0700 (PDT)
 From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH 9/9] Die on early EOF in slurp_file,
-	instead of infinite-looping.
-Date: Tue, 22 Apr 2008 16:21:12 -0700
-Message-Id: <1208906472-18465-10-git-send-email-jamey@thetovacompany.com>
+Subject: [PATCH 4/9] Fix "Warning: indirect jmp without `*'".
+Date: Tue, 22 Apr 2008 16:21:07 -0700
+Message-Id: <1208906472-18465-5-git-send-email-jamey@thetovacompany.com>
 In-Reply-To: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 References: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,28 +26,24 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
+The generated code is byte-for-byte identical.
+
 Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
 ---
-A "shouldn't happen" case that I triggered due to a different bug in
-Windows. I thought that, in the unlikely event that this case occurs, an
-infinite loop is a rather harsh result.
+ purgatory/arch/i386/entry32-16-debug.S |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
- kexec/kexec.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 3a1656a..f898428 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -408,6 +408,8 @@ char *slurp_file(const char *filename, off_t *r_size)
- 			die("read on %s of %ld bytes failed: %s\n", filename,
- 			    (size - progress)+ 0UL, strerror(errno));
- 		}
-+		if (result == 0)
-+			die("read on %s ended before stat said it should\n", filename);
- 		progress += result;
- 	}
- 	result = close(fd);
+diff --git a/purgatory/arch/i386/entry32-16-debug.S b/purgatory/arch/i386/entry32-16-debug.S
+index 558ac1f..82b58ca 100644
+--- a/purgatory/arch/i386/entry32-16-debug.S
++++ b/purgatory/arch/i386/entry32-16-debug.S
+@@ -191,5 +191,5 @@ DEBUG_CHAR('j')
+ entry16_debug_old_first32:
+ 	.long 0x100000
+ 	.size entry16_debug_old_first32, . - entry16_debug_old_first32
+-	jmp	%eax
++	jmp	*%eax
+ .size entry16_debug_first32, . - entry16_debug_first32
 -- 
 1.5.4.1
 
