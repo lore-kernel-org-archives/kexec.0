@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from py-out-1112.google.com ([64.233.166.181])
+Received: from rv-out-0708.google.com ([209.85.198.243]
+	helo=rv-out-0506.google.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoRt4-0006Vj-SN
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:26:59 +0000
-Received: by py-out-1112.google.com with SMTP id a73so3540559pye.2
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:26:58 -0700 (PDT)
+	id 1JoRyd-0006vd-9I
+	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:32:43 +0000
+Received: by rv-out-0506.google.com with SMTP id b17so1263444rvf.42
+	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:32:42 -0700 (PDT)
 From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH 0/9] kexec userspace and purgatory cleanups
-Date: Tue, 22 Apr 2008 16:21:03 -0700
-Message-Id: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
+Subject: [PATCH 1/9] Fix undefined symbol errors on readw/writew: arch/io.h,
+	not sys/io.h.
+Date: Tue, 22 Apr 2008 16:21:04 -0700
+Message-Id: <1208906472-18465-2-git-send-email-jamey@thetovacompany.com>
+In-Reply-To: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
+References: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +28,37 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-GIT: Please enter your email below.
-GIT: Lines beginning in "GIT: " will be removed.
-GIT: Consider including an overall diffstat or table of contents
-GIT: for the patch you are writing.
+The undefined symbols naturally weren't relocated by kexec's linker, so
+each compiled `call` instruction branched into the middle of itself. The
+CPU proceeded to interpret the un-relocated address as instructions,
+resulting in an undefined opcode fault. Since at this point no IDT is
+loaded, that turned into a triple-fault and reboot.
 
-This patch series fixes issues I encountered while porting kexec to run
-on Windows. (I'll be happy to say more about that insane, but
-surprisingly successful, plan on another occasion.) These patches,
-however, are only the ones that affect the kexec userspace tools on
-Linux. They fall into three categories.
+The bug was only visible when running kexec with --console-vga.
 
-Bug fixes, primarily in the i386 purgatory source:
-- [1/9] Fix undefined symbol errors on readw/writew.
-- [2/9] Fix copy-paste bug: entry16 does not start at entry16_debug.
-- [3/9] Conform more closely to Documentation/i386/boot.txt.
-- [9/9] Die on early EOF in slurp_file, instead of infinite-looping.
+Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
+---
+Although GCC warned about this problem, it would have been easier to
+diagnose if the ELF linking code in the kexec userspace tools would
+report an error on attempting to link undefined symbols.
 
-Compiler and assembler warning fixes:
-- [4/9] Fix "Warning: indirect jmp without `*'".
-- [5/9] Fix all gcc warnings for ARCH=i386 builds.
+ purgatory/arch/i386/console-x86.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Cleanups or simplifications:
-- [6/9] <sys/mman.h> is not needed by any i386 kexec/ source.
-- [7/9] Replace weak definitions with source filename overriding.
-- [8/9] Simplify initialization of argument list for `shutdown`.
+diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
+index 68f5daf..9773573 100644
+--- a/purgatory/arch/i386/console-x86.c
++++ b/purgatory/arch/i386/console-x86.c
+@@ -1,5 +1,5 @@
+ #include <stdint.h>
+-#include <sys/io.h>
++#include <arch/io.h>
+ #include <purgatory.h>
+ 
+ /*
+-- 
+1.5.4.1
 
-I believe each of these patches stands pretty well on its own, both in
-independence from each other, and in being fairly self-explanatory.
-
-These patches are against 9e959db12a671a71934a765d15aaf082f0a4f886 in
-git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.
-Although, as they touch only code that hasn't seen much change recently,
-they should apply cleanly to other versions.
-
-I hope you'll consider including these patches in your next release of
-the kexec userspace tools. If you would have preferred the patches in
-some other form, please let me know, since I'll have some more patches
-for your consideration later.
-
-Thanks,
-Jamey Sharp
 
 _______________________________________________
 kexec mailing list
