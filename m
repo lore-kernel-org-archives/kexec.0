@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from py-out-1112.google.com ([64.233.166.182])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoRzo-00074m-DY
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:33:56 +0000
+	id 1JoS04-00074m-MH
+	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:34:12 +0000
 Received: by py-out-1112.google.com with SMTP id a73so3543921pye.2
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:33:56 -0700 (PDT)
+	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:34:12 -0700 (PDT)
 From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH 2/9] Fix copy-paste bug: entry16 does not start at
-	entry16_debug.
-Date: Tue, 22 Apr 2008 16:21:05 -0700
-Message-Id: <1208906472-18465-3-git-send-email-jamey@thetovacompany.com>
+Subject: [PATCH 6/9] <sys/mman.h> is not needed by any kexec/ source,
+	at least on i386.
+Date: Tue, 22 Apr 2008 16:21:09 -0700
+Message-Id: <1208906472-18465-7-git-send-email-jamey@thetovacompany.com>
 In-Reply-To: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 References: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,33 +27,78 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-The entry16 and entry16_debug functions need to compute appropriate 16-bit
-segments before dropping to real mode. Each is intended to use its own
-entry address as the segment base. However, both were using the entry
-address of entry16_debug, causing the code-segment reload to branch to the
-wrong place in the non-debug case.
-
-This bug was only visible when running kexec with --real-mode and without
---debug.
+Other architectures also include sys/mman.h and likely don't need to, but
+I can't easily test that.
 
 Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
 ---
- purgatory/arch/i386/entry32-16.S |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ kexec/arch/i386/kexec-bzImage.c       |    1 -
+ kexec/arch/i386/kexec-elf-x86.c       |    1 -
+ kexec/arch/i386/kexec-multiboot-x86.c |    1 -
+ kexec/arch/i386/kexec-nbi.c           |    1 -
+ kexec/arch/i386/x86-linux-setup.c     |    1 -
+ 5 files changed, 0 insertions(+), 5 deletions(-)
 
-diff --git a/purgatory/arch/i386/entry32-16.S b/purgatory/arch/i386/entry32-16.S
-index a37fb55..aaf1273 100644
---- a/purgatory/arch/i386/entry32-16.S
-+++ b/purgatory/arch/i386/entry32-16.S
-@@ -25,7 +25,7 @@
- entry16:
- 	.code32
- 	/* Compute where I am running at */
--	movl	$entry16_debug, %ebx	
-+	movl	$entry16, %ebx
- 
- 	/* Fixup my real mode segment */
- 	movl	%ebx, %eax
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 9ca3cea..d585196 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -24,7 +24,6 @@
+ #include <errno.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/mman.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <getopt.h>
+diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
+index 249dfa6..1e523f9 100644
+--- a/kexec/arch/i386/kexec-elf-x86.c
++++ b/kexec/arch/i386/kexec-elf-x86.c
+@@ -25,7 +25,6 @@
+ #include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/mman.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <getopt.h>
+diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
+index 1618c82..ec65860 100644
+--- a/kexec/arch/i386/kexec-multiboot-x86.c
++++ b/kexec/arch/i386/kexec-multiboot-x86.c
+@@ -41,7 +41,6 @@
+ #include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/mman.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <getopt.h>
+diff --git a/kexec/arch/i386/kexec-nbi.c b/kexec/arch/i386/kexec-nbi.c
+index e771f89..19ae631 100644
+--- a/kexec/arch/i386/kexec-nbi.c
++++ b/kexec/arch/i386/kexec-nbi.c
+@@ -24,7 +24,6 @@
+ #include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/mman.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <getopt.h>
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 97480fd..4b9a5e5 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -22,7 +22,6 @@
+ #include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/mman.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+ #include <linux/fb.h>
 -- 
 1.5.4.1
 
