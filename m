@@ -2,14 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from rv-out-0708.google.com ([209.85.198.243]
 	helo=rv-out-0506.google.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoRzI-0006vd-34
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:33:24 +0000
+	id 1JoRzK-0006vd-QO
+	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:33:27 +0000
 Received: by rv-out-0506.google.com with SMTP id b17so1263444rvf.42
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:33:23 -0700 (PDT)
+	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:33:26 -0700 (PDT)
 From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH 7/9] Replace weak definitions with source filename overriding.
-Date: Tue, 22 Apr 2008 16:21:10 -0700
-Message-Id: <1208906472-18465-8-git-send-email-jamey@thetovacompany.com>
+Subject: [PATCH 5/9] Fix all gcc warnings for ARCH=i386 builds.
+Date: Tue, 22 Apr 2008 16:21:08 -0700
+Message-Id: <1208906472-18465-6-git-send-email-jamey@thetovacompany.com>
 In-Reply-To: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 References: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,283 +27,199 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This reduces the kexec-tools' demands on the capabilities of the
-toolchain, and improves standards conformance, without really changing
-maintenance complexity.
-
 Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
 ---
-This is the patch I expect to be controversial, if any of these are. Of
-course the reason I wrote it is because the PE file format, unlike ELF,
-doesn't support weak symbols. But I also feel that weak symbols were the
-wrong choice here. I believe that the result of this patch is code that
-is easier to understand, due to being more self-documenting and using
-tools that more developers are familiar with.
+Some of GCC's warnings are clearly pointless in this code, but because
+the "die" function is not declared "noreturn", GCC can't tell. In those
+cases, I chose to initialize variables uselessly, rather than worry
+about convinving the compiler that the existing code was actually OK.
 
- kexec/Makefile            |   11 +++++++++++
- kexec/add_buffer.c        |   14 ++++++++++++++
- kexec/add_segment.c       |    8 ++++++++
- kexec/arch/ia64/Makefile  |    2 ++
- kexec/arch/mips/Makefile  |    4 ++++
- kexec/arch/ppc64/Makefile |    2 ++
- kexec/arch_reuse_initrd.c |    6 ++++++
- kexec/kexec-iomem.c       |   13 -------------
- kexec/kexec.c             |   31 -------------------------------
- kexec/kexec.h             |    2 ++
- kexec/proc_iomem.c        |   13 +++++++++++++
- kexec/virt_to_phys.c      |    7 +++++++
- 12 files changed, 69 insertions(+), 44 deletions(-)
- create mode 100644 kexec/add_buffer.c
- create mode 100644 kexec/add_segment.c
- create mode 100644 kexec/arch_reuse_initrd.c
- create mode 100644 kexec/proc_iomem.c
- create mode 100644 kexec/virt_to_phys.c
+ kexec/arch/i386/crashdump-x86.c       |    7 +++----
+ kexec/arch/i386/kexec-beoboot-x86.c   |    2 +-
+ kexec/arch/i386/kexec-bzImage.c       |    8 ++++----
+ kexec/arch/i386/kexec-elf-x86.c       |    6 +++---
+ kexec/arch/i386/kexec-multiboot-x86.c |    2 +-
+ kexec/kexec-elf-rel.c                 |    8 ++++----
+ kexec/kexec.c                         |    2 +-
+ 7 files changed, 17 insertions(+), 18 deletions(-)
 
-diff --git a/kexec/Makefile b/kexec/Makefile
-index cf6f043..98fed4c 100644
---- a/kexec/Makefile
-+++ b/kexec/Makefile
-@@ -29,6 +29,17 @@ dist += kexec/Makefile $(KEXEC_SRCS) $(KEXEC_GENERATED_SRCS)	\
- 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
- 	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 86dc166..7717219 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -151,7 +151,7 @@ static int exclude_crash_reserve_region(int *nr_ranges)
+ {
+ 	int i, j, tidx = -1;
+ 	unsigned long long cstart, cend;
+-	struct memory_range temp_region;
++	struct memory_range temp_region = { };
  
-+$(ARCH)_PROC_IOMEM		= kexec/proc_iomem.c
-+KEXEC_SRCS += $($(ARCH)_PROC_IOMEM)
-+$(ARCH)_VIRT_TO_PHYS		= kexec/virt_to_phys.c
-+KEXEC_SRCS += $($(ARCH)_VIRT_TO_PHYS)
-+$(ARCH)_ADD_SEGMENT		= kexec/add_segment.c
-+KEXEC_SRCS += $($(ARCH)_ADD_SEGMENT)
-+$(ARCH)_ADD_BUFFER		= kexec/add_buffer.c
-+KEXEC_SRCS += $($(ARCH)_ADD_BUFFER)
-+$(ARCH)_ARCH_REUSE_INITRD	= kexec/arch_reuse_initrd.c
-+KEXEC_SRCS += $($(ARCH)_ARCH_REUSE_INITRD)
-+
- include $(srcdir)/kexec/arch/alpha/Makefile
- include $(srcdir)/kexec/arch/arm/Makefile
- include $(srcdir)/kexec/arch/i386/Makefile
-diff --git a/kexec/add_buffer.c b/kexec/add_buffer.c
-new file mode 100644
-index 0000000..4d4a55f
---- /dev/null
-+++ b/kexec/add_buffer.c
-@@ -0,0 +1,14 @@
-+#include "kexec.h"
-+
-+unsigned long add_buffer(struct kexec_info *info,
-+			 const void *buf,
-+			 unsigned long bufsz,
-+			 unsigned long memsz,
-+			 unsigned long buf_align,
-+			 unsigned long buf_min,
-+			 unsigned long buf_max,
-+			 int buf_end)
-+{
-+	return add_buffer_virt(info, buf, bufsz, memsz, buf_align,
-+			       buf_min, buf_max, buf_end);
-+}
-diff --git a/kexec/add_segment.c b/kexec/add_segment.c
-new file mode 100644
-index 0000000..029c376
---- /dev/null
-+++ b/kexec/add_segment.c
-@@ -0,0 +1,8 @@
-+#include "kexec.h"
-+
-+void add_segment(struct kexec_info *info,
-+		 const void *buf, size_t bufsz,
-+		 unsigned long base, size_t memsz)
-+{
-+	return add_segment_phys_virt(info, buf, bufsz, base, memsz, 0);
-+}
-diff --git a/kexec/arch/ia64/Makefile b/kexec/arch/ia64/Makefile
-index f6b3789..f5b212b 100644
---- a/kexec/arch/ia64/Makefile
-+++ b/kexec/arch/ia64/Makefile
-@@ -7,6 +7,8 @@ ia64_KEXEC_SRCS += kexec/arch/ia64/kexec-elf-ia64.c
- ia64_KEXEC_SRCS += kexec/arch/ia64/kexec-elf-rel-ia64.c
- ia64_KEXEC_SRCS += kexec/arch/ia64/crashdump-ia64.c
+ 	/* Crash reserved region. */
+ 	cstart = crash_reserved_mem.start;
+@@ -185,9 +185,7 @@ static int exclude_crash_reserve_region(int *nr_ranges)
+ 		}
+ 		for (j = (*nr_ranges - 1); j >= tidx; j--)
+ 			crash_memory_range[j+1] = crash_memory_range[j];
+-		crash_memory_range[tidx].start = temp_region.start;
+-		crash_memory_range[tidx].end = temp_region.end;
+-		crash_memory_range[tidx].type = temp_region.type;
++		crash_memory_range[tidx] = temp_region;
+ 		(*nr_ranges)++;
+ 	}
+ 	return 0;
+@@ -291,6 +289,7 @@ static int delete_memmap(struct memory_range *memmap_p, unsigned long long addr,
+ 				memmap_p[i].end = addr - 1;
+ 				temp_region.start = addr + size;
+ 				temp_region.end = mend;
++				temp_region.type = memmap_p[i].type;
+ 				operation = 1;
+ 				tidx = i;
+ 				break;
+diff --git a/kexec/arch/i386/kexec-beoboot-x86.c b/kexec/arch/i386/kexec-beoboot-x86.c
+index a73a3cb..2b1c34b 100644
+--- a/kexec/arch/i386/kexec-beoboot-x86.c
++++ b/kexec/arch/i386/kexec-beoboot-x86.c
+@@ -79,7 +79,7 @@ int beoboot_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
+ {
+ 	struct beoboot_header bb_header;
+-	const unsigned char *command_line, *kernel, *initrd;
++	const char *command_line, *kernel, *initrd;
  
-+ia64_PROC_IOMEM =
-+
- dist += kexec/arch/ia64/Makefile $(ia64_KEXEC_SRCS)			\
- 	kexec/arch/ia64/kexec-ia64.h kexec/arch/ia64/crashdump-ia64.h	\
- 	kexec/arch/ia64/include/arch/options.h
-diff --git a/kexec/arch/mips/Makefile b/kexec/arch/mips/Makefile
-index 8cba55e..f94bd89 100644
---- a/kexec/arch/mips/Makefile
-+++ b/kexec/arch/mips/Makefile
-@@ -6,6 +6,10 @@ mips_KEXEC_SRCS += kexec/arch/mips/kexec-elf-mips.c
- mips_KEXEC_SRCS += kexec/arch/mips/kexec-elf-rel-mips.c
- mips_KEXEC_SRCS += kexec/arch/mips/mips-setup-simple.S
+ 	int debug, real_mode_entry;
+ 	int opt;
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index abb094c..9ca3cea 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -128,7 +128,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	}
  
-+mips_ADD_BUFFER =
-+mips_ADD_SEGMENT =
-+mips_VIRT_TO_PHYS =
-+
- dist += kexec/arch/mips/Makefile $(mips_KEXEC_SRCS)			\
- 	kexec/arch/mips/kexec-mips.h					\
- 	kexec/arch/mips/include/arch/options.h
-diff --git a/kexec/arch/ppc64/Makefile b/kexec/arch/ppc64/Makefile
-index 90250f6..7ed0aa9 100644
---- a/kexec/arch/ppc64/Makefile
-+++ b/kexec/arch/ppc64/Makefile
-@@ -8,6 +8,8 @@ ppc64_KEXEC_SRCS += kexec/arch/ppc64/kexec-elf-ppc64.c
- ppc64_KEXEC_SRCS += kexec/arch/ppc64/kexec-ppc64.c
- ppc64_KEXEC_SRCS += kexec/arch/ppc64/crashdump-ppc64.c
+ 	kern16_size = (setup_sects +1) *512;
+-	kernel_version = ((unsigned char *)&setup_header) + 512 + setup_header.kver_addr;
++	kernel_version = ((char *)&setup_header) + 512 + setup_header.kver_addr;
+ 	if (kernel_len < kern16_size) {
+ 		fprintf(stderr, "BzImage truncated?\n");
+ 		return -1;
+@@ -198,10 +198,10 @@ int do_bzImage_load(struct kexec_info *info,
+ 	 * overflow takes place while applying relocations.
+ 	 */
+ 	if (!real_mode_entry && relocatable_kernel)
+-		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
++		elf_rel_build_load(info, &info->rhdr, (char *) purgatory, purgatory_size,
+ 					0x3000, 0x7fffffff, -1, 0);
+ 	else
+-		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
++		elf_rel_build_load(info, &info->rhdr, (char *) purgatory, purgatory_size,
+ 					0x3000, 640*1024, -1, 0);
+ 	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
+ 	/* The argument/parameter segment */
+@@ -262,7 +262,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/* Tell the kernel what is going on */
+ 	setup_linux_bootloader_parameters(info, real_mode, setup_base,
+ 		kern16_size, command_line, command_line_len,
+-		initrd, initrd_len);
++		(unsigned char *) initrd, initrd_len);
  
-+ppc64_ARCH_REUSE_INITRD =
-+
- dist += kexec/arch/ppc64/Makefile $(ppc64_KEXEC_SRCS)			\
- 	kexec/arch/ppc64/kexec-ppc64.h kexec/arch/ppc64/crashdump-ppc64.h \
- 	kexec/arch/ppc64/include/arch/options.h
-diff --git a/kexec/arch_reuse_initrd.c b/kexec/arch_reuse_initrd.c
-new file mode 100644
-index 0000000..477a76d
---- /dev/null
-+++ b/kexec/arch_reuse_initrd.c
-@@ -0,0 +1,6 @@
-+#include "kexec.h"
-+
-+void arch_reuse_initrd(void)
-+{
-+	die("--reuseinitrd not implemented on this architecture\n");
-+}
-diff --git a/kexec/kexec-iomem.c b/kexec/kexec-iomem.c
-index 8e4abab..ddc9f13 100644
---- a/kexec/kexec-iomem.c
-+++ b/kexec/kexec-iomem.c
-@@ -101,16 +101,3 @@ int parse_iomem_single(char *str, uint64_t *start, uint64_t *end)
+ 	/* Get the initial register values */
+ 	elf_rel_get_symbol(&info->rhdr, "entry16_regs", &regs16, sizeof(regs16));
+diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
+index 76ea0e2..249dfa6 100644
+--- a/kexec/arch/i386/kexec-elf-x86.c
++++ b/kexec/arch/i386/kexec-elf-x86.c
+@@ -185,7 +185,7 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	/* Do we want arguments? */
+ 	if (arg_style != ARG_STYLE_NONE) {
+ 		/* Load the setup code */
+-		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
++		elf_rel_build_load(info, &info->rhdr, (char *) purgatory, purgatory_size,
+ 			0, ULONG_MAX, 1, 0);
+ 	}
+ 	if (arg_style == ARG_STYLE_NONE) {
+@@ -199,7 +199,7 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
  
- 	return ret;
- }
--
--static const char proc_iomem_str[]= "/proc/iomem";
--
--/*
-- * Allow an architecture specific implementation of this
-- * function to override the location of a file looking a lot
-- * like /proc/iomem
-- */
--const char * __attribute__((weak)) proc_iomem(void)
--{
--        return proc_iomem_str;
--}
--
+ 		/* Setup the ELF boot notes */
+ 		note_base = elf_boot_notes(info, max_addr,
+-			command_line, command_line_len);
++			(unsigned char *) command_line, command_line_len);
+ 
+ 		/* Initialize the stack arguments */
+ 		arg2 = 0; /* No return address */
+@@ -247,7 +247,7 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		ramdisk_buf = NULL;
+ 		ramdisk_length = 0;
+ 		if (ramdisk) {
+-			ramdisk_buf = slurp_file(ramdisk, &ramdisk_length);
++			ramdisk_buf = (unsigned char *) slurp_file(ramdisk, &ramdisk_length);
+ 		}
+ 
+ 		/* If panic kernel is being loaded, additional segments need
+diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
+index 5ad279a..1618c82 100644
+--- a/kexec/arch/i386/kexec-multiboot-x86.c
++++ b/kexec/arch/i386/kexec-multiboot-x86.c
+@@ -210,7 +210,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	elf_exec_build_load(info, &ehdr, buf, len, 0);
+ 
+ 	/* Load the setup code */
+-	elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size, 0,
++	elf_rel_build_load(info, &info->rhdr, (char *) purgatory, purgatory_size, 0,
+ 				ULONG_MAX, 1, 0);
+ 	
+ 	/* The first segment will contain the multiboot headers:
+diff --git a/kexec/kexec-elf-rel.c b/kexec/kexec-elf-rel.c
+index 4419937..74c4b35 100644
+--- a/kexec/kexec-elf-rel.c
++++ b/kexec/kexec-elf-rel.c
+@@ -58,7 +58,7 @@ static size_t elf_rela_size(struct mem_ehdr *ehdr)
+ 
+ static struct mem_sym elf_sym(struct mem_ehdr *ehdr, const unsigned char *ptr)
+ {
+-	struct mem_sym sym;
++	struct mem_sym sym = { };
+ 	if (ehdr->ei_class == ELFCLASS32) {
+ 		Elf32_Sym lsym;
+ 		memcpy(&lsym, ptr, sizeof(lsym));
+@@ -87,7 +87,7 @@ static struct mem_sym elf_sym(struct mem_ehdr *ehdr, const unsigned char *ptr)
+ 
+ static struct mem_rela elf_rel(struct mem_ehdr *ehdr, const unsigned char *ptr)
+ {
+-	struct mem_rela rela;
++	struct mem_rela rela = { };
+ 	if (ehdr->ei_class == ELFCLASS32) {
+ 		Elf32_Rel lrel;
+ 		memcpy(&lrel, ptr, sizeof(lrel));
+@@ -112,7 +112,7 @@ static struct mem_rela elf_rel(struct mem_ehdr *ehdr, const unsigned char *ptr)
+ 
+ static struct mem_rela elf_rela(struct mem_ehdr *ehdr, const unsigned char *ptr)
+ {
+-	struct mem_rela rela;
++	struct mem_rela rela = { };
+ 	if (ehdr->ei_class == ELFCLASS32) {
+ 		Elf32_Rela lrela;
+ 		memcpy(&lrela, ptr, sizeof(lrela));
+@@ -339,7 +339,7 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 			struct mem_rela rel;
+ 			struct mem_sym sym;
+ 			const void *location;
+-			const char *name;
++			const unsigned char *name;
+ 			unsigned long address, value, sec_base;
+ 			if (shdr->sh_type == SHT_REL) {
+ 				rel = elf_rel(ehdr, ptr);
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 20b2ae4..2a71ace 100644
+index 0647295..20b2ae4 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -285,11 +285,6 @@ unsigned long locate_hole(struct kexec_info *info,
- 	return hole_base;
- }
- 
--unsigned long __attribute__((weak)) virt_to_phys(unsigned long addr)
--{
--	abort();
--}
--
- void add_segment_phys_virt(struct kexec_info *info,
- 	const void *buf, size_t bufsz,
- 	unsigned long base, size_t memsz, int phys)
-@@ -342,13 +337,6 @@ void add_segment_phys_virt(struct kexec_info *info,
+@@ -584,7 +584,7 @@ static void update_purgatory(struct kexec_info *info)
+ 			sha256_update(&ctx, null_buf, bytes);
+ 			nullsz -= bytes;
+ 		}
+-		region[j].start = info->segment[i].mem;
++		region[j].start = (unsigned long) info->segment[i].mem;
+ 		region[j].len   = info->segment[i].memsz;
+ 		j++;
  	}
- }
- 
--void __attribute__((weak)) add_segment(struct kexec_info *info,
--				       const void *buf, size_t bufsz,
--				       unsigned long base, size_t memsz)
--{
--	return add_segment_phys_virt(info, buf, bufsz, base, memsz, 0);
--}
--
- unsigned long add_buffer_phys_virt(struct kexec_info *info,
- 	const void *buf, unsigned long bufsz, unsigned long memsz,
- 	unsigned long buf_align, unsigned long buf_min, unsigned long buf_max,
-@@ -385,19 +373,6 @@ unsigned long add_buffer_virt(struct kexec_info *info, const void *buf,
- 				    buf_min, buf_max, buf_end, 0);
- }
- 
--unsigned long __attribute__((weak)) add_buffer(struct kexec_info *info,
--					       const void *buf,
--					       unsigned long bufsz,
--					       unsigned long memsz,
--					       unsigned long buf_align,
--					       unsigned long buf_min,
--					       unsigned long buf_max,
--					       int buf_end)
--{
--	return add_buffer_virt(info, buf, bufsz, memsz, buf_align,
--			       buf_min, buf_max, buf_end);
--}
--
- char *slurp_file(const char *filename, off_t *r_size)
- {
- 	int fd;
-@@ -836,12 +811,6 @@ void check_reuse_initrd(void)
- 	fclose(fp);
- }
- 
--/* Arch hook for reuse_initrd */
--void __attribute__((weak)) arch_reuse_initrd(void)
--{
--	die("--reuseinitrd not implemented on this architecture\n");
--}
--
- int main(int argc, char *argv[])
- {
- 	int do_load = 1;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 9649ec7..2d3a748 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -4,6 +4,7 @@
- #include "config.h"
- 
- #include <sys/types.h>
-+#include <stdio.h>
- #include <stdint.h>
- #define USE_BSD
- #include <byteswap.h>
-@@ -206,6 +207,7 @@ extern unsigned long add_buffer_phys_virt(struct kexec_info *info,
- 	const void *buf, unsigned long bufsz, unsigned long memsz,
- 	unsigned long buf_align, unsigned long buf_min, unsigned long buf_max,
- 	int buf_end, int phys);
-+extern void arch_reuse_initrd(void);
- 
- extern unsigned char purgatory[];
- extern size_t purgatory_size;
-diff --git a/kexec/proc_iomem.c b/kexec/proc_iomem.c
-new file mode 100644
-index 0000000..85daa85
---- /dev/null
-+++ b/kexec/proc_iomem.c
-@@ -0,0 +1,13 @@
-+#include "kexec.h"
-+
-+static const char proc_iomem_str[] = "/proc/iomem";
-+
-+/*
-+ * Allow an architecture specific implementation of this
-+ * function to override the location of a file looking a lot
-+ * like /proc/iomem
-+ */
-+const char *proc_iomem(void)
-+{
-+        return proc_iomem_str;
-+}
-diff --git a/kexec/virt_to_phys.c b/kexec/virt_to_phys.c
-new file mode 100644
-index 0000000..51ac1df
---- /dev/null
-+++ b/kexec/virt_to_phys.c
-@@ -0,0 +1,7 @@
-+#include "kexec.h"
-+#include <stdlib.h>
-+
-+unsigned long virt_to_phys(unsigned long addr)
-+{
-+	abort();
-+}
 -- 
 1.5.4.1
 
