@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from main.gmane.org ([80.91.229.2] helo=ciao.gmane.org)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoILv-0008AU-1Q
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 13:16:07 +0000
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1JoILp-00069b-6W
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 13:16:01 +0000
-Received: from charybdis-ext.suse.de ([195.135.221.2])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 13:16:01 +0000
-Received: from bwalle by charybdis-ext.suse.de with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 13:16:01 +0000
-From: Bernhard Walle <bwalle@suse.de>
-Subject: kexec --real-mode
-Date: Tue, 22 Apr 2008 15:16:22 +0200
-Message-ID: <20080422151622.43c85a00@strauss.suse.de>
-Mime-Version: 1.0
+Received: from py-out-1112.google.com ([64.233.166.181])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JoRt4-0006Vj-SN
+	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:26:59 +0000
+Received: by py-out-1112.google.com with SMTP id a73so3540559pye.2
+	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:26:58 -0700 (PDT)
+From: Jamey Sharp <jamey@thetovacompany.com>
+Subject: [PATCH 0/9] kexec userspace and purgatory cleanups
+Date: Tue, 22 Apr 2008 16:21:03 -0700
+Message-Id: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,58 +17,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Hi,
+GIT: Please enter your email below.
+GIT: Lines beginning in "GIT: " will be removed.
+GIT: Consider including an overall diffstat or table of contents
+GIT: for the patch you are writing.
 
-did anybody try the --real-mode option with current release? I tried it
-on two machines, and on one machine it just reboots, on the other
-machine it hangs.
+This patch series fixes issues I encountered while porting kexec to run
+on Windows. (I'll be happy to say more about that insane, but
+surprisingly successful, plan on another occasion.) These patches,
+however, are only the ones that affect the kexec userspace tools on
+Linux. They fall into three categories.
 
-I use
+Bug fixes, primarily in the i386 purgatory source:
+- [1/9] Fix undefined symbol errors on readw/writew.
+- [2/9] Fix copy-paste bug: entry16 does not start at entry16_debug.
+- [3/9] Conform more closely to Documentation/i386/boot.txt.
+- [9/9] Die on early EOF in slurp_file, instead of infinite-looping.
 
-    kexec --serial=0x03f8 --serial-baud=57600 --console-serial \
-    -l /boot/vmlinuz --initrd=/boot/initrd
-    --append="root=/dev/sda7 console=ttyS0,57600" \
-    -d
+Compiler and assembler warning fixes:
+- [4/9] Fix "Warning: indirect jmp without `*'".
+- [5/9] Fix all gcc warnings for ARCH=i386 builds.
 
-on serial console, it gives me
+Cleanups or simplifications:
+- [6/9] <sys/mman.h> is not needed by any i386 kexec/ source.
+- [7/9] Replace weak definitions with source filename overriding.
+- [8/9] Simplify initialization of argument list for `shutdown`.
 
-    Starting new kernel
-    I'm in purgatory
-    a
-    b
-    c
-    d
-    e
-    f
-    g
-    h
+I believe each of these patches stands pretty well on its own, both in
+independence from each other, and in being fairly self-explanatory.
 
-So it gets until
+These patches are against 9e959db12a671a71934a765d15aaf082f0a4f886 in
+git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.
+Although, as they touch only code that hasn't seen much change recently,
+they should apply cleanly to other versions.
 
-    linux-entry16.S:
+I hope you'll consider including these patches in your next release of
+the kexec userspace tools. If you would have preferred the patches in
+some other form, please let me know, since I'll have some more patches
+for your consideration later.
 
-    191         movw    %cs, %ax
-    192         movw    %ax, %ds
-    193
-    194 DEBUG_CHAR('h')
-    195         /* Load the registers */
-    196         movl    eax - entry16, %eax
-    197         movl    ebx - entry16, %ebx
-    198         movl    ecx - entry16, %ecx
-    199         movl    edx - entry16, %edx
-
-Any advise so far? :)
-
-
-        Bernhard
-
-
+Thanks,
+Jamey Sharp
 
 _______________________________________________
 kexec mailing list
