@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wx-out-0506.google.com ([66.249.82.224])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoSAT-00080w-07
-	for kexec@lists.infradead.org; Tue, 22 Apr 2008 23:44:57 +0000
-Received: by wx-out-0506.google.com with SMTP id s7so2058532wxc.24
-	for <kexec@lists.infradead.org>; Tue, 22 Apr 2008 16:44:56 -0700 (PDT)
-Message-ID: <e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
-Date: Tue, 22 Apr 2008 16:44:55 -0700
-From: "Jamey Sharp" <jamey@thetovacompany.com>
-Subject: Re: kexec --real-mode
-In-Reply-To: <20080422151622.43c85a00@strauss.suse.de>
+Received: from inet-tsb5.toshiba.co.jp ([202.33.96.24] helo=imx2.toshiba.co.jp)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JoT37-0004mp-Mb
+	for kexec@lists.infradead.org; Wed, 23 Apr 2008 00:41:26 +0000
+From: "gib" <suchada.pitchayasamanya@toshiba.co.jp>
+References: <200804210517.m3L5Hq61011769@toshiba.co.jp>
+	<480D790D.7080403@in.ibm.com>
+In-Reply-To: <480D790D.7080403@in.ibm.com>
+Subject: RE: Question about forcing kernel panic on PowerMac G5 by kexec
+	command
+Date: Wed, 23 Apr 2008 09:41:17 +0900
+Message-Id: <200804230041.m3N0fIQD013543@toshiba.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <20080422151622.43c85a00@strauss.suse.de>
+Content-Language: ja
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +25,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
+To: 'Mohan Kumar M' <mohan@in.ibm.com>
 Cc: kexec@lists.infradead.org
 
-On Tue, Apr 22, 2008 at 6:16 AM, Bernhard Walle <bwalle@suse.de> wrote:
-> did anybody try the --real-mode option with current release? I tried
-> it on two machines, and on one machine it just reboots, on the other
-> machine it hangs.
+Hi Mohan,
 
-I think you're experiencing a bug that I just proposed a patch for. :-)
-You can confirm that: try adding the "--debug" option to your kexec
-call. If that works correctly, then I think you'll find that the patch
-in "[PATCH 2/9] Fix copy-paste bug: entry16 does not start at
-entry16_debug" will solve your problem. That's archived here:
+Thank you very much for your reply.
 
-http://lists.infradead.org/pipermail/kexec/2008-April/001581.html
+> What kernel version you are trying? Also what level of kexec-tools you
+use?
+I've tried kernel 2.6.24 and 2.6.25 with the kexec-tools-testing 20080324,
+the both of them gave me the same result.
 
-Jamey
+> I hope you are aware that you need two different kernels for kdump, 
+> first one is meant for normal use and another one is kdump kernel. Did 
+> you compile the kdump kernel with CONFIG_CRASH_DUMP?
+
+Yes, I built 2 kernels the first one as the system kernel and the second one
+as the dump-capture kernel(with CONFIG_CRASH_DUMP).
+
+Another notice is when I pre-loaded the dump-capture kernel(kexec -p
+/boot/vmlinux...), I got
+	Modified cmdline: elfcorehdr=41188K savemaxmem=0M ...
+	segment[0].mem:0x2000000 memsz:8269624
+	segment[1].mem:0x27e3000 memsz:65536
+	segment[2].mem:0x27f3000 memsz:4096
+	segment[3].mem:0x27f4000 memsz:36864
+	segment[5].mem:0x9fbf000 memsz:266240
+
+Why the savemaxmem=0M? since it should be some value else.
+Do you have any idea about this?
+
+Regards,
+Suchada
+
+-----Original Message-----
+From: Mohan Kumar M [mailto:mohan@in.ibm.com] 
+Sent: Tuesday, April 22, 2008 2:35 PM
+To: gib
+Cc: kexec@lists.infradead.org
+Subject: Re: Question about forcing kernel panic on PowerMac G5 by kexec
+command
+
+gib wrote:
+> Hello all,
+> 
+>  
+> 
+> I'm working on PowerMac G5 complied with CONFIG_KEXEC = y.
+> 
+> It's work fine with Kexec command option l ( kexec -l /boot/vmlinux. ) 
+> but after the capture kernel pre-loading ( by kexec -p /boot/vmlinux. ),
+> 
+Hi Suchada,
+
+What kernel version you are trying? Also what level of kexec-tools you use?
+
+I hope you are aware that you need two different kernels for kdump, 
+first one is meant for normal use and another one is kdump kernel. Did 
+you compile the kdump kernel with CONFIG_CRASH_DUMP?
+
+> when I forced kernel panic by "echo c > /proc/sysrq-trigger" the console 
+> kept showing "Sending IPI to other CPU" and did not go to the next step.
+> 
+>  
+> 
+> According to this list there was some problem about kdump in ppc970 based
+CPU which PowerMac's CPU are.
+
+There was a interrupt routing problem with specific ppc970 cpu type, but 
+that problem is fixed now.
+
+Regards,
+Mohan.
+
+
 
 _______________________________________________
 kexec mailing list
