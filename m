@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoePG-0004pk-9y
-	for kexec@lists.infradead.org; Wed, 23 Apr 2008 12:49:02 +0000
+	id 1JofT0-0001Tz-Ij
+	for kexec@lists.infradead.org; Wed, 23 Apr 2008 13:56:59 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <480F1957.2070609@ah.jp.nec.com>
-Date: Wed, 23 Apr 2008 05:48:53 -0700
-In-Reply-To: <480F1957.2070609@ah.jp.nec.com> (Takenori Nagano's message of
-	"Wed, 23 Apr 2008 20:11:19 +0900")
-Message-ID: <m1wsmoohxm.fsf@frodo.ebiederm.org>
+References: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
+Date: Wed, 23 Apr 2008 06:56:47 -0700
+In-Reply-To: <1208906472-18465-1-git-send-email-jamey@thetovacompany.com>
+	(Jamey Sharp's message of "Tue, 22 Apr 2008 16:21:03 -0700")
+Message-ID: <m1bq40oesg.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] add new notifier function ,take4
+Subject: Re: [PATCH 0/9] kexec userspace and purgatory cleanups
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +23,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takenori Nagano <t-nagano@ah.jp.nec.com>
-Cc: Nick Piggin <nickpiggin@yahoo.com.au>, k-miyoshi@cb.jp.nec.com, greg@kroah.com, bwalle@suse.de, kdb@oss.sgi.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@xenotime.net>, Keith Owens <kaos@ocs.com.au>, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
+To: Jamey Sharp <jamey@thetovacompany.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Takenori Nagano <t-nagano@ah.jp.nec.com> writes:
+Jamey Sharp <jamey@thetovacompany.com> writes:
 
-> Hi,
+> GIT: Please enter your email below.
+> GIT: Lines beginning in "GIT: " will be removed.
+> GIT: Consider including an overall diffstat or table of contents
+> GIT: for the patch you are writing.
 >
-> changelog take3 -> take4
+> This patch series fixes issues I encountered while porting kexec to run
+> on Windows. (I'll be happy to say more about that insane, but
+> surprisingly successful, plan on another occasion.) 
+
+Sounds fun.  I like the idea of /sbin/kexec running on other operating
+systems, as long as it isn't too much maintenance overhead.
+
+Portability tends to reveal all kinds of things, and increase
+the user/developer base.
+
+Now if we only had the code to boot windows...
+
+> These patches,
+> however, are only the ones that affect the kexec userspace tools on
+> Linux. They fall into three categories.
+
+I just took a quick skim through the patches and they generally
+look good.
+
+> Bug fixes, primarily in the i386 purgatory source:
+> - [1/9] Fix undefined symbol errors on readw/writew.
+> - [2/9] Fix copy-paste bug: entry16 does not start at entry16_debug.
+> - [3/9] Conform more closely to Documentation/i386/boot.txt.
+> - [9/9] Die on early EOF in slurp_file, instead of infinite-looping.
 >
-> - Rebased 2.6.25-mm1
-> - Add a document
-> - Add kdump on panic_notifier
+> Compiler and assembler warning fixes:
+> - [4/9] Fix "Warning: indirect jmp without `*'".
+> - [5/9] Fix all gcc warnings for ARCH=i386 builds.
 >
-> These patches add new notifier function and implement it to panic_notifier_list.
-> We used the hardcoded notifier chain so far, but it was not flexible. New
-> notifier is very flexible, because user can change a list of order by control
-> files.
->
-> And, third patch moves crash_kexec() to panic_notifier. It helps us to do
-> something before taking a crash dump. It's useful for some RAS tools developer.
-> If you want to use it, you have to set config option DUMP_ON_PANIC_NOTIFIER to
-> Y. Default value of DUMP_ON_PANIC_NOTIFIER is N.
-> If you set DUMP_ON_PANIC_NOTIFIER to N, kdump has no difference before.
+> Cleanups or simplifications:
+> - [6/9] <sys/mman.h> is not needed by any i386 kexec/ source.
+> - [7/9] Replace weak definitions with source filename overriding.
+  The other benefit of this is that it slightly reduces the binary
+  size which is advantageous for embedded development.
 
-NAK.
+> - [8/9] Simplify initialization of argument list for `shutdown`.
 
-Reasonable alternatives have been suggested.  No rebuttal has been given.
-Just buggy patches with insufficient description of what you are doing
-and why.
-
-I am tired of seeing the same patch come up again and again without even
-all of the easy problems that are pointed out addressed, much less the
-design issues considered or addressed.
-
-I see no evidence that we need this mechanism to achieve any of
-the goals proposed.
-
-This mechanism drastically reduces the maintainability of the
-kexec on panic code as it makes the code path indiscoverable
-and thus unreviewable.
-
-This mechanism gives an unnecessary and confusing policy control
-to users when we should be able to auto-tune based on the situation.
-
-CONFIGURABILITY IS BAD in this context.
-
-I think this entire approach is a BAD IDEA.  Please go back to
-the drawing board.  Please describe the specific problems you
-are trying to solve and why the existing mechanisms can not be
-made to work and we can work with you.
+I lifted this out sysvinit where that structure is needed because
+processing of optional processing of the -t <when> option.  Since
+we aren't doing that your structure is better.
 
 Eric
 
