@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JoctT-0002C7-Rw
-	for kexec@lists.infradead.org; Wed, 23 Apr 2008 11:12:08 +0000
-Message-ID: <480F1966.707@ah.jp.nec.com>
-Date: Wed, 23 Apr 2008 20:11:34 +0900
+	id 1Joctm-0002oJ-Lp
+	for kexec@lists.infradead.org; Wed, 23 Apr 2008 11:12:27 +0000
+Message-ID: <480F196D.6080206@ah.jp.nec.com>
+Date: Wed, 23 Apr 2008 20:11:41 +0900
 From: Takenori Nagano <t-nagano@ah.jp.nec.com>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] add tunable_notifier function ,take4
+Subject: [PATCH 2/2] implement new notifier function to panic_notifier_list
+	,take4
 References: <480DD85C.7060200@ah.jp.nec.com>
 In-Reply-To: <480DD85C.7060200@ah.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
@@ -18,18 +19,18 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0191628232=="
+Content-Type: multipart/mixed; boundary="===============0915246701=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 Cc: Nick Piggin <nickpiggin@yahoo.com.au>, k-miyoshi@cb.jp.nec.com, greg@kroah.com, bwalle@suse.de, kdb@oss.sgi.com, kexec@lists.infradead.org, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Keith Owens <kaos@ocs.com.au>, vgoyal@redhat.com
 
---===============0191628232==
+--===============0915246701==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
-This patch adds new notifier function tunable_notifier_chain. Its base is
-atomic_notifier_chain.
+This patch implements new notifier function to panic_notifier_list. We can
+change the list of order by debugfs.
 
 Thanks,
 
@@ -38,474 +39,619 @@ Thanks,
 Signed-off-by: Takenori Nagano <t-nagano@ah.jp.nec.com>
 
 ---
-diff -uprN linux-2.6.25.orig/Documentation/ABI/testing/sysfs-notifiers linux-2.6.25/Documentation/ABI/testing/sysfs-notifiers
---- linux-2.6.25.orig/Documentation/ABI/testing/sysfs-notifiers	1970-01-01 09:00:00.000000000 +0900
-+++ linux-2.6.25/Documentation/ABI/testing/sysfs-notifiers	2008-04-22 17:55:39.142310091 +0900
-@@ -0,0 +1,15 @@
-+What:		/sys/kernel/notifiers/<notifier>/<notifier_block>/priority
-+Date:		April 2008
-+Contact:	Takenori Nagano <t-nagano@ah.jp.nec.com>
-+Description:
-+		The /sys/kernel/notifiers/<notifier>/<notifier_block>/priority
-+		file controls notifier_block order on notifier. Writing to this
-+		file will insert the notifier_block to appropriate place that is
-+		pointed by new priority.
-+
-+What:		/sys/kernel/notifiers/<notifier>/<notifier_block>/description
-+Date:		April 2008
-+Contact:	Takenori Nagano <t-nagano@ah.jp.nec.com>
-+Description:
-+		This file shows the description of the notifier_block that
-+		belongs to. It helps to decide the priority value.
-diff -uprN linux-2.6.25.orig/include/linux/kernel.h linux-2.6.25/include/linux/kernel.h
---- linux-2.6.25.orig/include/linux/kernel.h	2008-04-22 20:35:01.239466758 +0900
-+++ linux-2.6.25/include/linux/kernel.h	2008-04-21 17:15:59.072648972 +0900
-@@ -129,7 +129,7 @@ extern int _cond_resched(void);
- 		(__x < 0) ? -__x : __x;		\
- 	})
+diff -uprN linux-2.6.25.orig/arch/alpha/kernel/setup.c linux-2.6.25/arch/alpha/kernel/setup.c
+--- linux-2.6.25.orig/arch/alpha/kernel/setup.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/alpha/kernel/setup.c	2008-04-21 17:15:58.208654286 +0900
+@@ -44,14 +44,18 @@
+ #include <asm/io.h>
+ #include <linux/log2.h>
  
 -extern struct atomic_notifier_head panic_notifier_list;
 +extern struct tunable_atomic_notifier_head panic_notifier_list;
- extern long (*panic_blink)(long time);
- NORET_TYPE void panic(const char * fmt, ...)
- 	__attribute__ ((NORET_AND format (printf, 1, 2))) __cold;
-diff -uprN linux-2.6.25.orig/include/linux/notifier.h linux-2.6.25/include/linux/notifier.h
---- linux-2.6.25.orig/include/linux/notifier.h	2008-04-22 20:35:01.543464904 +0900
-+++ linux-2.6.25/include/linux/notifier.h	2008-04-21 17:15:59.112641471 +0900
-@@ -13,6 +13,7 @@
- #include <linux/mutex.h>
- #include <linux/rwsem.h>
- #include <linux/srcu.h>
-+#include <linux/kobject.h>
- 
- /*
-  * Notifier chains are of four types:
-@@ -53,6 +54,13 @@ struct notifier_block {
- 	int priority;
+ static int alpha_panic_event(struct notifier_block *, unsigned long, void *);
+-static struct notifier_block alpha_panic_block = {
++static struct notifier_block alpha_panic_block_base = {
+ 	alpha_panic_event,
+         NULL,
+         INT_MAX /* try to do it first */
  };
  
-+struct tunable_atomic_notifier_block {
-+	struct notifier_block *nb;
-+	struct tunable_atomic_notifier_head *head;
-+	struct kobject kobj;
-+	char *desc;
++static struct tunable_atomic_notifier_block alpha_panic_block = {
++	.nb = &alpha_panic_block_base
 +};
 +
- struct atomic_notifier_head {
- 	spinlock_t lock;
- 	struct notifier_block *head;
-@@ -63,6 +71,13 @@ struct blocking_notifier_head {
- 	struct notifier_block *head;
+ #include <asm/uaccess.h>
+ #include <asm/pgtable.h>
+ #include <asm/system.h>
+@@ -521,8 +525,8 @@ setup_arch(char **cmdline_p)
+ 	}
+ 
+ 	/* Register a call for panic conditions. */
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			&alpha_panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++				&alpha_panic_block, "alpha_panic", NULL);
+ 
+ #ifdef CONFIG_ALPHA_GENERIC
+ 	/* Assume that we've booted from SRM if we haven't booted from MILO.
+diff -uprN linux-2.6.25.orig/arch/arm/mach-omap1/board-voiceblue.c linux-2.6.25/arch/arm/mach-omap1/board-voiceblue.c
+--- linux-2.6.25.orig/arch/arm/mach-omap1/board-voiceblue.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/arm/mach-omap1/board-voiceblue.c	2008-04-21 17:15:58.252653690 +0900
+@@ -226,14 +226,19 @@ static int panic_event(struct notifier_b
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block panic_block = {
++static struct notifier_block panic_block_base = {
+ 	.notifier_call	= panic_event,
  };
  
-+struct tunable_atomic_notifier_head {
-+	spinlock_t lock;
-+	struct notifier_block *head;
-+	char *name;
-+	struct kset *notifier_sub_kset;
++static struct tunable_atomic_notifier_block panic_block = {
++	.nb             = &panic_block_base
 +};
 +
- struct raw_notifier_head {
- 	struct notifier_block *head;
+ static int __init voiceblue_setup(void)
+ {
+ 	/* Setup panic notifier */
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&panic_block, "VoiceBlue", NULL);
+ 
+ 	return 0;
+ }
+diff -uprN linux-2.6.25.orig/arch/mips/lasat/setup.c linux-2.6.25/arch/mips/lasat/setup.c
+--- linux-2.6.25.orig/arch/mips/lasat/setup.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/mips/lasat/setup.c	2008-04-21 17:15:58.288653222 +0900
+@@ -106,7 +106,7 @@ static int lasat_panic_prom_monitor(stru
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block lasat_panic_block[] =
++static struct notifier_block lasat_panic_block_base[] =
+ {
+ 	{
+ 		.notifier_call	= lasat_panic_display,
+@@ -117,6 +117,18 @@ static struct notifier_block lasat_panic
+ 	}
  };
-@@ -73,6 +88,13 @@ struct srcu_notifier_head {
- 	struct notifier_block *head;
- };
  
-+struct control_file_info {
-+	struct tunable_atomic_notifier_head *nh;
-+	struct tunable_atomic_notifier_block *n;
-+	char *name;
-+	struct control_file_info *next;
-+};
-+
- #define ATOMIC_INIT_NOTIFIER_HEAD(name) do {	\
- 		spin_lock_init(&(name)->lock);	\
- 		(name)->head = NULL;		\
-@@ -81,6 +103,12 @@ struct srcu_notifier_head {
- 		init_rwsem(&(name)->rwsem);	\
- 		(name)->head = NULL;		\
- 	} while (0)
-+#define TUNABLE_ATOMIC_INIT_NOTIFIER(val1, val2) do {		\
-+		spin_lock_init(&(val1)->lock);			\
-+		(val1)->head = NULL;				\
-+		(val1)->name = val2;				\
-+		(val1)->notifier_sub_kset = NULL;		\
-+	} while (0)
- #define RAW_INIT_NOTIFIER_HEAD(name) do {	\
- 		(name)->head = NULL;		\
- 	} while (0)
-@@ -96,6 +124,11 @@ extern void srcu_init_notifier_head(stru
- #define BLOCKING_NOTIFIER_INIT(name) {				\
- 		.rwsem = __RWSEM_INITIALIZER((name).rwsem),	\
- 		.head = NULL }
-+#define TUNABLE_ATOMIC_NOTIFIER_INIT(val1, val2) {		\
-+		.lock =__SPIN_LOCK_UNLOCKED(val1.lock),		\
-+		.head = NULL,					\
-+		.name = val2,					\
-+		.notifier_sub_kset = NULL }
- #define RAW_NOTIFIER_INIT(name)	{				\
- 		.head = NULL }
- /* srcu_notifier_heads cannot be initialized statically */
-@@ -106,6 +139,9 @@ extern void srcu_init_notifier_head(stru
- #define BLOCKING_NOTIFIER_HEAD(name)				\
- 	struct blocking_notifier_head name =			\
- 		BLOCKING_NOTIFIER_INIT(name)
-+#define TUNABLE_ATOMIC_NOTIFIER_HEAD(name, val)			\
-+	struct tunable_atomic_notifier_head name =			\
-+		TUNABLE_ATOMIC_NOTIFIER_INIT(name, val)
- #define RAW_NOTIFIER_HEAD(name)					\
- 	struct raw_notifier_head name =				\
- 		RAW_NOTIFIER_INIT(name)
-@@ -116,6 +152,10 @@ extern int atomic_notifier_chain_registe
- 		struct notifier_block *nb);
- extern int blocking_notifier_chain_register(struct blocking_notifier_head *nh,
- 		struct notifier_block *nb);
-+extern int tunable_atomic_notifier_chain_register(
-+				struct tunable_atomic_notifier_head *nh,
-+				struct tunable_atomic_notifier_block *nb,
-+				char *name, char *desc);
- extern int raw_notifier_chain_register(struct raw_notifier_head *nh,
- 		struct notifier_block *nb);
- extern int srcu_notifier_chain_register(struct srcu_notifier_head *nh,
-@@ -129,6 +169,9 @@ extern int atomic_notifier_chain_unregis
- 		struct notifier_block *nb);
- extern int blocking_notifier_chain_unregister(struct blocking_notifier_head *nh,
- 		struct notifier_block *nb);
-+extern int tunable_atomic_notifier_chain_unregister(
-+				struct tunable_atomic_notifier_head *nh,
-+				struct tunable_atomic_notifier_block *nb);
- extern int raw_notifier_chain_unregister(struct raw_notifier_head *nh,
- 		struct notifier_block *nb);
- extern int srcu_notifier_chain_unregister(struct srcu_notifier_head *nh,
-@@ -142,6 +185,14 @@ extern int blocking_notifier_call_chain(
- 		unsigned long val, void *v);
- extern int __blocking_notifier_call_chain(struct blocking_notifier_head *nh,
- 	unsigned long val, void *v, int nr_to_call, int *nr_calls);
-+extern int tunable_atomic_notifier_call_chain(
-+				struct tunable_atomic_notifier_head *nh,
-+				unsigned long val, void *v);
-+extern int __tunable_atomic_notifier_call_chain(
-+				struct tunable_atomic_notifier_head *nh,
-+				unsigned long val,  void *v,
-+				int nr_to_call, int *nr_calls);
-+extern int tunable_atomic_notifier_init(void);
- extern int raw_notifier_call_chain(struct raw_notifier_head *nh,
- 		unsigned long val, void *v);
- extern int __raw_notifier_call_chain(struct raw_notifier_head *nh,
-diff -uprN linux-2.6.25.orig/kernel/ksysfs.c linux-2.6.25/kernel/ksysfs.c
---- linux-2.6.25.orig/kernel/ksysfs.c	2008-04-17 11:49:44.000000000 +0900
-+++ linux-2.6.25/kernel/ksysfs.c	2008-04-21 17:15:59.136648497 +0900
-@@ -15,6 +15,7 @@
- #include <linux/init.h>
- #include <linux/kexec.h>
- #include <linux/sched.h>
-+#include <linux/notifier.h>
- 
- #define KERNEL_ATTR_RO(_name) \
- static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
-@@ -146,7 +147,10 @@ static int __init ksysfs_init(void)
- 	if (error)
- 		goto notes_exit;
- 
--	return 0;
-+	/* create the /sys/kernel/notifiers directory */
-+	error = tunable_atomic_notifier_init();
-+
-+	return error;
- 
- notes_exit:
- 	if (notes_size > 0)
-diff -uprN linux-2.6.25.orig/kernel/notifier.c linux-2.6.25/kernel/notifier.c
---- linux-2.6.25.orig/kernel/notifier.c	2008-04-22 20:35:03.131455216 +0900
-+++ linux-2.6.25/kernel/notifier.c	2008-04-21 17:15:59.172648342 +0900
-@@ -319,6 +319,261 @@ int blocking_notifier_call_chain(struct 
- EXPORT_SYMBOL_GPL(blocking_notifier_call_chain);
- 
- /*
-+ *	Tunable atomic notifier chain routines. Registration and unregistration
-+ *	use a spinlock, and call_chain is synchronized by RCU (no locks).
-+ *	User can change the list order to use /sys/kernel/notifiers/list-name/.
-+ */
-+
-+static ssize_t priority_show(struct kobject *kobj, 
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	struct tunable_atomic_notifier_block *n = container_of(kobj,
-+				struct tunable_atomic_notifier_block, kobj);
-+
-+	return sprintf(buf, "%d\n", n->nb->priority);
-+}
-+
-+static ssize_t priority_store(struct kobject *kobj,
-+		struct kobj_attribute *attr, const char *buf, size_t size)
-+{
-+	struct tunable_atomic_notifier_block *n = container_of(kobj,
-+				struct tunable_atomic_notifier_block, kobj);
-+	struct tunable_atomic_notifier_head *nh = n->head;
-+	unsigned long flags;
-+	int priority, ret;
-+
-+	sscanf(buf, "%d", &priority);
-+	n->nb->priority = priority;
-+
-+	spin_lock_irqsave(&nh->lock, flags);
-+	ret = notifier_chain_unregister(&nh->head, n->nb);
-+	if (ret)
-+		goto out_unlock;
-+	ret = notifier_chain_register(&nh->head, n->nb);
-+
-+out_unlock:
-+	spin_unlock_irqrestore(&nh->lock, flags);
-+
-+	return (ret ? ret : size);
-+
-+}
-+
-+static ssize_t description_show(struct kobject *kobj,
-+				struct kobj_attribute *attr, char *buf)
-+{
-+	struct tunable_atomic_notifier_block *n = container_of(kobj,
-+				struct tunable_atomic_notifier_block, kobj);
-+
-+	if (n->desc)
-+		return sprintf(buf, "%s\n", n->desc);
-+
-+	return sprintf(buf, "Description is not available\n");
-+}
-+
-+static struct kobj_attribute priority_attr = 
-+	__ATTR(priority, 0644, priority_show, priority_store);
-+static struct kobj_attribute description_attr =
-+	__ATTR_RO(description);
-+
-+static struct attribute *notifiers_attributes[] = {
-+	&priority_attr.attr, &description_attr.attr, NULL 
-+};
-+
-+static struct kobj_type notifiers_ktype = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_attrs = notifiers_attributes,
-+};
-+
-+static struct kobject *notifiers_kobj;
-+struct control_file_info *base;
-+
-+int notifiers_kobject_create(struct tunable_atomic_notifier_head *nh,
-+			struct tunable_atomic_notifier_block *n, char *name)
-+{
-+	int error = -ENOMEM;
-+	struct kobject *kobj = &n->kobj;
-+
-+	if (!nh->notifier_sub_kset) {
-+		nh->notifier_sub_kset = kset_create_and_add(nh->name, NULL,
-+							notifiers_kobj);
-+		if (!nh->notifier_sub_kset)
-+			goto out;
++static struct tunable_atomic_notifier_block lasat_panic_block[] = {
++	{
++		.nb		= &lasat_panic_block_base[0]
++	}, {
++		.nb		= &lasat_panic_block_base[1]
 +	}
++};
 +
-+	memset(kobj, 0, sizeof(struct kobject));
-+	kobj->kset = nh->notifier_sub_kset;
-+	error = kobject_init_and_add(kobj, &notifiers_ktype, NULL, "%s", name);
-+	if (error)
-+		kobject_put(kobj);
++static char* notifier_name[] = {
++	"lasat_panic_display", "lasat_panic_prom_monitor"
++};
 +
-+out:
-+	return error;
-+}
-+
-+/**
-+ *	tunable_atomic_notifier_chain_register - Add notifier to an tunable notifier chain
-+ *	@nh: Pointer to head of the tunable notifier chain
-+ *	@n: New entry in notifier chain
-+ *	@name: Pointer to the name of the new notifier entry
-+ *	@desc: Pointer to the description of new entry
-+ *
-+ *	Adds a notifier to an tunable notifier chain and makes control dir.
-+ *	This function must be called after kmem_cache_init().
-+ *
-+ *	Returns zero on success or %-ENODEV on failure.
-+ */
-+
-+int tunable_atomic_notifier_chain_register(
-+		struct tunable_atomic_notifier_head *nh,
-+		struct tunable_atomic_notifier_block *n, char *name, char *desc)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	if (!name)
-+		return -EINVAL;
-+	if (desc)
-+		n->desc = desc;
-+
-+	if (!notifiers_kobj) {
-+		struct control_file_info *temp, *new;
-+
-+		temp = kmalloc(sizeof(struct control_file_info), GFP_ATOMIC);
-+		if (!temp)
-+			return -ENOMEM;
-+		temp->nh = nh;
-+		temp->n = n;
-+		temp->name = name;
-+		temp->next = NULL;
-+		if (!base)
-+			base = temp;
-+		else {
-+			new = base;
-+			while (new->next) {	
-+				new = new->next;
-+			}
-+			new->next = temp;
-+		}
-+		goto regist;
-+	}
-+
-+	ret = notifiers_kobject_create(nh, n, name);
-+	if (ret)
-+		return ret;
-+
-+regist:
-+	spin_lock_irqsave(&nh->lock, flags);
-+	ret = notifier_chain_register(&nh->head, n->nb);
-+	spin_unlock_irqrestore(&nh->lock, flags);
-+	n->head = nh;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(tunable_atomic_notifier_chain_register);
-+
-+/**
-+ *	tunable_atomic_notifier_chain_unregister - Remove notifier from a tunable notifier chain
-+ *	@nh: Pointer to head of the tunable notifier chain
-+ *	@n: Entry to remove from notifier chain
-+ *
-+ *	Removes a notifier from a tunable notifier chain.
-+ *
-+ *	Retunrns zero on success or %-ENOENT on failure.
-+ */
-+
-+int tunable_atomic_notifier_chain_unregister(
-+				struct tunable_atomic_notifier_head *nh,
-+				struct tunable_atomic_notifier_block *n)
-+{
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&nh->lock, flags);
-+	ret = notifier_chain_unregister(&nh->head, n->nb);
-+	spin_unlock_irqrestore(&nh->lock, flags);
-+	synchronize_rcu();
-+
-+	if (ret)
-+		return ret;
-+
-+	kobject_del(&n->kobj);
-+	kobject_put(&n->kobj);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tunable_atomic_notifier_chain_unregister);
-+
-+/**
-+ *	__tunable_atomic_notifier_call_chain - Call functions in a tunable notifier chain
-+ *	@nh: Pointer to head of the tunable notifier chain
-+ *	@val: Value passed unmodified to notifier function
-+ *	@v: Pointer passed unmodified to notifier function
-+ *	@nr_to_call: See the comment for notifier_call_chain
-+ *	@nr_calls: See the comment for notifier_call_chain
-+ *
-+ *	Calls each function in a notifier chain in turn. The functions
-+ *	run in an atomic context, so they must not block.
-+ *	This routine uses RCU to synchronize with changes to the chain.
-+ *
-+ *	If the return value of the notifier can be and'ed
-+ *	with %NOTIFY_STOP_MASK then tunable_atomic_notifier_call_chain()
-+ *	will return immediately, with the return value of
-+ *	the notifier function which halted execution.
-+ *	Otherwise the return value is the return value
-+ *	of the last notifier function called.
-+ */
-+
-+int __kprobes __tunable_atomic_notifier_call_chain(
-+					struct tunable_atomic_notifier_head *nh,
-+					unsigned long val, void *v,
-+					int nr_to_call, int *nr_calls)
-+{
-+	int ret;
-+
-+	rcu_read_lock();
-+	ret = notifier_call_chain(&nh->head, val, v, nr_to_call, nr_calls);
-+	rcu_read_unlock();
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(__tunable_atomic_notifier_call_chain);
-+
-+int __kprobes tunable_atomic_notifier_call_chain(
-+					struct tunable_atomic_notifier_head *nh,
-+					unsigned long val, void *v)
-+{
-+	return __tunable_atomic_notifier_call_chain(nh, val, v, -1, NULL);
-+}
-+EXPORT_SYMBOL_GPL(tunable_atomic_notifier_call_chain);
-+
-+int __init tunable_atomic_notifier_init(void) {
-+	struct control_file_info *prev, *temp = base;
-+	struct tunable_atomic_notifier_head *nh;
-+	struct tunable_atomic_notifier_block *n;
-+	char *name;
-+	int error;
-+
-+	notifiers_kobj = kobject_create_and_add("notifiers", kernel_kobj);
-+
-+	if (!notifiers_kobj)
-+		return -ENOMEM;
-+
-+	while (temp) {
-+		nh = temp->nh;
-+		n = temp->n;
-+		name = temp->name;
-+
-+		error = notifiers_kobject_create(nh, n, name);
-+		if (error)
-+			printk("%s: %s is failed to create. err = %d\n",
-+							nh->name, name, error);
-+		prev = temp;
-+		temp = temp->next;
-+		kfree(prev);
-+	}
-+	return 0;
-+}
-+
-+/*
-  *	Raw notifier chain routines.  There is no protection;
-  *	the caller must provide it.  Use at your own risk!
-  */
-diff -uprN linux-2.6.25.orig/kernel/panic.c linux-2.6.25/kernel/panic.c
---- linux-2.6.25.orig/kernel/panic.c	2008-04-22 20:35:03.147454771 +0900
-+++ linux-2.6.25/kernel/panic.c	2008-04-21 17:15:59.208648222 +0900
-@@ -30,7 +30,7 @@ static DEFINE_SPINLOCK(pause_on_oops_loc
+ void __init plat_time_init(void)
+ {
+ 	mips_hpt_frequency = lasat_board_info.li_cpu_hz / 2;
+@@ -134,8 +146,8 @@ void __init plat_mem_setup(void)
  
- int panic_timeout;
+ 	/* Set up panic notifier */
+ 	for (i = 0; i < ARRAY_SIZE(lasat_panic_block); i++)
+-		atomic_notifier_chain_register(&panic_notifier_list,
+-				&lasat_panic_block[i]);
++		tunable_notifier_chain_register(&panic_notifier_list,
++				&lasat_panic_block[i], notifier_name[i], NULL);
  
--ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-+TUNABLE_ATOMIC_NOTIFIER_HEAD(panic_notifier_list, "panic_notifier_list");
+ 	lasat_reboot_setup();
  
- EXPORT_SYMBOL(panic_notifier_list);
+diff -uprN linux-2.6.25.orig/arch/mips/sgi-ip22/ip22-reset.c linux-2.6.25/arch/mips/sgi-ip22/ip22-reset.c
+--- linux-2.6.25.orig/arch/mips/sgi-ip22/ip22-reset.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/mips/sgi-ip22/ip22-reset.c	2008-04-21 17:15:58.324653254 +0900
+@@ -226,10 +226,14 @@ static int panic_event(struct notifier_b
+ 	return NOTIFY_DONE;
+ }
  
-@@ -101,7 +101,7 @@ NORET_TYPE void panic(const char * fmt, 
- 	smp_send_stop();
+-static struct notifier_block panic_block = {
++static struct notifier_block panic_block_base = {
+ 	.notifier_call	= panic_event,
+ };
+ 
++static struct tunable_atomic_notifier_block panic_block = {
++	.nb		= &panic_block_base
++};
++
+ static int __init reboot_setup(void)
+ {
+ 	int res;
+@@ -246,7 +250,8 @@ static int __init reboot_setup(void)
+ 
+ 	init_timer(&blink_timer);
+ 	blink_timer.function = blink_timeout;
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					       &panic_block, "sgi-ip22", NULL);
+ 
+ 	return 0;
+ }
+diff -uprN linux-2.6.25.orig/arch/mips/sgi-ip32/ip32-reset.c linux-2.6.25/arch/mips/sgi-ip32/ip32-reset.c
+--- linux-2.6.25.orig/arch/mips/sgi-ip32/ip32-reset.c	2008-04-22 20:34:43.035578599 +0900
++++ linux-2.6.25/arch/mips/sgi-ip32/ip32-reset.c	2008-04-21 17:15:58.588651552 +0900
+@@ -175,10 +175,14 @@ static int panic_event(struct notifier_b
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block panic_block = {
++static struct notifier_block panic_block_base = {
+ 	.notifier_call = panic_event,
+ };
+ 
++static struct tunable_atomic_notifier_block panic_block = {
++	.nb		= &panic_block_base
++};
++
+ static __init int ip32_reboot_setup(void)
+ {
+ 	/* turn on the green led only */
+@@ -193,7 +197,8 @@ static __init int ip32_reboot_setup(void
+ 
+ 	init_timer(&blink_timer);
+ 	blink_timer.function = blink_timeout;
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					       &panic_block, "sgi-ip32", NULL);
+ 
+ 	if (request_irq(MACEISA_RTC_IRQ, ip32_rtc_int, 0, "rtc", NULL))
+ 		panic("Can't allocate MACEISA RTC IRQ");
+diff -uprN linux-2.6.25.orig/arch/parisc/kernel/pdc_chassis.c linux-2.6.25/arch/parisc/kernel/pdc_chassis.c
+--- linux-2.6.25.orig/arch/parisc/kernel/pdc_chassis.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/parisc/kernel/pdc_chassis.c	2008-04-21 17:15:58.604651614 +0900
+@@ -101,11 +101,14 @@ static int pdc_chassis_panic_event(struc
+ }   
+ 
+ 
+-static struct notifier_block pdc_chassis_panic_block = {
++static struct notifier_block pdc_chassis_panic_block_base = {
+ 	.notifier_call = pdc_chassis_panic_event,
+ 	.priority = INT_MAX,
+ };
+ 
++static struct tunable_atomic_notifier_block pdc_chassis_panic_block = {
++	.nb		= &pdc_chassis_panic_block_base
++};
+ 
+ /**
+  * parisc_reboot_event() - Called by the reboot handler.
+@@ -144,8 +147,8 @@ void __init parisc_pdc_chassis_init(void
+ 				PDC_CHASSIS_VER);
+ 
+ 		/* initialize panic notifier chain */
+-		atomic_notifier_chain_register(&panic_notifier_list,
+-				&pdc_chassis_panic_block);
++		tunable_atomic_notifier_chain_register(&panic_notifier_list,
++				&pdc_chassis_panic_block, "pdc_chassis", NULL);
+ 
+ 		/* initialize reboot notifier chain */
+ 		register_reboot_notifier(&pdc_chassis_reboot_block);
+diff -uprN linux-2.6.25.orig/arch/powerpc/kernel/setup-common.c linux-2.6.25/arch/powerpc/kernel/setup-common.c
+--- linux-2.6.25.orig/arch/powerpc/kernel/setup-common.c	2008-04-22 20:34:43.439575752 +0900
++++ linux-2.6.25/arch/powerpc/kernel/setup-common.c	2008-04-21 17:15:58.628651402 +0900
+@@ -609,14 +609,19 @@ static int ppc_panic_event(struct notifi
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block ppc_panic_block = {
++static struct notifier_block ppc_panic_block_base = {
+ 	.notifier_call = ppc_panic_event,
+ 	.priority = INT_MIN /* may not return; must be done last */
+ };
+ 
++static struct tunable_atomic_notifier_block ppc_panic_block = {
++	.nb		= &ppc_panic_block_base
++};
++
+ void __init setup_panic(void)
+ {
+-	atomic_notifier_chain_register(&panic_notifier_list, &ppc_panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&ppc_panic_block, "powerpc", NULL);
+ }
+ 
+ #ifdef CONFIG_CHECK_CACHE_COHERENCY
+diff -uprN linux-2.6.25.orig/arch/ppc/platforms/prep_setup.c linux-2.6.25/arch/ppc/platforms/prep_setup.c
+--- linux-2.6.25.orig/arch/ppc/platforms/prep_setup.c	2008-04-22 20:34:44.015572781 +0900
++++ linux-2.6.25/arch/ppc/platforms/prep_setup.c	2008-04-21 17:15:58.772650588 +0900
+@@ -634,12 +634,16 @@ ibm_statusled_panic(struct notifier_bloc
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block ibm_statusled_block = {
++static struct notifier_block ibm_statusled_block_base = {
+ 	ibm_statusled_panic,
+ 	NULL,
+ 	INT_MAX /* try to do it first */
+ };
+ 
++static struct tunable_atomic_notifier_block ibm_statusled_block = {
++	.nb = &ibm_statusled_block_base
++};
++
+ static void
+ ibm_statusled_progress(char *s, unsigned short hex)
+ {
+@@ -654,8 +658,9 @@ ibm_statusled_progress(char *s, unsigned
+ 		hex = 0xfff;
+ 		if (!notifier_installed) {
+ 			++notifier_installed;
+-			atomic_notifier_chain_register(&panic_notifier_list,
+-						&ibm_statusled_block);
++			tunable_atomic_notifier_chain_register(
++				&panic_notifier_list, &ibm_statusled_block,
++				"IBM_statusLED", NULL);
+ 		}
+ 	}
+ 	else
+diff -uprN linux-2.6.25.orig/arch/s390/kernel/ipl.c linux-2.6.25/arch/s390/kernel/ipl.c
+--- linux-2.6.25.orig/arch/s390/kernel/ipl.c	2008-04-22 20:34:44.103572199 +0900
++++ linux-2.6.25/arch/s390/kernel/ipl.c	2008-04-21 17:15:58.772650588 +0900
+@@ -1372,11 +1372,15 @@ static int on_panic_notify(struct notifi
+ 	return NOTIFY_OK;
+ }
+ 
+-static struct notifier_block on_panic_nb = {
++static struct notifier_block on_panic_nb_base = {
+ 	.notifier_call = on_panic_notify,
+ 	.priority = 0,
+ };
+ 
++static struct tunable_atomic_notifier_block on_panic_nb = {
++	.nb = &on_panic_nb_base
++};
++
+ void __init setup_ipl(void)
+ {
+ 	ipl_info.type = get_ipl_type();
+@@ -1402,7 +1406,8 @@ void __init setup_ipl(void)
+ 		/* We have no info to copy */
+ 		break;
+ 	}
+-	atomic_notifier_chain_register(&panic_notifier_list, &on_panic_nb);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++						&on_panic_nb, "s390_ipl", NULL);
+ }
+ 
+ void __init ipl_save_parameters(void)
+diff -uprN linux-2.6.25.orig/arch/sparc64/kernel/sstate.c linux-2.6.25/arch/sparc64/kernel/sstate.c
+--- linux-2.6.25.orig/arch/sparc64/kernel/sstate.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/sparc64/kernel/sstate.c	2008-04-21 17:15:58.772650588 +0900
+@@ -82,11 +82,15 @@ static int sstate_panic_event(struct not
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block sstate_panic_block = {
++static struct notifier_block sstate_panic_block_base = {
+ 	.notifier_call	=	sstate_panic_event,
+ 	.priority	=	INT_MAX,
+ };
+ 
++static struct tunable_atomic_notifier_block sstate_panic_block = {
++	.nb		=	&sstate_panic_block_base
++};
++
+ void __init sun4v_sstate_init(void)
+ {
+ 	unsigned long major, minor;
+@@ -99,6 +103,6 @@ void __init sun4v_sstate_init(void)
+ 	hv_supports_soft_state = 1;
+ 
+ 	prom_sun4v_guest_soft_state();
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &sstate_panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&sstate_panic_block, "sstate" ,NULL);
+ }
+diff -uprN linux-2.6.25.orig/arch/um/drivers/mconsole_kern.c linux-2.6.25/arch/um/drivers/mconsole_kern.c
+--- linux-2.6.25.orig/arch/um/drivers/mconsole_kern.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/um/drivers/mconsole_kern.c	2008-04-21 17:15:58.848643538 +0900
+@@ -920,16 +920,20 @@ static int notify_panic(struct notifier_
+ 	return 0;
+ }
+ 
+-static struct notifier_block panic_exit_notifier = {
++static struct notifier_block panic_exit_notifier_base = {
+ 	.notifier_call 		= notify_panic,
+ 	.next 			= NULL,
+ 	.priority 		= 1
+ };
+ 
++static struct tunable_atomic_notifier_block panic_exit_notifier = {
++	.nb			= &panic_exit_notifier_base
++};
++
+ static int add_notifier(void)
+ {
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			&panic_exit_notifier);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&panic_exit_notifier, "mconsole", NULL);
+ 	return 0;
+ }
+ 
+diff -uprN linux-2.6.25.orig/arch/um/kernel/um_arch.c linux-2.6.25/arch/um/kernel/um_arch.c
+--- linux-2.6.25.orig/arch/um/kernel/um_arch.c	2008-04-22 20:34:44.335563438 +0900
++++ linux-2.6.25/arch/um/kernel/um_arch.c	2008-04-21 17:15:58.848643538 +0900
+@@ -234,12 +234,16 @@ static int panic_exit(struct notifier_bl
+ 	return 0;
+ }
+ 
+-static struct notifier_block panic_exit_notifier = {
++static struct notifier_block panic_exit_notifier_base = {
+ 	.notifier_call 		= panic_exit,
+ 	.next 			= NULL,
+ 	.priority 		= 0
+ };
+ 
++static struct tunable_atomic_notifier_block panic_exit_notifier = {
++	.nb			= &panic_exit_notifier_base
++};
++
+ /* Set during early boot */
+ unsigned long task_size;
+ EXPORT_SYMBOL(task_size);
+@@ -357,8 +361,8 @@ int __init linux_main(int argc, char **a
+ 		printf("Kernel virtual memory size shrunk to %lu bytes\n",
+ 		       virtmem_size);
+ 
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &panic_exit_notifier);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++				       &panic_exit_notifier, "um", NULL);
+ 
+ 	uml_postsetup();
+ 
+diff -uprN linux-2.6.25.orig/arch/x86/lguest/boot.c linux-2.6.25/arch/x86/lguest/boot.c
+--- linux-2.6.25.orig/arch/x86/lguest/boot.c	2008-04-22 20:34:44.807567744 +0900
++++ linux-2.6.25/arch/x86/lguest/boot.c	2008-04-21 17:15:58.848643538 +0900
+@@ -820,17 +820,22 @@ static int lguest_panic(struct notifier_
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block paniced = {
++static struct notifier_block paniced_base = {
+ 	.notifier_call = lguest_panic
+ };
+ 
++static struct tunable_atomic_notifier_block paniced = {
++	.nb = = &paniced_base
++};
++
+ /* Setting up memory is fairly easy. */
+ static __init char *lguest_memory_setup(void)
+ {
+ 	/* We do this here and not earlier because lockcheck used to barf if we
+ 	 * did it before start_kernel().  I think we fixed that, so it'd be
+ 	 * nice to move it back to lguest_init.  Patch welcome... */
+-	atomic_notifier_chain_register(&panic_notifier_list, &paniced);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list, &paniced,
++							"lguest", NULL);
+ 
+ 	/* The Linux bootloader header contains an "e820" memory map: the
+ 	 * Launcher populated the first entry with our memory limit. */
+diff -uprN linux-2.6.25.orig/arch/xtensa/platforms/iss/setup.c linux-2.6.25/arch/xtensa/platforms/iss/setup.c
+--- linux-2.6.25.orig/arch/xtensa/platforms/iss/setup.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/arch/xtensa/platforms/iss/setup.c	2008-04-21 17:15:58.848643538 +0900
+@@ -98,13 +98,18 @@ iss_panic_event(struct notifier_block *t
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block iss_panic_block = {
++static struct notifier_block iss_panic_block_base = {
+ 	iss_panic_event,
+ 	NULL,
+ 	0
+ };
+ 
++static struct tunable_atomic_notifier_block iss_panic_block = {
++	.nb = &iss_panic_block_base
++};
++
+ void __init platform_setup(char **p_cmdline)
+ {
+-	atomic_notifier_chain_register(&panic_notifier_list, &iss_panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&iss_panic_block, "iss_panic", NULL);
+ }
+diff -uprN linux-2.6.25.orig/drivers/char/ipmi/ipmi_msghandler.c linux-2.6.25/drivers/char/ipmi/ipmi_msghandler.c
+--- linux-2.6.25.orig/drivers/char/ipmi/ipmi_msghandler.c	2008-04-22 20:34:46.675556380 +0900
++++ linux-2.6.25/drivers/char/ipmi/ipmi_msghandler.c	2008-04-21 17:15:58.972642550 +0900
+@@ -4234,12 +4234,16 @@ static int panic_event(struct notifier_b
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block panic_block = {
++static struct notifier_block panic_block_base = {
+ 	.notifier_call	= panic_event,
+ 	.next		= NULL,
+ 	.priority	= 200	/* priority: INT_MAX >= x >= 0 */
+ };
+ 
++static struct tunable_atomic_notifier_block panic_block = {
++	.nb		= &panic_block_base
++};
++
+ static int ipmi_init_msghandler(void)
+ {
+ 	int rv;
+@@ -4269,7 +4273,8 @@ static int ipmi_init_msghandler(void)
+ 	setup_timer(&ipmi_timer, ipmi_timeout, 0);
+ 	mod_timer(&ipmi_timer, jiffies + IPMI_TIMEOUT_JIFFIES);
+ 
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&panic_block, "ipmi_msghandler", NULL);
+ 
+ 	initialized = 1;
+ 
+@@ -4289,7 +4294,8 @@ static __exit void cleanup_ipmi(void)
+ 	if (!initialized)
+ 		return;
+ 
+-	atomic_notifier_chain_unregister(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_unregister(&panic_notifier_list,
++						 &panic_block);
+ 
+ 	/*
+ 	 * This can't be called if any interfaces exist, so no worry
+diff -uprN linux-2.6.25.orig/drivers/char/ipmi/ipmi_watchdog.c linux-2.6.25/drivers/char/ipmi/ipmi_watchdog.c
+--- linux-2.6.25.orig/drivers/char/ipmi/ipmi_watchdog.c	2008-04-22 20:34:46.691555965 +0900
++++ linux-2.6.25/drivers/char/ipmi/ipmi_watchdog.c	2008-04-21 17:15:58.988649720 +0900
+@@ -1157,12 +1157,15 @@ static int wdog_panic_handler(struct not
+ 	return NOTIFY_OK;
+ }
+ 
+-static struct notifier_block wdog_panic_notifier = {
++static struct notifier_block wdog_panic_notifier_base = {
+ 	.notifier_call	= wdog_panic_handler,
+ 	.next		= NULL,
+ 	.priority	= 150	/* priority: INT_MAX >= x >= 0 */
+ };
+ 
++static struct tunable_atomic_notifier_block wdog_panic_notifier = {
++	.nb		= &wdog_panic_notifier_base
++};
+ 
+ static void ipmi_new_smi(int if_num, struct device *device)
+ {
+@@ -1302,8 +1305,8 @@ static int __init ipmi_wdog_init(void)
+ 	check_parms();
+ 
+ 	register_reboot_notifier(&wdog_reboot_notifier);
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			&wdog_panic_notifier);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++				&wdog_panic_notifier, "ipmi_wdog", NULL);
+ 
+ 	rv = ipmi_smi_watcher_register(&smi_watcher);
+ 	if (rv) {
+@@ -1311,8 +1314,8 @@ static int __init ipmi_wdog_init(void)
+ 		if (nmi_handler_registered)
+ 			unregister_die_notifier(&ipmi_nmi_handler);
+ #endif
+-		atomic_notifier_chain_unregister(&panic_notifier_list,
+-						 &wdog_panic_notifier);
++		tunable_atomic_notifier_chain_unregister(&panic_notifier_list,
++						 	 &wdog_panic_notifier);
+ 		unregister_reboot_notifier(&wdog_reboot_notifier);
+ 		printk(KERN_WARNING PFX "can't register smi watcher\n");
+ 		return rv;
+@@ -1333,8 +1336,8 @@ static void __exit ipmi_wdog_exit(void)
+ 		unregister_die_notifier(&ipmi_nmi_handler);
  #endif
  
--	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
-+	tunable_atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+-	atomic_notifier_chain_unregister(&panic_notifier_list,
+-					 &wdog_panic_notifier);
++	tunable_atomic_notifier_chain_unregister(&panic_notifier_list,
++					 	 &wdog_panic_notifier);
+ 	unregister_reboot_notifier(&wdog_reboot_notifier);
+ }
+ module_exit(ipmi_wdog_exit);
+diff -uprN linux-2.6.25.orig/drivers/misc/ibmasm/heartbeat.c linux-2.6.25/drivers/misc/ibmasm/heartbeat.c
+--- linux-2.6.25.orig/drivers/misc/ibmasm/heartbeat.c	2008-04-22 20:34:50.719536142 +0900
++++ linux-2.6.25/drivers/misc/ibmasm/heartbeat.c	2008-04-21 17:15:59.024649246 +0900
+@@ -48,17 +48,22 @@ static int panic_happened(struct notifie
+ 	return 0;
+ }
  
- 	if (!panic_blink)
- 		panic_blink = no_blink;
+-static struct notifier_block panic_notifier = { panic_happened, NULL, 1 };
++static struct notifier_block panic_notifier_base = { panic_happened, NULL, 1 };
++
++static struct tunable_atomic_notifier_block panic_notifier = { 
++	.nb = &panic_notifier_base
++};
+ 
+ void ibmasm_register_panic_notifier(void)
+ {
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_notifier);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					       &panic_notifier, "ibmasm", NULL);
+ }
+ 
+ void ibmasm_unregister_panic_notifier(void)
+ {
+-	atomic_notifier_chain_unregister(&panic_notifier_list,
+-			&panic_notifier);
++	tunable_atomic_notifier_chain_unregister(&panic_notifier_list,
++						 &panic_notifier);
+ }
+ 
+ 
+diff -uprN linux-2.6.25.orig/drivers/parisc/power.c linux-2.6.25/drivers/parisc/power.c
+--- linux-2.6.25.orig/drivers/parisc/power.c	2008-04-17 11:49:44.000000000 +0900
++++ linux-2.6.25/drivers/parisc/power.c	2008-04-21 17:15:59.036649566 +0900
+@@ -189,11 +189,14 @@ static int parisc_panic_event(struct not
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block parisc_panic_block = {
++static struct notifier_block parisc_panic_block_base = {
+ 	.notifier_call	= parisc_panic_event,
+ 	.priority	= INT_MAX,
+ };
+ 
++static struct tunable_atomic_notifier_block parisc_panic_block = {
++	.nb		= &parisc_panic_block_base
++};
+ 
+ static int __init power_init(void)
+ {
+@@ -231,8 +234,8 @@ static int __init power_init(void)
+ 	}
+ 
+ 	/* Register a call for panic conditions. */
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-			&parisc_panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++				&parisc_panic_block, "parisc_panic", NULL);
+ 
+ 	return 0;
+ }
+@@ -241,8 +244,8 @@ static void __exit power_exit(void)
+ {
+ 	kthread_stop(power_task);
+ 
+-	atomic_notifier_chain_unregister(&panic_notifier_list,
+-			&parisc_panic_block);
++	tunable_atomic_notifier_chain_unregister(&panic_notifier_list,
++						 &parisc_panic_block);
+ 
+ 	pdc_soft_power_button(0);
+ }
+diff -uprN linux-2.6.25.orig/kernel/softlockup.c linux-2.6.25/kernel/softlockup.c
+--- linux-2.6.25.orig/kernel/softlockup.c	2008-04-22 20:35:03.247453824 +0900
++++ linux-2.6.25/kernel/softlockup.c	2008-04-21 17:15:59.240648254 +0900
+@@ -35,8 +35,12 @@ softlock_panic(struct notifier_block *th
+ 	return NOTIFY_DONE;
+ }
+ 
+-static struct notifier_block panic_block = {
+-	.notifier_call = softlock_panic,
++static struct notifier_block panic_block_base = {
++	.notifier_call = softlock_panic
++};
++
++static struct tunable_atomic_notifier_block panic_block = {
++	.nb		= &panic_block_base
+ };
+ 
+ /*
+@@ -310,5 +314,6 @@ __init void spawn_softlockup_task(void)
+ 	cpu_callback(&cpu_nfb, CPU_ONLINE, cpu);
+ 	register_cpu_notifier(&cpu_nfb);
+ 
+-	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
++	tunable_atomic_notifier_chain_register(&panic_notifier_list,
++					&panic_block, "softlockup", NULL);
+ }
 
 
 
---===============0191628232==
+--===============0915246701==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -516,4 +662,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0191628232==--
+--===============0915246701==--
