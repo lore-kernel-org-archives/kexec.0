@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Joppz-0004cm-UZ
-	for kexec@lists.infradead.org; Thu, 24 Apr 2008 01:01:24 +0000
-Date: Thu, 24 Apr 2008 11:01:20 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch] <sys/mman.h> is not needed by any kexec/ source
-Message-ID: <20080424010118.GB7278@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JqObq-0001su-21
+	for kexec@lists.infradead.org; Mon, 28 Apr 2008 08:21:14 +0000
+Date: Mon, 28 Apr 2008 10:22:13 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: kexec --real-mode
+Message-ID: <20080428102213.63eeaba1@strauss.suse.de>
+In-Reply-To: <m163u8oeli.fsf@frodo.ebiederm.org>
+References: <20080422151622.43c85a00@strauss.suse.de>
+	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
+	<20080423103400.6e3d9d90@strauss.suse.de>
+	<m163u8oeli.fsf@frodo.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,135 +25,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Jamey Sharp <jamey@thetovacompany.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
 
-This continues the work that Jamey Sharp did on i386 to
-cover all other architectures.
+Hi,
 
-Cc: Jamey Sharp <jamey@thetovacompany.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+* Eric W. Biederman [2008-04-23 07:00]:
+> Bernhard Walle <bwalle@suse.de> writes:
+> > * Jamey Sharp [2008-04-22 16:44]:
+> >>
+> >> On Tue, Apr 22, 2008 at 6:16 AM, Bernhard Walle <bwalle@suse.de> wrote:
+> >> > did anybody try the --real-mode option with current release? I tried
+> >> > it on two machines, and on one machine it just reboots, on the other
+> >> > machine it hangs.
+> >> 
+> >> I think you're experiencing a bug that I just proposed a patch for. :-)
+> >> You can confirm that: try adding the "--debug" option to your kexec
+> >> call. If that works correctly, then I think you'll find that the patch
+> >> in "[PATCH 2/9] Fix copy-paste bug: entry16 does not start at
+> >> entry16_debug" will solve your problem. That's archived here:
+> >> 
+> >> http://lists.infradead.org/pipermail/kexec/2008-April/001581.html
+> >
+> > No, I used --debug already.
+> 
+> If this used to work when booting older kernels on your hardware.
+> Jamey's patch 3/9 might help.
 
-Index: kexec-tools-testing-merge/kexec/arch/ia64/kexec-elf-ia64.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/ia64/kexec-elf-ia64.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/ia64/kexec-elf-ia64.c	2008-04-24 09:34:59.000000000 +1000
-@@ -31,7 +31,6 @@
- #include <stdint.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/mips/kexec-elf-mips.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/mips/kexec-elf-mips.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/mips/kexec-elf-mips.c	2008-04-24 09:34:59.000000000 +1000
-@@ -17,7 +17,6 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/ppc/kexec-dol-ppc.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/ppc/kexec-dol-ppc.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/ppc/kexec-dol-ppc.c	2008-04-24 09:34:59.000000000 +1000
-@@ -13,7 +13,6 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/ppc/kexec-elf-ppc.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/ppc/kexec-elf-ppc.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/ppc/kexec-elf-ppc.c	2008-04-24 09:34:59.000000000 +1000
-@@ -13,7 +13,6 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/ppc64/kexec-elf-ppc64.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/ppc64/kexec-elf-ppc64.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/ppc64/kexec-elf-ppc64.c	2008-04-24 09:34:59.000000000 +1000
-@@ -27,7 +27,6 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/ppc64/kexec-zImage-ppc64.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/ppc64/kexec-zImage-ppc64.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/ppc64/kexec-zImage-ppc64.c	2008-04-24 09:34:59.000000000 +1000
-@@ -25,7 +25,6 @@
- #include <errno.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/sh/kexec-netbsd-sh.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/sh/kexec-netbsd-sh.c	2008-04-24 09:34:21.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/sh/kexec-netbsd-sh.c	2008-04-24 09:34:59.000000000 +1000
-@@ -15,7 +15,6 @@
- #include <stdint.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/sh/kexec-zImage-sh.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/sh/kexec-zImage-sh.c	2008-04-24 09:34:22.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/sh/kexec-zImage-sh.c	2008-04-24 09:34:59.000000000 +1000
-@@ -15,7 +15,6 @@
- #include <stdint.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
-Index: kexec-tools-testing-merge/kexec/arch/x86_64/crashdump-x86_64.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/x86_64/crashdump-x86_64.c	2008-04-24 09:34:22.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/x86_64/crashdump-x86_64.c	2008-04-24 09:34:59.000000000 +1000
-@@ -27,7 +27,6 @@
- #include <fcntl.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <unistd.h>
- #include "../../kexec.h"
- #include "../../kexec-elf.h"
-Index: kexec-tools-testing-merge/kexec/arch/x86_64/kexec-elf-x86_64.c
-===================================================================
---- kexec-tools-testing-merge.orig/kexec/arch/x86_64/kexec-elf-x86_64.c	2008-04-24 09:34:22.000000000 +1000
-+++ kexec-tools-testing-merge/kexec/arch/x86_64/kexec-elf-x86_64.c	2008-04-24 09:34:59.000000000 +1000
-@@ -25,7 +25,6 @@
- #include <limits.h>
- #include <sys/types.h>
- #include <sys/stat.h>
--#include <sys/mman.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <getopt.h>
+Well, now it goes until DEBUG_CHAR('j'). But the kernel doesn't boot.
+
+> Otherwise if this is the first time you are trying it you may
+> simply have encountered the reason that --real-mode is not the default.
+> BIOS can get really strange after the kernel has been running.
+
+That might be the case. Thanks for the information.
+
+> You might try booting kexec_test and see where that puts you.
+
+But that's ELF and not bzImage.
+
+
+	Bernhard
 
 _______________________________________________
 kexec mailing list
