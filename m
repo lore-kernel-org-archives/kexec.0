@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JqXZm-000869-F5
-	for kexec@lists.infradead.org; Mon, 28 Apr 2008 17:55:42 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20080422151622.43c85a00@strauss.suse.de>
-	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
-	<20080423103400.6e3d9d90@strauss.suse.de>
-	<m163u8oeli.fsf@frodo.ebiederm.org>
-	<20080428102213.63eeaba1@strauss.suse.de>
-Date: Mon, 28 Apr 2008 10:55:21 -0700
-In-Reply-To: <20080428102213.63eeaba1@strauss.suse.de> (Bernhard Walle's
-	message of "Mon, 28 Apr 2008 10:22:13 +0200")
-Message-ID: <m1bq3t50fq.fsf@frodo.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: kexec --real-mode
+Received: from main.gmane.org ([80.91.229.2] helo=ciao.gmane.org)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JqYQQ-00021C-3Z
+	for kexec@lists.infradead.org; Mon, 28 Apr 2008 18:50:06 +0000
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1JqYQM-0001EM-5A
+	for kexec@lists.infradead.org; Mon, 28 Apr 2008 18:50:03 +0000
+Received: from ABTS-KK-Dynamic-150.88.167.122.airtelbroadband.in
+	([ABTS-KK-Dynamic-150.88.167.122.airtelbroadband.in])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Mon, 28 Apr 2008 18:50:02 +0000
+Received: from sundeep471 by ABTS-KK-Dynamic-150.88.167.122.airtelbroadband.in
+	with local (Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Mon, 28 Apr 2008 18:50:02 +0000
+From: SUNDEEP BORRA <sundeep471@gmail.com>
+Subject: Re: [ARM]
+Date: Mon, 28 Apr 2008 18:48:47 +0000 (UTC)
+Message-ID: <loom.20080428T183225-986@post.gmane.org>
+References: <9b8644470804102121k43362a86i92d4d80275569dc4@mail.gmail.com>
+	<1207900080.15605.14.camel@x61.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,52 +33,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
+To: kexec@lists.infradead.org
 
-Bernhard Walle <bwalle@suse.de> writes:
 
-> Hi,
->
-> * Eric W. Biederman [2008-04-23 07:00]:
->> Bernhard Walle <bwalle@suse.de> writes:
->> > * Jamey Sharp [2008-04-22 16:44]:
->> >>
->> >> On Tue, Apr 22, 2008 at 6:16 AM, Bernhard Walle <bwalle@suse.de> wrote:
->> >> > did anybody try the --real-mode option with current release? I tried
->> >> > it on two machines, and on one machine it just reboots, on the other
->> >> > machine it hangs.
->> >> 
->> >> I think you're experiencing a bug that I just proposed a patch for. :-)
->> >> You can confirm that: try adding the "--debug" option to your kexec
->> >> call. If that works correctly, then I think you'll find that the patch
->> >> in "[PATCH 2/9] Fix copy-paste bug: entry16 does not start at
->> >> entry16_debug" will solve your problem. That's archived here:
->> >> 
->> >> http://lists.infradead.org/pipermail/kexec/2008-April/001581.html
->> >
->> > No, I used --debug already.
->> 
->> If this used to work when booting older kernels on your hardware.
->> Jamey's patch 3/9 might help.
->
-> Well, now it goes until DEBUG_CHAR('j'). But the kernel doesn't boot.
->
->> Otherwise if this is the first time you are trying it you may
->> simply have encountered the reason that --real-mode is not the default.
->> BIOS can get really strange after the kernel has been running.
 
-> That might be the case. Thanks for the information.
->
->> You might try booting kexec_test and see where that puts you.
->
-> But that's ELF and not bzImage.
+Dear Eric,
 
-It is a different code path.  It is designed to exercise the 16bit BIOS
-calls that the kernel uses with a lot of serial port debugging
-so we can see if that is the problem.
+I got the Apt sources for ARM-KEXEC from Simon Horman. As I claimed before, 
+neither the purgatory nor the testing code of the repository till date has got 
+only dummy functions and no ARM specific code is ready. The one I got from 
+Simon Horman, maintaining it with all updates to all architectures, is working 
+fine.
 
-Eric
+It is at ftp://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+
+Thanks for your response,
+
+Regards,
+Sundeep Borra
+
+
 
 _______________________________________________
 kexec mailing list
