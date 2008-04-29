@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([59.145.155.2])
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jqnmj-0005gH-Tu
-	for kexec@lists.infradead.org; Tue, 29 Apr 2008 11:14:24 +0000
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-	by e28smtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m3TBDUcH005584
-	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 16:43:30 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m3TBDOj81089710
-	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 16:43:24 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.13.1/8.13.3) with ESMTP id m3TBDcJ1006448
-	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 11:13:39 GMT
-Message-ID: <481702DA.3000009@in.ibm.com>
-Date: Tue, 29 Apr 2008 16:43:30 +0530
-From: "Sachin P. Sant" <sachinp@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: kexec/ kdump setup problem
-References: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
-In-Reply-To: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
+	id 1JqsCn-0004As-Ls
+	for kexec@lists.infradead.org; Tue, 29 Apr 2008 15:57:25 +0000
+Date: Tue, 29 Apr 2008 17:58:26 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: kexec --real-mode
+Message-ID: <20080429175826.4a891110@strauss.suse.de>
+In-Reply-To: <m1bq3t50fq.fsf@frodo.ebiederm.org>
+References: <20080422151622.43c85a00@strauss.suse.de>
+	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
+	<20080423103400.6e3d9d90@strauss.suse.de>
+	<m163u8oeli.fsf@frodo.ebiederm.org>
+	<20080428102213.63eeaba1@strauss.suse.de>
+	<m1bq3t50fq.fsf@frodo.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,17 +27,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mrunal Gawade <mrunal.gawade@gmail.com>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
 
-Mrunal Gawade wrote:
-> After I execute this command. Should I expect any prompt that kernel 
-> loaded successfully?
-Check the /sys/kernel/kexec_crash_loaded file. Value "1" means success.
+* Eric W. Biederman [2008-04-28 10:55]:
+> 
+> It is a different code path.  It is designed to exercise the 16bit BIOS
+> calls that the kernel uses with a lot of serial port debugging
+> so we can see if that is the problem.
 
-Thanks
--Sachin
+Well, that gives me 
+------------------------------------------------------------
+I'm in purgatory
+kexec_test 20080324 starting...
+eax: 00000000 ebx: 00000000 ecx: 00000000 edx: 00000000
+esi: 00000000 edi: 00000000 esp: 00008FF8 ebp: 00000000
+idt: 00000000 00000000
+gdt: 0000006F 00005BA0
+Switching descriptors.
+Descriptors changed.
+Legacy pic setup.
+In real mode.
+Interrupts enabled.
+Base memory size: 0276
+A20 disabled.
+E820 Memory Map.
+000000000009D800 @ 0000000000000000 type: 00000001
+0000000000002800 @ 000
+------------------------------------------------------------
 
+Yes, the output stops here. Don't know why ...
+
+
+
+        Bernhard
 
 _______________________________________________
 kexec mailing list
