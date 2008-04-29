@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from wr-out-0506.google.com ([64.233.184.237])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JqtUO-0001m0-PX
-	for kexec@lists.infradead.org; Tue, 29 Apr 2008 17:19:37 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20080422151622.43c85a00@strauss.suse.de>
-	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
-	<20080423103400.6e3d9d90@strauss.suse.de>
-	<m163u8oeli.fsf@frodo.ebiederm.org>
-	<20080428102213.63eeaba1@strauss.suse.de>
-	<m1bq3t50fq.fsf@frodo.ebiederm.org>
-	<20080429175826.4a891110@strauss.suse.de>
-Date: Tue, 29 Apr 2008 10:15:13 -0700
-In-Reply-To: <20080429175826.4a891110@strauss.suse.de> (Bernhard Walle's
-	message of "Tue, 29 Apr 2008 17:58:26 +0200")
-Message-ID: <m1fxt44m72.fsf@frodo.ebiederm.org>
+	id 1JqybK-0003rt-4f
+	for kexec@lists.infradead.org; Tue, 29 Apr 2008 22:47:07 +0000
+Received: by wr-out-0506.google.com with SMTP id c46so362865wra.18
+	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 15:47:05 -0700 (PDT)
+Message-ID: <c62583fb0804291540o25e4b865j35c4e9b87aa016ea@mail.gmail.com>
+Date: Tue, 29 Apr 2008 15:40:13 -0700
+From: "Mrunal Gawade" <mrunal.gawade@gmail.com>
+Subject: Re: kexec/ kdump setup problem
+In-Reply-To: <481702DA.3000009@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: kexec --real-mode
+References: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
+	<481702DA.3000009@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +21,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2121667730=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
+To: "Sachin P. Sant" <sachinp@in.ibm.com>
+Cc: kexec@lists.infradead.org
 
-Bernhard Walle <bwalle@suse.de> writes:
+--===============2121667730==
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_906_20934845.1209508813511"
 
-> * Eric W. Biederman [2008-04-28 10:55]:
->> 
->> It is a different code path.  It is designed to exercise the 16bit BIOS
->> calls that the kernel uses with a lot of serial port debugging
->> so we can see if that is the problem.
+------=_Part_906_20934845.1209508813511
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Thanks Sachin.
+
+The value over there is a "0" which means I have a failure. How do I
+diagnose what is the problem? I was able to load a normal kernel and then
+use "e" option to reboot into it. But crash dump kernel seemed to be giving
+problem always.
+
+
+Thank you,
+Mrunal
+
+On Tue, Apr 29, 2008 at 4:13 AM, Sachin P. Sant <sachinp@in.ibm.com> wrote:
+
+> Mrunal Gawade wrote:
 >
-> Well, that gives me 
-> ------------------------------------------------------------
-> I'm in purgatory
-> kexec_test 20080324 starting...
-> eax: 00000000 ebx: 00000000 ecx: 00000000 edx: 00000000
-> esi: 00000000 edi: 00000000 esp: 00008FF8 ebp: 00000000
-> idt: 00000000 00000000
-> gdt: 0000006F 00005BA0
-> Switching descriptors.
-> Descriptors changed.
-> Legacy pic setup.
-> In real mode.
-> Interrupts enabled.
-> Base memory size: 0276
-> A20 disabled.
-> E820 Memory Map.
-> 000000000009D800 @ 0000000000000000 type: 00000001
-> 0000000000002800 @ 000
-> ------------------------------------------------------------
+> > After I execute this command. Should I expect any prompt that kernel
+> > loaded successfully?
+> >
+> Check the /sys/kernel/kexec_crash_loaded file. Value "1" means success.
 >
-> Yes, the output stops here. Don't know why ...
+> Thanks
+> -Sachin
+>
+>
 
-Ok.  I'm guessing that whatever it is immediately after
-the e820 map dump causes the box to go south.
+------=_Part_906_20934845.1209508813511
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-But this is a very good clue that your BIOS just can't
-handle being run after the linux kernel has run at
-this point.  Unfortunately this is common and why
-the --real-mode switch has not been the default for several years.
+Thanks Sachin. <br><br>The value over there is a &quot;0&quot; which means I have a failure. How do I diagnose what is the problem? I was able to load a normal kernel and then use &quot;e&quot; option to reboot into it. But crash dump kernel seemed to be giving problem always.<br>
+<br><br>Thank you,<br>Mrunal<br><br><div class="gmail_quote">On Tue, Apr 29, 2008 at 4:13 AM, Sachin P. Sant &lt;<a href="mailto:sachinp@in.ibm.com">sachinp@in.ibm.com</a>&gt; wrote:<br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<div class="Ih2E3d">Mrunal Gawade wrote:<br>
+<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
+After I execute this command. Should I expect any prompt that kernel loaded successfully?<br>
+</blockquote></div>
+Check the /sys/kernel/kexec_crash_loaded file. Value &quot;1&quot; means success.<br>
+<br>
+Thanks<br><font color="#888888">
+-Sachin<br>
+<br>
+</font></blockquote></div><br>
 
-What is your interest in getting the --real-mode option working at this
-point?
+------=_Part_906_20934845.1209508813511--
 
-After this point the debugging starts to get very laborious.
 
-Eric
+--===============2121667730==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2121667730==--
+
