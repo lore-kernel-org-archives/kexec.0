@@ -1,15 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from yw-out-1718.google.com ([74.125.46.155])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jqgsz-0003LQ-D3
-	for kexec@lists.infradead.org; Tue, 29 Apr 2008 03:52:09 +0000
-Received: by yw-out-1718.google.com with SMTP id 9so3411700ywk.72
-	for <kexec@lists.infradead.org>; Mon, 28 Apr 2008 20:52:00 -0700 (PDT)
-Message-ID: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
-Date: Mon, 28 Apr 2008 20:45:49 -0700
-From: "Mrunal Gawade" <mrunal.gawade@gmail.com>
-Subject: kexec/ kdump setup problem
+Received: from e28smtp02.in.ibm.com ([59.145.155.2])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jqnmj-0005gH-Tu
+	for kexec@lists.infradead.org; Tue, 29 Apr 2008 11:14:24 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28smtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m3TBDUcH005584
+	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 16:43:30 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m3TBDOj81089710
+	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 16:43:24 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.13.1/8.13.3) with ESMTP id m3TBDcJ1006448
+	for <kexec@lists.infradead.org>; Tue, 29 Apr 2008 11:13:39 GMT
+Message-ID: <481702DA.3000009@in.ibm.com>
+Date: Tue, 29 Apr 2008 16:43:30 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: kexec/ kdump setup problem
+References: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
+In-Reply-To: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,66 +28,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0601751202=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Mrunal Gawade <mrunal.gawade@gmail.com>
+Cc: kexec@lists.infradead.org
 
---===============0601751202==
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_14268_22589900.1209440749623"
+Mrunal Gawade wrote:
+> After I execute this command. Should I expect any prompt that kernel 
+> loaded successfully?
+Check the /sys/kernel/kexec_crash_loaded file. Value "1" means success.
 
-------=_Part_14268_22589900.1209440749623
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks
+-Sachin
 
-Hi,
-
-I have setup the system with two kernels (2.6.25) for kexec/kdump utility. I
-am using this command to load kernel. Please comment if its correct. vmlinux
-is the dump kernel.
-
-kexec -p /boot/vmlinux --initrd=2.6.25-default-kdump --args-linux
---append="root=/dev/sda1 init 1 irqpoll"
-
-After I execute this command. Should I expect any prompt that kernel loaded
-successfully? Because if I execute the sequence alt-SysReq-c after this to
-force crash my system hangs. Nothing seems to proceed further. How do I
-check if the kernel is loaded successfully? Because if I execute the "-u"
-unload option I do not get any error either that kernel is not loaded or
-something. Nothing seems to happen over there.
-
-Your timely help would be much appreciated as I need to get this fixed as
-soon as possible as my project progress is stopped as I am not able to
-analyse the reason for crash.
-
-
-Thank you,
-Mrunal
-
-------=_Part_14268_22589900.1209440749623
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-Hi,<br><br>I have setup the system with two kernels (2.6.25) for kexec/kdump utility. I am using this command to load kernel. Please comment if its correct. vmlinux is the dump kernel. <br><br>kexec -p /boot/vmlinux --initrd=2.6.25-default-kdump --args-linux --append=&quot;root=/dev/sda1 init 1 irqpoll&quot;<br>
-<br>After I execute this command. Should I expect any prompt that kernel loaded successfully? Because if I execute the sequence alt-SysReq-c after this to force crash my system hangs. Nothing seems to proceed further. How do I check if the kernel is loaded successfully? Because if I execute the &quot;-u&quot; unload option I do not get any error either that kernel is not loaded or something. Nothing seems to happen over there. <br>
-<br>Your timely help would be much appreciated as I need to get this fixed as soon as possible as my project progress is stopped as I am not able to analyse the reason for crash.<br><br><br>Thank you,<br>Mrunal<br>
-
-------=_Part_14268_22589900.1209440749623--
-
-
---===============0601751202==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0601751202==--
-
