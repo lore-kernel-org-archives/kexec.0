@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jr7oG-00039q-Ch
-	for kexec@lists.infradead.org; Wed, 30 Apr 2008 08:37:04 +0000
-Date: Wed, 30 Apr 2008 10:38:14 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: kexec --real-mode
-Message-ID: <20080430103814.072c9ef9@strauss.suse.de>
-In-Reply-To: <m1fxt44m72.fsf@frodo.ebiederm.org>
-References: <20080422151622.43c85a00@strauss.suse.de>
-	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
-	<20080423103400.6e3d9d90@strauss.suse.de>
-	<m163u8oeli.fsf@frodo.ebiederm.org>
-	<20080428102213.63eeaba1@strauss.suse.de>
-	<m1bq3t50fq.fsf@frodo.ebiederm.org>
-	<20080429175826.4a891110@strauss.suse.de>
-	<m1fxt44m72.fsf@frodo.ebiederm.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JrCgp-00030M-Us
+	for kexec@lists.infradead.org; Wed, 30 Apr 2008 13:49:44 +0000
+Date: Wed, 30 Apr 2008 09:49:16 -0400
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: kexec/ kdump setup problem
+Message-ID: <20080430134916.GA1233@hmsendeavour.rdu.redhat.com>
+References: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
+	<481702DA.3000009@in.ibm.com>
+	<c62583fb0804291540o25e4b865j35c4e9b87aa016ea@mail.gmail.com>
+	<20080430001738.GA28606@hmsendeavour.rdu.redhat.com>
+	<c62583fb0804291914o6d245e64v168dc51be7a2fd80@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <c62583fb0804291914o6d245e64v168dc51be7a2fd80@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,45 +27,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
+To: Mrunal Gawade <mrunal.gawade@gmail.com>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, "Sachin P. Sant" <sachinp@in.ibm.com>
 
-* Eric W. Biederman [2008-04-29 10:15]:
+On Tue, Apr 29, 2008 at 07:14:36PM -0700, Mrunal Gawade wrote:
+> Hi,
 > 
-> Ok.  I'm guessing that whatever it is immediately after
-> the e820 map dump causes the box to go south.
+> I just checked /sys/kernel/kexec_crash_loaded file after giving the kexec -p
+> command for loading panic kernel. And the value was 1. So it was loaded
+> successfully. I then crashed kernel and it hanged. I rebooted manually and
+> checked the value in the file again and it was "0". So across reboot it got
+> reset. So if I assume that the kernel loading was successful, the question
+> remains if it got loaded successfully at the designated space 65M@16M. How
+> do I know that? I am running SUSE 2.6.25 on a VMWare workstation. Does
+> running on VM could change any thing such as memory layout or anything
+> related to panic handling?
 > 
-> But this is a very good clue that your BIOS just can't
-> handle being run after the linux kernel has run at
-> this point.  Unfortunately this is common and why
-> the --real-mode switch has not been the default for several years.
 
-Ok, thanks.
+As Sachin mentioned, kexec_crash_loaded gets reset accross reboots.
 
-> What is your interest in getting the --real-mode option working at this
-> point?
+As for use on a VMWare guest, its behavior is anyones guess.  Best thing I could
+think to do would be to add earlyprintk to the kdump kernel command line, and
+watch the serial console for mesages about where you're hanging (see
+Documentations/kernel-parameters.txt for details about earlyprintk).
 
-Well, the first reason was just interest.
+Neil
 
-The second reason that pointed me in that direction is that I saw that
-kdump-booted kernels ignore the VGA parameter [e.g. 791] (which is
-quite clear since the video mode is not set in the boot block, but that
-can be easily patched) and also ignore the compiled-in VGA value (set
-with rdev). Then I saw that this is not done in the real kernel but in
-the 16 bit boot code which is of course only executed in real mode
-booting (arch/x86/boot/video.c).
+> You specified taking a look at the /sys/kernel/kexec_crash_loaded file. Is
+> there a central document which documents all these error resolving
+> guidelines? Also I checked in the /var/log/messages and there is no message
+> related to this printed over there.
+> 
+> 
+> Thank you,
+> Mrunal
+> 
+> On Tue, Apr 29, 2008 at 5:17 PM, Neil Horman <nhorman@redhat.com> wrote:
+> 
+> > On Tue, Apr 29, 2008 at 03:40:13PM -0700, Mrunal Gawade wrote:
+> > > Thanks Sachin.
+> > >
+> > > The value over there is a "0" which means I have a failure. How do I
+> > > diagnose what is the problem? I was able to load a normal kernel and
+> > then
+> > > use "e" option to reboot into it. But crash dump kernel seemed to be
+> > giving
+> > > problem always.
+> > >
+> > >
+> > > Thank you,
+> > > Mrunal
+> > >
+> >
+> > check /var/log/messages, to see if there is any message there.  It
+> > wouldn't hurt
+> > to enable debugging in the kexec binary either, although if the load is
+> > actually
+> > failing, I would think you would get something on stderr.  First guess
+> > would be
+> > that you don't have a crashkernel area specified on your command line (or
+> > you
+> > do, and its reservation failed, which also will show up in the logs most
+> > likely)
+> >
+> > Neil
+> >
+> > > On Tue, Apr 29, 2008 at 4:13 AM, Sachin P. Sant <sachinp@in.ibm.com>
+> > wrote:
+> > >
+> > > > Mrunal Gawade wrote:
+> > > >
+> > > > > After I execute this command. Should I expect any prompt that kernel
+> > > > > loaded successfully?
+> > > > >
+> > > > Check the /sys/kernel/kexec_crash_loaded file. Value "1" means
+> > success.
+> > > >
+> > > > Thanks
+> > > > -Sachin
+> > > >
+> > > >
+> >
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
+> >
+> >
+> > --
+> > /***************************************************
+> >  *Neil Horman
+> >  *Software Engineer
+> >  *Red Hat, Inc.
+> >  *nhorman@redhat.com
+> >  *gpg keyid: 1024D / 0x92A74FA1
+> >  *http://pgp.mit.edu
+> >  ***************************************************/
+> >
 
-I know the 32-bit booted kernel takes the video mode from the running
-kernel, but currently it's not possible to change the mode. Well, it's
-not really important, it just would be nice.
-
-The overall reason behind this is that we (SUSE) use kexec now for the
-first reboot in our distribution setup which works quite well, and
-that's the reason I looked into that.
-
-
-
-	Bernhard
+-- 
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
