@@ -1,30 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.18.162])
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jr4Dv-0005cW-S8
-	for kexec@lists.infradead.org; Wed, 30 Apr 2008 04:47:20 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp01.au.ibm.com (8.13.1/8.13.1) with ESMTP id m3U4m1ST029640
-	for <kexec@lists.infradead.org>; Wed, 30 Apr 2008 14:48:01 +1000
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m3U4pGLI219598
-	for <kexec@lists.infradead.org>; Wed, 30 Apr 2008 14:51:16 +1000
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
-	by d23av02.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m3U4lGej012085
-	for <kexec@lists.infradead.org>; Wed, 30 Apr 2008 14:47:16 +1000
-Message-ID: <4817F9D1.9010709@in.ibm.com>
-Date: Wed, 30 Apr 2008 10:17:13 +0530
-From: "Sachin P. Sant" <sachinp@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: kexec/ kdump setup problem
-References: <c62583fb0804282045w757bba55v5515bdbb37d5f18c@mail.gmail.com>
-	<481702DA.3000009@in.ibm.com>
-	<c62583fb0804291540o25e4b865j35c4e9b87aa016ea@mail.gmail.com>
-	<20080430001738.GA28606@hmsendeavour.rdu.redhat.com>
-	<c62583fb0804291914o6d245e64v168dc51be7a2fd80@mail.gmail.com>
-In-Reply-To: <c62583fb0804291914o6d245e64v168dc51be7a2fd80@mail.gmail.com>
+	id 1Jr7oG-00039q-Ch
+	for kexec@lists.infradead.org; Wed, 30 Apr 2008 08:37:04 +0000
+Date: Wed, 30 Apr 2008 10:38:14 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: kexec --real-mode
+Message-ID: <20080430103814.072c9ef9@strauss.suse.de>
+In-Reply-To: <m1fxt44m72.fsf@frodo.ebiederm.org>
+References: <20080422151622.43c85a00@strauss.suse.de>
+	<e2ed954f0804221644y436bd6cdoeb1fed2fd5d04ccb@mail.gmail.com>
+	<20080423103400.6e3d9d90@strauss.suse.de>
+	<m163u8oeli.fsf@frodo.ebiederm.org>
+	<20080428102213.63eeaba1@strauss.suse.de>
+	<m1bq3t50fq.fsf@frodo.ebiederm.org>
+	<20080429175826.4a891110@strauss.suse.de>
+	<m1fxt44m72.fsf@frodo.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,34 +29,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mrunal Gawade <mrunal.gawade@gmail.com>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
 
-Mrunal Gawade wrote:
-> Hi,
->
-> I just checked /sys/kernel/kexec_crash_loaded file after giving the 
-> kexec -p command for loading panic kernel. And the value was 1. So it 
-> was loaded successfully. I then crashed kernel and it hanged. I 
-> rebooted manually and checked the value in the file again and it was 
-> "0". So across reboot it got reset. So if I assume that the kernel 
-> loading was successful, the question remains if it got loaded 
-> successfully at the designated space 65M@16M. How do I know that? 
-The file /sys/kernel/kexec_crash_loaded will have value 1 if the kdump kernel has been
-loaded successfully. In your case when you executed kexec -p the kernel was loaded at
-the designated space and value 1 in kexec_crash_loaded reflects that. This value won't
-be retained across reboots. One will have to again execute the kexec -p command to
-load the kdump kernel after reboot. [ If kdump service is enabled (chkconfig kdump on)
-kexec -p will get executed after every reboot. ]
+* Eric W. Biederman [2008-04-29 10:15]:
+> 
+> Ok.  I'm guessing that whatever it is immediately after
+> the e820 map dump causes the box to go south.
+> 
+> But this is a very good clue that your BIOS just can't
+> handle being run after the linux kernel has run at
+> this point.  Unfortunately this is common and why
+> the --real-mode switch has not been the default for several years.
 
-I think in your case the problem is that after a successful load, the kdump kernel
-does not boot on a system crash.[alt-sysrq-c]. you could try adding console
-related options to the kexec command and see if that will give some information
-on where the kernel hangs.
+Ok, thanks.
 
-Thanks
--Sachin
+> What is your interest in getting the --real-mode option working at this
+> point?
 
+Well, the first reason was just interest.
+
+The second reason that pointed me in that direction is that I saw that
+kdump-booted kernels ignore the VGA parameter [e.g. 791] (which is
+quite clear since the video mode is not set in the boot block, but that
+can be easily patched) and also ignore the compiled-in VGA value (set
+with rdev). Then I saw that this is not done in the real kernel but in
+the 16 bit boot code which is of course only executed in real mode
+booting (arch/x86/boot/video.c).
+
+I know the 32-bit booted kernel takes the video mode from the running
+kernel, but currently it's not possible to change the mode. Well, it's
+not really important, it just would be nice.
+
+The overall reason behind this is that we (SUSE) use kexec now for the
+first reboot in our distribution setup which works quite well, and
+that's the reason I looked into that.
+
+
+
+	Bernhard
 
 _______________________________________________
 kexec mailing list
