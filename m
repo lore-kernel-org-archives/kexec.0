@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JrMTc-0007ji-G4
-	for kexec@lists.infradead.org; Thu, 01 May 2008 00:16:45 +0000
-Date: Thu, 1 May 2008 10:16:40 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Make extended crashkernel= syntax less confusing
-Message-ID: <20080501001638.GD22728@verge.net.au>
-References: <a8d9dc7f83b9c34d9e0165503b323a7f32b00260.1209519344.git.michael@ellerman.id.au>
-	<20080430112915.f56d8815.akpm@linux-foundation.org>
-	<20080430235726.3f28b732@kopernikus.site>
+	id 1Jt7kR-0002Ea-F1
+	for kexec@lists.infradead.org; Mon, 05 May 2008 20:57:23 +0000
+Received: from nlxdcldnl2.cl.intel.com (localhost.localdomain [127.0.0.1])
+	by nlxdcldnl2.cl.intel.com (8.14.1/8.14.1) with ESMTP id m45KrSPM004448
+	for <kexec@lists.infradead.org>; Mon, 5 May 2008 13:53:28 -0700
+Received: (from dnlombar@localhost)
+	by nlxdcldnl2.cl.intel.com (8.14.1/8.14.1/Submit) id m45KrSoT004447
+	for kexec@lists.infradead.org; Mon, 5 May 2008 13:53:28 -0700
+Date: Mon, 5 May 2008 13:53:28 -0700
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
+Subject: [PATCH] Cross compile?
+Message-ID: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080430235726.3f28b732@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,70 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Michael Ellerman <michael@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Wed, Apr 30, 2008 at 11:57:26PM +0200, Bernhard Walle wrote:
-> * Andrew Morton <akpm@linux-foundation.org> [2008-04-30 11:29]:
-> >
-> > I'm a bit surprised to see the code being updated but not the
-> > documentation.  Were they out of sync before or are they out of sync after
-> > this patch or were they always in sync or what?
-> 
-> It was simply not specified. I propose the following patch to make it
-> clear:
+In util/Makefile, the bin-to-hex utility was being built with the
+cross-compiler, not the host compiler.  This patch fixes that.
 
-This is fine by me, acked.
+Signed-off-by: David N. Lombard, <david.n.lombard@intel.com>
 
-> ----
-> 
-> [PATCH] Clarify inclusive/exclusive in crashkernel commandline in documentation
-> 
-> 
-> Reflect the changes from Michael Ellerman in crashkernel syntax that make the
-> end of the memory exclusive in the documentation. It was simply not specified
-> before.
-> 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-> ---
->  Documentation/kdump/kdump.txt |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -245,6 +245,8 @@ The syntax is:
->      crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
->      range=start-[end]
->  
-> +    'start' is inclusive and 'end' is exclusive.
-> +
->  For example:
->  
->      crashkernel=512M-2G:64M,2G-:128M
-> @@ -253,10 +255,11 @@ This would mean:
->  
->      1) if the RAM is smaller than 512M, then don't reserve anything
->         (this is the "rescue" case)
-> -    2) if the RAM size is between 512M and 2G, then reserve 64M
-> +    2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
->      3) if the RAM size is larger than 2G, then reserve 128M
->  
->  
-> +
->  Boot into System Kernel
->  =======================
->  
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
--- 
-Horms
-
+--- kexec-tools-testing-20080324/util/Makefile.orig	2008-03-24 01:30:57.000000000 -0700
++++ kexec-tools-testing-20080324/util/Makefile	2008-05-05 13:10:09.000000000 -0700
+@@ -2,10 +2,7 @@ BIN_TO_HEX:= bin/bin-to-hex
+ 
+ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 	@$(MKDIR) -p $(@D)
+-	$(LINK.o) -o $@ $^
++	$(BUILD_CC) $(BUILD_CFLAGS) -o $@ $<
+-
+-$(BIN_TO_HEX): CC=$(BUILD_CC)
+-$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
+ 
+ dist += util/Makefile util/bin-to-hex.c
+ clean += util/bin-to-hex.o $(BIN_TO_HEX)
 
 _______________________________________________
 kexec mailing list
