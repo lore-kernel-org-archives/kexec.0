@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jt7kR-0002Ea-F1
-	for kexec@lists.infradead.org; Mon, 05 May 2008 20:57:23 +0000
-Received: from nlxdcldnl2.cl.intel.com (localhost.localdomain [127.0.0.1])
-	by nlxdcldnl2.cl.intel.com (8.14.1/8.14.1) with ESMTP id m45KrSPM004448
-	for <kexec@lists.infradead.org>; Mon, 5 May 2008 13:53:28 -0700
-Received: (from dnlombar@localhost)
-	by nlxdcldnl2.cl.intel.com (8.14.1/8.14.1/Submit) id m45KrSoT004447
-	for kexec@lists.infradead.org; Mon, 5 May 2008 13:53:28 -0700
-Date: Mon, 5 May 2008 13:53:28 -0700
-From: "Lombard, David N" <dnlombar@ichips.intel.com>
-Subject: [PATCH] Cross compile?
-Message-ID: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jt8SS-0004Fj-6P
+	for kexec@lists.infradead.org; Mon, 05 May 2008 21:42:52 +0000
+From: Jeremy Kerr <jk@ozlabs.org>
+Subject: Re: [PATCH] Cross compile?
+Date: Tue, 6 May 2008 07:42:45 +1000
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+In-Reply-To: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+Message-Id: <200805060742.45737.jk@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,27 +24,21 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: "Lombard, David N" <dnlombar@ichips.intel.com>
 
-In util/Makefile, the bin-to-hex utility was being built with the
-cross-compiler, not the host compiler.  This patch fixes that.
+David,
 
-Signed-off-by: David N. Lombard, <david.n.lombard@intel.com>
+> In util/Makefile, the bin-to-hex utility was being built with the
+> cross-compiler, not the host compiler.  This patch fixes that.
 
+We set the CC to BUILD_CC for the bin-to-hex target so it should use the 
+host compiler currently.
 
---- kexec-tools-testing-20080324/util/Makefile.orig	2008-03-24 01:30:57.000000000 -0700
-+++ kexec-tools-testing-20080324/util/Makefile	2008-05-05 13:10:09.000000000 -0700
-@@ -2,10 +2,7 @@ BIN_TO_HEX:= bin/bin-to-hex
- 
- $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
- 	@$(MKDIR) -p $(@D)
--	$(LINK.o) -o $@ $^
-+	$(BUILD_CC) $(BUILD_CFLAGS) -o $@ $<
--
--$(BIN_TO_HEX): CC=$(BUILD_CC)
--$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
- 
- dist += util/Makefile util/bin-to-hex.c
- clean += util/bin-to-hex.o $(BIN_TO_HEX)
+What are your BUILD_CC, BUILD_CFLAGS and LDFLAGS?
+
+Cheers,
+
+Jeremy
 
 _______________________________________________
 kexec mailing list
