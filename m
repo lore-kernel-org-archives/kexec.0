@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JtobZ-00069o-BG
-	for kexec@lists.infradead.org; Wed, 07 May 2008 18:43:05 +0000
-Date: Wed, 7 May 2008 11:38:54 -0700
-From: "Lombard, David N" <dnlombar@ichips.intel.com>
-Subject: Re: Reducing the size of kexec util
-Message-ID: <20080507183854.GD21888@nlxdcldnl2.cl.intel.com>
-References: <20080507171130.GB21888@nlxdcldnl2.cl.intel.com>
-	<20080507172836.GC28246@hmsendeavour.rdu.redhat.com>
-	<20080507175829.GC21888@nlxdcldnl2.cl.intel.com>
-	<20080507181414.GA29032@hmsendeavour.rdu.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080507181414.GA29032@hmsendeavour.rdu.redhat.com>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ju8bv-0001W8-4o
+	for kexec@lists.infradead.org; Thu, 08 May 2008 16:04:47 +0000
+Date: Thu, 8 May 2008 18:05:24 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] [IA64] Don't reserve crashkernel memory > 4 GB
+Message-ID: <20080508180524.27cb2e8d@strauss.suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,44 +20,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: kexec@lists.infradead.org
+To: linux-ia64@vger.kernel.org, kexec@lists.infradead.org
 
-On Wed, May 07, 2008 at 02:14:14PM -0400, Neil Horman wrote:
-> On Wed, May 07, 2008 at 10:58:29AM -0700, Lombard, David N wrote:
-> > On Wed, May 07, 2008 at 01:28:36PM -0400, Neil Horman wrote:
-> > > On Wed, May 07, 2008 at 10:11:30AM -0700, Lombard, David N wrote:
-> > > > The current (20080324) kexec binary on x86 is 135KiB.  While not a
-> > > > problem on a normal distro or runtime environment, it's a chubster
-> > > > in an embedded role.
-> > > > 
-> > > > Has any thought been given to reducing its 'on-disk' footprint?
-> > > > The rather obvious, non-default build-time options to only support
-> > > > specific kernel types and capabilities, jumps to mind.
-> > > > 
-> > > > Beyond build-time options, a Busybox applet would further minimize
-> > > > size, but maintenance would be painful...
-> > > > 
-> > > Busybox is precisely what I use to implement kdump in RHEL at the moment.  Its
-> > > still a bit bloated, since it is meant for enterprise servers, but it makes it
-> > > very easy to customize very small initramfs files for specific purposes.
-> > 
-> > Hmmm... Don't see a kexec or kdump in busybox-1.10.1.  Is this in git?
-> > 
-> > What did you do to reduce binary size?  I don't really care about process
-> > size, as I'm not working with memory-constrained systems.
-> > 
-...
-> If your goal is to simply reduce the size of the kexec binary, I think an old
-> fashioned audit is in order.  Theres plenty of space to be saved too, I think.
-> In particular there are lots of error checks that are re-created that could be
-> made common.
+Some IA64 machines map all cell-local memory above 4 GB (32 bit limit).
+However, in most cases, the kernel needs some memory below that limit that is
+DMA-capable. So in this machine configuration, the crashkernel will be reserved
+above 4 GB.
 
-Agreed...
+For machines that use SWIOTLB implementation because they lack an I/O MMU
+the low memory is required by the SWIOTLB implementation. In that case,
+it doesn't make sense to reserve the crashkernel at all because it's unusable
+for kdump.
 
--- 
-David N. Lombard, Intel, Irvine, CA
-I do not speak for Intel Corporation; all comments are strictly my own.
+A special case is the "hpzx1" machine vector. In theory, it has a I/O MMU, so
+it can be booted above 4 GB. However, in the kdump case that is not possible
+because of changeset 51b58e3e26ebfb8cd56825c4b396ed251f51dec9:
+
+    On HP zx1 machines, the 'machvec=dig' parameter is needed for the kdump
+    kernel to avoid problems with the HP sba iommu.  The problem is that during
+    the boot of the kdump kernel, the iommu is re-initialized, so in-flight DMA
+    from improperly shutdown drivers causes an IOTLB miss which leads to an
+    MCA.  With kdump, the idea is to get into the kdump kernel with as little
+    code as we can, so shutting down drivers properly is not an option.
+    
+    The workaround is to add 'machvec=dig' to the kdump kernel boot parameters.
+    This makes the kdump kernel avoid using the sba iommu altogether, leaving
+    the IOTLB intact.  Any ongoing DMA falls harmlessly outside the kdump
+    kernel.  After the kdump kernel reboots, all devices will have been
+    shutdown properly and DMA stopped.
+    
+    This patch pushes that functionality into the sba iommu initialization
+    code, so that users won't have to find the obscure documentation telling
+    them about 'machvec=dig'.
+
+This means that also for hpzx1 it's not possible to boot when all
+memory is above the 4 GB limit. So the only machine vector that can handle
+this case is "sn2".
+
+The patch is against 2.6.25. For 2.6.26, "uv" from SGI has probably added to
+the patch.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+---
+ arch/ia64/kernel/setup.c |   29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+Index: linux-2.6.25/arch/ia64/kernel/setup.c
+===================================================================
+--- linux-2.6.25.orig/arch/ia64/kernel/setup.c
++++ linux-2.6.25/arch/ia64/kernel/setup.c
+@@ -215,6 +215,25 @@ __initcall(register_memory);
+ 
+ 
+ #ifdef CONFIG_KEXEC
++
++/*
++ * This function checks if the reserved crashkernel is allowed on the specific
++ * IA64 machine flavour. Machines without an IO TLB use swiotlb and require
++ * some memory below 4 GB (i.e. in 32 bit area), see the implementation of
++ * lib/swiotlb.c. The hpzx1 architecture has an IO TLB but cannot use that
++ * in kdump case. See the comment in sba_init() in sba_iommu.c.
++ *
++ * So, the only machvec that really supports loading the kdump kernel
++ * over 4 GB is "sn2".
++ */
++static int __init check_crashkernel_memory(unsigned long pbase, size_t size)
++{
++	if (ia64_platform_is("sn2"))
++		return 1;
++	else
++		return pbase < (1UL << 32);
++}
++
+ static void __init setup_crashkernel(unsigned long total, int *n)
+ {
+ 	unsigned long long base = 0, size = 0;
+@@ -228,6 +247,16 @@ static void __init setup_crashkernel(uns
+ 			base = kdump_find_rsvd_region(size,
+ 					rsvd_region, *n);
+ 		}
++
++		if (!check_crashkernel_memory(base, size)) {
++			pr_warning("crashkernel: There would be kdump memory "
++				"at %ld GB but this is unusable because it "
++				"must\nbe below 4 GB. Change the memory "
++				"configuration of the machine.\n",
++				(unsigned long)(base >> 30));
++			return;
++		}
++
+ 		if (base != ~0UL) {
+ 			printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
+ 					"for crashkernel (System RAM: %ldMB)\n",
 
 _______________________________________________
 kexec mailing list
