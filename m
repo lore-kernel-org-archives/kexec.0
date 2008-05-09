@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JuVlg-00030u-SU
-	for kexec@lists.infradead.org; Fri, 09 May 2008 16:48:25 +0000
-Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 449DA40E26
-	for <kexec@lists.infradead.org>; Fri,  9 May 2008 18:48:23 +0200 (CEST)
-Date: Fri, 9 May 2008 18:49:04 +0200
-Subject: [PATCH] Implement EDD support for 32 bit boot
-Message-ID: <20080509164904.GA18218@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-From: bwalle@suse.de (Bernhard Walle)
+	id 1JuWB9-0008No-3n
+	for kexec@lists.infradead.org; Fri, 09 May 2008 17:14:44 +0000
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: [PATCH] Add --reuse-cmdline 
+In-reply-to: <20080508204943.GA24160@suse.de> 
+References: <20080508204943.GA24160@suse.de>
+Date: Fri, 09 May 2008 12:13:25 -0500
+Message-ID: <19164.1210353205@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,359 +17,419 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-
-This patch implements EDD support. The information is read from
-/sys/firmware/edd (the edd driver must be loaded for this) and is written into
-the zero page of the 32 bit boot protocol.
-
-I successfully tested the patch on a x86_64 machine with the x86_64 kernel.
-
-This fixes a hardware detection problem, discovered in
-https://bugzilla.novell.com/show_bug.cgi?id=383210.
-
-The last patch that updates the E820MAX constant is required to use that patch.
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
+In message <20080508204943.GA24160@suse.de> you wrote:
+> This patch adds an option "--reuse-cmdline" for people that are lazy in typin
+g
+> --append="$(cat /proc/cmdline)". The advantage of "--reuse-cmdline" is also t
+hat
+> it strips off BOOT_IMAGE (since it may not be correct any more) from lilo and
+> other boot loaders, and, more important, the crashkernel option in case a
+> panic kernel is loaded.
+> 
+> If you like the option I can also add it for really all architectures. Tested
+ only
+> with x86-bzImage both the kexec and kdump case.
+
+For ppc64, the default is to reuse the command line.  We should probably
+merge functionality.
+
+Either way, this should probably be a generic option, not x86 specific.
+
+Mikey
+
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> 
+> ---
+>  kexec/arch/i386/kexec-bzImage.c       |   12 +++-
+>  kexec/arch/i386/kexec-elf-x86.c       |   16 ++++--
+>  kexec/arch/i386/kexec-multiboot-x86.c |   12 +++-
+>  kexec/arch/x86_64/kexec-elf-x86_64.c  |   16 ++++--
+>  kexec/kexec.8                         |   18 +++++++
+>  kexec/kexec.c                         |   85 +++++++++++++++++++++++++++++--
 ---
- include/x86/x86-linux.h           |   39 +++++-
- kexec/arch/i386/x86-linux-setup.c |  227 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 260 insertions(+), 6 deletions(-)
+>  kexec/kexec.h                         |    1 
+>  7 files changed, 132 insertions(+), 28 deletions(-)
+> 
+> --- a/kexec/arch/i386/kexec-bzImage.c
+> +++ b/kexec/arch/i386/kexec-bzImage.c
+> @@ -89,6 +89,7 @@ void bzImage_usage(void)
+>  		"    --real-mode           Use the kernels real mode entry poin
+t.\n"
+>  		"    --command-line=STRING Set the kernel command line to STRIN
+G.\n"
+>  		"    --append=STRING       Set the kernel command line to STRIN
+G.\n"
+> +		"    --reuse-cmdline       Use kernel command line from running
+ system.\n"
+>  		"    --initrd=FILE         Use FILE as the kernel's initial ram
+disk.\n"
+>  		"    --ramdisk=FILE        Use FILE as the kernel's initial ram
+disk.\n"
+>  		);
+> @@ -335,14 +336,16 @@ int bzImage_load(int argc, char **argv,
+>  	int debug, real_mode_entry;
+>  	int opt;
+>  	int result;
+> -#define OPT_APPEND	(OPT_ARCH_MAX+0)
+> -#define OPT_RAMDISK	(OPT_ARCH_MAX+1)
+> -#define OPT_REAL_MODE	(OPT_ARCH_MAX+2)
+> +#define OPT_APPEND		(OPT_ARCH_MAX+0)
+> +#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+> +#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+> +#define OPT_REAL_MODE		(OPT_ARCH_MAX+3)
 
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -43,6 +43,29 @@ struct apm_bios_info {
- 	uint8_t  reserved[44];	/* 0x54 */
- };
- 
-+/*
-+ * EDD stuff
-+ */
-+
-+#define EDD_MBR_SIG_MAX 16
-+#define EDDMAXNR 	6	/* number of edd_info structs starting at EDDBUF  */
-+
-+#define EDD_EXT_FIXED_DISK_ACCESS           (1 << 0)
-+#define EDD_EXT_DEVICE_LOCKING_AND_EJECTING (1 << 1)
-+#define EDD_EXT_ENHANCED_DISK_DRIVE_SUPPORT (1 << 2)
-+#define EDD_EXT_64BIT_EXTENSIONS            (1 << 3)
-+
-+#define EDD_DEVICE_PARAM_SIZE 74
-+
-+struct edd_info {
-+	uint8_t	 device;
-+	uint8_t  version;
-+	uint16_t interface_support;
-+	uint16_t legacy_max_cylinder;
-+	uint8_t  legacy_max_head;
-+	uint8_t  legacy_sectors_per_track;
-+	uint8_t  edd_device_params[EDD_DEVICE_PARAM_SIZE];
-+} __attribute__ ((packed));
- 
- struct x86_linux_param_header {
- 	uint8_t  orig_x;			/* 0x00 */
-@@ -87,7 +110,9 @@ struct x86_linux_param_header {
- 	uint32_t alt_mem_k;			/* 0x1e0 */
- 	uint8_t  reserved5[4];			/* 0x1e4 */
- 	uint8_t  e820_map_nr;			/* 0x1e8 */
--	uint8_t  reserved6[8];			/* 0x1e9 */
-+	uint8_t  eddbuf_entries;		/* 0x1e9 */
-+	uint8_t  edd_mbr_sig_buf_entries;	/* 0x1ea */
-+	uint8_t  reserved6[6];			/* 0x1eb */
- 	uint8_t  setup_sects;			/* 0x1f1 */
- 	uint16_t mount_root_rdonly;		/* 0x1f2 */
- 	uint16_t syssize;			/* 0x1f4 */
-@@ -148,18 +173,20 @@ struct x86_linux_param_header {
- 	uint32_t cmdline_size;			/* 0x238 */
- 	uint32_t hardware_subarch;		/* 0x23C */
- 	uint64_t hardware_subarch_data;		/* 0x240 */
--	uint8_t  reserved16[0x2d0 - 0x248];	/* 0x248 */
-+	uint8_t  reserved16[0x290 - 0x248];	/* 0x248 */
-+	uint32_t edd_mbr_sig_buffer[EDD_MBR_SIG_MAX];	/* 0x290 */
- #endif
--	struct e820entry e820_map[E820MAX];	/* 0x2d0 */
--						/* 0x550 */
-+	struct 	e820entry e820_map[E820MAX];	/* 0x2d0 */
-+	uint8_t _pad8[48];			/* 0xcd0 */
-+	struct 	edd_info eddbuf[EDDMAXNR];	/* 0xd00 */
-+						/* 0xeec */
- #define COMMAND_LINE_SIZE 2048
- };
- 
- struct x86_linux_faked_param_header {
- 	struct x86_linux_param_header hdr;	/* 0x00 */
--	uint8_t reserved17[0xab0];		/* 0x550 */
- 	uint8_t command_line[COMMAND_LINE_SIZE]; /* 0x1000 */
--	uint8_t reserved18[0x200];		/* 0x1800 - 0x2000 */
-+	// uint8_t reserved18[0x200];		/* 0x1800 - 0x2000 */
- };
- 
- struct x86_linux_header {
---- a/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec/arch/i386/x86-linux-setup.c
-@@ -13,10 +13,12 @@
-  * GNU General Public License for more details.
-  *
-  */
-+//#define DEBUG 1
- #define _GNU_SOURCE
- #include <stdint.h>
- #include <stdio.h>
- #include <string.h>
-+#include <stdarg.h>
- #include <stdlib.h>
- #include <errno.h>
- #include <limits.h>
-@@ -26,6 +28,7 @@
- #include <sys/ioctl.h>
- #include <linux/fb.h>
- #include <unistd.h>
-+#include <dirent.h>
- #include <x86/x86-linux.h>
- #include "../../kexec.h"
- #include "kexec-x86.h"
-@@ -156,6 +159,227 @@ int setup_linux_vesafb(struct x86_linux_
- 	return -1;
- }
- 
-+#define EDD_SYFS_DIR "/sys/firmware/edd"
-+
-+#define EDD_EXT_FIXED_DISK_ACCESS           (1 << 0)
-+#define EDD_EXT_DEVICE_LOCKING_AND_EJECTING (1 << 1)
-+#define EDD_EXT_ENHANCED_DISK_DRIVE_SUPPORT (1 << 2)
-+#define EDD_EXT_64BIT_EXTENSIONS            (1 << 3)
-+
-+/*
-+ * Scans one line from a given filename. Returns on success the number of
-+ * items written (same like scanf()).
-+ */
-+static int file_scanf(const char *dir, const char *file, const char *scanf_line, ...)
-+{
-+	va_list argptr;
-+	FILE *fp;
-+	int retno;
-+	char filename[PATH_MAX];
-+
-+	snprintf(filename, PATH_MAX, "%s/%s", dir, file);
-+	filename[PATH_MAX-1] = 0;
-+
-+	fp = fopen(filename, "r");
-+	if (!fp) {
-+		return -errno;
-+	}
-+
-+	va_start(argptr, scanf_line);
-+	retno = vfscanf(fp, scanf_line, argptr);
-+	va_end(argptr);
-+
-+	fclose(fp);
-+
-+	return retno;
-+}
-+
-+static int parse_edd_extensions(const char *dir, struct edd_info *edd_info)
-+{
-+	char filename[PATH_MAX];
-+	char line[1024];
-+	uint16_t flags = 0;
-+	FILE *fp;
-+
-+	snprintf(filename, PATH_MAX, "%s/%s", dir, "extensions");
-+	filename[PATH_MAX-1] = 0;
-+
-+	fp = fopen(filename, "r");
-+	if (!fp) {
-+		return -errno;
-+	}
-+
-+	while (fgets(line, 1024, fp)) {
-+		/*
-+		 * strings are in kernel source, function edd_show_extensions()
-+		 * drivers/firmware/edd.c
-+		 */
-+		if (strstr(line, "Fixed disk access") == line)
-+			flags |= EDD_EXT_FIXED_DISK_ACCESS;
-+		else if (strstr(line, "Device locking and ejecting") == line)
-+			flags |= EDD_EXT_DEVICE_LOCKING_AND_EJECTING;
-+		else if (strstr(line, "Enhanced Disk Drive support") == line)
-+			flags |= EDD_EXT_ENHANCED_DISK_DRIVE_SUPPORT;
-+		else if (strstr(line, "64-bit extensions") == line)
-+			flags |= EDD_EXT_64BIT_EXTENSIONS;
-+	}
-+
-+	fclose(fp);
-+
-+	edd_info->interface_support = flags;
-+
-+	return 0;
-+}
-+
-+static int read_edd_raw_data(const char *dir, struct edd_info *edd_info)
-+{
-+	char filename[PATH_MAX];
-+	FILE *fp;
-+
-+	snprintf(filename, PATH_MAX, "%s/%s", dir, "raw_data");
-+	filename[PATH_MAX-1] = 0;
-+
-+	fp = fopen(filename, "r");
-+	if (!fp) {
-+		return -errno;
-+	}
-+
-+	memset(edd_info->edd_device_params, 0, EDD_DEVICE_PARAM_SIZE);
-+	if (fread(edd_info->edd_device_params, sizeof(uint8_t),
-+				EDD_DEVICE_PARAM_SIZE, fp) !=
-+			EDD_DEVICE_PARAM_SIZE)
-+		return -1;
-+
-+	fclose(fp);
-+
-+	return 0;
-+}
-+
-+static int add_edd_entry(struct x86_linux_param_header *real_mode,
-+		const char *sysfs_name, int *current_edd, int *current_mbr)
-+{
-+	uint8_t devnum, version;
-+	uint32_t mbr_sig;
-+	struct edd_info *edd_info;
-+
-+	if (!current_mbr || !current_edd) {
-+		fprintf(stderr, "%s: current_edd and current_edd "
-+				"must not be NULL", __FUNCTION__);
-+		return -1;
-+	}
-+
-+	edd_info = &real_mode->eddbuf[*current_edd];
-+
-+	/* extract the device number */
-+	if (sscanf(basename(sysfs_name), "int13_dev%hhx", &devnum) != 1) {
-+		fprintf(stderr, "Invalid format of int13_dev dir "
-+				"entry: %s\n", basename(sysfs_name));
-+		return -1;
-+	}
-+
-+	/* if there's a MBR signature, then add it */
-+	if (file_scanf(sysfs_name, "mbr_signature", "0x%x", &mbr_sig) == 1) {
-+		real_mode->edd_mbr_sig_buffer[*current_mbr] = mbr_sig;
-+		(*current_mbr)++;
-+		dbgprintf("EDD Device 0x%x: mbr_sig=0x%x\n", devnum, mbr_sig);
-+	}
-+
-+	/* set the device number */
-+	edd_info->device = devnum;
-+
-+	/* set the version */
-+	if (file_scanf(sysfs_name, "version", "0x%hhx", &version) != 1)
-+		return -1;
-+
-+	edd_info->version = version;
-+
-+	if (version == 0) {
-+		/* no EDD info, zero the entry */
-+		memset(edd_info, 0, sizeof(struct edd_info));
-+	} else {
-+		/* legacy_max_cylinder */
-+		if (file_scanf(sysfs_name, "legacy_max_cylinder", "%hu",
-+					&edd_info->legacy_max_cylinder) != 1) {
-+			fprintf(stderr, "Reading legacy_max_cylinder failed.\n");
-+			return -1;
-+		}
-+
-+		/* legacy_max_head */
-+		if (file_scanf(sysfs_name, "legacy_max_head", "%hhu",
-+					&edd_info->legacy_max_head) != 1) {
-+			fprintf(stderr, "Reading legacy_max_head failed.\n");
-+			return -1;
-+		}
-+
-+		/* legacy_sectors_per_track */
-+		if (file_scanf(sysfs_name, "legacy_sectors_per_track", "%hhu",
-+					&edd_info->legacy_sectors_per_track) != 1) {
-+			fprintf(stderr, "Reading legacy_sectors_per_track failed.\n");
-+			return -1;
-+		}
-+
-+		/* Parse the EDD extensions */
-+		if (parse_edd_extensions(sysfs_name, edd_info) != 0) {
-+			fprintf(stderr, "Parsing EDD extensions failed.\n");
-+			return -1;
-+		}
-+
-+		/* Parse the raw info */
-+		if (read_edd_raw_data(sysfs_name, edd_info) != 0) {
-+			fprintf(stderr, "Reading EDD raw data failed.\n");
-+			return -1;
-+		}
-+	}
-+
-+	(*current_edd)++;
-+
-+	return 0;
-+}
-+
-+void setup_edd_info(struct x86_linux_param_header *real_mode,
-+					unsigned long kexec_flags)
-+{
-+	DIR *edd_dir;
-+	struct dirent *cursor;
-+	int current_edd = 0;
-+	int current_mbr = 0;
-+
-+	edd_dir = opendir(EDD_SYFS_DIR);
-+	if (!edd_dir) {
-+		dbgprintf(EDD_SYFS_DIR " does not exist.\n");
-+		return;
-+	}
-+
-+	while ((cursor = readdir(edd_dir))) {
-+		char full_dir_name[PATH_MAX];
-+
-+		/* only read the entries that start with "int13_dev" */
-+		if (strstr(cursor->d_name, "int13_dev") != cursor->d_name)
-+			continue;
-+
-+		snprintf(full_dir_name, PATH_MAX, "%s/%s",
-+				EDD_SYFS_DIR, cursor->d_name);
-+		full_dir_name[PATH_MAX-1] = 0;
-+
-+		if (add_edd_entry(real_mode, full_dir_name, &current_edd,
-+					&current_mbr) != 0) {
-+			current_edd = 0;
-+			current_mbr = 0;
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	closedir(edd_dir);
-+
-+	real_mode->eddbuf_entries = current_edd;
-+	real_mode->edd_mbr_sig_buf_entries = current_mbr;
-+
-+	dbgprintf("Added %d EDD MBR entries and %d EDD entries.\n",
-+		real_mode->edd_mbr_sig_buf_entries,
-+		real_mode->eddbuf_entries);
-+}
-+
- void setup_linux_system_parameters(struct x86_linux_param_header *real_mode,
- 					unsigned long kexec_flags)
- {
-@@ -239,4 +463,7 @@ void setup_linux_system_parameters(struc
- 			}
- 		}
- 	}
-+
-+	/* fill the EDD information */
-+	setup_edd_info(real_mode, kexec_flags);
- }
+What space updates?
+
+>  	static const struct option options[] = {
+>  		KEXEC_ARCH_OPTIONS
+>  		{ "debug",		0, 0, OPT_DEBUG },
+>  		{ "command-line",	1, 0, OPT_APPEND },
+>  		{ "append",		1, 0, OPT_APPEND },
+> +		{ "reuse-cmdline",	1, 0, OPT_REUSE_CMDLINE },
+>  		{ "initrd",		1, 0, OPT_RAMDISK },
+>  		{ "ramdisk",		1, 0, OPT_RAMDISK },
+>  		{ "real-mode",		0, 0, OPT_REAL_MODE },
+> @@ -374,6 +377,9 @@ int bzImage_load(int argc, char **argv,
+>  		case OPT_APPEND:
+>  			command_line = optarg;
+>  			break;
+> +		case OPT_REUSE_CMDLINE:
+> +			command_line = get_command_line();
+> +			break;
+>  		case OPT_RAMDISK:
+>  			ramdisk = optarg;
+>  			break;
+> --- a/kexec/arch/i386/kexec-elf-x86.c
+> +++ b/kexec/arch/i386/kexec-elf-x86.c
+> @@ -73,6 +73,7 @@ void elf_x86_usage(void)
+>  {
+>  	printf(	"    --command-line=STRING Set the kernel command line to STRIN
+G\n"
+>  		"    --append=STRING       Set the kernel command line to STRIN
+G\n"
+> +		"    --reuse-cmdline       Use kernel command line from running
+ system.\n"
+>  		"    --initrd=FILE         Use FILE as the kernel's initial ram
+disk.\n"
+>  		"    --ramdisk=FILE        Use FILE as the kernel's initial ram
+disk.\n"
+>  		"    --args-linux          Pass linux kernel style options\n"
+> @@ -97,16 +98,18 @@ int elf_x86_load(int argc, char **argv,
+>  #define ARG_STYLE_LINUX 1
+>  #define ARG_STYLE_NONE  2
+>  	int opt;
+> -#define OPT_APPEND	(OPT_ARCH_MAX+0)
+> -#define OPT_RAMDISK	(OPT_ARCH_MAX+1)
+> -#define OPT_ARGS_ELF    (OPT_ARCH_MAX+2)
+> -#define OPT_ARGS_LINUX  (OPT_ARCH_MAX+3)
+> -#define OPT_ARGS_NONE   (OPT_ARCH_MAX+4)
+> +#define OPT_APPEND		(OPT_ARCH_MAX+0)
+> +#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+> +#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+> +#define OPT_ARGS_ELF    	(OPT_ARCH_MAX+3)
+> +#define OPT_ARGS_LINUX  	(OPT_ARCH_MAX+4)
+> +#define OPT_ARGS_NONE   	(OPT_ARCH_MAX+5)
+>  
+>  	static const struct option options[] = {
+>  		KEXEC_ARCH_OPTIONS
+>  		{ "command-line",	1, NULL, OPT_APPEND },
+>  		{ "append",		1, NULL, OPT_APPEND },
+> +		{ "reuse-cmdline",	1, NULL, OPT_REUSE_CMDLINE },
+>  		{ "initrd",		1, NULL, OPT_RAMDISK },
+>  		{ "ramdisk",		1, NULL, OPT_RAMDISK },
+>  		{ "args-elf",		0, NULL, OPT_ARGS_ELF },
+> @@ -138,6 +141,9 @@ int elf_x86_load(int argc, char **argv,
+>  		case OPT_APPEND:
+>  			command_line = optarg;
+>  			break;
+> +		case OPT_REUSE_CMDLINE:
+> +			command_line = get_command_line();
+> +			break;
+>  		case OPT_RAMDISK:
+>  			ramdisk = optarg;
+>  			break;
+> --- a/kexec/arch/i386/kexec-multiboot-x86.c
+> +++ b/kexec/arch/i386/kexec-multiboot-x86.c
+> @@ -129,6 +129,7 @@ void multiboot_x86_usage(void)
+>  /* Multiboot-specific options */
+>  {
+>  	printf("    --command-line=STRING        Set the kernel command line to
+ STRING.\n");
+> +	printf("    --reuse-cmdline       	 Use kernel command line from r
+unning system.\n");
+>  	printf("    --module=\"MOD arg1 arg2...\"  Load module MOD with command
+-line \"arg1...\"\n");
+>  	printf("                                 (can be used multiple times).\
+n");
+>  }
+> @@ -155,13 +156,15 @@ int multiboot_x86_load(int argc, char **
+>  	int i;
+>  	int opt;
+>  	int modules, mod_command_line_space;
+> -#define OPT_CL  	(OPT_ARCH_MAX+0)
+> -#define OPT_MOD 	(OPT_ARCH_MAX+1)
+> -#define OPT_VGA 	(OPT_ARCH_MAX+2)
+> +#define OPT_CL  		(OPT_ARCH_MAX+0)
+> +#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+> +#define OPT_MOD 		(OPT_ARCH_MAX+2)
+> +#define OPT_VGA 		(OPT_ARCH_MAX+3)
+>  	static const struct option options[] = {
+>  		KEXEC_ARCH_OPTIONS
+>  		{ "command-line",		1, 0, OPT_CL },
+>  		{ "append",			1, 0, OPT_CL },
+> +		{ "reuse-cmdline",		1, 0, OPT_REUSE_CMDLINE },
+>  		{ "module",			1, 0, OPT_MOD },
+>  		{ 0, 				0, 0, 0 },
+>  	};
+> @@ -194,6 +197,9 @@ int multiboot_x86_load(int argc, char **
+>  		case OPT_CL:
+>  			command_line = optarg;
+>  			break;
+> +		case OPT_REUSE_CMDLINE:
+> +			command_line = get_command_line();
+> +			break;
+>  		case OPT_MOD:
+>  			modules++;
+>  			mod_command_line_space += strlen(optarg) + 1;
+> --- a/kexec/arch/x86_64/kexec-elf-x86_64.c
+> +++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
+> @@ -73,6 +73,7 @@ void elf_x86_64_usage(void)
+>  {
+>  	printf(	"    --command-line=STRING Set the kernel command line to STRIN
+G\n"
+>  		"    --append=STRING       Set the kernel command line to STRIN
+G\n"
+> +		"    --reuse-cmdline       Use kernel command line from running
+ system.\n"
+>  		"    --initrd=FILE         Use FILE as the kernel's initial ram
+disk.\n"
+>  		"    --ramdisk=FILE        Use FILE as the kernel's initial ram
+disk.\n"
+>  		"    --args-linux          Pass linux kernel style options\n"
+> @@ -96,16 +97,18 @@ int elf_x86_64_load(int argc, char **arg
+>  #define ARG_STYLE_LINUX 1
+>  #define ARG_STYLE_NONE  2
+>  	int opt;
+> -#define OPT_APPEND	(OPT_ARCH_MAX+0)
+> -#define OPT_RAMDISK	(OPT_ARCH_MAX+1)
+> -#define OPT_ARGS_ELF    (OPT_ARCH_MAX+2)
+> -#define OPT_ARGS_LINUX  (OPT_ARCH_MAX+3)
+> -#define OPT_ARGS_NONE   (OPT_ARCH_MAX+4)
+> +#define OPT_APPEND		(OPT_ARCH_MAX+0)
+> +#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+> +#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+> +#define OPT_ARGS_ELF		(OPT_ARCH_MAX+3)
+> +#define OPT_ARGS_LINUX		(OPT_ARCH_MAX+4)
+> +#define OPT_ARGS_NONE		(OPT_ARCH_MAX+5)
+>  
+>  	static const struct option options[] = {
+>  		KEXEC_ARCH_OPTIONS
+>  		{ "command-line",	1, NULL, OPT_APPEND },
+>  		{ "append",		1, NULL, OPT_APPEND },
+> +		{ "reuse-cmdline",	1, NULL, OPT_REUSE_CMDLINE },
+>  		{ "initrd",		1, NULL, OPT_RAMDISK },
+>  		{ "ramdisk",		1, NULL, OPT_RAMDISK },
+>  		{ "args-elf",		0, NULL, OPT_ARGS_ELF },
+> @@ -138,6 +141,9 @@ int elf_x86_64_load(int argc, char **arg
+>  		case OPT_APPEND:
+>  			command_line = optarg;
+>  			break;
+> +		case OPT_REUSE_CMDLINE:
+> +			command_line = get_command_line();
+> +			break;
+>  		case OPT_RAMDISK:
+>  			ramdisk = optarg;
+>  			break;
+> --- a/kexec/kexec.8
+> +++ b/kexec/kexec.8
+> @@ -186,6 +186,15 @@ to the kernel command line.
+>  Set the kernel command line to
+>  .IR string .
+>  .TP
+> +.BI \-\-reuse-cmdline
+> +Use the command line from the running system. When a panic kernel is loaded,
+ it
+> +strips the
+> +.I
+> +crashkernel
+> +parameter automatically. The
+> +.I BOOT_IMAGE
+> +parameter is also stripped.
+> +.TP
+>  .BI \-\-initrd= file
+>  Use
+>  .I file
+> @@ -204,6 +213,15 @@ as the kernel's initial ramdisk.
+>  Set the kernel command line to
+>  .IR string .
+>  .TP
+> +.BI \-\-reuse-cmdline
+> +Use the command line from the running system. When a panic kernel is loaded,
+ it
+> +strips the
+> +.I
+> +crashkernel
+> +parameter automatically. The
+> +.I BOOT_IMAGE
+> +parameter is also stripped.
+> +.TP
+>  .BI \-\-module= "mod arg1 arg2 ..."
+>  Load module
+>  .I mod
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -31,6 +31,7 @@
+>  #include <unistd.h>
+>  #include <fcntl.h>
+>  #include <getopt.h>
+> +#include <ctype.h>
+>  
+>  #include "config.h"
+>  
+> @@ -46,6 +47,7 @@
+>  
+>  unsigned long long mem_min = 0;
+>  unsigned long long mem_max = ULONG_MAX;
+> +unsigned long kexec_flags = 0;
+>  
+>  void die(char *fmt, ...)
+>  {
+> @@ -792,26 +794,86 @@ static int kexec_loaded(void)
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Remove parameter from a kernel command line. Helper function by get_comma
+nd_line().
+> + */
+> +static void remove_parameter(char *line, const char *param_name)
+> +{
+> +	char *start, *end;
+> +
+> +	start = strstr(line, param_name);
+> +
+> +	/* parameter not found */
+> +	if (!start)
+> +		return;
+> +
+> +	/*
+> +	 * check if that's really the start of a parameter and not in
+> +	 * the middle of the word
+> +	 */
+> +	if (start != line && !isspace(*(start-1)))
+> +		return;
+> +
+> +	end = strstr(start, " ");
+> +	if (!end)
+> +		*start = 0;
+> +	else {
+> +		memmove(start, end+1, strlen(end));
+> +		*(end + strlen(end)) = 0;
+> +	}
+> +}
+> +
+> +/*
+> + * Returns the contents of the current command line to be used with
+> + * --reuse-cmdline option.  The function gets called from architecture speci
+fic
+> + * code. If we load a panic kernel, that function will strip the
+> + * "crashkernel=" option because it does not make sense that the crashkernel
+> + * reserves memory for a crashkernel (well, it would not boot since the
+> + * amount is exactly the same as the crashkernel has overall memory). Also,
+> + * remove the BOOT_IMAGE from lilo (and others) since that doesn't make
+> + * sense here any more. The kernel could be different even if we reuse the
+> + * commandline.
+> + *
+> + * The function returns dynamically allocated memory.
+> + */
+> +char *get_command_line(void)
+> +{
+> +	FILE *fp;
+> +	size_t len;
+> +	char *line = NULL;
+> +
+> +	fp = fopen("/proc/cmdline", "r");
+> +	if (!fp)
+> +		die("Could not read /proc/cmdline.");
+> +	getline(&line, &len, fp);
+> +	fclose(fp);
+> +
+> +	if (line) {
+> +		/* strip newline */
+> +		*(line + strlen(line) - 1) = 0;
+> +
+> +		remove_parameter(line, "crashkernel");
+> +		if (kexec_flags & KEXEC_ON_CRASH)
+> +			remove_parameter(line, "BOOT_IMAGE");
+> +	} else
+> +		line = strdup("");
+> +
+> +	return line;
+> +}
+> +
+>  /* check we retained the initrd */
+>  void check_reuse_initrd(void)
+>  {
+> -	FILE * fp;
+> -	char * line = NULL;
+> -	size_t len = 0;
+> -	ssize_t read;
+> +	char *line = get_command_line();
+>  
+> -	fp = fopen("/proc/cmdline", "r");
+> -	if (fp == NULL)
+> -		die("unable to open /proc/cmdline\n");
+> -	read = getline(&line, &len, fp);
+>  	if (strstr(line, "retain_initrd") == NULL)
+>  		die("unrecoverable error: current boot didn't "
+>  		    "retain the initrd for reuse.\n");
+> -	if (line)
+> -		free(line);
+> -	fclose(fp);
+> +
+> +	free(line);
+>  }
+>  
+> +
+>  int main(int argc, char *argv[])
+>  {
+>  	int do_load = 1;
+> @@ -821,7 +883,6 @@ int main(int argc, char *argv[])
+>  	int do_ifdown = 0;
+>  	int do_unload = 0;
+>  	int do_reuse_initrd = 0;
+> -	unsigned long kexec_flags = 0;
+>  	char *type = 0;
+>  	char *endptr;
+>  	int opt;
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -220,6 +220,7 @@ int arch_process_options(int argc, char
+>  int arch_compat_trampoline(struct kexec_info *info);
+>  void arch_update_purgatory(struct kexec_info *info);
+>  int is_crashkernel_mem_reserved(void);
+> +char *get_command_line(void);
+>  
+>  int kexec_iomem_for_each_line(char *match,
+>  			      int (*callback)(void *data,
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
