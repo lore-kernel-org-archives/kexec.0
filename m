@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JvYF2-0003G1-Ad
-	for kexec@lists.infradead.org; Mon, 12 May 2008 13:39:00 +0000
-Date: Mon, 12 May 2008 15:38:49 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Add --reuse-cmdline
-Message-ID: <20080512153849.74753e71@kopernikus.site>
-In-Reply-To: <19164.1210353205@neuling.org>
-References: <20080508204943.GA24160@suse.de>
-	<19164.1210353205@neuling.org>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jvn9U-0005dd-Vy
+	for kexec@lists.infradead.org; Tue, 13 May 2008 05:34:17 +0000
+Date: Tue, 13 May 2008 01:34:08 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
+	multi-stage load
+Message-ID: <20080513053408.GA5870@redhat.com>
+References: <1210574441.30365.8.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1210574441.30365.8.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,89 +20,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1454703601=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>
 
---===============1454703601==
-Content-Type: multipart/signed; boundary="Sig_/XVYJV.ZkU.f5R3y3b_UR6.k";
-	protocol="application/pgp-signature"; micalg=PGP-SHA1
+On Mon, May 12, 2008 at 02:40:41PM +0800, Huang, Ying wrote:
+> This patch implements a prototype of kexec multi-stage load. With this
+> patch, the "backup pages map" can be passed to kexeced kernel via
+> /sbin/kexec; and the sys_kexec_load can be used to load large
+> hibernated image with huge number of segments.
+> 
+> 
 
---Sig_/XVYJV.ZkU.f5R3y3b_UR6.k
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Huang,
 
-Hi,
+Had a quick look at the patch. Will review in detail soon. Had few
+thoughts.
 
-at first thanks for looking at the patch.
+In general, these patches are on top of previous kexec jump patches.
+It would be good if you could repost your updated patches so that
+I can apply the patches and and get some testing going.
 
-* Michael Neuling <mikey@neuling.org> [2008-05-09 12:13]:
->=20
-> In message <20080508204943.GA24160@suse.de> you wrote:
-> > This patch adds an option "--reuse-cmdline" for people that are lazy in=
- typin
-> g
-> > --append=3D"$(cat /proc/cmdline)". The advantage of "--reuse-cmdline" i=
-s also t
-> hat
-> > it strips off BOOT_IMAGE (since it may not be correct any more) from li=
-lo and
-> > other boot loaders, and, more important, the crashkernel option in case=
- a
-> > panic kernel is loaded.
-> >=20
-> > If you like the option I can also add it for really all architectures. =
-Tested
->  only
-> > with x86-bzImage both the kexec and kdump case.
->=20
-> For ppc64, the default is to reuse the command line.  We should probably
-> merge functionality.
+Last time I tried the patches (V9) and kexec jump did not work for me. I
+was not getting timer interrupts in second kernel. Then I had to put 
+LAPIC and IOAPIC in legacy mode and then at one way jump started working.
+I am not sure how the next kernel boots for you without putting APICs
+in legacy mode. (Yet to make returning back to original kernel work
+using V9). 
 
-Where is that functionality implemented? I couldn't find it. Does the
-kernel that automatically on PPC64? I know too litte about that
-architecture.
+> In kexec based hibernation, resuming from disk is implemented as
+> loading the hibernated disk image with sys_kexec_load(). But unlike
+> the normal kexec load, the hibernated image may have huge number of
+> segments. So multi-stage loading is necessary for kexec load based
+> resuming from disk implementation.
 
-> Either way, this should probably be a generic option, not x86 specific.
+I understand that hibernated images are huge. But why do we require
+multi stage loading? I knew there was a maximum segment limit in kexec.
+But I think we can change that limit. Anything else prevents us from
+loading large images in one go?
 
-Well, I thought first of it. But since the '--append' parameter is not
-generic, this makes no sense.
+> And, multi-stage loading is also
+> necessary for parameter passing from original kernel to kexeced kernel
+> because some information such as "backup pages map" is not available
+> before loading.
+> 
+> 
+> Four stages are defined:
+> 
+> - KS_start: start stage; begin a new kexec loading; there must be only
+>   one KS_start stage in one kexec loading.
+> 
+> - KS_mid: middle stage; continue load some segments; there may be many
+>   or zero KS_mid stages in one kexec loading; follows a KS_start or
+>   KS_mid stage.
+> 
+> - KS_final: final stage; finish a kexec loading; there must be only
+>   one KS_final stage in one kexec loading; follows a KS_start or
+>   KS_mid stage.
+> 
+> - KS_full: back compatible with original loading semantics, finish all
+>   work of a kexec loading in one KS_full stage.
+> 
+> 
+> Overlapping between pages of different segments is allowed to support
+> "parameter passing".
+> 
+> 
+> During loading, a hash table mapped from destination page to source
+> page is used instead of original linear mapping
+> implementation. Because the hibernated image may be very large (up to
+> near the size of physical memory), it is very time-consuming to search
+> a source page given the destination page, which is used to check
+> whether an newly allocated page is in the range of allocated
+> destination pages.
 
-Maybe it would make sense to change the command line handling in
-general to be global and not image specific, but first I need to
-understand how that works on PPC64 ... (and probably others).
+This seems to be an optimization of kexec so that it becomes efficient
+in loading large images (containing large number of segments). Probably
+this can be a separate patch.
 
+IMHO, we can just first write a minimal patch where one can just switch
+between kernels. Once that patch is upstream, we can enhance
+it to do the hibernation and saving core functionality. Incremental
+review becomes easier. Your last patch (v9) was a good attempt at that and
+I thought very soon we shall have something mergable.
 
+> The original mapping is only used by assembly code
+> to swap the page contents. This map is also exported to user space via
+> /proc/kexec_pgmap, so that /sbin/kexec can use it to construct the
+> "backup pages map" parameter for kexeced kernel.
+> 
+> 
+> This patch is based on Linux kernel 2.6.25 and kexec_jump patch, and
+> has been tested on an IBM T42.
+> 
 
-	Bernhard
+Is kexec_jump v9 patch good enough or you have anohter internal version
+of patch on top of this patch applies?
 
---Sig_/XVYJV.ZkU.f5R3y3b_UR6.k
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iD8DBQFIKEhsiGU2lt2vZFQRAkquAKCDUisShyRAufQGM/59/+YzdZ294gCaAg6A
-VjPQVtXccsdh8xbtQ0l0e3U=
-=sEBi
------END PGP SIGNATURE-----
-
---Sig_/XVYJV.ZkU.f5R3y3b_UR6.k--
-
-
---===============1454703601==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1454703601==--
-
