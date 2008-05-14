@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from inet-tsb5.toshiba.co.jp ([202.33.96.24] helo=imx2.toshiba.co.jp)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jw995-0006CM-Bg
-	for kexec@lists.infradead.org; Wed, 14 May 2008 05:03:20 +0000
-From: "gib" <suchada.pitchayasamanya@toshiba.co.jp>
-References: <200804210517.m3L5Hq61011769@toshiba.co.jp>
-	<480D790D.7080403@in.ibm.com>
-	<200804230041.m3N0fIQD013543@toshiba.co.jp>
-	<480F05D7.1060402@in.ibm.com>
-	<200805090406.m4946FxB003919@toshiba.co.jp>
-	<482A69C5.3060106@in.ibm.com>
-In-Reply-To: <482A69C5.3060106@in.ibm.com>
-Subject: RE: Question about forcing kernel panic on PowerMac G5 by kexec
-	command
-Date: Wed, 14 May 2008 14:02:54 +0900
-Message-Id: <200805140502.m4E52udd015629@toshiba.co.jp>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JwJSA-0003Za-1A
+	for kexec@lists.infradead.org; Wed, 14 May 2008 16:03:42 +0000
+Date: Wed, 14 May 2008 12:03:29 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm] kexec jump -v9
+Message-ID: <20080514160329.GF30469@redhat.com>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Content-Language: ja
+Content-Disposition: inline
+In-Reply-To: <1204773188.4707.109.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,83 +23,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Mohan Kumar M' <mohan@in.ibm.com>
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-Hi Mohan,
-
-> Do you have only one entry for memory node in the /proc/device-tree
-directory?
-Yes, I have only one entry(for memory) in the /proc/device-tree directory.
-
-> Do you know last good working version of kernel (for kdump) and try to 
-> boot into that kernel and check the memory nodes in device-tree?
-What is the last version of kernel for kdump which you mentioned?
-(now I using the vanilla kernel 2.6.25 version)
-
-Please tell me and I will try to boot into it.
-
-Thank you,
-Suchada
-
------Original Message-----
-From: Mohan Kumar M [mailto:mohan@in.ibm.com] 
-Sent: Wednesday, May 14, 2008 1:26 PM
-To: gib
-Cc: kexec@lists.infradead.org
-Subject: Re: Question about forcing kernel panic on PowerMac G5 by kexec
-command
-
-gib wrote:
-> Hi Mohan,
-> 
-> Sorry for the late reply.
-> 
->> I am not sure about the latest kexec tools. Is it possible to test with 
->> the kexec-tools shipped with the distro?
-> 
-> I tried to test with the kexec-tools shipped with the distro before and it
-> gave me the same result as the latest kexec-tools (kexec-tools-testing
-> 20080324).
-> 
->> Can you give us the contents of the reg property in the last memory node 
->> in device tree?
-> 
-> With the command # hexdump /proc/device-tree/memory@0,0/reg I got
-> 0000000 0000 0000 0000 0000 2000 0000 0000 0000
-> 0000010 0000 0000 0000 0000 0000 0000 2000 0000
-> 0000020 2000 0000 0000 0000 4000 0000 2000 0000
-> 0000030 0000 0000 0000 0000 0000 0000 0000 0000
-> *
-> 0000060
+On Thu, Mar 06, 2008 at 11:13:08AM +0800, Huang, Ying wrote:
+> This is a minimal patch with only the essential features. All
+> additional features are split out and can be discussed later. I think
+> it may be easier to get consensus on this minimal patch.
 > 
 
-Hi Suchada,
+Hi Huang,
 
-Do you have only one entry for memory node in the /proc/device-tree 
-directory?
-
-Do you know last good working version of kernel (for kdump) and try to 
-boot into that kernel and check the memory nodes in device-tree?
-
-kexec-tools uses reg property in the memory device nodes to calculate 
-the total system memory.
-
- From above "hexdump", I could not parse the memory properties.
-
-Regards,
-Mohan.
+Ok, after a long time, I am back to testing and reviewing this patch.
 
 
-> Is it because of this problem that cause the system did not go the next
-step
-> and kept showing "Sending IPI to other CPU" message?
+[..]
+> 7. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
+>    root file system.
 > 
-> Thanks for your help,
-> Suchada
+> 8. In kernel C, load the memory image of kernel A as follow:
+> 
+>    /sbin/kexec -l --args-none --entry=`cat kexec_jump_back_entry` dump.elf
 > 
 
+How do I got back to original kernel without loading dump.elf. I mean,
+original kernel is already in memory and I don't have to first save
+it to disk and then reload back. Is there a way to do it? If not, then
+we need to modify kexec-tools to support that.
 
+Something like
+
+kexec --entry=<entry point>, should tell kexec that kernel is already
+loaded. Just do the bit to set the entry point properly.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
