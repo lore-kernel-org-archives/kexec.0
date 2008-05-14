@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwPeE-00066t-1r
-	for kexec@lists.infradead.org; Wed, 14 May 2008 22:40:34 +0000
+	id 1JwQZz-0004Vh-SQ
+	for kexec@lists.infradead.org; Wed, 14 May 2008 23:40:16 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <Pine.LNX.4.44L0.0803221645190.27399-100000@netrider.rowland.org>
-	<200803222229.45673.rjw@sisk.pl>
-Date: Wed, 14 May 2008 15:38:28 -0700
-In-Reply-To: <200803222229.45673.rjw@sisk.pl> (Rafael J. Wysocki's message of
-	"Sat, 22 Mar 2008 22:29:44 +0100")
-Message-ID: <m1k5hwzf2z.fsf@frodo.ebiederm.org>
+References: <Pine.LNX.4.44L0.0803121055510.4595-100000@iolanthe.rowland.org>
+	<200803140231.39282.rjw@sisk.pl>
+	<m1prtsug2e.fsf@ebiederm.dsl.xmission.com>
+	<200805142341.52078.maximlevitsky@gmail.com>
+Date: Wed, 14 May 2008 16:34:48 -0700
+In-Reply-To: <200805142341.52078.maximlevitsky@gmail.com> (Maxim Levitsky's
+	message of "Wed, 14 May 2008 23:41:51 +0300")
+Message-ID: <m1od78tq7b.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
 List-Id: <kexec.lists.infradead.org>
@@ -24,35 +26,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: Len Brown <len.brown@intel.com>, nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Maxim Levitsky <maximlevitsky@gmail.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@lists.linux-foundation.org, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-"Rafael J. Wysocki" <rjw@sisk.pl> writes:
+Maxim Levitsky <maximlevitsky@gmail.com> writes:
 
-> On Saturday, 22 of March 2008, Alan Stern wrote:
+> First of all S4 ACPI code turns some leds on some systems,
+> cosmetic thing, but still nice.
+>
+> Secondary, what about wakeup devices?
+> Hardware can disable some devices in S5 while leave them running in S4
+> on my system for example network card will do WOL in S4,
+> but to make it WOL in S5 I have to turn a specific option in BIOS.
+>
+> While my system doesn't have this, it isn't uncommon for system to leave USB
+> ports
+> running so one can turn the PC with keyboard/mouse even in S4.
+> in S5 those ports  will probably  be disabled.
+> My system on have this for S3 only.
+>
+> On laptops we can expect even more ACPI functionality, so some more differences
+> between
+> S4 and S5 can happen.
+>
+> Last thing that I want to say is that, when linux puts PC in S? state, on top of
+> executing
+> _PTS, _GTS acpi functions, it writes the destination S state to a fixed
+> register, thus the hardware
+> can (and does) behave differently.
 
-> The spec doesn't say much about that, so we'll need to carry out some
-> experiments.
+Yes.
 
-> Still, as far as I can figure out what the spec authors _might_ mean, I think
-> that it would be inappropriate to restore the ACPI NVS area if S5 was entered
-> on "power off".  The idea seems to be that the restoration of the ACPI NVS area
-> should complement whatever has been preserved by the platform over the
-> hibernation/resume cycle.
+S4 looks interesting.  Especially the weird fans don't work on restore
+from S5 case.
 
-> IMO, if S5 was entered on "powe off", there are two possible ways to go.
-> Either ACPI is initialized by the boot kernel, in which case the image kernel
-> should not touch things like _WAK and similar, just throw away whatever
-> ACPI-related state it got from the image and try to rebuild the ACPI-related
-> data from scratch.  Or the boot kernel doesn't touch ACPI and the image kernel
-> initializes it in the same way as during a fresh boot (that might be difficult,
-> though).
+S4 still appears to be a premature optimization, that ads lots of
+complexity and reduces the reliability of the code.
 
-Just an added data partial point.  In the kexec case I have had not heard
-anyone screaming to me that ACPI doesn't work after we switch kernels.
+Software hibernation to disk should be a rock solid proposition, that
+needs little if any cooperation from drivers, and it should work on
+every box, because fundamentally it is hardware agnostic.  The only
+cooperation we need from drivers is for devices that we can't tolerate
+at upper layers an unplug and replug event like block devices because
+we would loose our filesystems.
 
-So I expect shutting down ACPI and restarting it should work reliably
-and that is easy to test as that is already implemented with kexec.
+All of the reports say hibernation is not rock solid reliable.
+Things like S4 support keep us from being hardware agnostic.
+Therefore it appears to me we have a design bug.
+
+Which is why I'm not at all happy with S4 support.
+
+
+
+It actually occurs to me that the first mode we should really support
+is the mode where the user hits the power button themselves.  That
+totally removes the hibernation path from any weird hardware
+interactions.
+
+Then S5 is an optimization upon that (just a little more work on the
+shutdown path).
+
+Then ultimately S4 reusing and refactoring the work for S3? suspend to
+ram to allow us to leave very specific devices on.  But that is lot
+of complexity, for a little bit of gain.
+
+We should have code that works by design. Code that practically
+every time.  Something that is easy to diagnose.
+
 
 Eric
 
