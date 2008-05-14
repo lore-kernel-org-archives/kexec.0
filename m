@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JvzFe-0003xR-Mk
-	for kexec@lists.infradead.org; Tue, 13 May 2008 18:29:27 +0000
-Date: Tue, 13 May 2008 11:24:23 -0700
-From: "Lombard, David N" <dnlombar@ichips.intel.com>
-Subject: Re: [PATCH] Add --reuse-cmdline
-Message-ID: <20080513182423.GA18392@nlxdcldnl2.cl.intel.com>
-References: <20080508204943.GA24160@suse.de> <19164.1210353205@neuling.org>
-	<20080512153849.74753e71@kopernikus.site>
-	<17602.1210621437@neuling.org>
+	id 1Jw69w-0002wJ-3R
+	for kexec@lists.infradead.org; Wed, 14 May 2008 01:52:00 +0000
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
+	multi-stage load
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20080513053408.GA5870@redhat.com>
+References: <1210574441.30365.8.camel@caritas-dev.intel.com>
+	<20080513053408.GA5870@redhat.com>
+Date: Wed, 14 May 2008 09:57:46 +0800
+Message-ID: <1210730266.23707.50.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <17602.1210621437@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,40 +24,144 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>
 
-On Mon, May 12, 2008 at 02:43:57PM -0500, Michael Neuling wrote:
-> In message <20080512153849.74753e71@kopernikus.site> you wrote:
-> 
-> Sorry, I think I was mistaken.  ppc64 only takes the "root=<blah>" from
-> the first kernel, provided it's not specified on the kexec command line
-> for the next kernel.
-> 
-> Anyway, the code is in kexec/arch/ppc64/fs2dt.c (search for "root=")
+Hi, Vivek,
 
-Externally to kexec(8), I copy the console keyword under the same
-circumstances, e.g., it has not been explicitly set.
-
-> > > Either way, this should probably be a generic option, not x86 specific.
+On Tue, 2008-05-13 at 01:34 -0400, Vivek Goyal wrote:
+> On Mon, May 12, 2008 at 02:40:41PM +0800, Huang, Ying wrote:
+> > This patch implements a prototype of kexec multi-stage load. With this
+> > patch, the "backup pages map" can be passed to kexeced kernel via
+> > /sbin/kexec; and the sys_kexec_load can be used to load large
+> > hibernated image with huge number of segments.
 > > 
-> > Well, I thought first of it. But since the '--append' parameter is not
-> > generic, this makes no sense.
 > > 
-> > Maybe it would make sense to change the command line handling in
-> > general to be global and not image specific, but first I need to
-> > understand how that works on PPC64 ... (and probably others).
 > 
-> Yeah, the cmdline should be generically and consistently handled rather
-> than what we have now.
+> Hi Huang,
+> 
+> Had a quick look at the patch. Will review in detail soon. Had few
+> thoughts.
+> 
+> In general, these patches are on top of previous kexec jump patches.
+> It would be good if you could repost your updated patches so that
+> I can apply the patches and and get some testing going.
 
-The problem is that not all boot options are always usable in the next
-kernel, in addition to being architecturally specific, it's very
-situational.  Having written that, a generic framework could be usable.
+The kexec jump patch v9 is sufficient for this patch to work. I have no
+new version of kexec jump patch so far.
 
--- 
-David N. Lombard, Intel, Irvine, CA
-I do not speak for Intel Corporation; all comments are strictly my own.
+> Last time I tried the patches (V9) and kexec jump did not work for me. I
+> was not getting timer interrupts in second kernel. Then I had to put 
+> LAPIC and IOAPIC in legacy mode and then at one way jump started working.
+> I am not sure how the next kernel boots for you without putting APICs
+> in legacy mode. (Yet to make returning back to original kernel work
+> using V9). 
+
+Can normal kexec (without kexec jump) works without putting LAPIC and
+IOAPIC in legacy mode? Does this mean we should put LAPIC and IOAPIC
+into legacy mode before kexec and restore them after?
+
+The kexec jump patch works well on my IBM T42. But it seems that the
+IOAPIC is disabled in BIOS, so I can only use i8259 and LAPIC on this
+machine.
+
+> > In kexec based hibernation, resuming from disk is implemented as
+> > loading the hibernated disk image with sys_kexec_load(). But unlike
+> > the normal kexec load, the hibernated image may have huge number of
+> > segments. So multi-stage loading is necessary for kexec load based
+> > resuming from disk implementation.
+> 
+> I understand that hibernated images are huge. But why do we require
+> multi stage loading? I knew there was a maximum segment limit in kexec.
+> But I think we can change that limit. Anything else prevents us from
+> loading large images in one go?
+
+There are two reason for multi-stage loading:
+
+- Pass backup pages map from original kernel (A) to kexeced kernel (B),
+because it is not known before loading. We have discussed this before
+in:
+	http://lkml.org/lkml/2008/3/12/308
+	http://lkml.org/lkml/2008/3/14/59
+	http://lkml.org/lkml/2008/3/21/299
+
+- Load large hibernated image. The hibernated image can be not only
+large but also discontinuous. For example, the physical memory size is
+4G, and there is one free page every 2 pages, that is, there will be
+nearly 2G segments. Loading these segments in one go is impossible. So
+multi-stage load is necessary. And if the hibernated image is
+compressed, it is also very difficult to load it in one go because the
+anonymous pages needed.
+
+> > And, multi-stage loading is also
+> > necessary for parameter passing from original kernel to kexeced kernel
+> > because some information such as "backup pages map" is not available
+> > before loading.
+> > 
+> > 
+> > Four stages are defined:
+> > 
+> > - KS_start: start stage; begin a new kexec loading; there must be only
+> >   one KS_start stage in one kexec loading.
+> > 
+> > - KS_mid: middle stage; continue load some segments; there may be many
+> >   or zero KS_mid stages in one kexec loading; follows a KS_start or
+> >   KS_mid stage.
+> > 
+> > - KS_final: final stage; finish a kexec loading; there must be only
+> >   one KS_final stage in one kexec loading; follows a KS_start or
+> >   KS_mid stage.
+> > 
+> > - KS_full: back compatible with original loading semantics, finish all
+> >   work of a kexec loading in one KS_full stage.
+> > 
+> > 
+> > Overlapping between pages of different segments is allowed to support
+> > "parameter passing".
+> > 
+> > 
+> > During loading, a hash table mapped from destination page to source
+> > page is used instead of original linear mapping
+> > implementation. Because the hibernated image may be very large (up to
+> > near the size of physical memory), it is very time-consuming to search
+> > a source page given the destination page, which is used to check
+> > whether an newly allocated page is in the range of allocated
+> > destination pages.
+> 
+> This seems to be an optimization of kexec so that it becomes efficient
+> in loading large images (containing large number of segments). Probably
+> this can be a separate patch.
+
+If it is desired, I can separate it into another patch.
+
+> IMHO, we can just first write a minimal patch where one can just switch
+> between kernels. Once that patch is upstream, we can enhance
+> it to do the hibernation and saving core functionality. Incremental
+> review becomes easier. Your last patch (v9) was a good attempt at that and
+> I thought very soon we shall have something mergable.
+
+Agreed. We can first focus on kexec jump patch. But as in last thread of
+kexec jump (v9), we need a protocol for parameter passing between kernel
+A and kernel B. So, we can use this patch as a prototype for the
+communication protocol.
+
+> > The original mapping is only used by assembly code
+> > to swap the page contents. This map is also exported to user space via
+> > /proc/kexec_pgmap, so that /sbin/kexec can use it to construct the
+> > "backup pages map" parameter for kexeced kernel.
+> > 
+> > 
+> > This patch is based on Linux kernel 2.6.25 and kexec_jump patch, and
+> > has been tested on an IBM T42.
+> > 
+> 
+> Is kexec_jump v9 patch good enough or you have anohter internal version
+> of patch on top of this patch applies?
+
+v9 is the latest kexec jump patch, no other internal version so far.
+
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
