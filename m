@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwNxt-000687-Ad
-	for kexec@lists.infradead.org; Wed, 14 May 2008 20:52:45 +0000
-Date: Wed, 14 May 2008 16:52:04 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm] kexec jump -v9
-Message-ID: <20080514205204.GJ30469@redhat.com>
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	id 1JwOrl-0007tQ-4J
+	for kexec@lists.infradead.org; Wed, 14 May 2008 21:50:29 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1210574441.30365.8.camel@caritas-dev.intel.com>
+	<20080513053408.GA5870@redhat.com>
+	<1210730266.23707.50.camel@caritas-dev.intel.com>
+	<20080514025607.GA19944@redhat.com>
+	<1210736275.23707.62.camel@caritas-dev.intel.com>
+Date: Wed, 14 May 2008 14:43:41 -0700
+In-Reply-To: <1210736275.23707.62.camel@caritas-dev.intel.com> (Ying Huang's
+	message of "Wed, 14 May 2008 11:37:55 +0800")
+Message-ID: <m1lk2c4l4i.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1204773188.4707.109.camel@caritas-dev.intel.com>
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec multi-stage
+	load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,167 +29,34 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Mar 06, 2008 at 11:13:08AM +0800, Huang, Ying wrote:
-> This is a minimal patch with only the essential features. All
-> additional features are split out and can be discussed later. I think
-> it may be easier to get consensus on this minimal patch.
-> 
-> Best Regards,
-> Huang Ying
-> 
-> ------------------------------------>
-> 
-> This patch provides an enhancement to kexec/kdump. It implements
-> the following features:
-> 
-> - Jumping between the original kernel and the kexeced kernel.
-> 
-> - Backup/restore memory used by both the original kernel and the
->   kexeced kernel.
-> 
-> - Save/restore CPU and devices state before after kexec.
-> 
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-Hi Huang,
+>> So, IMHO, for first simple implementation, we don't have to pass around
+>> any data between kernels except entry point. (Please correct me if I am 
+>> wrong). Lets get that implementation in first and then we can get rest
+>> of the pieces in place.
+>
+> Yes. Kernel entry/re-entry point is the only information need to be
+> communicated between kernels for just switching between them. So we can
+> focus on kexec jump patch firstly.
 
-Ok, I have done some testing on this patch. Currently I have just
-tested switching back and forth between two kernels and it is working for
-me.
+Then as a preliminary design let's plan on this.
 
-Just that I had to put LAPIC and IOAPIC in legacy mode for it to work. Few
-comments/questions are inline.
+- Pass the rentry point as the return address (using the C ABI).
+  We may want to load the stack pointer etc so we can act as
+  a direct entry point for new code.
 
-[..]
->  	.text
->  	.align PAGE_ALIGNED
-> +	.global kexec_relocate_page
-> +kexec_relocate_page:
-> +
-> +/*
-> + * Entry point for jumping back from kexeced kernel, the paging is
-> + * turned off.
-> + */
-> +kexec_jump_back_entry:
-> +	call	1f
-> +1:
-> +	popl	%ebx
-> +	subl	$(1b - kexec_relocate_page), %ebx
-> +	movl	%edi, KJUMP_ENTRY_OFF(%ebx)
-> +	movl	CP_VA_CONTROL_PAGE(%ebx), %edi
-> +	lea	STACK_TOP(%ebx), %esp
-> +	movl	CP_PA_SWAP_PAGE(%ebx), %eax
-> +	movl	CP_PA_BACKUP_PAGES_MAP(%ebx), %edx
-> +	pushl	%eax
-> +	pushl	%edx
-> +	call	swap_pages
-> +	addl	$8, %esp
-> +	movl	CP_PA_PGD(%ebx), %eax
-> +	movl	%eax, %cr3
-> +	movl	%cr0, %eax
-> +	orl	$(1<<31), %eax
-> +	movl	%eax, %cr0
-> +	lea	STACK_TOP(%edi), %esp
-> +	movl	%edi, %eax
-> +	addl	$(virtual_mapped - kexec_relocate_page), %eax
-> +	pushl	%eax
-> +	ret
+- Look at passing a pointer to the mapping of pages that the kexec
+  trampoline uses in arg1 of the C ABI.  Largely the format is defacto
+  fixed anyway because we need to pass the structure from C to
+  assembly.
 
-Upon re-entering the kernel, what happens to GDT table? So gdtr will be
-pointing to GDT of other kernel (which is not there as pages have been
-swapped)? Do we need to reload the gdtr upon re-entering the kernel.
+Using the standard C ABI makes things much it much easier to pick
+a calling convention, and to document it.
 
-[..]
-> @@ -197,8 +282,54 @@ identity_mapped:
->  	xorl	%eax, %eax
->  	movl	%eax, %cr3
->  
-> +	movl	CP_PA_SWAP_PAGE(%edi), %eax
-> +	pushl	%eax
-> +	pushl	%ebx
-> +	call	swap_pages
-> +	addl	$8, %esp
-> +
-> +	/* To be certain of avoiding problems with self-modifying code
-> +	 * I need to execute a serializing instruction here.
-> +	 * So I flush the TLB, it's handy, and not processor dependent.
-> +	 */
-> +	xorl	%eax, %eax
-> +	movl	%eax, %cr3
-> +
-> +	/* set all of the registers to known values */
-> +	/* leave %esp alone */
-> +
-> +	movl	KJUMP_MAGIC_OFF(%edi), %eax
-> +	cmpl	$KJUMP_MAGIC_NUMBER, %eax
-> +	jz 1f
-> +	xorl	%edi, %edi
-> +	xorl	%eax, %eax
-> +	xorl	%ebx, %ebx
-> +	xorl    %ecx, %ecx
-> +	xorl    %edx, %edx
-> +	xorl    %esi, %esi
-> +	xorl    %ebp, %ebp
-> +	ret
-> +1:
-> +	popl	%edx
-> +	movl	CP_PA_SWAP_PAGE(%edi), %esp
-> +	addl	$PAGE_SIZE_asm, %esp
-> +	pushl	%edx
-> +2:
-> +	call	*%edx
-
-> +	movl	%edi, %edx
-> +	popl	%edi
-> +	pushl	%edx
-> +	jmp	2b
-> +
-
-What does above piece of code do? Looks like redundant for switching
-between the kernels? After call *%edx, we never return here. Instead
-we come back to "kexec_jump_back_entry"?
-
-
-[..]
-> --- /dev/null
-> +++ b/Documentation/i386/jump_back_protocol.txt
-> @@ -0,0 +1,66 @@
-> +		THE LINUX/I386 JUMP BACK PROTOCOL
-> +		---------------------------------
-> +
-> +		Huang Ying <ying.huang@intel.com>
-> +		    Last update 2007-12-19
-> +
-> +Currently, the following versions of the jump back protocol exist.
-> +
-> +Protocol 1.00:	Jumping between original kernel and kexeced kernel
-> +		support. Calling ordinary C function support.
-> +
-> +
-> +*** JUMP BACK ENTRY
-> +
-> +At jump back entry of callee, the CPU must be in 32-bit protected mode
-> +with paging disabled; the CS, DS, ES and SS must be 4G flat segments;
-> +CS must have execute/read permission, and DS, ES and SS must have
-> +read/write permission; interrupt must be disabled; the contents of
-> +registers and corresponding memory must be as follow:
-> +
-> +Offset/Size	Meaning
-> +
-> +%edi		Real jump back entry of caller if supported,
-> +		otherwise 0.
-> +%esp		Stack top pointer, the size of stack is about 4k bytes.
-> +(%esp)/4	Helper jump back entry of caller if %edi != 0,
-> +		otherwise undefined.
-> +
-
-I am not sure what is helper jump back entry? I understand that you 
-are using %edi to pass around entry point between two kernels. Can
-you please shed some more light on this?
-
-Thanks
-Vivek
+Eric
 
 _______________________________________________
 kexec mailing list
