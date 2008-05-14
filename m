@@ -1,19 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jw7j7-0004LA-C3
-	for kexec@lists.infradead.org; Wed, 14 May 2008 03:32:25 +0000
-Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
-	multi-stage load
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080514025607.GA19944@redhat.com>
-References: <1210574441.30365.8.camel@caritas-dev.intel.com>
-	<20080513053408.GA5870@redhat.com>
-	<1210730266.23707.50.camel@caritas-dev.intel.com>
-	<20080514025607.GA19944@redhat.com>
-Date: Wed, 14 May 2008 11:37:55 +0800
-Message-ID: <1210736275.23707.62.camel@caritas-dev.intel.com>
+Received: from e31.co.us.ibm.com ([32.97.110.149])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jw8Yl-0000WI-JB
+	for kexec@lists.infradead.org; Wed, 14 May 2008 04:25:48 +0000
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m4E4PiLx021165
+	for <kexec@lists.infradead.org>; Wed, 14 May 2008 00:25:44 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m4E4PiTP207118
+	for <kexec@lists.infradead.org>; Tue, 13 May 2008 22:25:44 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m4E4PiIg016473
+	for <kexec@lists.infradead.org>; Tue, 13 May 2008 22:25:44 -0600
+Message-ID: <482A69C5.3060106@in.ibm.com>
+Date: Wed, 14 May 2008 09:55:41 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: Question about forcing kernel panic on PowerMac G5 by kexec
+	command
+References: <200804210517.m3L5Hq61011769@toshiba.co.jp>
+	<480D790D.7080403@in.ibm.com>
+	<200804230041.m3N0fIQD013543@toshiba.co.jp>
+	<480F05D7.1060402@in.ibm.com>
+	<200805090406.m4946FxB003919@toshiba.co.jp>
+In-Reply-To: <200805090406.m4946FxB003919@toshiba.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,57 +39,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>
+To: gib <suchada.pitchayasamanya@toshiba.co.jp>
+Cc: kexec@lists.infradead.org
 
-On Tue, 2008-05-13 at 22:56 -0400, Vivek Goyal wrote:
-[...]
-> > 
-> > > Last time I tried the patches (V9) and kexec jump did not work for me. I
-> > > was not getting timer interrupts in second kernel. Then I had to put 
-> > > LAPIC and IOAPIC in legacy mode and then at one way jump started working.
-> > > I am not sure how the next kernel boots for you without putting APICs
-> > > in legacy mode. (Yet to make returning back to original kernel work
-> > > using V9). 
-> > 
-> > Can normal kexec (without kexec jump) works without putting LAPIC and
-> > IOAPIC in legacy mode? Does this mean we should put LAPIC and IOAPIC
-> > into legacy mode before kexec and restore them after?
-> > 
+gib wrote:
+> Hi Mohan,
 > 
-> We do put LAPIC and IOAPIC in legacy mode in normal kexec. Look at 
-> disable_IO_APIC() in native_machine_shutdown(). So I think we shall
-> have to do the same thing in kexec jump code too.
-
-OK. I will look at this.
-
-> I went through above mail thread again where we were discussing what all
-> information need to be passed between kernels.
+> Sorry for the late reply.
 > 
-> Last time we enumerated three things.
+>> I am not sure about the latest kexec tools. Is it possible to test with 
+>> the kexec-tools shipped with the distro?
 > 
-> - kernel entry/re-entry point for switch between kernels.
-> - backup pages map for core filtering
-> - Probably ELF core notes for saving hibernated image.
+> I tried to test with the kexec-tools shipped with the distro before and it
+> gave me the same result as the latest kexec-tools (kexec-tools-testing
+> 20080324).
 > 
-> I think if we just implement the functionality so that one can switch
-> back and forth between kernels (no hibernated image saving),then we probably
-> need to pass around only kernel entry/re-entry point and nothing else and in
-> your patches I think you are already doing using %edi.
+>> Can you give us the contents of the reg property in the last memory node 
+>> in device tree?
+> 
+> With the command # hexdump /proc/device-tree/memory@0,0/reg I got
+> 0000000 0000 0000 0000 0000 2000 0000 0000 0000
+> 0000010 0000 0000 0000 0000 0000 0000 2000 0000
+> 0000020 2000 0000 0000 0000 4000 0000 2000 0000
+> 0000030 0000 0000 0000 0000 0000 0000 0000 0000
+> *
+> 0000060
+> 
 
-Yes.
+Hi Suchada,
 
-> So, IMHO, for first simple implementation, we don't have to pass around
-> any data between kernels except entry point. (Please correct me if I am 
-> wrong). Lets get that implementation in first and then we can get rest
-> of the pieces in place.
+Do you have only one entry for memory node in the /proc/device-tree 
+directory?
 
-Yes. Kernel entry/re-entry point is the only information need to be
-communicated between kernels for just switching between them. So we can
-focus on kexec jump patch firstly.
+Do you know last good working version of kernel (for kdump) and try to 
+boot into that kernel and check the memory nodes in device-tree?
 
-Best Regards,
-Huang Ying
+kexec-tools uses reg property in the memory device nodes to calculate 
+the total system memory.
+
+ From above "hexdump", I could not parse the memory properties.
+
+Regards,
+Mohan.
+
+
+> Is it because of this problem that cause the system did not go the next step
+> and kept showing "Sending IPI to other CPU" message?
+> 
+> Thanks for your help,
+> Suchada
+> 
 
 
 _______________________________________________
