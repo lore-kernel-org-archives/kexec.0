@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwSP4-00023F-EI
-	for kexec@lists.infradead.org; Thu, 15 May 2008 01:37:06 +0000
+	id 1JwTBM-0008GU-5E
+	for kexec@lists.infradead.org; Thu, 15 May 2008 02:27:00 +0000
 Subject: Re: [PATCH -mm] kexec jump -v9
 From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <m13aok1pt1.fsf@frodo.ebiederm.org>
+In-Reply-To: <20080514205204.GJ30469@redhat.com>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<m13aok1pt1.fsf@frodo.ebiederm.org>
-Date: Thu, 15 May 2008 09:42:19 +0800
-Message-ID: <1210815739.23707.74.camel@caritas-dev.intel.com>
+	<20080514205204.GJ30469@redhat.com>
+Date: Thu, 15 May 2008 10:32:42 +0800
+Message-ID: <1210818762.23707.102.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -19,96 +19,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Wed, 2008-05-14 at 15:30 -0700, Eric W. Biederman wrote:
-[...]
-> >  
-> > +	if (image->preserve_context) {
-> > +		KJUMP_MAGIC(control_page) = KJUMP_MAGIC_NUMBER;
-> > +		if (kexec_jump_save_cpu(control_page)) {
-> > +			image->start = KJUMP_ENTRY(control_page);
-> > +			return;
-> 
-> Tricky, and I expect unnecessary.
-> We should be able to just have relocate_new_kernel return?
-
-OK, I will check this. Maybe we can move CPU state saving code into
-relocate_new_kernel.
-
-[...]
-> > -static void kernel_kexec(void)
-> > +static int kernel_kexec(void)
-> >  {
-> > +	int ret = -ENOSYS;
-> >  #ifdef CONFIG_KEXEC
-> > -	struct kimage *image;
-> > -	image = xchg(&kexec_image, NULL);
-> > -	if (!image)
-> > -		return;
-> > -	kernel_restart_prepare(NULL);
-> > -	printk(KERN_EMERG "Starting new kernel\n");
-> > -	machine_shutdown();
-> > -	machine_kexec(image);
-> > +	if (xchg(&kexec_lock, 1))
-> > +		return -EBUSY;
-> > +	if (!kexec_image) {
-> > +		ret = -EINVAL;
-> > +		goto unlock;
-> > +	}
-> > +	if (!kexec_image->preserve_context) {
-> > +		kernel_restart_prepare(NULL);
-> > +		printk(KERN_EMERG "Starting new kernel\n");
-> > +		machine_shutdown();
-> > +	}
-> > +	ret = kexec_jump(kexec_image);
-> > +unlock:
-> > +	xchg(&kexec_lock, 0);
-> >  #endif
-> 
-> Ugh.  No.  Not sharing the shutdown methods with reboot and
-> the normal kexec path looks like a recipe for failure to me.
-> 
-> This looks like where we really need to have the conversation.
-> What methods do we use to shutdown the system.
-> 
-> My take on the situation is this.  For proper handling we
-> need driver device_detach and device_reattach methods.
-> 
-> With the following semantics.  The device_detach methods
-> will disable DMA and place the hardware in a sane state
-> from which the device driver can reclaim and reinitialize it,
-> but the hardware will not be touched.
-> 
-> device_reattach reattaches the driver to the hardware.
-
-Yes. Current device PM callback is not suitable for hibernation (kexec
-based or original). I think we can collaborate with Rafael J. Wysocki on
-the new device drivers hibernation callbacks.
-
-> So looking at this patch I see two very productive directions
-> we can go.
-> 1) A patch that just fixes up the kexec infrastructure code
->    so it implements the swap page and provides the kernel
->    reentry point.  And doesn't handle the upper layer
->    user interface portion.
-> 
-> 2) A patch that renames device_shutdown to device_detach.
->    And starts implementing the driver hooks needed from
->    a resumable kexec.
-
-OK. I can separate the patch into two patches.
-
-Best Regards,
-Huang Ying
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDA4LTA1LTE0IGF0IDE2OjUyIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKWy4u
+Ll0KPiBPaywgSSBoYXZlIGRvbmUgc29tZSB0ZXN0aW5nIG9uIHRoaXMgcGF0Y2guIEN1cnJlbnRs
+eSBJIGhhdmUganVzdAo+IHRlc3RlZCBzd2l0Y2hpbmcgYmFjayBhbmQgZm9ydGggYmV0d2VlbiB0
+d28ga2VybmVscyBhbmQgaXQgaXMgd29ya2luZyBmb3IKPiBtZS4KClRoYW5rcy4KClsuLi5dCj4g
+PiArLyoKPiA+ICsgKiBFbnRyeSBwb2ludCBmb3IganVtcGluZyBiYWNrIGZyb20ga2V4ZWNlZCBr
+ZXJuZWwsIHRoZSBwYWdpbmcgaXMKPiA+ICsgKiB0dXJuZWQgb2ZmLgo+ID4gKyAqLwo+ID4gK2tl
+eGVjX2p1bXBfYmFja19lbnRyeToKPiA+ICsJY2FsbAkxZgo+ID4gKzE6Cj4gPiArCXBvcGwJJWVi
+eAo+ID4gKwlzdWJsCSQoMWIgLSBrZXhlY19yZWxvY2F0ZV9wYWdlKSwgJWVieAo+ID4gKwltb3Zs
+CSVlZGksIEtKVU1QX0VOVFJZX09GRiglZWJ4KQo+ID4gKwltb3ZsCUNQX1ZBX0NPTlRST0xfUEFH
+RSglZWJ4KSwgJWVkaQo+ID4gKwlsZWEJU1RBQ0tfVE9QKCVlYngpLCAlZXNwCj4gPiArCW1vdmwJ
+Q1BfUEFfU1dBUF9QQUdFKCVlYngpLCAlZWF4Cj4gPiArCW1vdmwJQ1BfUEFfQkFDS1VQX1BBR0VT
+X01BUCglZWJ4KSwgJWVkeAo+ID4gKwlwdXNobAklZWF4Cj4gPiArCXB1c2hsCSVlZHgKPiA+ICsJ
+Y2FsbAlzd2FwX3BhZ2VzCj4gPiArCWFkZGwJJDgsICVlc3AKPiA+ICsJbW92bAlDUF9QQV9QR0Qo
+JWVieCksICVlYXgKPiA+ICsJbW92bAklZWF4LCAlY3IzCj4gPiArCW1vdmwJJWNyMCwgJWVheAo+
+ID4gKwlvcmwJJCgxPDwzMSksICVlYXgKPiA+ICsJbW92bAklZWF4LCAlY3IwCj4gPiArCWxlYQlT
+VEFDS19UT1AoJWVkaSksICVlc3AKPiA+ICsJbW92bAklZWRpLCAlZWF4Cj4gPiArCWFkZGwJJCh2
+aXJ0dWFsX21hcHBlZCAtIGtleGVjX3JlbG9jYXRlX3BhZ2UpLCAlZWF4Cj4gPiArCXB1c2hsCSVl
+YXgKPiA+ICsJcmV0Cj4gCj4gVXBvbiByZS1lbnRlcmluZyB0aGUga2VybmVsLCB3aGF0IGhhcHBl
+bnMgdG8gR0RUIHRhYmxlPyBTbyBnZHRyIHdpbGwgYmUKPiBwb2ludGluZyB0byBHRFQgb2Ygb3Ro
+ZXIga2VybmVsICh3aGljaCBpcyBub3QgdGhlcmUgYXMgcGFnZXMgaGF2ZSBiZWVuCj4gc3dhcHBl
+ZCk/IERvIHdlIG5lZWQgdG8gcmVsb2FkIHRoZSBnZHRyIHVwb24gcmUtZW50ZXJpbmcgdGhlIGtl
+cm5lbC4KCkFmdGVyIHJlLWVudGVyaW5nIHRoZSBrZXJuZWwgYW5kIHJldHVybmluZyBmcm9tIG1h
+Y2hpbmVfa2V4ZWMsCnJlc3RvcmVfcHJvY2Vzc29yX3N0YXRlKCkgaXMgY2FsbGVkLCB3aGVyZSB0
+aGUgR0RUUiBhbmQgc29tZSBvdGhlciBDUFUKc3RhdGUgc3VjaCBhcyBGUFUsIElEVCwgZXRjIGFy
+ZSByZXN0b3JlZC4KCj4gWy4uXQo+ID4gQEAgLTE5Nyw4ICsyODIsNTQgQEAgaWRlbnRpdHlfbWFw
+cGVkOgo+ID4gIAl4b3JsCSVlYXgsICVlYXgKPiA+ICAJbW92bAklZWF4LCAlY3IzCj4gPiAgCj4g
+PiArCW1vdmwJQ1BfUEFfU1dBUF9QQUdFKCVlZGkpLCAlZWF4Cj4gPiArCXB1c2hsCSVlYXgKPiA+
+ICsJcHVzaGwJJWVieAo+ID4gKwljYWxsCXN3YXBfcGFnZXMKPiA+ICsJYWRkbAkkOCwgJWVzcAo+
+ID4gKwo+ID4gKwkvKiBUbyBiZSBjZXJ0YWluIG9mIGF2b2lkaW5nIHByb2JsZW1zIHdpdGggc2Vs
+Zi1tb2RpZnlpbmcgY29kZQo+ID4gKwkgKiBJIG5lZWQgdG8gZXhlY3V0ZSBhIHNlcmlhbGl6aW5n
+IGluc3RydWN0aW9uIGhlcmUuCj4gPiArCSAqIFNvIEkgZmx1c2ggdGhlIFRMQiwgaXQncyBoYW5k
+eSwgYW5kIG5vdCBwcm9jZXNzb3IgZGVwZW5kZW50Lgo+ID4gKwkgKi8KPiA+ICsJeG9ybAklZWF4
+LCAlZWF4Cj4gPiArCW1vdmwJJWVheCwgJWNyMwo+ID4gKwo+ID4gKwkvKiBzZXQgYWxsIG9mIHRo
+ZSByZWdpc3RlcnMgdG8ga25vd24gdmFsdWVzICovCj4gPiArCS8qIGxlYXZlICVlc3AgYWxvbmUg
+Ki8KPiA+ICsKPiA+ICsJbW92bAlLSlVNUF9NQUdJQ19PRkYoJWVkaSksICVlYXgKPiA+ICsJY21w
+bAkkS0pVTVBfTUFHSUNfTlVNQkVSLCAlZWF4Cj4gPiArCWp6IDFmCj4gPiArCXhvcmwJJWVkaSwg
+JWVkaQo+ID4gKwl4b3JsCSVlYXgsICVlYXgKPiA+ICsJeG9ybAklZWJ4LCAlZWJ4Cj4gPiArCXhv
+cmwgICAgJWVjeCwgJWVjeAo+ID4gKwl4b3JsICAgICVlZHgsICVlZHgKPiA+ICsJeG9ybCAgICAl
+ZXNpLCAlZXNpCj4gPiArCXhvcmwgICAgJWVicCwgJWVicAo+ID4gKwlyZXQKPiA+ICsxOgo+ID4g
+Kwlwb3BsCSVlZHgKPiA+ICsJbW92bAlDUF9QQV9TV0FQX1BBR0UoJWVkaSksICVlc3AKPiA+ICsJ
+YWRkbAkkUEFHRV9TSVpFX2FzbSwgJWVzcAo+ID4gKwlwdXNobAklZWR4Cj4gPiArMjoKPiA+ICsJ
+Y2FsbAkqJWVkeAo+IAo+ID4gKwltb3ZsCSVlZGksICVlZHgKPiA+ICsJcG9wbAklZWRpCj4gPiAr
+CXB1c2hsCSVlZHgKPiA+ICsJam1wCTJiCj4gPiArCj4gCj4gV2hhdCBkb2VzIGFib3ZlIHBpZWNl
+IG9mIGNvZGUgZG8/IExvb2tzIGxpa2UgcmVkdW5kYW50IGZvciBzd2l0Y2hpbmcKPiBiZXR3ZWVu
+IHRoZSBrZXJuZWxzPyBBZnRlciBjYWxsIColZWR4LCB3ZSBuZXZlciByZXR1cm4gaGVyZS4gSW5z
+dGVhZAo+IHdlIGNvbWUgYmFjayB0byAia2V4ZWNfanVtcF9iYWNrX2VudHJ5Ij8KCkZvciBzd2l0
+Y2hpbmcgYmV0d2VlbiB0aGUga2VybmVscywgdGhpcyBpcyByZWR1bmRhbnQuIE9yaWdpbmFsbHkg
+YW5vdGhlcgpmZWF0dXJlIG9mIGtleGVjIGp1bXAgaXMgdG8gY2FsbCBzb21lIGNvZGUgaW4gcGh5
+c2ljYWwgbW9kZS4g77u/VGhpcyBpcwp1c2VkIHRvIHByb3ZpZGUgYSBDIEFCSSB0byBjYWxsZWQg
+Y29kZS4KCk5vdywgRXJpYyBzdWdnZXN0cyB0byB1c2UgYSBDIEFCSSBjb21wYXRpYmxlIG1vZGUg
+dG8gcGFzcyB0aGUganVtcCBiYWNrCmVudHJ5IHBvaW50IHRvbywgdGhhdCBpcywgdXNlIHRoZSBy
+ZXR1cm4gYWRkcmVzcyBvbiBzdGFjayBpbnN0ZWFkIG9mICUKZWRpLiBJIHRoaW5rIHRoYXQgaXMg
+cmVhc29uYWJsZS4gTWF5YmUgd2UgY2FuIHJldmlzZSB0aGlzIGNvZGUgdG8gYmUKY29tcGF0aWJs
+ZSB3aXRoIEMgQUJJIGFuZCBwcm92aWRlIGEgY29udmVuaWVudCBpbnRlcmZhY2UgZm9yIGJvdGgg
+a2VybmVsCmFuZCBvdGhlciBwaHlzaWNhbCBtb2RlIGNvZGUuCgo+IFsuLl0KPiA+IC0tLSAvZGV2
+L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vaTM4Ni9qdW1wX2JhY2tfcHJvdG9jb2wudHh0
+Cj4gPiBAQCAtMCwwICsxLDY2IEBACj4gPiArCQlUSEUgTElOVVgvSTM4NiBKVU1QIEJBQ0sgUFJP
+VE9DT0wKPiA+ICsJCS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+ID4gKwo+ID4g
+KwkJSHVhbmcgWWluZyA8eWluZy5odWFuZ0BpbnRlbC5jb20+Cj4gPiArCQkgICAgTGFzdCB1cGRh
+dGUgMjAwNy0xMi0xOQo+ID4gKwo+ID4gK0N1cnJlbnRseSwgdGhlIGZvbGxvd2luZyB2ZXJzaW9u
+cyBvZiB0aGUganVtcCBiYWNrIHByb3RvY29sIGV4aXN0Lgo+ID4gKwo+ID4gK1Byb3RvY29sIDEu
+MDA6CUp1bXBpbmcgYmV0d2VlbiBvcmlnaW5hbCBrZXJuZWwgYW5kIGtleGVjZWQga2VybmVsCj4g
+PiArCQlzdXBwb3J0LiBDYWxsaW5nIG9yZGluYXJ5IEMgZnVuY3Rpb24gc3VwcG9ydC4KPiA+ICsK
+PiA+ICsKPiA+ICsqKiogSlVNUCBCQUNLIEVOVFJZCj4gPiArCj4gPiArQXQganVtcCBiYWNrIGVu
+dHJ5IG9mIGNhbGxlZSwgdGhlIENQVSBtdXN0IGJlIGluIDMyLWJpdCBwcm90ZWN0ZWQgbW9kZQo+
+ID4gK3dpdGggcGFnaW5nIGRpc2FibGVkOyB0aGUgQ1MsIERTLCBFUyBhbmQgU1MgbXVzdCBiZSA0
+RyBmbGF0IHNlZ21lbnRzOwo+ID4gK0NTIG11c3QgaGF2ZSBleGVjdXRlL3JlYWQgcGVybWlzc2lv
+biwgYW5kIERTLCBFUyBhbmQgU1MgbXVzdCBoYXZlCj4gPiArcmVhZC93cml0ZSBwZXJtaXNzaW9u
+OyBpbnRlcnJ1cHQgbXVzdCBiZSBkaXNhYmxlZDsgdGhlIGNvbnRlbnRzIG9mCj4gPiArcmVnaXN0
+ZXJzIGFuZCBjb3JyZXNwb25kaW5nIG1lbW9yeSBtdXN0IGJlIGFzIGZvbGxvdzoKPiA+ICsKPiA+
+ICtPZmZzZXQvU2l6ZQlNZWFuaW5nCj4gPiArCj4gPiArJWVkaQkJUmVhbCBqdW1wIGJhY2sgZW50
+cnkgb2YgY2FsbGVyIGlmIHN1cHBvcnRlZCwKPiA+ICsJCW90aGVyd2lzZSAwLgo+ID4gKyVlc3AJ
+CVN0YWNrIHRvcCBwb2ludGVyLCB0aGUgc2l6ZSBvZiBzdGFjayBpcyBhYm91dCA0ayBieXRlcy4K
+PiA+ICsoJWVzcCkvNAlIZWxwZXIganVtcCBiYWNrIGVudHJ5IG9mIGNhbGxlciBpZiAlZWRpICE9
+IDAsCj4gPiArCQlvdGhlcndpc2UgdW5kZWZpbmVkLgo+ID4gKwo+IAo+IEkgYW0gbm90IHN1cmUg
+d2hhdCBpcyBoZWxwZXIganVtcCBiYWNrIGVudHJ5PyBJIHVuZGVyc3RhbmQgdGhhdCB5b3UgCj4g
+YXJlIHVzaW5nICVlZGkgdG8gcGFzcyBhcm91bmQgZW50cnkgcG9pbnQgYmV0d2VlbiB0d28ga2Vy
+bmVscy4gQ2FuCj4geW91IHBsZWFzZSBzaGVkIHNvbWUgbW9yZSBsaWdodCBvbiB0aGlzPwoKSGVs
+cGVyIGp1bXAgYmFjayBlbnRyeSBpcyB1c2VkIHRvIHByb3ZpZGUgYSBDIEFCSSB0byBzb21lIHBo
+eXNpY2FsIG1vZGUKY29kZSBvdGhlciB0aGFuIGtlcm5lbC4gSXQgaXMgdGhlIGFib3ZlIHJlZHVu
+ZGFudCBjb2RlLgoKQmVzdCBSZWdhcmRzLApIdWFuZyBZaW5nCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
