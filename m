@@ -1,9 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jwqnn-00081T-Nl
-	for kexec@lists.infradead.org; Fri, 16 May 2008 03:40:16 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+	id 1JwrqG-0005Ly-FV
+	for kexec@lists.infradead.org; Fri, 16 May 2008 04:46:52 +0000
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
+	multi-stage load
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <m1tzgzez4f.fsf@frodo.ebiederm.org>
 References: <1210574441.30365.8.camel@caritas-dev.intel.com>
 	<20080513053408.GA5870@redhat.com>
 	<1210730266.23707.50.camel@caritas-dev.intel.com>
@@ -11,17 +14,12 @@ References: <1210574441.30365.8.camel@caritas-dev.intel.com>
 	<1210736275.23707.62.camel@caritas-dev.intel.com>
 	<m1lk2c4l4i.fsf@frodo.ebiederm.org>
 	<1210827473.23707.133.camel@caritas-dev.intel.com>
-	<m1lk2bs970.fsf@frodo.ebiederm.org>
-	<1210902114.23707.156.camel@caritas-dev.intel.com>
-	<m14p8zgf43.fsf@frodo.ebiederm.org>
-	<1210906575.23707.189.camel@caritas-dev.intel.com>
-Date: Thu, 15 May 2008 20:33:41 -0700
-In-Reply-To: <1210906575.23707.189.camel@caritas-dev.intel.com> (Ying Huang's
-	message of "Fri, 16 May 2008 10:56:15 +0800")
-Message-ID: <m1iqxegbxm.fsf@frodo.ebiederm.org>
+	<20080516020043.GC6926@redhat.com>
+	<1210904374.23707.178.camel@caritas-dev.intel.com>
+	<m1tzgzez4f.fsf@frodo.ebiederm.org>
+Date: Fri, 16 May 2008 12:52:48 +0800
+Message-ID: <1210913568.23707.230.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec multi-stage
-	load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,38 +32,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-"Huang, Ying" <ying.huang@intel.com> writes:
+On Thu, 2008-05-15 at 19:55 -0700, Eric W. Biederman wrote:
+> "Huang, Ying" <ying.huang@intel.com> writes:
+> 
+> > The disadvantage of this solution is that kernel B must know it is
+> > original kernel (A) or kexeced kernel (B). Different code should be used
+> > by kernel A and kernel B. And after jump from A to B, jump from B to A,
+> > when jump from A to B again, kernel A must use different code from the
+> > first time.
+> 
+> I don't know what the case is for keeping two kernels in memory and switching
+> between them.
 
+This can be used to save the memory image of kernel B and accelerate the
+hibernation. The real boot of kernel B is only needed first time.
 
-> I think it is reasonable to enable jumping back and forth more than one
-> time.
+> I suspect a small piece of trampoline code between the two kernels could
+> handle the case. (i.e. purgatory pays attention).
+> 
+> That is a fundamental aspect of the design.  A general purpose infrastructure
+> with trampoline code to adapt it to whatever situation comes up.
 
-I'm not opposed.  I just don't understand the utility yet.
+It is possible to use purgatory to deal with this problem.
 
-> So the following should be possible:
->
-> 1. Jump from A to B (actually jump to purgatory, trigger the boot of B)
-> 2. Jump from B to A
-> 3. Jump from A to B again (jump to the kexec_jump_back_entry of B)
-                      (And we go through purgatory which remembers
-                       the kexec_jump_back_entry of B)
-> 4. Jump from B to A
-> ...
->
-> So it should be possible to get the re-entry point of kernel B in
-> kexec_jump_back_entry of kernel A too. So I think in
-> kexec_jump_back_entry, the caller's stack should be checked to get
-> re-entry point of peer. And the stack state is different depend on where
-> come from, from relocate_new_kernel() or return.
+Jump from kernel A to kernel B
+    Jump to entry of purgatory (purgatory_entry)
+    purgatory save the return address (kexec_jump_back_entry_A)
+    Purgatory set kexec_jump_back_entry for kernel B to a code
+        segment in purgatory, say kexec_jump_back_entry_A_for_B
+    Purgatory jump to entry point of kernel B
+Jump from kernel B to kernel A
+    Jump to purgatory (kexec_jump_back_entry_A_for_B)
+    Purgatory save the return address (kexec_jump_back_entry_B)
+    Purgatory return to kernel A (kexec_jump_back_entry_A)
+Jump from kernel A to kernel B again
+    Jump to entry of purgatory (purgatory_entry)
+    Purgatory save the return address (kexec_jump_back_entry_A)
+    Purgatory jump to kexec_jump_back_entry_B
 
-Yes.
+The disadvantage of this solution is that some information is saved in
+purgatory (kexec_jump_back_entry_A, kexec_jump_back_entry_B). So,
+purgatory must be saved too when save the memory image of kernel A or
+kernel B. Purgatory can be seen as a part of kernel B. But it is a
+little tricky to think it as a part of kernel A too.
 
-Any conditional logic needs to be in purgatory or a similar trampoline.
-
-Eric
+Best Regards,
+Huang Ying
 
 _______________________________________________
 kexec mailing list
