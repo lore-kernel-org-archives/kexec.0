@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jwp4M-0005VC-VB
-	for kexec@lists.infradead.org; Fri, 16 May 2008 01:49:15 +0000
+	id 1Jwp7N-0005qb-UA
+	for kexec@lists.infradead.org; Fri, 16 May 2008 01:52:22 +0000
+Date: Thu, 15 May 2008 21:51:42 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH -mm] kexec jump -v9
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <m1skwjghen.fsf@frodo.ebiederm.org>
+Message-ID: <20080516015142.GB6926@redhat.com>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
 	<20080514205204.GJ30469@redhat.com>
-	<1210830110.23707.141.camel@caritas-dev.intel.com>
-	<20080516005121.GA6926@redhat.com> <m1skwjghen.fsf@frodo.ebiederm.org>
-Date: Fri, 16 May 2008 09:55:02 +0800
-Message-ID: <1210902902.23707.164.camel@caritas-dev.intel.com>
+	<1210818762.23707.102.camel@caritas-dev.intel.com>
+	<20080515200923.GC9718@redhat.com>
+	<1210902514.23707.161.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1210902514.23707.161.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +27,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Thu, 2008-05-15 at 18:35 -0700, Eric W. Biederman wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+On Fri, May 16, 2008 at 09:48:34AM +0800, Huang, Ying wrote:
+> On Thu, 2008-05-15 at 16:09 -0400, Vivek Goyal wrote:
+> [...]
+> > Ok, You want to make BIOS calls. We already do that using vm86 mode and
+> > use bios real mode interrupts. So why do we need this interface? Or, IOW,
+> > how is this interface better?
 > 
-> > ioapic_suspend() is not putting APICs in Legacy mode and that's why
-> > we are seeing the issue. It only saves the IOAPIC routing table entries
-> > and these entries are restored during ioapic_resume().
-> >
-> > But I think somebody has to put APICs in legacy mode for normal 
-> > hibernation also. Not sure who does it. May be BIOS, so that during
-> > resume, second kernel can get the timer interrupts.
+> It can call code in 32-bit physical mode in addition to real mode. So It
+> can be used to call EFI runtime service, especially call EFI 64 runtime
+> service under 32-bit kernel or vice versa.
 > 
-> I doubt anything cares in the suspend to ram case. There should just
-> be a small BIOS trampoline to get back to linux when the processor
-> restarts.  And you don't need interrupts for any of that. 
+> The main purpose of kexec jump is for hibernation. But I think if the
+> effort is small, why not support general 32-bit physical mode code call
+> at same time.
+> 
 
-As far as I know, in suspend to ram, interrupt is used as waking up
-event, such as, keyboard interrupt.
+In general what's the environment requirements for EFI runtime 
+services? I mean, just that processor should be in protected mode with
+paging disabled or one need to stop all other cpus and devices and then make
+the call (as we are doing in this case?). 
 
-Best Regards,
-Huang Ying
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
