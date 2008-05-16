@@ -1,12 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga03.intel.com ([143.182.124.21])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwpRs-00013v-Sz
-	for kexec@lists.infradead.org; Fri, 16 May 2008 02:13:33 +0000
-Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
-	multi-stage load
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080516020043.GC6926@redhat.com>
+	id 1Jwpi3-0002nv-L5
+	for kexec@lists.infradead.org; Fri, 16 May 2008 02:30:15 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1210574441.30365.8.camel@caritas-dev.intel.com>
 	<20080513053408.GA5870@redhat.com>
 	<1210730266.23707.50.camel@caritas-dev.intel.com>
@@ -14,10 +11,15 @@ References: <1210574441.30365.8.camel@caritas-dev.intel.com>
 	<1210736275.23707.62.camel@caritas-dev.intel.com>
 	<m1lk2c4l4i.fsf@frodo.ebiederm.org>
 	<1210827473.23707.133.camel@caritas-dev.intel.com>
-	<20080516020043.GC6926@redhat.com>
-Date: Fri, 16 May 2008 10:19:34 +0800
-Message-ID: <1210904374.23707.178.camel@caritas-dev.intel.com>
+	<m1lk2bs970.fsf@frodo.ebiederm.org>
+	<1210902114.23707.156.camel@caritas-dev.intel.com>
+Date: Thu, 15 May 2008 19:25:00 -0700
+In-Reply-To: <1210902114.23707.156.camel@caritas-dev.intel.com> (Ying Huang's
+	message of "Fri, 16 May 2008 09:41:54 +0800")
+Message-ID: <m14p8zgf43.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec multi-stage
+	load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,33 +32,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, 2008-05-15 at 22:00 -0400, Vivek Goyal wrote:
-[...]
-> IMHO, this kind of make more sense to me when keeping C function like
-> semantics in mind.
-> 
-> Both the cases can be treated like calls to functions (calling BIOS function
-> and jumping to kernel B). The basic difference between two cases is the
-> re-entry point. In BIOS function case, we always re-enter the function at the
-> start but in case of kernel B, except first entry, all other entries happen
-> at a run time determined address, which needs to be communicated to kernel A.
-> 
-> I would think that second kernel B just should execute "ret" and new entry
-> address of kernel B is passed to kernel A through %eax (return value of
-> function).
+"Huang, Ying" <ying.huang@intel.com> writes:
 
-The disadvantage of this solution is that kernel B must know it is
-original kernel (A) or kexeced kernel (B). Different code should be used
-by kernel A and kernel B. And after jump from A to B, jump from B to A,
-when jump from A to B again, kernel A must use different code from the
-first time.
+> On Thu, 2008-05-15 at 11:39 -0700, Eric W. Biederman wrote:
+> [...]
+>> 2) After we figure out our address read the stack pointer from
+>>    a fixed location and simply set it.  (This is my preference)
+>
+> Just for confirmation (My English is poor).
+>
+> Do you mean that kernel A just read the stack top as re-entry point,
+> regardless of whether it is return address or argument 1?
 
-Best Regards,
-Huang Ying
+What I was thinking was:
 
+In kernel A()
+
+relocate_new_kernel:
+
+        ...
+
+        call	*%eax
+
+kexec_jump_back_entry:
+        /* This code should be PIC so figure out where we are */
+        call	1f
+1:
+        popl	%edi
+        subl	$(1b - relocate_kernel), %edi
+
+        /* Setup a safe stack */
+        leal    PAGE_SIZE(%edi), %esp
+        ...
+
+
+Then in purgatory we can read the address of kexec_jump_back_entry
+by examining 0(%esp) and export it in whatever fashion is sane.
+
+However we reach kexec_jump_back_entry we should be fine.
+
+Eric
 
 _______________________________________________
 kexec mailing list
