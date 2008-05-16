@@ -1,26 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jx07t-0005NG-6G
-	for kexec@lists.infradead.org; Fri, 16 May 2008 13:37:37 +0000
-Date: Fri, 16 May 2008 09:36:58 -0400
+	id 1Jx0BH-0005kG-RB
+	for kexec@lists.infradead.org; Fri, 16 May 2008 13:41:08 +0000
+Date: Fri, 16 May 2008 09:40:24 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
 	multi-stage load
-Message-ID: <20080516133658.GE6926@redhat.com>
-References: <20080513053408.GA5870@redhat.com>
-	<1210730266.23707.50.camel@caritas-dev.intel.com>
+Message-ID: <20080516134024.GF6926@redhat.com>
+References: <1210730266.23707.50.camel@caritas-dev.intel.com>
 	<20080514025607.GA19944@redhat.com>
 	<1210736275.23707.62.camel@caritas-dev.intel.com>
 	<m1lk2c4l4i.fsf@frodo.ebiederm.org>
 	<1210827473.23707.133.camel@caritas-dev.intel.com>
-	<20080516020043.GC6926@redhat.com>
-	<1210904374.23707.178.camel@caritas-dev.intel.com>
-	<m1tzgzez4f.fsf@frodo.ebiederm.org>
-	<1210913568.23707.230.camel@caritas-dev.intel.com>
+	<m1lk2bs970.fsf@frodo.ebiederm.org>
+	<1210902114.23707.156.camel@caritas-dev.intel.com>
+	<m14p8zgf43.fsf@frodo.ebiederm.org>
+	<1210906575.23707.189.camel@caritas-dev.intel.com>
+	<20080516032758.GD6926@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1210913568.23707.230.camel@caritas-dev.intel.com>
+In-Reply-To: <20080516032758.GD6926@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,58 +36,95 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Huang, Ying" <ying.huang@intel.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>
 
-On Fri, May 16, 2008 at 12:52:48PM +0800, Huang, Ying wrote:
-> On Thu, 2008-05-15 at 19:55 -0700, Eric W. Biederman wrote:
-> > "Huang, Ying" <ying.huang@intel.com> writes:
+On Thu, May 15, 2008 at 11:27:58PM -0400, Vivek Goyal wrote:
+> On Fri, May 16, 2008 at 10:56:15AM +0800, Huang, Ying wrote:
+> > On Thu, 2008-05-15 at 19:25 -0700, Eric W. Biederman wrote:
+> > > "Huang, Ying" <ying.huang@intel.com> writes:
+> > > 
+> > > > On Thu, 2008-05-15 at 11:39 -0700, Eric W. Biederman wrote:
+> > > > [...]
+> > > >> 2) After we figure out our address read the stack pointer from
+> > > >>    a fixed location and simply set it.  (This is my preference)
+> > > >
+> > > > Just for confirmation (My English is poor).
+> > > >
+> > > > Do you mean that kernel A just read the stack top as re-entry point,
+> > > > regardless of whether it is return address or argument 1?
+> > > 
+> > > What I was thinking was:
+> > > 
+> > > In kernel A()
+> > > 
+> > > relocate_new_kernel:
+> > > 
+> > >         ...
+> > > 
+> > >         call	*%eax
+> > > 
+> > > kexec_jump_back_entry:
+> > >         /* This code should be PIC so figure out where we are */
+> > >         call	1f
+> > > 1:
+> > >         popl	%edi
+> > >         subl	$(1b - relocate_kernel), %edi
+> > > 
+> > >         /* Setup a safe stack */
+> > >         leal    PAGE_SIZE(%edi), %esp
+> > >         ...
+> > > 
+> > > 
+> > > Then in purgatory we can read the address of kexec_jump_back_entry
+> > > by examining 0(%esp) and export it in whatever fashion is sane.
+> > > 
+> > > However we reach kexec_jump_back_entry we should be fine.
 > > 
-> > > The disadvantage of this solution is that kernel B must know it is
-> > > original kernel (A) or kexeced kernel (B). Different code should be used
-> > > by kernel A and kernel B. And after jump from A to B, jump from B to A,
-> > > when jump from A to B again, kernel A must use different code from the
-> > > first time.
+> 
+> Huang is making use of purgatory only for booting kernel B for the first
+> time. Once the kernel B is booted, all the trasitions (A-->B and B<--A)
+> happen without using purgatory. Just keep on jumping back and forth
+> to "kexec_jump_back_entry".
+> 
+> Probably not using purgatory for later transitions is justified as long as
+> kernel code is simple and small. Otherwise we will shall have to teach
+> purgatory also of special case of resuming kernel B or booting kernel B.
+> 
+> > I think it is reasonable to enable jumping back and forth more than one
+> > time. So the following should be possible:
 > > 
-> > I don't know what the case is for keeping two kernels in memory and switching
-> > between them.
-> 
-> This can be used to save the memory image of kernel B and accelerate the
-> hibernation. The real boot of kernel B is only needed first time.
-> 
-> > I suspect a small piece of trampoline code between the two kernels could
-> > handle the case. (i.e. purgatory pays attention).
+> > 1. Jump from A to B (actually jump to purgatory, trigger the boot of B)
+> > 2. Jump from B to A
+> > 3. Jump from A to B again (jump to the kexec_jump_back_entry of B)
+> > 4. Jump from B to A
+> > ...
 > > 
-> > That is a fundamental aspect of the design.  A general purpose infrastructure
-> > with trampoline code to adapt it to whatever situation comes up.
+> > So it should be possible to get the re-entry point of kernel B in
+> > kexec_jump_back_entry of kernel A too. So I think in
+> > kexec_jump_back_entry, the caller's stack should be checked to get
+> > re-entry point of peer. And the stack state is different depend on where
+> > come from, from relocate_new_kernel() or return.
+> > 
 > 
-> It is possible to use purgatory to deal with this problem.
+> To me this idea also looks good. So control flow will look something
+> as follows?
 > 
-> Jump from kernel A to kernel B
->     Jump to entry of purgatory (purgatory_entry)
->     purgatory save the return address (kexec_jump_back_entry_A)
->     Purgatory set kexec_jump_back_entry for kernel B to a code
->         segment in purgatory, say kexec_jump_back_entry_A_for_B
->     Purgatory jump to entry point of kernel B
-> Jump from kernel B to kernel A
->     Jump to purgatory (kexec_jump_back_entry_A_for_B)
->     Purgatory save the return address (kexec_jump_back_entry_B)
->     Purgatory return to kernel A (kexec_jump_back_entry_A)
-> Jump from kernel A to kernel B again
->     Jump to entry of purgatory (purgatory_entry)
->     Purgatory save the return address (kexec_jump_back_entry_A)
->     Purgatory jump to kexec_jump_back_entry_B
+> relocate_new kernel:
+> 	
+> 	if (!preserve_context)
+> 		set registers to known state.
+> 		jump to purgatory.
+> 	else
+> 		goto jump-back-setup:
 > 
-> The disadvantage of this solution is that some information is saved in
-> purgatory (kexec_jump_back_entry_A, kexec_jump_back_entry_B). So,
-> purgatory must be saved too when save the memory image of kernel A or
-> kernel B. Purgatory can be seen as a part of kernel B. But it is a
-> little tricky to think it as a part of kernel A too.
+> jump-back-setup:
+> - Color the stack.
+>   move $0xffffffff 0(%esp)
+> 
+> - call %edx
+> 
 
-That's a good point. Remembering the actual return points in purgatory
-will require purgatory to be saved along with core file.
-
-I think, purgatory is a good infrastructure for transitions between the
-kernels but at the same time, here it is a matter of just making a "call"
-and then inspecting the stack in kexec_jump_back_entry. IMHO, we can keep it
-simple and not involving purgatory in later transitions.
+Thinking more about it, probably we don't have to separate out preserve
+context and normal kexec path. Both can transition to purgatory using
+call %edx. Coloring the stack should not harm in normal kexec.
 
 Thanks
 Vivek
