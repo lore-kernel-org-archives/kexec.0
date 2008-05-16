@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.246])
+Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwuZj-0000MK-Na
-	for kexec@lists.infradead.org; Fri, 16 May 2008 07:42:00 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so42844rvf.42
-	for <kexec@lists.infradead.org>; Fri, 16 May 2008 00:41:58 -0700 (PDT)
-Date: Thu, 15 May 2008 22:34:23 -0700
-From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH] Update KEXEC_ARCH_* constants from Linux kernel headers.
-Message-ID: <20080516053423.GA21166@oh.minilop.net>
+	id 1JwyZF-0001Lv-Mf
+	for kexec@lists.infradead.org; Fri, 16 May 2008 11:57:46 +0000
+Date: Fri, 16 May 2008 13:58:33 +0200
+From: Pavel Machek <pavel@suse.cz>
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
+	multi-stage load
+Message-ID: <20080516115833.GB22264@elf.ucw.cz>
+References: <1210574441.30365.8.camel@caritas-dev.intel.com>
+	<20080513053408.GA5870@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20080513053408.GA5870@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +25,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
+	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>
 
-Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
----
-I thought I'd need this, but it turned out not to matter. I'm submitting
-it anyway because keeping kexec-tools in sync with the kernel kexec
-headers seems like a good idea.
+Hi!
 
- kexec/kexec-syscall.h |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+> > During loading, a hash table mapped from destination page to source
+> > page is used instead of original linear mapping
+> > implementation. Because the hibernated image may be very large (up to
+> > near the size of physical memory), it is very time-consuming to search
+> > a source page given the destination page, which is used to check
+> > whether an newly allocated page is in the range of allocated
+> > destination pages.
+> 
+> This seems to be an optimization of kexec so that it becomes efficient
+> in loading large images (containing large number of segments). Probably
+> this can be a separate patch.
+> 
+> IMHO, we can just first write a minimal patch where one can just switch
+> between kernels. Once that patch is upstream, we can enhance
 
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index d12a11c..2b9345f 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -82,8 +82,11 @@ static inline long kexec_reboot(void)
- #define KEXEC_ARCH_PPC     (20 << 16)
- #define KEXEC_ARCH_PPC64   (21 << 16)
- #define KEXEC_ARCH_IA_64   (50 << 16)
--#define KEXEC_ARCH_S390    (22 << 16)
- #define KEXEC_ARCH_ARM     (40 << 16)
-+#define KEXEC_ARCH_S390    (22 << 16)
-+#define KEXEC_ARCH_SH      (42 << 16)
-+#define KEXEC_ARCH_MIPS_LE (10 << 16)
-+#define KEXEC_ARCH_MIPS    ( 8 << 16)
- 
- #define KEXEC_MAX_SEGMENTS 16
- 
+Yes, please.
+									Pavel
 -- 
-1.5.4.1
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
