@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwyZF-0001Lv-Mf
-	for kexec@lists.infradead.org; Fri, 16 May 2008 11:57:46 +0000
-Date: Fri, 16 May 2008 13:58:33 +0200
+	id 1Jwynb-0004xe-7H
+	for kexec@lists.infradead.org; Fri, 16 May 2008 12:12:35 +0000
+Date: Fri, 16 May 2008 14:13:28 +0200
 From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
-	multi-stage load
-Message-ID: <20080516115833.GB22264@elf.ucw.cz>
-References: <1210574441.30365.8.camel@caritas-dev.intel.com>
-	<20080513053408.GA5870@redhat.com>
+Subject: Re: [PATCH -mm] kexec jump -v9
+Message-ID: <20080516121328.GD22264@elf.ucw.cz>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	<20080514205204.GJ30469@redhat.com>
+	<1210818762.23707.102.camel@caritas-dev.intel.com>
+	<20080515200923.GC9718@redhat.com>
+	<1210902514.23707.161.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080513053408.GA5870@redhat.com>
+In-Reply-To: <1210902514.23707.161.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,28 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, "Huang,
-	Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Hi!
-
-> > During loading, a hash table mapped from destination page to source
-> > page is used instead of original linear mapping
-> > implementation. Because the hibernated image may be very large (up to
-> > near the size of physical memory), it is very time-consuming to search
-> > a source page given the destination page, which is used to check
-> > whether an newly allocated page is in the range of allocated
-> > destination pages.
+On Fri 2008-05-16 09:48:34, Huang, Ying wrote:
+> On Thu, 2008-05-15 at 16:09 -0400, Vivek Goyal wrote:
+> [...]
+> > Ok, You want to make BIOS calls. We already do that using vm86 mode and
+> > use bios real mode interrupts. So why do we need this interface? Or, IOW,
+> > how is this interface better?
 > 
-> This seems to be an optimization of kexec so that it becomes efficient
-> in loading large images (containing large number of segments). Probably
-> this can be a separate patch.
+> It can call code in 32-bit physical mode in addition to real mode. So It
+> can be used to call EFI runtime service, especially call EFI 64 runtime
+> service under 32-bit kernel or vice versa.
 > 
-> IMHO, we can just first write a minimal patch where one can just switch
-> between kernels. Once that patch is upstream, we can enhance
+> The main purpose of kexec jump is for hibernation. But I think if the
+> effort is small, why not support general 32-bit physical mode code call
+> at same time.
 
-Yes, please.
+I believe we should focus on kexecing kernels, first.
+
+Only way to prove the effort is small is by having small followup
+patch, and that needs the two patches separated...
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
