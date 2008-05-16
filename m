@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwosC-0004a4-9I
-	for kexec@lists.infradead.org; Fri, 16 May 2008 01:36:40 +0000
-Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec
-	multi-stage load
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <m1lk2bs970.fsf@frodo.ebiederm.org>
-References: <1210574441.30365.8.camel@caritas-dev.intel.com>
-	<20080513053408.GA5870@redhat.com>
-	<1210730266.23707.50.camel@caritas-dev.intel.com>
-	<20080514025607.GA19944@redhat.com>
-	<1210736275.23707.62.camel@caritas-dev.intel.com>
-	<m1lk2c4l4i.fsf@frodo.ebiederm.org>
-	<1210827473.23707.133.camel@caritas-dev.intel.com>
-	<m1lk2bs970.fsf@frodo.ebiederm.org>
-Date: Fri, 16 May 2008 09:41:54 +0800
-Message-ID: <1210902114.23707.156.camel@caritas-dev.intel.com>
+	id 1Jwovh-000524-2P
+	for kexec@lists.infradead.org; Fri, 16 May 2008 01:40:17 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	<20080514205204.GJ30469@redhat.com>
+	<1210830110.23707.141.camel@caritas-dev.intel.com>
+	<20080516005121.GA6926@redhat.com>
+Date: Thu, 15 May 2008 18:35:28 -0700
+In-Reply-To: <20080516005121.GA6926@redhat.com> (Vivek Goyal's message of
+	"Thu, 15 May 2008 20:51:21 -0400")
+Message-ID: <m1skwjghen.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH -mm] kexec jump -v9
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,22 +26,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Thu, 2008-05-15 at 11:39 -0700, Eric W. Biederman wrote:
-[...]
-> 2) After we figure out our address read the stack pointer from
->    a fixed location and simply set it.  (This is my preference)
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-Just for confirmation (My English is poor).
+> ioapic_suspend() is not putting APICs in Legacy mode and that's why
+> we are seeing the issue. It only saves the IOAPIC routing table entries
+> and these entries are restored during ioapic_resume().
+>
+> But I think somebody has to put APICs in legacy mode for normal 
+> hibernation also. Not sure who does it. May be BIOS, so that during
+> resume, second kernel can get the timer interrupts.
 
-Do you mean that kernel A just read the stack top as re-entry point,
-regardless of whether it is return address or argument 1?
+I doubt anything cares in the suspend to ram case. There should just
+be a small BIOS trampoline to get back to linux when the processor
+restarts.  And you don't need interrupts for any of that. 
 
-Best Regards,
-Huang Ying
-
+Eric
 
 _______________________________________________
 kexec mailing list
