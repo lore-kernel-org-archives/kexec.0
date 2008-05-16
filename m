@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from atrey.karlin.mff.cuni.cz ([195.113.31.123])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jwynb-0004xe-7H
-	for kexec@lists.infradead.org; Fri, 16 May 2008 12:12:35 +0000
-Date: Fri, 16 May 2008 14:13:28 +0200
+	id 1JwysX-0006H7-Hl
+	for kexec@lists.infradead.org; Fri, 16 May 2008 12:17:41 +0000
+Date: Fri, 16 May 2008 14:18:36 +0200
 From: Pavel Machek <pavel@suse.cz>
 Subject: Re: [PATCH -mm] kexec jump -v9
-Message-ID: <20080516121328.GD22264@elf.ucw.cz>
+Message-ID: <20080516121836.GE22264@elf.ucw.cz>
 References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<20080514205204.GJ30469@redhat.com>
-	<1210818762.23707.102.camel@caritas-dev.intel.com>
-	<20080515200923.GC9718@redhat.com>
-	<1210902514.23707.161.camel@caritas-dev.intel.com>
+	<m13aok1pt1.fsf@frodo.ebiederm.org>
+	<200805150155.33787.rjw@sisk.pl>
+	<m163tfi5sq.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1210902514.23707.161.camel@caritas-dev.intel.com>
+In-Reply-To: <m163tfi5sq.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,28 +26,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri 2008-05-16 09:48:34, Huang, Ying wrote:
-> On Thu, 2008-05-15 at 16:09 -0400, Vivek Goyal wrote:
-> [...]
-> > Ok, You want to make BIOS calls. We already do that using vm86 mode and
-> > use bios real mode interrupts. So why do we need this interface? Or, IOW,
-> > how is this interface better?
+On Thu 2008-05-15 15:03:17, Eric W. Biederman wrote:
+> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
 > 
-> It can call code in 32-bit physical mode in addition to real mode. So It
-> can be used to call EFI runtime service, especially call EFI 64 runtime
-> service under 32-bit kernel or vice versa.
+> > Well, it looks like we do similar things concurrently.  Please have a look 
+> > here: http://kerneltrap.org/Linux/Separating_Suspend_and_Hibernation
 > 
-> The main purpose of kexec jump is for hibernation. But I think if the
-> effort is small, why not support general 32-bit physical mode code call
-> at same time.
+> Yes.  Part of the reason I wanted to separate these two conversations
+> I knew something was going on.
+> 
+> > Similar patches are in the Greg's tree already.
+> 
+> Taking a look.
+> 
+> I just can't get past the fact in that the only reason hibernation can
+> not use the widely implemented and tested probe/remove is because of
+> filesystems on block devices, and that you are proposing to add 4
+> methods for each and every driver to handle that case, when they
+> don't need ANYTHING!
+> 
+> I wonder how hard teaching the upper layers to deal with
+> hotplug/remove is?
 
-I believe we should focus on kexecing kernels, first.
+It looked _too_ hard when I was looking... at least if we are thinking
+off "keep the filesystem mounted over unplug-replug".
 
-Only way to prove the effort is small is by having small followup
-patch, and that needs the two patches separated...
+Or do you have something else in mind?
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
