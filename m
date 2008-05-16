@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
+Received: from rv-out-0708.google.com ([209.85.198.245])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jwmk3-0005Yr-RO
-	for kexec@lists.infradead.org; Thu, 15 May 2008 23:20:09 +0000
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH -mm] kexec jump -v9
-Date: Fri, 16 May 2008 01:20:08 +0200
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<200805150155.33787.rjw@sisk.pl>
-	<m163tfi5sq.fsf@frodo.ebiederm.org>
-In-Reply-To: <m163tfi5sq.fsf@frodo.ebiederm.org>
+	id 1JwnPd-0001wm-Ty
+	for kexec@lists.infradead.org; Fri, 16 May 2008 00:03:07 +0000
+Received: by rv-out-0708.google.com with SMTP id b17so733150rvf.42
+	for <kexec@lists.infradead.org>; Thu, 15 May 2008 17:03:02 -0700 (PDT)
+Date: Thu, 15 May 2008 17:03:09 -0700
+From: Jamey Sharp <jamey@thetovacompany.com>
+Subject: [PATCH] Use target CC and LD to build kdump and kexec_test.
+Message-ID: <20080516000309.GA5188@oh.minilop.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200805160120.09057.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,197 +23,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On Friday, 16 of May 2008, Eric W. Biederman wrote:
-> "Rafael J. Wysocki" <rjw@sisk.pl> writes:
-> 
-> > Well, it looks like we do similar things concurrently.  Please have a look 
-> > here: http://kerneltrap.org/Linux/Separating_Suspend_and_Hibernation
-> 
-> Yes.  Part of the reason I wanted to separate these two conversations
-> I knew something was going on.
-> 
-> > Similar patches are in the Greg's tree already.
-> 
-> Taking a look.
-> 
-> I just can't get past the fact in that the only reason hibernation can
-> not use the widely implemented and tested probe/remove is because of
-> filesystems on block devices, and that you are proposing to add 4
-> methods for each and every driver to handle that case, when they
-> don't need ANYTHING!
+Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
+---
+Another generic patch extracted from my Windows porting work.
 
-Why exactly do you think that removing()/probing() devices just for creating
-a hibernation image is a good idea?
+I think this is correct, but review would be appreciated.
 
-Also, ->poweroff() is actually similar to the late phase of ->suspend().
+ Makefile.in         |    1 +
+ configure.ac        |    2 ++
+ kdump/Makefile      |    1 +
+ kexec_test/Makefile |    4 ++--
+ 4 files changed, 6 insertions(+), 2 deletions(-)
 
-> I wonder how hard teaching the upper layers to deal with
-> hotplug/remove is?
-> 
-> The more I look at this the more I get the impression that
-> hibernation and suspend should be solved in separate patches.  I'm
-> not at all convinced that is what is good for the goose is good for
-> the gander for things like your prepare method.
-
-This was discussed a lot with people who had exactly opposite opinions.
-With BenH in particular (CCed).
+diff --git a/Makefile.in b/Makefile.in
+index 037f9a4..b51c3a1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -37,6 +37,7 @@ AR		= @AR@
+ BUILD_CC	= @BUILD_CC@
+ BUILD_CFLAGS	= @BUILD_CFLAGS@
+ TARGET_CC	= @TARGET_CC@
++TARGET_LD	= @TARGET_LD@
+ TARGET_CFLAGS	= @TARGET_CFLAGS@
  
-> Hibernation seems to be an extreme case of hotplug.
+ 
+diff --git a/configure.ac b/configure.ac
+index b2ad226..beb8b3e 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -87,6 +87,7 @@ fi
+ dnl Find compiler for target
+ if test "${target}" != "${host}" ; then
+ 	AC_CHECK_PROGS(TARGET_CC, [${target_alias}-gcc ${target}-gcc gcc])
++	AC_CHECK_PROGS(TARGET_LD, [${target_alias}-ld ${target}-ld ld])
+ else
+ 	TARGET_CC="$CC"
+ fi
+@@ -148,6 +149,7 @@ dnl ---Output variables...
+ AC_SUBST([BUILD_CC])
+ AC_SUBST([BUILD_CFLAGS])
+ AC_SUBST([TARGET_CC])
++AC_SUBST([TARGET_LD])
+ AC_SUBST([TARGET_CFLAGS])
+ AC_SUBST([ASFLAGS])
+ 
+diff --git a/kdump/Makefile b/kdump/Makefile
+index 4a788f9..1e2b72c 100644
+--- a/kdump/Makefile
++++ b/kdump/Makefile
+@@ -15,6 +15,7 @@ clean += $(KDUMP_OBJS) $(KDUMP_DEPS) $(KDUMP) $(KDUMP_MANPAGE)
+ 
+ -include $(KDUMP_DEPS)
+ 
++$(KDUMP): CC=$(TARGET_CC)
+ $(KDUMP): $(KDUMP_OBJS)
+ 	@$(MKDIR) -p $(@D)
+ 	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -o $@ $(KDUMP_OBJS)
+diff --git a/kexec_test/Makefile b/kexec_test/Makefile
+index 4848fc4..fec6210 100644
+--- a/kexec_test/Makefile
++++ b/kexec_test/Makefile
+@@ -26,6 +26,7 @@ clean += $(KEXEC_TEST_OBJS) $(KEXEC_TEST_DEPS) $(KEXEC_TEST)
+ 
+ -include $(KEXEC_TEST_DEPS)
+ 
++$(KEXEC_TEST): CC=$(TARGET_CC)
+ $(KEXEC_TEST): CPPFLAGS+=-DRELOC=$(RELOC)
+ $(KEXEC_TEST): ASFLAGS+=-m32
+ #$(KEXEC_TEST): LDFLAGS=-m32 -Wl,-e -Wl,_start -Wl,-Ttext -Wl,$(RELOC) \
+@@ -34,7 +35,6 @@ $(KEXEC_TEST): LDFLAGS=-melf_i386 -e _start -Ttext $(RELOC)
+ 
+ $(KEXEC_TEST): $(KEXEC_TEST_OBJS)
+ 	mkdir -p $(@D)
+-	#$(LINK.o) -o $@ $^
+-	$(LD) $(LDFLAGS) -o $@ $^
++	$(TARGET_LD) $(LDFLAGS) -o $@ $^
+ 
+ endif
+-- 
+1.5.4.1
 
-I don't agree with that.
-
-> Suspend seems to be just an extreme case of putting unused
-> devices in low power state.
-
-Ditto.
-
-> ....
-> 
-> 
-> I don't like the fact that these methods are power management specific.
-
-Please be more specific.
-
-> How should this impact the greater kernel ecosystem.
-> 
-> + * The externally visible transitions are handled with the help of the following
-> + * callbacks included in this structure:
-> + *
-> + * @prepare: Prepare the device for the upcoming transition, but do NOT change
-> + *	its hardware state.  Prevent new children of the device from being
-> + *	registered after @prepare() returns (the driver's subsystem and
-> + *	generally the rest of the kernel is supposed to prevent new calls to the
-> + *	probe method from being made too once @prepare() has succeeded).  If
-> + *	@prepare() detects a situation it cannot handle (e.g. registration of a
-> + *	child already in progress), it may return -EAGAIN, so that the PM core
-> + *	can execute it once again (e.g. after the new child has been registered)
-> + *	to recover from the race condition.  This method is executed for all
-> + *	kinds of suspend transitions and is followed by one of the suspend
-> + *	callbacks: @suspend(), @freeze(), or @poweroff().
-> + *	The PM core executes @prepare() for all devices before starting to
-> + *	execute suspend callbacks for any of them, so drivers may assume all of
-> + *	the other devices to be present and functional while @prepare() is being
-> + *	executed.  In particular, it is safe to make GFP_KERNEL memory
-> + *	allocations from within @prepare(), although they are likely to fail in
-> + *	case of hibernation, if a substantial amount of memory is requested.
-> + *	However, drivers may NOT assume anything about the availability of the
-> + *	user space at that time and it is not correct to request firmware from
-> + *	within @prepare() (it's too late to do that).
-> + *
-> + * @complete: Undo the changes made by @prepare().  This method is executed for
-> + *	all kinds of resume transitions, following one of the resume callbacks:
-> + *	@resume(), @thaw(), @restore().  Also called if the state transition
-> + *	fails before the driver's suspend callback (@suspend(), @freeze(),
-> + *	@poweroff()) can be executed (e.g. if the suspend callback fails for one
-> + *	of the other devices that the PM core has unsucessfully attempted to
-> + *	suspend earlier).
-> + *	The PM core executes @complete() after it has executed the appropriate
-> + *	resume callback for all devices.
-> 
-> The names above are terrible.  Perhaps: @pause/@unpause.
-
-The names have been discussed either and I don't intend to change them now.
-Sorry.
-
-> @pause Stop all device driver user space facing activities, and prepare
->        for a possible power state transition.
-> 
-> Essentially these should be very much like bringing an ethernet
-> interface down.  The device is still there but we can't do anything
-> with it.  The only difference is that this may not be user visible.
-> 
-> + * @suspend: Executed before putting the system into a sleep state in which the
-> + *	contents of main memory are preserved.  Quiesce the device, put it into
-> + *	a low power state appropriate for the upcoming system state (such as
-> + *	PCI_D3hot), and enable wakeup events as appropriate.
-> + *
-> + * @resume: Executed after waking the system up from a sleep state in which the
-> + *	contents of main memory were preserved.  Put the device into the
-> + *	appropriate state, according to the information saved in memory by the
-> + *	preceding @suspend().  The driver starts working again, responding to
-> + *	hardware events and software requests.  The hardware may have gone
-> + *	through a power-off reset, or it may have maintained state from the
-> + *	previous suspend() which the driver may rely on while resuming.  On most
-> + *	platforms, there are no restrictions on availability of resources like
-> + *	clocks during @resume().
-> 
-> Unless I have misread something.
-
-Yes, you have.
-
-> These are exactly the same as @poweroff and @restore.
-
-For many drivers @suspend will be equivalent to @freeze + @poweroff probably.
-
-Also, @restore is not the same as @resume, because @restore cannot assume
-anything about the state of devices, whereas @resume can.
-
-> @suspend place the device in a low power state.
->          Enable wakeup events.
-> 
->          Can we use this for cases when we need low power but haven't
->          stopped the cpu?  I think so.
-
-And you are wrong.
-
-We tried that, it didn't work.
-
-> + * @freeze: Hibernation-specific, executed before creating a hibernation image.
-> + *	Quiesce operations so that a consistent image can be created, but do NOT
-> + *	otherwise put the device into a low power device state and do NOT emit
-> + *	system wakeup events.  Save in main memory the device settings to be
-> + *	used by @restore() during the subsequent resume from hibernation or by
-> + *	the subsequent @thaw(), if the creation of the image or the restoration
-> + *	of main memory contents from it fails.
-> + *
-> + * @thaw: Hibernation-specific, executed after creating a hibernation image OR
-> + *	if the creation of the image fails.  Also executed after a failing
-> + *	attempt to restore the contents of main memory from such an image.
-> + *	Undo the changes made by the preceding @freeze(), so the device can be
-> + *	operated in the same way as immediately before the call to @freeze().
-> 
-> Just @detach/@reattach.
-> 
-> @detach Detach the driver from the hardware, while keeping the driver
->         instance for the hardware alive.
-> 
->         Essentially this is what the shutdown method is today.
->         Except for being ready for a reattach.
-> 
-> @reattach
->         See if the hardware for the driver is present and reclaim
->         it and bring it up to speed for processing requests.
-
-No, I don't think so.  I don't want the driver to detach, but to quiesce the
-hardware.
-
-> + * @poweroff: Hibernation-specific, executed after saving a hibernation image.
-> + *	Quiesce the device, put it into a low power state appropriate for the
-> + *	upcoming system state (such as PCI_D3hot), and enable wakeup events as
-> + *	appropriate.
-> + *
-> + * @restore: Hibernation-specific, executed after restoring the contents of main
-> + *	memory from a hibernation image.  Driver starts working again,
-> + *	responding to hardware events and software requests.  Drivers may NOT
-> + *	make ANY assumptions about the hardware state right prior to @restore().
-> + *	On most platforms, there are no restrictions on availability of
-> + *	resources like clocks during @restore().
-> + *
-> 
-> If we have events we care about we just need to do:
-> reattach(); suspend();  It is all the same from the point of view of
-> the device.  Not the system but the device.
-
-That I can agree with, if I understood you correctly. :-)
-
-Still, having more specialized callbacks is not generally bad IMO, they
-can reuse the code just fine.
-
-Thanks,
-Rafael
 
 _______________________________________________
 kexec mailing list
