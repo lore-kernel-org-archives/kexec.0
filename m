@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.245])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JwnZi-0005Hl-I3
-	for kexec@lists.infradead.org; Fri, 16 May 2008 00:13:31 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so737470rvf.42
-	for <kexec@lists.infradead.org>; Thu, 15 May 2008 17:13:29 -0700 (PDT)
-Date: Thu, 15 May 2008 17:13:37 -0700
-From: Jamey Sharp <jamey@thetovacompany.com>
-Subject: [PATCH] Open slurped files in binary mode, on systems where that
-	matters.
-Message-ID: <20080516001337.GA6312@oh.minilop.net>
+	id 1JwoB2-0002LT-0A
+	for kexec@lists.infradead.org; Fri, 16 May 2008 00:52:04 +0000
+Date: Thu, 15 May 2008 20:51:21 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm] kexec jump -v9
+Message-ID: <20080516005121.GA6926@redhat.com>
+References: <1204773188.4707.109.camel@caritas-dev.intel.com>
+	<20080514205204.GJ30469@redhat.com>
+	<1210830110.23707.141.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1210830110.23707.141.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
----
-This patch shouldn't hurt any system that doesn't distinguish between
-binary and text files, and helps when running on Windows.
+On Thu, May 15, 2008 at 01:41:50PM +0800, Huang, Ying wrote:
+> Hi, Vivek,
+> 
+> On Wed, 2008-05-14 at 16:52 -0400, Vivek Goyal wrote:
+> [...]
+> > Ok, I have done some testing on this patch. Currently I have just
+> > tested switching back and forth between two kernels and it is working for
+> > me.
+> > 
+> > Just that I had to put LAPIC and IOAPIC in legacy mode for it to work. Few
+> > comments/questions are inline.
+> 
+> It seems that for LAPIC and IOAPIC, there is
+> lapic_suspend()/lapic_resume() and ioapic_suspend()/ioapic_resume(),
+> which will be called before/after kexec jump through
+> device_power_down()/device_power_up(). So, the mechanism for
+> LAPIC/IOAPIC is there, we may need to check the corresponding
+> implementation.
+> 
 
- kexec/kexec.c |    7 +++++--
- 1 files changed, 5 insertions(+), 2 deletions(-)
+ioapic_suspend() is not putting APICs in Legacy mode and that's why
+we are seeing the issue. It only saves the IOAPIC routing table entries
+and these entries are restored during ioapic_resume().
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index de9765e..1da6c1e 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -30,6 +30,9 @@
- #include <sys/stat.h>
- #include <unistd.h>
- #include <fcntl.h>
-+#ifndef _O_BINARY
-+#define _O_BINARY 0
-+#endif
- #include <getopt.h>
- 
- #include "config.h"
-@@ -386,7 +389,7 @@ char *slurp_file(const char *filename, off_t *r_size)
- 		*r_size = 0;
- 		return 0;
- 	}
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | _O_BINARY);
- 	if (fd < 0) {
- 		die("Cannot open `%s': %s\n",
- 			filename, strerror(errno));
-@@ -431,7 +434,7 @@ char *slurp_file_len(const char *filename, off_t size)
- 
- 	if (!filename)
- 		return 0;
--	fd = open(filename, O_RDONLY);
-+	fd = open(filename, O_RDONLY | _O_BINARY);
- 	if (fd < 0) {
- 		fprintf(stderr, "Cannot open %s: %s\n", filename,
- 				strerror(errno));
--- 
-1.5.4.1
+But I think somebody has to put APICs in legacy mode for normal 
+hibernation also. Not sure who does it. May be BIOS, so that during
+resume, second kernel can get the timer interrupts.
 
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
