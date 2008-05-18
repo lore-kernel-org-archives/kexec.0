@@ -1,14 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from netrider.rowland.org ([192.131.102.5])
-	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jx0nr-0003dH-4a
-	for kexec@lists.infradead.org; Fri, 16 May 2008 14:21:00 +0000
-Date: Fri, 16 May 2008 10:20:58 -0400 (EDT)
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [linux-pm] [PATCH -mm] kexec jump -v9
-In-Reply-To: <m163tfi5sq.fsf@frodo.ebiederm.org>
-Message-ID: <Pine.LNX.4.44L0.0805160955320.25035-100000@netrider.rowland.org>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1JxYLy-0006uZ-Io
+	for kexec@lists.infradead.org; Sun, 18 May 2008 02:10:26 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20080513053408.GA5870@redhat.com>
+	<1210730266.23707.50.camel@caritas-dev.intel.com>
+	<20080514025607.GA19944@redhat.com>
+	<1210736275.23707.62.camel@caritas-dev.intel.com>
+	<m1lk2c4l4i.fsf@frodo.ebiederm.org>
+	<1210827473.23707.133.camel@caritas-dev.intel.com>
+	<m1lk2bs970.fsf@frodo.ebiederm.org>
+	<1210902114.23707.156.camel@caritas-dev.intel.com>
+	<m14p8zgf43.fsf@frodo.ebiederm.org>
+	<1210906575.23707.189.camel@caritas-dev.intel.com>
+	<20080516032758.GD6926@redhat.com>
+Date: Sat, 17 May 2008 18:59:58 -0700
+In-Reply-To: <20080516032758.GD6926@redhat.com> (Vivek Goyal's message of
+	"Thu, 15 May 2008 23:27:58 -0400")
+Message-ID: <m1skwg8j8h.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH] kexec based hibernation: a prototype of kexec multi-stage
+	load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,106 +34,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, "Huang, Ying" <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>
 
-On Thu, 15 May 2008, Eric W. Biederman wrote:
+Vivek Goyal <vgoyal@redhat.com> writes:
+>
+> To me this idea also looks good. So control flow will look something
+> as follows?
+>
+> relocate_new kernel:
+> 	
+> 	if (!preserve_context)
+> 		set registers to known state.
+> 		jump to purgatory.
+> 	else
+> 		goto jump-back-setup:
+>
+> jump-back-setup:
+> - Color the stack.
+>   move $0xffffffff 0(%esp)
+>
+> - call %edx
+>
+> kexec_jump_back_entry:
+>
+> - If 0 (%esp) is not -1
+> 	image->start = 0(%esp)  //Re entry point of kernel B. Store it.
+>   else
+> 	We returned from BIOS call. Re-entry point has not changed
+>         Do nothing.
+>
+> - Continue to resume kernel A
 
-> I just can't get past the fact in that the only reason hibernation can
-> not use the widely implemented and tested probe/remove is because of
-> filesystems on block devices, and that you are proposing to add 4
-> methods for each and every driver to handle that case, when they
-> don't need ANYTHING!
 
-You are mixing together several distinct concepts: powering-down
-devices, quiescing devices, blocking request queues, and so on.
+That logic has more conditionals then I like but it may in
+fact be reasonable.  I don't have any fundamental objections
+into making this a co-routine interface.
 
-> The more I look at this the more I get the impression that
-> hibernation and suspend should be solved in separate patches.  I'm
-> not at all convinced that is what is good for the goose is good for
-> the gander for things like your prepare method.
+That said.  I think immediately implementing a coroutine interface
+is a premature optimization.  Please let's work on call/return.
+Then prototype the coroutine method of suspend to swap and see
+how much time it saves us.
 
-Isn't that exactly what Rafael has been doing?  Why do you think the 
-new PM framework has different methods for suspend and hibernate?
+Honestly I will be surprised if time will be saved, as historically
+at least the bottleneck in kernel startup time is initializing
+hardware, and we need to essentially redo all of that initialization.
 
-> Hibernation seems to be an extreme case of hotplug.
-
-?  I don't follow this at all.
-
-> Suspend seems to be just an extreme case of putting unused
-> devices in low power state.
-
-To a large extent that is true.  But there is more to it.
-
-Normally, when a device is put in a low-power state while the system is 
-running, it's expected that an I/O request will cause the device to 
-return to full power.  But during suspend things don't work that way; 
-instead I/O requests are supposed to be blocked and the device is 
-supposed to remain at low power.
-
-There are other requirements too.  While the system is running, more or
-less arbitrary devices can go to low power at more or less arbitrary
-times (as appropriate, of course).  But during suspend, the PM core has
-to arrange that _all_ devices go to low power.  This means, among other
-things, that drivers have to be prevented from registering new devices
-while the transition is taking place.  (Not to mention the races 
-involved in registering a new child device at the same time as its 
-parent is being powered down.)
-
-> + * @prepare: Prepare the device for the upcoming transition, but do NOT change
-> + *	its hardware state.  Prevent new children of the device from being
-> + *	registered after @prepare() returns (the driver's subsystem and
-...
-> + * @complete: Undo the changes made by @prepare().  This method is executed for
-...
-
-> The names above are terrible.  Perhaps: @pause/@unpause.
-
-I think you have missed the point of these methods.  What they do is
-unrelated to pausing or unpausing; their main purpose is to prevent and
-to allow new children from being registered.
-
-> @pause Stop all device driver user space facing activities, and prepare
->        for a possible power state transition.
-> 
-> Essentially these should be very much like bringing an ethernet
-> interface down.  The device is still there but we can't do anything
-> with it.  The only difference is that this may not be user visible.
-
-Why do we need this?  Why can't user-space-facing activities be stopped 
-when the power-level change occurs?
-
-> + * @freeze: Hibernation-specific, executed before creating a hibernation image.
-> + *	Quiesce operations so that a consistent image can be created, but do NOT
-> + *	otherwise put the device into a low power device state and do NOT emit
-> + *	system wakeup events.  Save in main memory the device settings to be
-> + *	used by @restore() during the subsequent resume from hibernation or by
-> + *	the subsequent @thaw(), if the creation of the image or the restoration
-> + *	of main memory contents from it fails.
-> + *
-> + * @thaw: Hibernation-specific, executed after creating a hibernation image OR
-> + *	if the creation of the image fails.  Also executed after a failing
-> + *	attempt to restore the contents of main memory from such an image.
-> + *	Undo the changes made by the preceding @freeze(), so the device can be
-> + *	operated in the same way as immediately before the call to @freeze().
-> 
-> Just @detach/@reattach.
-> 
-> @detach Detach the driver from the hardware, while keeping the driver
->         instance for the hardware alive.
-
-This isn't the same thing at all.  @freeze doesn't detach the driver 
-from anything.  It merely tells the driver to quiesce the device.
-
-> If we have events we care about we just need to do:
-> reattach(); suspend();  It is all the same from the point of view of
-> the device.  Not the system but the device.
-
-?  Why are you worried about what the device sees?  The device can't 
-even tell the difference between a detach and a period of time with no 
-I/O.
-
-Alan Stern
+Eric
 
 
 _______________________________________________
