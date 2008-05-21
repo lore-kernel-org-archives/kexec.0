@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1JyeXq-0004bp-Vd
-	for kexec@lists.infradead.org; Wed, 21 May 2008 02:59:15 +0000
-Date: Wed, 21 May 2008 12:59:06 +1000
+	id 1JyhAU-0004Qw-4I
+	for kexec@lists.infradead.org; Wed, 21 May 2008 05:47:18 +0000
+Date: Wed, 21 May 2008 15:47:07 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] PPC64: ensure that extra rtas segment is a multiple of
-	PAGE_SIZE
-Message-ID: <20080521025904.GC5126@verge.net.au>
-References: <20080520152640.GB16652@hmsreliant.think-freely.org>
+Subject: Re: [PATCH] Cross compile?
+Message-ID: <20080521054705.GA3714@verge.net.au>
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<200805060742.45737.jk@ozlabs.org>
+	<20080506133108.GB29182@nlxdcldnl2.cl.intel.com>
+	<200805070842.23111.jk@ozlabs.org>
+	<20080507150932.GA24429@nlxdcldnl2.cl.intel.com>
+	<20080507153927.GA21888@nlxdcldnl2.cl.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080520152640.GB16652@hmsreliant.think-freely.org>
+In-Reply-To: <20080507153927.GA21888@nlxdcldnl2.cl.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,30 +28,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: kexec@lists.infradead.org, ebiederm@xmission.com, vgoyal@redhat.com
+To: Jeremy Kerr <jk@ozlabs.org>, kexec@lists.infradead.org
 
-On Tue, May 20, 2008 at 11:26:40AM -0400, Neil Horman wrote:
-> kexec on ppc64 systems, include an extra PT_LOAD segment if the rtas
-> memory hits the stored kdump kernel image.  While the rtas area is
-> memory mapped (implying that it begins and ends on a page boundary),
-> the whole of the mapped region is not consumed by the rtas features
-> (the remaining area just returns 0's).  This unused area is not
-> accounted in the rtas prom, which is used to populate the proc files
-> which export the size information that is used to define the mapped
-> memory region (/proc/device-tree/rtas/rtas-size).  Since this is the
-> data that kexec uses to generate the PT_LOAD segment, we wind up with
-> a PT_LOAD segment that incorrectly contains a partial page.  This
-> causes things like makedumpfile to fail, since it reads memory in page
-> sized chunks, and fails on the inability to read only part of a page.
-> This patch corrects that by rounding the extra segment size up the
-> next whole page size.  This is safe, since the rtas area is mapped to
-> a whole page range.  I've tested on both 4k and 64k configured kernels
-> on ppc64 and found that it works well.
+On Wed, May 07, 2008 at 08:39:27AM -0700, Lombard, David N wrote:
+> On Wed, May 07, 2008 at 08:09:32AM -0700, Lombard, David N wrote:
+> > On Wed, May 07, 2008 at 08:42:22AM +1000, Jeremy Kerr wrote:
+> > > Hi David,
+> > > 
+> > > > Well, note the patch *does* uses those values--it's just the
+> > > > assignment doesn't work.
+> > > 
+> > > Let's fix the assignment then - it's been working fine here (build = 
+> > > i386-linux, host = powerpc-linux, target = powerpc64-linux), so I'd 
+> > > like to know what's breaking on your system.
 > 
-> Regards Neil
+> More info:
+> 
+> Failure (original):
+> 
+>  mkdir -p purgatory
+>  uclibc-gcc  --no-undefined -nostartfiles -nostdlib -nodefaultlibs -e purgatory_start -r -o purgatory/purgatory.ro purgatory/purgatory.o purgatory/printf.o purgatory/string.o purgatory/arch/i386/entry32-16.o purgatory/arch/i386/entry32-16-debug.o purgatory/arch/i386/entry32.o purgatory/arch/i386/setup-x86.o purgatory/arch/i386/stack.o purgatory/arch/i386/compat_x86_64.o purgatory/arch/i386/purgatory-x86.o purgatory/arch/i386/console-x86.o purgatory/arch/i386/vga.o purgatory/arch/i386/pic.o purgatory/arch/i386/crashdump_backup.o purgatory/sha256.o
+>  uclibc-gcc   -o bin/bin-to-hex util/bin-to-hex.c
+>  mkdir -p kexec
+>  bin/bin-to-hex purgatory < purgatory/purgatory.ro > kexec/purgatory.c
+>  /bin/sh: bin/bin-to-hex: /lib/ld-uClibc.so.0: bad ELF interpreter: No such file or directory
+>  make[1]: *** [kexec/purgatory.c] Error 126
+> 
+> Success (patched):
+> 
+>  mkdir -p purgatory
+>  uclibc-gcc  --no-undefined -nostartfiles -nostdlib -nodefaultlibs -e purgatory_start -r -o purgatory/purgatory.ro purgatory/purgatory.o purgatory/printf.o purgatory/string.o purgatory/arch/i386/entry32-16.o purgatory/arch/i386/entry32-16-debug.o purgatory/arch/i386/entry32.o purgatory/arch/i386/setup-x86.o purgatory/arch/i386/stack.o purgatory/arch/i386/compat_x86_64.o purgatory/arch/i386/purgatory-x86.o purgatory/arch/i386/console-x86.o purgatory/arch/i386/vga.o purgatory/arch/i386/pic.o purgatory/arch/i386/crashdump_backup.o purgatory/sha256.o
+>  host-gcc -O2 -Wall -o bin/bin-to-hex util/bin-to-hex.c
+>  mkdir -p kexec
+>  bin/bin-to-hex purgatory < purgatory/purgatory.ro > kexec/purgatory.c
+>  uclibc-gcc -g -O2 -fno-strict-aliasing -Wall -Wstrict-prototypes -I./include -I./util_lib/include -Iinclude/ -I./kexec/arch/i386/include  -c -MD -o kexec/purgatory.o kexec/purgatory.c
+> 
+> Build distro is F7
+> Using purpose-built gcc-3.4.6 for both uclibc-gcc and host-gcc
+> Make is make-3.81-6.fc7
 
-Thanks Neil, applied.
+Hi David,
+
+I'm a little bit confused about how you are invoking ./configure
 
 -- 
 Horms
