@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JymV4-0000Cq-IX
-	for kexec@lists.infradead.org; Wed, 21 May 2008 11:28:55 +0000
-Date: Wed, 21 May 2008 13:29:28 +0200
+	id 1JymWK-0000YA-BZ
+	for kexec@lists.infradead.org; Wed, 21 May 2008 11:30:12 +0000
+Date: Wed, 21 May 2008 13:30:48 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Update 32 bit boot protocol
-Message-ID: <20080521132928.29df44e5@halley.suse.de>
-In-Reply-To: <20080521061225.GG3714@verge.net.au>
-References: <20080509164355.GA16830@suse.de>
-	<20080521061225.GG3714@verge.net.au>
+Subject: Re: [PATCH] Add --reuse-cmdline
+Message-ID: <20080521133048.7bf4082f@halley.suse.de>
+In-Reply-To: <20080513182423.GA18392@nlxdcldnl2.cl.intel.com>
+References: <20080508204943.GA24160@suse.de> <19164.1210353205@neuling.org>
+	<20080512153849.74753e71@kopernikus.site>
+	<17602.1210621437@neuling.org>
+	<20080513182423.GA18392@nlxdcldnl2.cl.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,37 +25,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: "Lombard, David N" <dnlombar@ichips.intel.com>
+Cc: Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org
 
-* Simon Horman [2008-05-21 16:12]:
+* Lombard, David N [2008-05-13 11:24]:
 >
-> On Fri, May 09, 2008 at 06:43:55PM +0200, Bernhard Walle wrote:
-> > This patch updates the boot protocol to match with the kernel. See
-> > Documentation/i386/zero-page.txt in kernel.
-> > 
-> > The number of E820 map entries have been increased from 32 to 128. The update
-> > is necessary for the next patch that implements EDD support for kexec.
-> > when using the default 32 bit mode.
-> > 
-> > 
-> > Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-> Thanks, I have applied this change, though I
-> am a little confused about the relationship between
-> the information in (kernel/)Documentation/i386/zero-page.txt and
-> (kexec-tools-testing/)doc/linux-i386-zero-page.txt.
+> The problem is that not all boot options are always usable in the next
+> kernel, in addition to being architecturally specific, it's very
+> situational.  Having written that, a generic framework could be usable.
 
-Well, it's supposed to contain the same information. I think the 32 bit
-boot protocol, i.e. the communication between the "setup" part of
-bzImage and the real Linux kernel, was "explored" and used by kexec
-first and then "standardised" by Linux developers. Therefore, the
-documentation appeared first in kexec-tools and then some kernel
-developer put it into documentation tree of the kernel.
-
-Maybe it would make also sense to remove that part of documentation
-from kexec and just refer to the (more up to date) Linux documentation.
-But I leave this up to your decision. I just discovered that mistake.
+Yes. I think that the framework to read out the command line and filter
+out options like crashkernel that *never* make sense should be
+architecture independent. Then architecture specific code could make
+the rest.
 
 
 	Bernhard
