@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jyhzl-0005DV-8b
-	for kexec@lists.infradead.org; Wed, 21 May 2008 06:40:17 +0000
-Date: Wed, 21 May 2008 16:40:06 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Update KEXEC_ARCH_* constants from Linux kernel headers.
-Message-ID: <20080521064005.GM3714@verge.net.au>
-References: <20080516053423.GA21166@oh.minilop.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080516053423.GA21166@oh.minilop.net>
+Received: from mx1.suse.de ([195.135.220.2])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1JymV4-0000Cq-IX
+	for kexec@lists.infradead.org; Wed, 21 May 2008 11:28:55 +0000
+Date: Wed, 21 May 2008 13:29:28 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Update 32 bit boot protocol
+Message-ID: <20080521132928.29df44e5@halley.suse.de>
+In-Reply-To: <20080521061225.GG3714@verge.net.au>
+References: <20080509164355.GA16830@suse.de>
+	<20080521061225.GG3714@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +23,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jamey Sharp <jamey@thetovacompany.com>
+To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-On Thu, May 15, 2008 at 10:34:23PM -0700, Jamey Sharp wrote:
-> Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
-> ---
-> I thought I'd need this, but it turned out not to matter. I'm submitting
-> it anyway because keeping kexec-tools in sync with the kernel kexec
-> headers seems like a good idea.
+* Simon Horman [2008-05-21 16:12]:
+>
+> On Fri, May 09, 2008 at 06:43:55PM +0200, Bernhard Walle wrote:
+> > This patch updates the boot protocol to match with the kernel. See
+> > Documentation/i386/zero-page.txt in kernel.
+> > 
+> > The number of E820 map entries have been increased from 32 to 128. The update
+> > is necessary for the next patch that implements EDD support for kexec.
+> > when using the default 32 bit mode.
+> > 
+> > 
+> > Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> 
+> Thanks, I have applied this change, though I
+> am a little confused about the relationship between
+> the information in (kernel/)Documentation/i386/zero-page.txt and
+> (kexec-tools-testing/)doc/linux-i386-zero-page.txt.
 
-Thanks, that seems reasonable to me. Applied.
+Well, it's supposed to contain the same information. I think the 32 bit
+boot protocol, i.e. the communication between the "setup" part of
+bzImage and the real Linux kernel, was "explored" and used by kexec
+first and then "standardised" by Linux developers. Therefore, the
+documentation appeared first in kexec-tools and then some kernel
+developer put it into documentation tree of the kernel.
 
--- 
-Horms
+Maybe it would make also sense to remove that part of documentation
+from kexec and just refer to the (more up to date) Linux documentation.
+But I leave this up to your decision. I just discovered that mistake.
 
+
+	Bernhard
 
 _______________________________________________
 kexec mailing list
