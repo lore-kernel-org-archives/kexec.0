@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jyhiu-0001GL-84
-	for kexec@lists.infradead.org; Wed, 21 May 2008 06:22:52 +0000
-Date: Wed, 21 May 2008 16:22:45 +1000
+	id 1Jyhjd-0002ha-91
+	for kexec@lists.infradead.org; Wed, 21 May 2008 06:23:37 +0000
+Date: Wed, 21 May 2008 16:23:30 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Prototype ifdown() in kexec.h, not nested in main().
-Message-ID: <20080521062243.GJ3714@verge.net.au>
-References: <20080516001258.GA6259@oh.minilop.net>
+Subject: Re: [PATCH] Open slurped files in binary mode, on systems where
+	that matters.
+Message-ID: <20080521062328.GK3714@verge.net.au>
+References: <20080516001337.GA6312@oh.minilop.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080516001258.GA6259@oh.minilop.net>
+In-Reply-To: <20080516001337.GA6312@oh.minilop.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,13 +27,16 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jamey Sharp <jamey@thetovacompany.com>
 Cc: kexec@lists.infradead.org
 
-On Thu, May 15, 2008 at 05:12:58PM -0700, Jamey Sharp wrote:
+On Thu, May 15, 2008 at 05:13:37PM -0700, Jamey Sharp wrote:
 > Signed-off-by: Jamey Sharp <jamey@thetovacompany.com>
 > ---
-> Another generic patch extracted from my Windows porting work.
+> This patch shouldn't hurt any system that doesn't distinguish between
+> binary and text files, and helps when running on Windows.
 
-Thanks for cleaning up that abomination.
-Applied.
+Thanks,
+
+I have to confess that I've never had to deal with _O_BINARY myself,
+but the patch does look correct to me. I have applied it.
 
 -- 
 Horms
