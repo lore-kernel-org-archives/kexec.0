@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jz7AB-0005Kl-BY
-	for kexec@lists.infradead.org; Thu, 22 May 2008 09:32:44 +0000
-Subject: [PATCH] kexec jump -v10: kexec jump
+	id 1Jz7Eo-0005jK-PA
+	for kexec@lists.infradead.org; Thu, 22 May 2008 09:37:31 +0000
+Subject: [PATCH 1/2] kexec jump -v10: kexec jump (resend, fix subject,
+	please ignore previous one)
 From: "Huang, Ying" <ying.huang@intel.com>
-Date: Thu, 22 May 2008 17:33:30 +0800
-Message-Id: <1211448810.12819.8.camel@caritas-dev.intel.com>
+Date: Thu, 22 May 2008 17:38:18 +0800
+Message-Id: <1211449098.12819.14.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
