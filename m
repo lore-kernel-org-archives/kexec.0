@@ -1,34 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e5.ny.us.ibm.com ([32.97.182.145])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1JzTCc-00033f-SK
-	for kexec@lists.infradead.org; Fri, 23 May 2008 09:04:43 +0000
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m4N94gZD021416
-	for <kexec@lists.infradead.org>; Fri, 23 May 2008 05:04:42 -0400
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m4N94gZJ153520
-	for <kexec@lists.infradead.org>; Fri, 23 May 2008 05:04:42 -0400
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m4N94f4g003369
-	for <kexec@lists.infradead.org>; Fri, 23 May 2008 05:04:41 -0400
-Message-ID: <483688A6.1080601@in.ibm.com>
-Date: Fri, 23 May 2008 14:34:38 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Jzdkr-0000N3-5N
+	for kexec@lists.infradead.org; Fri, 23 May 2008 20:20:45 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <4836AC3C.3090005@in.ibm.com>
+Date: Fri, 23 May 2008 13:14:42 -0700
+In-Reply-To: <4836AC3C.3090005@in.ibm.com> (Sharyathi Nagesh's message of
+	"Fri, 23 May 2008 17:06:28 +0530")
+Message-ID: <m1ve144w25.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: Question about forcing kernel panic on PowerMac G5 by kexec
-	command
-References: <200804210517.m3L5Hq61011769@toshiba.co.jp>
-	<480D790D.7080403@in.ibm.com>
-	<200804230041.m3N0fIQD013543@toshiba.co.jp>
-	<480F05D7.1060402@in.ibm.com>
-	<200805090406.m4946FxB003919@toshiba.co.jp>
-	<482A69C5.3060106@in.ibm.com>
-	<200805140502.m4E52udd015629@toshiba.co.jp>
-	<48342A82.2000706@in.ibm.com>
-In-Reply-To: <48342A82.2000706@in.ibm.com>
+Subject: Re: correction to compat_sys_kexec_load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,35 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: gib <suchada.pitchayasamanya@toshiba.co.jp>
-Cc: kexec@lists.infradead.org
+To: Sharyathi Nagesh <sharyath@in.ibm.com>
+Cc: akpm@osdl.org, mohd.omar@in.ibm.com, IndhuDurai@in.ibm.com, maneesh@in.ltcfwd.linux.ibm.com, Kexec Mailing List <kexec@lists.infradead.org>, fastboot@lists.osdl.org, linux-kernel@vger.kernel.org, mohan@in.ibm.com, sachinp@in.ibm.com
 
-Mohan Kumar M wrote:
-> gib wrote:
->> Hi Mohan,
->>
->>> Do you have only one entry for memory node in the /proc/device-tree
->> directory?
->> Yes, I have only one entry(for memory) in the /proc/device-tree directory.
->>
->>> Do you know last good working version of kernel (for kdump) and try to 
->>> boot into that kernel and check the memory nodes in device-tree?
->> What is the last version of kernel for kdump which you mentioned?
->> (now I using the vanilla kernel 2.6.25 version)
-> 
-> Hi Suchada,
-> 
-> Sorry, I don't have information related to G5 and kexec/kdump. Still I 
-> am not sure why the device tree is exporting only one memory node.
+Sharyathi Nagesh <sharyath@in.ibm.com> writes:
 
-Hi Suchada,
+> Hi
+>   While testing with kexec tool, I observed some problems. When application
+> (kexec) is 32 bit and kernel is 64 bit I observed that loading crash kernel
+> works without any issues but unloading crash kernel fails.
+> --------------------------------------------------------
+> running strace over 'kexec -u -p'
+> show the problem to be with sys_kexec_load() call
+>
+> sys_kexec_load(0, 0, 0, 0x1, 0)         = -1 EINVAL (Invalid argument)
+> write(2, "kexec_load (0 segments) failed: "..., 49
+> kexec_load (0 segments) failed: Invalid argument
+> ) = 4
 
-Is there any node called "ibm,dynamic-reconfiguration-memory" in the 
-device tree?
+Yes.  This is a bug.  Although not in the kernel implementation.
 
-Regards,
-Mohan.
+> --------------------------------------------------------
+>
+> This is patch to fix the problem, I think kernel code had a typo where in:
+> if((flags & KEXEC_ARCH_MASK) == KEXEC_ARCH) was used instead of
+> if((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH)
 
+Nope.  We do the latter check after we have fixed up the arguments
+and call sys_kexec_load.  The check really is meant to filter out
+KEXEC_ARCH_DEFAULT.
+
+
+> This patch takes care of that, I have tested the patch it worked fine for
+> me. Please review the patch and let me know of your views. This patch is based
+> on linux-2.6.26-rc3.
+
+That patch as it exists is actively bad.  It removes the check for a really
+nasty gotcha if someone passes in KEXEC_ARCH_DEFAULT in 32bit mode.  Code
+expecting a 32bit handoff and getting a 64bit handoff will explode in fun
+ways.  You happened to test the one corner case where this does not matter.
+
+What we need to do is fix /sbin/kexec to pass in the correct
+architecture of the kernel for unload as it does for load.
+
+Eric
 
 _______________________________________________
 kexec mailing list
