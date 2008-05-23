@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from an-out-0708.google.com ([209.85.132.247])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Jzdkr-0000N3-5N
-	for kexec@lists.infradead.org; Fri, 23 May 2008 20:20:45 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <4836AC3C.3090005@in.ibm.com>
-Date: Fri, 23 May 2008 13:14:42 -0700
-In-Reply-To: <4836AC3C.3090005@in.ibm.com> (Sharyathi Nagesh's message of
-	"Fri, 23 May 2008 17:06:28 +0530")
-Message-ID: <m1ve144w25.fsf@frodo.ebiederm.org>
+	id 1JzfVk-0000Na-F8
+	for kexec@lists.infradead.org; Fri, 23 May 2008 22:13:16 +0000
+Received: by an-out-0708.google.com with SMTP id c24so207878ana.99
+	for <kexec@lists.infradead.org>; Fri, 23 May 2008 15:13:13 -0700 (PDT)
+Message-ID: <e2ed954f0805231513i28cb788bt856d91afcab4e227@mail.gmail.com>
+Date: Fri, 23 May 2008 15:13:12 -0700
+From: "Jamey Sharp" <jamey@thetovacompany.com>
+Subject: Re: [RFC] Win32 port of the userspace tools using MinGW.
+In-Reply-To: <20080522153403.1e6e714a@kopernikus.site>
 MIME-Version: 1.0
-Subject: Re: correction to compat_sys_kexec_load
+Content-Disposition: inline
+References: <20080516054813.GA21670@oh.minilop.net>
+	<20080522153403.1e6e714a@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,50 +26,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sharyathi Nagesh <sharyath@in.ibm.com>
-Cc: akpm@osdl.org, mohd.omar@in.ibm.com, IndhuDurai@in.ibm.com, maneesh@in.ltcfwd.linux.ibm.com, Kexec Mailing List <kexec@lists.infradead.org>, fastboot@lists.osdl.org, linux-kernel@vger.kernel.org, mohan@in.ibm.com, sachinp@in.ibm.com
+To: kexec@lists.infradead.org
 
-Sharyathi Nagesh <sharyath@in.ibm.com> writes:
-
-> Hi
->   While testing with kexec tool, I observed some problems. When application
-> (kexec) is 32 bit and kernel is 64 bit I observed that loading crash kernel
-> works without any issues but unloading crash kernel fails.
-> --------------------------------------------------------
-> running strace over 'kexec -u -p'
-> show the problem to be with sys_kexec_load() call
+On Thu, May 22, 2008 at 6:34 AM, Bernhard Walle <bwalle@suse.de> wrote:
+> * Jamey Sharp <jamey@thetovacompany.com> [2008-05-15 22:48]:
+>> OK, I haven't quite gotten around to posting the Windows kernel driver
+>> source that goes with this.
 >
-> sys_kexec_load(0, 0, 0, 0x1, 0)         = -1 EINVAL (Invalid argument)
-> write(2, "kexec_load (0 segments) failed: "..., 49
-> kexec_load (0 segments) failed: Invalid argument
-> ) = 4
+> Do you plan to release the driver sources?
 
-Yes.  This is a bug.  Although not in the kernel implementation.
+Yes, and I've finally done so. The code I wrote is licensed under GPLv2
+or later; some Linux kernel source is included verbatim or with
+modifications, and is licensed accordingly.
+    http://source.thetovacompany.com/kexec-win/
 
-> --------------------------------------------------------
+I've only tried cross-compiling this code from Linux. In principle it
+should build with MinGW on Windows as well, if anyone cares. :-)
+
+My versions of machine_kexec_32.c and relocate_kernel_32.S have some
+changes. I've been trying to find time to propose them as patches to
+Linux kexec, but I've been waiting until I could test them, which hasn't
+happened yet. I started from Linux v2.6.25 if anyone cares to diff them.
+
+The load_kimage function in kexec.c is roughly equivalent to
+sys_kexec_load in Linux but with a lot less code. It doesn't handle the
+possibility of being allocated pages at addresses that won't fit in an
+unsigned long. But I think it handles everything else that Linux does,
+with less complexity. I'd really like to get review on that, and see if
+something like my algorithm should go into the Linux implementation too.
+
+>> +
+>> +     if(memory_range)
+>> +     {
+>> +             *range = memory_range;
+>> +             *ranges = memory_ranges;
+>> +             return 0;
+>> +     }
 >
-> This is patch to fix the problem, I think kernel code had a typo where in:
-> if((flags & KEXEC_ARCH_MASK) == KEXEC_ARCH) was used instead of
-> if((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH)
+> I think you should use the kernel coding style here, i.e. the '{' in
+> the same line as the 'if'.
 
-Nope.  We do the latter check after we have fixed up the arguments
-and call sys_kexec_load.  The check really is meant to filter out
-KEXEC_ARCH_DEFAULT.
+I assume you mean I should use kernel style throughout, not just in the
+quoted bit. :-) Sure, I can do that. I was hoping for more feedback than
+just code style though. :-)
 
-
-> This patch takes care of that, I have tested the patch it worked fine for
-> me. Please review the patch and let me know of your views. This patch is based
-> on linux-2.6.26-rc3.
-
-That patch as it exists is actively bad.  It removes the check for a really
-nasty gotcha if someone passes in KEXEC_ARCH_DEFAULT in 32bit mode.  Code
-expecting a 32bit handoff and getting a 64bit handoff will explode in fun
-ways.  You happened to test the one corner case where this does not matter.
-
-What we need to do is fix /sbin/kexec to pass in the correct
-architecture of the kernel for unload as it does for load.
-
-Eric
+Jamey
 
 _______________________________________________
 kexec mailing list
