@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 52.19.354a.static.theplanet.com ([74.53.25.82]
-	helo=elimiz.elimizonline.net)
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K0GoG-0003AE-Pu
-	for kexec@lists.infradead.org; Sun, 25 May 2008 14:02:53 +0000
-Received: from [91.98.72.124] (helo=ArminLaptop)
-	by elimiz.elimizonline.net with esmtpa (Exim 4.68)
-	(envelope-from <zoup@zoup.org>) id 1K0Go6-00044T-7l
-	for kexec@lists.infradead.org; Sun, 25 May 2008 19:02:43 +0500
-Date: Sun, 25 May 2008 18:19:54 +0430
-From: Armin ranjbar <zoup@zoup.org>
-Subject: Re: Freeze problem
-Message-Id: <20080525181954.4091b47e.zoup@zoup.org>
-In-Reply-To: <20080525152720.6b4f1ede@kopernikus.site>
-References: <20080525151904.10392ec8.zoup@zoup.org>
-	<20080525130732.32ddc731@kopernikus.site>
-	<20080525170335.00ef0676.zoup@zoup.org>
-	<20080525152720.6b4f1ede@kopernikus.site>
+	id 1K0MZT-0006Zv-4v
+	for kexec@lists.infradead.org; Sun, 25 May 2008 20:11:59 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 9C92F45E46
+	for <kexec@lists.infradead.org>; Sun, 25 May 2008 22:11:56 +0200 (CEST)
+Date: Sun, 25 May 2008 22:11:54 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Use 'long long' for printf() format string and ELF64 numbers.
+Message-ID: <20080525221154.2fd2e432@kopernikus.site>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -32,20 +27,46 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-On Sun, 25 May 2008 15:27:20 +0200
-Bernhard Walle <bwalle@suse.de> wrote:
->    kexec --console-vga --debug -p /boot/vmlinux ....
-> 
-> That gives a bit more diagnostics in purgatory code to see where the
-> system hangs. However, not sure if that also works when booting the
-> crashkernel. Can you try a normal kexec (with -l) first and see if that
-> works in your configuration?
+Since 'long long' is 64 bit wide on almost any platform, especially on
+32 bit platforms (like i386) while 'long long' is only 64 bit on 64 bit
+platforms but 32 bit on 32 bit platforms, 'long long' is more suited and
+fixes compiler warnings like
 
-Yes thats works perfectly ( with -l ), 
-you want result of that debug command if it failed or not ?
+  kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
+        'long unsigned int', but argument 4 has type 'Elf64_Off'
+  kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
+        'long unsigned int', but argument 5 has type 'Elf64_Addr'
+  ...
+  kexec/crashdump-elf.c:248: warning: format '%lx' expects type \
+        'long unsigned int', but argument 8 has type 'Elf64_Xword'
 
--- 
-Armin ranjbar , System Administrator
+Tested on i686-pc-linux-gnu.
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
+index 7d2befe..f01accb 100644
+--- a/kexec/crashdump-elf.c
++++ b/kexec/crashdump-elf.c
+@@ -4,12 +4,12 @@
+ #endif
+ 
+ #if (ELF_WIDTH == 64)
+-#define dbgprintf_phdr(prefix, phdr)					\
+-do {									\
+-	dbgprintf("%s: p_type = %u, p_offset = 0x%lx p_paddr = 0x%lx "	\
+-		"p_vaddr = 0x%lx p_filesz = 0x%lx p_memsz = 0x%lx\n",	\
+-		(prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, \
+-		(phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);	\
++#define dbgprintf_phdr(prefix, phdr)						\
++do {										\
++	dbgprintf("%s: p_type = %u, p_offset = 0x%llx p_paddr = 0x%llx "	\
++		"p_vaddr = 0x%llx p_filesz = 0x%llx p_memsz = 0x%llx\n",	\
++		(prefix), (phdr)->p_type, (phdr)->p_offset, (phdr)->p_paddr, 	\
++		(phdr)->p_vaddr, (phdr)->p_filesz, (phdr)->p_memsz);		\
+ } while(0)
+ #else
+ #define dbgprintf_phdr(prefix, phdr)					\
 
 _______________________________________________
 kexec mailing list
