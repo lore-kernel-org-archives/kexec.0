@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx1.suse.de ([195.135.220.2])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K0gyl-0002FO-Iy
-	for kexec@lists.infradead.org; Mon, 26 May 2008 17:59:27 +0000
-Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 169EC412C0
-	for <kexec@lists.infradead.org>; Mon, 26 May 2008 19:59:25 +0200 (CEST)
+	id 1K0jNQ-00052f-Hz
+	for kexec@lists.infradead.org; Mon, 26 May 2008 20:33:06 +0000
+Date: Mon, 26 May 2008 22:32:59 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Don't run libtoolize and automake in bootstrap.
-Date: Mon, 26 May 2008 20:00:02 +0200
-Message-Id: <1211824802-7205-1-git-send-email-bwalle@suse.de>
+Subject: Re: correction to compat_sys_kexec_load
+Message-ID: <20080526223259.4d3d2979@kopernikus.site>
+In-Reply-To: <m1od6w4jxx.fsf@frodo.ebiederm.org>
+References: <4836AC3C.3090005@in.ibm.com> <m1ve144w25.fsf@frodo.ebiederm.org>
+	<20080523233348.13fe0c63@kopernikus.site>
+	<m1od6w4jxx.fsf@frodo.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,39 +20,21 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: akpm@osdl.org, Sharyathi Nagesh <sharyath@in.ibm.com>, IndhuDurai@in.ibm.com, mohd.omar@in.ibm.com, Kexec Mailing List <kexec@lists.infradead.org>, fastboot@lists.osdl.org, linux-kernel@vger.kernel.org, mohan@in.ibm.com, sachinp@in.ibm.com
 
-This patch removes the 'automake' and 'libtoolize' calls from the 'bootstrap'.
-The bug has been introduced by commit 6f65cb623cdb82f712144e438d9aa2f097376251
-by myself. Automake and Libtool are not used in kexec-tools.
+* ebiederm@xmission.com (Eric W. Biederman) [2008-05-23 17:36]:
+>
+> As there is no real justification for it.  At this
+> point getting user space fixed so that it works on older kernels
+> seems important. 
 
+http://article.gmane.org/gmane.linux.kernel.kexec/1534 should fix this.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- bootstrap |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
-
-diff --git a/bootstrap b/bootstrap
-index 8e289e1..fc9837d 100755
---- a/bootstrap
-+++ b/bootstrap
-@@ -22,8 +22,6 @@
- set -x
- aclocal -I config
- autoheader
--automake --foreign --add-missing --copy
- autoconf
--libtoolize --copy
- 
- ## @end 1
--- 
-1.5.4.5
 
 
 _______________________________________________
