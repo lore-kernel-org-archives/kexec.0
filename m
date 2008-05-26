@@ -1,24 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 52.19.354a.static.theplanet.com ([74.53.25.82]
-	helo=elimiz.elimizonline.net)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K0ZiW-0003fT-V1
-	for kexec@lists.infradead.org; Mon, 26 May 2008 10:14:13 +0000
-Received: from [91.98.72.124] (helo=ArminLaptop)
-	by elimiz.elimizonline.net with esmtpa (Exim 4.68)
-	(envelope-from <zoup@zoup.org>) id 1K0ZiP-0006hA-7T
-	for kexec@lists.infradead.org; Mon, 26 May 2008 15:14:06 +0500
-Date: Mon, 26 May 2008 14:44:09 +0430
-From: Armin ranjbar <zoup@zoup.org>
-Subject: Re: Freeze problem
-Message-Id: <20080526144409.33560588.zoup@zoup.org>
-In-Reply-To: <20080525181954.4091b47e.zoup@zoup.org>
-References: <20080525151904.10392ec8.zoup@zoup.org>
-	<20080525130732.32ddc731@kopernikus.site>
-	<20080525170335.00ef0676.zoup@zoup.org>
-	<20080525152720.6b4f1ede@kopernikus.site>
-	<20080525181954.4091b47e.zoup@zoup.org>
-Mime-Version: 1.0
+	id 1K0eEK-0003OD-Ae
+	for kexec@lists.infradead.org; Mon, 26 May 2008 15:03:21 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Specify the arch on kexec_unload.
+Date: Mon, 26 May 2008 16:41:39 +0200
+Message-Id: <1211812899-21448-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,23 +15,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: Sharyathi@suse.de, Nagesh@suse.de, "[D,
+	Bernhard Walle <bwalle@suse.de>]"@suse.de, ""@suse.de, sharyath@in.ibm.com
 
-On Sun, 25 May 2008 18:19:54 +0430
-> > That gives a bit more diagnostics in purgatory code to see where the
-> > system hangs. However, not sure if that also works when booting the
-> > crashkernel. Can you try a normal kexec (with -l) first and see if that
-> > works in your configuration?
+This fixes the problem in kexec-tools that the patch
+http://article.gmane.org/gmane.linux.kernel/685027 tries to fix in kernel.
 
-with debug and serial console output , result is the same, freeze .
-by the way -d did  not print any more info than normal kexec run .
+The fix in userspace is correct.
 
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ kexec/kexec.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 096fa4f..1550d68 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -702,6 +702,14 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ int k_unload (unsigned long kexec_flags)
+ {
+ 	int result;
++	long native_arch;
++
++	/* set the arch */
++	native_arch = physical_arch();
++	if (native_arch < 0) {
++		return -1;
++	}
++	kexec_flags |= native_arch;
+ 
+ 	result = kexec_load(NULL, 0, NULL, kexec_flags);
+ 	if (result != 0) {
 -- 
-Armin ranjbar , System Administrator
+1.5.4.5
+
 
 _______________________________________________
 kexec mailing list
