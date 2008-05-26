@@ -1,12 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K0eEK-0003OB-9m
-	for kexec@lists.infradead.org; Mon, 26 May 2008 15:03:21 +0000
+	id 1K0gyl-0002FO-Iy
+	for kexec@lists.infradead.org; Mon, 26 May 2008 17:59:27 +0000
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 169EC412C0
+	for <kexec@lists.infradead.org>; Mon, 26 May 2008 19:59:25 +0200 (CEST)
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Specify the arch on kexec_unload.
-Date: Mon, 26 May 2008 16:46:58 +0200
-Message-Id: <1211813218-21886-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH] Don't run libtoolize and automake in bootstrap.
+Date: Mon, 26 May 2008 20:00:02 +0200
+Message-Id: <1211824802-7205-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +26,31 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: sharyath@in.ibm.com, Bernhard Walle <bwalle@suse.de>
+Cc: Bernhard Walle <bwalle@suse.de>
 
-This fixes the problem in kexec-tools that the patch
-http://article.gmane.org/gmane.linux.kernel/685027 tries to fix in kernel.
+This patch removes the 'automake' and 'libtoolize' calls from the 'bootstrap'.
+The bug has been introduced by commit 6f65cb623cdb82f712144e438d9aa2f097376251
+by myself. Automake and Libtool are not used in kexec-tools.
 
-The fix in userspace is correct.
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- kexec/kexec.c |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ bootstrap |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 096fa4f..1550d68 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -702,6 +702,14 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- int k_unload (unsigned long kexec_flags)
- {
- 	int result;
-+	long native_arch;
-+
-+	/* set the arch */
-+	native_arch = physical_arch();
-+	if (native_arch < 0) {
-+		return -1;
-+	}
-+	kexec_flags |= native_arch;
+diff --git a/bootstrap b/bootstrap
+index 8e289e1..fc9837d 100755
+--- a/bootstrap
++++ b/bootstrap
+@@ -22,8 +22,6 @@
+ set -x
+ aclocal -I config
+ autoheader
+-automake --foreign --add-missing --copy
+ autoconf
+-libtoolize --copy
  
- 	result = kexec_load(NULL, 0, NULL, kexec_flags);
- 	if (result != 0) {
+ ## @end 1
 -- 
 1.5.4.5
 
