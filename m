@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K0eEK-0003OD-Ae
+	id 1K0eEK-0003OB-9m
 	for kexec@lists.infradead.org; Mon, 26 May 2008 15:03:21 +0000
 From: Bernhard Walle <bwalle@suse.de>
 Subject: [PATCH] Specify the arch on kexec_unload.
-Date: Mon, 26 May 2008 16:41:39 +0200
-Message-Id: <1211812899-21448-1-git-send-email-bwalle@suse.de>
+Date: Mon, 26 May 2008 16:46:58 +0200
+Message-Id: <1211813218-21886-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,8 +21,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Sharyathi@suse.de, Nagesh@suse.de, "[D,
-	Bernhard Walle <bwalle@suse.de>]"@suse.de, ""@suse.de, sharyath@in.ibm.com
+Cc: sharyath@in.ibm.com, Bernhard Walle <bwalle@suse.de>
 
 This fixes the problem in kexec-tools that the patch
 http://article.gmane.org/gmane.linux.kernel/685027 tries to fix in kernel.
