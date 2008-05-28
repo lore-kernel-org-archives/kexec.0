@@ -1,19 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from an-out-0708.google.com ([209.85.132.249])
+Received: from an-out-0708.google.com ([209.85.132.247])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K19qQ-000781-QX
-	for kexec@lists.infradead.org; Wed, 28 May 2008 00:48:47 +0000
-Received: by an-out-0708.google.com with SMTP id c24so619154ana.99
-	for <kexec@lists.infradead.org>; Tue, 27 May 2008 17:48:45 -0700 (PDT)
-Message-ID: <e2ed954f0805271748s2254480at35f71c3395072def@mail.gmail.com>
-Date: Tue, 27 May 2008 17:48:44 -0700
-From: "Jamey Sharp" <jamey@minilop.net>
-Subject: Re: [PATCH] Use 'long long' for printf() format string and ELF64
-	numbers.
-In-Reply-To: <20080525221154.2fd2e432@kopernikus.site>
+	id 1K19zZ-0008PB-W3
+	for kexec@lists.infradead.org; Wed, 28 May 2008 00:58:14 +0000
+Received: by an-out-0708.google.com with SMTP id c24so619836ana.99
+	for <kexec@lists.infradead.org>; Tue, 27 May 2008 17:58:13 -0700 (PDT)
+Message-ID: <e2ed954f0805271758m5f124316y4343c9540a0d2ae5@mail.gmail.com>
+Date: Tue, 27 May 2008 17:58:11 -0700
+From: "Jamey Sharp" <jamey@thetovacompany.com>
+Subject: Re: [PATCH] Cross compile?
+In-Reply-To: <20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <20080525221154.2fd2e432@kopernikus.site>
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<200805060742.45737.jk@ozlabs.org>
+	<20080506133108.GB29182@nlxdcldnl2.cl.intel.com>
+	<200805070842.23111.jk@ozlabs.org>
+	<20080507150932.GA24429@nlxdcldnl2.cl.intel.com>
+	<20080507153927.GA21888@nlxdcldnl2.cl.intel.com>
+	<20080521054705.GA3714@verge.net.au>
+	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,18 +32,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Sun, May 25, 2008 at 1:11 PM, Bernhard Walle <bwalle@suse.de> wrote:
->  kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
->        'long unsigned int', but argument 4 has type 'Elf64_Off'
+On Tue, May 27, 2008 at 7:40 AM, Lombard, David N
+<dnlombar@ichips.intel.com> wrote:
+> ./configure --build=`uname -m`-linux-uclibc \
+>          --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
+>          CC=uclibc-gcc BUILD_CC=host-gcc
 
-This is what inttypes.h is for, right?
+Isn't this backwards? BUILD_CC ought to match --build, and CC ought to
+match --host. If you wanted a kexec binary to put in a uClibc initramfs,
+you should set --host for that, not --build. Right?
 
-> dbgprintf("%s: p_type = %u, p_offset = 0x%llx p_paddr = 0x%llx " ...
-
-Perhaps (... "p_offset = 0x" PRIx64 " p_paddr = 0x" PRIx64 ...)?
+I've just been looking at `git grep -F -w CC` to decide which configure
+flag to use for what, if that helps.
 
 Jamey
 
