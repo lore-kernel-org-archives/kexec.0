@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga12.intel.com ([143.182.124.36] helo=azsmga102.ch.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1LEQ-0004hc-Rp
-	for kexec@lists.infradead.org; Wed, 28 May 2008 12:58:19 +0000
-Date: Wed, 28 May 2008 08:57:42 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 2/2] kexec jump -v10: save/restore device state
-Message-ID: <20080528125742.GA3884@redhat.com>
-References: <1211449099.12819.15.camel@caritas-dev.intel.com>
+	id 1K1Ous-0003NV-GS
+	for kexec@lists.infradead.org; Wed, 28 May 2008 16:54:22 +0000
+Date: Wed, 28 May 2008 09:47:15 -0700
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
+Subject: Re: [PATCH] Cross compile?
+Message-ID: <20080528164715.GA13422@nlxdcldnl2.cl.intel.com>
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<200805060742.45737.jk@ozlabs.org>
+	<20080506133108.GB29182@nlxdcldnl2.cl.intel.com>
+	<200805070842.23111.jk@ozlabs.org>
+	<20080507150932.GA24429@nlxdcldnl2.cl.intel.com>
+	<20080507153927.GA21888@nlxdcldnl2.cl.intel.com>
+	<20080521054705.GA3714@verge.net.au>
+	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
+	<e2ed954f0805271758m5f124316y4343c9540a0d2ae5@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1211449099.12819.15.camel@caritas-dev.intel.com>
+In-Reply-To: <e2ed954f0805271758m5f124316y4343c9540a0d2ae5@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +31,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Jamey Sharp <jamey@thetovacompany.com>
+Cc: kexec@lists.infradead.org
 
-On Thu, May 22, 2008 at 05:38:19PM +0800, Huang, Ying wrote:
+On Tue, May 27, 2008 at 05:58:11PM -0700, Jamey Sharp wrote:
+> On Tue, May 27, 2008 at 7:40 AM, Lombard, David N
+> <dnlombar@ichips.intel.com> wrote:
+> > ./configure --build=`uname -m`-linux-uclibc \
+> >          --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
+> >          CC=uclibc-gcc BUILD_CC=host-gcc
+> 
+> Isn't this backwards? BUILD_CC ought to match --build, and CC ought to
+> match --host. If you wanted a kexec binary to put in a uClibc initramfs,
+> you should set --host for that, not --build. Right?
 
-[..]
-> Known issues:
-> 
-> - Can not work with the new devices hibernation operations in
->   2.6.26-rc2-mm1 so far. Working on this now.
-> 
-> - APIC is not put into legacy mode during kexec, so kexec may failed
->   (no IRQ) if APIC is not put into legacy mode.
-> 
-> - The suspend/resume callback of device drivers are used to put
->   devices into quiescent state. This will unnecessarily (possibly
->   harmfully) put devices into low power state. This is intended to be
->   solved by separating device quiesce/unquiesce callback from the
->   device suspend/resume callback.
-> 
-> - Because the segment number supported by sys_kexec_load is limited,
->   hibernation image with many segments may not be load. This is
->   planned to be eliminated by adding a new flag to sys_kexec_load to
->   make a image can be loaded with multiple sys_kexec_load invoking.
-> 
-> 
+Here's util/Makefile, which wants bin/bin-to-hex to run on the build
+platform:
 
-These two patches look good to me. I think once you have worked out
-issues with IOAPIC and generated patches for compatibility with
-new suspend/resume callbacks, these patches are good enough to get
-some testing going on in -mm tree.
+  BIN_TO_HEX:= bin/bin-to-hex
 
-I will also test out -v10 very soon.
+  $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+        @$(MKDIR) -p $(@D)
+        $(LINK.o) -o $@ $^
 
-Thanks
-Vivek
+  $(BIN_TO_HEX): CC=$(BUILD_CC)
+  $(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
+
+  dist += util/Makefile util/bin-to-hex.c
+  clean += util/bin-to-hex.o $(BIN_TO_HEX)
+
+Unless I am mistaken, this uses BUILD_CC and BIULD_CFLAGS for
+bin/bin-to-hex, which is run on the build platform. I patched that to:
+
+  BIN_TO_HEX:= bin/bin-to-hex
+
+  $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+        @$(MKDIR) -p $(@D)
+        $(BUILD_CC) $(BUILD_CFLAGS) -o $@ $<
+
+  dist += util/Makefile util/bin-to-hex.c
+  clean += util/bin-to-hex.o $(BIN_TO_HEX)
+
+otherwise it used the uClibc-based tools, which cannot run on the current
+glibc-based platform (F7).
+
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
