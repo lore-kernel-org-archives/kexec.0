@@ -1,20 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1AYk-0005Qx-6J
-	for kexec@lists.infradead.org; Wed, 28 May 2008 01:34:34 +0000
-Subject: Re: [PATCH -mm] kexec jump -v9
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080527221514.GA20037@redhat.com>
-References: <1204773188.4707.109.camel@caritas-dev.intel.com>
-	<20080514205204.GJ30469@redhat.com>
-	<1210830110.23707.141.camel@caritas-dev.intel.com>
-	<20080516005121.GA6926@redhat.com>
-	<1211873263.12819.103.camel@caritas-dev.intel.com>
-	<20080527221514.GA20037@redhat.com>
-Date: Wed, 28 May 2008 09:35:52 +0800
-Message-Id: <1211938552.12819.122.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e28smtp02.in.ibm.com ([59.145.155.2])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K1DRz-0002rU-Lf
+	for kexec@lists.infradead.org; Wed, 28 May 2008 04:39:48 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28smtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m4S4dhiD022197
+	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:43 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m4S4dTDr806942
+	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:29 +0530
+Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
+	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m4S4dhiA002727
+	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:43 +0530
+Message-ID: <483CE20E.6040104@in.ibm.com>
+Date: Wed, 28 May 2008 10:09:42 +0530
+From: Sharyathi Nagesh <sharyath@in.ibm.com>
+MIME-Version: 1.0
+Subject: Re: correction to compat_sys_kexec_load
+References: <4836AC3C.3090005@in.ibm.com> <m1ve144w25.fsf@frodo.ebiederm.org>
+	<20080523233348.13fe0c63@kopernikus.site>
+	<m1od6w4jxx.fsf@frodo.ebiederm.org>
+	<20080526223259.4d3d2979@kopernikus.site>
+In-Reply-To: <20080526223259.4d3d2979@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,43 +35,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: akpm@osdl.org, mohd.omar@in.ibm.com, IndhuDurai@in.ibm.com, fastboot@lists.osdl.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, mohan@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, sachinp@in.ibm.com
 
-On Tue, 2008-05-27 at 18:15 -0400, Vivek Goyal wrote:
-[...]
-> > But, because IOAPIC may need to be in original state during
-> > suspend/resume, so it is not appropriate to call disable_IO_APIC() in
-> > ioapic_suspend(). So I think we can call disable_IO_APIC() in new
-> > hibernation/restore callback.
+Bernhard/Eric
+   Thanks for helping with this. kexec patch has been submitted up stream
+Thanks
+Yeehaw
+Bernhard Walle wrote:
+> * ebiederm@xmission.com (Eric W. Biederman) [2008-05-23 17:36]:
+>> As there is no real justification for it.  At this
+>> point getting user space fixed so that it works on older kernels
+>> seems important. 
 > 
-> My hunch is suspend/resume will still work if we put this call in
-> ioapic_suspend() but I would not recommend that. suspend/resume does
-> not need to put IOAPIC in legacy mode.
->   
-> I am not sure what is "new hibernation/restore callback"? Are you
-> referring to new patches from Rafel?
-
-Yes. Rafel has a new patch to separate suspend and hibernation device
-call backs.
-http://kerneltrap.org/Linux/Separating_Suspend_and_Hibernation
-
-> I think this issue is specifc to kexec and kjump so probably we should
-> not tweaking any suspend/resume related bit.
+> http://article.gmane.org/gmane.linux.kernel.kexec/1534 should fix this.
 > 
-> How about calling disable_IO_APIC() in kexec_jump()? We can probably even
-> optimize it by calling it only when we are transitioning into new image
-> for the first time and not for subsquent transitions (by keeping some kind of
-> count in kimage). This is little hackish but, should work...
+> 
 
-Yes. This issue is kexec/kjump specific. We can call it in kexec_jump().
-Maybe we also need call something other in native_machine_shutdown()?
-
-BTW: I have a new version -v10: http://lkml.org/lkml/2008/5/22/106, do
-you have time to review it?
-
-Best Regards,
-Huang Ying
 
 _______________________________________________
 kexec mailing list
