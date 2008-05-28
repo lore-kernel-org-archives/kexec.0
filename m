@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1Fyo-0001yZ-VA
-	for kexec@lists.infradead.org; Wed, 28 May 2008 07:21:51 +0000
-Date: Wed, 28 May 2008 09:22:25 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Use 'long long' for printf() format string and ELF64
-	numbers.
-Message-ID: <20080528092225.7f424d67@halley.suse.de>
-In-Reply-To: <e2ed954f0805271748s2254480at35f71c3395072def@mail.gmail.com>
-References: <20080525221154.2fd2e432@kopernikus.site>
-	<e2ed954f0805271748s2254480at35f71c3395072def@mail.gmail.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1K1LEQ-0004hc-Rp
+	for kexec@lists.infradead.org; Wed, 28 May 2008 12:58:19 +0000
+Date: Wed, 28 May 2008 08:57:42 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 2/2] kexec jump -v10: save/restore device state
+Message-ID: <20080528125742.GA3884@redhat.com>
+References: <1211449099.12819.15.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1211449099.12819.15.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +23,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jamey Sharp <jamey@minilop.net>
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-* Jamey Sharp [2008-05-27 17:48]:
->
-> On Sun, May 25, 2008 at 1:11 PM, Bernhard Walle <bwalle@suse.de> wrote:
-> >  kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
-> >        'long unsigned int', but argument 4 has type 'Elf64_Off'
+On Thu, May 22, 2008 at 05:38:19PM +0800, Huang, Ying wrote:
+
+[..]
+> Known issues:
 > 
-> This is what inttypes.h is for, right?
+> - Can not work with the new devices hibernation operations in
+>   2.6.26-rc2-mm1 so far. Working on this now.
 > 
-> > dbgprintf("%s: p_type = %u, p_offset = 0x%llx p_paddr = 0x%llx " ...
+> - APIC is not put into legacy mode during kexec, so kexec may failed
+>   (no IRQ) if APIC is not put into legacy mode.
 > 
-> Perhaps (... "p_offset = 0x" PRIx64 " p_paddr = 0x" PRIx64 ...)?
+> - The suspend/resume callback of device drivers are used to put
+>   devices into quiescent state. This will unnecessarily (possibly
+>   harmfully) put devices into low power state. This is intended to be
+>   solved by separating device quiesce/unquiesce callback from the
+>   device suspend/resume callback.
+> 
+> - Because the segment number supported by sys_kexec_load is limited,
+>   hibernation image with many segments may not be load. This is
+>   planned to be eliminated by adding a new flag to sys_kexec_load to
+>   make a image can be loaded with multiple sys_kexec_load invoking.
+> 
+> 
 
-Yes, I know this, but it's really ugly to read IMO. If it's not really
-necessary I think it's better to avoid it.
+These two patches look good to me. I think once you have worked out
+issues with IOAPIC and generated patches for compatibility with
+new suspend/resume callbacks, these patches are good enough to get
+some testing going on in -mm tree.
 
+I will also test out -v10 very soon.
 
-
-	Bernhard
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
