@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K19EI-00073l-G6
-	for kexec@lists.infradead.org; Wed, 28 May 2008 00:09:22 +0000
-Date: Wed, 28 May 2008 10:09:15 +1000
+	id 1K19Eb-0000ZG-Ay
+	for kexec@lists.infradead.org; Wed, 28 May 2008 00:09:42 +0000
+Date: Wed, 28 May 2008 10:09:34 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Use 'long long' for printf() format string and ELF64
-	numbers.
-Message-ID: <20080528000913.GD6752@verge.net.au>
-References: <20080525221154.2fd2e432@kopernikus.site>
+Subject: Re: [PATCH] Specify the arch on kexec_unload.
+Message-ID: <20080528000933.GE6752@verge.net.au>
+References: <1211813218-21886-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080525221154.2fd2e432@kopernikus.site>
+In-Reply-To: <1211813218-21886-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,28 +24,15 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+Cc: sharyath@in.ibm.com, kexec@lists.infradead.org
 
-On Sun, May 25, 2008 at 10:11:54PM +0200, Bernhard Walle wrote:
-> Since 'long long' is 64 bit wide on almost any platform, especially on
-> 32 bit platforms (like i386) while 'long long' is only 64 bit on 64 bit
-> platforms but 32 bit on 32 bit platforms, 'long long' is more suited and
-> fixes compiler warnings like
+On Mon, May 26, 2008 at 04:46:58PM +0200, Bernhard Walle wrote:
+> This fixes the problem in kexec-tools that the patch
+> http://article.gmane.org/gmane.linux.kernel/685027 tries to fix in kernel.
 > 
->   kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
->         'long unsigned int', but argument 4 has type 'Elf64_Off'
->   kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
->         'long unsigned int', but argument 5 has type 'Elf64_Addr'
->   ...
->   kexec/crashdump-elf.c:248: warning: format '%lx' expects type \
->         'long unsigned int', but argument 8 has type 'Elf64_Xword'
-> 
-> Tested on i686-pc-linux-gnu.
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> The fix in userspace is correct.
 
-Thanks Bernhard, I've had much less elegant ideas on how to
-solve that problem myself.
+Thanks, applied.
 
 -- 
 Horms
