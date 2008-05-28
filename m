@@ -1,28 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([59.145.155.2])
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1DRz-0002rU-Lf
-	for kexec@lists.infradead.org; Wed, 28 May 2008 04:39:48 +0000
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-	by e28smtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m4S4dhiD022197
-	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:43 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
-	m4S4dTDr806942
-	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:29 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m4S4dhiA002727
-	for <kexec@lists.infradead.org>; Wed, 28 May 2008 10:09:43 +0530
-Message-ID: <483CE20E.6040104@in.ibm.com>
-Date: Wed, 28 May 2008 10:09:42 +0530
-From: Sharyathi Nagesh <sharyath@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: correction to compat_sys_kexec_load
-References: <4836AC3C.3090005@in.ibm.com> <m1ve144w25.fsf@frodo.ebiederm.org>
-	<20080523233348.13fe0c63@kopernikus.site>
-	<m1od6w4jxx.fsf@frodo.ebiederm.org>
-	<20080526223259.4d3d2979@kopernikus.site>
-In-Reply-To: <20080526223259.4d3d2979@kopernikus.site>
+	id 1K1Fyo-0001yZ-VA
+	for kexec@lists.infradead.org; Wed, 28 May 2008 07:21:51 +0000
+Date: Wed, 28 May 2008 09:22:25 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Use 'long long' for printf() format string and ELF64
+	numbers.
+Message-ID: <20080528092225.7f424d67@halley.suse.de>
+In-Reply-To: <e2ed954f0805271748s2254480at35f71c3395072def@mail.gmail.com>
+References: <20080525221154.2fd2e432@kopernikus.site>
+	<e2ed954f0805271748s2254480at35f71c3395072def@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,23 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: akpm@osdl.org, mohd.omar@in.ibm.com, IndhuDurai@in.ibm.com, fastboot@lists.osdl.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, mohan@in.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, sachinp@in.ibm.com
+To: Jamey Sharp <jamey@minilop.net>
+Cc: kexec@lists.infradead.org
 
-Bernhard/Eric
-   Thanks for helping with this. kexec patch has been submitted up stream
-Thanks
-Yeehaw
-Bernhard Walle wrote:
-> * ebiederm@xmission.com (Eric W. Biederman) [2008-05-23 17:36]:
->> As there is no real justification for it.  At this
->> point getting user space fixed so that it works on older kernels
->> seems important. 
+* Jamey Sharp [2008-05-27 17:48]:
+>
+> On Sun, May 25, 2008 at 1:11 PM, Bernhard Walle <bwalle@suse.de> wrote:
+> >  kexec/crashdump-elf.c:160: warning: format '%lx' expects type \
+> >        'long unsigned int', but argument 4 has type 'Elf64_Off'
 > 
-> http://article.gmane.org/gmane.linux.kernel.kexec/1534 should fix this.
+> This is what inttypes.h is for, right?
 > 
+> > dbgprintf("%s: p_type = %u, p_offset = 0x%llx p_paddr = 0x%llx " ...
 > 
+> Perhaps (... "p_offset = 0x" PRIx64 " p_paddr = 0x" PRIx64 ...)?
 
+Yes, I know this, but it's really ugly to read IMO. If it's not really
+necessary I think it's better to avoid it.
+
+
+
+	Bernhard
 
 _______________________________________________
 kexec mailing list
