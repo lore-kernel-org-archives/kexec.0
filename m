@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from imx12.toshiba.co.jp ([61.202.160.132])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1Vn1-0000xH-4o
-	for kexec@lists.infradead.org; Thu, 29 May 2008 00:14:43 +0000
-From: "gib" <suchada.pitchayasamanya@toshiba.co.jp>
-References: <200804210517.m3L5Hq61011769@toshiba.co.jp>
-	<480D790D.7080403@in.ibm.com>
-	<200804230041.m3N0fIQD013543@toshiba.co.jp>
-	<480F05D7.1060402@in.ibm.com>
-	<200805090406.m4946FxB003919@toshiba.co.jp>
-	<482A69C5.3060106@in.ibm.com>
-	<200805140502.m4E52udd015629@toshiba.co.jp>
-	<48342A82.2000706@in.ibm.com> <483688A6.1080601@in.ibm.com>
-In-Reply-To: <483688A6.1080601@in.ibm.com>
-Subject: RE: Question about forcing kernel panic on PowerMac G5 by kexec
-	command
-Date: Thu, 29 May 2008 09:14:32 +0900
-Message-Id: <200805290014.m4T0EWX5001220@toshiba.co.jp>
+Received: from mx03.syneticon.net ([87.79.32.166])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1K1h3v-0004Et-0T
+	for kexec@lists.infradead.org; Thu, 29 May 2008 12:16:55 +0000
+Message-ID: <483E9E97.6050207@wpkg.org>
+Date: Thu, 29 May 2008 14:16:23 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Content-Language: ja
+Subject: Re: kexec on mips - anyone has it working?
+References: <483BCB75.4050901@wpkg.org>
+	<200805271449.45124.nschichan@freebox.fr>
+	<483C4F73.4040909@wpkg.org>
+	<200805291347.05196.nschichan@freebox.fr>
+In-Reply-To: <200805291347.05196.nschichan@freebox.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,57 +25,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Mohan Kumar M' <mohan@in.ibm.com>
-Cc: kexec@lists.infradead.org
+To: Nicolas Schichan <nschichan@freebox.fr>
+Cc: linux-mips@linux-mips.org, Kexec Mailing List <kexec@lists.infradead.org>
 
-Hi Mohan,
-
-> Is there any node called "ibm,dynamic-reconfiguration-memory" in the 
-> device tree?
-There is no any node called "ibm,dynamic-reconfiguration-memory" in my
-PowerMac G5.
-What is the mentioned node (ibm,dynamic-reconfiguration-memory) responsible
-for?
-
-Regards,
-Suchada
-
------Original Message-----
-From: Mohan Kumar M [mailto:mohan@in.ibm.com] 
-Sent: Friday, May 23, 2008 6:05 PM
-To: gib
-Cc: kexec@lists.infradead.org
-Subject: Re: Question about forcing kernel panic on PowerMac G5 by kexec
-command
-
-Mohan Kumar M wrote:
-> gib wrote:
->> Hi Mohan,
+Nicolas Schichan schrieb:
+> On Tuesday 27 May 2008 20:14:11 you wrote:
+>> Aah, I see.
 >>
->>> Do you have only one entry for memory node in the /proc/device-tree
->> directory?
->> Yes, I have only one entry(for memory) in the /proc/device-tree
-directory.
->>
->>> Do you know last good working version of kernel (for kdump) and try to 
->>> boot into that kernel and check the memory nodes in device-tree?
->> What is the last version of kernel for kdump which you mentioned?
->> (now I using the vanilla kernel 2.6.25 version)
+>> Anyway, it doesn't work - with or without this slight change in
+>> machine_kexec.c, with kexec compiled from the sources in the link you
+>> gave or with kexec-tools-testing-20080324, it just doesn't work on
+>> BCM43XX with OpenWRT patches. At least on Asus WL-500gP.
 > 
-> Hi Suchada,
+> I'm not familiar with broadcom CPU names, but isn't BCM43XX supposed
+> to be a Wifi chipset ? :)
+
+Well, yeah, indeed the device is sold as a wireless router. But it can 
+perfectly run Debian, so it should run kexec as well, shouldn't it? ;)
+
+
+> However,  could   you  kexec   a  kernel  from   a  kernel   that  has
+> CONFIG_MIPS_UNCACHED  set (under  "Kernel  hacking", "run  uncached")?
+> this will slow down the kernel that does the kexec, but if this works,
+> then it is most probably a cache problem.
 > 
-> Sorry, I don't have information related to G5 and kexec/kdump. Still I 
-> am not sure why the device tree is exporting only one memory node.
+> Could you also indicate the last lines of kernel messages just before
+> the "Bye." ?
 
-Hi Suchada,
-
-Is there any node called "ibm,dynamic-reconfiguration-memory" in the 
-device tree?
-
-Regards,
-Mohan.
+I'll try that later today and will post the results.
 
 
+> Are you trying to kexec a big kernel image ?
+
+Hmm, is it big? It's the same kernel I booted:
+
+# ls -l vmlinux
+-rwxr-xr-x 1 root root 3868065 May 26 23:30 vmlinux
+
+
+> how much RAM do you have
+> on the board ?
+
+It has 32 MB RAM; some ~11 MB is used before I load another kernel.
+
+
+> are there some hardware that could have a hard time to
+> be re-probed by the kexeced linux kernel ?
+
+The kexeced kernel is the same one I booted, so no.
+
+
+-- 
+Tomasz Chmielewski
+http://wpkg.org
 
 _______________________________________________
 kexec mailing list
