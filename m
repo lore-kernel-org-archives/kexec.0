@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx03.syneticon.net ([87.79.32.166])
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K1oXU-0006tN-It
-	for kexec@lists.infradead.org; Thu, 29 May 2008 20:15:57 +0000
-Message-ID: <483F0EF3.3060500@wpkg.org>
-Date: Thu, 29 May 2008 22:15:47 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	id 1K1svF-0008VG-RU
+	for kexec@lists.infradead.org; Fri, 30 May 2008 00:56:47 +0000
+Date: Fri, 30 May 2008 09:56:39 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: Re: handle x86_64 xen code/data relocation
+In-Reply-To: <4832C8CF.2030502@redhat.com>
+References: <20080520035837.GA29290@verge.net.au> <4832C8CF.2030502@redhat.com>
+Message-Id: <20080530092357.1645.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Subject: Re: kexec on mips - anyone has it working?
-References: <483BCB75.4050901@wpkg.org>
-	<200805271449.45124.nschichan@freebox.fr>
-	<483C4F73.4040909@wpkg.org>
-	<200805291347.05196.nschichan@freebox.fr>
-In-Reply-To: <200805291347.05196.nschichan@freebox.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,118 +18,300 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nicolas Schichan <nschichan@freebox.fr>
-Cc: linux-mips@linux-mips.org, openwrt-devel@lists.openwrt.org, Kexec Mailing List <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: xen-devel@lists.xensource.com, crash-utility@redhat.com
 
-Tmljb2xhcyBTY2hpY2hhbiBzY2hyaWViOgo+IE9uIFR1ZXNkYXkgMjcgTWF5IDIwMDggMjA6MTQ6
-MTEgeW91IHdyb3RlOgo+PiBBYWgsIEkgc2VlLgo+Pgo+PiBBbnl3YXksIGl0IGRvZXNuJ3Qgd29y
-ayAtIHdpdGggb3Igd2l0aG91dCB0aGlzIHNsaWdodCBjaGFuZ2UgaW4KPj4gbWFjaGluZV9rZXhl
-Yy5jLCB3aXRoIGtleGVjIGNvbXBpbGVkIGZyb20gdGhlIHNvdXJjZXMgaW4gdGhlIGxpbmsgeW91
-Cj4+IGdhdmUgb3Igd2l0aCBrZXhlYy10b29scy10ZXN0aW5nLTIwMDgwMzI0LCBpdCBqdXN0IGRv
-ZXNuJ3Qgd29yayBvbgo+PiBCQ000M1hYIHdpdGggT3BlbldSVCBwYXRjaGVzLiBBdCBsZWFzdCBv
-biBBc3VzIFdMLTUwMGdQLgo+IAo+IEknbSBub3QgZmFtaWxpYXIgd2l0aCBicm9hZGNvbSBDUFUg
-bmFtZXMsIGJ1dCBpc24ndCBCQ000M1hYIHN1cHBvc2VkCj4gdG8gYmUgYSBXaWZpIGNoaXBzZXQg
-PyA6KQo+IAo+IEhvd2V2ZXIsICBjb3VsZCAgIHlvdSAga2V4ZWMgICBhICBrZXJuZWwgIGZyb20g
-ICBhICBrZXJuZWwgICB0aGF0ICBoYXMKPiBDT05GSUdfTUlQU19VTkNBQ0hFRCAgc2V0ICh1bmRl
-ciAgIktlcm5lbCAgaGFja2luZyIsICJydW4gIHVuY2FjaGVkIik/Cj4gdGhpcyB3aWxsIHNsb3cg
-ZG93biB0aGUga2VybmVsIHRoYXQgZG9lcyB0aGUga2V4ZWMsIGJ1dCBpZiB0aGlzIHdvcmtzLAo+
-IHRoZW4gaXQgaXMgbW9zdCBwcm9iYWJseSBhIGNhY2hlIHByb2JsZW0uCgpJIGd1ZXNzIEknbSBu
-b3QgdGhhdCBsdWNreS4gRWl0aGVyIENPTkZJR19NSVBTX1VOQ0FDSEVEIHNsb3dlZCB0aGUgCmRl
-dmljZSBkb3duIHNvIG11Y2ggdGhhdCBpdCBkaWRuJ3QgYm9vdCwgb3IgaXQgZGlkbid0IGJvb3Qu
-IEhleSwgaXNuJ3QgCml0IHRoZSBzYW1lPyBTbyBlaXRoZXIgQkNNNDNYWCBkb2Vzbid0IHdvcmsg
-dmVyeSB3ZWxsIHdpdGggY2VydGFpbiAKa2VybmVsIG9wdGlvbnMgZW5hYmxlZC9kaXNhYmxlZCwg
-b3IgT3BlbldSVCBwYXRjaGVzIHN0aWxsIGxhY2sgc29tZSAKZmVhdHVyZXMgdG8gbWFrZSBBU1VT
-IFdMLTUwMGdQIHByb3Blcmx5IChhZGRlZCBvcGVud3J0LWRldmVsIHRvIENDOikuCgpXaXRob3V0
-IENPTkZJR19NSVBTX1VOQ0FDSEVEIGl0IGJvb3RzIGp1c3QgZmluZS4KCkhlcmUgaXMgd2hhdCBp
-cyBkaXNwbGF5ZWQgd2hlbiBkb2luZyAia2V4ZWMgLWUiICh1c2luZyAKa2V4ZWMtdG9vbHMtdGVz
-dGluZy0yMDA4MDMyNCk6CgojIGtleGVjIC1lCmI0NDogZXRoMDogcG93ZXJpbmcgZG93biBQSFkK
-U3RhcnRpbmcgbmV3IGtlcm5lbApXaWxsIGNhbGwgbmV3IGtlcm5lbCBhdCAwMDMwNTAwMApCeWUg
-Li4uCgoKCgoKQmVsb3csIGEgZnVsbCBib290dXAgdXAgdG8gdGhlIHBvaW50IHdoZXJlIGl0IGZy
-ZWV6ZXMgd2l0aCAKQ09ORklHX01JUFNfVU5DQUNIRUQgZW5hYmxlZCAoZXZlcnkgbWVzc2FnZSBp
-cyBwcmludGVkIHZlcnkgZmFzdCwgdXAgCnVudGlsIHRoZSBsYXN0ICJ1c2Jjb3JlIiwgd2hlcmUg
-bm90aGluZyBlbHNlIHNob3dzIHVwKToKCgpDRkUgdmVyc2lvbiAxLjAuMzcgZm9yIEJDTTk0N1hY
-ICgzMmJpdCxTUCxMRSkKQnVpbGQgRGF0ZTog77+9fCAxMO+/ve+/vSAxMiAyMjoyMToxOSBDU1Qg
-MjAwNiAocm9vdEBsb2NhbGhvc3QubG9jYWxkb21haW4pCkNvcHlyaWdodCAoQykgMjAwMCwyMDAx
-LDIwMDIsMjAwMyBCcm9hZGNvbSBDb3Jwb3JhdGlvbi4KCkluaXRpYWxpemluZyBBcmVuYQpJbml0
-aWFsaXppbmcgRGV2aWNlcy4KZXQwOiBCcm9hZGNvbSBCQ000N3h4IDEwLzEwMCBNYnBzIEV0aGVy
-bmV0IENvbnRyb2xsZXIgMy45MC43LjAKcm5kaXMwOiBCcm9hZGNvbSBVU0IgUk5ESVMgTmV0d29y
-ayBBZGFwdGVyIChQLXQtUCkKQ1BVIHR5cGUgMHgyOTAwNjogMjY0TUh6ClRvdGFsIG1lbW9yeTog
-MzM1NTQ0MzIgS0J5dGVzCgpUb3RhbCBtZW1vcnkgdXNlZCBieSBDRkU6ICAweDgwODAwMDAwIC0g
-MHg4MDg5QUY0MCAoNjM0Njg4KQpJbml0aWFsaXplZCBEYXRhOiAgICAgICAgICAweDgwODMxM0Qw
-IC0gMHg4MDgzMzc5MCAoOTE1MikKQlNTIEFyZWE6ICAgICAgICAgICAgICAgICAgMHg4MDgzMzc5
-MCAtIDB4ODA4MzRGNDAgKDYwNjQpCkxvY2FsIEhlYXA6ICAgICAgICAgICAgICAgIDB4ODA4MzRG
-NDAgLSAweDgwODk4RjQwICg0MDk2MDApClN0YWNrIEFyZWE6ICAgICAgICAgICAgICAgIDB4ODA4
-OThGNDAgLSAweDgwODlBRjQwICg4MTkyKQpUZXh0IChjb2RlKSBzZWdtZW50OiAgICAgICAweDgw
-ODAwMDAwIC0gMHg4MDgzMTNEMCAoMjAxNjgwKQpCb290IGFyZWEgKHBoeXNpY2FsKTogICAgICAw
-eDAwODlCMDAwIC0gMHgwMDhEQjAwMApSZWxvY2F0aW9uIEZhY3RvcjogICAgICAgICBJOjAwMDAw
-MDAwIC0gRDowMDAwMDAwMAoKRGV2aWNlIGV0aDA6ICBod2FkZHIgMDAtMEUtQTYtRjEtRUQtM0Ms
-IGlwYWRkciAxOTIuMTY4LjEuMSwgbWFzayAKMjU1LjI1NS4yNTUuMAogICAgICAgICBnYXRld2F5
-IG5vdCBzZXQsIG5hbWVzZXJ2ZXIgbm90IHNldApOdWxsIFJlc2N1ZSBGbGFnLgpMb2FkZXI6cmF3
-IEZpbGVzeXM6cmF3IERldjpmbGFzaDAub3MgRmlsZTogT3B0aW9uczoobnVsbCkKTG9hZGluZzog
-Li4gMzc2OCBieXRlcyByZWFkCkVudHJ5IGF0IDB4ODAwMDEwMDAKQ2xvc2luZyBuZXR3b3JrLgpT
-dGFydGluZyBwcm9ncmFtIGF0IDB4ODAwMDEwMDAKTGludXggdmVyc2lvbiAyLjYuMjUuNCAoYnVp
-bGRAZG9tKSAoZ2NjIHZlcnNpb24gNC4xLjIpICM1IFRodSBNYXkgMjkgCjIxOjQ1OjQ2IENFU1Qg
-MjAwOApjb25zb2xlIFtlYXJseTBdIGVuYWJsZWQKQ1BVIHJldmlzaW9uIGlzOiAwMDAyOTAwNiAo
-QnJvYWRjb20gQkNNMzMwMikKc3NiOiBDb3JlIDAgZm91bmQ6IENoaXBDb21tb24gKGNjIDB4ODAw
-LCByZXYgMHgwMywgdmVuZG9yIDB4NDI0MykKc3NiOiBDb3JlIDEgZm91bmQ6IEZhc3QgRXRoZXJu
-ZXQgKGNjIDB4ODA2LCByZXYgMHgwNiwgdmVuZG9yIDB4NDI0MykKc3NiOiBDb3JlIDIgZm91bmQ6
-IEZhc3QgRXRoZXJuZXQgKGNjIDB4ODA2LCByZXYgMHgwNiwgdmVuZG9yIDB4NDI0MykKc3NiOiBD
-b3JlIDMgZm91bmQ6IFVTQiAxLjEgSG9zdGRldiAoY2MgMHg4MDgsIHJldiAweDAzLCB2ZW5kb3Ig
-MHg0MjQzKQpzc2I6IENvcmUgNCBmb3VuZDogUENJIChjYyAweDgwNCwgcmV2IDB4MDgsIHZlbmRv
-ciAweDQyNDMpCnNzYjogQ29yZSA1IGZvdW5kOiBNSVBTIDMzMDIgKGNjIDB4ODE2LCByZXYgMHgw
-MywgdmVuZG9yIDB4NDI0MykKc3NiOiBDb3JlIDYgZm91bmQ6IFY5MCAoY2MgMHg4MDcsIHJldiAw
-eDAyLCB2ZW5kb3IgMHg0MjQzKQpzc2I6IENvcmUgNyBmb3VuZDogSVBTRUMgKGNjIDB4ODBCLCBy
-ZXYgMHgwMCwgdmVuZG9yIDB4NDI0MykKc3NiOiBDb3JlIDggZm91bmQ6IE1FTUMgU0RSQU0gKGNj
-IDB4ODBGLCByZXYgMHgwMiwgdmVuZG9yIDB4NDI0MykKc3NiOiBJbml0aWFsaXppbmcgTUlQUyBj
-b3JlLi4uCnNzYjogc2V0X2lycTogY29yZSAweDA4MDYsIGlycSAyID0+IDIKc3NiOiBzZXRfaXJx
-OiBjb3JlIDB4MDgwNiwgaXJxIDMgPT4gMwpzc2I6IHNldF9pcnE6IGNvcmUgMHgwODA0LCBpcnEg
-MCA9PiA0CnNzYjogU29uaWNzIFNpbGljb24gQmFja3BsYW5lIGZvdW5kIGF0IGFkZHJlc3MgMHgx
-ODAwMDAwMApTZXJpYWwgaW5pdCBkb25lLgpEZXRlcm1pbmVkIHBoeXNpY2FsIFJBTSBtYXA6CiAg
-bWVtb3J5OiAwMjAwMDAwMCBAIDAwMDAwMDAwICh1c2FibGUpCkluaXRyZCBub3QgZm91bmQgb3Ig
-ZW1wdHkgLSBkaXNhYmxpbmcgaW5pdHJkClpvbmUgUEZOIHJhbmdlczoKICAgTm9ybWFsICAgICAg
-ICAgIDAgLT4gICAgIDgxOTIKTW92YWJsZSB6b25lIHN0YXJ0IFBGTiBmb3IgZWFjaCBub2RlCmVh
-cmx5X25vZGVfbWFwWzFdIGFjdGl2ZSBQRk4gcmFuZ2VzCiAgICAgMDogICAgICAgIDAgLT4gICAg
-IDgxOTIKQnVpbHQgMSB6b25lbGlzdHMgaW4gWm9uZSBvcmRlciwgbW9iaWxpdHkgZ3JvdXBpbmcg
-b24uICBUb3RhbCBwYWdlczogODEyOApLZXJuZWwgY29tbWFuZCBsaW5lOiByb290PS9kZXYvc2Rh
-MSByb290ZGVsYXk9MTAgY29uc29sZT10dHlTMCwxMTUyMDAKUHJpbWFyeSBpbnN0cnVjdGlvbiBj
-YWNoZSAxNmtCLCBWSVBULCAyLXdheSwgbGluZXNpemUgMTYgYnl0ZXMuClByaW1hcnkgZGF0YSBj
-YWNoZSAxNmtCLCAyLXdheSwgVklQVCwgY2FjaGUgYWxpYXNlcywgbGluZXNpemUgMTYgYnl0ZXMK
-U3ludGhlc2l6ZWQgY2xlYXIgcGFnZSBoYW5kbGVyICgyNiBpbnN0cnVjdGlvbnMpLgpTeW50aGVz
-aXplZCBjb3B5IHBhZ2UgaGFuZGxlciAoNDYgaW5zdHJ1Y3Rpb25zKS4KUElEIGhhc2ggdGFibGUg
-ZW50cmllczogMTI4IChvcmRlcjogNywgNTEyIGJ5dGVzKQpjb25zb2xlIGhhbmRvdmVyOiBib290
-IFtlYXJseTBdIC0+IHJlYWwgW3R0eVMwXQpEZW50cnkgY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVz
-OiA0MDk2IChvcmRlcjogMiwgMTYzODQgYnl0ZXMpCklub2RlLWNhY2hlIGhhc2ggdGFibGUgZW50
-cmllczogMjA0OCAob3JkZXI6IDEsIDgxOTIgYnl0ZXMpCk1lbW9yeTogMjkzNzZrLzMyNzY4ayBh
-dmFpbGFibGUgKDI0MDlrIGtlcm5lbCBjb2RlLCAzMzkyayByZXNlcnZlZCwgMzkyayAKZGF0YSwg
-MTQ0ayBpbml0LCAwayBoaWdobWVtKQpNb3VudC1jYWNoZSBoYXNoIHRhYmxlIGVudHJpZXM6IDUx
-MgpuZXRfbmFtZXNwYWNlOiA0NDAgYnl0ZXMKTkVUOiBSZWdpc3RlcmVkIHByb3RvY29sIGZhbWls
-eSAxNgpTQ1NJIHN1YnN5c3RlbSBpbml0aWFsaXplZAp1c2Jjb3JlOiByZWdpc3RlcmVkIG5ldyBp
-bnRlcmZhY2UgZHJpdmVyIHVzYmZzCnVzYmNvcmU6IHJlZ2lzdGVyZWQgbmV3IGludGVyZmFjZSBk
-cml2ZXIgaHViCnVzYmNvcmU6IHJlZ2lzdGVyZWQgbmV3IGRldmljZSBkcml2ZXIgdXNiCgoKCgpX
-aXRoIENPTkZJR19NSVBTX1VOQ0FDSEVEIGRpc2FibGVkLCBpdCBjb250aW51ZXMgbGlrZSBoZXJl
-OgoKc3NiOiBQQ0ljb3JlIGluIGhvc3QgbW9kZSBmb3VuZApSZWdpc3RlcmluZyBhIFBDSSBidXMg
-YWZ0ZXIgYm9vdApQQ0k6IEZpeGluZyB1cCBicmlkZ2UgMDAwMDowMDowMC4wClBDSTogRml4aW5n
-IHVwIGRldmljZSAwMDAwOjAwOjAwLjAKUENJOiBGaXhpbmcgbGF0ZW5jeSB0aW1lciBvZiBkZXZp
-Y2UgMDAwMDowMDowMC4wIHRvIDE2OApQQ0k6IEVuYWJsaW5nIGRldmljZSAwMDAwOjAwOjAyLjAg
-KDAwMDAgLT4gMDAwMikKUENJOiBGaXhpbmcgdXAgZGV2aWNlIDAwMDA6MDA6MDIuMApzc2I6IENv
-cmUgMCBmb3VuZDogQ2hpcENvbW1vbiAoY2MgMHg4MDAsIHJldiAweDBELCB2ZW5kb3IgMHg0MjQz
-KQpzc2I6IENvcmUgMSBmb3VuZDogSUVFRSA4MDIuMTEgKGNjIDB4ODEyLCByZXYgMHgwOSwgdmVu
-ZG9yIDB4NDI0MykKc3NiOiBDb3JlIDIgZm91bmQ6IFBDSSAoY2MgMHg4MDQsIHJldiAweDBDLCB2
-ZW5kb3IgMHg0MjQzKQpzc2I6IENvcmUgMyBmb3VuZDogUENNQ0lBIChjYyAweDgwRCwgcmV2IDB4
-MDcsIHZlbmRvciAweDQyNDMpCnNzYjogU29uaWNzIFNpbGljb24gQmFja3BsYW5lIGZvdW5kIG9u
-IFBDSSBkZXZpY2UgMDAwMDowMDowMi4wCk5FVDogUmVnaXN0ZXJlZCBwcm90b2NvbCBmYW1pbHkg
-MgpJUCByb3V0ZSBjYWNoZSBoYXNoIHRhYmxlIGVudHJpZXM6IDEwMjQgKG9yZGVyOiAwLCA0MDk2
-IGJ5dGVzKQpUQ1AgZXN0YWJsaXNoZWQgaGFzaCB0YWJsZSBlbnRyaWVzOiAxMDI0IChvcmRlcjog
-MSwgODE5MiBieXRlcykKVENQIGJpbmQgaGFzaCB0YWJsZSBlbnRyaWVzOiAxMDI0IChvcmRlcjog
-MCwgNDA5NiBieXRlcykKVENQOiBIYXNoIHRhYmxlcyBjb25maWd1cmVkIChlc3RhYmxpc2hlZCAx
-MDI0IGJpbmQgMTAyNCkKVENQIHJlbm8gcmVnaXN0ZXJlZApkZXRlY3RlZCBsem1hIGluaXRyYW1m
-cwppbml0cmFtZnM6IExaTUEgbGM9MSxscD0yLHBiPTIsb3JpZ1NpemU9NTEyCnNxdWFzaGZzOiB2
-ZXJzaW9uIDMuMCAoMjAwNi8wMy8xNSkgUGhpbGxpcCBMb3VnaGVyClJlZ2lzdGVyaW5nIG1pbmlf
-Zm8gdmVyc2lvbiAkSWQkCiguLi4pCgoKLS0gClRvbWFzeiBDaG1pZWxld3NraQpodHRwOi8vd3Br
-Zy5vcmcKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi,
+
+> My original concern was the need to upgrade the hypervisor, but since that
+> time, we've put in a workaround for the crash utility to allow the
+> xen_phys_start value to be passed in as a command line argument.
+
+Yes. There is no problem for us to analyze a dump. I think the makedumpfile
+utility can have a workaround too.
+
+I like the Plan A too. So I will send a patch of Plan A to the xen-devel 
+mailing list.
+
+Thanks.
+Itsuro Oda
+
+On Tue, 20 May 2008 08:49:19 -0400
+Dave Anderson <anderson@redhat.com> wrote:
+
+> Simon Horman wrote:
+> > On Tue, Apr 22, 2008 at 05:32:03PM +0900, Itsuro ODA wrote:
+> >> Hi all,
+> >>
+> >> Recent version of xen (ex. RHEL5.2, 3.2.0) on the x86_64
+> >> moves the physical(machine) address of xen code/data area after 
+> >> the system started up. The start address of this is stored in
+> >> 'xen_phys_start'. Thus to get a machine address of a xen text symbol
+> >> from its virtual address, calculate 
+> >> "va - __XEN_VIRT_START +  xen_phys_start".
+> >>
+> >> crash and makedumpfile command need the value of xen_phys_start.
+> >> They know the virtual address of 'xen_phys_start' symbol but
+> >> no way to extract the value of xen_phys_start.
+> >>
+> >> I think adding the xen_phys_start value to the CRASHINFO ElfNote
+> >> section at first. (Plan A: patch for xen hypervisor code attaced)
+> >> It is smallest modification necessary over all.
+> >>
+> >> On the other hand there is a opinion that it is better to upgrade
+> >> a user-package than a hypervisor or kernel package.
+> >> The xen_phys_start value can be got from /proc/iomem.
+> >>     -------------------------------------------------------
+> >>     # cat /proc/iomem
+> >>     ...
+> >>       7e600000-7f5fffff : Hypervisor code and data  *** this line
+> >>     ...
+> >>     -------------------------------------------------------
+> >> So the kexec-tools can handle it theoretically.
+> >>
+> >> The Plan B is that kexec-tools adds another ElfNote section which
+> >> holds the xen_phys_start value. The attached patch works well
+> >> though I am concern about it is a bit tricky.
+> >>
+> >> Which plan is better ?  Or more good implementation ?
+> >> Please comment.
+> >>
+> >> (note that crash and makedumpfile modification is same degree
+> >> for both plan.)
+> > 
+> > Hi Oda-san,
+> > 
+> > I think that in terms of simplicity plan A is a clear
+> > winner. That is assuming tha the changes to crash
+> > and makedumpfile are more or less the same for both
+> > plan A and plan B.
+> > 
+> > However, if there is a reason that it makes sense to include
+> > the change in kexec-tools and make a fresh release, I'm happy to do so.
+> 
+> I was the one who suggested a user-space alternative, but reconsidering it,
+> I also agree that plan A is preferable, primarily for simplicity's sake in
+> both kexec-tools (no changes) and in the crash utility (a couple lines that
+> have already been added in the latest version).
+> 
+> My original concern was the need to upgrade the hypervisor, but since that
+> time, we've put in a workaround for the crash utility to allow the
+> xen_phys_start value to be passed in as a command line argument.
+> 
+> Dave
+> 
+> > 
+> >> === Plan A (modify the xen hypervisor. It is for RHEL5.2 but almost same for other version) ===
+> >> --- include/xen/elfcore.h.org	2008-04-17 14:11:41.000000000 +0900
+> >> +++ include/xen/elfcore.h	2008-04-17 14:11:57.000000000 +0900
+> >> @@ -66,6 +66,7 @@
+> >>      unsigned long xen_compile_time;
+> >>      unsigned long tainted;
+> >>  #ifdef CONFIG_X86
+> >> +    unsigned long xen_phys_start;
+> >>      unsigned long dom0_pfn_to_mfn_frame_list_list;
+> >>  #endif
+> >>  } crash_xen_info_t;
+> >> --- arch/x86/crash.c.org	2008-04-17 14:12:51.000000000 +0900
+> >> +++ arch/x86/crash.c	2008-04-17 14:13:13.000000000 +0900
+> >> @@ -102,6 +102,7 @@
+> >>      hvm_disable();
+> >>  
+> >>      info = kexec_crash_save_info();
+> >> +    info->xen_phys_start = xen_phys_start;
+> >>      info->dom0_pfn_to_mfn_frame_list_list =
+> >>          arch_get_pfn_to_mfn_frame_list_list(dom0);
+> >>  }
+> >> ================================================================
+> >>
+> >> === Plan B (modify the kexec-tools. proof of concept version) ===
+> >> diff -ru kexec-tools-testing-20080324.org/kexec/arch/x86_64/crashdump-x86_64.c kexec-tools-testing-20080324/kexec/arch/x86_64/crashdump-x86_64.c
+> >> --- kexec-tools-testing-20080324.org/kexec/arch/x86_64/crashdump-x86_64.c	2008-03-21 13:16:28.000000000 +0900
+> >> +++ kexec-tools-testing-20080324/kexec/arch/x86_64/crashdump-x86_64.c	2008-04-22 15:15:08.000000000 +0900
+> >> @@ -73,6 +73,25 @@
+> >>  	return -1;
+> >>  }
+> >>  
+> >> +static int get_hypervisor_paddr(struct kexec_info *info)
+> >> +{
+> >> +	uint64_t start;
+> >> +
+> >> +	if (!xen_present())
+> >> +		return 0;
+> >> +
+> >> +	if (parse_iomem_single("Hypervisor code and data\n", &start, NULL) == 0) {
+> >> +		info->hypervisor_paddr_start = start;
+> >> +#ifdef DEBUG
+> >> +		printf("kernel load physical addr start = 0x%016Lx\n", start);
+> >> +#endif
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	fprintf(stderr, "Cannot determine hypervisor physical load addr\n");
+> >> +	return -1;
+> >> +}
+> >> +
+> >>  /* Retrieve info regarding virtual address kernel has been compiled for and
+> >>   * size of the kernel from /proc/kcore. Current /proc/kcore parsing from
+> >>   * from kexec-tools fails because of malformed elf notes. A kernel patch has
+> >> @@ -581,6 +600,9 @@
+> >>  	if (get_kernel_paddr(info))
+> >>  		return -1;
+> >>  
+> >> +	if (get_hypervisor_paddr(info))
+> >> +		return -1;
+> >> +
+> >>  	if (get_kernel_vaddr_and_size(info))
+> >>  		return -1;
+> >>  
+> >> @@ -620,6 +642,9 @@
+> >>  	 */
+> >>  	elfcorehdr = add_buffer(info, tmp, sz, 16*1024, align, min_base,
+> >>  							max_addr, -1);
+> >> +	if (info->hypervisor_paddr_start && xen_present()) {
+> >> +		*(info->hypervisor_paddr_loc) += elfcorehdr;
+> >> +	}
+> >>  	if (delete_memmap(memmap_p, elfcorehdr, sz) < 0)
+> >>  		return -1;
+> >>  	cmdline_add_memmap(mod_cmdline, memmap_p);
+> >> diff -ru kexec-tools-testing-20080324.org/kexec/crashdump.c kexec-tools-testing-20080324/kexec/crashdump.c
+> >> --- kexec-tools-testing-20080324.org/kexec/crashdump.c	2008-03-21 13:16:28.000000000 +0900
+> >> +++ kexec-tools-testing-20080324/kexec/crashdump.c	2008-04-22 15:33:47.000000000 +0900
+> >> @@ -36,8 +36,10 @@
+> >>  #define FUNC crash_create_elf64_headers
+> >>  #define EHDR Elf64_Ehdr
+> >>  #define PHDR Elf64_Phdr
+> >> +#define NHDR Elf64_Nhdr
+> >>  #include "crashdump-elf.c"
+> >>  #undef ELF_WIDTH
+> >> +#undef NHDR
+> >>  #undef PHDR
+> >>  #undef EHDR
+> >>  #undef FUNC
+> >> @@ -46,8 +48,10 @@
+> >>  #define FUNC crash_create_elf32_headers
+> >>  #define EHDR Elf32_Ehdr
+> >>  #define PHDR Elf32_Phdr
+> >> +#define NHDR Elf32_Nhdr
+> >>  #include "crashdump-elf.c"
+> >>  #undef ELF_WIDTH
+> >> +#undef NHDR
+> >>  #undef PHDR
+> >>  #undef EHDR
+> >>  #undef FUNC
+> >> diff -ru kexec-tools-testing-20080324.org/kexec/crashdump-elf.c kexec-tools-testing-20080324/kexec/crashdump-elf.c
+> >> --- kexec-tools-testing-20080324.org/kexec/crashdump-elf.c	2008-01-11 12:13:48.000000000 +0900
+> >> +++ kexec-tools-testing-20080324/kexec/crashdump-elf.c	2008-04-22 15:35:16.000000000 +0900
+> >> @@ -1,6 +1,6 @@
+> >>  
+> >> -#if !defined(FUNC) || !defined(EHDR) || !defined(PHDR)
+> >> -#error FUNC, EHDR and PHDR must be defined
+> >> +#if !defined(FUNC) || !defined(EHDR) || !defined(PHDR) || !defined(NHDR)
+> >> +#error FUNC, EHDR, PHDR and NHDR must be defined
+> >>  #endif
+> >>  
+> >>  #if (ELF_WIDTH == 64)
+> >> @@ -37,6 +37,7 @@
+> >>  	uint64_t vmcoreinfo_addr, vmcoreinfo_len;
+> >>  	int has_vmcoreinfo = 0;
+> >>  	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
+> >> +	int has_hypervisor_paddr_start = 0;
+> >>  
+> >>  	if (xen_present())
+> >>  		nr_cpus = xen_get_nr_phys_cpus();
+> >> @@ -78,6 +79,11 @@
+> >>  		sz += sizeof(PHDR);
+> >>  	}
+> >>  
+> >> +	if (info->hypervisor_paddr_start && xen_present()) {
+> >> +		sz += sizeof(PHDR) + sizeof(NHDR) + 4 + sizeof(unsigned long);
+> >> +		has_hypervisor_paddr_start = 1;
+> >> +	}
+> >> +
+> >>  	/*
+> >>  	 * Make sure the ELF core header is aligned to at least 1024.
+> >>  	 * We do this because the secondary kernel gets the ELF core
+> >> @@ -168,6 +174,22 @@
+> >>  		dbgprintf_phdr("vmcoreinfo header", phdr);
+> >>  	}
+> >>  
+> >> +	if (has_hypervisor_paddr_start) {
+> >> +		phdr = (PHDR *) bufp;
+> >> +		bufp += sizeof(PHDR);
+> >> +		phdr->p_type	= PT_NOTE;
+> >> +		phdr->p_flags	= 0;
+> >> +		phdr->p_offset  = phdr->p_paddr = 0;
+> >> +		phdr->p_vaddr   = 0;
+> >> +		phdr->p_filesz	= phdr->p_memsz	= sizeof(NHDR) + 4 + sizeof(unsigned long);
+> >> +		phdr->p_align	= 0;
+> >> +
+> >> +		(elf->e_phnum)++;
+> >> +		dbgprintf_phdr("hypervisor phys addr header", phdr);
+> >> +
+> >> +		info->hypervisor_paddr_loc = (unsigned long *)&phdr->p_offset;
+> >> +	}
+> >> +
+> >>  	/* Setup an PT_LOAD type program header for the region where
+> >>  	 * Kernel is mapped if info->kern_size is non-zero.
+> >>  	 */
+> >> @@ -225,6 +247,24 @@
+> >>  		(elf->e_phnum)++;
+> >>  		dbgprintf_phdr("Elf header", phdr);
+> >>  	}
+> >> +
+> >> +	if (has_hypervisor_paddr_start) {
+> >> +		NHDR *nhdr;
+> >> +		unsigned int offset = (void *)bufp - *buf;
+> >> +
+> >> +		nhdr = (NHDR *) bufp;
+> >> +		bufp += sizeof(NHDR);
+> >> +		nhdr->n_namesz = 4;
+> >> +		nhdr->n_descsz = sizeof(unsigned long);
+> >> +		nhdr->n_type = 0x1000003;
+> >> +		memcpy(bufp, "Xen", 4);
+> >> +		bufp += 4;
+> >> +		*((unsigned long *)bufp) = info->hypervisor_paddr_start;
+> >> +		bufp += sizeof(unsigned long);
+> >> +
+> >> +		*(info->hypervisor_paddr_loc) = offset;
+> >> +	}
+> >> +
+> >>  	return 0;
+> >>  }
+> >>  
+> >> diff -ru kexec-tools-testing-20080324.org/kexec/kexec.h kexec-tools-testing-20080324/kexec/kexec.h
+> >> --- kexec-tools-testing-20080324.org/kexec/kexec.h	2008-03-21 13:16:28.000000000 +0900
+> >> +++ kexec-tools-testing-20080324/kexec/kexec.h	2008-04-22 15:08:57.000000000 +0900
+> >> @@ -123,6 +123,8 @@
+> >>  	unsigned long kern_vaddr_start;
+> >>  	unsigned long kern_paddr_start;
+> >>  	unsigned long kern_size;
+> >> +	unsigned long hypervisor_paddr_start;
+> >> +	unsigned long *hypervisor_paddr_loc;
+> >>  };
+> >>  
+> >>  void usage(void);
+> >> ======================================================================================
+> >> -- 
+> >> Itsuro ODA <oda@valinux.co.jp>
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> > 
+> 
+
+-- 
+Itsuro ODA <oda@valinux.co.jp>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
