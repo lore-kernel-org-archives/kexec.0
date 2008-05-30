@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx03.syneticon.net ([87.79.32.166])
+Received: from smtp.ctxuk.citrix.com ([62.200.22.115] helo=SMTP.EU.CITRIX.COM)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K22xK-0003AS-Hw
-	for kexec@lists.infradead.org; Fri, 30 May 2008 11:39:35 +0000
-Message-ID: <483FE764.1090901@wpkg.org>
-Date: Fri, 30 May 2008 13:39:16 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
-MIME-Version: 1.0
-Subject: Re: kexec on mips - anyone has it working?
-References: <483BCB75.4050901@wpkg.org>
-	<200805291347.05196.nschichan@freebox.fr>
-	<483F0EF3.3060500@wpkg.org>
-	<200805301327.11925.nschichan@freebox.fr>
-In-Reply-To: <200805301327.11925.nschichan@freebox.fr>
+	id 1K25RJ-0003fr-17
+	for kexec@lists.infradead.org; Fri, 30 May 2008 14:18:41 +0000
+Date: Fri, 30 May 2008 15:18:10 +0100
+Subject: Re: [Xen-devel] [PATCH] Add xen_phys_start value in the crash
+	info note
+From: Keir Fraser <keir.fraser@eu.citrix.com>
+Message-ID: <C465CB32.2176B%keir.fraser@eu.citrix.com>
+In-Reply-To: <20080530134554.1647.ODA@valinux.co.jp>
+Mime-version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +22,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nicolas Schichan <nschichan@freebox.fr>
-Cc: linux-mips@linux-mips.org, openwrt-devel@lists.openwrt.org, Kexec Mailing List <kexec@lists.infradead.org>
+To: Itsuro ODA <oda@valinux.co.jp>, xen-devel@lists.xensource.com
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-Nicolas Schichan schrieb:
-> On Thursday 29 May 2008 22:15:47 Tomasz Chmielewski wrote:
->> # kexec -e
->> b44: eth0: powering down PHY
->> Starting new kernel
->> Will call new kernel at 00305000
+On 30/5/08 06:13, "Itsuro ODA" <oda@valinux.co.jp> wrote:
+
+> This patch makes the vmcore utilities (ex. crash, makedumpfile) be
+> able to get the relocation address of the xen hypervisor from a vmcore.
+> It is necessary for the utilities to find the data of the hypervisor
+> structures.
 > 
-> The calling address of the kernel looks quite wrong, it should clearly
-> be inside the KSEG0 zone. could  you please indicate the output of the
-> command "mips-linux-readelf -l vmlinux" ?
+> Note that this patch does not raise any comptibility issue for the
+> utilities (which I know) nor the other components of xen.
 
-# uname -m
-mips
-# readelf -l vmlinux
+Since it both changes the size of the crash_info elf note, and adds the new
+field in the middle of the crash_info structure, how can it not affect
+compatibility?
 
-Elf file type is EXEC (Executable file)
-Entry point 0x80251b50
-There are 2 program headers, starting at offset 52
+ -- Keir
 
-Program Headers:
-   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-   LOAD           0x001000 0x80001000 0x80001000 0x2dd07a 0x303250 RWE 
-0x2000
-   NOTE           0x000000 0x00000000 0x00000000 0x00000 0x00000 R   0x4
 
-  Section to Segment mapping:
-   Segment Sections...
-    00     .text __ex_table __dbe_table .rodata .pci_fixup __ksymtab 
-__ksymtab_gpl __ksymtab_strings __param .data .data.cacheline_aligned 
-.init.text .init.data .init.setup .initcall.init .con_initcall.init 
-.exit.text .init.ramfs .bss
-    01
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
 
 _______________________________________________
 kexec mailing list
