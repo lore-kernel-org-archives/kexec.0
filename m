@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K25mw-0006lu-Gm
-	for kexec@lists.infradead.org; Fri, 30 May 2008 14:41:03 +0000
-Message-ID: <484011FB.6010604@redhat.com>
-Date: Fri, 30 May 2008 10:40:59 -0400
-From: Dave Anderson <anderson@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [Crash-utility] Re: [Xen-devel] [PATCH] Add xen_phys_start value
-	in the crash info note
-References: <C465CB32.2176B%keir.fraser@eu.citrix.com>
-In-Reply-To: <C465CB32.2176B%keir.fraser@eu.citrix.com>
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K3JJK-00021Y-KM
+	for kexec@lists.infradead.org; Mon, 02 Jun 2008 23:19:30 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id EB3A545ACA
+	for <kexec@lists.infradead.org>; Tue,  3 Jun 2008 01:19:27 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Fix implicit declaration of inb/outb
+Date: Tue,  3 Jun 2008 01:20:06 +0200
+Message-Id: <1212448806-22450-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,41 +20,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,
-	maintenance and development" <crash-utility@redhat.com>
-Cc: Itsuro ODA <oda@valinux.co.jp>, xen-devel@lists.xensource.com, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-Keir Fraser wrote:
-> On 30/5/08 06:13, "Itsuro ODA" <oda@valinux.co.jp> wrote:
->
->   
->> This patch makes the vmcore utilities (ex. crash, makedumpfile) be
->> able to get the relocation address of the xen hypervisor from a vmcore.
->> It is necessary for the utilities to find the data of the hypervisor
->> structures.
->>
->> Note that this patch does not raise any comptibility issue for the
->> utilities (which I know) nor the other components of xen.
->>     
->
-> Since it both changes the size of the crash_info elf note, and adds the new
-> field in the middle of the crash_info structure, how can it not affect
-> compatibility?
->
->  -- Keir
->   
+This patch fixes following compiler warning:
 
-Itsuro did it that way on purpose.  It maintains backwards compatibility by
-keeping the dom0_pfn_to_mfn_frame_list_list field as the last field in the
-PT_NOTE.  crash doesn't know what a crash_xen_info_t structure is, but only
-its old and new size.
+    purgatory/arch/i386/console-x86.c:84: \
+        warning: implicit declaration of function `outb'
+    purgatory/arch/i386/console-x86.c:89: \
+        warning: implicit declaration of function `inb'
 
-Dave
+Found on x86_64. The problem did not happen with i386.
+Fix tested on x86_64-suse-linux and i586-suse-linux.
 
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ purgatory/arch/i386/console-x86.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/purgatory/arch/i386/console-x86.c b/purgatory/arch/i386/console-x86.c
+index 9773573..68f5daf 100644
+--- a/purgatory/arch/i386/console-x86.c
++++ b/purgatory/arch/i386/console-x86.c
+@@ -1,5 +1,5 @@
+ #include <stdint.h>
+-#include <arch/io.h>
++#include <sys/io.h>
+ #include <purgatory.h>
+ 
+ /*
+-- 
+1.5.4.5
 
 
 _______________________________________________
