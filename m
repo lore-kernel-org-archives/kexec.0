@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K3MpH-0007X4-2v
-	for kexec@lists.infradead.org; Tue, 03 Jun 2008 03:04:43 +0000
-Date: Mon, 2 Jun 2008 23:04:40 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Implement support for mem command line parameter
-Message-ID: <20080603030440.GC32687@redhat.com>
-References: <1212449384-22819-1-git-send-email-bwalle@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1212449384-22819-1-git-send-email-bwalle@suse.de>
+Received: from mx1.suse.de ([195.135.220.2])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K3R1E-0002mT-JN
+	for kexec@lists.infradead.org; Tue, 03 Jun 2008 07:33:21 +0000
+Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 310AF41530
+	for <kexec@lists.infradead.org>; Tue,  3 Jun 2008 09:33:18 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Fix implicit declaration of inb/outb
+Date: Tue,  3 Jun 2008 09:33:57 +0200
+Message-Id: <1212478437-8935-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <e2ed954f0806021843r648e4276v6c0d49aa1f601e17@mail.gmail.com>
+References: <e2ed954f0806021843r648e4276v6c0d49aa1f601e17@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,101 +22,198 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-On Tue, Jun 03, 2008 at 01:29:44AM +0200, Bernhard Walle wrote:
-> When the kernel is booted with the "mem" kernel command line (see
-> Documentation/kernel-parameters.txt of kernel source tree), the /proc/iomem
-> is not modified. Instead, it shows the whole memory space as "System RAM".
-> I consider that as correct because the file is named "iomem", and for I/O,
-> the behaviour makes sense.
-> 
+This patch fixes following compiler warning:
 
-IIUC, in the past the behavior of /proc/iomem was different for i386 and
-x86_64. One arch used to truncate it and other would not. I don't remember
-which one used to do what.
+    purgatory/arch/i386/console-x86.c:84: \
+        warning: implicit declaration of function `outb'
+    purgatory/arch/i386/console-x86.c:89: \
+        warning: implicit declaration of function `inb'
 
-I had a quick look at the current code and looks like truncation of e820
-map is taking place before request_resource(). In that case we should
-see the truncated map. But I am not sure and will test it tomorrow...
+Found on x86_64. The problem did not happen with i386.
+Fix tested on x86_64-suse-linux and i586-suse-linux.
 
-I am not sure which one is the right behavior as one can argue for both.
-So it essentially boils down to two interfaces. One view corresponds to
-BIOS view and other view corresponds to kernel view (override BIOS by
-user options). I think we need to export both to user space.
+I also added __always_inline__ to make sure that the function gets always
+inlined, regardless of optimisation compiler flags.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ purgatory/arch/i386/include/arch/io.h   |   42 ++++++++++++++++++++-----------
+ purgatory/arch/x86_64/include/arch/io.h |   40 +++--------------------------
+ 2 files changed, 31 insertions(+), 51 deletions(-)
+
+diff --git a/purgatory/arch/i386/include/arch/io.h b/purgatory/arch/i386/include/arch/io.h
+index 13ad887..0a9430a 100644
+--- a/purgatory/arch/i386/include/arch/io.h
++++ b/purgatory/arch/i386/include/arch/io.h
+@@ -1,10 +1,11 @@
+-#ifndef ARCH_IO_H
+-#define ARCH_IO_H
++#ifndef ARCH_I386_IO_H
++#define ARCH_I386_IO_H
  
-We need BIOS view so that pure "kexec" can pass it to new kernel, 
-irrespecitve of the view seen by first kernel. For example if system
-has 4G of memory but user passed mem=2G and first kernel is using only
-2G, but if we kexec a new kernel, it should see the full 4G mememory as
-obtained by BIOS.
+ #include <stdint.h>
+ /* Helper functions for directly doing I/O */
+ 
+-extern inline uint8_t inb(uint16_t port)
++static inline __attribute__((__always_inline__))
++uint8_t inb(uint16_t port)
+ {
+ 	uint8_t result;
+ 
+@@ -15,7 +16,8 @@ extern inline uint8_t inb(uint16_t port)
+ 	return result;
+ }
+ 
+-extern inline uint16_t inw(uint16_t port)
++static inline __attribute__((__always_inline__))
++uint16_t inw(uint16_t port)
+ {
+ 	uint16_t result;
+ 
+@@ -26,7 +28,8 @@ extern inline uint16_t inw(uint16_t port)
+ 	return result;
+ }
+ 
+-extern inline uint32_t inl(uint32_t port)
++static inline __attribute__((__always_inline__))
++uint32_t inl(uint32_t port)
+ {
+ 	uint32_t result;
+ 
+@@ -37,7 +40,8 @@ extern inline uint32_t inl(uint32_t port)
+ 	return result;
+ }
+ 
+-extern inline void outb (uint8_t value, uint16_t port)
++static inline __attribute__((__always_inline__))
++void outb (uint8_t value, uint16_t port)
+ {
+ 	__asm__ __volatile__ (
+ 		"outb %b0,%w1"
+@@ -45,7 +49,8 @@ extern inline void outb (uint8_t value, uint16_t port)
+ 		:"a" (value), "Nd" (port));
+ }
+ 
+-extern inline void outw (uint16_t value, uint16_t port)
++static inline __attribute__((__always_inline__))
++void outw (uint16_t value, uint16_t port)
+ {
+ 	__asm__ __volatile__ (
+ 		"outw %w0,%w1"
+@@ -53,7 +58,8 @@ extern inline void outw (uint16_t value, uint16_t port)
+ 		:"a" (value), "Nd" (port));
+ }
+ 
+-extern inline void outl (uint32_t value, uint16_t port)
++static inline __attribute__((__always_inline__))
++void outl (uint32_t value, uint16_t port)
+ {
+ 	__asm__ __volatile__ (
+ 		"outl %0,%w1"
+@@ -69,30 +75,36 @@ extern inline void outl (uint32_t value, uint16_t port)
+  * memory location directly.
+  */
+ 
+-static inline unsigned char readb(const volatile void  *addr)
++static inline __attribute__((__always_inline__))
++unsigned char readb(const volatile void  *addr)
+ {
+ 	return *(volatile unsigned char *) addr;
+ }
+-static inline unsigned short readw(const volatile void  *addr)
++static inline __attribute__((__always_inline__))
++unsigned short readw(const volatile void  *addr)
+ {
+ 	return *(volatile unsigned short *) addr;
+ }
+-static inline unsigned int readl(const volatile void  *addr)
++static inline __attribute__((__always_inline__))
++unsigned int readl(const volatile void  *addr)
+ {
+ 	return *(volatile unsigned int *) addr;
+ }
+ 
+-static inline void writeb(unsigned char b, volatile void  *addr)
++static inline __attribute__((__always_inline__))
++void writeb(unsigned char b, volatile void  *addr)
+ {
+ 	*(volatile unsigned char *) addr = b;
+ }
+-static inline void writew(unsigned short b, volatile void  *addr)
++static inline __attribute__((__always_inline__))
++void writew(unsigned short b, volatile void  *addr)
+ {
+ 	*(volatile unsigned short *) addr = b;
+ }
+-static inline void writel(unsigned int b, volatile void  *addr)
++static inline __attribute__((__always_inline__))
++void writel(unsigned int b, volatile void  *addr)
+ {
+ 	*(volatile unsigned int *) addr = b;
+ }
+ 
+-#endif /* ARCH_IO_H */
++#endif /* ARCH_I386_IO_H */
+diff --git a/purgatory/arch/x86_64/include/arch/io.h b/purgatory/arch/x86_64/include/arch/io.h
+index dcd01bf..464cd14 100644
+--- a/purgatory/arch/x86_64/include/arch/io.h
++++ b/purgatory/arch/x86_64/include/arch/io.h
+@@ -1,39 +1,7 @@
+-#ifndef ARCH_IO_H
+-#define ARCH_IO_H
++#ifndef ARCH_X86_64_IO_H
++#define ARCH_X86_64_IO_H
+ 
+ #include <stdint.h>
++#include "../../../i386/include/arch/io.h"
+ 
+-/*
+- * readX/writeX() are used to access memory mapped devices. On some
+- * architectures the memory mapped IO stuff needs to be accessed
+- * differently. On the x86 architecture, we just read/write the
+- * memory location directly.
+- */
+-
+-static inline unsigned char readb(const volatile void  *addr)
+-{
+-	return *(volatile unsigned char *) addr;
+-}
+-static inline unsigned short readw(const volatile void  *addr)
+-{
+-	return *(volatile unsigned short *) addr;
+-}
+-static inline unsigned int readl(const volatile void  *addr)
+-{
+-	return *(volatile unsigned int *) addr;
+-}
+-
+-static inline void writeb(unsigned char b, volatile void  *addr)
+-{
+-	*(volatile unsigned char *) addr = b;
+-}
+-static inline void writew(unsigned short b, volatile void  *addr)
+-{
+-	*(volatile unsigned short *) addr = b;
+-}
+-static inline void writel(unsigned int b, volatile void  *addr)
+-{
+-	*(volatile unsigned int *) addr = b;
+-}
+-
+-#endif /* ARCH_IO_H */
++#endif /* ARCH_X86_64_IO_H */
+-- 
+1.5.4.5
 
-We need user view for "kdump" purposes as we don't want to dump memory
-not used by first kernel. (you have already explained it).
-
-> However, when the kernel is booted with the "mem" parameter, the user expects
-> the crashdump to be as small as the system memory, not containing the whole
-> unused system RAM. To implement this, there are several options:
-> 
->  1. Modify /proc/iomem.
->  2. Add a new /proc/iomem_used or something like that, i.e. a new kernel
->     interface.
->  3. Parse /proc/meminfo to read the system RAM.
->  4. Parse /proc/cmdline to read the command line.
-> 
-> I choosed the 4th possibility because of several reasons.
-> 
->  - The /proc/iomem interface should be stable and not modified. That may break
->    other stuff we don't know. It may also be difficult to convince kernel
->    maintainers.
-
-We probably will not touch /proc/iomem. We need to create a new interface
-which will change based on user options. That should not break any 
-user space applications?
-
->  - We should not add yet another interface between kernel and userspace for
->    a feature 99 % of the people don't need and don't even know about.
-> 
-> The semantics of mem is different on different architectures. i386 and x86_64
-> (x86) treat the limit specified on the command line as physical address limit
-
-You mean system RAM limit? Because PCI devices are still mapped at higher
-physical addresses. So it is not physical address limit?
-
-> while IA64 count the real memory. That is because of different practises of
-> memory mapping on PC architecture vs. "new" architectures.
-> 
-> However, on x86 (which that implementation covers) it's most easy to read
-> the /proc/cmdline and the mem parameter. That parameter should be very stable
-> since bootloaders need to parse it, so no fancy features are likely to be
-> added in future. So we can use that.
-> 
-> The new function limit_system_memory() now reads the memory map kexec built for
-
-What happens if user booted first kernel with user specified map (using
-memmap=exactmap)? How will /proc/iomem look like? I think it will show
-user specified IO regions and ignore BIOS map?
-
-So lets say a system has got 4G of RAM, and for testing purpose a user
-boots with user speicified map which says 1G of RAM is available. Now
-we kexec into second kernel. Should second kernel see 4G of RAM or 1G
-of RAM. I feel, second kernel should see 4G of RAM.
-
-Hence I feel that we need to create two views. /proc/iomem can serve
-as unmodied io resource view as reported by BIOS, and /proc/iomem_used
-can serve as modified view as seen by kernel (due to user options.)
-
-I think its the hard way of doing things as it might break something but
-I feel this will also make semantics very clear than patching things
-in user space.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
