@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K3R3W-0003BT-9z
-	for kexec@lists.infradead.org; Tue, 03 Jun 2008 07:35:42 +0000
-Date: Tue, 3 Jun 2008 09:36:18 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Fix implicit declaration of inb/outb
-Message-ID: <20080603093618.7974ffec@halley.suse.de>
-In-Reply-To: <e2ed954f0806021843r648e4276v6c0d49aa1f601e17@mail.gmail.com>
-References: <1212448806-22450-1-git-send-email-bwalle@suse.de>
-	<e2ed954f0806021843r648e4276v6c0d49aa1f601e17@mail.gmail.com>
-Mime-Version: 1.0
+	id 1K3izR-0006gl-3x
+	for kexec@lists.infradead.org; Wed, 04 Jun 2008 02:44:41 +0000
+From: Jeremy Kerr <jk@ozlabs.org>
+Subject: Re: [PATCH] Cross compile?
+Date: Wed, 4 Jun 2008 10:42:06 +0800
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<20080521054705.GA3714@verge.net.au>
+	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
+In-Reply-To: <20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200806041042.06607.jk@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jamey Sharp <jamey@thetovacompany.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: "Lombard, David N" <dnlombar@ichips.intel.com>, Simon Horman <horms@verge.net.au>
 
-* Jamey Sharp [2008-06-02 18:43]:
->
-> Oh, dear--that doesn't work.
+Hi David,
 
-Thanks for catching that issue. But it also means that it *didn't* work
-on x86-64 because inb() needed to call a function (I don't think that
-the compiler did inline something when it even didn't know the
-prototype).
+(sorry about the late reply, been on holidays for the last 3 weeks..)
 
-My next patch should address that issue by just using the same header
-file for i386 and x86-64. No need for code duplication here. And I
-think we should use __always_inline__ in that case (yes, it's GNU only
-but I think we can afford that for kexec-tools) to make sure that the
-inlining takes also place for -O0.'
+> ./configure --build=`uname -m`-linux-uclibc \
+>           --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
+>           CC=uclibc-gcc BUILD_CC=host-gcc
+
+Ah, there's the problem. You're specifying CC on the configure line, 
+which is overriding it for *everything*. Which is why the 
+CC=$(BUILD_CC) assignment in util/Makefile isn't working for you.
+
+I'll see if I can work out a proper fix...
+
+Also, why are you setting --build to -uclibc?
+
+Cheers,
 
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Maintenance
+Jeremy
+
+
 
 _______________________________________________
 kexec mailing list
