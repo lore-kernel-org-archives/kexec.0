@@ -1,23 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K5oXl-0004k1-2l
-	for kexec@lists.infradead.org; Mon, 09 Jun 2008 21:04:45 +0000
-Date: Mon, 9 Jun 2008 23:04:41 +0200
+	id 1K5pMq-0000I2-Kz
+	for kexec@lists.infradead.org; Mon, 09 Jun 2008 21:57:33 +0000
+Date: Mon, 9 Jun 2008 23:57:29 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [patch 2/3] Add flags parameter to reserve_bootmem_generic()
-Message-ID: <20080609230441.77d3dc8a@kopernikus.site>
-In-Reply-To: <20080609210055.GK3542@redhat.com>
-References: <87bq2bmvro.fsf@saeurebad.de> <20080609132207.GC3542@redhat.com>
-	<20080609182341.00d6e746@halley.suse.de>
-	<484D5CCB.5020709@firstfloor.org>
-	<1213041041.19111.68.camel@ustr-shaha1-linux-dev.na.uis.unisys.com>
-	<20080609221732.1e14e5d5@kopernikus.site>
-	<20080609202935.GI3542@redhat.com>
-	<20080609224211.2ef0f74c@kopernikus.site>
-	<20080609205429.GJ3542@redhat.com>
-	<20080609225734.2bb9ee64@kopernikus.site>
-	<20080609210055.GK3542@redhat.com>
+Subject: Re: [PATCH] Implement support for mem command line parameter
+Message-ID: <20080609235729.43e38e2f@kopernikus.site>
+In-Reply-To: <20080603030440.GC32687@redhat.com>
+References: <1212449384-22819-1-git-send-email-bwalle@suse.de>
+	<20080603030440.GC32687@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -32,17 +24,68 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Johannes Weiner <hannes@saeurebad.de>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, hpa@zytor.com, "Romer, Benjamin M" <Benjamin.Romer@unisys.com>, Amul Shah <amul.shah@unisys.com>
+Cc: kexec@lists.infradead.org
 
-* Vivek Goyal <vgoyal@redhat.com> [2008-06-09 17:00]:
+* Vivek Goyal <vgoyal@redhat.com> [2008-06-02 23:04]:
+>
+> On Tue, Jun 03, 2008 at 01:29:44AM +0200, Bernhard Walle wrote:
+> > When the kernel is booted with the "mem" kernel command line (see
+> > Documentation/kernel-parameters.txt of kernel source tree), the /proc/iomem
+> > is not modified. Instead, it shows the whole memory space as "System RAM".
+> > I consider that as correct because the file is named "iomem", and for I/O,
+> > the behaviour makes sense.
+> > 
 > 
-> I am really not sure. :-). In the past, Andrew picked up the patches, kept
-> in his tree for couple of days and if something is important, he will push
-> it out to Linus.
+> IIUC, in the past the behavior of /proc/iomem was different for i386 and
+> x86_64. One arch used to truncate it and other would not. I don't remember
+> which one used to do what.
 
-Ok, I'm a bit confused about linux-next, and the new x86 tree from
-Ingo/Thomas and how to merge patches. So, I'll wait a few days and then
-resend the patches with Andrew in Cc.
+Right. I just checked with 2.6.22.5 (openSUSE 10.3 kernel), and
+
+  - i386: /proc/iomem contains full memory
+  - x86_64: /proc/iomem contains truncated memory
+
+After the x86 merge, x86_64 now has the behaviour of i386.
+
+> I had a quick look at the current code and looks like truncation of e820
+> map is taking place before request_resource(). In that case we should
+> see the truncated map. But I am not sure and will test it tomorrow...
+
+2.6.25 shows the full /proc/iomem.
+
+> We probably will not touch /proc/iomem. We need to create a new interface
+> which will change based on user options. That should not break any 
+> user space applications?
+
+That would make sense. I will prepare a patch tomorrow, I hope such a
+interface will be accepted. One might argue that "just don't use mem,
+it's only for debugging" or something.
+
+> >  - We should not add yet another interface between kernel and userspace for
+> >    a feature 99 % of the people don't need and don't even know about.
+> > 
+> > The semantics of mem is different on different architectures. i386 and x86_64
+> > (x86) treat the limit specified on the command line as physical address limit
+> 
+> You mean system RAM limit? Because PCI devices are still mapped at higher
+> physical addresses. So it is not physical address limit?
+
+In x86 the mem=3G means that the highest RAM memory address is
+3*1024*1024*1024 bytes physical address space. Removing the hole
+between 640K and 1M and 15M and 16M, that's not exactly 3G memory.
+
+> > while IA64 count the real memory. That is because of different practises of
+> > memory mapping on PC architecture vs. "new" architectures.
+
+And IA64 really counts that memory, so 'free -m' will show 3*1024 in
+that case.
+
+> Hence I feel that we need to create two views. /proc/iomem can serve
+> as unmodied io resource view as reported by BIOS, and /proc/iomem_used
+> can serve as modified view as seen by kernel (due to user options.)
+
+Right, that's the more *clean* solution, but it needs a new kernel
+interface.
 
 
 
