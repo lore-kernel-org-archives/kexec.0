@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from usea-naimss1.unisys.com ([192.61.61.103])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K5nSO-0000Y8-8w
-	for kexec@lists.infradead.org; Mon, 09 Jun 2008 19:55:09 +0000
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K5noA-0005yx-0W
+	for kexec@lists.infradead.org; Mon, 09 Jun 2008 20:17:38 +0000
+Date: Mon, 9 Jun 2008 22:17:32 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: [patch 2/3] Add flags parameter to reserve_bootmem_generic()
-From: Amul Shah <amul.shah@unisys.com>
-In-Reply-To: <484D5CCB.5020709@firstfloor.org>
-References: <20080608134628.757299158@halley.suse.de> <20080608134629.743220
-	278@halley.suse.de>	<87bq2bmvro.fsf@saeurebad.de>
-	<20080609132207.GC3542@re dhat.com>
+Message-ID: <20080609221732.1e14e5d5@kopernikus.site>
+In-Reply-To: <1213041041.19111.68.camel@ustr-shaha1-linux-dev.na.uis.unisys.com>
+References: <20080608134628.757299158@halley.suse.de>
+	<20080608134629.743220 278@halley.suse.de>
+	<87bq2bmvro.fsf@saeurebad.de> <20080609132207.GC3542@re dhat.com>
 	<20080609182341.00d6e746@halley.suse.de>
 	<484D5CCB.5020709@firstfloor.org>
-Date: Mon, 09 Jun 2008 15:50:41 -0400
-Message-Id: <1213041041.19111.68.camel@ustr-shaha1-linux-dev.na.uis.unisys.com>
+	<1213041041.19111.68.camel@ustr-shaha1-linux-dev.na.uis.unisys.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -26,173 +27,167 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, Johannes Weiner <hannes@saeurebad.de>, linux-kernel@vger.kernel.org, anderson@redhat.com, hpa@zytor.com, "Romer, Benjamin M" <Benjamin.Romer@unisys.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Amul Shah <amul.shah@unisys.com>
+Cc: kexec@lists.infradead.org, Johannes Weiner <hannes@saeurebad.de>, linux-kernel@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, hpa@zytor.com, "Romer,
+	Benjamin M" <Benjamin.Romer@unisys.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, 2008-06-09 at 18:39 +0200, Andi Kleen wrote:
-> Bernhard Walle wrote:
-> > * Vivek Goyal [2008-06-09 09:22]:
-> >> Kdump first kernel always tries to reserve just physical RAM and nothing
-> >> else. So I am not sure what does above code do. Try to reserve a memory
-> >> which is not RAM but is in the region less than highest mapped entity and
-> >> in that case return silently without any warning. In what case do we
-> >> exercise this path?
+* Amul Shah <amul.shah@unisys.com> [2008-06-09 15:50]:
+>
+> > Don't remember the details. Perhaps Amul does (cc'ed)
 > > 
-> > I don't know. That code has been introduced in 
-> > http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=5e58a02a8f6a7a1c9ae41f39286bcd3aea0d6f24
-> > 
-> > Ccing Andi.
-> > 
-> > IMO we should not print any warning in that function, leaving the error
-> > handling to the caller.
+> > -Andi
+> >   
 > 
-> Don't remember the details. Perhaps Amul does (cc'ed)
+> The short story is that the kexec kernel was panicking when trying to
+> reserve the MP tables.  The panic occurs because the MP tables resided
+> in a reserved memory area above the highest address (80MB phys at that
+> time) in the user defined E820 map used by the kexec kernel.
 > 
-> -Andi
-> 
+> I had placed my code to affect only MP table reservation (see patch
+> below) because it is unique to just that code path.  Andi decided a
+> generalized approach would be better in case other vendors had similar
+> issues.
 
-The short story is that the kexec kernel was panicking when trying to
-reserve the MP tables.  The panic occurs because the MP tables resided
-in a reserved memory area above the highest address (80MB phys at that
-time) in the user defined E820 map used by the kexec kernel.
+Ok, in that case it makes indeed sense to just return success here.
+Here's my third version of that patch:
 
-I had placed my code to affect only MP table reservation (see patch
-below) because it is unique to just that code path.  Andi decided a
-generalized approach would be better in case other vendors had similar
-issues.
+-------------------------------------------------------------------------
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Add 'flags' parameter to reserve_bootmem_generic()
 
-Vivek asked if I was using a user defined memory map for the kexec
-kernel.  I was using one, but the top of memory was being defined as
-80MB physical (end_pfn).  The "exactmap" option parsing is clobbering
-the variable end_pfn_map.  I suggested using the saved_pfn_map variable.
+This patch adds a 'flags' parameter to reserve_bootmem_generic() like it
+already has been added in reserve_bootmem() with commit
+72a7fe3967dbf86cb34e24fbf1d957fe24d2f246.
 
-In the end Andi's patch was the best, so it stuck.
+It also changes all users to use BOOTMEM_DEFAULT, which doesn't effectively
+change the behaviour. Since the change is x86-specific, I don't think it's
+necessary to add a new API for migration. There are only 4 users of that
+function.
 
-I took a quick look at the current code base and it would still panic
-when reserving the MP table.  The function smp_scan_config does the
-reservation.  I did not track down how the BUG_ON in
-reserve_bootmem_core corresponds to end_pfn.
+The change is necessary for the next patch, using reserve_bootmem_generic()
+for crashkernel reservation.
 
-thanks,
-Amul
 
-Here is my original email (http://lkml.org/lkml/2006/11/2/285):
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-The kdump crash kernel panics when it tries to reserve the MP Config
-tables on an ES7000.
+---
+ arch/x86/kernel/e820_64.c |    3 ++-
+ arch/x86/kernel/efi_64.c  |    3 ++-
+ arch/x86/kernel/mpparse.c |    5 +++--
+ arch/x86/mm/init_64.c     |   19 +++++++++++++------
+ include/asm-x86/proto.h   |    2 +-
+ 5 files changed, 21 insertions(+), 11 deletions(-)
 
-The MP Config table is located above 1MB of physical memory in a
-reserved memory area.  It is located outside the first 1MB area because
-the tables are too large, 240k.
-
-The crash kernel is given a user defined memory map with E820 reserved
-and ACPI areas passed in by kexec tools and a usable area from 16MB
-physical to 80MB physical.  This user defined map causes the top of
-memory to be set as 80MB.
-
-The ACPI tables and MP Tables reside higher in memory.  When reserving
-memory with reserve_bootmem_generic, the function has a BUG panic if the
-memory location to reserve is above the top of memory.  The MP table is
-above the top of memory in a user defined memory map.
-
-This patch will ignore reserving the MP tables if the MP table resides
-in an area already reserved in the E820.
-
-I have two alternate patches that accomplish the same effect if this
-patch is not acceptable.
-1. avoid reserving the MP tables if a user defined memory map or if a
-user defined memory limit ("mem=") is used.
-2. avoid reserving the MP tables if a kernel parameter is passed in to
-ignore MP table reservation.
-
-diff -Naur linux-2.6.19-rc4/arch/x86_64/kernel/e820.c linux-2.6.19-rc4-az/arch/x86_64/kernel/e820.c
---- linux-2.6.19-rc4/arch/x86_64/kernel/e820.c  2006-10-31 17:38:41.000000000 -0500
-+++ linux-2.6.19-rc4-az/arch/x86_64/kernel/e820.c       2006-11-02 17:56:01.000000000 -0500
-@@ -351,6 +351,53 @@
-        }
+--- a/arch/x86/kernel/e820_64.c
++++ b/arch/x86/kernel/e820_64.c
+@@ -118,7 +118,8 @@ void __init early_res_to_bootmem(unsigne
+ 			continue;
+ 		printk(KERN_INFO "  early res: %d [%lx-%lx] %s\n", i,
+ 			final_start, final_end - 1, r->name);
+-		reserve_bootmem_generic(final_start, final_end - final_start);
++		reserve_bootmem_generic(final_start, final_end - final_start,
++			BOOTMEM_DEFAULT);
+ 	}
  }
  
-+int __init e820_reserved(unsigned long target_phys)
-+{
-+       int i;
-+       unsigned long section_begin_phys, section_end_phys;
-+
-+       for (i = 0; i < e820.nr_map; i++) {
-+               // if it is usable memory, ignore it
-+               if (e820.map[i].type == E820_RAM )
-+                       continue;
-+
-+               section_begin_phys = e820.map[i].addr;
-+               section_end_phys = e820.map[i].addr + e820.map[i].size;
-+
-+               // if its NOT within the memory range, ignore it
-+               if (!(section_begin_phys < target_phys &&
-+                     target_phys < section_end_phys))
-+                       continue;
-+
-+               printk(KERN_DEBUG "MP Tables at %lx in %016lx - %016lx",
-+                      target_phys, section_begin_phys, section_end_phys);
-+               
-+               switch (e820.map[i].type) {
-+               case E820_RESERVED:
-+                       printk(KERN_DEBUG "(reserved)\n");
-+                       break;
-+               case E820_ACPI:
-+                       printk(KERN_DEBUG "(ACPI data)\n");
-+                       printk(KERN_DEBUG "WARNING: MP Tables located in");
-+                       printk(KERN_DEBUG "ACPI Data Area\n");
-+                       break;
-+               case E820_NVS:
-+                       printk(KERN_DEBUG "(ACPI NVS)\n");
-+                       printk(KERN_DEBUG "WARNING: MP Tables located in");
-+                       printk(KERN_DEBUG "ACPI NVS Area\n");
-+                       break;
-+               default:        
-+                       printk(KERN_DEBUG "(type %u)\n", e820.map[i].type);
-+                       printk(KERN_ERR "WARNING: MP Tables located in");
-+                       printk(KERN_ERR "Unkown Memory Area!\n");
-+                       printk(KERN_ERR "Reservations are disallowed.\n");
-+                       return 0;
-+               }
-+               return 1;
-+       }
-+       return 0;
-+}
-+
- /*
-  * Sanitize the BIOS e820 map.
-  *
-diff -Naur linux-2.6.19-rc4/arch/x86_64/kernel/mpparse.c linux-2.6.19-rc4-az/arch/x86_64/kernel/mpparse.c
---- linux-2.6.19-rc4/arch/x86_64/kernel/mpparse.c       2006-10-31 17:38:41.000000000 -0500
-+++ linux-2.6.19-rc4-az/arch/x86_64/kernel/mpparse.c    2006-11-02 17:25:10.000000000 -0500
-@@ -23,6 +23,7 @@
- #include <linux/acpi.h>
- #include <linux/module.h>
+--- a/arch/x86/kernel/efi_64.c
++++ b/arch/x86/kernel/efi_64.c
+@@ -100,7 +100,8 @@ void __init efi_call_phys_epilog(void)
+ void __init efi_reserve_bootmem(void)
+ {
+ 	reserve_bootmem_generic((unsigned long)memmap.phys_map,
+-				memmap.nr_map * memmap.desc_size);
++				memmap.nr_map * memmap.desc_size,
++				BOOTMEM_DEFAULT);
+ }
  
-+#include <asm/e820.h>
- #include <asm/smp.h>
- #include <asm/mtrr.h>
- #include <asm/mpspec.h>
-@@ -543,7 +544,7 @@
+ void __iomem * __init efi_ioremap(unsigned long phys_addr, unsigned long size)
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -729,10 +729,11 @@ static int __init smp_scan_config(unsign
+ 			if (!reserve)
+ 				return 1;
  
-                        smp_found_config = 1;
-                        reserve_bootmem_generic(virt_to_phys(mpf), PAGE_SIZE);
--                       if (mpf->mpf_physptr)
-+                       if (mpf->mpf_physptr && e820_reserved(mpf->mpf_physptr))
-                                reserve_bootmem_generic(mpf->mpf_physptr, PAGE_SIZE);
-                        mpf_found = mpf;
-                        return 1;
-diff -Naur linux-2.6.19-rc4/include/asm-x86_64/e820.h linux-2.6.19-rc4-az/include/asm-x86_64/e820.h
---- linux-2.6.19-rc4/include/asm-x86_64/e820.h  2006-10-31 17:39:24.000000000 -0500
-+++ linux-2.6.19-rc4-az/include/asm-x86_64/e820.h       2006-11-02 17:25:10.000000000 -0500
-@@ -44,6 +44,7 @@
- extern void e820_reserve_resources(void);
- extern void e820_mark_nosave_regions(void);
- extern void e820_print_map(char *who);
-+extern int e820_reserved(unsigned long target_phys);
- extern int e820_any_mapped(unsigned long start, unsigned long end, unsigned type);
- extern int e820_all_mapped(unsigned long start, unsigned long end, unsigned type);
+-			reserve_bootmem_generic(virt_to_phys(mpf), PAGE_SIZE);
++			reserve_bootmem_generic(virt_to_phys(mpf), PAGE_SIZE,
++				BOOTMEM_DEFAULT);
+ 			if (mpf->mpf_physptr)
+ 				reserve_bootmem_generic(mpf->mpf_physptr,
+-							PAGE_SIZE);
++					PAGE_SIZE, BOOTMEM_DEFAULT);
+ #endif
+ 		return 1;
+ 		}
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -798,12 +798,13 @@ void free_initrd_mem(unsigned long start
+ }
+ #endif
  
+-void __init reserve_bootmem_generic(unsigned long phys, unsigned len)
++int __init reserve_bootmem_generic(unsigned long phys, unsigned len, int flags)
+ {
+ #ifdef CONFIG_NUMA
+ 	int nid, next_nid;
+ #endif
+ 	unsigned long pfn = phys >> PAGE_SHIFT;
++	int ret;
+ 
+ 	if (pfn >= end_pfn) {
+ 		/*
+@@ -811,11 +812,11 @@ void __init reserve_bootmem_generic(unsi
+ 		 * firmware tables:
+ 		 */
+ 		if (pfn < max_pfn_mapped)
+-			return;
++			return 0;
+ 
+ 		printk(KERN_ERR "reserve_bootmem: illegal reserve %lx %u\n",
+ 				phys, len);
+-		return;
++		return -EFAULT;
+ 	}
+ 
+ 	/* Should check here against the e820 map to avoid double free */
+@@ -823,17 +824,23 @@ void __init reserve_bootmem_generic(unsi
+ 	nid = phys_to_nid(phys);
+ 	next_nid = phys_to_nid(phys + len - 1);
+ 	if (nid == next_nid)
+-		reserve_bootmem_node(NODE_DATA(nid), phys, len, BOOTMEM_DEFAULT);
++		ret = reserve_bootmem_node(NODE_DATA(nid), phys, len, flags);
+ 	else
+-		reserve_bootmem(phys, len, BOOTMEM_DEFAULT);
++		ret = reserve_bootmem(phys, len, flags);
++
+ #else
+-	reserve_bootmem(phys, len, BOOTMEM_DEFAULT);
++	ret = reserve_bootmem(phys, len, flags);
+ #endif
+ 
++	if (ret != 0)
++		return ret;
++
+ 	if (phys+len <= MAX_DMA_PFN*PAGE_SIZE) {
+ 		dma_reserve += len / PAGE_SIZE;
+ 		set_dma_reserve(dma_reserve);
+ 	}
++
++	return 0;
+ }
+ 
+ int kern_addr_valid(unsigned long addr)
+--- a/include/asm-x86/proto.h
++++ b/include/asm-x86/proto.h
+@@ -14,7 +14,7 @@ extern void ia32_syscall(void);
+ extern void ia32_cstar_target(void);
+ extern void ia32_sysenter_target(void);
+ 
+-extern void reserve_bootmem_generic(unsigned long phys, unsigned len);
++extern int reserve_bootmem_generic(unsigned long phys, unsigned len, int flags);
+ 
+ extern void syscall32_cpu_init(void);
+ 
+
 
 
 
