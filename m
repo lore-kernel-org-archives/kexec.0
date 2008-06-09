@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K5j6n-0001Dl-EY
-	for kexec@lists.infradead.org; Mon, 09 Jun 2008 15:16:33 +0000
-Date: Mon, 9 Jun 2008 08:17:02 -0700
-From: "Lombard, David N" <dnlombar@ichips.intel.com>
-Subject: Re: [PATCH] Cross compile?
-Message-ID: <20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
-References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
-	<20080521054705.GA3714@verge.net.au>
-	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
-	<200806041042.06607.jk@ozlabs.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200806041042.06607.jk@ozlabs.org>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K5k9I-0007yN-Fa
+	for kexec@lists.infradead.org; Mon, 09 Jun 2008 16:23:12 +0000
+Date: Mon, 9 Jun 2008 18:23:41 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [patch 2/3] Add flags parameter to reserve_bootmem_generic()
+Message-ID: <20080609182341.00d6e746@halley.suse.de>
+In-Reply-To: <20080609132207.GC3542@redhat.com>
+References: <20080608134628.757299158@halley.suse.de>
+	<20080608134629.743220278@halley.suse.de>
+	<87bq2bmvro.fsf@saeurebad.de> <20080609132207.GC3542@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,36 +24,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Kerr <jk@ozlabs.org>
-Cc: "Lombard, David N" <dnlombar@plxs0284.pdx.intel.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: andi@firstfloor.org, kexec@lists.infradead.org, Johannes Weiner <hannes@saeurebad.de>, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, hpa@zytor.com, tglx@linutronix.de
 
-On Wed, Jun 04, 2008 at 10:42:06AM +0800, Jeremy Kerr wrote:
-> Hi David,
-> 
-> (sorry about the late reply, been on holidays for the last 3 weeks..)
-> 
-> > ./configure --build=`uname -m`-linux-uclibc \
-> >           --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
-> >           CC=uclibc-gcc BUILD_CC=host-gcc
-> 
-> Ah, there's the problem. You're specifying CC on the configure line, 
-> which is overriding it for *everything*. Which is why the 
-> CC=$(BUILD_CC) assignment in util/Makefile isn't working for you.
+* Vivek Goyal [2008-06-09 09:22]:
+>
+> Kdump first kernel always tries to reserve just physical RAM and nothing
+> else. So I am not sure what does above code do. Try to reserve a memory
+> which is not RAM but is in the region less than highest mapped entity and
+> in that case return silently without any warning. In what case do we
+> exercise this path?
 
-I'm perfectly happy to admit I've horked this...
+I don't know. That code has been introduced in 
+http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=5e58a02a8f6a7a1c9ae41f39286bcd3aea0d6f24
 
-> I'll see if I can work out a proper fix...
-> 
-> Also, why are you setting --build to -uclibc?
+Ccing Andi.
 
-Some of the above came from kboot; everything else is my own fault :)
+IMO we should not print any warning in that function, leaving the error
+handling to the caller.
 
-kexec is being built on a glibc-based x86 for use on a uclibc-based
-x86.
 
+Bernhard
 -- 
-David N. Lombard, Intel, Irvine, CA
-I do not speak for Intel Corporation; all comments are strictly my own.
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Maintenance
 
 _______________________________________________
 kexec mailing list
