@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K5hKC-0007HS-19
-	for kexec@lists.infradead.org; Mon, 09 Jun 2008 13:22:16 +0000
-Date: Mon, 9 Jun 2008 09:22:07 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 2/3] Add flags parameter to reserve_bootmem_generic()
-Message-ID: <20080609132207.GC3542@redhat.com>
-References: <20080608134628.757299158@halley.suse.de>
-	<20080608134629.743220278@halley.suse.de>
-	<87bq2bmvro.fsf@saeurebad.de>
+	id 1K5j6n-0001Dl-EY
+	for kexec@lists.infradead.org; Mon, 09 Jun 2008 15:16:33 +0000
+Date: Mon, 9 Jun 2008 08:17:02 -0700
+From: "Lombard, David N" <dnlombar@ichips.intel.com>
+Subject: Re: [PATCH] Cross compile?
+Message-ID: <20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<20080521054705.GA3714@verge.net.au>
+	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
+	<200806041042.06607.jk@ozlabs.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87bq2bmvro.fsf@saeurebad.de>
+In-Reply-To: <200806041042.06607.jk@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,57 +26,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Johannes Weiner <hannes@saeurebad.de>
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, hpa@zytor.com, tglx@linutronix.de
+To: Jeremy Kerr <jk@ozlabs.org>
+Cc: "Lombard, David N" <dnlombar@plxs0284.pdx.intel.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Mon, Jun 09, 2008 at 12:01:15AM +0200, Johannes Weiner wrote:
-> Hi,
+On Wed, Jun 04, 2008 at 10:42:06AM +0800, Jeremy Kerr wrote:
+> Hi David,
 > 
-> Bernhard Walle <bwalle@suse.de> writes:
+> (sorry about the late reply, been on holidays for the last 3 weeks..)
 > 
-> > --- a/arch/x86/mm/init_64.c
-> > +++ b/arch/x86/mm/init_64.c
-> > @@ -798,12 +798,13 @@ void free_initrd_mem(unsigned long start
-> >  }
-> >  #endif
-> >  
-> > -void __init reserve_bootmem_generic(unsigned long phys, unsigned len)
-> > +int __init reserve_bootmem_generic(unsigned long phys, unsigned len, int flags)
-> >  {
-> >  #ifdef CONFIG_NUMA
-> >  	int nid, next_nid;
-> >  #endif
-> >  	unsigned long pfn = phys >> PAGE_SHIFT;
-> > +	int ret;
-> >  
-> >  	if (pfn >= end_pfn) {
-> >  		/*
-> > @@ -811,11 +812,11 @@ void __init reserve_bootmem_generic(unsi
-> >  		 * firmware tables:
-> >  		 */
-> >  		if (pfn < max_pfn_mapped)
-> > -			return;
-> > +			return -EFAULT;
+> > ./configure --build=`uname -m`-linux-uclibc \
+> >           --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
+> >           CC=uclibc-gcc BUILD_CC=host-gcc
 > 
-> This seemed to be `just do nothing' behaviour.  Wouldn't 0 be more
-> correct here?  Or something else so there is a difference between the
-> path that does not print a warning (the one below) and the path that
-> does?
+> Ah, there's the problem. You're specifying CC on the configure line, 
+> which is overriding it for *everything*. Which is why the 
+> CC=$(BUILD_CC) assignment in util/Makefile isn't working for you.
 
-Bernard,
+I'm perfectly happy to admit I've horked this...
 
-This is interesting. IIUC, end_pfn represents end of physical RAM and
-max_pfn_mapped represents, end of other tables like ACPI which are
-mapped in higher regions.
+> I'll see if I can work out a proper fix...
+> 
+> Also, why are you setting --build to -uclibc?
 
-Kdump first kernel always tries to reserve just physical RAM and nothing
-else. So I am not sure what does above code do. Try to reserve a memory
-which is not RAM but is in the region less than highest mapped entity and
-in that case return silently without any warning. In what case do we
-exercise this path?
+Some of the above came from kboot; everything else is my own fault :)
 
-Thanks
-Vivek
+kexec is being built on a glibc-based x86 for use on a uclibc-based
+x86.
+
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
