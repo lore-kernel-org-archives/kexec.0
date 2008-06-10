@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K5u6P-0001Jt-8e
-	for kexec@lists.infradead.org; Tue, 10 Jun 2008 03:00:53 +0000
-Date: Mon, 9 Jun 2008 23:00:51 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Implement support for mem command line parameter
-Message-ID: <20080610030051.GB25390@redhat.com>
-References: <1212449384-22819-1-git-send-email-bwalle@suse.de>
-	<20080603030440.GC32687@redhat.com>
-	<20080609235729.43e38e2f@kopernikus.site>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080609235729.43e38e2f@kopernikus.site>
+	id 1K5y4B-00046W-HA
+	for kexec@lists.infradead.org; Tue, 10 Jun 2008 07:14:52 +0000
+Subject: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
+From: "Huang, Ying" <ying.huang@intel.com>
+Date: Tue, 10 Jun 2008 15:15:06 +0800
+Message-Id: <1213082106.22608.30.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,86 +20,259 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-On Mon, Jun 09, 2008 at 11:57:29PM +0200, Bernhard Walle wrote:
-> * Vivek Goyal <vgoyal@redhat.com> [2008-06-02 23:04]:
-> >
-> > On Tue, Jun 03, 2008 at 01:29:44AM +0200, Bernhard Walle wrote:
-> > > When the kernel is booted with the "mem" kernel command line (see
-> > > Documentation/kernel-parameters.txt of kernel source tree), the /proc/iomem
-> > > is not modified. Instead, it shows the whole memory space as "System RAM".
-> > > I consider that as correct because the file is named "iomem", and for I/O,
-> > > the behaviour makes sense.
-> > > 
-> > 
-> > IIUC, in the past the behavior of /proc/iomem was different for i386 and
-> > x86_64. One arch used to truncate it and other would not. I don't remember
-> > which one used to do what.
-> 
-> Right. I just checked with 2.6.22.5 (openSUSE 10.3 kernel), and
-> 
->   - i386: /proc/iomem contains full memory
->   - x86_64: /proc/iomem contains truncated memory
-> 
-> After the x86 merge, x86_64 now has the behaviour of i386.
-> 
+This patch implements devices state save/restore before after kexec.
 
-Cool. Now atleast behavior across x86 and x86_64 is same.
 
-> > I had a quick look at the current code and looks like truncation of e820
-> > map is taking place before request_resource(). In that case we should
-> > see the truncated map. But I am not sure and will test it tomorrow...
-> 
-> 2.6.25 shows the full /proc/iomem.
-> 
-> > We probably will not touch /proc/iomem. We need to create a new interface
-> > which will change based on user options. That should not break any 
-> > user space applications?
-> 
-> That would make sense. I will prepare a patch tomorrow, I hope such a
-> interface will be accepted. One might argue that "just don't use mem,
-> it's only for debugging" or something.
-> 
-> > >  - We should not add yet another interface between kernel and userspace for
-> > >    a feature 99 % of the people don't need and don't even know about.
-> > > 
-> > > The semantics of mem is different on different architectures. i386 and x86_64
-> > > (x86) treat the limit specified on the command line as physical address limit
-> > 
-> > You mean system RAM limit? Because PCI devices are still mapped at higher
-> > physical addresses. So it is not physical address limit?
-> 
-> In x86 the mem=3G means that the highest RAM memory address is
-> 3*1024*1024*1024 bytes physical address space. Removing the hole
-> between 640K and 1M and 15M and 16M, that's not exactly 3G memory.
-> 
-> > > while IA64 count the real memory. That is because of different practises of
-> > > memory mapping on PC architecture vs. "new" architectures.
-> 
-> And IA64 really counts that memory, so 'free -m' will show 3*1024 in
-> that case.
-> 
-> > Hence I feel that we need to create two views. /proc/iomem can serve
-> > as unmodied io resource view as reported by BIOS, and /proc/iomem_used
-> > can serve as modified view as seen by kernel (due to user options.)
-> 
-> Right, that's the more *clean* solution, but it needs a new kernel
-> interface.
-> 
+This patch together with features in kexec_jump patch can be used for
+following:
 
-I think this interface might be acceptable to community. Lets write a
-patch and present our case to community.
+- A simple hibernation implementation without ACPI support. You can
+  kexec a hibernating kernel, save the memory image of original system
+  and shutdown the system. When resuming, you restore the memory image
+  of original system via ordinary kexec load then jump back.
 
-Thanks
-Vivke
+- Kernel/system debug through making system snapshot. You can make
+  system snapshot, jump back, do some thing and make another system
+  snapshot.
 
-> 
-> 
-> Bernhard
-> -- 
-> Bernhard Walle, SUSE LINUX Products GmbH, Architecture Maintenance
+- Cooperative multi-kernel/system. With kexec jump, you can switch
+  between several kernels/systems quickly without boot process except
+  the first time. This appears like swap a whole kernel/system out/in.
+
+- A general method to call program in physical mode (paging turning
+  off). This can be used to invoke BIOS code under Linux.
+
+
+The following user-space tools can be used with kexec jump:
+
+- kexec-tools needs to be patched to support kexec jump. The patches
+  and the precompiled kexec can be download from the following URL:
+       source: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-src_git_kh10.tar.bz2
+       patches: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-patches_git_kh10.tar.bz2
+       binary: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec_git_kh10
+
+- makedumpfile with patches are used as memory image saving tool, it
+  can exclude free pages from original kernel memory image file. The
+  patches and the precompiled makedumpfile can be download from the
+  following URL:
+       source: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-src_cvs_kh10.tar.bz2
+       patches: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-patches_cvs_kh10.tar.bz2
+       binary: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile_cvs_kh10
+
+- An initramfs image can be used as the root file system of kexeced
+  kernel. An initramfs image built with "BuildRoot" can be downloaded
+  from the following URL:
+       initramfs image: http://khibernation.sourceforge.net/download/release_v10/initramfs/rootfs_cvs_kh10.gz
+  All user space tools above are included in the initramfs image.
+
+
+Usage example of simple hibernation:
+
+1. Compile and install patched kernel with following options selected:
+
+CONFIG_X86_32=y
+CONFIG_RELOCATABLE=y
+CONFIG_KEXEC=y
+CONFIG_CRASH_DUMP=y
+CONFIG_PM=y
+
+2. Build an initramfs image contains kexec-tool and makedumpfile, or
+   download the pre-built initramfs image, called rootfs.gz in
+   following text.
+
+3. Prepare a partition to save memory image of original kernel, called
+   hibernating partition in following text.
+
+4. Boot kernel compiled in step 1 (kernel A).
+
+5. In the kernel A, load kernel compiled in step 1 (kernel B) with
+   /sbin/kexec. The shell command line can be as follow:
+
+   /sbin/kexec --load-preserve-context /boot/bzImage --mem-min=0x100000
+     --mem-max=0xffffff --initrd=rootfs.gz
+
+6. Boot the kernel B with following shell command line:
+
+   /sbin/kexec -e
+
+7. The kernel B will boot as normal kexec. In kernel B the memory
+   image of kernel A can be saved into hibernating partition as
+   follow:
+
+   jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
+   echo $jump_back_entry > kexec_jump_back_entry
+   cp /proc/vmcore dump.elf
+
+   Then you can shutdown the machine as normal.
+
+8. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
+   root file system.
+
+9. In kernel C, load the memory image of kernel A as follow:
+
+   /sbin/kexec -l --args-none --entry=`cat kexec_jump_back_entry` dump.elf
+
+10. Jump back to the kernel A as follow:
+
+   /sbin/kexec -e
+
+   Then, kernel A is resumed.
+
+
+Implementation point:
+
+To support jumping between two kernels, before jumping to (executing)
+the new kernel and jumping back to the original kernel, the devices
+are put into quiescent state, and the state of devices and CPU is
+saved. After jumping back from kexeced kernel and jumping to the new
+kernel, the state of devices and CPU are restored accordingly. The
+devices/CPU state save/restore code of software suspend is called to
+implement corresponding function.
+
+
+Known issues:
+
+- Because the segment number supported by sys_kexec_load is limited,
+  hibernation image with many segments may not be load. This is
+  planned to be eliminated by adding a new flag to sys_kexec_load to
+  make a image can be loaded with multiple sys_kexec_load invoking.
+
+
+ChangeLog:
+
+v11:
+
+- Add disable_IO_APIC() to machine_kexec() to put IO APIC into legacy
+  mode before executing new kernel.
+
+- Base on top of new hibernation/restore device driver callback.
+
+v10:
+
+- Split from original kexec_jump patch.
+
+
+Now, only the i386 architecture is supported. The patchset is based on
+Linux kernel 2.6.26-rc5-mm1, and has been tested on IBM T42 with ACPI
+on and off.
+
+
+Signed-off-by: Huang Ying <ying.huang@intel.com>
+
+---
+ arch/x86/kernel/machine_kexec_32.c |    6 +++++
+ include/linux/suspend.h            |    2 +
+ kernel/kexec.c                     |   43 ++++++++++++++++++++++++++++++++++++-
+ kernel/power/power.h               |    2 -
+ 4 files changed, 50 insertions(+), 3 deletions(-)
+
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -25,6 +25,10 @@
+ #include <linux/utsname.h>
+ #include <linux/numa.h>
+ #include <linux/suspend.h>
++#include <linux/freezer.h>
++#include <linux/pm.h>
++#include <linux/cpu.h>
++#include <linux/console.h>
+ 
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -1427,8 +1431,34 @@ module_init(crash_save_vmcoreinfo_init)
+ 
+ int kexec_jump(struct kimage *image)
+ {
++	int error = 0;
++
++	mutex_lock(&pm_mutex);
+ 	if (image->preserve_context) {
++		pm_prepare_console();
++		error = freeze_processes();
++		if (error) {
++			error = -EBUSY;
++			goto Exit;
++		}
++		suspend_console();
++		error = device_suspend(PMSG_FREEZE);
++		if (error)
++			goto Resume_console;
++		error = disable_nonboot_cpus();
++		if (error)
++			goto Resume_devices;
+ 		local_irq_disable();
++		/* At this point, device_suspend() has been called,
++		 * but *not* device_power_down(). We *must*
++		 * device_power_down() now.  Otherwise, drivers for
++		 * some devices (e.g. interrupt controllers) become
++		 * desynchronized with the actual state of the
++		 * hardware at resume time, and evil weirdness ensues.
++		 */
++		error = device_power_down(PMSG_FREEZE);
++		if (error)
++			goto Enable_irqs;
+ 		save_processor_state();
+ 	}
+ 
+@@ -1436,7 +1466,18 @@ int kexec_jump(struct kimage *image)
+ 
+ 	if (image->preserve_context) {
+ 		restore_processor_state();
++		device_power_up(PMSG_RESTORE);
++ Enable_irqs:
+ 		local_irq_enable();
++		enable_nonboot_cpus();
++ Resume_devices:
++		device_resume(PMSG_RESTORE);
++ Resume_console:
++		resume_console();
++		thaw_processes();
++ Exit:
++		pm_restore_console();
+ 	}
+-	return 0;
++	mutex_unlock(&pm_mutex);
++	return error;
+ }
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -53,8 +53,6 @@ extern int hibernation_platform_enter(vo
+ 
+ extern int pfn_is_nosave(unsigned long);
+ 
+-extern struct mutex pm_mutex;
+-
+ #define power_attr(_name) \
+ static struct kobj_attribute _name##_attr = {	\
+ 	.attr	= {				\
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -266,4 +266,6 @@ static inline void register_nosave_regio
+ }
+ #endif
+ 
++extern struct mutex pm_mutex;
++
+ #endif /* _LINUX_SUSPEND_H */
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -125,6 +125,12 @@ void machine_kexec(struct kimage *image)
+ 	/* Interrupts aren't acceptable while we reboot */
+ 	local_irq_disable();
+ 
++	if (image->preserve_context) {
++#ifdef CONFIG_X86_IO_APIC
++		disable_IO_APIC();
++#endif
++	}
++
+ 	control_page = page_address(image->control_code_page);
+ 	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
+ 
+
 
 _______________________________________________
 kexec mailing list
