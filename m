@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6Ms0-00045V-SK
-	for kexec@lists.infradead.org; Wed, 11 Jun 2008 09:43:57 +0000
-Subject: Re: [linux-pm] [PATCH -mm 2/2] kexec jump -v11: save/restore
-	device state
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <alpine.LFD.1.10.0806110418370.4233@localhost.localdomain>
-References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-	<alpine.LFD.1.10.0806101400090.14381@localhost.localdomain>
-	<1213146074.21923.10.camel@caritas-dev.intel.com>
-	<alpine.LFD.1.10.0806110418370.4233@localhost.localdomain>
-Date: Wed, 11 Jun 2008 17:46:24 +0800
-Message-Id: <1213177584.17610.0.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1K6S0D-0001ai-9h
+	for kexec@lists.infradead.org; Wed, 11 Jun 2008 15:12:45 +0000
+Date: Wed, 11 Jun 2008 11:12:42 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] Implement support for mem command line parameter
+Message-ID: <20080611151242.GC6450@redhat.com>
+References: <1212449384-22819-1-git-send-email-bwalle@suse.de>
+	<20080603030440.GC32687@redhat.com>
+	<20080609235729.43e38e2f@kopernikus.site>
+	<20080610030051.GB25390@redhat.com>
+	<20080610213158.44e2139c@kopernikus.site>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080610213158.44e2139c@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +27,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Len Brown <lenb@kernel.org>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
-On Wed, 2008-06-11 at 04:21 -0400, Len Brown wrote:
-> On Wed, 11 Jun 2008, Huang, Ying wrote:
-> > On Tue, 2008-06-10 at 14:01 -0400, Len Brown wrote:
+On Tue, Jun 10, 2008 at 09:31:58PM +0200, Bernhard Walle wrote:
+> * Vivek Goyal <vgoyal@redhat.com> [2008-06-09 23:00]:
+> >
+> > > Right. I just checked with 2.6.22.5 (openSUSE 10.3 kernel), and
 > > > 
-> > > On Tue, 10 Jun 2008, Huang, Ying wrote:
+> > >   - i386: /proc/iomem contains full memory
+> > >   - x86_64: /proc/iomem contains truncated memory
 > > > 
-> > > > This patch implements devices state save/restore before after kexec.
-> > > > 
-> > > > 
-> > > > This patch together with features in kexec_jump patch can be used for
-> > > > following:
-> > > > 
-> > > > - A simple hibernation implementation without ACPI support. You can
-> > > >   kexec a hibernating kernel, save the memory image of original system
-> > > >   and shutdown the system. When resuming, you restore the memory image
-> > > >   of original system via ordinary kexec load then jump back.
-> > > 
-> > > What part of ACPI's role in hibernation are you trying to avoid
-> > > 1. enabling wake devices
-> > > 2. removing power from the system
-> > > 3. something else?
+> > > After the x86 merge, x86_64 now has the behaviour of i386.
+> > >   
 > > 
-> > ACPI S5 is used instead of S4 for this simple hibernation
-> > implementation. That is, before creating the hibernation image, the ACPI
-> > _PTS is not executed, devices are not put into low power state and wake
-> > devices are not enabled. After creating the hibernation image, the image
-> > is saved to disk and system is shutdown (go to S5). When resuming from
-> > hibernated image, ACPI _BFS and _WAK are not executed too.
+> > Cool. Now atleast behavior across x86 and x86_64 is same.
 > 
-> Doesn't that resume the devices and their drivers into an unknown state?
+> After studying the code, well, that was wrong. I tested again:
+> 
+>  - i386: /proc/iomem contains truncated memory
+>  - x86_64: /proc/iomem contains full memroy
+> 
+> And after the merge, it stays the same, i.e. /proc/iomem in i386 is
+> truncated.
 
-device_suspend(PMSG_FREEZE) and device_power_down(PMSG_FREEZE) are
-called before hibernation; device_power_up(PMSG_RESTORE) and
-device_resume(PMSG_RESTORE) are called after restore. The new
-hibernation/restore device driver callbacks introduced by Rafael is
-used. So I think the device/driver state will be saved/restored
-properly.
+:-(
 
-It is planed to support ACPI S4 in the future. But I think a hibernation
-scheme without ACPI may be useful in some situation too.
+> 
+> Sorry for the confusion. :-|
+> 
+> The question is: Is that "accidentally" or by design. The file
+> Documentation/kernel-parameters.txt:
+> 
+>         [X86-32] Use together with memmap= to avoid physical
+>         address space collisions. Without memmap= PCI devices
+>         could be placed at addresses belonging to unused RAM.
+> 
+> implies that it's "by design".
+> 
 
-Best Regards,
-Huang Ying
+IIUC, does that mean if a system has got 3G of RAM then during normal
+boot PCI devices will be mapped at physical addresses higher than 3G.
+But if I boo the system with mem=2G, then there are changes that PCI
+devices get mapped at physical address between 2G and 3G? 
 
+If yes, what's the issue with that? Anyway kernel will never see RAM
+beyond 2G.
+
+So if we make these two arch consistent, that is /proc/iomem does
+not see truncated memory even user passes mem= option, hopefully
+it works for everybody.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
