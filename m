@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6S0D-0001ai-9h
-	for kexec@lists.infradead.org; Wed, 11 Jun 2008 15:12:45 +0000
-Date: Wed, 11 Jun 2008 11:12:42 -0400
+	id 1K6SPk-0003xl-5N
+	for kexec@lists.infradead.org; Wed, 11 Jun 2008 15:39:08 +0000
+Date: Wed, 11 Jun 2008 11:39:01 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] Implement support for mem command line parameter
-Message-ID: <20080611151242.GC6450@redhat.com>
-References: <1212449384-22819-1-git-send-email-bwalle@suse.de>
-	<20080603030440.GC32687@redhat.com>
-	<20080609235729.43e38e2f@kopernikus.site>
-	<20080610030051.GB25390@redhat.com>
-	<20080610213158.44e2139c@kopernikus.site>
+Subject: Re: [PATCH] Limit E820 map and /proc/iomem for mem parameter on x86-64
+Message-ID: <20080611153901.GD6450@redhat.com>
+References: <20080610215325.GA20673@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080610213158.44e2139c@kopernikus.site>
+In-Reply-To: <20080610215325.GA20673@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,56 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-On Tue, Jun 10, 2008 at 09:31:58PM +0200, Bernhard Walle wrote:
-> * Vivek Goyal <vgoyal@redhat.com> [2008-06-09 23:00]:
-> >
-> > > Right. I just checked with 2.6.22.5 (openSUSE 10.3 kernel), and
-> > > 
-> > >   - i386: /proc/iomem contains full memory
-> > >   - x86_64: /proc/iomem contains truncated memory
-> > > 
-> > > After the x86 merge, x86_64 now has the behaviour of i386.
-> > >   
-> > 
-> > Cool. Now atleast behavior across x86 and x86_64 is same.
+On Tue, Jun 10, 2008 at 11:53:25PM +0200, Bernhard Walle wrote:
+> This patch tries to unify the behaviour of i386 and x86-64 when parsing
+> the memory (mem/memmap) parameter of the kernel command line:
 > 
-> After studying the code, well, that was wrong. I tested again:
+> On i386, the view was limited (i.e. the actual view was presented).
+> On x86-64, the view was full (i.e. the BIOS view was presented).
 > 
->  - i386: /proc/iomem contains truncated memory
->  - x86_64: /proc/iomem contains full memroy
+> This patch moves the limit_regions() function and the print_memory_map()
+> function to a new file e820.c, shared between the two x86 flavours. Then
+> it adds calls to limit_regions() in 64 bit code.
 > 
-> And after the merge, it stays the same, i.e. /proc/iomem in i386 is
-> truncated.
-
-:-(
-
+> I gave the patch a bit testing. However, it's not for merging, it's just
+> to get early feedback to see if that goes into the right direction.
 > 
-> Sorry for the confusion. :-|
-> 
-> The question is: Is that "accidentally" or by design. The file
-> Documentation/kernel-parameters.txt:
-> 
->         [X86-32] Use together with memmap= to avoid physical
->         address space collisions. Without memmap= PCI devices
->         could be placed at addresses belonging to unused RAM.
-> 
-> implies that it's "by design".
 > 
 
-IIUC, does that mean if a system has got 3G of RAM then during normal
-boot PCI devices will be mapped at physical addresses higher than 3G.
-But if I boo the system with mem=2G, then there are changes that PCI
-devices get mapped at physical address between 2G and 3G? 
+I would like to have consistent behavior of /proc/iomem across i386
+and x86_64, so this sounds like right direction to me.
 
-If yes, what's the issue with that? Anyway kernel will never see RAM
-beyond 2G.
+Also I would like to have another interface (say /proc/iomem_kernel)which
+actually gets modified based on the user specified options. So effectively we
+can have both the views. BIOS view and user defined view.
 
-So if we make these two arch consistent, that is /proc/iomem does
-not see truncated memory even user passes mem= option, hopefully
-it works for everybody.
+As discussed on kexec mailing list, it helps kexec and kdump operation. 
+In the case of kexec, we want to know the actual resources present in 
+the system so that new kernel can see it (Irrespective of the fact
+what first kernel was actually using).
+
+In case of kdump, we want to see truncated view so that we don't end
+up capturing the contents of memory not being used by kernel.
 
 Thanks
 Vivek
