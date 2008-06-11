@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6SUu-0004Xa-E3
-	for kexec@lists.infradead.org; Wed, 11 Jun 2008 15:44:28 +0000
-Date: Wed, 11 Jun 2008 17:45:03 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Limit E820 map and /proc/iomem for mem parameter on x86-64
-Message-ID: <20080611174503.3e6b18e8@halley.suse.de>
-In-Reply-To: <20080611153901.GD6450@redhat.com>
-References: <20080610215325.GA20673@suse.de> <20080611153901.GD6450@redhat.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1K6TG1-0007CT-9j
+	for kexec@lists.infradead.org; Wed, 11 Jun 2008 16:33:09 +0000
+Date: Wed, 11 Jun 2008 12:30:26 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
+Message-ID: <20080611163026.GG6450@redhat.com>
+References: <1213082106.22608.30.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1213082106.22608.30.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,23 +23,130 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-* Vivek Goyal [2008-06-11 11:39]:
->
-> Also I would like to have another interface (say /proc/iomem_kernel)which
-> actually gets modified based on the user specified options. So effectively we
-> can have both the views. BIOS view and user defined view.
+On Tue, Jun 10, 2008 at 03:15:06PM +0800, Huang, Ying wrote:
+> This patch implements devices state save/restore before after kexec.
+> 
+> 
+> This patch together with features in kexec_jump patch can be used for
+> following:
+> 
+> - A simple hibernation implementation without ACPI support. You can
+>   kexec a hibernating kernel, save the memory image of original system
+>   and shutdown the system. When resuming, you restore the memory image
+>   of original system via ordinary kexec load then jump back.
+> 
+> - Kernel/system debug through making system snapshot. You can make
+>   system snapshot, jump back, do some thing and make another system
+>   snapshot.
+> 
+> - Cooperative multi-kernel/system. With kexec jump, you can switch
+>   between several kernels/systems quickly without boot process except
+>   the first time. This appears like swap a whole kernel/system out/in.
+> 
+> - A general method to call program in physical mode (paging turning
+>   off). This can be used to invoke BIOS code under Linux.
+> 
+> 
+> The following user-space tools can be used with kexec jump:
+> 
+> - kexec-tools needs to be patched to support kexec jump. The patches
+>   and the precompiled kexec can be download from the following URL:
+>        source: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-src_git_kh10.tar.bz2
+>        patches: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-patches_git_kh10.tar.bz2
+>        binary: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec_git_kh10
+> 
+> - makedumpfile with patches are used as memory image saving tool, it
+>   can exclude free pages from original kernel memory image file. The
+>   patches and the precompiled makedumpfile can be download from the
+>   following URL:
+>        source: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-src_cvs_kh10.tar.bz2
+>        patches: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-patches_cvs_kh10.tar.bz2
+>        binary: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile_cvs_kh10
+> 
+> - An initramfs image can be used as the root file system of kexeced
+>   kernel. An initramfs image built with "BuildRoot" can be downloaded
+>   from the following URL:
+>        initramfs image: http://khibernation.sourceforge.net/download/release_v10/initramfs/rootfs_cvs_kh10.gz
+>   All user space tools above are included in the initramfs image.
+> 
+> 
+> Usage example of simple hibernation:
+> 
+> 1. Compile and install patched kernel with following options selected:
+> 
+> CONFIG_X86_32=y
+> CONFIG_RELOCATABLE=y
+> CONFIG_KEXEC=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_PM=y
+> 
+> 2. Build an initramfs image contains kexec-tool and makedumpfile, or
+>    download the pre-built initramfs image, called rootfs.gz in
+>    following text.
+> 
+> 3. Prepare a partition to save memory image of original kernel, called
+>    hibernating partition in following text.
+> 
+> 4. Boot kernel compiled in step 1 (kernel A).
+> 
+> 5. In the kernel A, load kernel compiled in step 1 (kernel B) with
+>    /sbin/kexec. The shell command line can be as follow:
+> 
+>    /sbin/kexec --load-preserve-context /boot/bzImage --mem-min=0x100000
+>      --mem-max=0xffffff --initrd=rootfs.gz
+> 
+> 6. Boot the kernel B with following shell command line:
+> 
+>    /sbin/kexec -e
+> 
+> 7. The kernel B will boot as normal kexec. In kernel B the memory
+>    image of kernel A can be saved into hibernating partition as
+>    follow:
+> 
+>    jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
+>    echo $jump_back_entry > kexec_jump_back_entry
+>    cp /proc/vmcore dump.elf
+> 
+>    Then you can shutdown the machine as normal.
+> 
+> 8. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
+>    root file system.
+> 
 
-Yes, of course, I just don't have time to work full-time on that, so be
-a bit patient. :)
+One of the concerns raised by hibernation people in the past was to use
+single boot loader entry to boot normally as well while resuming a kernel.
+
+So in this case a user either needs to maintain two boot-loader entries
+or modify it on the fly. I wished there was a better way to handle that.
+
+I am more interested in ability to have multiple kernel loaded in RAM
+and capability to switch between them. Allows me to take non-disruptive
+core dumps and somebody wanted to snapshots the kernels. That should
+still work.
 
 
+[..]
+> --- a/arch/x86/kernel/machine_kexec_32.c
+> +++ b/arch/x86/kernel/machine_kexec_32.c
+> @@ -125,6 +125,12 @@ void machine_kexec(struct kimage *image)
+>  	/* Interrupts aren't acceptable while we reboot */
+>  	local_irq_disable();
+>  
+> +	if (image->preserve_context) {
+> +#ifdef CONFIG_X86_IO_APIC
+> +		disable_IO_APIC();
+> +#endif
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+I think it would be a good idea to put some kind of comment here. We
+need to put APICs in legacy mode so that we can get timer interrupts
+in second kernel. kexec/kdump paths already have calls to
+disable_IO_APIC() in one form or other. kexec jump path also needs one.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
