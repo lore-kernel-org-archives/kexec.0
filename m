@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6pN2-00033g-3W
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 16:09:52 +0000
-Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 219BE4164D
-	for <kexec@lists.infradead.org>; Thu, 12 Jun 2008 18:09:49 +0200 (CEST)
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Fix wrong remove_parameter() calls
-Date: Thu, 12 Jun 2008 18:10:25 +0200
-Message-Id: <1213287025-5443-1-git-send-email-bwalle@suse.de>
-In-Reply-To: <20080612021935.GG22358@verge.net.au>
-References: <20080612021935.GG22358@verge.net.au>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1K6sLR-0000EF-1U
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 19:20:25 +0000
+Date: Thu, 12 Jun 2008 15:20:15 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm 1/2] kexec jump -v11: kexec jump
+Message-ID: <20080612192015.GH9654@redhat.com>
+References: <1213082104.22608.29.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1213082104.22608.29.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,55 +19,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-When --reuse-cmdline is specified, kexec automatically removes some command
-line parameter that are *known* to break the kexec'd target. That patch
-corrects that behaviour:
+On Tue, Jun 10, 2008 at 03:15:04PM +0800, Huang, Ying wrote:
+> This patch provides an enhancement to kexec/kdump. It implements
+> the following features:
+> 
+> - Backup/restore memory used by the original kernel before/after
+>   kexec.
+> 
+> - Save/restore CPU state before/after kexec.
+> 
+> The features of this patch can be used as a general method to call
+> program in physical mode (paging turning off). This can be used to
+> call BIOS code under Linux.
+> 
+> 
 
- 1. BOOT_IMAGE should be removed always when --reuse-cmdline is specified since
-    it's likely that the kernel is not the same as the running kernel. As only
-    lilo-like bootloaders (i.e. not GRUB) adds that parameter, there's no need
-    to add a BOOT_IMAGE here.
+Hi Huang,
 
- 2. crashkernel should be only removed when 'kexec -p' is called. For the
-    normal kexec, the crashkernel parameter can be passed as in the
-    running kernel.
+I was testing these patches and I get following error on my machine.
 
-The mistake has been introduced by commit 3c5bb06948881b3e31c783c19edef74275794280
-by myself.
+Freezing remaining freezable tasks ... (elapsed 0.00 seconds) done.
+Suspending console(s) (use no_console_suspend to debug)
+PM: Device i8042 failed to freeze: error -22
+Restarting tasks ... done.
 
+Any idea why keyboard controller would not freeze?
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- kexec/kexec.c |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 1550d68..b831775 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -869,9 +869,9 @@ char *get_command_line(void)
- 		/* strip newline */
- 		*(line + strlen(line) - 1) = 0;
- 
--		remove_parameter(line, "crashkernel");
-+		remove_parameter(line, "BOOT_IMAGE");
- 		if (kexec_flags & KEXEC_ON_CRASH)
--			remove_parameter(line, "BOOT_IMAGE");
-+			remove_parameter(line, "crashkernel");
- 	} else
- 		line = strdup("");
- 
--- 
-1.5.4.5
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
