@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6TG1-0007CT-9j
-	for kexec@lists.infradead.org; Wed, 11 Jun 2008 16:33:09 +0000
-Date: Wed, 11 Jun 2008 12:30:26 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1K6b1x-0005UE-P1
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 00:51:10 +0000
 Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
-Message-ID: <20080611163026.GG6450@redhat.com>
+From: "Huang, Ying" <ying.huang@intel.com>
+In-Reply-To: <20080611163026.GG6450@redhat.com>
 References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1213082106.22608.30.camel@caritas-dev.intel.com>
+	<20080611163026.GG6450@redhat.com>
+Date: Thu, 12 Jun 2008 08:53:39 +0800
+Message-Id: <1213232019.21353.8.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,136 +19,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Tue, Jun 10, 2008 at 03:15:06PM +0800, Huang, Ying wrote:
-> This patch implements devices state save/restore before after kexec.
-> 
-> 
-> This patch together with features in kexec_jump patch can be used for
-> following:
-> 
-> - A simple hibernation implementation without ACPI support. You can
->   kexec a hibernating kernel, save the memory image of original system
->   and shutdown the system. When resuming, you restore the memory image
->   of original system via ordinary kexec load then jump back.
-> 
-> - Kernel/system debug through making system snapshot. You can make
->   system snapshot, jump back, do some thing and make another system
->   snapshot.
-> 
-> - Cooperative multi-kernel/system. With kexec jump, you can switch
->   between several kernels/systems quickly without boot process except
->   the first time. This appears like swap a whole kernel/system out/in.
-> 
-> - A general method to call program in physical mode (paging turning
->   off). This can be used to invoke BIOS code under Linux.
-> 
-> 
-> The following user-space tools can be used with kexec jump:
-> 
-> - kexec-tools needs to be patched to support kexec jump. The patches
->   and the precompiled kexec can be download from the following URL:
->        source: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-src_git_kh10.tar.bz2
->        patches: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-patches_git_kh10.tar.bz2
->        binary: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec_git_kh10
-> 
-> - makedumpfile with patches are used as memory image saving tool, it
->   can exclude free pages from original kernel memory image file. The
->   patches and the precompiled makedumpfile can be download from the
->   following URL:
->        source: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-src_cvs_kh10.tar.bz2
->        patches: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-patches_cvs_kh10.tar.bz2
->        binary: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile_cvs_kh10
-> 
-> - An initramfs image can be used as the root file system of kexeced
->   kernel. An initramfs image built with "BuildRoot" can be downloaded
->   from the following URL:
->        initramfs image: http://khibernation.sourceforge.net/download/release_v10/initramfs/rootfs_cvs_kh10.gz
->   All user space tools above are included in the initramfs image.
-> 
-> 
-> Usage example of simple hibernation:
-> 
-> 1. Compile and install patched kernel with following options selected:
-> 
-> CONFIG_X86_32=y
-> CONFIG_RELOCATABLE=y
-> CONFIG_KEXEC=y
-> CONFIG_CRASH_DUMP=y
-> CONFIG_PM=y
-> 
-> 2. Build an initramfs image contains kexec-tool and makedumpfile, or
->    download the pre-built initramfs image, called rootfs.gz in
->    following text.
-> 
-> 3. Prepare a partition to save memory image of original kernel, called
->    hibernating partition in following text.
-> 
-> 4. Boot kernel compiled in step 1 (kernel A).
-> 
-> 5. In the kernel A, load kernel compiled in step 1 (kernel B) with
->    /sbin/kexec. The shell command line can be as follow:
-> 
->    /sbin/kexec --load-preserve-context /boot/bzImage --mem-min=0x100000
->      --mem-max=0xffffff --initrd=rootfs.gz
-> 
-> 6. Boot the kernel B with following shell command line:
-> 
->    /sbin/kexec -e
-> 
-> 7. The kernel B will boot as normal kexec. In kernel B the memory
->    image of kernel A can be saved into hibernating partition as
->    follow:
-> 
->    jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
->    echo $jump_back_entry > kexec_jump_back_entry
->    cp /proc/vmcore dump.elf
-> 
->    Then you can shutdown the machine as normal.
-> 
-> 8. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
->    root file system.
-> 
-
-One of the concerns raised by hibernation people in the past was to use
-single boot loader entry to boot normally as well while resuming a kernel.
-
-So in this case a user either needs to maintain two boot-loader entries
-or modify it on the fly. I wished there was a better way to handle that.
-
-I am more interested in ability to have multiple kernel loaded in RAM
-and capability to switch between them. Allows me to take non-disruptive
-core dumps and somebody wanted to snapshots the kernels. That should
-still work.
-
-
-[..]
-> --- a/arch/x86/kernel/machine_kexec_32.c
-> +++ b/arch/x86/kernel/machine_kexec_32.c
-> @@ -125,6 +125,12 @@ void machine_kexec(struct kimage *image)
->  	/* Interrupts aren't acceptable while we reboot */
->  	local_irq_disable();
->  
-> +	if (image->preserve_context) {
-> +#ifdef CONFIG_X86_IO_APIC
-> +		disable_IO_APIC();
-> +#endif
-
-I think it would be a good idea to put some kind of comment here. We
-need to put APICs in legacy mode so that we can get timer interrupts
-in second kernel. kexec/kdump paths already have calls to
-disable_IO_APIC() in one form or other. kexec jump path also needs one.
-
-Thanks
-Vivek
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCAyMDA4LTA2LTExIGF0IDEyOjMwIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKWy4u
+Ll0KPiA+IFVzYWdlIGV4YW1wbGUgb2Ygc2ltcGxlIGhpYmVybmF0aW9uOgo+ID4gCj4gPiAxLiBD
+b21waWxlIGFuZCBpbnN0YWxsIHBhdGNoZWQga2VybmVsIHdpdGggZm9sbG93aW5nIG9wdGlvbnMg
+c2VsZWN0ZWQ6Cj4gPiAKPiA+IENPTkZJR19YODZfMzI9eQo+ID4gQ09ORklHX1JFTE9DQVRBQkxF
+PXkKPiA+IENPTkZJR19LRVhFQz15Cj4gPiBDT05GSUdfQ1JBU0hfRFVNUD15Cj4gPiBDT05GSUdf
+UE09eQo+ID4gCj4gPiAyLiBCdWlsZCBhbiBpbml0cmFtZnMgaW1hZ2UgY29udGFpbnMga2V4ZWMt
+dG9vbCBhbmQgbWFrZWR1bXBmaWxlLCBvcgo+ID4gICAgZG93bmxvYWQgdGhlIHByZS1idWlsdCBp
+bml0cmFtZnMgaW1hZ2UsIGNhbGxlZCByb290ZnMuZ3ogaW4KPiA+ICAgIGZvbGxvd2luZyB0ZXh0
+Lgo+ID4gCj4gPiAzLiBQcmVwYXJlIGEgcGFydGl0aW9uIHRvIHNhdmUgbWVtb3J5IGltYWdlIG9m
+IG9yaWdpbmFsIGtlcm5lbCwgY2FsbGVkCj4gPiAgICBoaWJlcm5hdGluZyBwYXJ0aXRpb24gaW4g
+Zm9sbG93aW5nIHRleHQuCj4gPiAKPiA+IDQuIEJvb3Qga2VybmVsIGNvbXBpbGVkIGluIHN0ZXAg
+MSAoa2VybmVsIEEpLgo+ID4gCj4gPiA1LiBJbiB0aGUga2VybmVsIEEsIGxvYWQga2VybmVsIGNv
+bXBpbGVkIGluIHN0ZXAgMSAoa2VybmVsIEIpIHdpdGgKPiA+ICAgIC9zYmluL2tleGVjLiBUaGUg
+c2hlbGwgY29tbWFuZCBsaW5lIGNhbiBiZSBhcyBmb2xsb3c6Cj4gPiAKPiA+ICAgIC9zYmluL2tl
+eGVjIC0tbG9hZC1wcmVzZXJ2ZS1jb250ZXh0IC9ib290L2J6SW1hZ2UgLS1tZW0tbWluPTB4MTAw
+MDAwCj4gPiAgICAgIC0tbWVtLW1heD0weGZmZmZmZiAtLWluaXRyZD1yb290ZnMuZ3oKPiA+IAo+
+ID4gNi4gQm9vdCB0aGUga2VybmVsIEIgd2l0aCBmb2xsb3dpbmcgc2hlbGwgY29tbWFuZCBsaW5l
+Ogo+ID4gCj4gPiAgICAvc2Jpbi9rZXhlYyAtZQo+ID4gCj4gPiA3LiBUaGUga2VybmVsIEIgd2ls
+bCBib290IGFzIG5vcm1hbCBrZXhlYy4gSW4ga2VybmVsIEIgdGhlIG1lbW9yeQo+ID4gICAgaW1h
+Z2Ugb2Yga2VybmVsIEEgY2FuIGJlIHNhdmVkIGludG8gaGliZXJuYXRpbmcgcGFydGl0aW9uIGFz
+Cj4gPiAgICBmb2xsb3c6Cj4gPiAKPiA+ICAgIGp1bXBfYmFja19lbnRyeT1gY2F0IC9wcm9jL2Nt
+ZGxpbmUgfCB0ciAnICcgJ1xuJyB8IGdyZXAga2V4ZWNfanVtcF9iYWNrX2VudHJ5IHwgY3V0IC1k
+ICc9J2AKPiA+ICAgIGVjaG8gJGp1bXBfYmFja19lbnRyeSA+IGtleGVjX2p1bXBfYmFja19lbnRy
+eQo+ID4gICAgY3AgL3Byb2Mvdm1jb3JlIGR1bXAuZWxmCj4gPiAKPiA+ICAgIFRoZW4geW91IGNh
+biBzaHV0ZG93biB0aGUgbWFjaGluZSBhcyBub3JtYWwuCj4gPiAKPiA+IDguIEJvb3Qga2VybmVs
+IGNvbXBpbGVkIGluIHN0ZXAgMSAoa2VybmVsIEMpLiBVc2UgdGhlIHJvb3Rmcy5neiBhcwo+ID4g
+ICAgcm9vdCBmaWxlIHN5c3RlbS4KPiA+IAo+IAo+IE9uZSBvZiB0aGUgY29uY2VybnMgcmFpc2Vk
+IGJ5IGhpYmVybmF0aW9uIHBlb3BsZSBpbiB0aGUgcGFzdCB3YXMgdG8gdXNlCj4gc2luZ2xlIGJv
+b3QgbG9hZGVyIGVudHJ5IHRvIGJvb3Qgbm9ybWFsbHkgYXMgd2VsbCB3aGlsZSByZXN1bWluZyBh
+IGtlcm5lbC4KPiAKPiBTbyBpbiB0aGlzIGNhc2UgYSB1c2VyIGVpdGhlciBuZWVkcyB0byBtYWlu
+dGFpbiB0d28gYm9vdC1sb2FkZXIgZW50cmllcwo+IG9yIG1vZGlmeSBpdCBvbiB0aGUgZmx5LiBJ
+IHdpc2hlZCB0aGVyZSB3YXMgYSBiZXR0ZXIgd2F5IHRvIGhhbmRsZSB0aGF0LgoK77u/Tm93IGl0
+IGlzIG5vdCBuZWVkZWQgdG8gaGF2ZSB0d28gYm9vdC1sb2FkZXIgZW50cmllcywganVzdCBvbmUg
+aXMKZW5vdWdoLiBTdGVwIDQgYW5kIHN0ZXAgOCBjYW4gc2hhcmUgdGhlIHNhbWUgYm9vdC1sb2Fk
+ZXIgZW50cmllcy4gVGhlCnJvb3Rmcy5neiBjYW4gYmUgdGhlIG5vcm1hbCBpbml0cmFtZnMgb3Ig
+aW5pdHJkIHdoZW4gZGVwbG95bWVudC4gSW4Kcm9vdGZzLmd6LCBpZiB0aGVyZSBpcyBhIHZhbGlk
+IGhpYmVybmF0aW9uIGltYWdlLCB0aGUgaGliZXJuYXRlZCBzeXN0ZW0Kd2lsbCBiZSByZXN0b3Jl
+ZCwgb3RoZXJ3aXNlLCBub3JtYWwgYm9vdCBwcm9jZXNzIGZvbGxvd3MuCgoKPiBJIGFtIG1vcmUg
+aW50ZXJlc3RlZCBpbiBhYmlsaXR5IHRvIGhhdmUgbXVsdGlwbGUga2VybmVsIGxvYWRlZCBpbiBS
+QU0KPiBhbmQgY2FwYWJpbGl0eSB0byBzd2l0Y2ggYmV0d2VlbiB0aGVtLiBBbGxvd3MgbWUgdG8g
+dGFrZSBub24tZGlzcnVwdGl2ZQo+IGNvcmUgZHVtcHMgYW5kIHNvbWVib2R5IHdhbnRlZCB0byBz
+bmFwc2hvdHMgdGhlIGtlcm5lbHMuIFRoYXQgc2hvdWxkCj4gc3RpbGwgd29yay4KPiAKPiAKPiBb
+Li5dCj4gPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY18zMi5jCj4gPiArKysg
+Yi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY18zMi5jCj4gPiBAQCAtMTI1LDYgKzEyNSwx
+MiBAQCB2b2lkIG1hY2hpbmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4gPiAgCS8qIElu
+dGVycnVwdHMgYXJlbid0IGFjY2VwdGFibGUgd2hpbGUgd2UgcmVib290ICovCj4gPiAgCWxvY2Fs
+X2lycV9kaXNhYmxlKCk7Cj4gPiAgCj4gPiArCWlmIChpbWFnZS0+cHJlc2VydmVfY29udGV4dCkg
+ewo+ID4gKyNpZmRlZiBDT05GSUdfWDg2X0lPX0FQSUMKPiA+ICsJCWRpc2FibGVfSU9fQVBJQygp
+Owo+ID4gKyNlbmRpZgo+IAo+IEkgdGhpbmsgaXQgd291bGQgYmUgYSBnb29kIGlkZWEgdG8gcHV0
+IHNvbWUga2luZCBvZiBjb21tZW50IGhlcmUuIFdlCj4gbmVlZCB0byBwdXQgQVBJQ3MgaW4gbGVn
+YWN5IG1vZGUgc28gdGhhdCB3ZSBjYW4gZ2V0IHRpbWVyIGludGVycnVwdHMKPiBpbiBzZWNvbmQg
+a2VybmVsLiBrZXhlYy9rZHVtcCBwYXRocyBhbHJlYWR5IGhhdmUgY2FsbHMgdG8KPiBkaXNhYmxl
+X0lPX0FQSUMoKSBpbiBvbmUgZm9ybSBvciBvdGhlci4ga2V4ZWMganVtcCBwYXRoIGFsc28gbmVl
+ZHMgb25lLgoKT0suIEkgd2lsbCBhZGQgaXQuCgpCZXN0IFJlZ2FyZHMsCkh1YW5nIFlpbmcKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
