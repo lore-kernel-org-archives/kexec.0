@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6b1x-0005UE-P1
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 00:51:10 +0000
-Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080611163026.GG6450@redhat.com>
-References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-	<20080611163026.GG6450@redhat.com>
-Date: Thu, 12 Jun 2008 08:53:39 +0800
-Message-Id: <1213232019.21353.8.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1K6cGG-0002MV-L6
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 02:10:01 +0000
+Date: Thu, 12 Jun 2008 12:09:58 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Fix implicit declaration of inb/outb
+Message-ID: <20080612020957.GF22358@verge.net.au>
+References: <e2ed954f0806021843r648e4276v6c0d49aa1f601e17@mail.gmail.com>
+	<1212478437-8935-1-git-send-email-bwalle@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1212478437-8935-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,67 +20,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org, Jamey Sharp <jamey@thetovacompany.com>
 
-T24gV2VkLCAyMDA4LTA2LTExIGF0IDEyOjMwIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90ZToKWy4u
-Ll0KPiA+IFVzYWdlIGV4YW1wbGUgb2Ygc2ltcGxlIGhpYmVybmF0aW9uOgo+ID4gCj4gPiAxLiBD
-b21waWxlIGFuZCBpbnN0YWxsIHBhdGNoZWQga2VybmVsIHdpdGggZm9sbG93aW5nIG9wdGlvbnMg
-c2VsZWN0ZWQ6Cj4gPiAKPiA+IENPTkZJR19YODZfMzI9eQo+ID4gQ09ORklHX1JFTE9DQVRBQkxF
-PXkKPiA+IENPTkZJR19LRVhFQz15Cj4gPiBDT05GSUdfQ1JBU0hfRFVNUD15Cj4gPiBDT05GSUdf
-UE09eQo+ID4gCj4gPiAyLiBCdWlsZCBhbiBpbml0cmFtZnMgaW1hZ2UgY29udGFpbnMga2V4ZWMt
-dG9vbCBhbmQgbWFrZWR1bXBmaWxlLCBvcgo+ID4gICAgZG93bmxvYWQgdGhlIHByZS1idWlsdCBp
-bml0cmFtZnMgaW1hZ2UsIGNhbGxlZCByb290ZnMuZ3ogaW4KPiA+ICAgIGZvbGxvd2luZyB0ZXh0
-Lgo+ID4gCj4gPiAzLiBQcmVwYXJlIGEgcGFydGl0aW9uIHRvIHNhdmUgbWVtb3J5IGltYWdlIG9m
-IG9yaWdpbmFsIGtlcm5lbCwgY2FsbGVkCj4gPiAgICBoaWJlcm5hdGluZyBwYXJ0aXRpb24gaW4g
-Zm9sbG93aW5nIHRleHQuCj4gPiAKPiA+IDQuIEJvb3Qga2VybmVsIGNvbXBpbGVkIGluIHN0ZXAg
-MSAoa2VybmVsIEEpLgo+ID4gCj4gPiA1LiBJbiB0aGUga2VybmVsIEEsIGxvYWQga2VybmVsIGNv
-bXBpbGVkIGluIHN0ZXAgMSAoa2VybmVsIEIpIHdpdGgKPiA+ICAgIC9zYmluL2tleGVjLiBUaGUg
-c2hlbGwgY29tbWFuZCBsaW5lIGNhbiBiZSBhcyBmb2xsb3c6Cj4gPiAKPiA+ICAgIC9zYmluL2tl
-eGVjIC0tbG9hZC1wcmVzZXJ2ZS1jb250ZXh0IC9ib290L2J6SW1hZ2UgLS1tZW0tbWluPTB4MTAw
-MDAwCj4gPiAgICAgIC0tbWVtLW1heD0weGZmZmZmZiAtLWluaXRyZD1yb290ZnMuZ3oKPiA+IAo+
-ID4gNi4gQm9vdCB0aGUga2VybmVsIEIgd2l0aCBmb2xsb3dpbmcgc2hlbGwgY29tbWFuZCBsaW5l
-Ogo+ID4gCj4gPiAgICAvc2Jpbi9rZXhlYyAtZQo+ID4gCj4gPiA3LiBUaGUga2VybmVsIEIgd2ls
-bCBib290IGFzIG5vcm1hbCBrZXhlYy4gSW4ga2VybmVsIEIgdGhlIG1lbW9yeQo+ID4gICAgaW1h
-Z2Ugb2Yga2VybmVsIEEgY2FuIGJlIHNhdmVkIGludG8gaGliZXJuYXRpbmcgcGFydGl0aW9uIGFz
-Cj4gPiAgICBmb2xsb3c6Cj4gPiAKPiA+ICAgIGp1bXBfYmFja19lbnRyeT1gY2F0IC9wcm9jL2Nt
-ZGxpbmUgfCB0ciAnICcgJ1xuJyB8IGdyZXAga2V4ZWNfanVtcF9iYWNrX2VudHJ5IHwgY3V0IC1k
-ICc9J2AKPiA+ICAgIGVjaG8gJGp1bXBfYmFja19lbnRyeSA+IGtleGVjX2p1bXBfYmFja19lbnRy
-eQo+ID4gICAgY3AgL3Byb2Mvdm1jb3JlIGR1bXAuZWxmCj4gPiAKPiA+ICAgIFRoZW4geW91IGNh
-biBzaHV0ZG93biB0aGUgbWFjaGluZSBhcyBub3JtYWwuCj4gPiAKPiA+IDguIEJvb3Qga2VybmVs
-IGNvbXBpbGVkIGluIHN0ZXAgMSAoa2VybmVsIEMpLiBVc2UgdGhlIHJvb3Rmcy5neiBhcwo+ID4g
-ICAgcm9vdCBmaWxlIHN5c3RlbS4KPiA+IAo+IAo+IE9uZSBvZiB0aGUgY29uY2VybnMgcmFpc2Vk
-IGJ5IGhpYmVybmF0aW9uIHBlb3BsZSBpbiB0aGUgcGFzdCB3YXMgdG8gdXNlCj4gc2luZ2xlIGJv
-b3QgbG9hZGVyIGVudHJ5IHRvIGJvb3Qgbm9ybWFsbHkgYXMgd2VsbCB3aGlsZSByZXN1bWluZyBh
-IGtlcm5lbC4KPiAKPiBTbyBpbiB0aGlzIGNhc2UgYSB1c2VyIGVpdGhlciBuZWVkcyB0byBtYWlu
-dGFpbiB0d28gYm9vdC1sb2FkZXIgZW50cmllcwo+IG9yIG1vZGlmeSBpdCBvbiB0aGUgZmx5LiBJ
-IHdpc2hlZCB0aGVyZSB3YXMgYSBiZXR0ZXIgd2F5IHRvIGhhbmRsZSB0aGF0LgoK77u/Tm93IGl0
-IGlzIG5vdCBuZWVkZWQgdG8gaGF2ZSB0d28gYm9vdC1sb2FkZXIgZW50cmllcywganVzdCBvbmUg
-aXMKZW5vdWdoLiBTdGVwIDQgYW5kIHN0ZXAgOCBjYW4gc2hhcmUgdGhlIHNhbWUgYm9vdC1sb2Fk
-ZXIgZW50cmllcy4gVGhlCnJvb3Rmcy5neiBjYW4gYmUgdGhlIG5vcm1hbCBpbml0cmFtZnMgb3Ig
-aW5pdHJkIHdoZW4gZGVwbG95bWVudC4gSW4Kcm9vdGZzLmd6LCBpZiB0aGVyZSBpcyBhIHZhbGlk
-IGhpYmVybmF0aW9uIGltYWdlLCB0aGUgaGliZXJuYXRlZCBzeXN0ZW0Kd2lsbCBiZSByZXN0b3Jl
-ZCwgb3RoZXJ3aXNlLCBub3JtYWwgYm9vdCBwcm9jZXNzIGZvbGxvd3MuCgoKPiBJIGFtIG1vcmUg
-aW50ZXJlc3RlZCBpbiBhYmlsaXR5IHRvIGhhdmUgbXVsdGlwbGUga2VybmVsIGxvYWRlZCBpbiBS
-QU0KPiBhbmQgY2FwYWJpbGl0eSB0byBzd2l0Y2ggYmV0d2VlbiB0aGVtLiBBbGxvd3MgbWUgdG8g
-dGFrZSBub24tZGlzcnVwdGl2ZQo+IGNvcmUgZHVtcHMgYW5kIHNvbWVib2R5IHdhbnRlZCB0byBz
-bmFwc2hvdHMgdGhlIGtlcm5lbHMuIFRoYXQgc2hvdWxkCj4gc3RpbGwgd29yay4KPiAKPiAKPiBb
-Li5dCj4gPiAtLS0gYS9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY18zMi5jCj4gPiArKysg
-Yi9hcmNoL3g4Ni9rZXJuZWwvbWFjaGluZV9rZXhlY18zMi5jCj4gPiBAQCAtMTI1LDYgKzEyNSwx
-MiBAQCB2b2lkIG1hY2hpbmVfa2V4ZWMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4gPiAgCS8qIElu
-dGVycnVwdHMgYXJlbid0IGFjY2VwdGFibGUgd2hpbGUgd2UgcmVib290ICovCj4gPiAgCWxvY2Fs
-X2lycV9kaXNhYmxlKCk7Cj4gPiAgCj4gPiArCWlmIChpbWFnZS0+cHJlc2VydmVfY29udGV4dCkg
-ewo+ID4gKyNpZmRlZiBDT05GSUdfWDg2X0lPX0FQSUMKPiA+ICsJCWRpc2FibGVfSU9fQVBJQygp
-Owo+ID4gKyNlbmRpZgo+IAo+IEkgdGhpbmsgaXQgd291bGQgYmUgYSBnb29kIGlkZWEgdG8gcHV0
-IHNvbWUga2luZCBvZiBjb21tZW50IGhlcmUuIFdlCj4gbmVlZCB0byBwdXQgQVBJQ3MgaW4gbGVn
-YWN5IG1vZGUgc28gdGhhdCB3ZSBjYW4gZ2V0IHRpbWVyIGludGVycnVwdHMKPiBpbiBzZWNvbmQg
-a2VybmVsLiBrZXhlYy9rZHVtcCBwYXRocyBhbHJlYWR5IGhhdmUgY2FsbHMgdG8KPiBkaXNhYmxl
-X0lPX0FQSUMoKSBpbiBvbmUgZm9ybSBvciBvdGhlci4ga2V4ZWMganVtcCBwYXRoIGFsc28gbmVl
-ZHMgb25lLgoKT0suIEkgd2lsbCBhZGQgaXQuCgpCZXN0IFJlZ2FyZHMsCkh1YW5nIFlpbmcKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Tue, Jun 03, 2008 at 09:33:57AM +0200, Bernhard Walle wrote:
+> This patch fixes following compiler warning:
+> 
+>     purgatory/arch/i386/console-x86.c:84: \
+>         warning: implicit declaration of function `outb'
+>     purgatory/arch/i386/console-x86.c:89: \
+>         warning: implicit declaration of function `inb'
+> 
+> Found on x86_64. The problem did not happen with i386.
+> Fix tested on x86_64-suse-linux and i586-suse-linux.
+> 
+> I also added __always_inline__ to make sure that the function gets always
+> inlined, regardless of optimisation compiler flags.
+
+Thanks, applied.
+
+-- 
+Horms
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
