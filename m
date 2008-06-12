@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.eu.citrix.com ([62.200.22.115])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6nv5-0003nK-L4
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 14:36:55 +0000
-Date: Thu, 12 Jun 2008 15:36:33 +0100
-Subject: Re: [Xen-devel] [PATCH 0/2] extract vmcoreinfo from /proc/vmcore
-	for Xen
-From: Keir Fraser <keir.fraser@eu.citrix.com>
-Message-ID: <C476F301.21F9F%keir.fraser@eu.citrix.com>
-In-Reply-To: <20080612165246.16CC.ODA@valinux.co.jp>
-Mime-version: 1.0
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K6pN2-00033g-3W
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 16:09:52 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 219BE4164D
+	for <kexec@lists.infradead.org>; Thu, 12 Jun 2008 18:09:49 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Fix wrong remove_parameter() calls
+Date: Thu, 12 Jun 2008 18:10:25 +0200
+Message-Id: <1213287025-5443-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <20080612021935.GG22358@verge.net.au>
+References: <20080612021935.GG22358@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,55 +22,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Itsuro ODA <oda@valinux.co.jp>, xen-devel@lists.xensource.com
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-I'm a bit confused as to what this is for. If you know where Xen is located
-in physical or virtual address space, and you have access to Xen symbols,
-why would you need the few symbol addresses provided by vmcoreinfo? I can
-hardly see what symbols dom_xen and dom_io would be particularly useful for.
-Similarly, why would you record structure sizes when this is statically
-determinable given the Xen sources?
+When --reuse-cmdline is specified, kexec automatically removes some command
+line parameter that are *known* to break the kexec'd target. That patch
+corrects that behaviour:
 
- -- Keir
+ 1. BOOT_IMAGE should be removed always when --reuse-cmdline is specified since
+    it's likely that the kernel is not the same as the running kernel. As only
+    lilo-like bootloaders (i.e. not GRUB) adds that parameter, there's no need
+    to add a BOOT_IMAGE here.
 
-On 12/6/08 09:22, "Itsuro ODA" <oda@valinux.co.jp> wrote:
+ 2. crashkernel should be only removed when 'kexec -p' is called. For the
+    normal kexec, the crashkernel parameter can be passed as in the
+    running kernel.
 
-> Hi,
-> 
-> The following patchset is to support extracting vmcoreinfo from
-> /proc/vmcore for Xen.
-> 
-> This is the up-port of the patchset I made for 3.2.0 and posted
-> the end of March.
-> 
-> [PATCH 1/2] patch for xen hypervisor (xen-unstable.hg)
-> [PATCH 2/2] patch for linux (linux-2.6.18-xen.hg)
-> 
-> --- background ----------------------------------------------------
-> * what the makedumpfile is:
->   To shorten the size of the dumpfile and the time of creating the
->   dumpfile, makedumpfile copies only the necessary pages for analysis
->   to the dumpfile from /proc/vmcore. You can specify the kind of
->   unnecessary pages with dump_level. If you want to shorten the size
->   further, enable the compression of the page data.
-> * Xen extraction 
->   makedumpfile also has a feature that extracting the part of
->   xen hypervisor and domain-0 from /proc/vmcore taken under xen
->   environment. In most cases under xen environment, it is enough to
->   analyze a cause of system crash.
-> * extract vmcoreinfo from /proc/vmcore
->   makedumpfile 1.2.0 supports to extract the vmcoreinfo data from
->   /proc/vmcore and uses it for dump filtering. (for a vmcore taken
->   under the native environment.)
-> ------------------------------------------------------------------
-> 
-> Thanks.
+The mistake has been introduced by commit 3c5bb06948881b3e31c783c19edef74275794280
+by myself.
 
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ kexec/kexec.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 1550d68..b831775 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -869,9 +869,9 @@ char *get_command_line(void)
+ 		/* strip newline */
+ 		*(line + strlen(line) - 1) = 0;
+ 
+-		remove_parameter(line, "crashkernel");
++		remove_parameter(line, "BOOT_IMAGE");
+ 		if (kexec_flags & KEXEC_ON_CRASH)
+-			remove_parameter(line, "BOOT_IMAGE");
++			remove_parameter(line, "crashkernel");
+ 	} else
+ 		line = strdup("");
+ 
+-- 
+1.5.4.5
 
 
 _______________________________________________
