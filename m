@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from smtp.eu.citrix.com ([62.200.22.115])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6mRl-0003Sl-O2
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 13:02:37 +0000
-Date: Thu, 12 Jun 2008 09:02:25 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
-Message-ID: <20080612130225.GA9654@redhat.com>
-References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-	<20080611163026.GG6450@redhat.com>
-	<1213232019.21353.8.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1213232019.21353.8.camel@caritas-dev.intel.com>
+	id 1K6nv5-0003nK-L4
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 14:36:55 +0000
+Date: Thu, 12 Jun 2008 15:36:33 +0100
+Subject: Re: [Xen-devel] [PATCH 0/2] extract vmcoreinfo from /proc/vmcore
+	for Xen
+From: Keir Fraser <keir.fraser@eu.citrix.com>
+Message-ID: <C476F301.21F9F%keir.fraser@eu.citrix.com>
+In-Reply-To: <20080612165246.16CC.ODA@valinux.co.jp>
+Mime-version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,63 +18,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Itsuro ODA <oda@valinux.co.jp>, xen-devel@lists.xensource.com
+Cc: kexec@lists.infradead.org
 
-T24gVGh1LCBKdW4gMTIsIDIwMDggYXQgMDg6NTM6MzlBTSArMDgwMCwgSHVhbmcsIFlpbmcgd3Jv
-dGU6Cj4gT24gV2VkLCAyMDA4LTA2LTExIGF0IDEyOjMwIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90
-ZToKPiBbLi4uXQo+ID4gPiBVc2FnZSBleGFtcGxlIG9mIHNpbXBsZSBoaWJlcm5hdGlvbjoKPiA+
-ID4gCj4gPiA+IDEuIENvbXBpbGUgYW5kIGluc3RhbGwgcGF0Y2hlZCBrZXJuZWwgd2l0aCBmb2xs
-b3dpbmcgb3B0aW9ucyBzZWxlY3RlZDoKPiA+ID4gCj4gPiA+IENPTkZJR19YODZfMzI9eQo+ID4g
-PiBDT05GSUdfUkVMT0NBVEFCTEU9eQo+ID4gPiBDT05GSUdfS0VYRUM9eQo+ID4gPiBDT05GSUdf
-Q1JBU0hfRFVNUD15Cj4gPiA+IENPTkZJR19QTT15Cj4gPiA+IAo+ID4gPiAyLiBCdWlsZCBhbiBp
-bml0cmFtZnMgaW1hZ2UgY29udGFpbnMga2V4ZWMtdG9vbCBhbmQgbWFrZWR1bXBmaWxlLCBvcgo+
-ID4gPiAgICBkb3dubG9hZCB0aGUgcHJlLWJ1aWx0IGluaXRyYW1mcyBpbWFnZSwgY2FsbGVkIHJv
-b3Rmcy5neiBpbgo+ID4gPiAgICBmb2xsb3dpbmcgdGV4dC4KPiA+ID4gCj4gPiA+IDMuIFByZXBh
-cmUgYSBwYXJ0aXRpb24gdG8gc2F2ZSBtZW1vcnkgaW1hZ2Ugb2Ygb3JpZ2luYWwga2VybmVsLCBj
-YWxsZWQKPiA+ID4gICAgaGliZXJuYXRpbmcgcGFydGl0aW9uIGluIGZvbGxvd2luZyB0ZXh0Lgo+
-ID4gPiAKPiA+ID4gNC4gQm9vdCBrZXJuZWwgY29tcGlsZWQgaW4gc3RlcCAxIChrZXJuZWwgQSku
-Cj4gPiA+IAo+ID4gPiA1LiBJbiB0aGUga2VybmVsIEEsIGxvYWQga2VybmVsIGNvbXBpbGVkIGlu
-IHN0ZXAgMSAoa2VybmVsIEIpIHdpdGgKPiA+ID4gICAgL3NiaW4va2V4ZWMuIFRoZSBzaGVsbCBj
-b21tYW5kIGxpbmUgY2FuIGJlIGFzIGZvbGxvdzoKPiA+ID4gCj4gPiA+ICAgIC9zYmluL2tleGVj
-IC0tbG9hZC1wcmVzZXJ2ZS1jb250ZXh0IC9ib290L2J6SW1hZ2UgLS1tZW0tbWluPTB4MTAwMDAw
-Cj4gPiA+ICAgICAgLS1tZW0tbWF4PTB4ZmZmZmZmIC0taW5pdHJkPXJvb3Rmcy5nego+ID4gPiAK
-PiA+ID4gNi4gQm9vdCB0aGUga2VybmVsIEIgd2l0aCBmb2xsb3dpbmcgc2hlbGwgY29tbWFuZCBs
-aW5lOgo+ID4gPiAKPiA+ID4gICAgL3NiaW4va2V4ZWMgLWUKPiA+ID4gCj4gPiA+IDcuIFRoZSBr
-ZXJuZWwgQiB3aWxsIGJvb3QgYXMgbm9ybWFsIGtleGVjLiBJbiBrZXJuZWwgQiB0aGUgbWVtb3J5
-Cj4gPiA+ICAgIGltYWdlIG9mIGtlcm5lbCBBIGNhbiBiZSBzYXZlZCBpbnRvIGhpYmVybmF0aW5n
-IHBhcnRpdGlvbiBhcwo+ID4gPiAgICBmb2xsb3c6Cj4gPiA+IAo+ID4gPiAgICBqdW1wX2JhY2tf
-ZW50cnk9YGNhdCAvcHJvYy9jbWRsaW5lIHwgdHIgJyAnICdcbicgfCBncmVwIGtleGVjX2p1bXBf
-YmFja19lbnRyeSB8IGN1dCAtZCAnPSdgCj4gPiA+ICAgIGVjaG8gJGp1bXBfYmFja19lbnRyeSA+
-IGtleGVjX2p1bXBfYmFja19lbnRyeQo+ID4gPiAgICBjcCAvcHJvYy92bWNvcmUgZHVtcC5lbGYK
-PiA+ID4gCj4gPiA+ICAgIFRoZW4geW91IGNhbiBzaHV0ZG93biB0aGUgbWFjaGluZSBhcyBub3Jt
-YWwuCj4gPiA+IAo+ID4gPiA4LiBCb290IGtlcm5lbCBjb21waWxlZCBpbiBzdGVwIDEgKGtlcm5l
-bCBDKS4gVXNlIHRoZSByb290ZnMuZ3ogYXMKPiA+ID4gICAgcm9vdCBmaWxlIHN5c3RlbS4KPiA+
-ID4gCj4gPiAKPiA+IE9uZSBvZiB0aGUgY29uY2VybnMgcmFpc2VkIGJ5IGhpYmVybmF0aW9uIHBl
-b3BsZSBpbiB0aGUgcGFzdCB3YXMgdG8gdXNlCj4gPiBzaW5nbGUgYm9vdCBsb2FkZXIgZW50cnkg
-dG8gYm9vdCBub3JtYWxseSBhcyB3ZWxsIHdoaWxlIHJlc3VtaW5nIGEga2VybmVsLgo+ID4gCj4g
-PiBTbyBpbiB0aGlzIGNhc2UgYSB1c2VyIGVpdGhlciBuZWVkcyB0byBtYWludGFpbiB0d28gYm9v
-dC1sb2FkZXIgZW50cmllcwo+ID4gb3IgbW9kaWZ5IGl0IG9uIHRoZSBmbHkuIEkgd2lzaGVkIHRo
-ZXJlIHdhcyBhIGJldHRlciB3YXkgdG8gaGFuZGxlIHRoYXQuCj4gCj4g77u/Tm93IGl0IGlzIG5v
-dCBuZWVkZWQgdG8gaGF2ZSB0d28gYm9vdC1sb2FkZXIgZW50cmllcywganVzdCBvbmUgaXMKPiBl
-bm91Z2guIFN0ZXAgNCBhbmQgc3RlcCA4IGNhbiBzaGFyZSB0aGUgc2FtZSBib290LWxvYWRlciBl
-bnRyaWVzLiBUaGUKPiByb290ZnMuZ3ogY2FuIGJlIHRoZSBub3JtYWwgaW5pdHJhbWZzIG9yIGlu
-aXRyZCB3aGVuIGRlcGxveW1lbnQuIEluCj4gcm9vdGZzLmd6LCBpZiB0aGVyZSBpcyBhIHZhbGlk
-IGhpYmVybmF0aW9uIGltYWdlLCB0aGUgaGliZXJuYXRlZCBzeXN0ZW0KPiB3aWxsIGJlIHJlc3Rv
-cmVkLCBvdGhlcndpc2UsIG5vcm1hbCBib290IHByb2Nlc3MgZm9sbG93cy4KPiAKCkZldyB0aGlu
-Z3MgSSBkb24ndCB1bmRlcnN0YW5kLgoKLSBBcmUgeW91IHNheWluZyB0aGF0IGhpYmVybmF0ZWQg
-aW1hZ2Ugd2lsbCBiZSBzYXZlZCBpbiBpbml0cmQKICAocm9vdGZzLmd6KT8gQnV0IHRoYXQgc2F2
-aW5nIGlzIG9ubHkgaW4gUkFNLCB3ZSBuZXZlciB3cml0ZSBiYWNrCiAgaXQgdG8gZGlzaz8KCi0g
-SSB0aG91Z2h0IHdlIHByb2JhYmx5IGhhdmUgdG8gZGVkaWNhdGUgYSByYXcgcGFydGl0aW9uIGtp
-bmQgb2YgdGhpbmcKICBmb3Igc2F2aW5nIGltYWdlIGFuZCB0aGVuIG1vZGlmeSBib290IGxvYWRl
-ciBjb21tYW5kIGxpbmUgdG8gc29tZXRoaW5nCiAgc2ltaWxhciB0bywgInJlc3VtZT1wYXJ0aXRp
-b24iLiBUaGVuIGluaXRyZCBjYW4gZ28gaHVudGluZyBmb3IgaW1hZ2UKICBpbiByZXNwZWN0aXZl
-IHBhcnRpdGlvbiAoYXMgc3BlY2lmaWVkIGJ5IGNvbW1hbmQgbGluZSBwYXJhbWV0ZXIpIGFuZCBp
-ZgogIGltYWdlIGlzIG5vdCBhdmFpbGFibGUgdGhlbiBjb250aW51ZSB3aXRoIG5vcm1hbCBib290
-LgoKVGhhbmtzClZpdmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+I'm a bit confused as to what this is for. If you know where Xen is located
+in physical or virtual address space, and you have access to Xen symbols,
+why would you need the few symbol addresses provided by vmcoreinfo? I can
+hardly see what symbols dom_xen and dom_io would be particularly useful for.
+Similarly, why would you record structure sizes when this is statically
+determinable given the Xen sources?
+
+ -- Keir
+
+On 12/6/08 09:22, "Itsuro ODA" <oda@valinux.co.jp> wrote:
+
+> Hi,
+> 
+> The following patchset is to support extracting vmcoreinfo from
+> /proc/vmcore for Xen.
+> 
+> This is the up-port of the patchset I made for 3.2.0 and posted
+> the end of March.
+> 
+> [PATCH 1/2] patch for xen hypervisor (xen-unstable.hg)
+> [PATCH 2/2] patch for linux (linux-2.6.18-xen.hg)
+> 
+> --- background ----------------------------------------------------
+> * what the makedumpfile is:
+>   To shorten the size of the dumpfile and the time of creating the
+>   dumpfile, makedumpfile copies only the necessary pages for analysis
+>   to the dumpfile from /proc/vmcore. You can specify the kind of
+>   unnecessary pages with dump_level. If you want to shorten the size
+>   further, enable the compression of the page data.
+> * Xen extraction 
+>   makedumpfile also has a feature that extracting the part of
+>   xen hypervisor and domain-0 from /proc/vmcore taken under xen
+>   environment. In most cases under xen environment, it is enough to
+>   analyze a cause of system crash.
+> * extract vmcoreinfo from /proc/vmcore
+>   makedumpfile 1.2.0 supports to extract the vmcoreinfo data from
+>   /proc/vmcore and uses it for dump filtering. (for a vmcore taken
+>   under the native environment.)
+> ------------------------------------------------------------------
+> 
+> Thanks.
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
