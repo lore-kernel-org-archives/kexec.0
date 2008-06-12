@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6sLR-0000EF-1U
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 19:20:25 +0000
-Date: Thu, 12 Jun 2008 15:20:15 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v11: kexec jump
-Message-ID: <20080612192015.GH9654@redhat.com>
-References: <1213082104.22608.29.camel@caritas-dev.intel.com>
+	id 1K6wSZ-0002F4-FR
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 23:44:04 +0000
+Date: Fri, 13 Jun 2008 08:41:55 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: Re: [Xen-devel] [PATCH 0/2] extract vmcoreinfo from /proc/vmcore for
+	Xen
+In-Reply-To: <C476F301.21F9F%keir.fraser@eu.citrix.com>
+References: <20080612165246.16CC.ODA@valinux.co.jp>
+	<C476F301.21F9F%keir.fraser@eu.citrix.com>
+Message-Id: <20080613075723.16DF.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1213082104.22608.29.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,37 +24,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Keir Fraser <keir.fraser@eu.citrix.com>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org
 
-On Tue, Jun 10, 2008 at 03:15:04PM +0800, Huang, Ying wrote:
-> This patch provides an enhancement to kexec/kdump. It implements
-> the following features:
+Hi,
+
+The aim of "vmcoreinfo in vmcore" is to run makedumpfile
+without xen-syms.
+
+The basic form of the xen extraction:
+# makedumpfile -X --xen-syms xen-syms /proc/vmcore output-file
+It selects pages owned by the hypervisor and the domain 0 and
+makes a size reduced vmcore image.
+The page selection is done as follows:
+- scan alloc_bitmap and frametable
+  - select if alloc_bitmap on &&
+    - xen heap
+    or
+    - owned by dom0/dom-xen/dom-io
+The necessary infomation such as the symbol address of alloc_bitmap,
+the size of page_info, the offset of _domain in page_info, and so on
+are extracted in the xen-syms.
+
+The vmcoreinfo is a note section in a vmcore which is packed the
+infomation neccessary for page selection. If a vmcoreinfo exists
+in a vmcore, xen-syms is not necessary to run makedumpfile:
+# makedumpfile -X /proc/vmcore output-file
+does the same thing as mentioned above.
+
+Thanks.
+Itsuro Oda
+
+On Thu, 12 Jun 2008 15:36:33 +0100
+Keir Fraser <keir.fraser@eu.citrix.com> wrote:
+
+> I'm a bit confused as to what this is for. If you know where Xen is located
+> in physical or virtual address space, and you have access to Xen symbols,
+> why would you need the few symbol addresses provided by vmcoreinfo? I can
+> hardly see what symbols dom_xen and dom_io would be particularly useful for.
+> Similarly, why would you record structure sizes when this is statically
+> determinable given the Xen sources?
 > 
-> - Backup/restore memory used by the original kernel before/after
->   kexec.
+>  -- Keir
 > 
-> - Save/restore CPU state before/after kexec.
+> On 12/6/08 09:22, "Itsuro ODA" <oda@valinux.co.jp> wrote:
 > 
-> The features of this patch can be used as a general method to call
-> program in physical mode (paging turning off). This can be used to
-> call BIOS code under Linux.
+> > Hi,
+> > 
+> > The following patchset is to support extracting vmcoreinfo from
+> > /proc/vmcore for Xen.
+> > 
+> > This is the up-port of the patchset I made for 3.2.0 and posted
+> > the end of March.
+> > 
+> > [PATCH 1/2] patch for xen hypervisor (xen-unstable.hg)
+> > [PATCH 2/2] patch for linux (linux-2.6.18-xen.hg)
+> > 
+> > --- background ----------------------------------------------------
+> > * what the makedumpfile is:
+> >   To shorten the size of the dumpfile and the time of creating the
+> >   dumpfile, makedumpfile copies only the necessary pages for analysis
+> >   to the dumpfile from /proc/vmcore. You can specify the kind of
+> >   unnecessary pages with dump_level. If you want to shorten the size
+> >   further, enable the compression of the page data.
+> > * Xen extraction 
+> >   makedumpfile also has a feature that extracting the part of
+> >   xen hypervisor and domain-0 from /proc/vmcore taken under xen
+> >   environment. In most cases under xen environment, it is enough to
+> >   analyze a cause of system crash.
+> > * extract vmcoreinfo from /proc/vmcore
+> >   makedumpfile 1.2.0 supports to extract the vmcoreinfo data from
+> >   /proc/vmcore and uses it for dump filtering. (for a vmcore taken
+> >   under the native environment.)
+> > ------------------------------------------------------------------
+> > 
+> > Thanks.
 > 
 > 
 
-Hi Huang,
+-- 
+Itsuro ODA <oda@valinux.co.jp>
 
-I was testing these patches and I get following error on my machine.
-
-Freezing remaining freezable tasks ... (elapsed 0.00 seconds) done.
-Suspending console(s) (use no_console_suspend to debug)
-PM: Device i8042 failed to freeze: error -22
-Restarting tasks ... done.
-
-Any idea why keyboard controller would not freeze?
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
