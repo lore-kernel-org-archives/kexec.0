@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6i7d-0004FR-Te
-	for kexec@lists.infradead.org; Thu, 12 Jun 2008 08:25:30 +0000
-Date: Thu, 12 Jun 2008 17:23:23 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: [PATCH 2/2] extract vmcoreinfo from /proc/vmcore for Xen
-Message-Id: <20080612170441.16D0.ODA@valinux.co.jp>
+	id 1K6mRl-0003Sl-O2
+	for kexec@lists.infradead.org; Thu, 12 Jun 2008 13:02:37 +0000
+Date: Thu, 12 Jun 2008 09:02:25 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
+Message-ID: <20080612130225.GA9654@redhat.com>
+References: <1213082106.22608.30.camel@caritas-dev.intel.com>
+	<20080611163026.GG6450@redhat.com>
+	<1213232019.21353.8.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1213232019.21353.8.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,132 +21,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xensource.com
-Cc: kexec@lists.infradead.org
+To: "Huang, Ying" <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-This patch is for linux-2.6.18-xen.
-
-- get the machine address of the vmcoreinfo area of xen
-- expose the machine address and the size of the vmcoreinfo area
-  via /sys/hypervisor/vmcoreinfo so that the kexec-tools looks them.
-
-Signed-off-by: Itsuro Oda <oda@valinux.co.jp>
-
-diff -r e01b3a133ddc drivers/xen/core/machine_kexec.c
---- a/drivers/xen/core/machine_kexec.c	Wed Jun 11 09:28:01 2008 +0100
-+++ b/drivers/xen/core/machine_kexec.c	Thu Jun 12 13:10:40 2008 +0900
-@@ -19,6 +19,9 @@ static struct resource xen_hypervisor_re
- static struct resource xen_hypervisor_res;
- static struct resource *xen_phys_cpus;
- 
-+size_t vmcoreinfo_size_xen;
-+unsigned long paddr_vmcoreinfo_xen;
-+
- void __init xen_machine_kexec_setup_resources(void)
- {
- 	xen_kexec_range_t range;
-@@ -94,6 +97,18 @@ void __init xen_machine_kexec_setup_reso
- 	if (range.size) {
- 		crashk_res.start = range.start;
- 		crashk_res.end = range.start + range.size - 1;
-+	}
-+
-+	/* get physical address of vmcoreinfo */
-+	memset(&range, 0, sizeof(range));
-+	range.range = KEXEC_RANGE_MA_VMCOREINFO;
-+
-+	if (HYPERVISOR_kexec_op(KEXEC_CMD_kexec_get_range, &range))
-+		return;
-+
-+	if (range.size) {
-+		paddr_vmcoreinfo_xen = range.start;
-+		vmcoreinfo_size_xen = range.size;
- 	}
- 
- 	if (machine_kexec_setup_resources(&xen_hypervisor_res, xen_phys_cpus,
-diff -r e01b3a133ddc drivers/xen/core/xen_sysfs.c
---- a/drivers/xen/core/xen_sysfs.c	Wed Jun 11 09:28:01 2008 +0100
-+++ b/drivers/xen/core/xen_sysfs.c	Thu Jun 12 13:39:04 2008 +0900
-@@ -15,6 +15,7 @@
- #include <xen/features.h>
- #include <xen/hypervisor_sysfs.h>
- #include <xen/xenbus.h>
-+#include <xen/interface/kexec.h>
- 
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Mike D. Day <ncmike@us.ibm.com>");
-@@ -334,6 +335,24 @@ static void xen_properties_destroy(void)
- 			   &xen_properties_group);
- }
- 
-+static ssize_t vmcoreinfo_show(struct hyp_sysfs_attr *attr, char *page)
-+{
-+	return sprintf(page, "%lx %zx\n",
-+		paddr_vmcoreinfo_xen, vmcoreinfo_size_xen);
-+}
-+
-+HYPERVISOR_ATTR_RO(vmcoreinfo);
-+
-+static int __init xen_sysfs_vmcoreinfo_init(void)
-+{
-+	return sysfs_create_file(&hypervisor_subsys.kset.kobj, &vmcoreinfo_attr.attr);
-+}
-+
-+static void xen_sysfs_vmcoreinfo_destroy(void)
-+{
-+	sysfs_remove_file(&hypervisor_subsys.kset.kobj, &vmcoreinfo_attr.attr);
-+}
-+
- static int __init hyper_sysfs_init(void)
- {
- 	int ret;
-@@ -354,9 +373,14 @@ static int __init hyper_sysfs_init(void)
- 	if (ret)
- 		goto uuid_out;
- 	ret = xen_properties_init();
-+	if (ret)
-+		goto prop_out;
-+	ret = xen_sysfs_vmcoreinfo_init();
- 	if (!ret)
- 		goto out;
- 
-+	xen_properties_destroy();
-+prop_out:
- 	xen_sysfs_uuid_destroy();
- uuid_out:
- 	xen_compilation_destroy();
-@@ -370,6 +394,7 @@ out:
- 
- static void __exit hyper_sysfs_exit(void)
- {
-+	xen_sysfs_vmcoreinfo_destroy();
- 	xen_properties_destroy();
- 	xen_compilation_destroy();
- 	xen_sysfs_uuid_destroy();
-diff -r e01b3a133ddc include/xen/interface/kexec.h
---- a/include/xen/interface/kexec.h	Wed Jun 11 09:28:01 2008 +0100
-+++ b/include/xen/interface/kexec.h	Thu Jun 12 13:11:44 2008 +0900
-@@ -138,6 +138,10 @@ typedef struct xen_kexec_load {
-                                      * the ia64_boot_param */
- #define KEXEC_RANGE_MA_EFI_MEMMAP 5 /* machine address and size of
-                                      * of the EFI Memory Map */
-+#define KEXEC_RANGE_MA_VMCOREINFO 6 /* machine address and size of vmcoreinfo */
-+
-+extern size_t vmcoreinfo_size_xen;
-+extern unsigned long paddr_vmcoreinfo_xen;
- 
- /*
-  * Find the address and size of certain memory areas
-
--- 
-Itsuro ODA <oda@valinux.co.jp>
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBKdW4gMTIsIDIwMDggYXQgMDg6NTM6MzlBTSArMDgwMCwgSHVhbmcsIFlpbmcgd3Jv
+dGU6Cj4gT24gV2VkLCAyMDA4LTA2LTExIGF0IDEyOjMwIC0wNDAwLCBWaXZlayBHb3lhbCB3cm90
+ZToKPiBbLi4uXQo+ID4gPiBVc2FnZSBleGFtcGxlIG9mIHNpbXBsZSBoaWJlcm5hdGlvbjoKPiA+
+ID4gCj4gPiA+IDEuIENvbXBpbGUgYW5kIGluc3RhbGwgcGF0Y2hlZCBrZXJuZWwgd2l0aCBmb2xs
+b3dpbmcgb3B0aW9ucyBzZWxlY3RlZDoKPiA+ID4gCj4gPiA+IENPTkZJR19YODZfMzI9eQo+ID4g
+PiBDT05GSUdfUkVMT0NBVEFCTEU9eQo+ID4gPiBDT05GSUdfS0VYRUM9eQo+ID4gPiBDT05GSUdf
+Q1JBU0hfRFVNUD15Cj4gPiA+IENPTkZJR19QTT15Cj4gPiA+IAo+ID4gPiAyLiBCdWlsZCBhbiBp
+bml0cmFtZnMgaW1hZ2UgY29udGFpbnMga2V4ZWMtdG9vbCBhbmQgbWFrZWR1bXBmaWxlLCBvcgo+
+ID4gPiAgICBkb3dubG9hZCB0aGUgcHJlLWJ1aWx0IGluaXRyYW1mcyBpbWFnZSwgY2FsbGVkIHJv
+b3Rmcy5neiBpbgo+ID4gPiAgICBmb2xsb3dpbmcgdGV4dC4KPiA+ID4gCj4gPiA+IDMuIFByZXBh
+cmUgYSBwYXJ0aXRpb24gdG8gc2F2ZSBtZW1vcnkgaW1hZ2Ugb2Ygb3JpZ2luYWwga2VybmVsLCBj
+YWxsZWQKPiA+ID4gICAgaGliZXJuYXRpbmcgcGFydGl0aW9uIGluIGZvbGxvd2luZyB0ZXh0Lgo+
+ID4gPiAKPiA+ID4gNC4gQm9vdCBrZXJuZWwgY29tcGlsZWQgaW4gc3RlcCAxIChrZXJuZWwgQSku
+Cj4gPiA+IAo+ID4gPiA1LiBJbiB0aGUga2VybmVsIEEsIGxvYWQga2VybmVsIGNvbXBpbGVkIGlu
+IHN0ZXAgMSAoa2VybmVsIEIpIHdpdGgKPiA+ID4gICAgL3NiaW4va2V4ZWMuIFRoZSBzaGVsbCBj
+b21tYW5kIGxpbmUgY2FuIGJlIGFzIGZvbGxvdzoKPiA+ID4gCj4gPiA+ICAgIC9zYmluL2tleGVj
+IC0tbG9hZC1wcmVzZXJ2ZS1jb250ZXh0IC9ib290L2J6SW1hZ2UgLS1tZW0tbWluPTB4MTAwMDAw
+Cj4gPiA+ICAgICAgLS1tZW0tbWF4PTB4ZmZmZmZmIC0taW5pdHJkPXJvb3Rmcy5nego+ID4gPiAK
+PiA+ID4gNi4gQm9vdCB0aGUga2VybmVsIEIgd2l0aCBmb2xsb3dpbmcgc2hlbGwgY29tbWFuZCBs
+aW5lOgo+ID4gPiAKPiA+ID4gICAgL3NiaW4va2V4ZWMgLWUKPiA+ID4gCj4gPiA+IDcuIFRoZSBr
+ZXJuZWwgQiB3aWxsIGJvb3QgYXMgbm9ybWFsIGtleGVjLiBJbiBrZXJuZWwgQiB0aGUgbWVtb3J5
+Cj4gPiA+ICAgIGltYWdlIG9mIGtlcm5lbCBBIGNhbiBiZSBzYXZlZCBpbnRvIGhpYmVybmF0aW5n
+IHBhcnRpdGlvbiBhcwo+ID4gPiAgICBmb2xsb3c6Cj4gPiA+IAo+ID4gPiAgICBqdW1wX2JhY2tf
+ZW50cnk9YGNhdCAvcHJvYy9jbWRsaW5lIHwgdHIgJyAnICdcbicgfCBncmVwIGtleGVjX2p1bXBf
+YmFja19lbnRyeSB8IGN1dCAtZCAnPSdgCj4gPiA+ICAgIGVjaG8gJGp1bXBfYmFja19lbnRyeSA+
+IGtleGVjX2p1bXBfYmFja19lbnRyeQo+ID4gPiAgICBjcCAvcHJvYy92bWNvcmUgZHVtcC5lbGYK
+PiA+ID4gCj4gPiA+ICAgIFRoZW4geW91IGNhbiBzaHV0ZG93biB0aGUgbWFjaGluZSBhcyBub3Jt
+YWwuCj4gPiA+IAo+ID4gPiA4LiBCb290IGtlcm5lbCBjb21waWxlZCBpbiBzdGVwIDEgKGtlcm5l
+bCBDKS4gVXNlIHRoZSByb290ZnMuZ3ogYXMKPiA+ID4gICAgcm9vdCBmaWxlIHN5c3RlbS4KPiA+
+ID4gCj4gPiAKPiA+IE9uZSBvZiB0aGUgY29uY2VybnMgcmFpc2VkIGJ5IGhpYmVybmF0aW9uIHBl
+b3BsZSBpbiB0aGUgcGFzdCB3YXMgdG8gdXNlCj4gPiBzaW5nbGUgYm9vdCBsb2FkZXIgZW50cnkg
+dG8gYm9vdCBub3JtYWxseSBhcyB3ZWxsIHdoaWxlIHJlc3VtaW5nIGEga2VybmVsLgo+ID4gCj4g
+PiBTbyBpbiB0aGlzIGNhc2UgYSB1c2VyIGVpdGhlciBuZWVkcyB0byBtYWludGFpbiB0d28gYm9v
+dC1sb2FkZXIgZW50cmllcwo+ID4gb3IgbW9kaWZ5IGl0IG9uIHRoZSBmbHkuIEkgd2lzaGVkIHRo
+ZXJlIHdhcyBhIGJldHRlciB3YXkgdG8gaGFuZGxlIHRoYXQuCj4gCj4g77u/Tm93IGl0IGlzIG5v
+dCBuZWVkZWQgdG8gaGF2ZSB0d28gYm9vdC1sb2FkZXIgZW50cmllcywganVzdCBvbmUgaXMKPiBl
+bm91Z2guIFN0ZXAgNCBhbmQgc3RlcCA4IGNhbiBzaGFyZSB0aGUgc2FtZSBib290LWxvYWRlciBl
+bnRyaWVzLiBUaGUKPiByb290ZnMuZ3ogY2FuIGJlIHRoZSBub3JtYWwgaW5pdHJhbWZzIG9yIGlu
+aXRyZCB3aGVuIGRlcGxveW1lbnQuIEluCj4gcm9vdGZzLmd6LCBpZiB0aGVyZSBpcyBhIHZhbGlk
+IGhpYmVybmF0aW9uIGltYWdlLCB0aGUgaGliZXJuYXRlZCBzeXN0ZW0KPiB3aWxsIGJlIHJlc3Rv
+cmVkLCBvdGhlcndpc2UsIG5vcm1hbCBib290IHByb2Nlc3MgZm9sbG93cy4KPiAKCkZldyB0aGlu
+Z3MgSSBkb24ndCB1bmRlcnN0YW5kLgoKLSBBcmUgeW91IHNheWluZyB0aGF0IGhpYmVybmF0ZWQg
+aW1hZ2Ugd2lsbCBiZSBzYXZlZCBpbiBpbml0cmQKICAocm9vdGZzLmd6KT8gQnV0IHRoYXQgc2F2
+aW5nIGlzIG9ubHkgaW4gUkFNLCB3ZSBuZXZlciB3cml0ZSBiYWNrCiAgaXQgdG8gZGlzaz8KCi0g
+SSB0aG91Z2h0IHdlIHByb2JhYmx5IGhhdmUgdG8gZGVkaWNhdGUgYSByYXcgcGFydGl0aW9uIGtp
+bmQgb2YgdGhpbmcKICBmb3Igc2F2aW5nIGltYWdlIGFuZCB0aGVuIG1vZGlmeSBib290IGxvYWRl
+ciBjb21tYW5kIGxpbmUgdG8gc29tZXRoaW5nCiAgc2ltaWxhciB0bywgInJlc3VtZT1wYXJ0aXRp
+b24iLiBUaGVuIGluaXRyZCBjYW4gZ28gaHVudGluZyBmb3IgaW1hZ2UKICBpbiByZXNwZWN0aXZl
+IHBhcnRpdGlvbiAoYXMgc3BlY2lmaWVkIGJ5IGNvbW1hbmQgbGluZSBwYXJhbWV0ZXIpIGFuZCBp
+ZgogIGltYWdlIGlzIG5vdCBhdmFpbGFibGUgdGhlbiBjb250aW51ZSB3aXRoIG5vcm1hbCBib290
+LgoKVGhhbmtzClZpdmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
