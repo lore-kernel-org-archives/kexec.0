@@ -1,25 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp03.in.ibm.com ([59.145.155.3] helo=e28esmtp03.in.ibm.com)
+Received: from e28smtp05.in.ibm.com ([59.145.155.5] helo=e28esmtp05.in.ibm.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K7DZv-0007G5-VY
-	for kexec@lists.infradead.org; Fri, 13 Jun 2008 18:01:01 +0000
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-	by e28esmtp03.in.ibm.com (8.13.1/8.13.1) with ESMTP id m5DI0Js2015887
-	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:30:19 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m5DI02LT1437756
-	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:30:02 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m5DI0IW3019690
-	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:30:18 +0530
+	id 1K7Da4-0007Nq-Aq
+	for kexec@lists.infradead.org; Fri, 13 Jun 2008 18:01:05 +0000
+Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
+	by e28esmtp05.in.ibm.com (8.13.1/8.13.1) with ESMTP id m5DI0Rf5011345
+	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:30:27 +0530
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m5DHxgSf864398
+	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:29:42 +0530
+Received: from d28av04.in.ibm.com (loopback [127.0.0.1])
+	by d28av04.in.ibm.com (8.13.1/8.13.3) with ESMTP id m5DI0Qag011424
+	for <kexec@lists.infradead.org>; Fri, 13 Jun 2008 23:30:27 +0530
 From: Chandru <chandru@in.ibm.com>
-Subject: [RFC][PATCH 2/3] kexec-tools: add support for dynamic reconfiguration
+Subject: [RFC][PATCH 3/3] kexec-tools: add support for dynamic reconfiguration
 	memory
-Date: Fri, 13 Jun 2008 23:30:12 +0530
+Date: Fri, 13 Jun 2008 23:30:21 +0530
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200806132330.13198.chandru@in.ibm.com>
+Message-Id: <200806132330.21758.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,223 +35,145 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: bwalle@suse.de, vgoyal@redhat.com, maneesh@in.ibm.com
 
-Changes to kexec-ppc64.c
+The add_dyn_reconf_usable_mem_property() appends the entry number from 
+ibm,dynamic-memory to 'linux,usable-memory' string. 
+
 
 Signed-off-by: Chandru Siddalingappa <chandru@in.ibm.com
 ---
 
---- kexec/arch/ppc64/kexec-ppc64.c.orig	2008-06-12 06:27:39.000000000 -0400
-+++ kexec/arch/ppc64/kexec-ppc64.c	2008-06-13 13:28:31.000000000 -0400
-@@ -96,6 +96,49 @@ err1:
+--- kexec/arch/ppc64/fs2dt.c.orig	2008-06-12 06:26:57.000000000 -0400
++++ kexec/arch/ppc64/fs2dt.c	2008-06-13 12:44:47.000000000 -0400
+@@ -35,7 +35,7 @@
  
+ #define MAXPATH 1024		/* max path name length */
+ #define NAMESPACE 16384		/* max bytes for property names */
+-#define TREEWORDS 65536		/* max 32 bit words for property values */
++#define TREEWORDS 131072	/* max 32 bit words for property values */
+ #define MEMRESERVE 256		/* max number of reserved memory blocks */
+ #define MAX_MEMORY_RANGES 1024
+ 
+@@ -122,18 +122,90 @@ static unsigned propnum(const char *name
+ 	return offset;
  }
  
-+static int count_dyn_reconf_memory_ranges(void)
++static void add_dyn_reconf_usable_mem_property(int fd)
 +{
-+	char device_tree[] = "/proc/device-tree/";
-+	char fname[128];
-+	char buf[32];
-+	FILE *file;
++	char fname[MAXPATH], propname[64], t[32], *bname;
++	const char tbuf[128];
++	unsigned long long buf[32];
++	unsigned long ranges[2*MAX_MEMORY_RANGES];
++	unsigned long long base, end, loc_base, loc_end;
++	int range, rlen = 0, i;
 +
-+	strcpy(fname, device_tree);
-+	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,lmb-size");
-+	if ((file = fopen(fname, "r")) == NULL) {
-+		perror(fname);
-+		return -1;
-+	}
++	strcpy(fname, pathname);
++	bname = strrchr(fname, '/');
++	bname[0] = '\0';
++	bname = strrchr(fname, '/');
++	if (strncmp(bname, "/ibm,dynamic-reconfiguration-memory", 36))
++		return;
 +
-+	if (fread(buf, 1, 8, file) < 0) {
-+		perror(fname);
-+		fclose(file);
-+		return -1;
-+	}
++	if (lseek(fd, 4, SEEK_SET) < 0)
++		die("unrecoverable error: error seeking in \"%s\": %s\n",
++		    pathname, strerror(errno));
++	for (i = 1; i <= num_of_lmbs; i++) {
++		rlen = 0;
++		if (read(fd, buf, 24) < 0)
++			die("unrecoverable error: error reading \"%s\": %s\n",
++			    pathname, strerror(errno));
 +
-+	lmb_size = ((unsigned long long *)buf)[0];
-+	fclose(file);
++		base = buf[0];
++		end = base + lmb_size;
++		if (~0ULL - base < end)
++			die("unrecoverable error: mem property overflow\n");
 +
-+	/* Get number of lmbs from ibm,dynamic-memory */
-+	strcpy(fname, device_tree);
-+	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory");
-+	if ((file = fopen(fname, "r")) == NULL) {
-+		perror(fname);
-+		return -1;
-+	}
-+	/*
-+	 * first 4 bytes provide number of entries(lmbs)
-+	 */
-+	if (fread(buf, 1, 4, file) < 0) {
-+		perror(fname);
-+		fclose(file);
-+		return -1;
-+	}
-+	num_of_lmbs = ((unsigned int *)buf)[0];
-+	max_memory_ranges += num_of_lmbs;
-+	fclose(file);
-+}
-+
- /*
-  * Count the memory nodes under /proc/device-tree and populate the
-  * max_memory_ranges variable. This variable replaces MAX_MEMORY_RANGES
-@@ -113,6 +156,12 @@ static int count_memory_ranges(void)
- 	}
- 
- 	while ((dentry = readdir(dir)) != NULL) {
-+		if (!strncmp(dentry->d_name,
-+				"ibm,dynamic-reconfiguration-memory", 35)){
-+			count_dyn_reconf_memory_ranges();
-+			continue;
++		for (range = 0; range < usablemem_rgns.size; range++) {
++			loc_base = usablemem_rgns.ranges[range].start;
++			loc_end = usablemem_rgns.ranges[range].end;
++			if (loc_base >= base && loc_end <= end) {
++				ranges[rlen++] = loc_base;
++				ranges[rlen++] = loc_end - loc_base;
++			} else if (base < loc_end && end > loc_base) {
++				if (loc_base < base)
++					loc_base = base;
++				if (loc_end > end)
++					loc_end = end;
++				ranges[rlen++] = loc_base;
++				ranges[rlen++] = loc_end - loc_base;
++			}
 +		}
 +
- 		if (strncmp(dentry->d_name, "memory@", 7) &&
- 			strcmp(dentry->d_name, "memory") &&
- 			strncmp(dentry->d_name, "pci@", 4))
-@@ -128,7 +177,52 @@ static int count_memory_ranges(void)
- 
- 	return 0;
- }
-+static void add_base_memory_range(uint64_t start, uint64_t end)
-+{
-+	base_memory_range[nr_memory_ranges].start = start;
-+	base_memory_range[nr_memory_ranges].end  = end;
-+	base_memory_range[nr_memory_ranges].type = RANGE_RAM;
-+	nr_memory_ranges++;
-+
-+	dbgprintf("%016llx-%016llx : %x\n",
-+		base_memory_range[nr_memory_ranges-1].start,
-+		base_memory_range[nr_memory_ranges-1].end,
-+		base_memory_range[nr_memory_ranges-1].type);
-+}
-+
-+static int get_dyn_reconf_base_ranges(void)
-+{
-+	uint64_t start, end;
-+	char fname[128], buf[32];
-+	FILE *file;
-+	int i, n;
- 
-+
-+	strcpy(fname, "/proc/device-tree/");
-+	strcat(fname,
-+		"ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory");
-+	if ((file = fopen(fname, "r")) == NULL) {
-+		perror(fname);
-+		return -1;
-+	}
-+
-+	fseek(file, 4, SEEK_SET);
-+	for (i = 0; i < num_of_lmbs; i++) {
-+		if ((n = fread(buf, 1, 24, file)) < 0) {
-+			perror(fname);
-+			fclose(file);
-+			return -1;
++		if (!rlen) {
++			/*
++			 * User did not pass any ranges for this region.
++			 * Hence, write (0,0) duple in linux,usable-memory
++			 * property such that this region will be ignored.
++			 */
++			ranges[rlen++] = 0;
++			ranges[rlen++] = 0;
 +		}
-+		if (nr_memory_ranges >= max_memory_ranges)
-+			return -1;
 +
-+		start = ((uint64_t *)buf)[0];
-+		end = start + lmb_size;
-+		add_base_memory_range(start, end);
++		rlen = rlen * sizeof(unsigned long);
++		/*
++		 * Add linux,usable-memory property.
++		 */
++		*dt++ = 3;
++		*dt++ = rlen;
++		strcpy(tbuf, "linux,usable-memory");
++		sprintf(t, "%d", i);
++		strcat(tbuf, t);
++		*dt++ = propnum((const char *)tbuf);
++		if ((rlen >= 8) && ((unsigned long)dt & 0x4))
++			dt++;
++		memcpy(dt, &ranges, rlen);
++		dt += (rlen + 3)/4;
 +	}
-+	fclose(file);
-+	return 0;
 +}
- /* Sort the base ranges in memory - this is useful for ensuring that our
-  * ranges are in ascending order, even if device-tree read of memory nodes
-  * is done differently. Also, could be used for other range coalescing later
-@@ -156,7 +250,7 @@ static int sort_base_ranges(void)
- /* Get base memory ranges */
- static int get_base_ranges(void)
+ static void add_usable_mem_property(int fd, int len)
  {
--	int local_memory_ranges = 0;
-+	uint64_t start, end;
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
- 	char buf[MAXBYTES];
-@@ -170,6 +264,11 @@ static int get_base_ranges(void)
- 		return -1;
- 	}
- 	while ((dentry = readdir(dir)) != NULL) {
-+		if (!strncmp(dentry->d_name,
-+				"ibm,dynamic-reconfiguration-memory", 35)) {
-+			get_dyn_reconf_base_ranges();
-+			continue;
-+		}
- 		if (strncmp(dentry->d_name, "memory@", 7) &&
- 			strcmp(dentry->d_name, "memory"))
- 			continue;
-@@ -197,27 +296,18 @@ static int get_base_ranges(void)
- 				closedir(dir);
- 				return -1;
- 			}
--			if (local_memory_ranges >= max_memory_ranges) {
-+			if (nr_memory_ranges >= max_memory_ranges) {
- 				fclose(file);
- 				break;
- 			}
--			base_memory_range[local_memory_ranges].start =
--				((uint64_t *)buf)[0];
--			base_memory_range[local_memory_ranges].end  =
--				base_memory_range[local_memory_ranges].start +
--				((uint64_t *)buf)[1];
--			base_memory_range[local_memory_ranges].type = RANGE_RAM;
--			local_memory_ranges++;
--			dbgprintf("%016llx-%016llx : %x\n",
--				base_memory_range[local_memory_ranges-1].start,
--				base_memory_range[local_memory_ranges-1].end,
--				base_memory_range[local_memory_ranges-1].type);
-+			start = ((uint64_t *)buf)[0];
-+			end = start + ((uint64_t *)buf)[1];
-+			add_base_memory_range(start, end);
- 			fclose(file);
- 		}
- 		closedir(dmem);
- 	}
- 	closedir(dir);
--	nr_memory_ranges = local_memory_ranges;
- 	sort_base_ranges();
- 	memory_max = base_memory_range[nr_memory_ranges - 1].end;
- #ifdef DEBUG
-@@ -276,7 +366,9 @@ static int get_devtree_details(unsigned 
- 			strncmp(dentry->d_name, "memory@", 7) &&
- 			strcmp(dentry->d_name, "memory") &&
- 			strncmp(dentry->d_name, "pci@", 4) &&
--			strncmp(dentry->d_name, "rtas", 4))
-+			strncmp(dentry->d_name, "rtas", 4) &&
-+			strncmp(dentry->d_name,
-+				"ibm,dynamic-reconfiguration-memory", 35))
- 			continue;
- 		strcpy(fname, device_tree);
- 		strcat(fname, dentry->d_name);
-@@ -474,6 +566,29 @@ static int get_devtree_details(unsigned 
- 			closedir(cdir);
- 		} /* memory */
+ 	char fname[MAXPATH], *bname;
+ 	unsigned long long buf[2];
+ 	unsigned long ranges[2*MAX_MEMORY_RANGES];
+ 	unsigned long long base, end, loc_base, loc_end;
+-	int range, rlen = 0;
++	int range, rlen = 0, i;
  
-+		if (!strncmp(dentry->d_name,
-+				"ibm,dynamic-reconfiguration-memory", 35)) {
-+			unsigned int k;
-+			strcat(fname, "/ibm,dynamic-memory");
-+			if ((file = fopen(fname, "r")) == NULL) {
-+				perror(fname);
-+				goto error_opencdir;
-+			}
-+			fseek(file, 4, SEEK_SET);
-+			for (k = 0; k < num_of_lmbs; k++) {
-+				if ((n = fread(buf, 1, 24, file)) < 0) {
-+					perror(fname);
-+					goto error_openfile;
-+				}
-+				rmo_base = ((unsigned long long *)buf)[0];
-+				rmo_top = rmo_base + lmb_size;
-+				if (rmo_top > 0x30000000UL)
-+					rmo_top = 0x30000000UL;
-+			}
-+			fclose(file);
-+			closedir(cdir);
-+		} /* ibm,dynamic-reconfiguration-memory */
+ 	strcpy(fname, pathname);
+-	bname = strrchr(fname,'/');
++	bname = strrchr(fname, '/');
+ 	bname[0] = '\0';
+-	bname = strrchr(fname,'/');
++	bname = strrchr(fname, '/');
+ 	if (strncmp(bname, "/memory@", 8))
+ 		return;
+ 
+@@ -171,7 +243,7 @@ static void add_usable_mem_property(int 
+ 
+ 	if (!rlen) {
+ 		/*
+-		 * User did not pass any ranges for thsi region. Hence, write
++		 * User did not pass any ranges for this region. Hence, write
+ 		 * (0,0) duple in linux,usable-memory property such that
+ 		 * this region will be ignored.
+ 		 */
+@@ -190,6 +262,7 @@ static void add_usable_mem_property(int 
+ 		dt++;
+ 	memcpy(dt,&ranges,rlen);
+ 	dt += (rlen + 3)/4;
 +
- 		if (strncmp(dentry->d_name, "pci@", 4) == 0) {
- 			strcat(fname, "/linux,tce-base");
- 			if ((file = fopen(fname, "r")) == NULL) {
+ }
+ 
+ /* put all properties (files) in the property structure */
+@@ -267,6 +340,9 @@ static void putprops(char *fn, struct di
+ 		dt += (len + 3)/4;
+ 		if (!strcmp(dp->d_name, "reg") && usablemem_rgns.size)
+ 			add_usable_mem_property(fd, len);
++		if (!strcmp(dp->d_name, "ibm,dynamic-memory") &&
++						usablemem_rgns.size)
++			add_dyn_reconf_usable_mem_property(fd);
+ 		close(fd);
+ 	}
+ 
 
 _______________________________________________
 kexec mailing list
