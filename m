@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.246])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6yJp-00011Z-SS
-	for kexec@lists.infradead.org; Fri, 13 Jun 2008 01:43:10 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so5196132rvf.42
-	for <kexec@lists.infradead.org>; Thu, 12 Jun 2008 18:43:09 -0700 (PDT)
-Message-ID: <86802c440806121843k221aaed9wc49b3a6a1ea966af@mail.gmail.com>
-Date: Thu, 12 Jun 2008 18:43:09 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH] Limit E820 map and /proc/iomem for mem parameter on x86-64
-In-Reply-To: <20080610215325.GA20673@suse.de>
+	id 1K6yqB-0007OU-Ok
+	for kexec@lists.infradead.org; Fri, 13 Jun 2008 02:16:36 +0000
+Date: Fri, 13 Jun 2008 12:16:30 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Fix wrong remove_parameter() calls
+Message-ID: <20080613021629.GE12174@verge.net.au>
+References: <20080612021935.GG22358@verge.net.au>
+	<1213287025-5443-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <20080610215325.GA20673@suse.de>
+In-Reply-To: <1213287025-5443-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, vgoyal@redhat.com, linux-kernel@vger.kernel.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
-On Tue, Jun 10, 2008 at 2:53 PM, Bernhard Walle <bwalle@suse.de> wrote:
-> This patch tries to unify the behaviour of i386 and x86-64 when parsing
-> the memory (mem/memmap) parameter of the kernel command line:
->
-> On i386, the view was limited (i.e. the actual view was presented).
-> On x86-64, the view was full (i.e. the BIOS view was presented).
->
-> This patch moves the limit_regions() function and the print_memory_map()
-> function to a new file e820.c, shared between the two x86 flavours. Then
-> it adds calls to limit_regions() in 64 bit code.
->
-> I gave the patch a bit testing. However, it's not for merging, it's just
-> to get early feedback to see if that goes into the right direction.
+On Thu, Jun 12, 2008 at 06:10:25PM +0200, Bernhard Walle wrote:
+> When --reuse-cmdline is specified, kexec automatically removes some command
+> line parameter that are *known* to break the kexec'd target. That patch
+> corrects that behaviour:
+> 
+>  1. BOOT_IMAGE should be removed always when --reuse-cmdline is specified since
+>     it's likely that the kernel is not the same as the running kernel. As only
+>     lilo-like bootloaders (i.e. not GRUB) adds that parameter, there's no need
+>     to add a BOOT_IMAGE here.
+> 
+>  2. crashkernel should be only removed when 'kexec -p' is called. For the
+>     normal kexec, the crashkernel parameter can be passed as in the
+>     running kernel.
+> 
+> The mistake has been introduced by commit 3c5bb06948881b3e31c783c19edef74275794280
+> by myself.
 
-can you check tip/master about that e820 merge?
+Thans Bernhard, applied.
 
-http://people.redhat.com/mingo/tip.git/readme.txt
+-- 
+Horms
 
-it made 32bit using e820_register_active_region...and limit_region in
-32bit is remove.
-
-YH
 
 _______________________________________________
 kexec mailing list
