@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K7DaF-0000BM-RI
-	for kexec@lists.infradead.org; Fri, 13 Jun 2008 18:01:08 +0000
-Date: Fri, 13 Jun 2008 14:00:59 -0400
+	id 1K7DlT-0007vf-NF
+	for kexec@lists.infradead.org; Fri, 13 Jun 2008 18:12:43 +0000
+Date: Fri, 13 Jun 2008 14:05:55 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v11: kexec jump
-Message-ID: <20080613180059.GA4906@redhat.com>
-References: <1213082104.22608.29.camel@caritas-dev.intel.com>
-	<20080612192015.GH9654@redhat.com>
-	<1213319040.20431.8.camel@caritas-dev.intel.com>
+Subject: Re: [linux-pm] [PATCH -mm 2/2] kexec jump -v11: save/restore
+	device state
+Message-ID: <20080613180555.GB4906@redhat.com>
+References: <1213082106.22608.30.camel@caritas-dev.intel.com>
+	<alpine.LFD.1.10.0806101400090.14381@localhost.localdomain>
+	<1213146074.21923.10.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1213319040.20431.8.camel@caritas-dev.intel.com>
+In-Reply-To: <1213146074.21923.10.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +27,40 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Len Brown <lenb@kernel.org>
 
-On Fri, Jun 13, 2008 at 09:04:00AM +0800, Huang, Ying wrote:
-> On Thu, 2008-06-12 at 15:20 -0400, Vivek Goyal wrote:
-> > On Tue, Jun 10, 2008 at 03:15:04PM +0800, Huang, Ying wrote:
-> > > This patch provides an enhancement to kexec/kdump. It implements
-> > > the following features:
-> > > 
-> > > - Backup/restore memory used by the original kernel before/after
-> > >   kexec.
-> > > 
-> > > - Save/restore CPU state before/after kexec.
-> > > 
-> > > The features of this patch can be used as a general method to call
-> > > program in physical mode (paging turning off). This can be used to
-> > > call BIOS code under Linux.
-> > > 
-> > > 
+On Wed, Jun 11, 2008 at 09:01:14AM +0800, Huang, Ying wrote:
+> On Tue, 2008-06-10 at 14:01 -0400, Len Brown wrote:
 > > 
-> > Hi Huang,
+> > On Tue, 10 Jun 2008, Huang, Ying wrote:
 > > 
-> > I was testing these patches and I get following error on my machine.
+> > > This patch implements devices state save/restore before after kexec.
+> > > 
+> > > 
+> > > This patch together with features in kexec_jump patch can be used for
+> > > following:
+> > > 
+> > > - A simple hibernation implementation without ACPI support. You can
+> > >   kexec a hibernating kernel, save the memory image of original system
+> > >   and shutdown the system. When resuming, you restore the memory image
+> > >   of original system via ordinary kexec load then jump back.
 > > 
-> > Freezing remaining freezable tasks ... (elapsed 0.00 seconds) done.
-> > Suspending console(s) (use no_console_suspend to debug)
-> > PM: Device i8042 failed to freeze: error -22
-> > Restarting tasks ... done.
-> > 
-> > Any idea why keyboard controller would not freeze?
+> > What part of ACPI's role in hibernation are you trying to avoid
+> > 1. enabling wake devices
+> > 2. removing power from the system
+> > 3. something else?
 > 
-> Which kernel version do you use?
-> 
+> ACPI S5 is used instead of S4 for this simple hibernation
+> implementation. That is, before creating the hibernation image, the ACPI
+> _PTS is not executed, devices are not put into low power state and wake
+> devices are not enabled. After creating the hibernation image, the image
+> is saved to disk and system is shutdown (go to S5). When resuming from
+> hibernated image, ACPI _BFS and _WAK are not executed too.
 
-2.6.26-rc5-mm1.
+Hi huang,
 
-> Does original hibernation work? It can be setup easily. Just add
-> following parameters to kernel command line:
-> 
-
-Ok, I found that in my config CONFIG_HIBERNATION was not enabled. After
-enabling CONFIG_HIBERNATION, both suspend to disk and kjump started
-working.
-
-Does that mean there is some dependency on code under CONFIG_HIBERNATION.
-If yes, I think this dependency should be resolved during compile time.
-May be addtional config option (CONFIG_KEXEC_JUMP), which also selects
-the CONFIG_HIBERNATION automatically etc...
+Can't we implement ACPI S5 state as an option in current hibernation
+framework? Or kexec jump is a requirement for that? 
 
 Thanks
 Vivek
