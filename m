@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from rv-out-0708.google.com ([209.85.198.246])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K6xtx-0007XU-1L
-	for kexec@lists.infradead.org; Fri, 13 Jun 2008 01:16:25 +0000
-Subject: Re: [PATCH -mm 2/2] kexec jump -v11: save/restore device state
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080612130225.GA9654@redhat.com>
-References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-	<20080611163026.GG6450@redhat.com>
-	<1213232019.21353.8.camel@caritas-dev.intel.com>
-	<20080612130225.GA9654@redhat.com>
-Date: Fri, 13 Jun 2008 09:18:52 +0800
-Message-Id: <1213319932.22697.9.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1K6yJp-00011Z-SS
+	for kexec@lists.infradead.org; Fri, 13 Jun 2008 01:43:10 +0000
+Received: by rv-out-0708.google.com with SMTP id b17so5196132rvf.42
+	for <kexec@lists.infradead.org>; Thu, 12 Jun 2008 18:43:09 -0700 (PDT)
+Message-ID: <86802c440806121843k221aaed9wc49b3a6a1ea966af@mail.gmail.com>
+Date: Thu, 12 Jun 2008 18:43:09 -0700
+From: "Yinghai Lu" <yhlu.kernel@gmail.com>
+Subject: Re: [PATCH] Limit E820 map and /proc/iomem for mem parameter on x86-64
+In-Reply-To: <20080610215325.GA20673@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+References: <20080610215325.GA20673@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +25,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: kexec@lists.infradead.org, vgoyal@redhat.com, linux-kernel@vger.kernel.org
 
-On Thu, 2008-06-12 at 09:02 -0400, Vivek Goyal wrote:
-[...]
-> Few things I don't understand.
-> 
-> - Are you saying that hibernated image will be saved in initrd
->   (rootfs.gz)? But that saving is only in RAM, we never write back
->   it to disk?
+On Tue, Jun 10, 2008 at 2:53 PM, Bernhard Walle <bwalle@suse.de> wrote:
+> This patch tries to unify the behaviour of i386 and x86-64 when parsing
+> the memory (mem/memmap) parameter of the kernel command line:
+>
+> On i386, the view was limited (i.e. the actual view was presented).
+> On x86-64, the view was full (i.e. the BIOS view was presented).
+>
+> This patch moves the limit_regions() function and the print_memory_map()
+> function to a new file e820.c, shared between the two x86 flavours. Then
+> it adds calls to limit_regions() in 64 bit code.
+>
+> I gave the patch a bit testing. However, it's not for merging, it's just
+> to get early feedback to see if that goes into the right direction.
 
-No. Hibernated image should be saved in a dedicated raw partition as you
-said below.
+can you check tip/master about that e820 merge?
 
-> - I thought we probably have to dedicate a raw partition kind of thing
->   for saving image and then modify boot loader command line to something
->   similar to, "resume=partition". Then initrd can go hunting for image
->   in respective partition (as specified by command line parameter) and if
->   image is not available then continue with normal boot.
+http://people.redhat.com/mingo/tip.git/readme.txt
 
-Yes. But the boot-loader command line only need to be changed during
-system install or hibernation setup. We need not change the location of
-"hibernation partition" frequently.
+it made 32bit using e820_register_active_region...and limit_region in
+32bit is remove.
 
-So I think one boot-loader command line is sufficient for:
-
-- normal boot
-- normal boot a system to be hibernated
-- boot helper system to restore the hibernated system
-
-Best Regards,
-Huang Ying
-
+YH
 
 _______________________________________________
 kexec mailing list
