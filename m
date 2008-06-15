@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from rv-out-0708.google.com ([209.85.198.250])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K7DlT-0007vf-NF
-	for kexec@lists.infradead.org; Fri, 13 Jun 2008 18:12:43 +0000
-Date: Fri, 13 Jun 2008 14:05:55 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [linux-pm] [PATCH -mm 2/2] kexec jump -v11: save/restore
-	device state
-Message-ID: <20080613180555.GB4906@redhat.com>
-References: <1213082106.22608.30.camel@caritas-dev.intel.com>
-	<alpine.LFD.1.10.0806101400090.14381@localhost.localdomain>
-	<1213146074.21923.10.camel@caritas-dev.intel.com>
+	id 1K7oVS-00067S-Ej
+	for kexec@lists.infradead.org; Sun, 15 Jun 2008 09:26:42 +0000
+Received: by rv-out-0708.google.com with SMTP id b17so6136872rvf.42
+	for <kexec@lists.infradead.org>; Sun, 15 Jun 2008 02:26:37 -0700 (PDT)
+Message-ID: <3877989d0806150226x62fc1d1bk96131430f55848e1@mail.gmail.com>
+Date: Sun, 15 Jun 2008 17:26:36 +0800
+From: "Luming Yu" <luming.yu@gmail.com>
+Subject: Re: kdump regression: /proc/vmcore is 0 after kdump
+In-Reply-To: <3877989d0806130922p1f36a3bes9914144ac8c42266@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1213146074.21923.10.camel@caritas-dev.intel.com>
+References: <3877989d0806050058u3159e7b5x3113f63b3e0f3d8f@mail.gmail.com>
+	<20080605081633.GA6713@verge.net.au>
+	<3877989d0806130922p1f36a3bes9914144ac8c42266@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,44 +27,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Len Brown <lenb@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, andrew.patterson@hp.com
+Cc: Petr Tesarik <ptesarik@suse.cz>, Simon Horman <horms@verge.net.au>, linux-ia64@vger.kernel.org, Kexec Mailing List <kexec@lists.infradead.org>, Roland McGrath <roland@redhat.com>
 
-On Wed, Jun 11, 2008 at 09:01:14AM +0800, Huang, Ying wrote:
-> On Tue, 2008-06-10 at 14:01 -0400, Len Brown wrote:
-> > 
-> > On Tue, 10 Jun 2008, Huang, Ying wrote:
-> > 
-> > > This patch implements devices state save/restore before after kexec.
-> > > 
-> > > 
-> > > This patch together with features in kexec_jump patch can be used for
-> > > following:
-> > > 
-> > > - A simple hibernation implementation without ACPI support. You can
-> > >   kexec a hibernating kernel, save the memory image of original system
-> > >   and shutdown the system. When resuming, you restore the memory image
-> > >   of original system via ordinary kexec load then jump back.
-> > 
-> > What part of ACPI's role in hibernation are you trying to avoid
-> > 1. enabling wake devices
-> > 2. removing power from the system
-> > 3. something else?
-> 
-> ACPI S5 is used instead of S4 for this simple hibernation
-> implementation. That is, before creating the hibernation image, the ACPI
-> _PTS is not executed, devices are not put into low power state and wake
-> devices are not enabled. After creating the hibernation image, the image
-> is saved to disk and system is shutdown (go to S5). When resuming from
-> hibernated image, ACPI _BFS and _WAK are not executed too.
+On Sat, Jun 14, 2008 at 12:22 AM, Luming Yu <luming.yu@gmail.com> wrote:
+> On Thu, Jun 5, 2008 at 4:16 PM, Simon Horman <horms@verge.net.au> wrote:
+>> On Thu, Jun 05, 2008 at 03:58:40PM +0800, Luming Yu wrote:
+>>> On Tue, Jun 3, 2008 at 2:02 PM, Luming Yu <luming.yu@gmail.com> wrote:
+>>> >> I'm trying upstream kdump to get more detailed data for help analysis
+>>> >> the scenario..
+>>> > Upstream kdump doesn't work! don't know what cause the regression,
+>>> > possibly kexec-tools...
+>>> > Need investigation here!
+>>> >
+>>>
+>>> I tested mainline kernel from 2.6.20 to 2.6.26-rc4 on my tiger4..
+>>> whatever I try, /proc/vmcore is always 0 !
+>>>
+>>> Then I managed to get Nan hai's original patch against 2.6.19..
+>>> http://marc.info/?l=linux-ia64&m=116521104831321&w=2
+>>> This patch doesn't have zero-vmcore problem.
+>>>
+>>> Given the age of the kdump feature and so many upstream releases since
+>>> 2.6.20, I'm in doubt why I don't see this kind of bug report on ia64
+>>> mailing list before?
+>>>
+>>> PS. Now I can start to capture info for the strace problem with 2.6.19
+>>> kernel +Nahai's 2.6.19 kdump patch, hope the problem is still
+>>> reproducible.
+>>
+>> Which version of kexec-tools are you using?
+>> If you haven't done so already, could you try the latest version, 20080324.
+>>
+>> http://www.eu.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+>>
+>
+> Yes, this resolves one of my kdump problem.
+> But there seems to have a regression introduced into upstream probably
+> starting from 2.6.25.
+> The last kernel with kdump working on this box is 2.6.24. I don't have
+> time to start bisection to find out which patch causes that regression
+> right now.Maybe someone on this list can give me some hint..
 
-Hi huang,
-
-Can't we implement ACPI S5 state as an option in current hibernation
-framework? Or kexec jump is a requirement for that? 
-
-Thanks
-Vivek
+My git bisection result indicates the following commit causes the
+kdump regression in 2.6.25-rc1:
+commit 3c75e23784e6ed5f4841de43d0750fd9b37bafcb
+Author: Andrew Patterson <andrew.patterson@hp.com>
+Date:   Tue Jan 22 17:18:27 2008 -0700
 
 _______________________________________________
 kexec mailing list
