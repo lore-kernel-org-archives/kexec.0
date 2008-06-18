@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1K83qe-0006j5-Gm
-	for kexec@lists.infradead.org; Mon, 16 Jun 2008 01:49:32 +0000
-Subject: Re: [PATCH -mm 1/2] kexec jump -v11: kexec jump
-From: "Huang, Ying" <ying.huang@intel.com>
-In-Reply-To: <20080613180059.GA4906@redhat.com>
-References: <1213082104.22608.29.camel@caritas-dev.intel.com>
-	<20080612192015.GH9654@redhat.com>
-	<1213319040.20431.8.camel@caritas-dev.intel.com>
-	<20080613180059.GA4906@redhat.com>
-Date: Mon, 16 Jun 2008 09:52:21 +0800
-Message-Id: <1213581141.7179.6.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from mx2.mail.elte.hu ([157.181.151.9])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1K8uIK-0000eY-2I
+	for kexec@lists.infradead.org; Wed, 18 Jun 2008 09:49:37 +0000
+Date: Wed, 18 Jun 2008 11:49:17 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [patch] [PATCH] Use BOOTMEM_EXCLUSIVE for i386
+Message-ID: <20080618094917.GA15255@elte.hu>
+References: <20080608141607.GA25743@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080608141607.GA25743@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,31 +23,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
+Cc: the arch/x86 maintainers <x86@kernel.org>, Yinghai Lu <yhlu.kernel@gmail.com>
 
-On Fri, 2008-06-13 at 14:00 -0400, Vivek Goyal wrote:
-[...]
-> Ok, I found that in my config CONFIG_HIBERNATION was not enabled. After
-> enabling CONFIG_HIBERNATION, both suspend to disk and kjump started
-> working.
+
+* Bernhard Walle <bwalle@suse.de> wrote:
+
+> This patch uses the BOOTMEM_EXCLUSIVE for crashkernel reservation also 
+> for i386 and prints a error message on failure.
 > 
-> Does that mean there is some dependency on code under CONFIG_HIBERNATION.
-> If yes, I think this dependency should be resolved during compile time.
-> May be addtional config option (CONFIG_KEXEC_JUMP), which also selects
-> the CONFIG_HIBERNATION automatically etc...
+> The patch is still for 2.6.26 since it is only bug fixing. The 
+> unification of reserve_crashkernel() between i386 and x86_64 should be 
+> done for 2.6.27.
 
-Yes. kexec jump need to put devices into quiescent state and save
-devices state into memory, which is implemented by calling hibernation
-function: device_suspend(PMSG_FREEZE), whose implementation depends on 
-CONFIG_HIBERNATION.
+applied to tip/x86/urgent, thanks Bernhard.
 
-So, I will add CONFIG_KEXEC_JUMP and select CONFIG_HIBERNATION
-automatically.
-
-Best Regards,
-Huang Ying
-
+	Ingo
 
 _______________________________________________
 kexec mailing list
