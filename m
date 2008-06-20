@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9])
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K8uIK-0000eY-2I
-	for kexec@lists.infradead.org; Wed, 18 Jun 2008 09:49:37 +0000
-Date: Wed, 18 Jun 2008 11:49:17 +0200
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [patch] [PATCH] Use BOOTMEM_EXCLUSIVE for i386
-Message-ID: <20080618094917.GA15255@elte.hu>
-References: <20080608141607.GA25743@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080608141607.GA25743@suse.de>
+	id 1K9gon-0003Ql-Tv
+	for kexec@lists.infradead.org; Fri, 20 Jun 2008 13:38:23 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 1804145C09
+	for <kexec@lists.infradead.org>; Fri, 20 Jun 2008 15:38:16 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>(by way of Bernhard Walle
+	<bwalle@suse.de>)
+Date: Fri, 20 Jun 2008 15:38:22 +0200
+Message-Id: <1213969102-17400-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH] Unify crashkernel reservation for 32 and 64 bit
+Resent-Message-ID: <20080620153853.6c368b8c@halley.suse.de>
+Resent-To: kexec@lists.infradead.org
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,26 +23,241 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, anderson@redhat.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
-Cc: the arch/x86 maintainers <x86@kernel.org>, Yinghai Lu <yhlu.kernel@gmail.com>
+To: mingo@elte.hu
+Cc: Bernhard Walle <bwalle@suse.de>, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com
+
+This patch moves the reserve_crashkernel() to setup.c and removes the
+architecture-specific version. Both versions were more or less the same.
 
 
-* Bernhard Walle <bwalle@suse.de> wrote:
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ arch/x86/kernel/setup.c    |   61 ++++++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/setup_32.c |   53 --------------------------------------
+ arch/x86/kernel/setup_64.c |   40 ----------------------------
+ include/asm-x86/setup.h    |    3 ++
+ 4 files changed, 64 insertions(+), 93 deletions(-)
 
-> This patch uses the BOOTMEM_EXCLUSIVE for crashkernel reservation also 
-> for i386 and prints a error message on failure.
-> 
-> The patch is still for 2.6.26 since it is only bug fixing. The 
-> unification of reserve_crashkernel() between i386 and x86_64 should be 
-> done for 2.6.27.
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 542ff3c..915aa13 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -3,6 +3,7 @@
+ #include <linux/init.h>
+ #include <linux/bootmem.h>
+ #include <linux/percpu.h>
++#include <linux/kexec.h>
+ #include <asm/smp.h>
+ #include <asm/percpu.h>
+ #include <asm/sections.h>
+@@ -11,6 +12,7 @@
+ #include <asm/topology.h>
+ #include <asm/mpspec.h>
+ #include <asm/apicdef.h>
++#include <asm/highmem.h>
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
+ unsigned int num_processors;
+@@ -404,3 +406,62 @@ EXPORT_SYMBOL(node_to_cpumask);
+ #endif /* CONFIG_DEBUG_PER_CPU_MAPS */
+ 
+ #endif /* X86_64_NUMA */
++
++
++/*
++ * --------- Crashkernel reservation ------------------------------
++ */
++
++static inline unsigned long long get_total_mem(void)
++{
++	unsigned long long total;
++
++	total = max_low_pfn - min_low_pfn;
++#ifdef CONFIG_HIGHMEM
++	total += highend_pfn - highstart_pfn;
++#endif
++
++	return total << PAGE_SHIFT;
++}
++
++#ifdef CONFIG_KEXEC
++void __init reserve_crashkernel(void)
++{
++	unsigned long long total_mem;
++	unsigned long long crash_size, crash_base;
++	int ret;
++
++	total_mem = get_total_mem();
++
++	ret = parse_crashkernel(boot_command_line, total_mem,
++			&crash_size, &crash_base);
++	if (ret == 0 && crash_size > 0) {
++		if (crash_base <= 0) {
++			printk(KERN_INFO "crashkernel reservation failed - "
++					"you have to specify a base address\n");
++			return;
++		}
++
++		if (reserve_bootmem_generic(crash_base, crash_size,
++					BOOTMEM_EXCLUSIVE) < 0) {
++			printk(KERN_INFO "crashkernel reservation failed - "
++					"memory is in use\n");
++			return;
++		}
++
++		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
++				"for crashkernel (System RAM: %ldMB)\n",
++				(unsigned long)(crash_size >> 20),
++				(unsigned long)(crash_base >> 20),
++				(unsigned long)(total_mem >> 20));
++
++		crashk_res.start = crash_base;
++		crashk_res.end   = crash_base + crash_size - 1;
++		insert_resource(&iomem_resource, &crashk_res);
++	}
++}
++#else
++void __init reserve_crashkernel(void)
++{}
++#endif
++
+diff --git a/arch/x86/kernel/setup_32.c b/arch/x86/kernel/setup_32.c
+index 348dc8a..a00b71b 100644
+--- a/arch/x86/kernel/setup_32.c
++++ b/arch/x86/kernel/setup_32.c
+@@ -429,59 +429,6 @@ extern unsigned long __init setup_memory(void);
+ extern void zone_sizes_init(void);
+ #endif /* !CONFIG_NEED_MULTIPLE_NODES */
+ 
+-static inline unsigned long long get_total_mem(void)
+-{
+-	unsigned long long total;
+-
+-	total = max_low_pfn - min_low_pfn;
+-#ifdef CONFIG_HIGHMEM
+-	total += highend_pfn - highstart_pfn;
+-#endif
+-
+-	return total << PAGE_SHIFT;
+-}
+-
+-#ifdef CONFIG_KEXEC
+-static void __init reserve_crashkernel(void)
+-{
+-	unsigned long long total_mem;
+-	unsigned long long crash_size, crash_base;
+-	int ret;
+-
+-	total_mem = get_total_mem();
+-
+-	ret = parse_crashkernel(boot_command_line, total_mem,
+-			&crash_size, &crash_base);
+-	if (ret == 0 && crash_size > 0) {
+-		if (crash_base <= 0) {
+-			printk(KERN_INFO "crashkernel reservation failed - "
+-					"you have to specify a base address\n");
+-			return;
+-		}
+-
+-		if (reserve_bootmem_generic(crash_base, crash_size,
+-					BOOTMEM_EXCLUSIVE) < 0) {
+-			printk(KERN_INFO "crashkernel reservation failed - "
+-					"memory is in use\n");
+-			return;
+-		}
+-
+-		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
+-				"for crashkernel (System RAM: %ldMB)\n",
+-				(unsigned long)(crash_size >> 20),
+-				(unsigned long)(crash_base >> 20),
+-				(unsigned long)(total_mem >> 20));
+-
+-		crashk_res.start = crash_base;
+-		crashk_res.end   = crash_base + crash_size - 1;
+-		insert_resource(&iomem_resource, &crashk_res);
+-	}
+-}
+-#else
+-static inline void __init reserve_crashkernel(void)
+-{}
+-#endif
+-
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 
+ static bool do_relocate_initrd = false;
+diff --git a/arch/x86/kernel/setup_64.c b/arch/x86/kernel/setup_64.c
+index 6ad0fe4..076d61b 100644
+--- a/arch/x86/kernel/setup_64.c
++++ b/arch/x86/kernel/setup_64.c
+@@ -244,46 +244,6 @@ static inline void copy_edd(void)
+ }
+ #endif
+ 
+-#ifdef CONFIG_KEXEC
+-static void __init reserve_crashkernel(void)
+-{
+-	unsigned long long total_mem;
+-	unsigned long long crash_size, crash_base;
+-	int ret;
+-
+-	total_mem = ((unsigned long long)max_low_pfn - min_low_pfn) << PAGE_SHIFT;
+-
+-	ret = parse_crashkernel(boot_command_line, total_mem,
+-			&crash_size, &crash_base);
+-	if (ret == 0 && crash_size) {
+-		if (crash_base <= 0) {
+-			printk(KERN_INFO "crashkernel reservation failed - "
+-					"you have to specify a base address\n");
+-			return;
+-		}
+-
+-		if (reserve_bootmem_generic(crash_base, crash_size,
+-					BOOTMEM_EXCLUSIVE) < 0) {
+-			printk(KERN_INFO "crashkernel reservation failed - "
+-					"memory is in use\n");
+-			return;
+-		}
+-
+-		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
+-				"for crashkernel (System RAM: %ldMB)\n",
+-				(unsigned long)(crash_size >> 20),
+-				(unsigned long)(crash_base >> 20),
+-				(unsigned long)(total_mem >> 20));
+-		crashk_res.start = crash_base;
+-		crashk_res.end   = crash_base + crash_size - 1;
+-		insert_resource(&iomem_resource, &crashk_res);
+-	}
+-}
+-#else
+-static inline void __init reserve_crashkernel(void)
+-{}
+-#endif
+-
+ /* Current gdt points %fs at the "master" per-cpu area: after this,
+  * it's on the real one. */
+ void switch_to_new_gdt(void)
+diff --git a/include/asm-x86/setup.h b/include/asm-x86/setup.h
+index e14b6e7..b434bdd 100644
+--- a/include/asm-x86/setup.h
++++ b/include/asm-x86/setup.h
+@@ -8,6 +8,9 @@
+ /* Interrupt control for vSMPowered x86_64 systems */
+ void vsmp_init(void);
+ 
++/* Crashkernel reservation */
++void reserve_crashkernel(void);
++
+ #ifndef CONFIG_PARAVIRT
+ #define paravirt_post_allocator_init()	do {} while (0)
+ #endif
+-- 
+1.5.4.5
 
-applied to tip/x86/urgent, thanks Bernhard.
-
-	Ingo
 
 _______________________________________________
 kexec mailing list
