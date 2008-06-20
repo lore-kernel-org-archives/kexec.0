@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mx1.suse.de ([195.135.220.2])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K9iyO-0001bn-Ja
+	id 1K9iyP-0001bm-06
 	for kexec@lists.infradead.org; Fri, 20 Jun 2008 15:56:25 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH 3/3] Limit E820 map when a user-defined memory map is specified
-Date: Fri, 20 Jun 2008 17:57:00 +0200
-Message-Id: <1213977420-1555-4-git-send-email-bwalle@suse.de>
-In-Reply-To: <1213977420-1555-1-git-send-email-bwalle@suse.de>
-References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+Subject: Introduce userspace interface for Firmware-provided memory map
+Date: Fri, 20 Jun 2008 17:56:57 +0200
+Message-Id: <1213977420-1555-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,78 +23,47 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-This patch brings back limiting of the E820 map when a user-defined
-E820 map is specified. While the behaviour of i386 (32 bit) was to limit
-the E820 map (and /proc/iomem), the behaviour of x86-64 (64 bit) was not to
-limit.
+This patch (as request for comments) introduces a new userspace interface
+/proc/firmware_mem that provides the unfiltered view of the BIOS on
+memory configuration. That's usable for two reasons:
 
-That patch limits the E820 map again for both x86 architectures.
+ 1) Debugging (yes, the E820 memory is printed in kernel ring buffer, but that's
+    not the case for all platforms, on IA64 you have to enable some magic define
+    to print the EFI memory map, for example),
+ 
+ 2) Kexec. When the user or the system uses a special command line to modify the
+    memory configuration, kexec still needs a method to get the original memory
+    map.  While the filtered view is useful for generating ELF core headers for
+    crashdumps, the unfiltered view is necessary to boot the next kernel without
+    the "limitations" the original kernel has.
 
-Code was tested for compilation and booting on a 32 bit and 64 bit system.
+We had the discussion to add iomem_used on kexec mailing list. However, I think
+it's better to let /proc/iomem represent the *filtered* (i.e. "used") view of
+the I/O resources and introduce a new interface for the *unfiltered* view.
+There are two reasons:
+
+ 1) On i386 (the oldest architectures), /proc/iomem always represented the
+    *filtered* view (i.e. "mem" parameter was also visible in /proc/iomem).
+    I think we should not change the semantics of an interface without a reason.
+ 
+ 2) /proc/iomem_used would it make necessary to duplicate all registration between
+    /proc/iomem and /proc/iomem_used. Because currently the resource root
+    is exported and used everywhere in the kernel source, that would make
+    changes of the whole resource infrastructure necessary if code duplication
+    should be avoided.
+
+Maybe you think that /proc/firmware_mem is not the right place to export that.
+I don't know, I also don't care that much about the naming or the way to export
+that. So, please advise me if you agree that it's ok for kexec to export an
+unfiltered view of the memory map.
+
+The patch has been tested on i386 and x86_64.
+
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- arch/x86/kernel/e820.c |   30 ++++++++++++++++++++++++++++++
- 1 files changed, 30 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index f5b1736..2e7d385 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -934,6 +934,33 @@ static void early_panic(char *msg)
- 	panic(msg);
- }
- 
-+void __init e820_limit_regions(unsigned long long size)
-+{
-+	unsigned long long current_addr;
-+	int i;
-+
-+	for (i = 0; i < e820.nr_map; i++) {
-+		current_addr = e820.map[i].addr + e820.map[i].size;
-+		if (current_addr < size)
-+			continue;
-+
-+		if (e820.map[i].type != E820_RAM)
-+			continue;
-+
-+		if (e820.map[i].addr >= size) {
-+			/*
-+			 * This region starts past the end of the
-+			 * requested size, skip it completely.
-+			 */
-+			e820.nr_map = i;
-+		} else {
-+			e820.nr_map = i + 1;
-+			e820.map[i].size -= current_addr - size;
-+		}
-+		return;
-+	}
-+}
-+
- /* "mem=nopentium" disables the 4MB page tables. */
- static int __init parse_memopt(char *p)
- {
-@@ -951,6 +978,8 @@ static int __init parse_memopt(char *p)
- 
- 	mem_size = memparse(p, &p);
- 	end_user_pfn = mem_size>>PAGE_SHIFT;
-+	e820_limit_regions(mem_size);
-+
- 	return 0;
- }
- early_param("mem", parse_memopt);
-@@ -995,6 +1024,7 @@ static int __init parse_memmap_opt(char *p)
- 		e820_add_region(start_at, mem_size, E820_RESERVED);
- 	} else {
- 		end_user_pfn = (mem_size >> PAGE_SHIFT);
-+		e820_limit_regions(mem_size);
- 	}
- 	return *p == '\0' ? 0 : -EINVAL;
- }
--- 
-1.5.4.5
+
 
 
 _______________________________________________
