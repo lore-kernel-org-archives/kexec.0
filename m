@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K9izw-0001jh-R7
-	for kexec@lists.infradead.org; Fri, 20 Jun 2008 15:58:01 +0000
-Date: Fri, 20 Jun 2008 17:58:37 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1K9mao-0004uI-Em
+	for kexec@lists.infradead.org; Fri, 20 Jun 2008 19:48:18 +0000
+Date: Fri, 20 Jun 2008 15:42:00 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: Introduce userspace interface for Firmware-provided memory map
-Message-ID: <20080620175837.5d4d8610@halley.suse.de>
-In-Reply-To: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+Message-ID: <20080620194200.GC21235@redhat.com>
 References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1213977420-1555-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +24,19 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Bernhard Walle [2008-06-20 17:56]:
->
-> The patch has been tested on i386 and x86_64.
+On Fri, Jun 20, 2008 at 05:56:57PM +0200, Bernhard Walle wrote:
+> This patch (as request for comments) introduces a new userspace interface
+> /proc/firmware_mem that provides the unfiltered view of the BIOS on
+> memory configuration. That's usable for two reasons:
+> 
 
-Forgot to mention that the patch is against linux-2.6/tip/master.
+How about /proc/firmware_memmap. This is little longish but probably more
+clear in intent.
 
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
