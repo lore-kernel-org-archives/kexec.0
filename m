@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K9gon-0003Ql-Tv
-	for kexec@lists.infradead.org; Fri, 20 Jun 2008 13:38:23 +0000
-Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id 1804145C09
-	for <kexec@lists.infradead.org>; Fri, 20 Jun 2008 15:38:16 +0200 (CEST)
-From: Bernhard Walle <bwalle@suse.de>(by way of Bernhard Walle
-	<bwalle@suse.de>)
-Date: Fri, 20 Jun 2008 15:38:22 +0200
-Message-Id: <1213969102-17400-1-git-send-email-bwalle@suse.de>
-Subject: [PATCH] Unify crashkernel reservation for 32 and 64 bit
-Resent-Message-ID: <20080620153853.6c368b8c@halley.suse.de>
-Resent-To: kexec@lists.infradead.org
+	id 1K9iyO-0001bn-Ja
+	for kexec@lists.infradead.org; Fri, 20 Jun 2008 15:56:25 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH 3/3] Limit E820 map when a user-defined memory map is specified
+Date: Fri, 20 Jun 2008 17:57:00 +0200
+Message-Id: <1213977420-1555-4-git-send-email-bwalle@suse.de>
+In-Reply-To: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,233 +22,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mingo@elte.hu
-Cc: Bernhard Walle <bwalle@suse.de>, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-This patch moves the reserve_crashkernel() to setup.c and removes the
-architecture-specific version. Both versions were more or less the same.
+This patch brings back limiting of the E820 map when a user-defined
+E820 map is specified. While the behaviour of i386 (32 bit) was to limit
+the E820 map (and /proc/iomem), the behaviour of x86-64 (64 bit) was not to
+limit.
+
+That patch limits the E820 map again for both x86 architectures.
+
+Code was tested for compilation and booting on a 32 bit and 64 bit system.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- arch/x86/kernel/setup.c    |   61 ++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kernel/setup_32.c |   53 --------------------------------------
- arch/x86/kernel/setup_64.c |   40 ----------------------------
- include/asm-x86/setup.h    |    3 ++
- 4 files changed, 64 insertions(+), 93 deletions(-)
+ arch/x86/kernel/e820.c |   30 ++++++++++++++++++++++++++++++
+ 1 files changed, 30 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 542ff3c..915aa13 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -3,6 +3,7 @@
- #include <linux/init.h>
- #include <linux/bootmem.h>
- #include <linux/percpu.h>
-+#include <linux/kexec.h>
- #include <asm/smp.h>
- #include <asm/percpu.h>
- #include <asm/sections.h>
-@@ -11,6 +12,7 @@
- #include <asm/topology.h>
- #include <asm/mpspec.h>
- #include <asm/apicdef.h>
-+#include <asm/highmem.h>
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index f5b1736..2e7d385 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -934,6 +934,33 @@ static void early_panic(char *msg)
+ 	panic(msg);
+ }
  
- #ifdef CONFIG_X86_LOCAL_APIC
- unsigned int num_processors;
-@@ -404,3 +406,62 @@ EXPORT_SYMBOL(node_to_cpumask);
- #endif /* CONFIG_DEBUG_PER_CPU_MAPS */
- 
- #endif /* X86_64_NUMA */
-+
-+
-+/*
-+ * --------- Crashkernel reservation ------------------------------
-+ */
-+
-+static inline unsigned long long get_total_mem(void)
++void __init e820_limit_regions(unsigned long long size)
 +{
-+	unsigned long long total;
++	unsigned long long current_addr;
++	int i;
 +
-+	total = max_low_pfn - min_low_pfn;
-+#ifdef CONFIG_HIGHMEM
-+	total += highend_pfn - highstart_pfn;
-+#endif
++	for (i = 0; i < e820.nr_map; i++) {
++		current_addr = e820.map[i].addr + e820.map[i].size;
++		if (current_addr < size)
++			continue;
 +
-+	return total << PAGE_SHIFT;
-+}
++		if (e820.map[i].type != E820_RAM)
++			continue;
 +
-+#ifdef CONFIG_KEXEC
-+void __init reserve_crashkernel(void)
-+{
-+	unsigned long long total_mem;
-+	unsigned long long crash_size, crash_base;
-+	int ret;
-+
-+	total_mem = get_total_mem();
-+
-+	ret = parse_crashkernel(boot_command_line, total_mem,
-+			&crash_size, &crash_base);
-+	if (ret == 0 && crash_size > 0) {
-+		if (crash_base <= 0) {
-+			printk(KERN_INFO "crashkernel reservation failed - "
-+					"you have to specify a base address\n");
-+			return;
++		if (e820.map[i].addr >= size) {
++			/*
++			 * This region starts past the end of the
++			 * requested size, skip it completely.
++			 */
++			e820.nr_map = i;
++		} else {
++			e820.nr_map = i + 1;
++			e820.map[i].size -= current_addr - size;
 +		}
-+
-+		if (reserve_bootmem_generic(crash_base, crash_size,
-+					BOOTMEM_EXCLUSIVE) < 0) {
-+			printk(KERN_INFO "crashkernel reservation failed - "
-+					"memory is in use\n");
-+			return;
-+		}
-+
-+		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
-+				"for crashkernel (System RAM: %ldMB)\n",
-+				(unsigned long)(crash_size >> 20),
-+				(unsigned long)(crash_base >> 20),
-+				(unsigned long)(total_mem >> 20));
-+
-+		crashk_res.start = crash_base;
-+		crashk_res.end   = crash_base + crash_size - 1;
-+		insert_resource(&iomem_resource, &crashk_res);
++		return;
 +	}
 +}
-+#else
-+void __init reserve_crashkernel(void)
-+{}
-+#endif
 +
-diff --git a/arch/x86/kernel/setup_32.c b/arch/x86/kernel/setup_32.c
-index 348dc8a..a00b71b 100644
---- a/arch/x86/kernel/setup_32.c
-+++ b/arch/x86/kernel/setup_32.c
-@@ -429,59 +429,6 @@ extern unsigned long __init setup_memory(void);
- extern void zone_sizes_init(void);
- #endif /* !CONFIG_NEED_MULTIPLE_NODES */
+ /* "mem=nopentium" disables the 4MB page tables. */
+ static int __init parse_memopt(char *p)
+ {
+@@ -951,6 +978,8 @@ static int __init parse_memopt(char *p)
  
--static inline unsigned long long get_total_mem(void)
--{
--	unsigned long long total;
--
--	total = max_low_pfn - min_low_pfn;
--#ifdef CONFIG_HIGHMEM
--	total += highend_pfn - highstart_pfn;
--#endif
--
--	return total << PAGE_SHIFT;
--}
--
--#ifdef CONFIG_KEXEC
--static void __init reserve_crashkernel(void)
--{
--	unsigned long long total_mem;
--	unsigned long long crash_size, crash_base;
--	int ret;
--
--	total_mem = get_total_mem();
--
--	ret = parse_crashkernel(boot_command_line, total_mem,
--			&crash_size, &crash_base);
--	if (ret == 0 && crash_size > 0) {
--		if (crash_base <= 0) {
--			printk(KERN_INFO "crashkernel reservation failed - "
--					"you have to specify a base address\n");
--			return;
--		}
--
--		if (reserve_bootmem_generic(crash_base, crash_size,
--					BOOTMEM_EXCLUSIVE) < 0) {
--			printk(KERN_INFO "crashkernel reservation failed - "
--					"memory is in use\n");
--			return;
--		}
--
--		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
--				"for crashkernel (System RAM: %ldMB)\n",
--				(unsigned long)(crash_size >> 20),
--				(unsigned long)(crash_base >> 20),
--				(unsigned long)(total_mem >> 20));
--
--		crashk_res.start = crash_base;
--		crashk_res.end   = crash_base + crash_size - 1;
--		insert_resource(&iomem_resource, &crashk_res);
--	}
--}
--#else
--static inline void __init reserve_crashkernel(void)
--{}
--#endif
--
- #ifdef CONFIG_BLK_DEV_INITRD
- 
- static bool do_relocate_initrd = false;
-diff --git a/arch/x86/kernel/setup_64.c b/arch/x86/kernel/setup_64.c
-index 6ad0fe4..076d61b 100644
---- a/arch/x86/kernel/setup_64.c
-+++ b/arch/x86/kernel/setup_64.c
-@@ -244,46 +244,6 @@ static inline void copy_edd(void)
+ 	mem_size = memparse(p, &p);
+ 	end_user_pfn = mem_size>>PAGE_SHIFT;
++	e820_limit_regions(mem_size);
++
+ 	return 0;
  }
- #endif
- 
--#ifdef CONFIG_KEXEC
--static void __init reserve_crashkernel(void)
--{
--	unsigned long long total_mem;
--	unsigned long long crash_size, crash_base;
--	int ret;
--
--	total_mem = ((unsigned long long)max_low_pfn - min_low_pfn) << PAGE_SHIFT;
--
--	ret = parse_crashkernel(boot_command_line, total_mem,
--			&crash_size, &crash_base);
--	if (ret == 0 && crash_size) {
--		if (crash_base <= 0) {
--			printk(KERN_INFO "crashkernel reservation failed - "
--					"you have to specify a base address\n");
--			return;
--		}
--
--		if (reserve_bootmem_generic(crash_base, crash_size,
--					BOOTMEM_EXCLUSIVE) < 0) {
--			printk(KERN_INFO "crashkernel reservation failed - "
--					"memory is in use\n");
--			return;
--		}
--
--		printk(KERN_INFO "Reserving %ldMB of memory at %ldMB "
--				"for crashkernel (System RAM: %ldMB)\n",
--				(unsigned long)(crash_size >> 20),
--				(unsigned long)(crash_base >> 20),
--				(unsigned long)(total_mem >> 20));
--		crashk_res.start = crash_base;
--		crashk_res.end   = crash_base + crash_size - 1;
--		insert_resource(&iomem_resource, &crashk_res);
--	}
--}
--#else
--static inline void __init reserve_crashkernel(void)
--{}
--#endif
--
- /* Current gdt points %fs at the "master" per-cpu area: after this,
-  * it's on the real one. */
- void switch_to_new_gdt(void)
-diff --git a/include/asm-x86/setup.h b/include/asm-x86/setup.h
-index e14b6e7..b434bdd 100644
---- a/include/asm-x86/setup.h
-+++ b/include/asm-x86/setup.h
-@@ -8,6 +8,9 @@
- /* Interrupt control for vSMPowered x86_64 systems */
- void vsmp_init(void);
- 
-+/* Crashkernel reservation */
-+void reserve_crashkernel(void);
-+
- #ifndef CONFIG_PARAVIRT
- #define paravirt_post_allocator_init()	do {} while (0)
- #endif
+ early_param("mem", parse_memopt);
+@@ -995,6 +1024,7 @@ static int __init parse_memmap_opt(char *p)
+ 		e820_add_region(start_at, mem_size, E820_RESERVED);
+ 	} else {
+ 		end_user_pfn = (mem_size >> PAGE_SHIFT);
++		e820_limit_regions(mem_size);
+ 	}
+ 	return *p == '\0' ? 0 : -EINVAL;
+ }
 -- 
 1.5.4.5
 
