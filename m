@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1K9iyP-0001bm-06
+	id 1K9iyO-0001bo-Jg
 	for kexec@lists.infradead.org; Fri, 20 Jun 2008 15:56:25 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Introduce userspace interface for Firmware-provided memory map
-Date: Fri, 20 Jun 2008 17:56:57 +0200
-Message-Id: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH 1/3] Introduce /proc/firmware_mem
+Date: Fri, 20 Jun 2008 17:56:58 +0200
+Message-Id: <1213977420-1555-2-git-send-email-bwalle@suse.de>
+In-Reply-To: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +25,121 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-This patch (as request for comments) introduces a new userspace interface
-/proc/firmware_mem that provides the unfiltered view of the BIOS on
-memory configuration. That's usable for two reasons:
+/proc/iomem contains mostly the view of the system about the memory resources.
+However, when using kexec, it's necessary to get also the firmware view, i.e.
+the original memory map the kernel got passed before applying command line
+options like exactmap or mem=<value>. kexec needs both views:
 
- 1) Debugging (yes, the E820 memory is printed in kernel ring buffer, but that's
-    not the case for all platforms, on IA64 you have to enable some magic define
-    to print the EFI memory map, for example),
- 
- 2) Kexec. When the user or the system uses a special command line to modify the
-    memory configuration, kexec still needs a method to get the original memory
-    map.  While the filtered view is useful for generating ELF core headers for
-    crashdumps, the unfiltered view is necessary to boot the next kernel without
-    the "limitations" the original kernel has.
+ a) When another kernel is booted, then the firmware view is needed. If you
+    boot your original kernel with mem=3G, then you don't necessarily expect
+    thew kexec'd kernel also to have a limited amount of memory.
 
-We had the discussion to add iomem_used on kexec mailing list. However, I think
-it's better to let /proc/iomem represent the *filtered* (i.e. "used") view of
-the I/O resources and introduce a new interface for the *unfiltered* view.
-There are two reasons:
+ b) When the ELF core headers for kernel dumps are generated, kexec needs the
+    kernel view about memory resources because it doesn't make sense to dump
+    memory that never has been used.
 
- 1) On i386 (the oldest architectures), /proc/iomem always represented the
-    *filtered* view (i.e. "mem" parameter was also visible in /proc/iomem).
-    I think we should not change the semantics of an interface without a reason.
- 
- 2) /proc/iomem_used would it make necessary to duplicate all registration between
-    /proc/iomem and /proc/iomem_used. Because currently the resource root
-    is exported and used everywhere in the kernel source, that would make
-    changes of the whole resource infrastructure necessary if code duplication
-    should be avoided.
-
-Maybe you think that /proc/firmware_mem is not the right place to export that.
-I don't know, I also don't care that much about the naming or the way to export
-that. So, please advise me if you agree that it's ok for kexec to export an
-unfiltered view of the memory map.
-
-The patch has been tested on i386 and x86_64.
-
+The patch only creates the interface and the resource tree. It has to be filled
+by architecture code.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ include/linux/ioport.h |    1 +
+ kernel/resource.c      |   39 +++++++++++++++++++++++++++++++--------
+ 2 files changed, 32 insertions(+), 8 deletions(-)
 
-
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index c6801bf..4af561a 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -100,6 +100,7 @@ struct resource_list {
+ /* PC/ISA/whatever - the normal PC address spaces: IO and memory */
+ extern struct resource ioport_resource;
+ extern struct resource iomem_resource;
++extern struct resource firmware_mem_resource;
+ 
+ extern int request_resource(struct resource *root, struct resource *new);
+ extern int release_resource(struct resource *new);
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 74af2d7..dee58a7 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -36,6 +36,15 @@ struct resource iomem_resource = {
+ };
+ EXPORT_SYMBOL(iomem_resource);
+ 
++struct resource firmware_mem_resource = {
++	.name	= "Firmware memory map",
++	.start	= 0,
++	.end	= -1,
++	.flags	= IORESOURCE_MEM,
++};
++EXPORT_SYMBOL(firmware_mem_resource);
++
++
+ static DEFINE_RWLOCK(resource_lock);
+ 
+ #ifdef CONFIG_PROC_FS
+@@ -95,24 +104,30 @@ static const struct seq_operations resource_op = {
+ 	.show	= r_show,
+ };
+ 
+-static int ioports_open(struct inode *inode, struct file *file)
++static int resource_open(struct inode *inode, struct file *file,
++	                 struct resource *resource)
+ {
+ 	int res = seq_open(file, &resource_op);
+ 	if (!res) {
+ 		struct seq_file *m = file->private_data;
+-		m->private = &ioport_resource;
++		m->private = resource;
+ 	}
+ 	return res;
+ }
+ 
++static int ioports_open(struct inode *inode, struct file *file)
++{
++	return resource_open(inode, file, &ioport_resource);
++}
++
+ static int iomem_open(struct inode *inode, struct file *file)
+ {
+-	int res = seq_open(file, &resource_op);
+-	if (!res) {
+-		struct seq_file *m = file->private_data;
+-		m->private = &iomem_resource;
+-	}
+-	return res;
++	return resource_open(inode, file, &iomem_resource);
++}
++
++static int firmware_mem_open(struct inode *inode, struct file *file)
++{
++	return resource_open(inode, file, &firmware_mem_resource);
+ }
+ 
+ static const struct file_operations proc_ioports_operations = {
+@@ -129,10 +144,18 @@ static const struct file_operations proc_iomem_operations = {
+ 	.release	= seq_release,
+ };
+ 
++static const struct file_operations proc_firmware_mem_operations = {
++	.open		= firmware_mem_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= seq_release,
++};
++
+ static int __init ioresources_init(void)
+ {
+ 	proc_create("ioports", 0, NULL, &proc_ioports_operations);
+ 	proc_create("iomem", 0, NULL, &proc_iomem_operations);
++	proc_create("firmware_mem", 0, NULL, &proc_firmware_mem_operations);
+ 	return 0;
+ }
+ __initcall(ioresources_init);
+-- 
+1.5.4.5
 
 
 _______________________________________________
