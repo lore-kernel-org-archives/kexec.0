@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KAVjA-00063r-67
-	for kexec@lists.infradead.org; Sun, 22 Jun 2008 19:59:56 +0000
-Date: Sun, 22 Jun 2008 21:59:53 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: Introduce userspace interface for Firmware-provided memory map
-Message-ID: <20080622215953.214419b0@kopernikus.site>
-In-Reply-To: <485C149E.1000807@kernel.org>
+Received: from py-out-1112.google.com ([64.233.166.181])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KAVuW-0004qB-HP
+	for kexec@lists.infradead.org; Sun, 22 Jun 2008 20:11:40 +0000
+Received: by py-out-1112.google.com with SMTP id a73so1406247pye.2
+	for <kexec@lists.infradead.org>; Sun, 22 Jun 2008 13:11:39 -0700 (PDT)
+Message-ID: <86802c440806221311q5a65cdb6me24b45de5657359c@mail.gmail.com>
+Date: Sun, 22 Jun 2008 13:11:38 -0700
+From: "Yinghai Lu" <yhlu.kernel@gmail.com>
+Subject: Re: [PATCH 3/3] Limit E820 map when a user-defined memory map is
+	specified
+In-Reply-To: <20080622215635.7a0ebaae@kopernikus.site>
+MIME-Version: 1.0
+Content-Disposition: inline
 References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
-	<20080620194200.GC21235@redhat.com> <485C149E.1000807@kernel.org>
-Mime-Version: 1.0
+	<1213977420-1555-4-git-send-email-bwalle@suse.de>
+	<86802c440806201334s30cbc685se44326812841fdd2@mail.gmail.com>
+	<20080622215635.7a0ebaae@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +29,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@kernel.org>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-Hi,
-
-* "H. Peter Anvin" <hpa@kernel.org> [2008-06-20 13:35]:
+On Sun, Jun 22, 2008 at 12:56 PM, Bernhard Walle <bwalle@suse.de> wrote:
+> * "Yinghai Lu" <yhlu.kernel@gmail.com> [2008-06-20 13:34]:
+>>
+>> any problem that you encountered without this patch?
 >
-> Vivek Goyal wrote:
-> > On Fri, Jun 20, 2008 at 05:56:57PM +0200, Bernhard Walle wrote:
-> >> This patch (as request for comments) introduces a new userspace interface
-> >> /proc/firmware_mem that provides the unfiltered view of the BIOS on
-> >> memory configuration. That's usable for two reasons:
-> > 
-> > How about /proc/firmware_memmap. This is little longish but probably more
-> > clear in intent.
-> 
-> Perhaps even /proc/firmware/memmap (or /sys/firmware/memmap/...).  I 
-> realize introducing a new directory is annoying, but it's a namespace 
-> that is likely to have other users.
+> Sorry, forgot to answer that question.
+>
+> Yes, if you use mem=3G and take a dump, kexec builds the ELF core
+> headers for the full memory size, which means that the dump is as large
+> as the physical memory of the machine is, which doesn't make sense.
 
-Since /sys/firmware is already used by ACPI and EDD, I think that's
-quite a good idea! Maybe we should also export the raw E820 or EFI
-memory map there. Just like EDD.
+can we use e820_update_range instead? so e820_setup_gap still can get
+correct value?
 
-I'll send a new patch.
-
-
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+YH
 
 _______________________________________________
 kexec mailing list
