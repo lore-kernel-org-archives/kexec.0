@@ -1,22 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from py-out-1112.google.com ([64.233.166.181])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KAVuW-0004qB-HP
-	for kexec@lists.infradead.org; Sun, 22 Jun 2008 20:11:40 +0000
-Received: by py-out-1112.google.com with SMTP id a73so1406247pye.2
-	for <kexec@lists.infradead.org>; Sun, 22 Jun 2008 13:11:39 -0700 (PDT)
-Message-ID: <86802c440806221311q5a65cdb6me24b45de5657359c@mail.gmail.com>
-Date: Sun, 22 Jun 2008 13:11:38 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH 3/3] Limit E820 map when a user-defined memory map is
-	specified
-In-Reply-To: <20080622215635.7a0ebaae@kopernikus.site>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
-	<1213977420-1555-4-git-send-email-bwalle@suse.de>
-	<86802c440806201334s30cbc685se44326812841fdd2@mail.gmail.com>
-	<20080622215635.7a0ebaae@kopernikus.site>
+Received: from e32.co.us.ibm.com ([32.97.110.150])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KAmnY-0004sB-R6
+	for kexec@lists.infradead.org; Mon, 23 Jun 2008 14:13:39 +0000
+Received: from d03relay05.boulder.ibm.com (d03relay05.boulder.ibm.com
+	[9.17.195.107])
+	by e32.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m5NE8k55031673
+	for <kexec@lists.infradead.org>; Mon, 23 Jun 2008 10:08:46 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay05.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m5NEDEGq149014
+	for <kexec@lists.infradead.org>; Mon, 23 Jun 2008 08:13:16 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m5NED70w012726
+	for <kexec@lists.infradead.org>; Mon, 23 Jun 2008 08:13:13 -0600
+Subject: [RFC] [KDUMP] [PROPOSED WORK] kdump on Xen hypervisor and guests,
+	more tests for utilities, like makedumpfile, mkdumprd, kexec etc
+From: Subrata Modak <subrata@linux.vnet.ibm.com>
+Date: Mon, 23 Jun 2008 19:42:50 +0530
+Message-Id: <1214230370.4719.53.camel@subratamodak.linux.ibm.com>
+Mime-Version: 1.0
+Reply-To: subrata@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,24 +34,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: ltp-list <ltp-list@lists.sourceforge.net>
+Cc: "poornima.nayak" <poornima.nayak@in.ibm.com>, sachinp <sachinp@linux.vnet.ibm.com>, Mike Frysinger <vapier@gentoo.org>, "iranna.ankad" <iranna.ankad@in.ibm.com>, Cai Qian <qcai@redhat.com>, kexec@lists.infradead.org, Masatake YAMATO <yamato@redhat.com>, maknayak <maknayak@in.ibm.com>, risrajak <risrajak@in.ibm.com>, hbabu@us.ibm.com, Patrick Kirsch <pkirsch@suse.de>, vgoyal@redhat.com, Jeff Burke <jburke@redhat.com>, inddurai <inddurai@in.ibm.com>, risrajak <risrajak@linux.vnet.ibm.com>
 
-On Sun, Jun 22, 2008 at 12:56 PM, Bernhard Walle <bwalle@suse.de> wrote:
-> * "Yinghai Lu" <yhlu.kernel@gmail.com> [2008-06-20 13:34]:
->>
->> any problem that you encountered without this patch?
->
-> Sorry, forgot to answer that question.
->
-> Yes, if you use mem=3G and take a dump, kexec builds the ELF core
-> headers for the full memory size, which means that the dump is as large
-> as the physical memory of the machine is, which doesn't make sense.
+Hi,
 
-can we use e820_update_range instead? so e820_setup_gap still can get
-correct value?
+Cai has proposed to work on the above LTP-KDUMP test cases
+enrichment/enhancements. Please let us know about your views on the
+same. We encourage people to review his proposal and the corresponding
+upcoming test cases. I am going to put this soon on the LTP-KDUMP plan
+document.
 
-YH
+http://ltp.cvs.sourceforge.net/ltp/ltp/testcases/kdump/doc/TEST_PLAN.txt,
+
+Regards--
+Subrata
+
+..................................
+
+Here is my first draft plan of Kexec/Kdump tests enhancement sorted by
+priorities. I would like to add them as many as possible.
+
+== filtered vmcore utilities ==
+- in different compressed levels, verify the vmcore with the correct
+  layout. 
+- verify it in flat file or ELF formats from a network host.
+
+== analyse vmcore utilities ==
+- GDB
+- crash with better error detecting.
+- crash to analyse Hypervisor and Dom0 Kernel.
+
+== test scripts ==
+- timestamp information for crash was triggered, vmcore was generated,
+  and vmcore was verified.
+- aim to 100% automation, and reduce manual setup.
+- tidy up scripts.
+
+== crash scenarios ==
+- SDINT switch for ia64 if possible.
+- Hypervisor crash for Virtualization.
+- crashes on full- and para-virt guests.
+
+== fix bugs in existing tests ==
+- printk LKDTM module can hang the second Kernel.
+
+== kdump configurations and init script ==
+- capture vmcore after init runs.
+- rpm pre- and post-scripts
+- kdump_pre and kdump_post directives
+
+== increase coverages for new kexec/kdump development efforts ==
+- new reserved region syntax in Kernel.
+
+CaiQian
+
 
 _______________________________________________
 kexec mailing list
