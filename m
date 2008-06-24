@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBmcy-0000tX-SG
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 08:14:49 +0000
-Date: Thu, 26 Jun 2008 10:15:26 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
-Message-ID: <20080626101526.780af0c0@halley.suse.de>
-In-Reply-To: <20080625224301.GE32344@redhat.com>
-References: <1214423826-12628-1-git-send-email-bwalle@suse.de>
-	<1214423826-12628-2-git-send-email-bwalle@suse.de>
-	<20080625224301.GE32344@redhat.com>
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBmh1-0006zy-GZ
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 08:19:04 +0000
+Date: Tue, 24 Jun 2008 20:28:17 +0200
+From: Pavel Machek <pavel@suse.cz>
+Subject: Re: [PATCH 2/3] Use /proc/firmware_mem for x86 (e820)
+Message-ID: <20080624182817.GI5642@ucw.cz>
+References: <1213977420-1555-1-git-send-email-bwalle@suse.de>
+	<1213977420-1555-3-git-send-email-bwalle@suse.de>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1213977420-1555-3-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com
+To: Bernhard Walle <bwalle@suse.de>
+Cc: Greg KH <greg@kroah.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-* Vivek Goyal [2008-06-25 18:43]:
->
-> Thanks for the patch. Couple of thoughts.
-> 
-> Do we really need another CONFIG option (CONFIG_FIRMWARE_MEMMAP)? To,
-> me this does not seem to be a big chunk of code at the same time I am
-> assuming that most of the people will use it (because of kexec). So
-> probably, it might not make lot of sense to put additional CONFIG option.
+Hi!
 
-Agreed.
+> This patch copies the E820 map very early, before the kernel applies various
+> operations. That copy is used later to register only the BIOS-provided E820
+> map later in the resource tree for /proc/firmware_mem.
 
-> [..]
-> > +#include <linux/string.h>
-> > +#include <linux/firmware-map.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/types.h>
-> > +#include <linux/bootmem.h>
-> > +
-> > +/*
-> > + * String representation of enum firmware_map_type from
-> > + * <linux/firmware-map.h>.
-> > + */
-> > +const char *type_to_string_map[] = {
-> > +	"RAM",				/* MAP_RAM */
-> > +	"Reserved",			/* MAP_RESERVED */
-> > +	"ACPI Tables",			/* MAP_ACPI */
-> > +	"Non-volatile Storage",		/* MAP_NVS */
-> > +};
-> > +
-> 
-> How about leaving the decision of memory type on arch dependent code? How
-> about letting arch code pass you an string while adding entry and that
-> string will contain the type of memory. The way request_resource() is
-> implemented. 
+It is not process related -> it should not go to /proc. Talk to Greg.
 
-Also agreed, see the resent patch.
+							Pavel
 
-
-Bernhard
 -- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
