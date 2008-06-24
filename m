@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBDbZ-0003Gj-W4
-	for kexec@lists.infradead.org; Tue, 24 Jun 2008 18:51:02 +0000
-Date: Tue, 24 Jun 2008 20:50:59 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBDcx-0003LB-I3
+	for kexec@lists.infradead.org; Tue, 24 Jun 2008 18:52:28 +0000
+Date: Tue, 24 Jun 2008 14:52:25 -0400
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: how to cross compile kexec for 64b x86_64 on a 32b x86
-Message-ID: <20080624205059.4218f727@kopernikus.site>
-In-Reply-To: <df1bdeb10806241146l6af052an3e9dd3305eb36ca5@mail.gmail.com>
+Message-ID: <20080624185225.GA21408@hmsendeavour.rdu.redhat.com>
 References: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
-	<20080624201407.2cf464ed@kopernikus.site>
-	<df1bdeb10806241146l6af052an3e9dd3305eb36ca5@mail.gmail.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,36 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Srinivas Dharmasanam <the.srinivas@gmail.com>
+To: Srinivas Murthy <codevana@gmail.com>
 Cc: kexec@lists.infradead.org
 
-* "Srinivas Dharmasanam" <the.srinivas@gmail.com> [2008-06-24 11:46]:
->
-> Tried that; it fails saying:
+On Tue, Jun 24, 2008 at 11:11:36AM -0700, Srinivas Murthy wrote:
+> Hi,
+> 	I need to cross-compile kexec-tools-1.101 for a x86_64 architecture
+> platform on a 32b x86.
 > 
-> checking for gcc...
-> /gcc-3.4.5-glibc-2.3.6/x86_64-unknown-linux-gnu/bin/x86_64-unknown-linux-gnu-gcc
-> checking for C compiler default output file name... a.out
-> checking whether the C compiler works... configure: error: cannot run
-> C compiled programs.
-> If you meant to cross compile, use `--host'.
-> See `config.log' for more details.
+> 	I didn't see any instructions in the configure, etc. scripts for doing this.
+> 
+> 	Can you please let me know how to do this?
+> 
+Mostly, you can get away with adding -m32 to the top level CFLAGS in the
+makefile and running setarch i386 in the shell where you run make
 
-Ah, right, try
+Neil
 
-  ./configure \
-      --host=x86_64-unknown-linux-gnu
-      --build=x86_64-unknown-linux-gnu
+> Thanks.
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-> I dont see a conftest.c file anywhere.
-
-Read config.log. It's "inline", the conftest.c gets deleted on very
-check.
-
-
-Bernhard
 -- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+/***************************************************
+ *Neil Horman
+ *Software Engineer
+ *Red Hat, Inc.
+ *nhorman@redhat.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
