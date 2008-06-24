@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.246])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBCzT-0007uP-42
-	for kexec@lists.infradead.org; Tue, 24 Jun 2008 18:11:39 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so10699828rvf.42
-	for <kexec@lists.infradead.org>; Tue, 24 Jun 2008 11:11:37 -0700 (PDT)
-Message-ID: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
-Date: Tue, 24 Jun 2008 11:11:36 -0700
-From: "Srinivas Murthy" <codevana@gmail.com>
-Subject: how to cross compile kexec for 64b x86_64 on a 32b x86
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBD1v-00087z-F4
+	for kexec@lists.infradead.org; Tue, 24 Jun 2008 18:14:12 +0000
+Date: Tue, 24 Jun 2008 20:14:07 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: how to cross compile kexec for 64b x86_64 on a 32b x86
+Message-ID: <20080624201407.2cf464ed@kopernikus.site>
+In-Reply-To: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
+References: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,17 +22,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Srinivas Murthy <codevana@gmail.com>
+Cc: kexec@lists.infradead.org
 
-Hi,
-	I need to cross-compile kexec-tools-1.101 for a x86_64 architecture
-platform on a 32b x86.
+* "Srinivas Murthy" <codevana@gmail.com> [2008-06-24 11:11]:
+>
+> Hi,
+> 	I need to cross-compile kexec-tools-1.101 for a x86_64 architecture
+> platform on a 32b x86.
+> 
+> 	I didn't see any instructions in the configure, etc. scripts for doing this.
 
-	I didn't see any instructions in the configure, etc. scripts for doing this.
+gcc does not support that (like the -m32 flag when you build i386 on
+x86-64). You need to build a cross compiler, and then you would pass
+that via
 
-	Can you please let me know how to do this?
+      CC=your-cross-compiler ./configure
 
-Thanks.
+
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
