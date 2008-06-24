@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nf-out-0910.google.com ([64.233.182.185])
+Received: from rv-out-0708.google.com ([209.85.198.246])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBBer-0008If-Lm
-	for kexec@lists.infradead.org; Tue, 24 Jun 2008 16:46:17 +0000
-Received: by nf-out-0910.google.com with SMTP id d21so28420nfb.22
-	for <kexec@lists.infradead.org>; Tue, 24 Jun 2008 09:46:16 -0700 (PDT)
-Date: Tue, 24 Jun 2008 17:42:40 +0100
-From: WANG Cong <xiyou.wangcong@gmail.com>
-Subject: [Patch] kernel/kexec.c: make 'kimage_terminate' void
-Message-ID: <20080624164240.GF10512@hack.voiplan.pt>
+	id 1KBCzT-0007uP-42
+	for kexec@lists.infradead.org; Tue, 24 Jun 2008 18:11:39 +0000
+Received: by rv-out-0708.google.com with SMTP id b17so10699828rvf.42
+	for <kexec@lists.infradead.org>; Tue, 24 Jun 2008 11:11:37 -0700 (PDT)
+Message-ID: <df1bdeb10806241111q1b992291k35ed22894282377f@mail.gmail.com>
+Date: Tue, 24 Jun 2008 11:11:36 -0700
+From: "Srinivas Murthy" <codevana@gmail.com>
+Subject: how to cross compile kexec for 64b x86_64 on a 32b x86
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -23,47 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: kexec@lists.infradead.org, ebiederm@xmission.com
+To: kexec@lists.infradead.org
 
+Hi,
+	I need to cross-compile kexec-tools-1.101 for a x86_64 architecture
+platform on a 32b x86.
 
-Since kimage_terminate() always returns 0, make it void.
+	I didn't see any instructions in the configure, etc. scripts for doing this.
 
-Signed-off-by: WANG Cong <wangcong@zeuux.org>
-Cc: Eric Biederman <ebiederm@xmission.com>
+	Can you please let me know how to do this?
 
----
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 1c5fcac..6db42ff 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -589,14 +589,12 @@ static void kimage_free_extra_pages(struct kimage *image)
- 	kimage_free_page_list(&image->unuseable_pages);
- 
- }
--static int kimage_terminate(struct kimage *image)
-+static void kimage_terminate(struct kimage *image)
- {
- 	if (*image->entry != 0)
- 		image->entry++;
- 
- 	*image->entry = IND_DONE;
--
--	return 0;
- }
- 
- #define for_each_kimage_entry(image, ptr, entry) \
-@@ -997,9 +995,7 @@ asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
- 			if (result)
- 				goto out;
- 		}
--		result = kimage_terminate(image);
--		if (result)
--			goto out;
-+		kimage_terminate(image);
- 	}
- 	/* Install the new kernel, and  Uninstall the old */
- 	image = xchg(dest_image, image);
+Thanks.
 
 _______________________________________________
 kexec mailing list
