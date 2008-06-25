@@ -1,27 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from rv-out-0708.google.com ([209.85.198.244])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBVQi-0007cU-Mb
-	for kexec@lists.infradead.org; Wed, 25 Jun 2008 13:53:01 +0000
-Received: from int-mx1.corp.redhat.com (int-mx1.corp.redhat.com
-	[172.16.52.254])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id m5PDqxxH012008
-	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 09:52:59 -0400
-Received: from mail.boston.redhat.com (mail.boston.redhat.com [10.16.255.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id
-	m5PDqx5s017875
-	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 09:52:59 -0400
-Received: from [10.16.18.219] (dhcp-100-18-219.bos.redhat.com [10.16.18.219])
-	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id
-	m5PDqwwH002734
-	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 09:52:58 -0400
-Message-ID: <48624DBA.8000307@redhat.com>
-Date: Wed, 25 Jun 2008 09:52:58 -0400
-From: Dave Anderson <anderson@redhat.com>
+	id 1KBXMJ-0003cz-Fm
+	for kexec@lists.infradead.org; Wed, 25 Jun 2008 15:56:36 +0000
+Received: by rv-out-0708.google.com with SMTP id b17so11234572rvf.42
+	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 08:56:33 -0700 (PDT)
+Message-ID: <86802c440806250856i5b6c608ag848ad78d83b2337c@mail.gmail.com>
+Date: Wed, 25 Jun 2008 08:56:33 -0700
+From: "Yinghai Lu" <yhlu.kernel@gmail.com>
+Subject: Re: [PATCH 1/3] e820_update_range(): Strip size of original region
+In-Reply-To: <1214395342-20375-2-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
-Subject: Re: how to cross compile kexec for 64b x86_64 on a 32b x86
-References: <mailman.1873.1214398996.2802.kexec@lists.infradead.org>
-In-Reply-To: <mailman.1873.1214398996.2802.kexec@lists.infradead.org>
+Content-Disposition: inline
+References: <1214395342-20375-1-git-send-email-bwalle@suse.de>
+	<1214395342-20375-2-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,26 +26,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-> It seems that I now need the crash utility also to be cross compiled.
-> I dont see any cross-compile support in the crash-4.0-6.3 pkg.
+On Wed, Jun 25, 2008 at 5:02 AM, Bernhard Walle <bwalle@suse.de> wrote:
+> This patch fixes a bug in e820_update_range(): Previously, if a region was
+> partially covered, then e820_update_range() only added a new E820 range but
+> didn't update the end/size of the previous range. That lead to duplicate
+> covering of a region.
+>
+> Patch tested on i386 and x86-64 with patch that uses e820_update_range()
+> to limit the E820 map when "mem" parameter is specified on the command line.
+>
+>
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> ---
+>  arch/x86/kernel/e820.c |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index e285ea3..e466073 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -422,6 +422,7 @@ u64 __init e820_update_range(u64 start, u64 size, unsigned old_type,
+>                final_end = min(start + size, ei->addr + ei->size);
+>                if (final_start >= final_end)
+>                        continue;
+> +               ei->size -= final_end - final_start;
+>                e820_add_region(final_start, final_end - final_start,
+>                                         new_type);
+>                real_updated_size += final_end - final_start;
+> --
 
-You got that right...
+this one is not needed, I sent one updated to Ingo, and it is in
+tip/setup-memory
+[PATCH] x86: change size if e820_update/remove_range
 
-> Any suggestions for how to cross compile the crash-4.0-6.3 for x86_64
-> on an x86 system.
-
-Like Bernhard suggested, try tinkering with the compilations in the
-top-level Makefile, as well as passing --host and --target arguments
-to the embedded gdb's configure command when it gets built.
-
-I'm unaware of anybody who's ever attempted it...
-
-Dave
-
-
-
+YH
 
 _______________________________________________
 kexec mailing list
