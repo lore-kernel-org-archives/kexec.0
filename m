@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBTh4-0003OZ-NR
+	id 1KBTh4-0003Om-HC
 	for kexec@lists.infradead.org; Wed, 25 Jun 2008 12:01:47 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH 2/3] e820_update_range(): Allow specifying ULLONG_MAX
-Date: Wed, 25 Jun 2008 14:02:21 +0200
-Message-Id: <1214395342-20375-3-git-send-email-bwalle@suse.de>
+Subject: [PATCH 1/3] e820_update_range(): Strip size of original region
+Date: Wed, 25 Jun 2008 14:02:20 +0200
+Message-Id: <1214395342-20375-2-git-send-email-bwalle@suse.de>
 In-Reply-To: <1214395342-20375-1-git-send-email-bwalle@suse.de>
 References: <1214395342-20375-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
@@ -25,51 +25,32 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: x86@kernel.org
 Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, yhlu.kernel@gmail.com
 
-Allow the specifying of ULLONG_MAX to limit the whole E820 map from the
-specified start to the end. Without the patch, there would be integer
-overflows.
+This patch fixes a bug in e820_update_range(): Previously, if a region was
+partially covered, then e820_update_range() only added a new E820 range but
+didn't update the end/size of the previous range. That lead to duplicate
+covering of a region.
+
+Patch tested on i386 and x86-64 with patch that uses e820_update_range()
+to limit the E820 map when "mem" parameter is specified on the command line.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- arch/x86/kernel/e820.c |   11 +++++++++--
- 1 files changed, 9 insertions(+), 2 deletions(-)
+ arch/x86/kernel/e820.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
 diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index e466073..7d1109b 100644
+index e285ea3..e466073 100644
 --- a/arch/x86/kernel/e820.c
 +++ b/arch/x86/kernel/e820.c
-@@ -397,6 +397,9 @@ int __init copy_e820_map(struct e820entry *biosmap, int nr_map)
- 	return __copy_e820_map(biosmap, nr_map);
- }
- 
-+/*
-+ * Pass size == ULLONG_MAX to update until the end.
-+ */
- u64 __init e820_update_range(u64 start, u64 size, unsigned old_type,
- 				unsigned new_type)
- {
-@@ -412,14 +415,18 @@ u64 __init e820_update_range(u64 start, u64 size, unsigned old_type,
- 			continue;
- 		/* totally covered? */
- 		if (ei->addr >= start &&
--		    (ei->addr + ei->size) <= (start + size)) {
-+		    (((ei->addr + ei->size) <= (start + size)) ||
-+			    (size == ULLONG_MAX))) {
- 			ei->type = new_type;
- 			real_updated_size += ei->size;
- 			continue;
- 		}
- 		/* partially covered */
- 		final_start = max(start, ei->addr);
--		final_end = min(start + size, ei->addr + ei->size);
-+		if (size == ULLONG_MAX)
-+			final_end = ei->addr + ei->size;
-+		else
-+			final_end = min(start + size, ei->addr + ei->size);
+@@ -422,6 +422,7 @@ u64 __init e820_update_range(u64 start, u64 size, unsigned old_type,
+ 		final_end = min(start + size, ei->addr + ei->size);
  		if (final_start >= final_end)
  			continue;
- 		ei->size -= final_end - final_start;
++		ei->size -= final_end - final_start;
+ 		e820_add_region(final_start, final_end - final_start,
+ 					 new_type);
+ 		real_updated_size += final_end - final_start;
 -- 
 1.5.4.5
 
