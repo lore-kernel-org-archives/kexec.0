@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [85.21.88.6] (helo=buildserver.ru.mvista.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBUeY-0004B3-IC
-	for kexec@lists.infradead.org; Wed, 25 Jun 2008 13:03:15 +0000
+	id 1KBVAT-0005xy-4E
+	for kexec@lists.infradead.org; Wed, 25 Jun 2008 13:36:14 +0000
 Received: from [192.168.1.169] (unknown [10.150.0.9])
-	by buildserver.ru.mvista.com (Postfix) with ESMTP id ACCC98815
-	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 18:03:10 +0500 (SAMST)
-Message-ID: <48624310.1070108@ru.mvista.com>
-Date: Wed, 25 Jun 2008 17:07:28 +0400
+	by buildserver.ru.mvista.com (Postfix) with ESMTP id 6FD688816
+	for <kexec@lists.infradead.org>; Wed, 25 Jun 2008 18:36:12 +0500 (SAMST)
+Message-ID: <48624ACE.4050403@ru.mvista.com>
+Date: Wed, 25 Jun 2008 17:40:30 +0400
 From: msyrchin <msyrchin@ru.mvista.com>
 MIME-Version: 1.0
-Subject: [PATCH] MIPS: kexec-tools crashdump, 64-bit support, SMP etc.
+Subject: [PATCH] MIPS: kernel kexec crashdump, 64-bit support, SMP etc.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,963 +25,620 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This patch updates kexec-toolst for MIPS platform to support kdump, 64-bit
-and SMP. It does the following:
+This patch updates kernel part of kexec for MIPS platform to support
+kdump, 64-bit, SMP and simplify code adaptation to new boards. It does
+the following:
 
- - mips-setup-simple.S was removed. Most platforms has their own boot
-  structures and it is more simple to fill them inside kernel (not in
-  trampoline code). Struct 'boot_notes' isn't used now anymore - removed.
- - command line is passed now as simple text buffer (is starts with string
-  'kexec' to help kernel to find it). This buffer is located after 
-kernel's bss
-  segment.
- - 64-bit platforms are now supported.
- - In function elf_mips_load CKSEG0 mask is removed from PT_LOAD segments
-  addresses. This this changes there is no need in special funtions
-  add_segment_phys_virt, add_buffer_virt and add_buffer_phys_virt.
- - crashdump support was added.
+- hooks for machine-specific actions are introduced 
+(_machine_kexec_prepare,
+  _machine_kexec_shutdown, _machine_crash_shutdown);
+- kexec reboot on SMP machine is implemented;
+- add boot parameters passing to new kernel (array kexec_args[] is 
+copied to
+  registers a0-a3 on reboot );
+- crash dump functionality is added (boot kernel with non-default physical
+  start, parse "crashkernel=..." command line parameter, copy_oldmem_page()
+  is implemeted to read memory dump after reboot-on-crashi, 
+crash_setup_regs()
+  is updated to correctly store registers on crash);
 
-kexec/kdump funtionality was tested on several Cavium Octeon
-boards (mips64 SMP).
+kexec/kdump funtionality was tested on several Cavium Octeon boards
+(mips64 SMP). The way we do it was the following:
+- _machine_kexec_prepare was find kexec segment with command line and
+save it's pointed into internal bootloader structure.
+- _machine_kexec_shutdown was used to stop boards IO and make all non-boot
+CPUs spin in function relocated_kexec_smp_wait()
+- _machine_crash_shutdown just calls default_machine_crash_shutdown()
+We tested 1) 'common' kexec reboot (by 'kexec -e'), 2) kexec-on-panic 
+('kexec -p ...') and 3) access to/proc/vmcore (with gdb).
 
 Signed-off-by: Maxim Syrchin <msyrchin@ru.mvista.com>
 ---
- kexec/arch/mips/Makefile               |   17 -
- kexec/arch/mips/crashdump-mips.c       |  371 
-+++++++++++++++++++++++++++++++++++++++
- kexec/arch/mips/crashdump-mips.h       |   26 ++
- kexec/arch/mips/include/arch/options.h |   12 +
- kexec/arch/mips/kexec-elf-mips.c       |  149 ++++++++-------
- kexec/arch/mips/kexec-mips.c           |   55 ++---
- kexec/arch/mips/kexec-mips.h           |   13 -
- kexec/arch/mips/mips-setup-simple.S    |  110 -----------
- kexec/kexec-syscall.h                  |    3
- 9 files changed, 521 insertions(+), 235 deletions(-)
+arch/mips/Kconfig                  |   23 +++++++++
+arch/mips/Makefile                 |    4 ++
+arch/mips/kernel/Makefile          |    3 +-
+arch/mips/kernel/crash.c           |   91 
+++++++++++++++++++++++++++++++++++
+arch/mips/kernel/crash_dump.c      |   96 
+++++++++++++++++++++++++++++++++++++
+arch/mips/kernel/machine_kexec.c   |   52 ++++++++++++++++++-
+arch/mips/kernel/relocate_kernel.S |   93 
+++++++++++++++++++++++++++++++++++-
+arch/mips/kernel/setup.c           |   10 +++-
+include/asm-mips/kexec.h           |   21 ++++++++-
+9 files changed, 386 insertions(+), 7 deletions(-)
+create mode 100644 arch/mips/kernel/crash.c
+create mode 100644 arch/mips/kernel/crash_dump.c
 
-diff -Naur -wb a/kexec/arch/mips/crashdump-mips.c 
-b/kexec/arch/mips/crashdump-mips.c
---- a/kexec/arch/mips/crashdump-mips.c    1970-01-01 03:00:00.000000000 
-+0300
-+++ b/kexec/arch/mips/crashdump-mips.c    2008-06-24 11:59:58.000000000 
-+0400
-@@ -0,0 +1,371 @@
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index e5a7c5d..50d9cfb 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -1945,6 +1945,29 @@ config KEXEC
+      support.  As of this writing the exact hardware interface is
+      strongly in flux, so no good recommendation can be made.
+
++config CRASH_DUMP
++    bool "kernel crash dumps (EXPERIMENTAL)"
++    depends on EXPERIMENTAL
++    help
++      Generate crash dump after being started by kexec.
++          This should be normally only set in special crash dump kernels
++      which are loaded in the main kernel with kexec-tools into
++      a specially reserved region and then later executed after
++      a crash by kdump/kexec. The crash dump kernel must be compiled
++          to a memory address not used by the main kernel or BIOS using
++          PHYSICAL_START.
++
++config PHYSICAL_START
++    hex "Physical address where the kernel is loaded"
++    default "0xffffffff84000000"
++    depends on CRASH_DUMP
++    help
++      This gives the CKSEG0 or KSEG0 address where the kernel is loaded.
++      If you plan to use kernel for capturing the crash dump change
++      this value to start of the reserved region (the "X" value as
++      specified in the "crashkernel=YM@XM" command line boot parameter
++      passed to the panic-ed kernel).
++
+config SECCOMP
+    bool "Enable seccomp to safely compute untrusted bytecode"
+    depends on PROC_FS
+diff --git a/arch/mips/Makefile b/arch/mips/Makefile
+index ad36c94..6f0c69a 100644
+--- a/arch/mips/Makefile
++++ b/arch/mips/Makefile
+@@ -597,6 +597,10 @@ core-$(CONFIG_TOSHIBA_RBTX4938) += 
+arch/mips/tx4938/common/
+cflags-$(CONFIG_TOSHIBA_RBTX4938) += -Iinclude/asm-mips/mach-tx49xx
+load-$(CONFIG_TOSHIBA_RBTX4938) += 0xffffffff80100000
+
++ifdef CONFIG_PHYSICAL_START
++load-y                = $(CONFIG_PHYSICAL_START)
++endif
++
+cflags-y            += -Iinclude/asm-mips/mach-generic
+drivers-$(CONFIG_PCI)        += arch/mips/pci/
+
+diff --git a/arch/mips/kernel/Makefile b/arch/mips/kernel/Makefile
+index 65e46a6..b02266f 100644
+--- a/arch/mips/kernel/Makefile
++++ b/arch/mips/kernel/Makefile
+@@ -84,7 +84,8 @@ obj-$(CONFIG_I8253)        += i8253.o
+
+obj-$(CONFIG_GPIO_TXX9)        += gpio_txx9.o
+
+-obj-$(CONFIG_KEXEC)        += machine_kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC)        += machine_kexec.o relocate_kernel.o crash.o
++obj-$(CONFIG_CRASH_DUMP)    += crash_dump.o
+obj-$(CONFIG_EARLY_PRINTK)    += early_printk.o
+
+CFLAGS_cpu-bugs64.o    = $(shell if $(CC) $(KBUILD_CFLAGS) -Wa,-mdaddi 
+-c -o /dev/null -xc /dev/null >/dev/null 2>&1; then echo 
+"-DHAVE_AS_SET_DADDI"; fi)
+diff --git a/arch/mips/kernel/crash.c b/arch/mips/kernel/crash.c
+new file mode 100644
+index 0000000..f4f2b4a
+--- /dev/null
++++ b/arch/mips/kernel/crash.c
+@@ -0,0 +1,91 @@
 +/*
-+ * kexec: Linux boots Linux
++ * Architecture specific (MIPS) functions for kexec based crash dumps.
 + *
-+ * 2005 (C) IBM Corporation.
-+ * 2008 (C) MontaVista Software, Inc.
++ * Copyright (C) 2005, IBM Corp.
++ * Copyright (C) 2008, MontaVista Software Inc.
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation (version 2 of the License).
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 + */
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <elf.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <unistd.h>
-+#include "../../kexec.h"
-+#include "../../kexec-elf.h"
-+#include "../../kexec-syscall.h"
-+#include "../../crashdump.h"
-+#include "kexec-mips.h"
-+#include "crashdump-mips.h"
 +
-+extern struct arch_options_t arch_options;
++#undef DEBUG
 +
-+/* Stores a sorted list of RAM memory ranges for which to create elf 
-headers.
-+ * A separate program header is created for backup region */
-+static struct memory_range crash_memory_range[CRASH_MAX_MEMORY_RANGES];
++#include <linux/kernel.h>
++#include <linux/smp.h>
++#include <linux/reboot.h>
++#include <linux/kexec.h>
++#include <linux/bootmem.h>
++#include <linux/crash_dump.h>
++#include <linux/delay.h>
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/types.h>
++#include <linux/sched.h>
 +
-+/* Memory region reserved for storing panic kernel and other data. */
-+static struct memory_range crash_reserved_mem;
 +
-+/*
-+ * To store the memory size of the first kernel and this value will be
-+ * passed to the second kernel as command line (savemaxmem=xM).
-+ * The second kernel will be calculated saved_max_pfn based on this
-+ * variable.
-+ */
-+unsigned long long saved_max_mem = 0;
 +
-+/* Removes crash reserve region from list of memory chunks for whom elf 
-program
-+ * headers have to be created. Assuming crash reserve region to be a single
-+ * continuous area fully contained inside one of the memory chunks */
-+static int exclude_crash_reserve_region(int *nr_ranges)
++/* This keeps a track of which one is crashing cpu. */
++int crashing_cpu = -1;
++static cpumask_t cpus_in_crash = CPU_MASK_NONE;
++
++#ifdef CONFIG_SMP
++
++void crash_shutdown_secondary(void *ignore)
 +{
-+    int i, j, tidx = -1;
-+    unsigned long long cstart, cend;
-+    struct memory_range temp_region;
++    struct pt_regs* regs;
++    int cpu = smp_processor_id();
 +
-+    /* Crash reserved region. */
-+    cstart = crash_reserved_mem.start;
-+    cend = crash_reserved_mem.end;
++    regs = task_pt_regs(current);
++   +    if (!cpu_online(cpu))
++        return;
 +
-+    for (i = 0; i < (*nr_ranges); i++) {
-+        unsigned long long mstart, mend;
-+        mstart = crash_memory_range[i].start;
-+        mend = crash_memory_range[i].end;
-+        if (cstart < mend && cend > mstart) {
-+            if (cstart != mstart && cend != mend) {
-+                /* Split memory region */
-+                crash_memory_range[i].end = cstart - 1;
-+                temp_region.start = cend + 1;
-+                temp_region.end = mend;
-+                temp_region.type = RANGE_RAM;
-+                tidx = i+1;
-+            } else if (cstart != mstart)
-+                crash_memory_range[i].end = cstart - 1;
-+            else
-+                crash_memory_range[i].start = cend + 1;
-+        }
++    local_irq_disable();
++    if (!cpu_isset(cpu, cpus_in_crash))
++        crash_save_cpu(regs, cpu);
++    cpu_set(cpu, cpus_in_crash);
++
++    while(!atomic_read(&kexec_ready_to_reboot)) {
++        cpu_relax();
 +    }
-+    /* Insert split memory region, if any. */
-+    if (tidx >= 0) {
-+        if (*nr_ranges == CRASH_MAX_MEMORY_RANGES) {
-+            /* No space to insert another element. */
-+            fprintf(stderr, "Error: Number of crash memory ranges"
-+                    " excedeed the max limit\n");
-+            return -1;
-+        }
-+        for (j = (*nr_ranges - 1); j >= tidx; j--)
-+            crash_memory_range[j+1] = crash_memory_range[j];
-+        crash_memory_range[tidx].start = temp_region.start;
-+        crash_memory_range[tidx].end = temp_region.end;
-+        crash_memory_range[tidx].type = temp_region.type;
-+        (*nr_ranges)++;
-+    }
-+    return 0;
-+}
-+/* Reads the appropriate file and retrieves the SYSTEM RAM regions for 
-whom to
-+ * create Elf headers. Keeping it separate from get_memory_ranges() as
-+ * requirements are different in the case of normal kexec and crashdumps.
-+ *
-+ * Normal kexec needs to look at all of available physical memory 
-irrespective
-+ * of the fact how much of it is being used by currently running kernel.
-+ * Crashdumps need to have access to memory regions actually being used by
-+ * running  kernel. Expecting a different file/data structure than 
-/proc/iomem
-+ * to look into down the line. May be something like /proc/kernelmem or may
-+ * be zone data structures exported from kernel.
-+ */
-+static int get_crash_memory_ranges(struct memory_range **range, int 
-*ranges)
-+{
-+    const char iomem[]= "/proc/iomem";
-+    int i, memory_ranges = 0;
-+    char line[MAX_LINE];
-+    FILE *fp;
-+    unsigned long long start, end;
-+
-+    fp = fopen(iomem, "r");
-+    if (!fp) {
-+        fprintf(stderr, "Cannot open %s: %s\n",
-+            iomem, strerror(errno));
-+        return -1;
-+    }
-+    
-+    /* Separate segment for backup region */
-+    crash_memory_range[0].start = BACKUP_SRC_START;
-+    crash_memory_range[0].end = BACKUP_SRC_END;
-+    crash_memory_range[0].type = RANGE_RAM;
-+    memory_ranges++;
-+
-+    while(fgets(line, sizeof(line), fp) != 0) {
-+        char *str;
-+        int type, consumed, count;
-+        if (memory_ranges >= CRASH_MAX_MEMORY_RANGES)
-+            break;
-+        count = sscanf(line, "%Lx-%Lx : %n",
-+            &start, &end, &consumed);
-+        if (count != 2)
-+            continue;
-+        str = line + consumed;
-+
-+        /* Only Dumping memory of type System RAM. */
-+        if (memcmp(str, "System RAM\n", 11) == 0) {
-+            type = RANGE_RAM;
-+        } else if (memcmp(str, "Crash kernel\n", 13) == 0) {
-+                /* Reserved memory region. New kernel can
-+                 * use this region to boot into. */
-+                crash_reserved_mem.start = start;
-+                crash_reserved_mem.end = end;
-+                crash_reserved_mem.type = RANGE_RAM;
-+                continue;
-+        } else {
-+            continue;
-+        }
-+        
-+        if (start == BACKUP_SRC_START && end >= (BACKUP_SRC_END + 1))
-+            start = BACKUP_SRC_END + 1;
-+
-+        crash_memory_range[memory_ranges].start = start;
-+        crash_memory_range[memory_ranges].end = end;
-+        crash_memory_range[memory_ranges].type = type;
-+        memory_ranges++;
-+
-+        /* Segregate linearly mapped region. */
-+        if ((MAXMEM - 1) >= start && (MAXMEM - 1) <= end) {
-+            crash_memory_range[memory_ranges-1].end = MAXMEM -1;
-+
-+            /* Add segregated region. */
-+            crash_memory_range[memory_ranges].start = MAXMEM;
-+            crash_memory_range[memory_ranges].end = end;
-+            crash_memory_range[memory_ranges].type = type;
-+            memory_ranges++;
-+        }
-+    }
-+    fclose(fp);
-+
-+    if (exclude_crash_reserve_region(&memory_ranges) < 0)
-+        return -1;
-+
-+    for (i = 0; i < memory_ranges; i++)
-+        if (saved_max_mem < crash_memory_range[i].end)
-+            saved_max_mem = crash_memory_range[i].end + 1;
-+
-+    *range = crash_memory_range;
-+    *ranges = memory_ranges;
-+    return 0;
++    relocated_kexec_smp_wait(NULL);
++    /* NOTREACHED */
 +}
 +
-+/* Converts unsigned long to ascii string. */
-+static void ultoa(unsigned long i, char *str)
++static void crash_kexec_prepare_cpus(void)
 +{
-+    int j = 0, k;
-+    char tmp;
++    unsigned int msecs;
 +
-+    do {
-+        str[j++] = i % 10 + '0';
-+    } while ((i /=10) > 0);
-+    str[j] = '\0';
++    unsigned int ncpus = num_online_cpus() - 1;/* Excluding the panic 
+cpu */
 +
-+    /* Reverse the string. */
-+    for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
-+        tmp = str[k];
-+        str[k] = str[j];
-+        str[j] = tmp;
-+    }
-+}
-+
-+/* Adds the appropriate mem= options to command line, indicating the
-+ * memory region the new kernel can use to boot into. */
-+static int cmdline_add_mem(char *cmdline, unsigned long addr, unsigned 
-long size)
-+{
-+    int cmdlen, len;
-+    char str[50], *ptr;
-+
-+    addr = addr/1024;
-+    size = size/1024;
-+    ptr = str;
-+    strcpy (str, " mem=");
-+    ptr += strlen(str);
-+    ultoa(size, ptr);
-+    strcat (str, "K@");
-+    ptr = str + strlen(str);
-+    ultoa(addr, ptr);
-+    strcat (str, "K");
-+    len = strlen(str);
-+    cmdlen = strlen(cmdline) + len;
-+    if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+        die("Command line overflow\n");
-+    strcat(cmdline, str);
-+
-+    return 0;
-+}
-+
-+/* Adds the elfcorehdr= command line parameter to command line. */
-+static int cmdline_add_elfcorehdr(char *cmdline, unsigned long addr)
-+{
-+    int cmdlen, len, align = 1024;
-+    char str[30], *ptr;
-+
-+    /* Passing in elfcorehdr=xxxK format. Saves space required in cmdline.
-+     * Ensure 1K alignment*/
-+    if (addr%align)
-+        return -1;
-+    addr = addr/align;
-+    ptr = str;
-+    strcpy(str, " elfcorehdr=");
-+    ptr += strlen(str);
-+    ultoa(addr, ptr);
-+    strcat(str, "K");
-+    len = strlen(str);
-+    cmdlen = strlen(cmdline) + len;
-+    if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+        die("Command line overflow\n");
-+    strcat(cmdline, str);
-+    return 0;
-+}
-+
-+/* Adds the elfcorehdr= command line parameter to command line. */
-+static int cmdline_add_savemaxmem(char *cmdline, unsigned long addr)
-+{
-+    int cmdlen, len, align = 1024;
-+    char str[30], *ptr;
-+
-+    /* Passing in savemaxmem=xxxM format. Saves space required in 
-cmdline.*/
-+    addr = addr/(align*align);
-+    ptr = str;
-+    strcpy(str, " savemaxmem=");
-+    ptr += strlen(str);
-+    ultoa(addr, ptr);
-+    strcat(str, "M");
-+    len = strlen(str);
-+    cmdlen = strlen(cmdline) + len;
-+    if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+        die("Command line overflow\n");
-+    strcat(cmdline, str);
-+    return 0;
-+}
-+
-+#ifdef __mips64
-+static struct crash_elf_info elf_info64 =
-+{
-+    class: ELFCLASS64,
-+    data: ELFDATA2MSB,
-+    machine: EM_MIPS,
-+    backup_src_start: BACKUP_SRC_START,
-+    backup_src_end: BACKUP_SRC_END,
-+    page_offset: PAGE_OFFSET,
-+    lowmem_limit: MAXMEM,
-+};
-+#endif
-+static struct crash_elf_info elf_info32 =
-+{
-+    class: ELFCLASS32,
-+    data: ELFDATA2MSB,
-+    machine: EM_MIPS,
-+    backup_src_start: BACKUP_SRC_START,
-+    backup_src_end: BACKUP_SRC_END,
-+    page_offset: PAGE_OFFSET,
-+    lowmem_limit: MAXMEM,
-+};
-+
-+/* Loads additional segments in case of a panic kernel is being loaded.
-+ * One segment for backup region, another segment for storing elf headers
-+ * for crash memory image.
-+ */
-+int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
-+                unsigned long max_addr, unsigned long min_base)
-+{
-+    void *tmp;
-+    unsigned long sz, elfcorehdr;
-+    int nr_ranges, align = 1024;
-+    struct memory_range *mem_range;
-+
-+    if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
-+        return -1;
-+
-+    /* Create a backup region segment to store backup data*/
-+    sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
-+    tmp = xmalloc(sz);
-+    memset(tmp, 0, sz);
-+    info->backup_start = add_buffer(info, tmp, sz, sz, align,
-+                crash_reserved_mem.start,
-+                crash_reserved_mem.end,-1);    
-+
-+#ifdef __mips64
-+    /* Create elf header segment and store crash image data. */
-+    if (arch_options.core_header_type == CORE_TYPE_ELF64) {
-+        if (crash_create_elf64_headers(info, &elf_info64,
-+                           crash_memory_range, nr_ranges,
-+                           &tmp, &sz,
-+                           ELF_CORE_HEADER_ALIGN) < 0)
-+            return -1;
-+    }
-+    else {
-+        if (crash_create_elf32_headers(info, &elf_info32,
-+                           crash_memory_range, nr_ranges,
-+                           &tmp, &sz,
-+                           ELF_CORE_HEADER_ALIGN) < 0)
-+            return -1;
-+    }
-+#else
-+    if (crash_create_elf32_headers(info, &elf_info32,
-+                   crash_memory_range, nr_ranges,
-+                   &tmp, &sz,
-+                   ELF_CORE_HEADER_ALIGN) < 0)
-+        return -1;
-+#endif
-+    elfcorehdr = add_buffer(info, tmp, sz, sz, align,
-+                crash_reserved_mem.start,
-+                crash_reserved_mem.end, -1);
++    smp_call_function (crash_shutdown_secondary, NULL, 0, 0);
++    smp_wmb();
 +
 +    /*
-+     * backup segment is after elfcorehdr, so use elfcorehdr as top of
-+     * kernel's available memory
++     * FIXME: Until we will have the way to stop other CPUSs reliabally,
++     * the crash CPU will send an IPI and wait for other CPUs to
++     * respond.
++     * Delay of at least 10 seconds.
 +     */
-+    cmdline_add_mem(mod_cmdline, crash_reserved_mem.start,
-+        elfcorehdr - crash_reserved_mem.start);
-+    cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
-+    cmdline_add_savemaxmem(mod_cmdline, saved_max_mem);
++    printk(KERN_EMERG "Sending IPI to other cpus...\n");
++    msecs = 10000;
++    while ((cpus_weight(cpus_in_crash) < ncpus) && (--msecs > 0)) {
++        cpu_relax();
++        mdelay(1);
++    }
++
++}
++
++#else
++static void crash_kexec_prepare_cpus() {}
++#endif
++
++void default_machine_crash_shutdown(struct pt_regs *regs)
++{
++    local_irq_disable();
++    crashing_cpu = smp_processor_id();
++    crash_save_cpu(regs, crashing_cpu);
++    crash_kexec_prepare_cpus();
++    cpu_set(crashing_cpu, cpus_in_crash);
++}
+diff --git a/arch/mips/kernel/crash_dump.c b/arch/mips/kernel/crash_dump.c
+new file mode 100644
+index 0000000..76e5fac
+--- /dev/null
++++ b/arch/mips/kernel/crash_dump.c
+@@ -0,0 +1,96 @@
++/*
++ * Routines for doing kexec-based kdump.
++ *
++ * Copyright (C) 2005, IBM Corp.
++ * Copyright (C) 2008, MontaVista Software Inc.
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
++
++#include <linux/highmem.h>
++#include <linux/bootmem.h>
++#include <linux/crash_dump.h>
++#include <asm/uaccess.h>
++
++#ifdef CONFIG_PROC_VMCORE
++static int __init parse_elfcorehdr(char *p)
++{
++    if (p)
++        elfcorehdr_addr = memparse(p, &p);
++    return 1;
++}
++__setup("elfcorehdr=", parse_elfcorehdr);
++#endif
++
++static int __init parse_savemaxmem(char *p)
++{
++    if (p)
++        saved_max_pfn = (memparse(p, &p) >> PAGE_SHIFT) - 1;
++
++    return 1;
++}
++__setup("savemaxmem=", parse_savemaxmem);
++
++
++static void *kdump_buf_page;
++
++/**
++ * copy_oldmem_page - copy one page from "oldmem"
++ * @pfn: page frame number to be copied
++ * @buf: target memory address for the copy; this can be in kernel address
++ *    space or user address space (see @userbuf)
++ * @csize: number of bytes to copy
++ * @offset: offset in bytes into the page (based on pfn) to begin the copy
++ * @userbuf: if set, @buf is in user address space, use copy_to_user(),
++ *    otherwise @buf is in kernel address space, use memcpy().
++ *
++ * Copy a page from "oldmem". For this page, there is no pte mapped
++ * in the current kernel.
++ *
++ * Calling copy_to_user() in atomic context is not desirable. Hence first
++ * copying the data to a pre-allocated kernel page and then copying to 
+user
++ * space in non-atomic context.
++ */
++ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
++                               size_t csize, unsigned long offset, int 
+userbuf)
++{
++    void  *vaddr;
++
++    if (!csize)
++        return 0;
++
++    vaddr = kmap_atomic_pfn(pfn, KM_PTE0);
++
++    if (!userbuf) {
++        memcpy(buf, (vaddr + offset), csize);
++        kunmap_atomic(vaddr, KM_PTE0);
++    } else {
++        if (!kdump_buf_page) {
++            printk(KERN_WARNING "Kdump: Kdump buffer page not"
++                " allocated\n");
++            return -EFAULT;
++        }
++        copy_page(kdump_buf_page, vaddr);
++        kunmap_atomic(vaddr, KM_PTE0);
++        if (copy_to_user(buf, (kdump_buf_page + offset), csize))
++            return -EFAULT;
++    }
++
++    return csize;
++}
++
++static int __init kdump_buf_page_init(void)
++{
++    int ret = 0;
++
++    kdump_buf_page = kmalloc(PAGE_SIZE, GFP_KERNEL);
++    if (!kdump_buf_page) {
++        printk(KERN_WARNING "Kdump: Failed to allocate kdump buffer"
++             " page\n");
++        ret = -ENOMEM;
++    }
++
++    return ret;
++}
++arch_initcall(kdump_buf_page_init);
+diff --git a/arch/mips/kernel/machine_kexec.c 
+b/arch/mips/kernel/machine_kexec.c
+index 85beb9b..5b52da8 100644
+--- a/arch/mips/kernel/machine_kexec.c
++++ b/arch/mips/kernel/machine_kexec.c
+@@ -19,9 +19,19 @@ extern const size_t relocate_new_kernel_size;
+extern unsigned long kexec_start_address;
+extern unsigned long kexec_indirection_page;
+
++int (*_machine_kexec_prepare)(struct kimage *) = NULL;
++void (*_machine_kexec_shutdown)(void) = NULL;
++void (*_machine_crash_shutdown)(struct pt_regs *regs) = NULL;
++#ifdef CONFIG_SMP
++void (*relocated_kexec_smp_wait) (void *);
++atomic_t kexec_ready_to_reboot = ATOMIC_INIT(0);
++#endif
++
+int
+machine_kexec_prepare(struct kimage *kimage)
+{
++    if (_machine_kexec_prepare)
++        return _machine_kexec_prepare(kimage);
+    return 0;
+}
+
+@@ -33,13 +43,18 @@ machine_kexec_cleanup(struct kimage *kimage)
+void
+machine_shutdown(void)
+{
++    if (_machine_kexec_shutdown)
++        _machine_kexec_shutdown();
+}
+
+void
+machine_crash_shutdown(struct pt_regs *regs)
+{
++    if (_machine_crash_shutdown)
++        _machine_crash_shutdown(regs);
++    else
++        default_machine_crash_shutdown(regs);
+}
+-
+typedef void (*noretfun_t)(void) __attribute__((noreturn));
+
+void
+@@ -52,7 +67,9 @@ machine_kexec(struct kimage *image)
+    reboot_code_buffer =
+      (unsigned long)page_address(image->control_code_page);
+
+-    kexec_start_address = image->start;
++     kexec_start_address =
++        (unsigned long) phys_to_virt(image->start);
++
+    kexec_indirection_page =
+        (unsigned long) phys_to_virt(image->head & PAGE_MASK);
+
+@@ -63,7 +80,7 @@ machine_kexec(struct kimage *image)
+     * The generic kexec code builds a page list with physical
+     * addresses. they are directly accessible through KSEG0 (or
+     * CKSEG0 or XPHYS if on 64bit system), hence the
+-     * pys_to_virt() call.
++     * phys_to_virt() call.
+     */
+    for (ptr = &image->head; (entry = *ptr) && !(entry &IND_DONE);
+         ptr = (entry & IND_INDIRECTION) ?
+@@ -81,5 +98,34 @@ machine_kexec(struct kimage *image)
+    printk("Will call new kernel at %08lx\n", image->start);
+    printk("Bye ...\n");
+    __flush_cache_all();
++#ifdef CONFIG_SMP
++    /* All secondary cpus now may jump to kexec_wait cycle */
++    relocated_kexec_smp_wait = reboot_code_buffer +
++        (kexec_smp_wait - relocate_new_kernel);
++    smp_wmb();
++    atomic_set(&kexec_ready_to_reboot,1);
++#endif
+    ((noretfun_t) reboot_code_buffer)();
+}
++
++/* crashkernel=size@addr specifies the location to reserve for
++ * a crash kernel.  By reserving this memory we guarantee
++ * that linux never sets it up as a DMA target.
++ * Useful for holding code to do something appropriate
++ * after a kernel panic.
++ */
++static int __init parse_crashkernel(char *arg)
++{
++    unsigned long size, base;
++    size = memparse(arg, &arg);
++    if (*arg == '@') {
++        base = memparse(arg+1, &arg);
++        /* FIXME: Do I want a sanity check
++         * to validate the memory range?
++         */
++        crashk_res.start = base;
++        crashk_res.end   = base + size - 1;
++    }
 +    return 0;
 +}
++early_param("crashkernel", parse_crashkernel);
+diff --git a/arch/mips/kernel/relocate_kernel.S 
+b/arch/mips/kernel/relocate_kernel.S
+index 87481f9..314288e 100644
+--- a/arch/mips/kernel/relocate_kernel.S
++++ b/arch/mips/kernel/relocate_kernel.S
+@@ -14,7 +14,13 @@
+#include <asm/stackframe.h>
+#include <asm/addrspace.h>
+
 +
-+int is_crashkernel_mem_reserved(void)
-+{
-+    uint64_t start, end;
+LEAF(relocate_new_kernel)
++     PTR_L a0,    arg0
++     PTR_L a1,    arg1
++     PTR_L a2,    arg2
++     PTR_L a3,    arg3
 +
-+    return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
-+      (start != end) : 0;
-+}
+    PTR_L        s0, kexec_indirection_page
+    PTR_L        s1, kexec_start_address
+
+@@ -26,7 +32,6 @@ process_entry:
+    and        s3, s2, 0x1
+    beq        s3, zero, 1f
+    and        s4, s2, ~0x1    /* store destination addr in s4 */
+-    move        a0, s4
+    b        process_entry
+
+1:
+@@ -60,10 +65,96 @@ copy_word:
+    b        process_entry
+
+done:
++#ifdef CONFIG_SMP
++    /* kexec_flag reset is signal to other CPUs what kernel
++        was moved to it's location. Note - we need relocated address
++        of kexec_flag.  */
 +
-diff -Naur -wb a/kexec/arch/mips/crashdump-mips.h 
-b/kexec/arch/mips/crashdump-mips.h
---- a/kexec/arch/mips/crashdump-mips.h    1970-01-01 03:00:00.000000000 
-+0300
-+++ b/kexec/arch/mips/crashdump-mips.h    2008-06-24 09:41:19.000000000 
-+0400
-@@ -0,0 +1,26 @@
-+#ifndef CRASHDUMP_MIPS_H
-+#define CRASHDUMP_MIPS_H
-+
-+struct kexec_info;
-+int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
-+                unsigned long max_addr, unsigned long min_base);
-+#ifdef __mips64
-+#define PAGE_OFFSET    0xa800000000000000ULL
-+#else
-+#define PAGE_OFFSET    0x80000000
++     bal        1f
++ 1:     move        t1,ra;
++     PTR_LA        t2,1b
++     PTR_LA        t0,kexec_flag
++     PTR_SUB        t0,t0,t2;
++     PTR_ADD        t0,t1,t0;
++     LONG_S        zero,(t0)
 +#endif
-+#define __pa(x)        ((unsigned long)(X)& 0x7fffffff)
 +
-+#define MAXMEM        0x80000000
++     /* Some platforms need I-cache to be flushed before
++     * jumping to new kernel.
++      */
 +
-+#define CRASH_MAX_MEMMAP_NR    (KEXEC_MAX_SEGMENTS + 1)
-+#define CRASH_MAX_MEMORY_RANGES    (MAX_MEMORY_RANGES + 2)
+    /* jump to kexec_start_address */
+    j        s1
+    END(relocate_new_kernel)
+
++#ifdef CONFIG_SMP
++/*
++ * Other CPUs should wait until code is relocated and
++ * then start at entry point.
++ */
++LEAF(kexec_smp_wait)
++    PTR_L        a0, s_arg0
++    PTR_L        a1, s_arg1
++    PTR_L        a2, s_arg2
++    PTR_L        a3, s_arg3
++    PTR_L        s1, kexec_start_address
 +
-+#define COMMAND_LINE_SIZE    512
-+
-+/* Backup Region, First 1M of System RAM. */
-+#define BACKUP_SRC_START    0x00000000
-+#define BACKUP_SRC_END        0x000fffff
-+#define BACKUP_SRC_SIZE    (BACKUP_SRC_END - BACKUP_SRC_START + 1)
-+
-+#endif /* CRASHDUMP_MIPS_H */
-diff -Naur -wb a/kexec/arch/mips/include/arch/options.h 
-b/kexec/arch/mips/include/arch/options.h
---- a/kexec/arch/mips/include/arch/options.h    2008-06-16 
-13:37:36.000000000 +0400
-+++ b/kexec/arch/mips/include/arch/options.h    2008-06-24 
-09:41:19.000000000 +0400
-@@ -1,11 +1,19 @@
- #ifndef KEXEC_ARCH_MIPS_OPTIONS_H
- #define KEXEC_ARCH_MIPS_OPTIONS_H
- 
--#define OPT_ARCH_MAX   (OPT_MAX+0)
-+#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
- 
-+#ifdef __mips64
-+#define OPT_ELF64_CORE  (OPT_MAX+1)
- #define KEXEC_ARCH_OPTIONS \
-     KEXEC_OPTIONS \
-+    { "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
- 
--#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
-+#define OPT_ARCH_MAX       (OPT_MAX+2)
-+#else
-+#define KEXEC_ARCH_OPTIONS \
-+    KEXEC_OPTIONS \
- 
-+#define OPT_ARCH_MAX   (OPT_MAX+0)
-+#endif
- #endif /* KEXEC_ARCH_MIPS_OPTIONS_H */
-diff -Naur -wb a/kexec/arch/mips/kexec-elf-mips.c 
-b/kexec/arch/mips/kexec-elf-mips.c
---- a/kexec/arch/mips/kexec-elf-mips.c    2008-06-24 09:51:03.000000000 
-+0400
-+++ b/kexec/arch/mips/kexec-elf-mips.c    2008-06-24 13:02:55.000000000 
-+0400
-@@ -27,49 +27,12 @@
- #include "../../kexec-elf.h"
- #include "kexec-mips.h"
- #include <arch/options.h>
-+#include "crashdump-mips.h"
- 
- static const int probe_debug = 0;
- 
--#define BOOTLOADER         "kexec"
--#define MAX_COMMAND_LINE   256
--
--#define UPSZ(X) ((sizeof(X) + 3) & ~3)
--static struct boot_notes {
--    Elf_Bhdr hdr;
--    Elf_Nhdr bl_hdr;
--    unsigned char bl_desc[UPSZ(BOOTLOADER)];
--    Elf_Nhdr blv_hdr;
--    unsigned char blv_desc[UPSZ(BOOTLOADER_VERSION)];
--    Elf_Nhdr cmd_hdr;
--    unsigned char command_line[0];
--} elf_boot_notes = {
--    .hdr = {
--        .b_signature = 0x0E1FB007,
--        .b_size = sizeof(elf_boot_notes),
--        .b_checksum = 0,
--        .b_records = 3,
--    },
--    .bl_hdr = {
--        .n_namesz = 0,
--        .n_descsz = sizeof(BOOTLOADER),
--        .n_type = EBN_BOOTLOADER_NAME,
--    },
--    .bl_desc = BOOTLOADER,
--    .blv_hdr = {
--        .n_namesz = 0,
--        .n_descsz = sizeof(BOOTLOADER_VERSION),
--        .n_type = EBN_BOOTLOADER_VERSION,
--    },
--    .blv_desc = BOOTLOADER_VERSION,
--    .cmd_hdr = {
--        .n_namesz = 0,
--        .n_descsz = 0,
--        .n_type = EBN_COMMAND_LINE,
--    },
--};
--
--
--#define OPT_APPEND    (OPT_ARCH_MAX+0)
-+/* 'kexec' in cmdline is used to find cmdline buffer by kernel */
-+static char cmdline_buf[256] = "kexec ";
- 
- int elf_mips_probe(const char *buf, off_t len)
- {
-@@ -108,16 +71,14 @@
-     struct kexec_info *info)
- {
-     struct mem_ehdr ehdr;
--    char *arg_buf;
--    size_t arg_bytes;
--    unsigned long arg_base;
--    struct boot_notes *notes;
--    size_t note_bytes;
--    const char *command_line;
--    int command_line_len;
--    unsigned char *setup_start;
--    uint32_t setup_size;
-+    unsigned long bss_start, bss_size = 0;
-+    const char *command_line = NULL;
-+    char *modified_cmdline;
-+    int modified_cmdline_len;
-+    unsigned long cmdline_addr;
-+    int result,i;
-     int opt;
-+#define OPT_APPEND     (OPT_ARCH_MAX+0)
-     static const struct option options[] = {
-         KEXEC_ARCH_OPTIONS
-         {"command-line", 1, 0, OPT_APPEND},
-@@ -144,38 +105,84 @@
-             break;
-         }
-     }
--    command_line_len = 0;
--    setup_simple_regs.spr9 = 0;
-+
-+    /* Need to append some command line parameters internally in case of
-+     * taking crash dumps.
++    /* Non-relocated address works for args and kexec_start_address ( old
++     * kernel is not overwritten). But we need relocated address of
++     * kexec_flag.
 +     */
-+    if (info->kexec_flags & KEXEC_ON_CRASH) {
-+        modified_cmdline = xmalloc(COMMAND_LINE_SIZE);
-+        memset((void *)modified_cmdline, 0, COMMAND_LINE_SIZE);
-     if (command_line) {
--        command_line_len = strlen(command_line) + 1;
--        setup_simple_regs.spr9 = 2;
-+            strncpy(modified_cmdline, command_line, COMMAND_LINE_SIZE);
-+            modified_cmdline[COMMAND_LINE_SIZE - 1] = '\0';
-+        }
-+        modified_cmdline_len = strlen(modified_cmdline);
-     }
- 
--    /* Load the ELF executable */
--    elf_exec_build_load(info, &ehdr, buf, len, 0);
-+    /* Parse the Elf file */
-+    result = build_elf_exec_info(buf, len, &ehdr, 0);
-+    if (result < 0) {
-+        die("ELF exec parse failed\n");
-+    }
- 
--    setup_start = setup_simple_start;
--    setup_size = setup_simple_size;
--    setup_simple_regs.spr8 = ehdr.e_entry;
-+    /* Read in the PT_LOAD segments and remove CKSEG0 mask from address*/
-+    for(i = 0; i < ehdr.e_phnum; i++) {
-+        struct mem_phdr *phdr;
-+        phdr = &ehdr.e_phdr[i];
-+        if (phdr->p_type == PT_LOAD) {
-+            phdr->p_paddr = virt_to_phys(phdr->p_paddr);
-+        }
-+    }
- 
--    note_bytes = sizeof(elf_boot_notes) + ((command_line_len + 3) & ~3);
--    arg_bytes = note_bytes + ((setup_size + 3) & ~3);
-+    for(i = 0; i < ehdr.e_shnum; i++) {
-+        struct mem_shdr *shdr;
-+        unsigned char *strtab;
-+        strtab = (unsigned char *)ehdr.e_shdr[ehdr.e_shstrndx].sh_data;
- 
--    arg_buf = xmalloc(arg_bytes);
--    arg_base = add_buffer_virt(info,
--         arg_buf, arg_bytes, arg_bytes, 4, 0, elf_max_addr(&ehdr), 1);
-+        shdr = &ehdr.e_shdr[i];
-+        if ( shdr->sh_size &&
-+                strcmp((char *)&strtab[shdr->sh_name],
-+                    ".bss") == 0) {
-+            bss_start = virt_to_phys(shdr->sh_addr);
-+            bss_size = shdr->sh_size;
-+            break;
-+        }
- 
--    notes = (struct boot_notes *)(arg_buf + ((setup_size + 3) & ~3));
-+    }
- 
--    memcpy(arg_buf, setup_start, setup_size);
--    memcpy(notes, &elf_boot_notes, sizeof(elf_boot_notes));
--    memcpy(notes->command_line, command_line, command_line_len);
-+    /* Load the Elf data */
-+    result = elf_exec_load(&ehdr, info);
-+    if (result < 0) {
-+        die("ELF exec load failed\n");
-+    }
-+    info->entry = virt_to_phys(ehdr.e_entry);
- 
--    notes->hdr.b_size = note_bytes;
--    notes->cmd_hdr.n_descsz = command_line_len;
--    notes->hdr.b_checksum = compute_ip_checksum(notes, note_bytes);
-+    if(!bss_size)
-+        die("No .bss segment present\n");
- 
--    info->entry = (void *)arg_base;
-+    /* Put cmdline right after bss */
-+    cmdline_addr = bss_start + bss_size;
 +
-+    /* If panic kernel is being loaded, additional segments need
-+     * to be created.
-+     */
-+    if (info->kexec_flags & KEXEC_ON_CRASH) {
-+        result = load_crashdump_segments(info, modified_cmdline,
-+                        0, 0);
-+        if (result < 0)
-+            return -1;
-+        /* Use new command line. */
-+        command_line = modified_cmdline;
-+    }
-+    
-+    if (command_line)
-+    {
-+        strncat(cmdline_buf,command_line,
-+            sizeof(cmdline_buf) - strlen(cmdline_buf) - 1);
-+        add_buffer(info, cmdline_buf, sizeof(cmdline_buf),
-+            sizeof(cmdline_buf), sizeof(void*),
-+            cmdline_addr, 0x0fffffff, 1);
-+    }
- 
-     return 0;
- }
-diff -Naur -wb a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
---- a/kexec/arch/mips/kexec-mips.c    2008-06-24 12:29:18.000000000 +0400
-+++ b/kexec/arch/mips/kexec-mips.c    2008-06-24 13:04:28.000000000 +0400
-@@ -30,7 +30,7 @@
- {
-     int memory_ranges = 0;
- 
--#if 0
-+#if 1
-     /* this is valid for gemini2 platform based on tx4938
-      * in our case, /proc/iomem doesn't report ram space
-      */
-@@ -39,7 +39,7 @@
-      memory_range[memory_ranges].type = RANGE_RAM;
-      memory_ranges++;
- #else
--#warning You may need to fix this for your platform
-+#error Please, fix this for your platform
-     const char iomem[] = "/proc/iomem";
-     char line[MAX_LINE];
-     FILE *fp;
-@@ -97,8 +97,18 @@
- 
- void arch_usage(void)
- {
-+#ifdef __mips64
-+    fprintf(stderr, "     --elf32-core-headers Prepare core headers in "
-+            "ELF32 format\n");
-+#endif
- }
- 
-+#ifdef __mips64
-+struct arch_options_t arch_options = {
-+    .core_header_type = CORE_TYPE_ELF64
-+};
++    bal        1f
++1:    move        t1,ra;
++    PTR_LA        t2,1b
++    PTR_LA        t0,kexec_flag
++    PTR_SUB        t0,t0,t2;
++    PTR_ADD        t0,t1,t0;
++
++1:    LONG_L        s0, (t0)
++    bne        s0, zero,1b
++
++    j        s1
++    END(kexec_smp_wait)
 +#endif
 +
- int arch_process_options(int argc, char **argv)
- {
-     static const struct option options[] = {
-@@ -113,6 +123,12 @@
-         switch(opt) {
-         default:
-             break;
++
 +#ifdef __mips64
-+        case OPT_ELF64_CORE:
-+            arch_options.core_header_type = CORE_TYPE_ELF64;
-+            break;
++       /* all PTR's must be aligned to 8 byte in 64-bit mode */
++       .align  3
 +#endif
-+        
-         }
-     }
-     /* Reset getopt for the next pass; called in other source modules */
-@@ -126,6 +142,10 @@
-      * use KEXEC_ARCH_DEFAULT instead of KEXEC_ARCH_MIPS here.
-      */
-     { "mips", KEXEC_ARCH_DEFAULT },
-+       /* Not using KEXEC_ARCH_DEFAULT because that will fail
-+    * in the kernel's compat_sys_kexec_load() routine.
-+    */
-+    { "mips64", KEXEC_ARCH_MIPS },
-     { 0 },
- };
- 
-@@ -138,38 +158,9 @@
- {
- }
- 
--/*
-- * Adding a dummy function, so that build on mips will not break.
-- * Need to implement the actual checking code
-- */
--int is_crashkernel_mem_reserved(void)
--{
--    return 1;
--}
--
- unsigned long virt_to_phys(unsigned long addr)
- {
--    return addr - 0x80000000;
-+    return ((addr)& 0x7fffffff);
- }
- 
--/*
-- * add_segment() should convert base to a physical address on mips,
-- * while the default is just to work with base as is */
--void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
--         unsigned long base, size_t memsz)
--{
--    add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
--}
--
--/*
-- * add_buffer() should convert base to a physical address on mips,
-- * while the default is just to work with base as is */
--unsigned long add_buffer(struct kexec_info *info, const void *buf,
--             unsigned long bufsz, unsigned long memsz,
--             unsigned long buf_align, unsigned long buf_min,
--             unsigned long buf_max, int buf_end)
--{
--    return add_buffer_phys_virt(info, buf, bufsz, memsz, buf_align,
--                    buf_min, buf_max, buf_end, 1);
--}
- 
-diff -Naur -wb a/kexec/arch/mips/kexec-mips.h b/kexec/arch/mips/kexec-mips.h
---- a/kexec/arch/mips/kexec-mips.h    2008-06-16 13:37:36.000000000 +0400
-+++ b/kexec/arch/mips/kexec-mips.h    2008-06-24 12:07:24.000000000 +0400
-@@ -1,17 +1,16 @@
- #ifndef KEXEC_MIPS_H
- #define KEXEC_MIPS_H
- 
--extern unsigned char setup_simple_start[];
--extern uint32_t setup_simple_size;
--
--extern struct {
--    uint32_t spr8;
--    uint32_t spr9;
--} setup_simple_regs;
-+#define MAX_MEMORY_RANGES 64
-+#define CORE_TYPE_ELF32 1
-+#define CORE_TYPE_ELF64 2
- 
- int elf_mips_probe(const char *buf, off_t len);
- int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
-     struct kexec_info *info);
- void elf_mips_usage(void);
- 
-+struct arch_options_t {
-+    int     core_header_type;
-+};
- #endif /* KEXEC_MIPS_H */
-diff -Naur -wb a/kexec/arch/mips/Makefile b/kexec/arch/mips/Makefile
---- a/kexec/arch/mips/Makefile    2008-06-16 13:37:36.000000000 +0400
-+++ b/kexec/arch/mips/Makefile    2008-06-24 09:41:19.000000000 +0400
-@@ -1,16 +1,7 @@
- #
- # kexec mips (linux booting linux)
- #
--mips_KEXEC_SRCS =  kexec/arch/mips/kexec-mips.c
--mips_KEXEC_SRCS += kexec/arch/mips/kexec-elf-mips.c
--mips_KEXEC_SRCS += kexec/arch/mips/kexec-elf-rel-mips.c
--mips_KEXEC_SRCS += kexec/arch/mips/mips-setup-simple.S
--
--mips_ADD_BUFFER =
--mips_ADD_SEGMENT =
--mips_VIRT_TO_PHYS =
--
--dist += kexec/arch/mips/Makefile $(mips_KEXEC_SRCS)            \
--    kexec/arch/mips/kexec-mips.h                    \
--    kexec/arch/mips/include/arch/options.h
--
-+KEXEC_C_SRCS+= kexec/arch/mips/kexec-mips.c
-+KEXEC_C_SRCS+= kexec/arch/mips/kexec-elf-mips.c
-+KEXEC_C_SRCS+= kexec/arch/mips/kexec-elf-rel-mips.c
-+KEXEC_C_SRCS+= kexec/arch/mips/crashdump-mips.c
-diff -Naur -wb a/kexec/arch/mips/mips-setup-simple.S 
-b/kexec/arch/mips/mips-setup-simple.S
---- a/kexec/arch/mips/mips-setup-simple.S    2008-06-16 
-13:37:36.000000000 +0400
-+++ b/kexec/arch/mips/mips-setup-simple.S    1970-01-01 
-03:00:00.000000000 +0300
-@@ -1,110 +0,0 @@
--/*
-- * mips-setup-simple.S - code to execute before kernel to handle 
-command line
-- * Copyright (C) 2007 Francesco Chiechi, Alessandro Rubini
-- * Copyright (C) 2007 Tvblob s.r.l.
-- *
-- * derived from Albert Herranz idea (ppc) adding command line support
-- * (boot_notes structure)
-- *
-- * This source code is licensed under the GNU General Public License,
-- * Version 2.  See the file COPYING for more details.
-- */
--
--/*
-- * Only suitable for platforms booting with MMU turned off.
-- * -- Albert Herranz
-- */
--#include "regdef.h"
--
--/* returns  t0 = relocated address of sym */
--/* modifies t1 t2 */
--/* sym must not be global or this will not work (at least AFAIK up to 
-now) */
--#define RELOC_SYM(sym)                                                 \
--    move    t0,ra;          /* save ra */                           \
--    bal 1f;                                                         \
--1:                                                                     \
--    move    t1,ra;          /* now t1 is 1b (where we are now) */   \
--    move    ra,t0;          /* restore ra */                        \
--    lui     t2,%hi(1b);                                             \
--    ori     t2,t2,%lo(1b);                                          \
--    lui     t0,%hi(sym);                                            \
--    ori     t0,t0,%lo(sym);                                         \
--    sub     t0,t0,t2;       /* t0 = offset between sym and 1b */    \
--    add     t0,t1,t0;       /* t0 = actual address in memory */
--
--    .data
--    .globl setup_simple_start
--setup_simple_start:
--
--    /* should perform here any required setup */
--
--    /* Initialize GOT pointer (verify if needed) */
--    bal     1f
--    nop
--    .word   _GLOBAL_OFFSET_TABLE_
--    1:
--    move    gp, ra
--    lw      t1, 0(ra)
--    move    gp, t1
--
--    /* spr8 relocation */
--    RELOC_SYM(spr8)
--
--    move    t4,t0           // save pointer to kernel start addr
--    lw      t3,0(t0)        // save kernel start address
--
--    /* spr9 relocation */
--    RELOC_SYM(spr9)
--    lw      a0,0(t0)        // load argc
--
--    // this code is to be changed if boot_notes struct changes
--    lw      t2,12(t4)       // t2 is size of boot_notes struct
--    addi    t2,t2,3
--    srl     t2,t2,2
--    sll     v1,t2,2         // v1 = size of boot_notes struct
--                // aligned to word boundary
--
--    addi    t0,t4,0x20      // t0 contains the address of "kexec" string
--    add     v0,t4,v1        // v0 points to last word of boot_notes
--    addi    v0,v0,8         // v0 points to address after boot_notes
--    sw      t0,0(v0)        // store pointer to "kexec" string there
--
--    lw      t2,-8(t0)       // t2 is size of "kexec" string in bytes
--    addi    t2,t2,3
--    srl     t2,t2,2
--    sll     v1,t2,2         // v1 = size of "kexec" string
--                // aligned to word boundary
--    add     t2,t0,v1
--    addi    t0,t2,4         // t0 points to size of version string
--
--    lw      t2,0(t0)        // t2 is size of version string in bytes
--    addi    t2,t2,3
--    srl     t2,t2,2
--    sll     v1,t2,2         // v1 = size of version string
--                // aligned to word boundary
--
--    addi    t0,t0,8         // t0 points to version string
--    add     t0,t0,v1        // t0 points to start of command_line record
--    addi    t0,t0,12        // t0 points command line
--
--    sw      t0,4(v0)        // store pointer to command line
--
--    move    a1,v0           // load argv
--    li      a2,0
--    li      a3,0
--
--    jr      t3
--    nop
--
--    .balign 4
--    .globl setup_simple_regs
--setup_simple_regs:
--spr8:    .long 0x00000000
--spr9:    .long 0x00000000
--
--setup_simple_end:
--
--    .globl setup_simple_size
--setup_simple_size:
--    .long setup_simple_end - setup_simple_start
--
-diff -Naur -wb a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
---- a/kexec/kexec-syscall.h    2008-06-16 13:37:36.000000000 +0400
-+++ b/kexec/kexec-syscall.h    2008-06-24 12:06:41.000000000 +0400
-@@ -52,6 +52,9 @@
- #if defined(__mips__)
- #define __NR_kexec_load                4311
- #endif
-+#if defined(__mips64__)
-+#define __NR_kexec_load                5270
++
++/* All parameters to new kernel are passed in registers a0-a3.
++ * kexec_args[0..3] are uses to prepare register values.
++ */
++
++kexec_args:
++    EXPORT(kexec_args)
++arg0:    PTR        0x0
++arg1:    PTR        0x0
++arg2:    PTR        0x0
++arg3:    PTR        0x0
++    .size    kexec_args,PTRSIZE*4
++
++#ifdef CONFIG_SMP
++/*
++ * Secondary CPUs may have different kernel parameters in
++ * their registers a0-a3. secondary_kexec_args[0..3] are used
++ * to prepare register values.
++ */
++secondary_kexec_args:
++    EXPORT(secondary_kexec_args)
++s_arg0:    PTR        0x0
++s_arg1:    PTR        0x0
++s_arg2:    PTR        0x0
++s_arg3:    PTR        0x0
++    .size    secondary_kexec_args,PTRSIZE*4
++kexec_flag:
++    LONG        0x1
++
 +#endif
- #ifndef __NR_kexec_load
- #error Unknown processor architecture.  Needs a kexec_load syscall number.
- #endif
++
++
+kexec_start_address:
+    EXPORT(kexec_start_address)
+    PTR        0x0
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index c6a063b..4054f15 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -21,7 +21,7 @@
+#include <linux/console.h>
+#include <linux/pfn.h>
+#include <linux/debugfs.h>
+-
++#include <linux/kexec.h>
+#include <asm/addrspace.h>
+#include <asm/bootinfo.h>
+#include <asm/bugs.h>
+@@ -494,6 +494,11 @@ static void __init arch_mem_init(char **cmdline_p)
+    }
+
+    bootmem_init();
++#ifdef CONFIG_KEXEC
++    if (crashk_res.start != crashk_res.end)
++        reserve_bootmem(crashk_res.start,
++                crashk_res.end - crashk_res.start + 1);
++#endif
+    sparse_init();
+    paging_init();
+}
+@@ -548,6 +553,9 @@ static void __init resource_init(void)
+         */
+        request_resource(res, &code_resource);
+        request_resource(res, &data_resource);
++#ifdef CONFIG_KEXEC
++        request_resource(res, &crashk_res);
++#endif
+    }
+}
+
+diff --git a/include/asm-mips/kexec.h b/include/asm-mips/kexec.h
+index cdbab43..51554cb 100644
+--- a/include/asm-mips/kexec.h
++++ b/include/asm-mips/kexec.h
+@@ -9,6 +9,8 @@
+#ifndef _MIPS_KEXEC
+# define _MIPS_KEXEC
+
++#include <asm/stacktrace.h>
++
+/* Maximum physical address we can use pages from */
+#define KEXEC_SOURCE_MEMORY_LIMIT (0x20000000)
+/* Maximum address we can reach in physical address mode */
+@@ -24,7 +26,24 @@
+static inline void crash_setup_regs(struct pt_regs *newregs,
+                    struct pt_regs *oldregs)
+{
+-    /* Dummy implementation for now */
++    if (oldregs)
++        memcpy(newregs, oldregs, sizeof(*newregs));
++    else
++        prepare_frametrace(newregs);
+}
+
++#ifdef CONFIG_KEXEC
++struct kimage;
++extern unsigned long kexec_args[4];
++extern int (*_machine_kexec_prepare)(struct kimage *);
++extern void (*_machine_kexec_shutdown)(void);
++extern void (*_machine_crash_shutdown)(struct pt_regs *regs);
++extern void default_machine_crash_shutdown(struct pt_regs *regs);
++#ifdef CONFIG_SMP
++extern const unsigned char kexec_smp_wait[];
++extern unsigned long secondary_kexec_args[4];
++extern void (*relocated_kexec_smp_wait) (void *);
++extern atomic_t kexec_ready_to_reboot;
++#endif
++#endif
+#endif /* !_MIPS_KEXEC */
+-- 
+1.5.5.3
+
+
 
 
 _______________________________________________
