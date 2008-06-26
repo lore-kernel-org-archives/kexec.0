@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBqoY-0003ha-L4
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 12:43:02 +0000
-Date: Thu, 26 Jun 2008 08:42:04 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
-Message-ID: <20080626124204.GB3878@redhat.com>
-References: <1214423826-12628-1-git-send-email-bwalle@suse.de>
-	<1214423826-12628-2-git-send-email-bwalle@suse.de>
-	<20080625224301.GE32344@redhat.com>
-	<18531.20387.111875.576837@harpo.it.uu.se>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBqsJ-0003qb-8D
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 12:46:56 +0000
+Date: Thu, 26 Jun 2008 14:47:31 +0200
+Subject: [PATCH] Fix vmcoreinfo generation on 32bit hosts for 64bit kernels
+Message-ID: <20080626124731.GA24365@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <18531.20387.111875.576837@harpo.it.uu.se>
+From: bwalle@suse.de (Bernhard Walle)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,71 +21,185 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mikael Pettersson <mikpe@it.uu.se>
-Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com
+To: oomichi@mxs.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-On Thu, Jun 26, 2008 at 10:13:23AM +0200, Mikael Pettersson wrote:
-> Vivek Goyal writes:
->  > On Wed, Jun 25, 2008 at 09:57:05PM +0200, Bernhard Walle wrote:
->  > > This patch adds /sys/firmware/memmap interface that represents the BIOS
->  > > (or Firmware) provided memory map. The tree looks like:
->  > > 
->  > >     /sys/firmware/memmap/0/start   (hex number)
->  > >                            end     (hex number)
->  > >                            type    (string)
->  > >     ...                 /1/start
->  > >                            end
->  > >                            type
->  > > 
->  > > With the following shell snippet one can print the memory map in the same form
->  > > the kernel prints itself when booting on x86 (the E820 map).
->  > > 
->  > >   --------- 8< --------------------------
->  > >     #!/bin/sh
->  > >     cd /sys/firmware/memmap
->  > >     for dir in * ; do
->  > >         start=$(cat $dir/start)
->  > >         end=$(cat $dir/end)
->  > >         type=$(cat $dir/type)
->  > >         printf "%016x-%016x (%s)\n" $start $[ $end +1] "$type"
->  > >     done
->  > >   --------- >8 --------------------------
->  > > 
->  > > That patch only provides the needed interface:
->  > > 
->  > >  1. The sysfs interface.
->  > >  2. The structure and enumeration definition.
->  > >  3. The function firmware_map_add() and firmware_map_add_early()
->  > >     that should be called from architecture code (E820/EFI, for
->  > >     example) to add the contents to the interface.
->  > > 
->  > > If the kernel is compiled without CONFIG_FIRMWARE_MEMMAP, the interface does
->  > > nothing without cluttering the architecture-specific code with #ifdef's.
->  > > 
->  > 
->  > Hi Bernhard,
->  > 
->  > Thanks for the patch. Couple of thoughts.
->  > 
->  > Do we really need another CONFIG option (CONFIG_FIRMWARE_MEMMAP)? To,
->  > me this does not seem to be a big chunk of code
-> 
-> It should be configurable. Whether it's done via CONFIG_KEXEC or its own
-> option I don't care.
-> 
+This bug fixes the generation of vmcoreinfo files on 32bit hosts for ELF64
+files, i.e. 64bit kernels. The concrete problem was PPC64 which is built in a
+32bit environment at SUSE.
 
-That's fine. I am just curious how does one decide whether a particular
-functionality should have a separate CONFIG option or not.
 
-I thought if a functionality is sufficiently big/significant (in terms of code
-and in terms of memory allocation etc), then it is a good idea to put it
-under a CONFIG option, in case people want to compile it out. 
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-Just that looking at the patch, personally, I don't think that it makes
-lot of sense to create a separate CONFIG option for this patch. 
+---
+ makedumpfile.c |   37 ++++++++++++++++++-----------------
+ makedumpfile.h |   60 ++++++++++++++++++++++++++++-----------------------------
+ 2 files changed, 49 insertions(+), 48 deletions(-)
 
-Thanks
-Vivek
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -123,7 +123,7 @@ vaddr_to_offset_general(unsigned long lo
+  * It is useful at few calls like get_str_osrelease_from_vmlinux().
+  */
+ off_t
+-vaddr_to_offset_slow(int fd, char *filename, unsigned long vaddr)
++vaddr_to_offset_slow(int fd, char *filename, unsigned long long vaddr)
+ {
+ 	off_t offset = 0;
+ 	int i, phnum, num_load, flag_elf64, elf_format;
+@@ -170,6 +170,7 @@ vaddr_to_offset_slow(int fd, char *filen
+ 			break;
+ 		}
+ 	}
++
+ 	return offset;
+ }
+ 
+@@ -970,11 +971,11 @@ out:
+ 	return ret;
+ }
+ 
+-unsigned long
++unsigned long long
+ get_symbol_addr(char *symname)
+ {
+ 	int i;
+-	unsigned long symbol = NOT_FOUND_SYMBOL;
++	unsigned long long symbol = NOT_FOUND_SYMBOL;
+ 	Elf *elfd = NULL;
+ 	GElf_Shdr shdr;
+ 	GElf_Sym sym;
+@@ -1949,7 +1950,7 @@ int
+ get_str_osrelease_from_vmlinux()
+ {
+ 	struct utsname system_utsname;
+-	unsigned long utsname;
++	unsigned long long utsname;
+ 	off_t offset;
+ 	const off_t failed = (off_t)-1;
+ 
+@@ -1968,7 +1969,7 @@ get_str_osrelease_from_vmlinux()
+ 	    dwarf_info.name_debuginfo, utsname);
+ 
+ 	if (!offset) {
+-		ERRMSG("Can't convert vaddr (%lx) of utsname to an offset.\n",
++		ERRMSG("Can't convert vaddr (%llx) of utsname to an offset.\n",
+ 		    utsname);
+ 		return FALSE;
+ 	}
+@@ -5684,19 +5685,19 @@ show_data_xen()
+ 	 * Show data for debug
+ 	 */
+ 	MSG("\n");
+-	MSG("SYMBOL(dom_xen): %lx\n", SYMBOL(dom_xen));
+-	MSG("SYMBOL(dom_io): %lx\n", SYMBOL(dom_io));
+-	MSG("SYMBOL(domain_list): %lx\n", SYMBOL(domain_list));
+-	MSG("SYMBOL(xen_heap_start): %lx\n", SYMBOL(xen_heap_start));
+-	MSG("SYMBOL(frame_table): %lx\n", SYMBOL(frame_table));
+-	MSG("SYMBOL(alloc_bitmap): %lx\n", SYMBOL(alloc_bitmap));
+-	MSG("SYMBOL(max_page): %lx\n", SYMBOL(max_page));
+-	MSG("SYMBOL(pgd_l2): %lx\n", SYMBOL(pgd_l2));
+-	MSG("SYMBOL(pgd_l3): %lx\n", SYMBOL(pgd_l3));
+-	MSG("SYMBOL(pgd_l4): %lx\n", SYMBOL(pgd_l4));
+-	MSG("SYMBOL(xenheap_phys_end): %lx\n", SYMBOL(xenheap_phys_end));
+-	MSG("SYMBOL(xen_pstart): %lx\n", SYMBOL(xen_pstart));
+-	MSG("SYMBOL(frametable_pg_dir): %lx\n", SYMBOL(frametable_pg_dir));
++	MSG("SYMBOL(dom_xen): %llx\n", SYMBOL(dom_xen));
++	MSG("SYMBOL(dom_io): %llx\n", SYMBOL(dom_io));
++	MSG("SYMBOL(domain_list): %llx\n", SYMBOL(domain_list));
++	MSG("SYMBOL(xen_heap_start): %llx\n", SYMBOL(xen_heap_start));
++	MSG("SYMBOL(frame_table): %llx\n", SYMBOL(frame_table));
++	MSG("SYMBOL(alloc_bitmap): %llx\n", SYMBOL(alloc_bitmap));
++	MSG("SYMBOL(max_page): %llx\n", SYMBOL(max_page));
++	MSG("SYMBOL(pgd_l2): %llx\n", SYMBOL(pgd_l2));
++	MSG("SYMBOL(pgd_l3): %llx\n", SYMBOL(pgd_l3));
++	MSG("SYMBOL(pgd_l4): %llx\n", SYMBOL(pgd_l4));
++	MSG("SYMBOL(xenheap_phys_end): %llx\n", SYMBOL(xenheap_phys_end));
++	MSG("SYMBOL(xen_pstart): %llx\n", SYMBOL(xen_pstart));
++	MSG("SYMBOL(frametable_pg_dir): %llx\n", SYMBOL(frametable_pg_dir));
+ 
+ 	MSG("SIZE(page_info): %ld\n", SIZE(page_info));
+ 	MSG("OFFSET(page_info.count_info): %ld\n", OFFSET(page_info.count_info));
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -258,7 +258,7 @@ do { \
+ #define WRITE_SYMBOL(str_symbol, symbol) \
+ do { \
+ 	if (SYMBOL(symbol) != NOT_FOUND_SYMBOL) { \
+-		fprintf(info->file_vmcoreinfo, "%s%lx\n", \
++		fprintf(info->file_vmcoreinfo, "%s%llx\n", \
+ 		    STR_SYMBOL(str_symbol), SYMBOL(symbol)); \
+ 	} \
+ } while (0)
+@@ -802,39 +802,39 @@ struct vm_table {
+ extern struct vm_table		vt;
+ 
+ struct symbol_table {
+-	unsigned long	mem_map;
+-	unsigned long	mem_section;
+-	unsigned long	pkmap_count;
+-	unsigned long	pkmap_count_next;
+-	unsigned long	system_utsname;
+-	unsigned long	init_uts_ns;
+-	unsigned long	_stext;
+-	unsigned long	swapper_pg_dir;
+-	unsigned long	init_level4_pgt;
+-	unsigned long	phys_base;
+-	unsigned long	node_online_map;
+-	unsigned long	node_states;
+-	unsigned long	node_memblk;
+-	unsigned long	node_data;
+-	unsigned long	pgdat_list;
+-	unsigned long	contig_page_data;
++	unsigned long long	mem_map;
++	unsigned long long	mem_section;
++	unsigned long long	pkmap_count;
++	unsigned long long	pkmap_count_next;
++	unsigned long long	system_utsname;
++	unsigned long long	init_uts_ns;
++	unsigned long long 	_stext;
++	unsigned long long 	swapper_pg_dir;
++	unsigned long long 	init_level4_pgt;
++	unsigned long long 	phys_base;
++	unsigned long long 	node_online_map;
++	unsigned long long 	node_states;
++	unsigned long long 	node_memblk;
++	unsigned long long 	node_data;
++	unsigned long long 	pgdat_list;
++	unsigned long long 	contig_page_data;
+ 
+ 	/*
+ 	 * for Xen extraction
+ 	 */
+-	unsigned long	dom_xen;
+-	unsigned long	dom_io;
+-	unsigned long	domain_list;
+-	unsigned long	frame_table;
+-	unsigned long	xen_heap_start;
+-	unsigned long	pgd_l2;
+-	unsigned long	pgd_l3;
+-	unsigned long	pgd_l4;
+-	unsigned long	xenheap_phys_end;
+-	unsigned long	xen_pstart;
+-	unsigned long	frametable_pg_dir;
+-	unsigned long	max_page;
+-	unsigned long	alloc_bitmap;
++	unsigned long long	dom_xen;
++	unsigned long long	dom_io;
++	unsigned long long	domain_list;
++	unsigned long long	frame_table;
++	unsigned long long	xen_heap_start;
++	unsigned long long	pgd_l2;
++	unsigned long long	pgd_l3;
++	unsigned long long	pgd_l4;
++	unsigned long long	xenheap_phys_end;
++	unsigned long long	xen_pstart;
++	unsigned long long	frametable_pg_dir;
++	unsigned long long	max_page;
++	unsigned long long	alloc_bitmap;
+ };
+ 
+ struct size_table {
 
 _______________________________________________
 kexec mailing list
