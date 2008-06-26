@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from terminus.zytor.com ([198.137.202.10])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBurN-0002eM-54
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 17:02:13 +0000
-Date: Thu, 26 Jun 2008 19:02:09 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Remove experimental status of kdump on PPC64
-Message-ID: <20080626190209.3e046ea8@kopernikus.site>
-In-Reply-To: <1214494132.2791.0.camel@weaponx>
-References: <1214485035-26041-1-git-send-email-bwalle@suse.de>
-	<1214494132.2791.0.camel@weaponx>
-Mime-Version: 1.0
+	id 1KBvru-0002aB-Io
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 18:06:51 +0000
+Message-ID: <4863D930.2040300@kernel.org>
+Date: Thu, 26 Jun 2008 11:00:16 -0700
+From: "H. Peter Anvin" <hpa@kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
+References: <1214423826-12628-1-git-send-email-bwalle@suse.de>	<1214423826-12628-2-git-send-email-bwalle@suse.de>	<20080625224301.GE32344@redhat.com>	<18531.20387.111875.576837@harpo.it.uu.se>	<20080626104524.2d7ed1ab@halley.suse.de>
+	<18531.23894.572847.322265@harpo.it.uu.se>
+In-Reply-To: <18531.23894.572847.322265@harpo.it.uu.se>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +23,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Josh Boyer <jwboyer@gmail.com>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Mikael Pettersson <mikpe@it.uu.se>
+Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com, Vivek Goyal <vgoyal@redhat.com>
 
-* Josh Boyer <jwboyer@gmail.com> [2008-06-26 11:28]:
->
-> On Thu, 2008-06-26 at 14:57 +0200, Bernhard Walle wrote:
-> > This patch removes the experimental status of kdump on IA64. kdump is on IA64
-> > now since more than one year and it has proven to be stable.
+Mikael Pettersson wrote:
+> Bernhard Walle writes:
+>  > > It should be configurable. Whether it's done via CONFIG_KEXEC or its own
+>  > > option I don't care.
+>  > 
+>  > Ok, changed:
+>  > 
+>  > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+>  > index 1008737..73fcc59 100644
+>  > --- a/drivers/firmware/Kconfig
+>  > +++ b/drivers/firmware/Kconfig
+>  > @@ -28,7 +28,7 @@ config EDD_OFF
+>  >  
+>  >  config FIRMWARE_MEMMAP
+>  >      def_bool y
+>  > -    depends on X86_64 || X86_32
+>  > +    depends on (X86_64 || X86_32) && KEXEC
+>  >  
+>  >  config EFI_VARS
+>  >         tristate "EFI Variable Support via sysfs"
 > 
-> I think you mean PPC64?
+> Yep, thanks.
+> 
 
-Right. Copy & paste, I made the same patch for IA64. Resent. Sorry. :)
+Making this depend on KEXEC would be most unfortunate.  This is valuable 
+information for finding all kinds of issues even in the absence of KEXEC.
 
+I really don't see a point in making this configurable, except perhaps 
+under CONFIG_EMBEDDED.
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+	-hpa
 
 _______________________________________________
 kexec mailing list
