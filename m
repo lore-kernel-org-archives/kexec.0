@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from mx3.mail.elte.hu ([157.181.1.138])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBrDG-0004ul-4F
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 13:08:34 +0000
-Date: Thu, 26 Jun 2008 15:09:11 +0200
-Subject: [PATCH] makedumpfile: Fix compile warning
-Message-ID: <20080626130911.GA29225@suse.de>
+	id 1KBrRN-0005zR-9v
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 13:23:10 +0000
+Date: Thu, 26 Jun 2008 15:22:57 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] x86: Limit E820 map when a user-defined memory map is
+	specified
+Message-ID: <20080626132257.GD18444@elte.hu>
+References: <1214422756-10923-1-git-send-email-bwalle@suse.de>
+	<86802c440806251259o6b1b1038v9f645992415f0372@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-From: bwalle@suse.de (Bernhard Walle)
+In-Reply-To: <86802c440806251259o6b1b1038v9f645992415f0372@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,50 +21,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: Yinghai Lu <yhlu.kernel@gmail.com>
+Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-VGhpcyBwYXRjaCBmaXhlcyBmb2xsb3dpbmcgY29tcGlsZSB3YXJuaW5nOgoKICAgIG1ha2VkdW1w
-ZmlsZS5jOiBJbiBmdW5jdGlvbiDigJhyZWFkbWVt4oCZOgogICAgbWFrZWR1bXBmaWxlLmM6MjA3
-OiB3YXJuaW5nOiBjYWxsIHRvIGZ1bmN0aW9uIFwKICAgICAgICAgICAg4oCYdmFkZHJfdG9fb2Zm
-c2V0X3g4Nl82NOKAmSB3aXRob3V0IGEgcmVhbCBwcm90b3R5cGUKICAgIG1ha2VkdW1wZmlsZS5o
-OjYwMzogbm90ZTog4oCYdmFkZHJfdG9fb2Zmc2V0X3g4Nl82NOKAmSB3YXMgZGVjbGFyZWQgaGVy
-ZQoKClNpZ25lZC1vZmYtYnk6IEJlcm5oYXJkIFdhbGxlIDxid2FsbGVAc3VzZS5kZT4KCi0tLQog
-bWFrZWR1bXBmaWxlLmMgfCAgICA0ICsrKysKIG1ha2VkdW1wZmlsZS5oIHwgICAxNiArKysrKysr
-Ky0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25z
-KC0pCgotLS0gYS9tYWtlZHVtcGZpbGUuYworKysgYi9tYWtlZHVtcGZpbGUuYwpAQCAtMzAsNiAr
-MzAsMTAgQEAgc3RydWN0IER1bXBJbmZvCQkqaW5mbyA9IE5VTEw7CiBpbnQgbWVzc2FnZV9sZXZl
-bDsKIAogLyoKKyAqIEZvcndhcmQgZGVjbGFyYXRpb25zCisgKi8KKworLyoKICAqIFRoZSBudW1i
-ZXJzIG9mIHRoZSBleGNsdWRlZCBwYWdlcwogICovCiB1bnNpZ25lZCBsb25nIGxvbmcgcGZuX3pl
-cm87Ci0tLSBhL21ha2VkdW1wZmlsZS5oCisrKyBiL21ha2VkdW1wZmlsZS5oCkBAIC01OTEsMzIg
-KzU5MSwzMiBAQCBkbyB7IFwKICAqIFRoZSBmdW5jdGlvbiBvZiBkZXBlbmRlbmNlIG9uIG1hY2hp
-bmUKICAqLwogI2lmZGVmIF9feDg2X18KLWludCBnZXRfbWFjaGRlcF9pbmZvX3g4NigpOworaW50
-IGdldF9tYWNoZGVwX2luZm9feDg2KHZvaWQpOwogI2RlZmluZSBnZXRfcGh5c19iYXNlKFgpCVRS
-VUUKICNkZWZpbmUgZ2V0X21hY2hkZXBfaW5mbyhYKQlnZXRfbWFjaGRlcF9pbmZvX3g4NihYKQog
-I2RlZmluZSB2YWRkcl90b19vZmZzZXQoWCkJdmFkZHJfdG9fb2Zmc2V0X2dlbmVyYWwoWCkKICNl
-bmRpZiAvKiB4ODYgKi8KIAogI2lmZGVmIF9feDg2XzY0X18KLWludCBnZXRfcGh5c19iYXNlX3g4
-Nl82NCgpOwotaW50IGdldF9tYWNoZGVwX2luZm9feDg2XzY0KCk7Ci1vZmZfdCB2YWRkcl90b19v
-ZmZzZXRfeDg2XzY0KCk7CitpbnQgZ2V0X3BoeXNfYmFzZV94ODZfNjQodm9pZCk7CitpbnQgZ2V0
-X21hY2hkZXBfaW5mb194ODZfNjQodm9pZCk7CitvZmZfdCB2YWRkcl90b19vZmZzZXRfeDg2XzY0
-KHVuc2lnbmVkIGxvbmcgdmFkZHIpOwogI2RlZmluZSBnZXRfcGh5c19iYXNlKFgpCWdldF9waHlz
-X2Jhc2VfeDg2XzY0KFgpCiAjZGVmaW5lIGdldF9tYWNoZGVwX2luZm8oWCkJZ2V0X21hY2hkZXBf
-aW5mb194ODZfNjQoWCkKICNkZWZpbmUgdmFkZHJfdG9fb2Zmc2V0KFgpCXZhZGRyX3RvX29mZnNl
-dF94ODZfNjQoWCkKICNlbmRpZiAvKiB4ODZfNjQgKi8KIAogI2lmZGVmIF9fcG93ZXJwY19fIC8q
-IHBvd2VycGMgKi8KLWludCBnZXRfbWFjaGRlcF9pbmZvX3BwYzY0KCk7CitpbnQgZ2V0X21hY2hk
-ZXBfaW5mb19wcGM2NCh2b2lkKTsKICNkZWZpbmUgZ2V0X21hY2hkZXBfaW5mbyhYKQlnZXRfbWFj
-aGRlcF9pbmZvX3BwYzY0KFgpCiAjZGVmaW5lIGdldF9waHlzX2Jhc2UoWCkJVFJVRQogI2RlZmlu
-ZSB2YWRkcl90b19vZmZzZXQoWCkJdmFkZHJfdG9fb2Zmc2V0X2dlbmVyYWwoWCkKICNlbmRpZiAg
-ICAgICAgICAvKiBwb3dlcnBjICovCiAKICNpZmRlZiBfX2lhNjRfXyAvKiBpYTY0ICovCi1pbnQg
-Z2V0X3BoeXNfYmFzZV9pYTY0KCk7Ci1pbnQgZ2V0X21hY2hkZXBfaW5mb19pYTY0KCk7Ci1vZmZf
-dCB2YWRkcl90b19vZmZzZXRfaWE2NCgpOworaW50IGdldF9waHlzX2Jhc2VfaWE2NCh2b2lkKTsK
-K2ludCBnZXRfbWFjaGRlcF9pbmZvX2lhNjQodm9pZCk7CitvZmZfdCB2YWRkcl90b19vZmZzZXRf
-aWE2NCh1bnNpZ25lZCBsb25nIHZhZGRyKTsKICNkZWZpbmUgZ2V0X21hY2hkZXBfaW5mbyhYKQln
-ZXRfbWFjaGRlcF9pbmZvX2lhNjQoWCkKICNkZWZpbmUgZ2V0X3BoeXNfYmFzZShYKQlnZXRfcGh5
-c19iYXNlX2lhNjQoWCkKICNkZWZpbmUgdmFkZHJfdG9fb2Zmc2V0KFgpCXZhZGRyX3RvX29mZnNl
-dF9pYTY0KFgpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+
+* Yinghai Lu <yhlu.kernel@gmail.com> wrote:
+
+> On Wed, Jun 25, 2008 at 12:39 PM, Bernhard Walle <bwalle@suse.de> wrote:
+> > This patch brings back limiting of the E820 map when a user-defined
+> > E820 map is specified. While the behaviour of i386 (32 bit) was to limit
+> > the E820 map (and /proc/iomem), the behaviour of x86-64 (64 bit) was not to
+> > limit.
+> >
+> > That patch limits the E820 map again for both x86 architectures.
+> >
+> > Code was tested for compilation and booting on a 32 bit and 64 bit system.
+> >
+> >
+> > Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> 
+> Acked-by: Yinghai Lu <yhlu.kernel@gmail.com>
+
+applied to tip/x86/unify-setup - thanks.
+
+	Ingo
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
