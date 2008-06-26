@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBmc2-0006cB-VW
+	id 1KBmc2-0006cC-VZ
 	for kexec@lists.infradead.org; Thu, 26 Jun 2008 08:13:51 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: x86: Add /sys/firmware/memmap
-Date: Thu, 26 Jun 2008 10:14:25 +0200
-Message-Id: <1214468067-1231-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH 2/2] Use FIRMWARE_MEMMAP on x86/E820
+Date: Thu, 26 Jun 2008 10:14:27 +0200
+Message-Id: <1214468067-1231-3-git-send-email-bwalle@suse.de>
+In-Reply-To: <1214468067-1231-1-git-send-email-bwalle@suse.de>
+References: <1214468067-1231-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +25,123 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: x86@kernel.org
 Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, yhlu.kernel@gmail.com
 
-This patch series adds a new interface /sys/firmware/memmap
-to export the BIOS (Firmware) provided memory map via sysfs
-for usage with kexec.
-
-While the first patch adds the generic interface, the second
-patch implements that interface for E820 on x86. EFI is on the TODO
-list, and other architectures can be added later.
+This patch uses the /sys/firmware/memmap interface provided in the last patch
+on the x86 architecture when E820 is used. The patch copies the E820
+memory map very early, and registers the E820 map afterwards via
+firmware_map_add_early().
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ arch/x86/kernel/e820.c |   42 ++++++++++++++++++++++++++++++++++++------
+ include/asm-x86/e820.h |    2 ++
+ 2 files changed, 38 insertions(+), 6 deletions(-)
 
-
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 3771386..c27863e 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -19,6 +19,7 @@
+ #include <linux/mm.h>
+ #include <linux/pfn.h>
+ #include <linux/suspend.h>
++#include <linux/firmware-map.h>
+ 
+ #include <asm/pgtable.h>
+ #include <asm/page.h>
+@@ -27,7 +28,22 @@
+ #include <asm/setup.h>
+ #include <asm/trampoline.h>
+ 
++/*
++ * The e820 map is the map that gets modified e.g. with command line parameters
++ * and that is also registered with modifications in the kernel resource tree
++ * with the iomem_resource as parent.
++ *
++ * The e820_saved is directly saved after the BIOS-provided memory map is
++ * copied. It doesn't get modified afterwards. It's registered for the
++ * /sys/firmware/memmap interface.
++ *
++ * That memory map is not modified and is used as base for kexec. The kexec'd
++ * kernel should get the same memory map as the firmware provides. Then the
++ * user can e.g. boot the original kernel with mem=1G while still booting the
++ * next kernel with full memory.
++ */
+ struct e820map e820;
++struct e820map e820_saved;
+ 
+ /* For PCI or other memory-mapped resources */
+ unsigned long pci_mem_start = 0xaeedbabe;
+@@ -1056,6 +1072,16 @@ void __init finish_e820_parsing(void)
+ 	}
+ }
+ 
++static inline const char *e820_type_to_string(int e820_type)
++{
++	switch (e820_type) {
++	case E820_RAM:	return "System RAM";
++	case E820_ACPI:	return "ACPI Tables";
++	case E820_NVS:	return "ACPI Non-volatile Storage";
++	default:	return "reserved";
++	}
++}
++
+ /*
+  * Mark e820 reserved areas as busy for the resource manager.
+  */
+@@ -1066,12 +1092,7 @@ void __init e820_reserve_resources(void)
+ 
+ 	res = alloc_bootmem_low(sizeof(struct resource) * e820.nr_map);
+ 	for (i = 0; i < e820.nr_map; i++) {
+-		switch (e820.map[i].type) {
+-		case E820_RAM:	res->name = "System RAM"; break;
+-		case E820_ACPI:	res->name = "ACPI Tables"; break;
+-		case E820_NVS:	res->name = "ACPI Non-volatile Storage"; break;
+-		default:	res->name = "reserved";
+-		}
++		res->name = e820_type_to_string(e820.map[i].type);
+ 		res->start = e820.map[i].addr;
+ 		res->end = res->start + e820.map[i].size - 1;
+ #ifndef CONFIG_RESOURCES_64BIT
+@@ -1084,6 +1105,13 @@ void __init e820_reserve_resources(void)
+ 		insert_resource(&iomem_resource, res);
+ 		res++;
+ 	}
++
++	for (i = 0; i < e820_saved.nr_map; i++) {
++		struct e820entry *entry = &e820_saved.map[i];
++		firmware_map_add_early(entry->addr,
++			entry->addr + entry->size - 1,
++			e820_type_to_string(entry->type));
++	}
+ }
+ 
+ char *__init default_machine_specific_memory_setup(void)
+@@ -1119,6 +1147,8 @@ char *__init default_machine_specific_memory_setup(void)
+ 		e820_add_region(HIGH_MEMORY, mem_size << 10, E820_RAM);
+ 	}
+ 
++	memcpy(&e820_saved, &e820, sizeof(struct e820map));
++
+ 	/* In case someone cares... */
+ 	return who;
+ }
+diff --git a/include/asm-x86/e820.h b/include/asm-x86/e820.h
+index 13a0a5f..607f940 100644
+--- a/include/asm-x86/e820.h
++++ b/include/asm-x86/e820.h
+@@ -56,7 +56,9 @@ struct e820map {
+ 	struct e820entry map[E820_X_MAX];
+ };
+ 
++/* see comment in arch/x86/kernel/e820.c */
+ extern struct e820map e820;
++extern struct e820map e820_saved;
+ 
+ extern int e820_any_mapped(u64 start, u64 end, unsigned type);
+ extern int e820_all_mapped(u64 start, u64 end, unsigned type);
+-- 
+1.5.6
 
 
 _______________________________________________
