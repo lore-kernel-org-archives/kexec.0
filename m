@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBqsJ-0003qb-8D
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 12:46:56 +0000
-Date: Thu, 26 Jun 2008 14:47:31 +0200
-Subject: [PATCH] Fix vmcoreinfo generation on 32bit hosts for 64bit kernels
-Message-ID: <20080626124731.GA24365@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-From: bwalle@suse.de (Bernhard Walle)
+	id 1KBqxm-00004r-I0
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 12:52:34 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Remove experimental status of kdump on IA64
+Date: Thu, 26 Jun 2008 14:53:11 +0200
+Message-Id: <1214484791-25439-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,189 +15,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: linux-ia64@vger.kernel.org
+Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-This bug fixes the generation of vmcoreinfo files on 32bit hosts for ELF64
-files, i.e. 64bit kernels. The concrete problem was PPC64 which is built in a
-32bit environment at SUSE.
+This patch removes the experimental status of kdump on IA64. kdump is on IA64
+now since more than one year and it has proven to be stable.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
 ---
- makedumpfile.c |   37 ++++++++++++++++++-----------------
- makedumpfile.h |   60 ++++++++++++++++++++++++++++-----------------------------
- 2 files changed, 49 insertions(+), 48 deletions(-)
+ arch/ia64/Kconfig |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -123,7 +123,7 @@ vaddr_to_offset_general(unsigned long lo
-  * It is useful at few calls like get_str_osrelease_from_vmlinux().
-  */
- off_t
--vaddr_to_offset_slow(int fd, char *filename, unsigned long vaddr)
-+vaddr_to_offset_slow(int fd, char *filename, unsigned long long vaddr)
- {
- 	off_t offset = 0;
- 	int i, phnum, num_load, flag_elf64, elf_format;
-@@ -170,6 +170,7 @@ vaddr_to_offset_slow(int fd, char *filen
- 			break;
- 		}
- 	}
-+
- 	return offset;
- }
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 16be414..f548e43 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -539,8 +539,8 @@ config KEXEC
+ 	  strongly in flux, so no good recommendation can be made.
  
-@@ -970,11 +971,11 @@ out:
- 	return ret;
- }
+ config CRASH_DUMP
+-	  bool "kernel crash dumps (EXPERIMENTAL)"
+-	  depends on EXPERIMENTAL && IA64_MCA_RECOVERY && !IA64_HP_SIM && (!SMP || HOTPLUG_CPU)
++	  bool "kernel crash dumps"
++	  depends on IA64_MCA_RECOVERY && !IA64_HP_SIM && (!SMP || HOTPLUG_CPU)
+ 	  help
+ 	    Generate crash dump after being started by kexec.
  
--unsigned long
-+unsigned long long
- get_symbol_addr(char *symname)
- {
- 	int i;
--	unsigned long symbol = NOT_FOUND_SYMBOL;
-+	unsigned long long symbol = NOT_FOUND_SYMBOL;
- 	Elf *elfd = NULL;
- 	GElf_Shdr shdr;
- 	GElf_Sym sym;
-@@ -1949,7 +1950,7 @@ int
- get_str_osrelease_from_vmlinux()
- {
- 	struct utsname system_utsname;
--	unsigned long utsname;
-+	unsigned long long utsname;
- 	off_t offset;
- 	const off_t failed = (off_t)-1;
- 
-@@ -1968,7 +1969,7 @@ get_str_osrelease_from_vmlinux()
- 	    dwarf_info.name_debuginfo, utsname);
- 
- 	if (!offset) {
--		ERRMSG("Can't convert vaddr (%lx) of utsname to an offset.\n",
-+		ERRMSG("Can't convert vaddr (%llx) of utsname to an offset.\n",
- 		    utsname);
- 		return FALSE;
- 	}
-@@ -5684,19 +5685,19 @@ show_data_xen()
- 	 * Show data for debug
- 	 */
- 	MSG("\n");
--	MSG("SYMBOL(dom_xen): %lx\n", SYMBOL(dom_xen));
--	MSG("SYMBOL(dom_io): %lx\n", SYMBOL(dom_io));
--	MSG("SYMBOL(domain_list): %lx\n", SYMBOL(domain_list));
--	MSG("SYMBOL(xen_heap_start): %lx\n", SYMBOL(xen_heap_start));
--	MSG("SYMBOL(frame_table): %lx\n", SYMBOL(frame_table));
--	MSG("SYMBOL(alloc_bitmap): %lx\n", SYMBOL(alloc_bitmap));
--	MSG("SYMBOL(max_page): %lx\n", SYMBOL(max_page));
--	MSG("SYMBOL(pgd_l2): %lx\n", SYMBOL(pgd_l2));
--	MSG("SYMBOL(pgd_l3): %lx\n", SYMBOL(pgd_l3));
--	MSG("SYMBOL(pgd_l4): %lx\n", SYMBOL(pgd_l4));
--	MSG("SYMBOL(xenheap_phys_end): %lx\n", SYMBOL(xenheap_phys_end));
--	MSG("SYMBOL(xen_pstart): %lx\n", SYMBOL(xen_pstart));
--	MSG("SYMBOL(frametable_pg_dir): %lx\n", SYMBOL(frametable_pg_dir));
-+	MSG("SYMBOL(dom_xen): %llx\n", SYMBOL(dom_xen));
-+	MSG("SYMBOL(dom_io): %llx\n", SYMBOL(dom_io));
-+	MSG("SYMBOL(domain_list): %llx\n", SYMBOL(domain_list));
-+	MSG("SYMBOL(xen_heap_start): %llx\n", SYMBOL(xen_heap_start));
-+	MSG("SYMBOL(frame_table): %llx\n", SYMBOL(frame_table));
-+	MSG("SYMBOL(alloc_bitmap): %llx\n", SYMBOL(alloc_bitmap));
-+	MSG("SYMBOL(max_page): %llx\n", SYMBOL(max_page));
-+	MSG("SYMBOL(pgd_l2): %llx\n", SYMBOL(pgd_l2));
-+	MSG("SYMBOL(pgd_l3): %llx\n", SYMBOL(pgd_l3));
-+	MSG("SYMBOL(pgd_l4): %llx\n", SYMBOL(pgd_l4));
-+	MSG("SYMBOL(xenheap_phys_end): %llx\n", SYMBOL(xenheap_phys_end));
-+	MSG("SYMBOL(xen_pstart): %llx\n", SYMBOL(xen_pstart));
-+	MSG("SYMBOL(frametable_pg_dir): %llx\n", SYMBOL(frametable_pg_dir));
- 
- 	MSG("SIZE(page_info): %ld\n", SIZE(page_info));
- 	MSG("OFFSET(page_info.count_info): %ld\n", OFFSET(page_info.count_info));
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -258,7 +258,7 @@ do { \
- #define WRITE_SYMBOL(str_symbol, symbol) \
- do { \
- 	if (SYMBOL(symbol) != NOT_FOUND_SYMBOL) { \
--		fprintf(info->file_vmcoreinfo, "%s%lx\n", \
-+		fprintf(info->file_vmcoreinfo, "%s%llx\n", \
- 		    STR_SYMBOL(str_symbol), SYMBOL(symbol)); \
- 	} \
- } while (0)
-@@ -802,39 +802,39 @@ struct vm_table {
- extern struct vm_table		vt;
- 
- struct symbol_table {
--	unsigned long	mem_map;
--	unsigned long	mem_section;
--	unsigned long	pkmap_count;
--	unsigned long	pkmap_count_next;
--	unsigned long	system_utsname;
--	unsigned long	init_uts_ns;
--	unsigned long	_stext;
--	unsigned long	swapper_pg_dir;
--	unsigned long	init_level4_pgt;
--	unsigned long	phys_base;
--	unsigned long	node_online_map;
--	unsigned long	node_states;
--	unsigned long	node_memblk;
--	unsigned long	node_data;
--	unsigned long	pgdat_list;
--	unsigned long	contig_page_data;
-+	unsigned long long	mem_map;
-+	unsigned long long	mem_section;
-+	unsigned long long	pkmap_count;
-+	unsigned long long	pkmap_count_next;
-+	unsigned long long	system_utsname;
-+	unsigned long long	init_uts_ns;
-+	unsigned long long 	_stext;
-+	unsigned long long 	swapper_pg_dir;
-+	unsigned long long 	init_level4_pgt;
-+	unsigned long long 	phys_base;
-+	unsigned long long 	node_online_map;
-+	unsigned long long 	node_states;
-+	unsigned long long 	node_memblk;
-+	unsigned long long 	node_data;
-+	unsigned long long 	pgdat_list;
-+	unsigned long long 	contig_page_data;
- 
- 	/*
- 	 * for Xen extraction
- 	 */
--	unsigned long	dom_xen;
--	unsigned long	dom_io;
--	unsigned long	domain_list;
--	unsigned long	frame_table;
--	unsigned long	xen_heap_start;
--	unsigned long	pgd_l2;
--	unsigned long	pgd_l3;
--	unsigned long	pgd_l4;
--	unsigned long	xenheap_phys_end;
--	unsigned long	xen_pstart;
--	unsigned long	frametable_pg_dir;
--	unsigned long	max_page;
--	unsigned long	alloc_bitmap;
-+	unsigned long long	dom_xen;
-+	unsigned long long	dom_io;
-+	unsigned long long	domain_list;
-+	unsigned long long	frame_table;
-+	unsigned long long	xen_heap_start;
-+	unsigned long long	pgd_l2;
-+	unsigned long long	pgd_l3;
-+	unsigned long long	pgd_l4;
-+	unsigned long long	xenheap_phys_end;
-+	unsigned long long	xen_pstart;
-+	unsigned long long	frametable_pg_dir;
-+	unsigned long long	max_page;
-+	unsigned long long	alloc_bitmap;
- };
- 
- struct size_table {
+-- 
+1.5.6
+
 
 _______________________________________________
 kexec mailing list
