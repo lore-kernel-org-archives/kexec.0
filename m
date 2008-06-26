@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx1.suse.de ([195.135.220.2])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBlob-0001PU-Cc
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 07:22:46 +0000
+	id 1KBlq7-0001S4-J9
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 07:24:19 +0000
+Date: Thu, 26 Jun 2008 09:24:57 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Remove CONFIG_EXPERIMENTAL from kdump
-Date: Thu, 26 Jun 2008 09:23:21 +0200
-Message-Id: <1214465001-12338-1-git-send-email-bwalle@suse.de>
-In-Reply-To: <20080625221635.GD32344@redhat.com>
+Subject: Re: [PATCH] Remove CONFIG_EXPERIMENTAL from kdump
+Message-ID: <20080626092457.50c58bc2@halley.suse.de>
+In-Reply-To: <1214465001-12338-1-git-send-email-bwalle@suse.de>
 References: <20080625221635.GD32344@redhat.com>
+	<1214465001-12338-1-git-send-email-bwalle@suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,53 +19,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Bernhard Walle <bwalle@suse.de>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-I would suggest to remove the "experimental" status from Kdump.
-Kdump is now in the kernel since a long time and used by Enterprise
-distributions. I don't think that "experimental" is true any more.
+* Bernhard Walle [2008-06-26 09:23]:
+>
+> I would suggest to remove the "experimental" status from Kdump.
+> Kdump is now in the kernel since a long time and used by Enterprise
+> distributions. I don't think that "experimental" is true any more.
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+Sorry, forgot the Acked-by which was the intention to resend it to
+Andrew. :-| Sent again.
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- arch/x86/Kconfig |    1 -
- fs/Kconfig       |    2 +-
- 2 files changed, 1 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index e0edaaa..f4f255b 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1190,7 +1190,6 @@ config KEXEC
- 
- config CRASH_DUMP
- 	bool "kernel crash dumps (EXPERIMENTAL)"
--	depends on EXPERIMENTAL
- 	depends on X86_64 || (X86_32 && HIGHMEM)
- 	help
- 	  Generate crash dump after being started by kexec.
-diff --git a/fs/Kconfig b/fs/Kconfig
-index cf12c40..b2252a4 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -930,7 +930,7 @@ config PROC_KCORE
- 
- config PROC_VMCORE
-         bool "/proc/vmcore support (EXPERIMENTAL)"
--        depends on PROC_FS && EXPERIMENTAL && CRASH_DUMP
-+        depends on PROC_FS && CRASH_DUMP
- 	default y
-         help
-         Exports the dump image of crashed kernel in ELF format.
+Bernhard
 -- 
-1.5.4.5
-
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
