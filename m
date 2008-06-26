@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBrRN-0005zR-9v
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 13:23:10 +0000
-Date: Thu, 26 Jun 2008 15:22:57 +0200
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH] x86: Limit E820 map when a user-defined memory map is
-	specified
-Message-ID: <20080626132257.GD18444@elte.hu>
-References: <1214422756-10923-1-git-send-email-bwalle@suse.de>
-	<86802c440806251259o6b1b1038v9f645992415f0372@mail.gmail.com>
+	id 1KBsab-0003UO-UO
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 14:36:46 +0000
+Date: Thu, 26 Jun 2008 16:37:21 +0200
+Subject: [PATCH] Use progress bar also for bitmap creation
+Message-ID: <20080626143721.GA12486@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <86802c440806251259o6b1b1038v9f645992415f0372@mail.gmail.com>
+From: bwalle@suse.de (Bernhard Walle)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +21,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yhlu.kernel@gmail.com>
-Cc: Bernhard Walle <bwalle@suse.de>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: oomichi@mxs.nes.nec.co.jp
+Cc: jlan@sgi.com, kexec@lists.infradead.org
+
+On large nodes, bitmap creation takes a serious amount of time. But the
+progress indicator only starts after the bitmaps has been created, showing
+only the progress of the copy process.
+
+This patch adds a "message" parameter to the print_progress() function.
+That message is displayed first and gets overwritten by next message.
+So, the user sees
+
+    Excluding zero pages : [  0 %]
+    Excluding zero pages : [... %]
+    Excluding zero pages : [100 %]
+    Copying data         : [  0 %]
+    Copying data         : [... %]
+    Copying data         : [100 %]
+
+in sequence. IMO that's the fastest option to implement such a progress.
 
 
-* Yinghai Lu <yhlu.kernel@gmail.com> wrote:
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-> On Wed, Jun 25, 2008 at 12:39 PM, Bernhard Walle <bwalle@suse.de> wrote:
-> > This patch brings back limiting of the E820 map when a user-defined
-> > E820 map is specified. While the behaviour of i386 (32 bit) was to limit
-> > the E820 map (and /proc/iomem), the behaviour of x86-64 (64 bit) was not to
-> > limit.
-> >
-> > That patch limits the E820 map again for both x86 architectures.
-> >
-> > Code was tested for compilation and booting on a 32 bit and 64 bit system.
-> >
-> >
-> > Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-> Acked-by: Yinghai Lu <yhlu.kernel@gmail.com>
+---
+ makedumpfile.c |   30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-applied to tip/x86/unify-setup - thanks.
-
-	Ingo
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -32,6 +32,17 @@ int message_level;
+ /*
+  * Forward declarations
+  */
++void print_progress(const char 		*msg,
++		    unsigned long 	current,
++		    unsigned long 	end);
++
++/*
++ * Message texts
++ */
++#define PROGRESS_COPY   	"Copying data"
++#define PROGRESS_UNN_PAGES 	"Excluding unnecessary pages"
++#define PROGRESS_ZERO_PAGES 	"Excluding zero pages"
++#define PROGRESS_MAXLEN		"35"
+ 
+ /*
+  * The numbers of the excluded pages
+@@ -4062,6 +4073,9 @@ exclude_zero_pages()
+ 	}
+ 	for (pfn = paddr = 0; pfn < info->max_mapnr;
+ 	    pfn++, paddr += info->page_size) {
++
++		print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
++
+ 		if (!is_in_segs(paddr))
+ 			continue;
+ 
+@@ -4100,6 +4114,8 @@ exclude_unnecessary_pages()
+ 		goto out;
+ 	}
+ 	for (mm = 0; mm < info->num_mem_map; mm++) {
++		print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
++
+ 		mmd = &info->mem_map_data[mm];
+ 		pfn   = mmd->pfn_start;
+ 		paddr = pfn*info->page_size;
+@@ -4670,7 +4686,7 @@ write_kdump_header()
+ }
+ 
+ void
+-print_progress(unsigned long current, unsigned long end)
++print_progress(const char *msg, unsigned long current, unsigned long end)
+ {
+ 	int progress;
+ 	time_t tm;
+@@ -4686,7 +4702,7 @@ print_progress(unsigned long current, un
+ 		progress = 100;
+ 
+ 	PROGRESS_MSG("\r");
+-	PROGRESS_MSG("[%3d %%]", progress);
++	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
+ }
+ 
+ int
+@@ -4912,7 +4928,7 @@ write_elf_pages()
+ 
+ 			while (bufsz_remain > 0) {
+ 				if ((num_dumped % per) == 0)
+-					print_progress(num_dumped, num_dumpable);
++					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+ 
+ 				if (bufsz_remain >= page_size)
+ 					bufsz_write = page_size;
+@@ -5009,7 +5025,7 @@ write_elf_pages()
+ 
+ 		while (bufsz_remain > 0) {
+ 			if ((num_dumped % per) == 0)
+-				print_progress(num_dumped, num_dumpable);
++				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+ 
+ 			if (bufsz_remain >= page_size)
+ 				bufsz_write = page_size;
+@@ -5038,7 +5054,7 @@ write_elf_pages()
+ 	if (!write_cache_bufsz(&cd_seg))
+ 		goto out;
+ 
+-	print_progress(num_dumpable, num_dumpable);
++	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+ 	PROGRESS_MSG("\n");
+ 
+ 	ret = TRUE;
+@@ -5247,7 +5263,7 @@ write_kdump_pages()
+ 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
+ 
+ 		if ((num_dumped % per) == 0)
+-			print_progress(num_dumped, num_dumpable);
++			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
+ 
+ 		if ((pfn % PFN_BUFBITMAP) == 0) {
+ 			if (info->len_bitmap - bm2.offset < BUFSIZE_BITMAP)
+@@ -5325,7 +5341,7 @@ write_kdump_pages()
+ 	/*
+ 	 * Print the progress of the end.
+ 	 */
+-	print_progress(num_dumpable, num_dumpable);
++	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+ 	PROGRESS_MSG("\n");
+ 
+ 	ret = TRUE;
 
 _______________________________________________
 kexec mailing list
