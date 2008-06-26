@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aun.it.uu.se ([130.238.12.36])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBnWQ-0002FS-62
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 09:12:08 +0000
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBqhx-0006LR-Ld
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 12:36:14 +0000
+Date: Thu, 26 Jun 2008 08:35:18 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] Remove CONFIG_EXPERIMENTAL from kdump
+Message-ID: <20080626123518.GA3878@redhat.com>
+References: <20080625221635.GD32344@redhat.com>
+	<1214465001-12338-1-git-send-email-bwalle@suse.de>
+	<20080626012337.a73c91d2.akpm@linux-foundation.org>
+	<20080626102803.2a1a46cd@halley.suse.de>
 MIME-Version: 1.0
-Message-ID: <18531.23894.572847.322265@harpo.it.uu.se>
-Date: Thu, 26 Jun 2008 11:11:50 +0200
-From: Mikael Pettersson <mikpe@it.uu.se>
-Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
-In-Reply-To: <20080626104524.2d7ed1ab@halley.suse.de>
-References: <1214423826-12628-1-git-send-email-bwalle@suse.de>
-	<1214423826-12628-2-git-send-email-bwalle@suse.de>
-	<20080625224301.GE32344@redhat.com>
-	<18531.20387.111875.576837@harpo.it.uu.se>
-	<20080626104524.2d7ed1ab@halley.suse.de>
+Content-Disposition: inline
+In-Reply-To: <20080626102803.2a1a46cd@halley.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,29 +27,31 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
-Cc: Mikael Pettersson <mikpe@it.uu.se>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com, Vivek Goyal <vgoyal@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Bernhard Walle writes:
- > > It should be configurable. Whether it's done via CONFIG_KEXEC or its own
- > > option I don't care.
- > 
- > Ok, changed:
- > 
- > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
- > index 1008737..73fcc59 100644
- > --- a/drivers/firmware/Kconfig
- > +++ b/drivers/firmware/Kconfig
- > @@ -28,7 +28,7 @@ config EDD_OFF
- >  
- >  config FIRMWARE_MEMMAP
- >      def_bool y
- > -    depends on X86_64 || X86_32
- > +    depends on (X86_64 || X86_32) && KEXEC
- >  
- >  config EFI_VARS
- >         tristate "EFI Variable Support via sysfs"
+On Thu, Jun 26, 2008 at 10:28:03AM +0200, Bernhard Walle wrote:
+> * Andrew Morton [2008-06-26 01:23]:
+> > >  
+> > >  config PROC_VMCORE
+> > >          bool "/proc/vmcore support (EXPERIMENTAL)"
+> > > -        depends on PROC_FS && EXPERIMENTAL && CRASH_DUMP
+> > > +        depends on PROC_FS && CRASH_DUMP
+> > >  	default y
+> > >          help
+> > >          Exports the dump image of crashed kernel in ELF format.
+> > 
+> > What about powerpc, sh and ia64?
+> 
+> At least for ia64 I wouldn't consider it as experimental. Don't know
+> about SH and PPC. But should we mark it as EXPERIMENTAL on all
+> platforms only because some "exotic" (at least SH) platforms have kdump
+> not very long implemented?
 
-Yep, thanks.
+It has been present long enough on ia64 and ppc64. Only new entry seems
+to be SH. I would think of leaving it EXPERIMENTAL only on SH.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
