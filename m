@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KBsab-0003UO-UO
-	for kexec@lists.infradead.org; Thu, 26 Jun 2008 14:36:46 +0000
-Date: Thu, 26 Jun 2008 16:37:21 +0200
-Subject: [PATCH] Use progress bar also for bitmap creation
-Message-ID: <20080626143721.GA12486@suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-From: bwalle@suse.de (Bernhard Walle)
+Received: from wr-out-0506.google.com ([64.233.184.231])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KBtPA-0003mf-HX
+	for kexec@lists.infradead.org; Thu, 26 Jun 2008 15:29:00 +0000
+Received: by wr-out-0506.google.com with SMTP id 70so63994wra.22
+	for <kexec@lists.infradead.org>; Thu, 26 Jun 2008 08:28:59 -0700 (PDT)
+Subject: Re: [PATCH] Remove experimental status of kdump on PPC64
+From: Josh Boyer <jwboyer@gmail.com>
+In-Reply-To: <1214485035-26041-1-git-send-email-bwalle@suse.de>
+References: <1214485035-26041-1-git-send-email-bwalle@suse.de>
+Date: Thu, 26 Jun 2008 11:28:52 -0400
+Message-Id: <1214494132.2791.0.camel@weaponx>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,135 +24,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp
-Cc: jlan@sgi.com, kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-On large nodes, bitmap creation takes a serious amount of time. But the
-progress indicator only starts after the bitmaps has been created, showing
-only the progress of the copy process.
+On Thu, 2008-06-26 at 14:57 +0200, Bernhard Walle wrote:
+> This patch removes the experimental status of kdump on IA64. kdump is on IA64
+> now since more than one year and it has proven to be stable.
 
-This patch adds a "message" parameter to the print_progress() function.
-That message is displayed first and gets overwritten by next message.
-So, the user sees
+I think you mean PPC64?
 
-    Excluding zero pages : [  0 %]
-    Excluding zero pages : [... %]
-    Excluding zero pages : [100 %]
-    Copying data         : [  0 %]
-    Copying data         : [... %]
-    Copying data         : [100 %]
+josh
 
-in sequence. IMO that's the fastest option to implement such a progress.
+> For i386/x86_64, a similar patch has been accepted by Ingo Molnar and Vivek
+> Goyal.
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> ---
+>  arch/powerpc/Kconfig |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 3934e26..2a116b9 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -308,8 +308,8 @@ config KEXEC
+>  	  strongly in flux, so no good recommendation can be made.
+>  
+>  config CRASH_DUMP
+> -	bool "Build a kdump crash kernel (EXPERIMENTAL)"
+> -	depends on PPC_MULTIPLATFORM && PPC64 && EXPERIMENTAL
+> +	bool "Build a kdump crash kernel"
+> +	depends on PPC_MULTIPLATFORM && PPC64
+>  	help
+>  	  Build a kernel suitable for use as a kdump capture kernel.
+>  	  The kernel will be linked at a different address than normal, and
 
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
----
- makedumpfile.c |   30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -32,6 +32,17 @@ int message_level;
- /*
-  * Forward declarations
-  */
-+void print_progress(const char 		*msg,
-+		    unsigned long 	current,
-+		    unsigned long 	end);
-+
-+/*
-+ * Message texts
-+ */
-+#define PROGRESS_COPY   	"Copying data"
-+#define PROGRESS_UNN_PAGES 	"Excluding unnecessary pages"
-+#define PROGRESS_ZERO_PAGES 	"Excluding zero pages"
-+#define PROGRESS_MAXLEN		"35"
- 
- /*
-  * The numbers of the excluded pages
-@@ -4062,6 +4073,9 @@ exclude_zero_pages()
- 	}
- 	for (pfn = paddr = 0; pfn < info->max_mapnr;
- 	    pfn++, paddr += info->page_size) {
-+
-+		print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
-+
- 		if (!is_in_segs(paddr))
- 			continue;
- 
-@@ -4100,6 +4114,8 @@ exclude_unnecessary_pages()
- 		goto out;
- 	}
- 	for (mm = 0; mm < info->num_mem_map; mm++) {
-+		print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
-+
- 		mmd = &info->mem_map_data[mm];
- 		pfn   = mmd->pfn_start;
- 		paddr = pfn*info->page_size;
-@@ -4670,7 +4686,7 @@ write_kdump_header()
- }
- 
- void
--print_progress(unsigned long current, unsigned long end)
-+print_progress(const char *msg, unsigned long current, unsigned long end)
- {
- 	int progress;
- 	time_t tm;
-@@ -4686,7 +4702,7 @@ print_progress(unsigned long current, un
- 		progress = 100;
- 
- 	PROGRESS_MSG("\r");
--	PROGRESS_MSG("[%3d %%]", progress);
-+	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
- }
- 
- int
-@@ -4912,7 +4928,7 @@ write_elf_pages()
- 
- 			while (bufsz_remain > 0) {
- 				if ((num_dumped % per) == 0)
--					print_progress(num_dumped, num_dumpable);
-+					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 				if (bufsz_remain >= page_size)
- 					bufsz_write = page_size;
-@@ -5009,7 +5025,7 @@ write_elf_pages()
- 
- 		while (bufsz_remain > 0) {
- 			if ((num_dumped % per) == 0)
--				print_progress(num_dumped, num_dumpable);
-+				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 			if (bufsz_remain >= page_size)
- 				bufsz_write = page_size;
-@@ -5038,7 +5054,7 @@ write_elf_pages()
- 	if (!write_cache_bufsz(&cd_seg))
- 		goto out;
- 
--	print_progress(num_dumpable, num_dumpable);
-+	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
- 	PROGRESS_MSG("\n");
- 
- 	ret = TRUE;
-@@ -5247,7 +5263,7 @@ write_kdump_pages()
- 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
- 
- 		if ((num_dumped % per) == 0)
--			print_progress(num_dumped, num_dumpable);
-+			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 		if ((pfn % PFN_BUFBITMAP) == 0) {
- 			if (info->len_bitmap - bm2.offset < BUFSIZE_BITMAP)
-@@ -5325,7 +5341,7 @@ write_kdump_pages()
- 	/*
- 	 * Print the progress of the end.
- 	 */
--	print_progress(num_dumpable, num_dumpable);
-+	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
- 	PROGRESS_MSG("\n");
- 
- 	ret = TRUE;
 
 _______________________________________________
 kexec mailing list
