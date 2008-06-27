@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from py-out-1112.google.com ([64.233.166.181])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KCIjj-0004b7-5z
-	for kexec@lists.infradead.org; Fri, 27 Jun 2008 18:31:55 +0000
-Received: by py-out-1112.google.com with SMTP id a73so462943pye.2
-	for <kexec@lists.infradead.org>; Fri, 27 Jun 2008 11:31:54 -0700 (PDT)
-Message-ID: <86802c440806271131q2fe2c2cubea2c810b99b9302@mail.gmail.com>
-Date: Fri, 27 Jun 2008 11:31:53 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH 2/2] Use FIRMWARE_MEMMAP on x86/E820
-In-Reply-To: <20080627131415.4d482af2@halley.suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <1214511542-28458-1-git-send-email-bwalle@suse.de>
-	<1214511542-28458-3-git-send-email-bwalle@suse.de>
-	<86802c440806261354y673a5521ie615feafae3b2bd8@mail.gmail.com>
-	<20080627131415.4d482af2@halley.suse.de>
+Received: from mx2.suse.de ([195.135.220.15])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KCIly-0000Dw-Ey
+	for kexec@lists.infradead.org; Fri, 27 Jun 2008 18:34:14 +0000
+Date: Fri, 27 Jun 2008 20:34:09 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: x86: Add /sys/firmware/memmap
+Message-ID: <20080627203409.3bc891e3@kopernikus.site>
+In-Reply-To: <20080627181833.GA7735@suse.de>
+References: <1214565175-21512-1-git-send-email-bwalle@suse.de>
+	<20080627181833.GA7735@suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,24 +23,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, gregkh@suse.de
+To: Greg KH <gregkh@suse.de>
+Cc: x86@kernel.org, kexec@lists.infradead.org, yhlu.kernel@gmail.com, vgoyal@redhat.com, linux-kernel@vger.kernel.org
 
-On Fri, Jun 27, 2008 at 4:14 AM, Bernhard Walle <bwalle@suse.de> wrote:
-> * Yinghai Lu [2008-06-26 13:54]:
->>
->> looks good...
->>
->> will produce one patch update early_reserve_e820_mpc_new or
->> early_reserve_e820 to update e820_saved too. that contained updated
->> mptable for second kernel without acpi support.
->
-> You or me? I don't understand ...
+* Greg KH <gregkh@suse.de> [2008-06-27 11:18]:
+> 
+> Looks good, want me to take this through my tree (due to the firmware
+> core change)?  If so, can you get an ack on the x86 portion from the
+> respective people as well?
 
-after your patch are merged into tip, I will produce one patch to fix
-early_reserve_e820...
+Well, the x86 part only applies on tip (because your tree doesn't have
+the e820_{32,64} -> e820 merge). So, wouldn't it easier to ack that
+patch from your side and merge via tip?
 
-YH
+
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
