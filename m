@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KCARW-00081a-Eh
-	for kexec@lists.infradead.org; Fri, 27 Jun 2008 09:40:35 +0000
-Message-Id: <4864B595.8040205@mxs.nes.nec.co.jp>
-Date: Fri, 27 Jun 2008 18:40:37 +0900
+	id 1KCAVg-0003Vb-Qt
+	for kexec@lists.infradead.org; Fri, 27 Jun 2008 09:44:53 +0000
+Message-Id: <4864B697.5010304@mxs.nes.nec.co.jp>
+Date: Fri, 27 Jun 2008 18:44:55 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Use progress bar also for bitmap creation
-References: <20080626143721.GA12486@suse.de>
-In-Reply-To: <20080626143721.GA12486@suse.de>
+Subject: Re: [PATCH] makedumpfile: fix illegal buffer access
+References: <20080627133604.EE49.ODA@valinux.co.jp>
+In-Reply-To: <20080627133604.EE49.ODA@valinux.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,160 +18,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0727709902=="
+Content-Type: multipart/mixed; boundary="===============0563028407=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: jlan@sgi.com, kexec@lists.infradead.org
+To: Itsuro ODA <oda@valinux.co.jp>
+Cc: kexec@lists.infradead.org
 
---===============0727709902==
+--===============0563028407==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi Bernhard,
+Hi ODA-san,
 
-Thank you for your patch.
-I like this idea :-)
-
-I am busy now, and I will consider the patch well the next week.
+Thank you for the patch.
+I will apply the patch to the next release.
 
 
 Thanks
 Ken'ichi Ohmichi
 
-Bernhard Walle wrote:
-> On large nodes, bitmap creation takes a serious amount of time. But the
-> progress indicator only starts after the bitmaps has been created, showing
-> only the progress of the copy process.
+Itsuro ODA wrote:
+> Hi,
 > 
-> This patch adds a "message" parameter to the print_progress() function.
-> That message is displayed first and gets overwritten by next message.
-> So, the user sees
+> Null padding of the vmcoreinfo (vmcoreinfo of xen is the case)
+> causes SIGSEGV (I met it on x86_64).
+> This fix avoids illegal buffer access.
 > 
->     Excluding zero pages : [  0 %]
->     Excluding zero pages : [... %]
->     Excluding zero pages : [100 %]
->     Copying data         : [  0 %]
->     Copying data         : [... %]
->     Copying data         : [100 %]
+> Thanks.
+> Itsuro Oda
 > 
-> in sequence. IMO that's the fastest option to implement such a progress.
-> 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-> ---
->  makedumpfile.c |   30 +++++++++++++++++++++++-------
->  1 file changed, 23 insertions(+), 7 deletions(-)
-> 
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -32,6 +32,17 @@ int message_level;
->  /*
->   * Forward declarations
->   */
-> +void print_progress(const char 		*msg,
-> +		    unsigned long 	current,
-> +		    unsigned long 	end);
-> +
-> +/*
-> + * Message texts
-> + */
-> +#define PROGRESS_COPY   	"Copying data"
-> +#define PROGRESS_UNN_PAGES 	"Excluding unnecessary pages"
-> +#define PROGRESS_ZERO_PAGES 	"Excluding zero pages"
-> +#define PROGRESS_MAXLEN		"35"
+> --- makedumpfile.c.org	2008-06-12 15:01:26.000000000 +0900
+> +++ makedumpfile.c	2008-06-12 16:16:11.000000000 +0900
+> @@ -2187,6 +2187,8 @@ read_vmcoreinfo_basic_info()
 >  
->  /*
->   * The numbers of the excluded pages
-> @@ -4062,6 +4073,9 @@ exclude_zero_pages()
->  	}
->  	for (pfn = paddr = 0; pfn < info->max_mapnr;
->  	    pfn++, paddr += info->page_size) {
-> +
-> +		print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
-> +
->  		if (!is_in_segs(paddr))
->  			continue;
+>  	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+>  		i = strlen(buf);
+> +		if (!i)
+> +			break;
+>  		if (buf[i - 1] == '\n')
+>  			buf[i - 1] = '\0';
+>  		if (strncmp(buf, STR_OSRELEASE, strlen(STR_OSRELEASE)) == 0) {
+> @@ -2244,6 +2246,8 @@ read_vmcoreinfo_symbol(char *str_symbol)
 >  
-> @@ -4100,6 +4114,8 @@ exclude_unnecessary_pages()
->  		goto out;
->  	}
->  	for (mm = 0; mm < info->num_mem_map; mm++) {
-> +		print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
-> +
->  		mmd = &info->mem_map_data[mm];
->  		pfn   = mmd->pfn_start;
->  		paddr = pfn*info->page_size;
-> @@ -4670,7 +4686,7 @@ write_kdump_header()
->  }
+>  	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+>  		i = strlen(buf);
+> +		if (!i)
+> +			break;
+>  		if (buf[i - 1] == '\n')
+>  			buf[i - 1] = '\0';
+>  		if (strncmp(buf, str_symbol, strlen(str_symbol)) == 0) {
+> @@ -2275,6 +2279,8 @@ read_vmcoreinfo_long(char *str_structure
 >  
->  void
-> -print_progress(unsigned long current, unsigned long end)
-> +print_progress(const char *msg, unsigned long current, unsigned long end)
->  {
->  	int progress;
->  	time_t tm;
-> @@ -4686,7 +4702,7 @@ print_progress(unsigned long current, un
->  		progress = 100;
+>  	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+>  		i = strlen(buf);
+> +		if (!i)
+> +			break;
+>  		if (buf[i - 1] == '\n')
+>  			buf[i - 1] = '\0';
+>  		if (strncmp(buf, str_structure, strlen(str_structure)) == 0) {
+> @@ -2304,6 +2310,8 @@ read_vmcoreinfo_string(char *str_in, cha
 >  
->  	PROGRESS_MSG("\r");
-> -	PROGRESS_MSG("[%3d %%]", progress);
-> +	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
->  }
+>  	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+>  		i = strlen(buf);
+> +		if (!i)
+> +			break;
+>  		if (buf[i - 1] == '\n')
+>  			buf[i - 1] = '\0';
+>  		if (strncmp(buf, str_in, strlen(str_in)) == 0) {
+> @@ -5790,6 +5798,8 @@ read_vmcoreinfo_basic_info_xen()
 >  
->  int
-> @@ -4912,7 +4928,7 @@ write_elf_pages()
->  
->  			while (bufsz_remain > 0) {
->  				if ((num_dumped % per) == 0)
-> -					print_progress(num_dumped, num_dumpable);
-> +					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
->  
->  				if (bufsz_remain >= page_size)
->  					bufsz_write = page_size;
-> @@ -5009,7 +5025,7 @@ write_elf_pages()
->  
->  		while (bufsz_remain > 0) {
->  			if ((num_dumped % per) == 0)
-> -				print_progress(num_dumped, num_dumpable);
-> +				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
->  
->  			if (bufsz_remain >= page_size)
->  				bufsz_write = page_size;
-> @@ -5038,7 +5054,7 @@ write_elf_pages()
->  	if (!write_cache_bufsz(&cd_seg))
->  		goto out;
->  
-> -	print_progress(num_dumpable, num_dumpable);
-> +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
->  	PROGRESS_MSG("\n");
->  
->  	ret = TRUE;
-> @@ -5247,7 +5263,7 @@ write_kdump_pages()
->  	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
->  
->  		if ((num_dumped % per) == 0)
-> -			print_progress(num_dumped, num_dumpable);
-> +			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
->  
->  		if ((pfn % PFN_BUFBITMAP) == 0) {
->  			if (info->len_bitmap - bm2.offset < BUFSIZE_BITMAP)
-> @@ -5325,7 +5341,7 @@ write_kdump_pages()
->  	/*
->  	 * Print the progress of the end.
->  	 */
-> -	print_progress(num_dumpable, num_dumpable);
-> +	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
->  	PROGRESS_MSG("\n");
->  
->  	ret = TRUE;
+>  	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+>  		i = strlen(buf);
+> +		if (!i)
+> +			break;
+>  		if (buf[i - 1] == '\n')
+>  			buf[i - 1] = '\0';
+>  		if (strncmp(buf, STR_PAGESIZE, strlen(STR_PAGESIZE)) == 0) {
 > 
 
 
 
---===============0727709902==
+--===============0563028407==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -182,4 +110,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0727709902==--
+--===============0563028407==--
