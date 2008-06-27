@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KCBwG-0002an-SW
-	for kexec@lists.infradead.org; Fri, 27 Jun 2008 11:16:25 +0000
-Date: Fri, 27 Jun 2008 13:17:01 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] Fix vmcoreinfo generation on 32bit hosts for 64bit kernels
-Message-ID: <20080627131701.5ab66b5a@halley.suse.de>
-In-Reply-To: <48645B6C.1070608@mxs.nes.nec.co.jp>
-References: <20080626124731.GA24365@suse.de>
-	<48645B6C.1070608@mxs.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KCDam-0005WG-8G
+	for kexec@lists.infradead.org; Fri, 27 Jun 2008 13:02:20 +0000
+Date: Fri, 27 Jun 2008 09:01:41 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: x86: Add /sys/firmware/memmap
+Message-ID: <20080627130141.GA5801@redhat.com>
+References: <1214565175-21512-1-git-send-email-bwalle@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1214565175-21512-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +23,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, gregkh@suse.de, yhlu.kernel@gmail.com
 
-Hi Ken'ichi,
-
-* Ken'ichi Ohmichi [2008-06-27 12:15]:
-> Bernhard Walle wrote:
-> > This bug fixes the generation of vmcoreinfo files on 32bit hosts for ELF64
-> > files, i.e. 64bit kernels. The concrete problem was PPC64 which is built in a
-> > 32bit environment at SUSE.
+On Fri, Jun 27, 2008 at 01:12:53PM +0200, Bernhard Walle wrote:
+> This patch series adds a new interface /sys/firmware/memmap to export
+> the BIOS (Firmware) provided memory map via sysfs for usage with
+> kexec.
 > 
-> I have one question.
-> I guess that the fundamental problem is that makedumpfile cannot
-> use vmcoreinfo which is contained in /proc/vmcore on ppc64, right ?
-> If yes, could you please test my attached patch for fixing it.
+> While the first patch adds the generic interface, the second patch
+> implements that interface for E820 on x86.
 > 
-> I created the kernel patch for adding the symbol "node_data" to
-> ppc64's vmcoreinfo, but I cannot tested it because I don't have
-> any ppc64 machine.
+> Change compared to previous commit:
+> 
+>  1. Comments from Greg KH.
+>  2. Documentation.
+> 
+> The patch has been tested on i386 and x86_64 with success.
 
-No, not directly. We still ship the makedumpfile.config. Yes, we plan
-to switch to /proc/vmcore vmcoreinfo for next release (SLES 11).
+This patchset looks good to me. We do need this functionality for doing
+the right thing for kexec and kdump users.
 
-I'll test your patch on PPC and give feedback!
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-But I think the patch is also valid since makedumpfile.config file is
-still supported and should work.
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
