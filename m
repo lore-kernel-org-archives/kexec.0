@@ -1,28 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e35.co.us.ibm.com ([32.97.110.153])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KCJ2N-0000K3-H0
-	for kexec@lists.infradead.org; Fri, 27 Jun 2008 18:51:11 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e35.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m5RIp9fL005219
-	for <kexec@lists.infradead.org>; Fri, 27 Jun 2008 14:51:09 -0400
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m5RIp6qA148890
-	for <kexec@lists.infradead.org>; Fri, 27 Jun 2008 12:51:07 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m5RIp6hu015613
-	for <kexec@lists.infradead.org>; Fri, 27 Jun 2008 12:51:06 -0600
+Date: Fri, 27 Jun 2008 13:56:25 -0700
+From: Greg KH <gregkh@suse.de>
 Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
-From: Dave Hansen <dave@linux.vnet.ibm.com>
-In-Reply-To: <1214565175-21512-2-git-send-email-bwalle@suse.de>
+Message-ID: <20080627205625.GA16609@kroah.com>
 References: <1214565175-21512-1-git-send-email-bwalle@suse.de>
 	<1214565175-21512-2-git-send-email-bwalle@suse.de>
-Date: Fri, 27 Jun 2008 11:51:04 -0700
-Message-Id: <1214592664.12598.30.camel@nimitz>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1214565175-21512-2-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,10 +23,8 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
 Cc: gregkh@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com, vgoyal@redhat.com
 
-On Fri, 2008-06-27 at 13:12 +0200, Bernhard Walle wrote:
-> 
-> This patch adds /sys/firmware/memmap interface that represents the
-> BIOS
+On Fri, Jun 27, 2008 at 01:12:54PM +0200, Bernhard Walle wrote:
+> This patch adds /sys/firmware/memmap interface that represents the BIOS
 > (or Firmware) provided memory map. The tree looks like:
 > 
 >     /sys/firmware/memmap/0/start   (hex number)
@@ -50,14 +33,53 @@ On Fri, 2008-06-27 at 13:12 +0200, Bernhard Walle wrote:
 >     ...                 /1/start
 >                            end
 >                            type
+> 
+> With the following shell snippet one can print the memory map in the same form
+> the kernel prints itself when booting on x86 (the E820 map).
+> 
+>   --------- 8< --------------------------
+>     #!/bin/sh
+>     cd /sys/firmware/memmap
+>     for dir in * ; do
+>         start=$(cat $dir/start)
+>         end=$(cat $dir/end)
+>         type=$(cat $dir/type)
+>         printf "%016x-%016x (%s)\n" $start $[ $end +1] "$type"
+>     done
+>   --------- >8 --------------------------
+> 
+> That patch only provides the needed interface:
+> 
+>  1. The sysfs interface.
+>  2. The structure and enumeration definition.
+>  3. The function firmware_map_add() and firmware_map_add_early()
+>     that should be called from architecture code (E820/EFI, for
+>     example) to add the contents to the interface.
+> 
+> If the kernel is compiled without CONFIG_FIRMWARE_MEMMAP, the interface does
+> nothing without cluttering the architecture-specific code with #ifdef's.
+> 
+> The purpose of the new interface is kexec: While /proc/iomem represents
+> the *used* memory map (e.g. modified via kernel parameters like 'memmap'
+> and 'mem'), the /sys/firmware/memmap tree represents the unmodified memory
+> map provided via the firmware. So kexec can:
+> 
+>  - use the original memory map for rebooting,
+>  - use the /proc/iomem for setting up the ELF core headers for kdump
+>    case that should only represent the memory of the system.
+> 
+> The patch has been tested on i386 and x86_64.
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-Could we give this a slightly different name?  We have various 'mem_map'
-variables in the kernel, and this confused me on first glance. 
+Acked-by: Greg Kroah-Hartman <gregkh@suse.de>
 
-Could we just spell out 'memory_map'?
+x86 developers, feel free to add this to your tree, it looks fine to me.
 
--- Dave
+thanks,
 
+greg k-h
 
 _______________________________________________
 kexec mailing list
