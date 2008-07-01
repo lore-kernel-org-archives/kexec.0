@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bobafett.staff.proxad.net ([213.228.1.121])
+Received: from mx03.syneticon.net ([87.79.32.166])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KDgRm-00086O-NP
-	for kexec@lists.infradead.org; Tue, 01 Jul 2008 14:03:07 +0000
-From: Nicolas Schichan <nschichan@freebox.fr>
-Subject: Re: [PATCH] MIPS: kernel kexec crashdump, 64-bit support, SMP etc.
-Date: Tue, 1 Jul 2008 16:03:04 +0200
-References: <48624ACE.4050403@ru.mvista.com>
-In-Reply-To: <48624ACE.4050403@ru.mvista.com>
+	id 1KDk2q-0004hK-4n
+	for kexec@lists.infradead.org; Tue, 01 Jul 2008 17:53:36 +0000
+Message-ID: <486A6F0D.4070802@wpkg.org>
+Date: Tue, 01 Jul 2008 19:53:17 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807011603.04654.nschichan@freebox.fr>
+Subject: Re: kexec on mips - anyone has it working?
+References: <483BCB75.4050901@wpkg.org>
+	<200805301327.11925.nschichan@freebox.fr>
+	<483FE764.1090901@wpkg.org>
+	<200807011542.29274.nschichan@freebox.fr>
+In-Reply-To: <200807011542.29274.nschichan@freebox.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +25,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: msyrchin <msyrchin@ru.mvista.com>
+To: Nicolas Schichan <nschichan@freebox.fr>
+Cc: linux-mips@linux-mips.org, openwrt-devel@lists.openwrt.org, Kexec Mailing List <kexec@lists.infradead.org>
+
+Nicolas Schichan schrieb:
+> On Friday 30 May 2008 13:39:16 Tomasz Chmielewski wrote:
+> 
+> Hello,
+> 
+>> Nicolas Schichan schrieb:
+>>> On Thursday 29 May 2008 22:15:47 Tomasz Chmielewski wrote:
+>>>> Will call new kernel at 00305000
+>>> The calling address of the kernel looks quite wrong, it should clearly
+>>> be inside the KSEG0 zone. could  you please indicate the output of the
+>>> command "mips-linux-readelf -l vmlinux" ?
+>> # uname -m
+>> mips
+>> # readelf -l vmlinux
+>>
+>> Elf file type is EXEC (Executable file)
+>> Entry point 0x80251b50
+> 
+> This is  quite surprising.   The jump address  that kexec will  use is
+> cleary not what  I expected. I would have expected it  to be the Entry
+> point address given by readelf.
+> 
+> could  you try  the  following patch  to  make sure  that the  kimage*
+> structure is not corrupted by the code in machine_kexec() ?
+> 
+> Index: linux/arch/mips/kernel/machine_kexec.c
+> ===================================================================
+> --- linux/arch/mips/kernel/machine_kexec.c	(revision 8056)
+> +++ linux/arch/mips/kernel/machine_kexec.c	(working copy)
+> @@ -49,6 +49,8 @@
+>  	unsigned long entry;
+>  	unsigned long *ptr;
+>  
+> +	printk("image->start = %p", image->start);
+> +
+>  	reboot_code_buffer =
+>  	  (unsigned long)page_address(image->control_code_page);
+
+Umm?
+
+   CC      arch/mips/kernel/machine_kexec.o
+cc1: warnings being treated as errors
+arch/mips/kernel/machine_kexec.c: In function 'machine_kexec':
+arch/mips/kernel/machine_kexec.c:52: warning: format '%p' expects type 
+'void *', but argument 2 has type 'long unsigned int'
+make[6]: *** [arch/mips/kernel/machine_kexec.o] Error 1
+make[5]: *** [arch/mips/kernel] Error 2
+make[5]: Leaving directory 
+`/home/tch-data/openwrt/11612/build_dir/linux-brcm47xx/linux-2.6.25.9'
 
 
-Hi,
-
-
-On Wednesday 25 June 2008 15:40:30 msyrchin wrote:
-> This patch updates kernel part of kexec for MIPS platform to support
-> kdump, 64-bit, SMP and simplify code adaptation to new boards. It does
-> the following:
->
-> - hooks for machine-specific actions are introduced
-> (_machine_kexec_prepare,
->   _machine_kexec_shutdown, _machine_crash_shutdown);
-> - kexec reboot on SMP machine is implemented;
-> - add boot parameters passing to new kernel (array kexec_args[] is
-> copied to
->   registers a0-a3 on reboot );
-> - crash dump functionality is added (boot kernel with non-default physical
->   start, parse "crashkernel=..." command line parameter, copy_oldmem_page()
->   is implemeted to read memory dump after reboot-on-crashi,
-> crash_setup_regs()
->   is updated to correctly store registers on crash);
->
-> kexec/kdump funtionality was tested on several Cavium Octeon boards
-> (mips64 SMP). The way we do it was the following:
-> - _machine_kexec_prepare was find kexec segment with command line and
-> save it's pointed into internal bootloader structure.
-> - _machine_kexec_shutdown was used to stop boards IO and make all non-boot
-> CPUs spin in function relocated_kexec_smp_wait()
-> - _machine_crash_shutdown just calls default_machine_crash_shutdown()
-> We tested 1) 'common' kexec reboot (by 'kexec -e'), 2) kexec-on-panic
-> ('kexec -p ...') and 3) access to/proc/vmcore (with gdb).
-
-Nice  :)   could  you   also  send  this   patch  to   the  linux-mips
-mailing-list ?
-
-Apprently all tabs in the patch have been converted to spaces and some
-lines seem to have been wrapped by your mailer.
-
-Regards,
 
 -- 
-Nicolas Schichan
-
-
-
+Tomasz Chmielewski
+http://wpkg.org
 
 _______________________________________________
 kexec mailing list
