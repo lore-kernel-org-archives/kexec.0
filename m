@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from bobafett.staff.proxad.net ([213.228.1.121])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KDeDc-0005DU-Uf
-	for kexec@lists.infradead.org; Tue, 01 Jul 2008 11:40:21 +0000
-Date: Tue, 1 Jul 2008 21:40:16 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] x86: Fix documentation bug about relocatability
-Message-ID: <20080701114015.GA11207@verge.net.au>
-References: <1214510118-21405-1-git-send-email-bwalle@suse.de>
+	id 1KDg8A-00057U-UR
+	for kexec@lists.infradead.org; Tue, 01 Jul 2008 13:42:51 +0000
+From: Nicolas Schichan <nschichan@freebox.fr>
+Subject: Re: kexec on mips - anyone has it working?
+Date: Tue, 1 Jul 2008 15:42:28 +0200
+References: <483BCB75.4050901@wpkg.org>
+	<200805301327.11925.nschichan@freebox.fr>
+	<483FE764.1090901@wpkg.org>
+In-Reply-To: <483FE764.1090901@wpkg.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1214510118-21405-1-git-send-email-bwalle@suse.de>
+Message-Id: <200807011542.29274.nschichan@freebox.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,46 +25,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Tomasz Chmielewski <mangoo@wpkg.org>
+Cc: linux-mips@linux-mips.org, openwrt-devel@lists.openwrt.org, Kexec Mailing List <kexec@lists.infradead.org>
 
-On Thu, Jun 26, 2008 at 09:55:18PM +0200, Bernhard Walle wrote:
-> This patch fixes a small bug in documentation: x86_64 also has now
-> the ability to build a relocatable kernel.
-> 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+On Friday 30 May 2008 13:39:16 Tomasz Chmielewski wrote:
 
-Acked-by: mon Horman <horms@verge.net.au>
+Hello,
 
-> ---
->  Documentation/kdump/kdump.txt |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
-> index b8e52c0..9691c7f 100644
-> --- a/Documentation/kdump/kdump.txt
-> +++ b/Documentation/kdump/kdump.txt
-> @@ -109,7 +109,7 @@ There are two possible methods of using Kdump.
->  2) Or use the system kernel binary itself as dump-capture kernel and there is
->     no need to build a separate dump-capture kernel. This is possible
->     only with the architecutres which support a relocatable kernel. As
-> -   of today i386 and ia64 architectures support relocatable kernel.
-> +   of today, i386, x86_64 and ia64 architectures support relocatable kernel.
->  
->  Building a relocatable kernel is advantageous from the point of view that
->  one does not have to build a second kernel for capturing the dump. But
-> -- 
-> 1.5.6
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Nicolas Schichan schrieb:
+> > On Thursday 29 May 2008 22:15:47 Tomasz Chmielewski wrote:
+> >> Will call new kernel at 00305000
+> >
+> > The calling address of the kernel looks quite wrong, it should clearly
+> > be inside the KSEG0 zone. could  you please indicate the output of the
+> > command "mips-linux-readelf -l vmlinux" ?
+>
+> # uname -m
+> mips
+> # readelf -l vmlinux
+>
+> Elf file type is EXEC (Executable file)
+> Entry point 0x80251b50
+
+This is  quite surprising.   The jump address  that kexec will  use is
+cleary not what  I expected. I would have expected it  to be the Entry
+point address given by readelf.
+
+could  you try  the  following patch  to  make sure  that the  kimage*
+structure is not corrupted by the code in machine_kexec() ?
+
+Index: linux/arch/mips/kernel/machine_kexec.c
+===================================================================
+--- linux/arch/mips/kernel/machine_kexec.c	(revision 8056)
++++ linux/arch/mips/kernel/machine_kexec.c	(working copy)
+@@ -49,6 +49,8 @@
+ 	unsigned long entry;
+ 	unsigned long *ptr;
+ 
++	printk("image->start = %p", image->start);
++
+ 	reboot_code_buffer =
+ 	  (unsigned long)page_address(image->control_code_page);
+ 
+
+
+Regards,
 
 -- 
-Horms
+Nicolas Schichan
+
 
 
 _______________________________________________
