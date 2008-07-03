@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx03.syneticon.net ([87.79.32.166])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KDkY7-0005wM-F1
-	for kexec@lists.infradead.org; Tue, 01 Jul 2008 18:25:55 +0000
-Message-ID: <486A76AF.9080109@wpkg.org>
-Date: Tue, 01 Jul 2008 20:25:51 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+Received: from mx3.mail.elte.hu ([157.181.1.138])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KEOeW-0007dv-MS
+	for kexec@lists.infradead.org; Thu, 03 Jul 2008 13:15:13 +0000
+Date: Thu, 3 Jul 2008 15:14:56 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] x86: Find offset for crashkernel reservation automatically
+Message-ID: <20080703131456.GA12102@elte.hu>
+References: <1214510048-21215-1-git-send-email-bwalle@suse.de>
+	<20080627133256.GB5801@redhat.com>
+	<20080627134212.GC5801@redhat.com>
+	<20080627160656.06f71661@halley.suse.de>
+	<20080627141910.GD5801@redhat.com>
+	<20080627162223.2df5a8b9@halley.suse.de>
+	<m1zlp6vjub.fsf@frodo.ebiederm.org>
+	<20080627202932.16634031@kopernikus.site>
 MIME-Version: 1.0
-Subject: Re: kexec on mips - anyone has it working?
-References: <483BCB75.4050901@wpkg.org>
-	<200807011542.29274.nschichan@freebox.fr>
-	<486A6F0D.4070802@wpkg.org>
-	<200807012000.40421.nschichan@freebox.fr>
-In-Reply-To: <200807012000.40421.nschichan@freebox.fr>
+Content-Disposition: inline
+In-Reply-To: <20080627202932.16634031@kopernikus.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +30,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nicolas Schichan <nschichan@freebox.fr>
-Cc: linux-mips@linux-mips.org, kexec@lists.infradead.org
-
-Nicolas Schichan schrieb:
-
-(...)
-
-> +	printk("image->start = %lx", image->start);
-> +
-
-And this is what happens if I use your "util.c for kexec-userland" - why 
-does it use a different address?
+To: Bernhard Walle <bwalle@suse.de>
+Cc: x86@kernel.org, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org
 
 
-# /root/kexec-test/kexec -r
-Starting new kernel
-image->start = 802520d0Will call new kernel at 802520d0
-Bye ...
+* Bernhard Walle <bwalle@suse.de> wrote:
 
+> > > But in general policy should go in userspace (if possible), so I 
+> > > agree with you that kexec-tools can handle that.
+> > 
+> > At a quick skim the patch looks good.  I thought I had initially 
+> > implemented the code to work this way but apparently in all of the 
+> > churn that aspect of it got lost.
+> > 
+> > Let's start with trying to allocate the memory as low as possible 
+> > for a crash kernel (I think you are already doing that).
+> 
+> Yes, in 95 % of the cases the crashkernel still gets reserved at 16M.
 
--- 
-Tomasz Chmielewski
-http://wpkg.org
+ok - i've applied it to tip/x86/crashdump - thanks Bernhard.
 
+	Ingo
 
 _______________________________________________
 kexec mailing list
