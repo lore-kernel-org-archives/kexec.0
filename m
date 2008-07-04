@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.18.174])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KEOYT-0003hK-QJ
-	for kexec@lists.infradead.org; Thu, 03 Jul 2008 13:08:58 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
-	by e23smtp05.au.ibm.com (8.13.1/8.13.1) with ESMTP id m63D8DxS029948
-	for <kexec@lists.infradead.org>; Thu, 3 Jul 2008 23:08:13 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m63D8RT44202496
-	for <kexec@lists.infradead.org>; Thu, 3 Jul 2008 23:08:28 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m63D8rmW012757
-	for <kexec@lists.infradead.org>; Thu, 3 Jul 2008 23:08:53 +1000
-Message-ID: <486CCF6E.2010804@in.ibm.com>
-Date: Thu, 03 Jul 2008 18:39:02 +0530
-From: "Sachin P. Sant" <sachinp@in.ibm.com>
+Received: from fms-01.valinux.co.jp ([210.128.90.1] helo=mail.valinux.co.jp)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KEZ7D-0001q8-3z
+	for kexec@lists.infradead.org; Fri, 04 Jul 2008 00:25:31 +0000
+Date: Fri, 04 Jul 2008 09:27:27 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: [makedumpfile][PATCH] handle x86_64 xen code/data relocation
+Message-Id: <20080704091014.EEC7.ODA@valinux.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH] Fix 32 bit kexec binary to boot on 64 bit ppc64
-Content-Type: multipart/mixed; boundary="------------070605070801030701030400"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,205 +16,236 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>
+Cc: oomichi@mxs.nes.nec.co.jp
 
-This is a multi-part message in MIME format.
---------------070605070801030701030400
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi all,
 
-Allow 32 bit kexec binary to boot kdump kernel on
-ppc64 architecture.
+Recent version of xen (ex. RHEL5.2, 3.2.0) on the x86_64
+moves the physical(machine) address of xen code/data area after 
+the system started up. The start address of this is stored in
+'xen_phys_start'. Thus to get a machine address of a xen text symbol
+from its virtual address, calculate 
+"va - __XEN_VIRT_START +  xen_phys_start".
 
-This problem was reported by Bernhard here.
+makedumpfile command need the value of xen_phys_start.
+They know the virtual address of 'xen_phys_start' symbol but
+no way to extract the value of xen_phys_start.
 
-http://lists.infradead.org/pipermail/kexec/2008-June/001998.html
+I posted a patch which adds the xen_phys_start value to the 
+CRASHINFO ElfNote section and It was merged the upstream (xen-unstable
+tree).
 
-Thanks
--Sachin
+This patch enables as follows:
+* add --xen_phys_start option for a vmcore which is relocated and does not
+  include the xen_phys_start value in the CRASHINFO.
+* extract the xen_phys_start value from the CRASHINFO if the CRASHINFO
+  includes the xen_phys_start value.
 
-Signed-off-by : Sachin Sant <sachinp@in.ibm.com>
+(note that the crash command includes this function already.)
+
+This patch is for makedumpfile-1.2.6.
+
+Thanks.
+Itsuro Oda
+
 ---
-
-
-
-
---------------070605070801030701030400
-Content-Type: text/x-patch;
- name="32bit-kexec-with-64bit-ppc64.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="32bit-kexec-with-64bit-ppc64.patch"
-
-* Allow 32 bit kexec binary to boot kdump kernel on ppc64 architecture.
-
-Signed-off-by : Sachin Sant <sachinp@in.ibm.com>
----
-
-diff -Naurp old/kexec/arch/ppc64/crashdump-ppc64.c new/kexec/arch/ppc64/crashdump-ppc64.c
---- old/kexec/arch/ppc64/crashdump-ppc64.c	2008-07-01 11:20:12.000000000 +0530
-+++ new/kexec/arch/ppc64/crashdump-ppc64.c	2008-07-03 17:27:50.000000000 +0530
-@@ -82,7 +82,7 @@ mem_rgns_t usablemem_rgns = {0, NULL};
-  * we can determine the RAM size unless parsing the device-tree/memoy@/reg
-  * property in the kernel.
-  */
--unsigned long saved_max_mem = 0;
-+uint64_t saved_max_mem = 0;
+--- makedumpfile.h.org	2008-06-12 15:25:43.000000000 +0900
++++ makedumpfile.h	2008-07-03 10:48:07.000000000 +0900
+@@ -467,6 +467,7 @@ do { \
+ #define STRLEN_OSRELEASE (65)	/* same length as diskdump.h */
  
- /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
-  * create Elf headers. Keeping it separate from get_memory_ranges() as
-@@ -264,7 +264,7 @@ err:
- }
+ #define XEN_ELFNOTE_CRASH_INFO	(0x1000001)
++#define SIZE_XEN_CRASH_INFO_V2	(sizeof(unsigned long) * 10)
  
- /* Converts unsigned long to ascii string. */
--static void ultoa(unsigned long i, char *str)
-+static void ultoa(uint64_t i, char *str)
- {
- 	int j = 0, k;
- 	char tmp;
-@@ -282,8 +282,8 @@ static void ultoa(unsigned long i, char 
- 	}
- }
- 
--static int add_cmdline_param(char *cmdline, unsigned long addr,
--				char *cmdstr, char *byte)
-+static int add_cmdline_param(char *cmdline, uint64_t addr, char *cmdstr,
-+				char *byte)
- {
- 	int cmdlen, len, align = 1024;
- 	char str[COMMAND_LINE_SIZE], *ptr;
-@@ -320,10 +320,11 @@ static int add_cmdline_param(char *cmdli
-  * for crash memory image.
-  */
- int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
--				unsigned long max_addr, unsigned long min_base)
-+				uint64_t max_addr, unsigned long min_base)
- {
- 	void *tmp;
--	unsigned long sz, elfcorehdr;
-+	unsigned long sz;
-+	uint64_t elfcorehdr;
- 	int nr_ranges, align = 1024, i;
- 	unsigned long long end;
- 	struct memory_range *mem_range;
-diff -Naurp old/kexec/arch/ppc64/crashdump-ppc64.h new/kexec/arch/ppc64/crashdump-ppc64.h
---- old/kexec/arch/ppc64/crashdump-ppc64.h	2008-07-01 11:20:12.000000000 +0530
-+++ new/kexec/arch/ppc64/crashdump-ppc64.h	2008-07-03 17:25:34.000000000 +0530
-@@ -3,7 +3,7 @@
- 
- struct kexec_info;
- int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
--				unsigned long max_addr, unsigned long min_base);
-+				uint64_t max_addr, unsigned long min_base);
- void add_usable_mem_rgns(unsigned long long base, unsigned long long size);
- 
- #define PAGE_OFFSET     0xC000000000000000
-diff -Naurp old/kexec/arch/ppc64/fs2dt.c new/kexec/arch/ppc64/fs2dt.c
---- old/kexec/arch/ppc64/fs2dt.c	2008-07-01 11:20:12.000000000 +0530
-+++ new/kexec/arch/ppc64/fs2dt.c	2008-07-03 17:19:35.000000000 +0530
-@@ -125,9 +125,9 @@ static unsigned propnum(const char *name
- static void add_usable_mem_property(int fd, int len)
- {
- 	char fname[MAXPATH], *bname;
--	unsigned long long buf[2];
--	unsigned long ranges[2*MAX_MEMORY_RANGES];
--	unsigned long long base, end, loc_base, loc_end;
-+	uint64_t buf[2];
-+	uint64_t ranges[2*MAX_MEMORY_RANGES];
-+	uint64_t base, end, loc_base, loc_end;
- 	int range, rlen = 0;
- 
- 	strcpy(fname, pathname);
-@@ -137,9 +137,9 @@ static void add_usable_mem_property(int 
- 	if (strncmp(bname, "/memory@", 8))
- 		return;
- 
--	if (len < 2 * sizeof(unsigned long long))
-+	if (len < 2 * sizeof(uint64_t))
- 		die("unrecoverable error: not enough data for mem property\n");
--	len = 2 * sizeof(unsigned long long);
-+	len = 2 * sizeof(uint64_t);
- 
- 	if (lseek(fd, 0, SEEK_SET) < 0)
- 		die("unrecoverable error: error seeking in \"%s\": %s\n",
-@@ -179,7 +179,7 @@ static void add_usable_mem_property(int 
- 		ranges[rlen++] = 0;
- 	}
- 
--	rlen = rlen * sizeof(unsigned long);
-+	rlen = rlen * sizeof(uint64_t);
+ /*
+  * The value of dependence on machine
+@@ -778,6 +779,9 @@ struct DumpInfo {
  	/*
- 	 * No add linux,usable-memory property.
+ 	 * for Xen extraction
  	 */
-diff -Naurp old/kexec/arch/ppc64/kexec-elf-ppc64.c new/kexec/arch/ppc64/kexec-elf-ppc64.c
---- old/kexec/arch/ppc64/kexec-elf-ppc64.c	2008-07-01 11:20:12.000000000 +0530
-+++ new/kexec/arch/ppc64/kexec-elf-ppc64.c	2008-07-03 17:26:50.000000000 +0530
-@@ -186,7 +186,7 @@ int elf_ppc64_load(int argc, char **argv
- 	if (size > phdr->p_memsz)
- 		size = phdr->p_memsz;
++	off_t			offset_xen_crash_info;
++	unsigned long		size_xen_crash_info;
++	unsigned long xen_phys_start;
+ 	unsigned long xen_heap_start;	/* start mfn of xen heap area */
+ 	unsigned long xen_heap_end;	/* end mfn(+1) of xen heap area */
+ 	unsigned long frame_table_vaddr;
+@@ -1051,11 +1055,14 @@ int get_xen_info_x86();
+ #define HYPERVISOR_VIRT_END   (0xffff880000000000)
+ #define DIRECTMAP_VIRT_START  (0xffff830000000000)
+ #define DIRECTMAP_VIRT_END    (0xffff840000000000)
++#define XEN_VIRT_START        (0xffff828c80000000)
  
--	hole_addr = (unsigned long)locate_hole(info, size, 0, 0,
-+	hole_addr = (uint64_t)locate_hole(info, size, 0, 0,
- 			max_addr, 1);
- 	ehdr.e_phdr[0].p_paddr = hole_addr;
- 	result = elf_exec_load(&ehdr, info);
-diff -Naurp old/kexec/arch/ppc64/kexec-ppc64.c new/kexec/arch/ppc64/kexec-ppc64.c
---- old/kexec/arch/ppc64/kexec-ppc64.c	2008-07-01 11:20:12.000000000 +0530
-+++ new/kexec/arch/ppc64/kexec-ppc64.c	2008-07-03 17:19:35.000000000 +0530
-@@ -37,8 +37,8 @@
- static struct memory_range *exclude_range = NULL;
- static struct memory_range *memory_range = NULL;
- static struct memory_range *base_memory_range = NULL;
--static unsigned long long rmo_top;
--unsigned long long memory_max = 0;
-+static uint64_t rmo_top;
-+uint64_t memory_max = 0;
- static int nr_memory_ranges, nr_exclude_ranges;
- uint64_t crash_base, crash_size;
- unsigned int rtas_base, rtas_size;
-@@ -251,12 +251,12 @@ static int sort_ranges(void)
-  */
- static int get_devtree_details(unsigned long kexec_flags)
+ #define is_xen_vaddr(x) \
+         ((x) >= HYPERVISOR_VIRT_START && (x) < HYPERVISOR_VIRT_END)
+ #define is_direct(x) \
+         ((x) >= DIRECTMAP_VIRT_START && (x) < DIRECTMAP_VIRT_END)
++#define is_xen_text(x) \
++        ((x) >= XEN_VIRT_START && (x) < DIRECTMAP_VIRT_START)
+ 
+ unsigned long long kvtop_xen_x86_64(unsigned long kvaddr);
+ #define kvtop_xen(X)	kvtop_xen_x86_64(X)
+--- makedumpfile.c.org	2008-06-12 15:01:26.000000000 +0900
++++ makedumpfile.c	2008-07-03 12:02:44.000000000 +0900
+@@ -2187,6 +2187,8 @@ read_vmcoreinfo_basic_info()
+ 
+ 	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+ 		i = strlen(buf);
++		if (!i)
++			break;
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, STR_OSRELEASE, strlen(STR_OSRELEASE)) == 0) {
+@@ -2244,6 +2246,8 @@ read_vmcoreinfo_symbol(char *str_symbol)
+ 
+ 	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+ 		i = strlen(buf);
++		if (!i)
++			break;
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, str_symbol, strlen(str_symbol)) == 0) {
+@@ -2275,6 +2279,8 @@ read_vmcoreinfo_long(char *str_structure
+ 
+ 	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+ 		i = strlen(buf);
++		if (!i)
++			break;
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, str_structure, strlen(str_structure)) == 0) {
+@@ -2304,6 +2310,8 @@ read_vmcoreinfo_string(char *str_in, cha
+ 
+ 	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+ 		i = strlen(buf);
++		if (!i)
++			break;
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, str_in, strlen(str_in)) == 0) {
+@@ -2467,8 +2475,20 @@ get_pt_note_info(off_t off_note, unsigne
+ 		/*
+ 		 * Check whether /proc/vmcore contains xen's note.
+ 		 */
+-		} else if (n_type == XEN_ELFNOTE_CRASH_INFO)
++		} else if (n_type == XEN_ELFNOTE_CRASH_INFO) {
+ 			vt.mem_flags |= MEMORY_XEN;
++			if (info->flag_elf64) {
++				info->offset_xen_crash_info = offset
++				    + (sizeof(note64)
++				    + ((note64.n_namesz + 3) & ~3));
++				info->size_xen_crash_info = note64.n_descsz;
++			} else {
++				info->offset_xen_crash_info = offset
++				    + (sizeof(note32)
++				    + ((note32.n_namesz + 3) & ~3));
++				info->size_xen_crash_info = note32.n_descsz;
++			}
++		}
+ 
+ 		if (info->flag_elf64) {
+ 			offset += sizeof(Elf64_Nhdr)
+@@ -5547,6 +5567,36 @@ get_structure_info_xen()
+ }
+ 
+ int
++get_xen_phys_start(void)
++{
++	off_t offset;
++	unsigned long xen_phys_start;
++	const off_t failed = (off_t)-1;
++
++	if (info->xen_phys_start)
++		return TRUE;
++
++	if (info->size_xen_crash_info >= SIZE_XEN_CRASH_INFO_V2) {
++		offset = info->offset_xen_crash_info + info->size_xen_crash_info
++			 - sizeof(unsigned long) * 2;
++		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
++			ERRMSG("Can't seek the dump memory(%s). %s\n",
++			    info->name_memory, strerror(errno));
++			return FALSE;
++		}
++		if (read(info->fd_memory, &xen_phys_start, sizeof(unsigned long))
++		    != sizeof(unsigned long)) {
++			ERRMSG("Can't read the dump memory(%s). %s\n",
++			    info->name_memory, strerror(errno));
++			return FALSE;
++		}
++		info->xen_phys_start = xen_phys_start;
++	}
++
++	return TRUE;
++}
++
++int
+ get_xen_info()
  {
--	unsigned long long rmo_base;
--	unsigned long long tce_base;
-+	uint64_t rmo_base;
-+	uint64_t tce_base;
- 	unsigned int tce_size;
--	unsigned long long htab_base, htab_size;
--	unsigned long long kernel_end;
--	unsigned long long initrd_start, initrd_end;
-+	uint64_t htab_base, htab_size;
-+	uint64_t kernel_end;
-+	uint64_t initrd_start, initrd_end;
- 	char buf[MAXBYTES];
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
-@@ -465,8 +465,8 @@ static int get_devtree_details(unsigned 
- 				perror(fname);
- 				goto error_openfile;
- 			}
--			rmo_base = ((unsigned long long *)buf)[0];
--			rmo_top = rmo_base + ((unsigned long long *)buf)[1];
-+			rmo_base = ((uint64_t *)buf)[0];
-+			rmo_top = rmo_base + ((uint64_t *)buf)[1];
- 			if (rmo_top > 0x30000000UL)
- 				rmo_top = 0x30000000UL;
+ 	unsigned long domain;
+@@ -5706,6 +5756,7 @@ show_data_xen()
+ 	MSG("OFFSET(domain.next_in_list): %ld\n", OFFSET(domain.next_in_list));
  
+ 	MSG("\n");
++	MSG("xen_phys_start: %lx\n", info->xen_phys_start);
+ 	MSG("frame_table_vaddr: %lx\n", info->frame_table_vaddr);
+ 	MSG("xen_heap_start: %lx\n", info->xen_heap_start);
+ 	MSG("xen_heap_end:%lx\n", info->xen_heap_end);
+@@ -5790,6 +5841,8 @@ read_vmcoreinfo_basic_info_xen()
+ 
+ 	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+ 		i = strlen(buf);
++		if (!i)
++			break;
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, STR_PAGESIZE, strlen(STR_PAGESIZE)) == 0) {
+@@ -6023,6 +6076,8 @@ initial_xen()
+ 			return FALSE;
+ 		unlink(info->name_vmcoreinfo);
+ 	}
++	if (!get_xen_phys_start())
++		return FALSE;
+ 	if (!get_xen_info())
+ 		return FALSE;
+ 
+@@ -6204,6 +6259,7 @@ check_param_for_creating_dumpfile(int ar
+ static struct option longopts[] = {
+ 	{"xen-syms", required_argument, NULL, 'y'},
+ 	{"xen-vmcoreinfo", required_argument, NULL, 'z'},
++	{"xen_phys_start", required_argument, NULL, 'P'},
+ 	{"message-level", required_argument, NULL, 'm'},
+ 	{"help", no_argument, NULL, 'h'},
+ 	{0, 0, 0, 0}
+@@ -6266,6 +6322,9 @@ main(int argc, char *argv[])
+ 		case 'm':
+ 			message_level = atoi(optarg);
+ 			break;
++		case 'P':
++			info->xen_phys_start = strtoul(optarg, NULL, 0);
++			break;
+ 		case 'R':
+ 			info->flag_rearrange = 1;
+ 			break;
+--- x86_64.c.org	2008-06-12 15:16:48.000000000 +0900
++++ x86_64.c	2008-07-03 10:58:24.000000000 +0900
+@@ -190,6 +190,9 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 	if (!is_xen_vaddr(kvaddr))
+ 		return NOT_PADDR;
+ 
++	if (is_xen_text(kvaddr))
++		return (unsigned long)kvaddr - XEN_VIRT_START + info->xen_phys_start;
++
+ 	if (is_direct(kvaddr))
+ 		return (unsigned long)kvaddr - DIRECTMAP_VIRT_START;
+-- 
+Itsuro ODA <oda@valinux.co.jp>
 
---------------070605070801030701030400
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------070605070801030701030400--
-
