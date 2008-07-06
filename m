@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay2.mail.vrmd.de ([81.28.224.28])
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KFdJ9-0007bF-Is
-	for kexec@lists.infradead.org; Sun, 06 Jul 2008 23:06:16 +0000
+	id 1KFdPW-0002bc-5L
+	for kexec@lists.infradead.org; Sun, 06 Jul 2008 23:12:50 +0000
 From: Bernhard Walle <bwalle@suse.de>
 Subject: Use /sys/firmware/memmap in kexec
-Date: Mon,  7 Jul 2008 01:06:06 +0200
-Message-Id: <1215385571-11844-1-git-send-email-bwalle@suse.de>
+Date: Mon,  7 Jul 2008 01:13:23 +0200
+Message-Id: <1215386008-16271-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
