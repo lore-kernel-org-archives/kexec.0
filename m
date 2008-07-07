@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KFgod-0002kz-45
-	for kexec@lists.infradead.org; Mon, 07 Jul 2008 02:50:59 +0000
-Message-Id: <48718477.3020406@mxs.nes.nec.co.jp>
-Date: Mon, 07 Jul 2008 11:50:31 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH] Use progress bar also for bitmap creation
-References: <20080626143721.GA12486@suse.de>
-	<4864B595.8040205@mxs.nes.nec.co.jp>
-In-Reply-To: <4864B595.8040205@mxs.nes.nec.co.jp>
+	id 1KFhHU-000717-89
+	for kexec@lists.infradead.org; Mon, 07 Jul 2008 03:20:49 +0000
+Subject: [PATCH -mm 2/2] kexec jump -v12: save/restore device state
+From: Huang Ying <ying.huang@intel.com>
+Date: Mon, 07 Jul 2008 11:25:24 +0800
+Message-Id: <1215401124.4660.5.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,205 +16,290 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1331565372=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: jlan@sgi.com, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-pm@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
---===============1331565372==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+This patch implements devices state save/restore before after kexec.
 
 
-Hi Bernhard,
+This patch together with features in kexec_jump patch can be used for
+following:
 
-Ken'ichi Ohmichi wrote:
-> Hi Bernhard,
-> 
-> Thank you for your patch.
-> I like this idea :-)
-> 
-> I am busy now, and I will consider the patch well the next week.
+- A simple hibernation implementation without ACPI support. You can
+  kexec a hibernating kernel, save the memory image of original system
+  and shutdown the system. When resuming, you restore the memory image
+  of original system via ordinary kexec load then jump back.
 
-Thank you for the patch, and sorry for my late response.
+- Kernel/system debug through making system snapshot. You can make
+  system snapshot, jump back, do some thing and make another system
+  snapshot.
 
-I added the progress bar for excluding free pages to your patch.
-Could you please check the attached patch ?
-If there is no problem in the attached patch, I will release the
-next release with this patch.
+- Cooperative multi-kernel/system. With kexec jump, you can switch
+  between several kernels/systems quickly without boot process except
+  the first time. This appears like swap a whole kernel/system out/in.
 
-
-Thanks
-Ken'ichi Ohmichi
+- A general method to call program in physical mode (paging turning
+  off). This can be used to invoke BIOS code under Linux.
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+The following user-space tools can be used with kexec jump:
+
+- kexec-tools needs to be patched to support kexec jump. The patches
+  and the precompiled kexec can be download from the following URL:
+       source: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-src_git_kh10.tar.bz2
+       patches: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec-tools-patches_git_kh10.tar.bz2
+       binary: http://khibernation.sourceforge.net/download/release_v10/kexec-tools/kexec_git_kh10
+
+- makedumpfile with patches are used as memory image saving tool, it
+  can exclude free pages from original kernel memory image file. The
+  patches and the precompiled makedumpfile can be download from the
+  following URL:
+       source: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-src_cvs_kh10.tar.bz2
+       patches: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile-patches_cvs_kh10.tar.bz2
+       binary: http://khibernation.sourceforge.net/download/release_v10/makedumpfile/makedumpfile_cvs_kh10
+
+- An initramfs image can be used as the root file system of kexeced
+  kernel. An initramfs image built with "BuildRoot" can be downloaded
+  from the following URL:
+       initramfs image: http://khibernation.sourceforge.net/download/release_v10/initramfs/rootfs_cvs_kh10.gz
+  All user space tools above are included in the initramfs image.
+
+
+Usage example of simple hibernation:
+
+1. Compile and install patched kernel with following options selected:
+
+CONFIG_X86_32=y
+CONFIG_RELOCATABLE=y
+CONFIG_KEXEC=y
+CONFIG_CRASH_DUMP=y
+CONFIG_PM=y
+CONFIG_HIBERNATION=y
+CONFIG_KEXEC_JUMP=y
+
+2. Build an initramfs image contains kexec-tool and makedumpfile, or
+   download the pre-built initramfs image, called rootfs.gz in
+   following text.
+
+3. Prepare a partition to save memory image of original kernel, called
+   hibernating partition in following text.
+
+4. Boot kernel compiled in step 1 (kernel A).
+
+5. In the kernel A, load kernel compiled in step 1 (kernel B) with
+   /sbin/kexec. The shell command line can be as follow:
+
+   /sbin/kexec --load-preserve-context /boot/bzImage --mem-min=0x100000
+     --mem-max=0xffffff --initrd=rootfs.gz
+
+6. Boot the kernel B with following shell command line:
+
+   /sbin/kexec -e
+
+7. The kernel B will boot as normal kexec. In kernel B the memory
+   image of kernel A can be saved into hibernating partition as
+   follow:
+
+   jump_back_entry=`cat /proc/cmdline | tr ' ' '\n' | grep kexec_jump_back_entry | cut -d '='`
+   echo $jump_back_entry > kexec_jump_back_entry
+   cp /proc/vmcore dump.elf
+
+   Then you can shutdown the machine as normal.
+
+8. Boot kernel compiled in step 1 (kernel C). Use the rootfs.gz as
+   root file system.
+
+9. In kernel C, load the memory image of kernel A as follow:
+
+   /sbin/kexec -l --args-none --entry=`cat kexec_jump_back_entry` dump.elf
+
+10. Jump back to the kernel A as follow:
+
+   /sbin/kexec -e
+
+   Then, kernel A is resumed.
+
+
+Implementation point:
+
+To support jumping between two kernels, before jumping to (executing)
+the new kernel and jumping back to the original kernel, the devices
+are put into quiescent state, and the state of devices and CPU is
+saved. After jumping back from kexeced kernel and jumping to the new
+kernel, the state of devices and CPU are restored accordingly. The
+devices/CPU state save/restore code of software suspend is called to
+implement corresponding function.
+
+
+Known issues:
+
+- Because the segment number supported by sys_kexec_load is limited,
+  hibernation image with many segments may not be load. This is
+  planned to be eliminated by adding a new flag to sys_kexec_load to
+  make a image can be loaded with multiple sys_kexec_load invoking.
+
+
+ChangeLog:
+
+v12:
+
+- Add dependency of HIBERNATION for CONFIG_KEXEC_JUMP to resolve
+  dependency problem.
+
+v11:
+
+- Add disable_IO_APIC() to machine_kexec() to put IO APIC into legacy
+  mode before executing new kernel.
+
+- Base on top of new hibernation/restore device driver callback.
+
+v10:
+
+- Split from original kexec_jump patch.
+
+
+Now, only the i386 architecture is supported. The patchset is based on
+Linux kernel 2.6.26-rc8-mm1, and has been tested on IBM T42 with ACPI
+on and off.
+
+
+Signed-off-by: Huang Ying <ying.huang@intel.com>
+
 ---
-diff -puN makedumpfile.org/makedumpfile.c makedumpfile/makedumpfile.c
---- makedumpfile.org/makedumpfile.c	2008-07-07 10:48:18.000000000 +0900
-+++ makedumpfile/makedumpfile.c	2008-07-07 11:30:04.000000000 +0900
-@@ -32,6 +32,18 @@ int message_level;
- /*
-  * Forward declarations
-  */
-+void print_progress(const char 		*msg,
-+		    unsigned long 	current,
-+		    unsigned long 	end);
-+
-+/*
-+ * Message texts
-+ */
-+#define PROGRESS_COPY   	"Copying data"
-+#define PROGRESS_UNN_PAGES 	"Excluding unnecessary pages"
-+#define PROGRESS_FREE_PAGES 	"Excluding free pages"
-+#define PROGRESS_ZERO_PAGES 	"Excluding zero pages"
-+#define PROGRESS_MAXLEN		"35"
- 
- /*
-  * The numbers of the excluded pages
-@@ -3917,6 +3929,8 @@ _exclude_free_page()
- 	}
- 	for (num_nodes = 1; num_nodes <= vt.numnodes; num_nodes++) {
- 
-+		print_progress(PROGRESS_FREE_PAGES, num_nodes - 1, vt.numnodes);
-+
- 		node_zones = pgdat + OFFSET(pglist_data.node_zones);
- 
- 		if (!readmem(VADDR, pgdat + OFFSET(pglist_data.nr_zones),
-@@ -3948,6 +3962,12 @@ _exclude_free_page()
- 			}
- 		}
- 	}
-+
-+	/*
-+	 * print [100 %]
-+	 */
-+	print_progress(PROGRESS_FREE_PAGES, vt.numnodes, vt.numnodes);
-+
- 	return TRUE;
- }
- 
-@@ -4062,6 +4082,9 @@ exclude_zero_pages()
- 	}
- 	for (pfn = paddr = 0; pfn < info->max_mapnr;
- 	    pfn++, paddr += info->page_size) {
-+
-+		print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
-+
- 		if (!is_in_segs(paddr))
- 			continue;
- 
-@@ -4073,6 +4096,12 @@ exclude_zero_pages()
- 			pfn_zero++;
- 		}
- 	}
-+
-+	/*
-+	 * print [100 %]
-+	 */
-+	print_progress(PROGRESS_ZERO_PAGES, info->max_mapnr, info->max_mapnr);
-+
- 	ret = TRUE;
- out:
- 	if (buf != NULL)
-@@ -4100,6 +4129,8 @@ exclude_unnecessary_pages()
- 		goto out;
- 	}
- 	for (mm = 0; mm < info->num_mem_map; mm++) {
-+		print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
-+
- 		mmd = &info->mem_map_data[mm];
- 		pfn   = mmd->pfn_start;
- 		paddr = pfn*info->page_size;
-@@ -4160,6 +4191,12 @@ exclude_unnecessary_pages()
- 			}
- 		}
- 	}
-+
-+	/*
-+	 * print [100 %]
-+	 */
-+	print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map);
-+
- 	if (info->dump_level & DL_EXCLUDE_FREE)
- 		if (!exclude_free_page())
- 			goto out;
-@@ -4670,7 +4707,7 @@ write_kdump_header()
- }
- 
- void
--print_progress(unsigned long current, unsigned long end)
-+print_progress(const char *msg, unsigned long current, unsigned long end)
- {
- 	int progress;
- 	time_t tm;
-@@ -4686,7 +4723,7 @@ print_progress(unsigned long current, un
- 		progress = 100;
- 
- 	PROGRESS_MSG("\r");
--	PROGRESS_MSG("[%3d %%]", progress);
-+	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
- }
- 
- int
-@@ -4912,7 +4949,7 @@ write_elf_pages()
- 
- 			while (bufsz_remain > 0) {
- 				if ((num_dumped % per) == 0)
--					print_progress(num_dumped, num_dumpable);
-+					print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 				if (bufsz_remain >= page_size)
- 					bufsz_write = page_size;
-@@ -5009,7 +5046,7 @@ write_elf_pages()
- 
- 		while (bufsz_remain > 0) {
- 			if ((num_dumped % per) == 0)
--				print_progress(num_dumped, num_dumpable);
-+				print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 			if (bufsz_remain >= page_size)
- 				bufsz_write = page_size;
-@@ -5038,7 +5075,7 @@ write_elf_pages()
- 	if (!write_cache_bufsz(&cd_seg))
- 		goto out;
- 
--	print_progress(num_dumpable, num_dumpable);
-+	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
- 	PROGRESS_MSG("\n");
- 
- 	ret = TRUE;
-@@ -5247,7 +5284,7 @@ write_kdump_pages()
- 	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
- 
- 		if ((num_dumped % per) == 0)
--			print_progress(num_dumped, num_dumpable);
-+			print_progress(PROGRESS_COPY, num_dumped, num_dumpable);
- 
- 		if ((pfn % PFN_BUFBITMAP) == 0) {
- 			if (info->len_bitmap - bm2.offset < BUFSIZE_BITMAP)
-@@ -5325,7 +5362,7 @@ write_kdump_pages()
- 	/*
- 	 * Print the progress of the end.
- 	 */
--	print_progress(num_dumpable, num_dumpable);
-+	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
- 	PROGRESS_MSG("\n");
- 
- 	ret = TRUE;
+ arch/x86/Kconfig                   |    5 ++--
+ arch/x86/kernel/machine_kexec_32.c |   12 +++++++++++
+ include/linux/suspend.h            |    2 +
+ kernel/kexec.c                     |   39 +++++++++++++++++++++++++++++++++++++
+ kernel/power/power.h               |    2 -
+ 5 files changed, 56 insertions(+), 4 deletions(-)
 
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -26,6 +26,10 @@
+ #include <linux/numa.h>
+ #include <linux/suspend.h>
+ #include <linux/device.h>
++#include <linux/freezer.h>
++#include <linux/pm.h>
++#include <linux/cpu.h>
++#include <linux/console.h>
+ 
+ #include <asm/page.h>
+ #include <asm/uaccess.h>
+@@ -1441,7 +1445,31 @@ int kernel_kexec(void)
+ 
+ 	if (kexec_image->preserve_context) {
+ #ifdef CONFIG_KEXEC_JUMP
++		mutex_lock(&pm_mutex);
++		pm_prepare_console();
++		error = freeze_processes();
++		if (error) {
++			error = -EBUSY;
++			goto Restore_console;
++		}
++		suspend_console();
++		error = device_suspend(PMSG_FREEZE);
++		if (error)
++			goto Resume_console;
++		error = disable_nonboot_cpus();
++		if (error)
++			goto Resume_devices;
+ 		local_irq_disable();
++		/* At this point, device_suspend() has been called,
++		 * but *not* device_power_down(). We *must*
++		 * device_power_down() now.  Otherwise, drivers for
++		 * some devices (e.g. interrupt controllers) become
++		 * desynchronized with the actual state of the
++		 * hardware at resume time, and evil weirdness ensues.
++		 */
++		error = device_power_down(PMSG_FREEZE);
++		if (error)
++			goto Enable_irqs;
+ 		save_processor_state();
+ #endif
+ 	} else {
+@@ -1459,7 +1487,18 @@ int kernel_kexec(void)
+ 	if (kexec_image->preserve_context) {
+ #ifdef CONFIG_KEXEC_JUMP
+ 		restore_processor_state();
++		device_power_up(PMSG_RESTORE);
++ Enable_irqs:
+ 		local_irq_enable();
++		enable_nonboot_cpus();
++ Resume_devices:
++		device_resume(PMSG_RESTORE);
++ Resume_console:
++		resume_console();
++		thaw_processes();
++ Restore_console:
++		pm_restore_console();
++		mutex_unlock(&pm_mutex);
+ #endif
+ 	}
+ 
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -53,8 +53,6 @@ extern int hibernation_platform_enter(vo
+ 
+ extern int pfn_is_nosave(unsigned long);
+ 
+-extern struct mutex pm_mutex;
+-
+ #define power_attr(_name) \
+ static struct kobj_attribute _name##_attr = {	\
+ 	.attr	= {				\
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -278,4 +278,6 @@ static inline void register_nosave_regio
+ }
+ #endif
+ 
++extern struct mutex pm_mutex;
++
+ #endif /* _LINUX_SUSPEND_H */
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -125,6 +125,18 @@ void machine_kexec(struct kimage *image)
+ 	/* Interrupts aren't acceptable while we reboot */
+ 	local_irq_disable();
+ 
++	if (image->preserve_context) {
++#ifdef CONFIG_X86_IO_APIC
++		/* We need to put APICs in legacy mode so that we can
++		 * get timer interrupts in second kernel. kexec/kdump
++		 * paths already have calls to disable_IO_APIC() in
++		 * one form or other. kexec jump path also need
++		 * one.
++		 */
++		disable_IO_APIC();
++#endif
++	}
++
+ 	control_page = page_address(image->control_code_page);
+ 	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
+ 
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1276,9 +1276,10 @@ config CRASH_DUMP
+ config KEXEC_JUMP
+ 	bool "kexec jump (EXPERIMENTAL)"
+ 	depends on EXPERIMENTAL
+-	depends on KEXEC && PM_SLEEP && X86_32
++	depends on KEXEC && HIBERNATION && X86_32
+ 	help
+-	  Invoke code in physical address mode via KEXEC
++	  Jump between original kernel and kexeced kernel and invoke
++	  code in physical address mode via KEXEC
+ 
+ config PHYSICAL_START
+ 	hex "Physical address where the kernel is loaded" if (EMBEDDED || CRASH_DUMP)
 
---===============1331565372==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1331565372==--
