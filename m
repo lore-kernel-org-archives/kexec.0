@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KG2RS-0001yG-8O
-	for kexec@lists.infradead.org; Tue, 08 Jul 2008 01:56:31 +0000
-From: Michael Neuling <mikey@neuling.org>
-In-reply-to: <200807080014.24910.chandru@in.ibm.com> 
-References: <200807080014.24910.chandru@in.ibm.com>
-Date: Tue, 08 Jul 2008 11:56:25 +1000
-Message-ID: <21291.1215482185@neuling.org>
+Received: from mga11.intel.com ([192.55.52.93])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KG98Y-00057d-41
+	for kexec@lists.infradead.org; Tue, 08 Jul 2008 09:05:26 +0000
+Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
+From: Huang Ying <ying.huang@intel.com>
+In-Reply-To: <20080707125010.GA21254@elf.ucw.cz>
+References: <1215401122.4660.4.camel@caritas-dev.intel.com>
+	<20080707125010.GA21254@elf.ucw.cz>
+Date: Tue, 08 Jul 2008 17:10:09 +0800
+Message-Id: <1215508209.29894.8.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,193 +19,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chandru <chandru@in.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, maneesh@in.ibm.com
+To: Pavel Machek <pavel@suse.cz>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
+Hi, Pavel,
 
-
-> [PATCH 1/4] kdump : add support for ibm, dynamic-reconfiguration-memory for kexec/kdump 
-
-Please change the name of the individual patches 
-
-BTW this patch doesn't apply against the powerpc-next tree.  Please use
-that tree, not Linus tree.
-
-In message <200807080014.24910.chandru@in.ibm.com> you wrote:
-> kexec-tools adds  crash, rtas, and tce memory regions as linux,usable-memory 
-> properties in device-tree.  Following changes are made in the kernel to 
-> recognize these special properties in case of 
-> ibm,dynamic-reconfiguration-memory node of device-tree.
+On Mon, 2008-07-07 at 20:50 +0800, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Chandru Siddalingappa <chandru@in.ibm.com>
-> ---
+> The patch looks mostly ok to me. (Perhaps there's time to split it
+> into smaller chunks?)
 > 
-> diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c 
-> linux-2.6.26-rc9/arch/powerpc/kernel/prom.c
-> --- linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c	2008-07-06 
-> 04:23:22.000000000 +0530
-> +++ linux-2.6.26-rc9/arch/powerpc/kernel/prom.c	2008-07-07 17:23:58.000
-000000 
-> +0530
-> @@ -884,9 +884,10 @@ static u64 __init dt_mem_next_cell(int s
->   */
->  static int __init early_init_dt_scan_drconf_memory(unsigned long node)
->  {
-> -	cell_t *dm, *ls;
-> +	cell_t *dm, *ls, *endp, *usm;
->  	unsigned long l, n, flags;
->  	u64 base, size, lmb_size;
-> +	char buf[32], t[8];
->  
->  	ls = (cell_t *)of_get_flat_dt_prop(node, "ibm,lmb-size", &l);
->  	if (ls == NULL || l < dt_root_size_cells * sizeof(cell_t))
-> @@ -917,7 +918,33 @@ static int __init early_init_dt_scan_drc
->  			if ((base + size) > 0x80000000ul)
->  				size = 0x80000000ul - base;
->  		}
+> You can add Acked-by: Pavel Machek <pavel@suse.cz> to it, I guess.
 
-Please document what you are trying to achieve here
+Thank you very much!
 
-> -		lmb_add(base, size);
-> +		strcpy(buf, "linux,usable-memory");
-> +		sprintf(t, "%d", (int)n);
-> +		strcat(buf, t);
-
-sprintf(buf, "linux,usable-memory%d", (int)n);
-??
-
-> +		usm = (cell_t *)of_get_flat_dt_prop(node,
-> +						 (const char *)buf, &l);
-> +		if (usm != NULL) {
-> +			endp = usm + (l / sizeof(cell_t));
-> +			while ((endp - usm) >= (dt_root_addr_cells +
-> +						 dt_root_size_cells)) {
-> +				base = dt_mem_next_cell(dt_root_addr_cells,
-> +								 &usm);
-> +				size = dt_mem_next_cell(dt_root_size_cells,
-> +								 &usm);
-> +				if (size == 0)
-> +					continue;
-> +				if (iommu_is_off) {
-> +					if ((base + size) > 0x80000000ul)
-> +						size = 0x80000000ul - base;
-
-There is similar code to this above.  Can this be merged?  Why
-0x80000000ul anyway?
-
-> +				}
-> +				lmb_add(base, size);
-> +			}
-> +
-> +			/* Continue with next lmb entry */
-> +			continue;
-
-Is this "continue" needed?  
-
-Also, this comment is useless.  We know what a continue does :-)
-
-> +		} else {
-> +			lmb_add(base, size);
-> +		}
->  	}
->  	lmb_dump_all();
->  	return 0;
-> diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c 
-> linux-2.6.26-rc9/arch/powerpc/mm/numa.c
-> --- linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c	2008-07-06 04:23:22.000
-000000 
-> +0530
-> +++ linux-2.6.26-rc9/arch/powerpc/mm/numa.c	2008-07-07 17:50:35.000000000 
-> +0530
-> @@ -349,18 +349,33 @@ static unsigned long __init numa_enforce
->  	return lmb_end_of_DRAM() - start;
->  }
->  
-> +static void set_nodeinfo(int nid, unsigned long start, unsigned long size)
-> +{
-> +	fake_numa_create_new_node(((start + size) >> PAGE_SHIFT),
-> +					&nid);
-> +	node_set_online(nid);
-> +
-> +	size = numa_enforce_memory_limit(start, size);
-> +	if (!size)
-> +		return;
-> +	add_active_range(nid, start >> PAGE_SHIFT,
-> +			(start >> PAGE_SHIFT) + (size >> PAGE_SHIFT));
-> +	return;
-> +}
-> +
->  /*
->   * Extract NUMA information from the ibm,dynamic-reconfiguration-memory
->   * node.  This assumes n_mem_{addr,size}_cells have been set.
->   */
->  static void __init parse_drconf_memory(struct device_node *memory)
->  {
-> -	const unsigned int *lm, *dm, *aa;
-> +	const unsigned int *lm, *dm, *aa, *usm;
->  	unsigned int ls, ld, la;
->  	unsigned int n, aam, aalen;
->  	unsigned long lmb_size, size, start;
->  	int nid, default_nid = 0;
-> -	unsigned int ai, flags;
-> +	unsigned int ai, flags, len, ranges;
-> +	char buf[32], t[8];
->  
->  	lm = of_get_property(memory, "ibm,lmb-size", &ls);
->  	dm = of_get_property(memory, "ibm,dynamic-memory", &ld);
-> @@ -396,16 +411,27 @@ static void __init parse_drconf_memory(s
->  				nid = default_nid;
->  		}
->  
-> -		fake_numa_create_new_node(((start + lmb_size) >> PAGE_SHIFT),
-> -						&nid);
-> -		node_set_online(nid);
-> +		strcpy(buf, "linux,usable-memory");
-> +		sprintf(t, "%d", (int)n);
-> +		strcat(buf, t);
-
-Again, we can do this in a single sprintf, like above...
-
-> +		usm = of_get_property(memory, (const char *)buf, &len);
-> +		if (usm != NULL) {
-> +			ranges = (len >> 2) / (n_mem_addr_cells +
-> +						 n_mem_size_cells);
-> +
-> +dr_new_range:		start = read_n_cells(n_mem_addr_cells, &usm);
-> +			size = read_n_cells(n_mem_size_cells, &usm);
-> +			if (size == 0)
-> +				continue;
->  
-> -		size = numa_enforce_memory_limit(start, lmb_size);
-> -		if (!size)
-> -			continue;
-> +			set_nodeinfo(nid, start, size);
-> +			if (--ranges)
-> +				goto dr_new_range;
-
-Can you please use a while or for loop rather than a goto.  
-
->  
-> -		add_active_range(nid, start >> PAGE_SHIFT,
-> -				 (start >> PAGE_SHIFT) + (size >> PAGE_SHIFT));
-> +			continue;
-> +		} else {
-> +			set_nodeinfo(nid, start, lmb_size);
-> +		}
->  	}
->  }
->  
+[...]
+> > @@ -98,16 +101,24 @@ int machine_kexec_prepare(struct kimage
+> >   */
+> >  void machine_kexec_cleanup(struct kimage *image)
+> >  {
+> > +     if (nx_enabled)
+> > +             set_pages_nx(image->control_code_page, 1);
+> >  }
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> , 0 ? (setup and cleanup were same, which is strange).
+
+Oh, Yes. That should be 0, I will change it.
 > 
+> > @@ -1411,3 +1421,50 @@ static int __init crash_save_vmcoreinfo_
+> >  }
+> > 
+> >  module_init(crash_save_vmcoreinfo_init)
+> > +
+> > +/**
+> > + *   kernel_kexec - reboot the system
+
+> Really?
+
+I will change the comments to reflect the changes to kernel_kexec.
+
+> > + *   Move into place and start executing a preloaded standalone
+> > + *   executable.  If nothing was preloaded return an error.
+> > + */
+> > +int kernel_kexec(void)
+> > +{
+> > +     int error = 0;
+> > +
+> > +     if (xchg(&kexec_lock, 1))
+> > +             return -EBUSY;
+> 
+> That's quite a strange way to provide a lock. mutex_trylock?
+
+I think this is because kexec_lock is used by crash_kexec() too, which
+may be called in some extreme environment, such as during panic().
+
+> > +     if (!kexec_image) {
+> > +             error = -EINVAL;
+> > +             goto Unlock;
+> > +     }
+> > +
+> > +     if (kexec_image->preserve_context) {
+> > +#ifdef CONFIG_KEXEC_JUMP
+> > +             local_irq_disable();
+> > +             save_processor_state();
+> 
+> #else
+>         BUG()
+> 
+> ...because otherwise you silently do nothing?
+> 
+> > +#endif
+> 
+> Pavel
+
+If CONFIG_KEXEC_JUMP is defined, kexec_image->preserve_context will
+always be 0. So current code is safe. Here, #ifdef is used to resolve
+the dependency issue. For example, save_processor_state() may be
+undefined if CONFIG_KEXEC_JUMP is not defined.
+
+Best Regards,
+Huang Ying
+
+
 
 _______________________________________________
 kexec mailing list
