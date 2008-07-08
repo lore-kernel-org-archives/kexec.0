@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGDG1-0006yC-I1
-	for kexec@lists.infradead.org; Tue, 08 Jul 2008 13:29:25 +0000
-Date: Tue, 8 Jul 2008 09:28:55 -0400
+	id 1KGEXq-0006eO-CZ
+	for kexec@lists.infradead.org; Tue, 08 Jul 2008 14:51:54 +0000
+Date: Tue, 8 Jul 2008 10:50:51 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: AMD Family 10H machine check on vmcore read
-Message-ID: <20080708132855.GB7866@redhat.com>
-References: <1215472086.3361.297.camel@amd.troyhebe>
+Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
+Message-ID: <20080708145051.GA14745@redhat.com>
+References: <1215401122.4660.4.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1215472086.3361.297.camel@amd.troyhebe>
+In-Reply-To: <1215401122.4660.4.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,84 +23,197 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bob Montgomery <bob.montgomery@hp.com>
-Cc: airlied@linux.ie, linux kernel mailing list <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Andi Kleen <ak@suse.de>, Dave Jones <rhkernel-list@redhat.com>
+To: Huang Ying <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Mon, Jul 07, 2008 at 05:08:06PM -0600, Bob Montgomery wrote:
-> We maintain a 2.6.18 derived kernel.  
-> When testing kdump on a new AMD Family 10h (16) processor, once in the
-> kdump kernel, a read from either /proc/vmcore or /dev/oldmem that
-> corresponds to the area of memory identified in the original (crashing)
-> kernel by these boot messages:
+On Mon, Jul 07, 2008 at 11:25:22AM +0800, Huang Ying wrote:
+> This patch provides an enhancement to kexec/kdump. It implements
+> the following features:
 > 
-> Mapping aperture over 65536 KB of RAM @ 1c000000
-> ...
-> PCI-DMA: Disabling AGP.
-> PCI-DMA: aperture base @ 1c000000 size 65536 KB
-> PCI-DMA: using GART IOMMU.
+> - Backup/restore memory used by the original kernel before/after
+>   kexec.
 > 
-> causes a machine check.
+> - Save/restore CPU state before/after kexec.
 > 
-> On a Family 15 AMD64 processor running this kernel and kdump kernel, I
-> can read the areas identified as being in the aperture from the kdump
-> kernel and get values, but on the new processor, reads from the kdump
-> kernel that are within that address range result in the machine check:
-> 
-> HARDWARE ERROR
-> CPU 0: Machine Check Exception:                4 Bank 4: be0000010005001b
-> TSC 141bd974323de ADDR 1c000000 MISC e00c0ffe01000000
-> 
-> While up on the original kernel, attempts to read those locations
-> from /dev/mem result in EFAULTs on both the old and new processors.
-> It's just the reads from the kdump kernel's /proc/vmcore or /dev/oldmem
-> that work ok on the old processor and machine check on the new one.
-> 
-> The output of /proc/iomem does not specifically identify the area.  It's
-> just within the range of: 
-> 
-> 00100000-cfe4ffff : System RAM
-> 
-> I found code in arch/x86_64/kernel/mce.c:mce_cpu_quirks() that disables
-> GART TBL walk errors to prevent machine checks.  The code checked for
-> family 15 and so I added family 16 as well.  Here is a patch that fixes
-> my version of the kernel:
-> 
-> --- linux-source-2.6.18-kdump/arch/x86_64/kernel/mce.c.orig	2008-07-02 09:27:39.000000000 -0600
-> +++ linux-source-2.6.18-kdump/arch/x86_64/kernel/mce.c	2008-07-02 09:28:45.000000000 -0600
-> @@ -354,7 +354,8 @@ static void mce_init(void *dummy)
->  static void __cpuinit mce_cpu_quirks(struct cpuinfo_x86 *c)
->  { 
->  	/* This should be disabled by the BIOS, but isn't always */
-> -	if (c->x86_vendor == X86_VENDOR_AMD && c->x86 == 15) {
-> +	if (c->x86_vendor == X86_VENDOR_AMD && 
-> +			((c->x86 == 15) || (c->x86 == 16))) {
->  		/* disable GART TBL walk error reporting, which trips off 
->  		   incorrectly with the IOMMU & 3ware & Cerberus. */
->  		clear_bit(10, &bank[4]);
-> 
-> 
-Hi Bob,
 
-I am not sure what's happening here. Because in /proc/iomem, GART reserved
-area is reported as System RAM, kdump kernel will try to read this area
-and save it. Now I am not sure, what is so special about this area that
-mapping it and reading it in second kernel would cause a MCE.
+Hi Huang,
 
-CCing it to LKML, hoping people knowing GART will be able to provide some
-input.
+In general this patch set looks good enough to live in -mm and
+get some testing going.
 
-> But I don't see this fix upstream in the kernel.  So I'm wondering if
-> some other patch protects other kdump kernels from this problem.  In
-> particular, a recent patch that informed the e820 map about the gart
-> aperture to prevent a normal kernel and a kexec kernel from putting it
-> at different addresses.  It didn't mention machine checks from kdump
-> kernels, but I wonder if it would have prevented access to that memory
-> area by having it be excluded from the /proc/vmcore list of areas??
+To me, adding capability to return back to original kernel looks
+like a logical extension to kexec functionality.
 
-Can you provide a link to the patch above? If /proc/iomem, does not report
-GART area as system ram then it will be excluded from the dump. (IIUC,
-IOMMU tables are in GART area and ideally one should be capturing it to 
-find out how IOMMU tables looked like at the time of crash).
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Few minor comments inline.
+
+[..]
+> --- a/arch/x86/kernel/machine_kexec_32.c
+> +++ b/arch/x86/kernel/machine_kexec_32.c
+> @@ -22,6 +22,7 @@
+>  #include <asm/cpufeature.h>
+>  #include <asm/desc.h>
+>  #include <asm/system.h>
+> +#include <asm/cacheflush.h>
+>  
+>  #define PAGE_ALIGNED __attribute__ ((__aligned__(PAGE_SIZE)))
+>  static u32 kexec_pgd[1024] PAGE_ALIGNED;
+> @@ -85,10 +86,12 @@ static void load_segments(void)
+>   * reboot code buffer to allow us to avoid allocations
+>   * later.
+>   *
+> - * Currently nothing.
+> + * Make control page executable.
+>   */
+>  int machine_kexec_prepare(struct kimage *image)
+>  {
+> +	if (nx_enabled)
+> +		set_pages_x(image->control_code_page, 1);
+>  	return 0;
+>  }
+>  
+> @@ -98,16 +101,24 @@ int machine_kexec_prepare(struct kimage 
+>   */
+>  void machine_kexec_cleanup(struct kimage *image)
+>  {
+> +	if (nx_enabled)
+> +		set_pages_nx(image->control_code_page, 1);
+>  }
+>  
+>  /*
+>   * Do not allocate memory (or fail in any way) in machine_kexec().
+>   * We are past the point of no return, committed to rebooting now.
+>   */
+> -NORET_TYPE void machine_kexec(struct kimage *image)
+> +void machine_kexec(struct kimage *image)
+>  {
+>  	unsigned long page_list[PAGES_NR];
+>  	void *control_page;
+> +	asmlinkage unsigned long
+> +		(*relocate_kernel_ptr)(unsigned long indirection_page,
+> +				       unsigned long control_page,
+> +				       unsigned long start_address,
+> +				       unsigned int has_pae,
+> +				       unsigned int preserve_context);
+>  
+>  	tracer_disable();
+>  
+> @@ -115,10 +126,11 @@ NORET_TYPE void machine_kexec(struct kim
+>  	local_irq_disable();
+>  
+>  	control_page = page_address(image->control_code_page);
+> -	memcpy(control_page, relocate_kernel, PAGE_SIZE);
+> +	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
+>  
+
+Is it possible to add either a compile time or run time check
+somewhere to make sure code in relocate_kernel.S does not exceed
+PAGE_SIZE/2.
+
+[..]
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/utsrelease.h>
+>  #include <linux/utsname.h>
+>  #include <linux/numa.h>
+> +#include <linux/suspend.h>
+> +#include <linux/device.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/uaccess.h>
+> @@ -242,6 +244,12 @@ static int kimage_normal_alloc(struct ki
+>  		goto out;
+>  	}
+>  
+> +	image->swap_page = kimage_alloc_control_pages(image, 0);
+> +	if (!image->swap_page) {
+> +		printk(KERN_ERR "Could not allocate swap buffer\n");
+> +		goto out;
+> +	}
+> +
+>  	result = 0;
+>   out:
+>  	if (result == 0)
+> @@ -986,6 +994,8 @@ asmlinkage long sys_kexec_load(unsigned 
+>  		if (result)
+>  			goto out;
+>  
+> +		if (flags & KEXEC_PRESERVE_CONTEXT)
+> +			image->preserve_context = 1;
+>  		result = machine_kexec_prepare(image);
+>  		if (result)
+>  			goto out;
+> @@ -1411,3 +1421,50 @@ static int __init crash_save_vmcoreinfo_
+>  }
+>  
+>  module_init(crash_save_vmcoreinfo_init)
+> +
+> +/**
+> + *	kernel_kexec - reboot the system
+> + *
+> + *	Move into place and start executing a preloaded standalone
+> + *	executable.  If nothing was preloaded return an error.
+> + */
+> +int kernel_kexec(void)
+> +{
+> +	int error = 0;
+> +
+> +	if (xchg(&kexec_lock, 1))
+> +		return -EBUSY;
+> +	if (!kexec_image) {
+> +		error = -EINVAL;
+> +		goto Unlock;
+> +	}
+> +
+> +	if (kexec_image->preserve_context) {
+> +#ifdef CONFIG_KEXEC_JUMP
+> +		local_irq_disable();
+> +		save_processor_state();
+> +#endif
+> +	} else {
+> +		blocking_notifier_call_chain(&reboot_notifier_list,
+> +					     SYS_RESTART, NULL);
+> +		system_state = SYSTEM_RESTART;
+> +		device_shutdown();
+> +		sysdev_shutdown();
+> +		printk(KERN_EMERG "Starting new kernel\n");
+> +		machine_shutdown();
+
+All the above code was part of kernel_restart_prepare(), can't we just
+make that function non-static and use that?
+
+[..]
+> --- a/arch/x86/kernel/relocate_kernel_32.S
+> +++ b/arch/x86/kernel/relocate_kernel_32.S
+> @@ -20,11 +20,44 @@
+>  #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+>  #define PAE_PGD_ATTR (_PAGE_PRESENT)
+>  
+> +/* control_page + PAGE_SIZE/2 ~ control_page + PAGE_SIZE * 3/4 are
+> + * used to save some data for jumping back
+> + */
+> +#define DATA(offset)		(PAGE_SIZE/2+(offset))
+> +
+> +/* Minimal CPU state */
+> +#define ESP			DATA(0x0)
+> +#define CR0			DATA(0x4)
+> +#define CR3			DATA(0x8)
+> +#define CR4			DATA(0xc)
+> +
+> +/* other data */
+> +#define CP_VA_CONTROL_PAGE	DATA(0x10)
+> +#define CP_PA_PGD		DATA(0x14)
+> +#define CP_PA_SWAP_PAGE		DATA(0x18)
+> +#define CP_PA_BACKUP_PAGES_MAP	DATA(0x1c)
+> +
+
+In general, this assembly piece of code is getting bigger and its
+difficult to read it now. I think we should at-least pull out the page
+table setup code into C. Somebody had posted a patch to do that. Don't
+know what happened to that. Anyway, this is a separate issue and is on
+wish list.
 
 Thanks
 Vivek
