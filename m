@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ausmtp04.au.ibm.com ([202.81.18.152])
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGB2O-00070z-F3
-	for kexec@lists.infradead.org; Tue, 08 Jul 2008 11:07:13 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by ausmtp04.au.ibm.com (8.13.8/8.13.8) with ESMTP id m68B90dk090688
-	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 21:09:00 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m68AwBsR238310
-	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 20:58:11 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m68AwAwK003053
-	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 20:58:10 +1000
-From: Chandru <chandru@in.ibm.com>
-Subject: Re: [PATCH 1/4] kdump : add support for ibm,
-	dynamic-reconfiguration-memory for kexec/kdump
-Date: Tue, 8 Jul 2008 16:28:07 +0530
-References: <200807080014.24910.chandru@in.ibm.com>
-	<20080708113646.13836635.sfr@canb.auug.org.au>
-In-Reply-To: <20080708113646.13836635.sfr@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807081628.07843.chandru@in.ibm.com>
+	id 1KGBMk-00065A-9z
+	for kexec@lists.infradead.org; Tue, 08 Jul 2008 11:28:14 +0000
+Date: Tue, 8 Jul 2008 13:28:51 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Use progress bar also for bitmap creation
+Message-ID: <20080708132851.5f31c023@halley.suse.de>
+In-Reply-To: <4872C6C4.5040909@mxs.nes.nec.co.jp>
+References: <20080626143721.GA12486@suse.de>
+	<4864B595.8040205@mxs.nes.nec.co.jp>
+	<48718477.3020406@mxs.nes.nec.co.jp>
+	<20080707165317.7cd320aa@halley.suse.de>
+	<4872C6C4.5040909@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,28 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: jlan@sgi.com, kexec@lists.infradead.org
 
-Thanks for the review comments. I will change to 'snprintf' at all the places  
-and remove the unnecessary casts.
+* Ken'ichi Ohmichi [2008-07-08 10:45]:
+> Bernhard Walle wrote:
+> > * Ken'ichi Ohmichi [2008-07-07 11:50]:
+> >> Ken'ichi Ohmichi wrote:
+> >>> Hi Bernhard,
+> >>>
+> >>> Thank you for your patch.
+> >>> I like this idea :-)
+> >>>
+> >>> I am busy now, and I will consider the patch well the next week.
+> >> Thank you for the patch, and sorry for my late response.
+> >>
+> >> I added the progress bar for excluding free pages to your patch.
+> >> Could you please check the attached patch ?
+> >> If there is no problem in the attached patch, I will release the
+> >> next release with this patch.
+> > 
+> > That patch does not apply any more to the latest release. Maybe you can
+> > send me your whole tarball?
+> 
+> Sorry for wasting your time.
+> OK, I'll send you tarball later.
+> In the other way, you can get it by the following command:
+> cvs -z3 -d:pserver:anonymous@makedumpfile.cvs.sourceforge.net:/cvsroot/makedumpfile co -r DEVEL -P makedumpfile
 
-On Tuesday 08 July 2008 07:06:46 Stephen Rothwell wrote:
-> Hi Chandru,
->
-> On Tue, 8 Jul 2008 00:14:24 +0530 Chandru <chandru@in.ibm.com> wrote:
-> > +		if (usm != NULL) {
-> > +			ranges = (len >> 2) / (n_mem_addr_cells +
->
->                                  ^^^^^^^^^^
-> len / sizeof(u32) ?
+Ah, cool, didn't know that a public CVS exists. :)
+Yes, that works without problems here and it looks nice.
 
-ranges is made to count the number of linux,usable-memory properties in the 
-device tree.  It's acting as a counter here.  So the expression in the patch 
-is fine. 
 
-Thanks,
-Chandru
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
