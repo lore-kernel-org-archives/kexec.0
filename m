@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KG98Y-00057d-41
-	for kexec@lists.infradead.org; Tue, 08 Jul 2008 09:05:26 +0000
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080707125010.GA21254@elf.ucw.cz>
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080707125010.GA21254@elf.ucw.cz>
-Date: Tue, 08 Jul 2008 17:10:09 +0800
-Message-Id: <1215508209.29894.8.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from ausmtp04.au.ibm.com ([202.81.18.152])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KGB2O-00070z-F3
+	for kexec@lists.infradead.org; Tue, 08 Jul 2008 11:07:13 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by ausmtp04.au.ibm.com (8.13.8/8.13.8) with ESMTP id m68B90dk090688
+	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 21:09:00 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m68AwBsR238310
+	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 20:58:11 +1000
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m68AwAwK003053
+	for <kexec@lists.infradead.org>; Tue, 8 Jul 2008 20:58:10 +1000
+From: Chandru <chandru@in.ibm.com>
+Subject: Re: [PATCH 1/4] kdump : add support for ibm,
+	dynamic-reconfiguration-memory for kexec/kdump
+Date: Tue, 8 Jul 2008 16:28:07 +0530
+References: <200807080014.24910.chandru@in.ibm.com>
+	<20080708113646.13836635.sfr@canb.auug.org.au>
+In-Reply-To: <20080708113646.13836635.sfr@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200807081628.07843.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,89 +36,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@suse.cz>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
 
-Hi, Pavel,
+Thanks for the review comments. I will change to 'snprintf' at all the places  
+and remove the unnecessary casts.
 
-On Mon, 2008-07-07 at 20:50 +0800, Pavel Machek wrote:
-> Hi!
-> 
-> The patch looks mostly ok to me. (Perhaps there's time to split it
-> into smaller chunks?)
-> 
-> You can add Acked-by: Pavel Machek <pavel@suse.cz> to it, I guess.
+On Tuesday 08 July 2008 07:06:46 Stephen Rothwell wrote:
+> Hi Chandru,
+>
+> On Tue, 8 Jul 2008 00:14:24 +0530 Chandru <chandru@in.ibm.com> wrote:
+> > +		if (usm != NULL) {
+> > +			ranges = (len >> 2) / (n_mem_addr_cells +
+>
+>                                  ^^^^^^^^^^
+> len / sizeof(u32) ?
 
-Thank you very much!
+ranges is made to count the number of linux,usable-memory properties in the 
+device tree.  It's acting as a counter here.  So the expression in the patch 
+is fine. 
 
-[...]
-> > @@ -98,16 +101,24 @@ int machine_kexec_prepare(struct kimage
-> >   */
-> >  void machine_kexec_cleanup(struct kimage *image)
-> >  {
-> > +     if (nx_enabled)
-> > +             set_pages_nx(image->control_code_page, 1);
-> >  }
-> 
-> , 0 ? (setup and cleanup were same, which is strange).
-
-Oh, Yes. That should be 0, I will change it.
-> 
-> > @@ -1411,3 +1421,50 @@ static int __init crash_save_vmcoreinfo_
-> >  }
-> > 
-> >  module_init(crash_save_vmcoreinfo_init)
-> > +
-> > +/**
-> > + *   kernel_kexec - reboot the system
-
-> Really?
-
-I will change the comments to reflect the changes to kernel_kexec.
-
-> > + *   Move into place and start executing a preloaded standalone
-> > + *   executable.  If nothing was preloaded return an error.
-> > + */
-> > +int kernel_kexec(void)
-> > +{
-> > +     int error = 0;
-> > +
-> > +     if (xchg(&kexec_lock, 1))
-> > +             return -EBUSY;
-> 
-> That's quite a strange way to provide a lock. mutex_trylock?
-
-I think this is because kexec_lock is used by crash_kexec() too, which
-may be called in some extreme environment, such as during panic().
-
-> > +     if (!kexec_image) {
-> > +             error = -EINVAL;
-> > +             goto Unlock;
-> > +     }
-> > +
-> > +     if (kexec_image->preserve_context) {
-> > +#ifdef CONFIG_KEXEC_JUMP
-> > +             local_irq_disable();
-> > +             save_processor_state();
-> 
-> #else
->         BUG()
-> 
-> ...because otherwise you silently do nothing?
-> 
-> > +#endif
-> 
-> Pavel
-
-If CONFIG_KEXEC_JUMP is defined, kexec_image->preserve_context will
-always be 0. So current code is safe. Here, #ifdef is used to resolve
-the dependency issue. For example, save_processor_state() may be
-undefined if CONFIG_KEXEC_JUMP is not defined.
-
-Best Regards,
-Huang Ying
-
-
+Thanks,
+Chandru
 
 _______________________________________________
 kexec mailing list
