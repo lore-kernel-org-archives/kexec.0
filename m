@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGY8q-000443-3k
-	for kexec@lists.infradead.org; Wed, 09 Jul 2008 11:47:24 +0000
-Date: Wed, 9 Jul 2008 13:48:01 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] makedumpfile: Improve error handing when SIZE(nodemask_t)
-	is undefined
-Message-ID: <20080709134801.149fbdb4@halley.suse.de>
+	id 1KGdWz-0007HL-NE
+	for kexec@lists.infradead.org; Wed, 09 Jul 2008 17:32:41 +0000
+Subject: Re: AMD Family 10H machine check on vmcore read
+From: Bob Montgomery <bob.montgomery@hp.com>
+In-Reply-To: <20080708132855.GB7866@redhat.com>
+References: <1215472086.3361.297.camel@amd.troyhebe>
+	<20080708132855.GB7866@redhat.com>
+Date: Wed, 09 Jul 2008 11:32:40 -0600
+Message-Id: <1215624760.3361.314.camel@amd.troyhebe>
 Mime-Version: 1.0
+Reply-To: bob.montgomery@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,40 +24,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "airlied@linux.ie" <airlied@linux.ie>, linux kernel mailing list <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Andi Kleen <ak@suse.de>, Dave Jones <rhkernel-list@redhat.com>
 
-Hi,
+On Tue, 2008-07-08 at 13:28 +0000, Vivek Goyal wrote:
+> On Mon, Jul 07, 2008 at 05:08:06PM -0600, Bob Montgomery wrote:
+> > We maintain a 2.6.18 derived kernel.
+> > When testing kdump on a new AMD Family 10h (16) processor, once in the
+> > kdump kernel, a read from either /proc/vmcore or /dev/oldmem that
+> > corresponds to the area of memory identified in the original (crashing)
+> > kernel by these boot messages:
 
-I accidentally used a new makedumpfile with an old VMCOREINFO that did
-not contain the SIZE(nodemask_t). Then len was -1, and malloc(-1)
-failed. Which looked like memory was too low.
+> >
+> > On a Family 15 AMD64 processor running this kernel and kdump kernel, I
+> > can read the areas identified as being in the aperture from the kdump
+> > kernel and get values, but on the new processor, reads from the kdump
+> > kernel that are within that address range result in the machine check:
+> >
+> > HARDWARE ERROR
+> > CPU 0: Machine Check Exception:                4 Bank 4: be0000010005001b
+> > TSC 141bd974323de ADDR 1c000000 MISC e00c0ffe01000000
+> >
 
-This patch just improves the error message in that case so that the
-user knows what is wrong.
+> Hi Bob,
+> 
+> I am not sure what's happening here. Because in /proc/iomem, GART reserved
+> area is reported as System RAM, kdump kernel will try to read this area
+> and save it. Now I am not sure, what is so special about this area that
+> mapping it and reading it in second kernel would cause a MCE.
+> 
+> CCing it to LKML, hoping people knowing GART will be able to provide some
+> input.
+> 
+> > But I don't see this fix upstream in the kernel.  So I'm wondering if
+> > some other patch protects other kdump kernels from this problem.  In
+> > particular, a recent patch that informed the e820 map about the gart
+> > aperture to prevent a normal kernel and a kexec kernel from putting it
+> > at different addresses.  It didn't mention machine checks from kdump
+> > kernels, but I wonder if it would have prevented access to that memory
+> > area by having it be excluded from the /proc/vmcore list of areas??
+> 
+> Can you provide a link to the patch above? If /proc/iomem, does not report
+> GART area as system ram then it will be excluded from the dump. (IIUC,
+> IOMMU tables are in GART area and ideally one should be capturing it to
+> find out how IOMMU tables looked like at the time of crash).
+
+The patch that I thought might be related is:
+ x86: disable the GART early, 64-bit
+
+author     Yinghai Lu <Yinghai.Lu@Sun.COM>
+           Wed, 30 Jan 2008 12:33:09 +0000 (13:33 +0100)
+committer  Ingo Molnar <mingo@elte.hu>
+           Wed, 30 Jan 2008 12:33:09 +0000 (13:33 +0100)
+commit     aaf230424204864e2833dcc1da23e2cb0b9f39cd
+tree       a42042f5135aa63a780964bd053ae174211ab62f
+
+I thought it might be relevant because of this included comment:
+
+> hm, i'm wondering, instead of modifying the GART, why dont we simply
+> _detect_ whatever GART settings we have inherited, and propagate that
+> into our e820 maps? I.e. if there's inconsistency, then punch that out
+> from the memory maps and just dont use that memory.
+
+But this patch doesn't mention machine checks as the symptom that
+initiated the patch.
+
+And my reason for looking was because I didn't think I could be the
+first person to try reading /proc/vmcore on a Family 10h processor.  So
+I wondered why it hadn't been seen by some other tester, and thought
+some other patch might have "fixed" it a different way on newer kernels
+than mine.
+
+Thanks,
+Bob Montgomery
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
----
- makedumpfile.c |    5 +++++
- 1 file changed, 5 insertions(+)
 
-diff -u -r1.7.2.37 makedumpfile.c
---- makedumpfile.c	9 Jul 2008 00:22:09 -0000	1.7.2.37
-+++ makedumpfile.c	9 Jul 2008 11:39:43 -0000
-@@ -2580,6 +2580,11 @@
- 	    && (SYMBOL(node_states) == NOT_FOUND_SYMBOL))
- 		return 0;
 
-+	if (SIZE(nodemask_t) == NOT_FOUND_LONG_VALUE) {
-+		ERRMSG("SIZE(nodemask_t) undefined.\n");
-+		return 0;
-+	}
-+
- 	len = SIZE(nodemask_t);
- 	vt.node_online_map_len = len/sizeof(unsigned long);
- 	if (!(vt.node_online_map = (unsigned long *)malloc(len))) {
 
 _______________________________________________
 kexec mailing list
