@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGOA0-0007WX-O3
-	for kexec@lists.infradead.org; Wed, 09 Jul 2008 01:07:56 +0000
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080708104044.GA15327@elf.ucw.cz>
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080707125010.GA21254@elf.ucw.cz>
-	<1215508209.29894.8.camel@caritas-dev.intel.com>
-	<20080708104044.GA15327@elf.ucw.cz>
-Date: Wed, 09 Jul 2008 09:12:42 +0800
-Message-Id: <1215565962.16450.8.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KGXZ2-0003mq-5J
+	for kexec@lists.infradead.org; Wed, 09 Jul 2008 11:10:24 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id E16C841631
+	for <kexec@lists.infradead.org>; Wed,  9 Jul 2008 13:10:21 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Parse /sys/firmware/memmap
+Date: Wed,  9 Jul 2008 13:10:59 +0200
+Message-Id: <1215601862-21748-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <20080709004138.GD13710@verge.net.au>
+References: <20080709004138.GD13710@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +22,15 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@suse.cz>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-Hi, Pavel,
-
-On Tue, 2008-07-08 at 12:40 +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > > > @@ -1411,3 +1421,50 @@ static int __init crash_save_vmcoreinfo_
-> > > >  }
-> > > > 
-> > > >  module_init(crash_save_vmcoreinfo_init)
-> > > > +
-> > > > +/**
-> > > > + *   kernel_kexec - reboot the system
-> > 
-> > > Really?
-> > 
-> > I will change the comments to reflect the changes to kernel_kexec.
-> > 
-> > > > + *   Move into place and start executing a preloaded standalone
-> > > > + *   executable.  If nothing was preloaded return an error.
-> > > > + */
-> > > > +int kernel_kexec(void)
-> > > > +{
-> > > > +     int error = 0;
-> > > > +
-> > > > +     if (xchg(&kexec_lock, 1))
-> > > > +             return -EBUSY;
-> > > 
-> > > That's quite a strange way to provide a lock. mutex_trylock?
-> > 
-> > I think this is because kexec_lock is used by crash_kexec() too, which
-> > may be called in some extreme environment, such as during panic().
-> > 
-> > > > +     if (!kexec_image) {
-> > > > +             error = -EINVAL;
-> > > > +             goto Unlock;
-> > > > +     }
-> > > > +
-> > > > +     if (kexec_image->preserve_context) {
-> > > > +#ifdef CONFIG_KEXEC_JUMP
-> > > > +             local_irq_disable();
-> > > > +             save_processor_state();
-> > > 
-> > > #else
-> > >         BUG()
-> > > 
-> > > ...because otherwise you silently do nothing?
-> > > 
-> > > > +#endif
-> > 
-> > If CONFIG_KEXEC_JUMP is defined, kexec_image->preserve_context will
-> > always be 0. So current code is safe. Here, #ifdef is used to resolve
-> > the dependency issue. For example, save_processor_state() may be
-> > undefined if CONFIG_KEXEC_JUMP is not defined.
-> 
-> Move the #ifdef outside the if (), then, so this is clear?
-
-I think this is reasonable, I will do it.
-
-> Actually, if preserve_context is always zero in !KEXEC_JUMP case, it
-> might make sense to remove whole variable...
-
-I think this will add too many #ifndef CONFIG_KEXEC_JUMP ... #endif that
-is necessary. The memory and performance gain is too little to
-compensate the code readability reduction.
-
-Best Regards,
-Huang Ying
+Define ULLONG_MAX and define LLONG_MAX. Both now in the first patch.  The rest
+is the same.
 
 
 
