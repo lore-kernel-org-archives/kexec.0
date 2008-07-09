@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGJqQ-0004cT-7K
-	for kexec@lists.infradead.org; Tue, 08 Jul 2008 20:31:29 +0000
-Date: Tue, 8 Jul 2008 12:40:45 +0200
-From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-Message-ID: <20080708104044.GA15327@elf.ucw.cz>
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080707125010.GA21254@elf.ucw.cz>
-	<1215508209.29894.8.camel@caritas-dev.intel.com>
+	id 1KGNV4-0004jg-Uv
+	for kexec@lists.infradead.org; Wed, 09 Jul 2008 00:25:39 +0000
+Message-Id: <4874057E.1030809@mxs.nes.nec.co.jp>
+Date: Wed, 09 Jul 2008 09:25:34 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1215508209.29894.8.camel@caritas-dev.intel.com>
+Subject: Re: [PATCH] Use progress bar also for bitmap creation
+References: <20080626143721.GA12486@suse.de>	<4864B595.8040205@mxs.nes.nec.co.jp>	<48718477.3020406@mxs.nes.nec.co.jp>
+	<20080708174354.641d5a1a@halley.suse.de>
+In-Reply-To: <20080708174354.641d5a1a@halley.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,75 +19,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1462114220=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: jlan@sgi.com, kexec@lists.infradead.org
 
-Hi!
+--===============1462114220==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-> > > @@ -1411,3 +1421,50 @@ static int __init crash_save_vmcoreinfo_
-> > >  }
-> > > 
-> > >  module_init(crash_save_vmcoreinfo_init)
-> > > +
-> > > +/**
-> > > + *   kernel_kexec - reboot the system
-> 
-> > Really?
-> 
-> I will change the comments to reflect the changes to kernel_kexec.
-> 
-> > > + *   Move into place and start executing a preloaded standalone
-> > > + *   executable.  If nothing was preloaded return an error.
-> > > + */
-> > > +int kernel_kexec(void)
-> > > +{
-> > > +     int error = 0;
-> > > +
-> > > +     if (xchg(&kexec_lock, 1))
-> > > +             return -EBUSY;
-> > 
-> > That's quite a strange way to provide a lock. mutex_trylock?
-> 
-> I think this is because kexec_lock is used by crash_kexec() too, which
-> may be called in some extreme environment, such as during panic().
-> 
-> > > +     if (!kexec_image) {
-> > > +             error = -EINVAL;
-> > > +             goto Unlock;
-> > > +     }
-> > > +
-> > > +     if (kexec_image->preserve_context) {
-> > > +#ifdef CONFIG_KEXEC_JUMP
-> > > +             local_irq_disable();
-> > > +             save_processor_state();
-> > 
-> > #else
-> >         BUG()
-> > 
-> > ...because otherwise you silently do nothing?
-> > 
-> > > +#endif
-> 
-> If CONFIG_KEXEC_JUMP is defined, kexec_image->preserve_context will
-> always be 0. So current code is safe. Here, #ifdef is used to resolve
-> the dependency issue. For example, save_processor_state() may be
-> undefined if CONFIG_KEXEC_JUMP is not defined.
 
-Move the #ifdef outside the if (), then, so this is clear?
+Hi Bernhard,
 
-Actually, if preserve_context is always zero in !KEXEC_JUMP case, it
-might make sense to remove whole variable...
-									Pavel
+Bernhard Walle wrote:
+> * Ken'ichi Ohmichi [2008-07-07 11:50]:
+>> Ken'ichi Ohmichi wrote:
+>>> Hi Bernhard,
+>>>
+>>> Thank you for your patch.
+>>> I like this idea :-)
+>>>
+>>> I am busy now, and I will consider the patch well the next week.
+>> Thank you for the patch, and sorry for my late response.
+>>
+>> I added the progress bar for excluding free pages to your patch.
+>> Could you please check the attached patch ?
+>> If there is no problem in the attached patch, I will release the
+>> next release with this patch.
+> 
+> I also tested on a larger SGI machine. Here the exclusion of the memory
+> holes takes a considerable amount of time. Therefore, I would suggest
+> to also use the patch below:
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Thank you for the patch.
+It sounds good to me.
+I'll merge it into the next release.
+
+
+Thanks
+Ken'ichi Ohmichi
+
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> 
+> Index: makedumpfile.c
+> ===================================================================
+> RCS file: /cvsroot/makedumpfile/makedumpfile/makedumpfile.c,v
+> retrieving revision 1.7.2.36
+> diff -u -r1.7.2.36 makedumpfile.c
+> --- makedumpfile.c	8 Jul 2008 01:31:44 -0000	1.7.2.36
+> +++ makedumpfile.c	8 Jul 2008 15:41:18 -0000
+> @@ -40,6 +40,7 @@
+>   * Message texts
+>   */
+>  #define PROGRESS_COPY   	"Copying data"
+> +#define PROGRESS_HOLES		"Checking for memory holes"
+>  #define PROGRESS_UNN_PAGES 	"Excluding unnecessary pages"
+>  #define PROGRESS_FREE_PAGES 	"Excluding free pages"
+>  #define PROGRESS_ZERO_PAGES 	"Excluding zero pages"
+> @@ -4068,11 +4069,20 @@
+>  	 */
+>  	for (pfn = 0, paddr = 0; pfn < info->max_mapnr;
+>  	    pfn++, paddr += info->page_size) {
+> +
+> +		print_progress(PROGRESS_HOLES, pfn, info->max_mapnr);
+> +
+>  		if (is_in_segs(paddr))
+>  			set_bit_on_1st_bitmap(pfn);
+>  		else
+>  			pfn_memhole++;
+>  	}
+> +
+> +	/*
+> +	 * print 100 %
+> +	 */
+> +	print_progress(PROGRESS_HOLES, info->max_mapnr, info->max_mapnr);
+> +
+>  	if (!sync_1st_bitmap())
+>  		goto out;
+>  
+> 
+
+
+
+--===============1462114220==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1462114220==--
