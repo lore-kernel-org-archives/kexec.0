@@ -1,26 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGXaL-0006rL-QQ
-	for kexec@lists.infradead.org; Wed, 09 Jul 2008 11:11:46 +0000
-Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id EBE6145C93
-	for <kexec@lists.infradead.org>; Wed,  9 Jul 2008 13:11:44 +0200 (CEST)
-Date: Wed, 9 Jul 2008 13:12:08 +0200
-From: Bernhard Walle <bwalle@suse.de>(by way of Bernhard Walle
-	<bwalle@suse.de>)
-Message-ID: <20080709131208.32f90f73@halley.suse.de>
-In-Reply-To: <20080709004138.GD13710@verge.net.au>
-References: <20080707070621.GD788@verge.net.au>
-	<1215441822-13820-3-git-send-email-bwalle@suse.de>
-	<20080709004138.GD13710@verge.net.au>
+	id 1KGY8q-000443-3k
+	for kexec@lists.infradead.org; Wed, 09 Jul 2008 11:47:24 +0000
+Date: Wed, 9 Jul 2008 13:48:01 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] makedumpfile: Improve error handing when SIZE(nodemask_t)
+	is undefined
+Message-ID: <20080709134801.149fbdb4@halley.suse.de>
 Mime-Version: 1.0
-Subject: Re: [PATCH 2/3] Remove redundancy between
-	get_memory_ranges_proc_iomem() and get_memory_ranges_sysfs()
-Resent-Message-ID: <20080709131225.66bf1535@halley.suse.de>
-Resent-To: kexec@lists.infradead.org
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,70 +21,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: kexec@lists.infradead.org
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
 Hi,
 
-* Simon Horman [2008-07-09 10:41]:
->
-> On Mon, Jul 07, 2008 at 04:43:41PM +0200, Bernhard Walle wrote:
-> > With the previous patch, we have a duplication between that both functions
-> > for following tasks:
-> > 
-> >  - don't report the interrupt table as RAM,
-> >  - set the mem_min and mem_max limits for kdump.
-> > 
-> > This patch removes that redundancy into the function get_memory_ranges()
-> > that calls both functions internally.
-> 
-> these patches seem fine to me, but I am still having minor troubles
-> with missing defines. For the record, I am seeing the problems with
-> gcc-3.4.5 + glibc-2.3.6. Yes, I know this is old, but it would
-> be nice if this minor issue didn't break it.
+I accidentally used a new makedumpfile with an old VMCOREINFO that did
+not contain the SIZE(nodemask_t). Then len was -1, and malloc(-1)
+failed. Which looked like memory was too low.
 
-Yes, of course, I just cannot reproduce it, even with current Debian
-and gcc 3.4 ...
-
-> 1. The snippet below looks good, but it needs to be included
->    in or berfore " [PATCH 1/3] Parse /sys/firmware/memmap".
-
-Should be fixed now.
-
-> > diff --git a/kexec/firmware_memmap.c b/kexec/firmware_memmap.c
-> > index cdac6f3..2ad450d 100644
-> > --- a/kexec/firmware_memmap.c
-> > +++ b/kexec/firmware_memmap.c
-> > @@ -31,6 +31,13 @@
-> >  #include "firmware_memmap.h"
-> >  #include "kexec.h"
-> >  
-> > +/*
-> > + * If the system is too old for ULLONG_MAX, define it here.
-> > + */
-> > +#ifndef ULLONG_MAX
-> > +#    define ULLONG_MAX (~0ULL)
-> > +#endif
-> > +
-> >  /**
-> >   * The full path to the sysfs interface that provides the memory map.
-> >   */
-> 
-> 2. I did not realise this at the time that I sent my previous response,
->    but LLONG_MAX is also a problem. I believe that the following
->    code, based on your code above, fixes the problem.
-
-Should also be fixed now.
-
-> Just for good measure, I have also verified, using the same method, that
-> your code gives 18446744073709551615 (=2^64-1), which matches the value
-> internally provided by gcc-4.3.1 + glibc-2.7.
-
-Thanks for your testing!
+This patch just improves the error message in that case so that the
+user knows what is wrong.
 
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+---
+ makedumpfile.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff -u -r1.7.2.37 makedumpfile.c
+--- makedumpfile.c	9 Jul 2008 00:22:09 -0000	1.7.2.37
++++ makedumpfile.c	9 Jul 2008 11:39:43 -0000
+@@ -2580,6 +2580,11 @@
+ 	    && (SYMBOL(node_states) == NOT_FOUND_SYMBOL))
+ 		return 0;
+
++	if (SIZE(nodemask_t) == NOT_FOUND_LONG_VALUE) {
++		ERRMSG("SIZE(nodemask_t) undefined.\n");
++		return 0;
++	}
++
+ 	len = SIZE(nodemask_t);
+ 	vt.node_online_map_len = len/sizeof(unsigned long);
+ 	if (!(vt.node_online_map = (unsigned long *)malloc(len))) {
 
 _______________________________________________
 kexec mailing list
