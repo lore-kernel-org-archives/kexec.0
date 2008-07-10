@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e6.ny.us.ibm.com ([32.97.182.146])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KH4cg-0003mU-B5
-	for kexec@lists.infradead.org; Thu, 10 Jul 2008 22:28:22 +0000
-Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
-	by e6.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m6AMUUuJ009606
-	for <kexec@lists.infradead.org>; Thu, 10 Jul 2008 18:30:30 -0400
-Received: from d01av01.pok.ibm.com (d01av01.pok.ibm.com [9.56.224.215])
-	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m6AMRuCZ226062
-	for <kexec@lists.infradead.org>; Thu, 10 Jul 2008 18:27:56 -0400
-Received: from d01av01.pok.ibm.com (loopback [127.0.0.1])
-	by d01av01.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m6AMRupd018931
-	for <kexec@lists.infradead.org>; Thu, 10 Jul 2008 18:27:56 -0400
-Message-ID: <48768CE9.2080802@austin.ibm.com>
-Date: Thu, 10 Jul 2008 17:27:53 -0500
-From: Nathan Fontenot <nfont@austin.ibm.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KH5FX-000274-81
+	for kexec@lists.infradead.org; Thu, 10 Jul 2008 23:08:31 +0000
+Date: Fri, 11 Jul 2008 09:08:28 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: Future of kexec-tools-testing
+Message-ID: <20080710230827.GC11227@verge.net.au>
+References: <20080710112912.21641167@halley.suse.de>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/4] kdump : add support for ibm,
-	dynamic-reconfiguration-memory for kexec/kdump
-References: <200807080014.24910.chandru@in.ibm.com>
-In-Reply-To: <200807080014.24910.chandru@in.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20080710112912.21641167@halley.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,65 +23,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chandru <chandru@in.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
-Hello Chandru,
+On Thu, Jul 10, 2008 at 11:29:12AM +0200, Bernhard Walle wrote:
+> Hi,
+> 
+> SUSE uses now kexec-tools-testing releases since about one year and
+> we never had severe problems (compared to other software). It's well
+> maintained (thanks Simon!), gets frequent releases, patches are
+> accepted, so:
+> 
+>  - I would suggest that kexec-tools-testing could be renamed to
+>    kexec-tools somewhere in the future since kexec-tools is not
+>    maintained any more by Eric. It only causes confusion since
+>    some distributions still use kexec-tools (the original ones)
+>    with lots of patches.
 
->  static int __init early_init_dt_scan_drconf_memory(unsigned long node)
->  {
-> -	cell_t *dm, *ls;
-> +	cell_t *dm, *ls, *endp, *usm;
->  	unsigned long l, n, flags;
->  	u64 base, size, lmb_size;
-> +	char buf[32], t[8];
->  
->  	ls = (cell_t *)of_get_flat_dt_prop(node, "ibm,lmb-size", &l);
->  	if (ls == NULL || l < dt_root_size_cells * sizeof(cell_t))
-> @@ -917,7 +918,33 @@ static int __init early_init_dt_scan_drc
->  			if ((base + size) > 0x80000000ul)
->  				size = 0x80000000ul - base;
->  		}
-> -		lmb_add(base, size);
-> +		strcpy(buf, "linux,usable-memory");
-> +		sprintf(t, "%d", (int)n);
-> +		strcat(buf, t);
-> +		usm = (cell_t *)of_get_flat_dt_prop(node,
-> +						 (const char *)buf, &l);
-> +		if (usm != NULL) {
-> +			endp = usm + (l / sizeof(cell_t));
-> +			while ((endp - usm) >= (dt_root_addr_cells +
-> +						 dt_root_size_cells)) {
-> +				base = dt_mem_next_cell(dt_root_addr_cells,
-> +								 &usm);
-> +				size = dt_mem_next_cell(dt_root_size_cells,
-> +								 &usm);
-> +				if (size == 0)
-> +					continue;
-> +				if (iommu_is_off) {
-> +					if ((base + size) > 0x80000000ul)
-> +						size = 0x80000000ul - base;
-> +				}
-> +				lmb_add(base, size);
-> +			}
-> +
-> +			/* Continue with next lmb entry */
-> +			continue;
-> +		} else {
-> +			lmb_add(base, size);
-> +		}
->  	}
+I agree.
 
-I am still digging through the kexec tools but I don't think you want
-the processing of the linux,usable-memory property inside of the
-for (; n!= 0; --n) loop.  This should be moved up so that it looks for
-the linux,usable-memory property and parses it, then if it is not found
-look for the ibm,dynamic-reconfiguration-memory property and parse it.
+Perhaps we could make the next release kexec-tools 2.0.0, perhaps
+after a few beta releases?
 
-There is no need to look for the linux-usable-memory property every time
-a piece of the ibm,dynamic-reconfiguration-memory property is parsed.
+I can rename my git tree to coincide with this move.
 
--Nathan
+>    I think current IA64 versions even do not work with kexec-tools
+>    since there were some incompatible changes related to the
+>    position of ELF core headers.
+
+Yes, I think you are right.
+
+>  - I would suggest that kexec-tools gets normal release numbers.
+>    The date releases are quite bad for package managers since it's
+>    not possible to go back (in terms of a clean update path)
+>    from something like 20080101 to 1.5 since 2008 is always greater.
+> 
+>    Currently SUSE ships still the old 1.101 version and the real
+>    release is only visible in the changelog. Of course it's possible to
+>    do something like 1.101+20080101, but it's nasty.
+
+That is fine by me. But we may as well rename the package to kexec-tools
+at the same time.
+
+> If I could help out doing some work to help to get that done, then just
+> tell me.
+
+You're already helping a lot.
+
+Perhaps the best thing to do now would be to hash out a release roadmap.
+Fortunately the code is pretty small, so it shouldn't be a very long road.
+
+Do you think there is anything currently missing from the tree?
+If not, I can make a beta release early next week (I have to leave
+my desk for an extended weekend shortly).
+
+-- 
+Horms
+
 
 _______________________________________________
 kexec mailing list
