@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGsLM-0007IP-SV
-	for kexec@lists.infradead.org; Thu, 10 Jul 2008 09:21:41 +0000
-Date: Thu, 10 Jul 2008 11:22:20 +0200
+	id 1KGsS1-0007eo-Fl
+	for kexec@lists.infradead.org; Thu, 10 Jul 2008 09:28:33 +0000
+Date: Thu, 10 Jul 2008 11:29:12 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: [PATCH] makedumpfile: Improve error handing when
-	SIZE(nodemask_t) is undefined
-Message-ID: <20080710112220.0203c0a6@halley.suse.de>
-In-Reply-To: <4875D479.107@mxs.nes.nec.co.jp>
-References: <20080709134801.149fbdb4@halley.suse.de>
-	<487562F0.8020606@mxs.nes.nec.co.jp>
-	<20080710105157.2af29b21@halley.suse.de>
-	<4875CF72.9060306@mxs.nes.nec.co.jp>
-	<20080710110138.285aa546@halley.suse.de>
-	<4875D479.107@mxs.nes.nec.co.jp>
+Subject: Future of kexec-tools-testing
+Message-ID: <20080710112912.21641167@halley.suse.de>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -28,29 +20,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-* Ken'ichi Ohmichi [2008-07-10 18:20]:
-> Bernhard Walle wrote:
-> > * Ken'ichi Ohmichi [2008-07-10 17:59]:
-> >> Bernhard Walle wrote:
-> >>> * Ken'ichi Ohmichi [2008-07-10 10:16]:
-> >>>>> +	if (SIZE(nodemask_t) == NOT_FOUND_LONG_VALUE) {
-> >>>>> +		ERRMSG("SIZE(nodemask_t) undefined.\n");
-> >>>> I like the following message of the same form as another message.
-> >>>>
-> >>>> ERRMSG("Can't get the size of nodemask_t.\n");
-> >>> Sounds fine, thanks.
-> >> Thank you for the response.
-> >> I merged this patch into DEVEL tree, and I'll merge it into
-> >> the next release too.
-> > 
-> > Any plans when you make the next release?
-> 
-> I will do some tests, and will release it by 18 July.
+Hi,
 
-Sounds fine!
+SUSE uses now kexec-tools-testing releases since about one year and
+we never had severe problems (compared to other software). It's well
+maintained (thanks Simon!), gets frequent releases, patches are
+accepted, so:
+
+ - I would suggest that kexec-tools-testing could be renamed to
+   kexec-tools somewhere in the future since kexec-tools is not
+   maintained any more by Eric. It only causes confusion since
+   some distributions still use kexec-tools (the original ones)
+   with lots of patches.
+
+   I think current IA64 versions even do not work with kexec-tools
+   since there were some incompatible changes related to the
+   position of ELF core headers.
+
+ - I would suggest that kexec-tools gets normal release numbers.
+   The date releases are quite bad for package managers since it's
+   not possible to go back (in terms of a clean update path)
+   from something like 20080101 to 1.5 since 2008 is always greater.
+
+   Currently SUSE ships still the old 1.101 version and the real
+   release is only visible in the changelog. Of course it's possible to
+   do something like 1.101+20080101, but it's nasty.
+
+If I could help out doing some work to help to get that done, then just
+tell me.
 
 
 
