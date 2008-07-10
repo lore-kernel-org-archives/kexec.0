@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KH5We-0001ev-J3
-	for kexec@lists.infradead.org; Thu, 10 Jul 2008 23:26:13 +0000
-Date: Fri, 11 Jul 2008 09:26:10 +1000
+	id 1KH5Zs-0001jj-0Y
+	for kexec@lists.infradead.org; Thu, 10 Jul 2008 23:29:32 +0000
+Date: Fri, 11 Jul 2008 09:29:30 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [Patch] kexec/crashdump.c: remove useless code
-Message-ID: <20080710232609.GF11227@verge.net.au>
-References: <20080710104823.GA10478@hack.voiplan.pt>
+Subject: Re: [PATCH 1/3] Parse /sys/firmware/memmap.
+Message-ID: <20080710232929.GH11227@verge.net.au>
+References: <20080709004138.GD13710@verge.net.au>
+	<1215601862-21748-2-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080710104823.GA10478@hack.voiplan.pt>
+In-Reply-To: <1215601862-21748-2-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,17 +24,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Cong <xiyou.wangcong@gmail.com>
+To: Bernhard Walle <bwalle@suse.de>
 Cc: kexec@lists.infradead.org
 
-On Thu, Jul 10, 2008 at 11:48:23AM +0100, WANG Cong wrote:
+On Wed, Jul 09, 2008 at 01:11:00PM +0200, Bernhard Walle wrote:
+> After the patch that provides /sys/firmware/memmap has been merged in the 'tip'
+> tree by Ingo Molnar, kexec should use that interface.
 > 
-> I think we don't need to print fopen errors when stat fails.
+> This patch implements architecture-independent parsing in a new file called
+> firmware_memmap.c. The x86 part is ported to use that memory map for
+> kexec. We don't use that memory map for building the ELF core headers,
+> that was the intention for that new interface.
 > 
-> Signed-off-by: WANG Cong <wangcong@zeuux.org>
-> Cc: Simon Horman <horms@verge.net.au>
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-Thanks, applied.
+Thanks, applied. Ditto for the following two patches.
+
+[PATCH 2/3] Remove redundancy between get_memory_ranges_proc_iomem()
+        and get_memory_ranges_sysfs()
+[PATCH 3/3] Use get_memory_ranges() on x86-64.
 
 -- 
 Horms
