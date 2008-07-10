@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KGsS1-0007eo-Fl
-	for kexec@lists.infradead.org; Thu, 10 Jul 2008 09:28:33 +0000
-Date: Thu, 10 Jul 2008 11:29:12 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Future of kexec-tools-testing
-Message-ID: <20080710112912.21641167@halley.suse.de>
-Mime-Version: 1.0
+Received: from hu-out-0506.google.com ([72.14.214.237])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KGtlh-00034O-AV
+	for kexec@lists.infradead.org; Thu, 10 Jul 2008 10:52:57 +0000
+Received: by hu-out-0506.google.com with SMTP id 16so11471719hue.22
+	for <kexec@lists.infradead.org>; Thu, 10 Jul 2008 03:52:55 -0700 (PDT)
+Date: Thu, 10 Jul 2008 11:48:23 +0100
+From: WANG Cong <xiyou.wangcong@gmail.com>
+Subject: [Patch] kexec/crashdump.c: remove useless code
+Message-ID: <20080710104823.GA10478@hack.voiplan.pt>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,40 +26,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-Hi,
 
-SUSE uses now kexec-tools-testing releases since about one year and
-we never had severe problems (compared to other software). It's well
-maintained (thanks Simon!), gets frequent releases, patches are
-accepted, so:
+I think we don't need to print fopen errors when stat fails.
 
- - I would suggest that kexec-tools-testing could be renamed to
-   kexec-tools somewhere in the future since kexec-tools is not
-   maintained any more by Eric. It only causes confusion since
-   some distributions still use kexec-tools (the original ones)
-   with lots of patches.
+Signed-off-by: WANG Cong <wangcong@zeuux.org>
+Cc: Simon Horman <horms@verge.net.au>
 
-   I think current IA64 versions even do not work with kexec-tools
-   since there were some incompatible changes related to the
-   position of ELF core headers.
-
- - I would suggest that kexec-tools gets normal release numbers.
-   The date releases are quite bad for package managers since it's
-   not possible to go back (in terms of a clean update path)
-   from something like 20080101 to 1.5 since 2008 is always greater.
-
-   Currently SUSE ships still the old 1.101 version and the real
-   release is only visible in the changelog. Of course it's possible to
-   do something like 1.101+20080101, but it's nasty.
-
-If I could help out doing some work to help to get that done, then just
-tell me.
-
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+---
+diff --git a/kexec/crashdump.c b/kexec/crashdump.c
+index 92de524..257b3f5 100644
+--- a/kexec/crashdump.c
++++ b/kexec/crashdump.c
+@@ -84,14 +84,12 @@ int get_crash_notes_per_cpu(int cpu, uint64_t *addr, uint64_t *len)
+ 			    strerror(fopen_errno));
+ 		if (!stat("/sys/devices", &cpu_stat)) {
+ 			stat_errno = errno;
+-			fprintf(stderr, "Could not open \"%s\": %s\n",
+-				crash_notes, strerror(fopen_errno));
+ 			if (stat_errno == ENOENT)
+ 				die("\"/sys/devices\" does not exist. "
+ 				    "Sysfs does not seem to be mounted. "
+ 				    "Try mounting sysfs.\n");
+ 			die("Could not open \"/sys/devices\": %s\n",
+-			    crash_notes, strerror(stat_errno));
++			    strerror(stat_errno));
+ 		}
+ 		/* CPU is not physically present.*/
+ 		return -1;
 
 _______________________________________________
 kexec mailing list
