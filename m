@@ -1,30 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.18.175])
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHJ0M-0007NP-IR
-	for kexec@lists.infradead.org; Fri, 11 Jul 2008 13:49:47 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp06.au.ibm.com (8.13.1/8.13.1) with ESMTP id m6BDn6Lo014373
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:06 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m6BDng7h209740
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:42 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m6BDngTj021387
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:42 +1000
-From: Chandru <chandru@in.ibm.com>
-Subject: [PATCH 1/4][V2] powerpc : add support for linux,
-	usable-memory properties for drconf memory
-Date: Fri, 11 Jul 2008 19:19:36 +0530
-References: <200807080014.24910.chandru@in.ibm.com>
-	<48768CE9.2080802@austin.ibm.com>
-	<200807111639.22032.chandru@in.ibm.com>
-In-Reply-To: <200807111639.22032.chandru@in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807111919.36401.chandru@in.ibm.com>
+	id 1KHKEp-0002j3-No
+	for kexec@lists.infradead.org; Fri, 11 Jul 2008 15:08:48 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 2B81A45C76
+	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 17:08:46 +0200 (CEST)
+Date: Fri, 11 Jul 2008 17:07:20 +0200
+From: Bernhard Walle <bwalle@suse.de>(by way of Bernhard Walle
+	<bwalle@suse.de>)
+Message-ID: <20080711170720.22533ccb@halley.suse.de>
+In-Reply-To: <20080710230827.GC11227@verge.net.au>
+References: <20080710112912.21641167@halley.suse.de>
+	<20080710230827.GC11227@verge.net.au>
+Mime-Version: 1.0
+Subject: Re: Future of kexec-tools-testing
+Resent-Message-ID: <20080711170927.1aec8a83@halley.suse.de>
+Resent-To: kexec@lists.infradead.org
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,155 +31,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@ozlabs.org
-Cc: Nathan Fontenot <nfont@austin.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
 
-Scan for linux,usable-memory properties in case of dynamic reconfiguration 
-memory. Support for kexec/kdump. 
+* Simon Horman [2008-07-11 09:08]:
+> On Thu, Jul 10, 2008 at 11:29:12AM +0200, Bernhard Walle wrote:
+> > 
+> > SUSE uses now kexec-tools-testing releases since about one year and
+> > we never had severe problems (compared to other software). It's well
+> > maintained (thanks Simon!), gets frequent releases, patches are
+> > accepted, so:
+> > 
+> >  - I would suggest that kexec-tools-testing could be renamed to
+> >    kexec-tools somewhere in the future since kexec-tools is not
+> >    maintained any more by Eric. It only causes confusion since
+> >    some distributions still use kexec-tools (the original ones)
+> >    with lots of patches.
+> 
+> I agree.
+> 
+> Perhaps we could make the next release kexec-tools 2.0.0, perhaps
+> after a few beta releases?
 
-Signed-off-by: Chandru Siddalingappa <chandru@in.ibm.com>
----
+Sounds reasonable.
 
-Patch applies on linux-next tree (patch-v2.6.26-rc9-next-20080711.gz)
+> I can rename my git tree to coincide with this move.
 
- arch/powerpc/kernel/prom.c |   40 +++++++++++++++++++++++------
- arch/powerpc/mm/numa.c     |   48 ++++++++++++++++++++++++-----------
- 2 files changed, 65 insertions(+), 23 deletions(-)
+I think the name of the git tree is not that important, but it makes
+also sense to rename that. Since there is no "kexec-tools" tree anyway.
 
-diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c 
-linux-2.6.26-rc9/arch/powerpc/kernel/prom.c
---- linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c	2008-07-11 
-14:44:55.000000000 +0530
-+++ linux-2.6.26-rc9/arch/powerpc/kernel/prom.c	2008-07-11 14:58:26.000000000 
-+0530
-@@ -888,9 +888,10 @@ static u64 __init dt_mem_next_cell(int s
-  */
- static int __init early_init_dt_scan_drconf_memory(unsigned long node)
- {
--	cell_t *dm, *ls;
--	unsigned long l, n, flags;
-+	cell_t *dm, *ls, *usm;
-+	unsigned long l, n, flags, ranges;
- 	u64 base, size, lmb_size;
-+	char buf[32];
- 
- 	ls = (cell_t *)of_get_flat_dt_prop(node, "ibm,lmb-size", &l);
- 	if (ls == NULL || l < dt_root_size_cells * sizeof(cell_t))
-@@ -914,14 +915,37 @@ static int __init early_init_dt_scan_drc
- 		   or if the block is not assigned to this partition (0x8) */
- 		if ((flags & 0x80) || !(flags & 0x8))
- 			continue;
--		size = lmb_size;
--		if (iommu_is_off) {
-+		if (iommu_is_off)
- 			if (base >= 0x80000000ul)
- 				continue;
--			if ((base + size) > 0x80000000ul)
--				size = 0x80000000ul - base;
--		}
--		lmb_add(base, size);
-+		size = lmb_size;
-+
-+		/*
-+		 * Append 'n' to 'linux,usable-memory' to get special
-+		 * properties passed in by tools like kexec-tools. Relevant
-+		 * only if this is a kexec/kdump kernel.
-+		 */
-+		sprintf(buf, "linux,usable-memory%d", (int)n);
-+		usm = of_get_flat_dt_prop(node, buf, &l);
-+		ranges = 1;
-+		if (usm != NULL)
-+			ranges = (l >> 2)/(dt_root_addr_cells
-+						+ dt_root_size_cells);
-+		do {
-+			if (usm != NULL) {
-+				base = dt_mem_next_cell(dt_root_addr_cells,
-+							 &usm);
-+				size = dt_mem_next_cell(dt_root_size_cells,
-+							 &usm);
-+				if (size == 0)
-+					break;
-+			}
-+			if (iommu_is_off)
-+				if ((base + size) > 0x80000000ul)
-+					size = 0x80000000ul - base;
-+
-+			lmb_add(base, size);
-+		} while (--ranges);
- 	}
- 	lmb_dump_all();
- 	return 0;
-diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c 
-linux-2.6.26-rc9/arch/powerpc/mm/numa.c
---- linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c	2008-07-11 14:44:55.000000000 
-+0530
-+++ linux-2.6.26-rc9/arch/powerpc/mm/numa.c	2008-07-11 15:01:56.000000000 
-+0530
-@@ -493,11 +493,13 @@ static unsigned long __init numa_enforce
-  */
- static void __init parse_drconf_memory(struct device_node *memory)
- {
--	const u32 *dm;
--	unsigned int n, rc;
--	unsigned long lmb_size, size;
-+	const u32 *dm, *usm;
-+	unsigned int n, rc, len, ranges;
-+	unsigned long lmb_size, size, sz;
- 	int nid;
- 	struct assoc_arrays aa;
-+	char buf[32];
-+	u64 base;
- 
- 	n = of_get_drconf_memory(memory, &dm);
- 	if (!n)
-@@ -524,19 +526,35 @@ static void __init parse_drconf_memory(s
- 
- 		nid = of_drconf_to_nid_single(&drmem, &aa);
- 
--		fake_numa_create_new_node(
--				((drmem.base_addr + lmb_size) >> PAGE_SHIFT),
--					   &nid);
--
--		node_set_online(nid);
--
--		size = numa_enforce_memory_limit(drmem.base_addr, lmb_size);
--		if (!size)
--			continue;
-+		/*
-+		 * Append 'n' to 'linux,usable-memory' to get special
-+		 * properties passed in by tools like kexec-tools. Relevant
-+		 * only if this is a kexec/kdump kernel.
-+		 */
-+		sprintf(buf, "linux,usable-memory%d", (int)n);
-+		usm = of_get_property(memory, buf, &len);
-+		ranges = 1;
-+		if (usm != NULL)
-+			ranges = (len >> 2) /
-+					 (n_mem_addr_cells + n_mem_size_cells);
-+
-+		base = drmem.base_addr;
-+		size = lmb_size;
-+		do {
-+			if (usm != NULL) {
-+				base = read_n_cells(n_mem_addr_cells, &usm);
-+				size = read_n_cells(n_mem_size_cells, &usm);
-+			}
- 
--		add_active_range(nid, drmem.base_addr >> PAGE_SHIFT,
--				 (drmem.base_addr >> PAGE_SHIFT)
--				 + (size >> PAGE_SHIFT));
-+			fake_numa_create_new_node(((base + size) >> PAGE_SHIFT),
-+							 &nid);
-+			node_set_online(nid);
-+			sz = numa_enforce_memory_limit(base, size);
-+			if (sz)
-+				add_active_range(nid, base >> PAGE_SHIFT,
-+						 (base >> PAGE_SHIFT)
-+						+ (sz >> PAGE_SHIFT));
-+		} while (--ranges);
- 	}
- }
- 
+> Perhaps the best thing to do now would be to hash out a release roadmap.
+> Fortunately the code is pretty small, so it shouldn't be a very long road.
+> 
+> Do you think there is anything currently missing from the tree?
+> If not, I can make a beta release early next week (I have to leave
+> my desk for an extended weekend shortly).
+
+No, the current state is fine for me (from a functional point of view).
+So, just release kexec-tools-2.0.0-rc1 next week. I think we don't need
+alpha and beta versions here.
+
+I'll help to test that release then (by updating SUSE/Factory :-)).
+
+I think we don't need changes in the release policy because it worked
+out fine in the past. And when 2.0.0 is out, I think then also all
+other major distributions like Debian, Fedora, etc. update to that
+release and drop their patches.
+
+Thanks a lot for your effort!
+
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
