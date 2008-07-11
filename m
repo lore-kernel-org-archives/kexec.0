@@ -1,28 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp03.in.ibm.com ([59.145.155.3] helo=e28esmtp03.in.ibm.com)
+Received: from e23smtp06.au.ibm.com ([202.81.18.175])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHGVq-0000v0-4t
-	for kexec@lists.infradead.org; Fri, 11 Jul 2008 11:10:18 +0000
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-	by e28esmtp03.in.ibm.com (8.13.1/8.13.1) with ESMTP id m6BB9Th2001771
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 16:39:29 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m6BB96Tg1216706
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 16:39:06 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m6BB9S0X006389
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 16:39:28 +0530
+	id 1KHJ0M-0007NP-IR
+	for kexec@lists.infradead.org; Fri, 11 Jul 2008 13:49:47 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp06.au.ibm.com (8.13.1/8.13.1) with ESMTP id m6BDn6Lo014373
+	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:06 +1000
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m6BDng7h209740
+	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:42 +1000
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m6BDngTj021387
+	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 23:49:42 +1000
 From: Chandru <chandru@in.ibm.com>
-Subject: Re: [PATCH 1/4] kdump : add support for ibm,
-	=?iso-8859-1?q?=09dynamic-reconfiguration-memory_for?= kexec/kdump
-Date: Fri, 11 Jul 2008 16:39:21 +0530
+Subject: [PATCH 1/4][V2] powerpc : add support for linux,
+	usable-memory properties for drconf memory
+Date: Fri, 11 Jul 2008 19:19:36 +0530
 References: <200807080014.24910.chandru@in.ibm.com>
 	<48768CE9.2080802@austin.ibm.com>
-In-Reply-To: <48768CE9.2080802@austin.ibm.com>
+	<200807111639.22032.chandru@in.ibm.com>
+In-Reply-To: <200807111639.22032.chandru@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200807111639.22032.chandru@in.ibm.com>
+Message-Id: <200807111919.36401.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,85 +37,155 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nathan Fontenot <nfont@austin.ibm.com>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
+To: linuxppc-dev@ozlabs.org
+Cc: Nathan Fontenot <nfont@austin.ibm.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org
 
-On Friday 11 July 2008 03:57:53 Nathan Fontenot wrote:
-> Hello Chandru,
->
-> >  static int __init early_init_dt_scan_drconf_memory(unsigned long node)
-> >  {
-> > -	cell_t *dm, *ls;
-> > +	cell_t *dm, *ls, *endp, *usm;
-> >  	unsigned long l, n, flags;
-> >  	u64 base, size, lmb_size;
-> > +	char buf[32], t[8];
-> >
-> >  	ls = (cell_t *)of_get_flat_dt_prop(node, "ibm,lmb-size", &l);
-> >  	if (ls == NULL || l < dt_root_size_cells * sizeof(cell_t))
-> > @@ -917,7 +918,33 @@ static int __init early_init_dt_scan_drc
-> >  			if ((base + size) > 0x80000000ul)
-> >  				size = 0x80000000ul - base;
-> >  		}
-> > -		lmb_add(base, size);
-> > +		strcpy(buf, "linux,usable-memory");
-> > +		sprintf(t, "%d", (int)n);
-> > +		strcat(buf, t);
-> > +		usm = (cell_t *)of_get_flat_dt_prop(node,
-> > +						 (const char *)buf, &l);
-> > +		if (usm != NULL) {
-> > +			endp = usm + (l / sizeof(cell_t));
-> > +			while ((endp - usm) >= (dt_root_addr_cells +
-> > +						 dt_root_size_cells)) {
-> > +				base = dt_mem_next_cell(dt_root_addr_cells,
-> > +								 &usm);
-> > +				size = dt_mem_next_cell(dt_root_size_cells,
-> > +								 &usm);
-> > +				if (size == 0)
-> > +					continue;
-> > +				if (iommu_is_off) {
-> > +					if ((base + size) > 0x80000000ul)
-> > +						size = 0x80000000ul - base;
-> > +				}
-> > +				lmb_add(base, size);
-> > +			}
-> > +
-> > +			/* Continue with next lmb entry */
-> > +			continue;
-> > +		} else {
-> > +			lmb_add(base, size);
-> > +		}
-> >  	}
->
-> I am still digging through the kexec tools but I don't think you want
-> the processing of the linux,usable-memory property inside of the
-> for (; n!= 0; --n) loop.  This should be moved up so that it looks for
-> the linux,usable-memory property and parses it, then if it is not found
-> look for the ibm,dynamic-reconfiguration-memory property and parse it.
->
-> There is no need to look for the linux-usable-memory property every time
-> a piece of the ibm,dynamic-reconfiguration-memory property is parsed.
->
-> -Nathan
+Scan for linux,usable-memory properties in case of dynamic reconfiguration 
+memory. Support for kexec/kdump. 
 
-Hello Nathan,
+Signed-off-by: Chandru Siddalingappa <chandru@in.ibm.com>
+---
 
-Thanks for the review. kexec-tools adds a 'linux,usable-memory' property for 
-each memory range listed in the device tree.  If the regions are not 
-crashkernel or rtas or tce regions, then it sets base and size to zero but 
-still adds them as linux,usable-memory property.  If we look at the code 
-above, in a kdump kernel we don't add an lmb through lmb_add() if the regions 
-are not one of the mentioned above.  We check for (size == 0) and continue 
-with next lmb if it is so.  We still have the complete device tree which 
-kexec-tools passes in as the buffer that we are scanning here and 
-linux,usable-memory  properties aid in making kdump kernel to see only those 
-memory regions that it is suppose to use.  I just worked on another version 
-of this patch based on comments from Michael Neuling and Stephen Rothwell. I 
-will post it shortly.
+Patch applies on linux-next tree (patch-v2.6.26-rc9-next-20080711.gz)
 
+ arch/powerpc/kernel/prom.c |   40 +++++++++++++++++++++++------
+ arch/powerpc/mm/numa.c     |   48 ++++++++++++++++++++++++-----------
+ 2 files changed, 65 insertions(+), 23 deletions(-)
 
-Thanks,
-Chandru
+diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c 
+linux-2.6.26-rc9/arch/powerpc/kernel/prom.c
+--- linux-2.6.26-rc9-orig/arch/powerpc/kernel/prom.c	2008-07-11 
+14:44:55.000000000 +0530
++++ linux-2.6.26-rc9/arch/powerpc/kernel/prom.c	2008-07-11 14:58:26.000000000 
++0530
+@@ -888,9 +888,10 @@ static u64 __init dt_mem_next_cell(int s
+  */
+ static int __init early_init_dt_scan_drconf_memory(unsigned long node)
+ {
+-	cell_t *dm, *ls;
+-	unsigned long l, n, flags;
++	cell_t *dm, *ls, *usm;
++	unsigned long l, n, flags, ranges;
+ 	u64 base, size, lmb_size;
++	char buf[32];
+ 
+ 	ls = (cell_t *)of_get_flat_dt_prop(node, "ibm,lmb-size", &l);
+ 	if (ls == NULL || l < dt_root_size_cells * sizeof(cell_t))
+@@ -914,14 +915,37 @@ static int __init early_init_dt_scan_drc
+ 		   or if the block is not assigned to this partition (0x8) */
+ 		if ((flags & 0x80) || !(flags & 0x8))
+ 			continue;
+-		size = lmb_size;
+-		if (iommu_is_off) {
++		if (iommu_is_off)
+ 			if (base >= 0x80000000ul)
+ 				continue;
+-			if ((base + size) > 0x80000000ul)
+-				size = 0x80000000ul - base;
+-		}
+-		lmb_add(base, size);
++		size = lmb_size;
++
++		/*
++		 * Append 'n' to 'linux,usable-memory' to get special
++		 * properties passed in by tools like kexec-tools. Relevant
++		 * only if this is a kexec/kdump kernel.
++		 */
++		sprintf(buf, "linux,usable-memory%d", (int)n);
++		usm = of_get_flat_dt_prop(node, buf, &l);
++		ranges = 1;
++		if (usm != NULL)
++			ranges = (l >> 2)/(dt_root_addr_cells
++						+ dt_root_size_cells);
++		do {
++			if (usm != NULL) {
++				base = dt_mem_next_cell(dt_root_addr_cells,
++							 &usm);
++				size = dt_mem_next_cell(dt_root_size_cells,
++							 &usm);
++				if (size == 0)
++					break;
++			}
++			if (iommu_is_off)
++				if ((base + size) > 0x80000000ul)
++					size = 0x80000000ul - base;
++
++			lmb_add(base, size);
++		} while (--ranges);
+ 	}
+ 	lmb_dump_all();
+ 	return 0;
+diff -Naurp linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c 
+linux-2.6.26-rc9/arch/powerpc/mm/numa.c
+--- linux-2.6.26-rc9-orig/arch/powerpc/mm/numa.c	2008-07-11 14:44:55.000000000 
++0530
++++ linux-2.6.26-rc9/arch/powerpc/mm/numa.c	2008-07-11 15:01:56.000000000 
++0530
+@@ -493,11 +493,13 @@ static unsigned long __init numa_enforce
+  */
+ static void __init parse_drconf_memory(struct device_node *memory)
+ {
+-	const u32 *dm;
+-	unsigned int n, rc;
+-	unsigned long lmb_size, size;
++	const u32 *dm, *usm;
++	unsigned int n, rc, len, ranges;
++	unsigned long lmb_size, size, sz;
+ 	int nid;
+ 	struct assoc_arrays aa;
++	char buf[32];
++	u64 base;
+ 
+ 	n = of_get_drconf_memory(memory, &dm);
+ 	if (!n)
+@@ -524,19 +526,35 @@ static void __init parse_drconf_memory(s
+ 
+ 		nid = of_drconf_to_nid_single(&drmem, &aa);
+ 
+-		fake_numa_create_new_node(
+-				((drmem.base_addr + lmb_size) >> PAGE_SHIFT),
+-					   &nid);
+-
+-		node_set_online(nid);
+-
+-		size = numa_enforce_memory_limit(drmem.base_addr, lmb_size);
+-		if (!size)
+-			continue;
++		/*
++		 * Append 'n' to 'linux,usable-memory' to get special
++		 * properties passed in by tools like kexec-tools. Relevant
++		 * only if this is a kexec/kdump kernel.
++		 */
++		sprintf(buf, "linux,usable-memory%d", (int)n);
++		usm = of_get_property(memory, buf, &len);
++		ranges = 1;
++		if (usm != NULL)
++			ranges = (len >> 2) /
++					 (n_mem_addr_cells + n_mem_size_cells);
++
++		base = drmem.base_addr;
++		size = lmb_size;
++		do {
++			if (usm != NULL) {
++				base = read_n_cells(n_mem_addr_cells, &usm);
++				size = read_n_cells(n_mem_size_cells, &usm);
++			}
+ 
+-		add_active_range(nid, drmem.base_addr >> PAGE_SHIFT,
+-				 (drmem.base_addr >> PAGE_SHIFT)
+-				 + (size >> PAGE_SHIFT));
++			fake_numa_create_new_node(((base + size) >> PAGE_SHIFT),
++							 &nid);
++			node_set_online(nid);
++			sz = numa_enforce_memory_limit(base, size);
++			if (sz)
++				add_active_range(nid, base >> PAGE_SHIFT,
++						 (base >> PAGE_SHIFT)
++						+ (sz >> PAGE_SHIFT));
++		} while (--ranges);
+ 	}
+ }
+ 
 
 _______________________________________________
 kexec mailing list
