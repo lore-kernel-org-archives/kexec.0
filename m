@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from yx-out-1718.google.com ([74.125.44.156])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHPvS-00028n-JI
-	for kexec@lists.infradead.org; Fri, 11 Jul 2008 21:13:11 +0000
-Received: by yx-out-1718.google.com with SMTP id 6so1718972yxn.72
-	for <kexec@lists.infradead.org>; Fri, 11 Jul 2008 14:13:05 -0700 (PDT)
-Message-ID: <86802c440807111413x493ef180r14a6bcb1a4a55924@mail.gmail.com>
-Date: Fri, 11 Jul 2008 14:13:05 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: AMD Family 10H machine check on vmcore read
-In-Reply-To: <20080711205052.GC3298@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <1215472086.3361.297.camel@amd.troyhebe>
-	<20080708132855.GB7866@redhat.com>
-	<1215624760.3361.314.camel@amd.troyhebe>
-	<20080711205052.GC3298@redhat.com>
+Received: from smtp1.linux-foundation.org ([140.211.169.13])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KHT65-0001Hn-TR
+	for kexec@lists.infradead.org; Sat, 12 Jul 2008 00:36:22 +0000
+Date: Fri, 11 Jul 2008 17:36:09 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
+Message-Id: <20080711173609.8310504d.akpm@linux-foundation.org>
+In-Reply-To: <1214565175-21512-2-git-send-email-bwalle@suse.de>
+References: <1214565175-21512-1-git-send-email-bwalle@suse.de>
+	<1214565175-21512-2-git-send-email-bwalle@suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,105 +23,253 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Andi Kleen <andi@firstfloor.org>, Bob Montgomery <bob.montgomery@hp.com>, linux kernel mailing list <linux-kernel@vger.kernel.org>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: gregkh@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com, vgoyal@redhat.com
 
-On Fri, Jul 11, 2008 at 1:50 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
-> On Wed, Jul 09, 2008 at 11:32:40AM -0600, Bob Montgomery wrote:
->> On Tue, 2008-07-08 at 13:28 +0000, Vivek Goyal wrote:
->> > On Mon, Jul 07, 2008 at 05:08:06PM -0600, Bob Montgomery wrote:
->> > > We maintain a 2.6.18 derived kernel.
->> > > When testing kdump on a new AMD Family 10h (16) processor, once in the
->> > > kdump kernel, a read from either /proc/vmcore or /dev/oldmem that
->> > > corresponds to the area of memory identified in the original (crashing)
->> > > kernel by these boot messages:
->>
->> > >
->> > > On a Family 15 AMD64 processor running this kernel and kdump kernel, I
->> > > can read the areas identified as being in the aperture from the kdump
->> > > kernel and get values, but on the new processor, reads from the kdump
->> > > kernel that are within that address range result in the machine check:
->> > >
->> > > HARDWARE ERROR
->> > > CPU 0: Machine Check Exception:                4 Bank 4: be0000010005001b
->> > > TSC 141bd974323de ADDR 1c000000 MISC e00c0ffe01000000
->> > >
->>
->> > Hi Bob,
->> >
->> > I am not sure what's happening here. Because in /proc/iomem, GART reserved
->> > area is reported as System RAM, kdump kernel will try to read this area
->> > and save it. Now I am not sure, what is so special about this area that
->> > mapping it and reading it in second kernel would cause a MCE.
->> >
->> > CCing it to LKML, hoping people knowing GART will be able to provide some
->> > input.
->> >
->> > > But I don't see this fix upstream in the kernel.  So I'm wondering if
->> > > some other patch protects other kdump kernels from this problem.  In
->> > > particular, a recent patch that informed the e820 map about the gart
->> > > aperture to prevent a normal kernel and a kexec kernel from putting it
->> > > at different addresses.  It didn't mention machine checks from kdump
->> > > kernels, but I wonder if it would have prevented access to that memory
->> > > area by having it be excluded from the /proc/vmcore list of areas??
->> >
->> > Can you provide a link to the patch above? If /proc/iomem, does not report
->> > GART area as system ram then it will be excluded from the dump. (IIUC,
->> > IOMMU tables are in GART area and ideally one should be capturing it to
->> > find out how IOMMU tables looked like at the time of crash).
->>
->> The patch that I thought might be related is:
->>  x86: disable the GART early, 64-bit
->>
->> author     Yinghai Lu <Yinghai.Lu@Sun.COM>
->>            Wed, 30 Jan 2008 12:33:09 +0000 (13:33 +0100)
->> committer  Ingo Molnar <mingo@elte.hu>
->>            Wed, 30 Jan 2008 12:33:09 +0000 (13:33 +0100)
->> commit     aaf230424204864e2833dcc1da23e2cb0b9f39cd
->> tree       a42042f5135aa63a780964bd053ae174211ab62f
->>
->> I thought it might be relevant because of this included comment:
->>
->> > hm, i'm wondering, instead of modifying the GART, why dont we simply
->> > _detect_ whatever GART settings we have inherited, and propagate that
->> > into our e820 maps? I.e. if there's inconsistency, then punch that out
->> > from the memory maps and just dont use that memory.
->>
->> But this patch doesn't mention machine checks as the symptom that
->> initiated the patch.
->>
->> And my reason for looking was because I didn't think I could be the
->> first person to try reading /proc/vmcore on a Family 10h processor.  So
->> I wondered why it hadn't been seen by some other tester, and thought
->> some other patch might have "fixed" it a different way on newer kernels
->> than mine.
->>
+On Fri, 27 Jun 2008 13:12:54 +0200 Bernhard Walle <bwalle@suse.de> wrote:
+
+> This patch adds /sys/firmware/memmap interface that represents the BIOS
+> (or Firmware) provided memory map. The tree looks like:
+> 
+>     /sys/firmware/memmap/0/start   (hex number)
+>                            end     (hex number)
+>                            type    (string)
+>     ...                 /1/start
+>                            end
+>                            type
+> 
+> With the following shell snippet one can print the memory map in the same form
+> the kernel prints itself when booting on x86 (the E820 map).
+> 
+>   --------- 8< --------------------------
+>     #!/bin/sh
+>     cd /sys/firmware/memmap
+>     for dir in * ; do
+>         start=$(cat $dir/start)
+>         end=$(cat $dir/end)
+>         type=$(cat $dir/type)
+>         printf "%016x-%016x (%s)\n" $start $[ $end +1] "$type"
+>     done
+>   --------- >8 --------------------------
+> 
+> That patch only provides the needed interface:
+> 
+>  1. The sysfs interface.
+>  2. The structure and enumeration definition.
+>  3. The function firmware_map_add() and firmware_map_add_early()
+>     that should be called from architecture code (E820/EFI, for
+>     example) to add the contents to the interface.
+> 
+> If the kernel is compiled without CONFIG_FIRMWARE_MEMMAP, the interface does
+> nothing without cluttering the architecture-specific code with #ifdef's.
+> 
+> The purpose of the new interface is kexec: While /proc/iomem represents
+> the *used* memory map (e.g. modified via kernel parameters like 'memmap'
+> and 'mem'), the /sys/firmware/memmap tree represents the unmodified memory
+> map provided via the firmware. So kexec can:
+> 
+>  - use the original memory map for rebooting,
+>  - use the /proc/iomem for setting up the ELF core headers for kdump
+>    case that should only represent the memory of the system.
+> 
+> The patch has been tested on i386 and x86_64.
+> 
+> ...
 >
-> Hi Bob,
+> +/*
+> + * Firmware memory map entries
+> + */
+> +static LIST_HEAD(map_entries);
+
+Alarm bells.  Please add a comment explaining why no locking is needed
+for this.
+
+> +/**
+> + * Common implementation of firmware_map_add() and firmware_map_add_early()
+> + * which expects a pre-allocated struct firmware_map_entry.
+> + *
+> + * @start: Start of the memory range.
+> + * @end:   End of the memory range (inclusive).
+> + * @type:  Type of the memory range.
+> + * @entry: Pre-allocated (either kmalloc() or bootmem allocator), uninitialised
+> + *         entry.
+> + */
+
+Busted kerneldoc.  It should start with
+
+/**
+ * firmware_map_add_entry - <stuff>
+
+> +static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
+> +				  const char *type,
+> +				  struct firmware_map_entry *entry)
+> +{
+> +	BUG_ON(start > end);
+> +
+> +	entry->start = start;
+> +	entry->end = end;
+> +	entry->type = type;
+> +	INIT_LIST_HEAD(&entry->list);
+> +	kobject_init(&entry->kobj, &memmap_ktype);
+> +
+> +	list_add_tail(&entry->list, &map_entries);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * See <linux/firmware-map.h> for documentation.
+> + */
+> +int firmware_map_add(resource_size_t start, resource_size_t end,
+> +		     const char *type)
+> +{
+> +	struct firmware_map_entry *entry;
+> +
+> +	entry = kmalloc(sizeof(struct firmware_map_entry), GFP_ATOMIC);
+> +	WARN_ON(!entry);
+
+Actually, kmalloc() would have warned already.
+
+> +	if (!entry)
+> +		return -ENOMEM;
+> +
+> +	return firmware_map_add_entry(start, end, type, entry);
+> +}
+> +
+> 
+> ...
 >
-> So it looks like this patch will mark aperture region as non RAM and kudmp
-> will not try to dump that memory and will not run into MCE. Have you tried
-> the kernel with this patch? Does it work for you?
+> +static ssize_t start_show(struct firmware_map_entry *entry, char *buf)
+> +{
+> +	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->start);
+> +}
+> +
+> +static ssize_t end_show(struct firmware_map_entry *entry, char *buf)
+> +{
+> +	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->end);
+> +}
+
+Printing a resource_size_t needs a cast to `unsigned long long' to
+avoid printk warnings.
+
+> +static ssize_t type_show(struct firmware_map_entry *entry, char *buf)
+> +{
+> +	return snprintf(buf, PAGE_SIZE, "%s\n", entry->type);
+> +}
+> +
+> +#define to_memmap_attr(_attr) container_of(_attr, struct memmap_attribute, attr)
+> +#define to_memmap_entry(obj) container_of(obj, struct firmware_map_entry, kobj)
+> +
+> +static ssize_t memmap_attr_show(struct kobject *kobj,
+> +				struct attribute *attr, char *buf)
+> +{
+> +	struct firmware_map_entry *entry = to_memmap_entry(kobj);
+> +	struct memmap_attribute *memmap_attr = to_memmap_attr(attr);
+> +
+> +	return memmap_attr->show(entry, buf);
+> +}
+> +
+> +/*
+> + * Initialises stuff and adds the entries in the map_entries list to
+> + * sysfs. Important is that firmware_map_add() and firmware_map_add_early()
+> + * must be called before late_initcall.
+
+Please update the comment to provide the reason why this is important.
+
+> + */
+> +static int __init memmap_init(void)
+> +{
+> +	int i = 0;
+> +	struct firmware_map_entry *entry;
+> +	struct kset *memmap_kset;
+> +
+> +	memmap_kset = kset_create_and_add("memmap", NULL, firmware_kobj);
+> +	WARN_ON(!memmap_kset);
+> +	if (!memmap_kset)
+> +		return -ENOMEM;
+
+Actually, you can do
+
+	if (WARN_ON(!memmap_kset))
+		return -ENOMEM;
+
+(multiple instances)
+
+> +	list_for_each_entry(entry, &map_entries, list) {
+> +		entry->kobj.kset = memmap_kset;
+> +		kobject_add(&entry->kobj, NULL, "%d", i++);
+
+kobject_add() can fail.
+
+I'd suggest that you enable CONFIG_ENABLE_MUST_CHECK in your usualconfig.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +late_initcall(memmap_init);
+> +
+> 
+> ...
 >
-> At this point I don't know, why accessing the aperture region of first
-> kernel causes MCE. May be Andi or Yinghai will know, CCing them.
->
-> So backporting the Yinghai's patch to your kernel should help here.
->
+> +/**
+> + * Adds a firmware mapping entry. This function uses kmalloc() for memory
+> + * allocation. Use firmware_map_add_early() if you want to use the bootmem
+> + * allocator.
+> + *
+> + * That function must be called before late_initcall.
+> + *
+> + * @start: Start of the memory range.
+> + * @end:   End of the memory range (inclusive).
+> + * @type:  Type of the memory range.
+> + *
+> + * Returns 0 on success, or -ENOMEM if no memory could be allocated.
+> + */
+> +int firmware_map_add(resource_size_t start, resource_size_t end,
+> +		     const char *type);
 
-two kernels could have different position with GART aperture allocated
-from low ram.
+More busted kernedoc (multiple instances)
 
-so need to stop it in shutdown path of first kernel or startup path of
-second kernel.
+Please document C functions at the definition site, not in the header file.
 
-otherwise second kernel will try to use address of first kernel gart,
-and later if the gart is disabled for new gart, the setting will be
-lost.
+a) because otherwise the documentation gets splattered across
+   different files (eg - static functions?)
 
-with this patch could use MCE error and HT sync flood and warm reset
+b) principle of least surprise: that's where people expect to find it.
 
-YH
+> +/**
+> + * Adds a firmware mapping entry. This function uses the bootmem allocator
+> + * for memory allocation. Use firmware_map_add() if you want to use kmalloc().
+> + *
+> + * That function must be called before late_initcall.
+> + *
+> + * @start: Start of the memory range.
+> + * @end:   End of the memory range (inclusive).
+> + * @type:  Type of the memory range.
+> + *
+> + * Returns 0 on success, or -ENOMEM if no memory could be allocated.
+> + */
+> +int firmware_map_add_early(resource_size_t start, resource_size_t end,
+> +			   const char *type);
+> +
+> +#else /* CONFIG_FIRMWARE_MEMMAP */
+> +
+> +static inline int firmware_map_add(resource_size_t start, resource_size_t end,
+> +				   const char *type)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int firmware_map_add_early(resource_size_t start,
+> +					 resource_size_t end, const char *type)
+> +{
+> +	return 0;
+> +}
+> +
+> +#endif /* CONFIG_FIRMWARE_MEMMAP */
+> +
+> +#endif /* _LINUX_FIRMWARE_MAP_H */
+
 
 _______________________________________________
 kexec mailing list
