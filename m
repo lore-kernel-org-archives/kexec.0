@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.crca.org.au ([67.207.131.56] helo=crca.org.au)
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHTVI-0007M2-Sw
-	for kexec@lists.infradead.org; Sat, 12 Jul 2008 01:02:25 +0000
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-From: Nigel Cunningham <nigel@nigel.suspend2.net>
-In-Reply-To: <20080711201149.GB3298@redhat.com>
+	id 1KHUu3-0000WM-TU
+	for kexec@lists.infradead.org; Sat, 12 Jul 2008 02:32:04 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080708145051.GA14745@redhat.com>
 	<20080711122131.b6461ab1.akpm@linux-foundation.org>
-	<20080711201149.GB3298@redhat.com>
-Date: Sat, 12 Jul 2008 11:02:17 +1000
-Message-Id: <1215824537.7319.7.camel@nigel-laptop>
-Mime-Version: 1.0
-Reply-To: nigel@nigel.suspend2.net
+	<20080711202434.GB6261@elf.ucw.cz> <200807112240.59461.rjw@sisk.pl>
+Date: Fri, 11 Jul 2008 19:23:04 -0700
+In-Reply-To: <200807112240.59461.rjw@sisk.pl> (Rafael J. Wysocki's message of
+	"Fri, 11 Jul 2008 22:40:58 +0200")
+Message-ID: <m1lk076dtj.fsf@frodo.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: "Rafael J. Wysocki" <rjw@sisk.pl>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@suse.cz>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-Hi.
+"Rafael J. Wysocki" <rjw@sisk.pl> writes:
 
-On Fri, 2008-07-11 at 16:11 -0400, Vivek Goyal wrote:
-> Hi Andrew,
-> 
-> We can use this patchset for hibernation, but can it be a better way of doing
-> things than what we already have, I don't know. Last time I had raised
-> this question and power people had various views. In the end, Pavel wanted
-> this patchset to be in.  Pavel, can tell more here...
-> 
-> To me this patchset looks interesting for couple of reasons.
-> 
-> - Looks like an interesting feature where one can have a separate kernel
->   in memory and one can switch between the kernels on the fly. It can
->   be modified to have more than one kernel in memory at a time.
+> The truth is we could do hibernation without the freezer if
+> (a) some drivers were fixed not to rely on it (kexec doesn't help here),
+> (b) we had support at the block layer or filesystems level (kexec is a big
+>    workaround here).
 
-I'm not sure how useful that would be, though. I already have
-functionality in TuxOnIce which allows you to resume a different image
-instead of powering off (roughly the same thing when combined with not
-removing the image after resuming). It was neat when testing to be able
-to switch back and forth, and I developed the code because I imagined
-that it could form part of the foundation for switching between a login
-screen and users' stored sessions. Is this what you're imagining?
+I just realized with a little care the block layer does have support for this,
+or something very close.
 
-> - So far kexec was one directional. One can only kexec to new kernel and
->   old kernel was gone. Now this patchset makes kexec functionality kind
->   of bidirectional and this looks like logical extension and can lead
->   to intersting use cases in future.
+You setup a software raid mirror with one disk device.    The physical
+device can come in and out while the filesystems depend on the real device.
 
-Ah. You mean keeping both kernels in memory at the same time? In the
-above, I was replacing one image with another.
+I expect a hardware pass through device configured to do exactly the
+above would be about 100 lines of code, so getting past the filesystem
+hurdle should be very doable.  Arguably we should be able to do this
+up a level, but it is easy enough to do that you can do a proof of
+concept with out that.
 
-> Huang also talks of using this feature for snapshotting kernel and
-> invoking some BIOS code in protected mode. I am not very sure how exactly
-> are they planning to use it. Huang, do you have more details on this?
+Now I'm curious to see how far you can go with just the device hotplug support.
 
-As Rafael wrote, snapshotting is a completely different beast.
-
-Regards,
-
-Nigel
-
+Eric
 
 _______________________________________________
 kexec mailing list
