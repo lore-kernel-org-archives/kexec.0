@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([217.79.144.158])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHkAv-0004Tf-PC
-	for kexec@lists.infradead.org; Sat, 12 Jul 2008 18:50:30 +0000
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Received: from netrider.rowland.org ([192.131.102.5])
+	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KHlBU-0007st-B1
+	for kexec@lists.infradead.org; Sat, 12 Jul 2008 19:55:08 +0000
+Date: Sat, 12 Jul 2008 15:55:02 -0400 (EDT)
+From: Alan Stern <stern@rowland.harvard.edu>
 Subject: Re: [linux-pm] [PATCH -mm 1/2] kexec jump -v12: kexec jump
-Date: Sat, 12 Jul 2008 20:52:42 +0200
-References: <Pine.LNX.4.44L0.0807112255450.9023-100000@netrider.rowland.org>
-	<m1ej5z4v7v.fsf@frodo.ebiederm.org>
 In-Reply-To: <m1ej5z4v7v.fsf@frodo.ebiederm.org>
+Message-ID: <Pine.LNX.4.44L0.0807121551590.17776-100000@netrider.rowland.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807122052.43805.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +22,10 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Pavel Machek <pavel@suse.cz>, Alan Stern <stern@rowland.harvard.edu>, Jens Axboe <jens.axboe@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Saturday, 12 of July 2008, Eric W. Biederman wrote:
-> Alan Stern <stern@rowland.harvard.edu> writes:
-> 
-> > On Fri, 11 Jul 2008, Eric W. Biederman wrote:
-> >
-> >> I just realized with a little care the block layer does have support for this,
-> >> or something very close.
-> >> 
-> >> You setup a software raid mirror with one disk device.    The physical
-> >> device can come in and out while the filesystems depend on the real device.
-> >
-> > Do you mean "the filesystems depend on the logical RAID device"?  
-> 
-> Oh yes. Thinko.
-> 
-> > What's to prevent userspace from accessing the physical device 
-> > directly?
-> 
-> Nothing.
-> 
-> > What this amounts to, in the end, is having a way to distinguish the
-> > set of I/O requests coming from the hibernation code (reading or
-> > writing the memory image) from the set of all other I/O requests.  The
-> > driver or the block layer has to be set up to allow the first set
-> > through while blocking the second set.  (And don't forget about the 
-> > complications caused by error-recovery I/O during the hibernation 
-> > activity!)
-> 
-> I guess this problem exists but it is not at all the problem I was
-> thinking of.
-> 
+On Fri, 11 Jul 2008, Eric W. Biederman wrote:
+
 > > Forcing the second set of requests to filter through an extra software 
 > > layer is a clumsy way of accomplishing this.  There ought to be a 
 > > better approach.
@@ -67,26 +35,21 @@ On Saturday, 12 of July 2008, Eric W. Biederman wrote:
 > (and thus reuse all of the find device hotplug methods) is because
 > things like the filesystem layer don't know how to cope with their
 > block devices going away an coming back.
-> 
+
+This is not how the procedure works.  During hibernation, block devices
+are not logically hot-unplugged.  (If they were then they couldn't be
+used for writing the memory image.)  Instead, they are quiesced or
+suspended and their input queues are plugged.
+
 > That is the problem inserting an virtual software device in the middle
 > can solve.  If that works should there be a better way?  Certainly but
 > to prove it out starting with a block device wrapper is a trivial way to
 > go.
 
-I have discussed that with Jens a bit and it seems we can use a special I/O
-scheduler that will separate the image saving I/O from any other I/O, allowing
-only the former to reach lower layers.  Since you can switch I/O schedulers on
-the fly already, quite a bit of the necessary functionality is in place.
+This sounds like a solution to a non-existent problem.
 
-Of course, we also need character device drivers to block user space while
-suspended and we need ioctls to be handled correctly at that time etc.
+Alan Stern
 
-That said, even if devices are accessed while we're saving the image, there
-will be no damage as long as those accesses will not result in any data being
-actually written to non-volatile storage, such as disks.
-
-Thanks,
-Rafael
 
 _______________________________________________
 kexec mailing list
