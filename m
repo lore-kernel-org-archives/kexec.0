@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHT65-0001Hn-TR
-	for kexec@lists.infradead.org; Sat, 12 Jul 2008 00:36:22 +0000
-Date: Fri, 11 Jul 2008 17:36:09 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] Add /sys/firmware/memmap
-Message-Id: <20080711173609.8310504d.akpm@linux-foundation.org>
-In-Reply-To: <1214565175-21512-2-git-send-email-bwalle@suse.de>
-References: <1214565175-21512-1-git-send-email-bwalle@suse.de>
-	<1214565175-21512-2-git-send-email-bwalle@suse.de>
+Received: from mail.crca.org.au ([67.207.131.56] helo=crca.org.au)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KHTVI-0007M2-Sw
+	for kexec@lists.infradead.org; Sat, 12 Jul 2008 01:02:25 +0000
+Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
+From: Nigel Cunningham <nigel@nigel.suspend2.net>
+In-Reply-To: <20080711201149.GB3298@redhat.com>
+References: <1215401122.4660.4.camel@caritas-dev.intel.com>
+	<20080708145051.GA14745@redhat.com>
+	<20080711122131.b6461ab1.akpm@linux-foundation.org>
+	<20080711201149.GB3298@redhat.com>
+Date: Sat, 12 Jul 2008 11:02:17 +1000
+Message-Id: <1215824537.7319.7.camel@nigel-laptop>
 Mime-Version: 1.0
+Reply-To: nigel@nigel.suspend2.net
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,252 +26,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: gregkh@suse.de, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yhlu.kernel@gmail.com, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Fri, 27 Jun 2008 13:12:54 +0200 Bernhard Walle <bwalle@suse.de> wrote:
+Hi.
 
-> This patch adds /sys/firmware/memmap interface that represents the BIOS
-> (or Firmware) provided memory map. The tree looks like:
+On Fri, 2008-07-11 at 16:11 -0400, Vivek Goyal wrote:
+> Hi Andrew,
 > 
->     /sys/firmware/memmap/0/start   (hex number)
->                            end     (hex number)
->                            type    (string)
->     ...                 /1/start
->                            end
->                            type
+> We can use this patchset for hibernation, but can it be a better way of doing
+> things than what we already have, I don't know. Last time I had raised
+> this question and power people had various views. In the end, Pavel wanted
+> this patchset to be in.  Pavel, can tell more here...
 > 
-> With the following shell snippet one can print the memory map in the same form
-> the kernel prints itself when booting on x86 (the E820 map).
+> To me this patchset looks interesting for couple of reasons.
 > 
->   --------- 8< --------------------------
->     #!/bin/sh
->     cd /sys/firmware/memmap
->     for dir in * ; do
->         start=$(cat $dir/start)
->         end=$(cat $dir/end)
->         type=$(cat $dir/type)
->         printf "%016x-%016x (%s)\n" $start $[ $end +1] "$type"
->     done
->   --------- >8 --------------------------
-> 
-> That patch only provides the needed interface:
-> 
->  1. The sysfs interface.
->  2. The structure and enumeration definition.
->  3. The function firmware_map_add() and firmware_map_add_early()
->     that should be called from architecture code (E820/EFI, for
->     example) to add the contents to the interface.
-> 
-> If the kernel is compiled without CONFIG_FIRMWARE_MEMMAP, the interface does
-> nothing without cluttering the architecture-specific code with #ifdef's.
-> 
-> The purpose of the new interface is kexec: While /proc/iomem represents
-> the *used* memory map (e.g. modified via kernel parameters like 'memmap'
-> and 'mem'), the /sys/firmware/memmap tree represents the unmodified memory
-> map provided via the firmware. So kexec can:
-> 
->  - use the original memory map for rebooting,
->  - use the /proc/iomem for setting up the ELF core headers for kdump
->    case that should only represent the memory of the system.
-> 
-> The patch has been tested on i386 and x86_64.
-> 
-> ...
->
-> +/*
-> + * Firmware memory map entries
-> + */
-> +static LIST_HEAD(map_entries);
+> - Looks like an interesting feature where one can have a separate kernel
+>   in memory and one can switch between the kernels on the fly. It can
+>   be modified to have more than one kernel in memory at a time.
 
-Alarm bells.  Please add a comment explaining why no locking is needed
-for this.
+I'm not sure how useful that would be, though. I already have
+functionality in TuxOnIce which allows you to resume a different image
+instead of powering off (roughly the same thing when combined with not
+removing the image after resuming). It was neat when testing to be able
+to switch back and forth, and I developed the code because I imagined
+that it could form part of the foundation for switching between a login
+screen and users' stored sessions. Is this what you're imagining?
 
-> +/**
-> + * Common implementation of firmware_map_add() and firmware_map_add_early()
-> + * which expects a pre-allocated struct firmware_map_entry.
-> + *
-> + * @start: Start of the memory range.
-> + * @end:   End of the memory range (inclusive).
-> + * @type:  Type of the memory range.
-> + * @entry: Pre-allocated (either kmalloc() or bootmem allocator), uninitialised
-> + *         entry.
-> + */
+> - So far kexec was one directional. One can only kexec to new kernel and
+>   old kernel was gone. Now this patchset makes kexec functionality kind
+>   of bidirectional and this looks like logical extension and can lead
+>   to intersting use cases in future.
 
-Busted kerneldoc.  It should start with
+Ah. You mean keeping both kernels in memory at the same time? In the
+above, I was replacing one image with another.
 
-/**
- * firmware_map_add_entry - <stuff>
+> Huang also talks of using this feature for snapshotting kernel and
+> invoking some BIOS code in protected mode. I am not very sure how exactly
+> are they planning to use it. Huang, do you have more details on this?
 
-> +static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
-> +				  const char *type,
-> +				  struct firmware_map_entry *entry)
-> +{
-> +	BUG_ON(start > end);
-> +
-> +	entry->start = start;
-> +	entry->end = end;
-> +	entry->type = type;
-> +	INIT_LIST_HEAD(&entry->list);
-> +	kobject_init(&entry->kobj, &memmap_ktype);
-> +
-> +	list_add_tail(&entry->list, &map_entries);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * See <linux/firmware-map.h> for documentation.
-> + */
-> +int firmware_map_add(resource_size_t start, resource_size_t end,
-> +		     const char *type)
-> +{
-> +	struct firmware_map_entry *entry;
-> +
-> +	entry = kmalloc(sizeof(struct firmware_map_entry), GFP_ATOMIC);
-> +	WARN_ON(!entry);
+As Rafael wrote, snapshotting is a completely different beast.
 
-Actually, kmalloc() would have warned already.
+Regards,
 
-> +	if (!entry)
-> +		return -ENOMEM;
-> +
-> +	return firmware_map_add_entry(start, end, type, entry);
-> +}
-> +
-> 
-> ...
->
-> +static ssize_t start_show(struct firmware_map_entry *entry, char *buf)
-> +{
-> +	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->start);
-> +}
-> +
-> +static ssize_t end_show(struct firmware_map_entry *entry, char *buf)
-> +{
-> +	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->end);
-> +}
-
-Printing a resource_size_t needs a cast to `unsigned long long' to
-avoid printk warnings.
-
-> +static ssize_t type_show(struct firmware_map_entry *entry, char *buf)
-> +{
-> +	return snprintf(buf, PAGE_SIZE, "%s\n", entry->type);
-> +}
-> +
-> +#define to_memmap_attr(_attr) container_of(_attr, struct memmap_attribute, attr)
-> +#define to_memmap_entry(obj) container_of(obj, struct firmware_map_entry, kobj)
-> +
-> +static ssize_t memmap_attr_show(struct kobject *kobj,
-> +				struct attribute *attr, char *buf)
-> +{
-> +	struct firmware_map_entry *entry = to_memmap_entry(kobj);
-> +	struct memmap_attribute *memmap_attr = to_memmap_attr(attr);
-> +
-> +	return memmap_attr->show(entry, buf);
-> +}
-> +
-> +/*
-> + * Initialises stuff and adds the entries in the map_entries list to
-> + * sysfs. Important is that firmware_map_add() and firmware_map_add_early()
-> + * must be called before late_initcall.
-
-Please update the comment to provide the reason why this is important.
-
-> + */
-> +static int __init memmap_init(void)
-> +{
-> +	int i = 0;
-> +	struct firmware_map_entry *entry;
-> +	struct kset *memmap_kset;
-> +
-> +	memmap_kset = kset_create_and_add("memmap", NULL, firmware_kobj);
-> +	WARN_ON(!memmap_kset);
-> +	if (!memmap_kset)
-> +		return -ENOMEM;
-
-Actually, you can do
-
-	if (WARN_ON(!memmap_kset))
-		return -ENOMEM;
-
-(multiple instances)
-
-> +	list_for_each_entry(entry, &map_entries, list) {
-> +		entry->kobj.kset = memmap_kset;
-> +		kobject_add(&entry->kobj, NULL, "%d", i++);
-
-kobject_add() can fail.
-
-I'd suggest that you enable CONFIG_ENABLE_MUST_CHECK in your usualconfig.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +late_initcall(memmap_init);
-> +
-> 
-> ...
->
-> +/**
-> + * Adds a firmware mapping entry. This function uses kmalloc() for memory
-> + * allocation. Use firmware_map_add_early() if you want to use the bootmem
-> + * allocator.
-> + *
-> + * That function must be called before late_initcall.
-> + *
-> + * @start: Start of the memory range.
-> + * @end:   End of the memory range (inclusive).
-> + * @type:  Type of the memory range.
-> + *
-> + * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-> + */
-> +int firmware_map_add(resource_size_t start, resource_size_t end,
-> +		     const char *type);
-
-More busted kernedoc (multiple instances)
-
-Please document C functions at the definition site, not in the header file.
-
-a) because otherwise the documentation gets splattered across
-   different files (eg - static functions?)
-
-b) principle of least surprise: that's where people expect to find it.
-
-> +/**
-> + * Adds a firmware mapping entry. This function uses the bootmem allocator
-> + * for memory allocation. Use firmware_map_add() if you want to use kmalloc().
-> + *
-> + * That function must be called before late_initcall.
-> + *
-> + * @start: Start of the memory range.
-> + * @end:   End of the memory range (inclusive).
-> + * @type:  Type of the memory range.
-> + *
-> + * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-> + */
-> +int firmware_map_add_early(resource_size_t start, resource_size_t end,
-> +			   const char *type);
-> +
-> +#else /* CONFIG_FIRMWARE_MEMMAP */
-> +
-> +static inline int firmware_map_add(resource_size_t start, resource_size_t end,
-> +				   const char *type)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int firmware_map_add_early(resource_size_t start,
-> +					 resource_size_t end, const char *type)
-> +{
-> +	return 0;
-> +}
-> +
-> +#endif /* CONFIG_FIRMWARE_MEMMAP */
-> +
-> +#endif /* _LINUX_FIRMWARE_MAP_H */
+Nigel
 
 
 _______________________________________________
