@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from relay2.mail.vrmd.de ([81.28.224.28])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KHnNS-0001y1-Ku
-	for kexec@lists.infradead.org; Sat, 12 Jul 2008 22:15:39 +0000
-From: Bernhard Walle <bernhard.walle@gmx.de>
-Subject: [PATCH 1/2] firmware/memmap: Cleanup
-Date: Sun, 13 Jul 2008 00:15:32 +0200
-Message-Id: <1215900933-27592-2-git-send-email-bernhard.walle@gmx.de>
-In-Reply-To: <20080711173609.8310504d.akpm@linux-foundation.org>
-References: <20080711173609.8310504d.akpm@linux-foundation.org>
+	id 1KI6dp-000586-R0
+	for kexec@lists.infradead.org; Sun, 13 Jul 2008 18:49:50 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] x86: Move crashkernel reservation before
+	dma32_reserve_bootmem()
+Date: Sun, 13 Jul 2008 20:49:44 +0200
+Message-Id: <1215974984-25184-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,190 +22,55 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: x86@kernel.org
-Cc: akpm@linux-foundation.org, Bernhard Walle <bernhard.walle@gmx.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Bernhard Walle <bwalle@suse.de>
+Cc: akpm@linux-foundation.org, Bernhard Walle <bernhard.walle@gmx.de>, kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, vgoyal@redhat.com
 
-Various cleanup the drivers/firmware/memmap (after review by AKPM):
+From: Bernhard Walle <bernhard.walle@gmx.de>
 
-    - fix kdoc to conform to the standard
-    - move kdoc from header to implementation files
-    - remove superfluous WARN_ON() after kmalloc()
-    - WARN_ON(x); if (!x) -> if(!WARN_ON(x))
-    - improve some comments
+On a x86-64 machine (nothing special I could encounter) I had the problem that
+crashkernel reservation with the usual "64M@16M" failed. While debugging that,
+I encountered that dma32_reserve_bootmem() reserves a memory region which is in
+that area.
+
+Because dma32_reserve_bootmem() does not rely on a specific offset but
+crashkernel does, it makes sense to move the crashkernel reservation up a bit.
+I tested that patch and it works without problems. I don't see any negative
+effects of that move, but maybe I oversaw something ...
+
+While the long-term solution is to make the crashkernel reservation dynamic
+(which is already done in -tip), this bug should be fixed also short-term for
+2.6.26 (or 2.6.26-stable if it's too short), and that's why I made that patch.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 Signed-off-by: Bernhard Walle <bernhard.walle@gmx.de>
 ---
- drivers/firmware/memmap.c        |   61 ++++++++++++++++++++++++++-----------
- include/linux/firmware-map.h     |   26 ----------------
- 2 files changed, 43 insertions(+), 44 deletions(-)
- create mode 100644 include/config/firmware/memmap.h
+ arch/x86/kernel/setup_64.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-diff --git a/drivers/firmware/memmap.c b/drivers/firmware/memmap.c
-index e23399c..73b7c1d 100644
---- a/drivers/firmware/memmap.c
-+++ b/drivers/firmware/memmap.c
-@@ -84,20 +84,23 @@ static struct kobj_type memmap_ktype = {
-  */
+diff --git a/arch/x86/kernel/setup_64.c b/arch/x86/kernel/setup_64.c
+index 6dff128..158cefe 100644
+--- a/arch/x86/kernel/setup_64.c
++++ b/arch/x86/kernel/setup_64.c
+@@ -444,6 +444,12 @@ void __init setup_arch(char **cmdline_p)
+ 	contig_initmem_init(0, end_pfn);
+ #endif
  
- /*
-- * Firmware memory map entries
-+ * Firmware memory map entries. No locking is needed because the
-+ * firmware_map_add() and firmware_map_add_early() functions are called
-+ * in firmware initialisation code in one single thread of execution.
-  */
- static LIST_HEAD(map_entries);
++	/*
++	 * dma32_reserve_bootmem() allocates bootmem which may conflict
++	 * with the crashkernel command line, so do that before
++	 */
++	reserve_crashkernel();
++
+ 	dma32_reserve_bootmem();
  
- /**
-- * Common implementation of firmware_map_add() and firmware_map_add_early()
-- * which expects a pre-allocated struct firmware_map_entry.
-- *
-+ * firmware_map_add_entry() - Does the real work to add a firmware memmap entry.
-  * @start: Start of the memory range.
-  * @end:   End of the memory range (inclusive).
-  * @type:  Type of the memory range.
-  * @entry: Pre-allocated (either kmalloc() or bootmem allocator), uninitialised
-  *         entry.
-- */
-+ *
-+ * Common implementation of firmware_map_add() and firmware_map_add_early()
-+ * which expects a pre-allocated struct firmware_map_entry.
-+ **/
- static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
- 				  const char *type,
- 				  struct firmware_map_entry *entry)
-@@ -115,33 +118,52 @@ static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
- 	return 0;
- }
- 
--/*
-- * See <linux/firmware-map.h> for documentation.
-- */
-+/**
-+ * firmware_map_add() - Adds a firmware mapping entry.
-+ * @start: Start of the memory range.
-+ * @end:   End of the memory range (inclusive).
-+ * @type:  Type of the memory range.
-+ *
-+ * This function uses kmalloc() for memory
-+ * allocation. Use firmware_map_add_early() if you want to use the bootmem
-+ * allocator.
-+ *
-+ * That function must be called before late_initcall.
-+ *
-+ * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-+ **/
- int firmware_map_add(resource_size_t start, resource_size_t end,
- 		     const char *type)
- {
- 	struct firmware_map_entry *entry;
- 
- 	entry = kmalloc(sizeof(struct firmware_map_entry), GFP_ATOMIC);
--	WARN_ON(!entry);
- 	if (!entry)
- 		return -ENOMEM;
- 
- 	return firmware_map_add_entry(start, end, type, entry);
- }
- 
--/*
-- * See <linux/firmware-map.h> for documentation.
-- */
-+/**
-+ * firmware_map_add_early() - Adds a firmware mapping entry.
-+ * @start: Start of the memory range.
-+ * @end:   End of the memory range (inclusive).
-+ * @type:  Type of the memory range.
-+ *
-+ * Adds a firmware mapping entry. This function uses the bootmem allocator
-+ * for memory allocation. Use firmware_map_add() if you want to use kmalloc().
-+ *
-+ * That function must be called before late_initcall.
-+ *
-+ * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-+ **/
- int __init firmware_map_add_early(resource_size_t start, resource_size_t end,
- 				  const char *type)
- {
- 	struct firmware_map_entry *entry;
- 
- 	entry = alloc_bootmem_low(sizeof(struct firmware_map_entry));
--	WARN_ON(!entry);
--	if (!entry)
-+	if (WARN_ON(!entry))
- 		return -ENOMEM;
- 
- 	return firmware_map_add_entry(start, end, type, entry);
-@@ -181,7 +203,10 @@ static ssize_t memmap_attr_show(struct kobject *kobj,
- /*
-  * Initialises stuff and adds the entries in the map_entries list to
-  * sysfs. Important is that firmware_map_add() and firmware_map_add_early()
-- * must be called before late_initcall.
-+ * must be called before late_initcall. That's just because that function
-+ * is called as late_initcall() function, which means that if you call
-+ * firmware_map_add() or firmware_map_add_early() afterwards, the entries
-+ * are not added to sysfs.
-  */
- static int __init memmap_init(void)
- {
-@@ -190,13 +215,13 @@ static int __init memmap_init(void)
- 	struct kset *memmap_kset;
- 
- 	memmap_kset = kset_create_and_add("memmap", NULL, firmware_kobj);
--	WARN_ON(!memmap_kset);
--	if (!memmap_kset)
-+	if (WARN_ON(!memmap_kset))
- 		return -ENOMEM;
- 
- 	list_for_each_entry(entry, &map_entries, list) {
- 		entry->kobj.kset = memmap_kset;
--		kobject_add(&entry->kobj, NULL, "%d", i++);
-+		if (kobject_add(&entry->kobj, NULL, "%d", i++))
-+			kobject_put(&entry->kobj);
+ #ifdef CONFIG_ACPI_SLEEP
+@@ -484,7 +490,6 @@ void __init setup_arch(char **cmdline_p)
+ 		}
  	}
+ #endif
+-	reserve_crashkernel();
  
- 	return 0;
-diff --git a/include/config/firmware/memmap.h b/include/config/firmware/memmap.h
-new file mode 100644
-index 0000000..e69de29
-diff --git a/include/linux/firmware-map.h b/include/linux/firmware-map.h
-index acbdbcc..6e199c8 100644
---- a/include/linux/firmware-map.h
-+++ b/include/linux/firmware-map.h
-@@ -24,34 +24,8 @@
-  */
- #ifdef CONFIG_FIRMWARE_MEMMAP
- 
--/**
-- * Adds a firmware mapping entry. This function uses kmalloc() for memory
-- * allocation. Use firmware_map_add_early() if you want to use the bootmem
-- * allocator.
-- *
-- * That function must be called before late_initcall.
-- *
-- * @start: Start of the memory range.
-- * @end:   End of the memory range (inclusive).
-- * @type:  Type of the memory range.
-- *
-- * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-- */
- int firmware_map_add(resource_size_t start, resource_size_t end,
- 		     const char *type);
--
--/**
-- * Adds a firmware mapping entry. This function uses the bootmem allocator
-- * for memory allocation. Use firmware_map_add() if you want to use kmalloc().
-- *
-- * That function must be called before late_initcall.
-- *
-- * @start: Start of the memory range.
-- * @end:   End of the memory range (inclusive).
-- * @type:  Type of the memory range.
-- *
-- * Returns 0 on success, or -ENOMEM if no memory could be allocated.
-- */
- int firmware_map_add_early(resource_size_t start, resource_size_t end,
- 			   const char *type);
+ 	reserve_ibft_region();
  
 -- 
 1.5.6.2
