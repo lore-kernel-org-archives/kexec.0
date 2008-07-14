@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ti-out-0910.google.com ([209.85.142.186])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIO8S-0003zS-O7
-	for kexec@lists.infradead.org; Mon, 14 Jul 2008 13:30:37 +0000
-Received: by ti-out-0910.google.com with SMTP id a21so2332949tia.2
-	for <kexec@lists.infradead.org>; Mon, 14 Jul 2008 06:30:32 -0700 (PDT)
-Message-ID: <851fc09e0807140630w6edfa613oc176c6479808a6bd@mail.gmail.com>
-Date: Mon, 14 Jul 2008 21:30:31 +0800
-From: "huang ying" <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-In-Reply-To: <20080711122131.b6461ab1.akpm@linux-foundation.org>
+	id 1KIO9B-0005E8-4J
+	for kexec@lists.infradead.org; Mon, 14 Jul 2008 13:31:24 +0000
+Date: Mon, 14 Jul 2008 09:30:19 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] x86: Move crashkernel reservation before
+	dma32_reserve_bootmem()
+Message-ID: <20080714133019.GB16673@redhat.com>
+References: <1215974984-25184-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080708145051.GA14745@redhat.com>
-	<20080711122131.b6461ab1.akpm@linux-foundation.org>
+In-Reply-To: <1215974984-25184-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,60 +24,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: Bernhard Walle <bernhard.walle@gmx.de>, akpm@linux-foundation.org, x86@kernel.org, kexec@lists.infradead.org
 
-On Sat, Jul 12, 2008 at 3:21 AM, Andrew Morton
-<akpm@linux-foundation.org> wrote:
-> On Tue, 8 Jul 2008 10:50:51 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
->
->> On Mon, Jul 07, 2008 at 11:25:22AM +0800, Huang Ying wrote:
->> > This patch provides an enhancement to kexec/kdump. It implements
->> > the following features:
->> >
->> > - Backup/restore memory used by the original kernel before/after
->> >   kexec.
->> >
->> > - Save/restore CPU state before/after kexec.
->> >
->>
->> Hi Huang,
->>
->> In general this patch set looks good enough to live in -mm and
->> get some testing going.
->>
->> To me, adding capability to return back to original kernel looks
->> like a logical extension to kexec functionality.
->
-> Exciting ;)  It's much less code than I expected.
->
-> I don't think I understand the feature any more.  Once upon a time we
-> thought that this might become a new and better (or at least
-> better-code-sharing) way of doing suspend-to-disk.  How far are we from
-> that?
+On Sun, Jul 13, 2008 at 08:49:44PM +0200, Bernhard Walle wrote:
+> From: Bernhard Walle <bernhard.walle@gmx.de>
+> 
+> On a x86-64 machine (nothing special I could encounter) I had the problem that
+> crashkernel reservation with the usual "64M@16M" failed. While debugging that,
+> I encountered that dma32_reserve_bootmem() reserves a memory region which is in
+> that area.
+> 
+> Because dma32_reserve_bootmem() does not rely on a specific offset but
+> crashkernel does, it makes sense to move the crashkernel reservation up a bit.
+> I tested that patch and it works without problems. I don't see any negative
+> effects of that move, but maybe I oversaw something ...
+> 
+> While the long-term solution is to make the crashkernel reservation dynamic
+> (which is already done in -tip), this bug should be fixed also short-term for
+> 2.6.26 (or 2.6.26-stable if it's too short), and that's why I made that patch.
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> Signed-off-by: Bernhard Walle <bernhard.walle@gmx.de>
+> ---
+>  arch/x86/kernel/setup_64.c |    7 ++++++-
+>  1 files changed, 6 insertions(+), 1 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup_64.c b/arch/x86/kernel/setup_64.c
+> index 6dff128..158cefe 100644
+> --- a/arch/x86/kernel/setup_64.c
+> +++ b/arch/x86/kernel/setup_64.c
+> @@ -444,6 +444,12 @@ void __init setup_arch(char **cmdline_p)
+>  	contig_initmem_init(0, end_pfn);
+>  #endif
+>  
+> +	/*
+> +	 * dma32_reserve_bootmem() allocates bootmem which may conflict
+> +	 * with the crashkernel command line, so do that before
+> +	 */
+> +	reserve_crashkernel();
+> +
+>  	dma32_reserve_bootmem();
+>  
+>  #ifdef CONFIG_ACPI_SLEEP
+> @@ -484,7 +490,6 @@ void __init setup_arch(char **cmdline_p)
+>  		}
+>  	}
+>  #endif
+> -	reserve_crashkernel();
+>  
+>  	reserve_ibft_region();
 
-At least there are still issues as follow:
+Looks good to me. 
 
-- We need a mechanism to pass some information (such as backup pages
-map) from hibernated kernel to hibernating kernel. Maybe in C calling
-convention.
-- To load hibernation image via /sbin/kexec, the segment number
-constraint of sys_kexec_load needs to be extended (maybe via
-multi-stage loading).
-- Make kexec based hibernation compatible with ACPI S4.
-- Extend makedumpfile utility for kexec based hibernation.
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-> What are the prospects of supporting other architectures?
-
-I will work on x86_64 supporting.
-
-> Who maintains kexec-tools, and are they OK with merging up the
-> corresponding changes?
-
-I will work with kexec-tools mailing list for corresponding kexec-tools patches.
-
-Best Regards,
-Huang Ying
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
