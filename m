@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIOQ6-0004uQ-7A
-	for kexec@lists.infradead.org; Mon, 14 Jul 2008 13:48:55 +0000
-Date: Mon, 14 Jul 2008 09:48:05 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm 2/2] kexec jump -v12: save/restore device state
-Message-ID: <20080714134805.GD16673@redhat.com>
-References: <1215401124.4660.5.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1215401124.4660.5.camel@caritas-dev.intel.com>
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIP6i-0005QX-UC
+	for kexec@lists.infradead.org; Mon, 14 Jul 2008 14:32:53 +0000
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 05289459E6
+	for <kexec@lists.infradead.org>; Mon, 14 Jul 2008 16:32:51 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Use CFLAGS for compiling bin2hex
+Date: Mon, 14 Jul 2008 16:33:32 +0200
+Message-Id: <1216046012-32349-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,57 +20,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-On Mon, Jul 07, 2008 at 11:25:24AM +0800, Huang Ying wrote:
-> This patch implements devices state save/restore before after kexec.
-> 
-> 
-> This patch together with features in kexec_jump patch can be used for
-> following:
-> 
-> - A simple hibernation implementation without ACPI support. You can
->   kexec a hibernating kernel, save the memory image of original system
->   and shutdown the system. When resuming, you restore the memory image
->   of original system via ordinary kexec load then jump back.
-> 
-> - Kernel/system debug through making system snapshot. You can make
->   system snapshot, jump back, do some thing and make another system
->   snapshot.
-> 
-> - Cooperative multi-kernel/system. With kexec jump, you can switch
->   between several kernels/systems quickly without boot process except
->   the first time. This appears like swap a whole kernel/system out/in.
-> 
-> - A general method to call program in physical mode (paging turning
->   off). This can be used to invoke BIOS code under Linux.
-> 
+This is a minor correction in the Makefile to use the CFLAGS (from configure)
+also for bin2hex.
 
-Huang,
 
-You have cited various possible use cases of this patchset. Which is
-the specific feature you are planning to use?
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ util/Makefile |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Thinking more about it, what's the compelling feature out of this list
-which makes this patchset a strong candidate for inclusion?
+diff --git a/util/Makefile b/util/Makefile
+index 11d82fd..a1a78ac 100644
+--- a/util/Makefile
++++ b/util/Makefile
+@@ -2,10 +2,10 @@ BIN_TO_HEX:= bin/bin-to-hex
+ 
+ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 	@$(MKDIR) -p $(@D)
+-	$(LINK.o) -o $@ $^
++	$(LINK.o) $(CFLAGS) -o $@ $^
+ 
+ $(BIN_TO_HEX): CC=$(BUILD_CC)
+-$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
++$(BIN_TO_HEX): CFLAGS+=$(BUILD_CFLAGS)
+ $(BIN_TO_HEX): LDFLAGS=
+ 
+ dist += util/Makefile util/bin-to-hex.c
+-- 
+1.5.6
 
-Regarding hibernation, Rafael does not think this is the way to go 
-for future.
-
-Regarding ability to have two kernels in memory at the same time and
-be able to jump between these two looks like a cool feature but who
-is actually planning to use it?
-
-So I am curious to know, which is the compelling feature you are planning
-to use?
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
