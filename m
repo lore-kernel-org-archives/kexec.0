@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIE8X-0006Ar-DT
-	for kexec@lists.infradead.org; Mon, 14 Jul 2008 02:50:02 +0000
-Message-Id: <487ABD56.5040603@mxs.nes.nec.co.jp>
-Date: Mon, 14 Jul 2008 11:43:34 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1KIGsu-0002dv-6F
+	for kexec@lists.infradead.org; Mon, 14 Jul 2008 05:46:04 +0000
+Date: Mon, 14 Jul 2008 07:46:44 +0200
+From: Pavel Machek <pavel@suse.cz>
+Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
+Message-ID: <20080714054644.GC20258@elf.ucw.cz>
+References: <1215401122.4660.4.camel@caritas-dev.intel.com>
+	<20080708145051.GA14745@redhat.com>
+	<20080711122131.b6461ab1.akpm@linux-foundation.org>
+	<20080711201149.GB3298@redhat.com>
+	<1215824537.7319.7.camel@nigel-laptop>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86: Move crashkernel reservation
-	before	dma32_reserve_bootmem()
-References: <1215974984-25184-1-git-send-email-bwalle@suse.de>
-In-Reply-To: <1215974984-25184-1-git-send-email-bwalle@suse.de>
+Content-Disposition: inline
+In-Reply-To: <1215824537.7319.7.camel@nigel-laptop>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,126 +23,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2026730141=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Bernhard Walle <bernhard.walle@gmx.de>, akpm@linux-foundation.org, x86@kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com
+To: Nigel Cunningham <nigel@nigel.suspend2.net>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
---===============2026730141==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-
-Hi,
-
-Bernhard Walle wrote:
-> From: Bernhard Walle <bernhard.walle@gmx.de>
+On Sat 2008-07-12 11:02:17, Nigel Cunningham wrote:
+> Hi.
 > 
-> On a x86-64 machine (nothing special I could encounter) I had the problem that
-> crashkernel reservation with the usual "64M@16M" failed. While debugging that,
-> I encountered that dma32_reserve_bootmem() reserves a memory region which is in
-> that area.
-
-I tested your patch on x86_64 linux-2.6.26, and it works fine.
-Good catching, Bernhard :-)
-
-
-Before applying Bernhard's patch, kernel output the following message
-and could not reserve the memory area for kdump. So kdump did not work.
-
- Jul 14 11:15:48 localhost kernel: Bootmem setup node 0 0000000000000000-0000000170000000
- Jul 14 11:15:48 localhost kdump: No crashkernel parameter specified for running kernel
- Jul 14 11:15:48 localhost kernel:   NODE_DATA [000000000000f000 - 0000000000014fff]
- Jul 14 11:15:48 localhost kdump: failed to start up
- Jul 14 11:15:48 localhost kernel:   bootmap [0000000000015000 -  0000000000042fff] pages 2e
- Jul 14 11:15:48 localhost kernel:   early res: 0 [0-fff] BIOS data page
- Jul 14 11:15:48 localhost kernel:   early res: 1 [6000-7fff] TRAMPOLINE
- Jul 14 11:15:48 localhost kernel:   early res: 2 [200000-9b1c97] TEXT DATA BSS
- Jul 14 11:15:48 localhost kernel:   early res: 3 [37ce4000-37fef146] RAMDISK
- Jul 14 11:15:48 localhost kernel:   early res: 4 [9b400-fffff] BIOS reserved
- Jul 14 11:15:48 localhost kernel:   early res: 5 [8000-efff] PGTABLE
- Jul 14 11:15:48 localhost kernel: crashkernel reservation failed - memory is in use
-
-After applying Bernhard's patch, kernel outputs the following message,
-and kdump works.
-
- Jul 14 11:27:39 localhost kernel: Bootmem setup node 0 0000000000000000-0000000170000000
- Jul 14 11:27:39 localhost kernel:   NODE_DATA [000000000000f000 - 0000000000014fff]
- Jul 14 11:27:39 localhost kernel:   bootmap [0000000000015000 -  0000000000042fff] pages 2e
- Jul 14 11:27:39 localhost kernel:   early res: 0 [0-fff] BIOS data page
- Jul 14 11:27:39 localhost kernel:   early res: 1 [6000-7fff] TRAMPOLINE
- Jul 14 11:27:39 localhost kernel:   early res: 2 [200000-9b1c97] TEXT DATA BSS
- Jul 14 11:27:39 localhost kernel:   early res: 3 [37ce4000-37fef14a] RAMDISK
- Jul 14 11:27:39 localhost kernel:   early res: 4 [9b400-fffff] BIOS reserved
- Jul 14 11:27:39 localhost kernel:   early res: 5 [8000-efff] PGTABLE
- Jul 14 11:27:39 localhost kernel: Reserving 128MB of memory at 16MB for crashkernel (System RAM: 5888MB)
-
-
-> Because dma32_reserve_bootmem() does not rely on a specific offset but
-> crashkernel does, it makes sense to move the crashkernel reservation up a bit.
-> I tested that patch and it works without problems. I don't see any negative
-> effects of that move, but maybe I oversaw something ...
+> On Fri, 2008-07-11 at 16:11 -0400, Vivek Goyal wrote:
+> > Hi Andrew,
+> > 
+> > We can use this patchset for hibernation, but can it be a better way of doing
+> > things than what we already have, I don't know. Last time I had raised
+> > this question and power people had various views. In the end, Pavel wanted
+> > this patchset to be in.  Pavel, can tell more here...
+> > 
+> > To me this patchset looks interesting for couple of reasons.
+> > 
+> > - Looks like an interesting feature where one can have a separate kernel
+> >   in memory and one can switch between the kernels on the fly. It can
+> >   be modified to have more than one kernel in memory at a time.
 > 
-> While the long-term solution is to make the crashkernel reservation dynamic
-> (which is already done in -tip), this bug should be fixed also short-term for
-> 2.6.26 (or 2.6.26-stable if it's too short), and that's why I made that patch.
+> I'm not sure how useful that would be, though. I already have
+> functionality in TuxOnIce which allows you to resume a different image
+> instead of powering off (roughly the same thing when combined with not
+> removing the image after resuming). It was neat when testing to be
+> able
 
-I hope so.
+Beaty of kjump is that it is supposed to used on half-broken system,
+so it is useful for debugging.
 
-
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> Signed-off-by: Bernhard Walle <bernhard.walle@gmx.de>
-
-Tested-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
-> ---
->  arch/x86/kernel/setup_64.c |    7 ++++++-
->  1 files changed, 6 insertions(+), 1 deletions(-)
+> > - So far kexec was one directional. One can only kexec to new kernel and
+> >   old kernel was gone. Now this patchset makes kexec functionality kind
+> >   of bidirectional and this looks like logical extension and can lead
+> >   to intersting use cases in future.
 > 
-> diff --git a/arch/x86/kernel/setup_64.c b/arch/x86/kernel/setup_64.c
-> index 6dff128..158cefe 100644
-> --- a/arch/x86/kernel/setup_64.c
-> +++ b/arch/x86/kernel/setup_64.c
-> @@ -444,6 +444,12 @@ void __init setup_arch(char **cmdline_p)
->  	contig_initmem_init(0, end_pfn);
->  #endif
->  
-> +	/*
-> +	 * dma32_reserve_bootmem() allocates bootmem which may conflict
-> +	 * with the crashkernel command line, so do that before
-> +	 */
-> +	reserve_crashkernel();
-> +
->  	dma32_reserve_bootmem();
->  
->  #ifdef CONFIG_ACPI_SLEEP
-> @@ -484,7 +490,6 @@ void __init setup_arch(char **cmdline_p)
->  		}
->  	}
->  #endif
-> -	reserve_crashkernel();
->  
->  	reserve_ibft_region();
->  
+> Ah. You mean keeping both kernels in memory at the same time? In the
+> above, I was replacing one image with another.
 
-
-
-
---===============2026730141==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Yep, kjump keeps both kernels loaded at the same time.
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2026730141==--
