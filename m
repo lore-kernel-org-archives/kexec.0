@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
-	by casper.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1KINo9-0001Va-66
-	for kexec@lists.infradead.org; Mon, 14 Jul 2008 13:09:40 +0000
-Date: Mon, 14 Jul 2008 09:09:55 -0400
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIOQ6-0004uQ-7A
+	for kexec@lists.infradead.org; Mon, 14 Jul 2008 13:48:55 +0000
+Date: Mon, 14 Jul 2008 09:48:05 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-Message-ID: <20080714130955.GA16673@redhat.com>
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080708145051.GA14745@redhat.com>
-	<20080711122131.b6461ab1.akpm@linux-foundation.org>
-	<20080711201149.GB3298@redhat.com>
-	<1215824537.7319.7.camel@nigel-laptop>
+Subject: Re: [PATCH -mm 2/2] kexec jump -v12: save/restore device state
+Message-ID: <20080714134805.GD16673@redhat.com>
+References: <1215401124.4660.5.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1215824537.7319.7.camel@nigel-laptop>
+In-Reply-To: <1215401124.4660.5.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,57 +23,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nigel Cunningham <nigel@nigel.suspend2.net>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Huang Ying <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
 
-On Sat, Jul 12, 2008 at 11:02:17AM +1000, Nigel Cunningham wrote:
-> Hi.
+On Mon, Jul 07, 2008 at 11:25:24AM +0800, Huang Ying wrote:
+> This patch implements devices state save/restore before after kexec.
 > 
-> On Fri, 2008-07-11 at 16:11 -0400, Vivek Goyal wrote:
-> > Hi Andrew,
-> > 
-> > We can use this patchset for hibernation, but can it be a better way of doing
-> > things than what we already have, I don't know. Last time I had raised
-> > this question and power people had various views. In the end, Pavel wanted
-> > this patchset to be in.  Pavel, can tell more here...
-> > 
-> > To me this patchset looks interesting for couple of reasons.
-> > 
-> > - Looks like an interesting feature where one can have a separate kernel
-> >   in memory and one can switch between the kernels on the fly. It can
-> >   be modified to have more than one kernel in memory at a time.
 > 
-> I'm not sure how useful that would be, though. I already have
-> functionality in TuxOnIce which allows you to resume a different image
-> instead of powering off (roughly the same thing when combined with not
-> removing the image after resuming). It was neat when testing to be able
-> to switch back and forth, and I developed the code because I imagined
-> that it could form part of the foundation for switching between a login
-> screen and users' stored sessions. Is this what you're imagining?
+> This patch together with features in kexec_jump patch can be used for
+> following:
+> 
+> - A simple hibernation implementation without ACPI support. You can
+>   kexec a hibernating kernel, save the memory image of original system
+>   and shutdown the system. When resuming, you restore the memory image
+>   of original system via ordinary kexec load then jump back.
+> 
+> - Kernel/system debug through making system snapshot. You can make
+>   system snapshot, jump back, do some thing and make another system
+>   snapshot.
+> 
+> - Cooperative multi-kernel/system. With kexec jump, you can switch
+>   between several kernels/systems quickly without boot process except
+>   the first time. This appears like swap a whole kernel/system out/in.
+> 
+> - A general method to call program in physical mode (paging turning
+>   off). This can be used to invoke BIOS code under Linux.
 > 
 
-I did not think of that. I thought of two things.
+Huang,
 
-- This can possibly be used for non-disruptive kernel crash dumping, where
-  if a user wants to capture the snapshot of kernel and then continue
-  to work. Thought, it might be little heavy weight solution and kernel
-  state also has changed a bit by the time dump is captured (because of
-  all the suspend code).
+You have cited various possible use cases of this patchset. Which is
+the specific feature you are planning to use?
 
-- One can have two distributions installed on a single system and switch
-  between two booted kernels in few seconds.
+Thinking more about it, what's the compelling feature out of this list
+which makes this patchset a strong candidate for inclusion?
 
-> > - So far kexec was one directional. One can only kexec to new kernel and
-> >   old kernel was gone. Now this patchset makes kexec functionality kind
-> >   of bidirectional and this looks like logical extension and can lead
-> >   to intersting use cases in future.
-> 
-> Ah. You mean keeping both kernels in memory at the same time? In the
-> above, I was replacing one image with another.
+Regarding hibernation, Rafael does not think this is the way to go 
+for future.
 
-Yes, here both the kernels will remain in the RAM. In fact it should be
-easily possible to keep more than 2 kernels in memory and switch between
-these.
+Regarding ability to have two kernels in memory at the same time and
+be able to jump between these two looks like a cool feature but who
+is actually planning to use it?
+
+So I am curious to know, which is the compelling feature you are planning
+to use?
 
 Thanks
 Vivek
