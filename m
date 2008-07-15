@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIjKX-0004Ma-Gf
-	for kexec@lists.infradead.org; Tue, 15 Jul 2008 12:08:34 +0000
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIjZl-0006ob-Bm
+	for kexec@lists.infradead.org; Tue, 15 Jul 2008 12:24:17 +0000
+Date: Tue, 15 Jul 2008 22:24:11 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified
+	at configure time
+Message-ID: <20080715122410.GA24840@verge.net.au>
+References: <20080715102808.GA29267@verge.net.au>
+	<1216123702.433919.719662663715.1.gpush@pingu>
 MIME-Version: 1.0
-Subject: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified at
-	configure time
-Message-Id: <1216123702.433919.719662663715.1.gpush@pingu>
-In-Reply-To: <20080715102808.GA29267@verge.net.au>
-From: Jeremy Kerr <jk@ozlabs.org>
-Date: Tue, 15 Jul 2008 22:08:22 +1000
+Content-Disposition: inline
+In-Reply-To: <1216123702.433919.719662663715.1.gpush@pingu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>
+To: Jeremy Kerr <jk@ozlabs.org>
+Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
 
-Currently, we're unconditionally setting the build and target cflags in
-the configure script, which means that they can't be easily
-overwritten.
+On Tue, Jul 15, 2008 at 10:08:22PM +1000, Jeremy Kerr wrote:
+> Currently, we're unconditionally setting the build and target cflags in
+> the configure script, which means that they can't be easily
+> overwritten.
+> 
+> This change conditionally sets these variables if they're not specified
+> during configure, allowing something like:
+> 
+> BUILD_CFLAGS=-Werror ./configure
+> 
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> 
+> ---
+>  configure.ac |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/configure.ac b/configure.ac
+> index 5f1c15a..fa5330a 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -56,8 +56,13 @@ if test "${host_alias}" ; then
+>  	OBJDIR="$OBJDIR-${host_alias}"
+>  fi
+>  
+> -BUILD_CFLAGS='-O2 -Wall'
+> -TARGET_CFLAGS='-O2 -Wall'
+> +if test "x$BUILD_CFLAGS" = "x" ; then
+> +	BUILD_CFLAGS='-O2 -Wall'
+> +fi
+> +
+> +if test "x$TARGET_CFLAGS" = "x" ; then
+> +	TARGET_CFLAGS='-O2 -Wall'
+> +fi
+>  
+>  AC_ARG_WITH([objdir], AC_HELP_STRING([--with-objdir=<dir>],[select directory for object files]),
+>  	[ OBJDIR="$withval" ], [ OBJDIR="$OBJDIR" ])
 
-This change conditionally sets these variables if they're not specified
-during configure, allowing something like:
+Can we get rid of TARGET_CFLAGS? It doesn't seem to be used anywhere.
 
-BUILD_CFLAGS=-Werror ./configure
+Also I think you need the following util/Makefile snippet as Bernhards
+patch is already in the tree (I was working on a similar patch myself :-)
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-
----
- configure.ac |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index 5f1c15a..fa5330a 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -56,8 +56,13 @@ if test "${host_alias}" ; then
- 	OBJDIR="$OBJDIR-${host_alias}"
- fi
+diff --git a/util/Makefile b/util/Makefile
+index a1a78ac..0ea59d4 100644
+--- a/util/Makefile
++++ b/util/Makefile
+@@ -5,8 +5,8 @@ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 	$(LINK.o) $(CFLAGS) -o $@ $^
  
--BUILD_CFLAGS='-O2 -Wall'
--TARGET_CFLAGS='-O2 -Wall'
-+if test "x$BUILD_CFLAGS" = "x" ; then
-+	BUILD_CFLAGS='-O2 -Wall'
-+fi
-+
-+if test "x$TARGET_CFLAGS" = "x" ; then
-+	TARGET_CFLAGS='-O2 -Wall'
-+fi
+ $(BIN_TO_HEX): CC=$(BUILD_CC)
+-$(BIN_TO_HEX): CFLAGS+=$(BUILD_CFLAGS)
+-$(BIN_TO_HEX): LDFLAGS=
++$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
++$(BIN_TO_HEX): LDFLAGS=$(BUILD_LDFLAGS)
  
- AC_ARG_WITH([objdir], AC_HELP_STRING([--with-objdir=<dir>],[select directory for object files]),
- 	[ OBJDIR="$withval" ], [ OBJDIR="$OBJDIR" ])
+ dist += util/Makefile util/bin-to-hex.c
+ clean += util/bin-to-hex.o $(BIN_TO_HEX)
 
 _______________________________________________
 kexec mailing list
