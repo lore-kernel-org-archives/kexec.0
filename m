@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIcrD-0002YY-UM
-	for kexec@lists.infradead.org; Tue, 15 Jul 2008 05:13:48 +0000
-Subject: Re: [PATCH -mm 2/2] kexec jump -v12: save/restore device state
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080714134805.GD16673@redhat.com>
-References: <1215401124.4660.5.camel@caritas-dev.intel.com>
-	<20080714134805.GD16673@redhat.com>
-Date: Tue, 15 Jul 2008 13:19:04 +0800
-Message-Id: <1216099144.22944.35.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from e28smtp05.in.ibm.com ([59.145.155.5] helo=e28esmtp05.in.ibm.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIg4u-0006mB-J6
+	for kexec@lists.infradead.org; Tue, 15 Jul 2008 08:40:20 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28esmtp05.in.ibm.com (8.13.1/8.13.1) with ESMTP id m6F8dUrP011985
+	for <kexec@lists.infradead.org>; Tue, 15 Jul 2008 14:09:30 +0530
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m6F8dUBK1474724
+	for <kexec@lists.infradead.org>; Tue, 15 Jul 2008 14:09:30 +0530
+Received: from d28av04.in.ibm.com (loopback [127.0.0.1])
+	by d28av04.in.ibm.com (8.13.1/8.13.3) with ESMTP id m6F8dU71006679
+	for <kexec@lists.infradead.org>; Tue, 15 Jul 2008 14:09:30 +0530
+Message-ID: <487C6253.9050609@in.ibm.com>
+Date: Tue, 15 Jul 2008 14:09:47 +0530
+From: "Sachin P. Sant" <sachinp@in.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [ANNOUNCE] kexec-tools 2.0.0-rc1
+References: <20080714112713.GA26256@verge.net.au>
+In-Reply-To: <20080714112713.GA26256@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +32,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Bernhard Walle <bwalle@suse.de>, Vivek Goyal <vgoyal@in.ibm.com>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi, Vivek,
+Simon Horman wrote:
+> Hi all,
+>
+> I'm happy to announce the release of kexec-tools 2.0.0-rc1.
+> This marks the changing of the name of the tree that
+> I maintain from kexec-tools-testing to kexec-tools.
+>
+> Please test this code so we can move towards releasing 2.0.0.
+>   
+Tested on few ppc64 boxes and found no issues with 2.0.0-rc1
+snapshot.
 
-On Mon, 2008-07-14 at 09:48 -0400, Vivek Goyal wrote:
-[...]
-> You have cited various possible use cases of this patchset. Which is
-> the specific feature you are planning to use?
+Thanks
+-Sachin
 
-I think two features are useful:
+-- 
 
-1. Kexec based hibernation
-2. Do kdump then continue
-
-> Thinking more about it, what's the compelling feature out of this list
-> which makes this patchset a strong candidate for inclusion?
-> 
-> Regarding hibernation, Rafael does not think this is the way to go 
-> for future.
-
-I think kexec based hibernation can be a better hibernation scheme, at
-least more code sharing.
-
-Best Regards,
-Huang Ying
-
+---------------------------------
+Sachin Sant
+IBM Linux Technology Center
+India Systems and Technology Labs
+Bangalore, India
+---------------------------------
 
 
 _______________________________________________
