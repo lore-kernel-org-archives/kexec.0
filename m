@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIYhO-0006Jy-Gf
-	for kexec@lists.infradead.org; Tue, 15 Jul 2008 00:47:22 +0000
-Date: Tue, 15 Jul 2008 10:47:18 +1000
-From: Simon Horman <horms@verge.net.au>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIZY8-0001qg-7h
+	for kexec@lists.infradead.org; Tue, 15 Jul 2008 01:41:52 +0000
+From: Jeremy Kerr <jk@ozlabs.org>
 Subject: Re: [PATCH] Use CFLAGS for compiling bin2hex
-Message-ID: <20080715004716.GB19443@verge.net.au>
+Date: Tue, 15 Jul 2008 11:41:31 +1000
 References: <1216046012-32349-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <1216046012-32349-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1216046012-32349-1-git-send-email-bwalle@suse.de>
+Message-Id: <200807151141.31994.jk@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +23,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-On Mon, Jul 14, 2008 at 04:33:32PM +0200, Bernhard Walle wrote:
-> This is a minor correction in the Makefile to use the CFLAGS (from configure)
-> also for bin2hex.
 
-Thanks, applied.
+>  $(BIN_TO_HEX): CC=$(BUILD_CC)
+> -$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
+> +$(BIN_TO_HEX): CFLAGS+=$(BUILD_CFLAGS)
+>  $(BIN_TO_HEX): LDFLAGS=
 
--- 
-Horms
+Are you sure? CFLAGS will include stuff for $host (eg, -m64 for a 64-bit 
+host machine).
 
+Cheers,
+
+
+Jeremy
 
 _______________________________________________
 kexec mailing list
