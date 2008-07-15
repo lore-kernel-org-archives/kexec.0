@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIjJw-0007w6-Ig
-	for kexec@lists.infradead.org; Tue, 15 Jul 2008 12:07:53 +0000
-From: Jeremy Kerr <jk@ozlabs.org>
-Subject: Re: [PATCH] Use CFLAGS for compiling bin2hex
-Date: Tue, 15 Jul 2008 22:04:21 +1000
-References: <1216046012-32349-1-git-send-email-bwalle@suse.de>
-	<20080715102808.GA29267@verge.net.au>
-	<20080715130333.6f22b678@halley.suse.de>
-In-Reply-To: <20080715130333.6f22b678@halley.suse.de>
+	id 1KIjKX-0004Ma-Gf
+	for kexec@lists.infradead.org; Tue, 15 Jul 2008 12:08:34 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807152204.22591.jk@ozlabs.org>
+Subject: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified at
+	configure time
+Message-Id: <1216123702.433919.719662663715.1.gpush@pingu>
+In-Reply-To: <20080715102808.GA29267@verge.net.au>
+From: Jeremy Kerr <jk@ozlabs.org>
+Date: Tue, 15 Jul 2008 22:08:22 +1000
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,23 +25,41 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>
 
+Currently, we're unconditionally setting the build and target cflags in
+the configure script, which means that they can't be easily
+overwritten.
 
->    BUILD_CFLAGS=... ./configure
->
-> didn't also work. That would be acceptable for me.
+This change conditionally sets these variables if they're not specified
+during configure, allowing something like:
 
-OK, patch coming.
+BUILD_CFLAGS=-Werror ./configure
 
-However, note that the BUILD_* is only used to compile tools to run on 
-the build machine, and hence during the build process. There's not much 
-point adding optimisation flags here, as it's only going to 
-(potentially) speed up the build process, and not affect the resulting 
-kexec binary in any way.
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 
-Cheers,
+---
+ configure.ac |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-
-Jeremy
+diff --git a/configure.ac b/configure.ac
+index 5f1c15a..fa5330a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -56,8 +56,13 @@ if test "${host_alias}" ; then
+ 	OBJDIR="$OBJDIR-${host_alias}"
+ fi
+ 
+-BUILD_CFLAGS='-O2 -Wall'
+-TARGET_CFLAGS='-O2 -Wall'
++if test "x$BUILD_CFLAGS" = "x" ; then
++	BUILD_CFLAGS='-O2 -Wall'
++fi
++
++if test "x$TARGET_CFLAGS" = "x" ; then
++	TARGET_CFLAGS='-O2 -Wall'
++fi
+ 
+ AC_ARG_WITH([objdir], AC_HELP_STRING([--with-objdir=<dir>],[select directory for object files]),
+ 	[ OBJDIR="$withval" ], [ OBJDIR="$OBJDIR" ])
 
 _______________________________________________
 kexec mailing list
