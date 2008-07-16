@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KIuQ7-0001FZ-Ij
-	for kexec@lists.infradead.org; Tue, 15 Jul 2008 23:59:00 +0000
-From: Jeremy Kerr <jk@ozlabs.org>
-Subject: Re: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified at
-	configure time
-Date: Wed, 16 Jul 2008 09:58:24 +1000
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KIuex-00056s-ET
+	for kexec@lists.infradead.org; Wed, 16 Jul 2008 00:14:20 +0000
+Date: Wed, 16 Jul 2008 10:14:17 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified
+	at configure time
+Message-ID: <20080716001415.GD15703@verge.net.au>
 References: <20080715102808.GA29267@verge.net.au>
 	<1216123702.433919.719662663715.1.gpush@pingu>
 	<20080715122410.GA24840@verge.net.au>
-In-Reply-To: <20080715122410.GA24840@verge.net.au>
+	<200807160958.24783.jk@ozlabs.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200807160958.24783.jk@ozlabs.org>
+In-Reply-To: <200807160958.24783.jk@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,54 +23,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>
+To: Jeremy Kerr <jk@ozlabs.org>
+Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
 
-SGkgSG9ybXMsCgo+IENhbiB3ZSBnZXQgcmlkIG9mIFRBUkdFVF9DRkxBR1M/IEl0IGRvZXNuJ3Qg
-c2VlbSB0byBiZSB1c2VkIGFueXdoZXJlLgoKV2UgbmVlZCBhIHdheSB0byBzcGVjaWZ5IGNmbGFn
-cyB0byBidWlsZCB0aGluZ3MgaW4gdGhlIHRhcmdldCBhcmNoIChpZSwKcHVyZ2F0b3J5KS4gSXQg
-bG9va3MgbGlrZSB3ZSdyZSBnZXR0aW5nIGFyb3VuZCB0aGlzIGJ5IHNwZWNpZnlpbmcgdGhlCnB1
-cmdhdG9yeSdzIGNmbGFncyBpbiBwdXJnYXRvcnkvYXJjaC8kQVJDSC9NYWtlZmlsZSwgd2hpY2gg
-SSBndWVzcyBpcwpvay4KCkknbSBhYmxlIHRvIGJ1aWxkIGEgcG93ZXJwYzY0IGtleGVjIHRvIHJ1
-biBvbiBhIHBvd2VycGMzMiBtYWNoaW5lLAp3aGljaCBpcyB3aGF0IEknbSBhZnRlciBoZXJlLiBJ
-IHN0aWxsIGdldCBhIGJ1bmNoIG9mIHdhcm5pbmdzIHRob3VnaDoKCmtleGVjL2FyY2gvcHBjNjQv
-a2V4ZWMtekltYWdlLXBwYzY0LmM6IEluIGZ1bmN0aW9uIOKAmHpJbWFnZV9wcGM2NF9sb2Fk4oCZ
-OgprZXhlYy9hcmNoL3BwYzY0L2tleGVjLXpJbWFnZS1wcGM2NC5jOjE2NDogd2FybmluZzogY2Fz
-dCB0byBwb2ludGVyIGZyb20gaW50ZWdlciBvZiBkaWZmZXJlbnQgc2l6ZQoKa2V4ZWMvYXJjaC9w
-cGM2NC9rZXhlYy1lbGYtcHBjNjQuYzogSW4gZnVuY3Rpb24g4oCYZWxmX3BwYzY0X2xvYWTigJk6
-CmtleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXBwYzY0LmM6MTIxOiB3YXJuaW5nOiBpbnRlZ2Vy
-IGNvbnN0YW50IGlzIHRvbyBsYXJnZSBmb3Ig4oCYdW5zaWduZWQgbG9uZ+KAmSB0eXBlCmtleGVj
-L2FyY2gvcHBjNjQva2V4ZWMtZWxmLXBwYzY0LmM6MjM3OiB3YXJuaW5nOiBjYXN0IGZyb20gcG9p
-bnRlciB0byBpbnRlZ2VyIG9mIGRpZmZlcmVudCBzaXplCmtleGVjL2FyY2gvcHBjNjQva2V4ZWMt
-ZWxmLXBwYzY0LmM6Mjc2OiB3YXJuaW5nOiBjYXN0IGZyb20gcG9pbnRlciB0byBpbnRlZ2VyIG9m
-IGRpZmZlcmVudCBzaXplCmtleGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXBwYzY0LmM6MjgzOiB3
-YXJuaW5nOiBjYXN0IGZyb20gcG9pbnRlciB0byBpbnRlZ2VyIG9mIGRpZmZlcmVudCBzaXplCmtl
-eGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXBwYzY0LmM6Mjg3OiB3YXJuaW5nOiBjYXN0IGZyb20g
-cG9pbnRlciB0byBpbnRlZ2VyIG9mIGRpZmZlcmVudCBzaXplCmtleGVjL2FyY2gvcHBjNjQva2V4
-ZWMtZWxmLXBwYzY0LmM6MzUyOiB3YXJuaW5nOiBmb3JtYXQg4oCYJWxk4oCZIGV4cGVjdHMgdHlw
-ZSDigJhsb25nIGludOKAmSwgYnV0IGFyZ3VtZW50IDUgaGFzIHR5cGUg4oCYc2l6ZV904oCZCgpr
-ZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2NC5jOjQ1OiB3YXJuaW5nOiBpbnRlZ2VyIGNv
-bnN0YW50IGlzIHRvbyBsYXJnZSBmb3Ig4oCYbG9uZ+KAmSB0eXBlCmtleGVjL2FyY2gvcHBjNjQv
-Y3Jhc2hkdW1wLXBwYzY0LmM6NDU6IHdhcm5pbmc6IGxhcmdlIGludGVnZXIgaW1wbGljaXRseSB0
-cnVuY2F0ZWQgdG8gdW5zaWduZWQgdHlwZQprZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2
-NC5jOjQ2OiB3YXJuaW5nOiBpbnRlZ2VyIGNvbnN0YW50IGlzIHRvbyBsYXJnZSBmb3Ig4oCYbG9u
-Z+KAmSB0eXBlCmtleGVjL2FyY2gvcHBjNjQvY3Jhc2hkdW1wLXBwYzY0LmM6NDY6IHdhcm5pbmc6
-IGludGVnZXIgY29uc3RhbnQgaXMgdG9vIGxhcmdlIGZvciDigJhsb25n4oCZIHR5cGUKa2V4ZWMv
-YXJjaC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuYzo0Njogd2FybmluZzogbGFyZ2UgaW50ZWdlciBp
-bXBsaWNpdGx5IHRydW5jYXRlZCB0byB1bnNpZ25lZCB0eXBlCmtleGVjL2FyY2gvcHBjNjQvY3Jh
-c2hkdW1wLXBwYzY0LmM6NTY6IHdhcm5pbmc6IGludGVnZXIgY29uc3RhbnQgaXMgdG9vIGxhcmdl
-IGZvciDigJhsb25n4oCZIHR5cGUKa2V4ZWMvYXJjaC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuYzo1
-Njogd2FybmluZzogbGFyZ2UgaW50ZWdlciBpbXBsaWNpdGx5IHRydW5jYXRlZCB0byB1bnNpZ25l
-ZCB0eXBlCmtleGVjL2FyY2gvcHBjNjQvY3Jhc2hkdW1wLXBwYzY0LmM6NTc6IHdhcm5pbmc6IGlu
-dGVnZXIgY29uc3RhbnQgaXMgdG9vIGxhcmdlIGZvciDigJhsb25n4oCZIHR5cGUKa2V4ZWMvYXJj
-aC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuYzo1Nzogd2FybmluZzogaW50ZWdlciBjb25zdGFudCBp
-cyB0b28gbGFyZ2UgZm9yIOKAmGxvbmfigJkgdHlwZQprZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVt
-cC1wcGM2NC5jOjU3OiB3YXJuaW5nOiBsYXJnZSBpbnRlZ2VyIGltcGxpY2l0bHkgdHJ1bmNhdGVk
-IHRvIHVuc2lnbmVkIHR5cGUKCkNoZWVycywKCgpKZXJlbXkKCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+Hi Jermemy,
+
+> Hi Horms,
+> 
+> > Can we get rid of TARGET_CFLAGS? It doesn't seem to be used anywhere.
+> 
+> We need a way to specify cflags to build things in the target arch (ie,
+> purgatory). It looks like we're getting around this by specifying the
+> purgatory's cflags in purgatory/arch/$ARCH/Makefile, which I guess is
+> ok.
+> 
+> I'm able to build a powerpc64 kexec to run on a powerpc32 machine,
+> which is what I'm after here. I still get a bunch of warnings though:
+
+I'm quite fine with the idea of having TARGET_CFLAGS,
+its just that it doesn't seem to be used at this time.
+Then again, it isn't doing any harm.
+
+-- 
+Horms
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
