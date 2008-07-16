@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJ0SF-0006mF-BC
-	for kexec@lists.infradead.org; Wed, 16 Jul 2008 06:25:39 +0000
-Date: Wed, 16 Jul 2008 16:25:33 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Allow BUILD_CFLAGS and TARGET_CFLAGS to be specified
-	at configure time
-Message-ID: <20080716062532.GB2073@verge.net.au>
-References: <20080715102808.GA29267@verge.net.au>
-	<1216123702.433919.719662663715.1.gpush@pingu>
+	id 1KJ8gO-0002jt-8B
+	for kexec@lists.infradead.org; Wed, 16 Jul 2008 15:12:44 +0000
+Date: Wed, 16 Jul 2008 11:12:40 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: problems in kdump kernel if 'maxcpus=1' not specified?
+Message-ID: <20080716151240.GB711@redhat.com>
+References: <487D49DC.8040209@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1216123702.433919.719662663715.1.gpush@pingu>
+In-Reply-To: <487D49DC.8040209@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,63 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Kerr <jk@ozlabs.org>
-Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
+To: Jay Lan <jlan@sgi.com>
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec@lists.infradead.org
 
-I have applied the following:
+On Tue, Jul 15, 2008 at 06:07:40PM -0700, Jay Lan wrote:
+> Are there known problems if you boot up kdump kernel with
+> multipl cpus?
+> 
 
-From: Jeremy Kerr <jk@ozlabs.org>
+I had run into one issue and that was some system would get reset and 
+jump to BIOS.
 
-Currently, we're unconditionally setting the build and target cflags in
-the configure script, which means that they can't be easily
-overwritten.
+The reason was that kdump kernel can boot on a non-boot cpu. When it
+tries to bring up other cpus it sends INIT and a non-boot cpu sending
+INIT to "boot" cpu was not acceptable (as per intel documentation) and 
+it re-initialized the system.
 
-This change conditionally sets these variables if they're not specified
-during configure, allowing something like:
+I am not sure how many systems are affected with this behavior. Hence
+the reason for using maxcpus=1.
 
-BUILD_CFLAGS=-Werror ./configure
+> It takes unacceptably long time to run makedumpfile in
+> saving dump at a huge memory system. In my testing it
+> took 16hr25min to run create_dump_bitmap() on a 1TB system.
+> Pfn's are processed sequentially with single cpu. We
+> certainly can use multipl cpus here ;)
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+This is certainly very long time. How much memory have you reserved for
+kdump kernel?
 
----
- configure.ac |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+I had run some tests on a x86_64 128GB RAM system and it took me 4 minutes
+to filter and save the core (maximum filtering level of 31). I had
+reserved 128MB of memory for kdump kernel.
 
-diff --git a/configure.ac b/configure.ac
-index 5f1c15a..fa5330a 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -56,8 +56,13 @@ if test "${host_alias}" ; then
- 	OBJDIR="$OBJDIR-${host_alias}"
- fi
- 
--BUILD_CFLAGS='-O2 -Wall'
--TARGET_CFLAGS='-O2 -Wall'
-+if test "x$BUILD_CFLAGS" = "x" ; then
-+	BUILD_CFLAGS='-O2 -Wall'
-+fi
-+
-+if test "x$TARGET_CFLAGS" = "x" ; then
-+	TARGET_CFLAGS='-O2 -Wall'
-+fi
- 
- AC_ARG_WITH([objdir], AC_HELP_STRING([--with-objdir=<dir>],[select directory for object files]),
- 	[ OBJDIR="$withval" ], [ OBJDIR="$OBJDIR" ])
+I think something else is seriously wrong here. 1 TB is almost 10 times of
+128GM and even if time scales linearly it should not take more than
+40mins.
 
-diff --git a/util/Makefile b/util/Makefile
-index a1a78ac..948ee63 100644
---- a/util/Makefile
-+++ b/util/Makefile
-@@ -5,7 +5,7 @@ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
- 	$(LINK.o) $(CFLAGS) -o $@ $^
- 
- $(BIN_TO_HEX): CC=$(BUILD_CC)
--$(BIN_TO_HEX): CFLAGS+=$(BUILD_CFLAGS)
-+$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
- $(BIN_TO_HEX): LDFLAGS=
- 
- dist += util/Makefile util/bin-to-hex.c
+You need to dive deeper to find out what is taking so much of time.
+
+CCing kenichi.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
