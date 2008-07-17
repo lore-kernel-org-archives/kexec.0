@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJbdi-0001cu-5B
-	for kexec@lists.infradead.org; Thu, 17 Jul 2008 22:07:54 +0000
-Date: Fri, 18 Jul 2008 00:07:45 +0200
+	id 1KJbkf-0008CW-3K
+	for kexec@lists.infradead.org; Thu, 17 Jul 2008 22:15:05 +0000
 From: Bernhard Walle <bwalle@suse.de>
-Subject: kdump: Report actual value of VMCOREINFO_OSRELEASE in VMCOREINFO
-Message-ID: <20080718000745.51d32607@kopernikus.site>
-Mime-Version: 1.0
+Subject: [PATCH] x86: Move crashkernel reservation before
+	dma32_reserve_bootmem()
+Date: Fri, 18 Jul 2008 00:15:45 +0200
+Message-Id: <1216332945-17197-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,41 +16,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com
+To: x86@kernel.org
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, Bernhard Walle <bwalle@suse.de>
 
-The current implementation reports the structure name as
-VMCOREINFO_OSRELEASE in VMCOREINFO, e.g.
+On a x86-64 machine (nothing special I could encounter) I had the problem that
+crashkernel reservation with the usual "64M@16M" failed. While debugging that,
+I encountered that dma32_reserve_bootmem() reserves a memory region which is in
+that area.
 
-        VMCOREINFO_OSRELEASE=init_uts_ns.name.release
+Because dma32_reserve_bootmem() does not rely on a specific offset but
+crashkernel does, it makes sense to move the crashkernel reservation up a bit.
+I tested that patch and it works without problems. I don't see any negative
+effects of that move, but maybe I oversaw something ...
 
-That doesn't make sense because it's always the same. Instead, use the
-value, e.g.
+While we strictly don't need that patch in 2.6.27 because we have the
+automatic, dynamic offset detection, it makes sense to also include it here
+because:
 
-        VMCOREINFO_OSRELEASE=2.6.26-rc3
-
-That's also what the 'makedumpfile -g' does.
+  - it's easier to get it in -stable then,
+  - many people are still used to the 'crashkernel=...@16M' syntax,
+  - not everybody may be using a reloatable kernel.
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ arch/x86/kernel/setup.c |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 3265968..3c7784d 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -127,8 +127,8 @@ void vmcoreinfo_append_str(const char *fmt, ...)
- 	__attribute__ ((format (printf, 1, 2)));
- unsigned long paddr_vmcoreinfo_note(void);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 531b55b..16101c0 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -792,6 +792,12 @@ void __init setup_arch(char **cmdline_p)
  
--#define VMCOREINFO_OSRELEASE(name) \
--	vmcoreinfo_append_str("OSRELEASE=%s\n", #name)
-+#define VMCOREINFO_OSRELEASE(value) \
-+	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
- #define VMCOREINFO_PAGESIZE(value) \
- 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
+ 	initmem_init(0, max_pfn);
+ 
++	/*
++	 * dma32_reserve_bootmem() allocates bootmem which may conflict
++	 * with the crashkernel command line, so do that before
++	 */
++	reserve_crashkernel();
++
+ #ifdef CONFIG_X86_64
+ 	dma32_reserve_bootmem();
+ #endif
+@@ -808,7 +814,6 @@ void __init setup_arch(char **cmdline_p)
+ 	 */
+ 	find_smp_config();
+ #endif
+-	reserve_crashkernel();
+ 
+ 	reserve_ibft_region();
+ 
+-- 
+1.5.6
+
 
 _______________________________________________
 kexec mailing list
