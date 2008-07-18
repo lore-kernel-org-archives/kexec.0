@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from qw-out-1920.google.com ([74.125.92.146])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJcIj-0005z8-9O
-	for kexec@lists.infradead.org; Thu, 17 Jul 2008 22:50:17 +0000
-Received: by qw-out-1920.google.com with SMTP id 5so92648qwf.24
-	for <kexec@lists.infradead.org>; Thu, 17 Jul 2008 15:50:15 -0700 (PDT)
-Message-ID: <86802c440807171550t360a2a76mddb9ae45c7e9f4fb@mail.gmail.com>
-Date: Thu, 17 Jul 2008 15:50:14 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH] x86: Move crashkernel reservation before
-	dma32_reserve_bootmem()
-In-Reply-To: <1216332945-17197-1-git-send-email-bwalle@suse.de>
+	id 1KJfNe-0002Dv-0j
+	for kexec@lists.infradead.org; Fri, 18 Jul 2008 02:07:34 +0000
+Message-Id: <487FFAD5.4040302@mxs.nes.nec.co.jp>
+Date: Fri, 18 Jul 2008 11:07:17 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <1216332945-17197-1-git-send-email-bwalle@suse.de>
+Subject: makedumpfile-1.2.7: Add linux-2.6.26 and xen-3.1.2 support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,68 +16,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1094150733=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: akpm@linux-foundation.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Bernhard Walle <bwalle@suse.de>, Akio Takebe <takebe_akio@jp.fujitsu.com>, Itsuro ODA <oda@valinux.co.jp>, Neil Horman <nhorman@redhat.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-On Thu, Jul 17, 2008 at 3:15 PM, Bernhard Walle <bwalle@suse.de> wrote:
-> On a x86-64 machine (nothing special I could encounter) I had the problem that
-> crashkernel reservation with the usual "64M@16M" failed. While debugging that,
-> I encountered that dma32_reserve_bootmem() reserves a memory region which is in
-> that area.
->
-> Because dma32_reserve_bootmem() does not rely on a specific offset but
-> crashkernel does, it makes sense to move the crashkernel reservation up a bit.
-> I tested that patch and it works without problems. I don't see any negative
-> effects of that move, but maybe I oversaw something ...
->
-> While we strictly don't need that patch in 2.6.27 because we have the
-> automatic, dynamic offset detection, it makes sense to also include it here
-> because:
->
->  - it's easier to get it in -stable then,
->  - many people are still used to the 'crashkernel=...@16M' syntax,
->  - not everybody may be using a reloatable kernel.
->
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> ---
->  arch/x86/kernel/setup.c |    7 ++++++-
->  1 files changed, 6 insertions(+), 1 deletions(-)
->
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 531b55b..16101c0 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -792,6 +792,12 @@ void __init setup_arch(char **cmdline_p)
->
->        initmem_init(0, max_pfn);
->
-> +       /*
-> +        * dma32_reserve_bootmem() allocates bootmem which may conflict
-> +        * with the crashkernel command line, so do that before
-> +        */
-> +       reserve_crashkernel();
-> +
->  #ifdef CONFIG_X86_64
->        dma32_reserve_bootmem();
->  #endif
-> @@ -808,7 +814,6 @@ void __init setup_arch(char **cmdline_p)
->         */
->        find_smp_config();
->  #endif
-> -       reserve_crashkernel();
->
->        reserve_ibft_region();
->
+--===============1094150733==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-Joe Jin already had another one to move dma32_reserve_bootmem later
 
-YH
+Hi,
+
+makedumpfile version 1.2.7 is released.
+Thank you for many patches.
+Please test it. Your opinions/comments are welcome.
+
+Changelog:
+ o New feature
+   - Add xen-3.1.2 support (Akio Takebe)
+   - handle x86_64 xen code/data relocation (Itsuro ODA)
+   - Add linux-2.6.26 support.
+   - Add the progress bar for creating dump bitmap (Bernhard Walle)
+   - Shrink the time for creating dump bitmap.
+
+ o Bugfix
+   - Fix vmcoreinfo generation on 32bit hosts for 64bit kernels (Bernhard Walle)
+   - Fix compile warning (Bernhard Walle)
+   - Fix illegal buffer access (Itsuro ODA)
+   - Improve error handing when SIZE(nodemask_t) is undefined (Bernhard Walle)
+
+ o Code Cleanup
+   - Remove trailing whitespace (Bernhard Walle)
+   - Remove unnecessary description in manpage.
+   - Cleanup machine dependent method.
+   - Cleanup open_dump_file() method.
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile(ver. 1.2.7) from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-1.2.7.tar.gz"
+  2. "cd makedumpfile"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+--===============1094150733==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1094150733==--
