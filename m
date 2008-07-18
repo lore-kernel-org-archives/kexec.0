@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJwJa-0003nH-HJ
-	for kexec@lists.infradead.org; Fri, 18 Jul 2008 20:12:30 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20080718150410.GB26261@hack.voiplan.pt>
-Date: Fri, 18 Jul 2008 13:07:58 -0700
-In-Reply-To: <20080718150410.GB26261@hack.voiplan.pt> (WANG Cong's message of
-	"Fri, 18 Jul 2008 16:04:10 +0100")
-Message-ID: <m1sku7j6qp.fsf@frodo.ebiederm.org>
+Received: from mx3.mail.elte.hu ([157.181.1.138])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KJxcw-0007qt-MH
+	for kexec@lists.infradead.org; Fri, 18 Jul 2008 21:36:35 +0000
+Date: Fri, 18 Jul 2008 23:36:22 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] x86: Move dma32_reserve_bootmem() after
+	reserve_crashkernel()
+Message-ID: <20080718213622.GA14603@elte.hu>
+References: <86802c440807180922l3500082chf7dcf0a1bafc6629@mail.gmail.com>
+	<1216400873-21862-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
-Subject: Re: [Patch] kexec: remove redundant if-else
+Content-Disposition: inline
+In-Reply-To: <1216400873-21862-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,25 +25,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: WANG Cong <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, yhlu.kernel@gmail.com, vgoyal@redhat.com, linux-kernel@vger.kernel.org
 
-WANG Cong <xiyou.wangcong@gmail.com> writes:
 
-> These if-else's can be removed.
+* Bernhard Walle <bwalle@suse.de> wrote:
 
-Why?  That appears to be pointless code style thrashing.
+> On a x86-64 machine (nothing special I could encounter) I had the 
+> problem that crashkernel reservation with the usual "64M@16M" failed. 
+> While debugging that, I encountered that dma32_reserve_bootmem() 
+> reserves a memory region which is in that area.
+> 
+> Because dma32_reserve_bootmem() does not rely on a specific offset but 
+> crashkernel does, it makes sense to move the dma32_reserve_bootmem() 
+> reservation down a bit. I tested that patch and it works without 
+> problems. I don't see any negative effects of that move, but maybe I 
+> oversaw something ...
+> 
+> While we strictly don't need that patch in 2.6.27 because we have the 
+> automatic, dynamic offset detection, it makes sense to also include it 
+> here because:
+> 
+>   - it's easier to get it in -stable then,
+>   - many people are still used to the 'crashkernel=...@16M' syntax,
+>   - not everybody may be using a reloatable kernel.
 
-Converting code with a single return into code with multiple returns.
-Which arguably makes it harder to prove properties about.
+applied to tip/x86/crashdump, thanks Bernhard.
 
-Further if you want to use the style you suggest a label name like err
-is better than the name out.
-
-But in this case where we have multiple results I don't like the proposed
-change in style at all.  Especially with no rational.
-
-Eric
+	Ingo
 
 _______________________________________________
 kexec mailing list
