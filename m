@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from py-out-1112.google.com ([64.233.166.182])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJsix-0006PA-NS
-	for kexec@lists.infradead.org; Fri, 18 Jul 2008 16:22:27 +0000
-Received: by py-out-1112.google.com with SMTP id a73so511272pye.2
-	for <kexec@lists.infradead.org>; Fri, 18 Jul 2008 09:22:27 -0700 (PDT)
-Message-ID: <86802c440807180922l3500082chf7dcf0a1bafc6629@mail.gmail.com>
-Date: Fri, 18 Jul 2008 09:22:26 -0700
-From: "Yinghai Lu" <yhlu.kernel@gmail.com>
-Subject: Re: [PATCH] x86: Move crashkernel reservation before
-	dma32_reserve_bootmem()
-In-Reply-To: <20080718115213.3c87f8f8@halley.suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-References: <1216332945-17197-1-git-send-email-bwalle@suse.de>
-	<86802c440807171550t360a2a76mddb9ae45c7e9f4fb@mail.gmail.com>
-	<20080718115213.3c87f8f8@halley.suse.de>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KJtQI-0005O6-Jw
+	for kexec@lists.infradead.org; Fri, 18 Jul 2008 17:07:15 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] x86: Move dma32_reserve_bootmem() after reserve_crashkernel()
+Date: Fri, 18 Jul 2008 19:07:53 +0200
+Message-Id: <1216400873-21862-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <86802c440807180922l3500082chf7dcf0a1bafc6629@mail.gmail.com>
+References: <86802c440807180922l3500082chf7dcf0a1bafc6629@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +17,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: akpm@linux-foundation.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: yhlu.kernel@gmail.com
+Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, Bernhard Walle <bwalle@suse.de>
 
-On Fri, Jul 18, 2008 at 2:52 AM, Bernhard Walle <bwalle@suse.de> wrote:
-> * Yinghai Lu [2008-07-17 15:50]:
->>
->> > +       /*
->> > +        * dma32_reserve_bootmem() allocates bootmem which may conflict
->> > +        * with the crashkernel command line, so do that before
->> > +        */
->> > +       reserve_crashkernel();
->> > +
->> >  #ifdef CONFIG_X86_64
->> >        dma32_reserve_bootmem();
->> >  #endif
->> > @@ -808,7 +814,6 @@ void __init setup_arch(char **cmdline_p)
->> >         */
->> >        find_smp_config();
->> >  #endif
->> > -       reserve_crashkernel();
->> >
->> >        reserve_ibft_region();
->>
->> Joe Jin already had another one to move dma32_reserve_bootmem later
->
-> Commit id? Current status?
+On a x86-64 machine (nothing special I could encounter) I had the problem that
+crashkernel reservation with the usual "64M@16M" failed. While debugging that,
+I encountered that dma32_reserve_bootmem() reserves a memory region which is in
+that area.
 
-it seems commit description from you is more good.
-please create one version move dma32_reserve_boot_mem after
-reserve_crashkernel and use your commit description.
+Because dma32_reserve_bootmem() does not rely on a specific offset but
+crashkernel does, it makes sense to move the dma32_reserve_bootmem()
+reservation down a bit. I tested that patch and it works without problems. I
+don't see any negative effects of that move, but maybe I oversaw something ...
 
-YH
+While we strictly don't need that patch in 2.6.27 because we have the
+automatic, dynamic offset detection, it makes sense to also include it here
+because:
+
+  - it's easier to get it in -stable then,
+  - many people are still used to the 'crashkernel=...@16M' syntax,
+  - not everybody may be using a reloatable kernel.
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ arch/x86/kernel/setup.c |   13 +++++++++----
+ 1 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 531b55b..74d110e 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -792,10 +792,6 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	initmem_init(0, max_pfn);
+ 
+-#ifdef CONFIG_X86_64
+-	dma32_reserve_bootmem();
+-#endif
+-
+ #ifdef CONFIG_ACPI_SLEEP
+ 	/*
+ 	 * Reserve low memory region for sleep support.
+@@ -810,6 +806,15 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ 	reserve_crashkernel();
+ 
++#ifdef CONFIG_X86_64
++	/*
++	 * dma32_reserve_bootmem() allocates bootmem which may conflict
++	 * with the crashkernel command line, so do that after
++	 * reserve_crashkernel()
++	 */
++	dma32_reserve_bootmem();
++#endif
++
+ 	reserve_ibft_region();
+ 
+ #ifdef CONFIG_KVM_CLOCK
+-- 
+1.5.6
+
 
 _______________________________________________
 kexec mailing list
