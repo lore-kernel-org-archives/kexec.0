@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KJfNe-0002Dv-0j
-	for kexec@lists.infradead.org; Fri, 18 Jul 2008 02:07:34 +0000
-Message-Id: <487FFAD5.4040302@mxs.nes.nec.co.jp>
-Date: Fri, 18 Jul 2008 11:07:17 +0900
+	id 1KJh8v-0005H0-Es
+	for kexec@lists.infradead.org; Fri, 18 Jul 2008 04:00:30 +0000
+Message-Id: <48801557.1040709@mxs.nes.nec.co.jp>
+Date: Fri, 18 Jul 2008 13:00:23 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: makedumpfile-1.2.7: Add linux-2.6.26 and xen-3.1.2 support
+Subject: Re: [PATCH] makedumpfile: Shrink the time for creating 1st-bitmap
+	(Re: problems in kdump kernel if 'maxcpus=1' not specified?)
+References: <487D49DC.8040209@sgi.com>	<20080716151240.GB711@redhat.com>	<20080716152544.GD10030@hmsendeavour.rdu.redhat.com>	<20080716162343.GC711@redhat.com>	<20080716170338.GA11654@hmsendeavour.rdu.redhat.com>	<487E4922.9050209@sgi.com>	<487ED1B3.6060803@mxs.nes.nec.co.jp>	<487EE836.7010607@mxs.nes.nec.co.jp>
+	<487F7CB0.7040902@sgi.com>
+In-Reply-To: <487F7CB0.7040902@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,77 +20,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1094150733=="
+Content-Type: multipart/mixed; boundary="===============0500056696=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>, Akio Takebe <takebe_akio@jp.fujitsu.com>, Itsuro ODA <oda@valinux.co.jp>, Neil Horman <nhorman@redhat.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
---===============1094150733==
+--===============0500056696==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
 Hi,
 
-makedumpfile version 1.2.7 is released.
-Thank you for many patches.
-Please test it. Your opinions/comments are welcome.
+Jay Lan wrote:
+> Ken'ichi Ohmichi wrote:
+>> Hi Jay,
+>>
+>> Ken'ichi Ohmichi wrote:
+>>> I created the attached patch that makedumpfile does not scan
+>>> memory gap when creating 1st-bitmap. Could you please try it ?
+>>> This patch is for makedumpfile-1.2.6.
+>> I found a bug in the patch I sent before, and I fixed it in the
+>> attached patch. Could you please try this patch ?
+>> Sorry for my mistake.
+> 
+> Hi Ken'ichi San,
+> 
+> Thanks for your patch. I need to compete for the test machine. Will
+> post new data when i have one.
 
-Changelog:
- o New feature
-   - Add xen-3.1.2 support (Akio Takebe)
-   - handle x86_64 xen code/data relocation (Itsuro ODA)
-   - Add linux-2.6.26 support.
-   - Add the progress bar for creating dump bitmap (Bernhard Walle)
-   - Shrink the time for creating dump bitmap.
-
- o Bugfix
-   - Fix vmcoreinfo generation on 32bit hosts for 64bit kernels (Bernhard Walle)
-   - Fix compile warning (Bernhard Walle)
-   - Fix illegal buffer access (Itsuro ODA)
-   - Improve error handing when SIZE(nodemask_t) is undefined (Bernhard Walle)
-
- o Code Cleanup
-   - Remove trailing whitespace (Bernhard Walle)
-   - Remove unnecessary description in manpage.
-   - Cleanup machine dependent method.
-   - Cleanup open_dump_file() method.
-
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  You can download the latest makedumpfile(ver. 1.2.7) from the following URL.
-  Details of the change are written on the CVS page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-1.2.7.tar.gz"
-  2. "cd makedumpfile"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+I think that new makedumpfile (version 1.2.7) is more useful for you,
+because it includes not only this patch but also the other patch
+shrinking the time for creating bitmap.
 
 
 Thanks
 Ken'ichi Ohmichi
 
 
---===============1094150733==
+>> diff -puN backup/v1.2.6/makedumpfile.c makedumpfile/makedumpfile.c
+>> --- backup/v1.2.6/makedumpfile.c	2008-06-05 15:17:17.000000000 +0900
+>> +++ makedumpfile/makedumpfile.c	2008-07-18 00:14:34.000000000 +0900
+>> @@ -3987,8 +3987,10 @@ exclude_free_page()
+>>  int
+>>  create_1st_bitmap()
+>>  {
+>> +	int i;
+>>  	char *buf = NULL;
+>> -	unsigned long long pfn, paddr;
+>> +	unsigned long long pfn, pfn_start, pfn_end, pfn_bitmap1;
+>> +	struct pt_load_segment *pls;
+>>  	off_t offset_page;
+>>  	int ret = FALSE;
+>>  
+>> @@ -4021,13 +4023,19 @@ create_1st_bitmap()
+>>  	/*
+>>  	 * If page is on memory hole, set bit on the 1st-bitmap.
+>>  	 */
+>> -	for (pfn = 0, paddr = 0; pfn < info->max_mapnr;
+>> -	    pfn++, paddr += info->page_size) {
+>> -		if (is_in_segs(paddr))
+>> +	for (i = pfn_bitmap1 = 0; i < info->num_load_memory; i++) {
+>> +		pls = &info->pt_load_segments[i];
+>> +		pfn_start = pls->phys_start >> PAGESHIFT();
+>> +		pfn_end   = pls->phys_end >> PAGESHIFT();
+>> +		if (!is_in_segs(pfn_start << PAGESHIFT()))
+>> +			pfn_start++;
+>> +		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
+>>  			set_bit_on_1st_bitmap(pfn);
+>> -		else
+>> -			pfn_memhole++;
+>> +			pfn_bitmap1++;
+>> +		}
+>>  	}
+>> +	pfn_memhole = info->max_mapnr - pfn_bitmap1;
+>> +
+>>  	if (!sync_1st_bitmap())
+>>  		goto out;
+>>  
+> 
+> 
+> 
+> ------------------------------------------------------------------------
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
+
+
+--===============0500056696==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -97,4 +123,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1094150733==--
+--===============0500056696==--
