@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from ik-out-1112.google.com ([66.249.90.181])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KK13Y-0001NK-DN
-	for kexec@lists.infradead.org; Sat, 19 Jul 2008 01:16:16 +0000
-Date: Sat, 19 Jul 2008 11:16:14 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kdump: Update kdump documentation as
-	kexec-tools-resting has been renamed kexec-tools
-Message-ID: <20080719011612.GA20745@verge.net.au>
-References: <20080719005835.GA19032@verge.net.au>
+	id 1KK9Vv-0006Pp-0y
+	for kexec@lists.infradead.org; Sat, 19 Jul 2008 10:18:07 +0000
+Received: by ik-out-1112.google.com with SMTP id c21so377284ika.2
+	for <kexec@lists.infradead.org>; Sat, 19 Jul 2008 03:18:03 -0700 (PDT)
+Date: Sat, 19 Jul 2008 11:16:35 +0100
+From: WANG Cong <xiyou.wangcong@gmail.com>
+Subject: Re: [Patch] kexec: remove redundant if-else
+Message-ID: <20080719101635.GB3558@hack.netcabo.pt>
+References: <20080718150410.GB26261@hack.voiplan.pt>
+	<m1sku7j6qp.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080719005835.GA19032@verge.net.au>
+In-Reply-To: <m1sku7j6qp.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,56 +26,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+On Fri, Jul 18, 2008 at 01:07:58PM -0700, Eric W. Biederman wrote:
+>WANG Cong <xiyou.wangcong@gmail.com> writes:
+>
+>> These if-else's can be removed.
+>
+>Why?  That appears to be pointless code style thrashing.
 
---- 
-Reposting to Vivek's new email address
 
-Index: linux-2.6/Documentation/kdump/kdump.txt
-===================================================================
---- linux-2.6.orig/Documentation/kdump/kdump.txt	2008-07-19 10:27:50.000000000 +1000
-+++ linux-2.6/Documentation/kdump/kdump.txt	2008-07-19 10:51:57.000000000 +1000
-@@ -65,26 +65,26 @@ Install kexec-tools
- 
- 2) Download the kexec-tools user-space package from the following URL:
- 
--http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools-testing.tar.gz
-+http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools.tar.gz
- 
--This is a symlink to the latest version, which at the time of writing is
--20061214, the only release of kexec-tools-testing so far. As other versions
--are released, the older ones will remain available at
--http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
-+This is a symlink to the latest version.
- 
--Note: Latest kexec-tools-testing git tree is available at
-+The latest kexec-tools git tree is available at:
- 
--git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
-+git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
- or
--http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools-testing.git;a=summary
-+http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools.git
-+
-+More information about kexec-tools can be found at
-+http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/README.html
- 
- 3) Unpack the tarball with the tar command, as follows:
- 
--   tar xvpzf kexec-tools-testing.tar.gz
-+   tar xvpzf kexec-tools.tar.gz
- 
- 4) Change to the kexec-tools directory, as follows:
- 
--   cd kexec-tools-testing-VERSION
-+   cd kexec-tools-VERSION
- 
- 5) Configure the package, as follows:
- 
+I don't think that is coding style fix. Because when we arrive the
+'out' branch, 'result' is always properly set, thus checking it again
+is useless for me. :-)
 
+Thanks.
+
+-- 
+Hi, I'm a .signature virus, please copy/paste me to help me spread
+all over the world.
 
 _______________________________________________
 kexec mailing list
