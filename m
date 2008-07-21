@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KKb5u-0003hL-Pu
-	for kexec@lists.infradead.org; Sun, 20 Jul 2008 15:45:07 +0000
-Date: Sun, 20 Jul 2008 17:44:56 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: linux-next: Tree for July 18: warning at kernel/lockdep.c:2068
-	trace_hardirqs_on_caller
-Message-ID: <20080720174456.55e41e8b@kopernikus.site>
-In-Reply-To: <20080720150341.7cd381c2@kopernikus.site>
-References: <20080718195352.e562a00f.sfr@canb.auug.org.au>
-	<200807190928.33978.m.kozlowski@tuxland.pl>
-	<19f34abd0807190255x304173d4wf2bfabb2d5bce511@mail.gmail.com>
-	<19f34abd0807190559y2fe5ebf9h7095793e82de3122@mail.gmail.com>
-	<20080719221723.GB5578@suse.de>
-	<19f34abd0807191527u61c5ed61kffe2279c8d46915d@mail.gmail.com>
-	<19f34abd0807191544nfd73be5nf7dde4b61992a7e8@mail.gmail.com>
-	<20080719225817.GA6264@suse.de>
-	<19f34abd0807191611y7cabf405iad307ba79591e04f@mail.gmail.com>
-	<1216544462.9311.20.camel@nimitz>
-	<20080720150341.7cd381c2@kopernikus.site>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KKudl-0003ML-E1
+	for kexec@lists.infradead.org; Mon, 21 Jul 2008 12:37:21 +0000
+Date: Mon, 21 Jul 2008 08:37:06 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kdump: Update kdump documentation as
+	kexec-tools-resting has been renamed kexec-tools
+Message-ID: <20080721123706.GA4451@redhat.com>
+References: <20080719005835.GA19032@verge.net.au>
+	<20080719011612.GA20745@verge.net.au>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080719011612.GA20745@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,33 +25,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Vegard Nossum <vegard.nossum@gmail.com>, Pekka Enberg <penberg@cs.helsinki.fi>, Greg KH <gregkh@suse.de>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Dave Hansen <dave@linux.vnet.ibm.com>, Mariusz Kozlowski <m.kozlowski@tuxland.pl>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kernel-testers@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Bernhard Walle <bwalle@suse.de> [2008-07-20 15:03]:
+On Sat, Jul 19, 2008 at 11:16:14AM +1000, Simon Horman wrote:
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 > 
-> Because I didn't know that interface. And because I don't see that
-> interface on my two systems that I just checked. i386 and x86-64. What
-> do I have to do to enable that interface?
+> --- 
+> Reposting to Vivek's new email address
+> 
+> Index: linux-2.6/Documentation/kdump/kdump.txt
+> ===================================================================
+> --- linux-2.6.orig/Documentation/kdump/kdump.txt	2008-07-19 10:27:50.000000000 +1000
+> +++ linux-2.6/Documentation/kdump/kdump.txt	2008-07-19 10:51:57.000000000 +1000
+> @@ -65,26 +65,26 @@ Install kexec-tools
+>  
+>  2) Download the kexec-tools user-space package from the following URL:
+>  
+> -http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools-testing.tar.gz
+> +http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools.tar.gz
+>  
+> -This is a symlink to the latest version, which at the time of writing is
+> -20061214, the only release of kexec-tools-testing so far. As other versions
+> -are released, the older ones will remain available at
+> -http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+> +This is a symlink to the latest version.
+>  
+> -Note: Latest kexec-tools-testing git tree is available at
+> +The latest kexec-tools git tree is available at:
+>  
+> -git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
+> +git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
+>  or
+> -http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools-testing.git;a=summary
+> +http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools.git
+> +
+> +More information about kexec-tools can be found at
+> +http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/README.html
+>  
+>  3) Unpack the tarball with the tar command, as follows:
+>  
+> -   tar xvpzf kexec-tools-testing.tar.gz
+> +   tar xvpzf kexec-tools.tar.gz
+>  
+>  4) Change to the kexec-tools directory, as follows:
+>  
+> -   cd kexec-tools-testing-VERSION
+> +   cd kexec-tools-VERSION
+>  
+>  5) Configure the package, as follows:
 
-That interface depends on CONFIG_MEMORY_HOTPLUG. But given to that
-dependency list,
+Looks Good. Thanks Simon.
 
-128 config MEMORY_HOTPLUG
-129         bool "Allow for memory hot-add"
-130         depends on SPARSEMEM || X86_64_ACPI_NUMA
-131         depends on HOTPLUG && !HIBERNATION && ARCH_ENABLE_MEMORY_HOTPLUG
-132         depends on (IA64 || X86 || PPC64 || SUPERH || S390)
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-that interface is off on *many* systems (i386, x86_64), so we can't rely
-on that interface in kexec. I think on POWER it's much more common than
-on PC architectures.
-
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Vivek
 
 _______________________________________________
 kexec mailing list
