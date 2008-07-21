@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KKvIL-0004Sf-0G
-	for kexec@lists.infradead.org; Mon, 21 Jul 2008 13:19:17 +0000
-Date: Mon, 21 Jul 2008 09:17:21 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KKvNt-00052F-1E
+	for kexec@lists.infradead.org; Mon, 21 Jul 2008 13:25:01 +0000
+Date: Mon, 21 Jul 2008 15:25:39 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: linux-next: Tree for July 18: warning at kernel/lockdep.c:2068
 	trace_hardirqs_on_caller
-Message-ID: <20080721131721.GB4451@redhat.com>
+Message-ID: <20080721152539.3d8684f9@halley.suse.de>
+In-Reply-To: <20080721131721.GB4451@redhat.com>
 References: <20080718195352.e562a00f.sfr@canb.auug.org.au>
 	<200807190928.33978.m.kozlowski@tuxland.pl>
 	<19f34abd0807190255x304173d4wf2bfabb2d5bce511@mail.gmail.com>
@@ -18,9 +19,8 @@ References: <20080718195352.e562a00f.sfr@canb.auug.org.au>
 	<20080719225817.GA6264@suse.de>
 	<19f34abd0807191611y7cabf405iad307ba79591e04f@mail.gmail.com>
 	<1216544462.9311.20.camel@nimitz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1216544462.9311.20.camel@nimitz>
+	<20080721131721.GB4451@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,65 +33,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Hansen <dave@linux.vnet.ibm.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Vegard Nossum <vegard.nossum@gmail.com>, Pekka Enberg <penberg@cs.helsinki.fi>, Greg KH <gregkh@suse.de>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Mariusz Kozlowski <m.kozlowski@tuxland.pl>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kernel-testers@vger.kernel.org, Bernhard Walle <bwalle@suse.de>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Vegard Nossum <vegard.nossum@gmail.com>, Greg KH <gregkh@suse.de>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Dave Hansen <dave@linux.vnet.ibm.com>, Mariusz Kozlowski <m.kozlowski@tuxland.pl>, Pekka Enberg <penberg@cs.helsinki.fi>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kernel-testers@vger.kernel.org
 
-On Sun, Jul 20, 2008 at 02:01:02AM -0700, Dave Hansen wrote:
-> On Sun, 2008-07-20 at 01:11 +0200, Vegard Nossum wrote:
-> > Maybe the firmware memmap code can simply run a little later in the
-> > boot sequence?
+* Vivek Goyal [2008-07-21 09:17]:
 > 
-> Heh, I'm catching up on this thread...
-> 
-> It is possible that it could run later.  But, I do know that there are
-> at least a couple of these tables (on various arches) that we toss out
-> of memory or become unavailable later in boot.  
-> 
-> I do this this:
-> 
->     sysfs: add /sys/firmware/memmap
-> 
-> is really being done at the wrong level.  I don't, for instance, see
-> *any* reference to memory hotplug in these patches.  That's because
-> they're done against firmware structures, and memory hotplug doesn't
-> update firmware structures on the two architectures that I can remember
-> (ppc64 and x86).
-> 
-> In other words, kexec using this probably won't work on a memory hotplug
-> machine.
+> Is /proc/iomem updated upon memory hotplug event.
 
-If memory is just being added and not being removed then kexec will
-continue to work. Just that newly added memory will not be visible to
-second kernel. (Unless we start modifying /sys/firmware/memmap upon 
-memory hotplug event).
+Yes. I just checked that (yesterday).
 
-Is /proc/iomem updated upon memory hotplug event. All these years, kexec
-has been using that interace.
+I think it would make sense to extend /sys/firmware/memmap on
+hot-plugging. Just because on reboot, the firmware will see that
+memory, too, and report it. However, we need a way to discriminate the
+originally firmware-provided memory map with later added memory. I'm
+not sure how that can be done, I have to think about it.
 
-> 
-> Secondly, why don't we just modify the
-> existing /sys/devices/system/memory things to properly export what exec
-> needs?  They're already cross-platform *and* they're updated with memory
-> hotplug events.  
 
-As bernhard mentioned that above interface has got long dependeny list
-and will not work for kexec until and unless we get rid of those 
-dependencies.
-
-What does /sys/devices/system/memory represent? All the physical memory
-present in the system or all the physical memory being used by kernel
-(for example, memory limited by command line options mem=).
-
-If it represents all the physical memory present in the system then it
-might make sense to not create another interface but to use this one for
-kexec. (But we shall have to get rid of long list of dependencies so that
-it can gel wil more universal appeal of kexec).
-
-Do you think that we can decouple /sys/devices/system/memory interface with
-CONFIG_MEMORY_HOTPLUG?
-
-Thanks
-Vivek
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
