@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KKveW-0006uW-Dl
-	for kexec@lists.infradead.org; Mon, 21 Jul 2008 13:42:12 +0000
-Date: Mon, 21 Jul 2008 09:39:37 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KKvj3-0007S3-Dl
+	for kexec@lists.infradead.org; Mon, 21 Jul 2008 13:46:54 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 4972B41A44
+	for <kexec@lists.infradead.org>; Mon, 21 Jul 2008 15:46:51 +0200 (CEST)
+Date: Mon, 21 Jul 2008 15:47:33 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: linux-next: Tree for July 18: warning at kernel/lockdep.c:2068
 	trace_hardirqs_on_caller
-Message-ID: <20080721133937.GC4451@redhat.com>
+Message-ID: <20080721154733.07a116ad@halley.suse.de>
+In-Reply-To: <20080721133937.GC4451@redhat.com>
 References: <19f34abd0807190255x304173d4wf2bfabb2d5bce511@mail.gmail.com>
 	<19f34abd0807190559y2fe5ebf9h7095793e82de3122@mail.gmail.com>
 	<20080719221723.GB5578@suse.de>
@@ -18,9 +24,8 @@ References: <19f34abd0807190255x304173d4wf2bfabb2d5bce511@mail.gmail.com>
 	<1216544462.9311.20.camel@nimitz>
 	<20080721131721.GB4451@redhat.com>
 	<20080721152539.3d8684f9@halley.suse.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080721152539.3d8684f9@halley.suse.de>
+	<20080721133937.GC4451@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,31 +38,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Vegard Nossum <vegard.nossum@gmail.com>, Greg KH <gregkh@suse.de>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Dave Hansen <dave@linux.vnet.ibm.com>, Mariusz Kozlowski <m.kozlowski@tuxland.pl>, Pekka Enberg <penberg@cs.helsinki.fi>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kernel-testers@vger.kernel.org
+To: kexec@lists.infradead.org
 
-On Mon, Jul 21, 2008 at 03:25:39PM +0200, Bernhard Walle wrote:
-> * Vivek Goyal [2008-07-21 09:17]:
-> > 
-> > Is /proc/iomem updated upon memory hotplug event.
+* Vivek Goyal [2008-07-21 09:39]:
 > 
-> Yes. I just checked that (yesterday).
-> 
-> I think it would make sense to extend /sys/firmware/memmap on
-> hot-plugging. Just because on reboot, the firmware will see that
-> memory, too, and report it. However, we need a way to discriminate the
-> originally firmware-provided memory map with later added memory. I'm
-> not sure how that can be done, I have to think about it.
+> But the point is, if /sys/devices/system/memory also represents all
+> the physical memory present in the system then it might be not be
+> justified to create another similar interface. (Until and unless there
+> is something unique about /sys/firmware/memmap).
 
-Probably use another type of RAM identifier (System RAM (hotplug)).
+But I don't see anything like a physical address there:
 
-But the point is, if /sys/devices/system/memory also represents all
-the physical memory present in the system then it might be not be
-justified to create another similar interface. (Until and unless there
-is something unique about /sys/firmware/memmap).
+  /sys/devices/system/memory/memory2:
+  -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_device
+  -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_index
+  -rw-r--r-- 1 root root 4096 2008-07-21 15:45 state
 
-Thanks
-Vivek
+(on a PPC64 machine where SUSE kernel has that interface enabled by
+default).
+
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
