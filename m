@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KKws2-0006Op-49
-	for kexec@lists.infradead.org; Mon, 21 Jul 2008 15:00:14 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 754FC41A78
-	for <kexec@lists.infradead.org>; Mon, 21 Jul 2008 17:00:12 +0200 (CEST)
-Date: Mon, 21 Jul 2008 17:00:54 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KLBBh-0000z5-U2
+	for kexec@lists.infradead.org; Tue, 22 Jul 2008 06:17:30 +0000
+Date: Tue, 22 Jul 2008 15:15:11 +0900
+From: Yasunori Goto <y-goto@jp.fujitsu.com>
 Subject: Re: linux-next: Tree for July 18: warning at kernel/lockdep.c:2068
 	trace_hardirqs_on_caller
-Message-ID: <20080721170054.3283b6cc@halley.suse.de>
-In-Reply-To: <20080721145417.GE4451@redhat.com>
-References: <20080719221723.GB5578@suse.de>
-	<19f34abd0807191527u61c5ed61kffe2279c8d46915d@mail.gmail.com>
-	<19f34abd0807191544nfd73be5nf7dde4b61992a7e8@mail.gmail.com>
-	<20080719225817.GA6264@suse.de>
-	<19f34abd0807191611y7cabf405iad307ba79591e04f@mail.gmail.com>
-	<1216544462.9311.20.camel@nimitz>
-	<20080721131721.GB4451@redhat.com>
-	<20080721152539.3d8684f9@halley.suse.de>
-	<20080721133937.GC4451@redhat.com>
-	<20080721154733.07a116ad@halley.suse.de>
-	<20080721145417.GE4451@redhat.com>
-Mime-Version: 1.0
+In-Reply-To: <20080721170037.1a0046b1@halley.suse.de>
+References: <20080721133937.GC4451@redhat.com>
+	<20080721170037.1a0046b1@halley.suse.de>
+Message-Id: <20080722142345.8733.E1E9C6FF@jp.fujitsu.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,39 +24,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Bernhard Walle <bwalle@suse.de>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Vegard Nossum <vegard.nossum@gmail.com>, Greg KH <gregkh@suse.de>, kexec <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Dave Hansen <dave@linux.vnet.ibm.com>, Mariusz Kozlowski <m.kozlowski@tuxland.pl>, Pekka Enberg <penberg@cs.helsinki.fi>, linux-next@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kernel-testers@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-* Vivek Goyal [2008-07-21 10:54]:
->
-> On Mon, Jul 21, 2008 at 03:47:33PM +0200, Bernhard Walle wrote:
-> > * Vivek Goyal [2008-07-21 09:39]:
+Hello.
+
+> > > > Is /proc/iomem updated upon memory hotplug event.
 > > > 
-> > > But the point is, if /sys/devices/system/memory also represents all
-> > > the physical memory present in the system then it might be not be
-> > > justified to create another similar interface. (Until and unless there
-> > > is something unique about /sys/firmware/memmap).
+> > > Yes. I just checked that (yesterday).
+> > > 
+> > > I think it would make sense to extend /sys/firmware/memmap on
+> > > hot-plugging. Just because on reboot, the firmware will see that
+> > > memory, too, and report it. However, we need a way to discriminate the
+> > > originally firmware-provided memory map with later added memory. I'm
+> > > not sure how that can be done, I have to think about it.
 > > 
-> > But I don't see anything like a physical address there:
+> > Probably use another type of RAM identifier (System RAM (hotplug)).
 > > 
-> >   /sys/devices/system/memory/memory2:
-> >   -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_device
-> >   -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_index
-> >   -rw-r--r-- 1 root root 4096 2008-07-21 15:45 state
-> > 
-> > (on a PPC64 machine where SUSE kernel has that interface enabled by
-> > default).
-> > 
-> > 
-> Do you want to respond to lkml and to dave hansen so that he can respond
-> back. In this mail only kexec mailing list is there.
+> > But the point is, if /sys/devices/system/memory also represents all
+> > the physical memory present in the system then it might be not be
+> > justified to create another similar interface. (Until and unless there
+> > is something unique about /sys/firmware/memmap).
+> 
+> But I don't see anything like a physical address there:
+> 
+>   /sys/devices/system/memory/memory2:
+>   -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_device
+>   -r--r--r-- 1 root root 4096 2008-07-21 15:45 phys_index
+>   -rw-r--r-- 1 root root 4096 2008-07-21 15:45 state
+> 
+> (on a PPC64 machine where SUSE kernel has that interface enabled by
+> default).
 
-Group reply vs. reply. Thanks for noticing. :)
+I wrote about them Documentation/memory-hotplug.txt. Please see it.
+
+But I think /sys/firmware/memmap is better for kexec than using them.
+They are made for each sections whose size is fixed on each architecture.
+There is no information about areas which are occupied by firmware, and
+its fixed size directories are not suitable to show them.
 
 
+BTW, does kexec needs the information about not only hot-added normal memory
+but also "hot-added occupied (reserved) memory by firmware"?
+Fujitsu has ia64 box which can add memory. The information about memory
+area is notified via _CRS method of ACPI. Our firmware team said that
+there was no interface to notify the area which was occupied by firmware.
+So, _CRS shows only normal (not-reserved) memory area. It means OS can't know
+reserved memory which is hot-added.
 
-Bernhard
+If kexec has to know those reserved area, then it is very bad news for me. :-(
+
+
+Thanks.
+
 -- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Yasunori Goto 
+
+
 
 _______________________________________________
 kexec mailing list
