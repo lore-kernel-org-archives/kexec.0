@@ -1,15 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from e35.co.us.ibm.com ([32.97.110.153])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KLfZ3-0006de-95
-	for kexec@lists.infradead.org; Wed, 23 Jul 2008 14:43:38 +0000
-Message-ID: <48874394.6090602@suse.de>
-Date: Wed, 23 Jul 2008 16:43:32 +0200
-From: Stefan Assmann <sassmann@suse.de>
-MIME-Version: 1.0
-Subject: Re: ps3-kernel hang at kexec caused by usb
-References: <4886EC22.3040805@suse.de>
-In-Reply-To: <4886EC22.3040805@suse.de>
+	id 1KLnxz-0000SC-8F
+	for kexec@lists.infradead.org; Wed, 23 Jul 2008 23:41:55 +0000
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e35.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m6NNfoSH018243
+	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 19:41:50 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m6NNfoXX165326
+	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 17:41:50 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m6NNfncg011889
+	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 17:41:50 -0600
+Subject: Re: [RFC] [KDUMP] [PROPOSED WORK] kdump on Xen hypervisor and
+	guests, more tests for utilities, like makedumpfile, mkdumprd, kexec etc
+From: Subrata Modak <subrata@linux.vnet.ibm.com>
+In-Reply-To: <20080625.114653.534764946533767806.qcai@redhat.com>
+References: <1214230370.4719.53.camel@subratamodak.linux.ibm.com>
+	<20080624124243.GA16734@redhat.com>
+	<20080625.114653.534764946533767806.qcai@redhat.com>
+Date: Thu, 24 Jul 2008 05:11:31 +0530
+Message-Id: <1216856493.5195.22.camel@subratamodak.linux.ibm.com>
+Mime-Version: 1.0
+Reply-To: subrata@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +38,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cell Broadband Engine OSS Development <cbe-oss-dev@ozlabs.org>
-Cc: kexec@lists.infradead.org, Masakazu Mokuno <mokuno@sm.sony.co.jp>, Geoff Levand <geoffrey.levand@am.sony.com>
+To: Cai Qian <qcai@redhat.com>
+Cc: poornima.nayak@in.ibm.com, ltp-list@lists.sourceforge.net, vapier@gentoo.org, iranna.ankad@in.ibm.com, kexec@lists.infradead.org, yamato@redhat.com, maknayak@in.ibm.com, risrajak@in.ibm.com, hbabu@us.ibm.com, sachinp@linux.vnet.ibm.com, pkirsch@suse.de, risrajak@linux.vnet.ibm.com, jburke@redhat.com, inddurai@in.ibm.com, vgoyal@redhat.com
 
-Stefan Assmann wrote:
-> Hey all,
-> 
-> I'm having troubles to kexec recent kernels on Playstation 3.
-> After issuing
-> kexec -l <vmlinux> --initrd=<initrd>
-> kexec -e
-> the screen stays black.
-> 
-> I tracked this down in the suse kernel and it seems related to a patch
-> with the Subject: USB: fix interrupt disabling for HCDs with shared
-> interrupt handlers.
+Hi Cai,
 
-I forgot the git commit ID from mainline, sorry.
-linux-2.6 bf9127c36341573dc47a9c2fc003dcf13bbbf246
+Some patches in Bits and Pieces regarding this nearby ?
+
+Regards--
+Subrata
 
 > 
-> This patch went mainline with 2.6.26 and the most likely reason why
-> it has not been discovered yet may be because USB is compiled
-> as a module in most cases. However the suse config has it compiled
-> into the kernel and this causes some mischief.
+> Yes. Initally, I put this item to a relative low priority, partly
+> because kdump config options and init scripts are tend to be
+> distro-specific, so it won't be easy to write portable tests for
+> different distros. In addition, lots of config options are not easy to
+> be tested automately, like raw disk target, vfat disk target, and
+> network target etc, as testers have to setup those name manually. But,
+> you are right, those are high priority tests for kexec/kdump in distro
+> release, we tested most of those options manually for RHEL anyway and we
+> had some automated tests of it, which I'll try to submit to LTP as many
+> as possible. For those manual tests, I'll also try to find some ways to
+> automate them. For example, for different dump targets, it is possible
+> to verify the generated initrd file as expected.
 > 
-> It would be nice if somebody could try this on other distros as well.
-> I'm attaching an altered ps3_defconfig (from geoffs git) that has
-> USB compiled in. So all you need to do is compile a recent kernel
-> (2.6.26) with that config and it should hang right after kexec.
+> > 
+> > > == increase coverages for new kexec/kdump development efforts ==
+> > > - new reserved region syntax in Kernel.
+> > 
+> > Another important thing we need to focus on is driver testing. Drivers
+> > can fail to initialize in second kernel and kdump will fail. Can we do
+> > something so that we can do following.
+> >
+> 
+> That isn't something I have not thought of. For RHEL release testing, we
+> will have a workflow to run those tests on any storage/network drivers,
+> and it will report back testing results and driver matrix. However, this
+> workflow is very distro-specific, and depends on the test farm it is
+> using, so it does not make any sense to put it here.
+> 
+> > - Collect the machine statistics on which kdump was tested and send
+> >   the reports to a common place. Especially capture the storage/network
+> >   driver data which can be probably be available through LTP site.
+> > 
+> 
+> That sounds like a good idea to me.
+> 
+> > - Also capture how much memory was reserved on what architecture and
+> >   whether it worked or not. This will help us verify for sure that how
+> >  much memory to reserve for second kernel on various architectures.
+> >
+> 
+> This is something could be done. I'll have a look at it.
+> 
+> Thanks,
+> CaiQian
+> 
+> > Thanks
+> > Vivek
 
-  Stefan
-
--- 
-Stefan Assmann          | SUSE LINUX Products GmbH
-Software Engineer       | Maxfeldstr. 5, D-90409 Nuernberg
-Mail : sassmann@suse.de | GF: Markus Rex, HRB 16746 (AG Nuernberg)
 
 _______________________________________________
 kexec mailing list
