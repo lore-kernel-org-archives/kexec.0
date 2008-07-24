@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e35.co.us.ibm.com ([32.97.110.153])
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KLnxz-0000SC-8F
-	for kexec@lists.infradead.org; Wed, 23 Jul 2008 23:41:55 +0000
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e35.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m6NNfoSH018243
-	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 19:41:50 -0400
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m6NNfoXX165326
-	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 17:41:50 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m6NNfncg011889
-	for <kexec@lists.infradead.org>; Wed, 23 Jul 2008 17:41:50 -0600
-Subject: Re: [RFC] [KDUMP] [PROPOSED WORK] kdump on Xen hypervisor and
-	guests, more tests for utilities, like makedumpfile, mkdumprd, kexec etc
-From: Subrata Modak <subrata@linux.vnet.ibm.com>
-In-Reply-To: <20080625.114653.534764946533767806.qcai@redhat.com>
-References: <1214230370.4719.53.camel@subratamodak.linux.ibm.com>
-	<20080624124243.GA16734@redhat.com>
-	<20080625.114653.534764946533767806.qcai@redhat.com>
-Date: Thu, 24 Jul 2008 05:11:31 +0530
-Message-Id: <1216856493.5195.22.camel@subratamodak.linux.ibm.com>
-Mime-Version: 1.0
-Reply-To: subrata@linux.vnet.ibm.com
+	id 1KLwMP-00008W-5A
+	for kexec@lists.infradead.org; Thu, 24 Jul 2008 08:39:42 +0000
+Message-Id: <D8D3E355-6D19-403B-8F61-FC15EA78851F@suse.de>
+From: Alexander Graf <agraf@suse.de>
+In-Reply-To: <170fa0d20807231713t19b5bd5bt5f418f509040b7aa@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v926)
+Subject: Re: kexec/kdump of a kvm guest?
+Date: Thu, 24 Jul 2008 10:39:31 +0200
+References: <170fa0d20806261158me6f81d0p2ea4fa6b7e694a5a@mail.gmail.com>
+	<486F58EC.6020408@qumranet.com>
+	<170fa0d20807231713t19b5bd5bt5f418f509040b7aa@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,65 +24,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cai Qian <qcai@redhat.com>
-Cc: poornima.nayak@in.ibm.com, ltp-list@lists.sourceforge.net, vapier@gentoo.org, iranna.ankad@in.ibm.com, kexec@lists.infradead.org, yamato@redhat.com, maknayak@in.ibm.com, risrajak@in.ibm.com, hbabu@us.ibm.com, sachinp@linux.vnet.ibm.com, pkirsch@suse.de, risrajak@linux.vnet.ibm.com, jburke@redhat.com, inddurai@in.ibm.com, vgoyal@redhat.com
+To: Mike Snitzer <snitzer@gmail.com>
+Cc: kexec@lists.infradead.org, kvm@vger.kernel.org, Avi Kivity <avi@qumranet.com>
 
-Hi Cai,
 
-Some patches in Bits and Pieces regarding this nearby ?
+On Jul 24, 2008, at 2:13 AM, Mike Snitzer wrote:
 
-Regards--
-Subrata
+> On Sat, Jul 5, 2008 at 7:20 AM, Avi Kivity <avi@qumranet.com> wrote:
+>> Mike Snitzer wrote:
+>>>
+>>> My host is x86_64 RHEL5U1 running 2.6.25.4 with kvm-70 (kvm-intel).
+>>>
+>>> When I configure kdump in the guest (running 2.6.22.19) and force a
+>>> crash (with 'echo c > /proc/sysrq-trigger) kexec boots the kdump
+>>> kernel but then the kernel hangs (before it gets to /sbin/init et  
+>>> al).
+>>> On the host, the associated qemu is consuming 100% cpu.
+>>>
+>>> I really need to be able to collect vmcores from my kvm guests.  So
+>>> far I can't (on raw hardware all works fine).
+>>>
+>>>
+>>
+>> I've tested this a while ago and it worked (though I tested regular  
+>> kexecs,
+>> not crashes); this may be a regression.
+>>
+>> Please run kvm_stat to see what's happening at the time of the crash.
+>
+> OK, I can look into kvm_stat but I just discovered that just having
+> kvm-intel and kvm loaded into my 2.6.22.19 kernel actually prevents
 
-> 
-> Yes. Initally, I put this item to a relative low priority, partly
-> because kdump config options and init scripts are tend to be
-> distro-specific, so it won't be easy to write portable tests for
-> different distros. In addition, lots of config options are not easy to
-> be tested automately, like raw disk target, vfat disk target, and
-> network target etc, as testers have to setup those name manually. But,
-> you are right, those are high priority tests for kexec/kdump in distro
-> release, we tested most of those options manually for RHEL anyway and we
-> had some automated tests of it, which I'll try to submit to LTP as many
-> as possible. For those manual tests, I'll also try to find some ways to
-> automate them. For example, for different dump targets, it is possible
-> to verify the generated initrd file as expected.
-> 
-> > 
-> > > == increase coverages for new kexec/kdump development efforts ==
-> > > - new reserved region syntax in Kernel.
-> > 
-> > Another important thing we need to focus on is driver testing. Drivers
-> > can fail to initialize in second kernel and kdump will fail. Can we do
-> > something so that we can do following.
-> >
-> 
-> That isn't something I have not thought of. For RHEL release testing, we
-> will have a workflow to run those tests on any storage/network drivers,
-> and it will report back testing results and driver matrix. However, this
-> workflow is very distro-specific, and depends on the test farm it is
-> using, so it does not make any sense to put it here.
-> 
-> > - Collect the machine statistics on which kdump was tested and send
-> >   the reports to a common place. Especially capture the storage/network
-> >   driver data which can be probably be available through LTP site.
-> > 
-> 
-> That sounds like a good idea to me.
-> 
-> > - Also capture how much memory was reserved on what architecture and
-> >   whether it worked or not. This will help us verify for sure that how
-> >  much memory to reserve for second kernel on various architectures.
-> >
-> 
-> This is something could be done. I'll have a look at it.
-> 
-> Thanks,
-> CaiQian
-> 
-> > Thanks
-> > Vivek
+Is 2.6.22.19 your host or your guest kernel? It's very unlikely that  
+you loaded kvm modules in the guest.
 
+> the host from being able to kexec/kdump too!?  I didn't have any
+> guests running (only the kvm modules were loaded).  As soon as I
+> unloaded the kvm modules kdump worked as expected.
+>
+> Something about kvm is completely breaking kexec/kdump on both the
+> host and guest kernels.
+
+I guess the kexec people would be pretty interested in this as well,  
+so I'll just CC them for now.
+As you're stating that the host kernel breaks with kvm modules loaded,  
+maybe someone there could give a hint.
+
+Alex
 
 _______________________________________________
 kexec mailing list
