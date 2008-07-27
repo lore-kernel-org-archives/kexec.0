@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from il.qumranet.com ([212.179.150.194])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KN2Ij-0007fw-JX
-	for kexec@lists.infradead.org; Sun, 27 Jul 2008 09:12:25 +0000
-Message-ID: <488C3BF8.1000105@qumranet.com>
-Date: Sun, 27 Jul 2008 12:12:24 +0300
-From: Avi Kivity <avi@qumranet.com>
+	id 1KNFvg-00071F-U0
+	for kexec@lists.infradead.org; Sun, 27 Jul 2008 23:45:33 +0000
+Date: Mon, 28 Jul 2008 09:45:31 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch] crashdump: fix undefined reference to `elfcorehdr_addr'
+Message-ID: <20080727234529.GM6175@verge.net.au>
+References: <20080726092519.GA4341@elte.hu>
+	<20080726031034.82e2feef.akpm@linux-foundation.org>
 MIME-Version: 1.0
-Subject: Re: kexec/kdump of a kvm guest?
-References: <170fa0d20806261158me6f81d0p2ea4fa6b7e694a5a@mail.gmail.com>	
-	<486F58EC.6020408@qumranet.com>	
-	<170fa0d20807231713t19b5bd5bt5f418f509040b7aa@mail.gmail.com>	
-	<D8D3E355-6D19-403B-8F61-FC15EA78851F@suse.de>	
-	<170fa0d20807240449n3e52c002qdb9c2626a192b0f1@mail.gmail.com>	
-	<20080724131552.GA22243@redhat.com>
-	<170fa0d20807241203h7065b643k7df1187ef7e76f87@mail.gmail.com>
-In-Reply-To: <170fa0d20807241203h7065b643k7df1187ef7e76f87@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20080726031034.82e2feef.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,20 +24,82 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Snitzer <snitzer@gmail.com>
-Cc: libvir-list@redhat.com, kexec@lists.infradead.org, Alexander Graf <agraf@suse.de>, Vivek Goyal <vgoyal@redhat.com>, kvm@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@in.ibm.com>, Ingo Molnar <mingo@elte.hu>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Mike Snitzer wrote:
-> Avi indicated he seems to remember that at least kexec worked last he
-> tried (didn't provide when/what he tried though).
->
->   
+On Sat, Jul 26, 2008 at 03:10:34AM -0700, Andrew Morton wrote:
+> On Sat, 26 Jul 2008 11:25:19 +0200 Ingo Molnar <mingo@elte.hu> wrote:
+> 
+> > 
+> > please apply before -rc1.
+> > 
+> > 	Ingo
+> > 
+> > ----------->
+> > >From 72db7cba50b6a05825f8a287f74002cc38f04fb7 Mon Sep 17 00:00:00 2001
+> > From: Ingo Molnar <mingo@elte.hu>
+> > Date: Sat, 26 Jul 2008 11:22:33 +0200
+> > Subject: [PATCH] crashdump: fix undefined reference to `elfcorehdr_addr'
+> > 
+> > fix build bug introduced by 95b68dec0d5 "calgary iommu: use the first
+> > kernels TCE tables in kdump":
+> > 
+> >  arch/x86/kernel/built-in.o: In function `calgary_iommu_init':
+> >  (.init.text+0x8399): undefined reference to `elfcorehdr_addr'
+> >  arch/x86/kernel/built-in.o: In function `calgary_iommu_init':
+> >  (.init.text+0x856c): undefined reference to `elfcorehdr_addr'
+> >  arch/x86/kernel/built-in.o: In function `detect_calgary':
+> >  (.init.text+0x8c68): undefined reference to `elfcorehdr_addr'
+> >  arch/x86/kernel/built-in.o: In function `detect_calgary':
+> >  (.init.text+0x8d0c): undefined reference to `elfcorehdr_addr'
+> >
+> > make elfcorehdr_addr a generally available symbol.
+> > 
+> > Signed-off-by: Ingo Molnar <mingo@elte.hu>
+> > ---
+> >  include/linux/crash_dump.h |    6 ++++++
+> >  1 files changed, 6 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+> > index 6cd39a9..025e4f5 100644
+> > --- a/include/linux/crash_dump.h
+> > +++ b/include/linux/crash_dump.h
+> > @@ -8,7 +8,13 @@
+> >  #include <linux/proc_fs.h>
+> >  
+> >  #define ELFCORE_ADDR_MAX	(-1ULL)
+> > +
+> > +#ifdef CONFIG_PROC_VMCORE
+> >  extern unsigned long long elfcorehdr_addr;
+> > +#else
+> > +static const unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
+> > +#endif
+> > +
+> >  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+> >  						unsigned long, int);
+> >  extern const struct file_operations proc_vmcore_operations;
+> 
+> spose that'll fix it.  But it seems odd that is_kdump_kernel() will
+> return false if CONFIG_PROC_VMCORE=n, CONFIG_CRASH_DUMP=y.  I mean,
+> it's still a crashdump kernel, is it not?
 
-kexec inside a guest.  Months ago.
+Perhaps is_kdump_kernel() ought to be renamed kernel_has_vmcore().
+
+To my mind, is_kdump_kernel() should really look something like this:
+
+#ifdef CONFIG_CRASH_DUMP
+static inline int is_kdump_kernel(void) { return 1; }
+#else
+static inline int is_kdump_kernel(void) { return 0; }
+#endif
+
+But that can probably just be handled by any relevant code
+using CONFIG_CRASH_DUMP as necessary.
+
 
 
 -- 
-error compiling committee.c: too many arguments to function
+Horms
 
 
 _______________________________________________
