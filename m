@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNIUO-0003iS-18
-	for kexec@lists.infradead.org; Mon, 28 Jul 2008 02:29:32 +0000
-Date: Mon, 28 Jul 2008 12:29:30 +1000
+	id 1KNIjq-0007HB-6o
+	for kexec@lists.infradead.org; Mon, 28 Jul 2008 02:45:30 +0000
+Date: Mon, 28 Jul 2008 12:45:28 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH] kdump: Update kdump documentation as kexec-tools-resting
-	has been renamed kexec-tools
-Message-ID: <20080728022928.GA3334@verge.net.au>
-References: <20080728021344.GA28674@verge.net.au>
+Subject: Re: [patch] crashdump: fix undefined reference to `elfcorehdr_addr'
+Message-ID: <20080728024526.GB3334@verge.net.au>
+References: <20080727234529.GM6175@verge.net.au>
+	<20080728015117.GA12055@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080728021344.GA28674@verge.net.au>
+In-Reply-To: <20080728015117.GA12055@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +24,100 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Andrew Morton <akpm@osdl.org>, Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Terry Loftin <terry.loftin@hp.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+The rfc patch I made to rename is_kdump_kernel to kernel_has_vmcore,
+which I appended to my previous post should have looked more like the
+following. Although, as I noted in my previous post, its more a starting
+point for discussion than a solution to the problem at hand.
 
---- 
-Repost using Vivek's redhat address and PATCH in the subject
-
-Andrew, please consider applying this.
-
-Index: linux-2.6/Documentation/kdump/kdump.txt
+Index: linux-2.6/arch/x86/kernel/pci-calgary_64.c
 ===================================================================
---- linux-2.6.orig/Documentation/kdump/kdump.txt	2008-07-19 10:27:50.000000000 +1000
-+++ linux-2.6/Documentation/kdump/kdump.txt	2008-07-19 10:51:57.000000000 +1000
-@@ -65,26 +65,26 @@ Install kexec-tools
+--- linux-2.6.orig/arch/x86/kernel/pci-calgary_64.c	2008-07-28 10:10:31.000000000 +1000
++++ linux-2.6/arch/x86/kernel/pci-calgary_64.c	2008-07-28 10:14:24.000000000 +1000
+@@ -801,7 +801,7 @@ static int __init calgary_setup_tar(stru
+ 	tbl = pci_iommu(dev->bus);
+ 	tbl->it_base = (unsigned long)bus_info[dev->bus->number].tce_space;
  
- 2) Download the kexec-tools user-space package from the following URL:
+-	if (is_kdump_kernel())
++	if (kernel_has_vmcore())
+ 		calgary_init_bitmap_from_tce_table(tbl);
+ 	else
+ 		tce_free(tbl, 0, tbl->it_size);
+@@ -1184,7 +1184,7 @@ static int __init calgary_init(void)
+ 		return ret;
  
--http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools-testing.tar.gz
-+http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools.tar.gz
+ 	/* Purely for kdump kernel case */
+-	if (is_kdump_kernel())
++	if (kernel_has_vmcore())
+ 		get_tce_space_from_tar();
  
--This is a symlink to the latest version, which at the time of writing is
--20061214, the only release of kexec-tools-testing so far. As other versions
--are released, the older ones will remain available at
--http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
-+This is a symlink to the latest version.
+ 	do {
+@@ -1438,7 +1438,7 @@ void __init detect_calgary(void)
+ 		return;
+ 	}
  
--Note: Latest kexec-tools-testing git tree is available at
-+The latest kexec-tools git tree is available at:
+-	specified_table_size = determine_tce_table_size((is_kdump_kernel() ?
++	specified_table_size = determine_tce_table_size((kernel_has_vmcore() ?
+ 					saved_max_pfn : max_pfn) * PAGE_SIZE);
  
--git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools-testing.git
-+git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
- or
--http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools-testing.git;a=summary
-+http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools.git
+ 	for (bus = 0; bus < MAX_PHB_BUS_NUM; bus++) {
+@@ -1461,7 +1461,7 @@ void __init detect_calgary(void)
+ 			 * If it is kdump kernel, find and use tce tables
+ 			 * from first kernel, else allocate tce tables here
+ 			 */
+-			if (!is_kdump_kernel()) {
++			if (!kernel_has_vmcore()) {
+ 				tbl = alloc_tce_table();
+ 				if (!tbl)
+ 					goto cleanup;
+Index: linux-2.6/fs/proc/vmcore.c
+===================================================================
+--- linux-2.6.orig/fs/proc/vmcore.c	2008-07-28 09:51:30.000000000 +1000
++++ linux-2.6/fs/proc/vmcore.c	2008-07-28 09:51:53.000000000 +1000
+@@ -32,8 +32,7 @@ static size_t elfcorebuf_sz;
+ /* Total size of vmcore file. */
+ static u64 vmcore_size;
+ 
+-/* Stores the physical address of elf header of crash image. */
+-unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
++unsigned long long elfcorehdr_addr;
+ 
+ struct proc_dir_entry *proc_vmcore = NULL;
+ 
+Index: linux-2.6/include/linux/crash_dump.h
+===================================================================
+--- linux-2.6.orig/include/linux/crash_dump.h	2008-07-28 09:46:29.000000000 +1000
++++ linux-2.6/include/linux/crash_dump.h	2008-07-28 10:43:03.000000000 +1000
+@@ -11,8 +11,13 @@
+ 
+ #ifdef CONFIG_PROC_VMCORE
+ extern unsigned long long elfcorehdr_addr;
 +
-+More information about kexec-tools can be found at
-+http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/README.html
++static inline int kernel_has_vmcore(void)
++{
++	return (elfcorehdr_addr != ELFCORE_ADDR_MAX) ? 1 : 0;
++}
+ #else
+-static const unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
++static inline int kernel_has_vmcore(void) { return 0; }
+ #endif
  
- 3) Unpack the tarball with the tar command, as follows:
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+@@ -28,12 +33,6 @@ extern struct proc_dir_entry *proc_vmcor
  
--   tar xvpzf kexec-tools-testing.tar.gz
-+   tar xvpzf kexec-tools.tar.gz
+ #define vmcore_elf_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
  
- 4) Change to the kexec-tools directory, as follows:
+-static inline int is_kdump_kernel(void)
+-{
+-	return (elfcorehdr_addr != ELFCORE_ADDR_MAX) ? 1 : 0;
+-}
+-#else /* !CONFIG_CRASH_DUMP */
+-static inline int is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
  
--   cd kexec-tools-testing-VERSION
-+   cd kexec-tools-VERSION
- 
- 5) Configure the package, as follows:
- 
-
-
+ extern unsigned long saved_max_pfn;
 
 _______________________________________________
 kexec mailing list
