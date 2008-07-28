@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNIFA-0001dK-70
-	for kexec@lists.infradead.org; Mon, 28 Jul 2008 02:13:49 +0000
-Date: Mon, 28 Jul 2008 12:13:45 +1000
+	id 1KNIUO-0003iS-18
+	for kexec@lists.infradead.org; Mon, 28 Jul 2008 02:29:32 +0000
+Date: Mon, 28 Jul 2008 12:29:30 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: kdump: Update kdump documentation as kexec-tools-resting has been
-	renamed kexec-tools
-Message-ID: <20080728021344.GA28674@verge.net.au>
+Subject: [PATCH] kdump: Update kdump documentation as kexec-tools-resting
+	has been renamed kexec-tools
+Message-ID: <20080728022928.GA3334@verge.net.au>
+References: <20080728021344.GA28674@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20080728021344.GA28674@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,10 +25,15 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Andrew Morton <akpm@osdl.org>, Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@in.ibm.com>
+Cc: Andrew Morton <akpm@osdl.org>, Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+--- 
+Repost using Vivek's redhat address and PATCH in the subject
+
+Andrew, please consider applying this.
 
 Index: linux-2.6/Documentation/kdump/kdump.txt
 ===================================================================
@@ -69,6 +76,8 @@ Index: linux-2.6/Documentation/kdump/kdump.txt
  
  5) Configure the package, as follows:
  
+
+
 
 _______________________________________________
 kexec mailing list
