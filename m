@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNqYQ-0006ms-Ch
-	for kexec@lists.infradead.org; Tue, 29 Jul 2008 14:51:59 +0000
-Date: Tue, 29 Jul 2008 10:51:56 -0400
+	id 1KNqvJ-0007Pk-54
+	for kexec@lists.infradead.org; Tue, 29 Jul 2008 15:15:37 +0000
+Date: Tue, 29 Jul 2008 11:15:33 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 1/3] kdump: use is_kdump_kernel() in sba_init()
-Message-ID: <20080729145156.GO25975@redhat.com>
+Subject: Re: [patch 2/3] kdump: add is_vmcore_usable() and vmcore_unusable()
+Message-ID: <20080729151533.GP25975@redhat.com>
 References: <20080729081235.293361145@vergenet.net>
-	<20080729081629.356523305@vergenet.net>
+	<20080729081629.522008269@vergenet.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080729081629.356523305@vergenet.net>
+In-Reply-To: <20080729081629.522008269@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +25,90 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, lkml@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>
 
-On Tue, Jul 29, 2008 at 06:12:36PM +1000, Simon Horman wrote:
-> After recent patches* is_kdump_kernel() should return 1 in the
-> case where code is executing in a crashkernel and 0 otherwise.
-> It is save to use outside of CONFIG_KDUMP.
+On Tue, Jul 29, 2008 at 06:12:37PM +1000, Simon Horman wrote:
+> The usage of elfcorehdr_addr has changed recently
+> such that being set to ELFCORE_ADDR_MAX is used by
+> is_kdump_kernel() to indicate if the code is executing
+> in a kernel executed as a crash kernel.
 > 
-> * http://lkml.org/lkml/2008/7/28/445
+> However, arch/ia64/kernel/setup.c:reserve_elfcorehdr will
+> rest elfcorehdr_addr to ELFCORE_ADDR_MAX on error,
+> which means any subsequent calls to is_kdump_kernel()
+> will return 0, even though they should return 1.
 > 
-
-Hi Simon,
-
-is_kdump_kernel() returns 1 when both the following conditions are true.
-
-- CONFIG_CRASH_DUMP is enabled
-- And kernel is booting after a panic.
-
-If any of the above condition is not true, it returns 0.
-
-So for the cases where, CONFIG_CRASH_DUMP=n and kernel is booting after
-panic, is_kdump_kernel() will still return 0.
-
-This essentially means that any kernel which is booting after a panic,
-but does not have CONFIG_CRASH_DUMP enabled, will not take special actions
-required for booting that kernel. Until, somebody can come up with another
-usage of booting a kernel after a panic (apart from crash dump), I think
-this is good enough an assumption.
-
-So your changes will work. I just wanted to clarify the semantics more
-explicitly.
-
+> Ok, at this point in time there are no subsequent calls,
+> but I think its fair to say that there is ample scope for error
+> or at the very least confusion.
+> 
+> This patch add an extra state, ELFCORE_ADDR_ERR, which
+> indicates that elfcorehdr_addr was passed on the command line,
+> and thus execution is taking place in a crashdump kernel,
+> but vmcore can't be used for some reason. This is tested
+> for using is_vmcore_usable() and set using vmcore_unusable().
+> A subsequent patch makes use of this new code.
+> 
+> To summarise, the states that elfcorehdr_addr can now be in are as follows:
+> 
+> ELFCORE_ADDR_MAX: not a crashdump kernel
+> ELFCORE_ADDR_ERR: crashdump kernel but vmcore is unusable
+> any other value:  crash dump kernel and vmcore is usable
+> 
 > Signed-off-by: Simon Horman <horms@verge.net.au>
 > 
 > 
-> Index: linux-2.6/arch/ia64/hp/common/sba_iommu.c
+> Index: linux-2.6/include/linux/crash_dump.h
 > ===================================================================
-> --- linux-2.6.orig/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:17.000000000 +1000
-> +++ linux-2.6/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:51.000000000 +1000
-> @@ -2070,14 +2070,13 @@ sba_init(void)
->  	if (!ia64_platform_is("hpzx1") && !ia64_platform_is("hpzx1_swiotlb"))
->  		return 0;
+> --- linux-2.6.orig/include/linux/crash_dump.h	2008-07-29 17:27:43.000000000 +1000
+> +++ linux-2.6/include/linux/crash_dump.h	2008-07-29 17:53:13.000000000 +1000
+> @@ -8,6 +8,7 @@
+>  #include <linux/proc_fs.h>
 >  
-> -#if defined(CONFIG_IA64_GENERIC) && defined(CONFIG_CRASH_DUMP) && \
-> -        defined(CONFIG_PROC_FS)
-> +#if defined(CONFIG_IA64_GENERIC)
+>  #define ELFCORE_ADDR_MAX	(-1ULL)
+> +#define ELFCORE_ADDR_ERR	(-2ULL)
+>  
+>  #ifdef CONFIG_PROC_VMCORE
+>  extern unsigned long long elfcorehdr_addr;
+> @@ -36,5 +37,30 @@ static inline int is_kdump_kernel(void)
+>  static inline int is_kdump_kernel(void) { return 0; }
+>  #endif /* CONFIG_CRASH_DUMP */
+>  
+> +#ifdef CONFIG_PROC_VMCORE
+> +/* is_vmcore_usable() checks if the kernel is booting after a panic and
+> + * the vmcore region is usable.
+> + *
+> + * This makes use of the fact that due to alignment 1 is not
+> + * a valid pointer, much in the vain of IS_ERR(), except
+> + * dealing directly with an unsigned long long rather than a pointer.
+> + */
+> +
+> +static inline int is_vmcore_usable(void)
+> +{
+> +	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
+> +}
+> +
+> +/* vmcore_unusable() marks the vmcore as unusable, without disturbing
+> + * the logic of is_kdump_kernel()
+> + */
+> +
+> +static inline void vmcore_unusable(void)
+> +{
+> +	if (!is_kdump_kernel())
+> +		elfcorehdr_addr = ELFCORE_ADDR_ERR;
+> +}
 
+Hi Simon,
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+Should above condition be "if(is_kdump_kernel())" instead of
+"if(!is_kdump_kernel())?
+
+I would think that you would like to mark a vmcore unusable only if, to 
+begin with you were booting after a panic.
+
+If we being marking vmcore_unusable in case of normal kernel
+(!is_kdump_kernel()), then is_kdump_kernel() will start reporting
+normal kernel as kdump kernel?
 
 Thanks
 Vivek
