@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNh2s-0005br-5f
-	for kexec@lists.infradead.org; Tue, 29 Jul 2008 04:42:47 +0000
-Date: Tue, 29 Jul 2008 14:42:43 +1000
+	id 1KNkOz-0005ht-1L
+	for kexec@lists.infradead.org; Tue, 29 Jul 2008 08:17:50 +0000
+Message-Id: <20080729081629.356523305@vergenet.net>
+References: <20080729081235.293361145@vergenet.net>
+Date: Tue, 29 Jul 2008 18:12:36 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/5] ia64: Define elfcorehdr_addr in arch dependent section
-Message-ID: <20080729044241.GA23514@verge.net.au>
-References: <20080727234529.GM6175@verge.net.au>
-	<20080728015117.GA12055@verge.net.au>
-	<20080728024526.GB3334@verge.net.au>
-	<20080728034007.GA30450@verge.net.au>
-	<20080728211025.GA9985@redhat.com>
-	<20080728211156.GB9985@redhat.com>
-	<20080728211314.GC9985@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080728211314.GC9985@redhat.com>
+Subject: [patch 1/3] kdump: use is_kdump_kernel() in sba_init()
+Content-Disposition: inline; filename=ia64-use-is_kdump_kernel.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,83 +17,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, Terry Loftin <terry.loftin@hp.com>, Paul Mundt <lethal@linux-sh.org>, Paul Mackerras <paulus@samba.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>
+To: kexec@lists.infradead.org, linux-ia64@vger.kernel.org, lkml@vger.kernel.org
+Cc: Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Jul 28, 2008 at 05:13:14PM -0400, Vivek Goyal wrote:
-> 
-> o Move elfcorehdr_addr definition in arch dependent crash dump file. This is
->   equivalent to defining elfcorehdr_addr under CONFIG_CRASH_DUMP instead of
->   CONFIG_PROC_VMCORE. This is needed by is_kdump_kernel() which can be
->   used irrespective of the fact whether CONFIG_PROC_VMCORE is enabled or
->   not.
-> 
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
-> 
->  arch/ia64/kernel/setup.c |    9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff -puN arch/ia64/kernel/setup.c~fix-elfcorehdr_addr-parsing-ia64 arch/ia64/kernel/setup.c
-> --- linux-2.6.27-pre-rc1/arch/ia64/kernel/setup.c~fix-elfcorehdr_addr-parsing-ia64	2008-07-28 12:16:40.000000000 -0400
-> +++ linux-2.6.27-pre-rc1-root/arch/ia64/kernel/setup.c	2008-07-28 12:16:40.000000000 -0400
-> @@ -478,7 +478,12 @@ static __init int setup_nomca(char *s)
->  }
->  early_param("nomca", setup_nomca);
->  
-> -#ifdef CONFIG_PROC_VMCORE
-> +/*
-> + * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
-> + * is_kdump_kernel() to determine if we are booting after a panic. Hence
-> + * ifdef it under CONFIG_CRASH_DUMP and not CONFIG_PROC_VMCORE.
-> + */
-> +#ifdef CONFIG_CRASH_DUMP
->  /* elfcorehdr= specifies the location of elf core header
->   * stored by the crashed kernel.
->   */
-> @@ -491,7 +496,9 @@ static int __init parse_elfcorehdr(char 
->  	return 0;
->  }
->  early_param("elfcorehdr", parse_elfcorehdr);
-> +#endif
->  
-> +#ifdef CONFIG_PROC_VMCORE
->  int __init reserve_elfcorehdr(unsigned long *start, unsigned long *end)
->  {
->  	unsigned long length;
-> _
+After recent patches* is_kdump_kernel() should return 1 in the
+case where code is executing in a crashkernel and 0 otherwise.
+It is save to use outside of CONFIG_KDUMP.
 
-Hi Vivek,
-
-I think that you also need the following in arch/ia64/kernel/crash_dump.c.
-With this change your code compiles on ia64.
+* http://lkml.org/lkml/2008/7/28/445
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
 
-Index: linux-2.6/arch/ia64/kernel/crash_dump.c
+Index: linux-2.6/arch/ia64/hp/common/sba_iommu.c
 ===================================================================
---- linux-2.6.orig/arch/ia64/kernel/crash_dump.c	2008-07-29 14:06:57.000000000 +1000
-+++ linux-2.6/arch/ia64/kernel/crash_dump.c	2008-07-29 14:09:55.000000000 +1000
-@@ -8,10 +8,14 @@
+--- linux-2.6.orig/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:17.000000000 +1000
++++ linux-2.6/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:51.000000000 +1000
+@@ -2070,14 +2070,13 @@ sba_init(void)
+ 	if (!ia64_platform_is("hpzx1") && !ia64_platform_is("hpzx1_swiotlb"))
+ 		return 0;
  
- #include <linux/errno.h>
- #include <linux/types.h>
-+#include <linux/crash_dump.h>
- 
- #include <asm/page.h>
- #include <asm/uaccess.h>
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
-+
- /**
-  * copy_oldmem_page - copy one page from "oldmem"
-  * @pfn: page frame number to be copied
+-#if defined(CONFIG_IA64_GENERIC) && defined(CONFIG_CRASH_DUMP) && \
+-        defined(CONFIG_PROC_FS)
++#if defined(CONFIG_IA64_GENERIC)
+ 	/* If we are booting a kdump kernel, the sba_iommu will
+ 	 * cause devices that were not shutdown properly to MCA
+ 	 * as soon as they are turned back on.  Our only option for
+ 	 * a successful kdump kernel boot is to use the swiotlb.
+ 	 */
+-	if (elfcorehdr_addr < ELFCORE_ADDR_MAX) {
++	if (is_kdump_kernel()) {
+ 		if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
+ 			panic("Unable to initialize software I/O TLB:"
+ 				  " Try machvec=dig boot option");
+
+-- 
+
+-- 
+Horms
 
 
 _______________________________________________
