@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNdBe-0001wx-Rs
-	for kexec@lists.infradead.org; Tue, 29 Jul 2008 00:35:35 +0000
-Date: Tue, 29 Jul 2008 10:35:33 +1000
+	id 1KNdvO-0007Ij-C1
+	for kexec@lists.infradead.org; Tue, 29 Jul 2008 01:22:51 +0000
+Date: Tue, 29 Jul 2008 11:22:48 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch] crashdump: fix undefined reference to `elfcorehdr_addr'
-Message-ID: <20080729003533.GH10434@verge.net.au>
+Subject: Re: [PATCH 1/5] Move elfcorehdr_addr out of vmcore.c (Was: Re:
+	[patch] crashdump: fix undefined reference to `elfcorehdr_addr')
+Message-ID: <20080729012245.GI10434@verge.net.au>
 References: <20080727234529.GM6175@verge.net.au>
 	<20080728015117.GA12055@verge.net.au>
 	<20080728024526.GB3334@verge.net.au>
 	<20080728034007.GA30450@verge.net.au>
-	<20080728124856.GF5515@elte.hu>
+	<20080728211025.GA9985@redhat.com>
+	<m1vdypfwxe.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080728124856.GF5515@elte.hu>
+In-Reply-To: <m1vdypfwxe.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,37 +29,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Terry Loftin <terry.loftin@hp.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Tony Luck <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, Terry Loftin <terry.loftin@hp.com>, Paul Mundt <lethal@linux-sh.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Jul 28, 2008 at 02:48:56PM +0200, Ingo Molnar wrote:
+On Mon, Jul 28, 2008 at 03:47:41PM -0700, Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> * Simon Horman <horms@verge.net.au> wrote:
+> > Hi All,
+> >
+> > How does following series of patches look like. I have moved
+> > elfcorehdr_addr out of vmcore.c and pushed it to arch dependent section 
+> > of crash dump to make sure that it can be worked with even when
+> > CONFIG_PROC_VMCORE is disabled and CONFIG_CRASH_DUMP is enabled.
+> >
+> > I tested it on x86_64. Compile tested it on i386 and ppc64. ia64 and
+> > sh versions are completely untested.
 > 
-> > On Mon, Jul 28, 2008 at 12:45:28PM +1000, Simon Horman wrote:
-> > > The rfc patch I made to rename is_kdump_kernel to kernel_has_vmcore,
-> > > which I appended to my previous post should have looked more like the
-> > > following. Although, as I noted in my previous post, its more a starting
-> > > point for discussion than a solution to the problem at hand.
-> > 
-> > Sorry, one more time. I forgot to quilt refresh.
+> Given the current state of the code:
+> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > 
-> doesnt apply cleanly to latest -git:
+> To process a kernel crash dump we pass the kernel elfcorehdr option,
+> so testing to see if it was passed seems reasonable.
 > 
->  Hunk #1 FAILED at 2070.
->  1 out of 1 hunk FAILED -- saving rejects to file arch/ia64/hp/common/sba_iommu.c.rej
-> 
-> due to a crossing change i guess. Also, i guess this should go via -mm 
-> as it touches fs/proc/vmcore.c and include/linux/crash_dump.h. The x86 
-> bits look good to me.
-> 
->  Acked-by: Ingo Molnar <mingo@elte.hu>
+> In general I think this method of handling the problems with kdump is
+> too brittle to live, but in the case of iommus we certainly need to do
+> something different, and unfortunately iommus were not common on x86
+> when the original code was merged so we have not handled them well.
 
-Sorry about the messiness there. Vivek has a different patch
-set that renders most of this irrelevant. I'll fix up the
-arch/ia64/hp/common/sba_iommu.c portion to match his changes
-so that he can include it in his sereis / it can be included
-after his series.
+Agreed, however these patches look like they really ought to be merged
+into a single patch for the sake of bisect. As things stand, applying
+the first patch will break the build on each architecture with an
+architecture specific until the latter is applied.
 
 -- 
 Horms
