@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from wr-out-0506.google.com ([64.233.184.238])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNqvJ-0007Pk-54
-	for kexec@lists.infradead.org; Tue, 29 Jul 2008 15:15:37 +0000
-Date: Tue, 29 Jul 2008 11:15:33 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 2/3] kdump: add is_vmcore_usable() and vmcore_unusable()
-Message-ID: <20080729151533.GP25975@redhat.com>
-References: <20080729081235.293361145@vergenet.net>
-	<20080729081629.522008269@vergenet.net>
+	id 1KNvgp-00025Y-Bx
+	for kexec@lists.infradead.org; Tue, 29 Jul 2008 20:21:00 +0000
+Received: by wr-out-0506.google.com with SMTP id 70so38073wra.22
+	for <kexec@lists.infradead.org>; Tue, 29 Jul 2008 13:20:55 -0700 (PDT)
+Message-ID: <802076b50807291320p6968ee3audd383b4e24825279@mail.gmail.com>
+Date: Tue, 29 Jul 2008 21:20:55 +0100
+From: "Kazek Kazik" <kazek3018@googlemail.com>
+Subject: Kexec on SH4, STi7100 (ST40)
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080729081629.522008269@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,94 +23,210 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux kernel mailing list <linux-kernel@vger.kernel.org>
+To: kexec@lists.infradead.org
 
-On Tue, Jul 29, 2008 at 06:12:37PM +1000, Simon Horman wrote:
-> The usage of elfcorehdr_addr has changed recently
-> such that being set to ELFCORE_ADDR_MAX is used by
-> is_kdump_kernel() to indicate if the code is executing
-> in a kernel executed as a crash kernel.
-> 
-> However, arch/ia64/kernel/setup.c:reserve_elfcorehdr will
-> rest elfcorehdr_addr to ELFCORE_ADDR_MAX on error,
-> which means any subsequent calls to is_kdump_kernel()
-> will return 0, even though they should return 1.
-> 
-> Ok, at this point in time there are no subsequent calls,
-> but I think its fair to say that there is ample scope for error
-> or at the very least confusion.
-> 
-> This patch add an extra state, ELFCORE_ADDR_ERR, which
-> indicates that elfcorehdr_addr was passed on the command line,
-> and thus execution is taking place in a crashdump kernel,
-> but vmcore can't be used for some reason. This is tested
-> for using is_vmcore_usable() and set using vmcore_unusable().
-> A subsequent patch makes use of this new code.
-> 
-> To summarise, the states that elfcorehdr_addr can now be in are as follows:
-> 
-> ELFCORE_ADDR_MAX: not a crashdump kernel
-> ELFCORE_ADDR_ERR: crashdump kernel but vmcore is unusable
-> any other value:  crash dump kernel and vmcore is usable
-> 
-> Signed-off-by: Simon Horman <horms@verge.net.au>
-> 
-> 
-> Index: linux-2.6/include/linux/crash_dump.h
-> ===================================================================
-> --- linux-2.6.orig/include/linux/crash_dump.h	2008-07-29 17:27:43.000000000 +1000
-> +++ linux-2.6/include/linux/crash_dump.h	2008-07-29 17:53:13.000000000 +1000
-> @@ -8,6 +8,7 @@
->  #include <linux/proc_fs.h>
->  
->  #define ELFCORE_ADDR_MAX	(-1ULL)
-> +#define ELFCORE_ADDR_ERR	(-2ULL)
->  
->  #ifdef CONFIG_PROC_VMCORE
->  extern unsigned long long elfcorehdr_addr;
-> @@ -36,5 +37,30 @@ static inline int is_kdump_kernel(void)
->  static inline int is_kdump_kernel(void) { return 0; }
->  #endif /* CONFIG_CRASH_DUMP */
->  
-> +#ifdef CONFIG_PROC_VMCORE
-> +/* is_vmcore_usable() checks if the kernel is booting after a panic and
-> + * the vmcore region is usable.
-> + *
-> + * This makes use of the fact that due to alignment 1 is not
-> + * a valid pointer, much in the vain of IS_ERR(), except
-> + * dealing directly with an unsigned long long rather than a pointer.
-> + */
-> +
-> +static inline int is_vmcore_usable(void)
-> +{
-> +	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-> +}
-> +
-> +/* vmcore_unusable() marks the vmcore as unusable, without disturbing
-> + * the logic of is_kdump_kernel()
-> + */
-> +
-> +static inline void vmcore_unusable(void)
-> +{
-> +	if (!is_kdump_kernel())
-> +		elfcorehdr_addr = ELFCORE_ADDR_ERR;
-> +}
+Hello for all.
 
-Hi Simon,
+I try to run kexec on STi7100 processor. Unfortunately code from
+kexec-tools-2.0.0-rc1.tar.gz is not working right.
+I found in my kernel .config file:
 
-Should above condition be "if(is_kdump_kernel())" instead of
-"if(!is_kdump_kernel())?
+#
+# Memory management options
+#
+CONFIG_MMU=y
+CONFIG_PAGE_OFFSET=0x80000000
+CONFIG_MEMORY_START=0x04400000
+CONFIG_MEMORY_SIZE=0x02400000
+CONFIG_SELECT_MEMORY_MODEL=y
+CONFIG_FLATMEM_MANUAL=y
+# CONFIG_DISCONTIGMEM_MANUAL is not set
+# CONFIG_SPARSEMEM_MANUAL is not set
+CONFIG_FLATMEM=y
+CONFIG_FLAT_NODE_MEM_MAP=y
+# CONFIG_SPARSEMEM_STATIC is not set
+CONFIG_SPLIT_PTLOCK_CPUS=4
 
-I would think that you would like to mark a vmcore unusable only if, to 
-begin with you were booting after a panic.
+And I changed source code:
+in kexec-sh.c file:
+int get_memory_ranges(struct memory_range **range, int *ranges,
+		      unsigned long kexec_flags)
+{
+	int memory_ranges;
+	
+	memory_ranges = 0;
+	memory_range[memory_ranges].start = 0x84400000;
+	memory_range[memory_ranges].end   = 0x84640000;
+	memory_range[memory_ranges].type  = RANGE_RAM;
+	memory_ranges++;
+	*range = memory_range;
+	*ranges = memory_ranges;
+	return 0;
+}
+unsigned long get_empty_zero(char *s)
+{
+        char *env;
 
-If we being marking vmcore_unusable in case of normal kernel
-(!is_kdump_kernel()), then is_kdump_kernel() will start reporting
-normal kernel as kdump kernel?
+	env = getenv("KEXEC_EMPTY_ZERO");
 
-Thanks
-Vivek
+	if(s)
+	{
+	  env = s;
+	}
+	else if(!env)
+	{
+		env = "0x84400000";
+	}
+	return 0x8fffffff & strtoul(env,(char **)NULL,0);
+}
+
+In kexec-zImage-sh.c file:
+int zImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+	struct kexec_info *info)
+{
+        char *command_line;
+	int opt;
+	unsigned long empty_zero, area;
+	unsigned char *param;
+	unsigned long *paraml;
+
+	static const struct option options[] = {
+       	        KEXEC_ARCH_OPTIONS
+		{0, 0, 0, 0},
+	};
+
+	static const char short_options[] = KEXEC_ARCH_OPT_STR "";
+
+	command_line = 0;
+	empty_zero = get_empty_zero(NULL);
+	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+		switch (opt) {
+		default:
+			/* Ignore core options */
+			if (opt < OPT_ARCH_MAX) {
+				break;
+			}
+		case '?':
+			usage();
+			return -1;
+		case OPT_APPEND:
+			command_line = optarg;
+			break;
+		case OPT_EMPTYZERO:
+			empty_zero = get_empty_zero(optarg);
+			break;
+		}
+	}
+	param = xmalloc(0x1000);
+	memset(param, 0, 0x1000);
+	area=locate_hole(info,len+0x1000,0,0,ULONG_MAX,INT_MAX);
+	if (area == ULONG_MAX)
+	{
+		printf("Memory allocation error.");
+	}
+	//------------------
+	printf("Debug info.\n");
+	printf("Variable area --> 0x%08X\n", area);
+	printf("Variable empty_zero --> 0x%08X\n", empty_zero);
+	//------------------
+	if (!command_line) {
+		command_line = get_append();
+	}
+	strncpy(&param[256], command_line, strlen(command_line));
+	paraml = (unsigned long *)param;
+	printf("cmdline --> %s  <-- end of cmdline.\n", (char *)&param[256]);
+	// paraml[0] = 1;  // readonly flag is set as default
+
+	add_segment(info, param, 0x1000, area, 0x1000);
+	add_segment(info, buf,   len,  (area + 0x1000), len);
+	/* For now we don't have arguments to pass :( */
+	info->entry = (void *)(area + 0x1000 + 0x1000);
+	return 0;
+}
+
+I load new kernel in this way:
+./kexec -l /tmp/usb/USB-Harddisk\ \(1-1\)/boot/zImage --type=zImage-sh
+--append="console=ttyAS0,115200 root=/dev/sda1 mem=40m
+bigphysarea=1280 coprocessor_mem=2m@0x04000000,2m@0x04200000"
+--mem-min=84000000
+and execute:
+./kexec -e
+
+This is what I get on tellnet:
+Debug info.
+Variable area --> 0x84400000
+Variable empty_zero --> 0x84400000
+cmdline --> console=ttyAS0,115200 root=/dev/sdb1 mem=40m
+bigphysarea=1280 coprocessor_mem=2m@0x04000000,2m@0x04200000  <-- end
+of cmdline.
+
+And on console:
+login[4354]: root login on 'pts/0'
+
+Starting new kernel
+
+
+Board: STb7100-mboard
+
+
+U-Boot 1.1.2 (STLINUX_2_0p1) (May 30 2007 - 16:03:49)
+
+DRAM:  32 MB
+ write time out = 1, clock = 40
+ write time out = 1, clock = 40
+Flash: 16 MB
+In:    serial
+Out:   serial
+Err:   serial
+pll0 freq 531
+pll1 freq 399
+Net:   VFD_Driver Init
+VFD_Controller Type : NEW Kathrein VFD
+board_version = 0
+Button_value = 7
+Hit any key to stop autoboot:  1  0
+## Booting image at a0040000 ...
+   Image Name:   Linux-2.6.17.14_stm22_0037
+   Image Type:   SuperH Linux Kernel Image (gzip compressed)
+   Data Size:    1742761 Bytes =  1.7 MB
+   Load Address: 84401000
+   Entry Point:  84402000
+   Verifying Checksum ... OK
+   Uncompressing Kernel Image ... OK
+
+Starting kernel console=ttyAS0,115200 root=/dev/mtdblock3 mem=38m
+bigphysarea=1280 coprocessor_mem=2m@0x04000000,2m@0x04200000 -
+0x00000000 - 0 ...
+
+Linux version 2.6.17.14_stm22_0037 (****@*****) (gcc version 4.1.1
+(STMicroelectronics/Linux Base 4.1.1-21)) #125 PREEMPT Mon Jun 9
+11:00:25 BST 2008
+STMicroelectronics STb7100 Reference board initialisation
+STb7100 version 3.x
+Built 1 zonelists
+Kernel command line: console=ttyAS0,115200 root=/dev/mtdblock3 mem=38m
+bigphysarea=1280 coprocessor_mem=2m@0x04000000,2m@0x04200000
+st-coprocessor: Failed to reserve memory at 0x04000000
+st-coprocessor: Failed to reserve memory at 0x04200000
+PID hash table entries: 256 (order: 8, 1024 bytes)
+Using tmu for system timer
+Dentry cache hash table entries: 8192 (order: 3, 32768 bytes)
+Inode-cache hash table entries: 4096 (order: 2, 16384 bytes)
+Memory: 29876k/38912k available (2897k kernel code, 9016k reserved,
+364k data, 100k init)
+PVR=04061100 CVR=30480000 PRR=00009100
+I-cache : n_ways=2 n_sets=256 way_incr=8192
+I-cache : entry_mask=0x00001fe0 alias_mask=0x00001000 n_aliases=2
+D-cache : n_ways=2 n_sets=512 way_incr=16384
+D-cache : entry_mask=0x00003fe0 alias_mask=0x00003000 n_aliases=4
+Mount-cache hash table entries: 512
+CPU: STb710x
+
+
+I don't have any idea why it's reboot system instead run new kernel.
+I will really thanks full for any help.
+
+Szymon.
 
 _______________________________________________
 kexec mailing list
