@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNzZX-00044p-E0
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 00:29:43 +0000
-Date: Wed, 30 Jul 2008 10:29:39 +1000
+	id 1KNzaH-00054Q-UB
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 00:30:30 +0000
+Date: Wed, 30 Jul 2008 10:30:28 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch] kdump: sh: parse elfcorehdr command line argument
-Message-ID: <20080730002937.GA21998@verge.net.au>
+Subject: [patch] kdump: update elfcorehdr documentation to reflect
+	supported architectures
+Message-ID: <20080730003026.GA22106@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -21,56 +22,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, linux-sh@vger.kernel.org
-Cc: Paul Mundt <lethal@linux-sh.org>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Vivek Goyal <vgoyal@redhat.com>
 
-A quick cut and paste from other architectures to allow SH
-to parse the elfcorehdr command line argument which is required
-for both is_kdump_kernel() and vmcore to function.
-(the former is as yet unused on SH).
-
-Tested compilation only
+IA64, PPC and SH also support the elfcorehdr command line.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Index: linux-2.6/arch/sh/kernel/setup.c
+Index: linux-2.6/Documentation/kernel-parameters.txt
 ===================================================================
---- linux-2.6.orig/arch/sh/kernel/setup.c	2008-07-30 09:33:45.000000000 +1000
-+++ linux-2.6/arch/sh/kernel/setup.c	2008-07-30 09:37:45.000000000 +1000
-@@ -25,6 +25,7 @@
- #include <linux/smp.h>
- #include <linux/err.h>
- #include <linux/debugfs.h>
-+#include <linux/crash_dump.h>
- #include <asm/uaccess.h>
- #include <asm/io.h>
- #include <asm/page.h>
-@@ -286,6 +287,25 @@ static void __init setup_memory(void)
- extern void __init setup_memory(void);
- #endif
+--- linux-2.6.orig/Documentation/kernel-parameters.txt	2008-07-30 09:48:40.000000000 +1000
++++ linux-2.6/Documentation/kernel-parameters.txt	2008-07-30 09:48:45.000000000 +1000
+@@ -688,7 +688,7 @@ and is between 256 and 4096 characters. 
+ 			See Documentation/block/as-iosched.txt and
+ 			Documentation/block/deadline-iosched.txt for details.
  
-+/*
-+ * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
-+ * is_kdump_kernel() to determine if we are booting after a panic. Hence
-+ * ifdef it under CONFIG_CRASH_DUMP and not CONFIG_PROC_VMCORE.
-+ */
-+#ifdef CONFIG_CRASH_DUMP
-+/* elfcorehdr= specifies the location of elf core header
-+ * stored by the crashed kernel.
-+ */
-+static int __init parse_elfcorehdr(char *arg)
-+{
-+	if (!arg)
-+		return -EINVAL;
-+	elfcorehdr_addr = memparse(arg, &arg);
-+	return 0;
-+}
-+early_param("elfcorehdr", parse_elfcorehdr);
-+#endif
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	enable_mmu();
+-	elfcorehdr=	[X86-32, X86_64]
++	elfcorehdr=	[IA64,PPC,SH,X86-32,X86_64]
+ 			Specifies physical address of start of kernel core
+ 			image elf header. Generally kexec loader will
+ 			pass this option to capture kernel.
 
 _______________________________________________
 kexec mailing list
