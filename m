@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KOBJ7-0005vq-T9
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 13:01:34 +0000
-Date: Wed, 30 Jul 2008 09:01:31 -0400
+	id 1KOBKs-0001YR-Cm
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 13:03:22 +0000
+Date: Wed, 30 Jul 2008 09:03:21 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 3/3] kdump: use is_vmcore_usable() and
-	vmcore_unusable() in reserve_elfcorehdr()
-Message-ID: <20080730130131.GB16373@redhat.com>
-References: <20080729081235.293361145@vergenet.net>
-	<20080729081629.715923799@vergenet.net>
+Subject: Re: [patch] kdump: update elfcorehdr documentation to reflect
+	supported architectures
+Message-ID: <20080730130321.GC16373@redhat.com>
+References: <20080730003026.GA22106@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080729081629.715923799@vergenet.net>
+In-Reply-To: <20080730003026.GA22106@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,52 +25,33 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, lkml@vger.kernel.org
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, Jul 29, 2008 at 06:12:38PM +1000, Simon Horman wrote:
-> After recent changes setting elfcorehdr_addr to ELFCORE_ADDR_MAX
-> will cause is_kdump_kernel() to return 0 when it should return 1.
-> Instead use vmcore_unusable(), which has been added for this purpose.
+On Wed, Jul 30, 2008 at 10:30:28AM +1000, Simon Horman wrote:
+> IA64, PPC and SH also support the elfcorehdr command line.
 > 
 > Signed-off-by: Simon Horman <horms@verge.net.au>
 > 
-> Index: linux-2.6/arch/ia64/kernel/setup.c
+> Index: linux-2.6/Documentation/kernel-parameters.txt
 > ===================================================================
-> --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-07-29 17:27:43.000000000 +1000
-> +++ linux-2.6/arch/ia64/kernel/setup.c	2008-07-29 17:50:50.000000000 +1000
-> @@ -502,11 +502,11 @@ int __init reserve_elfcorehdr(unsigned l
->  	 * to work properly.
->  	 */
+> --- linux-2.6.orig/Documentation/kernel-parameters.txt	2008-07-30 09:48:40.000000000 +1000
+> +++ linux-2.6/Documentation/kernel-parameters.txt	2008-07-30 09:48:45.000000000 +1000
+> @@ -688,7 +688,7 @@ and is between 256 and 4096 characters. 
+>  			See Documentation/block/as-iosched.txt and
+>  			Documentation/block/deadline-iosched.txt for details.
 >  
-> -	if (elfcorehdr_addr >= ELFCORE_ADDR_MAX)
-> +	if (!is_vmcore_usable())
->  		return -EINVAL;
->  
->  	if ((length = vmcore_find_descriptor_size(elfcorehdr_addr)) == 0) {
-> -		elfcorehdr_addr = ELFCORE_ADDR_MAX;
-> +		vmcore_unusable();
->  		return -EINVAL;
->  	}
->  
+> -	elfcorehdr=	[X86-32, X86_64]
+> +	elfcorehdr=	[IA64,PPC,SH,X86-32,X86_64]
+>  			Specifies physical address of start of kernel core
+>  			image elf header. Generally kexec loader will
+>  			pass this option to capture kernel.
 
-Hi Simon,
+Thanks Simon.
 
-I had a question. I am not very sure what reserve_elfcorehdr is doing
-but doing something similar to reserving some memory area where
-elfcoreheaders are.
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-I see that reserve_elfcorehdr is under CONFIG_PROC_VMCORE. Will it work
-if CONFIG_PROC_VMCORE=n and somebody wants to use /dev/oldmem?
-Or reserve_elfcorehdr should be under CONFIG_CRASH_DUMP?
-
-Thanks
 Vivek
-  
-> 
-> -- 
-> 
-> -- 
-> Horms
+
 
 _______________________________________________
 kexec mailing list
