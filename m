@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mta23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KO0GV-0001Kj-6h
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 01:14:07 +0000
-Date: Wed, 30 Jul 2008 10:13:25 +0900
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [patch] kdump: sh: parse elfcorehdr command line argument
-Message-ID: <20080730011325.GA7529@linux-sh.org>
-References: <20080730002937.GA21998@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080730002937.GA21998@verge.net.au>
+Received: from chilli.pcug.org.au ([203.10.76.44] helo=smtps.tip.net.au)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KO4Ge-0008OX-Fl
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 05:30:33 +0000
+Date: Wed, 30 Jul 2008 15:30:28 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: linux-next: build failure
+Message-Id: <20080730153028.95226354.sfr@canb.auug.org.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +20,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, linux-sh@vger.kernel.org
+To: Ananth N Mavinakayanahalli <ananth@in.ibm.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, linux-next@vger.kernel.org, kexec@lists.infradead.org, Ankita Garg <ankita@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Jul 30, 2008 at 10:29:39AM +1000, Simon Horman wrote:
-> A quick cut and paste from other architectures to allow SH
-> to parse the elfcorehdr command line argument which is required
-> for both is_kdump_kernel() and vmcore to function.
-> (the former is as yet unused on SH).
-> 
-> Tested compilation only
-> 
-> Signed-off-by: Simon Horman <horms@verge.net.au>
-> 
-This was the first thing I was going to do this morning, but you beat me
-to it. :-)
+Hi Ananth,
 
-Applied, thanks!
+Today's linux-next build (powerpc allyesconfig) failed like this:
+
+tests/lkdtm.c:182: error: expected ')' before '*' token
+
+I have no idea why this fails now when it did not before.
+
+I applied the following patch.
+-- 
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
+http://www.canb.auug.org.au/~sfr/
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 30 Jul 2008 15:24:53 +1000
+Subject: [PATCH] tests: lkdtm needs ide.h
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ tests/lkdtm.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/tests/lkdtm.c b/tests/lkdtm.c
+index 2a40d18..856f060 100644
+--- a/tests/lkdtm.c
++++ b/tests/lkdtm.c
+@@ -52,6 +52,7 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/hrtimer.h>
++#include <linux/ide.h>
+ #include <scsi/scsi_cmnd.h>
+ 
+ #define NUM_CPOINTS 8
+-- 
+1.5.6.3
+
 
 _______________________________________________
 kexec mailing list
