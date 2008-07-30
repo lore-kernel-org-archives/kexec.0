@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KOCQr-00053X-6c
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 14:13:37 +0000
-Date: Wed, 30 Jul 2008 16:14:16 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: makedumpfile fails on SGI machine
-Message-ID: <20080730161416.47605c30@halley.suse.de>
-Mime-Version: 1.0
+Received: from fk-out-0910.google.com ([209.85.128.188])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KOHcb-0004Cu-LG
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 19:46:06 +0000
+Received: by fk-out-0910.google.com with SMTP id 18so121986fks.2
+	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 12:46:03 -0700 (PDT)
+From: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>
+Subject: Re: linux-next: build failure
+Date: Wed, 30 Jul 2008 21:16:55 +0200
+References: <20080730153028.95226354.sfr@canb.auug.org.au>
+	<20080730064146.GA1564@cs181140183.pp.htv.fi>
+	<20080730070643.GA18347@in.ibm.com>
+In-Reply-To: <20080730070643.GA18347@in.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200807302116.55515.bzolnier@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,342 +27,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
+To: Ankita Garg <ankita@in.ibm.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Adrian Bunk <bunk@kernel.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, linux-next@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-Hi,
+On Wednesday 30 July 2008, Ankita Garg wrote:
+> On Wed, Jul 30, 2008 at 09:41:46AM +0300, Adrian Bunk wrote:
+> > On Wed, Jul 30, 2008 at 03:30:28PM +1000, Stephen Rothwell wrote:
+> > > Hi Ananth,
+> > > 
+> > > Today's linux-next build (powerpc allyesconfig) failed like this:
+> > > 
+> > > tests/lkdtm.c:182: error: expected ')' before '*' token
+> > > 
+> > > I have no idea why this fails now when it did not before.
+> > 
+> > Sorry, that's my fault.
+> > (I didn't notice since my allyes builds have CONFIG_MODULES=n, and
+> >  no defconfig seems to have both LKDTM and IDE=y.)
+> > 
+> > Bart, can you either apply Stephen's patch or drop the lkdtm.c chunk 
+> > from my patch?
+> >
+> 
+> I suppose it would be better if the earlier changes are reverted, as
+> lkdtm already has bits to include ide.h depending on CONFIG_IDE being
+> y/n.
 
-makedumpfile 1.2.7 fails on a SGI machine with following error:
+I reverted lktdm.c change (sorry for not noticing it earlier).
 
-readmem: Can't convert a virtual address(a0007fff8f900000) to offset.
-
-The debug output is
-
---------------------------------------- 8< --------------------------
-LOAD (0)
-  phys_start : 3014000000
-  phys_end   : 301466d660
-  virt_start : a000000100000000
-  virt_end   : a00000010066d660
-LOAD (1)
-  phys_start : 3000080000
-  phys_end   : 3000400000
-  virt_start : e000003000080000
-  virt_end   : e000003000400000
-LOAD (2)
-  phys_start : 3003000000
-  phys_end   : 3006000000
-  virt_start : e000003003000000
-  virt_end   : e000003006000000
-LOAD (3)
-  phys_start : 3006000000
-  phys_end   : 3014000000
-  virt_start : e000003006000000
-  virt_end   : e000003014000000
-LOAD (4)
-  phys_start : 3014000000
-  phys_end   : 3014f0b000
-  virt_start : e000003014000000
-  virt_end   : e000003014f0b000
-LOAD (5)
-  phys_start : 3014f0b000
-  phys_end   : 3018000000
-  virt_start : e000003014f0b000
-  virt_end   : e000003018000000
-LOAD (6)
-  phys_start : 3038000000
-  phys_end   : 307bffe000
-  virt_start : e000003038000000
-  virt_end   : e00000307bffe000
-LOAD (7)
-  phys_start : b000080000
-  phys_end   : b000400000
-  virt_start : e00000b000080000
-  virt_end   : e00000b000400000
-LOAD (8)
-  phys_start : b003000000
-  phys_end   : b006000000
-  virt_start : e00000b003000000
-  virt_end   : e00000b006000000
-LOAD (9)
-  phys_start : b006000000
-  phys_end   : b079e8c000
-  virt_start : e00000b006000000
-  virt_end   : e00000b079e8c000
-LOAD (10)
-  phys_start : b079e8c000
-  phys_end   : b079e92000
-  virt_start : e00000b079e8c000
-  virt_end   : e00000b079e92000
-LOAD (11)
-  phys_start : b079e92000
-  phys_end   : b079e93000
-  virt_start : e00000b079e92000
-  virt_end   : e00000b079e93000
-LOAD (12)
-  phys_start : b079e93000
-  phys_end   : b07a3f2000
-  virt_start : e00000b079e93000
-  virt_end   : e00000b07a3f2000
-LOAD (13)
-  phys_start : b07a3f2000
-  phys_end   : b07a452000
-  virt_start : e00000b07a3f2000
-  virt_end   : e00000b07a452000
-LOAD (14)
-  phys_start : b07a452000
-  phys_end   : b07a7fe000
-  virt_start : e00000b07a452000
-  virt_end   : e00000b07a7fe000
-LOAD (15)
-  phys_start : b07b800000
-  phys_end   : b07b801000
-  virt_start : e00000b07b800000
-  virt_end   : e00000b07b801000
-LOAD (16)
-  phys_start : b07b801000
-  phys_end   : b07b88c000
-  virt_start : e00000b07b801000
-  virt_end   : e00000b07b88c000
-LOAD (17)
-  phys_start : b07b88c000
-  phys_end   : b07b894000
-  virt_start : e00000b07b88c000
-  virt_end   : e00000b07b894000
-LOAD (18)
-  phys_start : b07b894000
-  phys_end   : b07b896000
-  virt_start : e00000b07b894000
-  virt_end   : e00000b07b896000
-LOAD (19)
-  phys_start : b07b896000
-  phys_end   : b07b89e000
-  virt_start : e00000b07b896000
-  virt_end   : e00000b07b89e000
-LOAD (20)
-  phys_start : b07b89e000
-  phys_end   : b07b89f000
-  virt_start : e00000b07b89e000
-  virt_end   : e00000b07b89f000
-LOAD (21)
-  phys_start : b07b89f000
-  phys_end   : b07ba00000
-  virt_start : e00000b07b89f000
-  virt_end   : e00000b07ba00000
-LOAD (22)
-  phys_start : b07ba00000
-  phys_end   : b07bd5a000
-  virt_start : e00000b07ba00000
-  virt_end   : e00000b07bd5a000
-LOAD (23)
-  phys_start : b07bd94000
-  phys_end   : b07be00000
-  virt_start : e00000b07bd94000
-  virt_end   : e00000b07be00000
-LOAD (24)
-  phys_start : b07be00000
-  phys_end   : b07be12000
-  virt_start : e00000b07be00000
-  virt_end   : e00000b07be12000
-LOAD (25)
-  phys_start : b07be80000
-  phys_end   : b07be8e000
-  virt_start : e00000b07be80000
-  virt_end   : e00000b07be8e000
-Linux kdump
-
-max_mapnr    : 2c1efa3
-
-num of NODEs : 2
-
-
-Memory type  : DISCONTIGMEM
-
-mem_map (0)
-  mem_map    : 0
-  pfn_start  : 0
-  pfn_end    : c00c00
-mem_map (1)
-  mem_map    : a0007fff8f900000
-  pfn_start  : c00c00
-  pfn_end    : c1efff
-mem_map (2)
-  mem_map    : 0
-  pfn_start  : c1efff
-  pfn_end    : 2c00c00
-mem_map (3)
-  mem_map    : a0007fffff900000
-  pfn_start  : 2c00c00
-  pfn_end    : 2c1efa3
-Checking for memory holes          : [100 %] readmem: Can't convert a
-virtual address(a0007fff8f900000) to offset.
---------------------------------------- >8 --------------------------
-
-After debugging that, I didn't find an error code. That address is in
-fact the beginning of the mem_map of that node, and is in fact not
-mapped (I verified that in crash).
-
-With an older kernel and an older makedumpfile it succeeds. The
-debugging output here is:
-
----------------------------------------- 8< --------------------------
-LOAD (0)
-  phys_start : 3014000000
-  phys_end   : 30145ac840
-  virt_start : a000000100000000
-  virt_end   : a0000001005ac840
-LOAD (1)
-  phys_start : 3000080000
-  phys_end   : 3000400000
-  virt_start : e000003000080000
-  virt_end   : e000003000400000
-LOAD (2)
-  phys_start : 3003000000
-  phys_end   : 3006000000
-  virt_start : e000003003000000
-  virt_end   : e000003006000000
-LOAD (3)
-  phys_start : 3006000000
-  phys_end   : 3014000000
-  virt_start : e000003006000000
-  virt_end   : e000003014000000
-LOAD (4)
-  phys_start : 3014000000
-  phys_end   : 3015b9f000
-  virt_start : e000003014000000
-  virt_end   : e000003015b9f000
-LOAD (5)
-  phys_start : 3015b9f000
-  phys_end   : 3018000000
-  virt_start : e000003015b9f000
-  virt_end   : e000003018000000
-LOAD (6)
-  phys_start : 3038000000
-  phys_end   : 307bffe000
-  virt_start : e000003038000000
-  virt_end   : e00000307bffe000
-LOAD (7)
-  phys_start : b000080000
-  phys_end   : b000400000
-  virt_start : e00000b000080000
-  virt_end   : e00000b000400000
-LOAD (8)
-  phys_start : b003000000
-  phys_end   : b006000000
-  virt_start : e00000b003000000
-  virt_end   : e00000b006000000
-LOAD (9)
-  phys_start : b006000000
-  phys_end   : b079ea2000
-  virt_start : e00000b006000000
-  virt_end   : e00000b079ea2000
-LOAD (10)
-  phys_start : b079ea2000
-  phys_end   : b07a3f4000
-  virt_start : e00000b079ea2000
-  virt_end   : e00000b07a3f4000
-LOAD (11)
-  phys_start : b07a3f4000
-  phys_end   : b07a452000
-  virt_start : e00000b07a3f4000
-  virt_end   : e00000b07a452000
-LOAD (12)
-  phys_start : b07a452000
-  phys_end   : b07a7fe000
-  virt_start : e00000b07a452000
-  virt_end   : e00000b07a7fe000
-LOAD (13)
-  phys_start : b07b800000
-  phys_end   : b07b801000
-  virt_start : e00000b07b800000
-  virt_end   : e00000b07b801000
-LOAD (14)
-  phys_start : b07b801000
-  phys_end   : b07b88c000
-  virt_start : e00000b07b801000
-  virt_end   : e00000b07b88c000
-LOAD (15)
-  phys_start : b07b88c000
-  phys_end   : b07b894000
-  virt_start : e00000b07b88c000
-  virt_end   : e00000b07b894000
-LOAD (16)
-  phys_start : b07b894000
-  phys_end   : b07b896000
-  virt_start : e00000b07b894000
-  virt_end   : e00000b07b896000
-LOAD (17)
-  phys_start : b07b896000
-  phys_end   : b07b89e000
-  virt_start : e00000b07b896000
-  virt_end   : e00000b07b89e000
-LOAD (18)
-  phys_start : b07b89e000
-  phys_end   : b07b89f000
-  virt_start : e00000b07b89e000
-  virt_end   : e00000b07b89f000
-LOAD (19)
-  phys_start : b07b89f000
-  phys_end   : b07ba00000
-  virt_start : e00000b07b89f000
-  virt_end   : e00000b07ba00000
-LOAD (20)
-  phys_start : b07ba00000
-  phys_end   : b07bd5a000
-  virt_start : e00000b07ba00000
-  virt_end   : e00000b07bd5a000
-LOAD (21)
-  phys_start : b07bd94000
-  phys_end   : b07be00000
-  virt_start : e00000b07bd94000
-  virt_end   : e00000b07be00000
-LOAD (22)
-  phys_start : b07be00000
-  phys_end   : b07be12000
-  virt_start : e00000b07be00000
-  virt_end   : e00000b07be12000
-LOAD (23)
-  phys_start : b07be80000
-  phys_end   : b07be8e000
-  virt_start : e00000b07be80000
-  virt_end   : e00000b07be8e000
-
-max_mapnr    : 2c1efa3
-
-num of NODEs : 2
-
-
-Memory type  : DISCONTIGMEM
-
-pfn_end of node (1) is over max_mapnr.
-  pfn_start: 2c00000
-  pfn_end  : 2c1f000
-  max_mapnr: 2c1efa3
-mem_map (0)
-  mem_map    : 0
-  pfn_start  : 0
-  pfn_end    : c00000
-mem_map (1)
-  mem_map    : a0007fff8f938000
-  pfn_start  : c00000
-  pfn_end    : c1f000
-mem_map (2)
-  mem_map    : 0
-  pfn_start  : c1f000
-  pfn_end    : 2c00000
-mem_map (3)
-  mem_map    : a0007fffff938000
-  pfn_start  : 2c00000
-  pfn_end    : 2c1efa3
---------------------- >8 -----------------------------------------
-
-Can you help here? I'm currently a bit short in time ... :-(
-
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Thanks,
+Bart
 
 _______________________________________________
 kexec mailing list
