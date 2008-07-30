@@ -1,28 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.18.174])
+Received: from e28smtp01.in.ibm.com ([59.145.155.1] helo=e28esmtp01.in.ibm.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KO5n8-00011l-IZ
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 07:08:11 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.18.234])
-	by e23smtp05.au.ibm.com (8.13.1/8.13.1) with ESMTP id m6U77KeH025187
-	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:07:20 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m6U76pH9479382
-	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:06:51 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m6U76oFa012656
-	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:06:51 +1000
-Date: Wed, 30 Jul 2008 12:36:43 +0530
+	id 1KOAM4-0003JO-Fq
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 12:00:33 +0000
+Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
+	by e28esmtp01.in.ibm.com (8.13.1/8.13.1) with ESMTP id m6UC0SIi003296
+	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:30:28 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m6UC0QND1392748
+	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:30:26 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+	by d28av03.in.ibm.com (8.13.1/8.13.3) with ESMTP id m6UC0Qg7030262
+	for <kexec@lists.infradead.org>; Wed, 30 Jul 2008 17:30:27 +0530
+Date: Wed, 30 Jul 2008 17:30:26 +0530
 From: Ankita Garg <ankita@in.ibm.com>
-Subject: Re: linux-next: build failure
-Message-ID: <20080730070643.GA18347@in.ibm.com>
-References: <20080730153028.95226354.sfr@canb.auug.org.au>
-	<20080730064146.GA1564@cs181140183.pp.htv.fi>
+Subject: RT-based kdump kernel hangs on multiple hardware
+Message-ID: <20080730120026.GA30011@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080730064146.GA1564@cs181140183.pp.htv.fi>
 Reply-To: Ankita Garg <ankita@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -36,68 +32,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Adrian Bunk <bunk@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, linux-next@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Darren Hart <dvhltc@us.ibm.com>, Sripathi Kodi <sripathik@in.ibm.com>, Chirag Jog <chirag@linux.vnet.ibm.com>, "Sachin P. Sant" <sachinp@in.ibm.com>, Maneesh Soni <maneesh@in.ibm.com>, Dinakar Guniguntala <dino@in.ibm.com>
 
-On Wed, Jul 30, 2008 at 09:41:46AM +0300, Adrian Bunk wrote:
-> On Wed, Jul 30, 2008 at 03:30:28PM +1000, Stephen Rothwell wrote:
-> > Hi Ananth,
-> > 
-> > Today's linux-next build (powerpc allyesconfig) failed like this:
-> > 
-> > tests/lkdtm.c:182: error: expected ')' before '*' token
-> > 
-> > I have no idea why this fails now when it did not before.
-> 
-> Sorry, that's my fault.
-> (I didn't notice since my allyes builds have CONFIG_MODULES=n, and
->  no defconfig seems to have both LKDTM and IDE=y.)
-> 
-> Bart, can you either apply Stephen's patch or drop the lkdtm.c chunk 
-> from my patch?
->
+Hi,
 
-I suppose it would be better if the earlier changes are reverted, as
-lkdtm already has bits to include ide.h depending on CONFIG_IDE being
-y/n.
+We have been facing a number of kdump issues on quite a few of our
+hardware. These are with RT kernel as the kdump kernel. Inorder to keep
+discussion about each hardware separate, sending separate mails for each
+as part of the same thread.
 
-> > I applied the following patch.
-> > -- 
-> > Cheers,
-> > Stephen Rothwell                    sfr@canb.auug.org.au
-> > http://www.canb.auug.org.au/~sfr/
-> > 
-> > From: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Date: Wed, 30 Jul 2008 15:24:53 +1000
-> > Subject: [PATCH] tests: lkdtm needs ide.h
-> > 
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > ---
-> >  tests/lkdtm.c |    1 +
-> >  1 files changed, 1 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/tests/lkdtm.c b/tests/lkdtm.c
-> > index 2a40d18..856f060 100644
-> > --- a/tests/lkdtm.c
-> > +++ b/tests/lkdtm.c
-> > @@ -52,6 +52,7 @@
-> >  #include <linux/init.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/hrtimer.h>
-> > +#include <linux/ide.h>
-> >  #include <scsi/scsi_cmnd.h>
-> >  
-> >  #define NUM_CPOINTS 8
-> 
-> cu
-> Adrian
-> 
-> -- 
-> 
->        "Is there not promise of rain?" Ling Tan asked suddenly out
->         of the darkness. There had been need of rain for many days.
->        "Only a promise," Lao Er said.
->                                        Pearl S. Buck - Dragon Seed
+Pl let me know if I need to provide more information. Any ideas on what
+could be going wrong or how it can be fixed?
 
 -- 
 Regards,
