@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KNzaH-00054Q-UB
-	for kexec@lists.infradead.org; Wed, 30 Jul 2008 00:30:30 +0000
-Date: Wed, 30 Jul 2008 10:30:28 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch] kdump: update elfcorehdr documentation to reflect
-	supported architectures
-Message-ID: <20080730003026.GA22106@verge.net.au>
+Received: from mta23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KO0GV-0001Kj-6h
+	for kexec@lists.infradead.org; Wed, 30 Jul 2008 01:14:07 +0000
+Date: Wed, 30 Jul 2008 10:13:25 +0900
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [patch] kdump: sh: parse elfcorehdr command line argument
+Message-ID: <20080730011325.GA7529@linux-sh.org>
+References: <20080730002937.GA21998@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20080730002937.GA21998@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,26 +23,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, linux-sh@vger.kernel.org
 
-IA64, PPC and SH also support the elfcorehdr command line.
+On Wed, Jul 30, 2008 at 10:29:39AM +1000, Simon Horman wrote:
+> A quick cut and paste from other architectures to allow SH
+> to parse the elfcorehdr command line argument which is required
+> for both is_kdump_kernel() and vmcore to function.
+> (the former is as yet unused on SH).
+> 
+> Tested compilation only
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> 
+This was the first thing I was going to do this morning, but you beat me
+to it. :-)
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
-Index: linux-2.6/Documentation/kernel-parameters.txt
-===================================================================
---- linux-2.6.orig/Documentation/kernel-parameters.txt	2008-07-30 09:48:40.000000000 +1000
-+++ linux-2.6/Documentation/kernel-parameters.txt	2008-07-30 09:48:45.000000000 +1000
-@@ -688,7 +688,7 @@ and is between 256 and 4096 characters. 
- 			See Documentation/block/as-iosched.txt and
- 			Documentation/block/deadline-iosched.txt for details.
- 
--	elfcorehdr=	[X86-32, X86_64]
-+	elfcorehdr=	[IA64,PPC,SH,X86-32,X86_64]
- 			Specifies physical address of start of kernel core
- 			image elf header. Generally kexec loader will
- 			pass this option to capture kernel.
+Applied, thanks!
 
 _______________________________________________
 kexec mailing list
