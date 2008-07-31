@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KON08-0007Us-HT
-	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:44 +0000
-Message-Id: <20080731012927.447357400@vergenet.net>
+	id 1KON08-0007Ur-HR
+	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:45 +0000
+Message-Id: <20080731012927.629185400@vergenet.net>
 References: <20080731012208.115225969@vergenet.net>
-Date: Thu, 31 Jul 2008 11:22:11 +1000
+Date: Thu, 31 Jul 2008 11:22:12 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 3/6] kdump: update elfcorehdr documentation to reflect
-	supported architectures
-Content-Disposition: inline; filename=elfcorehdr-doc.patch
+Subject: [patch 4/6] kdump: use is_kdump_kernel() in sba_init()
+Content-Disposition: inline; filename=ia64-use-is_kdump_kernel.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +22,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@gmail.com>, Vivek Goyal <vgoyal@redhat.com>
 
-IA64, PPC and SH also support the elfcorehdr command line.
+o Make use of is_kdump_kernel() rather than checking elfcorehdr_addr directly.
+
+o Remove CONFIG_CRASH_DUMP as is_kdump_kernel() is safe to call anywhere
+
+o Remove CONFIG_PROC_FS as it is bogus, the check
+  should occur regardless of if CONFIG_PROC_FS is set or not.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
 --- 
-Andrew, as this is a very minor documentation fix it can wait until
-after 2.6.27 if you prefer.
+Andrew, this patch fixes bug in the (unlikely) case where
+an ia64 crashdump kernel does not have CONFIG_PROC_FS set.
+I think it is worth including in 2.6.27. But breakage cases are
+likely to be minimal to non-existent, so I am comfortable
+with post 2.6.27 too.
 
-Index: linux-2.6/Documentation/kernel-parameters.txt
+Index: linux-2.6/arch/ia64/hp/common/sba_iommu.c
 ===================================================================
---- linux-2.6.orig/Documentation/kernel-parameters.txt	2008-07-30 09:48:40.000000000 +1000
-+++ linux-2.6/Documentation/kernel-parameters.txt	2008-07-30 09:48:45.000000000 +1000
-@@ -688,7 +688,7 @@ and is between 256 and 4096 characters. 
- 			See Documentation/block/as-iosched.txt and
- 			Documentation/block/deadline-iosched.txt for details.
+--- linux-2.6.orig/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:17.000000000 +1000
++++ linux-2.6/arch/ia64/hp/common/sba_iommu.c	2008-07-29 10:57:51.000000000 +1000
+@@ -2070,14 +2070,13 @@ sba_init(void)
+ 	if (!ia64_platform_is("hpzx1") && !ia64_platform_is("hpzx1_swiotlb"))
+ 		return 0;
  
--	elfcorehdr=	[X86-32, X86_64]
-+	elfcorehdr=	[IA64,PPC,SH,X86-32,X86_64]
- 			Specifies physical address of start of kernel core
- 			image elf header. Generally kexec loader will
- 			pass this option to capture kernel.
+-#if defined(CONFIG_IA64_GENERIC) && defined(CONFIG_CRASH_DUMP) && \
+-        defined(CONFIG_PROC_FS)
++#if defined(CONFIG_IA64_GENERIC)
+ 	/* If we are booting a kdump kernel, the sba_iommu will
+ 	 * cause devices that were not shutdown properly to MCA
+ 	 * as soon as they are turned back on.  Our only option for
+ 	 * a successful kdump kernel boot is to use the swiotlb.
+ 	 */
+-	if (elfcorehdr_addr < ELFCORE_ADDR_MAX) {
++	if (is_kdump_kernel()) {
+ 		if (swiotlb_late_init_with_default_size(64 * (1<<20)) != 0)
+ 			panic("Unable to initialize software I/O TLB:"
+ 				  " Try machvec=dig boot option");
 
 -- 
 
