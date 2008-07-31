@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KON09-0007VE-Tm
-	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:46 +0000
-Message-Id: <20080731012927.813560963@vergenet.net>
-References: <20080731012208.115225969@vergenet.net>
-Date: Thu, 31 Jul 2008 11:22:13 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch 5/6] kdump: add is_vmcore_usable() and vmcore_unusable()
-Content-Disposition: inline; filename=is_vmcore_usable.patch
+	id 1KONFa-0000jI-L2
+	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:46:43 +0000
+Message-Id: <4891197D.10400@mxs.nes.nec.co.jp>
+Date: Thu, 31 Jul 2008 10:46:37 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: Re: makedumpfile fails on SGI machine
+References: <20080730161416.47605c30@halley.suse.de>
+In-Reply-To: <20080730161416.47605c30@halley.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,125 +18,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0483496299=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
 
-The usage of elfcorehdr_addr has changed recently
-such that being set to ELFCORE_ADDR_MAX is used by
-is_kdump_kernel() to indicate if the code is executing
-in a kernel executed as a crash kernel.
+--===============0483496299==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-However, arch/ia64/kernel/setup.c:reserve_elfcorehdr will
-rest elfcorehdr_addr to ELFCORE_ADDR_MAX on error,
-which means any subsequent calls to is_kdump_kernel()
-will return 0, even though they should return 1.
 
-Ok, at this point in time there are no subsequent calls,
-but I think its fair to say that there is ample scope for error
-or at the very least confusion.
+Hi Bernhard,
 
-This patch add an extra state, ELFCORE_ADDR_ERR, which
-indicates that elfcorehdr_addr was passed on the command line,
-and thus execution is taking place in a crashdump kernel,
-but vmcore can't be used for some reason. This is tested
-for using is_vmcore_usable() and set using vmcore_unusable().
-A subsequent patch makes use of this new code.
+Thank you for the report.
 
-To summarise, the states that elfcorehdr_addr can now be in are as follows:
+Bernhard Walle wrote:
+> After debugging that, I didn't find an error code. That address is in
+> fact the beginning of the mem_map of that node, and is in fact not
+> mapped (I verified that in crash).
+> 
+> With an older kernel and an older makedumpfile it succeeds.
 
-ELFCORE_ADDR_MAX: not a crashdump kernel
-ELFCORE_ADDR_ERR: crashdump kernel but vmcore is unusable
-any other value:  crash dump kernel and vmcore is usable
+I'd like to know whether this problem is due to the makedumpfile
+regression or either the unsupported kernel. Could you please
+fill the following items ?
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+* Problematic condition
+  kernel version: ?
+  makedumpfile version: 1.2.7
 
---- 
+* Successful condition
+  kernel version: ?
+  makedumpfile version: ?
 
- fs/proc/vmcore.c           |    2 +-
- include/linux/crash_dump.h |   26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
+And could you please test the combination of successful kernel
+and problematic makedumpfile(1.2.7) ?
 
-Wed, 30 Jul 2008 09:10:37 +1000
-* Fixed logic bug in vmcore_unusable().
-  if (!is_kdump_kernel()) is correct
-  if (is_kdump_kernel()) is not
 
-Andrew, this patch can wait until after 2.6.27 as it is (minor)
-infrastructure that only has one usage case, and that usage case
-is not buggy at this time.
+Thanks
+Ken'ichi Ohmichi
 
-is_vmcore_usable() and vmcore_unusable() are used in a subsequent patch
-in this series
 
-Index: linux-2.6/include/linux/crash_dump.h
-===================================================================
---- linux-2.6.orig/include/linux/crash_dump.h	2008-07-30 09:05:50.000000000 +1000
-+++ linux-2.6/include/linux/crash_dump.h	2008-07-30 09:08:58.000000000 +1000
-@@ -8,6 +8,7 @@
- #include <linux/proc_fs.h>
- 
- #define ELFCORE_ADDR_MAX	(-1ULL)
-+#define ELFCORE_ADDR_ERR	(-2ULL)
- 
- extern unsigned long long elfcorehdr_addr;
- 
-@@ -42,5 +43,30 @@ static inline int is_kdump_kernel(void)
- static inline int is_kdump_kernel(void) { return 0; }
- #endif /* CONFIG_CRASH_DUMP */
- 
-+#ifdef CONFIG_PROC_VMCORE
-+/* is_vmcore_usable() checks if the kernel is booting after a panic and
-+ * the vmcore region is usable.
-+ *
-+ * This makes use of the fact that due to alignment 1 is not
-+ * a valid pointer, much in the vain of IS_ERR(), except
-+ * dealing directly with an unsigned long long rather than a pointer.
-+ */
-+
-+static inline int is_vmcore_usable(void)
-+{
-+	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-+}
-+
-+/* vmcore_unusable() marks the vmcore as unusable,
-+ * without disturbing the logic of is_kdump_kernel()
-+ */
-+
-+static inline void vmcore_unusable(void)
-+{
-+	if (is_kdump_kernel())
-+		elfcorehdr_addr = ELFCORE_ADDR_ERR;
-+}
-+#endif /* CONFIG_PROC_VMCORE */
-+
- extern unsigned long saved_max_pfn;
- #endif /* LINUX_CRASHDUMP_H */
-Index: linux-2.6/fs/proc/vmcore.c
-===================================================================
---- linux-2.6.orig/fs/proc/vmcore.c	2008-07-30 09:05:50.000000000 +1000
-+++ linux-2.6/fs/proc/vmcore.c	2008-07-30 09:07:07.000000000 +1000
-@@ -650,7 +650,7 @@ static int __init vmcore_init(void)
- 	int rc = 0;
- 
- 	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
--	if (!(elfcorehdr_addr < ELFCORE_ADDR_MAX))
-+	if (!(is_vmcore_usable()))
- 		return rc;
- 	rc = parse_crash_elf_headers();
- 	if (rc) {
-
--- 
-
--- 
-Horms
-
+--===============0483496299==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0483496299==--
