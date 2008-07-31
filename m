@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KON08-0007Up-HP
-	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:45 +0000
-Message-Id: <20080731012927.076924783@vergenet.net>
+	id 1KON09-0007VE-Tm
+	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:46 +0000
+Message-Id: <20080731012927.813560963@vergenet.net>
 References: <20080731012208.115225969@vergenet.net>
-Date: Thu, 31 Jul 2008 11:22:09 +1000
+Date: Thu, 31 Jul 2008 11:22:13 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 1/6] kdump: Make elfcorehdr_addr independent of
-	CONFIG_PROC_VMCORE
-Content-Disposition: inline;
-	filename=make-elfcorehdr_addr-independent-of-CONFIG_PROC_VMCORE.patch
+Subject: [patch 5/6] kdump: add is_vmcore_usable() and vmcore_unusable()
+Content-Disposition: inline; filename=is_vmcore_usable.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,242 +22,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linuxppc-dev@ozlabs.org, linux-sh@vger.kernel.org
-Cc: Muli Ben-Yehuda <muli@il.ibm.com>, Tony Luck <tony.luck@intel.com>, Chandru <chandru@in.ibm.com>, Terry Loftin <terry.loftin@hp.com>, Paul Mundt <lethal@linux-sh.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Vivek Goyal <vgoyal@redhat.com>
+The usage of elfcorehdr_addr has changed recently
+such that being set to ELFCORE_ADDR_MAX is used by
+is_kdump_kernel() to indicate if the code is executing
+in a kernel executed as a crash kernel.
 
-o elfcorehdr_addr is used by not only the code under CONFIG_PROC_VMCORE but
-  also by the code which is not inside CONFIG_PROC_VMCORE. For example,
-  is_kdump_kernel() is used by powerpc code to determine if kernel is booting
-  after a panic then use previous kernel's TCE table. So even if
-  CONFIG_PROC_VMCORE is not set in second kernel, one should be able to
-  correctly determine that we are booting after a panic and setup calgary
-  iommu accordingly.
+However, arch/ia64/kernel/setup.c:reserve_elfcorehdr will
+rest elfcorehdr_addr to ELFCORE_ADDR_MAX on error,
+which means any subsequent calls to is_kdump_kernel()
+will return 0, even though they should return 1.
 
-o So remove the assumption that elfcorehdr_addr is under CONFIG_PROC_VMCORE.
+Ok, at this point in time there are no subsequent calls,
+but I think its fair to say that there is ample scope for error
+or at the very least confusion.
 
-o Move definition of elfcorehdr_addr to arch dependent crash files.
-  (Unfortunately crash dump does not have an arch independent file otherwise
-   that would have been the best place).
+This patch add an extra state, ELFCORE_ADDR_ERR, which
+indicates that elfcorehdr_addr was passed on the command line,
+and thus execution is taking place in a crashdump kernel,
+but vmcore can't be used for some reason. This is tested
+for using is_vmcore_usable() and set using vmcore_unusable().
+A subsequent patch makes use of this new code.
 
-o kexec.c is not the right place as one can Have CRASH_DUMP enabled in
-  second kernel without KEXEC being enabled.
+To summarise, the states that elfcorehdr_addr can now be in are as follows:
 
-o I don't see sh setup code parsing the command line for elfcorehdr_addr. I 
-  am wondering how does vmcore interface work on sh. Anyway, I am atleast
-  defining elfcoredhr_addr so that compilation is not broken on sh.
+ELFCORE_ADDR_MAX: not a crashdump kernel
+ELFCORE_ADDR_ERR: crashdump kernel but vmcore is unusable
+any other value:  crash dump kernel and vmcore is usable
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Acked-by: Simon Horman <horms@verge.net.au>
-Acked-by: Paul Mundt <lethal@linux-sh.org>
----
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
- arch/ia64/kernel/crash_dump.c    |    4 ++++
- arch/ia64/kernel/setup.c         |    9 ++++++++-
- arch/powerpc/kernel/crash_dump.c |   10 ++++++++--
- arch/sh/kernel/crash_dump.c      |    3 +++
- arch/x86/kernel/crash_dump_32.c  |    3 +++
- arch/x86/kernel/crash_dump_64.c  |    3 +++
- arch/x86/kernel/setup.c          |    8 +++++++-
- fs/proc/vmcore.c                 |    3 ---
- include/linux/crash_dump.h       |   14 ++++++++++----
- 9 files changed, 46 insertions(+), 11 deletions(-)
+--- 
 
-Andrew, this patch is a clean-up and is not required by other patches,
-so it could wait until post 2.6.27 if you prefer. However, it is a
-valuable cleanup that removes messiness and should remove some of
-the confusion around elfcorehdr_addr and is_kdump_kernel(). So I
-would prefer it to be included in 2.6.27.
+ fs/proc/vmcore.c           |    2 +-
+ include/linux/crash_dump.h |   26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-sh setup code has been added in a separate patch that will
-be merged by Paul Mundt.
+Wed, 30 Jul 2008 09:10:37 +1000
+* Fixed logic bug in vmcore_unusable().
+  if (!is_kdump_kernel()) is correct
+  if (is_kdump_kernel()) is not
 
-- Simon Horman
+Andrew, this patch can wait until after 2.6.27 as it is (minor)
+infrastructure that only has one usage case, and that usage case
+is not buggy at this time.
 
-diff -puN include/linux/crash_dump.h~remove-elfcore-hdr-addr-definition-vmcore include/linux/crash_dump.h
---- linux-2.6.27-pre-rc1/include/linux/crash_dump.h~remove-elfcore-hdr-addr-definition-vmcore	2008-07-28 12:00:44.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/include/linux/crash_dump.h	2008-07-28 12:00:56.000000000 -0400
-@@ -9,11 +9,7 @@
+is_vmcore_usable() and vmcore_unusable() are used in a subsequent patch
+in this series
+
+Index: linux-2.6/include/linux/crash_dump.h
+===================================================================
+--- linux-2.6.orig/include/linux/crash_dump.h	2008-07-30 09:05:50.000000000 +1000
++++ linux-2.6/include/linux/crash_dump.h	2008-07-30 09:08:58.000000000 +1000
+@@ -8,6 +8,7 @@
+ #include <linux/proc_fs.h>
  
  #define ELFCORE_ADDR_MAX	(-1ULL)
++#define ELFCORE_ADDR_ERR	(-2ULL)
  
--#ifdef CONFIG_PROC_VMCORE
  extern unsigned long long elfcorehdr_addr;
--#else
--static const unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
--#endif
  
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
- 						unsigned long, int);
-@@ -28,6 +24,16 @@ extern struct proc_dir_entry *proc_vmcor
- 
- #define vmcore_elf_check_arch(x) (elf_check_arch(x) || vmcore_elf_check_arch_cross(x))
- 
-+/*
-+ * is_kdump_kernel() checks whether this kernel is booting after a panic of
-+ * previous kernel or not. This is determined by checking if previous kernel
-+ * has passed the elf core header address on command line.
-+ *
-+ * This is not just a test if CONFIG_CRASH_DUMP is enabled or not. It will
-+ * return 1 if CONFIG_CRASH_DUMP=y and if kernel is booting after a panic of
-+ * previous kernel.
-+ */
-+
- static inline int is_kdump_kernel(void)
- {
- 	return (elfcorehdr_addr != ELFCORE_ADDR_MAX) ? 1 : 0;
-diff -puN fs/proc/vmcore.c~remove-elfcore-hdr-addr-definition-vmcore fs/proc/vmcore.c
---- linux-2.6.27-pre-rc1/fs/proc/vmcore.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-28 09:19:50.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/fs/proc/vmcore.c	2008-07-28 09:20:10.000000000 -0400
-@@ -32,9 +32,6 @@ static size_t elfcorebuf_sz;
- /* Total size of vmcore file. */
- static u64 vmcore_size;
- 
--/* Stores the physical address of elf header of crash image. */
--unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
--
- struct proc_dir_entry *proc_vmcore = NULL;
- 
- /* Reads a page from the oldmem device from given offset. */
-diff -puN arch/x86/kernel/crash_dump_32.c~remove-elfcore-hdr-addr-definition-vmcore arch/x86/kernel/crash_dump_32.c
---- linux-2.6.27-pre-rc1/arch/x86/kernel/crash_dump_32.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:28:26.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/x86/kernel/crash_dump_32.c	2008-07-29 05:28:26.000000000 -0400
-@@ -13,6 +13,9 @@
- 
- static void *kdump_buf_page;
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
-+
- /**
-  * copy_oldmem_page - copy one page from "oldmem"
-  * @pfn: page frame number to be copied
-diff -puN arch/x86/kernel/crash_dump_64.c~remove-elfcore-hdr-addr-definition-vmcore arch/x86/kernel/crash_dump_64.c
---- linux-2.6.27-pre-rc1/arch/x86/kernel/crash_dump_64.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:28:26.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/x86/kernel/crash_dump_64.c	2008-07-29 05:28:26.000000000 -0400
-@@ -11,6 +11,9 @@
- #include <asm/uaccess.h>
- #include <asm/io.h>
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
-+
- /**
-  * copy_oldmem_page - copy one page from "oldmem"
-  * @pfn: page frame number to be copied
-diff -puN arch/x86/kernel/setup.c~remove-elfcore-hdr-addr-definition-vmcore arch/x86/kernel/setup.c
---- linux-2.6.27-pre-rc1/arch/x86/kernel/setup.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:28:26.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/x86/kernel/setup.c	2008-07-29 05:28:26.000000000 -0400
-@@ -558,7 +558,13 @@ static void __init reserve_standard_io_r
- 
- }
- 
--#ifdef CONFIG_PROC_VMCORE
-+/*
-+ * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
-+ * is_kdump_kernel() to determine if we are booting after a panic. Hence
-+ * ifdef it under CONFIG_CRASH_DUMP and not CONFIG_PROC_VMCORE.
-+ */
-+
-+#ifdef CONFIG_CRASH_DUMP
- /* elfcorehdr= specifies the location of elf core header
-  * stored by the crashed kernel. This option will be passed
-  * by kexec loader to the capture kernel.
-diff -puN arch/powerpc/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore arch/powerpc/kernel/crash_dump.c
---- linux-2.6.27-pre-rc1/arch/powerpc/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:30:33.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/powerpc/kernel/crash_dump.c	2008-07-29 05:30:33.000000000 -0400
-@@ -27,6 +27,9 @@
- #define DBG(fmt...)
- #endif
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
-+
- void __init reserve_kdump_trampoline(void)
- {
- 	lmb_reserve(0, KDUMP_RESERVE_LIMIT);
-@@ -66,7 +69,11 @@ void __init setup_kdump_trampoline(void)
- 	DBG(" <- setup_kdump_trampoline()\n");
- }
- 
--#ifdef CONFIG_PROC_VMCORE
-+/*
-+ * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
-+ * is_kdump_kernel() to determine if we are booting after a panic. Hence
-+ * ifdef it under CONFIG_CRASH_DUMP and not CONFIG_PROC_VMCORE.
-+ */
- static int __init parse_elfcorehdr(char *p)
- {
- 	if (p)
-@@ -75,7 +82,6 @@ static int __init parse_elfcorehdr(char 
- 	return 1;
- }
- __setup("elfcorehdr=", parse_elfcorehdr);
--#endif
- 
- static int __init parse_savemaxmem(char *p)
- {
-diff -puN arch/ia64/kernel/setup.c~remove-elfcore-hdr-addr-definition-vmcore arch/ia64/kernel/setup.c
---- linux-2.6.27-pre-rc1/arch/ia64/kernel/setup.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:30:54.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/ia64/kernel/setup.c	2008-07-29 05:30:54.000000000 -0400
-@@ -478,7 +478,12 @@ static __init int setup_nomca(char *s)
- }
- early_param("nomca", setup_nomca);
- 
--#ifdef CONFIG_PROC_VMCORE
-+/*
-+ * Note: elfcorehdr_addr is not just limited to vmcore. It is also used by
-+ * is_kdump_kernel() to determine if we are booting after a panic. Hence
-+ * ifdef it under CONFIG_CRASH_DUMP and not CONFIG_PROC_VMCORE.
-+ */
-+#ifdef CONFIG_CRASH_DUMP
- /* elfcorehdr= specifies the location of elf core header
-  * stored by the crashed kernel.
-  */
-@@ -491,7 +496,9 @@ static int __init parse_elfcorehdr(char 
- 	return 0;
- }
- early_param("elfcorehdr", parse_elfcorehdr);
-+#endif
+@@ -42,5 +43,30 @@ static inline int is_kdump_kernel(void)
+ static inline int is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
  
 +#ifdef CONFIG_PROC_VMCORE
- int __init reserve_elfcorehdr(unsigned long *start, unsigned long *end)
- {
- 	unsigned long length;
-diff -puN arch/ia64/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore arch/ia64/kernel/crash_dump.c
---- linux-2.6.27-pre-rc1/arch/ia64/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:37:10.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/ia64/kernel/crash_dump.c	2008-07-29 05:37:58.000000000 -0400
-@@ -8,10 +8,14 @@
- 
- #include <linux/errno.h>
- #include <linux/types.h>
-+#include <linux/crash_dump.h>
- 
- #include <asm/page.h>
- #include <asm/uaccess.h>
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
++/* is_vmcore_usable() checks if the kernel is booting after a panic and
++ * the vmcore region is usable.
++ *
++ * This makes use of the fact that due to alignment 1 is not
++ * a valid pointer, much in the vain of IS_ERR(), except
++ * dealing directly with an unsigned long long rather than a pointer.
++ */
 +
- /**
-  * copy_oldmem_page - copy one page from "oldmem"
-  * @pfn: page frame number to be copied
-diff -puN arch/sh/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore arch/sh/kernel/crash_dump.c
---- linux-2.6.27-pre-rc1/arch/sh/kernel/crash_dump.c~remove-elfcore-hdr-addr-definition-vmcore	2008-07-29 05:31:04.000000000 -0400
-+++ linux-2.6.27-pre-rc1-root/arch/sh/kernel/crash_dump.c	2008-07-29 05:31:04.000000000 -0400
-@@ -10,6 +10,9 @@
- #include <linux/io.h>
- #include <asm/uaccess.h>
- 
-+/* Stores the physical address of elf header of crash image. */
-+unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
++static inline int is_vmcore_usable(void)
++{
++	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
++}
 +
- /**
-  * copy_oldmem_page - copy one page from "oldmem"
-  * @pfn: page frame number to be copied
-_
++/* vmcore_unusable() marks the vmcore as unusable,
++ * without disturbing the logic of is_kdump_kernel()
++ */
++
++static inline void vmcore_unusable(void)
++{
++	if (is_kdump_kernel())
++		elfcorehdr_addr = ELFCORE_ADDR_ERR;
++}
++#endif /* CONFIG_PROC_VMCORE */
++
+ extern unsigned long saved_max_pfn;
+ #endif /* LINUX_CRASHDUMP_H */
+Index: linux-2.6/fs/proc/vmcore.c
+===================================================================
+--- linux-2.6.orig/fs/proc/vmcore.c	2008-07-30 09:05:50.000000000 +1000
++++ linux-2.6/fs/proc/vmcore.c	2008-07-30 09:07:07.000000000 +1000
+@@ -650,7 +650,7 @@ static int __init vmcore_init(void)
+ 	int rc = 0;
+ 
+ 	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
+-	if (!(elfcorehdr_addr < ELFCORE_ADDR_MAX))
++	if (!(is_vmcore_usable()))
+ 		return rc;
+ 	rc = parse_crash_elf_headers();
+ 	if (rc) {
 
 -- 
 
