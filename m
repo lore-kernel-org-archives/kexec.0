@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KOWTP-0000c1-7I
-	for kexec@lists.infradead.org; Thu, 31 Jul 2008 11:37:35 +0000
-Date: Thu, 31 Jul 2008 13:38:16 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: makedumpfile fails on SGI machine
-Message-ID: <20080731133816.6036d4e7@halley.suse.de>
-In-Reply-To: <4891A3CB.9040805@mxs.nes.nec.co.jp>
-References: <20080730161416.47605c30@halley.suse.de>
-	<4891197D.10400@mxs.nes.nec.co.jp>
-	<20080731104726.035850be@halley.suse.de>
-	<48919306.80103@mxs.nes.nec.co.jp>
-	<20080731131823.3c7c97b2@halley.suse.de>
-	<4891A3CB.9040805@mxs.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KOY6M-0001nu-7U
+	for kexec@lists.infradead.org; Thu, 31 Jul 2008 13:21:54 +0000
+Date: Thu, 31 Jul 2008 09:21:52 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [patch 3/3] kdump: use is_vmcore_usable() and
+	vmcore_unusable() in reserve_elfcorehdr()
+Message-ID: <20080731132152.GB26782@redhat.com>
+References: <20080729081235.293361145@vergenet.net>
+	<20080729081629.715923799@vergenet.net>
+	<20080730130131.GB16373@redhat.com>
+	<20080731004842.GA1657@verge.net.au>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080731004842.GA1657@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,23 +27,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Ken'ichi Ohmichi [2008-07-31 20:36]:
+On Thu, Jul 31, 2008 at 10:48:43AM +1000, Simon Horman wrote:
+> On Wed, Jul 30, 2008 at 09:01:31AM -0400, Vivek Goyal wrote:
+> > On Tue, Jul 29, 2008 at 06:12:38PM +1000, Simon Horman wrote:
+> > > After recent changes setting elfcorehdr_addr to ELFCORE_ADDR_MAX
+> > > will cause is_kdump_kernel() to return 0 when it should return 1.
+> > > Instead use vmcore_unusable(), which has been added for this purpose.
+> > > 
+> > > Signed-off-by: Simon Horman <horms@verge.net.au>
+> > > 
+> > > Index: linux-2.6/arch/ia64/kernel/setup.c
+> > > ===================================================================
+> > > --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-07-29 17:27:43.000000000 +1000
+> > > +++ linux-2.6/arch/ia64/kernel/setup.c	2008-07-29 17:50:50.000000000 +1000
+> > > @@ -502,11 +502,11 @@ int __init reserve_elfcorehdr(unsigned l
+> > >  	 * to work properly.
+> > >  	 */
+> > >  
+> > > -	if (elfcorehdr_addr >= ELFCORE_ADDR_MAX)
+> > > +	if (!is_vmcore_usable())
+> > >  		return -EINVAL;
+> > >  
+> > >  	if ((length = vmcore_find_descriptor_size(elfcorehdr_addr)) == 0) {
+> > > -		elfcorehdr_addr = ELFCORE_ADDR_MAX;
+> > > +		vmcore_unusable();
+> > >  		return -EINVAL;
+> > >  	}
+> > >  
+> > 
+> > Hi Simon,
+> > 
+> > I had a question. I am not very sure what reserve_elfcorehdr is doing
+> > but doing something similar to reserving some memory area where
+> > elfcoreheaders are.
 > 
-> Thank you for config file.
+> Yes, that is my understanding of what it does.
 > 
-> I'm starting the kernel compiling.
-> I'll investigate this problem the next week.
 
-Thanks in advance.
+In x86 we never have to reserve that elf header area as we know that
+booting kernel will never overwrite in that area. (Previous kernel has
+modified the memory map in such a way so that elf header memory area
+is not even part of memory range second kernel can use. 
 
+Any idea, why do we need to reserve this area in IA64.
 
+> > I see that reserve_elfcorehdr is under CONFIG_PROC_VMCORE. Will it work
+> > if CONFIG_PROC_VMCORE=n and somebody wants to use /dev/oldmem?
+> > Or reserve_elfcorehdr should be under CONFIG_CRASH_DUMP?
+> 
+> I'm not that familiar with /dev/oldmem, but as far as I can see,
+> read_oldmem doesn't do anything with ELF headers, so reservation
+> by vmcore_find_descriptor_size() should not be neccessary.
+> 
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+/dev/oldmem does not directly touch elfcorehdr. But it indirectly does in
+the sense that it is reading all the previous kernel's memory and dumping
+it to disk. That would include elfcorehdrs also.
+
+Now if we need to do some kind of reservation for elf headers so that
+fs/vmcore.c code can read it, then same should be true for /dev/oldmem
+code also. Otherwise reserving elfcorehdr code should be redundant.
+
+That's why I raised the question that why do we need to reserve that area
+in case of IA64. And if there is a genuine reason then probably that
+reason will hold valid in case of /dev/oldmem also and we might have
+to put is_vmcore_usable() definition also under CONFIG_CRASH_DUMP.
+
+Thanks
+Vivek
+
 
 _______________________________________________
 kexec mailing list
