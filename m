@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KON08-0007Uo-HN
-	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:45 +0000
-Message-Id: <20080731012208.115225969@vergenet.net>
-Date: Thu, 31 Jul 2008 11:22:08 +1000
+	id 1KON09-0007VD-Tb
+	for kexec@lists.infradead.org; Thu, 31 Jul 2008 01:30:46 +0000
+Message-Id: <20080731012927.994229258@vergenet.net>
+References: <20080731012208.115225969@vergenet.net>
+Date: Thu, 31 Jul 2008 11:22:14 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 0/6] is_kdump_kernel() cleanup and related patches
+Subject: [patch 6/6] kdump: use is_vmcore_usable() and vmcore_unusable() in
+	reserve_elfcorehdr()
+Content-Disposition: inline; filename=use-is_vmcore_usable.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,20 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi,
+After recent changes setting elfcorehdr_addr to ELFCORE_ADDR_MAX
+will cause is_kdump_kernel() to return 0 when it should return 1.
+Instead use vmcore_unusable(), which has been added for this purpose.
 
-this patch series contains all the patches (that I am aware of)
-that have recently been posted regarding kdump and in particular
-is_kdump_kernel()
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
-For Andrew Morton's benefit I have annotated each patch as to whether it
-needs to be included in 2.6.27 or not. My conclusion is that while
-I would like to see all of the patches included in 2.6.27, none
-of them are particularly dire, and thus they could all wait until
-post-2.6.27.
+--- 
+
+Andrew, this can wait until post 2.6.27 as although the current
+state of affairs is confusing, a bug does not manifest at this time
+as there are no callers of is_kdump_kernel on ia64 at this time.
+
+is_vmcore_usable() and vmcore_unusable() are provided by a previous
+patch in this series
+
+Index: linux-2.6/arch/ia64/kernel/setup.c
+===================================================================
+--- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-07-31 09:41:15.000000000 +1000
++++ linux-2.6/arch/ia64/kernel/setup.c	2008-07-31 09:41:36.000000000 +1000
+@@ -509,11 +509,11 @@ int __init reserve_elfcorehdr(unsigned l
+ 	 * to work properly.
+ 	 */
+ 
+-	if (elfcorehdr_addr >= ELFCORE_ADDR_MAX)
++	if (!is_vmcore_usable())
+ 		return -EINVAL;
+ 
+ 	if ((length = vmcore_find_descriptor_size(elfcorehdr_addr)) == 0) {
+-		elfcorehdr_addr = ELFCORE_ADDR_MAX;
++		vmcore_unusable();
+ 		return -EINVAL;
+ 	}
+ 
+
+-- 
 
 -- 
 Horms
