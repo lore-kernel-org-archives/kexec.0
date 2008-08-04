@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KPxoF-0001Ah-LZ
-	for kexec@lists.infradead.org; Mon, 04 Aug 2008 11:01:04 +0000
-Date: Mon, 4 Aug 2008 13:01:00 +0200
-From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH -mm 1/2] kexec jump -v12: kexec jump
-Message-ID: <20080804110100.GF12341@atrey.karlin.mff.cuni.cz>
-References: <1215401122.4660.4.camel@caritas-dev.intel.com>
-	<20080708145051.GA14745@redhat.com>
-	<20080711122131.b6461ab1.akpm@linux-foundation.org>
-	<20080711201149.GB3298@redhat.com>
-	<1215824537.7319.7.camel@nigel-laptop>
-	<20080714054644.GC20258@elf.ucw.cz>
-	<20080714133221.GC16673@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080714133221.GC16673@redhat.com>
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KPyc1-00021t-Ft
+	for kexec@lists.infradead.org; Mon, 04 Aug 2008 11:52:29 +0000
+Date: Mon, 4 Aug 2008 13:53:09 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Kdump compressed format
+Message-ID: <20080804135309.4ef6f33b@halley.suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,47 +20,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Nigel Cunningham <nigel@nigel.suspend2.net>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Horms <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-pm@lists.linux-foundation.org
+To: crash-utility@redhat.com, kexec@lists.infradead.org
 
-> On Mon, Jul 14, 2008 at 07:46:44AM +0200, Pavel Machek wrote:
-> > On Sat 2008-07-12 11:02:17, Nigel Cunningham wrote:
-> > > Hi.
-> > > 
-> > > On Fri, 2008-07-11 at 16:11 -0400, Vivek Goyal wrote:
-> > > > Hi Andrew,
-> > > > 
-> > > > We can use this patchset for hibernation, but can it be a better way of doing
-> > > > things than what we already have, I don't know. Last time I had raised
-> > > > this question and power people had various views. In the end, Pavel wanted
-> > > > this patchset to be in.  Pavel, can tell more here...
-> > > > 
-> > > > To me this patchset looks interesting for couple of reasons.
-> > > > 
-> > > > - Looks like an interesting feature where one can have a separate kernel
-> > > >   in memory and one can switch between the kernels on the fly. It can
-> > > >   be modified to have more than one kernel in memory at a time.
-> > > 
-> > > I'm not sure how useful that would be, though. I already have
-> > > functionality in TuxOnIce which allows you to resume a different image
-> > > instead of powering off (roughly the same thing when combined with not
-> > > removing the image after resuming). It was neat when testing to be
-> > > able
-> > 
-> > Beaty of kjump is that it is supposed to used on half-broken system,
-> > so it is useful for debugging.
-> > 
-> 
-> What do you mean by supposed to be used on half-broken system?
+Hi,
 
-Maybe some network driver went wrong (but rest of machine keeps
-working), so you want to do kdump but do not want to kill the machine
-(as the remaining network drivers make the server useful).
-								Pavel
+is there any documentation how the kdump compressed format (or the
+diskdump format, from what it is derived) looks like? Beside of the
+source code of the tools that support it. ;-)
+
+Thanks for any help!
+
+
+
+Bernhard
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
