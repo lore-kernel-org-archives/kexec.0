@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KQFvY-0008Mv-P8
-	for kexec@lists.infradead.org; Tue, 05 Aug 2008 06:21:49 +0000
-Message-Id: <4897F177.2060106@mxs.nes.nec.co.jp>
-Date: Tue, 05 Aug 2008 15:21:43 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1KQGpY-0005FJ-9P
+	for kexec@lists.infradead.org; Tue, 05 Aug 2008 07:19:40 +0000
+Date: Tue, 5 Aug 2008 17:19:36 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch 3/3] kdump: use is_vmcore_usable() and
+	vmcore_unusable() in reserve_elfcorehdr()
+Message-ID: <20080805071934.GA7824@verge.net.au>
+References: <20080729081235.293361145@vergenet.net>
+	<20080729081629.715923799@vergenet.net>
+	<20080730130131.GB16373@redhat.com>
+	<20080731004842.GA1657@verge.net.au>
+	<20080731132152.GB26782@redhat.com>
+	<20080801040759.GG27241@verge.net.au>
 MIME-Version: 1.0
-Subject: Re: Kdump compressed format
-References: <20080804135309.4ef6f33b@halley.suse.de>
-In-Reply-To: <20080804135309.4ef6f33b@halley.suse.de>
+Content-Disposition: inline
+In-Reply-To: <20080801040759.GG27241@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,130 +25,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0950628088=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
---===============0950628088==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+On Fri, Aug 01, 2008 at 02:08:01PM +1000, Simon Horman wrote:
+> On Thu, Jul 31, 2008 at 09:21:52AM -0400, Vivek Goyal wrote:
+> > On Thu, Jul 31, 2008 at 10:48:43AM +1000, Simon Horman wrote:
+> > > On Wed, Jul 30, 2008 at 09:01:31AM -0400, Vivek Goyal wrote:
+> > > > On Tue, Jul 29, 2008 at 06:12:38PM +1000, Simon Horman wrote:
+> > > > > After recent changes setting elfcorehdr_addr to ELFCORE_ADDR_MAX
+> > > > > will cause is_kdump_kernel() to return 0 when it should return 1.
+> > > > > Instead use vmcore_unusable(), which has been added for this purpose.
+> > > > > 
+> > > > > Signed-off-by: Simon Horman <horms@verge.net.au>
+> > > > > 
+> > > > > Index: linux-2.6/arch/ia64/kernel/setup.c
+> > > > > ===================================================================
+> > > > > --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-07-29 17:27:43.000000000 +1000
+> > > > > +++ linux-2.6/arch/ia64/kernel/setup.c	2008-07-29 17:50:50.000000000 +1000
+> > > > > @@ -502,11 +502,11 @@ int __init reserve_elfcorehdr(unsigned l
+> > > > >  	 * to work properly.
+> > > > >  	 */
+> > > > >  
+> > > > > -	if (elfcorehdr_addr >= ELFCORE_ADDR_MAX)
+> > > > > +	if (!is_vmcore_usable())
+> > > > >  		return -EINVAL;
+> > > > >  
+> > > > >  	if ((length = vmcore_find_descriptor_size(elfcorehdr_addr)) == 0) {
+> > > > > -		elfcorehdr_addr = ELFCORE_ADDR_MAX;
+> > > > > +		vmcore_unusable();
+> > > > >  		return -EINVAL;
+> > > > >  	}
+> > > > >  
+> > > > 
+> > > > Hi Simon,
+> > > > 
+> > > > I had a question. I am not very sure what reserve_elfcorehdr is doing
+> > > > but doing something similar to reserving some memory area where
+> > > > elfcoreheaders are.
+> > > 
+> > > Yes, that is my understanding of what it does.
+> > > 
+> > 
+> > In x86 we never have to reserve that elf header area as we know that
+> > booting kernel will never overwrite in that area. (Previous kernel has
+> > modified the memory map in such a way so that elf header memory area
+> > is not even part of memory range second kernel can use. 
+> > 
+> > Any idea, why do we need to reserve this area in IA64.
+> > 
+> > > > I see that reserve_elfcorehdr is under CONFIG_PROC_VMCORE. Will it work
+> > > > if CONFIG_PROC_VMCORE=n and somebody wants to use /dev/oldmem?
+> > > > Or reserve_elfcorehdr should be under CONFIG_CRASH_DUMP?
+> > > 
+> > > I'm not that familiar with /dev/oldmem, but as far as I can see,
+> > > read_oldmem doesn't do anything with ELF headers, so reservation
+> > > by vmcore_find_descriptor_size() should not be neccessary.
+> > > 
+> > 
+> > /dev/oldmem does not directly touch elfcorehdr. But it indirectly does in
+> > the sense that it is reading all the previous kernel's memory and dumping
+> > it to disk. That would include elfcorehdrs also.
+> > 
+> > Now if we need to do some kind of reservation for elf headers so that
+> > fs/vmcore.c code can read it, then same should be true for /dev/oldmem
+> > code also. Otherwise reserving elfcorehdr code should be redundant.
+> > 
+> > That's why I raised the question that why do we need to reserve that area
+> > in case of IA64. And if there is a genuine reason then probably that
+> > reason will hold valid in case of /dev/oldmem also and we might have
+> > to put is_vmcore_usable() definition also under CONFIG_CRASH_DUMP.
+> 
+> Hi Vivek,
+> 
+> yes, I do think that the problem is a bit deeper than my original response.
+> I'll investigate this further.
 
+Hi Vivek,
 
-Hi Bernhard,
+sorry for not getting back to you sooner. I think that the short answer
+to this question is that the code should be protected by
+CONFIG_CRASH_DUMP instead of CONFIG_PROC_VMCORE. This should ensure
+that the memory where the elfheader lies is not used by the crashkernel,
+regardless of if CONFIG_PROC_VMCORE is in effect or not.
 
-Bernhard Walle wrote:
-> is there any documentation how the kdump compressed format (or the
-> diskdump format, from what it is derived) looks like? Beside of the
-> source code of the tools that support it. ;-)
-
-The kdump compressed format is supported by only the crash utility
-and makedumpfile command. gdb does not support it. I think that
-there is not any documentation about the kdump compressed format,
-then I wrote it. Is it enough ?
-
-----------------------------------------------------------------------------
-* The kdump compressed format
-                                               File offset
-  +------------------------------------------+ 0x0
-  |    main header (struct disk_dump_header) |
-  |------------------------------------------+ block 1
-  |    sub header (struct kdump_sub_header)  |
-  |------------------------------------------+ block 2
-  |            1st-bitmap                    |
-  |------------------------------------------+ block 2 + X blocks (aligned by block)
-  |            2nd-bitmap                    |
-  |------------------------------------------+ block 2 + 2 * X blocks (aligned by block)
-  | page header for pfn 0 (struct page_desc) |
-  | page header for pfn 1 (struct page_desc) |
-  |                     :                    |
-  | page header for pfn Z (struct page_desc) |
-  |------------------------------------------| (not aligned by block)
-  |         page data (pfn 0)                |
-  |         page data (pfn 1)                |
-  |                        :                 |
-  |         page data (pfn Z)                |
-  +------------------------------------------+
-
-
-* main header
-  The main header of the kdump compressed format is the almost same as the one
-  of diskdump. This header has the following members, and the member signature
-  and header_version are different from diskdump.
-
-  struct disk_dump_header {
-        char                    signature[SIG_LEN];     /* = "KDUMP   " */
-        int                     header_version; /* Dump header version */
-        struct new_utsname      utsname;        /* copy of system_utsname */
-        struct timeval          timestamp;      /* Time stamp */
-        unsigned int            status;         /* Above flags */
-        int                     block_size;     /* Size of a block in byte */
-        int                     sub_hdr_size;   /* Size of arch dependent
-                                                   header in blocks */
-        unsigned int            bitmap_blocks;  /* Size of Memory bitmap in
-                                                   block */
-        unsigned int            max_mapnr;      /* = max_mapnr */
-        unsigned int            total_ram_blocks;/* Number of blocks should be
-                                                   written */
-        unsigned int            device_blocks;  /* Number of total blocks in
-                                                 * the dump device */
-        unsigned int            written_blocks; /* Number of written blocks */
-        unsigned int            current_cpu;    /* CPU# which handles dump */
-        int                     nr_cpus;        /* Number of CPUs */
-        struct task_struct      *tasks[0];
-  };
-
-* sub header
-  The sub header of the kdump compressed format is orignal. This header
-  has the member phys_base and dump_level. The member phys_base is for
-  an x86_64 relocatable kernel, and the member dump_level has '-d' option's
-  value of makedumpfile command.
-
-  struct kdump_sub_header {
-        unsigned long   phys_base;
-        int             dump_level;     /* header_version 1 and later */
-  };
-
-
-* 1st-bitmap
-  The bit of 1st-bitmap presents either a page on memory hole, or not.
-  If a page is on memory hole, the corresponding bit is off. Otherwise,
-  it is on.
-
-
-* 2nd-bitmap
-  The bit of 2nd-bitmap presents either a dumpable page, or not.
-  If a page is on memory hole or excluded by makedumpfile command, the
-  corresponding bit is off. Otherwise, it is on.
-
-
-* page header
-  There are page headers corresponding to dumpable pages.
-  This header presents the corresponding page information (compressed, or not. etc.)
-
-  typedef struct page_desc {
-        off_t                   offset;         /* the offset of the page data*/
-        unsigned int            size;           /* the size of this dump page */
-        unsigned int            flags;          /* flags */
-        unsigned long long      page_flags;     /* page flags */
-  } page_desc_t;
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
-
---===============0950628088==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+I will make a patch for this ASAP.
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0950628088==--
