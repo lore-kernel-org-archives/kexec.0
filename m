@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KQOBi-0001D0-4y
-	for kexec@lists.infradead.org; Tue, 05 Aug 2008 15:11:02 +0000
-Date: Tue, 5 Aug 2008 17:11:43 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: makedumpfile fails on SGI machine
-Message-ID: <20080805171143.773c2465@halley.suse.de>
-In-Reply-To: <48984275.5070409@mxs.nes.nec.co.jp>
-References: <20080730161416.47605c30@halley.suse.de>
-	<4891197D.10400@mxs.nes.nec.co.jp>
-	<20080731104726.035850be@halley.suse.de>
-	<48919306.80103@mxs.nes.nec.co.jp>
-	<20080731131823.3c7c97b2@halley.suse.de>
-	<4891A3CB.9040805@mxs.nes.nec.co.jp>
-	<48984275.5070409@mxs.nes.nec.co.jp>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="MP_/lreQH1xuk2zPaOiAU.cKU=N"
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KQWG0-0003gH-AN
+	for kexec@lists.infradead.org; Tue, 05 Aug 2008 23:48:01 +0000
+Date: Wed, 6 Aug 2008 09:47:58 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kdump, ia64: always reserve elfcore header memory in crash kernel
+Message-ID: <20080805234754.GA8627@verge.net.au>
+References: <20080805094825.GA9712@verge.net.au>
+	<20080805125634.GA15193@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080805125634.GA15193@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,122 +20,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-ia64@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
---MP_/lreQH1xuk2zPaOiAU.cKU=N
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-* Ken'ichi Ohmichi [2008-08-05 21:07]:
+On Tue, Aug 05, 2008 at 08:56:34AM -0400, Vivek Goyal wrote:
+> On Tue, Aug 05, 2008 at 07:48:27PM +1000, Simon Horman wrote:
+> > elfcore header memory needs to be reserved in a crash kernel.
+> > This means that the relevant code should be protected
+> > by CONFIG_CRASH_DUMP rather than CONFIG_PROC_VMCORE.
+> > 
+> > Signed-off-by: Simon Horman <horms@verge.net.au>
+> > 
+> > --- 
+> > Andrew, this patch fixes bug in the (unlikely) case where
+> > an ia64 crashdump kernel does not have CONFIG_PROC_FS set.
+> > I think it is worth including in 2.6.27. But breakage cases are
+> > likely to be minimal to non-existent, so I am comfortable
+> > with post 2.6.27 too.
+> > 
+> > This patch should be appended to the series,
+> > "is_kdump_kernel() cleanup and related patches".
+> > 
+> > http://lists.infradead.org/pipermail/kexec/2008-July/002270.html
+> > 
+> > Index: linux-2.6/arch/ia64/kernel/efi.c
+> > ===================================================================
+> > --- linux-2.6.orig/arch/ia64/kernel/efi.c	2008-08-05 18:31:13.000000000 +1000
+> > +++ linux-2.6/arch/ia64/kernel/efi.c	2008-08-05 18:31:21.000000000 +1000
+> > @@ -1334,7 +1334,7 @@ kdump_find_rsvd_region (unsigned long si
+> >  }
+> >  #endif
+> >  
+> > -#ifdef CONFIG_PROC_VMCORE
+> > +#ifdef CONFIG_CRASH_DUMP
+> >  /* locate the size find a the descriptor at a certain address */
+> >  unsigned long __init
+> >  vmcore_find_descriptor_size (unsigned long address)
+> > Index: linux-2.6/arch/ia64/kernel/setup.c
+> > ===================================================================
+> > --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-08-05 18:31:20.000000000 +1000
+> > +++ linux-2.6/arch/ia64/kernel/setup.c	2008-08-05 18:31:21.000000000 +1000
+> > @@ -352,7 +352,7 @@ reserve_memory (void)
+> >  	}
+> >  #endif
+> >  
+> > -#ifdef CONFIG_PROC_VMCORE
+> > +#ifdef CONFIG_CRASH_KERNEL
+> >  	if (reserve_elfcorehdr(&rsvd_region[n].start,
+> >  			       &rsvd_region[n].end) == 0)
+> >  		n++;
 > 
-> BTW, I'd like to know some conditions of this problem.
-> So please let me know the makedumpfile commandline which you run.
->  Ex. # makedumpfile -d 31 -x vmlinux /proc/vmcore dumpfile
+> Hi Simon,
+> 
+> Thanks for the patch. One minor nit. I think compilation will fail
+> in the case of CONFIG_PROC_VMCORE=n. Because reserve_elfcorehdr will
+> try to use vmcore_unusabe() which is not available now?
 
-  # makedumpfile -d 3 -D vmcore.sles11 vmcore.sles11.filtered
+Yes, sorry. I forgot to send a revised version of the patch that
+creates vmcore_unusabe() so that it is present if CONFIG_PROC_VMCORE=n.
+I will do so.
 
-> I doubt that makedumpfile cannot distinguish the pgtable correctly.
-> I created the debugging patch. Please run makedumpfile-1.2.7 applied
-> with it by '-D' option, and report the output.
-> According to your kernel .config file, the output should contain
-> "PAGETABLE_4L : ON".
-
-See the attachment.
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
-
---MP_/lreQH1xuk2zPaOiAU.cKU=N
-Content-Type: application/octet-stream; name=log
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=log
-
-DUNoZWNraW5nIGZvciBtZW1vcnkgaG9sZXMgICAgICAgICAgOiBbICAwICVdIA1DaGVja2luZyBm
-b3IgbWVtb3J5IGhvbGVzICAgICAgICAgIDogWzEwMCAlXSByZWFkbWVtOiBDYW4ndCBjb252ZXJ0
-IGEgdmlydHVhbCBhZGRyZXNzKGEwMDA3ZmZmOGY5MDAwMDApIHRvIG9mZnNldC4KY3JlYXRlXzJu
-ZF9iaXRtYXA6IENhbid0IGV4Y2x1ZGUgdW5uZWNlc3NhcnkgcGFnZXMuCkxPQUQgKDApCiAgcGh5
-c19zdGFydCA6IDMwMTQwMDAwMDAKICBwaHlzX2VuZCAgIDogMzAxNDYzOTU4MAogIHZpcnRfc3Rh
-cnQgOiBhMDAwMDAwMTAwMDAwMDAwCiAgdmlydF9lbmQgICA6IGEwMDAwMDAxMDA2Mzk1ODAKTE9B
-RCAoMSkKICBwaHlzX3N0YXJ0IDogMzAwMDA4MDAwMAogIHBoeXNfZW5kICAgOiAzMDAwNDAwMDAw
-CiAgdmlydF9zdGFydCA6IGUwMDAwMDMwMDAwODAwMDAKICB2aXJ0X2VuZCAgIDogZTAwMDAwMzAw
-MDQwMDAwMApMT0FEICgyKQogIHBoeXNfc3RhcnQgOiAzMDAzMDAwMDAwCiAgcGh5c19lbmQgICA6
-IDMwMDYwMDAwMDAKICB2aXJ0X3N0YXJ0IDogZTAwMDAwMzAwMzAwMDAwMAogIHZpcnRfZW5kICAg
-OiBlMDAwMDAzMDA2MDAwMDAwCkxPQUQgKDMpCiAgcGh5c19zdGFydCA6IDMwMDYwMDAwMDAKICBw
-aHlzX2VuZCAgIDogMzAxNDAwMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDAzMDA2MDAwMDAwCiAg
-dmlydF9lbmQgICA6IGUwMDAwMDMwMTQwMDAwMDAKTE9BRCAoNCkKICBwaHlzX3N0YXJ0IDogMzAx
-NDAwMDAwMAogIHBoeXNfZW5kICAgOiAzMDE0ZWMzMDAwCiAgdmlydF9zdGFydCA6IGUwMDAwMDMw
-MTQwMDAwMDAKICB2aXJ0X2VuZCAgIDogZTAwMDAwMzAxNGVjMzAwMApMT0FEICg1KQogIHBoeXNf
-c3RhcnQgOiAzMDE0ZWMzMDAwCiAgcGh5c19lbmQgICA6IDMwMTgwMDAwMDAKICB2aXJ0X3N0YXJ0
-IDogZTAwMDAwMzAxNGVjMzAwMAogIHZpcnRfZW5kICAgOiBlMDAwMDAzMDE4MDAwMDAwCkxPQUQg
-KDYpCiAgcGh5c19zdGFydCA6IDMwMzgwMDAwMDAKICBwaHlzX2VuZCAgIDogMzA3YmZmZTAwMAog
-IHZpcnRfc3RhcnQgOiBlMDAwMDAzMDM4MDAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMDMwN2Jm
-ZmUwMDAKTE9BRCAoNykKICBwaHlzX3N0YXJ0IDogYjAwMDA4MDAwMAogIHBoeXNfZW5kICAgOiBi
-MDAwNDAwMDAwCiAgdmlydF9zdGFydCA6IGUwMDAwMGIwMDAwODAwMDAKICB2aXJ0X2VuZCAgIDog
-ZTAwMDAwYjAwMDQwMDAwMApMT0FEICg4KQogIHBoeXNfc3RhcnQgOiBiMDAzMDAwMDAwCiAgcGh5
-c19lbmQgICA6IGIwMDYwMDAwMDAKICB2aXJ0X3N0YXJ0IDogZTAwMDAwYjAwMzAwMDAwMAogIHZp
-cnRfZW5kICAgOiBlMDAwMDBiMDA2MDAwMDAwCkxPQUQgKDkpCiAgcGh5c19zdGFydCA6IGIwMDYw
-MDAwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDA2
-MDAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzllYTAwMDAKTE9BRCAoMTApCiAgcGh5c19z
-dGFydCA6IGIwNzllYTAwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhNjAwMAogIHZpcnRfc3RhcnQg
-OiBlMDAwMDBiMDc5ZWEwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzllYTYwMDAKTE9BRCAo
-MTEpCiAgcGh5c19zdGFydCA6IGIwNzllYTYwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhNzAwMAog
-IHZpcnRfc3RhcnQgOiBlMDAwMDBiMDc5ZWE2MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzll
-YTcwMDAKTE9BRCAoMTIpCiAgcGh5c19zdGFydCA6IGIwNzllYTcwMDAKICBwaHlzX2VuZCAgIDog
-YjA3YTNmMjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDc5ZWE3MDAwCiAgdmlydF9lbmQgICA6
-IGUwMDAwMGIwN2EzZjIwMDAKTE9BRCAoMTMpCiAgcGh5c19zdGFydCA6IGIwN2EzZjIwMDAKICBw
-aHlzX2VuZCAgIDogYjA3YTQ1MjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdhM2YyMDAwCiAg
-dmlydF9lbmQgICA6IGUwMDAwMGIwN2E0NTIwMDAKTE9BRCAoMTQpCiAgcGh5c19zdGFydCA6IGIw
-N2E0NTIwMDAKICBwaHlzX2VuZCAgIDogYjA3YTdmZTAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBi
-MDdhNDUyMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2E3ZmUwMDAKTE9BRCAoMTUpCiAgcGh5
-c19zdGFydCA6IGIwN2I4MDAwMDAKICBwaHlzX2VuZCAgIDogYjA3YjgwMTAwMAogIHZpcnRfc3Rh
-cnQgOiBlMDAwMDBiMDdiODAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4MDEwMDAKTE9B
-RCAoMTYpCiAgcGh5c19zdGFydCA6IGIwN2I4MDEwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg4YzAw
-MAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODAxMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIw
-N2I4OGMwMDAKTE9BRCAoMTcpCiAgcGh5c19zdGFydCA6IGIwN2I4OGMwMDAKICBwaHlzX2VuZCAg
-IDogYjA3Yjg5NDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODhjMDAwCiAgdmlydF9lbmQg
-ICA6IGUwMDAwMGIwN2I4OTQwMDAKTE9BRCAoMTgpCiAgcGh5c19zdGFydCA6IGIwN2I4OTQwMDAK
-ICBwaHlzX2VuZCAgIDogYjA3Yjg5NjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODk0MDAw
-CiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OTYwMDAKTE9BRCAoMTkpCiAgcGh5c19zdGFydCA6
-IGIwN2I4OTYwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg5ZTAwMAogIHZpcnRfc3RhcnQgOiBlMDAw
-MDBiMDdiODk2MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OWUwMDAKTE9BRCAoMjApCiAg
-cGh5c19zdGFydCA6IGIwN2I4OWUwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg5ZjAwMAogIHZpcnRf
-c3RhcnQgOiBlMDAwMDBiMDdiODllMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OWYwMDAK
-TE9BRCAoMjEpCiAgcGh5c19zdGFydCA6IGIwN2I4OWYwMDAKICBwaHlzX2VuZCAgIDogYjA3YmEw
-MDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODlmMDAwCiAgdmlydF9lbmQgICA6IGUwMDAw
-MGIwN2JhMDAwMDAKTE9BRCAoMjIpCiAgcGh5c19zdGFydCA6IGIwN2JhMDAwMDAKICBwaHlzX2Vu
-ZCAgIDogYjA3YmQ1YTAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiYTAwMDAwCiAgdmlydF9l
-bmQgICA6IGUwMDAwMGIwN2JkNWEwMDAKTE9BRCAoMjMpCiAgcGh5c19zdGFydCA6IGIwN2JkOTQw
-MDAKICBwaHlzX2VuZCAgIDogYjA3YmUwMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiZDk0
-MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlMDAwMDAKTE9BRCAoMjQpCiAgcGh5c19zdGFy
-dCA6IGIwN2JlMDAwMDAKICBwaHlzX2VuZCAgIDogYjA3YmUxMjAwMAogIHZpcnRfc3RhcnQgOiBl
-MDAwMDBiMDdiZTAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlMTIwMDAKTE9BRCAoMjUp
-CiAgcGh5c19zdGFydCA6IGIwN2JlODAwMDAKICBwaHlzX2VuZCAgIDogYjA3YmU4ZTAwMAogIHZp
-cnRfc3RhcnQgOiBlMDAwMDBiMDdiZTgwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlOGUw
-MDAKTGludXgga2R1bXAKCm1heF9tYXBuciAgICA6IDJjMWVmYTMKUEFHRVRBQkxFXzRMIDogT04K
-Cm51bSBvZiBOT0RFcyA6IDIKCgpNZW1vcnkgdHlwZSAgOiBESVNDT05USUdNRU0KCm1lbV9tYXAg
-KDApCiAgbWVtX21hcCAgICA6IDAKICBwZm5fc3RhcnQgIDogMAogIHBmbl9lbmQgICAgOiBjMDBj
-MDAKbWVtX21hcCAoMSkKICBtZW1fbWFwICAgIDogYTAwMDdmZmY4ZjkwMDAwMAogIHBmbl9zdGFy
-dCAgOiBjMDBjMDAKICBwZm5fZW5kICAgIDogYzFlZmZmCm1lbV9tYXAgKDIpCiAgbWVtX21hcCAg
-ICA6IDAKICBwZm5fc3RhcnQgIDogYzFlZmZmCiAgcGZuX2VuZCAgICA6IDJjMDBjMDAKbWVtX21h
-cCAoMykKICBtZW1fbWFwICAgIDogYTAwMDdmZmZmZjkwMDAwMAogIHBmbl9zdGFydCAgOiAyYzAw
-YzAwCiAgcGZuX2VuZCAgICA6IDJjMWVmYTMKCm1ha2VkdW1wZmlsZSBGYWlsZWQuCg==
-
---MP_/lreQH1xuk2zPaOiAU.cKU=N
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---MP_/lreQH1xuk2zPaOiAU.cKU=N--
-
