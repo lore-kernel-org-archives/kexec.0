@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KQX8Z-0001d1-9K
-	for kexec@lists.infradead.org; Wed, 06 Aug 2008 00:44:24 +0000
-Date: Wed, 6 Aug 2008 10:44:21 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 5/6] kdump: add is_vmcore_usable() and vmcore_unusable()
-Message-ID: <20080806004419.GB8627@verge.net.au>
-References: <20080731012208.115225969@vergenet.net>
-	<20080731012927.813560963@vergenet.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080731012927.813560963@vergenet.net>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KQOBi-0001D0-4y
+	for kexec@lists.infradead.org; Tue, 05 Aug 2008 15:11:02 +0000
+Date: Tue, 5 Aug 2008 17:11:43 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: makedumpfile fails on SGI machine
+Message-ID: <20080805171143.773c2465@halley.suse.de>
+In-Reply-To: <48984275.5070409@mxs.nes.nec.co.jp>
+References: <20080730161416.47605c30@halley.suse.de>
+	<4891197D.10400@mxs.nes.nec.co.jp>
+	<20080731104726.035850be@halley.suse.de>
+	<48919306.80103@mxs.nes.nec.co.jp>
+	<20080731131823.3c7c97b2@halley.suse.de>
+	<4891A3CB.9040805@mxs.nes.nec.co.jp>
+	<48984275.5070409@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="MP_/lreQH1xuk2zPaOiAU.cKU=N"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,121 +25,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
 
-The usage of elfcorehdr_addr has changed recently
-such that being set to ELFCORE_ADDR_MAX is used by
-is_kdump_kernel() to indicate if the code is executing
-in a kernel executed as a crash kernel.
+--MP_/lreQH1xuk2zPaOiAU.cKU=N
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-However, arch/ia64/kernel/setup.c:reserve_elfcorehdr will
-rest elfcorehdr_addr to ELFCORE_ADDR_MAX on error,
-which means any subsequent calls to is_kdump_kernel()
-will return 0, even though they should return 1.
+* Ken'ichi Ohmichi [2008-08-05 21:07]:
+> 
+> BTW, I'd like to know some conditions of this problem.
+> So please let me know the makedumpfile commandline which you run.
+>  Ex. # makedumpfile -d 31 -x vmlinux /proc/vmcore dumpfile
 
-Ok, at this point in time there are no subsequent calls,
-but I think its fair to say that there is ample scope for error
-or at the very least confusion.
+  # makedumpfile -d 3 -D vmcore.sles11 vmcore.sles11.filtered
 
-This patch add an extra state, ELFCORE_ADDR_ERR, which
-indicates that elfcorehdr_addr was passed on the command line,
-and thus execution is taking place in a crashdump kernel,
-but vmcore can't be used for some reason. This is tested
-for using is_vmcore_usable() and set using vmcore_unusable().
-A subsequent patch makes use of this new code.
+> I doubt that makedumpfile cannot distinguish the pgtable correctly.
+> I created the debugging patch. Please run makedumpfile-1.2.7 applied
+> with it by '-D' option, and report the output.
+> According to your kernel .config file, the output should contain
+> "PAGETABLE_4L : ON".
 
-To summarise, the states that elfcorehdr_addr can now be in are as follows:
+See the attachment.
 
-ELFCORE_ADDR_MAX: not a crashdump kernel
-ELFCORE_ADDR_ERR: crashdump kernel but vmcore is unusable
-any other value:  crash dump kernel and vmcore is usable
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
---- 
+--MP_/lreQH1xuk2zPaOiAU.cKU=N
+Content-Type: application/octet-stream; name=log
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=log
 
- fs/proc/vmcore.c           |    2 +-
- include/linux/crash_dump.h |   26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+), 1 deletion(-)
+DUNoZWNraW5nIGZvciBtZW1vcnkgaG9sZXMgICAgICAgICAgOiBbICAwICVdIA1DaGVja2luZyBm
+b3IgbWVtb3J5IGhvbGVzICAgICAgICAgIDogWzEwMCAlXSByZWFkbWVtOiBDYW4ndCBjb252ZXJ0
+IGEgdmlydHVhbCBhZGRyZXNzKGEwMDA3ZmZmOGY5MDAwMDApIHRvIG9mZnNldC4KY3JlYXRlXzJu
+ZF9iaXRtYXA6IENhbid0IGV4Y2x1ZGUgdW5uZWNlc3NhcnkgcGFnZXMuCkxPQUQgKDApCiAgcGh5
+c19zdGFydCA6IDMwMTQwMDAwMDAKICBwaHlzX2VuZCAgIDogMzAxNDYzOTU4MAogIHZpcnRfc3Rh
+cnQgOiBhMDAwMDAwMTAwMDAwMDAwCiAgdmlydF9lbmQgICA6IGEwMDAwMDAxMDA2Mzk1ODAKTE9B
+RCAoMSkKICBwaHlzX3N0YXJ0IDogMzAwMDA4MDAwMAogIHBoeXNfZW5kICAgOiAzMDAwNDAwMDAw
+CiAgdmlydF9zdGFydCA6IGUwMDAwMDMwMDAwODAwMDAKICB2aXJ0X2VuZCAgIDogZTAwMDAwMzAw
+MDQwMDAwMApMT0FEICgyKQogIHBoeXNfc3RhcnQgOiAzMDAzMDAwMDAwCiAgcGh5c19lbmQgICA6
+IDMwMDYwMDAwMDAKICB2aXJ0X3N0YXJ0IDogZTAwMDAwMzAwMzAwMDAwMAogIHZpcnRfZW5kICAg
+OiBlMDAwMDAzMDA2MDAwMDAwCkxPQUQgKDMpCiAgcGh5c19zdGFydCA6IDMwMDYwMDAwMDAKICBw
+aHlzX2VuZCAgIDogMzAxNDAwMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDAzMDA2MDAwMDAwCiAg
+dmlydF9lbmQgICA6IGUwMDAwMDMwMTQwMDAwMDAKTE9BRCAoNCkKICBwaHlzX3N0YXJ0IDogMzAx
+NDAwMDAwMAogIHBoeXNfZW5kICAgOiAzMDE0ZWMzMDAwCiAgdmlydF9zdGFydCA6IGUwMDAwMDMw
+MTQwMDAwMDAKICB2aXJ0X2VuZCAgIDogZTAwMDAwMzAxNGVjMzAwMApMT0FEICg1KQogIHBoeXNf
+c3RhcnQgOiAzMDE0ZWMzMDAwCiAgcGh5c19lbmQgICA6IDMwMTgwMDAwMDAKICB2aXJ0X3N0YXJ0
+IDogZTAwMDAwMzAxNGVjMzAwMAogIHZpcnRfZW5kICAgOiBlMDAwMDAzMDE4MDAwMDAwCkxPQUQg
+KDYpCiAgcGh5c19zdGFydCA6IDMwMzgwMDAwMDAKICBwaHlzX2VuZCAgIDogMzA3YmZmZTAwMAog
+IHZpcnRfc3RhcnQgOiBlMDAwMDAzMDM4MDAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMDMwN2Jm
+ZmUwMDAKTE9BRCAoNykKICBwaHlzX3N0YXJ0IDogYjAwMDA4MDAwMAogIHBoeXNfZW5kICAgOiBi
+MDAwNDAwMDAwCiAgdmlydF9zdGFydCA6IGUwMDAwMGIwMDAwODAwMDAKICB2aXJ0X2VuZCAgIDog
+ZTAwMDAwYjAwMDQwMDAwMApMT0FEICg4KQogIHBoeXNfc3RhcnQgOiBiMDAzMDAwMDAwCiAgcGh5
+c19lbmQgICA6IGIwMDYwMDAwMDAKICB2aXJ0X3N0YXJ0IDogZTAwMDAwYjAwMzAwMDAwMAogIHZp
+cnRfZW5kICAgOiBlMDAwMDBiMDA2MDAwMDAwCkxPQUQgKDkpCiAgcGh5c19zdGFydCA6IGIwMDYw
+MDAwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDA2
+MDAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzllYTAwMDAKTE9BRCAoMTApCiAgcGh5c19z
+dGFydCA6IGIwNzllYTAwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhNjAwMAogIHZpcnRfc3RhcnQg
+OiBlMDAwMDBiMDc5ZWEwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzllYTYwMDAKTE9BRCAo
+MTEpCiAgcGh5c19zdGFydCA6IGIwNzllYTYwMDAKICBwaHlzX2VuZCAgIDogYjA3OWVhNzAwMAog
+IHZpcnRfc3RhcnQgOiBlMDAwMDBiMDc5ZWE2MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwNzll
+YTcwMDAKTE9BRCAoMTIpCiAgcGh5c19zdGFydCA6IGIwNzllYTcwMDAKICBwaHlzX2VuZCAgIDog
+YjA3YTNmMjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDc5ZWE3MDAwCiAgdmlydF9lbmQgICA6
+IGUwMDAwMGIwN2EzZjIwMDAKTE9BRCAoMTMpCiAgcGh5c19zdGFydCA6IGIwN2EzZjIwMDAKICBw
+aHlzX2VuZCAgIDogYjA3YTQ1MjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdhM2YyMDAwCiAg
+dmlydF9lbmQgICA6IGUwMDAwMGIwN2E0NTIwMDAKTE9BRCAoMTQpCiAgcGh5c19zdGFydCA6IGIw
+N2E0NTIwMDAKICBwaHlzX2VuZCAgIDogYjA3YTdmZTAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBi
+MDdhNDUyMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2E3ZmUwMDAKTE9BRCAoMTUpCiAgcGh5
+c19zdGFydCA6IGIwN2I4MDAwMDAKICBwaHlzX2VuZCAgIDogYjA3YjgwMTAwMAogIHZpcnRfc3Rh
+cnQgOiBlMDAwMDBiMDdiODAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4MDEwMDAKTE9B
+RCAoMTYpCiAgcGh5c19zdGFydCA6IGIwN2I4MDEwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg4YzAw
+MAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODAxMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIw
+N2I4OGMwMDAKTE9BRCAoMTcpCiAgcGh5c19zdGFydCA6IGIwN2I4OGMwMDAKICBwaHlzX2VuZCAg
+IDogYjA3Yjg5NDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODhjMDAwCiAgdmlydF9lbmQg
+ICA6IGUwMDAwMGIwN2I4OTQwMDAKTE9BRCAoMTgpCiAgcGh5c19zdGFydCA6IGIwN2I4OTQwMDAK
+ICBwaHlzX2VuZCAgIDogYjA3Yjg5NjAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODk0MDAw
+CiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OTYwMDAKTE9BRCAoMTkpCiAgcGh5c19zdGFydCA6
+IGIwN2I4OTYwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg5ZTAwMAogIHZpcnRfc3RhcnQgOiBlMDAw
+MDBiMDdiODk2MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OWUwMDAKTE9BRCAoMjApCiAg
+cGh5c19zdGFydCA6IGIwN2I4OWUwMDAKICBwaHlzX2VuZCAgIDogYjA3Yjg5ZjAwMAogIHZpcnRf
+c3RhcnQgOiBlMDAwMDBiMDdiODllMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2I4OWYwMDAK
+TE9BRCAoMjEpCiAgcGh5c19zdGFydCA6IGIwN2I4OWYwMDAKICBwaHlzX2VuZCAgIDogYjA3YmEw
+MDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiODlmMDAwCiAgdmlydF9lbmQgICA6IGUwMDAw
+MGIwN2JhMDAwMDAKTE9BRCAoMjIpCiAgcGh5c19zdGFydCA6IGIwN2JhMDAwMDAKICBwaHlzX2Vu
+ZCAgIDogYjA3YmQ1YTAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiYTAwMDAwCiAgdmlydF9l
+bmQgICA6IGUwMDAwMGIwN2JkNWEwMDAKTE9BRCAoMjMpCiAgcGh5c19zdGFydCA6IGIwN2JkOTQw
+MDAKICBwaHlzX2VuZCAgIDogYjA3YmUwMDAwMAogIHZpcnRfc3RhcnQgOiBlMDAwMDBiMDdiZDk0
+MDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlMDAwMDAKTE9BRCAoMjQpCiAgcGh5c19zdGFy
+dCA6IGIwN2JlMDAwMDAKICBwaHlzX2VuZCAgIDogYjA3YmUxMjAwMAogIHZpcnRfc3RhcnQgOiBl
+MDAwMDBiMDdiZTAwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlMTIwMDAKTE9BRCAoMjUp
+CiAgcGh5c19zdGFydCA6IGIwN2JlODAwMDAKICBwaHlzX2VuZCAgIDogYjA3YmU4ZTAwMAogIHZp
+cnRfc3RhcnQgOiBlMDAwMDBiMDdiZTgwMDAwCiAgdmlydF9lbmQgICA6IGUwMDAwMGIwN2JlOGUw
+MDAKTGludXgga2R1bXAKCm1heF9tYXBuciAgICA6IDJjMWVmYTMKUEFHRVRBQkxFXzRMIDogT04K
+Cm51bSBvZiBOT0RFcyA6IDIKCgpNZW1vcnkgdHlwZSAgOiBESVNDT05USUdNRU0KCm1lbV9tYXAg
+KDApCiAgbWVtX21hcCAgICA6IDAKICBwZm5fc3RhcnQgIDogMAogIHBmbl9lbmQgICAgOiBjMDBj
+MDAKbWVtX21hcCAoMSkKICBtZW1fbWFwICAgIDogYTAwMDdmZmY4ZjkwMDAwMAogIHBmbl9zdGFy
+dCAgOiBjMDBjMDAKICBwZm5fZW5kICAgIDogYzFlZmZmCm1lbV9tYXAgKDIpCiAgbWVtX21hcCAg
+ICA6IDAKICBwZm5fc3RhcnQgIDogYzFlZmZmCiAgcGZuX2VuZCAgICA6IDJjMDBjMDAKbWVtX21h
+cCAoMykKICBtZW1fbWFwICAgIDogYTAwMDdmZmZmZjkwMDAwMAogIHBmbl9zdGFydCAgOiAyYzAw
+YzAwCiAgcGZuX2VuZCAgICA6IDJjMWVmYTMKCm1ha2VkdW1wZmlsZSBGYWlsZWQuCg==
 
-Wed, 30 Jul 2008 09:10:37 +1000
-* Fixed logic bug in vmcore_unusable().
-  if (!is_kdump_kernel()) is correct
-  if (is_kdump_kernel()) is not
-
-Wed, 06 Aug 2008 09:53:44 +1000
-* is_vmcore_usable() and vmcore_unusable may be used when
-  CONFIG_CRASH_DUMP is defined but CONFIG_PROC_VMCORE is not.
-
-  This update is needed by
-  "kdump, ia64: always reserve elfcore header memory in crash kernel"
-  http://lists.infradead.org/pipermail/kexec/2008-August/002294.html
-
-Index: linux-2.6/include/linux/crash_dump.h
-===================================================================
---- linux-2.6.orig/include/linux/crash_dump.h	2008-08-05 18:10:21.000000000 +1000
-+++ linux-2.6/include/linux/crash_dump.h	2008-08-05 18:11:14.000000000 +1000
-@@ -8,6 +8,7 @@
- #include <linux/proc_fs.h>
- 
- #define ELFCORE_ADDR_MAX	(-1ULL)
-+#define ELFCORE_ADDR_ERR	(-2ULL)
- 
- extern unsigned long long elfcorehdr_addr;
- 
-@@ -38,6 +39,29 @@ static inline int is_kdump_kernel(void)
- {
- 	return (elfcorehdr_addr != ELFCORE_ADDR_MAX) ? 1 : 0;
- }
-+
-+/* is_vmcore_usable() checks if the kernel is booting after a panic and
-+ * the vmcore region is usable.
-+ *
-+ * This makes use of the fact that due to alignment -2ULL is not
-+ * a valid pointer, much in the vain of IS_ERR(), except
-+ * dealing directly with an unsigned long long rather than a pointer.
-+ */
-+
-+static inline int is_vmcore_usable(void)
-+{
-+	return is_kdump_kernel() && elfcorehdr_addr != ELFCORE_ADDR_ERR ? 1 : 0;
-+}
-+
-+/* vmcore_unusable() marks the vmcore as unusable,
-+ * without disturbing the logic of is_kdump_kernel()
-+ */
-+
-+static inline void vmcore_unusable(void)
-+{
-+	if (is_kdump_kernel())
-+		elfcorehdr_addr = ELFCORE_ADDR_ERR;
-+}
- #else /* !CONFIG_CRASH_DUMP */
- static inline int is_kdump_kernel(void) { return 0; }
- #endif /* CONFIG_CRASH_DUMP */
-Index: linux-2.6/fs/proc/vmcore.c
-===================================================================
---- linux-2.6.orig/fs/proc/vmcore.c	2008-08-05 18:10:21.000000000 +1000
-+++ linux-2.6/fs/proc/vmcore.c	2008-08-05 18:10:25.000000000 +1000
-@@ -650,7 +650,7 @@ static int __init vmcore_init(void)
- 	int rc = 0;
- 
- 	/* If elfcorehdr= has been passed in cmdline, then capture the dump.*/
--	if (!(elfcorehdr_addr < ELFCORE_ADDR_MAX))
-+	if (!(is_vmcore_usable()))
- 		return rc;
- 	rc = parse_crash_elf_headers();
- 	if (rc) {
-
+--MP_/lreQH1xuk2zPaOiAU.cKU=N
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--MP_/lreQH1xuk2zPaOiAU.cKU=N--
+
