@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KQLsH-0002ey-4y
-	for kexec@lists.infradead.org; Tue, 05 Aug 2008 12:42:49 +0000
-Date: Tue, 5 Aug 2008 14:43:29 +0200
-From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: Kdump compressed format
-Message-ID: <20080805144329.559f4203@halley.suse.de>
-In-Reply-To: <4897F177.2060106@mxs.nes.nec.co.jp>
-References: <20080804135309.4ef6f33b@halley.suse.de>
-	<4897F177.2060106@mxs.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KQM66-0007zu-72
+	for kexec@lists.infradead.org; Tue, 05 Aug 2008 12:57:06 +0000
+Date: Tue, 5 Aug 2008 08:56:34 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: kdump, ia64: always reserve elfcore header memory in crash kernel
+Message-ID: <20080805125634.GA15193@redhat.com>
+References: <20080805094825.GA9712@verge.net.au>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080805094825.GA9712@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +23,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-ia64@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-* Ken'ichi Ohmichi [2008-08-05 15:21]:
-> Bernhard Walle wrote:
-> > is there any documentation how the kdump compressed format (or the
-> > diskdump format, from what it is derived) looks like? Beside of the
-> > source code of the tools that support it. ;-)
+On Tue, Aug 05, 2008 at 07:48:27PM +1000, Simon Horman wrote:
+> elfcore header memory needs to be reserved in a crash kernel.
+> This means that the relevant code should be protected
+> by CONFIG_CRASH_DUMP rather than CONFIG_PROC_VMCORE.
 > 
-> The kdump compressed format is supported by only the crash utility
-> and makedumpfile command. gdb does not support it. I think that
-> there is not any documentation about the kdump compressed format,
-> then I wrote it. Is it enough ?
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> 
+> --- 
+> Andrew, this patch fixes bug in the (unlikely) case where
+> an ia64 crashdump kernel does not have CONFIG_PROC_FS set.
+> I think it is worth including in 2.6.27. But breakage cases are
+> likely to be minimal to non-existent, so I am comfortable
+> with post 2.6.27 too.
+> 
+> This patch should be appended to the series,
+> "is_kdump_kernel() cleanup and related patches".
+> 
+> http://lists.infradead.org/pipermail/kexec/2008-July/002270.html
+> 
+> Index: linux-2.6/arch/ia64/kernel/efi.c
+> ===================================================================
+> --- linux-2.6.orig/arch/ia64/kernel/efi.c	2008-08-05 18:31:13.000000000 +1000
+> +++ linux-2.6/arch/ia64/kernel/efi.c	2008-08-05 18:31:21.000000000 +1000
+> @@ -1334,7 +1334,7 @@ kdump_find_rsvd_region (unsigned long si
+>  }
+>  #endif
+>  
+> -#ifdef CONFIG_PROC_VMCORE
+> +#ifdef CONFIG_CRASH_DUMP
+>  /* locate the size find a the descriptor at a certain address */
+>  unsigned long __init
+>  vmcore_find_descriptor_size (unsigned long address)
+> Index: linux-2.6/arch/ia64/kernel/setup.c
+> ===================================================================
+> --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-08-05 18:31:20.000000000 +1000
+> +++ linux-2.6/arch/ia64/kernel/setup.c	2008-08-05 18:31:21.000000000 +1000
+> @@ -352,7 +352,7 @@ reserve_memory (void)
+>  	}
+>  #endif
+>  
+> -#ifdef CONFIG_PROC_VMCORE
+> +#ifdef CONFIG_CRASH_KERNEL
+>  	if (reserve_elfcorehdr(&rsvd_region[n].start,
+>  			       &rsvd_region[n].end) == 0)
+>  		n++;
 
-Thanks a lot! Yes, that gives me the overview I needed.
+Hi Simon,
 
-I grabbed your information and generated a manual page from it where I
-also want to describe the other dump formats (when I have some time
-left):
+Thanks for the patch. One minor nit. I think compilation will fail
+in the case of CONFIG_PROC_VMCORE=n. Because reserve_elfcorehdr will
+try to use vmcore_unusabe() which is not available now?
 
-   http://www.suse.de/~bwalle/kdump/
-
-That's basically part of the SUSE kdump configuration, maintained in
-http://freehg.org/u/bwalle/kdump/.
-
-I just used asciidoc because I hate nroff. I hope it's ok for you to
-distribute that manual page.
-
-However, if you wonder, I didn't need that information for documentation
-but for page size on PPC64 ... thanks again!
-
-
-
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
