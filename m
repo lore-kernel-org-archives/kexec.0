@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KQM66-0007zu-72
-	for kexec@lists.infradead.org; Tue, 05 Aug 2008 12:57:06 +0000
-Date: Tue, 5 Aug 2008 08:56:34 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kdump, ia64: always reserve elfcore header memory in crash kernel
-Message-ID: <20080805125634.GA15193@redhat.com>
-References: <20080805094825.GA9712@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080805094825.GA9712@verge.net.au>
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KQdwl-0003Zp-Du
+	for kexec@lists.infradead.org; Wed, 06 Aug 2008 08:00:40 +0000
+Date: Wed, 6 Aug 2008 10:01:21 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: Kdump compressed format
+Message-ID: <20080806100121.4b50d15a@halley.suse.de>
+In-Reply-To: <489952B0.4050105@mxs.nes.nec.co.jp>
+References: <20080804135309.4ef6f33b@halley.suse.de>
+	<4897F177.2060106@mxs.nes.nec.co.jp>
+	<20080805144329.559f4203@halley.suse.de>
+	<489952B0.4050105@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,63 +25,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-ia64@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-On Tue, Aug 05, 2008 at 07:48:27PM +1000, Simon Horman wrote:
-> elfcore header memory needs to be reserved in a crash kernel.
-> This means that the relevant code should be protected
-> by CONFIG_CRASH_DUMP rather than CONFIG_PROC_VMCORE.
+* Ken'ichi Ohmichi [2008-08-06 16:28]:
 > 
-> Signed-off-by: Simon Horman <horms@verge.net.au>
+> > I just used asciidoc because I hate nroff. I hope it's ok for you to
+> > distribute that manual page.
 > 
-> --- 
-> Andrew, this patch fixes bug in the (unlikely) case where
-> an ia64 crashdump kernel does not have CONFIG_PROC_FS set.
-> I think it is worth including in 2.6.27. But breakage cases are
-> likely to be minimal to non-existent, so I am comfortable
-> with post 2.6.27 too.
-> 
-> This patch should be appended to the series,
-> "is_kdump_kernel() cleanup and related patches".
-> 
-> http://lists.infradead.org/pipermail/kexec/2008-July/002270.html
-> 
-> Index: linux-2.6/arch/ia64/kernel/efi.c
-> ===================================================================
-> --- linux-2.6.orig/arch/ia64/kernel/efi.c	2008-08-05 18:31:13.000000000 +1000
-> +++ linux-2.6/arch/ia64/kernel/efi.c	2008-08-05 18:31:21.000000000 +1000
-> @@ -1334,7 +1334,7 @@ kdump_find_rsvd_region (unsigned long si
->  }
->  #endif
->  
-> -#ifdef CONFIG_PROC_VMCORE
-> +#ifdef CONFIG_CRASH_DUMP
->  /* locate the size find a the descriptor at a certain address */
->  unsigned long __init
->  vmcore_find_descriptor_size (unsigned long address)
-> Index: linux-2.6/arch/ia64/kernel/setup.c
-> ===================================================================
-> --- linux-2.6.orig/arch/ia64/kernel/setup.c	2008-08-05 18:31:20.000000000 +1000
-> +++ linux-2.6/arch/ia64/kernel/setup.c	2008-08-05 18:31:21.000000000 +1000
-> @@ -352,7 +352,7 @@ reserve_memory (void)
->  	}
->  #endif
->  
-> -#ifdef CONFIG_PROC_VMCORE
-> +#ifdef CONFIG_CRASH_KERNEL
->  	if (reserve_elfcorehdr(&rsvd_region[n].start,
->  			       &rsvd_region[n].end) == 0)
->  		n++;
+> The manual page is for its usage
 
-Hi Simon,
+Not the section 5, which is about file formats. But since it's
+asciidoc, I can also create a HTML / PDF documentation from it later
+when I'm finished with other file formats.
 
-Thanks for the patch. One minor nit. I think compilation will fail
-in the case of CONFIG_PROC_VMCORE=n. Because reserve_elfcorehdr will
-try to use vmcore_unusabe() which is not available now?
 
-Thanks
-Vivek
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
