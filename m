@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KR1j4-0007cJ-5G
-	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:24:06 +0000
-Date: Thu, 7 Aug 2008 11:24:05 +0200
-From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH 6/6] kexec jump: fix for ftrace
-Message-ID: <20080807092405.GF372@atrey.karlin.mff.cuni.cz>
-References: <1218099937.5164.37.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1218099937.5164.37.camel@caritas-dev.intel.com>
+	id 1KR1nv-00086C-BF
+	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:29:07 +0000
+Subject: Re: [PATCH 1/6] kexec jump: clean up #ifdef and comments
+From: Huang Ying <ying.huang@intel.com>
+In-Reply-To: <20080807092058.GB372@atrey.karlin.mff.cuni.cz>
+References: <1218099923.5164.32.camel@caritas-dev.intel.com>
+	<20080807092058.GB372@atrey.karlin.mff.cuni.cz>
+Date: Thu, 07 Aug 2008 17:29:04 +0800
+Message-Id: <1218101344.5164.38.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,78 +23,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
+To: Pavel Machek <pavel@suse.cz>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-> Restore ftrace after jumping back from kexeced kernel.
+On Thu, 2008-08-07 at 11:20 +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > CONFIG_KEXEC_JUMP to make code looks cleaner.
+> > 
+> > Fix no longer correct comments of kernel_kexec().
+> > 
+> > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > 
+> > ---
+> >  kernel/kexec.c |   11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> > 
+> > --- a/kernel/kexec.c
+> > +++ b/kernel/kexec.c
+> > @@ -1427,8 +1427,6 @@ static int __init crash_save_vmcoreinfo_
+> >  module_init(crash_save_vmcoreinfo_init)
+> >  
+> >  /**
+> > - *	kernel_kexec - reboot the system
+> > - *
+> >   *	Move into place and start executing a preloaded standalone
+> >   *	executable.  If nothing was preloaded return an error.
+> >   */
 > 
-> ---
->  arch/x86/kernel/machine_kexec_32.c |   19 +++++++++++++++++++
->  kernel/kexec.c                     |    2 --
->  2 files changed, 19 insertions(+), 2 deletions(-)
-> 
-> @@ -124,7 +126,15 @@ void machine_kexec(struct kimage *image)
->  				       unsigned int has_pae,
->  				       unsigned int preserve_context);
->  
-> +#ifdef CONFIG_KEXEC_JUMP
-> +	if (kexec_image->preserve_context)
-> +		save_processor_state();
-> +#endif
-> +
-> +#ifdef CONFIG_FTRACE
-> +	save_ftrace_enabled = ftrace_enabled;
->  	tracer_disable();
-> +#endif
->  
->  	/* Interrupts aren't acceptable while we reboot */
->  	raw_local_irq_disable();
+> If it is not kerneldoc, it should not be /** .
 
-The patch does way more than its changelog says...
-									Pavel
+OK. I will fix it.
+
+Best Regards,
+Huang Ying
 
 
-> @@ -182,6 +192,15 @@ void machine_kexec(struct kimage *image)
->  					   (unsigned long)page_list,
->  					   image->start, cpu_has_pae,
->  					   image->preserve_context);
-> +
-> +#ifdef CONFIG_KEXEC_JUMP
-> +	if (kexec_image->preserve_context)
-> +		restore_processor_state();
-> +#endif
-> +
-> +#ifdef CONFIG_FTRACE
-> +	ftrace_enabled = save_ftrace_enabled;
-> +#endif
->  }
->  
->  void arch_crash_save_vmcoreinfo(void)
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1469,7 +1469,6 @@ int kernel_kexec(void)
->  		error = device_power_down(PMSG_FREEZE);
->  		if (error)
->  			goto Enable_irqs;
-> -		save_processor_state();
->  	} else
->  #endif
->  	{
-> @@ -1482,7 +1481,6 @@ int kernel_kexec(void)
->  
->  #ifdef CONFIG_KEXEC_JUMP
->  	if (kexec_image->preserve_context) {
-> -		restore_processor_state();
->  		device_power_up(PMSG_RESTORE);
->   Enable_irqs:
->  		local_irq_enable();
-> 
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
