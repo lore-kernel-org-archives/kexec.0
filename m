@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KR1RH-0005vW-3d
-	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:05:43 +0000
-Subject: [PATCH 6/6] kexec jump: fix for ftrace
+	id 1KR1Rb-0005xY-4K
+	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:06:03 +0000
+Subject: [PATCH 5/6] kexec jump: fix for lockdep
 From: Huang Ying <ying.huang@intel.com>
-Date: Thu, 07 Aug 2008 17:05:37 +0800
-Message-Id: <1218099937.5164.37.camel@caritas-dev.intel.com>
+Date: Thu, 07 Aug 2008 17:05:35 +0800
+Message-Id: <1218099935.5164.36.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,83 +23,26 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Restore ftrace after jumping back from kexeced kernel.
+Replace local_irq_disable() with raw_local_irq_disable() to prevent
+lockdep complain.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
 
 ---
- arch/x86/kernel/machine_kexec_32.c |   19 +++++++++++++++++++
- kernel/kexec.c                     |    2 --
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ arch/x86/kernel/machine_kexec_32.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/arch/x86/kernel/machine_kexec_32.c
 +++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/numa.h>
- #include <linux/ftrace.h>
-+#include <linux/suspend.h>
- 
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -117,6 +118,7 @@ void machine_kexec(struct kimage *image)
- {
- 	unsigned long page_list[PAGES_NR];
- 	void *control_page;
-+	int save_ftrace_enabled;
- 	asmlinkage unsigned long
- 		(*relocate_kernel_ptr)(unsigned long indirection_page,
- 				       unsigned long control_page,
-@@ -124,7 +126,15 @@ void machine_kexec(struct kimage *image)
- 				       unsigned int has_pae,
- 				       unsigned int preserve_context);
- 
-+#ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context)
-+		save_processor_state();
-+#endif
-+
-+#ifdef CONFIG_FTRACE
-+	save_ftrace_enabled = ftrace_enabled;
- 	tracer_disable();
-+#endif
+@@ -130,7 +130,7 @@ void machine_kexec(struct kimage *image)
+ #endif
  
  	/* Interrupts aren't acceptable while we reboot */
- 	raw_local_irq_disable();
-@@ -182,6 +192,15 @@ void machine_kexec(struct kimage *image)
- 					   (unsigned long)page_list,
- 					   image->start, cpu_has_pae,
- 					   image->preserve_context);
-+
-+#ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context)
-+		restore_processor_state();
-+#endif
-+
-+#ifdef CONFIG_FTRACE
-+	ftrace_enabled = save_ftrace_enabled;
-+#endif
- }
+-	local_irq_disable();
++	raw_local_irq_disable();
  
- void arch_crash_save_vmcoreinfo(void)
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1469,7 +1469,6 @@ int kernel_kexec(void)
- 		error = device_power_down(PMSG_FREEZE);
- 		if (error)
- 			goto Enable_irqs;
--		save_processor_state();
- 	} else
- #endif
- 	{
-@@ -1482,7 +1481,6 @@ int kernel_kexec(void)
- 
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
--		restore_processor_state();
- 		device_power_up(PMSG_RESTORE);
-  Enable_irqs:
- 		local_irq_enable();
+ 	if (image->preserve_context) {
+ #ifdef CONFIG_X86_IO_APIC
 
 
 
