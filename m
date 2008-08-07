@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from gprs189-60.eurotel.cz ([160.218.189.60] helo=spitz.ucw.cz)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KR5Ls-00052b-OQ
-	for kexec@lists.infradead.org; Thu, 07 Aug 2008 13:16:25 +0000
-Date: Thu, 7 Aug 2008 09:15:57 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1KRC98-00062V-8h
+	for kexec@lists.infradead.org; Thu, 07 Aug 2008 20:31:47 +0000
+Date: Thu, 7 Aug 2008 22:31:30 +0200
+From: Pavel Machek <pavel@suse.cz>
 Subject: Re: [PATCH 2/6] kexec jump: check code size in control page
-Message-ID: <20080807131557.GB27783@redhat.com>
+Message-ID: <20080807203130.GA10331@ucw.cz>
 References: <1218099926.5164.33.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
+	<20080807131557.GB27783@redhat.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1218099926.5164.33.camel@caritas-dev.intel.com>
+In-Reply-To: <20080807131557.GB27783@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +24,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-On Thu, Aug 07, 2008 at 05:05:26PM +0800, Huang Ying wrote:
-> Kexec/Kexec-jump requires code size in control page is less than
-> PAGE_SIZE/2. This patch adds runtime checking for this.
+Hi!
+
+> > PAGE_SIZE/2. This patch adds runtime checking for this.
+> > 
+> > Signed-off-by: Huang Ying <ying.huang@intel.com>
+...
+
+> >  {
+> >  	if (nx_enabled)
+> >  		set_pages_x(image->control_code_page, 1);
+> > +
+> > +	BUG_ON((unsigned long)kexec_control_page_code_end - \
+> > +	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
+> > +
 > 
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
+
+> Run time check is better than nothing but I think in this case it would
+> be better if we can catch it at compile time. 
 > 
-> ---
->  arch/x86/kernel/machine_kexec_32.c   |    4 ++++
->  arch/x86/kernel/relocate_kernel_32.S |    3 +++
->  include/asm-x86/kexec.h              |    1 +
->  3 files changed, 8 insertions(+)
-> 
-> --- a/arch/x86/kernel/machine_kexec_32.c
-> +++ b/arch/x86/kernel/machine_kexec_32.c
-> @@ -92,6 +92,10 @@ int machine_kexec_prepare(struct kimage 
->  {
->  	if (nx_enabled)
->  		set_pages_x(image->control_code_page, 1);
-> +
-> +	BUG_ON((unsigned long)kexec_control_page_code_end - \
-> +	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
-> +
+> One of the methods will be to write a small program of your own and
+> put in script/ and at build time check for the size and flag error. May
+> be there are other better ways to do this.
 
-Hi Huang,
+BUILD_BUG_ON()?
 
-Run time check is better than nothing but I think in this case it would
-be better if we can catch it at compile time. 
-
-One of the methods will be to write a small program of your own and
-put in script/ and at build time check for the size and flag error. May
-be there are other better ways to do this.
-
-Thanks
-Vivek
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 
 _______________________________________________
 kexec mailing list
