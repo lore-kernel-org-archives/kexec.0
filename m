@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KR5Aa-0003jb-O0
-	for kexec@lists.infradead.org; Thu, 07 Aug 2008 13:04:45 +0000
-Date: Thu, 7 Aug 2008 09:04:01 -0400
+	id 1KR5hI-0007QT-Jo
+	for kexec@lists.infradead.org; Thu, 07 Aug 2008 13:38:32 +0000
+Date: Thu, 7 Aug 2008 09:38:05 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 1/6] kexec jump: clean up #ifdef and comments
-Message-ID: <20080807130401.GA27783@redhat.com>
-References: <1218099923.5164.32.camel@caritas-dev.intel.com>
+Subject: Re: [PATCH 6/6] kexec jump: fix for ftrace
+Message-ID: <20080807133805.GD27783@redhat.com>
+References: <1218099937.5164.37.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1218099923.5164.32.camel@caritas-dev.intel.com>
+In-Reply-To: <1218099937.5164.37.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,74 +26,77 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-On Thu, Aug 07, 2008 at 05:05:23PM +0800, Huang Ying wrote:
-> Move if (kexec_image->preserve_context) { ... } into #ifdef
-> CONFIG_KEXEC_JUMP to make code looks cleaner.
-> 
-> Fix no longer correct comments of kernel_kexec().
+On Thu, Aug 07, 2008 at 05:05:37PM +0800, Huang Ying wrote:
+> Restore ftrace after jumping back from kexeced kernel.
 > 
 > Signed-off-by: Huang Ying <ying.huang@intel.com>
 > 
 > ---
->  kernel/kexec.c |   11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+>  arch/x86/kernel/machine_kexec_32.c |   19 +++++++++++++++++++
+>  kernel/kexec.c                     |    2 --
+>  2 files changed, 19 insertions(+), 2 deletions(-)
 > 
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1427,8 +1427,6 @@ static int __init crash_save_vmcoreinfo_
->  module_init(crash_save_vmcoreinfo_init)
+> --- a/arch/x86/kernel/machine_kexec_32.c
+> +++ b/arch/x86/kernel/machine_kexec_32.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/init.h>
+>  #include <linux/numa.h>
+>  #include <linux/ftrace.h>
+> +#include <linux/suspend.h>
 >  
->  /**
-> - *	kernel_kexec - reboot the system
-> - *
->   *	Move into place and start executing a preloaded standalone
->   *	executable.  If nothing was preloaded return an error.
->   */
-> @@ -1443,8 +1441,8 @@ int kernel_kexec(void)
->  		goto Unlock;
->  	}
+>  #include <asm/pgtable.h>
+>  #include <asm/pgalloc.h>
+> @@ -117,6 +118,7 @@ void machine_kexec(struct kimage *image)
+>  {
+>  	unsigned long page_list[PAGES_NR];
+>  	void *control_page;
+> +	int save_ftrace_enabled;
+>  	asmlinkage unsigned long
+>  		(*relocate_kernel_ptr)(unsigned long indirection_page,
+>  				       unsigned long control_page,
+> @@ -124,7 +126,15 @@ void machine_kexec(struct kimage *image)
+>  				       unsigned int has_pae,
+>  				       unsigned int preserve_context);
 >  
-> -	if (kexec_image->preserve_context) {
->  #ifdef CONFIG_KEXEC_JUMP
-> +	if (kexec_image->preserve_context) {
->  		mutex_lock(&pm_mutex);
->  		pm_prepare_console();
->  		error = freeze_processes();
-> @@ -1471,8 +1469,9 @@ int kernel_kexec(void)
->  		if (error)
->  			goto Enable_irqs;
->  		save_processor_state();
-> +	} else
->  #endif
-> -	} else {
-> +	{
->  		blocking_notifier_call_chain(&reboot_notifier_list,
->  					     SYS_RESTART, NULL);
->  		system_state = SYSTEM_RESTART;
-> @@ -1484,8 +1483,8 @@ int kernel_kexec(void)
->  
->  	machine_kexec(kexec_image);
->  
-> -	if (kexec_image->preserve_context) {
->  #ifdef CONFIG_KEXEC_JUMP
-> +	if (kexec_image->preserve_context) {
->  		restore_processor_state();
->  		device_power_up(PMSG_RESTORE);
->   Enable_irqs:
-> @@ -1499,8 +1498,8 @@ int kernel_kexec(void)
->   Restore_console:
->  		pm_restore_console();
->  		mutex_unlock(&pm_mutex);
-> -#endif
->  	}
+> +#ifdef CONFIG_KEXEC_JUMP
+> +	if (kexec_image->preserve_context)
+> +		save_processor_state();
+> +#endif
+> +
+> +#ifdef CONFIG_FTRACE
+> +	save_ftrace_enabled = ftrace_enabled;
+>  	tracer_disable();
 > +#endif
 >  
->   Unlock:
->  	xchg(&kexec_lock, 0);
+>  	/* Interrupts aren't acceptable while we reboot */
+>  	raw_local_irq_disable();
+> @@ -182,6 +192,15 @@ void machine_kexec(struct kimage *image)
+>  					   (unsigned long)page_list,
+>  					   image->start, cpu_has_pae,
+>  					   image->preserve_context);
+> +
+> +#ifdef CONFIG_KEXEC_JUMP
+> +	if (kexec_image->preserve_context)
+> +		restore_processor_state();
+> +#endif
+> +
+> +#ifdef CONFIG_FTRACE
+> +	ftrace_enabled = save_ftrace_enabled;
+> +#endif
+>  }
+>  
 
-Thanks Huang. Looks good to me.
+Hi Huang,
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+What kind of problem we run into if we don't disable the ftracer?
+
+I think there are too many #ifdefs now and probably we can at least
+get rid if #ifdef CONFIG_FTRACE thing.
+
+I think ftracer needs to export the function to enable the tracer
+back (tracer_enable()) so that we don't directly play with ftrace_enabled
+variable. tracer_enable() can be do {} while{0} in case of CONFIG_FTRACE=n
+so that we can get rid of #ifdefs here.
 
 Thanks
 Vivek
