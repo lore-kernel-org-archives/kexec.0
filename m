@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KR1R1-0005sq-Jb
-	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:05:27 +0000
-Subject: [PATCH 1/6] kexec jump: clean up #ifdef and comments
+	id 1KR1R3-0005sN-Qj
+	for kexec@lists.infradead.org; Thu, 07 Aug 2008 09:05:30 +0000
+Subject: [PATCH 2/6] kexec jump: check code size in control page
 From: Huang Ying <ying.huang@intel.com>
-Date: Thu, 07 Aug 2008 17:05:23 +0800
-Message-Id: <1218099923.5164.32.camel@caritas-dev.intel.com>
+Date: Thu, 07 Aug 2008 17:05:26 +0800
+Message-Id: <1218099926.5164.33.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,69 +23,49 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Move if (kexec_image->preserve_context) { ... } into #ifdef
-CONFIG_KEXEC_JUMP to make code looks cleaner.
-
-Fix no longer correct comments of kernel_kexec().
+Kexec/Kexec-jump requires code size in control page is less than
+PAGE_SIZE/2. This patch adds runtime checking for this.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
 
 ---
- kernel/kexec.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ arch/x86/kernel/machine_kexec_32.c   |    4 ++++
+ arch/x86/kernel/relocate_kernel_32.S |    3 +++
+ include/asm-x86/kexec.h              |    1 +
+ 3 files changed, 8 insertions(+)
 
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1427,8 +1427,6 @@ static int __init crash_save_vmcoreinfo_
- module_init(crash_save_vmcoreinfo_init)
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -92,6 +92,10 @@ int machine_kexec_prepare(struct kimage 
+ {
+ 	if (nx_enabled)
+ 		set_pages_x(image->control_code_page, 1);
++
++	BUG_ON((unsigned long)kexec_control_page_code_end - \
++	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
++
+ 	return 0;
+ }
  
- /**
-- *	kernel_kexec - reboot the system
-- *
-  *	Move into place and start executing a preloaded standalone
-  *	executable.  If nothing was preloaded return an error.
-  */
-@@ -1443,8 +1441,8 @@ int kernel_kexec(void)
- 		goto Unlock;
- 	}
- 
--	if (kexec_image->preserve_context) {
- #ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context) {
- 		mutex_lock(&pm_mutex);
- 		pm_prepare_console();
- 		error = freeze_processes();
-@@ -1471,8 +1469,9 @@ int kernel_kexec(void)
- 		if (error)
- 			goto Enable_irqs;
- 		save_processor_state();
-+	} else
- #endif
--	} else {
-+	{
- 		blocking_notifier_call_chain(&reboot_notifier_list,
- 					     SYS_RESTART, NULL);
- 		system_state = SYSTEM_RESTART;
-@@ -1484,8 +1483,8 @@ int kernel_kexec(void)
- 
- 	machine_kexec(kexec_image);
- 
--	if (kexec_image->preserve_context) {
- #ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context) {
- 		restore_processor_state();
- 		device_power_up(PMSG_RESTORE);
-  Enable_irqs:
-@@ -1499,8 +1498,8 @@ int kernel_kexec(void)
-  Restore_console:
- 		pm_restore_console();
- 		mutex_unlock(&pm_mutex);
--#endif
- 	}
-+#endif
- 
-  Unlock:
- 	xchg(&kexec_lock, 0);
+--- a/arch/x86/kernel/relocate_kernel_32.S
++++ b/arch/x86/kernel/relocate_kernel_32.S
+@@ -376,3 +376,6 @@ swap_pages:
+ 	popl	%ebx
+ 	popl	%ebp
+ 	ret
++
++	.globl kexec_control_page_code_end
++kexec_control_page_code_end:
+--- a/include/asm-x86/kexec.h
++++ b/include/asm-x86/kexec.h
+@@ -159,6 +159,7 @@ relocate_kernel(unsigned long indirectio
+ 		unsigned long start_address,
+ 		unsigned int has_pae,
+ 		unsigned int preserve_context);
++void kexec_control_page_code_end(void);
+ #else
+ NORET_TYPE void
+ relocate_kernel(unsigned long indirection_page,
 
 
 
