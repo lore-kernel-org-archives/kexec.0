@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KRSPC-0003FS-NO
-	for kexec@lists.infradead.org; Fri, 08 Aug 2008 13:53:22 +0000
-Date: Fri, 8 Aug 2008 09:52:25 -0400
+	id 1KRSfY-0006ha-6p
+	for kexec@lists.infradead.org; Fri, 08 Aug 2008 14:10:16 +0000
+Date: Fri, 8 Aug 2008 10:09:38 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH 2/6] kexec jump: check code size in control page
-Message-ID: <20080808135225.GD3840@redhat.com>
-References: <1218099926.5164.33.camel@caritas-dev.intel.com>
-	<20080807131557.GB27783@redhat.com> <20080807203130.GA10331@ucw.cz>
-	<1218163477.22039.10.camel@caritas-dev.intel.com>
+Subject: Re: [PATCH -v2 3/8] kexec jump: check code size in control page
+Message-ID: <20080808140938.GE3840@redhat.com>
+References: <1218178356.22039.76.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1218163477.22039.10.camel@caritas-dev.intel.com>
+In-Reply-To: <1218178356.22039.76.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +24,81 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@suse.cz>, "Eric W. Biederman" <ebiederm@xmission.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-On Fri, Aug 08, 2008 at 10:44:37AM +0800, Huang Ying wrote:
-> On Thu, 2008-08-07 at 22:31 +0200, Pavel Machek wrote:
-> > Hi!
-> > 
-> > > > PAGE_SIZE/2. This patch adds runtime checking for this.
-> > > > 
-> > > > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> > ...
-> > 
-> > > >  {
-> > > >  	if (nx_enabled)
-> > > >  		set_pages_x(image->control_code_page, 1);
-> > > > +
-> > > > +	BUG_ON((unsigned long)kexec_control_page_code_end - \
-> > > > +	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
-> > > > +
-> > > 
-> > 
-> > > Run time check is better than nothing but I think in this case it would
-> > > be better if we can catch it at compile time. 
-> > > 
-> > > One of the methods will be to write a small program of your own and
-> > > put in script/ and at build time check for the size and flag error. May
-> > > be there are other better ways to do this.
-> > 
-> > BUILD_BUG_ON()?
+On Fri, Aug 08, 2008 at 02:52:36PM +0800, Huang Ying wrote:
+> Kexec/Kexec-jump require code size in control page is less than
+> PAGE_SIZE/2. This patch add link-time checking for this.
 > 
-> I tried with BUILD_BUG_ON(), and compiling is OK for both of following
-> statement:
+> ASSERT() of ld link script is used as the link-time checking
+> mechanism.
 > 
-> BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
-> 	     (unsigned long)relocate_kernel >= PAGE_SIZE/2);
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
 > 
-> BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
-> 	     (unsigned long)relocate_kernel < PAGE_SIZE/2);
+> ---
+>  arch/x86/kernel/machine_kexec_32.c     |    2 +-
+>  arch/x86/kernel/relocate_kernel_32.S   |   10 +++++++---
+>  arch/x86/kernel/vmlinux_32.lds.S       |    2 ++
+>  arch/x86/kernel/vmlinux_check_32.lds.S |    7 +++++++
+>  include/asm-x86/kexec.h                |    4 ++++
+>  5 files changed, 21 insertions(+), 4 deletions(-)
 > 
-> In general, I think value of kexec_control_page_code_end and
-> relocate_kernel is not determined during compiling time. So
-> BUILD_BUG_ON() doesn't work.
-> 
-> Another idea, use ASSERT() command of ld link script as in the following
-> patch:
-> 
+> --- a/arch/x86/kernel/machine_kexec_32.c
+> +++ b/arch/x86/kernel/machine_kexec_32.c
+> @@ -138,7 +138,7 @@ void machine_kexec(struct kimage *image)
+>  	}
+>  
+>  	control_page = page_address(image->control_code_page);
+> -	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
+> +	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
+>  
+>  	relocate_kernel_ptr = control_page;
+>  	page_list[PA_CONTROL_PAGE] = __pa(control_page);
+> --- a/arch/x86/kernel/relocate_kernel_32.S
+> +++ b/arch/x86/kernel/relocate_kernel_32.S
+> @@ -20,10 +20,11 @@
+>  #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+>  #define PAE_PGD_ATTR (_PAGE_PRESENT)
+>  
+> -/* control_page + PAGE_SIZE/2 ~ control_page + PAGE_SIZE * 3/4 are
+> - * used to save some data for jumping back
+> +/* control_page + KEXEC_CONTROL_CODE_MAX_SIZE
+> + * ~ control_page + PAGE_SIZE * 3/4 are used to save some data for
+> + * jumping back
+>   */
+
+Hi Huang,
+
+Above comment is not very clear. Can you please elaborate it. I thought
+that PAGE_SIZE/2 is used for control code and rest half is shared between
+kjump data and stack. What is PAGE_SIZE *3/4?
+
+
+> -#define DATA(offset)		(PAGE_SIZE/2+(offset))
+> +#define DATA(offset)		(KEXEC_CONTROL_CODE_MAX_SIZE+(offset))
+>  
+>  /* Minimal CPU state */
+>  #define ESP			DATA(0x0)
+> @@ -376,3 +377,6 @@ swap_pages:
+>  	popl	%ebx
+>  	popl	%ebp
+>  	ret
+> +
+> +	.globl kexec_control_code_size
+> +.set kexec_control_code_size, . - relocate_kernel
+> --- a/include/asm-x86/kexec.h
+> +++ b/include/asm-x86/kexec.h
+> @@ -41,6 +41,10 @@
+>  # define PAGES_NR		17
+>  #endif
+>  
+> +#ifdef CONFIG_X86_32
+> +# define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+> +#endif
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <linux/string.h>
 > --- a/arch/x86/kernel/vmlinux_32.lds.S
 > +++ b/arch/x86/kernel/vmlinux_32.lds.S
 > @@ -209,3 +209,5 @@ SECTIONS
@@ -81,18 +109,19 @@ On Fri, Aug 08, 2008 at 10:44:37AM +0800, Huang Ying wrote:
 > +#include "vmlinux_check_32.lds.S"
 > --- /dev/null
 > +++ b/arch/x86/kernel/vmlinux_check_32.lds.S
-> @@ -0,0 +1,3 @@
+> @@ -0,0 +1,7 @@
+> +/*
+> + * Link time checks
+> + */
+> +
 > +#include <asm/kexec.h>
 > +
-> +ASSERT(kexec_control_page_code_end - relocate_kernel >= 2048, "kexec control page code size is too big")
-> 
-> 
+> +ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE, "kexec control code size is too big")
 
-Use of ASSERT() looks good to me. I think creation of extra file for a 
-single ASSERT() can be avoided. Instead, we can just put this assert in
-vmlinux_32.lds.S itself?
+Will it make sense to move it into vmlinux_32.lds.S itself? Creating a separate
+file for a single check seems superfluous.
 
-Thansk
+Thanks
 Vivek
 
 _______________________________________________
