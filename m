@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KRLqF-0000Ze-GS
-	for kexec@lists.infradead.org; Fri, 08 Aug 2008 06:52:51 +0000
-Subject: [PATCH -v2 6/8] kexec jump: fix for lockdep
+	id 1KRLqI-0000aj-Eb
+	for kexec@lists.infradead.org; Fri, 08 Aug 2008 06:52:54 +0000
+Subject: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
 From: Huang Ying <ying.huang@intel.com>
-Date: Fri, 08 Aug 2008 14:52:45 +0800
-Message-Id: <1218178365.22039.79.camel@caritas-dev.intel.com>
+Date: Fri, 08 Aug 2008 14:52:48 +0800
+Message-Id: <1218178368.22039.80.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,26 +23,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Replace local_irq_disable() with raw_local_irq_disable() to prevent
-lockdep complain.
+Add ftrace_enabled_save/restore, used to disable ftrace for a
+while. This is used by kexec jump.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
 
 ---
- arch/x86/kernel/machine_kexec_32.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/ftrace.h |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -123,7 +123,7 @@ void machine_kexec(struct kimage *image)
- 	tracer_disable();
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -98,6 +98,24 @@ static inline void tracer_disable(void)
+ #endif
+ }
  
- 	/* Interrupts aren't acceptable while we reboot */
--	local_irq_disable();
-+	raw_local_irq_disable();
- 
- 	if (image->preserve_context) {
- #ifdef CONFIG_X86_IO_APIC
++static inline int ftrace_enabled_save(void)
++{
++#ifdef CONFIG_FTRACE
++	int saved_ftrace_enabled = ftrace_enabled;
++	ftrace_enabled = 0;
++	return saved_ftrace_enabled;
++#else
++	return 0;
++#endif
++}
++
++static inline void ftrace_enabled_restore(int enabled)
++{
++#ifdef CONFIG_FTRACE
++	ftrace_enabled = enabled;
++#endif
++}
++
+ #ifdef CONFIG_FRAME_POINTER
+ /* TODO: need to fix this for ARM */
+ # define CALLER_ADDR0 ((unsigned long)__builtin_return_address(0))
 
 
 
