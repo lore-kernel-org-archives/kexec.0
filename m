@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KRHy5-0001tp-OF
-	for kexec@lists.infradead.org; Fri, 08 Aug 2008 02:44:43 +0000
-Subject: Re: [PATCH 2/6] kexec jump: check code size in control page
+	id 1KRICk-0004mZ-5d
+	for kexec@lists.infradead.org; Fri, 08 Aug 2008 02:59:51 +0000
+Subject: Re: [PATCH 6/6] kexec jump: fix for ftrace
 From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080807203130.GA10331@ucw.cz>
-References: <1218099926.5164.33.camel@caritas-dev.intel.com>
-	<20080807131557.GB27783@redhat.com>  <20080807203130.GA10331@ucw.cz>
-Date: Fri, 08 Aug 2008 10:44:37 +0800
-Message-Id: <1218163477.22039.10.camel@caritas-dev.intel.com>
+In-Reply-To: <20080807133805.GD27783@redhat.com>
+References: <1218099937.5164.37.camel@caritas-dev.intel.com>
+	<20080807133805.GD27783@redhat.com>
+Date: Fri, 08 Aug 2008 10:59:31 +0800
+Message-Id: <1218164371.22039.20.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,68 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@suse.cz>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-On Thu, 2008-08-07 at 22:31 +0200, Pavel Machek wrote:
-> Hi!
+On Thu, 2008-08-07 at 09:38 -0400, Vivek Goyal wrote:
+[...]
+> What kind of problem we run into if we don't disable the ftracer?
 > 
-> > > PAGE_SIZE/2. This patch adds runtime checking for this.
-> > > 
-> > > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> ...
+> I think there are too many #ifdefs now and probably we can at least
+> get rid if #ifdef CONFIG_FTRACE thing.
 > 
-> > >  {
-> > >  	if (nx_enabled)
-> > >  		set_pages_x(image->control_code_page, 1);
-> > > +
-> > > +	BUG_ON((unsigned long)kexec_control_page_code_end - \
-> > > +	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
-> > > +
-> > 
-> 
-> > Run time check is better than nothing but I think in this case it would
-> > be better if we can catch it at compile time. 
-> > 
-> > One of the methods will be to write a small program of your own and
-> > put in script/ and at build time check for the size and flag error. May
-> > be there are other better ways to do this.
-> 
-> BUILD_BUG_ON()?
+> I think ftracer needs to export the function to enable the tracer
+> back (tracer_enable()) so that we don't directly play with ftrace_enabled
+> variable. tracer_enable() can be do {} while{0} in case of CONFIG_FTRACE=n
+> so that we can get rid of #ifdefs here.
 
-I tried with BUILD_BUG_ON(), and compiling is OK for both of following
-statement:
+The ftracer issue for kexec is reported by Dhaval Giani and fixed by
+Ingo as in following thread:
 
-BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
-	     (unsigned long)relocate_kernel >= PAGE_SIZE/2);
+http://lkml.org/lkml/2008/2/19/175
 
-BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
-	     (unsigned long)relocate_kernel < PAGE_SIZE/2);
+After some testing, I found that if we enable ftrace before
+restore_processor_state(), system will hang. I think maybe ftracer
+depends on some processor state that we destroyed during kexec and
+restored by restore_processor_state(). So I move save_processor_state()
+and restore_processor_state() into machine_kexec() and enable ftrace
+after restore_processor_state().
 
-In general, I think value of kexec_control_page_code_end and
-relocate_kernel is not determined during compiling time. So
-BUILD_BUG_ON() doesn't work.
+The #ifdef CONFIG_FTRACE should be removed. I think an interface like
+irq_save/restore is good for this.
 
-Another idea, use ASSERT() command of ld link script as in the following
-patch:
-
---- a/arch/x86/kernel/vmlinux_32.lds.S
-+++ b/arch/x86/kernel/vmlinux_32.lds.S
-@@ -209,3 +209,5 @@ SECTIONS
- 
-   DWARF_DEBUG
- }
-+
-+#include "vmlinux_check_32.lds.S"
---- /dev/null
-+++ b/arch/x86/kernel/vmlinux_check_32.lds.S
-@@ -0,0 +1,3 @@
-+#include <asm/kexec.h>
-+
-+ASSERT(kexec_control_page_code_end - relocate_kernel >= 2048, "kexec control page code size is too big")
-
-
-It works for me. What do you think about that?
+saved_ftrace_enabled = ftrace_save_enabled()
+<...>
+ftrace_restore_enabled(saved_ftrace_enabled)
 
 Best Regards,
 Huang Ying
