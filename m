@@ -1,11 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH -v2 6/8] kexec jump: fix for lockdep
-From: Peter Zijlstra <peterz@infradead.org>
-In-Reply-To: <1218178365.22039.79.camel@caritas-dev.intel.com>
-References: <1218178365.22039.79.camel@caritas-dev.intel.com>
-Date: Fri, 08 Aug 2008 12:13:46 +0200
-Message-Id: <1218190426.8625.71.camel@twins>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KRSPC-0003FS-NO
+	for kexec@lists.infradead.org; Fri, 08 Aug 2008 13:53:22 +0000
+Date: Fri, 8 Aug 2008 09:52:25 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 2/6] kexec jump: check code size in control page
+Message-ID: <20080808135225.GD3840@redhat.com>
+References: <1218099926.5164.33.camel@caritas-dev.intel.com>
+	<20080807131557.GB27783@redhat.com> <20080807203130.GA10331@ucw.cz>
+	<1218163477.22039.10.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1218163477.22039.10.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,41 +26,74 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@suse.cz>, "Eric W. Biederman" <ebiederm@xmission.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>
 
-On Fri, 2008-08-08 at 14:52 +0800, Huang Ying wrote:
-> Replace local_irq_disable() with raw_local_irq_disable() to prevent
-> lockdep complain.
-
-
-Uhhm, please provide more information - just using raw_* to silence
-lockdep is generally the wrong thing to do.
-
-> Signed-off-by: Huang Ying <ying.huang@intel.com>
+On Fri, Aug 08, 2008 at 10:44:37AM +0800, Huang Ying wrote:
+> On Thu, 2008-08-07 at 22:31 +0200, Pavel Machek wrote:
+> > Hi!
+> > 
+> > > > PAGE_SIZE/2. This patch adds runtime checking for this.
+> > > > 
+> > > > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > ...
+> > 
+> > > >  {
+> > > >  	if (nx_enabled)
+> > > >  		set_pages_x(image->control_code_page, 1);
+> > > > +
+> > > > +	BUG_ON((unsigned long)kexec_control_page_code_end - \
+> > > > +	       (unsigned long)relocate_kernel >= PAGE_SIZE/2);
+> > > > +
+> > > 
+> > 
+> > > Run time check is better than nothing but I think in this case it would
+> > > be better if we can catch it at compile time. 
+> > > 
+> > > One of the methods will be to write a small program of your own and
+> > > put in script/ and at build time check for the size and flag error. May
+> > > be there are other better ways to do this.
+> > 
+> > BUILD_BUG_ON()?
 > 
-> ---
->  arch/x86/kernel/machine_kexec_32.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I tried with BUILD_BUG_ON(), and compiling is OK for both of following
+> statement:
 > 
-> --- a/arch/x86/kernel/machine_kexec_32.c
-> +++ b/arch/x86/kernel/machine_kexec_32.c
-> @@ -123,7 +123,7 @@ void machine_kexec(struct kimage *image)
->  	tracer_disable();
+> BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
+> 	     (unsigned long)relocate_kernel >= PAGE_SIZE/2);
+> 
+> BUILD_BUG_ON((unsigned long)kexec_control_page_code_end - \
+> 	     (unsigned long)relocate_kernel < PAGE_SIZE/2);
+> 
+> In general, I think value of kexec_control_page_code_end and
+> relocate_kernel is not determined during compiling time. So
+> BUILD_BUG_ON() doesn't work.
+> 
+> Another idea, use ASSERT() command of ld link script as in the following
+> patch:
+> 
+> --- a/arch/x86/kernel/vmlinux_32.lds.S
+> +++ b/arch/x86/kernel/vmlinux_32.lds.S
+> @@ -209,3 +209,5 @@ SECTIONS
 >  
->  	/* Interrupts aren't acceptable while we reboot */
-> -	local_irq_disable();
-> +	raw_local_irq_disable();
->  
->  	if (image->preserve_context) {
->  #ifdef CONFIG_X86_IO_APIC
+>    DWARF_DEBUG
+>  }
+> +
+> +#include "vmlinux_check_32.lds.S"
+> --- /dev/null
+> +++ b/arch/x86/kernel/vmlinux_check_32.lds.S
+> @@ -0,0 +1,3 @@
+> +#include <asm/kexec.h>
+> +
+> +ASSERT(kexec_control_page_code_end - relocate_kernel >= 2048, "kexec control page code size is too big")
 > 
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
+Use of ASSERT() looks good to me. I think creation of extra file for a 
+single ASSERT() can be avoided. Instead, we can just put this assert in
+vmlinux_32.lds.S itself?
+
+Thansk
+Vivek
 
 _______________________________________________
 kexec mailing list
