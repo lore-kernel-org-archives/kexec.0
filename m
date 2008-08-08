@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KRLqB-00009A-UR
-	for kexec@lists.infradead.org; Fri, 08 Aug 2008 06:52:48 +0000
-Subject: [PATCH -v2 5/8] kexec jump: in sync with hibernation implementation
+	id 1KRLqF-0000Ze-GS
+	for kexec@lists.infradead.org; Fri, 08 Aug 2008 06:52:51 +0000
+Subject: [PATCH -v2 6/8] kexec jump: fix for lockdep
 From: Huang Ying <ying.huang@intel.com>
-Date: Fri, 08 Aug 2008 14:52:42 +0800
-Message-Id: <1218178362.22039.78.camel@caritas-dev.intel.com>
+Date: Fri, 08 Aug 2008 14:52:45 +0800
+Message-Id: <1218178365.22039.79.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,33 +23,26 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Add device_pm_lock() and device_pm_unlock() in kernel_kexec() in sync
-with current hibernation implementation.
+Replace local_irq_disable() with raw_local_irq_disable() to prevent
+lockdep complain.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
 
 ---
- kernel/kexec.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/machine_kexec_32.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1457,6 +1457,7 @@ int kernel_kexec(void)
- 		error = disable_nonboot_cpus();
- 		if (error)
- 			goto Resume_devices;
-+		device_pm_lock();
- 		local_irq_disable();
- 		/* At this point, device_suspend() has been called,
- 		 * but *not* device_power_down(). We *must*
-@@ -1485,6 +1486,7 @@ int kernel_kexec(void)
- 		device_power_up(PMSG_RESTORE);
-  Enable_irqs:
- 		local_irq_enable();
-+		device_pm_unlock();
- 		enable_nonboot_cpus();
-  Resume_devices:
- 		device_resume(PMSG_RESTORE);
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -123,7 +123,7 @@ void machine_kexec(struct kimage *image)
+ 	tracer_disable();
+ 
+ 	/* Interrupts aren't acceptable while we reboot */
+-	local_irq_disable();
++	raw_local_irq_disable();
+ 
+ 	if (image->preserve_context) {
+ #ifdef CONFIG_X86_IO_APIC
 
 
 
