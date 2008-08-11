@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga14.intel.com ([143.182.124.37])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSM8x-000785-SP
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 01:24:20 +0000
-Subject: Re: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
-References: <1218178368.22039.80.camel@caritas-dev.intel.com>
-	<20080808141700.GF3840@redhat.com>
-	<alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
-Date: Mon, 11 Aug 2008 09:22:21 +0800
-Message-Id: <1218417741.30464.23.camel@caritas-dev.intel.com>
+Subject: Re: [PATCH -v2 6/8] kexec jump: fix for lockdep
+From: Peter Zijlstra <peterz@infradead.org>
+In-Reply-To: <1218416396.30464.9.camel@caritas-dev.intel.com>
+References: <1218178365.22039.79.camel@caritas-dev.intel.com>
+	<1218190426.8625.71.camel@twins>
+	<1218416396.30464.9.camel@caritas-dev.intel.com>
+Date: Mon, 11 Aug 2008 08:09:54 +0200
+Message-Id: <1218434994.10800.16.camel@twins>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -24,36 +20,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Steven Rostedt <rostedt@goodmis.org>
+To: Huang Ying <ying.huang@intel.com>
 Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-Hi, Steven,
-
-On Fri, 2008-08-08 at 10:30 -0400, Steven Rostedt wrote:
-[...]
-> The only problem with this approach is what happens if the user changes 
-> the enabled in between these two calls. This would make ftrace 
-> inconsistent.
+On Mon, 2008-08-11 at 08:59 +0800, Huang Ying wrote:
+> On Fri, 2008-08-08 at 12:13 +0200, Peter Zijlstra wrote:
+> > On Fri, 2008-08-08 at 14:52 +0800, Huang Ying wrote:
+> > > Replace local_irq_disable() with raw_local_irq_disable() to prevent
+> > > lockdep complain.
+> > Uhhm, please provide more information - just using raw_* to silence
+> > lockdep is generally the wrong thing to do.
 > 
-> I have a patch from the -rt tree that handles what you want. It is 
-> attached below. Not sure how well it will apply to mainline.
+> In traditional kexec, the new kernel will replace current one, so the
+> irq is simply disabled. But now jumping back from kexeced kernel is
+> supported, so the irq should be enabled again.
 > 
-> I really need to go through the rt patch set and start submitting a bunch 
-> of clean-up/fixes to mainline. We've been meaning to do it, just have been 
-> distracted :-(
+> The code sequence of irq during kexec jump is as follow:
+> 
+> local_irq_disable(); /* in kernel_kexec() */
+> local_irq_disable(); /* in machine_kexec() */
+> local_irq_enable(); /* in kernel_kexec() */
+> 
+> The disable and enable is not match. Maybe another method is to use
+> local_irq_save(), local_irq_restore() pair in machine_kexec(), so the
+> disable and enable is matched.
 
-Your version is better in general sense. Thank you very much!
+And its the machine kernel's lockdep instance that goes complain?
 
-But in this specific situation of kexec/kjump. The execution environment
-is that other CPUs are disabled, local irq is disabled, and it is not
-permitted to switch to other process. But it is safe and sufficient to
-use non-locked version here.
-
-So to satisfy both demands, I think it is better to provide both
-version, locked and non-locked. What do you think about that?
-
-Best Regards,
-Huang Ying
+whichever annotation gets used - and I think I can agree that raw_*
+might be approriate there, this should be accompanied with a rather
+elaborate changelog and preferably a comment in the code too. Without
+such we'll be wondering in the years to come WTH happens here.
 
 
 
