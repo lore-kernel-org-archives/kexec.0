@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSWJ9-0004Ss-1P
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 12:15:31 +0000
-Date: Mon, 11 Aug 2008 14:15:57 +0200
-From: Bernhard Walle <bwalle@suse.de>(by way of Bernhard Walle
-	<bwalle@suse.de>)
-Message-ID: <20080811141557.61c4d084@halley.suse.de>
-In-Reply-To: <48A02A8C.3010904@mxs.nes.nec.co.jp>
-References: <20080804135309.4ef6f33b@halley.suse.de>
-	<4897F177.2060106@mxs.nes.nec.co.jp>
-	<20080805144329.559f4203@halley.suse.de>
-	<48A02A8C.3010904@mxs.nes.nec.co.jp>
-Mime-Version: 1.0
-Subject: Re: Kdump compressed format
-Resent-Message-ID: <20080811141613.5ed0e85e@halley.suse.de>
-Resent-To: kexec@lists.infradead.org, crash-utility@redhat.com
+Received: from hrndva-omtalb.mail.rr.com ([71.74.56.123])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KSWWU-0006Ql-T3
+	for kexec@lists.infradead.org; Mon, 11 Aug 2008 12:29:19 +0000
+Date: Mon, 11 Aug 2008 08:29:17 -0400 (EDT)
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
+In-Reply-To: <1218417741.30464.23.camel@caritas-dev.intel.com>
+Message-ID: <alpine.DEB.1.10.0808110828580.15650@gandalf.stny.rr.com>
+References: <1218178368.22039.80.camel@caritas-dev.intel.com>
+	<20080808141700.GF3840@redhat.com>
+	<alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
+	<1218417741.30464.23.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,46 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+To: Huang Ying <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-* Ken'ichi Ohmichi [2008-08-11 21:03]:
-> Bernhard Walle wrote:
-> > * Ken'ichi Ohmichi [2008-08-05 15:21]:
-> >> Bernhard Walle wrote:
-> >>> is there any documentation how the kdump compressed format (or the
-> >>> diskdump format, from what it is derived) looks like? Beside of the
-> >>> source code of the tools that support it. ;-)
-> >> The kdump compressed format is supported by only the crash utility
-> >> and makedumpfile command. gdb does not support it. I think that
-> >> there is not any documentation about the kdump compressed format,
-> >> then I wrote it. Is it enough ?
-> > 
-> > Thanks a lot! Yes, that gives me the overview I needed.
-> > 
-> > I grabbed your information and generated a manual page from it where I
-> > also want to describe the other dump formats (when I have some time
-> > left):
-> > 
-> >    http://www.suse.de/~bwalle/kdump/
-> > 
-> > That's basically part of the SUSE kdump configuration, maintained in
-> > http://freehg.org/u/bwalle/kdump/.
-> > 
-> > I just used asciidoc because I hate nroff. I hope it's ok for you to
-> > distribute that manual page.
+
+On Mon, 11 Aug 2008, Huang Ying wrote:
+
+> Hi, Steven,
 > 
-> I have one question.
-> On the site (http://www.suse.de/~bwalle/kdump/vmcore.5.txt), the copyright
-> of SUSE is written. If the part of kdump-compressed format is written to
-> the README file of makedumpfile, is it the problem ?
+> On Fri, 2008-08-08 at 10:30 -0400, Steven Rostedt wrote:
+> [...]
+> > The only problem with this approach is what happens if the user changes 
+> > the enabled in between these two calls. This would make ftrace 
+> > inconsistent.
+> > 
+> > I have a patch from the -rt tree that handles what you want. It is 
+> > attached below. Not sure how well it will apply to mainline.
+> > 
+> > I really need to go through the rt patch set and start submitting a bunch 
+> > of clean-up/fixes to mainline. We've been meaning to do it, just have been 
+> > distracted :-(
+> 
+> Your version is better in general sense. Thank you very much!
+> 
+> But in this specific situation of kexec/kjump. The execution environment
+> is that other CPUs are disabled, local irq is disabled, and it is not
+> permitted to switch to other process. But it is safe and sufficient to
+> use non-locked version here.
+> 
+> So to satisfy both demands, I think it is better to provide both
+> version, locked and non-locked. What do you think about that?
 
-No, of course not, I can also change the copyright there if you want.
+Sounds good,
 
+I'm looking forward to the patch ;-)
 
+-- Steve
 
-Bernhard
--- 
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
