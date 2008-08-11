@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSLo2-0005K7-Ep
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 01:02:42 +0000
-Subject: Re: [PATCH -v2 3/8] kexec jump: check code size in control page
+	id 1KSM8x-000785-SP
+	for kexec@lists.infradead.org; Mon, 11 Aug 2008 01:24:20 +0000
+Subject: Re: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
 From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080808140938.GE3840@redhat.com>
-References: <1218178356.22039.76.camel@caritas-dev.intel.com>
-	<20080808140938.GE3840@redhat.com>
-Date: Mon, 11 Aug 2008 09:02:38 +0800
-Message-Id: <1218416558.30464.12.camel@caritas-dev.intel.com>
+In-Reply-To: <alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
+References: <1218178368.22039.80.camel@caritas-dev.intel.com>
+	<20080808141700.GF3840@redhat.com>
+	<alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
+Date: Mon, 11 Aug 2008 09:22:21 +0800
+Message-Id: <1218417741.30464.23.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,54 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-Hi, Vivek,
+Hi, Steven,
 
-On Fri, 2008-08-08 at 10:09 -0400, Vivek Goyal wrote:
+On Fri, 2008-08-08 at 10:30 -0400, Steven Rostedt wrote:
 [...]
-> > --- a/arch/x86/kernel/relocate_kernel_32.S
-> > +++ b/arch/x86/kernel/relocate_kernel_32.S
-> > @@ -20,10 +20,11 @@
-> >  #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
-> >  #define PAE_PGD_ATTR (_PAGE_PRESENT)
-> >  
-> > -/* control_page + PAGE_SIZE/2 ~ control_page + PAGE_SIZE * 3/4 are
-> > - * used to save some data for jumping back
-> > +/* control_page + KEXEC_CONTROL_CODE_MAX_SIZE
-> > + * ~ control_page + PAGE_SIZE * 3/4 are used to save some data for
-> > + * jumping back
-> >   */
+> The only problem with this approach is what happens if the user changes 
+> the enabled in between these two calls. This would make ftrace 
+> inconsistent.
 > 
-> Hi Huang,
+> I have a patch from the -rt tree that handles what you want. It is 
+> attached below. Not sure how well it will apply to mainline.
 > 
-> Above comment is not very clear. Can you please elaborate it. I thought
-> that PAGE_SIZE/2 is used for control code and rest half is shared between
-> kjump data and stack. What is PAGE_SIZE *3/4?
+> I really need to go through the rt patch set and start submitting a bunch 
+> of clean-up/fixes to mainline. We've been meaning to do it, just have been 
+> distracted :-(
 
-Yes. Rest half is shared between kjump data and stack. I will change it.
+Your version is better in general sense. Thank you very much!
 
-> > +++ b/arch/x86/kernel/vmlinux_check_32.lds.S
-> > @@ -0,0 +1,7 @@
-> > +/*
-> > + * Link time checks
-> > + */
-> > +
-> > +#include <asm/kexec.h>
-> > +
-> > +ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE,
-> "kexec control code size is too big")
-> 
-> Will it make sense to move it into vmlinux_32.lds.S itself? Creating a
-> separate
-> file for a single check seems superfluous.
+But in this specific situation of kexec/kjump. The execution environment
+is that other CPUs are disabled, local irq is disabled, and it is not
+permitted to switch to other process. But it is safe and sufficient to
+use non-locked version here.
 
-I hope other ones can use it. But for now, put it in vmlinux_32.lds.S is
-better. I will change it.
+So to satisfy both demands, I think it is better to provide both
+version, locked and non-locked. What do you think about that?
 
 Best Regards,
-HUang Ying
+Huang Ying
 
 
 
