@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSQxV-0003hL-PO
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 06:32:50 +0000
-Subject: Re: [PATCH -v2 6/8] kexec jump: fix for lockdep
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <1218434994.10800.16.camel@twins>
-References: <1218178365.22039.79.camel@caritas-dev.intel.com>
-	<1218190426.8625.71.camel@twins>
-	<1218416396.30464.9.camel@caritas-dev.intel.com>
-	<1218434994.10800.16.camel@twins>
-Date: Mon, 11 Aug 2008 14:32:24 +0800
-Message-Id: <1218436344.30464.46.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1KSW7e-0002WR-0t
+	for kexec@lists.infradead.org; Mon, 11 Aug 2008 12:03:38 +0000
+Message-Id: <48A02A8C.3010904@mxs.nes.nec.co.jp>
+Date: Mon, 11 Aug 2008 21:03:24 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: Re: Kdump compressed format
+References: <20080804135309.4ef6f33b@halley.suse.de>	<4897F177.2060106@mxs.nes.nec.co.jp>
+	<20080805144329.559f4203@halley.suse.de>
+In-Reply-To: <20080805144329.559f4203@halley.suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,53 +19,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0533474923=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-On Mon, 2008-08-11 at 08:09 +0200, Peter Zijlstra wrote:
-> On Mon, 2008-08-11 at 08:59 +0800, Huang Ying wrote:
-> > On Fri, 2008-08-08 at 12:13 +0200, Peter Zijlstra wrote:
-> > > On Fri, 2008-08-08 at 14:52 +0800, Huang Ying wrote:
-> > > > Replace local_irq_disable() with raw_local_irq_disable() to prevent
-> > > > lockdep complain.
-> > > Uhhm, please provide more information - just using raw_* to silence
-> > > lockdep is generally the wrong thing to do.
-> > 
-> > In traditional kexec, the new kernel will replace current one, so the
-> > irq is simply disabled. But now jumping back from kexeced kernel is
-> > supported, so the irq should be enabled again.
-> > 
-> > The code sequence of irq during kexec jump is as follow:
-> > 
-> > local_irq_disable(); /* in kernel_kexec() */
-> > local_irq_disable(); /* in machine_kexec() */
-> > local_irq_enable(); /* in kernel_kexec() */
-> > 
-> > The disable and enable is not match. Maybe another method is to use
-> > local_irq_save(), local_irq_restore() pair in machine_kexec(), so the
-> > disable and enable is matched.
+--===============0533474923==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+Hi Bernhard,
+
+Sorry for my late response.
+
+Bernhard Walle wrote:
+> * Ken'ichi Ohmichi [2008-08-05 15:21]:
+>> Bernhard Walle wrote:
+>>> is there any documentation how the kdump compressed format (or the
+>>> diskdump format, from what it is derived) looks like? Beside of the
+>>> source code of the tools that support it. ;-)
+>> The kdump compressed format is supported by only the crash utility
+>> and makedumpfile command. gdb does not support it. I think that
+>> there is not any documentation about the kdump compressed format,
+>> then I wrote it. Is it enough ?
 > 
-> And its the machine kernel's lockdep instance that goes complain?
+> Thanks a lot! Yes, that gives me the overview I needed.
 > 
-> whichever annotation gets used - and I think I can agree that raw_*
-> might be approriate there, this should be accompanied with a rather
-> elaborate changelog and preferably a comment in the code too. Without
-> such we'll be wondering in the years to come WTH happens here.
+> I grabbed your information and generated a manual page from it where I
+> also want to describe the other dump formats (when I have some time
+> left):
+> 
+>    http://www.suse.de/~bwalle/kdump/
+> 
+> That's basically part of the SUSE kdump configuration, maintained in
+> http://freehg.org/u/bwalle/kdump/.
+> 
+> I just used asciidoc because I hate nroff. I hope it's ok for you to
+> distribute that manual page.
 
-Sorry, I find there is no complain from lockdep. Un-paired irq
-disable/enable has no problem with lockdep, just increase something such
-as "redundant_hardirqs_off". Please ignore this thread.
-
-Best Regards,
-Huang Ying
+I have one question.
+On the site (http://www.suse.de/~bwalle/kdump/vmcore.5.txt), the copyright
+of SUSE is written. If the part of kdump-compressed format is written to
+the README file of makedumpfile, is it the problem ?
 
 
+Thanks
+Ken'ichi Ohmichi
+
+
+--===============0533474923==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0533474923==--
