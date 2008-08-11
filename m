@@ -1,18 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from hrndva-omtalb.mail.rr.com ([71.74.56.123])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSWWU-0006Ql-T3
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 12:29:19 +0000
-Date: Mon, 11 Aug 2008 08:29:17 -0400 (EDT)
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
-In-Reply-To: <1218417741.30464.23.camel@caritas-dev.intel.com>
-Message-ID: <alpine.DEB.1.10.0808110828580.15650@gandalf.stny.rr.com>
-References: <1218178368.22039.80.camel@caritas-dev.intel.com>
-	<20080808141700.GF3840@redhat.com>
-	<alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
-	<1218417741.30464.23.camel@caritas-dev.intel.com>
-MIME-Version: 1.0
+Received: from e32.co.us.ibm.com ([32.97.110.150])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KSXW4-0006ww-Ma
+	for kexec@lists.infradead.org; Mon, 11 Aug 2008 13:32:57 +0000
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e32.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m7BDQQ29013046
+	for <kexec@lists.infradead.org>; Mon, 11 Aug 2008 09:26:26 -0400
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m7BDWrql171264
+	for <kexec@lists.infradead.org>; Mon, 11 Aug 2008 07:32:53 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m7BDWqCv012767
+	for <kexec@lists.infradead.org>; Mon, 11 Aug 2008 07:32:53 -0600
+Subject: Re: [LTP] [RFC] [KDUMP] [PROPOSED WORK] kdump on Xen hypervisor
+	and	guests, more tests for utilities, like makedumpfile, mkdumprd,
+	kexec etc
+From: Subrata Modak <subrata@linux.vnet.ibm.com>
+In-Reply-To: <1216856493.5195.22.camel@subratamodak.linux.ibm.com>
+References: <1214230370.4719.53.camel@subratamodak.linux.ibm.com>
+	<20080624124243.GA16734@redhat.com>
+	<20080625.114653.534764946533767806.qcai@redhat.com>
+	<1216856493.5195.22.camel@subratamodak.linux.ibm.com>
+Date: Mon, 11 Aug 2008 19:02:47 +0530
+Message-Id: <1218461567.5010.76.camel@subratamodak.linux.ibm.com>
+Mime-Version: 1.0
+Reply-To: subrata@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,42 +40,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+To: Cai Qian <qcai@redhat.com>
+Cc: poornima.nayak@in.ibm.com, ltp-list@lists.sourceforge.net, vapier@gentoo.org, iranna.ankad@in.ibm.com, kexec@lists.infradead.org, maknayak@in.ibm.com, risrajak@in.ibm.com, hbabu@us.ibm.com, sachinp@linux.vnet.ibm.com, jburke@redhat.com, inddurai@in.ibm.com, vgoyal@redhat.com
 
+Cai,
 
-On Mon, 11 Aug 2008, Huang Ying wrote:
+Any headway in this front ?
 
-> Hi, Steven,
+Regards--
+Subrata
+
+On Thu, 2008-07-24 at 05:11 +0530, Subrata Modak wrote:
+> Hi Cai,
 > 
-> On Fri, 2008-08-08 at 10:30 -0400, Steven Rostedt wrote:
-> [...]
-> > The only problem with this approach is what happens if the user changes 
-> > the enabled in between these two calls. This would make ftrace 
-> > inconsistent.
+> Some patches in Bits and Pieces regarding this nearby ?
+> 
+> Regards--
+> Subrata
+> 
 > > 
-> > I have a patch from the -rt tree that handles what you want. It is 
-> > attached below. Not sure how well it will apply to mainline.
+> > Yes. Initally, I put this item to a relative low priority, partly
+> > because kdump config options and init scripts are tend to be
+> > distro-specific, so it won't be easy to write portable tests for
+> > different distros. In addition, lots of config options are not easy to
+> > be tested automately, like raw disk target, vfat disk target, and
+> > network target etc, as testers have to setup those name manually. But,
+> > you are right, those are high priority tests for kexec/kdump in distro
+> > release, we tested most of those options manually for RHEL anyway and we
+> > had some automated tests of it, which I'll try to submit to LTP as many
+> > as possible. For those manual tests, I'll also try to find some ways to
+> > automate them. For example, for different dump targets, it is possible
+> > to verify the generated initrd file as expected.
 > > 
-> > I really need to go through the rt patch set and start submitting a bunch 
-> > of clean-up/fixes to mainline. We've been meaning to do it, just have been 
-> > distracted :-(
+> > > 
+> > > > == increase coverages for new kexec/kdump development efforts ==
+> > > > - new reserved region syntax in Kernel.
+> > > 
+> > > Another important thing we need to focus on is driver testing. Drivers
+> > > can fail to initialize in second kernel and kdump will fail. Can we do
+> > > something so that we can do following.
+> > >
+> > 
+> > That isn't something I have not thought of. For RHEL release testing, we
+> > will have a workflow to run those tests on any storage/network drivers,
+> > and it will report back testing results and driver matrix. However, this
+> > workflow is very distro-specific, and depends on the test farm it is
+> > using, so it does not make any sense to put it here.
+> > 
+> > > - Collect the machine statistics on which kdump was tested and send
+> > >   the reports to a common place. Especially capture the storage/network
+> > >   driver data which can be probably be available through LTP site.
+> > > 
+> > 
+> > That sounds like a good idea to me.
+> > 
+> > > - Also capture how much memory was reserved on what architecture and
+> > >   whether it worked or not. This will help us verify for sure that how
+> > >  much memory to reserve for second kernel on various architectures.
+> > >
+> > 
+> > This is something could be done. I'll have a look at it.
+> > 
+> > Thanks,
+> > CaiQian
+> > 
+> > > Thanks
+> > > Vivek
 > 
-> Your version is better in general sense. Thank you very much!
 > 
-> But in this specific situation of kexec/kjump. The execution environment
-> is that other CPUs are disabled, local irq is disabled, and it is not
-> permitted to switch to other process. But it is safe and sufficient to
-> use non-locked version here.
-> 
-> So to satisfy both demands, I think it is better to provide both
-> version, locked and non-locked. What do you think about that?
-
-Sounds good,
-
-I'm looking forward to the patch ;-)
-
--- Steve
+> -------------------------------------------------------------------------
+> This SF.Net email is sponsored by the Moblin Your Move Developer's challenge
+> Build the coolest Linux based applications with Moblin SDK & win great prizes
+> Grand prize is a trip for two to an Open Source event anywhere in the world
+> http://moblin-contest.org/redirect.php?banner_id=100&url=/
+> _______________________________________________
+> Ltp-list mailing list
+> Ltp-list@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/ltp-list
 
 
 _______________________________________________
