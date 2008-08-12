@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mga01.intel.com ([192.55.52.88])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSYDU-00053d-TA
-	for kexec@lists.infradead.org; Mon, 11 Aug 2008 14:17:50 +0000
-Date: Tue, 12 Aug 2008 00:17:46 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch] kexec and kdump documentation for xen
-Message-ID: <20080811141744.GA26213@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+	id 1KSibD-0005fJ-7x
+	for kexec@lists.infradead.org; Tue, 12 Aug 2008 01:22:59 +0000
+Subject: Re: [PATCH -v2 7/8] kexec jump: ftrace_enabled_save/restore
+From: Huang Ying <ying.huang@intel.com>
+In-Reply-To: <20080811135136.GD28030@redhat.com>
+References: <1218178368.22039.80.camel@caritas-dev.intel.com>
+	<20080808141700.GF3840@redhat.com>
+	<alpine.DEB.1.10.0808081026240.22796@gandalf.stny.rr.com>
+	<1218417741.30464.23.camel@caritas-dev.intel.com>
+	<20080811135136.GD28030@redhat.com>
+Date: Tue, 12 Aug 2008 09:22:53 +0800
+Message-Id: <1218504173.24951.7.camel@caritas-dev.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,234 +26,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xensource.com, kexec@lists.infradead.org
-Cc: Isaku Yamahata <yamahata@valinux.co.jp>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-Add guide to using the kexec and kdump facility in xen.
+Hi, Vivek,
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+On Mon, 2008-08-11 at 09:51 -0400, Vivek Goyal wrote:
+[...]
+> So you want to use a non-locked version from optimization point of view?
+> So that we don't end up taking and release a lock?
 
---- 
-I the work on this document using an ia64 machine and qemu emulating x86_32.
-I am yet to verify it on x86_32 hardware or x86_64.
-Index: xen-unstable.hg/docs/misc/kexec_and_kdump.txt
-===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ xen-unstable.hg/docs/misc/kexec_and_kdump.txt	2008-08-12 00:11:45.000000000 +1000
-@@ -0,0 +1,213 @@
-+
-+=======================
-+Kexec and Kdump for Xen
-+=======================
-+
-+This is a breif guide to using Kexec and Kdump in conjunction with Xen.
-+This functionaly works at the level of the hypervisor and dom0 kernel.
-+And will thus affect all guests running on a machine.
-+
-+At this stage it does not work in conjunction with domU kernels.
-+
-+This document should be read in conjunction with
-+Documentation/kdump/kdump.txt from the Linux kernel source.
-+Some of the information in this document has been
-+sourced from that document.
-+
-+
-+Kexec
-+=====
-+
-+It is possible to kexec from Xen or Linux to either Xen or Linux.
-+
-+Pattern        | Before Kexec       | After Kexec
-+---------------+--------------------+--------------------
-+Xen -> Xen     | first hypervisor & | second hypervisor &
-+               | dom0 kernel        | dom0 kernel
-+---------------+--------------------+--------------------
-+Xen   -> Linux | first hypervisor & | second kernel
-+               | dom0 kernel        |
-+---------------+--------------------+--------------------
-+Linux -> Xen   | first kernel       | second hypervisor &
-+               |                    | dom0 kernel
-+---------------+--------------------+--------------------
-+Linux -> Linux | first kernel       | second kernel
-+
-+If you are kexecing to Xen then you will also need to preapare the second
-+hypervisor and dom0 kernel that will run after kexec. These may be the same
-+as the first hypervisor and dom0 kernel that are used before kexec if you
-+are kexecing from Xen to Xen.
-+
-+If you are kexecing to Linux then you will need to prepare the second Linux
-+kernel that will run after kexec. In the case that you are kexecing from
-+Linux, it may be the same as the first kernel image that that runs before
-+kexec.
-+
-+Regardless of which kexec pattern you wish to run, you will
-+need to have kexec-tools installed. This provides the kexec command.
-+
-+1. Load
-+-------
-+
-+Before kexecing the second kernel or hypervisor & dom0 kernel
-+need to be loaded into the running hypervisor or kernel using
-+the kexec command.
-+
-+  a. To kexec to Xen (Xen->Xen or Linux->Xen)
-+
-+  kexec -l --append="XEN_ARGS -- DOM0_ARGS" \
-+	--vmm="XEN_IMAGE" "DOM0_IMAGE" KEXEC_ARGS
-+
-+  where:
-+    XEN_ARGS: command line arguments to the xen hypervisor
-+              On x86 the no-real-mode argument should be included
-+    DOM0_ARGS: command line arguments to the dom0 kernel
-+    XEN_IMAGE: xen hypervisor image
-+    DOM0_IMAGE: dom0 kernel image
-+    KEXEC_ARGS: additional kexec-tools command line arguments
-+
-+  e.g. kexec -l --append "no-real-mode" --vmm="/boot/xen.gz" /boot/vmlinuz.gz
-+
-+  OR
-+
-+  b. To kexec to Linux (Xen->Linux or Linux->Linux)
-+
-+  kexec -l LINUX_IMAGE --append "$LINUX_ARGS" KEXEC_ARGS
-+
-+  where:
-+    LINUX_IMAGE: the second linux kernel image
-+    LINUX_ARGS: command line arguments to the second linux kernel
-+    KEXEC_ARGS: additional kexec-tools command line arguments
-+
-+  e.g. kexec -l /boot/second-vmlinuz.gz
-+
-+2. Execute
-+----------
-+
-+Once the second kernel is loaded, it can be executed at any time.
-+If you don't see the second kernel booting within a second or so,
-+you are in trouble :(
-+
-+   kexec -e
-+
-+Kdump
-+=====
-+
-+It is possible to kdump from Xen or Linux to a Linux crash kernel.
-+It is not possible to use xen as a crash kernel.
-+
-+Pattern        | Before Kexec       | After Kexec
-+---------------+--------------------+--------------------
-+Xen -> Linux   | first hypervisor & | crash kernel
-+               | dom0 kernel        |
-+---------------+--------------------+--------------------
-+Linux -> Linux | first kernel       | crash kernel
-+
-+Regardless of if you are kdumping from Xen or Linux you will need to
-+prepare a linux crash kernel.  You will also need to have kexec-tools
-+installed. This provides the kexec command.
-+
-+0. Set-Up The Crash Kernel Region
-+---------------------------------
-+
-+In order to use kdump an area of memory has to be reserved at boot time.
-+This is the area of memory that the crash kernel will use, thus allowing it
-+to run without disrupting the memory used by the first kernel. This area is
-+called the crash kernel region and is reserved using the crashkernel
-+command line parameter to the Xen hypervisor. It has two forms:
-+
-+  i) crashkernel=size
-+
-+     This is the simplest and recommended way to reserve the crash kernel
-+     region. Just specify how large the region should be and the hypervisor
-+     will find a good location for it. A good size to start with is 128Mb
-+
-+     e.g.
-+
-+     crashkernel=128M
-+
-+  ii) crashkernel=size@base
-+
-+      In this form the base address is provided in addition to
-+      the size. Use this if auto-placement doesn't work for some reason.
-+      It is strongly recommended that the base address be aligned
-+      to 64Mb, else memory below the alignment point will not
-+      be usable.
-+
-+      e.g. crashkernel=128M@256M
-+
-+   Regardless of which of the two forms of the crashkernel command line you
-+   use, the crash kernel region should appear in /proc/iomem on x86 or
-+   /proc/iomem_machine on ia64. If it doesn't then either the crashkernel
-+   parameter is missing, or for some reason the region couldn't be placed -
-+   for instance because it is too large.
-+
-+   # cat /proc/iomem
-+   ...
-+   00100000-07feffff : System RAM
-+     00100000-00bfffff : Hypervisor code and data
-+     0533f000-0733efff : Crash kernel
-+   ...
-+
-+
-+1. Load
-+-------
-+
-+Once you are running in a kexec-enabled hypervisor and dom0,
-+you can prepare to kdump by loading the crash kernel into the
-+running kernel.
-+
-+  kexec -p CRASH_KERNEL_IMAGE --append "$CRASH_KERNEL_ARGS" KEXEC_ARGS
-+
-+  where:
-+    CRASH_KERNEL_IMAGE: the crash kernel image
-+    CRASH_KERNEL_ARGS: command line arguments to the crash kernel
-+		       init 1 is strongly recommended
-+		       irqpoll is strongly recommended
-+		       maxcpus=1 is required if the crash kernel is SMP
-+		       reset_devices is strongly recommended
-+    KEXEC_ARGS: additional kexec-tools command line arguments
-+                On x86 --args-linux should be supplied if an uncompressed
-+		vmlinux image is used as the crash kernel
-+
-+  e.g. kexec -p /boot/crash-vmlinuz \
-+        --append "init 1 irqpoll maxcpus=1 reset_devices" --args-linux
-+
-+On x86 systems the crash kernel may be either
-+- A uncompressed vmlinux image if the kernel is not relocatable
-+- A compressed bzImage or vmlinuz image if the kernel is relocatable
-+- Relocatability is crontroled by the CONFIG_RELOCATABLE kernel
-+  compile configuration parameter. This option may not be available
-+  depending on the kernel version
-+On ia64
-+  Either a vmlinuz or vmlinux.gz image may be used
-+
-+
-+2. Execute
-+----------
-+
-+Once the second kernel is loaded, the crash kernel will be executed if the
-+hypervisor panics. It will also be executed if dom0 panics or if dom0
-+oopses and /proc/sys/kernel/panic_on_oops is set to a non-zero value
-+
-+echo 1 > /proc/sys/kernel/panic_on_oops
-+
-+Kdump may also be triggered (for testing)
-+
-+  a. From Domain 0
-+
-+  echo c > /proc/sysrq-trigger
-+
-+  b. From Xen
-+
-+     Enter the xen console
-+
-+     ctrl^a ctrl^a  (may be bound to a different key, this is the default)
-+
-+     Select C for "trigger a crashdump"
-+
-+     C
-+
-+If you don't see the crash kernel booting within a second or so,
-+you are in trouble :(
-+
+Not from optimization point of view. machine_kexec() may be called from
+crash_kexec(), where it is not permitted to take and release a lock.
+
+Best Regards,
+Huang Ying
+
+
 
 _______________________________________________
 kexec mailing list
