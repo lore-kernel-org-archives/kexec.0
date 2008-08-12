@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSkLM-0000cM-QH
-	for kexec@lists.infradead.org; Tue, 12 Aug 2008 03:14:45 +0000
-Subject: [PATCH -v3 7/7] kexec jump: fix for ftrace
-From: Huang Ying <ying.huang@intel.com>
-Date: Tue, 12 Aug 2008 11:14:37 +0800
-Message-Id: <1218510877.24951.46.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+	id 1KSn7W-0003Wd-OW
+	for kexec@lists.infradead.org; Tue, 12 Aug 2008 06:12:39 +0000
+Message-Id: <48A129D3.20000@mxs.nes.nec.co.jp>
+Date: Tue, 12 Aug 2008 15:12:35 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: makedumpfile-1.2.8: Add IMPLEMENTATION file
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,93 +16,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1318335372=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
+To: Bernhard Walle <bwalle@suse.de>, kexec-ml <kexec@lists.infradead.org>
 
-Ftrace depends on some processor state that we destroyed during kexec
-and restored by restore_processor_state(). So save_processor_state()
-and restore_processor_state() are moved into machine_kexec() and
-ftrace is restored after restore_processor_state().
-
-Signed-off-by: Huang Ying <ying.huang@intel.com>
-
----
- arch/x86/kernel/machine_kexec_32.c |   16 +++++++++++++++-
- kernel/kexec.c                     |    2 --
- 2 files changed, 15 insertions(+), 3 deletions(-)
-
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -12,6 +12,7 @@
- #include <linux/init.h>
- #include <linux/numa.h>
- #include <linux/ftrace.h>
-+#include <linux/suspend.h>
- 
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
-@@ -113,6 +114,7 @@ void machine_kexec(struct kimage *image)
- {
- 	unsigned long page_list[PAGES_NR];
- 	void *control_page;
-+	int save_ftrace_enabled;
- 	asmlinkage unsigned long
- 		(*relocate_kernel_ptr)(unsigned long indirection_page,
- 				       unsigned long control_page,
-@@ -120,7 +122,12 @@ void machine_kexec(struct kimage *image)
- 				       unsigned int has_pae,
- 				       unsigned int preserve_context);
- 
--	tracer_disable();
-+#ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context)
-+		save_processor_state();
-+#endif
-+
-+	save_ftrace_enabled = __ftrace_enabled_save();
- 
- 	/* Interrupts aren't acceptable while we reboot */
- 	local_irq_disable();
-@@ -178,6 +185,13 @@ void machine_kexec(struct kimage *image)
- 					   (unsigned long)page_list,
- 					   image->start, cpu_has_pae,
- 					   image->preserve_context);
-+
-+#ifdef CONFIG_KEXEC_JUMP
-+	if (kexec_image->preserve_context)
-+		restore_processor_state();
-+#endif
-+
-+	__ftrace_enabled_restore(save_ftrace_enabled);
- }
- 
- void arch_crash_save_vmcoreinfo(void)
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1469,7 +1469,6 @@ int kernel_kexec(void)
- 		error = device_power_down(PMSG_FREEZE);
- 		if (error)
- 			goto Enable_irqs;
--		save_processor_state();
- 	} else
- #endif
- 	{
-@@ -1482,7 +1481,6 @@ int kernel_kexec(void)
- 
- #ifdef CONFIG_KEXEC_JUMP
- 	if (kexec_image->preserve_context) {
--		restore_processor_state();
- 		device_power_up(PMSG_RESTORE);
-  Enable_irqs:
- 		local_irq_enable();
+--===============1318335372==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
 
+Hi,
+
+makedumpfile version 1.2.8 is released.
+Since there are some requests about documentation for kdump 
+compressed format and I add the IMPLEMENTATION file describing it.
+(There is no changes against source code)
+
+Changelog:
+ - Add the IMPLEMENTATION file for the kdump-compressed format.
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile(ver. 1.2.8) from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-1.2.8.tar.gz"
+  2. "cd makedumpfile"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+
+
+--===============1318335372==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1318335372==--
