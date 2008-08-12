@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mga02.intel.com ([134.134.136.20])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSkL6-0000UK-8o
-	for kexec@lists.infradead.org; Tue, 12 Aug 2008 03:14:28 +0000
-Subject: [PATCH -v3 2/7] kexec jump: rename KEXEC_CONTROL_CODE_SIZE to
-	KEXEC_CONTROL_PAGE_SIZE
+	id 1KSkLA-0000V7-QH
+	for kexec@lists.infradead.org; Tue, 12 Aug 2008 03:14:33 +0000
+Subject: [PATCH -v3 3/7] kexec jump: check code size in control page
 From: Huang Ying <ying.huang@intel.com>
-Date: Tue, 12 Aug 2008 11:14:24 +0800
-Message-Id: <1218510864.24951.41.camel@caritas-dev.intel.com>
+Date: Tue, 12 Aug 2008 11:14:28 +0800
+Message-Id: <1218510868.24951.42.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -24,143 +23,81 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Rename KEXEC_CONTROL_CODE_SIZE to KEXEC_CONTROL_PAGE_SIZE, because
-control page is used for not only code on some platform. For example
-in kexec jump, it is used for data and stack too.
+Kexec/Kexec-jump require code size in control page is less than
+PAGE_SIZE/2. This patch add link-time checking for this.
+
+ASSERT() of ld link script is used as the link-time checking
+mechanism.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
 
 ---
- arch/arm/include/asm/kexec.h     |    2 +-
- arch/ia64/include/asm/kexec.h    |    2 +-
- arch/powerpc/include/asm/kexec.h |    2 +-
- arch/s390/include/asm/kexec.h    |    2 +-
- arch/sh/include/asm/kexec.h      |    2 +-
- include/asm-mips/kexec.h         |    2 +-
- include/asm-x86/kexec.h          |    4 ++--
- include/linux/kexec.h            |    4 ++--
- kernel/kexec.c                   |    4 ++--
- 9 files changed, 12 insertions(+), 12 deletions(-)
+ arch/x86/kernel/machine_kexec_32.c   |    2 +-
+ arch/x86/kernel/relocate_kernel_32.S |   10 +++++++---
+ arch/x86/kernel/vmlinux_32.lds.S     |    6 ++++++
+ include/asm-x86/kexec.h              |    4 ++++
+ 4 files changed, 18 insertions(+), 4 deletions(-)
 
+--- a/arch/x86/kernel/machine_kexec_32.c
++++ b/arch/x86/kernel/machine_kexec_32.c
+@@ -138,7 +138,7 @@ void machine_kexec(struct kimage *image)
+ 	}
+ 
+ 	control_page = page_address(image->control_code_page);
+-	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
++	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
+ 
+ 	relocate_kernel_ptr = control_page;
+ 	page_list[PA_CONTROL_PAGE] = __pa(control_page);
+--- a/arch/x86/kernel/relocate_kernel_32.S
++++ b/arch/x86/kernel/relocate_kernel_32.S
+@@ -20,10 +20,11 @@
+ #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
+ #define PAE_PGD_ATTR (_PAGE_PRESENT)
+ 
+-/* control_page + PAGE_SIZE/2 ~ control_page + PAGE_SIZE * 3/4 are
+- * used to save some data for jumping back
++/* control_page + KEXEC_CONTROL_CODE_MAX_SIZE
++ * ~ control_page + PAGE_SIZE are used as data storage and stack for
++ * jumping back
+  */
+-#define DATA(offset)		(PAGE_SIZE/2+(offset))
++#define DATA(offset)		(KEXEC_CONTROL_CODE_MAX_SIZE+(offset))
+ 
+ /* Minimal CPU state */
+ #define ESP			DATA(0x0)
+@@ -376,3 +377,6 @@ swap_pages:
+ 	popl	%ebx
+ 	popl	%ebp
+ 	ret
++
++	.globl kexec_control_code_size
++.set kexec_control_code_size, . - relocate_kernel
 --- a/include/asm-x86/kexec.h
 +++ b/include/asm-x86/kexec.h
-@@ -63,7 +63,7 @@
- /* Maximum address we can use for the control code buffer */
- # define KEXEC_CONTROL_MEMORY_LIMIT TASK_SIZE
- 
--# define KEXEC_CONTROL_CODE_SIZE	4096
-+# define KEXEC_CONTROL_PAGE_SIZE	4096
- 
- /* The native architecture */
- # define KEXEC_ARCH KEXEC_ARCH_386
-@@ -79,7 +79,7 @@
- # define KEXEC_CONTROL_MEMORY_LIMIT     (0xFFFFFFFFFFUL)
- 
- /* Allocate one page for the pdp and the second for the code */
--# define KEXEC_CONTROL_CODE_SIZE  (4096UL + 4096UL)
-+# define KEXEC_CONTROL_PAGE_SIZE  (4096UL + 4096UL)
- 
- /* The native architecture */
- # define KEXEC_ARCH KEXEC_ARCH_X86_64
---- a/arch/sh/include/asm/kexec.h
-+++ b/arch/sh/include/asm/kexec.h
-@@ -21,7 +21,7 @@
- /* Maximum address we can use for the control code buffer */
- #define KEXEC_CONTROL_MEMORY_LIMIT TASK_SIZE
- 
--#define KEXEC_CONTROL_CODE_SIZE	4096
-+#define KEXEC_CONTROL_PAGE_SIZE	4096
- 
- /* The native architecture */
- #define KEXEC_ARCH KEXEC_ARCH_SH
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -22,7 +22,7 @@
- #define KEXEC_CONTROL_MEMORY_LIMIT TASK_SIZE
+@@ -41,6 +41,10 @@
+ # define PAGES_NR		17
  #endif
  
--#define KEXEC_CONTROL_CODE_SIZE 4096
-+#define KEXEC_CONTROL_PAGE_SIZE 4096
++#ifdef CONFIG_X86_32
++# define KEXEC_CONTROL_CODE_MAX_SIZE	2048
++#endif
++
+ #ifndef __ASSEMBLY__
  
- /* The native architecture */
- #ifdef __powerpc64__
---- a/arch/ia64/include/asm/kexec.h
-+++ b/arch/ia64/include/asm/kexec.h
-@@ -9,7 +9,7 @@
- /* Maximum address we can use for the control code buffer */
- #define KEXEC_CONTROL_MEMORY_LIMIT TASK_SIZE
+ #include <linux/string.h>
+--- a/arch/x86/kernel/vmlinux_32.lds.S
++++ b/arch/x86/kernel/vmlinux_32.lds.S
+@@ -209,3 +209,9 @@ SECTIONS
  
--#define KEXEC_CONTROL_CODE_SIZE (8192 + 8192 + 4096)
-+#define KEXEC_CONTROL_PAGE_SIZE (8192 + 8192 + 4096)
- 
- /* The native architecture */
- #define KEXEC_ARCH KEXEC_ARCH_IA_64
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -31,7 +31,7 @@
- #define KEXEC_CONTROL_MEMORY_LIMIT (1UL<<31)
- 
- /* Allocate one page for the pdp and the second for the code */
--#define KEXEC_CONTROL_CODE_SIZE 4096
-+#define KEXEC_CONTROL_PAGE_SIZE 4096
- 
- /* The native architecture */
- #define KEXEC_ARCH KEXEC_ARCH_S390
---- a/arch/arm/include/asm/kexec.h
-+++ b/arch/arm/include/asm/kexec.h
-@@ -10,7 +10,7 @@
- /* Maximum address we can use for the control code buffer */
- #define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
- 
--#define KEXEC_CONTROL_CODE_SIZE	4096
-+#define KEXEC_CONTROL_PAGE_SIZE	4096
- 
- #define KEXEC_ARCH KEXEC_ARCH_ARM
- 
---- a/include/asm-mips/kexec.h
-+++ b/include/asm-mips/kexec.h
-@@ -16,7 +16,7 @@
-  /* Maximum address we can use for the control code buffer */
- #define KEXEC_CONTROL_MEMORY_LIMIT (0x20000000)
- 
--#define KEXEC_CONTROL_CODE_SIZE 4096
-+#define KEXEC_CONTROL_PAGE_SIZE 4096
- 
- /* The native architecture */
- #define KEXEC_ARCH KEXEC_ARCH_MIPS
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -242,7 +242,7 @@ static int kimage_normal_alloc(struct ki
- 	 */
- 	result = -ENOMEM;
- 	image->control_code_page = kimage_alloc_control_pages(image,
--					   get_order(KEXEC_CONTROL_CODE_SIZE));
-+					   get_order(KEXEC_CONTROL_PAGE_SIZE));
- 	if (!image->control_code_page) {
- 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
- 		goto out;
-@@ -317,7 +317,7 @@ static int kimage_crash_alloc(struct kim
- 	 */
- 	result = -ENOMEM;
- 	image->control_code_page = kimage_alloc_control_pages(image,
--					   get_order(KEXEC_CONTROL_CODE_SIZE));
-+					   get_order(KEXEC_CONTROL_PAGE_SIZE));
- 	if (!image->control_code_page) {
- 		printk(KERN_ERR "Could not allocate control_code_buffer\n");
- 		goto out;
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -25,8 +25,8 @@
- #error KEXEC_CONTROL_MEMORY_LIMIT not defined
- #endif
- 
--#ifndef KEXEC_CONTROL_CODE_SIZE
--#error KEXEC_CONTROL_CODE_SIZE not defined
-+#ifndef KEXEC_CONTROL_PAGE_SIZE
-+#error KEXEC_CONTROL_PAGE_SIZE not defined
- #endif
- 
- #ifndef KEXEC_ARCH
+   DWARF_DEBUG
+ }
++
++/* Link time checks */
++#include <asm/kexec.h>
++
++ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE,
++       "kexec control code size is too big")
 
 
 
