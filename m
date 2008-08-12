@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga14.intel.com ([143.182.124.37])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KSkLA-0000V7-QH
-	for kexec@lists.infradead.org; Tue, 12 Aug 2008 03:14:33 +0000
-Subject: [PATCH -v3 3/7] kexec jump: check code size in control page
+	id 1KSkLE-0000W0-FQ
+	for kexec@lists.infradead.org; Tue, 12 Aug 2008 03:14:36 +0000
+Subject: [PATCH -v3 4/7] kexec jump: remove duplication of
+	kexec_restart_prepare()
 From: Huang Ying <ying.huang@intel.com>
-Date: Tue, 12 Aug 2008 11:14:28 +0800
-Message-Id: <1218510868.24951.42.camel@caritas-dev.intel.com>
+Date: Tue, 12 Aug 2008 11:14:31 +0800
+Message-Id: <1218510871.24951.43.camel@caritas-dev.intel.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,81 +24,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, nigel@nigel.suspend2.net, "Rafael J. Wysocki" <rjw@sisk.pl>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org
 
-Kexec/Kexec-jump require code size in control page is less than
-PAGE_SIZE/2. This patch add link-time checking for this.
-
-ASSERT() of ld link script is used as the link-time checking
-mechanism.
+Call kernel_restart_prepare() in kernel_kexec() instead of duplicating
+the code.
 
 Signed-off-by: Huang Ying <ying.huang@intel.com>
+Acked-by: Pavel Machek <pavel@suse.cz>
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
 ---
- arch/x86/kernel/machine_kexec_32.c   |    2 +-
- arch/x86/kernel/relocate_kernel_32.S |   10 +++++++---
- arch/x86/kernel/vmlinux_32.lds.S     |    6 ++++++
- include/asm-x86/kexec.h              |    4 ++++
- 4 files changed, 18 insertions(+), 4 deletions(-)
+ include/linux/reboot.h |    1 +
+ kernel/kexec.c         |    6 +-----
+ kernel/sys.c           |    2 +-
+ 3 files changed, 3 insertions(+), 6 deletions(-)
 
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -138,7 +138,7 @@ void machine_kexec(struct kimage *image)
- 	}
- 
- 	control_page = page_address(image->control_code_page);
--	memcpy(control_page, relocate_kernel, PAGE_SIZE/2);
-+	memcpy(control_page, relocate_kernel, KEXEC_CONTROL_CODE_MAX_SIZE);
- 
- 	relocate_kernel_ptr = control_page;
- 	page_list[PA_CONTROL_PAGE] = __pa(control_page);
---- a/arch/x86/kernel/relocate_kernel_32.S
-+++ b/arch/x86/kernel/relocate_kernel_32.S
-@@ -20,10 +20,11 @@
- #define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
- #define PAE_PGD_ATTR (_PAGE_PRESENT)
- 
--/* control_page + PAGE_SIZE/2 ~ control_page + PAGE_SIZE * 3/4 are
-- * used to save some data for jumping back
-+/* control_page + KEXEC_CONTROL_CODE_MAX_SIZE
-+ * ~ control_page + PAGE_SIZE are used as data storage and stack for
-+ * jumping back
+--- a/include/linux/reboot.h
++++ b/include/linux/reboot.h
+@@ -59,6 +59,7 @@ extern void machine_crash_shutdown(struc
+  * Architecture independent implemenations of sys_reboot commands.
   */
--#define DATA(offset)		(PAGE_SIZE/2+(offset))
-+#define DATA(offset)		(KEXEC_CONTROL_CODE_MAX_SIZE+(offset))
  
- /* Minimal CPU state */
- #define ESP			DATA(0x0)
-@@ -376,3 +377,6 @@ swap_pages:
- 	popl	%ebx
- 	popl	%ebp
- 	ret
-+
-+	.globl kexec_control_code_size
-+.set kexec_control_code_size, . - relocate_kernel
---- a/include/asm-x86/kexec.h
-+++ b/include/asm-x86/kexec.h
-@@ -41,6 +41,10 @@
- # define PAGES_NR		17
- #endif
- 
-+#ifdef CONFIG_X86_32
-+# define KEXEC_CONTROL_CODE_MAX_SIZE	2048
-+#endif
-+
- #ifndef __ASSEMBLY__
- 
- #include <linux/string.h>
---- a/arch/x86/kernel/vmlinux_32.lds.S
-+++ b/arch/x86/kernel/vmlinux_32.lds.S
-@@ -209,3 +209,9 @@ SECTIONS
- 
-   DWARF_DEBUG
++extern void kernel_restart_prepare(char *cmd);
+ extern void kernel_restart(char *cmd);
+ extern void kernel_halt(void);
+ extern void kernel_power_off(void);
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -274,7 +274,7 @@ void emergency_restart(void)
  }
-+
-+/* Link time checks */
-+#include <asm/kexec.h>
-+
-+ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE,
-+       "kexec control code size is too big")
+ EXPORT_SYMBOL_GPL(emergency_restart);
+ 
+-static void kernel_restart_prepare(char *cmd)
++void kernel_restart_prepare(char *cmd)
+ {
+ 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
+ 	system_state = SYSTEM_RESTART;
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1472,11 +1472,7 @@ int kernel_kexec(void)
+ 	} else
+ #endif
+ 	{
+-		blocking_notifier_call_chain(&reboot_notifier_list,
+-					     SYS_RESTART, NULL);
+-		system_state = SYSTEM_RESTART;
+-		device_shutdown();
+-		sysdev_shutdown();
++		kernel_restart_prepare(NULL);
+ 		printk(KERN_EMERG "Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
 
 
 
