@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
+Received: from mx3.mail.elte.hu ([157.181.1.138])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTK6c-00037z-Qd
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 17:25:55 +0000
-Date: Wed, 13 Aug 2008 10:25:04 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+	id 1KTKdC-0004gT-Au
+	for kexec@lists.infradead.org; Wed, 13 Aug 2008 17:59:34 +0000
+Date: Wed, 13 Aug 2008 19:59:15 +0200
+From: Ingo Molnar <mingo@elte.hu>
 Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
 	0) in kernel_kexec()
-Message-Id: <20080813102504.7ce478eb.akpm@linux-foundation.org>
-In-Reply-To: <alpine.LFD.1.10.0808130958220.3462@nehalem.linux-foundation.org>
+Message-ID: <20080813175915.GA3938@elte.hu>
 References: <1218618760.24951.137.camel@caritas-dev.intel.com>
 	<20080813022712.4bea5fea.akpm@linux-foundation.org>
 	<alpine.LFD.1.10.0808130958220.3462@nehalem.linux-foundation.org>
-Mime-Version: 1.0
+	<20080813102504.7ce478eb.akpm@linux-foundation.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20080813102504.7ce478eb.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +27,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: nigel@nigel.suspend2.net, Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kexec, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, 13 Aug 2008 10:01:13 -0700 (PDT) Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> 
-> 
-> On Wed, 13 Aug 2008, Andrew Morton wrote:
-> >
-> > We don't need to create that local.  I queued this:
-> 
-> No, please don't. 
-> 
-> Just don't take this whole patch-series until it's cleaned up.
+* Andrew Morton <akpm@linux-foundation.org> wrote:
 
-We already took it - in 2.6.13!
-
-> There is 
-> absolutely no excuse for using xchg as a locking primitive. Nothing like 
-> this should be queued anywhere, it should be burned and the ashes should 
-> be scattered over the atlantic so that nobody will ever see them again.
+> > instead? Not that that's really right either, but at least it avoids 
+> > the _ridiculous_ crap. The real solution is probably to use a 
+> > spinlock and trylock/unlock.
 > 
-> F*ck me with a spoon, if you have to use xchg() to do a trylock, why the 
-> hell isn't the unlock sequence then
+> Or test_and_set_bit().  That's what I've been saying too, only 
+> differently ;)
 > 
-> 	smp_mb();
-> 	var = 0;
-> 
-> instead? Not that that's really right either, but at least it avoids the 
-> _ridiculous_ crap. The real solution is probably to use a spinlock and 
-> trylock/unlock.
-> 
+> But cleaning up the long-standing silly usage of xchg() is a different 
+> activity from suppressing this recently-added compile warning.
 
-Or test_and_set_bit().  That's what I've been saying too, only
-differently ;)
+actually, in this case i disagree: the warning here is a canary that 
+there's something wrong about this code - i.e. gcc is _right_ about 
+warning us. The warning is also totally harmless - the warning shows us 
+the suckiness of the code structure - and squashing the warning doesnt 
+fix that.
 
-But cleaning up the long-standing silly usage of xchg() is a different
-activity from suppressing this recently-added compile warning.
+So im coal-mine analogies, i disagree with squashing the canary, we 
+should find and fix the shaft that emits the smelly methane instead ;-)
 
+	Ingo
 
 _______________________________________________
 kexec mailing list
