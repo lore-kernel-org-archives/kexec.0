@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp1.linux-foundation.org ([140.211.169.13])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTJpB-0006sZ-NU
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 17:07:54 +0000
-Date: Wed, 13 Aug 2008 10:07:03 -0700
+	id 1KTK6c-00037z-Qd
+	for kexec@lists.infradead.org; Wed, 13 Aug 2008 17:25:55 +0000
+Date: Wed, 13 Aug 2008 10:25:04 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] kexec jump: fix code size checking
-Message-Id: <20080813100703.10f50b40.akpm@linux-foundation.org>
-In-Reply-To: <20080813131927.GB3957@redhat.com>
-References: <1218589475.24951.59.camel@caritas-dev.intel.com>
-	<20080813131927.GB3957@redhat.com>
+Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
+	0) in kernel_kexec()
+Message-Id: <20080813102504.7ce478eb.akpm@linux-foundation.org>
+In-Reply-To: <alpine.LFD.1.10.0808130958220.3462@nehalem.linux-foundation.org>
+References: <1218618760.24951.137.camel@caritas-dev.intel.com>
+	<20080813022712.4bea5fea.akpm@linux-foundation.org>
+	<alpine.LFD.1.10.0808130958220.3462@nehalem.linux-foundation.org>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -23,41 +25,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, mingo@elte.hu, Linus Torvalds <torvalds@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: nigel@nigel.suspend2.net, Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Kexec, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Huang Ying <ying.huang@intel.com>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, 13 Aug 2008 09:19:27 -0400 Vivek Goyal <vgoyal@redhat.com> wrote:
+On Wed, 13 Aug 2008 10:01:13 -0700 (PDT) Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> On Wed, Aug 13, 2008 at 09:04:35AM +0800, Huang Ying wrote:
-> > Fix building issue when CONFIG_KEXEC=n. Thanks to Vivek Goyal for his
-> > reminding.
-> > 
-> > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> > 
-> > ---
-> >  include/asm-x86/kexec.h |    3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > --- a/include/asm-x86/kexec.h
-> > +++ b/include/asm-x86/kexec.h
-> > @@ -43,6 +43,9 @@
-> >  
-> >  #ifdef CONFIG_X86_32
-> >  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
-> > +# ifndef CONFIG_KEXEC
-> > +#  define kexec_control_code_size	0
-> > +# endif
-> >  #endif
-> >  
-> >  #ifndef __ASSEMBLY__
 > 
-> I think Andrew already fixed it. Right way is to put code in vmlinux.lds.S
-> under #ifdef CONFIG_KEXEC, than defining the symbol kexec_control_code_size
-> if CONFIG_KEXEC=n
+> 
+> On Wed, 13 Aug 2008, Andrew Morton wrote:
+> >
+> > We don't need to create that local.  I queued this:
+> 
+> No, please don't. 
+> 
+> Just don't take this whole patch-series until it's cleaned up.
 
-I was wondering about that.
+We already took it - in 2.6.13!
 
-I resurrected that patch.
+> There is 
+> absolutely no excuse for using xchg as a locking primitive. Nothing like 
+> this should be queued anywhere, it should be burned and the ashes should 
+> be scattered over the atlantic so that nobody will ever see them again.
+> 
+> F*ck me with a spoon, if you have to use xchg() to do a trylock, why the 
+> hell isn't the unlock sequence then
+> 
+> 	smp_mb();
+> 	var = 0;
+> 
+> instead? Not that that's really right either, but at least it avoids the 
+> _ridiculous_ crap. The real solution is probably to use a spinlock and 
+> trylock/unlock.
+> 
+
+Or test_and_set_bit().  That's what I've been saying too, only
+differently ;)
+
+But cleaning up the long-standing silly usage of xchg() is a different
+activity from suppressing this recently-added compile warning.
+
 
 _______________________________________________
 kexec mailing list
