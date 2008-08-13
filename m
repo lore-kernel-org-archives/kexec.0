@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTGJC-00050b-6h
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 13:22:38 +0000
-Date: Wed, 13 Aug 2008 09:21:41 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] kexec jump: fix code size checking
-Message-ID: <20080813132141.GC3957@redhat.com>
-References: <1218589475.24951.59.camel@caritas-dev.intel.com>
-	<20080813024701.GA19201@verge.net.au>
-	<1218596715.24951.69.camel@caritas-dev.intel.com>
+Received: from smtp1.linux-foundation.org ([140.211.169.13])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KTJfZ-0002JT-0f
+	for kexec@lists.infradead.org; Wed, 13 Aug 2008 16:57:57 +0000
+Date: Wed, 13 Aug 2008 09:57:33 -0700 (PDT)
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
+	0) in kernel_kexec()
+In-Reply-To: <1218618760.24951.137.camel@caritas-dev.intel.com>
+Message-ID: <alpine.LFD.1.10.0808130956360.3462@nehalem.linux-foundation.org>
+References: <1218618760.24951.137.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1218596715.24951.69.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,62 +24,24 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Aug 13, 2008 at 11:05:15AM +0800, Huang Ying wrote:
-> On Wed, 2008-08-13 at 12:47 +1000, Simon Horman wrote:
-> > On Wed, Aug 13, 2008 at 09:04:35AM +0800, Huang Ying wrote:
-> > > Fix building issue when CONFIG_KEXEC=n. Thanks to Vivek Goyal for his
-> > > reminding.
-> > > 
-> > > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> > > 
-> > > ---
-> > >  include/asm-x86/kexec.h |    3 +++
-> > >  1 file changed, 3 insertions(+)
-> > > 
-> > > --- a/include/asm-x86/kexec.h
-> > > +++ b/include/asm-x86/kexec.h
-> > > @@ -43,6 +43,9 @@
-> > >  
-> > >  #ifdef CONFIG_X86_32
-> > >  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
-> > > +# ifndef CONFIG_KEXEC
-> > > +#  define kexec_control_code_size	0
-> > > +# endif
-> > >  #endif
-> > >  
-> > >  #ifndef __ASSEMBLY__
-> > 
-> > Is it impossible to skip the linker check in the !CONFIG_KEXEC case?
-> 
-> It is possible. I think there are several ways to do that.
-> 
-> 1) use #ifdef in vmlinux_32.lds.S, such as:
-> 
-> #ifdef CONFIG_KEXEC
-> ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE,
->        "kexec control code size is too big")
-> #endif
-> 
-> 2) #define a macro for kexec check ld script in asm/kexec.h, such as:
-> 
-> #define LD_CHECK_KEXEC()	ASSERT(kexec_control_code_size <= KEXEC_CONTROL_CODE_MAX_SIZE, \
-> 				       "kexec control code size is too big")
-> 
-> and use that in vmlinux_32.lds.S.
-> 
-> 3) #define kexec_control_code_size 0. So that the check can be passed
-> always. And, code size = 0 is reasonable for no code (CONFIG_KEXEC=n).
-> 
-> 
-> I think 3) is better. What do you think about?
-> 
 
-I think 1) is good enough.
 
-Thanks
-Vivek
+On Wed, 13 Aug 2008, Huang Ying wrote:
+>
+> -	xchg(&kexec_lock, 0);
+> +	locked = xchg(&kexec_lock, 0);
+> +	BUG_ON(!locked);
+
+Why do you want to do this at all? 
+
+And why do you implement your locks with xchg() in the first place? That's 
+total and utter crap.
+
+Hint: we have _real_ locking primitives in the kernel.
+
+			Linus
 
 _______________________________________________
 kexec mailing list
