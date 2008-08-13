@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTCdg-0007BH-0u
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 09:27:32 +0000
-Date: Wed, 13 Aug 2008 02:27:12 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
-	0) in kernel_kexec()
-Message-Id: <20080813022712.4bea5fea.akpm@linux-foundation.org>
-In-Reply-To: <1218618760.24951.137.camel@caritas-dev.intel.com>
-References: <1218618760.24951.137.camel@caritas-dev.intel.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KTGGe-0004YZ-HM
+	for kexec@lists.infradead.org; Wed, 13 Aug 2008 13:20:00 +0000
+Date: Wed, 13 Aug 2008 09:19:27 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] kexec jump: fix code size checking
+Message-ID: <20080813131927.GB3957@redhat.com>
+References: <1218589475.24951.59.camel@caritas-dev.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1218589475.24951.59.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,84 +24,37 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
-Cc: nigel@nigel.suspend2.net, Torvalds <torvalds@linux-foundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, mingo@elte.hu, Linus, Vivek Goyal <vgoyal@redhat.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, mingo@elte.hu
 
-On Wed, 13 Aug 2008 17:12:40 +0800 Huang Ying <ying.huang@intel.com> wrote:
-
-> Fix compiling warning on xchg(&kexec_lock, 0) in kernel_kexec().
->
-
-Would prefer that thi code not use such a peculair idiom.  I don't
-believe that it needs to.
-
-I guess that's a separate activity.
-
+On Wed, Aug 13, 2008 at 09:04:35AM +0800, Huang Ying wrote:
+> Fix building issue when CONFIG_KEXEC=n. Thanks to Vivek Goyal for his
+> reminding.
+> 
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
 > 
 > ---
->  kernel/kexec.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  include/asm-x86/kexec.h |    3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1433,6 +1433,7 @@ module_init(crash_save_vmcoreinfo_init)
->  int kernel_kexec(void)
->  {
->  	int error = 0;
-> +	int locked;
+> --- a/include/asm-x86/kexec.h
+> +++ b/include/asm-x86/kexec.h
+> @@ -43,6 +43,9 @@
 >  
->  	if (xchg(&kexec_lock, 1))
->  		return -EBUSY;
-> @@ -1498,7 +1499,8 @@ int kernel_kexec(void)
+>  #ifdef CONFIG_X86_32
+>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+> +# ifndef CONFIG_KEXEC
+> +#  define kexec_control_code_size	0
+> +# endif
 >  #endif
 >  
->   Unlock:
-> -	xchg(&kexec_lock, 0);
-> +	locked = xchg(&kexec_lock, 0);
-> +	BUG_ON(!locked);
->  
->  	return error;
->  }
-> 
+>  #ifndef __ASSEMBLY__
 
-Please always quote the compiler output in the changelog when fixing
-warnings and build errors.
+I think Andrew already fixed it. Right way is to put code in vmlinux.lds.S
+under #ifdef CONFIG_KEXEC, than defining the symbol kexec_control_code_size
+if CONFIG_KEXEC=n
 
-The patch is titled "kexec jump: ..." whereas this is just a plain old
-kexec fix, which is applicable to mainline.
-
-We don't need to create that local.  I queued this:
-
-
-
-Subject: kexec: fix compilation warning on xchg(&kexec_lock, 0) in kernel_kexec()
-From: Huang Ying <ying.huang@intel.com>
-
-kernel/kexec.c: In function 'kernel_kexec':
-kernel/kexec.c:1506: warning: value computed is not used
-
-Signed-off-by: Huang Ying <ying.huang@intel.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- kernel/kexec.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff -puN kernel/kexec.c~kexec-jump-fix-compiling-warning-on-xchgkexec_lock-0-in-kernel_kexec kernel/kexec.c
---- a/kernel/kexec.c~kexec-jump-fix-compiling-warning-on-xchgkexec_lock-0-in-kernel_kexec
-+++ a/kernel/kexec.c
-@@ -1503,7 +1503,8 @@ int kernel_kexec(void)
- 	}
- 
-  Unlock:
--	xchg(&kexec_lock, 0);
-+	if (!xchg(&kexec_lock, 0))
-+		BUG();
- 
- 	return error;
- }
-_
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
