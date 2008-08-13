@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
+Received: from mail-out2.uio.no ([129.240.10.58])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTMiq-0003E4-QK
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 20:13:33 +0000
-Date: Wed, 13 Aug 2008 13:13:13 -0700 (PDT)
-From: Linus Torvalds <torvalds@linux-foundation.org>
+	id 1KTMks-00083J-1j
+	for kexec@lists.infradead.org; Wed, 13 Aug 2008 20:15:38 +0000
 Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
 	0) in kernel_kexec()
-In-Reply-To: <20080813130749.c406ab6c.akpm@linux-foundation.org>
-Message-ID: <alpine.LFD.1.10.0808131310450.3462@nehalem.linux-foundation.org>
+From: Trond Myklebust <trond.myklebust@fys.uio.no>
+In-Reply-To: <20080813124406.21091eae.akpm@linux-foundation.org>
 References: <1218618760.24951.137.camel@caritas-dev.intel.com>
 	<alpine.LFD.1.10.0808130956360.3462@nehalem.linux-foundation.org>
 	<m1r68shjhb.fsf@frodo.ebiederm.org>
 	<20080813124406.21091eae.akpm@linux-foundation.org>
-	<alpine.LFD.1.10.0808131247320.3462@nehalem.linux-foundation.org>
-	<20080813130749.c406ab6c.akpm@linux-foundation.org>
-MIME-Version: 1.0
+Date: Wed, 13 Aug 2008 16:15:04 -0400
+Message-Id: <1218658504.9042.61.camel@localhost>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,36 +27,23 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
-Cc: nigel@nigel.suspend2.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, ebiederm@xmission.com, pavel@ucw.cz, ying.huang@intel.com, mingo@elte.hu, vgoyal@redhat.com
+Cc: nigel@nigel.suspend2.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, "Eric W. Biederman" <ebiederm@xmission.com>, pavel@ucw.cz, ying.huang@intel.com, mingo@elte.hu, torvalds@linux-foundation.org, vgoyal@redhat.com
 
+On Wed, 2008-08-13 at 12:44 -0700, Andrew Morton wrote:
 
+> - Is xchg() guaranteed to be atomic?  That's what atomic_xchg() is for.
 
-On Wed, 13 Aug 2008, Andrew Morton wrote:
-> > 
-> > Nope. That needs to be an "unsigned long".
-> 
-> It is.
+Yes, xchg() is guaranteed to be atomic. atomic_xchg() applies only to
+the atomic_t type, and is almost always #defined to xchg().
 
-Gaah. I just misread the patch, sorry.
+> - xchg() isn't guaranteed to exist on all architectures.  atomic_xchg() is.
 
-> Used a bitop to preserve the runtime checking in there.  spin_unlock()
-> doesn't return the previous lockedness.
+You appear to be confusing xchg() with cmpxchg(). AFAIK, xchg() exists
+on all architectures, and is used in several instances of generic code.
+It is particularly extensively used in the networking layer.
 
-Umm. spin_unlock does a lot more when you have lock debugging on, and 
-doesn't do useless crap when it isn't.
+Trond
 
-> A bitop seems a better fit to me.  We never spin on that lock (it
-> always uses test_and_set), so why use a "spin"lock?
-
-..because an atomic bitop is not the same as a lock.
-
-The memory ordering guarantees are different. Yes, they are sufficient, 
-but that's because we've had to make them so to account for CRAP CODE that 
-uses bit operations as if they were locks.
-
-Don't continue that. It's WRONG.
-
-		Linus
 
 _______________________________________________
 kexec mailing list
