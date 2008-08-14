@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from web1110.biz.mail.sk1.yahoo.com ([74.6.114.42])
-	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTXoE-00019K-Ju
-	for kexec@lists.infradead.org; Thu, 14 Aug 2008 08:03:51 +0000
-Date: Thu, 14 Aug 2008 01:03:48 -0700 (PDT)
-From: Cai Qian <caiqian@cclom.cn>
-Subject: Kdump Automation Mechanism
-MIME-Version: 1.0
-Message-ID: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
+Received: from mx2.suse.de ([195.135.220.15])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KTY0c-0004Eq-Lr
+	for kexec@lists.infradead.org; Thu, 14 Aug 2008 08:16:39 +0000
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 1004645A9B
+	for <kexec@lists.infradead.org>; Thu, 14 Aug 2008 10:16:36 +0200 (CEST)
+Date: Thu, 14 Aug 2008 10:17:20 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: Kdump Automation Mechanism
+Message-ID: <20080814101720.582d4a2d@halley.suse.de>
+In-Reply-To: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
+References: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,30 +23,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: caiqian@cclom.cn
 
-Hi,
-
-I am wondering if this is the right project to accept Kdump automation files. For example, Kdump
-daemon init script, mkdumprd (read from Kdump configuration file and generate Kdump initramfs for
-the system), default Kdump configuration file, tools to compress vmcore etc.
-
-The problem I am having right now is that, I am trying to write a Kdump test suite, but I could
-not 
-find a easy way to write a general enough suite for every distro to use. Red Hat and SUSE have
-slightly different setting up. Debian and Ubuntu don't have Kdump automation mechanism as the time
-I was checking. Also, It make things much easier for different distros and users to pick it up and
-contribute to those efforts.
-
-Thanks,
-CaiQian
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+KiBDYWkgUWlhbiBbMjAwOC0wOC0xNCAwMTowM106Cj4gCj4gSSBhbSB3b25kZXJpbmcgaWYgdGhp
+cyBpcyB0aGUgcmlnaHQgcHJvamVjdCB0byBhY2NlcHQgS2R1bXAgYXV0b21hdGlvbiBmaWxlcy4g
+Rm9yIGV4YW1wbGUsIEtkdW1wCj4gZGFlbW9uIGluaXQgc2NyaXB0LCBta2R1bXByZCAocmVhZCBm
+cm9tIEtkdW1wIGNvbmZpZ3VyYXRpb24gZmlsZSBhbmQgZ2VuZXJhdGUgS2R1bXAgaW5pdHJhbWZz
+IGZvcgo+IHRoZSBzeXN0ZW0pLCBkZWZhdWx0IEtkdW1wIGNvbmZpZ3VyYXRpb24gZmlsZSwgdG9v
+bHMgdG8gY29tcHJlc3Mgdm1jb3JlIGV0Yy4KPiAKPiBUaGUgcHJvYmxlbSBJIGFtIGhhdmluZyBy
+aWdodCBub3cgaXMgdGhhdCwgSSBhbSB0cnlpbmcgdG8gd3JpdGUgYSBLZHVtcCB0ZXN0IHN1aXRl
+LCBidXQgSSBjb3VsZAo+IG5vdCAKPiBmaW5kIGEgZWFzeSB3YXkgdG8gd3JpdGUgYSBnZW5lcmFs
+IGVub3VnaCBzdWl0ZSBmb3IgZXZlcnkgZGlzdHJvIHRvIHVzZS4gUmVkIEhhdCBhbmQgU1VTRSBo
+YXZlCj4gc2xpZ2h0bHkgZGlmZmVyZW50IHNldHRpbmcgdXAuIERlYmlhbiBhbmQgVWJ1bnR1IGRv
+bid0IGhhdmUgS2R1bXAgYXV0b21hdGlvbiBtZWNoYW5pc20gYXMgdGhlIHRpbWUKPiBJIHdhcyBj
+aGVja2luZy4gQWxzbywgSXQgbWFrZSB0aGluZ3MgbXVjaCBlYXNpZXIgZm9yIGRpZmZlcmVudCBk
+aXN0cm9zIGFuZCB1c2VycyB0byBwaWNrIGl0IHVwIGFuZAo+IGNvbnRyaWJ1dGUgdG8gdGhvc2Ug
+ZWZmb3J0cy4KClNMRVMgMTEgLyBvcGVuU1VTRSAxMS4xIChhbmQgbGF0ZXIpIHNjcmlwdHMgYW5k
+IHRvb2xzIGFyZSBhdApodHRwOi8vZnJlZWhnLm9yZy91L2J3YWxsZS9rZHVtcCBpZiB5b3Ugd2Fu
+dCB0byB0YWtlIGEgbG9vayBhdC4KClRoZSBwcm9ibGVtIGlzIHRoYXQga2R1bXAgbmVlZHMgdG8g
+YmUgaW50ZWdyYXRlZCBpbnRvIHRoZSBkaXN0cmlidXRpb24sCmkuZS4gWWFTVCBjb25maWd1cmF0
+aW9uICh2cy4gUmVkSGF0J3MgY29uZmlndXJhdGlvbiB1dGlsaXRpZXMpLApta2luaXRyZCBmcm9t
+IFNVU0UgKHZzLiBta2R1bXByZCBmcm9tIFJlZEhhdCBbMV0pLCBCdXN5Qm94IHZzLiBHTlUKdG9v
+bHMuCgpGb3IgZXhhbXBsZSwgdGhlIHJlYXNvbiB3aHkgU1VTRSBkb2VzIG5vdCB1c2UgQnVzeWJv
+eCBpbiBpbml0cmFtZnMgaXMKdGhhdCB3ZSBkaWRuJ3Qgd2FudCB0byBwcm92aWRlIGFkZGl0aW9u
+YWwgc3VwcG9ydCBmb3IgQnVzeWJveC4KVGhhdCB3YXMgYSBidXNpbmVzcyBkZWNpc2lvbiwgbm90
+IGJlY2F1c2UgQnVzeWJveCBpcyBub3Qgc3VpdGVkIG9yCmJ1Z2d5IChpLmUuIG5vdCBzdHJpY3Rs
+eSB0ZWNobmljYWwgZGVjaXNpb24pLgoKV2hhdCBJIHdhbnQgdG8gc2F5OiBJdCdzIG5vdCBhbHdh
+eXMgKnRoYXQqIGVhc3kgdG8gc2hhcmUgZXZlcnl0aGluZwphY3Jvc3MgZGlzdHJpYnV0aW9ucyBh
+bHRob3VnaCBJIGNvbnNpZGVyIHRoYXQgaW4gZ2VuZXJhbCBhcyBhIGdvb2QgaWRlYS4KCgpCZXJu
+aGFyZAoKWzFdIG1rZHVtcHJkIG9uIFNVU0UgaXMgb25seSBhIHNjcmlwdCB0aGF0IGNhbGxzIG1r
+aW5pdHJkIHdpdGggcmlnaHQKICAgIHBhcmFtZXRlcnMgd2hpbGUgdGhlIG1rZHVtcHJkIG9uIFJl
+ZEhhdCBidWlsZHMgYSBpbml0cmFtZnMgZm9yCiAgICBrZHVtcCBpdHNlbGYgd2l0aCBidXN5Ym94
+Ci0tIApCZXJuaGFyZCBXYWxsZSwgU1VTRSBMSU5VWCBQcm9kdWN0cyBHbWJILCBBcmNoaXRlY3R1
+cmUgRGV2ZWxvcG1lbnQKCuKAnE1ha2UgZXZlcnl0aGluZyBhcyBzaW1wbGUgYXMgcG9zc2libGUs
+IGJ1dCBub3Qgc2ltcGxlci7igJ0KICAgICAgIC0tIEFsYmVydCBFaW5zdGVpbgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
