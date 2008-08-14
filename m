@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([66.187.233.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTbmM-00071c-DE
-	for kexec@lists.infradead.org; Thu, 14 Aug 2008 12:18:11 +0000
-Date: Thu, 14 Aug 2008 08:18:08 -0400
-From: Neil Horman <nhorman@redhat.com>
+	id 1KTcxq-0006ii-NG
+	for kexec@lists.infradead.org; Thu, 14 Aug 2008 13:34:07 +0000
+Date: Thu, 14 Aug 2008 09:34:03 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: Kdump Automation Mechanism
-Message-ID: <20080814121808.GA10809@hmsendeavour.rdu.redhat.com>
+Message-ID: <20080814133403.GA4157@redhat.com>
 References: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
-	<20080814101720.582d4a2d@halley.suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080814101720.582d4a2d@halley.suse.de>
+In-Reply-To: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,69 +19,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
+To: Cai Qian <caiqian@cclom.cn>
 Cc: kexec@lists.infradead.org
 
-T24gVGh1LCBBdWcgMTQsIDIwMDggYXQgMTA6MTc6MjBBTSArMDIwMCwgQmVybmhhcmQgV2FsbGUg
-d3JvdGU6Cj4gKiBDYWkgUWlhbiBbMjAwOC0wOC0xNCAwMTowM106Cj4gPiAKPiA+IEkgYW0gd29u
-ZGVyaW5nIGlmIHRoaXMgaXMgdGhlIHJpZ2h0IHByb2plY3QgdG8gYWNjZXB0IEtkdW1wIGF1dG9t
-YXRpb24gZmlsZXMuIEZvciBleGFtcGxlLCBLZHVtcAo+ID4gZGFlbW9uIGluaXQgc2NyaXB0LCBt
-a2R1bXByZCAocmVhZCBmcm9tIEtkdW1wIGNvbmZpZ3VyYXRpb24gZmlsZSBhbmQgZ2VuZXJhdGUg
-S2R1bXAgaW5pdHJhbWZzIGZvcgo+ID4gdGhlIHN5c3RlbSksIGRlZmF1bHQgS2R1bXAgY29uZmln
-dXJhdGlvbiBmaWxlLCB0b29scyB0byBjb21wcmVzcyB2bWNvcmUgZXRjLgo+ID4gCj4gPiBUaGUg
-cHJvYmxlbSBJIGFtIGhhdmluZyByaWdodCBub3cgaXMgdGhhdCwgSSBhbSB0cnlpbmcgdG8gd3Jp
-dGUgYSBLZHVtcCB0ZXN0IHN1aXRlLCBidXQgSSBjb3VsZAo+ID4gbm90IAo+ID4gZmluZCBhIGVh
-c3kgd2F5IHRvIHdyaXRlIGEgZ2VuZXJhbCBlbm91Z2ggc3VpdGUgZm9yIGV2ZXJ5IGRpc3RybyB0
-byB1c2UuIFJlZCBIYXQgYW5kIFNVU0UgaGF2ZQo+ID4gc2xpZ2h0bHkgZGlmZmVyZW50IHNldHRp
-bmcgdXAuIERlYmlhbiBhbmQgVWJ1bnR1IGRvbid0IGhhdmUgS2R1bXAgYXV0b21hdGlvbiBtZWNo
-YW5pc20gYXMgdGhlIHRpbWUKPiA+IEkgd2FzIGNoZWNraW5nLiBBbHNvLCBJdCBtYWtlIHRoaW5n
-cyBtdWNoIGVhc2llciBmb3IgZGlmZmVyZW50IGRpc3Ryb3MgYW5kIHVzZXJzIHRvIHBpY2sgaXQg
-dXAgYW5kCj4gPiBjb250cmlidXRlIHRvIHRob3NlIGVmZm9ydHMuCj4gCj4gU0xFUyAxMSAvIG9w
-ZW5TVVNFIDExLjEgKGFuZCBsYXRlcikgc2NyaXB0cyBhbmQgdG9vbHMgYXJlIGF0Cj4gaHR0cDov
-L2ZyZWVoZy5vcmcvdS9id2FsbGUva2R1bXAgaWYgeW91IHdhbnQgdG8gdGFrZSBhIGxvb2sgYXQu
-Cj4gCj4gVGhlIHByb2JsZW0gaXMgdGhhdCBrZHVtcCBuZWVkcyB0byBiZSBpbnRlZ3JhdGVkIGlu
-dG8gdGhlIGRpc3RyaWJ1dGlvbiwKPiBpLmUuIFlhU1QgY29uZmlndXJhdGlvbiAodnMuIFJlZEhh
-dCdzIGNvbmZpZ3VyYXRpb24gdXRpbGl0aWVzKSwKPiBta2luaXRyZCBmcm9tIFNVU0UgKHZzLiBt
-a2R1bXByZCBmcm9tIFJlZEhhdCBbMV0pLCBCdXN5Qm94IHZzLiBHTlUKPiB0b29scy4KPiAKPiBG
-b3IgZXhhbXBsZSwgdGhlIHJlYXNvbiB3aHkgU1VTRSBkb2VzIG5vdCB1c2UgQnVzeWJveCBpbiBp
-bml0cmFtZnMgaXMKPiB0aGF0IHdlIGRpZG4ndCB3YW50IHRvIHByb3ZpZGUgYWRkaXRpb25hbCBz
-dXBwb3J0IGZvciBCdXN5Ym94Lgo+IFRoYXQgd2FzIGEgYnVzaW5lc3MgZGVjaXNpb24sIG5vdCBi
-ZWNhdXNlIEJ1c3lib3ggaXMgbm90IHN1aXRlZCBvcgo+IGJ1Z2d5IChpLmUuIG5vdCBzdHJpY3Rs
-eSB0ZWNobmljYWwgZGVjaXNpb24pLgo+IAo+IFdoYXQgSSB3YW50IHRvIHNheTogSXQncyBub3Qg
-YWx3YXlzICp0aGF0KiBlYXN5IHRvIHNoYXJlIGV2ZXJ5dGhpbmcKPiBhY3Jvc3MgZGlzdHJpYnV0
-aW9ucyBhbHRob3VnaCBJIGNvbnNpZGVyIHRoYXQgaW4gZ2VuZXJhbCBhcyBhIGdvb2QgaWRlYS4K
-PiAKCkFncmVlZC4gIEl0IHdvdWxkIGJlIGdyZWF0IGlmIHdlIGNvdWxkIGdldCBzb21lIGNvbW1v
-biB0ZXN0aW5nIGluZnJhc3RydWN0dXJlLApidXQgY3VycmVudGx5IHRoZSB0aGUgaW1wbGVtZW50
-YXRpb24gb2Yga2R1bXAgZnVuY3Rpb25hbGl0eSBpcyBjb21wbGV0ZWx5Cm5vbi1zdGFuZGFyZC4g
-IFRoZXJlcyBqdXN0IHRvbyBtYW55IHRoaW5ncyB0aGUgcGVvcGxlIHdhbnQga2R1bXAgdG8gYmUg
-YWJsZSB0bwpkbywgYW5kIHRvbyBtYW55IHdheXMgdG8gZ2V0IHRoZXJlLgoKVGhhdCBiZWluZyBz
-YWlkLCBCZXJuaGFyZCwgSSBzdXBwb3NlIGl0IHdvdWxkIGJlIHdvcnRod2hpbGUgc3RhbmRhcmRp
-emluZyBzb21lCmNvbmZpZ3VyYXRpb24gc2V0dGluZ3MsIHNlZWluZyBhcyBkZXNwaXRlIG91ciBp
-bXBsZW1lbnRhdGlvbiBkaWZmZXJlbmNlcywgd2UKc2VlbSB0byBsYXJnZWx5IHN1cHBvcnQgdGhl
-IHNhbWUgZmVhdHVyZSBzZXQuICBIYXZlIHlvdSBnaXZlbiBhbnkgY29uc2lkZXJhdGlvbgp0byBk
-ZWZpbmluZyBhIHN0YW5kYXJkIGtkdW1wIGZlYXR1cmUgc2V0IGFuZCBjb25maWd1cmF0aW9uIHN5
-bnRheD8KCj4gCj4gQmVybmhhcmQKPiAKPiBbMV0gbWtkdW1wcmQgb24gU1VTRSBpcyBvbmx5IGEg
-c2NyaXB0IHRoYXQgY2FsbHMgbWtpbml0cmQgd2l0aCByaWdodAo+ICAgICBwYXJhbWV0ZXJzIHdo
-aWxlIHRoZSBta2R1bXByZCBvbiBSZWRIYXQgYnVpbGRzIGEgaW5pdHJhbWZzIGZvcgo+ICAgICBr
-ZHVtcCBpdHNlbGYgd2l0aCBidXN5Ym94Ckkgd2FzIGxvb2tpbmcgYXQgdGhpcywgSSBhc3N1bWUg
-dGhhdCB5b3VyIGluaXRyYW1mcyB0aGVuIGFjdHMgdmVyeSBzaW1taWxhciB0bwp5b3VyIGRlZmF1
-bHQgaW5pdHJhbWZzLCB3aGljaCBtb3VudHMgdGhlIHJvb3RmcyBhbmQgcnVucyBpbml0LCBhbmQg
-eW91ciBrZHVtcApjYXB0dXJlIG9wZXJhdGlvbnMgYXJlIHRoZW4gaW1wbGVtZW50ZWQgaW4gdGhl
-IGtkdW1wIGluaXQgc2NyaXB0LiAgSXMgdGhhdApjb3JyZWN0PwoKTmVpbAoKPiAtLSAKPiBCZXJu
-aGFyZCBXYWxsZSwgU1VTRSBMSU5VWCBQcm9kdWN0cyBHbWJILCBBcmNoaXRlY3R1cmUgRGV2ZWxv
-cG1lbnQKPiAKPiDigJxNYWtlIGV2ZXJ5dGhpbmcgYXMgc2ltcGxlIGFzIHBvc3NpYmxlLCBidXQg
-bm90IHNpbXBsZXIu4oCdCj4gICAgICAgIC0tIEFsYmVydCBFaW5zdGVpbgo+IAo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4ga2V4ZWMgbWFpbGluZyBs
-aXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCi0tIAovKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqCiAqTmVpbCBIb3JtYW4KICpTZW5pb3IgU29mdHdh
-cmUgRW5naW5lZXIKICpSZWQgSGF0LCBJbmMuCiAqbmhvcm1hbkByZWRoYXQuY29tCiAqZ3BnIGtl
-eWlkOiAxMDI0RCAvIDB4OTJBNzRGQTEKICpodHRwOi8vcGdwLm1pdC5lZHUKICoqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKi8KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On Thu, Aug 14, 2008 at 01:03:48AM -0700, Cai Qian wrote:
+> Hi,
+> 
+> I am wondering if this is the right project to accept Kdump automation files. For example, Kdump
+> daemon init script, mkdumprd (read from Kdump configuration file and generate Kdump initramfs for
+> the system), default Kdump configuration file, tools to compress vmcore etc.
+> 
+> The problem I am having right now is that, I am trying to write a Kdump test suite, but I could
+> not 
+> find a easy way to write a general enough suite for every distro to use. Red Hat and SUSE have
+> slightly different setting up. Debian and Ubuntu don't have Kdump automation mechanism as the time
+> I was checking. Also, It make things much easier for different distros and users to pick it up and
+> contribute to those efforts.
+> 
+
+Couln't agree more. Distributions tend to diverge when it comes to user
+space implementation of things and that makes testing and community
+contribution very difficult (Apart from normal user being confused).
+
+We need to put some effort in making sure we diverge as less as possible.
+How to do that? I can think of two things.
+
+- Development of user space utilities/applications takes place while
+  interacting with community. For example, filtering utility, makedumpfile
+  development took place while taking feedback from community on kexec
+  mailing list.
+
+- Willingness on the user space developers to come to a common platform
+  and put a concious effort to keep things similar.  (Of course good
+  things similar).
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
