@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KTOfW-0004dh-3J
-	for kexec@lists.infradead.org; Wed, 13 Aug 2008 22:18:14 +0000
-Date: Wed, 13 Aug 2008 15:17:25 -0700 (PDT)
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] kexec jump: fix compiling warning on xchg(&kexec_lock,
-	0) in kernel_kexec()
-In-Reply-To: <20080813134118.e1ab1292.akpm@linux-foundation.org>
-Message-ID: <alpine.LFD.1.10.0808131516250.3462@nehalem.linux-foundation.org>
-References: <1218618760.24951.137.camel@caritas-dev.intel.com>
-	<alpine.LFD.1.10.0808130956360.3462@nehalem.linux-foundation.org>
-	<m1r68shjhb.fsf@frodo.ebiederm.org>
-	<20080813124406.21091eae.akpm@linux-foundation.org>
-	<alpine.LFD.1.10.0808131247320.3462@nehalem.linux-foundation.org>
-	<20080813130749.c406ab6c.akpm@linux-foundation.org>
-	<alpine.LFD.1.10.0808131310450.3462@nehalem.linux-foundation.org>
-	<20080813132535.6cd4bab6.akpm@linux-foundation.org>
-	<alpine.LFD.1.10.0808131328380.3462@nehalem.linux-foundation.org>
-	<20080813134118.e1ab1292.akpm@linux-foundation.org>
+Received: from web1110.biz.mail.sk1.yahoo.com ([74.6.114.42])
+	by bombadil.infradead.org with smtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KTXoE-00019K-Ju
+	for kexec@lists.infradead.org; Thu, 14 Aug 2008 08:03:51 +0000
+Date: Thu, 14 Aug 2008 01:03:48 -0700 (PDT)
+From: Cai Qian <caiqian@cclom.cn>
+Subject: Kdump Automation Mechanism
 MIME-Version: 1.0
+Message-ID: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,24 +20,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: nigel@nigel.suspend2.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, ebiederm@xmission.com, pavel@ucw.cz, ying.huang@intel.com, mingo@elte.hu, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: caiqian@cclom.cn
 
+Hi,
 
+I am wondering if this is the right project to accept Kdump automation files. For example, Kdump
+daemon init script, mkdumprd (read from Kdump configuration file and generate Kdump initramfs for
+the system), default Kdump configuration file, tools to compress vmcore etc.
 
-On Wed, 13 Aug 2008, Andrew Morton wrote:
+The problem I am having right now is that, I am trying to write a Kdump test suite, but I could
+not 
+find a easy way to write a general enough suite for every distro to use. Red Hat and SUSE have
+slightly different setting up. Debian and Ubuntu don't have Kdump automation mechanism as the time
+I was checking. Also, It make things much easier for different distros and users to pick it up and
+contribute to those efforts.
 
-> On Wed, 13 Aug 2008 13:31:24 -0700 (PDT)
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > 
-> > I thought you said there were things that want to sleep in the region?
-> 
-> be reasonable - that was over five minutes ago.
-
-LOL. Anyway, I can't find anything wrong with this last one, however 
-difficult I try to be.
-
-			Linus
+Thanks,
+CaiQian
 
 _______________________________________________
 kexec mailing list
