@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KThvs-0007wq-NH
-	for kexec@lists.infradead.org; Thu, 14 Aug 2008 18:52:25 +0000
-Date: Thu, 14 Aug 2008 14:52:04 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: Kdump Automation Mechanism
-Message-ID: <20080814185204.GI14625@hmsendeavour.rdu.redhat.com>
-References: <249026.52731.qm@web1110.biz.mail.sk1.yahoo.com>
-	<20080814101720.582d4a2d@halley.suse.de>
-	<20080814121808.GA10809@hmsendeavour.rdu.redhat.com>
-	<20080718024311.7957954b@e153.suse.de>
-	<20080814151150.GC14625@hmsendeavour.rdu.redhat.com>
-	<48A469F5.3010608@sgi.com>
+Received: from mx2.mail.elte.hu ([157.181.151.9])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KTykd-00041z-6F
+	for kexec@lists.infradead.org; Fri, 15 Aug 2008 12:49:55 +0000
+Date: Fri, 15 Aug 2008 14:49:38 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH -v3 6/7] kexec jump: __ftrace_enabled_save/restore
+Message-ID: <20080815124938.GB24663@elte.hu>
+References: <1218510876.24951.45.camel@caritas-dev.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <48A469F5.3010608@sgi.com>
+In-Reply-To: <1218510876.24951.45.camel@caritas-dev.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,101 +19,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>
+To: Huang Ying <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gVGh1LCBBdWcgMTQsIDIwMDggYXQgMTA6MjM6MDFBTSAtMDcwMCwgSmF5IExhbiB3cm90ZToK
-PiBOZWlsIEhvcm1hbiB3cm90ZToKPiA+IE9uIEZyaSwgSnVsIDE4LCAyMDA4IGF0IDAyOjQzOjEx
-QU0gKzAyMDAsIEJlcm5oYXJkIFdhbGxlIHdyb3RlOj4gKiBOZWlsIEhvcm1hbiBbMjAwOC0wOC0x
-NCAwODoxOF06PiA+ID4gPiBUaGF0IGJlaW5nIHNhaWQsIEJlcm5oYXJkLCBJIHN1cHBvc2UgaXQg
-d291bGQgYmUgd29ydGh3aGlsZSBzdGFuZGFyZGl6aW5nIHNvbWU+ID4gY29uZmlndXJhdGlvbiBz
-ZXR0aW5ncywgc2VlaW5nIGFzIGRlc3BpdGUgb3VyIGltcGxlbWVudGF0aW9uIGRpZmZlcmVuY2Vz
-LCB3ZT4gPiBzZWVtIHRvIGxhcmdlbHkgc3VwcG9ydCB0aGUgc2FtZSBmZWF0dXJlIHNldC4gIEhh
-dmUgeW91IGdpdmVuIGFueSBjb25zaWRlcmF0aW9uPiA+IHRvIGRlZmluaW5nIGEgc3RhbmRhcmQg
-a2R1bXAgZmVhdHVyZSBzZXQgYW5kIGNvbmZpZ3VyYXRpb24gc3ludGF4Pz4gPiBJIGhhdmUgbm90
-aGluZyBhZ2FpbnN0IGNvbnNpZGVyYXRpb24gaW4gdGhhdCBhcmVhLj4gPiBTVVNFIGRvZXMgY29u
-ZmlndXJhdGlvbiBpbiAvZXRjL3N5c2NvbmZpZy9rZHVtcC4gSSB0aGluayBzeXNjb25maWcgaXM+
-IGFsc28gb24gUmVkSGF0LCBzbyB0aGF0IGlzIHRoZSBzYW1lPz4gSXRzIGNsb3NlLCAvZXRjL3N5
-c2NvbmZpZy9rZHVtcCBpcyB1c2VkIHRvIGFwcGx5IG9wdGlvbnMgdG8gdGhlIGtleGVjIHV0aWxp
-dHksd2hpbGUgL2V0Yy9rZHVtcC5jb25mIGRpcmVjdHMgaG93IHRoZSBpbml0cmQgc2hvdWxkIGJl
-IGNvbnN0cnVjdGVkLiAgSSB3b3VsZGxpa2UgdG8gbW92ZSB0byB1c2luZyBhIHVybCBzdHlsZSBz
-eW50YXggZm9yIHNwZWNpZnlpbmcgZHVtcCB0YXJnZXRzIGxpa2UgeW91aGF2ZSwgYnV0IHRoZXJl
-IGFyZSBzZXJpZXMgb2Ygb3RoZXIgb3B0aW9ucyB0aGF0IEkgbmVlZCB0byB0YWtlIGludG9jb25z
-aWRlcmF0aW9uIChzZWVodHRwOi8vZG93bmxvYWQuZmVkb3JhLnJlZGhhdC5jb20vcHViL2ZlZG9y
-YS9saW51eC9kZXZlbG9wbWVudC9zb3VyY2UvU1JQTVMva2V4ZWMtdG9vbHMKPiAtMS4xMDJwcmUt
-MTUuZmMxMC5zcmMucnBtCj4gCj4gSGkgTmVpbCBhbmQgQmVybmhhcmQsCj4gCj4gWWVzLCBwbGVh
-c2UhIFBsZWFzZSBhdCBsZWFzdCBhZ3JlZSBiZXR3ZWVuIFJlZEhhdCBhbmQgU3VTRSBob3cgdXNl
-cnMKPiBjYW4gaW5zdGFsbCAocnBtcyB0aGF0IGNvbnRhaW5zIG5lY2Vzc2FyeSBiaXRzLCBzdWNo
-IGFzIGRlYnVnaW5mbyBkYXRhKSwKPiBjcmVhdGUgaW5pdHJkLCBjb25maWd1cmUgKGtkdW1wIGNv
-bmZpZyBmaWxlcyksIGFuZCBhbmFseXplICh3aGF0IHRvCj4gdGFrZSB0byBydW4gY3Jhc2gpIGNv
-cmUgZmlsZXMhIFRoYXQgd291bGQgYmUgZ3JlYXQhISEKPiAKVGhpcyBpcyA5MCUgdGhlcmUuICBp
-bnN0YWxsYXRpb24gaXMgdGhlIHNhbWUsIGJvdGggZm9yIGtleGVjIGFuZCBkZWJ1Z2luZm8gcnBt
-cywKaW5pdHJkIGNyZWF0aW9uIGlzIGF1dG9tYXRlZCBiYXNlZCBvbiBjb25maWdzICh3aGljaCBk
-byBuZWVkIHRvIGZpbmQgYSB3YXkgdG8KbWVyZ2UpLiAgTGlrZXdpc2UgY29yZSBjYXB0dXJlIGZv
-cm1hdCBpcyB0aGUgc2FtZSAoc3ViamVjdCB0byBjb25maWcgb3B0aW9ucyBvZgpjb3Vyc2UpCgo+
-IElmIHlvdSBjYW4gcHV0IHZtY29yZSBhdCB0aGUgc2FtZSBsb2NhdGlvbi4uLiBBaGgsIGFza2lu
-ZyB0b28gbXVjaD8gOykKPiAKVGhpcyBpcyByZWFsbHkgb24geW91LiAgYm90aCBzeXN0ZW1zIGxl
-dCB5b3UgY29uZmlndXJlIHdoZXJlIHRvIHN0b3JlIGNvcmVzCgo+IENoZWVycywKPiAgLSBqYXkK
-PiAKPiA+IAo+ID4+Pj4gWzFdIG1rZHVtcHJkIG9uIFNVU0UgaXMgb25seSBhIHNjcmlwdCB0aGF0
-IGNhbGxzIG1raW5pdHJkIHdpdGggcmlnaHQ+ID4gPiAgICAgcGFyYW1ldGVycyB3aGlsZSB0aGUg
-bWtkdW1wcmQgb24gUmVkSGF0IGJ1aWxkcyBhIGluaXRyYW1mcyBmb3I+ID4gPiAgICAga2R1bXAg
-aXRzZWxmIHdpdGggYnVzeWJveD4gPiBJIHdhcyBsb29raW5nIGF0IHRoaXMsIEkgYXNzdW1lIHRo
-YXQgeW91ciBpbml0cmFtZnMgdGhlbiBhY3RzIHZlcnkgc2ltbWlsYXIgdG8+ID4geW91ciBkZWZh
-dWx0IGluaXRyYW1mcywgd2hpY2ggbW91bnRzIHRoZSByb290ZnMgYW5kIHJ1bnMgaW5pdCwgYW5k
-IHlvdXIga2R1bXA+ID4gY2FwdHVyZSBvcGVyYXRpb25zIGFyZSB0aGVuIGltcGxlbWVudGVkIGlu
-IHRoZSBrZHVtcCBpbml0IHNjcmlwdC4gIElzIHRoYXQ+ID4gY29ycmVjdD8+ID4gRm9yIGtkdW1w
-LCBhbiBvd24gaW5pdHJhbWZzIGlzIGJ1aWx0LiBUaGF0IGRvZXMgdGhlIGNvcHkgc3R1ZmYgaW4+
-IGluaXRyYW1mcywgc28gdGhhdCB3b3JrcyB3aXRob3V0IHJvb3RmcyBhbmQgcmVib290cyBiZWZv
-cmUgaW5pdCBpcz4gZXhlY3V0ZWQuPiA+IFNvIHRoZSAnY29weScgc2NyaXB0IGlzIG5vdCB0aGUg
-aW5pdCBzY3JpcHQgYnV0IOKAnGluaXQvYm9vdC1rZHVtcC5zaOKAnT4gc2NyaXB0IGlmIHlvdSDi
-gJxoZyBjbG9uZSBodHRwOi8vZnJlZWhnLm9yZy91L2J3YWxsZS9rZHVtcC/igJ0uPiBVbmZvcnR1
-bmF0ZWx5LCBmcmVlaGcgaGFzIG5vIHRyZWUgdmlldyBpbiBpdHMgd2ViIGludGVyZmFjZS4+IEFo
-aCwgc28geW91IGRvIGFsbCB5b3VyIGR1bXAgbWFuaXB1bGF0aW9uIHdpdGggeW91ciBrZHVtcHRv
-b2wgYmluYXJ5LCBJIHNlZSBub3cuSSBoYW5kbGUgYWxsIG9mIHRoYXQgd2l0aCB2YXJpb3VzIHNo
-ZWxsIHNjcmlwdHMgaW4gdGhlIGluaXRyYW1mcy4KPiA+PiBIYXZpbmcgdGhhdCBzYWlkLCBmb3Ig
-dGVzdGluZyBvbmUgbXVzdCBkbzo+ID4gIC0gaW5zdGFsbCBwYWNrYWdlcz4gICAgU1VTRTo+ICAg
-IG8ga2V4ZWMtdG9vbHM+ICAgIG8ga2R1bXA+ICAgIG8gbWFrZWR1bXBmaWxlPiAgICBSSDogPz4g
-U2FtZSBoZXJlLgo+ID4+ICAtIHNldCBjcmFzaGtlcm5lbCBwYXJhbWV0ZXI+ICAgID0+IGNhbiBi
-ZSBkb25lIHdpdGggR1JVQiBjb25maWd1cmF0aW9uIG1hbnVhbGx5IHdpdGggZWRpdGluZz4gICAg
-ICAgL2Jvb3QvZ3J1Yi9tZW51LmxzdCwgc2hvdWxkIGJlIHRoZSBzYW1lIG9uIFJIIGFuZCBTVVNF
-PiBBZ3JlZWQuCj4gPj4gIC0gZW5hYmxlIGtkdW1wICh0aGF0IHdvdWxkIGJlIOKAnGNoa2NvbmZp
-ZyBrZHVtcCBvbuKAnSk+ICAgID0+IHNob3VsZCBiZSB0aGUgc2FtZSBvbiBSSCBhbmQgU1VTRT4g
-QWdyZWVkLgo+ID4+ICAtIHR3ZWFrIHNvbWUgY29uZmlndXJhdGlvbiBzZXR0aW5ncyBsaWtlIHRo
-ZSBwbGFjZSB3aGVyZSBpdCBzaG91bGQgYmU+ICAgIHNhdmVkPiAgICA9PiBLRFVNUF9TQVZFRElS
-IGluIC9ldGMvc3lzY29uZmlnL2tkdW1wPiAgICA9PiBLRFVNUF9EVU1QTEVWRUwgZm9yIG1ha2Vk
-dW1wZmlsZSBpbiAvZXRjL3N5c2NvbmZpZy9rZHVtcD4gICAgPT4gS0RVTVBfRFVNUEZPUk1BVCAo
-4oCcY29tcHJlc3NlZOKAnSAvIOKAnEVMRuKAnSAvIOKAnOKAnSk+ICAgICAgIGluIC9ldGMvc3lz
-Y29uZmlnL2tkdW1wPiBBZ3JlZWQuICBJIHRoaW5rIHRoaXMgaXMgd2hlcmUgd2UgZGl2ZXJnZSB0
-aG91Z2guICBXZSBzZWVtIHRvIHN1cHBvcnQgbXVjaCBvZnRoZSBzYW1lIGR1bXAgdGFyZ2V0cyBi
-dXQgb3VyIGNvbmZpZ3VhcmF0aW9uIGRpcmVjdGl2ZXMgYXJlIGRpZmZlcmVudC4gIEZvciBtZSxJ
-IHdvdWxkIG5lZWQgdG8gY29uZmlndXJlOjxkdW1wIHR5cGU+IDx0eXBlIGRhdGE+PGNvcmVfY29s
-bGVjdG9yPiA8Y3B8bWFrZWR1bXBmaWxlPiBbb3B0aW9uc10KPiA+PiAgLSB0cmlnZ2VyIGtkdW1w
-PiAgICA9PiBlY2hvIGMgPiAvcHJvYy9zeXNycS10cmlnZ2VyPiA+IE1vc3Qgb3RoZXIgc3R1ZmYg
-aXMg4oCcbmljZSB0byBoYXZl4oCdIGJ1dCBub3Qg4oCcbWFuZGF0b3J54oCdIEkgdGhpbms/PiBB
-Y3R1YWxseSwgeW91J3JlIHJpZ2h0LiAgTG9va2luZyBvdmVyIGl0LCBJIGRvIGhhdmUgYSBzZXQg
-b2YgYWRkaXRpb25hbCBvcHRpb25zLGJ1dCBub25lIGFyZSBjZW50cmFsIHRvIGR1bXAgY29sbGVj
-dGlvbiAobGluayBkZWxheSBzcGVjaWZpY2F0aW9uIGZvciBzcGFubmluZ3RyZWUsIGtkdW1wIHBy
-ZS9wb3N0IHNjcmlwdHMsIGV0YykuCj4gPj4+PiBCZXJuaGFyZD4gLS0gPiBCZXJuaGFyZCBXYWxs
-ZSwgU1VTRSBMSU5VWCBQcm9kdWN0cyBHbWJILCBBcmNoaXRlY3R1cmUgRGV2ZWxvcG1lbnQ+ID4g
-4oCcTWFrZSBldmVyeXRoaW5nIGFzIHNpbXBsZSBhcyBwb3NzaWJsZSwgYnV0IG5vdCBzaW1wbGVy
-LuKAnT4gICAgICAgIC0tIEFsYmVydCBFaW5zdGVpbj4gPiBfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXz4ga2V4ZWMgbWFpbGluZyBsaXN0PiBrZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCj4gPiAtLSAvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqICpOZWlsIEhvcm1hbiAqU2VuaW9yIFNvZnR3YXJlIEVuZ2luZWVyICpSZWQg
-SGF0LCBJbmMuICpuaG9ybWFuQHJlZGhhdC5jb20gKmdwZyBrZXlpZDogMTAyNEQgLyAweDkyQTc0
-RkExICpodHRwOi8vcGdwLm1pdC5lZHUgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqKioqKioqKioqLwo+ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19rZXhlYyBtYWlsaW5nIGxpc3RrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAoKLS0g
-Ci8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioKICpO
-ZWlsIEhvcm1hbgogKlNlbmlvciBTb2Z0d2FyZSBFbmdpbmVlcgogKlJlZCBIYXQsIEluYy4KICpu
-aG9ybWFuQHJlZGhhdC5jb20KICpncGcga2V5aWQ6IDEwMjREIC8gMHg5MkE3NEZBMQogKmh0dHA6
-Ly9wZ3AubWl0LmVkdQogKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
-KioqKioqKioqLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+* Huang Ying <ying.huang@intel.com> wrote:
+
+> +/* Ftrace disable/restore without lock. Some synchronization mechanism
+> + * must be used to prevent ftrace_enabled to be changed between
+> + * disable/restore. */
+
+use the proper comment style please:
+
+/*
+ *
+ */
+
+> +static inline int __ftrace_enabled_save(void)
+> +{
+> +#ifdef CONFIG_FTRACE
+> +	int saved_ftrace_enabled = ftrace_enabled;
+> +	ftrace_enabled = 0;
+> +	return saved_ftrace_enabled;
+> +#else
+> +	return 0;
+> +#endif
+> +}
+> +
+> +static inline void __ftrace_enabled_restore(int enabled)
+> +{
+> +#ifdef CONFIG_FTRACE
+> +	ftrace_enabled = enabled;
+> +#endif
+> +}
+
+hm, what is this used for?
+
+also, instead of such an ugly inline, why not create a proper 
+kernel/trace/* function for this. That would also give it access to all 
+the proper locking mechanisms - instead of relying on some extral 
+mechanism.
+
+	Ingo
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
