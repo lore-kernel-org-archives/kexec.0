@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KUtOD-0007j4-ON
-	for kexec@lists.infradead.org; Mon, 18 Aug 2008 01:18:33 +0000
-Subject: Re: [PATCH -v3 6/7] kexec jump: __ftrace_enabled_save/restore
-From: Huang Ying <ying.huang@intel.com>
-In-Reply-To: <20080815124938.GB24663@elte.hu>
-References: <1218510876.24951.45.camel@caritas-dev.intel.com>
-	<20080815124938.GB24663@elte.hu>
-Date: Mon, 18 Aug 2008 09:18:13 +0800
-Message-Id: <1219022293.5663.14.camel@yhuang-dev.sh.intel.com>
-Mime-Version: 1.0
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KUvVl-0002Fp-Ts
+	for kexec@lists.infradead.org; Mon, 18 Aug 2008 03:34:30 +0000
+MIME-Version: 1.0
+Subject: [PATCH] Explicitly use BUILD_CC and TARGET_CC
+Message-Id: <1219030410.884068.167991623519.1.gpush@pingu>
+From: Jeremy Kerr <jk@ozlabs.org>
+Date: Mon, 18 Aug 2008 11:33:30 +0800
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +20,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On Fri, 2008-08-15 at 14:49 +0200, Ingo Molnar wrote:
-> * Huang Ying <ying.huang@intel.com> wrote:
-> 
-> > +/* Ftrace disable/restore without lock. Some synchronization mechanism
-> > + * must be used to prevent ftrace_enabled to be changed between
-> > + * disable/restore. */
-> 
-> use the proper comment style please:
-> 
-> /*
->  *
->  */
+Currently, we override CC for build and target compiles:
 
-OK. I will change it.
+$(BIN_TO_HEX): CC=$(BUILD_CC)
 
-> > +static inline int __ftrace_enabled_save(void)
-> > +{
-> > +#ifdef CONFIG_FTRACE
-> > +	int saved_ftrace_enabled = ftrace_enabled;
-> > +	ftrace_enabled = 0;
-> > +	return saved_ftrace_enabled;
-> > +#else
-> > +	return 0;
-> > +#endif
-> > +}
-> > +
-> > +static inline void __ftrace_enabled_restore(int enabled)
-> > +{
-> > +#ifdef CONFIG_FTRACE
-> > +	ftrace_enabled = enabled;
-> > +#endif
-> > +}
-> 
-> hm, what is this used for?
-> 
-> also, instead of such an ugly inline, why not create a proper 
-> kernel/trace/* function for this. That would also give it access to all 
-> the proper locking mechanisms - instead of relying on some extral 
-> mechanism.
+However, this breaks when a user does something like:
 
-This function is used for kexec jump in machine_kexec(). Where all
-non-boot CPUs and IRQ are disabled, system is going to kexec, and it is
-not allowed to schedule to other process in this circumstance, so a
-non-lock version is needed. A locked version has been implemented by
-Steven Rostedt, I think it can be used for other circumstance.
+ make CC=host-arch-gcc
 
-Best Regards,
-Huang Ying
+- since command-line parameter overrides all makefile variables, so
+we end up using host-arch-gcc for *all* compiles, including those for
+target and build.
 
+This change explicitly uses BUILD_CC and TARGET_CC where necessary,
+so that the CC variable isn't used for build and target compiles.
 
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+
+---
+ purgatory/Makefile |   16 +++++++++-------
+ util/Makefile      |    6 +-----
+ 2 files changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index ac58719..d7aec3a 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -42,27 +42,29 @@ purgatory/sha256.o: CFLAGS += -O0
+ 
+ purgatory/sha256.o: $(srcdir)/util_lib/sha256.c
+ 	mkdir -p $(@D)
+-	$(COMPILE.c) -o $@ $^
++	$(TARGET_CC) $(TARGET_CFLAGS) $(TARGET_CPPFLAGS) -o $@ $^
+ 
+-$(PURGATORY): CC=$(TARGET_CC)
+-$(PURGATORY): CFLAGS+=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
++$(PURGATORY): TARGET_CFLAGS += $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 		      -Os -fno-builtin -ffreestanding \
+ 		      -fno-zero-initialized-in-bss
+ 
+-$(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
++$(PURGATORY): TARGET_CPPFLAGS += $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 			-I$(srcdir)/purgatory/include \
+ 			-I$(srcdir)/purgatory/arch/$(ARCH)/include \
+ 			-I$(srcdir)/util_lib/include \
+ 			-I$(shell $(CC) -print-file-name=include)
+-$(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
++
++$(PURGATORY): TARGET_LDFLAGS += $($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
+ 			--no-undefined -nostartfiles -nostdlib -nodefaultlibs \
+ 			-e purgatory_start -r
+ 
+ $(PURGATORY): $(PURGATORY_OBJS)
+ 	$(MKDIR) -p $(@D)
+-	$(CC) $(LDFLAGS) -o $@ $^
++	$(TARGET_CC) $(TARGET_LDFLAGS) -o $@ $^
+ 
+-#	$(LD) $(LDFLAGS) $(EXTRA_LDFLAGS) --no-undefined -e purgatory_start -r -o $@ $(PURGATORY_OBJS) $(UTIL_LIB)
++$(PURGATORY_OBJS): %.o: %.c
++	$(MKDIR) -p $(@D)
++	$(TARGET_CC) $(TARGET_CPPFLAGS) $(TARGET_CFLAGS) -o $@ $^
+ 
+ echo::
+ 	@echo "PURGATORY_SRCS $(PURGATORY_SRCS)"
+diff --git a/util/Makefile b/util/Makefile
+index 948ee63..9c005d5 100644
+--- a/util/Makefile
++++ b/util/Makefile
+@@ -2,11 +2,7 @@ BIN_TO_HEX:= bin/bin-to-hex
+ 
+ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 	@$(MKDIR) -p $(@D)
+-	$(LINK.o) $(CFLAGS) -o $@ $^
+-
+-$(BIN_TO_HEX): CC=$(BUILD_CC)
+-$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
+-$(BIN_TO_HEX): LDFLAGS=
++	$(BUILD_CC) $(BUILD_CPPFLAGS) $(BUILD_CFLAGS) -o $@ $^
+ 
+ dist += util/Makefile util/bin-to-hex.c
+ clean += util/bin-to-hex.o $(BIN_TO_HEX)
 
 _______________________________________________
 kexec mailing list
