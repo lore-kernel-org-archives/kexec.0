@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
+Received: from mx2.mail.elte.hu ([157.181.151.9])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KUz5S-0002IY-GL
-	for kexec@lists.infradead.org; Mon, 18 Aug 2008 07:23:35 +0000
-From: Jeremy Kerr <jk@ozlabs.org>
-Subject: Re: [PATCH] Explicitly use BUILD_CC and TARGET_CC
-Date: Mon, 18 Aug 2008 17:19:48 +1000
-References: <1219030410.884068.167991623519.1.gpush@pingu>
-	<20080818071037.GA5029@verge.net.au>
-In-Reply-To: <20080818071037.GA5029@verge.net.au>
+	id 1KUzeb-0005hl-Gz
+	for kexec@lists.infradead.org; Mon, 18 Aug 2008 07:59:59 +0000
+Date: Mon, 18 Aug 2008 09:59:37 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH -v3 6/7] kexec jump: __ftrace_enabled_save/restore
+Message-ID: <20080818075937.GI30694@elte.hu>
+References: <1218510876.24951.45.camel@caritas-dev.intel.com>
+	<20080815124938.GB24663@elte.hu>
+	<1219022293.5663.14.camel@yhuang-dev.sh.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200808181519.48759.jk@ozlabs.org>
+In-Reply-To: <1219022293.5663.14.camel@yhuang-dev.sh.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,24 +25,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>
-
-Hi Horms,
-
-> On some architectures, such as ia64, PURGATORY_SRCS can include .S
-> files. Prehaps we need PURGATORY_C_SRCS and PURGATORY_ASM_SRCS ?
-
-That should be fine: we just add a rule for %.o: %.S
-
-> I think that you need $(TARGET_CC) -c here.
-> Also above for purgatory/sha256.o if that target is to remain
-> separate.
-
-Good point. New patch coming.
+To: Huang Ying <ying.huang@intel.com>
+Cc: nigel@nigel.suspend2.net, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, "Eric W. Biederman" <ebiederm@xmission.com>, Pavel Machek <pavel@ucw.cz>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
 
-Jeremy
+* Huang Ying <ying.huang@intel.com> wrote:
+
+> On Fri, 2008-08-15 at 14:49 +0200, Ingo Molnar wrote:
+> > * Huang Ying <ying.huang@intel.com> wrote:
+> > 
+> > > +/* Ftrace disable/restore without lock. Some synchronization mechanism
+> > > + * must be used to prevent ftrace_enabled to be changed between
+> > > + * disable/restore. */
+> > 
+> > use the proper comment style please:
+> > 
+> > /*
+> >  *
+> >  */
+> 
+> OK. I will change it.
+
+it's upstream already, please send a followup clean up patch.
+
+> > > +static inline int __ftrace_enabled_save(void)
+> > > +{
+> > > +#ifdef CONFIG_FTRACE
+> > > +	int saved_ftrace_enabled = ftrace_enabled;
+> > > +	ftrace_enabled = 0;
+> > > +	return saved_ftrace_enabled;
+> > > +#else
+> > > +	return 0;
+> > > +#endif
+> > > +}
+> > > +
+> > > +static inline void __ftrace_enabled_restore(int enabled)
+> > > +{
+> > > +#ifdef CONFIG_FTRACE
+> > > +	ftrace_enabled = enabled;
+> > > +#endif
+> > > +}
+> > 
+> > hm, what is this used for?
+> > 
+> > also, instead of such an ugly inline, why not create a proper 
+> > kernel/trace/* function for this. That would also give it access to all 
+> > the proper locking mechanisms - instead of relying on some extral 
+> > mechanism.
+> 
+> This function is used for kexec jump in machine_kexec(). Where all 
+> non-boot CPUs and IRQ are disabled, system is going to kexec, and it 
+> is not allowed to schedule to other process in this circumstance, so a 
+> non-lock version is needed. A locked version has been implemented by 
+> Steven Rostedt, I think it can be used for other circumstance.
+
+ok, fair enough.
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
