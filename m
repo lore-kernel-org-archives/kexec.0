@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KW0SN-0006Tf-P2
-	for kexec@lists.infradead.org; Thu, 21 Aug 2008 03:03:28 +0000
-Date: Thu, 21 Aug 2008 11:03:11 +0800 (CST)
-Message-Id: <20080821.110311.104200204069595398.qcai@redhat.com>
-Subject: Re: Kdump Automation Mechanism
-From: Cai Qian <qcai@redhat.com>
-In-Reply-To: <48AC7999.2020104@sgi.com>
-References: <536253.14632.qm@web1114.biz.mail.sk1.yahoo.com>
-	<48AC7999.2020104@sgi.com>
-Mime-Version: 1.0
+	id 1KW2BM-0006Uo-9j
+	for kexec@lists.infradead.org; Thu, 21 Aug 2008 04:54:01 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1218138156.3361.386.camel@amd.troyhebe>
+	<20080808014024.GB3911@redhat.com>
+	<1218750773.3361.425.camel@amd.troyhebe>
+	<20080815131359.GA10208@redhat.com>
+	<1219081942.3361.436.camel@amd.troyhebe>
+	<20080819134748.GC18972@redhat.com>
+Date: Wed, 20 Aug 2008 21:50:21 -0700
+In-Reply-To: <20080819134748.GC18972@redhat.com> (Vivek Goyal's message of
+	"Tue, 19 Aug 2008 09:47:48 -0400")
+Message-ID: <m1wsib3raq.fsf@frodo.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: Trying to test my gart/iommu vmcore problem on RH
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,49 +24,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: jlan@sgi.com
-Cc: qcai@redhat.com, bwalle@suse.de, kexec@lists.infradead.org, nhorman@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Heber, Troy" <troy.heber@hp.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Loftin,
+	Terry" <terry.loftin@hp.com>, Bob Montgomery <bob.montgomery@hp.com>
 
-SGkgSmF5LA0KDQpGcm9tOiBKYXkgTGFuIDxqbGFuQHNnaS5jb20+DQpTdWJqZWN0OiBSZTogS2R1
-bXAgQXV0b21hdGlvbiBNZWNoYW5pc20NCkRhdGU6IFdlZCwgMjAgQXVnIDIwMDggMTM6MDc6NTMg
-LTA3MDANCg0KPiBDYWkgUWlhbiB3cm90ZToNCj4gPiBIaSBCZXJuaGFyZCBhbmQgTmVpbCwNCj4g
-PiANCj4gPiAtLS0gQmVybmhhcmQgV2FsbGUgPGJ3YWxsZUBzdXNlLmRlPiB3cm90ZToNCj4gPiAN
-Cj4gPj4gKiBKYXkgTGFuIFsyMDA4LTA4LTE0IDEwOjIzXToNCj4gPj4+IElmIHlvdSBjYW4gcHV0
-IHZtY29yZSBhdCB0aGUgc2FtZSBsb2NhdGlvbi4uLiBBaGgsIGFza2luZyB0b28gbXVjaD8gOykN
-Cj4gPj4gV2lsbCBjaGFuZ2UgdGhhdCB0byAvdmFyL2NyYXNoIHNpbmNlIHRoYXQncyBGSFMgMi4z
-IGFueXdheS4gOikNCj4gPj4gW0FuZCBJIHBlcnNvbmFsbHkgbmV2ZXIgbGlrZWQgw6LigqzFky92
-YXIvbG9nL2R1bXDDouKCrMKdIHNpbmNlIGl0J3Mgbm90IGEgbG9nZmlsZS5dDQo+ID4+DQo+ID4g
-DQo+ID4gVGhhdCdzIGEgZ29vZC4gRG8geW91IGhhdmUgYW55IGNvbnNpZGVyYXRpb24gZm9yIHN0
-YW5kYXJkIEtkdW1wIG9wdGlvbnM/IEkgaGF2ZSBjcmVhdGVkIGEgS2R1bXANCj4gPiB0ZXN0IHN1
-aXRlIGJ1dCBpdCBvcmlnaW5hbGx5IHdyaXR0ZW4gYW5kIHRlc3RlZCBvbiBSSEVMIGFuZCBGZWRv
-cmEuDQo+ID4gDQo+ID4gaHR0cDovL3NvdXJjZWZvcmdlLm5ldC9tYWlsYXJjaGl2ZS9tZXNzYWdl
-LnBocD9tc2dfbmFtZT0yMDA4MDgxNS4yMTA3MzUuNDUwOTg1NjYwMzM1Mjc1MTk5LnFjYWklNDBy
-ZWRoYXQuY29tDQo+IA0KPiBIaSBDYWksDQo+IA0KPiBJIGNsaWNrZWQgb24gdGhlIGF0dGFjaG1l
-bnQgb2YgdGhlIHBhZ2UgYWJvdmUsIGl0IGZhaWxlZCB3aXRoOg0KPiAgICBGaWxlIG5vdCBmb3Vu
-ZCBvbiBzZXJ2ZXIuDQo+IA0KDQpUaGVuLCBwbGVhc2UgZmluZCBpdCBhdCwNCg0KaHR0cDovL3Bl
-b3BsZS5yZWRoYXQuY29tL3FjYWkva2R1bXAtbmctMS4wLnRhci5neg0KDQpUaGFua3MsDQpDYWlR
-aWFuDQoNCj4gUmVnYXJkcywNCj4gIC0gamF5DQo+IA0KPiA+IA0KPiA+IEkgaG9wZSBpdCBjb3Vs
-ZCBhbHNvIHdvcmsgZm9yIFNMRVMsIE9wZW5TVVNFIGFuZCBvdGhlciBkaXN0cm9zLiBIb3dldmVy
-LCBJIGhhdmUgbm8gZW52aXJvbm1lbnQgdG8NCj4gPiB0ZXN0IGl0IHlldCwgYW5kIEkgZm91bmQg
-aXQgaXMga2luZCBvZiBkaWZmaWN1bHQgdG8gcG9ydCBpdCB0byBvdGhlciBkaXN0cm9zIGZvciBz
-byBtYW55IGRpZmZlcmVudA0KPiA+IG9wdGlvbnMuDQo+ID4gDQo+ID4gSSdkIGFwcHJlY2lhdGUg
-aWYgeW91IGd1eXMgY291bGQgaGF2ZSBhIGxvb2ssIGFuZCBjb21lIG91dCBhIHN0YW5kYXJkIEtk
-dW1wIG9wdGlvbnMuIEknZCBhbHNvIGJlDQo+ID4gaGFwcHkgdG8gbW9kaWZ5IHRoZSBzdWl0ZSBh
-Y2NvcmRpbmdseS4NCj4gPiANCj4gPiBUaGFua3MsDQo+ID4gQ2FpUWlhbg0KPiA+IA0KPiA+Pg0K
-PiA+PiBCZXJuaGFyZA0KPiA+PiAtLSANCj4gPj4gQmVybmhhcmQgV2FsbGUsIFNVU0UgTElOVVgg
-UHJvZHVjdHMgR21iSCwgQXJjaGl0ZWN0dXJlIERldmVsb3BtZW50DQo+ID4+DQo+ID4+IMOi4oKs
-xZNNYWtlIGV2ZXJ5dGhpbmcgYXMgc2ltcGxlIGFzIHBvc3NpYmxlLCBidXQgbm90IHNpbXBsZXIu
-w6LigqzCnQ0KPiA+PiAgICAgICAgLS0gQWxiZXJ0IEVpbnN0ZWluDQo+ID4+DQo+ID4+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4+IGtleGVjIG1h
-aWxpbmcgbGlzdA0KPiA+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4+IGh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMNCj4gPj4NCj4gPiANCj4g
-PiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
-PiA+IGtleGVjIG1haWxpbmcgbGlzdA0KPiA+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4g
-PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQo+ID4g
-DQo+IA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Vivek Goyal <vgoyal@redhat.com> writes:
+
+> Hi Bob,
+>
+> I am CCing this thread to kexec mailing list. It is good to discuss
+> the issue there to get the ideas.
+>
+> I will summarize the discussion so far.
+>
+> Bob is running into MCA in second kernel in kdump. Reason seems to be
+> that second kernel is trying to access the memory area marked as
+> GART aperture (by first kernel). Because GART aperture does not appear
+> as "reserved" or something else in /proc/iomem (in case kernel has
+> overridden the BIOS settings and has reserved a memory area), second
+> kernel thinks it is a valid RAM area and tries to dump it and runs into
+> issues.
+>
+> Few options Bob is considering are.
+>
+> - Update "e820" memory map to mark GART aperture as reserved, which will
+>   be reflected in /proc/iomem also. Kexec-tools will not pass reserved
+>   area to second kernel and it will not try to dump this area.
+>
+>
+> - Mark GART aperture as "GART aperture" in /proc/iomem and modify
+>   kexec-tools to filter out this memroy from memory map passed to second
+>   kernel.
+
+
+We should definitely reserve the resource, and it should definitely
+show up in /proc/iomem.
+
+> - Disable cpu side GART access in first kernel so that even if second
+>   kernel tries to access it, it does not run into isseus.
+
+This is an interesting one.  When I looked at this years ago I had the
+feeling that if we did this we could actually always use a 2G Aperture
+at a fixed address, and require going through the gart for all of lowmem.
+
+But that is a little more than we are talking about.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
