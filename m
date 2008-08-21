@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KWGs6-0004ZH-ER
-	for kexec@lists.infradead.org; Thu, 21 Aug 2008 20:35:06 +0000
-Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
-	by relay1.corp.sgi.com (Postfix) with ESMTP id 559A28F80B4
-	for <kexec@lists.infradead.org>; Thu, 21 Aug 2008 13:35:04 -0700 (PDT)
-Received: from kluge.engr.sgi.com (kluge.engr.sgi.com [192.102.96.102])
-	by cthulhu.engr.sgi.com (8.12.10/8.12.10/SuSE Linux 0.7) with ESMTP id
-	m7LKZ4WM029667
-	for <kexec@lists.infradead.org>; Thu, 21 Aug 2008 13:35:04 -0700
-Message-ID: <48ADD177.6040201@sgi.com>
-Date: Thu, 21 Aug 2008 13:35:03 -0700
-From: Jay Lan <jlan@sgi.com>
-MIME-Version: 1.0
-Subject: Memory needed for a kdump kernel has been bloated
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KWGyB-0001uf-Nu
+	for kexec@lists.infradead.org; Thu, 21 Aug 2008 20:41:24 +0000
+Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 08B7045E0E
+	for <kexec@lists.infradead.org>; Thu, 21 Aug 2008 22:41:21 +0200 (CEST)
+Date: Thu, 21 Aug 2008 22:41:19 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: Memory needed for a kdump kernel has been bloated
+Message-ID: <20080821224119.4d93da1c@kopernikus.site>
+In-Reply-To: <48ADD177.6040201@sgi.com>
+References: <48ADD177.6040201@sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,164 +29,24 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-I have an IA64 system with 250G memory. I reserved 1024M memory for the
-kdump kernel. It worked fine... up to 2.6.23.
+* Jay Lan <jlan@sgi.com> [2008-08-21 13:35]:
+>
+> 2) the kdump kernel tried to add disk /dev/sdb when it is not even
+>    in /etc/fstab. I think only the system disk and the disk where
+>    we want to save the vmcore to should be needed.
 
-Starting 2.6.24-rc1, booting a kdump kernel on the machine has been
-failed on OOM. I tried 1280M, but still failed. I threw in 2048M and
-then it worked. When OOM happened, it failed on allocating memory
-for adding a disk.
-
-I saw two problems here:
-1) the memory needed has been bloated since 2.6.23. and
-2) the kdump kernel tried to add disk /dev/sdb when it is not even
-   in /etc/fstab. I think only the system disk and the disk where
-   we want to save the vmcore to should be needed.
-
-Sorry that i am still chasing a few other problems in recent kernels
-and thus i do not provide a patch.
-
-Below is part of the console messages on OOM.
-
-- jay
+But what has that to do with the kernel? What do you mean with "add
+disk"? Mount? Load driver? That's up to initrd and/or system
+configuration ...
 
 
-...
-Loading mptscsih
-Loading mptsas
-Fusion MPT SAS Host driver 3.04.06
-ACPI: PCI Interrupt 0001:00:01.0[A] -> GSI 60 (level, low) -> IRQ 60
-mptbase: ioc0: Initiating bringup
-ioc0: LSISAS1068 B0: Capabilities={Initiator}
-scsi0 : ioc0: LSISAS1068 B0, FwRev=01100000h, Ports=1, MaxQ=511, IRQ=60
-scsi 0:0:0:0: Direct-Access     SGI      ST3146854SS      X421 PQ: 0 ANSI: 3
-sd 0:0:0:0: [sda] 286749488 512-byte hardware sectors (146816 MB)
-sd 0:0:0:0: [sda] Write Protect is off
-sd 0:0:0:0: [sda] Write cache: disabled, read cache: enabled, supports
-DPO and FUA
-sd 0:0:0:0: [sda] 286749488 512-byte hardware sectors (146816 MB)
-sd 0:0:0:0: [sda] Write Protect is off
-sd 0:0:0:0: [sda] Write cache: disabled, read cache: enabled, supports
-DPO and FUA
- sda: sda1 sda2 sda3 sda4 sda5 sda6 sda7 sda8 sda9 sda10 sda11
-sd 0:0:0:0: [sda] Attached SCSI disk
-ACPI: PCI Interrupt 0011:01:00.0[A] -> GSI 66 (level, low) -> IRQ 66
-mptbase: ioc1: Initiating bringup
-sd 0:0:0:0: Attached scsi generic sg0 type 0
-mptbase: ioc1: ERROR - Diagnostic reset FAILED! (142h)
-mptbase: ioc1: WARNING - NOT READY!
-mptbase: ioc1: ERROR - didn't initialize properly! (-1)
-mptsas: probe of 0011:01:00.0 failed with error -1
-ACPI: PCI Interrupt 0031:00:01.0[A] -> GSI 70 (level, low) -> IRQ 70
-mptbase: ioc2: Initiating bringup
-ioc2: LSISAS1064 A3: Capabilities={Initiator}
-scsi1 : ioc2: LSISAS1064 A3, FwRev=01070000h, Ports=1, MaxQ=511, IRQ=70
-scsi 1:0:0:0: Direct-Access     SGI      ST3146854SS      X421 PQ: 0 ANSI: 3
-sd 1:0:0:0: [sdb] 286749488 512-byte hardware sectors (146816 MB)
-sd 1:0:0:0: [sdb] Write Protect is off
-sd 1:0:0:0: [sdb] Write cache: disabled, read cache: enabled, supports
-DPO and FUA
-sd 1:0:0:0: [sdb] 286749488 512-byte hardware sectors (146816 MB)
-sd 1:0:0:0: [sdb] Write Protect is off
-sd 1:0:0:0: [sdb] Write cache: disabled, read cache: enabled, supports
-DPO and FUA
- sdb: sdb1 sdb2 sdb3 sdb4 sdb5 sdb6 sdb7 sdb8 sdb9 sdb10 sdb11
-modprobe invoked oom-killer: gfp_mask=0xd0, order=0, oomkilladj=0
 
-Call Trace:
- [<a000000100014e40>] show_stack+0x40/0xa0
-                                sp=e00000607108f670 bsp=e000006071081a70
- [<a000000100014ed0>] dump_stack+0x30/0x60
-                                sp=e00000607108f840 bsp=e000006071081a58
- [<a00000010010e980>] oom_kill_process+0x80/0x3a0
-                                sp=e00000607108f840 bsp=e000006071081a00
- [<a00000010010f660>] out_of_memory+0x520/0x6a0
-                                sp=e00000607108f850 bsp=e0000060710819b0
- [<a000000100116c80>] __alloc_pages_internal+0x580/0x700
-                                sp=e00000607108f8e0 bsp=e000006071081928
- [<a000000100116e90>] __alloc_pages+0x30/0x60
-                                sp=e00000607108f8f0 bsp=e0000060710818f8
- [<a0000001001658a0>] new_slab+0x2a0/0x6c0
-                                sp=e00000607108f8f0 bsp=e0000060710818a8
- [<a0000001001661c0>] __slab_alloc+0x500/0xae0
-                                sp=e00000607108f8f0 bsp=e000006071081848
- [<a000000100169ca0>] __kmalloc_node+0x120/0x200
-                                sp=e00000607108f900 bsp=e000006071081808
- [<a00000010016fd20>] percpu_populate+0x100/0x160
-                                sp=e00000607108f900 bsp=e0000060710817c0
- [<a00000010016fdf0>] __percpu_populate_mask+0x70/0x160
-                                sp=e00000607108f900 bsp=e000006071081780
- [<a00000010016ff80>] __percpu_alloc_mask+0xa0/0xe0
-                                sp=e00000607108f940 bsp=e000006071081748
- [<a000000100212f10>] add_partition+0x50/0x380
-                                sp=e00000607108f940 bsp=e0000060710816f0
- [<a000000100213e20>] rescan_partitions+0x4a0/0x520
-                                sp=e00000607108f940 bsp=e000006071081690
- [<a0000001001d5220>] do_open+0x520/0x6e0
-                                sp=e00000607108f940 bsp=e000006071081628
- [<a0000001001d5490>] __blkdev_get+0xb0/0xe0
-                                sp=e00000607108f950 bsp=e0000060710815e0
- [<a0000001001d54f0>] blkdev_get+0x30/0x60
-                                sp=e00000607108fad0 bsp=e0000060710815b0
- [<a000000100213850>] register_disk+0x230/0x360
-                                sp=e00000607108fad0 bsp=e000006071081578
- [<a0000001004146a0>] add_disk+0xa0/0x140
-                                sp=e00000607108fad0 bsp=e000006071081550
- [<a0000001005fbce0>] sd_probe+0x740/0x8a0
-                                sp=e00000607108fad0 bsp=e0000060710814f8
- [<a00000010051a5c0>] driver_probe_device+0x220/0x360
-                                sp=e00000607108fae0 bsp=e0000060710814c0
- [<a00000010051a810>] __device_attach+0x30/0x60
-                                sp=e00000607108fae0 bsp=e000006071081498
- [<a000000100518a00>] bus_for_each_drv+0xa0/0x140
-                                sp=e00000607108fae0 bsp=e000006071081460
- [<a00000010051a940>] device_attach+0xa0/0xe0
-                                sp=e00000607108fb00 bsp=e000006071081430
- [<a0000001005185d0>] bus_attach_device+0x70/0x100
-                                sp=e00000607108fb00 bsp=e000006071081400
- [<a000000100515990>] device_add+0x810/0xb40
-                                sp=e00000607108fb00 bsp=e000006071081390
- [<a0000001005cd5e0>] scsi_sysfs_add_sdev+0x160/0x480
-                                sp=e00000607108fb00 bsp=e000006071081350
- [<a0000001005c8d00>] scsi_probe_and_add_lun+0x10a0/0x1340
-                                sp=e00000607108fb00 bsp=e0000060710812e0
- [<a0000001005c9590>] __scsi_scan_target+0x150/0xb00
-                                sp=e00000607108fb30 bsp=e000006071081290
- [<a0000001005caa00>] scsi_scan_target+0x120/0x160
-                                sp=e00000607108fb90 bsp=e000006071081240
- [<a0000002024926a0>] sas_rphy_add+0x300/0x340 [scsi_transport_sas]
-                                sp=e00000607108fb90 bsp=e000006071081200
- [<a000000202602240>] mptsas_probe_one_phy+0x900/0x9c0 [mptsas]
-                                sp=e00000607108fb90 bsp=e0000060710811a8
- [<a000000202603be0>] mptsas_probe_hba_phys+0xe20/0xf00 [mptsas]
-                                sp=e00000607108fbb0 bsp=e000006071081150
- [<a000000202607080>] mptsas_probe+0x7c0/0x960 [mptsas]
-                                sp=e00000607108fcf0 bsp=e0000060710810e8
- [<a00000010044e730>] pci_device_probe+0x170/0x240
-                                sp=e00000607108fd00 bsp=e000006071081090
- [<a00000010051a5c0>] driver_probe_device+0x220/0x360
-                                sp=e00000607108fd80 bsp=e000006071081058
- [<a00000010051a780>] __driver_attach+0x80/0xe0
-                                sp=e00000607108fd80 bsp=e000006071081020
- [<a000000100519070>] bus_for_each_dev+0x90/0x100
-                                sp=e00000607108fd80 bsp=e000006071080fe0
- [<a00000010051a160>] driver_attach+0x40/0x60
-                                sp=e00000607108fda0 bsp=e000006071080fc0
- [<a000000100519b00>] bus_add_driver+0x160/0x4a0
-                                sp=e00000607108fda0 bsp=e000006071080f78
- [<a00000010051ae30>] driver_register+0x1b0/0x300
-                                sp=e00000607108fda0 bsp=e000006071080f30
- [<a00000010044ecd0>] __pci_register_driver+0xb0/0x140
-                                sp=e00000607108fda0 bsp=e000006071080ef8
- [<a0000002026301e0>] mptsas_init+0x1e0/0x320 [mptsas]
-                                sp=e00000607108fdb0 bsp=e000006071080ec8
- [<a0000001000e6990>] sys_init_module+0x3610/0x3940
-                                sp=e00000607108fdb0 bsp=e000006071080d48
- [<a00000010000af80>] ia64_ret_from_syscall+0x0/0x20
-                                sp=e00000607108fe30 bsp=e000006071080d48
- [<a000000000010720>] __kernel_syscall_via_break+0x0/0x20
-                                sp=e000006071090000 bsp=e000006071080d48
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
 
+"Make everything as simple as possible, but not simpler."
+        -- Albert Einstein
 
 _______________________________________________
 kexec mailing list
