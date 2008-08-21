@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KVtkv-0001UH-6m
-	for kexec@lists.infradead.org; Wed, 20 Aug 2008 19:54:09 +0000
-Date: Wed, 20 Aug 2008 21:54:04 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Received: from mx1.redhat.com ([66.187.233.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KW0SN-0006Tf-P2
+	for kexec@lists.infradead.org; Thu, 21 Aug 2008 03:03:28 +0000
+Date: Thu, 21 Aug 2008 11:03:11 +0800 (CST)
+Message-Id: <20080821.110311.104200204069595398.qcai@redhat.com>
 Subject: Re: Kdump Automation Mechanism
-Message-ID: <20080820215404.0ff117ff@kopernikus.site>
-In-Reply-To: <536253.14632.qm@web1114.biz.mail.sk1.yahoo.com>
-References: <20080818170257.4271910a@halley.suse.de>
-	<536253.14632.qm@web1114.biz.mail.sk1.yahoo.com>
+From: Cai Qian <qcai@redhat.com>
+In-Reply-To: <48AC7999.2020104@sgi.com>
+References: <536253.14632.qm@web1114.biz.mail.sk1.yahoo.com>
+	<48AC7999.2020104@sgi.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -19,56 +19,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cai Qian <caiqian@cclom.cn>
-Cc: qcai@redhat.com, Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org
+To: jlan@sgi.com
+Cc: qcai@redhat.com, bwalle@suse.de, kexec@lists.infradead.org, nhorman@redhat.com
 
-* Cai Qian <caiqian@cclom.cn> [2008-08-20 09:22]:
-> --- Bernhard Walle <bwalle@suse.de> wrote:
-> =
-
-> > * Jay Lan [2008-08-14 10:23]:
-> > >
-> > > If you can put vmcore at the same location... Ahh, asking too much? ;)
-> > =
-
-> > Will change that to /var/crash since that's FHS 2.3 anyway. :)
-> > [And I personally never liked =E2=80=9C/var/log/dump=E2=80=9D since it'=
-s not a logfile.]
-> >
-> =
-
-> That's a good. Do you have any consideration for standard Kdump options? =
-I have created a Kdump
-> test suite but it originally written and tested on RHEL and Fedora.
-> =
-
-> http://sourceforge.net/mailarchive/message.php?msg_name=3D20080815.210735=
-.450985660335275199.qcai%40redhat.com
-
-Thanks for that effort and for letting me that know.
-
-I'll take definitively a look at this, but currently I'm a bit short in
-time because of feature development for the next enterprise
-distribution.
-
-I put that on my TODO list, and I'll give you feedback, in the next
-weeks. :-)
-
-
-
-Bernhard
--- =
-
-Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
-
-"Make everything as simple as possible, but not simpler."
-        -- Albert Einstein
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSmF5LA0KDQpGcm9tOiBKYXkgTGFuIDxqbGFuQHNnaS5jb20+DQpTdWJqZWN0OiBSZTogS2R1
+bXAgQXV0b21hdGlvbiBNZWNoYW5pc20NCkRhdGU6IFdlZCwgMjAgQXVnIDIwMDggMTM6MDc6NTMg
+LTA3MDANCg0KPiBDYWkgUWlhbiB3cm90ZToNCj4gPiBIaSBCZXJuaGFyZCBhbmQgTmVpbCwNCj4g
+PiANCj4gPiAtLS0gQmVybmhhcmQgV2FsbGUgPGJ3YWxsZUBzdXNlLmRlPiB3cm90ZToNCj4gPiAN
+Cj4gPj4gKiBKYXkgTGFuIFsyMDA4LTA4LTE0IDEwOjIzXToNCj4gPj4+IElmIHlvdSBjYW4gcHV0
+IHZtY29yZSBhdCB0aGUgc2FtZSBsb2NhdGlvbi4uLiBBaGgsIGFza2luZyB0b28gbXVjaD8gOykN
+Cj4gPj4gV2lsbCBjaGFuZ2UgdGhhdCB0byAvdmFyL2NyYXNoIHNpbmNlIHRoYXQncyBGSFMgMi4z
+IGFueXdheS4gOikNCj4gPj4gW0FuZCBJIHBlcnNvbmFsbHkgbmV2ZXIgbGlrZWQgw6LigqzFky92
+YXIvbG9nL2R1bXDDouKCrMKdIHNpbmNlIGl0J3Mgbm90IGEgbG9nZmlsZS5dDQo+ID4+DQo+ID4g
+DQo+ID4gVGhhdCdzIGEgZ29vZC4gRG8geW91IGhhdmUgYW55IGNvbnNpZGVyYXRpb24gZm9yIHN0
+YW5kYXJkIEtkdW1wIG9wdGlvbnM/IEkgaGF2ZSBjcmVhdGVkIGEgS2R1bXANCj4gPiB0ZXN0IHN1
+aXRlIGJ1dCBpdCBvcmlnaW5hbGx5IHdyaXR0ZW4gYW5kIHRlc3RlZCBvbiBSSEVMIGFuZCBGZWRv
+cmEuDQo+ID4gDQo+ID4gaHR0cDovL3NvdXJjZWZvcmdlLm5ldC9tYWlsYXJjaGl2ZS9tZXNzYWdl
+LnBocD9tc2dfbmFtZT0yMDA4MDgxNS4yMTA3MzUuNDUwOTg1NjYwMzM1Mjc1MTk5LnFjYWklNDBy
+ZWRoYXQuY29tDQo+IA0KPiBIaSBDYWksDQo+IA0KPiBJIGNsaWNrZWQgb24gdGhlIGF0dGFjaG1l
+bnQgb2YgdGhlIHBhZ2UgYWJvdmUsIGl0IGZhaWxlZCB3aXRoOg0KPiAgICBGaWxlIG5vdCBmb3Vu
+ZCBvbiBzZXJ2ZXIuDQo+IA0KDQpUaGVuLCBwbGVhc2UgZmluZCBpdCBhdCwNCg0KaHR0cDovL3Bl
+b3BsZS5yZWRoYXQuY29tL3FjYWkva2R1bXAtbmctMS4wLnRhci5neg0KDQpUaGFua3MsDQpDYWlR
+aWFuDQoNCj4gUmVnYXJkcywNCj4gIC0gamF5DQo+IA0KPiA+IA0KPiA+IEkgaG9wZSBpdCBjb3Vs
+ZCBhbHNvIHdvcmsgZm9yIFNMRVMsIE9wZW5TVVNFIGFuZCBvdGhlciBkaXN0cm9zLiBIb3dldmVy
+LCBJIGhhdmUgbm8gZW52aXJvbm1lbnQgdG8NCj4gPiB0ZXN0IGl0IHlldCwgYW5kIEkgZm91bmQg
+aXQgaXMga2luZCBvZiBkaWZmaWN1bHQgdG8gcG9ydCBpdCB0byBvdGhlciBkaXN0cm9zIGZvciBz
+byBtYW55IGRpZmZlcmVudA0KPiA+IG9wdGlvbnMuDQo+ID4gDQo+ID4gSSdkIGFwcHJlY2lhdGUg
+aWYgeW91IGd1eXMgY291bGQgaGF2ZSBhIGxvb2ssIGFuZCBjb21lIG91dCBhIHN0YW5kYXJkIEtk
+dW1wIG9wdGlvbnMuIEknZCBhbHNvIGJlDQo+ID4gaGFwcHkgdG8gbW9kaWZ5IHRoZSBzdWl0ZSBh
+Y2NvcmRpbmdseS4NCj4gPiANCj4gPiBUaGFua3MsDQo+ID4gQ2FpUWlhbg0KPiA+IA0KPiA+Pg0K
+PiA+PiBCZXJuaGFyZA0KPiA+PiAtLSANCj4gPj4gQmVybmhhcmQgV2FsbGUsIFNVU0UgTElOVVgg
+UHJvZHVjdHMgR21iSCwgQXJjaGl0ZWN0dXJlIERldmVsb3BtZW50DQo+ID4+DQo+ID4+IMOi4oKs
+xZNNYWtlIGV2ZXJ5dGhpbmcgYXMgc2ltcGxlIGFzIHBvc3NpYmxlLCBidXQgbm90IHNpbXBsZXIu
+w6LigqzCnQ0KPiA+PiAgICAgICAgLS0gQWxiZXJ0IEVpbnN0ZWluDQo+ID4+DQo+ID4+IF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4+IGtleGVjIG1h
+aWxpbmcgbGlzdA0KPiA+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+ID4+IGh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMNCj4gPj4NCj4gPiANCj4g
+PiANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0K
+PiA+IGtleGVjIG1haWxpbmcgbGlzdA0KPiA+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4g
+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQo+ID4g
+DQo+IA0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
