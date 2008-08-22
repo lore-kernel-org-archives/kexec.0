@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KWKv2-0001Ki-4b
-	for kexec@lists.infradead.org; Fri, 22 Aug 2008 00:54:24 +0000
-Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
-	by relay1.corp.sgi.com (Postfix) with ESMTP id 5A10E8F80CF
-	for <kexec@lists.infradead.org>; Thu, 21 Aug 2008 17:54:23 -0700 (PDT)
-Received: from kluge.engr.sgi.com (kluge.engr.sgi.com [192.102.96.102])
-	by cthulhu.engr.sgi.com (8.12.10/8.12.10/SuSE Linux 0.7) with ESMTP id
-	m7M0sNWM016789
-	for <kexec@lists.infradead.org>; Thu, 21 Aug 2008 17:54:23 -0700
-Message-ID: <48AE0E3E.20802@sgi.com>
-Date: Thu, 21 Aug 2008 17:54:22 -0700
-From: Jay Lan <jlan@sgi.com>
-MIME-Version: 1.0
-Subject: Avoid 2.6.27-rc3 for IA64 kdump kernel
+Received: from mx2.suse.de ([195.135.220.15])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KWQOI-00052P-4D
+	for kexec@lists.infradead.org; Fri, 22 Aug 2008 06:44:58 +0000
+Date: Fri, 22 Aug 2008 08:44:54 +0200
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: Memory needed for a kdump kernel has been bloated
+Message-ID: <20080822084454.176006c4@kopernikus.site>
+In-Reply-To: <48ADD768.4040506@sgi.com>
+References: <48ADD177.6040201@sgi.com>
+	<20080821224119.4d93da1c@kopernikus.site>
+	<48ADD768.4040506@sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,15 +24,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org
 
-The kdump kernel of 2.6.27-rc3 would panic at __free_pages_bootmem
-on booting (IA64). It has been fixed in 2.6.27-rc4.
+* Jay Lan <jlan@sgi.com> [2008-08-21 14:00]:
+>
+> Bernhard Walle wrote:
+> > * Jay Lan <jlan@sgi.com> [2008-08-21 13:35]:
+> >> 2) the kdump kernel tried to add disk /dev/sdb when it is not even
+> >>    in /etc/fstab. I think only the system disk and the disk where
+> >>    we want to save the vmcore to should be needed.
+> > 
+> > But what has that to do with the kernel? What do you mean with "add
+> > disk"? Mount? Load driver? That's up to initrd and/or system
+> > configuration ...
+> 
+> Hmm, it would be great if there is a way we can initialize only the
+> needed disk. "add_disk" was called from sd_probe:
+>    add_disk <-
+>      sd_probe <-
+>      driver_probe_device <-
+>      __device_attach <-
+>      bus_for_each_drv <-
+>      ...
+> 
+> So the solution might need come from initrd or a device driver? Maybe
+> we can use a new system configuration item. But it can save a lot of
+> memory if we do not need to initialize those devices.
 
-Just FYI so that you do not waste time scraching your head ;)
+Hm ..., I guess all disks share the same driver in your setup. I think
+that's not possible with current infrastructure ... but maybe someone
+has an idea.
 
-Cheers,
- - jay
+But in general I like the idea. That would also help on other
+platforms with a huge amount of disks. :-)
+
+
+
+Bernhard
+-- 
+Bernhard Walle, SUSE LINUX Products GmbH, Architecture Development
+
+"Make everything as simple as possible, but not simpler."
+        -- Albert Einstein
 
 _______________________________________________
 kexec mailing list
