@@ -1,16 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.245])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KXwTE-00071v-Ew
-	for kexec@lists.infradead.org; Tue, 26 Aug 2008 11:12:20 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so1911060rvf.42
-	for <kexec@lists.infradead.org>; Tue, 26 Aug 2008 04:12:20 -0700 (PDT)
-From: Magnus Damm <magnus.damm@gmail.com>
-Date: Tue, 26 Aug 2008 20:12:32 +0900
-Message-Id: <20080826111232.615.24048.sendpatchset@rx1.opensource.se>
-In-Reply-To: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
-References: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
-Subject: [PATCH 06/06] sh: Add vmlinux support
+	id 1KYADk-00015l-Lu
+	for kexec@lists.infradead.org; Wed, 27 Aug 2008 01:53:17 +0000
+Received: from yukiko.kent.sydney.vergenet.net
+	(124-170-204-174.dyn.iinet.net.au [124.170.204.174])
+	by kirsty.vergenet.net (Postfix) with ESMTP id 6773824076
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 11:53:15 +1000 (EST)
+Resent-Message-ID: <20080827015314.GA19066@verge.net.au>
+Resent-To: kexec@lists.infradead.org
+Received: from metis.extern.pengutronix.de ([83.236.181.26])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KXL9v-0002c3-Gy
+	for kexec@lists.infradead.org; Sun, 24 Aug 2008 19:21:55 +0000
+Received: from themisto.extern.pengutronix.de ([83.236.181.29]
+	helo=[127.0.0.1])
+	by metis.extern.pengutronix.de with esmtp (Exim 4.63)
+	(envelope-from <mkl@pengutronix.de>) id 1KXL9i-0005qK-Ef
+	for kexec@lists.infradead.org; Sun, 24 Aug 2008 21:21:47 +0200
+Message-ID: <48B1B4C0.3070209@pengutronix.de>
+Date: Sun, 24 Aug 2008 21:21:36 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+MIME-Version: 1.0
+Subject: [patch] fix compilation on arm
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,181 +31,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1135848000=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 
-From: Magnus Damm <damm@igel.co.jp>
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--===============1135848000==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig4CAAD345BA29D467DEA4E771"
 
-Add SuperH vmlinux support through a zero-page aware elf loader. Only for
-kexec at this point, in the future kdump support will be added.
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig4CAAD345BA29D467DEA4E771
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Magnus Damm <damm@igel.co.jp>
+Hi,
+
+cross compilation to arm fails with toolchain based on recent new kernel
+headers, due to mussing asm/page.h, This patch fixes the problem.
+
+cheers, Marc
+
+--=20
+ Marc Kleine-Budde              Phone: +49-231-2826-924
+ Pengutronix - Linux Solutions for Science and Industry
+ Vertretung West/Dortmund     http://www.pengutronix.de
+
+=46rom f1786e47eb58f4eec4357ff07d8d009222e6ea7c Mon Sep 17 00:00:00 2001
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Date: Sun, 24 Aug 2008 21:11:05 +0200
+Subject: [PATCH] remove "asm/page.h" include, define _XOPEN_SOURCE
+
+In recent kernels "asm/page.h" isn't exported to userspace anymore, thus
+the include is removed.
+
+Further this patch defines _XOPEN_SOURCE, in order to use getpagesize.
+
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 ---
+ kexec/arch/arm/kexec-zImage-arm.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
- kexec/arch/sh/Makefile       |    1 
- kexec/arch/sh/kexec-elf-sh.c |  114 ++++++++++++++++++++++++++++++++++++++++++
- kexec/arch/sh/kexec-sh.c     |    1 
- kexec/arch/sh/kexec-sh.h     |    5 +
- 4 files changed, 121 insertions(+)
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c
+b/kexec/arch/arm/kexec-zImage-arm.c
+index 440ad73..5eb4905 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -3,6 +3,7 @@
+  *
+  */
+ #define _GNU_SOURCE
++#define _XOPEN_SOURCE
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -11,7 +12,6 @@
+ #include <stdint.h>
+ #include <getopt.h>
+ #include <arch/options.h>
+-#include <asm/page.h>
+ #include "../../kexec.h"
 
---- 0004/kexec/arch/sh/Makefile
-+++ work/kexec/arch/sh/Makefile	2008-08-22 13:17:18.000000000 +0900
-@@ -4,6 +4,7 @@
- sh_KEXEC_SRCS += kexec/arch/sh/kexec-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/kexec-zImage-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/kexec-netbsd-sh.c
-+sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-rel-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/netbsd_booter.S
- 
---- /dev/null
-+++ work/kexec/arch/sh/kexec-elf-sh.c	2008-08-22 14:24:31.000000000 +0900
-@@ -0,0 +1,114 @@
-+/*
-+ * kexec: Linux boots Linux
-+ *
-+ * Copyright (C) 2008  Magnus Damm
-+ *
-+ * Based on x86 implementation,
-+ * Copyright (C) 2003-2005  Eric Biederman (ebiederm@xmission.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation (version 2 of the License).
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <errno.h>
-+#include <limits.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <unistd.h>
-+#include <getopt.h>
-+#include <elf.h>
-+#include "../../kexec.h"
-+#include "../../kexec-syscall.h"
-+#include "../../kexec-elf.h"
-+#include "../../kexec-elf-boot.h"
-+#include <arch/options.h>
-+#include "kexec-sh.h"
-+
-+int elf_sh_probe(const char *buf, off_t len)
-+{
-+	struct mem_ehdr ehdr;
-+	int result;
-+	result = build_elf_exec_info(buf, len, &ehdr, 0);
-+	if (result < 0)
-+		goto out;
-+
-+	/* Verify the architecuture specific bits */
-+	if (ehdr.e_machine != EM_SH) {
-+		result = -1;
-+		goto out;
-+	}
-+
-+	result = 0;
-+ out:
-+	free_elf_info(&ehdr);
-+	return result;
-+}
-+
-+void elf_sh_usage(void)
-+{
-+	printf("  --append=STRING       Set the kernel command line to STRING\n"
-+		);
-+}
-+
-+int elf_sh_load(int argc, char **argv, const char *buf, off_t len, 
-+	struct kexec_info *info)
-+{
-+	struct mem_ehdr ehdr;
-+	const char *command_line;
-+	struct mem_sym sym;
-+	int opt;
-+	static const struct option options[] = {
-+		KEXEC_ARCH_OPTIONS
-+		{ 0, 			0, NULL, 0 },
-+	};
-+
-+	static const char short_options[] = KEXEC_OPT_STR "";
-+
-+	/*
-+	 * Parse the command line arguments
-+	 */
-+	command_line = 0;
-+	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
-+		switch(opt) {
-+		default:
-+			/* Ignore core options */
-+			if (opt < OPT_ARCH_MAX) {
-+				break;
-+			}
-+		case '?':
-+			usage();
-+			return -1;
-+		case OPT_APPEND:
-+			command_line = optarg;
-+			break;
-+		}
-+	}
-+
-+	/* Load the ELF executable */
-+	elf_exec_build_load(info, &ehdr, buf, len, 0);
-+	info->entry = (void *)ehdr.e_entry;
-+
-+	/* If we're booting a vmlinux then fill in empty_zero_page */
-+	if (elf_rel_find_symbol(&ehdr, "empty_zero_page", &sym) == 0) {
-+		unsigned char *zp = (void *)ehdr.e_shdr[sym.st_shndx].sh_data;
-+
-+		kexec_sh_setup_zero_page(zp, 4096, command_line);
-+	}
-+
-+	return 0;
-+}
---- 0005/kexec/arch/sh/kexec-sh.c
-+++ work/kexec/arch/sh/kexec-sh.c	2008-08-22 13:17:18.000000000 +0900
-@@ -53,6 +53,7 @@ int get_memory_ranges(struct memory_rang
- /* Supported file types and callbacks */
- struct file_type file_type[] = {
-        {"zImage-sh", zImage_sh_probe, zImage_sh_load, zImage_sh_usage},
-+       {"elf-sh", elf_sh_probe, elf_sh_load, elf_sh_usage},
-        {"netbsd-sh", netbsd_sh_probe, netbsd_sh_load, netbsd_sh_usage},
- };
- int file_types = sizeof(file_type) / sizeof(file_type[0]);
---- 0005/kexec/arch/sh/kexec-sh.h
-+++ work/kexec/arch/sh/kexec-sh.h	2008-08-22 13:17:18.000000000 +0900
-@@ -6,6 +6,11 @@ int zImage_sh_load(int argc, char **argv
- 	struct kexec_info *info);
- void zImage_sh_usage(void);
- 
-+int elf_sh_probe(const char *buf, off_t len);
-+int elf_sh_load(int argc, char **argv, const char *buf, off_t len,
-+	struct kexec_info *info);
-+void elf_sh_usage(void);
-+
- int netbsd_sh_probe(const char *buf, off_t len);
- int netbsd_sh_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info);
+ #define COMMAND_LINE_SIZE 1024
+--=20
+1.5.5.1
+
+
+
+--------------enig4CAAD345BA29D467DEA4E771
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+
+iD8DBQFIsbTFjTAFq1RaXHMRAmUSAJ4gX6QQThdJmfaazKntx4D4/boHhwCaAyjj
+Ovv1WcF2RdLdY5sWKDKTaVM=
+=j3o8
+-----END PGP SIGNATURE-----
+
+--------------enig4CAAD345BA29D467DEA4E771--
+
+
+
+--===============1135848000==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1135848000==--
+
+
