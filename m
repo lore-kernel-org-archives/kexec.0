@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from rv-out-0708.google.com ([209.85.198.245])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KXwSf-00071v-2P
-	for kexec@lists.infradead.org; Tue, 26 Aug 2008 11:11:45 +0000
+	id 1KXwSl-00071v-V2
+	for kexec@lists.infradead.org; Tue, 26 Aug 2008 11:11:52 +0000
 Received: by rv-out-0708.google.com with SMTP id b17so1911060rvf.42
-	for <kexec@lists.infradead.org>; Tue, 26 Aug 2008 04:11:44 -0700 (PDT)
+	for <kexec@lists.infradead.org>; Tue, 26 Aug 2008 04:11:51 -0700 (PDT)
 From: Magnus Damm <magnus.damm@gmail.com>
-Date: Tue, 26 Aug 2008 20:11:56 +0900
-Message-Id: <20080826111156.615.52141.sendpatchset@rx1.opensource.se>
+Date: Tue, 26 Aug 2008 20:12:04 +0900
+Message-Id: <20080826111204.615.30390.sendpatchset@rx1.opensource.se>
 In-Reply-To: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
 References: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
-Subject: [PATCH 01/06] sh: Add support for sh4al-dsp processors
+Subject: [PATCH 02/06] sh: Get system memory ranges from /proc/iomem
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,23 +29,54 @@ Cc: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 
 From: Magnus Damm <damm@igel.co.jp>
 
-Add support for sh4al-dsp processors such as sh7722.
+Parse contents of /proc/iomem instead of hardcoding RAM ranges.
 
 Signed-off-by: Magnus Damm <damm@igel.co.jp>
 ---
 
- kexec/arch/sh/kexec-sh.c |    1 +
- 1 file changed, 1 insertion(+)
+ kexec/arch/sh/kexec-sh.c |   26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
---- 0001/kexec/arch/sh/kexec-sh.c
-+++ work/kexec/arch/sh/kexec-sh.c	2008-08-20 19:07:47.000000000 +0900
-@@ -105,6 +105,7 @@ const struct arch_map_entry arches[] = {
- 	{ "sh3", KEXEC_ARCH_DEFAULT },
- 	{ "sh4", KEXEC_ARCH_DEFAULT },
- 	{ "sh4a", KEXEC_ARCH_DEFAULT },
-+	{ "sh4al-dsp", KEXEC_ARCH_DEFAULT },
- 	{ 0 },
- };
+--- 0002/kexec/arch/sh/kexec-sh.c
++++ work/kexec/arch/sh/kexec-sh.c	2008-08-22 10:53:15.000000000 +0900
+@@ -22,19 +22,31 @@
+ #define MAX_MEMORY_RANGES 64
+ static struct memory_range memory_range[MAX_MEMORY_RANGES];
+ 
++static int kexec_sh_memory_range_callback(void *data, int nr,
++					  char *str,
++					  unsigned long base,
++					  unsigned long length)
++{
++	if (nr < MAX_MEMORY_RANGES) {
++		memory_range[nr].start = base;
++		memory_range[nr].end = base + length - 1;
++		memory_range[nr].type = RANGE_RAM;
++		return 0;
++	}
++
++	return 1;
++}
++
+ /* Return a sorted list of available memory ranges. */
+ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 		      unsigned long kexec_flags)
+ {
+-	int memory_ranges;
++	int nr;
+ 
+-	memory_ranges = 0;
+-	memory_range[memory_ranges].start = 0x08000000;
+-	memory_range[memory_ranges].end   = 0x10000000;
+-	memory_range[memory_ranges].type  = RANGE_RAM;
+-	memory_ranges++;
++	nr = kexec_iomem_for_each_line("System RAM\n",
++				       kexec_sh_memory_range_callback, NULL);
+ 	*range = memory_range;
+-	*ranges = memory_ranges;
++	*ranges = nr;
+ 	return 0;
+ }
  
 
 _______________________________________________
