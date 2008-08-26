@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KYADk-00015l-Lu
-	for kexec@lists.infradead.org; Wed, 27 Aug 2008 01:53:17 +0000
+	id 1KYAFE-0001AK-Cn
+	for kexec@lists.infradead.org; Wed, 27 Aug 2008 01:54:49 +0000
 Received: from yukiko.kent.sydney.vergenet.net
 	(124-170-204-174.dyn.iinet.net.au [124.170.204.174])
-	by kirsty.vergenet.net (Postfix) with ESMTP id 6773824076
-	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 11:53:15 +1000 (EST)
-Resent-Message-ID: <20080827015314.GA19066@verge.net.au>
+	by kirsty.vergenet.net (Postfix) with ESMTP id 7E2C224076
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 11:54:47 +1000 (EST)
+Resent-Message-ID: <20080827015447.GB19066@verge.net.au>
 Resent-To: kexec@lists.infradead.org
-Received: from metis.extern.pengutronix.de ([83.236.181.26])
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KXL9v-0002c3-Gy
-	for kexec@lists.infradead.org; Sun, 24 Aug 2008 19:21:55 +0000
-Received: from themisto.extern.pengutronix.de ([83.236.181.29]
-	helo=[127.0.0.1])
-	by metis.extern.pengutronix.de with esmtp (Exim 4.63)
-	(envelope-from <mkl@pengutronix.de>) id 1KXL9i-0005qK-Ef
-	for kexec@lists.infradead.org; Sun, 24 Aug 2008 21:21:47 +0200
-Message-ID: <48B1B4C0.3070209@pengutronix.de>
-Date: Sun, 24 Aug 2008 21:21:36 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
+	id 1KXv2w-0000Xa-VF
+	for kexec@lists.infradead.org; Tue, 26 Aug 2008 09:41:07 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx2.suse.de (Postfix) with ESMTP id 8E42E45D54
+	for <kexec@lists.infradead.org>; Tue, 26 Aug 2008 11:41:05 +0200 (CEST)
+Content-Type: multipart/mixed; boundary="===============8925425014036418479=="
 MIME-Version: 1.0
-Subject: [patch] fix compilation on arm
+Subject: [PATCH] Use /usr/bin/nm -D on stripped binaries
+Message-Id: <0eff1a298f2c6402f554.1219743656@halley.suse.de>
+Date: Tue, 26 Aug 2008 11:40:56 +0200
+From: Bernhard Walle <bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,94 +32,170 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1135848000=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---===============1135848000==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig4CAAD345BA29D467DEA4E771"
+--===============8925425014036418479==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
---------------enig4CAAD345BA29D467DEA4E771
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Use "nm -D" to retrieve also the symbols of crash when having stripped binaries.
+Use the presence of the symbol table to determine if the binary has been
+stripped or not.
 
-Hi,
+Because we don't have static symbols in stripped binaries, we check the size
+of the function (the "nm -S" output) and report "unknown" if the looked address
+is outside of the function.
 
-cross compilation to arm fails with toolchain based on recent new kernel
-headers, due to mussing asm/page.h, This patch fixes the problem.
 
-cheers, Marc
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
---=20
- Marc Kleine-Budde              Phone: +49-231-2826-924
- Pengutronix - Linux Solutions for Science and Industry
- Vertretung West/Dortmund     http://www.pengutronix.de
 
-=46rom f1786e47eb58f4eec4357ff07d8d009222e6ea7c Mon Sep 17 00:00:00 2001
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Sun, 24 Aug 2008 21:11:05 +0200
-Subject: [PATCH] remove "asm/page.h" include, define _XOPEN_SOURCE
-
-In recent kernels "asm/page.h" isn't exported to userspace anymore, thus
-the include is removed.
-
-Further this patch defines _XOPEN_SOURCE, in order to use getpagesize.
-
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- kexec/arch/arm/kexec-zImage-arm.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c
-b/kexec/arch/arm/kexec-zImage-arm.c
-index 440ad73..5eb4905 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -3,6 +3,7 @@
-  *
-  */
- #define _GNU_SOURCE
-+#define _XOPEN_SOURCE
- #include <stdio.h>
- #include <string.h>
- #include <stdlib.h>
-@@ -11,7 +12,6 @@
- #include <stdint.h>
- #include <getopt.h>
- #include <arch/options.h>
--#include <asm/page.h>
- #include "../../kexec.h"
-
- #define COMMAND_LINE_SIZE 1024
---=20
-1.5.5.1
+2 files changed, 55 insertions(+), 12 deletions(-)
+defs.h    |    1 
+symbols.c |   66 +++++++++++++++++++++++++++++++++++++++++++++++++------------
 
 
 
---------------enig4CAAD345BA29D467DEA4E771
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--===============8925425014036418479==
+Content-Type: text/x-patch; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=crash-use-nm-d.diff
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+Use "nm -D" to retrieve also the symbols of crash when having stripped binaries.
+Use the presence of the symbol table to determine if the binary has been
+stripped or not.
 
-iD8DBQFIsbTFjTAFq1RaXHMRAmUSAJ4gX6QQThdJmfaazKntx4D4/boHhwCaAyjj
-Ovv1WcF2RdLdY5sWKDKTaVM=
-=j3o8
------END PGP SIGNATURE-----
-
---------------enig4CAAD345BA29D467DEA4E771--
+Because we don't have static symbols in stripped binaries, we check the size
+of the function (the "nm -S" output) and report "unknown" if the looked address
+is outside of the function.
 
 
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
---===============1135848000==
+diff --git a/defs.h b/defs.h
+--- a/defs.h
++++ b/defs.h
+@@ -3296,6 +3296,7 @@
+ void dump_offset_table(char *, ulong);
+ int is_elf_file(char *);
+ int is_kernel(char *);
++int is_binary_stripped(char *filename);
+ int file_elf_version(char *);
+ int is_system_map(char *);
+ int select_namelist(char *);
+diff --git a/symbols.c b/symbols.c
+--- a/symbols.c
++++ b/symbols.c
+@@ -2719,6 +2719,32 @@
+         return TRUE;
+ }
+ 
++int
++is_binary_stripped(char *filename)
++{
++#if defined(GDB_6_0) || defined(GDB_6_1)
++        struct bfd *bfd;
++#else
++        struct _bfd *bfd;
++#endif
++
++	if ((bfd = bfd_openr(filename, NULL)) == NULL) {
++		error(INFO, "Cannot open ELF file: %s\n", filename);
++		return FALSE;
++	}
++
++	if (!bfd_check_format(bfd, bfd_object)) {
++		error(INFO, "Invalid ELF file: %s\n", filename);
++		return FALSE;
++	}
++
++	int number_of_symbols;
++	number_of_symbols = bfd_canonicalize_symtab(bfd, NULL);
++
++	bfd_close(bfd);
++	
++	return number_of_symbols == 0;
++}
+ 
+ /*
+  *  This command may be used to:
+@@ -9048,9 +9074,11 @@
+ 	char *arglist[MAXARGS];
+ 	char buf[BUFSIZE];
+ 	FILE *pipe;
+-	ulong vaddr, lookfor;
+-	ulong last_vaddr;
++	ulong vaddr, size, lookfor;
++	ulong last_vaddr, last_size;
+ 	char symbol[BUFSIZE];
++	int stripped_binary;
++	const char *nm_call;
+ 
+ 	fflush(fp);
+ 	fflush(stdout);
+@@ -9073,11 +9101,17 @@
+ 		return;
+ 	}
+ 
++	stripped_binary = is_binary_stripped(thisfile);
++	if (stripped_binary)
++		nm_call = "/usr/bin/nm -DSBn %s";
++	else
++		nm_call = "/usr/bin/nm -BSn %s";
++
+         for (i = 0; i < NUMBER_STACKFRAMES; i++) {
+ 		if (!(lookfor = retaddr[i]))
+ 			continue;
+ 
+-		sprintf(buf, "/usr/bin/nm -Bn %s", thisfile);
++		sprintf(buf, nm_call, thisfile);
+ 	        if (!(pipe = popen(buf, "r"))) {
+ 			perror("pipe");
+ 			break;
+@@ -9086,20 +9120,28 @@
+ 		last_vaddr = 0;
+ 		BZERO(symbol, BUFSIZE);
+ 
+-	        while (fgets(buf, 80, pipe)) {
++	        while (fgets(buf, BUFSIZE, pipe)) {
+ 			c = parse_line(strip_linefeeds(buf), arglist);
+-			if (c != 3)
++			if (c != 4)
+ 				continue;
+ 			vaddr = htol(arglist[0], FAULT_ON_ERROR, NULL);
++			size = htol(arglist[1], FAULT_ON_ERROR, NULL);
+ 			if (vaddr > lookfor) {
+-				fprintf(stderr, "%s  %lx: %s+%ld\n",
+-					i == 0 ? "\n" : "", 
+-					lookfor, symbol, 
+-					lookfor-last_vaddr);
+-				break;
+-			}
+-			strcpy(symbol, arglist[2]);
++				if ((lookfor - last_vaddr) > last_size)
++					fprintf(stderr, "%s  %lx: %s+%ld\n",
++						i == 0 ? "\n" : "", 
++						lookfor, "unknown", 
++						lookfor-last_vaddr);
++				else
++					fprintf(stderr, "%s  %lx: %s+%ld\n",
++						i == 0 ? "\n" : "", 
++						lookfor, symbol, 
++						lookfor-last_vaddr);
++				break;
++			}
++			strcpy(symbol, arglist[3]);
+ 			last_vaddr = vaddr;
++			last_size = size;
+ 		}
+ 
+ 		pclose(pipe);
+
+--===============8925425014036418479==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -129,6 +206,6 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1135848000==--
+--===============8925425014036418479==--
 
 
