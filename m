@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KYAbL-0001pF-OX
-	for kexec@lists.infradead.org; Wed, 27 Aug 2008 02:17:40 +0000
-Date: Wed, 27 Aug 2008 12:17:38 +1000
+	id 1KYAjn-0003qW-Lw
+	for kexec@lists.infradead.org; Wed, 27 Aug 2008 02:26:24 +0000
+Date: Wed, 27 Aug 2008 12:26:21 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Update INSTALL
-Message-ID: <20080827021736.GJ19066@verge.net.au>
-References: <1219741919-9274-1-git-send-email-bwalle@suse.de>
+Subject: Re: [patch] fix compilation on arm
+Message-ID: <20080827022621.GK19066@verge.net.au>
+References: <48B1B4C0.3070209@pengutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1219741919-9274-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <48B1B4C0.3070209@pengutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,23 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org, yhlu.kernel@gmail.com
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: kexec@lists.infradead.org
 
-On Tue, Aug 26, 2008 at 11:11:59AM +0200, Bernhard Walle wrote:
-> That patch should merge my accidentally written INSTALL file with that
-> already present in the git tree.
+On Sun, Aug 24, 2008 at 09:21:36PM +0200, Marc Kleine-Budde wrote:
+> Hi,
 > 
-> It adds following items:
-> 
->     - static compilation
->     - cross compilation
-> 
-> And updates the instructions to build the auto-generated files to use the
-> "bootstrap" script already present.
-> 
+> cross compilation to arm fails with toolchain based on recent new kernel
+> headers, due to mussing asm/page.h, This patch fixes the problem.
 
 Thanks, applied.
+
 
 _______________________________________________
 kexec mailing list
