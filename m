@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mta23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KYF6T-0002ni-CR
-	for kexec@lists.infradead.org; Wed, 27 Aug 2008 07:06:05 +0000
-Date: Wed, 27 Aug 2008 16:05:50 +0900
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [PATCH 00/06] sh: Improved kexec support for SuperH
-Message-ID: <20080827070550.GB18717@linux-sh.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KYFYa-000572-T3
+	for kexec@lists.infradead.org; Wed, 27 Aug 2008 07:35:09 +0000
+Date: Wed, 27 Aug 2008 17:35:06 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 06/06] sh: Add vmlinux support
+Message-ID: <20080827073503.GB30536@verge.net.au>
 References: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
+	<20080826111232.615.24048.sendpatchset@rx1.opensource.se>
+	<20080827023905.GL19066@verge.net.au>
+	<aec7e5c30808262110p8197b84ieaf38211a495daa0@mail.gmail.com>
+	<20080827054043.GO19066@verge.net.au>
+	<aec7e5c30808262355w73e2e6b2y47534812758a79a0@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080826111150.615.97501.sendpatchset@rx1.opensource.se>
+In-Reply-To: <aec7e5c30808262355w73e2e6b2y47534812758a79a0@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +29,34 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Magnus Damm <magnus.damm@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org
 
-On Tue, Aug 26, 2008 at 08:11:50PM +0900, Magnus Damm wrote:
-> Here comes a few SuperH related patches. Trivial stuff - fixing up plain
-> kexec support. Kdump is not ready yet. I also have have a few kdump changes
-> in my local tree but they need more work.
+On Wed, Aug 27, 2008 at 03:55:00PM +0900, Magnus Damm wrote:
+> On Wed, Aug 27, 2008 at 2:40 PM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Aug 27, 2008 at 01:10:30PM +0900, Magnus Damm wrote:
+> >> Hi Simon,
+> >>
+> >> On Wed, Aug 27, 2008 at 11:39 AM, Simon Horman <horms@verge.net.au> wrote:
+> >> > On Tue, Aug 26, 2008 at 08:12:32PM +0900, Magnus Damm wrote:
+> >> >> From: Magnus Damm <damm@igel.co.jp>
+> >> >>
+> >> >> Add SuperH vmlinux support through a zero-page aware elf loader. Only for
+> >> >> kexec at this point, in the future kdump support will be added.
+> >> >
+> >> > If these series of patches are fine by you then they are fine by me.
+> >> > I just have a few minor issues with this last patch.
+> >>
+> >> How does the attached patch look?
+> >>
+> >> Thanks for your help!
+> >
+> > Much better :-)
+> >
+> > Should I just fold it into the last patch and push ?
 > 
-> [PATCH 01/06] sh: Add support for sh4al-dsp processors
-> [PATCH 02/06] sh: Get system memory ranges from /proc/iomem
-> [PATCH 03/06] sh: Add virtual addresses support
-> [PATCH 04/06] sh: Autodetect zImage zero page address
-> [PATCH 05/06] sh: Use dynamic zImage load address
-> [PATCH 06/06] sh: Add vmlinux support
-> 
-> Tested with 2.6.27-rc on SuperH Mobile processor models sh7722/sh7723.
-> 
-> Signed-off-by: Magnus Damm <damm@igel.co.jp>
+> Yes, that would be great! Thanks! =)
 
-FWIW:
-
-Acked-by: Paul Mundt <lethal@linux-sh.org>
+Great. I've pushed the patches and included Paul's ack.
 
 _______________________________________________
 kexec mailing list
