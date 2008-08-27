@@ -1,31 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([195.212.29.136])
+Received: from mtagate5.de.ibm.com ([195.212.29.154])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KYFrD-0007AM-4x
-	for kexec@lists.infradead.org; Wed, 27 Aug 2008 07:54:23 +0000
-Received: from d06nrmr1407.portsmouth.uk.ibm.com
-	(d06nrmr1407.portsmouth.uk.ibm.com [9.149.38.185])
-	by mtagate3.uk.ibm.com (8.13.8/8.13.8) with ESMTP id m7R7sLni321682
-	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 07:54:21 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
-	[9.149.37.213])
-	by d06nrmr1407.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v9.0) with
-	ESMTP id m7R7sL2Y4169850
-	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 08:54:21 +0100
-Received: from d06av03.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av03.portsmouth.uk.ibm.com (8.12.11.20060308/8.13.3) with ESMTP
-	id m7R7sKqi011232
-	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 08:54:21 +0100
-Received: from mercedes-benz.boeblingen.de.ibm.com
-	(dyn-9-152-210-87.boeblingen.de.ibm.com [9.152.210.87])
-	by d06av03.portsmouth.uk.ibm.com (8.12.11.20060308/8.12.11) with ESMTP
-	id m7R7sKgV011226
-	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 08:54:20 +0100
-Date: Wed, 27 Aug 2008 09:54:24 +0200
-From: Maxim Shchetynin <maxim@linux.vnet.ibm.com>
+	id 1KYG3W-0005cl-0F
+	for kexec@lists.infradead.org; Wed, 27 Aug 2008 08:07:06 +0000
+Received: from d12nrmr1607.megacenter.de.ibm.com
+	(d12nrmr1607.megacenter.de.ibm.com [9.149.167.49])
+	by mtagate5.de.ibm.com (8.13.8/8.13.8) with ESMTP id m7R85eDp372322
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 08:05:40 GMT
+Received: from d12av04.megacenter.de.ibm.com (d12av04.megacenter.de.ibm.com
+	[9.149.165.229])
+	by d12nrmr1607.megacenter.de.ibm.com (8.13.8/8.13.8/NCO v9.0) with
+	ESMTP id m7R85ead3620930
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 10:05:40 +0200
+Received: from d12av04.megacenter.de.ibm.com (loopback [127.0.0.1])
+	by d12av04.megacenter.de.ibm.com (8.12.11.20060308/8.13.3) with ESMTP
+	id m7R85ek8005005
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 10:05:40 +0200
+Received: from d12ml066.megacenter.de.ibm.com (d12ml066.megacenter.de.ibm.com
+	[9.149.167.12])
+	by d12av04.megacenter.de.ibm.com (8.12.11.20060308/8.12.11) with ESMTP
+	id m7R85eZP005002
+	for <kexec@lists.infradead.org>; Wed, 27 Aug 2008 10:05:40 +0200
 Subject: [PATCH] Let kexec work on IBM QS2x blade servers
-Message-ID: <20080827095424.2de4829e@mercedes-benz.boeblingen.de.ibm.com>
-Mime-Version: 1.0
+Message-ID: <OF33221B02.C088FDA5-ONC12574B2.002C5BF5-C12574B2.002C7A61@de.ibm.com>
+From: Maxim Shchetynin <maxim@de.ibm.com>
+Date: Wed, 27 Aug 2008 10:04:56 +0200
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,34 +34,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-SGVsbG8sCgpwbGVhc2UgaGF2ZSBhIGxvb2sgYXQgdGhlIGZvbGxvd2luZyBwYXRjaC4gVGhpcyBw
-YXRjaCBhbGxvd3Mga2V4ZWMgdG8gd29yayBvbiBJQk0gUVMyeCBibGFkZXMuIFdvdWxkIGl0IGJl
-IHBvc3NpYmxlIHRvIGFwcGx5IHRoaXMgcGF0Y2ggdG8gYSBuZXh0IGtleGVjIHZlcnNpb24/CgpG
-cm9tOiBNYXhpbSBTaGNoZXR5bmluIDxtYXhpbUBkZS5pYm0uY29tPgpTaWduZWQtb2ZmLWJ5OiBN
-YXhpbSBTaGNoZXR5bmluIDxtYXhpbUBkZS5pYm0uY29tPgotLS0KCmRpZmYgLU51YXIga2V4ZWMt
-dG9vbHMtdGVzdGluZy0yMDA3MDMzMC9rZXhlYy9hcmNoL3BwYzY0L2tleGVjLWVsZi1yZWwtcHBj
-NjQuYyBrZXhlYy10b29scy10ZXN0aW5nLTIwMDcwMzMwLWZpeGVkL2tleGVjL2FyY2gvcHBjNjQv
-a2V4ZWMtZWxmLXJlbC1wcGM2NC5jCi0tLSBrZXhlYy10b29scy10ZXN0aW5nLTIwMDcwMzMwL2tl
-eGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXJlbC1wcGM2NC5jCTIwMDctMDMtMzAgMDY6MzQ6MzYu
-MDAwMDAwMDAwICswMjAwCisrKyBrZXhlYy10b29scy10ZXN0aW5nLTIwMDcwMzMwLWZpeGVkL2tl
-eGVjL2FyY2gvcHBjNjQva2V4ZWMtZWxmLXJlbC1wcGM2NC5jCTIwMDgtMDYtMTkgMTc6MzU6MjMu
-MDAwMDAwMDAwICswMjAwCkBAIC01Niw2ICs1Niw3IEBACiAJCWJyZWFrOwogCiAJY2FzZSBSX1BQ
-QzY0X0FERFI2NDoKKwljYXNlIFJfUFBDNjRfUkVMNjQ6CiAJCS8qIFNpbXBseSBzZXQgaXQgKi8K
-IAkJKih1aW50NjRfdCAqKWxvY2F0aW9uID0gdmFsdWU7CiAJCWJyZWFrOwoKLS0gCk1pdCBmcmV1
-bmRsaWNoZW4gR3LDvMOfZW4gLyBtZXQgdnJpZW5kZWxpamtlIGdyb2V0ZW4gLyBhdmVjIHJlZ2Fy
-ZHMKCiAgICBNYXhpbSBWLiBTaGNoZXR5bmluCiAgICBMaW51eCBLZXJuZWwgRW50d2lja2x1bmcK
-ICAgIElCTSBEZXV0c2NobGFuZCBSZXNlYXJjaCAmIERldmVsb3BtZW50IEdtYkgKICAgIExpbnV4
-IGbDvHIgQ2VsbCwgQWJ0ZWlsdW5nIDMyNTAKICAgIFNjaMO2bmFpY2hlciBTdHJhw59lIDIyMAog
-ICAgNzEwMzIgQsO2YmxpbmdlbgoKVm9yc2l0emVuZGVyIGRlcyBBdWZzaWNodHNyYXRzOiBNYXJ0
-aW4gSmV0dGVyCkdlc2Now6RmdHNmw7xocnVuZzogSGVyYmVydCBLaXJjaGVyClNpdHogZGVyIEdl
-c2VsbHNjaGFmdDogQsO2YmxpbmdlbgpSZWdpc3RyaWVyZ2VyaWNodDogQW10c2dlcmljaHQgU3R1
-dHRnYXJ0LCBIUkIgMjQzMjk0CgpGYWhyIG51ciBzbyBzY2huZWxsIHdpZSBkZWluIFNjaHV0emVu
-Z2VsIGZsaWVnZW4ga2FubiEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+Hello,
+
+please have a look at the following patch. This patch allows kexec to work
+on IBM QS2x blades. Would it be possible to apply this patch to a next
+kexec version?
+
+From: Maxim Shchetynin <maxim@de.ibm.com>.
+Signed-off-by: Maxim Shchetynin <maxim@de.ibm.com>
+---
+
+diff -Nuar
+kexec-tools-testing-20070330/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+kexec-tools-testing-20070330-fixed/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+--- kexec-tools-testing-20070330/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+2007-03-30 06:34:36.000000000 +0200
++++
+kexec-tools-testing-20070330-fixed/kexec/arch/ppc64/kexec-elf-rel-ppc64.c
+2008-06-19 17:35:23.000000000 +0200
+@@ -56,6 +56,7 @@
+            break;
+
+      case R_PPC64_ADDR64:
++     case R_PPC64_REL64::
+            /* Simply set it */
+            *(uint64_t *)location =3D value;
+            break;
+
+Mit freundlichen Gr=FC=DFen / met vriendelijke groeten / avec regards
+
+    Maxim V. Shchetynin
+    Linux Kernel Entwicklung
+    IBM Deutschland Research & Development GmbH
+    Linux f=FCr Cell, Abteilung 3250
+    Sch=F6naicher Stra=DFe 220
+    71032 B=F6blingen
+
+Vorsitzender des Aufsichtsrats: Martin Jetter
+Gesch=E4ftsf=FChrung: Herbert Kircher
+Sitz der Gesellschaft: B=F6blingen
+Registriergericht: Amtsgericht Stuttgart, HRB 243294
+
+Fahr nur so schnell wie dein Schutzengel fliegen kann!
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
