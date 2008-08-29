@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wf-out-1314.google.com ([209.85.200.173])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KYudJ-00076V-8y
-	for kexec@lists.infradead.org; Fri, 29 Aug 2008 03:26:45 +0000
-Received: by wf-out-1314.google.com with SMTP id 28so776354wfc.24
-	for <kexec@lists.infradead.org>; Thu, 28 Aug 2008 20:26:43 -0700 (PDT)
-Message-ID: <431757fd0808282026x257b7080k48e20c8e12343119@mail.gmail.com>
-Date: Thu, 28 Aug 2008 20:26:43 -0700
-From: "Manish Lachwani" <mlachwani@gmail.com>
-Subject: KEXEC on ARM V6
+	id 1KYwO6-00008L-VS
+	for kexec@lists.infradead.org; Fri, 29 Aug 2008 05:19:11 +0000
+Date: Fri, 29 Aug 2008 15:19:09 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: How do i see printf output from the purgatory code?
+Message-ID: <20080829051907.GA25758@verge.net.au>
+References: <48B73F4C.5030206@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <48B73F4C.5030206@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,40 +23,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org
 
-Hello!
+On Thu, Aug 28, 2008 at 05:14:04PM -0700, Jay Lan wrote:
+> Specifically, an ia64.
+> 
+> I added printf() to purgatory-ia64.c, compiled, and executed
+> the kexec command from a shell window (ie, not from a script), but
+> i still did not see the printf i put in.
+> 
+> Thanks for help in advance!
 
-I am trying to get kexec working on an ARM V6 board (1136) using the
-2.0.0 version of the kexec-tools.
+IIRC, the printf output in purgatory only shows on the VGA console.
 
-Firstly, it appears that uname checks for "arm". The ARM V6 board that
-I have has "armv6l" in the uname. I have hacked this support for
-armv6l.
-
-const struct arch_map_entry arches[] = {
-       { "arm", KEXEC_ARCH_ARM },
-       { "armv6l", KEXEC_ARCH_ARM },
-       { 0 },
-};
-
-I can send a patch as well.
-
-The loading seems to work ok. On "kexec -e", I see:
-
-Starting new kernel
-Uncompressing Linux...................................................................................................
-
-crc error
-
- -- System halted
-
-
-Has kexec been tried on any ARM yet? unfortunately, I dont have
-another board to try on. Response is highly appreciated.
-
-thanks,
-Manish
 
 _______________________________________________
 kexec mailing list
