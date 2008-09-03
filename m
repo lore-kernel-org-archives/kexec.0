@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KZzrz-0008Rb-VW
-	for kexec@lists.infradead.org; Mon, 01 Sep 2008 03:14:25 +0000
-Message-ID: <48BB4FE5.3050004@mxs.nes.nec.co.jp>
-Date: Mon, 01 Sep 2008 11:13:57 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH][ia64] Fix the difference between node_mem_map
-	and	node_start_pfn. (Re: makedumpfile fails on SGI machine)
-References: <20080730161416.47605c30@halley.suse.de>	<4891197D.10400@mxs.nes.nec.co.jp>	<20080731104726.035850be@halley.suse.de>	<48919306.80103@mxs.nes.nec.co.jp>	<20080731131823.3c7c97b2@halley.suse.de>	<4891A3CB.9040805@mxs.nes.nec.co.jp>	<48984275.5070409@mxs.nes.nec.co.jp>	<20080805171143.773c2465@halley.suse.de>	<48A9228A.3070005@mxs.nes.nec.co.jp>	<20080818130025.0282e471@halley.suse.de>	<48B517A2.5010508@mxs.nes.nec.co.jp>
-	<48B602CF.5040809@sgi.com>	<20080828092519.5d2d8838@halley.suse.de>	<48B79B17.8050307@mxs.nes.nec.co.jp>
-	<20080829185436.106fcdca@halley.suse.de>
-In-Reply-To: <20080829185436.106fcdca@halley.suse.de>
+Received: from ti-out-0910.google.com ([209.85.142.185])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kaqf2-0006aJ-PT
+	for kexec@lists.infradead.org; Wed, 03 Sep 2008 11:36:33 +0000
+Received: by ti-out-0910.google.com with SMTP id a21so1794066tia.2
+	for <kexec@lists.infradead.org>; Wed, 03 Sep 2008 04:36:30 -0700 (PDT)
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Wed, 03 Sep 2008 20:36:42 +0900
+Message-Id: <20080903113642.31132.32287.sendpatchset@rx1.opensource.se>
+Subject: [PATCH] sh: Fix help text spelling
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,48 +17,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1208115213=="
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 
---===============1208115213==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+From: Magnus Damm <damm@igel.co.jp>
 
+Fix SuperH help text spelling.
 
-Hi Bernhard,
+Signed-off-by: Magnus Damm <damm@igel.co.jp>
+---
 
-Bernhard Walle wrote:
->>> However, shouldn't we add that vmem_map to VMCOREINFO of the kernel?
->> I think that we would rather fix the kernel bug than add vmem_map to
->> VMCOREINFO of the kernel. If fixing it, makedumpfile does not need
->> vmem_map.
->>
->> The attached patch fixes the kernel bug, and makedumpfile can work without
->> '-x' option. I tested it on my ia64 none-NUMA machine, and it works fine.
->> Could you test the attached patch on your machine again ?
-> 
-> Thanks for the patch! This works fine on my machine.
+ kexec/arch/sh/kexec-sh.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thank you for the testing !
-I'll send this patch to linux-mm.
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
---===============1208115213==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--- 0001/kexec/arch/sh/kexec-sh.c
++++ work/kexec/arch/sh/kexec-sh.c	2008-08-27 16:51:55.000000000 +0900
+@@ -66,7 +66,7 @@ void arch_usage(void)
+     " none\n\n"
+     "Default options:\n"
+     " --append=\"%s\"\n"
+-    " STRING of --appned is set form /proc/cmdline as default.\n"
++    " STRING of --append is set from /proc/cmdline as default.\n"
+     ,get_append());
+ 
+ }
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1208115213==--
