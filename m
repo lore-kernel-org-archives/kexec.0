@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.171.30] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KbJZJ-0006IJ-O2
-	for kexec@lists.infradead.org; Thu, 04 Sep 2008 18:28:34 +0000
-Message-ID: <48C028D0.4050202@sgi.com>
-Date: Thu, 04 Sep 2008 11:28:32 -0700
-From: Jay Lan <jlan@sgi.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] IA64: kexec allocates too few memory for kdump kernel
-	itself
-References: <48BEFB47.20004@sgi.com> <20080904000100.GD8974@verge.net.au>
-	<48BF3BE8.2050806@sgi.com>
-In-Reply-To: <48BF3BE8.2050806@sgi.com>
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KbOFl-0004QB-HW
+	for kexec@lists.infradead.org; Thu, 04 Sep 2008 23:28:42 +0000
+Subject: Re: Trying to test my gart/iommu vmcore problem on RH
+From: Bob Montgomery <bob.montgomery@hp.com>
+In-Reply-To: <m1vdxpky0c.fsf@frodo.ebiederm.org>
+References: <1218138156.3361.386.camel@amd.troyhebe>
+	<20080808014024.GB3911@redhat.com>	<1218750773.3361.425.camel@amd.troyhebe>
+	<20080815131359.GA10208@redhat.com>
+	<1219081942.3361.436.camel@amd.troyhebe>
+	<20080819134748.GC18972@redhat.com>	<m1wsib3raq.fsf@frodo.ebiederm.org>
+	<1219442751.3361.459.camel@amd.troyhebe>
+	<m18wuofw79.fsf@frodo.ebiederm.org> <20080825131603.GB18914@redhat.com>
+	<m1vdxpky0c.fsf@frodo.ebiederm.org>
+Date: Thu, 04 Sep 2008 17:28:48 -0600
+Message-Id: <1220570928.2215.48.camel@amd.troyhebe>
+Mime-Version: 1.0
+Reply-To: bob.montgomery@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,197 +30,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Heber, Troy" <troy.heber@hp.com>, "Loftin, Terry" <terry.loftin@hp.com>, Kexec Mailing List <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Jay Lan wrote:
-> Simon Horman wrote:
->> On Wed, Sep 03, 2008 at 02:01:59PM -0700, Jay Lan wrote:
->>> Sometimes the kexec would allocate not enough memory for kdump kernel
->>> itself on IA64 and caused kdump kernel to panic at boot.
->>>
->>> When it happens, the /proc/iomem would show a kernel RAM segment like
->>> this:
->>> 3014000000-3015294fff : System RAM
->>>   3014000000-3014823ccf : Kernel code
->>>   3014823cd0-3014dee8ef : Kernel data
->>>   3014dee8f0-301529448f : Kernel bss
->>> 3015295000-307bffdfff : System RAM
->>>   3018000000-3037ffffff : Crash kernel
->>>
->>> But kexec would allocate memory 3018000000-3019290000 for the kernel,
->>> which is 0x5000 smaller than the regular kernel. In my cases, the
->>> physical_node_map and kern_memmap of the kdump kernel overlaped and
->>> caused data corruption.
->>>
->>> This patch fixes the problem. The patch was generated against
->>> kexec-tools 2.0.0 and tested in 2.6.27-rc4.
->> Hi Jay,
->>
->> I am unclear about why this underallocation occurs.
+On Mon, 2008-08-25 at 13:46 +0000, Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
 > 
-> Hi Simon,
-> 
-> The routine add_loaded_segments_info() set up "loaded_segment" array
-> that is needed by purgatory code, based on data stored in the
-> mem_ehdr array passed in as the second parameter.
-> 
-> Upon entrance of the routine, the crash_memory_range[] contains
-> information about the regular kernel:
-> crash_memory_range[ 0]: start=  3000080000, end=  30003fffff
-> crash_memory_range[ 1]: start=  3003000000, end=  3005ffffff
-> crash_memory_range[ 2]: start=  3006000000, end=  3013ffffff
-> crash_memory_range[ 3]: start=  3014000000, end=  3015294fff
-> 
-> The #3 entry is the kernel memory segment.
-> 
-> And the mem_ehdr array would contain data as such:
+> > On Fri, Aug 22, 2008 at 04:48:10PM -0700, Eric W. Biederman wrote:
+> >>
+> >> Hmm.  Thinking about this we actually have 2 problems.
+> >> - Communication about what is going on.
+> >> - How to handle an iommu in the event of a crash dump scenario.
+> >>
+> >> The current solution is to ignore the iommu, and use swiotlb.  This
+> >> solution does not look like it will work for future iommus.
+Howdy all,
 
-Hi,
+There are several aspects to this problem that make solutions come in
+and out of contention:
 
-It should be mem_phdr, got it from mem_ehdr->e_phdr.
+1.  Kexec vs Kdump
 
-> i=0, p_paddr=3018000000, p_memsz=d04480, p_offset=10000, p_type=1
-> i=1, p_paddr=3018d20000, p_memsz=9620, p_offset=d20000, p_type=1
-> i=2, p_paddr=3018d30000, p_memsz=564490, p_offset=d30000, p_type=1
-> i=3, p_paddr=0, p_memsz=0, p_offset=0, p_type=4
+	Kexec: If we are kexec'ing normally, we assume that the shutdown has
+successfully stopped DMAs prior to starting our new kernel, and if not,
+it's a bug in the previous kernel's driver shutdown.  So no issue here,
+right?
 
-Does anyone understand how the array were created and why there
-was a gap between i=0 and i=1 entries? I think this is the problem
-but i do not know how to fix it, so tried to work around it.
+	Kdump: The driver shutdown has been skipped as we go down during a
+crash, so assume that leftover DMA operations might be in progress as
+the kdump kernel comes up.  BUT!  They will be in progress to some area
+of memory other than the memory being used by the kdump kernel (it has
+its own crashkernel sandbox).  And on my 2.6.18-based system, with an
+AMD64 NB GART-acting-as-IOMMU, the kdump kernel *does not* try to
+initialize or use an IOMMU when it comes up because its memory size is
+too small to need one (no one is setting crashkernel=4G@4G).  So the
+kdump kernel can successfully ignore the old IOs using the old GART
+aperture IOMMU.
 
-The statement my patch replaced was totally broken:
- -			if (loaded_segments[loaded_segments_num].end !=
- -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
- -				break;
- +			if (loaded_segments[loaded_segments_num].end <
- +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
- +				loaded_segments[loaded_segments_num].end
- +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
+EXCEPT(!) for the fact the we've left CPU-side translations turned on in
+the GART NB hardware and the kdump kernel will currently read through
+that zone using /proc/vmcore or /dev/oldmem.  That's why I like fixing
+my stone-age problem by turning off CPU-side access. 
 
-My debugging showed that when "loaded_segments[loaded_segments_num].end"
-!= "phdr->p_paddr & ~(ELF_PAGE_SIZE-1)", they were treated as equal
-and continue to next statement.  However, if i assign both expression
-to local variables and do comparison, the 'break' statement is
-executed correctly when two values are not the same. Unfortunately,
-consequently the kdump kernel would _alawys_ hang.
-
-I believe the intent of the original statement is to ensure there is
-no gap between entries of mem_phdr array. But if there is a gap,
-kexec should simply exit with failure. The 'break' statement just
-created a loaded_segment[] array that broke the kernel memory segment
-into multiple entries and resulted in the kdump kernel hang in
-find_memory(). The IA64 (at least 2.6.27-rc4) kdump kernel works in
-some cases today are simply out of luck.
-
-I believe the real fix is to fix the contents of the mem_phdr array.
-Since i do not know how to fix it, my patch would close up the
-gap where there is the a gap between entries of the mem_phdr array.
-
-Does it make more sense to you now, Simon?
-
-Regards,
- - jay
+Note that real (future?) IOMMUs don't even have the concept of
+translating accesses from the CPU side.  They only work on IO requests.
+So reading old memory areas from the crashed kernel shouldn't cause an
+IOMMU to "do" anything.
 
 
+2.  GART vs Calgary vs "new AMD IOMMU" vs "new Intel IOMMU"
 
-> 
-> The code wants the new loaded_segments contain starting address
-> all aligned at page boundary, which is 0x10000 in IA64.
-> 
-> Note that the p_memsz of mem_ehdr does not match to entries in
-> /proc/iomem:
-> 3014000000-3015294fff : System RAM
->   3014000000-3014823ccf : Kernel code
->   3014823cd0-3014dee8ef : Kernel data
->   3014dee8f0-301529448f : Kernel bss
-> 
-> The original code of add_loaded_segments_info() would go through
-> the mem_ehdr array and use the p_paddr of the first entry (the
-> beginning of the reserved memory) as the start address, add
-> the p_memsz of three entries to calculate the end address of
-> the kernel segment.
-> 
-> But the p_paddr of i=0 plus p_memsz of i=0 should result in
-> 3018d10000 as the p_paddr of i=1 entry, but actually the
-> p_paddr of i=1 is 3018d20000. The logic of that routine
-> can not explain the discrepency.
-> 
-> So, where the data of mem_ehdr array come from?
-> 
-> add_loaded_segments_info
-> <-  load_crashdump_segments
->   <-  elf_ia64_load
->     <- file_type[i].load
->       <- my_load
-> 
-> The elf_ia64_load set up mem_ehdr, probabaly based on data
-> pointed by *buf, which i think comes from vmlinuz.
-> 
-> So, i failed to find out how the p_memsz were set up initially.
-> But, i think we did it the way too complicated, IMHO.
-> 
-> The crash_memory_range[] array showed the kernel segment consumed
-> 0x1295000 bytes of memory and we only need to tell the purgatory
-> code to reserve that amount of memory. The logic in
-> add_loaded_segments_info() came out with 0x1290000 and caused the
-> crashkernel to panic on boot.
-> 
-> Hmmm, as i types now, i may not consider the situation where
-> the crashkernel is not the same as the first kernel...
-> 
-> Note that the underallocation does not _ALWAYS_ happen! It depends
-> on the vmlinux we build. Honestly i do not understand some part of
-> the kexec-tools code well enough to make major surgery to the code.
-> So, i just compare the end address after calculation of i=0 entry
-> of mem_ehdr array with the start address of the second entry. If it
-> is too small, i just bring it up to align with the start address of
-> the second entry. I am happy to allocate one extra page, may not be
-> needed in some cases, of memory than to panic. Yes, my patch is
-> a work-around.
-> 
-> If you can find the true cause of the problem and fix it, it
-> would be great and appreciated!
-> 
-> Regards,
->  - jay
-> 
-> 
->>> Signed-off-by: Jay Lan <jlan@sgi.com>
->>>
->>> ---
->>>  kexec/arch/ia64/crashdump-ia64.c |    8 ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
->>> ===================================================================
->>> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-03 11:24:14.289758063 -0700
->>> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-03 11:29:34.095833316 -0700
->>> @@ -90,15 +90,15 @@ static void add_loaded_segments_info(str
->>>  			phdr = &ehdr->e_phdr[i];
->>>  	                if (phdr->p_type != PT_LOAD)
->>>  	                        break;
->>> -			if (loaded_segments[loaded_segments_num].end !=
->>> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
->>> -				break;
->>> +			if (loaded_segments[loaded_segments_num].end <
->>> +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
->>> +				loaded_segments[loaded_segments_num].end
->>> +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
->>>  			loaded_segments[loaded_segments_num].end +=
->>>  				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
->>>  				~(ELF_PAGE_SIZE - 1);
->>>  			i++;
->>>  		}
->>> -
->>>  		loaded_segments_num++;
->>>  	}
->>>  }
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+	The GART-as-IOMMU thing is not a "real" IOMMU.  It doesn't offer much
+of the interesting protection of a real IOMMU, just "valid", "coherent"
+and a translation address.  An IO card is still free to screw up and hit
+other addresses outside the aperture if it wants to, or hit other pages
+in the aperture that really belong to some other driver, or to write to
+a page that it should only read, etc.  Consequently, there isn't much
+desire to utilize the GART thing unless I really need 32-bit IO card
+access to 40-bit address space.  Since I don't need that in the kdump
+kernel (currently), there's no reason to try to use the GART there, so
+it's safe to ignore it, as long as I don't provoke it :-)
+
+BUT, if I had a real IOMMU that provided cool protection stuff and
+domain stuff, and not just address range expansion for old IO cards,
+then I might want to (or be forced to) use it all the time, independent
+of memory size, and then the kdump kernel might really need to deal with
+sharing it in some way with old leftover DMAs from the crashed kernel
+that we're dumping.  And this, I think, is the only real issue looming.
+
+But this should only be a kdump issue, and not a kexec issue (see #1
+above), because the previous kernel should have shut all that down
+before it kexec'd, right?
+
+
+3.  IOMMU vs swiotlb
+
+Isn't swiotlb just a way of hiding bounce buffer copies and management
+inside of the dma_map_single and dma_unmap_single calls?  If so, it's
+just software(TM) and it just uses addresses in the kdump kernel
+sandbox, which (by definition) are not addresses that could have been
+used in the old kernel that crashed.  There shouldn't be any conflict
+between kdump kernel and old crashed kernel if one or both are using
+swiotlb.  Once again, in *my* current situation, there's no reason to
+use swiotlb in the kdump kernel because my memory range is restricted to
+my crashkernel sandbox and I don't need any IOMMU address translation
+capability.  
+
+If the original kernel had been using swiotlb, then there's really no
+issue, because any leftover DMAs are just writing to the old bounce
+buffers anyway, and there's no driver left waiting to call
+dma_unmap_single to copy the result into the real buffer.
+
+What considerations have I missed?
+
+Bob Montgomery
+(vacation last week)
+
+   
+
 
 
 _______________________________________________
