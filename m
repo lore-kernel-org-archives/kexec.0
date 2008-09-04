@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kb4Bo-0007dm-Gz
-	for kexec@lists.infradead.org; Thu, 04 Sep 2008 02:03:17 +0000
-Date: Thu, 4 Sep 2008 12:03:14 +1000
-From: Simon Horman <horms@verge.net.au>
+Received: from mta23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KbBBF-0006Bo-Hn
+	for kexec@lists.infradead.org; Thu, 04 Sep 2008 09:31:10 +0000
+Date: Thu, 4 Sep 2008 18:30:40 +0900
+From: Paul Mundt <lethal@linux-sh.org>
 Subject: Re: [PATCH] sh: Add vmlinux crash dump support
-Message-ID: <20080904020310.GA25701@verge.net.au>
+Message-ID: <20080904093039.GB16025@linux-sh.org>
 References: <20080903113811.31135.32678.sendpatchset@rx1.opensource.se>
+	<20080904020310.GA25701@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080903113811.31135.32678.sendpatchset@rx1.opensource.se>
+In-Reply-To: <20080904020310.GA25701@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>
 
-On Wed, Sep 03, 2008 at 08:38:11PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm@igel.co.jp>
+On Thu, Sep 04, 2008 at 12:03:14PM +1000, Simon Horman wrote:
+> On Wed, Sep 03, 2008 at 08:38:11PM +0900, Magnus Damm wrote:
+> > From: Magnus Damm <damm@igel.co.jp>
+> > 
+> > This patch adds SuperH crash dump support. The vmlinux loader is modified
+> > with crash dump hooks as on other architectures. SuperH does not need any
+> > backup region, so only the elf header is allocated from the top of the
+> > reserved memory window. The actual size of the memory window is passed
+> > to the secondary kernel on the command line using "mem=".
+> > 
+> > The secondary kernel must be configured to match the reserved memory
+> > window, change kernel parameters CONFIG_MEMORY_START and CONFIG_MEMORY_SIZE.
+> > 
+> > Linux-2.6.27 should be usable as primary kernel on SuperH, later kernel
+> > versions are needed to fully support secondary kernel /proc/vmcore.
 > 
-> This patch adds SuperH crash dump support. The vmlinux loader is modified
-> with crash dump hooks as on other architectures. SuperH does not need any
-> backup region, so only the elf header is allocated from the top of the
-> reserved memory window. The actual size of the memory window is passed
-> to the secondary kernel on the command line using "mem=".
+> Hi Magnus,
 > 
-> The secondary kernel must be configured to match the reserved memory
-> window, change kernel parameters CONFIG_MEMORY_START and CONFIG_MEMORY_SIZE.
+> this looks ok to me. Has Paul or someone else reviewed it?
 > 
-> Linux-2.6.27 should be usable as primary kernel on SuperH, later kernel
-> versions are needed to fully support secondary kernel /proc/vmcore.
+I have now, looks good to me.
 
-Hi Magnus,
-
-this looks ok to me. Has Paul or someone else reviewed it?
+Acked-by: Paul Mundt <lethal@linux-sh.org>
 
 _______________________________________________
 kexec mailing list
