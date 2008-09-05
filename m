@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mta23.gyao.ne.jp ([125.63.38.249] helo=mx.gate01.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KbQpR-00006D-CM
-	for kexec@lists.infradead.org; Fri, 05 Sep 2008 02:13:41 +0000
+	id 1KbQq1-0001Xk-RC
+	for kexec@lists.infradead.org; Fri, 05 Sep 2008 02:14:18 +0000
 Received: from [124.34.33.190] (helo=master.linux-sh.org)
-	by pop55.isp.us-com.jp with esmtp (Mail 4.69) id 1KbQpO-0008BV-9I
-	for kexec@lists.infradead.org; Fri, 05 Sep 2008 11:13:38 +0900
+	by pop56.isp.us-com.jp with esmtp (Mail 4.69) id 1KbQpz-0006vv-Vx
+	for kexec@lists.infradead.org; Fri, 05 Sep 2008 11:14:16 +0900
 Received: from localhost (unknown [127.0.0.1])
-	by master.linux-sh.org (Postfix) with ESMTP id 64DFA63754
-	for <kexec@lists.infradead.org>; Fri,  5 Sep 2008 02:13:11 +0000 (UTC)
+	by master.linux-sh.org (Postfix) with ESMTP id 1D10763754
+	for <kexec@lists.infradead.org>; Fri,  5 Sep 2008 02:13:49 +0000 (UTC)
 Received: from master.linux-sh.org ([127.0.0.1])
 	by localhost (master.linux-sh.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id T8bF3BBENG1O for <kexec@lists.infradead.org>;
-	Fri,  5 Sep 2008 11:13:11 +0900 (JST)
-Date: Fri, 5 Sep 2008 11:13:10 +0900
+	with ESMTP id NobIKu0G7FqN for <kexec@lists.infradead.org>;
+	Fri,  5 Sep 2008 11:13:48 +0900 (JST)
+Date: Fri, 5 Sep 2008 11:13:48 +0900
 From: Paul Mundt <lethal@linux-sh.org>
-Subject: [PATCH] kexec/kexec.h: Bring put/get_unaligned() back from the dead.
-Message-ID: <20080905021310.GA20338@linux-sh.org>
+Subject: [PATCH] sh: Add ELF relocation support for R_SH_DIR32/R_SH_REL32
+	relocs.
+Message-ID: <20080905021348.GB20338@linux-sh.org>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -33,87 +34,78 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This re-enables the fairly generic put/get_unaligned() routines in
-kexec.h, while tidying up the variable shadowing clash that results
-when using it in places like machine_apply_elf_rel().
-
-Needed for SH ELF relocations.
-
-IA64 still does its own put_unaligned64(), which should likely also be
-converted over to using put_unaligned() directly.
+Simple handler for the common SHcompact ELF relocations.
 
 Signed-off-by: Paul Mundt <lethal@linux-sh.org>
 
 ---
 
- kexec/kexec.h |   21 ++++++++++-----------
- 1 files changed, 10 insertions(+), 11 deletions(-)
+ kexec/arch/sh/kexec-elf-rel-sh.c |   45 +++++++++++++++++++++++++++++++++----
+ 1 files changed, 40 insertions(+), 5 deletions(-)
 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 7db8227..8421c29 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -6,6 +6,7 @@
- #include <sys/types.h>
+diff --git a/kexec/arch/sh/kexec-elf-rel-sh.c b/kexec/arch/sh/kexec-elf-rel-sh.c
+index 3e16b28..c1aaa60 100644
+--- a/kexec/arch/sh/kexec-elf-rel-sh.c
++++ b/kexec/arch/sh/kexec-elf-rel-sh.c
+@@ -1,3 +1,15 @@
++/*
++ * kexec-elf-rel-sh.c - ELF relocations for SuperH
++ * Copyright (C) 2008 Paul Mundt
++ *
++ * Based on the SHcompact module loader (arch/sh/kernel/module.c) in the
++ * Linux kernel, which is written by:
++ *
++ *	Copyright (C) 2003 - 2008 Kaz Kojima & Paul Mundt
++ *
++ * This source code is licensed under the GNU General Public License,
++ * Version 2.  See the file COPYING for more details.
++ */
  #include <stdio.h>
- #include <stdint.h>
-+#include <string.h>
- #define USE_BSD
- #include <byteswap.h>
- #include <endian.h>
-@@ -56,43 +57,41 @@
- #endif
+ #include <elf.h>
+ #include "../../kexec.h"
+@@ -5,14 +17,37 @@
  
+ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+ {
++	/* Intentionally don't bother with endianness validation, it's
++	 * configurable */
  
--#if 0
- /*
-- * This function doesn't actually exist.  The idea is that when someone uses the macros
-- * below with an unsupported size (datatype), the linker will alert us to the problem via
-- * an unresolved reference error.
-+ * This function doesn't actually exist.  The idea is that when someone
-+ * uses the macros below with an unsupported size (datatype), the linker
-+ * will alert us to the problem via an unresolved reference error.
-  */
- extern unsigned long bad_unaligned_access_length (void);
+-        die("machine_verify_elf_rel is not implemented\n");
+-	return 0;
++	if (ehdr->ei_class != ELFCLASS32)
++		return 0;
++	if (ehdr->e_machine != EM_SH)
++		return 0;
++
++	return 1;
+ }
  
- #define get_unaligned(loc) \
- ({ \
--	__typeof__(*(loc)) value; \
-+	__typeof__(*(loc)) _v; \
- 	size_t size = sizeof(*(loc)); \
- 	switch(size) {  \
- 	case 1: case 2: case 4: case 8: \
--		memcpy(&value, (loc), size); \
-+		memcpy(&_v, (loc), size); \
- 		break; \
- 	default: \
--		value = bad_unaligned_access_length(); \
-+		_v = bad_unaligned_access_length(); \
- 		break; \
- 	} \
--	value; \
-+	_v; \
- })
- 
- #define put_unaligned(value, loc) \
- do { \
- 	size_t size = sizeof(*(loc)); \
--	__typeof__(*(loc)) val = value; \
-+	__typeof__(*(loc)) _v = value; \
- 	switch(size) { \
- 	case 1: case 2: case 4: case 8: \
--		memcpy((loc), &val, size); \
-+		memcpy((loc), &_v, size); \
- 		break; \
- 	default: \
- 		bad_unaligned_access_length(); \
- 		break; \
- 	} \
- } while(0)
--#endif
- 
- extern unsigned long long mem_min, mem_max;
- 
+ void machine_apply_elf_rel(struct mem_ehdr *ehdr, unsigned long r_type,
+-	void *location, unsigned long address, unsigned long value)
++	void *orig_loc, unsigned long address, unsigned long relocation)
+ {
+-        die("Unknown rela relocation: %lu\n", r_type);
+-	return;
++	uint32_t *location = orig_loc;
++	uint32_t value;
++
++	switch (r_type) {
++	case R_SH_DIR32:
++		value = get_unaligned(location);
++		value += relocation;
++		put_unaligned(value, location);
++		break;
++	case R_SH_REL32:
++		relocation = (relocation - (uint32_t)location);
++		value = get_unaligned(location);
++		value += relocation;
++		put_unaligned(value, location);
++		break;
++	default:
++	        die("Unknown rela relocation: %lu\n", r_type);
++		break;
++	}
+ }
 
 _______________________________________________
 kexec mailing list
