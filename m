@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KcyJe-0006YF-Jp
-	for kexec@lists.infradead.org; Tue, 09 Sep 2008 08:11:14 +0000
-Date: Tue, 9 Sep 2008 10:19:00 +0200
+	id 1Kcyh8-00016J-Qu
+	for kexec@lists.infradead.org; Tue, 09 Sep 2008 08:35:31 +0000
+Content-Type: multipart/mixed; boundary="===============0412276394=="
+MIME-Version: 1.0
+Subject: [PATCH] Use gzip for manpage compression
+Message-Id: <e31c137cf40f10b0a445.1220949784@kepler.site>
+Date: Tue, 09 Sep 2008 10:43:04 +0200
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: IA64: copying /proc/vmcore caused kernel MCA'ed
-Message-ID: <20080909101900.76f843ec@kepler.site>
-In-Reply-To: <48C56F55.5000503@sgi.com>
-References: <48C56F55.5000503@sgi.com>
-Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,31 +17,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: jlan@sgi.com
+To: oomichi@mxs.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-* Jay Lan <jlan@sgi.com> [2008-09-08]: 
+--===============0412276394==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-> Any input helping me speed up debugging is appreciated.
-
-I would start with comparing the ELF program headers of /proc/vmcore
-which you get with "readelf -l /proc/vmcore" in kdump environment and
-the /proc/iomem which kexec uses to set up the ELF core headers.
-
-If both does contain the memory regions which should not be accessed,
-then it's a bug in the ressource assignment of the kernel, and
-if /proc/iomem does not, the kexec tool has a bug.
-
-Hope that helps a bit, I don't have time to look deeper into that now.
+Use gzip instead of zip for manual page compression. That's the usual
+method of compressing manual pages on Unix.
 
 
-Bernhard
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+
+1 file changed, 1 insertion(+), 1 deletion(-)
+Makefile |    2 +-
+
+
+
+--===============0412276394==
+Content-Type: text/x-patch; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename=makedumpfile-use-gzip.diff
+
+Use gzip instead of zip for manual page compression. That's the usual
+method of compressing manual pages on Unix.
+
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+diff --git a/Makefile b/Makefile
+--- a/Makefile
++++ b/Makefile
+@@ -31,7 +31,7 @@
+ 
+ makedumpfile: $(SRC) $(OBJ_ARCH)
+ 	$(CC) $(CFLAGS) $(OBJ_ARCH) -o $@ $< -static -ldw -lelf -lz
+-	zip ./makedumpfile.8.gz ./makedumpfile.8
++	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
+ 
+ clean:
+ 	rm -f $(OBJ) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz
+
+--===============0412276394==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0412276394==--
+
