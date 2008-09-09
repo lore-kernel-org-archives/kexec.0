@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kcyh8-00016J-Qu
-	for kexec@lists.infradead.org; Tue, 09 Sep 2008 08:35:31 +0000
-Content-Type: multipart/mixed; boundary="===============0412276394=="
+	id 1Kczsw-0003GS-Us
+	for kexec@lists.infradead.org; Tue, 09 Sep 2008 09:51:47 +0000
+Message-ID: <48C63F6C.3040005@mxs.nes.nec.co.jp>
+Date: Tue, 09 Sep 2008 18:18:36 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH] Use gzip for manpage compression
-Message-Id: <e31c137cf40f10b0a445.1220949784@kepler.site>
-Date: Tue, 09 Sep 2008 10:43:04 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Use gzip for manpage compression
+References: <e31c137cf40f10b0a445.1220949784@kepler.site>
+In-Reply-To: <e31c137cf40f10b0a445.1220949784@kepler.site>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,54 +18,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============1454758629=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp
+To: Bernhard Walle <bwalle@suse.de>
 Cc: kexec@lists.infradead.org
 
---===============0412276394==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+--===============1454758629==
+Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
-Use gzip instead of zip for manual page compression. That's the usual
-method of compressing manual pages on Unix.
+
+Hi Bernhard,
+
+Bernhard Walle wrote:
+> Use gzip instead of zip for manual page compression. That's the usual
+> method of compressing manual pages on Unix.
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+Thank you for the patch.
+After applying your patch, the file size of manpage is reduced.
+(3774bytes -> 3647bytes).
+The patch will be applied to the next release.
 
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+Thanks
+Ken'ichi Ohmichi
 
 
-1 file changed, 1 insertion(+), 1 deletion(-)
-Makefile |    2 +-
-
-
-
---===============0412276394==
-Content-Type: text/x-patch; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment; filename=makedumpfile-use-gzip.diff
-
-Use gzip instead of zip for manual page compression. That's the usual
-method of compressing manual pages on Unix.
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-
-diff --git a/Makefile b/Makefile
---- a/Makefile
-+++ b/Makefile
-@@ -31,7 +31,7 @@
- 
- makedumpfile: $(SRC) $(OBJ_ARCH)
- 	$(CC) $(CFLAGS) $(OBJ_ARCH) -o $@ $< -static -ldw -lelf -lz
--	zip ./makedumpfile.8.gz ./makedumpfile.8
-+	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
- 
- clean:
- 	rm -f $(OBJ) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz
-
---===============0412276394==
+--===============1454758629==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -75,5 +59,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0412276394==--
-
+--===============1454758629==--
