@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga07.intel.com ([143.182.124.22] helo=azsmga101.ch.intel.com)
+Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
+	helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KduO4-00020G-RR
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 22:11:41 +0000
-Date: Thu, 11 Sep 2008 14:59:54 -0700
-From: "Lombard, David N" <dnlombar@ichips.intel.com>
-Subject: Re: SetVirtualAddressMap() on Tiano EFI firmware
-Message-ID: <20080911215954.GA3104@nlxdcldnl2.cl.intel.com>
-References: <200809111423.58814.bjorn.helgaas@hp.com>
+	id 1KdvAw-0006d9-Hh
+	for kexec@lists.infradead.org; Thu, 11 Sep 2008 23:02:10 +0000
+Message-ID: <48C9A2F8.3060308@sgi.com>
+Date: Thu, 11 Sep 2008 16:00:08 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200809111423.58814.bjorn.helgaas@hp.com>
+Subject: [PATCH]IA64: assign a distinguishable label to uncached memory in
+	/proc/iomem
+Content-Type: multipart/mixed; boundary="------------020302050802090908040703"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,31 +19,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bjorn.helgaas@hp.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-ia64@vger.kernel.org
+Cc: Jack Steiner <steiner@sgi.com>, kexec@lists.infradead.org
 
-On Thu, Sep 11, 2008 at 01:23:58PM -0700, Bjorn Helgaas wrote:
-> Has kexec been tested on x86 with EFI firmware?
-> 
-> I'm testing it on ia64 with Tiano-based EFI firmware, and I
-> tripped over an issue with SetVirtualAddressMap().  I would
-> expect a similar problem to happen on x86, but I don't see
-> any code to deal with it.
+This is a multi-part message in MIME format.
+--------------020302050802090908040703
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-Hmmm.  I run on 32- and 64-bit kernels on a 32-bit IA EFI, and
-haven't seen this problem, including chains of kexec invocations.
+Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
+is denoted as "System RAM" in /proc/iomem, while memory of attribute
+(EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
 
-I'll take a closer look at what's going on on my systems.
+The kexec utility then includes uncached memory as part of vmcore. The
+kdump kernel MCA'ed when it tries to save the vmcore to a disk. A normal
+"cached" access may cause MCAs.
 
--- 
-David N. Lombard, Intel, Irvine, CA
-I do not speak for Intel Corporation; all comments are strictly my own.
+This patch would label memory with attribute of EFI_MEMORY_UC only as
+"Uncached RAM" so that kexec would know not to include it in the vmcore.
+I will submit a separate kexec-tools patch to the kexec list.
+
+Signed-off-by: Jay Lan <jlan@sgi.com>
+
+
+
+--------------020302050802090908040703
+Content-Type: text/plain;
+ name="UC-mem"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="UC-mem"
+
+---
+ arch/ia64/kernel/efi.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+Index: linux/arch/ia64/kernel/efi.c
+===================================================================
+--- linux.orig/arch/ia64/kernel/efi.c
++++ linux/arch/ia64/kernel/efi.c
+@@ -1232,9 +1232,10 @@ efi_initialize_iomem_resources(struct re
+ 				if (md->attribute & EFI_MEMORY_WP) {
+ 					name = "System ROM";
+ 					flags |= IORESOURCE_READONLY;
+-				} else {
+-					name = "System RAM";
+-				}
++				} else if (md->attribute == EFI_MEMORY_UC)
++						name = "Uncached RAM";
++					else
++						name = "System RAM";
+ 				break;
+ 
+ 			case EFI_ACPI_MEMORY_NVS:
+
+
+--------------020302050802090908040703
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------020302050802090908040703--
+
