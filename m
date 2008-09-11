@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KdbzP-0006fV-Nu
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 02:33:00 +0000
-Message-ID: <48C88309.20005@mxs.nes.nec.co.jp>
-Date: Thu, 11 Sep 2008 11:31:37 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
+	id 1KdhRD-0002UW-26
+	for kexec@lists.infradead.org; Thu, 11 Sep 2008 08:22:03 +0000
+Date: Thu, 11 Sep 2008 10:21:58 +0200
+From: Bernhard Walle <bwalle@suse.de>
 Subject: Re: the exiting makedumpfile is almost there... :)
+Message-ID: <20080911102158.50bc847d@kepler.site>
+In-Reply-To: <48C87C87.6070808@mxs.nes.nec.co.jp>
 References: <48C85836.8080606@sgi.com>
-In-Reply-To: <48C85836.8080606@sgi.com>
+	<48C87C87.6070808@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,50 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0149001824=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, Dave Anderson <anderson@redhat.com>
+To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
---===============0149001824==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+* "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> [2008-09-11]: 
 
-
-Hi Jay,
-
-Sorry for one more request.
-
-Jay Lan wrote:
-> Hmmm, the reason it is only "almost there" was that crash failed
-> to analyze the output of makedumpfile. :(  Crash was happy with
-> the vmcore saved with 'cp' command.
 > 
-> a4700rac:/var/tmp/jlan # crash -d 1 /boot/vmlinux-2.6.27-rc5-default
-> /mnt/sda9/diskdump/vmcore-2.6.27-rc5-default
-> 
-> crash 4.0-4.10
+> I have not tested makedumpfile on IA64 linux-2.6.27-rcX yet,
+> because IA64 linux-2.6.27-rcX kernel gets a panic while booting.
+> So I guess that there is some thing wrong in my .config file.
 
-The latest crash is version 4.0-7.1.
-Could you please download it from the following site and try it ?
-
-http://people.redhat.com/anderson/
+http://article.gmane.org/gmane.linux.ports.ia64/19380
 
 
-Thanks
-Ken'ichi Ohmichi
-
-
---===============0149001824==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Bernhard
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0149001824==--
