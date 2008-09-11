@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from g1t0028.austin.hp.com ([15.216.28.35])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kdo1P-0005g8-Pd
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 15:23:52 +0000
-Date: Thu, 11 Sep 2008 17:23:47 +0200
-Subject: [patch] [PATCH] Fix memory leaks
-Message-ID: <20080911152347.GA13656@suse.de>
+	id 1Kdshu-0006Et-Ix
+	for kexec@lists.infradead.org; Thu, 11 Sep 2008 20:24:02 +0000
+Received: from g5t0029.atlanta.hp.com (g5t0029.atlanta.hp.com [16.228.8.141])
+	by g1t0028.austin.hp.com (Postfix) with ESMTP id 459471C3A8
+	for <kexec@lists.infradead.org>; Thu, 11 Sep 2008 20:24:01 +0000 (UTC)
+From: Bjorn Helgaas <bjorn.helgaas@hp.com>
+Subject: SetVirtualAddressMap() on Tiano EFI firmware
+Date: Thu, 11 Sep 2008 14:23:58 -0600
 MIME-Version: 1.0
 Content-Disposition: inline
-From: bwalle@suse.de (Bernhard Walle)
+Message-Id: <200809111423.58814.bjorn.helgaas@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,90 +24,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-This memory leaks appear in valigrind run:
+Has kexec been tested on x86 with EFI firmware?
 
-    makedumpfile Completed.
-    ==6024== 
-    ==6024== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 2 from 1)
-    ==6024== malloc/free: in use at exit: 8,838 bytes in 5 blocks.
-    ==6024== malloc/free: 80 allocs, 75 frees, 192,858 bytes allocated.
-    ==6024== For counts of detected errors, rerun with: -v
-    ==6024== searching for pointers to 5 not-freed blocks.
-    ==6024== checked 70,864 bytes.
-    ==6024== 
-    ==6024== 
-    ==6024== 22 bytes in 1 blocks are definitely lost in loss record 2 of 5
-    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
-    ==6024==    by 0x416955: initial (makedumpfile.c:3318)
-    ==6024==    by 0x418954: create_dumpfile (makedumpfile.c:6000)
-    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
-    ==6024== 
-    ==6024== 
-    ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 4 of 5
-    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
-    ==6024==    by 0x409F72: prepare_dump_bitmap (makedumpfile.c:4338)
-    ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
-    ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
-    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
-    ==6024== 
-    ==6024== 
-    ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 5 of 5
-    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
-    ==6024==    by 0x409F51: prepare_dump_bitmap (makedumpfile.c:4333)
-    ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
-    ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
-    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
-    ==6024== 
-    ==6024== LEAK SUMMARY:
-    ==6024==    definitely lost: 8,262 bytes in 3 blocks.
-    ==6024==      possibly lost: 0 bytes in 0 blocks.
-    ==6024==    still reachable: 576 bytes in 2 blocks.
-    ==6024==         suppressed: 0 bytes in 0 blocks.
-    ==6024== Reachable blocks (those to which a pointer was found) are not shown.
-    ==6024== To see them, rerun with: --leak-check=full --show-reachable=yes
+I'm testing it on ia64 with Tiano-based EFI firmware, and I
+tripped over an issue with SetVirtualAddressMap().  I would
+expect a similar problem to happen on x86, but I don't see
+any code to deal with it.
 
-Although it's not strictly necessary to free memory at the end of program run since
-it gets freed automatically, it still makes sense to have a clean valgrind run to be
-able to check the program for "real" memory leaks with valgrind.
+The EFI SetVirtualAddressMap() interface is only supposed to
+be called once.  Linux calls it once at boot-time, and if we
+kexec a new Linux kernel, the new kernel calls it again.
 
+The EFI spec suggests that if it *is* called twice,
+SetVirtualAddressMap() should return EFI_UNSUPPORTED.  But
+we go to great pains in purgatory (ia64_env_setup()) to patch
+the function descriptor so that the new kernel's call never
+even makes it to the EFI routine.  I don't know whether this
+is because SetVirtualAddressMap() blows up if we call it again,
+or whether we just didn't want to change Linux to ignore an
+EFI_UNSUPPORTED return value.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
+On ia64, the SetVirtualAddressMap entry in the EFI Runtime
+Services Table points to a function descriptor, and ia64_env_setup()
+patches the code address in the descriptor so that when the new
+kernel thinks it's calling SetVirtualAddressMap(), it's instead
+calling a dummy function that immediately returns success.
 
----
- makedumpfile.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+In most current ia64 EFI implementations, SetVirtualAddressMap()
+converts all pointers in the EFI Runtime Services Table from
+physical to virtual, including the SetVirtualAddressMap pointer
+itself.  ia64_env_setup() (running in physical mode) converts
+the SetVirtualAddressMap pointer from virtual to physical by
+subtracting PAGE_OFFSET.
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5268,6 +5268,14 @@ close_dump_bitmap(void)
- 		ERRMSG("Can't close the bitmap file(%s). %s\n",
- 		    info->name_bitmap, strerror(errno));
- 	free(info->name_bitmap);
-+
-+	/* free 1st bitmap */
-+	free(info->bitmap1);
-+	info->bitmap1 = NULL;
-+
-+	/* free 2nd bitmap */
-+	free(info->bitmap2);
-+	info->bitmap2 = NULL;
+But new Tiano-based EFI implementations do *not* convert the
+SetVirtualAddressMap pointer to virtual -- they leave it as physical.
+So when ia64_env_setup() subtracts PAGE_OFFSET from the physical
+address, it ends up with garbage, and patching the function
+descriptor causes an MCA.
+
+The following patch makes kexec-tools work on either old or new
+firmware.  Masking out the top nibble of either a physical address
+or a virtual address in region 7 results in a physical address.
+
+diff --git a/purgatory/arch/ia64/purgatory-ia64.c b/purgatory/arch/ia64/purgatory-ia64.c
+index b2fe6d4..acacb56 100644
+--- a/purgatory/arch/ia64/purgatory-ia64.c
++++ b/purgatory/arch/ia64/purgatory-ia64.c
+@@ -147,7 +147,7 @@ setup_arch(void)
+ 
+ inline unsigned long PA(unsigned long addr)
+ {
+-	return addr - PAGE_OFFSET;
++	return addr & 0x0fffffffffffffffLL;
  }
  
  void
-@@ -5332,6 +5340,10 @@ close_files_for_creating_dumpfile(void)
- 	else if (info->dump_level > DL_EXCLUDE_ZERO)
- 		close_kernel_file();
- 
-+	/* free name for vmcoreinfo */
-+	free(info->name_vmcoreinfo);
-+	info->name_vmcoreinfo = NULL;
-+
- 	close_dump_memory();
- 
- 	close_dump_file();
 
 _______________________________________________
 kexec mailing list
