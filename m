@@ -1,22 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KdnDh-00006w-JI
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 14:32:29 +0000
-Received: from zorg.emea.sgi.com (zorg.emea.sgi.com [144.253.68.115])
-	by relay1.corp.sgi.com (Postfix) with ESMTP id 211438F8113
-	for <kexec@lists.infradead.org>; Thu, 11 Sep 2008 07:32:28 -0700 (PDT)
-Received: from hedi by zorg.emea.sgi.com with local (Exim 4.63)
-	(envelope-from <hedi@sgi.com>) id 1KdnDe-00007X-DK
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 15:32:26 +0100
-Date: Thu, 11 Sep 2008 15:32:26 +0100
-From: Hedi Berriche <hedi@sgi.com>
-Subject: Re: the exiting makedumpfile is almost there... :)
-Message-ID: <20080911143226.GT29908@sgi.com>
-References: <48C85836.8080606@sgi.com>
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kdo1P-0005g8-Pd
+	for kexec@lists.infradead.org; Thu, 11 Sep 2008 15:23:52 +0000
+Date: Thu, 11 Sep 2008 17:23:47 +0200
+Subject: [patch] [PATCH] Fix memory leaks
+Message-ID: <20080911152347.GA13656@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <48C85836.8080606@sgi.com>
+From: bwalle@suse.de (Bernhard Walle)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,49 +21,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: oomichi@mxs.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-On Thu, Sep 11, 2008 at 00:29 Jay Lan wrote:
-| a4700rac:/boot # date; makedumpfile -c -d31 -x
-| /boot/vmlinux-2.6.27-rc5-default /proc/vmcore
-| /mnt/sda9/diskdump/vmcore-2.6.27-rc5-default; date
-| Wed Sep 10 14:31:56 PDT 2008
-| Can't distinguish the pgtable.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-| The kernel version is not supported.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-| The created dumpfile may be incomplete.
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-| Copying data                       : [100 %]
+This memory leaks appear in valigrind run:
 
-Jay,
+    makedumpfile Completed.
+    ==6024== 
+    ==6024== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 2 from 1)
+    ==6024== malloc/free: in use at exit: 8,838 bytes in 5 blocks.
+    ==6024== malloc/free: 80 allocs, 75 frees, 192,858 bytes allocated.
+    ==6024== For counts of detected errors, rerun with: -v
+    ==6024== searching for pointers to 5 not-freed blocks.
+    ==6024== checked 70,864 bytes.
+    ==6024== 
+    ==6024== 
+    ==6024== 22 bytes in 1 blocks are definitely lost in loss record 2 of 5
+    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
+    ==6024==    by 0x416955: initial (makedumpfile.c:3318)
+    ==6024==    by 0x418954: create_dumpfile (makedumpfile.c:6000)
+    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
+    ==6024== 
+    ==6024== 
+    ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 4 of 5
+    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
+    ==6024==    by 0x409F72: prepare_dump_bitmap (makedumpfile.c:4338)
+    ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
+    ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
+    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
+    ==6024== 
+    ==6024== 
+    ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 5 of 5
+    ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
+    ==6024==    by 0x409F51: prepare_dump_bitmap (makedumpfile.c:4333)
+    ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
+    ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
+    ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
+    ==6024== 
+    ==6024== LEAK SUMMARY:
+    ==6024==    definitely lost: 8,262 bytes in 3 blocks.
+    ==6024==      possibly lost: 0 bytes in 0 blocks.
+    ==6024==    still reachable: 576 bytes in 2 blocks.
+    ==6024==         suppressed: 0 bytes in 0 blocks.
+    ==6024== Reachable blocks (those to which a pointer was found) are not shown.
+    ==6024== To see them, rerun with: --leak-check=full --show-reachable=yes
 
-In addition to what other folks have mentioned about giving the latest crash
-version a try, I'd like to point out that makedumpfile did spit a couple of
-warnings while creating the vmcore
+Although it's not strictly necessary to free memory at the end of program run since
+it gets freed automatically, it still makes sense to have a clean valgrind run to be
+able to check the program for "real" memory leaks with valgrind.
 
 
-| Can't distinguish the pgtable.
-| The kernel version is not supported.
-| The created dumpfile may be incomplete.
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-these warnings added to the fact that later on crash choked with
+---
+ makedumpfile.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-| NOTE: page_hash_table does not exist in this kernel
-| crash: page excluded: kernel virtual address: e000006003108e00  type:
-
-seem to suggest that the makedumpfile warnings could be relevant to the
-end result.
-
-One useful experiment would be to find out whether a makdedumpfile generated
-vmcore, from the one you saved with cp, does exhibit the same problem.
-
-Cheers,
-Hedi.
--- 
-Hedi Berriche
-GPS Unix
-http://www.sgi.com/support
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5268,6 +5268,14 @@ close_dump_bitmap(void)
+ 		ERRMSG("Can't close the bitmap file(%s). %s\n",
+ 		    info->name_bitmap, strerror(errno));
+ 	free(info->name_bitmap);
++
++	/* free 1st bitmap */
++	free(info->bitmap1);
++	info->bitmap1 = NULL;
++
++	/* free 2nd bitmap */
++	free(info->bitmap2);
++	info->bitmap2 = NULL;
+ }
+ 
+ void
+@@ -5332,6 +5340,10 @@ close_files_for_creating_dumpfile(void)
+ 	else if (info->dump_level > DL_EXCLUDE_ZERO)
+ 		close_kernel_file();
+ 
++	/* free name for vmcoreinfo */
++	free(info->name_vmcoreinfo);
++	info->name_vmcoreinfo = NULL;
++
+ 	close_dump_memory();
+ 
+ 	close_dump_file();
 
 _______________________________________________
 kexec mailing list
