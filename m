@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from outbound-sin.frontbridge.com ([207.46.51.80]
-	helo=SG2EHSOBE001.bigfish.com)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KdbB6-0005Nx-H4
-	for kexec@lists.infradead.org; Thu, 11 Sep 2008 01:41:01 +0000
-Message-ID: <48C8771E.40502@am.sony.com>
-Date: Wed, 10 Sep 2008 18:40:46 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
+	id 1Kdbla-00010d-3f
+	for kexec@lists.infradead.org; Thu, 11 Sep 2008 02:18:42 +0000
+Message-ID: <48C87C87.6070808@mxs.nes.nec.co.jp>
+Date: Thu, 11 Sep 2008 11:03:51 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: [kexec patch 2/2] Fix ppc64 build warnings
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com>
+In-Reply-To: <48C85836.8080606@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,139 +18,290 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1455571066=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org, Cell Broadband Engine OSS Development <cbe-oss-dev@ozlabs.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: Dave Anderson <anderson@redhat.com>, Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
 
-Fix these ppc64 32 bit build warnings:
-
- kexec/arch/ppc64/kexec-zImage-ppc64.c: In function 'zImage_ppc64_load':
- kexec/arch/ppc64/kexec-zImage-ppc64.c:164: warning: cast to pointer from integer of different size
- kexec/arch/ppc64/kexec-elf-ppc64.c: In function 'elf_ppc64_load':
- kexec/arch/ppc64/kexec-elf-ppc64.c:121: warning: integer constant is too large for 'unsigned long' type
- kexec/arch/ppc64/kexec-elf-ppc64.c:237: warning: cast from pointer to integer of different size
- kexec/arch/ppc64/kexec-elf-ppc64.c:276: warning: cast from pointer to integer of different size
- kexec/arch/ppc64/kexec-elf-ppc64.c:283: warning: cast from pointer to integer of different size
- kexec/arch/ppc64/kexec-elf-ppc64.c:287: warning: cast from pointer to integer of different size
- kexec/arch/ppc64/kexec-elf-ppc64.c:341: warning: format '%lx' expects type 'long unsigned int', but argument 3 has type 'uint64_t'
- kexec/arch/ppc64/kexec-elf-ppc64.c:352: warning: format '%ld' expects type 'long int', but argument 5 has type 'size_t'
- kexec/arch/ppc64/crashdump-ppc64.c:45: warning: integer constant is too large for 'long' type
- kexec/arch/ppc64/crashdump-ppc64.c:46: warning: integer constant is too large for 'long' type
- kexec/arch/ppc64/crashdump-ppc64.c:56: warning: integer constant is too large for 'long' type
- kexec/arch/ppc64/crashdump-ppc64.c:57: warning: integer constant is too large for 'long' type
-
-Tested on PS3 (ppc64) with 32 and 64 bit builds. 
-
-Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
----
- kexec/arch/ppc64/crashdump-ppc64.h    |    4 ++--
- kexec/arch/ppc64/kexec-elf-ppc64.c    |   26 ++++++++++++++------------
- kexec/arch/ppc64/kexec-zImage-ppc64.c |    2 +-
- 3 files changed, 17 insertions(+), 15 deletions(-)
-
---- a/kexec/arch/ppc64/crashdump-ppc64.h
-+++ b/kexec/arch/ppc64/crashdump-ppc64.h
-@@ -6,9 +6,9 @@ int load_crashdump_segments(struct kexec
- 				uint64_t max_addr, unsigned long min_base);
- void add_usable_mem_rgns(unsigned long long base, unsigned long long size);
- 
--#define PAGE_OFFSET     0xC000000000000000
-+#define PAGE_OFFSET     0xC000000000000000ULL
- #define KERNELBASE      PAGE_OFFSET
--#define VMALLOCBASE     0xD000000000000000
-+#define VMALLOCBASE     0xD000000000000000ULL
- 
- #define __pa(x)         ((unsigned long)(x)-PAGE_OFFSET)
- #define MAXMEM          (-KERNELBASE-VMALLOCBASE)
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -118,7 +118,7 @@ int elf_ppc64_load(int argc, char **argv
- 	cmdline = 0;
- 	ramdisk = 0;
- 	devicetreeblob = 0;
--	max_addr = 0xFFFFFFFFFFFFFFFFUL;
-+	max_addr = 0xFFFFFFFFFFFFFFFFULL;
- 	hole_addr = 0;
- 
- 	while ((opt = getopt_long(argc, argv, short_options,
-@@ -233,7 +233,7 @@ int elf_ppc64_load(int argc, char **argv
- 		}
- 		seg_buf = (unsigned char *)slurp_file(ramdisk, &seg_size);
- 		add_buffer(info, seg_buf, seg_size, seg_size, 0, 0, max_addr, 1);
--		hole_addr = (uint64_t)
-+		hole_addr = (uintptr_t)
- 			info->segment[info->nr_segments-1].mem;
- 		initrd_base = hole_addr;
- 		initrd_size = (uint64_t)
-@@ -272,7 +272,7 @@ int elf_ppc64_load(int argc, char **argv
- 	while (*rsvmap_ptr || *(rsvmap_ptr+1))
- 		rsvmap_ptr += 2;
- 	rsvmap_ptr -= 2;
--	*rsvmap_ptr = (uint64_t)(
-+	*rsvmap_ptr = (uintptr_t)(
- 		info->segment[(info->nr_segments)-1].mem);
- 	rsvmap_ptr++;
- 	*rsvmap_ptr = (uint64_t)bb_ptr->totalsize;
-@@ -280,11 +280,11 @@ int elf_ppc64_load(int argc, char **argv
- 	nr_segments = info->nr_segments;
- 
- 	/* Set kernel */
--	my_kernel = (uint64_t)info->segment[0].mem;
-+	my_kernel = (uintptr_t)info->segment[0].mem;
- 	elf_rel_set_symbol(&info->rhdr, "kernel", &my_kernel, sizeof(my_kernel));
- 
- 	/* Set dt_offset */
--	my_dt_offset = (uint64_t)info->segment[nr_segments-1].mem;
-+	my_dt_offset = (uintptr_t)info->segment[nr_segments-1].mem;
- 	elf_rel_set_symbol(&info->rhdr, "dt_offset", &my_dt_offset,
- 				sizeof(my_dt_offset));
- 
-@@ -338,17 +338,19 @@ int elf_ppc64_load(int argc, char **argv
- 				sizeof(toc_addr));
- 
- 	fprintf(stderr, "info->entry is %p\n", info->entry);
--	fprintf(stderr, "kernel is %lx\n", my_kernel);
--	fprintf(stderr, "dt_offset is %lx\n", my_dt_offset);
-+	fprintf(stderr, "kernel is %llx\n", (unsigned long long)my_kernel);
-+	fprintf(stderr, "dt_offset is %llx\n",
-+		(unsigned long long)my_dt_offset);
- 	fprintf(stderr, "panic_kernel is %x\n", my_panic_kernel);
--	fprintf(stderr, "backup_start is %lx\n", my_backup_start);
--	fprintf(stderr, "stack is %lx\n", my_stack);
--	fprintf(stderr, "toc_addr is %lx\n", toc_addr);
--	fprintf(stderr, "purgatory size is %lu\n", purgatory_size);
-+	fprintf(stderr, "backup_start is %llx\n",
-+		(unsigned long long)my_backup_start);
-+	fprintf(stderr, "stack is %llx\n", (unsigned long long)my_stack);
-+	fprintf(stderr, "toc_addr is %llx\n", (unsigned long long)toc_addr);
-+	fprintf(stderr, "purgatory size is %zu\n", purgatory_size);
- #endif
- 
- 	for (i = 0; i < nr_segments; i++)
--		fprintf(stderr, "segment[%d].mem:%p memsz:%ld\n", i,
-+		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
- 			info->segment[i].mem, info->segment[i].memsz);
- 
- 	return 0;
---- a/kexec/arch/ppc64/kexec-zImage-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-zImage-ppc64.c
-@@ -161,7 +161,7 @@ int zImage_ppc64_load(FILE *file, int ar
- 	segment->mem = (void *) load_loc;
- 	segment->memsz = memsize;
- 	segment->bufsz = filesize;
--	*ret_entry = (void *)((uint64_t)elf.e_entry);
-+	*ret_entry = (void *)(uintptr_t)elf.e_entry;
- 	*ret_nr_segments = i - 1;
- 	free(ph);
- 	return 0;
+--===============1455571066==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
 
+Hi Jay,
 
+Thank you for testing and the report.
+It is good that a new makedumpfile shrinks its running time.
+
+But does it create a unreadable dumpfile ?
+OK, I want to reproduce/investigate the problem.
+Could you please send me your .config file ?
+
+I have not tested makedumpfile on IA64 linux-2.6.27-rcX yet,
+because IA64 linux-2.6.27-rcX kernel gets a panic while booting.
+So I guess that there is some thing wrong in my .config file.
+
+
+I'll be on vacation the next week, and I'll start investigating
+it the week after next (9/24).
+
+
+Thanks
+Ken'ichi Ohmichi
+
+Jay Lan wrote:
+> After getting around a few kdump kernel panic/hang, i finally was
+> able to complete a kdump vmcore with 2.6.27-rc5. The system under
+> testing was an IA64 with 128 cpu and 256G memory A4700 system.
+> 
+> The /proc/vmcore is:
+> a4700rac:/boot # ll /proc/vmcore
+> -r-------- 1 root root 263006257684 2008-09-10 14:45 /proc/vmcore
+> a4700rac:/boot # ls -lh /proc/vmcore
+> -r-------- 1 root root 245G 2008-09-10 14:44 /proc/vmcore
+> 
+> Time spent in saving the vmcore using cp was 7 min 17 sec:
+> 
+> a4700rac:/boot # date; cp /proc/vmcore /mnt/sda9/diskdump/vmcore-cp; date
+> Wed Sep 10 14:34:18 PDT 2008
+> Wed Sep 10 14:41:35 PDT 2008
+> 
+> Time spent with 'makedumpfile -c -d31' was 1 min 40 sec:
+> 
+> a4700rac:/boot # date; makedumpfile -c -d31 -x
+> /boot/vmlinux-2.6.27-rc5-default /proc/vmcore
+> /mnt/sda9/diskdump/vmcore-2.6.27-rc5-default; date
+> Wed Sep 10 14:31:56 PDT 2008
+> Can't distinguish the pgtable.
+> The kernel version is not supported.
+> The created dumpfile may be incomplete.
+> Copying data                       : [100 %]
+> 
+> The dumpfile is saved to /mnt/sda9/diskdump/vmcore-2.6.27-rc5-default.
+> 
+> makedumpfile Completed.
+> Wed Sep 10 14:33:36 PDT 2008
+> 
+> 
+> The fact that it took only 1 min 40 sec in running makedumpfile was
+> EXCELLENT and EXCITING!!! Remember last time i tested on a 256 cpu
+> 1TB A4700? It took 18 hours to complete the makedumpfile. What an
+> improvement!
+> 
+> Hmmm, the reason it is only "almost there" was that crash failed
+> to analyze the output of makedumpfile. :(  Crash was happy with
+> the vmcore saved with 'cp' command.
+> 
+> a4700rac:/var/tmp/jlan # crash -d 1 /boot/vmlinux-2.6.27-rc5-default
+> /mnt/sda9/diskdump/vmcore-2.6.27-rc5-default
+> 
+> crash 4.0-4.10
+> Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Red Hat, Inc.
+> Copyright (C) 2004, 2005, 2006  IBM Corporation
+> Copyright (C) 1999-2006  Hewlett-Packard Co
+> Copyright (C) 2005, 2006  Fujitsu Limited
+> Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
+> Copyright (C) 2005  NEC Corporation
+> Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
+> Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
+> This program is free software, covered by the GNU General Public License,
+> and you are welcome to change it and/or distribute copies of it under
+> certain conditions.  Enter "help copying" to see the conditions.
+> This program has absolutely no warranty.  Enter "help warranty" for details.
+> 
+> crash: xc_core_elf_verify: not a xen ELF core file
+> diskdump_data:
+>              flags: 6 (KDUMP_CMPRS_LOCAL|ERROR_EXCLUDED)
+>                dfd: 3
+>                ofp: 0
+>       machine_type: 50 (EM_IA_64)
+> 
+>             header: 6000000001142c70
+>            signature: "KDUMP   "
+>       header_version: 1
+>              utsname:
+>                sysname:
+>               nodename:
+>                release:
+>                version:
+>                machine:
+>             domainname:
+>            timestamp:
+>                 tv_sec: 0
+>                tv_usec: 0
+>               status: 0 ()
+>           block_size: 65536
+>         sub_hdr_size: 1
+>        bitmap_blocks: 2076
+>            max_mapnr: 543813611
+>     total_ram_blocks: 0
+>        device_blocks: 0
+>       written_blocks: 0
+>          current_cpu: 0
+>              nr_cpus: 1
+>       tasks[nr_cpus]: 0
+> 
+>         sub_header: 0 (n/a)
+> 
+>   sub_header_kdump: 6000000001152c80
+>            phys_base: 6044000000
+>           dump_level: 31 (0x1f)
+> (DUMP_EXCLUDE_ZERO|DUMP_EXCLUDE_CACHE|DUMP_EXCLUDE_CACHE_PRI|DUMP_EXCLUDE_USER_DATA|DUMP_EXCLUDE_FREE)
+> 
+>        data_offset: 81e0000
+>         block_size: 65536
+>        block_shift: 16
+>             bitmap: 2000000000530010
+>         bitmap_len: 136052736
+>    dumpable_bitmap: 2000000008700010
+>               byte: 0
+>                bit: 0
+>    compressed_page: 6000000001162c90
+>          curbufptr: 0
+> 
+>  page_cache_hdr[0]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 20000000109e0010
+>         pg_hit_count: 0
+>  page_cache_hdr[1]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 20000000109f0010
+>         pg_hit_count: 0
+>  page_cache_hdr[2]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a00010
+>         pg_hit_count: 0
+>  page_cache_hdr[3]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a10010
+>         pg_hit_count: 0
+>  page_cache_hdr[4]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a20010
+>         pg_hit_count: 0
+>  page_cache_hdr[5]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a30010
+>         pg_hit_count: 0
+>  page_cache_hdr[6]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a40010
+>         pg_hit_count: 0
+>  page_cache_hdr[7]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a50010
+>         pg_hit_count: 0
+>  page_cache_hdr[8]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a60010
+>         pg_hit_count: 0
+>  page_cache_hdr[9]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a70010
+>         pg_hit_count: 0
+> page_cache_hdr[10]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a80010
+>         pg_hit_count: 0
+> page_cache_hdr[11]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010a90010
+>         pg_hit_count: 0
+> page_cache_hdr[12]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010aa0010
+>         pg_hit_count: 0
+> page_cache_hdr[13]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010ab0010
+>         pg_hit_count: 0
+> page_cache_hdr[14]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010ac0010
+>         pg_hit_count: 0
+> page_cache_hdr[15]:
+>             pg_flags: 0 ()
+>              pg_addr: 0
+>            pg_bufptr: 2000000010ad0010
+>         pg_hit_count: 0
+> 
+>     page_cache_buf: 20000000109e0010
+>        evict_index: 0
+>          evictions: 0
+>           accesses: 0
+>       cached_reads: 0
+>        valid_pages: 20000000108d0010
+> compressed kdump: phys_start: 6044000000
+> gdb /boot/vmlinux-2.6.27-rc5-default
+> GNU gdb 6.1
+> Copyright 2004 Free Software Foundation, Inc.
+> GDB is free software, covered by the GNU General Public License, and you are
+> welcome to change it and/or distribute copies of it under certain
+> conditions.
+> Type "show copying" to see the conditions.
+> There is absolutely no warranty for GDB.  Type "show warranty" for details.
+> This GDB was configured as "ia64-unknown-linux-gnu"...
+> 
+> crash: CONFIG_HZ: 250
+> crash: CONFIG_NR_CPUS: 512
+> verify_namelist:
+> /proc/version:
+> Linux version 2.6.27-rc5-default (jlan@jackhammer) (gcc version 4.1.2
+> 20070115 (SUSE Linux)) #61 SMP Wed Sep 10 14:21:26 PDT 2008
+> utsname version: #61 SMP Wed Sep 10 14:21:26 PDT 2008
+> /boot/vmlinux-2.6.27-rc5-default:
+> Linux version 2.6.27-rc5-default (jlan@jackhammer) (gcc version 4.1.2
+> 20070115 (SUSE Linux)) #61 SMP Wed Sep 10 14:21:26 PDT 2008
+> 
+> WARNING: Because this kernel was compiled with gcc version 4.1.2, certain
+>          commands or command options may fail unless crash is invoked with
+>          the  "--readnow" command line option.
+> 
+> crash: get_cpus_online: online: 128
+> node_table[0]:
+>              id: 0
+>           pgdat: 0
+>            size: 543813632
+>         present: 73014444033
+>         mem_map: 0
+>     start_paddr: 0
+>     start_mapnr: 0
+> NOTE: page_hash_table does not exist in this kernel
+> crash: page excluded: kernel virtual address: e000006003108e00  type:
+> "runqueues entry (per_cpu)"
+> a4700rac:/var/tmp/jlan #
+> 
+> 
+
+
+
+
+
+--===============1455571066==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1455571066==--
