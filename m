@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kdy1n-00012J-1Z
-	for kexec@lists.infradead.org; Fri, 12 Sep 2008 02:04:56 +0000
-Message-ID: <48C9CDFD.9000800@mxs.nes.nec.co.jp>
-Date: Fri, 12 Sep 2008 11:03:41 +0900
+	id 1KdyNs-0000oW-U3
+	for kexec@lists.infradead.org; Fri, 12 Sep 2008 02:27:45 +0000
+Message-ID: <48C9D22A.5010404@mxs.nes.nec.co.jp>
+Date: Fri, 12 Sep 2008 11:21:30 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [patch] [PATCH] Fix memory leaks
-References: <20080911152347.GA13656@suse.de>
-In-Reply-To: <20080911152347.GA13656@suse.de>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com> <20080911143226.GT29908@sgi.com>
+In-Reply-To: <20080911143226.GT29908@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,119 +18,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1099933453=="
+Content-Type: multipart/mixed; boundary="===============1778263890=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org
+To: Hedi Berriche <hedi@sgi.com>
+Cc: kexec@lists.infradead.org
 
---===============1099933453==
+--===============1778263890==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi Bernhard,
+Hi Hedi, Jay,
 
-Good catching :-)
-This patch also will be merged to the next release.
+Hedi Berriche wrote:
+> In addition to what other folks have mentioned about giving the latest crash
+> version a try, I'd like to point out that makedumpfile did spit a couple of
+> warnings while creating the vmcore
+> 
+> 
+> | Can't distinguish the pgtable.
+> | The kernel version is not supported.
+> | The created dumpfile may be incomplete.
+> 
+> these warnings added to the fact that later on crash choked with
+> 
+> | NOTE: page_hash_table does not exist in this kernel
+> | crash: page excluded: kernel virtual address: e000006003108e00  type:
+> 
+> seem to suggest that the makedumpfile warnings could be relevant to the
+> end result.
+
+Oh, good point.
+If makedumpfile cannot distinguish the pgtable, it guesses PGTABLE_3 and
+creates a dumpfile. If Jay's kernel .config file has CONFIG_PGTABLE_4=y,
+makedumpfile misunderstands the pgtable. If it has CONFIG_PGTABLE_4=y,
+could you please try the attached patch ? This patch is only for debugging,
+and I'll investigate the cause.
 
 
 Thanks
 Ken'ichi Ohmichi
 
-Bernhard Walle wrote:
-> This memory leaks appear in valigrind run:
-> 
->     makedumpfile Completed.
->     ==6024== 
->     ==6024== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 2 from 1)
->     ==6024== malloc/free: in use at exit: 8,838 bytes in 5 blocks.
->     ==6024== malloc/free: 80 allocs, 75 frees, 192,858 bytes allocated.
->     ==6024== For counts of detected errors, rerun with: -v
->     ==6024== searching for pointers to 5 not-freed blocks.
->     ==6024== checked 70,864 bytes.
->     ==6024== 
->     ==6024== 
->     ==6024== 22 bytes in 1 blocks are definitely lost in loss record 2 of 5
->     ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
->     ==6024==    by 0x416955: initial (makedumpfile.c:3318)
->     ==6024==    by 0x418954: create_dumpfile (makedumpfile.c:6000)
->     ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
->     ==6024== 
->     ==6024== 
->     ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 4 of 5
->     ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
->     ==6024==    by 0x409F72: prepare_dump_bitmap (makedumpfile.c:4338)
->     ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
->     ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
->     ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
->     ==6024== 
->     ==6024== 
->     ==6024== 4,120 bytes in 1 blocks are definitely lost in loss record 5 of 5
->     ==6024==    at 0x4C2560E: malloc (in /usr/lib64/valgrind/amd64-linux/vgpreload_memcheck.so)
->     ==6024==    by 0x409F51: prepare_dump_bitmap (makedumpfile.c:4333)
->     ==6024==    by 0x4187D8: create_dump_bitmap (makedumpfile.c:4361)
->     ==6024==    by 0x41886C: create_dumpfile (makedumpfile.c:6005)
->     ==6024==    by 0x4191AA: main (makedumpfile.c:6299)
->     ==6024== 
->     ==6024== LEAK SUMMARY:
->     ==6024==    definitely lost: 8,262 bytes in 3 blocks.
->     ==6024==      possibly lost: 0 bytes in 0 blocks.
->     ==6024==    still reachable: 576 bytes in 2 blocks.
->     ==6024==         suppressed: 0 bytes in 0 blocks.
->     ==6024== Reachable blocks (those to which a pointer was found) are not shown.
->     ==6024== To see them, rerun with: --leak-check=full --show-reachable=yes
-> 
-> Although it's not strictly necessary to free memory at the end of program run since
-> it gets freed automatically, it still makes sense to have a clean valgrind run to be
-> able to check the program for "real" memory leaks with valgrind.
-> 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
-> 
-> ---
->  makedumpfile.c |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -5268,6 +5268,14 @@ close_dump_bitmap(void)
->  		ERRMSG("Can't close the bitmap file(%s). %s\n",
->  		    info->name_bitmap, strerror(errno));
->  	free(info->name_bitmap);
-> +
-> +	/* free 1st bitmap */
-> +	free(info->bitmap1);
-> +	info->bitmap1 = NULL;
-> +
-> +	/* free 2nd bitmap */
-> +	free(info->bitmap2);
-> +	info->bitmap2 = NULL;
->  }
->  
->  void
-> @@ -5332,6 +5340,10 @@ close_files_for_creating_dumpfile(void)
->  	else if (info->dump_level > DL_EXCLUDE_ZERO)
->  		close_kernel_file();
->  
-> +	/* free name for vmcoreinfo */
-> +	free(info->name_vmcoreinfo);
-> +	info->name_vmcoreinfo = NULL;
-> +
->  	close_dump_memory();
->  
->  	close_dump_file();
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+---
+diff -puN backup/makedumpfile-1.2.9/ia64.c makedumpfile/ia64.c
+--- backup/makedumpfile-1.2.9/ia64.c	2008-09-04 16:31:58.000000000 +0900
++++ makedumpfile/ia64.c	2008-09-12 11:27:38.000000000 +0900
+@@ -79,6 +79,7 @@ get_machdep_info_ia64(void)
+ 		vt.mem_flags |= MEMORY_PAGETABLE_3L;
+ 		DEBUG_MSG("PAGETABLE_3L : ON\n");
+ 	} else {
++		vt.mem_flags |= MEMORY_PAGETABLE_4L;
+ 		MSG("Can't distinguish the pgtable.\n");
+ 	}
+ 
 
 
-
-
-
---===============1099933453==
+--===============1778263890==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -141,4 +85,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1099933453==--
+--===============1778263890==--
