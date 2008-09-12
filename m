@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
-	helo=relay.sgi.com)
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KeEzC-0002UC-SR
-	for kexec@lists.infradead.org; Fri, 12 Sep 2008 20:11:23 +0000
-Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
-	by netops-testserver-3.corp.sgi.com (Postfix) with ESMTP id 4CF1390893
-	for <kexec@lists.infradead.org>; Fri, 12 Sep 2008 13:11:22 -0700 (PDT)
-Message-ID: <48CACCBA.9030905@sgi.com>
-Date: Fri, 12 Sep 2008 13:10:34 -0700
-From: Jay Lan <jlan@sgi.com>
+	id 1KeI2j-0000IA-Kd
+	for kexec@lists.infradead.org; Fri, 12 Sep 2008 23:27:14 +0000
+Date: Sat, 13 Sep 2008 09:27:12 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] IA64: kexec allocates too few memory for kdump kernel
+	itself
+Message-ID: <20080912232710.GE3832@verge.net.au>
+References: <48BEFB47.20004@sgi.com> <20080904000100.GD8974@verge.net.au>
+	<48BF3BE8.2050806@sgi.com> <48C028D0.4050202@sgi.com>
 MIME-Version: 1.0
-Subject: [PATCH]IA64: do not include uncached memory to vmcore
-Content-Type: multipart/mixed; boundary="------------010607040108090700060609"
+Content-Disposition: inline
+In-Reply-To: <48C028D0.4050202@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,127 +21,216 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org
 
-This is a multi-part message in MIME format.
---------------010607040108090700060609
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+On Thu, Sep 04, 2008 at 11:28:32AM -0700, Jay Lan wrote:
+> Jay Lan wrote:
+> > Simon Horman wrote:
+> >> On Wed, Sep 03, 2008 at 02:01:59PM -0700, Jay Lan wrote:
+> >>> Sometimes the kexec would allocate not enough memory for kdump kernel
+> >>> itself on IA64 and caused kdump kernel to panic at boot.
+> >>>
+> >>> When it happens, the /proc/iomem would show a kernel RAM segment like
+> >>> this:
+> >>> 3014000000-3015294fff : System RAM
+> >>>   3014000000-3014823ccf : Kernel code
+> >>>   3014823cd0-3014dee8ef : Kernel data
+> >>>   3014dee8f0-301529448f : Kernel bss
+> >>> 3015295000-307bffdfff : System RAM
+> >>>   3018000000-3037ffffff : Crash kernel
+> >>>
+> >>> But kexec would allocate memory 3018000000-3019290000 for the kernel,
+> >>> which is 0x5000 smaller than the regular kernel. In my cases, the
+> >>> physical_node_map and kern_memmap of the kdump kernel overlaped and
+> >>> caused data corruption.
+> >>>
+> >>> This patch fixes the problem. The patch was generated against
+> >>> kexec-tools 2.0.0 and tested in 2.6.27-rc4.
+> >> Hi Jay,
+> >>
+> >> I am unclear about why this underallocation occurs.
+> > 
+> > Hi Simon,
+> > 
+> > The routine add_loaded_segments_info() set up "loaded_segment" array
+> > that is needed by purgatory code, based on data stored in the
+> > mem_ehdr array passed in as the second parameter.
+> > 
+> > Upon entrance of the routine, the crash_memory_range[] contains
+> > information about the regular kernel:
+> > crash_memory_range[ 0]: start=  3000080000, end=  30003fffff
+> > crash_memory_range[ 1]: start=  3003000000, end=  3005ffffff
+> > crash_memory_range[ 2]: start=  3006000000, end=  3013ffffff
+> > crash_memory_range[ 3]: start=  3014000000, end=  3015294fff
+> > 
+> > The #3 entry is the kernel memory segment.
+> > 
+> > And the mem_ehdr array would contain data as such:
+> 
+> Hi,
+> 
+> It should be mem_phdr, got it from mem_ehdr->e_phdr.
+> 
+> > i=0, p_paddr=3018000000, p_memsz=d04480, p_offset=10000, p_type=1
+> > i=1, p_paddr=3018d20000, p_memsz=9620, p_offset=d20000, p_type=1
+> > i=2, p_paddr=3018d30000, p_memsz=564490, p_offset=d30000, p_type=1
+> > i=3, p_paddr=0, p_memsz=0, p_offset=0, p_type=4
+> 
+> Does anyone understand how the array were created and why there
+> was a gap between i=0 and i=1 entries? I think this is the problem
+> but i do not know how to fix it, so tried to work around it.
+> 
+> The statement my patch replaced was totally broken:
+>  -			if (loaded_segments[loaded_segments_num].end !=
+>  -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+>  -				break;
+>  +			if (loaded_segments[loaded_segments_num].end <
+>  +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+>  +				loaded_segments[loaded_segments_num].end
+>  +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
+> 
+> My debugging showed that when "loaded_segments[loaded_segments_num].end"
+> != "phdr->p_paddr & ~(ELF_PAGE_SIZE-1)", they were treated as equal
+> and continue to next statement.  However, if i assign both expression
+> to local variables and do comparison, the 'break' statement is
+> executed correctly when two values are not the same. Unfortunately,
+> consequently the kdump kernel would _alawys_ hang.
+> 
+> I believe the intent of the original statement is to ensure there is
+> no gap between entries of mem_phdr array. But if there is a gap,
+> kexec should simply exit with failure. The 'break' statement just
+> created a loaded_segment[] array that broke the kernel memory segment
+> into multiple entries and resulted in the kdump kernel hang in
+> find_memory(). The IA64 (at least 2.6.27-rc4) kdump kernel works in
+> some cases today are simply out of luck.
+> 
+> I believe the real fix is to fix the contents of the mem_phdr array.
+> Since i do not know how to fix it, my patch would close up the
+> gap where there is the a gap between entries of the mem_phdr array.
+> 
+> Does it make more sense to you now, Simon?
 
-Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
-is denoted as "System RAM" in /proc/iomem, while memory of attribute
-(EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
+Hi Jay,
 
-The kexec utility then includes uncached memory as part of vmcore.
-The kdump kernel may MCA when it tries to save the vmcore to a disk.
-A normal "cached" access can cause MCAs.
+yes that does make sense. I'd like to poke around and see
+if mem_phdr can be fixed.
 
-Since kexec assembled memory ranges with memory tagged as "System RAM",
-the uncached memory will be excluded if it is labeled differently.
+> 
+> Regards,
+>  - jay
+> 
+> 
+> 
+> > 
+> > The code wants the new loaded_segments contain starting address
+> > all aligned at page boundary, which is 0x10000 in IA64.
+> > 
+> > Note that the p_memsz of mem_ehdr does not match to entries in
+> > /proc/iomem:
+> > 3014000000-3015294fff : System RAM
+> >   3014000000-3014823ccf : Kernel code
+> >   3014823cd0-3014dee8ef : Kernel data
+> >   3014dee8f0-301529448f : Kernel bss
+> > 
+> > The original code of add_loaded_segments_info() would go through
+> > the mem_ehdr array and use the p_paddr of the first entry (the
+> > beginning of the reserved memory) as the start address, add
+> > the p_memsz of three entries to calculate the end address of
+> > the kernel segment.
+> > 
+> > But the p_paddr of i=0 plus p_memsz of i=0 should result in
+> > 3018d10000 as the p_paddr of i=1 entry, but actually the
+> > p_paddr of i=1 is 3018d20000. The logic of that routine
+> > can not explain the discrepency.
+> > 
+> > So, where the data of mem_ehdr array come from?
+> > 
+> > add_loaded_segments_info
+> > <-  load_crashdump_segments
+> >   <-  elf_ia64_load
+> >     <- file_type[i].load
+> >       <- my_load
+> > 
+> > The elf_ia64_load set up mem_ehdr, probabaly based on data
+> > pointed by *buf, which i think comes from vmlinuz.
+> > 
+> > So, i failed to find out how the p_memsz were set up initially.
+> > But, i think we did it the way too complicated, IMHO.
+> > 
+> > The crash_memory_range[] array showed the kernel segment consumed
+> > 0x1295000 bytes of memory and we only need to tell the purgatory
+> > code to reserve that amount of memory. The logic in
+> > add_loaded_segments_info() came out with 0x1290000 and caused the
+> > crashkernel to panic on boot.
+> > 
+> > Hmmm, as i types now, i may not consider the situation where
+> > the crashkernel is not the same as the first kernel...
+> > 
+> > Note that the underallocation does not _ALWAYS_ happen! It depends
+> > on the vmlinux we build. Honestly i do not understand some part of
+> > the kexec-tools code well enough to make major surgery to the code.
+> > So, i just compare the end address after calculation of i=0 entry
+> > of mem_ehdr array with the start address of the second entry. If it
+> > is too small, i just bring it up to align with the start address of
+> > the second entry. I am happy to allocate one extra page, may not be
+> > needed in some cases, of memory than to panic. Yes, my patch is
+> > a work-around.
+> > 
+> > If you can find the true cause of the problem and fix it, it
+> > would be great and appreciated!
+> > 
+> > Regards,
+> >  - jay
+> > 
+> > 
+> >>> Signed-off-by: Jay Lan <jlan@sgi.com>
+> >>>
+> >>> ---
+> >>>  kexec/arch/ia64/crashdump-ia64.c |    8 ++++----
+> >>>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>>
+> >>> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+> >>> ===================================================================
+> >>> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-03 11:24:14.289758063 -0700
+> >>> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-03 11:29:34.095833316 -0700
+> >>> @@ -90,15 +90,15 @@ static void add_loaded_segments_info(str
+> >>>  			phdr = &ehdr->e_phdr[i];
+> >>>  	                if (phdr->p_type != PT_LOAD)
+> >>>  	                        break;
+> >>> -			if (loaded_segments[loaded_segments_num].end !=
+> >>> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+> >>> -				break;
+> >>> +			if (loaded_segments[loaded_segments_num].end <
+> >>> +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+> >>> +				loaded_segments[loaded_segments_num].end
+> >>> +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
+> >>>  			loaded_segments[loaded_segments_num].end +=
+> >>>  				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+> >>>  				~(ELF_PAGE_SIZE - 1);
+> >>>  			i++;
+> >>>  		}
+> >>> -
+> >>>  		loaded_segments_num++;
+> >>>  	}
+> >>>  }
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
 
-Simon, since only IA64 will create "Uncached RAM" label, i do not
-make changes to other arch.
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
-Our HP machine in the lab is dead. I am sorry that i can not test
-against other IA64 systems (than SGI's). Feedback is very much
-appreciated.
-
-The corresponding kernel patch is needed to test this kexec patch:
-http://marc.info/?l=linux-ia64&m=122122791230130&w=2
-This patch without the kernel patch will have no effect and do no
-harm.
-
-
-Signed-off-by: Jay Lan <jlan@sgi.com>
-
-
---------------010607040108090700060609
-Content-Type: text/plain;
- name="UC-mem.kexec"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="UC-mem.kexec"
-
----
- kexec/arch/ia64/crashdump-ia64.c     |    5 ++++-
- kexec/arch/ia64/kexec-ia64.c         |    5 ++++-
- kexec/firmware_memmap.c              |    2 ++
- kexec/kexec.h                        |    1 +
- 11 files changed, 27 insertions(+), 3 deletions(-)
-
-Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
-===================================================================
---- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-10 17:17:57.751956424 -0700
-+++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-10 17:18:02.060031443 -0700
-@@ -212,8 +212,11 @@ static int get_crash_memory_ranges(struc
- 			kernel_code_start = start;
- 			kernel_code_end = end;
- 			continue;
--		}else
-+		} else if (memcmp(str, "Uncached RAM\n", 13) == 0) {
-+			type = RANGE_UNCACHED;
-+		} else {
- 			continue;
-+		}
- 		crash_memory_range[memory_ranges].start = start;
- 		crash_memory_range[memory_ranges].end = end;
- 		crash_memory_range[memory_ranges].type = type;
-Index: kexec-tools/kexec/kexec.h
-===================================================================
---- kexec-tools.orig/kexec/kexec.h	2008-09-10 17:07:20.892688089 -0700
-+++ kexec-tools/kexec/kexec.h	2008-09-10 17:18:02.072031652 -0700
-@@ -110,6 +110,7 @@ struct memory_range {
- #define RANGE_RESERVED	1
- #define RANGE_ACPI	2
- #define RANGE_ACPI_NVS	3
-+#define RANGE_UNCACHED	4
- };
- 
- struct kexec_info {
-Index: kexec-tools/kexec/arch/ia64/kexec-ia64.c
-===================================================================
---- kexec-tools.orig/kexec/arch/ia64/kexec-ia64.c	2008-09-10 17:07:20.892688089 -0700
-+++ kexec-tools/kexec/arch/ia64/kexec-ia64.c	2008-09-10 17:18:02.100032140 -0700
-@@ -139,8 +139,11 @@ int get_memory_ranges(struct memory_rang
- 			memory_ranges = split_range(memory_ranges, start, end);
- 			saved_efi_memmap_size = end - start;
- 			continue;
--		} else
-+		} else if (memcmp(str, "Uncached RAM\n", 13) == 0) {
-+			type = RANGE_UNCACHED;
-+		} else {
- 			continue;
-+		}
- 		/*
- 		 * Check if this memory range can be coalesced with
- 		 * the previous range
-Index: kexec-tools/kexec/firmware_memmap.c
-===================================================================
---- kexec-tools.orig/kexec/firmware_memmap.c	2008-09-10 17:07:20.892688089 -0700
-+++ kexec-tools/kexec/firmware_memmap.c	2008-09-10 17:18:02.120032488 -0700
-@@ -158,6 +158,8 @@ static int parse_memmap_entry(const char
- 		range->type = RANGE_RESERVED;
- 	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
- 		range->type = RANGE_ACPI_NVS;
-+	else if (strcmp(type, "Uncached RAM") == 0)
-+		range->type = RANGE_UNCACHED;
- 	else {
- 		fprintf(stderr, "Unknown type (%s) while parsing %s. Please "
- 			"report this as bug. Using RANGE_RESERVED now.\n",
-
-
---------------010607040108090700060609
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------010607040108090700060609--
-
