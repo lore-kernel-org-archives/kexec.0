@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
+Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
+	helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KeH1x-0006Qh-8W
-	for kexec@lists.infradead.org; Fri, 12 Sep 2008 22:22:21 +0000
-Message-ID: <48CAEB6A.8080405@sgi.com>
-Date: Fri, 12 Sep 2008 15:21:30 -0700
+	id 1KeEzC-0002UC-SR
+	for kexec@lists.infradead.org; Fri, 12 Sep 2008 20:11:23 +0000
+Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
+	by netops-testserver-3.corp.sgi.com (Postfix) with ESMTP id 4CF1390893
+	for <kexec@lists.infradead.org>; Fri, 12 Sep 2008 13:11:22 -0700 (PDT)
+Message-ID: <48CACCBA.9030905@sgi.com>
+Date: Fri, 12 Sep 2008 13:10:34 -0700
 From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Subject: Re: the exiting makedumpfile is almost there... :)
-References: <48C85836.8080606@sgi.com> <20080911143226.GT29908@sgi.com>
-	<48C9D22A.5010404@mxs.nes.nec.co.jp> <48CA70CD.2090500@sgi.com>
-	<48CAC7DB.4090904@sgi.com> <48CAD340.7000701@redhat.com>
-In-Reply-To: <48CAD340.7000701@redhat.com>
+Subject: [PATCH]IA64: do not include uncached memory to vmcore
+Content-Type: multipart/mixed; boundary="------------010607040108090700060609"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,122 +21,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0207825806=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec@lists.infradead.org, Hedi Berriche <hedi@sgi.com>
+To: kexec@lists.infradead.org
 
---===============0207825806==
-Content-Type: text/plain; charset=ISO-2022-JP
+This is a multi-part message in MIME format.
+--------------010607040108090700060609
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 
-Dave Anderson wrote:
-> Try using at least -d4 and redirect the output to a file.  It's much
-> more verbose than the above, but it shows every readmem() made from
-> the dumpfile:
-> 
->  # crash -d4 vmlinux vmcore.cp > /tmp/debug.cp
->  q
->  # crash -d4 vmlinux vmcore.makedumpfile > /tmp/debug.makedumpfile
->  q
->  #
-> 
-> Then compare the two outputs -- they should be pretty much identical
-> (except for any crash utility user addresses) until the vmcore.makedumpfile
-> fails.  So you should see a successful readmem() of e0000060031417a8 in
-> the "vmcore.cp" debug output at the point where it fails doing the
-> read in "vmcore.makedumpfile" above.
-> 
-> What's kind of strange is that pglist_data.node_zones structure that
-> it's reading from is in the same page as the base pglist_data
-> at e000006003140000, i.e., at page offset 17a8 (6056).  And the code
-> looks like it has already read data from that same page prior to
-> reading the "zone spanned pages".  (I'm presuming that the ia64 page
-> size you're using is greater than 4k).  But the -d4 output will
-> confirm that.
+Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
+is denoted as "System RAM" in /proc/iomem, while memory of attribute
+(EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
 
-Looks like it.
+The kexec utility then includes uncached memory as part of vmcore.
+The kdump kernel may MCA when it tries to save the vmcore to a disk.
+A normal "cached" access can cause MCAs.
 
-In the case of 'cp':
-...
-<readmem: a0000001010be338, KVADDR, "pgdat_list", 8, (ROE),
-600fffffff8abfc0>
-<readmem: e00000600315fb70, KVADDR, "pglist node_id", 4, (FOE),
-600fffffff8ac01c>
-                        <readmem: e00000600315fb48, KVADDR,
-"node_mem_map", 8, (FOE), 600fffffff8ac020>
-<readmem: e00000600315fb58, KVADDR, "pglist node_start_pfn", 8, (FOE),
-600fffffff8ac030>
-<readmem: e00000600315fb68, KVADDR, "pglist node_spanned_pages", 8,
-(FOE), 600fffffff8ac040>
-<readmem: e00000600315fb60, KVADDR, "pglist node_present_pages", 8,
-(FOE), 600fffffff8ac048>
-<readmem: e00000600315fb50, KVADDR, "pglist bdata", 8, (FOE),
-600fffffff8ac090> node_table[0]:
-             id: 0
+Since kexec assembled memory ranges with memory tagged as "System RAM",
+the uncached memory will be excluded if it is labeled differently.
 
-          pgdat: e000006003140000
-           size: 62720
+Simon, since only IA64 will create "Uncached RAM" label, i do not
+make changes to other arch.
 
-        present: 62720
-        mem_map: a07ffff8fdd0a800
+Our HP machine in the lab is dead. I am sorry that i can not test
+against other IA64 systems (than SGI's). Feedback is very much
+appreciated.
 
-    start_paddr: 6003000000
-    start_mapnr: 6292224
-
-<readmem: e0000060031417a8, KVADDR, "zone spanned_pages", 8, (FOE),
-600fffffff8ac058>
-                    <readmem: e0000060031416c8, KVADDR, "zone[_struct]
-free_pages", 8, (FOE), 600fffffff8ac050>
-
-...
+The corresponding kernel patch is needed to test this kexec patch:
+http://marc.info/?l=linux-ia64&m=122122791230130&w=2
+This patch without the kernel patch will have no effect and do no
+harm.
 
 
-In the case of makedumpfile:
-...
-<readmem: a0000001010be338, KVADDR, "pgdat_list", 8, (ROE),
-600ffffffff4bfb0>
-<readmem: e00000600315fb70, KVADDR, "pglist node_id", 4, (FOE),
-600ffffffff4c00c>
-<readmem: e00000600315fb48, KVADDR, "node_mem_map", 8, (FOE),
-600ffffffff4c010>
-<readmem: e00000600315fb58, KVADDR, "pglist node_start_pfn", 8, (FOE),
-600ffffffff4c020>
-<readmem: e00000600315fb68, KVADDR, "pglist node_spanned_pages", 8,
-(FOE), 600ffffffff4c030>
-<readmem: e00000600315fb60, KVADDR, "pglist node_present_pages", 8,
-(FOE), 600ffffffff4c038>
-<readmem: e00000600315fb50, KVADDR, "pglist bdata", 8, (FOE),
-600ffffffff4c080> node_table[0]:
-             id: 0
-
-          pgdat: e000006003140000
-           size: 62720
-
-        present: 62720
-        mem_map: a07ffff8fdd0a800
-
-    start_paddr: 6003000000
-    start_mapnr: 6292224
-
-<readmem: e0000060031417a8, KVADDR, "zone spanned_pages", 8, (FOE),
-600ffffffff4c048>
-crash: page excluded: kernel virtual address: e0000060031417a8  type:
-"zone spanned_pages"
+Signed-off-by: Jay Lan <jlan@sgi.com>
 
 
+--------------010607040108090700060609
+Content-Type: text/plain;
+ name="UC-mem.kexec"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="UC-mem.kexec"
 
-jay
+---
+ kexec/arch/ia64/crashdump-ia64.c     |    5 ++++-
+ kexec/arch/ia64/kexec-ia64.c         |    5 ++++-
+ kexec/firmware_memmap.c              |    2 ++
+ kexec/kexec.h                        |    1 +
+ 11 files changed, 27 insertions(+), 3 deletions(-)
 
-> 
-> Dave
-> 
-> 
+Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-10 17:17:57.751956424 -0700
++++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-10 17:18:02.060031443 -0700
+@@ -212,8 +212,11 @@ static int get_crash_memory_ranges(struc
+ 			kernel_code_start = start;
+ 			kernel_code_end = end;
+ 			continue;
+-		}else
++		} else if (memcmp(str, "Uncached RAM\n", 13) == 0) {
++			type = RANGE_UNCACHED;
++		} else {
+ 			continue;
++		}
+ 		crash_memory_range[memory_ranges].start = start;
+ 		crash_memory_range[memory_ranges].end = end;
+ 		crash_memory_range[memory_ranges].type = type;
+Index: kexec-tools/kexec/kexec.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec.h	2008-09-10 17:07:20.892688089 -0700
++++ kexec-tools/kexec/kexec.h	2008-09-10 17:18:02.072031652 -0700
+@@ -110,6 +110,7 @@ struct memory_range {
+ #define RANGE_RESERVED	1
+ #define RANGE_ACPI	2
+ #define RANGE_ACPI_NVS	3
++#define RANGE_UNCACHED	4
+ };
+ 
+ struct kexec_info {
+Index: kexec-tools/kexec/arch/ia64/kexec-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/kexec-ia64.c	2008-09-10 17:07:20.892688089 -0700
++++ kexec-tools/kexec/arch/ia64/kexec-ia64.c	2008-09-10 17:18:02.100032140 -0700
+@@ -139,8 +139,11 @@ int get_memory_ranges(struct memory_rang
+ 			memory_ranges = split_range(memory_ranges, start, end);
+ 			saved_efi_memmap_size = end - start;
+ 			continue;
+-		} else
++		} else if (memcmp(str, "Uncached RAM\n", 13) == 0) {
++			type = RANGE_UNCACHED;
++		} else {
+ 			continue;
++		}
+ 		/*
+ 		 * Check if this memory range can be coalesced with
+ 		 * the previous range
+Index: kexec-tools/kexec/firmware_memmap.c
+===================================================================
+--- kexec-tools.orig/kexec/firmware_memmap.c	2008-09-10 17:07:20.892688089 -0700
++++ kexec-tools/kexec/firmware_memmap.c	2008-09-10 17:18:02.120032488 -0700
+@@ -158,6 +158,8 @@ static int parse_memmap_entry(const char
+ 		range->type = RANGE_RESERVED;
+ 	else if (strcmp(type, "ACPI Non-volatile Storage") == 0)
+ 		range->type = RANGE_ACPI_NVS;
++	else if (strcmp(type, "Uncached RAM") == 0)
++		range->type = RANGE_UNCACHED;
+ 	else {
+ 		fprintf(stderr, "Unknown type (%s) while parsing %s. Please "
+ 			"report this as bug. Using RANGE_RESERVED now.\n",
 
 
-
---===============0207825806==
+--------------010607040108090700060609
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -146,4 +143,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0207825806==--
+--------------010607040108090700060609--
+
