@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KeIAK-0001CU-BM
-	for kexec@lists.infradead.org; Fri, 12 Sep 2008 23:35:04 +0000
-Date: Sat, 13 Sep 2008 09:35:02 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH]IA64: do not include uncached memory to vmcore
-Message-ID: <20080912233500.GF3832@verge.net.au>
-References: <48CACCBA.9030905@sgi.com>
+	id 1KeJAA-0001M0-Nn
+	for kexec@lists.infradead.org; Sat, 13 Sep 2008 00:38:59 +0000
+Message-ID: <48CB0B71.2070308@sgi.com>
+Date: Fri, 12 Sep 2008 17:38:09 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <48CACCBA.9030905@sgi.com>
+Subject: Re: [PATCH] IA64: kexec allocates too few memory for kdump kernel
+	itself
+References: <48BEFB47.20004@sgi.com>
+	<20080904000100.GD8974@verge.net.au>	<48BF3BE8.2050806@sgi.com>
+	<48C028D0.4050202@sgi.com> <20080912232710.GE3832@verge.net.au>
+In-Reply-To: <20080912232710.GE3832@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +25,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-On Fri, Sep 12, 2008 at 01:10:34PM -0700, Jay Lan wrote:
-> Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
-> is denoted as "System RAM" in /proc/iomem, while memory of attribute
-> (EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
+Simon Horman wrote:
+>> Hi,
+>>
+>> It should be mem_phdr, got it from mem_ehdr->e_phdr.
+>>
+>>> i=0, p_paddr=3018000000, p_memsz=d04480, p_offset=10000, p_type=1
+>>> i=1, p_paddr=3018d20000, p_memsz=9620, p_offset=d20000, p_type=1
+>>> i=2, p_paddr=3018d30000, p_memsz=564490, p_offset=d30000, p_type=1
+>>> i=3, p_paddr=0, p_memsz=0, p_offset=0, p_type=4
+>> Does anyone understand how the array were created and why there
+>> was a gap between i=0 and i=1 entries? I think this is the problem
+>> but i do not know how to fix it, so tried to work around it.
+>>
+>> The statement my patch replaced was totally broken:
+>>  -			if (loaded_segments[loaded_segments_num].end !=
+>>  -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+>>  -				break;
+>>  +			if (loaded_segments[loaded_segments_num].end <
+>>  +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+>>  +				loaded_segments[loaded_segments_num].end
+>>  +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
+>>
+>> My debugging showed that when "loaded_segments[loaded_segments_num].end"
+>> != "phdr->p_paddr & ~(ELF_PAGE_SIZE-1)", they were treated as equal
+>> and continue to next statement.  However, if i assign both expression
+>> to local variables and do comparison, the 'break' statement is
+>> executed correctly when two values are not the same. Unfortunately,
+>> consequently the kdump kernel would _alawys_ hang.
+>>
+>> I believe the intent of the original statement is to ensure there is
+>> no gap between entries of mem_phdr array. But if there is a gap,
+>> kexec should simply exit with failure. The 'break' statement just
+>> created a loaded_segment[] array that broke the kernel memory segment
+>> into multiple entries and resulted in the kdump kernel hang in
+>> find_memory(). The IA64 (at least 2.6.27-rc4) kdump kernel works in
+>> some cases today are simply out of luck.
+>>
+>> I believe the real fix is to fix the contents of the mem_phdr array.
+>> Since i do not know how to fix it, my patch would close up the
+>> gap where there is the a gap between entries of the mem_phdr array.
+>>
+>> Does it make more sense to you now, Simon?
 > 
-> The kexec utility then includes uncached memory as part of vmcore.
-> The kdump kernel may MCA when it tries to save the vmcore to a disk.
-> A normal "cached" access can cause MCAs.
+> Hi Jay,
 > 
-> Since kexec assembled memory ranges with memory tagged as "System RAM",
-> the uncached memory will be excluded if it is labeled differently.
-> 
-> Simon, since only IA64 will create "Uncached RAM" label, i do not
-> make changes to other arch.
-> 
-> Our HP machine in the lab is dead. I am sorry that i can not test
-> against other IA64 systems (than SGI's). Feedback is very much
-> appreciated.
-> 
-> The corresponding kernel patch is needed to test this kexec patch:
-> http://marc.info/?l=linux-ia64&m=122122791230130&w=2
-> This patch without the kernel patch will have no effect and do no
-> harm.
+> yes that does make sense. I'd like to poke around and see
+> if mem_phdr can be fixed.
 
-Hi Jay,
+I think the whole ehdr is read from the kernel binary in
+slurp_decompress_file.
 
-both of these patches seem reasonable to me, especially from a kexec point
-of view. I will try and test them on an HP RX2620 and Intel Tiger 4 and
-get back to you shortly.
+Bernhard reported a kdump kernel boot problem caused by a patch
+regarding per-cpu variables access in early boot code:
+http://article.gmane.org/gmane.linux.ports.ia64/19380
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+I backed out the offending patch and i was no longer able to
+reproduce this problem.
 
+So, it is safe to say the problem was due to how we process
+data from the vmlinuz.
+
+The code i tried to change:
+-             if (loaded_segments[loaded_segments_num].end !=
+-                     phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+-                     break;
+has two problems:
+1) '!=' operation takes precedence over '&'. If the code is to
+   do what it intends to do, the statement should be:
+              if (loaded_segments[loaded_segments_num].end !=
+                     (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+                     break;
+2) When the 'break' is really executed, you breaks the kernel
+   segment into multiple segments.
+
+The code needs fix even if the problem i saw was a result of
+a bug in the kernel.
+
+Thanks,
+jay
+
+
+
+> 
 
 _______________________________________________
 kexec mailing list
