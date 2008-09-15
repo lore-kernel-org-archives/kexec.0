@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kf6MP-0008EB-Df
-	for kexec@lists.infradead.org; Mon, 15 Sep 2008 05:10:59 +0000
-Date: Mon, 15 Sep 2008 15:10:51 +1000
+	id 1Kf6vR-0003y2-Bi
+	for kexec@lists.infradead.org; Mon, 15 Sep 2008 05:47:06 +0000
+Date: Mon, 15 Sep 2008 15:47:03 +1000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH]IA64: assign a distinguishable label to uncached memory
-	in /proc/iomem
-Message-ID: <20080915051049.GA7369@verge.net.au>
-References: <48C9A2F8.3060308@sgi.com>
+Subject: Re: [PATCH] IA64: kexec allocates too few memory for kdump kernel
+	itself
+Message-ID: <20080915054702.GA3160@verge.net.au>
+References: <48BEFB47.20004@sgi.com> <20080904000100.GD8974@verge.net.au>
+	<48BF3BE8.2050806@sgi.com> <48C028D0.4050202@sgi.com>
+	<20080912232710.GE3832@verge.net.au> <48CB0B71.2070308@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <48C9A2F8.3060308@sgi.com>
+In-Reply-To: <48CB0B71.2070308@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +27,96 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jay Lan <jlan@sgi.com>
-Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, Jack Steiner <steiner@sgi.com>, linux-ia64@vger.kernel.org
+Cc: kexec@lists.infradead.org
 
-On Thu, Sep 11, 2008 at 04:00:08PM -0700, Jay Lan wrote:
-> Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
-> is denoted as "System RAM" in /proc/iomem, while memory of attribute
-> (EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
+On Fri, Sep 12, 2008 at 05:38:09PM -0700, Jay Lan wrote:
+> Simon Horman wrote:
+> >> Hi,
+> >>
+> >> It should be mem_phdr, got it from mem_ehdr->e_phdr.
+> >>
+> >>> i=0, p_paddr=3018000000, p_memsz=d04480, p_offset=10000, p_type=1
+> >>> i=1, p_paddr=3018d20000, p_memsz=9620, p_offset=d20000, p_type=1
+> >>> i=2, p_paddr=3018d30000, p_memsz=564490, p_offset=d30000, p_type=1
+> >>> i=3, p_paddr=0, p_memsz=0, p_offset=0, p_type=4
+> >> Does anyone understand how the array were created and why there
+> >> was a gap between i=0 and i=1 entries? I think this is the problem
+> >> but i do not know how to fix it, so tried to work around it.
+> >>
+> >> The statement my patch replaced was totally broken:
+> >>  -			if (loaded_segments[loaded_segments_num].end !=
+> >>  -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+> >>  -				break;
+> >>  +			if (loaded_segments[loaded_segments_num].end <
+> >>  +			    (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+> >>  +				loaded_segments[loaded_segments_num].end
+> >>  +				  = phdr->p_paddr & ~(ELF_PAGE_SIZE-1);
+> >>
+> >> My debugging showed that when "loaded_segments[loaded_segments_num].end"
+> >> != "phdr->p_paddr & ~(ELF_PAGE_SIZE-1)", they were treated as equal
+> >> and continue to next statement.  However, if i assign both expression
+> >> to local variables and do comparison, the 'break' statement is
+> >> executed correctly when two values are not the same. Unfortunately,
+> >> consequently the kdump kernel would _alawys_ hang.
+> >>
+> >> I believe the intent of the original statement is to ensure there is
+> >> no gap between entries of mem_phdr array. But if there is a gap,
+> >> kexec should simply exit with failure. The 'break' statement just
+> >> created a loaded_segment[] array that broke the kernel memory segment
+> >> into multiple entries and resulted in the kdump kernel hang in
+> >> find_memory(). The IA64 (at least 2.6.27-rc4) kdump kernel works in
+> >> some cases today are simply out of luck.
+> >>
+> >> I believe the real fix is to fix the contents of the mem_phdr array.
+> >> Since i do not know how to fix it, my patch would close up the
+> >> gap where there is the a gap between entries of the mem_phdr array.
+> >>
+> >> Does it make more sense to you now, Simon?
+> > 
+> > Hi Jay,
+> > 
+> > yes that does make sense. I'd like to poke around and see
+> > if mem_phdr can be fixed.
 > 
-> The kexec utility then includes uncached memory as part of vmcore. The
-> kdump kernel MCA'ed when it tries to save the vmcore to a disk. A normal
-> "cached" access may cause MCAs.
+> I think the whole ehdr is read from the kernel binary in
+> slurp_decompress_file.
 > 
-> This patch would label memory with attribute of EFI_MEMORY_UC only as
-> "Uncached RAM" so that kexec would know not to include it in the vmcore.
-> I will submit a separate kexec-tools patch to the kexec list.
+> Bernhard reported a kdump kernel boot problem caused by a patch
+> regarding per-cpu variables access in early boot code:
+> http://article.gmane.org/gmane.linux.ports.ia64/19380
 > 
-> Signed-off-by: Jay Lan <jlan@sgi.com>
+> I backed out the offending patch and i was no longer able to
+> reproduce this problem.
+> 
+> So, it is safe to say the problem was due to how we process
+> data from the vmlinuz.
+> 
+> The code i tried to change:
+> -             if (loaded_segments[loaded_segments_num].end !=
+> -                     phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+> -                     break;
+> has two problems:
+> 1) '!=' operation takes precedence over '&'. If the code is to
+>    do what it intends to do, the statement should be:
+>               if (loaded_segments[loaded_segments_num].end !=
+>                      (phdr->p_paddr & ~(ELF_PAGE_SIZE-1)) )
+>                      break;
 
-Hi Jay,
+Good point. That is definately a problem.
 
-I've taken a look on an RX2620, Tiger2 and Tiger4 and none of these
-machines have EFI memory regions that are covered by this new check. That
-is, any regions with the EFI_MEMORY_UC bit set in the attribute either also
-have other attibute bits set, or are of a type not covered by this.
+> 2) When the 'break' is really executed, you breaks the kernel
+>    segment into multiple segments.
 
-I strongly suspect that this is not a problem, but I wanted to bring it to
-your attention anyway. I can provide more detailed EFI information from any
-or all of these machines if you need it.
+I also agree that is a problem. I just wonder what is the
+best thing to do about it.
 
-With regards to the kexec-tools portion of this patch, it looks fine to me
-and I don't think there will be any problem in merging it if/when the
-kernel portion is accepted.
+> The code needs fix even if the problem i saw was a result of
+> a bug in the kernel.
+
+Agreed.
+
+For now can you make a patch that just fixes precedence logic bug?
+Lets merge that and then tackle the more complex broken segment issue.
 
 -- 
 Simon Horman
