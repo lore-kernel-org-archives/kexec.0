@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kg3h4-0001eI-Rt
-	for kexec@lists.infradead.org; Wed, 17 Sep 2008 20:32:12 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <48D0067F.3020007@esentire.com>
-Date: Tue, 16 Sep 2008 15:21:53 -0700
-In-Reply-To: <48D0067F.3020007@esentire.com> (Jonathan Steel's message of
-	"Tue, 16 Sep 2008 15:18:23 -0400")
-Message-ID: <m1d4j3g29q.fsf@frodo.ebiederm.org>
+	id 1Kg4F3-0006ya-NS
+	for kexec@lists.infradead.org; Wed, 17 Sep 2008 21:07:18 +0000
+Received: from cthulhu.engr.sgi.com (cthulhu.engr.sgi.com [192.26.80.2])
+	by relay1.corp.sgi.com (Postfix) with ESMTP id 4FCF98F809A
+	for <kexec@lists.infradead.org>; Wed, 17 Sep 2008 14:07:16 -0700 (PDT)
+Received: from kluge.engr.sgi.com (kluge.engr.sgi.com [192.102.96.102])
+	by cthulhu.engr.sgi.com (8.12.10/8.12.10/SuSE Linux 0.7) with ESMTP id
+	m8HL7G4l025991
+	for <kexec@lists.infradead.org>; Wed, 17 Sep 2008 14:07:16 -0700
+Message-ID: <48D17183.7030002@sgi.com>
+Date: Wed, 17 Sep 2008 14:07:15 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Subject: [PATCH] kexec: segmentation fault in kimage_add_entry
+Subject: /sbin/kexec became zero size... Anyone else?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +27,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jonathan Steel <jon.steel@esentire.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-From: Jonathan Steel <jon.steel@esentire.com>
+Hi,
 
-A segmentation fault can occur in kimage_add_entry in kexec.c when
-loading a kernel image into memory. The fault occurs because a page is
-requested by calling kimage_alloc_page with gfp_mask GFP_KERNEL and the
-function may actually return a page with gfp_mask GFP_HIGHUSER. The high
-mem page is returned because it was swapped with the kernel page due to
-the kernel page being a page that will shortly be copied to.
+My root disk was populated with sles10sp2, but the kernel was
+2.6.27-rc5 and /sbin/kexec was built from 2.0.0 version.
 
-This patch ensures that kimage_alloc_page returns a page that was
-created with the correct gfp flags.
+Many times when kdump kernel failed early i found  after reboot that
+/sbin/kexec became zero size. There was no warning on executing
+'/etc/init.d/kdump start' when /sbin/kexec is zero size. I have
+no idea when and how that happened.
+
+Has anyone else seen this problem?
+
+Thanks,
+jay
 
 
-I have verified the change and fixed the whitespace damage of the
-original patch.  Jonathan did a great job of tracking this down
-after he hit the problem. -- Eric
-
-Signed-off-by: Jonathan Steel <jon.steel@esentire.com>
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- kernel/kexec.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 59f3f0d..aef2653 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -753,8 +753,14 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 			*old = addr | (*old & ~PAGE_MASK);
- 
- 			/* The old page I have found cannot be a
--			 * destination page, so return it.
-+			 * destination page, so return it if it's
-+			 * gfp_flags honor the ones passed in.
- 			 */
-+			if (!(gfp_mask & __GFP_HIGHMEM) &&
-+			    PageHighMem(old_page)) {
-+				kimage_free_pages(old_page);
-+				continue;
-+			}
- 			addr = old_addr;
- 			page = old_page;
- 			break;
--- 
-1.5.3.rc6.17.g1911
+a4700rac:/sbin # ll kexec*
+-rwxr-xr-x 1 root root      0 2008-09-17 12:41 kexec
+-rwxr-xr-x 1 root root 387635 2008-07-23 07:25 kexec-2.0.0
+-r-xr-xr-x 1 root root 320632 2008-04-21 17:31 kexec-sles10sp2
+a4700rac:/sbin # /etc/init.d/kdump start
+Loading kdump Loading kdump kernel: /sbin/kexec -p
+/boot/vmlinuz-2.6.27-rc5-default --append="CRASH=1  root=/dev/sda8
+shub2 console=ttySG0,115200  thash_entries=2097152  ro elevator=deadline
+sysrq=1 reset_devices irqpoll maxcpus=1  3"
+--initrd=/boot/initrd-2.6.27-rc5-default --noio
+                                                                     done
+a4700rac:/sbin #
 
 
 _______________________________________________
