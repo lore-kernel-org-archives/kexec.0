@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0015.houston.hp.com ([15.201.24.18])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KhC5S-0001Dy-9M
-	for kexec@lists.infradead.org; Sat, 20 Sep 2008 23:42:02 +0000
-From: Bjorn Helgaas <bjorn.helgaas@hp.com>
-Subject: Re: SetVirtualAddressMap() on Tiano EFI firmware
-Date: Sat, 20 Sep 2008 17:41:56 -0600
-References: <200809111423.58814.bjorn.helgaas@hp.com>
-	<20080911215954.GA3104@nlxdcldnl2.cl.intel.com>
-	<200809121259.54155.bjorn.helgaas@hp.com>
-In-Reply-To: <200809121259.54155.bjorn.helgaas@hp.com>
+Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kgs2h-00085B-8m
+	for kexec@lists.infradead.org; Sat, 20 Sep 2008 02:17:51 +0000
+Message-ID: <48D45D21.7080702@sgi.com>
+Date: Fri, 19 Sep 2008 19:17:05 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200809201741.56302.bjorn.helgaas@hp.com>
+Subject: [PATCH] IA64: better calculate PT_LOAD segment size
+Content-Type: multipart/mixed; boundary="------------070605020501000209070409"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,41 +17,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Lombard, David N" <dnlombar@ichips.intel.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>, "Luck,
+	Tony" <tony.luck@intel.com>
 
-On Friday 12 September 2008 12:59:53 pm Bjorn Helgaas wrote:
-> On Thursday 11 September 2008 03:59:54 pm Lombard, David N wrote:
-> > On Thu, Sep 11, 2008 at 01:23:58PM -0700, Bjorn Helgaas wrote:
-> > > Has kexec been tested on x86 with EFI firmware?
-> > > 
-> > > I'm testing it on ia64 with Tiano-based EFI firmware, and I
-> > > tripped over an issue with SetVirtualAddressMap().  I would
-> > > expect a similar problem to happen on x86, but I don't see
-> > > any code to deal with it.
-> > 
-> > Hmmm.  I run on 32- and 64-bit kernels on a 32-bit IA EFI, and
-> > haven't seen this problem, including chains of kexec invocations.
-> > 
-> > I'll take a closer look at what's going on on my systems.
+This is a multi-part message in MIME format.
+--------------070605020501000209070409
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-Any news on this?
+This patch combines consecutive PL_LOAD segments into one.
+The end address of the last PL_LOAD segment, calculated by
+adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
+will be the end address of this loaded_segments[] entry.
 
-> Thanks.  In case it wasn't clear, here's my confusion about x86:
-> 
-> I don't see anything in kexec-tools that touches SetVirtualAddressMap().
-> And I don't see anything in Linux that prevents x86 from calling
-> SetVirtualAddressMap() in the new kernel.
-> 
-> If we do call SetVirtualAddressMap() in the new kernel, I would
-> expect it to return EFI_UNSUPPORTED, which should cause Linux to
-> panic.
+This patch fixes the kdump kernel MCA problem caused by under-
+allocation of memory and a "kdump broken on ALtix 350" problem
+reported by Bernhard Walle.
+
+Simon, this patch replaces my previous patch I submitted on the
+underallocation issue.
+
+Signed-off-by: Jay Lan <jlan@sgi.com>
+
+
+--------------070605020501000209070409
+Content-Type: text/plain;
+ name="bootmem-fix.v2"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="bootmem-fix.v2"
+
+---
+ kexec/arch/ia64/crashdump-ia64.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 14:33:07.593344017 -0700
++++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 17:39:03.732928237 -0700
+@@ -86,19 +86,20 @@ static void add_loaded_segments_info(str
+                 loaded_segments[loaded_segments_num].end =
+ 			loaded_segments[loaded_segments_num].start;
+ 
++		/* Consolidate consecutive PL_LOAD segments into one.
++		 * The end addr of the last PL_LOAD segment, calculated by
++		 * adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
++		 * will be the end address of this loaded_segments entry.
++		 */
+ 		while (i < ehdr->e_phnum) {
+ 			phdr = &ehdr->e_phdr[i];
+ 	                if (phdr->p_type != PT_LOAD)
+ 	                        break;
+-			if (loaded_segments[loaded_segments_num].end !=
+-				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+-				break;
+-			loaded_segments[loaded_segments_num].end +=
+-				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+-				~(ELF_PAGE_SIZE - 1);
++			loaded_segments[loaded_segments_num].end =
++				(phdr->p_paddr + phdr->p_memsz +
++				ELF_PAGE_SIZE - 1) & ~(ELF_PAGE_SIZE - 1);
+ 			i++;
+ 		}
+-
+ 		loaded_segments_num++;
+ 	}
+ }
+
+--------------070605020501000209070409
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------070605020501000209070409--
+
