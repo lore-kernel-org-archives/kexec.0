@@ -1,18 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KhkDN-00045b-6h
-	for kexec@lists.infradead.org; Mon, 22 Sep 2008 12:08:30 +0000
-Message-ID: <48D77E05.30504@mxs.nes.nec.co.jp>
-Date: Mon, 22 Sep 2008 20:14:13 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: the exiting makedumpfile is almost there... :)
-References: <48C85836.8080606@sgi.com> <20080911143226.GT29908@sgi.com>
-	<48C9D22A.5010404@mxs.nes.nec.co.jp> <48CA70CD.2090500@sgi.com>
-	<48CAC7DB.4090904@sgi.com> <48CAD340.7000701@redhat.com>
-	<48CAEB6A.8080405@sgi.com>
-In-Reply-To: <48CAEB6A.8080405@sgi.com>
+	id 1KhusJ-00037O-1C
+	for kexec@lists.infradead.org; Mon, 22 Sep 2008 23:31:27 +0000
+Subject: Re: Trying to test my gart/iommu vmcore problem on RH
+From: Bob Montgomery <bob.montgomery@hp.com>
+In-Reply-To: <1220994769.2215.75.camel@amd.troyhebe>
+References: <1218750773.3361.425.camel@amd.troyhebe>
+	<20080815131359.GA10208@redhat.com>
+	<1219081942.3361.436.camel@amd.troyhebe>
+	<20080819134748.GC18972@redhat.com> <m1wsib3raq.fsf@frodo.ebiederm.org>
+	<1219442751.3361.459.camel@amd.troyhebe>
+	<m18wuofw79.fsf@frodo.ebiederm.org> <20080825131603.GB18914@redhat.com>
+	<m1vdxpky0c.fsf@frodo.ebiederm.org>
+	<1220570928.2215.48.camel@amd.troyhebe>
+	<20080905151209.GB13742@redhat.com>
+	<1220994769.2215.75.camel@amd.troyhebe>
+Date: Mon, 22 Sep 2008 17:31:34 -0600
+Message-Id: <1222126294.2215.91.camel@amd.troyhebe>
+Mime-Version: 1.0
+Reply-To: bob.montgomery@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,191 +28,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0476552896=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Hedi Berriche <hedi@sgi.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Heber, Troy" <troy.heber@hp.com>, "Loftin, Terry" <terry.loftin@hp.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
---===============0476552896==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+On Tue, 2008-09-09 at 21:12 +0000, I wrote:
 
+> The kdump kernel wouldn't be in danger of being overwritten, it just
+> might not be able to set up any IOs that work to its own address space
+> if an IOMMU is out there waiting to grab them.
+> 
+> For the calgary case, we'd maybe have to add the Crash Kernel range to
+> the list of things sent to iommu_range_reserve in
+> calgary_reserve_regions, to prevent those addresses from ever being
+> given out.
+> 
+> Bob M.
 
-Hi Jay,
+While this, or something like it, is necessary, it isn't sufficient.
+I think what we would really need to do is to have the primary kernel
+set up an identity mapping for all pages in the Crash kernel range,
+or the subset of pages that could be IO targets when the kdump kernel
+is running.  This would allow a still-running IOMMU from the primary
+kernel to translate kdump IOs to kdump addresses transparently.
 
-My IA64 linux-2.6.27-rc7 kernel could boot by your patches and its kdump
-succeeded, thanks. But I cannot reproduce this problem unfortunately.
-Could you send me your kernel .config file to reproduce it ?
+And that leads to the Kdump IO Rule:
 
-And could you please research the reason why the page of virtual address
-0xe0000060031417a8 is excluded ?  This patch is for researching it.
-Please apply it against makedumpfile-1.2.9, and create a dump file
-by makedumpfile with "-e 0xe0000060031417a8" option. The reason why
-excluding the page is printed like the following:
+        The primary kernel is responsible for setting up any necessary
+        conditions to allow the kdump kernel to perform its required
+        IO without detecting any iommu.
 
-  # makedumpfile -cd31 -e 0xe000000062744000 -x vmlinux /proc/vmcore dump.cd31
-  The kernel version is not supported.
-  The created dumpfile may be incomplete.
-  Excluding unnecessary pages        : [100 %]
-  PAGE(vaddr:e000000062744000, pfn:189d1) is excluded as FREE PAGE.
+        The kdump kernel must refrain from detecting and initializing
+        any iommu.
 
-  Copying data                       : [100 %]
+This has a these effects:
 
-  The dumpfile is saved to dump.cd31.
+A) Primary kernel: depending on what it is using for as an IOMMU,
+        it may have to do some (or considerable) setup, to guarantee
+        that the kdump kernel can have IO capability to its Crash
+        kernel address range.
 
-  makedumpfile Completed.
-  # 
+B) Primary kernel: the Crash kernel range must be set up in an address
+        range whose physical addresses are accessible to IO cards
+        without address remapping.
 
-
-Thanks
-Ken'ichi Ohmichi
-
----
-diff -puN backup/makedumpfile-1.2.9/makedumpfile.c makedumpfile/makedumpfile.c
---- backup/makedumpfile-1.2.9/makedumpfile.c	2008-09-04 16:31:58.000000000 +0900
-+++ makedumpfile/makedumpfile.c	2008-09-22 20:15:37.000000000 +0900
-@@ -3360,6 +3360,9 @@ out:
- 	if (!get_mem_map())
- 		return FALSE;
- 
-+	if (info->vaddr_why_excluded)
-+		info->pfn_why_excluded = (vaddr_to_paddr(info->vaddr_why_excluded) / info->page_size);
-+
- 	return TRUE;
- }
- 
-@@ -3470,8 +3473,14 @@ clear_bit_on_1st_bitmap(unsigned long lo
- }
- 
- int
--clear_bit_on_2nd_bitmap(unsigned long long pfn)
-+clear_bit_on_2nd_bitmap(unsigned long long pfn, char *page_type)
- {
-+	if (info->pfn_why_excluded == pfn) {
-+		MSG("\n");
-+		MSG("PAGE(vaddr:%lx, pfn:%llx) is excluded as %s.\n",
-+		    info->vaddr_why_excluded, info->pfn_why_excluded, page_type);
-+		MSG("\n");
-+	}
- 	return set_bitmap(info->bitmap2, pfn, 0);
- }
- 
-@@ -3872,7 +3881,7 @@ reset_bitmap_of_free_pages(unsigned long
- 				}
- 				for (i = 0; i < (1<<order); i++) {
- 					pfn = start_pfn + i;
--					clear_bit_on_2nd_bitmap(pfn);
-+					clear_bit_on_2nd_bitmap(pfn, "FREE PAGE");
- 				}
- 				found_free_pages += i;
- 
-@@ -4114,7 +4123,7 @@ exclude_zero_pages(void)
- 			return FALSE;
- 
- 		if (is_zero_page(buf, info->page_size)) {
--			clear_bit_on_2nd_bitmap(pfn);
-+			clear_bit_on_2nd_bitmap(pfn, "ZERO PAGE");
- 			pfn_zero++;
- 		}
- 	}
-@@ -4186,7 +4195,7 @@ exclude_unnecessary_pages(void)
- 			if ((info->dump_level & DL_EXCLUDE_CACHE)
- 			    && (isLRU(flags) || isSwapCache(flags))
- 			    && !isPrivate(flags) && !isAnon(mapping)) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, "CACHE PAGE");
- 				pfn_cache++;
- 			}
- 			/*
-@@ -4195,7 +4204,7 @@ exclude_unnecessary_pages(void)
- 			else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
- 			    && (isLRU(flags) || isSwapCache(flags))
- 			    && !isAnon(mapping)) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, "CACHE PRIVATE PAGE");
- 				pfn_cache_private++;
- 			}
- 			/*
-@@ -4203,7 +4212,7 @@ exclude_unnecessary_pages(void)
- 			 */
- 			else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
- 			    && isAnon(mapping)) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, "USER DATA PAGE");
- 				pfn_user++;
- 			}
- 		}
-@@ -5794,7 +5803,7 @@ exclude_xen_user_domain(void)
- 					size * info->num_load_memory);
- 
- 			if (!allocated_in_map(pfn)) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
- 				continue;
- 			}
- 
-@@ -5802,7 +5811,7 @@ exclude_xen_user_domain(void)
- 			if (!readmem(VADDR_XEN,
- 			      page_info_addr + OFFSET(page_info.count_info),
- 		 	      &count_info, sizeof(count_info))) {
--				clear_bit_on_2nd_bitmap(pfn);
-+				clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
- 				continue;	/* page_info may not exist */
- 			}
- 			if (!readmem(VADDR_XEN,
-@@ -5823,7 +5832,7 @@ exclude_xen_user_domain(void)
- 				continue;
- 			if ((count_info & 0xffff) && is_select_domain(_domain))
- 				continue;
--			clear_bit_on_2nd_bitmap(pfn);
-+			clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
- 		}
- 	}
- 
-@@ -6162,7 +6171,7 @@ main(int argc, char *argv[])
- 
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
--	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:RVvXx:", longopts,
-+	while ((opt = getopt_long(argc, argv, "b:cDd:Ee:Ffg:hi:RVvXx:", longopts,
- 	    NULL)) != -1) {
- 		switch (opt) {
- 		case 'b':
-@@ -6180,6 +6189,9 @@ main(int argc, char *argv[])
- 		case 'E':
- 			info->flag_elf_dumpfile = 1;
- 			break;
-+		case 'e':
-+			info->vaddr_why_excluded = strtoul(optarg, NULL, 0);
-+			break;
- 		case 'F':
- 			info->flag_flatten = 1;
- 			break;
-diff -puN backup/makedumpfile-1.2.9/makedumpfile.h makedumpfile/makedumpfile.h
---- backup/makedumpfile-1.2.9/makedumpfile.h	2008-09-04 16:31:58.000000000 +0900
-+++ makedumpfile/makedumpfile.h	2008-09-22 18:41:16.000000000 +0900
-@@ -725,6 +725,8 @@ struct DumpInfo {
- 	int		flag_force;	     /* overwrite existing stuff */
- 	int		flag_exclude_xen_dom;/* exclude Domain-U from xen-kdump */
- 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
-+	unsigned long	vaddr_why_excluded;
-+	unsigned long long	pfn_why_excluded;
- 	long		page_size;           /* size of page */
- 	long		page_shift;
- 	unsigned long long	max_mapnr;   /* number of page descriptor */
+C) Kdump kernel: the kdump kernel must ignore any IOMMU hardware that
+        might be "detectable".
 
 
+The setup responsibilities for the primary kernel depend on what it is
+currently using for dma mapping:
 
---===============0476552896==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+1) no iommu (nommu_map_single): No setup is required for kdump.
+        Leftover IOs will go to IO buffers allocated by the primary
+        kernel outside of the Crash kernel area.  Kdump IOs will
+        go to IO buffers allocated by the kdump kernel in the Crash
+        kernel area.
+
+2) swiotlb (swiotlb_map_single_phys): No setup is required for kdump.
+        Leftover IOs will go to the primary kernel bounce buffers
+        outside of the Crash kernel area.  Kdump IOs will go to IO
+        buffers allocated by the kdump kernel in the Crash kernel area.
+
+3) GART (gart_map_single): No setup is required for kdump.  Leftover
+        IOs will be mapped through the GART aperture to IO buffers
+        allocated by the primary kernel outside of the Crash Kernel
+        area.  Kdump IOs will go to IO buffers allocated by the kdump
+        kernel in the Crash kernel area.
+
+4) Calgary IOMMU (calgary_map_single): The Crash kernel memory range
+        must be pre-allocated for IO and identity-mapped, so any IO
+        operation to an address in the Crash kernel range is allowed
+        to complete to that same address.  To preallocate for a
+        128MB Crash kernel area, 32K entries (256 Kbytes) are used
+        from the Calgary table.  For a 4GB system, the default size
+        of the table is 1024K entries (8 Mbytes).
+
+        Leftover IOs will go to IO buffers allocated by the primary
+        kernel and remapped by the Calgary IOMMU.  Neither the IO-side
+        address (iova) nor the physical address of a leftover IO will
+        be in the Crash kernel area.  Kdump IOs will go to IO buffers
+        allocated by the kdump kernel, remapped by the Calgary IOMMU
+        to those same addresses (iova equals physical address within
+        the Crash kernel area).
+
+5) Intel IOMMU (intel_map_single): The Crash kernel memory range must
+        be pre-allocated and identity-mapped for each hw device that
+        is needed by the kdump kernel, so any IO operation to an
+        address in the Crash kernel range is allowed to complete to
+        that same address.
+
+        Leftover IOs will go to IO buffers allocated by the primary
+        kernel and remapped by the Intel IOMMU.  Neither the IO-side
+        address (iova) nor the physical address of a leftover IO
+        will be in the Crash kernel area.  Kdump IOs will go to IO
+        buffers allocated by the kdump kernel, remapped by the Intel
+        IOMMU to those same addresses (iova equals physical address
+        within the Crash kernel area).
+
+
+This all assumes no virtual machine stuff yet.
+
+Possible? Comments? Corrections? 
+
+Bob Montgomery
+
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0476552896==--
