@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Khds7-000278-Fj
-	for kexec@lists.infradead.org; Mon, 22 Sep 2008 05:22:08 +0000
-Message-ID: <48D72B2B.3000406@mxs.nes.nec.co.jp>
-Date: Mon, 22 Sep 2008 14:20:43 +0900
+	id 1KhkDN-00045b-6h
+	for kexec@lists.infradead.org; Mon, 22 Sep 2008 12:08:30 +0000
+Message-ID: <48D77E05.30504@mxs.nes.nec.co.jp>
+Date: Mon, 22 Sep 2008 20:14:13 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
-In-Reply-To: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com> <20080911143226.GT29908@sgi.com>
+	<48C9D22A.5010404@mxs.nes.nec.co.jp> <48CA70CD.2090500@sgi.com>
+	<48CAC7DB.4090904@sgi.com> <48CAD340.7000701@redhat.com>
+	<48CAEB6A.8080405@sgi.com>
+In-Reply-To: <48CAEB6A.8080405@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,71 +21,183 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2104296657=="
+Content-Type: multipart/mixed; boundary="===============0476552896=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Hedi Berriche <hedi@sgi.com>
 
---===============2104296657==
+--===============0476552896==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi Kevin,
+Hi Jay,
 
-Thank you for reporting.
+My IA64 linux-2.6.27-rc7 kernel could boot by your patches and its kdump
+succeeded, thanks. But I cannot reproduce this problem unfortunately.
+Could you send me your kernel .config file to reproduce it ?
 
-I guess that the problem depends on kernel configuration, and I want
-to reproduce it on my machine for investigating. Could you send me
-your kernel .config file ? And please let me know the kernel version.
+And could you please research the reason why the page of virtual address
+0xe0000060031417a8 is excluded ?  This patch is for researching it.
+Please apply it against makedumpfile-1.2.9, and create a dump file
+by makedumpfile with "-e 0xe0000060031417a8" option. The reason why
+excluding the page is printed like the following:
+
+  # makedumpfile -cd31 -e 0xe000000062744000 -x vmlinux /proc/vmcore dump.cd31
+  The kernel version is not supported.
+  The created dumpfile may be incomplete.
+  Excluding unnecessary pages        : [100 %]
+  PAGE(vaddr:e000000062744000, pfn:189d1) is excluded as FREE PAGE.
+
+  Copying data                       : [100 %]
+
+  The dumpfile is saved to dump.cd31.
+
+  makedumpfile Completed.
+  # 
 
 
 Thanks
 Ken'ichi Ohmichi
 
-Worth, Kevin wrote:
-> Hello,
-> 
-> I have a couple errors that also happened on 1.2.6 and I wondered if anyone might have a suggestion why.
-> 
-> The one thing I know might be strange about my system is that my first kernel (the one that panics) is compiled with CONFIG_VMSPLIT_1G, meaning that it is set to have 3GB of kernel space and 1GB of user space. I believe this does things to CONFIG_PAGE_OFFSET, but the depth of my kernel knowledge is not so great.
-> 
-> 
-> # makedumpfile -E -d 31 -i /boot/vmcoreinfo vmcore dumpoutput2
-> check_release: /boot/vmcoreinfo and vmcore don't match.
-> 
-> makedumpfile Failed.
-> 
-> The release numbers of the vmcore and vmcoreinfo files should be identical. This happens if I specify anything greater than "-d 1".
-> 
-> I tried a quick addition to the printf to include the values that generate the above error. It looks like "system_utsname.release" is NULL coming into the strcmp on line 340 of makedumpfile.c . Unfortunately I don't know enough about the kernel to go further than this.
-> 
-> 
-> Additionally (potentially a separate issue), on an identical piece of hardware, but with 4GB of memory instead of 2GB, using "-d 1", I get the following error:
-> 
-> Excluding zero pages               : [ 38 %] readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
-> create_2nd_bitmap: Can't exclude pages filled with zerocreate_2nd_bitmap: for creating an ELF dumpfile.
-> 
-> makedumpfile Failed.
-> 
-> I can cp the file just fine and it loads up in crash, but I can't seem to use makedumpfile to trim the vmcore down at all on this system with more memory.
-> 
-> Any suggestions? Thanks!
-> 
-> 
-> Kevin Worth
-> Network Security
-> Software Engineer
-> kevin.worth@hp.com<mailto:kevin.worth@hp.com>
-> ph 916.785.4528
-> fx 916.785.1196
-> 
-> [cid:image003.jpg@01C91999.C5AF4AE0]
+---
+diff -puN backup/makedumpfile-1.2.9/makedumpfile.c makedumpfile/makedumpfile.c
+--- backup/makedumpfile-1.2.9/makedumpfile.c	2008-09-04 16:31:58.000000000 +0900
++++ makedumpfile/makedumpfile.c	2008-09-22 20:15:37.000000000 +0900
+@@ -3360,6 +3360,9 @@ out:
+ 	if (!get_mem_map())
+ 		return FALSE;
+ 
++	if (info->vaddr_why_excluded)
++		info->pfn_why_excluded = (vaddr_to_paddr(info->vaddr_why_excluded) / info->page_size);
++
+ 	return TRUE;
+ }
+ 
+@@ -3470,8 +3473,14 @@ clear_bit_on_1st_bitmap(unsigned long lo
+ }
+ 
+ int
+-clear_bit_on_2nd_bitmap(unsigned long long pfn)
++clear_bit_on_2nd_bitmap(unsigned long long pfn, char *page_type)
+ {
++	if (info->pfn_why_excluded == pfn) {
++		MSG("\n");
++		MSG("PAGE(vaddr:%lx, pfn:%llx) is excluded as %s.\n",
++		    info->vaddr_why_excluded, info->pfn_why_excluded, page_type);
++		MSG("\n");
++	}
+ 	return set_bitmap(info->bitmap2, pfn, 0);
+ }
+ 
+@@ -3872,7 +3881,7 @@ reset_bitmap_of_free_pages(unsigned long
+ 				}
+ 				for (i = 0; i < (1<<order); i++) {
+ 					pfn = start_pfn + i;
+-					clear_bit_on_2nd_bitmap(pfn);
++					clear_bit_on_2nd_bitmap(pfn, "FREE PAGE");
+ 				}
+ 				found_free_pages += i;
+ 
+@@ -4114,7 +4123,7 @@ exclude_zero_pages(void)
+ 			return FALSE;
+ 
+ 		if (is_zero_page(buf, info->page_size)) {
+-			clear_bit_on_2nd_bitmap(pfn);
++			clear_bit_on_2nd_bitmap(pfn, "ZERO PAGE");
+ 			pfn_zero++;
+ 		}
+ 	}
+@@ -4186,7 +4195,7 @@ exclude_unnecessary_pages(void)
+ 			if ((info->dump_level & DL_EXCLUDE_CACHE)
+ 			    && (isLRU(flags) || isSwapCache(flags))
+ 			    && !isPrivate(flags) && !isAnon(mapping)) {
+-				clear_bit_on_2nd_bitmap(pfn);
++				clear_bit_on_2nd_bitmap(pfn, "CACHE PAGE");
+ 				pfn_cache++;
+ 			}
+ 			/*
+@@ -4195,7 +4204,7 @@ exclude_unnecessary_pages(void)
+ 			else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
+ 			    && (isLRU(flags) || isSwapCache(flags))
+ 			    && !isAnon(mapping)) {
+-				clear_bit_on_2nd_bitmap(pfn);
++				clear_bit_on_2nd_bitmap(pfn, "CACHE PRIVATE PAGE");
+ 				pfn_cache_private++;
+ 			}
+ 			/*
+@@ -4203,7 +4212,7 @@ exclude_unnecessary_pages(void)
+ 			 */
+ 			else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
+ 			    && isAnon(mapping)) {
+-				clear_bit_on_2nd_bitmap(pfn);
++				clear_bit_on_2nd_bitmap(pfn, "USER DATA PAGE");
+ 				pfn_user++;
+ 			}
+ 		}
+@@ -5794,7 +5803,7 @@ exclude_xen_user_domain(void)
+ 					size * info->num_load_memory);
+ 
+ 			if (!allocated_in_map(pfn)) {
+-				clear_bit_on_2nd_bitmap(pfn);
++				clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
+ 				continue;
+ 			}
+ 
+@@ -5802,7 +5811,7 @@ exclude_xen_user_domain(void)
+ 			if (!readmem(VADDR_XEN,
+ 			      page_info_addr + OFFSET(page_info.count_info),
+ 		 	      &count_info, sizeof(count_info))) {
+-				clear_bit_on_2nd_bitmap(pfn);
++				clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
+ 				continue;	/* page_info may not exist */
+ 			}
+ 			if (!readmem(VADDR_XEN,
+@@ -5823,7 +5832,7 @@ exclude_xen_user_domain(void)
+ 				continue;
+ 			if ((count_info & 0xffff) && is_select_domain(_domain))
+ 				continue;
+-			clear_bit_on_2nd_bitmap(pfn);
++			clear_bit_on_2nd_bitmap(pfn, "USER DOMAIN PAGE");
+ 		}
+ 	}
+ 
+@@ -6162,7 +6171,7 @@ main(int argc, char *argv[])
+ 
+ 	info->block_order = DEFAULT_ORDER;
+ 	message_level = DEFAULT_MSG_LEVEL;
+-	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:RVvXx:", longopts,
++	while ((opt = getopt_long(argc, argv, "b:cDd:Ee:Ffg:hi:RVvXx:", longopts,
+ 	    NULL)) != -1) {
+ 		switch (opt) {
+ 		case 'b':
+@@ -6180,6 +6189,9 @@ main(int argc, char *argv[])
+ 		case 'E':
+ 			info->flag_elf_dumpfile = 1;
+ 			break;
++		case 'e':
++			info->vaddr_why_excluded = strtoul(optarg, NULL, 0);
++			break;
+ 		case 'F':
+ 			info->flag_flatten = 1;
+ 			break;
+diff -puN backup/makedumpfile-1.2.9/makedumpfile.h makedumpfile/makedumpfile.h
+--- backup/makedumpfile-1.2.9/makedumpfile.h	2008-09-04 16:31:58.000000000 +0900
++++ makedumpfile/makedumpfile.h	2008-09-22 18:41:16.000000000 +0900
+@@ -725,6 +725,8 @@ struct DumpInfo {
+ 	int		flag_force;	     /* overwrite existing stuff */
+ 	int		flag_exclude_xen_dom;/* exclude Domain-U from xen-kdump */
+ 	unsigned long	vaddr_for_vtop;      /* virtual address for debugging */
++	unsigned long	vaddr_why_excluded;
++	unsigned long long	pfn_why_excluded;
+ 	long		page_size;           /* size of page */
+ 	long		page_shift;
+ 	unsigned long long	max_mapnr;   /* number of page descriptor */
 
 
 
---===============2104296657==
+--===============0476552896==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -93,4 +208,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============2104296657==--
+--===============0476552896==--
