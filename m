@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([66.187.233.31])
+Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KiEh8-0004NJ-3x
-	for kexec@lists.infradead.org; Tue, 23 Sep 2008 20:41:14 +0000
-Date: Tue, 23 Sep 2008 16:41:11 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: /sbin/kexec became zero size... Anyone else?
-Message-ID: <20080923204111.GF20638@hmsendeavour.rdu.redhat.com>
-References: <48D17183.7030002@sgi.com> <20080923075202.GA20108@verge.net.au>
-	<48D91C4E.5030704@sgi.com>
-	<20080923174113.GC20638@hmsendeavour.rdu.redhat.com>
-	<48D95253.10400@sgi.com>
+	id 1KiEou-0008ET-3I
+	for kexec@lists.infradead.org; Tue, 23 Sep 2008 20:49:17 +0000
+Message-ID: <48D955F5.5050508@redhat.com>
+Date: Tue, 23 Sep 2008 16:47:49 -0400
+From: Dave Anderson <anderson@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <48D95253.10400@sgi.com>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com> <20080911143226.GT29908@sgi.com>
+	<48C9D22A.5010404@mxs.nes.nec.co.jp> <48CA70CD.2090500@sgi.com>
+	<48CAC7DB.4090904@sgi.com> <48CAD340.7000701@redhat.com>
+	<48CAEB6A.8080405@sgi.com> <48D77E05.30504@mxs.nes.nec.co.jp>
+	<48D94F89.5010607@sgi.com>
+In-Reply-To: <48D94F89.5010607@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,93 +22,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1482109185=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jay Lan <jlan@sgi.com>
-Cc: Neil Horman <nhorman@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+Cc: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec@lists.infradead.org, Hedi Berriche <hedi@sgi.com>
 
-On Tue, Sep 23, 2008 at 01:32:19PM -0700, Jay Lan wrote:
-> Neil Horman wrote:
-> > On Tue, Sep 23, 2008 at 09:41:50AM -0700, Jay Lan wrote:
-> >> Simon Horman wrote:
-> >>> On Wed, Sep 17, 2008 at 02:07:15PM -0700, Jay Lan wrote:
-> >>>> Hi,
-> >>>>
-> >>>> My root disk was populated with sles10sp2, but the kernel was
-> >>>> 2.6.27-rc5 and /sbin/kexec was built from 2.0.0 version.
-> >>>>
-> >>>> Many times when kdump kernel failed early i found  after reboot that
-> >>>> /sbin/kexec became zero size. There was no warning on executing
-> >>>> '/etc/init.d/kdump start' when /sbin/kexec is zero size. I have
-> >>>> no idea when and how that happened.
-> >>>>
-> >>>> Has anyone else seen this problem?
-> >>> Is it possible that this is caused by filesystem corruption?
-> >> I found the problems, which i can not reliably reproduce, happened
-> >> when i ran into kdump kernel boot failure (yet not every time.)
-> >> What puzzled me was why only /sbin/kexec was affected.
-> >>
-> > This is why most kdump implementations capture vmcore from an initramfs, since
-> > a crash means that you may not be able to trust the integrity of the filesystems
-> > that were mounted before the panic.
-> > 
-> > 
-> >> I can not explain what caused it (otherwise i would be able to
-> >> reproduce it) and do not know where my finger should point to. ;)
-> >> The good news is since i fixed the kernel boot problem it has not
-> >> happened any more.
-> >>
-> >> The distros probably can add a check against zero-sized kexec
-> >> in /etc/init.d/kdump script though.
-> >>
-> > Theres really not a need to.  Filesystems can be corrupted by crashes, thats why
-> > we capture cores from the initrd.  We need to be able to trust the rest of the
-> > system to scan filesystems and do their best to recover when filsystems loose
-> > data.
-> 
-> Hi Neil,
-> 
-> Which rhel release starts doing this?
-> 
-Not sure what you mean.  Which rhel releases attempt to recover filesystems on
-boot?  Linux has done that with fsck for years.  Which RHEL releases have
-allowed vmcore capture from an initrd with kdump?  Read the man page, its been
-available since GA.
+--===============1482109185==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-Neil
+Jay Lan wrote:
+> Ken'ichi Ohmichi wrote:
+> 
+>>Hi Jay,
+> 
+> 
+> Hi Ken'ichi,
+> 
+> 
+>>My IA64 linux-2.6.27-rc7 kernel could boot by your patches and its kdump
+>>succeeded, thanks. But I cannot reproduce this problem unfortunately.
+>>Could you send me your kernel .config file to reproduce it ?
+> 
+> 
+> 
+> I just emailed you my .config.
+> 
+> 
+>>And could you please research the reason why the page of virtual address
+>>0xe0000060031417a8 is excluded ?  This patch is for researching it.
+>>Please apply it against makedumpfile-1.2.9, and create a dump file
+>>by makedumpfile with "-e 0xe0000060031417a8" option. The reason why
+>>excluding the page is printed like the following:
+> 
+> 
+> The excluded page moved. It is at at e0000060030f0000 type: "pmd page".
+> The change that Dave said helped him did not help me though.
 
-> Thanks,
->  - jay
-> 
-> 
-> > 
-> > Regards
-> > Neil
-> >  
-> >> Thanks,
-> >>  - jay
-> >>
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> 
+Did you initialize the reset_cache variable to 1 at the top of the function?
+I forgot to put that in my post.
 
--- 
-/***************************************************
- *Neil Horman
- *Senior Software Engineer
- *Red Hat, Inc.
- *nhorman@redhat.com
- *gpg keyid: 1024D / 0x92A74FA1
- *http://pgp.mit.edu
- ***************************************************/
+In any case, you still want to debug that function.  Since you know what
+the target pfn being skipped is: 60030f0000 >> PAGE_SHIFT, you can
+dump out the page->flags field in exclude_unnecessary_pages() when it
+comes up in the loop.  Then when you run crash on the "cp" dumpfile,
+do a "kmem -p 60030f0000", which will show the associated page struct
+address and a few fields within it.  My guess is that the page->flags
+field that you saw in makedumpfile's exclude_unnecessary_pages() will
+not be the same as what you see running crash.
+
+Dave
+
+
+Dave
+
+
+--===============1482109185==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1482109185==--
