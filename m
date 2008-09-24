@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from e28smtp05.in.ibm.com ([59.145.155.5] helo=e28esmtp05.in.ibm.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KiPRb-0003Lm-MN
-	for kexec@lists.infradead.org; Wed, 24 Sep 2008 08:09:56 +0000
-Message-ID: <48D9F52E.7060605@mxs.nes.nec.co.jp>
-Date: Wed, 24 Sep 2008 17:07:10 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1KiSsB-00044M-Dh
+	for kexec@lists.infradead.org; Wed, 24 Sep 2008 11:49:36 +0000
+Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
+	by e28esmtp05.in.ibm.com (8.13.1/8.13.1) with ESMTP id m8OBnTnW016765
+	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 17:19:29 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m8OBnTJq1687598
+	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 17:19:29 +0530
+Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
+	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m8OBnTf5031210
+	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 21:49:29 +1000
+Received: from guara.in.ibm.com ([9.124.35.51])
+	by d28av05.in.ibm.com (8.13.1/8.12.11) with ESMTP id m8OBnTpH030328
+	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 21:49:29 +1000
+From: Chandru <chandru@in.ibm.com>
+Subject: [PATCH 1/3] kexec/kdump: read crash memory ranges from drconf memory
+Date: Wed, 24 Sep 2008 17:19:07 +0530
 MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>	<48D72B2B.3000406@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>
-	<48D9EDDC.1070600@mxs.nes.nec.co.jp>
-In-Reply-To: <48D9EDDC.1070600@mxs.nes.nec.co.jp>
+Content-Disposition: inline
+Message-Id: <200809241719.07464.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,358 +30,198 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1544382612=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
---===============1544382612==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Get the memory ranges of the 1st kernel excluding the memory reserved for 
+kexec/kdump kernel in case of ibm,dynamic-reconfiguration-memory node of 
+device tree 
 
+Signed-off-by: Chandru Siddalingappa <chandru@in.ibm.com>
+---
 
-Hi Kevin,
+ kexec/arch/ppc64/crashdump-ppc64.c |  121 +++++++++++++++++++--------
+ kexec/arch/ppc64/crashdump-ppc64.h |    3
+ 2 files changed, 90 insertions(+), 34 deletions(-)
 
-Ken'ichi Ohmichi wrote:
->> My config file is attached. Kernel is 2.6.20 + Ubuntu patches.
->> It was built from http://packages.ubuntu.com/feisty/linux-source-2.6.20
->>
->> Since it might be easy to see the parts I have changed from the defaults,
->> the diff between my config and the Ubuntu "generic" config is below.
-> 
-> Thank you for your .config file.
-> 
-> I could reproduce this problem. I created the patch, and it was merged
-> into DEVEL tree. Could you get the DEVEL package by the following command
-> and test it ?
-> 
-> cvs -z3 -d:pserver:anonymous@makedumpfile.cvs.sourceforge.net:/cvsroot/makedumpfile co -r DEVEL -P makedumpfile
-> 
-> If you cannot download it, please try the attached patch for makedumpfile-1.2.9.
-
-Sorry for forgetting one notice.
-
-If you use a vmcoreinfo file by '-i' option, please re-create a vmcoreinfo
-file again by a new makedumpfile which applied this patch.
-If using an old vmcoreinfo file, makedumpfile cannot run correctly because
-the vmcoreinfo file does not contain necessary information (symbol vmlist,
-offset vm_struct.addr).
-
-
-Thanks
-Ken'ichi Ohmichi
-
-> -------------------------------
-> [PATCH] Add vtop_x86 support.
-> 
-> On x86 machine, the existing makedumpfile translates a virtual address
-> only by referring PT_LOAD header of /proc/vmcore. This feature is not
-> enough for x86 machine, because some kernel data is located in vmalloc
-> area. Then, this patch adds the translating feature for vmalloc address.
-> 
-> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-> ---
-> diff -puN backup/makedumpfile-1.2.9/makedumpfile.c makedumpfile/makedumpfile.c
-> --- backup/makedumpfile-1.2.9/makedumpfile.c	2008-09-04 16:31:58.000000000 +0900
-> +++ makedumpfile/makedumpfile.c	2008-09-24 14:56:02.000000000 +0900
-> @@ -1803,6 +1803,7 @@ get_symbol_info(void)
->  	SYMBOL_INIT(_stext, "_stext");
->  	SYMBOL_INIT(swapper_pg_dir, "swapper_pg_dir");
->  	SYMBOL_INIT(init_level4_pgt, "init_level4_pgt");
-> +	SYMBOL_INIT(vmlist, "vmlist");
->  	SYMBOL_INIT(phys_base, "phys_base");
->  	SYMBOL_INIT(node_online_map, "node_online_map");
->  	SYMBOL_INIT(node_states, "node_states");
-> @@ -1910,6 +1911,8 @@ get_structure_info(void)
->  	OFFSET_INIT(node_memblk_s.size, "node_memblk_s", "size");
->  	OFFSET_INIT(node_memblk_s.nid, "node_memblk_s", "nid");
->  
-> +	OFFSET_INIT(vm_struct.addr, "vm_struct", "addr");
-> +
->  	ENUM_NUMBER_INIT(NR_FREE_PAGES, "NR_FREE_PAGES");
->  	ENUM_NUMBER_INIT(N_ONLINE, "N_ONLINE");
->  
-> @@ -2095,6 +2098,7 @@ generate_vmcoreinfo(void)
->  	WRITE_SYMBOL("_stext", _stext);
->  	WRITE_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->  	WRITE_SYMBOL("init_level4_pgt", init_level4_pgt);
-> +	WRITE_SYMBOL("vmlist", vmlist);
->  	WRITE_SYMBOL("phys_base", phys_base);
->  	WRITE_SYMBOL("node_online_map", node_online_map);
->  	WRITE_SYMBOL("node_states", node_states);
-> @@ -2142,6 +2146,7 @@ generate_vmcoreinfo(void)
->  	WRITE_MEMBER_OFFSET("node_memblk_s.start_paddr", node_memblk_s.start_paddr);
->  	WRITE_MEMBER_OFFSET("node_memblk_s.size", node_memblk_s.size);
->  	WRITE_MEMBER_OFFSET("node_memblk_s.nid", node_memblk_s.nid);
-> +	WRITE_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
->  
->  	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
->  		WRITE_ARRAY_LENGTH("node_data", node_data);
-> @@ -2339,6 +2344,7 @@ read_vmcoreinfo(void)
->  	READ_SYMBOL("_stext", _stext);
->  	READ_SYMBOL("swapper_pg_dir", swapper_pg_dir);
->  	READ_SYMBOL("init_level4_pgt", init_level4_pgt);
-> +	READ_SYMBOL("vmlist", vmlist);
->  	READ_SYMBOL("phys_base", phys_base);
->  	READ_SYMBOL("node_online_map", node_online_map);
->  	READ_SYMBOL("node_states", node_states);
-> @@ -2379,6 +2385,7 @@ read_vmcoreinfo(void)
->  	READ_MEMBER_OFFSET("node_memblk_s.start_paddr", node_memblk_s.start_paddr);
->  	READ_MEMBER_OFFSET("node_memblk_s.size", node_memblk_s.size);
->  	READ_MEMBER_OFFSET("node_memblk_s.nid", node_memblk_s.nid);
-> +	READ_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
->  
->  	READ_ARRAY_LENGTH("node_data", node_data);
->  	READ_ARRAY_LENGTH("pgdat_list", pgdat_list);
-> diff -puN backup/makedumpfile-1.2.9/makedumpfile.h makedumpfile/makedumpfile.h
-> --- backup/makedumpfile-1.2.9/makedumpfile.h	2008-09-04 16:31:58.000000000 +0900
-> +++ makedumpfile/makedumpfile.h	2008-09-24 15:59:13.000000000 +0900
-> @@ -498,6 +498,24 @@ do { \
->  #define _SECTION_SIZE_BITS_PAE	(30)
->  #define _MAX_PHYSMEM_BITS	(32)
->  #define _MAX_PHYSMEM_BITS_PAE	(36)
-> +
-> +#define PGDIR_SHIFT_3LEVEL	(30)
-> +#define PTRS_PER_PTE_3LEVEL	(512)
-> +#define PTRS_PER_PGD_3LEVEL	(4)
-> +#define PMD_SHIFT		(21)  /* only used by PAE translators */
-> +#define PTRS_PER_PMD		(512) /* only used by PAE translators */
-> +#define PTE_SHIFT		(12)  /* only used by PAE translators */
-> +#define PTRS_PER_PTE		(512) /* only used by PAE translators */
-> +
-> +#define pgd_index_PAE(address)  (((address) >> PGDIR_SHIFT_3LEVEL) & (PTRS_PER_PGD_3LEVEL - 1))
-> +#define pmd_index(address)  (((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-> +#define pte_index(address)  (((address) >> PTE_SHIFT) & (PTRS_PER_PTE - 1))
-> +
-> +#define _PAGE_PRESENT		(0x001)
-> +#define _PAGE_PSE		(0x080)
-> +
-> +#define ENTRY_MASK		(~0x8000000000000fffULL)
-> +
->  #endif /* x86 */
->  
->  #ifdef __x86_64__
-> @@ -611,10 +629,11 @@ do { \
->   */
->  #ifdef __x86__
->  int get_machdep_info_x86(void);
-> +unsigned long long vaddr_to_paddr_x86(unsigned long vaddr);
->  #define get_phys_base()		TRUE
->  #define get_machdep_info()	get_machdep_info_x86()
->  #define get_versiondep_info()	TRUE
-> -#define vaddr_to_paddr(X)	vaddr_to_paddr_general(X)
-> +#define vaddr_to_paddr(X)	vaddr_to_paddr_x86(X)
->  #endif /* x86 */
->  
->  #ifdef __x86_64__
-> @@ -840,6 +859,7 @@ struct symbol_table {
->  	unsigned long long 	_stext;
->  	unsigned long long 	swapper_pg_dir;
->  	unsigned long long 	init_level4_pgt;
-> +	unsigned long long 	vmlist;
->  	unsigned long long 	phys_base;
->  	unsigned long long 	node_online_map;
->  	unsigned long long 	node_states;
-> @@ -919,6 +939,9 @@ struct offset_table {
->  		long	size;
->  		long	nid;
->  	} node_memblk_s;
-> +	struct vm_struct {
-> +		long	addr;
-> +	} vm_struct;
->  
->  	/*
->  	 * for Xen extraction
-> @@ -1051,19 +1074,6 @@ struct domain_list {
->  #define is_direct(x) \
->  	((x) >= DIRECTMAP_VIRT_START && (x) < DIRECTMAP_VIRT_END)
->  
-> -#define PGDIR_SHIFT_3LEVEL   (30)
-> -#define PTRS_PER_PTE_3LEVEL  (512)
-> -#define PTRS_PER_PGD_3LEVEL  (4)
-> -#define PMD_SHIFT            (21)    /* only used by PAE translators */
-> -#define PTRS_PER_PMD         (512)   /* only used by PAE translators */
-> -#define PTE_SHIFT            (12)    /* only used by PAE translators */
-> -#define PTRS_PER_PTE         (512)   /* only used by PAE translators */
-> -
-> -#define _PAGE_PRESENT   0x001
-> -#define _PAGE_PSE       0x080
-> -
-> -#define ENTRY_MASK	(~0x8000000000000fffULL)
-> -
->  unsigned long long kvtop_xen_x86(unsigned long kvaddr);
->  #define kvtop_xen(X)	kvtop_xen_x86(X)
->  
-> diff -puN backup/makedumpfile-1.2.9/x86.c makedumpfile/x86.c
-> --- backup/makedumpfile-1.2.9/x86.c	2008-09-04 16:31:58.000000000 +0900
-> +++ makedumpfile/x86.c	2008-09-24 16:06:25.000000000 +0900
-> @@ -20,6 +20,8 @@
->  int
->  get_machdep_info_x86(void)
->  {
-> +	unsigned long vmlist, vmalloc_start;
-> +
->  	/* PAE */
->  	if ((vt.mem_flags & MEMORY_X86_PAE)
->  	    || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
-> @@ -28,6 +30,7 @@ get_machdep_info_x86(void)
->  	      == 512)) {
->  		DEBUG_MSG("\n");
->  		DEBUG_MSG("PAE          : ON\n");
-> +		vt.mem_flags |= MEMORY_X86_PAE;
->  		info->section_size_bits = _SECTION_SIZE_BITS_PAE;
->  		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
->  	} else {
-> @@ -38,9 +41,123 @@ get_machdep_info_x86(void)
->  	}
->  	info->page_offset = __PAGE_OFFSET;
->  
-> +	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-> +		ERRMSG("Can't get the symbol of _stext.\n");
-> +		return FALSE;
-> +	}
-> +	info->kernel_start = SYMBOL(_stext) & ~KVBASE_MASK;
-> +	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
-> +
-> +	/*
-> +	 * For the compatibility, makedumpfile should run without the symbol
-> +	 * vmlist and the offset of vm_struct.addr if they are not necessary.
-> +	 */
-> +	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
-> +	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
-> +		return TRUE;
-> +	}
-> +	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
-> +		ERRMSG("Can't get vmlist.\n");
-> +		return FALSE;
-> +	}
-> +	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
-> +	    sizeof(vmalloc_start))) {
-> +		ERRMSG("Can't get vmalloc_start.\n");
-> +		return FALSE;
-> +	}
-> +	info->vmalloc_start = vmalloc_start;
-> +	DEBUG_MSG("vmalloc_start: %lx\n", vmalloc_start);
-> +
->  	return TRUE;
->  }
->  
-> +unsigned long long
-> +vtop_x86_PAE(unsigned long vaddr)
-> +{
-> +	unsigned long long page_dir, pgd_pte, pmd_paddr, pmd_pte;
-> +	unsigned long long pte_paddr, pte;
-> +
-> +	if (SYMBOL(swapper_pg_dir) == NOT_FOUND_SYMBOL) {
-> +		ERRMSG("Can't get the symbol of swapper_pg_dir.\n");
-> +		return NOT_PADDR;
-> +	}
-> +
-> +	page_dir  = SYMBOL(swapper_pg_dir);
-> +	page_dir += pgd_index_PAE(vaddr) * sizeof(unsigned long long);
-> +	if (!readmem(VADDR, page_dir, &pgd_pte, sizeof(pgd_pte))) {
-> +		ERRMSG("Can't get pgd_pte (page_dir:%llx).\n", page_dir);
-> +		return NOT_PADDR;
-> +	}
-> +	if (!(pgd_pte & _PAGE_PRESENT))
-> +		return NOT_PADDR;
-> +
-> +	if (info->vaddr_for_vtop == vaddr)
-> +		MSG("  PGD : %16llx => %16llx\n", page_dir, pgd_pte);
-> +
-> +	pmd_paddr  = pgd_pte & ENTRY_MASK;
-> +	pmd_paddr += pmd_index(vaddr) * sizeof(unsigned long long);
-> +	if (!readmem(PADDR, pmd_paddr, &pmd_pte, sizeof(pmd_pte))) {
-> +		ERRMSG("Can't get pmd_pte (pmd_paddr:%llx).\n", pmd_paddr);
-> +		return NOT_PADDR;
-> +	}
-> +	if (!(pmd_pte & _PAGE_PRESENT))
-> +		return NOT_PADDR;
-> +
-> +	if (info->vaddr_for_vtop == vaddr)
-> +		MSG("  PMD : %16llx => %16llx\n", pmd_paddr, pmd_pte);
-> +
-> +	if (pmd_pte & _PAGE_PSE)
-> +		return (pmd_pte & ENTRY_MASK) + (vaddr & ((1UL << PMD_SHIFT) - 1));
-> +
-> +	pte_paddr  = pmd_pte & ENTRY_MASK;
-> +	pte_paddr += pte_index(vaddr) * sizeof(unsigned long long);
-> +	if (!readmem(PADDR, pte_paddr, &pte, sizeof(pte)))
-> +		return NOT_PADDR;
-> +
-> +	if (!(pte & _PAGE_PRESENT))
-> +		return NOT_PADDR;
-> +
-> +	if (info->vaddr_for_vtop == vaddr)
-> +		MSG("  PTE : %16llx => %16llx\n", pte_paddr, pte);
-> +
-> +	return (pte & ENTRY_MASK) + (vaddr & ((1UL << PTE_SHIFT) - 1));
-> +}
-> +
-> +int
-> +is_vmalloc_addr_x86(unsigned long vaddr)
-> +{
-> +	return (info->vmalloc_start && vaddr >= info->vmalloc_start);
-> +}
-> +
-> +unsigned long long
-> +vaddr_to_paddr_x86(unsigned long vaddr)
-> +{
-> +	unsigned long long paddr;
-> +
-> +	if ((paddr = vaddr_to_paddr_general(vaddr)) != NOT_PADDR)
-> +		return paddr;
-> +
-> +	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
-> +	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
-> +		ERRMSG("Can't get necessary information for vmalloc translation.\n");
-> +		return NOT_PADDR;
-> +	}
-> +	if (!is_vmalloc_addr_x86(vaddr))
-> +		return (vaddr - info->kernel_start);
-> +
-> +	if (vt.mem_flags & MEMORY_X86_PAE) {
-> +		paddr = vtop_x86_PAE(vaddr);
-> +	} else {
-> +		/*
-> +		 * TODO: Support vmalloc translation of not-PAE kernel.
-> +		 */
-> +		ERRMSG("This makedumpfile does not support vmalloc ");
-> +		ERRMSG("translation of not-PAE kernel.\n");
-> +		return NOT_PADDR;
-> +	}
-> +	return paddr;
-> +}
-> +
->  /*
->   * for Xen extraction
->   */
-> 
-> 
-> 
-> 
-> 
-> ------------------------------------------------------------------------
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
-
-
-
---===============1544382612==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--- kexec-tools-orig/kexec/arch/ppc64/crashdump-ppc64.c	2008-09-24 
+14:46:55.000000000 +0530
++++ kexec-tools/kexec/arch/ppc64/crashdump-ppc64.c	2008-09-24 
+14:34:38.000000000 +0530
+@@ -84,6 +84,82 @@ mem_rgns_t usablemem_rgns = {0, NULL};
+  */
+ uint64_t saved_max_mem = 0;
+ 
++static unsigned long long cstart, cend;
++static int memory_ranges;
++
++/*
++ * Exclude the region that lies within crashkernel
++ */
++static void exclude_crash_region(uint64_t start, uint64_t end)
++{
++	if (cstart < end && cend > start) {
++		if (start < cstart && end > cend) {
++			crash_memory_range[memory_ranges].start = start;
++			crash_memory_range[memory_ranges].end = cstart;
++			crash_memory_range[memory_ranges].type = RANGE_RAM;
++			memory_ranges++;
++			crash_memory_range[memory_ranges].start = cend;
++			crash_memory_range[memory_ranges].end = end;
++			crash_memory_range[memory_ranges].type = RANGE_RAM;
++			memory_ranges++;
++		} else if (start < cstart) {
++			crash_memory_range[memory_ranges].start = start;
++			crash_memory_range[memory_ranges].end = cstart;
++			crash_memory_range[memory_ranges].type = RANGE_RAM;
++			memory_ranges++;
++		} else if (end > cend) {
++			crash_memory_range[memory_ranges].start = cend;
++			crash_memory_range[memory_ranges].end = end;
++			crash_memory_range[memory_ranges].type = RANGE_RAM;
++			memory_ranges++;
++		}
++	} else {
++		crash_memory_range[memory_ranges].start = start;
++		crash_memory_range[memory_ranges].end  = end;
++		crash_memory_range[memory_ranges].type = RANGE_RAM;
++		memory_ranges++;
++	}
++}
++
++static int get_dyn_reconf_crash_memory_ranges()
++{
++	uint64_t start, end;
++	char fname[128], buf[32];
++	FILE *file;
++	int i, n;
++
++	strcpy(fname, "/proc/device-tree/");
++	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory");
++	if ((file = fopen(fname, "r")) == NULL) {
++		perror(fname);
++		return -1;
++	}
++
++	fseek(file, 4, SEEK_SET);
++	for (i = 0; i < num_of_lmbs; i++) {
++		if ((n = fread(buf, 1, 24, file)) < 0) {
++			perror(fname);
++			fclose(file);
++			return -1;
++		}
++		if (memory_ranges >= (max_memory_ranges + 1)) {
++			/* No space to insert another element. */
++				fprintf(stderr,
++				"Error: Number of crash memory ranges"
++				" excedeed the max limit\n");
++			return -1;
++		}
++
++		start = ((uint64_t *)buf)[0];
++		end = start + lmb_size;
++		if (start == 0 && end >= (BACKUP_SRC_END + 1))
++			start = BACKUP_SRC_END + 1;
++		exclude_crash_region(start, end);
++	}
++	fclose(file);
++	return 0;
++}
++
+ /* Reads the appropriate file and retrieves the SYSTEM RAM regions for whom to
+  * create Elf headers. Keeping it separate from get_memory_ranges() as
+  * requirements are different in the case of normal kexec and crashdumps.
+@@ -98,7 +174,6 @@ uint64_t saved_max_mem = 0;
+ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ {
+ 
+-	int memory_ranges = 0;
+ 	char device_tree[256] = "/proc/device-tree/";
+ 	char fname[256];
+ 	char buf[MAXBYTES];
+@@ -106,7 +181,7 @@ static int get_crash_memory_ranges(struc
+ 	FILE *file;
+ 	struct dirent *dentry, *mentry;
+ 	int i, n, crash_rng_len = 0;
+-	unsigned long long start, end, cstart, cend;
++	unsigned long long start, end;
+ 	int page_size;
+ 
+ 	crash_max_memory_ranges = max_memory_ranges + 6;
+@@ -129,7 +204,16 @@ static int get_crash_memory_ranges(struc
+ 		perror(device_tree);
+ 		goto err;
+ 	}
++
++	cstart = crash_base;
++	cend = crash_base + crash_size;
++
+ 	while ((dentry = readdir(dir)) != NULL) {
++		if (!strncmp(dentry->d_name,
++				"ibm,dynamic-reconfiguration-memory", 35)){
++			get_dyn_reconf_crash_memory_ranges();
++			continue;
++		}
+ 		if (strncmp(dentry->d_name, "memory@", 7) &&
+ 			strcmp(dentry->d_name, "memory"))
+ 			continue;
+@@ -170,38 +254,7 @@ static int get_crash_memory_ranges(struc
+ 			if (start == 0 && end >= (BACKUP_SRC_END + 1))
+ 				start = BACKUP_SRC_END + 1;
+ 
+-			cstart = crash_base;
+-			cend = crash_base + crash_size;
+-			/*
+-			 * Exclude the region that lies within crashkernel
+-			 */
+-			if (cstart < end && cend > start) {
+-				if (start < cstart && end > cend) {
+-					crash_memory_range[memory_ranges].start = start;
+-					crash_memory_range[memory_ranges].end = cstart;
+-					crash_memory_range[memory_ranges].type = RANGE_RAM;
+-					memory_ranges++;
+-					crash_memory_range[memory_ranges].start = cend;
+-					crash_memory_range[memory_ranges].end = end;
+-					crash_memory_range[memory_ranges].type = RANGE_RAM;
+-					memory_ranges++;
+-				} else if (start < cstart) {
+-					crash_memory_range[memory_ranges].start = start;
+-					crash_memory_range[memory_ranges].end = cstart;
+-					crash_memory_range[memory_ranges].type = RANGE_RAM;
+-					memory_ranges++;
+-				} else if (end > cend){
+-					crash_memory_range[memory_ranges].start = cend;
+-					crash_memory_range[memory_ranges].end = end;
+-					crash_memory_range[memory_ranges].type = RANGE_RAM;
+-					memory_ranges++;
+-				}
+-			} else {
+-				crash_memory_range[memory_ranges].start = start;
+-				crash_memory_range[memory_ranges].end  = end;
+-				crash_memory_range[memory_ranges].type = RANGE_RAM;
+-				memory_ranges++;
+-			}
++			exclude_crash_region(start, end);
+ 			fclose(file);
+ 		}
+ 		closedir(dmem);
+--- kexec-tools-orig/kexec/arch/ppc64/crashdump-ppc64.h	2008-09-24 
+14:46:55.000000000 +0530
++++ kexec-tools/kexec/arch/ppc64/crashdump-ppc64.h	2008-09-16 
+19:18:57.000000000 +0530
+@@ -28,4 +28,7 @@ extern uint64_t crash_size;
+ extern unsigned int rtas_base;
+ extern unsigned int rtas_size;
+ 
++uint64_t lmb_size;
++unsigned int num_of_lmbs;
++
+ #endif /* CRASHDUMP_PPC64_H */
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1544382612==--
