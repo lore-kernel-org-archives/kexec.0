@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KiHkf-0002jn-9E
-	for kexec@lists.infradead.org; Tue, 23 Sep 2008 23:57:10 +0000
-Date: Wed, 24 Sep 2008 09:57:03 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH]IA64: do not include uncached memory to vmcore
-Message-ID: <20080923235701.GF14438@verge.net.au>
-References: <48CACCBA.9030905@sgi.com> <20080912233500.GF3832@verge.net.au>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KiJ9F-0002Xx-L3
+	for kexec@lists.infradead.org; Wed, 24 Sep 2008 01:26:34 +0000
+Message-ID: <48D99351.7090804@mxs.nes.nec.co.jp>
+Date: Wed, 24 Sep 2008 10:09:37 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080912233500.GF3832@verge.net.au>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com>
+	<20080911143226.GT29908@sgi.com>	<48C9D22A.5010404@mxs.nes.nec.co.jp>
+	<48CA70CD.2090500@sgi.com>	<48CAC7DB.4090904@sgi.com>
+	<48CAD340.7000701@redhat.com>	<48CAEB6A.8080405@sgi.com>
+	<48D77E05.30504@mxs.nes.nec.co.jp> <48D90E13.3040202@redhat.com>
+In-Reply-To: <48D90E13.3040202@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,57 +22,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1815375036=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, kexec@lists.infradead.org
+To: Dave Anderson <anderson@redhat.com>, Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org, Hedi Berriche <hedi@sgi.com>
 
-On Sat, Sep 13, 2008 at 09:35:02AM +1000, Simon Horman wrote:
-> On Fri, Sep 12, 2008 at 01:10:34PM -0700, Jay Lan wrote:
-> > Currently a memory segment in memory map with attribute of EFI_MEMORY_UC
-> > is denoted as "System RAM" in /proc/iomem, while memory of attribute
-> > (EFI_MEMORY_WB|EFI_MEMORY_UC) is also labeled the same.
-> > 
-> > The kexec utility then includes uncached memory as part of vmcore.
-> > The kdump kernel may MCA when it tries to save the vmcore to a disk.
-> > A normal "cached" access can cause MCAs.
-> > 
-> > Since kexec assembled memory ranges with memory tagged as "System RAM",
-> > the uncached memory will be excluded if it is labeled differently.
-> > 
-> > Simon, since only IA64 will create "Uncached RAM" label, i do not
-> > make changes to other arch.
-> > 
-> > Our HP machine in the lab is dead. I am sorry that i can not test
-> > against other IA64 systems (than SGI's). Feedback is very much
-> > appreciated.
-> > 
-> > The corresponding kernel patch is needed to test this kexec patch:
-> > http://marc.info/?l=linux-ia64&m=122122791230130&w=2
-> > This patch without the kernel patch will have no effect and do no
-> > harm.
+--===============1815375036==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+Hi Dave, Jay,
+
+Dave Anderson wrote:
+> We just ran into a similar problem using an older version of makedumpfile,
+> but looking at the latest makedumpfile code, it's seems that you could
+> run into the same problem.
 > 
-> Hi Jay,
+> In exclude_unnecessary_pages(), if a physical page is in a memory
+> hole, then it skips the page and continues.  In our case, that happened,
+> but when it started up again, the next legitimate pfn was well beyond
+> the previously-read cache of 512 pages.  But since the new legit page
+> wasn't modulo-512, it didn't refresh the page cache, and it ended up
+> using stale page data (page->flags) and ended up excluding legitimate
+> pages:
 > 
-> both of these patches seem reasonable to me, especially from a kexec point
-> of view. I will try and test them on an HP RX2620 and Intel Tiger 4 and
-> get back to you shortly.
+>                 for (; pfn < mmd->pfn_end;
+>                     pfn++, mem_map += SIZE(page),
+>                     paddr += info->page_size) {
+> 
+>                         /*
+>                          * Exclude the memory hole.
+>                          */
+>                         if (!is_in_segs(paddr))
+>                                 continue;
+> 
+>                         if ((pfn % PGMM_CACHED) == 0) {
+>                                 if (pfn + PGMM_CACHED < mmd->pfn_end)
+>                                         pfn_mm = PGMM_CACHED;
+>                                 else
+>                                         pfn_mm = mmd->pfn_end - pfn;
+>                                 if (!readmem(VADDR, mem_map, page_cache,
+>                                     SIZE(page) * pfn_mm))
+>                                         goto out;
+>                         }
+> 
+> We fixed it by doing something like this:
+> 
+>          if (!is_in_segs(paddr)) {
+>                  reset_cache = 1;
+>                  continue;
+>          }
+> 
+>          if (((pfn % PGMM_CACHED) == 0) || reset_cache) {
+>                  reset_cache = 0;
+>                  ...
 
-Hi Jay, Hi All,
+Great, you are right.
+Thank you for fixing it  :-) 
 
-As "[IA64] kexec fails on systems with blocks of uncached memory" has
-been applied to the kernel by Tony and pulled by Linus, I have
-applied this kexec-tools portion of the patch.
+Jay, could you try Dave's fixing like the attached patch ?
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
+Thanks
+Ken'ichi Ohmichi
+
+---
+diff -puN backup/makedumpfile-1.2.9/makedumpfile.c makedumpfile/makedumpfile.c
+--- backup/makedumpfile-1.2.9/makedumpfile.c	2008-09-04 16:31:58.000000000 +0900
++++ makedumpfile/makedumpfile.c	2008-09-24 10:04:53.000000000 +0900
+@@ -4130,6 +4130,7 @@ exclude_zero_pages(void)
+ int
+ exclude_unnecessary_pages(void)
+ {
++	int reset_cache;
+ 	unsigned int mm;
+ 	unsigned long mem_map;
+ 	unsigned long long pfn, paddr, pfn_mm;
+@@ -4156,6 +4157,8 @@ exclude_unnecessary_pages(void)
+ 		if (mem_map == NOT_MEMMAP_ADDR)
+ 			continue;
+ 
++		reset_cache = 1;
++
+ 		for (; pfn < mmd->pfn_end;
+ 		    pfn++, mem_map += SIZE(page),
+ 		    paddr += info->page_size) {
+@@ -4163,10 +4166,11 @@ exclude_unnecessary_pages(void)
+ 			/*
+ 			 * Exclude the memory hole.
+ 			 */
+-			if (!is_in_segs(paddr))
++			if (!is_in_segs(paddr)) {
++				reset_cache = 1;
+ 				continue;
+-
+-			if ((pfn % PGMM_CACHED) == 0) {
++			}
++			if (((pfn % PGMM_CACHED) == 0) || reset_cache) {
+ 				if (pfn + PGMM_CACHED < mmd->pfn_end)
+ 					pfn_mm = PGMM_CACHED;
+ 				else
+@@ -4174,6 +4178,7 @@ exclude_unnecessary_pages(void)
+ 				if (!readmem(VADDR, mem_map, page_cache,
+ 				    SIZE(page) * pfn_mm))
+ 					goto out;
++				reset_cache = 0;
+ 			}
+ 			pcache  = page_cache + ((pfn%PGMM_CACHED) * SIZE(page));
+ 			flags   = ULONG(pcache + OFFSET(page.flags));
+
+
+--===============1815375036==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1815375036==--
