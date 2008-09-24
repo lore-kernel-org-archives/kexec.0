@@ -1,28 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([59.145.155.2] helo=e28esmtp02.in.ibm.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KiStP-0004Vz-CB
-	for kexec@lists.infradead.org; Wed, 24 Sep 2008 11:50:52 +0000
-Received: from d28relay04.in.ibm.com (d28relay04.in.ibm.com [9.184.220.61])
-	by e28esmtp02.in.ibm.com (8.13.1/8.13.1) with ESMTP id m8OBol5R020837
-	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 17:20:47 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay04.in.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m8OBnlmh1716332
-	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 17:19:47 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.13.1/8.13.3) with ESMTP id m8OBnTMq031204
-	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 21:49:29 +1000
-Received: from guara.in.ibm.com ([9.124.35.51])
-	by d28av05.in.ibm.com (8.13.1/8.12.11) with ESMTP id m8OBnTpG030328
-	for <kexec@lists.infradead.org>; Wed, 24 Sep 2008 21:49:29 +1000
-From: Chandru <chandru@in.ibm.com>
-Subject: [PATCH 0/3] kdump: add support for ibm,
-	dynamic-reconfiguration-memory for kexec/kdump
-Date: Wed, 24 Sep 2008 17:18:59 +0530
+Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KiZ7z-0000SZ-56
+	for kexec@lists.infradead.org; Wed, 24 Sep 2008 18:30:19 +0000
+Message-ID: <48DA8738.2090207@sgi.com>
+Date: Wed, 24 Sep 2008 11:30:16 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200809241718.59719.chandru@in.ibm.com>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com>
+	<20080911143226.GT29908@sgi.com>	<48C9D22A.5010404@mxs.nes.nec.co.jp>
+	<48CA70CD.2090500@sgi.com>	<48CAC7DB.4090904@sgi.com>
+	<48CAD340.7000701@redhat.com>	<48CAEB6A.8080405@sgi.com>
+	<48D77E05.30504@mxs.nes.nec.co.jp> <48D90E13.3040202@redhat.com>
+	<48D99351.7090804@mxs.nes.nec.co.jp>
+In-Reply-To: <48D99351.7090804@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,27 +23,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1248353905=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Hedi Berriche <hedi@sgi.com>
 
-/proc/device-tree on power6 machines has ibm,dynamic-reconfiguration-memory 
-node which stores in it the memory representation for most part of the system 
-memory. This memory was earlier represented in 'memory@' nodes of the device 
-tree.  Following patch series makes kexec-tools aware of this dynamic 
-reconfiguration memory node. These patches were sent earlier for RFC. In 
-addition to this, a change in the kernel was also required. The kernel change 
-has been accepted in powerpc git tree. 
-http://git.kernel.org/?p=linux/kernel/git/paulus/powerpc.git;a=commit;h=cf00085d8045cddd80a8aabad97de96fa8131793
-Some part of the patch here is re-organization of the existing code to 
-accommodate dynamic reconf memory. 
+--===============1248353905==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-Chandru
+Ken'ichi Ohmichi wrote:
+> Hi Dave, Jay,
+> 
+> Dave Anderson wrote:
+>> We just ran into a similar problem using an older version of makedumpfile,
+>> but looking at the latest makedumpfile code, it's seems that you could
+>> run into the same problem.
+>>
+>> In exclude_unnecessary_pages(), if a physical page is in a memory
+>> hole, then it skips the page and continues.  In our case, that happened,
+>> but when it started up again, the next legitimate pfn was well beyond
+>> the previously-read cache of 512 pages.  But since the new legit page
+>> wasn't modulo-512, it didn't refresh the page cache, and it ended up
+>> using stale page data (page->flags) and ended up excluding legitimate
+>> pages:
+>>
+>>                 for (; pfn < mmd->pfn_end;
+>>                     pfn++, mem_map += SIZE(page),
+>>                     paddr += info->page_size) {
+>>
+>>                         /*
+>>                          * Exclude the memory hole.
+>>                          */
+>>                         if (!is_in_segs(paddr))
+>>                                 continue;
+>>
+>>                         if ((pfn % PGMM_CACHED) == 0) {
+>>                                 if (pfn + PGMM_CACHED < mmd->pfn_end)
+>>                                         pfn_mm = PGMM_CACHED;
+>>                                 else
+>>                                         pfn_mm = mmd->pfn_end - pfn;
+>>                                 if (!readmem(VADDR, mem_map, page_cache,
+>>                                     SIZE(page) * pfn_mm))
+>>                                         goto out;
+>>                         }
+>>
+>> We fixed it by doing something like this:
+>>
+>>          if (!is_in_segs(paddr)) {
+>>                  reset_cache = 1;
+>>                  continue;
+>>          }
+>>
+>>          if (((pfn % PGMM_CACHED) == 0) || reset_cache) {
+>>                  reset_cache = 0;
+>>                  ...
+> 
+> Great, you are right.
+> Thank you for fixing it  :-) 
+> 
+> Jay, could you try Dave's fixing like the attached patch ?
 
+Yes. I applied your version of Dave's patch and tried again.
+It failed at a different pfn f600315:
+
+
+a4700rac:/mnt/sda9/diskdump # rm dump.cd31; /var/tmp/jlan/makedumpfile
+-cd31 -e 0xe0000f60031502f0 -x vmlinux.3 vmcore-cp.3 dump.cd31
+Excluding unnecessary pages        : [ 45 %]
+pfn=f600315 flags=3c000000001026c
+
+PAGE(vaddr:e0000f60031502f0, pfn:f600315) is excluded as CACHE PAGE.
+
+Copying data                       : [100 %]
+
+The dumpfile is saved to dump.cd31.
+
+makedumpfile Completed.
+
+
+Note the flags of pfn f600315. Crash checked on the pfn using the
+vmcore-cp.3 and showed different flags:
+
+crash> kmem -p f60031502f0
+      PAGE         PHYSICAL      MAPPING       INDEX CNT FLAGS
+a07ffffc45d00498 f6003150000                0        0  1 3c0000000000400
+crash>
+
+
+> 
+> 
+> Thanks
+> Ken'ichi Ohmichi
+> 
+
+
+
+--===============1248353905==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1248353905==--
