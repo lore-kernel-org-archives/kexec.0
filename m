@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kijz5-0003aa-CD
-	for kexec@lists.infradead.org; Thu, 25 Sep 2008 06:05:52 +0000
-Message-ID: <48DB29A6.3070608@mxs.nes.nec.co.jp>
-Date: Thu, 25 Sep 2008 15:03:18 +0900
+	id 1Kilh7-0004kj-L4
+	for kexec@lists.infradead.org; Thu, 25 Sep 2008 07:55:26 +0000
+Message-ID: <48DB31D5.9040200@mxs.nes.nec.co.jp>
+Date: Thu, 25 Sep 2008 15:38:13 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
-	<48D72B2B.3000406@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>
-	<48D9EDDC.1070600@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>
-In-Reply-To: <28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>
+Subject: Re: the exiting makedumpfile is almost there... :)
+References: <48C85836.8080606@sgi.com>	<20080911143226.GT29908@sgi.com>	<48C9D22A.5010404@mxs.nes.nec.co.jp>	<48CA70CD.2090500@sgi.com>	<48CAC7DB.4090904@sgi.com>	<48CAD340.7000701@redhat.com>	<48CAEB6A.8080405@sgi.com>	<48D77E05.30504@mxs.nes.nec.co.jp>
+	<48D90E13.3040202@redhat.com>	<48D99351.7090804@mxs.nes.nec.co.jp>
+	<48DA8738.2090207@sgi.com> <48DAB79C.9050601@sgi.com>
+In-Reply-To: <48DAB79C.9050601@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,79 +20,128 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0393786142=="
+Content-Type: multipart/mixed; boundary="===============1527315731=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Hedi Berriche <hedi@sgi.com>
 
---===============0393786142==
+--===============1527315731==
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
 
-Hi Kevin,
+Hi Jay,
 
-Thank you for the test and the report.
+Thank you for testing.
 
-Worth, Kevin wrote:
-> Wow! That was quick turn-around time- just over 12 hours!
+Jay Lan wrote:
+>>> Jay, could you try Dave's fixing like the attached patch ?
+>> Yes. I applied your version of Dave's patch and tried again.
+>> It failed at a different pfn f600315:
+>>
+>>
+>> a4700rac:/mnt/sda9/diskdump # rm dump.cd31; /var/tmp/jlan/makedumpfile
+>> -cd31 -e 0xe0000f60031502f0 -x vmlinux.3 vmcore-cp.3 dump.cd31
+>> Excluding unnecessary pages        : [ 45 %]
+>> pfn=f600315 flags=3c000000001026c
+>>
+>> PAGE(vaddr:e0000f60031502f0, pfn:f600315) is excluded as CACHE PAGE.
+>>
+>> Copying data                       : [100 %]
+>>
+>> The dumpfile is saved to dump.cd31.
+>>
+>> makedumpfile Completed.
+>>
+>>
+>> Note the flags of pfn f600315. Crash checked on the pfn using the
+>> vmcore-cp.3 and showed different flags:
+>>
+>> crash> kmem -p f60031502f0
+>>       PAGE         PHYSICAL      MAPPING       INDEX CNT FLAGS
+>> a07ffffc45d00498 f6003150000                0        0  1 3c0000000000400
+>> crash>
+>>
 > 
-> The line breaks in the email caused problems with patching, and I'd rather not sync completely to the CVS tree,
-> but I was able to just pull the patches from sourceforge using the following links
-> http://makedumpfile.cvs.sourceforge.net/makedumpfile/makedumpfile/makedumpfile.c?r1=1.7.2.48&r2=1.7.2.49&view=patch
-> http://makedumpfile.cvs.sourceforge.net/makedumpfile/makedumpfile/makedumpfile.h?r1=1.4.2.31&r2=1.4.2.32&view=patch
-> http://makedumpfile.cvs.sourceforge.net/makedumpfile/makedumpfile/x86.c?r1=1.2.2.20&r2=1.2.2.21&view=patch
+> I ran a testing on a 2-cpu  machine. The legitimate page got excluded
+> is:
+>    PAGE(vaddr:e00000300313fb70, pfn:300313) is excluded as CACHE PAGE
 > 
-> The diff looked identical to what you sent, so I patched the source and built.
+> Values of some variables in the routine on processing that page are:
+>   pfn=300313 flags=3026c, page.flags=0
+>   page_cache=0x6000000000033f60, pcache=0x6000000000037b88
 > 
-> It appears to now work fine when I specify "-d 31", and it continues to work on my system with 2GB of memory.
+> Hope these data help.
 
-That is good.
+Yes, your test data helps me.
+Your test informed me that there was the buffer-handling problem
+referring different page yet, so the last patch is not enough.
+I created the attached patch for fixing it. Could you test the
+attached patch again ?  Sorry for many tests.
 
-> However, on my identically-configured (identical hardware too) system with 4GB of memory my log file contains.
-> This was just triggered with an alt-sysrq-c.
-> 
-> ^MChecking for memory holes          : [  0 %] ^MChecking for memory holes
->     : [100 %] ^MExcluding unnecessary pages        : [100 %] ^MExcluding free pa
-> ges               : [100 %] ^MExcluding zero pages               : [ 18 %] readm
-> em: Can't seek the dump memory(/proc/vmcore). Invalid argument
-> create_2nd_bitmap: Can't exclude pages filled with zerocreate_2nd_bitmap: for cr
-> eating an ELF dumpfile.
-> 
-> makedumpfile Failed.
-
-According to your test, lseek(2) failed by EINVAL in readmem().
-I want to know the 'offset' value and the 'addr' value to solve it.
-Could you test again with both the attached patch and yesterday patch ?
-
-One more, please run makedumpfile with '-D' option for debugging,
-and send me both the result and `readelf -a /proc/vmcore` output.
-`readelf -a /proc/vmcore` output is useful, because the 'offset'
-is taken by referring PT_LOAD header of ELF header,
+This patch is for makedumpfile-1.2.9.
 
 
 Thanks
 Ken'ichi Ohmichi
 
-
-diff -puN makedumpfile.org/makedumpfile.c makedumpfile/makedumpfile.c
---- makedumpfile.org/makedumpfile.c	2008-09-25 14:59:52.000000000 +0900
-+++ makedumpfile/makedumpfile.c	2008-09-25 14:59:00.000000000 +0900
-@@ -257,8 +257,8 @@ readmem(int type_addr, unsigned long lon
- 	}
+diff -puN a/makedumpfile.c b/makedumpfile.c
+--- a/makedumpfile.c	2008-09-25 15:39:00.000000000 +0900
++++ b/makedumpfile.c	2008-09-25 15:39:17.000000000 +0900
+@@ -4133,6 +4133,7 @@ exclude_unnecessary_pages(void)
+ 	unsigned int mm;
+ 	unsigned long mem_map;
+ 	unsigned long long pfn, paddr, pfn_mm;
++	unsigned long long pfn_read_start, pfn_read_end, index_pg;
+ 	unsigned char *page_cache = NULL, *pcache;
+ 	unsigned int _count;
+ 	unsigned long flags, mapping;
+@@ -4156,6 +4157,12 @@ exclude_unnecessary_pages(void)
+ 		if (mem_map == NOT_MEMMAP_ADDR)
+ 			continue;
  
- 	if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
--		ERRMSG("Can't seek the dump memory(%s). %s\n",
--		    info->name_memory, strerror(errno));
-+		ERRMSG("Can't seek the dump memory(%s). (%s) offset:%llx, addr:%llx\n",
-+		    info->name_memory, strerror(errno), offset, addr);
- 		return FALSE;
- 	}
++		/*
++		 * Refresh the buffer of struct page, when changing mem_map.
++		 */
++		pfn_read_start = ULONGLONG_MAX;
++		pfn_read_end   = 0;
++
+ 		for (; pfn < mmd->pfn_end;
+ 		    pfn++, mem_map += SIZE(page),
+ 		    paddr += info->page_size) {
+@@ -4166,16 +4173,23 @@ exclude_unnecessary_pages(void)
+ 			if (!is_in_segs(paddr))
+ 				continue;
  
+-			if ((pfn % PGMM_CACHED) == 0) {
+-				if (pfn + PGMM_CACHED < mmd->pfn_end)
+-					pfn_mm = PGMM_CACHED;
++			index_pg = pfn % PGMM_CACHED;
++			if (pfn < pfn_read_start || pfn_read_end < pfn) {
++				if (roundup(pfn, PGMM_CACHED) < mmd->pfn_end)
++					pfn_mm = PGMM_CACHED - index_pg;
+ 				else
+ 					pfn_mm = mmd->pfn_end - pfn;
+-				if (!readmem(VADDR, mem_map, page_cache,
++
++				if (!readmem(VADDR, mem_map,
++				    page_cache + (index_pg * SIZE(page)),
+ 				    SIZE(page) * pfn_mm))
+ 					goto out;
++
++				pfn_read_start = pfn;
++				pfn_read_end   = pfn + pfn_mm - 1;
+ 			}
+-			pcache  = page_cache + ((pfn%PGMM_CACHED) * SIZE(page));
++			pcache  = page_cache + (index_pg * SIZE(page));
++
+ 			flags   = ULONG(pcache + OFFSET(page.flags));
+ 			_count  = UINT(pcache + OFFSET(page._count));
+ 			mapping = ULONG(pcache + OFFSET(page.mapping));
 
 
---===============0393786142==
+--===============1527315731==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -105,4 +152,4 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0393786142==--
+--===============1527315731==--
