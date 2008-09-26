@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kj5lR-0008QH-3p
-	for kexec@lists.infradead.org; Fri, 26 Sep 2008 05:21:19 +0000
-Message-ID: <48DC6C23.1040704@mxs.nes.nec.co.jp>
-Date: Fri, 26 Sep 2008 13:59:15 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
+	id 1KjGT9-0000dp-V7
+	for kexec@lists.infradead.org; Fri, 26 Sep 2008 16:47:04 +0000
+From: "Worth, Kevin" <kevin.worth@hp.com>
+Date: Fri, 26 Sep 2008 16:45:56 +0000
+Subject: RE: Problems writing ELF dumps with makedumpfile 1.2.9
+Message-ID: <28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>
 References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
 	<48D72B2B.3000406@mxs.nes.nec.co.jp>
 	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>
 	<48D9EDDC.1070600@mxs.nes.nec.co.jp>
 	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>
 	<48DB29A6.3070608@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>
-In-Reply-To: <28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>
+	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
+	<48DC6C23.1040704@mxs.nes.nec.co.jp>
+In-Reply-To: <48DC6C23.1040704@mxs.nes.nec.co.jp>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,16 +26,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0084307720=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
 
---===============0084307720==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Could the fact that my kernel's page offset is different from the defaut be the cause of the address being beyond the maximum?
+(from the kernel config diff I sent before, changing the VMSPLIT parameter, which gives the kernel 3GB of memory, causes the PAGE_OFFSET value to shift)
 
+dif between default ubuntu and my kernel config:
+< CONFIG_PAGE_OFFSET=0xC0000000
+---
+> # CONFIG_VMSPLIT_3G is not set
+> # CONFIG_VMSPLIT_3G_OPT is not set
+> # CONFIG_VMSPLIT_2G is not set
+> CONFIG_VMSPLIT_1G=y
+> CONFIG_PAGE_OFFSET=0x40000000
+
+I don't know much about these memory internals, but just pointing out a spot in my config that is different from usual.
+
+I will try testing with the new patch and report back.
+
+-Kevin
+
+________________________________________
+From: Ken'ichi Ohmichi [oomichi@mxs.nes.nec.co.jp]
+Sent: Thursday, September 25, 2008 9:59 PM
+To: Worth, Kevin
+Cc: Masaki Tachibana; kexec-ml
+Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
 
 Hi Kevin,
 
@@ -75,9 +98,9 @@ Worth, Kevin wrote:
 >   virt_start : ffffffffffffffff
 >   virt_end   : 3fffffff
 > Linux kdump
-> 
+>
 > max_mapnr    : 140000
-> 
+>
 > [snip]
 >
 > Program Headers:
@@ -139,16 +162,7 @@ https://sourceforge.net/projects/makedumpfile/
 Thanks
 Ken'ichi Ohmichi
 
-
---===============0084307720==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0084307720==--
