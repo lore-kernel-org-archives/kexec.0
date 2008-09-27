@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
-	helo=relay.sgi.com)
+Received: from relay2.sgi.com ([192.48.171.30] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KjOB2-0005Md-PQ
-	for kexec@lists.infradead.org; Sat, 27 Sep 2008 01:00:53 +0000
-Message-ID: <48DD8595.6030504@sgi.com>
-Date: Fri, 26 Sep 2008 18:00:05 -0700
+	id 1KjOMM-00023M-N8
+	for kexec@lists.infradead.org; Sat, 27 Sep 2008 01:12:35 +0000
+Message-ID: <48DD8854.2040409@sgi.com>
+Date: Fri, 26 Sep 2008 18:11:48 -0700
 From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Subject: Re: kdump broken on Altix 350
-References: <20080829180302.6e67c26e@halley.suse.de>	<20080829180531.0524a1e4@halley.suse.de>	<57C9024A16AD2D4C97DC78E552063EA30A0067D6@orsmsx505.amr.corp.intel.com>	<20080910134805.488b43f9@kepler.site>
-	<48C82C4F.1050002@sgi.com>
-In-Reply-To: <48C82C4F.1050002@sgi.com>
+Subject: Re: [PATCH] IA64: better calculate PT_LOAD segment size
+References: <48D45D21.7080702@sgi.com> <20080923233615.GE14438@verge.net.au>
+In-Reply-To: <20080923233615.GE14438@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +22,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>, linux-ia64@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Bernhard Walle <bwalle@suse.de>, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org
 
-Jay Lan wrote:
-> Bernhard Walle wrote:
->> * "Luck, Tony" <tony.luck@intel.com> [2008-08-29]: 
+Simon Horman wrote:
+> On Fri, Sep 19, 2008 at 07:17:05PM -0700, Jay Lan wrote:
+>> This patch combines consecutive PL_LOAD segments into one.
+>> The end address of the last PL_LOAD segment, calculated by
+>> adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
+>> will be the end address of this loaded_segments[] entry.
 >>
->>>> your commit
->>>>
->>>>     commit 10617bbe84628eb18ab5f723d3ba35005adde143
->>>>     Author: Tony Luck <tony.luck@intel.com>
->>>>     Date:   Tue Aug 12 10:34:20 2008 -0700
->>>>
->>>>     [IA64] Ensure cpu0 can access per-cpu variables in early boot
->>>> code
->>>>
->>>> broke kdump on our Altix 350. I get following early crash in kdump
->>>> kernel
->>> Sorry about that.  I'll try to reproduce it here.
->> I had some discussion about that with Jay Lan that he could not
->> reproduce that on his machine. We thought it was different config, but
->> now I can verify that the problem is reproducible here with the default
->> configuration (plus CONFIG_SATA_VITESSE).
+>> This patch fixes the kdump kernel MCA problem caused by under-
+>> allocation of memory and a "kdump broken on ALtix 350" problem
+>> reported by Bernhard Walle.
+>>
+>> Simon, this patch replaces my previous patch I submitted on the
+>> underallocation issue.
+>>
+>> Signed-off-by: Jay Lan <jlan@sgi.com>
+>>
 > 
-> Hi Bernhard and Tony,
+> The logic-bug portion of this fix I am fine with.
+> As you pointed out previously & has higher precedence
+> than += which makes the following bogus:
 > 
-> I started seeing this problem, and it affected A4700 in addition to
-> A350.
+>                         loaded_segments[loaded_segments_num].end +=
+>                                 (phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+>                                 ~(ELF_PAGE_SIZE - 1)
 > 
-> It was not clear the system hang was related to this problem. I saw a
-> kdump kernel hang at cpu_init() at an A350, and a hang in find_memory
-> on handling pernode space thing at an A4700. No error records and no
-> backtrace, so i did not relate my problem to this one at first.
-> 
-> Out of curiosity, i backed out Tony's patch mentioned from 2.6.27-rc5
-> and the kdump kernel hangs were gone on both systems.
-> 
-> Also, i had a kdump kernel MCA problem that was caused by kexec
-> underallocating kernel memory for the kdump kernel. The  problem
-> does not happen again after i backed out the patch.
+> The segment merging portion I am less clear about.
+> Why are there gaps in the first place? 
 
-Tony and Simon,
+I think there is still a bug in the kernel.
 
-The program headers (PT_LOAD) of vmlinux before Tony's patch look
-like these:
+> If these
+> multiple PT_LOAD segments are really one segment,
+> why aren't they being fed in as one segment?
 
-Program Headers:
-Type     Offset             VirtAddr           PhysAddr
-         FileSiz            MemSiz              Flags  Align
-LOAD     0x0000000000010000 0xa000000100000000 0x0000000004000000
-         0x0000000000d04480 0x0000000000d04480  RWE    10000
-LOAD     0x0000000000d20000 0xffffffffffff0000 0x0000000004d10000
-         0x0000000000009620 0x0000000000009620  RW     10000
-LOAD     0x0000000000d30000 0xa000000100d20000 0x0000000004d20000
-         0x00000000000bef50 0x0000000000564c90  RW     10000
+I searched a little... My guess is that it was done so that
+the program headers provided more information for kexec
+and crash? And thus put it back to simulate a boot loader?
+I really do not know why it was done. Maybe Vivek or Eric
+would know?
 
-The program headers of vmlinux after Tony's patch look like
-these:
-Program Headers:
-Type     Offset             VirtAddr           PhysAddr
-         FileSiz            MemSiz              Flags  Align
-LOAD     0x0000000000010000 0xa000000100000000 0x0000000004000000
-         0x0000000000d04480 0x0000000000d04480  RWE    10000
-LOAD     0x0000000000d20000 0xffffffffffff0000 0x0000000004d20000
-         0x0000000000009620 0x0000000000009620  RW     10000
-LOAD     0x0000000000d30000 0xa000000100d30000 0x0000000004d30000
-         0x00000000000bef58 0x0000000000564c90  RW     10000
-
-The first PT_LOAD is for code, the second for percpu, and the
-third for data. The FileSiz and MemSiz of the code and percpu
-headers in both cases are identical. The only difference is the
-PhyAddr of the percpu header after the patch is 0x10000 greater
-than in the case of before patch.
-
-Tony's patch put per-cpu area for cpu0 in the vmlinux itself
-(in the percpu section of the ELF executable). If i read the
-code correctly, he added extra PERCPU_PAGE_SIZE (0x10000 in ia64)
-to the code segment. That explains why the PhysAddr of the percpu
-segment became 0x10000 greater after the patch.
-
-Howver, shouldn't the MemSiz of the code segment 0x10000 larger?
-The current logic of add_loaded_segments_info() in
-kexec/arch/ia64/crashdump-ia64.c counts on that information to
-correctly determine how much memory is needed for vmlinux.
-
-I could not figure out how the MemSiz of the code PL_LOAD
-header in vmlinux is determined and set.
+The current comparison part of code is basically a no-op.
+I think we can simplify the code here.
 
 Regards,
- - jay
+jay
+
+> 
+>> ---
+>>  kexec/arch/ia64/crashdump-ia64.c |   15 ++++++++-------
+>>  1 file changed, 8 insertions(+), 7 deletions(-)
+>>
+>> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+>> ===================================================================
+>> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 14:33:07.593344017 -0700
+>> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 17:39:03.732928237 -0700
+>> @@ -86,19 +86,20 @@ static void add_loaded_segments_info(str
+>>                  loaded_segments[loaded_segments_num].end =
+>>  			loaded_segments[loaded_segments_num].start;
+>>  
+>> +		/* Consolidate consecutive PL_LOAD segments into one.
+>> +		 * The end addr of the last PL_LOAD segment, calculated by
+>> +		 * adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
+>> +		 * will be the end address of this loaded_segments entry.
+>> +		 */
+>>  		while (i < ehdr->e_phnum) {
+>>  			phdr = &ehdr->e_phdr[i];
+>>  	                if (phdr->p_type != PT_LOAD)
+>>  	                        break;
+>> -			if (loaded_segments[loaded_segments_num].end !=
+>> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+>> -				break;
+>> -			loaded_segments[loaded_segments_num].end +=
+>> -				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+>> -				~(ELF_PAGE_SIZE - 1);
+>> +			loaded_segments[loaded_segments_num].end =
+>> +				(phdr->p_paddr + phdr->p_memsz +
+>> +				ELF_PAGE_SIZE - 1) & ~(ELF_PAGE_SIZE - 1);
+>>  			i++;
+>>  		}
+>> -
+>>  		loaded_segments_num++;
+>>  	}
+>>  }
+> 
+> 
+
 
 _______________________________________________
 kexec mailing list
