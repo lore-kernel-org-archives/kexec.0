@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0015.houston.hp.com ([15.201.24.18])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KjLsi-0004fE-7m
-	for kexec@lists.infradead.org; Fri, 26 Sep 2008 22:33:49 +0000
-From: "Worth, Kevin" <kevin.worth@hp.com>
-Date: Fri, 26 Sep 2008 22:32:39 +0000
-Subject: RE: Problems writing ELF dumps with makedumpfile 1.2.9
-Message-ID: <28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
-	<48D72B2B.3000406@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>
-	<48D9EDDC.1070600@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>
-	<48DB29A6.3070608@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
-	<48DC6C23.1040704@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>
-In-Reply-To: <28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>
-Content-Language: en-US
+Received: from netops-testserver-3-out.sgi.com ([192.48.171.28]
+	helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KjOB2-0005Md-PQ
+	for kexec@lists.infradead.org; Sat, 27 Sep 2008 01:00:53 +0000
+Message-ID: <48DD8595.6030504@sgi.com>
+Date: Fri, 26 Sep 2008 18:00:05 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
+Subject: Re: kdump broken on Altix 350
+References: <20080829180302.6e67c26e@halley.suse.de>	<20080829180531.0524a1e4@halley.suse.de>	<57C9024A16AD2D4C97DC78E552063EA30A0067D6@orsmsx505.amr.corp.intel.com>	<20080910134805.488b43f9@kepler.site>
+	<48C82C4F.1050002@sgi.com>
+In-Reply-To: <48C82C4F.1050002@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,261 +24,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, Simon Horman <horms@verge.net.au>, linux-ia64@vger.kernel.org
 
-Note patching required ignoring whitespace (perhaps a tab/space issue in hunk #3 of makedumpfile.c?)
+Jay Lan wrote:
+> Bernhard Walle wrote:
+>> * "Luck, Tony" <tony.luck@intel.com> [2008-08-29]: 
+>>
+>>>> your commit
+>>>>
+>>>>     commit 10617bbe84628eb18ab5f723d3ba35005adde143
+>>>>     Author: Tony Luck <tony.luck@intel.com>
+>>>>     Date:   Tue Aug 12 10:34:20 2008 -0700
+>>>>
+>>>>     [IA64] Ensure cpu0 can access per-cpu variables in early boot
+>>>> code
+>>>>
+>>>> broke kdump on our Altix 350. I get following early crash in kdump
+>>>> kernel
+>>> Sorry about that.  I'll try to reproduce it here.
+>> I had some discussion about that with Jay Lan that he could not
+>> reproduce that on his machine. We thought it was different config, but
+>> now I can verify that the problem is reproducible here with the default
+>> configuration (plus CONFIG_SATA_VITESSE).
+> 
+> Hi Bernhard and Tony,
+> 
+> I started seeing this problem, and it affected A4700 in addition to
+> A350.
+> 
+> It was not clear the system hang was related to this problem. I saw a
+> kdump kernel hang at cpu_init() at an A350, and a hang in find_memory
+> on handling pernode space thing at an A4700. No error records and no
+> backtrace, so i did not relate my problem to this one at first.
+> 
+> Out of curiosity, i backed out Tony's patch mentioned from 2.6.27-rc5
+> and the kdump kernel hangs were gone on both systems.
+> 
+> Also, i had a kdump kernel MCA problem that was caused by kexec
+> underallocating kernel memory for the kdump kernel. The  problem
+> does not happen again after i backed out the patch.
 
-worthk:~/makedumpfile-1.2.9$ patch -p1 --dry-run <v1.3.0-rc01.patch
-patching file Makefile
-Hunk #1 succeeded at 1 with fuzz 1.
-patching file ia64.c
-patching file makedumpfile-R.pl
-patching file makedumpfile.c
-Hunk #3 FAILED at 240.
-1 out of 17 hunks FAILED -- saving rejects to file makedumpfile.c.rej
-patching file makedumpfile.h
-patching file x86.c
-patching file x86_64.c
+Tony and Simon,
 
-worthk:~/makedumpfile-1.2.9$ patch -l -p1 --dry-run <v1.3.0-rc01.patch
-patching file Makefile
-Hunk #1 succeeded at 1 with fuzz 1.
-patching file ia64.c
-patching file makedumpfile-R.pl
-patching file makedumpfile.c
-patching file makedumpfile.h
-patching file x86.c
-patching file x86_64.c
+The program headers (PT_LOAD) of vmlinux before Tony's patch look
+like these:
 
-The fuzz messages is because I'm patching against a makefile that was modified by Ubuntu to use "-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE" rather than "-D_FILE_OFFSET_BITS=64". Perhaps the difference between the Ubuntu version and this upstream setting should be resolved... Ubuntu changelog at https://launchpad.net/ubuntu/+source/makedumpfile  with note "Use _LARGEFILE_SOURCE and _LARGEFILE64_SOURCE instead of _FILE_OFFSET_BITS=64 for correct compilation." Could this have negative effects or is it just a different way to tell the compiler to support large files?
+Program Headers:
+Type     Offset             VirtAddr           PhysAddr
+         FileSiz            MemSiz              Flags  Align
+LOAD     0x0000000000010000 0xa000000100000000 0x0000000004000000
+         0x0000000000d04480 0x0000000000d04480  RWE    10000
+LOAD     0x0000000000d20000 0xffffffffffff0000 0x0000000004d10000
+         0x0000000000009620 0x0000000000009620  RW     10000
+LOAD     0x0000000000d30000 0xa000000100d20000 0x0000000004d20000
+         0x00000000000bef50 0x0000000000564c90  RW     10000
 
-CFLAGS = -g -O2 -Wall -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
-          -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
-CFLAGS_ARCH     = -g -O2 -Wall -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+The program headers of vmlinux after Tony's patch look like
+these:
+Program Headers:
+Type     Offset             VirtAddr           PhysAddr
+         FileSiz            MemSiz              Flags  Align
+LOAD     0x0000000000010000 0xa000000100000000 0x0000000004000000
+         0x0000000000d04480 0x0000000000d04480  RWE    10000
+LOAD     0x0000000000d20000 0xffffffffffff0000 0x0000000004d20000
+         0x0000000000009620 0x0000000000009620  RW     10000
+LOAD     0x0000000000d30000 0xa000000100d30000 0x0000000004d30000
+         0x00000000000bef58 0x0000000000564c90  RW     10000
 
+The first PT_LOAD is for code, the second for percpu, and the
+third for data. The FileSiz and MemSiz of the code and percpu
+headers in both cases are identical. The only difference is the
+PhyAddr of the percpu header after the patch is 0x10000 greater
+than in the case of before patch.
 
+Tony's patch put per-cpu area for cpu0 in the vmlinux itself
+(in the percpu section of the ELF executable). If i read the
+code correctly, he added extra PERCPU_PAGE_SIZE (0x10000 in ia64)
+to the code segment. That explains why the PhysAddr of the percpu
+segment became 0x10000 greater after the patch.
 
-On to the actual testing- I wonder if I am worse off than before applying this patch...
+Howver, shouldn't the MemSiz of the code segment 0x10000 larger?
+The current logic of add_loaded_segments_info() in
+kexec/arch/ia64/crashdump-ia64.c counts on that information to
+correctly determine how much memory is needed for vmlinux.
 
-With command line "makedumpfile -D -E -d 31 -I $rootmnt/boot/vmcoreinfo /proc/vmcore $rootmnt/var/crash/vmcore" I get what appears to be a regression in check_release:
+I could not figure out how the MemSiz of the code PL_LOAD
+header in vmlinux is determined and set.
 
-readmem: Can't convert a virtual address(403c1364) to physical address.
-check_release: Can't get the address of system_utsname.
-LOAD (0)
-  phys_start : 0
-  phys_end   : a0000
-  virt_start : c0000000
-  virt_end   : c00a0000
-LOAD (1)
-  phys_start : 100000
-  phys_end   : 1000000
-  virt_start : c0100000
-  virt_end   : c1000000
-LOAD (2)
-  phys_start : 5000000
-  phys_end   : 38000000
-  virt_start : c5000000
-  virt_end   : f8000000
-LOAD (3)
-  phys_start : 38000000
-  phys_end   : bf790000
-  virt_start : ffffffffffffffff
-  virt_end   : 8778ffff
-LOAD (4)
-  phys_start : 100000000
-  phys_end   : 140000000
-  virt_start : ffffffffffffffff
-  virt_end   : 3fffffff
-Linux kdump
-
-max_mapnr    : 140000
-
-PAE          : ON
-
-makedumpfile Failed.
-
-
-If I change the command line to "makedumpfile -D -E -d 1 -I $rootmnt/boot/vmcoreinfo /proc/vmcore $rootmnt/var/crash/vmcore" (simply turn "-d" down to 1) I get
-
-Excluding zero pages               : [ 33 %] readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
-create_2nd_bitmap: Can't exclude pages filled with zerocreate_2nd_bitmap: for creating an ELF dumpfile.
-LOAD (0)
-  phys_start : 0
-  phys_end   : a0000
-  virt_start : c0000000
-  virt_end   : c00a0000
-LOAD (1)
-  phys_start : 100000
-  phys_end   : 1000000
-  virt_start : c0100000
-  virt_end   : c1000000
-LOAD (2)
-  phys_start : 5000000
-  phys_end   : 38000000
-  virt_start : c5000000
-  virt_end   : f8000000
-LOAD (3)
-  phys_start : 38000000
-  phys_end   : bf790000
-  virt_start : ffffffffffffffff
-  virt_end   : 8778ffff
-LOAD (4)
-  phys_start : 100000000
-  phys_end   : 140000000
-  virt_start : ffffffffffffffff
-  virt_end   : 3fffffff
-Linux kdump
-
-max_mapnr    : 140000
-mem_map (0)
-  mem_map    : 0
-  pfn_start  : 0
-  pfn_end    : 140000
-
-makedumpfile Failed.
-
-
------Original Message-----
-From: kexec-bounces@lists.infradead.org [mailto:kexec-bounces@lists.infradead.org] On Behalf Of Worth, Kevin
-Sent: Friday, September 26, 2008 9:46 AM
-To: Ken'ichi Ohmichi
-Cc: Masaki Tachibana; kexec-ml
-Subject: RE: Problems writing ELF dumps with makedumpfile 1.2.9
-
-Could the fact that my kernel's page offset is different from the defaut be the cause of the address being beyond the maximum?
-(from the kernel config diff I sent before, changing the VMSPLIT parameter, which gives the kernel 3GB of memory, causes the PAGE_OFFSET value to shift)
-
-dif between default ubuntu and my kernel config:
-< CONFIG_PAGE_OFFSET=0xC0000000
----
-> # CONFIG_VMSPLIT_3G is not set
-> # CONFIG_VMSPLIT_3G_OPT is not set
-> # CONFIG_VMSPLIT_2G is not set
-> CONFIG_VMSPLIT_1G=y
-> CONFIG_PAGE_OFFSET=0x40000000
-
-I don't know much about these memory internals, but just pointing out a spot in my config that is different from usual.
-
-I will try testing with the new patch and report back.
-
--Kevin
-
-________________________________________
-From: Ken'ichi Ohmichi [oomichi@mxs.nes.nec.co.jp]
-Sent: Thursday, September 25, 2008 9:59 PM
-To: Worth, Kevin
-Cc: Masaki Tachibana; kexec-ml
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-
-Hi Kevin,
-
-Thank you for testing.
-
-Worth, Kevin wrote:
-> Below is the additional information you asked for (run with the patch you attached).
-> It appears the binutils readelf has problems with reading the vmcore file
-> (got error message "readelf: Error: Could not locate '/proc/vmcore'.
-> System error message: Value too large for defined data type").
-> I installed elfutils and used eu-readelf.
-> That appears to work correctly.
->
-> readmem: Can't seek the dump memory(/proc/vmcore). (Invalid argument) offset:b2800000ae7a02d8, addr:2c00000000
-> create_2nd_bitmap: Can't exclude pages filled with zerocreate_2nd_bitmap: for creating an ELF dumpfile.
-> LOAD (0)
->   phys_start : 0
->   phys_end   : a0000
->   virt_start : c0000000
->   virt_end   : c00a0000
-> LOAD (1)
->   phys_start : 100000
->   phys_end   : 1000000
->   virt_start : c0100000
->   virt_end   : c1000000
-> LOAD (2)
->   phys_start : 5000000
->   phys_end   : 38000000
->   virt_start : c5000000
->   virt_end   : f8000000
-> LOAD (3)
->   phys_start : 38000000
->   phys_end   : bf790000
->   virt_start : ffffffffffffffff
->   virt_end   : 8778ffff
-> LOAD (4)
->   phys_start : 100000000
->   phys_end   : 140000000
->   virt_start : ffffffffffffffff
->   virt_end   : 3fffffff
-> Linux kdump
->
-> max_mapnr    : 140000
->
-> [snip]
->
-> Program Headers:
->   Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
->   NOTE           0x000190 0x0000000000000000 0x0000000000000000 0x000148 0x000148     0x0
->   LOAD           0x0002d8 0x00000000c0000000 0x0000000000000000 0x0a0000 0x0a0000 RWE 0x0
->   LOAD           0x0a02d8 0x00000000c0100000 0x0000000000100000 0xf00000 0xf00000 RWE 0x0
->   LOAD           0xfa02d8 0x00000000c5000000 0x0000000005000000 0x33000000 0x33000000 RWE 0x0
->   LOAD           0x33fa02d8 0xffffffffffffffff 0x0000000038000000 0x87790000 0x87790000 RWE 0x0
->   LOAD           0xbb7302d8 0xffffffffffffffff 0x0000000100000000 0x40000000 0x40000000 RWE 0x0
-
-According to the above log, problematic physical address is 0x2c00000000,
-and this address is larger than the maximum physical address 0x140000000.
-So.. now I cannot guess the cause why it happens.
-In exclude_zero_pages(), the physical address is calculated by adding
-page_size like the following:
-
-int
-exclude_zero_pages(void)
-{
-...
-        for (pfn = paddr = 0; pfn < info->max_mapnr;
-            pfn++, paddr += info->page_size) {
-
-                print_progress(PROGRESS_ZERO_PAGES, pfn, info->max_mapnr);
-
-                if (!is_in_segs(paddr))
-                        continue;
-
-                if (!is_dumpable(&bitmap2, pfn))
-                        continue;
-
-                if (!readmem(PADDR, paddr, buf, info->page_size))
-                        return FALSE;
-
-                if (is_zero_page(buf, info->page_size)) {
-                        clear_bit_on_2nd_bitmap(pfn);
-                        pfn_zero++;
-                }
-        }
-
-info->max_mapnr is 0x140000, so the physical address(paddr) must be
-smaller than 0x140000000 (0x140000 * 0x1000(page_size)).
-
-I'd like to know the detail, so could you please test again ?
-Some patches which we created recently are merged to one patch
-(v1.3.0-rc01.patch), and it contains new error messages for
-debugging this problem. Please download the patch from below
-URL and try it.
-
-https://sourceforge.net/tracker/index.php?func=detail&aid=2129657&group_id=178938&atid=887141
-
-or
-
-https://sourceforge.net/projects/makedumpfile/
--> [Tracker] -> [Patches] -> v1.3.0-rc01
-
-
-Thanks
-Ken'ichi Ohmichi
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Regards,
+ - jay
 
 _______________________________________________
 kexec mailing list
