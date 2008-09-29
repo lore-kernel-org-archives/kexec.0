@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.171.30] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KjOMM-00023M-N8
-	for kexec@lists.infradead.org; Sat, 27 Sep 2008 01:12:35 +0000
-Message-ID: <48DD8854.2040409@sgi.com>
-Date: Fri, 26 Sep 2008 18:11:48 -0700
-From: Jay Lan <jlan@sgi.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KkAbZ-0000ae-RX
+	for kexec@lists.infradead.org; Mon, 29 Sep 2008 04:43:30 +0000
+Message-ID: <48E05748.6020706@mxs.nes.nec.co.jp>
+Date: Mon, 29 Sep 2008 13:19:20 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [PATCH] IA64: better calculate PT_LOAD segment size
-References: <48D45D21.7080702@sgi.com> <20080923233615.GE14438@verge.net.au>
-In-Reply-To: <20080923233615.GE14438@verge.net.au>
+Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
+References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>	<48D72B2B.3000406@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>	<48D9EDDC.1070600@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>	<48DB29A6.3070608@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
+	<48DC6C23.1040704@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>
+	<28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>
+In-Reply-To: <28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,101 +20,132 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0185692727=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Bernhard Walle <bwalle@suse.de>, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org
+To: "Worth, Kevin" <kevin.worth@hp.com>
+Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
 
-Simon Horman wrote:
-> On Fri, Sep 19, 2008 at 07:17:05PM -0700, Jay Lan wrote:
->> This patch combines consecutive PL_LOAD segments into one.
->> The end address of the last PL_LOAD segment, calculated by
->> adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
->> will be the end address of this loaded_segments[] entry.
->>
->> This patch fixes the kdump kernel MCA problem caused by under-
->> allocation of memory and a "kdump broken on ALtix 350" problem
->> reported by Bernhard Walle.
->>
->> Simon, this patch replaces my previous patch I submitted on the
->> underallocation issue.
->>
->> Signed-off-by: Jay Lan <jlan@sgi.com>
->>
+--===============0185692727==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+Hi Kevin,
+
+Worth, Kevin wrote:
+>> Could the fact that my kernel's page offset is different from the
+>> defaut be the cause of the address being beyond the maximum?
+>> (from the kernel config diff I sent before, changing the VMSPLIT
+>> parameter, which gives the kernel 3GB of memory, causes the PAGE_OFFSET value to shift)
+
+I have tried reproducing the problem by using your .config file on my
+system just after you sent me it, but I cannot do it.
+
+
+> worthk:~/makedumpfile-1.2.9$ patch -l -p1 --dry-run <v1.3.0-rc01.patch
+> patching file Makefile
+> Hunk #1 succeeded at 1 with fuzz 1.
+> patching file ia64.c
+> patching file makedumpfile-R.pl
+> patching file makedumpfile.c
+> patching file makedumpfile.h
+> patching file x86.c
+> patching file x86_64.c
 > 
-> The logic-bug portion of this fix I am fine with.
-> As you pointed out previously & has higher precedence
-> than += which makes the following bogus:
+> The fuzz messages is because I'm patching against a makefile that was
+> modified by Ubuntu to use "-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE"
+> rather than "-D_FILE_OFFSET_BITS=64". Perhaps the difference between
+> the Ubuntu version and this upstream setting should be resolved...
+> Ubuntu changelog at https://launchpad.net/ubuntu/+source/makedumpfile
+>  with note "Use _LARGEFILE_SOURCE and _LARGEFILE64_SOURCE instead of
+> _FILE_OFFSET_BITS=64 for correct compilation." Could this have negative
+> effects or is it just a different way to tell the compiler to support
+> large files?
 > 
->                         loaded_segments[loaded_segments_num].end +=
->                                 (phdr->p_memsz + ELF_PAGE_SIZE - 1) &
->                                 ~(ELF_PAGE_SIZE - 1)
+> CFLAGS = -g -O2 -Wall -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE \
+>           -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
+> CFLAGS_ARCH     = -g -O2 -Wall -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+
+I will consider it.
+
+
+> On to the actual testing- I wonder if I am worse off than before applying this patch...
 > 
-> The segment merging portion I am less clear about.
-> Why are there gaps in the first place? 
-
-I think there is still a bug in the kernel.
-
-> If these
-> multiple PT_LOAD segments are really one segment,
-> why aren't they being fed in as one segment?
-
-I searched a little... My guess is that it was done so that
-the program headers provided more information for kexec
-and crash? And thus put it back to simulate a boot loader?
-I really do not know why it was done. Maybe Vivek or Eric
-would know?
-
-The current comparison part of code is basically a no-op.
-I think we can simplify the code here.
-
-Regards,
-jay
-
+> With command line "makedumpfile -D -E -d 31 -I $rootmnt/boot/vmcoreinfo /proc/vmcore $rootmnt/var/crash/vmcore"
+> I get what appears to be a regression in check_release:
 > 
->> ---
->>  kexec/arch/ia64/crashdump-ia64.c |   15 ++++++++-------
->>  1 file changed, 8 insertions(+), 7 deletions(-)
->>
->> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
->> ===================================================================
->> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 14:33:07.593344017 -0700
->> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 17:39:03.732928237 -0700
->> @@ -86,19 +86,20 @@ static void add_loaded_segments_info(str
->>                  loaded_segments[loaded_segments_num].end =
->>  			loaded_segments[loaded_segments_num].start;
->>  
->> +		/* Consolidate consecutive PL_LOAD segments into one.
->> +		 * The end addr of the last PL_LOAD segment, calculated by
->> +		 * adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
->> +		 * will be the end address of this loaded_segments entry.
->> +		 */
->>  		while (i < ehdr->e_phnum) {
->>  			phdr = &ehdr->e_phdr[i];
->>  	                if (phdr->p_type != PT_LOAD)
->>  	                        break;
->> -			if (loaded_segments[loaded_segments_num].end !=
->> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
->> -				break;
->> -			loaded_segments[loaded_segments_num].end +=
->> -				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
->> -				~(ELF_PAGE_SIZE - 1);
->> +			loaded_segments[loaded_segments_num].end =
->> +				(phdr->p_paddr + phdr->p_memsz +
->> +				ELF_PAGE_SIZE - 1) & ~(ELF_PAGE_SIZE - 1);
->>  			i++;
->>  		}
->> -
->>  		loaded_segments_num++;
->>  	}
->>  }
+> readmem: Can't convert a virtual address(403c1364) to physical address.
+> check_release: Can't get the address of system_utsname.
+> LOAD (0)
+>   phys_start : 0
+>   phys_end   : a0000
+>   virt_start : c0000000
+>   virt_end   : c00a0000
+> LOAD (1)
+>   phys_start : 100000
+>   phys_end   : 1000000
+>   virt_start : c0100000
+>   virt_end   : c1000000
+> LOAD (2)
+>   phys_start : 5000000
+>   phys_end   : 38000000
+>   virt_start : c5000000
+>   virt_end   : f8000000
+> LOAD (3)
+>   phys_start : 38000000
+>   phys_end   : bf790000
+>   virt_start : ffffffffffffffff
+>   virt_end   : 8778ffff
+> LOAD (4)
+>   phys_start : 100000000
+>   phys_end   : 140000000
+>   virt_start : ffffffffffffffff
+>   virt_end   : 3fffffff
+> Linux kdump
+> 
+> max_mapnr    : 140000
+> 
+> PAE          : ON
+> 
+> makedumpfile Failed.
 > 
 > 
+> If I change the command line to "makedumpfile -D -E -d 1 -I $rootmnt/boot/vmcoreinfo /proc/vmcore $rootmnt/var/crash/vmcore" (simply turn "-d" down to 1) I get
+> 
+> Excluding zero pages               : [ 33 %] readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+> create_2nd_bitmap: Can't exclude pages filled with zerocreate_2nd_bitmap: for creating an ELF dumpfile.
 
+I guess that you don't apply v1.3.0-rc01.patch, because new error messages
+of v1.3.0-rc01.patch are not printed in the above log.
+If applying it, the below ~~~ messages should be printed.
+
+readmem: Can't seek the dump memory(/proc/vmcore). (offset:XXX) Invalid argument
+                                                   ~~~~~~~~~~~~
+exclude_zero_pages: Can't get the page data(pfn:YYY, max_mapnr:ZZZ)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can confirm makedumpfile's version by `makedumpfile -v` like
+the following:
+  # makedumpfile -v
+  makedumpfile: version 1.3.0-rc01 (released on 26 September 2008)
+  
+  #
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+--===============0185692727==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0185692727==--
