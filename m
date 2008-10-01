@@ -1,28 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e36.co.us.ibm.com ([32.97.110.154])
+Received: from g5t0008.atlanta.hp.com ([15.192.0.45])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kl6Yz-0006yk-6c
-	for kexec@lists.infradead.org; Wed, 01 Oct 2008 18:36:41 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e36.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m91IaLcV001862
-	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 14:36:21 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m91IaLhc137628
-	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 12:36:21 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m91IaLub001948
-	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 12:36:21 -0600
-Message-ID: <48E3C318.3040507@in.ibm.com>
-Date: Thu, 02 Oct 2008 00:06:08 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
+	id 1Kl796-000508-PB
+	for kexec@lists.infradead.org; Wed, 01 Oct 2008 19:14:01 +0000
+From: "Worth, Kevin" <kevin.worth@hp.com>
+Date: Wed, 1 Oct 2008 19:12:59 +0000
+Subject: RE: Problems writing ELF dumps with makedumpfile 1.2.9
+Message-ID: <28113A0489833849A1CF9EC16F4215434376E9C963@GVW1097EXB.americas.hpqcorp.net>
+References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>
+	<48D72B2B.3000406@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>
+	<48D9EDDC.1070600@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>
+	<48DB29A6.3070608@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
+	<48DC6C23.1040704@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>
+	<28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>
+	<48E05748.6020706@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F4215434049D3F31F@GVW1097EXB.americas.hpqcorp.net>
+	<48E191B1.7090809@mxs.nes.nec.co.jp>
+	<28113A0489833849A1CF9EC16F4215434049FC6BD3@GVW1097EXB.americas.hpqcorp.net>
+	<48E2DDEE.5050603@mxs.nes.nec.co.jp>
+	<48E30585.2090107@mxs.nes.nec.co.jp>
+In-Reply-To: <48E30585.2090107@mxs.nes.nec.co.jp>
+Content-Language: en-US
 MIME-Version: 1.0
-Subject: Re: [PATCH] Remove legacy kdump kernel build support
-References: <20080930124828.GA1945@in.ibm.com>
-	<20080930172540.GA21378@oksana.dev.rtsoft.ru>
-In-Reply-To: <20080930172540.GA21378@oksana.dev.rtsoft.ru>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,35 +38,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: avorontsov@ru.mvista.com
-Cc: ppcdev <linuxppc-dev@ozlabs.org>, paulus@samba.org, kexec@lists.infradead.org
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
 
-Anton Vorontsov wrote:
-> On Tue, Sep 30, 2008 at 06:18:28PM +0530, Mohan Kumar M wrote:
->> Remove legacy kdump kernel build support
->>
+Using rc2 patch:
 
-Hi,
+Copying data                       : [100 %]
 
-I have submitted the patch to support relocatable kdump kernel with 
-retaining legacy kdump build support.
+The dumpfile is saved to /root/var/crash/vmcore.
 
-Regards,
-Mohan.
+makedumpfile Completed.
 
-> 
-> Can we leave the legacy support for a while? On PPC32 we don't have
-> the relocatable kernel support, but we have kdump patches floating
-> around[1], and they use the `hard-coded values' approach, so far.
-> 
-> I'm not sure if anybody is currently working on a PPC32 kernel
-> relocation support.. but for sure it will take some time to implement.
-> 
-> Thanks,
-> 
-> [1] http://ozlabs.org/pipermail/linuxppc-dev/2008-August/061161.html
-> 
+Aha! That worked!
 
+I'm suspecting the Ubuntu dev that changed the compile flags may not have realized what implications it could have.
+
+Additionally, we did resolve+test the problem with using -d values >1, so that is an improvement, as well. Thank you very much for your help in this, Ken'ichi! I'll be submitting 1.3.0 to the Ubuntu devs as soon as the final version is released :)
+
+Now on to the next issue... I get a " cannot access vmalloc'd module memory" when I load my dump files in crash :\  Behavior is the same with using cp instead of makedumpfile, so appears to be a crash or kdump issue. Will send a separate email to the list on that topic.
+
+Thanks again.
+
+-Kevin
+
+-----Original Message-----
+From: Ken'ichi Ohmichi [mailto:oomichi@mxs.nes.nec.co.jp]
+Sent: Tuesday, September 30, 2008 10:07 PM
+To: Worth, Kevin
+Cc: Masaki Tachibana; kexec-ml
+Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
+
+
+Hi Kevin,
+
+Ken'ichi Ohmichi wrote:
+>> I've attached the log files from running strace.
+>> Hopefully they contain some clue as to where this failure is occurring.
+>> I tried specifying -d30 and it still failed. Both traces attached.
+>
+> Thank you for some log files.
+>
+> vmcore-d30.log:
+>   open("/proc/vmcore", O_RDONLY)          = 4
+>   [snip]
+>   lseek(4, 2885288664, SEEK_SET)          = -1 EINVAL (Invalid argument)
+>
+> Your system has 4GB memory, and /proc/vmcore size is almost 4GB, right ?
+> If yes, the above lseek() should *not* fail because the offset (almost 2.7GB)
+> is in /proc/vmcore. So I guess that this problem is due to a kernel.
+
+I should see the log more carefully.
+
+According to your log, lseek(2) is called even if makedumpfile is
+compiled by -D_FILE_OFFSET_BITS=64. On my system (RHEL5), _llseek()
+is called instead of it. This difference is due to each environment.
+
+To fix it, I added both -D_LARGEFILE_SOURCE and -D_LARGEFILE64_SOURCE
+with -D_FILE_OFFSET_BITS=64 and I uploaded makedumpfile-1.3.0-rc02.tar.gz
+to the following:
+
+https://sourceforge.net/project/showfiles.php?group_id=178938&package_id=293160&release_id=629891
+
+I guess/hope that this makedumpfile fixes your problem.
+Please try it on your system.
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
