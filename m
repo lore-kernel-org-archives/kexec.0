@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from e2.ny.us.ibm.com ([32.97.182.142])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KkvTz-0004yX-9S
-	for kexec@lists.infradead.org; Wed, 01 Oct 2008 06:46:48 +0000
-Message-ID: <48E30585.2090107@mxs.nes.nec.co.jp>
-Date: Wed, 01 Oct 2008 14:07:17 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1Kl6Nt-0003uv-TY
+	for kexec@lists.infradead.org; Wed, 01 Oct 2008 18:25:14 +0000
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m91IP4vP025150
+	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 14:25:04 -0400
+Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m91IP48T258172
+	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 14:25:04 -0400
+Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
+	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m91IP4oh002896
+	for <kexec@lists.infradead.org>; Wed, 1 Oct 2008 14:25:04 -0400
+Date: Wed, 1 Oct 2008 23:55:01 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
+Subject: [PATCH] Fix kdump kernel hang issue with relocatable kernel patches
+Message-ID: <20081001182501.GA20319@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>	<48D72B2B.3000406@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>	<48D9EDDC.1070600@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>	<48DB29A6.3070608@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
-	<48DC6C23.1040704@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>	<28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>	<48E05748.6020706@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049D3F31F@GVW1097EXB.americas.hpqcorp.net>	<48E191B1.7090809@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049FC6BD3@GVW1097EXB.americas.hpqcorp.net>
-	<48E2DDEE.5050603@mxs.nes.nec.co.jp>
-In-Reply-To: <48E2DDEE.5050603@mxs.nes.nec.co.jp>
+Content-Disposition: inline
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,64 +29,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0564816078=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: paulus@samba.org
+Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
 
---===============0564816078==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+One of the relocatable kernel support patches assumes that the target
+address will be 0. But for kdump kernels (without relocation support) it
+will be 32MB. The following patch fixes this issue.
 
+Fix kdump kernel issue
 
-Hi Kevin,
+Kdump kernel without relocation support needs to be moved to
+PHYSICAL_START (ie 32MB) instead of 0. This patch fixes this
+issue.
 
-Ken'ichi Ohmichi wrote:
->> I've attached the log files from running strace.
->> Hopefully they contain some clue as to where this failure is occurring.
->> I tried specifying -d30 and it still failed. Both traces attached.
-> 
-> Thank you for some log files.
-> 
-> vmcore-d30.log: 
->   open("/proc/vmcore", O_RDONLY)          = 4
->   [snip]
->   lseek(4, 2885288664, SEEK_SET)          = -1 EINVAL (Invalid argument)
-> 
-> Your system has 4GB memory, and /proc/vmcore size is almost 4GB, right ?
-> If yes, the above lseek() should *not* fail because the offset (almost 2.7GB)
-> is in /proc/vmcore. So I guess that this problem is due to a kernel.
+Signed-off-by: Mohan Kumar M <mohan@in.ibm.com>
+---
+ arch/powerpc/kernel/head_64.S |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-I should see the log more carefully.
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 84856be..8934500 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -1395,7 +1395,7 @@ _STATIC(__after_prom_start)
+  *
+  * Note: This process overwrites the OF exception vectors.
+  */
+-	li	r3,0			/* target addr */
++	LOAD_REG_IMMEDIATE(r3, PHYSICAL_START) /* target addr */
+ 	mr.	r4,r26			/* In some cases the loader may  */
+ 	beq	9f			/* have already put us at zero */
+ 	lis	r5,(copy_to_here - _stext)@ha
+-- 
+1.5.5.1
 
-According to your log, lseek(2) is called even if makedumpfile is
-compiled by -D_FILE_OFFSET_BITS=64. On my system (RHEL5), _llseek()
-is called instead of it. This difference is due to each environment.
-
-To fix it, I added both -D_LARGEFILE_SOURCE and -D_LARGEFILE64_SOURCE
-with -D_FILE_OFFSET_BITS=64 and I uploaded makedumpfile-1.3.0-rc02.tar.gz
-to the following:
-
-https://sourceforge.net/project/showfiles.php?group_id=178938&package_id=293160&release_id=629891
-
-I guess/hope that this makedumpfile fixes your problem.
-Please try it on your system.
-
-
-Thanks
-Ken'ichi Ohmichi
-
-
---===============0564816078==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0564816078==--
