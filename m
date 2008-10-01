@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
+Received: from g1t0029.austin.hp.com ([15.216.28.36])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kl97T-0003wO-8d
-	for kexec@lists.infradead.org; Wed, 01 Oct 2008 21:20:27 +0000
-From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: [RFC] powerpc: add kexec support on Book-E
-Date: Wed,  1 Oct 2008 23:20:22 +0200
-Message-Id: <1222896024-22172-2-git-send-email-sebastian@breakpoint.cc>
-In-Reply-To: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
-References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
+	id 1Kl7Fa-0005tT-8z
+	for kexec@lists.infradead.org; Wed, 01 Oct 2008 19:20:44 +0000
+From: "Worth, Kevin" <kevin.worth@hp.com>
+Date: Wed, 1 Oct 2008 19:19:56 +0000
+Subject: "cannot access vmalloc'd module memory" when loading kdump'ed
+	vmcore in crash
+Message-ID: <28113A0489833849A1CF9EC16F4215434376E9C97F@GVW1097EXB.americas.hpqcorp.net>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,257 +18,558 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1377081630=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@ozlabs.org
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
+To: kexec-ml <kexec@lists.infradead.org>, "crash-utility@redhat.com" <crash-utility@redhat.com>
 
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+--===============1377081630==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_28113A0489833849A1CF9EC16F4215434376E9C97FGVW1097EXBame_"
 
-The relocate_new_kernel() code usually disables the MMU and the small code
-operates on physicall addresses while moving the kernel to its final
-position. Book-E doesn't support this so a 1:1 mapping must be created.
+--_000_28113A0489833849A1CF9EC16F4215434376E9C97FGVW1097EXBame_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Hello kexec and crash mailing lists,
+
+Sorry to spam whoever's code this ISN'T an issue with, but I really am unsu=
+re of whether is a kdump or a crash issue. I am running an Ubuntu 7.04 with=
+ a 2.6.20 kernel (includes Ubuntus patches- source at http://packages.ubunt=
+u.com/feisty/linux-source-2.6.20 ) and a modified VMSPLIT/PAGE_OFFSET value=
+ (see bottom for details) on an i386 machine with 4GB of memory. At first I=
+ thought this could be an issue with makedumpfile stripping out things it s=
+houldn't, but I've found that setting up my initrd script so that it simply=
+ performs "cp /proc/vmcore /var/crash/vmcore" results in the same issue.
+
+I've tried this with both crash 4.0-6.3 and 4.0-7.2 and get the same result=
+. Unfortunately I'm locked at kernel 2.6.20 for other reasons, or else I wo=
+uld try that.
+
+If anyone can offer suggestions of what to try, please let me know. If this=
+ is something that has already been resolved elsewhere, sorry to waste time=
+, and if someone can point me to what resolved it, perhaps I can look at ba=
+ckporting the fix myself. Thanks for your time.
+
+crash-4.0-7.2$ ./crash ~/vmcore ~/targetfiles/vmlinux-2.6.20-17.39-custom2
+
+crash 4.0-7.2
+<snip>Copyright notices...</snip>
+GNU gdb 6.1
+<snip>Copyright notices...</snip>
+This GDB was configured as "i686-pc-linux-gnu"...
+
+please wait... (gathering module symbol data)
+WARNING: cannot access vmalloc'd module memory
+
+      KERNEL: /home/worthk/targetfiles/vmlinux-2.6.20-17.39-custom2
+    DUMPFILE: /home/worthk/vmcore
+        CPUS: 2
+        DATE: Wed Oct  1 12:30:50 2008
+      UPTIME: 00:35:11
+LOAD AVERAGE: 0.07, 0.09, 0.08
+       TASKS: 94
+    NODENAME: test-module
+     RELEASE: 2.6.20-17.39-custom2
+     VERSION: #3 SMP Wed Sep 24 10:11:03 PDT 2008
+     MACHINE: i686  (2200 Mhz)
+      MEMORY: 5 GB
+<6>SysRq : Trigger a crashdump"
+         PID: 4304
+     COMMAND: "bash"
+        TASK: 5d7e9030  [THREAD_INFO: f4b70000]
+         CPU: 0
+       STATE: TASK_RUNNING (SYSRQ)
+
+crash> mod -s test
+mod: cannot access vmalloc'd module memory
+
+
+My kernel config is a bit outside the norm, in that the VMSPLIT value has b=
+een modified to give 3GB of memory the kernelspace and 1GB of memory to use=
+rspace. Below is a diff between the default Ubuntu "generic" config and min=
+e:
+
+diff /boot/config-2.6.20-17-generic /boot/config-2.6.20-17.37-custom2
+3,4c3,4
+< # Linux kernel version: 2.6.20-17-generic < # Wed Aug 20 14:43:36 2008
 ---
- arch/powerpc/include/asm/kexec.h       |    4 +
- arch/powerpc/kernel/machine_kexec_32.c |   16 +++-
- arch/powerpc/kernel/misc_32.S          |  139 ++++++++++++++++++++++++++++++-
- 3 files changed, 151 insertions(+), 8 deletions(-)
+> # Linux kernel version: 2.6.20-17.37-custom2 # Tue Aug 19 18:50:53
+> 2008
+33c33
+< CONFIG_VERSION_SIGNATURE=3D"Ubuntu 2.6.20-17.39-generic"
+---
+> CONFIG_VERSION_SIGNATURE=3D"Ubuntu 2.6.20-17.37-generic"
+51c51
+< # CONFIG_EMBEDDED is not set
+---
+> CONFIG_EMBEDDED=3Dy
+188,190c188,194
+< CONFIG_HIGHMEM4G=3Dy
+< # CONFIG_HIGHMEM64G is not set
+< CONFIG_PAGE_OFFSET=3D0xC0000000
+---
+> # CONFIG_HIGHMEM4G is not set
+> CONFIG_HIGHMEM64G=3Dy
+> # CONFIG_VMSPLIT_3G is not set
+> # CONFIG_VMSPLIT_3G_OPT is not set
+> # CONFIG_VMSPLIT_2G is not set
+> CONFIG_VMSPLIT_1G=3Dy
+> CONFIG_PAGE_OFFSET=3D0x40000000
+191a196
+> CONFIG_X86_PAE=3Dy
+204c209
+< # CONFIG_RESOURCES_64BIT is not set
+---
+> CONFIG_RESOURCES_64BIT=3Dy
+1161a1167
+> CONFIG_IDE_MAX_HWIFS=3D4
+1443a1450
+> # CONFIG_PATA_PLATFORM is not set
+1525a1533
+> CONFIG_I2O_EXT_ADAPTEC_DMA64=3Dy
 
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 3736d9b..3907b24 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -31,6 +31,9 @@
- #define KEXEC_ARCH KEXEC_ARCH_PPC
- #endif
- 
-+#define KEXEC_MODE_NOMMU 1
-+#define KEXEC_MODE_BOOKE 2
-+
- #ifndef __ASSEMBLY__
- #include <linux/cpumask.h>
- 
-@@ -124,6 +127,7 @@ struct kimage;
- struct pt_regs;
- extern void default_machine_kexec(struct kimage *image);
- extern int default_machine_kexec_prepare(struct kimage *image);
-+extern int booke_machine_kexec_prepare(struct kimage *image);
- extern void default_machine_crash_shutdown(struct pt_regs *regs);
- extern int crash_shutdown_register(crash_shutdown_t handler);
- extern int crash_shutdown_unregister(crash_shutdown_t handler);
-diff --git a/arch/powerpc/kernel/machine_kexec_32.c b/arch/powerpc/kernel/machine_kexec_32.c
-index ae63a96..6611002 100644
---- a/arch/powerpc/kernel/machine_kexec_32.c
-+++ b/arch/powerpc/kernel/machine_kexec_32.c
-@@ -16,11 +16,13 @@
- #include <asm/hw_irq.h>
- #include <asm/io.h>
- 
--typedef NORET_TYPE void (*relocate_new_kernel_t)(
-+typedef void (*relocate_new_kernel_t)(
- 				unsigned long indirection_page,
- 				unsigned long reboot_code_buffer,
--				unsigned long start_address) ATTRIB_NORET;
-+				unsigned long start_address,
-+				unsigned long mmu_mode);
- 
-+static unsigned long mmu_mode;
- /*
-  * This is a generic machine_kexec function suitable at least for
-  * non-OpenFirmware embedded platforms.
-@@ -56,10 +58,18 @@ void default_machine_kexec(struct kimage *image)
- 
- 	/* now call it */
- 	rnk = (relocate_new_kernel_t) reboot_code_buffer;
--	(*rnk)(page_list, reboot_code_buffer_phys, image->start);
-+	(*rnk)(page_list, reboot_code_buffer_phys, image->start, mmu_mode);
-+	BUG();
- }
- 
- int default_machine_kexec_prepare(struct kimage *image)
- {
-+	mmu_mode = KEXEC_MODE_NOMMU;
-+	return 0;
-+}
-+
-+int booke_machine_kexec_prepare(struct kimage *image)
-+{
-+	mmu_mode = KEXEC_MODE_BOOKE;
- 	return 0;
- }
-diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
-index 7a6dfbc..519d752 100644
---- a/arch/powerpc/kernel/misc_32.S
-+++ b/arch/powerpc/kernel/misc_32.S
-@@ -877,9 +877,131 @@ relocate_new_kernel:
- 	/* r3 = page_list   */
- 	/* r4 = reboot_code_buffer */
- 	/* r5 = start_address      */
-+	/* r6 = mmu handling	*/
- 
--	li	r0, 0
-+	mflr	r28
-+	mr	r29, r3
-+	mr	r30, r4
-+	mr	r31, r5
-+
-+	li	r0, KEXEC_MODE_NOMMU
-+	cmpw	r0, r6
-+	beq	disable_mmu
-+
-+	li	r0, KEXEC_MODE_BOOKE
-+	cmpw	r0, r6
-+	beq	create_linear_mapping
-+
-+	blr
- 
-+create_linear_mapping:
-+	li	r25, 0			/* phys kernel start (low) */
-+
-+/* 1. Find the index of the entry we're executing in */
-+	bl	invstr			/* Find our address */
-+invstr:
-+	mflr	r6			/* Make it accessible */
-+	mfmsr	r7
-+	rlwinm	r4,r7,27,31,31		/* extract MSR[IS] */
-+	mfspr	r7, SPRN_PID0
-+	slwi	r7,r7,16
-+	or	r7,r7,r4
-+	mtspr	SPRN_MAS6,r7
-+	tlbsx	0,r6			/* search MSR[IS], SPID=PID0 */
-+	mfspr	r7,SPRN_MAS1
-+	andis.	r7,r7,MAS1_VALID@h
-+	bne	match_TLB
-+	
-+	/*
-+	 * We search just in PID0 because kernel's global mapping has to be
-+	 * there. We simply return to the caller if we didn't find the mapping
-+	 * since we didn't (yet) pass the point of no return. This should not
-+	 * happen.
-+	 */
-+	mtlr	r28
-+	blr
-+
-+match_TLB:
-+	mfspr	r7,SPRN_MAS0
-+	rlwinm	r3,r7,16,20,31		/* Extract MAS0(Entry) */
-+
-+	mfspr	r7,SPRN_MAS1		/* Insure IPROT set */
-+	oris	r7,r7,MAS1_IPROT@h
-+	mtspr	SPRN_MAS1,r7
-+	tlbwe
-+
-+/* 2. Invalidate all entries except the entry we're executing in */
-+	mfspr	r9,SPRN_TLB1CFG
-+	andi.	r9,r9,0xfff
-+	li	r6,0			/* Set Entry counter to 0 */
-+1:
-+	lis	r7,0x1000		/* Set MAS0(TLBSEL) = 1 */
-+	rlwimi	r7,r6,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r6) */
-+	mtspr   SPRN_MAS0,r7
-+	tlbre
-+	mfspr	r7,SPRN_MAS1
-+	rlwinm  r7,r7,0,2,31		/* Clear MAS1 Valid and IPROT */
-+	cmpw	r3,r6
-+	beq	skpinv			/* Dont update the current execution TLB */
-+	mtspr	SPRN_MAS1,r7
-+	tlbwe
-+	isync
-+skpinv:
-+	addi	r6,r6,1			/* Increment */
-+	cmpw	r6,r9			/* Are we done? */
-+	bne	1b			/* If not, repeat */
-+
-+	/* Invalidate TLB0 */
-+	li	r6,0x04
-+	tlbivax	0,r6
-+	TLBSYNC
-+	/* Invalidate TLB1 */
-+	li	r6,0x0c
-+	tlbivax	0,r6
-+	TLBSYNC
-+
-+/* 3. Setup a temp mapping and jump to it */
-+	andi.	r5, r3, 0x1		/* Find an entry not used and is non-zero */
-+	addi	r5, r5, 0x1
-+	lis	r7, 0x1000		/* Set MAS0(TLBSEL) = 1 */
-+	rlwimi	r7, r3, 16, 4, 15	/* Setup MAS0 = TLBSEL | ESEL(r3) */
-+	mtspr	SPRN_MAS0,r7
-+	tlbre
-+
-+	/* Just modify the entry ID and EPN for the temp mapping */
-+	lis	r7,0x1000		/* Set MAS0(TLBSEL) = 1 */
-+	rlwimi	r7,r5,16,4,15		/* Setup MAS0 = TLBSEL | ESEL(r5) */
-+	mtspr	SPRN_MAS0,r7
-+
-+	xori	r6,r4,1			/* Setup TMP mapping in the other Address space */
-+	slwi	r6,r6,12
-+	oris	r6,r6,(MAS1_VALID|MAS1_IPROT)@h
-+	ori	r6,r6,(MAS1_TSIZE(BOOKE_PAGESZ_1GB))@l
-+	mtspr	SPRN_MAS1,r6
-+
-+	lis	r7, MAS2_I | MAS2_G
-+	mtspr	SPRN_MAS2,r7
-+
-+	li	r8, 0
-+	ori	r8,r25,(MAS3_SX|MAS3_SW|MAS3_SR)
-+	mtspr   SPRN_MAS3,r8
-+
-+	tlbwe
-+
-+	xori	r6, r4, 1
-+	slwi	r5, r6, 4		/* DS setup new context with other address space */
-+	slwi	r6, r6, 5		/* IS setup new context with other address space */
-+	or	r6, r6, r5
-+
-+	/* find our address */
-+	addi	r7, r30, final_copy_code - relocate_new_kernel
-+
-+	mtspr	SPRN_SRR0,r7
-+	mtspr	SPRN_SRR1,r6
-+	rfi
-+
-+disable_mmu:
-+	li	r0, 0
- 	/*
- 	 * Set Machine Status Register to a known status,
- 	 * switch the MMU off and jump to 1: in a single step.
-@@ -888,14 +1010,21 @@ relocate_new_kernel:
- 	mr	r8, r0
- 	ori     r8, r8, MSR_RI|MSR_ME
- 	mtspr	SPRN_SRR1, r8
--	addi	r8, r4, 1f - relocate_new_kernel
-+	addi	r8, r4, final_copy_code - relocate_new_kernel
- 	mtspr	SPRN_SRR0, r8
- 	sync
- 	rfi
- 
--1:
--	/* from this point address translation is turned off */
--	/* and interrupts are disabled */
-+final_copy_code:
-+
-+	mr	r3, r29
-+	mr	r4, r30
-+	mr	r5, r31
-+
-+	li	r0, 0
-+
-+	/* from this point address translation is turned off or we have  */
-+	/* a 1:1 mapping and interrupts are disabled */
- 
- 	/* set a new stack at the bottom of our page... */
- 	/* (not really needed now) */
--- 
-1.5.6.5
 
+Kevin Worth
+Network Security Software Engineer
+ProCurve networking by HP
+kevin.worth@hp.com<mailto:kevin.worth@hp.com>
+ph 916.785.4528
+fx 916.785.1196
+
+--_000_28113A0489833849A1CF9EC16F4215434376E9C97FGVW1097EXBame_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
+	{mso-style-priority:99;
+	mso-style-link:"Plain Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.5pt;
+	font-family:Consolas;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-priority:99;
+	mso-style-link:"Balloon Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";}
+span.PlainTextChar
+	{mso-style-name:"Plain Text Char";
+	mso-style-priority:99;
+	mso-style-link:"Plain Text";
+	font-family:Consolas;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-priority:99;
+	mso-style-link:"Balloon Text";
+	font-family:"Tahoma","sans-serif";}
+span.EmailStyle21
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.EmailStyle22
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Hello kexec and crash ma=
+iling
+lists,<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Sorry to spam whoever&#8=
+217;s
+code this ISN&#8217;T an issue with, but I really am unsure of whether is a
+kdump or a crash issue. I am running an Ubuntu 7.04 with a 2.6.20 kernel
+(includes Ubuntus patches- source at <a
+href=3D"http://packages.ubuntu.com/feisty/linux-source-2.6.20">http://packa=
+ges.ubuntu.com/feisty/linux-source-2.6.20</a>
+) and a modified VMSPLIT/PAGE_OFFSET value (see bottom for details) on an i=
+386
+machine with 4GB of memory. At first I thought this could be an issue with
+makedumpfile stripping out things it shouldn&#8217;t, but I&#8217;ve found =
+that
+setting up my initrd script so that it simply performs &#8220;cp /proc/vmco=
+re
+/var/crash/vmcore&#8221; results in the same issue.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>I&#8217;ve tried this wi=
+th both
+crash 4.0-6.3 and 4.0-7.2 and get the same result. Unfortunately I&#8217;m
+locked at kernel 2.6.20 for other reasons, or else I would try that.<o:p></=
+o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>If anyone can offer sugg=
+estions
+of what to try, please let me know. If this is something that has already b=
+een
+resolved elsewhere, sorry to waste time, and if someone can point me to wha=
+t
+resolved it, perhaps I can look at backporting the fix myself. Thanks for y=
+our
+time.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>crash-4.0-7.2$ ./crash ~=
+/vmcore
+~/targetfiles/vmlinux-2.6.20-17.39-custom2<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>crash 4.0-7.2<o:p></o:p>=
+</span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt;snip&gt;Copyright
+notices&#8230;&lt;/snip&gt;<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>GNU gdb 6.1<o:p></o:p></=
+span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt;snip&gt;Copyright
+notices&#8230;&lt;/snip&gt;<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>This GDB was configured =
+as
+&quot;i686-pc-linux-gnu&quot;...<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>please wait... (gatherin=
+g module
+symbol data)<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>WARNING: cannot access v=
+malloc'd
+module memory<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;
+KERNEL: /home/worthk/targetfiles/vmlinux-2.6.20-17.39-custom2<o:p></o:p></s=
+pan></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp; DUMPF=
+ILE:
+/home/worthk/vmcore<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;
+CPUS: 2<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;
+DATE: Wed Oct&nbsp; 1 12:30:50 2008<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;
+UPTIME: 00:35:11<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>LOAD AVERAGE: 0.07, 0.09=
+, 0.08<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;
+TASKS: 94<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp; NODEN=
+AME:
+test-module<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;
+RELEASE: 2.6.20-17.39-custom2<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;
+VERSION: #3 SMP Wed Sep 24 10:11:03 PDT 2008<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;
+MACHINE: i686&nbsp; (2200 Mhz)<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;
+MEMORY: 5 GB<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt;6&gt;SysRq : Trigger=
+ a
+crashdump&quot;<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;
+PID: 4304<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;
+COMMAND: &quot;bash&quot;<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;
+TASK: 5d7e9030&nbsp; [THREAD_INFO: f4b70000]<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;
+CPU: 0<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;
+STATE: TASK_RUNNING (SYSRQ)<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>crash&gt; mod -s test<o:=
+p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>mod: cannot access vmall=
+oc'd
+module memory<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>My kernel config is a bi=
+t
+outside the norm, in that the VMSPLIT value has been modified to give 3GB o=
+f
+memory the kernelspace and 1GB of memory to userspace. Below is a diff betw=
+een
+the default Ubuntu &#8220;generic&#8221; config and mine:<o:p></o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>diff
+/boot/config-2.6.20-17-generic /boot/config-2.6.20-17.37-custom2<o:p></o:p>=
+</span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>3,4c3,4<o:p></o:p></span=
+></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt; # Linux kernel vers=
+ion:
+2.6.20-17-generic &lt; # Wed Aug 20 14:43:36 2008<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>---<o:p></o:p></span></p=
+>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # Linux kernel vers=
+ion:
+2.6.20-17.37-custom2 # Tue Aug 19 18:50:53 <o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; 2008<o:p></o:p></sp=
+an></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>33c33<o:p></o:p></span><=
+/p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt;
+CONFIG_VERSION_SIGNATURE=3D&quot;Ubuntu 2.6.20-17.39-generic&quot;<o:p></o:=
+p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>---<o:p></o:p></span></p=
+>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt;
+CONFIG_VERSION_SIGNATURE=3D&quot;Ubuntu 2.6.20-17.37-generic&quot;<o:p></o:=
+p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>51c51<o:p></o:p></span><=
+/p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt; # CONFIG_EMBEDDED i=
+s not
+set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>---<o:p></o:p></span></p=
+>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_EMBEDDED=3Dy=
+<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>188,190c188,194<o:p></o:=
+p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt; CONFIG_HIGHMEM4G=3D=
+y<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt; # CONFIG_HIGHMEM64G=
+ is not
+set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt;
+CONFIG_PAGE_OFFSET=3D0xC0000000<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>---<o:p></o:p></span></p=
+>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # CONFIG_HIGHMEM4G =
+is not
+set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_HIGHMEM64G=
+=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # CONFIG_VMSPLIT_3G=
+ is not
+set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # CONFIG_VMSPLIT_3G=
+_OPT is
+not set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # CONFIG_VMSPLIT_2G=
+ is not
+set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_VMSPLIT_1G=
+=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt;
+CONFIG_PAGE_OFFSET=3D0x40000000<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>191a196<o:p></o:p></span=
+></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_X86_PAE=3Dy<=
+o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>204c209<o:p></o:p></span=
+></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&lt; # CONFIG_RESOURCES_=
+64BIT is
+not set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>---<o:p></o:p></span></p=
+>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_RESOURCES_64=
+BIT=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>1161a1167<o:p></o:p></sp=
+an></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; CONFIG_IDE_MAX_HWIF=
+S=3D4<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>1443a1450<o:p></o:p></sp=
+an></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt; # CONFIG_PATA_PLATF=
+ORM is
+not set<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>1525a1533<o:p></o:p></sp=
+an></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&gt;
+CONFIG_I2O_EXT_ADAPTEC_DMA64=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span>=
+</p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Kevin Worth<br>
+Network Security Software Engineer<br>
+ProCurve networking by HP<br>
+<a href=3D"mailto:kevin.worth@hp.com">kevin.worth@hp.com</a> <br>
+ph 916.785.4528<br>
+fx 916.785.1196<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+--_000_28113A0489833849A1CF9EC16F4215434376E9C97FGVW1097EXBame_--
+
+
+--===============1377081630==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1377081630==--
+
