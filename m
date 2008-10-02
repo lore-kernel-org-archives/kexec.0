@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KlL4G-0005v9-Be
-	for kexec@lists.infradead.org; Thu, 02 Oct 2008 10:05:57 +0000
-Date: Thu, 2 Oct 2008 20:05:53 +1000
-From: Simon Horman <horms@verge.net.au>
+Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
+	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KlNfy-0004it-F1
+	for kexec@lists.infradead.org; Thu, 02 Oct 2008 12:53:03 +0000
+Message-Id: <2AF4947A-B0E5-4530-9240-55C94A73E9FC@kernel.crashing.org>
+From: Kumar Gala <galak@kernel.crashing.org>
+In-Reply-To: <1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
+Mime-Version: 1.0 (Apple Message framework v929.2)
 Subject: Re: [PATCH] powerpc: dtb and purgatory support for ppc32
-Message-ID: <20081002100553.GA5886@verge.net.au>
+Date: Thu, 2 Oct 2008 07:52:37 -0500
 References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
 	<1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
-	<7AB33E84-B8C2-4B32-B1F8-7FA213198FE4@kernel.crashing.org>
-	<48E47D38.3040508@linutronix.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <48E47D38.3040508@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,31 +24,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Siewior <bigeasy@linutronix.de>
-Cc: linuxppc-dev@ozlabs.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, kexec@lists.infradead.org, Kumar Gala <galak@kernel.crashing.org>
-
-On Thu, Oct 02, 2008 at 09:50:16AM +0200, Sebastian Siewior wrote:
-> Kumar Gala wrote:
-> 
-> > are you trying to get this accepted?
-> 
-> If the reviewer don't have any objections yes. You sound
-> like there is something terrible wrong. Do you want it in smaller pieces?
-
-I'm not speaking on behalf of Kumar Gala, just on behalf of myself.
-
-I would like to get some review of this patch by if possible.
-Also, I'm a little unclear of how it will interact with the
-patches that Mohan Kumar sent this week. But at this point
-I don't see any particular need to break the patch up into
-smaller pieices.
+To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Cc: linuxppc-dev@ozlabs.org, Sebastian Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
 
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+On Oct 1, 2008, at 4:20 PM, Sebastian Andrzej Siewior wrote:
 
+> From: Sebastian Siewior <bigeasy@linutronix.de>
+>
+> Some code dtb scanning & filling has been borrowed from ppc64.
+> The old behavior is still available if compiled with GameCube,
+> other PowerPC platform use the can purgatory and specify a new
+> dtb.
+> The purgatory is disabled because somehting is wrong and I dunno
+> the reason. Booting a self containd cuImage (incl. dtb / wiuthout
+> the need for a bd sturct) can be booted.
+>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> ---
+> kexec/arch/ppc/Makefile            |    1 +
+> kexec/arch/ppc/kexec-elf-ppc.c     |  167 ++++++++++----
+> kexec/arch/ppc/kexec-elf-rel-ppc.c |    4 +
+> kexec/arch/ppc/kexec-ppc.c         |  469 +++++++++++++++++++++++++++ 
+> ++++++++-
+> purgatory/arch/ppc/Makefile        |    1 +
+> purgatory/arch/ppc/purgatory-ppc.c |    4 +
+> purgatory/arch/ppc/v2wrap.S        |   54 ++++
+> 7 files changed, 652 insertions(+), 48 deletions(-)
+> create mode 100644 purgatory/arch/ppc/v2wrap.S
+
+I think I might have realized some of my confusion.. is this patch to  
+the kernel or to some kexec tool?   If its to the kernel I don't  
+answer at all.  If its to some kexec tool than that wasn't clear at all.
+
+- k
 
 _______________________________________________
 kexec mailing list
