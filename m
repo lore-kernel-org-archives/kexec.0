@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
-	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KlFH6-0001Zk-Nt
-	for kexec@lists.infradead.org; Thu, 02 Oct 2008 03:54:49 +0000
-Message-Id: <7AB33E84-B8C2-4B32-B1F8-7FA213198FE4@kernel.crashing.org>
-From: Kumar Gala <galak@kernel.crashing.org>
-In-Reply-To: <1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
-Mime-Version: 1.0 (Apple Message framework v929.2)
-Subject: Re: [PATCH] powerpc: dtb and purgatory support for ppc32
-Date: Wed, 1 Oct 2008 22:54:23 -0500
-References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
-	<1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KlGVd-0003ZR-HF
+	for kexec@lists.infradead.org; Thu, 02 Oct 2008 05:13:54 +0000
+Date: Thu, 2 Oct 2008 15:13:50 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kdump broken on Altix 350
+Message-ID: <20081002051348.GA1027@verge.net.au>
+References: <57C9024A16AD2D4C97DC78E552063EA34DB4172D@orsmsx505.amr.corp.intel.com>
+	<200809292342.m8TNgq4u004680@agluck-lia64.sc.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200809292342.m8TNgq4u004680@agluck-lia64.sc.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: linuxppc-dev@ozlabs.org, Sebastian Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
+To: "Luck, Tony" <tony.luck@intel.com>
+Cc: Jay Lan <jlan@sgi.com>, Bernhard Walle <bwalle@suse.de>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+On Mon, Sep 29, 2008 at 04:42:52PM -0700, Luck, Tony wrote:
+> Does this make kexec/kdump happier?  Bare minimum testing so far
+> (builds and boots on tiger ... didn't try kexec yet).
 
-On Oct 1, 2008, at 4:20 PM, Sebastian Andrzej Siewior wrote:
+Hi Tony,
 
-> From: Sebastian Siewior <bigeasy@linutronix.de>
->
-> Some code dtb scanning & filling has been borrowed from ppc64.
-> The old behavior is still available if compiled with GameCube,
-> other PowerPC platform use the can purgatory and specify a new
-> dtb.
-> The purgatory is disabled because somehting is wrong and I dunno
-> the reason. Booting a self containd cuImage (incl. dtb / wiuthout
-> the need for a bd sturct) can be booted.
->
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
-> kexec/arch/ppc/Makefile            |    1 +
-> kexec/arch/ppc/kexec-elf-ppc.c     |  167 ++++++++++----
-> kexec/arch/ppc/kexec-elf-rel-ppc.c |    4 +
-> kexec/arch/ppc/kexec-ppc.c         |  469 +++++++++++++++++++++++++++ 
-> ++++++++-
-> purgatory/arch/ppc/Makefile        |    1 +
-> purgatory/arch/ppc/purgatory-ppc.c |    4 +
-> purgatory/arch/ppc/v2wrap.S        |   54 ++++
-> 7 files changed, 652 insertions(+), 48 deletions(-)
-> create mode 100644 purgatory/arch/ppc/v2wrap.S
+your analysis (in your previous email) was more or less the same
+conclusion that I had come too, though I was puzzling over
+why you had put the reserved area for cpu0 where you had - I assumed
+I was misunderstanding things.
 
-are you trying to get this accepted?
+This patch looks good to me.
 
-- k
+Jay,
+
+With this patch I assume that we still need an order of operations fix for
+kexec-tools but no section merging changes. Is that correct?
+
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
 
 _______________________________________________
