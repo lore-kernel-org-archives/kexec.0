@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KlRc3-000223-JO
-	for kexec@lists.infradead.org; Thu, 02 Oct 2008 17:05:30 +0000
-Message-ID: <48E4FF18.10405@sgi.com>
-Date: Thu, 02 Oct 2008 10:04:24 -0700
-From: Jay Lan <jlan@sgi.com>
+Received: from g1t0028.austin.hp.com ([15.216.28.35])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KlSid-0006r2-V8
+	for kexec@lists.infradead.org; Thu, 02 Oct 2008 18:16:08 +0000
+From: Bjorn Helgaas <bjorn.helgaas@hp.com>
+Subject: Re: SetVirtualAddressMap() on Tiano EFI firmware
+Date: Thu, 2 Oct 2008 12:16:03 -0600
+References: <200809111423.58814.bjorn.helgaas@hp.com>
+In-Reply-To: <200809111423.58814.bjorn.helgaas@hp.com>
 MIME-Version: 1.0
-Subject: Re: kdump broken on Altix 350
-References: <57C9024A16AD2D4C97DC78E552063EA34DB4172D@orsmsx505.amr.corp.intel.com>	<200809292342.m8TNgq4u004680@agluck-lia64.sc.intel.com>
-	<20081002051348.GA1027@verge.net.au>
-In-Reply-To: <20081002051348.GA1027@verge.net.au>
+Content-Disposition: inline
+Message-Id: <200810021216.03922.bjorn.helgaas@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +23,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Bernhard Walle <bwalle@suse.de>, "Luck, Tony" <tony.luck@intel.com>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
+To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
 
-Simon Horman wrote:
-> On Mon, Sep 29, 2008 at 04:42:52PM -0700, Luck, Tony wrote:
->> Does this make kexec/kdump happier?  Bare minimum testing so far
->> (builds and boots on tiger ... didn't try kexec yet).
+On Thursday 11 September 2008 02:23:58 pm Bjorn Helgaas wrote:
+> ...
+> The following patch makes kexec-tools work on either old or new
+> firmware.  Masking out the top nibble of either a physical address
+> or a virtual address in region 7 results in a physical address.
 > 
-> Hi Tony,
+> diff --git a/purgatory/arch/ia64/purgatory-ia64.c b/purgatory/arch/ia64/purgatory-ia64.c
+> index b2fe6d4..acacb56 100644
+> --- a/purgatory/arch/ia64/purgatory-ia64.c
+> +++ b/purgatory/arch/ia64/purgatory-ia64.c
+> @@ -147,7 +147,7 @@ setup_arch(void)
+>  
+>  inline unsigned long PA(unsigned long addr)
+>  {
+> -	return addr - PAGE_OFFSET;
+> +	return addr & 0x0fffffffffffffffLL;
+>  }
+>  
+>  void
 > 
-> your analysis (in your previous email) was more or less the same
-> conclusion that I had come too, though I was puzzling over
-> why you had put the reserved area for cpu0 where you had - I assumed
-> I was misunderstanding things.
-> 
-> This patch looks good to me.
-> 
-> Jay,
-> 
-> With this patch I assume that we still need an order of operations fix for
-> kexec-tools but no section merging changes. Is that correct?
 
-I think the code should still be simplified.
+I haven't seen any activity on this.
 
-The 'break' of the if-statement has never been executed due to
-the mistake in operation precedence. Thus, the code have been
-doing segment merging by calculating p_memsz of each segment
-without having to deal with 'gap' between PT_LOAD headers.
+Simon, if nobody objects to it, would you consider the patch above
+for kexec-tools?
 
-As demonstrated by this incidence, when there is a gap happened,
-the kernel boot fail. So, if we assume the PT_LOAD headers will
-be generated correctly, then the segment merging logic should be
-simplified. It does not make sense to pick up p_memsz of each
-segment and do all those calculation. It caused confusion.
-
-Regards,
-jay
+Bjorn
 
 _______________________________________________
 kexec mailing list
