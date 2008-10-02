@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KlGVd-0003ZR-HF
-	for kexec@lists.infradead.org; Thu, 02 Oct 2008 05:13:54 +0000
-Date: Thu, 2 Oct 2008 15:13:50 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kdump broken on Altix 350
-Message-ID: <20081002051348.GA1027@verge.net.au>
-References: <57C9024A16AD2D4C97DC78E552063EA34DB4172D@orsmsx505.amr.corp.intel.com>
-	<200809292342.m8TNgq4u004680@agluck-lia64.sc.intel.com>
+Received: from www.tglx.de ([62.245.132.106])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KlIxI-0005P6-3V
+	for kexec@lists.infradead.org; Thu, 02 Oct 2008 07:50:36 +0000
+Message-ID: <48E47D38.3040508@linutronix.de>
+Date: Thu, 02 Oct 2008 09:50:16 +0200
+From: Sebastian Siewior <bigeasy@linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200809292342.m8TNgq4u004680@agluck-lia64.sc.intel.com>
+Subject: Re: [PATCH] powerpc: dtb and purgatory support for ppc32
+References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
+	<1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
+	<7AB33E84-B8C2-4B32-B1F8-7FA213198FE4@kernel.crashing.org>
+In-Reply-To: <7AB33E84-B8C2-4B32-B1F8-7FA213198FE4@kernel.crashing.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,36 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Jay Lan <jlan@sgi.com>, Bernhard Walle <bwalle@suse.de>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: linuxppc-dev@ozlabs.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, kexec@lists.infradead.org
 
-On Mon, Sep 29, 2008 at 04:42:52PM -0700, Luck, Tony wrote:
-> Does this make kexec/kdump happier?  Bare minimum testing so far
-> (builds and boots on tiger ... didn't try kexec yet).
+Kumar Gala wrote:
 
-Hi Tony,
+> are you trying to get this accepted?
 
-your analysis (in your previous email) was more or less the same
-conclusion that I had come too, though I was puzzling over
-why you had put the reserved area for cpu0 where you had - I assumed
-I was misunderstanding things.
+If the reviewer don't have any objections yes. You sound
+like there is something terrible wrong. Do you want it in smaller pieces?
 
-This patch looks good to me.
+> - k
+Sebastian
+-- =
 
-Jay,
-
-With this patch I assume that we still need an order of operations fix for
-kexec-tools but no section merging changes. Is that correct?
-
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Firmensitz: 88690 Uhldingen, Auf dem Berg 3
+Registergericht: Amtsgericht Freiburg i. Br., HRB 700 806;
+StNr. 87007/07777; Ust-Id Nr.: DE252739476
+Gesch=E4ftsf=FChrer: Heinz Egger, Thomas Gleixner
 
 _______________________________________________
 kexec mailing list
