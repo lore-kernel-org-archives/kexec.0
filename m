@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.250])
+Received: from smtp-outbound-1.vmware.com ([65.113.40.141])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Klrsx-0003sh-3F
-	for kexec@lists.infradead.org; Fri, 03 Oct 2008 21:08:27 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so2716045rvf.42
-	for <kexec@lists.infradead.org>; Fri, 03 Oct 2008 14:08:23 -0700 (PDT)
-Message-ID: <86802c440810031408i60e2036ax805bfd997092cd86@mail.gmail.com>
-Date: Fri, 3 Oct 2008 14:08:23 -0700
-From: "Yinghai Lu" <yinghai@kernel.org>
-Subject: kexec with vmware esx 3.0.2
-MIME-Version: 1.0
-Content-Disposition: inline
+	id 1Kls9O-0005mI-Js
+	for kexec@lists.infradead.org; Fri, 03 Oct 2008 21:25:26 +0000
+Subject: Re: kexec with vmware esx 3.0.2
+From: Zachary Amsden <zach@vmware.com>
+In-Reply-To: <86802c440810031408i60e2036ax805bfd997092cd86@mail.gmail.com>
+References: <86802c440810031408i60e2036ax805bfd997092cd86@mail.gmail.com>
+Date: Fri, 03 Oct 2008 14:21:33 -0700
+Message-Id: <1223068893.7330.117.camel@bodhitayantram.eng.vmware.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,12 +22,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Zachary Amsden <zach@vmware.com>, Alok Kataria <akataria@vmware.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Alok Kataria <akataria@vmware.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-anyone tried to use linux kernel to kexec vmware esx?
+On Fri, 2008-10-03 at 14:08 -0700, Yinghai Lu wrote:
+> anyone tried to use linux kernel to kexec vmware esx?
 
-YH
+That would not be a recommended practice.  It might work.  It should not
+be very useful.
+
+Zach
+
 
 _______________________________________________
 kexec mailing list
