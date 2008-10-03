@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from e1.ny.us.ibm.com ([32.97.182.141])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KlaCt-0004Ae-DP
-	for kexec@lists.infradead.org; Fri, 03 Oct 2008 02:15:52 +0000
-Message-ID: <48E57128.8030208@mxs.nes.nec.co.jp>
-Date: Fri, 03 Oct 2008 10:11:04 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1KldSl-0006KN-06
+	for kexec@lists.infradead.org; Fri, 03 Oct 2008 05:44:27 +0000
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m935iPTB012710
+	for <kexec@lists.infradead.org>; Fri, 3 Oct 2008 01:44:25 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m935iPla234272
+	for <kexec@lists.infradead.org>; Fri, 3 Oct 2008 01:44:25 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m935iPxa018395
+	for <kexec@lists.infradead.org>; Fri, 3 Oct 2008 01:44:25 -0400
+Message-ID: <48E5B134.6050506@in.ibm.com>
+Date: Fri, 03 Oct 2008 11:14:20 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: Problems writing ELF dumps with makedumpfile 1.2.9
-References: <28113A0489833849A1CF9EC16F42154340494D5BA0@GVW1097EXB.americas.hpqcorp.net>	<28113A0489833849A1CF9EC16F4215434049544C88@GVW1097EXB.americas.hpqcorp.net>	<48D9EDDC.1070600@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F421543404958892C@GVW1097EXB.americas.hpqcorp.net>	<48DB29A6.3070608@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049588E80@GVW1097EXB.americas.hpqcorp.net>,
-	<48DC6C23.1040704@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049EAF1D2@GVW1097EXB.americas.hpqcorp.net>	<28113A0489833849A1CF9EC16F4215434049D3EDB5@GVW1097EXB.americas.hpqcorp.net>	<48E05748.6020706@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049D3F31F@GVW1097EXB.americas.hpqcorp.net>	<48E191B1.7090809@mxs.nes.nec.co.jp>	<28113A0489833849A1CF9EC16F4215434049FC6BD3@GVW1097EXB.americas.hpqcorp.net>	<48E2DDEE.5050603@mxs.nes.nec.co.jp>	<48E30585.2090107@mxs.nes.nec.co.jp>
-	<28113A0489833849A1CF9EC16F4215434376E9C963@GVW1097EXB.americas.hpqcorp.net>
-In-Reply-To: <28113A0489833849A1CF9EC16F4215434376E9C963@GVW1097EXB.americas.hpqcorp.net>
+Subject: Re: [PATCH] powerpc: dtb and purgatory support for ppc32
+References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
+	<1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
+	<7AB33E84-B8C2-4B32-B1F8-7FA213198FE4@kernel.crashing.org>
+	<48E47D38.3040508@linutronix.de>
+	<20081002100553.GA5886@verge.net.au>
+In-Reply-To: <20081002100553.GA5886@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,58 +33,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0157494233=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Worth, Kevin" <kevin.worth@hp.com>
-Cc: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: linuxppc-dev@ozlabs.org, Sebastian Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Kumar Gala <galak@kernel.crashing.org>
 
---===============0157494233==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Simon Horman wrote:
+> On Thu, Oct 02, 2008 at 09:50:16AM +0200, Sebastian Siewior wrote:
 
-
-Hi Kevin,
-
-Worth, Kevin wrote:
-> Using rc2 patch:
 > 
-> Copying data                       : [100 %]
-> 
-> The dumpfile is saved to /root/var/crash/vmcore.
-> 
-> makedumpfile Completed.
-> 
-> Aha! That worked!
-
-Thank you for many tests, and I'm happy by your report :-)
-
-
-> I'm suspecting the Ubuntu dev that changed the compile flags
-> may not have realized what implications it could have.
+> I'm not speaking on behalf of Kumar Gala, just on behalf of myself.
 >
-> Additionally, we did resolve+test the problem with using -d
-> values >1, so that is an improvement, as well. Thank you very
-> much for your help in this, Ken'ichi! I'll be submitting 1.3.0
-> to the Ubuntu devs as soon as the final version is released :)
 
-I'm doing many regression tests, and I'll release the final
-version until 10 October.
+Hi Horms,
 
+> I would like to get some review of this patch by if possible.
+> Also, I'm a little unclear of how it will interact with the
+> patches that Mohan Kumar sent this week. But at this point
+> I don't see any particular need to break the patch up into
+> smaller pieices.
+> 
 
-Thanks
-Ken'ichi Ohmichi
+My patches are meant for PPC64 only. The patch implements support for 
+relocatable kdump kernel on PPC64 platform.
 
+So I don't think Sebastian's patches need to support this relocation 
+support in the kexec-tools as of now.
 
---===============0157494233==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Regards,
+Mohan.
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0157494233==--
