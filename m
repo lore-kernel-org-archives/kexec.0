@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from g5t0006.atlanta.hp.com ([15.192.0.43])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KmB2J-0001yQ-HG
-	for kexec@lists.infradead.org; Sat, 04 Oct 2008 17:35:24 +0000
+	id 1KmBFB-0002us-7r
+	for kexec@lists.infradead.org; Sat, 04 Oct 2008 17:48:42 +0000
 From: "Worth, Kevin" <kevin.worth@hp.com>
-Date: Sat, 4 Oct 2008 17:34:30 +0000
+Date: Sat, 4 Oct 2008 17:47:00 +0000
 Subject: RE: [Crash-utility] "cannot access vmalloc'd module memory" when
 	loading kdump'ed vmcore in crash
-Message-ID: <28113A0489833849A1CF9EC16F42154346498C2A63@GVW1097EXB.americas.hpqcorp.net>
+Message-ID: <28113A0489833849A1CF9EC16F42154346498C2A65@GVW1097EXB.americas.hpqcorp.net>
 References: <28113A0489833849A1CF9EC16F4215434376E9C97F@GVW1097EXB.americas.hpqcorp.net>
 	<48E3D2EB.4030301@redhat.com>
 	<28113A0489833849A1CF9EC16F4215434376E9CC1A@GVW1097EXB.americas.hpqcorp.net>
 	<48E4DF65.30009@redhat.com>
 	<28113A0489833849A1CF9EC16F4215434376E9D234@GVW1097EXB.americas.hpqcorp.net>
 	<48E63DB1.7090609@redhat.com>
-In-Reply-To: <48E63DB1.7090609@redhat.com>
+	<28113A0489833849A1CF9EC16F42154346498C2A63@GVW1097EXB.americas.hpqcorp.net>
+In-Reply-To: <28113A0489833849A1CF9EC16F42154346498C2A63@GVW1097EXB.americas.hpqcorp.net>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -30,6 +31,16 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Discussion list for crash utility usage,	maintenance and development" <crash-utility@redhat.com>, kexec-ml <kexec@lists.infradead.org>
+
+Whoops! Important typo....  "other than that it involves network traffic and should NOT be causing any funky behavior here"
+
+-Kevin
+
+-----Original Message-----
+From: crash-utility-bounces@redhat.com [mailto:crash-utility-bounces@redhat.com] On Behalf Of Worth, Kevin
+Sent: Saturday, October 04, 2008 10:35 AM
+To: Discussion list for crash utility usage, maintenance and development; kexec-ml
+Subject: RE: [Crash-utility] "cannot access vmalloc'd module memory" when loading kdump'ed vmcore in crash
 
 Hi Dave (and kexec list),
 
@@ -594,6 +605,11 @@ Thanks,
 
 
 
+
+--
+Crash-utility mailing list
+Crash-utility@redhat.com
+https://www.redhat.com/mailman/listinfo/crash-utility
 
 --
 Crash-utility mailing list
