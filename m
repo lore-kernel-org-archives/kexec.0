@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KmskR-0000b2-N9
-	for kexec@lists.infradead.org; Mon, 06 Oct 2008 16:15:52 +0000
-From: "Worth, Kevin" <kevin.worth@hp.com>
-Date: Mon, 6 Oct 2008 16:15:37 +0000
-Subject: RE: [Crash-utility] "cannot access vmalloc'd module memory" when
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kmvv9-0002IL-RR
+	for kexec@lists.infradead.org; Mon, 06 Oct 2008 19:39:08 +0000
+Received: from int-mx2.corp.redhat.com (int-mx2.corp.redhat.com [172.16.27.26])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id m96Jd7fc020455
+	for <kexec@lists.infradead.org>; Mon, 6 Oct 2008 15:39:07 -0400
+Date: Mon, 6 Oct 2008 15:39:05 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <2000408380.786281223321945939.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <1077541243.786041223321889818.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
+Subject: Re: [Crash-utility] "cannot access vmalloc'd module memory" when
 	loading kdump'ed vmcore in crash
-Message-ID: <28113A0489833849A1CF9EC16F4215434649AA1869@GVW1097EXB.americas.hpqcorp.net>
-References: <28113A0489833849A1CF9EC16F42154346498C2A63@GVW1097EXB.americas.hpqcorp.net>,
-	<2100183.613951223305838657.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <2100183.613951223305838657.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
-Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -25,316 +25,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,	maintenance and development" <crash-utility@redhat.com>
+To: "Discussion list for crash utility usage,
+	maintenance and development" <crash-utility@redhat.com>
 Cc: kexec-ml <kexec@lists.infradead.org>
 
-Dave,
-
-That does seem pretty strange that the physical address is coming out beyond the 4GB mark and that the read actually succeeds. Just checked on the Ubuntu patches to the 2.6.20 kernel ( http://archive.ubuntu.com/ubuntu/pool/main/l/linux-source-2.6.20/linux-source-2.6.20_2.6.20-17.39.diff.gz ) and no mention of mem.c or either of those two functions.
-
-Let me try the kexec PAGE_OFFSET modification today or tomorrow and reply back on how it goes. If that produces no change I'll try do a re-run of the previous email's process with some more careful attention paid (that I get a vtop of everything and that my context examples are the same process).
-
--Kevin
-________________________________________
-From: crash-utility-bounces@redhat.com [crash-utility-bounces@redhat.com] On Behalf Of Dave Anderson [anderson@redhat.com]
-Sent: Monday, October 06, 2008 8:10 AM
-To: Discussion list for crash utility usage,    maintenance and development
-Cc: kexec-ml
-Subject: Re: [Crash-utility] "cannot access vmalloc'd module memory" when       loading kdump'ed vmcore in crash
 
 ----- "Kevin Worth" <kevin.worth@hp.com> wrote:
 
-OK, let's skip the user-space angle for now, because I keep
-forgetting that you are running with /dev/mem as the memory
-source.  And there is an inconsistency with your debug output
-that I cannot explain.
+> Dave,
+> 
+> That does seem pretty strange that the physical address is coming out
+> beyond the 4GB mark and that the read actually succeeds. Just checked
+> on the Ubuntu patches to the 2.6.20 kernel (
+> http://archive.ubuntu.com/ubuntu/pool/main/l/linux-source-2.6.20/linux-source-2.6.20_2.6.20-17.39.diff.gz
+> ) and no mention of mem.c or either of those two functions.
 
-As I mentioned before, the /dev/mem driver has this immediate
-restriction in "drivers/char/mem.c":
 
+Hmmm -- I do see one thing with the /dev/mem driver that could
+be an explanation.  Maybe...
+
+Prior to the read() call to /dev/mem, crash does an llseek() to
+the target physical address, which gets stored in the open file
+structure's file.f_pos member, which is a 64-bit loff_t.  Then when
+the subsequent read() call is made, the file.f_pos member gets 
+passed by reference to the /dev/mem driver's read_mem() function 
+via the "ppos" argument: 
+ 
   static ssize_t read_mem(struct file * file, char __user * buf,
                           size_t count, loff_t *ppos)
   {
           unsigned long p = *ppos;
           ssize_t read, sz;
           char *ptr;
-
+  
           if (!valid_phys_addr_range(p, count))
                   return -EFAULT;
-          ...
+  
+But its value is then pulled from *ppos into a 32-bit unsigned long 
+"p" variable, which is what gets used from then on.  So it looks like
+the high 1-bit from a greater-than-4GB (0x100000000) physical address 
+would get stripped, and therefore would erroneously bypass the 
+valid_phys_addr_range() check.
 
-where for x86, it looks like this:
+So in your case, physical addresses from ~3GB-up-to-4GB would 
+be rejected, but those at and above 4GB would be inadvertently
+accepted.  However, if that were the case, the *wrong* physical address
+would be accessed -- but your "module" reads seemingly return the correct
+data!  So I still don't get it...
 
-  static inline int valid_phys_addr_range(unsigned long addr, size_t count)
-  {
-          if (addr + count > __pa(high_memory))
-                  return 0;
+I haven't tinkered with the 32-bit /dev/mem driver in years, because 
+Red Hat not only has the "high_memory" restriction, it also has a 
+devmem_is_allowed() function that further restricts /dev/mem to the 
+first 256 pages (1MB) of physical memory.  (I note that upstream kernels
+have recently added a CONFIG_STRICT_DEVMEM config option to do the same 
+thing.)  And, FYI, the Red Hat /dev/crash "replacement-for-/dev/mem" driver 
+correctly reads *ppos into a u64.
 
-          return 1;
+So when you test this again on your live system, after printing the
+module via "p <virtual-address-of-module>", do a vtop of the 
+<virtual-address-of-module>, take the translated-to physical address
+and dump it to verify the contents.  Like this:
+  
+  crash> p modules
+  modules = $2 = {
+    next = 0xf8bf5904, 
+    prev = 0xf8836004
   }
+  crash> module 0xf8bf5900
+  struct module {
+    state = MODULE_STATE_LIVE, 
+    list = {
+      next = 0xf8a60d84, 
+      prev = 0xc06787b0
+    }, 
+    name = "crash"
+    mkobj = {
+      kobj = {
+        k_name = 0xf8bf594c "crash", 
+        name = "crash", 
+        kref = {
+          refcount = {
+            counter = 2
+          }
+        }, 
+    ...
+  crash> vtop 0xf8bf5900
+  VIRTUAL   PHYSICAL
+  f8bf5900  2412c900
+  ...
+  crash> rd -p 2412c900 30
+  2412c900:  00000000 f8a60d84 c06787b0 73617263   ..........g.cras
+  2412c910:  00000068 00000000 00000000 00000000   h...............
+  2412c920:  00000000 00000000 00000000 00000000   ................
+  2412c930:  00000000 00000000 00000000 00000000   ................
+  2412c940:  00000000 00000000 f8bf594c 73617263   ........LY..cras
+  2412c950:  00000068 00000000 00000000 00000000   h...............
+  2412c960:  00000002 c06783e8 f8a60de4 c06783f4   ......g.......g.
+  2412c970:  c06783e0 00000000                     ..g.....
+  crash>
 
-That restricts is from reading "highmem", which is the extent
-of physical memory that can be unity-mapped, which means that
-the kernel can directly access it by simply adding the PAGE_OFFSET
-value to the physical address.  In your case, your PAGE_OFFSET is
-0x40000000.  With your 1G/3G split, you've got 3GB of kernel virtual
-address space that you can directly access, minus 128MB at the top that
-is used for the vmalloc() address range.  (3GB - 128MB) is 0xb8000000.
-Therefore, your "high_memory" maximum unity-mapped kernel virtual
-address is (0xb8000000 + PAGE_OFFSET), or in your case is 0xf8000000,
-your high_memory value is 0xf8000000.
+Lastly, try this set of crash commands on your live system:
+  
+  rd -p 0
+  rd -p 0x20000000
+  rd -p 0x40000000
+  rd -p 0x60000000
+  rd -p 0x80000000
+  rd -p 0xa0000000
+  rd -p 0xb8000000
+  rd -p 0xc0000000
+  rd -p 0xe0000000
+  rd -p 0x100000000
+  rd -p 0x120000000
+  rd -p 0x140000000
+  
+Theoretically, anything at and above 0xb8000000 should fail.  
 
-In any case, on your live system, whenever a crash utility readmem()
-is done that accesses a physical address beyond 0xb8000000, it *should*
-get back the EFAULT above and fail, and therefore the crash command
-making the readmem() fails.
+> Let me try the kexec PAGE_OFFSET modification today or tomorrow and
+> reply back on how it goes. If that produces no change I'll try do a
+> re-run of the previous email's process with some more careful
+> attention paid (that I get a vtop of everything and that my context
+> examples are the same process).
 
-Accordingly, when you did this on your live system:
+OK fine...
 
-> crash> vm -p
-> PID: 32227  TASK: 47bc8030  CPU: 0   COMMAND: "crash"
->    MM       PGD      RSS    TOTAL_VM
-> f7e67040  5fddfe00  63336k   67412k
->   VMA       START      END    FLAGS  FILE
-> f3ed61d4   8048000   83e5000   1875  /root/crash
-> VIRTUAL   PHYSICAL
-> vm: read error: physical address: 10b60b000  type: "page table"
+Thanks,
+  Dave
 
-It ended up translating the first user virtual address (8048000),
-requiring a page-table translation, and ended up trying to access
-a page table page at physical address 0x10b60b000, which /dev/mem
-did not allow, because you got a "read error".
-
-However -- and this is what I cannot explain -- the above can also
-happen on a live system when accessing vmalloc() kernel virtual space
-as well *if* any PTE or page table read to make the translation, or
-*if* the ending physical page itself, are beyond the /dev/mem restriction
-(again, which should be 0xb8000000 in your case).
-
-So when you did this on your live system, you referenced the vmalloc
-address of your custom module at address 0xf9088280, and successfully
-read and displayed its contents:
-
->
-> crash> p modules
-> modules = $2 = {
->   next = 0xf9088284,
->   prev = 0xf8842104
-> }
-> crash> module 0xf9088280
-> struct module {
->   state = MODULE_STATE_LIVE,
->   list = {
->     next = 0xf8ff9d84,
->     prev = 0x403c63a4
->   },
->   name = "custom_lkm\000\000\000\000\000\000\000\000\000\000\000\000\000\000\00
-> 0\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\00
-> 0\000\000\000\000\000\000\000\000\000\000\000\000\000",
->   mkobj = {
->     kobj = {
->       k_name = 0xf90882cc "custom_lkm",
->       name = "custom_lkm\000\000\000\000\000\000\000\000",
->       kref = {
->         refcount = {
->           counter = 3
->         }
->       },
->       entry = {
->         next = 0x403c6068,
->         prev = 0xf8ff9de4
->       },
-> ...
->
-
-But when you did vtop of 0xf9088280, it ended up translating
-to 119b98000, which is well beyond 4GB (never mind 0xb8000000), so
-/dev/mem should not have been able to read it:
-
->
-> crash> vtop 0xf9088280
-> VIRTUAL   PHYSICAL
-> f9088280  119b98280
->
-> PAGE DIRECTORY: 4044b000
->   PGD: 4044b018 => 6001
->   PMD:     6e40 => 1d515067
->   PTE: 1d515440 => 119b98163
->  PAGE: 119b98000
->
->    PTE     PHYSICAL   FLAGS
-> 119b98163  119b98000  (PRESENT|RW|ACCESSED|DIRTY|GLOBAL)
->
-
-By any chance has the /dev/mem driver been modified on your kernel?
-
-In any case, I can't explain why you are apprently able to access
-physical addresses beyond your "high_memory"?  an.
-
-Anyway, the ext3 translation is useless without the accompanying "vtop":
-
->
-> crash> mod | grep ext3
-> f88c8000  ext3             132616  (not loaded)  [CONFIG_KALLSYMS]
->
-> ... [ snip ] ...
->
-> (Realized afterward that I forgot to vtop ext3. Let me know if it's needed and I can repeat this procedure)
->
-
-And the "bash" vm output only makes sense with respect to
-its output on the live system:
-
-> >From dump file:
->
-> crash> vm
-> PID: 4323   TASK: 47be0a90  CPU: 0   COMMAND: "bash"
->    MM       PGD      RSS    TOTAL_VM
-> 5d683580  5d500dc0  2616k    3968k
->   VMA       START      END    FLAGS  FILE
-> 5fc2aac4   8048000   80ee000   1875  /bin/bash
-> 5fe5f0cc   80ee000   80f3000 101877  /bin/bash
-> ...
->
->
-> crash> vm -p
-> PID: 4323   TASK: 47be0a90  CPU: 0   COMMAND: "bash"
->    MM       PGD      RSS    TOTAL_VM
-> 5d683580  5d500dc0  2616k    3968k
->   VMA       START      END    FLAGS  FILE
-> 5fc2aac4   8048000   80ee000   1875  /bin/bash
-> VIRTUAL   PHYSICAL
-> 8048000   FILE: /bin/bash  OFFSET: 0
-> 8049000   FILE: /bin/bash  OFFSET: 1000
-> 804a000   FILE: /bin/bash  OFFSET: 2000
-> ...no errors, lots of output
->
-
-But getting back to vmalloc'd module space, your access of the module
-at vmalloc-address-f9088280/physical-address-119b98000 showed that
-it's getting back a page of zeroes, while accessing the same physical
-address (0x119b98000) the you successfully read (but how?) on the live
-system:
-
->
-> crash> modules
-> modules = $2 = {
->   next = 0xf9088284,
->   prev = 0xf8842104
-> }
->
-> crash> module 0xf9088280
-> struct module {
->   state = MODULE_STATE_LIVE,
->   list = {
->     next = 0x0,
->     prev = 0x0
->   },
->   name = "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\0
-> 00\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\0
-> 00\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\0
-> 00\000",
->   mkobj = {
->     kobj = {
->       k_name = 0x0,
->       name = "\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\0
-> 00\000\000",
->       kref = {
->         refcount = {
->           counter = 0
->         }
->       },
->       entry = {
->         next = 0x0,
->         prev = 0x0
-> ...
->
-> crash> vtop 0xf9088280
-> VIRTUAL   PHYSICAL
-> f9088280  119b98280
->
-> PAGE DIRECTORY: 4044b000
->   PGD: 4044b018 => 6001
->   PMD:     6e40 => 1d515067
->   PTE: 1d515440 => 119b98163
->  PAGE: 119b98000
->
->    PTE     PHYSICAL   FLAGS
-> 119b98163  119b98000  (PRESENT|RW|ACCESSED|DIRTY|GLOBAL)
->
->   PAGE     PHYSICAL   MAPPING    INDEX CNT FLAGS
-> 47337300  119b98000         0         0  1 80000000
-
-And so even though I'd like to point out that analogous readmem()
-on the dumpfile reads the same physical location -- and seems to
-just return zeroes -- is not enough for me to simply state that
-it's a problem with kexec/kdump.
-
-Because, again, I cannot explain how you are able to access
-physical address 0x119b98000 from /dev/mem on your live
-system?
-
-Can you check whether your kernel source has modified
-the read_mem() or valid_phys_addr_range() functions?
-If they unchanged from what I showed above (from 2.6.20),
-then I'm stumped, because it makes no sense to me how you
-can read from those physical addresses on your live system.
-
-For verification, if you do this:
-
-  crash> p high_memory
-
-it should show 0xf8000000.  If you then do a vtop of 0xf8000000,
-it will simply end up stripping off the PAGE_OFFSET of 0x40000000,
-resulting in the maximum-accessible physical address of 0xb8000000.
-And if you can do this:
-
-  crash> rd -p 0xb8000000
-
-it should fail -- as should any address equal to or above it.
-But your output above that translates the module vmalloc
-addresses seemingly reads physical addresses well beyond the
-4GB (0x100000000).  And that's what I cannot begin to explain.
-
-So I'm running out of ideas here...
-
-One thing I can suggest is to rebuild your kexec-tools package
-that you're using, and correct the PAGE_OFFSET value to equal
-your system's.  The version of "kexec/arch/i386/crashdump-x86.h"
-that we (Red Hat) are using looks like this:
-
-  #ifndef CRASHDUMP_X86_H
-  #define CRASHDUMP_X86_H
-
-  struct kexec_info;
-  int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
-                                  unsigned long max_addr, unsigned long min_base);
-
-  #define PAGE_OFFSET     0xc0000000
-  #define __pa(x)         ((unsigned long)(x)-PAGE_OFFSET)
-
-  #define __VMALLOC_RESERVE       (128 << 20)
-  #define MAXMEM                  (-PAGE_OFFSET-__VMALLOC_RESERVE)
-
-  #define CRASH_MAX_MEMMAP_NR     (KEXEC_MAX_SEGMENTS + 1)
-  #define CRASH_MAX_MEMORY_RANGES (MAX_MEMORY_RANGES + 2)
-
-  /* Backup Region, First 640K of System RAM. */
-  #define BACKUP_SRC_START        0x00000000
-  #define BACKUP_SRC_END          0x0009ffff
-  #define BACKUP_SRC_SIZE (BACKUP_SRC_END - BACKUP_SRC_START + 1)
-
-  #endif /* CRASHDUMP_X86_H */
-
-Try rebuilding your package with PAGE_OFFSET defined as 0x40000000,
-and then see what happens.
-
-Dave
-
---
-Crash-utility mailing list
-Crash-utility@redhat.com
-https://www.redhat.com/mailman/listinfo/crash-utility
+ 
 
 _______________________________________________
 kexec mailing list
