@@ -1,19 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kmz9Q-00047R-9G
-	for kexec@lists.infradead.org; Mon, 06 Oct 2008 23:06:05 +0000
-Date: Tue, 7 Oct 2008 10:06:02 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch] ia64: make PA() work for both physical identity-mapped
-	virtual addresses
-Message-ID: <20081006230601.GA29595@verge.net.au>
-References: <200810060924.04033.bjorn.helgaas@hp.com>
-	<20081006213208.GA10959@verge.net.au>
-	<200810061600.49929.bjorn.helgaas@hp.com>
+Received: from e23smtp03.au.ibm.com ([202.81.18.172])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KnC2e-0001iA-6C
+	for kexec@lists.infradead.org; Tue, 07 Oct 2008 12:51:56 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp03.au.ibm.com (8.13.1/8.13.1) with ESMTP id m97Cocpm024080
+	for <kexec@lists.infradead.org>; Tue, 7 Oct 2008 23:50:38 +1100
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m97Cpqj6292664
+	for <kexec@lists.infradead.org>; Tue, 7 Oct 2008 23:51:52 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m97CpqNb030279
+	for <kexec@lists.infradead.org>; Tue, 7 Oct 2008 23:51:52 +1100
+Message-ID: <48EB5B68.8010401@in.ibm.com>
+Date: Tue, 07 Oct 2008 18:21:52 +0530
+From: Chandru <chandru@in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200810061600.49929.bjorn.helgaas@hp.com>
+Subject: kdump: quad core Opteron
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,54 +31,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bjorn.helgaas@hp.com>
-Cc: "Lombard, David N" <dnlombar@ichips.intel.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Oct 06, 2008 at 04:00:49PM -0600, Bjorn Helgaas wrote:
-> On Monday 06 October 2008 3:32:10 pm Simon Horman wrote:
-> > On Mon, Oct 06, 2008 at 09:24:03AM -0600, Bjorn Helgaas wrote:
-> > > The EFI Runtime Services Table contains pointers to ia64 function
-> > > descriptors.  On existing, pre-Tiano, firmware, SetVirtualAddressMap()
-> > > converts *all* these pointers from physical to virtual.  On Tiano-based
-> > > firmware, the pointer to the SetVirtualAddressMap() function descriptor
-> > > is not converted, so it remains a physical pointer.
-> > >
-> > > The ia64 kexec purgatory patches the SetVirtualAddressMap() function
-> > > descriptor so that when the new kernel calls SetVirtualAddressMap(), it
-> > > never reaches firmware.  Instead, it calls a dummy function that just
-> > > returns success.
-> > >
-> > > Purgatory runs in physical mode, so it must convert the pointer from the
-> > > RuntimeServicesTable to a physical address.  This patch makes that
-> > > conversion work both for old firmware (where the pointer is an identity-
-> > > mapped virtual address) and new Tiano firmware (where the pointer is a
-> > > physical address).
-> > >
-> > > Without this patch, kexec on Tiano firmware causes an MCA because
-> > > ia64_env_setup() subtracts PAGE_OFFSET from a physical address and ends
-> > > up with an invalid physical address.  Referencing that address causes
-> > > the MCA.
-> > >
-> > > Signed-off-by: Bjorn Helgaas <bjorn.helgaas@hp.com>
-> >
-> > Thanks Bjorn, applied.
-> 
-> Thanks!
-> 
-> Any idea when you'll make another kexec-tools release?  I have a
-> Red Hat feature request in for RHEL6, and they'll need to know
-> what kexec-tools version to look for.  RH will get the latest
-> for RHEL6, but I really don't know when they'll start putting
-> that together.
-> 
-> https://bugzilla.redhat.com/show_bug.cgi?id=463477
+kdump on a quad core Opteron blade machine doesn't give a complete 
+vmcore on the system.   All works well until we attempt to copy 
+/proc/vmcore to some target place ( disk , n/w ). The system immediately 
+resets without any OS messages after having copied few mb's of vmcore 
+file.  Problem also occurs with 2.6.27-rc8 and latest kexec-tools.  If 
+we pass 'mem=4G' as boot parameter to the first kernel, then kdump 
+succeeds in copying a readable vmcore to /var/crash.
 
-I'm happy to make one soon if that helps.
+[root@abc ~]# uname -a
+Linux abc 2.6.27-rc8 #2 SMP Tue Oct 7 08:05:46 EDT 2008 x86_64 x86_64 
+x86_64 GNU/Linux
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+Chandru
 
 
 _______________________________________________
