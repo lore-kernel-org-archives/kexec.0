@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnCGt-0001gV-0Y
-	for kexec@lists.infradead.org; Tue, 07 Oct 2008 13:06:39 +0000
-Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id B005F45D36
-	for <kexec@lists.infradead.org>; Tue,  7 Oct 2008 15:06:36 +0200 (CEST)
-Date: Tue, 7 Oct 2008 15:06:36 +0200
-From: Bernhard Walle <bwalle@suse.de>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KnCXn-0003gZ-12
+	for kexec@lists.infradead.org; Tue, 07 Oct 2008 13:24:07 +0000
+Date: Tue, 7 Oct 2008 09:24:01 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: kdump: quad core Opteron
-Message-ID: <20081007150636.287cc364@halley.suse.de>
-In-Reply-To: <48EB5B68.8010401@in.ibm.com>
+Message-ID: <20081007132401.GA4007@redhat.com>
 References: <48EB5B68.8010401@in.ibm.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <48EB5B68.8010401@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +23,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Chandru <chandru@in.ibm.com>
+Cc: kexec@lists.infradead.org
 
-* Chandru [2008-10-07 18:21]:
->
-> kdump on a quad core Opteron blade machine doesn't give a complete 
-> vmcore on the system.   All works well until we attempt to copy 
-> /proc/vmcore to some target place ( disk , n/w ). The system immediately 
-> resets without any OS messages after having copied few mb's of vmcore 
-> file.  Problem also occurs with 2.6.27-rc8 and latest kexec-tools.  If 
-> we pass 'mem=4G' as boot parameter to the first kernel, then kdump 
+On Tue, Oct 07, 2008 at 06:21:52PM +0530, Chandru wrote:
+> kdump on a quad core Opteron blade machine doesn't give a complete  
+> vmcore on the system.   All works well until we attempt to copy  
+> /proc/vmcore to some target place ( disk , n/w ). The system immediately  
+> resets without any OS messages after having copied few mb's of vmcore  
+> file.  Problem also occurs with 2.6.27-rc8 and latest kexec-tools.  If  
+> we pass 'mem=4G' as boot parameter to the first kernel, then kdump  
 > succeeds in copying a readable vmcore to /var/crash.
+>
 
-Maybe extend the copy process to print out the address, and then look
-at which address it crashes. Then look in the memory map, maybe there's
-something special there.
+Hi Chandru,
 
-Regards,
-Bernhard
--- 
-Bernhard Walle, SUSE Linux Products GmbH, Architecture Development
+How much memory this system has got. Can you also paste the output of 
+/proc/iomem of first kernel.
+
+Does this system has GART? So looks like we are accessing some memory area
+which platform does not like. (We saw issues with GART in the past.)
+
+Can you also provide /proc/vmcore ELF header (readelf output), in both
+the cases (mem=4G and without that).
+
+You can try putting some printk in /proc/vmcore code and see which
+physical memory area you are accessing when system goes bust. If in all
+the failure cases it is same physical memory area, then we can try to find
+what's so special about it.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
