@@ -1,26 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp06.in.ibm.com ([59.145.155.6] helo=e28esmtp06.in.ibm.com)
+Received: from e23smtp02.au.ibm.com ([202.81.18.163])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnZSB-0002oN-VR
-	for kexec@lists.infradead.org; Wed, 08 Oct 2008 13:51:52 +0000
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
-	by e28esmtp06.in.ibm.com (8.13.1/8.13.1) with ESMTP id m98DpmkI003413
-	for <kexec@lists.infradead.org>; Wed, 8 Oct 2008 19:21:48 +0530
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
-	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m98DpmjF954502
-	for <kexec@lists.infradead.org>; Wed, 8 Oct 2008 19:21:48 +0530
-Received: from d28av04.in.ibm.com (loopback [127.0.0.1])
-	by d28av04.in.ibm.com (8.13.1/8.13.3) with ESMTP id m98Dpm5p015985
-	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 00:51:48 +1100
-Message-ID: <48ECBAF5.5010309@in.ibm.com>
-Date: Wed, 08 Oct 2008 19:21:49 +0530
+	id 1Knb2r-000421-ND
+	for kexec@lists.infradead.org; Wed, 08 Oct 2008 15:33:50 +0000
+Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
+	by e23smtp02.au.ibm.com (8.13.1/8.13.1) with ESMTP id m98FX8xJ014816
+	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 02:33:08 +1100
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m98FXj30189792
+	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 02:33:46 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m98FXjHm000724
+	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 02:33:45 +1100
+Message-ID: <48ECD2D5.6080307@in.ibm.com>
+Date: Wed, 08 Oct 2008 21:03:41 +0530
 From: Chandru <chandru@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: kdump: quad core Opteron
-References: <48EB5B68.8010401@in.ibm.com> <20081007132401.GA4007@redhat.com>
-	<1223395191.2215.179.camel@amd.troyhebe>
-In-Reply-To: <1223395191.2215.179.camel@amd.troyhebe>
+Subject: Re: [PATCH 1/3] kexec/kdump: read crash memory ranges from drconf
+	memory
+References: <200809241719.07464.chandru@in.ibm.com>
+	<20081008014055.GA22396@verge.net.au>
+	<20081008015622.GB22396@verge.net.au>
+In-Reply-To: <20081008015622.GB22396@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,52 +36,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bob.montgomery@hp.com
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-Bob Montgomery wrote:
-> Here's the README for the patch:
+Simon Horman wrote:
+
+> On Wed, Oct 08, 2008 at 12:40:57PM +1100, Simon Horman wrote:
 >
-> This patch changes the initialization of the GART (in
-> pci-gart.c:init_k8_gatt) to set the DisGartCpu bit in the GART Aperture
-> Control Register.  Setting the bit Disables requests from the CPUs from
-> accessing the GART.  In other words, CPU memory accesses within the
-> range of addresses in the aperture will not cause the GART to perform an
-> address translation.  The aperture area was already being unmapped at
-> the kernel level with clear_kernel_mapping() to prevent accesses from
-> the CPU, but that kernel level unmapping is not in effect in the kexec'd
-> kdump kernel.  By disabling the CPU-side accesses within the GART, which
-> does persist through the kexec of the kdump kernel, the kdump kernel is
-> prevented from interacting with the GART during accesses to the dump
-> memory areas which include the address range of the GART aperture.
-> Although the patch can be applied to the kdump kernel, it is not
-> exercised there because the kdump kernel doesn't attempt to initialize
-> the GART.
->
-> Bob Montgomery
-> working at HP
+> [snip]	
 >
 >   
+>>> --- kexec-tools-orig/kexec/arch/ppc64/crashdump-ppc64.h	2008-09-24 
+>>> 14:46:55.000000000 +0530
+>>> +++ kexec-tools/kexec/arch/ppc64/crashdump-ppc64.h	2008-09-16 
+>>> 19:18:57.000000000 +0530
+>>> @@ -28,4 +28,7 @@ extern uint64_t crash_size;
+>>>  extern unsigned int rtas_base;
+>>>  extern unsigned int rtas_size;
+>>>  
+>>> +uint64_t lmb_size;
+>>> +unsigned int num_of_lmbs;
+>>> +
+>>>       
+>> I am a little confused about why these variables need to be global
+>> as they only seem to be used inside get_crash_memory_ranges().
+>> I am also a little confused about how they are initialised.
+>>     
+>
+> Ok, looking further I see that these are also used
+> by code introduced in patch 2 and are initialised in
+> code added by patch 3. It would be nicer have them
+> intitalised in this patch as I'm not sure that
+> the code will work sensibly with just this patch
+> or just this patch and patch 2 applied, which may
+> be important for bisection in the future.
+>
+>   
+Hello Simon,
 
-I made the following changes and it seems like it is working.
+Thanks for reviewing the patch. The reference to lmb_size and 
+num_of_lmbs exists in all the three patches. Either all these patches 
+have to be applied together or they will have to be removed completely 
+if we were to bisect the code. We could have one big patch from all 
+these patches instead of three. Pls let me know if that makes it easier 
+to locate any problems in the future. Also the 'static' scope on cstart 
+and cend and memory_ranges could be removed in crashdump-ppc64.c. They 
+can be let to have a program scope. Pls let me know, I will send the 
+same patch removing these scopes.
 
---- linux-2.6.27-rc8/include/asm-x86/gart.h.orig        2008-10-08 
-09:41:23.000000000 -0400
-+++ linux-2.6.27-rc8/include/asm-x86/gart.h     2008-10-08 
-09:44:35.000000000 -0400
-@@ -42,7 +42,8 @@ static inline void enable_gart_translati
-         /* Enable GART translation for this hammer. */
-         pci_read_config_dword(dev, AMD64_GARTAPERTURECTL, &ctl);
-         ctl |= GARTEN;
--        ctl &= ~(DISGARTCPU | DISGARTIO);
-+       ctl |= DISGARTCPU;
-+       ctl &= ~(DISGARTIO);
-         pci_write_config_dword(dev, AMD64_GARTAPERTURECTL, ctl);
- }
-
-The system doesn't reset now while copying /proc/vmcore. Thanks!
-
+Thanks,
 Chandru
+
 
 _______________________________________________
 kexec mailing list
