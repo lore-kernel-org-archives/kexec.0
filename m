@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnhbI-00070t-J6
-	for kexec@lists.infradead.org; Wed, 08 Oct 2008 22:33:49 +0000
-Received: from yukiko.kent.sydney.vergenet.net
-	(124-170-201-186.dyn.iinet.net.au [124.170.201.186])
-	by kirsty.vergenet.net (Postfix) with ESMTP id 85234240A3
-	for <kexec@lists.infradead.org>; Thu,  9 Oct 2008 09:33:47 +1100 (EST)
-Date: Thu, 9 Oct 2008 09:33:47 +1100
+	id 1KnhfW-0007c4-OM
+	for kexec@lists.infradead.org; Wed, 08 Oct 2008 22:38:11 +0000
+Date: Thu, 9 Oct 2008 09:38:09 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch] Include all source files exactly once
-Message-ID: <20081008223345.GK16178@verge.net.au>
+Subject: Re: [PATCH] Cross compile?
+Message-ID: <20081008223808.GM16178@verge.net.au>
+References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
+	<20080521054705.GA3714@verge.net.au>
+	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
+	<200806041042.06607.jk@ozlabs.org>
+	<20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,179 +27,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Jeremy Kerr <jk@ozlabs.org>, kexec@lists.infradead.org, "Lombard, David N" <dnlombar@ichips.intel.com>
 
-This patch fixes two problems.
+On Mon, Jun 09, 2008 at 08:17:02AM -0700, Lombard, David N wrote:
+> On Wed, Jun 04, 2008 at 10:42:06AM +0800, Jeremy Kerr wrote:
+> > Hi David,
+> > 
+> > (sorry about the late reply, been on holidays for the last 3 weeks..)
+> > 
+> > > ./configure --build=`uname -m`-linux-uclibc \
+> > >           --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
+> > >           CC=uclibc-gcc BUILD_CC=host-gcc
+> > 
+> > Ah, there's the problem. You're specifying CC on the configure line, 
+> > which is overriding it for *everything*. Which is why the 
+> > CC=$(BUILD_CC) assignment in util/Makefile isn't working for you.
+> 
+> I'm perfectly happy to admit I've horked this...
+> 
+> > I'll see if I can work out a proper fix...
+> > 
+> > Also, why are you setting --build to -uclibc?
+> 
+> Some of the above came from kboot; everything else is my own fault :)
+> 
+> kexec is being built on a glibc-based x86 for use on a uclibc-based
+> x86.
 
-1. It ensures that the following files are always included in the
-   tarball, regardless of what architecture it is built on
-	kexec/proc_iomem.c
-	kexec/virt_to_phys.c
-	kexec/add_segment.c
-	kexec/add_buffer.c
-	kexec/arch_reuse_initrd.c
+I know that this is a bit of a blast from the past,
+but I believe that this has been fixed by Jeremy.
 
-2. It ensures that archetecture specific files are only
-   included in the tarball once.
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
---- 
-This patch applies on top of Sebastian Siewior's
-"powerpc: dtb and purgatory support for ppc32" patch.
-
-Index: kexec-tools/kexec/Makefile
-===================================================================
---- kexec-tools.orig/kexec/Makefile	2008-10-08 16:34:16.000000000 +1100
-+++ kexec-tools/kexec/Makefile	2008-10-08 16:58:41.000000000 +1100
-@@ -7,41 +7,42 @@ $(PURGATORY_HEX_C): $(PURGATORY) $(BIN_T
- 	$(MKDIR) -p $(@D)
- 	$(BIN_TO_HEX) purgatory < $(PURGATORY) > $@
- 
--KEXEC_SRCS =
--KEXEC_GENERATED_SRCS =
-+BASE_KEXEC_SRCS =  kexec/kexec.c
-+BASE_KEXEC_SRCS += kexec/ifdown.c
-+BASE_KEXEC_SRCS += kexec/kexec-elf.c
-+BASE_KEXEC_SRCS += kexec/kexec-elf-exec.c
-+BASE_KEXEC_SRCS += kexec/kexec-elf-core.c
-+BASE_KEXEC_SRCS += kexec/kexec-elf-rel.c
-+BASE_KEXEC_SRCS += kexec/kexec-elf-boot.c
-+BASE_KEXEC_SRCS += kexec/kexec-iomem.c
-+BASE_KEXEC_SRCS += kexec/firmware_memmap.c
-+BASE_KEXEC_SRCS += kexec/crashdump.c
-+BASE_KEXEC_SRCS += kexec/crashdump-xen.c
-+BASE_KEXEC_SRCS += kexec/phys_arch.c
- 
--KEXEC_SRCS += kexec/kexec.c
--KEXEC_SRCS += kexec/ifdown.c
--KEXEC_SRCS += kexec/kexec-elf.c
--KEXEC_SRCS += kexec/kexec-elf-exec.c
--KEXEC_SRCS += kexec/kexec-elf-core.c
--KEXEC_SRCS += kexec/kexec-elf-rel.c
--KEXEC_SRCS += kexec/kexec-elf-boot.c
--KEXEC_SRCS += kexec/kexec-iomem.c
--KEXEC_SRCS += kexec/firmware_memmap.c
--KEXEC_SRCS += kexec/crashdump.c
--KEXEC_SRCS += kexec/crashdump-xen.c
--KEXEC_SRCS += kexec/phys_arch.c
-+KEXEC_GENERATED_SRCS = $(PURGATORY_HEX_C)
- 
--KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
--
--dist += kexec/Makefile $(KEXEC_SRCS) $(KEXEC_GENERATED_SRCS)	\
-+dist += kexec/Makefile $(BASE_KEXEC_SRCS) $(KEXEC_GENERATED_SRCS)	\
- 	kexec/crashdump-elf.c					\
- 	kexec/crashdump.h kexec/firmware_memmap.h		\
- 	kexec/kexec-elf-boot.h					\
- 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
--	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
-+	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8	\
-+	kexec/proc_iomem.c kexec/virt_to_phys.c			\
-+	kexec/add_segment.c kexec/add_buffer.c			\
-+	kexec/arch_reuse_initrd.c
- 
-+$(ARCH)_foreign_KEXEC_SRCS =
- $(ARCH)_PROC_IOMEM		= kexec/proc_iomem.c
--KEXEC_SRCS += $($(ARCH)_PROC_IOMEM)
-+$(ARCH)_foreign_KEXEC_SRCS += $($(ARCH)_PROC_IOMEM)
- $(ARCH)_VIRT_TO_PHYS		= kexec/virt_to_phys.c
--KEXEC_SRCS += $($(ARCH)_VIRT_TO_PHYS)
-+$(ARCH)_foreign_KEXEC_SRCS += $($(ARCH)_VIRT_TO_PHYS)
- $(ARCH)_ADD_SEGMENT		= kexec/add_segment.c
--KEXEC_SRCS += $($(ARCH)_ADD_SEGMENT)
-+$(ARCH)_foreign_KEXEC_SRCS += $($(ARCH)_ADD_SEGMENT)
- $(ARCH)_ADD_BUFFER		= kexec/add_buffer.c
--KEXEC_SRCS += $($(ARCH)_ADD_BUFFER)
-+$(ARCH)_foreign_KEXEC_SRCS += $($(ARCH)_ADD_BUFFER)
- $(ARCH)_ARCH_REUSE_INITRD	= kexec/arch_reuse_initrd.c
--KEXEC_SRCS += $($(ARCH)_ARCH_REUSE_INITRD)
-+$(ARCH)_foreign_KEXEC_SRCS += $($(ARCH)_ARCH_REUSE_INITRD)
- 
- include $(srcdir)/kexec/arch/alpha/Makefile
- include $(srcdir)/kexec/arch/arm/Makefile
-@@ -55,7 +56,8 @@ include $(srcdir)/kexec/arch/s390/Makefi
- include $(srcdir)/kexec/arch/sh/Makefile
- include $(srcdir)/kexec/arch/x86_64/Makefile
- 
--KEXEC_SRCS += $($(ARCH)_KEXEC_SRCS)
-+KEXEC_SRCS += $($(ARCH)_KEXEC_SRCS) $($(ARCH)_foreign_KEXEC_SRCS) \
-+	      $(BASE_KEXEC_SRCS)
- 
- KEXEC_OBJS = $(call objify, $(KEXEC_SRCS) $(KEXEC_GENERATED_SRCS))
- KEXEC_DEPS = $(call depify, $(KEXEC_OBJS))
-Index: kexec-tools/kexec/arch/ppc/Makefile
-===================================================================
---- kexec-tools.orig/kexec/arch/ppc/Makefile	2008-10-08 16:34:16.000000000 +1100
-+++ kexec-tools/kexec/arch/ppc/Makefile	2008-10-08 16:56:53.000000000 +1100
-@@ -7,7 +7,8 @@ ppc_KEXEC_SRCS += kexec/arch/ppc/kexec-e
- ppc_KEXEC_SRCS += kexec/arch/ppc/kexec-dol-ppc.c
- ppc_KEXEC_SRCS += kexec/arch/ppc/ppc-setup-simple.S
- ppc_KEXEC_SRCS += kexec/arch/ppc/ppc-setup-dol.S
--ppc_KEXEC_SRCS += kexec/arch/ppc64/fs2dt.c
-+
-+ppc_foreign_KEXEC_SRCS += kexec/arch/ppc64/fs2dt.c
- 
- dist += kexec/arch/ppc/Makefile $(ppc_KEXEC_SRCS)			\
- 	kexec/arch/ppc/kexec-ppc.h kexec/arch/ppc/ppc_asm.h		\
-Index: kexec-tools/kexec/arch/x86_64/Makefile
-===================================================================
---- kexec-tools.orig/kexec/arch/x86_64/Makefile	2008-10-08 16:34:16.000000000 +1100
-+++ kexec-tools/kexec/arch/x86_64/Makefile	2008-10-08 16:58:20.000000000 +1100
-@@ -1,14 +1,15 @@
- #
- # kexec x86_64 (linux booting linux)
- #
--x86_64_KEXEC_SRCS =  kexec/arch/i386/kexec-elf-x86.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-bzImage.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-multiboot-x86.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-beoboot-x86.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
--x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-x86-common.c
--x86_64_KEXEC_SRCS += kexec/arch/x86_64/crashdump-x86_64.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-elf-x86.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-bzImage.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-multiboot-x86.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-beoboot-x86.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
-+x86_64_foreign_KEXEC_SRCS += kexec/arch/i386/kexec-x86-common.c
-+
-+x86_64_KEXEC_SRCS =  kexec/arch/x86_64/crashdump-x86_64.c
- x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-x86_64.c
- x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-x86_64.c
- x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
-Index: kexec-tools/purgatory/Makefile
-===================================================================
---- kexec-tools.orig/purgatory/Makefile	2008-10-08 16:34:16.000000000 +1100
-+++ kexec-tools/purgatory/Makefile	2008-10-08 16:40:58.000000000 +1100
-@@ -8,12 +8,11 @@
- # or headers.
- 
- PURGATORY = purgatory/purgatory.ro
--PURGATORY_SRCS =
--PURGATORY_SRCS += purgatory/purgatory.c
--PURGATORY_SRCS += purgatory/printf.c
--PURGATORY_SRCS += purgatory/string.c
-+BASE_PURGATORY_SRCS =  purgatory/purgatory.c
-+BASE_PURGATORY_SRCS += purgatory/printf.c
-+BASE_PURGATORY_SRCS += purgatory/string.c
- 
--dist += purgatory/Makefile $(PURGATORY_SRCS)				\
-+dist += purgatory/Makefile $(BASE_PURGATORY_SRCS)			\
- 	purgatory/include/purgatory.h purgatory/include/string.h
- 
- include $(srcdir)/purgatory/arch/alpha/Makefile
-@@ -27,7 +26,7 @@ include $(srcdir)/purgatory/arch/s390/Ma
- include $(srcdir)/purgatory/arch/sh/Makefile
- include $(srcdir)/purgatory/arch/x86_64/Makefile
- 
--PURGATORY_SRCS+=$($(ARCH)_PURGATORY_SRCS)
-+PURGATORY_SRCS = $(BASE_PURGATORY_SRCS) $($(ARCH)_PURGATORY_SRCS)
- 
- PURGATORY_OBJS = $(call objify, $(PURGATORY_SRCS)) purgatory/sha256.o
- PURGATORY_DEPS = $(call depify, $(PURGATORY_OBJS))
 
 _______________________________________________
 kexec mailing list
