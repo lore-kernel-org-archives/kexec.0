@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnSOW-0000J9-Bd
-	for kexec@lists.infradead.org; Wed, 08 Oct 2008 06:19:36 +0000
-Date: Wed, 8 Oct 2008 17:19:35 +1100
+	id 1KnSrf-0007db-ML
+	for kexec@lists.infradead.org; Wed, 08 Oct 2008 06:49:44 +0000
+Date: Wed, 8 Oct 2008 17:49:41 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch] cris: add cris architecture to configure
-Message-ID: <20081008061933.GI22396@verge.net.au>
-References: <20080904140850.GC14660@edgar.se.axis.com>
-	<20080905004244.GA22365@verge.net.au>
-	<20080905092557.GA12335@edgar.se.axis.com>
-	<20081008061541.GF22396@verge.net.au>
+Subject: [patch] ia64: Order of operations bug in PT_LOAD segment reader
+Message-ID: <20081008064940.GA11893@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20081008061541.GF22396@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,38 +21,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Edgar E. Iglesias" <edgar.iglesias@axis.com>
-Cc: "Edgar E. Iglesias" <edgar@axis.com>, kexec@lists.infradead.org, jespern@axis.com
+To: linux-ia64@vger.kernel.org, kexec@lists.infradead.org
+Cc: Jay Lan <jlan@sgi.com>, Bernhard Walle <bwalle@suse.de>, "Luck,
+	Tony" <tony.luck@intel.com>
 
-# PATH=$PATH:/usr/local/cris/bin/ CC=crisv32-axis-linux-gnu-gcc \
-	./configure --host=crisv32-axis-linux-gnu
-configure: WARNING: If you wanted to set the --build type, don't use --host.
-    If a cross compiler is detected then cross compile mode will be used.
-checking build system type... i686-pc-linux-gnu
-checking host system type... cris-axis-linux-gnu
-checking target system type... cris-axis-linux-gnu
-configure: error: unsupported architecture cris
+This bug was discovered by Jay Lan and he also proposed this fix, however
+thee is some discussion about what if any related changes should be made at
+the same time.
 
+The bug comes about because the break statment was never executed because
+the if clause would bever be true because the if clause will never be true
+because &  has higher precedence than !=.
+
+My position on this is that with the if logic fixed, as per this patch, the
+break statment and the rest of the while() loop makes sense and should work
+as intended.
+
+As I understand it, Jay's position is that the code should be simplified,
+after all it never worked as intended.
+
+There is a related kernel bug that lead Jay to discover this problem.
+The kernel bug has been resolved by Tony Luck and was
+included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
+"[IA64] Put the space for cpu0 per-cpu area into .data section".
+
+Now that the kernel bug is out of the way, I am providing this patch to
+continue discussion on what to do on the kexec-tools side of things.  I do
+not intend to apply this patch until there is some conclusion in the
+discussion between Jay and myself.
+
+Cc: Jay Lan <jlan@sgi.com>
 Signed-off-by: Simon Horman <horms@verge.net.au>
----
- configure.ac |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
 
-I have added this patch to the kexec-tools git tree.
+Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:31:42.000000000 +1100
++++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:32:08.000000000 +1100
+@@ -91,7 +91,7 @@ static void add_loaded_segments_info(str
+ 	                if (phdr->p_type != PT_LOAD)
+ 	                        break;
+ 			if (loaded_segments[loaded_segments_num].end !=
+-				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
++				(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
+ 				break;
+ 			loaded_segments[loaded_segments_num].end +=
+ 				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
 
-diff --git a/configure.ac b/configure.ac
-index ff3b304..c9793b6 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -42,7 +42,7 @@ case $target_cpu in
- 	mips|mipsel )
- 		ARCH="mips"
- 		;;
--	crisv32 )
-+	cris|crisv32 )
- 		ARCH="cris"
- 		;;
- 	ia64|x86_64|alpha )
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+
 
 _______________________________________________
 kexec mailing list
