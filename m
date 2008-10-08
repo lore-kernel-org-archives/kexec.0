@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnSrf-0007db-ML
-	for kexec@lists.infradead.org; Wed, 08 Oct 2008 06:49:44 +0000
-Date: Wed, 8 Oct 2008 17:49:41 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch] ia64: Order of operations bug in PT_LOAD segment reader
-Message-ID: <20081008064940.GA11893@verge.net.au>
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KnTuf-0000Ww-5g
+	for kexec@lists.infradead.org; Wed, 08 Oct 2008 07:56:53 +0000
+From: Andreas Schwab <schwab@suse.de>
+Subject: Re: [patch] ia64: Order of operations bug in PT_LOAD segment reader
+References: <20081008064940.GA11893@verge.net.au>
+Date: Wed, 08 Oct 2008 09:56:49 +0200
+In-Reply-To: <20081008064940.GA11893@verge.net.au> (Simon Horman's message of
+	"Wed, 8 Oct 2008 17:49:41 +1100")
+Message-ID: <jeljwza5a6.fsf@sykes.suse.de>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,61 +19,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-ia64@vger.kernel.org, kexec@lists.infradead.org
-Cc: Jay Lan <jlan@sgi.com>, Bernhard Walle <bwalle@suse.de>, "Luck,
-	Tony" <tony.luck@intel.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, "Luck,
+	Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org, Jay Lan <jlan@sgi.com>
 
-This bug was discovered by Jay Lan and he also proposed this fix, however
-thee is some discussion about what if any related changes should be made at
-the same time.
+Simon Horman <horms@verge.net.au> writes:
 
-The bug comes about because the break statment was never executed because
-the if clause would bever be true because the if clause will never be true
-because &  has higher precedence than !=.
+> The bug comes about because the break statment was never executed because
+> the if clause would bever be true because the if clause will never be true
+> because &  has higher precedence than !=3D.
+                 ^^^^^^
+                 lower
 
-My position on this is that with the if logic fixed, as per this patch, the
-break statment and the rest of the while() loop makes sense and should work
-as intended.
+Andreas.
 
-As I understand it, Jay's position is that the code should be simplified,
-after all it never worked as intended.
+-- =
 
-There is a related kernel bug that lead Jay to discover this problem.
-The kernel bug has been resolved by Tony Luck and was
-included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
-"[IA64] Put the space for cpu0 per-cpu area into .data section".
-
-Now that the kernel bug is out of the way, I am providing this patch to
-continue discussion on what to do on the kexec-tools side of things.  I do
-not intend to apply this patch until there is some conclusion in the
-discussion between Jay and myself.
-
-Cc: Jay Lan <jlan@sgi.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
-Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
-===================================================================
---- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:31:42.000000000 +1100
-+++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:32:08.000000000 +1100
-@@ -91,7 +91,7 @@ static void add_loaded_segments_info(str
- 	                if (phdr->p_type != PT_LOAD)
- 	                        break;
- 			if (loaded_segments[loaded_segments_num].end !=
--				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
-+				(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
- 				break;
- 			loaded_segments[loaded_segments_num].end +=
- 				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
-
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Andreas Schwab, SuSE Labs, schwab@suse.de
+SuSE Linux Products GmbH, Maxfeldstra=DFe 5, 90409 N=FCrnberg, Germany
+PGP key fingerprint =3D 58CA 54C7 6D53 942B 1756  01D3 44D5 214B 8276 4ED5
+"And now for something completely different."
 
 _______________________________________________
 kexec mailing list
