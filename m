@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kno98-0005Tf-CV
-	for kexec@lists.infradead.org; Thu, 09 Oct 2008 05:33:11 +0000
+	id 1KnxLb-0002gB-Ku
+	for kexec@lists.infradead.org; Thu, 09 Oct 2008 15:22:39 +0000
+Date: Thu, 9 Oct 2008 11:20:27 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: [PATCH] add additional symbols to /sys/kernel/vmcoreinfo data for
+	ppc(64)
+Message-ID: <20081009151408.GA25268@hmsendeavour.rdu.redhat.com>
 MIME-Version: 1.0
-Message-ID: <18669.38794.476429.103254@cargo.ozlabs.ibm.com>
-Date: Thu, 9 Oct 2008 16:32:58 +1100
-From: Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH] Fix kdump kernel hang issue with relocatable kernel
-	patches
-In-Reply-To: <20081001182501.GA20319@in.ibm.com>
-References: <20081001182501.GA20319@in.ibm.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,32 +22,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mohan@in.ibm.com
-Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, hbabu@us.ibm.com
+Cc: nhorman@tuxdriver.com
 
-Mohan Kumar M writes:
+Hey-
+	The makdumpdile dump filtering program, in some modes of operation needs
+the node_data and/or contig_page_data symbols to function properly.  These
+symbols are missing from the powerpc kernel.  This patch adds those symbols in
+properly.  Tested successfully by myself and the reporter.
 
-> One of the relocatable kernel support patches assumes that the target
-> address will be 0. But for kdump kernels (without relocation support) it
-> will be 32MB. The following patch fixes this issue.
-> 
-> Fix kdump kernel issue
-> 
-> Kdump kernel without relocation support needs to be moved to
-> PHYSICAL_START (ie 32MB) instead of 0. This patch fixes this
-> issue.
+Regards
+Neil
 
-Hmmm.  Is there any reason to continue to support non-relocatable
-64-bit kernels being kdump kernels?  In other words, for 64-bit,
-couldn't we make CONFIG_CRASH_DUMP depend on CONFIG_RELOCATABLE?
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 
-I don't think we want to try to support two different modes of
-operation for a kdump kernel, and I don't see any value in continuing
-to support PHYSICAL_START > 0 for 64-bit non-relocatable kernels.
-(And when we can make 32-bit PIE kernels, I'll be making the same
-statement about 32-bit. :)
 
-Paul.
+ machine_kexec.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index aab7688..2f9b5aa 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -44,6 +44,16 @@ void machine_kexec_cleanup(struct kimage *image)
+ 		ppc_md.machine_kexec_cleanup(image);
+ }
+ 
++void arch_crash_save_vmcoreinfo(void)
++{
++#ifdef CONFIG_NEED_MULTIPLE_NODES
++	VMCOREINFO_SYMBOL(node_data);
++	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
++#else
++	VMCOREINFO_SYMBOL(contig_page_data);
++#endif
++}
++
+ /*
+  * Do not allocate memory (or fail in any way) in machine_kexec().
+  * We are past the point of no return, committed to rebooting now.
+-- 
+/***************************************************
+ *Neil Horman
+ *nhorman@tuxdriver.com
+ *gpg keyid: 1024D / 0x92A74FA1
+ *http://pgp.mit.edu
+ ***************************************************/
 
 _______________________________________________
 kexec mailing list
