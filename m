@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnhfW-0007c4-OM
-	for kexec@lists.infradead.org; Wed, 08 Oct 2008 22:38:11 +0000
-Date: Thu, 9 Oct 2008 09:38:09 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Cross compile?
-Message-ID: <20081008223808.GM16178@verge.net.au>
-References: <20080505205328.GA29182@nlxdcldnl2.cl.intel.com>
-	<20080521054705.GA3714@verge.net.au>
-	<20080527144004.GA9884@nlxdcldnl2.cl.intel.com>
-	<200806041042.06607.jk@ozlabs.org>
-	<20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kno3i-0004th-RN
+	for kexec@lists.infradead.org; Thu, 09 Oct 2008 05:27:35 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080609151702.GB10743@nlxdcldnl2.cl.intel.com>
+Message-ID: <18669.38444.112286.785452@cargo.ozlabs.ibm.com>
+Date: Thu, 9 Oct 2008 16:27:08 +1100
+From: Paul Mackerras <paulus@samba.org>
+Subject: Re: [PATCH] Support for relocatable kdump kernel
+In-Reply-To: <20081001182645.GB20319@in.ibm.com>
+References: <20081001182645.GB20319@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +22,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jeremy Kerr <jk@ozlabs.org>, kexec@lists.infradead.org, "Lombard, David N" <dnlombar@ichips.intel.com>
+To: mohan@in.ibm.com
+Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
 
-On Mon, Jun 09, 2008 at 08:17:02AM -0700, Lombard, David N wrote:
-> On Wed, Jun 04, 2008 at 10:42:06AM +0800, Jeremy Kerr wrote:
-> > Hi David,
-> > 
-> > (sorry about the late reply, been on holidays for the last 3 weeks..)
-> > 
-> > > ./configure --build=`uname -m`-linux-uclibc \
-> > >           --host=`uname -m` --prefix=/home/dnl/kboot-11/root \
-> > >           CC=uclibc-gcc BUILD_CC=host-gcc
-> > 
-> > Ah, there's the problem. You're specifying CC on the configure line, 
-> > which is overriding it for *everything*. Which is why the 
-> > CC=$(BUILD_CC) assignment in util/Makefile isn't working for you.
-> 
-> I'm perfectly happy to admit I've horked this...
-> 
-> > I'll see if I can work out a proper fix...
-> > 
-> > Also, why are you setting --build to -uclibc?
-> 
-> Some of the above came from kboot; everything else is my own fault :)
-> 
-> kexec is being built on a glibc-based x86 for use on a uclibc-based
-> x86.
+Mohan Kumar M writes:
 
-I know that this is a bit of a blast from the past,
-but I believe that this has been fixed by Jeremy.
+> Support for relocatable kdump kernel
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+[snip]
 
+> @@ -1384,7 +1392,15 @@ _STATIC(__after_prom_start)
+>  	/* process relocations for the final address of the kernel */
+>  	lis	r25,PAGE_OFFSET@highest	/* compute virtual base of kernel */
+>  	sldi	r25,r25,32
+> -	mr	r3,r25
+> +#ifdef CONFIG_CRASH_DUMP
+> +	ld	r7,__kdump_flag@got(r2)
+> +	add	r7,r7,r26
+> +	ld	r7,0(r7)
+
+I think it is dangerous to use an address from the GOT at this point
+when we haven't called relocate() yet.  In fact those 3 instructions
+can be replaced by one:
+
+	ld	r7,__kdump_flag-_stext(r26)
+
+since we have our base address (i.e. the address of _stext) in r26 at
+this point.
+
+> +#ifdef CONFIG_RELOCATABLE
+> +#ifdef CONFIG_CRASH_DUMP
+> +/*
+> + * Check if the kernel has to be running as relocatable kernel based on the
+> + * variable __kdump_flag, if it is set the kernel is treated as relocatble
+> + * kernel, otherwise it will be moved to PHYSICAL_START
+> + */
+> +	ld	r7,__kdump_flag@got(r2)
+> +	ld	r7,0(r7)
+
+Here again I would rather you did
+
+	ld	r7,__kdump_flag-_stext(r26)
+
+since the kernel is relocated for its final location by this point,
+but it is not running at the final location yet.
+
+> +	cmpldi	cr0,r7,1
+> +	bne	regular
+> +
+> +	li	r5,__end_interrupts - _stext	/* just copy interrupts */
+> +	b	5f
+> +regular:
+> +#endif
+> +	lis	r5,(copy_to_here - _stext)@ha
+> +	addi	r5,r5,(copy_to_here - _stext)@l /* # bytes of memory to copy */
+>  
+>  	bl	.copy_and_flush		/* copy the first n bytes	 */
+>  					/* this includes the code being	 */
+> @@ -1411,15 +1443,33 @@ _STATIC(__after_prom_start)
+>  	mtctr	r8
+>  	bctr
+>  
+> +p_end:	.llong	_end - _stext
+> +
+>  4:	/* Now copy the rest of the kernel up to _end */
+>  	addis	r5,r26,(p_end - _stext)@ha
+>  	ld	r5,(p_end - _stext)@l(r5)	/* get _end */
+> -	bl	.copy_and_flush		/* copy the rest */
+> +#else
+> +	lis	r5,(copy_to_here - _stext)@ha
+> +	addi	r5,r5,(copy_to_here - _stext)@l /* # bytes of memory to copy */
+>  
+> -9:	b	.start_here_multiplatform
+> +	bl	.copy_and_flush		/* copy the first n bytes	 */
+> +					/* this includes the code being	 */
+> +					/* executed here.		 */
+> +	addis	r8,r3,(4f - _stext)@ha	/* Jump to the copy of this code */
+> +	addi	r8,r8,(4f - _stext)@l	/* that we just made */
+> +	mtctr	r8
+> +	bctr
+>  
+>  p_end:	.llong	_end - _stext
+>  
+> +4:	/* Now copy the rest of the kernel up to _end */
+> +	addis	r5,r26,(p_end - _stext)@ha
+> +	ld	r5,(p_end - _stext)@l(r5)	/* get _end */
+> +#endif
+> +5:	bl	.copy_and_flush		/* copy the rest */
+> +
+> +9:	b	.start_here_multiplatform
+
+You have ended up with two separate copies of the code here depending
+on whether or not we have CONFIG_RELOCATABLE set.  I don't think the
+code paths should be different to such an extent.  Please try to make
+the ifdef as small as possible (ideally, nonexistent).
+
+Paul.
 
 _______________________________________________
 kexec mailing list
