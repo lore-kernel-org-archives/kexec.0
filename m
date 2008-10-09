@@ -1,28 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e8.ny.us.ibm.com ([32.97.182.138])
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KnyUC-0006RD-Io
-	for kexec@lists.infradead.org; Thu, 09 Oct 2008 16:35:37 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e8.ny.us.ibm.com (8.13.1/8.13.1) with ESMTP id m99GWmrP007542
-	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 12:32:48 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m99GZXmd141112
-	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 10:35:34 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m99GZTMs019347
-	for <kexec@lists.infradead.org>; Thu, 9 Oct 2008 10:35:29 -0600
-Message-ID: <48EE32CA.5070401@in.ibm.com>
-Date: Thu, 09 Oct 2008 22:05:22 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] Support for relocatable kdump kernel
-References: <20081001182645.GB20319@in.ibm.com>
-	<18669.38444.112286.785452@cargo.ozlabs.ibm.com>
-In-Reply-To: <18669.38444.112286.785452@cargo.ozlabs.ibm.com>
+	id 1KnytE-0004uv-RN
+	for kexec@lists.infradead.org; Thu, 09 Oct 2008 17:01:29 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id A383F4191C
+	for <kexec@lists.infradead.org>; Thu,  9 Oct 2008 19:01:25 +0200 (CEST)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Use return value of count_dyn_reconf_memory_ranges()
+Date: Thu,  9 Oct 2008 19:01:25 +0200
+Message-Id: <1223571685-14110-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,119 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Mackerras <paulus@samba.org>
-Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
-Hi Paul,
+This patch fixes the build error
 
-Thank you for the review. I will implement the changes you suggested and 
-send the patches.
+    kexec/arch/ppc64/kexec-ppc64.c:140: \
+        warning: control reaches end of non-void function
 
-Regards,
-Mohan.
+The patch returns 0 on success, and checks when the function is called
+for a non-zero value.
 
-> Mohan Kumar M writes:
-> 
->> Support for relocatable kdump kernel
-> 
-> [snip]
-> 
->> @@ -1384,7 +1392,15 @@ _STATIC(__after_prom_start)
->>  	/* process relocations for the final address of the kernel */
->>  	lis	r25,PAGE_OFFSET@highest	/* compute virtual base of kernel */
->>  	sldi	r25,r25,32
->> -	mr	r3,r25
->> +#ifdef CONFIG_CRASH_DUMP
->> +	ld	r7,__kdump_flag@got(r2)
->> +	add	r7,r7,r26
->> +	ld	r7,0(r7)
-> 
-> I think it is dangerous to use an address from the GOT at this point
-> when we haven't called relocate() yet.  In fact those 3 instructions
-> can be replaced by one:
-> 
-> 	ld	r7,__kdump_flag-_stext(r26)
-> 
-> since we have our base address (i.e. the address of _stext) in r26 at
-> this point.
-> 
->> +#ifdef CONFIG_RELOCATABLE
->> +#ifdef CONFIG_CRASH_DUMP
->> +/*
->> + * Check if the kernel has to be running as relocatable kernel based on the
->> + * variable __kdump_flag, if it is set the kernel is treated as relocatble
->> + * kernel, otherwise it will be moved to PHYSICAL_START
->> + */
->> +	ld	r7,__kdump_flag@got(r2)
->> +	ld	r7,0(r7)
-> 
-> Here again I would rather you did
-> 
-> 	ld	r7,__kdump_flag-_stext(r26)
-> 
-> since the kernel is relocated for its final location by this point,
-> but it is not running at the final location yet.
-> 
->> +	cmpldi	cr0,r7,1
->> +	bne	regular
->> +
->> +	li	r5,__end_interrupts - _stext	/* just copy interrupts */
->> +	b	5f
->> +regular:
->> +#endif
->> +	lis	r5,(copy_to_here - _stext)@ha
->> +	addi	r5,r5,(copy_to_here - _stext)@l /* # bytes of memory to copy */
->>  
->>  	bl	.copy_and_flush		/* copy the first n bytes	 */
->>  					/* this includes the code being	 */
->> @@ -1411,15 +1443,33 @@ _STATIC(__after_prom_start)
->>  	mtctr	r8
->>  	bctr
->>  
->> +p_end:	.llong	_end - _stext
->> +
->>  4:	/* Now copy the rest of the kernel up to _end */
->>  	addis	r5,r26,(p_end - _stext)@ha
->>  	ld	r5,(p_end - _stext)@l(r5)	/* get _end */
->> -	bl	.copy_and_flush		/* copy the rest */
->> +#else
->> +	lis	r5,(copy_to_here - _stext)@ha
->> +	addi	r5,r5,(copy_to_here - _stext)@l /* # bytes of memory to copy */
->>  
->> -9:	b	.start_here_multiplatform
->> +	bl	.copy_and_flush		/* copy the first n bytes	 */
->> +					/* this includes the code being	 */
->> +					/* executed here.		 */
->> +	addis	r8,r3,(4f - _stext)@ha	/* Jump to the copy of this code */
->> +	addi	r8,r8,(4f - _stext)@l	/* that we just made */
->> +	mtctr	r8
->> +	bctr
->>  
->>  p_end:	.llong	_end - _stext
->>  
->> +4:	/* Now copy the rest of the kernel up to _end */
->> +	addis	r5,r26,(p_end - _stext)@ha
->> +	ld	r5,(p_end - _stext)@l(r5)	/* get _end */
->> +#endif
->> +5:	bl	.copy_and_flush		/* copy the rest */
->> +
->> +9:	b	.start_here_multiplatform
-> 
-> You have ended up with two separate copies of the code here depending
-> on whether or not we have CONFIG_RELOCATABLE set.  I don't think the
-> code paths should be different to such an extent.  Please try to make
-> the ifdef as small as possible (ideally, nonexistent).
-> 
-> Paul.
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ kexec/arch/ppc64/kexec-ppc64.c |    5 ++++-
+ 1 files changed, 4 insertions(+), 1 deletions(-)
+
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 40258b7..069a9fc 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -137,6 +137,8 @@ static int count_dyn_reconf_memory_ranges(void)
+ 	num_of_lmbs = ((unsigned int *)buf)[0];
+ 	max_memory_ranges += num_of_lmbs;
+ 	fclose(file);
++
++	return 0;
+ }
+ 
+ /*
+@@ -158,7 +160,8 @@ static int count_memory_ranges(void)
+ 	while ((dentry = readdir(dir)) != NULL) {
+ 		if (!strncmp(dentry->d_name,
+ 				"ibm,dynamic-reconfiguration-memory", 35)){
+-			count_dyn_reconf_memory_ranges();
++			if (count_dyn_reconf_memory_ranges() != 0)
++				return -1;
+ 			continue;
+ 		}
+ 
+-- 
+1.6.0.2
 
 
 _______________________________________________
