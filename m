@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ko414-0000JY-Mx
-	for kexec@lists.infradead.org; Thu, 09 Oct 2008 22:29:55 +0000
-Date: Fri, 10 Oct 2008 09:29:53 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Use return value of count_dyn_reconf_memory_ranges()
-Message-ID: <20081009222951.GE20255@verge.net.au>
-References: <1223571685-14110-1-git-send-email-bwalle@suse.de>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ko5rx-0002BR-4F
+	for kexec@lists.infradead.org; Fri, 10 Oct 2008 00:28:37 +0000
+Message-ID: <48EE9FD0.4070501@mxs.nes.nec.co.jp>
+Date: Fri, 10 Oct 2008 09:20:32 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1223571685-14110-1-git-send-email-bwalle@suse.de>
+Subject: Re: [PATCH] add additional symbols to /sys/kernel/vmcoreinfo data
+	for	ppc(64)
+References: <20081009151408.GA25268@hmsendeavour.rdu.redhat.com>
+In-Reply-To: <20081009151408.GA25268@hmsendeavour.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,31 +19,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1272387458=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-On Thu, Oct 09, 2008 at 07:01:25PM +0200, Bernhard Walle wrote:
-> This patch fixes the build error
+--===============1272387458==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+
+Hi Neil,
+
+I had created similar patch, but your patch is better than mine because
+your patch has right configuration dependency. So I think this patch is
+fine.
+
+Reviewed-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+
+
+Thanks
+Ken'ichi Ohmichi
+
+* Reference:
+http://lists.infradead.org/pipermail/kexec/2008-June/001970.html
+
+Neil Horman wrote:
+> Hey-
+> 	The makdumpdile dump filtering program, in some modes of operation needs
+> the node_data and/or contig_page_data symbols to function properly.  These
+> symbols are missing from the powerpc kernel.  This patch adds those symbols in
+> properly.  Tested successfully by myself and the reporter.
 > 
->     kexec/arch/ppc64/kexec-ppc64.c:140: \
->         warning: control reaches end of non-void function
+> Regards
+> Neil
 > 
-> The patch returns 0 on success, and checks when the function is called
-> for a non-zero value.
+> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> 
+> 
+>  machine_kexec.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> 
+> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+> index aab7688..2f9b5aa 100644
+> --- a/arch/powerpc/kernel/machine_kexec.c
+> +++ b/arch/powerpc/kernel/machine_kexec.c
+> @@ -44,6 +44,16 @@ void machine_kexec_cleanup(struct kimage *image)
+>  		ppc_md.machine_kexec_cleanup(image);
+>  }
+>  
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +#ifdef CONFIG_NEED_MULTIPLE_NODES
+> +	VMCOREINFO_SYMBOL(node_data);
+> +	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+> +#else
+> +	VMCOREINFO_SYMBOL(contig_page_data);
+> +#endif
+> +}
+> +
+>  /*
+>   * Do not allocate memory (or fail in any way) in machine_kexec().
+>   * We are past the point of no return, committed to rebooting now.
 
-Thanks Bernhard, applied.
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
+
+--===============1272387458==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1272387458==--
