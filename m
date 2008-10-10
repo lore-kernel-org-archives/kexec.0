@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
-	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ko94t-0001Iy-Kt
-	for kexec@lists.infradead.org; Fri, 10 Oct 2008 03:54:12 +0000
-Subject: Re: [RFC] powerpc: add kexec support on Book-E
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-In-Reply-To: <1222896024-22172-2-git-send-email-sebastian@breakpoint.cc>
-References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
-	<1222896024-22172-2-git-send-email-sebastian@breakpoint.cc>
-Date: Fri, 10 Oct 2008 14:53:46 +1100
-Message-Id: <1223610826.8157.142.camel@pasglop>
-Mime-Version: 1.0
-Reply-To: benh@kernel.crashing.org
+	id 1KoBLs-0004jg-U7
+	for kexec@lists.infradead.org; Fri, 10 Oct 2008 06:19:53 +0000
+Message-ID: <48EEEFF9.4090006@mxs.nes.nec.co.jp>
+Date: Fri, 10 Oct 2008 15:02:33 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: makedumpfile-1.3.0: Support i386 CONFIG_VMSPLIT_1G kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,47 +16,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1582153691=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: linuxppc-dev@ozlabs.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Jay Lan <jlan@sgi.com>, Bernhard Walle <bwalle@suse.de>, "Worth,
+	Kevin" <kevin.worth@hp.com>
 
-On Wed, 2008-10-01 at 23:20 +0200, Sebastian Andrzej Siewior wrote:
-
-> +#define KEXEC_MODE_NOMMU 1
-> +#define KEXEC_MODE_BOOKE 2
-
-No need for runtime detection here, you cannot and likely never will be
-able to build a kernel that does bot BookE and real mode...
-
-> +
-> +/* 1. Find the index of the entry we're executing in */
-> +	bl	invstr			/* Find our address */
-> +invstr:
-> +	mflr	r6			/* Make it accessible */
-> +	mfmsr	r7
-> +	rlwinm	r4,r7,27,31,31		/* extract MSR[IS] */
-> +	mfspr	r7, SPRN_PID0
-> +	slwi	r7,r7,16
-> +	or	r7,r7,r4
-> +	mtspr	SPRN_MAS6,r7
-> +	tlbsx	0,r6			/* search MSR[IS], SPID=PID0 */
-> +	mfspr	r7,SPRN_MAS1
-> +	andis.	r7,r7,MAS1_VALID@h
-> +	bne	match_TLB
-
-This isn't just BookE .. it's specifically FSL BookE (or "merged"
-architecture). This isn't going to work on 44x for example. You need to
-make it clearer.
-
-Cheers,
-Ben.
+--===============1582153691==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
 
+Hi,
+
+makedumpfile version 1.3.0 is released.
+Your comments/patches are welcome.
+
+Changelog:
+ o New feature
+   - Support i386 CONFIG_VMSPLIT_1G kernel.
+   - Add compiling options for calling lseek64() surely.
+   - Use gzip for manpage compression. (Bernhard Walle)
+
+ o Bugfix
+   - Fix the buffer handling problem for reading struct page.
+   - Fix readmem to read each page.
+   - Don't write undefined values to disk. (Bernhard Walle)
+   - Fix memory leaks. (Bernhard Walle)
+   - Fix/Add error messages for debugging.
+   - Fix the type of file_offset.
+   - Fix the error handling of kvtop_xen().
+   - Fix the comment for some values in page.flags.
+
+ o Code Cleanup
+   - Cleanup: Separate xen's paddr_to_offset from linux's one.
+   - Cleanup: Use the existing macros in kvtop_xen_x86().
+   - Cleanup: Delete unnecessary description.
+   - Update copyright date.
+
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
+
+
+
+--===============1582153691==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1582153691==--
