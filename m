@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fg-out-1718.google.com ([72.14.220.158])
+Received: from gv-out-0910.google.com ([216.239.58.186])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kq21R-0006vY-Pr
-	for kexec@lists.infradead.org; Wed, 15 Oct 2008 08:46:26 +0000
-Received: by fg-out-1718.google.com with SMTP id l26so211634fgb.26
-	for <kexec@lists.infradead.org>; Wed, 15 Oct 2008 01:46:24 -0700 (PDT)
-Message-ID: <572af9170810150146p58c599fvabb41338ffd4e033@mail.gmail.com>
-Date: Wed, 15 Oct 2008 12:46:24 +0400
+	id 1KplYP-0003Mw-5v
+	for kexec@lists.infradead.org; Tue, 14 Oct 2008 15:11:21 +0000
+Received: by gv-out-0910.google.com with SMTP id n40so485756gve.5
+	for <kexec@lists.infradead.org>; Tue, 14 Oct 2008 08:11:19 -0700 (PDT)
+Message-ID: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
+Date: Tue, 14 Oct 2008 19:11:19 +0400
 From: "Maxim Uvarov" <muvarov@gmail.com>
-Subject: Re: [PATCH] kexec memory ranges dynamic allocation
-In-Reply-To: <20081015031818.GC27243@verge.net.au>
+Subject: [PATCH] kexec memory ranges dynamic allocation
 MIME-Version: 1.0
 Content-Type: multipart/mixed; 
-	boundary="----=_Part_8470_11336369.1224060384834"
-References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
-	<20081015031818.GC27243@verge.net.au>
+	boundary="----=_Part_179286_8737003.1223997079356"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,217 +22,135 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-------=_Part_8470_11336369.1224060384834
+------=_Part_179286_8737003.1223997079356
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_8471_21552431.1224060384834"
+	boundary="----=_Part_179287_27690756.1223997079357"
 
-------=_Part_8471_21552431.1224060384834
+------=_Part_179287_27690756.1223997079357
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Patch corrected. ( git_kexec_powerpc_v2.patch is attached.)
+Hello all,
 
-I tested it on ppc64 pasemi electra board. Both kexec -l and kexec -p works.
-
-Maxim.
-
-
-
-2008/10/15 Simon Horman <horms@verge.net.au>
-
-> On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:
-> > Hello all,
-> >
-> > As you all know it is not easy to count exact value of memory ranges from
-> > device tree on powerpc.
-> > It very depends on how dts file was written. What do you think about
-> really
-> > dynamic allocation buffers
-> > for this buffers?
->
-> Conceptually I have no objections to the change,
-> though I would like to get some review from ppc people.
-> (linuxppc-dev@ozlabs.org CCed)
->
-> > Patch is attached.
->
-> This patch doesn't seem to compile for me.
->
-> # powerpc64-unknown-linux-gnu-gcc --version
-> powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1
-> Copyright (C) 2006 Free Software Foundation, Inc.
-> This is free software; see the source for copying conditions.  There is NO
-> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
->
-> #make
-> [snip]
-> kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn't a
-> prototype
-> kexec/arch/ppc64/kexec-ppc64.c: In function 'realloc_memory_ranges':
-> kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of
-> 'realloc' makes pointer from integer without a cast
-> kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function
-> 'realloc'
-> kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable 'tmp'
->
-> --
-> Simon Horman
->  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
->  H: www.vergenet.net/~horms/ <http://www.vergenet.net/%7Ehorms/>
->   W: www.valinux.co.jp/en
->
->
-
+As you all know it is not easy to count exact value of memory ranges from
+device tree on powerpc.
+It very depends on how dts file was written. What do you think about really
+dynamic allocation buffers
+for this buffers? Patch is attached.
 
 -- 
 Best regards,
 Maxim Uvarov
 
-------=_Part_8471_21552431.1224060384834
+------=_Part_179287_27690756.1223997079357
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Patch corrected. ( git_kexec_powerpc_v2.patch is attached.)<br><br>I tested it on ppc64 pasemi electra board. Both kexec -l and kexec -p works.<br><br>Maxim.<br><br><br><br><div class="gmail_quote">2008/10/15 Simon Horman <span dir="ltr">&lt;<a href="mailto:horms@verge.net.au">horms@verge.net.au</a>&gt;</span><br>
-<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;"><div class="Ih2E3d">On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:<br>
-&gt; Hello all,<br>
-&gt;<br>
-&gt; As you all know it is not easy to count exact value of memory ranges from<br>
-&gt; device tree on powerpc.<br>
-&gt; It very depends on how dts file was written. What do you think about really<br>
-&gt; dynamic allocation buffers<br>
-&gt; for this buffers?<br>
-<br>
-</div>Conceptually I have no objections to the change,<br>
-though I would like to get some review from ppc people.<br>
-(<a href="mailto:linuxppc-dev@ozlabs.org">linuxppc-dev@ozlabs.org</a> CCed)<br>
-<br>
-&gt; Patch is attached.<br>
-<br>
-This patch doesn&#39;t seem to compile for me.<br>
-<br>
-# powerpc64-unknown-linux-gnu-gcc --version<br>
-powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1<br>
-Copyright (C) 2006 Free Software Foundation, Inc.<br>
-This is free software; see the source for copying conditions. &nbsp;There is NO<br>
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>
-<br>
-#make<br>
-[snip]<br>
-kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn&#39;t a<br>
-prototype<br>
-kexec/arch/ppc64/kexec-ppc64.c: In function &#39;realloc_memory_ranges&#39;:<br>
-kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of &#39;realloc&#39; makes pointer from integer without a cast<br>
-kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function &#39;realloc&#39;<br>
-kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable &#39;tmp&#39;<br>
-<font color="#888888"><br>
---<br>
-Simon Horman<br>
- &nbsp;VA Linux Systems Japan K.K., Sydney, Australia Satellite Office<br>
- &nbsp;H: <a href="http://www.vergenet.net/%7Ehorms/" target="_blank">www.vergenet.net/~horms/</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; W: <a href="http://www.valinux.co.jp/en" target="_blank">www.valinux.co.jp/en</a><br>
-<br>
-</font></blockquote></div><br><br clear="all"><br>-- <br>Best regards,<br>Maxim Uvarov<br>
+<div dir="ltr">Hello all,<br><br>As you all know it is not easy to count exact value of memory ranges from device tree on powerpc. <br>It very depends on how dts file was written. What do you think about really dynamic allocation buffers<br>
+for this buffers? Patch is attached.<br clear="all"><br>-- <br>Best regards,<br>Maxim Uvarov<br>
+</div>
 
-------=_Part_8471_21552431.1224060384834--
+------=_Part_179287_27690756.1223997079357--
 
-------=_Part_8470_11336369.1224060384834
-Content-Type: text/x-patch; name=git_kexec_powerpc_v2.patch
+------=_Part_179286_8737003.1223997079356
+Content-Type: application/octet-stream; name=git_kexec_powerpc.patch
 Content-Transfer-Encoding: base64
-X-Attachment-Id: f_fmbprn880
-Content-Disposition: attachment; filename=git_kexec_powerpc_v2.patch
+X-Attachment-Id: f_fmanzx5m0
+Content-Disposition: attachment; filename=git_kexec_powerpc.patch
 
 ZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvcHBjNjQva2V4ZWMtcHBjNjQuYyBiL2tleGVjL2FyY2gv
-cHBjNjQva2V4ZWMtcHBjNjQuYwppbmRleCAwNjlhOWZjLi4wYWQ0MGZhIDEwMDY0NAotLS0gYS9r
+cHBjNjQva2V4ZWMtcHBjNjQuYwppbmRleCAwNjlhOWZjLi41ZGQ1ZGQyIDEwMDY0NAotLS0gYS9r
 ZXhlYy9hcmNoL3BwYzY0L2tleGVjLXBwYzY0LmMKKysrIGIva2V4ZWMvYXJjaC9wcGM2NC9rZXhl
-Yy1wcGM2NC5jCkBAIC05Niw5NiArOTYsNDYgQEAgZXJyMToKIAogfQogCi1zdGF0aWMgaW50IGNv
+Yy1wcGM2NC5jCkBAIC05Niw5NiArOTYsNDcgQEAgZXJyMToKIAogfQogCi1zdGF0aWMgaW50IGNv
 dW50X2R5bl9yZWNvbmZfbWVtb3J5X3Jhbmdlcyh2b2lkKQorc3RhdGljIGludCByZWFsbG9jX21l
 bW9yeV9yYW5nZXMoKQogewotCWNoYXIgZGV2aWNlX3RyZWVbXSA9ICIvcHJvYy9kZXZpY2UtdHJl
 ZS8iOwotCWNoYXIgZm5hbWVbMTI4XTsKLQljaGFyIGJ1ZlszMl07Ci0JRklMRSAqZmlsZTsKLQot
 CXN0cmNweShmbmFtZSwgZGV2aWNlX3RyZWUpOwotCXN0cmNhdChmbmFtZSwgImlibSxkeW5hbWlj
 LXJlY29uZmlndXJhdGlvbi1tZW1vcnkvaWJtLGxtYi1zaXplIik7Ci0JaWYgKChmaWxlID0gZm9w
 ZW4oZm5hbWUsICJyIikpID09IE5VTEwpIHsKLQkJcGVycm9yKGZuYW1lKTsKLQkJcmV0dXJuIC0x
-OwotCX0KKwlzaXplX3QgbWVtb3J5X3JhbmdlX2xlbjsKIAotCWlmIChmcmVhZChidWYsIDEsIDgs
-IGZpbGUpIDwgMCkgewotCQlwZXJyb3IoZm5hbWUpOwotCQlmY2xvc2UoZmlsZSk7Ci0JCXJldHVy
-biAtMTsKLQl9Ci0KLQlsbWJfc2l6ZSA9ICgodWludDY0X3QgKilidWYpWzBdOwotCWZjbG9zZShm
-aWxlKTsKKwltYXhfbWVtb3J5X3JhbmdlcysrOworCW1lbW9yeV9yYW5nZV9sZW4gPSBzaXplb2Yo
-c3RydWN0IG1lbW9yeV9yYW5nZSkgKiBtYXhfbWVtb3J5X3JhbmdlczsKIAotCS8qIEdldCBudW1i
-ZXIgb2YgbG1icyBmcm9tIGlibSxkeW5hbWljLW1lbW9yeSAqLwotCXN0cmNweShmbmFtZSwgZGV2
-aWNlX3RyZWUpOwotCXN0cmNhdChmbmFtZSwgImlibSxkeW5hbWljLXJlY29uZmlndXJhdGlvbi1t
-ZW1vcnkvaWJtLGR5bmFtaWMtbWVtb3J5Iik7Ci0JaWYgKChmaWxlID0gZm9wZW4oZm5hbWUsICJy
-IikpID09IE5VTEwpIHsKLQkJcGVycm9yKGZuYW1lKTsKLQkJcmV0dXJuIC0xOwotCX0KLQkvKgot
-CSAqIGZpcnN0IDQgYnl0ZXMgcHJvdmlkZSBudW1iZXIgb2YgZW50cmllcyhsbWJzKQotCSAqLwot
-CWlmIChmcmVhZChidWYsIDEsIDQsIGZpbGUpIDwgMCkgewotCQlwZXJyb3IoZm5hbWUpOwotCQlm
-Y2xvc2UoZmlsZSk7Ci0JCXJldHVybiAtMTsKLQl9Ci0JbnVtX29mX2xtYnMgPSAoKHVuc2lnbmVk
-IGludCAqKWJ1ZilbMF07Ci0JbWF4X21lbW9yeV9yYW5nZXMgKz0gbnVtX29mX2xtYnM7Ci0JZmNs
-b3NlKGZpbGUpOworCW1lbW9yeV9yYW5nZSA9IChzdHJ1Y3QgbWVtb3J5X3JhbmdlICopIHJlYWxs
-b2MobWVtb3J5X3JhbmdlLCBtZW1vcnlfcmFuZ2VfbGVuKTsKKwlpZiAoIW1lbW9yeV9yYW5nZSkK
-KwkJZ290byBlcnI7CiAKLQlyZXR1cm4gMDsKLX0KKwliYXNlX21lbW9yeV9yYW5nZSA9IChzdHJ1
-Y3QgbWVtb3J5X3JhbmdlICopIHJlYWxsb2MobWVtb3J5X3JhbmdlLCBtZW1vcnlfcmFuZ2VfbGVu
-KTsKKwlpZiAoIWJhc2VfbWVtb3J5X3JhbmdlKQorCQlnb3RvIGVycjsKIAotLyoKLSAqIENvdW50
-IHRoZSBtZW1vcnkgbm9kZXMgdW5kZXIgL3Byb2MvZGV2aWNlLXRyZWUgYW5kIHBvcHVsYXRlIHRo
-ZQotICogbWF4X21lbW9yeV9yYW5nZXMgdmFyaWFibGUuIFRoaXMgdmFyaWFibGUgcmVwbGFjZXMg
-TUFYX01FTU9SWV9SQU5HRVMKLSAqIG1hY3JvIHVzZWQgZWFybGllci4KLSAqLwotc3RhdGljIGlu
-dCBjb3VudF9tZW1vcnlfcmFuZ2VzKHZvaWQpCi17Ci0JY2hhciBkZXZpY2VfdHJlZVsyNTZdID0g
-Ii9wcm9jL2RldmljZS10cmVlLyI7Ci0Jc3RydWN0IGRpcmVudCAqZGVudHJ5OwotCURJUiAqZGly
-OworCWV4Y2x1ZGVfcmFuZ2UgPSAoc3RydWN0IG1lbW9yeV9yYW5nZSAqKSByZWFsbG9jKGV4Y2x1
-ZGVfcmFuZ2UsIG1lbW9yeV9yYW5nZV9sZW4pOworCWlmICghZXhjbHVkZV9yYW5nZSkKKwkJZ290
-byBlcnI7CiAKLQlpZiAoKGRpciA9IG9wZW5kaXIoZGV2aWNlX3RyZWUpKSA9PSBOVUxMKSB7Ci0J
-CXBlcnJvcihkZXZpY2VfdHJlZSk7Ci0JCXJldHVybiAtMTsKLQl9CisJdXNhYmxlbWVtX3JnbnMu
-cmFuZ2VzID0gKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKikKKwkJCQlyZWFsbG9jKHVzYWJsZW1lbV9y
-Z25zLnJhbmdlcywgbWVtb3J5X3JhbmdlX2xlbik7CisJaWYgKCEodXNhYmxlbWVtX3JnbnMucmFu
-Z2VzKSkKKwkJZ290byBlcnI7CiAKLQl3aGlsZSAoKGRlbnRyeSA9IHJlYWRkaXIoZGlyKSkgIT0g
-TlVMTCkgewotCQlpZiAoIXN0cm5jbXAoZGVudHJ5LT5kX25hbWUsCi0JCQkJImlibSxkeW5hbWlj
-LXJlY29uZmlndXJhdGlvbi1tZW1vcnkiLCAzNSkpewotCQkJaWYgKGNvdW50X2R5bl9yZWNvbmZf
-bWVtb3J5X3JhbmdlcygpICE9IDApCi0JCQkJcmV0dXJuIC0xOwotCQkJY29udGludWU7Ci0JCX0K
-KwlyZXR1cm4gMDsKIAotCQlpZiAoc3RybmNtcChkZW50cnktPmRfbmFtZSwgIm1lbW9yeUAiLCA3
-KSAmJgotCQkJc3RyY21wKGRlbnRyeS0+ZF9uYW1lLCAibWVtb3J5IikgJiYKLQkJCXN0cm5jbXAo
-ZGVudHJ5LT5kX25hbWUsICJwY2lAIiwgNCkpCi0JCQljb250aW51ZTsKLQkJbWF4X21lbW9yeV9y
-YW5nZXMrKzsKLQl9Ci0JLyogbmVlZCB0byBhZGQgZXh0cmEgcmVnaW9uIGZvciByZXRhaW5lZCBp
-bml0cmQgKi8KLQlpZiAocmV1c2VfaW5pdHJkKSB7Ci0JCW1heF9tZW1vcnlfcmFuZ2VzKys7Ci0J
-fQorZXJyOgorCWZwcmludGYoc3RkZXJyLCAibWVtb3J5IHJhbmdlIHN0cnVjdHVyZSByZS1hbGxv
-Y2F0aW9uIGZhaWx1cmVcbiIpOworCXJldHVybiAtMTsKK30KIAotCWNsb3NlZGlyKGRpcik7CiAK
-LQlyZXR1cm4gMDsKLX0KIHN0YXRpYyB2b2lkIGFkZF9iYXNlX21lbW9yeV9yYW5nZSh1aW50NjRf
-dCBzdGFydCwgdWludDY0X3QgZW5kKQogewogCWJhc2VfbWVtb3J5X3JhbmdlW25yX21lbW9yeV9y
-YW5nZXNdLnN0YXJ0ID0gc3RhcnQ7CiAJYmFzZV9tZW1vcnlfcmFuZ2VbbnJfbWVtb3J5X3Jhbmdl
-c10uZW5kICA9IGVuZDsKIAliYXNlX21lbW9yeV9yYW5nZVtucl9tZW1vcnlfcmFuZ2VzXS50eXBl
-ID0gUkFOR0VfUkFNOwogCW5yX21lbW9yeV9yYW5nZXMrKzsKKwlpZiAobnJfbWVtb3J5X3Jhbmdl
-cyA+PSBtYXhfbWVtb3J5X3JhbmdlcykgCisJCXJlYWxsb2NfbWVtb3J5X3JhbmdlcygpOyAKIAog
-CWRiZ3ByaW50ZigiJTAxNmxseC0lMDE2bGx4IDogJXhcbiIsCiAJCWJhc2VfbWVtb3J5X3Jhbmdl
-W25yX21lbW9yeV9yYW5nZXMtMV0uc3RhcnQsCkBAIC0zMDAsOCArMjUwLDggQEAgc3RhdGljIGlu
-dCBnZXRfYmFzZV9yYW5nZXModm9pZCkKIAkJCQlyZXR1cm4gLTE7CiAJCQl9CiAJCQlpZiAobnJf
-bWVtb3J5X3JhbmdlcyA+PSBtYXhfbWVtb3J5X3JhbmdlcykgewotCQkJCWZjbG9zZShmaWxlKTsK
-LQkJCQlicmVhazsKKwkJCQlpZiAocmVhbGxvY19tZW1vcnlfcmFuZ2VzKCkgPCAwKQorCQkJCQli
-cmVhazsKIAkJCX0KIAkJCXN0YXJ0ID0gKCh1aW50NjRfdCAqKWJ1ZilbMF07CiAJCQllbmQgPSBz
-dGFydCArICgodWludDY0X3QgKilidWYpWzFdOwpAQCAtMzk2LDYgKzM0Niw4IEBAIHN0YXRpYyBp
-bnQgZ2V0X2RldnRyZWVfZGV0YWlscyh1bnNpZ25lZCBsb25nIGtleGVjX2ZsYWdzKQogCQkJZXhj
-bHVkZV9yYW5nZVtpXS5zdGFydCA9IDB4MFVMOwogCQkJZXhjbHVkZV9yYW5nZVtpXS5lbmQgPSBr
-ZXJuZWxfZW5kOwogCQkJaSsrOworCQkJaWYgKGkgPj0gbWF4X21lbW9yeV9yYW5nZXMpCisJCQkJ
-cmVhbGxvY19tZW1vcnlfcmFuZ2VzKCk7CiAKIAkJCWlmIChrZXhlY19mbGFncyAmIEtFWEVDX09O
-X0NSQVNIKSB7CiAJCQkJbWVtc2V0KGZuYW1lLCAwLCBzaXplb2YoZm5hbWUpKTsKQEAgLTQ3MCw2
-ICs0MjIsOCBAQCBzdGF0aWMgaW50IGdldF9kZXZ0cmVlX2RldGFpbHModW5zaWduZWQgbG9uZyBr
-ZXhlY19mbGFncykKIAkJCWV4Y2x1ZGVfcmFuZ2VbaV0uc3RhcnQgPSBodGFiX2Jhc2U7CiAJCQll
-eGNsdWRlX3JhbmdlW2ldLmVuZCA9IGh0YWJfYmFzZSArIGh0YWJfc2l6ZTsKIAkJCWkrKzsKKwkJ
-CWlmIChpID49IG1heF9tZW1vcnlfcmFuZ2VzKQorCQkJCXJlYWxsb2NfbWVtb3J5X3Jhbmdlcygp
-OwogCiAJCQkvKiByZXNlcnZlIHRoZSBpbml0cmRfc3RhcnQgYW5kIGVuZCBsb2NhdGlvbnMuICov
-CiAJCQlpZiAocmV1c2VfaW5pdHJkKSB7CkBAIC01NDUsNiArNDk5LDggQEAgc3RhdGljIGludCBn
-ZXRfZGV2dHJlZV9kZXRhaWxzKHVuc2lnbmVkIGxvbmcga2V4ZWNfZmxhZ3MpCiAJCQlleGNsdWRl
-X3JhbmdlW2ldLnN0YXJ0ID0gcnRhc19iYXNlOwogCQkJZXhjbHVkZV9yYW5nZVtpXS5lbmQgPSBy
-dGFzX2Jhc2UgKyBydGFzX3NpemU7CiAJCQlpKys7CisJCQlpZiAoaSA+PSBtYXhfbWVtb3J5X3Jh
-bmdlcykKKwkJCQlyZWFsbG9jX21lbW9yeV9yYW5nZXMoKTsKIAkJCWlmIChrZXhlY19mbGFncyAm
-IEtFWEVDX09OX0NSQVNIKQogCQkJCWFkZF91c2FibGVfbWVtX3JnbnMocnRhc19iYXNlLCBydGFz
-X3NpemUpOwogCQl9IC8qIHJ0YXMgKi8KQEAgLTc0MCw5ICs2OTYsMTAgQEAgb3V0OgogLyogUmV0
-dXJuIGEgbGlzdCBvZiB2YWxpZCBtZW1vcnkgcmFuZ2VzICovCiBpbnQgZ2V0X21lbW9yeV9yYW5n
-ZXMoc3RydWN0IG1lbW9yeV9yYW5nZSAqKnJhbmdlLCBpbnQgKnJhbmdlcywKIAkJCXVuc2lnbmVk
-IGxvbmcga2V4ZWNfZmxhZ3MpCi17Ci0JaWYgKGNvdW50X21lbW9yeV9yYW5nZXMoKSkKLQkJcmV0
-dXJuIC0xOworewkKKyAgICAgICAgLyogYWxsb2NhdGUgbWVtb3J5X3JhbmdlIGR5bmFtaWNhbGx5
-ICovCisgICAgICAgIG1heF9tZW1vcnlfcmFuZ2VzID0gMTsKKwogCWlmIChhbGxvY19tZW1vcnlf
-cmFuZ2VzKCkpCiAJCXJldHVybiAtMTsKIAlpZiAoc2V0dXBfbWVtb3J5X3JhbmdlcyhrZXhlY19m
-bGFncykpCg==
-------=_Part_8470_11336369.1224060384834
+OwotCX0KKwlzaXplX3QgbWVtb3J5X3JhbmdlX2xlbjsKKwlzdHJ1Y3QgbWVtb3J5X3JhbmdlICp0
+bXA7CiAKLQlpZiAoZnJlYWQoYnVmLCAxLCA4LCBmaWxlKSA8IDApIHsKLQkJcGVycm9yKGZuYW1l
+KTsKLQkJZmNsb3NlKGZpbGUpOwotCQlyZXR1cm4gLTE7Ci0JfQotCi0JbG1iX3NpemUgPSAoKHVp
+bnQ2NF90ICopYnVmKVswXTsKLQlmY2xvc2UoZmlsZSk7CisJbWF4X21lbW9yeV9yYW5nZXMrKzsK
+KwltZW1vcnlfcmFuZ2VfbGVuID0gc2l6ZW9mKHN0cnVjdCBtZW1vcnlfcmFuZ2UpICogbWF4X21l
+bW9yeV9yYW5nZXM7CiAKLQkvKiBHZXQgbnVtYmVyIG9mIGxtYnMgZnJvbSBpYm0sZHluYW1pYy1t
+ZW1vcnkgKi8KLQlzdHJjcHkoZm5hbWUsIGRldmljZV90cmVlKTsKLQlzdHJjYXQoZm5hbWUsICJp
+Ym0sZHluYW1pYy1yZWNvbmZpZ3VyYXRpb24tbWVtb3J5L2libSxkeW5hbWljLW1lbW9yeSIpOwot
+CWlmICgoZmlsZSA9IGZvcGVuKGZuYW1lLCAiciIpKSA9PSBOVUxMKSB7Ci0JCXBlcnJvcihmbmFt
+ZSk7Ci0JCXJldHVybiAtMTsKLQl9Ci0JLyoKLQkgKiBmaXJzdCA0IGJ5dGVzIHByb3ZpZGUgbnVt
+YmVyIG9mIGVudHJpZXMobG1icykKLQkgKi8KLQlpZiAoZnJlYWQoYnVmLCAxLCA0LCBmaWxlKSA8
+IDApIHsKLQkJcGVycm9yKGZuYW1lKTsKLQkJZmNsb3NlKGZpbGUpOwotCQlyZXR1cm4gLTE7Ci0J
+fQotCW51bV9vZl9sbWJzID0gKCh1bnNpZ25lZCBpbnQgKilidWYpWzBdOwotCW1heF9tZW1vcnlf
+cmFuZ2VzICs9IG51bV9vZl9sbWJzOwotCWZjbG9zZShmaWxlKTsKKwltZW1vcnlfcmFuZ2UgPSAo
+c3RydWN0IG1lbW9yeV9yYW5nZSAqKSByZWFsbG9jKG1lbW9yeV9yYW5nZV9sZW4pOworCWlmICgh
+bWVtb3J5X3JhbmdlKQorCQlnb3RvIGVycjsKIAotCXJldHVybiAwOwotfQorCWJhc2VfbWVtb3J5
+X3JhbmdlID0gKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKikgcmVhbGxvYyhtZW1vcnlfcmFuZ2UsIG1l
+bW9yeV9yYW5nZV9sZW4pOworCWlmICghYmFzZV9tZW1vcnlfcmFuZ2UpCisJCWdvdG8gZXJyOwog
+Ci0vKgotICogQ291bnQgdGhlIG1lbW9yeSBub2RlcyB1bmRlciAvcHJvYy9kZXZpY2UtdHJlZSBh
+bmQgcG9wdWxhdGUgdGhlCi0gKiBtYXhfbWVtb3J5X3JhbmdlcyB2YXJpYWJsZS4gVGhpcyB2YXJp
+YWJsZSByZXBsYWNlcyBNQVhfTUVNT1JZX1JBTkdFUwotICogbWFjcm8gdXNlZCBlYXJsaWVyLgot
+ICovCi1zdGF0aWMgaW50IGNvdW50X21lbW9yeV9yYW5nZXModm9pZCkKLXsKLQljaGFyIGRldmlj
+ZV90cmVlWzI1Nl0gPSAiL3Byb2MvZGV2aWNlLXRyZWUvIjsKLQlzdHJ1Y3QgZGlyZW50ICpkZW50
+cnk7Ci0JRElSICpkaXI7CisJZXhjbHVkZV9yYW5nZSA9IChzdHJ1Y3QgbWVtb3J5X3JhbmdlICop
+IHJlYWxsb2MoZXhjbHVkZV9yYW5nZSwgbWVtb3J5X3JhbmdlX2xlbik7CisJaWYgKCFleGNsdWRl
+X3JhbmdlKQorCQlnb3RvIGVycjsKIAotCWlmICgoZGlyID0gb3BlbmRpcihkZXZpY2VfdHJlZSkp
+ID09IE5VTEwpIHsKLQkJcGVycm9yKGRldmljZV90cmVlKTsKLQkJcmV0dXJuIC0xOwotCX0KKwl1
+c2FibGVtZW1fcmducy5yYW5nZXMgPSAoc3RydWN0IG1lbW9yeV9yYW5nZSAqKQorCQkJCXJlYWxs
+b2ModXNhYmxlbWVtX3JnbnMucmFuZ2VzLCBtZW1vcnlfcmFuZ2VfbGVuKTsKKwlpZiAoISh1c2Fi
+bGVtZW1fcmducy5yYW5nZXMpKQorCQlnb3RvIGVycjsKIAotCXdoaWxlICgoZGVudHJ5ID0gcmVh
+ZGRpcihkaXIpKSAhPSBOVUxMKSB7Ci0JCWlmICghc3RybmNtcChkZW50cnktPmRfbmFtZSwKLQkJ
+CQkiaWJtLGR5bmFtaWMtcmVjb25maWd1cmF0aW9uLW1lbW9yeSIsIDM1KSl7Ci0JCQlpZiAoY291
+bnRfZHluX3JlY29uZl9tZW1vcnlfcmFuZ2VzKCkgIT0gMCkKLQkJCQlyZXR1cm4gLTE7Ci0JCQlj
+b250aW51ZTsKLQkJfQorCXJldHVybiAwOwogCi0JCWlmIChzdHJuY21wKGRlbnRyeS0+ZF9uYW1l
+LCAibWVtb3J5QCIsIDcpICYmCi0JCQlzdHJjbXAoZGVudHJ5LT5kX25hbWUsICJtZW1vcnkiKSAm
+JgotCQkJc3RybmNtcChkZW50cnktPmRfbmFtZSwgInBjaUAiLCA0KSkKLQkJCWNvbnRpbnVlOwot
+CQltYXhfbWVtb3J5X3JhbmdlcysrOwotCX0KLQkvKiBuZWVkIHRvIGFkZCBleHRyYSByZWdpb24g
+Zm9yIHJldGFpbmVkIGluaXRyZCAqLwotCWlmIChyZXVzZV9pbml0cmQpIHsKLQkJbWF4X21lbW9y
+eV9yYW5nZXMrKzsKLQl9CitlcnI6CisJZnByaW50ZihzdGRlcnIsICJtZW1vcnkgcmFuZ2Ugc3Ry
+dWN0dXJlIHJlLWFsbG9jYXRpb24gZmFpbHVyZVxuIik7CisJcmV0dXJuIC0xOworfQogCi0JY2xv
+c2VkaXIoZGlyKTsKIAotCXJldHVybiAwOwotfQogc3RhdGljIHZvaWQgYWRkX2Jhc2VfbWVtb3J5
+X3JhbmdlKHVpbnQ2NF90IHN0YXJ0LCB1aW50NjRfdCBlbmQpCiB7CiAJYmFzZV9tZW1vcnlfcmFu
+Z2VbbnJfbWVtb3J5X3Jhbmdlc10uc3RhcnQgPSBzdGFydDsKIAliYXNlX21lbW9yeV9yYW5nZVtu
+cl9tZW1vcnlfcmFuZ2VzXS5lbmQgID0gZW5kOwogCWJhc2VfbWVtb3J5X3JhbmdlW25yX21lbW9y
+eV9yYW5nZXNdLnR5cGUgPSBSQU5HRV9SQU07CiAJbnJfbWVtb3J5X3JhbmdlcysrOworCWlmIChu
+cl9tZW1vcnlfcmFuZ2VzID49IG1heF9tZW1vcnlfcmFuZ2VzKSAKKwkJcmVhbGxvY19tZW1vcnlf
+cmFuZ2VzKCk7IAogCiAJZGJncHJpbnRmKCIlMDE2bGx4LSUwMTZsbHggOiAleFxuIiwKIAkJYmFz
+ZV9tZW1vcnlfcmFuZ2VbbnJfbWVtb3J5X3Jhbmdlcy0xXS5zdGFydCwKQEAgLTMwMCw4ICsyNTEs
+OCBAQCBzdGF0aWMgaW50IGdldF9iYXNlX3Jhbmdlcyh2b2lkKQogCQkJCXJldHVybiAtMTsKIAkJ
+CX0KIAkJCWlmIChucl9tZW1vcnlfcmFuZ2VzID49IG1heF9tZW1vcnlfcmFuZ2VzKSB7Ci0JCQkJ
+ZmNsb3NlKGZpbGUpOwotCQkJCWJyZWFrOworCQkJCWlmIChyZWFsbG9jX21lbW9yeV9yYW5nZXMo
+KSA8IDApCisJCQkJCWJyZWFrOwogCQkJfQogCQkJc3RhcnQgPSAoKHVpbnQ2NF90ICopYnVmKVsw
+XTsKIAkJCWVuZCA9IHN0YXJ0ICsgKCh1aW50NjRfdCAqKWJ1ZilbMV07CkBAIC0zOTYsNiArMzQ3
+LDggQEAgc3RhdGljIGludCBnZXRfZGV2dHJlZV9kZXRhaWxzKHVuc2lnbmVkIGxvbmcga2V4ZWNf
+ZmxhZ3MpCiAJCQlleGNsdWRlX3JhbmdlW2ldLnN0YXJ0ID0gMHgwVUw7CiAJCQlleGNsdWRlX3Jh
+bmdlW2ldLmVuZCA9IGtlcm5lbF9lbmQ7CiAJCQlpKys7CisJCQlpZiAoaSA+PSBtYXhfbWVtb3J5
+X3JhbmdlcykKKwkJCQlyZWFsbG9jX21lbW9yeV9yYW5nZXMoKTsKIAogCQkJaWYgKGtleGVjX2Zs
+YWdzICYgS0VYRUNfT05fQ1JBU0gpIHsKIAkJCQltZW1zZXQoZm5hbWUsIDAsIHNpemVvZihmbmFt
+ZSkpOwpAQCAtNDcwLDYgKzQyMyw4IEBAIHN0YXRpYyBpbnQgZ2V0X2RldnRyZWVfZGV0YWlscyh1
+bnNpZ25lZCBsb25nIGtleGVjX2ZsYWdzKQogCQkJZXhjbHVkZV9yYW5nZVtpXS5zdGFydCA9IGh0
+YWJfYmFzZTsKIAkJCWV4Y2x1ZGVfcmFuZ2VbaV0uZW5kID0gaHRhYl9iYXNlICsgaHRhYl9zaXpl
+OwogCQkJaSsrOworCQkJaWYgKGkgPj0gbWF4X21lbW9yeV9yYW5nZXMpCisJCQkJcmVhbGxvY19t
+ZW1vcnlfcmFuZ2VzKCk7CiAKIAkJCS8qIHJlc2VydmUgdGhlIGluaXRyZF9zdGFydCBhbmQgZW5k
+IGxvY2F0aW9ucy4gKi8KIAkJCWlmIChyZXVzZV9pbml0cmQpIHsKQEAgLTU0NSw2ICs1MDAsOCBA
+QCBzdGF0aWMgaW50IGdldF9kZXZ0cmVlX2RldGFpbHModW5zaWduZWQgbG9uZyBrZXhlY19mbGFn
+cykKIAkJCWV4Y2x1ZGVfcmFuZ2VbaV0uc3RhcnQgPSBydGFzX2Jhc2U7CiAJCQlleGNsdWRlX3Jh
+bmdlW2ldLmVuZCA9IHJ0YXNfYmFzZSArIHJ0YXNfc2l6ZTsKIAkJCWkrKzsKKwkJCWlmIChpID49
+IG1heF9tZW1vcnlfcmFuZ2VzKQorCQkJCXJlYWxsb2NfbWVtb3J5X3JhbmdlcygpOwogCQkJaWYg
+KGtleGVjX2ZsYWdzICYgS0VYRUNfT05fQ1JBU0gpCiAJCQkJYWRkX3VzYWJsZV9tZW1fcmducyhy
+dGFzX2Jhc2UsIHJ0YXNfc2l6ZSk7CiAJCX0gLyogcnRhcyAqLwpAQCAtNzQwLDkgKzY5NywxMCBA
+QCBvdXQ6CiAvKiBSZXR1cm4gYSBsaXN0IG9mIHZhbGlkIG1lbW9yeSByYW5nZXMgKi8KIGludCBn
+ZXRfbWVtb3J5X3JhbmdlcyhzdHJ1Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2UsIGludCAqcmFuZ2Vz
+LAogCQkJdW5zaWduZWQgbG9uZyBrZXhlY19mbGFncykKLXsKLQlpZiAoY291bnRfbWVtb3J5X3Jh
+bmdlcygpKQotCQlyZXR1cm4gLTE7Cit7CQorICAgICAgICAvKiBhbGxvY2F0ZSBtZW1vcnlfcmFu
+Z2UgZHluYW1pY2FsbHkgKi8KKyAgICAgICAgbWF4X21lbW9yeV9yYW5nZXMgPSAxOworCiAJaWYg
+KGFsbG9jX21lbW9yeV9yYW5nZXMoKSkKIAkJcmV0dXJuIC0xOwogCWlmIChzZXR1cF9tZW1vcnlf
+cmFuZ2VzKGtleGVjX2ZsYWdzKSkK
+------=_Part_179286_8737003.1223997079356
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -246,5 +161,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
-------=_Part_8470_11336369.1224060384834--
+------=_Part_179286_8737003.1223997079356--
 
