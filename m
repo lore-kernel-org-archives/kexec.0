@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from fg-out-1718.google.com ([72.14.220.154])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KpxCc-0003OR-QU
-	for kexec@lists.infradead.org; Wed, 15 Oct 2008 03:37:39 +0000
-Date: Wed, 15 Oct 2008 14:37:36 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] powerpc: dtb and purgatory support for ppc32
-Message-ID: <20081015033735.GG27243@verge.net.au>
-References: <1222896024-22172-1-git-send-email-sebastian@breakpoint.cc>
-	<1222896024-22172-4-git-send-email-sebastian@breakpoint.cc>
-	<20081008030325.GD22396@verge.net.au>
-	<20081012133955.GA7536@Chamillionaire.breakpoint.cc>
+	id 1KpzsB-0005FF-BP
+	for kexec@lists.infradead.org; Wed, 15 Oct 2008 06:28:44 +0000
+Received: by fg-out-1718.google.com with SMTP id l26so175679fgb.26
+	for <kexec@lists.infradead.org>; Tue, 14 Oct 2008 23:28:42 -0700 (PDT)
+Message-ID: <572af9170810142328j7596290bv8e6c89df1e31dd48@mail.gmail.com>
+Date: Wed, 15 Oct 2008 10:28:41 +0400
+From: "Maxim Uvarov" <muvarov@gmail.com>
+Subject: Re: [PATCH] kexec memory ranges dynamic allocation
+In-Reply-To: <20081015031818.GC27243@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20081012133955.GA7536@Chamillionaire.breakpoint.cc>
+References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
+	<20081015031818.GC27243@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,45 +21,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1740758454=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: linuxppc-dev@ozlabs.org, Sebastian Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
 
-On Sun, Oct 12, 2008 at 03:39:55PM +0200, Sebastian Andrzej Siewior wrote:
-> * Simon Horman | 2008-10-08 14:03:26 [+1100]:
-> 
-> >> +#ifdef WITH_GAMECUBE
-> >> +static int go_purgatory = 0;
-> >> +#else
-> >> +static int go_purgatory = 1;
-> >> +#endif
+--===============1740758454==
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_7357_391147.1224052121883"
+
+------=_Part_7357_391147.1224052121883
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+2008/10/15 Simon Horman <horms@verge.net.au>
+
+> On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:
+> > Hello all,
 > >
-> >Can you just use WITH_GAMECUBE inside elf_ppc_load() and remove
-> >the need for go_purgatory, or do you plan to make go_purgatory
-> >switchable at run-time at some point in the future?
+> > As you all know it is not easy to count exact value of memory ranges from
+> > device tree on powerpc.
+> > It very depends on how dts file was written. What do you think about
+> really
+> > dynamic allocation buffers
+> > for this buffers?
+>
+> Conceptually I have no objections to the change,
+> though I would like to get some review from ppc people.
+> (linuxppc-dev@ozlabs.org CCed)
+>
+> > Patch is attached.
+>
+> This patch doesn't seem to compile for me.
+>
+> # powerpc64-unknown-linux-gnu-gcc --version
+> powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1
+> Copyright (C) 2006 Free Software Foundation, Inc.
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>
+> #make
+> [snip]
+> kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn't a
+> prototype
+> kexec/arch/ppc64/kexec-ppc64.c: In function 'realloc_memory_ranges':
+> kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of
+> 'realloc' makes pointer from integer without a cast
+> kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function
+> 'realloc'
+> kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable 'tmp'
+>
+Sorry  I edited manually formated patch before sending and lost first
+argument to realloc. I will resend it.
 
-> For the first shot I would prefer to use WITH_GAMECUBE inside of
-> elf_ppc_load(). In longterm I don't see any reason why GameCube can't
-> use the purgatory code like the other archs and get the memory maps from
-> the device tree. However I'm not sure if GameCube still runs on a recent
-> kernel: now that arc/ppc isn't available anymore GameCube has to pass a
-> dtb somehow and this isn't the case. So therefore I would like the keep
-> #ifdef and the exisiting behavior until someone clears this up.
+>
+> --
+> Simon Horman
+>  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+>  H: www.vergenet.net/~horms/ <http://www.vergenet.net/%7Ehorms/>
+>   W: www.valinux.co.jp/en
+>
+>
 
-Ok, in this case I would like to request that you remove
-go_purgatory (for now) and just use #ifdef WITH_GAMECUBE instead.
-I think that it will make things cleaner (for now).
 
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+Best regards,
+Maxim Uvarov
 
+------=_Part_7357_391147.1224052121883
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<br><br><div class="gmail_quote">2008/10/15 Simon Horman <span dir="ltr">&lt;<a href="mailto:horms@verge.net.au">horms@verge.net.au</a>&gt;</span><br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<div class="Ih2E3d">On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:<br>
+&gt; Hello all,<br>
+&gt;<br>
+&gt; As you all know it is not easy to count exact value of memory ranges from<br>
+&gt; device tree on powerpc.<br>
+&gt; It very depends on how dts file was written. What do you think about really<br>
+&gt; dynamic allocation buffers<br>
+&gt; for this buffers?<br>
+<br>
+</div>Conceptually I have no objections to the change,<br>
+though I would like to get some review from ppc people.<br>
+(<a href="mailto:linuxppc-dev@ozlabs.org">linuxppc-dev@ozlabs.org</a> CCed)<br>
+<br>
+&gt; Patch is attached.<br>
+<br>
+This patch doesn&#39;t seem to compile for me.<br>
+<br>
+# powerpc64-unknown-linux-gnu-gcc --version<br>
+powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1<br>
+Copyright (C) 2006 Free Software Foundation, Inc.<br>
+This is free software; see the source for copying conditions. &nbsp;There is NO<br>
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>
+<br>
+#make<br>
+[snip]<br>
+kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn&#39;t a<br>
+prototype<br>
+kexec/arch/ppc64/kexec-ppc64.c: In function &#39;realloc_memory_ranges&#39;:<br>
+kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of &#39;realloc&#39; makes pointer from integer without a cast<br>
+kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function &#39;realloc&#39;<br>
+kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable &#39;tmp&#39;<br>
+<font color="#888888"></font></blockquote><div>Sorry&nbsp; I edited manually formated patch before sending and lost first argument to realloc. I will resend it. <br></div><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<font color="#888888"><br>
+--<br>
+Simon Horman<br>
+ &nbsp;VA Linux Systems Japan K.K., Sydney, Australia Satellite Office<br>
+ &nbsp;H: <a href="http://www.vergenet.net/%7Ehorms/" target="_blank">www.vergenet.net/~horms/</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; W: <a href="http://www.valinux.co.jp/en" target="_blank">www.valinux.co.jp/en</a><br>
+<br>
+</font></blockquote></div><br><br clear="all"><br>-- <br>Best regards,<br>Maxim Uvarov<br>
+
+------=_Part_7357_391147.1224052121883--
+
+
+--===============1740758454==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1740758454==--
+
