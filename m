@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ti-out-0910.google.com ([209.85.142.186])
+Received: from fg-out-1718.google.com ([72.14.220.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kq1NG-00084k-II
-	for kexec@lists.infradead.org; Wed, 15 Oct 2008 08:04:55 +0000
-Received: by ti-out-0910.google.com with SMTP id a21so1557189tia.2
-	for <kexec@lists.infradead.org>; Wed, 15 Oct 2008 01:04:52 -0700 (PDT)
-Content-Disposition: inline
-Subject: =?utf-8?q?=EF=BC=BBPATCH=EF=BC=BD?=
-	=?utf-8?q?_/Documentation/kdump/gdbmacros=2Etxt=3Aupdates_and_fixs__bugs?=
-	=?utf-8?q?_when_iterating_thread_group?= member
-From: Qinghuang Feng <qhfeng.kernel@gmail.com>
-Date: Wed, 15 Oct 2008 16:04:47 +0800
+	id 1Kq21R-0006vY-Pr
+	for kexec@lists.infradead.org; Wed, 15 Oct 2008 08:46:26 +0000
+Received: by fg-out-1718.google.com with SMTP id l26so211634fgb.26
+	for <kexec@lists.infradead.org>; Wed, 15 Oct 2008 01:46:24 -0700 (PDT)
+Message-ID: <572af9170810150146p58c599fvabb41338ffd4e033@mail.gmail.com>
+Date: Wed, 15 Oct 2008 12:46:24 +0400
+From: "Maxim Uvarov" <muvarov@gmail.com>
+Subject: Re: [PATCH] kexec memory ranges dynamic allocation
+In-Reply-To: <20081015031818.GC27243@verge.net.au>
 MIME-Version: 1.0
-Message-Id: <200810151604.47642.qhfeng.kernel@gmail.com>
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_8470_11336369.1224060384834"
+References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
+	<20081015031818.GC27243@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,419 +23,228 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: ppcdev <linuxppc-dev@ozlabs.org>, kexec@lists.infradead.org
 
-This patch is for linus-git, and it do the following:
+------=_Part_8470_11336369.1224060384834
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_8471_21552431.1224060384834"
 
-1.updates macros in the file to fix the following errors:
-(gdb) btt
-There is no member named pid_list.
-(gdb) bttnobp
-There is no member named pid_list.
+------=_Part_8471_21552431.1224060384834
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-2.fix bugs in two places when iterateing thread members in a thread group
+Patch corrected. ( git_kexec_powerpc_v2.patch is attached.)
 
-original macro:
-16 define bttnobp
-....
-21         while ($next_t != $init_t)
-...
-34                 set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-35                 while ($next_th != $next_t)
-36                         set $next_th=(struct task_struct *)$next_th
-37                         printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-now, we should print info about the thread member, but it  print 
-info of threadgroup leader repeatly.
-...
+I tested it on ppc64 pasemi electra board. Both kexec -l and kexec -p works.
 
-3.introduce two auxiliary macros: psusr and pskern to list info of all tasks
-viewed in userspace and kernelspace respectively.
-
-The following is the testing result, bu it is test in X86 and kgdb remote 
-debugging environment:
-a.out is a muti-thread program, and one of its threads exec the "top".
-(gdb) pskern
-address		state		uid	pid	ppid	comm
-0xC03512F4	running		0	0	0	swapper
-....
-0xD9418180	sleeping	0	2379	2371	bash
-0xD94191C0	sleeping	0	2383	2379	a.out
-0xDC52DA20	sleeping	0	2384	2379	a.out
-0xDC52D610	sleeping	0	2385	2379	a.out
-0xDC52D200	sleeping	0	2386	2379	a.out
-0xDC52CDF0	sleeping	0	2387	2386	top
-address		state		uid	pid	ppid	comm
-(gdb) btt
-....
-pid 2379; addr:0xd9418180; comm bash:
-=====================================
-do_wait + 2227 in section .text
-sys_wait4 + 121 in section .text
-sys_waitpid + 19 in section .text
-ia32_sysenter_target + 127 in section .text
-
-pid 2383; addr:0xd94191c0; comm a.out:
-=====================================
-do_nanosleep + 84 in section .text
-hrtimer_nanosleep + 74 in section .text
-sys_nanosleep + 66 in section .text
-ia32_sysenter_target + 127 in section .text
-
-pid 2384; addr:0xdc52da20; comm a.out:
-=====================================
-do_nanosleep + 84 in section .text
-hrtimer_nanosleep + 74 in section .text
-sys_nanosleep + 66 in section .text
-ia32_sysenter_target + 127 in section .text
-
-pid 2385; addr:0xdc52d610; comm a.out:
----Type <return> to continue, or q <return> to quit---
-=====================================
-do_nanosleep + 84 in section .text
-hrtimer_nanosleep + 74 in section .text
-sys_nanosleep + 66 in section .text
-ia32_sysenter_target + 127 in section .text
-
-pid 2386; addr:0xdc52d200; comm a.out:
-=====================================
-do_wait + 2227 in section .text
-sys_wait4 + 121 in section .text
-sys_waitpid + 19 in section .text
-ia32_sysenter_target + 127 in section .text
-
-pid 2387; addr:0xdc52cdf0; comm top:
-=====================================
-schedule_timeout + 109 in section .text
-do_select + 1081 in section .text
-core_sys_select + 440 in section .text
-sys_select + 143 in section .text
-ia32_sysenter_target + 127 in section .text
+Maxim.
 
 
-Signed-off-by: Qinghuang Feng <qhfeng.kernel@gmail.com>
----
-diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
-index 9b9b454..c286da1 100644
---- a/Documentation/kdump/gdbmacros.txt
-+++ b/Documentation/kdump/gdbmacros.txt
-@@ -13,39 +13,146 @@
- # Maneesh Soni <maneesh@in.ibm.com>
- #
- 
-+define __show_state
-+        if ($arg0->state == 0)
-+                printf "running\t\t"
-+                else
-+                if ($arg0->state == 1)
-+                        printf "sleeping\t"
-+                        else
-+                        if ($arg0->state == 2)
-+                                printf "disksleep\t"
-+                                else
-+                                if ($arg0->state == 4)
-+                                        printf "zombie\t"
-+                                        else
-+                                        if ($arg0->state == 8)
-+                                                printf "stopped\t"
-+                                                else
-+                                                if ($arg0->state == 16)
-+                                                        printf "wpaging\t"
-+                                                        else
-+                                                                printf "%d\t\t", $arg0->state
-+                                                        end
-+                                                end
-+                                        end
-+                                end
-+                        end
-+                end
-+end
-+document __show_state
-+internel macro, don't call it by hand
-+end
-+
-+
-+define psusr
-+        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-+        set $init_t = &init_task
-+        set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-+        set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-+
-+        while ($next_t != $init_t)
-+		set $next_t=(struct task_struct *)$next_t
-+		printf "0x%08X\t", $next_t
-+		show_state $next_t
-+		printf "%d\t%d\t%d\t%s\n", \
-+			$next_t->uid, $next_t->pid, \
-+			$next_t->parent->pid, $next_t->comm
-+		set  $next_t=(char *)($next_t->tasks.next) - $tasks_off 
-+        end
-+
-+        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-+        printf "----end----\n"
-+
-+end
-+document psusr
-+print information for all tasks, but not including thread members.
-+This command looks like "ps -aux" in userspace.
-+end
-+
-+
-+define pskern
-+        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-+        set $init_t = &init_task
-+        printf "0x%08X\t", $init_t
-+        __show_state $init_t
-+        printf "%d\t%d\t%d\t%s\n", \
-+                $init_t->uid, $init_t->pid, \
-+                $init_t->parent->pid, $init_t->comm
-+	
-+	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-+	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-+	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-+
-+	while ($next_t != $init_t)
-+		set $next_t=(struct task_struct *)$next_t
-+
-+		printf "0x%08X\t", $next_t
-+		show_state $next_t
-+		printf "%d\t%d\t%d\t%s\n", \
-+			$next_t->uid, $next_t->pid, \
-+			$next_t->parent->pid, $next_t->comm
-+
-+		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
-+
-+		while ($next_th != $next_t)
-+			set $next_th=(struct task_struct *)$next_th
-+
-+			printf "0x%08X\t", $next_th
-+			show_state $next_th
-+			printf "%d\t%d\t%d\t%s\n", \
-+				$next_th->uid, $next_th->pid, \
-+				$next_th->parent->pid, $next_th->comm
-+
-+			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
-+		end
-+
-+		set  $next_t=(char *)($next_t->tasks.next) - $tasks_off
-+        end
-+
-+        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-+        printf "----end----\n"
-+
-+end
-+document pskern
-+print infor for all tasks viewed in kernel, including all thread members
-+and swapper(PID==0).
-+end
-+
-+
-+define __prinfo_nobp
-+        printf "\npid %d; addr:0x%08x; comm %s:\n", \
-+                $arg0.pid, $arg0, $arg0.comm
-+        printf "=====================================\n"
-+        set var $stackp = $arg0.thread.sp
-+        set var $stack_top = ($stackp & ~4095) + 4096
-+
-+        while ($stackp < $stack_top)
-+                if (*($stackp) > _stext && *($stackp) < _sinittext)
-+                        info symbol *($stackp)
-+                end
-+        set $stackp += 4
-+        end
-+end
-+document __prinfo_nobp
-+internal macro, don't call it by hand.
-+end
-+
-+
- define bttnobp
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-+
- 	while ($next_t != $init_t)
- 		set $next_t=(struct task_struct *)$next_t
--		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--		printf "===================\n"
--		set var $stackp = $next_t.thread.esp
--		set var $stack_top = ($stackp & ~4095) + 4096
--
--		while ($stackp < $stack_top)
--			if (*($stackp) > _stext && *($stackp) < _sinittext)
--				info symbol *($stackp)
--			end
--			set $stackp += 4
--		end
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		__prinfo_nobp $next_t
-+		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
--			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--			printf "===================\n"
--			set var $stackp = $next_t.thread.esp
--			set var $stack_top = ($stackp & ~4095) + 4096
--
--			while ($stackp < $stack_top)
--				if (*($stackp) > _stext && *($stackp) < _sinittext)
--					info symbol *($stackp)
--				end
--				set $stackp += 4
--			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			__prinfo_nobp $next_th
-+			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
-@@ -54,42 +161,41 @@ document bttnobp
- 	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
- end
- 
-+
-+define __prinfo
-+        printf "\npid %d; addr:0x%08x; comm %s:\n", \
-+                $arg0.pid, $arg0, $arg0.comm
-+        printf "=====================================\n"
-+        set var $stackp = $arg0.thread.sp
-+        set var $stack_top = ($stackp & ~4095) + 4096
-+        set var $stack_bot = ($stackp & ~4095)
-+
-+        set $stackp = *($stackp)
-+        while (($stackp < $stack_top) && ($stackp > $stack_bot))
-+                set var $addr = *($stackp + 4)
-+                info symbol $addr
-+                set $stackp = *($stackp)
-+        end
-+end
-+document __prinfo
-+internal macro, don't call it by hand.
-+end
-+
-+
- define btt
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-+
- 	while ($next_t != $init_t)
- 		set $next_t=(struct task_struct *)$next_t
--		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--		printf "===================\n"
--		set var $stackp = $next_t.thread.esp
--		set var $stack_top = ($stackp & ~4095) + 4096
--		set var $stack_bot = ($stackp & ~4095)
--
--		set $stackp = *($stackp)
--		while (($stackp < $stack_top) && ($stackp > $stack_bot))
--			set var $addr = *($stackp + 4)
--			info symbol $addr
--			set $stackp = *($stackp)
--		end
--
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		__prinfo $next_t
-+		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
--			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
--			printf "===================\n"
--			set var $stackp = $next_t.thread.esp
--			set var $stack_top = ($stackp & ~4095) + 4096
--			set var $stack_bot = ($stackp & ~4095)
--
--			set $stackp = *($stackp)
--			while (($stackp < $stack_top) && ($stackp > $stack_bot))
--				set var $addr = *($stackp + 4)
--				info symbol $addr
--				set $stackp = *($stackp)
--			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			__prinfo $next_th	
-+			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
-@@ -101,7 +207,7 @@ end
- define btpid
- 	set var $pid = $arg0
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	set var $pid_task = 0
-@@ -113,29 +219,19 @@ define btpid
- 			set $pid_task = $next_t
- 		end
- 
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
- 			if ($next_th.pid == $pid)
- 				set $pid_task = $next_th
- 			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
- 
--	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
--	printf "===================\n"
--	set var $stackp = $pid_task.thread.esp
--	set var $stack_top = ($stackp & ~4095) + 4096
--	set var $stack_bot = ($stackp & ~4095)
--
--	set $stackp = *($stackp)
--	while (($stackp < $stack_top) && ($stackp > $stack_bot))
--		set var $addr = *($stackp + 4)
--		info symbol $addr
--		set $stackp = *($stackp)
--	end
-+	__prinfo $pid_task
-+
- end
- document btpid
- 	backtrace of pid
-@@ -145,7 +241,7 @@ end
- define trapinfo
- 	set var $pid = $arg0
- 	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
--	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-+	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
- 	set $init_t=&init_task
- 	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
- 	set var $pid_task = 0
-@@ -157,13 +253,13 @@ define trapinfo
- 			set $pid_task = $next_t
- 		end
- 
--		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-+		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
- 		while ($next_th != $next_t)
- 			set $next_th=(struct task_struct *)$next_th
- 			if ($next_th.pid == $pid)
- 				set $pid_task = $next_th
- 			end
--			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-+			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
- 		end
- 		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
- 	end
 
+2008/10/15 Simon Horman <horms@verge.net.au>
+
+> On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:
+> > Hello all,
+> >
+> > As you all know it is not easy to count exact value of memory ranges from
+> > device tree on powerpc.
+> > It very depends on how dts file was written. What do you think about
+> really
+> > dynamic allocation buffers
+> > for this buffers?
+>
+> Conceptually I have no objections to the change,
+> though I would like to get some review from ppc people.
+> (linuxppc-dev@ozlabs.org CCed)
+>
+> > Patch is attached.
+>
+> This patch doesn't seem to compile for me.
+>
+> # powerpc64-unknown-linux-gnu-gcc --version
+> powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1
+> Copyright (C) 2006 Free Software Foundation, Inc.
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>
+> #make
+> [snip]
+> kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn't a
+> prototype
+> kexec/arch/ppc64/kexec-ppc64.c: In function 'realloc_memory_ranges':
+> kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of
+> 'realloc' makes pointer from integer without a cast
+> kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function
+> 'realloc'
+> kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable 'tmp'
+>
+> --
+> Simon Horman
+>  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+>  H: www.vergenet.net/~horms/ <http://www.vergenet.net/%7Ehorms/>
+>   W: www.valinux.co.jp/en
+>
+>
+
+
+-- 
+Best regards,
+Maxim Uvarov
+
+------=_Part_8471_21552431.1224060384834
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Patch corrected. ( git_kexec_powerpc_v2.patch is attached.)<br><br>I tested it on ppc64 pasemi electra board. Both kexec -l and kexec -p works.<br><br>Maxim.<br><br><br><br><div class="gmail_quote">2008/10/15 Simon Horman <span dir="ltr">&lt;<a href="mailto:horms@verge.net.au">horms@verge.net.au</a>&gt;</span><br>
+<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;"><div class="Ih2E3d">On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:<br>
+&gt; Hello all,<br>
+&gt;<br>
+&gt; As you all know it is not easy to count exact value of memory ranges from<br>
+&gt; device tree on powerpc.<br>
+&gt; It very depends on how dts file was written. What do you think about really<br>
+&gt; dynamic allocation buffers<br>
+&gt; for this buffers?<br>
+<br>
+</div>Conceptually I have no objections to the change,<br>
+though I would like to get some review from ppc people.<br>
+(<a href="mailto:linuxppc-dev@ozlabs.org">linuxppc-dev@ozlabs.org</a> CCed)<br>
+<br>
+&gt; Patch is attached.<br>
+<br>
+This patch doesn&#39;t seem to compile for me.<br>
+<br>
+# powerpc64-unknown-linux-gnu-gcc --version<br>
+powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1<br>
+Copyright (C) 2006 Free Software Foundation, Inc.<br>
+This is free software; see the source for copying conditions. &nbsp;There is NO<br>
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.<br>
+<br>
+#make<br>
+[snip]<br>
+kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn&#39;t a<br>
+prototype<br>
+kexec/arch/ppc64/kexec-ppc64.c: In function &#39;realloc_memory_ranges&#39;:<br>
+kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of &#39;realloc&#39; makes pointer from integer without a cast<br>
+kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function &#39;realloc&#39;<br>
+kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable &#39;tmp&#39;<br>
+<font color="#888888"><br>
+--<br>
+Simon Horman<br>
+ &nbsp;VA Linux Systems Japan K.K., Sydney, Australia Satellite Office<br>
+ &nbsp;H: <a href="http://www.vergenet.net/%7Ehorms/" target="_blank">www.vergenet.net/~horms/</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; W: <a href="http://www.valinux.co.jp/en" target="_blank">www.valinux.co.jp/en</a><br>
+<br>
+</font></blockquote></div><br><br clear="all"><br>-- <br>Best regards,<br>Maxim Uvarov<br>
+
+------=_Part_8471_21552431.1224060384834--
+
+------=_Part_8470_11336369.1224060384834
+Content-Type: text/x-patch; name=git_kexec_powerpc_v2.patch
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_fmbprn880
+Content-Disposition: attachment; filename=git_kexec_powerpc_v2.patch
+
+ZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvcHBjNjQva2V4ZWMtcHBjNjQuYyBiL2tleGVjL2FyY2gv
+cHBjNjQva2V4ZWMtcHBjNjQuYwppbmRleCAwNjlhOWZjLi4wYWQ0MGZhIDEwMDY0NAotLS0gYS9r
+ZXhlYy9hcmNoL3BwYzY0L2tleGVjLXBwYzY0LmMKKysrIGIva2V4ZWMvYXJjaC9wcGM2NC9rZXhl
+Yy1wcGM2NC5jCkBAIC05Niw5NiArOTYsNDYgQEAgZXJyMToKIAogfQogCi1zdGF0aWMgaW50IGNv
+dW50X2R5bl9yZWNvbmZfbWVtb3J5X3Jhbmdlcyh2b2lkKQorc3RhdGljIGludCByZWFsbG9jX21l
+bW9yeV9yYW5nZXMoKQogewotCWNoYXIgZGV2aWNlX3RyZWVbXSA9ICIvcHJvYy9kZXZpY2UtdHJl
+ZS8iOwotCWNoYXIgZm5hbWVbMTI4XTsKLQljaGFyIGJ1ZlszMl07Ci0JRklMRSAqZmlsZTsKLQot
+CXN0cmNweShmbmFtZSwgZGV2aWNlX3RyZWUpOwotCXN0cmNhdChmbmFtZSwgImlibSxkeW5hbWlj
+LXJlY29uZmlndXJhdGlvbi1tZW1vcnkvaWJtLGxtYi1zaXplIik7Ci0JaWYgKChmaWxlID0gZm9w
+ZW4oZm5hbWUsICJyIikpID09IE5VTEwpIHsKLQkJcGVycm9yKGZuYW1lKTsKLQkJcmV0dXJuIC0x
+OwotCX0KKwlzaXplX3QgbWVtb3J5X3JhbmdlX2xlbjsKIAotCWlmIChmcmVhZChidWYsIDEsIDgs
+IGZpbGUpIDwgMCkgewotCQlwZXJyb3IoZm5hbWUpOwotCQlmY2xvc2UoZmlsZSk7Ci0JCXJldHVy
+biAtMTsKLQl9Ci0KLQlsbWJfc2l6ZSA9ICgodWludDY0X3QgKilidWYpWzBdOwotCWZjbG9zZShm
+aWxlKTsKKwltYXhfbWVtb3J5X3JhbmdlcysrOworCW1lbW9yeV9yYW5nZV9sZW4gPSBzaXplb2Yo
+c3RydWN0IG1lbW9yeV9yYW5nZSkgKiBtYXhfbWVtb3J5X3JhbmdlczsKIAotCS8qIEdldCBudW1i
+ZXIgb2YgbG1icyBmcm9tIGlibSxkeW5hbWljLW1lbW9yeSAqLwotCXN0cmNweShmbmFtZSwgZGV2
+aWNlX3RyZWUpOwotCXN0cmNhdChmbmFtZSwgImlibSxkeW5hbWljLXJlY29uZmlndXJhdGlvbi1t
+ZW1vcnkvaWJtLGR5bmFtaWMtbWVtb3J5Iik7Ci0JaWYgKChmaWxlID0gZm9wZW4oZm5hbWUsICJy
+IikpID09IE5VTEwpIHsKLQkJcGVycm9yKGZuYW1lKTsKLQkJcmV0dXJuIC0xOwotCX0KLQkvKgot
+CSAqIGZpcnN0IDQgYnl0ZXMgcHJvdmlkZSBudW1iZXIgb2YgZW50cmllcyhsbWJzKQotCSAqLwot
+CWlmIChmcmVhZChidWYsIDEsIDQsIGZpbGUpIDwgMCkgewotCQlwZXJyb3IoZm5hbWUpOwotCQlm
+Y2xvc2UoZmlsZSk7Ci0JCXJldHVybiAtMTsKLQl9Ci0JbnVtX29mX2xtYnMgPSAoKHVuc2lnbmVk
+IGludCAqKWJ1ZilbMF07Ci0JbWF4X21lbW9yeV9yYW5nZXMgKz0gbnVtX29mX2xtYnM7Ci0JZmNs
+b3NlKGZpbGUpOworCW1lbW9yeV9yYW5nZSA9IChzdHJ1Y3QgbWVtb3J5X3JhbmdlICopIHJlYWxs
+b2MobWVtb3J5X3JhbmdlLCBtZW1vcnlfcmFuZ2VfbGVuKTsKKwlpZiAoIW1lbW9yeV9yYW5nZSkK
+KwkJZ290byBlcnI7CiAKLQlyZXR1cm4gMDsKLX0KKwliYXNlX21lbW9yeV9yYW5nZSA9IChzdHJ1
+Y3QgbWVtb3J5X3JhbmdlICopIHJlYWxsb2MobWVtb3J5X3JhbmdlLCBtZW1vcnlfcmFuZ2VfbGVu
+KTsKKwlpZiAoIWJhc2VfbWVtb3J5X3JhbmdlKQorCQlnb3RvIGVycjsKIAotLyoKLSAqIENvdW50
+IHRoZSBtZW1vcnkgbm9kZXMgdW5kZXIgL3Byb2MvZGV2aWNlLXRyZWUgYW5kIHBvcHVsYXRlIHRo
+ZQotICogbWF4X21lbW9yeV9yYW5nZXMgdmFyaWFibGUuIFRoaXMgdmFyaWFibGUgcmVwbGFjZXMg
+TUFYX01FTU9SWV9SQU5HRVMKLSAqIG1hY3JvIHVzZWQgZWFybGllci4KLSAqLwotc3RhdGljIGlu
+dCBjb3VudF9tZW1vcnlfcmFuZ2VzKHZvaWQpCi17Ci0JY2hhciBkZXZpY2VfdHJlZVsyNTZdID0g
+Ii9wcm9jL2RldmljZS10cmVlLyI7Ci0Jc3RydWN0IGRpcmVudCAqZGVudHJ5OwotCURJUiAqZGly
+OworCWV4Y2x1ZGVfcmFuZ2UgPSAoc3RydWN0IG1lbW9yeV9yYW5nZSAqKSByZWFsbG9jKGV4Y2x1
+ZGVfcmFuZ2UsIG1lbW9yeV9yYW5nZV9sZW4pOworCWlmICghZXhjbHVkZV9yYW5nZSkKKwkJZ290
+byBlcnI7CiAKLQlpZiAoKGRpciA9IG9wZW5kaXIoZGV2aWNlX3RyZWUpKSA9PSBOVUxMKSB7Ci0J
+CXBlcnJvcihkZXZpY2VfdHJlZSk7Ci0JCXJldHVybiAtMTsKLQl9CisJdXNhYmxlbWVtX3JnbnMu
+cmFuZ2VzID0gKHN0cnVjdCBtZW1vcnlfcmFuZ2UgKikKKwkJCQlyZWFsbG9jKHVzYWJsZW1lbV9y
+Z25zLnJhbmdlcywgbWVtb3J5X3JhbmdlX2xlbik7CisJaWYgKCEodXNhYmxlbWVtX3JnbnMucmFu
+Z2VzKSkKKwkJZ290byBlcnI7CiAKLQl3aGlsZSAoKGRlbnRyeSA9IHJlYWRkaXIoZGlyKSkgIT0g
+TlVMTCkgewotCQlpZiAoIXN0cm5jbXAoZGVudHJ5LT5kX25hbWUsCi0JCQkJImlibSxkeW5hbWlj
+LXJlY29uZmlndXJhdGlvbi1tZW1vcnkiLCAzNSkpewotCQkJaWYgKGNvdW50X2R5bl9yZWNvbmZf
+bWVtb3J5X3JhbmdlcygpICE9IDApCi0JCQkJcmV0dXJuIC0xOwotCQkJY29udGludWU7Ci0JCX0K
+KwlyZXR1cm4gMDsKIAotCQlpZiAoc3RybmNtcChkZW50cnktPmRfbmFtZSwgIm1lbW9yeUAiLCA3
+KSAmJgotCQkJc3RyY21wKGRlbnRyeS0+ZF9uYW1lLCAibWVtb3J5IikgJiYKLQkJCXN0cm5jbXAo
+ZGVudHJ5LT5kX25hbWUsICJwY2lAIiwgNCkpCi0JCQljb250aW51ZTsKLQkJbWF4X21lbW9yeV9y
+YW5nZXMrKzsKLQl9Ci0JLyogbmVlZCB0byBhZGQgZXh0cmEgcmVnaW9uIGZvciByZXRhaW5lZCBp
+bml0cmQgKi8KLQlpZiAocmV1c2VfaW5pdHJkKSB7Ci0JCW1heF9tZW1vcnlfcmFuZ2VzKys7Ci0J
+fQorZXJyOgorCWZwcmludGYoc3RkZXJyLCAibWVtb3J5IHJhbmdlIHN0cnVjdHVyZSByZS1hbGxv
+Y2F0aW9uIGZhaWx1cmVcbiIpOworCXJldHVybiAtMTsKK30KIAotCWNsb3NlZGlyKGRpcik7CiAK
+LQlyZXR1cm4gMDsKLX0KIHN0YXRpYyB2b2lkIGFkZF9iYXNlX21lbW9yeV9yYW5nZSh1aW50NjRf
+dCBzdGFydCwgdWludDY0X3QgZW5kKQogewogCWJhc2VfbWVtb3J5X3JhbmdlW25yX21lbW9yeV9y
+YW5nZXNdLnN0YXJ0ID0gc3RhcnQ7CiAJYmFzZV9tZW1vcnlfcmFuZ2VbbnJfbWVtb3J5X3Jhbmdl
+c10uZW5kICA9IGVuZDsKIAliYXNlX21lbW9yeV9yYW5nZVtucl9tZW1vcnlfcmFuZ2VzXS50eXBl
+ID0gUkFOR0VfUkFNOwogCW5yX21lbW9yeV9yYW5nZXMrKzsKKwlpZiAobnJfbWVtb3J5X3Jhbmdl
+cyA+PSBtYXhfbWVtb3J5X3JhbmdlcykgCisJCXJlYWxsb2NfbWVtb3J5X3JhbmdlcygpOyAKIAog
+CWRiZ3ByaW50ZigiJTAxNmxseC0lMDE2bGx4IDogJXhcbiIsCiAJCWJhc2VfbWVtb3J5X3Jhbmdl
+W25yX21lbW9yeV9yYW5nZXMtMV0uc3RhcnQsCkBAIC0zMDAsOCArMjUwLDggQEAgc3RhdGljIGlu
+dCBnZXRfYmFzZV9yYW5nZXModm9pZCkKIAkJCQlyZXR1cm4gLTE7CiAJCQl9CiAJCQlpZiAobnJf
+bWVtb3J5X3JhbmdlcyA+PSBtYXhfbWVtb3J5X3JhbmdlcykgewotCQkJCWZjbG9zZShmaWxlKTsK
+LQkJCQlicmVhazsKKwkJCQlpZiAocmVhbGxvY19tZW1vcnlfcmFuZ2VzKCkgPCAwKQorCQkJCQli
+cmVhazsKIAkJCX0KIAkJCXN0YXJ0ID0gKCh1aW50NjRfdCAqKWJ1ZilbMF07CiAJCQllbmQgPSBz
+dGFydCArICgodWludDY0X3QgKilidWYpWzFdOwpAQCAtMzk2LDYgKzM0Niw4IEBAIHN0YXRpYyBp
+bnQgZ2V0X2RldnRyZWVfZGV0YWlscyh1bnNpZ25lZCBsb25nIGtleGVjX2ZsYWdzKQogCQkJZXhj
+bHVkZV9yYW5nZVtpXS5zdGFydCA9IDB4MFVMOwogCQkJZXhjbHVkZV9yYW5nZVtpXS5lbmQgPSBr
+ZXJuZWxfZW5kOwogCQkJaSsrOworCQkJaWYgKGkgPj0gbWF4X21lbW9yeV9yYW5nZXMpCisJCQkJ
+cmVhbGxvY19tZW1vcnlfcmFuZ2VzKCk7CiAKIAkJCWlmIChrZXhlY19mbGFncyAmIEtFWEVDX09O
+X0NSQVNIKSB7CiAJCQkJbWVtc2V0KGZuYW1lLCAwLCBzaXplb2YoZm5hbWUpKTsKQEAgLTQ3MCw2
+ICs0MjIsOCBAQCBzdGF0aWMgaW50IGdldF9kZXZ0cmVlX2RldGFpbHModW5zaWduZWQgbG9uZyBr
+ZXhlY19mbGFncykKIAkJCWV4Y2x1ZGVfcmFuZ2VbaV0uc3RhcnQgPSBodGFiX2Jhc2U7CiAJCQll
+eGNsdWRlX3JhbmdlW2ldLmVuZCA9IGh0YWJfYmFzZSArIGh0YWJfc2l6ZTsKIAkJCWkrKzsKKwkJ
+CWlmIChpID49IG1heF9tZW1vcnlfcmFuZ2VzKQorCQkJCXJlYWxsb2NfbWVtb3J5X3Jhbmdlcygp
+OwogCiAJCQkvKiByZXNlcnZlIHRoZSBpbml0cmRfc3RhcnQgYW5kIGVuZCBsb2NhdGlvbnMuICov
+CiAJCQlpZiAocmV1c2VfaW5pdHJkKSB7CkBAIC01NDUsNiArNDk5LDggQEAgc3RhdGljIGludCBn
+ZXRfZGV2dHJlZV9kZXRhaWxzKHVuc2lnbmVkIGxvbmcga2V4ZWNfZmxhZ3MpCiAJCQlleGNsdWRl
+X3JhbmdlW2ldLnN0YXJ0ID0gcnRhc19iYXNlOwogCQkJZXhjbHVkZV9yYW5nZVtpXS5lbmQgPSBy
+dGFzX2Jhc2UgKyBydGFzX3NpemU7CiAJCQlpKys7CisJCQlpZiAoaSA+PSBtYXhfbWVtb3J5X3Jh
+bmdlcykKKwkJCQlyZWFsbG9jX21lbW9yeV9yYW5nZXMoKTsKIAkJCWlmIChrZXhlY19mbGFncyAm
+IEtFWEVDX09OX0NSQVNIKQogCQkJCWFkZF91c2FibGVfbWVtX3JnbnMocnRhc19iYXNlLCBydGFz
+X3NpemUpOwogCQl9IC8qIHJ0YXMgKi8KQEAgLTc0MCw5ICs2OTYsMTAgQEAgb3V0OgogLyogUmV0
+dXJuIGEgbGlzdCBvZiB2YWxpZCBtZW1vcnkgcmFuZ2VzICovCiBpbnQgZ2V0X21lbW9yeV9yYW5n
+ZXMoc3RydWN0IG1lbW9yeV9yYW5nZSAqKnJhbmdlLCBpbnQgKnJhbmdlcywKIAkJCXVuc2lnbmVk
+IGxvbmcga2V4ZWNfZmxhZ3MpCi17Ci0JaWYgKGNvdW50X21lbW9yeV9yYW5nZXMoKSkKLQkJcmV0
+dXJuIC0xOworewkKKyAgICAgICAgLyogYWxsb2NhdGUgbWVtb3J5X3JhbmdlIGR5bmFtaWNhbGx5
+ICovCisgICAgICAgIG1heF9tZW1vcnlfcmFuZ2VzID0gMTsKKwogCWlmIChhbGxvY19tZW1vcnlf
+cmFuZ2VzKCkpCiAJCXJldHVybiAtMTsKIAlpZiAoc2V0dXBfbWVtb3J5X3JhbmdlcyhrZXhlY19m
+bGFncykpCg==
+------=_Part_8470_11336369.1224060384834
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+------=_Part_8470_11336369.1224060384834--
+
