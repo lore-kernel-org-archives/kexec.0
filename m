@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KqDzN-0001mp-6b
-	for kexec@lists.infradead.org; Wed, 15 Oct 2008 21:33:05 +0000
-Date: Wed, 15 Oct 2008 17:32:49 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: =?utf-8?B?77y7UEFUQ0jvvL0gL0RvY3VtZW50?=
-	=?utf-8?Q?ation=2Fkdump=2Fgdbmacros=2Etxt=3Aupdate?=
-	=?utf-8?Q?s?= and fixs bugs when iterating thread group member
-Message-ID: <20081015213249.GA5685@redhat.com>
-References: <200810151604.47642.qhfeng.kernel@gmail.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KqKDv-0008TY-Dw
+	for kexec@lists.infradead.org; Thu, 16 Oct 2008 04:12:32 +0000
+Message-ID: <48F6BECE.60500@mxs.nes.nec.co.jp>
+Date: Thu, 16 Oct 2008 13:10:54 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200810151604.47642.qhfeng.kernel@gmail.com>
+Subject: [PATCH] Add vmlist.addr to vmcoreinfo for x86 vmalloc translation.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,426 +16,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2143002087=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Qinghuang Feng <qhfeng.kernel@gmail.com>
-Cc: vatsa@in.ibm.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, maneesh@in.ibm.com, alexn@telia.com
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Worth, Kevin" <kevin.worth@hp.com>, kexec-ml <kexec@lists.infradead.org>
 
-On Wed, Oct 15, 2008 at 04:04:47PM +0800, Qinghuang Feng wrote:
-> This patch is for linus-git, and it do the following:
-> 
-> 1.updates macros in the file to fix the following errors:
-> (gdb) btt
-> There is no member named pid_list.
-> (gdb) bttnobp
-> There is no member named pid_list.
-> 
-> 2.fix bugs in two places when iterateing thread members in a thread group
-> 
-> original macro:
-> 16 define bttnobp
-> ....
-> 21         while ($next_t != $init_t)
-> ...
-> 34                 set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> 35                 while ($next_th != $next_t)
-> 36                         set $next_th=(struct task_struct *)$next_th
-> 37                         printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> now, we should print info about the thread member, but it  print 
-> info of threadgroup leader repeatly.
-> ...
-> 
+--===============2143002087==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-CCing people who contributed these macros. They should be able to have a
-look at it.
+
+Hi Andrew,
+
+This patch adds both symbol 'vmlist' and offset 'vm_struct.addr' to
+the vmcoreinfo[1] data for i386 vmalloc translation.
+
+makedumpfile[2] needs VMALLOC_START value for distinguishing a vmalloc
+address or not, because it should choose suitable translation method.
+If applying this patch, makedumpfile will be able to take VMALLOC_START
+value from 'vmlist.addr'.
+
+This patch is for linux-2.6.27 and its CodingStyle have been checked by
+checkpatch.pl.
+
+
+vmcoreinfo[1]:
+The vmcoreinfo data has the minimum debugging information only for dump
+filtering. makedumpfile[2] uses it to distinguish unnecessary pages and
+creates a small dumpfile.
+
+makedumpfile[2]:
+dump filtering command
+https://sourceforge.net/projects/makedumpfile/
+
 
 Thanks
-Vivek
+Ken'ichi Ohmichi
 
-> 3.introduce two auxiliary macros: psusr and pskern to list info of all tasks
-> viewed in userspace and kernelspace respectively.
-> 
-> The following is the testing result, bu it is test in X86 and kgdb remote 
-> debugging environment:
-> a.out is a muti-thread program, and one of its threads exec the "top".
-> (gdb) pskern
-> address		state		uid	pid	ppid	comm
-> 0xC03512F4	running		0	0	0	swapper
-> ....
-> 0xD9418180	sleeping	0	2379	2371	bash
-> 0xD94191C0	sleeping	0	2383	2379	a.out
-> 0xDC52DA20	sleeping	0	2384	2379	a.out
-> 0xDC52D610	sleeping	0	2385	2379	a.out
-> 0xDC52D200	sleeping	0	2386	2379	a.out
-> 0xDC52CDF0	sleeping	0	2387	2386	top
-> address		state		uid	pid	ppid	comm
-> (gdb) btt
-> ....
-> pid 2379; addr:0xd9418180; comm bash:
-> =====================================
-> do_wait + 2227 in section .text
-> sys_wait4 + 121 in section .text
-> sys_waitpid + 19 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> pid 2383; addr:0xd94191c0; comm a.out:
-> =====================================
-> do_nanosleep + 84 in section .text
-> hrtimer_nanosleep + 74 in section .text
-> sys_nanosleep + 66 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> pid 2384; addr:0xdc52da20; comm a.out:
-> =====================================
-> do_nanosleep + 84 in section .text
-> hrtimer_nanosleep + 74 in section .text
-> sys_nanosleep + 66 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> pid 2385; addr:0xdc52d610; comm a.out:
-> ---Type <return> to continue, or q <return> to quit---
-> =====================================
-> do_nanosleep + 84 in section .text
-> hrtimer_nanosleep + 74 in section .text
-> sys_nanosleep + 66 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> pid 2386; addr:0xdc52d200; comm a.out:
-> =====================================
-> do_wait + 2227 in section .text
-> sys_wait4 + 121 in section .text
-> sys_waitpid + 19 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> pid 2387; addr:0xdc52cdf0; comm top:
-> =====================================
-> schedule_timeout + 109 in section .text
-> do_select + 1081 in section .text
-> core_sys_select + 440 in section .text
-> sys_select + 143 in section .text
-> ia32_sysenter_target + 127 in section .text
-> 
-> 
-> Signed-off-by: Qinghuang Feng <qhfeng.kernel@gmail.com>
-> ---
-> diff --git a/Documentation/kdump/gdbmacros.txt b/Documentation/kdump/gdbmacros.txt
-> index 9b9b454..c286da1 100644
-> --- a/Documentation/kdump/gdbmacros.txt
-> +++ b/Documentation/kdump/gdbmacros.txt
-> @@ -13,39 +13,146 @@
->  # Maneesh Soni <maneesh@in.ibm.com>
->  #
->  
-> +define __show_state
-> +        if ($arg0->state == 0)
-> +                printf "running\t\t"
-> +                else
-> +                if ($arg0->state == 1)
-> +                        printf "sleeping\t"
-> +                        else
-> +                        if ($arg0->state == 2)
-> +                                printf "disksleep\t"
-> +                                else
-> +                                if ($arg0->state == 4)
-> +                                        printf "zombie\t"
-> +                                        else
-> +                                        if ($arg0->state == 8)
-> +                                                printf "stopped\t"
-> +                                                else
-> +                                                if ($arg0->state == 16)
-> +                                                        printf "wpaging\t"
-> +                                                        else
-> +                                                                printf "%d\t\t", $arg0->state
-> +                                                        end
-> +                                                end
-> +                                        end
-> +                                end
-> +                        end
-> +                end
-> +end
-> +document __show_state
-> +internel macro, don't call it by hand
-> +end
-> +
-> +
-> +define psusr
-> +        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-> +        set $init_t = &init_task
-> +        set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> +        set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> +
-> +        while ($next_t != $init_t)
-> +		set $next_t=(struct task_struct *)$next_t
-> +		printf "0x%08X\t", $next_t
-> +		show_state $next_t
-> +		printf "%d\t%d\t%d\t%s\n", \
-> +			$next_t->uid, $next_t->pid, \
-> +			$next_t->parent->pid, $next_t->comm
-> +		set  $next_t=(char *)($next_t->tasks.next) - $tasks_off 
-> +        end
-> +
-> +        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-> +        printf "----end----\n"
-> +
-> +end
-> +document psusr
-> +print information for all tasks, but not including thread members.
-> +This command looks like "ps -aux" in userspace.
-> +end
-> +
-> +
-> +define pskern
-> +        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-> +        set $init_t = &init_task
-> +        printf "0x%08X\t", $init_t
-> +        __show_state $init_t
-> +        printf "%d\t%d\t%d\t%s\n", \
-> +                $init_t->uid, $init_t->pid, \
-> +                $init_t->parent->pid, $init_t->comm
-> +	
-> +	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> +	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
-> +	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> +
-> +	while ($next_t != $init_t)
-> +		set $next_t=(struct task_struct *)$next_t
-> +
-> +		printf "0x%08X\t", $next_t
-> +		show_state $next_t
-> +		printf "%d\t%d\t%d\t%s\n", \
-> +			$next_t->uid, $next_t->pid, \
-> +			$next_t->parent->pid, $next_t->comm
-> +
-> +		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
-> +
-> +		while ($next_th != $next_t)
-> +			set $next_th=(struct task_struct *)$next_th
-> +
-> +			printf "0x%08X\t", $next_th
-> +			show_state $next_th
-> +			printf "%d\t%d\t%d\t%s\n", \
-> +				$next_th->uid, $next_th->pid, \
-> +				$next_th->parent->pid, $next_th->comm
-> +
-> +			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
-> +		end
-> +
-> +		set  $next_t=(char *)($next_t->tasks.next) - $tasks_off
-> +        end
-> +
-> +        printf "address\t\tstate\t\tuid\tpid\tppid\tcomm\n"
-> +        printf "----end----\n"
-> +
-> +end
-> +document pskern
-> +print infor for all tasks viewed in kernel, including all thread members
-> +and swapper(PID==0).
-> +end
-> +
-> +
-> +define __prinfo_nobp
-> +        printf "\npid %d; addr:0x%08x; comm %s:\n", \
-> +                $arg0.pid, $arg0, $arg0.comm
-> +        printf "=====================================\n"
-> +        set var $stackp = $arg0.thread.sp
-> +        set var $stack_top = ($stackp & ~4095) + 4096
-> +
-> +        while ($stackp < $stack_top)
-> +                if (*($stackp) > _stext && *($stackp) < _sinittext)
-> +                        info symbol *($stackp)
-> +                end
-> +        set $stackp += 4
-> +        end
-> +end
-> +document __prinfo_nobp
-> +internal macro, don't call it by hand.
-> +end
-> +
-> +
->  define bttnobp
->  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> -	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> +	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
->  	set $init_t=&init_task
->  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> +
->  	while ($next_t != $init_t)
->  		set $next_t=(struct task_struct *)$next_t
-> -		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> -		printf "===================\n"
-> -		set var $stackp = $next_t.thread.esp
-> -		set var $stack_top = ($stackp & ~4095) + 4096
-> -
-> -		while ($stackp < $stack_top)
-> -			if (*($stackp) > _stext && *($stackp) < _sinittext)
-> -				info symbol *($stackp)
-> -			end
-> -			set $stackp += 4
-> -		end
-> -		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> +		__prinfo_nobp $next_t
-> +		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
->  		while ($next_th != $next_t)
->  			set $next_th=(struct task_struct *)$next_th
-> -			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> -			printf "===================\n"
-> -			set var $stackp = $next_t.thread.esp
-> -			set var $stack_top = ($stackp & ~4095) + 4096
-> -
-> -			while ($stackp < $stack_top)
-> -				if (*($stackp) > _stext && *($stackp) < _sinittext)
-> -					info symbol *($stackp)
-> -				end
-> -				set $stackp += 4
-> -			end
-> -			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> +			__prinfo_nobp $next_th
-> +			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
->  		end
->  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
->  	end
-> @@ -54,42 +161,41 @@ document bttnobp
->  	dump all thread stack traces on a kernel compiled with !CONFIG_FRAME_POINTER
->  end
->  
-> +
-> +define __prinfo
-> +        printf "\npid %d; addr:0x%08x; comm %s:\n", \
-> +                $arg0.pid, $arg0, $arg0.comm
-> +        printf "=====================================\n"
-> +        set var $stackp = $arg0.thread.sp
-> +        set var $stack_top = ($stackp & ~4095) + 4096
-> +        set var $stack_bot = ($stackp & ~4095)
-> +
-> +        set $stackp = *($stackp)
-> +        while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> +                set var $addr = *($stackp + 4)
-> +                info symbol $addr
-> +                set $stackp = *($stackp)
-> +        end
-> +end
-> +document __prinfo
-> +internal macro, don't call it by hand.
-> +end
-> +
-> +
->  define btt
->  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> -	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> +	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
->  	set $init_t=&init_task
->  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
-> +
->  	while ($next_t != $init_t)
->  		set $next_t=(struct task_struct *)$next_t
-> -		printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> -		printf "===================\n"
-> -		set var $stackp = $next_t.thread.esp
-> -		set var $stack_top = ($stackp & ~4095) + 4096
-> -		set var $stack_bot = ($stackp & ~4095)
-> -
-> -		set $stackp = *($stackp)
-> -		while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> -			set var $addr = *($stackp + 4)
-> -			info symbol $addr
-> -			set $stackp = *($stackp)
-> -		end
-> -
-> -		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> +		__prinfo $next_t
-> +		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
->  		while ($next_th != $next_t)
->  			set $next_th=(struct task_struct *)$next_th
-> -			printf "\npid %d; comm %s:\n", $next_t.pid, $next_t.comm
-> -			printf "===================\n"
-> -			set var $stackp = $next_t.thread.esp
-> -			set var $stack_top = ($stackp & ~4095) + 4096
-> -			set var $stack_bot = ($stackp & ~4095)
-> -
-> -			set $stackp = *($stackp)
-> -			while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> -				set var $addr = *($stackp + 4)
-> -				info symbol $addr
-> -				set $stackp = *($stackp)
-> -			end
-> -			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> +			__prinfo $next_th	
-> +			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
->  		end
->  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
->  	end
-> @@ -101,7 +207,7 @@ end
->  define btpid
->  	set var $pid = $arg0
->  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> -	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> +	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group)
->  	set $init_t=&init_task
->  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
->  	set var $pid_task = 0
-> @@ -113,29 +219,19 @@ define btpid
->  			set $pid_task = $next_t
->  		end
->  
-> -		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> +		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
->  		while ($next_th != $next_t)
->  			set $next_th=(struct task_struct *)$next_th
->  			if ($next_th.pid == $pid)
->  				set $pid_task = $next_th
->  			end
-> -			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> +			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
->  		end
->  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
->  	end
->  
-> -	printf "\npid %d; comm %s:\n", $pid_task.pid, $pid_task.comm
-> -	printf "===================\n"
-> -	set var $stackp = $pid_task.thread.esp
-> -	set var $stack_top = ($stackp & ~4095) + 4096
-> -	set var $stack_bot = ($stackp & ~4095)
-> -
-> -	set $stackp = *($stackp)
-> -	while (($stackp < $stack_top) && ($stackp > $stack_bot))
-> -		set var $addr = *($stackp + 4)
-> -		info symbol $addr
-> -		set $stackp = *($stackp)
-> -	end
-> +	__prinfo $pid_task
-> +
->  end
->  document btpid
->  	backtrace of pid
-> @@ -145,7 +241,7 @@ end
->  define trapinfo
->  	set var $pid = $arg0
->  	set $tasks_off=((size_t)&((struct task_struct *)0)->tasks)
-> -	set $pid_off=((size_t)&((struct task_struct *)0)->pids[1].pid_list.next)
-> +	set $thread_off=((size_t)&((struct task_struct *)0)->thread_group.next)
->  	set $init_t=&init_task
->  	set $next_t=(((char *)($init_t->tasks).next) - $tasks_off)
->  	set var $pid_task = 0
-> @@ -157,13 +253,13 @@ define trapinfo
->  			set $pid_task = $next_t
->  		end
->  
-> -		set $next_th=(((char *)$next_t->pids[1].pid_list.next) - $pid_off)
-> +		set $next_th=(((char *)$next_t->thread_group.next) - $thread_off)
->  		while ($next_th != $next_t)
->  			set $next_th=(struct task_struct *)$next_th
->  			if ($next_th.pid == $pid)
->  				set $pid_task = $next_th
->  			end
-> -			set $next_th=(((char *)$next_th->pids[1].pid_list.next) - $pid_off)
-> +			set $next_th=(((char *)$next_th->thread_group.next) - $thread_off)
->  		end
->  		set $next_t=(char *)($next_t->tasks.next) - $tasks_off
->  	end
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+---
+--- a/kernel/kexec.c	2008-10-10 07:13:53.000000000 +0900
++++ b/kernel/kexec.c	2008-10-15 13:12:50.000000000 +0900
+@@ -1371,6 +1371,7 @@ static int __init crash_save_vmcoreinfo_
+ 	VMCOREINFO_SYMBOL(node_online_map);
+ 	VMCOREINFO_SYMBOL(swapper_pg_dir);
+ 	VMCOREINFO_SYMBOL(_stext);
++	VMCOREINFO_SYMBOL(vmlist);
+ 
+ #ifndef CONFIG_NEED_MULTIPLE_NODES
+ 	VMCOREINFO_SYMBOL(mem_map);
+@@ -1406,6 +1407,7 @@ static int __init crash_save_vmcoreinfo_
+ 	VMCOREINFO_OFFSET(free_area, free_list);
+ 	VMCOREINFO_OFFSET(list_head, next);
+ 	VMCOREINFO_OFFSET(list_head, prev);
++	VMCOREINFO_OFFSET(vm_struct, addr);
+ 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
+ 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
+ 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
+_
+
+
+--===============2143002087==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2143002087==--
