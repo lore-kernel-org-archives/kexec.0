@@ -1,13 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from e3.ny.us.ibm.com ([32.97.182.143])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KqKDv-0008TY-Dw
-	for kexec@lists.infradead.org; Thu, 16 Oct 2008 04:12:32 +0000
-Message-ID: <48F6BECE.60500@mxs.nes.nec.co.jp>
-Date: Thu, 16 Oct 2008 13:10:54 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1KqQAV-0000PX-B0
+	for kexec@lists.infradead.org; Thu, 16 Oct 2008 10:33:23 +0000
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e3.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m9GAXJHA016304
+	for <kexec@lists.infradead.org>; Thu, 16 Oct 2008 06:33:19 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m9GAXJOp288386
+	for <kexec@lists.infradead.org>; Thu, 16 Oct 2008 06:33:19 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m9GAXJ3q028459
+	for <kexec@lists.infradead.org>; Thu, 16 Oct 2008 06:33:19 -0400
+Message-ID: <48F71868.8000507@in.ibm.com>
+Date: Thu, 16 Oct 2008 16:03:12 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
 MIME-Version: 1.0
-Subject: [PATCH] Add vmlist.addr to vmcoreinfo for x86 vmalloc translation.
+Subject: Re: [PATCH] Support for relocatable kdump kernel
+References: <20081012233420.GA6240@in.ibm.com>
+	<18674.42140.69339.584403@drongo.ozlabs.ibm.com>
+In-Reply-To: <18674.42140.69339.584403@drongo.ozlabs.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,76 +30,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2143002087=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Worth, Kevin" <kevin.worth@hp.com>, kexec-ml <kexec@lists.infradead.org>
+To: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
 
---===============2143002087==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Paul Mackerras wrote:
+> Mohan Kumar M writes:
+> 
+>> Support for relocatable kdump kernel
+> 
+>> @@ -1401,9 +1414,21 @@ _STATIC(__after_prom_start)
+>>  	beq	9f			/* have already put us at zero */
+>>  	li	r6,0x100		/* Start offset, the first 0x100 */
+>>  					/* bytes were copied earlier.	 */
+>> -#ifdef CONFIG_RELOCATABLE
+>> +
+>> +#ifdef CONFIG_CRASH_DUMP
+> 
+> What tree is this patch against?  No tree that I can find has a line
+> saying "#ifdef CONFIG_RELOCATABLE" at that point.  Or is there a
+> prerequisite patch that I haven't seen yet?
 
+Hi Paul,
 
-Hi Andrew,
+My patch is based on your PATCH 5 of relocatable kernel patchset (which 
+demonstrates kernel can be relocatable).
 
-This patch adds both symbol 'vmlist' and offset 'vm_struct.addr' to
-the vmcoreinfo[1] data for i386 vmalloc translation.
+Do I need to resend the patch by generating the diff with your patch5 also?
 
-makedumpfile[2] needs VMALLOC_START value for distinguishing a vmalloc
-address or not, because it should choose suitable translation method.
-If applying this patch, makedumpfile will be able to take VMALLOC_START
-value from 'vmlist.addr'.
+Regards,
+Mohan.
 
-This patch is for linux-2.6.27 and its CodingStyle have been checked by
-checkpatch.pl.
-
-
-vmcoreinfo[1]:
-The vmcoreinfo data has the minimum debugging information only for dump
-filtering. makedumpfile[2] uses it to distinguish unnecessary pages and
-creates a small dumpfile.
-
-makedumpfile[2]:
-dump filtering command
-https://sourceforge.net/projects/makedumpfile/
-
-
-Thanks
-Ken'ichi Ohmichi
-
-Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
----
---- a/kernel/kexec.c	2008-10-10 07:13:53.000000000 +0900
-+++ b/kernel/kexec.c	2008-10-15 13:12:50.000000000 +0900
-@@ -1371,6 +1371,7 @@ static int __init crash_save_vmcoreinfo_
- 	VMCOREINFO_SYMBOL(node_online_map);
- 	VMCOREINFO_SYMBOL(swapper_pg_dir);
- 	VMCOREINFO_SYMBOL(_stext);
-+	VMCOREINFO_SYMBOL(vmlist);
- 
- #ifndef CONFIG_NEED_MULTIPLE_NODES
- 	VMCOREINFO_SYMBOL(mem_map);
-@@ -1406,6 +1407,7 @@ static int __init crash_save_vmcoreinfo_
- 	VMCOREINFO_OFFSET(free_area, free_list);
- 	VMCOREINFO_OFFSET(list_head, next);
- 	VMCOREINFO_OFFSET(list_head, prev);
-+	VMCOREINFO_OFFSET(vm_struct, addr);
- 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
- 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
-_
-
-
---===============2143002087==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2143002087==--
