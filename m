@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KqwSr-0006I0-PL
-	for kexec@lists.infradead.org; Fri, 17 Oct 2008 21:02:31 +0000
-Date: Fri, 17 Oct 2008 17:00:13 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH] kexec: fix hang on i386 when panic occurs while
-	console_sem is held
-Message-ID: <20081017210013.GD23591@hmsreliant.think-freely.org>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KqwZe-0000G0-Hm
+	for kexec@lists.infradead.org; Fri, 17 Oct 2008 21:09:31 +0000
+Date: Fri, 17 Oct 2008 17:08:54 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] add additional symbols to /sys/kernel/vmcoreinfo data
+	for ppc(64)
+Message-ID: <20081017210854.GB10013@redhat.com>
+References: <20081009151408.GA25268@hmsendeavour.rdu.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20081009151408.GA25268@hmsendeavour.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,56 +24,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: nhorman@tuxdriver.com, hbabu@us.ibm.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, akpm@linux-foundation.org, vgoyal@redhat.com
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hey all-
-	Theres a corner case in 32 bit x86 kdump at the moment.  When the box
-panics via nmi, we call bust_spinlocks(1) to disable sensitivity to the
-console_sem (allowing us to print to the console in all cases), but we don't
-call crash_kexec, until after we call bust_spinlocks(0), which re-enables
-console_sem sensitivity.  The result is that, if we get an nmi while the
-console_sem is held and kdump is configured, and we try to print something to
-the console during kdump shutdown (which we often do) we deadlock the box.  The
-fix is to simply do what 64 bit die_nmi does which is to not call
-bust_spinlocks(0) until after we call crash_kexec.  Patch below tested
-successfully by me:
+On Thu, Oct 09, 2008 at 11:20:27AM -0400, Neil Horman wrote:
+> Hey-
+> 	The makdumpdile dump filtering program, in some modes of operation needs
+> the node_data and/or contig_page_data symbols to function properly.  These
+> symbols are missing from the powerpc kernel.  This patch adds those symbols in
+> properly.  Tested successfully by myself and the reporter.
+> 
+> Regards
+> Neil
+> 
+> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> 
+> 
+>  machine_kexec.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> 
+> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+> index aab7688..2f9b5aa 100644
+> --- a/arch/powerpc/kernel/machine_kexec.c
+> +++ b/arch/powerpc/kernel/machine_kexec.c
+> @@ -44,6 +44,16 @@ void machine_kexec_cleanup(struct kimage *image)
+>  		ppc_md.machine_kexec_cleanup(image);
+>  }
+>  
+> +void arch_crash_save_vmcoreinfo(void)
+> +{
+> +#ifdef CONFIG_NEED_MULTIPLE_NODES
+> +	VMCOREINFO_SYMBOL(node_data);
+> +	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
+> +#else
+> +	VMCOREINFO_SYMBOL(contig_page_data);
+> +#endif
+> +}
+> +
 
-Regards
-Neil
+Hi Neil,
 
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+Looks like contig_page_data is already being saved in arch independent
+portion of kexec (crash_save_vmcoreinfo_init()). We probably don't need
+to save it here again?
 
+#ifndef CONFIG_NEED_MULTIPLE_NODES
+        VMCOREINFO_SYMBOL(mem_map);
+        VMCOREINFO_SYMBOL(contig_page_data);
+#endif
 
- dumpstack_32.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-
-diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index 1a78180..b361475 100644
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -405,7 +405,6 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
- 		panic("Non maskable interrupt");
- 	console_silent();
- 	spin_unlock(&nmi_print_lock);
--	bust_spinlocks(0);
- 
- 	/*
- 	 * If we are in kernel we are probably nested up pretty bad
-@@ -416,6 +415,7 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
- 		crash_kexec(regs);
- 	}
- 
-+	bust_spinlocks(0);
- 	do_exit(SIGSEGV);
- }
- 
--- 
-/****************************************************
- * Neil Horman <nhorman@tuxdriver.com>
- * Software Engineer, Red Hat
- ****************************************************/
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
