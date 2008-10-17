@@ -1,24 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp06.in.ibm.com ([59.145.155.6] helo=e28esmtp06.in.ibm.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KqtYJ-0003qa-G0
-	for kexec@lists.infradead.org; Fri, 17 Oct 2008 17:55:56 +0000
-Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
-	by e28esmtp06.in.ibm.com (8.13.1/8.13.1) with ESMTP id m9HHtpOW007760
-	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 23:25:51 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m9HHtp4f1052814
-	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 23:25:51 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.13.1/8.13.3) with ESMTP id m9HHtpTZ002610
-	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 23:25:51 +0530
-From: Chandru <chandru@in.ibm.com>
-Subject: [PATCH] kdump : check flags field from drconf memory
-Date: Fri, 17 Oct 2008 23:25:54 +0530
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kqtav-00041J-Qe
+	for kexec@lists.infradead.org; Fri, 17 Oct 2008 17:58:38 +0000
+Received: from int-mx2.corp.redhat.com (int-mx2.corp.redhat.com [172.16.27.26])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id m9HHwbQu026549
+	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 13:58:37 -0400
+Received: from mail02.corp.redhat.com (zmail02.collab.prod.int.phx2.redhat.com
+	[10.5.5.42])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9HHwbMt024352
+	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 13:58:37 -0400
+Date: Fri, 17 Oct 2008 13:58:36 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1101712308.1611161224266316866.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <964791790.1610871224266288310.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
+Subject: kexec/kdump produces incomplete dump files with kernel 2.6.20 +
+	CONFIG_HIGHMEM64G
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200810172325.54932.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,74 +29,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
-
-On a powerpc machine when memory is dynamically removed/added from an lpar, the 
-corresponding flags field in the drconf memory reflects the same with the bits 
-unset/set accordingly. The kernel does a check on these flags while booting. 
-Following are the similar changes brought in to kexec-tools.  This makes 
-kexec-tools to skip those memory regions that do not belong or are not 
-assigned to the current partition ( but are available to dynamically add them 
-back ). Without this patch (and with memory remove operation) copying vmcore 
-fails with error as
-
-Copying data                       : [ 84 %] readmem: Can't read the dump 
-memory(/proc/vmcore). Bad address
-read_pfn: Can't get the page data.
+To: kexec-ml <kexec@lists.infradead.org>
 
 
-Signed-off-by : Chandru S <chandru@in.ibm.com>
----
+> Well, without following the thread, I had a similar error and in my
+> case it was that PAE was missing in the capture kernel. That's why I
+> asked. I think that is wrong here, but I still wanted to mention that
+> case (and I don't have time to read all the mails related to that topic
+> in the crash mailing list, sorry).
+>
+> Regards,
+> Bernhard
 
-diff -Naurp kexec-tools-orig//kexec/arch/ppc64/crashdump-ppc64.c 
-kexec-tools/kexec/arch/ppc64/crashdump-ppc64.c
---- kexec-tools-orig//kexec/arch/ppc64/crashdump-ppc64.c	2008-10-14 
-01:36:05.000000000 -0500
-+++ kexec-tools/kexec/arch/ppc64/crashdump-ppc64.c	2008-10-17 
-12:17:53.000000000 -0500
-@@ -127,6 +127,7 @@ static int get_dyn_reconf_crash_memory_r
- 	char fname[128], buf[32];
- 	FILE *file;
- 	int i, n;
-+	uint32_t flags;
- 
- 	strcpy(fname, "/proc/device-tree/");
- 	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory");
-@@ -150,10 +151,17 @@ static int get_dyn_reconf_crash_memory_r
- 			return -1;
- 		}
- 
--		start = ((uint64_t *)buf)[0];
-+		start = ((uint64_t *)buf)[DRCONF_ADDR];
- 		end = start + lmb_size;
- 		if (start == 0 && end >= (BACKUP_SRC_END + 1))
- 			start = BACKUP_SRC_END + 1;
-+
-+		flags = (*((uint32_t *)&buf[DRCONF_FLAGS]));
-+		/* skip this block if the reserved bit is set in flags (0x80)
-+		   or if the block is not assigned to this partition (0x8) */
-+		if ((flags & 0x80) || !(flags & 0x8))
-+			continue;	
-+
- 		exclude_crash_region(start, end);
- 	}
- 	fclose(file);
-diff -Naurp kexec-tools-orig//kexec/arch/ppc64/crashdump-ppc64.h 
-kexec-tools/kexec/arch/ppc64/crashdump-ppc64.h
---- kexec-tools-orig//kexec/arch/ppc64/crashdump-ppc64.h	2008-10-14 
-01:36:05.000000000 -0500
-+++ kexec-tools/kexec/arch/ppc64/crashdump-ppc64.h	2008-10-17 
-12:18:02.000000000 -0500
-@@ -31,4 +31,7 @@ extern unsigned int rtas_size;
- uint64_t lmb_size;
- unsigned int num_of_lmbs;
- 
-+#define DRCONF_ADDR	0
-+#define DRCONF_FLAGS	20
-+
- #endif /* CRASHDUMP_PPC64_H */
+Well that makes perfect sense -- the upper bit gets stripped in
+the 32-bit PTE and the wrong location gets mapped.  I was looking
+at the fs/vmcore.c code for something to that effect, and I just
+presumed his capture kernel was PAE.  Looking back at the thread,
+the only thing I see is this:
 
+  "my "capture kernel" is just the standard Ubuntu kernel
+   (with 1G kernel / 3G user)."
 
+Whatever that means... 
+
+So Kevin, that's the first thing to check.
+
+Thanks Bernhard,
+  Dave
 
 _______________________________________________
 kexec mailing list
