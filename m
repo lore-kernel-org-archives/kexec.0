@@ -1,26 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.18.175])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KqrwZ-0004XT-FE
-	for kexec@lists.infradead.org; Fri, 17 Oct 2008 16:12:52 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp06.au.ibm.com (8.13.1/8.13.1) with ESMTP id m9HGBq8A002343
-	for <kexec@lists.infradead.org>; Sat, 18 Oct 2008 03:11:52 +1100
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m9HGClZi289214
-	for <kexec@lists.infradead.org>; Sat, 18 Oct 2008 03:12:48 +1100
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m9HGClaV024152
-	for <kexec@lists.infradead.org>; Sat, 18 Oct 2008 03:12:47 +1100
-Message-ID: <48F8B980.7000403@in.ibm.com>
-Date: Fri, 17 Oct 2008 21:42:48 +0530
-From: Chandru <chandru@in.ibm.com>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kqs3F-00008m-15
+	for kexec@lists.infradead.org; Fri, 17 Oct 2008 16:19:45 +0000
+Received: from int-mx2.corp.redhat.com (int-mx2.corp.redhat.com [172.16.27.26])
+	by mx2.redhat.com (8.13.8/8.13.8) with ESMTP id m9HGJior006595
+	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 12:19:44 -0400
+Received: from mail02.corp.redhat.com (zmail02.collab.prod.int.phx2.redhat.com
+	[10.5.5.42])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9HGJind031899
+	for <kexec@lists.infradead.org>; Fri, 17 Oct 2008 12:19:44 -0400
+Date: Fri, 17 Oct 2008 12:19:44 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <306593678.1592141224260384037.JavaMail.root@zmail02.collab.prod.int.phx2.redhat.com>
+Subject: kexec/kdump produces incomplete dump files with kernel 2.6.20 +
+	CONFIG_HIGHMEM64G
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec memory ranges dynamic allocation
-References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
-In-Reply-To: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,43 +28,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: kexec-ml <kexec@lists.infradead.org>
 
-Maxim Uvarov wrote:
-> Hello all,
 >
-> As you all know it is not easy to count exact value of memory ranges 
-> from device tree on powerpc.
-> It very depends on how dts file was written. What do you think about 
-> really dynamic allocation buffers
-> for this buffers? Patch is attached.
+> Do you use the same kernel as the running kernel as capture kernel?
 >
-> -- 
-> Best regards,
-> Maxim Uvarov
+> Regards,
+> Bernhard
 
-Maxim,
+If I may butt in here -- Kevin's capture kernel is "standard" 3GB/1GB
+kernel, whereas his primary kernel is his 1GB/3GB kernel.
 
-The changes seem to be better in allocating memory ranges dynamically.   
-From the patch, it looks like there are couple of other places in 
-get_devtree_details() to make a  call to realloc_memory_ranges(). Also 
-the patch removes the initialization of lmb_size and num_of_lmbs which 
-are required for  the recent dynamic-reconf-memory changes to 
-kexec-tools.  Else these values could also be read from 
-/proc/device-tree wherever necessary .   I applied the patch on a ppc64 
-machine and got the following
+Also to clarify, since vmalloc memory is biased to be allocated
+from highmem, in his 1GB/3GB kernel it comes from physical memory
+above his kernel's 3GB "unity-mappable" range.  And his system happens
+to have a 1GB chunk of physical memory from 4GB to 5GB physical, so
+his vmalloc memory comes from the physical address 0x100000000 and
+above.  Data is read OK on the live system from that region of memory,
+but when read from the same physical address on the dumpfile, it always
+returns zeroes.
 
-# ./build/sbin/kexec -p /boot/vmlinux-kdump --append="root=/dev/sda3   
-elevator=deadline sysrq=1 reset_devices " --initrd=/boot/initrd-kdump
-get memory ranges:2
-Could not find a free area of memory of 82b2b8 bytes...
-Base address: ffffffff is not page aligned
-
-Without the patch , kexec loads the crashkernel in to memory.  Trying to 
-see whats wrong...
- 
-Chandru
+Dave
 
 _______________________________________________
 kexec mailing list
