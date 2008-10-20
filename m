@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from theia.rz.uni-saarland.de ([134.96.7.31])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Krx6A-00087c-BW
-	for kexec@lists.infradead.org; Mon, 20 Oct 2008 15:55:14 +0000
-Date: Mon, 20 Oct 2008 17:11:06 +0200
+	id 1Krx6G-00087c-Fx
+	for kexec@lists.infradead.org; Mon, 20 Oct 2008 15:55:21 +0000
+Date: Mon, 20 Oct 2008 17:08:34 +0200
 From: Alexander van Heukelum <heukelum@mailshack.com>
-Subject: [PATCH] x86, dumpstack: make die and die_nmi equal
-Message-ID: <20081020151106.GA26034@mailshack.com>
+Subject: [PATCH] x86: make oops_begin and oops_end equal
+Message-ID: <20081020150834.GA26018@mailshack.com>
 References: <20081017210013.GD23591@hmsreliant.think-freely.org>
 	<20081020121339.GE10594@elte.hu>
 	<20081020134211.GA15574@hmsreliant.think-freely.org>
 	<20081020150731.GA25999@mailshack.com>
-	<20081020150834.GA26018@mailshack.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20081020150834.GA26018@mailshack.com>
+In-Reply-To: <20081020150731.GA25999@mailshack.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,121 +29,123 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Neil Horman <nhorman@tuxdriver.com>
 Cc: Alexander van Heukelum <heukelum@fastmail.fm>, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, Ingo Molnar <mingo@elte.hu>, tglx@linutronix.de, vgoyal@redhat.com
 
-Use the x86_64 version of die() and die_nmi() on i386 too.
-Changes to the original x86_64-version have no influence
-on the generated code:
+Mostly use the x86_64 version of oops_begin() and oops_end() on
+i386 too. Changes to the original x86_64 version:
 
- - whitespace, comments
- - use user_mode_vm() instead of user_mode()
+ - move add_taint(TAINT_DIE) into oops_end()
+ - add a conditional crash_kexec() into oops_end()
 
 Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
 ---
- arch/x86/kernel/dumpstack_32.c |   40 ++++++++++++++--------------------------
- arch/x86/kernel/dumpstack_64.c |    9 +++++++--
- 2 files changed, 21 insertions(+), 28 deletions(-)
+ arch/x86/kernel/dumpstack_32.c |   36 +++++++++++++++++++++---------------
+ arch/x86/kernel/dumpstack_64.c |    4 +++-
+ 2 files changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index e45952b..6f00938 100644
+index b361475..e45952b 100644
 --- a/arch/x86/kernel/dumpstack_32.c
 +++ b/arch/x86/kernel/dumpstack_32.c
-@@ -377,52 +377,40 @@ void die(const char *str, struct pt_regs *regs, long err)
+@@ -289,35 +289,41 @@ static unsigned int die_nest_count;
+ 
+ unsigned __kprobes long oops_begin(void)
  {
- 	unsigned long flags = oops_begin();
++	int cpu;
+ 	unsigned long flags;
  
--	if (die_nest_count < 3) {
-+	if (!user_mode_vm(regs))
- 		report_bug(regs->ip, regs);
+ 	oops_enter();
  
--		if (__die(str, regs, err))
--			regs = NULL;
+-	if (die_owner != raw_smp_processor_id()) {
+-		console_verbose();
+-		raw_local_irq_save(flags);
+-		__raw_spin_lock(&die_lock);
+-		die_owner = smp_processor_id();
+-		die_nest_count = 0;
+-		bust_spinlocks(1);
 -	} else {
--		printk(KERN_EMERG "Recursive die() failure, output suppressed\n");
--	}
-+	if (__die(str, regs, err))
-+		regs = NULL;
- 
- 	oops_end(flags, regs, SIGSEGV);
+-		raw_local_irq_save(flags);
++	/* racy, but better than risking deadlock. */
++	raw_local_irq_save(flags);
++	cpu = smp_processor_id();
++	if (!__raw_spin_trylock(&die_lock)) {
++		if (cpu == die_owner)
++			/* nested oops. should stop eventually */;
++		else
++			__raw_spin_lock(&die_lock);
+ 	}
+ 	die_nest_count++;
++	die_owner = cpu;
++	console_verbose();
++	bust_spinlocks(1);
+ 	return flags;
  }
  
--static DEFINE_SPINLOCK(nmi_print_lock);
--
- void notrace __kprobes
- die_nmi(char *str, struct pt_regs *regs, int do_panic)
+ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
  {
-+	unsigned long flags;
-+
- 	if (notify_die(DIE_NMIWATCHDOG, str, regs, 0, 2, SIGINT) == NOTIFY_STOP)
- 		return;
- 
--	spin_lock(&nmi_print_lock);
-+	flags = oops_begin();
- 	/*
- 	* We are in trouble anyway, lets at least try
--	* to get a message out:
-+	* to get a message out.
- 	*/
--	bust_spinlocks(1);
- 	printk(KERN_EMERG "%s", str);
- 	printk(" on CPU%d, ip %08lx, registers:\n",
- 		smp_processor_id(), regs->ip);
- 	show_registers(regs);
--	if (do_panic)
--		panic("Non maskable interrupt");
--	console_silent();
--	spin_unlock(&nmi_print_lock);
 -	bust_spinlocks(0);
+ 	die_owner = -1;
++	bust_spinlocks(0);
++	die_nest_count--;
+ 	add_taint(TAINT_DIE);
+-	__raw_spin_unlock(&die_lock);
++	if (!die_nest_count)
++		/* Nest count reaches zero, release the lock. */
++		__raw_spin_unlock(&die_lock);
+ 	raw_local_irq_restore(flags);
 -
--	/*
--	 * If we are in kernel we are probably nested up pretty bad
--	 * and might aswell get out now while we still can:
--	 */
--	if (!user_mode_vm(regs)) {
--		current->thread.trap_no = 2;
-+	if (kexec_should_crash(current))
+-	if (!regs)
++	if (!regs) {
++		oops_exit();
+ 		return;
+-
++	}
+ 	if (kexec_should_crash(current))
  		crash_kexec(regs);
--	}
--
--	do_exit(SIGSEGV);
-+	if (do_panic || panic_on_oops)
-+		panic("Non maskable interrupt");
-+	oops_end(flags, NULL, SIGBUS);
-+	nmi_exit();
-+	local_irq_enable();
-+	do_exit(SIGBUS);
+ 	if (in_interrupt())
+@@ -405,6 +411,7 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
+ 		panic("Non maskable interrupt");
+ 	console_silent();
+ 	spin_unlock(&nmi_print_lock);
++	bust_spinlocks(0);
+ 
+ 	/*
+ 	 * If we are in kernel we are probably nested up pretty bad
+@@ -415,7 +422,6 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
+ 		crash_kexec(regs);
+ 	}
+ 
+-	bust_spinlocks(0);
+ 	do_exit(SIGSEGV);
  }
  
- static int __init oops_setup(char *s)
 diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index cd7b46b..dbcca05 100644
+index 96a5db7..cd7b46b 100644
 --- a/arch/x86/kernel/dumpstack_64.c
 +++ b/arch/x86/kernel/dumpstack_64.c
-@@ -508,19 +508,24 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
- 	return 0;
- }
+@@ -461,6 +461,7 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+ 	die_owner = -1;
+ 	bust_spinlocks(0);
+ 	die_nest_count--;
++	add_taint(TAINT_DIE);
+ 	if (!die_nest_count)
+ 		/* Nest count reaches zero, release the lock. */
+ 		__raw_spin_unlock(&die_lock);
+@@ -469,6 +470,8 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+ 		oops_exit();
+ 		return;
+ 	}
++	if (kexec_should_crash(current))
++		crash_kexec(regs);
+ 	if (in_interrupt())
+ 		panic("Fatal exception in interrupt");
+ 	if (panic_on_oops)
+@@ -496,7 +499,6 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
+ 		return 1;
  
-+/*
-+ * This is gone through when something in the kernel has done something bad
-+ * and is about to be terminated:
-+ */
- void die(const char *str, struct pt_regs *regs, long err)
- {
- 	unsigned long flags = oops_begin();
- 
--	if (!user_mode(regs))
-+	if (!user_mode_vm(regs))
- 		report_bug(regs->ip, regs);
- 
- 	if (__die(str, regs, err))
- 		regs = NULL;
-+
- 	oops_end(flags, regs, SIGSEGV);
- }
- 
--notrace __kprobes void
-+void notrace __kprobes
- die_nmi(char *str, struct pt_regs *regs, int do_panic)
- {
- 	unsigned long flags;
+ 	show_registers(regs);
+-	add_taint(TAINT_DIE);
+ 	/* Executive summary in case the oops scrolled away */
+ 	printk(KERN_ALERT "RIP ");
+ 	printk_address(regs->ip, 1);
 -- 
 1.5.4.3
 
