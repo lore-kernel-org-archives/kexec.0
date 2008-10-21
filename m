@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsIkD-0001rS-3c
-	for kexec@lists.infradead.org; Tue, 21 Oct 2008 15:02:01 +0000
-Date: Tue, 21 Oct 2008 10:59:54 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH] x86, dumpstack: make die and die_nmi equal
-Message-ID: <20081021145954.GB25750@hmsreliant.think-freely.org>
-References: <20081017210013.GD23591@hmsreliant.think-freely.org>
-	<20081020121339.GE10594@elte.hu>
-	<20081020134211.GA15574@hmsreliant.think-freely.org>
-	<20081020150731.GA25999@mailshack.com>
-	<20081020150834.GA26018@mailshack.com>
-	<20081020151106.GA26034@mailshack.com>
+Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KsKTv-0000S6-AH
+	for kexec@lists.infradead.org; Tue, 21 Oct 2008 16:53:21 +0000
+Message-ID: <48FE08CB.5080308@sgi.com>
+Date: Tue, 21 Oct 2008 09:52:27 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20081020151106.GA26034@mailshack.com>
+Subject: Re: [patch] ia64: Order of operations bug in PT_LOAD segment reader
+References: <20081008064940.GA11893@verge.net.au>
+In-Reply-To: <20081008064940.GA11893@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,100 +22,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexander van Heukelum <heukelum@mailshack.com>
-Cc: Alexander van Heukelum <heukelum@fastmail.fm>, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, Ingo Molnar <mingo@elte.hu>, tglx@linutronix.de, vgoyal@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, "Luck,
+	Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org
 
-On Mon, Oct 20, 2008 at 05:11:06PM +0200, Alexander van Heukelum wrote:
-> Use the x86_64 version of die() and die_nmi() on i386 too.
-> Changes to the original x86_64-version have no influence
-> on the generated code:
+Simon Horman wrote:
+
+Hi Simon,
+
+Just got back from vacation. Sorry for late response.
+
+> This bug was discovered by Jay Lan and he also proposed this fix, however
+> thee is some discussion about what if any related changes should be made at
+> the same time.
 > 
->  - whitespace, comments
->  - use user_mode_vm() instead of user_mode()
+> The bug comes about because the break statment was never executed because
+> the if clause would bever be true because the if clause will never be true
+> because &  has higher precedence than !=.
 > 
-Hey, smore more comments inline
-
-> Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
-> ---
->  arch/x86/kernel/dumpstack_32.c |   40 ++++++++++++++--------------------------
->  arch/x86/kernel/dumpstack_64.c |    9 +++++++--
->  2 files changed, 21 insertions(+), 28 deletions(-)
+> My position on this is that with the if logic fixed, as per this patch, the
+> break statment and the rest of the while() loop makes sense and should work
+> as intended.
 > 
-> diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-> index e45952b..6f00938 100644
-> --- a/arch/x86/kernel/dumpstack_32.c
-> +++ b/arch/x86/kernel/dumpstack_32.c
-> @@ -377,52 +377,40 @@ void die(const char *str, struct pt_regs *regs, long err)
->  {
->  	unsigned long flags = oops_begin();
->  
-> -	if (die_nest_count < 3) {
-> +	if (!user_mode_vm(regs))
->  		report_bug(regs->ip, regs);
->  
-> -		if (__die(str, regs, err))
-> -			regs = NULL;
-> -	} else {
-> -		printk(KERN_EMERG "Recursive die() failure, output suppressed\n");
-> -	}
-> +	if (__die(str, regs, err))
-> +		regs = NULL;
->  
->  	oops_end(flags, regs, SIGSEGV);
->  }
->  
-> -static DEFINE_SPINLOCK(nmi_print_lock);
-> -
->  void notrace __kprobes
->  die_nmi(char *str, struct pt_regs *regs, int do_panic)
->  {
-> +	unsigned long flags;
-> +
->  	if (notify_die(DIE_NMIWATCHDOG, str, regs, 0, 2, SIGINT) == NOTIFY_STOP)
->  		return;
->  
-> -	spin_lock(&nmi_print_lock);
-> +	flags = oops_begin();
->  	/*
->  	* We are in trouble anyway, lets at least try
-> -	* to get a message out:
-> +	* to get a message out.
->  	*/
-> -	bust_spinlocks(1);
->  	printk(KERN_EMERG "%s", str);
->  	printk(" on CPU%d, ip %08lx, registers:\n",
->  		smp_processor_id(), regs->ip);
->  	show_registers(regs);
-> -	if (do_panic)
-> -		panic("Non maskable interrupt");
-> -	console_silent();
-> -	spin_unlock(&nmi_print_lock);
-> -	bust_spinlocks(0);
-> -
-> -	/*
-> -	 * If we are in kernel we are probably nested up pretty bad
-> -	 * and might aswell get out now while we still can:
-> -	 */
-> -	if (!user_mode_vm(regs)) {
-> -		current->thread.trap_no = 2;
-> +	if (kexec_should_crash(current))
->  		crash_kexec(regs);
-As I mentioned in your other patch, this crash_kexec can go I think if you're
-going to do it in oops_end (as long as you correct the deadlock condition there
+> As I understand it, Jay's position is that the code should be simplified,
+> after all it never worked as intended.
+> 
+> There is a related kernel bug that lead Jay to discover this problem.
+> The kernel bug has been resolved by Tony Luck and was
+> included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
+> "[IA64] Put the space for cpu0 per-cpu area into .data section".
+> 
+> Now that the kernel bug is out of the way, I am providing this patch to
+> continue discussion on what to do on the kexec-tools side of things.  I do
+> not intend to apply this patch until there is some conclusion in the
+> discussion between Jay and myself.
 
-And as before, if you could rediff so that we didn't reintroduce the deadlock
-that we just fixed, that would be much appreciated.
+I think this patch is not right for two reasons:
+1) The if-statement below has never proved the correctness of
+   its intent because the 'break' statement never got executed
+   due to a logic error.
+  		if (loaded_segments[loaded_segments_num].end !=
+			(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
+			break;
+2) With your patch in my testing, the kdump kernel boot hung
+   even earlier in a PAL_CALL that was not returned to the kernel.
+   I understand that my test case was based on a kernel without
+   Tony's latest fix, but that was the only situation we can
+   see the if-statement becomes true. I do not know any other
+   way to make a memory gap happen. However, when it happens,
+   your patch only makes kdump kenrel boot hang earlier.
 
-Beyond that, I think this looks good.  Fix that up and It'll have my ack.
+I still root for my patch because the kdump kernel would boot
+correctly even if a memory gap indeed happened. ;) However,
+if you do not feel comfortable with my patch, i think the best
+alternative is to take out the if-statement above completely.
 
-Best
-Neil
+Regards,
+jay
 
---
-/****************************************************
- * Neil Horman <nhorman@tuxdriver.com>
- * Software Engineer, Red Hat
- ****************************************************/
+
+> 
+> Cc: Jay Lan <jlan@sgi.com>
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> 
+> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+> ===================================================================
+> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:31:42.000000000 +1100
+> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:32:08.000000000 +1100
+> @@ -91,7 +91,7 @@ static void add_loaded_segments_info(str
+>  	                if (phdr->p_type != PT_LOAD)
+>  	                        break;
+>  			if (loaded_segments[loaded_segments_num].end !=
+> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+> +				(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
+>  				break;
+>  			loaded_segments[loaded_segments_num].end +=
+>  				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+> 
+
 
 _______________________________________________
 kexec mailing list
