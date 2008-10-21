@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsFrz-0001dg-6d
-	for kexec@lists.infradead.org; Tue, 21 Oct 2008 11:57:51 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so2264532rvf.42
-	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 04:57:49 -0700 (PDT)
-From: Magnus Damm <magnus.damm@gmail.com>
-Date: Tue, 21 Oct 2008 20:56:38 +0900
-Message-Id: <20081021115638.27749.59642.sendpatchset@rx1.opensource.se>
-Subject: [PATCH] vmcore: Remove saved_max_pfn check
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KsIW4-0007O2-K5
+	for kexec@lists.infradead.org; Tue, 21 Oct 2008 14:47:26 +0000
+Date: Tue, 21 Oct 2008 10:45:05 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
+Message-ID: <20081021144505.GA25750@hmsreliant.think-freely.org>
+References: <20081017210013.GD23591@hmsreliant.think-freely.org>
+	<20081020121339.GE10594@elte.hu>
+	<20081020134211.GA15574@hmsreliant.think-freely.org>
+	<20081020150731.GA25999@mailshack.com>
+	<20081020150834.GA26018@mailshack.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20081020150834.GA26018@mailshack.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,58 +23,150 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: akpm@linux-foundation.org, horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Alexander van Heukelum <heukelum@mailshack.com>
+Cc: Alexander van Heukelum <heukelum@fastmail.fm>, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, Ingo Molnar <mingo@elte.hu>, tglx@linutronix.de, vgoyal@redhat.com
 
-From: Magnus Damm <damm@igel.co.jp>
+On Mon, Oct 20, 2008 at 05:08:34PM +0200, Alexander van Heukelum wrote:
+> Mostly use the x86_64 version of oops_begin() and oops_end() on
+> i386 too. Changes to the original x86_64 version:
+> 
+Hey, doing a sight review this am here.  Didn't find anything major, but I did
+find a few little nits.  comments inlie
 
-This patch removes the saved_max_pfn check from the /proc/vmcore
-function read_from_oldmem(). No need to verify, we should be able
-to just trust that "elfcorehdr=" is correctly passed to the crash
-kernel on the kernel command line like we do with other parameters.
+>  - move add_taint(TAINT_DIE) into oops_end()
+>  - add a conditional crash_kexec() into oops_end()
+> 
+> Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
+> ---
+>  arch/x86/kernel/dumpstack_32.c |   36 +++++++++++++++++++++---------------
+>  arch/x86/kernel/dumpstack_64.c |    4 +++-
+>  2 files changed, 24 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
+> index b361475..e45952b 100644
+> --- a/arch/x86/kernel/dumpstack_32.c
+> +++ b/arch/x86/kernel/dumpstack_32.c
+> @@ -289,35 +289,41 @@ static unsigned int die_nest_count;
+>  
+>  unsigned __kprobes long oops_begin(void)
+>  {
+> +	int cpu;
+>  	unsigned long flags;
+>  
+>  	oops_enter();
+>  
+> -	if (die_owner != raw_smp_processor_id()) {
+> -		console_verbose();
+> -		raw_local_irq_save(flags);
+> -		__raw_spin_lock(&die_lock);
+> -		die_owner = smp_processor_id();
+> -		die_nest_count = 0;
+> -		bust_spinlocks(1);
+> -	} else {
+> -		raw_local_irq_save(flags);
+> +	/* racy, but better than risking deadlock. */
+> +	raw_local_irq_save(flags);
+> +	cpu = smp_processor_id();
+> +	if (!__raw_spin_trylock(&die_lock)) {
+> +		if (cpu == die_owner)
+> +			/* nested oops. should stop eventually */;
+> +		else
+> +			__raw_spin_lock(&die_lock);
+>  	}
+>  	die_nest_count++;
+> +	die_owner = cpu;
+> +	console_verbose();
+> +	bust_spinlocks(1);
+>  	return flags;
+>  }
+>  
+>  void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+>  {
+> -	bust_spinlocks(0);
+>  	die_owner = -1;
+> +	bust_spinlocks(0);
+> +	die_nest_count--;
+>  	add_taint(TAINT_DIE);
+> -	__raw_spin_unlock(&die_lock);
+> +	if (!die_nest_count)
+> +		/* Nest count reaches zero, release the lock. */
+> +		__raw_spin_unlock(&die_lock);
+>  	raw_local_irq_restore(flags);
+> -
+> -	if (!regs)
+> +	if (!regs) {
+> +		oops_exit();
+>  		return;
+> -
+> +	}
+>  	if (kexec_should_crash(current))
+>  		crash_kexec(regs);
+Hmm.  I think this creates the same case that I just fixed in my initial post.
+If we start using oops_end with this here, it may be possible to call
+crash_kexec with the console_sem held.  If that happens, we deadlock.  I think
+you should be able to move this clause up above the bust_spinlocks(0) without
+any issue, and that would take care of that
 
-The read_from_oldmem() function in fs/proc/vmcore.c is quite similar
-to read_from_oldmem() in drivers/char/mem.c, but only in the latter
-it makes sense to use saved_max_pfn. For oldmem it is used to determine
-when to stop reading. For vmcore we already have the elf header info
-pointing out the physical memory regions, no need to pass the end-of-
-old-memory twice.
+>  	if (in_interrupt())
+> @@ -405,6 +411,7 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
+>  		panic("Non maskable interrupt");
+>  	console_silent();
+>  	spin_unlock(&nmi_print_lock);
+> +	bust_spinlocks(0);
+>  
+>  	/*
+>  	 * If we are in kernel we are probably nested up pretty bad
+> @@ -415,7 +422,6 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
+>  		crash_kexec(regs);
+>  	}
+>  
+> -	bust_spinlocks(0);
+>  	do_exit(SIGSEGV);
+>  }
+>  
+This undoes my previous patch.  I realize your second patch fixes it properly so
+the ordering is correct when oops_begin and oops_end are used, but if you could
+rediff so this isn't here, I'd appreciate it.  If these patches are committed
+separately, you'll avoid having the tree in a state where that deadlock can
+reoccur (even if it is just for one commit)
 
-Removing the saved_max_pfn check from vmcore makes it possible for
-architectures to skip oldmem but still support crash dump through
-vmcore - without the need for the old saved_max_pfn cruft.
+> diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+> index 96a5db7..cd7b46b 100644
+> --- a/arch/x86/kernel/dumpstack_64.c
+> +++ b/arch/x86/kernel/dumpstack_64.c
+> @@ -461,6 +461,7 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+>  	die_owner = -1;
+>  	bust_spinlocks(0);
+>  	die_nest_count--;
+> +	add_taint(TAINT_DIE);
+>  	if (!die_nest_count)
+>  		/* Nest count reaches zero, release the lock. */
+>  		__raw_spin_unlock(&die_lock);
+> @@ -469,6 +470,8 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+>  		oops_exit();
+>  		return;
+>  	}
+> +	if (kexec_should_crash(current))
+> +		crash_kexec(regs);
+If you're going to add the crash_kexec here (which looking at the call sites,
+makes sense to me), you should likely remove it from the critical section of die
+and die_nmi, just to avoid the redundancy.  Same issue as the 32 bit version
+above applies, this needs to happen before you call bust_spinlocks(0).
 
-Architectures that want to play safe can do the saved_max_pfn check
-in copy_oldmem_page(). Not sure why anyone would want to do that,
-but that's even safer than today - the saved_max_pfn check in vmcore
-removed by this patch only checks the first page.
+Fix those issues, and the rest looks good to me.
 
-Signed-off-by: Magnus Damm <damm@igel.co.jp>
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-Acked-by: Simon Horman <horms@verge.net.au>
----
+Regards
+Neil
 
- Andrew, can you please pick up this one?
-
- fs/proc/vmcore.c |    2 --
- 1 file changed, 2 deletions(-)
-
---- 0001/fs/proc/vmcore.c
-+++ work/fs/proc/vmcore.c	2008-10-21 20:45:15.000000000 +0900
-@@ -47,8 +47,6 @@ static ssize_t read_from_oldmem(char *bu
- 
- 	offset = (unsigned long)(*ppos % PAGE_SIZE);
- 	pfn = (unsigned long)(*ppos / PAGE_SIZE);
--	if (pfn > saved_max_pfn)
--		return -EINVAL;
- 
- 	do {
- 		if (count > (PAGE_SIZE - offset))
+-- 
+/****************************************************
+ * Neil Horman <nhorman@tuxdriver.com>
+ * Software Engineer, Red Hat
+ ****************************************************/
 
 _______________________________________________
 kexec mailing list
