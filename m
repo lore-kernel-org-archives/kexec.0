@@ -1,15 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.171.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsKTv-0000S6-AH
-	for kexec@lists.infradead.org; Tue, 21 Oct 2008 16:53:21 +0000
-Message-ID: <48FE08CB.5080308@sgi.com>
-Date: Tue, 21 Oct 2008 09:52:27 -0700
-From: Jay Lan <jlan@sgi.com>
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KsLrs-0001nU-Ie
+	for kexec@lists.infradead.org; Tue, 21 Oct 2008 18:22:14 +0000
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m9LIM3bk012975
+	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:22:03 -0400
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m9LILtH6125952
+	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:21:55 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m9LILsu3004565
+	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:21:54 -0400
+Message-ID: <48FE1DBC.7030202@in.ibm.com>
+Date: Tue, 21 Oct 2008 23:51:48 +0530
+From: Mohan Kumar M <mohan@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [patch] ia64: Order of operations bug in PT_LOAD segment reader
-References: <20081008064940.GA11893@verge.net.au>
-In-Reply-To: <20081008064940.GA11893@verge.net.au>
+Subject: Re: [PATCH] Support for relocatable kdump kernel
+References: <18684.5062.154465.668614@drongo.ozlabs.ibm.com>
+	<1224485038.9055.34.camel@localhost> <48FC5097.5090908@in.ibm.com>
+	<1224569019.8228.29.camel@localhost>
+In-Reply-To: <1224569019.8228.29.camel@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,84 +35,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, "Luck,
-	Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org
+To: michael@ellerman.id.au
+Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, kexec <kexec@lists.infradead.org>
 
-Simon Horman wrote:
+Michael Ellerman wrote:
 
-Hi Simon,
-
-Just got back from vacation. Sorry for late response.
-
-> This bug was discovered by Jay Lan and he also proposed this fix, however
-> thee is some discussion about what if any related changes should be made at
-> the same time.
+> Does it? I see CONFIG_CRASH_DUMP depending on PPC64, so there is no
+> 32-bit kdump possible. Or is someone working on it out-of-tree?
 > 
-> The bug comes about because the break statment was never executed because
-> the if clause would bever be true because the if clause will never be true
-> because &  has higher precedence than !=.
-> 
-> My position on this is that with the if logic fixed, as per this patch, the
-> break statment and the rest of the while() loop makes sense and should work
-> as intended.
-> 
-> As I understand it, Jay's position is that the code should be simplified,
-> after all it never worked as intended.
-> 
-> There is a related kernel bug that lead Jay to discover this problem.
-> The kernel bug has been resolved by Tony Luck and was
-> included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
-> "[IA64] Put the space for cpu0 per-cpu area into .data section".
-> 
-> Now that the kernel bug is out of the way, I am providing this patch to
-> continue discussion on what to do on the kexec-tools side of things.  I do
-> not intend to apply this patch until there is some conclusion in the
-> discussion between Jay and myself.
 
-I think this patch is not right for two reasons:
-1) The if-statement below has never proved the correctness of
-   its intent because the 'break' statement never got executed
-   due to a logic error.
-  		if (loaded_segments[loaded_segments_num].end !=
-			(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
-			break;
-2) With your patch in my testing, the kdump kernel boot hung
-   even earlier in a PAL_CALL that was not returned to the kernel.
-   I understand that my test case was based on a kernel without
-   Tony's latest fix, but that was the only situation we can
-   see the if-statement becomes true. I do not know any other
-   way to make a memory gap happen. However, when it happens,
-   your patch only makes kdump kenrel boot hang earlier.
+IIUC Anton Vorontsov is working on the 32-bit kdump kernel support.
 
-I still root for my patch because the kdump kernel would boot
-correctly even if a memory gap indeed happened. ;) However,
-if you do not feel comfortable with my patch, i think the best
-alternative is to take out the if-statement above completely.
+>> Do you expect a function to do the checking in iommu.c?
+> 
+> You'd use the function in iommu.c, but it should be defined in some
+> header.
+> 
+Yeah, I will do that.
+
+> OK. Does old purgatory ensure that the register is 0? Otherwise I think
+> it's possible that a new kernel could get confused by cruft left in that
+> register by an old purgatory - causing the 2nd kernel to think it's a
+> kdump kernel when it shouldn't be.
+
+__kdump_flag is by default is 0 and old purgatory code even won't know 
+that it need to modify __kdump_flag. So unless __kdump_flag is 1, the 
+kernel will behave as a normal one.
 
 Regards,
-jay
-
-
-> 
-> Cc: Jay Lan <jlan@sgi.com>
-> Signed-off-by: Simon Horman <horms@verge.net.au>
-> 
-> Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:31:42.000000000 +1100
-> +++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-10-08 17:32:08.000000000 +1100
-> @@ -91,7 +91,7 @@ static void add_loaded_segments_info(str
->  	                if (phdr->p_type != PT_LOAD)
->  	                        break;
->  			if (loaded_segments[loaded_segments_num].end !=
-> -				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
-> +				(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
->  				break;
->  			loaded_segments[loaded_segments_num].end +=
->  				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
-> 
-
+Mohan.
 
 _______________________________________________
 kexec mailing list
