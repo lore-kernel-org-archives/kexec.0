@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ksmyl-0000YG-D9
-	for kexec@lists.infradead.org; Wed, 22 Oct 2008 23:19:04 +0000
-Date: Thu, 23 Oct 2008 10:18:56 +1100
+	id 1Ksn4s-0001Si-Ak
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 23:25:23 +0000
+Date: Thu, 23 Oct 2008 10:25:21 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] powerpc: kexec exit should not use magic numbers
-Message-ID: <20081022231854.GB5247@verge.net.au>
-References: <f90d4d7306443a720ca31adf513faf25@bga.com> <kexec-kern-1@bga.com>
+Subject: Re: [patch] ia64: Order of operations bug in PT_LOAD segment reader
+Message-ID: <20081022232519.GC5247@verge.net.au>
+References: <20081008064940.GA11893@verge.net.au> <48FE08CB.5080308@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <kexec-kern-1@bga.com>
+In-Reply-To: <48FE08CB.5080308@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,54 +23,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>
-Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, Mohan Kumar M <mohan@in.ibm.com>, Paul Mackerras <paulus@samba.org>
+To: Jay Lan <jlan@sgi.com>
+Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, "Luck,
+	Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org
 
-[ Added Mohan Kumar to CC list ]
-
-On Wed, Oct 22, 2008 at 03:39:18PM -0500, Milton Miller wrote:
-> The relocatable kernel kdump patch (54622f10a6aabb8bb2bdacf3dd070046f03dc246)
-> added a magic flag value in a register to tell purgatory that it should
-> be a panic kernel.  This part is wrong and is reverted by this patch.
+On Tue, Oct 21, 2008 at 09:52:27AM -0700, Jay Lan wrote:
+> Simon Horman wrote:
 > 
-> The kernel gets a list of memory blocks and a entry point from user space.
-> Its job is to copy the blocks into place and then branch to the designated
-> entry point (after turning "off" the mmu).
+> Hi Simon,
 > 
-> The user space tool inserts a trampoline, called purgatory, that runs
-> before the user supplied code.   Its job is to establish the entry
-> environment for the new kernel or other application based on the contents
-> of memory.  The purgatory code is compiled and embedded in the tool,
-> where it is later patched using the elf symbol table using elf symbols.
+> Just got back from vacation. Sorry for late response.
 > 
-> Since the tool knows it is creating a purgatory that will run after a
-> kernel crash, it should just patch purgatory (or the kernel directly)
-> if something needs to happen.
+> > This bug was discovered by Jay Lan and he also proposed this fix, however
+> > thee is some discussion about what if any related changes should be made at
+> > the same time.
+> > 
+> > The bug comes about because the break statment was never executed because
+> > the if clause would bever be true because the if clause will never be true
+> > because &  has higher precedence than !=.
+> > 
+> > My position on this is that with the if logic fixed, as per this patch, the
+> > break statment and the rest of the while() loop makes sense and should work
+> > as intended.
+> > 
+> > As I understand it, Jay's position is that the code should be simplified,
+> > after all it never worked as intended.
+> > 
+> > There is a related kernel bug that lead Jay to discover this problem.
+> > The kernel bug has been resolved by Tony Luck and was
+> > included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
+> > "[IA64] Put the space for cpu0 per-cpu area into .data section".
+> > 
+> > Now that the kernel bug is out of the way, I am providing this patch to
+> > continue discussion on what to do on the kexec-tools side of things.  I do
+> > not intend to apply this patch until there is some conclusion in the
+> > discussion between Jay and myself.
+> 
+> I think this patch is not right for two reasons:
+> 1) The if-statement below has never proved the correctness of
+>    its intent because the 'break' statement never got executed
+>    due to a logic error.
+>   		if (loaded_segments[loaded_segments_num].end !=
+> 			(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
+> 			break;
+> 2) With your patch in my testing, the kdump kernel boot hung
+>    even earlier in a PAL_CALL that was not returned to the kernel.
+>    I understand that my test case was based on a kernel without
+>    Tony's latest fix, but that was the only situation we can
+>    see the if-statement becomes true. I do not know any other
+>    way to make a memory gap happen. However, when it happens,
+>    your patch only makes kdump kenrel boot hang earlier.
+> 
+> I still root for my patch because the kdump kernel would boot
+> correctly even if a memory gap indeed happened. ;) However,
+> if you do not feel comfortable with my patch, i think the best
+> alternative is to take out the if-statement above completely.
 
-Hi Milton,
-
-All of these patches look fine to me.
-
-On the kernel side:
-Acked-by: Simon Horman <horms@verge.net.au>
-
-On the kexec-tools side:
-I'd rather wait until the kernel changes get merged before merging
-the kexec-tools portion. Please ping me at that point.
+Point taken, just to clarify, this is the patch you would like merged?
 
 
-I'd like to note that these changes really ought to go into the same kernel
-(and kexec-tools) release that the relocateable kdump patches as they will
-introduce incompatibility. For example, crash-dump kernels with only the
-relocatable kdump changes will not be usable if the first-kernel includes
-these changes. I think that means that this needs to go into 2.6.28 -
-assuming that Linus accepts the pull request than Ben Herrenschmidt sent
-recently.
+From: Jay Lan <jlan@sgi.com>
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+IA64: better calculate PT_LOAD segment size
+
+This patch combines consecutive PL_LOAD segments into one.
+The end address of the last PL_LOAD segment, calculated by
+adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
+will be the end address of this loaded_segments[] entry.
+
+This patch fixes the kdump kernel MCA problem caused by under-
+allocation of memory and a "kdump broken on ALtix 350" problem
+reported by Bernhard Walle.
+
+Simon, this patch replaces my previous patch I submitted on the
+underallocation issue.
+
+Signed-off-by: Jay Lan <jlan@sgi.com>
+
+---
+ kexec/arch/ia64/crashdump-ia64.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+Index: kexec-tools/kexec/arch/ia64/crashdump-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 14:33:07.593344017 -0700
++++ kexec-tools/kexec/arch/ia64/crashdump-ia64.c	2008-09-19 17:39:03.732928237 -0700
+@@ -86,19 +86,20 @@ static void add_loaded_segments_info(str
+                 loaded_segments[loaded_segments_num].end =
+ 			loaded_segments[loaded_segments_num].start;
+ 
++		/* Consolidate consecutive PL_LOAD segments into one.
++		 * The end addr of the last PL_LOAD segment, calculated by
++		 * adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
++		 * will be the end address of this loaded_segments entry.
++		 */
+ 		while (i < ehdr->e_phnum) {
+ 			phdr = &ehdr->e_phdr[i];
+ 	                if (phdr->p_type != PT_LOAD)
+ 	                        break;
+-			if (loaded_segments[loaded_segments_num].end !=
+-				phdr->p_paddr & ~(ELF_PAGE_SIZE-1))
+-				break;
+-			loaded_segments[loaded_segments_num].end +=
+-				(phdr->p_memsz + ELF_PAGE_SIZE - 1) &
+-				~(ELF_PAGE_SIZE - 1);
++			loaded_segments[loaded_segments_num].end =
++				(phdr->p_paddr + phdr->p_memsz +
++				ELF_PAGE_SIZE - 1) & ~(ELF_PAGE_SIZE - 1);
+ 			i++;
+ 		}
+-
+ 		loaded_segments_num++;
+ 	}
+ }
 
 
 _______________________________________________
