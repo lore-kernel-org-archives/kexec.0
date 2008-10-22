@@ -1,28 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e5.ny.us.ibm.com ([32.97.182.145])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsLrs-0001nU-Ie
-	for kexec@lists.infradead.org; Tue, 21 Oct 2008 18:22:14 +0000
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e5.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m9LIM3bk012975
-	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:22:03 -0400
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m9LILtH6125952
-	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:21:55 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
-	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m9LILsu3004565
-	for <kexec@lists.infradead.org>; Tue, 21 Oct 2008 14:21:54 -0400
-Message-ID: <48FE1DBC.7030202@in.ibm.com>
-Date: Tue, 21 Oct 2008 23:51:48 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
+Received: from out3.smtp.messagingengine.com ([66.111.4.27])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ksanb-0006i2-K8
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:18:43 +0000
+Message-Id: <1224670721.25843.1280616145@webmail.messagingengine.com>
+From: "Alexander van Heukelum" <heukelum@fastmail.fm>
+Content-Disposition: inline
 MIME-Version: 1.0
-Subject: Re: [PATCH] Support for relocatable kdump kernel
-References: <18684.5062.154465.668614@drongo.ozlabs.ibm.com>
-	<1224485038.9055.34.camel@localhost> <48FC5097.5090908@in.ibm.com>
-	<1224569019.8228.29.camel@localhost>
-In-Reply-To: <1224569019.8228.29.camel@localhost>
+References: <20081017210013.GD23591@hmsreliant.think-freely.org>
+	<20081020121339.GE10594@elte.hu>
+	<20081020134211.GA15574@hmsreliant.think-freely.org>
+	<20081020150731.GA25999@mailshack.com>
+	<20081020150834.GA26018@mailshack.com>
+	<20081021144505.GA25750@hmsreliant.think-freely.org>
+Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
+In-Reply-To: <20081021144505.GA25750@hmsreliant.think-freely.org>
+Date: Wed, 22 Oct 2008 12:18:41 +0200
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,35 +28,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: michael@ellerman.id.au
-Cc: linuxppc-dev list <linuxppc-dev@ozlabs.org>, kexec <kexec@lists.infradead.org>
+To: Neil Horman <nhorman@tuxdriver.com>, Alexander van Heukelum <heukelum@mailshack.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com
 
-Michael Ellerman wrote:
+On Tue, 21 Oct 2008 10:45:05 -0400, "Neil Horman"
+<nhorman@tuxdriver.com> said:
+> On Mon, Oct 20, 2008 at 05:08:34PM +0200, Alexander van Heukelum wrote:
+> > Mostly use the x86_64 version of oops_begin() and oops_end() on
+> > i386 too. Changes to the original x86_64 version:
+> > 
+> Hey, doing a sight review this am here.  Didn't find anything major, but
+> I did
+> find a few little nits.  comments inlie
 
-> Does it? I see CONFIG_CRASH_DUMP depending on PPC64, so there is no
-> 32-bit kdump possible. Or is someone working on it out-of-tree?
-> 
+Hi Neil,
 
-IIUC Anton Vorontsov is working on the 32-bit kdump kernel support.
+Thanks for the review. I've sent a redone patch series just a moment
+ago, based on your comments. There was also another problem with these
+two patches: oops_end(flags, regs, signr) had special behaviour for
+regs=NULL that I did not consider before. The series has grown due
+to this issue...
 
->> Do you expect a function to do the checking in iommu.c?
-> 
-> You'd use the function in iommu.c, but it should be defined in some
-> header.
-> 
-Yeah, I will do that.
+>> [...]
+> Hmm.  I think this creates the same case that I just fixed in my initial
+> post. If we start using oops_end with this here, it may be possible to call
+> crash_kexec with the console_sem held.  If that happens, we deadlock.  I
+> think you should be able to move this clause up above the bust_spinlocks(0)
+> without any issue, and that would take care of that
 
-> OK. Does old purgatory ensure that the register is 0? Otherwise I think
-> it's possible that a new kernel could get confused by cruft left in that
-> register by an old purgatory - causing the 2nd kernel to think it's a
-> kdump kernel when it shouldn't be.
+Indeed. The new series does exactly that.
 
-__kdump_flag is by default is 0 and old purgatory code even won't know 
-that it need to modify __kdump_flag. So unless __kdump_flag is 1, the 
-kernel will behave as a normal one.
+>> [...]
+> This undoes my previous patch.  I realize your second patch fixes it
+> properly so the ordering is correct when oops_begin and oops_end are used, but if you
+> could rediff so this isn't here, I'd appreciate it.  If these patches are
+> committed separately, you'll avoid having the tree in a state where that deadlock
+> can reoccur (even if it is just for one commit)
 
-Regards,
-Mohan.
+Yeah, I quickly rediffed the patches I already had. The new series
+leaves
+it as is until die_nmi is replaced by the oops_begin/oops_end version.
+
+>> [...]
+> If you're going to add the crash_kexec here (which looking at the call
+> sites, makes sense to me), you should likely remove it from the critical section
+> of die and die_nmi, just to avoid the redundancy.  Same issue as the 32 bit
+> version above applies, this needs to happen before you call bust_spinlocks(0).
+
+Indeed.
+
+> Fix those issues, and the rest looks good to me.
+
+I think I've done that ;).
+
+Thanks,
+Greetings,
+    Alexander
+
+(I will probably not be able to respond to e-mail until after the
+weekend)
+-- 
+  Alexander van Heukelum
+  heukelum@fastmail.fm
+
+-- 
+http://www.fastmail.fm - mmm... Fastmail...
+
 
 _______________________________________________
 kexec mailing list
