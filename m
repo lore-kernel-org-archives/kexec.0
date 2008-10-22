@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+Received: from mx2.mail.elte.hu ([157.181.151.9])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsblP-0000qc-8y
-	for kexec@lists.infradead.org; Wed, 22 Oct 2008 11:20:33 +0000
-Date: Wed, 22 Oct 2008 07:18:25 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH 5/7] i386, dumpstack: use x86_64's method to account
-	die_nest_count
-Message-ID: <20081022111825.GF18951@hmsreliant.think-freely.org>
-References: <1224669614-25863-1-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-2-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-3-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-4-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-5-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-6-git-send-email-heukelum@fastmail.fm>
+	id 1KscQF-0003FN-Db
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 12:02:43 +0000
+Date: Wed, 22 Oct 2008 14:02:22 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
+Message-ID: <20081022120222.GE8095@elte.hu>
+References: <20081017210013.GD23591@hmsreliant.think-freely.org>
+	<20081020121339.GE10594@elte.hu>
+	<20081020134211.GA15574@hmsreliant.think-freely.org>
+	<20081020150731.GA25999@mailshack.com>
+	<20081020150834.GA26018@mailshack.com>
+	<20081021144505.GA25750@hmsreliant.think-freely.org>
+	<1224670721.25843.1280616145@webmail.messagingengine.com>
+	<20081022104513.GA18951@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1224669614-25863-6-git-send-email-heukelum@fastmail.fm>
+In-Reply-To: <20081022104513.GA18951@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,91 +30,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexander van Heukelum <heukelum@fastmail.fm>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, tglx@linutronix.de, ebiederm@xmission.com, hpa@zytor.com, Ingo Molnar <mingo@elte.hu>, akpm@linux-foundation.org, vgoyal@redhat.com
-
-On Wed, Oct 22, 2008 at 12:00:12PM +0200, Alexander van Heukelum wrote:
-> oops_begin/oops_end should always be used in pairs. On x86_64
-> oops_begin increments die_nest_count, and oops_end decrements
-> die_nest_count. Doing this makes oops_begin and oops_end equal
-> to the x86_64 versions.
-> 
-> Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
-
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: Alexander van Heukelum <heukelum@fastmail.fm>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Alexander van Heukelum <heukelum@mailshack.com>, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
 
 
-> ---
->  arch/x86/kernel/dumpstack_32.c |   29 +++++++++++++++++------------
->  1 files changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-> index a29b88f..7c7d691 100644
-> --- a/arch/x86/kernel/dumpstack_32.c
-> +++ b/arch/x86/kernel/dumpstack_32.c
-> @@ -289,21 +289,24 @@ static unsigned int die_nest_count;
->  
->  unsigned __kprobes long oops_begin(void)
->  {
-> +	int cpu;
->  	unsigned long flags;
->  
->  	oops_enter();
->  
-> -	if (die_owner != raw_smp_processor_id()) {
-> -		console_verbose();
-> -		raw_local_irq_save(flags);
-> -		__raw_spin_lock(&die_lock);
-> -		die_owner = smp_processor_id();
-> -		die_nest_count = 0;
-> -		bust_spinlocks(1);
-> -	} else {
-> -		raw_local_irq_save(flags);
-> +	/* racy, but better than risking deadlock. */
-> +	raw_local_irq_save(flags);
-> +	cpu = smp_processor_id();
-> +	if (!__raw_spin_trylock(&die_lock)) {
-> +		if (cpu == die_owner)
-> +			/* nested oops. should stop eventually */;
-> +		else
-> +			__raw_spin_lock(&die_lock);
->  	}
->  	die_nest_count++;
-> +	die_owner = cpu;
-> +	console_verbose();
-> +	bust_spinlocks(1);
->  	return flags;
->  }
->  
-> @@ -315,13 +318,15 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
->  	bust_spinlocks(0);
->  	die_owner = -1;
->  	add_taint(TAINT_DIE);
-> -	__raw_spin_unlock(&die_lock);
-> +	die_nest_count--;
-> +	if (!die_nest_count)
-> +		/* Nest count reaches zero, release the lock. */
-> +		__raw_spin_unlock(&die_lock);
->  	raw_local_irq_restore(flags);
-> -
->  	oops_exit();
-> +
->  	if (!signr)
->  		return;
-> -
->  	if (in_interrupt())
->  		panic("Fatal exception in interrupt");
->  	if (panic_on_oops)
-> -- 
-> 1.5.4.3
-> 
-> 
+* Neil Horman <nhorman@tuxdriver.com> wrote:
 
--- 
-/****************************************************
- * Neil Horman <nhorman@tuxdriver.com>
- * Software Engineer, Red Hat
- ****************************************************/
+> > Thanks for the review. I've sent a redone patch series just a moment 
+> > ago, based on your comments. There was also another problem with 
+> > these two patches: oops_end(flags, regs, signr) had special 
+> > behaviour for regs=NULL that I did not consider before. The series 
+> > has grown due to this issue...
+
+[...]
+> Copy that.  Thanks for the quick turn-around.
+
+applied to tip/x86/dumpstack, thanks guys!
+
+Could you please also create arch/x86/kernel/dumpstack.c and move all 
+the now-unified bits there - before they get out of sync again?
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
