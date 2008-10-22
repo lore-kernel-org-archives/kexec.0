@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from m-relay2.rz.uni-saarland.de ([134.96.7.8]
-	helo=eris.rz.uni-saarland.de)
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsbEQ-0000EH-Kr
-	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:46:27 +0000
-From: Alexander van Heukelum <heukelum@fastmail.fm>
-Subject: [PATCH 2/7] x86, dumpstack: let signr=0 signal no do_exit
-Date: Wed, 22 Oct 2008 12:00:09 +0200
-Message-Id: <1224669614-25863-3-git-send-email-heukelum@fastmail.fm>
-In-Reply-To: <1224669614-25863-2-git-send-email-heukelum@fastmail.fm>
-References: <1224669614-25863-1-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-2-git-send-email-heukelum@fastmail.fm>
+	id 1KsbFM-0003NC-FV
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:47:25 +0000
+Date: Wed, 22 Oct 2008 06:45:13 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
+Message-ID: <20081022104513.GA18951@hmsreliant.think-freely.org>
+References: <20081017210013.GD23591@hmsreliant.think-freely.org>
+	<20081020121339.GE10594@elte.hu>
+	<20081020134211.GA15574@hmsreliant.think-freely.org>
+	<20081020150731.GA25999@mailshack.com>
+	<20081020150834.GA26018@mailshack.com>
+	<20081021144505.GA25750@hmsreliant.think-freely.org>
+	<1224670721.25843.1280616145@webmail.messagingengine.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1224670721.25843.1280616145@webmail.messagingengine.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,152 +25,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com, hpa@zytor.com, akpm@linux-foundation.org, Alexander van Heukelum <heukelum@fastmail.fm>, ebiederm@xmission.com, tglx@linutronix.de
-Cc: Alexander van Heukelum <heukelum@fastmail.fm>
+To: Alexander van Heukelum <heukelum@fastmail.fm>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, Alexander van Heukelum <heukelum@mailshack.com>, Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com
 
-Change oops_end such that signr=0 signals that do_exit
-is not to be called.
+On Wed, Oct 22, 2008 at 12:18:41PM +0200, Alexander van Heukelum wrote:
+> On Tue, 21 Oct 2008 10:45:05 -0400, "Neil Horman"
+> <nhorman@tuxdriver.com> said:
+> > On Mon, Oct 20, 2008 at 05:08:34PM +0200, Alexander van Heukelum wrote:
+> > > Mostly use the x86_64 version of oops_begin() and oops_end() on
+> > > i386 too. Changes to the original x86_64 version:
+> > > 
+> > Hey, doing a sight review this am here.  Didn't find anything major, but
+> > I did
+> > find a few little nits.  comments inlie
+> 
+> Hi Neil,
+> 
+> Thanks for the review. I've sent a redone patch series just a moment
+> ago, based on your comments. There was also another problem with these
+> two patches: oops_end(flags, regs, signr) had special behaviour for
+> regs=NULL that I did not consider before. The series has grown due
+> to this issue...
+> 
+> >> [...]
+> > Hmm.  I think this creates the same case that I just fixed in my initial
+> > post. If we start using oops_end with this here, it may be possible to call
+> > crash_kexec with the console_sem held.  If that happens, we deadlock.  I
+> > think you should be able to move this clause up above the bust_spinlocks(0)
+> > without any issue, and that would take care of that
+> 
+> Indeed. The new series does exactly that.
+> 
+> >> [...]
+> > This undoes my previous patch.  I realize your second patch fixes it
+> > properly so the ordering is correct when oops_begin and oops_end are used, but if you
+> > could rediff so this isn't here, I'd appreciate it.  If these patches are
+> > committed separately, you'll avoid having the tree in a state where that deadlock
+> > can reoccur (even if it is just for one commit)
+> 
+> Yeah, I quickly rediffed the patches I already had. The new series
+> leaves
+> it as is until die_nmi is replaced by the oops_begin/oops_end version.
+> 
+> >> [...]
+> > If you're going to add the crash_kexec here (which looking at the call
+> > sites, makes sense to me), you should likely remove it from the critical section
+> > of die and die_nmi, just to avoid the redundancy.  Same issue as the 32 bit
+> > version above applies, this needs to happen before you call bust_spinlocks(0).
+> 
+> Indeed.
+> 
+> > Fix those issues, and the rest looks good to me.
+> 
+> I think I've done that ;).
+> 
+> Thanks,
+> Greetings,
+>     Alexander
+> 
+> (I will probably not be able to respond to e-mail until after the
+> weekend)
+Copy that.  Thanks for the quick turn-around.
 
-Currently, each use of __die is soon followed by a call
-to oops_end and 'regs' is set to NULL if oops_end is expected
-not to call do_exit. Change all such pairs to set signr=0
-instead. On x86_64 oops_end is used 'bare' in die_nmi; use
-signr=0 instead of regs=NULL there, too.
+Best
+Neil
 
-Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
----
- arch/x86/kernel/dumpstack_32.c |    7 ++++---
- arch/x86/kernel/dumpstack_64.c |    9 +++++----
- arch/x86/mm/fault.c            |   11 +++++++----
- 3 files changed, 16 insertions(+), 11 deletions(-)
+> -- 
+>   Alexander van Heukelum
+>   heukelum@fastmail.fm
+> 
+> -- 
+> http://www.fastmail.fm - mmm... Fastmail...
+> 
+> 
 
-diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index 5493d31..7c22f99 100644
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -318,7 +318,7 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
- 	__raw_spin_unlock(&die_lock);
- 	raw_local_irq_restore(flags);
- 
--	if (!regs)
-+	if (!signr)
- 		return;
- 
- 	if (in_interrupt())
-@@ -371,17 +371,18 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
- void die(const char *str, struct pt_regs *regs, long err)
- {
- 	unsigned long flags = oops_begin();
-+	int sig = SIGSEGV;
- 
- 	if (die_nest_count < 3) {
- 		report_bug(regs->ip, regs);
- 
- 		if (__die(str, regs, err))
--			regs = NULL;
-+			sig = 0;
- 	} else {
- 		printk(KERN_EMERG "Recursive die() failure, output suppressed\n");
- 	}
- 
--	oops_end(flags, regs, SIGSEGV);
-+	oops_end(flags, regs, sig);
- }
- 
- static DEFINE_SPINLOCK(nmi_print_lock);
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index 96a5db7..ffefea6 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -465,7 +465,7 @@ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
- 		/* Nest count reaches zero, release the lock. */
- 		__raw_spin_unlock(&die_lock);
- 	raw_local_irq_restore(flags);
--	if (!regs) {
-+	if (!signr) {
- 		oops_exit();
- 		return;
- 	}
-@@ -509,13 +509,14 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
- void die(const char *str, struct pt_regs *regs, long err)
- {
- 	unsigned long flags = oops_begin();
-+	int sig = SIGSEGV;
- 
- 	if (!user_mode(regs))
- 		report_bug(regs->ip, regs);
- 
- 	if (__die(str, regs, err))
--		regs = NULL;
--	oops_end(flags, regs, SIGSEGV);
-+		sig = 0;
-+	oops_end(flags, regs, sig);
- }
- 
- notrace __kprobes void
-@@ -539,7 +540,7 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
- 		crash_kexec(regs);
- 	if (do_panic || panic_on_oops)
- 		panic("Non maskable interrupt");
--	oops_end(flags, NULL, SIGBUS);
-+	oops_end(flags, regs, 0);
- 	nmi_exit();
- 	local_irq_enable();
- 	do_exit(SIGBUS);
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 8e52e68..ed9ee30 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -415,6 +415,7 @@ static noinline void pgtable_bad(unsigned long address, struct pt_regs *regs,
- 				 unsigned long error_code)
- {
- 	unsigned long flags = oops_begin();
-+	int sig = SIGKILL;
- 	struct task_struct *tsk;
- 
- 	printk(KERN_ALERT "%s: Corrupted page table at address %lx\n",
-@@ -425,8 +426,8 @@ static noinline void pgtable_bad(unsigned long address, struct pt_regs *regs,
- 	tsk->thread.trap_no = 14;
- 	tsk->thread.error_code = error_code;
- 	if (__die("Bad pagetable", regs, error_code))
--		regs = NULL;
--	oops_end(flags, regs, SIGKILL);
-+		sig = 0;
-+	oops_end(flags, regs, sig);
- }
- #endif
- 
-@@ -594,6 +595,7 @@ void __kprobes do_page_fault(struct pt_regs *regs, unsigned long error_code)
- 
- #ifdef CONFIG_X86_64
- 	unsigned long flags;
-+	int sig;
- #endif
- 
- 	tsk = current;
-@@ -868,11 +870,12 @@ no_context:
- 	bust_spinlocks(0);
- 	do_exit(SIGKILL);
- #else
-+	sig = SIGKILL;
- 	if (__die("Oops", regs, error_code))
--		regs = NULL;
-+		sig = 0;
- 	/* Executive summary in case the body of the oops scrolled away */
- 	printk(KERN_EMERG "CR2: %016lx\n", address);
--	oops_end(flags, regs, SIGKILL);
-+	oops_end(flags, regs, sig);
- #endif
- 
- /*
 -- 
-1.5.4.3
-
+/****************************************************
+ * Neil Horman <nhorman@tuxdriver.com>
+ * Software Engineer, Red Hat
+ ****************************************************/
 
 _______________________________________________
 kexec mailing list
