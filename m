@@ -2,19 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from m-relay2.rz.uni-saarland.de ([134.96.7.8]
 	helo=eris.rz.uni-saarland.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KsamA-000292-QQ
-	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:17:15 +0000
+	id 1KsadJ-0002mo-Rk
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:08:06 +0000
 From: Alexander van Heukelum <heukelum@fastmail.fm>
-Subject: [PATCH 6/7] i386, dumpstack: use oops_begin/oops_end in die_nmi
-Date: Wed, 22 Oct 2008 12:00:13 +0200
-Message-Id: <1224669614-25863-7-git-send-email-heukelum@fastmail.fm>
-In-Reply-To: <1224669614-25863-6-git-send-email-heukelum@fastmail.fm>
+Subject: [PATCH 3/7] x86_64, dumpstack: move kexec_crash from __die to oops_end
+Date: Wed, 22 Oct 2008 12:00:10 +0200
+Message-Id: <1224669614-25863-4-git-send-email-heukelum@fastmail.fm>
+In-Reply-To: <1224669614-25863-3-git-send-email-heukelum@fastmail.fm>
 References: <1224669614-25863-1-git-send-email-heukelum@fastmail.fm>
 	<1224669614-25863-2-git-send-email-heukelum@fastmail.fm>
 	<1224669614-25863-3-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-4-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-5-git-send-email-heukelum@fastmail.fm>
-	<1224669614-25863-6-git-send-email-heukelum@fastmail.fm>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,99 +28,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Neil Horman <nhorman@tuxdriver.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com, hpa@zytor.com, akpm@linux-foundation.org, Alexander van Heukelum <heukelum@fastmail.fm>, ebiederm@xmission.com, tglx@linutronix.de
 Cc: Alexander van Heukelum <heukelum@fastmail.fm>
 
-Use oops_begin and oops_end in die_nmi.
-
-Whitespace-only changes on x86_64, to make it equal to i386's
-version.
+oops_end is preceded by either a call to __die, or a conditional
+call to crash_kexec. Move the conditional call to crash_kexec
+from the end of __die to the start of oops_end and remove
+the superfluous call to crash_kexec in die_nmi.
 
 Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
 ---
- arch/x86/kernel/dumpstack_32.c |   33 +++++++++++----------------------
- arch/x86/kernel/dumpstack_64.c |    4 ++--
- 2 files changed, 13 insertions(+), 24 deletions(-)
+ arch/x86/kernel/dumpstack_64.c |    9 ++++-----
+ 1 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index 7c7d691..e91ae34 100644
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -390,40 +390,29 @@ void die(const char *str, struct pt_regs *regs, long err)
- 	oops_end(flags, regs, sig);
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index ffefea6..57ce11b 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -458,6 +458,9 @@ unsigned __kprobes long oops_begin(void)
+ 
+ void __kprobes oops_end(unsigned long flags, struct pt_regs *regs, int signr)
+ {
++	if (regs && kexec_should_crash(current))
++		crash_kexec(regs);
++
+ 	die_owner = -1;
+ 	bust_spinlocks(0);
+ 	die_nest_count--;
+@@ -501,8 +504,6 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
+ 	printk(KERN_ALERT "RIP ");
+ 	printk_address(regs->ip, 1);
+ 	printk(" RSP <%016lx>\n", regs->sp);
+-	if (kexec_should_crash(current))
+-		crash_kexec(regs);
+ 	return 0;
  }
  
--static DEFINE_SPINLOCK(nmi_print_lock);
--
- void notrace __kprobes
- die_nmi(char *str, struct pt_regs *regs, int do_panic)
- {
-+	unsigned long flags;
-+
- 	if (notify_die(DIE_NMIWATCHDOG, str, regs, 0, 2, SIGINT) == NOTIFY_STOP)
- 		return;
- 
--	spin_lock(&nmi_print_lock);
- 	/*
--	* We are in trouble anyway, lets at least try
--	* to get a message out:
--	*/
--	bust_spinlocks(1);
-+	 * We are in trouble anyway, lets at least try
-+	 * to get a message out.
-+	 */
-+	flags = oops_begin();
- 	printk(KERN_EMERG "%s", str);
+@@ -536,11 +537,9 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
  	printk(" on CPU%d, ip %08lx, registers:\n",
  		smp_processor_id(), regs->ip);
  	show_registers(regs);
--	if (do_panic)
-+	oops_end(flags, regs, 0);
-+	if (do_panic || panic_on_oops)
- 		panic("Non maskable interrupt");
--	console_silent();
--	spin_unlock(&nmi_print_lock);
--
--	/*
--	 * If we are in kernel we are probably nested up pretty bad
--	 * and might aswell get out now while we still can:
--	 */
--	if (!user_mode_vm(regs)) {
--		current->thread.trap_no = 2;
+-	if (kexec_should_crash(current))
 -		crash_kexec(regs);
--	}
--
--	bust_spinlocks(0);
--	do_exit(SIGSEGV);
-+	nmi_exit();
-+	local_irq_enable();
-+	do_exit(SIGBUS);
- }
- 
- static int __init oops_setup(char *s)
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index dc6162b..831e1e1 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -519,7 +519,7 @@ void die(const char *str, struct pt_regs *regs, long err)
- 	oops_end(flags, regs, sig);
- }
- 
--notrace __kprobes void
-+void notrace __kprobes
- die_nmi(char *str, struct pt_regs *regs, int do_panic)
- {
- 	unsigned long flags;
-@@ -527,11 +527,11 @@ die_nmi(char *str, struct pt_regs *regs, int do_panic)
- 	if (notify_die(DIE_NMIWATCHDOG, str, regs, 0, 2, SIGINT) == NOTIFY_STOP)
- 		return;
- 
--	flags = oops_begin();
- 	/*
- 	 * We are in trouble anyway, lets at least try
- 	 * to get a message out.
- 	 */
-+	flags = oops_begin();
- 	printk(KERN_EMERG "%s", str);
- 	printk(" on CPU%d, ip %08lx, registers:\n",
- 		smp_processor_id(), regs->ip);
++	oops_end(flags, regs, 0);
+ 	if (do_panic || panic_on_oops)
+ 		panic("Non maskable interrupt");
+-	oops_end(flags, regs, 0);
+ 	nmi_exit();
+ 	local_irq_enable();
+ 	do_exit(SIGBUS);
 -- 
 1.5.4.3
 
