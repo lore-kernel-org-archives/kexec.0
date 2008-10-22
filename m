@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out3.smtp.messagingengine.com ([66.111.4.27])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ksanb-0006i2-K8
-	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:18:43 +0000
-Message-Id: <1224670721.25843.1280616145@webmail.messagingengine.com>
-From: "Alexander van Heukelum" <heukelum@fastmail.fm>
-Content-Disposition: inline
-MIME-Version: 1.0
-References: <20081017210013.GD23591@hmsreliant.think-freely.org>
-	<20081020121339.GE10594@elte.hu>
-	<20081020134211.GA15574@hmsreliant.think-freely.org>
-	<20081020150731.GA25999@mailshack.com>
-	<20081020150834.GA26018@mailshack.com>
-	<20081021144505.GA25750@hmsreliant.think-freely.org>
-Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
-In-Reply-To: <20081021144505.GA25750@hmsreliant.think-freely.org>
-Date: Wed, 22 Oct 2008 12:18:41 +0200
+Received: from m-relay2.rz.uni-saarland.de ([134.96.7.8]
+	helo=eris.rz.uni-saarland.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KsamC-0002a9-3l
+	for kexec@lists.infradead.org; Wed, 22 Oct 2008 10:17:16 +0000
+From: Alexander van Heukelum <heukelum@fastmail.fm>
+Subject: [PATCH 7/7] i386, dumpstack: unify die()
+Date: Wed, 22 Oct 2008 12:00:14 +0200
+Message-Id: <1224669614-25863-8-git-send-email-heukelum@fastmail.fm>
+In-Reply-To: <1224669614-25863-7-git-send-email-heukelum@fastmail.fm>
+References: <1224669614-25863-1-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-2-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-3-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-4-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-5-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-6-git-send-email-heukelum@fastmail.fm>
+	<1224669614-25863-7-git-send-email-heukelum@fastmail.fm>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +24,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>, Alexander van Heukelum <heukelum@mailshack.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, Thomas Gleixner <tglx@linutronix.de>, vgoyal@redhat.com
+To: Neil Horman <nhorman@tuxdriver.com>, Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com, hpa@zytor.com, akpm@linux-foundation.org, Alexander van Heukelum <heukelum@fastmail.fm>, ebiederm@xmission.com, tglx@linutronix.de
+Cc: Alexander van Heukelum <heukelum@fastmail.fm>
 
-On Tue, 21 Oct 2008 10:45:05 -0400, "Neil Horman"
-<nhorman@tuxdriver.com> said:
-> On Mon, Oct 20, 2008 at 05:08:34PM +0200, Alexander van Heukelum wrote:
-> > Mostly use the x86_64 version of oops_begin() and oops_end() on
-> > i386 too. Changes to the original x86_64 version:
-> > 
-> Hey, doing a sight review this am here.  Didn't find anything major, but
-> I did
-> find a few little nits.  comments inlie
+Make i386's die() equal to x86_64's version.
 
-Hi Neil,
+Whitespace-only changes on x86_64, to make it equal to i386's
+version. (user_mode and user_mode_vm are equal on x86_64.)
 
-Thanks for the review. I've sent a redone patch series just a moment
-ago, based on your comments. There was also another problem with these
-two patches: oops_end(flags, regs, signr) had special behaviour for
-regs=NULL that I did not consider before. The series has grown due
-to this issue...
+Signed-off-by: Alexander van Heukelum <heukelum@fastmail.fm>
+---
+ arch/x86/kernel/dumpstack_32.c |   10 +++-------
+ arch/x86/kernel/dumpstack_64.c |    6 +++++-
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
->> [...]
-> Hmm.  I think this creates the same case that I just fixed in my initial
-> post. If we start using oops_end with this here, it may be possible to call
-> crash_kexec with the console_sem held.  If that happens, we deadlock.  I
-> think you should be able to move this clause up above the bust_spinlocks(0)
-> without any issue, and that would take care of that
-
-Indeed. The new series does exactly that.
-
->> [...]
-> This undoes my previous patch.  I realize your second patch fixes it
-> properly so the ordering is correct when oops_begin and oops_end are used, but if you
-> could rediff so this isn't here, I'd appreciate it.  If these patches are
-> committed separately, you'll avoid having the tree in a state where that deadlock
-> can reoccur (even if it is just for one commit)
-
-Yeah, I quickly rediffed the patches I already had. The new series
-leaves
-it as is until die_nmi is replaced by the oops_begin/oops_end version.
-
->> [...]
-> If you're going to add the crash_kexec here (which looking at the call
-> sites, makes sense to me), you should likely remove it from the critical section
-> of die and die_nmi, just to avoid the redundancy.  Same issue as the 32 bit
-> version above applies, this needs to happen before you call bust_spinlocks(0).
-
-Indeed.
-
-> Fix those issues, and the rest looks good to me.
-
-I think I've done that ;).
-
-Thanks,
-Greetings,
-    Alexander
-
-(I will probably not be able to respond to e-mail until after the
-weekend)
+diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
+index e91ae34..f2046c5 100644
+--- a/arch/x86/kernel/dumpstack_32.c
++++ b/arch/x86/kernel/dumpstack_32.c
+@@ -378,15 +378,11 @@ void die(const char *str, struct pt_regs *regs, long err)
+ 	unsigned long flags = oops_begin();
+ 	int sig = SIGSEGV;
+ 
+-	if (die_nest_count < 3) {
++	if (!user_mode_vm(regs))
+ 		report_bug(regs->ip, regs);
+ 
+-		if (__die(str, regs, err))
+-			sig = 0;
+-	} else {
+-		printk(KERN_EMERG "Recursive die() failure, output suppressed\n");
+-	}
+-
++	if (__die(str, regs, err))
++		sig = 0;
+ 	oops_end(flags, regs, sig);
+ }
+ 
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 831e1e1..28c67aa 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -506,12 +506,16 @@ int __kprobes __die(const char *str, struct pt_regs *regs, long err)
+ 	return 0;
+ }
+ 
++/*
++ * This is gone through when something in the kernel has done something bad
++ * and is about to be terminated:
++ */
+ void die(const char *str, struct pt_regs *regs, long err)
+ {
+ 	unsigned long flags = oops_begin();
+ 	int sig = SIGSEGV;
+ 
+-	if (!user_mode(regs))
++	if (!user_mode_vm(regs))
+ 		report_bug(regs->ip, regs);
+ 
+ 	if (__die(str, regs, err))
 -- 
-  Alexander van Heukelum
-  heukelum@fastmail.fm
-
--- 
-http://www.fastmail.fm - mmm... Fastmail...
+1.5.4.3
 
 
 _______________________________________________
