@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ksnpn-0005zH-Ge
-	for kexec@lists.infradead.org; Thu, 23 Oct 2008 00:13:51 +0000
-Date: Thu, 23 Oct 2008 11:13:49 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kdump : check flags field from drconf memory
-Message-ID: <20081023001347.GB22521@verge.net.au>
-References: <200810172325.54932.chandru@in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200810172325.54932.chandru@in.ibm.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KsqnN-0008Kl-O1
+	for kexec@lists.infradead.org; Thu, 23 Oct 2008 03:23:34 +0000
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running
+	relocatable 
+In-reply-to: <kexec-kern-2@bga.com> 
+References: <kexec-kern-2@bga.com>
+Date: Thu, 23 Oct 2008 14:23:27 +1100
+Message-ID: <25820.1224732207@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,38 +18,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chandru <chandru@in.ibm.com>
-Cc: kexec@lists.infradead.org
+To: Milton Miller <miltonm@bga.com>
+Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Paul Mackerras <paulus@samba.org>, linuxppc-dev@ozlabs.org
 
-On Fri, Oct 17, 2008 at 11:25:54PM +0530, Chandru wrote:
-> On a powerpc machine when memory is dynamically removed/added from an lpar, the 
-> corresponding flags field in the drconf memory reflects the same with the bits 
-> unset/set accordingly. The kernel does a check on these flags while booting. 
-> Following are the similar changes brought in to kexec-tools.  This makes 
-> kexec-tools to skip those memory regions that do not belong or are not 
-> assigned to the current partition ( but are available to dynamically add them 
-> back ). Without this patch (and with memory remove operation) copying vmcore 
-> fails with error as
+In message <kexec-kern-2@bga.com> you wrote:
+> The __kdump_flag ABI is overly constraining for future development.  
 > 
-> Copying data                       : [ 84 %] readmem: Can't read the dump 
-> memory(/proc/vmcore). Bad address
-> read_pfn: Can't get the page data.
+> As of 2.6.27, the kernel entry point has 4 constraints:  Offset 0 is
+> the starting point for the master (boot) cpu (entered with r3 pointing
+> to the device tree structure), offset 0x60 is code for the slave cpus
+> (entered with r3 set to their device tree physical id), offset 0x20 is
+> used by the iseries hypervisor, and secondary cpus must be well behaved
+> when the first 256 bytes are copied to address 0.
 > 
+> Placing the __kdump_flag at 0x18 is bad because:
 > 
-> Signed-off-by : Chandru S <chandru@in.ibm.com>
+> - It was taking the last 8 bytes before the iseries hypervisor data.  
+> - It was 8 bytes for a boolean flag
+> - It had no way of identifying that the flag was present
+> - It does leave any room for the master to add any additional code
+>   before branching, which hurts debug.
+> - It will be unnecessarily hard for 32 bit code to be common (8 bytes)
+> 
+> Now that we have eliminated the use of __kdump_flag in favor of
+> the standard is_kdump_kernel(), this flag only controls run without
+> relocating the kernel to PHYSICAL_START (0), so rename it __run_at_load.
+> 
+> Move the flag to 0x5c, 1 word before the secondary cpu entry point at
+> 0x60.  Use the copy at address 0 not the one in the base kernel image to
+> make it easier on kexec-tools.  Initialize it with "run0" to say it will
+> run at 0 unless it is set to 1.  It only exists if we are relocatable.
+> 
+> Signed-off-by: Milton Miller <miltonm@bga.com>
+> ---
+> I left it global so it appears that way in System.map, but it would
+> not need to be.
+> 
+> I kept the guards with CONFIG_CRASH_DUMP for now.  They could be relaxed
+> to just CONFIG_RELOCATABLE.
+> 
+> Tested with normal kexec (kernel moved to 0) and a custom boot-loader
+> (kernel stayed at loaded 16MB start).
+> 
+> Index: next.git/arch/powerpc/kernel/head_64.S
+> ===================================================================
+> --- next.git.orig/arch/powerpc/kernel/head_64.S	2008-10-22 04:30:08.000
+000000 -0500
+> +++ next.git/arch/powerpc/kernel/head_64.S	2008-10-22 04:59:55.000000000 -
+0500
+> @@ -97,12 +97,6 @@ __secondary_hold_spinloop:
+>  __secondary_hold_acknowledge:
+>  	.llong	0x0
+>  
+> -	/* This flag is set by purgatory if we should be a kdump kernel. */
+> -	/* Do not move this variable as purgatory knows about it. */
+> -	.globl	__kdump_flag
+> -__kdump_flag:
+> -	.llong	0x0
+> -
+>  #ifdef CONFIG_PPC_ISERIES
+>  	/*
+>  	 * At offset 0x20, there is a pointer to iSeries LPAR data.
+> @@ -112,6 +106,20 @@ __kdump_flag:
+>  	.llong hvReleaseData-KERNELBASE
+>  #endif /* CONFIG_PPC_ISERIES */
+>  
+> +#ifdef CONFIG_CRASH_DUMP
+> +	/* This flag is set to 1 by a loader if the kernel should run
+> +	 * at the loaded address instead of the linked address.  This
+> +	 * is used by kexec-tools to keep the the kdump kernel in the
+> +	 * crash_kernel region.  The loader is responsible for
+> +	 * observing the alignment requirement.
+> +	 */
+> +	/* Do not move this variable as kexec-tools knows about it. */
+> +	. = 0x5c
+> +	.globl	__run_at_load
+> +__run_at_load:
+> +	.long	0x72756e30	/* "run0" -- relocate to 0 by default */
+> +#endif
+> +
+>  	. = 0x60
+>  /*
+>   * The following code is used to hold secondary processors
+> @@ -1391,8 +1399,8 @@ _STATIC(__after_prom_start)
+>  	lis	r25,PAGE_OFFSET@highest	/* compute virtual base of kernel */
+>  	sldi	r25,r25,32
+>  #ifdef CONFIG_CRASH_DUMP
+> -	ld	r7,__kdump_flag-_stext(r26)
+> -	cmpldi	cr0,r7,1	/* kdump kernel ? - stay where we are */
+> +	lwz	r7,__run_at_load-_stext(0)
+> +	cmplwi	cr0,r7,1	/* kdump kernel ? - stay where we are */
 
+Do we really want the flag to always be at 0x5c not 0x5c + kernel offset?
 
-Thanks, applied.
+Also, comment "kdump kernel" needs to be updated to reflect the new
+name.  
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+Other than that, the patch series works for me.
 
+Mikey
+
+>  	bne	1f
+>  	add	r25,r25,r26
+>  #endif
+> @@ -1416,11 +1424,11 @@ _STATIC(__after_prom_start)
+>  #ifdef CONFIG_CRASH_DUMP
+>  /*
+>   * Check if the kernel has to be running as relocatable kernel based on the
+> - * variable __kdump_flag, if it is set the kernel is treated as relocatable
+> + * variable __run_at_load, if it is set the kernel is treated as relocatable
+>   * kernel, otherwise it will be moved to PHYSICAL_START
+>   */
+> -	ld	r7,__kdump_flag-_stext(r26)
+> -	cmpldi	cr0,r7,1
+> +	lwz	r7,__run_at_load-_stext(0)
+> +	cmplwi	cr0,r7,1
+>  	bne	3f
+>  
+>  	li	r5,__end_interrupts - _stext	/* just copy interrupts */
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev@ozlabs.org
+> https://ozlabs.org/mailman/listinfo/linuxppc-dev
+> 
 
 _______________________________________________
 kexec mailing list
