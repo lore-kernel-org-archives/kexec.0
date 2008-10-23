@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ksr7Q-0001u6-DF
-	for kexec@lists.infradead.org; Thu, 23 Oct 2008 03:44:17 +0000
+Received: from out3.smtp.messagingengine.com ([66.111.4.27])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KswOp-0008Et-GS
+	for kexec@lists.infradead.org; Thu, 23 Oct 2008 09:22:35 +0000
+Message-Id: <1224753754.1503.1280816335@webmail.messagingengine.com>
+From: "Alexander van Heukelum" <heukelum@fastmail.fm>
+Content-Disposition: inline
 MIME-Version: 1.0
-Message-ID: <18687.62202.333736.269891@drongo.ozlabs.ibm.com>
-Date: Thu, 23 Oct 2008 14:43:54 +1100
-From: Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running
-	relocatable
-In-Reply-To: <18687.61506.924500.411952@drongo.ozlabs.ibm.com>
-References: <f90d4d7306443a720ca31adf513faf25@bga.com> <kexec-kern-2@bga.com>
-	<18687.61506.924500.411952@drongo.ozlabs.ibm.com>
+References: <20081017210013.GD23591@hmsreliant.think-freely.org>
+	<20081020121339.GE10594@elte.hu>
+	<20081020134211.GA15574@hmsreliant.think-freely.org>
+	<20081020150731.GA25999@mailshack.com>
+	<20081020150834.GA26018@mailshack.com>
+	<20081021144505.GA25750@hmsreliant.think-freely.org>
+	<1224670721.25843.1280616145@webmail.messagingengine.com>
+	<20081022104513.GA18951@hmsreliant.think-freely.org>
+	<20081022120222.GE8095@elte.hu>
+	<20081022191948.GB20423@hmsreliant.think-freely.org>
+Subject: Re: [PATCH] x86: make oops_begin and oops_end equal
+In-Reply-To: <20081022191948.GB20423@hmsreliant.think-freely.org>
+Date: Thu, 23 Oct 2008 11:22:34 +0200
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,29 +32,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>, Ben Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@ozlabs.org, Michael Ellerman <michael@ellerman.id.au>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+To: Neil Horman <nhorman@tuxdriver.com>, Ingo Molnar <mingo@elte.hu>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Alexander van Heukelum <heukelum@mailshack.com>, Andrew Morton <akpm@linux-foundation.org>, vgoyal@redhat.com
 
-Paul Mackerras writes:
-> Milton Miller writes:
-> 
-> > Move the flag to 0x5c, 1 word before the secondary cpu entry point at
-> > 0x60.  Use the copy at address 0 not the one in the base kernel image to
-> > make it easier on kexec-tools.
-> 
-> Why is it easier on kexec-tools?  Doesn't kexec-tools know where it
-> put the kernel?
-> 
-> I'd much rather keep the flag inside the kdump kernel image, rather
-> than having kexec/kdump start using random fixed locations outside the
-> new kernel image.
+On Wed, 22 Oct 2008 15:19:48 -0400, "Neil Horman"
+<nhorman@tuxdriver.com> said:
+> On Wed, Oct 22, 2008 at 02:02:22PM +0200, Ingo Molnar wrote:
+> > 
+> > * Neil Horman <nhorman@tuxdriver.com> wrote:
+> > 
+> > > > Thanks for the review. I've sent a redone patch series just a moment 
+> > > > ago, based on your comments. There was also another problem with 
+> > > > these two patches: oops_end(flags, regs, signr) had special 
+> > > > behaviour for regs=NULL that I did not consider before. The series 
+> > > > has grown due to this issue...
+> > 
+> > [...]
+> > > Copy that.  Thanks for the quick turn-around.
+> > 
+> > applied to tip/x86/dumpstack, thanks guys!
+> > 
+> > Could you please also create arch/x86/kernel/dumpstack.c and move all 
+> > the now-unified bits there - before they get out of sync again?
+> > 
+> I can do this in the next day or so, unless you have an urge to Alexander
 
-In fact the cliching argument is that when the kernel is loaded by OF
-or yaboot, we have no way to tell what will be at location 0x5c,
-whereas we know that the word at offset 0x5c in the kernel image will
-have been initialized to 0.  So we had better put the flag inside the
-kernel image.
+Hi Neil,
 
-Paul.
+Many thanks for the review of the patches, and please go ahead
+and finish the unification!
+
+Greetings,
+    Alexander
+
+> Neil
+> 
+> > 	Ingo
+> > 
+> 
+> -- 
+> /****************************************************
+>  * Neil Horman <nhorman@tuxdriver.com>
+>  * Software Engineer, Red Hat
+>  ****************************************************/
+-- 
+  Alexander van Heukelum
+  heukelum@fastmail.fm
+
+-- 
+http://www.fastmail.fm - A fast, anti-spam email service.
+
 
 _______________________________________________
 kexec mailing list
