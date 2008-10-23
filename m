@@ -1,28 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e38.co.us.ibm.com ([32.97.110.159])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kt1vG-0007nO-Al
-	for kexec@lists.infradead.org; Thu, 23 Oct 2008 15:16:26 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e38.co.us.ibm.com (8.13.1/8.13.1) with ESMTP id m9NFFZ1h025283
-	for <kexec@lists.infradead.org>; Thu, 23 Oct 2008 09:15:35 -0600
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	m9NFG43s127424
-	for <kexec@lists.infradead.org>; Thu, 23 Oct 2008 09:16:07 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m9NFG3ED030862
-	for <kexec@lists.infradead.org>; Thu, 23 Oct 2008 09:16:04 -0600
-Message-ID: <4900952A.3090605@in.ibm.com>
-Date: Thu, 23 Oct 2008 20:45:54 +0530
-From: Mohan Kumar M <mohan@in.ibm.com>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kt648-0006ye-Gu
+	for kexec@lists.infradead.org; Thu, 23 Oct 2008 19:41:52 +0000
+Date: Thu, 23 Oct 2008 17:41:29 -0200
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
+Message-ID: <20081023194129.GD27959@blackpad>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running
-	relocatable
-References: <kexec-kern-2@bga.com>
-In-Reply-To: <kexec-kern-2@bga.com>
+Content-Disposition: inline
+In-Reply-To: <20081022232824.GD5247@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,80 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>
-Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, Paul Mackerras <paulus@samba.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Avi Kivity <avi@redhat.com>, kvm@vger.kernel.org
 
-Hi Milton,
-
-My suggestions:
-
-Milton Miller wrote:
-> The __kdump_flag ABI is overly constraining for future development.  
+On Thu, Oct 23, 2008 at 10:28:24AM +1100, Simon Horman wrote:
+> On Mon, Oct 20, 2008 at 01:01:32PM -0200, Eduardo Habkost wrote:
+> > The following two patches should make kdump work when the kvm-intel module
+> > is loaded. We need to disable vmx mode before booting the kdump kernel,
+> > so I've introduced a notifier interface where KVM can hook and disable
+> > virtualization on all CPUs just before they are halted.
+> > 
+> > It has the same purpose of the KVM reboot notifier that gets executed
+> > at kexec-time. But on the kdump case, things are not as simple because
+> > the kernel has just crashed.
+> > 
+> > The notifier interface being introduced is x86-specific. I don't know
+> > if an arch-independent interface would be more appropriate for this
+> > case.
+> > 
+> > It was tested only using kvm-intel. Testing on different machines
+> > is welcome.
 > 
-> As of 2.6.27, the kernel entry point has 4 constraints:  Offset 0 is
-> the starting point for the master (boot) cpu (entered with r3 pointing
-> to the device tree structure), offset 0x60 is code for the slave cpus
-> (entered with r3 set to their device tree physical id), offset 0x20 is
-> used by the iseries hypervisor, and secondary cpus must be well behaved
-> when the first 256 bytes are copied to address 0.
+> These changes look fine to me from a kexec/kdump point of view.
 > 
-> Placing the __kdump_flag at 0x18 is bad because:
-> 
-> - It was taking the last 8 bytes before the iseries hypervisor data.  
-> - It was 8 bytes for a boolean flag
-> - It had no way of identifying that the flag was present
-> - It does leave any room for the master to add any additional code
->   before branching, which hurts debug.
-> - It will be unnecessarily hard for 32 bit code to be common (8 bytes)
-> 
-> Now that we have eliminated the use of __kdump_flag in favor of
-> the standard is_kdump_kernel(), this flag only controls run without
-> relocating the kernel to PHYSICAL_START (0), so rename it __run_at_load.
->
-We could try both of our approaches. Instead of passing the information 
-that next kernel should be relocatable from kexec_sequence to purgatory 
-code, we will do it from kexec-tools path (following your approach). But 
-instead of setting the __run_at_load value in the purgatory code (ie at 
-physical address 0x5c), we will set the variable __run_at_load at kernel 
-  image itself.
+> Reviewed-by: Simon Horman <horms@verge.net.au>
 
-i.e.,
-[code snip 1]
-	lwz	r7,__run_at_load-_stext(r26)
-	cmplwi	cr0,r7,1	/* kdump kernel ? - stay where we are */
-  	bne	1f
-  	add	r25,r25,r26
+Thanks.
 
-	lwz	r7,__run_at_load-_stext(r26)
-	cmplwi	cr0,r7,1
-  	bne	3f
+Considering they touch both KVM and kexec, which tree would be best way
+to get them in?
 
-kexec-tools
-[code snip 2]
-	LOADADDR(6,run_at_load)
-	ld	18,0(6)
-	cmpd	18,1
-	bne	skip
-	li	7,1
-	stw	7,92(4)		# mark __run_at_load flag at kernel
-skip:
-	lwz	7,0(4)		# get the first instruction that we stole
-	stw	7,0(0)		# and put it in the slave loop at 0
-  				# skip cache flush, do we care?
+(Avi: the patches were sent only to kexec and kvm mailing lists,
+initially. If it's better to submit them to your address also so it gets
+on your queue, please let me know)
 
-[code snip 3]
-	if (info->kexec_flags & KEXEC_ON_CRASH) {
-		....
-		elf_rel_set_symbol(&info->rhdr, "run_at_load",
-                                 &my_run_at_load, 							 
-sizeof(my_run_at_load));
-	}
-
-Using this approach we are not breaking the kexec_sequence ABI and we 
-directly modifying the flag in kernel image.
-
-Regards,
-Mohan.
+-- 
+Eduardo
 
 _______________________________________________
 kexec mailing list
