@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ksnda-0004mB-Jn
-	for kexec@lists.infradead.org; Thu, 23 Oct 2008 00:01:15 +0000
-Date: Thu, 23 Oct 2008 11:01:11 +1100
+	id 1Ksnpn-0005zH-Ge
+	for kexec@lists.infradead.org; Thu, 23 Oct 2008 00:13:51 +0000
+Date: Thu, 23 Oct 2008 11:13:49 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch] ia64: Order of operations bug in PT_LOAD segment reader
-Message-ID: <20081023000110.GA18136@verge.net.au>
-References: <20081008064940.GA11893@verge.net.au> <48FE08CB.5080308@sgi.com>
-	<20081022232519.GC5247@verge.net.au> <48FFBB87.6020608@sgi.com>
+Subject: Re: [PATCH] kdump : check flags field from drconf memory
+Message-ID: <20081023001347.GB22521@verge.net.au>
+References: <200810172325.54932.chandru@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <48FFBB87.6020608@sgi.com>
+In-Reply-To: <200810172325.54932.chandru@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,86 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jlan@sgi.com>
-Cc: kexec@lists.infradead.org, Bernhard Walle <bwalle@suse.de>, "Luck,
-	Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org
+To: Chandru <chandru@in.ibm.com>
+Cc: kexec@lists.infradead.org
 
-On Wed, Oct 22, 2008 at 04:47:19PM -0700, Jay Lan wrote:
-> Simon Horman wrote:
-> > On Tue, Oct 21, 2008 at 09:52:27AM -0700, Jay Lan wrote:
-> >> Simon Horman wrote:
-> >>
-> >> Hi Simon,
-> >>
-> >> Just got back from vacation. Sorry for late response.
-> >>
-> >>> This bug was discovered by Jay Lan and he also proposed this fix, however
-> >>> thee is some discussion about what if any related changes should be made at
-> >>> the same time.
-> >>>
-> >>> The bug comes about because the break statment was never executed because
-> >>> the if clause would bever be true because the if clause will never be true
-> >>> because &  has higher precedence than !=.
-> >>>
-> >>> My position on this is that with the if logic fixed, as per this patch, the
-> >>> break statment and the rest of the while() loop makes sense and should work
-> >>> as intended.
-> >>>
-> >>> As I understand it, Jay's position is that the code should be simplified,
-> >>> after all it never worked as intended.
-> >>>
-> >>> There is a related kernel bug that lead Jay to discover this problem.
-> >>> The kernel bug has been resolved by Tony Luck and was
-> >>> included in Linus's tree between 2.6.27-rc8 and 2.6.27-rc9 as
-> >>> "[IA64] Put the space for cpu0 per-cpu area into .data section".
-> >>>
-> >>> Now that the kernel bug is out of the way, I am providing this patch to
-> >>> continue discussion on what to do on the kexec-tools side of things.  I do
-> >>> not intend to apply this patch until there is some conclusion in the
-> >>> discussion between Jay and myself.
-> >> I think this patch is not right for two reasons:
-> >> 1) The if-statement below has never proved the correctness of
-> >>    its intent because the 'break' statement never got executed
-> >>    due to a logic error.
-> >>   		if (loaded_segments[loaded_segments_num].end !=
-> >> 			(phdr->p_paddr & ~(ELF_PAGE_SIZE-1)))
-> >> 			break;
-> >> 2) With your patch in my testing, the kdump kernel boot hung
-> >>    even earlier in a PAL_CALL that was not returned to the kernel.
-> >>    I understand that my test case was based on a kernel without
-> >>    Tony's latest fix, but that was the only situation we can
-> >>    see the if-statement becomes true. I do not know any other
-> >>    way to make a memory gap happen. However, when it happens,
-> >>    your patch only makes kdump kenrel boot hang earlier.
-> >>
-> >> I still root for my patch because the kdump kernel would boot
-> >> correctly even if a memory gap indeed happened. ;) However,
-> >> if you do not feel comfortable with my patch, i think the best
-> >> alternative is to take out the if-statement above completely.
-> > 
-> > Point taken, just to clarify, this is the patch you would like merged?
+On Fri, Oct 17, 2008 at 11:25:54PM +0530, Chandru wrote:
+> On a powerpc machine when memory is dynamically removed/added from an lpar, the 
+> corresponding flags field in the drconf memory reflects the same with the bits 
+> unset/set accordingly. The kernel does a check on these flags while booting. 
+> Following are the similar changes brought in to kexec-tools.  This makes 
+> kexec-tools to skip those memory regions that do not belong or are not 
+> assigned to the current partition ( but are available to dynamically add them 
+> back ). Without this patch (and with memory remove operation) copying vmcore 
+> fails with error as
 > 
-> Hi Simon,
+> Copying data                       : [ 84 %] readmem: Can't read the dump 
+> memory(/proc/vmcore). Bad address
+> read_pfn: Can't get the page data.
 > 
-> Yes. This is the patch that i would like merged.
+> 
+> Signed-off-by : Chandru S <chandru@in.ibm.com>
 
-Thanks. I've applied the change.
 
-> > From: Jay Lan <jlan@sgi.com>
-> > 
-> > IA64: better calculate PT_LOAD segment size
-> > 
-> > This patch combines consecutive PL_LOAD segments into one.
-> > The end address of the last PL_LOAD segment, calculated by
-> > adding p_memsz to p_paddr & rounded up to ELF_PAGE_SIZE,
-> > will be the end address of this loaded_segments[] entry.
-> > 
-> > This patch fixes the kdump kernel MCA problem caused by under-
-> > allocation of memory and a "kdump broken on ALtix 350" problem
-> > reported by Bernhard Walle.
-> > 
-> > Simon, this patch replaces my previous patch I submitted on the
-> > underallocation issue.
+Thanks, applied.
 
 -- 
 Simon Horman
