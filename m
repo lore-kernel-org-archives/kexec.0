@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KtB6U-0004u5-8Y
-	for kexec@lists.infradead.org; Fri, 24 Oct 2008 01:04:38 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20081022232824.GD5247@verge.net.au>
-	<20081023194129.GD27959@blackpad>
-	<20081023222906.GB10753@verge.net.au>
-Date: Thu, 23 Oct 2008 18:00:17 -0700
-In-Reply-To: <20081023222906.GB10753@verge.net.au> (Simon Horman's message of
-	"Fri, 24 Oct 2008 09:29:08 +1100")
-Message-ID: <m1tzb2hkny.fsf@frodo.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KtEU6-0001RR-JS
+	for kexec@lists.infradead.org; Fri, 24 Oct 2008 04:41:15 +0000
+From: Michael Neuling <mikey@neuling.org>
+Subject: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running relocatable 
+In-reply-to: <18687.62202.333736.269891@drongo.ozlabs.ibm.com> 
+References: <f90d4d7306443a720ca31adf513faf25@bga.com> <kexec-kern-2@bga.com>
+	<18687.61506.924500.411952@drongo.ozlabs.ibm.com>
+	<18687.62202.333736.269891@drongo.ozlabs.ibm.com>
+Date: Fri, 24 Oct 2008 15:41:09 +1100
+Message-ID: <21633.1224823269@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,42 +19,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Avi Kivity <avi@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Paul Mackerras <paulus@samba.org>
+Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>
 
-Simon Horman <horms@verge.net.au> writes:
+From: Milton Miller <miltonm@bga.com>
 
-> [ Added Andrew Morton, Eric Biederman, Vivek Goyal and Haren Myneni to CC ]
->
-> On Thu, Oct 23, 2008 at 05:41:29PM -0200, Eduardo Habkost wrote:
->> On Thu, Oct 23, 2008 at 10:28:24AM +1100, Simon Horman wrote:
->> > On Mon, Oct 20, 2008 at 01:01:32PM -0200, Eduardo Habkost wrote:
->> > > The following two patches should make kdump work when the kvm-intel module
->> > > is loaded. We need to disable vmx mode before booting the kdump kernel,
->> > > so I've introduced a notifier interface where KVM can hook and disable
->> > > virtualization on all CPUs just before they are halted.
->> > > 
->> > > It has the same purpose of the KVM reboot notifier that gets executed
->> > > at kexec-time. But on the kdump case, things are not as simple because
->> > > the kernel has just crashed.
->> > > 
->> > > The notifier interface being introduced is x86-specific. I don't know
->> > > if an arch-independent interface would be more appropriate for this
->> > > case.
+The __kdump_flag ABI is overly constraining for future development.  
 
-My preference would be to have a magic function call that compiles out when
-kvm isn't present.  This is a code path that is hard to audit and test, and
-get right.  A notifier chain seems to make a proper audit all but impossible.
+As of 2.6.27, the kernel entry point has 4 constraints:  Offset 0 is
+the starting point for the master (boot) cpu (entered with r3 pointing
+to the device tree structure), offset 0x60 is code for the slave cpus
+(entered with r3 set to their device tree physical id), offset 0x20 is
+used by the iseries hypervisor, and secondary cpus must be well behaved
+when the first 256 bytes are copied to address 0.
 
-Why do we need to disable vmx mode before booting a normal linux kernel?
-Is it possible to disable vmx mode before we enable interrrupts in the
-kdump kernel?
+Placing the __kdump_flag at 0x18 is bad because:
 
-Eric
+- It was taking the last 8 bytes before the iseries hypervisor data.  
+- It was 8 bytes for a boolean flag
+- It had no way of identifying that the flag was present
+- It does leave any room for the master to add any additional code
+  before branching, which hurts debug.
+- It will be unnecessarily hard for 32 bit code to be common (8 bytes)
+
+Now that we have eliminated the use of __kdump_flag in favor of
+the standard is_kdump_kernel(), this flag only controls run without
+relocating the kernel to PHYSICAL_START (0), so rename it __run_at_load.
+
+Move the flag to 0x5c, 1 word before the secondary cpu entry point at
+0x60.  Initialize it with "run0" to say it will run at 0 unless it is
+set to 1.  It only exists if we are relocatable.
+
+Signed-off-by: Milton Miller <miltonm@bga.com>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+---
+ arch/powerpc/kernel/head_64.S |   30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+As discussed, this changes the __run_at_load location to 
+0x5c + load offset rather than 0x5c + 0.
+
+Index: linux-2.6-ozlabs/arch/powerpc/kernel/head_64.S
+===================================================================
+--- linux-2.6-ozlabs.orig/arch/powerpc/kernel/head_64.S
++++ linux-2.6-ozlabs/arch/powerpc/kernel/head_64.S
+@@ -104,12 +104,6 @@ __secondary_hold_spinloop:
+ __secondary_hold_acknowledge:
+ 	.llong	0x0
+ 
+-	/* This flag is set by purgatory if we should be a kdump kernel. */
+-	/* Do not move this variable as purgatory knows about it. */
+-	.globl	__kdump_flag
+-__kdump_flag:
+-	.llong	0x0
+-
+ #ifdef CONFIG_PPC_ISERIES
+ 	/*
+ 	 * At offset 0x20, there is a pointer to iSeries LPAR data.
+@@ -119,6 +113,20 @@ __kdump_flag:
+ 	.llong hvReleaseData-KERNELBASE
+ #endif /* CONFIG_PPC_ISERIES */
+ 
++#ifdef CONFIG_CRASH_DUMP
++	/* This flag is set to 1 by a loader if the kernel should run
++	 * at the loaded address instead of the linked address.  This
++	 * is used by kexec-tools to keep the the kdump kernel in the
++	 * crash_kernel region.  The loader is responsible for
++	 * observing the alignment requirement.
++	 */
++	/* Do not move this variable as kexec-tools knows about it. */
++	. = 0x5c
++	.globl	__run_at_load
++__run_at_load:
++	.long	0x72756e30	/* "run0" -- relocate to 0 by default */
++#endif
++
+ 	. = 0x60
+ /*
+  * The following code is used to hold secondary processors
+@@ -1407,8 +1415,8 @@ _STATIC(__after_prom_start)
+ 	lis	r25,PAGE_OFFSET@highest	/* compute virtual base of kernel */
+ 	sldi	r25,r25,32
+ #ifdef CONFIG_CRASH_DUMP
+-	ld	r7,__kdump_flag-_stext(r26)
+-	cmpldi	cr0,r7,1	/* kdump kernel ? - stay where we are */
++	lwz	r7,__run_at_load-_stext(r26)
++	cmplwi	cr0,r7,1	/* kdump kernel ? - stay where we are */
+ 	bne	1f
+ 	add	r25,r25,r26
+ #endif
+@@ -1432,11 +1440,11 @@ _STATIC(__after_prom_start)
+ #ifdef CONFIG_CRASH_DUMP
+ /*
+  * Check if the kernel has to be running as relocatable kernel based on the
+- * variable __kdump_flag, if it is set the kernel is treated as relocatable
++ * variable __run_at_load, if it is set the kernel is treated as relocatable
+  * kernel, otherwise it will be moved to PHYSICAL_START
+  */
+-	ld	r7,__kdump_flag-_stext(r26)
+-	cmpldi	cr0,r7,1
++	lwz	r7,__run_at_load-_stext(r26)
++	cmplwi	cr0,r7,1
+ 	bne	3f
+ 
+ 	li	r5,__end_interrupts - _stext	/* just copy interrupts */
 
 _______________________________________________
 kexec mailing list
