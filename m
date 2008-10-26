@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ku75g-0002T7-Ly
-	for kexec@lists.infradead.org; Sun, 26 Oct 2008 14:59:41 +0000
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] [WATCHDOG] Fix kdump when using hpwdt
-Date: Sun, 26 Oct 2008 15:59:37 +0100
-Message-Id: <1225033177-5311-1-git-send-email-bwalle@suse.de>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ku7Dg-0003Yr-3b
+	for kexec@lists.infradead.org; Sun, 26 Oct 2008 15:07:56 +0000
+Message-ID: <490487C1.1010707@redhat.com>
+Date: Sun, 26 Oct 2008 17:07:45 +0200
+From: Avi Kivity <avi@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
+References: <20081022232824.GD5247@verge.net.au>	<20081023194129.GD27959@blackpad>	<20081023222906.GB10753@verge.net.au>	<m1tzb2hkny.fsf@frodo.ebiederm.org>
+	<4904676F.3020706@redhat.com> <m1mygre7nk.fsf@frodo.ebiederm.org>
+In-Reply-To: <m1mygre7nk.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,76 +19,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org, Wim Van Sebroeck <wim@iguana.be>, Thomas Mingarelli <thomas.mingarelli@hp.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>
 
-When the "hpwdt" module is loaded (even if the /dev/watchdog device is not
-opened), then kdump does not work. The panic kernel either does not start at
-all or crash in various places.
+Eric W. Biederman wrote:
+>> so reboots don't
+>> work.  It also assigns some memory to the cpu; if the new kernel isn't aware of
+>> it, 
+>>     
+>
+> Not a problem for a kdump kernel, as it lives out of a reserved region
+> of memory.
+>   
 
-The problem is that hpwdt_pretimeout is registered with register_die_notifier()
-with the highest possible priority. Because it returns NOTIFY_STOP, the
-crash_nmi_callback which is also registered with register_die_notifier()
-is never executed. This causes the shutdown of other CPUs to fail.
+But it is a problem for general kexec.
 
-Reverting the order is no option: The crash_nmi_callback executes HLT
-and so never returns normally. Because of that, it must be executed as
-last notifier, which currently is done.
+>>> Is it possible to disable vmx mode before we enable interrrupts in the
+>>> kdump kernel?
+>>>
+>>>       
+>> You need IPIs to disable vmx on smp.
+>>     
+>
+> Thank you.  Reading your description and taking a quick look at
+> the code in hardware disable it does not appear that there is
+> anything needed (other than restricting ourselves it running
+> uniprocessor in the kdump kernel) that needs to happen.
+>
+> Certainly it would be nice to have kvm disabled in hardware,
+> but if you are proposing using the existing hardware disable
+> I must say that the cure looks much worse than the disease.
+>   
 
-So, that patch returns NOTIFY_OK in case allow_kdump is set as module parameter
-in the hpwdt module. Also, it changes the default of allow_kdump to 1. Kdump is
-quite common and should be working as default.
+Certainly you don't want to issue IPIs when kdump()ing.  It's not 
+unlikely that the other cpus have interrupts permanently disabled.
 
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
-Cc: Wim Van Sebroeck <wim@iguana.be>
-Cc: Thomas Mingarelli <thomas.mingarelli@hp.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
----
- drivers/watchdog/hpwdt.c |   10 +++++++---
- 1 files changed, 7 insertions(+), 3 deletions(-)
+(we can use NMI IPIs, but that will likely be messy)
 
-diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
-index a3765e0..65e7102 100644
---- a/drivers/watchdog/hpwdt.c
-+++ b/drivers/watchdog/hpwdt.c
-@@ -116,7 +116,7 @@ static unsigned int reload;			/* the computed soft_margin */
- static int nowayout = WATCHDOG_NOWAYOUT;
- static char expect_release;
- static unsigned long hpwdt_is_open;
--static unsigned int allow_kdump;
-+static unsigned int allow_kdump = 1;
- 
- static void __iomem *pci_mem_addr;		/* the PCI-memory address */
- static unsigned long __iomem *hpwdt_timer_reg;
-@@ -482,7 +482,11 @@ static int hpwdt_pretimeout(struct notifier_block *nb, unsigned long ulReason,
- 			"Management Log for details.\n");
- 	}
- 
--	return NOTIFY_STOP;
-+	/*
-+	 * for kdump, we must return NOTIFY_OK here to execute the
-+	 * crash_nmi_callback afterwards, see arch/x86/kernel/crash.c
-+	 */
-+	return allow_kdump ? NOTIFY_OK : NOTIFY_STOP;
- }
- 
- /*
-@@ -759,7 +763,7 @@ MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
- module_param(soft_margin, int, 0);
- MODULE_PARM_DESC(soft_margin, "Watchdog timeout in seconds");
- 
--module_param(allow_kdump, int, 0);
-+module_param(allow_kdump, int, 1);
- MODULE_PARM_DESC(allow_kdump, "Start a kernel dump after NMI occurs");
- 
- module_param(nowayout, int, 0);
+> It looks like the disable function is all of about 20 assembly
+> instructions so I would not have a problem if he had a
+> little inline function we could call that test to see if
+> vmx is enabled and disable it in the case of kexec on panic.
+>
+> The normal polite shutdown.  That just looks like asking for trouble.
+>   
+
+But what happens when the kdump kernel reboots?  If it is uniprocessor, 
+it will never have a chance to disable vmx on other cpus.  Using acpi 
+reset (now default) works around this on some machines, but not all.
+
 -- 
-1.6.0.2
+error compiling committee.c: too many arguments to function
 
 
 _______________________________________________
