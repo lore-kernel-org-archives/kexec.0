@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KuTeE-00047J-1l
-	for kexec@lists.infradead.org; Mon, 27 Oct 2008 15:04:50 +0000
+	id 1KuTnn-0007kI-EV
+	for kexec@lists.infradead.org; Mon, 27 Oct 2008 15:14:43 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20081022232824.GD5247@verge.net.au>
 	<20081023194129.GD27959@blackpad>
 	<20081023222906.GB10753@verge.net.au>
 	<m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
 	<m1mygre7nk.fsf@frodo.ebiederm.org> <490487C1.1010707@redhat.com>
-	<m1k5bvc9ku.fsf@frodo.ebiederm.org> <490582D4.9000601@redhat.com>
-Date: Mon, 27 Oct 2008 08:02:31 -0700
-In-Reply-To: <490582D4.9000601@redhat.com> (Avi Kivity's message of "Mon, 27
-	Oct 2008 10:59:00 +0200")
-Message-ID: <m163neaxo8.fsf@frodo.ebiederm.org>
+	<20081026213927.GF23893@blackpad> <m1bpx6bxhm.fsf@frodo.ebiederm.org>
+	<49058645.9010005@redhat.com>
+Date: Mon, 27 Oct 2008 08:05:50 -0700
+In-Reply-To: <49058645.9010005@redhat.com> (Avi Kivity's message of "Mon, 27
+	Oct 2008 11:13:41 +0200")
+Message-ID: <m1skqi9iy9.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
 List-Id: <kexec.lists.infradead.org>
@@ -33,26 +34,20 @@ Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vg
 
 Avi Kivity <avi@redhat.com> writes:
 
-> Eric W. Biederman wrote:
+> There's no way to query whether vmx is enabled or disabled, AFAICT.  So we have
+> to execute vmxoff and ignore possible #UDs.
 >
-> We've observed on some machines that keyboard controller reset didn't work, and
-> that the fallback to triple-fault asserted INIT and not RESET (and that this
-> INIT was blocked, hanging the machine).  Switching to acpi reset worked on some
-> machines, but not all.  Either acpi reset was not implemented on the failing
-> machines, or it was wired to INIT and not RESET.
+> If we trust the exception handlers, there's no problem.  Otherwise we need to
+> replace the current #UD handler with an iret (perhaps switching temporarily to
+> another IDT).
 
-Right.  INIT does not reset things like the MTRRs, I had forgotten
-that distinction.
+Ugh.  We already change the IDT on that code path so that
+may be a way to go.
 
-Frequently the firmware when it regains control at 0xffffffff0
-asserts reset, but if we can't get there.  Ouch!
+> The general kexec path also wants this fixed.
 
-
-> Since we already have NMI IPIs, we could disable vmx there.  If it is done
-> unconditionally and without notifiers, there is no chance of having unreviewed
-> surprises sneaking in.
-
-Sounds good to me.
+It looks like someone hooked the reboot notifier which should
+be called on the normal kexec path.
 
 Eric
 
