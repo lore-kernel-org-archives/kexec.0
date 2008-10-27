@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KuDZK-0004fH-2Q
-	for kexec@lists.infradead.org; Sun, 26 Oct 2008 21:54:43 +0000
+	id 1KuHd0-0003d0-L0
+	for kexec@lists.infradead.org; Mon, 27 Oct 2008 02:14:47 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20081022232824.GD5247@verge.net.au>
 	<20081023194129.GD27959@blackpad>
 	<20081023222906.GB10753@verge.net.au>
 	<m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
 	<m1mygre7nk.fsf@frodo.ebiederm.org> <490487C1.1010707@redhat.com>
-Date: Sun, 26 Oct 2008 14:47:45 -0700
-In-Reply-To: <490487C1.1010707@redhat.com> (Avi Kivity's message of "Sun, 26
-	Oct 2008 17:07:45 +0200")
-Message-ID: <m1k5bvc9ku.fsf@frodo.ebiederm.org>
+	<20081026213927.GF23893@blackpad>
+Date: Sun, 26 Oct 2008 19:08:53 -0700
+In-Reply-To: <20081026213927.GF23893@blackpad> (Eduardo Habkost's message of
+	"Sun, 26 Oct 2008 19:39:27 -0200")
+Message-ID: <m1bpx6bxhm.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
 List-Id: <kexec.lists.infradead.org>
@@ -27,77 +28,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>
+To: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Avi Kivity <avi@redhat.com> writes:
+Eduardo Habkost <ehabkost@redhat.com> writes:
 
-> Eric W. Biederman wrote:
->>> so reboots don't
->>> work.  It also assigns some memory to the cpu; if the new kernel isn't aware
-> of
->>> it,
->>
->> Not a problem for a kdump kernel, as it lives out of a reserved region
->> of memory.
->>
->
-> But it is a problem for general kexec.
-
-Agreed.  We certainly want to cleanly disable vmx on a normal
-kexec reboot.
-
->>>> Is it possible to disable vmx mode before we enable interrrupts in the
->>>> kdump kernel?
->>>>
->>>>
->>> You need IPIs to disable vmx on smp.
+> On Sun, Oct 26, 2008 at 05:07:45PM +0200, Avi Kivity wrote:
+>> Eric W. Biederman wrote:
+> <snip>
+>>>>> Is it possible to disable vmx mode before we enable interrrupts in the
+>>>>> kdump kernel?
+>>>>>
+>>>>>       
+>>>> You need IPIs to disable vmx on smp.
+>>>>     
 >>>
+>>> Thank you.  Reading your description and taking a quick look at
+>>> the code in hardware disable it does not appear that there is
+>>> anything needed (other than restricting ourselves it running
+>>> uniprocessor in the kdump kernel) that needs to happen.
+>>>
+>>> Certainly it would be nice to have kvm disabled in hardware,
+>>> but if you are proposing using the existing hardware disable
+>>> I must say that the cure looks much worse than the disease.
+>>>   
 >>
->> Thank you.  Reading your description and taking a quick look at
->> the code in hardware disable it does not appear that there is
->> anything needed (other than restricting ourselves it running
->> uniprocessor in the kdump kernel) that needs to happen.
+>> Certainly you don't want to issue IPIs when kdump()ing.  It's not  
+>> unlikely that the other cpus have interrupts permanently disabled.
 >>
->> Certainly it would be nice to have kvm disabled in hardware,
->> but if you are proposing using the existing hardware disable
->> I must say that the cure looks much worse than the disease.
->>
+>> (we can use NMI IPIs, but that will likely be messy)
 >
-> Certainly you don't want to issue IPIs when kdump()ing.  It's not unlikely that
-> the other cpus have interrupts permanently disabled.
->
-> (we can use NMI IPIs, but that will likely be messy)
->
->> It looks like the disable function is all of about 20 assembly
->> instructions so I would not have a problem if he had a
->> little inline function we could call that test to see if
->> vmx is enabled and disable it in the case of kexec on panic.
->>
->> The normal polite shutdown.  That just looks like asking for trouble.
->>
->
-> But what happens when the kdump kernel reboots?  If it is uniprocessor, it will
-> never have a chance to disable vmx on other cpus.  Using acpi reset (now
-> default) works around this on some machines, but not all.
+> NMI IPIs are already used on x86 native_machine_crash_shutdown(), so
+> it wouldn't get more messy that it is currently. We just need to add
+> another bit of code to the code that already runs on an NMI handler.
 
-Mostly likely any reboot path will trigger software to toggle the
-reset line on the board.  At least that has been my experience, and
-the reason we don't see many problems when we fail to properly
-shutdown devices before reboot.  If vmx persists across that it would
-seem to be very broken by design.
+Yes.  And handling of those NMIs is best effort.  Nothing fails if
+they don't actually run.
 
-In any case if reboot fails after a kdump that is a minor thing.  Someone
-can always push the power button or the equivalent.
+> My question is: is a notifier chain too much complexity for a sensible
+> piece of code like that? If so, a compile-time hook on that point
+> would be safer, but then it wouldn't work when KVM is compiled as a
+> out-of-tree module.
 
-My objections are:  on_each_cpu called from after a panic looks like
-a good way to loose control of the box and never return.  Adding
-a notifier looks like a good way too add functionality onto the
-kdump path that never gets reviewed for robustness after a kernel
-crash and thus a good way to remove the usefulness of the kexec
-on panic kernel path.
+Well we could fairly easily have a non-modular function that does.
+if (vmx_present && vmx_enabled) {
+   turn_off_vmx();
+}
+
+Which at first skim looks like it is all of about 10-20 machine
+instructions.
+
+There are a few real places where we need code on the kdump
+path because there it is not possible to do the work any
+other way.  However we need to think long and hard about
+that because placing the code anywhere besides in a broken
+and failing kernel is going to be easier to maintain and
+more reliable.
+
+I oppose an atomic notifier because it makes the review
+essentially impossible.  If any module can come in and register
+a notifier we can't know what code is running on that code
+path and we can't be certain the code is safe in an abnormal
+case to run on that code path.
+
+Right now we only need to support vmx on the kdump path because
+of what appears to be a hardware design bug.  Enabling vmx
+apparently disables standard functions like an INIT IPI.  Things
+like this do happen but they should be rare.
+
+> Good point. My problem was a hang when booting the kdump kernel, but it
+> may also cause problems later, when the kdump kernel reboots.
+
+What was the cause of the hang when booting the kdump kernel?
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
