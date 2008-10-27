@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KuUMO-000762-KA
-	for kexec@lists.infradead.org; Mon, 27 Oct 2008 15:50:28 +0000
-Date: Mon, 27 Oct 2008 13:50:03 -0200
-From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
-Message-ID: <20081027155003.GM23893@blackpad>
-References: <20081023194129.GD27959@blackpad>
+	id 1KuVzK-0000DA-4S
+	for kexec@lists.infradead.org; Mon, 27 Oct 2008 17:34:48 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20081022232824.GD5247@verge.net.au>
+	<20081023194129.GD27959@blackpad>
 	<20081023222906.GB10753@verge.net.au>
 	<m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
-	<m1mygre7nk.fsf@frodo.ebiederm.org>
-	<490487C1.1010707@redhat.com> <20081026213927.GF23893@blackpad>
-	<m1bpx6bxhm.fsf@frodo.ebiederm.org> <49058645.9010005@redhat.com>
-	<m1skqi9iy9.fsf@frodo.ebiederm.org>
+	<m1mygre7nk.fsf@frodo.ebiederm.org> <490487C1.1010707@redhat.com>
+	<20081026213927.GF23893@blackpad> <m1bpx6bxhm.fsf@frodo.ebiederm.org>
+	<49058645.9010005@redhat.com> <20081027122808.GH23893@blackpad>
+	<4905C9ED.807@redhat.com>
+Date: Mon, 27 Oct 2008 10:32:43 -0700
+In-Reply-To: <4905C9ED.807@redhat.com> (Avi Kivity's message of "Mon, 27 Oct
+	2008 16:02:21 +0200")
+Message-ID: <m18wsa7xl0.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1skqi9iy9.fsf@frodo.ebiederm.org>
+Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,28 +30,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Avi Kivity <avi@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Oct 27, 2008 at 08:05:50AM -0700, Eric W. Biederman wrote:
-> Avi Kivity <avi@redhat.com> writes:
-> 
-> > There's no way to query whether vmx is enabled or disabled, AFAICT.  So we have
-> > to execute vmxoff and ignore possible #UDs.
-> >
-> > If we trust the exception handlers, there's no problem.  Otherwise we need to
-> > replace the current #UD handler with an iret (perhaps switching temporarily to
-> > another IDT).
-> 
-> Ugh.  We already change the IDT on that code path so that
-> may be a way to go.
+Avi Kivity <avi@redhat.com> writes:
 
-I don't see the IDT being changed on native_machine_shutdown(). It even
-uses notifier chain registration (register_die_notifier()) to sneak a
-NMI handler in.
+> Eduardo Habkost wrote:
+>> Can't we just set a flag when we are about to enable vmx, so we run vmxoff
+>> only when know it's enabled? There will be a tiny window between setting
+>> this flag and and actually running vmxon where things could go wrong,
+>> but this doesn't look that bad.
+>>
+>
+> It makes more sense to have a vmxon api in the core; you call it, the kernel
+> enables it and sets a flag; then either you or the core can disable it.
 
--- 
-Eduardo
+Yes.  That sounds like the most maintainable approach.
+
+>> The patches I've sent to the kvm mailing list added a notifier interface
+>> specific for kexec_crash, using raw_notifier_*().
+>>
+>> IMO, if a notifier registration interface was acceptable, the raw
+>> notifiers would be good enough for that. But Eric seems to think that
+>> adding a notifier registration interface for the crash handler path
+>> wouldn't be a good idea, and I am starting to agree with him.
+>>
+>>
+>
+> I wouldn't mind notifiers (with a nice comment explaining that you must know
+> what you're doing, though that's the case with most kernel APIs).  I'm fine with
+> either approach.
+
+This is the 3rd request I have seen for a notifier.  This is the first
+request I have seen for code that must be executed in the kexec on
+panic path.  So history suggest to me that notifiers make it
+unreasonably easy to get code onto the kexec on panic code path.
+
+Occasionally the kexec on panic code path is tested to see how
+well it works in strange situations like being called from
+a stack overflow etc.
+
+The rest of the history is that previous attempts like lkcd
+had very programmer friendly interfaces, that worked fine
+in test environments giving beautiful core dumps, but when things
+broke in the field they were essentially useless.  The kdump
+approach is still not completely reliable but it does work
+well enough that people get useful crash dumps sometimes.
+
+I feel anything that makes the kexec on panic code path harder
+to verify it will work when things are crazy broken, like
+a notifier is something we should avoid.
+
+Eric
 
 _______________________________________________
 kexec mailing list
