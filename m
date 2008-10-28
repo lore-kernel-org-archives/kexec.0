@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kuuxo-0008Sf-JS
-	for kexec@lists.infradead.org; Tue, 28 Oct 2008 20:14:53 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
-	<m1mygre7nk.fsf@frodo.ebiederm.org> <490487C1.1010707@redhat.com>
-	<20081026213927.GF23893@blackpad>
-	<m1bpx6bxhm.fsf@frodo.ebiederm.org>
-	<49058645.9010005@redhat.com> <20081027122808.GH23893@blackpad>
-	<4905C9ED.807@redhat.com> <m18wsa7xl0.fsf@frodo.ebiederm.org>
-	<20081028194530.GK23893@blackpad>
-Date: Tue, 28 Oct 2008 13:13:03 -0700
-In-Reply-To: <20081028194530.GK23893@blackpad> (Eduardo Habkost's message of
-	"Tue, 28 Oct 2008 17:45:30 -0200")
-Message-ID: <m18ws84gxc.fsf@frodo.ebiederm.org>
+Received: from mail3.webfaction.com ([70.85.44.146])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KusQ7-0005ls-NE
+	for kexec@lists.infradead.org; Tue, 28 Oct 2008 17:31:56 +0000
+Date: Tue, 28 Oct 2008 13:31:46 -0400
+From: Forest Bond <forest@alittletooquiet.net>
+Subject: Re: kexec & memtest86+: inconsistent memory errors
+Message-ID: <20081028173146.GA9750@storm.local.network>
+References: <20081007182350.GD13130@storm.local.network>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
+In-Reply-To: <20081007182350.GD13130@storm.local.network>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,38 +18,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0524146414=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Chris Hovious <chris.hovious@logicsupply.com>
 
-Eduardo Habkost <ehabkost@redhat.com> writes:
 
-> I am still wondering if a simple function pointer (instead of a full
-> notifier interface) would be good enough. It looks like a reasonable
-> tradeoff.
+--===============0524146414==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Disposition: inline
 
-Oh sorry.   As long as we do the whole rcu protected thing so it is safe
-to call the function without taking locks it should work.  I'm not
-thrilled about a function pointer but it should work.
 
-> I think I will get flamed if I try to pull to the core a bunch of code
-> that always lived in the KVM module.  8)
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why is KVM modular anyway?  That seems like some pretty core cpu functionality...
+Hi,
 
-> And even if we pull those functions to the core, we will still have
-> a function pointer on the new code anyway, because we would need to
-> support vmx and svm.
+On Tue, Oct 07, 2008 at 02:23:50PM -0400, Forest Bond wrote:
+> We've been using kexec to drop into memtest86+ for a few years now.  We r=
+un
+> memtest86+ from within our Linux-based hardware test suite.  This has alw=
+ays
+> worked quite well.  It was painful to get running at first (kexec was sti=
+ll
+> young then and wasn't included with our distribution's kernel), but is ve=
+ry easy
+> to use now.
+>=20
+> Unfortunately, though, we've hit a new snag with our latest platform vers=
+ion.
+> This is based on Ubuntu 8.04.
+>=20
+> Specific software version info:
+>=20
+>   kernel version 2.6.24-19-generic
+>   kexec-tools-testing 20070330 released 30th March 2007
+>   memtest86+ version 2.01
+>=20
+> The problem is that memtest86+ reports numerous memory errors when booted=
+ via
+> kexec, booting directly into memtest86+ does not turn up these errors.
+>=20
+> I suspect a device is getting mapped into memory and not deallocated prio=
+r to
+> kexec execution (but I may be putting my ignorance on display).
+>=20
+> Any ideas?
 
-Depending.  It doesn't sound like svm has the problem where init doesn't
-work so svm really doesn't need to do this.
+Can anyone confirm that my suspicions about this might be correct?  Can any=
+one
+recommend troubleshooting techniques?
 
-Eric
+Thanks,
+Forest
+--=20
+Forest Bond
+http://www.alittletooquiet.net
+http://www.pytagsfs.org
+
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+
+iD8DBQFJB0yCRO4fQQdv5AwRAnWNAJ4+adl3ntBTxsbCYJ8J3/x1hZo9UgCg2xpq
+6Wlz8XqcyW85IHwLlkeUEVQ=
+=5xoh
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
+
+
+--===============0524146414==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0524146414==--
+
