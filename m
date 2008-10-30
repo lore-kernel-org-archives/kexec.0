@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from mga11.intel.com ([192.55.52.93])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KvaKl-0003cR-Th
-	for kexec@lists.infradead.org; Thu, 30 Oct 2008 16:25:25 +0000
-Date: Thu, 30 Oct 2008 14:24:42 -0200
-From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: Re: [PATCH 1/6] kdump: crash-time virt disable function
-Message-ID: <20081030162442.GW23893@blackpad>
-References: <1225373687-6960-1-git-send-email-ehabkost@redhat.com>
-	<1225373687-6960-2-git-send-email-ehabkost@redhat.com>
-	<4909BBA7.1020307@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4909BBA7.1020307@redhat.com>
+	id 1KvSiA-0004cM-Qr
+	for kexec@lists.infradead.org; Thu, 30 Oct 2008 08:16:59 +0000
+Subject: [PATCH -mm 0/3 -v3] kexec/i386: kexec page table code clean up
+From: Huang Ying <ying.huang@intel.com>
+Date: Thu, 30 Oct 2008 16:16:55 +0800
+Message-Id: <1225354615.24095.110.camel@yhuang-dev.sh.intel.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,29 +16,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1265025535=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>, Ian Campbell <Ian.Campbell@citrix.com>, Magnus Damm <magnus.damm@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Thu, Oct 30, 2008 at 03:50:31PM +0200, Avi Kivity wrote:
-<snip>
->>
->> +static void (*virt_disable_fn)(unsigned int cpu);
->>   
->
-> Since you never use the cpu argument, I suggest dropping it.
 
-It is a leftover from when I was using cpus_hardware_enabled to check
-if vmx was enabled, before I've noticed I could just check CR4.VMXE. I
-will drop it.
+--===============1265025535==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-ick+T9bVPBXxleYsQMCU"
 
--- 
-Eduardo
+
+--=-ick+T9bVPBXxleYsQMCU
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+This patchset cleans up page table setup code of kexec on i386.
+
+This patchset is based on 2.6.28-rc2-mm1 and has been tested on i386.
+
+v3:
+
+- Remove PAGE_SIZE alignment from relocate_kernel()
+
+- Re-based on 2.6.28-rc2-mm1
+
+v2:
+
+- Rename some function names, such as alloc_page_tables ->
+  machine_kexec_alloc_page_tables, etc.
+
+- Cleanup error processing for machine_alloc_page_tables.
+
+
+Best Regards,
+Huang Ying
+
+
+
+--=-ick+T9bVPBXxleYsQMCU
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkkJbXMACgkQKhFGF+eHlphAMQCfUXDQPugXGV4PNfYzHO7P1iZy
+WDIAoJaWRtuD86fJmzVDOXl0a55PIl7x
+=if1F
+-----END PGP SIGNATURE-----
+
+--=-ick+T9bVPBXxleYsQMCU--
+
+
+
+--===============1265025535==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1265025535==--
+
+
