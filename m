@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KvXgC-0000LV-VU
+	id 1KvXgC-0000LX-VZ
 	for kexec@lists.infradead.org; Thu, 30 Oct 2008 13:35:17 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 2/6] kvm_x86_ops: crash_hardware_disable() operation
-Date: Thu, 30 Oct 2008 11:34:42 -0200
-Message-Id: <1225373687-6960-3-git-send-email-ehabkost@redhat.com>
-In-Reply-To: <1225373687-6960-1-git-send-email-ehabkost@redhat.com>
-References: <1225373687-6960-1-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 0/6] kdump: disable virtualization extensions on crash (v2)
+Date: Thu, 30 Oct 2008 11:34:40 -0200
+Message-Id: <1225373687-6960-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +23,36 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-The vmx hardware_disable() function does too much for the virt_disable
-crash handler, so we will have a new operation for the crash-time
-virt_disable case.
 
-Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
----
- arch/x86/include/asm/kvm_host.h |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+Hi,
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 09e6c56..002023b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -426,6 +426,7 @@ struct kvm_x86_ops {
- 	int (*disabled_by_bios)(void);             /* __init */
- 	void (*hardware_enable)(void *dummy);      /* __init */
- 	void (*hardware_disable)(void *dummy);
-+	void (*crash_hardware_disable)(void *dummy);
- 	void (*check_processor_compatibility)(void *rtn);
- 	int (*hardware_setup)(void);               /* __init */
- 	void (*hardware_unsetup)(void);            /* __exit */
+After some discussion, this is my second try to fix properly the kdump
+hang when the kvm-intel module is loaded. I've kept the virtualization
+code inside the KVM, and just used a function pointer that can be
+registered by KVM to be called at crash time.
+
+
+This series is for one of the alternatives for solving the problem. Other
+alternatives that were discussed were:
+
+a) Using a raw notifier chain (kernel/notifier.c) (the first version
+   of this series)
+   - This was dropped because the less code we have to rely on, the better,
+     and it would make it too easy to break kdump
+b) Always calling vmxoff, after hacking the #UD vector to ignore
+   unknown opcode exceptions.
+  - Too hackish in my opinion. And we don't need to hack #UD, anyway,
+    if we can simply test CR4.VMXE (all our code that run vmxon/vmxoff
+    toggle CR4.VMXE accordingly)
+c) Moving the equivalent to the hardware_disable()/hardware_enable() API
+   (and the vmx and svm implementations) from the KVM module to the kernel
+   core, so the kernel core knows which CPUs have virtualization enabled,
+   and disables virtualization without calling into the KVM module.
+   - This wasn't completely discarded, but would move to the core a bunch
+     of code that always lived in the KVM module.
+
 -- 
-1.5.5.GIT
-
+Eduardo
 
 _______________________________________________
 kexec mailing list
