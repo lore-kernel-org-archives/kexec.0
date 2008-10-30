@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KvLy2-00043K-3s
-	for kexec@lists.infradead.org; Thu, 30 Oct 2008 01:04:54 +0000
+	id 1KvMR1-0006kh-LY
+	for kexec@lists.infradead.org; Thu, 30 Oct 2008 01:34:52 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20081023194129.GD27959@blackpad>
-	<20081023222906.GB10753@verge.net.au>
-	<m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
+References: <m1tzb2hkny.fsf@frodo.ebiederm.org> <4904676F.3020706@redhat.com>
 	<m1mygre7nk.fsf@frodo.ebiederm.org> <490487C1.1010707@redhat.com>
-	<20081026213927.GF23893@blackpad> <490581A9.80108@redhat.com>
-	<20081027130937.GA28226@redhat.com> <20081029201006.GT23893@blackpad>
-	<20081029210550.GA13316@redhat.com>
-Date: Wed, 29 Oct 2008 17:58:16 -0700
-In-Reply-To: <20081029210550.GA13316@redhat.com> (Vivek Goyal's message of
-	"Wed, 29 Oct 2008 17:05:50 -0400")
-Message-ID: <m1tzau3nmf.fsf@frodo.ebiederm.org>
+	<20081026213927.GF23893@blackpad>
+	<m1bpx6bxhm.fsf@frodo.ebiederm.org>
+	<49058645.9010005@redhat.com> <20081027122808.GH23893@blackpad>
+	<4905C9ED.807@redhat.com> <m18wsa7xl0.fsf@frodo.ebiederm.org>
+	<20081028194530.GK23893@blackpad> <m18ws84gxc.fsf@frodo.ebiederm.org>
+	<49082FD0.3040009@redhat.com> <m13aif4fk7.fsf@frodo.ebiederm.org>
+	<4908975A.7050900@redhat.com>
+Date: Wed, 29 Oct 2008 18:33:39 -0700
+In-Reply-To: <4908975A.7050900@redhat.com> (Avi Kivity's message of "Wed, 29
+	Oct 2008 19:03:22 +0200")
+Message-ID: <m1bpx23lzg.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/2] kvm: disable virtualization on kdump
 List-Id: <kexec.lists.infradead.org>
@@ -29,53 +31,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>
+To: Avi Kivity <avi@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Vivek Goyal <vgoyal@redhat.com>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+Avi Kivity <avi@redhat.com> writes:
 
-> On Wed, Oct 29, 2008 at 06:10:06PM -0200, Eduardo Habkost wrote:
->> On Mon, Oct 27, 2008 at 09:09:37AM -0400, Vivek Goyal wrote:
->> > On Mon, Oct 27, 2008 at 10:54:01AM +0200, Avi Kivity wrote:
->> <snip>
->> > >
->> > > The hang was likely caused by vmx blocking INIT.  Sigh.
->> > 
->> > Avi,
->> > 
->> > We boot kdump kernel with maxcpus=1. IIUC, in that code path we will not
->> > be using INIT. So did you try booting kdump kernel with maxcpus=1 and did
->> > it work for you? If not than problem could be something else.
->> 
->> Just checked it here: I am passing maxcpus=1 to the kdump kernel. My
->> full kexec commandline is this:
->> 
->> /sbin/kexec --console-serial -p '--command-line=ro root=/dev/vg0/rawhide rhgb
-> console=ttyS0,115200 ignore_loglevel irqpoll maxcpus=1 reset_devices
-> earlyprintk=ttyS0,115200' --initrd=/boot/initrd-2.6.28-rc2kdump.img
-> /boot/vmlinuz-2.6.28-rc2
->> 
->> Additional info: I don't get the "I'm in purgatory" message on serial
->> console, when the system hangs. I do get the message if I trigger the
->> crash dump after unloading the kvm-intel module, so the serial console
->> is working.
->> 
+> Eric W. Biederman wrote:
+>> Most of the reason I was wondering is that the cpu hardware probing
+>> largely seems to be a duplicate of what we have in the core for
+>> probing cpu capabilities already, and could likely be made smaller
+>> by building upon the existing codebase.
+>>
+>>
 >
-> That means we are not even beginning to boot second kernel and are getting
-> lost somewhere in the first kernel itself (most likely relocate_kernel_32/64.S).
->
-> And it could be because of any of the interesting restrictions put when
-> vmx is enabled (As Avi mentioned in another mail.).
->
-> To debug that code, I used to put some "outb" messages to output a
-> character to serial console and find out which instructions is creating
-> trouble. You can debug to find out exactly what operation is not allowed
-> when vmx is enabled or simply write the patches to disable vmx and it
-> should automatically lead to problem resolution.
+> We use the core cpuid functions, or are you referring to something else?
 
-The transfer between kernels happens with virtual addresses identity mapped
-to physical addresses.  For 32bit mode we implement this by disabling paging.
-Which apparently is one of the interesting restrictions placed of vmx.
+I was referring to the arch/x86/kernel/cpu/*
+and arch/x86/include/asm/cpufeature.h
+
+The core functions that are responsible for detecting all of the cpu features,
+and disabling them if there are cpu errata.
+
+The usual pattern is that code does all of the magic detection logic and
+then the code that would use it would just need to test: cpu_has_vmx or cpu_has_svm.
+
+At least in part that allows us to show the working cpu features in /proc/cpuinfo.
+
+>>> svm can writeback into memory at odd times if we don't do this, and the cost
+> is
+>>> small - clear a bit in EFER.  There's no reason to be lazy.
+>>>
+>>
+>> Especially if we can clear that bit unconditionally (when
+>> EFER is present) I'm all for it.
+>>
+>
+> That is the case.
+
+Cool.  I forget if we have to test for EFER on 32bit, or if we can just wrmsr
+and be done with it.  Regardless that sounds easy to do on the kexec path.
 
 Eric
 
