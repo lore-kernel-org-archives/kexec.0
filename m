@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KvjFY-0007FD-Hm
-	for kexec@lists.infradead.org; Fri, 31 Oct 2008 01:56:33 +0000
-Date: Fri, 31 Oct 2008 12:56:25 +1100
+	id 1KvjKl-0003lG-Hn
+	for kexec@lists.infradead.org; Fri, 31 Oct 2008 02:01:55 +0000
+Date: Fri, 31 Oct 2008 13:01:52 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH -mm 0/3 -v3] kexec/i386: kexec page table code clean up
-Message-ID: <20081031015623.GA27118@verge.net.au>
-References: <1225354615.24095.110.camel@yhuang-dev.sh.intel.com>
+Subject: Re: [PATCH 0/2] kexec jump/hibernation support for kexec-tools
+Message-ID: <20081031020150.GB27118@verge.net.au>
+References: <1225250653.24095.39.camel@yhuang-dev.sh.intel.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1225354615.24095.110.camel@yhuang-dev.sh.intel.com>
+In-Reply-To: <1225250653.24095.39.camel@yhuang-dev.sh.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,29 +24,9 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Huang Ying <ying.huang@intel.com>
-Cc: Ian Campbell <Ian.Campbell@citrix.com>, kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Oct 30, 2008 at 04:16:55PM +0800, Huang Ying wrote:
-> This patchset cleans up page table setup code of kexec on i386.
-> 
-> This patchset is based on 2.6.28-rc2-mm1 and has been tested on i386.
-> 
-> v3:
-> 
-> - Remove PAGE_SIZE alignment from relocate_kernel()
-> 
-> - Re-based on 2.6.28-rc2-mm1
-> 
-> v2:
-> 
-> - Rename some function names, such as alloc_page_tables ->
->   machine_kexec_alloc_page_tables, etc.
-> 
-> - Cleanup error processing for machine_alloc_page_tables.
-
-These changes seem reasonable to me.
-
-Reviewd-by: Simon Horman <horms@verge.net.au>
+Thanks, I have applied both patches.
 
 -- 
 Simon Horman
