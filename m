@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga11.intel.com ([192.55.52.93])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kvj7s-0006C3-7v
-	for kexec@lists.infradead.org; Fri, 31 Oct 2008 01:48:36 +0000
-Subject: [PATCH 3/3 -v4] kexec/i386: setup kexec page table in C
-From: Huang Ying <ying.huang@intel.com>
-Date: Fri, 31 Oct 2008 09:48:15 +0800
-Message-Id: <1225417695.24095.138.camel@yhuang-dev.sh.intel.com>
-Mime-Version: 1.0
+	id 1Kvjl7-0002Nw-Ho
+	for kexec@lists.infradead.org; Fri, 31 Oct 2008 02:29:11 +0000
+Date: Fri, 31 Oct 2008 13:29:06 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec memory ranges dynamic allocation
+Message-ID: <20081031022902.GH27118@verge.net.au>
+References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
+	<20081015031818.GC27243@verge.net.au>
+	<572af9170810150146p58c599fvabb41338ffd4e033@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <572af9170810150146p58c599fvabb41338ffd4e033@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,315 +21,262 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2041796488=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Simon Horman <horms@verge.net.au>, Ian Campbell <Ian.Campbell@citrix.com>, Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: ppcdev <linuxppc-dev@ozlabs.org>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org
+
+Hi,
+
+Could someone please comment on the satus of this patch?
+
+On Wed, Oct 15, 2008 at 12:46:24PM +0400, Maxim Uvarov wrote:
+> Patch corrected. ( git_kexec_powerpc_v2.patch is attached.)
+> 
+> I tested it on ppc64 pasemi electra board. Both kexec -l and kexec -p works.
+> 
+> Maxim.
+> 
+> 
+> 
+> 2008/10/15 Simon Horman <horms@verge.net.au>
+> 
+> > On Tue, Oct 14, 2008 at 07:11:19PM +0400, Maxim Uvarov wrote:
+> > > Hello all,
+> > >
+> > > As you all know it is not easy to count exact value of memory ranges from
+> > > device tree on powerpc.
+> > > It very depends on how dts file was written. What do you think about
+> > really
+> > > dynamic allocation buffers
+> > > for this buffers?
+> >
+> > Conceptually I have no objections to the change,
+> > though I would like to get some review from ppc people.
+> > (linuxppc-dev@ozlabs.org CCed)
+> >
+> > > Patch is attached.
+> >
+> > This patch doesn't seem to compile for me.
+> >
+> > # powerpc64-unknown-linux-gnu-gcc --version
+> > powerpc64-unknown-linux-gnu-gcc (GCC) 4.1.1
+> > Copyright (C) 2006 Free Software Foundation, Inc.
+> > This is free software; see the source for copying conditions.  There is NO
+> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> >
+> > #make
+> > [snip]
+> > kexec/arch/ppc64/kexec-ppc64.c:100: warning: function declaration isn't a
+> > prototype
+> > kexec/arch/ppc64/kexec-ppc64.c: In function 'realloc_memory_ranges':
+> > kexec/arch/ppc64/kexec-ppc64.c:107: warning: passing argument 1 of
+> > 'realloc' makes pointer from integer without a cast
+> > kexec/arch/ppc64/kexec-ppc64.c:107: error: too few arguments to function
+> > 'realloc'
+> > kexec/arch/ppc64/kexec-ppc64.c:102: warning: unused variable 'tmp'
+> >
+> > --
+> > Simon Horman
+> >  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+> >  H: www.vergenet.net/~horms/ <http://www.vergenet.net/%7Ehorms/>
+> >   W: www.valinux.co.jp/en
+> >
+> >
+> 
+> 
+> -- 
+> Best regards,
+> Maxim Uvarov
+
+> diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+> index 069a9fc..0ad40fa 100644
+> --- a/kexec/arch/ppc64/kexec-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-ppc64.c
+> @@ -96,96 +96,46 @@ err1:
+>  
+>  }
+>  
+> -static int count_dyn_reconf_memory_ranges(void)
+> +static int realloc_memory_ranges()
+>  {
+> -	char device_tree[] = "/proc/device-tree/";
+> -	char fname[128];
+> -	char buf[32];
+> -	FILE *file;
+> -
+> -	strcpy(fname, device_tree);
+> -	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,lmb-size");
+> -	if ((file = fopen(fname, "r")) == NULL) {
+> -		perror(fname);
+> -		return -1;
+> -	}
+> +	size_t memory_range_len;
+>  
+> -	if (fread(buf, 1, 8, file) < 0) {
+> -		perror(fname);
+> -		fclose(file);
+> -		return -1;
+> -	}
+> -
+> -	lmb_size = ((uint64_t *)buf)[0];
+> -	fclose(file);
+> +	max_memory_ranges++;
+> +	memory_range_len = sizeof(struct memory_range) * max_memory_ranges;
+>  
+> -	/* Get number of lmbs from ibm,dynamic-memory */
+> -	strcpy(fname, device_tree);
+> -	strcat(fname, "ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory");
+> -	if ((file = fopen(fname, "r")) == NULL) {
+> -		perror(fname);
+> -		return -1;
+> -	}
+> -	/*
+> -	 * first 4 bytes provide number of entries(lmbs)
+> -	 */
+> -	if (fread(buf, 1, 4, file) < 0) {
+> -		perror(fname);
+> -		fclose(file);
+> -		return -1;
+> -	}
+> -	num_of_lmbs = ((unsigned int *)buf)[0];
+> -	max_memory_ranges += num_of_lmbs;
+> -	fclose(file);
+> +	memory_range = (struct memory_range *) realloc(memory_range, memory_range_len);
+> +	if (!memory_range)
+> +		goto err;
+>  
+> -	return 0;
+> -}
+> +	base_memory_range = (struct memory_range *) realloc(memory_range, memory_range_len);
+> +	if (!base_memory_range)
+> +		goto err;
+>  
+> -/*
+> - * Count the memory nodes under /proc/device-tree and populate the
+> - * max_memory_ranges variable. This variable replaces MAX_MEMORY_RANGES
+> - * macro used earlier.
+> - */
+> -static int count_memory_ranges(void)
+> -{
+> -	char device_tree[256] = "/proc/device-tree/";
+> -	struct dirent *dentry;
+> -	DIR *dir;
+> +	exclude_range = (struct memory_range *) realloc(exclude_range, memory_range_len);
+> +	if (!exclude_range)
+> +		goto err;
+>  
+> -	if ((dir = opendir(device_tree)) == NULL) {
+> -		perror(device_tree);
+> -		return -1;
+> -	}
+> +	usablemem_rgns.ranges = (struct memory_range *)
+> +				realloc(usablemem_rgns.ranges, memory_range_len);
+> +	if (!(usablemem_rgns.ranges))
+> +		goto err;
+>  
+> -	while ((dentry = readdir(dir)) != NULL) {
+> -		if (!strncmp(dentry->d_name,
+> -				"ibm,dynamic-reconfiguration-memory", 35)){
+> -			if (count_dyn_reconf_memory_ranges() != 0)
+> -				return -1;
+> -			continue;
+> -		}
+> +	return 0;
+>  
+> -		if (strncmp(dentry->d_name, "memory@", 7) &&
+> -			strcmp(dentry->d_name, "memory") &&
+> -			strncmp(dentry->d_name, "pci@", 4))
+> -			continue;
+> -		max_memory_ranges++;
+> -	}
+> -	/* need to add extra region for retained initrd */
+> -	if (reuse_initrd) {
+> -		max_memory_ranges++;
+> -	}
+> +err:
+> +	fprintf(stderr, "memory range structure re-allocation failure\n");
+> +	return -1;
+> +}
+>  
+> -	closedir(dir);
+>  
+> -	return 0;
+> -}
+>  static void add_base_memory_range(uint64_t start, uint64_t end)
+>  {
+>  	base_memory_range[nr_memory_ranges].start = start;
+>  	base_memory_range[nr_memory_ranges].end  = end;
+>  	base_memory_range[nr_memory_ranges].type = RANGE_RAM;
+>  	nr_memory_ranges++;
+> +	if (nr_memory_ranges >= max_memory_ranges) 
+> +		realloc_memory_ranges(); 
+>  
+>  	dbgprintf("%016llx-%016llx : %x\n",
+>  		base_memory_range[nr_memory_ranges-1].start,
+> @@ -300,8 +250,8 @@ static int get_base_ranges(void)
+>  				return -1;
+>  			}
+>  			if (nr_memory_ranges >= max_memory_ranges) {
+> -				fclose(file);
+> -				break;
+> +				if (realloc_memory_ranges() < 0)
+> +					break;
+>  			}
+>  			start = ((uint64_t *)buf)[0];
+>  			end = start + ((uint64_t *)buf)[1];
+> @@ -396,6 +346,8 @@ static int get_devtree_details(unsigned long kexec_flags)
+>  			exclude_range[i].start = 0x0UL;
+>  			exclude_range[i].end = kernel_end;
+>  			i++;
+> +			if (i >= max_memory_ranges)
+> +				realloc_memory_ranges();
+>  
+>  			if (kexec_flags & KEXEC_ON_CRASH) {
+>  				memset(fname, 0, sizeof(fname));
+> @@ -470,6 +422,8 @@ static int get_devtree_details(unsigned long kexec_flags)
+>  			exclude_range[i].start = htab_base;
+>  			exclude_range[i].end = htab_base + htab_size;
+>  			i++;
+> +			if (i >= max_memory_ranges)
+> +				realloc_memory_ranges();
+>  
+>  			/* reserve the initrd_start and end locations. */
+>  			if (reuse_initrd) {
+> @@ -545,6 +499,8 @@ static int get_devtree_details(unsigned long kexec_flags)
+>  			exclude_range[i].start = rtas_base;
+>  			exclude_range[i].end = rtas_base + rtas_size;
+>  			i++;
+> +			if (i >= max_memory_ranges)
+> +				realloc_memory_ranges();
+>  			if (kexec_flags & KEXEC_ON_CRASH)
+>  				add_usable_mem_rgns(rtas_base, rtas_size);
+>  		} /* rtas */
+> @@ -740,9 +696,10 @@ out:
+>  /* Return a list of valid memory ranges */
+>  int get_memory_ranges(struct memory_range **range, int *ranges,
+>  			unsigned long kexec_flags)
+> -{
+> -	if (count_memory_ranges())
+> -		return -1;
+> +{	
+> +        /* allocate memory_range dynamically */
+> +        max_memory_ranges = 1;
+> +
+>  	if (alloc_memory_ranges())
+>  		return -1;
+>  	if (setup_memory_ranges(kexec_flags))
 
 
---===============2041796488==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-QyMdk2pS9MvxQveb15AA"
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
-
---=-QyMdk2pS9MvxQveb15AA
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-This patch transforms the kexec page tables setup code from assembler
-code to C code in machine_kexec_prepare. This improves readability and
-reduces code line number.
-
-Signed-off-by: Huang Ying <ying.huang@intel.com>
-
----
- arch/x86/include/asm/kexec.h         |   17 -----
- arch/x86/kernel/machine_kexec_32.c   |   59 ++++++++++++++----
- arch/x86/kernel/relocate_kernel_32.S |  114 ------------------------------=
------
- 3 files changed, 49 insertions(+), 141 deletions(-)
-
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -99,6 +99,45 @@ static int machine_kexec_alloc_page_tabl
- 	return 0;
- }
-=20
-+static void machine_kexec_page_table_set_one(
-+	pgd_t *pgd, pmd_t *pmd, pte_t *pte,
-+	unsigned long vaddr, unsigned long paddr)
-+{
-+	pud_t *pud;
-+
-+	pgd +=3D pgd_index(vaddr);
-+#ifdef CONFIG_X86_PAE
-+	if (!(pgd_val(*pgd) & _PAGE_PRESENT))
-+		set_pgd(pgd, __pgd(__pa(pmd) | _PAGE_PRESENT));
-+#endif
-+	pud =3D pud_offset(pgd, vaddr);
-+	pmd =3D pmd_offset(pud, vaddr);
-+	if (!(pmd_val(*pmd) & _PAGE_PRESENT))
-+		set_pmd(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
-+	pte =3D pte_offset_kernel(pmd, vaddr);
-+	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC));
-+}
-+
-+static void machine_kexec_prepare_page_tables(struct kimage *image)
-+{
-+	void *control_page;
-+	pmd_t *pmd =3D 0;
-+
-+	control_page =3D page_address(image->control_code_page);
-+#ifdef CONFIG_X86_PAE
-+	pmd =3D image->arch.pmd0;
-+#endif
-+	machine_kexec_page_table_set_one(
-+		image->arch.pgd, pmd, image->arch.pte0,
-+		(unsigned long)control_page, __pa(control_page));
-+#ifdef CONFIG_X86_PAE
-+	pmd =3D image->arch.pmd1;
-+#endif
-+	machine_kexec_page_table_set_one(
-+		image->arch.pgd, pmd, image->arch.pte1,
-+		__pa(control_page), __pa(control_page));
-+}
-+
- /*
-  * A architecture hook called to validate the
-  * proposed image and prepare the control pages
-@@ -112,12 +151,19 @@ static int machine_kexec_alloc_page_tabl
-  *
-  * - Make control page executable.
-  * - Allocate page tables
-+ * - Setup page tables
-  */
- int machine_kexec_prepare(struct kimage *image)
- {
-+	int error;
-+
- 	if (nx_enabled)
- 		set_pages_x(image->control_code_page, 1);
--	return machine_kexec_alloc_page_tables(image);
-+	error =3D machine_kexec_alloc_page_tables(image);
-+	if (error)
-+		return error;
-+	machine_kexec_prepare_page_tables(image);
-+	return 0;
- }
-=20
- /*
-@@ -176,17 +222,6 @@ void machine_kexec(struct kimage *image)
- 	page_list[PA_CONTROL_PAGE] =3D __pa(control_page);
- 	page_list[VA_CONTROL_PAGE] =3D (unsigned long)control_page;
- 	page_list[PA_PGD] =3D __pa(image->arch.pgd);
--	page_list[VA_PGD] =3D (unsigned long)image->arch.pgd;
--#ifdef CONFIG_X86_PAE
--	page_list[PA_PMD_0] =3D __pa(image->arch.pmd0);
--	page_list[VA_PMD_0] =3D (unsigned long)image->arch.pmd0;
--	page_list[PA_PMD_1] =3D __pa(image->arch.pmd1);
--	page_list[VA_PMD_1] =3D (unsigned long)image->arch.pmd1;
--#endif
--	page_list[PA_PTE_0] =3D __pa(image->arch.pte0);
--	page_list[VA_PTE_0] =3D (unsigned long)image->arch.pte0;
--	page_list[PA_PTE_1] =3D __pa(image->arch.pte1);
--	page_list[VA_PTE_1] =3D (unsigned long)image->arch.pte1;
-=20
- 	if (image->type =3D=3D KEXEC_TYPE_DEFAULT)
- 		page_list[PA_SWAP_PAGE] =3D (page_to_pfn(image->swap_page)
---- a/arch/x86/kernel/relocate_kernel_32.S
-+++ b/arch/x86/kernel/relocate_kernel_32.S
-@@ -10,15 +10,12 @@
- #include <asm/page.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
--#include <asm/pgtable.h>
-=20
- /*
-  * Must be relocatable PIC code callable as a C function
-  */
-=20
- #define PTR(x) (x << 2)
--#define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY=
-)
--#define PAE_PGD_ATTR (_PAGE_PRESENT)
-=20
- /* control_page + KEXEC_CONTROL_CODE_MAX_SIZE
-  * ~ control_page + PAGE_SIZE are used as data storage and stack for
-@@ -59,117 +56,6 @@ relocate_kernel:
- 	movl	%cr4, %eax
- 	movl	%eax, CR4(%edi)
-=20
--#ifdef CONFIG_X86_PAE
--	/* map the control page at its virtual address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xc0000000, %eax
--	shrl	$27, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PMD_0)(%ebp), %edx
--	orl	$PAE_PGD_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PMD_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x3fe00000, %eax
--	shrl	$18, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_0)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x001ff000, %eax
--	shrl	$9, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	/* identity map the control page at its physical address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xc0000000, %eax
--	shrl	$27, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PMD_1)(%ebp), %edx
--	orl	$PAE_PGD_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PMD_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x3fe00000, %eax
--	shrl	$18, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_1)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x001ff000, %eax
--	shrl	$9, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--#else
--	/* map the control page at its virtual address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xffc00000, %eax
--	shrl	$20, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_0)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_0)(%ebp), %edi
--	movl	PTR(VA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x003ff000, %eax
--	shrl	$10, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	/* identity map the control page at its physical address */
--
--	movl	PTR(VA_PGD)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0xffc00000, %eax
--	shrl	$20, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_PTE_1)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--
--	movl	PTR(VA_PTE_1)(%ebp), %edi
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %eax
--	andl	$0x003ff000, %eax
--	shrl	$10, %eax
--	addl	%edi, %eax
--
--	movl	PTR(PA_CONTROL_PAGE)(%ebp), %edx
--	orl	$PAGE_ATTR, %edx
--	movl	%edx, (%eax)
--#endif
--
--relocate_new_kernel:
- 	/* read the arguments and say goodbye to the stack */
- 	movl  20+4(%esp), %ebx /* page_list */
- 	movl  20+8(%esp), %ebp /* list of pages */
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -5,21 +5,8 @@
- # define PA_CONTROL_PAGE	0
- # define VA_CONTROL_PAGE	1
- # define PA_PGD			2
--# define VA_PGD			3
--# define PA_PTE_0		4
--# define VA_PTE_0		5
--# define PA_PTE_1		6
--# define VA_PTE_1		7
--# define PA_SWAP_PAGE		8
--# ifdef CONFIG_X86_PAE
--#  define PA_PMD_0		9
--#  define VA_PMD_0		10
--#  define PA_PMD_1		11
--#  define VA_PMD_1		12
--#  define PAGES_NR		13
--# else
--#  define PAGES_NR		9
--# endif
-+# define PA_SWAP_PAGE		3
-+# define PAGES_NR		4
- #else
- # define PA_CONTROL_PAGE	0
- # define VA_CONTROL_PAGE	1
-
-
---=-QyMdk2pS9MvxQveb15AA
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkkKY9sACgkQKhFGF+eHlpikCwCfV0DEsrmpznhnPGoPDxERWrGM
-OHAAoJt53vY0cSbJYb7asJTfT6OAy5Wd
-=GMle
------END PGP SIGNATURE-----
-
---=-QyMdk2pS9MvxQveb15AA--
-
-
-
---===============2041796488==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2041796488==--
-
-
