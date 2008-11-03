@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kx0Vs-0001s8-Dp
-	for kexec@lists.infradead.org; Mon, 03 Nov 2008 14:34:40 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id D6E2042A49
-	for <kexec@lists.infradead.org>; Mon,  3 Nov 2008 15:34:36 +0100 (CET)
-Message-ID: <490F0BFC.5070504@suse.de>
-Date: Mon, 03 Nov 2008 15:34:36 +0100
-From: Stefan Assmann <sassmann@suse.de>
-MIME-Version: 1.0
-Subject: [PATCH] make memcmp arguments const
+	id 1Kx7Ry-0002bi-2G
+	for kexec@lists.infradead.org; Mon, 03 Nov 2008 21:59:06 +0000
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: [PATCH 3/4] powerpc32: pull in libfdt
+Date: Mon,  3 Nov 2008 22:59:02 +0100
+Message-Id: <1225749543-32683-4-git-send-email-sebastian@breakpoint.cc>
+In-Reply-To: <1225749543-32683-1-git-send-email-sebastian@breakpoint.cc>
+References: <1225749543-32683-1-git-send-email-sebastian@breakpoint.cc>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,41 +17,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-In purgatory/string.c the definition of memcmp is
-	int memcmp(void *src1, void *src2, size_t len)
-man memcmp reveals
-	int memcmp(const void *s1, const void *s2, size_t n)
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Signed-off-by: Stefan Assmann <sassmann@suse.de>
+This is v1.2.0 of libfdt from the dtc project which is available at
+ git://www.jdl.com/software/dtc.git
 
+The other files
+- include/page.h
+- include/types.h
+- libfdt-wrapper.c
+- ops.h
+
+are part of the glue code which is used the powerpc boot wrapper code
+is comming from the Linux kernel v2.6.27-rc6 and has been modified a
+little to fit.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- purgatory/string.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kexec/arch/ppc/Makefile                 |   11 +-
+ kexec/arch/ppc/include/page.h           |   34 +
+ kexec/arch/ppc/include/types.h          |   27 +
+ kexec/arch/ppc/libfdt-wrapper.c         |  189 ++++++
+ kexec/arch/ppc/libfdt/Makefile.libfdt   |    8 +
+ kexec/arch/ppc/libfdt/TODO              |    3 +
+ kexec/arch/ppc/libfdt/fdt.c             |  201 ++++++
+ kexec/arch/ppc/libfdt/fdt.h             |   60 ++
+ kexec/arch/ppc/libfdt/fdt_ro.c          |  466 +++++++++++++
+ kexec/arch/ppc/libfdt/fdt_rw.c          |  463 +++++++++++++
+ kexec/arch/ppc/libfdt/fdt_strerror.c    |   96 +++
+ kexec/arch/ppc/libfdt/fdt_sw.c          |  257 ++++++++
+ kexec/arch/ppc/libfdt/fdt_wip.c         |  145 +++++
+ kexec/arch/ppc/libfdt/libfdt.h          | 1076 +++++++++++++++++++++++++++++++
+ kexec/arch/ppc/libfdt/libfdt_env.h      |   23 +
+ kexec/arch/ppc/libfdt/libfdt_internal.h |   95 +++
+ kexec/arch/ppc/ops.h                    |  151 +++++
+ 17 files changed, 3304 insertions(+), 1 deletions(-)
+ create mode 100644 kexec/arch/ppc/include/page.h
+ create mode 100644 kexec/arch/ppc/include/types.h
+ create mode 100644 kexec/arch/ppc/libfdt-wrapper.c
+ create mode 100644 kexec/arch/ppc/libfdt/Makefile.libfdt
+ create mode 100644 kexec/arch/ppc/libfdt/TODO
+ create mode 100644 kexec/arch/ppc/libfdt/fdt.c
+ create mode 100644 kexec/arch/ppc/libfdt/fdt.h
+ create mode 100644 kexec/arch/ppc/libfdt/fdt_ro.c
+ create mode 100644 kexec/arch/ppc/libfdt/fdt_rw.c
+ create mode 100644 kexec/arch/ppc/libfdt/fdt_strerror.c
+ create mode 100644 kexec/arch/ppc/libfdt/fdt_sw.c
+ create mode 100644 kexec/arch/ppc/libfdt/fdt_wip.c
+ create mode 100644 kexec/arch/ppc/libfdt/libfdt.h
+ create mode 100644 kexec/arch/ppc/libfdt/libfdt_env.h
+ create mode 100644 kexec/arch/ppc/libfdt/libfdt_internal.h
+ create mode 100644 kexec/arch/ppc/ops.h
 
---- a/purgatory/string.c
-+++ b/purgatory/string.c
-@@ -36,9 +36,9 @@ void* memcpy(void *dest, const void *src
- }
-
-
--int memcmp(void *src1, void *src2, size_t len)
-+int memcmp(const void *src1, const void *src2, size_t len)
- {
--	unsigned char *s1, *s2;
-+	const unsigned char *s1, *s2;
- 	size_t i;
- 	s1 = src1;
- 	s2 = src2;
--- 
-Stefan Assmann          | SUSE LINUX Products GmbH
-Software Engineer       | Maxfeldstr. 5, D-90409 Nuernberg
-Mail : sassmann@suse.de | GF: Markus Rex, HRB 16746 (AG Nuernberg)
 
 _______________________________________________
 kexec mailing list
