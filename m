@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kx8bp-0003mk-KX
-	for kexec@lists.infradead.org; Mon, 03 Nov 2008 23:13:22 +0000
-Date: Tue, 4 Nov 2008 10:13:19 +1100
+	id 1Kx8iB-0007T8-2X
+	for kexec@lists.infradead.org; Mon, 03 Nov 2008 23:19:55 +0000
+Date: Tue, 4 Nov 2008 10:19:53 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/4] slurpfile: use lseek() on character nodes instead
-	of fstat() for file size
-Message-ID: <20081103231317.GA24084@verge.net.au>
+Subject: Re: [PATCH 3/4] powerpc32: pull in libfdt
+Message-ID: <20081103231952.GB24084@verge.net.au>
 References: <1225749543-32683-1-git-send-email-sebastian@breakpoint.cc>
-	<1225749543-32683-2-git-send-email-sebastian@breakpoint.cc>
+	<1225749543-32683-4-git-send-email-sebastian@breakpoint.cc>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1225749543-32683-2-git-send-email-sebastian@breakpoint.cc>
+In-Reply-To: <1225749543-32683-4-git-send-email-sebastian@breakpoint.cc>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,67 +27,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
 
-On Mon, Nov 03, 2008 at 10:59:00PM +0100, Sebastian Andrzej Siewior wrote:
+On Mon, Nov 03, 2008 at 10:59:02PM +0100, Sebastian Andrzej Siewior wrote:
 > From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > 
-> fstat() is used to determine the filesize before read() and
-> it requires a filesystem. That it means it can not be used
-> on character nodes. This makes it impossible to obtains the
-> kernel from a char node like mtd or more likely ubi.
-> We can't use this in every case because files in /proc don't
-> support lseek(). This is required by the powerpc part to read
-> some device-tree entries.
+> This is v1.2.0 of libfdt from the dtc project which is available at
+>  git://www.jdl.com/software/dtc.git
+> 
+> The other files
+> - include/page.h
+> - include/types.h
+> - libfdt-wrapper.c
+> - ops.h
+> 
+> are part of the glue code which is used the powerpc boot wrapper code
+> is comming from the Linux kernel v2.6.27-rc6 and has been modified a
+> little to fit.
 > 
 > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+The diff seems to be missing :-)
+
 > ---
->  kexec/kexec.c |   22 ++++++++++++++++++++--
->  1 files changed, 20 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index 0616091..3c3f73e 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -467,7 +467,7 @@ char *slurp_file(const char *filename, off_t *r_size)
->  {
->  	int fd;
->  	char *buf;
-> -	off_t size, progress;
-> +	off_t size, progress, err;
->  	ssize_t result;
->  	struct stat stats;
->  	
-> @@ -486,7 +486,25 @@ char *slurp_file(const char *filename, off_t *r_size)
->  		die("Cannot stat: %s: %s\n",
->  			filename, strerror(errno));
->  	}
-> -	size = stats.st_size;
-> +	/*
-> +	 * Seek in case the kernel is a character node like /dev/ubi0_0.
-> +	 * This does not work on regular files which live in /proc and
-> +	 * we need this for some /proc/device-tree entries
-> +	 */
-> +	if (S_ISCHR(stats.st_mode)) {
-> +
-> +		size = lseek(fd, 0, SEEK_END);
-> +		if (size < 0)
-> +			die("Can not seek file %s: %s\n", filename, strerror(errno));
-> +
-> +		err = lseek(fd, 0, SEEK_SET);
-> +		if (err < 0)
-> +			die("Can not seek to the begin of file %s: %s\n", filename,
-> +					strerror(errno));
-
-Please reformat these lines so they are <= 80 columns wide.
-
-> +	} else {
-> +		size = stats.st_size;
-> +	}
-> +
->  	*r_size = size;
->  	buf = xmalloc(size);
->  	progress = 0;
-> -- 
-> 1.6.0.2
+>  kexec/arch/ppc/Makefile                 |   11 +-
+>  kexec/arch/ppc/include/page.h           |   34 +
+>  kexec/arch/ppc/include/types.h          |   27 +
+>  kexec/arch/ppc/libfdt-wrapper.c         |  189 ++++++
+>  kexec/arch/ppc/libfdt/Makefile.libfdt   |    8 +
+>  kexec/arch/ppc/libfdt/TODO              |    3 +
+>  kexec/arch/ppc/libfdt/fdt.c             |  201 ++++++
+>  kexec/arch/ppc/libfdt/fdt.h             |   60 ++
+>  kexec/arch/ppc/libfdt/fdt_ro.c          |  466 +++++++++++++
+>  kexec/arch/ppc/libfdt/fdt_rw.c          |  463 +++++++++++++
+>  kexec/arch/ppc/libfdt/fdt_strerror.c    |   96 +++
+>  kexec/arch/ppc/libfdt/fdt_sw.c          |  257 ++++++++
+>  kexec/arch/ppc/libfdt/fdt_wip.c         |  145 +++++
+>  kexec/arch/ppc/libfdt/libfdt.h          | 1076 +++++++++++++++++++++++++++++++
+>  kexec/arch/ppc/libfdt/libfdt_env.h      |   23 +
+>  kexec/arch/ppc/libfdt/libfdt_internal.h |   95 +++
+>  kexec/arch/ppc/ops.h                    |  151 +++++
+>  17 files changed, 3304 insertions(+), 1 deletions(-)
+>  create mode 100644 kexec/arch/ppc/include/page.h
+>  create mode 100644 kexec/arch/ppc/include/types.h
+>  create mode 100644 kexec/arch/ppc/libfdt-wrapper.c
+>  create mode 100644 kexec/arch/ppc/libfdt/Makefile.libfdt
+>  create mode 100644 kexec/arch/ppc/libfdt/TODO
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt.c
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt.h
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt_ro.c
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt_rw.c
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt_strerror.c
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt_sw.c
+>  create mode 100644 kexec/arch/ppc/libfdt/fdt_wip.c
+>  create mode 100644 kexec/arch/ppc/libfdt/libfdt.h
+>  create mode 100644 kexec/arch/ppc/libfdt/libfdt_env.h
+>  create mode 100644 kexec/arch/ppc/libfdt/libfdt_internal.h
+>  create mode 100644 kexec/arch/ppc/ops.h
 > 
 > 
 > _______________________________________________
