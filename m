@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KwmZH-0005Wm-Br
-	for kexec@lists.infradead.org; Sun, 02 Nov 2008 23:41:16 +0000
-Date: Mon, 3 Nov 2008 10:41:11 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec memory ranges dynamic allocation
-Message-ID: <20081102234109.GG11409@verge.net.au>
-References: <572af9170810140811v446a6874pd67cb77753a9e32d@mail.gmail.com>
-	<20081015031818.GC27243@verge.net.au>
-	<572af9170810150146p58c599fvabb41338ffd4e033@mail.gmail.com>
-	<20081031022902.GH27118@verge.net.au>
-	<572af9170810302353l417781berf1da0661b37bc6db@mail.gmail.com>
-	<20081101031601.GA11013@verge.net.au>
-	<572af9170811010143v37826aa2y3200eb6815aba966@mail.gmail.com>
+Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kx0Vs-0001s8-Dp
+	for kexec@lists.infradead.org; Mon, 03 Nov 2008 14:34:40 +0000
+Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id D6E2042A49
+	for <kexec@lists.infradead.org>; Mon,  3 Nov 2008 15:34:36 +0100 (CET)
+Message-ID: <490F0BFC.5070504@suse.de>
+Date: Mon, 03 Nov 2008 15:34:36 +0100
+From: Stefan Assmann <sassmann@suse.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <572af9170811010143v37826aa2y3200eb6815aba966@mail.gmail.com>
+Subject: [PATCH] make memcmp arguments const
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,53 +25,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: ppcdev <linuxppc-dev@ozlabs.org>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Sat, Nov 01, 2008 at 11:43:15AM +0300, Maxim Uvarov wrote:
-> 2008/11/1 Simon Horman <horms@verge.net.au>
-> 
-> > On Fri, Oct 31, 2008 at 09:53:23AM +0300, Maxim Uvarov wrote:
-> > > 2008/10/31 Simon Horman <horms@verge.net.au>
-> > >
-> > > > Hi,
-> > > >
-> > > > Could someone please comment on the satus of this patch?
-> > > >
-> > > Hello,  Simon
-> > >
-> > > I can not reproduce  error which you wrote before on my target. So it is
-> > a
-> > > little bit
-> > > difficult to say what  was wrong exactly.
-> >
-> > Hi,
-> >
-> > the version of the patch below (which I think is the latest)
-> > compiles fine for me. I wanted to confirm that you
-> > and Chandru are happy for it to be merged.
-> >
-> > If so, could you please provide a short descripton for the change-log
-> > and a Signed-off-by line.
-> 
-> Patch looks good.
-> 
-> Description is:
->    Do not count  max_memory_range for allocation. Increase allocation
-> buffers
->    when it is needed. This actually allows us to avoid a lot of troubles
-> with
->    various device-tree files.
-> 
-> Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
+In purgatory/string.c the definition of memcmp is
+	int memcmp(void *src1, void *src2, size_t len)
+man memcmp reveals
+	int memcmp(const void *s1, const void *s2, size_t n)
 
-Thanks, applied.
+Signed-off-by: Stefan Assmann <sassmann@suse.de>
 
+---
+ purgatory/string.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/purgatory/string.c
++++ b/purgatory/string.c
+@@ -36,9 +36,9 @@ void* memcpy(void *dest, const void *src
+ }
+
+
+-int memcmp(void *src1, void *src2, size_t len)
++int memcmp(const void *src1, const void *src2, size_t len)
+ {
+-	unsigned char *s1, *s2;
++	const unsigned char *s1, *s2;
+ 	size_t i;
+ 	s1 = src1;
+ 	s2 = src2;
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Stefan Assmann          | SUSE LINUX Products GmbH
+Software Engineer       | Maxfeldstr. 5, D-90409 Nuernberg
+Mail : sassmann@suse.de | GF: Markus Rex, HRB 16746 (AG Nuernberg)
 
 _______________________________________________
 kexec mailing list
