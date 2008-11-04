@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kx8iB-0007T8-2X
-	for kexec@lists.infradead.org; Mon, 03 Nov 2008 23:19:55 +0000
-Date: Tue, 4 Nov 2008 10:19:53 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 3/4] powerpc32: pull in libfdt
-Message-ID: <20081103231952.GB24084@verge.net.au>
+Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1KxHP5-0002ov-2g
+	for kexec@lists.infradead.org; Tue, 04 Nov 2008 08:36:47 +0000
+Date: Tue, 4 Nov 2008 09:36:43 +0100
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: [PATCH v2] slurpfile: use lseek() on character nodes instead of
+	fstat() for file size
+Message-ID: <20081104083643.GA5123@Chamillionaire.breakpoint.cc>
 References: <1225749543-32683-1-git-send-email-sebastian@breakpoint.cc>
-	<1225749543-32683-4-git-send-email-sebastian@breakpoint.cc>
+	<1225749543-32683-2-git-send-email-sebastian@breakpoint.cc>
+	<20081103231317.GA24084@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1225749543-32683-4-git-send-email-sebastian@breakpoint.cc>
+In-Reply-To: <20081103231317.GA24084@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,75 +26,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+To: Simon Horman <horms@verge.net.au>
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
 
-On Mon, Nov 03, 2008 at 10:59:02PM +0100, Sebastian Andrzej Siewior wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> This is v1.2.0 of libfdt from the dtc project which is available at
->  git://www.jdl.com/software/dtc.git
-> 
-> The other files
-> - include/page.h
-> - include/types.h
-> - libfdt-wrapper.c
-> - ops.h
-> 
-> are part of the glue code which is used the powerpc boot wrapper code
-> is comming from the Linux kernel v2.6.27-rc6 and has been modified a
-> little to fit.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+fstat() is used to determine the filesize before read() and
+it requires a filesystem. That it means it can not be used
+on character nodes. This makes it impossible to obtains the
+kernel from a char node like mtd or more likely ubi.
+We can't use this in every case because files in /proc don't
+support lseek(). This is required by the powerpc part to read
+some device-tree entries.
 
-The diff seems to be missing :-)
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kexec/kexec.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
 
-> ---
->  kexec/arch/ppc/Makefile                 |   11 +-
->  kexec/arch/ppc/include/page.h           |   34 +
->  kexec/arch/ppc/include/types.h          |   27 +
->  kexec/arch/ppc/libfdt-wrapper.c         |  189 ++++++
->  kexec/arch/ppc/libfdt/Makefile.libfdt   |    8 +
->  kexec/arch/ppc/libfdt/TODO              |    3 +
->  kexec/arch/ppc/libfdt/fdt.c             |  201 ++++++
->  kexec/arch/ppc/libfdt/fdt.h             |   60 ++
->  kexec/arch/ppc/libfdt/fdt_ro.c          |  466 +++++++++++++
->  kexec/arch/ppc/libfdt/fdt_rw.c          |  463 +++++++++++++
->  kexec/arch/ppc/libfdt/fdt_strerror.c    |   96 +++
->  kexec/arch/ppc/libfdt/fdt_sw.c          |  257 ++++++++
->  kexec/arch/ppc/libfdt/fdt_wip.c         |  145 +++++
->  kexec/arch/ppc/libfdt/libfdt.h          | 1076 +++++++++++++++++++++++++++++++
->  kexec/arch/ppc/libfdt/libfdt_env.h      |   23 +
->  kexec/arch/ppc/libfdt/libfdt_internal.h |   95 +++
->  kexec/arch/ppc/ops.h                    |  151 +++++
->  17 files changed, 3304 insertions(+), 1 deletions(-)
->  create mode 100644 kexec/arch/ppc/include/page.h
->  create mode 100644 kexec/arch/ppc/include/types.h
->  create mode 100644 kexec/arch/ppc/libfdt-wrapper.c
->  create mode 100644 kexec/arch/ppc/libfdt/Makefile.libfdt
->  create mode 100644 kexec/arch/ppc/libfdt/TODO
->  create mode 100644 kexec/arch/ppc/libfdt/fdt.c
->  create mode 100644 kexec/arch/ppc/libfdt/fdt.h
->  create mode 100644 kexec/arch/ppc/libfdt/fdt_ro.c
->  create mode 100644 kexec/arch/ppc/libfdt/fdt_rw.c
->  create mode 100644 kexec/arch/ppc/libfdt/fdt_strerror.c
->  create mode 100644 kexec/arch/ppc/libfdt/fdt_sw.c
->  create mode 100644 kexec/arch/ppc/libfdt/fdt_wip.c
->  create mode 100644 kexec/arch/ppc/libfdt/libfdt.h
->  create mode 100644 kexec/arch/ppc/libfdt/libfdt_env.h
->  create mode 100644 kexec/arch/ppc/libfdt/libfdt_internal.h
->  create mode 100644 kexec/arch/ppc/ops.h
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 0616091..6f1cb76 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -467,7 +467,7 @@ char *slurp_file(const char *filename, off_t *r_size)
+ {
+ 	int fd;
+ 	char *buf;
+-	off_t size, progress;
++	off_t size, progress, err;
+ 	ssize_t result;
+ 	struct stat stats;
+ 	
+@@ -486,7 +486,26 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 		die("Cannot stat: %s: %s\n",
+ 			filename, strerror(errno));
+ 	}
+-	size = stats.st_size;
++	/*
++	 * Seek in case the kernel is a character node like /dev/ubi0_0.
++	 * This does not work on regular files which live in /proc and
++	 * we need this for some /proc/device-tree entries
++	 */
++	if (S_ISCHR(stats.st_mode)) {
++
++		size = lseek(fd, 0, SEEK_END);
++		if (size < 0)
++			die("Can not seek file %s: %s\n", filename,
++					strerror(errno));
++
++		err = lseek(fd, 0, SEEK_SET);
++		if (err < 0)
++			die("Can not seek to the begin of file %s: %s\n",
++					filename, strerror(errno));
++	} else {
++		size = stats.st_size;
++	}
++
+ 	*r_size = size;
+ 	buf = xmalloc(size);
+ 	progress = 0;
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+1.5.6.5
 
 
 _______________________________________________
