@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxNHR-0007O5-CJ
-	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:17 +0000
+	id 1KxNHU-0007PL-EO
+	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:21 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 00/14] x86: disable virt on kdump and emergency_restart
-Date: Tue,  4 Nov 2008 12:52:28 -0200
-Message-Id: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 16/16] Revert "x86: default to reboot via ACPI"
+Date: Tue,  4 Nov 2008 12:52:44 -0200
+Message-Id: <1225810364-8990-17-git-send-email-ehabkost@redhat.com>
+In-Reply-To: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
+References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,32 +25,36 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Hi,
+This reverts commit c7ffa6c26277b403920e2255d10df849bd613380.
 
-This is a new version of the series to disabling virtualization on kdump,
-now extended to do the same tricks on emergency_restart() if needed.
+Now that we have the hooks to disable virtualization on
+emergency_restart(), we can get back to the BOOT_KBD reboot_type default.
 
-This series is against linux-next-20081103.
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+---
+ arch/x86/kernel/reboot.c |    6 +-----
+ 1 files changed, 1 insertions(+), 5 deletions(-)
 
-Patches 01-07 simply move the non-kdump-specific parts
-of nmi_shootdown_cpus() to reboot.c, so it can be used by
-emergency_restart(). They should be a no-op in relation to existing code.
-
-Patches 08 adds the virt_disable function registering interface, like
-the previous series.
-
-Patch 09 hooks emergency_virt_disable() into kdump crash_shutdown code.
-
-Patch 10 hooks emergency_virt_disable() into emergency_restart() using
-nmi_shootdown_cpus().
-
-Patches 11-15 change KVM so that it registers a virt_disable function
-when loading.
-
-Finally, patch 16 restore the previous reboot=kbd default.
-
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 932763f..f05e819 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -32,11 +32,7 @@ EXPORT_SYMBOL(pm_power_off);
+ 
+ static const struct desc_ptr no_idt = {};
+ static int reboot_mode;
+-/*
+- * Keyboard reset and triple fault may result in INIT, not RESET, which
+- * doesn't work when we're in vmx root mode.  Try ACPI first.
+- */
+-enum reboot_type reboot_type = BOOT_ACPI;
++enum reboot_type reboot_type = BOOT_KBD;
+ int reboot_force;
+ 
+ #if defined(CONFIG_X86_32) && defined(CONFIG_SMP)
 -- 
-Eduardo
+1.5.5.GIT
+
 
 _______________________________________________
 kexec mailing list
