@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxITz-0001AZ-I0
-	for kexec@lists.infradead.org; Tue, 04 Nov 2008 09:45:55 +0000
-Message-ID: <491019CE.2030404@suse.de>
-Date: Tue, 04 Nov 2008 10:45:50 +0100
-From: Stefan Assmann <sassmann@suse.de>
-MIME-Version: 1.0
-Subject: Re: [PATCH] make memcmp arguments const
-References: <490F0BFC.5070504@suse.de> <20081103221937.GA10026@verge.net.au>
-In-Reply-To: <20081103221937.GA10026@verge.net.au>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KxNHI-0007LJ-Bd
+	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:08 +0000
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: [PATCH 11/16] kvm_x86_ops: crash_hardware_disable() operation
+Date: Tue,  4 Nov 2008 12:52:39 -0200
+Message-Id: <1225810364-8990-12-git-send-email-ehabkost@redhat.com>
+In-Reply-To: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
+References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,75 +17,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-SGkgU2ltb24sCgpTaW1vbiBIb3JtYW4gd3JvdGU6Cj4gT24gTW9uLCBOb3YgMDMsIDIwMDggYXQg
-MDM6MzQ6MzZQTSArMDEwMCwgU3RlZmFuIEFzc21hbm4gd3JvdGU6Cj4+IEluIHB1cmdhdG9yeS9z
-dHJpbmcuYyB0aGUgZGVmaW5pdGlvbiBvZiBtZW1jbXAgaXMKPj4gCWludCBtZW1jbXAodm9pZCAq
-c3JjMSwgdm9pZCAqc3JjMiwgc2l6ZV90IGxlbikKPj4gbWFuIG1lbWNtcCByZXZlYWxzCj4+IAlp
-bnQgbWVtY21wKGNvbnN0IHZvaWQgKnMxLCBjb25zdCB2b2lkICpzMiwgc2l6ZV90IG4pCj4+Cj4+
-IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBc3NtYW5uIDxzYXNzbWFubkBzdXNlLmRlPgo+Pgo+PiAt
-LS0KPj4gIHB1cmdhdG9yeS9zdHJpbmcuYyB8ICAgIDQgKystLQo+PiAgMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gLS0tIGEvcHVyZ2F0b3J5L3N0
-cmluZy5jCj4+ICsrKyBiL3B1cmdhdG9yeS9zdHJpbmcuYwo+PiBAQCAtMzYsOSArMzYsOSBAQCB2
-b2lkKiBtZW1jcHkodm9pZCAqZGVzdCwgY29uc3Qgdm9pZCAqc3JjCj4+ICB9Cj4+Cj4+Cj4+IC1p
-bnQgbWVtY21wKHZvaWQgKnNyYzEsIHZvaWQgKnNyYzIsIHNpemVfdCBsZW4pCj4+ICtpbnQgbWVt
-Y21wKGNvbnN0IHZvaWQgKnNyYzEsIGNvbnN0IHZvaWQgKnNyYzIsIHNpemVfdCBsZW4pCj4+ICB7
-Cj4+IC0JdW5zaWduZWQgY2hhciAqczEsICpzMjsKPj4gKwljb25zdCB1bnNpZ25lZCBjaGFyICpz
-MSwgKnMyOwo+PiAgCXNpemVfdCBpOwo+PiAgCXMxID0gc3JjMTsKPj4gIAlzMiA9IHNyYzI7Cj4g
-Cj4gSGkgU3RlZmFuLAo+IAo+IHRoaXMgY2hhbmdlIHNlZW1zIHJlYXNvbmFibGUgdG8gbWUsIGJ1
-dCBJIHRoaW5rIHRoYXQKPiB0aGUgZGVjbGFyYXRpb24gYWxzbyBuZWVkcyB0byBiZSB1cGRhdGVk
-LiBJZiB0aGUgY2hhbmdlCj4gYmVsb3cgaXMgZmluZSBieSB5b3UsIGNvdWxkIHlvdSBwbGVhc2Ug
-YWRkIGl0IHRvIHlvdXIgcGF0Y2gKPiBhbmQgcmVwb3N0ID8KCllvdSdyZSByaWdodCwgSSBmb3Jn
-b3QgdG8gY2hhbmdlIHRoYXQuIE5ldyBwYXRjaCBpcyBhcHBlbmRlZC4KCj4gCj4gIyBnY2MgLS12
-ZXJzaW9uCj4gZ2NjIChEZWJpYW4gNC4zLjItMSkgNC4zLjIKPiBDb3B5cmlnaHQgKEMpIDIwMDgg
-RnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLCBJbmMuCj4gVGhpcyBpcyBmcmVlIHNvZnR3YXJlOyBz
-ZWUgdGhlIHNvdXJjZSBmb3IgY29weWluZyBjb25kaXRpb25zLiAgVGhlcmUgaXMgTk8KPiB3YXJy
-YW50eTsgbm90IGV2ZW4gZm9yIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBBUlRJ
-Q1VMQVIgUFVSUE9TRS4KPiAKPiAjIG1ha2UKPiAuLi4KPiBnY2MgLVdhbGwgLU8yIC1mb21pdC1m
-cmFtZS1wb2ludGVyIC1waXBlIC1mbm8tc3RyaWN0LWFsaWFzaW5nIC1XYWxsIC1Xc3RyaWN0LXBy
-b3RvdHlwZXMgLWZuby16ZXJvLWluaXRpYWxpemVkLWluLWJzcyAgLU9zIC1mbm8tYnVpbHRpbiAt
-ZmZyZWVzdGFuZGluZyAgLUkuL3B1cmdhdG9yeS9pbmNsdWRlIC1JLi9wdXJnYXRvcnkvYXJjaC9p
-Mzg2L2luY2x1ZGUgLUkuL3V0aWxfbGliL2luY2x1ZGUgLUkvdXNyL2xpYi9nY2MvaTQ4Ni1saW51
-eC1nbnUvNC4zLjIvaW5jbHVkZSAgLWMgLU1EIC1vIHB1cmdhdG9yeS9zdHJpbmcubyBwdXJnYXRv
-cnkvc3RyaW5nLmMKPiBwdXJnYXRvcnkvc3RyaW5nLmM6Mzk6IGVycm9yOiBjb25mbGljdGluZyB0
-eXBlcyBmb3Ig4oCYbWVtY21w4oCZCj4gLi9wdXJnYXRvcnkvaW5jbHVkZS9zdHJpbmcuaDo5OiBl
-cnJvcjogcHJldmlvdXMgZGVjbGFyYXRpb24gb2Yg4oCYbWVtY21w4oCZIHdhcwo+IGhlcmUKPiBt
-YWtlOiAqKiogW3B1cmdhdG9yeS9zdHJpbmcub10gRXJyb3IgMQo+IAo+IEluZGV4OiBrZXhlYy10
-b29scy9wdXJnYXRvcnkvaW5jbHVkZS9zdHJpbmcuaAo+ID09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiAtLS0ga2V4ZWMt
-dG9vbHMub3JpZy9wdXJnYXRvcnkvaW5jbHVkZS9zdHJpbmcuaAkyMDA4LTExLTA0IDA5OjA3OjQ4
-LjAwMDAwMDAwMCArMTEwMAo+ICsrKyBrZXhlYy10b29scy9wdXJnYXRvcnkvaW5jbHVkZS9zdHJp
-bmcuaAkyMDA4LTExLTA0IDA5OjA4OjAyLjAwMDAwMDAwMCArMTEwMAo+IEBAIC02LDcgKzYsNyBA
-QAo+ICBzaXplX3Qgc3Rybmxlbihjb25zdCBjaGFyICpzLCBzaXplX3QgbWF4KTsKPiAgdm9pZCog
-bWVtc2V0KHZvaWQqIHMsIGludCBjLCBzaXplX3Qgbik7Cj4gIHZvaWQqIG1lbWNweSh2b2lkICpk
-ZXN0LCBjb25zdCB2b2lkICpzcmMsIHNpemVfdCBsZW4pOwo+IC1pbnQgbWVtY21wKHZvaWQgKnNy
-YzEsIHZvaWQgKnNyYzIsIHNpemVfdCBsZW4pOwo+ICtpbnQgbWVtY21wKGNvbnN0IHZvaWQgKnNy
-YzEsIGNvbnN0IHZvaWQgKnNyYzIsIHNpemVfdCBsZW4pOwo+ICAKPiAgCj4gICNlbmRpZiAvKiBT
-VFJJTkdfSCAqLwo+IAoKU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFzc21hbm4gPHNhc3NtYW5uQHN1
-c2UuZGU+CgotLS0KIHB1cmdhdG9yeS9pbmNsdWRlL3N0cmluZy5oIHwgICAgMiArLQogcHVyZ2F0
-b3J5L3N0cmluZy5jICAgICAgICAgfCAgICA0ICsrLS0KIDIgZmlsZXMgY2hhbmdlZCwgMyBpbnNl
-cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKLS0tIGEvcHVyZ2F0b3J5L3N0cmluZy5jCisrKyBi
-L3B1cmdhdG9yeS9zdHJpbmcuYwpAQCAtMzYsOSArMzYsOSBAQCB2b2lkKiBtZW1jcHkodm9pZCAq
-ZGVzdCwgY29uc3Qgdm9pZCAqc3JjCiB9CgoKLWludCBtZW1jbXAodm9pZCAqc3JjMSwgdm9pZCAq
-c3JjMiwgc2l6ZV90IGxlbikKK2ludCBtZW1jbXAoY29uc3Qgdm9pZCAqc3JjMSwgY29uc3Qgdm9p
-ZCAqc3JjMiwgc2l6ZV90IGxlbikKIHsKLQl1bnNpZ25lZCBjaGFyICpzMSwgKnMyOworCWNvbnN0
-IHVuc2lnbmVkIGNoYXIgKnMxLCAqczI7CiAJc2l6ZV90IGk7CiAJczEgPSBzcmMxOwogCXMyID0g
-c3JjMjsKLS0tIGEvcHVyZ2F0b3J5L2luY2x1ZGUvc3RyaW5nLmgKKysrIGIvcHVyZ2F0b3J5L2lu
-Y2x1ZGUvc3RyaW5nLmgKQEAgLTYsNyArNiw3IEBACiBzaXplX3Qgc3Rybmxlbihjb25zdCBjaGFy
-ICpzLCBzaXplX3QgbWF4KTsKIHZvaWQqIG1lbXNldCh2b2lkKiBzLCBpbnQgYywgc2l6ZV90IG4p
-Owogdm9pZCogbWVtY3B5KHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbik7
-Ci1pbnQgbWVtY21wKHZvaWQgKnNyYzEsIHZvaWQgKnNyYzIsIHNpemVfdCBsZW4pOworaW50IG1l
-bWNtcChjb25zdCB2b2lkICpzcmMxLCBjb25zdCB2b2lkICpzcmMyLCBzaXplX3QgbGVuKTsKCgog
-I2VuZGlmIC8qIFNUUklOR19IICovCi0tIApTdGVmYW4gQXNzbWFubiAgICAgICAgICB8IFNVU0Ug
-TElOVVggUHJvZHVjdHMgR21iSApTb2Z0d2FyZSBFbmdpbmVlciAgICAgICB8IE1heGZlbGRzdHIu
-IDUsIEQtOTA0MDkgTnVlcm5iZXJnCk1haWwgOiBzYXNzbWFubkBzdXNlLmRlIHwgR0Y6IE1hcmt1
-cyBSZXgsIEhSQiAxNjc0NiAoQUcgTnVlcm5iZXJnKQoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+The vmx hardware_disable() function does too much for the virt_disable
+crash handler, so we will have a new operation for the crash-time
+virt_disable case.
+
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+---
+ arch/x86/include/asm/kvm_host.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 09e6c56..002023b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -426,6 +426,7 @@ struct kvm_x86_ops {
+ 	int (*disabled_by_bios)(void);             /* __init */
+ 	void (*hardware_enable)(void *dummy);      /* __init */
+ 	void (*hardware_disable)(void *dummy);
++	void (*crash_hardware_disable)(void *dummy);
+ 	void (*check_processor_compatibility)(void *rtn);
+ 	int (*hardware_setup)(void);               /* __init */
+ 	void (*hardware_unsetup)(void);            /* __exit */
+-- 
+1.5.5.GIT
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
