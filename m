@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxNHP-0007MY-EU
-	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:15 +0000
+	id 1KxNHO-0007M0-2a
+	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:14 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 02/16] x86 kdump: Move crashing_cpu assignment to
-	nmi_shootdown_cpus()
-Date: Tue,  4 Nov 2008 12:52:30 -0200
-Message-Id: <1225810364-8990-3-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 05/16] x86 kdump: Make nmi_shootdown_cpus() non-static
+Date: Tue,  4 Nov 2008 12:52:33 -0200
+Message-Id: <1225810364-8990-6-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,49 +25,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-This variable will be moved to non-kdump-specific code.
+Add prototype to asm/reboot.h.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kernel/crash.c |    8 +++++---
- 1 files changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/reboot.h |    5 +++++
+ arch/x86/kernel/crash.c       |    3 +--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index df77103..562d4fd 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -1,6 +1,8 @@
+ #ifndef _ASM_X86_REBOOT_H
+ #define _ASM_X86_REBOOT_H
+ 
++#include <linux/kdebug.h>
++
+ struct pt_regs;
+ 
+ struct machine_ops {
+@@ -18,4 +20,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs);
+ void native_machine_shutdown(void);
+ void machine_real_restart(const unsigned char *code, int length);
+ 
++typedef void (*nmi_shootdown_cb)(int, struct die_args*);
++void nmi_shootdown_cpus(nmi_shootdown_cb callback);
++
+ #endif /* _ASM_X86_REBOOT_H */
 diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e8c58aa..0e77fe9 100644
+index ffbe54b..84d6338 100644
 --- a/arch/x86/kernel/crash.c
 +++ b/arch/x86/kernel/crash.c
-@@ -29,10 +29,11 @@
+@@ -29,7 +29,6 @@
  
  #include <mach_ipi.h>
  
-+#if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
-+
- /* This keeps a track of which one is crashing cpu. */
- static int crashing_cpu;
+-typedef void (*nmi_shootdown_cb)(int, struct die_args*);
  
--#if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
- static atomic_t waiting_for_crash_ipi;
+ #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
  
- static void kdump_nmi_callback(int cpu, struct die_args *args)
-@@ -97,6 +98,9 @@ static void nmi_shootdown_cpus(void)
+@@ -97,7 +96,7 @@ static struct notifier_block crash_nmi_nb = {
+ 	.notifier_call = crash_nmi_callback,
+ };
+ 
+-static void nmi_shootdown_cpus(nmi_shootdown_cb callback)
++void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  {
  	unsigned long msecs;
  
-+	/* Make a note of crashing cpu. Will be used in NMI callback.*/
-+	crashing_cpu = safe_smp_processor_id();
-+
- 	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
- 	/* Would it be better to replace the trap vector here? */
- 	if (register_die_notifier(&crash_nmi_nb))
-@@ -137,8 +141,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 	/* The kernel is broken so disable interrupts */
- 	local_irq_disable();
- 
--	/* Make a note of crashing cpu. Will be used in NMI callback.*/
--	crashing_cpu = safe_smp_processor_id();
- 	nmi_shootdown_cpus();
- 	lapic_shutdown();
- #if defined(CONFIG_X86_IO_APIC)
 -- 
 1.5.5.GIT
 
