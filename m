@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxNHS-0007OX-Au
-	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:18 +0000
+	id 1KxNI0-0007LC-1O
+	for kexec@lists.infradead.org; Tue, 04 Nov 2008 14:53:52 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 15/16] kvm: x86: set kdump virt_disable function on
-	initialization
-Date: Tue,  4 Nov 2008 12:52:43 -0200
-Message-Id: <1225810364-8990-16-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 07/16] x86: Make nmi_shootdown_cpus() available on !SMP and
+	!X86_LOCAL_APIC
+Date: Tue,  4 Nov 2008 12:52:35 -0200
+Message-Id: <1225810364-8990-8-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,75 +26,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Finally implement the virt_disable function for kdump. It will call
-kvm_x86_ops->crash_hardware_disable(), that will disable virtualization
-extensions on the CPU if it is not disabled yet.
+The X86_LOCAL_APIC #ifdef was for kdump. For !SMP, the function simply
+does nothing.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kvm/x86.c |   19 ++++++++++++++++++-
- 1 files changed, 18 insertions(+), 1 deletions(-)
+ arch/x86/kernel/reboot.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 049c6a0..9e61baf 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -40,6 +40,7 @@
- #include <asm/msr.h>
- #include <asm/desc.h>
- #include <asm/mtrr.h>
-+#include <asm/virtext.h>
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index b65fc86..80d5e9c 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -522,7 +522,7 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ #endif
  
- #define MAX_IO_MSRS 256
- #define CR0_RESERVED_BITS						\
-@@ -2581,6 +2582,13 @@ int kvm_emulate_pio_string(struct kvm_vcpu *vcpu, struct kvm_run *run, int in,
- }
- EXPORT_SYMBOL_GPL(kvm_emulate_pio_string);
  
-+/* Called at crash time, so we can disable virtualization if needed
+-#if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
++#if defined(CONFIG_SMP)
+ 
+ /* This keeps a track of which one is crashing cpu. */
+ static int crashing_cpu;
+@@ -568,6 +568,12 @@ static struct notifier_block crash_nmi_nb = {
+ 	.notifier_call = crash_nmi_callback,
+ };
+ 
++/* Halt all other CPUs, calling the specified function on each of them
++ *
++ * This function can be used to halt all other CPUs on crash
++ * or emergency reboot time. The function passed as parameter
++ * will be called inside a NMI handler on all CPUs.
 + */
-+static void crash_hardware_disable(void)
-+{
-+	kvm_x86_ops->crash_hardware_disable(NULL);
-+}
-+
- int kvm_arch_init(void *opaque)
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  {
- 	int r;
-@@ -2605,9 +2613,15 @@ int kvm_arch_init(void *opaque)
+ 	unsigned long msecs;
+@@ -596,4 +602,9 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  
- 	kvm_x86_ops = ops;
- 
-+	r = set_virt_disable_func(crash_hardware_disable);
-+	if (r) {
-+		printk(KERN_ERR "kvm: virt_disable function already set?\n");
-+		goto out_clear_ops;
-+	}
-+
- 	r = kvm_mmu_module_init();
- 	if (r)
--		goto out_clear_ops;
-+		goto out_clear_crash;
- 
- 	kvm_init_msr_list();
- 
-@@ -2617,6 +2631,8 @@ int kvm_arch_init(void *opaque)
- 			PT_DIRTY_MASK, PT64_NX_MASK, 0, 0);
- 	return 0;
- 
-+out_clear_crash:
-+	clear_virt_disable_func();
- out_clear_ops:
- 	kvm_x86_ops = NULL;
- out:
-@@ -2625,6 +2641,7 @@ out:
- 
- void kvm_arch_exit(void)
- {
-+	clear_virt_disable_func();
- 	kvm_x86_ops = NULL;
- 	kvm_mmu_module_exit();
+ 	/* Leave the nmi callback set */
  }
++#else /* !CONFIG_SMP */
++void nmi_shootdown_cpus(nmi_shootdown_cb callback)
++{
++	/* No other CPUs to shoot down */
++}
+ #endif
 -- 
 1.5.5.GIT
 
