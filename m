@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxmWt-0005TI-4O
-	for kexec@lists.infradead.org; Wed, 05 Nov 2008 17:50:55 +0000
-Date: Wed, 5 Nov 2008 15:50:05 -0200
+	id 1KxmYx-0003yl-Jx
+	for kexec@lists.infradead.org; Wed, 05 Nov 2008 17:53:04 +0000
+Date: Wed, 5 Nov 2008 15:52:35 -0200
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: Re: [PATCH 15/16] kvm: x86: set kdump virt_disable function on
-	initialization
-Message-ID: <20081105175004.GI5247@blackpad>
+Subject: Re: [PATCH 08/16] x86: Emergency virtualization disable function
+Message-ID: <20081105175235.GJ5247@blackpad>
 References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
-	<1225810364-8990-16-git-send-email-ehabkost@redhat.com>
-	<m1od0u3wyq.fsf@frodo.ebiederm.org>
+	<1225810364-8990-9-git-send-email-ehabkost@redhat.com>
+	<m1bpwu3wod.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m1od0u3wyq.fsf@frodo.ebiederm.org>
+In-Reply-To: <m1bpwu3wod.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,63 +28,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Nov 05, 2008 at 09:26:53AM -0800, Eric W. Biederman wrote:
+On Wed, Nov 05, 2008 at 09:33:06AM -0800, Eric W. Biederman wrote:
 > Eduardo Habkost <ehabkost@redhat.com> writes:
 > 
-> > Finally implement the virt_disable function for kdump. It will call
-> > kvm_x86_ops->crash_hardware_disable(), that will disable virtualization
-> > extensions on the CPU if it is not disabled yet.
-> >
-> > Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
-> > ---
-> >  arch/x86/kvm/x86.c |   19 ++++++++++++++++++-
-> >  1 files changed, 18 insertions(+), 1 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 049c6a0..9e61baf 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -40,6 +40,7 @@
-> >  #include <asm/msr.h>
-> >  #include <asm/desc.h>
-> >  #include <asm/mtrr.h>
-> > +#include <asm/virtext.h>
-> >  
-> >  #define MAX_IO_MSRS 256
-> >  #define CR0_RESERVED_BITS						\
-> > @@ -2581,6 +2582,13 @@ int kvm_emulate_pio_string(struct kvm_vcpu *vcpu, struct
-> > kvm_run *run, int in,
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_emulate_pio_string);
-> >  
-> > +/* Called at crash time, so we can disable virtualization if needed
-> > + */
-> > +static void crash_hardware_disable(void)
+> > +int set_virt_disable_func(void (*fn)(void))
 > > +{
-> > +	kvm_x86_ops->crash_hardware_disable(NULL);
-> > +}
+> > +	int r = 0;
 > > +
-> >  int kvm_arch_init(void *opaque)
-> >  {
-> >  	int r;
-> > @@ -2605,9 +2613,15 @@ int kvm_arch_init(void *opaque)
-> >  
-> >  	kvm_x86_ops = ops;
-> >  
-> > +	r = set_virt_disable_func(crash_hardware_disable);
+> > +	spin_lock(&virt_disable_lock);
+> > +	if (!virt_disable_fn)
+> > +		rcu_assign_pointer(virt_disable_fn, fn);
+> > +	else
+> > +		r = -EEXIST;
+> > +	spin_unlock(&virt_disable_lock);
+> > +
+> > +	return r;
+> > +}
+> > +EXPORT_SYMBOL(set_virt_disable_func);
 > 
-> Can we make this say:
-> set_virt_disable_func(kvm_x86_ops->crash_hardware_disable);
+> EXPORT_SYMBOL_GPL?
 > 
-> So we can avoid going through 2 levels of function pointers?
-> I find that a little scary in code that might be running
-> at the edge of stack overflow.
+> > +EXPORT_SYMBOL(clear_virt_disable_func);
+> EXPORT_SYMBOL_GPL?
+> 
+> We are talking a core internal api that should not even
+> be exported if KVM is compiled into the kernel.
+> 
+> I have had to tell people NO too many times by that
+> wanted to shove code on the kexec on panic path that
+> had no business there.  I do not want to give
+> the least little impression that this is an ok hook
+> for the to use.  The very specific name helps in
+> that regard thank you for that.  Having the symbol
+> exported GPL would help even more.
 
-When I've checked this (on x86_64), gcc did tail recursion optimization
-and the call was just a jump to the function, so stack usage shouldn't
-be a problem.
+Agreed. I will change that if nobody else objects.
 
-But I am inclined to agree with you about the excess of abstraction.
+> 
+> Overall I think the code is just barely ok.
+> 
+> I don't like the fact that to run 2-3 instructions per cpu we are two
+> function pointers deep.  It feels like we have an excess of
+> abstraction here on the kvm side.
+> 
+> Is it possible to have the individual kvm modules call
+> set_virt_disable_func and clear_virt_disable_func?  Instead
+> of going through the x86_kvm_ops?
+> 
+> It really feels like we have an excess of abstraction here.
+
+We could move the set_virt_disable_func() calls to vmx.c and svm.c (on
+hardware_setup/hardware_unsetup). One could argue that it is sort of a
+coincidence that we need the code for both vmx and svm.
+
+Avi, what do you think?
 
 -- 
 Eduardo
