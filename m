@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KxoVJ-0007uH-Qs
+	id 1KxoVK-0007us-6n
 	for kexec@lists.infradead.org; Wed, 05 Nov 2008 19:57:26 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 14/15] kvm: vmx: crash_hardware_disable function
-Date: Wed,  5 Nov 2008 17:56:57 -0200
-Message-Id: <1225915018-6548-15-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 05/15] x86 kdump: Make nmi_shootdown_cpus() non-static
+Date: Wed,  5 Nov 2008 17:56:48 -0200
+Message-Id: <1225915018-6548-6-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
 References: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,96 +25,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-We need to first check if virtualization was enabled. We do this by
-checking CR4.VMXE. If it is set, run vmxoff and clear CR4.VMXE.
-
-Register it using set_virt_disable_func() on hardware_setup, and
-unregister it on hardware_unsetup.
+Add prototype to asm/reboot.h.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kvm/vmx.c |   40 +++++++++++++++++++++++++++++++++++-----
- 1 files changed, 35 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/reboot.h |    5 +++++
+ arch/x86/kernel/crash.c       |    3 +--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index ece9cb7..4b10768 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -31,6 +31,7 @@
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index df77103..562d4fd 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -1,6 +1,8 @@
+ #ifndef _ASM_X86_REBOOT_H
+ #define _ASM_X86_REBOOT_H
  
- #include <asm/io.h>
- #include <asm/desc.h>
-+#include <asm/virtext.h>
++#include <linux/kdebug.h>
++
+ struct pt_regs;
  
- #define __ex(x) __kvm_handle_fault_on_reboot(x)
+ struct machine_ops {
+@@ -18,4 +20,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs);
+ void native_machine_shutdown(void);
+ void machine_real_restart(const unsigned char *code, int length);
  
-@@ -1091,13 +1092,24 @@ static void vmclear_local_vcpus(void)
- 		__vcpu_clear(vmx);
- }
++typedef void (*nmi_shootdown_cb)(int, struct die_args*);
++void nmi_shootdown_cpus(nmi_shootdown_cb callback);
++
+ #endif /* _ASM_X86_REBOOT_H */
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index 4201fb3..bba0907 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -29,7 +29,6 @@
  
--static void hardware_disable(void *garbage)
-+static void __hardware_disable(void)
+ #include <mach_ipi.h>
+ 
+-typedef void (*nmi_shootdown_cb)(int, struct die_args*);
+ 
+ #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+ 
+@@ -97,7 +96,7 @@ static struct notifier_block crash_nmi_nb = {
+ 	.notifier_call = crash_nmi_callback,
+ };
+ 
+-static void nmi_shootdown_cpus(nmi_shootdown_cb callback)
++void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  {
--	vmclear_local_vcpus();
- 	asm volatile (__ex(ASM_VMX_VMXOFF) : : : "cc");
- 	write_cr4(read_cr4() & ~X86_CR4_VMXE);
- }
+ 	unsigned long msecs;
  
-+static void hardware_disable(void *garbage)
-+{
-+	vmclear_local_vcpus();
-+	__hardware_disable();
-+}
-+
-+static void crash_hardware_disable(void)
-+{
-+	if (read_cr4() & X86_CR4_VMXE)
-+		__hardware_disable();
-+}
-+
- static __init int adjust_vmx_controls(u32 ctl_min, u32 ctl_opt,
- 				      u32 msr, u32 *result)
- {
-@@ -1281,18 +1293,36 @@ static __init int alloc_kvm_area(void)
- 
- static __init int hardware_setup(void)
- {
--	if (setup_vmcs_config(&vmcs_config) < 0)
--		return -EIO;
-+	int r;
-+
-+	r = set_virt_disable_func(crash_hardware_disable);
-+	if (r)
-+		goto err;
-+
-+	if (setup_vmcs_config(&vmcs_config) < 0) {
-+		r = -EIO;
-+		goto err_clear_virt_disable;
-+	}
- 
- 	if (boot_cpu_has(X86_FEATURE_NX))
- 		kvm_enable_efer_bits(EFER_NX);
- 
--	return alloc_kvm_area();
-+	r = alloc_kvm_area();
-+	if (r)
-+		goto err_clear_virt_disable;
-+
-+	return 0;
-+
-+err_clear_virt_disable:
-+	clear_virt_disable_func();
-+err:
-+	return r;
- }
- 
- static __exit void hardware_unsetup(void)
- {
- 	free_kvm_area();
-+	clear_virt_disable_func();
- }
- 
- static void fix_pmode_dataseg(int seg, struct kvm_save_segment *save)
 -- 
 1.5.5.GIT
 
