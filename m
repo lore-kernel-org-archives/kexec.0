@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kxetd-0005bk-5t
-	for kexec@lists.infradead.org; Wed, 05 Nov 2008 09:41:53 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id DCE8142969
-	for <kexec@lists.infradead.org>; Wed,  5 Nov 2008 10:41:49 +0100 (CET)
-Message-ID: <49116A5D.8040900@suse.de>
-Date: Wed, 05 Nov 2008 10:41:49 +0100
-From: Stefan Assmann <sassmann@suse.de>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1KxjaH-00057B-AJ
+	for kexec@lists.infradead.org; Wed, 05 Nov 2008 14:42:13 +0000
+Date: Wed, 5 Nov 2008 09:41:44 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH 09/16] kdump: Hook emergency_virt_disable() on crash
+	shutdown code
+Message-ID: <20081105144144.GC8993@redhat.com>
+References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
+	<1225810364-8990-10-git-send-email-ehabkost@redhat.com>
 MIME-Version: 1.0
-Subject: [PATCH] Add include for offsetof macro
+Content-Disposition: inline
+In-Reply-To: <1225810364-8990-10-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,46 +25,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-kexec/arch/i386/kexec-elf-x86.c and kexec/arch/x86_64/kexec-elf-x86_64.c
-both use the macro offsetof() which according to the man page requires
-#include <stddef.h>.
-The include is not present at the moment and this patch adds it. This is
-necessary for compatibility with i.e. uClibc.
+On Tue, Nov 04, 2008 at 12:52:37PM -0200, Eduardo Habkost wrote:
+> Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+> ---
+>  arch/x86/kernel/crash.c |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index d84a852..87780ba 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/kdebug.h>
+>  #include <asm/smp.h>
+>  #include <asm/reboot.h>
+> +#include <asm/virtext.h>
+>  
+>  #include <mach_ipi.h>
+>  
+> @@ -49,6 +50,7 @@ static void kdump_nmi_callback(int cpu, struct die_args *args)
+>  #endif
+>  	crash_save_cpu(regs, cpu);
+>  
+> +	emergency_virt_disable();
+>  	disable_local_APIC();
+>  }
+>  
+> @@ -80,6 +82,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+>  	local_irq_disable();
+>  
+>  	kdump_nmi_shootdown_cpus();
+> +	emergency_virt_disable();
 
-Signed-off-by: Stefan Assmann <sassmann@suse.de>
+Hi Eduardo,
 
----
- kexec/arch/i386/kexec-elf-x86.c      |    1 +
- kexec/arch/x86_64/kexec-elf-x86_64.c |    1 +
- 2 files changed, 2 insertions(+)
+It might be a good idea to put a 2-3 line comment saying why it is
+imporatant to disable virtualization here before we continue.
 
---- a/kexec/arch/i386/kexec-elf-x86.c
-+++ b/kexec/arch/i386/kexec-elf-x86.c
-@@ -18,6 +18,7 @@
-  */
-
- #define _GNU_SOURCE
-+#include <stddef.h>
- #include <stdio.h>
- #include <string.h>
- #include <stdlib.h>
---- a/kexec/arch/x86_64/kexec-elf-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
-@@ -18,6 +18,7 @@
-  */
-
- #define _GNU_SOURCE
-+#include <stddef.h>
- #include <stdio.h>
- #include <string.h>
- #include <stdlib.h>
-
--- 
-Stefan Assmann          | SUSE LINUX Products GmbH
-Software Engineer       | Maxfeldstr. 5, D-90409 Nuernberg
-Mail: sassmann@suse.de  | GF: Markus Rex, HRB 16746 (AG Nuernberg)
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
