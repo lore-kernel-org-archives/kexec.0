@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ky1To-0008Vs-A0
-	for kexec@lists.infradead.org; Thu, 06 Nov 2008 09:48:44 +0000
-Message-ID: <4912BD67.8000704@redhat.com>
-Date: Thu, 06 Nov 2008 11:48:23 +0200
+	id 1Ky1V9-0005kJ-IE
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 09:50:07 +0000
+Message-ID: <4912BDC5.3000508@redhat.com>
+Date: Thu, 06 Nov 2008 11:49:57 +0200
 From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 08/16] x86: Emergency virtualization disable function
+Subject: Re: [PATCH 00/14] x86: disable virt on kdump and emergency_restart
 References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
-	<1225810364-8990-9-git-send-email-ehabkost@redhat.com>
-	<m1bpwu3wod.fsf@frodo.ebiederm.org>
-	<20081105175235.GJ5247@blackpad>
-In-Reply-To: <20081105175235.GJ5247@blackpad>
+	<49107E2C.8090803@redhat.com> <20081105163306.GA30018@elte.hu>
+In-Reply-To: <20081105163306.GA30018@elte.hu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +23,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Ingo Molnar <mingo@elte.hu>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Eduardo Habkost wrote:
-> We could move the set_virt_disable_func() calls to vmx.c and svm.c (on
-> hardware_setup/hardware_unsetup). One could argue that it is sort of a
-> coincidence that we need the code for both vmx and svm.
+Ingo Molnar wrote:
+> general ack for the x86 bits, but i'm not sure whether we should be 
+> pushing this upstream so late in the cycle. If we do it in the next 
+> cycle then it's best we do it in the x86 tree, the KVM impact seems 
+> much smaller than the general x86 impact.
 >   
 
-I don't share this fear of function calls, but perhaps that's due to 
-lack of experience with kdump.
-
-If you want to be extra simple and safe, remove kvm from the equation.  
-Make the disabling code part of kdump/emergency_restart and only rely on 
-the convention that cr3.vmxe == vmxon.
-
-That has the advantage of working with other virtualization systems as well.
+It certainly doesn't fall under the recent regression rule, and there's 
+a simple workaround (rmmod -r kvm) so I agree it's best to defer for the 
+next cycle.
 
 -- 
 error compiling committee.c: too many arguments to function
