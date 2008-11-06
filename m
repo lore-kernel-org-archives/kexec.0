@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ky6R6-00039E-0h
-	for kexec@lists.infradead.org; Thu, 06 Nov 2008 15:06:16 +0000
-Date: Thu, 6 Nov 2008 16:06:10 +0100
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
-Message-ID: <20081106150610.GA1644@elte.hu>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ky6sb-00047U-HR
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 15:34:41 +0000
+Date: Thu, 6 Nov 2008 13:34:05 -0200
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: Re: [PATCH 09/15] x86: Emergency virtualization disable function
+Message-ID: <20081106153405.GS5247@blackpad>
 References: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
-	<1225915018-6548-16-git-send-email-ehabkost@redhat.com>
-	<20081106071445.GI15731@elte.hu> <20081106124031.GO5247@blackpad>
-	<20081106143021.GD13023@elte.hu>
+	<1225915018-6548-10-git-send-email-ehabkost@redhat.com>
+	<20081105222731.GA14202@elf.ucw.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20081106143021.GD13023@elte.hu>
+In-Reply-To: <20081105222731.GA14202@elf.ucw.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,66 +25,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Pavel Machek <pavel@suse.cz>
+Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-
-* Ingo Molnar <mingo@elte.hu> wrote:
-
-> > Andrey Borzenkov's patch, for example, adds a new DMI entry 
-> > because reboot=acpi breaks his keyboard (even without KVM, I 
-> > guess). Andrey, was that the case?
+On Wed, Nov 05, 2008 at 11:27:32PM +0100, Pavel Machek wrote:
+> On Wed 2008-11-05 17:56:52, Eduardo Habkost wrote:
+> > This patch adds an interface to set a function that can be used to
+> > disable virtualization extensions on the CPU on emergency cases, such
+> > as on kdump or emergency reboot.
+> > 
+> > The function will be set by code that enables virtualization extensions
+> > on the CPUs (i.e. KVM), and should do the very least to disable virt
+> > extensions on the CPU where it is being called.
+> > 
+> > The functions that set the function pointer uses RCU synchronization,
+> > just in case the crash NMI is triggered while KVM is unloading.
+> > 
+> > We can't just use the same notifiers used at reboot time (that are used
+> > by non-crash-dump kexec), because at crash time some CPUs may have IRQs
+> > disabled, so we can't use IPIs. The crash shutdown code use NMIs to tell
+> > the other CPUs to be halted, so the notifier call will be hooked into
+> > the CPU halting code that is on the crash shutdown NMI handler.
+> > 
+> > [v2: drop 'unsigned int cpu' arg from function]
+> > [v3: make emergency_virt_disable() non-static]
+> > [v4: add a config option for it: CPU_VIRT_EXTENSIONS]
+> > [v5: add has_virt_extensions() function]
+> > [v6: don't define the registering functions if CPU_VIRT_EXTENSIONS is
+> >  not enabled]
+> > [v7: use EXPORT_SYMBOL_GPL]
+> > 
 > 
-> hm, IIRC the problem was KVM in his case too.
+> > --- /dev/null
+> > +++ b/arch/x86/kernel/virtext.c
+> > @@ -0,0 +1,89 @@
+> > +/* Core CPU virtualization extensions handling
+> > + *
+> > + * This should carry the code for handling CPU virtualization extensions
+> > + * that needs to live in the kernel core.
+> > + *
+> > + * Author: Eduardo Habkost <ehabkost@redhat.com>
+> > + *
+> > + * Copyright (C) 2008, Red Hat Inc.
+> > + */
+> 
+> GPL?
 
-actually, Andrey's problem seems to be unrelated. So i've queued up 
-the revert below in tip/x86/urgent for v2.6.28. Thanks guys!
+Yes, of course.
 
-	Ingo
+As IANAL, I used a similar .c file as reference for the author/copyright
+info header, and used arch/x86/kernel/crash.c, that doesn't refer to
+the GPL also. I think I chose a bad example as reference.
 
----------------->
-From 8d00450d296dedec9ada38d43b83e79cca6fd5a3 Mon Sep 17 00:00:00 2001
-From: Eduardo Habkost <ehabkost@redhat.com>
-Date: Tue, 4 Nov 2008 12:52:44 -0200
-Subject: [PATCH] Revert "x86: default to reboot via ACPI"
+arch/x86/kernel/crash.c even has "All rights reserved". Ouch.
 
-This reverts commit c7ffa6c26277b403920e2255d10df849bd613380.
-
-the assumptio of this change was that this would not break
-any existing machine. Andrey Borzenkov reported troubles with
-the ACPI reboot method: the system would hang on reboot, necessiating
-a power cycle. Probably more systems are affected as well.
-
-Also, there are patches queued up for v2.6.29 to disable virtualization
-on emergency_restart() - which was the original motivation of
-this change.
-
-Reported-by: Andrey Borzenkov <arvidjaar@mail.ru>
-Bisected-by: Andrey Borzenkov <arvidjaar@mail.ru>
-Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
-Acked-by: Avi Kivity <avi@redhat.com>
-Signed-off-by: Ingo Molnar <mingo@elte.hu>
----
- arch/x86/kernel/reboot.c |    6 +-----
- 1 files changed, 1 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index f4c93f1..724adfc 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -29,11 +29,7 @@ EXPORT_SYMBOL(pm_power_off);
- 
- static const struct desc_ptr no_idt = {};
- static int reboot_mode;
--/*
-- * Keyboard reset and triple fault may result in INIT, not RESET, which
-- * doesn't work when we're in vmx root mode.  Try ACPI first.
-- */
--enum reboot_type reboot_type = BOOT_ACPI;
-+enum reboot_type reboot_type = BOOT_KBD;
- int reboot_force;
- 
- #if defined(CONFIG_X86_32) && defined(CONFIG_SMP)
+-- 
+Eduardo
 
 _______________________________________________
 kexec mailing list
