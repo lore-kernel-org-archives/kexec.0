@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3.mail.elte.hu ([157.181.1.138])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kxz4y-0007qU-JH
-	for kexec@lists.infradead.org; Thu, 06 Nov 2008 07:14:56 +0000
-Date: Thu, 6 Nov 2008 08:14:45 +0100
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
-Message-ID: <20081106071445.GI15731@elte.hu>
-References: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
-	<1225915018-6548-16-git-send-email-ehabkost@redhat.com>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1Ky1Q6-0006qd-Vm
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 09:44:55 +0000
+Message-ID: <4912BC86.8050607@redhat.com>
+Date: Thu, 06 Nov 2008 11:44:38 +0200
+From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1225915018-6548-16-git-send-email-ehabkost@redhat.com>
+Subject: Re: [PATCH 15/16] kvm: x86: set kdump virt_disable function on
+	initialization
+References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>	<1225810364-8990-16-git-send-email-ehabkost@redhat.com>
+	<m1od0u3wyq.fsf@frodo.ebiederm.org>
+In-Reply-To: <m1od0u3wyq.fsf@frodo.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +24,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
+Eric W. Biederman wrote:
+>>  
+>> +	r = set_virt_disable_func(crash_hardware_disable);
+>>     
+>
+> Can we make this say:
+> set_virt_disable_func(kvm_x86_ops->crash_hardware_disable);
+>
+> So we can avoid going through 2 levels of function pointers?
+> I find that a little scary in code that might be running
+> at the edge of stack overflow.
+>   
 
-* Eduardo Habkost <ehabkost@redhat.com> wrote:
+Actually, with scheduling disabled we can overflow the stack as much as 
+we like.  It will reduce the quality of the dump, but everything ought 
+to work.
 
-> This reverts commit c7ffa6c26277b403920e2255d10df849bd613380.
-> 
-> Now that we have the hooks to disable virtualization on
-> emergency_restart(), we can get back to the BOOT_KBD reboot_type default.
-> 
-> Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+-- 
+error compiling committee.c: too many arguments to function
 
-hm, why revert this? There's nothing wrong with the ACPI reboot 
-method, it's just that we surprise the BIOS by exiting with an unclean 
-VMX state in certain circumstances.
-
-if the ACPI reboot method does not work we do the KBD method as the 
-next thing in the reboot chain.
-
-	Ingo
 
 _______________________________________________
 kexec mailing list
