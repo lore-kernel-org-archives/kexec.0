@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ky29S-0000Bi-Mr
-	for kexec@lists.infradead.org; Thu, 06 Nov 2008 10:31:47 +0000
-Message-ID: <4912C75B.8050508@redhat.com>
-Date: Thu, 06 Nov 2008 12:30:51 +0200
-From: Avi Kivity <avi@redhat.com>
+	id 1Ky3yS-0005ik-A0
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 12:28:34 +0000
+Date: Thu, 6 Nov 2008 10:28:00 -0200
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: Re: [PATCH 00/14] x86: disable virt on kdump and emergency_restart
+Message-ID: <20081106122800.GN5247@blackpad>
+References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>
+	<49107E2C.8090803@redhat.com> <20081105163306.GA30018@elte.hu>
+	<4912BDC5.3000508@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 08/16] x86: Emergency virtualization disable function
-References: <1225810364-8990-1-git-send-email-ehabkost@redhat.com>	<1225810364-8990-9-git-send-email-ehabkost@redhat.com>	<m1bpwu3wod.fsf@frodo.ebiederm.org>
-	<20081105175235.GJ5247@blackpad>	<4912BD67.8000704@redhat.com>
-	<m1mygd2lxs.fsf@frodo.ebiederm.org>
-In-Reply-To: <m1mygd2lxs.fsf@frodo.ebiederm.org>
+Content-Disposition: inline
+In-Reply-To: <4912BDC5.3000508@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Avi Kivity <avi@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Eric W. Biederman wrote:
+On Thu, Nov 06, 2008 at 11:49:57AM +0200, Avi Kivity wrote:
+> Ingo Molnar wrote:
+>> general ack for the x86 bits, but i'm not sure whether we should be  
+>> pushing this upstream so late in the cycle. If we do it in the next  
+>> cycle then it's best we do it in the x86 tree, the KVM impact seems  
+>> much smaller than the general x86 impact.
+>>   
 >
->> If you want to be extra simple and safe, remove kvm from the equation.  Make the
->> disabling code part of kdump/emergency_restart and only rely on the convention
->> that cr3.vmxe == vmxon.
->>     
-> Convention?
->   
+> It certainly doesn't fall under the recent regression rule, and there's  
+> a simple workaround (rmmod -r kvm) so I agree it's best to defer for the  
+> next cycle.
 
-There is a de-facto convention supported by at least vmware and kvm.  If 
-cr4.vmxe is 1, then we are in vmx operation.  If cr4.vmxe is 0, then we 
-are not in vmx operation.  This allows us to determine whether we need 
-to execute vmxoff without any APIs.
+Shouldn't reboot=kbd be the default again still during this cycle, then?
 
+The cases where the new reboot=acpi default broke didn't necessarily
+involve KVM.
 
 -- 
-error compiling committee.c: too many arguments to function
-
+Eduardo
 
 _______________________________________________
 kexec mailing list
