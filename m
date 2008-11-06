@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gprs189-60.eurotel.cz ([160.218.189.60])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kxqoz-0000GQ-4t
-	for kexec@lists.infradead.org; Wed, 05 Nov 2008 22:26:06 +0000
-Date: Wed, 5 Nov 2008 23:27:32 +0100
-From: Pavel Machek <pavel@suse.cz>
-Subject: Re: [PATCH 09/15] x86: Emergency virtualization disable function
-Message-ID: <20081105222731.GA14202@elf.ucw.cz>
+Received: from mx3.mail.elte.hu ([157.181.1.138])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1Kxz4y-0007qU-JH
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 07:14:56 +0000
+Date: Thu, 6 Nov 2008 08:14:45 +0100
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
+Message-ID: <20081106071445.GI15731@elte.hu>
 References: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
-	<1225915018-6548-10-git-send-email-ehabkost@redhat.com>
+	<1225915018-6548-16-git-send-email-ehabkost@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1225915018-6548-10-git-send-email-ehabkost@redhat.com>
+In-Reply-To: <1225915018-6548-16-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,53 +25,26 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Wed 2008-11-05 17:56:52, Eduardo Habkost wrote:
-> This patch adds an interface to set a function that can be used to
-> disable virtualization extensions on the CPU on emergency cases, such
-> as on kdump or emergency reboot.
-> 
-> The function will be set by code that enables virtualization extensions
-> on the CPUs (i.e. KVM), and should do the very least to disable virt
-> extensions on the CPU where it is being called.
-> 
-> The functions that set the function pointer uses RCU synchronization,
-> just in case the crash NMI is triggered while KVM is unloading.
-> 
-> We can't just use the same notifiers used at reboot time (that are used
-> by non-crash-dump kexec), because at crash time some CPUs may have IRQs
-> disabled, so we can't use IPIs. The crash shutdown code use NMIs to tell
-> the other CPUs to be halted, so the notifier call will be hooked into
-> the CPU halting code that is on the crash shutdown NMI handler.
-> 
-> [v2: drop 'unsigned int cpu' arg from function]
-> [v3: make emergency_virt_disable() non-static]
-> [v4: add a config option for it: CPU_VIRT_EXTENSIONS]
-> [v5: add has_virt_extensions() function]
-> [v6: don't define the registering functions if CPU_VIRT_EXTENSIONS is
->  not enabled]
-> [v7: use EXPORT_SYMBOL_GPL]
-> 
 
-> --- /dev/null
-> +++ b/arch/x86/kernel/virtext.c
-> @@ -0,0 +1,89 @@
-> +/* Core CPU virtualization extensions handling
-> + *
-> + * This should carry the code for handling CPU virtualization extensions
-> + * that needs to live in the kernel core.
-> + *
-> + * Author: Eduardo Habkost <ehabkost@redhat.com>
-> + *
-> + * Copyright (C) 2008, Red Hat Inc.
-> + */
+* Eduardo Habkost <ehabkost@redhat.com> wrote:
 
-GPL?
+> This reverts commit c7ffa6c26277b403920e2255d10df849bd613380.
+> 
+> Now that we have the hooks to disable virtualization on
+> emergency_restart(), we can get back to the BOOT_KBD reboot_type default.
+> 
+> Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+hm, why revert this? There's nothing wrong with the ACPI reboot 
+method, it's just that we surprise the BIOS by exiting with an unclean 
+VMX state in certain circumstances.
+
+if the ACPI reboot method does not work we do the KBD method as the 
+next thing in the reboot chain.
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
