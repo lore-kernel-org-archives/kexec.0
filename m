@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Ky6sb-00047U-HR
-	for kexec@lists.infradead.org; Thu, 06 Nov 2008 15:34:41 +0000
-Date: Thu, 6 Nov 2008 13:34:05 -0200
-From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: Re: [PATCH 09/15] x86: Emergency virtualization disable function
-Message-ID: <20081106153405.GS5247@blackpad>
+	id 1Ky731-0004dV-UC
+	for kexec@lists.infradead.org; Thu, 06 Nov 2008 15:45:40 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1225915018-6548-1-git-send-email-ehabkost@redhat.com>
-	<1225915018-6548-10-git-send-email-ehabkost@redhat.com>
-	<20081105222731.GA14202@elf.ucw.cz>
+	<1225915018-6548-16-git-send-email-ehabkost@redhat.com>
+	<20081106071445.GI15731@elte.hu> <20081106124031.GO5247@blackpad>
+	<20081106143021.GD13023@elte.hu> <20081106150610.GA1644@elte.hu>
+Date: Thu, 06 Nov 2008 07:41:01 -0800
+In-Reply-To: <20081106150610.GA1644@elte.hu> (Ingo Molnar's message of "Thu, 6
+	Nov 2008 16:06:10 +0100")
+Message-ID: <m1mygczwtu.fsf@frodo.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20081105222731.GA14202@elf.ucw.cz>
+Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +26,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@suse.cz>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ingo Molnar <mingo@elte.hu>
+Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Nov 05, 2008 at 11:27:32PM +0100, Pavel Machek wrote:
-> On Wed 2008-11-05 17:56:52, Eduardo Habkost wrote:
-> > This patch adds an interface to set a function that can be used to
-> > disable virtualization extensions on the CPU on emergency cases, such
-> > as on kdump or emergency reboot.
-> > 
-> > The function will be set by code that enables virtualization extensions
-> > on the CPUs (i.e. KVM), and should do the very least to disable virt
-> > extensions on the CPU where it is being called.
-> > 
-> > The functions that set the function pointer uses RCU synchronization,
-> > just in case the crash NMI is triggered while KVM is unloading.
-> > 
-> > We can't just use the same notifiers used at reboot time (that are used
-> > by non-crash-dump kexec), because at crash time some CPUs may have IRQs
-> > disabled, so we can't use IPIs. The crash shutdown code use NMIs to tell
-> > the other CPUs to be halted, so the notifier call will be hooked into
-> > the CPU halting code that is on the crash shutdown NMI handler.
-> > 
-> > [v2: drop 'unsigned int cpu' arg from function]
-> > [v3: make emergency_virt_disable() non-static]
-> > [v4: add a config option for it: CPU_VIRT_EXTENSIONS]
-> > [v5: add has_virt_extensions() function]
-> > [v6: don't define the registering functions if CPU_VIRT_EXTENSIONS is
-> >  not enabled]
-> > [v7: use EXPORT_SYMBOL_GPL]
-> > 
-> 
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/virtext.c
-> > @@ -0,0 +1,89 @@
-> > +/* Core CPU virtualization extensions handling
-> > + *
-> > + * This should carry the code for handling CPU virtualization extensions
-> > + * that needs to live in the kernel core.
-> > + *
-> > + * Author: Eduardo Habkost <ehabkost@redhat.com>
-> > + *
-> > + * Copyright (C) 2008, Red Hat Inc.
-> > + */
-> 
-> GPL?
+Ingo Molnar <mingo@elte.hu> writes:
 
-Yes, of course.
+> * Ingo Molnar <mingo@elte.hu> wrote:
+>
+>> > Andrey Borzenkov's patch, for example, adds a new DMI entry 
+>> > because reboot=acpi breaks his keyboard (even without KVM, I 
+>> > guess). Andrey, was that the case?
+>> 
+>> hm, IIRC the problem was KVM in his case too.
+>
+> actually, Andrey's problem seems to be unrelated. So i've queued up 
+> the revert below in tip/x86/urgent for v2.6.28. Thanks guys!
 
-As IANAL, I used a similar .c file as reference for the author/copyright
-info header, and used arch/x86/kernel/crash.c, that doesn't refer to
-the GPL also. I think I chose a bad example as reference.
+If there are a number of problems with reboot and reset
+I'm wondering if we should investigate using an
+outb to port 0x92.  With the right bit set you can trigger
+a toggle of the reset line on many motherboards.
 
-arch/x86/kernel/crash.c even has "All rights reserved". Ouch.
+Eric
 
--- 
-Eduardo
+
 
 _______________________________________________
 kexec mailing list
