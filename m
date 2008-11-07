@@ -1,26 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vms173001pub.verizon.net ([206.46.173.1])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KyGgu-0007E8-QO
-	for kexec@lists.infradead.org; Fri, 07 Nov 2008 02:03:17 +0000
-Received: from localhost.localdomain ([96.237.168.40])
-	by vms173001.mailsrvcs.net
-	(Sun Java System Messaging Server 6.2-6.01 (built Apr  3 2006))
-	with ESMTPA id <0K9X0060FX9AHSJ0@vms173001.mailsrvcs.net> for
-	kexec@lists.infradead.org; Thu, 06 Nov 2008 19:53:35 -0600 (CST)
-Date: Thu, 06 Nov 2008 20:53:29 -0500 (EST)
-From: Len Brown <lenb@kernel.org>
-Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
-In-reply-to: <20081107014342.GA9841@srcf.ucam.org>
-Message-id: <alpine.LFD.2.00.0811062049020.3106@localhost.localdomain>
-MIME-version: 1.0
-References: <fa.UVpnVba3yRAWG3rGZ0sk20JE9hs@ifi.uio.no>
-	<fa.FPBNKx3BSvZHPZ+eXD4Tb+fuRYk@ifi.uio.no>
-	<fa.PvVEuEo+f/t4sLmcGyN2Tsl8zYg@ifi.uio.no>
-	<fa.zzFdOXisTZzBaE1+ueGIYmt+Z5c@ifi.uio.no>
-	<fa.vQ6HVRcPFFr1zpcXFFOjEPtDdNk@ifi.uio.no>
-	<fa.ckUqcrtVKbxAkjNggIdajBTHr9Q@ifi.uio.no> <49139A43.4000203@shaw.ca>
-	<20081107014342.GA9841@srcf.ucam.org>
+	id 1KyHPy-0004S4-HG
+	for kexec@lists.infradead.org; Fri, 07 Nov 2008 02:49:51 +0000
+Date: Fri, 7 Nov 2008 13:49:48 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Reserve elfcorehdr memory in CONFIG_CRASH_DUMP
+Message-ID: <20081107024946.GA20889@verge.net.au>
+References: <4913A8C0.8090108@sgi.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4913A8C0.8090108@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,44 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Garrett <mjg@redhat.com>
-Cc: Robert Hancock <hancockr@shaw.ca>, Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Zhao Yakui <yakui.zhao@intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Jay Lan <jlan@sgi.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>
 
-
-
-On Fri, 7 Nov 2008, Matthew Garrett wrote:
-
-> On Thu, Nov 06, 2008 at 07:30:43PM -0600, Robert Hancock wrote:
+On Thu, Nov 06, 2008 at 06:32:32PM -0800, Jay Lan wrote:
+> IA64 kdump kernel failed to initialize /proc/vmcore in 2.6.28-rc2.
+> A bug was introduced in this patch commit:
+> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=d9a9855d0b06ca6d6cc92596fedcc03f8512e062
 > 
-> > http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=8fd145917fb62368a9b80db59562c20576238f5a
-> > 
-> > This patch ignores the RESET_REG_SUP flag and just tries using the reset 
-> > register anyway if it thinks it's valid. So we may attempt ACPI reset on 
-> > machines which don't indicate it's supported.
+> The problem was that the call to reserve_elfcorehdr() should be placed
+> in CONFIG_CRASH_DUMP rather than in CONFIG_CRASH_KERNEL, which does
+> not exist.
 > 
-> Yeah, that sounds very wrong.
-
-As it turns out, it was an incorrect guess on our part on how to be "bug 
-compatible" and I'm reverting it per the regression report here:
-
-http://bugzilla.kernel.org/show_bug.cgi?id=11942
-
--Len
-
-> > The patch description mentioned that some machines didn't reboot after 
-> > S3 suspend without this patch. However, we recently had this patch merged:
-> > 
-> > http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=a68823ee5285e65b51ceb96f8b13a5b4f99a6888
-> > 
-> > Is it possible that the problem fixed there is the true cause of this 
-> > reboot after S3 problem?
+> The patch fixes the problem.
 > 
-> Oh, yeah, could be. Given the From:, I should really have thought of 
-> that :)
+> Signed-off-by: Jay Lan <jlan@sgi.com>
+
+Acked-by: Simon Horman <horms@verge.net.au>
+
+> ---
+>  arch/ia64/kernel/setup.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> -- 
-> Matthew Garrett | mjg59@srcf.ucam.org
-> 
+> Index: linux/arch/ia64/kernel/setup.c
+> ===================================================================
+> --- linux.orig/arch/ia64/kernel/setup.c	2008-11-06 18:01:18.000000000 -0800
+> +++ linux/arch/ia64/kernel/setup.c	2008-11-06 18:05:42.047332827 -0800
+> @@ -359,7 +359,7 @@ reserve_memory (void)
+>  	}
+>  #endif
+>  
+> -#ifdef CONFIG_CRASH_KERNEL
+> +#ifdef CONFIG_CRASH_DUMP
+>  	if (reserve_elfcorehdr(&rsvd_region[n].start,
+>  			       &rsvd_region[n].end) == 0)
+>  		n++;
+
+
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+
 
 _______________________________________________
 kexec mailing list
