@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86])
+Received: from ogre.sisk.pl ([217.79.144.158])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1KyRo0-0005h4-9r
-	for kexec@lists.infradead.org; Fri, 07 Nov 2008 13:55:20 +0000
-In-Reply-To: <4900952A.3090605@in.ibm.com>
-References: <kexec-kern-2@bga.com> <4900952A.3090605@in.ibm.com>
-Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <b6c6e115495e149f24d2de5cb82a92ab@bga.com>
-From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running
-	relocatable
-Date: Fri, 7 Nov 2008 07:59:26 -0600
+	id 1KywJ6-0001qr-6P
+	for kexec@lists.infradead.org; Sat, 08 Nov 2008 22:29:28 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH 15/15] Revert "x86: default to reboot via ACPI"
+Date: Sat, 8 Nov 2008 23:32:22 +0100
+References: <fa.UVpnVba3yRAWG3rGZ0sk20JE9hs@ifi.uio.no>
+	<fa.ckUqcrtVKbxAkjNggIdajBTHr9Q@ifi.uio.no>
+	<49139A43.4000203@shaw.ca>
+In-Reply-To: <49139A43.4000203@shaw.ca>
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <200811082332.24125.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,81 +25,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mohan Kumar M <mohan@in.ibm.com>
-Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, Paul Mackerras <paulus@samba.org>
+To: Robert Hancock <hancockr@shaw.ca>, Matthew Garrett <mjg@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Eduardo Habkost <ehabkost@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Zhao Yakui <yakui.zhao@intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, Len Brown <lenb@kernel.org>
 
-On Oct 23, 2008, at 10:15 AM, Mohan Kumar M wrote:
-> Hi Milton,
-> My suggestions:
-> Milton Miller wrote:
->> The __kdump_flag ABI is overly constraining for future development.
-...
->> Now that we have eliminated the use of __kdump_flag in favor of
->> the standard is_kdump_kernel(), this flag only controls run without
->> relocating the kernel to PHYSICAL_START (0), so rename it 
->> __run_at_load.
->>
-> We could try both of our approaches. Instead of passing the 
-> information that next kernel should be relocatable from kexec_sequence 
-> to purgatory code, we will do it from kexec-tools path (following your 
-> approach). But instead of setting the __run_at_load value in the 
-> purgatory code (ie at physical address 0x5c), we will set the variable 
-> __run_at_load at kernel  image itself.
->
-> i.e.,
-> [code snip 1]
-> 	lwz	r7,__run_at_load-_stext(r26)
-> 	cmplwi	cr0,r7,1	/* kdump kernel ? - stay where we are */
->  	bne	1f
->  	add	r25,r25,r26
->
-> 	lwz	r7,__run_at_load-_stext(r26)
-> 	cmplwi	cr0,r7,1
->  	bne	3f
->
-> kexec-tools
-> [code snip 2]
-> 	LOADADDR(6,run_at_load)
-> 	ld	18,0(6)
-> 	cmpd	18,1
-> 	bne	skip
-> 	li	7,1
-> 	stw	7,92(4)		# mark __run_at_load flag at kernel
-> skip:
-> 	lwz	7,0(4)		# get the first instruction that we stole
-> 	stw	7,0(0)		# and put it in the slave loop at 0
->  				# skip cache flush, do we care?
->
-> [code snip 3]
-> 	if (info->kexec_flags & KEXEC_ON_CRASH) {
-> 		....
-> 		elf_rel_set_symbol(&info->rhdr, "run_at_load",
->                                 &my_run_at_load, 							 
-> sizeof(my_run_at_load));
-> 	}
+On Friday, 7 of November 2008, Robert Hancock wrote:
+> Matthew Garrett wrote:
+> > On Fri, Nov 07, 2008 at 09:01:19AM +0800, Zhao Yakui wrote:
+> > 
+> >> With the help of KVM I find that the windows will be rebooted by writing
+> >> RESET_VALUE to RESET_REG I/O port if the RESET_REG_SUP bit is not
+> >> zero(It indicates whether ACPI reboot is supported).
+> >> IMO maybe the ACPI reboot is the first choice. If it can't, then it will
+> >> fall back to other mode.
+> > 
+> > Hmm. But we're seeing some machines that end up very confused if 
+> > rebooted via ACPI. I guess we need to run Vista on them to find out how 
+> > they behave. What OSI strings did your KVM setup expose? We know that 
+> > Windows changes behaviour under various circumstances depending on which 
+> > OS the firmware requests, so it's almost possible that this is another 
+> > of those cases.
+> 
+> Given that Windows behavior, this patch seems suspicious:
+> 
+> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=8fd145917fb62368a9b80db59562c20576238f5a
+> 
+> This patch ignores the RESET_REG_SUP flag and just tries using the reset 
+> register anyway if it thinks it's valid. So we may attempt ACPI reset on 
+> machines which don't indicate it's supported.
+> 
+> The patch description mentioned that some machines didn't reboot after 
+> S3 suspend without this patch. However, we recently had this patch merged:
+> 
+> http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=a68823ee5285e65b51ceb96f8b13a5b4f99a6888
+> 
+> Is it possible that the problem fixed there is the true cause of this 
+> reboot after S3 problem?
 
+Generally, it is.
 
-This elf_rel_set_symbol sets the copy in purgatory,
-after we have copied the code from the kernel.  It
-is this copy that gets copied to address 0.
+Should it regarded as -stable material, BTW, or is it already in -stable?
 
-However this information is not in the code that
-is at the start of the kernel.  We don't have any
-symbols for the kernel itself, it might be stripped.
-So we can't use the elf_set_symbol api.  (The kernel
-may not be relocatable either).
+Matthew?
 
-> Using this approach we are not breaking the kexec_sequence
-> ABI and we directly modifying the flag in kernel image.
->
-> Regards,
-> Mohan.
-
-I'll prepare a patch, but it might be a few days
-while I catch up from my 2 week vacation.
-
-milton
-
+Thanks,
+Rafael
 
 _______________________________________________
 kexec mailing list
