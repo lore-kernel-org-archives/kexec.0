@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0FsQ-000703-Im
-	for kexec@lists.infradead.org; Wed, 12 Nov 2008 13:35:22 +0000
+	id 1L0FsS-00070b-9r
+	for kexec@lists.infradead.org; Wed, 12 Nov 2008 13:35:24 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 5/8] x86 kdump: Make nmi_shootdown_cpus() non-static
-Date: Wed, 12 Nov 2008 11:34:41 -0200
-Message-Id: <1226496884-24628-6-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 7/8] x86: Make nmi_shootdown_cpus() available on !SMP and
+	!X86_LOCAL_APIC
+Date: Wed, 12 Nov 2008 11:34:43 -0200
+Message-Id: <1226496884-24628-8-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
 References: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,56 +26,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Add prototype to asm/reboot.h.
+The X86_LOCAL_APIC #ifdef was for kdump. For !SMP, the function simply
+does nothing.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/include/asm/reboot.h |    5 +++++
- arch/x86/kernel/crash.c       |    3 +--
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kernel/reboot.c |   13 ++++++++++++-
+ 1 files changed, 12 insertions(+), 1 deletions(-)
 
-diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
-index df77103..562d4fd 100644
---- a/arch/x86/include/asm/reboot.h
-+++ b/arch/x86/include/asm/reboot.h
-@@ -1,6 +1,8 @@
- #ifndef _ASM_X86_REBOOT_H
- #define _ASM_X86_REBOOT_H
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 82fa28f..d0c9c77 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -524,7 +524,7 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ #endif
  
-+#include <linux/kdebug.h>
-+
- struct pt_regs;
  
- struct machine_ops {
-@@ -18,4 +20,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs);
- void native_machine_shutdown(void);
- void machine_real_restart(const unsigned char *code, int length);
+-#if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
++#if defined(CONFIG_SMP)
  
-+typedef void (*nmi_shootdown_cb)(int, struct die_args*);
-+void nmi_shootdown_cpus(nmi_shootdown_cb callback);
-+
- #endif /* _ASM_X86_REBOOT_H */
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index f23c2be..fb298d1 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -29,7 +29,6 @@
- 
- #include <mach_ipi.h>
- 
--typedef void (*nmi_shootdown_cb)(int, struct die_args*);
- 
- #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
- 
-@@ -100,7 +99,7 @@ static struct notifier_block crash_nmi_nb = {
+ /* This keeps a track of which one is crashing cpu. */
+ static int crashing_cpu;
+@@ -573,6 +573,12 @@ static struct notifier_block crash_nmi_nb = {
  	.notifier_call = crash_nmi_callback,
  };
  
--static void nmi_shootdown_cpus(nmi_shootdown_cb callback)
-+void nmi_shootdown_cpus(nmi_shootdown_cb callback)
++/* Halt all other CPUs, calling the specified function on each of them
++ *
++ * This function can be used to halt all other CPUs on crash
++ * or emergency reboot time. The function passed as parameter
++ * will be called inside a NMI handler on all CPUs.
++ */
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  {
  	unsigned long msecs;
+@@ -601,4 +607,9 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  
+ 	/* Leave the nmi callback set */
+ }
++#else /* !CONFIG_SMP */
++void nmi_shootdown_cpus(nmi_shootdown_cb callback)
++{
++	/* No other CPUs to shoot down */
++}
+ #endif
 -- 
 1.5.5.GIT
 
