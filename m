@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1Kzvhx-00036g-RO
-	for kexec@lists.infradead.org; Tue, 11 Nov 2008 16:03:14 +0000
-In-Reply-To: <491851D3.3050904@in.ibm.com>
-References: <kexec-kern-2@bga.com> <4900952A.3090605@in.ibm.com>
-	<b6c6e115495e149f24d2de5cb82a92ab@bga.com>
-	<491851D3.3050904@in.ibm.com>
-Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <f2538c5a645ccd8ed03ff44dc450f652@bga.com>
-From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH 3/3] powerpc/ppc64/kdump: better flag for running
-	relocatable
-Date: Tue, 11 Nov 2008 10:06:16 -0600
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1L0Caw-0001ux-9Z
+	for kexec@lists.infradead.org; Wed, 12 Nov 2008 10:05:06 +0000
+MIME-Version: 1.0
+Subject: [PATCH] makedumpfile: Claim to support 2.6.27
+Message-Id: <109842e145d381000c4c.1226482968@hale.suse.de>
+Date: Wed, 12 Nov 2008 10:42:48 +0100
+From: Bernhard Walle <bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +20,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mohan Kumar M <mohan@in.ibm.com>
-Cc: Ben Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, Paul Mackerras <paulus@samba.org>
+To: oomichi@mxs.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-On Nov 10, 2008, at 9:22 AM, Mohan Kumar M wrote:
-> Yes, elf_ret_symbol sets the copy in purgatory. But the following code 
-> in purgatory (to be introduced)
->
->  	LOADADDR(6,run_at_load)
->  	ld	18,0(6)
->  	cmpd	18,1
->  	bne	skip
->  	li	7,1
->  	stw	7,92(4)		# mark __run_at_load flag at kernel
->
-> will set the __run_at_load in the kernel image (ie where ever kernel 
-> is loaded + 0x5c(92). Or am I missing some thing?
+According to the changelog and my tests, 2.6.27 kernel is supported. Express
+that in the LATEST_VERSION check.
 
-That would work, but I prefer to keep the change in the userspace side. 
-  Partly because I don't want to link setting the relocatable flag to 
-purgatory starting a dump kernel, and partly because I think 
-kexec-tools should be verifying that the loaded kernel will run where 
-it expects, either by it finding the relcatable flag, inspecting the 
-elf header for the linked address, or some other method (like elf type 
-is dynamic for some platforms).  Oh, and its more readable in C.
 
-If someone adds mmap instead of read files to the common code, then we 
-will just have to make sure they use MMAP_PRIVATE instead of 
-MMAP_SHARED.  Today its not an issue.
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-milton
-
+diff --git a/makedumpfile.h b/makedumpfile.h
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -436,7 +436,7 @@
+ #define KVER_MIN_SHIFT 16
+ #define KERNEL_VERSION(x,y,z) (((x) << KVER_MAJ_SHIFT) | ((y) << KVER_MIN_SHIFT) | (z))
+ #define OLDEST_VERSION		(0x0206000f)	/* linux-2.6.15 */
+-#define LATEST_VERSION		(0x0206001a)	/* linux-2.6.26 */
++#define LATEST_VERSION		(0x0206001b)	/* linux-2.6.27 */
+ #define VERSION_LINUX_2_6_26	(0x0206001a)	/* linux-2.6.26 */
+ #define VERSION_LINUX_2_6_27	(0x0206001b)	/* linux-2.6.27 */
+ 
 
 _______________________________________________
 kexec mailing list
