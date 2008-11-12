@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9])
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0JzZ-0004c4-Ua
-	for kexec@lists.infradead.org; Wed, 12 Nov 2008 17:59:03 +0000
-Date: Wed, 12 Nov 2008 18:58:47 +0100
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 0/8] Make nmi_shootdown_cpus() usable by non-kdump code
-Message-ID: <20081112175847.GA12252@elte.hu>
-References: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
+	id 1L0Le0-0007IC-Pe
+	for kexec@lists.infradead.org; Wed, 12 Nov 2008 19:45:04 +0000
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Always use 64 bit addresses for the firmware memory map
+Date: Wed, 12 Nov 2008 20:44:49 +0100
+Message-Id: <1226519089-21647-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,56 +15,136 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: x86@kernel.org
+Cc: Bernhard Walle <bwalle@suse.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+
+I had a problem that on i386 without PAE enabled the firmware memory map was
+wrong because a 64 bit address has been truncated:
+
+        0000000000000000-000000000009f400 (System RAM)
+        000000000009f400-00000000000a0000 (reserved)
+        00000000fec10000-00000000fec11000 (reserved)
+        00000000fec20000-00000000fec21000 (reserved)
+        00000000fee00000-00000000fee10000 (reserved)
+        00000000ff800000-0000000100000000 (reserved)
+ --->   0000000000000000-00000000fffff000 (System RAM)  <---
+        00000000000f0000-0000000000100000 (reserved)
+        0000000000100000-00000000f57fa000 (System RAM)
+        00000000f57fa000-00000000f5800000 (ACPI Tables)
+        00000000fdc00000-00000000fdc01000 (reserved)
+        00000000fdc10000-00000000fdc11000 (reserved)
+        00000000fdc20000-00000000fdc21000 (reserved)
+        00000000fdc30000-00000000fdc31000 (reserved)
+        00000000fec00000-00000000fec01000 (reserved)
+
+Just always using 64 bit is the most sane approach in my opinion.
 
 
-* Eduardo Habkost <ehabkost@redhat.com> wrote:
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ drivers/firmware/memmap.c    |   17 +++++++----------
+ include/linux/firmware-map.h |   12 +++++-------
+ 2 files changed, 12 insertions(+), 17 deletions(-)
 
-> Hi, Ingo,
-> 
-> As tip/master is a moving target, I am splitting the previous 
-> kdump/reboot virtualization-disable code series[1] into smaller 
-> series so the simpler parts can be included sooner. This first 
-> series is just for making nmi_shootdown_cpus() usable by non-kdump 
-> code, by moving their generic parts to reboot.c.
+diff --git a/drivers/firmware/memmap.c b/drivers/firmware/memmap.c
+index 3bf8ee1..010afde 100644
+--- a/drivers/firmware/memmap.c
++++ b/drivers/firmware/memmap.c
+@@ -31,8 +31,8 @@
+  * information is necessary as for the resource tree.
+  */
+ struct firmware_map_entry {
+-	resource_size_t		start;	/* start of the memory range */
+-	resource_size_t		end;	/* end of the memory range (incl.) */
++	uint64_t		start;	/* start of the memory range */
++	uint64_t		end;	/* end of the memory range (incl.) */
+ 	const char		*type;	/* type of the memory range */
+ 	struct list_head	list;	/* entry for the linked list */
+ 	struct kobject		kobj;   /* kobject for each entry */
+@@ -101,7 +101,7 @@ static LIST_HEAD(map_entries);
+  * Common implementation of firmware_map_add() and firmware_map_add_early()
+  * which expects a pre-allocated struct firmware_map_entry.
+  **/
+-static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
++static int firmware_map_add_entry(uint64_t start, uint64_t end,
+ 				  const char *type,
+ 				  struct firmware_map_entry *entry)
+ {
+@@ -132,8 +132,7 @@ static int firmware_map_add_entry(resource_size_t start, resource_size_t end,
+  *
+  * Returns 0 on success, or -ENOMEM if no memory could be allocated.
+  **/
+-int firmware_map_add(resource_size_t start, resource_size_t end,
+-		     const char *type)
++int firmware_map_add(uint64_t start, uint64_t end, const char *type)
+ {
+ 	struct firmware_map_entry *entry;
+ 
+@@ -157,7 +156,7 @@ int firmware_map_add(resource_size_t start, resource_size_t end,
+  *
+  * Returns 0 on success, or -ENOMEM if no memory could be allocated.
+  **/
+-int __init firmware_map_add_early(resource_size_t start, resource_size_t end,
++int __init firmware_map_add_early(uint64_t start, uint64_t end,
+ 				  const char *type)
+ {
+ 	struct firmware_map_entry *entry;
+@@ -175,14 +174,12 @@ int __init firmware_map_add_early(resource_size_t start, resource_size_t end,
+ 
+ static ssize_t start_show(struct firmware_map_entry *entry, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%llx\n",
+-		(unsigned long long)entry->start);
++	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->start);
+ }
+ 
+ static ssize_t end_show(struct firmware_map_entry *entry, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE, "0x%llx\n",
+-		(unsigned long long)entry->end);
++	return snprintf(buf, PAGE_SIZE, "0x%llx\n", entry->end);
+ }
+ 
+ static ssize_t type_show(struct firmware_map_entry *entry, char *buf)
+diff --git a/include/linux/firmware-map.h b/include/linux/firmware-map.h
+index 6e199c8..209a27a 100644
+--- a/include/linux/firmware-map.h
++++ b/include/linux/firmware-map.h
+@@ -24,21 +24,19 @@
+  */
+ #ifdef CONFIG_FIRMWARE_MEMMAP
+ 
+-int firmware_map_add(resource_size_t start, resource_size_t end,
+-		     const char *type);
+-int firmware_map_add_early(resource_size_t start, resource_size_t end,
+-			   const char *type);
++int firmware_map_add(uint64_t start, uint64_t end, const char *type);
++int firmware_map_add_early(uint64_t start, uint64_t end, const char *type);
+ 
+ #else /* CONFIG_FIRMWARE_MEMMAP */
+ 
+-static inline int firmware_map_add(resource_size_t start, resource_size_t end,
++static inline int firmware_map_add(uint64_t start, uint64_t end,
+ 				   const char *type)
+ {
+ 	return 0;
+ }
+ 
+-static inline int firmware_map_add_early(resource_size_t start,
+-					 resource_size_t end, const char *type)
++static inline int firmware_map_add_early(uint64_t start, uint64_t end,
++					 const char *type)
+ {
+ 	return 0;
+ }
+-- 
+1.6.0.2
 
-applied them to tip/x86/crashdump, thanks Eduardo!
-
-this branch btw. is an append-only non-rebasing tree that is not a 
-moving target, you can access it via:
-
-  http://people.redhat.com/mingo/tip.git/README
-
-and then do:
-
-  git checkout -b x86/crashdump tip/x86/crashdump
-
-it has the following changes queued up currently:
-
-Eduardo Habkost (8):
-      x86 kdump: extract kdump-specific code from crash_nmi_callback()
-      x86 kdump: move crashing_cpu assignment to nmi_shootdown_cpus()
-      x86 kdump: create kdump_nmi_shootdown_cpus()
-      x86 kdump: make kdump_nmi_callback() a function ptr on crash_nmi_callback()
-      x86 kdump: make nmi_shootdown_cpus() non-static
-      x86: move nmi_shootdown_cpus() to reboot.c
-      x86: make nmi_shootdown_cpus() available on !SMP and !X86_LOCAL_APIC
-      x86: disable IRQs before doing anything on nmi_shootdown_cpus()
-
-Huang Ying (3):
-      kexec/i386: remove PAGE_SIZE alignment from relocate_kernel
-      kexec/i386: allocate page table pages dynamically
-      kexec/i386: setup kexec page table in C
-
-if you prefer less flux then you can send patches against that branch, 
-we'll sort out interaction with other trees.
-
-	Ingo
 
 _______________________________________________
 kexec mailing list
