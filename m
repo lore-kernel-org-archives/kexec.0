@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0FsN-0006zH-G7
-	for kexec@lists.infradead.org; Wed, 12 Nov 2008 13:35:19 +0000
+	id 1L0FsP-0006zm-Ey
+	for kexec@lists.infradead.org; Wed, 12 Nov 2008 13:35:21 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 8/8] x86: Disable IRQs before doing anything on
-	nmi_shootdown_cpus()
-Date: Wed, 12 Nov 2008 11:34:44 -0200
-Message-Id: <1226496884-24628-9-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 3/8] x86 kdump: Create kdump_nmi_shootdown_cpus()
+Date: Wed, 12 Nov 2008 11:34:39 -0200
+Message-Id: <1226496884-24628-4-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
 References: <1226496884-24628-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,26 +25,45 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, Avi Kivity <avi@redhat.com>, Andrey Borzenkov <arvidjaar@mail.ru>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-We need to know on which CPU we are running on, and we don't want to be
-preempted while doing this.
+For the kdump-specific code that was living on nmi_shootdown_cpus().
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kernel/reboot.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ arch/x86/kernel/crash.c |   11 +++++++++--
+ 1 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index d0c9c77..c495687 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -582,6 +582,7 @@ static struct notifier_block crash_nmi_nb = {
- void nmi_shootdown_cpus(nmi_shootdown_cb callback)
- {
- 	unsigned long msecs;
-+	local_irq_disable();
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index ed2f0f9..75c468c 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -122,10 +122,17 @@ static void nmi_shootdown_cpus(void)
+ 	}
  
- 	/* Make a note of crashing cpu. Will be used in NMI callback.*/
- 	crashing_cpu = safe_smp_processor_id();
+ 	/* Leave the nmi callback set */
++}
++
++static void kdump_nmi_shootdown_cpus(void)
++{
++	nmi_shootdown_cpus();
++
+ 	disable_local_APIC();
+ }
++
+ #else
+-static void nmi_shootdown_cpus(void)
++static void kdump_nmi_shootdown_cpus(void)
+ {
+ 	/* There are no cpus to shootdown */
+ }
+@@ -144,7 +151,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
+ 	/* The kernel is broken so disable interrupts */
+ 	local_irq_disable();
+ 
+-	nmi_shootdown_cpus();
++	kdump_nmi_shootdown_cpus();
+ 	lapic_shutdown();
+ #if defined(CONFIG_X86_IO_APIC)
+ 	disable_IO_APIC();
 -- 
 1.5.5.GIT
 
