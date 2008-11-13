@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0gF9-00021P-Ju
-	for kexec@lists.infradead.org; Thu, 13 Nov 2008 17:44:36 +0000
+	id 1L0gFA-00023M-PJ
+	for kexec@lists.infradead.org; Thu, 13 Nov 2008 17:44:37 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 11/11] x86: disable VMX on all CPUs on reboot
-Date: Thu, 13 Nov 2008 15:43:51 -0200
-Message-Id: <1226598231-18311-12-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 05/11] x86: cpu_emergency_vmxoff() function
+Date: Thu, 13 Nov 2008 15:43:45 -0200
+Message-Id: <1226598231-18311-6-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
 References: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,137 +25,46 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On emergency_restart, we may need to use an NMI to disable virtualization
-on all CPUs. We do that using nmi_shootdown_cpus() if VMX is enabled.
-
-Finding a proper point to hook the nmi_shootdown_cpus() call isn't
-trivial, as the non-emergency machine_restart() (that doesn't need the
-NMI tricks) uses machine_emergency_restart() directly.
-
-The solution to make this work without adding a new function or argument
-to machine_ops was setting a 'reboot_emergency' flag that tells if
-native_machine_emergency_restart() needs to do the virt cleanup or not.
+Add cpu_emergency_vmxoff() and its friends: cpu_vmx_enabled() and
+__cpu_emergency_vmxoff().
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kernel/reboot.c |   63 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 files changed, 61 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/virtext.h |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 6f05a28..a5f8c09 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -12,6 +12,7 @@
- #include <asm/proto.h>
- #include <asm/reboot_fixups.h>
- #include <asm/reboot.h>
-+#include <asm/virtext.h>
- 
- #ifdef CONFIG_X86_32
- # include <linux/dmi.h>
-@@ -39,6 +40,13 @@ int reboot_force;
- static int reboot_cpu = -1;
- #endif
- 
-+/* This is set if we need to go through the 'emergency' path.
-+ * When machine_emergency_restart() is called, we may be on
-+ * an inconsistent state and won't be able to do a clean cleanup
-+ */
-+static int reboot_emergency;
-+
-+
- /* This is set by the PCI code if either type 1 or type 2 PCI is detected */
- bool port_cf9_safe = false;
- 
-@@ -359,6 +367,48 @@ static inline void kb_wait(void)
- 	}
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 475fb17..2d090f3 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -58,4 +58,27 @@ static inline void cpu_vmxoff(void)
+ 	write_cr4(read_cr4() & ~X86_CR4_VMXE);
  }
  
-+static void vmxoff_nmi(int cpu, struct die_args *args)
++static inline int cpu_vmx_enabled(void)
 +{
-+	cpu_emergency_vmxoff();
++	return read_cr4() & X86_CR4_VMXE;
 +}
 +
-+/* Use NMIs as IPIs to tell all CPUs to disable virtualization
++/** Disable VMX if it is enabled on the current CPU
++ *
++ * You shouldn't call this if cpu_has_vmx() returns 0.
 + */
-+static void emergency_vmx_disable_all(void)
++static inline void __cpu_emergency_vmxoff(void)
 +{
-+	/* Just make sure we won't change CPUs while doing this */
-+	local_irq_disable();
-+
-+	/* We need to disable VMX on all CPUs before rebooting, otherwise
-+	 * we risk hanging up the machine, because the CPU ignore INIT
-+	 * signals when VMX is enabled.
-+	 *
-+	 * We can't take any locks and we may be on an inconsistent
-+	 * state, so we use NMIs as IPIs to tell the other CPUs to disable
-+	 * VMX and halt.
-+	 * 
-+	 * For safety, we will avoid running the nmi_shootdown_cpus()
-+	 * stuff unnecessarily, but we don't have a way to check
-+	 * if other CPUs have VMX enabled. So we will call it only if the
-+	 * CPU we are running on has VMX enabled.
-+	 *
-+	 * We will miss cases where VMX is not enabled on all CPUs. This
-+	 * shouldn't do much harm because KVM always enable VMX on all
-+	 * CPUs anyway. But we can miss it on the small window where KVM
-+	 * is still enabling VMX.
-+	 */
-+	if (cpu_has_vmx() && cpu_vmx_enabled()) {
-+		/* Disable VMX on this CPU.
-+		 */
++	if (cpu_vmx_enabled())
 +		cpu_vmxoff();
-+
-+		/* Halt and disable VMX on the other CPUs */
-+		nmi_shootdown_cpus(vmxoff_nmi);
-+
-+	}
 +}
 +
-+
- void __attribute__((weak)) mach_reboot_fixups(void)
- {
- }
-@@ -367,6 +417,9 @@ static void native_machine_emergency_restart(void)
- {
- 	int i;
- 
-+	if (reboot_emergency)
-+		emergency_vmx_disable_all();
-+
- 	/* Tell the BIOS if we want cold or warm reboot */
- 	*((unsigned short *)__va(0x472)) = reboot_mode;
- 
-@@ -473,13 +526,19 @@ void native_machine_shutdown(void)
- #endif
- }
- 
-+static void __machine_emergency_restart(int emergency)
++/** Disable VMX if it is supportd and enabled on the current CPU
++ */
++static inline void cpu_emergency_vmxoff(void)
 +{
-+	reboot_emergency = emergency;
-+	machine_ops.emergency_restart();
++	if (cpu_has_vmx())
++		__cpu_emergency_vmxoff();
 +}
 +
- static void native_machine_restart(char *__unused)
- {
- 	printk("machine restart\n");
- 
- 	if (!reboot_force)
- 		machine_shutdown();
--	machine_emergency_restart();
-+	__machine_emergency_restart(0);
- }
- 
- static void native_machine_halt(void)
-@@ -523,7 +582,7 @@ void machine_shutdown(void)
- 
- void machine_emergency_restart(void)
- {
--	machine_ops.emergency_restart();
-+	__machine_emergency_restart(1);
- }
- 
- void machine_restart(char *cmd)
+ #endif /* _ASM_X86_VIRTEX_H */
 -- 
 1.5.5.GIT
 
