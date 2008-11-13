@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0gF7-0001zn-B6
-	for kexec@lists.infradead.org; Thu, 13 Nov 2008 17:44:33 +0000
+	id 1L0gF8-00020j-17
+	for kexec@lists.infradead.org; Thu, 13 Nov 2008 17:44:34 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 10/11] kdump: forcibly disable VMX and SVM on
-	machine_crash_shutdown()
-Date: Thu, 13 Nov 2008 15:43:50 -0200
-Message-Id: <1226598231-18311-11-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 03/11] x86: asm/virtext.h: add cpu_vmxoff() inline function
+Date: Thu, 13 Nov 2008 15:43:43 -0200
+Message-Id: <1226598231-18311-4-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
 References: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,62 +25,37 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-We need to disable virtualization extensions on all CPUs before booting
-the kdump kernel, otherwise the kdump kernel booting will fail, and
-rebooting after the kdump kernel did its task may also fail.
-
-We do it using cpu_emergency_vmxoff() and cpu_emergency_svm_disable(),
-that should always work, because those functions check if the CPUs
-support SVM or VMX before doing their tasks.
+Unfortunately we can't use exactly the same code from vmx
+hardware_disable(), because the KVM function uses the
+__kvm_handle_fault_on_reboot() tricks.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/kernel/crash.c |   18 ++++++++++++++++++
- 1 files changed, 18 insertions(+), 0 deletions(-)
+ arch/x86/include/asm/virtext.h |   13 +++++++++++++
+ 1 files changed, 13 insertions(+), 0 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index d84a852..c689d19 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -26,6 +26,7 @@
- #include <linux/kdebug.h>
- #include <asm/smp.h>
- #include <asm/reboot.h>
-+#include <asm/virtext.h>
- 
- #include <mach_ipi.h>
- 
-@@ -49,6 +50,15 @@ static void kdump_nmi_callback(int cpu, struct die_args *args)
- #endif
- 	crash_save_cpu(regs, cpu);
- 
-+	/* Disable VMX or SVM if needed.
-+	 *
-+	 * We need to disable virtualization on all CPUs.
-+	 * Having VMX or SVM enabled on any CPU may break rebooting
-+	 * after the kdump kernel has finished its task.
-+	 */
-+	cpu_emergency_vmxoff();
-+	cpu_emergency_svm_disable();
-+
- 	disable_local_APIC();
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 351fa23..475fb17 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -45,4 +45,17 @@ static inline int cpu_has_vmx(void)
+ 	return test_bit(5, &ecx); /* CPUID.1:ECX.VMX[bit 5] -> VT */
  }
  
-@@ -80,6 +90,14 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 	local_irq_disable();
- 
- 	kdump_nmi_shootdown_cpus();
 +
-+	/* Booting kdump kernel with VMX or SVM enabled won't work,
-+	 * because (among other limitations) we can't disable paging
-+	 * with the virt flags.
-+	 */
-+	cpu_emergency_vmxoff();
-+	cpu_emergency_svm_disable();
++/** Disable VMX on the current CPU
++ *
++ * vmxoff causes a undefined-opcode exception if vmxon was not run
++ * on the CPU previously. Only call this function if you know VMX
++ * is enabled.
++ */
++static inline void cpu_vmxoff(void)
++{
++	asm volatile (ASM_VMX_VMXOFF : : : "cc");
++	write_cr4(read_cr4() & ~X86_CR4_VMXE);
++}
 +
- 	lapic_shutdown();
- #if defined(CONFIG_X86_IO_APIC)
- 	disable_IO_APIC();
+ #endif /* _ASM_X86_VIRTEX_H */
 -- 
 1.5.5.GIT
 
