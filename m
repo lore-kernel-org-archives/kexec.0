@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L0uTx-0006fj-Uj
-	for kexec@lists.infradead.org; Fri, 14 Nov 2008 08:56:50 +0000
-Message-ID: <491D3A42.5050709@mxs.nes.nec.co.jp>
-Date: Fri, 14 Nov 2008 17:43:46 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: Claim to support 2.6.27
-References: <109842e145d381000c4c.1226482968@hale.suse.de>	<491BEE34.6070501@mxs.nes.nec.co.jp>	<20081113121506.3a3b72b1@hale.suse.de>	<491CDDCE.2060307@mxs.nes.nec.co.jp>
-	<20081114093938.5cfcb2bf@hale.suse.de>
-In-Reply-To: <20081114093938.5cfcb2bf@hale.suse.de>
+	id 1L0vHb-0007nN-T3
+	for kexec@lists.infradead.org; Fri, 14 Nov 2008 09:48:08 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id A3C79429AA
+	for <kexec@lists.infradead.org>; Fri, 14 Nov 2008 10:48:04 +0100 (CET)
+From: Bernhard Walle <bwalle@suse.de>
+Subject: [PATCH] Fix spell error in help output
+Date: Fri, 14 Nov 2008 10:48:04 +0100
+Message-Id: <1226656084-22844-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,53 +20,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1679472549=="
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Bernhard Walle <bwalle@suse.de>
 
---===============1679472549==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-Bernhard Walle wrote:
-> Hi Ken'ichi, 
-> 
-> * Ken'ichi Ohmichi [2008-11-14 11:09]:
->> Bernhard Walle wrote:
->>> * Ken'ichi Ohmichi [2008-11-13 18:07]:
->>>> Bernhard Walle wrote:
->>>>> According to the changelog and my tests, 2.6.27 kernel is supported. Express
->>>>> that in the LATEST_VERSION check.
->>>> Thank your for your tests and your patch.
->>>> I also tested makedumpfile on linux-2.6.27 of both i386 and x86_64,
->>>> but I have not tested on ia64 yet.
->>>> So I want to know the CPU architecture of your machine to fill the
->>>> supporting table of makedumpfile's "README" file.
->>> I tested on ia64 in that case.
->> Is your ia64 kernel discontigmem, or sparsemem ?
-> 
-> CONFIG_DISCONTIGMEM_MANUAL=y
-> CONFIG_DISCONTIGMEM=y
-
-Thank you.
-I will test on ia64 sparsemem kernel and merge your patch into the next release.
+This patch just fixes a spell error. Found by Dave Plater.
 
 
-Thanks
-Ken'ichi Ohmichi
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+---
+ kexec/kexec.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 0616091..fc01458 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -917,7 +917,7 @@ void usage(void)
+ 	       "                      load code into.\n"
+ 	       "     --mem-max=<addr> Specify the highest memory address to\n"
+ 	       "                      load code into.\n"
+-	       "     --reuseinird     Reuse initrd from first boot.\n"
++	       "     --reuseinitrd    Reuse initrd from first boot.\n"
+ 	       "     --load-preserve-context Load the new kernel and preserve\n"
+ 	       "                      context of current kernel during kexec.\n"
+ 	       "     --load-jump-back-helper Load a helper image to jump back\n"
+-- 
+1.6.0.2
 
---===============1679472549==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1679472549==--
