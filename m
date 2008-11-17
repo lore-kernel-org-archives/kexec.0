@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L2BGQ-0002GE-Ag
-	for kexec@lists.infradead.org; Mon, 17 Nov 2008 21:04:07 +0000
+	id 1L2BGS-0002VA-E1
+	for kexec@lists.infradead.org; Mon, 17 Nov 2008 21:04:08 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 02/12] kvm: svm: move svm.h to include/asm
-Date: Mon, 17 Nov 2008 19:03:14 -0200
-Message-Id: <1226955804-16802-3-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 08/12] kvm: svm: move has_svm() code to asm/virtext.h
+Date: Mon, 17 Nov 2008 19:03:20 -0200
+Message-Id: <1226955804-16802-9-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,699 +25,114 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-svm.h will be used by core code that is independent of KVM, so I am
-moving it outside the arch/x86/kvm directory.
+Use a trick to keep the printk()s on has_svm() working as before. gcc
+will take care of not generating code for the 'msg' stuff when the
+function is called with a NULL msg argument.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/include/asm/svm.h |  328 ++++++++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/kvm_svm.h     |    2 +-
- arch/x86/kvm/svm.h         |  328 --------------------------------------------
- 3 files changed, 329 insertions(+), 329 deletions(-)
- create mode 100644 arch/x86/include/asm/svm.h
- delete mode 100644 arch/x86/kvm/svm.h
+ arch/x86/include/asm/virtext.h |   41 ++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/svm.c             |   19 ++++-------------
+ 2 files changed, 46 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-new file mode 100644
-index 0000000..1b8afa7
---- /dev/null
-+++ b/arch/x86/include/asm/svm.h
-@@ -0,0 +1,328 @@
-+#ifndef __SVM_H
-+#define __SVM_H
-+
-+enum {
-+	INTERCEPT_INTR,
-+	INTERCEPT_NMI,
-+	INTERCEPT_SMI,
-+	INTERCEPT_INIT,
-+	INTERCEPT_VINTR,
-+	INTERCEPT_SELECTIVE_CR0,
-+	INTERCEPT_STORE_IDTR,
-+	INTERCEPT_STORE_GDTR,
-+	INTERCEPT_STORE_LDTR,
-+	INTERCEPT_STORE_TR,
-+	INTERCEPT_LOAD_IDTR,
-+	INTERCEPT_LOAD_GDTR,
-+	INTERCEPT_LOAD_LDTR,
-+	INTERCEPT_LOAD_TR,
-+	INTERCEPT_RDTSC,
-+	INTERCEPT_RDPMC,
-+	INTERCEPT_PUSHF,
-+	INTERCEPT_POPF,
-+	INTERCEPT_CPUID,
-+	INTERCEPT_RSM,
-+	INTERCEPT_IRET,
-+	INTERCEPT_INTn,
-+	INTERCEPT_INVD,
-+	INTERCEPT_PAUSE,
-+	INTERCEPT_HLT,
-+	INTERCEPT_INVLPG,
-+	INTERCEPT_INVLPGA,
-+	INTERCEPT_IOIO_PROT,
-+	INTERCEPT_MSR_PROT,
-+	INTERCEPT_TASK_SWITCH,
-+	INTERCEPT_FERR_FREEZE,
-+	INTERCEPT_SHUTDOWN,
-+	INTERCEPT_VMRUN,
-+	INTERCEPT_VMMCALL,
-+	INTERCEPT_VMLOAD,
-+	INTERCEPT_VMSAVE,
-+	INTERCEPT_STGI,
-+	INTERCEPT_CLGI,
-+	INTERCEPT_SKINIT,
-+	INTERCEPT_RDTSCP,
-+	INTERCEPT_ICEBP,
-+	INTERCEPT_WBINVD,
-+	INTERCEPT_MONITOR,
-+	INTERCEPT_MWAIT,
-+	INTERCEPT_MWAIT_COND,
-+};
-+
-+
-+struct __attribute__ ((__packed__)) vmcb_control_area {
-+	u16 intercept_cr_read;
-+	u16 intercept_cr_write;
-+	u16 intercept_dr_read;
-+	u16 intercept_dr_write;
-+	u32 intercept_exceptions;
-+	u64 intercept;
-+	u8 reserved_1[44];
-+	u64 iopm_base_pa;
-+	u64 msrpm_base_pa;
-+	u64 tsc_offset;
-+	u32 asid;
-+	u8 tlb_ctl;
-+	u8 reserved_2[3];
-+	u32 int_ctl;
-+	u32 int_vector;
-+	u32 int_state;
-+	u8 reserved_3[4];
-+	u32 exit_code;
-+	u32 exit_code_hi;
-+	u64 exit_info_1;
-+	u64 exit_info_2;
-+	u32 exit_int_info;
-+	u32 exit_int_info_err;
-+	u64 nested_ctl;
-+	u8 reserved_4[16];
-+	u32 event_inj;
-+	u32 event_inj_err;
-+	u64 nested_cr3;
-+	u64 lbr_ctl;
-+	u8 reserved_5[832];
-+};
-+
-+
-+#define TLB_CONTROL_DO_NOTHING 0
-+#define TLB_CONTROL_FLUSH_ALL_ASID 1
-+
-+#define V_TPR_MASK 0x0f
-+
-+#define V_IRQ_SHIFT 8
-+#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
-+
-+#define V_INTR_PRIO_SHIFT 16
-+#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
-+
-+#define V_IGN_TPR_SHIFT 20
-+#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
-+
-+#define V_INTR_MASKING_SHIFT 24
-+#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
-+
-+#define SVM_INTERRUPT_SHADOW_MASK 1
-+
-+#define SVM_IOIO_STR_SHIFT 2
-+#define SVM_IOIO_REP_SHIFT 3
-+#define SVM_IOIO_SIZE_SHIFT 4
-+#define SVM_IOIO_ASIZE_SHIFT 7
-+
-+#define SVM_IOIO_TYPE_MASK 1
-+#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
-+#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
-+#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
-+#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
-+
-+struct __attribute__ ((__packed__)) vmcb_seg {
-+	u16 selector;
-+	u16 attrib;
-+	u32 limit;
-+	u64 base;
-+};
-+
-+struct __attribute__ ((__packed__)) vmcb_save_area {
-+	struct vmcb_seg es;
-+	struct vmcb_seg cs;
-+	struct vmcb_seg ss;
-+	struct vmcb_seg ds;
-+	struct vmcb_seg fs;
-+	struct vmcb_seg gs;
-+	struct vmcb_seg gdtr;
-+	struct vmcb_seg ldtr;
-+	struct vmcb_seg idtr;
-+	struct vmcb_seg tr;
-+	u8 reserved_1[43];
-+	u8 cpl;
-+	u8 reserved_2[4];
-+	u64 efer;
-+	u8 reserved_3[112];
-+	u64 cr4;
-+	u64 cr3;
-+	u64 cr0;
-+	u64 dr7;
-+	u64 dr6;
-+	u64 rflags;
-+	u64 rip;
-+	u8 reserved_4[88];
-+	u64 rsp;
-+	u8 reserved_5[24];
-+	u64 rax;
-+	u64 star;
-+	u64 lstar;
-+	u64 cstar;
-+	u64 sfmask;
-+	u64 kernel_gs_base;
-+	u64 sysenter_cs;
-+	u64 sysenter_esp;
-+	u64 sysenter_eip;
-+	u64 cr2;
-+	u8 reserved_6[32];
-+	u64 g_pat;
-+	u64 dbgctl;
-+	u64 br_from;
-+	u64 br_to;
-+	u64 last_excp_from;
-+	u64 last_excp_to;
-+};
-+
-+struct __attribute__ ((__packed__)) vmcb {
-+	struct vmcb_control_area control;
-+	struct vmcb_save_area save;
-+};
-+
-+#define SVM_CPUID_FEATURE_SHIFT 2
-+#define SVM_CPUID_FUNC 0x8000000a
-+
-+#define MSR_EFER_SVME_MASK (1ULL << 12)
-+#define MSR_VM_CR       0xc0010114
-+#define MSR_VM_HSAVE_PA 0xc0010117ULL
-+
-+#define SVM_VM_CR_SVM_DISABLE 4
-+
-+#define SVM_SELECTOR_S_SHIFT 4
-+#define SVM_SELECTOR_DPL_SHIFT 5
-+#define SVM_SELECTOR_P_SHIFT 7
-+#define SVM_SELECTOR_AVL_SHIFT 8
-+#define SVM_SELECTOR_L_SHIFT 9
-+#define SVM_SELECTOR_DB_SHIFT 10
-+#define SVM_SELECTOR_G_SHIFT 11
-+
-+#define SVM_SELECTOR_TYPE_MASK (0xf)
-+#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
-+#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
-+#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
-+#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
-+#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
-+#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
-+#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
-+
-+#define SVM_SELECTOR_WRITE_MASK (1 << 1)
-+#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
-+#define SVM_SELECTOR_CODE_MASK (1 << 3)
-+
-+#define INTERCEPT_CR0_MASK 1
-+#define INTERCEPT_CR3_MASK (1 << 3)
-+#define INTERCEPT_CR4_MASK (1 << 4)
-+#define INTERCEPT_CR8_MASK (1 << 8)
-+
-+#define INTERCEPT_DR0_MASK 1
-+#define INTERCEPT_DR1_MASK (1 << 1)
-+#define INTERCEPT_DR2_MASK (1 << 2)
-+#define INTERCEPT_DR3_MASK (1 << 3)
-+#define INTERCEPT_DR4_MASK (1 << 4)
-+#define INTERCEPT_DR5_MASK (1 << 5)
-+#define INTERCEPT_DR6_MASK (1 << 6)
-+#define INTERCEPT_DR7_MASK (1 << 7)
-+
-+#define SVM_EVTINJ_VEC_MASK 0xff
-+
-+#define SVM_EVTINJ_TYPE_SHIFT 8
-+#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
-+
-+#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
-+#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
-+#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
-+#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
-+
-+#define SVM_EVTINJ_VALID (1 << 31)
-+#define SVM_EVTINJ_VALID_ERR (1 << 11)
-+
-+#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
-+
-+#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
-+#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
-+#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
-+#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
-+
-+#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
-+#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
-+
-+#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
-+#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
-+
-+#define	SVM_EXIT_READ_CR0 	0x000
-+#define	SVM_EXIT_READ_CR3 	0x003
-+#define	SVM_EXIT_READ_CR4 	0x004
-+#define	SVM_EXIT_READ_CR8 	0x008
-+#define	SVM_EXIT_WRITE_CR0 	0x010
-+#define	SVM_EXIT_WRITE_CR3 	0x013
-+#define	SVM_EXIT_WRITE_CR4 	0x014
-+#define	SVM_EXIT_WRITE_CR8 	0x018
-+#define	SVM_EXIT_READ_DR0 	0x020
-+#define	SVM_EXIT_READ_DR1 	0x021
-+#define	SVM_EXIT_READ_DR2 	0x022
-+#define	SVM_EXIT_READ_DR3 	0x023
-+#define	SVM_EXIT_READ_DR4 	0x024
-+#define	SVM_EXIT_READ_DR5 	0x025
-+#define	SVM_EXIT_READ_DR6 	0x026
-+#define	SVM_EXIT_READ_DR7 	0x027
-+#define	SVM_EXIT_WRITE_DR0 	0x030
-+#define	SVM_EXIT_WRITE_DR1 	0x031
-+#define	SVM_EXIT_WRITE_DR2 	0x032
-+#define	SVM_EXIT_WRITE_DR3 	0x033
-+#define	SVM_EXIT_WRITE_DR4 	0x034
-+#define	SVM_EXIT_WRITE_DR5 	0x035
-+#define	SVM_EXIT_WRITE_DR6 	0x036
-+#define	SVM_EXIT_WRITE_DR7 	0x037
-+#define SVM_EXIT_EXCP_BASE      0x040
-+#define SVM_EXIT_INTR		0x060
-+#define SVM_EXIT_NMI		0x061
-+#define SVM_EXIT_SMI		0x062
-+#define SVM_EXIT_INIT		0x063
-+#define SVM_EXIT_VINTR		0x064
-+#define SVM_EXIT_CR0_SEL_WRITE	0x065
-+#define SVM_EXIT_IDTR_READ	0x066
-+#define SVM_EXIT_GDTR_READ	0x067
-+#define SVM_EXIT_LDTR_READ	0x068
-+#define SVM_EXIT_TR_READ	0x069
-+#define SVM_EXIT_IDTR_WRITE	0x06a
-+#define SVM_EXIT_GDTR_WRITE	0x06b
-+#define SVM_EXIT_LDTR_WRITE	0x06c
-+#define SVM_EXIT_TR_WRITE	0x06d
-+#define SVM_EXIT_RDTSC		0x06e
-+#define SVM_EXIT_RDPMC		0x06f
-+#define SVM_EXIT_PUSHF		0x070
-+#define SVM_EXIT_POPF		0x071
-+#define SVM_EXIT_CPUID		0x072
-+#define SVM_EXIT_RSM		0x073
-+#define SVM_EXIT_IRET		0x074
-+#define SVM_EXIT_SWINT		0x075
-+#define SVM_EXIT_INVD		0x076
-+#define SVM_EXIT_PAUSE		0x077
-+#define SVM_EXIT_HLT		0x078
-+#define SVM_EXIT_INVLPG		0x079
-+#define SVM_EXIT_INVLPGA	0x07a
-+#define SVM_EXIT_IOIO		0x07b
-+#define SVM_EXIT_MSR		0x07c
-+#define SVM_EXIT_TASK_SWITCH	0x07d
-+#define SVM_EXIT_FERR_FREEZE	0x07e
-+#define SVM_EXIT_SHUTDOWN	0x07f
-+#define SVM_EXIT_VMRUN		0x080
-+#define SVM_EXIT_VMMCALL	0x081
-+#define SVM_EXIT_VMLOAD		0x082
-+#define SVM_EXIT_VMSAVE		0x083
-+#define SVM_EXIT_STGI		0x084
-+#define SVM_EXIT_CLGI		0x085
-+#define SVM_EXIT_SKINIT		0x086
-+#define SVM_EXIT_RDTSCP		0x087
-+#define SVM_EXIT_ICEBP		0x088
-+#define SVM_EXIT_WBINVD		0x089
-+#define SVM_EXIT_MONITOR	0x08a
-+#define SVM_EXIT_MWAIT		0x08b
-+#define SVM_EXIT_MWAIT_COND	0x08c
-+#define SVM_EXIT_NPF  		0x400
-+
-+#define SVM_EXIT_ERR		-1
-+
-+#define SVM_CR0_SELECTIVE_MASK (1 << 3 | 1) /* TS and MP */
-+
-+#define SVM_VMLOAD ".byte 0x0f, 0x01, 0xda"
-+#define SVM_VMRUN  ".byte 0x0f, 0x01, 0xd8"
-+#define SVM_VMSAVE ".byte 0x0f, 0x01, 0xdb"
-+#define SVM_CLGI   ".byte 0x0f, 0x01, 0xdd"
-+#define SVM_STGI   ".byte 0x0f, 0x01, 0xdc"
-+#define SVM_INVLPGA ".byte 0x0f, 0x01, 0xdf"
-+
-+#endif
-+
-diff --git a/arch/x86/kvm/kvm_svm.h b/arch/x86/kvm/kvm_svm.h
-index 65ef0fc..8e5ee99 100644
---- a/arch/x86/kvm/kvm_svm.h
-+++ b/arch/x86/kvm/kvm_svm.h
-@@ -7,7 +7,7 @@
- #include <linux/kvm_host.h>
- #include <asm/msr.h>
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 6bcf0ac..6f0d409 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -19,6 +19,7 @@
+ #include <asm/system.h>
  
--#include "svm.h"
+ #include <asm/vmx.h>
 +#include <asm/svm.h>
  
- static const u32 host_save_user_msrs[] = {
- #ifdef CONFIG_X86_64
-diff --git a/arch/x86/kvm/svm.h b/arch/x86/kvm/svm.h
-deleted file mode 100644
-index 1b8afa7..0000000
---- a/arch/x86/kvm/svm.h
-+++ /dev/null
-@@ -1,328 +0,0 @@
--#ifndef __SVM_H
--#define __SVM_H
+ /*
+  * VMX functions:
+@@ -66,4 +67,44 @@ static inline void cpu_emergency_vmxoff(void)
+ 		__cpu_emergency_vmxoff();
+ }
+ 
++
++
++
++/*
++ * SVM functions:
++ */
++
++/** Check if the CPU has SVM support
++ *
++ * You can use the 'msg' arg to get a message describing the problem,
++ * if the function returns zero. Simply pass NULL if you are not interested
++ * on the messages; gcc should take care of not generating code for
++ * the messages on this case.
++ */
++static inline int cpu_has_svm(const char **msg)
++{
++	uint32_t eax, ebx, ecx, edx;
++
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD) {
++		if (msg)
++			*msg = "not amd";
++		return 0;
++	}
++
++	cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
++	if (eax < SVM_CPUID_FUNC) {
++		if (msg)
++			*msg = "can't execute cpuid_8000000a";
++		return 0;
++	}
++
++	cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
++	if (!(ecx & (1 << SVM_CPUID_FEATURE_SHIFT))) {
++		if (msg)
++			*msg = "svm not available";
++		return 0;
++	}
++	return 1;
++}
++
+ #endif /* _ASM_X86_VIRTEX_H */
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 9c4ce65..64241f5 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -28,6 +28,8 @@
+ 
+ #include <asm/desc.h>
+ 
++#include <asm/virtext.h>
++
+ #define __ex(x) __kvm_handle_fault_on_reboot(x)
+ 
+ MODULE_AUTHOR("Qumranet");
+@@ -245,24 +247,13 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 
+ static int has_svm(void)
+ {
+-	uint32_t eax, ebx, ecx, edx;
 -
--enum {
--	INTERCEPT_INTR,
--	INTERCEPT_NMI,
--	INTERCEPT_SMI,
--	INTERCEPT_INIT,
--	INTERCEPT_VINTR,
--	INTERCEPT_SELECTIVE_CR0,
--	INTERCEPT_STORE_IDTR,
--	INTERCEPT_STORE_GDTR,
--	INTERCEPT_STORE_LDTR,
--	INTERCEPT_STORE_TR,
--	INTERCEPT_LOAD_IDTR,
--	INTERCEPT_LOAD_GDTR,
--	INTERCEPT_LOAD_LDTR,
--	INTERCEPT_LOAD_TR,
--	INTERCEPT_RDTSC,
--	INTERCEPT_RDPMC,
--	INTERCEPT_PUSHF,
--	INTERCEPT_POPF,
--	INTERCEPT_CPUID,
--	INTERCEPT_RSM,
--	INTERCEPT_IRET,
--	INTERCEPT_INTn,
--	INTERCEPT_INVD,
--	INTERCEPT_PAUSE,
--	INTERCEPT_HLT,
--	INTERCEPT_INVLPG,
--	INTERCEPT_INVLPGA,
--	INTERCEPT_IOIO_PROT,
--	INTERCEPT_MSR_PROT,
--	INTERCEPT_TASK_SWITCH,
--	INTERCEPT_FERR_FREEZE,
--	INTERCEPT_SHUTDOWN,
--	INTERCEPT_VMRUN,
--	INTERCEPT_VMMCALL,
--	INTERCEPT_VMLOAD,
--	INTERCEPT_VMSAVE,
--	INTERCEPT_STGI,
--	INTERCEPT_CLGI,
--	INTERCEPT_SKINIT,
--	INTERCEPT_RDTSCP,
--	INTERCEPT_ICEBP,
--	INTERCEPT_WBINVD,
--	INTERCEPT_MONITOR,
--	INTERCEPT_MWAIT,
--	INTERCEPT_MWAIT_COND,
--};
--
--
--struct __attribute__ ((__packed__)) vmcb_control_area {
--	u16 intercept_cr_read;
--	u16 intercept_cr_write;
--	u16 intercept_dr_read;
--	u16 intercept_dr_write;
--	u32 intercept_exceptions;
--	u64 intercept;
--	u8 reserved_1[44];
--	u64 iopm_base_pa;
--	u64 msrpm_base_pa;
--	u64 tsc_offset;
--	u32 asid;
--	u8 tlb_ctl;
--	u8 reserved_2[3];
--	u32 int_ctl;
--	u32 int_vector;
--	u32 int_state;
--	u8 reserved_3[4];
--	u32 exit_code;
--	u32 exit_code_hi;
--	u64 exit_info_1;
--	u64 exit_info_2;
--	u32 exit_int_info;
--	u32 exit_int_info_err;
--	u64 nested_ctl;
--	u8 reserved_4[16];
--	u32 event_inj;
--	u32 event_inj_err;
--	u64 nested_cr3;
--	u64 lbr_ctl;
--	u8 reserved_5[832];
--};
--
--
--#define TLB_CONTROL_DO_NOTHING 0
--#define TLB_CONTROL_FLUSH_ALL_ASID 1
--
--#define V_TPR_MASK 0x0f
--
--#define V_IRQ_SHIFT 8
--#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
--
--#define V_INTR_PRIO_SHIFT 16
--#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
--
--#define V_IGN_TPR_SHIFT 20
--#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
--
--#define V_INTR_MASKING_SHIFT 24
--#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
--
--#define SVM_INTERRUPT_SHADOW_MASK 1
--
--#define SVM_IOIO_STR_SHIFT 2
--#define SVM_IOIO_REP_SHIFT 3
--#define SVM_IOIO_SIZE_SHIFT 4
--#define SVM_IOIO_ASIZE_SHIFT 7
--
--#define SVM_IOIO_TYPE_MASK 1
--#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
--#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
--#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
--#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
--
--struct __attribute__ ((__packed__)) vmcb_seg {
--	u16 selector;
--	u16 attrib;
--	u32 limit;
--	u64 base;
--};
--
--struct __attribute__ ((__packed__)) vmcb_save_area {
--	struct vmcb_seg es;
--	struct vmcb_seg cs;
--	struct vmcb_seg ss;
--	struct vmcb_seg ds;
--	struct vmcb_seg fs;
--	struct vmcb_seg gs;
--	struct vmcb_seg gdtr;
--	struct vmcb_seg ldtr;
--	struct vmcb_seg idtr;
--	struct vmcb_seg tr;
--	u8 reserved_1[43];
--	u8 cpl;
--	u8 reserved_2[4];
--	u64 efer;
--	u8 reserved_3[112];
--	u64 cr4;
--	u64 cr3;
--	u64 cr0;
--	u64 dr7;
--	u64 dr6;
--	u64 rflags;
--	u64 rip;
--	u8 reserved_4[88];
--	u64 rsp;
--	u8 reserved_5[24];
--	u64 rax;
--	u64 star;
--	u64 lstar;
--	u64 cstar;
--	u64 sfmask;
--	u64 kernel_gs_base;
--	u64 sysenter_cs;
--	u64 sysenter_esp;
--	u64 sysenter_eip;
--	u64 cr2;
--	u8 reserved_6[32];
--	u64 g_pat;
--	u64 dbgctl;
--	u64 br_from;
--	u64 br_to;
--	u64 last_excp_from;
--	u64 last_excp_to;
--};
--
--struct __attribute__ ((__packed__)) vmcb {
--	struct vmcb_control_area control;
--	struct vmcb_save_area save;
--};
--
--#define SVM_CPUID_FEATURE_SHIFT 2
--#define SVM_CPUID_FUNC 0x8000000a
--
--#define MSR_EFER_SVME_MASK (1ULL << 12)
--#define MSR_VM_CR       0xc0010114
--#define MSR_VM_HSAVE_PA 0xc0010117ULL
--
--#define SVM_VM_CR_SVM_DISABLE 4
--
--#define SVM_SELECTOR_S_SHIFT 4
--#define SVM_SELECTOR_DPL_SHIFT 5
--#define SVM_SELECTOR_P_SHIFT 7
--#define SVM_SELECTOR_AVL_SHIFT 8
--#define SVM_SELECTOR_L_SHIFT 9
--#define SVM_SELECTOR_DB_SHIFT 10
--#define SVM_SELECTOR_G_SHIFT 11
--
--#define SVM_SELECTOR_TYPE_MASK (0xf)
--#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
--#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
--#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
--#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
--#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
--#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
--#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
--
--#define SVM_SELECTOR_WRITE_MASK (1 << 1)
--#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
--#define SVM_SELECTOR_CODE_MASK (1 << 3)
--
--#define INTERCEPT_CR0_MASK 1
--#define INTERCEPT_CR3_MASK (1 << 3)
--#define INTERCEPT_CR4_MASK (1 << 4)
--#define INTERCEPT_CR8_MASK (1 << 8)
--
--#define INTERCEPT_DR0_MASK 1
--#define INTERCEPT_DR1_MASK (1 << 1)
--#define INTERCEPT_DR2_MASK (1 << 2)
--#define INTERCEPT_DR3_MASK (1 << 3)
--#define INTERCEPT_DR4_MASK (1 << 4)
--#define INTERCEPT_DR5_MASK (1 << 5)
--#define INTERCEPT_DR6_MASK (1 << 6)
--#define INTERCEPT_DR7_MASK (1 << 7)
--
--#define SVM_EVTINJ_VEC_MASK 0xff
--
--#define SVM_EVTINJ_TYPE_SHIFT 8
--#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
--
--#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
--#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
--#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
--#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
--
--#define SVM_EVTINJ_VALID (1 << 31)
--#define SVM_EVTINJ_VALID_ERR (1 << 11)
--
--#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
--
--#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
--#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
--#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
--#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
--
--#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
--#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
--
--#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
--#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
--
--#define	SVM_EXIT_READ_CR0 	0x000
--#define	SVM_EXIT_READ_CR3 	0x003
--#define	SVM_EXIT_READ_CR4 	0x004
--#define	SVM_EXIT_READ_CR8 	0x008
--#define	SVM_EXIT_WRITE_CR0 	0x010
--#define	SVM_EXIT_WRITE_CR3 	0x013
--#define	SVM_EXIT_WRITE_CR4 	0x014
--#define	SVM_EXIT_WRITE_CR8 	0x018
--#define	SVM_EXIT_READ_DR0 	0x020
--#define	SVM_EXIT_READ_DR1 	0x021
--#define	SVM_EXIT_READ_DR2 	0x022
--#define	SVM_EXIT_READ_DR3 	0x023
--#define	SVM_EXIT_READ_DR4 	0x024
--#define	SVM_EXIT_READ_DR5 	0x025
--#define	SVM_EXIT_READ_DR6 	0x026
--#define	SVM_EXIT_READ_DR7 	0x027
--#define	SVM_EXIT_WRITE_DR0 	0x030
--#define	SVM_EXIT_WRITE_DR1 	0x031
--#define	SVM_EXIT_WRITE_DR2 	0x032
--#define	SVM_EXIT_WRITE_DR3 	0x033
--#define	SVM_EXIT_WRITE_DR4 	0x034
--#define	SVM_EXIT_WRITE_DR5 	0x035
--#define	SVM_EXIT_WRITE_DR6 	0x036
--#define	SVM_EXIT_WRITE_DR7 	0x037
--#define SVM_EXIT_EXCP_BASE      0x040
--#define SVM_EXIT_INTR		0x060
--#define SVM_EXIT_NMI		0x061
--#define SVM_EXIT_SMI		0x062
--#define SVM_EXIT_INIT		0x063
--#define SVM_EXIT_VINTR		0x064
--#define SVM_EXIT_CR0_SEL_WRITE	0x065
--#define SVM_EXIT_IDTR_READ	0x066
--#define SVM_EXIT_GDTR_READ	0x067
--#define SVM_EXIT_LDTR_READ	0x068
--#define SVM_EXIT_TR_READ	0x069
--#define SVM_EXIT_IDTR_WRITE	0x06a
--#define SVM_EXIT_GDTR_WRITE	0x06b
--#define SVM_EXIT_LDTR_WRITE	0x06c
--#define SVM_EXIT_TR_WRITE	0x06d
--#define SVM_EXIT_RDTSC		0x06e
--#define SVM_EXIT_RDPMC		0x06f
--#define SVM_EXIT_PUSHF		0x070
--#define SVM_EXIT_POPF		0x071
--#define SVM_EXIT_CPUID		0x072
--#define SVM_EXIT_RSM		0x073
--#define SVM_EXIT_IRET		0x074
--#define SVM_EXIT_SWINT		0x075
--#define SVM_EXIT_INVD		0x076
--#define SVM_EXIT_PAUSE		0x077
--#define SVM_EXIT_HLT		0x078
--#define SVM_EXIT_INVLPG		0x079
--#define SVM_EXIT_INVLPGA	0x07a
--#define SVM_EXIT_IOIO		0x07b
--#define SVM_EXIT_MSR		0x07c
--#define SVM_EXIT_TASK_SWITCH	0x07d
--#define SVM_EXIT_FERR_FREEZE	0x07e
--#define SVM_EXIT_SHUTDOWN	0x07f
--#define SVM_EXIT_VMRUN		0x080
--#define SVM_EXIT_VMMCALL	0x081
--#define SVM_EXIT_VMLOAD		0x082
--#define SVM_EXIT_VMSAVE		0x083
--#define SVM_EXIT_STGI		0x084
--#define SVM_EXIT_CLGI		0x085
--#define SVM_EXIT_SKINIT		0x086
--#define SVM_EXIT_RDTSCP		0x087
--#define SVM_EXIT_ICEBP		0x088
--#define SVM_EXIT_WBINVD		0x089
--#define SVM_EXIT_MONITOR	0x08a
--#define SVM_EXIT_MWAIT		0x08b
--#define SVM_EXIT_MWAIT_COND	0x08c
--#define SVM_EXIT_NPF  		0x400
--
--#define SVM_EXIT_ERR		-1
--
--#define SVM_CR0_SELECTIVE_MASK (1 << 3 | 1) /* TS and MP */
--
--#define SVM_VMLOAD ".byte 0x0f, 0x01, 0xda"
--#define SVM_VMRUN  ".byte 0x0f, 0x01, 0xd8"
--#define SVM_VMSAVE ".byte 0x0f, 0x01, 0xdb"
--#define SVM_CLGI   ".byte 0x0f, 0x01, 0xdd"
--#define SVM_STGI   ".byte 0x0f, 0x01, 0xdc"
--#define SVM_INVLPGA ".byte 0x0f, 0x01, 0xdf"
--
--#endif
--
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD) {
+-		printk(KERN_INFO "has_svm: not amd\n");
+-		return 0;
+-	}
++	const char *msg;
+ 
+-	cpuid(0x80000000, &eax, &ebx, &ecx, &edx);
+-	if (eax < SVM_CPUID_FUNC) {
+-		printk(KERN_INFO "has_svm: can't execute cpuid_8000000a\n");
++	if (!cpu_has_svm(&msg)) {
++		printk(KERN_INFO "has_svn: %s\n", msg);
+ 		return 0;
+ 	}
+ 
+-	cpuid(0x80000001, &eax, &ebx, &ecx, &edx);
+-	if (!(ecx & (1 << SVM_CPUID_FEATURE_SHIFT))) {
+-		printk(KERN_DEBUG "has_svm: svm not available\n");
+-		return 0;
+-	}
+ 	return 1;
+ }
+ 
 -- 
 1.5.5.GIT
 
