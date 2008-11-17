@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
+Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L1uFM-0005H4-2x
-	for kexec@lists.infradead.org; Mon, 17 Nov 2008 02:53:53 +0000
-Date: Mon, 17 Nov 2008 11:53:28 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix spell error in help output
-Message-ID: <20081117025323.GA5450@verge.net.au>
-References: <1226656084-22844-1-git-send-email-bwalle@suse.de>
+	id 1L25fA-0008Bb-M9
+	for kexec@lists.infradead.org; Mon, 17 Nov 2008 15:05:16 +0000
+Date: Mon, 17 Nov 2008 13:04:27 -0200
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: Re: [PATCH 00/11] x86: disable virt on kdump and emergency_restart
+	(v3)
+Message-ID: <20081117150427.GH4481@blackpad>
+References: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
+	<491FD283.60402@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1226656084-22844-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <491FD283.60402@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,22 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec@lists.infradead.org
+To: Avi Kivity <avi@redhat.com>
+Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Nov 14, 2008 at 10:48:04AM +0100, Bernhard Walle wrote:
-> This patch just fixes a spell error. Found by Dave Plater.
-> 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+On Sun, Nov 16, 2008 at 09:57:55AM +0200, Avi Kivity wrote:
+> Eduardo Habkost wrote:
+>> Hi,
+>>
+>> This is a new spin of the series to disable vmx on kdump and on
+>> emergency_restart. Now we avoid doing the function pointer stuff by
+>> moving 4 small KVM functions to a header, as inline functions. The code
+>> looks much simpler now, but we have to be more careful because some
+>> additional code will run on kdump and reboot even when KVM is never
+>> loaded.
+>>
+>> I haven't tested the SVM changes on AMD CPUs. The changes are really
+>> simple, but some testing is welcome.
+>>
+>> This series is against tip.git#master, that already contains the
+>> nmi_shootdown_cpus() changes I've submitted previously.
+>>
+>>
+>>   
+>
+> Looks good.  I am slightly uneasy about moving things away from vmx.h  
+> and svm.h; can we keep them there and #include those headers directly?
 
-Thanks, applied.
+I see them as bits of code that are being moved from KVM to the kernel
+core. I think moving those bits outside arch/x86/kvm/ makes this more
+clear: people can expect that code living in arch/x86/kvm/ is never
+used if CONFIG_KVM was not set.
+
+Because of their location, I thought svm.h and vmx.h had KVM-specific
+code. Now I've noticed they are independent from KVM. May I move svm.h
+and vmx.h to arch/x86/include/asm, then?
 
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Eduardo
 
 _______________________________________________
 kexec mailing list
