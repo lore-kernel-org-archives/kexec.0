@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L25mD-0002Y6-0R
-	for kexec@lists.infradead.org; Mon, 17 Nov 2008 15:12:33 +0000
-Message-ID: <492189C9.2000502@redhat.com>
-Date: Mon, 17 Nov 2008 17:12:09 +0200
-From: Avi Kivity <avi@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 00/11] x86: disable virt on kdump and emergency_restart
-	(v3)
-References: <1226598231-18311-1-git-send-email-ehabkost@redhat.com>
-	<491FD283.60402@redhat.com> <20081117150427.GH4481@blackpad>
-In-Reply-To: <20081117150427.GH4481@blackpad>
+	id 1L2BGQ-0002MC-Tq
+	for kexec@lists.infradead.org; Mon, 17 Nov 2008 21:04:07 +0000
+From: Eduardo Habkost <ehabkost@redhat.com>
+Subject: [PATCH 10/12] x86: cpu_emergency_svm_disable() function
+Date: Mon, 17 Nov 2008 19:03:22 -0200
+Message-Id: <1226955804-16802-11-git-send-email-ehabkost@redhat.com>
+In-Reply-To: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
+References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,24 +17,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eduardo Habkost <ehabkost@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
+Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Eduardo Habkost wrote:
-> Because of their location, I thought svm.h and vmx.h had KVM-specific
-> code. Now I've noticed they are independent from KVM. May I move svm.h
-> and vmx.h to arch/x86/include/asm, then?
->   
+This function can be used by the reboot or kdump code to forcibly
+disable SVM on the CPU.
 
-Indeed the intent was to have these as hardware descriptions rather than 
-bits of code.  So moving them to include/asm makes sense.
+Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
+---
+ arch/x86/include/asm/virtext.h |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
+diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
+index 2cfe363..5936362 100644
+--- a/arch/x86/include/asm/virtext.h
++++ b/arch/x86/include/asm/virtext.h
+@@ -121,4 +121,12 @@ static inline void cpu_svm_disable(void)
+ 	wrmsrl(MSR_EFER, efer & ~MSR_EFER_SVME_MASK);
+ }
+ 
++/** Makes sure SVM is disabled, if it is supported on the CPU
++ */
++static inline void cpu_emergency_svm_disable(void)
++{
++	if (cpu_has_svm(NULL))
++		cpu_svm_disable();
++}
++
+ #endif /* _ASM_X86_VIRTEX_H */
 -- 
-error compiling committee.c: too many arguments to function
+1.5.5.GIT
 
 
 _______________________________________________
