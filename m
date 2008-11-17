@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L2BGX-0002yJ-TD
+	id 1L2BGY-00030b-Ia
 	for kexec@lists.infradead.org; Mon, 17 Nov 2008 21:04:14 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 04/12] kvm: vmx: move cpu_has_kvm_support() to an inline on
+Subject: [PATCH 09/12] kvm: svm: move svm_hardware_disable() code to
 	asm/virtext.h
-Date: Mon, 17 Nov 2008 19:03:16 -0200
-Message-Id: <1226955804-16802-5-git-send-email-ehabkost@redhat.com>
+Date: Mon, 17 Nov 2008 19:03:21 -0200
+Message-Id: <1226955804-16802-10-git-send-email-ehabkost@redhat.com>
 In-Reply-To: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,75 +26,54 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-It will be used by core code on kdump and reboot, to disable
-vmx if needed.
+Create cpu_svm_disable() function.
 
 Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
 ---
- arch/x86/include/asm/virtext.h |   31 +++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx.c             |    4 ++--
- 2 files changed, 33 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/include/asm/virtext.h
+ arch/x86/include/asm/virtext.h |   14 ++++++++++++++
+ arch/x86/kvm/svm.c             |    6 +-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-new file mode 100644
-index 0000000..298b6a0
---- /dev/null
+index 6f0d409..2cfe363 100644
+--- a/arch/x86/include/asm/virtext.h
 +++ b/arch/x86/include/asm/virtext.h
-@@ -0,0 +1,31 @@
-+/* CPU virtualization extensions handling
-+ *
-+ * This should carry the code for handling CPU virtualization extensions
-+ * that needs to live in the kernel core.
-+ *
-+ * Author: Eduardo Habkost <ehabkost@redhat.com>
-+ *
-+ * Copyright (C) 2008, Red Hat Inc.
-+ *
-+ * Contains code from KVM, Copyright (C) 2006 Qumranet, Inc.
-+ *
-+ * This work is licensed under the terms of the GNU GPL, version 2.  See
-+ * the COPYING file in the top-level directory.
-+ */
-+#ifndef _ASM_X86_VIRTEX_H
-+#define _ASM_X86_VIRTEX_H
-+
-+#include <asm/processor.h>
-+#include <asm/system.h>
-+
-+/*
-+ * VMX functions:
-+ */
-+
-+static inline int cpu_has_vmx(void)
-+{
-+	unsigned long ecx = cpuid_ecx(1);
-+	return test_bit(5, &ecx); /* CPUID.1:ECX.VMX[bit 5] -> VT */
-+}
-+
-+#endif /* _ASM_X86_VIRTEX_H */
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index e97ef1a..b07681e 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -31,6 +31,7 @@
- #include <asm/io.h>
- #include <asm/desc.h>
- #include <asm/vmx.h>
-+#include <asm/virtext.h>
- 
- #define __ex(x) __kvm_handle_fault_on_reboot(x)
- 
-@@ -1032,8 +1033,7 @@ static int vmx_get_irq(struct kvm_vcpu *vcpu)
- 
- static __init int cpu_has_kvm_support(void)
- {
--	unsigned long ecx = cpuid_ecx(1);
--	return test_bit(5, &ecx); /* CPUID.1:ECX.VMX[bit 5] -> VT */
-+	return cpu_has_vmx();
+@@ -107,4 +107,18 @@ static inline int cpu_has_svm(const char **msg)
+ 	return 1;
  }
  
- static __init int vmx_disabled_by_bios(void)
++
++/** Disable SVM on the current CPU
++ *
++ * You should call this only if cpu_has_svm() returned true.
++ */
++static inline void cpu_svm_disable(void)
++{
++	uint64_t efer;
++
++	wrmsrl(MSR_VM_HSAVE_PA, 0);
++	rdmsrl(MSR_EFER, efer);
++	wrmsrl(MSR_EFER, efer & ~MSR_EFER_SVME_MASK);
++}
++
+ #endif /* _ASM_X86_VIRTEX_H */
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 64241f5..7ded2ee 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -259,11 +259,7 @@ static int has_svm(void)
+ 
+ static void svm_hardware_disable(void *garbage)
+ {
+-	uint64_t efer;
+-
+-	wrmsrl(MSR_VM_HSAVE_PA, 0);
+-	rdmsrl(MSR_EFER, efer);
+-	wrmsrl(MSR_EFER, efer & ~MSR_EFER_SVME_MASK);
++	cpu_svm_disable();
+ }
+ 
+ static void svm_hardware_enable(void *garbage)
 -- 
 1.5.5.GIT
 
