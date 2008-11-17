@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.redhat.com ([66.187.237.31])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L2BGX-0002wj-I0
+	id 1L2BGX-0002wd-G5
 	for kexec@lists.infradead.org; Mon, 17 Nov 2008 21:04:13 +0000
 From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: [PATCH 07/12] x86: cpu_emergency_vmxoff() function
-Date: Mon, 17 Nov 2008 19:03:19 -0200
-Message-Id: <1226955804-16802-8-git-send-email-ehabkost@redhat.com>
-In-Reply-To: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
-References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
+Subject: [PATCH 00/12] x86: disable virt on kdump and emergency_restart (v4)
+Date: Mon, 17 Nov 2008 19:03:12 -0200
+Message-Id: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +23,34 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, Ingo Molnar <mingo@elte.hu>
 Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-Add cpu_emergency_vmxoff() and its friends: cpu_vmx_enabled() and
-__cpu_emergency_vmxoff().
+Hi, Ingo,
 
-Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
----
- arch/x86/include/asm/virtext.h |   23 +++++++++++++++++++++++
- 1 files changed, 23 insertions(+), 0 deletions(-)
+This is yet another spin of the series to disable vmx on kdump and on
+emergency_restart, after some feedback from Avi.
 
-diff --git a/arch/x86/include/asm/virtext.h b/arch/x86/include/asm/virtext.h
-index 7dee5b5..6bcf0ac 100644
---- a/arch/x86/include/asm/virtext.h
-+++ b/arch/x86/include/asm/virtext.h
-@@ -43,4 +43,27 @@ static inline void cpu_vmxoff(void)
- 	write_cr4(read_cr4() & ~X86_CR4_VMXE);
- }
- 
-+static inline int cpu_vmx_enabled(void)
-+{
-+	return read_cr4() & X86_CR4_VMXE;
-+}
-+
-+/** Disable VMX if it is enabled on the current CPU
-+ *
-+ * You shouldn't call this if cpu_has_vmx() returns 0.
-+ */
-+static inline void __cpu_emergency_vmxoff(void)
-+{
-+	if (cpu_vmx_enabled())
-+		cpu_vmxoff();
-+}
-+
-+/** Disable VMX if it is supported and enabled on the current CPU
-+ */
-+static inline void cpu_emergency_vmxoff(void)
-+{
-+	if (cpu_has_vmx())
-+		__cpu_emergency_vmxoff();
-+}
-+
- #endif /* _ASM_X86_VIRTEX_H */
+The only change from v3 is that vmx.h and svm.h were moved from
+arch/x86/kvm to arch/x86/include/asm, instead of moving code
+from those headers to asm/virtext.h.
+
+I haven't tested the SVM changes on AMD CPUs. The changes are really
+simple, but some testing is welcome.
+
+This series is against tip.git#master, that already contains the
+nmi_shootdown_cpus() changes I've submitted previously.
+
+
+For reference, this is the history of the patchset:
+
+v1: Implemented the changes using a function pointer registering interface
+    where KVM could hook the virt-disable functions
+v2: Style fixes
+v3: Implemented the changes by moving the virt-disable code from KVM
+    to inline functions on asm/virtext.h
+v4: Move KVM svm.h and vmx.h to include/asm, instead of moving
+    pieces of their contents to asm/virtext.h
+
 -- 
-1.5.5.GIT
-
+Eduardo
 
 _______________________________________________
 kexec mailing list
