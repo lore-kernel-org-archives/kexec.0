@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.mail.elte.hu ([157.181.151.9])
+Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
+	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L3Yi9-0003JV-9r
-	for kexec@lists.infradead.org; Fri, 21 Nov 2008 16:18:25 +0000
-Date: Fri, 21 Nov 2008 17:18:07 +0100
-From: Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 00/12] x86: disable virt on kdump and emergency_restart
-	(v4)
-Message-ID: <20081121161807.GB24839@elte.hu>
-References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
-	<20081118081501.GF17838@elte.hu> <4926DCC8.1040500@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4926DCC8.1040500@redhat.com>
+	id 1L3eZ2-0000Ll-TZ
+	for kexec@lists.infradead.org; Fri, 21 Nov 2008 22:33:25 +0000
+Subject: Re: [PATCH] powerpc/mpic: don't reset affinity for secondary MPIC
+	on boot
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+In-Reply-To: <200811211540.03281.arnd@arndb.de>
+References: <200811191450.59361.arnd@arndb.de>
+	<200811201823.25263.arnd@arndb.de> <1227235450.7185.214.camel@pasglop>
+	<200811211540.03281.arnd@arndb.de>
+Date: Sat, 22 Nov 2008 09:33:00 +1100
+Message-Id: <1227306780.7185.249.camel@pasglop>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,58 +26,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, Eduardo Habkost <ehabkost@redhat.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linuxppc-dev@ozlabs.org, paulus@samba.org, kexec@lists.infradead.org, cbe-oss-dev@ozlabs.org, Max Krasnyansky <maxk@qualcomm.com>
+
+On Fri, 2008-11-21 at 15:40 +0100, Arnd Bergmann wrote:
+> On Friday 21 November 2008, Benjamin Herrenschmidt wrote:
+> > Oh just that for powermac for example, I know I'm resetting the thing,
+> > so can't rely on init values, and on some BML embedded boxes too, while
+> > on things like cell I don't off hand know what the right CPU number is
+> > to hit the right C3PO interrupt, so I'm better off reading what SLOF
+> > did :-)
+> 
+> The current code will always use destination 0 for any MPIC, because
+> mpic_init is run befew smp_init and it currently uses the local CPU.
+> 
+> If an SMP powermac requires a specific destination setting in the
+> secondary MPIC, either the current mpic_init code is broken there
+> in the same way as on cell, or more broken if it requires something
+> other than destination 0.
+> 
+> > But if you think on Cell we can just hard wire in the platform code,
+> > then I'm ok.
+> 
+> On cell, I know that destination 0 is always correct because of the wiring
+> inside of Axon.
+
+Ok so -all- existing instances only care about destination 0, we may
+just hard code that in MPIC for now :-)
+
+Cheers,
+Ben.
 
 
-* Avi Kivity <avi@redhat.com> wrote:
-
-> Ingo Molnar wrote:
->> * Eduardo Habkost <ehabkost@redhat.com> wrote:
->>
->>   
->>> Hi, Ingo,
->>>
->>> This is yet another spin of the series to disable vmx on kdump and  
->>> on emergency_restart, after some feedback from Avi.
->>>     
->>
->> this is going to interact with the KVM tree, wont it?
->>
->> i think the best way forward would be to keep your changes in the KVM  
->> tree.
->>
->> Lets try a Git trick for that. Avi could do that by pulling your other  
->> x86 changes from the x86 topic tree into the kvm tree. They are  
->> reviewed, acked and well-tested now, and kept in a separate tree so no  
->> other x86 change will be pulled in via them.
->>
->> We can do this if Avi can guarantee that these commits wont ever be  
->> rebased within KVM - then the two trees will merge up just fine in  
->> linux-next (and later in v2.6.29 as well), without any awkward merge  
->> dependencies or merge conflicts.
->>   
->
-> I never rebase kvm.git master, so I pulled the x86 changes and 
-> applied all.  Ingo, this will mean you have to push x86 before 
-> kvm.git, but as you're generally faster than me there shouldn't be a 
-> problem.
-
-Great!
-
-Note that the dependencies are even more relaxed that that: you can 
-push it too via the KVM tree, independently of the x86 push. Obviously 
-you got those x86 changes from us x86 maintainers and they all work 
-standalone too.
-
-Pulling from each other means both sides agree on that sub-set of 
-changes and trust each other - so there's no forced merge ordering or 
-maintenance boundaries - any side can merge it upstream. (If you feel 
-uneasy about it on any level, and were you to send a pull request 
-first, then you can point it out to Linus in the pull request that you 
-got those changes from us.)
-
-	Ingo
 
 _______________________________________________
 kexec mailing list
