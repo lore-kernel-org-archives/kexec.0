@@ -1,18 +1,36 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from djurbala-pt.tunnel.tserv2.fmt.ipv6.he.net
-	([2001:470:1f01:ffff::eb] helo=gate.crashing.org)
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L3M0i-0001o1-Ub
-	for kexec@lists.infradead.org; Fri, 21 Nov 2008 02:44:45 +0000
-Subject: Re: [PATCH] powerpc/mpic: don't reset affinity for secondary MPIC
-	on boot
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-In-Reply-To: <200811201823.25263.arnd@arndb.de>
-References: <200811191450.59361.arnd@arndb.de>
-	<1227166240.7185.207.camel@pasglop> <200811201823.25263.arnd@arndb.de>
-Date: Fri, 21 Nov 2008 13:44:10 +1100
-Message-Id: <1227235450.7185.214.camel@pasglop>
-Mime-Version: 1.0
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1L3TQb-0004MW-Qg
+	for kexec@lists.infradead.org; Fri, 21 Nov 2008 10:39:58 +0000
+Received: from natsuko.kent.sydney.vergenet.net
+	(210-227-008-083.jp.fiberbit.net [210.227.8.83])
+	by koto.vergenet.net (Postfix) with ESMTP id D2D8834067
+	for <kexec@lists.infradead.org>; Fri, 21 Nov 2008 19:39:53 +0900 (JST)
+Resent-Message-ID: <20081121103953.GA6686@verge.net.au>
+Resent-To: kexec@lists.infradead.org
+Received: from imx9.toshiba.co.jp ([202.33.96.51])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1L3K69-0000kQ-Tv
+	for kexec@lists.infradead.org; Fri, 21 Nov 2008 00:42:14 +0000
+Received: from imx12.toshiba.co.jp (imx12 [61.202.160.132])
+	by imx9.toshiba.co.jp  with ESMTP id mAL0Rq70014698
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <kexec@lists.infradead.org>; Fri, 21 Nov 2008 09:27:53 +0900 (JST)
+Received: from arc11.toshiba.co.jp ([133.199.90.127])
+	by imx12.toshiba.co.jp  with ESMTP id mAL0RYee019372
+	for <kexec@lists.infradead.org>; Fri, 21 Nov 2008 09:27:34 +0900 (JST)
+Received: (from root@localhost) by arc11.toshiba.co.jp  id mAL0RY7Z025116
+	for kexec@lists.infradead.org; Fri, 21 Nov 2008 09:27:34 +0900 (JST)
+Received: from mx.toshiba.co.jp (localhost [127.0.0.1])
+	by ovp11.toshiba.co.jp  with ESMTP id mAL0RYYJ023162
+	for <kexec@lists.infradead.org>; Fri, 21 Nov 2008 09:27:34 +0900 (JST)
+From: "gib" <suchada.pitchayasamanya@toshiba.co.jp>
+Subject: Question about Kexec based hibernation in linux-2.6.27
+Date: Fri, 21 Nov 2008 09:27:26 +0900
+Message-Id: <200811210027.mAL0RXaJ018563@toshiba.co.jp>
+MIME-Version: 1.0
+Content-Language: ja
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,117 +39,307 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0263740048=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linuxppc-dev@ozlabs.org, paulus@samba.org, kexec@lists.infradead.org, cbe-oss-dev@ozlabs.org, Max Krasnyansky <maxk@qualcomm.com>
+To: kexec@lists.infradead.org
 
-On Thu, 2008-11-20 at 18:23 +0100, Arnd Bergmann wrote:
-> Kexec/kdump currently fails on the IBM QS2x blades when the kexec happens
-> on a CPU other than the initial boot CPU.  It turns out that this is the
-> result of mpic_init trying to set affinity of each interrupt vector to the
-> current boot CPU.
-> 
-> As far as I can tell,  the same problem is likely to exist on any
-> secondary MPIC, because they have to deliver interrupts to the first
-> output all the time. There are two potential solutions for this: either
-> not set up affinity at all for secondary MPICs, or assume that a single
-> CPU output is connected to the upstream interrupt controller and hardcode
-> affinity to that per architecture.
-> 
-> This patch implements the second approach, defaulting to the first output.
-> An architecture that has a secondary MPIC connected upstream using a
-> different output needs to set the mpic default_dest to the correct
-> value before calling mpic_init.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> ---
->  include/asm/mpic.h |    3 +++
->  sysdev/mpic.c      |    9 +++++++--
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> On Thursday 20 November 2008, Benjamin Herrenschmidt wrote:
-> 
-> > I would rather, for non primary, set it to a cpu provided as
-> > either a new argument or an mpic struct member initially set to 1 with
-> > an accessor to change it if necessary. 
-> 
-> How about this one?
-> 
-> > Or should we define a flag to have it read it at init time from the chip ?
-> 
-> I don't understand. This is init time, where we write it to the chip,
-> what do you mean with reading from it? If I understand you correctly,
-> we can't trust that value to start with.
+1jM MIME `.L}`p[g bZ[WE7B
 
-Oh just that for powermac for example, I know I'm resetting the thing,
-so can't rely on init values, and on some BML embedded boxes too, while
-on things like cell I don't off hand know what the right CPU number is
-to hit the right C3PO interrupt, so I'm better off reading what SLOF
-did :-)
+--===============0263740048==
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0004_01C94BBB.5E1A4FC0"
+Content-Language: ja
 
-But if you think on Cell we can just hard wire in the platform code,
-then I'm ok.
+1jM MIME `.L}`p[g bZ[WE7B
 
-Cheers,
-Ben.
+------=_NextPart_000_0004_01C94BBB.5E1A4FC0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-> 	Arnd <><
-> 
-> diff --git a/arch/powerpc/include/asm/mpic.h b/arch/powerpc/include/asm/mpic.h
-> index fe566a3..543d51c 100644
-> --- a/arch/powerpc/include/asm/mpic.h
-> +++ b/arch/powerpc/include/asm/mpic.h
-> @@ -295,6 +295,9 @@ struct mpic
->  	/* Protected sources */
->  	unsigned long		*protected;
->  
-> +	/* destination for non-primary MPICs */
-> +	int			default_dest;
-> +
->  #ifdef CONFIG_MPIC_WEIRD
->  	/* Pointer to HW info array */
->  	u32			*hw_set;
-> diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-> index 8e3478c..cf154c9 100644
-> --- a/arch/powerpc/sysdev/mpic.c
-> +++ b/arch/powerpc/sysdev/mpic.c
-> @@ -1220,6 +1220,7 @@ void __init mpic_set_default_senses(struct mpic *mpic, u8 *senses, int count)
->  void __init mpic_init(struct mpic *mpic)
->  {
->  	int i;
-> +	int cpu;
->  
->  	BUG_ON(mpic->num_sources == 0);
->  
-> @@ -1262,6 +1263,11 @@ void __init mpic_init(struct mpic *mpic)
->  
->  	mpic_pasemi_msi_init(mpic);
->  
-> +	if (mpic->flags & MPIC_PRIMARY)
-> +		cpu = hard_smp_processor_id();
-> +	else
-> +		cpu = mpic->default_dest;
-> +
->  	for (i = 0; i < mpic->num_sources; i++) {
->  		/* start with vector = source number, and masked */
->  		u32 vecpri = MPIC_VECPRI_MASK | i |
-> @@ -1272,8 +1278,7 @@ void __init mpic_init(struct mpic *mpic)
->  			continue;
->  		/* init hw */
->  		mpic_irq_write(i, MPIC_INFO(IRQ_VECTOR_PRI), vecpri);
-> -		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION),
-> -			       1 << hard_smp_processor_id());
-> +		mpic_irq_write(i, MPIC_INFO(IRQ_DESTINATION), 1 << cpu);
->  	}
->  	
->  	/* Init spurious vector */
+Hello all,
 
+ 
+
+I have tried the Kexec based hibernation feature in linux-2.6.27 kernel,
+everything work fine, I could resume the 1st kernel. 
+
+But after I shutdown or restarted the system and before booting up the new
+kernel the system required file system checking manually and took very long
+time for that.
+
+The following is the error message I got while booting up the new kernel.
+
+ 
+
+Checking filesystems
+
+/1 contains a file system with errors, check forced.
+
+/1:   | ===================
+
+Inode 11282887 has a bad extended attribute block 11306367.
+
+/1: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+
+           (i.e., without   -a or -p  options)
+
+                        [FAILDED]
+
+*** An error occured during the file sysem check.
+
+*** Dropping you to a shell;  the system will reboot
+
+*** when you leave the shell.
+
+*** Warning  -- SELinux is active
+
+*** Disabling security enforcement for system recovery.
+
+*** Run 'setenforce 1' to reenable.
+
+Give root password for maintenance
+
+(of type Control-D to continue):
+
+ 
+
+Does anybody know about this issue? It would be very helpful for me.
+
+ 
+
+Thanks in advance.
+
+Suchada Pitchayasamanya
+
+
+------=_NextPart_000_0004_01C94BBB.5E1A4FC0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+@font-face
+	{font-family:"Cordia New";
+	panose-1:2 11 3 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"Cordia New";
+	panose-1:2 11 3 4 2 2 2 2 2 4;}
+@font-face
+	{font-family:"MS Gothic";
+	panose-1:2 11 6 9 7 2 5 8 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0mm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	font-size:10.0pt;
+	font-family:"Arial","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML \66F8\5F0F\4ED8\304D \(\6587\5B57\)";
+	margin:0mm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"MS Gothic";}
+span.HTML
+	{mso-style-name:"HTML \66F8\5F0F\4ED8\304D \(\6587\5B57\)";
+	mso-style-priority:99;
+	mso-style-link:"HTML \66F8\5F0F\4ED8\304D";
+	font-family:"MS Gothic";}
+span.19
+	{mso-style-type:personal;
+	font-family:"Arial","sans-serif";
+	color:windowtext;}
+span.20
+	{mso-style-type:personal-reply;
+	font-family:"Arial","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:99.25pt 30.0mm 30.0mm 30.0mm;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026">
+  <v:textbox inset=3D"5.85pt,.7pt,5.85pt,.7pt" />
+ </o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DJA link=3Dblue vlink=3Dpurple =
+style=3D'text-justify-trim:punctuation'>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Hello all,<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>I have
+tried the Kexec based hibernation feature in linux-2.6.27 kernel, =
+everything
+work fine, I could resume the 1<sup>st</sup> kernel. =
+<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>But after I
+shutdown or restarted the system and before booting up the new kernel =
+the
+system required file system checking manually and took very long time =
+for that.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>The
+following is the error message I got while booting up the new =
+kernel.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Checking
+filesystems<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>/1 contains
+a file system with errors, check forced.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>/1:&nbsp;&nbsp;
+| =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<o:p></o:p></spa=
+n></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Inode
+11282887 has a bad extended attribute block =
+11306367.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>/1:
+UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(i.e., without&nbsp;&nbsp; -a or -p&nbsp; options)<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+; [FAILDED]<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>*** An
+error occured during the file sysem check.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>***
+Dropping you to a shell;&nbsp; the system will =
+reboot<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>*** when
+you leave the shell.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>***
+Warning&nbsp; -- SELinux is active<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>***
+Disabling security enforcement for system =
+recovery.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>*** Run
+'setenforce 1' to reenable.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Give root
+password for maintenance<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>(of type
+Control-D to continue):<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Does
+anybody know about this issue? It would be very helpful for =
+me.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Thanks in
+advance.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span lang=3DEN-US style=3D'font-family:"MS =
+Gothic"'>Suchada
+Pitchayasamanya<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_0004_01C94BBB.5E1A4FC0--
+
+
+
+
+--===============0263740048==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0263740048==--
+
+
+
