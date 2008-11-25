@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L4cuL-0001mK-JL
-	for kexec@lists.infradead.org; Mon, 24 Nov 2008 14:59:25 +0000
-Date: Mon, 24 Nov 2008 12:58:32 -0200
-From: Eduardo Habkost <ehabkost@redhat.com>
-Subject: Re: [PATCH 00/12] x86: disable virt on kdump and emergency_restart
-	(v4)
-Message-ID: <20081124145832.GC16862@blackpad>
-References: <1226955804-16802-1-git-send-email-ehabkost@redhat.com>
-	<20081118081501.GF17838@elte.hu> <4926DCC8.1040500@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4926DCC8.1040500@redhat.com>
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1L4xKP-0006Z4-UG
+	for kexec@lists.infradead.org; Tue, 25 Nov 2008 12:47:42 +0000
+Date: Tue, 25 Nov 2008 13:47:38 +0100
+From: Bernhard Walle <bwalle@suse.de>
+Subject: kexec does not load
+Message-ID: <20081125134738.7075a13a@hale.suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,23 +20,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: Andrew Morton <akpm@osdl.org>, Zachary Amsden <zach@vmware.com>, kvm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Andrey Borzenkov <arvidjaar@mail.ru>, mingo@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Huang Ying <ying.huang@intel.com>
+Cc: kexec@lists.infradead.org
 
-On Fri, Nov 21, 2008 at 06:07:36PM +0200, Avi Kivity wrote:
-<snip>
->
-> Eduardo, please check the merge (there was a small conflict in reboot.c  
-> which I fixed) once I push it.  Also, when generating patches that move  
-> files, use the -M switch: this makes it easier to review, and also  
-> handles files that change better.
+Hi Huang,
 
-The merge looks ok. I didn't know about -M, I will use it next time.
+your patch:
 
-Thanks!
+    commit ceb04ae1223ba5cdd40df744aa73a32b2cc7d879
+    Author: Huang Ying <ying.huang@intel.com>
+    Date:   Wed Oct 29 11:24:25 2008 +0800
 
--- 
-Eduardo
+    kexec jump support for kexec-tools
+    
+    To support memory backup/restore an option named
+    --load-preserve-context is added to kexec. When it is specified
+    toggether with --mem-max, most segments for crash dump support are
+    loaded, and the memory range between mem_min to mem_max which has no
+    segments loaded are loaded as backup segments. To support jump back
+    from kexeced, options named --load-jump-back-helper and --entry are
+    added to load a helper image with specified entry to jump back.
+    
+    Signed-off-by: Huang Ying <ying.huang@intel.com>
+    Signed-off-by: Simon Horman <horms@verge.net.au>
+
+broke kexec on my system (x86-64) with Xen. With the patch:
+
+   Symbol: cmdline_end not found cannot set
+
+Without the patch it does work. The command line was:
+
+    /sbin/kexec -p /boot/vmlinuz-2.6.27.5-2-default \
+         --append="root=/dev/disk/by-id/scsi-3500000e0159c2510-part6 \
+                   console=tty0 console=ttyS0,57600 \
+                   sysrq_always_enabled panic=100 \
+                   resume=/dev/disk/by-id/scsi-3500000e0159c2510-part2 \
+                   xencons=ttyS vga=normal console=ttyS0,57600 \
+                   elevator=deadline sysrq=1 reset_devices irqpoll \
+                   maxcpus=1 kernelversion=2.6.27.7-3-xen " \
+         --initrd=/boot/initrd-2.6.27.5-2-default-kdump
+
+I don't know the cause. Can you analyse? I can help with testing
+patches, of course, but I have no time to analyse the problem now. :-(
+
+
+Regards,
+Bernhard
+
 
 _______________________________________________
 kexec mailing list
