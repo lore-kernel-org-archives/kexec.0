@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from ns.suse.de ([195.135.220.2] helo=mx1.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L5GGV-0005iI-5l
-	for kexec@lists.infradead.org; Wed, 26 Nov 2008 09:00:55 +0000
-Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id 75D524645C
-	for <kexec@lists.infradead.org>; Wed, 26 Nov 2008 10:00:52 +0100 (CET)
+	id 1L5GMj-0001xe-37
+	for kexec@lists.infradead.org; Wed, 26 Nov 2008 09:07:21 +0000
+Date: Wed, 26 Nov 2008 10:07:17 +0100
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Fix compile warnings in get_memory_ranges()
-Date: Wed, 26 Nov 2008 10:00:52 +0100
-Message-Id: <1227690052-16219-1-git-send-email-bwalle@suse.de>
-MIME-Version: 1.0
+Subject: Re: [PATCH] Fix kexec x86_64 load failed bug
+Message-ID: <20081126100717.1759311b@hale.suse.de>
+In-Reply-To: <20081126074829.GD30657@verge.net.au>
+References: <20081125134738.7075a13a@hale.suse.de>
+	<1227662409.2442.11.camel@yhuang-dev.sh.intel.com>
+	<492CC1AA.3010408@oracle.com>
+	<1227673551.2442.12.camel@yhuang-dev.sh.intel.com>
+	<20081126061652.GA24221@verge.net.au>
+	<1227682058.2442.19.camel@yhuang-dev.sh.intel.com>
+	<20081126074829.GD30657@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,33 +24,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>
+To: Simon Horman <horms@verge.net.au>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Huang Ying <ying.huang@intel.com>
 
-VGhpcyBwYXRjaCBmaXhlczoKCiAgICAgICAga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21t
-b24uYzogSW4gZnVuY3Rpb24g4oCYZ2V0X21lbW9yeV9yYW5nZXPigJk6CiAgICAgICAga2V4ZWMv
-YXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYzoxODk6IFwKICAgICAgICAgICAgICAgIHdhcm5p
-bmc6IHBhc3NpbmcgYXJndW1lbnQgMiBvZiDigJhwYXJzZV9pb21lbV9zaW5nbGXigJkgZnJvbSBp
-bmNvbXBhdGlibGUgcG9pbnRlciB0eXBlCiAgICAgICAga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4
-Ni1jb21tb24uYzoxODk6IFwKICAgICAgICAgICAgICAgIHdhcm5pbmc6IHBhc3NpbmcgYXJndW1l
-bnQgMyBvZiDigJhwYXJzZV9pb21lbV9zaW5nbGXigJkgZnJvbSBpbmNvbXBhdGlibGUgcG9pbnRl
-ciB0eXBlCgpZZXMsIHRoYXQgd2FzIG15IG93biBjb2RlLiA6LSgKCgpTaWduZWQtb2ZmLWJ5OiBC
-ZXJuaGFyZCBXYWxsZSA8YndhbGxlQHN1c2UuZGU+Ci0tLQoga2V4ZWMvYXJjaC9pMzg2L2tleGVj
-LXg4Ni1jb21tb24uYyB8ICAgIDIgKy0KIDEgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYt
-Y29tbW9uLmMgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jCmluZGV4IDE0NTM3
-ODAuLmE0NjgyNzIgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9u
-LmMKKysrIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYwpAQCAtMTg0LDcgKzE4
-NCw3IEBAIGludCBnZXRfbWVtb3J5X3JhbmdlcyhzdHJ1Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2Us
-IGludCAqcmFuZ2VzLAogCSAqLwogCWlmICgoa2V4ZWNfZmxhZ3MgJiBLRVhFQ19PTl9DUkFTSCkg
-JiYKIAkgICAgIShrZXhlY19mbGFncyAmIEtFWEVDX1BSRVNFUlZFX0NPTlRFWFQpKSB7Ci0JCXVu
-c2lnbmVkIGxvbmcgbG9uZyBzdGFydCwgZW5kOworCQl1aW50NjRfdCBzdGFydCwgZW5kOwogCiAJ
-CXJldCA9IHBhcnNlX2lvbWVtX3NpbmdsZSgiQ3Jhc2gga2VybmVsXG4iLCAmc3RhcnQsICZlbmQp
-OwogCQlpZiAocmV0ICE9IDApIHsKLS0gCjEuNi4wLjIKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+* Simon Horman [2008-11-26 16:48]:
+>
+> On Wed, Nov 26, 2008 at 02:47:38PM +0800, Huang Ying wrote:
+> > On Wed, 2008-11-26 at 14:16 +0800, Simon Horman wrote:
+> > > On Wed, Nov 26, 2008 at 12:25:51PM +0800, Huang Ying wrote:
+> > > > On Wed, 2008-11-26 at 11:25 +0800, Randy Dunlap wrote:
+> > > > > This isn't kernel code?  Where is /purgatory/ ?
+> > > > > 
+> > > > > Anyway, for kernel code, that should be:
+> > > > > char *cmdline_end = NULL;
+> > > > 
+> > > > This patch is against kexec tools, not kernel.
+> > > > 
+> > > > Best Regards,
+> > > > Huang Ying
+> > > 
+> > > Hi Huang,
+> > > 
+> > > I think that I would prefer "char *cmdline_end = NULL;" for kexec-tools
+> > > code too.
+> > 
+> > Patch v2 follows with NULL instead of 0.
+> 
+> Thanks, applied.
+
+Verified. Huang, thanks for the quick fix!
+
+
+    Bernhard
+-- 
+Bernhard Walle, SUSE Linux Products GmbH, Architecture Development
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
