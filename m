@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.suse.de ([195.135.220.2])
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L5GGI-0005MH-4A
-	for kexec@lists.infradead.org; Wed, 26 Nov 2008 09:00:42 +0000
-Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
+	id 1L5GGV-0005iI-5l
+	for kexec@lists.infradead.org; Wed, 26 Nov 2008 09:00:55 +0000
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 95DA242937
-	for <kexec@lists.infradead.org>; Wed, 26 Nov 2008 10:00:39 +0100 (CET)
+	by mx2.suse.de (Postfix) with ESMTP id 75D524645C
+	for <kexec@lists.infradead.org>; Wed, 26 Nov 2008 10:00:52 +0100 (CET)
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Don't use /sys/firmware/memmap for Xen
-Date: Wed, 26 Nov 2008 10:00:39 +0100
-Message-Id: <1227690039-16014-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH] Fix compile warnings in get_memory_ranges()
+Date: Wed, 26 Nov 2008 10:00:52 +0100
+Message-Id: <1227690052-16219-1-git-send-email-bwalle@suse.de>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,77 +21,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Bernhard Walle <bwalle@suse.de>
 
-On Xen, we have to use /proc/iomem to retrieve the memory area for the kexec'd
-kernel, not /sys/firmware/memmap. Dom0 kernel gets a E820 map that contains
-only one region:
-
-    0000000000000000-0000000018e5e000 (System RAM)
-
-Compared to the /proc/iomem:
-
-    00000000-0009cbff : System RAM
-    0009cc00-0009ffff : reserved
-    000ce000-000d3fff : reserved
-    000e0000-000fffff : reserved
-    00100000-1fd6ffff : System RAM
-      01000000-04ffffff : Crash kernel
-      1ec00000-1fbfffff : Hypervisor code and data
-        1f0b4680-1f0b4873 : Crash note
-        1f0b4900-1f0b4a93 : Crash note
-        1f0b4b80-1f0b4d13 : Crash note
-        1f0b4e00-1f0b4f93 : Crash note
-    ...
-
-Without that patch, /proc/vmcore is empty in the kexec'd kernel and I'm unable
-to copy the crashdump.
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- kexec/arch/i386/kexec-x86-common.c |   10 +++++++++-
- 1 files changed, 9 insertions(+), 1 deletions(-)
-
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index 00c2be3..1453780 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -27,6 +27,7 @@
- #include "../../kexec.h"
- #include "../../kexec-syscall.h"
- #include "../../firmware_memmap.h"
-+#include "../../crashdump.h"
- #include "kexec-x86.h"
- 
- static struct memory_range memory_range[MAX_MEMORY_RANGES];
-@@ -147,7 +148,14 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- {
- 	int ret, i;
- 
--	if (have_sys_firmware_memmap())
-+	/*
-+	 * When using Xen, /sys/firmware/memmap (i.e., the E820 map) is
-+	 * wrong, it just provides one large memory are and that cannot
-+	 * be used for Kdump. Use always the /proc/iomem interface there
-+	 * even if we have /sys/firmware/memmap. Without that, /proc/vmcore
-+	 * is empty in the kdump kernel.
-+	 */
-+	if (!xen_present() && have_sys_firmware_memmap())
- 		ret = get_memory_ranges_sysfs(range, ranges);
- 	else
- 		ret = get_memory_ranges_proc_iomem(range, ranges);
--- 
-1.6.0.2
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBmaXhlczoKCiAgICAgICAga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21t
+b24uYzogSW4gZnVuY3Rpb24g4oCYZ2V0X21lbW9yeV9yYW5nZXPigJk6CiAgICAgICAga2V4ZWMv
+YXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYzoxODk6IFwKICAgICAgICAgICAgICAgIHdhcm5p
+bmc6IHBhc3NpbmcgYXJndW1lbnQgMiBvZiDigJhwYXJzZV9pb21lbV9zaW5nbGXigJkgZnJvbSBp
+bmNvbXBhdGlibGUgcG9pbnRlciB0eXBlCiAgICAgICAga2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4
+Ni1jb21tb24uYzoxODk6IFwKICAgICAgICAgICAgICAgIHdhcm5pbmc6IHBhc3NpbmcgYXJndW1l
+bnQgMyBvZiDigJhwYXJzZV9pb21lbV9zaW5nbGXigJkgZnJvbSBpbmNvbXBhdGlibGUgcG9pbnRl
+ciB0eXBlCgpZZXMsIHRoYXQgd2FzIG15IG93biBjb2RlLiA6LSgKCgpTaWduZWQtb2ZmLWJ5OiBC
+ZXJuaGFyZCBXYWxsZSA8YndhbGxlQHN1c2UuZGU+Ci0tLQoga2V4ZWMvYXJjaC9pMzg2L2tleGVj
+LXg4Ni1jb21tb24uYyB8ICAgIDIgKy0KIDEgZmlsZXMgY2hhbmdlZCwgMSBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYt
+Y29tbW9uLmMgYi9rZXhlYy9hcmNoL2kzODYva2V4ZWMteDg2LWNvbW1vbi5jCmluZGV4IDE0NTM3
+ODAuLmE0NjgyNzIgMTAwNjQ0Ci0tLSBhL2tleGVjL2FyY2gvaTM4Ni9rZXhlYy14ODYtY29tbW9u
+LmMKKysrIGIva2V4ZWMvYXJjaC9pMzg2L2tleGVjLXg4Ni1jb21tb24uYwpAQCAtMTg0LDcgKzE4
+NCw3IEBAIGludCBnZXRfbWVtb3J5X3JhbmdlcyhzdHJ1Y3QgbWVtb3J5X3JhbmdlICoqcmFuZ2Us
+IGludCAqcmFuZ2VzLAogCSAqLwogCWlmICgoa2V4ZWNfZmxhZ3MgJiBLRVhFQ19PTl9DUkFTSCkg
+JiYKIAkgICAgIShrZXhlY19mbGFncyAmIEtFWEVDX1BSRVNFUlZFX0NPTlRFWFQpKSB7Ci0JCXVu
+c2lnbmVkIGxvbmcgbG9uZyBzdGFydCwgZW5kOworCQl1aW50NjRfdCBzdGFydCwgZW5kOwogCiAJ
+CXJldCA9IHBhcnNlX2lvbWVtX3NpbmdsZSgiQ3Jhc2gga2VybmVsXG4iLCAmc3RhcnQsICZlbmQp
+OwogCQlpZiAocmV0ICE9IDApIHsKLS0gCjEuNi4wLjIKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
