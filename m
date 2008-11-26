@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L5F8W-0006xu-8X
-	for kexec@lists.infradead.org; Wed, 26 Nov 2008 07:48:36 +0000
-Date: Wed, 26 Nov 2008 16:48:31 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix kexec x86_64 load failed bug
-Message-ID: <20081126074829.GD30657@verge.net.au>
-References: <20081125134738.7075a13a@hale.suse.de>
-	<1227662409.2442.11.camel@yhuang-dev.sh.intel.com>
-	<492CC1AA.3010408@oracle.com>
-	<1227673551.2442.12.camel@yhuang-dev.sh.intel.com>
-	<20081126061652.GA24221@verge.net.au>
-	<1227682058.2442.19.camel@yhuang-dev.sh.intel.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1227682058.2442.19.camel@yhuang-dev.sh.intel.com>
+Received: from ns1.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1L5G2r-0002c7-Fv
+	for kexec@lists.infradead.org; Wed, 26 Nov 2008 08:46:49 +0000
+Received: from Relay1.suse.de (relay-ext.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 39C0241769
+	for <kexec@lists.infradead.org>; Wed, 26 Nov 2008 09:46:46 +0100 (CET)
+Date: Wed, 26 Nov 2008 09:46:45 +0100
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Re: [PATCH] Don't use /sys/firmware/memmap for Xen
+Message-ID: <20081126094645.14dd2fb7@hale.suse.de>
+In-Reply-To: <1227617358-20560-1-git-send-email-bwalle@suse.de>
+References: <1227617358-20560-1-git-send-email-bwalle@suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,37 +27,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huang Ying <ying.huang@intel.com>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, Bernhard Walle <bwalle@suse.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-On Wed, Nov 26, 2008 at 02:47:38PM +0800, Huang Ying wrote:
-> On Wed, 2008-11-26 at 14:16 +0800, Simon Horman wrote:
-> > On Wed, Nov 26, 2008 at 12:25:51PM +0800, Huang Ying wrote:
-> > > On Wed, 2008-11-26 at 11:25 +0800, Randy Dunlap wrote:
-> > > > This isn't kernel code?  Where is /purgatory/ ?
-> > > > 
-> > > > Anyway, for kernel code, that should be:
-> > > > char *cmdline_end = NULL;
-> > > 
-> > > This patch is against kexec tools, not kernel.
-> > > 
-> > > Best Regards,
-> > > Huang Ying
-> > 
-> > Hi Huang,
-> > 
-> > I think that I would prefer "char *cmdline_end = NULL;" for kexec-tools
-> > code too.
+* Bernhard Walle [2008-11-25 13:49]:
+>
+> On Xen, we have to use /proc/iomem to retrieve the memory area for the kexec'd
+> kernel, not /sys/firmware/memmap. Dom0 kernel gets a E820 map that contains
+> only one region:
 > 
-> Patch v2 follows with NULL instead of 0.
+>     0000000000000000-0000000018e5e000 (System RAM)
 
-Thanks, applied.
+I just noticed that this has a compile warning. A fixed patch follows.
 
+
+    Bernhard
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Bernhard Walle, SUSE Linux Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
