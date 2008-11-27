@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.suse.de ([195.135.220.2] helo=mx1.suse.de)
+Received: from mx2.suse.de ([195.135.220.15])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L5d5n-0005V3-Mw
-	for kexec@lists.infradead.org; Thu, 27 Nov 2008 09:23:23 +0000
-Date: Thu, 27 Nov 2008 10:23:18 +0100
+	id 1L5iMB-0001VV-Kr
+	for kexec@lists.infradead.org; Thu, 27 Nov 2008 15:00:40 +0000
+Date: Thu, 27 Nov 2008 16:00:34 +0100
 From: Bernhard Walle <bwalle@suse.de>
-Subject: Re: makedumpfile-1.3.1: Support linux-2.6.27 and linux-2.6.28.
-Message-ID: <20081127102319.5f7f90a5@hale.suse.de>
-In-Reply-To: <492DF215.8050105@mxs.nes.nec.co.jp>
-References: <492DF215.8050105@mxs.nes.nec.co.jp>
+Subject: [PATCH] Parse 64 bit VMCOREINFO on 32 bit userland
+Message-ID: <20081127160034.121f5911@hale.suse.de>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
@@ -22,26 +20,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, kexec-ml <kexec@lists.infradead.org>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-* Ken'ichi Ohmichi [2008-11-27 10:04]:
-> 
-> Changelog:
->  o New feature
->    - Support linux-2.6.26 sparsemem on i386.
+This bug fixes the problem that on a 32 bit userland makedumpfile (as common
+on the PPC platform) the parsing of the 64 bit VMCOREINFO fails with:
 
-BTW: Which option must be enabled for the kernel that this is
-'sparsemem', i.e. that this support is needed?
+   # makedumpfile -c /home/sachin/dump/vmcore vmcore.filtered
+   read_vmcoreinfo_symbol: Invalid data in /tmp/vmcoreinfowVoyJK:
+   SYMBOL(mem_section)=c000000000bb4400
 
-  CONFIG_ARCH_SPARSEMEM_ENABLE=y
-  CONFIG_SPARSEMEM_MANUAL
-  CONFIG_SPARSEMEM_STATIC=y
-  CONFIG_SPARSEMEM_VMEMMAP_ENABLE
+We just need to assume that the symbols are always 'unsigned long long' (64 bit)
+instead of 'unsigned long' (native pointer size on Linux platforms).
 
 
-    Bernhard
--- 
-Bernhard Walle, SUSE Linux Products GmbH, Architecture Development
+Signed-off-by: Bernhard Walle <bwalle@suse.de>
+
+---
+ makedumpfile.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -13,7 +13,6 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  */
+-#include <stdlib.h>
+ #include "makedumpfile.h"
+ 
+ struct symbol_table	symbol_table;
+@@ -2274,7 +2273,7 @@ read_vmcoreinfo_basic_info(void)
+ unsigned long
+ read_vmcoreinfo_symbol(char *str_symbol)
+ {
+-	unsigned long symbol = NOT_FOUND_SYMBOL;
++	unsigned long long symbol = NOT_FOUND_SYMBOL;
+ 	char buf[BUFSIZE_FGETS], *endp;
+ 	unsigned int i;
+ 
+@@ -2291,8 +2290,8 @@ read_vmcoreinfo_symbol(char *str_symbol)
+ 		if (buf[i - 1] == '\n')
+ 			buf[i - 1] = '\0';
+ 		if (strncmp(buf, str_symbol, strlen(str_symbol)) == 0) {
+-			symbol = strtoul(buf + strlen(str_symbol), &endp, 16);
+-			if ((!symbol || symbol == ULONG_MAX)
++			symbol = strtoull(buf + strlen(str_symbol), &endp, 16);
++			if ((!symbol || symbol == ULONGLONG_MAX)
+ 			    || strlen(endp) != 0) {
+ 				ERRMSG("Invalid data in %s: %s",
+ 				    info->name_vmcoreinfo, buf);
 
 _______________________________________________
 kexec mailing list
