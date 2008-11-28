@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1L5sHu-00028h-O1
-	for kexec@lists.infradead.org; Fri, 28 Nov 2008 01:36:55 +0000
-Message-ID: <492E7E90.3080407@mxs.nes.nec.co.jp>
-Date: Thu, 27 Nov 2008 20:03:44 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1L5vMT-0005kF-1O
+	for kexec@lists.infradead.org; Fri, 28 Nov 2008 04:53:49 +0000
+Date: Fri, 28 Nov 2008 13:53:42 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Don't use /sys/firmware/memmap for Xen
+Message-ID: <20081128045340.GE23112@verge.net.au>
+References: <1227690039-16014-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
-Subject: Re: makedumpfile-1.3.1: Support linux-2.6.27 and linux-2.6.28.
-References: <492DF215.8050105@mxs.nes.nec.co.jp>
-	<20081127102319.5f7f90a5@hale.suse.de>
-In-Reply-To: <20081127102319.5f7f90a5@hale.suse.de>
+Content-Disposition: inline
+In-Reply-To: <1227690039-16014-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,56 +19,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1402790117=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
-Cc: kexec-ml <kexec@lists.infradead.org>
+Cc: kexec@lists.infradead.org
 
---===============1402790117==
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-
-Hi Bernhard,
-
-Bernhard Walle wrote:
-> * Ken'ichi Ohmichi [2008-11-27 10:04]:
->> Changelog:
->>  o New feature
->>    - Support linux-2.6.26 sparsemem on i386.
+On Wed, Nov 26, 2008 at 10:00:39AM +0100, Bernhard Walle wrote:
+> On Xen, we have to use /proc/iomem to retrieve the memory area for the kexec'd
+> kernel, not /sys/firmware/memmap. Dom0 kernel gets a E820 map that contains
+> only one region:
 > 
-> BTW: Which option must be enabled for the kernel that this is
-> 'sparsemem', i.e. that this support is needed?
+>     0000000000000000-0000000018e5e000 (System RAM)
 > 
->   CONFIG_ARCH_SPARSEMEM_ENABLE=y
->   CONFIG_SPARSEMEM_MANUAL
->   CONFIG_SPARSEMEM_STATIC=y
->   CONFIG_SPARSEMEM_VMEMMAP_ENABLE
+> Compared to the /proc/iomem:
+> 
+>     00000000-0009cbff : System RAM
+>     0009cc00-0009ffff : reserved
+>     000ce000-000d3fff : reserved
+>     000e0000-000fffff : reserved
+>     00100000-1fd6ffff : System RAM
+>       01000000-04ffffff : Crash kernel
+>       1ec00000-1fbfffff : Hypervisor code and data
+>         1f0b4680-1f0b4873 : Crash note
+>         1f0b4900-1f0b4a93 : Crash note
+>         1f0b4b80-1f0b4d13 : Crash note
+>         1f0b4e00-1f0b4f93 : Crash note
+>     ...
+> 
+> Without that patch, /proc/vmcore is empty in the kexec'd kernel and I'm unable
+> to copy the crashdump.
 
-My kernel .config contains the following items, and I had tested
-on the kernel.
+Thanks Bernhard, applied.
 
-CONFIG_ARCH_SPARSEMEM_ENABLE=y
-CONFIG_SPARSEMEM_MANUAL=y
-CONFIG_SPARSEMEM=y
-CONFIG_SPARSEMEM_STATIC=y
-# CONFIG_SPARSEMEM_VMEMMAP_ENABLE is not set
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
-
-Thanks
-Ken'ichi Ohmichi
-
-
---===============1402790117==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1402790117==--
