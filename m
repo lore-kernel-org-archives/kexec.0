@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1L9o3u-00055D-4z
-	for kexec@lists.infradead.org; Mon, 08 Dec 2008 21:54:42 +0000
-Date: Mon, 8 Dec 2008 16:54:32 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from g5t0009.atlanta.hp.com ([15.192.0.46])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1L9pYj-0001bg-2C
+	for kexec@lists.infradead.org; Mon, 08 Dec 2008 23:30:37 +0000
 Subject: Re: kdump: quad core Opteron
-Message-ID: <20081208215432.GH4264@redhat.com>
+From: Bob Montgomery <bob.montgomery@hp.com>
+In-Reply-To: <200812082126.16680.chandru@in.ibm.com>
 References: <48EB5B68.8010401@in.ibm.com> <20081007132401.GA4007@redhat.com>
 	<1223395191.2215.179.camel@amd.troyhebe>
 	<200812082126.16680.chandru@in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200812082126.16680.chandru@in.ibm.com>
+Date: Mon, 08 Dec 2008 16:35:16 -0700
+Message-Id: <1228779316.3428.367.camel@amd.troyhebe>
+Mime-Version: 1.0
+Reply-To: bob.montgomery@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,183 +26,56 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Chandru <chandru@in.ibm.com>
-Cc: bob.montgomery@hp.com, kexec@lists.infradead.org
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Dec 08, 2008 at 09:26:16PM +0530, Chandru wrote:
-> On Tuesday 07 October 2008 21:29:51 Bob Montgomery wrote:
-> > On Tue, 2008-10-07 at 13:24 +0000, Vivek Goyal wrote:
-> > > On Tue, Oct 07, 2008 at 06:21:52PM +0530, Chandru wrote:
-> > > > kdump on a quad core Opteron blade machine doesn't give a complete
-> > > > vmcore on the system.   All works well until we attempt to copy
-> > > > /proc/vmcore to some target place ( disk , n/w ). The system
-> > > > immediately resets without any OS messages after having copied few mb's
-> > > > of vmcore file.  Problem also occurs with 2.6.27-rc8 and latest
-> > > > kexec-tools.  If we pass 'mem=4G' as boot parameter to the first
-> > > > kernel, then kdump succeeds in copying a readable vmcore to /var/crash.
-> > >
-> > > Hi Chandru,
-> > >
-> > > How much memory this system has got. Can you also paste the output of
-> > > /proc/iomem of first kernel.
-> > >
-> > > Does this system has GART? So looks like we are accessing some memory
-> > > area which platform does not like. (We saw issues with GART in the past.)
-> > >
-> > > Can you also provide /proc/vmcore ELF header (readelf output), in both
-> > > the cases (mem=4G and without that).
-> > >
-> > > You can try putting some printk in /proc/vmcore code and see which
-> > > physical memory area you are accessing when system goes bust. If in all
-> > > the failure cases it is same physical memory area, then we can try to
-> > > find what's so special about it.
-> >
-> > Or you can assume this is pretty much exactly the problem I ran into in
-> > August.  I've attached the patch that I'm using with our 2.6.18 kernel
-> > to disable CPU-side access by the GART, which prevents the problem on
-> > our Family 10H systems.  You'll need to fix the directory name for
-> > kernels newer than the arch/x86_64 merge.
-> >
-> > Now that someone else has seen the problem, if this fixes it, I'll
-> > submit the patch upstream.
-> >
-> > Here's the README for the patch:
-> >
-> > This patch changes the initialization of the GART (in
-> > pci-gart.c:init_k8_gatt) to set the DisGartCpu bit in the GART Aperture
-> > Control Register.  Setting the bit Disables requests from the CPUs from
-> > accessing the GART.  In other words, CPU memory accesses within the
-> > range of addresses in the aperture will not cause the GART to perform an
-> > address translation.  The aperture area was already being unmapped at
-> > the kernel level with clear_kernel_mapping() to prevent accesses from
-> > the CPU, but that kernel level unmapping is not in effect in the kexec'd
-> > kdump kernel.  By disabling the CPU-side accesses within the GART, which
-> > does persist through the kexec of the kdump kernel, the kdump kernel is
-> > prevented from interacting with the GART during accesses to the dump
-> > memory areas which include the address range of the GART aperture.
-> > Although the patch can be applied to the kdump kernel, it is not
-> > exercised there because the kdump kernel doesn't attempt to initialize
-> > the GART.
-> >
-> > Bob Montgomery
-> > working at HP
+On Mon, 2008-12-08 at 15:56 +0000, Chandru wrote:
+
+> Hi Bob,
 > 
-> Hi Bob, 
-> 
-> This problem was recently reported on a LS42 blade and the patch given by you 
-> also resolved the issue here too.  However I made couple of changes to 
-> kexec-tools to ignore GART memory region and not have elf headers created to 
+> This problem was recently reported on a LS42 blade and the patch given by you
+> also resolved the issue here too.  However I made couple of changes to
+> kexec-tools to ignore GART memory region and not have elf headers created to
 > it.  This patch also seemed to work on a LS21.
 > 
 > Thanks,
 > Chandru
-> 
-> Signed-off-by: Chandru S <chandru@in.ibm.com>
-> ---
 
 Hi Chandru,
 
-So this patch will solve the issue (at least for /proc/vmcore) even if
-we don't make any changes on kernel side?
+I tried your patch on kexec-tools, and I'm seeing a zero-length section
+in /proc/vmcore (using readelf -e /proc/vmcore) right after the GART
+hole:
 
-Thanks
-Vivek
+/proc/iomem in the main kernel shows:
+  01000000-08ffffff : Crash kernel 
+  20000000-23ffffff : GART
+cfe4e000-cfe55fff : ACPI Tables
 
-> 
-> --- kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c.orig	2008-12-08 
-> 01:50:41.000000000 -0600
-> +++ kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c	2008-12-08 
-> 03:02:45.000000000 -0600
-> @@ -47,7 +47,7 @@ static struct crash_elf_info elf_info =
->  };
->  
->  /* Forward Declaration. */
-> -static int exclude_crash_reserve_region(int *nr_ranges);
-> +static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end);
->  
->  #define KERN_VADDR_ALIGN	0x100000	/* 1MB */
->  
-> @@ -164,10 +164,11 @@ static struct memory_range crash_reserve
->  static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
->  {
->  	const char *iomem= proc_iomem();
-> -	int memory_ranges = 0;
-> +	int memory_ranges = 0, gart = 0;
->  	char line[MAX_LINE];
->  	FILE *fp;
->  	unsigned long long start, end;
-> +	uint64_t gart_start = 0, gart_end = 0;
->  
->  	fp = fopen(iomem, "r");
->  	if (!fp) {
-> @@ -219,6 +220,10 @@ static int get_crash_memory_ranges(struc
->  			type = RANGE_ACPI;
->  		} else if(memcmp(str,"ACPI Non-volatile Storage\n",26) == 0 ) {
->  			type = RANGE_ACPI_NVS;
-> +		} else if (memcmp(str, "GART\n", 5) == 0) {
-> +			gart_start = start;
-> +			gart_end = end;
-> +			gart = 1;
->  		} else {
->  			continue;
->  		}
-> @@ -233,8 +238,14 @@ static int get_crash_memory_ranges(struc
->  		memory_ranges++;
->  	}
->  	fclose(fp);
-> -	if (exclude_crash_reserve_region(&memory_ranges) < 0)
-> +	if (exclude_region(&memory_ranges, crash_reserved_mem.start,
-> +				crash_reserved_mem.end) < 0)
->  		return -1;
-> +	if (gart) {
-> +		/* exclude GART region if the system has one */
-> +		if (exclude_region(&memory_ranges, gart_start, gart_end) < 0)
-> +			return -1;
-> +	}
->  	*range = crash_memory_range;
->  	*ranges = memory_ranges;
->  #ifdef DEBUG
-> @@ -252,32 +263,27 @@ static int get_crash_memory_ranges(struc
->  /* Removes crash reserve region from list of memory chunks for whom elf 
-> program
->   * headers have to be created. Assuming crash reserve region to be a single
->   * continuous area fully contained inside one of the memory chunks */
-> -static int exclude_crash_reserve_region(int *nr_ranges)
-> +static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end)
->  {
->  	int i, j, tidx = -1;
-> -	unsigned long long cstart, cend;
->  	struct memory_range temp_region;
->  
-> -	/* Crash reserved region. */
-> -	cstart = crash_reserved_mem.start;
-> -	cend = crash_reserved_mem.end;
-> -
->  	for (i = 0; i < (*nr_ranges); i++) {
->  		unsigned long long mstart, mend;
->  		mstart = crash_memory_range[i].start;
->  		mend = crash_memory_range[i].end;
-> -		if (cstart < mend && cend > mstart) {
-> -			if (cstart != mstart && cend != mend) {
-> +		if (start < mend && end > mstart) {
-> +			if (start != mstart && end != mend) {
->  				/* Split memory region */
-> -				crash_memory_range[i].end = cstart - 1;
-> -				temp_region.start = cend + 1;
-> +				crash_memory_range[i].end = start - 1;
-> +				temp_region.start = end + 1;
->  				temp_region.end = mend;
->  				temp_region.type = RANGE_RAM;
->  				tidx = i+1;
-> -			} else if (cstart != mstart)
-> -				crash_memory_range[i].end = cstart - 1;
-> +			} else if (start != mstart)
-> +				crash_memory_range[i].end = start - 1;
->  			else
-> -				crash_memory_range[i].start = cend + 1;
-> +				crash_memory_range[i].start = end + 1;
->  		}
->  	}
->  	/* Insert split memory region, if any. */
+And readelf -e /proc/vmcore in the kdump kernel shows:
+
+Program Headers:
+  Type           Offset             VirtAddr           PhysAddr
+                 FileSiz            MemSiz              Flags  Align
+...
+  LOAD           0x000000000144d99c 0xffff810009000000 0x0000000009000000
+                 0x0000000017000000 0x0000000017000000  RWE    0
+  LOAD           0x000000001844d99c 0xffff810024000000 0x0000000024000000
+                 0x00000000abe4e000 0x00000000abe4e000  RWE    0
+  LOAD           0x00000000c429b99c 0xffff810024000000 0x0000000024000000
+                 0x0000000000000000 0x0000000000000000  RWE    0
+...
+
+The first LOAD shown covers 09000000-20000000, the System RAM between
+the Crash kernel and the GART.  
+The next LOAD covers 24000000-cfe4e000, which is the System RAM between
+the GART and the ACPI Tables.  So that all looks good.
+
+Then the next LOAD is also at 24000000 with a 0 in the size fields.
+I haven't had a chance to check the code yet.
+
+Bob Montgomery
+
+
 
 _______________________________________________
 kexec mailing list
