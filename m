@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp03.au.ibm.com ([202.81.18.172])
+Received: from g4t0017.houston.hp.com ([15.201.24.20])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1LA1YN-00082p-Fv
-	for kexec@lists.infradead.org; Tue, 09 Dec 2008 12:19:04 +0000
-Received: from sd0109e.au.ibm.com (d23rh905.au.ibm.com [202.81.18.225])
-	by e23smtp03.au.ibm.com (8.13.1/8.13.1) with ESMTP id mB9CHZ71009764
-	for <kexec@lists.infradead.org>; Tue, 9 Dec 2008 23:17:35 +1100
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
-	by sd0109e.au.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	mB9CCjTA232498
-	for <kexec@lists.infradead.org>; Tue, 9 Dec 2008 23:12:45 +1100
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	mB9CCinr020401
-	for <kexec@lists.infradead.org>; Tue, 9 Dec 2008 23:12:45 +1100
-From: Chandru <chandru@in.ibm.com>
+	id 1LA7fv-0000Jz-Mz
+	for kexec@lists.infradead.org; Tue, 09 Dec 2008 18:51:16 +0000
 Subject: Re: kdump: quad core Opteron
-Date: Tue, 9 Dec 2008 17:42:45 +0530
+From: Bob Montgomery <bob.montgomery@hp.com>
+In-Reply-To: <200812091742.45275.chandru@in.ibm.com>
 References: <48EB5B68.8010401@in.ibm.com>
 	<200812082126.16680.chandru@in.ibm.com>
 	<20081208215432.GH4264@redhat.com>
-In-Reply-To: <20081208215432.GH4264@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200812091742.45275.chandru@in.ibm.com>
+	<200812091742.45275.chandru@in.ibm.com>
+Date: Tue, 09 Dec 2008 11:55:59 -0700
+Message-Id: <1228848959.3428.372.camel@amd.troyhebe>
+Mime-Version: 1.0
+Reply-To: bob.montgomery@hp.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,26 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: bob.montgomery@hp.com, kexec@lists.infradead.org
+To: Chandru <chandru@in.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tuesday 09 December 2008 03:24:32 Vivek Goyal wrote:
+On Tue, 2008-12-09 at 12:12 +0000, Chandru wrote:
+> On Tuesday 09 December 2008 03:24:32 Vivek Goyal wrote:
+> 
+> > Hi Chandru,
+> >
+> > So this patch will solve the issue (at least for /proc/vmcore) even if
+> > we don't make any changes on kernel side?
+> >
+> > Thanks
+> > Vivek
+> 
+> Hi Vivek,
+> 
+> Yes, without any changes to the kernel and with this patch, we can boot into
+> kdump kernel on these quad core Opteron machines and collect a dump.
 
-> Hi Chandru,
->
-> So this patch will solve the issue (at least for /proc/vmcore) even if
-> we don't make any changes on kernel side?
->
-> Thanks
-> Vivek
+Provided that the kernel is new enough to have the "Insert GART region
+into resource map" already.  Otherwise, you will need to change the
+kernel for this to work.
 
-Hi Vivek,
+Chandru, thanks for coding this up.
 
-Yes, without any changes to the kernel and with this patch, we can boot into 
-kdump kernel on these quad core Opteron machines and collect a dump. 
+Bob Montgomery
 
-thanks,
-Chandru
 
 _______________________________________________
 kexec mailing list
