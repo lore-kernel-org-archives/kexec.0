@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
+Received: from mx2.mail.elte.hu ([157.181.151.9])
 	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1LA7fv-0000Jz-Mz
-	for kexec@lists.infradead.org; Tue, 09 Dec 2008 18:51:16 +0000
-Subject: Re: kdump: quad core Opteron
-From: Bob Montgomery <bob.montgomery@hp.com>
-In-Reply-To: <200812091742.45275.chandru@in.ibm.com>
-References: <48EB5B68.8010401@in.ibm.com>
-	<200812082126.16680.chandru@in.ibm.com>
-	<20081208215432.GH4264@redhat.com>
-	<200812091742.45275.chandru@in.ibm.com>
-Date: Tue, 09 Dec 2008 11:55:59 -0700
-Message-Id: <1228848959.3428.372.camel@amd.troyhebe>
-Mime-Version: 1.0
-Reply-To: bob.montgomery@hp.com
+	id 1LCXoQ-0008Ol-U1
+	for kexec@lists.infradead.org; Tue, 16 Dec 2008 11:10:03 +0000
+Date: Tue, 16 Dec 2008 12:09:49 +0100
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: kdump hangs up by Sysrq+C trigger in high load.
+Message-ID: <20081216110949.GB4299@elte.hu>
+References: <20081216152143.88caba51.ytakahashi@miraclelinux.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20081216152143.88caba51.ytakahashi@miraclelinux.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +23,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chandru <chandru@in.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Yoshihiro Takahashi <ytakahashi@miraclelinux.com>
+Cc: Eduardo Habkost <ehabkost@redhat.com>, Bernhard Walle <bwalle@suse.de>, "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Huang Ying <ying.huang@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
 
-On Tue, 2008-12-09 at 12:12 +0000, Chandru wrote:
-> On Tuesday 09 December 2008 03:24:32 Vivek Goyal wrote:
+
+* Yoshihiro Takahashi <ytakahashi@miraclelinux.com> wrote:
+
+> Hi.
 > 
-> > Hi Chandru,
-> >
-> > So this patch will solve the issue (at least for /proc/vmcore) even if
-> > we don't make any changes on kernel side?
-> >
-> > Thanks
-> > Vivek
+> kdump hangs up by Sysrq+C trigger once in about 10 times in high load. 
+> After the above occurs, kdump cannot collect vmcores with NMI button. 
+> When waiting_for_crash_ipi does case more than 0, mdelay seem to make a 
+> stall.
 > 
-> Hi Vivek,
+> While nmi_shootdown_cpus(), mdelay may not work since interruption is 
+> disable.  (ex. when crashing kernel by NMI interruption, all 
+> interruption may be disabled.).
 > 
-> Yes, without any changes to the kernel and with this patch, we can boot into
-> kdump kernel on these quad core Opteron machines and collect a dump.
+> So I think that it should use other way (TSC) instead of mdelay() in 
+> nmi_shootdown_cpus().
 
-Provided that the kernel is new enough to have the "Insert GART region
-into resource map" already.  Otherwise, you will need to change the
-kernel for this to work.
+mdelay uses either the tsc or CPU loops - neither stop while IRQs are 
+disabled.
 
-Chandru, thanks for coding this up.
+Could you figure out exactly why it hangs in your case?
 
-Bob Montgomery
-
+	Ingo
 
 _______________________________________________
 kexec mailing list
