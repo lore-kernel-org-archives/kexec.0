@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailgw.miraclelinux.com ([122.216.84.157])
+Received: from metropolitan.anduras.de ([80.237.200.159])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1LCr3T-0001xK-AY
-	for kexec@lists.infradead.org; Wed, 17 Dec 2008 07:42:51 +0000
-Date: Wed, 17 Dec 2008 16:42:43 +0900
-From: Yoshihiro Takahashi <ytakahashi@miraclelinux.com>
-Subject: Re: kdump hangs up by Sysrq+C trigger in high load.
-Message-Id: <20081217164243.a7710ae3.ytakahashi@miraclelinux.com>
-In-Reply-To: <20081216110949.GB4299@elte.hu>
-References: <20081216152143.88caba51.ytakahashi@miraclelinux.com>
-	<20081216110949.GB4299@elte.hu>
-Mime-Version: 1.0
+	id 1LD65F-0004xM-QG
+	for kexec@lists.infradead.org; Wed, 17 Dec 2008 23:45:42 +0000
+Received: from popper.anduras.local (p5491CEC0.dip.t-dialin.net
+	[84.145.206.192]) (Authenticated sender: anduras@anduras.priv)
+	by metropolitan.anduras.de (Postfix) with ESMTP id 5CC4A1E5500
+	for <kexec@lists.infradead.org>; Thu, 18 Dec 2008 00:45:41 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by popper.anduras.local (Postfix) with ESMTP id DB42E1B401E
+	for <kexec@lists.infradead.org>; Thu, 18 Dec 2008 00:45:40 +0100 (CET)
+Received: from popper.anduras.local ([127.0.0.1])
+	by localhost (popper.anduras.local [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 23683-02 for <kexec@lists.infradead.org>;
+	Thu, 18 Dec 2008 00:45:40 +0100 (CET)
+Received: from [10.10.23.170] (suburban.anduras.local [10.10.20.242])
+	by popper.anduras.local (Postfix) with ESMTP id 970F81B4001
+	for <kexec@lists.infradead.org>; Thu, 18 Dec 2008 00:45:40 +0100 (CET)
+Message-ID: <49498F24.7040000@anduras.de>
+Date: Thu, 18 Dec 2008 00:45:40 +0100
+From: Sven Anders <anders@anduras.de>
+MIME-Version: 1.0
+Subject: kexec kernel with embedded initrd?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,43 +30,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Thomas, Eduardo Habkost <ehabkost@redhat.com>, Bernhard Walle <bwalle@suse.de>, Ying <ying.huang@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Huang, "H. Peter Anvin" <hpa@zytor.com>, Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>
+To: kexec@lists.infradead.org
 
-Ingo. Thank you, your reply.
+Hello!
 
-I will serch it again.
+Sorry to bother you, just a short question, because I didn't find anything
+in the documentation or mailing list and I want to know if it should work
+before I try to find the error.
 
-On Tue, 16 Dec 2008 12:09:49 +0100
-Ingo Molnar <mingo@elte.hu> wrote:
+I want to boot a kernel (bzImage) with an embedded initrd (CPIO archive usi=
+ng
+the CONFIG_INITRAMFS_SOURCE option).
 
-> 
-> * Yoshihiro Takahashi <ytakahashi@miraclelinux.com> wrote:
-> 
-> > Hi.
-> > 
-> > kdump hangs up by Sysrq+C trigger once in about 10 times in high load. 
-> > After the above occurs, kdump cannot collect vmcores with NMI button. 
-> > When waiting_for_crash_ipi does case more than 0, mdelay seem to make a 
-> > stall.
-> > 
-> > While nmi_shootdown_cpus(), mdelay may not work since interruption is 
-> > disable.  (ex. when crashing kernel by NMI interruption, all 
-> > interruption may be disabled.).
-> > 
-> > So I think that it should use other way (TSC) instead of mdelay() in 
-> > nmi_shootdown_cpus().
-> 
-> mdelay uses either the tsc or CPU loops - neither stop while IRQs are 
-> disabled.
-> 
-> Could you figure out exactly why it hangs in your case?
-> 
-> 	Ingo
+Can I simply load the kernel with kexec or do I have to extract the initrd
+first and load them using the --initrd option?
+
+If I have to extract them first, is there a tool for this?
+
+Regards
+ Sven
+
+Mit freundlichen Gr=FC=DFen
+ Sven Anders
+
+-- =
+
+ Sven Anders <anders@anduras.de>                 () Ascii Ribbon Campaign
+                                                 /\ Support plain text e-ma=
+il
+ ANDURAS service solutions AG
+ Innstra=DFe 71 - 94036 Passau - Germany
+ Web: www.anduras.de - Tel: +49 (0)851-4 90 50-0 - Fax: +49 (0)851-4 90 50-=
+55
+
+Rechtsform: Aktiengesellschaft - Sitz: Passau - Amtsgericht Passau HRB 6032
+Mitglieder des Vorstands: Sven Anders, Marcus Junker
+Vorsitzender des Aufsichtsrats: Mark Peters
+
 
 _______________________________________________
 kexec mailing list
