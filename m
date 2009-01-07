@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mercury.realtime.net ([205.238.132.86])
 	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1LKZjk-0005cS-Kk
-	for kexec@lists.infradead.org; Wed, 07 Jan 2009 14:50:37 +0000
-In-Reply-To: <1231285442.8292.10.camel@localhost>
-References: <kexec-29-1-7.miltonm@bga.com> <1231285442.8292.10.camel@localhost>
+	id 1LKZNl-0002Sh-PH
+	for kexec@lists.infradead.org; Wed, 07 Jan 2009 14:27:43 +0000
+In-Reply-To: <1231296172.8292.20.camel@localhost>
+References: <kexec-29-1-1r.miltonm@bga.com>
+	<1231296172.8292.20.camel@localhost>
 Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <f378ca9151a64ea3cead1b7354e8153c@bga.com>
+Message-Id: <2078205b8668529382796ad92bc66ab3@bga.com>
 From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH] powerpc: check crash_base for relocatable kernel
-Date: Wed, 7 Jan 2009 08:57:13 -0600
+Subject: Re: [PATCH kexec-tools 1/5] ppc64: always check number of ranges when
+	adding
+Date: Wed, 7 Jan 2009 08:34:09 -0600
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +25,25 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: michael@ellerman.id.au
-Cc: linux-ppc <linuxppc-dev@ozlabs.org>, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org
+Cc: linux-ppc <linuxppc-dev@ozlabs.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "M. Mohan Kumar" <mohan@in.ibm.com>
 
-[removed Paul from cc and fixed Mohan's email]
+On Jan 6, 2009, at 8:42 PM, Michael Ellerman wrote:
+> On Fri, 2009-01-02 at 15:04 -0600, Milton Miller wrote:
+>> make the idom "always call realloc_memory_ranges when filling a range 
+>> entry"
 
-On Jan 6, 2009, at 5:44 PM, Michael Ellerman wrote:
-
-> On Fri, 2009-01-02 at 14:46 -0600, Milton Miller wrote:
->> @@ -94,10 +95,35 @@ void __init reserve_crashkernel(void)
->>  				KDUMP_KERNELBASE);
->>
->>  	crashk_res.start = KDUMP_KERNELBASE;
->> +#else
->> +	if (!crashk_res.start) {
->> +		/*
->> +		 * unspecified address, choose a region of specified size
->> +		 * can overlap with initrd (ignoring corruption when retained)
->> +		 * ppc64 requires kernel and some stacks to be in first segemnt
->> +		 */
->> +		crashk_res.start = KDUMP_KERNELBASE;
->> +	}
->> +
->> +	crash_base = PAGE_ALIGN(crashk_res.start);
->> +	if (crash_base != crashk_res.start) {
->> +		printk("Crash kernel base must be aligned to 0x%lx\n",
->> +				PAGE_SIZE);
->> +		crashk_res.start = crash_base;
->> +	}
->> +
->>  #endif
->>  	crash_size = PAGE_ALIGN(crash_size);
->>  	crashk_res.end = crashk_res.start + crash_size - 1;
->>
->> +	/* The crash region must not overlap the current kernel */
->> +	if (overlaps_crashkernel(__pa(_stext), _end - _stext)) {
->> +		printk(KERN_WARNING
->> +			"Crash kernel can not overlap current kernel\n");
->> +		crashk_res.start = crashk_res.end = 0;
->> +		return;
->> +	}
+>> @@ -666,6 +674,8 @@ int setup_memory_ranges(unsigned long ke
+>>  		memory_range[j].end = exclude_range[i+1].start - 1;
+>>  		memory_range[j].type = RANGE_RAM;
+>>  		j++;
+>> +		if (i >= max_memory_ranges)
+>> +			realloc_memory_ranges();
 >
-> I think we can be smarter here. Why don't we adjust the crash kernel
-> region so that it doesn't overlap the first kernel? ie. move it up a
-> bit.
-
-How much?   In addition to the size of the kernel, we have to allocate 
-(1) the emergeency stacks as we use them to bring up secondary cpus (2) 
-the irq stacks in the first segment.   While the second could be met 
-easier on systems with 1TB slbs we don't take advantage of that yet.
-
-
->
-> There's also the issue of the RMO, I'm not sure what we should do 
-> there,
-> but I think the kernel needs some smarts otherwise users are going to
-> shoot themselves in the foot.
-
-I was looking at the code in kexec-tools for the rmo, and it seems 
-extremely broken (ie it sets rmo_top on every memory block instead of 
-the lowest; the clamp to 768M is the savior for systems with multiple 
-blocks).
-
-Do we care about loading a kernel below a relocated kernel (between the 
-interrupt vectors and the new kernel)?   I ignored that for now, 
-arguing that we always run the first kernel at 0.
-
-
->
-> We could ignore the @x setting and split the RMO between both kernels
-> somewhat intelligently.
->
-> What might work is multiple crash regions, that way we could have some
-> space in the RMO for the second kernel (say 32MB?), but the rest 
-> outside
-> - leaving some RMO for the first kernel. But I think that would require
-> some serious surgery.
+> Should this be checking against i or j?
 >
 
-Other archs have this, i guess because they read the memory out of 
-/proc/iomem.   The trick is knowing what has to be put in real space 
-and what can go abvoe the rmo.   Also, we have those horrible hard-code 
-rmo to 768M max because some platform (one of the cell ones?) didn't 
-make the device tree to show it.  Maybe we can track it down and add 
-linux,usable-mem-ranges to fix it up?
-
-Does the generic code support loading into the split regions, or is it 
-just for giving the kernel room to run?
-
-
-
-So while all of these are nice, what do you think about merging this as 
-an interm measure, especially for backporting to 2.6.28 stable (and any 
-distro that wants to pick up relocatable kdump)?
+It does look like it should be against j.  I'll build test and respin 
+later.
 
 milton
 
