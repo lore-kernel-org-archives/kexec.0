@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1LIrCZ-0003HB-3d
-	for kexec@lists.infradead.org; Fri, 02 Jan 2009 21:05:03 +0000
-From: Milton Miller <miltonm@bga.com>
-Message-Id: <kexec-29-1-5r.miltonm@bga.com>
-In-Reply-To: <kexec-29-1.miltonm@bga.com>
-Subject: [PATCH kexec-tools 5/5] entry wants to be void *
-Date: Fri, 02 Jan 2009 15:04:51 -0600
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1LKRTx-0007Q8-9e
+	for kexec@lists.infradead.org; Wed, 07 Jan 2009 06:01:34 +0000
+Subject: [patch] Possible fix for kexec-tools dynamic range allocation
+From: Michael Ellerman <michael@ellerman.id.au>
+Date: Wed, 07 Jan 2009 17:01:26 +1100
+Message-Id: <1231308086.27416.14.camel@localhost>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,95 +17,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1501238204=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
-Cc: Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, "M. Mohan Kumar" <mohan@in.ibm.com>
+To: kexec@lists.infradead.org
+Cc: muvarov@gmail.com, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, Chandru <chandru@in.ibm.com>, Horms <horms@verge.net.au>
 
---===============1501238204==
+Hi all,
 
-The kexec info struct defines entry to be a void *, so pass around the
-user supplied value as one.
+The patch to dynamically allocate memory regions for ppc64 kexec-tools,
+ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has never
+worked AFAICT.
 
-This fixes the following warning:
+Chandru reported it as broken when it was posted:
+http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
 
-gcc -g -O2 -fno-strict-aliasing -Wall -Wstrict-prototypes -I./include -I./util_lib/include -Iinclude/ -I./kexec/arch/ppc64/include  -c -MD -o kexec/kexec.o kexec/kexec.c
-kexec/kexec.c: In function ���my_load���:
-kexec/kexec.c:773: warning: assignment makes pointer from integer without a cast
+Still, it's in now, and I'm trying to work out what's going wrong.
 
-Signed-off-by: Milton Miller <miltonm@bga.com>
+The symptom is as reported by Chandru, we end up not being able to
+allocate any memory (in locate_hole()). This is caused by the list of
+memory_ranges being empty.
+
+The memory_ranges are empty because they have been realloc'ed (by the
+dynamic alloc code), and the generic code is still looking at the old
+version.
+
+What I'm not clear on is why the ppc64 code is even calling
+setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
+been called by get_memory_ranges() from my_load(). Or is there another
+route into elf_ppc64_load() that I'm not seeing?
+
+And in fact if I just remove that call, then everything is peachy.
+
+The following patch makes it work for me at least.
+
+cheers
+
+From 40958d8f957876ca612b666f40bebf28ea335314 Mon Sep 17 00:00:00 2001
+From: Michael Ellerman <michael@ellerman.id.au>
+Date: Wed, 7 Jan 2009 16:57:05 +1100
+Subject: [PATCH] Don't call setup_memory_ranges() again
+
+There's no need to call setup_memory_ranges() again. Furthermore it can
+lead to the memory_ranges being realloc'ed, which results in the generic
+code (locate_hole() etc.) using the free'd memory_ranges.
+
+Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
 ---
+ kexec/arch/ppc64/kexec-elf-ppc64.c |    2 --
+ 1 files changed, 0 insertions(+), 2 deletions(-)
 
-Index: kexec-tools/kexec/kexec.c
-===================================================================
---- kexec-tools.orig/kexec/kexec.c	2009-01-02 02:54:37.000000000 -0600
-+++ kexec-tools/kexec/kexec.c	2009-01-02 02:55:06.000000000 -0600
-@@ -666,7 +666,7 @@ static void update_purgatory(struct kexe
-  *	Load the new kernel
-  */
- static int my_load(const char *type, int fileind, int argc, char **argv,
--		   unsigned long kexec_flags, unsigned long entry)
-+		   unsigned long kexec_flags, void *entry)
- {
- 	char *kernel;
- 	char *kernel_buf;
-@@ -846,23 +846,20 @@ static int my_exec(void)
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index 21533cb..1e2d5a3 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -151,8 +151,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (ramdisk && reuse_initrd)
+ 		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
  
- static int kexec_loaded(void);
- 
--static int load_jump_back_helper_image(unsigned long kexec_flags,
--				       unsigned long entry)
-+static int load_jump_back_helper_image(unsigned long kexec_flags, void *entry)
- {
- 	int result;
- 	struct kexec_segment seg;
- 
- 	memset(&seg, 0, sizeof(seg));
--	result = kexec_load((void *)entry, 1, &seg,
--			    kexec_flags);
-+	result = kexec_load(entry, 1, &seg, kexec_flags);
- 	return result;
- }
- 
- /*
-  *	Jump back to the original kernel
-  */
--static int my_load_jump_back_helper(unsigned long kexec_flags,
--				    unsigned long entry)
-+static int my_load_jump_back_helper(unsigned long kexec_flags, void *entry)
- {
- 	int result;
- 
-@@ -1036,7 +1033,7 @@ int main(int argc, char *argv[])
- 	int do_ifdown = 0;
- 	int do_unload = 0;
- 	int do_reuse_initrd = 0;
--	unsigned long entry = 0;
-+	void *entry = 0;
- 	char *type = 0;
- 	char *endptr;
- 	int opt;
-@@ -1096,7 +1093,7 @@ int main(int argc, char *argv[])
- 			kexec_flags = KEXEC_PRESERVE_CONTEXT;
- 			break;
- 		case OPT_ENTRY:
--			entry = strtoul(optarg, &endptr, 0);
-+			entry = (void *)strtoul(optarg, &endptr, 0);
- 			if (*endptr) {
- 				fprintf(stderr,
- 					"Bad option value in --load-jump-back-helper=%s\n",
+-	setup_memory_ranges(info->kexec_flags);
+-
+ 	/* Need to append some command line parameters internally in case of
+ 	 * taking crash dumps.
+ 	 */
+-- 
+1.5.3.7.1.g4e596e
 
 
---===============1501238204==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1501238204==--
