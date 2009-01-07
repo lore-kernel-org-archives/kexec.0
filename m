@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
-	id 1LKRTx-0007Q8-9e
-	for kexec@lists.infradead.org; Wed, 07 Jan 2009 06:01:34 +0000
-Subject: [patch] Possible fix for kexec-tools dynamic range allocation
-From: Michael Ellerman <michael@ellerman.id.au>
-Date: Wed, 07 Jan 2009 17:01:26 +1100
-Message-Id: <1231308086.27416.14.camel@localhost>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Received: from mercury.realtime.net ([205.238.132.86])
+	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
+	id 1LKZjk-0005cS-Kk
+	for kexec@lists.infradead.org; Wed, 07 Jan 2009 14:50:37 +0000
+In-Reply-To: <1231285442.8292.10.camel@localhost>
+References: <kexec-29-1-7.miltonm@bga.com> <1231285442.8292.10.camel@localhost>
+Mime-Version: 1.0 (Apple Message framework v624)
+Message-Id: <f378ca9151a64ea3cead1b7354e8153c@bga.com>
+From: Milton Miller <miltonm@bga.com>
+Subject: Re: [PATCH] powerpc: check crash_base for relocatable kernel
+Date: Wed, 7 Jan 2009 08:57:13 -0600
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,70 +22,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: muvarov@gmail.com, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, Chandru <chandru@in.ibm.com>, Horms <horms@verge.net.au>
+To: michael@ellerman.id.au
+Cc: linux-ppc <linuxppc-dev@ozlabs.org>, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org
 
-Hi all,
+[removed Paul from cc and fixed Mohan's email]
 
-The patch to dynamically allocate memory regions for ppc64 kexec-tools,
-ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has never
-worked AFAICT.
+On Jan 6, 2009, at 5:44 PM, Michael Ellerman wrote:
 
-Chandru reported it as broken when it was posted:
-http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
+> On Fri, 2009-01-02 at 14:46 -0600, Milton Miller wrote:
+>> @@ -94,10 +95,35 @@ void __init reserve_crashkernel(void)
+>>  				KDUMP_KERNELBASE);
+>>
+>>  	crashk_res.start = KDUMP_KERNELBASE;
+>> +#else
+>> +	if (!crashk_res.start) {
+>> +		/*
+>> +		 * unspecified address, choose a region of specified size
+>> +		 * can overlap with initrd (ignoring corruption when retained)
+>> +		 * ppc64 requires kernel and some stacks to be in first segemnt
+>> +		 */
+>> +		crashk_res.start = KDUMP_KERNELBASE;
+>> +	}
+>> +
+>> +	crash_base = PAGE_ALIGN(crashk_res.start);
+>> +	if (crash_base != crashk_res.start) {
+>> +		printk("Crash kernel base must be aligned to 0x%lx\n",
+>> +				PAGE_SIZE);
+>> +		crashk_res.start = crash_base;
+>> +	}
+>> +
+>>  #endif
+>>  	crash_size = PAGE_ALIGN(crash_size);
+>>  	crashk_res.end = crashk_res.start + crash_size - 1;
+>>
+>> +	/* The crash region must not overlap the current kernel */
+>> +	if (overlaps_crashkernel(__pa(_stext), _end - _stext)) {
+>> +		printk(KERN_WARNING
+>> +			"Crash kernel can not overlap current kernel\n");
+>> +		crashk_res.start = crashk_res.end = 0;
+>> +		return;
+>> +	}
+>
+> I think we can be smarter here. Why don't we adjust the crash kernel
+> region so that it doesn't overlap the first kernel? ie. move it up a
+> bit.
 
-Still, it's in now, and I'm trying to work out what's going wrong.
-
-The symptom is as reported by Chandru, we end up not being able to
-allocate any memory (in locate_hole()). This is caused by the list of
-memory_ranges being empty.
-
-The memory_ranges are empty because they have been realloc'ed (by the
-dynamic alloc code), and the generic code is still looking at the old
-version.
-
-What I'm not clear on is why the ppc64 code is even calling
-setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
-been called by get_memory_ranges() from my_load(). Or is there another
-route into elf_ppc64_load() that I'm not seeing?
-
-And in fact if I just remove that call, then everything is peachy.
-
-The following patch makes it work for me at least.
-
-cheers
-
-From 40958d8f957876ca612b666f40bebf28ea335314 Mon Sep 17 00:00:00 2001
-From: Michael Ellerman <michael@ellerman.id.au>
-Date: Wed, 7 Jan 2009 16:57:05 +1100
-Subject: [PATCH] Don't call setup_memory_ranges() again
-
-There's no need to call setup_memory_ranges() again. Furthermore it can
-lead to the memory_ranges being realloc'ed, which results in the generic
-code (locate_hole() etc.) using the free'd memory_ranges.
-
-Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
----
- kexec/arch/ppc64/kexec-elf-ppc64.c |    2 --
- 1 files changed, 0 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 21533cb..1e2d5a3 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -151,8 +151,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	if (ramdisk && reuse_initrd)
- 		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
- 
--	setup_memory_ranges(info->kexec_flags);
--
- 	/* Need to append some command line parameters internally in case of
- 	 * taking crash dumps.
- 	 */
--- 
-1.5.3.7.1.g4e596e
+How much?   In addition to the size of the kernel, we have to allocate 
+(1) the emergeency stacks as we use them to bring up secondary cpus (2) 
+the irq stacks in the first segment.   While the second could be met 
+easier on systems with 1TB slbs we don't take advantage of that yet.
 
 
+>
+> There's also the issue of the RMO, I'm not sure what we should do 
+> there,
+> but I think the kernel needs some smarts otherwise users are going to
+> shoot themselves in the foot.
+
+I was looking at the code in kexec-tools for the rmo, and it seems 
+extremely broken (ie it sets rmo_top on every memory block instead of 
+the lowest; the clamp to 768M is the savior for systems with multiple 
+blocks).
+
+Do we care about loading a kernel below a relocated kernel (between the 
+interrupt vectors and the new kernel)?   I ignored that for now, 
+arguing that we always run the first kernel at 0.
+
+
+>
+> We could ignore the @x setting and split the RMO between both kernels
+> somewhat intelligently.
+>
+> What might work is multiple crash regions, that way we could have some
+> space in the RMO for the second kernel (say 32MB?), but the rest 
+> outside
+> - leaving some RMO for the first kernel. But I think that would require
+> some serious surgery.
+>
+
+Other archs have this, i guess because they read the memory out of 
+/proc/iomem.   The trick is knowing what has to be put in real space 
+and what can go abvoe the rmo.   Also, we have those horrible hard-code 
+rmo to 768M max because some platform (one of the cell ones?) didn't 
+make the device tree to show it.  Maybe we can track it down and add 
+linux,usable-mem-ranges to fix it up?
+
+Does the generic code support loading into the split regions, or is it 
+just for giving the kernel room to run?
+
+
+
+So while all of these are nice, what do you think about merging this as 
+an interm measure, especially for backporting to 2.6.28 stable (and any 
+distro that wants to pick up relocatable kdump)?
+
+milton
 
 
 _______________________________________________
