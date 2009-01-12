@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.68 #1 (Red Hat Linux))
-	id 1LMGDU-0001Nu-M5
-	for kexec@lists.infradead.org; Mon, 12 Jan 2009 06:24:21 +0000
-Date: Mon, 12 Jan 2009 17:24:02 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/5 + 2] kexec updates
-Message-ID: <20090112062359.GK7337@verge.net.au>
-References: <kexec-29-1.miltonm@bga.com>
+Received: from sj-iport-6.cisco.com ([171.71.176.117])
+	by bombadil.infradead.org with esmtps (Exim 4.68 #1 (Red Hat Linux))
+	id 1LMKyv-00080O-Gz
+	for kexec@lists.infradead.org; Mon, 12 Jan 2009 11:29:25 +0000
+Received: from sj-core-1.cisco.com (sj-core-1.cisco.com [171.71.177.237])
+	by sj-dkim-3.cisco.com (8.12.11/8.12.11) with ESMTP id n0CBTKCv031462
+	for <kexec@lists.infradead.org>; Mon, 12 Jan 2009 03:29:20 -0800
+Received: from xbh-sjc-221.amer.cisco.com (xbh-sjc-221.cisco.com
+	[128.107.191.63])
+	by sj-core-1.cisco.com (8.13.8/8.13.8) with ESMTP id n0CBTK9c002936
+	for <kexec@lists.infradead.org>; Mon, 12 Jan 2009 11:29:20 GMT
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <kexec-29-1.miltonm@bga.com>
+Subject: newbie question: kexec linux-based bootstrap
+Date: Mon, 12 Jan 2009 03:29:19 -0800
+Message-ID: <F795765B112E7344AF36AA911279641508F6AFCB@xmb-sjc-212.amer.cisco.com>
+From: "Bizhan Gholikhamseh (bgholikh)" <bgholikh@cisco.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,64 +24,209 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1414076433=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>
-Cc: Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev@ozlabs.org, "M. Mohan Kumar" <mohan@in.ibm.com>, Paul Mackerras <paulus@samba.org>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Fri, Jan 02, 2009 at 02:42:38PM -0600, Milton Miller wrote:
-> Follwing this mail are 5 patches for kexec userspace and two for the
-> kernel.  The first fixes an array overflow and the second updates
-> userspace to the merged 2.6.28 kdump support.  The remaining are
-> cleanups and warning fixes, including one for the common code.
-> 
-> The two patchs for the kernel are independent.
+This is a multi-part message in MIME format.
 
-Hi all,
+--===============1414076433==
+Content-class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C974A9.028D4355"
 
-sorry to be a bit slow in responding, this email landed just
-as I was leaving for a weeks holiday.
+This is a multi-part message in MIME format.
 
-The kexec-tools patches seem reasonable to me and I'm happy to merge what I
-think are the latest versions - thanks Michael for your review.
+------_=_NextPart_001_01C974A9.028D4355
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Milton, here are the Subjects, Dates and Message-Ids of what I have in my
-queue.  If you could confirm this or repost that would be great.
+HI all,
 
-#1
-Subject: [PATCH kexec-tools v2] ppc64: always check number of ranges when adding them
-Date: Thu, 08 Jan 2009 06:33:50 -0600
-Message-ID: <1231418030_141769@mercury.realtime.net>
+=20
 
-#2
-Subject: [PATCH kexec-tools 2/5] ppc64: update kdump for 2.6.28 relocatable kernel
-Date: Fri, 02 Jan 2009 15:04:42 -0600
-Message-Id: <kexec-29-1-2r.miltonm@bga.com>
+I have been investigating how to boot Linux as bootstrap to boot another
+Linux.
 
-#3
-Subject: [PATCH kexec-tools 3/5] ppc64: segments may be reordered
-Date: Fri, 02 Jan 2009 15:04:45 -0600
-Message-Id: <kexec-29-1-3r.miltonm@bga.com>
+=20
 
-#4
-Subject: [PATCH kexec-tools 4/5] ppc64: cleanups
-Date: Fri, 02 Jan 2009 15:04:48 -0600
-Message-Id: <kexec-29-1-4r.miltonm@bga.com>
+From my understanding, Linux has a kexec system call which provides
+overlay another Linux image on the current running Linux.=20
 
-#5
-Subject: [PATCH kexec-tools 5/5] entry wants to be void *
-Date: Fri, 02 Jan 2009 15:04:51 -0600
-Message-Id: <kexec-29-1-5r.miltonm@bga.com>
+=20
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+Is my understanding correct?
 
+=20
+
+Is there any other available tool that I can use?
+
+=20
+
+=20
+
+=20
+
+Many thanks in advance,
+
+=20
+
+Biz
+
+=20
+
+
+------_=_NextPart_001_01C974A9.028D4355
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>HI =
+all,<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>I have been =
+investigating
+how to boot Linux as bootstrap to boot another =
+Linux.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>From my =
+understanding, Linux
+has a kexec system call which provides overlay another Linux image on =
+the
+current running Linux. <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>Is my understanding =
+correct?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>Is there any other =
+available
+tool that I can use?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'>&nbsp;<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier New"'>Many thanks in =
+advance,<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal style=3D'text-autospace:none'><font size=3D2 =
+face=3D"Courier New"><span
+style=3D'font-size:10.0pt;font-family:"Courier =
+New"'>Biz<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C974A9.028D4355--
+
+
+--===============1414076433==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1414076433==--
+
