@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mercury.realtime.net ([205.238.132.86])
+Received: from mga09.intel.com ([134.134.136.24])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LMlZ8-0003fT-Ih
-	for kexec@lists.infradead.org; Tue, 13 Jan 2009 15:52:33 +0000
-In-Reply-To: <20090112062359.GK7337@verge.net.au>
-References: <kexec-29-1.miltonm@bga.com> <20090112062359.GK7337@verge.net.au>
-Mime-Version: 1.0 (Apple Message framework v624)
-Message-Id: <db22d11838af3c43c4624a8d2f0b0883@bga.com>
-From: Milton Miller <miltonm@bga.com>
-Subject: Re: [PATCH 0/5 + 2] kexec updates
-Date: Tue, 13 Jan 2009 09:59:08 -0600
+	id 1LMmXz-00042V-Oa
+	for kexec@lists.infradead.org; Tue, 13 Jan 2009 16:55:26 +0000
+Date: Tue, 13 Jan 2009 08:43:11 -0800
+From: "David N. Lombard" <dnlombar@ichips.intel.com>
+Subject: Re: newbie question: kexec linux-based bootstrap
+Message-ID: <20090113164311.GB19417@nlxdcldnl2.cl.intel.com>
+References: <F795765B112E7344AF36AA911279641508F6AFCB@xmb-sjc-212.amer.cisco.com>
+	<496B4127.1070201@anduras.de>
+	<20090113144947.GA19417@nlxdcldnl2.cl.intel.com>
+	<F795765B112E7344AF36AA911279641508F6B692@xmb-sjc-212.amer.cisco.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <F795765B112E7344AF36AA911279641508F6B692@xmb-sjc-212.amer.cisco.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,68 +26,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org
+To: "Bizhan Gholikhamseh (bgholikh)" <bgholikh@cisco.com>
+Cc: "David N. Lombard" <dnlombar@plxs0284.pdx.intel.com>, Sven Anders <anders@anduras.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Jan 12, 2009, at 12:24 AM, Simon Horman wrote:
-> On Fri, Jan 02, 2009 at 02:42:38PM -0600, Milton Miller wrote:
->> Follwing this mail are 5 patches for kexec userspace and two for the
->> kernel.  The first fixes an array overflow and the second updates
->> userspace to the merged 2.6.28 kdump support.  The remaining are
->> cleanups and warning fixes, including one for the common code.
->>
->> The two patchs for the kernel are independent.
->
-> Hi all,
->
-> sorry to be a bit slow in responding, this email landed just
-> as I was leaving for a weeks holiday.
->
+On Tue, Jan 13, 2009 at 07:42:57AM -0800, Bizhan Gholikhamseh (bgholikh) wrote:
+> > On IA using kexec-tools 2.0.0, use a command like this to load the
+> kernel:
+> > 
+> >     kexec -l bzImage --initrd=initrd.img
+> --command-line="kernel-cmd-args"
+> > 
+> > where
+> > 	bzImage is the kernel's bzImage file
+> > 	initrd.img is the initrd image file
+> > 	kernel-cmd-args are the kernel's command line args
+> > 
+> > Then, boot the kernel with:
+> > 
+> >     kexec -e
+> 
+> We are using ramdisk instead of initrd, do you know what arguments I
+> need to pass to point to the ramdisk install on a partition on SATA
+> disk: e.g /dev/sda2?
 
-No problem, I figured as much.
+I'm not sure what you mean by "ramdisk install on ... SATA disk".
 
-> The kexec-tools patches seem reasonable to me and I'm happy to merge 
-> what I
-> think are the latest versions - thanks Michael for your review.
->
-> Milton, here are the Subjects, Dates and Message-Ids of what I have in 
-> my
-> queue.  If you could confirm this or repost that would be great.
->
-> #1
-> Subject: [PATCH kexec-tools v2] ppc64: always check number of ranges 
-> when adding them
-> Date: Thu, 08 Jan 2009 06:33:50 -0600
-> Message-ID: <1231418030_141769@mercury.realtime.net>
->
-> #2
-> Subject: [PATCH kexec-tools 2/5] ppc64: update kdump for 2.6.28 
-> relocatable kernel
-> Date: Fri, 02 Jan 2009 15:04:42 -0600
-> Message-Id: <kexec-29-1-2r.miltonm@bga.com>
->
-> #3
-> Subject: [PATCH kexec-tools 3/5] ppc64: segments may be reordered
-> Date: Fri, 02 Jan 2009 15:04:45 -0600
-> Message-Id: <kexec-29-1-3r.miltonm@bga.com>
->
-> #4
-> Subject: [PATCH kexec-tools 4/5] ppc64: cleanups
-> Date: Fri, 02 Jan 2009 15:04:48 -0600
-> Message-Id: <kexec-29-1-4r.miltonm@bga.com>
->
-> #5
-> Subject: [PATCH kexec-tools 5/5] entry wants to be void *
-> Date: Fri, 02 Jan 2009 15:04:51 -0600
-> Message-Id: <kexec-29-1-5r.miltonm@bga.com>
+If you want to just try kexec, take look at your current boot
+configuration file, e.g., /boot/grub/grub.conf.  For example, on my F7
+system, I have the following stanza:
 
-Based on the subjects, yes, those are the lastest versions.
+  title Fedora (2.6.23.15-80.fc7)
+    root (hd0,0)
+    kernel /vmlinuz-2.6.23.15-80.fc7 ro root=/dev/VolGroup00/LogVol00 rhgb quiet
+    initrd /initrd-2.6.23.15-80.fc7.img
 
-And I assume you saw Mohan's tested message.
+I could boot that as follows:
 
-Thanks,
-milton
+  kexec -l /boot/vmlinuz-2.6.23.15-80.fc7 \
+    --initrd=/boot/initrd-2.6.23.15-80.fc7.img \
+    --command-line="ro root=/dev/VolGroup00/LogVol00 rhgb quiet"
+  kexec -e
 
+Alternatively, to boot a diskless kernel/initrd, I might use
+
+  kexec -l vmlinuz --initrd=initrd.img --command-line="root=/dev/ram rw"
+  kexec -e
+
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
