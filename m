@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LNava-00072r-Hl
-	for kexec@lists.infradead.org; Thu, 15 Jan 2009 22:43:09 +0000
-Date: Fri, 16 Jan 2009 09:43:04 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/5 + 2] kexec updates
-Message-ID: <20090115224302.GI9114@verge.net.au>
-References: <kexec-29-1.miltonm@bga.com> <20090112062359.GK7337@verge.net.au>
-	<db22d11838af3c43c4624a8d2f0b0883@bga.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <db22d11838af3c43c4624a8d2f0b0883@bga.com>
+Received: from mx1.suse.de ([195.135.220.2])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LNo1H-00015L-9n
+	for kexec@lists.infradead.org; Fri, 16 Jan 2009 12:41:54 +0000
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 5D2CA4417E
+	for <kexec@lists.infradead.org>; Fri, 16 Jan 2009 13:41:41 +0100 (CET)
+Date: Fri, 16 Jan 2009 13:41:41 +0100
+From: Bernhard Walle <bwalle@suse.de>
+Subject: Release?
+Message-ID: <20090116134141.2bc15cff@hale.suse.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,74 +25,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Milton Miller <miltonm@bga.com>
-Cc: Michael Ellerman <michael@ellerman.id.au>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Tue, Jan 13, 2009 at 09:59:08AM -0600, Milton Miller wrote:
-> On Jan 12, 2009, at 12:24 AM, Simon Horman wrote:
->> On Fri, Jan 02, 2009 at 02:42:38PM -0600, Milton Miller wrote:
->>> Follwing this mail are 5 patches for kexec userspace and two for the
->>> kernel.  The first fixes an array overflow and the second updates
->>> userspace to the merged 2.6.28 kdump support.  The remaining are
->>> cleanups and warning fixes, including one for the common code.
->>>
->>> The two patchs for the kernel are independent.
->>
->> Hi all,
->>
->> sorry to be a bit slow in responding, this email landed just
->> as I was leaving for a weeks holiday.
->>
->
-> No problem, I figured as much.
->
->> The kexec-tools patches seem reasonable to me and I'm happy to merge  
->> what I
->> think are the latest versions - thanks Michael for your review.
->>
->> Milton, here are the Subjects, Dates and Message-Ids of what I have in  
->> my
->> queue.  If you could confirm this or repost that would be great.
->>
->> #1
->> Subject: [PATCH kexec-tools v2] ppc64: always check number of ranges  
->> when adding them
->> Date: Thu, 08 Jan 2009 06:33:50 -0600
->> Message-ID: <1231418030_141769@mercury.realtime.net>
->>
->> #2
->> Subject: [PATCH kexec-tools 2/5] ppc64: update kdump for 2.6.28  
->> relocatable kernel
->> Date: Fri, 02 Jan 2009 15:04:42 -0600
->> Message-Id: <kexec-29-1-2r.miltonm@bga.com>
->>
->> #3
->> Subject: [PATCH kexec-tools 3/5] ppc64: segments may be reordered
->> Date: Fri, 02 Jan 2009 15:04:45 -0600
->> Message-Id: <kexec-29-1-3r.miltonm@bga.com>
->>
->> #4
->> Subject: [PATCH kexec-tools 4/5] ppc64: cleanups
->> Date: Fri, 02 Jan 2009 15:04:48 -0600
->> Message-Id: <kexec-29-1-4r.miltonm@bga.com>
->>
->> #5
->> Subject: [PATCH kexec-tools 5/5] entry wants to be void *
->> Date: Fri, 02 Jan 2009 15:04:51 -0600
->> Message-Id: <kexec-29-1-5r.miltonm@bga.com>
->
-> Based on the subjects, yes, those are the lastest versions.
->
-> And I assume you saw Mohan's tested message.
+Hi,
 
-Thanks. I've added a "Tested-by: M. Mohan Kumar <mohan@in.ibm.com>" tag
-to each of the five patches and applied them.
+wouldn't it time for kexec-tools 2.1? There are many changes in git
+currently. :)
 
+
+
+    Bernhard
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Bernhard Walle, SUSE Linux Products GmbH, Architecture Development
 
 _______________________________________________
 kexec mailing list
