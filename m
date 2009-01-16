@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from ns2.suse.de ([195.135.220.15] helo=mx2.suse.de)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LNpLX-0001fS-Lp
-	for kexec@lists.infradead.org; Fri, 16 Jan 2009 14:06:54 +0000
-Received: from Relay2.suse.de (mail2.suse.de [195.135.221.8])
+	id 1LNtAE-0004Mk-Bg
+	for kexec@lists.infradead.org; Fri, 16 Jan 2009 18:11:29 +0000
+Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mx2.suse.de (Postfix) with ESMTP id EB837474E0
-	for <kexec@lists.infradead.org>; Fri, 16 Jan 2009 15:06:48 +0100 (CET)
+	by mx2.suse.de (Postfix) with ESMTP id 43DA34853B
+	for <kexec@lists.infradead.org>; Fri, 16 Jan 2009 19:11:23 +0100 (CET)
 From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] Fix missing FILE argument in fprintf()
-Date: Fri, 16 Jan 2009 15:06:48 +0100
-Message-Id: <1232114808-22809-1-git-send-email-bwalle@suse.de>
+Subject: [PATCH] [PPC64] Fix typo in realloc_memory_ranges()
+Date: Fri, 16 Jan 2009 19:11:23 +0100
+Message-Id: <1232129483-19974-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,33 +28,29 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Bernhard Walle <bwalle@suse.de>
 
-This fixes the following compiler warning
-
-    kexec/arch/i386/crashdump-x86.c: In function 'get_crash_memory_ranges':
-    kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 1 of \
-        'fprintf' from incompatible pointer type
-    kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 2 of \
-        'fprintf' makes pointer from integer without a cast
+The base_memory_range should not become memory_range. We need to realloc
+base_memory_range to not change the contents of memory. That was a copy & paste
+error.
 
 
 Signed-off-by: Bernhard Walle <bwalle@suse.de>
 ---
- kexec/arch/i386/crashdump-x86.c |    2 +-
+ kexec/arch/ppc64/kexec-ppc64.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 478d6be..ec61dfe 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -141,7 +141,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
- 			}
- 		}
- 		if (crash_reserved_mem.start >= mem_max) {
--			fprintf("Too small mem_max: 0x%lx.\n", mem_max);
-+			fprintf(stderr, "Too small mem_max: 0x%lx.\n", mem_max);
- 			return -1;
- 		}
- 		crash_reserved_mem.end = mem_max;
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index d8347f1..b0d8acd 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -107,7 +107,7 @@ static int realloc_memory_ranges(void)
+ 	if (!memory_range)
+ 		goto err;
+ 
+-	base_memory_range = (struct memory_range *) realloc(memory_range, memory_range_len);
++	base_memory_range = (struct memory_range *) realloc(base_memory_range, memory_range_len);
+ 	if (!base_memory_range)
+ 		goto err;
+ 
 -- 
 1.6.0.2
 
