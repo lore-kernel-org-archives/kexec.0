@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LNtAa-0004pl-E5
-	for kexec@lists.infradead.org; Fri, 16 Jan 2009 18:11:51 +0000
-Received: from Relay2.suse.de (relay-ext.suse.de [195.135.221.8])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mx1.suse.de (Postfix) with ESMTP id 5038345825
-	for <kexec@lists.infradead.org>; Fri, 16 Jan 2009 19:11:45 +0100 (CET)
-From: Bernhard Walle <bwalle@suse.de>
-Subject: [PATCH] [PPC64] printf() consolidation
-Date: Fri, 16 Jan 2009 19:11:45 +0100
-Message-Id: <1232129505-20327-1-git-send-email-bwalle@suse.de>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LOgA1-0001Zz-PZ
+	for kexec@lists.infradead.org; Sun, 18 Jan 2009 22:30:33 +0000
+Date: Mon, 19 Jan 2009 09:30:24 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] Fix missing FILE argument in fprintf()
+Message-ID: <20090118223020.GA3043@verge.net.au>
+References: <1232114808-22809-1-git-send-email-bwalle@suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1232114808-22809-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,60 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Bernhard Walle <bwalle@suse.de>
+To: Bernhard Walle <bwalle@suse.de>
+Cc: kexec@lists.infradead.org
 
-Remove the fprintf(stderr,...) in get_memory_ranges() that adds unnecessary
-output in the normal kexec case that the user don't want to see.
+On Fri, Jan 16, 2009 at 03:06:48PM +0100, Bernhard Walle wrote:
+> This fixes the following compiler warning
+> 
+>     kexec/arch/i386/crashdump-x86.c: In function 'get_crash_memory_ranges':
+>     kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 1 of \
+>         'fprintf' from incompatible pointer type
+>     kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 2 of \
+>         'fprintf' makes pointer from integer without a cast
+> 
+> 
+> Signed-off-by: Bernhard Walle <bwalle@suse.de>
 
-Use dbgprintf() in get_base_ranges() instead of
+Thanks Bernhard,
 
-    #ifdef DEBUG
-        fprintf(stderr,...)
-    #endif
+applied.
 
-to to make the code more readable.
-
-
-Signed-off-by: Bernhard Walle <bwalle@suse.de>diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
-index ad8a31c..8d4e42b 100644
-Signed-off-by: Bernhard Walle <bwalle@suse.de>
----
- kexec/arch/ppc64/kexec-ppc64.c |    7 +++----
- 1 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
-index ad8a31c..8d4e42b 100644
---- a/kexec/arch/ppc64/kexec-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-ppc64.c
-@@ -263,9 +263,8 @@ static int get_base_ranges(void)
- 	closedir(dir);
- 	sort_base_ranges();
- 	memory_max = base_memory_range[nr_memory_ranges - 1].end;
--#ifdef DEBUG
--	fprintf(stderr, "get base memory ranges:%d\n", nr_memory_ranges);
--#endif
-+	dbgprintf("get base memory ranges:%d\n", nr_memory_ranges);
-+
- 	return 0;
- }
- 
-@@ -726,7 +725,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 		sizeof(struct memory_range) * nr_memory_ranges);
- 
- 	*ranges = nr_memory_ranges;
--	fprintf(stderr, "get memory ranges:%d\n", nr_memory_ranges);
-+	dbgprintf("get memory ranges:%d\n", nr_memory_ranges);
- 	return 0;
- }
- 
 -- 
-1.6.0.2
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
 
 _______________________________________________
