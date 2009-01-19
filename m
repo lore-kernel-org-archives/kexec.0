@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from adelie.canonical.com ([91.189.90.139])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LP1gU-0003Ow-Ja
-	for kexec@lists.infradead.org; Mon, 19 Jan 2009 21:29:29 +0000
-Received: from hutte.canonical.com ([91.189.90.181])
-	by adelie.canonical.com with esmtp (Exim 4.69 #1 (Debian))
-	id 1LP1gT-0003vk-EQ
-	for <kexec@lists.infradead.org>; Mon, 19 Jan 2009 21:29:25 +0000
-Received: from cpe-67-242-211-173.rochester.res.rr.com ([67.242.211.173]
-	helo=[192.168.1.200]) by hutte.canonical.com with esmtpsa
-	(TLS-1.0:DHE_RSA_AES_256_CBC_SHA1:32) (Exim 4.69)
-	(envelope-from <michael.casadevall@canonical.com>)
-	id 1LP1gT-0002u3-9u
-	for kexec@lists.infradead.org; Mon, 19 Jan 2009 21:29:25 +0000
-Message-ID: <4974F0B3.2030501@canonical.com>
-Date: Mon, 19 Jan 2009 16:29:23 -0500
-From: Michael Casadevall <michael.casadevall@canonical.com>
+Received: from sj-iport-6.cisco.com ([171.71.176.117])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LOxNQ-0004Jk-E7
+	for kexec@lists.infradead.org; Mon, 19 Jan 2009 16:53:43 +0000
+Received: from sj-core-5.cisco.com (sj-core-5.cisco.com [171.71.177.238])
+	by sj-dkim-3.cisco.com (8.12.11/8.12.11) with ESMTP id n0JGrEPY024273
+	for <kexec@lists.infradead.org>; Mon, 19 Jan 2009 08:53:14 -0800
+Received: from xbh-sjc-221.amer.cisco.com (xbh-sjc-221.cisco.com
+	[128.107.191.63])
+	by sj-core-5.cisco.com (8.13.8/8.13.8) with ESMTP id n0JGrEdp002695
+	for <kexec@lists.infradead.org>; Mon, 19 Jan 2009 16:53:14 GMT
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: kexec on ARM
+Subject: kexec -l takes long time
+Date: Mon, 19 Jan 2009 08:53:13 -0800
+Message-ID: <F795765B112E7344AF36AA911279641509075A23@xmb-sjc-212.amer.cisco.com>
+From: "Bizhan Gholikhamseh (bgholikh)" <bgholikh@cisco.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +24,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0207845818=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Hello all,
-I've recently been working on trying to use kexec on ARM, but I've been
-running into some trouble, which may or may not be user error. I'm
-simply using kexec to load another kenel and execute it (for my
-purposes, I'm not interested in crash kernel support). I have the host
-kernel compiled in with kexec support, and I compiled kexec-tools for
-ARM. I can load the second kernel with kexec -l, and see it get loaded,
-but I just get a hang when I use kexec -e, I just get a hang. Looking at
-the printk's, it seems execution leaves the main kernel, and gets into
-the relocation stub before dying. On real hardware, it just hangs, but
-on QEMU, I get the following dump on the console:
+This is a multi-part message in MIME format.
 
- qemu: fatal: Trying to execute code outside RAM or ROM at 0xc0035460
+--===============0207845818==
+Content-class: urn:content-classes:message
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C97A56.6B48675A"
 
-R00=0f9b6000 R01=000005f8 R02=bf000c12 R03=ceddefc8
-R04=0f9b6000 R05=cf9b6000 R06=fee1dead R07=00000000
-R08=c002c008 R09=cedaa000 R10=00000000 R11=cedabe6c
-R12=00092070 R13=cedabe58 R14=c0030ffc R15=c0035460
-PSR=600000d3 -ZC- A svc32
-Aborted (core dumped)
+This is a multi-part message in MIME format.
 
-[1]+  Exit 134                ./start-arm
+------_=_NextPart_001_01C97A56.6B48675A
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-I'm hoping this is user error; does the second kernel require something
-special such as relocation support? I'm fairly new to kexec so any help
-that can be offered would be greatly appreciated.
-Michael
+Hi All,
+
+I have recently started using kexec in our environment. One thing that I
+have noticed, the command:
+
+"kexec -l bzImage -append=3D"`cat /proc/cmdline`"
+
+Takes about 20 seconds to finish, is this normal? If not what might be
+the issue?
+
+=20
+
+Many thanks in advance,
+
+Bizhan
+
+
+------_=_NextPart_001_01C97A56.6B48675A
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Hi All,<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>I have recently started using kexec in our =
+environment. One
+thing that I have noticed, the command:<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>&#8220;kexec &#8211;l bzImage =
+&#8211;append=3D&#8221;`cat
+/proc/cmdline`&#8221;<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Takes about 20 seconds to finish, is this normal? If =
+not
+what might be the issue?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Many thanks in advance,<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Bizhan<o:p></o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C97A56.6B48675A--
+
+
+--===============0207845818==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0207845818==--
+
