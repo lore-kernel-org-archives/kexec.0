@@ -1,14 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LP1Z5-0006dQ-Mu
-	for kexec@lists.infradead.org; Mon, 19 Jan 2009 21:21:50 +0000
-Date: Mon, 19 Jan 2009 16:21:27 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH]: add dmesg log symbols to /proc/vmcoreinfo lists
-Message-ID: <20090119212127.GA13157@hmsreliant.think-freely.org>
+Received: from adelie.canonical.com ([91.189.90.139])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LP1gU-0003Ow-Ja
+	for kexec@lists.infradead.org; Mon, 19 Jan 2009 21:29:29 +0000
+Received: from hutte.canonical.com ([91.189.90.181])
+	by adelie.canonical.com with esmtp (Exim 4.69 #1 (Debian))
+	id 1LP1gT-0003vk-EQ
+	for <kexec@lists.infradead.org>; Mon, 19 Jan 2009 21:29:25 +0000
+Received: from cpe-67-242-211-173.rochester.res.rr.com ([67.242.211.173]
+	helo=[192.168.1.200]) by hutte.canonical.com with esmtpsa
+	(TLS-1.0:DHE_RSA_AES_256_CBC_SHA1:32) (Exim 4.69)
+	(envelope-from <michael.casadevall@canonical.com>)
+	id 1LP1gT-0002u3-9u
+	for kexec@lists.infradead.org; Mon, 19 Jan 2009 21:29:25 +0000
+Message-ID: <4974F0B3.2030501@canonical.com>
+Date: Mon, 19 Jan 2009 16:29:23 -0500
+From: Michael Casadevall <michael.casadevall@canonical.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: kexec on ARM
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,88 +30,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: nhorman@tuxdriver.com, kexec@lists.infradead.org, hbabu@us.ibm.com, horms@verge.net.au, akpm@linux-foundation.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org
 
-Hey all-
-	It would be nice to be able to extract the dmesg log from a vmcore file
-without needing to keep the debug symbols for the running kernel handy all the
-time.  We have a facility to do this in /proc/vmcore.  This patch adds the
-log_buf and log_end symbols to the vmcoreinfo area so that tools (like
-makedumpfile) can easily extract the dmesg logs from a vmcore image.
+Hello all,
+I've recently been working on trying to use kexec on ARM, but I've been
+running into some trouble, which may or may not be user error. I'm
+simply using kexec to load another kenel and execute it (for my
+purposes, I'm not interested in crash kernel support). I have the host
+kernel compiled in with kexec support, and I compiled kexec-tools for
+ARM. I can load the second kernel with kexec -l, and see it get loaded,
+but I just get a hang when I use kexec -e, I just get a hang. Looking at
+the printk's, it seems execution leaves the main kernel, and gets into
+the relocation stub before dying. On real hardware, it just hangs, but
+on QEMU, I get the following dump on the console:
 
-Regards
-Neil
+ qemu: fatal: Trying to execute code outside RAM or ROM at 0xc0035460
 
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+R00=0f9b6000 R01=000005f8 R02=bf000c12 R03=ceddefc8
+R04=0f9b6000 R05=cf9b6000 R06=fee1dead R07=00000000
+R08=c002c008 R09=cedaa000 R10=00000000 R11=cedabe6c
+R12=00092070 R13=cedabe58 R14=c0030ffc R15=c0035460
+PSR=600000d3 -ZC- A svc32
+Aborted (core dumped)
 
+[1]+  Exit 134                ./start-arm
 
- include/linux/kernel.h |    2 ++
- kernel/kexec.c         |    3 +++
- kernel/printk.c        |    8 ++++++++
- 3 files changed, 13 insertions(+)
-
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 343df9e..a7f3e8a 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -242,6 +242,7 @@ extern struct ratelimit_state printk_ratelimit_state;
- extern int printk_ratelimit(void);
- extern bool printk_timed_ratelimit(unsigned long *caller_jiffies,
- 				   unsigned int interval_msec);
-+void log_buf_kexec_setup(void);
- #else
- static inline int vprintk(const char *s, va_list args)
- 	__attribute__ ((format (printf, 1, 0)));
-@@ -253,6 +254,7 @@ static inline int printk_ratelimit(void) { return 0; }
- static inline bool printk_timed_ratelimit(unsigned long *caller_jiffies, \
- 					  unsigned int interval_msec)	\
- 		{ return false; }
-+#define log_buf_kexec_setup() do {} while(0)
- #endif
- 
- extern int printk_needs_cpu(int cpu);
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 8a6d7b0..bee284d 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1409,6 +1409,9 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_OFFSET(list_head, prev);
- 	VMCOREINFO_OFFSET(vm_struct, addr);
- 	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
-+#ifdef CONFIG_PRINTK
-+	log_buf_kexec_setup();
-+#endif
- 	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
- 	VMCOREINFO_NUMBER(NR_FREE_PAGES);
- 	VMCOREINFO_NUMBER(PG_lru);
-diff --git a/kernel/printk.c b/kernel/printk.c
-index 69188f2..79e9e05 100644
---- a/kernel/printk.c
-+++ b/kernel/printk.c
-@@ -32,6 +32,7 @@
- #include <linux/security.h>
- #include <linux/bootmem.h>
- #include <linux/syscalls.h>
-+#include <linux/kexec.h>
- 
- #include <asm/uaccess.h>
- 
-@@ -136,6 +137,13 @@ static char *log_buf = __log_buf;
- static int log_buf_len = __LOG_BUF_LEN;
- static unsigned logged_chars; /* Number of chars produced since last read+clear operation */
- 
-+void log_buf_kexec_setup(void)
-+{
-+	VMCOREINFO_SYMBOL(log_buf);
-+	VMCOREINFO_SYMBOL(log_end);
-+}
-+
-+
- static int __init log_buf_len_setup(char *str)
- {
- 	unsigned size = memparse(str, &str);
+I'm hoping this is user error; does the second kernel require something
+special such as relocation support? I'm fairly new to kexec so any help
+that can be offered would be greatly appreciated.
+Michael
 
 _______________________________________________
 kexec mailing list
