@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LOgA1-0001Zz-PZ
-	for kexec@lists.infradead.org; Sun, 18 Jan 2009 22:30:33 +0000
-Date: Mon, 19 Jan 2009 09:30:24 +1100
+	id 1LOinr-0007zI-Jq
+	for kexec@lists.infradead.org; Mon, 19 Jan 2009 01:19:50 +0000
+Date: Mon, 19 Jan 2009 12:17:18 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix missing FILE argument in fprintf()
-Message-ID: <20090118223020.GA3043@verge.net.au>
-References: <1232114808-22809-1-git-send-email-bwalle@suse.de>
+Subject: Re: [PATCH] [PPC64] Fix memory corruption when using
+	realloc_memory_ranges()
+Message-ID: <20090119011716.GB6249@verge.net.au>
+References: <1232129494-20143-1-git-send-email-bwalle@suse.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1232114808-22809-1-git-send-email-bwalle@suse.de>
+In-Reply-To: <1232129494-20143-1-git-send-email-bwalle@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,21 +27,24 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bernhard Walle <bwalle@suse.de>
 Cc: kexec@lists.infradead.org
 
-On Fri, Jan 16, 2009 at 03:06:48PM +0100, Bernhard Walle wrote:
-> This fixes the following compiler warning
+On Fri, Jan 16, 2009 at 07:11:34PM +0100, Bernhard Walle wrote:
+> Because realloc_memory_ranges() makes the old memory invalid, and we return
+> a pointer to memory_range in get_memory_ranges(), we need to copy the contents
+> in get_memory_ranges().
 > 
->     kexec/arch/i386/crashdump-x86.c: In function 'get_crash_memory_ranges':
->     kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 1 of \
->         'fprintf' from incompatible pointer type
->     kexec/arch/i386/crashdump-x86.c:144: warning: passing argument 2 of \
->         'fprintf' makes pointer from integer without a cast
+> Some code that calls realloc_memory_ranges() may be triggered by
+> get_base_ranges() which is called after get_memory_ranges().
 > 
-> 
-> Signed-off-by: Bernhard Walle <bwalle@suse.de>
+> Yes, the memory needs to be deleted somewhere, but I don't know currently
+> where it's the best, and since it's not in a loop and memory is deleted
+> anyway after program termination I don't want to introduce unneccessary
+> complexity. The problem is that get_base_ranges() gets called from
+> architecture independent code and that allocation is PPC64-specific here.
 
-Thanks Bernhard,
+Thanks, this sounds like a bit of a mess, but I think that your
+patch does improve the situation.
 
-applied.
+Applied.
 
 -- 
 Simon Horman
