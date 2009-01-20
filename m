@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LPIRu-0006RL-Gy
-	for kexec@lists.infradead.org; Tue, 20 Jan 2009 15:23:33 +0000
-Date: Tue, 20 Jan 2009 10:22:56 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH]: add dmesg log symbols to /proc/vmcoreinfo lists
-Message-ID: <20090120152255.GB5125@redhat.com>
-References: <20090119212127.GA13157@hmsreliant.think-freely.org>
-	<20090120141551.GA5125@redhat.com>
-	<20090120150958.GB18207@hmsreliant.think-freely.org>
+	id 1LPPRX-0000C8-Fa
+	for kexec@lists.infradead.org; Tue, 20 Jan 2009 22:51:50 +0000
+Date: Wed, 21 Jan 2009 08:30:01 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch] Possible fix for kexec-tools dynamic range allocation
+Message-ID: <20090120212959.GA3564@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20090120150958.GB18207@hmsreliant.think-freely.org>
+In-Reply-To: <1231308086.27416.14.camel@localhost>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,48 +22,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: hbabu@us.ibm.com, akpm@linux-foundation.org, horms@verge.net.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Michael Ellerman <michael@ellerman.id.au>
+Cc: Bernhard Walle <bwalle@suse.de>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, muvarov@gmail.com
 
-On Tue, Jan 20, 2009 at 10:09:58AM -0500, Neil Horman wrote:
-> On Tue, Jan 20, 2009 at 09:15:51AM -0500, Vivek Goyal wrote:
-> > On Mon, Jan 19, 2009 at 04:21:27PM -0500, Neil Horman wrote:
-> > > Hey all-
-> > > 	It would be nice to be able to extract the dmesg log from a vmcore file
-> > > without needing to keep the debug symbols for the running kernel handy all the
-> > > time.  We have a facility to do this in /proc/vmcore.  This patch adds the
-> > > log_buf and log_end symbols to the vmcoreinfo area so that tools (like
-> > > makedumpfile) can easily extract the dmesg logs from a vmcore image.
-> > > 
-> > 
-> > It would be nice to get dmesg log if debug symbols are not around. Can't
-> > we use System.map for getting symbol addresses? vmcoreinfo had started
-> > small and seems to be growing now. I am thinking down the line will making
-> > use of System.map for such cases make sense?
-> > 
+On Wed, Jan 07, 2009 at 05:01:26PM +1100, Michael Ellerman wrote:
+> Hi all,
 > 
-> System.map only include exported and public symbols.  log_buf and log_end are
-> static, and not reported in the System.map.  Its a nice idea, but not
-> comprehensive for everything in the kernel.
+> The patch to dynamically allocate memory regions for ppc64 kexec-tools,
+> ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has never
+> worked AFAICT.
 > 
-> ><snip>
-> > 
-> > Will it be an issue if we make log_buf and log_end non static and directly
-> > access these in kexec.c?
-> > 
-> I had considered that, but was a bit hesitant to do so, since it exposes the
-> internal implementation of the dmesg buffer.  In the event someone disables
-> CONFIG_PRINTK, thats just more code we need to ifdef.  With this implementation
-> we just stub out the log_buf_setup function, and let that be that.  It seems
-> more consice to me this way.
+> Chandru reported it as broken when it was posted:
+> http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
+> 
+> Still, it's in now, and I'm trying to work out what's going wrong.
+> 
+> The symptom is as reported by Chandru, we end up not being able to
+> allocate any memory (in locate_hole()). This is caused by the list of
+> memory_ranges being empty.
+> 
+> The memory_ranges are empty because they have been realloc'ed (by the
+> dynamic alloc code), and the generic code is still looking at the old
+> version.
+> 
+> What I'm not clear on is why the ppc64 code is even calling
+> setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
+> been called by get_memory_ranges() from my_load(). Or is there another
+> route into elf_ppc64_load() that I'm not seeing?
+> 
+> And in fact if I just remove that call, then everything is peachy.
+> 
+> The following patch makes it work for me at least.
+
+Hi Michael,
+
+I must confess that I don't have a complete understanding of this problem.
+Does Bernhard's recent patch (sorry that I applied it even though
+it came in after your patch) help this problem?
+
+commit 95c74405638c786bc76fbca5e4e8427dfe26e907
+Author: Bernhard Walle <bwalle@suse.de>
+Date:   Fri Jan 16 19:11:34 2009 +0100
+Subject: Fix memory corruption when using realloc_memory_ranges()
+
+> >From 40958d8f957876ca612b666f40bebf28ea335314 Mon Sep 17 00:00:00 2001
+> From: Michael Ellerman <michael@ellerman.id.au>
+> Date: Wed, 7 Jan 2009 16:57:05 +1100
+> Subject: [PATCH] Don't call setup_memory_ranges() again
+> 
+> There's no need to call setup_memory_ranges() again. Furthermore it can
+> lead to the memory_ranges being realloc'ed, which results in the generic
+> code (locate_hole() etc.) using the free'd memory_ranges.
+> 
+> Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
+> ---
+>  kexec/arch/ppc64/kexec-elf-ppc64.c |    2 --
+>  1 files changed, 0 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+> index 21533cb..1e2d5a3 100644
+> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
+> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+> @@ -151,8 +151,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+>  	if (ramdisk && reuse_initrd)
+>  		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
+>  
+> -	setup_memory_ranges(info->kexec_flags);
+> -
+>  	/* Need to append some command line parameters internally in case of
+>  	 * taking crash dumps.
+>  	 */
+> -- 
+> 1.5.3.7.1.g4e596e
+> 
 > 
 
-Makes sense to me.
+-- 
+Simon Horman
+  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
+  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
