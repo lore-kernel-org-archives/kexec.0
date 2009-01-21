@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LPRXq-0003Ab-Ev
-	for kexec@lists.infradead.org; Wed, 21 Jan 2009 01:06:17 +0000
-Subject: Re: [patch] Possible fix for kexec-tools dynamic range allocation
-From: Michael Ellerman <michael@ellerman.id.au>
-In-Reply-To: <20090120212959.GA3564@verge.net.au>
-References: <20090120212959.GA3564@verge.net.au>
-Date: Wed, 21 Jan 2009 12:06:09 +1100
-Message-Id: <1232499969.11241.27.camel@localhost>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LPeUz-0001J5-12
+	for kexec@lists.infradead.org; Wed, 21 Jan 2009 14:56:11 +0000
+Date: Wed, 21 Jan 2009 06:42:42 -0800
+From: "David N. Lombard" <dnlombar@ichips.intel.com>
+Subject: Re: kexec -l takes long time
+Message-ID: <20090121144242.GA29772@nlxdcldnl2.cl.intel.com>
+References: <F795765B112E7344AF36AA911279641509075A23@xmb-sjc-212.amer.cisco.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <F795765B112E7344AF36AA911279641509075A23@xmb-sjc-212.amer.cisco.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,148 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1207885235=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Bernhard Walle <bwalle@suse.de>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, muvarov@gmail.com
+To: "Bizhan Gholikhamseh (bgholikh)" <bgholikh@cisco.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-
---===============1207885235==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-xoTqL495mndz7kR+I9Ut"
-
-
---=-xoTqL495mndz7kR+I9Ut
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2009-01-21 at 08:30 +1100, Simon Horman wrote:
-> On Wed, Jan 07, 2009 at 05:01:26PM +1100, Michael Ellerman wrote:
-> > Hi all,
-> >=20
-> > The patch to dynamically allocate memory regions for ppc64 kexec-tools,
-> > ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has neve=
-r
-> > worked AFAICT.
-> >=20
-> > Chandru reported it as broken when it was posted:
-> > http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
-> >=20
-> > Still, it's in now, and I'm trying to work out what's going wrong.
-> >=20
-> > The symptom is as reported by Chandru, we end up not being able to
-> > allocate any memory (in locate_hole()). This is caused by the list of
-> > memory_ranges being empty.
-> >=20
-> > The memory_ranges are empty because they have been realloc'ed (by the
-> > dynamic alloc code), and the generic code is still looking at the old
-> > version.
-> >=20
-> > What I'm not clear on is why the ppc64 code is even calling
-> > setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
-> > been called by get_memory_ranges() from my_load(). Or is there another
-> > route into elf_ppc64_load() that I'm not seeing?
-> >=20
-> > And in fact if I just remove that call, then everything is peachy.
-> >=20
-> > The following patch makes it work for me at least.
->=20
-> Hi Michael,
->=20
-> I must confess that I don't have a complete understanding of this problem=
-.
-> Does Bernhard's recent patch (sorry that I applied it even though
-> it came in after your patch) help this problem?
-
-Hi Horms,
-
-Well to be honest neither do I, I was hoping someone who'd written or
-helped write the original code would comment.
-
-Bernhard's patch will help, but I think mine is a better solution.
-
-> commit 95c74405638c786bc76fbca5e4e8427dfe26e907
-> Author: Bernhard Walle <bwalle@suse.de>
-> Date:   Fri Jan 16 19:11:34 2009 +0100
-> Subject: Fix memory corruption when using realloc_memory_ranges()
-
-> Because realloc_memory_ranges() makes the old memory invalid, and we retu=
-rn
-> a pointer to memory_range in get_memory_ranges(), we need to copy the con=
-tents
-> in get_memory_ranges().
->=20
-> Some code that calls realloc_memory_ranges() may be triggered by
-> get_base_ranges() which is called after get_memory_ranges().
->=20
-> Yes, the memory needs to be deleted somewhere, but I don't know currently
-> where it's the best, and since it's not in a loop and memory is deleted
-> anyway after program termination I don't want to introduce unneccessary
-> complexity. The problem is that get_base_ranges() gets called from
-> architecture independent code and that allocation is PPC64-specific here.
-
-I don't see where get_base_ranges() is called other than from PPC64
-code, so I'm confused about this comment.
-
-What I see happening is:
-      * get_memory_ranges() is called early in kexec.c and saves a
-        pointer to the memory ranges in "info".
-      * Any subsequent call which causes the memory ranges to be
-        realloc'ed will screw that up, because now info will point at
-        free'd memory.
-      * Later on in elf_ppc64_load() we call setup_memory_ranges()
-        (again).
-      * That may cause the ranges to be realloc'ed, which would be bad.
-      * But the second call to setup_memory_ranges() is useless, because
-        it doesn't update info, and info is what we keep using for
-        allocations.
-      * So if setup_memory_ranges() found new ranges, they would never
-        be used, even apart from the corruption issue. So we may as well
-        not call it.
-      * If there are /other/ code paths where we can realloc memory
-        ranges then maybe we /also/ need Bernhard's patch.
-
-But that was only a 10 minute analysis, so maybe I'm wrong ;)
-
-cheers
-
---=20
-Michael Ellerman
-OzLabs, IBM Australia Development Lab
-
-wwweb: http://michael.ellerman.id.au
-phone: +61 2 6212 1183 (tie line 70 21183)
-
-We do not inherit the earth from our ancestors,
-we borrow it from our children. - S.M.A.R.T Person
-
---=-xoTqL495mndz7kR+I9Ut
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkl2dQEACgkQdSjSd0sB4dJu1ACguUG53LcSYJoTh/L+xIJL1QxI
-NPYAn28Y+0t5U4Y7M1YY7QE52ztKMFLE
-=FPJG
------END PGP SIGNATURE-----
-
---=-xoTqL495mndz7kR+I9Ut--
-
-
-
---===============1207885235==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1207885235==--
-
-
+T24gTW9uLCBKYW4gMTksIDIwMDkgYXQgMDk6NTM6MTNBTSAtMDcwMCwgQml6aGFuIEdob2xpa2hh
+bXNlaCAoYmdob2xpa2gpIHdyb3RlOgo+IEhpIEFsbCwKPiBJIGhhdmUgcmVjZW50bHkgc3RhcnRl
+ZCB1c2luZyBrZXhlYyBpbiBvdXIgZW52aXJvbm1lbnQuIE9uZSB0aGluZyB0aGF0IEkgaGF2ZSBu
+b3RpY2VkLCB0aGUgY29tbWFuZDoKPiDigJxrZXhlYyDigJNsIGJ6SW1hZ2Ug4oCTYXBwZW5kPeKA
+nWBjYXQgL3Byb2MvY21kbGluZWDigJ0KPiBUYWtlcyBhYm91dCAyMCBzZWNvbmRzIHRvIGZpbmlz
+aCwgaXMgdGhpcyBub3JtYWw/IElmIG5vdCB3aGF0IG1pZ2h0IGJlIHRoZSBpc3N1ZT8KPiAKSXQn
+cyBub3Qgbm9ybWFsIGluIG15IGV4cGVyaWVuY2U7IGluIGFsbCBvZiBteSBleHBlcmllbmNlcyBv
+biBub3JtYWwgSUEgc2VydmVycwp0aGUgbG9hZCBoYXMgbm8gbm90aWNhYmxlIGRlbGF5LgoKSSBk
+b24ndCBrbm93IHdoZXJlIHRvIHBvaW50IHlvdSB0bywgdGhvdWdoIGZvciB0cm91Ymxlc2hvb3Rp
+bmcuICBBbiBzdHJhY2UKd291bGQgbGlrZWx5IGdldCB5b3Ugc3RhcnRlZCB0aG91Z2guCgotLSAK
+RGF2aWQgTi4gTG9tYmFyZCwgSW50ZWwsIElydmluZSwgQ0EKSSBkbyBub3Qgc3BlYWsgZm9yIElu
+dGVsIENvcnBvcmF0aW9uOyBhbGwgY29tbWVudHMgYXJlIHN0cmljdGx5IG15IG93bi4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
