@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LPPRX-0000C8-Fa
-	for kexec@lists.infradead.org; Tue, 20 Jan 2009 22:51:50 +0000
-Date: Wed, 21 Jan 2009 08:30:01 +1100
-From: Simon Horman <horms@verge.net.au>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LPRXq-0003Ab-Ev
+	for kexec@lists.infradead.org; Wed, 21 Jan 2009 01:06:17 +0000
 Subject: Re: [patch] Possible fix for kexec-tools dynamic range allocation
-Message-ID: <20090120212959.GA3564@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1231308086.27416.14.camel@localhost>
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <20090120212959.GA3564@verge.net.au>
+References: <20090120212959.GA3564@verge.net.au>
+Date: Wed, 21 Jan 2009 12:06:09 +1100
+Message-Id: <1232499969.11241.27.camel@localhost>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,92 +19,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1207885235=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <michael@ellerman.id.au>
-Cc: Bernhard Walle <bwalle@suse.de>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, muvarov@gmail.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Bernhard Walle <bwalle@suse.de>, Chandru <chandru@in.ibm.com>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, linuxppc-dev list <linuxppc-dev@ozlabs.org>, mohan@in.ibm.com, muvarov@gmail.com
 
-On Wed, Jan 07, 2009 at 05:01:26PM +1100, Michael Ellerman wrote:
-> Hi all,
-> 
-> The patch to dynamically allocate memory regions for ppc64 kexec-tools,
-> ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has never
-> worked AFAICT.
-> 
-> Chandru reported it as broken when it was posted:
-> http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
-> 
-> Still, it's in now, and I'm trying to work out what's going wrong.
-> 
-> The symptom is as reported by Chandru, we end up not being able to
-> allocate any memory (in locate_hole()). This is caused by the list of
-> memory_ranges being empty.
-> 
-> The memory_ranges are empty because they have been realloc'ed (by the
-> dynamic alloc code), and the generic code is still looking at the old
-> version.
-> 
-> What I'm not clear on is why the ppc64 code is even calling
-> setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
-> been called by get_memory_ranges() from my_load(). Or is there another
-> route into elf_ppc64_load() that I'm not seeing?
-> 
-> And in fact if I just remove that call, then everything is peachy.
-> 
-> The following patch makes it work for me at least.
 
-Hi Michael,
+--===============1207885235==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-xoTqL495mndz7kR+I9Ut"
 
-I must confess that I don't have a complete understanding of this problem.
-Does Bernhard's recent patch (sorry that I applied it even though
-it came in after your patch) help this problem?
 
-commit 95c74405638c786bc76fbca5e4e8427dfe26e907
-Author: Bernhard Walle <bwalle@suse.de>
-Date:   Fri Jan 16 19:11:34 2009 +0100
-Subject: Fix memory corruption when using realloc_memory_ranges()
+--=-xoTqL495mndz7kR+I9Ut
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> >From 40958d8f957876ca612b666f40bebf28ea335314 Mon Sep 17 00:00:00 2001
-> From: Michael Ellerman <michael@ellerman.id.au>
-> Date: Wed, 7 Jan 2009 16:57:05 +1100
-> Subject: [PATCH] Don't call setup_memory_ranges() again
-> 
-> There's no need to call setup_memory_ranges() again. Furthermore it can
-> lead to the memory_ranges being realloc'ed, which results in the generic
-> code (locate_hole() etc.) using the free'd memory_ranges.
-> 
-> Signed-off-by: Michael Ellerman <michael@ellerman.id.au>
-> ---
->  kexec/arch/ppc64/kexec-elf-ppc64.c |    2 --
->  1 files changed, 0 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> index 21533cb..1e2d5a3 100644
-> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> @@ -151,8 +151,6 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
->  	if (ramdisk && reuse_initrd)
->  		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
->  
-> -	setup_memory_ranges(info->kexec_flags);
-> -
->  	/* Need to append some command line parameters internally in case of
->  	 * taking crash dumps.
->  	 */
-> -- 
-> 1.5.3.7.1.g4e596e
-> 
-> 
+On Wed, 2009-01-21 at 08:30 +1100, Simon Horman wrote:
+> On Wed, Jan 07, 2009 at 05:01:26PM +1100, Michael Ellerman wrote:
+> > Hi all,
+> >=20
+> > The patch to dynamically allocate memory regions for ppc64 kexec-tools,
+> > ie. "ppc64: kexec memory ranges dynamic allocation" (d182ce5), has neve=
+r
+> > worked AFAICT.
+> >=20
+> > Chandru reported it as broken when it was posted:
+> > http://lists.infradead.org/pipermail/kexec/2008-October/002751.html
+> >=20
+> > Still, it's in now, and I'm trying to work out what's going wrong.
+> >=20
+> > The symptom is as reported by Chandru, we end up not being able to
+> > allocate any memory (in locate_hole()). This is caused by the list of
+> > memory_ranges being empty.
+> >=20
+> > The memory_ranges are empty because they have been realloc'ed (by the
+> > dynamic alloc code), and the generic code is still looking at the old
+> > version.
+> >=20
+> > What I'm not clear on is why the ppc64 code is even calling
+> > setup_memory_ranges() a second time (in elf_ppc64_load()). It's already
+> > been called by get_memory_ranges() from my_load(). Or is there another
+> > route into elf_ppc64_load() that I'm not seeing?
+> >=20
+> > And in fact if I just remove that call, then everything is peachy.
+> >=20
+> > The following patch makes it work for me at least.
+>=20
+> Hi Michael,
+>=20
+> I must confess that I don't have a complete understanding of this problem=
+.
+> Does Bernhard's recent patch (sorry that I applied it even though
+> it came in after your patch) help this problem?
 
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+Hi Horms,
 
+Well to be honest neither do I, I was hoping someone who'd written or
+helped write the original code would comment.
+
+Bernhard's patch will help, but I think mine is a better solution.
+
+> commit 95c74405638c786bc76fbca5e4e8427dfe26e907
+> Author: Bernhard Walle <bwalle@suse.de>
+> Date:   Fri Jan 16 19:11:34 2009 +0100
+> Subject: Fix memory corruption when using realloc_memory_ranges()
+
+> Because realloc_memory_ranges() makes the old memory invalid, and we retu=
+rn
+> a pointer to memory_range in get_memory_ranges(), we need to copy the con=
+tents
+> in get_memory_ranges().
+>=20
+> Some code that calls realloc_memory_ranges() may be triggered by
+> get_base_ranges() which is called after get_memory_ranges().
+>=20
+> Yes, the memory needs to be deleted somewhere, but I don't know currently
+> where it's the best, and since it's not in a loop and memory is deleted
+> anyway after program termination I don't want to introduce unneccessary
+> complexity. The problem is that get_base_ranges() gets called from
+> architecture independent code and that allocation is PPC64-specific here.
+
+I don't see where get_base_ranges() is called other than from PPC64
+code, so I'm confused about this comment.
+
+What I see happening is:
+      * get_memory_ranges() is called early in kexec.c and saves a
+        pointer to the memory ranges in "info".
+      * Any subsequent call which causes the memory ranges to be
+        realloc'ed will screw that up, because now info will point at
+        free'd memory.
+      * Later on in elf_ppc64_load() we call setup_memory_ranges()
+        (again).
+      * That may cause the ranges to be realloc'ed, which would be bad.
+      * But the second call to setup_memory_ranges() is useless, because
+        it doesn't update info, and info is what we keep using for
+        allocations.
+      * So if setup_memory_ranges() found new ranges, they would never
+        be used, even apart from the corruption issue. So we may as well
+        not call it.
+      * If there are /other/ code paths where we can realloc memory
+        ranges then maybe we /also/ need Bernhard's patch.
+
+But that was only a 10 minute analysis, so maybe I'm wrong ;)
+
+cheers
+
+--=20
+Michael Ellerman
+OzLabs, IBM Australia Development Lab
+
+wwweb: http://michael.ellerman.id.au
+phone: +61 2 6212 1183 (tie line 70 21183)
+
+We do not inherit the earth from our ancestors,
+we borrow it from our children. - S.M.A.R.T Person
+
+--=-xoTqL495mndz7kR+I9Ut
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkl2dQEACgkQdSjSd0sB4dJu1ACguUG53LcSYJoTh/L+xIJL1QxI
+NPYAn28Y+0t5U4Y7M1YY7QE52ztKMFLE
+=FPJG
+-----END PGP SIGNATURE-----
+
+--=-xoTqL495mndz7kR+I9Ut--
+
+
+
+--===============1207885235==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1207885235==--
+
+
