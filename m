@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LPeUz-0001J5-12
-	for kexec@lists.infradead.org; Wed, 21 Jan 2009 14:56:11 +0000
-Date: Wed, 21 Jan 2009 06:42:42 -0800
-From: "David N. Lombard" <dnlombar@ichips.intel.com>
-Subject: Re: kexec -l takes long time
-Message-ID: <20090121144242.GA29772@nlxdcldnl2.cl.intel.com>
-References: <F795765B112E7344AF36AA911279641509075A23@xmb-sjc-212.amer.cisco.com>
+Received: from e28smtp01.in.ibm.com ([59.145.155.1])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LQKFq-0000Os-1i
+	for kexec@lists.infradead.org; Fri, 23 Jan 2009 11:31:21 +0000
+Received: from d28relay02.in.ibm.com (d28relay02.in.ibm.com [9.184.220.59])
+	by e28smtp01.in.ibm.com (8.13.1/8.13.1) with ESMTP id n0NBVDLL026580
+	for <kexec@lists.infradead.org>; Fri, 23 Jan 2009 17:01:13 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	n0NBTBlr2502894
+	for <kexec@lists.infradead.org>; Fri, 23 Jan 2009 16:59:11 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+	by d28av03.in.ibm.com (8.13.1/8.13.3) with ESMTP id n0NBVCms008962
+	for <kexec@lists.infradead.org>; Fri, 23 Jan 2009 22:31:13 +1100
+Message-ID: <4979AA81.8030300@in.ibm.com>
+Date: Fri, 23 Jan 2009 17:01:13 +0530
+From: Chandru <chandru@in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <F795765B112E7344AF36AA911279641509075A23@xmb-sjc-212.amer.cisco.com>
+Subject: Re: [patch] Possible fix for kexec-tools dynamic range allocation
+References: <20090120212959.GA3564@verge.net.au>
+In-Reply-To: <20090120212959.GA3564@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,25 +28,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Bizhan Gholikhamseh (bgholikh)" <bgholikh@cisco.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Ellerman <michael@ellerman.id.au>, Bernhard Walle <bwalle@suse.de>, mohan@in.ibm.com, kexec@lists.infradead.org
 
-T24gTW9uLCBKYW4gMTksIDIwMDkgYXQgMDk6NTM6MTNBTSAtMDcwMCwgQml6aGFuIEdob2xpa2hh
-bXNlaCAoYmdob2xpa2gpIHdyb3RlOgo+IEhpIEFsbCwKPiBJIGhhdmUgcmVjZW50bHkgc3RhcnRl
-ZCB1c2luZyBrZXhlYyBpbiBvdXIgZW52aXJvbm1lbnQuIE9uZSB0aGluZyB0aGF0IEkgaGF2ZSBu
-b3RpY2VkLCB0aGUgY29tbWFuZDoKPiDigJxrZXhlYyDigJNsIGJ6SW1hZ2Ug4oCTYXBwZW5kPeKA
-nWBjYXQgL3Byb2MvY21kbGluZWDigJ0KPiBUYWtlcyBhYm91dCAyMCBzZWNvbmRzIHRvIGZpbmlz
-aCwgaXMgdGhpcyBub3JtYWw/IElmIG5vdCB3aGF0IG1pZ2h0IGJlIHRoZSBpc3N1ZT8KPiAKSXQn
-cyBub3Qgbm9ybWFsIGluIG15IGV4cGVyaWVuY2U7IGluIGFsbCBvZiBteSBleHBlcmllbmNlcyBv
-biBub3JtYWwgSUEgc2VydmVycwp0aGUgbG9hZCBoYXMgbm8gbm90aWNhYmxlIGRlbGF5LgoKSSBk
-b24ndCBrbm93IHdoZXJlIHRvIHBvaW50IHlvdSB0bywgdGhvdWdoIGZvciB0cm91Ymxlc2hvb3Rp
-bmcuICBBbiBzdHJhY2UKd291bGQgbGlrZWx5IGdldCB5b3Ugc3RhcnRlZCB0aG91Z2guCgotLSAK
-RGF2aWQgTi4gTG9tYmFyZCwgSW50ZWwsIElydmluZSwgQ0EKSSBkbyBub3Qgc3BlYWsgZm9yIElu
-dGVsIENvcnBvcmF0aW9uOyBhbGwgY29tbWVudHMgYXJlIHN0cmljdGx5IG15IG93bi4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Simon Horman wrote:
+>
+> Does Bernhard's recent patch (sorry that I applied it even though
+> it came in after your patch) help this problem?
+>
+> commit 95c74405638c786bc76fbca5e4e8427dfe26e907
+> Author: Bernhard Walle <bwalle@suse.de>
+> Date:   Fri Jan 16 19:11:34 2009 +0100
+> Subject: Fix memory corruption when using realloc_memory_ranges()
+>
+>   
+'git clone' or 'git pull' isn't showing these patches. The last commit 
+that I can see is : 6d4cdf4f94bf7ad2d1752b553ea948385881ff79 and search 
+by that commit doesn't yield anything :(.
+
+Thanks,
+Chandru
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
