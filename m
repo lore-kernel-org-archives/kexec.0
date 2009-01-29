@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LSAY8-0000zN-1Q
-	for kexec@lists.infradead.org; Wed, 28 Jan 2009 13:33:51 +0000
-Date: Wed, 28 Jan 2009 15:11:34 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH]: add dmesg log symbols to /proc/vmcoreinfo lists
-Message-ID: <20090128041109.GA4943@verge.net.au>
-References: <20090119212127.GA13157@hmsreliant.think-freely.org>
-	<20090120141551.GA5125@redhat.com>
-	<20090120150958.GB18207@hmsreliant.think-freely.org>
-	<20090120152255.GB5125@redhat.com>
-	<20090127001211.f847ea5a.akpm@linux-foundation.org>
+Received: from acsinet11.oracle.com ([141.146.126.233])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LSeEf-000103-Tu
+	for kexec@lists.infradead.org; Thu, 29 Jan 2009 21:15:44 +0000
+Message-ID: <49821C68.4000502@oracle.com>
+Date: Thu, 29 Jan 2009 13:15:20 -0800
+From: Randy Dunlap <randy.dunlap@oracle.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20090127001211.f847ea5a.akpm@linux-foundation.org>
+Subject: boot hang: async vs. kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,131 +20,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Neil Horman <nhorman@tuxdriver.com>, Eric Biederman <ebiederm@xmision.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "arjan@infradead.org" <arjan@infradead.org>, Dave Kleikamp <shaggy@linux.vnet.ibm.com>
 
-On Tue, Jan 27, 2009 at 12:12:11AM -0800, Andrew Morton wrote:
-> On Tue, 20 Jan 2009 10:22:56 -0500 Vivek Goyal <vgoyal@redhat.com> wrote:
-> 
-> > On Tue, Jan 20, 2009 at 10:09:58AM -0500, Neil Horman wrote:
-> > > On Tue, Jan 20, 2009 at 09:15:51AM -0500, Vivek Goyal wrote:
-> > > > On Mon, Jan 19, 2009 at 04:21:27PM -0500, Neil Horman wrote:
-> > > > > Hey all-
-> > > > > 	It would be nice to be able to extract the dmesg log from a vmcore file
-> > > > > without needing to keep the debug symbols for the running kernel handy all the
-> > > > > time.  We have a facility to do this in /proc/vmcore.  This patch adds the
-> > > > > log_buf and log_end symbols to the vmcoreinfo area so that tools (like
-> > > > > makedumpfile) can easily extract the dmesg logs from a vmcore image.
-> > > > > 
-> > > > 
-> > > > It would be nice to get dmesg log if debug symbols are not around. Can't
-> > > > we use System.map for getting symbol addresses? vmcoreinfo had started
-> > > > small and seems to be growing now. I am thinking down the line will making
-> > > > use of System.map for such cases make sense?
-> > > > 
-> > > 
-> > > System.map only include exported and public symbols.  log_buf and log_end are
-> > > static, and not reported in the System.map.  Its a nice idea, but not
-> > > comprehensive for everything in the kernel.
-> > > 
-> > > ><snip>
-> > > > 
-> > > > Will it be an issue if we make log_buf and log_end non static and directly
-> > > > access these in kexec.c?
-> > > > 
-> > > I had considered that, but was a bit hesitant to do so, since it exposes the
-> > > internal implementation of the dmesg buffer.  In the event someone disables
-> > > CONFIG_PRINTK, thats just more code we need to ifdef.  With this implementation
-> > > we just stub out the log_buf_setup function, and let that be that.  It seems
-> > > more consice to me this way.
-> > > 
-> > 
-> > Makes sense to me.
-> > 
-> > Acked-by: Vivek Goyal <vgoyal@redhat.com>
-> > 
-> 
-> I rewrote the title to
-> 
-> 	kexec: add dmesg log symbols to /proc/vmcoreinfo lists
-> 
-> it's nice to identify which subsystem is responsible for a patch.
-> 
-> I also did all the below.  Please check it.  (Is anyone else reading all
-> this stuff??)
+I (try to) do daily build/boot testing.  The newly built kernel
+is booted via kexec.  This was working until sometime between
+2.6.28 and 2.6.29-rc1, so I bisected it.*
 
-These look fine to me. Unfortunately they don't apply to the version
-of Linus' tree that I have checked out and I'm away from net access
-at this moment (though obviously not by the time this message reaches you).
-I'll update my tree and check once I'm back online.
+git bisect blames this commit:
 
-Eric Biederman usually watches kexec stuff. I'm pretty sure he
-is on the kexec mailing list, but I've CCed him anyway.
+96777fe7b042e5a5d0fe5fb861fcd6cd80ef9634 is first bad commit
+commit 96777fe7b042e5a5d0fe5fb861fcd6cd80ef9634
+Author: Dave Kleikamp <shaggy@linux.vnet.ibm.com>
+Date:   Thu Jan 8 09:46:31 2009 -0600
 
-> From: Andrew Morton <akpm@linux-foundation.org>
-> 
-> - switch didnt-need-to-be-a-macro to inline
-> 
-> - Remove unneeded ifdefs (we already did that in the header)
-> 
-> - repair bouncy enter key
-> 
-> Cc: Neil Horman <nhorman@tuxdriver.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> ---
-> 
->  include/linux/kernel.h |    5 ++++-
->  kernel/kexec.c         |    2 --
->  kernel/printk.c        |    1 -
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff -puN include/linux/kernel.h~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix include/linux/kernel.h
-> --- a/include/linux/kernel.h~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix
-> +++ a/include/linux/kernel.h
-> @@ -254,7 +254,10 @@ static inline int printk_ratelimit(void)
->  static inline bool printk_timed_ratelimit(unsigned long *caller_jiffies, \
->  					  unsigned int interval_msec)	\
->  		{ return false; }
-> -#define log_buf_kexec_setup() do {} while(0)
-> +
-> +static inline void log_buf_kexec_setup(void)
-> +{
-> +}
->  #endif
->  
->  extern int printk_needs_cpu(int cpu);
-> diff -puN kernel/kexec.c~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix kernel/kexec.c
-> --- a/kernel/kexec.c~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix
-> +++ a/kernel/kexec.c
-> @@ -1409,9 +1409,7 @@ static int __init crash_save_vmcoreinfo_
->  	VMCOREINFO_OFFSET(list_head, prev);
->  	VMCOREINFO_OFFSET(vm_struct, addr);
->  	VMCOREINFO_LENGTH(zone.free_area, MAX_ORDER);
-> -#ifdef CONFIG_PRINTK
->  	log_buf_kexec_setup();
-> -#endif
->  	VMCOREINFO_LENGTH(free_area.free_list, MIGRATE_TYPES);
->  	VMCOREINFO_NUMBER(NR_FREE_PAGES);
->  	VMCOREINFO_NUMBER(PG_lru);
-> diff -puN kernel/printk.c~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix kernel/printk.c
-> --- a/kernel/printk.c~kexec-add-dmesg-log-symbols-to-proc-vmcoreinfo-lists-fix
-> +++ a/kernel/printk.c
-> @@ -143,7 +143,6 @@ void log_buf_kexec_setup(void)
->  	VMCOREINFO_SYMBOL(log_end);
->  }
->  
-> -
->  static int __init log_buf_len_setup(char *str)
->  {
->  	unsigned size = memparse(str, &str);
-> _
+    async: Don't call async_synchronize_full_special() while holding sb_lock
+    
+    sync_filesystems() shouldn't be calling async_synchronize_full_special
+    while holding a spinlock.  The second while loop in that function is the
+    right place for this anyway.
+
+
+The new/kexec-loaded kernel hangs during initcalls.  The last one that
+I can see (via netconsole, might miss a few of the very last lines) is:
+
+calling  net_ns_init+0x0/0x14d @ 1
+net_namespace: 1008 bytes
+initcall net_ns_init+0x0/0x14d returned 0 after 0 usecs
+
+
+
+Any ideas/suggestions?
+Thanks.
+
+
+
+*caveat: This was all done with the "don't use gcc 4.1.[01]
+because it miscompiles __weak" patch reverted.  Could that
+be an issue/problem here?  (I'm using gcc 4.1.1.)
 
 -- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
+~Randy
 
 
 _______________________________________________
