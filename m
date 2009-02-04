@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.248])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LUY6I-0006Yk-LD
-	for kexec@lists.infradead.org; Wed, 04 Feb 2009 03:06:58 +0000
-Received: by rv-out-0708.google.com with SMTP id b17so2507524rvf.42
-	for <kexec@lists.infradead.org>; Tue, 03 Feb 2009 19:06:52 -0800 (PST)
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LUgWC-00018M-5Z
+	for kexec@lists.infradead.org; Wed, 04 Feb 2009 12:06:14 +0000
+Date: Wed, 4 Feb 2009 07:05:49 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH]: add dmesg log symbols to /proc/vmcoreinfo lists
+Message-ID: <20090204120549.GA2182@hmsreliant.think-freely.org>
+References: <20090119212127.GA13157@hmsreliant.think-freely.org>
+	<20090120141551.GA5125@redhat.com>
+	<20090120150958.GB18207@hmsreliant.think-freely.org>
+	<20090120152255.GB5125@redhat.com>
+	<20090127001211.f847ea5a.akpm@linux-foundation.org>
+	<20090128041109.GA4943@verge.net.au>
+	<m1ljsnz1up.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-In-Reply-To: <20090204022905.GM7199@verge.net.au>
-References: <1233642168.19806.74.camel@yhuang-dev.sh.intel.com>
-	<20090204022905.GM7199@verge.net.au>
-Date: Wed, 4 Feb 2009 12:06:52 +0900
-Message-ID: <aec7e5c30902031906k7fe8947kc429ffc0274eb930@mail.gmail.com>
-Subject: Re: [PATCH resend] kexec/x86_64: Use one page table in x86_64 
-	machine_kexec
-From: Magnus Damm <magnus.damm@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <m1ljsnz1up.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,45 +29,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Eric Biederman <ebiederm@xmision.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Feb 4, 2009 at 11:29 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Feb 03, 2009 at 02:22:48PM +0800, Huang Ying wrote:
->> Impact: reduce kernel BSS size by 7 pages, improve code readability
->>
->> Two page tables are used in current x86_64 kexec implementation. One
->> is used to jump from kernel virtual address to identity map address,
->> the other is used to map all physical memory. In fact, on x86_64,
->> there is no conflict between kernel virtual address space and physical
->> memory space, so just one page table is sufficient. The page table
->> pages used to map control page are dynamically allocated to save
->> memory if kexec image is not loaded. ASM code used to map control page
->> is replaced by C code too.
->
-> Hi Huang,
->
-> this patch looks quite nice to me. I am CCing my former colleague Magnus
-> Damm for comment. He did some work in this area a little while ago.
+> 
+> That aside we aren't currently exporting log_buf_len, so I don't
+> think this code works actually works.
+> 
+> Neil can you add a comment in kernel/printk.c of the algorithm
+> necessary for external tools to decode the ring buffer?
+> 
+> We need the comment because people working on kernel/printk.c
+> need to know what is happening and without having to review lots
+> of user space code, and we need the comment to verify that we
+> are exporting the right things.
+> 
 
-Thanks for the ping Simon!
+Ok, as per Erics comment, I've written this.  It applies on top of whats already
+in your tree Andrew.  It adds some comments on the function in question so that
+anyone working on printk.c will know why we're exporting their symbols.  It also
+modifies slightly the symbols we are exporting so that we can handle dmesg
+buffers that are longer than the standard PAGE_SIZE configuration, and lets us
+detect and handle buffer wraps.
 
-I like the idea of dynamically allocating pages and writing code in C
-instead of ASM. In fact, this patch is not so far away from what V2 of
-my patches did a few years ago:
+Thanks!
 
-http://lkml.org/lkml/2006/5/24/12
+printk.c |   12 +++++++++++-
+1 file changed, 11 insertions(+), 1 deletion(-)
 
-For one reason or another this wasn't acceptable at that point so I
-rewrote things and V4 got merged with static page tables and ASM code.
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 
-This patch is a step in the right direction IMO, but I'm not sure how
-it affects the Xen dom0 implementation. Does it still work and/or does
-anyone care?
-
-Cheers,
-
-/ magnus
+diff --git a/kernel/printk.c b/kernel/printk.c
+index dd5cc7b..6a1163b 100644
+--- a/kernel/printk.c
++++ b/kernel/printk.c
+@@ -138,10 +138,20 @@ static int log_buf_len = __LOG_BUF_LEN;
+ static unsigned logged_chars; /* Number of chars produced since last read+clear operation */
+ 
+ #ifdef CONFIG_KEXEC
++/*
++ * This appends the listed symbols to /proc/vmcoreinfo
++ * /proc/vmcoreinfo is used by various utiilties, like
++ * crash and makedumpfile to obtain access to symbols that
++ * are otherwise very difficult to locate.  These symbols 
++ * are specifically used so that utilities 
++ * can access and extract the dmesg log from a vmcore file
++ * after a crash
++ */
+ void log_buf_kexec_setup(void)
+ {
+ 	VMCOREINFO_SYMBOL(log_buf);
+-	VMCOREINFO_SYMBOL(log_end);
++	VMCOREINFO_SYMBOL(log_buf_len);
++	VMCOREINFO_SYMBOL(logged_chars)
+ }
+ #endif
+ 
 
 _______________________________________________
 kexec mailing list
