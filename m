@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LV2n9-0007Ed-1P
-	for kexec@lists.infradead.org; Thu, 05 Feb 2009 11:53:14 +0000
-Date: Thu, 5 Feb 2009 06:52:54 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH]: add dmesg log symbols to /proc/vmcoreinfo lists
-Message-ID: <20090205115254.GA15621@hmsreliant.think-freely.org>
-References: <20090119212127.GA13157@hmsreliant.think-freely.org>
-	<20090120141551.GA5125@redhat.com>
-	<20090120150958.GB18207@hmsreliant.think-freely.org>
-	<20090120152255.GB5125@redhat.com>
-	<20090127001211.f847ea5a.akpm@linux-foundation.org>
-	<20090128041109.GA4943@verge.net.au>
-	<m1ljsnz1up.fsf@fess.ebiederm.org>
-	<20090204120549.GA2182@hmsreliant.think-freely.org>
-	<498A317A.8030707@mxs.nes.nec.co.jp>
+Received: from mu-out-0910.google.com ([209.85.134.188])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LV68O-0004k9-AA
+	for kexec@lists.infradead.org; Thu, 05 Feb 2009 15:27:22 +0000
+Received: by mu-out-0910.google.com with SMTP id w9so231360mue.2
+	for <kexec@lists.infradead.org>; Thu, 05 Feb 2009 07:27:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <498A317A.8030707@mxs.nes.nec.co.jp>
+Date: Thu, 5 Feb 2009 16:27:18 +0100
+Message-ID: <d53687720902050727q2b40c3ccn7b793b1d30575acf@mail.gmail.com>
+Subject: kexec keeps crashing the kernel with low memory
+From: Laszlo Benedek <laszlo.benedek@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,117 +22,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmision.com>, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On Thu, Feb 05, 2009 at 09:23:22AM +0900, Ken'ichi Ohmichi wrote:
-> 
-> Hi Neil,
-> 
-> Thank you for a kernel patch and a makedumpfile patch.
-> 
-> Neil Horman wrote:
-> >> That aside we aren't currently exporting log_buf_len, so I don't
-> >> think this code works actually works.
-> >>
-> >> Neil can you add a comment in kernel/printk.c of the algorithm
-> >> necessary for external tools to decode the ring buffer?
-> >>
-> >> We need the comment because people working on kernel/printk.c
-> >> need to know what is happening and without having to review lots
-> >> of user space code, and we need the comment to verify that we
-> >> are exporting the right things.
-> >>
-> > 
-> > Ok, as per Erics comment, I've written this.  It applies on top of whats already
-> > in your tree Andrew.  It adds some comments on the function in question so that
-> > anyone working on printk.c will know why we're exporting their symbols.  It also
-> > modifies slightly the symbols we are exporting so that we can handle dmesg
-> > buffers that are longer than the standard PAGE_SIZE configuration, and lets us
-> > detect and handle buffer wraps.
-> > 
-> > Thanks!
-> > 
-> > printk.c |   12 +++++++++++-
-> > 1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> > 
-> > diff --git a/kernel/printk.c b/kernel/printk.c
-> > index dd5cc7b..6a1163b 100644
-> > --- a/kernel/printk.c
-> > +++ b/kernel/printk.c
-> > @@ -138,10 +138,20 @@ static int log_buf_len = __LOG_BUF_LEN;
-> >  static unsigned logged_chars; /* Number of chars produced since last read+clear operation */
-> >  
-> >  #ifdef CONFIG_KEXEC
-> > +/*
-> > + * This appends the listed symbols to /proc/vmcoreinfo
-> > + * /proc/vmcoreinfo is used by various utiilties, like
-> > + * crash and makedumpfile to obtain access to symbols that
-> > + * are otherwise very difficult to locate.  These symbols 
-> > + * are specifically used so that utilities 
-> > + * can access and extract the dmesg log from a vmcore file
-> > + * after a crash
-> > + */
-> >  void log_buf_kexec_setup(void)
-> >  {
-> >  	VMCOREINFO_SYMBOL(log_buf);
-> > -	VMCOREINFO_SYMBOL(log_end);
-> > +	VMCOREINFO_SYMBOL(log_buf_len);
-> > +	VMCOREINFO_SYMBOL(logged_chars)
-> >  }
-> >  #endif
-> 
-> Please do not remove VMCOREINFO_SYMBOL(log_end), because makedumpfile
-> needs it for knowing the latest log offset in ring buffer of dmesg.
-> I updated a makedumpfile patch for handling ring buffer, and it is
-> possible to download the latest patch from the following site:
-> 
-> https://sourceforge.net/tracker2/download.php?group_id=178938&atid=887142&file_id=312113&aid=2521075
-> 
-Understood, new patch attached.
+Hi,
 
-Add some comments and extra symbols on top of whats there for kernel/printk.c to
-satisfy Erics requests, and support Ken'ichi's enhanced version of the
-makedumpfile patch
+I am trying to use kexec and kdump together and everything seems (!)
+to work fine if I give kexec a lot of memory (crashkernel=100MB@16MB).
+If I lower the size of the preallocated memory then the original
+kernel keeps crashing during booting with random errors right after
+the bootup script started kexec. The oops are probably caused by some
+kind of memory corruption. This made me thinking. How should I choose
+the size of the reserved memory and how can I be sure that it is
+'stable' and nothing corrupted the kernel memory ?
 
-Neil
+Thanks in advance.
 
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-
-
-
- printk.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-
-diff --git a/kernel/printk.c b/kernel/printk.c
-index dd5cc7b..6c25eba 100644
---- a/kernel/printk.c
-+++ b/kernel/printk.c
-@@ -138,10 +138,21 @@ static int log_buf_len = __LOG_BUF_LEN;
- static unsigned logged_chars; /* Number of chars produced since last read+clear operation */
- 
- #ifdef CONFIG_KEXEC
-+/*
-+ * This appends the listed symbols to /proc/vmcoreinfo
-+ * /proc/vmcoreinfo is used by various utiilties, like
-+ * crash and makedumpfile to obtain access to symbols that
-+ * are otherwise very difficult to locate.  These symbols 
-+ * are specifically used so that utilities 
-+ * can access and extract the dmesg log from a vmcore file
-+ * after a crash
-+ */
- void log_buf_kexec_setup(void)
- {
- 	VMCOREINFO_SYMBOL(log_buf);
- 	VMCOREINFO_SYMBOL(log_end);
-+	VMCOREINFO_SYMBOL(log_buf_len);
-+	VMCOREINFO_SYMBOL(logged_chars)
- }
- #endif
- 
+Best regards,
+Laszlo Benedek
+p.s.: Can I search in archives of this mailing list? I failed to find
+it but I hope it exists somewhere.
 
 _______________________________________________
 kexec mailing list
