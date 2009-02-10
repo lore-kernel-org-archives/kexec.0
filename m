@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx30.brocade.com ([144.49.194.4])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LWh7Z-0005tZ-W1
-	for kexec@lists.infradead.org; Tue, 10 Feb 2009 01:09:08 +0000
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: should kernel image destination address be picked up by kernel
-	itself?
-Date: Mon, 9 Feb 2009 17:08:36 -0800
-Message-ID: <4C94DE2070B172459E4F1EE14BD2364E027E0B15@HQ-EXCH-5.corp.brocade.com>
-In-Reply-To: <m1ab93w61r.fsf@fess.ebiederm.org>
-References: <4C94DE2070B172459E4F1EE14BD2364E027534BA@HQ-EXCH-5.corp.brocade.com><m14ozb1eom.fsf@fess.ebiederm.org><4C94DE2070B172459E4F1EE14BD2364E027DFC66@HQ-EXCH-5.corp.brocade.com>
+	id 1LWl9M-0007LK-85
+	for kexec@lists.infradead.org; Tue, 10 Feb 2009 05:27:14 +0000
+References: <4C94DE2070B172459E4F1EE14BD2364E027534BA@HQ-EXCH-5.corp.brocade.com>
+	<m14ozb1eom.fsf@fess.ebiederm.org>
+	<4C94DE2070B172459E4F1EE14BD2364E027DFC66@HQ-EXCH-5.corp.brocade.com>
 	<m1ab93w61r.fsf@fess.ebiederm.org>
-From: "Ming Lei" <mlei@Brocade.COM>
+	<4C94DE2070B172459E4F1EE14BD2364E027E0B15@HQ-EXCH-5.corp.brocade.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Mon, 09 Feb 2009 21:27:12 -0800
+In-Reply-To: <4C94DE2070B172459E4F1EE14BD2364E027E0B15@HQ-EXCH-5.corp.brocade.com>
+	(Ming Lei's message of "Mon\, 9 Feb 2009 17\:08\:36 -0800")
+Message-ID: <m14oz22767.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: should kernel image destination address be picked up by kernel
+	itself?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,69 +28,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ming Lei <mlei@Brocade.COM>
 Cc: kexec@lists.infradead.org
-
-Hi Eric,
-
-Do you know what's this purgatory directory for? I saw it is linked with
-kexec in a weird way.
-
-Another note for current code base is that there is merged directory
-arch/powerpc since linux kernel 2.6.23, but kexec-tools still has ppc
-and ppc64 separated. Is there anyone working on this merged arch?
-
-Thanks
-Ming
-
-
------Original Message-----
-From: Eric W. Biederman [mailto:ebiederm@xmission.com] 
-Sent: Tuesday, February 03, 2009 1:43 PM
-To: Ming Lei
-Cc: kexec@lists.infradead.org
-Subject: Re: should kernel image destination address be picked up by
-kernel itself?
 
 "Ming Lei" <mlei@Brocade.COM> writes:
 
 > Hi Eric,
 >
-> I tried run latest kexec-tools v2.0 on ppc freescale 85xx platforms.
->
->>- All of the policy decisions are made in user space (such as where to
->>  execute from)
-> Is where to execute from the physical address or the virtual address?
-> How do we know it is available to kexec, it may be taken.
+> Do you know what's this purgatory directory for? I saw it is linked with
+> kexec in a weird way.
 
-It should be physical and there should be an API in linux like
-/proc/iomem which will report which addresses are memory.  ppc
-is a little different than x86 so I'm not up to speed on how it
-reports things.  I think it is with the device tree.
+Yep.  That is the relocatable code that run between one kernel and the next.
 
->>- standalone executables are loaded into an address space where
->>  physical address and virtual address are the same.
-> There may be case that physical address and virtual address not the
-same
-> on linux, such as vmalloc.
+> Another note for current code base is that there is merged directory
+> arch/powerpc since linux kernel 2.6.23, but kexec-tools still has ppc
+> and ppc64 separated. Is there anyone working on this merged arch?
 
-In the environment that kexec exports there should not be any.
-
->>What problem do you see in that model?
->>Why is it a problem for you?
->
-> Can we put something like -1 to indicate to kernel that user space
-wants
-> kernel to choose the virtual address to load the standalone
-executable,
-> then linux kernel can kmalloc this area and then load the standalone
-> executable.
-
-You can do something like create a proper static ET_DYN executable and
-then 
-/sbin/kexec will look for an address and load it there.
+Userspace should not be affected by a kernel implementation detail
+like that.
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
