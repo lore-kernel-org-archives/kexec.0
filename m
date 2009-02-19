@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx40.brocade.com ([144.49.195.4])
+Received: from wa-out-1112.google.com ([209.85.146.181])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LX0G1-0005Vl-3y
-	for kexec@lists.infradead.org; Tue, 10 Feb 2009 21:35:07 +0000
-Content-class: urn:content-classes:message
+	id 1LaDJx-0001Ih-Mc
+	for kexec@lists.infradead.org; Thu, 19 Feb 2009 18:08:28 +0000
+Received: by wa-out-1112.google.com with SMTP id j4so274411wah.2
+	for <kexec@lists.infradead.org>; Thu, 19 Feb 2009 10:08:24 -0800 (PST)
 MIME-Version: 1.0
-Subject: RE: should kernel image destination address be picked up by kernel
-	itself?
-Date: Tue, 10 Feb 2009 13:34:32 -0800
-Message-ID: <4C94DE2070B172459E4F1EE14BD2364E02860971@HQ-EXCH-5.corp.brocade.com>
-In-Reply-To: <m14oz22767.fsf@fess.ebiederm.org>
-References: <4C94DE2070B172459E4F1EE14BD2364E027534BA@HQ-EXCH-5.corp.brocade.com><m14ozb1eom.fsf@fess.ebiederm.org><4C94DE2070B172459E4F1EE14BD2364E027DFC66@HQ-EXCH-5.corp.brocade.com><m1ab93w61r.fsf@fess.ebiederm.org><4C94DE2070B172459E4F1EE14BD2364E027E0B15@HQ-EXCH-5.corp.brocade.com>
-	<m14oz22767.fsf@fess.ebiederm.org>
-From: "Ming Lei" <mlei@Brocade.COM>
+Date: Thu, 19 Feb 2009 10:08:24 -0800
+Message-ID: <74ae4f6a0902191008w3387263cq7a72554380ed42a5@mail.gmail.com>
+Subject: kexec/kdump crash kernel 10MB ZONE_DMA
+From: SUJIT V <sujit.linux@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,43 +22,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+
+On an x86_64 platform the crash kernel boot (32b kernel) panic's
+during the boot during device initialization due to failed kmalloc()
+and the the oom_killer() failing to free mem.
+
+The memory that is setup for the crash kernel to use is 32MB. It was
+working fine up until we added a new kernel module.  This seems to
+have tipped the balance in memory allocations for kernel code, and the
+ZONE allocater.
+
+The addition of the kernel module cause the "init.ramfs" size encoded
+in the header section of vmlinux to increases. So its observed that
+the capture kernel boot was OK till the init.ramfs size was below some
+threshold.
 
 
+Its harder for us to bump up the 32MB to a higher value (although we
+see that it seems to solve the problem). Instead, we tried reducing
+the ZONE_DMA memory from 16MB to 10MB and things work fine.
+
+What are your thoughts on going w/ this 10MB ZONE_DMA approach?  We
+don't have any ISA devices w/ the 16MB dma addr limitations, etc. that
+we care about in our system.
+
+Pl let us know if you have any suggestions/thoughts, etc.
 
 
->> "Ming Lei" <mlei@Brocade.COM> writes:
->>
->> Hi Eric,
->>
->> Do you know what's this purgatory directory for? I saw it is linked
-with
->> kexec in a weird way.
-
->Yep.  That is the relocatable code that run between one kernel and the
-next.
-
-Is there any doc or email thread explain this purgatory and its purpose?
-
->> Another note for current code base is that there is merged directory
->> arch/powerpc since linux kernel 2.6.23, but kexec-tools still has ppc
->> and ppc64 separated. Is there anyone working on this merged arch?
-
->Userspace should not be affected by a kernel implementation detail
->like that.
-
-Now linux kernel uses arch/powerpc to have both ppc32 and ppc64 code
-together. Should I use arch/ppc in kexec-tools, then it wont work with
-kernel powerpc since it uses device tree blob; if I use arch/ppc64 in
-kexec-tools, then since I need to use for ppc32, it wont work too. Right
-now it is not an immediate problem because we don't have any
-ppc32(except these few old ppc32). Howver, there is working in progress
-to support kexec/kdump for freescale 85xx(it is 32bit ppc). We may need
-to address the problem in kexec-tools.
-
-Thanks,
-Ming
+Thanks
 
 _______________________________________________
 kexec mailing list
