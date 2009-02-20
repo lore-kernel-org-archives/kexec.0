@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wa-out-1112.google.com ([209.85.146.181])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LaDJx-0001Ih-Mc
-	for kexec@lists.infradead.org; Thu, 19 Feb 2009 18:08:28 +0000
-Received: by wa-out-1112.google.com with SMTP id j4so274411wah.2
-	for <kexec@lists.infradead.org>; Thu, 19 Feb 2009 10:08:24 -0800 (PST)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1LaQsz-0001t4-Pb
+	for kexec@lists.infradead.org; Fri, 20 Feb 2009 08:37:32 +0000
+Message-ID: <499E6ABE.1030809@mxs.nes.nec.co.jp>
+Date: Fri, 20 Feb 2009 17:33:02 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Date: Thu, 19 Feb 2009 10:08:24 -0800
-Message-ID: <74ae4f6a0902191008w3387263cq7a72554380ed42a5@mail.gmail.com>
-Subject: kexec/kdump crash kernel 10MB ZONE_DMA
-From: SUJIT V <sujit.linux@gmail.com>
+Subject: makedumpfile-1.3.2: Add --dump-dmesg option
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,41 +16,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0323020087=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Neil Horman <nhorman@redhat.com>, Bernhard Walle <bernhard.walle@gmx.de>
 
-On an x86_64 platform the crash kernel boot (32b kernel) panic's
-during the boot during device initialization due to failed kmalloc()
-and the the oom_killer() failing to free mem.
-
-The memory that is setup for the crash kernel to use is 32MB. It was
-working fine up until we added a new kernel module.  This seems to
-have tipped the balance in memory allocations for kernel code, and the
-ZONE allocater.
-
-The addition of the kernel module cause the "init.ramfs" size encoded
-in the header section of vmlinux to increases. So its observed that
-the capture kernel boot was OK till the init.ramfs size was below some
-threshold.
+--===============0323020087==
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
 
-Its harder for us to bump up the 32MB to a higher value (although we
-see that it seems to solve the problem). Instead, we tried reducing
-the ZONE_DMA memory from 16MB to 10MB and things work fine.
+Hi,
 
-What are your thoughts on going w/ this 10MB ZONE_DMA approach?  We
-don't have any ISA devices w/ the 16MB dma addr limitations, etc. that
-we care about in our system.
+makedumpfile version 1.3.2 is released.
+Your comments/patches are welcome.
 
-Pl let us know if you have any suggestions/thoughts, etc.
+Changelog:
+ o New feature
+   - Add --dump-dmesg option (a part by Neil Horman)
+     (Dumping dmesg buffer from /proc/vmcore to a file)
+ o Bugfix
+   - Fix a typo in README file.
+ o Code Cleanup
+   - Delete unnecessary "include <stdlib.h>" (by Bernhard Walle)
+   - Add debugging message.
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the CVS page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
 
 
 Thanks
+Ken'ichi Ohmichi
+
+
+
+
+
+--===============0323020087==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0323020087==--
