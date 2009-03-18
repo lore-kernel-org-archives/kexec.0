@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ey-out-1920.google.com ([74.125.78.145])
+Received: from mail-gx0-f160.google.com ([209.85.217.160])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LhjVl-0002Qt-E0
-	for kexec@lists.infradead.org; Thu, 12 Mar 2009 11:55:48 +0000
-Received: by ey-out-1920.google.com with SMTP id 4so27432eyg.24
-	for <kexec@lists.infradead.org>; Thu, 12 Mar 2009 04:55:03 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <f69abfc30903110159m485ae02cwfe42f318863d6b45@mail.gmail.com>
-References: <f69abfc30903110159m485ae02cwfe42f318863d6b45@mail.gmail.com>
-Date: Thu, 12 Mar 2009 12:55:03 +0100
-Message-ID: <f69abfc30903120455u2fd377b5o48d555ac38ccc85@mail.gmail.com>
-Subject: Re: ARM: atags_offset at 0x100
-From: Yegor Yefremov <yegorslists@googlemail.com>
+	id 1Ljoy6-0005kH-3X
+	for kexec@lists.infradead.org; Wed, 18 Mar 2009 06:09:42 +0000
+Received: by gxk4 with SMTP id 4so193750gxk.18
+	for <kexec@lists.infradead.org>; Tue, 17 Mar 2009 23:09:32 -0700 (PDT)
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Wed, 18 Mar 2009 15:07:01 +0900
+Message-Id: <20090318060701.664.13386.sendpatchset@rx1.opensource.se>
+Subject: [PATCH] kexec jump: use add_segment_phys_virt()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,75 +17,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 
-T24gV2VkLCBNYXIgMTEsIDIwMDkgYXQgOTo1OSBBTSwgWWVnb3IgWWVmcmVtb3YKPHllZ29yc2xp
-c3RzQGdvb2dsZW1haWwuY29tPiB3cm90ZToKCj4gSSdtIHdvcmtpbmcgd2l0aCBLUzg2OTUgU29D
-LiBFdmVyeXRoaW5nIGlzIGZ1bmN0aW9uaW5nIHNvIGZhci4gVGhlCj4gb25seSBpc3N1ZSBJIGhh
-dmUgbm93IGlzIHRoZSBhdGFnc19vZmZzZXQuIEluIGtleGVjLXpJbWFnZS1hcm0uYyBpdCBpcwo+
-IGRlZmluZWQgYXMgMHgxMDAwICg0ayksIGJ1dCBtYW55IEFSTSBiYXNlZCBib2FyZHMgYXdhaXQg
-QVRBR3MgYXQgMHgxMDAKPiAoc2VlIGh0dHA6Ly9naXQua2VybmVsLm9yZy8/cD1saW51eC9rZXJu
-ZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LTIuNi5naXQ7YT1ibG9iX3BsYWluO2Y9YXJjaC9hcm0vbWFj
-aC1rczg2OTUvYm9hcmQtZHNtMzIwLmM7aGI9SEVBRCkuCj4gSWYgSSBjaGFuZ2UgdGhpcyBzZXR0
-aW5ncyBpbiBrZXJuZWwsIHRoZW4gSSBzZWUgdGhlIGF0YWdzLCBidXQgSSBjYW4ndAo+IHNpbXBs
-eSBjaGFuZ2UgdGhlIGF0YWdzX29mZnNldCBpbiBrZXhlYy16SW1hZ2UtYXJtLmMsIGJlY2F1c2Ug
-aXQgaXMKPiBub3QgNGsgYWxpZ25lZC4gSSBnZXQgdGhlIGZvbGxvd2luZyBlcnJvciBtZXNzYWdl
-Ogo+Cj4gQmFzZSBhZGRyZXNzOiDCoDEwMCBpcyBub3QgcGFnZSBhbGlnbmVkCj4KPiBVbmZvcnR1
-bmF0ZWx5IEkgY2Fubm90IGNoYW5nZSB0aGUga2VybmVsLCBjYXVzZSBiYWNrd2FyZCBjb21wYXRp
-YmlsaXR5Cj4gd2l0aCBvbGRlciBrZXJuZWxzIG11c3QgYmUgZ3VhcmFudGllZC4gSXMgdGhlcmUg
-YW55IHNvbHV0aW9uIGZvciB0aGlzCj4gcHJvYmxlbSBob3cgdG8gYnJpbmcga2V4ZWMgdG8gcHV0
-IEFUQUdzIGF0IDB4MTAwPwoKSSBmb3VuZCBhIHRlbXBvcmFyeSBzb2x1dGlvbiBmb3IgdGhpcyBw
-cm9ibGVtLiBBY2NvcmRpbmcgdG8KRG9jdW1lbnRhdGlvbi9hcm0vQm9vdGluZyByZWNvbW1lbmRl
-ZCBwbGFjZSBmb3IgQVRBR3MgYXJlIHRoZSBmaXJzdAoxNktpQiBvZiBSQU0uIFNvIEkganVzdCBh
-bGxvY2F0ZSB0aGlzIHNwYWNlIGFuZCBhdGFnX29mZnNldCBpcyB1c2VkIGFzCm9mZnNldCB3aXRo
-aW4gdGhpcyAxNktpQi4gVGhlIGtlcm5lbCBnZXRzIHRoZSB3aG9sZSBjaHVuayBhbmQgZG9lc24n
-dApjb21wbGFpbiBhYm91dCBub24gYWxpZ25lZCBtZW1vcnkuIEkgYWxzbyBjaGFuZ2VkIGF0YWdf
-b2Zmc2V0IHRvCjB4MTAwLCBjYXVzZSB0aGVyZSBhcmUgcmVhbGx5IGZldyBib2FyZHMgYXdhaXRp
-bmcgYm9vdF9wYXJhbXMgYXQgYW4Kb2Zmc2V0IGRpZmZlcmVudCBmcm9tIDB4MTAwLiBGb3Igb3Ro
-ZXIgYm9hcmRzIG5vdCB1c2luZyB0aGlzIG9mZnNldApzcGVjaWFsIGNvbW1hbmQgbGluZSBwYXJh
-bWV0ZXIgLS1hdGFnX29mZnNldCBjYW4gYmUgaW50cm9kdWNlZCB0bwpvdmVyd3JpdGUgdGhlIGRl
-ZmF1bHQgc2V0dGluZy4gQXJlIHRoZXJlIGFueSBjb25jZXJucyBhYm91dCBhbGxvY2F0aW5nCjE2
-S2lCIGF0IG9uY2Ugb3IgYW55IG90aGVyIGNvbmNlcm5zIHJlZ2FyZGluZyB0aGlzIG1ldGhvZD8K
-CkJlc3QgcmVnYXJkcywKWWVnb3IKCkluZGV4OiBrZXhlYy10b29scy9rZXhlYy9hcmNoL2FybS9r
-ZXhlYy16SW1hZ2UtYXJtLmMKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PQotLS0ga2V4ZWMtdG9vbHMub3JpZy9rZXhlYy9h
-cmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKKysrIGtleGVjLXRvb2xzL2tleGVjL2FyY2gvYXJt
-L2tleGVjLXpJbWFnZS1hcm0uYwpAQCAtMTYsNiArMTYsNyBAQAoKICNkZWZpbmUgQ09NTUFORF9M
-SU5FX1NJWkUgMTAyNAogI2RlZmluZSBCT09UX1BBUkFNU19TSVpFIDE1MzYKKyNkZWZpbmUgQVRB
-R1NfU0VHTUVOVF9TSVpFICg0ICogZ2V0cGFnZXNpemUoKSkKCiBzdHJ1Y3QgdGFnX2hlYWRlciB7
-CiAJdWludDMyX3Qgc2l6ZTsKQEAgLTEyNCw2ICsxMjUsNyBAQCBzdHJ1Y3QgdGFnICogYXRhZ19y
-ZWFkX3RhZ3Modm9pZCkKCiBzdGF0aWMKIGludCBhdGFnX2FybV9sb2FkKHN0cnVjdCBrZXhlY19p
-bmZvICppbmZvLCB1bnNpZ25lZCBsb25nIGJhc2UsCisJdW5zaWduZWQgaW50IGF0YWdfb2Zmc2V0
-LAogCWNvbnN0IGNoYXIgKmNvbW1hbmRfbGluZSwgb2ZmX3QgY29tbWFuZF9saW5lX2xlbiwKIAlj
-b25zdCBjaGFyICppbml0cmQsIG9mZl90IGluaXRyZF9sZW4pCiB7CkBAIC0xMzMsMTQgKzEzNSwx
-NSBAQCBpbnQgYXRhZ19hcm1fbG9hZChzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mCiAJc3RydWN0IHRh
-ZyAqcGFyYW1zOwogCXVpbnQzMl90ICppbml0cmRfc3RhcnQ7CiAJCi0JYnVmID0geG1hbGxvYyhn
-ZXRwYWdlc2l6ZSgpKTsKKwkvLyBhbGxvY2F0ZSAxNksKKwlidWYgPSB4bWFsbG9jKEFUQUdTX1NF
-R01FTlRfU0laRSk7CiAJaWYgKCFidWYpIHsKIAkJZnByaW50ZihzdGRlcnIsICJDb21waWxpbmcg
-QVRBR3M6IG91dCBvZiBtZW1vcnlcbiIpOwogCQlyZXR1cm4gLTE7CiAJfQoKLQltZW1zZXQoYnVm
-LCAweGZmLCBnZXRwYWdlc2l6ZSgpKTsKLQlwYXJhbXMgPSAoc3RydWN0IHRhZyAqKWJ1ZjsKKwlt
-ZW1zZXQoYnVmLCAweGZmLCBBVEFHU19TRUdNRU5UX1NJWkUpOworCXBhcmFtcyA9IChzdHJ1Y3Qg
-dGFnICopKGJ1ZiArIGF0YWdfb2Zmc2V0KTsKCiAJaWYgKHNhdmVkX3RhZ3MpIHsKIAkJLy8gQ29w
-eSB0YWdzCkBAIC0xODYsNyArMTg5LDcgQEAgaW50IGF0YWdfYXJtX2xvYWQoc3RydWN0IGtleGVj
-X2luZm8gKmluZgogCXBhcmFtcy0+aGRyLnNpemUgPSAwOwogCXBhcmFtcy0+aGRyLnRhZyA9IEFU
-QUdfTk9ORTsKCi0JbGVuID0gKChjaGFyICopcGFyYW1zIC0gYnVmKSArIHNpemVvZihzdHJ1Y3Qg
-dGFnX2hlYWRlcik7CisJbGVuID0gQVRBR1NfU0VHTUVOVF9TSVpFOwoKIAlhZGRfc2VnbWVudChp
-bmZvLCBidWYsIGxlbiwgYmFzZSwgbGVuKTsKCkBAIC0yMDcsNyArMjEwLDcgQEAgaW50IHpJbWFn
-ZV9hcm1fbG9hZChpbnQgYXJnYywgY2hhciAqKmFyZwogCXN0cnVjdCBrZXhlY19pbmZvICppbmZv
-KQogewogCXVuc2lnbmVkIGxvbmcgYmFzZTsKLQl1bnNpZ25lZCBpbnQgYXRhZ19vZmZzZXQgPSAw
-eDEwMDA7IC8qIDRrIG9mZnNldCBmcm9tIG1lbW9yeSBzdGFydCAqLworCXVuc2lnbmVkIGludCBh
-dGFnX29mZnNldCA9IDB4MTAwOyAvKiA0ayBvZmZzZXQgZnJvbSBtZW1vcnkgc3RhcnQgKi8KIAl1
-bnNpZ25lZCBpbnQgb2Zmc2V0ID0gMHg4MDAwOyAgICAgIC8qIDMyayBvZmZzZXQgZnJvbSBtZW1v
-cnkgc3RhcnQgKi8KIAljb25zdCBjaGFyICpjb21tYW5kX2xpbmU7CiAJb2ZmX3QgY29tbWFuZF9s
-aW5lX2xlbjsKQEAgLTI2Niw3ICsyNjksNyBAQCBpbnQgekltYWdlX2FybV9sb2FkKGludCBhcmdj
-LCBjaGFyICoqYXJnCiAJaWYgKGJhc2UgPT0gVUxPTkdfTUFYKQogCQlyZXR1cm4gLTE7CgotCWlm
-IChhdGFnX2FybV9sb2FkKGluZm8sIGJhc2UgKyBhdGFnX29mZnNldCwKKwlpZiAoYXRhZ19hcm1f
-bG9hZChpbmZvLCBiYXNlLCBhdGFnX29mZnNldCwKIAkJCSBjb21tYW5kX2xpbmUsIGNvbW1hbmRf
-bGluZV9sZW4sCiAJCQkgcmFtZGlza19idWYsIHJhbWRpc2tfbGVuZ3RoKSAgICA9PSAtMSkKIAkJ
-cmV0dXJuIC0xOwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Magnus Damm <damm@igel.co.jp>
+
+Since /proc/iomem contains physical addresses, use
+add_segment_phys_virt(xxx, 0) instead of add_segment()
+in add_backup_segments().
+
+This fix is needed for kexec jump on SuperH where
+add_segment() only takes virtual addresses.
+
+Signed-off-by: Magnus Damm <damm@igel.co.jp>
+---
+
+ kexec/kexec.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- 0001/kexec/kexec.c
++++ work/kexec/kexec.c	2009-03-17 22:43:06.000000000 +0900
+@@ -454,7 +454,8 @@ int add_backup_segments(struct kexec_inf
+ 				break;
+ 			start = (bkseg_base + pagesize - 1) & ~(pagesize - 1);
+ 			end = (bkseg_base + bkseg_size) & ~(pagesize - 1);
+-			add_segment(info, NULL, 0, start, end-start);
++			add_segment_phys_virt(info, NULL, 0,
++					      start, end-start, 0);
+ 			mem_size = mem_base + mem_size - \
+ 				(bkseg_base + bkseg_size);
+ 			mem_base = bkseg_base + bkseg_size;
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
