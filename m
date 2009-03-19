@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from ey-out-1920.google.com ([74.125.78.149])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Lk8Po-0003B4-Vx
-	for kexec@lists.infradead.org; Thu, 19 Mar 2009 02:55:35 +0000
-Date: Thu, 19 Mar 2009 13:55:27 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] sh: use physical address for zImage entry
-Message-ID: <20090319025525.GA31593@verge.net.au>
-References: <20090318112251.13413.30984.sendpatchset@rx1.opensource.se>
+	id 1LkIj9-0001fe-Gq
+	for kexec@lists.infradead.org; Thu, 19 Mar 2009 13:56:15 +0000
+Received: by ey-out-1920.google.com with SMTP id 13so80340eye.24
+	for <kexec@lists.infradead.org>; Thu, 19 Mar 2009 06:56:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20090318112251.13413.30984.sendpatchset@rx1.opensource.se>
+In-Reply-To: <f69abfc30903120455u2fd377b5o48d555ac38ccc85@mail.gmail.com>
+References: <f69abfc30903110159m485ae02cwfe42f318863d6b45@mail.gmail.com>
+	<f69abfc30903120455u2fd377b5o48d555ac38ccc85@mail.gmail.com>
+Date: Thu, 19 Mar 2009 14:56:05 +0100
+Message-ID: <f69abfc30903190656g43489564t739c459380706ff6@mail.gmail.com>
+Subject: Re: ARM: atags_offset at 0x100
+From: Yegor Yefremov <yegorslists@googlemail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +25,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Wed, Mar 18, 2009 at 08:22:51PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm@igel.co.jp>
-> 
-> Use a physical address for the SuperH zImage entry point.
-> This makes the zImage loader behave as the elf loader.
-> 
-> Signed-off-by: Magnus Damm <damm@igel.co.jp>
+The issue was cleared. Patch is obsolete. Sorry for noise.
 
-Thanks, applied.
-
--- 
-Simon Horman
-  VA Linux Systems Japan K.K., Sydney, Australia Satellite Office
-  H: www.vergenet.net/~horms/             W: www.valinux.co.jp/en
-
+Best regards,
+Yegor
 
 _______________________________________________
 kexec mailing list
