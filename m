@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe005.messaging.microsoft.com ([216.32.180.15]
-	helo=VA3EHSOBE005.bigfish.com)
+Received: from bilbo.ozlabs.org ([203.10.76.25])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LpRqh-0000Yn-Py
-	for kexec@lists.infradead.org; Thu, 02 Apr 2009 18:41:20 +0000
-Message-ID: <49D506BB.9030409@am.sony.com>
-Date: Thu, 2 Apr 2009 11:40:59 -0700
-From: Geoff Levand <geoffrey.levand@am.sony.com>
-MIME-Version: 1.0
-Subject: kexec trouble with gcc-4.3
+	id 1LpWta-0006ol-5a
+	for kexec@lists.infradead.org; Fri, 03 Apr 2009 00:04:54 +0000
+Subject: Re: [Cbe-oss-dev] kexec trouble with gcc-4.3
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <49D506BB.9030409@am.sony.com>
+References: <49D506BB.9030409@am.sony.com>
+Date: Fri, 03 Apr 2009 11:04:25 +1100
+Message-Id: <1238717065.6227.5.camel@localhost>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,33 +19,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0971617312=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: cbe-oss-dev@ozlabs.org
+To: Geoff Levand <geoffrey.levand@am.sony.com>
+Cc: kexec@lists.infradead.org, cbe-oss-dev@ozlabs.org
 
-Hi,
 
-I tried building kexec with gcc-4.3 from the cell sdk-3.1
-and the resulting binary didn't work correctly.  It works
-OK with the gcc-4.1 from the same (sdk-3.1).
+--===============0971617312==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-UkOvaWyGFnINc4TBti+0"
 
-Here is the last thing seen, then the system hangs:
 
-Starting new kernel
-kexec: waiting for cpu 1 (physical 1) to go down
-Invalid tag 26 scanning flattened device tree !
-Invalid tag 26 scanning flattened device tree !
-Invalid tag 26 scanning flattened device tree !
+--=-UkOvaWyGFnINc4TBti+0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Does anyone have any ideas?
+On Thu, 2009-04-02 at 11:40 -0700, Geoff Levand wrote:
+> Hi,
+>=20
+> I tried building kexec with gcc-4.3 from the cell sdk-3.1
+> and the resulting binary didn't work correctly.  It works
+> OK with the gcc-4.1 from the same (sdk-3.1).
 
--Geoff
+You mean building kexec-tools? Or building the kernel?
 
+cheers
+
+--=20
+Michael Ellerman
+OzLabs, IBM Australia Development Lab
+
+wwweb: http://michael.ellerman.id.au
+phone: +61 2 6212 1183 (tie line 70 21183)
+
+We do not inherit the earth from our ancestors,
+we borrow it from our children. - S.M.A.R.T Person
+
+--=-UkOvaWyGFnINc4TBti+0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAknVUokACgkQdSjSd0sB4dJoNACdEi888IJTtbmRAnIRvaCT86AB
+SaoAn35JuEh+Au/nTuemHM3WDdU77uMs
+=MeEB
+-----END PGP SIGNATURE-----
+
+--=-UkOvaWyGFnINc4TBti+0--
+
+
+
+--===============0971617312==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0971617312==--
+
+
