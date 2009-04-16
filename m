@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from brm-mailgate-1.brocade.com ([144.49.197.2])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LuWdb-0002Lh-Bl
-	for kexec@lists.infradead.org; Thu, 16 Apr 2009 18:48:46 +0000
-Content-class: urn:content-classes:message
+Received: from n26.bullet.mail.ukl.yahoo.com ([87.248.110.143])
+	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1Lua7v-0007hV-VA
+	for kexec@lists.infradead.org; Thu, 16 Apr 2009 22:32:18 +0000
+Message-ID: <415970.75253.qm@web28316.mail.ukl.yahoo.com>
+Date: Thu, 16 Apr 2009 22:32:10 +0000 (GMT)
+From: Albert Herranz <albert_herranz@yahoo.es>
+Subject: RE: about ppc32/kexec
 MIME-Version: 1.0
-Subject: RE: should kernel image destination address be picked up by kernel
-	itself?
-Date: Thu, 16 Apr 2009 11:48:33 -0700
-Message-ID: <4C94DE2070B172459E4F1EE14BD2364E02D878D9@HQ-EXCH-5.corp.brocade.com>
-In-Reply-To: <m14ozb1eom.fsf@fess.ebiederm.org>
-References: <4C94DE2070B172459E4F1EE14BD2364E027534BA@HQ-EXCH-5.corp.brocade.com>
-	<m14ozb1eom.fsf@fess.ebiederm.org>
-From: "Ming Lei" <mlei@Brocade.COM>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,47 +20,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ming Lei <mlei@Brocade.COM>
 Cc: kexec@lists.infradead.org
 
-Eric,
 
->>"Ming Lei" <mlei@Brocade.COM> writes:
->> As I understand the code, current destination address is picked up by
->> either the user(elf image) or kexec-tools. It is not automatic, can
-we
->> let linux kernel choose the address instead? It is automatic and no
-way
->> to wipe out something important.
+Hi,
 
->I don't follow.  The basic model of kexec is:
->2)- All of the policy decisions are made in user space (such as where
-to
->  execute from)
+> I don't understand why you choose to turn the MMU off on
+> ppc.. Is there
+> any practical reason? On Freescale 85xx which is close to
+> PPC44x, I did
+> not turn off MMU(I cannot) and I just rely on the current
+> virtual to
+> physical mapping to jump to the start address to execute
+> the second
+> kernel.
 
->3)- standalone executables are loaded into an address space where
->  physical address and virtual address are the same.
+kexec is designed to boot whatever self contained executable image you want (linux or any other binary). In fact, the ppc port was developed on a GameCube, and was designed to boot Linux and non-Linux binaries from Linux.
 
->4)- Sophisticated page swapping happens in the kernel where
->  sys_kexec_load was called so that any valid address on the machine
->  is available to the standalone executable.
+It currently avoids making assumptions about in-place memory mappings and works in real addressing mode.
+The MMU is turned off to switch to real mode addressing. The relocation code works in real addressing mode to copy the image to its final place and then jumps to the entry point of the loaded image, in real addressing mode.
+On kexec-tools, depending on the type of executable image loaded, a small stub is used as the entry point which setups whatever environment (address mappings if needed, etc.) the loaded binary expects, and then jumps to the actual entry point of the binary.
+In this way, the setup of the different possible environments for the different types of binary images than can be loaded is moved from kernelspace to userspace. The interface between the kernel and kexec-tools is well defined and constant.
 
->What problem do you see in that model?
->Why is it a problem for you?
+On platforms that cannot turn the MMU off you may need to choose another approach. And you may need to fix kexec-tools too to account for that.
 
->Eric
+Cheers,
+Albert
 
-I generally agree on 2). However, to choose where to copy the kimage
-segments, should the kernel be the one to make this decision so to avoid
-export memory map to user space, since the kernel knows where are all
-the free memory. This doesn't complicate the kernel code and meanwhile
-simplify the user space code and reduce the requirement for different
-platforms(so other platforms doesn't need to export kernel memory map).
 
-I think 3) and 4) is more the requirements from x86. On ppc32 I don't
-see the need for it. So 3) and 4) should be in platform specifics.
 
-Ming 
+      
+
 
 _______________________________________________
 kexec mailing list
