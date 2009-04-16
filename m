@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from brm-mailgate-2.brocade.com ([144.49.197.3])
+Received: from brm-mailgate-1.brocade.com ([144.49.197.2])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LuWJw-0007xH-Go
-	for kexec@lists.infradead.org; Thu, 16 Apr 2009 18:28:27 +0000
+	id 1LuWdb-0002Lh-Bl
+	for kexec@lists.infradead.org; Thu, 16 Apr 2009 18:48:46 +0000
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: RE: about ppc32/kexec
-Date: Thu, 16 Apr 2009 11:28:02 -0700
-Message-ID: <4C94DE2070B172459E4F1EE14BD2364E02D878B6@HQ-EXCH-5.corp.brocade.com>
-In-Reply-To: <95529.61291.qm@web28312.mail.ukl.yahoo.com>
-References: <95529.61291.qm@web28312.mail.ukl.yahoo.com>
+Subject: RE: should kernel image destination address be picked up by kernel
+	itself?
+Date: Thu, 16 Apr 2009 11:48:33 -0700
+Message-ID: <4C94DE2070B172459E4F1EE14BD2364E02D878D9@HQ-EXCH-5.corp.brocade.com>
+In-Reply-To: <m14ozb1eom.fsf@fess.ebiederm.org>
+References: <4C94DE2070B172459E4F1EE14BD2364E027534BA@HQ-EXCH-5.corp.brocade.com>
+	<m14ozb1eom.fsf@fess.ebiederm.org>
 From: "Ming Lei" <mlei@Brocade.COM>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,49 +25,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Albert Herranz <albert_herranz@yahoo.es>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: kexec@lists.infradead.org
 
-Albert,
+Eric,
 
->> 
->> 1)       In relocate_new_kernel, you put the comment saying switch
-the >>MMU off. Can you tell me how these code can achieve it. I don't
-see it >>happens on FSL85xx(actually 85xx or 44x doesn't allow MMU to
-turn off).
->> 
->> +       .globl relocate_new_kernel
->> +relocate_new_kernel:
->> +       /* r3 = page_list   */
->> +       /* r4 = reboot_code_buffer */
->> +       /* r5 = start_address      */
->> +
->> +       li      r0, 0
->> +
->> +       /*
->> +        * Set Machine Status Register to a known status,
->> +        * switch the MMU off and jump to 1: in a single step.
->> +        */
->> +
->> +       mr      r8, r0
->> +       ori     r8, r8, MSR_RI|MSR_ME
->> +       mtspr   SRR1, r8
->> +       addi    r8, r4, 1f - relocate_new_kernel
->> +       mtspr   SRR0, r8
->> +       sync
->> +       rfi
+>>"Ming Lei" <mlei@Brocade.COM> writes:
+>> As I understand the code, current destination address is picked up by
+>> either the user(elf image) or kexec-tools. It is not automatic, can
+we
+>> let linux kernel choose the address instead? It is automatic and no
+way
+>> to wipe out something important.
 
->This code sets the MSR to a value where MSR_IR (Instruction Relocate)
-and >MSR_DI (Data Relocate) are cleared, and thus the MMU is turned
-effectively >off.
->Turning the MMU off is possible at least on 6xx and 7xx.
+>I don't follow.  The basic model of kexec is:
+>2)- All of the policy decisions are made in user space (such as where
+to
+>  execute from)
 
-I don't understand why you choose to turn the MMU off on ppc. Is there
-any practical reason? On Freescale 85xx which is close to PPC44x, I did
-not turn off MMU(I cannot) and I just rely on the current virtual to
-physical mapping to jump to the start address to execute the second
-kernel.
+>3)- standalone executables are loaded into an address space where
+>  physical address and virtual address are the same.
 
+>4)- Sophisticated page swapping happens in the kernel where
+>  sys_kexec_load was called so that any valid address on the machine
+>  is available to the standalone executable.
+
+>What problem do you see in that model?
+>Why is it a problem for you?
+
+>Eric
+
+I generally agree on 2). However, to choose where to copy the kimage
+segments, should the kernel be the one to make this decision so to avoid
+export memory map to user space, since the kernel knows where are all
+the free memory. This doesn't complicate the kernel code and meanwhile
+simplify the user space code and reduce the requirement for different
+platforms(so other platforms doesn't need to export kernel memory map).
+
+I think 3) and 4) is more the requirements from x86. On ppc32 I don't
+see the need for it. So 3) and 4) should be in platform specifics.
+
+Ming 
 
 _______________________________________________
 kexec mailing list
