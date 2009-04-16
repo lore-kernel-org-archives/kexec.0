@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([203.10.76.25])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LpZRb-00019x-PV
-	for kexec@lists.infradead.org; Fri, 03 Apr 2009 02:47:54 +0000
-Subject: Re: [Cbe-oss-dev] kexec trouble with gcc-4.3
-From: Michael Ellerman <michael@ellerman.id.au>
-In-Reply-To: <49D56FB1.4070605@am.sony.com>
-References: <49D506BB.9030409@am.sony.com>
-	<1238717065.6227.5.camel@localhost>  <49D56FB1.4070605@am.sony.com>
-Date: Fri, 03 Apr 2009 13:47:44 +1100
-Message-Id: <1238726864.6802.11.camel@localhost>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Received: from brm-mailgate-2.brocade.com ([144.49.197.3])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LuWJw-0007xH-Go
+	for kexec@lists.infradead.org; Thu, 16 Apr 2009 18:28:27 +0000
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Subject: RE: about ppc32/kexec
+Date: Thu, 16 Apr 2009 11:28:02 -0700
+Message-ID: <4C94DE2070B172459E4F1EE14BD2364E02D878B6@HQ-EXCH-5.corp.brocade.com>
+In-Reply-To: <95529.61291.qm@web28312.mail.ukl.yahoo.com>
+References: <95529.61291.qm@web28312.mail.ukl.yahoo.com>
+From: "Ming Lei" <mlei@Brocade.COM>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,79 +19,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0149483507=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoffrey.levand@am.sony.com>
-Cc: kexec@lists.infradead.org, cbe-oss-dev@ozlabs.org
+To: Albert Herranz <albert_herranz@yahoo.es>
+Cc: kexec@lists.infradead.org
 
+Albert,
 
---===============0149483507==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-EAuTnCBWCDOqyJ/pf8IY"
+>> 
+>> 1)       In relocate_new_kernel, you put the comment saying switch
+the >>MMU off. Can you tell me how these code can achieve it. I don't
+see it >>happens on FSL85xx(actually 85xx or 44x doesn't allow MMU to
+turn off).
+>> 
+>> +       .globl relocate_new_kernel
+>> +relocate_new_kernel:
+>> +       /* r3 = page_list   */
+>> +       /* r4 = reboot_code_buffer */
+>> +       /* r5 = start_address      */
+>> +
+>> +       li      r0, 0
+>> +
+>> +       /*
+>> +        * Set Machine Status Register to a known status,
+>> +        * switch the MMU off and jump to 1: in a single step.
+>> +        */
+>> +
+>> +       mr      r8, r0
+>> +       ori     r8, r8, MSR_RI|MSR_ME
+>> +       mtspr   SRR1, r8
+>> +       addi    r8, r4, 1f - relocate_new_kernel
+>> +       mtspr   SRR0, r8
+>> +       sync
+>> +       rfi
 
+>This code sets the MSR to a value where MSR_IR (Instruction Relocate)
+and >MSR_DI (Data Relocate) are cleared, and thus the MMU is turned
+effectively >off.
+>Turning the MMU off is possible at least on 6xx and 7xx.
 
---=-EAuTnCBWCDOqyJ/pf8IY
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I don't understand why you choose to turn the MMU off on ppc. Is there
+any practical reason? On Freescale 85xx which is close to PPC44x, I did
+not turn off MMU(I cannot) and I just rely on the current virtual to
+physical mapping to jump to the start address to execute the second
+kernel.
 
-On Thu, 2009-04-02 at 19:08 -0700, Geoff Levand wrote:
-> On 04/02/2009 05:04 PM, Michael Ellerman wrote:
-> > On Thu, 2009-04-02 at 11:40 -0700, Geoff Levand wrote:
-> >> Hi,
-> >>=20
-> >> I tried building kexec with gcc-4.3 from the cell sdk-3.1
-> >> and the resulting binary didn't work correctly.  It works
-> >> OK with the gcc-4.1 from the same (sdk-3.1).
-> >=20
-> > You mean building kexec-tools? Or building the kernel?
->=20
-> The kexec program in kexec-tools.
-
-Right. In that case I'd guess there's a bug in the kexec-tools DT
-creation code, that's being exposed by the new gcc.
-
-If you compare the DT from a working and non-working version it
-shouldn't be too hard to track down.
-
-cheers
-
---=20
-Michael Ellerman
-OzLabs, IBM Australia Development Lab
-
-wwweb: http://michael.ellerman.id.au
-phone: +61 2 6212 1183 (tie line 70 21183)
-
-We do not inherit the earth from our ancestors,
-we borrow it from our children. - S.M.A.R.T Person
-
---=-EAuTnCBWCDOqyJ/pf8IY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAknVeNAACgkQdSjSd0sB4dI68ACfX2Szq719BeF9hWWhhHIjXf2o
-FEYAnRnQi5OXtq0YwDewjHh6935Xlyld
-=zQIE
------END PGP SIGNATURE-----
-
---=-EAuTnCBWCDOqyJ/pf8IY--
-
-
-
---===============0149483507==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0149483507==--
-
-
