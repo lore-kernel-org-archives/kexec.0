@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1LwBNg-0002RP-9o
-	for kexec@lists.infradead.org; Tue, 21 Apr 2009 08:31:11 +0000
-Message-ID: <49ED63B3.5070100@mxs.nes.nec.co.jp>
-Date: Tue, 21 Apr 2009 15:12:03 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1LwZsK-00018r-95
+	for kexec@lists.infradead.org; Wed, 22 Apr 2009 10:40:26 +0000
+References: <149724.46274.qm@web28314.mail.ukl.yahoo.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Wed, 22 Apr 2009 03:40:10 -0700
+In-Reply-To: <149724.46274.qm@web28314.mail.ukl.yahoo.com> (Albert Herranz's
+	message of "Fri\, 17 Apr 2009 10\:41\:46 +0000 \(GMT\)")
+Message-ID: <m18wltvunp.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [Crash-utility] [PATCH] makedumpfile: Save utsname data into
-	disk_dump_header.(Re: makedumpfile question / request)
-References: <474287444.42861240232368767.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-	<49ED3CD5.2000900@mxs.nes.nec.co.jp>
-In-Reply-To: <49ED3CD5.2000900@mxs.nes.nec.co.jp>
+Subject: Re: about ppc32/kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,212 +23,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage, maintenance and development" <crash-utility@redhat.com>
-Cc: kexec-ml <kexec@lists.infradead.org>, Dave Anderson <anderson@redhat.com>
+To: Albert Herranz <albert_herranz@yahoo.es>
+Cc: kexec@lists.infradead.org, Ming Lei <mlei@Brocade.COM>
 
+Albert Herranz <albert_herranz@yahoo.es> writes:
 
-Hi Dave,
+> Hi,
+>
+>> Thank you for the details. Can you explain why with MMU on
+>> it needs to
+>> assume in-place memory mappings? Do we always have __pa or
+>> __va
+>> available to translate between? We don't need to assume any
+>> mapping
+>> since on ppc32 you can always get to virtual address by
+>> adding
+>> PAGE_OFFSET to physical address.
+>
+> Is CONFIG_HIGHMEM covered by that?
+>
+>> I try to implement kexec for freescal 85xx and IBM44x
+>> platform so the
+>> current code for ppc32 definitely need to be either move to
+>> gamecube
+>> specific or I create stub for each of 85xx and 44x, which I
+>> try to
+>> avoid.
+>
+> The current code is not gamecube specific, it is ppc32 generic and works for platforms that can turn off their MMU, which is the general case. 44x seems to have a lot of particularities. Guess that's why it has its own *.S's.
+>
+> IMHO, at least you should try to keep the kexec interface as defined (all kexec structures use physical addresses).
+>
+> If you can't turn off the MMU on those platforms, you need either to use a 1:1 mapping or deal with the special case in a special way.
+> You can modify the existing relocate_new_kernel and special case the 4xx or you can create a new relocate_new_kernel_4xx and use that if 4xx.
+>
+> One way to follow/keep the kexec interface on 4xx for relocate_new_kernel might be:
+> - relocate the kernel translating physical addresses using a known mapping that can deal with all the memory that kexec is told to use to store the image (i.e. the memory that kexec_load uses to put the different pages that make up the image).
+> - then get rid of all the memory mappings, make sure to enable a 1:1 mapping that covers all the range of memory supported and jump to the entry point of the loaded image.
+>
+> Another one could be:
+> - get rid of all the memory mappings, enable a 1:1 mapping and do the relocation using physical addresses (as they can be used directly then).
+> - jump to the entry point of the loaded image.
+>
+> What do you think?
 
-Ken'ichi Ohmichi wrote:
->>>> Is there a reason that makedumpfile does not fill in the utsname structure
->>>> in the compressed dumpfile's header?  
->>> Thank you for good point.
->>>
->>> makedumpfile does not fill it because makedumpfile might not be able to
->>> get kernel debug information (containing symbol system_utsname/init_uts_ns).
->>> makedumpfile does not need kernel debug information if dump_level is 0 or 1,
->>> and it does not read a new_utsname structure. (check_release() is not called.)
->>>
->>>
->>>> The data structure does get read into a local new_utsname structure in the
->>>> check_release() function, but it doesn't get saved and copied into the
->>>> disk_dump_header in write_kdump_header().
->>>>
->>>> It would be helpful if that were in place as a quick ID for what the
->>>> compressed dumpfile contains.
->>> I feel that is worth.
->>> How about saving new_utsname data into disk_dump_header only if dump_level
->>> is 2 or bigger ?
->> Well, that's certainly preferable than the way it is now.
->>
->> But let me ask you this...
->>
->> Given that the init_uts_ns structure is always located in:
->>
->> (1) unity-mapped memory, or in a mapped kernel region for x86_64/ia64, and
->> (2) that your initial() function calls get_phys_base() in all cases,
->>
->> can't you just strip the relevant unity-mapping from the supplied 
->> VMCOREINFO/init_uts_ns symbol value, apply the phys_base, and then
->> read it from the vmcore file?
-> 
-> Thank you for the comment.
-> We can do it by the attached patch.
+I think the loaded image should be presented with a 1:1 virtual to
+physical memory mapping and get the chance to figure out what to do
+from there.  It is a nice least common denominator environment that
+every architecture and every variation can support, and I expect
+it will facilitate code sharing with the existing gamecube port.
 
-I forgot to say.
-I will take a vacation since tomorrow, and I'll reply to you after 7 May.
+I don't have a clue what kind of MMU the 85xx and the 44x have.  ppc has
+done all sorts of weird things in the past.  But my experience on other
+architectures like alpha, ia64 and x86_64 has been that setting up the
+paging infrastructure to do a 1:1 virtual to physical mapping hasn't
+been too hard even when you can't turn off the MMU.  Turning off the
+MMU is just easier.
 
-
-Thanks
-Ken'ichi Ohmichi
-
-
-> ---
-> [PATCH] Save utsname data into disk_dump_header.
-> 
-> By this patch, makedumpfile saves utsname data into disk_dump_header.
-> The crash utility can output the data by 'help -n' command:
-> 
-> crash> help -n
-> diskdump_data:
->              flags: 6 (KDUMP_CMPRS_LOCAL|ERROR_EXCLUDED)
->                dfd: 3
->                ofp: 3b29b4d760
->       machine_type: 62 (EM_X86_64)
-> 
->             header: c34c70
->            signature: "KDUMP   "
->       header_version: 2
->              utsname:
->                sysname: Linux
->               nodename: localhost.localdomain
->                release: 2.6.29-rc7
->                version: #1 SMP Mon Mar 9 11:20:46 JST 2009
->                machine: x86_64
->             domainname: (none)
->            timestamp:
-> [snip]
-> 
-> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-> ---
-> diff -puN a/makedumpfile.c b/makedumpfile.c
-> --- a/makedumpfile.c	2009-04-20 15:26:23.000000000 +0900
-> +++ b/makedumpfile.c	2009-04-21 12:48:00.000000000 +0900
-> @@ -382,9 +382,8 @@ fallback_to_current_page_size(void)
->  }
->  
->  int
-> -check_release(void)
-> +get_utsname(struct utsname *system_utsname)
->  {
-> -	struct utsname system_utsname;
->  	unsigned long utsname;
->  
->  	/*
-> @@ -398,13 +397,18 @@ check_release(void)
->  		ERRMSG("Can't get the symbol of system_utsname.\n");
->  		return FALSE;
->  	}
-> -	if (!readmem(VADDR, utsname, &system_utsname, sizeof(struct utsname))){
-> +	if (!readmem(VADDR, utsname, system_utsname, sizeof(struct utsname))){
->  		ERRMSG("Can't get the address of system_utsname.\n");
->  		return FALSE;
->  	}
-> +	return TRUE;
-> +}
->  
-> +int
-> +check_release(void)
-> +{
->  	if (info->flag_read_vmcoreinfo) {
-> -		if (strcmp(system_utsname.release, info->release)) {
-> +		if (strcmp(info->system_utsname.release, info->release)) {
->  			ERRMSG("%s and %s don't match.\n",
->  			    info->name_vmcoreinfo, info->name_memory);
->  			retcd = WRONG_RELEASE;
-> @@ -412,7 +416,7 @@ check_release(void)
->  		}
->  	}
->  
-> -	info->kernel_version = get_kernel_version(system_utsname.release);
-> +	info->kernel_version = get_kernel_version(info->system_utsname.release);
->  	if (info->kernel_version == FALSE) {
->  		if (!info->flag_read_vmcoreinfo)
->  			ERRMSG("Or %s and %s don't match.\n",
-> @@ -3378,7 +3382,7 @@ get_mem_map(void)
->  int
->  initial(void)
->  {
-> -	int flag_need_debuginfo;
-> +	int flag_get_debuginfo = FALSE, flag_need_debuginfo = FALSE;
->  
->  	if (!(vt.mem_flags & MEMORY_XEN) && info->flag_exclude_xen_dom) {
->  		MSG("'-X' option is disable,");
-> @@ -3398,6 +3402,7 @@ initial(void)
->  		if (!read_vmcoreinfo())
->  			return FALSE;
->  		close_vmcoreinfo();
-> +		flag_get_debuginfo = TRUE;
->  	/*
->  	 * Get the debug information for analysis from the kernel file
->  	 */
-> @@ -3413,6 +3418,7 @@ initial(void)
->  
->  		if (!get_srcfile_info())
->  			return FALSE;
-> +		flag_get_debuginfo = TRUE;
->  	} else {
->  		/*
->  		 * Check whether /proc/vmcore contains vmcoreinfo,
-> @@ -3438,6 +3444,7 @@ initial(void)
->  		if (!read_vmcoreinfo_from_vmcore(info->offset_vmcoreinfo,
->  		    info->size_vmcoreinfo, FALSE))
->  			return FALSE;
-> +		flag_get_debuginfo = TRUE;
->  	}
->  
->  	if (!get_value_for_old_linux())
-> @@ -3454,6 +3461,12 @@ out:
->  	if (!get_max_mapnr())
->  		return FALSE;
->  
-> +	if (flag_get_debuginfo) {
-> +		if (!get_machdep_info())
-> +			return FALSE;
-> +		if (!get_utsname(&info->system_utsname))
-> +			return FALSE;
-> +	}
->  	if ((info->max_dump_level <= DL_EXCLUDE_ZERO) && !info->flag_dmesg)
->  		flag_need_debuginfo = FALSE;
->  	else 
-> @@ -3465,10 +3478,6 @@ out:
->  		else
->  			return TRUE;
->  	}
-> -
-> -	if (!get_machdep_info())
-> -		return FALSE;
-> -
->  	if (!check_release())
->  		return FALSE;
->  
-> @@ -4969,6 +4978,7 @@ write_kdump_header(void)
->  	dh->bitmap_blocks
->  	    = divideup(info->len_bitmap, dh->block_size);
->  	memcpy(&dh->timestamp, &info->timestamp, sizeof(dh->timestamp));
-> +	memcpy(&dh->utsname, &info->system_utsname, sizeof(dh->utsname));
->  
->  	size = sizeof(struct disk_dump_header);
->  	if (!write_buffer(info->fd_dumpfile, 0, dh, size, info->name_dumpfile))
-> diff -puN a/makedumpfile.h b/makedumpfile.h
-> --- a/makedumpfile.h	2009-04-20 15:26:23.000000000 +0900
-> +++ b/makedumpfile.h	2009-04-21 12:47:58.000000000 +0900
-> @@ -750,6 +750,7 @@ struct splitting_info {
->  struct DumpInfo {
->  	int32_t		kernel_version;      /* version of first kernel*/
->  	struct timeval	timestamp;
-> +	struct utsname	system_utsname;
->  
->  	/*
->  	 * General info:
-> 
-> --
-> Crash-utility mailing list
-> Crash-utility@redhat.com
-> https://www.redhat.com/mailman/listinfo/crash-utility
-> 
-
-
+Eric
 
 _______________________________________________
 kexec mailing list
