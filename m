@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail.aulac.com.vn ([118.69.204.194] helo=mailhost10.fptdata.vn)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1LwZsK-00018r-95
-	for kexec@lists.infradead.org; Wed, 22 Apr 2009 10:40:26 +0000
-References: <149724.46274.qm@web28314.mail.ukl.yahoo.com>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Wed, 22 Apr 2009 03:40:10 -0700
-In-Reply-To: <149724.46274.qm@web28314.mail.ukl.yahoo.com> (Albert Herranz's
-	message of "Fri\, 17 Apr 2009 10\:41\:46 +0000 \(GMT\)")
-Message-ID: <m18wltvunp.fsf@fess.ebiederm.org>
+	id 1LwtcG-0006vN-Rm
+	for kexec@lists.infradead.org; Thu, 23 Apr 2009 07:45:11 +0000
+Received: from relay.atvn.com.vn by mailhost10.fptdata.vn (MDaemon PRO v9.5.5)
+	with ESMTP id md50000169875.msg
+	for <kexec@lists.infradead.org>; Thu, 23 Apr 2009 14:44:48 +0700
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by hcmcexch2.atvn.com.vn (Postfix) with ESMTP id 8092B164020
+	for <kexec@lists.infradead.org>; Thu, 23 Apr 2009 13:31:05 +0700 (ICT)
+Received: from hcmcexch2.atvn.com.vn ([127.0.0.1])
+	by localhost (hcmcexch2.atvn.com.vn [127.0.0.1]) (amavisd-new,
+	port 10024)
+	with ESMTP id KSicZfYobr6V for <kexec@lists.infradead.org>;
+	Thu, 23 Apr 2009 13:31:04 +0700 (ICT)
+Received: from [172.33.41.199] (unknown [172.33.41.199])
+	by hcmcexch2.atvn.com.vn (Postfix) with ESMTP id 156B016401F
+	for <kexec@lists.infradead.org>; Thu, 23 Apr 2009 13:31:04 +0700 (ICT)
+Message-ID: <49F01C2E.20506@atvn.com.vn>
+Date: Thu, 23 Apr 2009 14:43:42 +0700
+From: Nguyen Hong Kien <kiennh@atvn.com.vn>
 MIME-Version: 1.0
-Subject: Re: about ppc32/kexec
+Subject: kexec source code for ppc32
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +30,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Albert Herranz <albert_herranz@yahoo.es>
-Cc: kexec@lists.infradead.org, Ming Lei <mlei@Brocade.COM>
+To: kexec@lists.infradead.org
 
-Albert Herranz <albert_herranz@yahoo.es> writes:
+Hi all,
+Im looking for kexec source code for ppc32. Could you tell me where i 
+can get this source code?
+Thank so much,
+Kien
 
-> Hi,
->
->> Thank you for the details. Can you explain why with MMU on
->> it needs to
->> assume in-place memory mappings? Do we always have __pa or
->> __va
->> available to translate between? We don't need to assume any
->> mapping
->> since on ppc32 you can always get to virtual address by
->> adding
->> PAGE_OFFSET to physical address.
->
-> Is CONFIG_HIGHMEM covered by that?
->
->> I try to implement kexec for freescal 85xx and IBM44x
->> platform so the
->> current code for ppc32 definitely need to be either move to
->> gamecube
->> specific or I create stub for each of 85xx and 44x, which I
->> try to
->> avoid.
->
-> The current code is not gamecube specific, it is ppc32 generic and works for platforms that can turn off their MMU, which is the general case. 44x seems to have a lot of particularities. Guess that's why it has its own *.S's.
->
-> IMHO, at least you should try to keep the kexec interface as defined (all kexec structures use physical addresses).
->
-> If you can't turn off the MMU on those platforms, you need either to use a 1:1 mapping or deal with the special case in a special way.
-> You can modify the existing relocate_new_kernel and special case the 4xx or you can create a new relocate_new_kernel_4xx and use that if 4xx.
->
-> One way to follow/keep the kexec interface on 4xx for relocate_new_kernel might be:
-> - relocate the kernel translating physical addresses using a known mapping that can deal with all the memory that kexec is told to use to store the image (i.e. the memory that kexec_load uses to put the different pages that make up the image).
-> - then get rid of all the memory mappings, make sure to enable a 1:1 mapping that covers all the range of memory supported and jump to the entry point of the loaded image.
->
-> Another one could be:
-> - get rid of all the memory mappings, enable a 1:1 mapping and do the relocation using physical addresses (as they can be used directly then).
-> - jump to the entry point of the loaded image.
->
-> What do you think?
 
-I think the loaded image should be presented with a 1:1 virtual to
-physical memory mapping and get the chance to figure out what to do
-from there.  It is a nice least common denominator environment that
-every architecture and every variation can support, and I expect
-it will facilitate code sharing with the existing gamecube port.
+__________ Information from ESET NOD32 Antivirus, version of virus signature database 4029 (20090422) __________
 
-I don't have a clue what kind of MMU the 85xx and the 44x have.  ppc has
-done all sorts of weird things in the past.  But my experience on other
-architectures like alpha, ia64 and x86_64 has been that setting up the
-paging infrastructure to do a 1:1 virtual to physical mapping hasn't
-been too hard even when you can't turn off the MMU.  Turning off the
-MMU is just easier.
+The message was checked by ESET NOD32 Antivirus.
 
-Eric
+http://www.eset.com
+
+
+
 
 _______________________________________________
 kexec mailing list
