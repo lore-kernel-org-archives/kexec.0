@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from mail-bw0-f208.google.com ([209.85.218.208])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M1M2J-0000G4-Jt
-	for kexec@lists.infradead.org; Tue, 05 May 2009 14:54:32 +0000
-Date: Tue, 5 May 2009 10:53:44 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] sysrq: Simplify sysrq-c handler
-Message-ID: <20090505145344.GC9909@redhat.com>
+	id 1M1MId-0003Dt-Qh
+	for kexec@lists.infradead.org; Tue, 05 May 2009 15:11:22 +0000
+Received: by bwz4 with SMTP id 4so5144312bwz.18
+	for <kexec@lists.infradead.org>; Tue, 05 May 2009 08:11:13 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20090505145344.GC9909@redhat.com>
 References: <20090505134547.GA11780@hmsreliant.think-freely.org>
 	<20090505142359.GB9909@redhat.com>
 	<20090505144937.GD11817@hmsreliant.think-freely.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20090505144937.GD11817@hmsreliant.think-freely.org>
+	<20090505145344.GC9909@redhat.com>
+Date: Tue, 5 May 2009 12:04:13 -0300
+Message-ID: <fc5529100905050804o5b57579ct9810a4a9991e86f3@mail.gmail.com>
+Subject: Re: [PATCH] sysrq: Simplify sysrq-c handler
+From: Brayan Arraes <brayan@yack.com.br>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,59 +23,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0779251029=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>, ebiederm@xmission.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org
 
-On Tue, May 05, 2009 at 10:49:37AM -0400, Neil Horman wrote:
-> On Tue, May 05, 2009 at 10:23:59AM -0400, Vivek Goyal wrote:
-> > On Tue, May 05, 2009 at 09:45:47AM -0400, Neil Horman wrote:
-> > > Currently the sysrq-c handler is bit over-engineered.  Its behavior is dependent
-> > > on a few compile time and run time factors that alter its behavior which is
-> > > really unnecessecary.  If CONFIG_KEXEC is not configured, sysrq-c, crashes the
-> > > system with a NULL pointer dereference.  If CONFIG_KEXEC is configured, it calls
-> > > crash_kexec directly, which implies that the kexec kernel will either be booted
-> > > (if its been previously loaded), or it will simply do nothing (the no kexec
-> > > kernel has been loaded).  It would be much easier to just simplify the whole
-> > > thing to dereference a NULL pointer all the time regardless of configuration.
-> > > That way, it will always try to crash the system, and if a kexec kernel has been
-> > > loaded into reserved space, it will still boot from the page fault trap handler
-> > > (assuming panic_on_oops is set appropriately).
-> > > 
-> > 
-> > Neil,
-> > 
-> > Would it make sense to call panic() directly so that we are not dependent
-> > on panic_on_oops being set?
-> > 
-> > Thanks
-> > Vivek
-> > 
-> I think a good argument could be made for doing that, but I kind of like
-> traversing the entire page fault path, specifically to make sure that an oops
-> works the way they expect it too.  If nothing else, going through the entire
-> oops path like I do below will (hopefully) prevent people from complaining that
-> sysrq-c works, but when their custom module gets an OOPS, then never get a
-> vmcore :).
+--===============0779251029==
+Content-Type: multipart/alternative; boundary=00504502b63088d12004692b9784
 
-Ya, traversing an OOPs path makes sense because of complaint above you
-pointed out.
+--00504502b63088d12004692b9784
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-> 
-> I'll defer to an opposing consensus of course, but I think going through the
-> entire oops path is a better solution.
++1 vote to going through the oops path
 
-I am fine with traversing OOps path.
+-- 
+Archlinux User.
+Linux User #483990
+May the source be with YOU!!!
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+--00504502b63088d12004692b9784
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Thanks
-Vivek
+<br><div class=3D"gmail_quote">+1 vote to going through the oops path</div>=
+<div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote">--=A0</div>=
+Archlinux User.<br>Linux User #483990<br>May the source be with YOU!!!<br>
+
+--00504502b63088d12004692b9784--
+
+
+--===============0779251029==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0779251029==--
+
