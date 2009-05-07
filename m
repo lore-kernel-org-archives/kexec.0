@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bw0-f208.google.com ([209.85.218.208])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M1MId-0003Dt-Qh
-	for kexec@lists.infradead.org; Tue, 05 May 2009 15:11:22 +0000
-Received: by bwz4 with SMTP id 4so5144312bwz.18
-	for <kexec@lists.infradead.org>; Tue, 05 May 2009 08:11:13 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20090505145344.GC9909@redhat.com>
-References: <20090505134547.GA11780@hmsreliant.think-freely.org>
-	<20090505142359.GB9909@redhat.com>
-	<20090505144937.GD11817@hmsreliant.think-freely.org>
-	<20090505145344.GC9909@redhat.com>
-Date: Tue, 5 May 2009 12:04:13 -0300
-Message-ID: <fc5529100905050804o5b57579ct9810a4a9991e86f3@mail.gmail.com>
-Subject: Re: [PATCH] sysrq: Simplify sysrq-c handler
-From: Brayan Arraes <brayan@yack.com.br>
+Received: from smtp1.linux-foundation.org ([140.211.169.13])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1M2AWR-0003Ai-QV
+	for kexec@lists.infradead.org; Thu, 07 May 2009 20:48:58 +0000
+Date: Thu, 7 May 2009 13:45:29 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [Bugme-new] [Bug 13265] New: Crashdump feature totally broken
+	with CONFIG_KEXEC_JUMP
+Message-Id: <20090507134529.e14d6829.akpm@linux-foundation.org>
+In-Reply-To: <bug-13265-10286@http.bugzilla.kernel.org/>
+References: <bug-13265-10286@http.bugzilla.kernel.org/>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +19,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0779251029=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Neil Horman <nhorman@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org
-
---===============0779251029==
-Content-Type: multipart/alternative; boundary=00504502b63088d12004692b9784
-
---00504502b63088d12004692b9784
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-+1 vote to going through the oops path
-
--- 
-Archlinux User.
-Linux User #483990
-May the source be with YOU!!!
-
---00504502b63088d12004692b9784
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><div class=3D"gmail_quote">+1 vote to going through the oops path</div>=
-<div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote">--=A0</div>=
-Archlinux User.<br>Linux User #483990<br>May the source be with YOU!!!<br>
-
---00504502b63088d12004692b9784--
+To: kexec@lists.infradead.org
+Cc: bugzilla-daemon@bugzilla.kernel.org, bugme-daemon@bugzilla.kernel.org, tstarling@wikimedia.org
 
 
---===============0779251029==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+(switched to email.  Please respond via emailed reply-to-all, not via the
+bugzilla web interface).
+
+On Thu, 7 May 2009 13:29:41 GMT
+bugzilla-daemon@bugzilla.kernel.org wrote:
+
+> http://bugzilla.kernel.org/show_bug.cgi?id=13265
+> 
+>            Summary: Crashdump feature totally broken with
+>                     CONFIG_KEXEC_JUMP
+>            Product: Platform Specific/Hardware
+>            Version: 2.5
+>     Kernel Version: 2.6.30rc4
+>           Platform: All
+>         OS/Version: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: i386
+>         AssignedTo: platform_i386@kernel-bugs.osdl.org
+>         ReportedBy: tstarling@wikimedia.org
+>         Regression: No
+> 
+> 
+> I loaded a crash kernel into a freshly-built 2.6.30rc4 instance using the
+> Ubuntu scripts, and then triggered a crash with echo c > /proc/sysrq-trigger.
+> The result was a kernel oops due to a null pointer deference in
+> machine_kexec_32.c around line 197:
+> 
+> #ifdef CONFIG_KEXEC_JUMP
+>     if (kexec_image->preserve_context)
+> 
+> kexec_image is NULL in this situation because kexec_crash_image (a.k.a. the
+> image parameter) is meant to be used instead. I tracked down the commit for
+> you:
+> 
+> <http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commitdiff;h=3122c331190e9d1622bf1c8cf6ce3b17cca67c9e>
+> 
+> Presumably the feature has been broken since that time.
+> 
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0779251029==--
-
