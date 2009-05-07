@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2C3w-0008RP-Br
-	for kexec@lists.infradead.org; Thu, 07 May 2009 22:27:48 +0000
+	id 1M2C49-0008Sn-TV
+	for kexec@lists.infradead.org; Thu, 07 May 2009 22:27:53 +0000
 From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: [PATCH 08/14] x86,
-	boot: use BP_scratch in arch/x86/boot/compressed/head_*.S
-Date: Thu,  7 May 2009 15:26:56 -0700
-Message-Id: <1241735222-6640-9-git-send-email-hpa@linux.intel.com>
+Subject: [PATCH 12/14] x86, boot: zero EFLAGS on 32 bits
+Date: Thu,  7 May 2009 15:27:00 -0700
+Message-Id: <1241735222-6640-13-git-send-email-hpa@linux.intel.com>
 In-Reply-To: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
@@ -28,43 +27,45 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, hbabu@us.ibm.co
 
 From: H. Peter Anvin <hpa@zytor.com>
 
-Use the BP_scratch symbol from asm-offsets.h instead of hard-coding
-the location.
+The 64-bit code already clears EFLAGS as soon as it has a stack.  This
+seems like a reasonable precaution, so do it on 32 bits as well.
 
-[ Impact: cleanup ]
+[ Impact: extra paranoia ]
 
 Signed-off-by: H. Peter Anvin <hpa@zytor.com>
 ---
- arch/x86/boot/compressed/head_32.S |    2 +-
- arch/x86/boot/compressed/head_64.S |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/head_32.S |   10 ++++++++--
+ 1 files changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 2d7cd0f..511b0be 100644
+index 47636b3..48c2047 100644
 --- a/arch/x86/boot/compressed/head_32.S
 +++ b/arch/x86/boot/compressed/head_32.S
-@@ -53,7 +53,7 @@ ENTRY(startup_32)
-  * data at 0x1e4 (defined as a scratch field) are used as the stack
-  * for this calculation. Only 4 bytes are needed.
+@@ -12,9 +12,9 @@
+  * the page directory. [According to comments etc elsewhere on a compressed
+  * kernel it will end up at 0x1000 + 1Mb I hope so as I assume this. - AC]
+  *
+- * Page 0 is deliberately kept safe, since System Management Mode code in 
++ * Page 0 is deliberately kept safe, since System Management Mode code in
+  * laptops may need to access the BIOS data stored there.  This is also
+- * useful for future device drivers that either access the BIOS via VM86 
++ * useful for future device drivers that either access the BIOS via VM86
+  * mode.
   */
--	leal (0x1e4+4)(%esi), %esp
-+	leal (BP_scratch+4)(%esi), %esp
- 	call 1f
- 1:	popl %ebp
- 	subl $1b, %ebp
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 201af02..191b0d3 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -50,7 +50,7 @@ ENTRY(startup_32)
-  * data at 0x1e4 (defined as a scratch field) are used as the stack
-  * for this calculation. Only 4 bytes are needed.
+ 
+@@ -84,6 +84,12 @@ ENTRY(startup_32)
+ 	leal boot_stack_end(%ebx), %esp
+ 
+ /*
++ * Zero EFLAGS
++ */
++	pushl $0
++	popfl
++
++/*
+  * Copy the compressed kernel to the end of our buffer
+  * where decompression in place becomes safe.
   */
--	leal	(0x1e4+4)(%esi), %esp
-+	leal	(BP_scratch+4)(%esi), %esp
- 	call	1f
- 1:	popl	%ebp
- 	subl	$1b, %ebp
 -- 
 1.6.0.6
 
