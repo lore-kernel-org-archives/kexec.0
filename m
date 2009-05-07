@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2C49-0008Sn-TV
-	for kexec@lists.infradead.org; Thu, 07 May 2009 22:27:53 +0000
+	id 1M2C4F-0008RP-Da
+	for kexec@lists.infradead.org; Thu, 07 May 2009 22:27:58 +0000
 From: "H. Peter Anvin" <hpa@linux.intel.com>
-Subject: [PATCH 12/14] x86, boot: zero EFLAGS on 32 bits
-Date: Thu,  7 May 2009 15:27:00 -0700
-Message-Id: <1241735222-6640-13-git-send-email-hpa@linux.intel.com>
+Subject: [PATCH 13/14] x86: make CONFIG_RELOCATABLE the default
+Date: Thu,  7 May 2009 15:27:01 -0700
+Message-Id: <1241735222-6640-14-git-send-email-hpa@linux.intel.com>
 In-Reply-To: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
@@ -27,45 +27,31 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, hbabu@us.ibm.co
 
 From: H. Peter Anvin <hpa@zytor.com>
 
-The 64-bit code already clears EFLAGS as soon as it has a stack.  This
-seems like a reasonable precaution, so do it on 32 bits as well.
-
-[ Impact: extra paranoia ]
+Remove the EXPERIMENTAL tag from CONFIG_RELOCATABLE and make it the
+default.  Relocatable kernels have been used for a while now, and
+should now have identical semantics to non-relocatable kernels when
+loaded by a non-relocating bootloader.
 
 Signed-off-by: H. Peter Anvin <hpa@zytor.com>
 ---
- arch/x86/boot/compressed/head_32.S |   10 ++++++++--
- 1 files changed, 8 insertions(+), 2 deletions(-)
+ arch/x86/Kconfig |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 47636b3..48c2047 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -12,9 +12,9 @@
-  * the page directory. [According to comments etc elsewhere on a compressed
-  * kernel it will end up at 0x1000 + 1Mb I hope so as I assume this. - AC]
-  *
-- * Page 0 is deliberately kept safe, since System Management Mode code in 
-+ * Page 0 is deliberately kept safe, since System Management Mode code in
-  * laptops may need to access the BIOS data stored there.  This is also
-- * useful for future device drivers that either access the BIOS via VM86 
-+ * useful for future device drivers that either access the BIOS via VM86
-  * mode.
-  */
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index cd76de1..d3c8b0d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1500,8 +1500,8 @@ config PHYSICAL_START
+ 	  Don't change this unless you know what you are doing.
  
-@@ -84,6 +84,12 @@ ENTRY(startup_32)
- 	leal boot_stack_end(%ebx), %esp
- 
- /*
-+ * Zero EFLAGS
-+ */
-+	pushl $0
-+	popfl
-+
-+/*
-  * Copy the compressed kernel to the end of our buffer
-  * where decompression in place becomes safe.
-  */
+ config RELOCATABLE
+-	bool "Build a relocatable kernel (EXPERIMENTAL)"
+-	depends on EXPERIMENTAL
++	bool "Build a relocatable kernel"
++	default y
+ 	---help---
+ 	  This builds a kernel image that retains relocation information
+ 	  so it can be loaded someplace besides the default 1MB.
 -- 
 1.6.0.6
 
