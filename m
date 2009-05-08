@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from terminus.zytor.com ([198.137.202.10])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2TUu-0006NA-9e
-	for kexec@lists.infradead.org; Fri, 08 May 2009 17:04:39 +0000
-Message-ID: <4A046550.6050007@zytor.com>
-Date: Fri, 08 May 2009 10:01:04 -0700
+	id 1M2TXW-0001lK-Ge
+	for kexec@lists.infradead.org; Fri, 08 May 2009 17:07:21 +0000
+Message-ID: <4A0465E6.9000401@zytor.com>
+Date: Fri, 08 May 2009 10:03:34 -0700
 From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 03/14] x86, config: change defaults PHYSICAL_START and
-	PHYSICAL_ALIGN
+Subject: Re: [PATCH 01/14] x86,
+	boot: align the .bss section in the	decompressor
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
-	<1241735222-6640-4-git-send-email-hpa@linux.intel.com>
-	<20090508073606.GC12808@uranus.ravnborg.org>
-In-Reply-To: <20090508073606.GC12808@uranus.ravnborg.org>
+	<1241735222-6640-2-git-send-email-hpa@linux.intel.com>
+	<20090508075354.GA6132@lenovo>
+In-Reply-To: <20090508075354.GA6132@lenovo>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,54 +25,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, "H. Peter Anvin" <hpa@linux.intel.com>, tglx@linutronix.de, vgoyal@redhat.com
+To: Cyrill Gorcunov <gorcunov@gmail.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, "H. Peter Anvin" <hpa@linux.intel.com>, sam@ravnborg.org, tglx@linutronix.de, vgoyal@redhat.com
 
-Sam Ravnborg wrote:
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 039c3f0..13b3a5a 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -1455,17 +1455,20 @@ config KEXEC_JUMP
->>  
->>  config PHYSICAL_START
->>  	hex "Physical address where the kernel is loaded" if (EMBEDDED || CRASH_DUMP)
->> -	default "0x1000000" if X86_NUMAQ
->> -	default "0x200000" if X86_64
->> -	default "0x100000"
->> +	default "0x400000" if EMBEDDED
->> +	default "0x1000000"
->>  	---help---
->>  	  This gives the physical address where the kernel is loaded.
->>  
->>  	  If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
->>  	  bzImage will decompress itself to above physical address and
->> -	  run from there. Otherwise, bzImage will run from the address where
->> -	  it has been loaded by the boot loader and will ignore above physical
->> -	  address.
->> +	  run from there. Otherwise, bzImage will run from the either
->> +	  the above physical address or where it has been loaded by
->> +	  the boot loader, whichever is higher.
->> +
->> +	  For embedded machines with very small memory (less than
->> +	  about 24 MB) this may need to be adjusted downward from the
->> +	  default value of 0x1000000 (16 MB).
+Cyrill Gorcunov wrote:
+> | 
+> | diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> | index 0d26c92..27c168d 100644
+> | --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> | +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> | @@ -42,6 +42,7 @@ SECTIONS
+> |  		*(.data.*)
+> |  		_edata = . ;
+> |  	}
+> | +	. = ALIGN(32);
+> |  	.bss : {
+> |  		_bss = . ;
+> |  		*(.bss)
+> | -- 
+> | 1.6.0.6
+> | 
 > 
-> But in the above you say that default is "0x400000" if EMBEDDED
-> That is in contradiction with the help - no?
+> Hi Peter, should not it be ALIGN(8) rather? I thought
+> we keep these sections as tight as possible in a sake
+> of limitation of setup code size. Perhaps I miss something.
 > 
 
-0x1000000 really should be the default value.  The "0x400000" if
-EMBEDDED I put in to make the risk of throwing something surprising on
-embedded people somewhat smaller; I'm not sure if it should go away
-entirely.  Even if it doesn't, I do think referring to 16 MB as the
-"default value" is right.
-
-BTW, it would be nice to have Kconfig deal with:
-
-a) numbers that must be powers of 2;
-b) suffixes like "16M" instead of "0x1000000".  ;)
+This isn't the setup code at all.  This is the actual kernel, although
+in its compressed form.  Furthermore, this is the bss, so it doesn't
+affect the compressed image size.
 
 	-hpa
 
