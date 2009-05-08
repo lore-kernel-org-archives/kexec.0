@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pfepb.post.tele.dk ([195.41.46.236])
+Received: from pfepa.post.tele.dk ([195.41.46.235])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2Kai-0000qK-Kr
-	for kexec@lists.infradead.org; Fri, 08 May 2009 07:34:03 +0000
-Date: Fri, 8 May 2009 09:36:06 +0200
+	id 1M2Kgx-0004H3-Vx
+	for kexec@lists.infradead.org; Fri, 08 May 2009 07:40:31 +0000
+Date: Fri, 8 May 2009 09:42:34 +0200
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 03/14] x86,
-	config: change defaults PHYSICAL_START and PHYSICAL_ALIGN
-Message-ID: <20090508073606.GC12808@uranus.ravnborg.org>
+Subject: Re: [PATCH 05/14] kbuild: allow compressors (gzip, bzip2,
+	lzma) to take multiple inputs
+Message-ID: <20090508074234.GD12808@uranus.ravnborg.org>
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
-	<1241735222-6640-4-git-send-email-hpa@linux.intel.com>
+	<1241735222-6640-6-git-send-email-hpa@linux.intel.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1241735222-6640-4-git-send-email-hpa@linux.intel.com>
+In-Reply-To: <1241735222-6640-6-git-send-email-hpa@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,55 +28,78 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, tglx@linutronix.de, vgoyal@redhat.com
 
-On Thu, May 07, 2009 at 03:26:51PM -0700, H. Peter Anvin wrote:
+On Thu, May 07, 2009 at 03:26:53PM -0700, H. Peter Anvin wrote:
 > From: H. Peter Anvin <hpa@zytor.com>
 > 
-> Change the default for CONFIG_PHYSICAL_START to 16 MB; 4 MB if
-> EMBEDDED.  Change the default for CONFIG_PHYSICAL_ALIGN to match up
-> with a large page alignment datum (4 MB for non-PAE, 2 MB for PAE.)
+> Allow the compression commands in Kbuild (i.e. gzip, bzip2, lzma) to
+> take multiple input files and emit the concatenated compressed
+> output.  This avoids an intermediate step when a kernel image is built
+> from multiple components, such as the relocatable x86-32 kernel.
 > 
-> The default of 16 MB is designed to avoid occupying ZONE_DMA, as well
-> as avoiding a 15-16 MB memory hole, which some vendors inexplicably
-> still have in their systems.
-> 
-> [ Impact: minor performance improvement, leave ZONE_DMA free ]
+> [ Impact: new build feature, not yet used ]
 > 
 > Signed-off-by: H. Peter Anvin <hpa@zytor.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 > ---
->  arch/x86/Kconfig |   19 +++++++++++--------
->  1 files changed, 11 insertions(+), 8 deletions(-)
+>  scripts/Makefile.lib |   11 ++++++++---
+>  scripts/bin_size     |    8 ++++++--
+>  2 files changed, 14 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 039c3f0..13b3a5a 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -1455,17 +1455,20 @@ config KEXEC_JUMP
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 9796195..35dfdf6 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -183,7 +183,8 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
+>  # ---------------------------------------------------------------------------
 >  
->  config PHYSICAL_START
->  	hex "Physical address where the kernel is loaded" if (EMBEDDED || CRASH_DUMP)
-> -	default "0x1000000" if X86_NUMAQ
-> -	default "0x200000" if X86_64
-> -	default "0x100000"
-> +	default "0x400000" if EMBEDDED
-> +	default "0x1000000"
->  	---help---
->  	  This gives the physical address where the kernel is loaded.
+>  quiet_cmd_gzip = GZIP    $@
+> -cmd_gzip = gzip -f -9 < $< > $@
+> +cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
+> +	(rm -f $@ ; false)
 >  
->  	  If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
->  	  bzImage will decompress itself to above physical address and
-> -	  run from there. Otherwise, bzImage will run from the address where
-> -	  it has been loaded by the boot loader and will ignore above physical
-> -	  address.
-> +	  run from there. Otherwise, bzImage will run from the either
-> +	  the above physical address or where it has been loaded by
-> +	  the boot loader, whichever is higher.
-> +
-> +	  For embedded machines with very small memory (less than
-> +	  about 24 MB) this may need to be adjusted downward from the
-> +	  default value of 0x1000000 (16 MB).
+>  
+>  # Bzip2
+> @@ -193,10 +194,14 @@ cmd_gzip = gzip -f -9 < $< > $@
+>  size_append=$(CONFIG_SHELL) $(srctree)/scripts/bin_size
+>  
+>  quiet_cmd_bzip2 = BZIP2    $@
+> -cmd_bzip2 = (bzip2 -9 < $< && $(size_append) $<) > $@ || (rm -f $@ ; false)
+> +cmd_bzip2 = (cat $(filter-out FORCE,$^) | \
+> +	bzip2 -9 && $(size_append) $(filter-out FORCE,$^)) > $@ || \
+> +	(rm -f $@ ; false)
+>  
+>  # Lzma
+>  # ---------------------------------------------------------------------------
+>  
+>  quiet_cmd_lzma = LZMA    $@
+> -cmd_lzma = (lzma -9 -c $< && $(size_append) $<) >$@ || (rm -f $@ ; false)
+> +cmd_lzma = (cat $(filter-out FORCE,$^) | \
+> +	lzma -9 && $(size_append) $(filter-out FORCE,$^)) > $@ || \
+> +	(rm -f $@ ; false)
+> diff --git a/scripts/bin_size b/scripts/bin_size
+> index 43e1b36..55f2161 100644
+> --- a/scripts/bin_size
+> +++ b/scripts/bin_size
+> @@ -1,10 +1,14 @@
+>  #!/bin/sh
+>  
+>  if [ $# = 0 ] ; then
+> -   echo Usage: $0 file
+> +   echo Usage: $0 file...
+>  fi
+>  
+> -size_dec=`stat -c "%s" $1`
+> +size_dec=0
+> +for file; do
+> +  fsize=`stat -c "%s" $file`
+> +  size_dec=`expr $size_dec + $fsize`
+> +done
+>  size_hex_echo_string=`printf "%08x" $size_dec |
+>       sed 's/\(..\)\(..\)\(..\)\(..\)/\\\\x\4\\\\x\3\\\\x\2\\\\x\1/g'`
+>  /bin/echo -ne $size_hex_echo_string
 
-But in the above you say that default is "0x400000" if EMBEDDED
-That is in contradiction with the help - no?
+But I would rather have had this inside makefile.lib...
 
 	Sam
 
