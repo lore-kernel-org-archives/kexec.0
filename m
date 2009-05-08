@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pfepa.post.tele.dk ([195.41.46.235])
+Received: from pfepb.post.tele.dk ([195.41.46.236])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2KZI-0000kT-FG
-	for kexec@lists.infradead.org; Fri, 08 May 2009 07:32:47 +0000
-Date: Fri, 8 May 2009 09:34:36 +0200
+	id 1M2Kai-0000qK-Kr
+	for kexec@lists.infradead.org; Fri, 08 May 2009 07:34:03 +0000
+Date: Fri, 8 May 2009 09:36:06 +0200
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 02/14] x86,
-	boot: honor CONFIG_PHYSICAL_START when relocatable
-Message-ID: <20090508073436.GB12808@uranus.ravnborg.org>
+Subject: Re: [PATCH 03/14] x86,
+	config: change defaults PHYSICAL_START and PHYSICAL_ALIGN
+Message-ID: <20090508073606.GC12808@uranus.ravnborg.org>
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
-	<1241735222-6640-3-git-send-email-hpa@linux.intel.com>
+	<1241735222-6640-4-git-send-email-hpa@linux.intel.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1241735222-6640-3-git-send-email-hpa@linux.intel.com>
+In-Reply-To: <1241735222-6640-4-git-send-email-hpa@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,101 +28,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, tglx@linutronix.de, vgoyal@redhat.com
 
-On Thu, May 07, 2009 at 03:26:50PM -0700, H. Peter Anvin wrote:
+On Thu, May 07, 2009 at 03:26:51PM -0700, H. Peter Anvin wrote:
 > From: H. Peter Anvin <hpa@zytor.com>
 > 
-> Currently, when building a relocatable kernel, CONFIG_PHYSICAL_START
-> is ignored.  This is undesirable, as we would like to keep the kernel
-> out of ZONE_DMA and away from the possible memory hole at 15 MB (which
-> some vendors for some bizarre reason still have.)
+> Change the default for CONFIG_PHYSICAL_START to 16 MB; 4 MB if
+> EMBEDDED.  Change the default for CONFIG_PHYSICAL_ALIGN to match up
+> with a large page alignment datum (4 MB for non-PAE, 2 MB for PAE.)
 > 
-> With this patch, CONFIG_PHYSICAL_START is considered the *minimum*
-> address at which the kernel can be located; a relocating bootloader
-> can locate it higher, but not lower.  This also restores the
-> originally intended behavior that CONFIG_RELOCATABLE is functionally a
-> noop if used with a non-relocating bootloader.
+> The default of 16 MB is designed to avoid occupying ZONE_DMA, as well
+> as avoiding a 15-16 MB memory hole, which some vendors inexplicably
+> still have in their systems.
 > 
-> This patch also change movsb and stosb to movsl, stosl and stosq, to
-> shave a small fraction off the boot time.
-
-On the coding style side of thing...
-> +     movl %ebp, %ebx
-> +     cmpl %ebx, %eax
-> +     jbe 1f
-> +     movl %eax, %ebx
-
-This looks messy with different idention of the operand.
-
-Compare it to this:
-> +	movl	%ebp, %ebx
-> +	cmpl	%ebx, %eax
-> +	jbe	1f
-> +	movl	%eax, %ebx
-
-
-I like the latter more with vertical alignment of the operand.
-I see that you add spaces around operators (,) - good.
-
-
-
->   */
+> [ Impact: minor performance improvement, leave ZONE_DMA free ]
+> 
+> Signed-off-by: H. Peter Anvin <hpa@zytor.com>
+> ---
+>  arch/x86/Kconfig |   19 +++++++++++--------
+>  1 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 039c3f0..13b3a5a 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1455,17 +1455,20 @@ config KEXEC_JUMP
 >  
->  #ifdef CONFIG_RELOCATABLE
-> -	movl 	%ebp, %ebx
-> -	addl    $(CONFIG_PHYSICAL_ALIGN - 1), %ebx
-> -	andl    $(~(CONFIG_PHYSICAL_ALIGN - 1)), %ebx
-> +	movl $LOAD_PHYSICAL_ADDR, %eax
-> +	movl %ebp, %ebx
-> +	cmpl %ebx, %eax
-> +	jbe 1f
-> +	movl %eax, %ebx
-> +1:
-> +	addl $(CONFIG_PHYSICAL_ALIGN - 1), %ebx
-> +	andl $(~(CONFIG_PHYSICAL_ALIGN - 1)), %ebx
->  #else
->  	movl $LOAD_PHYSICAL_ADDR, %ebx
->  #endif
-> +	movl %ebx, %edi		/* Save kernel target address */
+>  config PHYSICAL_START
+>  	hex "Physical address where the kernel is loaded" if (EMBEDDED || CRASH_DUMP)
+> -	default "0x1000000" if X86_NUMAQ
+> -	default "0x200000" if X86_64
+> -	default "0x100000"
+> +	default "0x400000" if EMBEDDED
+> +	default "0x1000000"
+>  	---help---
+>  	  This gives the physical address where the kernel is loaded.
 >  
->  	/* Replace the compressed data size with the uncompressed size */
->  	subl input_len(%ebp), %ebx
-> @@ -84,27 +90,30 @@ ENTRY(startup_32)
->  	addl $4095, %ebx
->  	andl $~4095, %ebx
-
-Not part of your patch...
-But this is most likely (PAGE_SIZE - 1) so it would be better to write so.
-
-
->  
-> -/* Copy the compressed kernel to the end of our buffer
-> +/*
-> + * Set up the stack
-> + */
-> +	leal boot_stack_end(%ebx), %esp
-> +	pushl %edi		/* Saved kernel target address */
+>  	  If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
+>  	  bzImage will decompress itself to above physical address and
+> -	  run from there. Otherwise, bzImage will run from the address where
+> -	  it has been loaded by the boot loader and will ignore above physical
+> -	  address.
+> +	  run from there. Otherwise, bzImage will run from the either
+> +	  the above physical address or where it has been loaded by
+> +	  the boot loader, whichever is higher.
 > +
-> +/*
-> + * Copy the compressed kernel to the end of our buffer
->   * where decompression in place becomes safe.
->   */
->  	pushl %esi
-> -	leal _ebss(%ebp), %esi
-> -	leal _ebss(%ebx), %edi
-> -	movl $(_ebss - startup_32), %ecx
-> +	leal (_bss-4)(%ebp), %esi
-> +	leal (_bss-4)(%ebx), %edi
-> +	movl $(_bss - startup_32), %ecx
-> +	shrl $2, %ecx
+> +	  For embedded machines with very small memory (less than
+> +	  about 24 MB) this may need to be adjusted downward from the
+> +	  default value of 0x1000000 (16 MB).
 
-I do not see why you mess around with _bss here?
-Do you use .bss for decompression?
-
-
-Note: I do not speak x86 assembler so I have not tried to
-      understand the functionality.
-
-      I tired to grasp the changes around clear bss - but faild :-(
+But in the above you say that default is "0x400000" if EMBEDDED
+That is in contradiction with the help - no?
 
 	Sam
 
