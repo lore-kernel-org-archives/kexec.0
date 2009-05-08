@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from terminus.zytor.com ([198.137.202.10])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2TSK-0001rz-29
-	for kexec@lists.infradead.org; Fri, 08 May 2009 17:02:11 +0000
-Message-ID: <4A0464AC.9060308@zytor.com>
-Date: Fri, 08 May 2009 09:58:20 -0700
+	id 1M2TUu-0006NA-9e
+	for kexec@lists.infradead.org; Fri, 08 May 2009 17:04:39 +0000
+Message-ID: <4A046550.6050007@zytor.com>
+Date: Fri, 08 May 2009 10:01:04 -0700
 From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 02/14] x86,
-	boot: honor CONFIG_PHYSICAL_START when relocatable
+Subject: Re: [PATCH 03/14] x86, config: change defaults PHYSICAL_START and
+	PHYSICAL_ALIGN
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
-	<1241735222-6640-3-git-send-email-hpa@linux.intel.com>
-	<20090508073436.GB12808@uranus.ravnborg.org>
-In-Reply-To: <20090508073436.GB12808@uranus.ravnborg.org>
+	<1241735222-6640-4-git-send-email-hpa@linux.intel.com>
+	<20090508073606.GC12808@uranus.ravnborg.org>
+In-Reply-To: <20090508073606.GC12808@uranus.ravnborg.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,49 +29,50 @@ To: Sam Ravnborg <sam@ravnborg.org>
 Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, "H. Peter Anvin" <hpa@linux.intel.com>, tglx@linutronix.de, vgoyal@redhat.com
 
 Sam Ravnborg wrote:
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 039c3f0..13b3a5a 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -1455,17 +1455,20 @@ config KEXEC_JUMP
+>>  
+>>  config PHYSICAL_START
+>>  	hex "Physical address where the kernel is loaded" if (EMBEDDED || CRASH_DUMP)
+>> -	default "0x1000000" if X86_NUMAQ
+>> -	default "0x200000" if X86_64
+>> -	default "0x100000"
+>> +	default "0x400000" if EMBEDDED
+>> +	default "0x1000000"
+>>  	---help---
+>>  	  This gives the physical address where the kernel is loaded.
+>>  
+>>  	  If kernel is a not relocatable (CONFIG_RELOCATABLE=n) then
+>>  	  bzImage will decompress itself to above physical address and
+>> -	  run from there. Otherwise, bzImage will run from the address where
+>> -	  it has been loaded by the boot loader and will ignore above physical
+>> -	  address.
+>> +	  run from there. Otherwise, bzImage will run from the either
+>> +	  the above physical address or where it has been loaded by
+>> +	  the boot loader, whichever is higher.
+>> +
+>> +	  For embedded machines with very small memory (less than
+>> +	  about 24 MB) this may need to be adjusted downward from the
+>> +	  default value of 0x1000000 (16 MB).
 > 
-> On the coding style side of thing...
->> +     movl %ebp, %ebx
->> +     cmpl %ebx, %eax
->> +     jbe 1f
->> +     movl %eax, %ebx
+> But in the above you say that default is "0x400000" if EMBEDDED
+> That is in contradiction with the help - no?
 > 
-> This looks messy with different idention of the operand.
-> 
-> Compare it to this:
->> +	movl	%ebp, %ebx
->> +	cmpl	%ebx, %eax
->> +	jbe	1f
->> +	movl	%eax, %ebx
-> 
-> 
-> I like the latter more with vertical alignment of the operand.
-> I see that you add spaces around operators (,) - good.
 
-head_32.S was already written in the style with space (rather than tab)
-between opcode and operands.  There was a total of three instructions
-that didn't follow the pattern.  Re-styling the whole file is possible,
-of course, but should be a separate patch entirely.
+0x1000000 really should be the default value.  The "0x400000" if
+EMBEDDED I put in to make the risk of throwing something surprising on
+embedded people somewhat smaller; I'm not sure if it should go away
+entirely.  Even if it doesn't, I do think referring to 16 MB as the
+"default value" is right.
 
->>  	pushl %esi
->> -	leal _ebss(%ebp), %esi
->> -	leal _ebss(%ebx), %edi
->> -	movl $(_ebss - startup_32), %ecx
->> +	leal (_bss-4)(%ebp), %esi
->> +	leal (_bss-4)(%ebx), %edi
->> +	movl $(_bss - startup_32), %ecx
->> +	shrl $2, %ecx
-> 
-> I do not see why you mess around with _bss here?
-> Do you use .bss for decompression?
+BTW, it would be nice to have Kconfig deal with:
 
-This chunk of code is about moving the initialized segments into place.
- Moving the contents of the bss is a bug (and it clobbers the stack, the
-setup of which I moved earlier in the code.)
-
-However, using _edata would give an unaligned symbol, so use _bss
-instead as being an aligned symbol at the beginning of the _bss; we thus
-move the range from startup_32 to _bss.
+a) numbers that must be powers of 2;
+b) suffixes like "16M" instead of "0x1000000".  ;)
 
 	-hpa
 
