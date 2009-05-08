@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from pfepa.post.tele.dk ([195.41.46.235])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1M2Kgx-0004H3-Vx
-	for kexec@lists.infradead.org; Fri, 08 May 2009 07:40:31 +0000
-Date: Fri, 8 May 2009 09:42:34 +0200
+	id 1M2Kjm-0001uX-BP
+	for kexec@lists.infradead.org; Fri, 08 May 2009 07:43:26 +0000
+Date: Fri, 8 May 2009 09:45:27 +0200
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 05/14] kbuild: allow compressors (gzip, bzip2,
-	lzma) to take multiple inputs
-Message-ID: <20090508074234.GD12808@uranus.ravnborg.org>
+Subject: Re: [PATCH 07/14] x86,
+	boot: simplify arch/x86/boot/compressed/Makefile
+Message-ID: <20090508074527.GE12808@uranus.ravnborg.org>
 References: <1241735222-6640-1-git-send-email-hpa@linux.intel.com>
-	<1241735222-6640-6-git-send-email-hpa@linux.intel.com>
+	<1241735222-6640-8-git-send-email-hpa@linux.intel.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1241735222-6640-6-git-send-email-hpa@linux.intel.com>
+In-Reply-To: <1241735222-6640-8-git-send-email-hpa@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,80 +28,18 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "H. Peter Anvin" <hpa@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ebiederm@xmission.com, ying.huang@intel.com, mingo@elte.hu, tglx@linutronix.de, vgoyal@redhat.com
 
-On Thu, May 07, 2009 at 03:26:53PM -0700, H. Peter Anvin wrote:
+On Thu, May 07, 2009 at 03:26:55PM -0700, H. Peter Anvin wrote:
 > From: H. Peter Anvin <hpa@zytor.com>
 > 
-> Allow the compression commands in Kbuild (i.e. gzip, bzip2, lzma) to
-> take multiple input files and emit the concatenated compressed
-> output.  This avoids an intermediate step when a kernel image is built
-> from multiple components, such as the relocatable x86-32 kernel.
-> 
-> [ Impact: new build feature, not yet used ]
+> Simplify the arch/x86/boot/compressed/Makefile, by using the new
+> capability of specifying multiple inputs to a compressor, and the
+> CONFIG_X86_NEED_RELOCS Kconfig symbol.
 > 
 > Signed-off-by: H. Peter Anvin <hpa@zytor.com>
 > Cc: Sam Ravnborg <sam@ravnborg.org>
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  scripts/Makefile.lib |   11 ++++++++---
->  scripts/bin_size     |    8 ++++++--
->  2 files changed, 14 insertions(+), 5 deletions(-)
-> 
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 9796195..35dfdf6 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -183,7 +183,8 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
->  # ---------------------------------------------------------------------------
->  
->  quiet_cmd_gzip = GZIP    $@
-> -cmd_gzip = gzip -f -9 < $< > $@
-> +cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) || \
-> +	(rm -f $@ ; false)
->  
->  
->  # Bzip2
-> @@ -193,10 +194,14 @@ cmd_gzip = gzip -f -9 < $< > $@
->  size_append=$(CONFIG_SHELL) $(srctree)/scripts/bin_size
->  
->  quiet_cmd_bzip2 = BZIP2    $@
-> -cmd_bzip2 = (bzip2 -9 < $< && $(size_append) $<) > $@ || (rm -f $@ ; false)
-> +cmd_bzip2 = (cat $(filter-out FORCE,$^) | \
-> +	bzip2 -9 && $(size_append) $(filter-out FORCE,$^)) > $@ || \
-> +	(rm -f $@ ; false)
->  
->  # Lzma
->  # ---------------------------------------------------------------------------
->  
->  quiet_cmd_lzma = LZMA    $@
-> -cmd_lzma = (lzma -9 -c $< && $(size_append) $<) >$@ || (rm -f $@ ; false)
-> +cmd_lzma = (cat $(filter-out FORCE,$^) | \
-> +	lzma -9 && $(size_append) $(filter-out FORCE,$^)) > $@ || \
-> +	(rm -f $@ ; false)
-> diff --git a/scripts/bin_size b/scripts/bin_size
-> index 43e1b36..55f2161 100644
-> --- a/scripts/bin_size
-> +++ b/scripts/bin_size
-> @@ -1,10 +1,14 @@
->  #!/bin/sh
->  
->  if [ $# = 0 ] ; then
-> -   echo Usage: $0 file
-> +   echo Usage: $0 file...
->  fi
->  
-> -size_dec=`stat -c "%s" $1`
-> +size_dec=0
-> +for file; do
-> +  fsize=`stat -c "%s" $file`
-> +  size_dec=`expr $size_dec + $fsize`
-> +done
->  size_hex_echo_string=`printf "%08x" $size_dec |
->       sed 's/\(..\)\(..\)\(..\)\(..\)/\\\\x\4\\\\x\3\\\\x\2\\\\x\1/g'`
->  /bin/echo -ne $size_hex_echo_string
 
-But I would rather have had this inside makefile.lib...
-
-	Sam
+Very nice cleanup!
 
 _______________________________________________
 kexec mailing list
