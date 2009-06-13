@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MFD0B-0004bo-2Y
-	for kexec@lists.infradead.org; Fri, 12 Jun 2009 20:05:45 +0000
-Date: Fri, 12 Jun 2009 16:05:13 -0400
-From: Neil Horman <nhorman@redhat.com>
+Received: from wm58.inbox.com ([64.135.83.58])
+	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MFNDh-0007FX-F6
+	for kexec@lists.infradead.org; Sat, 13 Jun 2009 07:00:14 +0000
+Received: from inbox.com (127.0.0.1:25)
+	by inbox.com with [InBox.Com SMTP Server]
+	id <906120017146.WM58> for <kexec@lists.infradead.org> from
+	<dseetharam@inbox.com>; Fri, 12 Jun 2009 11:01:36 PM -0800
+Mime-Version: 1.0
+Date: Fri, 12 Jun 2009 23:01:35 -0800
+Message-ID: <9C8DECFB07C.00000038dseetharam@inbox.com>
+From: Dharmosoth Seetharam <dseetharam@inbox.com>
 Subject: Re: /var/log/messages doesn't have crash info when kernel gets
 	panic/oops/crash
-Message-ID: <20090612200513.GA2953@hmsreliant.think-freely.org>
-References: <913DA90C6C8.0000039Bdseetharam@inbox.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <913DA90C6C8.0000039Bdseetharam@inbox.com>
+In-Reply-To: <20090612200513.GA2953@hmsreliant.think-freely.org>
+References: <913da90c6c8.0000039bdseetharam@inbox.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,47 +23,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dharmosoth Seetharam <dseetharam@inbox.com>
+To: Neil Horman <nhorman@redhat.com>
 Cc: fastboot@lists.linux-foundation.org, vgoyal@in.ibm.com, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, Jun 12, 2009 at 01:25:49AM -0800, Dharmosoth Seetharam wrote:
-> Hi,
-> 
-> I have encounter a problem called /var/log/messages does not contain any information 
-> on kernel crash dump.
-> 
-> Prior to enabling KEXEC we saw stack traces and bug info etc in /var/log/messages.
-> After enabling KEXEC feature those info was missed.
-> 
-> How can we get those missed info in /var/log/messages even when KEXEC feature is enabled.
-> 
-> Any help will appreciate.
-> 
-run crash on the resultant vmcore file that kexec can produce/save and get the
-dmesg log out of it.
-alternatively you can use makedumpfile with the --dump-dmesg log
-
-Neil
-
-> 
-> Thanks and Regards
-> Seetharam
-> 
-> ____________________________________________________________
-> Receive Notifications of Incoming Messages
-> Easily monitor multiple email accounts & access them with a click.
-> Visit http://www.inbox.com/notifier and check it out!
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CkhpIE5laWwsCgpUaGFua3MgZm9yIHlvdXIgcXVpY2sgcmVwbHkuCgpXaGF0IHlvdSBoYXZlIHN1
+Z2dlc3RlZCBpcyBuaWNlIHdoZW4gd2UgZ290L3NhdmUgY3Jhc2ggZHVtcCAoaS5lIHZtY29yZSkK
+V2hhdCBpZiB3ZSBmYWlsZWQgdG8gc2F2ZS9jYXB0dXJlIHZtY29yZSBpbmZvIG9yIHZtY29yZSBp
+cyBjb3JydXB0ZWQgZXRjLiB0aGVuIHdlIGRvbnQgZ2V0IGFueSBpbmZvcm1hdGlvbgpyZWdhcmRp
+bmcgdGhlIHBhbmljL2NyYXNoL29vcHMgYXQgYW55d2hlcmU/CgogCgoKVGhhbmtzIGFuZCBSZWdh
+cmRzCgogU2VldGhhcmFtCgoKPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+IEZyb206IG5o
+b3JtYW5AcmVkaGF0LmNvbQo+IFNlbnQ6IEZyaSwgMTIgSnVuIDIwMDkgMTY6MDU6MTMgLTA0MDAK
+PiBUbzogZHNlZXRoYXJhbUBpbmJveC5jb20KPiBTdWJqZWN0OiBSZTogL3Zhci9sb2cvbWVzc2Fn
+ZXMgZG9lc24ndCBoYXZlIGNyYXNoIGluZm8gd2hlbiBrZXJuZWwgZ2V0cwo+IHBhbmljL29vcHMv
+Y3Jhc2gKPiAKPiBPbiBGcmksIEp1biAxMiwgMjAwOSBhdCAwMToyNTo0OUFNIC0wODAwLCBEaGFy
+bW9zb3RoIFNlZXRoYXJhbSB3cm90ZToKPj4gSGksCj4+IAo+PiBJIGhhdmUgZW5jb3VudGVyIGEg
+cHJvYmxlbSBjYWxsZWQgL3Zhci9sb2cvbWVzc2FnZXMgZG9lcyBub3QgY29udGFpbiBhbnkKPj4g
+aW5mb3JtYXRpb24KPj4gb24ga2VybmVsIGNyYXNoIGR1bXAuCj4+IAo+PiBQcmlvciB0byBlbmFi
+bGluZyBLRVhFQyB3ZSBzYXcgc3RhY2sgdHJhY2VzIGFuZCBidWcgaW5mbyBldGMgaW4KPj4gL3Zh
+ci9sb2cvbWVzc2FnZXMuCj4+IEFmdGVyIGVuYWJsaW5nIEtFWEVDIGZlYXR1cmUgdGhvc2UgaW5m
+byB3YXMgbWlzc2VkLgo+PiAKPj4gSG93IGNhbiB3ZSBnZXQgdGhvc2UgbWlzc2VkIGluZm8gaW4g
+L3Zhci9sb2cvbWVzc2FnZXMgZXZlbiB3aGVuIEtFWEVDCj4+IGZlYXR1cmUgaXMgZW5hYmxlZC4K
+Pj4gCj4+IEFueSBoZWxwIHdpbGwgYXBwcmVjaWF0ZS4KPj4gCj4gcnVuIGNyYXNoIG9uIHRoZSBy
+ZXN1bHRhbnQgdm1jb3JlIGZpbGUgdGhhdCBrZXhlYyBjYW4gcHJvZHVjZS9zYXZlIGFuZAo+IGdl
+dCB0aGUKPiBkbWVzZyBsb2cgb3V0IG9mIGl0Lgo+IGFsdGVybmF0aXZlbHkgeW91IGNhbiB1c2Ug
+bWFrZWR1bXBmaWxlIHdpdGggdGhlIC0tZHVtcC1kbWVzZyBsb2cKPiAKPiBOZWlsCj4gCj4+IAo+
+PiBUaGFua3MgYW5kIFJlZ2FyZHMKPj4gU2VldGhhcmFtCj4+IAo+PiBfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4gUmVjZWl2ZSBO
+b3RpZmljYXRpb25zIG9mIEluY29taW5nIE1lc3NhZ2VzCj4+IEVhc2lseSBtb25pdG9yIG11bHRp
+cGxlIGVtYWlsIGFjY291bnRzICYgYWNjZXNzIHRoZW0gd2l0aCBhIGNsaWNrLgo+PiBWaXNpdCBo
+dHRwOi8vd3d3LmluYm94LmNvbS9ub3RpZmllciBhbmQgY2hlY2sgaXQgb3V0IQo+PiAKPj4gX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4ga2V4ZWMgbWFp
+bGluZyBsaXN0Cj4+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkdFVCBGUkVFIFNNSUxFWVMg
+Rk9SIFlPVVIgSU0gJiBFTUFJTCAtIExlYXJuIG1vcmUgYXQgaHR0cDovL3d3dy5pbmJveC5jb20v
+c21pbGV5cwpXb3JrcyB3aXRoIEFJTcKuLCBNU07CriBNZXNzZW5nZXIsIFlhaG9vIcKuIE1lc3Nl
+bmdlciwgSUNRwq4sIEdvb2dsZSBUYWxr4oSiIGFuZCBtb3N0IHdlYm1haWxzCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
