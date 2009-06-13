@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wm58.inbox.com ([64.135.83.58])
-	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MFQLq-0008Bu-Nt
-	for kexec@lists.infradead.org; Sat, 13 Jun 2009 10:20:58 +0000
-Received: from inbox.com (127.0.0.1:25)
-	by inbox.com with [InBox.Com SMTP Server]
-	id <906130001009.WM58> for <kexec@lists.infradead.org> from
-	<dseetharam@inbox.com>; Sat, 13 Jun 2009 2:22:08 AM -0800
-Mime-Version: 1.0
-Date: Sat, 13 Jun 2009 02:22:08 -0800
-Message-ID: <9E4E2F1EF78.00000173dseetharam@inbox.com>
-From: Dharmosoth Seetharam <dseetharam@inbox.com>
-Subject: Re: /var/log/messages doesn't have crash info when kernel gets
-	panic/oops/crash
-In-Reply-To: <m1ljnwwqua.fsf@fess.ebiederm.org>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MFShp-0003Ok-K3
+	for kexec@lists.infradead.org; Sat, 13 Jun 2009 12:51:40 +0000
 References: <9c8decfb07c.00000038dseetharam@inbox.com>
 	<913da90c6c8.0000039bdseetharam@inbox.com>
+	<9E4E2F1EF78.00000173dseetharam@inbox.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Sat, 13 Jun 2009 05:51:25 -0700
+In-Reply-To: <9E4E2F1EF78.00000173dseetharam@inbox.com> (Dharmosoth
+	Seetharam's message of "Sat\, 13 Jun 2009 02\:22\:08 -0800")
+Message-ID: <m1prd8uwj6.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: /var/log/messages doesn't have crash info when kernel gets
+	panic/oops/crash
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,65 +22,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Dharmosoth Seetharam <dseetharam@inbox.com>
 Cc: Neil Horman <nhorman@redhat.com>, vgoyal@in.ibm.com, kexec@lists.infradead.org, fastboot@lists.linux-foundation.org
 
-CgoKCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiBGcm9tOiBlYmllZGVybUB4bWlzc2lv
-bi5jb20KPiBTZW50OiBTYXQsIDEzIEp1biAyMDA5IDAwOjExOjI1IC0wNzAwCj4gVG86IGRzZWV0
-aGFyYW1AaW5ib3guY29tCj4gU3ViamVjdDogUmU6IC92YXIvbG9nL21lc3NhZ2VzIGRvZXNuJ3Qg
-aGF2ZSBjcmFzaCBpbmZvIHdoZW4ga2VybmVsIGdldHMKPiBwYW5pYy9vb3BzL2NyYXNoCj4gCj4g
-RGhhcm1vc290aCBTZWV0aGFyYW0gPGRzZWV0aGFyYW1AaW5ib3guY29tPiB3cml0ZXM6Cj4gCj4+
-IEhpIE5laWwsCj4+IAo+PiBUaGFua3MgZm9yIHlvdXIgcXVpY2sgcmVwbHkuCj4+IAo+PiBXaGF0
-IHlvdSBoYXZlIHN1Z2dlc3RlZCBpcyBuaWNlIHdoZW4gd2UgZ290L3NhdmUgY3Jhc2ggZHVtcCAo
-aS5lIHZtY29yZSkKPj4gV2hhdCBpZiB3ZSBmYWlsZWQgdG8gc2F2ZS9jYXB0dXJlIHZtY29yZSBp
-bmZvIG9yIHZtY29yZSBpcyBjb3JydXB0ZWQKPj4gZXRjLiB0aGVuIHdlIGRvbnQgZ2V0IGFueSBp
-bmZvcm1hdGlvbgo+PiByZWdhcmRpbmcgdGhlIHBhbmljL2NyYXNoL29vcHMgYXQgYW55d2hlcmU/
-Cj4gCkhpIEVyaWMsCgo+IEJhc2ljIHF1ZXN0aW9ucy4KPiAxKSBEbyB5b3UgaGF2ZSBwYW5pYyBv
-biBvb3BzIHNldD8KPiAgICBJIHRoaW5rIHRoYXQgc2V0dGluZyBtb3JlIHRoYW4gYW55dGhpbmcg
-ZWxzZSB3aWxsIGJlIHRoZQo+ICAgIGRpZmZlcmVuY2UgaW4gd2hhdCBzaG93cyB1cCBpbiAvdmFy
-L2xvZy9tZXNzYWdlcy4KClllcywgaW4gbXkgY2FzZSBwYW5pY19vbl9vb3BzIHdhcyBzZXQgd2l0
-aCAxCgo+IDIpIEhhdmUgeW91IHRyaWVkIGEgZHJ5IHJ1biBhbmQgY29uZmlybWVkIHlvdSBjYW4g
-Z2V0IGEgY3Jhc2ggZHVtcD8KCk5vLCBJIGhhdmVuJ3QgdHJpZWQgdGhpcy4KCj4gMykgQXJlIHlv
-dSB1c2luZyBrdm0Ka3ZtPyBrZXJuZWwgdmlydHVhbCBtZW1vcnk/Cgp0aGFua3MsClNlZXRoYXJh
-bQoKPiAKPiAKPiBFcmljCj4gCj4gCj4+IFRoYW5rcyBhbmQgUmVnYXJkcwo+PiAKPj4gIFNlZXRo
-YXJhbQo+PiAKPj4gCj4+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+Pj4gRnJvbTogbmhv
-cm1hbkByZWRoYXQuY29tCj4+PiBTZW50OiBGcmksIDEyIEp1biAyMDA5IDE2OjA1OjEzIC0wNDAw
-Cj4+PiBUbzogZHNlZXRoYXJhbUBpbmJveC5jb20KPj4+IFN1YmplY3Q6IFJlOiAvdmFyL2xvZy9t
-ZXNzYWdlcyBkb2Vzbid0IGhhdmUgY3Jhc2ggaW5mbyB3aGVuIGtlcm5lbCBnZXRzCj4+PiBwYW5p
-Yy9vb3BzL2NyYXNoCj4+PiAKPj4+IE9uIEZyaSwgSnVuIDEyLCAyMDA5IGF0IDAxOjI1OjQ5QU0g
-LTA4MDAsIERoYXJtb3NvdGggU2VldGhhcmFtIHdyb3RlOgo+Pj4+IEhpLAo+Pj4+IAo+Pj4+IEkg
-aGF2ZSBlbmNvdW50ZXIgYSBwcm9ibGVtIGNhbGxlZCAvdmFyL2xvZy9tZXNzYWdlcyBkb2VzIG5v
-dCBjb250YWluCj4+Pj4gYW55Cj4+Pj4gaW5mb3JtYXRpb24KPj4+PiBvbiBrZXJuZWwgY3Jhc2gg
-ZHVtcC4KPj4+PiAKPj4+PiBQcmlvciB0byBlbmFibGluZyBLRVhFQyB3ZSBzYXcgc3RhY2sgdHJh
-Y2VzIGFuZCBidWcgaW5mbyBldGMgaW4KPj4+PiAvdmFyL2xvZy9tZXNzYWdlcy4KPj4+PiBBZnRl
-ciBlbmFibGluZyBLRVhFQyBmZWF0dXJlIHRob3NlIGluZm8gd2FzIG1pc3NlZC4KPj4+PiAKPj4+
-PiBIb3cgY2FuIHdlIGdldCB0aG9zZSBtaXNzZWQgaW5mbyBpbiAvdmFyL2xvZy9tZXNzYWdlcyBl
-dmVuIHdoZW4gS0VYRUMKPj4+PiBmZWF0dXJlIGlzIGVuYWJsZWQuCj4+Pj4gCj4+Pj4gQW55IGhl
-bHAgd2lsbCBhcHByZWNpYXRlLgo+Pj4+IAo+Pj4gcnVuIGNyYXNoIG9uIHRoZSByZXN1bHRhbnQg
-dm1jb3JlIGZpbGUgdGhhdCBrZXhlYyBjYW4gcHJvZHVjZS9zYXZlIGFuZAo+Pj4gZ2V0IHRoZQo+
-Pj4gZG1lc2cgbG9nIG91dCBvZiBpdC4KPj4+IGFsdGVybmF0aXZlbHkgeW91IGNhbiB1c2UgbWFr
-ZWR1bXBmaWxlIHdpdGggdGhlIC0tZHVtcC1kbWVzZyBsb2cKPj4+IAo+Pj4gTmVpbAo+Pj4gCj4+
-Pj4gCj4+Pj4gVGhhbmtzIGFuZCBSZWdhcmRzCj4+Pj4gU2VldGhhcmFtCj4+Pj4gCj4+Pj4gX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4+Pj4gUmVjZWl2ZSBOb3RpZmljYXRpb25zIG9mIEluY29taW5nIE1lc3NhZ2VzCj4+Pj4gRWFz
-aWx5IG1vbml0b3IgbXVsdGlwbGUgZW1haWwgYWNjb3VudHMgJiBhY2Nlc3MgdGhlbSB3aXRoIGEg
-Y2xpY2suCj4+Pj4gVmlzaXQgaHR0cDovL3d3dy5pbmJveC5jb20vbm90aWZpZXIgYW5kIGNoZWNr
-IGl0IG91dCEKPj4+PiAKPj4+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwo+Pj4+IGtleGVjIG1haWxpbmcgbGlzdAo+Pj4+IGtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKPj4+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCj4+IAo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPj4gR0VUIEZSRUUgU01JTEVZUyBGT1IgWU9VUiBJTSAmIEVNQUlM
-IC0gTGVhcm4gbW9yZSBhdAo+PiBodHRwOi8vd3d3LmluYm94LmNvbS9zbWlsZXlzCj4+IFdvcmtz
-IHdpdGggQUlNwq4sIE1TTsKuIE1lc3NlbmdlciwgWWFob28hwq4gTWVzc2VuZ2VyLCBJQ1HCriwg
-R29vZ2xlIFRhbGvihKIKPj4gYW5kIG1vc3Qgd2VibWFpbHMKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpSZWNlaXZlIE5vdGlmaWNh
-dGlvbnMgb2YgSW5jb21pbmcgTWVzc2FnZXMKRWFzaWx5IG1vbml0b3IgbXVsdGlwbGUgZW1haWwg
-YWNjb3VudHMgJiBhY2Nlc3MgdGhlbSB3aXRoIGEgY2xpY2suClZpc2l0IGh0dHA6Ly93d3cuaW5i
-b3guY29tL25vdGlmaWVyIGFuZCBjaGVjayBpdCBvdXQhCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2tleGVjCg==
+Dharmosoth Seetharam <dseetharam@inbox.com> writes:
+
+>> -----Original Message-----
+>> From: ebiederm@xmission.com
+>> Sent: Sat, 13 Jun 2009 00:11:25 -0700
+>> To: dseetharam@inbox.com
+>> Subject: Re: /var/log/messages doesn't have crash info when kernel gets
+>> panic/oops/crash
+>> 
+>> Dharmosoth Seetharam <dseetharam@inbox.com> writes:
+>> 
+>>> Hi Neil,
+>>> 
+>>> Thanks for your quick reply.
+>>> 
+>>> What you have suggested is nice when we got/save crash dump (i.e vmcore)
+>>> What if we failed to save/capture vmcore info or vmcore is corrupted
+>>> etc. then we dont get any information
+>>> regarding the panic/crash/oops at anywhere?
+>> 
+> Hi Eric,
+>
+>> Basic questions.
+>> 1) Do you have panic on oops set?
+>>    I think that setting more than anything else will be the
+>>    difference in what shows up in /var/log/messages.
+>
+> Yes, in my case panic_on_oops was set with 1
+
+That is the reason thing don't show up in /var/log/messages
+because you panic before syslog has a chance to write the messages.
+
+>> 2) Have you tried a dry run and confirmed you can get a crash dump?
+>
+> No, I haven't tried this.
+
+It sounds like you have not been getting the coredumps when problems
+happen.  Running a simple test run to  Alt-sysrq-c to confirm
+that things are basically setup ok is a good idea.
+
+>> 3) Are you using kvm
+> kvm? kernel virtual memory?
+
+Kernel virtual machine.  In particular.
+Hardware acceleration for virtual machines.
+
+Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
