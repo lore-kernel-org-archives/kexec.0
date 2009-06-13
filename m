@@ -1,23 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wm58.inbox.com ([64.135.83.58])
-	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MFUpP-0005D0-3L
-	for kexec@lists.infradead.org; Sat, 13 Jun 2009 15:07:37 +0000
-Received: from inbox.com (127.0.0.1:25)
-	by inbox.com with [InBox.Com SMTP Server]
-	id <906130003489.WM58> for <kexec@lists.infradead.org> from
-	<dseetharam@inbox.com>; Sat, 13 Jun 2009 7:08:58 AM -0800
-Mime-Version: 1.0
-Date: Sat, 13 Jun 2009 07:08:58 -0800
-Message-ID: <A0CF50B4BBE.0000004Fdseetharam@inbox.com>
-From: Dharmosoth Seetharam <dseetharam@inbox.com>
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MFXdq-0007Hb-Dz
+	for kexec@lists.infradead.org; Sat, 13 Jun 2009 18:07:52 +0000
+Date: Sat, 13 Jun 2009 14:07:36 -0400
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: /var/log/messages doesn't have crash info when kernel gets
 	panic/oops/crash
-In-Reply-To: <m1bpostedp.fsf@fess.ebiederm.org>
-References: <9c8decfb07c.00000038dseetharam@inbox.com>
-	<9e4e2f1ef78.00000173dseetharam@inbox.com>
-	<9fe503a86b2.000002e5dseetharam@inbox.com>
-	<913da90c6c8.0000039bdseetharam@inbox.com>
+Message-ID: <20090613180736.GA24861@localhost.localdomain>
+References: <913da90c6c8.0000039bdseetharam@inbox.com>
+	<9C8DECFB07C.00000038dseetharam@inbox.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9C8DECFB07C.00000038dseetharam@inbox.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,90 +21,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Neil Horman <nhorman@redhat.com>, vgoyal@in.ibm.com, kexec@lists.infradead.org, fastboot@lists.linux-foundation.org
+To: Dharmosoth Seetharam <dseetharam@inbox.com>
+Cc: fastboot@lists.linux-foundation.org, vgoyal@in.ibm.com, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-
-> -----Original Message-----
-> From: ebiederm@xmission.com
-> Sent: Sat, 13 Jun 2009 07:08:50 -0700
-> To: dseetharam@inbox.com
-> Subject: Re: /var/log/messages doesn't have crash info when kernel gets
-> panic/oops/crash
-> 
-> Dharmosoth Seetharam <dseetharam@inbox.com> writes:
-> 
->>>>> Basic questions.
->>>>> 1) Do you have panic on oops set?
->>>>>    I think that setting more than anything else will be the
->>>>>    difference in what shows up in /var/log/messages.
->>>> 
->>>> Yes, in my case panic_on_oops was set with 1
->>> 
->>> That is the reason thing don't show up in /var/log/messages
->>> because you panic before syslog has a chance to write the messages.
->> 
->> Thanks.
->> So, if panic_on_oops set with 0(default), we will get all the
->> needed info like stack traces, bug info etc. in /var/log/messages then
->> reboots.
->> 
->> Or do we need to apply any specific patches to get info in
->> /var/log/messages?
->> 
->>> 
->>>>> 2) Have you tried a dry run and confirmed you can get a crash dump?
->>>> 
->>>> No, I haven't tried this.
->>> 
->>> It sounds like you have not been getting the coredumps when problems
->>> happen.  Running a simple test run to  Alt-sysrq-c to confirm
->>> that things are basically setup ok is a good idea.
->>> 
->> Sorry, I misunderstood your question.
->> I have gave dry run and confirmed that the dumps are getting saved in
->> particular dir and able to analyze.
->> 
->> I did in both the ways like
->> 1 - echo c > /proc/sysrq-trigger
->> 2 -Alt -sysrq -c
-> 
-> Then unless you are having problems capturing core dumps in real
-> failure situations it sounds like all is well with the world.
-> 
-> A kernel oops is normally not fatal and the kernel tries to limp along
-> allowing for better diagnostics etc.  This allows klogd to read the
-> kernels message buffer and pass the kernel messages to syslog which
-> writes the messages to /var/log/messages.
-> 
-> After a kernel panic nothing is allowed to happen which prevents
-> user space from writing to /var/log/messages in the usual way.
-> 
-> If you want data in /var/log/messages it appears you have two choices.
-> 1) Post process a core dump as Neil suggested and feed the kernel log
->    buffer to syslog.
-> 2) disable panic on oops.  The system will continue to limp along
-> allowing
->    user space to write to /var/log/messages.
-> 
-> Eric
-
-Thanks Eric.
-
-I will try all the ways as you suggested and let you know the outcome.
-
-regards,
-Seetharam
-
-____________________________________________________________
-FREE ONLINE PHOTOSHARING - Share your photos online with your friends and family!
-Visit http://www.inbox.com/photosharing to find out more!
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBKdW4gMTIsIDIwMDkgYXQgMTE6MDE6MzVQTSAtMDgwMCwgRGhhcm1vc290aCBTZWV0
+aGFyYW0gd3JvdGU6Cj4gCj4gSGkgTmVpbCwKPiAKPiBUaGFua3MgZm9yIHlvdXIgcXVpY2sgcmVw
+bHkuCj4gCj4gV2hhdCB5b3UgaGF2ZSBzdWdnZXN0ZWQgaXMgbmljZSB3aGVuIHdlIGdvdC9zYXZl
+IGNyYXNoIGR1bXAgKGkuZSB2bWNvcmUpCj4gV2hhdCBpZiB3ZSBmYWlsZWQgdG8gc2F2ZS9jYXB0
+dXJlIHZtY29yZSBpbmZvIG9yIHZtY29yZSBpcyBjb3JydXB0ZWQgZXRjLiB0aGVuIHdlIGRvbnQg
+Z2V0IGFueSBpbmZvcm1hdGlvbgo+IHJlZ2FyZGluZyB0aGUgcGFuaWMvY3Jhc2gvb29wcyBhdCBh
+bnl3aGVyZT8KPiAKSWYgdGhlIHZtY29yZSBpcyBjb3JydXB0ZWQgdG8gdGhlIHBvaW50IHdoZXJl
+IG1ha2VkdW1wZmlsZSBjYW4ndCBleHRyYWN0IHRoZQpkbWVzZyBsb2csIHRoZW4gaXRzIGNlcnRh
+aW4gdGhhdCBzeXNsb2cgd291bGRuJ3QgaGF2ZSBiZWVuIGFibGUgdG8gd3JpdGUKYW55dGhpbmcg
+dG8gL3Zhci9sb2cvbWVzc2FnZXMgZWl0aGVyLiAgQXMgYSBsYXN0IHJlc29ydCB5b3UgY2FuIHRy
+eSBydW4gc3RyaW5ncwpvbiB0aGUgY29ycnVwdGVkIHZtY29yZSBhbmQgc2VlIGlmIHRoZSBkbWVz
+ZyBsb2cgaXMgc3RpbGwgaW4gdGhlcmUgc29tZXdoZXJlLgoKSWYgeW91IGZvcmdvdCB0byBjYXB0
+dXJlIHRoZSB2bWNvcmUsIHRoZXJlcyBub3QgbXVjaCBtb3JlIGhlbHAgSSBjYW4gZ2l2ZSB5b3Us
+CkltIGFmcmFpZC4gIFlvdSdsbCBqdXN0IGhhdmUgdG8gbWFrZSBzdXJlIHlvdSBjYXB0dXJlIGl0
+IG5leHQgdGltZS4gIElmIHlvdSBvbmx5Cm5lZWQgdGhlIGJhY2t0cmFjZSwgYW5kIGRvbid0IHdh
+bnQgdGhlIHJlc3Qgb2YgdGhlIHZtY29yZSwgeW91IGNhbiBtYWtlIGtkdW1wCmp1c3QgcnVuIG1h
+a2VkdW1wZmlsZSAtLWR1bXAtZG1lc2cgL3Byb2Mvdm1jb3JlIC92YXIvbG9nL29vcHMudHh0CgpO
+ZWlsCgo+ICAKPiAKPiAKPiBUaGFua3MgYW5kIFJlZ2FyZHMKPiAKPiAgU2VldGhhcmFtCj4gCj4g
+Cj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gRnJvbTogbmhvcm1hbkByZWRoYXQu
+Y29tCj4gPiBTZW50OiBGcmksIDEyIEp1biAyMDA5IDE2OjA1OjEzIC0wNDAwCj4gPiBUbzogZHNl
+ZXRoYXJhbUBpbmJveC5jb20KPiA+IFN1YmplY3Q6IFJlOiAvdmFyL2xvZy9tZXNzYWdlcyBkb2Vz
+bid0IGhhdmUgY3Jhc2ggaW5mbyB3aGVuIGtlcm5lbCBnZXRzCj4gPiBwYW5pYy9vb3BzL2NyYXNo
+Cj4gPiAKPiA+IE9uIEZyaSwgSnVuIDEyLCAyMDA5IGF0IDAxOjI1OjQ5QU0gLTA4MDAsIERoYXJt
+b3NvdGggU2VldGhhcmFtIHdyb3RlOgo+ID4+IEhpLAo+ID4+IAo+ID4+IEkgaGF2ZSBlbmNvdW50
+ZXIgYSBwcm9ibGVtIGNhbGxlZCAvdmFyL2xvZy9tZXNzYWdlcyBkb2VzIG5vdCBjb250YWluIGFu
+eQo+ID4+IGluZm9ybWF0aW9uCj4gPj4gb24ga2VybmVsIGNyYXNoIGR1bXAuCj4gPj4gCj4gPj4g
+UHJpb3IgdG8gZW5hYmxpbmcgS0VYRUMgd2Ugc2F3IHN0YWNrIHRyYWNlcyBhbmQgYnVnIGluZm8g
+ZXRjIGluCj4gPj4gL3Zhci9sb2cvbWVzc2FnZXMuCj4gPj4gQWZ0ZXIgZW5hYmxpbmcgS0VYRUMg
+ZmVhdHVyZSB0aG9zZSBpbmZvIHdhcyBtaXNzZWQuCj4gPj4gCj4gPj4gSG93IGNhbiB3ZSBnZXQg
+dGhvc2UgbWlzc2VkIGluZm8gaW4gL3Zhci9sb2cvbWVzc2FnZXMgZXZlbiB3aGVuIEtFWEVDCj4g
+Pj4gZmVhdHVyZSBpcyBlbmFibGVkLgo+ID4+IAo+ID4+IEFueSBoZWxwIHdpbGwgYXBwcmVjaWF0
+ZS4KPiA+PiAKPiA+IHJ1biBjcmFzaCBvbiB0aGUgcmVzdWx0YW50IHZtY29yZSBmaWxlIHRoYXQg
+a2V4ZWMgY2FuIHByb2R1Y2Uvc2F2ZSBhbmQKPiA+IGdldCB0aGUKPiA+IGRtZXNnIGxvZyBvdXQg
+b2YgaXQuCj4gPiBhbHRlcm5hdGl2ZWx5IHlvdSBjYW4gdXNlIG1ha2VkdW1wZmlsZSB3aXRoIHRo
+ZSAtLWR1bXAtZG1lc2cgbG9nCj4gPiAKPiA+IE5laWwKPiA+IAo+ID4+IAo+ID4+IFRoYW5rcyBh
+bmQgUmVnYXJkcwo+ID4+IFNlZXRoYXJhbQo+ID4+IAo+ID4+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+ID4+IFJlY2VpdmUgTm90
+aWZpY2F0aW9ucyBvZiBJbmNvbWluZyBNZXNzYWdlcwo+ID4+IEVhc2lseSBtb25pdG9yIG11bHRp
+cGxlIGVtYWlsIGFjY291bnRzICYgYWNjZXNzIHRoZW0gd2l0aCBhIGNsaWNrLgo+ID4+IFZpc2l0
+IGh0dHA6Ly93d3cuaW5ib3guY29tL25vdGlmaWVyIGFuZCBjaGVjayBpdCBvdXQhCj4gPj4gCj4g
+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiA+PiBr
+ZXhlYyBtYWlsaW5nIGxpc3QKPiA+PiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPj4gaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAo+IF9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
+IEdFVCBGUkVFIFNNSUxFWVMgRk9SIFlPVVIgSU0gJiBFTUFJTCAtIExlYXJuIG1vcmUgYXQgaHR0
+cDovL3d3dy5pbmJveC5jb20vc21pbGV5cwo+IFdvcmtzIHdpdGggQUlNwq4sIE1TTsKuIE1lc3Nl
+bmdlciwgWWFob28hwq4gTWVzc2VuZ2VyLCBJQ1HCriwgR29vZ2xlIFRhbGvihKIgYW5kIG1vc3Qg
+d2VibWFpbHMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
