@@ -1,29 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+Received: from bilbo.ozlabs.org ([203.10.76.25])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1MGtnP-0004qU-J1
-	for kexec@lists.infradead.org; Wed, 17 Jun 2009 11:59:22 +0000
-Received: from d23relay02.au.ibm.com (d23relay02.au.ibm.com [202.81.31.244])
-	by e23smtp02.au.ibm.com (8.13.1/8.13.1) with ESMTP id n5HBvPEI021582
-	for <kexec@lists.infradead.org>; Wed, 17 Jun 2009 21:57:25 +1000
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
-	by d23relay02.au.ibm.com (8.13.8/8.13.8/NCO v9.2) with ESMTP id
-	n5HBxC2a606262
-	for <kexec@lists.infradead.org>; Wed, 17 Jun 2009 21:59:12 +1000
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n5HBxB3w010247
-	for <kexec@lists.infradead.org>; Wed, 17 Jun 2009 21:59:12 +1000
-Date: Wed, 17 Jun 2009 17:29:17 +0530
-From: "M. Mohan Kumar" <mohan@in.ibm.com>
-Subject: [PATCH] Do not inline putprops function
-Message-ID: <20090617115917.GD31595@in.ibm.com>
+	id 1MGuE0-0007vW-2j
+	for kexec@lists.infradead.org; Wed, 17 Jun 2009 12:26:55 +0000
+Subject: Re: [PATCH] Do not inline putprops function
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <20090617115917.GD31595@in.ibm.com>
 References: <20090617113456.GC31595@in.ibm.com>
 	<20090617114551.GA5672@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20090617114551.GA5672@verge.net.au>
-Reply-To: mohan@in.ibm.com
+	<20090617115917.GD31595@in.ibm.com>
+Date: Wed, 17 Jun 2009 22:26:35 +1000
+Message-Id: <1245241595.4269.15.camel@concordia>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,58 +21,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0466005442=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, miltonm@bga.com
+To: mohan@in.ibm.com
+Cc: linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, miltonm@bga.com
 
-Do not inline putprops function
 
-With the recent kexec-tools git tree, both kexec and kdump kernels hang (i.e
-kexec -l and kexec -p respectively). This happened after the patch "ppc64:
-cleanups" commit b43a84a31a4be6ed025c1bdef3bb1c3c12e01b16. I tried
-reverting each hunk and then found out that retaining following lines in
-fs2dt.c makes kexec/kdump work.
+--===============0466005442==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-5Rg9Pwn15+VvVi8FWhQm"
 
--static unsigned *dt_len; /* changed len of modified cmdline
--                           in flat device-tree */
 
-[....]
+--=-5Rg9Pwn15+VvVi8FWhQm
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
--               dt_len = dt;
+On Wed, 2009-06-17 at 17:29 +0530, M. Mohan Kumar wrote:
+> Do not inline putprops function
+>=20
+> With the recent kexec-tools git tree, both kexec and kdump kernels hang (=
+i.e
+> kexec -l and kexec -p respectively). This happened after the patch "ppc64=
+:
+> cleanups" commit b43a84a31a4be6ed025c1bdef3bb1c3c12e01b16. I tried
+> reverting each hunk and then found out that retaining following lines in
+> fs2dt.c makes kexec/kdump work.
+>=20
+> -static unsigned *dt_len; /* changed len of modified cmdline
+> -                           in flat device-tree */
+>=20
+> [....]
+>=20
+> -               dt_len =3D dt;
+>=20
+> I don't have any clue why removing a unused variable would cause the kexe=
+c
+> kernel to hang. After further investigation, I observed that if the putpr=
+ops
+> function is not inlined, kexec/kdump kernel would work even after removin=
+g
+> the above lines.
+>=20
+> This patch directs gcc to not inline the putprops function. Now we could
+> invoke kexec and kdump kernels.
 
-I don't have any clue why removing a unused variable would cause the kexec
-kernel to hang. After further investigation, I observed that if the putprops
-function is not inlined, kexec/kdump kernel would work even after removing
-the above lines.
+What compiler version are you using? Does the behaviour change if you
+use a newer/older compiler? It sounds to me like there's some deeper bug
+and your patch is just papering over it.
 
-This patch directs gcc to not inline the putprops function. Now we could
-invoke kexec and kdump kernels.
+cheers
 
-Signed-off-by: M. Mohan Kumar <mohan@in.ibm.com>
----
- kexec/arch/ppc64/fs2dt.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+--=-5Rg9Pwn15+VvVi8FWhQm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-index 1f551fd..1e01f74 100644
---- a/kexec/arch/ppc64/fs2dt.c
-+++ b/kexec/arch/ppc64/fs2dt.c
-@@ -259,7 +259,7 @@ static void add_usable_mem_property(int fd, int len)
- }
- 
- /* put all properties (files) in the property structure */
--static void putprops(char *fn, struct dirent **nlist, int numlist)
-+__attribute__ ((noinline)) static void putprops(char *fn, struct dirent **nlist, int numlist)
- {
- 	struct dirent *dp;
- 	int i = 0, fd, len;
--- 
-1.6.0.6
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAko44PsACgkQdSjSd0sB4dJ5MQCfaDXTPJjZgiB0XajA00U+rBt1
+ctAAoKL4oFogfSyYVilZ6ubJziQ9rhtN
+=gJIX
+-----END PGP SIGNATURE-----
+
+--=-5Rg9Pwn15+VvVi8FWhQm--
+
+
+
+--===============0466005442==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0466005442==--
+
+
