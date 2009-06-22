@@ -1,32 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail7.fujitsu.co.jp ([192.51.44.37])
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MIdlO-0006wP-3l
-	for kexec@lists.infradead.org; Mon, 22 Jun 2009 07:16:29 +0000
-Received: from m5.gw.fujitsu.co.jp ([10.0.50.75])
-	by fgwmail7.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n5M7GBtx028999 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Mon, 22 Jun 2009 16:16:12 +0900
-Received: from smail (m5 [127.0.0.1])
-	by outgoing.m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 99D6E45DE4F
-	for <kexec@lists.infradead.org>; Mon, 22 Jun 2009 16:16:11 +0900 (JST)
-Received: from s5.gw.fujitsu.co.jp (s5.gw.fujitsu.co.jp [10.0.50.95])
-	by m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 6DDDD45DE51
-	for <kexec@lists.infradead.org>; Mon, 22 Jun 2009 16:16:11 +0900 (JST)
-Received: from s5.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id 3753F1DB805D
-	for <kexec@lists.infradead.org>; Mon, 22 Jun 2009 16:16:11 +0900 (JST)
-Received: from m106.s.css.fujitsu.com (m106.s.css.fujitsu.com [10.249.87.106])
-	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id CBAE2E08009
-	for <kexec@lists.infradead.org>; Mon, 22 Jun 2009 16:16:10 +0900 (JST)
-Message-ID: <4A3F2FB6.6040901@jp.fujitsu.com>
-Date: Mon, 22 Jun 2009 16:16:06 +0900
-From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+	id 1MIjqV-0002cY-ST
+	for kexec@lists.infradead.org; Mon, 22 Jun 2009 13:46:18 +0000
+Date: Mon, 22 Jun 2009 08:45:57 -0500
+From: Robin Holt <holt@sgi.com>
+Subject: Re: [PATCH 1/7] ia64, kdump: Mask MCA/INIT on freezing cpus
+Message-ID: <20090622134557.GC7084@sgi.com>
+References: <4A39E247.4030908@jp.fujitsu.com> <4A39E2CF.80901@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/7] Patches for kdump vs. INIT
-References: <4A39E247.4030908@jp.fujitsu.com>
-	<5AA89A0287224699B8E5C0526CE0EA41@Lanx8664>
-In-Reply-To: <5AA89A0287224699B8E5C0526CE0EA41@Lanx8664>
+Content-Disposition: inline
+In-Reply-To: <4A39E2CF.80901@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,25 +23,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jay Lan <jay.zen.lan@gmail.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-Jay Lan wrote:
-> Kdump with INIT on IPF worked on SGI's IA64 servers when i left SGI last
-> December.
-> Is this problem something new to you after .27?
+> To avoid this problem, This patch inserts ia64_set_psr_mc() before the
+> deadloop to mask MCA/INIT on cpus going to be frozen.  I confirmed that
+> weird log like above are disappeared after applying this patch.
 
-No.
-This is a potential bug in design, in case of INIT+INIT and panic+INIT. 
+Please do not do this.  Turning off MCA/INIT is just a horrible idea.
+When your code has a bug, the INIT of the cpu is the only tool we have
+to find out what it is doing short of putting special hardware onto the
+machine and trying to track it down.
 
-> SGI folks should test this patchset to ensure no surprise is introduced
-> to their servers.
-
-Any tests and comments would be appreciated.
-
+Without thinking about it, I have a gut feeling there must be some way
+to at least allow the MCA/INIT to make it through PROM and be delivered
+to the OS.  From there the OS should be able to sort out a way to handle
+kdump and MCAs received during a kdump.
 
 Thanks,
-H.Seto
+Robin
 
 _______________________________________________
 kexec mailing list
