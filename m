@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MIjqV-0002cY-ST
-	for kexec@lists.infradead.org; Mon, 22 Jun 2009 13:46:18 +0000
-Date: Mon, 22 Jun 2009 08:45:57 -0500
-From: Robin Holt <holt@sgi.com>
-Subject: Re: [PATCH 1/7] ia64, kdump: Mask MCA/INIT on freezing cpus
-Message-ID: <20090622134557.GC7084@sgi.com>
-References: <4A39E247.4030908@jp.fujitsu.com> <4A39E2CF.80901@jp.fujitsu.com>
+Received: from wa4ehsobe003.messaging.microsoft.com ([216.32.181.13]
+	helo=WA4EHSOBE003.bigfish.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MIrhi-00062n-GM
+	for kexec@lists.infradead.org; Mon, 22 Jun 2009 22:09:44 +0000
+Message-ID: <4A4000F1.8040908@am.sony.com>
+Date: Mon, 22 Jun 2009 15:08:49 -0700
+From: Geoff Levand <geoffrey.levand@am.sony.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4A39E2CF.80901@jp.fujitsu.com>
+Subject: [patch] kexec: Fix printed symbol value
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,25 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-> To avoid this problem, This patch inserts ia64_set_psr_mc() before the
-> deadloop to mask MCA/INIT on cpus going to be frozen.  I confirmed that
-> weird log like above are disappeared after applying this patch.
+Move the print statement so that the variable
+value has been assigned before its value is
+printed.
 
-Please do not do this.  Turning off MCA/INIT is just a horrible idea.
-When your code has a bug, the INIT of the cpu is the only tool we have
-to find out what it is doing short of putting special hardware onto the
-machine and trying to track it down.
+Signed-off-by: Geoff Levand <geoffrey.levand@am.sony.com>
+---
+index 74c4b35..1d3e22c 100644
+--- a/kexec/kexec-elf-rel.c
++++ b/kexec/kexec-elf-rel.c
+@@ -402,13 +402,13 @@ int elf_rel_load(struct mem_ehdr *ehdr, struct kexec_info *info,
+ 			else {
+ 				sec_base = ehdr->e_shdr[sym.st_shndx].sh_addr;
+ 			}
++			value = sym.st_value;
++			value += sec_base;
++			value += rel.r_addend;
+ #ifdef DEBUG
+ 			fprintf(stderr, "sym: %s value: %lx addr: %lx\n",
+ 				name, value, address);
+ #endif
+-			value = sym.st_value;
+-			value += sec_base;
+-			value += rel.r_addend;
+ 			machine_apply_elf_rel(ehdr, rel.r_type,
+ 				(void *)location, address, value);
+ 		}
 
-Without thinking about it, I have a gut feeling there must be some way
-to at least allow the MCA/INIT to make it through PROM and be delivered
-to the OS.  From there the OS should be able to sort out a way to handle
-kdump and MCAs received during a kdump.
-
-Thanks,
-Robin
 
 _______________________________________________
 kexec mailing list
