@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.redhat.com ([66.187.237.31])
+Received: from mail-yx0-f202.google.com ([209.85.210.202])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MIYAV-0008TK-8u
-	for kexec@lists.infradead.org; Mon, 22 Jun 2009 01:18:01 +0000
-Date: Sun, 21 Jun 2009 21:17:59 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: Need for KEXEC_PRESERVE_CONTEXT flag ?
-Message-ID: <20090622011759.GA23205@localhost.localdomain>
-References: <48e37220906182330w6a6e83bctb3b3a27f7bfc6afb@mail.gmail.com>
-	<20090621171709.GA3358@localhost.localdomain>
-	<48e37220906211154s4f1c3812o8f3ba1307a7e06d@mail.gmail.com>
+	id 1MIdN0-0007SP-5F
+	for kexec@lists.infradead.org; Mon, 22 Jun 2009 06:51:17 +0000
+Received: by yxe40 with SMTP id 40so951031yxe.28
+	for <kexec@lists.infradead.org>; Sun, 21 Jun 2009 23:50:55 -0700 (PDT)
+Message-ID: <5AA89A0287224699B8E5C0526CE0EA41@Lanx8664>
+From: "Jay Lan" <jay.zen.lan@gmail.com>
+References: <4A39E247.4030908@jp.fujitsu.com>
+In-Reply-To: <4A39E247.4030908@jp.fujitsu.com>
+Subject: Re: [PATCH 0/7] Patches for kdump vs. INIT
+Date: Sun, 21 Jun 2009 23:31:13 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <48e37220906211154s4f1c3812o8f3ba1307a7e06d@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,86 +20,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Indraneel Mukherjee <indro.ml@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, Jun 22, 2009 at 12:24:05AM +0530, Indraneel Mukherjee wrote:
-> On Sun, Jun 21, 2009 at 10:47 PM, Neil Horman <nhorman@redhat.com> wrote:
-> 
-> > On Fri, Jun 19, 2009 at 12:00:44PM +0530, Indraneel Mukherjee wrote:
-> > > Hi,
-> > >
-> > > The file kernel/kexec.c (~ line 1001 in linux-2.6.30) has this code
-> > >
-> > > ------snip----
-> > >
-> > >  if (flags & KEXEC_PRESERVE_CONTEXT)
-> > >             image->preserve_context = 1;
-> > >
-> > > ------snip----
-> > >
-> > > Will this ever be true? The flag KEXEC_PRESERVE_CONTEXT is not even
-> > defined
-> > > in kexec-tools-2.0.0.
-> > >
-> > > Consequently, all the code inside the condition
-> >  if(image->preserve_context)
-> > >   is also useless?
-> > >
-> > > Am i missing something here?
-> > >
-> > Yes, the code you're looking at in the first definition is part of the
-> > kernel,
-> > while you're looking for the definition of KEXEC_PRESERVE_CONTEXT in the
-> > kexec-tools userspace code.  You need to look for the definition of
-> > KEXEC_PRESERVE_CONTEXT in the kernel code (you'll find it in
-> > include/linux/kexec.h).
-> 
-> 
-> I've seen that bit.  I was only trying to understand that code & figure out
-> when does it ever gets executed. My guess is that kexec-tools is the only
-> user of all the code in kernel/kexec.c. So, i started wondering if
-> kexec-tools never sets the flag KEXEC_PRESERVE_CONTEXT, then why was that
-> code even written?
-> Ans that means we've got some untested code in the kernel :) ?
-> 
-Technically, you're correct, the code doesn't ever get used because the very
-limited set of tools that make use of the kexec infrastructure doesn't make use
-of it (yet).  That said, just because nothing uses it in user space, doesn't
-mean that it won't.  And if its not in the kernel first, userspace won't ever
-get to use it :)
+Kdump with INIT on IPF worked on SGI's IA64 servers when i left SGI last 
+December.
+Is this problem something new to you after .27?
 
-I guess the bottom line is, yeah its not used right now, but thats more of an
-impetus for kexec-tools to write code to take advantage of it, rather than for
-the kernel to remove it :)
+SGI folks should test this patchset to ensure no surprise is introduced to 
+their servers.
 
-Neil
+Cheers,
+jay
 
-> Regards,
-> Indro
+----- Original Message ----- 
+From: "Hidetoshi Seto" <seto.hidetoshi@jp.fujitsu.com>
+To: <linux-ia64@vger.kernel.org>; <linux-kernel@vger.kernel.org>
+Cc: "Haren Myneni" <hbabu@us.ibm.com>; <kexec@lists.infradead.org>; "Vivek 
+Goyal" <vgoyal@redhat.com>
+Sent: Wednesday, June 17, 2009 11:44 PM
+Subject: [PATCH 0/7] Patches for kdump vs. INIT
+
+
+> Hi Tony-san, and kdump folks,
+>
+> I got some trouble on kdump on IPF with INIT, and my investigation
+> proves there are some bugs and races in startup of kdump.
+> Here are fixes based on .30, for issues I found.
+>
+> Since it must be serious problem for (likely big) IPF servers if we
+> could fail to retrieve crashdump via kdump, so I believe these patches
+> should be applied asap.
+>
+>
+> Thanks,
+> H.Seto
+>
+> ===
+>
+> Hidetoshi Seto (7):
+>      ia64, kdump: Mask MCA/INIT on freezing cpus
+>      ia64, kexec: Make INIT safe while kdump/kexec
+>      ia64, kexec: Unregister MCA handler before kexec
+>      ia64, kdump: Don't offline APs
+>      ia64, kdump: Mask INIT first in panic-kdump path
+>      ia64, kdump: Try INIT regardless of kdump_on_init
+>      ia64, kdump: Short path to freeze CPUs
+>
+> arch/ia64/kernel/crash.c         |   85 
+> ++++++++++++++++++++++++++------------
+> arch/ia64/kernel/machine_kexec.c |   17 ++++++++
+> arch/ia64/kernel/mca.c           |   15 ++++++-
+> arch/ia64/kernel/mca_asm.S       |   47 +++++++++++++++++++++
+> 4 files changed, 136 insertions(+), 28 deletions(-)
+>
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> 
-> 
->  kexec-tools might use it one day, but not using it
-> > doesn't mean we should remove it from the kernel.
-> >
-> 
-> >
-> > Neil
-> >
-> > > Regards,
-> > > Indro
-> >
-> > > _______________________________________________
-> > > kexec mailing list
-> > > kexec@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/kexec
-> >
-> >
+
 
 _______________________________________________
 kexec mailing list
