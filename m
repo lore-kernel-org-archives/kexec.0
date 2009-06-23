@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gx0-f211.google.com ([209.85.217.211])
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MIlLr-0007R9-86
-	for kexec@lists.infradead.org; Mon, 22 Jun 2009 15:22:38 +0000
-Received: by gxk7 with SMTP id 7so4961970gxk.18
-	for <kexec@lists.infradead.org>; Mon, 22 Jun 2009 08:22:30 -0700 (PDT)
+	id 1MIyyq-0000HQ-92
+	for kexec@lists.infradead.org; Tue, 23 Jun 2009 05:55:46 +0000
+Date: Tue, 23 Jun 2009 00:55:36 -0500
+From: Robin Holt <holt@sgi.com>
+Subject: Re: [PATCH 1/7] ia64, kdump: Mask MCA/INIT on freezing cpus
+Message-ID: <20090623055536.GE6865@sgi.com>
+References: <4A39E247.4030908@jp.fujitsu.com> <4A39E2CF.80901@jp.fujitsu.com>
+	<20090622134557.GC7084@sgi.com> <4A4022EA.1020506@jp.fujitsu.com>
 MIME-Version: 1.0
-Date: Mon, 22 Jun 2009 23:22:29 +0800
-Message-ID: <e997b7420906220822w354dbafdo34126535500626d1@mail.gmail.com>
-Subject: kexec ,instruction error in misc_32.s
-From: "wilbur.chan" <wilbur512@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <4A4022EA.1020506@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,101 +20,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0029609772=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Robin Holt <holt@sgi.com>, Vivek Goyal <vgoyal@redhat.com>
 
---===============0029609772==
-Content-Type: multipart/alternative; boundary=00163630efc9406d86046cf17152
+On Tue, Jun 23, 2009 at 09:33:46AM +0900, Hidetoshi Seto wrote:
+> Robin Holt wrote:
+...
+> Do you mean that the 2nd kernel should be able to handle MCA/INIT from its
+> boot up?  I guess the word PROM is nearly equal to PAL/SAL firmware, if so
+> then I don't think there are good generic interface/procedure could be
+> useful here.  Do you have any concrete idea?
 
---00163630efc9406d86046cf17152
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+No concrete ideas.  Just a really uneasy feeling whenever the INIT
+is disabled.
 
-powerpc 8541 ,kernel 2.6.21.7
+On SGI's ia64 servers, when the INIT is first received, our PROM (PAL/SAL)
+records the processors state.  This record remains for the next reset
+or for salinfo to transfer to disk.  We can dump all the records in a
+format somewhat similar to the output in /var/log/salinfo/decoded.
 
+On more occasions than I could even begin to describe, those records
+have helped us determine what the processor was doing despite it even
+ignoring interrupts.  This includes everything except when MCA/INIT
+handling is disabled or PMIs are being processed.
 
+If you could give this some consideration, I would appreciate it.
+I really don't have the time to dedicate to thinking all the way through
+and therefore will not stand in the way of any patch you propose.
+If I can be of help in any way, please let me know.
 
-In  misc_32.s, when executed "rif "  instruction ,  the kernel went wrong
-because of the
-invalid instruction address.
-
-So , I changed r4 into virtual address(not physical address), this programm
-can go on ,
-however , there seemed to be some
-
-kernel overflow oops  in  page copying process in misc_32.s, causing  kernel
-'s termination.
-
-
-
-
-here are my steps,(r4 is physical address)
-
-# kexec -l uImage --devtree=your.fdt.dtb --devtree_addr=0x800000
-   Image Name:   Linux-2.6.21.7
-   Image Type:   PowerPC Linux Kernel Image (gzip compressed)
-   Data Size:    1190265 Bytes =    Load Address: 00000000
-   Entry Point:  00000000
-
-# kexec -e
-Starting new kernel
-virtual address: cfc09000
-physical address: fc09000
-calling function: reboot_code(page_list=0xfc08002,
-reboot_code_buffer_phys=0xfc09000, image
-->start=0x0,image->segment[1].mem=0x800000)
-
-Unable to handle kernel paging request for instruction fetch
-Faulting instruction address: 0x0fc09028
-
-
-
-
-Please help. thank you very much.
-
-
-regards,
-
---00163630efc9406d86046cf17152
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<p>powerpc 8541 ,kernel 2.6.21.7<br>=A0<br>=A0<br>=A0<br>In=A0 misc_32.s, w=
-hen executed &quot;rif &quot;=A0 instruction ,=A0 the kernel went wrong=A0 =
-because of the <br>invalid instruction address.<br>=A0<br>So , I changed r4=
- into virtual address(not physical address), this programm can go on , <br>
-however , there seemed to be some <br>=A0<br>kernel overflow oops=A0 in=A0 =
-page copying process in misc_32.s, causing=A0 kernel &#39;s termination.<br=
->=A0<br>=A0<br>=A0<br>=A0<br>here are my steps,(r4 is physical address)<br>=
-=A0<br># kexec -l uImage --devtree=3Dyour.fdt.dtb --devtree_addr=3D0x800000=
-<br>
-=A0=A0 Image Name:=A0=A0 Linux-2.6.21.7<br>=A0=A0 Image Type:=A0=A0 PowerPC=
- Linux Kernel Image (gzip compressed)<br>=A0=A0 Data Size:=A0=A0=A0 1190265=
- Bytes =3D=A0=A0=A0 Load Address: 00000000<br>=A0=A0 Entry Point:=A0 000000=
-00</p>
-<p># kexec -e<br>Starting new kernel<br>virtual address: cfc09000<br>physic=
-al address: fc09000<br>calling function: reboot_code(page_list=3D0xfc08002,=
- reboot_code_buffer_phys=3D0xfc09000, image<br>-&gt;start=3D0x0,image-&gt;s=
-egment[1].mem=3D0x800000)<br>
-=A0<br>Unable to handle kernel paging request for instruction fetch<br>Faul=
-ting instruction address: 0x0fc09028<br>=A0<br>=A0<br>=A0</p>
-<p>Please help. thank you very much.<br>=A0<br>=A0<br>regards,</p>
-
---00163630efc9406d86046cf17152--
-
-
---===============0029609772==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks,
+Robin
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0029609772==--
-
