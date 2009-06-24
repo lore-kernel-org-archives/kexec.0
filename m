@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([203.10.76.25])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1MJGL7-0007Pn-R6
-	for kexec@lists.infradead.org; Wed, 24 Jun 2009 00:27:57 +0000
-Subject: Re: [PATCH] Do not inline putprops function
-From: Michael Ellerman <michael@ellerman.id.au>
-In-Reply-To: <20090623135604.GC1157@hmsreliant.think-freely.org>
-References: <20090617113456.GC31595@in.ibm.com>
-	<20090617114551.GA5672@verge.net.au>
-	<20090617115917.GD31595@in.ibm.com>
-	<1245241595.4269.15.camel@concordia>
-	<20090617130413.GB2774@localhost.localdomain>
-	<20090617133435.GB4059@in.ibm.com>
-	<20090617140514.GB31383@hmsreliant.think-freely.org>
-	<20090617142652.GC4059@in.ibm.com>
-	<20090617144007.GC31383@hmsreliant.think-freely.org>
-	<20090623125534.GA8664@in.ibm.com>
-	<20090623135604.GC1157@hmsreliant.think-freely.org>
-Date: Wed, 24 Jun 2009 10:27:43 +1000
-Message-Id: <1245803263.9237.3.camel@concordia>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MJQQm-0007CL-Na
+	for kexec@lists.infradead.org; Wed, 24 Jun 2009 11:14:27 +0000
+Date: Wed, 24 Jun 2009 06:14:15 -0500
+From: Robin Holt <holt@sgi.com>
+Subject: Re: [PATCH 1/7] ia64, kdump: Mask MCA/INIT on freezing cpus
+Message-ID: <20090624111415.GA6878@sgi.com>
+References: <4A39E247.4030908@jp.fujitsu.com> <4A39E2CF.80901@jp.fujitsu.com>
+	<20090622134557.GC7084@sgi.com> <4A4022EA.1020506@jp.fujitsu.com>
+	<20090623055536.GE6865@sgi.com> <4A408D32.9010500@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4A408D32.9010500@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,91 +21,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0632928810=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: linuxppc-dev@ozlabs.org, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org, miltonm@bga.com, Simon Horman <horms@verge.net.au>
+To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Cc: linux-ia64@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Robin Holt <holt@sgi.com>, Vivek Goyal <vgoyal@redhat.com>
 
+On Tue, Jun 23, 2009 at 05:07:14PM +0900, Hidetoshi Seto wrote:
+> Robin Holt wrote:
+> > On Tue, Jun 23, 2009 at 09:33:46AM +0900, Hidetoshi Seto wrote:
+> >> Robin Holt wrote:
+> > ...
+> >> Do you mean that the 2nd kernel should be able to handle MCA/INIT from its
+> >> boot up?  I guess the word PROM is nearly equal to PAL/SAL firmware, if so
+> >> then I don't think there are good generic interface/procedure could be
+> >> useful here.  Do you have any concrete idea?
+> > 
+> > No concrete ideas.  Just a really uneasy feeling whenever the INIT
+> > is disabled.
+> 
+> Don't worry, don't be afraid.
+> Again, my patches don't disable INIT until kdump is invoked.
+> (And if kdump is invoked via INIT, it have already masked at the begging
+>  of INIT handlers.)
 
---===============0632928810==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-ggNhO6RKgPj9FrJxG8iU"
+The concern is that any time we prevent SAL from receiving control during
+an MCA/INIT, we reduce the maintainability of the machine.  Having them
+masked at any time results in the NMI/INIT not recording the PROM record
+which we use to diagnose where the hang is.
 
+In other patches, you implemented a do-nothing handler.  Could that
+be used?
 
---=-ggNhO6RKgPj9FrJxG8iU
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Alternatively, when the machine is first booted, the handler is defined
+by SAL as a SAL routine.  Could you record that during kernel boot and
+then just set the handler back to the SAL provided one prior to starting
+the kexec kernel boot?  At that point, the machine is more like the
+first boot.  Now that I think about this, this alternative seems fairly
+attractive.
 
-On Tue, 2009-06-23 at 09:56 -0400, Neil Horman wrote:
-> On Tue, Jun 23, 2009 at 06:25:34PM +0530, M. Mohan Kumar wrote:
-> > On Wed, Jun 17, 2009 at 10:40:07AM -0400, Neil Horman wrote:
-> > =20
-> > > > send objdump of fs2dt.o with and without this assignment.
-> > > >=20
-> > > That would be a fine thing to do, and I'd be happy to compare them.  =
-My though
-> > > regarding the comparison of the device tree on a good and bad run was=
- meant to
-> > > expidite what change in the assembly we'd be looking for.  If its the=
- kdump
-> > > kernel boot thats hanging, Its likely hanging on something in the dev=
-ice tree,
-> > > as thats whats being manipulated by this code.  So I figure that unde=
-rstanding
-> > > whats changed there will point us toward what change in the assembly =
-might be
-> > > responsible for the hang.  The assmebly's going to be signficantly di=
-fferent
-> > > (lots of optimization might be lost from no longer inlining a functio=
-n), so
-> > > anything that helps us narrow down whats changed will be good
-> >=20
-> > I am attaching the objdumps of fs2dt with and without dt_len.
-> >=20
-> Well it definately looks like removing that variable had some code change=
-s.
-> It'll take some time to match it up to source, but Most interesting I thi=
-nk is
-> the variance in putprops around address f34.  Looks like its doing some s=
-tring
-> maniuplation in a reversed order, using a huge offset.  Might be worthwhi=
-le to
-> check to see if theres any string overruns in this code.
-
-Yeah I still suspect it's just a bug in the code that's being exposed
-now.
-
-Mohan, can you try running it under valgrind?
-
-cheers
-
---=-ggNhO6RKgPj9FrJxG8iU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkpBcv8ACgkQdSjSd0sB4dIrYgCeOc0NKJAe0vj8YBryzOSF47S1
-6o0AoIwG689eO7S+Neae/5wgpE8f1Ydn
-=xAmA
------END PGP SIGNATURE-----
-
---=-ggNhO6RKgPj9FrJxG8iU--
-
-
-
---===============0632928810==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks,
+Robin
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0632928810==--
-
-
