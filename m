@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.247])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MJ8Rm-0003VR-Rw
-	for kexec@lists.infradead.org; Tue, 23 Jun 2009 16:02:17 +0000
-Received: by rv-out-0708.google.com with SMTP id k29so47373rvb.42
-	for <kexec@lists.infradead.org>; Tue, 23 Jun 2009 09:02:09 -0700 (PDT)
-MIME-Version: 1.0
-Date: Wed, 24 Jun 2009 00:02:09 +0800
-Message-ID: <e997b7420906230902k3084ca5fh1ff8be5c1941117a@mail.gmail.com>
-Subject: kexec--virtual address or physical address?
-From: "wilbur.chan" <wilbur512@gmail.com>
+Received: from bilbo.ozlabs.org ([203.10.76.25])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MJGL7-0007Pn-R6
+	for kexec@lists.infradead.org; Wed, 24 Jun 2009 00:27:57 +0000
+Subject: Re: [PATCH] Do not inline putprops function
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <20090623135604.GC1157@hmsreliant.think-freely.org>
+References: <20090617113456.GC31595@in.ibm.com>
+	<20090617114551.GA5672@verge.net.au>
+	<20090617115917.GD31595@in.ibm.com>
+	<1245241595.4269.15.camel@concordia>
+	<20090617130413.GB2774@localhost.localdomain>
+	<20090617133435.GB4059@in.ibm.com>
+	<20090617140514.GB31383@hmsreliant.think-freely.org>
+	<20090617142652.GC4059@in.ibm.com>
+	<20090617144007.GC31383@hmsreliant.think-freely.org>
+	<20090623125534.GA8664@in.ibm.com>
+	<20090623135604.GC1157@hmsreliant.think-freely.org>
+Date: Wed, 24 Jun 2009 10:27:43 +1000
+Message-Id: <1245803263.9237.3.camel@concordia>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,33 +29,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0632928810=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Neil Horman <nhorman@redhat.com>
+Cc: linuxppc-dev@ozlabs.org, "M. Mohan Kumar" <mohan@in.ibm.com>, kexec@lists.infradead.org, miltonm@bga.com, Simon Horman <horms@verge.net.au>
 
-IEhlbGxvIGV2ZXJ5b25lo6EKCkkgZ290IHNvbWUgdHJvdWJsZSBpbiBwb3J0aW5nIGtleGVjdG9v
-bHMgdG8gcG93ZXJwYyA4NTQxICx3aXRoIGtlcm5lbCAyLjYuMjEuNwoKCkRldGFpbCAgOiBJbiBN
-YWNoaW5lX2tleGVjXzMyLmMgLAogZnVuY3Rpb24gImRlZmF1bHRfbWFjaGluZV9rZXhlYyIsCgp0
-aGUgc2Vjb25kIHBhcmFtZXRlciBvZiBmdW5jdGlvbiByZWJvb3RfY29kZSwgIHdoaWNoIGlzCnJl
-Ym9vdF9jb2RlX2J1ZmZlcl9waHlzICwKCgpjYXVzaW5nIGFuIGluc3RydWN0aW9uIGVycm9yIGlu
-IGFyY2gvcG93ZXJwYy9taXNjXzMyLnMgd2hlbiBleGVjdXRpbmcKaW5zdHJ1Y3Rpb24gInJmaSIK
-CihMaW5lIDg5NCkKCkFmdGVyIEkgY2hhbmdlZCByZWJvb3RfY29kZV9idWZmZXJfcGh5cyBpbnRv
-IHJlYm9vdF9jb2RlX2J1ZmZlcihyYXRoZXIKdGhhbiBhIHBoeXNpYWwgYWRkcmVzcykgLCB0aGUg
-Y29kZSBnbyBvbiAsYnV0IGNhdXNlZAoKYW5vdGhlciAgZXJyb3Igb2YgICIga2VybmVsIHN0YWNr
-IG92ZXJmbG93Ii4KCkkgZG9uJ3QgaG93IHRvIHNvbHZlIHRoaXMgcHJvYmxlbSxhbnkgc3VnZ2Vz
-dGlvbiB3b3VsZCBiZSBncmF0ZWZ1bC4KCgpoZXJlIGFyZSBteSBzdGVwczoKCiMga2V4ZWMgLWwg
-dUltYWdlIC0tZGV2dHJlZT15b3VyLmZkdC5kdGIgLS1kZXZ0cmVlX2FkZHI9MHg4MDAwMDAKICAg
-SW1hZ2UgTmFtZTogICBMaW51eC0yLjYuMjEuNwogICBJbWFnZSBUeXBlOiAgIFBvd2VyUEMgTGlu
-dXggS2VybmVsIEltYWdlIChnemlwIGNvbXByZXNzZWQpCiAgIERhdGEgU2l6ZTogICAgMTE5MDI2
-NSBCeXRlcyA9ICAgIExvYWQgQWRkcmVzczogMDAwMDAwMDAKICAgRW50cnkgUG9pbnQ6ICAwMDAw
-MDAwMAoKIyBrZXhlYyAtZQpTdGFydGluZyBuZXcga2VybmVsCnZpcnR1YWwgYWRkcmVzczogY2Zj
-MDkwMDAKcGh5c2ljYWwgYWRkcmVzczogZmMwOTAwMAoKY2FsbGluZyBmdW5jdGlvbjogcmVib290
-X2NvZGUocGFnZV9saXN0PTB4ZmMwODAwMiwKcmVib290X2NvZGVfYnVmZmVyX3BoeXM9MHhmYzA5
-MDAwLCBpbWFnZS0+c3RhcnQ9MHgwLGltYWdlLT5zZWdtZW50CgpbMV0ubWVtPTB4ODAwMDAwKQoK
-VW5hYmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgZm9yIGluc3RydWN0aW9uIGZl
-dGNoCkZhdWx0aW5nIGluc3RydWN0aW9uIGFkZHJlc3M6IDB4MGZjMDkwMjgKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+
+--===============0632928810==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-ggNhO6RKgPj9FrJxG8iU"
+
+
+--=-ggNhO6RKgPj9FrJxG8iU
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2009-06-23 at 09:56 -0400, Neil Horman wrote:
+> On Tue, Jun 23, 2009 at 06:25:34PM +0530, M. Mohan Kumar wrote:
+> > On Wed, Jun 17, 2009 at 10:40:07AM -0400, Neil Horman wrote:
+> > =20
+> > > > send objdump of fs2dt.o with and without this assignment.
+> > > >=20
+> > > That would be a fine thing to do, and I'd be happy to compare them.  =
+My though
+> > > regarding the comparison of the device tree on a good and bad run was=
+ meant to
+> > > expidite what change in the assembly we'd be looking for.  If its the=
+ kdump
+> > > kernel boot thats hanging, Its likely hanging on something in the dev=
+ice tree,
+> > > as thats whats being manipulated by this code.  So I figure that unde=
+rstanding
+> > > whats changed there will point us toward what change in the assembly =
+might be
+> > > responsible for the hang.  The assmebly's going to be signficantly di=
+fferent
+> > > (lots of optimization might be lost from no longer inlining a functio=
+n), so
+> > > anything that helps us narrow down whats changed will be good
+> >=20
+> > I am attaching the objdumps of fs2dt with and without dt_len.
+> >=20
+> Well it definately looks like removing that variable had some code change=
+s.
+> It'll take some time to match it up to source, but Most interesting I thi=
+nk is
+> the variance in putprops around address f34.  Looks like its doing some s=
+tring
+> maniuplation in a reversed order, using a huge offset.  Might be worthwhi=
+le to
+> check to see if theres any string overruns in this code.
+
+Yeah I still suspect it's just a bug in the code that's being exposed
+now.
+
+Mohan, can you try running it under valgrind?
+
+cheers
+
+--=-ggNhO6RKgPj9FrJxG8iU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkpBcv8ACgkQdSjSd0sB4dIrYgCeOc0NKJAe0vj8YBryzOSF47S1
+6o0AoIwG689eO7S+Neae/5wgpE8f1Ydn
+=xAmA
+-----END PGP SIGNATURE-----
+
+--=-ggNhO6RKgPj9FrJxG8iU--
+
+
+
+--===============0632928810==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0632928810==--
+
+
