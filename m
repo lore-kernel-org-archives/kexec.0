@@ -1,29 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MOnlx-0003BA-Ey
-	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:10:32 +0000
-Received: from m6.gw.fujitsu.co.jp ([10.0.50.76])
-	by fgwmail5.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n697AMrh005127 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:10:22 +0900
-Received: from smail (m6 [127.0.0.1])
-	by outgoing.m6.gw.fujitsu.co.jp (Postfix) with ESMTP id 63B8245DE53
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:10:21 +0900 (JST)
-Received: from s6.gw.fujitsu.co.jp (s6.gw.fujitsu.co.jp [10.0.50.96])
-	by m6.gw.fujitsu.co.jp (Postfix) with ESMTP id EE14C45DE55
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:10:20 +0900 (JST)
-Received: from s6.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s6.gw.fujitsu.co.jp (Postfix) with ESMTP id ADA3AE08005
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:10:20 +0900 (JST)
+	id 1MOnnU-0006SL-Qz
+	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:12:08 +0000
+Received: from m5.gw.fujitsu.co.jp ([10.0.50.75])
+	by fgwmail6.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
+	n697Bw8r022306 for <kexec@lists.infradead.org> (envelope-from
+	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:11:58 +0900
+Received: from smail (m5 [127.0.0.1])
+	by outgoing.m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 4807A2AEBCA
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:58 +0900 (JST)
+Received: from s5.gw.fujitsu.co.jp (s5.gw.fujitsu.co.jp [10.0.50.95])
+	by m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 2177445DE52
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:58 +0900 (JST)
+Received: from s5.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id D91AC1DB803C
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:57 +0900 (JST)
 Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.249.87.103])
-	by s6.gw.fujitsu.co.jp (Postfix) with ESMTP id 0C3141DB8040
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:10:20 +0900 (JST)
-Message-ID: <4A5597CD.4060201@jp.fujitsu.com>
-Date: Thu, 09 Jul 2009 16:10:05 +0900
+	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id 84C5A1DB8043
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:57 +0900 (JST)
+Message-ID: <4A559832.3080000@jp.fujitsu.com>
+Date: Thu, 09 Jul 2009 16:11:46 +0900
 From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 1/7] ia64, kdump: Mask MCA/INIT on frozen cpus
+Subject: [PATCH v2 2/7] ia64,
+	kexec: Make INIT safe while transition to kdump/kexec kernel
 References: <4A39E247.4030908@jp.fujitsu.com> <4A5595F3.2050609@jp.fujitsu.com>
 In-Reply-To: <4A5595F3.2050609@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -44,175 +45,147 @@ Cc: Haren Myneni <hbabu@us.ibm.com>, "Luck, Tony" <tony.luck@intel.com>, kexec@l
 
 Summary:
 
-  INIT asserted on kdump kernel invokes INIT handler not only on a
-  cpu that running on the kdump kernel, but also BSP of the panicked
-  kernel, because the (badly) frozen BSP can be thawed by INIT.
+  Asserting INIT on the beginning of kdump/kexec kernel will result
+  in unexpected behavior because INIT handler for previous kernel is
+  invoked on new kernel.
 
 Description:
 
-  The kdump_cpu_freeze() is called on cpus except one that initiates
-  panic and/or kdump, to stop/offline the cpu (on ia64, it means we
-  pass control of cpus to SAL, or put them in spinloop).  Note that
-  CPU0(BSP) always go to spinloop, so if panic was happened on an AP,
-  there are at least 2cpus (= the AP and BSP) which not back to SAL.
-
-  On the spinning cpus, interrupts are disabled (rsm psr.i), but INIT
-  is still interruptible because psr.mc for mask them is not set unless
-  kdump_cpu_freeze() is not called from MCA/INIT context.
-
-  Therefore, assume that a panic was happened on an AP, kdump was
-  invoked, new INIT handlers for kdump kernel was registered and then
-  an INIT is asserted.  From the viewpoint of SAL, there are 2 online
-  cpus, so INIT will be delivered to both of them.  It likely means
-  that not only the AP (= a cpu executing kdump) enters INIT handler
-  which is newly registered, but also BSP (= another cpu spinning in
-  panicked kernel) enters the same INIT handler.  Of course setting of
-  registers in BSP are still old (for panicked kernel), so what happen
-  with running handler with wrong setting will be extremely unexpected.
-  I believe this is not desirable behavior.
+  In panic situation, we can receive INIT while kernel transition,
+  i.e. from beginning of panic to bootstrap of kdump kernel.
+  Since we initialize registers on leave from current kernel, no
+  longer monarch/slave handlers of current kernel in virtual mode are
+  called safely.  (In fact system goes hang as far as I confirmed)
 
 How to Reproduce:
 
-  Start kdump on one of APs (e.g. cpu1)
-    # taskset 0x2 echo c > /proc/sysrq-trigger
-  Then assert INIT after kdump kernel is booted, after new INIT handler
-  for kdump kernel is registered.
+  Start kdump
+    # echo c > /proc/sysrq-trigger
+  Then assert INIT while kdump kernel is booting, before new INIT
+  handler for kdump kernel is registered.
 
-Expected results:
+Expected(Desirable) result:
 
-  An INIT handler is invoked only on the AP.
+  kdump kernel boots without any problem, crashdump retrieved
 
-Actual results:
+Actual result:
 
-  An INIT handler is invoked on the AP and BSP.
-
-Sample of results:
-
-  I got following console log by asserting INIT after prompt "root:/>".
-  It seems that two monarchs appeared by one INIT, and one panicked at
-  last.  And it also seems that the panicked one supposed there were
-  4 online cpus and no one did rendezvous:
-
-    :
-    [  0 %]dropping to initramfs shell
-    exiting this shell will reboot your system
-    root:/> Entered OS INIT handler. PSP=fff301a0 cpu=0 monarch=0
-    ia64_init_handler: Promoting cpu 0 to monarch.
-    Delaying for 5 seconds...
-    All OS INIT slaves have reached rendezvous
-    Processes interrupted by INIT - 0 (cpu 0 task 0xa000000100af0000)
-    :
-    <<snip>>
-    :
-    Entered OS INIT handler. PSP=fff301a0 cpu=0 monarch=1
-    Delaying for 5 seconds...
-    mlogbuf_finish: printing switched to urgent mode, MCA/INIT might be dodgy or fail.
-    OS INIT slave did not rendezvous on cpu 1 2 3
-    INIT swapper 0[0]: bugcheck! 0 [1]
-    :
-    <<snip>>
-    :
-    Kernel panic - not syncing: Attempted to kill the idle task!
+  INIT handler for previous kernel is invoked on kdump kernel
+  => panic, hang etc. (unexpected)
 
 Proposed fix:
 
-  To avoid this problem, this patch inserts ia64_set_psr_mc() to mask
-  INIT on cpus going to be frozen.  This masking have no effect if the
-  kdump_cpu_freeze() is called from INIT handler when kdump_on_init == 1,
-  because psr.mc is already turned on to 1 before entering OS_INIT.
-  I confirmed that weird log like above are disappeared after applying
-  this patch.
+  We can unregister these init handlers from SAL before jumping into
+  new kernel, however then the INIT will fallback to default behavior,
+  result in warmboot by SAL (according to the SAL specification) and
+  we cannot retrieve the crashdump.
+
+  Therefore this patch introduces a NOP init handler and register it
+  to SAL before leave from current kernel, to start kdump safely by
+  preventing INITs from entering virtual mode and resulting in warmboot.
+
+  On the other hand, in case of kexec that not for kdump, it also
+  has same problem with INIT while kernel transition.
+  This patch handles this case differently, because for kexec
+  unregistering handlers will be preferred than registering NOP
+  handler, since the situation "no handlers registered" is usual
+  state for kernel's entry.
 
 Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Haren Myneni <hbabu@us.ibm.com>
 Cc: kexec@lists.infradead.org
 ---
- arch/ia64/include/asm/mca.h |    1 +
- arch/ia64/kernel/crash.c    |    4 ++++
- arch/ia64/kernel/head.S     |    2 +-
- arch/ia64/kernel/mca_asm.S  |   27 +++++++++++++++++++++++++++
- 4 files changed, 33 insertions(+), 1 deletions(-)
+ arch/ia64/include/asm/mca.h      |    1 +
+ arch/ia64/kernel/machine_kexec.c |   12 ++++++++++++
+ arch/ia64/kernel/mca_asm.S       |   20 ++++++++++++++++++++
+ 3 files changed, 33 insertions(+), 0 deletions(-)
 
 diff --git a/arch/ia64/include/asm/mca.h b/arch/ia64/include/asm/mca.h
-index 44a0b53..cb0952f 100644
+index cb0952f..c171cdf 100644
 --- a/arch/ia64/include/asm/mca.h
 +++ b/arch/ia64/include/asm/mca.h
-@@ -151,6 +151,7 @@ extern void ia64_mca_cmc_vector_setup(void);
- extern int  ia64_reg_MCA_extension(int (*fn)(void *, struct ia64_sal_os_state *));
- extern void ia64_unreg_MCA_extension(void);
- extern unsigned long ia64_get_rnat(unsigned long *);
-+extern void ia64_set_psr_mc(void);
- extern void ia64_mca_printk(const char * fmt, ...)
- 	 __attribute__ ((format (printf, 1, 2)));
+@@ -145,6 +145,7 @@ extern void ia64_mca_ucmc_handler(struct pt_regs *, struct ia64_sal_os_state *);
+ extern void ia64_init_handler(struct pt_regs *,
+ 			      struct switch_stack *,
+ 			      struct ia64_sal_os_state *);
++extern void ia64_os_init_on_kdump(void);
+ extern void ia64_monarch_init_handler(void);
+ extern void ia64_slave_init_handler(void);
+ extern void ia64_mca_cmc_vector_setup(void);
+diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
+index 0823de1..571d663 100644
+--- a/arch/ia64/kernel/machine_kexec.c
++++ b/arch/ia64/kernel/machine_kexec.c
+@@ -24,6 +24,8 @@
+ #include <asm/delay.h>
+ #include <asm/meminit.h>
+ #include <asm/processor.h>
++#include <asm/sal.h>
++#include <asm/mca.h>
  
-diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
-index f065093..3f3a579 100644
---- a/arch/ia64/kernel/crash.c
-+++ b/arch/ia64/kernel/crash.c
-@@ -129,10 +129,14 @@ void
- kdump_cpu_freeze(struct unw_frame_info *info, void *arg)
- {
- 	int cpuid;
+ typedef NORET_TYPE void (*relocate_new_kernel_t)(
+ 					unsigned long indirection_page,
+@@ -85,11 +87,21 @@ static void ia64_machine_kexec(struct unw_frame_info *info, void *arg)
+ 	void *pal_addr = efi_get_pal_addr();
+ 	unsigned long code_addr = (unsigned long)page_address(image->control_code_page);
+ 	int ii;
++	u64 fp, gp;
++	ia64_fptr_t *init_handler = (ia64_fptr_t *)ia64_os_init_on_kdump;
+ 
+ 	BUG_ON(!image);
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+ 		crash_save_this_cpu();
+ 		current->thread.ksp = (__u64)info->sw - 16;
 +
- 	local_irq_disable();
- 	cpuid = smp_processor_id();
- 	crash_save_this_cpu();
- 	current->thread.ksp = (__u64)info->sw - 16;
-+
-+	ia64_set_psr_mc();	/* mask MCA/INIT and stop reentrance */
-+
- 	atomic_inc(&kdump_cpu_frozen);
- 	kdump_status[cpuid] = 1;
- 	mb();
-diff --git a/arch/ia64/kernel/head.S b/arch/ia64/kernel/head.S
-index 23f846d..e1f97ac 100644
---- a/arch/ia64/kernel/head.S
-+++ b/arch/ia64/kernel/head.S
-@@ -1242,7 +1242,7 @@ GLOBAL_ENTRY(ia64_jump_to_sal)
- 	movl r16=SAL_PSR_BITS_TO_SET;;
- 	mov cr.ipsr=r16
- 	mov cr.ifs=r0;;
--	rfi;;
-+	rfi;;			// note: this unmask MCA/INIT (psr.mc)
- 1:
- 	/*
- 	 * Invalidate all TLB data/inst
++		/* Register noop init handler */
++		fp = ia64_tpa(init_handler->fp);
++		gp = ia64_tpa(ia64_getreg(_IA64_REG_GP));
++		ia64_sal_set_vectors(SAL_VECTOR_OS_INIT, fp, gp, 0, fp, gp, 0);
++	} else {
++		/* Unregister init handlers of current kernel */
++		ia64_sal_set_vectors(SAL_VECTOR_OS_INIT, 0, 0, 0, 0, 0, 0);
+ 	}
+ 
+ 	/* Interrupts aren't acceptable while we reboot */
 diff --git a/arch/ia64/kernel/mca_asm.S b/arch/ia64/kernel/mca_asm.S
-index a06d465..8d2eabe 100644
+index 8d2eabe..7461d25 100644
 --- a/arch/ia64/kernel/mca_asm.S
 +++ b/arch/ia64/kernel/mca_asm.S
-@@ -1073,3 +1073,30 @@ GLOBAL_ENTRY(ia64_get_rnat)
- 	mov ar.rsc=3
- 	br.ret.sptk.many rp
- END(ia64_get_rnat)
-+
-+
-+// void ia64_set_psr_mc(void)
+@@ -40,6 +40,7 @@
+ 
+ 	.global ia64_do_tlb_purge
+ 	.global ia64_os_mca_dispatch
++	.global ia64_os_init_on_kdump
+ 	.global ia64_os_init_dispatch_monarch
+ 	.global ia64_os_init_dispatch_slave
+ 
+@@ -299,6 +300,25 @@ END(ia64_os_mca_virtual_begin)
+ //StartMain////////////////////////////////////////////////////////////////////
+ 
+ //
++// NOP init handler for kdump.  In panic situation, we may receive INIT
++// while kernel transition.  Since we initialize registers on leave from
++// current kernel, no longer monarch/slave handlers of current kernel in
++// virtual mode are called safely.
++// We can unregister these init handlers from SAL, however then the INIT
++// will result in warmboot by SAL and we cannot retrieve the crashdump.
++// Therefore register this NOP function to SAL, to prevent entering virtual
++// mode and resulting warmboot by SAL.
 +//
-+// Set psr.mc bit to mask MCA/INIT.
-+GLOBAL_ENTRY(ia64_set_psr_mc)
-+	rsm psr.i | psr.ic		// disable interrupts
++ia64_os_init_on_kdump:
++	mov		r8=r0		// IA64_INIT_RESUME
++	mov             r9=r10		// SAL_GP
++	mov		r22=r17		// *minstate
 +	;;
-+	srlz.d
-+	;;
-+	mov r14 = psr			// get psr{36:35,31:0}
-+	movl r15 = 1f
-+	;;
-+	dep r14 = -1, r14, PSR_MC, 1	// set psr.mc
-+	;;
-+	dep r14 = -1, r14, PSR_IC, 1	// set psr.ic
-+	;;
-+	dep r14 = -1, r14, PSR_BN, 1	// keep bank1 in use
-+	;;
-+	mov cr.ipsr = r14
-+	mov cr.ifs = r0
-+	mov cr.iip = r15
-+	;;
-+	rfi
-+1:
-+	br.ret.sptk.many rp
-+END(ia64_set_psr_mc)
++	mov		r10=r0		// return to same context
++	mov		b0=r12		// SAL_CHECK return address
++	br		b0
++
++//
+ // SAL to OS entry point for INIT on all processors.  This has been defined for
+ // registration purposes with SAL as a part of ia64_mca_init.  Monarch and
+ // slave INIT have identical processing, except for the value of the
 -- 
 1.6.0
 
