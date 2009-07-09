@@ -1,29 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail7.fujitsu.co.jp ([192.51.44.37])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MOnq4-0006nq-GI
-	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:14:47 +0000
+	id 1MOnrW-0003WD-AW
+	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:16:28 +0000
 Received: from m1.gw.fujitsu.co.jp ([10.0.50.71])
 	by fgwmail7.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n697Ediu016600 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:14:39 +0900
+	n697G8QT017258 for <kexec@lists.infradead.org> (envelope-from
+	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:16:09 +0900
 Received: from smail (m1 [127.0.0.1])
-	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E95E045DE50
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:14:38 +0900 (JST)
+	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9DB2F45DE57
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:16:08 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
-	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id BE3EF45DE4F
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:14:38 +0900 (JST)
+	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 74C4D45DE50
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:16:08 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A41D11DB803A
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:14:38 +0900 (JST)
-Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.249.87.105])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4AB04E08001
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:14:38 +0900 (JST)
-Message-ID: <4A5598D4.3060001@jp.fujitsu.com>
-Date: Thu, 09 Jul 2009 16:14:28 +0900
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5A491E08002
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:16:08 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.249.87.104])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id E52061DB803E
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:16:07 +0900 (JST)
+Message-ID: <4A559929.6040600@jp.fujitsu.com>
+Date: Thu, 09 Jul 2009 16:15:53 +0900
 From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 4/7] ia64, kdump: Don't return APs to SAL from kdump
+Subject: [PATCH v2 5/7] ia64, kdump: Mask INIT first in panic-kdump path
 References: <4A39E247.4030908@jp.fujitsu.com> <4A5595F3.2050609@jp.fujitsu.com>
 In-Reply-To: <4A5595F3.2050609@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -44,89 +44,166 @@ Cc: Haren Myneni <hbabu@us.ibm.com>, "Luck, Tony" <tony.luck@intel.com>, kexec@l
 
 Summary:
 
-  Asserting INIT on cpu going to be offline will result in unexpected
-  behavior.  It will be a real problem in kdump cases where INIT might
-  be asserted to unstable APs going to be offline by returning to SAL.
+  Asserting INIT might block kdump if the system is already going to
+  start kdump via panic.
 
 Description:
 
-  Since psr.mc is cleared when bits in psr are set to SAL_PSR_BITS_TO_SET
-  in ia64_jump_to_sal(), there is a small window (~few msecs) that the
-  cpu can receive INIT even if the cpu enter there via INIT handler.
-  In this window we do restore of registers for SAL, so INIT asserted
-  here will not work properly.
+  INIT can interrupt anywhere in panic path, so it can interrupt in
+  middle of kdump kicked by panic.  Therefore there is a race if kdump
+  is kicked concurrently, via Panic and via INIT.
 
-  It is hard to remove this window by masking INIT (i.e. setting psr.mc)
-  because we have to unmask it later in OS, because we have to use branch
-  instruction (br.ret, not rfi) to return SAL, due to OS_BOOT_RENDEZ to
-  SAL return convention.
+  INIT could fail to invoke kdump if the system is already going to
+  start kdump via panic.  It could not restart kdump from INIT handler
+  if some of cpus are already playing dead with INIT masked.  It also
+  means that INIT could block kdump's progress if no monarch is entered
+  in the INIT rendezvous.
 
-  I suppose this window will not be a real problem on cpu offline if we
-  can educate people not to push INIT button during hotplug operation.
-  However, only exception is a race in kdump and INIT.  Now kdump returns
-  APs to SAL before processing dump, but the kernel might receive INIT at
-  that point in time.  Such INIT might be asserted by kdump itself if an
-  AP doesn't react IPI soon and kdump decided to use INIT to stop the AP.
-  Or it might be asserted by operator or an external agent to start dump
-  on the unstable system.
-
-  Such panic+INIT or INIT+INIT cases should be rare, but it will be happy
-  if we can retrieve crashdump even in such cases.
+  Panic+INIT is a rare, but possible situation since it can be assumed
+  that the kernel or an internal agent decides to panic the unstable
+  system while another external agent decides to send an INIT to the
+  system at same time.
 
 How to reproduce:
 
-  panic+INIT or INIT+INIT, with kdump configured
+  Assert INIT just after panic, before all other cpus have frozen
 
 Expected results:
 
-  crashdump is retrieved anyway
+  continue kdump invoked by panic, or restart kdump from INIT
 
 Actual results:
 
-  panic, hang etc. (unexpected)
+  might be hang, crashdump not retrieved
 
-Proposed fix
+Proposed Fix:
 
-  To avoid the window on the way to SAL, this patch stops returning APs
-  to SAL in case of kdump.  In other words, this patch makes APs spin
-  in OS instead of spinning in SAL.
+  This patch masks INIT first in panic path to take the initiative on
+  kdump, and reuse atomic value kdump_in_progress to make sure there is
+  only one initiator of kdump.  All INITs asserted later should be used
+  only for freezing all other cpus.
 
-  (* Note: What impact would be there?  If a cpu is spinning in SAL,
-   the cpu is in BOOT_RENDEZ loop, as same as offlined cpu.
-   In theory if an INIT is asserted there, cpus in the BOOT_RENDEZ loop
-   should not invoke OS_INIT on it.  So in either way, no matter where
-   the cpu is spinning actually in, once cpu starts spin and act as
-   "frozen," INIT on the cpu have no effects.
-   From another point of view, all debug information on the cpu should
-   have stored to memory before the cpu start to be frozen.  So no more
-   action on the cpu is required.)
+  This mask will be removed soon by rfi in relocate_kernel.S, before jump
+  into kdump kernel, after all cpus are frozen and no-op INIT handler is
+  registered.  So if INIT was in the interval while it is masked, it will
+  pend on the system and will received just after the rfi, and handled by
+  the no-op handler.
 
-  I confirmed that the kdump sometime hangs by concurrent INITs (another
-  INIT after an INIT), and it doesn't hang after applying this patch.
+  If there was a MCA event while psr.mc is 1, in theory the event will
+  pend on the system and will received just after the rfi same as above.
+  MCA handler is unregistered here at the time, so received MCA will not
+  reach to OS_MCA and will result in warmboot by SAL.
+
+  Note that codes in this masked interval are relatively simpler than
+  that in MCA/INIT handler which also executed with the mask.  So it can
+  be said that probability of error in this interval is supposed not so
+  higher than that in MCA/INIT handler.
 
 Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Haren Myneni <hbabu@us.ibm.com>
 Cc: kexec@lists.infradead.org
 ---
- arch/ia64/kernel/crash.c |    4 ----
- 1 files changed, 0 insertions(+), 4 deletions(-)
+ arch/ia64/kernel/crash.c           |   47 +++++++++++++++++++++++++++++++----
+ arch/ia64/kernel/relocate_kernel.S |    2 +-
+ 2 files changed, 42 insertions(+), 7 deletions(-)
 
 diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
-index 3f3a579..b2a8b3d 100644
+index b2a8b3d..9c851b7 100644
 --- a/arch/ia64/kernel/crash.c
 +++ b/arch/ia64/kernel/crash.c
-@@ -140,10 +140,6 @@ kdump_cpu_freeze(struct unw_frame_info *info, void *arg)
- 	atomic_inc(&kdump_cpu_frozen);
- 	kdump_status[cpuid] = 1;
- 	mb();
--#ifdef CONFIG_HOTPLUG_CPU
--	if (cpuid != 0)
--		ia64_jump_to_sal(&sal_boot_rendez_state[cpuid]);
--#endif
- 	for (;;)
- 		cpu_relax();
- }
+@@ -23,6 +23,7 @@
+ int kdump_status[NR_CPUS];
+ static atomic_t kdump_cpu_frozen;
+ atomic_t kdump_in_progress;
++static int kdump_freeze_monarch;
+ static int kdump_on_init = 1;
+ static int kdump_on_fatal_mca = 1;
+ 
+@@ -108,6 +109,33 @@ machine_crash_shutdown(struct pt_regs *pt)
+ 	 */
+ 	kexec_disable_iosapic();
+ #ifdef CONFIG_SMP
++	/*
++	 * If kdump_on_init is set and an INIT is asserted here, kdump will
++	 * be started again via INIT monarch.
++	 */
++	local_irq_disable();
++	ia64_set_psr_mc();	/* mask MCA/INIT */
++	if (atomic_inc_return(&kdump_in_progress) != 1)
++		unw_init_running(kdump_cpu_freeze, NULL);
++
++	/*
++	 * Now this cpu is ready for kdump.
++	 * Stop all others by IPI or INIT.  They could receive INIT from
++	 * outside and might be INIT monarch, but only thing they have to
++	 * do is falling into kdump_cpu_freeze().
++	 *
++	 * If an INIT is asserted here:
++	 * - All receivers might be slaves, since some of cpus could already
++	 *   be frozen and INIT might be masked on monarch.  In this case,
++	 *   all slaves will park in while (monarch_cpu == -1) loop before
++	 *   DIE_INIT_SLAVE_ENTER that for waiting monarch enters.
++	 *	=> TBD: freeze all slaves
++	 * - One might be a monarch, but INIT rendezvous will fail since
++	 *   at least this cpu already have INIT masked so it never join
++	 *   to the rendezvous.  In this case, all slaves and monarch will
++	 *   be frozen after timeout of the INIT rendezvous.
++	 *	=> TBD: freeze them without waiting timeout
++	 */
+ 	kdump_smp_send_stop();
+ 	/* not all cpu response to IPI, send INIT to freeze them */
+ 	if (kdump_wait_cpu_freeze() && kdump_on_init) 	{
+@@ -177,13 +205,18 @@ kdump_init_notifier(struct notifier_block *self, unsigned long val, void *data)
+ 	switch (val) {
+ 	case DIE_INIT_MONARCH_PROCESS:
+ 		if (kdump_on_init) {
+-			atomic_set(&kdump_in_progress, 1);
++			if (atomic_inc_return(&kdump_in_progress) != 1)
++				kdump_freeze_monarch = 1;
+ 			*(nd->monarch_cpu) = -1;
+ 		}
+ 		break;
+ 	case DIE_INIT_MONARCH_LEAVE:
+-		if (kdump_on_init)
+-			machine_kdump_on_init();
++		if (kdump_on_init) {
++			if (kdump_freeze_monarch)
++				unw_init_running(kdump_cpu_freeze, NULL);
++			else
++				machine_kdump_on_init();
++		}
+ 		break;
+ 	case DIE_INIT_SLAVE_LEAVE:
+ 		if (atomic_read(&kdump_in_progress))
+@@ -196,9 +229,11 @@ kdump_init_notifier(struct notifier_block *self, unsigned long val, void *data)
+ 	case DIE_MCA_MONARCH_LEAVE:
+ 		/* *(nd->data) indicate if MCA is recoverable */
+ 		if (kdump_on_fatal_mca && !(*(nd->data))) {
+-			atomic_set(&kdump_in_progress, 1);
+-			*(nd->monarch_cpu) = -1;
+-			machine_kdump_on_init();
++			if (atomic_inc_return(&kdump_in_progress) == 1) {
++				*(nd->monarch_cpu) = -1;
++				machine_kdump_on_init();
++			}
++			/* We got fatal MCA while kdump!? No way!! */
+ 		}
+ 		break;
+ 	}
+diff --git a/arch/ia64/kernel/relocate_kernel.S b/arch/ia64/kernel/relocate_kernel.S
+index 903babd..32f6fc1 100644
+--- a/arch/ia64/kernel/relocate_kernel.S
++++ b/arch/ia64/kernel/relocate_kernel.S
+@@ -52,7 +52,7 @@ GLOBAL_ENTRY(relocate_new_kernel)
+ 	srlz.i
+ 	;;
+ 	mov ar.rnat=r18
+-	rfi
++	rfi				// note: this unmask MCA/INIT (psr.mc)
+ 	;;
+ 1:
+ 	//physical mode code begin
 -- 
 1.6.0
 
