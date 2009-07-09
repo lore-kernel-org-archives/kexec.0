@@ -1,30 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MOnnU-0006SL-Qz
-	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:12:08 +0000
-Received: from m5.gw.fujitsu.co.jp ([10.0.50.75])
+	id 1MOnoT-0001ZP-Jy
+	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:13:08 +0000
+Received: from m6.gw.fujitsu.co.jp ([10.0.50.76])
 	by fgwmail6.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n697Bw8r022306 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:11:58 +0900
-Received: from smail (m5 [127.0.0.1])
-	by outgoing.m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 4807A2AEBCA
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:58 +0900 (JST)
-Received: from s5.gw.fujitsu.co.jp (s5.gw.fujitsu.co.jp [10.0.50.95])
-	by m5.gw.fujitsu.co.jp (Postfix) with ESMTP id 2177445DE52
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:58 +0900 (JST)
-Received: from s5.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id D91AC1DB803C
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:57 +0900 (JST)
-Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.249.87.103])
-	by s5.gw.fujitsu.co.jp (Postfix) with ESMTP id 84C5A1DB8043
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:11:57 +0900 (JST)
-Message-ID: <4A559832.3080000@jp.fujitsu.com>
-Date: Thu, 09 Jul 2009 16:11:46 +0900
+	n697D01Z022732 for <kexec@lists.infradead.org> (envelope-from
+	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:13:00 +0900
+Received: from smail (m6 [127.0.0.1])
+	by outgoing.m6.gw.fujitsu.co.jp (Postfix) with ESMTP id 0A04C45DE54
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:13:00 +0900 (JST)
+Received: from s6.gw.fujitsu.co.jp (s6.gw.fujitsu.co.jp [10.0.50.96])
+	by m6.gw.fujitsu.co.jp (Postfix) with ESMTP id DFD3F45DE4C
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:12:59 +0900 (JST)
+Received: from s6.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s6.gw.fujitsu.co.jp (Postfix) with ESMTP id C863C1DB8040
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:12:59 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.249.87.104])
+	by s6.gw.fujitsu.co.jp (Postfix) with ESMTP id 74AF5E08004
+	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:12:59 +0900 (JST)
+Message-ID: <4A559870.7090801@jp.fujitsu.com>
+Date: Thu, 09 Jul 2009 16:12:48 +0900
 From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v2 2/7] ia64,
-	kexec: Make INIT safe while transition to kdump/kexec kernel
+Subject: [PATCH v2 3/7] ia64, kexec: Unregister MCA handler before kexec
 References: <4A39E247.4030908@jp.fujitsu.com> <4A5595F3.2050609@jp.fujitsu.com>
 In-Reply-To: <4A5595F3.2050609@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -45,147 +44,61 @@ Cc: Haren Myneni <hbabu@us.ibm.com>, "Luck, Tony" <tony.luck@intel.com>, kexec@l
 
 Summary:
 
-  Asserting INIT on the beginning of kdump/kexec kernel will result
-  in unexpected behavior because INIT handler for previous kernel is
-  invoked on new kernel.
+  MCA on the beginning of kdump/kexec kernel will result in unexpected
+  behavior because MCA handler for previous kernel is invoked on the
+  kdump kernel.
 
 Description:
 
-  In panic situation, we can receive INIT while kernel transition,
-  i.e. from beginning of panic to bootstrap of kdump kernel.
-  Since we initialize registers on leave from current kernel, no
-  longer monarch/slave handlers of current kernel in virtual mode are
-  called safely.  (In fact system goes hang as far as I confirmed)
+  Once a cpu is passed to new kernel, all resources in previous kernel
+  should not be used from the cpu.  Even the resources for MCA handler
+  are no exception.  So we cannot handle MCAs and its machine check
+  errors during kernel transition, until new handler for new kernel is
+  registered with new resources ready for handling the MCA.
 
-How to Reproduce:
+How to reproduce:
 
-  Start kdump
-    # echo c > /proc/sysrq-trigger
-  Then assert INIT while kdump kernel is booting, before new INIT
-  handler for kdump kernel is registered.
+  Assert MCA while kdump kernel is booting, before new MCA handler for
+  kdump kernel is registered.
 
-Expected(Desirable) result:
+Expected(Desirable) results:
 
-  kdump kernel boots without any problem, crashdump retrieved
+  No recovery, cancel kdump and reboot the system.
 
-Actual result:
+Actual results:
 
-  INIT handler for previous kernel is invoked on kdump kernel
+  MCA handler for previous kernel is invoked on the kdump kernel.
   => panic, hang etc. (unexpected)
 
 Proposed fix:
 
-  We can unregister these init handlers from SAL before jumping into
-  new kernel, however then the INIT will fallback to default behavior,
-  result in warmboot by SAL (according to the SAL specification) and
-  we cannot retrieve the crashdump.
-
-  Therefore this patch introduces a NOP init handler and register it
-  to SAL before leave from current kernel, to start kdump safely by
-  preventing INITs from entering virtual mode and resulting in warmboot.
-
-  On the other hand, in case of kexec that not for kdump, it also
-  has same problem with INIT while kernel transition.
-  This patch handles this case differently, because for kexec
-  unregistering handlers will be preferred than registering NOP
-  handler, since the situation "no handlers registered" is usual
-  state for kernel's entry.
+  To avoid entering MCA handler from early stage of new kernel,
+  unregister the entry point from SAL before leave from current
+  kernel.  Then SAL will make all MCAs to warmboot safely, without
+  invoking OS_MCA.
 
 Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
 Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: Haren Myneni <hbabu@us.ibm.com>
 Cc: kexec@lists.infradead.org
 ---
- arch/ia64/include/asm/mca.h      |    1 +
- arch/ia64/kernel/machine_kexec.c |   12 ++++++++++++
- arch/ia64/kernel/mca_asm.S       |   20 ++++++++++++++++++++
- 3 files changed, 33 insertions(+), 0 deletions(-)
+ arch/ia64/kernel/machine_kexec.c |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/arch/ia64/include/asm/mca.h b/arch/ia64/include/asm/mca.h
-index cb0952f..c171cdf 100644
---- a/arch/ia64/include/asm/mca.h
-+++ b/arch/ia64/include/asm/mca.h
-@@ -145,6 +145,7 @@ extern void ia64_mca_ucmc_handler(struct pt_regs *, struct ia64_sal_os_state *);
- extern void ia64_init_handler(struct pt_regs *,
- 			      struct switch_stack *,
- 			      struct ia64_sal_os_state *);
-+extern void ia64_os_init_on_kdump(void);
- extern void ia64_monarch_init_handler(void);
- extern void ia64_slave_init_handler(void);
- extern void ia64_mca_cmc_vector_setup(void);
 diff --git a/arch/ia64/kernel/machine_kexec.c b/arch/ia64/kernel/machine_kexec.c
-index 0823de1..571d663 100644
+index 571d663..3d3aeef 100644
 --- a/arch/ia64/kernel/machine_kexec.c
 +++ b/arch/ia64/kernel/machine_kexec.c
-@@ -24,6 +24,8 @@
- #include <asm/delay.h>
- #include <asm/meminit.h>
- #include <asm/processor.h>
-+#include <asm/sal.h>
-+#include <asm/mca.h>
- 
- typedef NORET_TYPE void (*relocate_new_kernel_t)(
- 					unsigned long indirection_page,
-@@ -85,11 +87,21 @@ static void ia64_machine_kexec(struct unw_frame_info *info, void *arg)
- 	void *pal_addr = efi_get_pal_addr();
- 	unsigned long code_addr = (unsigned long)page_address(image->control_code_page);
- 	int ii;
-+	u64 fp, gp;
-+	ia64_fptr_t *init_handler = (ia64_fptr_t *)ia64_os_init_on_kdump;
- 
- 	BUG_ON(!image);
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		crash_save_this_cpu();
- 		current->thread.ksp = (__u64)info->sw - 16;
-+
-+		/* Register noop init handler */
-+		fp = ia64_tpa(init_handler->fp);
-+		gp = ia64_tpa(ia64_getreg(_IA64_REG_GP));
-+		ia64_sal_set_vectors(SAL_VECTOR_OS_INIT, fp, gp, 0, fp, gp, 0);
-+	} else {
-+		/* Unregister init handlers of current kernel */
-+		ia64_sal_set_vectors(SAL_VECTOR_OS_INIT, 0, 0, 0, 0, 0, 0);
+@@ -104,6 +104,9 @@ static void ia64_machine_kexec(struct unw_frame_info *info, void *arg)
+ 		ia64_sal_set_vectors(SAL_VECTOR_OS_INIT, 0, 0, 0, 0, 0, 0);
  	}
  
- 	/* Interrupts aren't acceptable while we reboot */
-diff --git a/arch/ia64/kernel/mca_asm.S b/arch/ia64/kernel/mca_asm.S
-index 8d2eabe..7461d25 100644
---- a/arch/ia64/kernel/mca_asm.S
-+++ b/arch/ia64/kernel/mca_asm.S
-@@ -40,6 +40,7 @@
- 
- 	.global ia64_do_tlb_purge
- 	.global ia64_os_mca_dispatch
-+	.global ia64_os_init_on_kdump
- 	.global ia64_os_init_dispatch_monarch
- 	.global ia64_os_init_dispatch_slave
- 
-@@ -299,6 +300,25 @@ END(ia64_os_mca_virtual_begin)
- //StartMain////////////////////////////////////////////////////////////////////
- 
- //
-+// NOP init handler for kdump.  In panic situation, we may receive INIT
-+// while kernel transition.  Since we initialize registers on leave from
-+// current kernel, no longer monarch/slave handlers of current kernel in
-+// virtual mode are called safely.
-+// We can unregister these init handlers from SAL, however then the INIT
-+// will result in warmboot by SAL and we cannot retrieve the crashdump.
-+// Therefore register this NOP function to SAL, to prevent entering virtual
-+// mode and resulting warmboot by SAL.
-+//
-+ia64_os_init_on_kdump:
-+	mov		r8=r0		// IA64_INIT_RESUME
-+	mov             r9=r10		// SAL_GP
-+	mov		r22=r17		// *minstate
-+	;;
-+	mov		r10=r0		// return to same context
-+	mov		b0=r12		// SAL_CHECK return address
-+	br		b0
++	/* Unregister mca handler - No more recovery on current kernel */
++	ia64_sal_set_vectors(SAL_VECTOR_OS_MCA, 0, 0, 0, 0, 0, 0);
 +
-+//
- // SAL to OS entry point for INIT on all processors.  This has been defined for
- // registration purposes with SAL as a part of ia64_mca_init.  Monarch and
- // slave INIT have identical processing, except for the value of the
+ 	/* Interrupts aren't acceptable while we reboot */
+ 	local_irq_disable();
+ 
 -- 
 1.6.0
 
