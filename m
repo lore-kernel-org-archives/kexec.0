@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail7.fujitsu.co.jp ([192.51.44.37])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MOnuH-0008WA-Tv
-	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:19:09 +0000
-Received: from m3.gw.fujitsu.co.jp ([10.0.50.73])
-	by fgwmail7.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n697J0n6018437 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Thu, 9 Jul 2009 16:19:00 +0900
-Received: from smail (m3 [127.0.0.1])
-	by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3205D45DE5A
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:19:00 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
-	by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id DA46F45DE53
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:18:59 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4D613E08015
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:18:59 +0900 (JST)
-Received: from m106.s.css.fujitsu.com (m106.s.css.fujitsu.com [10.249.87.106])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id AEF00E18007
-	for <kexec@lists.infradead.org>; Thu,  9 Jul 2009 16:18:58 +0900 (JST)
-Message-ID: <4A5599D2.7080604@jp.fujitsu.com>
-Date: Thu, 09 Jul 2009 16:18:42 +0900
-From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MOnw2-0005l0-L0
+	for kexec@lists.infradead.org; Thu, 09 Jul 2009 07:20:57 +0000
+Message-ID: <4A559982.8000003@mxs.nes.nec.co.jp>
+Date: Thu, 09 Jul 2009 16:17:22 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH v2 7/7] ia64, kdump: Short path to freeze CPUs
-References: <4A39E247.4030908@jp.fujitsu.com> <4A5595F3.2050609@jp.fujitsu.com>
-In-Reply-To: <4A5595F3.2050609@jp.fujitsu.com>
+Subject: Re: [PATCH] Enable kdump if 2nd-kernel is loaded.
+References: <4A5422E3.1030600@mxs.nes.nec.co.jp>
+	<20090708091852.GF4040@verge.net.au>
+	<4A553D27.8050005@mxs.nes.nec.co.jp>
+	<20090709055234.GA7282@verge.net.au>
+In-Reply-To: <20090709055234.GA7282@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,114 +25,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Haren Myneni <hbabu@us.ibm.com>, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, "Yu,
-	Fenghua" <fenghua.yu@intel.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-Setting monarch_cpu = -1 to let slaves frozen might not work, because
-there might be slaves being late, not entered the rendezvous yet.
-Such slaves might be caught in while (monarch_cpu == -1) loop.
 
-Use kdump_in_progress instead of monarch_cpus to break INIT rendezvous
-and let all slaves enter DIE_INIT_SLAVE_LEAVE smoothly.
+Hi Simon,
 
-And monarch no longer need to manage rendezvous if once kdump_in_progress
-is set, catch the monarch in DIE_INIT_MONARCH_ENTER then.
+Thank you so much for your review and comment.
 
-Signed-off-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>
-Cc: kexec@lists.infradead.org
----
- arch/ia64/kernel/crash.c |   15 ++++++---------
- arch/ia64/kernel/mca.c   |   15 +++++++++++++--
- 2 files changed, 19 insertions(+), 11 deletions(-)
+I have one question.
+Should I resend the patch to LKML with your "Acked-by:" tag for merging it ?
+Or isn't that necessary ?
 
-diff --git a/arch/ia64/kernel/crash.c b/arch/ia64/kernel/crash.c
-index 0995fdc..6631a9d 100644
---- a/arch/ia64/kernel/crash.c
-+++ b/arch/ia64/kernel/crash.c
-@@ -127,14 +127,13 @@ machine_crash_shutdown(struct pt_regs *pt)
- 	 * If an INIT is asserted here:
- 	 * - All receivers might be slaves, since some of cpus could already
- 	 *   be frozen and INIT might be masked on monarch.  In this case,
--	 *   all slaves will park in while (monarch_cpu == -1) loop before
--	 *   DIE_INIT_SLAVE_ENTER that for waiting monarch enters.
--	 *	=> TBD: freeze all slaves
-+	 *   all slaves will be frozen soon since kdump_in_progress will let
-+	 *   them into DIE_INIT_SLAVE_LEAVE.
- 	 * - One might be a monarch, but INIT rendezvous will fail since
- 	 *   at least this cpu already have INIT masked so it never join
- 	 *   to the rendezvous.  In this case, all slaves and monarch will
--	 *   be frozen after timeout of the INIT rendezvous.
--	 *	=> TBD: freeze them without waiting timeout
-+	 *   be frozen soon with no wait since the INIT rendezvous is skipped
-+	 *   by kdump_in_progress.
- 	 */
- 	kdump_smp_send_stop();
- 	/* not all cpu response to IPI, send INIT to freeze them */
-@@ -187,6 +186,7 @@ kdump_init_notifier(struct notifier_block *self, unsigned long val, void *data)
- 				break;
- 			/* fall through */
- 		case DIE_INIT_SLAVE_LEAVE:
-+		case DIE_INIT_MONARCH_ENTER:
- 		case DIE_MCA_RENDZVOUS_LEAVE:
- 			unw_init_running(kdump_cpu_freeze, NULL);
- 			break;
-@@ -217,7 +217,6 @@ kdump_init_notifier(struct notifier_block *self, unsigned long val, void *data)
- 		if (kdump_on_init && (nd->sos->rv_rc != 1)) {
- 			if (atomic_inc_return(&kdump_in_progress) != 1)
- 				kdump_freeze_monarch = 1;
--			*(nd->monarch_cpu) = -1;
- 		}
- 		break;
- 	case DIE_INIT_MONARCH_LEAVE:
-@@ -228,10 +227,8 @@ kdump_init_notifier(struct notifier_block *self, unsigned long val, void *data)
- 	case DIE_MCA_MONARCH_LEAVE:
- 		/* *(nd->data) indicate if MCA is recoverable */
- 		if (kdump_on_fatal_mca && !(*(nd->data))) {
--			if (atomic_inc_return(&kdump_in_progress) == 1) {
--				*(nd->monarch_cpu) = -1;
-+			if (atomic_inc_return(&kdump_in_progress) == 1)
- 				machine_kdump_on_init();
--			}
- 			/* We got fatal MCA while kdump!? No way!! */
- 		}
- 		break;
-diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
-index 7b30d21..d2877a7 100644
---- a/arch/ia64/kernel/mca.c
-+++ b/arch/ia64/kernel/mca.c
-@@ -1682,14 +1682,25 @@ ia64_init_handler(struct pt_regs *regs, struct switch_stack *sw,
- 
- 	if (!sos->monarch) {
- 		ia64_mc_info.imi_rendez_checkin[cpu] = IA64_MCA_RENDEZ_CHECKIN_INIT;
-+
-+#ifdef CONFIG_KEXEC
-+		while (monarch_cpu == -1 && !atomic_read(&kdump_in_progress))
-+			udelay(1000);
-+#else
- 		while (monarch_cpu == -1)
--		       cpu_relax();	/* spin until monarch enters */
-+			cpu_relax();	/* spin until monarch enters */
-+#endif
- 
- 		NOTIFY_INIT(DIE_INIT_SLAVE_ENTER, regs, (long)&nd, 1);
- 		NOTIFY_INIT(DIE_INIT_SLAVE_PROCESS, regs, (long)&nd, 1);
- 
-+#ifdef CONFIG_KEXEC
-+		while (monarch_cpu != -1 && !atomic_read(&kdump_in_progress))
-+			udelay(1000);
-+#else
- 		while (monarch_cpu != -1)
--		       cpu_relax();	/* spin until monarch leaves */
-+			cpu_relax();	/* spin until monarch leaves */
-+#endif
- 
- 		NOTIFY_INIT(DIE_INIT_SLAVE_LEAVE, regs, (long)&nd, 1);
- 
--- 
-1.6.0
+
+Thanks
+Ken'ichi Ohmichi
+
+Simon Horman wrote:
+> On Thu, Jul 09, 2009 at 09:43:19AM +0900, Ken'ichi Ohmichi wrote:
+>> Hi Simon,
+>>
+>> Thank you for the comment.
+>>
+>> Simon Horman wrote:
+>>> On Wed, Jul 08, 2009 at 01:38:59PM +0900, Ken'ichi Ohmichi wrote:
+>>>> Hi,
+>>>>
+>>>> This patch enables a kdump if 2nd-kernel is loaded.
+>>>> (The patch is based on linux-2.6.31-rc2.)
+>>>>
+>>>> Now, a kdump is enabled if a kernel parameter "oops=panic" is specified and
+>>>> 2nd-kernel is loaded. I think that a kdump should be enabled regardless of
+>>>> "oops=panic" if 2nd-kernel is loaded, because a system administrator loads
+>>>> 2nd-kernel for enabling a kdump.
+>>> I'm not sure that I like this change. To my mind, panic on oops
+>>> should only occur if specifically requested.
+>> My patch does not make panic_on_oops effective when 2nd-kernel is loaded,
+>> and it makes a kdump effective.
+>>
+>> kexec_should_crash() is called only by oops_end() for checking whether to
+>> call crash_kexec(). crash_kexec() is not panic, and I feel it is better
+>> that crash_kexec() is called when 2nd-kernel is loaded.
+>>
+>>
+>> I tried to test a kdump on linux-2.6.31-rc1 *without* a kernel parameter
+>> "oops=panic" by `echo c > /proc/sysrq-trigger`, but a kdump did not work
+>> because a kdump, which is occurred by `echo c > /proc/sysrq-trigger`, has
+>> been changed to a NULL pointer error instead of calling crash_kexec()
+>> since linux-2.6.31-rc1. Then I tried to boot linux-2.6.31-rc1 *with* a
+>> kernel parameter "oops=panic", the kernel got a panic while kernel booting
+>> due to a problem other than a kdump. 
+>> So I think a kdump should be enabled when 2nd-kernel is loaded.
+> 
+> Hi,
+> 
+> thanks for the more detailed explanation. I've reconsidered my position
+> and actually I think that I quite like your idea - it does indeed make
+> sense for kdump to occur if a kdump kernel has been loaded.
+> 
+> Acked-by: Simon Horman <horms@verge.net.au>
+> 
+>> Thanks
+>> Ken'ichi Ohmichi
+>>
+>>>> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+>>>> ---
+>>>> --- a/kernel/kexec.c	2009-07-08 12:30:26.000000000 +0900
+>>>> +++ b/kernel/kexec.c	2009-07-08 12:38:08.000000000 +0900
+>>>> @@ -57,6 +57,8 @@ struct resource crashk_res = {
+>>>>  
+>>>>  int kexec_should_crash(struct task_struct *p)
+>>>>  {
+>>>> +	if (kexec_crash_image)
+>>>> +		return 1;
+>>>>  	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
+>>>>  		return 1;
+>>>>  	return 0;
+>>>>
+>>>> _______________________________________________
+>>>> kexec mailing list
+>>>> kexec@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 
