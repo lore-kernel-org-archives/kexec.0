@@ -1,33 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail.valinux.co.jp ([210.128.90.3])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MPAuZ-0002bw-7K
-	for kexec@lists.infradead.org; Fri, 10 Jul 2009 07:52:58 +0000
-Received: from m4.gw.fujitsu.co.jp ([10.0.50.74])
-	by fgwmail5.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n6A7qlbR024705 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Fri, 10 Jul 2009 16:52:47 +0900
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7552545DE4D
-	for <kexec@lists.infradead.org>; Fri, 10 Jul 2009 16:52:46 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5378945DE6E
-	for <kexec@lists.infradead.org>; Fri, 10 Jul 2009 16:52:46 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 370081DB8043
-	for <kexec@lists.infradead.org>; Fri, 10 Jul 2009 16:52:46 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.249.87.107])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BF80C1DB803B
-	for <kexec@lists.infradead.org>; Fri, 10 Jul 2009 16:52:45 +0900 (JST)
-Message-ID: <4A56F343.7040907@jp.fujitsu.com>
-Date: Fri, 10 Jul 2009 16:52:35 +0900
-From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+	id 1MQCjX-0003Wn-JQ
+	for kexec@lists.infradead.org; Mon, 13 Jul 2009 04:01:54 +0000
+Date: Mon, 13 Jul 2009 13:01:41 +0900
+From: Itsuro ODA <oda@valinux.co.jp>
+Subject: [PATCH] fix missing Crash note in /proc/iomem
+Message-Id: <20090713112628.9F01.277DD91C@valinux.co.jp>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kdump: Enable kdump if 2nd-kernel is loaded.
-References: <4A55A4AE.3000206@mxs.nes.nec.co.jp>
-	<4A56E069.5040907@jp.fujitsu.com>
-	<4A56E83B.50600@mxs.nes.nec.co.jp>
-In-Reply-To: <4A56E83B.50600@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,48 +20,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+To: xen-devel@lists.xensource.com
+Cc: kexec@lists.infradead.org
 
-Hi Ohmichi-san,
+Hi,
 
-Ken'ichi Ohmichi wrote:
-> Hidetoshi Seto wrote:
->> I'd like to quote your comment:
->>
->>>> I tried to test a kdump on linux-2.6.31-rc1 *without* a kernel parameter
->>>> "oops=panic" by `echo c > /proc/sysrq-trigger`, but a kdump did not work
->>>> because a kdump, which is occurred by `echo c > /proc/sysrq-trigger`, has
->>>> been changed to a NULL pointer error instead of calling crash_kexec()
->>>> since linux-2.6.31-rc1.
->> So the real problem is that kdump is not triggered by the NULL pointer oops
->> if !panic_on_oops, isn't it?
->>
->> It seems that you should report this trouble of sysrq-c as a regression.
-> 
-> I don't think this problem is a regression of sysrq-c.
-> This change of sysrq-c looks reasonable to me. Because sysrq-c is used
-> for the test of kdump, and its code path has been changed to the same
-> path as a kdump on oops (a real problem, not test).
-> So we can test a kdump by a real oops, that is good to me.
-> As a result, I could find this problem a kdump is not enabled without
-> "oops=panic".
+Missing "Crash note" in /proc/iomem (dom 0) happens on the Xen 3.4.*.
+This causes a crash dump cannot be analyzed normally.
 
-Still I believe this is a regression of sysrq-c.
-If required function of sysrq-c were "cause a real oops", then it is not
-regression.  But as described in Documentation/sysrq.txt, real usage of
-sysrq-c is "perform a kexec reboot," i.e. kdump.
-So I think sysrq-c should use panic instead of oops if it want to kick
-the kdump unconditionally.
+This patch fixes this problem.
+This patch is for linux-2.6.18-xen.hg.
 
-However, yes, I agree it is a problem on the kdump's policy that kdump on
-oops is not enabled without the option.  I'm not sure how much people want
-to enable kdump only on panic while not on oops, but I suppose it will be
-negligible.  Or it would be better to introduce kdump_on_oops option or so.
+The range of "Crash note" is within the "Hypervisor code and data" 
+on the Xen 3.3.* and before. The code assumed this.
+It is not true for the Xen 3.4.
 
+== example: before patch: one of two "Crash note" is missing
+# cat /proc/iomem 
+...
+00100000-c779ffff : System RAM
+  02000000-09ffffff : Crash kernel
+  c7300000-c74aa35f : Hypervisor code and data
+    c7456080-c7456213 : Crash note
+c77a0000-c77adfff : ACPI Tables
+...
 
-Thanks,
-H.Seto
+== example: after patch: two "Crash note" are showed normally
+# cat /proc/iomem 
+...
+00100000-c779ffff : System RAM
+  02000000-09ffffff : Crash kernel
+  c7300000-c74aa35f : Hypervisor code and data
+    c7456080-c7456213 : Crash note
+  c7791c00-c7791df3 : Crash note
+c77a0000-c77adfff : ACPI Tables
+...
+
+This problem is occured on the x86_64 only. This patch has no bad effect for
+other architectures and is backword compatible.
+
+Please apply this patch to the newer dom-0 kernel too.
+
+Thanks.
+Itsuro Oda
+
+---
+Signed-off-by: Itsuro Oda <oda@valinux.co.jp>
+
+diff -r b086278a4406 drivers/xen/core/machine_kexec.c
+--- a/drivers/xen/core/machine_kexec.c	Mon Jun 29 10:57:46 2009 +0100
++++ b/drivers/xen/core/machine_kexec.c	Fri Jul 10 16:57:34 2009 +0900
+@@ -144,7 +144,15 @@ void __init xen_machine_kexec_setup_reso
+ 
+ void __init xen_machine_kexec_register_resources(struct resource *res)
+ {
++	int k;
++	struct resource *r;
++
+ 	request_resource(res, &xen_hypervisor_res);
++	for (k = 0; k < xen_max_nr_phys_cpus; k++) {
++		r = xen_phys_cpus + k;
++		if (r->parent == NULL) /* out of xen_hypervisor_res range */
++			request_resource(res, r);
++	} 
+ 	machine_kexec_register_resources(res);
+ }
+
+-- 
+Itsuro ODA <oda@valinux.co.jp>
 
 
 _______________________________________________
