@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.valinux.co.jp ([210.128.90.3])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MQCjX-0003Wn-JQ
-	for kexec@lists.infradead.org; Mon, 13 Jul 2009 04:01:54 +0000
-Date: Mon, 13 Jul 2009 13:01:41 +0900
-From: Itsuro ODA <oda@valinux.co.jp>
-Subject: [PATCH] fix missing Crash note in /proc/iomem
-Message-Id: <20090713112628.9F01.277DD91C@valinux.co.jp>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MQG6i-0005w8-22
+	for kexec@lists.infradead.org; Mon, 13 Jul 2009 07:37:58 +0000
+Message-ID: <4A5AB903.6090204@mxs.nes.nec.co.jp>
+Date: Mon, 13 Jul 2009 13:33:07 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
+Subject: [PATCH-v2] kdump: Enable kdump if 2nd-kernel is loaded.
+References: <4A55A4AE.3000206@mxs.nes.nec.co.jp>
+	<4A56E069.5040907@jp.fujitsu.com>
+In-Reply-To: <4A56E069.5040907@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,75 +23,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: xen-devel@lists.xensource.com
-Cc: kexec@lists.infradead.org
+To: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+
 
 Hi,
 
-Missing "Crash note" in /proc/iomem (dom 0) happens on the Xen 3.4.*.
-This causes a crash dump cannot be analyzed normally.
+This patch is a new version by Seto-san's comment.
 
-This patch fixes this problem.
-This patch is for linux-2.6.18-xen.hg.
 
-The range of "Crash note" is within the "Hypervisor code and data" 
-on the Xen 3.3.* and before. The code assumed this.
-It is not true for the Xen 3.4.
+Changelog since v1:
+* Remove the check code other than kexec_crash_image from kexec_should_crash()
+  because a kexec cannot crash if there is no image.
 
-== example: before patch: one of two "Crash note" is missing
-# cat /proc/iomem 
-...
-00100000-c779ffff : System RAM
-  02000000-09ffffff : Crash kernel
-  c7300000-c74aa35f : Hypervisor code and data
-    c7456080-c7456213 : Crash note
-c77a0000-c77adfff : ACPI Tables
-...
 
-== example: after patch: two "Crash note" are showed normally
-# cat /proc/iomem 
-...
-00100000-c779ffff : System RAM
-  02000000-09ffffff : Crash kernel
-  c7300000-c74aa35f : Hypervisor code and data
-    c7456080-c7456213 : Crash note
-  c7791c00-c7791df3 : Crash note
-c77a0000-c77adfff : ACPI Tables
-...
+This patch enables a kdump if 2nd-kernel is loaded.
+(The patch is based on linux-2.6.31-rc2.)
 
-This problem is occured on the x86_64 only. This patch has no bad effect for
-other architectures and is backword compatible.
+Now, a kdump on oops is enabled if a kernel parameter "oops=panic"
+is specified and 2nd-kernel is loaded. I think that a kdump should
+be enabled regardless of "oops=panic" if 2nd-kernel is loaded,
+because a system administrator loads 2nd-kernel for enabling a kdump.
 
-Please apply this patch to the newer dom-0 kernel too.
 
-Thanks.
-Itsuro Oda
+* Reference
+  The discussion about this patch
+  http://lists.infradead.org/pipermail/kexec/2009-July/003417.html
+  http://lists.infradead.org/pipermail/kexec/2009-July/003433.html
 
+
+Thanks
+Ken'ichi Ohmichi
+
+Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Acked-by: Simon Horman <horms@verge.net.au>
 ---
-Signed-off-by: Itsuro Oda <oda@valinux.co.jp>
-
-diff -r b086278a4406 drivers/xen/core/machine_kexec.c
---- a/drivers/xen/core/machine_kexec.c	Mon Jun 29 10:57:46 2009 +0100
-+++ b/drivers/xen/core/machine_kexec.c	Fri Jul 10 16:57:34 2009 +0900
-@@ -144,7 +144,15 @@ void __init xen_machine_kexec_setup_reso
+--- a/kernel/kexec.c	2009-07-08 12:30:26.000000000 +0900
++++ b/kernel/kexec.c	2009-07-13 13:49:03.000000000 +0900
+@@ -57,7 +57,7 @@ struct resource crashk_res = {
  
- void __init xen_machine_kexec_register_resources(struct resource *res)
+ int kexec_should_crash(struct task_struct *p)
  {
-+	int k;
-+	struct resource *r;
-+
- 	request_resource(res, &xen_hypervisor_res);
-+	for (k = 0; k < xen_max_nr_phys_cpus; k++) {
-+		r = xen_phys_cpus + k;
-+		if (r->parent == NULL) /* out of xen_hypervisor_res range */
-+			request_resource(res, r);
-+	} 
- 	machine_kexec_register_resources(res);
+-	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
++	if (kexec_crash_image)
+ 		return 1;
+ 	return 0;
  }
-
--- 
-Itsuro ODA <oda@valinux.co.jp>
-
 
 _______________________________________________
 kexec mailing list
