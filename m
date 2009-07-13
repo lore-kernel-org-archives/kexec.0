@@ -1,33 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MQGHy-0007RL-DC
-	for kexec@lists.infradead.org; Mon, 13 Jul 2009 07:49:37 +0000
-Received: from m1.gw.fujitsu.co.jp ([10.0.50.71])
-	by fgwmail5.fujitsu.co.jp (Fujitsu Gateway) with ESMTP id
-	n6D7nKac010826 for <kexec@lists.infradead.org> (envelope-from
-	seto.hidetoshi@jp.fujitsu.com); Mon, 13 Jul 2009 16:49:24 +0900
-Received: from smail (m1 [127.0.0.1])
-	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C428B45DE51
-	for <kexec@lists.infradead.org>; Mon, 13 Jul 2009 16:49:19 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
-	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 846E745DE4E
-	for <kexec@lists.infradead.org>; Mon, 13 Jul 2009 16:49:19 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4502D1DB803A
-	for <kexec@lists.infradead.org>; Mon, 13 Jul 2009 16:49:19 +0900 (JST)
-Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.249.87.103])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id DBC271DB803F
-	for <kexec@lists.infradead.org>; Mon, 13 Jul 2009 16:49:18 +0900 (JST)
-Message-ID: <4A5AE6E7.2000208@jp.fujitsu.com>
-Date: Mon, 13 Jul 2009 16:48:55 +0900
-From: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+	id 1MQOz8-0004BX-HF
+	for kexec@lists.infradead.org; Mon, 13 Jul 2009 17:06:51 +0000
+References: <4A55A4AE.3000206@mxs.nes.nec.co.jp>
+	<4A56E069.5040907@jp.fujitsu.com> <4A5AB903.6090204@mxs.nes.nec.co.jp>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Mon, 13 Jul 2009 10:06:25 -0700
+In-Reply-To: <4A5AB903.6090204@mxs.nes.nec.co.jp> (Ken'ichi Ohmichi's message
+	of "Mon\, 13 Jul 2009 13\:33\:07 +0900")
+Message-ID: <m14otga4xa.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH-v2] kdump: Enable kdump if 2nd-kernel is loaded.
-References: <4A55A4AE.3000206@mxs.nes.nec.co.jp>
-	<4A56E069.5040907@jp.fujitsu.com>
-	<4A5AB903.6090204@mxs.nes.nec.co.jp>
-In-Reply-To: <4A5AB903.6090204@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,29 +25,44 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
+Cc: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>, Simon Horman <horms@verge.net.au>, kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
-Ken'ichi Ohmichi wrote:
-> Signed-off-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-> Acked-by: Simon Horman <horms@verge.net.au>
-> ---
-> --- a/kernel/kexec.c	2009-07-08 12:30:26.000000000 +0900
-> +++ b/kernel/kexec.c	2009-07-13 13:49:03.000000000 +0900
-> @@ -57,7 +57,7 @@ struct resource crashk_res = {
->  
->  int kexec_should_crash(struct task_struct *p)
->  {
-> -	if (in_interrupt() || !p->pid || is_global_init(p) || panic_on_oops)
-> +	if (kexec_crash_image)
->  		return 1;
->  	return 0;
->  }
+"Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> writes:
 
-Reviewed-by: Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
+> Hi,
+>
+> This patch is a new version by Seto-san's comment.
+>
+>
+> Changelog since v1:
+> * Remove the check code other than kexec_crash_image from kexec_should_crash()
+>   because a kexec cannot crash if there is no image.
+>
+>
+> This patch enables a kdump if 2nd-kernel is loaded.
+> (The patch is based on linux-2.6.31-rc2.)
+>
+> Now, a kdump on oops is enabled if a kernel parameter "oops=panic"
+> is specified and 2nd-kernel is loaded. I think that a kdump should
+> be enabled regardless of "oops=panic" if 2nd-kernel is loaded,
+> because a system administrator loads 2nd-kernel for enabling a kdump.
 
-Thanks,
-H.Seto
+The Documentation for sysrq-c certainly needs to be updated.
 
+If I am doing development on a system I like oops's.  All of the
+information and nothing goes down.  I can get at /proc/kcore etc.
+
+In a setting where I can't be Johnny on the spot and look at
+things a core dump is probably the best I can get.  In that scenario
+panic_on_oops sounds good.
+
+As I read the current check it reads:
+If we are going to panic and not oops || panic_on_oops
+	kexec_should_crash = true;
+
+Which seems a very reasonable implementation of policy.
+
+Eric
 
 _______________________________________________
 kexec mailing list
