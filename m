@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 124x34x33x190.ap124.ftth.ucom.ne.jp ([124.34.33.190]
-	helo=master.linux-sh.org)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1MVYpa-0007Sl-QO
-	for kexec@lists.infradead.org; Mon, 27 Jul 2009 22:38:11 +0000
-Received: from localhost (unknown [127.0.0.1])
-	by master.linux-sh.org (Postfix) with ESMTP id 3B1616375A
-	for <kexec@lists.infradead.org>; Mon, 27 Jul 2009 22:37:59 +0000 (UTC)
-Received: from master.linux-sh.org ([127.0.0.1])
-	by localhost (master.linux-sh.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ao5FLlboagpt for <kexec@lists.infradead.org>;
-	Tue, 28 Jul 2009 07:37:59 +0900 (JST)
-Date: Tue, 28 Jul 2009 07:37:58 +0900
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: [PATCH] kexec: Handle datarootdir for newer autoconf versions.
-Message-ID: <20090727223758.GA22668@linux-sh.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MVaTX-0008CZ-Mb
+	for kexec@lists.infradead.org; Tue, 28 Jul 2009 00:23:31 +0000
+Date: Tue, 28 Jul 2009 10:23:25 +1000
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec: Handle datarootdir for newer autoconf versions.
+Message-ID: <20090728002324.GB20230@verge.net.au>
+References: <20090727223758.GA22668@linux-sh.org>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20090727223758.GA22668@linux-sh.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,33 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Paul Mundt <lethal@linux-sh.org>
+Cc: kexec@lists.infradead.org
 
-This fixes up the:
+On Tue, Jul 28, 2009 at 07:37:58AM +0900, Paul Mundt wrote:
+> This fixes up the:
+> 
+> config.status: WARNING:  'Makefile.in' seems to ignore the --datarootdir setting
+> 
+> warning when producing the output Makefile.
 
-config.status: WARNING:  'Makefile.in' seems to ignore the --datarootdir setting
-
-warning when producing the output Makefile.
-
-Signed-off-by: Paul Mundt <lethal@linux-sh.org>
-
----
-
- Makefile.in |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Makefile.in b/Makefile.in
-index 6b4c954..cb0faae 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -10,6 +10,7 @@ bindir		= @bindir@
- sbindir		= @sbindir@
- libexecdir	= @libexecdir@
- datadir		= @datadir@
-+datarootdir	= @datarootdir@
- sysconfdir	= @sysconfdir@
- sharedstatedir	= @sharedstatedir@
- localstatedir	= @localstatedir@
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
