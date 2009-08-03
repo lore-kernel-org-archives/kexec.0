@@ -1,15 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rv-out-0708.google.com ([209.85.198.249])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MVoNH-00075H-3x
-	for kexec@lists.infradead.org; Tue, 28 Jul 2009 15:13:59 +0000
-Received: by rv-out-0708.google.com with SMTP id c5so26069rvf.42
-	for <kexec@lists.infradead.org>; Tue, 28 Jul 2009 08:13:53 -0700 (PDT)
+Received: from e28smtp07.in.ibm.com ([59.145.155.7])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MXqQs-00022Y-Pt
+	for kexec@lists.infradead.org; Mon, 03 Aug 2009 05:50:07 +0000
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+	by e28smtp07.in.ibm.com (8.14.3/8.13.1) with ESMTP id n735nlQR027721
+	for <kexec@lists.infradead.org>; Mon, 3 Aug 2009 11:19:47 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	n735nkG31515526
+	for <kexec@lists.infradead.org>; Mon, 3 Aug 2009 11:19:46 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+	by d28av03.in.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
+	n735njgJ018459
+	for <kexec@lists.infradead.org>; Mon, 3 Aug 2009 15:49:46 +1000
+Date: Mon, 3 Aug 2009 11:19:19 +0530
+From: "M. Mohan Kumar" <mohan@in.ibm.com>
+Subject: Re: [PATCH] Do not inline putprops function
+Message-ID: <20090803054919.GA19594@in.ibm.com>
+References: <20090617115917.GD31595@in.ibm.com>
+	<1245241595.4269.15.camel@concordia>
+	<20090617130413.GB2774@localhost.localdomain>
+	<20090617133435.GB4059@in.ibm.com>
+	<20090617140514.GB31383@hmsreliant.think-freely.org>
+	<20090617142652.GC4059@in.ibm.com>
+	<20090617144007.GC31383@hmsreliant.think-freely.org>
+	<20090623125534.GA8664@in.ibm.com>
+	<20090623135604.GC1157@hmsreliant.think-freely.org>
+	<1245803263.9237.3.camel@concordia>
 MIME-Version: 1.0
-Date: Tue, 28 Jul 2009 08:13:52 -0700
-Message-ID: <110c8b2e0907280813n2bcf24daxdce75b07f35beee8@mail.gmail.com>
-Subject: kexecing ELF image built by wraplinux or mkelf
-From: Subodh Nijsure <nijsure.subodh@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1245803263.9237.3.camel@concordia>
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,62 +44,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Michael Ellerman <michael@ellerman.id.au>
+Cc: linuxppc-dev@ozlabs.org, Neil Horman <nhorman@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, miltonm@bga.com
 
-I am trying to boot ELF image that is combined kernel + ramdisk. I
-have tried to use wraplinux tool to wrap these two image but kexec
-doesn't seem to boot the combined image.
+On Wed, Jun 24, 2009 at 10:27:43AM +1000, Michael Ellerman wrote:
+> On Tue, 2009-06-23 at 09:56 -0400, Neil Horman wrote:
+> > On Tue, Jun 23, 2009 at 06:25:34PM +0530, M. Mohan Kumar wrote:
+> > > 
+> > Well it definately looks like removing that variable had some code changes.
+> > It'll take some time to match it up to source, but Most interesting I think is
+> > the variance in putprops around address f34.  Looks like its doing some string
+> > maniuplation in a reversed order, using a huge offset.  Might be worthwhile to
+> > check to see if theres any string overruns in this code.
+> 
+> Yeah I still suspect it's just a bug in the code that's being exposed
+> now.
+> 
+Hi,
 
-To keep things simple I have decided to first just wrap bzImage
+The same code works with gcc-3.4.
 
-wraplinux -E --output vmlinux.wrap ./arch/i386/boot/bzImage
+> Mohan, can you try running it under valgrind?
 
-readelf -S vmlinux.wrap
-There are 5 section headers, starting at offset 0x1f4098:
+Still I am not able to use valgrind to debug kexec-tools
 
-Section Headers:
-  [Nr] Name              Type            Addr     Off    Size   ES Flg Lk Inf Al
-  [ 0]                   NULL            00000000 000000 000000 00      0   0  0
-  [ 1] setup             PROGBITS        00010000 000080 002a00 00 WAX  0   0 16
-  [ 2] reloc             PROGBITS        00012a00 002a80 0005bc 00 WAX  0   0 16
-  [ 3] kernel            PROGBITS        00100000 003040 1f1038 00   A  0   0 16
-  [ 4] .shstrtab         STRTAB          00000000 1f4078 00001e 00      0   0  1
-Key to Flags:
-  W (write), A (alloc), X (execute), M (merge), S (strings)
-  I (info), L (link order), G (group), x (unknown)
-  O (extra OS processing required) o (OS specific), p (processor specific)
+Regards,
+M. Mohan Kumar.
 
-I am trying to load this image in my existing kernel using following
-command line ( i instrumented the kexec a bit to print info structure
-to see if kexec is reading the elf image correctly
 
-kexec  --type=elf-x86 --args-elf --reuse-cmdline  ./vmlinux.wrap
-
-kexec_load: entry = 0x17d8 flags = 0
-nr_segments = 4
-segment[0].buf   = 0x806f7b0
-segment[0].bufsz = 7060
-segment[0].mem   = 0x1000
-segment[0].memsz = 9000
-segment[1].buf   = 0x8076818
-segment[1].bufsz = ec
-segment[1].mem   = 0xa000
-segment[1].memsz = 1000
-segment[2].buf   = 0xb79f6088
-segment[2].bufsz = 2fbc
-segment[2].mem   = 0x10000
-segment[2].memsz = 3000
-segment[3].buf   = 0xb79f9048
-segment[3].bufsz = 1f1038
-segment[3].mem   = 0x100000
-segment[3].memsz = 1f2000
-
-I follow this my kexec -e and my machine "hangs".
-
-Anybody has tried booting output of wraplinux using kexec? I have had
-similar problems with mkelf-linux tool chain as well...
-
-/Subodh
 
 _______________________________________________
 kexec mailing list
