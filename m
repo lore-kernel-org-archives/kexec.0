@@ -1,37 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1MZQpz-0001Q6-4u
-	for kexec@lists.infradead.org; Fri, 07 Aug 2009 14:54:35 +0000
-Received: from d23relay01.au.ibm.com (d23relay01.au.ibm.com [202.81.31.243])
-	by e23smtp09.au.ibm.com (8.14.3/8.13.1) with ESMTP id n77ErOp7027440
-	for <kexec@lists.infradead.org>; Sat, 8 Aug 2009 00:53:24 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by d23relay01.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	n77EsSKP422398
-	for <kexec@lists.infradead.org>; Sat, 8 Aug 2009 00:54:28 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n77EsRee005167
-	for <kexec@lists.infradead.org>; Sat, 8 Aug 2009 00:54:27 +1000
-Date: Fri, 7 Aug 2009 20:24:05 +0530
-From: "M. Mohan Kumar" <mohan@in.ibm.com>
-Subject: Re: [PATCH] Do not inline putprops function
-Message-ID: <20090807145405.GB3110@in.ibm.com>
-References: <20090617140514.GB31383@hmsreliant.think-freely.org>
-	<20090617142652.GC4059@in.ibm.com>
-	<20090617144007.GC31383@hmsreliant.think-freely.org>
-	<20090623125534.GA8664@in.ibm.com>
-	<20090623135604.GC1157@hmsreliant.think-freely.org>
-	<1245803263.9237.3.camel@concordia>
-	<20090803054919.GA19594@in.ibm.com>
-	<20090805164938.GA2970@in.ibm.com>
-	<1249568660.20200.23.camel@concordia>
-	<20090807143549.GA3110@in.ibm.com>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MZVSe-0007Fp-V2
+	for kexec@lists.infradead.org; Fri, 07 Aug 2009 19:50:49 +0000
+References: <20090805112123.6552.73574.sendpatchset@localhost.localdomain>
+	<m1eirqtmey.fsf@fess.ebiederm.org>
+	<20090805140408.GJ7259@hmsreliant.think-freely.org>
+	<m1skg5vpgg.fsf@fess.ebiederm.org> <4A7A3A78.7080200@redhat.com>
+	<m1y6pxr737.fsf@fess.ebiederm.org> <4A7A506B.2060008@redhat.com>
+	<m1ljlxsiox.fsf@fess.ebiederm.org> <4A7A70E5.2010204@redhat.com>
+	<m1bpmtqxjh.fsf@fess.ebiederm.org> <4A7A7A0F.6070906@redhat.com>
+	<m1iqh1nxv3.fsf@fess.ebiederm.org> <4A7A9E54.60705@redhat.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Fri, 07 Aug 2009 12:50:23 -0700
+In-Reply-To: <4A7A9E54.60705@redhat.com> (Amerigo Wang's message of "Thu\,
+	06 Aug 2009 17\:11\:48 +0800")
+Message-ID: <m1iqgze740.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20090807143549.GA3110@in.ibm.com>
-Reply-To: mohan@in.ibm.com
+Subject: Re: [Patch 0/7] Implement crashkernel=auto
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,98 +30,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <michael@ellerman.id.au>
-Cc: linuxppc-dev@ozlabs.org, Neil Horman <nhorman@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, miltonm@bga.com
-
-On Fri, Aug 07, 2009 at 08:05:49PM +0530, M. Mohan Kumar wrote:
-> Hi,
-> 
-> After enabling EARLY_DEBUG (and DEBUG in some of the files in
-> arch/powerpc/kernel directory), without forcing the dtstruct variable to 8
-> byte alignment: 
-> 
-> # ./kexec -e
-> Starting new kernel
-> console [udbg0] enabled
->  -> early_setup(), dt_ptr: 0x7723000
->  -> early_init_devtree(c000000007723000)
-> Invalid tag 5 scanning flattened device tree !
-> search "chosen", depth: 0, uname:
-> Invalid tag 5 scanning flattened device tree !
-> dt_root_size_cells = 2
-> dt_root_addr_cells = 2
-> Invalid tag 5 scanning flattened device tree !
-> reserving: 128c000 -> 5ec1f7
-> reserving: 7734000 -> 8cc000
-> reserving: 7723000 -> f698
-> Phys. mem: 0
-> -> move_device_tree
-> <- move_device_tree
-> Scanning CPUs ...
-> Invalid tag 5 scanning flattened device tree !
->  <- early_init_devtree()
-> Probing machine type ...
->   pSeries ...
-> No suitable machine found !
-> 
-> 
-> So device-tree is getting corrupted when dtstruct variable is not aligned to
-> 8 byte variable. This problem is not seen with gcc-3.4. Is it compiler
-> issue? or bug in the code.
-> 
-
-I tried writing the device tree to a binary file with and without dt_len and
-compared the files after hexdump:
-
-0000 0001 2f00 0000 0000 0003 0000 0004                 0000 0001 2f00 0000 0000 0003 0000 0004
-0000 0000 0000 0002 0000 0003 0000 0004                 0000 0000 0000 0002 0000 0003 0000 0004
-0000 000f 0000 0002 0000 0003 0000 0004                 0000 000f 0000 0002 0000 0003 0000 0004
-0000 001b 3ef1 4800 0000 0003 0000 000d                 0000 001b 3ef1 4800 0000 0003 0000 000d
-0000 002b 0000 0000 4942 4d2c 3931 3135               | 0000 002b 4942 4d2c 3931 3135 2d35 3035
-2d35 3035 0000 0000 0000 0003 0000 0005               | 0000 0000 0000 0003 0000 0005 0000 0036
-
-Regards,
-M. Mohan Kumar
+To: Amerigo Wang <amwang@redhat.com>
+Cc: Neil Horman <nhorman@redhat.com>, tony.luck@intel.com, linux-ia64@vger.kernel.org, Bernhard Walle <bernhard.walle@gmx.de>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ingo Molnar <mingo@elte.hu>, Anton Vorontsov <avorontsov@ru.mvista.com>, akpm@linux-foundation.org
 
 
+Let me put this concrete proposal on the table.
 
+The problem:
 
+With the current set of crashkernel= options we are asking the
+distribution installer to perform magic.  Moving as much of this logic
+into a normal init script for better maintenance is desirable.
 
+My proposal:
 
-> 
-> On Fri, Aug 07, 2009 at 12:24:20AM +1000, Michael Ellerman wrote:
-> > On Wed, 2009-08-05 at 22:19 +0530, M. Mohan Kumar wrote:
-> > > Hi,
-> > > 
-> > > When I align the dtstruct variable to 8 bytes, I am able to invoke kdump.
-> > > 
-> > > When the line
-> > > 	static unsigned dtstruct[TREEWORDS], *dt;
-> > > changed to 
-> > > 	static unsigned dtstruct[TREEWORDS] __attribute__ ((aligned (8))), *dt;
-> > > 
-> > > kexec-tool works.
-> > 
-> > Hmm, odd.
-> > 
-> > Can you check how it's aligned without your change? ie. in the original
-> > binary, is it 4 byte aligned?
-> > 
-> > When you make the change, is the only thing that changes in the binary
-> > the alignedness of dtstruct, or does it cause other things to move
-> > around?
-> > 
-> > I don't think an unaligned dt blob should have any effect on the kernel,
-> > ie. it should copy it in fine, but I'd have to look at the code.
-> > 
-> > cheers
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Implement crashkernel=max which reserves as much memory as is
+reasonable for a crash kernel, without seriously affecting stability,
+performance, and reliability.
+
+As an initial approximation I would use a 32nd of low memory.
+
+In addition implement:
+
+/sys/kernel/crash_size
+
+That can be written to (with enough privileges when no crash kernel is
+loaded) reduce the amount of memory reserved by the crash kernel.
+
+Bernhard does that sound useful to you?
+
+Amerigo does that seem reasonable?
+
+Eric
 
 _______________________________________________
 kexec mailing list
