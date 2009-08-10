@@ -1,24 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([203.10.76.25])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1MaK3L-00056J-Bz
-	for kexec@lists.infradead.org; Mon, 10 Aug 2009 01:52:04 +0000
-Subject: Re: [PATCH] Do not inline putprops function
-From: Michael Ellerman <michael@ellerman.id.au>
-In-Reply-To: <20090807145405.GB3110@in.ibm.com>
-References: <20090617140514.GB31383@hmsreliant.think-freely.org>
-	<20090617142652.GC4059@in.ibm.com>
-	<20090617144007.GC31383@hmsreliant.think-freely.org>
-	<20090623125534.GA8664@in.ibm.com>
-	<20090623135604.GC1157@hmsreliant.think-freely.org>
-	<1245803263.9237.3.camel@concordia> <20090803054919.GA19594@in.ibm.com>
-	<20090805164938.GA2970@in.ibm.com>
-	<1249568660.20200.23.camel@concordia>
-	<20090807143549.GA3110@in.ibm.com> <20090807145405.GB3110@in.ibm.com>
-Date: Mon, 10 Aug 2009 11:51:49 +1000
-Message-Id: <1249869109.27744.41.camel@concordia>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Received: from mx2.redhat.com ([66.187.237.31])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1MaLGu-0008IT-MJ
+	for kexec@lists.infradead.org; Mon, 10 Aug 2009 03:10:09 +0000
+Message-ID: <4A7F8FE6.9030709@redhat.com>
+Date: Mon, 10 Aug 2009 11:11:34 +0800
+From: Amerigo Wang <amwang@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [Patch 0/7] Implement crashkernel=auto
+References: <20090805112123.6552.73574.sendpatchset@localhost.localdomain>	<m1eirqtmey.fsf@fess.ebiederm.org>	<20090805140408.GJ7259@hmsreliant.think-freely.org>	<m1skg5vpgg.fsf@fess.ebiederm.org>
+	<4A7A3A78.7080200@redhat.com>	<m1y6pxr737.fsf@fess.ebiederm.org>
+	<4A7A506B.2060008@redhat.com>	<m1ljlxsiox.fsf@fess.ebiederm.org>
+	<4A7A70E5.2010204@redhat.com>	<m1bpmtqxjh.fsf@fess.ebiederm.org>
+	<4A7A7A0F.6070906@redhat.com>	<m1iqh1nxv3.fsf@fess.ebiederm.org>
+	<4A7A9E54.60705@redhat.com> <m1iqgze740.fsf@fess.ebiederm.org>
+In-Reply-To: <m1iqgze740.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,113 +23,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1756431151=="
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mohan@in.ibm.com
-Cc: linuxppc-dev@ozlabs.org, Neil Horman <nhorman@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, miltonm@bga.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Neil Horman <nhorman@redhat.com>, tony.luck@intel.com, linux-ia64@vger.kernel.org, Bernhard Walle <bernhard.walle@gmx.de>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Ingo Molnar <mingo@elte.hu>, Anton Vorontsov <avorontsov@ru.mvista.com>, akpm@linux-foundation.org
 
+Eric W. Biederman wrote:
+> Let me put this concrete proposal on the table.
+>
+> The problem:
+>
+> With the current set of crashkernel= options we are asking the
+> distribution installer to perform magic.  Moving as much of this logic
+> into a normal init script for better maintenance is desirable.
+>
+> My proposal:
+>
+> Implement crashkernel=max which reserves as much memory as is
+> reasonable for a crash kernel, without seriously affecting stability,
+> performance, and reliability.
+>   
 
---===============1756431151==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-0JeGcxyHP8j/+1A5qOHP"
+This is almost exactly what I want with crashkernel=auto....
+So there's no big difference, except the name.
 
+> As an initial approximation I would use a 32nd of low memory.
+>   
 
---=-0JeGcxyHP8j/+1A5qOHP
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Hmm, I think Bernhard's proposal is fine for this case, i.e. we can 
+introduce a new syntax, "crashkernel=>>X" which means we reserve 1/2^X 
+of system memory.
 
-On Fri, 2009-08-07 at 20:24 +0530, M. Mohan Kumar wrote:
-> On Fri, Aug 07, 2009 at 08:05:49PM +0530, M. Mohan Kumar wrote:
-> > Hi,
-> >=20
-> > After enabling EARLY_DEBUG (and DEBUG in some of the files in
-> > arch/powerpc/kernel directory), without forcing the dtstruct variable t=
-o 8
-> > byte alignment:=20
-> >=20
-> > # ./kexec -e
-> > Starting new kernel
-> > console [udbg0] enabled
-> >  -> early_setup(), dt_ptr: 0x7723000
-> >  -> early_init_devtree(c000000007723000)
-> > Invalid tag 5 scanning flattened device tree !
-> > search "chosen", depth: 0, uname:
-> > Invalid tag 5 scanning flattened device tree !
-> > dt_root_size_cells =3D 2
-> > dt_root_addr_cells =3D 2
-> > Invalid tag 5 scanning flattened device tree !
-> > reserving: 128c000 -> 5ec1f7
-> > reserving: 7734000 -> 8cc000
-> > reserving: 7723000 -> f698
-> > Phys. mem: 0
-> > -> move_device_tree
-> > <- move_device_tree
-> > Scanning CPUs ...
-> > Invalid tag 5 scanning flattened device tree !
-> >  <- early_init_devtree()
-> > Probing machine type ...
-> >   pSeries ...
-> > No suitable machine found !
-> >=20
-> >=20
-> > So device-tree is getting corrupted when dtstruct variable is not align=
-ed to
-> > 8 byte variable. This problem is not seen with gcc-3.4. Is it compiler
-> > issue? or bug in the code.
-> >=20
->=20
-> I tried writing the device tree to a binary file with and without dt_len =
-and
-> compared the files after hexdump:
+What do you think?
 
-That sounds like a good idea.
+> In addition implement:
+>
+> /sys/kernel/crash_size
+>
+> That can be written to (with enough privileges when no crash kernel is
+> loaded) reduce the amount of memory reserved by the crash kernel.
+>   
 
-> 0000 0001 2f00 0000 0000 0003 0000 0004                 0000 0001 2f00 00=
-00 0000 0003 0000 0004
-> 0000 0000 0000 0002 0000 0003 0000 0004                 0000 0000 0000 00=
-02 0000 0003 0000 0004
-> 0000 000f 0000 0002 0000 0003 0000 0004                 0000 000f 0000 00=
-02 0000 0003 0000 0004
-> 0000 001b 3ef1 4800 0000 0003 0000 000d                 0000 001b 3ef1 48=
-00 0000 0003 0000 000d
-> 0000 002b 0000 0000 4942 4d2c 3931 3135               | 0000 002b 4942 4d=
-2c 3931 3135 2d35 3035
-> 2d35 3035 0000 0000 0000 0003 0000 0005               | 0000 0000 0000 00=
-03 0000 0005 0000 0036
+Yeah, this is nice!
 
-So the one on the left (which is ?) - has extra padding after 0x2b,
-which is the property data length, before the property value
-"IBM,9115-505". There shouldn't be any padding there.
+Thanks.
 
-cheers
-
---=-0JeGcxyHP8j/+1A5qOHP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkp/fTUACgkQdSjSd0sB4dJp2gCfRPbLvGz0zdV8B46amUsUzeah
-xHMAn3/nLekoM569PsDspQUi2eD+rkeK
-=ho37
------END PGP SIGNATURE-----
-
---=-0JeGcxyHP8j/+1A5qOHP--
-
-
-
---===============1756431151==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1756431151==--
-
-
