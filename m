@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from inmumg01.tcs.com ([219.64.33.12])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MbVZM-0005XX-7O
-	for kexec@lists.infradead.org; Thu, 13 Aug 2009 08:22:01 +0000
-Date: Thu, 13 Aug 2009 18:21:51 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Increase kernel text size for x86_64
-Message-ID: <20090813082151.GA6502@verge.net.au>
-References: <4A827223.8090907@suse.de> <20090813004013.GB23310@verge.net.au>
-	<4A83CAF5.6080004@suse.de>
+	id 1MbXIz-0007oV-Dn
+	for kexec@lists.infradead.org; Thu, 13 Aug 2009 10:13:14 +0000
+Subject: vmcore file 0 size in x86_64
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4A83CAF5.6080004@suse.de>
+From: Chandan12 K <chandan12.k@tcs.com>
+Message-ID: <OF7433B9C5.3D5E2748-ON65257611.0037CE47-65257611.0037EEDB@tcs.com>
+Date: Thu, 13 Aug 2009 15:40:56 +0530
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,80 +16,377 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2087646302=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hannes Reinecke <hare@suse.de>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-On Thu, Aug 13, 2009 at 10:12:37AM +0200, Hannes Reinecke wrote:
-> Simon Horman wrote:
-> > On Wed, Aug 12, 2009 at 09:41:23AM +0200, Hannes Reinecke wrote:
-> >> Hi all,
-> >>
-> >> I cannot load a x86_64 kernel with kexec on 2.6.31; the error message is:
-> >>
-> >> Can't find kernel text map area from kcore
-> >> Cannot load /boot/vmlinuz
-> >>
-> >> Digging through the source I found a mismatch between the assumed
-> >> kernel text size; kexec has:
-> >>
-> >> #define KERNEL_TEXT_SIZE  (40UL*1024*1024)
-> >>
-> >> but on the kernel side we have:
-> >>
-> >> include/asm/page_64_types.h:
-> >> #define KERNEL_IMAGE_SIZE   (512 * 1024 * 1024)
-> >>
-> >> And, indeed, changing the definition in kexec-tools to the kernel one
-> >> fixed the problem.
-> >>
-> >> Not sure if this has been reported before, if so please ignore
-> >> the noise.
-> > 
-> > Hi,
-> > 
-> > I'm wondering what effect this would have when using
-> > kexec-tools with older kernels, which presumably have
-> > a smaller value for KERNEL_IMAGE_SIZE.
-> > 
-> >> diff --git a/kexec/arch/x86_64/crashdump-x86_64.h b/kexec/arch/x86_64/crashdump-x86_64.h
-> >> index 9f4dee9..0e83527 100644
-> >> --- a/kexec/arch/x86_64/crashdump-x86_64.h
-> >> +++ b/kexec/arch/x86_64/crashdump-x86_64.h
-> >> @@ -11,7 +11,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
-> >>  #define MAXMEM           0x3fffffffffffUL
-> >>  
-> >>  /* Kernel text size */
-> >> -#define KERNEL_TEXT_SIZE  (40UL*1024*1024)
-> >> +#define KERNEL_TEXT_SIZE  (512UL*1024*1024)
-> >>  
-> >>  #define CRASH_MAX_MEMMAP_NR	(KEXEC_MAX_SEGMENTS + 1)
-> >>  #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
-> > 
-> Well, the actual point of failure is in kexec/arch/x86_64/crashdump-x86_64.c:125
-> 
-> 			/* Look for kernel text mapping header. */
-> 			if ((saddr >= __START_KERNEL_map) &&
-> 			    (eaddr <= __START_KERNEL_map + KERNEL_TEXT_SIZE)) {
-> 				saddr = (saddr) & (~(KERN_VADDR_ALIGN - 1));
-> 				info->kern_vaddr_start = saddr;
-> 				size = eaddr - saddr;
-> 
-> which basically should look for a ELF header into which the kernel fits. As we're
-> effectively just moving the upper limit I fail to see any harm to older kernels.
-> 
-> Hmm. Haven't checked for other occurrences of KERNEL_TEXT_SIZE, though.
-> 
-> Would be nice we could be getting these values off somewhere; rely on
-> some kernel defines is going to break now and then.
+This is a multipart message in MIME format.
+--===============2087646302==
+Content-Type: multipart/alternative; boundary="=_alternative 0037EE8565257611_="
 
-Agreed, but I think that your patch is worth having in the mean time.
-I will apply it.
+This is a multipart message in MIME format.
+--=_alternative 0037EE8565257611_=
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+
+Hi, 
+
+Adding boot logs 
+
+NET: Registered protocol family 1 
+audit: initializing netlink socket (disabled) 
+type=2000 audit(1250069944.104:1): initialized 
+VFS: Disk quotas dquot_6.5.1 
+Dquot-cache hash table entries: 512 (order 0, 4096 bytes) 
+Warning: Core image elf header is notsane 
+Kdump: vmcore not initialized 
+Registering unionfs 2.2-mm 
+msgmni has been set to 90 
+io scheduler noop registered 
+io scheduler anticipatory registered
+
+
+however, similar case has already been discussed in other mailing lists 
+with vivek. The only difference is that, I am not using redhat system and 
+dont have any user level kexel tools.   
+
+https://lists.linux-foundation.org/pipermail/fastboot/2007-January/012572.html 
+
+
+The kernel command line of capture kernel (kexe'ed kernel) : Kernel 
+command line: root=/dev/nfs rw console=ttyS0,115200 ip=::::::dhcp 
+selinux=0 noacpi maxcpus=1 memmap=exactmap memmap=640K@0K 
+memmap=64876K@16384K elfcorehdr=81260K 
+
+
+Command line for the Primary kernel : root=/dev/nfs rw 
+console=ttyS0,115200 ip=::::::dhcp crashkernel=64M@16M 
+
+kexec command used : kexec -p bzImage --append="root=/dev/nfs rw 
+console=ttyS0,115200 ip=::::::dhcp selinux=0 noacpi maxcpus=1" 
+
+Kconfig options : 
+
+CONFIG_CRASH_DUMP=y 
+CONFIG_PHYSICAL_START=0x200000 
+CONFIG_RELOCATABLE=y 
+CONFIG_PHYSICAL_ALIGN=0x200000
+
+Please suggest. 
+
+
+Chandan 
+
+
+
+Dave Anderson <anderson@redhat.com> 
+Sent by: crash-utility-bounces@redhat.com 
+08/12/2009 07:39 PM 
+
+Please respond to
+"Discussion list for crash utility usage,        maintenance and 
+development" <crash-utility@redhat.com>
+
+
+To
+"Discussion list for crash utility usage,        maintenance and 
+development" <crash-utility@redhat.com> 
+cc
+
+Subject
+Re: [Crash-utility] vmcore file size 0 on x86_64
+
+
+
+
+
+
+
+
+
+Forwarded to kexec list:
+
+ http://lists.infradead.org/pipermail/kexec/2009-August/003474.html
+
+----- "Chandan12 K" <chandan12.k@tcs.com> wrote:
+
+> Hi,
+> 
+> I am little new in this mailing list. I just wondered if anybody could
+> help me regarding the vmcore file generation. I ran kexec on my x86_64
+> machine, and the /proc/vmcore file is created with zero size.
+> 
+> However, even if I read the /dev/oldmem file, I am only able to read
+> till 16M. I guess I am only able to read till the 'X', where X is
+> crashkernel=Y@X.
+> 
+> Moreover, My machine seems to have 32 bit user space and ofcourse, 64
+> bit kernel space.
+> 
+> Appreciate any response.
+> 
+> Chandan Kumar
+> ____________________________________________ =====-----=====-----=====
+> Notice: The information contained in this e-mail
+> message and/or attachments to it may contain
+> confidential or privileged information. If you are
+> not the intended recipient, any dissemination, use,
+> review, distribution, printing or copying of the
+> information contained in this e-mail message
+> and/or attachments to it are strictly prohibited. If
+> you have received this communication in error,
+> please notify us by reply e-mail or telephone and
+> immediately and permanently delete the message
+> and any attachments. Thank you 
+> --
+> Crash-utility mailing list
+> Crash-utility@redhat.com
+> https://www.redhat.com/mailman/listinfo/crash-utility
+
+--
+Crash-utility mailing list
+Crash-utility@redhat.com
+https://www.redhat.com/mailman/listinfo/crash-utility
+
+ForwardSourceID:NT0000987A     
+=====-----=====-----=====
+Notice: The information contained in this e-mail
+message and/or attachments to it may contain 
+confidential or privileged information. If you are 
+not the intended recipient, any dissemination, use, 
+review, distribution, printing or copying of the 
+information contained in this e-mail message 
+and/or attachments to it are strictly prohibited. If 
+you have received this communication in error, 
+please notify us by reply e-mail or telephone and 
+immediately and permanently delete the message 
+and any attachments. Thank you
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+ForwardSourceID:NT000098BE 
+
+Chandan Kumar
+TCS Mumbai
+=====-----=====-----=====
+Notice: The information contained in this e-mail
+message and/or attachments to it may contain 
+confidential or privileged information. If you are 
+not the intended recipient, any dissemination, use, 
+review, distribution, printing or copying of the 
+information contained in this e-mail message 
+and/or attachments to it are strictly prohibited. If 
+you have received this communication in error, 
+please notify us by reply e-mail or telephone and 
+immediately and permanently delete the message 
+and any attachments. Thank you
+
+
+
+--=_alternative 0037EE8565257611_=
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html; charset="us-ascii"
+
+
+<br><font size=2 face="sans-serif">Hi,</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+Adding boot logs</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+NET: Registered protocol family 1</font><font size=3> </font><font size=2 face="sans-serif"><br>
+audit: initializing netlink socket (disabled)</font><font size=3> </font><font size=2 face="sans-serif"><br>
+type=2000 audit(1250069944.104:1): initialized</font><font size=3> </font><font size=2 face="sans-serif"><br>
+VFS: Disk quotas dquot_6.5.1</font><font size=3> </font><font size=2 face="sans-serif"><br>
+Dquot-cache hash table entries: 512 (order 0, 4096 bytes)</font><font size=3>
+</font><font size=2 face="sans-serif"><br>
+Warning: Core image elf header is notsane</font><font size=3> </font><font size=2 face="sans-serif"><br>
+Kdump: vmcore not initialized</font><font size=3> </font><font size=2 face="sans-serif"><br>
+Registering unionfs 2.2-mm</font><font size=3> </font><font size=2 face="sans-serif"><br>
+msgmni has been set to 90</font><font size=3> </font><font size=2 face="sans-serif"><br>
+io scheduler noop registered</font><font size=3> </font><font size=2 face="sans-serif"><br>
+io scheduler anticipatory registered</font><font size=3><br>
+<br>
+</font><font size=2 face="sans-serif"><br>
+however, similar case has already been discussed in other mailing lists
+with vivek. The only difference is that, I am not using redhat system and
+dont have any user level kexel tools. &nbsp;</font><font size=3> <br>
+</font><font size=3 color=blue><u><br>
+</u></font><a href="https://lists.linux-foundation.org/pipermail/fastboot/2007-January/012572.html"><font size=2 color=blue face="Trebuchet MS"><u>https://lists.linux-foundation.org/pipermail/fastboot/2007-January/012572.html</u></font></a><font size=3>
+<br>
+</font><font size=2 face="sans-serif"><br>
+The kernel command line of capture kernel (kexe'ed kernel) : Kernel command
+line: root=/dev/nfs rw console=ttyS0,115200 ip=::::::dhcp selinux=0 noacpi
+maxcpus=1 memmap=exactmap memmap=640K@0K memmap=64876K@16384K elfcorehdr=81260K</font><font size=3>
+<br>
+<br>
+</font><font size=2 face="sans-serif"><br>
+Command line for the Primary kernel : root=/dev/nfs rw console=ttyS0,115200
+ip=::::::dhcp crashkernel=64M@16M</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+kexec command used : kexec -p bzImage --append=&quot;root=/dev/nfs rw console=ttyS0,115200
+ip=::::::dhcp selinux=0 noacpi maxcpus=1&quot;</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+Kconfig options :</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+CONFIG_CRASH_DUMP=y</font><font size=3> </font><font size=2 face="sans-serif"><br>
+CONFIG_PHYSICAL_START=0x200000</font><font size=3> </font><font size=2 face="sans-serif"><br>
+CONFIG_RELOCATABLE=y</font><font size=3> </font><font size=2 face="sans-serif"><br>
+CONFIG_PHYSICAL_ALIGN=0x200000</font><font size=3><br>
+</font><font size=2 face="sans-serif"><br>
+Please suggest.</font><font size=3> <br>
+</font><font size=2 face="sans-serif"><br>
+</font><font size=3><br>
+</font><font size=2 face="sans-serif">Chandan</font><font size=3> <br>
+<br>
+<br>
+</font>
+<table width=100%>
+<tr valign=top>
+<td width=48%><font size=1 face="sans-serif"><b>Dave Anderson &lt;anderson@redhat.com&gt;</b>
+<br>
+Sent by: crash-utility-bounces@redhat.com</font><font size=3> </font>
+<p><font size=1 face="sans-serif">08/12/2009 07:39 PM</font><font size=3>
+</font>
+<br>
+<table border>
+<tr valign=top>
+<td bgcolor=white>
+<div align=center><font size=1 face="sans-serif">Please respond to<br>
+&quot;Discussion list for crash utility usage, &nbsp; &nbsp; &nbsp; &nbsp;maintenance
+and development&quot; &lt;crash-utility@redhat.com&gt;</font></div></table>
+<p>
+<td width=51%>
+<table width=100%>
+<tr valign=top>
+<td width=7%>
+<div align=right><font size=1 face="sans-serif">To</font></div>
+<td width=92%><font size=1 face="sans-serif">&quot;Discussion list for
+crash utility usage, &nbsp; &nbsp; &nbsp; &nbsp;maintenance and development&quot;
+&lt;crash-utility@redhat.com&gt;</font><font size=3> </font>
+<tr valign=top>
+<td>
+<div align=right><font size=1 face="sans-serif">cc</font></div>
+<td>
+<tr valign=top>
+<td>
+<div align=right><font size=1 face="sans-serif">Subject</font></div>
+<td><font size=1 face="sans-serif">Re: [Crash-utility] vmcore file size
+0 on x86_64</font></table>
+<br>
+<br>
+<table>
+<tr valign=top>
+<td>
+<td></table>
+<br></table>
+<br><font size=3><br>
+<br>
+</font><tt><font size=2><br>
+<br>
+Forwarded to kexec list:<br>
+<br>
+ </font></tt><a href="http://lists.infradead.org/pipermail/kexec/2009-August/003474.html"><tt><font size=2 color=blue><u>http://lists.infradead.org/pipermail/kexec/2009-August/003474.html</u></font></tt></a><tt><font size=2><br>
+<br>
+----- &quot;Chandan12 K&quot; &lt;chandan12.k@tcs.com&gt; wrote:<br>
+<br>
+&gt; Hi,<br>
+&gt; <br>
+&gt; I am little new in this mailing list. I just wondered if anybody could<br>
+&gt; help me regarding the vmcore file generation. I ran kexec on my x86_64<br>
+&gt; machine, and the /proc/vmcore file is created with zero size.<br>
+&gt; <br>
+&gt; However, even if I read the /dev/oldmem file, I am only able to read<br>
+&gt; till 16M. I guess I am only able to read till the 'X', where X is<br>
+&gt; crashkernel=Y@X.<br>
+&gt; <br>
+&gt; Moreover, My machine seems to have 32 bit user space and ofcourse,
+64<br>
+&gt; bit kernel space.<br>
+&gt; <br>
+&gt; Appreciate any response.<br>
+&gt; <br>
+&gt; Chandan Kumar<br>
+&gt; ____________________________________________ =====-----=====-----=====<br>
+&gt; Notice: The information contained in this e-mail<br>
+&gt; message and/or attachments to it may contain<br>
+&gt; confidential or privileged information. If you are<br>
+&gt; not the intended recipient, any dissemination, use,<br>
+&gt; review, distribution, printing or copying of the<br>
+&gt; information contained in this e-mail message<br>
+&gt; and/or attachments to it are strictly prohibited. If<br>
+&gt; you have received this communication in error,<br>
+&gt; please notify us by reply e-mail or telephone and<br>
+&gt; immediately and permanently delete the message<br>
+&gt; and any attachments. Thank you <br>
+&gt; --<br>
+&gt; Crash-utility mailing list<br>
+&gt; Crash-utility@redhat.com<br>
+&gt; </font></tt><a href="https://www.redhat.com/mailman/listinfo/crash-utility"><tt><font size=2 color=blue><u>https://www.redhat.com/mailman/listinfo/crash-utility</u></font></tt></a><tt><font size=2><br>
+<br>
+--<br>
+Crash-utility mailing list<br>
+Crash-utility@redhat.com</font></tt><font size=3 color=blue><u><br>
+</u></font><a href="https://www.redhat.com/mailman/listinfo/crash-utility"><tt><font size=2 color=blue><u>https://www.redhat.com/mailman/listinfo/crash-utility</u></font></tt></a><font size=3><br>
+</font><font size=1 color=white face="sans-serif"><br>
+ForwardSourceID:NT0000987A &nbsp; &nbsp;</font><font size=3> </font>
+<br><tt><font size=3>=====-----=====-----=====<br>
+Notice: The information contained in this e-mail<br>
+message and/or attachments to it may contain <br>
+confidential or privileged information. If you are <br>
+not the intended recipient, any dissemination, use, <br>
+review, distribution, printing or copying of the <br>
+information contained in this e-mail message <br>
+and/or attachments to it are strictly prohibited. If <br>
+you have received this communication in error, <br>
+please notify us by reply e-mail or telephone and <br>
+immediately and permanently delete the message <br>
+and any attachments. Thank you<br>
+<br>
+<br>
+</font></tt><tt><font size=2>_______________________________________________<br>
+kexec mailing list<br>
+kexec@lists.infradead.org<br>
+</font></tt><a href=http://lists.infradead.org/mailman/listinfo/kexec><tt><font size=2>http://lists.infradead.org/mailman/listinfo/kexec</font></tt></a><tt><font size=2><br>
+</font></tt>
+<br><font size=1 color=white face="sans-serif">ForwardSourceID:NT000098BE
+&nbsp; &nbsp;</font>
+<br><font size=2 face="sans-serif"><br>
+Chandan Kumar<br>
+TCS Mumbai<br>
+</font><pre>=====-----=====-----=====
+Notice: The information contained in this e-mail
+message and/or attachments to it may contain 
+confidential or privileged information. If you are 
+not the intended recipient, any dissemination, use, 
+review, distribution, printing or copying of the 
+information contained in this e-mail message 
+and/or attachments to it are strictly prohibited. If 
+you have received this communication in error, 
+please notify us by reply e-mail or telephone and 
+immediately and permanently delete the message 
+and any attachments. Thank you
+
+
+</pre>
+--=_alternative 0037EE8565257611_=--
+
+
+
+--===============2087646302==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2087646302==--
+
+
