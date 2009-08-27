@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qy0-f178.google.com ([209.85.221.178])
+Received: from mail-gx0-f221.google.com ([209.85.217.221])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MgaWo-0007qX-IJ
-	for kexec@lists.infradead.org; Thu, 27 Aug 2009 08:40:23 +0000
-Received: by qyk8 with SMTP id 8so583497qyk.2
-	for <kexec@lists.infradead.org>; Thu, 27 Aug 2009 01:40:16 -0700 (PDT)
+	id 1MghIt-0001pn-82
+	for kexec@lists.infradead.org; Thu, 27 Aug 2009 15:54:27 +0000
+Received: by gxk21 with SMTP id 21so1477740gxk.3
+	for <kexec@lists.infradead.org>; Thu, 27 Aug 2009 08:54:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20090826105024.GC18761@verge.net.au>
-References: <aec7e5c30908200614j68c1ad6ci7a3d8d1b9f98d08b@mail.gmail.com>
-	<20090826063117.GB18761@verge.net.au>
-	<aec7e5c30908260056w629fb2fp4be4c8660860f1c4@mail.gmail.com>
-	<20090826105024.GC18761@verge.net.au>
-Date: Thu, 27 Aug 2009 17:40:16 +0900
-Message-ID: <aec7e5c30908270140x6d5a7225j105972a607fe26c5@mail.gmail.com>
-Subject: Re: kexec-tools-2.0.1 and CFLAGS
-From: Magnus Damm <magnus.damm@gmail.com>
+Date: Thu, 27 Aug 2009 23:54:22 +0800
+Message-ID: <e997b7420908270854v423b51f9vc7e2d012c91360f@mail.gmail.com>
+Subject: Does kexec support SMP on powerpc? E500 V2
+From: "wilbur.chan" <wilbur512@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +18,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Wed, Aug 26, 2009 at 7:50 PM, Simon Horman<horms@verge.net.au> wrote:
-> I think you are understanding it right, that the current code fails
-> with no optimisation enabled because the unused function isn't optimised
-> away. Is there a reason you need -O0? It seems that fixing this is probably
-> more effort than its worth.
+There was a patch of kexec on SMP mips 64 , and I attempt to implement
+kexec on SMP powerpc .
 
-I don't really need -O0, just happened to pass in a custom CFLAGS
-without -O2 to ./configure and then the code didn't compile. Now I
-know that I should include -O2 in the CFLAGS to make sure the code
-builds.
+I found that ,=A0 it was a little different with=A0 mips when booting a
+kernel. We know=A0 that, every CPU jumped directly into kernel on
 
-If it should be fixed or not is a different question. I'm perfectly
-happy with things as-is!
+mips, but on powerpc , E500 SMP,=A0 the 'master' CPU was in charge of
+'slave'=A0 CPUs , so 'slave' CPU=A0 could do nothing
 
-Cheers,
+but to=A0 wait for 'master'=A0 to wake him up in Init function.
 
-/ magnus
+
+How to implement kexec on SMP powerpc?
+
+Any suggestions would be appreciate
+
+regards,
+
+wilbur
 
 _______________________________________________
 kexec mailing list
