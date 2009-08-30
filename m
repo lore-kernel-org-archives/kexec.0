@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gx0-f221.google.com ([209.85.217.221])
+Received: from mail-yw0-f198.google.com ([209.85.211.198])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Mgh9u-0005BK-UH
-	for kexec@lists.infradead.org; Thu, 27 Aug 2009 15:45:11 +0000
-Received: by gxk21 with SMTP id 21so1466813gxk.3
-	for <kexec@lists.infradead.org>; Thu, 27 Aug 2009 08:45:04 -0700 (PDT)
+	id 1MhdJn-00014i-SE
+	for kexec@lists.infradead.org; Sun, 30 Aug 2009 05:51:16 +0000
+Received: by ywh36 with SMTP id 36so4226040ywh.31
+	for <kexec@lists.infradead.org>; Sat, 29 Aug 2009 22:51:09 -0700 (PDT)
 MIME-Version: 1.0
-Date: Thu, 27 Aug 2009 23:45:03 +0800
-Message-ID: <e997b7420908270845m2f8472f8vd2eb1ebb1ce047da@mail.gmail.com>
-Subject: Does kexec support SMP on powerpc? E500 V2
+In-Reply-To: <20090827163319.GA3223@in.ibm.com>
+References: <e997b7420908270854v423b51f9vc7e2d012c91360f@mail.gmail.com>
+	<20090827163319.GA3223@in.ibm.com>
+Date: Sun, 30 Aug 2009 13:51:09 +0800
+Message-ID: <e997b7420908292251v19072667h8ac7c40a2739769b@mail.gmail.com>
+Subject: Re: Does kexec support SMP on powerpc? E500 V2
 From: "wilbur.chan" <wilbur512@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,74 +21,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1517373716=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: mohan@in.ibm.com
+Cc: kexec@lists.infradead.org
 
---===============1517373716==
-Content-Type: multipart/alternative; boundary=0016e646182e7cece00472217362
+2009/8/28 M. Mohan Kumar <mohan@in.ibm.com>:
 
---0016e646182e7cece00472217362
-Content-Type: text/plain; charset=ISO-8859-1
+>
+> Wilbur, I am not sure about ppc32 arch. Check
+> kexec/purgatory/arch/ppc64/v2wrap.S which makes all secondary cpus to spin
+> in a loop at the physical address 0x60
+>
+> Regards,
+> M. Mohan Kumar
+>
 
-There was a patch of kexec on SMP mips 64 , and I attempt to implement kexec
-on SMP powerpc .
+ I've read the code of kexec-elf-ppc64.c and v2wrap.S,
 
-I found that ,  it was a little different with  mips when booting a kernel.
-We know  that, every CPU jumped directly into kernel on
-
-mips, but on powerpc , E500 SMP,  the 'master' CPU was in charge of 'slave'
-CPUs , so 'slave' CPU  could do nothing
-
-but to  wait for 'master'  to wake him up in Init function.
+but got quit confused .
 
 
-How to implement kexec on SMP powerpc?
-Any suggestions would be appreciate
+Hmmm...  as matter of fact, I'm not quit familliar with the principle
+of  purgatory , because I
+
+modified the standard kexec-tool that , I only passed in the kernel
+segment , without any
+
+ramdisk or other segments.
+
+
+My questions are as followed:
+
+
+
+
+q1:  const unsigned char purgatory[] =...  (kexec/purgatory.c)
+
+
+ where are the  elements in Array 'purgatory'  coming from ?
+
+Is it the binary form of  v2wrap.S ?
+
+
+
+
+
+ (kexec_elf_ppc64.c)
+
+q2:   elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,\
+purgatory_size, 0, max_addr, 1, 0);
+
+Does  the 'purgatory' here stand for the array above or v2wrap.S ?  or both?
+
+What is this code used for?
+
+q3:   elf_rel_get_symbol(&info->rhdr, "purgatory_start", slave_code,
+			sizeof(slave_code));
+   master_entry = slave_code[0];
+
+ Does  master_entry euqal to the address of instruction 'b  master' in
+v2wrap.S ?
+
+
+q4:  memcpy(slave_code, info->segment[0].buf, sizeof(slave_code));
+
+why coying 256 bytes  of kernel data to  slave_code ,  modify first 4 bytes
+
+to  master_entry,then copy back to info->rhdr ?
+
+Why doing this?
+
+
+
+I saw comment saying :
+
+'a copy of the first 0x100 bytes of this code(v2wrap.S)   is copied to
+0, and , The above 0x100
+
+bytes at purgatory_start are replaced with the  code from the kernel'
+
+After this,  how the slave cpus jumps to 'slave' point in v2wrap.S  ,
+while  master cpu jumps to
+
+'purgatory_start' ?
+
+
+Thank you
+
+
 
 regards,
 
 wilbur
 
---0016e646182e7cece00472217362
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div>There was a patch of kexec on SMP=A0mips 64 , and I attempt to impleme=
-nt kexec on SMP powerpc .</div>
-<div>=A0</div>
-<div>I found that , =A0it was a little different with =A0mips when booting =
-a kernel. We know =A0that, every CPU jumped directly into kernel on </div>
-<div>=A0</div>
-<div>mips, but on powerpc , E500 SMP,=A0 the &#39;master&#39; CPU was in ch=
-arge of &#39;slave&#39;=A0 CPUs , so=A0&#39;slave&#39; CPU =A0could do noth=
-ing </div>
-<div>=A0</div>
-<div>but to=A0 wait for &#39;master&#39;=A0 to wake him up in Init function=
-.</div>
-<div>=A0</div>
-<div>=A0</div>
-<div>How to implement kexec on SMP powerpc?</div>
-<div>Any suggestions would be appreciate</div>
-<div>=A0</div>
-<div>regards,</div>
-<div>=A0</div>
-<div>wilbur</div>
-
---0016e646182e7cece00472217362--
-
-
---===============1517373716==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1517373716==--
-
