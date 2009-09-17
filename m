@@ -1,25 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from az33egw02.freescale.net ([192.88.158.103])
+Received: from e28smtp09.in.ibm.com ([59.145.155.9])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Mnnee-00024K-FG
-	for kexec@lists.infradead.org; Wed, 16 Sep 2009 06:06:17 +0000
-Received: from de01smr01.freescale.net (de01smr01.freescale.net [10.208.0.31])
-	by az33egw02.freescale.net (8.14.3/az33egw02) with ESMTP id
-	n8G662Re013873
-	for <kexec@lists.infradead.org>; Tue, 15 Sep 2009 23:06:03 -0700 (MST)
-Received: from zch01exm27.fsl.freescale.net (zch01exm27.ap.freescale.net
-	[10.192.129.223])
-	by de01smr01.freescale.net (8.13.1/8.13.0) with ESMTP id n8G67sji014610
-	for <kexec@lists.infradead.org>; Wed, 16 Sep 2009 01:07:55 -0500 (CDT)
-Content-class: urn:content-classes:message
+	id 1MoCwI-0003Ja-9q
+	for kexec@lists.infradead.org; Thu, 17 Sep 2009 09:06:11 +0000
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+	by e28smtp09.in.ibm.com (8.14.3/8.13.1) with ESMTP id n8H9178f019194
+	for <kexec@lists.infradead.org>; Thu, 17 Sep 2009 14:31:07 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	n8H95xrv1257670
+	for <kexec@lists.infradead.org>; Thu, 17 Sep 2009 14:35:59 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
+	n8H95x3S006486
+	for <kexec@lists.infradead.org>; Thu, 17 Sep 2009 14:35:59 +0530
+From: "M. Mohan Kumar" <mohan@in.ibm.com>
+Subject: Re: [RFC] [PATCH] Write to HVC terminal from purgatory code
+Date: Thu, 17 Sep 2009 14:36:02 +0530
+References: <20090907051407.GA2990@in.ibm.com>
+	<20090908230911.GE4075@verge.net.au>
+In-Reply-To: <20090908230911.GE4075@verge.net.au>
 MIME-Version: 1.0
-Subject: RE: How to build the kexec too for ARM11 using the cross compiler.
-Date: Wed, 16 Sep 2009 14:05:58 +0800
-Message-ID: <E99B4DCB8B5A0241832DBF4FCB7C813A7D02CF@zch01exm27.fsl.freescale.net>
-In-Reply-To: <20090916035131.GO24467@verge.net.au>
-References: <E99B4DCB8B5A0241832DBF4FCB7C813A7D0280@zch01exm27.fsl.freescale.net>
-	<20090916035131.GO24467@verge.net.au>
-From: "Lai Weilin-B04597" <B04597@freescale.com>
+Message-Id: <200909171436.02165.mohan@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,45 +30,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, miltonm@bga.com
 
-SSBhbSB0cnlpbmcgdG8gYnVpbGQgY3Jvc3MtY29tcGlsZSwgb24gYSB1YnVudHUgc2VydmVyLiAK
-QWZ0ZXIgSSByZWFkIHRocm91Z2ggdGhlIElOU1RBTEwgZmlsZSwgSSBjYW1lIHVwIHRoZSBmb2xs
-b3dpbmcgY29uZmlndXJlIG9wdGlvbi4KLi9jb25maWd1cmUgYXJtIC0tcHJlZml4PS91c3IgLS1i
-dWlsZD1hcm0tbm9uZS1saW51eC1nbnVlYWJpIC0tdGFyZ2V0PWFybS1ub25lLWxpbnV4LWdudWVh
-YmkgLS1ob3N0PWk2ODYtcGMtbGludXgtZ251CkFuZCBhZnRlciBzZXR0aW5nIHRoZSBlbnZpcm9u
-bWVudCB2YXJpYWJsZXMsIHN1Y2ggYXMgQ0MsIEJVSUxEX0NDIGFuZCBldGMuLCBpdCB3b3Jrcy4K
-CkFmdGVyIHRoZSBzdWNjZXNzZnVsIGJ1aWxkLCBJIHRyaWVkIHRoZSBrZXhlYyBvdXQgdXNpbmcg
-dGhlIGZvbGxvd2luZyBjb21tYW5kLgoja2V4ZWMgLWwgL3VuaXRfdGVzdHMvekltYWdlX214MzVf
-NDMwIC0tYXBwZW5kPSJub2luaXRyZCBjbwpuc29sZT10dHlteGMwLDExNTIwMCByb290PS9kZXYv
-bmZzIG5mc3Jvb3Q9MTAuMTkyLjIyNS4yMTE6L3Rvb2xzL3Jvb3Rmcy9iMDQ1OTcvcgpvb3Rmc19t
-eDM1IHJ3IGlwPWRoY3Agbm9fY29uc29sZV9zdXNwZW5kIgoKQWZ0ZXIgZXhlY3V0ZSB0aGUgYSBj
-dXJyZW50bHkgbG9hZGVkIGtlcm5lbCwgZXJyb3Igb2NjdXIgYWdhaW4uClRoZSBsb2cgaXMgYXMg
-YmVsb3cuCgpNWEMgV2F0Y2hkb2cgIyAwIHNodXRkb3duClN0YXJ0aW5nIG5ldyBrZXJuZWwKQnll
-IQpVbmNvbXByZXNzaW5nIExpbnV4Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uCgpjcmMgZXJyb3IKCiAtLSBTeXN0ZW0gaGFs
-dGVkCgoKQlRXLCB5b3VyIGNvbmZpZ3VyZSB3b3JrcyBmaW5lIGZvciBBUk0gb24gbXkgc2lkZSB0
-b28uClRoYW5rcy4uLgoKLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KRnJvbTogU2ltb24gSG9y
-bWFuIFttYWlsdG86aG9ybXNAdmVyZ2UubmV0LmF1XSAKU2VudDogMjAwOcTqOdTCMTbI1SAxMTo1
-MgpUbzogTGFpIFdlaWxpbi1CMDQ1OTcKQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKU3Vi
-amVjdDogUmU6IEhvdyB0byBidWlsZCB0aGUga2V4ZWMgdG9vIGZvciBBUk0xMSB1c2luZyB0aGUg
-Y3Jvc3MgY29tcGlsZXIuCgpPbiBXZWQsIFNlcCAxNiwgMjAwOSBhdCAxMTowNjozNEFNICswODAw
-LCBMYWkgV2VpbGluLUIwNDU5NyB3cm90ZToKPiBIaSwKPiBJIGFtIHRyeWluZyB0byBidWlsZCBr
-ZXhlYyB0b29sIGZvciBBUk0xMS4gIEkgY2FuJ3Qgc2VlIGFueSBkb2MgdGhhdCAKPiBoZWxwcyB0
-byBjb25maWd1cmUuIFRoZSBjcm9zcyBjb21waWxlciBpcyB1c2VkLCBhbmQgSSB0cmllZCB0aGUg
-Cj4gZm9sbG93aW5nIGNvbmZpZ3VyZSBvcHRpb24sIC4vY29uZmlndXJlIGFybSAtLXByZWZpeD0v
-dXNyIAo+IC0tYnVpbGQ9YXJtLW5vbmUtbGludXgtZ251ZWFiaSAtLWhvc3Q9aTY4Ni1wYy1saW51
-eC1nbnUgCj4gLS10YXJnZXQ9YXJtLW5vbmUtbGludXgtZ251ZWFiaSBidXQgZmFpbGVkLgo+IEFu
-eW9uZSBjYW4gaGVscCA/CgpIaSwKCldoZW4gY3Jvc3MtY29tcGlsaW5nIGZvciBhcm0gdGhlIGZv
-bGxvd2luZyB3b3JrcyBmb3IgbWU6CgphdXRvaGVhZGVyCmF1dG9jb25mCi4vY29uZmlndXJlIC0t
-aG9zdD1hcm0tdW5rbm93bi1saW51eC1nbnUKCkluIHdoYXQgd2F5IGlzIHdoYXQgeW91IGFyZSB0
-cnlpbmcgZmFpbGluZz8KQW5kIGFyZSB5b3UgdHJ5aW5nIHRvIGJ1aWxkIG5hdGl2ZWx5IG9yIGNy
-b3NzLWNvbXBpbGU/CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+> On Mon, Sep 07, 2009 at 10:44:07AM +0530, M. Mohan Kumar wrote:
+> > Write to HVC terminal from purgatory code
+> >
+> > Current x86/x86-64 kexec-tools print the message "I'm in purgatory" to
+> > serial console/VGA while executing the purgatory code.  Implement this
+> > feature for POWERPC pseries platform by using the H_PUT_TERM_CHAR
+> > hypervisor call by printng to hvc console.
+>
+> This change seems reasonable to me, can any of the ppc people offer a
+> review?
+>
+
+Sorry, I forgot to mention that this patch is tested on POWER5 (under 
+hypervisor) and POWER4 Full System partition mode (under non-hypervisor)
+
+Regards,
+M. Mohan Kumar.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
