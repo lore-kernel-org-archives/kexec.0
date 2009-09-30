@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from n16a.bullet.mail.mud.yahoo.com ([68.142.207.126])
-	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MsSlN-0004k8-JE
-	for kexec@lists.infradead.org; Tue, 29 Sep 2009 02:48:29 +0000
-Message-ID: <527147.77305.qm@web65705.mail.ac4.yahoo.com>
-Date: Mon, 28 Sep 2009 19:48:22 -0700 (PDT)
-From: "Prabhakar K." <krishkar99@yahoo.com>
-Subject: Re: [Fastboot] kexec - 2.6.14 - loads BIOS again
-In-Reply-To: <m1tyympope.fsf@fess.ebiederm.org>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1Mt4En-0002PD-UD
+	for kexec@lists.infradead.org; Wed, 30 Sep 2009 18:49:23 +0000
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: [PATCH] ia64: Restore registers in the stack on INIT
+Date: Wed, 30 Sep 2009 14:49:25 -0400
 MIME-Version: 1.0
+Message-Id: <AACA41FEBB43F2indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,142 +16,200 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1412775172=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: fastboot@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>
+To: linux-ia64@vger.kernel.org, kexec@lists.infradead.org
 
---===============1412775172==
-Content-Type: multipart/alternative; boundary="0-564131461-1254192502=:77305"
+Hi all,
 
---0-564131461-1254192502=:77305
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+When I was investigating vmcore captured by kdump, I noticed that
+the backtrace was sometimes not displayed correctly.
 
+The cause is that pt_regs and switch_stack are not saved in the stack
+when INIT comes during fsys mode. In fsys mode, r13 register does not
+point task_struct of current, so pt_regs and switch_stack are not saved
+because of the following code in arch/ia64/kernel/mca.c.
 
-From: Eric W. Biederman <ebiederm@xmission.com>
-Subject: Re: [Fastboot] kexec - 2.6.14 - loads BIOS again
-To: "Prabhakar K." <krishkar99@yahoo.com>
-Cc: "Kexec Mailing List" <kexec@lists.infradead.org>, fastboot@lists.linux-=
-foundation.org
-Date: Tuesday, September 29, 2009, 6:11 AM
+static struct task_struct *
+ia64_mca_modify_original_stack(struct pt_regs *regs,
+(snip)
+        if (r13 != sos->prev_IA64_KR_CURRENT) {
+                msg = "inconsistent previous current and r13";
+                goto no_mod;
+        }
 
-"Prabhakar K." <krishkar99@yahoo.com> writes:
+What I'd like to note here is that there is no way to know what happened
+when original stack is not modified.
+As I wrote above, the registers is not saved in the original stack, and
+moreover, the registers in the per cpu stack are useless since they are
+incomplete. We can't know why backtrace is not displayed. The only thing
+we can get is the message "inconsistent previous current and r13" in the
+mprintk buffer. Something problem happened? Or kernel was just in fsys
+mode? We cannot know.
 
->> Hi - After my previous posting I was able to make some progress.
->>
->> When I do
->>
->> kexec -l vmlinux --append=3D"init 1 root=3D/dev/hda2" --console-serial
->>
->> and=A0
->> kexec -e,
->>
->> I get message:
->>
->> Starting new kernel
->> I'm in purgatory
->>
->> And after that it still boots from BIOS (to the same first kernel).
->>
->> Whats the problem here?
->
-> I would recommend instrumenting up purgatory and then your target kernel.
->
-> It is quite possible the problem is in your backport.
->
->>>>>
->=A0 I have instrumented the purgatory code. when I run kexec -e, It hangs =
-for a
-> while at=A0
-> sha256_starts(&ctx); in the function verify_sha256_digest(), and then reb=
-oots
-> to the first kernel (from BIOS). I have put debug prints in sha256_starts=
-, but
-> none of those are executed.
->
-> Interestingly, the same function sha256_starts is executed during kexec -=
-l,
-> which is called as part of update_purgatory( )( when my_load( ) is called=
- from
-> kexec.c).
-> so its surprise why the same function is giving problems when kexec -e is=
- run.
+Solution1:
+ The pt_regs in the per cpu stack are incomplete, so fill in the blanks
+ with the appropriate registers so that we can debug using them.
 
-Do you by any chance have a watchdog you are not petting?
->> Yes, we do have software watchdog and hardware watchdog. I disabled soft=
-ware watchdog and I think the reason for resetting to the first kernel can =
-be explained due to hardware watchdog kicking in.
-To try out a different version of the kexec, I took kexec version 20080227 =
-from=A0http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/and =
-instrumented that code as well. With this, I was able to see the sha 256 ve=
-rification done during kexec -e and also the post verification of purgatory=
- code. And it hangs there (does not reboot to the first kernel).
-So, any conclusions based on these ? Please CC me in reply. Thanks !!
+Solution2:
+ Save the processor min-state(pal_min_state_area_t) somewhere. When
+ debugging, user can get register info from it.
 
-Eric=0A=0A=0A      
---0-564131461-1254192502=:77305
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+I prefer solution1 because it's easy for user to debug. The
+following patch is for solution1. restore_regs(), which is new function
+added by this patch, is just copying registers from pal_min_state
+to pt_regs.
 
-<table cellspacing=3D"0" cellpadding=3D"0" border=3D"0" ><tr><td valign=3D"=
-top" style=3D"font: inherit;"><br>From: Eric W. Biederman &lt;ebiederm@xmis=
-sion.com&gt;<br>Subject: Re: [Fastboot] kexec - 2.6.14 - loads BIOS again<b=
-r>To: "Prabhakar K." &lt;krishkar99@yahoo.com&gt;<br>Cc: "Kexec Mailing Lis=
-t" &lt;kexec@lists.infradead.org&gt;, fastboot@lists.linux-foundation.org<b=
-r>Date: Tuesday, September 29, 2009, 6:11 AM<br><br><div class=3D"plainMail=
-">"Prabhakar K." &lt;<a ymailto=3D"mailto:krishkar99@yahoo.com" href=3D"/mc=
-/compose?to=3Dkrishkar99@yahoo.com">krishkar99@yahoo.com</a>&gt; writes:<br=
-><br>&gt;&gt; Hi - After my previous posting I was able to make some progre=
-ss.<br>&gt;&gt;<br>&gt;&gt; When I do<br>&gt;&gt;<br>&gt;&gt; kexec -l vmli=
-nux --append=3D"init 1 root=3D/dev/hda2" --console-serial<br>&gt;&gt;<br>&g=
-t;&gt; and&nbsp;<br>&gt;&gt; kexec -e,<br>&gt;&gt;<br>&gt;&gt; I get messag=
-e:<br>&gt;&gt;<br>&gt;&gt; Starting new kernel<br>&gt;&gt; I'm in
- purgatory<br>&gt;&gt;<br>&gt;&gt; And after that it still boots from BIOS =
-(to the same first kernel).<br>&gt;&gt;<br>&gt;&gt; Whats the problem here?=
-<br>&gt;<br>&gt; I would recommend instrumenting up purgatory and then your=
- target kernel.<br>&gt;<br>&gt; It is quite possible the problem is in your=
- backport.<br>&gt;<br>&gt;&gt;&gt;&gt;&gt;<br>&gt;&nbsp; I have instrumente=
-d the purgatory code. when I run kexec -e, It hangs for a<br>&gt; while at&=
-nbsp;<br>&gt; sha256_starts(&amp;ctx); in the function verify_sha256_digest=
-(), and then reboots<br>&gt; to the first kernel (from BIOS). I have put de=
-bug prints in sha256_starts, but<br>&gt; none of those are executed.<br>&gt=
-;<br>&gt; Interestingly, the same function sha256_starts is executed during=
- kexec -l,<br>&gt; which is called as part of update_purgatory( )( when my_=
-load( ) is called from<br>&gt; kexec.c).<br>&gt; so its surprise why the sa=
-me function is giving problems when kexec -e is run.<br><br>Do you
- by any chance have a watchdog you are not petting?</div><div class=3D"plai=
-nMail"><br></div><div class=3D"plainMail">&gt;&gt; Yes, we do have software=
- watchdog and hardware watchdog. I disabled software watchdog and I think t=
-he reason for resetting to the first kernel can be explained due to hardwar=
-e watchdog kicking in.</div><div class=3D"plainMail"><br></div><div class=
-=3D"plainMail">To try out a different version of the kexec, I took kexec ve=
-rsion 20080227 from&nbsp;<a href=3D"http://www.kernel.org/pub/linux/kernel/=
-people/horms/kexec-tools/">http://www.kernel.org/pub/linux/kernel/people/ho=
-rms/kexec-tools/</a></div><div class=3D"plainMail"><a href=3D"http://www.ke=
-rnel.org/pub/linux/kernel/people/horms/kexec-tools/"></a>and instrumented t=
-hat code as well. With this, I was able to see the sha 256 verification don=
-e during kexec -e and also the post verification of purgatory code. And it =
-hangs there (does not reboot to the first kernel).</div><div
- class=3D"plainMail"><br></div><div class=3D"plainMail">So, any conclusions=
- based on these ? Please CC me in reply. Thanks !!<br><br>Eric</div></td></=
-tr></table><br>=0A=0A=0A=0A      
---0-564131461-1254192502=:77305--
+Any comments would be appreciated.
 
+Thanks,
+Takao Indoh
 
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ arch/ia64/kernel/mca.c |  103 +++++++++++++++++++++------------------
+ 1 file changed, 56 insertions(+), 47 deletions(-)
 
---===============1412775172==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+diff -Nurp linux-2.6.31.org/arch/ia64/kernel/mca.c linux-2.6.31/arch/ia64/kernel/mca.c
+--- linux-2.6.31.org/arch/ia64/kernel/mca.c	2009-09-21 17:12:45.000000000 -0400
++++ linux-2.6.31/arch/ia64/kernel/mca.c	2009-09-24 16:15:05.000000000 -0400
+@@ -887,6 +887,60 @@ ia64_mca_modify_comm(const struct task_s
+ 	memcpy(current->comm, comm, sizeof(current->comm));
+ }
+ 
++static void
++restore_regs(struct pt_regs *regs, const pal_min_state_area_t *ms,
++		unsigned long *nat)
++{
++	const u64 *bank;
++
++	/* If ipsr.ic then use pmsa_{iip,ipsr,ifs}, else use
++	 * pmsa_{xip,xpsr,xfs}
++	 */
++	if (ia64_psr(regs)->ic) {
++		regs->cr_iip = ms->pmsa_iip;
++		regs->cr_ipsr = ms->pmsa_ipsr;
++		regs->cr_ifs = ms->pmsa_ifs;
++	} else {
++		regs->cr_iip = ms->pmsa_xip;
++		regs->cr_ipsr = ms->pmsa_xpsr;
++		regs->cr_ifs = ms->pmsa_xfs;
++	}
++	regs->pr = ms->pmsa_pr;
++	regs->b0 = ms->pmsa_br0;
++	regs->ar_rsc = ms->pmsa_rsc;
++	copy_reg(&ms->pmsa_gr[1-1], ms->pmsa_nat_bits, &regs->r1, nat);
++	copy_reg(&ms->pmsa_gr[2-1], ms->pmsa_nat_bits, &regs->r2, nat);
++	copy_reg(&ms->pmsa_gr[3-1], ms->pmsa_nat_bits, &regs->r3, nat);
++	copy_reg(&ms->pmsa_gr[8-1], ms->pmsa_nat_bits, &regs->r8, nat);
++	copy_reg(&ms->pmsa_gr[9-1], ms->pmsa_nat_bits, &regs->r9, nat);
++	copy_reg(&ms->pmsa_gr[10-1], ms->pmsa_nat_bits, &regs->r10, nat);
++	copy_reg(&ms->pmsa_gr[11-1], ms->pmsa_nat_bits, &regs->r11, nat);
++	copy_reg(&ms->pmsa_gr[12-1], ms->pmsa_nat_bits, &regs->r12, nat);
++	copy_reg(&ms->pmsa_gr[13-1], ms->pmsa_nat_bits, &regs->r13, nat);
++	copy_reg(&ms->pmsa_gr[14-1], ms->pmsa_nat_bits, &regs->r14, nat);
++	copy_reg(&ms->pmsa_gr[15-1], ms->pmsa_nat_bits, &regs->r15, nat);
++	if (ia64_psr(regs)->bn)
++		bank = ms->pmsa_bank1_gr;
++	else
++		bank = ms->pmsa_bank0_gr;
++	copy_reg(&bank[16-16], ms->pmsa_nat_bits, &regs->r16, nat);
++	copy_reg(&bank[17-16], ms->pmsa_nat_bits, &regs->r17, nat);
++	copy_reg(&bank[18-16], ms->pmsa_nat_bits, &regs->r18, nat);
++	copy_reg(&bank[19-16], ms->pmsa_nat_bits, &regs->r19, nat);
++	copy_reg(&bank[20-16], ms->pmsa_nat_bits, &regs->r20, nat);
++	copy_reg(&bank[21-16], ms->pmsa_nat_bits, &regs->r21, nat);
++	copy_reg(&bank[22-16], ms->pmsa_nat_bits, &regs->r22, nat);
++	copy_reg(&bank[23-16], ms->pmsa_nat_bits, &regs->r23, nat);
++	copy_reg(&bank[24-16], ms->pmsa_nat_bits, &regs->r24, nat);
++	copy_reg(&bank[25-16], ms->pmsa_nat_bits, &regs->r25, nat);
++	copy_reg(&bank[26-16], ms->pmsa_nat_bits, &regs->r26, nat);
++	copy_reg(&bank[27-16], ms->pmsa_nat_bits, &regs->r27, nat);
++	copy_reg(&bank[28-16], ms->pmsa_nat_bits, &regs->r28, nat);
++	copy_reg(&bank[29-16], ms->pmsa_nat_bits, &regs->r29, nat);
++	copy_reg(&bank[30-16], ms->pmsa_nat_bits, &regs->r30, nat);
++	copy_reg(&bank[31-16], ms->pmsa_nat_bits, &regs->r31, nat);
++}
++
+ /* On entry to this routine, we are running on the per cpu stack, see
+  * mca_asm.h.  The original stack has not been touched by this event.  Some of
+  * the original stack's registers will be in the RBS on this stack.  This stack
+@@ -921,7 +975,6 @@ ia64_mca_modify_original_stack(struct pt
+ 	u64 r12 = ms->pmsa_gr[12-1], r13 = ms->pmsa_gr[13-1];
+ 	u64 ar_bspstore = regs->ar_bspstore;
+ 	u64 ar_bsp = regs->ar_bspstore + (loadrs >> 16);
+-	const u64 *bank;
+ 	const char *msg;
+ 	int cpu = smp_processor_id();
+ 
+@@ -1024,54 +1077,9 @@ ia64_mca_modify_original_stack(struct pt
+ 	p = (char *)r12 - sizeof(*regs);
+ 	old_regs = (struct pt_regs *)p;
+ 	memcpy(old_regs, regs, sizeof(*regs));
+-	/* If ipsr.ic then use pmsa_{iip,ipsr,ifs}, else use
+-	 * pmsa_{xip,xpsr,xfs}
+-	 */
+-	if (ia64_psr(regs)->ic) {
+-		old_regs->cr_iip = ms->pmsa_iip;
+-		old_regs->cr_ipsr = ms->pmsa_ipsr;
+-		old_regs->cr_ifs = ms->pmsa_ifs;
+-	} else {
+-		old_regs->cr_iip = ms->pmsa_xip;
+-		old_regs->cr_ipsr = ms->pmsa_xpsr;
+-		old_regs->cr_ifs = ms->pmsa_xfs;
+-	}
+-	old_regs->pr = ms->pmsa_pr;
+-	old_regs->b0 = ms->pmsa_br0;
+ 	old_regs->loadrs = loadrs;
+-	old_regs->ar_rsc = ms->pmsa_rsc;
+ 	old_unat = old_regs->ar_unat;
+-	copy_reg(&ms->pmsa_gr[1-1], ms->pmsa_nat_bits, &old_regs->r1, &old_unat);
+-	copy_reg(&ms->pmsa_gr[2-1], ms->pmsa_nat_bits, &old_regs->r2, &old_unat);
+-	copy_reg(&ms->pmsa_gr[3-1], ms->pmsa_nat_bits, &old_regs->r3, &old_unat);
+-	copy_reg(&ms->pmsa_gr[8-1], ms->pmsa_nat_bits, &old_regs->r8, &old_unat);
+-	copy_reg(&ms->pmsa_gr[9-1], ms->pmsa_nat_bits, &old_regs->r9, &old_unat);
+-	copy_reg(&ms->pmsa_gr[10-1], ms->pmsa_nat_bits, &old_regs->r10, &old_unat);
+-	copy_reg(&ms->pmsa_gr[11-1], ms->pmsa_nat_bits, &old_regs->r11, &old_unat);
+-	copy_reg(&ms->pmsa_gr[12-1], ms->pmsa_nat_bits, &old_regs->r12, &old_unat);
+-	copy_reg(&ms->pmsa_gr[13-1], ms->pmsa_nat_bits, &old_regs->r13, &old_unat);
+-	copy_reg(&ms->pmsa_gr[14-1], ms->pmsa_nat_bits, &old_regs->r14, &old_unat);
+-	copy_reg(&ms->pmsa_gr[15-1], ms->pmsa_nat_bits, &old_regs->r15, &old_unat);
+-	if (ia64_psr(old_regs)->bn)
+-		bank = ms->pmsa_bank1_gr;
+-	else
+-		bank = ms->pmsa_bank0_gr;
+-	copy_reg(&bank[16-16], ms->pmsa_nat_bits, &old_regs->r16, &old_unat);
+-	copy_reg(&bank[17-16], ms->pmsa_nat_bits, &old_regs->r17, &old_unat);
+-	copy_reg(&bank[18-16], ms->pmsa_nat_bits, &old_regs->r18, &old_unat);
+-	copy_reg(&bank[19-16], ms->pmsa_nat_bits, &old_regs->r19, &old_unat);
+-	copy_reg(&bank[20-16], ms->pmsa_nat_bits, &old_regs->r20, &old_unat);
+-	copy_reg(&bank[21-16], ms->pmsa_nat_bits, &old_regs->r21, &old_unat);
+-	copy_reg(&bank[22-16], ms->pmsa_nat_bits, &old_regs->r22, &old_unat);
+-	copy_reg(&bank[23-16], ms->pmsa_nat_bits, &old_regs->r23, &old_unat);
+-	copy_reg(&bank[24-16], ms->pmsa_nat_bits, &old_regs->r24, &old_unat);
+-	copy_reg(&bank[25-16], ms->pmsa_nat_bits, &old_regs->r25, &old_unat);
+-	copy_reg(&bank[26-16], ms->pmsa_nat_bits, &old_regs->r26, &old_unat);
+-	copy_reg(&bank[27-16], ms->pmsa_nat_bits, &old_regs->r27, &old_unat);
+-	copy_reg(&bank[28-16], ms->pmsa_nat_bits, &old_regs->r28, &old_unat);
+-	copy_reg(&bank[29-16], ms->pmsa_nat_bits, &old_regs->r29, &old_unat);
+-	copy_reg(&bank[30-16], ms->pmsa_nat_bits, &old_regs->r30, &old_unat);
+-	copy_reg(&bank[31-16], ms->pmsa_nat_bits, &old_regs->r31, &old_unat);
++	restore_regs(old_regs, ms, &old_unat);
+ 
+ 	/* Next stack a struct switch_stack.  mca_asm.S built a partial
+ 	 * switch_stack, copy it and fill in the blanks using pt_regs and
+@@ -1141,6 +1149,7 @@ ia64_mca_modify_original_stack(struct pt
+ no_mod:
+ 	mprintk(KERN_INFO "cpu %d, %s %s, original stack not modified\n",
+ 			smp_processor_id(), type, msg);
++	restore_regs(regs, ms, &old_unat);
+ 	return previous_current;
+ }
+ 
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1412775172==--
-
-
