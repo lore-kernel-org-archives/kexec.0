@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MtM5R-0000wD-Po
-	for kexec@lists.infradead.org; Thu, 01 Oct 2009 13:52:53 +0000
-Date: Thu, 1 Oct 2009 23:52:46 +1000
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: ARM misdetection
-Message-ID: <20091001135245.GE8820@verge.net.au>
-References: <d1b08f940910010634m1570a1cfqef90c7742b51f61d@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d1b08f940910010634m1570a1cfqef90c7742b51f61d@mail.gmail.com>
+	id 1MtPS4-0006S7-9l
+	for kexec@lists.infradead.org; Thu, 01 Oct 2009 17:28:29 +0000
+Date: Fri, 02 Oct 2009 01:28:16 +0800 (CST)
+Message-Id: <20091002.012816.266343564.caiqian@redhat.com>
+Subject: Can't exclude unnecessary pages for 2.6.31 Kernel
+From: CAI Qian <caiqian@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +20,96 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrea Adami <andrea.adami@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: oomichi@mxs.nes.nec.co.jp, nhorman@redhat.com, tachibana@mxm.nes.nec.co.jp, caiqian@redhat.com
 
-On Thu, Oct 01, 2009 at 03:34:01PM +0200, Andrea Adami wrote:
-> Hello,
-> 
-> Building kexec-tools_2.0.1 against glibc for armv5te I found out the
-> code in kexec/phys_arch.c can lead to arch misdetection.
-> The uname's output of my kernel is "armv5tel" and this won't match the
-> string "arm".
-> 
-> I added a patch to the OpenEmbedded buildsystem following the example
-> in the old kexec-tools-arm.patch (arch_compat_trampoline).
-> 
-> http://cgit.openembedded.org/cgit.cgi/openembedded/tree/recipes/kexec/files/fix-arm-arch-detection.patch
-> 
-> Other than adding some overhead for other archies, it just seems to work.
+Hallo!
 
-Extra blank lines and {} aside, this seems like a reasonable approach to me,
-Could you submit it to this list with a Signed-off-by line[1]?
+Met 2 issues with 2.6.31 kernel.
 
-[1] http://linux.yyz.us/patch-format.html
+(1) makedumpfile needs to be updated to support 2.6.31 kernel. This looks like 
+    an easy fix. In makedumpfile.h,
+
+    #define LATEST_VERSION          (0x0206001d)    /* linux-2.6.29 */
+
+(2) makedumpfile -d 16 failed.
+
+# makedumpfile -D -d 16
+  /var/crash/127.0.0.1-2009-10-01-06\:22\:33/vmcore vmcore
+
+LOAD (0)
+  phys_start : 1000000
+  phys_end   : 2683000
+  virt_start : ffffffff81000000
+  virt_end   : ffffffff82683000
+LOAD (1)
+  phys_start : 0
+  phys_end   : a0000
+  virt_start : ffff810000000000
+  virt_end   : ffff8100000a0000
+LOAD (2)
+  phys_start : 100000
+  phys_end   : 3000000
+  virt_start : ffff810000100000
+  virt_end   : ffff810003000000
+LOAD (3)
+  phys_start : b000000
+  phys_end   : 3ff70000
+  virt_start : ffff81000b000000
+  virt_end   : ffff81003ff70000
+Linux kdump
+page_size    : 4096
+
+max_mapnr    : 3ff70
+The kernel version is not supported.
+The created dumpfile may be incomplete.
+
+num of NODEs : 1
 
 
+Memory type  : SPARSEMEM
+
+mem_map (0)
+  mem_map    : ffff880002664000
+  pfn_start  : 0
+  pfn_end    : 8000
+mem_map (1)
+  mem_map    : 0
+  pfn_start  : 8000
+  pfn_end    : 10000
+mem_map (2)
+  mem_map    : 0
+  pfn_start  : 10000
+  pfn_end    : 18000
+mem_map (3)
+  mem_map    : 0
+  pfn_start  : 18000
+  pfn_end    : 20000
+mem_map (4)
+  mem_map    : 0
+  pfn_start  : 20000
+  pfn_end    : 28000
+mem_map (5)
+  mem_map    : 0
+  pfn_start  : 28000
+  pfn_end    : 30000
+mem_map (6)
+  mem_map    : 0
+  pfn_start  : 30000
+  pfn_end    : 38000
+mem_map (7)
+  mem_map    : 0
+  pfn_start  : 38000
+  pfn_end    : 3ff70
+Excluding unnecessary pages        : [100 %] page_to_pfn: Can't convert
+the address of page descriptor (ffffea000004e000) to pfn.
+
+create_2nd_bitmap: Can't exclude unnecessary pages.
+
+makedumpfile Failed.
+
+Thanks!
+CAI Qian
 
 _______________________________________________
 kexec mailing list
