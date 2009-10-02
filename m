@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MtXUK-0005pe-Vb
-	for kexec@lists.infradead.org; Fri, 02 Oct 2009 02:03:22 +0000
-References: <187068.43679.qm@web65716.mail.ac4.yahoo.com>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 01 Oct 2009 19:03:08 -0700
-In-Reply-To: <187068.43679.qm@web65716.mail.ac4.yahoo.com> (Prabhakar K.'s
-	message of "Thu\, 1 Oct 2009 14\:09\:33 -0700 \(PDT\)")
-Message-ID: <m11vlma6xv.fsf@fess.ebiederm.org>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1Mtc32-00036y-78
+	for kexec@lists.infradead.org; Fri, 02 Oct 2009 06:55:29 +0000
+Message-ID: <4AC5A28D.9040600@mxs.nes.nec.co.jp>
+Date: Fri, 02 Oct 2009 15:49:49 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: [Fastboot] kexec - 2.6.14 - loads BIOS again
+Subject: Re: Can't exclude unnecessary pages for 2.6.31 Kernel
+References: <20091002.012816.266343564.caiqian@redhat.com>	<4AC54672.7080201@mxs.nes.nec.co.jp>
+	<20091002.122142.187435277.caiqian@redhat.com>
+In-Reply-To: <20091002.122142.187435277.caiqian@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +23,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Prabhakar K." <krishkar99@yahoo.com>
-Cc: fastboot@lists.linux-foundation.org, Kexec Mailing List <kexec@lists.infradead.org>
+To: CAI Qian <caiqian@redhat.com>
+Cc: nhorman@redhat.com, kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp
 
-"Prabhakar K." <krishkar99@yahoo.com> writes:
 
-> From: Eric W. Biederman <ebiederm@xmission.com>
-> Subject: Re: [Fastboot] kexec - 2.6.14 - loads BIOS again
-> To: "Prabhakar K." <krishkar99@yahoo.com>
-> Cc: "Kexec Mailing List" <kexec@lists.infradead.org>,
-> fastboot@lists.linux-foundation.org
-> Date: Thursday, October 1, 2009, 6:29 AM
->
-> "Prabhakar K." <krishkar99@yahoo.com> writes:
->
->> Sending again as it is not posted yet !!
+Hi CAI,
+
+Thank you for testing my patch.
+
+CAI Qian wrote:
+>> I created the patch for catching this change.
+>> Could you try the attached patch ?
 >>
->> I have back ported to multiple versions of different kexec-tools. Also I
->> disabled watchdogs so that the first kernel reboot is not kicked in.
->> Now, with all those kexec-tools I see that it hangs
->> after post_verification_setup_arch( ).
->> And I had to hard reboot the router box.
->>
->> Is there a specific kexec tools that is known to work with 2.6.14 ? Or any
->> additional changes needed ?
->
-> Almost certainly if you are getting as far as kexec-tools you are dying
-> someplace early in your target kernel.
->
->>>> OK. What piece of code can cause in the target kernel to die ?
-> Can I take any working bzImage or vmlinux of a linux kernel(for that matter any
-> linux kernel) and load that as my target kernel ? or does this has any
-> restriction ?
+> 
+> It does make -d 16 works without errors. However, the crash utility
+> failed to read it (the log attached), but the full VMCore is working
+> fine there.
+> 
+> crash: page excluded: kernel virtual address: ffffffff819f1764 type:
+>        "tss_struct ist array"
 
-Short of bugs in /sbin/kexec it is unrestricted.
+I can not reproduce the above problem, and I want to reproduce this
+problem on my machine for investigating it.
 
-Eric
+Could you send your kernel .config file ?
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
