@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.perches.com ([173.55.12.10])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MucDY-0006Sw-FB
-	for kexec@lists.infradead.org; Mon, 05 Oct 2009 01:18:29 +0000
-From: Joe Perches <joe@perches.com>
-Subject: [PATCH 00/21] pr_dbg, pr_fmt
-Date: Sun,  4 Oct 2009 18:18:14 -0700
-Message-Id: <cover.1254701151.git.joe@perches.com>
+	id 1MumFq-0004x0-Tj
+	for kexec@lists.infradead.org; Mon, 05 Oct 2009 12:01:31 +0000
+References: <cover.1254701151.git.joe@perches.com>
+	<cover.1254701151.git.joe@perches.com>
+	<40ffa7c5595f4afbba793919b397b5139cde901a.1254701151.git.joe@perches.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Mon, 05 Oct 2009 05:01:16 -0700
+In-Reply-To: <40ffa7c5595f4afbba793919b397b5139cde901a.1254701151.git.joe@perches.com>
+	(Joe Perches's message of "Sun\, 4 Oct 2009 17\:53\:43 -0700")
+Message-ID: <m163auvylv.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 16/21] kernel/kexec.c: use pr_<level> and add pr_fmt(fmt)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,142 +21,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: amd64-microcode@amd64.org, kvm@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, linux-crypto@vger.kernel.org, linux-pm@lists.linux-foundation.org, bonding-devel@lists.sourceforge.net
+To: Joe Perches <joe@perches.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-One possible long term goal is to stop adding
-    #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-to source files to prefix modulename to logging output.
+Joe Perches <joe@perches.com> writes:
 
-It might be useful to eventually have kernel.h
-use a standard #define pr_fmt which includes KBUILD_MODNAME
-instead of a blank or empty define.
+> Added #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> Converted printk(KERN_<level> to pr_<level>(
+> Added KERN_ERR to allocation failure message
 
-Perhaps over time, the source modules that use pr_<level>
-with prefixes can be converted to use pr_fmt.
+I'm dense and I haven't seen the discussions.  What
+is the point of adding a prefix string where none exists
+into a bunch of printks?
 
-If all modules are converted, that will allow the printk
-routine to add module/filename/line/offset to the logging
-lines using some function similar to dynamic_debug and
-substantially reduct object string use by removing the
-repeated prefixes.
-
-This patchset does not get to that result.  The patches
-right now uses _more_ string space because all logging
-messages have unshared prefixes but it may be a useful start.
-
-The patchset strips prefixes from printks and adds pr_fmt to
-arch/x86, crypto, kernel, and a few drivers.
-
-It also converts printk(KERN_<level> to pr_<level> in a few files
-that already had some pr_<level> uses.
-
-The conversion also generally used long length format strings
-in the place of multiple short strings to ease any grep/search.
- 
-Joe Perches (21):
-  include/linux/ dynamic_debug.h kernel.h: Remove KBUILD_MODNAME from dynamic_pr_debug, add #define pr_dbg
-  ftrace.c: Add #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-  mtrr: use pr_<level> and pr_fmt
-  microcode: use pr_<level> and add pr_fmt
-  amd_iommu.c: use pr_<level> and add pr_fmt(fmt)
-  es7000_32.c: use pr_<level> and add pr_fmt(fmt)
-  arch/x86/kernel/apic/: use pr_<level> and add pr_fmt(fmt)
-  mcheck/: use pr_<level> and add pr_fmt(fmt)
-  arch/x86/kernel/setup_percpu.c: use pr_<level> and add pr_fmt(fmt)
-  arch/x86/kernel/cpu/: use pr_<level> and add pr_fmt(fmt)
-  i8254.c: Add pr_fmt(fmt)
-  kmmio.c: Add and use pr_fmt(fmt)
-  testmmiotrace.c: Add and use pr_fmt(fmt)
-  crypto/: use pr_<level> and add pr_fmt(fmt)
-  kernel/power/: use pr_<level> and add pr_fmt(fmt)
-  kernel/kexec.c: use pr_<level> and add pr_fmt(fmt)
-  crypto/async_tx/raid6test.c: use pr_<level> and add pr_fmt(fmt)
-  arch/x86/mm/mmio-mod.c: use pr_fmt
-  drivers/net/bonding/: : use pr_fmt
-  drivers/net/tlan: use pr_<level> and add pr_fmt(fmt)
-  drivers/net/tlan.h: Convert printk(KERN_DEBUG to pr_dbg(
-
- arch/x86/kernel/amd_iommu.c                |   71 ++--
- arch/x86/kernel/apic/apic.c                |   48 ++--
- arch/x86/kernel/apic/apic_flat_64.c        |    5 +-
- arch/x86/kernel/apic/bigsmp_32.c           |    8 +-
- arch/x86/kernel/apic/es7000_32.c           |   12 +-
- arch/x86/kernel/apic/io_apic.c             |  239 ++++++------
- arch/x86/kernel/apic/nmi.c                 |   29 +-
- arch/x86/kernel/apic/numaq_32.c            |   53 ++--
- arch/x86/kernel/apic/probe_32.c            |   18 +-
- arch/x86/kernel/apic/probe_64.c            |    8 +-
- arch/x86/kernel/apic/summit_32.c           |   23 +-
- arch/x86/kernel/apic/x2apic_uv_x.c         |   26 +-
- arch/x86/kernel/cpu/addon_cpuid_features.c |    9 +-
- arch/x86/kernel/cpu/amd.c                  |   26 +-
- arch/x86/kernel/cpu/bugs.c                 |   23 +-
- arch/x86/kernel/cpu/bugs_64.c              |    4 +-
- arch/x86/kernel/cpu/centaur.c              |   12 +-
- arch/x86/kernel/cpu/common.c               |   54 ++--
- arch/x86/kernel/cpu/cpu_debug.c            |    4 +-
- arch/x86/kernel/cpu/cyrix.c                |   12 +-
- arch/x86/kernel/cpu/intel.c                |   14 +-
- arch/x86/kernel/cpu/intel_cacheinfo.c      |   14 +-
- arch/x86/kernel/cpu/mcheck/mce-inject.c    |   20 +-
- arch/x86/kernel/cpu/mcheck/mce.c           |   59 ++--
- arch/x86/kernel/cpu/mcheck/mce_intel.c     |    8 +-
- arch/x86/kernel/cpu/mcheck/p5.c            |   21 +-
- arch/x86/kernel/cpu/mcheck/therm_throt.c   |   21 +-
- arch/x86/kernel/cpu/mcheck/threshold.c     |    7 +-
- arch/x86/kernel/cpu/mcheck/winchip.c       |    8 +-
- arch/x86/kernel/cpu/mtrr/centaur.c         |    4 +-
- arch/x86/kernel/cpu/mtrr/cleanup.c         |   59 ++--
- arch/x86/kernel/cpu/mtrr/generic.c         |   39 +-
- arch/x86/kernel/cpu/mtrr/main.c            |   32 +-
- arch/x86/kernel/cpu/perf_event.c           |   10 +-
- arch/x86/kernel/cpu/perfctr-watchdog.c     |   11 +-
- arch/x86/kernel/cpu/transmeta.c            |   20 +-
- arch/x86/kernel/cpu/vmware.c               |   11 +-
- arch/x86/kernel/ftrace.c                   |    8 +-
- arch/x86/kernel/microcode_amd.c            |    5 +-
- arch/x86/kernel/microcode_core.c           |   23 +-
- arch/x86/kernel/microcode_intel.c          |   47 +--
- arch/x86/kernel/setup_percpu.c             |   13 +-
- arch/x86/kvm/i8254.c                       |   12 +-
- arch/x86/mm/kmmio.c                        |   40 +-
- arch/x86/mm/mmio-mod.c                     |   71 ++--
- arch/x86/mm/testmmiotrace.c                |   29 +-
- crypto/algapi.c                            |    4 +-
- crypto/ansi_cprng.c                        |   39 +-
- crypto/async_tx/async_tx.c                 |    5 +-
- crypto/async_tx/raid6test.c                |   30 +-
- crypto/fips.c                              |    4 +-
- crypto/tcrypt.c                            |   75 ++--
- crypto/testmgr.c                           |  286 ++++++--------
- crypto/xor.c                               |   17 +-
- drivers/net/bonding/bond_3ad.c             |  171 +++++----
- drivers/net/bonding/bond_alb.c             |   38 +--
- drivers/net/bonding/bond_ipv6.c            |   12 +-
- drivers/net/bonding/bond_main.c            |  608 +++++++++++-----------------
- drivers/net/bonding/bond_sysfs.c           |  322 ++++++---------
- drivers/net/tlan.c                         |  135 +++---
- drivers/net/tlan.h                         |    2 +-
- include/linux/dynamic_debug.h              |   13 +-
- include/linux/kernel.h                     |    7 +-
- kernel/kexec.c                             |   21 +-
- kernel/power/hibernate.c                   |   46 +--
- kernel/power/hibernate_nvs.c               |    6 +-
- kernel/power/process.c                     |   29 +-
- kernel/power/snapshot.c                    |   36 +-
- kernel/power/suspend.c                     |   18 +-
- kernel/power/suspend_test.c                |   18 +-
- kernel/power/swap.c                        |   42 +-
- kernel/power/swsusp.c                      |   10 +-
- kernel/power/user.c                        |    8 +-
- 73 files changed, 1543 insertions(+), 1749 deletions(-)
-
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  kernel/kexec.c |   21 ++++++++++-----------
+>  1 files changed, 10 insertions(+), 11 deletions(-)
+>
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index f336e21..e805351 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -6,6 +6,8 @@
+>   * Version 2.  See the file COPYING for more details.
+>   */
+>  
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+>  #include <linux/capability.h>
+>  #include <linux/mm.h>
+>  #include <linux/file.h>
+> @@ -245,13 +247,13 @@ static int kimage_normal_alloc(struct kimage **rimage, unsigned long entry,
+>  	image->control_code_page = kimage_alloc_control_pages(image,
+>  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+>  	if (!image->control_code_page) {
+> -		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+> +		pr_err("Could not allocate control_code_buffer\n");
+>  		goto out;
+>  	}
+>  
+>  	image->swap_page = kimage_alloc_control_pages(image, 0);
+>  	if (!image->swap_page) {
+> -		printk(KERN_ERR "Could not allocate swap buffer\n");
+> +		pr_err("Could not allocate swap buffer\n");
+>  		goto out;
+>  	}
+>  
+> @@ -320,7 +322,7 @@ static int kimage_crash_alloc(struct kimage **rimage, unsigned long entry,
+>  	image->control_code_page = kimage_alloc_control_pages(image,
+>  					   get_order(KEXEC_CONTROL_PAGE_SIZE));
+>  	if (!image->control_code_page) {
+> -		printk(KERN_ERR "Could not allocate control_code_buffer\n");
+> +		pr_err("Could not allocate control_code_buffer\n");
+>  		goto out;
+>  	}
+>  
+> @@ -1141,8 +1143,7 @@ static int __init crash_notes_memory_init(void)
+>  	/* Allocate memory for saving cpu registers. */
+>  	crash_notes = alloc_percpu(note_buf_t);
+>  	if (!crash_notes) {
+> -		printk("Kexec: Memory allocation for saving cpu register"
+> -		" states failed\n");
+> +		pr_err("Memory allocation for saving cpu register states failed\n");
+>  		return -ENOMEM;
+>  	}
+>  	return 0;
+> @@ -1192,8 +1193,7 @@ static int __init parse_crashkernel_mem(char 			*cmdline,
+>  		if (*cur != ':') {
+>  			end = memparse(cur, &tmp);
+>  			if (cur == tmp) {
+> -				pr_warning("crashkernel: Memory "
+> -						"value expected\n");
+> +				pr_warning("crashkernel: Memory value expected\n");
+>  				return -EINVAL;
+>  			}
+>  			cur = tmp;
+> @@ -1211,7 +1211,7 @@ static int __init parse_crashkernel_mem(char 			*cmdline,
+>  
+>  		size = memparse(cur, &tmp);
+>  		if (cur == tmp) {
+> -			pr_warning("Memory value expected\n");
+> +			pr_warning("crashkernel: Memory value expected\n");
+>  			return -EINVAL;
+>  		}
+>  		cur = tmp;
+> @@ -1234,8 +1234,7 @@ static int __init parse_crashkernel_mem(char 			*cmdline,
+>  			cur++;
+>  			*crash_base = memparse(cur, &tmp);
+>  			if (cur == tmp) {
+> -				pr_warning("Memory value expected "
+> -						"after '@'\n");
+> +				pr_warning("crashkernel: Memory value expected after '@'\n");
+>  				return -EINVAL;
+>  			}
+>  		}
+> @@ -1473,7 +1472,7 @@ int kernel_kexec(void)
+>  #endif
+>  	{
+>  		kernel_restart_prepare(NULL);
+> -		printk(KERN_EMERG "Starting new kernel\n");
+> +		pr_emerg("Starting new kernel\n");
+>  		machine_shutdown();
+>  	}
+>  
+> -- 
+> 1.6.3.1.10.g659a0.dirty
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 _______________________________________________
 kexec mailing list
