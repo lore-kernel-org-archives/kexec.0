@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out26.alice.it ([85.33.2.26])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MuZLj-0002hX-AO
-	for kexec@lists.infradead.org; Sun, 04 Oct 2009 22:14:43 +0000
-From: Andrea Adami <andrea.adami@gmail.com>
-Subject: [PATCH 1/1] kexec-tools_2.0.1: fix arm detection.
-Date: Mon,  5 Oct 2009 00:14:33 +0200
-Message-Id: <1254694473-10196-1-git-send-email-andrea.adami@gmail.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MubLt-0003W5-90
+	for kexec@lists.infradead.org; Mon, 05 Oct 2009 00:23:02 +0000
+Message-ID: <4AC9384A.50604@mxs.nes.nec.co.jp>
+Date: Mon, 05 Oct 2009 09:05:30 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: Re: Can't exclude unnecessary pages for 2.6.31 Kernel
+References: <394279530.1283331254493445641.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <394279530.1283331254493445641.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,33 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Andrea Adami <andrea.adami@gmail.com>
+To: Dave Anderson <anderson@redhat.com>
+Cc: nhorman@redhat.com, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org, CAI Qian <caiqian@redhat.com>
 
 
-Signed-off-by: Andrea Adami <andrea.adami@gmail.com>
----
---- kexec-tools/kexec/phys_arch.c.old	2008-07-15 02:46:43.000000000 +0200
-+++ kexec-tools/kexec/phys_arch.c	2009-10-04 00:44:50.000000000 +0200
-@@ -13,9 +13,12 @@
- 		return -1;
- 	}
- 
--	for (i = 0; arches[i].machine; ++i)
-+	for (i = 0; arches[i].machine; ++i) {
-+		if ((strcmp(arches[i].machine, "arm") == 0) && (strncmp(utsname.machine, arches[i].machine, 3) == 0))
-+			return arches[i].arch;
- 		if (strcmp(utsname.machine, arches[i].machine) == 0)
- 			return arches[i].arch;
-+	}
- 
- 	fprintf(stderr, "Unsupported machine type: %s\n",
- 		utsname.machine);
+Dave Anderson wrote:
+> ----- "Dave Anderson" <anderson@redhat.com> wrote:
+> 
+>> ----- "CAI Qian" <caiqian@redhat.com> wrote:
+>>
+>>> From: CAI Qian <caiqian@redhat.com>
+>>> Subject: Re: Can't exclude unnecessary pages for 2.6.31 Kernel
+>>> Date: Fri, 02 Oct 2009 19:26:44 +0800 (CST)
+>>>
+>>>> Cced the crash utility maintainer.
+>>>>
+>>>> BZ filed -- https://bugzilla.redhat.com/show_bug.cgi?id=526749
+>>>>
+>>>>> It does make -d 16 works without errors. However, the crash utility
+>>>>> failed to read it (the log attached), but the full VMCore is working
+>>>>> fine there.
+>>>>>
+>>>>> crash: page excluded: kernel virtual address: ffffffff819f1764 type: "tss_struct ist array"
+>> I believe that the "tss_struct" issue is a crash bug if in fact it works
+>> OK with a full vmcore.  I'll look at the vmlinux/vmcores from the BZ.
+> 
+> Definitely a crash utility bug -- I'll fix it in the next upstream release.
+
+good job :-)
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
