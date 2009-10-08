@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f193.google.com ([209.85.222.193])
+Received: from mail-yw0-f188.google.com ([209.85.211.188])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MvqKT-0000ry-Lg
-	for kexec@lists.infradead.org; Thu, 08 Oct 2009 10:34:42 +0000
-Received: by pzk31 with SMTP id 31so2651957pzk.28
-	for <kexec@lists.infradead.org>; Thu, 08 Oct 2009 03:34:35 -0700 (PDT)
-Message-ID: <E48814F72D1D4905B552CD565C6EBE46@PC200910022250>
-From: "wilbur" <wilbur512@gmail.com>
-References: <df72c8b20910011036l123c9fcckcaa42e8760717227@mail.gmail.com>
-Subject: What is purgatory?
-Date: Thu, 8 Oct 2009 18:28:18 +0800
+	id 1Mvqsa-0007EA-TM
+	for kexec@lists.infradead.org; Thu, 08 Oct 2009 11:09:57 +0000
+Received: by ywh26 with SMTP id 26so5193434ywh.12
+	for <kexec@lists.infradead.org>; Thu, 08 Oct 2009 04:09:50 -0700 (PDT)
 MIME-Version: 1.0
+Date: Thu, 8 Oct 2009 19:09:50 +0800
+Message-ID: <e997b7420910080409g6efe1ea6p49cca8b3cba010be@mail.gmail.com>
+Subject: What is purgatory?
+From: "wilbur.chan" <wilbur512@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,110 +18,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1506023091=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-This is a multi-part message in MIME format.
-
---===============1506023091==
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0065_01CA4845.1B6B2370"
-
-This is a multi-part message in MIME format.
-
-------=_NextPart_000_0065_01CA4845.1B6B2370
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: base64
-
-bWlwczMyICwga2V4ZWMNCg0KDQoNCg0KbWlwcy1zZXR1cC1zaW1waWxlLlM6DQoNCg0KSW4gcHVy
-Z2F0b3J5IGNvZGUsIGtleGVjIHNldHVwZWQgIGJvb3Rfbm90ZSBzdHJ1Y3R1cmUgZm9yIGtlcm5l
-bCB0byByZWJvb3QuSXQgYWNjb21wbGlzaGVkIA0KDQp0aGlzIGJ5IGNvcHlpbmcgdGhlICJrZXhl
-YyIgc3RyaW5nIGFkZHJlc3MgdG8gdGhlIGVuZCBvZiBib290X25vdGUgc3RydWN0ICwgIGZvbGxv
-d2VkIGJ5IHRoZSBjb21tYW5kbGluZQ0KDQpwb2ludGVyIHN0b3JlZCBiZWhpbmQsICBhbmQgcGFz
-c2VkIGluIHRoZSBhZGRyZXNzIG9mIGNvbW1hbmRfbGluZSB0byBzZWNvbmQga2VybmVsIGJ5IHNl
-dHRpbmcgDQoNCnRoZSB2YWx1ZSBvZiBhMSByZWdpc3RlciB0byB0aGUgYWRkcmVzcyBvZiAia2V4
-ZWMiIHN0cmluZy4NCg0KDQoNCldoYXQgcHV6emxlZCBtZSBpcyB0aGF0LGluIHB1cmdhdG9yeSBj
-b2RlLA0KDQp3aHkgICAgICAibHcgICAgICB0MiwxMih0NCkiICAgICBjb3VsZCBwdXQgdDIgd2l0
-aCB0aGUgdmFsdWUgb2YgIHNpemUgb2YgYm9vdF9ub3Rlcz8NCg0KQXMgSSBrbm93ICwgdDQgaXMg
-dGhlIGVudHJ5IGFkZHJlc3Mgb2Yga2VybmVsICwgd2h5IHRoaXMgY29kZSBhYm92ZSBjb3VsZCBn
-ZXQgdGhlIHNpemUgb2YgDQoNCmJvb3Rfbm90ZXM/IGhvdz8NCg0KRG9lcyB0aGlzIG1lYW4gZXZl
-cnkga2VybmVsIG9mIGVsZiBmb3JtYXQgaGFzIGEgaGVhZCBzdHJ1Y3R1cmUgb2YgYm9vdF9ub3Rl
-PyANCg0KDQoNClRoYW5rIHlvdSA=
-
-------=_NextPart_000_0065_01CA4845.1B6B2370
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PWlzby04ODU5LTEiPg0KPE1FVEEgY29udGVudD0iTVNIVE1M
-IDYuMDAuMjkwMC41NzI2IiBuYW1lPUdFTkVSQVRPUj4NCjxTVFlMRT48L1NUWUxFPg0KPC9IRUFE
-Pg0KPEJPRFkgYmdDb2xvcj0jZmZmZmZmPg0KPERJVj48Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMw
-Nzsgc2l6ZT0yPm1pcHMzMiAsIGtleGVjPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSYj
-MjM0MzU7JiMyMDMwNzsgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFj
-ZT0mIzIzNDM1OyYjMjAzMDc7IHNpemU9Mj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05U
-IGZhY2U9JiMyMzQzNTsmIzIwMzA3OyBzaXplPTI+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48
-Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMwNzsgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxE
-SVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7IHNpemU9Mj5taXBzLXNldHVwLXNpbXBpbGUu
-Uzo8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3OyBzaXplPTI+
-PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMwNzsgc2l6
-ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7
-IHNpemU9Mj5JbiBwdXJnYXRvcnkgY29kZSwga2V4ZWMgc2V0dXBlZCZuYnNwOyBib290X25vdGUg
-DQpzdHJ1Y3R1cmUgZm9yIGtlcm5lbCB0byByZWJvb3QuSXQgYWNjb21wbGlzaGVkIDwvRk9OVD48
-L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7IHNpemU9Mj48L0ZPTlQ+Jm5i
-c3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3OyBzaXplPTI+dGhpcyBi
-eSBjb3B5aW5nIHRoZSAia2V4ZWMiIHN0cmluZyBhZGRyZXNzIHRvIHRoZSBlbmQgDQpvZiBib290
-X25vdGUgc3RydWN0ICwmbmJzcDsgZm9sbG93ZWQgYnkgdGhlIGNvbW1hbmRsaW5lPC9GT05UPjwv
-RElWPg0KPERJVj48Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMwNzsgc2l6ZT0yPjwvRk9OVD4mbmJz
-cDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7PnBvaW50ZXIgc3RvcmVk
-IGJlaGluZCwmbmJzcDsgYW5kIHBhc3NlZCBpbiB0aGUgYWRkcmVzcyBvZiANCmNvbW1hbmRfbGlu
-ZSB0byBzZWNvbmQga2VybmVsIGJ5IHNldHRpbmcgPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBm
-YWNlPSYjMjM0MzU7JiMyMDMwNzs+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBmYWNl
-PSYjMjM0MzU7JiMyMDMwNzs+dGhlIHZhbHVlIG9mIGExIDwvRk9OVD48Rk9OVCBmYWNlPSYjMjM0
-MzU7JiMyMDMwNzs+cmVnaXN0ZXIgdG8gdGhlIGFkZHJlc3MgDQpvZiAia2V4ZWMiIHN0cmluZy48
-L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3Oz48L0ZPTlQ+Jm5i
-c3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3Oz48L0ZPTlQ+Jm5ic3A7
-PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3Oz48L0ZPTlQ+Jm5ic3A7PC9E
-SVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3Oz5XaGF0IHB1enpsZWQgbWUgaXMg
-dGhhdCxpbiBwdXJnYXRvcnkgY29kZSw8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMy
-MzQzNTsmIzIwMzA3Oz48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQz
-NTsmIzIwMzA3Oz53aHkmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgDQombmJzcDsibHcmbmJzcDsm
-bmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgDQp0MiwxMih0NCkiJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Y291bGQgcHV0IHQyIHdpdGggdGhlIHZhbHVlIG9mJm5ic3A7IA0Kc2l6ZSBvZiBi
-b290X25vdGVzPzwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7
-PjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYjMjAzMDc7Pjwv
-Rk9OVD48Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMwNzs+QXMgSSBrbm93ICwgdDQgaXMgdGhlIGVu
-dHJ5IGFkZHJlc3Mgb2YgDQprZXJuZWwgLCB3aHkgdGhpcyBjb2RlIGFib3ZlIGNvdWxkIGdldCB0
-aGUgc2l6ZSBvZiA8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3
-Oz48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9JiMyMzQzNTsmIzIwMzA3Oz5i
-b290X25vdGVzPyBob3c/PC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSYjMjM0MzU7JiMy
-MDMwNzs+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSYjMjM0MzU7JiMyMDMw
-Nzs+RG9lcyB0aGlzIG1lYW4gZXZlcnkga2VybmVsIG9mIGVsZiBmb3JtYXQgaGFzIGEgaGVhZCAN
-CnN0cnVjdHVyZSBvZiBib290X25vdGU/IDwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0m
-IzIzNDM1OyYjMjAzMDc7PjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIz
-NDM1OyYjMjAzMDc7PjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1
-OyYjMjAzMDc7PjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0mIzIzNDM1OyYj
-MjAzMDc7PlRoYW5rIHlvdSA8L0ZPTlQ+PC9ESVY+PC9CT0RZPjwvSFRNTD4NCg==
-
-------=_NextPart_000_0065_01CA4845.1B6B2370--
+mips32 , kexec
 
 
 
---===============1506023091==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+mips-setup-simpile.S:
+
+
+In purgatory code, kexec setuped  boot_note structure for kernel to
+reboot.It accomplished
+
+this by copying the "kexec" string address to the end of boot_note
+struct ,  followed by the commandline
+
+pointer stored behind,  and passed in the address of command_line to
+second kernel by setting
+
+the value of a1 register to the address of "kexec" string.
+
+
+
+What puzzled me is that,in purgatory code,
+
+why      "lw      t2,12(t4)"     could put t2 with the value of  size
+of boot_notes?
+
+As I know , t4 is the entry address of kernel , why this code above
+could get the size of
+
+boot_notes? how?
+
+Does this mean every kernel of elf format has a head structure of boot_note?
+
+
+
+Thank you
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1506023091==--
-
-
