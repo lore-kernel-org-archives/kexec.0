@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1MwALk-0000e0-Dc
-	for kexec@lists.infradead.org; Fri, 09 Oct 2009 07:57:21 +0000
-Received: from int-mx02.intmail.prod.int.phx2.redhat.com
-	(int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n997vFfB015034
-	for <kexec@lists.infradead.org>; Fri, 9 Oct 2009 03:57:15 -0400
-Date: Fri, 09 Oct 2009 15:58:22 +0800 (CST)
-Message-Id: <20091009.155822.740078195601514959.caiqian@redhat.com>
-Subject: Re: Kdump Failed with 2.6.31 i386
-From: CAI Qian <caiqian@redhat.com>
-In-Reply-To: <4ACEE9F5.2020306@redhat.com>
-References: <20091009.120533.370613410103983527.caiqian@redhat.com>
-	<4ACEE9F5.2020306@redhat.com>
-Mime-Version: 1.0
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1MwAr4-0005Yj-K1
+	for kexec@lists.infradead.org; Fri, 09 Oct 2009 08:29:43 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+	by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id n998TZvQ021310
+	for <kexec@lists.infradead.org>; Fri, 9 Oct 2009 17:29:35 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+	(8.11.7/3.7W-MAILGATE-NEC)
+	id n998TZ321303 for kexec@lists.infradead.org;
+	Fri, 9 Oct 2009 17:29:35 +0900 (JST)
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+	by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id n998TZTn021359
+	for <kexec@lists.infradead.org>; Fri, 9 Oct 2009 17:29:35 +0900 (JST)
+Message-ID: <4ACEF2B6.1090207@mxs.nes.nec.co.jp>
+Date: Fri, 09 Oct 2009 17:22:14 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Subject: Re: makedumpfile-1.3.4: Support kdump-compressed format for input
+	file.
+References: <4ACEA2A3.5090706@mxs.nes.nec.co.jp>
+In-Reply-To: <4ACEA2A3.5090706@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,78 +33,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: amwang@redhat.com
-Cc: nhorman@redhat.com, kexec@lists.infradead.org, caiqian@redhat.com
+To: kexec-ml <kexec@lists.infradead.org>
 
-From: Amerigo Wang <amwang@redhat.com>
-Subject: Re: Kdump Failed with 2.6.31 i386
-Date: Fri, 09 Oct 2009 15:44:53 +0800
 
-> CAI Qian wrote:
->> Hallo!
->> Is it a known issue that kdump failed with 2.6.31 i386 systems? The
->> kdump kernel seems hang here.
->> ...
->> Spurious LAPIC timer interrupt on cpu 0
->> Console: colour VGA+ 80x25
->> console handover: boot [earlyser0] -> real [ttyS0]
->> Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
->> ... MAX_LOCKDEP_SUBCLASSES:  8
->> ... MAX_LOCK_DEPTH:          48
->> ... MAX_LOCKDEP_KEYS:        8191
->> ... CLASSHASH_SIZE:          4096
->> ... MAX_LOCKDEP_ENTRIES:     16384
->> ... MAX_LOCKDEP_CHAINS:      32768
->> ... CHAINHASH_SIZE:          16384
->>  memory used by lock dependency info: 3743 kB
->>  per task-struct memory footprint: 1920 bytes
->> HPET: 3 timers in total, 0 timers will be used for per-cpu timer
->> Clocksource tsc unstable (delta = 577041676100 ns)
->> 
-> 
-> 
-> This case hangs on setup_irq(0, &irq0). We already knew this.
+Hi,
 
-This has been seen on 3 HP and 1 DELL servers.
+Ken'ichi Ohmichi wrote:
+> Download:
+>   You can download the latest makedumpfile from the following URL.
+>   Details of the change are written on the CVS page of the following site.
+>   https://sourceforge.net/projects/makedumpfile/
 
-> 
->> or
->> Spurious LAPIC timer interrupt on cpu 0
->> Console: colour VGA+ 80x25
->> console [ttyS0] enabled
->> Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
->> ... MAX_LOCKDEP_SUBCLASSES:  8
->> ... MAX_LOCK_DEPTH:          48
->> ... MAX_LOCKDEP_KEYS:        8191
->> ... CLASSHASH_SIZE:          4096
->> ... MAX_LOCKDEP_ENTRIES:     16384
->> ... MAX_LOCKDEP_CHAINS:      32768
->> ... CHAINHASH_SIZE:          16384
->>  memory used by lock dependency info: 3743 kB
->>  per task-struct memory footprint: 1920 bytes
->> allocated 2621440 bytes of page_cgroup
->> please try 'cgroup_disable=memory' option if you don't want memory
->> cgroups
->> Calibrating delay loop (skipped), value calculated using timer
->> frequency.. 5986.01 BogoMIPS (lpj=2993008)
-> 
-> This case hangs after calibrate_delay() which already passed
-> late_time_init(), and probably before security_init()...
-> (since probably you have CONFIG_SECURITY=y)
->
+makedumpfile's CVS repository was imported into git, and we will use
+the git repository.
 
-This has been observed on a NEC server.
+The git repository: http://makedumpfile.git.sourceforge.net/
 
-Thanks!
-CAI Qian
 
-> Did you meet these two cases on the same machine? Or on different
-> machines?
->
- 
-> Thanks.
-> 
-> 
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
