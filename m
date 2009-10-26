@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from flmx07.ccur.com ([12.192.68.12])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Mzkie-0002Rc-Gr
-	for kexec@lists.infradead.org; Mon, 19 Oct 2009 05:23:48 +0000
-Message-ID: <4ADBF74B.6010907@mxs.nes.nec.co.jp>
-Date: Mon, 19 Oct 2009 14:21:15 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+	id 1N2SIJ-0005L9-Ll
+	for kexec@lists.infradead.org; Mon, 26 Oct 2009 16:19:48 +0000
+Message-ID: <4AE5CC2B.8070804@ccur.com>
+Date: Mon, 26 Oct 2009 11:19:55 -0500
+From: John Blackwood <john.blackwood@ccur.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/5] make '-x'/'-i' option unnecessary for re-filtering.
-References: <20091010.165135.12569232.caiqian@redhat.com>	<4AD3D19F.7000508@mxs.nes.nec.co.jp>	<4AD40DB4.6030808@mxs.nes.nec.co.jp>
-	<20091016.235937.202130176.caiqian@redhat.com>
-In-Reply-To: <20091016.235937.202130176.caiqian@redhat.com>
+Subject: /sys crash_notes provides bad value to kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,95 +16,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: CAI Qian <caiqian@redhat.com>
-Cc: usui@mxm.nes.nec.co.jp, tindoh@redhat.com, kexec@lists.infradead.org, anderson@redhat.com
+To: kexec@lists.infradead.org
+
+Hello,
+
+When attempting to generate a crash file on a on newer (2.6.31.x) NUMA
+x86_64 kernel, the kdump kernel was unable to initialize the /proc/vmcore
+file due to a bad physical address specified in the elf header for a
+per-cpu crash notes area.
+
+It turns out that the physical address that kexec reads from the output
+of the:
+
+   /sys/devices/system/cpu/cpu1/crash_notes
+
+sysfs file is not correct for NUMA x86_64 architecture systems, and this
+physical address is used in the elfheader that the kdump kernel attempts
+to use to initialize /proc/vmcore.
+
+I believe that this has to do with the new percpu_alloc=lpage and
+percpu_alloc=4k per-cpu setups that are now used.
+
+In those cases, the __pa(per_cpu_ptr(crash_notes, cpunum)) does not
+return the correct physical address value.
+
+I did a rough stab at getting the correct physical address for the
+'lpage' case (which I believe tends to be the default method used),
+but I was unable to figure out how to get the correct physical address
+for the '4k' page case.
+
+For what ever it's worth, here's a patch of my attempt at the lpage version;
+it might or might not be useful.
+
+( This patch really assumes only x86 or x86_64 builds, since
+the asm/percpu.h header file is only for x86 arch. )
+
+Thank you.
 
 
-Hi CAI,
+diff -rup a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+--- a/arch/x86/include/asm/percpu.h	2009-10-26 09:33:37.000000000 -0500
++++ b/arch/x86/include/asm/percpu.h	2009-10-26 09:33:53.000000000 -0500
+@@ -165,6 +165,15 @@ static inline void *pcpu_lpage_remapped(
+  }
+  #endif
 
-CAI Qian wrote:
-> Hello Ken'ichi!
-> 
-> This series of patches is working great here.
++#if defined(CONFIG_NEED_MULTIPLE_NODES) && defined(CONFIG_X86_64)
++unsigned long long pcpul_get_paddr(int cpunum, void *item);
++#else
++static inline unsigned long long pcpul_get_paddr(int cpunum, void *item)
++{
++	return (unsigned long long)NULL;
++}
++#endif
++
+  #endif /* !__ASSEMBLY__ */
 
-I'm glad to hear that.
-I will merge this patchset into the next release.
+  #ifdef CONFIG_SMP
+diff -rup a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
+--- a/arch/x86/kernel/setup_percpu.c	2009-10-26 09:33:37.000000000 -0500
++++ b/arch/x86/kernel/setup_percpu.c	2009-10-26 09:33:53.000000000 -0500
+@@ -314,6 +314,35 @@ void *pcpu_lpage_remapped(void *kaddr)
 
-
-Thanks
-Ken'ichi Ohmichi
-
-
-> Thanks!
-> CAI Qian
-> 
-> From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-> Subject: [PATCH 0/5] make '-x'/'-i' option unnecessary for re-filtering.
-> Date: Tue, 13 Oct 2009 14:18:44 +0900
-> 
->> Hi,
->>
->> Ken'ichi Ohmichi wrote:
->>> Hi CAI,
->>>
->>> Thank you for testing and a good point.
->>>
->>> CAI Qian wrote:
->>>>> makedumpfile version 1.3.4 is released.
->>>>> Your comments/patches are welcome.
->>>>>
->>>>> Changelog:
->>>>>  o New feature
->>>>>    - Support kdump-compressed format for input file. (by Takao Indoh)
->>>>>       A new makedumpfile can read dumpfile which is kdump-compressed format
->>>>>       instead of /proc/vmcore and re-filter it.
->>>> Does it need to specify either a vmlinux or vmcoreinfo file?
->>> Yes, we need to do it for re-filtering now.
->>> But it is not difficult to implement a feature that it is not
->>> necessary to specify either a vmlinux or vmcoreinfo file for
->>> re-filtering. I will try to implement the feature.
->> I created the patchset for implementing the above feature.
->> Any comments/patches are welcome.
->>
->> ---
->> [PATCH 0/5] make '-x'/'-i' option unnecessary for re-filtering.
->>
->> makedumpfile v1.3.4 can read a dumpfile which is kdump-compressed
->> format instead of /proc/vmcore and re-filter it.
->>
->> When re-filtering, it is necessary to specify '-x'/'-i' option.
->> If not specifying, makedumpfile fails like the following:
->>
->>  # ./makedumpfile -c -d 3 vmcore vmcore.1
->>  ...
->>  The dumpfile is saved to vmcore.1
->>  ...
->>  #
->>  # /makedumpfile -c -d 31 vmcore.1 vmcore.2
->>  vmcore.1 doesn't contain vmcoreinfo.
->>  Specify '-x' option or '-i' option.
->>  Commandline parameter is invalid.
->>  Try `makedumpfile --help' for more information.
->>  #
->>
->> For usability, this patchset makes '-x'/'-i' option unnecessary
->> for re-filtering.
->>
->>
->> Thanks
->> Ken'ichi Ohmichi
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+  	return NULL;
+  }
++
++#ifdef CONFIG_X86_64
++/*
++ * Return the physical address of the percpu data item for the
++ * specified cpu.
++ *
++ * Returns a physical address or NULL if pcpul_map is not being used.
++ * Currently only called by show_crash_notes().
++ */
++unsigned long long pcpul_get_paddr(int cpunum, void *item)
++{
++	struct pcpul_ent *pmp;
++	void *vaddr, *offset;
++	unsigned long long paddr = (unsigned long long)NULL;
++
++	if (!pcpul_map)
++		return paddr;
++	for (pmp = pcpul_map; pmp->ptr; pmp++) {
++		if ((int)pmp->cpu != cpunum)
++			continue;
++		offset = per_cpu_ptr(item, cpunum) - __per_cpu_offset[cpunum];
++		vaddr = pmp->ptr + (long unsigned int)offset;
++		paddr = __pa(vaddr);
++		return paddr;
++	}
++	return paddr;
++}
++#endif
++
+  #else
+  static ssize_t __init setup_pcpu_lpage(size_t static_size, bool chosen)
+  {
+diff -rup a/drivers/base/cpu.c b/drivers/base/cpu.c
+--- a/drivers/base/cpu.c	2009-10-26 09:33:37.000000000 -0500
++++ b/drivers/base/cpu.c	2009-10-26 09:33:53.000000000 -0500
+@@ -97,6 +97,12 @@ static ssize_t show_crash_notes(struct s
+  	 * boot up and this data does not change there after. Hence this
+  	 * operation should be safe. No locking required.
+  	 */
++	addr = pcpul_get_paddr(cpunum, crash_notes);
++	if (addr) {
++		rc = sprintf(buf, "%Lx\n", addr);
++		return rc;
++	}
++
+  	addr = __pa(per_cpu_ptr(crash_notes, cpunum));
+  	rc = sprintf(buf, "%Lx\n", addr);
+  	return rc;
 
 _______________________________________________
 kexec mailing list
