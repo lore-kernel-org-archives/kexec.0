@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-yx0-f202.google.com ([209.85.210.202])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1N2rfA-0007iI-9Z
-	for kexec@lists.infradead.org; Tue, 27 Oct 2009 19:25:05 +0000
-Date: Tue, 27 Oct 2009 15:24:14 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: Kdump issue with percpu_alloc=lpage
-Message-ID: <20091027192414.GC2744@redhat.com>
-References: <4AE74705.2000707@ccur.com>
+	id 1N3BPY-0001e1-Jf
+	for kexec@lists.infradead.org; Wed, 28 Oct 2009 16:30:16 +0000
+Received: by yxe40 with SMTP id 40so844613yxe.28
+	for <kexec@lists.infradead.org>; Wed, 28 Oct 2009 09:30:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4AE74705.2000707@ccur.com>
+Date: Thu, 29 Oct 2009 00:30:11 +0800
+Message-ID: <e997b7420910280930p40e3c02cw1ab5a7813a4b5147@mail.gmail.com>
+Subject: mips64 SMP patch of kexec
+From: "wilbur.chan" <wilbur512@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,69 +22,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Blackwood <john.blackwood@ccur.com>
-Cc: Tejun Heo <tj@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: msyrchin@ru.mvista.com
+Cc: Linux MIPS Mailing List <linux-mips@linux-mips.org>, kexec@lists.infradead.org, nschichan@freebox.fr
 
-On Tue, Oct 27, 2009 at 02:16:21PM -0500, John Blackwood wrote:
->
-> > Vivek Goyal wrote:
-> > > > In kdump, we allocate per cpu area using alloc_percpu() and later
-> > > > export the physical address of the area allocated to user space  
-> through
-> > > > sysfs. (/sys/devices/system/cpu/cpuN/crash_notes). kexec-tools  
-> user space
-> > > > utility makes use of this physical address to store in some ELF  
-> headers
-> > > > which in turn are used by the second kernel booted after crash.
-> > > >
-> > > > We assume that address returned by per_cpu_ptr() is unity mapped and
-> > > > use __pa() to convert that address to physical address.
-> > > >
-> > > > addr = __pa(per_cpu_ptr(crash_notes, cpunum));
-> > > >
-> > > > Is that not a valid assumption with percpu_alloc=lpage or  
-> percpu_alloc=4k
-> > > > options? If not, what's the right way to get the physical address in
-> > > > such situations?
-> >
-> > The lpage allocator is gone in the latest tree and only "embed" and
-> > "page" allocators are there.  The only difference between the two is
-> > that the embed one will put the first chunk inside the linearly mapped
-> > area which in turn means that __pa() would work on static percpu
-> > variables and some of dynamic ones but from the second chunk on and
-> > for the page allocator, the percpu addresses will be remapped into
-> > vmalloc area and behaves just like any other vmalloc address meaning
-> > that the physical page can be determined using vmalloc_to_page().  So,
-> > something like the following should work,
-> >
-> >         v = per_cpu_ptr(crash_notes, cpunum);
-> >         if (v < VMALLOC_START || v >= VMALLOC_END)
-> >                 p = __pa(v);
-> >         else
-> >                 p = page_to_phys(vmalloc_to_page(v));
-> >
-> > For the now removed lpage, it would be a bit difficult and we'll
-> > probably need to add a dedicated function to percpu to determine the
-> > physical address.  Hmmm... probably the right thing to do is to add
-> > such function so that the user can simply call percpu_to_phys()
-> > regardless of address?
->
-> Hi Tejun,
->
-> Just my 2 cent's worth...
->
-> I like the idea of having a percpu_to_phys() function that others can
-> call so that such detail are localized... and this also would tend to
-> be maintained better over time, since it would be more visible being
-> located near where the percpu support is implmented.
->
-> Thank you for the information.
+Hi, Maxim Syrchin
 
-Thanks Tejun. percpu_to_phys() makes sense to me also. John, would you like to
-post a patch for this.
+I've just  found your  kernel patch for mips64 SMP kexec:
 
-Thanks
-Vivek
+http://lists.infradead.org/pipermail/kexec/2008-June/001909.html
+
+ I was porting  your kexec part  code(excluding crash_dump )  on
+xlr408 ,which is of  8 cores SMP mips64 .
+
+I found that in machine_kexec.c ,
+flush_icache_range(reboot_code_buffer,  reboot_code_buffer +
+KEXEC_CONTROL_CODE_SIZE);
+
+caused an error, so I delete this line directly,although I don't know
+if it would bring problem after I del it...
+
+
+ It is strange that , in relocate_kernel.S, the operator 'REG_L	s5,
+(s2)' caused an  invalid access on kernel space.
+
+If I change REG_L to ld , everything went well.   So I change all the
+macro such as  REG_L to  ld ,REG_S to sd , PTR_ADD to dadd
+
+LONG_SUB to dsub, and SZREG to 8
+
+
+At the same time ,  I changed the kexec_smp_wait function to a simple
+loop, without checking the kexec_flag:
+
+
+.globl kexec_smp_wait
+kexec_smp_wait:
+3: b 3b
+
+at last , the a0,a1,a3,a4 were set to address of fw_arg0,
+fw_arg1,fw_arg2,fw_arg3 respectively.
+
+
+As you see, I just let one of the cpus jumps into new kernel,while the
+others be  in an infinite loop.
+
+After jumped into second kernel , the code seemed to be crazy.
+
+
+Firstly,  the code seemd to stop before calling 'start_kernel--->
+calibrate_delay ' .
+
+
+ However,  if I added a 'printk' in any 'if  branches'  in
+'calibrate_delay '  function  , the code would stop before calling
+
+'j  start_kernel'  in head.S. (This time, because printk seemed
+unavailable, I  wrote directlly to serial address to trace the
+kernel).
+
+
+I thougt it might be the problem of irq , so I added 'disable_irq(17)'
+ in machine_kexec before invoking reboot_code_buffer();
+
+
+
+However, the problem was still there.
+
+I don't know why this happedn can you give me some advice on how to
+solve this , or if there were some mistake in my code ?
+
+
+Thank you
+
+regards,
+
+wilbur
 
 _______________________________________________
 kexec mailing list
