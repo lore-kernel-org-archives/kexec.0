@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from flmx07.ccur.com ([12.192.68.12])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1N3FyC-0002wC-6I
-	for kexec@lists.infradead.org; Wed, 28 Oct 2009 21:22:20 +0000
-Message-ID: <4AE8B612.9080103@ccur.com>
-Date: Wed, 28 Oct 2009 16:22:26 -0500
-From: John Blackwood <john.blackwood@ccur.com>
+Received: from fg-out-1718.google.com ([72.14.220.155])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1N564B-0002aO-93
+	for kexec@lists.infradead.org; Mon, 02 Nov 2009 23:12:08 +0000
+Received: by fg-out-1718.google.com with SMTP id e21so2844177fga.0
+	for <kexec@lists.infradead.org>; Mon, 02 Nov 2009 15:12:01 -0800 (PST)
+Message-ID: <4AEF673E.5030509@gmail.com>
+Date: Tue, 03 Nov 2009 00:11:58 +0100
+From: Jiri Slaby <jirislaby@gmail.com>
 MIME-Version: 1.0
-Subject: Re: Kdump issue with percpu_alloc=lpage
+Subject: kdump fails to load and crashes [was: mmotm 2009-11-01-10-01 uploaded]
+References: <200911011807.nA1I7o95016136@imap1.linux-foundation.org>
+In-Reply-To: <200911011807.nA1I7o95016136@imap1.linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,66 +20,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: hbabu@us.ibm.com, Andrew Morton <akpm@linux-foundation.org>, mm-commits@vger.kernel.org, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
- > Subject: Re: Kdump issue with percpu_alloc=lpage
- > From: Vivek Goyal <vgoyal@redhat.com>
- > Date: Tue, 27 Oct 2009 15:24:14 -0400
- > To: "Blackwood, John" <john.blackwood@ccur.com>
- > CC: Tejun Heo <tj@kernel.org>, "kexec@lists.infradead.org" 
-<kexec@lists.infradead.org>
- >
- > > > The lpage allocator is gone in the latest tree and only "embed" and
- > > > "page" allocators are there.  The only difference between the two is
- > > > that the embed one will put the first chunk inside the linearly 
-mapped
- > > > area which in turn means that __pa() would work on static percpu
- > > > variables and some of dynamic ones but from the second chunk on and
- > > > for the page allocator, the percpu addresses will be remapped into
- > > > vmalloc area and behaves just like any other vmalloc address meaning
- > > > that the physical page can be determined using vmalloc_to_page(). 
-  So,
- > > > something like the following should work,
- > > >
- > > >         v = per_cpu_ptr(crash_notes, cpunum);
- > > >         if (v < VMALLOC_START || v >= VMALLOC_END)
- > > >                 p = __pa(v);
- > > >         else
- > > >                 p = page_to_phys(vmalloc_to_page(v));
- > > >
- > > > For the now removed lpage, it would be a bit difficult and we'll
- > > > probably need to add a dedicated function to percpu to determine the
- > > > physical address.  Hmmm... probably the right thing to do is to add
- > > > such function so that the user can simply call percpu_to_phys()
- > > > regardless of address?
- > >
- > > Hi Tejun,
- > >
- > > Just my 2 cent's worth...
- > >
- > > I like the idea of having a percpu_to_phys() function that others can
- > > call so that such detail are localized... and this also would tend to
- > > be maintained better over time, since it would be more visible being
- > > located near where the percpu support is implmented.
- > >
- > > Thank you for the information.
- >
- > Thanks Tejun. percpu_to_phys() makes sense to me also. John, would you
- > like to post a patch for this.
+On 11/01/2009 07:07 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2009-11-01-10-01 has been uploaded to
 
-Hi Vivek,
+Hi, kdump loading crashes:
+BUG: unable to handle kernel paging request at ffff8800010a7000
+IP: [<ffffffff8101cd8b>] machine_kexec_prepare+0x16b/0x13e0
+PGD 1806063 PUD 180a063 PMD 10001e1
+Oops: 0003 [#1] SMP
+last sysfs file: /sys/firmware/memmap/10/type
+CPU 1
+Modules linked in: fuse ath5k ath
+Pid: 3250, comm: kexec Tainted: G        W  2.6.32-rc5-mm1_64 #869 To Be
+Filled By O.E.M.
+RIP: 0010:[<ffffffff8101cd8b>]  [<ffffffff8101cd8b>]
+machine_kexec_prepare+0x16b/0x13e0
+RSP: 0018:ffff8801c95d1e88  EFLAGS: 00010206
+RAX: 00000000000001e3 RBX: ffff8801ca2aac00 RCX: 0000000040000000
+RDX: 0000000000200000 RSI: ffff8800010a7000 RDI: ffff8800010a7000
+RBP: ffff8801c95d1ee8 R08: 00000000000010a7 R09: 00000000010a7fff
+R10: 0000000000000fff R11: 0000000004ffffff R12: 0000000000000000
+R13: ffff8800010a6000 R14: 0000008000000000 R15: ffff880000000000
+FS:  00007f4f97b4c6f0(0000) GS:ffff880028280000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8800010a7000 CR3: 00000001c8cf2000 CR4: 00000000000006e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Process kexec (pid: 3250, threadinfo ffff8801c95d0000, task
+ffff8801ca116700)
+Stack:
+ffff8801c95d1ee8 ffff8800010a6000 ffff8800010a4000 ffff8800010a4000
+<0> 0000000000000000 00000001cc000000 ffff8801c95d1ee8 0000000000000006
+<0> ffff8801ca2aac00 0000000000000000 0000000000000000 000000000146eae0
+Call Trace:
+[<ffffffff8106d32c>] sys_kexec_load+0xec/0x5e0
+[<ffffffff814365b5>] ? do_page_fault+0x185/0x350
+[<ffffffff81002e6b>] system_call_fastpath+0x16/0x1b
+Code: 00 40 48 c1 e6 0c 4c 01 fe 48 39 ca 73 21 48 89 f7 0f 1f 80 00 00
+00 00 48 89 d0 48 81 c2 00 00 20 00 48 0d e3 01 00 00 48 39 d1 <48> ab
+77 e9 48 89 f7 49 81 c4 00 00 00 40 e8 e2 93 00 00 4c 89
+RIP  [<ffffffff8101cd8b>] machine_kexec_prepare+0x16b/0x13e0
+RSP <ffff8801c95d1e88>
+CR2: ffff8800010a7000
+---[ end trace 4eaa2a86a8e2da24 ]---
 
-I'm probably not really NUMA/vm savy enough to attempt a patch
-for approval at LKML.
+ffff8800010a7000 should be OK, as crashkernel=64M@16M was passed to the
+kernel.
 
-But maybe someone else more qualified can take up the cause.
+It's here:
+static void init_level2_page(pmd_t *level2p, unsigned long addr)
+{
+        unsigned long end_addr;
 
-Thanks.
+        addr &= PAGE_MASK;
+        end_addr = addr + PUD_SIZE;
+        while (addr < end_addr) {
+here ->         set_pmd(level2p++, __pmd(addr | __PAGE_KERNEL_LARGE_EXEC));
+                addr += PMD_SIZE;
+        }
+}
+
+Corresponding -fverbose-asm with -g:
+        .loc 1 65 0
+        addq    $2097152, %rdx  #, addr
+.LVL31:
+.LBB416:
+        .loc 5 77 0
+        orq     $483, %rax      #, tmp140
+.LBE416:
+        .loc 1 63 0
+        cmpq    %rdx, %rcx      # addr, end_addr
+.LBB417:
+        .loc 5 77 0
+        stosq
+.LVL32:
+.LBE417:
+        .loc 1 63 0
+        ja      .L26    #,
+
+
+
 
 _______________________________________________
 kexec mailing list
