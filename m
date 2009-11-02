@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fg-out-1718.google.com ([72.14.220.155])
+Received: from mail-yw0-f204.google.com ([209.85.211.204])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1N564B-0002aO-93
-	for kexec@lists.infradead.org; Mon, 02 Nov 2009 23:12:08 +0000
-Received: by fg-out-1718.google.com with SMTP id e21so2844177fga.0
-	for <kexec@lists.infradead.org>; Mon, 02 Nov 2009 15:12:01 -0800 (PST)
-Message-ID: <4AEF673E.5030509@gmail.com>
-Date: Tue, 03 Nov 2009 00:11:58 +0100
-From: Jiri Slaby <jirislaby@gmail.com>
+	id 1N56PC-0005aL-WD
+	for kexec@lists.infradead.org; Mon, 02 Nov 2009 23:33:51 +0000
+Received: by ywh42 with SMTP id 42so5157714ywh.28
+	for <kexec@lists.infradead.org>; Mon, 02 Nov 2009 15:33:45 -0800 (PST)
 MIME-Version: 1.0
-Subject: kdump fails to load and crashes [was: mmotm 2009-11-01-10-01 uploaded]
-References: <200911011807.nA1I7o95016136@imap1.linux-foundation.org>
-In-Reply-To: <200911011807.nA1I7o95016136@imap1.linux-foundation.org>
+Date: Tue, 3 Nov 2009 07:33:44 +0800
+Message-ID: <e997b7420911021533t58dd2b1dr61218a67952dae97@mail.gmail.com>
+Subject: mips64 smp kexec failed booting at timer interrupt
+From: "wilbur.chan" <wilbur512@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,89 +22,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: hbabu@us.ibm.com, Andrew Morton <akpm@linux-foundation.org>, mm-commits@vger.kernel.org, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, Linux MIPS Mailing List <linux-mips@linux-mips.org>
 
-On 11/01/2009 07:07 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2009-11-01-10-01 has been uploaded to
+I '  m using kexec on a mips64 smp board.
 
-Hi, kdump loading crashes:
-BUG: unable to handle kernel paging request at ffff8800010a7000
-IP: [<ffffffff8101cd8b>] machine_kexec_prepare+0x16b/0x13e0
-PGD 1806063 PUD 180a063 PMD 10001e1
-Oops: 0003 [#1] SMP
-last sysfs file: /sys/firmware/memmap/10/type
-CPU 1
-Modules linked in: fuse ath5k ath
-Pid: 3250, comm: kexec Tainted: G        W  2.6.32-rc5-mm1_64 #869 To Be
-Filled By O.E.M.
-RIP: 0010:[<ffffffff8101cd8b>]  [<ffffffff8101cd8b>]
-machine_kexec_prepare+0x16b/0x13e0
-RSP: 0018:ffff8801c95d1e88  EFLAGS: 00010206
-RAX: 00000000000001e3 RBX: ffff8801ca2aac00 RCX: 0000000040000000
-RDX: 0000000000200000 RSI: ffff8800010a7000 RDI: ffff8800010a7000
-RBP: ffff8801c95d1ee8 R08: 00000000000010a7 R09: 00000000010a7fff
-R10: 0000000000000fff R11: 0000000004ffffff R12: 0000000000000000
-R13: ffff8800010a6000 R14: 0000008000000000 R15: ffff880000000000
-FS:  00007f4f97b4c6f0(0000) GS:ffff880028280000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff8800010a7000 CR3: 00000001c8cf2000 CR4: 00000000000006e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-Process kexec (pid: 3250, threadinfo ffff8801c95d0000, task
-ffff8801ca116700)
-Stack:
-ffff8801c95d1ee8 ffff8800010a6000 ffff8800010a4000 ffff8800010a4000
-<0> 0000000000000000 00000001cc000000 ffff8801c95d1ee8 0000000000000006
-<0> ffff8801ca2aac00 0000000000000000 0000000000000000 000000000146eae0
-Call Trace:
-[<ffffffff8106d32c>] sys_kexec_load+0xec/0x5e0
-[<ffffffff814365b5>] ? do_page_fault+0x185/0x350
-[<ffffffff81002e6b>] system_call_fastpath+0x16/0x1b
-Code: 00 40 48 c1 e6 0c 4c 01 fe 48 39 ca 73 21 48 89 f7 0f 1f 80 00 00
-00 00 48 89 d0 48 81 c2 00 00 20 00 48 0d e3 01 00 00 48 39 d1 <48> ab
-77 e9 48 89 f7 49 81 c4 00 00 00 40 e8 e2 93 00 00 4c 89
-RIP  [<ffffffff8101cd8b>] machine_kexec_prepare+0x16b/0x13e0
-RSP <ffff8801c95d1e88>
-CR2: ffff8800010a7000
----[ end trace 4eaa2a86a8e2da24 ]---
+http://lists.infradead.org/pipermail/kexec/2008-June/001909.html
 
-ffff8800010a7000 should be OK, as crashkernel=64M@16M was passed to the
-kernel.
+By now , the second kernel has halt at start_kernel --> calibrate_delay,
 
-It's here:
-static void init_level2_page(pmd_t *level2p, unsigned long addr)
-{
-        unsigned long end_addr;
+and I found that it was because of jiffies was not changing.
 
-        addr &= PAGE_MASK;
-        end_addr = addr + PUD_SIZE;
-        while (addr < end_addr) {
-here ->         set_pmd(level2p++, __pmd(addr | __PAGE_KERNEL_LARGE_EXEC));
-                addr += PMD_SIZE;
-        }
-}
-
-Corresponding -fverbose-asm with -g:
-        .loc 1 65 0
-        addq    $2097152, %rdx  #, addr
-.LVL31:
-.LBB416:
-        .loc 5 77 0
-        orq     $483, %rax      #, tmp140
-.LBE416:
-        .loc 1 63 0
-        cmpq    %rdx, %rcx      # addr, end_addr
-.LBB417:
-        .loc 5 77 0
-        stosq
-.LVL32:
-.LBE417:
-        .loc 1 63 0
-        ja      .L26    #,
+So  it might be the failure of installation for timer interrupt , or
+timer interrupt did not trigger.
 
 
 
+Before jumped into second kernel, local_irq_disable was called at each
+CPU , and only one of CPU
+
+
+was enable to jump into second kernel, while the others loop at
+relocate_kernel all the time.
+
+
+
+
+After I got dump_stack log of the firts kernel, I found that, do_timer
+was invoked right after
+
+console_init -->release_console_sem , it seemed that , timer interrupt
+would be triggered
+
+by release_console_sem .
+
+here is the dump_stack info of do_timer of first kernel:
+
+
+0:Call Trace:
+0:[ <834243cc>]0: dump_stack+0x8/0x34
+0:[ <83451ee0>]0: do_timer+0x70/0xa8
+0:[ <8342333c>]0: timer_interrupt+0x64/0x160
+0:[ <834234b4>]0: ll_timer_interrupt+0x7c/0xd8
+0:[ <8341d220>]0: ret_from_irq+0x0/0x4
+0:[ <83443a64>]0: release_console_sem+0x1e0/0x328
+0:[ <8377cf88>]0: serial8250_console_init+0x1c/0x2c
+0:[ <8377ae58>]0: console_init+0x4c/0x6c
+0:[ <83762dd8>]0: start_kernel+0x3e0/0x75c
+
+
+
+Any one know how to fix it?  or how to enable the timer interrupt  in
+second kernel?
+
+Thx
 
 _______________________________________________
 kexec mailing list
