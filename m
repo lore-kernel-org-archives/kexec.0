@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qy0-f204.google.com ([209.85.221.204])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1N5La6-00061k-8f
-	for kexec@lists.infradead.org; Tue, 03 Nov 2009 15:46:06 +0000
-Received: by qyk42 with SMTP id 42so3076792qyk.28
-	for <kexec@lists.infradead.org>; Tue, 03 Nov 2009 07:46:00 -0800 (PST)
-Message-ID: <4AF05047.5090403@gmail.com>
-Date: Tue, 03 Nov 2009 16:46:15 +0100
-From: Jiri Slaby <jirislaby@gmail.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1N82vF-0001NQ-NN
+	for kexec@lists.infradead.org; Wed, 11 Nov 2009 02:27:06 +0000
+Message-ID: <4AFA1EE7.7050704@mxs.nes.nec.co.jp>
+Date: Wed, 11 Nov 2009 11:18:15 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
-Subject: Re: kdump fails to load and crashes [was: mmotm 2009-11-01-10-01
-	uploaded]
-References: <200911011807.nA1I7o95016136@imap1.linux-foundation.org>
-	<4AEF673E.5030509@gmail.com> <20091103144450.GB4235@redhat.com>
-	<4AF048D1.4090402@gmail.com> <20091103152448.GC4235@redhat.com>
-In-Reply-To: <20091103152448.GC4235@redhat.com>
+Subject: makedumpfile-1.3.5: Store vmcoreinfo data into a dumpfile in the
+	kdump-compressed format.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,23 +21,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: mm-commits@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
+To: kexec-ml <kexec@lists.infradead.org>
+Cc: Takao Indoh <tindoh@redhat.com>, CAI Qian <caiqian@redhat.com>
 
-On 11/03/2009 04:24 PM, Vivek Goyal wrote:
->> There /proc/iomem looks like:
->> 00100000-12beffff : System RAM
->>   01000000-04ffffff : Crash kernel
->>     01000000-014680c2 : Kernel code
->>     014680c3-016f39f7 : Kernel data
->>     0175b000-017d97ab : Kernel bss
-...
-> Anyway, can you just try reserving memory at some other address, say
-> 64M@32M and see if it works.
 
-Yup, that's it of course. I missed it overlaps with current kernel. I
-though they are areas for the crash kernels. Thanks for pointing out. So
-the error is we reserve the space for kdump even we can't in fact?
+Hi,
+
+makedumpfile version 1.3.5 is released.
+Your comments/patches are welcome.
+
+Changelog:
+o New feature
+  - Store vmcoreinfo data into a dumpfile in the kdump-compressed format.
+  - Read vmcoreinfo data from a kdump-compressed dumpfile.
+
+    For usability, this patchset makes '-x'/'-i' option unnecessary
+    for re-filtering.
+
+    makedumpfile v1.3.4 can read a dumpfile in the kdump-compressed
+    format instead of /proc/vmcore and re-filter it.
+    When re-filtering, makedumpfile v1.3.4 needs '-x'/'-i' option.
+    If not specifying, it failed like the following:
+
+      # makedumpfile -c -d 3 /proc/vmcore vmcore.1
+      ...
+      The dumpfile is saved to vmcore.1
+      ...
+      #
+      # /makedumpfile -c -d 31 vmcore.1 vmcore.2
+      vmcore.1 doesn't contain vmcoreinfo.
+      Specify '-x' option or '-i' option.
+      Commandline parameter is invalid.
+      Try `makedumpfile --help' for more information.
+      #
+
+    A new makedumpfile (v1.3.5) takes vmcoreinfo data from /proc/vmcore
+    and stores the data into a dumpfile in the kdump-compressed fomat.
+    When re-filtering, makedumpfile takes the data from the dumpfile and
+    uses it. So '-x'/'-i' option is not necessary.
+
+o Code Cleanup
+  - Set the calculated value to dh->sub_hdr_size.
+  - Fix some indents in write_kdump_header().
+  - Unify the name of kdump_sub_header.
+  - Fix the typo of DISKDUMP_HEADER_BLOCKS.
+  - Add the description about re-filtering into manpage.
+  - Fix the description in manpage and README.
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Ken'ichi Ohmichi
+
 
 _______________________________________________
 kexec mailing list
