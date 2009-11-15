@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1N82vF-0001NQ-NN
-	for kexec@lists.infradead.org; Wed, 11 Nov 2009 02:27:06 +0000
-Message-ID: <4AFA1EE7.7050704@mxs.nes.nec.co.jp>
-Date: Wed, 11 Nov 2009 11:18:15 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Received: from ey-out-1920.google.com ([74.125.78.144])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1N9ouI-0001PW-In
+	for kexec@lists.infradead.org; Sun, 15 Nov 2009 23:53:26 +0000
+Received: by ey-out-1920.google.com with SMTP id 4so1377455eyg.26
+	for <kexec@lists.infradead.org>; Sun, 15 Nov 2009 15:53:20 -0800 (PST)
+From: Florian Fainelli <florian@openwrt.org>
+Subject: [PATCH] add support for loading lzma compressed kernels
+Date: Mon, 16 Nov 2009 00:53:06 +0100
 MIME-Version: 1.0
-Subject: makedumpfile-1.3.5: Store vmcoreinfo data into a dumpfile in the
-	kdump-compressed format.
+Message-Id: <200911160053.10339.florian@openwrt.org>
+Reply-To: Florian Fainelli <florian@openwrt.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,85 +23,289 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
-Cc: Takao Indoh <tindoh@redhat.com>, CAI Qian <caiqian@redhat.com>
+To: kexec@lists.infradead.org
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
 
+Hi Eric,
 
-Hi,
+This patch allows one to load a lzma compressed kernel using kexec -l.
+As I wanted the lzma code to be very similar to the existing
+zlib slurp_decompress I took lzread and associated routines
+from the cpio lzma support. Tested on my x86 laptop using the
+following commands:
 
-makedumpfile version 1.3.5 is released.
-Your comments/patches are welcome.
+lzma e bzImage bzImage.lzma
+kexec -l bzImage.lzma
 
-Changelog:
-o New feature
-  - Store vmcoreinfo data into a dumpfile in the kdump-compressed format.
-  - Read vmcoreinfo data from a kdump-compressed dumpfile.
+Having lzma support is particularly useful on some embedded
+systems on which we have the kernel already lzma compressed
+and available on a mtd partition.
 
-    For usability, this patchset makes '-x'/'-i' option unnecessary
-    for re-filtering.
+Signed-off-by: Florian Fainelli <florian@openwrt.org>
+-- 
+diff -urN kexec-tools-2.0.1/configure.ac kexec-tools-2.0.1.lzma/configure.ac
+--- kexec-tools-2.0.1/configure.ac	2009-08-13 01:28:04.000000000 +0200
++++ kexec-tools-2.0.1.lzma/configure.ac	2009-11-16 00:30:42.000000000 +0100
+@@ -79,6 +79,9 @@
+ AC_ARG_WITH([zlib], AC_HELP_STRING([--without-zlib],[disable zlib support]),
+ 	[ with_zlib="$withval"], [ with_zlib=yes ] )
 
-    makedumpfile v1.3.4 can read a dumpfile in the kdump-compressed
-    format instead of /proc/vmcore and re-filter it.
-    When re-filtering, makedumpfile v1.3.4 needs '-x'/'-i' option.
-    If not specifying, it failed like the following:
++AC_ARG_WITH([lzma], AC_HELP_STRING([--without-lzma],[disable lzma support]),
++	[ with_lzma="$withval"], [ with_lzma=yes ] )
++
+ AC_ARG_WITH([xen], AC_HELP_STRING([--without-xen],
+ 	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
 
-      # makedumpfile -c -d 3 /proc/vmcore vmcore.1
-      ...
-      The dumpfile is saved to vmcore.1
-      ...
-      #
-      # /makedumpfile -c -d 31 vmcore.1 vmcore.2
-      vmcore.1 doesn't contain vmcoreinfo.
-      Specify '-x' option or '-i' option.
-      Commandline parameter is invalid.
-      Try `makedumpfile --help' for more information.
-      #
+@@ -142,6 +145,12 @@
+ 		AC_MSG_NOTICE([zlib support disabled])))
+ fi
 
-    A new makedumpfile (v1.3.5) takes vmcoreinfo data from /proc/vmcore
-    and stores the data into a dumpfile in the kdump-compressed fomat.
-    When re-filtering, makedumpfile takes the data from the dumpfile and
-    uses it. So '-x'/'-i' option is not necessary.
++dnl See if I have a usable copy of lzma available
++if test "$with_lzma" = yes ; then
++	AC_CHECK_HEADER(lzma.h,
++		AC_CHECK_LIB(lzma, lzma_code_, ,
++		AC_MSG_NOTICE([lzma support disabled])))
++
+ dnl find Xen control stack libraries
+ if test "$with_xen" = yes ; then
+ 	AC_CHECK_HEADER(xenctrl.h,
+diff -urN kexec-tools-2.0.1/include/kexec_lzma.h kexec-tools-2.0.1.lzma/include/kexec_lzma.h
+--- kexec-tools-2.0.1/include/kexec_lzma.h	1970-01-01 01:00:00.000000000 +0100
++++ kexec-tools-2.0.1.lzma/include/kexec_lzma.h	2009-11-16 00:45:23.000000000 +0100
+@@ -0,0 +1,24 @@
++#ifndef __KEXEC_LZMA_H
++#define __KEXEC_LZMA_H
++
++#include <sys/types.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <inttypes.h>
++#include <lzma.h>
++
++#define kBufferSize (1 << 15)
++
++typedef struct lzfile {
++	uint8_t buf[kBufferSize];
++	lzma_stream strm;
++	FILE *file;
++	int encoding;
++	int eof;
++} LZFILE;
++
++LZFILE *lzopen(const char *path, const char *mode);
++int lzclose(LZFILE *lzfile);
++ssize_t lzread(LZFILE *lzfile, void *buf, size_t len);
++
++#endif /* __KEXEC_LZMA_H */
+Files kexec-tools-2.0.1/kexec/.kexec.c.swo and kexec-tools-2.0.1.lzma/kexec/.kexec.c.swo differ
+diff -urN kexec-tools-2.0.1/kexec/Makefile kexec-tools-2.0.1.lzma/kexec/Makefile
+--- kexec-tools-2.0.1/kexec/Makefile	2008-10-09 00:32:14.000000000 +0200
++++ kexec-tools-2.0.1.lzma/kexec/Makefile	2009-11-15 20:36:37.000000000 +0100
+@@ -22,6 +22,7 @@
+ KEXEC_SRCS += kexec/crashdump.c
+ KEXEC_SRCS += kexec/crashdump-xen.c
+ KEXEC_SRCS += kexec/phys_arch.c
++KEXEC_SRCS += kexec/lzma.c
 
-o Code Cleanup
-  - Set the calculated value to dh->sub_hdr_size.
-  - Fix some indents in write_kdump_header().
-  - Unify the name of kdump_sub_header.
-  - Fix the typo of DISKDUMP_HEADER_BLOCKS.
-  - Add the description about re-filtering into manpage.
-  - Fix the description in manpage and README.
+ KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
 
-Explanation of makedumpfile:
-  To shorten the size of the dumpfile and the time of creating the
-  dumpfile, makedumpfile copies only the necessary pages for analysis
-  to the dumpfile from /proc/vmcore. You can specify the kind of
-  unnecessary pages with dump_level. If you want to shorten the size
-  further, enable the compression of the page data.
-
-Download:
-  You can download the latest makedumpfile from the following URL.
-  Details of the change are written on the git page of the following site.
-  https://sourceforge.net/projects/makedumpfile/
-
-Method of installation:
-  You can compile the makedumpfile command as follows;
-  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
-  2. "cd makedumpfile-x.y.z"
-  3. "make; make install"
-
-Usage:
-  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
-
-Example:
-  If you want to exclude pages filled by zero, cache pages, user pages
-  and free pages and to enable compression, please execute the following
-  command.
-
-  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
-
-
-Thanks
-Ken'ichi Ohmichi
-
+diff -urN kexec-tools-2.0.1/kexec/kexec.c kexec-tools-2.0.1.lzma/kexec/kexec.c
+--- kexec-tools-2.0.1/kexec/kexec.c	2009-03-18 09:38:55.000000000 +0100
++++ kexec-tools-2.0.1.lzma/kexec/kexec.c	2009-11-16 00:50:37.000000000 +0100
+@@ -41,6 +41,9 @@
+ #ifdef HAVE_LIBZ
+ #include <zlib.h>
+ #endif
++#ifdef HAVE_LIBLZMA
++#include <kexec_lzma.h>
++#endif
+ #include <sha256.h>
+ #include "kexec.h"
+ #include "kexec-syscall.h"
+@@ -609,6 +612,47 @@
+ 	*r_size =  size;
+ 	return buf;
+ }
++#elif defined (HAVE_LIBLZMA)
++char *slurp_decompress_file(const char *filename, off_t *r_size)
++{
++	LZFILE *fp;
++	char *buf;
++	off_t size, allocated;
++	ssize_t result;
++
++	if (!filename) {
++		*r_size = 0;
++		return 0;
++	}
++	fp = lzopen(filename, "rb");
++	if (fp == 0) {
++		die("Cannot open `%s': %s\n", filename);
++	}
++	size = 0;
++	allocated = 65536;
++	buf = xmalloc(allocated);
++	do {
++		if (size == allocated) {
++			allocated <<= 1;
++			buf = xrealloc(buf, allocated);
++		}
++		result = lzread(fp, buf + size, allocated - size);
++		if (result < 0) {
++			if ((errno == EINTR) || (errno == EAGAIN))
++				continue;
++
++			die ("read on %s of %ld bytes failed\n",
++				filename, (allocated - size) + 0UL);
++		}
++		size += result;
++	} while(result > 0);
++	result = lzclose(fp);
++	if (result != LZMA_OK) {
++		die ("Close of %s failed\n", filename);
++	}
++	*r_size =  size;
++	return buf;
++}
+ #else
+ char *slurp_decompress_file(const char *filename, off_t *r_size)
+ {
+diff -urN kexec-tools-2.0.1/kexec/lzma.c kexec-tools-2.0.1.lzma/kexec/lzma.c
+--- kexec-tools-2.0.1/kexec/lzma.c	1970-01-01 01:00:00.000000000 +0100
++++ kexec-tools-2.0.1.lzma/kexec/lzma.c	2009-11-16 00:44:56.000000000 +0100
+@@ -0,0 +1,132 @@
++#include <sys/types.h>
++#include <inttypes.h>
++#include <string.h>
++#include <stdlib.h>
++#include <lzma.h>
++#include <kexec_lzma.h>
++
++#ifdef HAVE_LIBLZMA
++static LZFILE *lzopen_internal(const char *path, const char *mode, int fd)
++{
++	int level = 5;
++	int encoding = 0;
++	FILE *fp;
++	LZFILE *lzfile;
++	lzma_ret ret;
++	lzma_stream lzma_strm_tmp = LZMA_STREAM_INIT;
++
++	for (; *mode; mode++) {
++		if (*mode == 'w')
++			encoding = 1;
++		else if (*mode == 'r')
++			encoding = 0;
++		else if (*mode >= '1' && *mode <= '9')
++			level = *mode - '0';
++	}
++	if (fd != -1)
++		fp = fdopen(fd, encoding ? "w" : "r");
++	else
++		fp = fopen(path, encoding ? "w" : "r");
++	if (!fp)
++		return NULL;
++
++	lzfile = calloc(1, sizeof(*lzfile));
++
++	if (!lzfile) {
++		fclose(fp);
++		return NULL;
++	}
++
++	lzfile->file = fp;
++	lzfile->encoding = encoding;
++	lzfile->eof = 0;
++	lzfile->strm = lzma_strm_tmp;
++	if (encoding) {
++		lzma_options_lzma opt_lzma;
++		if (lzma_lzma_preset(&opt_lzma, level - 1))
++			return NULL;
++		ret = lzma_alone_encoder(&lzfile->strm, &opt_lzma);
++	} else {
++		ret = lzma_auto_decoder(&lzfile->strm,
++					UINT64_C(64) * 1024 * 1024, 0);
++	}
++	if (ret != LZMA_OK) {
++		fclose(fp);
++		free(lzfile);
++		return NULL;
++	}
++	return lzfile;
++}
++
++LZFILE *lzopen(const char *path, const char *mode)
++{
++	return lzopen_internal(path, mode, -1);
++}
++
++int lzclose(LZFILE *lzfile)
++{
++	lzma_ret ret;
++	int n;
++
++	if (!lzfile)
++		return -1;
++
++	if (lzfile->encoding) {
++		for (;;) {
++			lzfile->strm.avail_out = kBufferSize;
++			lzfile->strm.next_out = lzfile->buf;
++			ret = lzma_code(&lzfile->strm, LZMA_FINISH);
++			if (ret != LZMA_OK && ret != LZMA_STREAM_END)
++				return -1;
++			n = kBufferSize - lzfile->strm.avail_out;
++			if (n && fwrite(lzfile->buf, 1, n, lzfile->file) != n)
++				return -1;
++			if (ret == LZMA_STREAM_END)
++				break;
++		}
++	}
++	lzma_end(&lzfile->strm);
++
++	return fclose(lzfile->file);
++	free(lzfile);
++}
++
++ssize_t lzread(LZFILE *lzfile, void *buf, size_t len)
++{
++	lzma_ret ret;
++	int eof = 0;
++
++	if (!lzfile || lzfile->encoding)
++		return -1;
++
++	if (lzfile->eof)
++		return 0;
++
++	lzfile->strm.next_out = buf;
++	lzfile->strm.avail_out = len;
++
++	for (;;) {
++		if (!lzfile->strm.avail_in) {
++			lzfile->strm.next_in = lzfile->buf;
++			lzfile->strm.avail_in = fread(lzfile->buf, 1, kBufferSize, lzfile->file);
++			if (!lzfile->strm.avail_in)
++				eof = 1;
++		}
++
++		ret = lzma_code(&lzfile->strm, LZMA_RUN);
++		if (ret == LZMA_STREAM_END) {
++			lzfile->eof = 1;
++			return len - lzfile->strm.avail_out;
++		}
++
++		if (ret != LZMA_OK)
++			return -1;
++
++		if (!lzfile->strm.avail_out)
++			return len;
++
++		if (eof)
++			return -1;
++	}
++}
++#endif /* HAVE_LIBLZMA */
 
 _______________________________________________
 kexec mailing list
