@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NAEe8-0007cU-TY
-	for kexec@lists.infradead.org; Tue, 17 Nov 2009 03:22:29 +0000
-Date: Tue, 17 Nov 2009 14:22:23 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Fast reboot from linux to Xen hypervisor with kexec
-Message-ID: <20091117032222.GE12541@verge.net.au>
-References: <200911171040002189644@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200911171040002189644@gmail.com>
+Received: from [218.249.29.198] (helo=bjtu.edu.cn)
+	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NAKSA-0007gq-GT
+	for kexec@lists.infradead.org; Tue, 17 Nov 2009 09:34:33 +0000
+From: "=?gb2312?B?yerN9e6j?=" <06120216@bjtu.edu.cn>
+Date: Tue, 17 Nov 2009 17:23:36 +0800
+Message-ID: <OHRGKJLMRNZVJZDOZILXIKCBCFOI.06120216@bjtu.edu.cn>
+Subject: Re: help for install kexec-tools
+Reply-To: =?gb2312?B?yerN9e6j?= <06120216@bjtu.edu.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,49 +16,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "fly.limin" <fly.limin@gmail.com>
-Cc: kexec <kexec@lists.infradead.org>
+To: horms@verge.net.au
+Cc: kexec@lists.infradead.org
 
-On Tue, Nov 17, 2009 at 10:40:02AM +0800, fly.limin wrote:
-> Hi:
->    recently i am researching fast boot from linux kernel to Xen hypervisor, it means when linux is running on the real machine, i just want to switch to Xen hypervisor without going through bootloader. both linux and dom0 of Xen using the same filesystem. since we boot Xen with the following command in grub:
-> 
->  title Xen 3.1.0 / XenLinux 2.6.18
->       kernel /boot/xen-3.gz
->       module /boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb quiet
->       module /boot/initrd-2.6.18-xen.img 
-> it's different from linux, but i think there are something in common.
-> so is there any suggestions for me! 
-
-Kexecing from Linux to Xen and vice-versa should work fine.
-
-On x86 try something like this:
-kexec -l -t multiboot-x86 \
-	--append="$XEN_ARGS" \
-	--module="/boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb quiet" \
-	--module=/boot/initrd-2.6.18-xen.img \
-	/boot/xen-3.gz
-kexec -e
-
-Or on ia64 try something like this:
-
-kexec -l \
-	--append="$XEN_ARGS -- ro root=LABEL=/ rhgb quiet" \
-	--initrd=/tmp/initramfs_data.cpio \
-	--vmm=/boot/xen-3.gz \
-	/boot/vmlinuz-2.6.18-xen
-
-Where $XEN_ARGS is any command line parameters that you want to
-provide to the hypervisor. In the case of the example you gave
-it would be empty in which case the --append line in my x86 example
-could be removed.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+aSBtb2RpZmllZCBib3RoIGtleGVjLXRvb2xzIGFuZCBtb2R1bGUgaW4ga2VybmVsIHRvIGluZ25v
+cmUgc29tZSB2YWxpZGl0eSBjaGVja2luZy4gYnV0IHdoZW4gdGhlIGNvZGUgaW4ga2VybmVsIGlz
+IGdvaW5nIHRvIGNvcHkgdGhlIG5ldyBrZXJuZWwgdG8gb2xkIGtlcm5lbCwgYSBwYWdlZmF1bHQg
+ZXhjZXB0aW9uIGlzIHJlY2VpdmUgbGlrZSB0aGlzOg0KfiAjIGtleGVjIC1lDQpTdGFydGluZyBu
+ZXcga2VybmVsDQpVbmhhbmRsZWQga2VybmVsIHVuYWxpZ25lZCBhY2Nlc3NbIzFdOg0KQ3B1IDEN
+CiQgMCAgIDogMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDAxIGE4MDAwMDAwMjMzMWZi
+YjAgZmZmZmZmZmZmZmZmZmZmZg0KJCA0ICAgOiBmZmZmZmZmZjgxMTM5ODFjIGZmZmZmZmZmODEx
+M2NmMTggZmZmZmZmZmY4MTEzY2YxNCBmZmZmZmZmZjAxMTAwMDAwDQokIDggICA6IDAwMDAwMDAw
+MDAwMGZmZmYgYTgwMDAwMDAyMzMxZmI5MCAwMDAwMDAwMDAwMDAwMDBhIGZmZmZmZmZmODEzZDg1
+ZDgNCiQxMiAgIDogMDAwMDAwMDAxMDAwOGNlMSAwMDAwMDAwMDEwMDAwMDFlIGZmZmZmZmZmODEx
+NjlhOTAgMDAwMDAwMDEyMDAwNDlkMA0KJDE2ICAgOiBhODAwMDAwMDIzMzFmYjkwIGZmZmZmZmZm
+ZmM0NDAwMDAgZmZmZmZmZmY4M2ZlMDAwMCBmZmZmZmYwMDAwMDAwMDAwDQokMjAgICA6IGZmZmZm
+ZmZmODExNDAwMDAgYTgwMDAwMDAyMzFjNTgwMCBhODAwMDAwMDIxYjE3MDAwIDAwMDAwMDAwMDAw
+MDAwMDgNCiQyNCAgIDogMDAwMDAwMDAwMDAwMDA3OSAwMDAwMDAwMDAwMDAwMDAwICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIA0KJDI4ICAgOiBhODAwMDAwMDIzMzFjMDAwIGE4MDAw
+MDAwMjMzMWZiNjAgMDAwMDAwZmZmZmUwY2E0MCBmZmZmZmZmZjgxMTMyNTQ0DQpIaSAgICA6IDAw
+MDAwMDAwMDk2MDAwMDANCkxvICAgIDogMDAwMDAwMDAwNWEwZDIwMA0KZXBjICAgOiBmZmZmZmZm
+ZjgxMTM5ODQwIGRvX2FkZSsweDJlMC8weDQ3MA0KICAgIE5vdCB0YWludGVkDQpyYSAgICA6IGZm
+ZmZmZmZmODExMzI1NDQgcmV0X2Zyb21fZXhjZXB0aW9uKzB4MC8weDEwDQpTdGF0dXM6IDEwMDA4
+Y2UzICAgIEtYIFNYIFVYIEtFUk5FTCBFWEwgSUUgDQpDYXVzZSA6IDAwODAwMDE0DQpCYWRWQSA6
+IGZmZmZmZmZmMDExMDAwMDANClBySWQgIDogMDAwZDA0MDEgKENhdml1bSBPY3Rlb24pDQpNb2R1
+bGVzIGxpbmtlZCBpbjoNClByb2Nlc3Mga2V4ZWMgKHBpZDogODI3LCB0aHJlYWRpbmZvPWE4MDAw
+MDAwMjMzMWMwMDAsIHRhc2s9YTgwMDAwMDAwYmVjNDA0MCwgdGxzPTAwMDAwMDU1NTU1N2ViMjAp
+DQpTdGFjayA6IGZmZmZmZmZmODNmZGMxYjcgMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAw
+MDAwIGZmZmZmZmZmODNmZTAwMDANCiAgICAgICAgMDAwMDAwMDAwMDAwMDAxZSBmZmZmZmZmZjgx
+MTMyNTQ0IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDAwMDAwMQ0KICAgICAgICBmZmZmZmZm
+ZjAxMTAwMDAwIGZmZmZmZmZmODE0MzAwMDAgZmZmZmZmZmZmZmZmZmZmZiAwMDAwMDAwMDAwMDAw
+MDAxDQogICAgICAgIGZmZmZmZmZmZmZmZmZmZmYgMDAwMDAwMDAwMDAwMTdkNSAwMDAwMDAwMDAw
+MDBmZmZmIGZmZmZmZmZmODNmY2MxOTANCiAgICAgICAgMDAwMDAwMDAwMDAwMDAwYSBmZmZmZmZm
+ZjgxM2Q4NWQ4IDAwMDAwMDAwMDAwMDAwMjAgZmZmZmZmZmY4MTI3ZmQ0Yw0KICAgICAgICBmZmZm
+ZmZmZjgxMTY5YTkwIDAwMDAwMDAxMjAwMDQ5ZDAgMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAw
+MDAwMDAwDQogICAgICAgIGZmZmZmZmZmODNmZTAwMDAgMDAwMDAwMDAwMDAwMDAxZSBmZmZmZmZm
+ZjgxMTQwMDAwIGE4MDAwMDAwMjMxYzU4MDANCiAgICAgICAgYTgwMDAwMDAyMWIxNzAwMCAwMDAw
+MDAwMDAwMDAwMDA4IDAwMDAwMDAwMDAwMDAwNzkgMDAwMDAwMDAwMDAwMDAwMA0KICAgICAgICBm
+ZmZmZmZmZjgxMTQwMDAwIGE4MDAwMDAwMjMxYzU4MDAgYTgwMDAwMDAyMzMxYzAwMCBhODAwMDAw
+MDIzMzFmY2YwDQogICAgICAgIDAwMDAwMGZmZmZlMGNhNDAgZmZmZmZmZmY4MTEzY2YwNCAwMDAw
+MDAwMDEwMDA4Y2UzIDAwMDAwMDAwMDk2MDAwMDANCiAgICAgICAgLi4uDQpDYWxsIFRyYWNlOg0K
+WzxmZmZmZmZmZjgxMTM5ODQwPl0gZG9fYWRlKzB4MmUwLzB4NDcwDQpbPGZmZmZmZmZmODExMzI1
+NDQ+XSByZXRfZnJvbV9leGNlcHRpb24rMHgwLzB4MTANCls8ZmZmZmZmZmY4MTEzY2YxND5dIG1h
+Y2hpbmVfa2V4ZWMrMHhkNC8weDFkMA0KWzxmZmZmZmZmZjgxMTgyYzY0Pl0ga2VybmVsX2tleGVj
+KzB4ODQvMHg5MA0KWzxmZmZmZmZmZjgxMTY5YzZjPl0gc3lzX3JlYm9vdCsweDFkYy8weDIxMA0K
+WzxmZmZmZmZmZjgxMTNiZGZjPl0gaGFuZGxlX3N5cysweGZjLzB4MTE4DQoNCg0KQ29kZTogMDAw
+MjEwZjggIDAyMDIxMDJkICBkYzQzMDAwMCA8YjBlMzAwMDA+IGI0ZTMwMDA3ICAyNDAzMDAwMCAg
+MTQ2MGZmZDggIDAwMDAwMDAwICA4ZTAyMDEyNCANClNlZ21lbnRhdGlvbiBmYXVsdA0KDQppIGRv
+IHNvbWUgdGVzdCwgdGhhdCBpIGNvcHkgc29tZXRoaW5nIHRvIHVzZXIgc3BhY2UgLnRleHQgc2Vn
+bWVudCBiZWZvcmUgYWxzbyByZWNlaXZlIGEgc2VnZW1lbnRhdGlvbiBmYXVsdC4gVGhpcyBtZWFu
+cyB0aGUgcmVhZG9ubHkgLnRleHQgY2Fubm90IGJlIHdyaXR0ZW4uIEhvdyB0byBhdm9pZCB0aGlz
+IGluIHRoZSBjb250ZXh0IG9mIEtFWEVDPw0KDQpQUzogbXkga2VybmVsIHZlcnNpb24gaXMgMi42
+LjI3DQoNCg0KLS0tLS0tLS0tLS0tLS0tLS0tINStyrzTyrz+IC0tLS0tLS0tLS0tLS0tLS0tLQ0K
+PkZyb206IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pg0KPlJlcGx5LVRvOiANCj5U
+bzogyerN9e6jPDA2MTIwMjE2QGJqdHUuZWR1LmNuPg0KPlN1YmplY3Q6IFJlOiBoZWxwIGZvciBp
+bnN0YWxsIGtleGVjLXRvb2xzDQo+RGF0ZTogRnJpLCAxMyBOb3YgMjAwOSAxMzo0NDowMSArMTEw
+MA0KPg0KPk9uIFRodSwgTm92IDEyLCAyMDA5IGF0IDA0OjE4OjExUE0gKzA4MDAsIMnqzfXuoyB3
+cm90ZToNCj4+IEN1cnJlbnRseSwgaSdtIHRyeWluZyB0byBpbnN0YWxsIGtleGVjLXRvb2xzIG9u
+IGEgYm94IHdoaWNoIGhhdmUgYSBvY3Rlb24gbWlwcyBjcHUgd2l0aCBhIGdjYyBjb21waWxlciB0
+dW5lZCBieSBjYXZpdW0uIHVuZm9ydHVuYXRlbHksIHNvbWUgY29tcGlsZXIgZXJyb3IgaGFwcGVu
+cy4NCj4+IElzIGl0IHBvc3NpYmxlIHRvIHJ1biB5b3VyIHRvb2xzIG9uIHN1Y2ggYSBlbnZpcm9u
+bWVudD8gaWYgcG9zc2libGUsIGkgd2lsbCBzcGVuZCBtb3JlIHRpbWUgdG8gZml4IHRoZSBlcnJv
+ci4NCj4NCj5IaSwNCj4NCj5JIGV4cGVjdCB0aGF0IGl0IGlzIHBvc3NpYmxlIHRvIGdldCB0aGlu
+Z3Mgd29ya2luZy4NCj5QZXJoYXBzIHBvc3RpbmcgdGhlIGVycm9ycyB0byB0aGUga2V4ZWMgbWFp
+bGluZyBsaXN0DQo+d291bGQgaGVscD8NCj4NCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
