@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail-pw0-f43.google.com ([209.85.160.43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NAEMy-000526-PS
-	for kexec@lists.infradead.org; Tue, 17 Nov 2009 03:04:45 +0000
-Date: Tue, 17 Nov 2009 14:04:38 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] add support for loading lzma compressed kernels
-Message-ID: <20091117030429.GC12541@verge.net.au>
-References: <200911160053.10339.florian@openwrt.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200911160053.10339.florian@openwrt.org>
+	id 1NADzJ-0003Xs-Ka
+	for kexec@lists.infradead.org; Tue, 17 Nov 2009 02:40:18 +0000
+Received: by pwi12 with SMTP id 12so3943547pwi.2
+	for <kexec@lists.infradead.org>; Mon, 16 Nov 2009 18:40:11 -0800 (PST)
+Date: Tue, 17 Nov 2009 10:40:02 +0800
+From: "fly.limin" <fly.limin@gmail.com>
+Subject: Fast reboot from linux to Xen hypervisor with kexec
+Message-ID: <200911171040002189644@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,316 +18,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0893472517=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: kexec <kexec@lists.infradead.org>
 
-On Mon, Nov 16, 2009 at 12:53:06AM +0100, Florian Fainelli wrote:
-> Hi Eric,
-> 
-> This patch allows one to load a lzma compressed kernel using kexec -l.
-> As I wanted the lzma code to be very similar to the existing
-> zlib slurp_decompress I took lzread and associated routines
-> from the cpio lzma support. Tested on my x86 laptop using the
-> following commands:
-> 
-> lzma e bzImage bzImage.lzma
-> kexec -l bzImage.lzma
-> 
-> Having lzma support is particularly useful on some embedded
-> systems on which we have the kernel already lzma compressed
-> and available on a mtd partition.
-> 
-> Signed-off-by: Florian Fainelli <florian@openwrt.org>
-> -- 
-> diff -urN kexec-tools-2.0.1/configure.ac kexec-tools-2.0.1.lzma/configure.ac
-> --- kexec-tools-2.0.1/configure.ac	2009-08-13 01:28:04.000000000 +0200
-> +++ kexec-tools-2.0.1.lzma/configure.ac	2009-11-16 00:30:42.000000000 +0100
-> @@ -79,6 +79,9 @@
->  AC_ARG_WITH([zlib], AC_HELP_STRING([--without-zlib],[disable zlib support]),
->  	[ with_zlib="$withval"], [ with_zlib=yes ] )
-> 
-> +AC_ARG_WITH([lzma], AC_HELP_STRING([--without-lzma],[disable lzma support]),
-> +	[ with_lzma="$withval"], [ with_lzma=yes ] )
-> +
->  AC_ARG_WITH([xen], AC_HELP_STRING([--without-xen],
->  	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
-> 
-> @@ -142,6 +145,12 @@
->  		AC_MSG_NOTICE([zlib support disabled])))
->  fi
-> 
-> +dnl See if I have a usable copy of lzma available
-> +if test "$with_lzma" = yes ; then
-> +	AC_CHECK_HEADER(lzma.h,
-> +		AC_CHECK_LIB(lzma, lzma_code_, ,
 
-Should lzma_code_ be lzma_code. The former doesn't seem to work with
-liblzma 4.999.9beta+20091016-1 from Debian.
+This is a multi-part message in MIME format.
 
-> +		AC_MSG_NOTICE([lzma support disabled])))
+--===============0893472517==
+Content-Type: multipart/alternative;
+	boundary="=====003_Dragon262344378088_====="
 
-The trailing "fi" line appears to be missing.
 
-> +
->  dnl find Xen control stack libraries
->  if test "$with_xen" = yes ; then
->  	AC_CHECK_HEADER(xenctrl.h,
-> diff -urN kexec-tools-2.0.1/include/kexec_lzma.h kexec-tools-2.0.1.lzma/include/kexec_lzma.h
-> --- kexec-tools-2.0.1/include/kexec_lzma.h	1970-01-01 01:00:00.000000000 +0100
-> +++ kexec-tools-2.0.1.lzma/include/kexec_lzma.h	2009-11-16 00:45:23.000000000 +0100
-> @@ -0,0 +1,24 @@
-> +#ifndef __KEXEC_LZMA_H
-> +#define __KEXEC_LZMA_H
-> +
-> +#include <sys/types.h>
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <inttypes.h>
-> +#include <lzma.h>
-> +
-> +#define kBufferSize (1 << 15)
-> +
-> +typedef struct lzfile {
-> +	uint8_t buf[kBufferSize];
-> +	lzma_stream strm;
-> +	FILE *file;
-> +	int encoding;
-> +	int eof;
-> +} LZFILE;
-> +
-> +LZFILE *lzopen(const char *path, const char *mode);
-> +int lzclose(LZFILE *lzfile);
-> +ssize_t lzread(LZFILE *lzfile, void *buf, size_t len);
-> +
-> +#endif /* __KEXEC_LZMA_H */
-> Files kexec-tools-2.0.1/kexec/.kexec.c.swo and kexec-tools-2.0.1.lzma/kexec/.kexec.c.swo differ
-> diff -urN kexec-tools-2.0.1/kexec/Makefile kexec-tools-2.0.1.lzma/kexec/Makefile
-> --- kexec-tools-2.0.1/kexec/Makefile	2008-10-09 00:32:14.000000000 +0200
-> +++ kexec-tools-2.0.1.lzma/kexec/Makefile	2009-11-15 20:36:37.000000000 +0100
-> @@ -22,6 +22,7 @@
->  KEXEC_SRCS += kexec/crashdump.c
->  KEXEC_SRCS += kexec/crashdump-xen.c
->  KEXEC_SRCS += kexec/phys_arch.c
-> +KEXEC_SRCS += kexec/lzma.c
-> 
->  KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
-> 
-> diff -urN kexec-tools-2.0.1/kexec/kexec.c kexec-tools-2.0.1.lzma/kexec/kexec.c
-> --- kexec-tools-2.0.1/kexec/kexec.c	2009-03-18 09:38:55.000000000 +0100
-> +++ kexec-tools-2.0.1.lzma/kexec/kexec.c	2009-11-16 00:50:37.000000000 +0100
-> @@ -41,6 +41,9 @@
->  #ifdef HAVE_LIBZ
->  #include <zlib.h>
->  #endif
-> +#ifdef HAVE_LIBLZMA
-> +#include <kexec_lzma.h>
-> +#endif
->  #include <sha256.h>
->  #include "kexec.h"
->  #include "kexec-syscall.h"
-> @@ -609,6 +612,47 @@
->  	*r_size =  size;
->  	return buf;
->  }
-> +#elif defined (HAVE_LIBLZMA)
-> +char *slurp_decompress_file(const char *filename, off_t *r_size)
+This is a multi-part message in MIME format.
 
-Does this imply that zlib compression isn't supported if
-lzma compression support is enabled?
+--=====003_Dragon262344378088_=====
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: 7bit
 
-> +{
-> +	LZFILE *fp;
-> +	char *buf;
-> +	off_t size, allocated;
-> +	ssize_t result;
-> +
-> +	if (!filename) {
-> +		*r_size = 0;
-> +		return 0;
-> +	}
-> +	fp = lzopen(filename, "rb");
-> +	if (fp == 0) {
-> +		die("Cannot open `%s': %s\n", filename);
-> +	}
-> +	size = 0;
-> +	allocated = 65536;
-> +	buf = xmalloc(allocated);
-> +	do {
-> +		if (size == allocated) {
-> +			allocated <<= 1;
-> +			buf = xrealloc(buf, allocated);
-> +		}
-> +		result = lzread(fp, buf + size, allocated - size);
-> +		if (result < 0) {
-> +			if ((errno == EINTR) || (errno == EAGAIN))
-> +				continue;
-> +
-> +			die ("read on %s of %ld bytes failed\n",
-> +				filename, (allocated - size) + 0UL);
-> +		}
-> +		size += result;
-> +	} while(result > 0);
-> +	result = lzclose(fp);
-> +	if (result != LZMA_OK) {
-> +		die ("Close of %s failed\n", filename);
-> +	}
-> +	*r_size =  size;
-> +	return buf;
-> +}
->  #else
->  char *slurp_decompress_file(const char *filename, off_t *r_size)
->  {
-> diff -urN kexec-tools-2.0.1/kexec/lzma.c kexec-tools-2.0.1.lzma/kexec/lzma.c
-> --- kexec-tools-2.0.1/kexec/lzma.c	1970-01-01 01:00:00.000000000 +0100
-> +++ kexec-tools-2.0.1.lzma/kexec/lzma.c	2009-11-16 00:44:56.000000000 +0100
-> @@ -0,0 +1,132 @@
-> +#include <sys/types.h>
-> +#include <inttypes.h>
-> +#include <string.h>
-> +#include <stdlib.h>
-> +#include <lzma.h>
-> +#include <kexec_lzma.h>
-> +
-> +#ifdef HAVE_LIBLZMA
+Hi:
+   recently i am researching fast boot from linux kernel to Xen hypervisor, it means when linux is running on the real machine, i just want to switch to Xen hypervisor without going through bootloader. both linux and dom0 of Xen using the same filesystem. since we boot Xen with the following command in grub:
 
-#include <kexec_lzma.h> needs to be inside HAVE_LIBLZMA,
-it seems just as well to move the #ifdef to the top of the file.
+ title Xen 3.1.0 / XenLinux 2.6.18
+      kernel /boot/xen-3.gz
+      module /boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb quiet
+      module /boot/initrd-2.6.18-xen.img 
+it's different from linux, but i think there are something in common.
+so is there any suggestions for me! 
 
-> +static LZFILE *lzopen_internal(const char *path, const char *mode, int fd)
-> +{
-> +	int level = 5;
-> +	int encoding = 0;
-> +	FILE *fp;
-> +	LZFILE *lzfile;
-> +	lzma_ret ret;
-> +	lzma_stream lzma_strm_tmp = LZMA_STREAM_INIT;
-> +
-> +	for (; *mode; mode++) {
-> +		if (*mode == 'w')
-> +			encoding = 1;
-> +		else if (*mode == 'r')
-> +			encoding = 0;
-> +		else if (*mode >= '1' && *mode <= '9')
-> +			level = *mode - '0';
-> +	}
-> +	if (fd != -1)
-> +		fp = fdopen(fd, encoding ? "w" : "r");
-> +	else
-> +		fp = fopen(path, encoding ? "w" : "r");
-> +	if (!fp)
-> +		return NULL;
-> +
-> +	lzfile = calloc(1, sizeof(*lzfile));
-> +
-> +	if (!lzfile) {
-> +		fclose(fp);
-> +		return NULL;
-> +	}
-> +
-> +	lzfile->file = fp;
-> +	lzfile->encoding = encoding;
-> +	lzfile->eof = 0;
-> +	lzfile->strm = lzma_strm_tmp;
-> +	if (encoding) {
-> +		lzma_options_lzma opt_lzma;
-> +		if (lzma_lzma_preset(&opt_lzma, level - 1))
-> +			return NULL;
-> +		ret = lzma_alone_encoder(&lzfile->strm, &opt_lzma);
-> +	} else {
-> +		ret = lzma_auto_decoder(&lzfile->strm,
-> +					UINT64_C(64) * 1024 * 1024, 0);
-> +	}
-> +	if (ret != LZMA_OK) {
-> +		fclose(fp);
-> +		free(lzfile);
-> +		return NULL;
-> +	}
-> +	return lzfile;
-> +}
-> +
-> +LZFILE *lzopen(const char *path, const char *mode)
-> +{
-> +	return lzopen_internal(path, mode, -1);
-> +}
-> +
-> +int lzclose(LZFILE *lzfile)
-> +{
-> +	lzma_ret ret;
-> +	int n;
-> +
-> +	if (!lzfile)
-> +		return -1;
-> +
-> +	if (lzfile->encoding) {
-> +		for (;;) {
-> +			lzfile->strm.avail_out = kBufferSize;
-> +			lzfile->strm.next_out = lzfile->buf;
-> +			ret = lzma_code(&lzfile->strm, LZMA_FINISH);
-> +			if (ret != LZMA_OK && ret != LZMA_STREAM_END)
-> +				return -1;
-> +			n = kBufferSize - lzfile->strm.avail_out;
-> +			if (n && fwrite(lzfile->buf, 1, n, lzfile->file) != n)
-> +				return -1;
-> +			if (ret == LZMA_STREAM_END)
-> +				break;
-> +		}
-> +	}
-> +	lzma_end(&lzfile->strm);
-> +
-> +	return fclose(lzfile->file);
-> +	free(lzfile);
-> +}
-> +
-> +ssize_t lzread(LZFILE *lzfile, void *buf, size_t len)
-> +{
-> +	lzma_ret ret;
-> +	int eof = 0;
-> +
-> +	if (!lzfile || lzfile->encoding)
-> +		return -1;
-> +
-> +	if (lzfile->eof)
-> +		return 0;
-> +
-> +	lzfile->strm.next_out = buf;
-> +	lzfile->strm.avail_out = len;
-> +
-> +	for (;;) {
-> +		if (!lzfile->strm.avail_in) {
-> +			lzfile->strm.next_in = lzfile->buf;
-> +			lzfile->strm.avail_in = fread(lzfile->buf, 1, kBufferSize, lzfile->file);
-> +			if (!lzfile->strm.avail_in)
-> +				eof = 1;
-> +		}
-> +
-> +		ret = lzma_code(&lzfile->strm, LZMA_RUN);
-> +		if (ret == LZMA_STREAM_END) {
-> +			lzfile->eof = 1;
-> +			return len - lzfile->strm.avail_out;
-> +		}
-> +
-> +		if (ret != LZMA_OK)
-> +			return -1;
-> +
-> +		if (!lzfile->strm.avail_out)
-> +			return len;
-> +
-> +		if (eof)
-> +			return -1;
-> +	}
-> +}
-> +#endif /* HAVE_LIBLZMA */
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+2009-11-17 
+
+
+
+Min Li
+School of Computer Science and Technology 
+Cluster and Grid Computing Lab 
+Services Computing Technology and System Lab 
+Huazhong University of Science and Technology 
+Wuhan, 430074, China 
+Tel: +86-139-8625-1431 
+Email: fly.limin@gmail.com
+
+--=====003_Dragon262344378088_=====
+Content-Type: text/html;
+	charset="gb2312"
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<STYLE type=text/css>@import url( C:\Documents and Settings\Administrator\Local Settings\Temporary Internet Files\scrollbar.css );
+</STYLE>
+
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<META name=GENERATOR content="MSHTML 8.00.6001.18852"><LINK rel=stylesheet 
+href="BLOCKQUOTE{margin-Top: 0px; margin-Bottom: 0px; margin-Left: 2em}"></HEAD>
+<BODY style="MARGIN: 10px; FONT-FAMILY: verdana; FONT-SIZE: 10pt">
+<DIV><FONT size=2 face=Verdana>Hi:<BR>&nbsp;&nbsp; recently i am researching 
+fast boot from linux kernel to Xen hypervisor, it means when linux is running on 
+the real machine, i just want to switch to Xen hypervisor without going through 
+bootloader. both linux and dom0 of Xen using the same filesystem. since we boot 
+Xen with the following command in grub:</DIV>
+<DIV>
+<P><BR>&nbsp;title Xen 3.1.0 / XenLinux 2.6.18<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+kernel /boot/xen-3.gz<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; module 
+/boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb 
+quiet<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; module /boot/initrd-2.6.18-xen.img </P>
+<P>it's different from linux, but i think there are something in common.<BR>so 
+is there any suggestions for me! <BR></P></FONT></DIV>
+<DIV align=left><FONT color=#c0c0c0 size=2 face=Verdana>2009-11-17 
+</FONT></DIV><FONT size=2 face=Verdana>
+<HR style="WIDTH: 122px; HEIGHT: 2px" align=left SIZE=2>
+
+<DIV><FONT color=#c0c0c0 size=2 face=Verdana><SPAN>
+<DIV>
+<DIV>Min Li<BR>School of Computer Science and Technology <BR>Cluster and Grid 
+Computing Lab <BR>Services Computing Technology and System Lab <BR>Huazhong 
+University of Science and Technology <BR>Wuhan, 430074, China <BR>Tel: 
++86-139-8625-1431 <BR>Email: 
+fly.limin@gmail.com</DIV></DIV></SPAN></FONT></DIV></FONT></BODY></HTML>
+
+--=====003_Dragon262344378088_=====--
+
+
+
+--===============0893472517==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0893472517==--
+
+
