@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [218.249.29.198] (helo=bjtu.edu.cn)
-	by bombadil.infradead.org with smtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NAZbT-0007dz-AO
-	for kexec@lists.infradead.org; Wed, 18 Nov 2009 01:45:09 +0000
-From: "=?gb2312?B?yerN9e6j?=" <06120216@bjtu.edu.cn>
-Date: Wed, 18 Nov 2009 09:43:58 +0800
-Message-ID: <MMARYILAONGELUFTMLUOKCKVHQMW.06120216@bjtu.edu.cn>
-Subject: Re: help for install kexec-tools
-Reply-To: =?gb2312?B?yerN9e6j?= <06120216@bjtu.edu.cn>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NAbdY-0007tq-Ay
+	for kexec@lists.infradead.org; Wed, 18 Nov 2009 03:55:25 +0000
+Date: Wed, 18 Nov 2009 14:55:18 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] add support for loading lzma compressed kernels
+Message-ID: <20091118035518.GJ18493@verge.net.au>
+References: <200911160053.10339.florian@openwrt.org>
+	<20091117030429.GC12541@verge.net.au>
+	<200911171508.29971.florian@openwrt.org>
+	<200911171523.15419.florian@openwrt.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200911171523.15419.florian@openwrt.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,35 +22,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: wilbur512@gmail.com
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-SXQgaXMgIlJFR19TCXM1LCAoczQpIiB3aGVyZSB0aGUgcGFnZWZhdWx0IGlzIHJlY2VpdmVkLCBz
-NCByZWcgc3RvcmVkIHRoZSBzdGFydCBhZGRyZXNzIG9mIGtlcm5lbCAudGV4dCBzZWdtZW50LiBX
-aGVuIGkgYWRkIGEgbGluZSBvZiBDIGNvZGUgdG8gZm9yY2Ugd3JpdGUgc29tZSB0aGluZyBpbiB0
-aGUgc2FtZSBhZGRyZXNzIGJlZm9yZSB0aGUgYXNzZW1ibHkgY29kZSwgdGhlIHNhbWUgdGhpbmcg
-aGFwcGVuZWQuIERvZXMgaXMgaGF2ZSBzb21lIG1lY2hhbmlzbSB0byBtYWtlIHRoZSBwYWdlIGNh
-bid0IGJlIHdyaXR0ZW4gaW4gaGFyZHdhcmUgbGV2ZWwsIGxpa2UgeDg2J3MgcmVhZG9ubHkgZmxh
-Zz8NCg0KQW5kIGNvdWxkIHlvdSB0ZWxsIG1lIHdoZXJlIGNhbiBpIGZpbmQgdGhlIHN1aXRhYmxl
-IHBhY3RoIGZvciBPQ1RFT04/DQoNCi0tLS0tLS0tLS0tLS0tLS0tLSDUrcq808q8/iAtLS0tLS0t
-LS0tLS0tLS0tLS0NCj5Gcm9tOiAid2lsYnVyLmNoYW4iIDx3aWxidXI1MTJAZ21haWwuY29tPg0K
-PlJlcGx5LVRvOiANCj5UbzogyerN9e6jPDA2MTIwMjE2QGJqdHUuZWR1LmNuPg0KPlN1YmplY3Q6
-IFJlOiBoZWxwIGZvciBpbnN0YWxsIGtleGVjLXRvb2xzDQo+RGF0ZTogVHVlLCAxNyBOb3YgMjAw
-OSAyMjoxMDoxNSArMDgwMA0KPg0KPjIwMDkvMTEvMTcgyerN9e6jDQo6DQo+PiBpIG1vZGlmaWVk
-IGJvdGgga2V4ZWMtdG9vbHMgYW5kIG1vZHVsZSBpbiBrZXJuZWwgdG8gaW5nbm9yZSBzb21lIHZh
-bGlkaXR5IGNoZWNraW5nLiBidXQgd2hlbiB0aGUgY29kZSBpbiBrZXJuZWwgaXMgZ29pbmcgdG8g
-Y29weSB0aGUgbmV3IGtlcm5lbCB0byBvbGQga2VybmVsLCBhIHBhZ2VmYXVsdCBleGNlcHRpb24g
-aXMgcmVjZWl2ZSBsaWtlIHRoaXM6DQo+PiB+ICMga2V4ZWMgLWUNCj4+IFN0YXJ0aW5nIG5ldyBr
-ZXJuZWwNCj4+IFVuaGFuZGxlZCBrZXJuZWwgdW5hbGlnbmVkIGFjY2Vzc1sjMV06DQo+DQo+TWF5
-YmUgaXQgd2FzIGJlY2F1c2Ugb2YgeW91ciBjcm9zc3Rvb2xzIHByb2JsZW0uDQo+DQo+d2F0Y2gg
-dGhlICdSRUdfTAlzNSwgKHMyKQ0KPglSRUdfUwlzNSwgKHM0KScNCj4NCj5pbiByZWxvY2F0ZV9r
-ZXJuZWwuUyAgdG8gc2VlIGlmIGl0IGlzIHN1aXRhYmxlIGZvciA2NCBiaXRzLg0KPg0KPg0KPkJU
-VywgaWYgeW91IGFyZSB1c2luZyBzbXAgcHJvY2Vzc29ycyAsIHlvdSBzaG91bGQgY2hlY2sgdGhl
-IHBhdGNoIGZvciBpdA0KPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Tue, Nov 17, 2009 at 03:23:15PM +0100, Florian Fainelli wrote:
+> On Tuesday 17 November 2009 15:08:29 Florian Fainelli wrote:
+> > Hello Simon,
+> > 
+> > On Tuesday 17 November 2009 04:04:38 Simon Horman wrote:
+> > > On Mon, Nov 16, 2009 at 12:53:06AM +0100, Florian Fainelli wrote:
+> > > > Hi Eric,
+> > > >
+> > > > This patch allows one to load a lzma compressed kernel using kexec -l.
+> > > > As I wanted the lzma code to be very similar to the existing
+> > > > zlib slurp_decompress I took lzread and associated routines
+> > > > from the cpio lzma support. Tested on my x86 laptop using the
+> > > > following commands:
+> > > >
+> > > > lzma e bzImage bzImage.lzma
+> > > > kexec -l bzImage.lzma
+> > > >
+> > > > Having lzma support is particularly useful on some embedded
+> > > > systems on which we have the kernel already lzma compressed
+> > > > and available on a mtd partition.
+> > > >
+> > > > Signed-off-by: Florian Fainelli <florian@openwrt.org>
+> > >
+> > > Should lzma_code_ be lzma_code. The former doesn't seem to work with
+> > > liblzma 4.999.9beta+20091016-1 from Debian.
+> > 
+> > You are right it's actually lzma_code (without the trailing _).
+> > 
+> > > > +		AC_MSG_NOTICE([lzma support disabled])))
+> > >
+> > > The trailing "fi" line appears to be missing.
+> > 
+> > Fixed too.
+> > [snip]
+> > 
+> > > Does this imply that zlib compression isn't supported if
+> > > lzma compression support is enabled?
+> > 
+> > Indeed, we might want to support both at runtime. Would you agree with the
+> > following proposal:
+> > 
+> > - rename slurp_decompress_file to zlib/lzma_decompress_file
+> > - in case gzopen fails, do not die, but return NULL
+> > - test the return value of zlib_decompress_file and try
+> >  lzma_decompress_file
+
+      Something along those lines sounds entirely reasonable to me.
+
+> We would also have to modify the call sites of slurp_decompress file this might 
+> become pretty heavy if we support more decompression algorithms. What do you 
+> think?
+
+Perhaps slurp_decompress could be a wrapper which tries each algorithm in
+turn as necessary?
+
+Also, I'd like to get rid of the #ifdef around what is currently
+slurp_decompress_file() if possible. My idea would be to move
+zlib_decompress_file and lzma_decompress_file into, for instance
+zlib.c and lzma.c respectively and have zlib.h and lzma.h provide
+more-or-less null functions for the case where the algorithm
+in question isn't supported.
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
