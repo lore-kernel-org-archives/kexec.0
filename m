@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-px0-f195.google.com ([209.85.216.195])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NADuc-0004F6-P0
-	for kexec@lists.infradead.org; Tue, 17 Nov 2009 02:35:27 +0000
-Received: by pxi33 with SMTP id 33so2088180pxi.28
-	for <kexec@lists.infradead.org>; Mon, 16 Nov 2009 18:35:20 -0800 (PST)
-Date: Tue, 17 Nov 2009 10:35:12 +0800
-From: "fly.limin" <fly.limin@gmail.com>
-Subject: fast boot from linux to Xen hypervisor by kexec
-Message-ID: <200911171035097181968@gmail.com>
-Mime-Version: 1.0
+Received: from hera.kernel.org ([140.211.167.34])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NAgmu-0006Lu-PY
+	for kexec@lists.infradead.org; Wed, 18 Nov 2009 09:25:21 +0000
+Message-ID: <4B03BD7A.9040500@kernel.org>
+Date: Wed, 18 Nov 2009 18:25:14 +0900
+From: Tejun Heo <tj@kernel.org>
+MIME-Version: 1.0
+Subject: Re: Kdump issue with percpu_alloc=lpage
+References: <4AE8B612.9080103@ccur.com>
+In-Reply-To: <4AE8B612.9080103@ccur.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,100 +18,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0025387209=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec <kexec@lists.infradead.org>
+To: John Blackwood <john.blackwood@ccur.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
+Hello,
 
-This is a multi-part message in MIME format.
+10/29/2009 06:22 AM, John Blackwood wrote:
+>> Thanks Tejun. percpu_to_phys() makes sense to me also. John, would you
+>> like to post a patch for this.
+> 
+> Hi Vivek,
+> 
+> I'm probably not really NUMA/vm savy enough to attempt a patch
+> for approval at LKML.
+> 
+> But maybe someone else more qualified can take up the cause.
 
---===============0025387209==
-Content-Type: multipart/alternative;
-	boundary="=====003_Dragon300542518671_====="
+Is this still necessary for the current upstream where lpage allocator
+is gone (but vmalloc mapping is still there)?
 
+Thanks.
 
-This is a multi-part message in MIME format.
-
---=====003_Dragon300542518671_=====
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-
-Hi:
-   recently i am researching fast boot from linux kernel to Xen hypervisor, it means when linux is running on the real machine, i just want to switch to Xen hypervisor without going through bootloader. both linux and dom0 of Xen using the same filesystem. since we boot Xen with the following command in grub:
-
- title Xen 3.1.0 / XenLinux 2.6.18
-      kernel /boot/xen-3.gz
-      module /boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb quiet
-      module /boot/initrd-2.6.18-xen.img 
-it's different from linux, but i think there are something in common.
-so is there any suggestions for me! 
-
-2009-11-17 
-
-
-
-Min Li
-School of Computer Science and Technology 
-Cluster and Grid Computing Lab 
-Services Computing Technology and System Lab 
-Huazhong University of Science and Technology 
-Wuhan, 430074, China 
-Tel: +86-139-8625-1431 
-Email: fly.limin@gmail.com
- 
-
---=====003_Dragon300542518671_=====
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content="text/html; charset=us-ascii" http-equiv=Content-Type>
-<META name=GENERATOR content="MSHTML 8.00.6001.18852"><LINK rel=stylesheet 
-href="BLOCKQUOTE{margin-Top: 0px; margin-Bottom: 0px; margin-Left: 2em}"></HEAD>
-<BODY style="MARGIN: 10px; FONT-FAMILY: verdana; FONT-SIZE: 10pt">
-<DIV><FONT size=2 face=Verdana>Hi:<BR>&nbsp;&nbsp; recently i am researching 
-fast boot from linux kernel to Xen hypervisor, it means when linux is running on 
-the real machine, i just want to switch to Xen hypervisor without going through 
-bootloader. both linux and dom0 of Xen using the same filesystem. since we boot 
-Xen with the following command in grub:</DIV>
-<DIV>
-<P><BR>&nbsp;title Xen 3.1.0 / XenLinux 2.6.18<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-kernel /boot/xen-3.gz<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; module 
-/boot/vmlinuz-2.6.18-xen ro root=LABEL=/ rhgb 
-quiet<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; module /boot/initrd-2.6.18-xen.img </P>
-<P>it's different from linux, but i think there are something in common.<BR>so 
-is there any suggestions for me! <BR></P></FONT></DIV>
-<DIV align=left><FONT color=#c0c0c0 size=2 face=Verdana>2009-11-17 
-</FONT></DIV><FONT size=2 face=Verdana>
-<HR style="WIDTH: 122px; HEIGHT: 2px" align=left SIZE=2>
-
-<DIV><FONT color=#c0c0c0 size=2 face=Verdana><SPAN>
-<DIV>
-<DIV>Min Li<BR>School of Computer Science and Technology <BR>Cluster and Grid 
-Computing Lab <BR>Services Computing Technology and System Lab <BR>Huazhong 
-University of Science and Technology <BR>Wuhan, 430074, China <BR>Tel: 
-+86-139-8625-1431 <BR>Email: fly.limin@gmail.com</DIV></DIV></SPAN> 
-</FONT></DIV></FONT></BODY></HTML>
-
---=====003_Dragon300542518671_=====--
-
-
-
---===============0025387209==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-- 
+tejun
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0025387209==--
-
-
