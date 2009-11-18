@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from hera.kernel.org ([140.211.167.34])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NAgmu-0006Lu-PY
-	for kexec@lists.infradead.org; Wed, 18 Nov 2009 09:25:21 +0000
-Message-ID: <4B03BD7A.9040500@kernel.org>
-Date: Wed, 18 Nov 2009 18:25:14 +0900
-From: Tejun Heo <tj@kernel.org>
-MIME-Version: 1.0
-Subject: Re: Kdump issue with percpu_alloc=lpage
-References: <4AE8B612.9080103@ccur.com>
-In-Reply-To: <4AE8B612.9080103@ccur.com>
+Received: from mail-pw0-f43.google.com ([209.85.160.43])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NAhs0-0008IZ-Ba
+	for kexec@lists.infradead.org; Wed, 18 Nov 2009 10:34:44 +0000
+Received: by pwi12 with SMTP id 12so682663pwi.2
+	for <kexec@lists.infradead.org>; Wed, 18 Nov 2009 02:34:38 -0800 (PST)
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Wed, 18 Nov 2009 19:29:21 +0900
+Message-Id: <20091118102921.11977.28946.sendpatchset@rxone.opensource.se>
+Subject: [PATCH] add kexec-tools support for armv6l processors
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,33 +17,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Blackwood <john.blackwood@ccur.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
 
-Hello,
+From: Magnus Damm <damm@opensource.se>
 
-10/29/2009 06:22 AM, John Blackwood wrote:
->> Thanks Tejun. percpu_to_phys() makes sense to me also. John, would you
->> like to post a patch for this.
-> 
-> Hi Vivek,
-> 
-> I'm probably not really NUMA/vm savy enough to attempt a patch
-> for approval at LKML.
-> 
-> But maybe someone else more qualified can take up the cause.
+Add kexec-tools support for arm processors identifying themselves
+as armv6l. Tested on a sh7367.
 
-Is this still necessary for the current upstream where lpage allocator
-is gone (but vmalloc mapping is still there)?
+Signed-off-by: Magnus Damm <damm@opensource.se>
+---
 
-Thanks.
+ kexec/arch/arm/kexec-arm.c |    1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-tejun
+--- 0001/kexec/arch/arm/kexec-arm.c
++++ work/kexec/arch/arm/kexec-arm.c	2009-11-16 16:38:12.000000000 +0900
+@@ -110,6 +110,7 @@ int arch_process_options(int argc, char 
+ 
+ const struct arch_map_entry arches[] = {
+ 	{ "arm", KEXEC_ARCH_ARM },
++	{ "armv6l", KEXEC_ARCH_ARM },
+ 	{ 0 },
+ };
+ 
 
 _______________________________________________
 kexec mailing list
