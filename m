@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NB6xZ-0005Kl-DK
-	for kexec@lists.infradead.org; Thu, 19 Nov 2009 13:22:10 +0000
-Date: Fri, 20 Nov 2009 00:22:03 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] add kexec-tools support for armv6l processors
-Message-ID: <20091119132203.GC30917@verge.net.au>
-References: <20091118102921.11977.28946.sendpatchset@rxone.opensource.se>
-	<20091119054500.GH11927@verge.net.au>
-	<d1b08f940911190017s50478713q72e73b386b09e461@mail.gmail.com>
+	id 1NB85Z-00089D-3H
+	for kexec@lists.infradead.org; Thu, 19 Nov 2009 14:34:30 +0000
+Date: Thu, 19 Nov 2009 09:33:43 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kdump issue with percpu_alloc=lpage
+Message-ID: <20091119143343.GB8741@redhat.com>
+References: <4AE8B612.9080103@ccur.com> <4B03BD7A.9040500@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <d1b08f940911190017s50478713q72e73b386b09e461@mail.gmail.com>
+In-Reply-To: <4B03BD7A.9040500@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,20 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrea Adami <andrea.adami@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Tejun Heo <tj@kernel.org>
+Cc: John Blackwood <john.blackwood@ccur.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Nov 19, 2009 at 09:17:34AM +0100, Andrea Adami wrote:
-> Hello Simon,
+On Wed, Nov 18, 2009 at 06:25:14PM +0900, Tejun Heo wrote:
+> Hello,
 > 
-> what's the point of adding a single arm family?
-> As we discussed before, the check done in phys_arch.c will often fail
-> (e.g. kernels utsname are armv5tel).
-> Are you going to add each arm family with respective endianness?
+> 10/29/2009 06:22 AM, John Blackwood wrote:
+> >> Thanks Tejun. percpu_to_phys() makes sense to me also. John, would you
+> >> like to post a patch for this.
+> > 
+> > Hi Vivek,
+> > 
+> > I'm probably not really NUMA/vm savy enough to attempt a patch
+> > for approval at LKML.
+> > 
+> > But maybe someone else more qualified can take up the cause.
+> 
+> Is this still necessary for the current upstream where lpage allocator
+> is gone (but vmalloc mapping is still there)?
+> 
 
-Sorry, that conversation had slipped my mind.
-To be honest, at this point I'm unsure what
-the best approach is.
+Hi Tejun,
+
+I did load a kdump kernel on 32-rc7 and it worked fine. But I guess in
+this case memory might have come from linearly mapped region.
+
+If the default per cpu allocator can get memory from vmalloc region also, then
+I think we will need this function which can map virtual address to
+physical address.
+
+Are there multiple allocators now? If yes, what are the command line
+options and I can try to use some other allocator and see if I can force
+the condition where memory comes from vmalloc region and I observe the
+crash.
+
+Once I can reproduce it, I can also send you the fix you suggested.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
