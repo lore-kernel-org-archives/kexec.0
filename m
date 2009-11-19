@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail-pw0-f43.google.com ([209.85.160.43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NAzpI-0003Az-3k
-	for kexec@lists.infradead.org; Thu, 19 Nov 2009 05:45:08 +0000
-Date: Thu, 19 Nov 2009 16:45:02 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] add kexec-tools support for armv6l processors
-Message-ID: <20091119054500.GH11927@verge.net.au>
-References: <20091118102921.11977.28946.sendpatchset@rxone.opensource.se>
+	id 1NB2Cu-0004Xp-Nf
+	for kexec@lists.infradead.org; Thu, 19 Nov 2009 08:17:41 +0000
+Received: by pwi12 with SMTP id 12so1383396pwi.2
+	for <kexec@lists.infradead.org>; Thu, 19 Nov 2009 00:17:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20091118102921.11977.28946.sendpatchset@rxone.opensource.se>
+In-Reply-To: <20091119054500.GH11927@verge.net.au>
+References: <20091118102921.11977.28946.sendpatchset@rxone.opensource.se>
+	<20091119054500.GH11927@verge.net.au>
+Date: Thu, 19 Nov 2009 09:17:34 +0100
+Message-ID: <d1b08f940911190017s50478713q72e73b386b09e461@mail.gmail.com>
+Subject: Re: [PATCH] add kexec-tools support for armv6l processors
+From: Andrea Adami <andrea.adami@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,17 +25,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Wed, Nov 18, 2009 at 07:29:21PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm@opensource.se>
-> 
-> Add kexec-tools support for arm processors identifying themselves
-> as armv6l. Tested on a sh7367.
+Hello Simon,
 
-Thanks Magnus, applied.
+what's the point of adding a single arm family?
+As we discussed before, the check done in phys_arch.c will often fail
+(e.g. kernels utsname are armv5tel).
+Are you going to add each arm family with respective endianness?
 
+Regards
+
+Andrea
 
 _______________________________________________
 kexec mailing list
