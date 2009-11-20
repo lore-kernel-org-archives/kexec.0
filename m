@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mxo44.mail.genotec.ch ([2001:1b50::82:195:224:44])
+Received: from mxo43.mail.genotec.ch ([2001:1b50::82:195:224:43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NBXaU-0004Lc-NU
-	for kexec@lists.infradead.org; Fri, 20 Nov 2009 17:48:04 +0000
+	id 1NBXaZ-0004jZ-Dp
+	for kexec@lists.infradead.org; Fri, 20 Nov 2009 17:48:08 +0000
 From: Marc Andre Tanner <mat@brain-dump.org>
-Subject: Architecture detection code
-Date: Fri, 20 Nov 2009 18:38:11 +0100
-Message-Id: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
+Subject: [PATCH] Accept architectures which partially match
+Date: Fri, 20 Nov 2009 18:38:12 +0100
+Message-Id: <1258738692-4990-2-git-send-email-mat@brain-dump.org>
+In-Reply-To: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
+References: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,20 +23,31 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: damm@opensource.se, horms@verge.net.au
+Cc: damm@opensource.se, horms@verge.net.au, Marc Andre Tanner <mat@brain-dump.org>
 
-Hi,
+It doesn't make sense to add every possible architecture
+family / endianness combination.
 
-I recently had the same problem as Magnus and came up with the
-following patch. It changes the architecture detection code to
-also accept partiall matches. Which means and "arm" entry in
-arch_map_entry will work for all arm* versions.
+Signed-off-by: Marc Andre Tanner <mat@brain-dump.org>
+---
+ kexec/phys_arch.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Please consider applying this patch and reverting the two from
-Magnus. 
-
-Thanks,
-Marc
+diff --git a/kexec/phys_arch.c b/kexec/phys_arch.c
+index ff8c28b..2b3cbf9 100644
+--- a/kexec/phys_arch.c
++++ b/kexec/phys_arch.c
+@@ -14,7 +14,7 @@ long physical_arch(void)
+ 	}
+ 
+ 	for (i = 0; arches[i].machine; ++i)
+-		if (strcmp(utsname.machine, arches[i].machine) == 0)
++		if (strncmp(utsname.machine, arches[i].machine, strlen(arches[i].machine)) == 0)
+ 			return arches[i].arch;
+ 
+ 	fprintf(stderr, "Unsupported machine type: %s\n",
+-- 
+1.6.5
 
 
 _______________________________________________
