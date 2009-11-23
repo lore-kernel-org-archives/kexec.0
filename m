@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-px0-f189.google.com ([209.85.216.189])
+Received: from mail-pw0-f43.google.com ([209.85.160.43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NC9dt-0002MD-B0
-	for kexec@lists.infradead.org; Sun, 22 Nov 2009 10:26:10 +0000
-Received: by pxi27 with SMTP id 27so3218706pxi.25
-	for <kexec@lists.infradead.org>; Sun, 22 Nov 2009 02:26:03 -0800 (PST)
+	id 1NCNZD-0003og-Ai
+	for kexec@lists.infradead.org; Mon, 23 Nov 2009 01:18:16 +0000
+Received: by pwi12 with SMTP id 12so3370514pwi.2
+	for <kexec@lists.infradead.org>; Sun, 22 Nov 2009 17:18:10 -0800 (PST)
 MIME-Version: 1.0
-Date: Sun, 22 Nov 2009 02:26:03 -0800
-Message-ID: <86802c440911220226g21cc42bbmdc3ebe21d0f61943@mail.gmail.com>
-Subject: [PATCH] x86: crash kernel reserve with reserve_early
+In-Reply-To: <m18wdypvjd.fsf@fess.ebiederm.org>
+References: <86802c440911220226g21cc42bbmdc3ebe21d0f61943@mail.gmail.com>
+	<m18wdypvjd.fsf@fess.ebiederm.org>
+Date: Sun, 22 Nov 2009 17:18:09 -0800
+Message-ID: <86802c440911221718l541c0dq599f6a401fd03157@mail.gmail.com>
+Subject: Re: [PATCH] x86: crash kernel reserve with reserve_early
 From: Yinghai Lu <yhlu.kernel@gmail.com>
-Content-Type: multipart/mixed; boundary=00504502aca5cfc8360478f322a4
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,88 +21,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
---00504502aca5cfc8360478f322a4
-Content-Type: text/plain; charset=ISO-8859-1
+On Sun, Nov 22, 2009 at 4:56 AM, Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+> Yinghai Lu <yhlu.kernel@gmail.com> writes:
+>
+>> [PATCH] x86: crash kernel reserve with reserve_early
+>>
+>> use find_e820_area/reserve_early instead.
+>> will get next good one automatically with alignment
+>
+> Semantically this is broken, as you are now ignoring a passed in
+> base address if one is supplied. =A0What problem are you trying to fix?
 
+avoid to use bootmem.
 
+also simpify the code.
 
---00504502aca5cfc8360478f322a4
-Content-Type: text/x-diff; charset=US-ASCII; name="crashkernel_early.patch"
-Content-Disposition: attachment; filename="crashkernel_early.patch"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_g2bnvbtk0
-
-W1BBVENIXSB4ODY6IGNyYXNoIGtlcm5lbCByZXNlcnZlIHdpdGggcmVzZXJ2ZV9lYXJseQoKdXNl
-IGZpbmRfZTgyMF9hcmVhL3Jlc2VydmVfZWFybHkgaW5zdGVhZC4Kd2lsbCBnZXQgbmV4dCBnb29k
-IG9uZSBhdXRvbWF0aWNhbGx5IHdpdGggYWxpZ25tZW50CgpTaWduZWQtb2ZmLWJ5OiBZaW5naGFp
-IEx1IDx5aW5naGFpQGtlcm5lbC5vcmc+Ci0tLQogYXJjaC94ODYva2VybmVsL3NldHVwLmMgfCAg
-IDYwICsrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBm
-aWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDQ3IGRlbGV0aW9ucygtKQoKSW5kZXg6IGxp
-bnV4LTIuNi9hcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYwo9PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51eC0yLjYu
-b3JpZy9hcmNoL3g4Ni9rZXJuZWwvc2V0dXAuYworKysgbGludXgtMi42L2FyY2gveDg2L2tlcm5l
-bC9zZXR1cC5jCkBAIC00ODgsNDIgKzQ4OCwxMSBAQCBzdGF0aWMgdm9pZCBfX2luaXQgcmVzZXJ2
-ZV9lYXJseV9zZXR1cF9kCiAKICNpZmRlZiBDT05GSUdfS0VYRUMKIAotLyoqCi0gKiBSZXNlcnZl
-IEBzaXplIGJ5dGVzIG9mIGNyYXNoa2VybmVsIG1lbW9yeSBhdCBhbnkgc3VpdGFibGUgb2Zmc2V0
-LgotICoKLSAqIEBzaXplOiBTaXplIG9mIHRoZSBjcmFzaGtlcm5lbCBtZW1vcnkgdG8gcmVzZXJ2
-ZS4KLSAqIFJldHVybnMgdGhlIGJhc2UgYWRkcmVzcyBvbiBzdWNjZXNzLCBhbmQgLTFVTEwgb24g
-ZmFpbHVyZS4KLSAqLwotc3RhdGljCi11bnNpZ25lZCBsb25nIGxvbmcgX19pbml0IGZpbmRfYW5k
-X3Jlc2VydmVfY3Jhc2hrZXJuZWwodW5zaWduZWQgbG9uZyBsb25nIHNpemUpCi17Ci0JY29uc3Qg
-dW5zaWduZWQgbG9uZyBsb25nIGFsaWdubWVudCA9IDE2PDwyMDsgCS8qIDE2TSAqLwotCXVuc2ln
-bmVkIGxvbmcgbG9uZyBzdGFydCA9IDBMTDsKLQotCXdoaWxlICgxKSB7Ci0JCWludCByZXQ7Ci0K
-LQkJc3RhcnQgPSBmaW5kX2U4MjBfYXJlYShzdGFydCwgVUxPTkdfTUFYLCBzaXplLCBhbGlnbm1l
-bnQpOwotCQlpZiAoc3RhcnQgPT0gLTFVTEwpCi0JCQlyZXR1cm4gc3RhcnQ7Ci0KLQkJLyogdHJ5
-IHRvIHJlc2VydmUgaXQgKi8KLQkJcmV0ID0gcmVzZXJ2ZV9ib290bWVtX2dlbmVyaWMoc3RhcnQs
-IHNpemUsIEJPT1RNRU1fRVhDTFVTSVZFKTsKLQkJaWYgKHJldCA+PSAwKQotCQkJcmV0dXJuIHN0
-YXJ0OwotCi0JCXN0YXJ0ICs9IGFsaWdubWVudDsKLQl9Ci19Ci0KIHN0YXRpYyBpbmxpbmUgdW5z
-aWduZWQgbG9uZyBsb25nIGdldF90b3RhbF9tZW0odm9pZCkKIHsKIAl1bnNpZ25lZCBsb25nIGxv
-bmcgdG90YWw7CiAKLQl0b3RhbCA9IG1heF9sb3dfcGZuIC0gbWluX2xvd19wZm47Ci0jaWZkZWYg
-Q09ORklHX0hJR0hNRU0KLQl0b3RhbCArPSBoaWdoZW5kX3BmbiAtIGhpZ2hzdGFydF9wZm47Ci0j
-ZW5kaWYKKwl0b3RhbCA9IG1heF9wZm4gLSBtaW5fbG93X3BmbjsKIAogCXJldHVybiB0b3RhbCA8
-PCBQQUdFX1NISUZUOwogfQpAQCAtNTMyLDYgKzUwMSw4IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBy
-ZXNlcnZlX2NyYXNoa2VybmVsKHYKIHsKIAl1bnNpZ25lZCBsb25nIGxvbmcgdG90YWxfbWVtOwog
-CXVuc2lnbmVkIGxvbmcgbG9uZyBjcmFzaF9zaXplLCBjcmFzaF9iYXNlOworCWNvbnN0IHVuc2ln
-bmVkIGxvbmcgbG9uZyBhbGlnbm1lbnQgPSAxNjw8MjA7CS8qIDE2TSAqLworCXVuc2lnbmVkIGxv
-bmcgbG9uZyBzdGFydDsKIAlpbnQgcmV0OwogCiAJdG90YWxfbWVtID0gZ2V0X3RvdGFsX21lbSgp
-OwpAQCAtNTQzLDIxICs1MTQsMTYgQEAgc3RhdGljIHZvaWQgX19pbml0IHJlc2VydmVfY3Jhc2hr
-ZXJuZWwodgogCiAJLyogMCBtZWFuczogZmluZCB0aGUgYWRkcmVzcyBhdXRvbWF0aWNhbGx5ICov
-CiAJaWYgKGNyYXNoX2Jhc2UgPD0gMCkgewotCQljcmFzaF9iYXNlID0gZmluZF9hbmRfcmVzZXJ2
-ZV9jcmFzaGtlcm5lbChjcmFzaF9zaXplKTsKLQkJaWYgKGNyYXNoX2Jhc2UgPT0gLTFVTEwpIHsK
-LQkJCXByX2luZm8oImNyYXNoa2VybmVsIHJlc2VydmF0aW9uIGZhaWxlZC4gIgotCQkJCSJObyBz
-dWl0YWJsZSBhcmVhIGZvdW5kLlxuIik7Ci0JCQlyZXR1cm47Ci0JCX0KKwkJc3RhcnQgPSBhbGln
-bm1lbnQ7CiAJfSBlbHNlIHsKLQkJcmV0ID0gcmVzZXJ2ZV9ib290bWVtX2dlbmVyaWMoY3Jhc2hf
-YmFzZSwgY3Jhc2hfc2l6ZSwKLQkJCQkJQk9PVE1FTV9FWENMVVNJVkUpOwotCQlpZiAocmV0IDwg
-MCkgewotCQkJcHJfaW5mbygiY3Jhc2hrZXJuZWwgcmVzZXJ2YXRpb24gZmFpbGVkIC0gIgotCQkJ
-CSJtZW1vcnkgaXMgaW4gdXNlXG4iKTsKLQkJCXJldHVybjsKLQkJfQorCQlzdGFydCA9IGNyYXNo
-X2Jhc2U7CisJfQorCWNyYXNoX2Jhc2UgPSBmaW5kX2U4MjBfYXJlYShzdGFydCwgVUxPTkdfTUFY
-LCBjcmFzaF9zaXplLCBhbGlnbm1lbnQpOworCWlmIChjcmFzaF9iYXNlID09IC0xVUxMKSB7CisJ
-CXByX2luZm8oImNyYXNoa2VybmVsIHJlc2VydmF0aW9uIGZhaWxlZCAtIE5vIHN1aXRhYmxlIGFy
-ZWEgZm91bmQuXG4iKTsKKwkJcmV0dXJuOwogCX0KKwlyZXNlcnZlX2Vhcmx5KGNyYXNoX2Jhc2Us
-IGNyYXNoX2Jhc2UgKyBjcmFzaF9zaXplLCAiQ1JBU0ggS0VSTkVMIik7CiAKIAlwcmludGsoS0VS
-Tl9JTkZPICJSZXNlcnZpbmcgJWxkTUIgb2YgbWVtb3J5IGF0ICVsZE1CICIKIAkJCSJmb3IgY3Jh
-c2hrZXJuZWwgKFN5c3RlbSBSQU06ICVsZE1CKVxuIiwKQEAgLTkzNSw2ICs5MDEsOCBAQCB2b2lk
-IF9faW5pdCBzZXR1cF9hcmNoKGNoYXIgKipjbWRsaW5lX3ApCiAKIAlyZXNlcnZlX2luaXRyZCgp
-OwogCisJcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpOworCiAJdnNtcF9pbml0KCk7CiAKIAlpb19kZWxh
-eV9pbml0KCk7CkBAIC05NjUsOCArOTMzLDYgQEAgdm9pZCBfX2luaXQgc2V0dXBfYXJjaChjaGFy
-ICoqY21kbGluZV9wKQogCiAJaW5pdG1lbV9pbml0KDAsIG1heF9wZm4sIGFjcGksIGs4KTsKIAot
-CXJlc2VydmVfY3Jhc2hrZXJuZWwoKTsKLQogI2lmZGVmIENPTkZJR19YODZfNjQKIAkvKgogCSAq
-IGRtYTMyX3Jlc2VydmVfYm9vdG1lbSgpIGFsbG9jYXRlcyBib290bWVtIHdoaWNoIG1heSBjb25m
-bGljdAo=
---00504502aca5cfc8360478f322a4
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+YH
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---00504502aca5cfc8360478f322a4--
-
