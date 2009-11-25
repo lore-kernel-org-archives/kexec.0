@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f187.google.com ([209.85.211.187])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NDACU-0003WI-TQ
-	for kexec@lists.infradead.org; Wed, 25 Nov 2009 05:14:03 +0000
-Received: by ywh17 with SMTP id 17so7099469ywh.2
-	for <kexec@lists.infradead.org>; Tue, 24 Nov 2009 21:13:56 -0800 (PST)
+Received: from e28smtp01.in.ibm.com ([122.248.162.1])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NDHkv-00053H-Iv
+	for kexec@lists.infradead.org; Wed, 25 Nov 2009 13:18:06 +0000
+Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
+	by e28smtp01.in.ibm.com (8.14.3/8.13.1) with ESMTP id nAPDHuJR022749
+	for <kexec@lists.infradead.org>; Wed, 25 Nov 2009 18:47:56 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	nAPDHuVM3567792
+	for <kexec@lists.infradead.org>; Wed, 25 Nov 2009 18:47:56 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.3/8.13.1/NCO v10.0 AVout) with ESMTP id
+	nAPDHtHX006069
+	for <kexec@lists.infradead.org>; Wed, 25 Nov 2009 18:47:56 +0530
+Date: Wed, 25 Nov 2009 18:47:47 +0530
+From: "M. Mohan Kumar" <mohan@in.ibm.com>
+Subject: [PATCH] Reserve memory for kdump kernel within RMO region
+Message-ID: <20091125131747.GA28857@in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
-References: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
-Date: Wed, 25 Nov 2009 14:13:56 +0900
-Message-ID: <aec7e5c30911242113y7706e9c0u2262cdd7ab8bf38d@mail.gmail.com>
-Subject: Re: Architecture detection code
-From: Magnus Damm <magnus.damm@gmail.com>
+Content-Disposition: inline
+Reply-To: mohan@in.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,21 +33,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Andre Tanner <mat@brain-dump.org>
-Cc: damm@opensource.se, horms@verge.net.au, kexec@lists.infradead.org
+To: benh@kernel.crashing.org, ppcdev <linuxppc-dev@ozlabs.org>
+Cc: michael@ellerman.id.au, kexec@lists.infradead.org
 
-On Sat, Nov 21, 2009 at 2:38 AM, Marc Andre Tanner <mat@brain-dump.org> wrote:
-> I recently had the same problem as Magnus and came up with the
-> following patch. It changes the architecture detection code to
-> also accept partiall matches. Which means and "arm" entry in
-> arch_map_entry will work for all arm* versions.
->
-> Please consider applying this patch and reverting the two from
-> Magnus.
+Reserve memory for kdump kernel within RMO region
 
-Sure, I'm happy to see that the arm supports gets more attention! =)
+When the kernel size exceeds 32MB(observed with some distros), memory
+for kdump kernel can not be reserved as kdump kernel base is assumed to
+be 32MB always. When the kernel has CONFIG_RELOCATABLE option enabled,
+provide the feature to reserve the memory for kdump kernel anywhere in
+the RMO region.
 
-/ magnus
+Signed-off-by: M. Mohan Kumar <mohan@in.ibm.com>
+---
+ arch/powerpc/kernel/machine_kexec.c |   19 +++++++++++++++++++
+ 1 files changed, 19 insertions(+), 0 deletions(-)
+
+diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
+index baf1af0..99b2f9f 100644
+--- a/arch/powerpc/kernel/machine_kexec.c
++++ b/arch/powerpc/kernel/machine_kexec.c
+@@ -140,10 +140,29 @@ void __init reserve_crashkernel(void)
+ 
+ 	/* The crash region must not overlap the current kernel */
+ 	if (overlaps_crashkernel(__pa(_stext), _end - _stext)) {
++#ifdef CONFIG_RELOCATABLE
++		do {
++			/* Align kdump kernel to 16MB (size of large page) */
++			crashk_res.start = ALIGN(crashk_res.start +
++						(16 * 1024 * 1024), 0x1000000);
++			if (crashk_res.start + (_stext - _end) > lmb.rmo_size) {
++				printk(KERN_WARNING
++					"Not enough memory for crash kernel\n");
++				crashk_res.start = crashk_res.end = 0;
++				return;
++			}
++		} while (overlaps_crashkernel(__pa(_stext), _end - _stext));
++
++		crashk_res.end = crashk_res.start + crash_size - 1;
++		printk(KERN_INFO
++			"crash kernel memory overlaps with kernel memory\n"
++			"Moving it to %lx\n", (unsigned long)crashk_res.start);
++#else
+ 		printk(KERN_WARNING
+ 			"Crash kernel can not overlap current kernel\n");
+ 		crashk_res.start = crashk_res.end = 0;
+ 		return;
++#endif
+ 	}
+ 
+ 	/* Crash kernel trumps memory limit */
+-- 
+1.5.4
+
 
 _______________________________________________
 kexec mailing list
