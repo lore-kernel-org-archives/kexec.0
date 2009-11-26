@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from ey-out-1920.google.com ([74.125.78.148])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NDRzx-0007R8-4u
-	for kexec@lists.infradead.org; Thu, 26 Nov 2009 00:14:18 +0000
-Date: Thu, 26 Nov 2009 11:14:10 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec.c: workaround getline and fscanf to make it
-	*libc agnostic. Tested against klibc and dietlibc.
-Message-ID: <20091126001410.GA853@verge.net.au>
+	id 1NDbgv-0001iC-Jv
+	for kexec@lists.infradead.org; Thu, 26 Nov 2009 10:35:18 +0000
+Received: by ey-out-1920.google.com with SMTP id 4so136349eyg.26
+	for <kexec@lists.infradead.org>; Thu, 26 Nov 2009 02:35:12 -0800 (PST)
+From: Yuri Bushmelev <jay4mail@gmail.com>
+Subject: Re: [PATCH] kexec.c: workaround getline and fscanf to make it *libc
+	agnostic. Tested against klibc and dietlibc.
+Date: Thu, 26 Nov 2009 13:34:10 +0300
 References: <1258845169-4999-1-git-send-email-andrea.adami@gmail.com>
-	<20091122050350.GF2728@verge.net.au> <4B09034E.40309@bwalle.de>
-	<20091125231752.GL4794@verge.net.au> <4B0DBFA4.7090009@bwalle.de>
+	<4B0DBFA4.7090009@bwalle.de> <20091126001410.GA853@verge.net.au>
+In-Reply-To: <20091126001410.GA853@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4B0DBFA4.7090009@bwalle.de>
+Message-Id: <200911261334.10310.jay4mail@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,136 +26,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bernhard@bwalle.de>
-Cc: Andrea Adami <andrea.adami@gmail.com>, Yuri Bushmelev <jay4mail@gmail.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Bernhard Walle <bernhard@bwalle.de>, kexec@lists.infradead.org, Andrea Adami <andrea.adami@gmail.com>
 
-On Thu, Nov 26, 2009 at 12:37:08AM +0100, Bernhard Walle wrote:
-> Simon Horman schrieb:
-> >  
-> > +
-> > +	if ( NULL == p)
-> > +		return -1;
+Hello!
+> On Thu, Nov 26, 2009 at 12:37:08AM +0100, Bernhard Walle wrote:
+> > Simon Horman schrieb:
+> > > +
+> > > +	if ( NULL == p)
+> > > +		return -1;
+> >
+> > Wouldn't that be better 'p == NULL'?
 > 
-> Wouldn't that be better 'p == NULL'?
+> Agreed
 
-Agreed
+That is form of 'early bug detection' of mistyped '=='.
+E.g. you can write by mistype
+	if (p = NULL) {}
+but can't
+	if (NULL = p) {}
+because you will get compiler error.
 
-> > +	ret = strtol(line, &p, 10);
-> > +
-> > +	/* Too long */
-> > +	if (ret > INT_MAX)
-> > +		return -1;
-> 
-> An integer that can be represented in 2 (strlen("__\0")==3) cannot be
-> larger than INT_MAX on any platform I can imagine. ;-)
-
-True, though it doesn't seem outrageous to check anyway.
-Perhaps the string format will change in future.
-
-----------------------------------------------------------------------
-
-From: Andrea Adami <andrea.adami@gmail.com>
-To: kexec@lists.infradead.org
-Subject: [PATCH] kexec.c: workaround getline and fscanf to make it *libc
-	agnostic. Tested against klibc and dietlibc.
-
-Based on a patch by Andrea Adami and Yuri Bushmelev
-I have:
-
-* Cleaned up indentation
-* Rearranged the logic in get_command_line()
-* Increased the buffer for reading the command line
-  from 1024 to 2048 bytes as this is now possible on x86
-
-Only compile tested against glibc.
-
-Cc: Andrea Adami <andrea.adami@gmail.com>
-Cc: Yuri Bushmelev <jay4mail@gmail.com>
-Cc: Bernhard Walle <bernhard@bwalle.de>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
-Index: kexec-tools/kexec/kexec.c
-===================================================================
---- kexec-tools.orig/kexec/kexec.c	2009-11-26 10:10:01.000000000 +1100
-+++ kexec-tools/kexec/kexec.c	2009-11-26 11:13:46.000000000 +1100
-@@ -933,15 +933,32 @@ void usage(void)
- 
- static int kexec_loaded(void)
- {
--	int ret;
-+	long ret = -1;
- 	FILE *fp;
-+	char *p;
-+	char line[3];
- 
- 	fp = fopen("/sys/kernel/kexec_loaded", "r");
- 	if (fp == NULL)
- 		return -1;
--	fscanf(fp, "%d", &ret);
-+
-+	p = fgets(line, sizeof(line), fp);
- 	fclose(fp);
--	return ret;
-+
-+	if (p == NULL)
-+		return -1;
-+
-+	ret = strtol(line, &p, 10);
-+
-+	/* Too long */
-+	if (ret > INT_MAX)
-+		return -1;
-+
-+	/* No digits were found */
-+	if (p == line)
-+		return -1;
-+
-+	return (int)ret;
- }
- 
- /*
-@@ -989,24 +1006,28 @@ static void remove_parameter(char *line,
- char *get_command_line(void)
- {
- 	FILE *fp;
--	size_t len;
--	char *line = NULL;
-+	char *line;
-+	const int sizeof_line = 2048;
-+
-+	line = malloc(sizeof_line);
-+	if (line == NULL)
-+		die("Could not allocate memory to read /proc/cmdline.");
- 
- 	fp = fopen("/proc/cmdline", "r");
- 	if (!fp)
--		die("Could not read /proc/cmdline.");
--	getline(&line, &len, fp);
-+		die("Could not open /proc/cmdline.");
-+
-+	if (fgets(line, sizeof_line, fp) == NULL)
-+		die("Can't read /proc/cmdline.");
-+
- 	fclose(fp);
- 
--	if (line) {
--		/* strip newline */
--		*(line + strlen(line) - 1) = 0;
--
--		remove_parameter(line, "BOOT_IMAGE");
--		if (kexec_flags & KEXEC_ON_CRASH)
--			remove_parameter(line, "crashkernel");
--	} else
--		line = strdup("");
-+	/* strip newline */
-+	line[strlen(line) - 1] = '\0';
-+
-+	remove_parameter(line, "BOOT_IMAGE");
-+	if (kexec_flags & KEXEC_ON_CRASH)
-+		remove_parameter(line, "crashkernel");
- 
- 	return line;
- }
+-- 
+Yuri Bushmelev
 
 _______________________________________________
 kexec mailing list
