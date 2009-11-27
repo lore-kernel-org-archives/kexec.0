@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtprelay02.ispgateway.de ([80.67.31.36])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NE5iu-0001vG-AU
-	for kexec@lists.infradead.org; Fri, 27 Nov 2009 18:39:20 +0000
-Message-ID: <4B101CCD.8030909@bwalle.de>
-Date: Fri, 27 Nov 2009 19:39:09 +0100
-From: Bernhard Walle <bernhard@bwalle.de>
+	id 1NE9yp-000564-Ve
+	for kexec@lists.infradead.org; Fri, 27 Nov 2009 23:12:04 +0000
+Date: Sat, 28 Nov 2009 10:11:54 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: Architecture detection code
+Message-ID: <20091127231151.GA2574@verge.net.au>
+References: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
+	<aec7e5c30911242113y7706e9c0u2262cdd7ab8bf38d@mail.gmail.com>
+	<20091125225250.GK4794@verge.net.au>
+	<20091127140357.GB8722@debbook.brain-dump.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] Reserve memory for kdump kernel within RMO region
-References: <20091125131747.GA28857@in.ibm.com>
-	<4B0D7CF4.8040402@bwalle.de>	<4B0E628A.9070009@in.ibm.com>
-	<4B0ED674.6050501@bwalle.de> <4B0FCC0C.8060103@in.ibm.com>
-In-Reply-To: <4B0FCC0C.8060103@in.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20091127140357.GB8722@debbook.brain-dump.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,36 +26,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "M. Mohan Kumar" <mohan@in.ibm.com>
-Cc: michael@ellerman.id.au, benh@kernel.crashing.org, kexec@lists.infradead.org, ppcdev <linuxppc-dev@ozlabs.org>
+To: Marc Andre Tanner <mat@brain-dump.org>
+Cc: Andrea Adami <andrea.adami@gmail.com>, kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>
 
-M. Mohan Kumar schrieb:
-> Hi,
+On Fri, Nov 27, 2009 at 03:03:57PM +0100, Marc Andre Tanner wrote:
+> On Thu, Nov 26, 2009 at 09:52:52AM +1100, Simon Horman wrote:
+> > On Wed, Nov 25, 2009 at 02:13:56PM +0900, Magnus Damm wrote:
+> > > On Sat, Nov 21, 2009 at 2:38 AM, Marc Andre Tanner <mat@brain-dump.org> wrote:
+> > > > I recently had the same problem as Magnus and came up with the
+> > > > following patch. It changes the architecture detection code to
+> > > > also accept partiall matches. Which means and "arm" entry in
+> > > > arch_map_entry will work for all arm* versions.
+> > > >
+> > > > Please consider applying this patch and reverting the two from
+> > > > Magnus.
+> > > 
+> > > Sure, I'm happy to see that the arm supports gets more attention! =)
+> > 
+> > Hi,
+> > 
+> > I'd like to apply the following patch. Let me know if I've botched things.
 > 
-> As of now the kdump kernel base is fixed to be 32MB. The intention of 
-> this patch is to modify that behaviour (for relocatable kernels)
-> 
-> * Regular kernel size may exceed 32MB, in this case we can't have kdump 
-> kernelbase as 32MB.
-> 
-> * crashkernel=auto also assumes that kdump kernelbase as 32MB, and it 
-> may also fail in reserving memory for kdump kernel.
+> Looks good.
 
-I'm not opposed to remove the 32MB restriction, but I would like to make
-the behaviour independent of CONFIG_RELOCATABLE like it's on x86:
-
- - Use 32M if one specifies xxx@32M
- - Use preferrably 32M, but fall back to another address if one
-   specifies xxx or xxx@0M.
-
-I don't see any problem with that. But it would make behaviour equal
-accross platforms.
-
-
-
-Regards,
-Bernhard
-
+Thanks, I've applied it.
 
 
 _______________________________________________
