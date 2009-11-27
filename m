@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mxo44.mail.genotec.ch ([2001:1b50::82:195:224:44])
+Received: from mxo43.mail.genotec.ch ([2001:1b50::82:195:224:43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NE1Z8-0007e3-1O
-	for kexec@lists.infradead.org; Fri, 27 Nov 2009 14:12:55 +0000
-Date: Fri, 27 Nov 2009 15:03:16 +0100
+	id 1NE1Zm-0007iZ-Vb
+	for kexec@lists.infradead.org; Fri, 27 Nov 2009 14:13:35 +0000
+Date: Fri, 27 Nov 2009 15:03:57 +0100
 From: Marc Andre Tanner <mat@brain-dump.org>
-Subject: Re: [PATCH] kexec-arm: add uImage support
-Message-ID: <20091127140316.GA8722@debbook.brain-dump.org>
-References: <1258747662-14093-1-git-send-email-mat@brain-dump.org>
-	<20091121034120.GF13498@verge.net.au>
-	<20091124213237.GH3435@verge.net.au>
+Subject: Re: Architecture detection code
+Message-ID: <20091127140357.GB8722@debbook.brain-dump.org>
+References: <1258738692-4990-1-git-send-email-mat@brain-dump.org>
+	<aec7e5c30911242113y7706e9c0u2262cdd7ab8bf38d@mail.gmail.com>
+	<20091125225250.GK4794@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20091124213237.GH3435@verge.net.au>
+In-Reply-To: <20091125225250.GK4794@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,20 +26,26 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+Cc: Andrea Adami <andrea.adami@gmail.com>, kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>
 
-On Wed, Nov 25, 2009 at 08:32:37AM +1100, Simon Horman wrote:
-> On Sat, Nov 21, 2009 at 02:41:20PM +1100, Simon Horman wrote:
-> > On Fri, Nov 20, 2009 at 09:07:42PM +0100, Marc Andre Tanner wrote:
-> > > uImages are basically just zImages with a special header,
-> > > we therefore just skip the header and let the normal zImage
-> > > infrastructure do the actual work.
+On Thu, Nov 26, 2009 at 09:52:52AM +1100, Simon Horman wrote:
+> On Wed, Nov 25, 2009 at 02:13:56PM +0900, Magnus Damm wrote:
+> > On Sat, Nov 21, 2009 at 2:38 AM, Marc Andre Tanner <mat@brain-dump.org> wrote:
+> > > I recently had the same problem as Magnus and came up with the
+> > > following patch. It changes the architecture detection code to
+> > > also accept partiall matches. Which means and "arm" entry in
+> > > arch_map_entry will work for all arm* versions.
+> > >
+> > > Please consider applying this patch and reverting the two from
+> > > Magnus.
 > > 
-> > This looks entirely reasonable to me.
-> > Unless someone jumps in and comments
-> > in the next few days I'll apply it.
+> > Sure, I'm happy to see that the arm supports gets more attention! =)
 > 
-> I've gone ahead an applied this change.
+> Hi,
+> 
+> I'd like to apply the following patch. Let me know if I've botched things.
+
+Looks good.
 
 Thanks,
 Marc
