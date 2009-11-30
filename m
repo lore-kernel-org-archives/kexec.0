@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-iw0-f202.google.com ([209.85.223.202])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NEuPh-0005t6-Oi
-	for kexec@lists.infradead.org; Mon, 30 Nov 2009 00:46:54 +0000
-Received: by iwn40 with SMTP id 40so1869904iwn.28
-	for <kexec@lists.infradead.org>; Sun, 29 Nov 2009 16:46:48 -0800 (PST)
+	id 1NEzAj-0003Ma-60
+	for kexec@lists.infradead.org; Mon, 30 Nov 2009 05:51:46 +0000
+Date: Mon, 30 Nov 2009 16:51:39 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] add support for loading lzma compressed kernels
+Message-ID: <20091130055135.GA17567@verge.net.au>
+References: <200911160053.10339.florian@openwrt.org>
+	<200911171523.15419.florian@openwrt.org>
+	<20091118035518.GJ18493@verge.net.au>
+	<200911190017.23744.florian@openwrt.org>
+	<m1y6m3754g.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-From: Mayank Kaushik <mayank.utexas@gmail.com>
-Date: Sun, 29 Nov 2009 18:40:45 -0600
-Message-ID: <8e626b2a0911291640u378eb19dye74bae9022ae43e0@mail.gmail.com>
-Subject: Kexec not working as expected from inside X
+Content-Disposition: inline
+In-Reply-To: <m1y6m3754g.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,157 +23,197 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0830838646=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Florian Fainelli <florian@openwrt.org>
 
---===============0830838646==
-Content-Type: multipart/alternative; boundary=000e0cd56c32873b7504798be5e2
+On Wed, Nov 18, 2009 at 04:03:27PM -0800, Eric W. Biederman wrote:
+> Florian Fainelli <florian@openwrt.org> writes:
+> 
+> > Please find below a version which should address your comments.
+> > Thanks for reviewing the patch.
 
---000e0cd56c32873b7504798be5e2
-Content-Type: text/plain; charset=ISO-8859-1
+Thanks, Applied.
 
-Hi everyone,
+> > --
+> > From: Florian Fainelli <florian@openwrt.org>
+> > Subject: [PATCH] add support for loading lzma compressed kernels
+> >
+> > This patch allows one to load a lzma compressed kernel using kexec -l.
+> > As I wanted the lzma code to be very similar to the existing
+> > zlib slurp_decompress I took lzread and associated routines
+> > from the cpio lzma support. Tested on my x86 laptop using the
+> > following commands:
+> >
+> > lzma e bzImage bzImage.lzma
+> > kexec -l bzImage.lzma
+> >
+> > Having lzma support is particularly useful on some embedded
+> > systems on which we have the kernel already lzma compressed
+> > and available on a mtd partition.
+> 
+> Yes.  I don't think it is particularly useful on x86 (as we have
+> a decompressor built into the kernel) but on other arches
+> it makes a lot of sense.
+> 
+> A few minor comments inline.
+> 
+> > diff -urN kexec-tools-2.0.1/kexec/kexec-lzma.h kexec-tools-2.0.1.lzma/kexec/kexec-lzma.h
+> > --- kexec-tools-2.0.1/kexec/kexec-lzma.h	1970-01-01 01:00:00.000000000 +0100
+> > +++ kexec-tools-2.0.1.lzma/kexec/kexec-lzma.h	2009-11-19 00:06:24.000000000 +0100
+> > @@ -0,0 +1,29 @@
+> > +#ifndef __KEXEC_LZMA_H
+> > +#define __KEXEC_LZMA_H
+> > +
+> > +#include <stdio.h>
+> > +#include <sys/types.h>
+> > +#include <unistd.h>
+> > +#include <inttypes.h>
+> > +#include <lzma.h>
+> > +
+> > +#include "config.h"
+> > +
+> > +#ifdef HAVE_LIBLZMA
+> > +#define kBufferSize (1 << 15)
+> > +
+> > +typedef struct lzfile {
+> > +	uint8_t buf[kBufferSize];
+> > +	lzma_stream strm;
+> > +	FILE *file;
+> > +	int encoding;
+> > +	int eof;
+> > +} LZFILE;
+> > +
+> > +LZFILE *lzopen(const char *path, const char *mode);
+> > +int lzclose(LZFILE *lzfile);
+> > +ssize_t lzread(LZFILE *lzfile, void *buf, size_t len);
+> 
+> I don't think we need any of these definitions in the header file.
+> 
+> > +#endif /* HAVE_LIBLZMA */
+> > +
+> > +char *lzma_decompress_file(const char *filename, off_t *r_size);
+> 
+> Ideally the lzma_decompress_file stub would live here and would not
+> even compile kexec/lzma.c if we don't have lzma.
+> 
+> > +#endif /* __KEXEC_LZMA_H */
 
-I'm running Fedora 8, kernel 2.6.24.3-50.fc8. I was experiencing
-frequent kernel hangs, so to get to the bottom of it I setup kexec/
-kdump with this kernel. I did it according to the documentation in
-<kernel_src>/Documentation/
-kdump/kdump.txt. I'm running Xorg with the
-closed-source binary nvidia driver. I did the following:
+I have also applied the following change
 
-1) Ensured that my running kernel supported kexec (as given in the
-documentation above), obtained the vmlinux for it from the fedora
-debug yum repos.
-2) Built a new crash-dump kernel (linux-2.6.23.17-kdump).
-3) Appended the following lines to my /etc/rc.sysinit:
+----------------------------------------------------------------------
 
-921 echo "1" > /proc/sys/kernel/sysrq
-922 savetextmode
-923 # Tell kexec which kernel and ramdisk to use
-924 kexec -p /usr/src/kernels/linux-2.6.23.17/vmlinux --initrd=/boot/
-initrd-2.6.23.17-kdump.img --args-linux --append="root=LABEL=/ 1
-irqpoll maxcpus=1"
-925
-926 DATE=`date +%Y-%m-%d-%T`
-927 NAME=`uname -r`
-928 if [ "$NAME" == "2.6.23.17-kdump" ]; then
-929   echo -e "Creating crash dump..\n"
-930   mkdir -p /var/crash/127.0.0.1-$DATE
-931   cp /proc/vmcore /var/crash/127.0.0.1-$DATE/vmcore-incomplete
-932   if [ $? == 0 ]
-933   then
-934       mv /var/crash/127.0.0.1-$DATE/vmcore-incomplete /var/crash/
-127.0.0.1-$DATE/vmcore
-935       echo -e "Done, rebooting..\n"
-936       reboot -f
-937   fi
-938 fi
+lzma: Move the bulk of kexec-lzma.h into lzma.c
 
-The above is supposed to dump the vmcore to my /var/crash/ directory
-as soon as the kdump kernel boots after a hang. The motivation for
-doing this was that I get kernel hangs while running X, and pressing
-<Alt>+<Sysrq> causes the screen to get garbled when the kdump kernel
-boots, so I don't have a chance of doing this manually.
+There isn't any need for anything in kexec-lzma.h other
+than a declaration of zlib_decompress_file().
 
-I've tested the above while in runlevel 3 while I'm inside a VT,
-everything works as expected (I see the kdump kernel boot up and copy
-the kdump), and I can see the vmcore end up inside /var/crash/. But
-when I try the same while X is running, the screen gets garbled while
-the kdump kernel boots, but nothing happens! The kernel does not
-reboot, and neither does it copy the vmcore to /var/crash. It is
-responsive though, I can toggle the CapsLock key, but the screen is
-blank.
+Other being cleaner it also fixes a build problem when
+lzma support isn't being compiled in.
 
-Is it something in the nvidia driver that's causing this to not work?
-Any clues on what's going wrong, or how I can debug this further?
+$ make all
+i686-unknown-linux-gnu-gcc -Wall -Wextra -O2 -fomit-frame-pointer -pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -I/home/horms/local/opt/crosstool/i686/gcc-3.4.5-glibc-2.3.6/i686-unknown-linux-gnu/include -I./include -I./util_lib/include -Iinclude/ -I./kexec/arch/i386/include  -c
+-MD -o kexec/kexec.o kexec/kexec.c
+In file included from kexec/kexec.c:47:
+kexec/kexec-lzma.h:8:18: lzma.h: No such file or directory
+kexec/kexec.c: In function `locate_hole':
+kexec/kexec.c:203: warning: comparison between signed and unsigned
 
-(Please CC me in the reply, I'm not on this list)
+It ought to be possible to just provide a stub for zlib_decompress_file()
+in kexec-lzma.h and not compile lzma.c at all in the case where
+lzma support isn't being compiled in. However I see no obvious way
+to do this with the existing build system. So I'd like to deal
+with that as a separate possible change.
 
-Thanks!
--Mayank
+Changes as suggested by Eric W. Biederman.
 
---000e0cd56c32873b7504798be5e2
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Cc: Florian Fainelli <florian@openwrt.org>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Hi everyone,<br>
-<br>
-I&#39;m running Fedora 8, kernel 2.6.24.3-50.fc8. I was experiencing<br>
-frequent kernel hangs, so to get to the bottom of it I setup kexec/<br>
-kdump with this kernel. I did it according to the documentation in<br>
-&lt;kernel_src&gt;/Documentation/<div id=3D":ai" class=3D"ii gt">kdump/kdum=
-p.txt. I&#39;m running Xorg with the<br>
-closed-source binary nvidia driver. I did the following:<br>
-<br>
-1) Ensured that my running kernel supported kexec (as given in the<br>
-documentation above), obtained the vmlinux for it from the fedora<br>
-debug yum repos.<br>
-2) Built a new crash-dump kernel (linux-2.6.23.17-kdump).<br>
-3) Appended the following lines to my /etc/rc.sysinit:<br>
-<br>
-921 echo &quot;1&quot; &gt; /proc/sys/kernel/sysrq<br>
-922 savetextmode<br>
-923 # Tell kexec which kernel and ramdisk to use<br>
-924 kexec -p /usr/src/kernels/linux-2.6.23.17/vmlinux --initrd=3D/boot/<br>
-initrd-2.6.23.17-kdump.img --args-linux --append=3D&quot;root=3DLABEL=3D/ 1=
-<br>
-irqpoll maxcpus=3D1&quot;<br>
-925<br>
-926 DATE=3D`date +%Y-%m-%d-%T`<br>
-927 NAME=3D`uname -r`<br>
-928 if [ &quot;$NAME&quot; =3D=3D &quot;2.6.23.17-kdump&quot; ]; then<br>
-929 =A0 echo -e &quot;Creating crash dump..\n&quot;<br>
-930 =A0 mkdir -p /var/crash/127.0.0.1-$DATE<br>
-931 =A0 cp /proc/vmcore /var/crash/127.0.0.1-$DATE/vmcore-incomplete<br>
-932 =A0 if [ $? =3D=3D 0 ]<br>
-933 =A0 then<br>
-934 =A0 =A0 =A0 mv /var/crash/127.0.0.1-$DATE/vmcore-incomplete /var/crash/=
-<br>
-127.0.0.1-$DATE/vmcore<br>
-935 =A0 =A0 =A0 echo -e &quot;Done, rebooting..\n&quot;<br>
-936 =A0 =A0 =A0 reboot -f<br>
-937 =A0 fi<br>
-938 fi<br>
-<br>
-The above is supposed to dump the vmcore to my /var/crash/ directory<br>
-as soon as the kdump kernel boots after a hang. The motivation for<br>
-doing this was that I get kernel hangs while running X, and pressing<br>
-&lt;Alt&gt;+&lt;Sysrq&gt; causes the screen to get garbled when the kdump k=
-ernel<br>
-boots, so I don&#39;t have a chance of doing this manually.<br>
-<br>
-I&#39;ve tested the above while in runlevel 3 while I&#39;m inside a VT,<br=
->
-everything works as expected (I see the kdump kernel boot up and copy<br>
-the kdump), and I can see the vmcore end up inside /var/crash/. But<br>
-when I try the same while X is running, the screen gets garbled while<br>
-the kdump kernel boots, but nothing happens! The kernel does not<br>
-reboot, and neither does it copy the vmcore to /var/crash. It is<br>
-responsive though, I can toggle the CapsLock key, but the screen is<br>
-blank.<br>
-<br>
-Is it something in the nvidia driver that&#39;s causing this to not work?<b=
-r>
-Any clues on what&#39;s going wrong, or how I can debug this further?<br>
-<br>(Please CC me in the reply, I&#39;m not on this list)<br><br>
-Thanks!<br>
--Mayank</div><br>
-
---000e0cd56c32873b7504798be5e2--
-
-
---===============0830838646==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Index: kexec-tools/kexec/kexec-lzma.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec-lzma.h	2009-11-30 16:43:38.000000000 +1100
++++ kexec-tools/kexec/kexec-lzma.h	2009-11-30 16:44:15.000000000 +1100
+@@ -1,29 +1,8 @@
+ #ifndef __KEXEC_LZMA_H
+ #define __KEXEC_LZMA_H
+ 
+-#include <stdio.h>
+ #include <sys/types.h>
+-#include <unistd.h>
+-#include <inttypes.h>
+-#include <lzma.h>
+-
+-#include "config.h"
+-
+-#ifdef HAVE_LIBLZMA
+-#define kBufferSize (1 << 15)
+-
+-typedef struct lzfile {
+-	uint8_t buf[kBufferSize];
+-	lzma_stream strm;
+-	FILE *file;
+-	int encoding;
+-	int eof;
+-} LZFILE;
+-
+-LZFILE *lzopen(const char *path, const char *mode);
+-int lzclose(LZFILE *lzfile);
+-ssize_t lzread(LZFILE *lzfile, void *buf, size_t len);
+-#endif /* HAVE_LIBLZMA */
+ 
+ char *lzma_decompress_file(const char *filename, off_t *r_size);
++
+ #endif /* __KEXEC_LZMA_H */
+Index: kexec-tools/kexec/lzma.c
+===================================================================
+--- kexec-tools.orig/kexec/lzma.c	2009-11-30 16:43:38.000000000 +1100
++++ kexec-tools/kexec/lzma.c	2009-11-30 16:44:15.000000000 +1100
+@@ -1,4 +1,9 @@
++#include <unistd.h>
++#include <sys/types.h>
++
+ #include "kexec-lzma.h"
++#include "config.h"
++
+ #ifdef HAVE_LIBLZMA
+ #define _GNU_SOURCE
+ #include <stdio.h>
+@@ -7,14 +12,26 @@
+ #include <stdlib.h>
+ #include <errno.h>
+ #include <limits.h>
+-#include <sys/types.h>
+ #include <sys/stat.h>
+-#include <unistd.h>
+ #include <ctype.h>
+ #include <lzma.h>
+ 
+ #include "kexec.h"
+ 
++#define kBufferSize (1 << 15)
++
++typedef struct lzfile {
++	uint8_t buf[kBufferSize];
++	lzma_stream strm;
++	FILE *file;
++	int encoding;
++	int eof;
++} LZFILE;
++
++LZFILE *lzopen(const char *path, const char *mode);
++int lzclose(LZFILE *lzfile);
++ssize_t lzread(LZFILE *lzfile, void *buf, size_t len);
++
+ static LZFILE *lzopen_internal(const char *path, const char *mode, int fd)
+ {
+ 	int level = 5;
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0830838646==--
-
