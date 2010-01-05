@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NS5Wk-0005oU-CR
-	for kexec@lists.infradead.org; Tue, 05 Jan 2010 09:16:41 +0000
-Date: Tue, 5 Jan 2010 20:16:28 +1100
-From: Simon Horman <horms@verge.net.au>
+Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NSEep-00007t-PW
+	for kexec@lists.infradead.org; Tue, 05 Jan 2010 19:01:32 +0000
+Date: Tue, 5 Jan 2010 19:00:47 +0000
+From: Russell King <rmk+lkml@arm.linux.org.uk>
 Subject: Re: Linux kernel crash dumps for ARM
-Message-ID: <20100105091625.GA19871@verge.net.au>
+Message-ID: <20100105190047.GD30868@flint.arm.linux.org.uk>
 References: <EB1A7C66AD0C92419BFFC785A947865A09EA8C9129@BLRINMSMBX01.bglrodc.lntinfotech.com>
 	<m17hrx9lgo.fsf@fess.ebiederm.org>
 	<20100105084850.GA27860@linux-sh.org>
+	<20100105091625.GA19871@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100105084850.GA27860@linux-sh.org>
+In-Reply-To: <20100105091625.GA19871@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,51 +26,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Paul Mundt <lethal@linux-sh.org>
-Cc: "rmk+lkml@arm.linux.org.uk" <rmk+lkml@arm.linux.org.uk>, Venkappa Mala <Venkappa.Mala@lntinfotech.com>, Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-kernel@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Kexec Mailing List <kexec@lists.infradead.org>, Venkappa Mala <Venkappa.Mala@lntinfotech.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Tue, Jan 05, 2010 at 05:48:51PM +0900, Paul Mundt wrote:
-> On Mon, Jan 04, 2010 at 09:20:23PM -0800, Eric W. Biederman wrote:
-> > Venkappa Mala <Venkappa.Mala@lntinfotech.com> writes:
-> > >
-> > > 2) As per kexec supports, kexec-tool is required and this allows you to load directly
-> > >    to a new kernel from the currently running one
-> > >
-> > >     As from my side, i am not able to find arm implementation support in kexec-tools/crash sources.
-> > >
-> > >    - is kexce-tool supported for ARM or not?
-> > >
-> It would be rather counterintuitive for the kernel to support kexec and
-> the necessary userspace components not to.
-> 
-> The MAINTAINERS file says:
-> 
-> KEXEC
-> M:      Eric Biederman <ebiederm@xmission.com>
-> W:      http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
-> L:      kexec@lists.infradead.org
-> S:      Maintained
-> F:      include/linux/kexec.h
-> F:      kernel/kexec.c
-> 
-> While the above URL redirects to gitweb, resulting in:
-> 
-> http://git.kernel.org/?p=linux/kernel/git/horms/kexec-tools.git;a=summary
-> 
-> A peripheral grep of the kexec-tools source results in:
-> 
-> $ git grep kdump | grep arm
-> kexec/arch/arm/kexec-arm.c:     return 0; /* kdump is not supported on this platform (yet) */
-> 
-> So one could infer that kexec is supported on ARM whilst kdump is not.
-> Adding crashdump support requires both some kernel and kexec-tools glue,
-> but is fairly straightforward, just look at the other ports.
+On Tue, Jan 05, 2010 at 08:16:28PM +1100, Simon Horman wrote:
+> To add to this, my understanding is that kexec support varies across
+> different ARM platforms - that is to say, it works on some and fails on
+> others. While this seems to be slowly improving, I'm also aware of any list
+> of what is supported and what isn't.
 
-To add to this, my understanding is that kexec support varies across
-different ARM platforms - that is to say, it works on some and fails on
-others. While this seems to be slowly improving, I'm also aware of any list
-of what is supported and what isn't.
+I'm unaware of that; the only area of weakness with kexec that I'm
+aware of is when the ARMv7 processor support didn't implement the
+necessary code to bring the caches/mmu/tlbs into a safe state for
+software-reboot, which is also what's required by kexec.
 
+-- 
+Russell King
+ Linux kernel    2.6 ARM Linux   - http://www.arm.linux.org.uk/
+ maintainer of:
 
 _______________________________________________
 kexec mailing list
