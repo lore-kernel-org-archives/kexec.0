@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bay0-omc3-s28.bay0.hotmail.com ([65.54.190.166])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NUjfz-0003tn-9y
-	for kexec@lists.infradead.org; Tue, 12 Jan 2010 16:33:07 +0000
-Message-ID: <BAY114-W48ACEBC2A986827933C7BDD6C0@phx.gbl>
-From: Zitt Zitterkopf <zittware@hotmail.com>
-Subject: RE: Problems compiling kexec-tools
-Date: Tue, 12 Jan 2010 08:33:01 -0800
-In-Reply-To: <20100112003930.GB20676@verge.net.au>
-References: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>,
-	<20100112003930.GB20676@verge.net.au>
+Received: from va3ehsobe005.messaging.microsoft.com ([216.32.180.15]
+	helo=VA3EHSOBE005.bigfish.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NV70r-0002Bl-Ov
+	for kexec@lists.infradead.org; Wed, 13 Jan 2010 17:28:13 +0000
+Message-ID: <4B4E029E.4020404@am.sony.com>
+Date: Wed, 13 Jan 2010 09:27:58 -0800
+From: Geoff Levand <geoffrey.levand@am.sony.com>
 MIME-Version: 1.0
+Subject: Re: Problems compiling kexec-tools
+References: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>
+In-Reply-To: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,96 +19,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1233943893=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-Cc: kexec@lists.infradead.org
+To: Zitt Zitterkopf <zittware@hotmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
---===============1233943893==
-Content-Type: multipart/alternative;
-	boundary="_b4a2f83c-2f60-40f3-9bc9-dcf6e27351f6_"
+On 01/11/2010 04:01 PM, Zitt Zitterkopf wrote:
+> All,
+> I'm attempting to compile kexec-tools so I can compile kboot from source.
+> 
+> I've obtained the kexec-tools-2.0.0 source from RPM.
 
---_b4a2f83c-2f60-40f3-9bc9-dcf6e27351f6_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Maybe you could try just using the 2.0.1 sources from here:
 
+  http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
 
+> I've done:
+> ./configure
+> make
+> 
+> which I receive the following errors:
+> gcc -lz   -g -O2 -static -fno-strict-aliasing -Wall -Wstrict-prototypes -o build/sbin/kexec kexec/kexec.o kexec/ifdown.o kexec/kexec-elf.o kexec/kexec-elf-exec.o kexec/kexec-elf-core.o kexec/kexec-elf-rel.o kexec/kexec-elf-boot.o kexec/kexec-iomem.o kexec/firmware_memmap.o kexec/crashdump.o kexec/crashdump-xen.o kexec/phys_arch.o kexec/proc_iomem.o kexec/virt_to_phys.o kexec/add_segment.o kexec/add_buffer.o kexec/arch_reuse_initrd.o kexec/arch/i386/kexec-x86.o kexec/arch/i386/kexec-x86-common.o kexec/arch/i386/kexec-elf-x86.o kexec/arch/i386/kexec-elf-rel-x86.o kexec/arch/i386/kexec-bzImage.o kexec/arch/i386/kexec-multiboot-x86.o kexec/arch/i386/kexec-beoboot-x86.o kexec/arch/i386/kexec-nbi.o kexec/arch/i386/x86-linux-setup.o kexec/arch/i386/crashdump-x86.o kexec/purgatory.o libutil.a
+> kexec/kexec.o: In function `slurp_decompress_file':
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:485: undefined reference to `gzopen'
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:501: undefined reference to `gzread'
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:506: undefined reference to `gzerror'
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:515: undefined reference to `gzclose'
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:517: undefined reference to `gzerror'
+> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:487: undefined reference to `gzerror'
+> collect2: ld returned 1 exit status
+> make: *** [build/sbin/kexec] Error 1
+> 
+> I've installed zlib:
+> zlib-1.2.3-29.4.moblin2.i586.rpm
+> zlib-devel-1.2.3-29.4.moblin2.i586.rpm
+> so I'm unsure what I've done wrong.
 
-> > I've installed zlib:
-> >=20
-> > zlib-1.2.3-29.4.moblin2.i586.rpm
-> >=20
-> > zlib-devel-1.2.3-29.4.moblin2.i586.rpm
-> >=20
-> > so I'm unsure what I've done wrong.
->=20
-> Just a guess=2C but do you have a static version of libz installed?
-> That is=2C did zlib-devel install a libz.a file?
+You could try passing the verbose flags and see what
+headers and libs get used during the build.  Maybe
+you'll find some problem there.  I think those would
+be something like:
 
+  gcc -v -Wl,--verbose ...
 
-Yes=3B libz.a is installed... but I may have installed=20
+Or maybe just use:
 
-zlib-static-1.2.3-29.4.moblin2.i586.rpm
+  ld --verbose ...
 
-being over zelous with the dependancy install.
+BTW, have you looked at the petitboot bootloader? For
+the most part it is a better choice than kboot.
+It provides essentially all the functionality that
+kboot does, plus more, it is easier to build, and it
+is a currently maintained project.
 
-=20
+The petitboot package can be built for x86.  That is
+how much of its development is done, but OpenWRT does
+not yet support an x86 build of petitboot (that
+would create a grub second stage image).  My plan is
+to add x86 PC support next.  I don't think it is very
+difficult to do, I just have not had time to do it.
 
-I tried=20
+You can see some screen shots of petitboot built for
+the PS3 here:
 
-rpm -e zlib-static-1.2.3-29.4.moblin2.i586.rpm
+  http://www.kernel.org/pub/linux/kernel/people/geoff/cell/ps3-petitboot/
 
-as root but it says "not installed".
- 		 	   		  =
+My petitboot development repo is here:
 
---_b4a2f83c-2f60-40f3-9bc9-dcf6e27351f6_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+  http://git.kernel.org/?p=linux/kernel/git/geoff/petitboot-dev.git
 
-<html>
-<head>
-<style><!--
-.hmmessage P
-{
-margin:0px=3B
-padding:0px
-}
-body.hmmessage
-{
-font-size: 10pt=3B
-font-family:Verdana
-}
---></style>
-</head>
-<body class=3D'hmmessage'>
-<BR>&gt=3B &gt=3B I've installed zlib:<BR>&gt=3B &gt=3B <BR>&gt=3B &gt=3B z=
-lib-1.2.3-29.4.moblin2.i586.rpm<BR>&gt=3B &gt=3B <BR>&gt=3B &gt=3B zlib-dev=
-el-1.2.3-29.4.moblin2.i586.rpm<BR>&gt=3B &gt=3B <BR>&gt=3B &gt=3B so I'm un=
-sure what I've done wrong.<BR>&gt=3B <BR>&gt=3B Just a guess=2C but do you =
-have a static version of libz installed?<BR>&gt=3B That is=2C did zlib-deve=
-l install a libz.a file?<BR><BR>
-Yes=3B libz.a is installed... but I may have installed <BR>
-zlib-static-1.2.3-29.4.moblin2.i586.rpm<BR>
-being over zelous with the dependancy install.<BR>
-&nbsp=3B<BR>
-I tried <BR>
-rpm -e zlib-static-1.2.3-29.4.moblin2.i586.rpm<BR>
-as root but it says "not installed".<BR> 		 	   		  </body>
-</html>=
+-Geoff
 
---_b4a2f83c-2f60-40f3-9bc9-dcf6e27351f6_--
-
-
---===============1233943893==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1233943893==--
-
