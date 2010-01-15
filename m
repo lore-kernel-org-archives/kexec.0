@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe005.messaging.microsoft.com ([216.32.180.15]
-	helo=VA3EHSOBE005.bigfish.com)
+Received: from va3ehsobe003.messaging.microsoft.com ([216.32.180.13]
+	helo=VA3EHSOBE003.bigfish.com)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NV70r-0002Bl-Ov
-	for kexec@lists.infradead.org; Wed, 13 Jan 2010 17:28:13 +0000
-Message-ID: <4B4E029E.4020404@am.sony.com>
-Date: Wed, 13 Jan 2010 09:27:58 -0800
+	id 1NVs8f-0003nk-V7
+	for kexec@lists.infradead.org; Fri, 15 Jan 2010 19:47:25 +0000
+Message-ID: <4B50C641.8020802@am.sony.com>
+Date: Fri, 15 Jan 2010 11:47:13 -0800
 From: Geoff Levand <geoffrey.levand@am.sony.com>
 MIME-Version: 1.0
 Subject: Re: Problems compiling kexec-tools
-References: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>
-In-Reply-To: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>
+References: <BAY114-W49E2846C6D653AB15A9A03DD6C0@phx.gbl>,
+	<4B4E029E.4020404@am.sony.com>
+	<BAY114-W336F3329F5DE1A53218CC5DD690@phx.gbl>
+In-Reply-To: <BAY114-W336F3329F5DE1A53218CC5DD690@phx.gbl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,69 +28,41 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Zitt Zitterkopf <zittware@hotmail.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 01/11/2010 04:01 PM, Zitt Zitterkopf wrote:
-> All,
-> I'm attempting to compile kexec-tools so I can compile kboot from source.
+On 01/15/2010 10:47 AM, Zitt Zitterkopf wrote:
+>> BTW, have you looked at the petitboot bootloader? For
+>> the most part it is a better choice than kboot.
+>> It provides essentially all the functionality that
+>> kboot does, plus more, it is easier to build, and it
+>> is a currently maintained project.
 > 
-> I've obtained the kexec-tools-2.0.0 source from RPM.
+> I do see some benefit for petitboot with the graphical menu. Ideally we'd need a version which reads each partition looking for multiple /boot kernels and present a method to select each one using a alpha char. Kinda like the old System Commander app.
 
-Maybe you could try just using the 2.0.1 sources from here:
+Just FYI, petitboot is setup to receive hot plug events
+(udev supported, hotplug-2 planned) and dhcp events.  It
+looks on any storage devices for boot menu config files
+and for any netboot info from dhcp and then adds or removes
+boot menu items for those dynamically.
 
-  http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+Petitboot does not look for kernel images it can boot,
+as you need more than that to boot a kernel (initrd,
+boot options, etc. are needed), nor does it test for
+the existence of any images specified in boot config
+files, as you would potentially need to be looking all
+over the Internet for them, and waiting for network
+timeouts, etc. just doesn't make sense.  Petitboot just
+assumes the user keeps the configs in good order.
 
-> I've done:
-> ./configure
-> make
-> 
-> which I receive the following errors:
-> gcc -lz   -g -O2 -static -fno-strict-aliasing -Wall -Wstrict-prototypes -o build/sbin/kexec kexec/kexec.o kexec/ifdown.o kexec/kexec-elf.o kexec/kexec-elf-exec.o kexec/kexec-elf-core.o kexec/kexec-elf-rel.o kexec/kexec-elf-boot.o kexec/kexec-iomem.o kexec/firmware_memmap.o kexec/crashdump.o kexec/crashdump-xen.o kexec/phys_arch.o kexec/proc_iomem.o kexec/virt_to_phys.o kexec/add_segment.o kexec/add_buffer.o kexec/arch_reuse_initrd.o kexec/arch/i386/kexec-x86.o kexec/arch/i386/kexec-x86-common.o kexec/arch/i386/kexec-elf-x86.o kexec/arch/i386/kexec-elf-rel-x86.o kexec/arch/i386/kexec-bzImage.o kexec/arch/i386/kexec-multiboot-x86.o kexec/arch/i386/kexec-beoboot-x86.o kexec/arch/i386/kexec-nbi.o kexec/arch/i386/x86-linux-setup.o kexec/arch/i386/crashdump-x86.o kexec/purgatory.o libutil.a
-> kexec/kexec.o: In function `slurp_decompress_file':
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:485: undefined reference to `gzopen'
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:501: undefined reference to `gzread'
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:506: undefined reference to `gzerror'
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:515: undefined reference to `gzclose'
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:517: undefined reference to `gzerror'
-> /home/moblin/rpmbuild/BUILD/kexec-tools-2.0.0/kexec/kexec.c:487: undefined reference to `gzerror'
-> collect2: ld returned 1 exit status
-> make: *** [build/sbin/kexec] Error 1
-> 
-> I've installed zlib:
-> zlib-1.2.3-29.4.moblin2.i586.rpm
-> zlib-devel-1.2.3-29.4.moblin2.i586.rpm
-> so I'm unsure what I've done wrong.
+As for the 'one key' selection UI you mention, Petitboot is
+setup with a client-server architecture.  The server deamon
+is the thing that receives events, looks for config files,
+parses the files, etc., then it sends the info to the client
+UI apps.  Multilpe UI client apps can register with the
+server, so you can say have one UI on the display, and
+several running in telnet sessions.
 
-You could try passing the verbose flags and see what
-headers and libs get used during the build.  Maybe
-you'll find some problem there.  I think those would
-be something like:
-
-  gcc -v -Wl,--verbose ...
-
-Or maybe just use:
-
-  ld --verbose ...
-
-BTW, have you looked at the petitboot bootloader? For
-the most part it is a better choice than kboot.
-It provides essentially all the functionality that
-kboot does, plus more, it is easier to build, and it
-is a currently maintained project.
-
-The petitboot package can be built for x86.  That is
-how much of its development is done, but OpenWRT does
-not yet support an x86 build of petitboot (that
-would create a grub second stage image).  My plan is
-to add x86 PC support next.  I don't think it is very
-difficult to do, I just have not had time to do it.
-
-You can see some screen shots of petitboot built for
-the PS3 here:
-
-  http://www.kernel.org/pub/linux/kernel/people/geoff/cell/ps3-petitboot/
-
-My petitboot development repo is here:
-
-  http://git.kernel.org/?p=linux/kernel/git/geoff/petitboot-dev.git
+Anyway, petitboot was designed for it to be relatively easy
+to make a new custom UI app.  Your 'one key' selection
+seems to be just a variation of the existing ncurses menu UI. 
 
 -Geoff
 
