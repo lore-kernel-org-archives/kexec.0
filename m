@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NXN3O-0006sm-Ux
+	id 1NXN3O-0006tQ-QB
 	for kexec@lists.infradead.org; Tue, 19 Jan 2010 23:00:11 +0000
 From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: powerpc32 support with device tree
-Date: Tue, 19 Jan 2010 23:59:40 +0100
-Message-Id: <1263941985-18856-1-git-send-email-sebastian@breakpoint.cc>
+Subject: [PATCH 1/5] slurpfile: use lseek() on character nodes instead of
+	fstat() for file size
+Date: Tue, 19 Jan 2010 23:59:41 +0100
+Message-Id: <1263941985-18856-2-git-send-email-sebastian@breakpoint.cc>
+In-Reply-To: <1263941985-18856-1-git-send-email-sebastian@breakpoint.cc>
+References: <1263941985-18856-1-git-send-email-sebastian@breakpoint.cc>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,33 +24,67 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Kumar Gala <galak@kernel.crashing.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Kumar Gala <galak@kernel.crashing.org>
 
-I've rebased my old patches on top of current kexec-tools tree and added
-support for the uImage target. There was no negative feedback the last I
-have posted as far I remember.
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Now that there is uImage support, there is no need for a wrapper around
-the kernel:
- kexec -l uImage --dtb=file.dtb
+fstat() is used to determine the filesize before read() and
+it requires a filesystem. That means that it can not be used
+on character nodes. This makes it impossible to obtains the
+kernel from a char node like mtd or more likely ubi.
+We can't use this in every case because files in /proc don't
+support lseek(). This is required by the powerpc part to read
+some device-tree entries.
 
-If the device tree does not contain the current memory size, clocks, mac
-address, ... the --reuse-node option can be used in order to set the value
-to the "current" value. This value is obtained from /proc/device-tree so
-it requires that the kernel exports the device tree.
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kexec/kexec.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
 
-I'm currently not sure if the --reuse-node option is very convenient to
-use. Another way to go would be to suck the complete device tree via /proc
-and only update the command line. Any comments on this?
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index a1cec86..6baa2d8 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -467,7 +467,7 @@ char *slurp_file(const char *filename, off_t *r_size)
+ {
+ 	int fd;
+ 	char *buf;
+-	off_t size, progress;
++	off_t size, progress, err;
+ 	ssize_t result;
+ 	struct stat stats;
+ 	
+@@ -486,7 +486,26 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 		die("Cannot stat: %s: %s\n",
+ 			filename, strerror(errno));
+ 	}
+-	size = stats.st_size;
++	/*
++	 * Seek in case the kernel is a character node like /dev/ubi0_0.
++	 * This does not work on regular files which live in /proc and
++	 * we need this for some /proc/device-tree entries
++	 */
++	if (S_ISCHR(stats.st_mode)) {
++
++		size = lseek(fd, 0, SEEK_END);
++		if (size < 0)
++			die("Can not seek file %s: %s\n", filename,
++					strerror(errno));
++
++		err = lseek(fd, 0, SEEK_SET);
++		if (err < 0)
++			die("Can not seek to the begin of file %s: %s\n",
++					filename, strerror(errno));
++	} else {
++		size = stats.st_size;
++	}
++
+ 	*r_size = size;
+ 	buf = xmalloc(size);
+ 	progress = 0;
+-- 
+1.6.5.2
 
-There are two more things sitting on my todo list: SMP support & initrd. 
-
-The patch series is also available in the git repository at:
-
-  git://breakpoint.cc/bigeasy/kexec-tools ppc32
-
-
-Sebastian
 
 _______________________________________________
 kexec mailing list
