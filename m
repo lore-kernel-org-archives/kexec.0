@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bruson.ifs.umich.edu ([141.213.229.79])
+Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NXILC-0001NC-5Z
-	for kexec@lists.infradead.org; Tue, 19 Jan 2010 17:58:14 +0000
-Subject: make install fails to install man pages
-Date: Tue, 19 Jan 2010 12:57:59 -0500
-From: Marcus Watts <mdw@umich.edu>
-Message-Id: <E1NXIL1-0005tH-Ho@bruson.ifs.umich.edu>
+	id 1NXN3O-0006sm-Ux
+	for kexec@lists.infradead.org; Tue, 19 Jan 2010 23:00:11 +0000
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: powerpc32 support with device tree
+Date: Tue, 19 Jan 2010 23:59:40 +0100
+Message-Id: <1263941985-18856-1-git-send-email-sebastian@breakpoint.cc>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,39 +20,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
-Cc: mdw@umich.edu
+To: kexec@lists.infradead.org
+Cc: Kumar Gala <galak@kernel.crashing.org>
 
-When building kexec-tools 2.0.1, I noticed that "make install"
-failed to install any man pages.  Upon looking, I found that
-what "make install" had tried to do was:
+I've rebased my old patches on top of current kexec-tools tree and added
+support for the uImage target. There was no negative feedback the last I
+have posted as far I remember.
 
-	for file in build/sbin/kexec .. kexec/kexec.8 kdump/kdump.8; do
-	if test `dirname $file` =     "build/sbin" ; then
-	...
-	if test `dirname $file` =     "build/man/man8" ; then
-		mkdir -p     /tmp/kex//usr/share/man/man8/
-		/usr/bin/install -c -m 644 $file /tmp/kex//usr/share/man/man8/
-	fi
-	...
-	done
+Now that there is uImage support, there is no need for a wrapper around
+the kernel:
+ kexec -l uImage --dtb=file.dtb
 
-Since the man pages don't start with "build/", they don't
-match the if clause so aren't installed.
+If the device tree does not contain the current memory size, clocks, mac
+address, ... the --reuse-node option can be used in order to set the value
+to the "current" value. This value is obtained from /proc/device-tree so
+it requires that the kernel exports the device tree.
 
-Source in the makefile looks like this:
-	if test `$(DIRNAME) $$file` =     "$(MAN8DIR)" ; then \
+I'm currently not sure if the --reuse-node option is very convenient to
+use. Another way to go would be to suck the complete device tree via /proc
+and only update the command line. Any comments on this?
 
-A test that might better express what you are trying to do:
-	if test `basename x/foo.8 .8` = foo
-perhaps something like this:
-configure.ac:
-	AC_CHECK_PROG([BASENAME],  basename,  basename,  "no", [$PATH])
-	if test "$BASENAME" = "no"; then AC_MSG_ERROR([ basename not found]) fi
-Makefile.in:
-	if test `$(BASENAME) $$file .8` =     "$$file" ; then \
+There are two more things sitting on my todo list: SMP support & initrd. 
 
-				-Marcus Watts
+The patch series is also available in the git repository at:
+
+  git://breakpoint.cc/bigeasy/kexec-tools ppc32
+
+
+Sebastian
 
 _______________________________________________
 kexec mailing list
