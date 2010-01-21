@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fed1rmmtao106.cox.net ([68.230.241.40])
+Received: from mail-yx0-f202.google.com ([209.85.210.202])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NXdId-0002OX-Na
-	for kexec@lists.infradead.org; Wed, 20 Jan 2010 16:21:00 +0000
-Received: from fed1rmimpo03.cox.net ([70.169.32.75]) by fed1rmmtao106.cox.net
-	(InterMail vM.8.00.01.00 201-2244-105-20090324) with ESMTP id
-	<20100120162054.RRGQ18268.fed1rmmtao106.cox.net@fed1rmimpo03.cox.net>
-	for <kexec@lists.infradead.org>; Wed, 20 Jan 2010 11:20:54 -0500
-Received: from toolshiner.phx1.kidfixit.com (unknown [10.1.0.2])
-	(using TLSv1 with cipher ADH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.phx1.kidfixit.com (Postfix) with ESMTP id A6745808C421
-	for <kexec@lists.infradead.org>; Wed, 20 Jan 2010 16:00:10 +0000 (UTC)
-References: <cone.1263962411.847498.22847.1000@toolshiner.phx1.kidfixit.com>
-	<201001201014.56630.florian@openwrt.org>
-	<cone.1264002495.970050.22847.1000@toolshiner.phx1.kidfixit.com>
-Message-ID: <cone.1264003210.167206.22847.1000@toolshiner.phx1.kidfixit.com>
-From: Joey Korkames <joey+lists@kidfixit.com>
-Subject: Re: bzip2-compressed bzimage support?
-Date: Wed, 20 Jan 2010 09:00:10 -0700
-Mime-Version: 1.0
-Content-Disposition: inline
+	id 1NXyTN-0001Kh-66
+	for kexec@lists.infradead.org; Thu, 21 Jan 2010 14:57:30 +0000
+Received: by yxe40 with SMTP id 40so44950yxe.28
+	for <kexec@lists.infradead.org>; Thu, 21 Jan 2010 06:57:24 -0800 (PST)
+MIME-Version: 1.0
+Date: Thu, 21 Jan 2010 20:27:23 +0530
+Message-ID: <4d358c531001210657k5c683b51sa2eda66e0787020d@mail.gmail.com>
+Subject: kexec_load failed: Bad address - mips64 /Octeon Cavium
+From: Vishnu Yadav <vishnuyadav@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,56 +18,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: multipart/mixed; boundary="===============0544538752=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Perhaps I spoke too soon:
+--===============0544538752==
+Content-Type: multipart/alternative; boundary=001636c5bfb7afe48a047dadebed
 
-xen2:~# grep -rn KEXEC /boot/debian/config-2.6.32-trunk-amd64 
-378:CONFIG_KEXEC=y
-380:# CONFIG_KEXEC_JUMP is not set
+--001636c5bfb7afe48a047dadebed
+Content-Type: text/plain; charset=ISO-8859-1
 
-I figure that there should be an ELF hint indicating if a kernel is 
-kexec-able so that kexec-tools can emit a specific (and useful) error 
-message if given an unsuitable kernel. But this doesn't appear to be an 
-unsuitable kernel based on the .config.
+I am trying to run kexec on mips 64 bit . on Octeon Cavium card.
+ I have applied the mips patches as told on net and somewhere in  this
+mailing list.
 
-And just for good measure, it also appears to be a plain gzip bzImage.
+I get below error .
 
-xen2:~# grep -rn -E 'BZIP|GZIP|LZMA' /boot/debian/config-2.6.32-trunk-amd64 
-68:CONFIG_HAVE_KERNEL_GZIP=y
-69:CONFIG_HAVE_KERNEL_BZIP2=y
-70:CONFIG_HAVE_KERNEL_LZMA=y
-71:CONFIG_KERNEL_GZIP=y
-72:# CONFIG_KERNEL_BZIP2 is not set
-73:# CONFIG_KERNEL_LZMA is not set
-125:CONFIG_RD_GZIP=y
-126:CONFIG_RD_BZIP2=y
-127:CONFIG_RD_LZMA=y
-4682:CONFIG_DECOMPRESS_GZIP=y
-4683:CONFIG_DECOMPRESS_BZIP2=y
-4684:CONFIG_DECOMPRESS_LZMA=y
+./kexec -l vmlinux.64
+kexec_load failed: Bad address
+entry       = 0x14deaa0 flags = 80000
+nr_segments = 1
+segment[0].buf   = 0x5555718010
+segment[0].bufsz = 55cb00
+segment[0].mem   = 0x1100000
+segment[0].memsz = 58b000
 
-Now, if it doesn't matter how the bzImage is compressed, then what are the 
-recent lzma commits to kexec-tools.git for?
 
-Thanks for reading
-Joey
+my kexec ver is - kexec-tools 2.0.1 released 13th August 2009
 
-Joey Korkames writes:
+and
+linux runnig on mips Octeon is -
+Linux (none) 2.6.27.7-Cavium-Octeon #3 SMP Thu Jan 21 17:23:38 IST 2010
+mips64 unknown
 
-> Gotcha, kexec resuses the bzImage's decompression stub. Now I have another 
-> reason to dislike the Debian.org kernels. I didn't know the 
-> _destination_ kernel had to have the config option as well.
-> 
-> Thanks!
-> -joey
-> 
+
+Pls help me ..
+
+
+-- 
+Best Regards,
+
+Vishnu Yadav
+
+--001636c5bfb7afe48a047dadebed
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+I am trying to run kexec on mips 64 bit . on Octeon Cavium card.<br>=A0I ha=
+ve applied the mips patches as told on net and somewhere in=A0 this mailing=
+ list.<br><br>I get below error .<br><br>./kexec -l vmlinux.64 <br>kexec_lo=
+ad failed: Bad address<br>
+entry=A0=A0=A0=A0=A0=A0 =3D 0x14deaa0 flags =3D 80000<br>nr_segments =3D 1<=
+br>segment[0].buf=A0=A0 =3D 0x5555718010<br>segment[0].bufsz =3D 55cb00<br>=
+segment[0].mem=A0=A0 =3D 0x1100000<br>segment[0].memsz =3D 58b000<br clear=
+=3D"all"><br><br>my kexec ver is - kexec-tools 2.0.1 released 13th August 2=
+009<br>
+<br>and <br>linux runnig on mips Octeon is - <br>Linux (none) 2.6.27.7-Cavi=
+um-Octeon #3 SMP Thu Jan 21 17:23:38 IST 2010 mips64 unknown<br><br><br>Pls=
+ help me ..<br><br><br>-- <br>Best Regards,<br><br>Vishnu Yadav<br>
+
+--001636c5bfb7afe48a047dadebed--
+
+
+--===============0544538752==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0544538752==--
+
