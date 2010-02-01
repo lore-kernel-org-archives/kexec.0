@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NbvAO-00056T-LQ
+	id 1NbvAO-00056S-LL
 	for kexec@lists.infradead.org; Mon, 01 Feb 2010 12:14:16 +0000
 Received: from yukiko.kent.sydney.vergenet.net
 	(203-206-13-190.dyn.iinet.net.au [203.206.13.190])
-	by kirsty.vergenet.net (Postfix) with ESMTP id 7DA0A245A4
+	by kirsty.vergenet.net (Postfix) with ESMTP id 841BA2460B
 	for <kexec@lists.infradead.org>; Mon,  1 Feb 2010 23:14:01 +1100 (EST)
-Message-Id: <20100201121320.754858384@vergenet.net>
-Date: Mon, 01 Feb 2010 23:11:58 +1100
+Message-Id: <20100201121321.505252137@vergenet.net>
+Date: Mon, 01 Feb 2010 23:12:02 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 02/27] Remove unused parameters from build_mem() and related
-	functions
+Subject: [patch 06/27] ia64: Remove unused info parameter from {move,
+	update}_loaded_segments()
 References: <20100201121156.252909695@vergenet.net>
-Content-Disposition: inline; filename=build_mem-remove-unused-parameters.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,106 +22,94 @@ List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1870434287=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kexec Mailing List <kexec@lists.infradead.org>
 
+--===============1870434287==
+Content-Disposition: inline; filename=ia64-move_loaded_segments-removed-unused-parameter.patch
+
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Index: kexec-tools/kexec/kexec-elf.c
+
+/bin/bash: 0001-add-kexec-tools-support-for-armv7l-processors.patch: ������������������������������������
+���������������������������������������������������
+Index: kexec-tools/kexec/arch/ia64/kexec-elf-ia64.c
 ===================================================================
---- kexec-tools.orig/kexec/kexec-elf.c	2010-02-01 23:06:41.000000000 +1100
-+++ kexec-tools/kexec/kexec-elf.c	2010-02-01 23:07:16.000000000 +1100
-@@ -302,8 +302,7 @@ static int build_mem_ehdr(const char *bu
+--- kexec-tools.orig/kexec/arch/ia64/kexec-elf-ia64.c	2010-02-01 23:06:40.000000000 +1100
++++ kexec-tools/kexec/arch/ia64/kexec-elf-ia64.c	2010-02-01 23:07:17.000000000 +1100
+@@ -96,8 +96,7 @@ void elf_ia64_usage(void)
+ 
+ /* Move the crash kerenl physical offset to reserved region
+  */
+-void move_loaded_segments(struct kexec_info *info, struct mem_ehdr *ehdr,
+-			  unsigned long addr)
++void move_loaded_segments(struct mem_ehdr *ehdr, unsigned long addr)
+ {
+ 	int i;
+ 	long offset;
+@@ -198,8 +197,8 @@ int elf_ia64_load(int argc, char **argv,
+ 			free_elf_info(&ehdr);
+ 			return -1;
+ 		}
+-		move_loaded_segments(info, &ehdr, mem_min);
+-	} else if (update_loaded_segments(info, &ehdr) < 0) {
++		move_loaded_segments(&ehdr, mem_min);
++	} else if (update_loaded_segments(&ehdr) < 0) {
+ 		fprintf(stderr, "Failed to place kernel\n");
+ 		return -1;
+ 	}
+Index: kexec-tools/kexec/arch/ia64/kexec-ia64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/kexec-ia64.c	2010-02-01 23:07:16.000000000 +1100
++++ kexec-tools/kexec/arch/ia64/kexec-ia64.c	2010-02-01 23:07:17.000000000 +1100
+@@ -216,7 +216,7 @@ int arch_compat_trampoline(struct kexec_
  	return 0;
  }
  
--static int build_mem_elf32_phdr(const char *buf, off_t len,
--	struct mem_ehdr *ehdr, int idx)
-+static int build_mem_elf32_phdr(const char *buf, struct mem_ehdr *ehdr, int idx)
+-int update_loaded_segments(struct kexec_info *info, struct mem_ehdr *ehdr)
++int update_loaded_segments(struct mem_ehdr *ehdr)
  {
+ 	int i;
  	struct mem_phdr *phdr;
- 	const char *pbuf;
-@@ -335,8 +334,7 @@ static int build_mem_elf32_phdr(const ch
- 	return 0;
- }
- 
--static int build_mem_elf64_phdr(const char *buf, off_t len,
--	struct mem_ehdr *ehdr, int idx)
-+static int build_mem_elf64_phdr(const char *buf, struct mem_ehdr *ehdr, int idx)
- {
- 	struct mem_phdr *phdr;
- 	const char *pbuf;
-@@ -407,11 +405,11 @@ static int build_mem_phdrs(const char *b
- 		int result;
- 		result = -1;
- 		if (ehdr->ei_class == ELFCLASS32) {
--			result = build_mem_elf32_phdr(buf, len, ehdr, i);
-+			result = build_mem_elf32_phdr(buf, ehdr, i);
- 
- 		}
- 		else if (ehdr->ei_class == ELFCLASS64) {
--			result = build_mem_elf64_phdr(buf, len, ehdr, i);
-+			result = build_mem_elf64_phdr(buf, ehdr, i);
- 		}
- 		if (result < 0) {
- 			return result;
-@@ -443,8 +441,7 @@ static int build_mem_phdrs(const char *b
- 	return 0;
- }
- 
--static int build_mem_elf32_shdr(const char *buf, off_t len,
--	struct mem_ehdr *ehdr, int idx)
-+static int build_mem_elf32_shdr(const char *buf, struct mem_ehdr *ehdr, int idx)
- {
- 	struct mem_shdr *shdr;
- 	const char *sbuf;
-@@ -513,8 +510,7 @@ static int build_mem_elf32_shdr(const ch
- 	return 0;
- }
- 
--static int build_mem_elf64_shdr(const char *buf, off_t len,
--	struct mem_ehdr *ehdr, int idx)
-+static int build_mem_elf64_shdr(const char *buf, struct mem_ehdr *ehdr, int idx)
- {
- 	struct mem_shdr *shdr;
- 	const char *sbuf;
-@@ -622,10 +618,10 @@ static int build_mem_shdrs(const char *b
- 		int result;
- 		result = -1;
- 		if (ehdr->ei_class == ELFCLASS32) {
--			result = build_mem_elf32_shdr(buf, len, ehdr, i);
-+			result = build_mem_elf32_shdr(buf, ehdr, i);
- 		}
- 		else if (ehdr->ei_class == ELFCLASS64) {
--			result = build_mem_elf64_shdr(buf, len, ehdr, i);
-+			result = build_mem_elf64_shdr(buf, ehdr, i);
- 		}
- 		if (result < 0) {
- 			return result;
-@@ -667,7 +663,7 @@ static void read_nhdr(const struct mem_e
- 	hdr->n_type   = elf32_to_cpu(ehdr, hdr->n_type);
- 
- }
--static int build_mem_notes(const char *buf, off_t len, struct mem_ehdr *ehdr)
-+static int build_mem_notes(struct mem_ehdr *ehdr)
- {
- 	const unsigned char *note_start, *note_end, *note;
- 	size_t note_size;
-@@ -769,7 +765,7 @@ int build_elf_info(const char *buf, off_
- 			return result;
+@@ -247,7 +247,7 @@ int update_loaded_segments(struct kexec_
+ 		start = (memory_range[i].start + align - 1) & ~(align - 1);
+ 		end = memory_range[i].end;
+ 		if (end > start && (end - start) > (end_addr - start_addr)) {
+-		    move_loaded_segments(info, ehdr, start);
++		    move_loaded_segments(ehdr, start);
+ 			return 0;
  		}
  	}
--	result = build_mem_notes(buf, len, ehdr);
-+	result = build_mem_notes(ehdr);
- 	if (result < 0) {
- 		free_elf_info(ehdr);
- 		return result;
+Index: kexec-tools/kexec/arch/ia64/kexec-ia64.h
+===================================================================
+--- kexec-tools.orig/kexec/arch/ia64/kexec-ia64.h	2010-02-01 23:06:40.000000000 +1100
++++ kexec-tools/kexec/arch/ia64/kexec-ia64.h	2010-02-01 23:07:17.000000000 +1100
+@@ -6,9 +6,8 @@ int elf_ia64_probe(const char *buf, off_
+ int elf_ia64_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info);
+ void elf_ia64_usage(void);
+-int update_loaded_segments(struct kexec_info *info, struct mem_ehdr *ehdr);
+-void move_loaded_segments(struct kexec_info *info, struct mem_ehdr *ehdr,
+-			  unsigned long addr);
++int update_loaded_segments(struct mem_ehdr *ehdr);
++void move_loaded_segments(struct mem_ehdr *ehdr, unsigned long addr);
+ 
+ #define EFI_PAGE_SIZE	  (1UL<<12)
+ #define ELF_PAGE_SIZE	  (1UL<<16)
 
+
+
+--===============1870434287==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1870434287==--
