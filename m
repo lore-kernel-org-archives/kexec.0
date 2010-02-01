@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NbvAI-00054Q-N5
+	id 1NbvAI-00054P-Mv
 	for kexec@lists.infradead.org; Mon, 01 Feb 2010 12:14:07 +0000
 Received: from yukiko.kent.sydney.vergenet.net
 	(203-206-13-190.dyn.iinet.net.au [203.206.13.190])
-	by kirsty.vergenet.net (Postfix) with ESMTP id 7D442245A2
+	by kirsty.vergenet.net (Postfix) with ESMTP id 6CDFB24067
 	for <kexec@lists.infradead.org>; Mon,  1 Feb 2010 23:14:01 +1100 (EST)
-Message-Id: <20100201121321.315061652@vergenet.net>
-Date: Mon, 01 Feb 2010 23:12:01 +1100
+Message-Id: <20100201121321.127489773@vergenet.net>
+Date: Mon, 01 Feb 2010 23:12:00 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch 05/27] i386: Remove unused kexec_flags parameter from
-	setup_edd_info()
+Subject: [patch 04/27] sh: Remove unused len parameter from zImage_head32()
 References: <20100201121156.252909695@vergenet.net>
 Content-Disposition: inline;
-	filename=i386-setup_edd_info-remove-unused-parameter.patch
+	filename=sh-zImage_head32-remove-unused-parameter.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,27 +31,37 @@ To: Kexec Mailing List <kexec@lists.infradead.org>
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Index: kexec-tools/kexec/arch/i386/x86-linux-setup.c
+Index: kexec-tools/kexec/arch/sh/kexec-zImage-sh.c
 ===================================================================
---- kexec-tools.orig/kexec/arch/i386/x86-linux-setup.c	2010-02-01 23:06:41.000000000 +1100
-+++ kexec-tools/kexec/arch/i386/x86-linux-setup.c	2010-02-01 23:07:17.000000000 +1100
-@@ -353,8 +353,7 @@ static void zero_edd(struct x86_linux_pa
- 		EDD_MBR_SIG_MAX * sizeof(uint32_t));
- }
+--- kexec-tools.orig/kexec/arch/sh/kexec-zImage-sh.c	2010-02-01 23:07:17.000000000 +1100
++++ kexec-tools/kexec/arch/sh/kexec-zImage-sh.c	2010-02-01 23:07:17.000000000 +1100
+@@ -34,7 +34,7 @@ static const int probe_debug = 0;
+ #define HEAD32_INIT_SR 3
+ #define HEAD32_INIT_SR_VALUE 0x400000F0
  
--void setup_edd_info(struct x86_linux_param_header *real_mode,
--					unsigned long kexec_flags)
-+void setup_edd_info(struct x86_linux_param_header *real_mode)
+-static unsigned long zImage_head32(const char *buf, off_t len, int offs)
++static unsigned long zImage_head32(const char *buf, int offs)
  {
- 	DIR *edd_dir;
- 	struct dirent *cursor;
-@@ -482,5 +481,5 @@ void setup_linux_system_parameters(struc
- 	}
+ 	unsigned long *values = (void *)buf;
+ 	int k;
+@@ -56,7 +56,7 @@ int zImage_sh_probe(const char *buf, off
+ 	if (memcmp(&buf[0x202], "HdrS", 4) != 0)
+ 	        return -1;
  
- 	/* fill the EDD information */
--	setup_edd_info(real_mode, kexec_flags);
-+	setup_edd_info(real_mode);
- }
+-	if (zImage_head32(buf, len, HEAD32_INIT_SR) != HEAD32_INIT_SR_VALUE)
++	if (zImage_head32(buf, HEAD32_INIT_SR) != HEAD32_INIT_SR_VALUE)
+ 	        return -1;
+ 
+ 	return 0;
+@@ -112,7 +112,7 @@ int zImage_sh_load(int argc, char **argv
+ 	 * all combinations.
+ 	 */
+ 
+-	empty_zero = zImage_head32(buf, len, HEAD32_KERNEL_START_ADDR);
++	empty_zero = zImage_head32(buf, HEAD32_KERNEL_START_ADDR);
+ 
+ 	zero_page_size = 0x10000;
+ 	zero_page_base = virt_to_phys(empty_zero - zero_page_size);
 
 
 _______________________________________________
