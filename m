@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nbypg-0002GV-RD
-	for kexec@lists.infradead.org; Mon, 01 Feb 2010 16:09:05 +0000
+	id 1Nc6Iu-0005wp-Cm
+	for kexec@lists.infradead.org; Tue, 02 Feb 2010 00:07:45 +0000
+Date: Tue, 2 Feb 2010 11:07:37 +1100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] Fix --reuse-cmdline so it is usable.
+Message-ID: <20100202000737.GA23305@verge.net.au>
 References: <m1d4167c5s.fsf@fess.ebiederm.org>
 	<20100125072352.GD23849@verge.net.au>
 	<m1eile4n5g.fsf@fess.ebiederm.org>
 	<20100201120957.GA4305@verge.net.au>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Mon, 01 Feb 2010 08:08:51 -0800
-In-Reply-To: <20100201120957.GA4305@verge.net.au> (Simon Horman's message of
-	"Mon\, 1 Feb 2010 23\:10\:01 +1100")
-Message-ID: <m1mxztos4s.fsf@fess.ebiederm.org>
+	<m1mxztos4s.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1mxztos4s.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,281 +23,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-Simon Horman <horms@verge.net.au> writes:
-
-> On Mon, Jan 25, 2010 at 12:14:03AM -0800, Eric W. Biederman wrote:
->> Simon Horman <horms@verge.net.au> writes:
->> 
->> > On Tue, Jan 19, 2010 at 12:05:03AM -0800, Eric W. Biederman wrote:
->> >> 
->> >> A colleague of mine implemented kdump and it used --reuse-cmdline
->> >> with some rather interesting and unexpected results.
->> >> 
->> >> Update the getopt specification so that --reuse-cmdline does not
->> >> attempt to take an argument that it will not use.
->> >> 
->> >> Update the processing of --append so that --reuse-cmdline followed
->> >> by --append actually appends the parameters specified by --reuse-cmdline.
->> >
->> > Hi Eric,
->> >
->> > sorry for being slow. Been semi-offline for LCA and am now catching
->> > up on things.
->> 
->> No problem, I am pretty out of it right now as well.
->> 
->> > [snip]
->> >
->> >> diff --git a/kexec/kexec.c b/kexec/kexec.c
->> >> index a1cec86..f4c22a6 100644
->> >> --- a/kexec/kexec.c
->> >> +++ b/kexec/kexec.c
->> >> @@ -994,6 +994,22 @@ void check_reuse_initrd(void)
->> >>  	free(line);
->> >>  }
->> >>  
->> >> +const char *concat_cmdline(const char *base, const char *append)
->> >> +{
->> >> +	const char *cmdline;
->> >> +	if (!base && !append)
->> >> +		return NULL;
->> >> +	if (!base)
->> >> +		return append;
->> >> +	if (!append)
->> >> +		return base;
->> >> +	cmdline = xmalloc(strlen(base) + 1 + strlen(append) + 1);
->> >> +	strcpy(cmdline, base);
->> >> +	strcat(cmdline, " ");
->> >> +	strcat(cmdline, append);
->> >> +	return cmdline;
->> >> +}
->> >> +
->> >
->> > This introduces a memory leak.
->> 
->> Yep.
->> 
->> > Perhaps it should strdup append and base in the !base and !append cases
->> > respectively and expect the caller to always call free.
->> >
->> > I realise that its a small leak in a programme that will soon exit anyway.
->> > But for the sake of being able to use tools like valgrind to analyse
->> > problems it seems to me that leaks are worth avoiding.  (Not that I have
->> > run valgrind on kexec-tools to see what happens :-)
->> 
->> I see your point but I think we already have a memory leak here (
->> Where does the memory that getopt uses come from? ), and I think on a
->> trivial application like /sbin/kexec that is simply not long running
->> it can't matter.  I'm even willing to call not freeing memory
->> explicitly a performance optimization in cases like this ;)
->
-> Clearly this is a matter of taste. And as it happens I fall on
-> the side of the fence that thinks that the leak should be avoided.
->
-> I propose applying the following after your patch:
->
-> From: Simon Horman <horms@verge.net.au>
->
-> don't leak in concat_cmdline
-
-It is a bit of a shame that we loose the const attributes.
-Beyond that the idiom
-	if (xyz)
-		free(xyz)
-can just become:
-	free(xyz)
-
-Eric
-
-
-
-> Signed-off-by: Simon Horman <horms@verge.net.au>
->
-> Index: kexec-tools/kexec/arch/i386/kexec-bzImage.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/kexec-bzImage.c	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/arch/i386/kexec-bzImage.c	2010-02-01 23:07:15.000000000 +1100
-> @@ -332,8 +332,8 @@ int do_bzImage_load(struct kexec_info *i
->  int bzImage_load(int argc, char **argv, const char *buf, off_t len, 
->  	struct kexec_info *info)
->  {
-> -	const char *command_line = NULL, *append = NULL;
-> -	const char *ramdisk;
-> +	char *command_line = NULL;
-> +	const char *ramdisk, *append = NULL;
->  	char *ramdisk_buf;
->  	off_t ramdisk_length;
->  	int command_line_len;
-> @@ -406,5 +406,7 @@ int bzImage_load(int argc, char **argv, 
->  		ramdisk_buf, ramdisk_length,
->  		real_mode_entry, debug);
->  
-> +	if (command_line)
-> +		free(command_line);
->  	return result;
->  }
-> Index: kexec-tools/kexec/arch/i386/kexec-elf-x86.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/kexec-elf-x86.c	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/arch/i386/kexec-elf-x86.c	2010-02-01 23:07:15.000000000 +1100
-> @@ -88,8 +88,8 @@ int elf_x86_load(int argc, char **argv, 
->  	struct kexec_info *info)
->  {
->  	struct mem_ehdr ehdr;
-> -	const char *command_line = NULL, *append = NULL;
-> -	char *modified_cmdline;
-> +	char *command_line = NULL, *modified_cmdline = NULL;
-> +	const char *append = NULL;
->  	int command_line_len;
->  	int modified_cmdline_len;
->  	const char *ramdisk;
-> @@ -264,8 +264,11 @@ int elf_x86_load(int argc, char **argv, 
->  			if (rc < 0)
->  				return -1;
->  			/* Use new command line. */
-> +			if (command_line)
-> +				free(command_line);
->  			command_line = modified_cmdline;
->  			command_line_len = strlen(modified_cmdline) + 1;
-> +			modified_cmdline = NULL;
->  		}
->  
->  		/* Tell the kernel what is going on */
-> @@ -288,5 +291,10 @@ int elf_x86_load(int argc, char **argv, 
->  	else {
->  		die("Unknown argument style\n");
->  	}
-> +
-> +	if (command_line)
-> +		free(command_line);
-> +	if (modified_cmdline)
-> +		free(modified_cmdline);
->  	return 0;
->  }
-> Index: kexec-tools/kexec/kexec.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.c	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/kexec.c	2010-02-01 23:07:15.000000000 +1100
-> @@ -62,6 +62,14 @@ void die(char *fmt, ...)
->  	exit(1);
->  }
->  
-> +char *xstrdup(const char *str)
-> +{
-> +	char *new = strdup(str);
-> +	if (!new)
-> +		die("Cannot strdup \"%s\": %s\n",
-> +			str, strerror(errno));
-> +	return new;
-> +}
->  
->  void *xmalloc(size_t size)
->  {
-> @@ -994,15 +1002,15 @@ void check_reuse_initrd(void)
->  	free(line);
->  }
->  
-> -const char *concat_cmdline(const char *base, const char *append)
-> +char *concat_cmdline(const char *base, const char *append)
->  {
-> -	const char *cmdline;
-> +	char *cmdline;
->  	if (!base && !append)
->  		return NULL;
-> -	if (!base)
-> -		return append;
-> -	if (!append)
-> -		return base;
-> +	if (append)
-> +		return xstrdup(append);
-> +	if (base)
-> +		return xstrdup(base);
->  	cmdline = xmalloc(strlen(base) + 1 + strlen(append) + 1);
->  	strcpy(cmdline, base);
->  	strcat(cmdline, " ");
-> Index: kexec-tools/kexec/arch/i386/kexec-multiboot-x86.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/i386/kexec-multiboot-x86.c	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/arch/i386/kexec-multiboot-x86.c	2010-02-01 23:07:15.000000000 +1100
-> @@ -147,8 +147,8 @@ int multiboot_x86_load(int argc, char **
->  	unsigned long mbi_base;
->  	struct entry32_regs regs;
->  	size_t mbi_bytes, mbi_offset;
-> -	const char *command_line=NULL, *append=NULL;
-> -	char *imagename, *cp;
-> +	char *command_line = NULL;
-> +	char *imagename, *cp, *append = NULL;;
->  	struct memory_range *range;
->  	int ranges;
->  	struct AddrRangeDesc *mmap;
-> @@ -389,6 +389,8 @@ int multiboot_x86_load(int argc, char **
->  	regs.eip = ehdr.e_entry;
->  	elf_rel_set_symbol(&info->rhdr, "entry32_regs", &regs, sizeof(regs));
->  
-> +	if (command_line)
-> +		free(command_line);
->  	return 0;
->  }
->  
-> Index: kexec-tools/kexec/arch/x86_64/kexec-elf-x86_64.c
-> ===================================================================
-> --- kexec-tools.orig/kexec/arch/x86_64/kexec-elf-x86_64.c	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/arch/x86_64/kexec-elf-x86_64.c	2010-02-01 23:07:15.000000000 +1100
-> @@ -87,8 +87,8 @@ int elf_x86_64_load(int argc, char **arg
->  	struct kexec_info *info)
->  {
->  	struct mem_ehdr ehdr;
-> -	const char *command_line = NULL, *append = NULL;
-> -	char *modified_cmdline;
-> +	const char *append = NULL;
-> +	char *command_line = NULL, *modified_cmdline;
->  	int command_line_len;
->  	int modified_cmdline_len;
->  	const char *ramdisk;
-> @@ -249,8 +249,11 @@ int elf_x86_64_load(int argc, char **arg
->  			if (rc < 0)
->  				return -1;
->  			/* Use new command line. */
-> +			if (command_line)
-> +				free(command_line);
->  			command_line = modified_cmdline;
->  			command_line_len = strlen(modified_cmdline) + 1;
-> +			modified_cmdline = NULL;
->  		}
->  
->  		/* Tell the kernel what is going on */
-> @@ -273,5 +276,10 @@ int elf_x86_64_load(int argc, char **arg
->  	else {
->  		die("Unknown argument style\n");
->  	}
-> +
-> +	if (command_line)
-> +		free(command_line);
-> +	if (modified_cmdline)
-> +		free(modified_cmdline);
->  	return 0;
->  }
-> Index: kexec-tools/kexec/kexec.h
-> ===================================================================
-> --- kexec-tools.orig/kexec/kexec.h	2010-02-01 23:07:15.000000000 +1100
-> +++ kexec-tools/kexec/kexec.h	2010-02-01 23:07:15.000000000 +1100
-> @@ -261,6 +261,6 @@ static inline int __attribute__ ((format
->  	dbgprintf(const char *fmt, ...) {return 0;}
->  #endif
->  
-> -const char *concat_cmdline(const char *base, const char *append);
-> +char *concat_cmdline(const char *base, const char *append);
->  
->  #endif /* KEXEC_H */
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBGZWIgMDEsIDIwMTAgYXQgMDg6MDg6NTFBTSAtMDgwMCwgRXJpYyBXLiBCaWVkZXJt
+YW4gd3JvdGU6Cj4gU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdyaXRlczoKPiAK
+PiA+IE9uIE1vbiwgSmFuIDI1LCAyMDEwIGF0IDEyOjE0OjAzQU0gLTA4MDAsIEVyaWMgVy4gQmll
+ZGVybWFuIHdyb3RlOgo+ID4+IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PiB3cml0
+ZXM6Cj4gPj4gCj4gPj4gPiBPbiBUdWUsIEphbiAxOSwgMjAxMCBhdCAxMjowNTowM0FNIC0wODAw
+LCBFcmljIFcuIEJpZWRlcm1hbiB3cm90ZToKPiA+PiA+PiAKPiA+PiA+PiBBIGNvbGxlYWd1ZSBv
+ZiBtaW5lIGltcGxlbWVudGVkIGtkdW1wIGFuZCBpdCB1c2VkIC0tcmV1c2UtY21kbGluZQo+ID4+
+ID4+IHdpdGggc29tZSByYXRoZXIgaW50ZXJlc3RpbmcgYW5kIHVuZXhwZWN0ZWQgcmVzdWx0cy4K
+PiA+PiA+PiAKPiA+PiA+PiBVcGRhdGUgdGhlIGdldG9wdCBzcGVjaWZpY2F0aW9uIHNvIHRoYXQg
+LS1yZXVzZS1jbWRsaW5lIGRvZXMgbm90Cj4gPj4gPj4gYXR0ZW1wdCB0byB0YWtlIGFuIGFyZ3Vt
+ZW50IHRoYXQgaXQgd2lsbCBub3QgdXNlLgo+ID4+ID4+IAo+ID4+ID4+IFVwZGF0ZSB0aGUgcHJv
+Y2Vzc2luZyBvZiAtLWFwcGVuZCBzbyB0aGF0IC0tcmV1c2UtY21kbGluZSBmb2xsb3dlZAo+ID4+
+ID4+IGJ5IC0tYXBwZW5kIGFjdHVhbGx5IGFwcGVuZHMgdGhlIHBhcmFtZXRlcnMgc3BlY2lmaWVk
+IGJ5IC0tcmV1c2UtY21kbGluZS4KPiA+PiA+Cj4gPj4gPiBIaSBFcmljLAo+ID4+ID4KPiA+PiA+
+IHNvcnJ5IGZvciBiZWluZyBzbG93LiBCZWVuIHNlbWktb2ZmbGluZSBmb3IgTENBIGFuZCBhbSBu
+b3cgY2F0Y2hpbmcKPiA+PiA+IHVwIG9uIHRoaW5ncy4KPiA+PiAKPiA+PiBObyBwcm9ibGVtLCBJ
+IGFtIHByZXR0eSBvdXQgb2YgaXQgcmlnaHQgbm93IGFzIHdlbGwuCj4gPj4gCj4gPj4gPiBbc25p
+cF0KPiA+PiA+Cj4gPj4gPj4gZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLmMgYi9rZXhlYy9rZXhl
+Yy5jCj4gPj4gPj4gaW5kZXggYTFjZWM4Ni4uZjRjMjJhNiAxMDA2NDQKPiA+PiA+PiAtLS0gYS9r
+ZXhlYy9rZXhlYy5jCj4gPj4gPj4gKysrIGIva2V4ZWMva2V4ZWMuYwo+ID4+ID4+IEBAIC05OTQs
+NiArOTk0LDIyIEBAIHZvaWQgY2hlY2tfcmV1c2VfaW5pdHJkKHZvaWQpCj4gPj4gPj4gIAlmcmVl
+KGxpbmUpOwo+ID4+ID4+ICB9Cj4gPj4gPj4gIAo+ID4+ID4+ICtjb25zdCBjaGFyICpjb25jYXRf
+Y21kbGluZShjb25zdCBjaGFyICpiYXNlLCBjb25zdCBjaGFyICphcHBlbmQpCj4gPj4gPj4gK3sK
+PiA+PiA+PiArCWNvbnN0IGNoYXIgKmNtZGxpbmU7Cj4gPj4gPj4gKwlpZiAoIWJhc2UgJiYgIWFw
+cGVuZCkKPiA+PiA+PiArCQlyZXR1cm4gTlVMTDsKPiA+PiA+PiArCWlmICghYmFzZSkKPiA+PiA+
+PiArCQlyZXR1cm4gYXBwZW5kOwo+ID4+ID4+ICsJaWYgKCFhcHBlbmQpCj4gPj4gPj4gKwkJcmV0
+dXJuIGJhc2U7Cj4gPj4gPj4gKwljbWRsaW5lID0geG1hbGxvYyhzdHJsZW4oYmFzZSkgKyAxICsg
+c3RybGVuKGFwcGVuZCkgKyAxKTsKPiA+PiA+PiArCXN0cmNweShjbWRsaW5lLCBiYXNlKTsKPiA+
+PiA+PiArCXN0cmNhdChjbWRsaW5lLCAiICIpOwo+ID4+ID4+ICsJc3RyY2F0KGNtZGxpbmUsIGFw
+cGVuZCk7Cj4gPj4gPj4gKwlyZXR1cm4gY21kbGluZTsKPiA+PiA+PiArfQo+ID4+ID4+ICsKPiA+
+PiA+Cj4gPj4gPiBUaGlzIGludHJvZHVjZXMgYSBtZW1vcnkgbGVhay4KPiA+PiAKPiA+PiBZZXAu
+Cj4gPj4gCj4gPj4gPiBQZXJoYXBzIGl0IHNob3VsZCBzdHJkdXAgYXBwZW5kIGFuZCBiYXNlIGlu
+IHRoZSAhYmFzZSBhbmQgIWFwcGVuZCBjYXNlcwo+ID4+ID4gcmVzcGVjdGl2ZWx5IGFuZCBleHBl
+Y3QgdGhlIGNhbGxlciB0byBhbHdheXMgY2FsbCBmcmVlLgo+ID4+ID4KPiA+PiA+IEkgcmVhbGlz
+ZSB0aGF0IGl0cyBhIHNtYWxsIGxlYWsgaW4gYSBwcm9ncmFtbWUgdGhhdCB3aWxsIHNvb24gZXhp
+dCBhbnl3YXkuCj4gPj4gPiBCdXQgZm9yIHRoZSBzYWtlIG9mIGJlaW5nIGFibGUgdG8gdXNlIHRv
+b2xzIGxpa2UgdmFsZ3JpbmQgdG8gYW5hbHlzZQo+ID4+ID4gcHJvYmxlbXMgaXQgc2VlbXMgdG8g
+bWUgdGhhdCBsZWFrcyBhcmUgd29ydGggYXZvaWRpbmcuICAoTm90IHRoYXQgSSBoYXZlCj4gPj4g
+PiBydW4gdmFsZ3JpbmQgb24ga2V4ZWMtdG9vbHMgdG8gc2VlIHdoYXQgaGFwcGVucyA6LSkKPiA+
+PiAKPiA+PiBJIHNlZSB5b3VyIHBvaW50IGJ1dCBJIHRoaW5rIHdlIGFscmVhZHkgaGF2ZSBhIG1l
+bW9yeSBsZWFrIGhlcmUgKAo+ID4+IFdoZXJlIGRvZXMgdGhlIG1lbW9yeSB0aGF0IGdldG9wdCB1
+c2VzIGNvbWUgZnJvbT8gKSwgYW5kIEkgdGhpbmsgb24gYQo+ID4+IHRyaXZpYWwgYXBwbGljYXRp
+b24gbGlrZSAvc2Jpbi9rZXhlYyB0aGF0IGlzIHNpbXBseSBub3QgbG9uZyBydW5uaW5nCj4gPj4g
+aXQgY2FuJ3QgbWF0dGVyLiAgSSdtIGV2ZW4gd2lsbGluZyB0byBjYWxsIG5vdCBmcmVlaW5nIG1l
+bW9yeQo+ID4+IGV4cGxpY2l0bHkgYSBwZXJmb3JtYW5jZSBvcHRpbWl6YXRpb24gaW4gY2FzZXMg
+bGlrZSB0aGlzIDspCj4gPgo+ID4gQ2xlYXJseSB0aGlzIGlzIGEgbWF0dGVyIG9mIHRhc3RlLiBB
+bmQgYXMgaXQgaGFwcGVucyBJIGZhbGwgb24KPiA+IHRoZSBzaWRlIG9mIHRoZSBmZW5jZSB0aGF0
+IHRoaW5rcyB0aGF0IHRoZSBsZWFrIHNob3VsZCBiZSBhdm9pZGVkLgo+ID4KPiA+IEkgcHJvcG9z
+ZSBhcHBseWluZyB0aGUgZm9sbG93aW5nIGFmdGVyIHlvdXIgcGF0Y2g6Cj4gPgo+ID4gRnJvbTog
+U2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Cj4gPgo+ID4gZG9uJ3QgbGVhayBpbiBj
+b25jYXRfY21kbGluZQo+IAo+IEl0IGlzIGEgYml0IG9mIGEgc2hhbWUgdGhhdCB3ZSBsb29zZSB0
+aGUgY29uc3QgYXR0cmlidXRlcy4KCkluZGVlZCwgdGhvdWdoIGl0IHNlZW1zIHRvIGJlIGF0IGxl
+YXN0IHBhcnRpYWxseSBicm9rZW4gaW4geW91ciBvcmlnaW5hbCBwYXRjaC4KCiMgZ2NjIC0tdmVy
+c2lvbgpnY2MgKERlYmlhbiA0LjQuMi04KSA0LjQuMgpDb3B5cmlnaHQgKEMpIDIwMDkgRnJlZSBT
+b2Z0d2FyZSBGb3VuZGF0aW9uLCBJbmMuClRoaXMgaXMgZnJlZSBzb2Z0d2FyZTsgc2VlIHRoZSBz
+b3VyY2UgZm9yIGNvcHlpbmcgY29uZGl0aW9ucy4gIFRoZXJlIGlzIE5PCndhcnJhbnR5OyBub3Qg
+ZXZlbiBmb3IgTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQ
+T1NFLgoKIyBtYWtlCmtleGVjL2tleGVjLmM6IEluIGZ1bmN0aW9uIOKAmGNvbmNhdF9jbWRsaW5l
+4oCZOgprZXhlYy9rZXhlYy5jOjEwMDc6IHdhcm5pbmc6IHBhc3NpbmcgYXJndW1lbnQgMSBvZiDi
+gJhzdHJjcHnigJkgZGlzY2FyZHMgcXVhbGlmaWVycyBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUK
+L3Vzci9pbmNsdWRlL3N0cmluZy5oOjEyNzogbm90ZTogZXhwZWN0ZWQg4oCYY2hhciAqIF9fcmVz
+dHJpY3RfX+KAmSBidXQgYXJndW1lbnQgaXMgb2YgdHlwZSDigJhjb25zdCBjaGFyICrigJkKa2V4
+ZWMva2V4ZWMuYzoxMDA4OiB3YXJuaW5nOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2Yg4oCYc3RyY2F0
+4oCZIGRpc2NhcmRzIHF1YWxpZmllcnMgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlCi91c3IvaW5j
+bHVkZS9zdHJpbmcuaDoxMzU6IG5vdGU6IGV4cGVjdGVkIOKAmGNoYXIgKiBfX3Jlc3RyaWN0X1/i
+gJkgYnV0IGFyZ3VtZW50IGlzIG9mIHR5cGUg4oCYY29uc3QgY2hhciAq4oCZCmtleGVjL2tleGVj
+LmM6MTAwOTogd2FybmluZzogcGFzc2luZyBhcmd1bWVudCAxIG9mIOKAmHN0cmNhdOKAmSBkaXNj
+YXJkcyBxdWFsaWZpZXJzIGZyb20gcG9pbnRlciB0YXJnZXQgdHlwZQovdXNyL2luY2x1ZGUvc3Ry
+aW5nLmg6MTM1OiBub3RlOiBleHBlY3RlZCDigJhjaGFyICogX19yZXN0cmljdF9f4oCZIGJ1dCBh
+cmd1bWVudCBpcyBvZiB0eXBlIOKAmGNvbnN0IGNoYXIgKuKAmQoKPiBCZXlvbmQgdGhhdCB0aGUg
+aWRpb20KPiAJaWYgKHh5eikKPiAJCWZyZWUoeHl6KQo+IGNhbiBqdXN0IGJlY29tZToKPiAJZnJl
+ZSh4eXopCgpjb25jYXRfY21kbGluZSgpIG1heSByZXR1cm4gTlVMTCBpbiB0aGUgY2FzZSB3aGVy
+ZSBib3RoCmJhc2UgYW5kIGFwcGVuZCBhcmUgTlVMTC4KCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
