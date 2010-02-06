@@ -1,15 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f185.google.com ([209.85.222.185])
+Received: from lo.gmane.org ([80.91.229.12])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Ndafy-0007GP-Rn
-	for kexec@lists.infradead.org; Sat, 06 Feb 2010 02:45:43 +0000
-Received: by pzk15 with SMTP id 15so4740853pzk.25
-	for <kexec@lists.infradead.org>; Fri, 05 Feb 2010 18:45:36 -0800 (PST)
-MIME-Version: 1.0
-Date: Fri, 5 Feb 2010 18:45:36 -0800
-Message-ID: <74ae4f6a1002051845i6a2787deve82963c5d258eda4@mail.gmail.com>
-Subject: kdump cp /proc/vmcore exiting with "Invalid Argument" Error
-From: Sujit V <sujit.linux@gmail.com>
+	id 1NdhA6-0002xa-Hj
+	for kexec@lists.infradead.org; Sat, 06 Feb 2010 09:41:15 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <glkk-kexec@m.gmane.org>) id 1Ndh9n-0004rf-NA
+	for kexec@lists.infradead.org; Sat, 06 Feb 2010 10:40:51 +0100
+Received: from dsl01.83.171.174.205.ip-pool.nefkom.net ([83.171.174.205])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Sat, 06 Feb 2010 10:40:51 +0100
+Received: from bernhard by dsl01.83.171.174.205.ip-pool.nefkom.net with local
+	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Sat, 06 Feb 2010 10:40:51 +0100
+From: Bernhard Walle <bernhard@bwalle.de>
+Subject: Re: kdump cp /proc/vmcore exiting with "Invalid Argument" Error
+Date: Sat, 06 Feb 2010 10:41:14 +0100
+Message-ID: <4B6D393A.7060103@bwalle.de>
+References: <74ae4f6a1002051845i6a2787deve82963c5d258eda4@mail.gmail.com>
+Mime-Version: 1.0
+In-Reply-To: <74ae4f6a1002051845i6a2787deve82963c5d258eda4@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,133 +32,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, fastboot@lists.linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: public-fastboot-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@lo.gmane.org, public-kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@lo.gmane.org
 
-I have integrated the kdump in our linux 2.6.23 based kernel. If I do
-echo c > /proc/sysrq-trigger then it boots the kdump kernel & I use
-the cp /proc/vmcore /local/crash/vmcore-incomplete
+Am 06.02.2010 03:45, schrieb Sujit V:
+> I have integrated the kdump in our linux 2.6.23 based kernel. If I do
+> echo c > /proc/sysrq-trigger then it boots the kdump kernel & I use
+> the cp /proc/vmcore /local/crash/vmcore-incomplete
+> 
+> On a new x86 based hardware (32 bit PAE kernel)  the "cp /proc/vmcore
+> " command exits prematurely.
+> 
+> cp -v /proc/vmcore /local/crash/vmcore-incomplete
+>       cp: reading `/proc/vmcore': Invalid argument  >>> Error >>
+> 
+> ls -l /local/crash/
+> total 115588
+> -r--------    1 0        0        2526724096 Feb  5 03:09 vmcore-incomplete
+> 
+> ls -l /proc/vmcore
+> -r--------    1 0        0        4153763584 Feb  5 03:16 /proc/vmcore
+> 
+> 
+> Every time I trigger kdump the cp command exits after copying
+> 2526724096 bytes. So I thought it might be a file size issue.
+> Googling pointed out a patch in include/linux/proc_fs.h
 
-On a new x86 based hardware (32 bit PAE kernel)  the "cp /proc/vmcore
-" command exits prematurely.
+I would compare 'readelf -l /proc/vmcore' (ELF program headers) and map
+the file offset 2526724096 to the physical memory that belongs to that
+file offset. Maybe accessing that physical memory fails for some reason.
 
-cp -v /proc/vmcore /local/crash/vmcore-incomplete
-      cp: reading `/proc/vmcore': Invalid argument  >>> Error >>
+> struct vmcore {
+> struct list_head list;
+> unsigned long long paddr;
+> - unsigned long size;
+> + unsigned long long size;
+> loff_t offset;
+> 
+> I checked my kernel & it already has this patch.
 
-ls -l /local/crash/
-total 115588
--r--------    1 0        0        2526724096 Feb  5 03:09 vmcore-incomplete
-
-ls -l /proc/vmcore
--r--------    1 0        0        4153763584 Feb  5 03:16 /proc/vmcore
-
-
-Every time I trigger kdump the cp command exits after copying
-2526724096 bytes. So I thought it might be a file size issue.
-Googling pointed out a patch in include/linux/proc_fs.h
-
-struct vmcore {
-struct list_head list;
-unsigned long long paddr;
-- unsigned long size;
-+ unsigned long long size;
-loff_t offset;
-
-I checked my kernel & it already has this patch.
+I don't think that this is the problem because 2526724096 is between 2G
+and 4G, so it doesn't point to some "magic border".
 
 
----------------------------------------------------------------------------------------
-IOMEM output
+Regards,
+Bernhard
 
-debugshell# cat /proc/iomem
-00000000-0009fbff : System RAM
-0009fc00-0009ffff : reserved
-000a0000-000bffff : Video RAM area
-000c0000-000dffff : pnp 00:01
-000f0000-000fffff : System ROM
-00100000-9e86afff : System RAM
-  00200000-006c1cec : Kernel code
-  006c1ced-008e68af : Kernel data
-  01000000-08ffffff : Crash kernel
-9e86b000-9e872fff : ACPI Non-volatile Storage
-9e873000-9e874fff : reserved
-9e875000-9e8acfff : System RAM
-9e8ad000-9e8b3fff : reserved
-9e8b4000-9e8d8fff : System RAM
-9e8d9000-9e8dbfff : ACPI Tables
-9e8dc000-9e8dcfff : System RAM
-9e8dd000-9e8eafff : ACPI Tables
-9e8eb000-9e8f6fff : System RAM
-9e8f7000-9e8f9fff : ACPI Tables
-9e8fa000-9e8fafff : ACPI Non-volatile Storage
-9e8fb000-9e8fbfff : System RAM
-9e8fc000-9e8fcfff : ACPI Tables
-9e8fd000-9e902fff : System RAM
-9e903000-9e903fff : ACPI Non-volatile Storage
-9e904000-9e947fff : System RAM
-9e948000-9e948fff : ACPI Tables
-9e949000-9e9e6fff : System RAM
-9e9e7000-9e9e7fff : reserved
-9e9e8000-9e9effff : System RAM
-9e9f0000-9e9f2fff : reserved
-9e9f3000-9e9f6fff : System RAM
-9e9f7000-9e9f9fff : reserved
-9e9fa000-9ea09fff : System RAM
-9ea0a000-9ea0cfff : reserved
-9ea0d000-9ea0efff : System RAM
-9ea0f000-9ec0ffff : ACPI Non-volatile Storage
-9ec10000-9ec3ffff : System RAM
-9ec40000-9ec40fff : ACPI Non-volatile Storage
-9ec41000-9ec42fff : System RAM
-9ec43000-9ec4cfff : ACPI Non-volatile Storage
-9ec4d000-9ec55fff : System RAM
-9ec56000-9ec57fff : ACPI Non-volatile Storage
-9ec58000-9ec58fff : System RAM
-9ec59000-9ec5ffff : ACPI Non-volatile Storage
-9ec60000-9ec69fff : System RAM
-9ec6a000-9ec6afff : ACPI Non-volatile Storage
-9ec6b000-9ec82fff : System RAM
-9ec83000-9ec83fff : ACPI Non-volatile Storage
-9ec84000-9fbfffff : System RAM
-9fc00000-9fffffff : reserved
-a0000000-a4ffffff : PCI Bus #03
-  a0000000-a1ffffff : 0000:03:00.0
-    a0000000-a1ffffff : bnx2
-  a2000000-a3ffffff : 0000:03:00.1
-    a2000000-a3ffffff : bnx2
-a5000000-a5ffffff : PCI Bus #01
-a6000000-a70fffff : PCI Bus #02
-  a6000000-a6000fff : 0000:02:00.0
-a7100000-a80fffff : PCI Bus #03
-  a7100000-a711ffff : 0000:03:00.0
-  a7120000-a713ffff : 0000:03:00.1
-a8100000-a90fffff : PCI Bus #04
-a9100000-aa0fffff : PCI Bus #05
-aa100000-ab0fffff : PCI Bus #06
-ab100000-ac0fffff : PCI Bus #06
-ac100000-ad0fffff : PCI Bus #05
-ad100000-ae0fffff : PCI Bus #04
-ae100000-af0fffff : PCI Bus #02
-af100000-b01fffff : PCI Bus #01
-  af100000-af11ffff : 0000:01:00.0
-    af100000-af11ffff : e1000e
-  af120000-af123fff : 0000:01:00.0
-    af120000-af123fff : e1000e
-b0200000-b0203fff : 0000:00:1b.0
-b0204000-b0204fff : 0000:00:1f.6
-b0205000-b02053ff : 0000:00:1d.7
-  b0205000-b02053ff : ehci_hcd
-b0205400-b02057ff : 0000:00:1a.7
-  b0205400-b02057ff : ehci_hcd
-b0205800-b02058ff : 0000:00:1f.3
-e0000000-efffffff : reserved
-fec00000-fec00fff : reserved
-fed00000-fed003ff : HPET 0
-fed13000-fed13fff : pnp 00:01
-fed1c000-fed1ffff : pnp 00:01
-fee00000-fee00fff : reserved
-fff00000-ffffffff : reserved
-100000000-15fffffff : System RAM
----------------------------------------------------------------------------
 
 _______________________________________________
 kexec mailing list
