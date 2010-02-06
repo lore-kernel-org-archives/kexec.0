@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mail-pz0-f185.google.com ([209.85.222.185])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NdRQn-00085d-DA
-	for kexec@lists.infradead.org; Fri, 05 Feb 2010 16:53:26 +0000
-Received: from int-mx02.intmail.prod.int.phx2.redhat.com
-	(int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id o15GrJRx017470
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
-	for <kexec@lists.infradead.org>; Fri, 5 Feb 2010 11:53:19 -0500
-Received: from mail05.corp.redhat.com (zmail05.collab.prod.int.phx2.redhat.com
-	[10.5.5.46])
-	by int-mx02.intmail.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP
-	id o15GrI1p027894
-	for <kexec@lists.infradead.org>; Fri, 5 Feb 2010 11:53:18 -0500
-Date: Fri, 5 Feb 2010 11:53:18 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <773792816.1109361265388798774.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <539140123.1108061265388145735.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-Subject: FYI: x86_64 bug when using gdb with vmcore
+	id 1Ndafy-0007GP-Rn
+	for kexec@lists.infradead.org; Sat, 06 Feb 2010 02:45:43 +0000
+Received: by pzk15 with SMTP id 15so4740853pzk.25
+	for <kexec@lists.infradead.org>; Fri, 05 Feb 2010 18:45:36 -0800 (PST)
 MIME-Version: 1.0
+Date: Fri, 5 Feb 2010 18:45:36 -0800
+Message-ID: <74ae4f6a1002051845i6a2787deve82963c5d258eda4@mail.gmail.com>
+Subject: kdump cp /proc/vmcore exiting with "Invalid Argument" Error
+From: Sujit V <sujit.linux@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,36 +22,133 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, fastboot@lists.linux-foundation.org
+
+I have integrated the kdump in our linux 2.6.23 based kernel. If I do
+echo c > /proc/sysrq-trigger then it boots the kdump kernel & I use
+the cp /proc/vmcore /local/crash/vmcore-incomplete
+
+On a new x86 based hardware (32 bit PAE kernel)  the "cp /proc/vmcore
+" command exits prematurely.
+
+cp -v /proc/vmcore /local/crash/vmcore-incomplete
+      cp: reading `/proc/vmcore': Invalid argument  >>> Error >>
+
+ls -l /local/crash/
+total 115588
+-r--------    1 0        0        2526724096 Feb  5 03:09 vmcore-incomplete
+
+ls -l /proc/vmcore
+-r--------    1 0        0        4153763584 Feb  5 03:16 /proc/vmcore
 
 
-The kexec/arch/x86_64/crashdump-x86_64.h file contains a
-stale PAGE_OFFSET value.  In 2.6.27 it was changed from
-0xffff810000000000UL to 0xffff880000000000UL.  This is
-only a problem when using gdb with the vmlinux/vmcore
-pair, because gdb relies upon the PT_LOAD segment's p_vaddr
-values in the ELF header to be correct.
+Every time I trigger kdump the cp command exits after copying
+2526724096 bytes. So I thought it might be a file size issue.
+Googling pointed out a patch in include/linux/proc_fs.h
 
-Anyway, in the RHEL6 kexec-tools, this simple patch 
-was made:
+struct vmcore {
+struct list_head list;
+unsigned long long paddr;
+- unsigned long size;
++ unsigned long long size;
+loff_t offset;
 
--#define PAGE_OFFSET            0xffff810000000000UL
-+#define PAGE_OFFSET            0xffff880000000000UL
+I checked my kernel & it already has this patch.
 
-which is OK since the RHEL6 version of kexec-tools
-will only be used with RHEL6 kernels.  
 
-But for backwards compatibility, the better way to do 
-it would be to check the utsname of the running kernel, 
-and use the right value.
+---------------------------------------------------------------------------------------
+IOMEM output
 
-But again, this is only required for gdb usage.  The 
-crash utility (and makedumpfile) make kernel version checks 
-to determine which x86_64 PAGE_OFFSET value is applicable,
-and don't rely on the ELF header p_vaddr values for
-the unity-mapped regions.  
-
-Dave Anderson
+debugshell# cat /proc/iomem
+00000000-0009fbff : System RAM
+0009fc00-0009ffff : reserved
+000a0000-000bffff : Video RAM area
+000c0000-000dffff : pnp 00:01
+000f0000-000fffff : System ROM
+00100000-9e86afff : System RAM
+  00200000-006c1cec : Kernel code
+  006c1ced-008e68af : Kernel data
+  01000000-08ffffff : Crash kernel
+9e86b000-9e872fff : ACPI Non-volatile Storage
+9e873000-9e874fff : reserved
+9e875000-9e8acfff : System RAM
+9e8ad000-9e8b3fff : reserved
+9e8b4000-9e8d8fff : System RAM
+9e8d9000-9e8dbfff : ACPI Tables
+9e8dc000-9e8dcfff : System RAM
+9e8dd000-9e8eafff : ACPI Tables
+9e8eb000-9e8f6fff : System RAM
+9e8f7000-9e8f9fff : ACPI Tables
+9e8fa000-9e8fafff : ACPI Non-volatile Storage
+9e8fb000-9e8fbfff : System RAM
+9e8fc000-9e8fcfff : ACPI Tables
+9e8fd000-9e902fff : System RAM
+9e903000-9e903fff : ACPI Non-volatile Storage
+9e904000-9e947fff : System RAM
+9e948000-9e948fff : ACPI Tables
+9e949000-9e9e6fff : System RAM
+9e9e7000-9e9e7fff : reserved
+9e9e8000-9e9effff : System RAM
+9e9f0000-9e9f2fff : reserved
+9e9f3000-9e9f6fff : System RAM
+9e9f7000-9e9f9fff : reserved
+9e9fa000-9ea09fff : System RAM
+9ea0a000-9ea0cfff : reserved
+9ea0d000-9ea0efff : System RAM
+9ea0f000-9ec0ffff : ACPI Non-volatile Storage
+9ec10000-9ec3ffff : System RAM
+9ec40000-9ec40fff : ACPI Non-volatile Storage
+9ec41000-9ec42fff : System RAM
+9ec43000-9ec4cfff : ACPI Non-volatile Storage
+9ec4d000-9ec55fff : System RAM
+9ec56000-9ec57fff : ACPI Non-volatile Storage
+9ec58000-9ec58fff : System RAM
+9ec59000-9ec5ffff : ACPI Non-volatile Storage
+9ec60000-9ec69fff : System RAM
+9ec6a000-9ec6afff : ACPI Non-volatile Storage
+9ec6b000-9ec82fff : System RAM
+9ec83000-9ec83fff : ACPI Non-volatile Storage
+9ec84000-9fbfffff : System RAM
+9fc00000-9fffffff : reserved
+a0000000-a4ffffff : PCI Bus #03
+  a0000000-a1ffffff : 0000:03:00.0
+    a0000000-a1ffffff : bnx2
+  a2000000-a3ffffff : 0000:03:00.1
+    a2000000-a3ffffff : bnx2
+a5000000-a5ffffff : PCI Bus #01
+a6000000-a70fffff : PCI Bus #02
+  a6000000-a6000fff : 0000:02:00.0
+a7100000-a80fffff : PCI Bus #03
+  a7100000-a711ffff : 0000:03:00.0
+  a7120000-a713ffff : 0000:03:00.1
+a8100000-a90fffff : PCI Bus #04
+a9100000-aa0fffff : PCI Bus #05
+aa100000-ab0fffff : PCI Bus #06
+ab100000-ac0fffff : PCI Bus #06
+ac100000-ad0fffff : PCI Bus #05
+ad100000-ae0fffff : PCI Bus #04
+ae100000-af0fffff : PCI Bus #02
+af100000-b01fffff : PCI Bus #01
+  af100000-af11ffff : 0000:01:00.0
+    af100000-af11ffff : e1000e
+  af120000-af123fff : 0000:01:00.0
+    af120000-af123fff : e1000e
+b0200000-b0203fff : 0000:00:1b.0
+b0204000-b0204fff : 0000:00:1f.6
+b0205000-b02053ff : 0000:00:1d.7
+  b0205000-b02053ff : ehci_hcd
+b0205400-b02057ff : 0000:00:1a.7
+  b0205400-b02057ff : ehci_hcd
+b0205800-b02058ff : 0000:00:1f.3
+e0000000-efffffff : reserved
+fec00000-fec00fff : reserved
+fed00000-fed003ff : HPET 0
+fed13000-fed13fff : pnp 00:01
+fed1c000-fed1ffff : pnp 00:01
+fee00000-fee00fff : reserved
+fff00000-ffffffff : reserved
+100000000-15fffffff : System RAM
+---------------------------------------------------------------------------
 
 _______________________________________________
 kexec mailing list
