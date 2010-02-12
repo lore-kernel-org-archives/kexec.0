@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from lion.reldata.com ([209.123.188.11] helo=reldata.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nfxzd-00058Z-3t
-	for kexec@lists.infradead.org; Fri, 12 Feb 2010 16:03:50 +0000
-Date: Fri, 12 Feb 2010 11:03:39 -0500
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: kdump not writing any vmcore
-Message-ID: <20100212160339.GB27909@hmsreliant.think-freely.org>
-References: <b08bcbf51002100831k3c1e35d7t8b0d80a1bf89fa07@mail.gmail.com>
-	<20100210164530.GE27658@hmsreliant.think-freely.org>
-	<b08bcbf51002110826x184e281ei175625f969288313@mail.gmail.com>
-	<20100211180606.GE26458@shamino.rdu.redhat.com>
-	<b08bcbf51002120642k46e5a73and2f200764c01b714@mail.gmail.com>
-	<b08bcbf51002120652r785285bbw9206d3e867cfaefb@mail.gmail.com>
+	id 1Nfy0R-0006qb-NJ
+	for kexec@lists.infradead.org; Fri, 12 Feb 2010 16:04:40 +0000
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <b08bcbf51002120652r785285bbw9206d3e867cfaefb@mail.gmail.com>
+Subject: RE: problems in loading capture kernel
+Date: Fri, 12 Feb 2010 11:04:31 -0500
+Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB1D4E1@lion.reldatainc.local>
+In-Reply-To: <20100204162743.GC6260@redhat.com>
+References: <32AB6BC050DF9E4E91868C4C3B7B6ABBAE09A5@lion.reldatainc.local>
+	<20100203202510.GC17059@redhat.com>
+	<32AB6BC050DF9E4E91868C4C3B7B6ABBAE09B6@lion.reldatainc.local>
+	<20100203205008.GD17059@redhat.com>
+	<32AB6BC050DF9E4E91868C4C3B7B6ABBAE09BE@lion.reldatainc.local>
+	<20100203211759.GE17059@redhat.com>
+	<32AB6BC050DF9E4E91868C4C3B7B6ABBAE09CE@lion.reldatainc.local>
+	<20100204162743.GC6260@redhat.com>
+From: "Soumendu Satapathy" <soumendu.satapathy@reldata.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,100 +26,301 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Gallus <gall.cwpl@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Fri, Feb 12, 2010 at 03:52:01PM +0100, Gallus wrote:
-> PS. I can add some overall information about the box:
-> =
+Sorry I am posting the results very late. As per Vivek's suggestions, I
+used the latest kexec-tools i.e version kexec-tools-2.0.1
+and I was successfully able to load the capture kernel.  I had problems
+with kexec-tools-2.0.0 and kexec-tools-1.101.
 
-> a) Modules loaded:
-> kernel: Modules linked in: dm_mirror dm_multipath dm_mod video sbs
-> backlight i2c_ec i2c_core button battery asus_acpi ac parport_pc lp
-> parport serio_raw ide_cd bnx2 cdrom pcspkr cciss sd_mod scsi_mod ext3
-> jbd uhci_hcd ohci_hcd ehci_hcd
-> =
+Thanks for your suggestions Vivek.
 
-> b) Some Oops that occurred (I'm not sure whether it was in crash
-> kernel or in normal one):
-> kernel: list_add corruption. prev->next should be e70ee78c, but was 54746=
-46e
-> kernel: BUG: unable to handle kernel NULL pointer dereference at
-> virtual address 00000084 kernel:  printing eip:
-> kernel: c06097b2
-> kernel: *pde =3D 1cf15001
-> Oops: 0000 [#1]
-> kernel: SMP
-> kernel: last sysfs file: /devices/pci0000:00/0000:00:00.0/class
-> kernel: CPU:    0
-> kernel: EIP:    0060:[<c06097b2>]    Tainted: G      VLI
-> kernel: EFLAGS: 00210046   (2.6.18-92.el5PAE #1)
-> kernel: EIP is at do_page_fault+0x1d1/0x5d3
-> kernel: eax: d2ef6000   ebx: 00000000   ecx: d2ef6064   edx: 0000000d
-> kernel: esi: 00000000   edi: d2ef6094   ebp: 00000000   esp: d2ef6044
-> =
+Regards
+Soumendu
 
-> c) hardware:
-> Quad-Core AMD Opteron(tm) Processor 8356, model 2, stepping 3
-> =
+-----Original Message-----
+From: Vivek Goyal [mailto:vgoyal@redhat.com] 
+Sent: Thursday, February 04, 2010 11:28 AM
+To: Soumendu Satapathy
+Cc: Kexec Mailing List
+Subject: Re: problems in loading capture kernel
 
-> Gallus
-> =
+On Wed, Feb 03, 2010 at 04:51:33PM -0500, Soumendu Satapathy wrote:
+> cat /proc/iomem | grep -i crash
+>   02000000-05ffffff : Crash kernel
+> 
+> I reserve memory now at 32M.  I can see the entry in /proc/iomem. But
+> the problem still persists. Perhaps kexec_load() is not loading into
+the
+> 
+> available reserved memory somehow.
+> 
+> kexec_load failed: Cannot assign requested address
+> entry       = 0x92550 flags = 1
 
+Which kexec-tools are you using. Can you try using the latest one.
 
-This helps not one bit.  Theres not enough info here to determine what the =
-cause
-(or even the location) of this corruption is.  All it tells us is that a li=
-st in
-the kernel was corrupted.  If that happened in the production kernel it wou=
-ld
-cause kdump to start.  If it happened in the kdump kernel, it would explain=
- why
-you never got a vmcore.  But without the call stack, I can't even tell you =
-what
-list this might have been.  If we knew that, we might be able to dredge bug=
-zilla
-to search for simmilar bugs, and if they were fixed.
+http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
 
-Currently, about all I can tell you from this is that 2.6.18-92 is a bit of=
- an
-old kernel.  If you're working with RHEL, I'd update to whatever the latest
-release is (I don't recall the exact number, -128 perhaps).  I know that si=
-nce
-that kernel I have fixed a few quad core opteron specific bugs (although th=
-ose
-were primarily hangs in kdump, not oopses).  Worth a shot though.
+> nr_segments = 4
+> segment[0].buf   = 0x8eeb40
+> segment[0].bufsz = 2e4d
+> segment[0].mem   = 0x8f000
+> segment[0].memsz = 3000
+> segment[1].buf   = 0x8e78d0
+> segment[1].bufsz = 7100
+> segment[1].mem   = 0x92000
+> segment[1].memsz = 9000
+> segment[2].buf   = 0x7f7d32395e10
+> segment[2].bufsz = 3159f0
+> segment[2].mem   = 0x100000
 
-Better still, open a support issue with Red Hat, and this bug will most lik=
-ely
-find its way to me, then we can get you a fix in a more timely manner :)
+Looking at this address, kexec is still trying to load a memory segemnt
+at address 1MB. I think with kexec -p and relocatable bzImage, it should
+have loaded the segment with-in reserved area. (IIRC). Slowly memory is
+fading. Long time since I touched kexec now. :-)
 
-Neil
+Trying using latest kexec-tools and see what happens.
 
-> On 12 February 2010 15:42, Gallus <gall.cwpl@gmail.com> wrote:
-> > On 11 February 2010 19:06, Neil Horman <nhorman@redhat.com> wrote:
-> >> On Thu, Feb 11, 2010 at 05:26:50PM +0100, Gallus wrote:
-> >>
-> >> > Does someone have any experience with such problems? Is there
-> >> > something left to try out?
-> >> >
-> >> Yes, this is what I fix all the time. =A0despite your comments above, =
-a console
-> >> log would still be helpful. =A0It will give us the bet pointer to what=
-s going
-> >> wrong.
-> >> Neil
-> >
-> >
-> > Can you share some thoughts about such problems? Any suggestion may be =
-helpful.
-> >
-> > Gallus
-> >
+Vivek
+
+> segment[2].memsz = 316000
+> segment[3].buf   = 0x7f7d32a3d010
+> segment[3].bufsz = 13b165
+> segment[3].mem   = 0x7fec4000
+> segment[3].memsz = 13c000
+> 
+> 
+> Thanks
+> Soumendu
+> 
+> -----Original Message-----
+> From: Vivek Goyal [mailto:vgoyal@redhat.com] 
+> Sent: Wednesday, February 03, 2010 4:18 PM
+> To: Soumendu Satapathy
+> Cc: Kexec Mailing List
+> Subject: Re: problems in loading capture kernel
+> 
+> On Wed, Feb 03, 2010 at 03:55:40PM -0500, Soumendu Satapathy wrote:
+> > cat /proc/iomem
+> > 
+> > 00000000-0009b3ff : System RAM
+> > 0009b400-0009ffff : reserved
+> > 000e4000-000fffff : reserved
+> > 00100000-cff6ffff : System RAM
+> >   00200000-006f0557 : Kernel code
+> >   006f0558-009b9b3f : Kernel data
+> >   00be2000-01219ea7 : Kernel bss
+> 
+> [..]
+> > 100000000-22fffffff : System RAM
+> > 
+> > I don't see a crashkernel entry in the above. Perhaps that might be
+> the
+> > issue.
+> 
+> Yes.
+> 
+> 00be2000-01219ea7 : Kernel bss
+> 
+> You are trying to reserve memory starting at 16MB (0x1000000) and that
+> area has been claimed by kernel bss reigon. Try reserving memory at
+> some other address, say 32MB (crashkernel=64M@32M).
+> 
+> Vivek
+> 
+> > 
+> > 
+> > Thanks
+> > Soumendu
+> > 
+> > -----Original Message-----
+> > From: Vivek Goyal [mailto:vgoyal@redhat.com] 
+> > Sent: Wednesday, February 03, 2010 3:50 PM
+> > To: Soumendu Satapathy
+> > Cc: Kexec Mailing List
+> > Subject: Re: problems in loading capture kernel
+> > 
+> > On Wed, Feb 03, 2010 at 03:41:25PM -0500, Soumendu Satapathy wrote:
+> > 
+> > > Oh! I am sorry. That's not an issue, I just did some trace to
+check
+> > the
+> > > errno. The errno = 99 which is invalid address.
+> > > 
+> > > 
+> > > - Have you reserved the space for second kernel?
+> > > 
+> > > Yes, I have reserved with the boot parameters. crashkernel=64M@16M
+> > > 
+> > > 
+> > > - Have you compiled kernel as relocatable one or built a second
+> kernel
+> > >   and trying to load vmlinux.
+> > > CONFIG_KEXEC=y
+> > > CONFIG_CRASH_DUMP=y
+> > > CONFIG_PHYSICAL_START=0x1000000
+> > > CONFIG_RELOCATABLE=y
+> > > CONFIG_PHYSICAL_ALIGN=0x200000
+> > > 
+> > 
+> > Please do not exclude kexec mailing list from CC. Adding it again.
+> > 
+> > Can you paste your `cat /proc/iomem` output and make sure space for
+> > crash
+> > kernel has been reserved.
+> > 
+> > Thanks
+> > Vivek
+> > 
+> > > I have used the above config option for the capture kernel .
+> Compiled
+> > > and build it. And was trying to pre-load it using the following
+> > command.
+> > > kexec -p  /boot/vmlinuz-2.6.27_capturekernel03feb
+> > > --initrd=/boot/initrd-2.6.27.img  --append="root=/dev/nfs
+> > > nfsroot=192.168.101.3:/FILESYSTEMS/nfs-roots/root-55 ip=dhcp
+> selinux=0
+> > > 1  irqpoll  maxcpus=1  reset_devices"
+> > > 
+> > > 
+> > > - What was the last working version or setup of kdump in your
+> > > environment.
+> > > 
+> > > Kdump worked well in my environment with a vanilla kernel
+(2.6.18).
+> > The
+> > > one that I am using now is a Fedora core 2.6.27 and it is somehow
+> > > failing with it.
+> > > 
+> > > 
+> > > Thanks
+> > > Soumendu
+> > > 
+> > > -----Original Message-----
+> > > From: Vivek Goyal [mailto:vgoyal@redhat.com] 
+> > > Sent: Wednesday, February 03, 2010 3:25 PM
+> > > To: Soumendu Satapathy
+> > > Cc: Kexec Mailing List
+> > > Subject: Re: problems in loading capture kernel
+> > > 
+> > > On Wed, Feb 03, 2010 at 02:46:53PM -0500, Soumendu Satapathy
+wrote:
+> > > > Hi Vivek ,
+> > > > 
+> > > >  
+> > > > 
+> > > > I am having some problems to load the capture kernel.
+> > > > 
+> > > >  
+> > > > 
+> > > > The following is the error. I am using a x86_64 box. I am using
+> > 2.6.27
+> > > > linux kernel for both the first kernel and the capture kernel.
+The
+> > > > capture kenel I have configured with CONFIG_SMP=n.
+> > > > 
+> > > > maxcpus=1.
+> > > > 
+> > > >  
+> > > > 
+> > > > kexec_load failed: Cannot assign requested address  99
+> > > > 
+> > > 
+> > > This looks little odd. Where is this address "99" coming from?
+> > > 
+> > > Few things.
+> > > 
+> > > - Have you reserved the space for second kernel?
+> > > - Have you compiled kernel as relocatable one or built a second
+> kernel
+> > >   and trying to load vmlinux.
+> > > - What was the last working version or setup of kdump in your
+> > > environment.
+> > > 
+> > > I would begin at running gdb at kexec to figure out where this
+> > seemingly
+> > > bad address "99" coming from.
+> > > 
+> > > CCing kexec mailing list, in case somebody has seen similar
+message.
+> > > 
+> > > Thanks
+> > > Vivek
+> > > 
+> > > > entry       = 0x92550 flags = 1
+> > > > 
+> > > > nr_segments = 4
+> > > > 
+> > > > segment[0].buf   = 0xb75b40
+> > > > 
+> > > > segment[0].bufsz = 2e77
+> > > > 
+> > > > segment[0].mem   = 0x8f000
+> > > > 
+> > > > segment[0].memsz = 3000
+> > > > 
+> > > > segment[1].buf   = 0xb6e8d0
+> > > > 
+> > > > segment[1].bufsz = 7100
+> > > > 
+> > > > segment[1].mem   = 0x92000
+> > > > 
+> > > > segment[1].memsz = 9000
+> > > > 
+> > > > segment[2].buf   = 0x7f5aab6c4e10
+> > > > 
+> > > > segment[2].bufsz = 3159d0
+> > > > 
+> > > > segment[2].mem   = 0x100000
+> > > > 
+> > > > segment[2].memsz = 316000
+> > > > 
+> > > > segment[3].buf   = 0x7f5aabd6c010
+> > > > 
+> > > > segment[3].bufsz = 13b153
+> > > > 
+> > > > segment[3].mem   = 0x7fec4000
+> > > > 
+> > > > segment[3].memsz = 13c000
+> > > > 
+> > > >  
+> > > > 
+> > > >  
+> > > > 
+> > > > Can you please provide some inputs ?
+> > > > 
+> > > >  
+> > > > 
+> > > > thanks
+> > > > 
+> > > > Soumendu S Satapathy
+> > > > 
+> > > > Senior Software Developer
+> > > > 
+> > > > RELDATA Inc.
+> > > > 
+> > > > 1719 Route 10, Suite 209
+> > > > 
+> > > > Parsippany, NJ 07054
+> > > > 
+> > > > (973) 644-2770  ext. 139  office
+> > > > 
+> > > > 732-692-7230 mobile
+> > > > 
+> > > > (973) 644-3385 fax
+> > > > 
+> > > > soumendu.satapathy@reldata.com
+> > > > 
+> > > > www.reldata.com <http://www.reldata.com/> 
+> > > > 
+> > > >  
+> > > > 
 
 _______________________________________________
 kexec mailing list
