@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-px0-f194.google.com ([209.85.216.194])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Ng4t3-0005W7-An
-	for kexec@lists.infradead.org; Fri, 12 Feb 2010 23:25:29 +0000
-Received: by pxi32 with SMTP id 32so1999586pxi.15
-	for <kexec@lists.infradead.org>; Fri, 12 Feb 2010 15:25:24 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <F5FD1B18-ECCA-49E6-B720-D41D33C8E991@bwalle.de>
-References: <74ae4f6a1002051845i6a2787deve82963c5d258eda4@mail.gmail.com>
-	<4B6D393A.7060103@bwalle.de>
-	<74ae4f6a1002101046y5faeacebxdf822eac8ccf6c98@mail.gmail.com>
-	<F5FD1B18-ECCA-49E6-B720-D41D33C8E991@bwalle.de>
-Date: Fri, 12 Feb 2010 15:25:24 -0800
-Message-ID: <74ae4f6a1002121525p4f4b001xbdcf8f356098e2b2@mail.gmail.com>
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NgHar-0000sA-OI
+	for kexec@lists.infradead.org; Sat, 13 Feb 2010 12:59:34 +0000
+From: nhorman@mail.tuxdriver.com
+Date: Sat, 13 Feb 2010 07:59:23 -0500
 Subject: Re: kdump cp /proc/vmcore exiting with "Invalid Argument" Error
-From: Sujit V <sujit.linux@gmail.com>
+In-Reply-To: <74ae4f6a1002121523k6c6e0cd7ha645a09f427786cc@mail.gmail.com>
+MIME-Version: 1.0
+Message-Id: <E1NgHak-0006gr-1K@smtp.tuxdriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,79 +17,172 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bernhard@bwalle.de>
-Cc: kexec@lists.infradead.org
-
-I used the system with a 2GB memory so that /proc/vmcore would be less
-than 4G. (and I would use the readelf I had from the binutils)
-
-Enter shell command >ls -l /proc/vmcore
--r--------    1 0        0        2006283756 Apr  5 02:15 /proc/vmcore
-
- cp /proc/vmcore /local/local1/crash/vmcore-incomplete
+To: Sujit V <sujit.linux@gmail.com>, Neil Horman <nhorman@tuxdriver.com>
+Cc: fastboot@lists.linux-foundation.org, kexec@lists.infradead.org
 
 
-Enter shell command >ls -l /local/local1/crash/
-total 1810340
--r--------    1 0        0        1989877760 Apr  4 05:01 vmcore-incomplete
+On Fri, 12 Feb 2010 18:23:45 -0500, Sujit V wrote:
+> On Fri, Feb 12, 2010 at 3:40 AM, Neil Horman <nhorman@tuxdriver.com> wrot=
+e:
+> > On Fri, Feb 05, 2010 at 06:45:36PM -0800, Sujit V wrote:
+> >> I have integrated the kdump in our linux 2.6.23 based kernel. If I do
+> >> echo c > /proc/sysrq-trigger then it boots the kdump kernel & I use
+> >> the cp /proc/vmcore /local/crash/vmcore-incomplete
+> >>
+> >> On a new x86 based hardware (32 bit PAE kernel) =A0the "cp /proc/vmcore
+> >> " command exits prematurely.
+> >>
+> >> cp -v /proc/vmcore /local/crash/vmcore-incomplete
+> >> =A0=3D> >>
+> >> ls -l /local/crash/
+> >> total 115588
+> >> -r-------- =A0 =A01 0 =A0 =A0 =A0 =A00 =A0 =A0 =A0 =A02526724096 Feb =
+=A05 03:09 vmcore-incomplete
+> >>
+> >> ls -l /proc/vmcore
+> >> -r-------- =A0 =A01 0 =A0 =A0 =A0 =A00 =A0 =A0 =A0 =A04153763584 Feb =
+=A05 03:16 /proc/vmcore
+> >>
+> >>
+> >> Every time I trigger kdump the cp command exits after copying
+> >> 2526724096 bytes. So I thought it might be a file size issue.
+> >> Googling pointed out a patch in include/linux/proc_fs.h
+> >>
+> >> struct vmcore {
+> >> struct list_head list;
+> >> unsigned long long paddr;
+> >> - unsigned long size;
+> >> + unsigned long long size;
+> >> loff_t offset;
+> >>
+> >> I checked my kernel & it already has this patch.
+> >>
+> >
+> > Do you use =A0the mem=3D20kernel command line parameter anywhere?
+> >
+> > I ran into something awhile back in which, if memory was
+> > limited in the production kernel with a mem=3D20parameter, the code tha=
+t setup
+> > /proc/vmcore=3D2> > error out with -EINVAL after passing the size defin=
+ed by the previous mem> > command.
+> =
 
+> Checked the cmdline for the production kernel. It does not have the
+> mem=3D20parameter.
+Check the command line in the kdump kernel wright after the cp fails.  Its =
+also possible that kexec didn't compute the memmap properly
+> =
 
-The cp on vmcore failed at file size was 1989877760 bytes. (i.e 0x769B2000 ).
-From the readelf -l /proc/vmcore. we see that this file offset belongs
-to a segment which starts at 0x000000007699f5ec.
-From this informatin I calculated that 0x769B2000 has the physical
-address. 0x7EC44A14
+> >
+> > Neil
+> >
+> >>
+> >> ----------------------------------------------------------------------=
+-----------------
+> >> IOMEM output
+> >>
+> >> debugshell# cat /proc/iomem
+> >> 00000000-0009fbff : System RAM
+> >> 0009fc00-0009ffff : reserved
+> >> 000a0000-000bffff : Video RAM area
+> >> 000c0000-000dffff : pnp 00:01
+> >> 000f0000-000fffff : System ROM
+> >> 00100000-9e86afff : System RAM
+> >> =A0 00200000-006c1cec : Kernel code
+> >> =A0 006c1ced-008e68af : Kernel data
+> >> =A0 01000000-08ffffff : Crash kernel
+> >> 9e86b000-9e872fff : ACPI Non-volatile Storage
+> >> 9e873000-9e874fff : reserved
+> >> 9e875000-9e8acfff : System RAM
+> >> 9e8ad000-9e8b3fff : reserved
+> >> 9> >> 9e8d9000-9e8dbfff : ACPI Tables
+> >> 9e8dc000-9e8dcfff : System RAM
+> >> 9e8dd000-9e8eafff : ACPI Tables
+> >> 9e8eb000-9e8f6fff : System RAM
+> >> 9e8f7000-9e8f9fff : ACPI Tables
+> >> 9e8fa000-9e8fafff : ACPI Non-volatile Storage
+> >> 9e8fb000-9e8fbfff : System RAM
+> >> 9e8fc000-9e8fcfff : ACPI Tables
+> >> 9e8fd000-9e902fff : System RAM
+> >> 9e903000-9e903fff : ACPI Non-volatile Storage
+> >> 9e904000-9e947fff : System RAM
+> >> 9e948000-9e948fff : ACPI Tables
+> >> 9e949000-9e9e6fff : System RAM
+> >> 9e9e7000-9e9e7fff : reserved
+> >> 9e9e8000-9e9effff : System RAM
+> >> 9e9f0000-9e9f2fff : reserved
+> >> 9e9f3000-9e9f6fff : System RAM
+> >> 9e9f7000-9e9f9fff : reserved
+> >> 9e9fa000-9ea09fff : System RAM
+> >> 9ea0a000-9ea0cfff : reserved
+> >> 9ea0d000-9ea0efff : System RAM
+> >> 9ea0f000-9ec0ffff : ACPI Non-volatile Storage
+> >> 9ec10000-9ec3ffff : System RAM
+> >> 9ec40000-9ec40fff : ACPI Non-volatile Storage
+> >> 9ec41000-9ec42fff : System RAM
+> >> 9ec43000-9ec4cfff : ACPI Non-volatile Storage
+> > >> 9ec56000-9ec57fff : ACPI Non-volatile Storage
+> >> 9ec58000-9ec58fff : System RAM
+> >> 9ec59000-9ec5ffff : ACPI Non-volatile Storage
+> >> 9ec60000-9ec69fff : System RAM
+> >> 9ec6a000-9ec6afff : ACPI Non-volatile Storage
+> >> 9ec6b000-9ec82fff : System RAM
+> >> 9ec83000-9ec83fff : ACPI Non-volatile Storage
+> >> 9ec84000-9fbfffff : System RAM
+> >> 9fc00000-9fffffff : reserved
+> >> a0000000-a4ffffff : PCI Bus #03
+> >> =A0 a0000000-a1ffffff : 0000:03:00.0
+> >> =A0 =A0 a0000000-a1ffffff : bnx2
+> >> =A0 a2000000-a3ffffff : 0000:03:00.1
+> >> =A0 =A0 a2000000-a3ffffff : bnx2
+> >> a5000000-a5ffffff : PCI Bus #01
+> >> a6000000-a70fffff : PCI Bus #02
+> >> =A0 a6000000-a6000fff : 0000:02:00.0
+> >> a7100000-a80fffff : PCI Bus #03
+> >> =A0 a7100000-a711ffff : 0000:03:00.0
+> >> =A0 a7120000-a713ffff : 0000:03:00.1
+> >> a8100000-a90fffff : PCI Bus #04
+> >> a9100000-aa0fffff : PCI Bus #05
+> >> aa100000-ab0fffff : PCI Bus #06
+> >> ab100000-ac0fffff : PCI Bus #06
+> >> ac100000-ad0fffff : PCI Bus #> >> ad100000-ae0fffff : PCI Bus #04
+> >> ae100000-af0fffff : PCI Bus #02
+> >> af100000-b01fffff : PCI Bus #01
+> >> =A0 af100000-af11ffff : 0000:01:00.0
+> >> =A0 =A0 af100000-af11ffff : e1000e
+> >> =A0 af120000-af123fff : 0000:01:00.0
+> >> =A0 =A0 af120000-af123fff : e1000e
+> >> b0200000-b0203fff : 0000:00:1b.0
+> >> b0204000-b0204fff : 0000:00:1f.6
+> >> b0205000-b02053ff : 0000:00:1d.7
+> >> =A0 b0205000-b02053ff : ehci_hcd
+> >> b0205400-b02057ff : 0000:00:1a.7
+> >> =A0 b0205400-b02057ff : ehci_hcd
+> >> b0205800-b02058ff : 0000:00:1f.3
+> >> e0000000-efffffff : reserved
+> >> fec00000-fec00fff : reserved
+> >> fed00000-fed003ff : HPET 0
+> >> fed13000-fed13fff : pnp 00:01
+> >> fed1c000-fed1ffff : pnp 00:01
+> >> fee00000-fee00fff : reserved
+> >> fff00000-ffffffff : reserved
+> >> 100000000-15fffffff : System RAM
+> >> ----------------------------------------------------------------------=
+-----
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infrad> >>
+> >
+> =
 
+nfo/kexec
 
-The kdump kernel boot param
-root=/dev/ram0 nmi_watchdog=0 irqpoll maxcpus=1 reset_devices
- memmap=exactmap memmap=640K@0K memmap=130412K@16384K elfcorehdr=146796K
-
-With the information  that cp fails at file offset 1989877760 bytes
-which maps to physical address  0x7EC44A14 how do I further analyze
-the issue.?
-
-Any pointers ?
-
-
----------------------- snippet of readelf -l /proc/vmcore output
--------------------------------
-Enter shell command >/sbin/readelf -l /proc/vmcore
-
-Elf file type is CORE (Core file)
-Entry point 0x0
-There are 23 program headers, starting at offset 64
-
-Program Headers:
-  Type           Offset                              PhysAddr
-               FileSiz                        MemSiz
-   Flags      Align
- LOAD           0x000000007699f5ec       0x000000007ec32000
-0x0000000000013000     0x0000000000013000      RWE    0
- LOAD           0x00000000769b25ec      0x000000007ec46000
-0x0000000000002000
-
-On Wed, Feb 10, 2010 at 11:53 PM, Bernhard Walle <bernhard@bwalle.de> wrote:
->
-> Am 10.02.2010 um 19:46 schrieb Sujit V:
->
->> Tried readelf on the /proc/vmcore but gave the below error. The
->> readelf worked correctly on another binary.
->>
->> kdump shell>/sbin/readelf -l /proc/vmcore
->> readelf: Error: Cannot stat input file /proc/vmcore.
->
-> My only guess is that readelf has no large file support (see http://sourceware.org/ml/binutils/2007-07/msg00087.html). Could you please execute "strace readelf -l /proc/vmcore"?
->
->
-> Regards,
-> Bernhard
->
->
 
 _______________________________________________
 kexec mailing list
