@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NgHar-0000sA-OI
-	for kexec@lists.infradead.org; Sat, 13 Feb 2010 12:59:34 +0000
-From: nhorman@mail.tuxdriver.com
-Date: Sat, 13 Feb 2010 07:59:23 -0500
-Subject: Re: kdump cp /proc/vmcore exiting with "Invalid Argument" Error
-In-Reply-To: <74ae4f6a1002121523k6c6e0cd7ha645a09f427786cc@mail.gmail.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NheBH-0001K7-09
+	for kexec@lists.infradead.org; Wed, 17 Feb 2010 07:18:48 +0000
+Date: Wed, 17 Feb 2010 18:18:39 +1100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: FYI: x86_64 bug when using gdb with vmcore
+Message-ID: <20100217071839.GB27742@verge.net.au>
+References: <539140123.1108061265388145735.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+	<773792816.1109361265388798774.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 MIME-Version: 1.0
-Message-Id: <E1NgHak-0006gr-1K@smtp.tuxdriver.com>
+Content-Disposition: inline
+In-Reply-To: <773792816.1109361265388798774.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,172 +20,271 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sujit V <sujit.linux@gmail.com>, Neil Horman <nhorman@tuxdriver.com>
-Cc: fastboot@lists.linux-foundation.org, kexec@lists.infradead.org
+To: Dave Anderson <anderson@redhat.com>
+Cc: kexec@lists.infradead.org
 
+On Fri, Feb 05, 2010 at 11:53:18AM -0500, Dave Anderson wrote:
+> 
+> The kexec/arch/x86_64/crashdump-x86_64.h file contains a
+> stale PAGE_OFFSET value.  In 2.6.27 it was changed from
+> 0xffff810000000000UL to 0xffff880000000000UL.  This is
+> only a problem when using gdb with the vmlinux/vmcore
+> pair, because gdb relies upon the PT_LOAD segment's p_vaddr
+> values in the ELF header to be correct.
+> 
+> Anyway, in the RHEL6 kexec-tools, this simple patch 
+> was made:
+> 
+> -#define PAGE_OFFSET            0xffff810000000000UL
+> +#define PAGE_OFFSET            0xffff880000000000UL
+> 
+> which is OK since the RHEL6 version of kexec-tools
+> will only be used with RHEL6 kernels.  
+> 
+> But for backwards compatibility, the better way to do 
+> it would be to check the utsname of the running kernel, 
+> and use the right value.
+> 
+> But again, this is only required for gdb usage.  The 
+> crash utility (and makedumpfile) make kernel version checks 
+> to determine which x86_64 PAGE_OFFSET value is applicable,
+> and don't rely on the ELF header p_vaddr values for
+> the unity-mapped regions.  
 
-On Fri, 12 Feb 2010 18:23:45 -0500, Sujit V wrote:
-> On Fri, Feb 12, 2010 at 3:40 AM, Neil Horman <nhorman@tuxdriver.com> wrot=
-e:
-> > On Fri, Feb 05, 2010 at 06:45:36PM -0800, Sujit V wrote:
-> >> I have integrated the kdump in our linux 2.6.23 based kernel. If I do
-> >> echo c > /proc/sysrq-trigger then it boots the kdump kernel & I use
-> >> the cp /proc/vmcore /local/crash/vmcore-incomplete
-> >>
-> >> On a new x86 based hardware (32 bit PAE kernel) =A0the "cp /proc/vmcore
-> >> " command exits prematurely.
-> >>
-> >> cp -v /proc/vmcore /local/crash/vmcore-incomplete
-> >> =A0=3D> >>
-> >> ls -l /local/crash/
-> >> total 115588
-> >> -r-------- =A0 =A01 0 =A0 =A0 =A0 =A00 =A0 =A0 =A0 =A02526724096 Feb =
-=A05 03:09 vmcore-incomplete
-> >>
-> >> ls -l /proc/vmcore
-> >> -r-------- =A0 =A01 0 =A0 =A0 =A0 =A00 =A0 =A0 =A0 =A04153763584 Feb =
-=A05 03:16 /proc/vmcore
-> >>
-> >>
-> >> Every time I trigger kdump the cp command exits after copying
-> >> 2526724096 bytes. So I thought it might be a file size issue.
-> >> Googling pointed out a patch in include/linux/proc_fs.h
-> >>
-> >> struct vmcore {
-> >> struct list_head list;
-> >> unsigned long long paddr;
-> >> - unsigned long size;
-> >> + unsigned long long size;
-> >> loff_t offset;
-> >>
-> >> I checked my kernel & it already has this patch.
-> >>
-> >
-> > Do you use =A0the mem=3D20kernel command line parameter anywhere?
-> >
-> > I ran into something awhile back in which, if memory was
-> > limited in the production kernel with a mem=3D20parameter, the code tha=
-t setup
-> > /proc/vmcore=3D2> > error out with -EINVAL after passing the size defin=
-ed by the previous mem> > command.
-> =
+Hi Dave,
 
-> Checked the cmdline for the production kernel. It does not have the
-> mem=3D20parameter.
-Check the command line in the kdump kernel wright after the cp fails.  Its =
-also possible that kexec didn't compute the memmap properly
-> =
+Something like this?
 
-> >
-> > Neil
-> >
-> >>
-> >> ----------------------------------------------------------------------=
------------------
-> >> IOMEM output
-> >>
-> >> debugshell# cat /proc/iomem
-> >> 00000000-0009fbff : System RAM
-> >> 0009fc00-0009ffff : reserved
-> >> 000a0000-000bffff : Video RAM area
-> >> 000c0000-000dffff : pnp 00:01
-> >> 000f0000-000fffff : System ROM
-> >> 00100000-9e86afff : System RAM
-> >> =A0 00200000-006c1cec : Kernel code
-> >> =A0 006c1ced-008e68af : Kernel data
-> >> =A0 01000000-08ffffff : Crash kernel
-> >> 9e86b000-9e872fff : ACPI Non-volatile Storage
-> >> 9e873000-9e874fff : reserved
-> >> 9e875000-9e8acfff : System RAM
-> >> 9e8ad000-9e8b3fff : reserved
-> >> 9> >> 9e8d9000-9e8dbfff : ACPI Tables
-> >> 9e8dc000-9e8dcfff : System RAM
-> >> 9e8dd000-9e8eafff : ACPI Tables
-> >> 9e8eb000-9e8f6fff : System RAM
-> >> 9e8f7000-9e8f9fff : ACPI Tables
-> >> 9e8fa000-9e8fafff : ACPI Non-volatile Storage
-> >> 9e8fb000-9e8fbfff : System RAM
-> >> 9e8fc000-9e8fcfff : ACPI Tables
-> >> 9e8fd000-9e902fff : System RAM
-> >> 9e903000-9e903fff : ACPI Non-volatile Storage
-> >> 9e904000-9e947fff : System RAM
-> >> 9e948000-9e948fff : ACPI Tables
-> >> 9e949000-9e9e6fff : System RAM
-> >> 9e9e7000-9e9e7fff : reserved
-> >> 9e9e8000-9e9effff : System RAM
-> >> 9e9f0000-9e9f2fff : reserved
-> >> 9e9f3000-9e9f6fff : System RAM
-> >> 9e9f7000-9e9f9fff : reserved
-> >> 9e9fa000-9ea09fff : System RAM
-> >> 9ea0a000-9ea0cfff : reserved
-> >> 9ea0d000-9ea0efff : System RAM
-> >> 9ea0f000-9ec0ffff : ACPI Non-volatile Storage
-> >> 9ec10000-9ec3ffff : System RAM
-> >> 9ec40000-9ec40fff : ACPI Non-volatile Storage
-> >> 9ec41000-9ec42fff : System RAM
-> >> 9ec43000-9ec4cfff : ACPI Non-volatile Storage
-> > >> 9ec56000-9ec57fff : ACPI Non-volatile Storage
-> >> 9ec58000-9ec58fff : System RAM
-> >> 9ec59000-9ec5ffff : ACPI Non-volatile Storage
-> >> 9ec60000-9ec69fff : System RAM
-> >> 9ec6a000-9ec6afff : ACPI Non-volatile Storage
-> >> 9ec6b000-9ec82fff : System RAM
-> >> 9ec83000-9ec83fff : ACPI Non-volatile Storage
-> >> 9ec84000-9fbfffff : System RAM
-> >> 9fc00000-9fffffff : reserved
-> >> a0000000-a4ffffff : PCI Bus #03
-> >> =A0 a0000000-a1ffffff : 0000:03:00.0
-> >> =A0 =A0 a0000000-a1ffffff : bnx2
-> >> =A0 a2000000-a3ffffff : 0000:03:00.1
-> >> =A0 =A0 a2000000-a3ffffff : bnx2
-> >> a5000000-a5ffffff : PCI Bus #01
-> >> a6000000-a70fffff : PCI Bus #02
-> >> =A0 a6000000-a6000fff : 0000:02:00.0
-> >> a7100000-a80fffff : PCI Bus #03
-> >> =A0 a7100000-a711ffff : 0000:03:00.0
-> >> =A0 a7120000-a713ffff : 0000:03:00.1
-> >> a8100000-a90fffff : PCI Bus #04
-> >> a9100000-aa0fffff : PCI Bus #05
-> >> aa100000-ab0fffff : PCI Bus #06
-> >> ab100000-ac0fffff : PCI Bus #06
-> >> ac100000-ad0fffff : PCI Bus #> >> ad100000-ae0fffff : PCI Bus #04
-> >> ae100000-af0fffff : PCI Bus #02
-> >> af100000-b01fffff : PCI Bus #01
-> >> =A0 af100000-af11ffff : 0000:01:00.0
-> >> =A0 =A0 af100000-af11ffff : e1000e
-> >> =A0 af120000-af123fff : 0000:01:00.0
-> >> =A0 =A0 af120000-af123fff : e1000e
-> >> b0200000-b0203fff : 0000:00:1b.0
-> >> b0204000-b0204fff : 0000:00:1f.6
-> >> b0205000-b02053ff : 0000:00:1d.7
-> >> =A0 b0205000-b02053ff : ehci_hcd
-> >> b0205400-b02057ff : 0000:00:1a.7
-> >> =A0 b0205400-b02057ff : ehci_hcd
-> >> b0205800-b02058ff : 0000:00:1f.3
-> >> e0000000-efffffff : reserved
-> >> fec00000-fec00fff : reserved
-> >> fed00000-fed003ff : HPET 0
-> >> fed13000-fed13fff : pnp 00:01
-> >> fed1c000-fed1ffff : pnp 00:01
-> >> fee00000-fee00fff : reserved
-> >> fff00000-ffffffff : reserved
-> >> 100000000-15fffffff : System RAM
-> >> ----------------------------------------------------------------------=
------
-> >>
-> >> _______________________________________________
-> >> kexec mailing list
-> >> kexec@lists.infradead.org
-> >> http://lists.infrad> >>
-> >
-> =
+----------------------------------------------------------------------
 
-nfo/kexec
+x86_64: use correct PAGE_OFFSET
 
+This fixes a bug when using gdb with vmcore
+as explained by Dave Anderson:
+
+The kexec/arch/x86_64/crashdump-x86_64.h file contains a
+stale PAGE_OFFSET value.  In 2.6.27 it was changed from
+0xffff810000000000UL to 0xffff880000000000UL.  This is
+only a problem when using gdb with the vmlinux/vmcore
+pair, because gdb relies upon the PT_LOAD segment's p_vaddr
+values in the ELF header to be correct.
+
+Cc: Dave Anderson <anderson@redhat.com>
+Signed-off-by: Simon Horman <horms@verge.net.au>
+
+Index: kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/x86_64/crashdump-x86_64.c	2010-02-17 16:04:18.000000000 +1100
++++ kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c	2010-02-17 16:18:42.000000000 +1100
+@@ -36,15 +36,6 @@
+ #include "crashdump-x86_64.h"
+ #include <x86/x86-linux.h>
+ 
+-static struct crash_elf_info elf_info =
+-{
+-	class: ELFCLASS64,
+-	data: ELFDATA2LSB,
+-	machine: EM_X86_64,
+-	backup_src_start: BACKUP_SRC_START,
+-	backup_src_end: BACKUP_SRC_END,
+-	page_offset: PAGE_OFFSET,
+-};
+ 
+ /* Forward Declaration. */
+ static int exclude_region(int *nr_ranges, uint64_t start, uint64_t end);
+@@ -604,6 +595,16 @@ int load_crashdump_segments(struct kexec
+ 	int nr_ranges, align = 1024, i;
+ 	struct memory_range *mem_range, *memmap_p;
+ 
++	struct crash_elf_info elf_info =
++	{
++		class: ELFCLASS64,
++		data: ELFDATA2LSB,
++		machine: EM_X86_64,
++		backup_src_start: BACKUP_SRC_START,
++		backup_src_end: BACKUP_SRC_END,
++		page_offset: page_offset,
++	};
++
+ 	if (get_kernel_paddr(info))
+ 		return -1;
+ 
+Index: kexec-tools/kexec/arch/x86_64/crashdump-x86_64.h
+===================================================================
+--- kexec-tools.orig/kexec/arch/x86_64/crashdump-x86_64.h	2010-02-17 16:04:18.000000000 +1100
++++ kexec-tools/kexec/arch/x86_64/crashdump-x86_64.h	2010-02-17 17:41:10.000000000 +1100
+@@ -1,12 +1,16 @@
+ #ifndef CRASHDUMP_X86_64_H
+ #define CRASHDUMP_X86_64_H
+ 
++#include "../../kexec.h"
++
+ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+ 				unsigned long max_addr, unsigned long min_base);
+ 
+ #define __START_KERNEL_map      0xffffffff80000000UL
+-#define PAGE_OFFSET		0xffff810000000000UL
+-#define __pa(x)                 (((unsigned long)(x)>=__START_KERNEL_map)?(unsigned long)(x) - (unsigned long)__START_KERNEL_map:(unsigned long)(x) - PAGE_OFFSET)
++
++extern unsigned long page_offset;
++
++#define __pa(x)                 (((unsigned long)(x)>=__START_KERNEL_map)?(unsigned long)(x) - (unsigned long)__START_KERNEL_map:(unsigned long)(x) - page_offset)
+ 
+ #define MAXMEM           0x3fffffffffffUL
+ 
+Index: kexec-tools/kexec/kexec.c
+===================================================================
+--- kexec-tools.orig/kexec/kexec.c	2010-02-17 16:04:18.000000000 +1100
++++ kexec-tools/kexec/kexec.c	2010-02-17 16:11:06.000000000 +1100
+@@ -1041,6 +1041,8 @@ int main(int argc, char *argv[])
+ 	};
+ 	static const char short_options[] = KEXEC_OPT_STR;
+ 
++	arch_init();
++
+ 	opterr = 0; /* Don't complain about unrecognized options here */
+ 	while ((opt = getopt_long(argc, argv, short_options,
+ 				  options, 0)) != -1) {
+Index: kexec-tools/kexec/Makefile
+===================================================================
+--- kexec-tools.orig/kexec/Makefile	2010-02-17 16:06:32.000000000 +1100
++++ kexec-tools/kexec/Makefile	2010-02-17 16:11:11.000000000 +1100
+@@ -44,6 +44,8 @@ $(ARCH)_ADD_BUFFER		= kexec/add_buffer.c
+ KEXEC_SRCS += $($(ARCH)_ADD_BUFFER)
+ $(ARCH)_ARCH_REUSE_INITRD	= kexec/arch_reuse_initrd.c
+ KEXEC_SRCS += $($(ARCH)_ARCH_REUSE_INITRD)
++$(ARCH)_ARCH_INIT		= kexec/arch_init.c
++KEXEC_SRCS += $($(ARCH)_ARCH_INIT)
+ 
+ include $(srcdir)/kexec/arch/alpha/Makefile
+ include $(srcdir)/kexec/arch/arm/Makefile
+Index: kexec-tools/kexec/arch/x86_64/Makefile
+===================================================================
+--- kexec-tools.orig/kexec/arch/x86_64/Makefile	2010-02-17 17:33:59.000000000 +1100
++++ kexec-tools/kexec/arch/x86_64/Makefile	2010-02-17 17:36:22.000000000 +1100
+@@ -13,6 +13,8 @@ x86_64_KEXEC_SRCS += kexec/arch/x86_64/k
+ x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-x86_64.c
+ x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+ 
++x86_64_ARCH_INIT = kexec/arch/x86_64/arch_init.c
++
+ dist += kexec/arch/x86_64/Makefile $(x86_64_KEXEC_SRCS)			\
+ 	kexec/arch/x86_64/kexec-x86_64.h kexec/arch/x86_64/crashdump-x86_64.h \
+ 	kexec/arch/x86_64/include/arch/options.h
+Index: kexec-tools/kexec/arch/x86_64/arch_init.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ kexec-tools/kexec/arch/x86_64/arch_init.c	2010-02-17 18:06:52.000000000 +1100
+@@ -0,0 +1,83 @@
++#include <errno.h>
++#include <string.h>
++#include <sys/utsname.h>
++#include <stdlib.h>
++#include <limits.h>
++#include <stdio.h>
++
++#include "crashdump-x86_64.h"
++
++#define KERNEL_VERSION(major, minor, patch) \
++	(((major) << 16) | ((minor) << 8) | patch)
++
++long kernel_version(void)
++{
++	struct utsname utsname;
++	unsigned long major, minor, patch;
++	char *p;
++
++	if (uname(&utsname) < 0) {
++		fprintf(stderr, "uname failed: %s\n", strerror(errno));
++		return -1;
++	}
++
++	p = utsname.release;
++	major = strtoul(p, &p, 10);
++	if (major == ULONG_MAX) {
++		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
++		return -1;
++	}
++
++	if (*p++ != '.') {
++		fprintf(stderr, "Unsupported utsname.release: %s\n",
++			utsname.release);
++		return -1;
++	}
++
++	minor = strtoul(p, &p, 10);
++	if (major == ULONG_MAX) {
++		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
++		return -1;
++	}
++
++	if (*p++ != '.') {
++		fprintf(stderr, "Unsupported utsname.release: %s\n",
++			utsname.release);
++		return -1;
++	}
++
++	patch = strtoul(p, &p, 10);
++	if (major == ULONG_MAX) {
++		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
++		return -1;
++	}
++
++	if (major >= 256 || minor >= 256 || patch >= 256) {
++		fprintf(stderr, "Unsupported utsname.release: %s\n",
++			utsname.release);
++		return -1;
++	}
++
++	return KERNEL_VERSION(major, minor, patch);
++}
++
++#define PAGE_OFFSET_PRE_2_6_27	0xffff810000000000UL
++#define PAGE_OFFSET		0xffff880000000000UL
++
++unsigned long page_offset;
++
++int arch_init(void)
++{
++	int kv;
++
++	kv = kernel_version();
++	if (kv < 0)
++		return -1;
++
++	if (kv < KERNEL_VERSION(2, 4, 27))
++		page_offset = PAGE_OFFSET_PRE_2_6_27;
++	else
++		page_offset = PAGE_OFFSET;
++
++	return 0;
++}
+Index: kexec-tools/kexec/arch_init.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ kexec-tools/kexec/arch_init.c	2010-02-17 16:12:14.000000000 +1100
+@@ -0,0 +1,4 @@
++int arch_init(void)
++{
++	return 0;
++}
+Index: kexec-tools/kexec/kexec.h
+===================================================================
+--- kexec-tools.orig/kexec/kexec.h	2010-02-17 16:12:44.000000000 +1100
++++ kexec-tools/kexec/kexec.h	2010-02-17 16:13:03.000000000 +1100
+@@ -249,6 +249,8 @@ int kexec_iomem_for_each_line(char *matc
+ int parse_iomem_single(char *str, uint64_t *start, uint64_t *end);
+ const char * proc_iomem(void);
+ 
++int arch_init(void);
++
+ extern int add_backup_segments(struct kexec_info *info,
+ 			       unsigned long backup_base,
+ 			       unsigned long backup_size);
 
 _______________________________________________
 kexec mailing list
