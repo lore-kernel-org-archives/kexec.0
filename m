@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nk3Mv-0006sH-3Z
-	for kexec@lists.infradead.org; Tue, 23 Feb 2010 22:36:45 +0000
-Date: Tue, 23 Feb 2010 17:36:38 -0500
+	id 1Nk3O0-0008TJ-0k
+	for kexec@lists.infradead.org; Tue, 23 Feb 2010 22:37:52 +0000
+Date: Tue, 23 Feb 2010 17:37:46 -0500
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: FW: 2.6.18 Fedora core kernel gives: "Overlapping
 	memorysegments at" error
-Message-ID: <20100223223638.GH11930@redhat.com>
+Message-ID: <20100223223746.GI11930@redhat.com>
 References: <32AB6BC050DF9E4E91868C4C3B7B6ABBB56926@lion.reldatainc.local>
 	<20100223215032.GG11930@redhat.com>
-	<32AB6BC050DF9E4E91868C4C3B7B6ABBB56942@lion.reldatainc.local>
+	<32AB6BC050DF9E4E91868C4C3B7B6ABBB5694C@lion.reldatainc.local>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <32AB6BC050DF9E4E91868C4C3B7B6ABBB56942@lion.reldatainc.local>
+In-Reply-To: <32AB6BC050DF9E4E91868C4C3B7B6ABBB5694C@lion.reldatainc.local>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,7 +29,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Soumendu Satapathy <soumendu.satapathy@reldata.com>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Tue, Feb 23, 2010 at 05:17:29PM -0500, Soumendu Satapathy wrote:
+On Tue, Feb 23, 2010 at 05:31:58PM -0500, Soumendu Satapathy wrote:
+> Well the Entry point in the readelf shows 0x2000100.  But the physical
+> start address that I specified in the .config file for the capture
+> kernel is CONFIG_PHYSICAL_START=0x2000000.
+> 
+> I am just wondering, could it be an issue ?
+> 
+
+No, that's not the issue here.
+
+Vivek
+
+
+> Thanks
+> Soumendu
+> 
+> 
+> -----Original Message-----
+> From: Soumendu Satapathy 
+> Sent: Tuesday, February 23, 2010 5:17 PM
+> To: 'Vivek Goyal'
+> Cc: Kexec Mailing List
+> Subject: RE: FW: 2.6.18 Fedora core kernel gives: "Overlapping
+> memorysegments at" error
+> 
 > $ readelf -l vmlinux
 > 
 > Elf file type is EXEC (Executable file)
@@ -92,12 +116,6 @@ On Tue, Feb 23, 2010 at 05:17:29PM -0500, Soumendu Satapathy wrote:
 >  Overlapping memory segments at  0x27f7000
 > 
 >  "sort_segments failed"
-
-The highest vmlinux segment is at address 0x000000000272d000 of size c08.
-So it should not be the conflicting setment. I guess that some of the
-internally generated and placed segments are having conflict because of
-some bug.
-
 > 
 > 
 > I think if I could have used the vmlinuz image as the capture kernel in
@@ -109,14 +127,6 @@ some bug.
 > if yes, please let me know and I will give it a try to see if the
 > problem persists or not. If not, then I am afraid there could be some
 > bug.
-
-Ok, I guess 2.6.18 did not have relocatable image option then. So you must
-have compiled two kernels. First for address 0x100000 (1MB) and second capture
-kernel for address 0x2000000(32MB)?
-
-Is older version of kexec-tools loading this 2.6.18 based capture kernel
-properly?
-
 > 
 > Thanks
 > Soumendu
