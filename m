@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lion.reldata.com ([209.123.188.11] helo=reldata.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NjxLA-00049v-Kn
-	for kexec@lists.infradead.org; Tue, 23 Feb 2010 16:10:32 +0000
+	id 1Nk2NN-00012B-3L
+	for kexec@lists.infradead.org; Tue, 23 Feb 2010 21:33:09 +0000
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: 2.6.18 Fedora core kernel gives: "Overlapping memory segments at"
+Subject: FW: 2.6.18 Fedora core kernel gives: "Overlapping memory segments at"
 	error
-Date: Tue, 23 Feb 2010 11:10:26 -0500
-Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB5688E@lion.reldatainc.local>
+Date: Tue, 23 Feb 2010 16:32:59 -0500
+Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB56926@lion.reldatainc.local>
 From: "Soumendu Satapathy" <soumendu.satapathy@reldata.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,24 +18,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1966934851=="
+Content-Type: multipart/mixed; boundary="===============1322429219=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
 This is a multi-part message in MIME format.
 
---===============1966934851==
+--===============1322429219==
 Content-class: urn:content-classes:message
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01CAB4A2.B6D2698E"
+	boundary="----_=_NextPart_001_01CAB4CF.C6184366"
 
 This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01CAB4A2.B6D2698E
+------_=_NextPart_001_01CAB4CF.C6184366
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+
+Hi Vivek,
+
+=20
+
+Is it a bug? Its works for 2.6.27 but fails for 2.6.18 kernel. However I
+use the vmlinuz image as a capture kernel in case of 2.6.27 as it does
+not complain of relocatable kernel with it.
+
+=20
+
+I am using a vmlinux kernel image to load as it complains  vmlinuz image
+for not being relocatable in case of 2.6.18.
+
+=20
+
+I get the following error:-
+
+=20
+
+Overlapping memory segments at  0x27f7000
+
+"sort_segments failed"
+
+=20
+
+=20
+
+Thanks
+
+Soumendu
+
+=20
+
+From: Soumendu Satapathy=20
+Sent: Tuesday, February 23, 2010 11:10 AM
+To: Kexec Mailing List
+Subject: 2.6.18 Fedora core kernel gives: "Overlapping memory segments
+at" error
+
+=20
 
 This is my .config  for the capture kernel.
 
@@ -319,7 +361,7 @@ www.reldata.com <http://www.reldata.com/>=20
 =20
 
 
-------_=_NextPart_001_01CAB4A2.B6D2698E
+------_=_NextPart_001_01CAB4CF.C6184366
 Content-Type: text/html;
 	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -331,7 +373,7 @@ xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
 xmlns=3D"http://www.w3.org/TR/REC-html40">
 
 <head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+<meta http-equiv=3DContent-Type content=3D"text/html; =
 charset=3Dus-ascii">
 <meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
 <style>
@@ -365,6 +407,10 @@ span.EmailStyle17
 	font-family:"Calibri","sans-serif";
 	color:windowtext;}
 span.EmailStyle18
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+span.EmailStyle19
 	{mso-style-type:personal-reply;
 	font-family:"Calibri","sans-serif";
 	color:#1F497D;}
@@ -389,6 +435,79 @@ div.Section1
 <body lang=3DEN-US link=3Dblue vlink=3Dpurple>
 
 <div class=3DSection1>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Hi =
+Vivek,<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Is it a bug? Its =
+works for
+2.6.27 but fails for 2.6.18 kernel. However I use the vmlinuz image as a
+capture kernel in case of 2.6.27 as it does not complain of relocatable =
+kernel
+with it.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>I am using a vmlinux =
+kernel
+image to load as it complains &nbsp;vmlinuz image for not being =
+relocatable in
+case of 2.6.18.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>I get the following =
+error:-<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal>Overlapping memory segments at&nbsp; =
+0x27f7000<o:p></o:p></p>
+
+<p class=3DMsoNormal>&#8220;sort_segments failed&#8221;<o:p></o:p></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Thanks<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Soumendu<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<div>
+
+<div style=3D'border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt =
+0in 0in 0in'>
+
+<p class=3DMsoNormal><b><span =
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'>From:</span>=
+</b><span
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'> Soumendu =
+Satapathy <br>
+<b>Sent:</b> Tuesday, February 23, 2010 11:10 AM<br>
+<b>To:</b> Kexec Mailing List<br>
+<b>Subject:</b> 2.6.18 Fedora core kernel gives: &quot;Overlapping =
+memory
+segments at&quot; error<o:p></o:p></span></p>
+
+</div>
+
+</div>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
 
 <p class=3DMsoNormal><span style=3D'color:#1F497D'>This is my .config =
 &nbsp;for the
@@ -485,9 +604,8 @@ MemTotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8037944 kB<o:p></o:p></p>
 
 <p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
 
-<p class=3DMsoNormal>I am using kexec-tools-2.0.1 and the &#8220;cat =
-/proc/iomem&#8221;
-&nbsp;o/p is as follows.<o:p></o:p></p>
+<p class=3DMsoNormal>I am using kexec-tools-2.0.1 and the &#8220;cat
+/proc/iomem&#8221; &nbsp;o/p is as follows.<o:p></o:p></p>
 
 <p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
 
@@ -796,10 +914,10 @@ style=3D'color:navy'><o:p></o:p></span></p>
 
 </html>
 
-------_=_NextPart_001_01CAB4A2.B6D2698E--
+------_=_NextPart_001_01CAB4CF.C6184366--
 
 
---===============1966934851==
+--===============1322429219==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -810,5 +928,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============1966934851==--
+--===============1322429219==--
 
