@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lion.reldata.com ([209.123.188.11] helo=reldata.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NjxFq-0001eg-WD
-	for kexec@lists.infradead.org; Tue, 23 Feb 2010 16:05:03 +0000
+	id 1NjxLA-00049v-Kn
+	for kexec@lists.infradead.org; Tue, 23 Feb 2010 16:10:32 +0000
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
 Subject: 2.6.18 Fedora core kernel gives: "Overlapping memory segments at"
 	error
-Date: Tue, 23 Feb 2010 11:04:54 -0500
-Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB5688C@lion.reldatainc.local>
+Date: Tue, 23 Feb 2010 11:10:26 -0500
+Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB5688E@lion.reldatainc.local>
 From: "Soumendu Satapathy" <soumendu.satapathy@reldata.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,24 +18,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0781735939=="
+Content-Type: multipart/mixed; boundary="===============1966934851=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kexec Mailing List <kexec@lists.infradead.org>
 
 This is a multi-part message in MIME format.
 
---===============0781735939==
+--===============1966934851==
 Content-class: urn:content-classes:message
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01CAB4A1.F145FBAE"
+	boundary="----_=_NextPart_001_01CAB4A2.B6D2698E"
 
 This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01CAB4A1.F145FBAE
+------_=_NextPart_001_01CAB4A2.B6D2698E
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+
+This is my .config  for the capture kernel.
+
+=20
+
+CONFIG_KEXEC=3Dy
+
+CONFIG_CRASH_DUMP=3Dy
+
+CONFIG_PHYSICAL_START=3D0x2000000
+
+=20
+
+I use crashkernel=3D64M@32M.
+
+=20
+
+Thanks
+
+Soumendu
+
+=20
+
+From: Soumendu Satapathy=20
+Sent: Tuesday, February 23, 2010 11:07 AM
+To: Kexec Mailing List
+Subject: 2.6.18 Fedora core kernel gives: "Overlapping memory segments
+at" error
+
+=20
 
 Hi there,
 
@@ -262,8 +292,34 @@ www.reldata.com <http://www.reldata.com/>=20
 
 =20
 
+=20
 
-------_=_NextPart_001_01CAB4A1.F145FBAE
+=20
+
+Soumendu S Satapathy
+
+Senior Software Developer
+
+RELDATA Inc.
+
+1719 Route 10, Suite 209
+
+Parsippany, NJ 07054
+
+(973) 644-2770  ext. 139  office
+
+732-692-7230 mobile
+
+(973) 644-3385 fax
+
+soumendu.satapathy@reldata.com
+
+www.reldata.com <http://www.reldata.com/>=20
+
+=20
+
+
+------_=_NextPart_001_01CAB4A2.B6D2698E
 Content-Type: text/html;
 	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -275,7 +331,7 @@ xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
 xmlns=3D"http://www.w3.org/TR/REC-html40">
 
 <head>
-<meta http-equiv=3DContent-Type content=3D"text/html; =
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
 charset=3Dus-ascii">
 <meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
 <style>
@@ -287,6 +343,9 @@ charset=3Dus-ascii">
 @font-face
 	{font-family:Calibri;
 	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{margin:0in;
@@ -302,11 +361,16 @@ a:visited, span.MsoHyperlinkFollowed
 	color:purple;
 	text-decoration:underline;}
 span.EmailStyle17
-	{mso-style-type:personal-compose;
+	{mso-style-type:personal;
 	font-family:"Calibri","sans-serif";
 	color:windowtext;}
+span.EmailStyle18
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
 .MsoChpDefault
-	{mso-style-type:export-only;}
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
 @page Section1
 	{size:8.5in 11.0in;
 	margin:1.0in 1.0in 1.0in 1.0in;}
@@ -325,6 +389,62 @@ div.Section1
 <body lang=3DEN-US link=3Dblue vlink=3Dpurple>
 
 <div class=3DSection1>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>This is my .config =
+&nbsp;for the
+capture kernel.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>CONFIG_KEXEC=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>CONFIG_CRASH_DUMP=3Dy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>CONFIG_PHYSICAL_START=3D0x2000000<o:p></o:p></spa=
+n></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal>I use crashkernel=3D64M@32M.<o:p></o:p></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Thanks<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Soumendu<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<div>
+
+<div style=3D'border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt =
+0in 0in 0in'>
+
+<p class=3DMsoNormal><b><span =
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'>From:</span>=
+</b><span
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'> Soumendu =
+Satapathy <br>
+<b>Sent:</b> Tuesday, February 23, 2010 11:07 AM<br>
+<b>To:</b> Kexec Mailing List<br>
+<b>Subject:</b> 2.6.18 Fedora core kernel gives: &quot;Overlapping =
+memory
+segments at&quot; error<o:p></o:p></span></p>
+
+</div>
+
+</div>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
 
 <p class=3DMsoNormal>Hi there,<o:p></o:p></p>
 
@@ -360,9 +480,8 @@ kernel:-<o:p></o:p></p>
 
 <p class=3DMsoNormal>I found that the kernel segments overlap when =
 loading them
-in the 64M memory reserved for the capture kernel. My system memory is =
-MemTotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-8037944 kB<o:p></o:p></p>
+in the 64M memory reserved for the capture kernel. My system memory is
+MemTotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8037944 kB<o:p></o:p></p>
 
 <p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
 
@@ -617,13 +736,56 @@ mobile<o:p></o:p></span></p>
 <p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'>(973) =
 644-3385 fax<o:p></o:p></span></p>
 
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'><a
+href=3D"mailto:soumendu.satapathy@reldata.com">soumendu.satapathy@reldata=
+.com</a><o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'><a
+href=3D"http://www.reldata.com/">www.reldata.com</a></span><span
+style=3D'color:navy'><o:p></o:p></span></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal><span =
+style=3D'font-size:10.0pt;color:navy'>Soumendu S
+Satapathy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'>Senior =
+Software
+Developer<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><b><span =
+style=3D'font-size:10.0pt;color:navy'>RELDATA =
+Inc.<o:p></o:p></span></b></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'>1719 =
+Route 10,
+Suite 209<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'font-size:10.0pt;color:navy'>Parsippany, NJ
+07054<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'>(973)
+644-2770&nbsp; ext. 139&nbsp; office<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'font-size:10.0pt;color:navy'>732-692-7230
+mobile<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'>(973) =
+644-3385 fax<o:p></o:p></span></p>
+
 <p class=3DMsoNormal><span =
 style=3D'font-size:10.0pt;color:navy'>soumendu.satapathy@reldata.com<o:p>=
 </o:p></span></p>
 
 <p class=3DMsoNormal><span style=3D'font-size:10.0pt;color:navy'><a
-href=3D"http://www.reldata.com/"><span =
-style=3D'color:blue'>www.reldata.com</span></a></span><span
+href=3D"http://www.reldata.com/">www.reldata.com</a></span><span
 style=3D'color:navy'><o:p></o:p></span></p>
 
 <p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
@@ -634,10 +796,10 @@ style=3D'color:navy'><o:p></o:p></span></p>
 
 </html>
 
-------_=_NextPart_001_01CAB4A1.F145FBAE--
+------_=_NextPart_001_01CAB4A2.B6D2698E--
 
 
---===============0781735939==
+--===============1966934851==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -648,5 +810,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============0781735939==--
+--===============1966934851==--
 
