@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from lion.reldata.com ([209.123.188.11] helo=reldata.com)
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nk34N-0001U5-Av
-	for kexec@lists.infradead.org; Tue, 23 Feb 2010 22:17:35 +0000
+	id 1Nk3IO-00088H-3J
+	for kexec@lists.infradead.org; Tue, 23 Feb 2010 22:32:04 +0000
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
 Subject: RE: FW: 2.6.18 Fedora core kernel gives: "Overlapping memorysegments
 	at" error
-Date: Tue, 23 Feb 2010 17:17:29 -0500
-Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB56942@lion.reldatainc.local>
-In-Reply-To: <20100223215032.GG11930@redhat.com>
+Date: Tue, 23 Feb 2010 17:31:58 -0500
+Message-ID: <32AB6BC050DF9E4E91868C4C3B7B6ABBB5694C@lion.reldatainc.local>
 References: <32AB6BC050DF9E4E91868C4C3B7B6ABBB56926@lion.reldatainc.local>
-	<20100223215032.GG11930@redhat.com>
+	<20100223215032.GG11930@redhat.com> 
 From: "Soumendu Satapathy" <soumendu.satapathy@reldata.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,8 +24,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: Soumendu Satapathy <soumendu.satapathy@reldata.com>, Vivek Goyal <vgoyal@redhat.com>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>
+
+Well the Entry point in the readelf shows 0x2000100.  But the physical
+start address that I specified in the .config file for the capture
+kernel is CONFIG_PHYSICAL_START=0x2000000.
+
+I am just wondering, could it be an issue ?
+
+Thanks
+Soumendu
+
+
+-----Original Message-----
+From: Soumendu Satapathy 
+Sent: Tuesday, February 23, 2010 5:17 PM
+To: 'Vivek Goyal'
+Cc: Kexec Mailing List
+Subject: RE: FW: 2.6.18 Fedora core kernel gives: "Overlapping
+memorysegments at" error
 
 $ readelf -l vmlinux
 
