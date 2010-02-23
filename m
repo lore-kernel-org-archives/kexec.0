@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail-gw0-f49.google.com ([74.125.83.49])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NjT6I-0002nR-GC
-	for kexec@lists.infradead.org; Mon, 22 Feb 2010 07:53:10 +0000
-Date: Mon, 22 Feb 2010 18:53:00 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: make install fails to install man pages
-Message-ID: <20100222075300.GA20519@verge.net.au>
-References: <E1NXIL1-0005tH-Ho@bruson.ifs.umich.edu>
+	id 1Nk0si-0003lG-TU
+	for kexec@lists.infradead.org; Tue, 23 Feb 2010 19:57:24 +0000
+Received: by gwj21 with SMTP id 21so1185627gwj.36
+	for <kexec@lists.infradead.org>; Tue, 23 Feb 2010 11:57:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E1NXIL1-0005tH-Ho@bruson.ifs.umich.edu>
+In-Reply-To: <20100221224825.GI5712@verge.net.au>
+References: <4d358c531001280506p2169fad8gdde3c23d989870e1@mail.gmail.com>
+	<20100221224825.GI5712@verge.net.au>
+Date: Tue, 23 Feb 2010 22:57:19 +0300
+Message-ID: <572af9171002231157u72e6524aqed6375855b998e82@mail.gmail.com>
+Subject: Re: mip64: kexec: Probem in allocating resevr mem
+From: Maxim Uvarov <muvarov@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,121 +21,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marcus Watts <mdw@umich.edu>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Vishnu Yadav <vishnuyadav@gmail.com>, kexec@lists.infradead.org
 
-On Tue, Jan 19, 2010 at 12:57:59PM -0500, Marcus Watts wrote:
-> When building kexec-tools 2.0.1, I noticed that "make install"
-> failed to install any man pages.  Upon looking, I found that
-> what "make install" had tried to do was:
-> 
-> 	for file in build/sbin/kexec .. kexec/kexec.8 kdump/kdump.8; do
-> 	if test `dirname $file` =     "build/sbin" ; then
-> 	...
-> 	if test `dirname $file` =     "build/man/man8" ; then
-> 		mkdir -p     /tmp/kex//usr/share/man/man8/
-> 		/usr/bin/install -c -m 644 $file /tmp/kex//usr/share/man/man8/
-> 	fi
-> 	...
-> 	done
-> 
-> Since the man pages don't start with "build/", they don't
-> match the if clause so aren't installed.
-> 
-> Source in the makefile looks like this:
-> 	if test `$(DIRNAME) $$file` =     "$(MAN8DIR)" ; then \
-> 
-> A test that might better express what you are trying to do:
-> 	if test `basename x/foo.8 .8` = foo
-> perhaps something like this:
-> configure.ac:
-> 	AC_CHECK_PROG([BASENAME],  basename,  basename,  "no", [$PATH])
-> 	if test "$BASENAME" = "no"; then AC_MSG_ERROR([ basename not found]) fi
-> Makefile.in:
-> 	if test `$(BASENAME) $$file .8` =     "$$file" ; then \
+ Vishnu Yadav,
 
-Hi Marcus,
+If you don't see reserved memory region on mips in /proc/iomem than it
+is definitely kernel issue. You can check:
+1. you have continuous memory segment, which is enough for booting new
+kernel in low 512M. (In general you can reserve memory at any address
+but kernel can be booted if it is in lower 512M),
+2. you specified right crashkernel=3D option. And it points to real
+memory segment.
+3. crashkernel was  parsed right in the kernel.
 
-Sorry for overlooking this, it got lost in my INBOX somehow.
+dmesg |grep mem - will print existence memory segments in format
+X(memory size) @(at) Y(memory address).
+cat /proc/iomem - should show  that memory is really reserved. If you
+don't see reserved segments then you have to debug how kernel reserves
+area for crashkernel (BOOT_MEM_RESERVED).
 
-I have taken an slightly different approach to this problem,
-which is to ensure that the manpages are in build/. Does this
-with the problem you are seeing?
+Best regards,
+Maxim Uvarov.
 
-----------------------------------------------------------------------
+2010/2/22 Simon Horman <horms@verge.net.au>:
+> On Thu, Jan 28, 2010 at 06:36:07PM +0530, Vishnu Yadav wrote:
+>> Hi
+>> I am =A0not able to reserve the memory in mips 64 plateform for "crash k=
+ernel"
+>>
+>> in below function of arch/mips/kernel/setup.c file of kernel code
+>> reserve_bootmem(start, size , flags)
+>> if i put flags=3D BOOTMEM_DEFAULT then this function succeeds but doesnt
+>> reserve =A0mem of crash kernel .. i verified it by seeing /proc/iomem
+>>
+>> but if i put flags=3D BOOTMEM_EXCLUSIVE .. this function itself fails and
+>> again no memry is reseved.
+>>
+>>
+>> Pls suggest me how to resevre mem regio for "crash kernel" in mips 64. N=
+OTE-
+>> I have applied kernel as well as user spaces patches for running kexec on
+>> mips64.
+>
+> Does Maxim Uvarov's recent patch help you at all?
+>
+> http://lists.infradead.org/pipermail/kexec/2010-February/003816.html
+>
 
-Install man pages
 
-Ensure that the man pages are built (end up in build/) so that they get
-installed.
 
-* Use variables set in kexec/Makefile and kdump/Makefile for the
-  correct lotion of the "built" man pages.
-* For consistency, use variables set in kexec/Makefile and kdump/Makefile
-  for the location of built binaries too
-* Use = instead of := for TARGETS and the variables that comprise it
-  so that they are re-evaluated after kexec/Makefile and kdump/Makefile
-  are sourced
-* Move the building of targets to below the inclusion of
-  kexec/Makefile and kdump/Makefile. This seems to be necessary
-  for $(TARGETS) to be correctly evaluated when used as a source.
-* Make sure all remains the first target without moving more rules
-  than necessary to below where kexec/Makefile and kdump/Makefile -
-  I'm concerned about unexpected consequences.
+-- =
 
-The kexec-tools build system is a bit special.
-
-Reported-by: Marcus Watts <mdw@umich.edu>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-
-Index: kexec-tools/Makefile.in
-===================================================================
---- kexec-tools.orig/Makefile.in	2010-02-22 18:45:47.000000000 +1100
-+++ kexec-tools/Makefile.in	2010-02-22 18:45:53.000000000 +1100
-@@ -104,15 +104,14 @@ PKGDATADIR=$(DATADIR)/$(PACKAGE_NAME)
- PKGLIBDIR=$(LIBDIR)/$(PACKAGE_NAME)
- PKGINCLUDEIR=$(INCLUDEDIR)/$(PACKAGE_NAME)
- 
--MAN_PAGES:= kexec/kexec.8
--MAN_PAGES+= kdump/kdump.8
--BINARIES_i386:=  $(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
--BINARIES_x86_64:=$(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
--BINARIES:=$(SBINDIR)/kexec $(SBINDIR)/kdump $(BINARIES_$(ARCH))
-+MAN_PAGES=$(KEXEC_MANPAGE) $(KDUMP_MANPAGE)
-+BINARIES_i386=$(KEXEC_TEST)
-+BINARIES_x86_64=$(KEXEC_TEST)
-+BINARIES=$(KEXEC) $(KDUMP) $(BINARIES_$(ARCH))
- 
--TARGETS:=$(BINARIES) $(MAN_PAGES)
-+TARGETS=$(BINARIES) $(MAN_PAGES)
- 
--all: $(TARGETS)
-+all: targets
- 
- # generic build rules
- %.o: %.c
-@@ -180,6 +179,9 @@ SRCS:= $(dist)
- PSRCS:=$(foreach s, $(SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
- PGSRCS:=$(foreach s, $(GENERATED_SRCS), $(PACKAGE_NAME)-$(PACKAGE_VERSION)/$(s))
- 
-+targets: $(TARGETS)
-+	@echo TARGETS: $(TARGETS)
-+
- Makefile: Makefile.in config.status
- 	./config.status
- 
-@@ -326,5 +328,5 @@ install: $(TARGETS)
- 		fi; \
- 	done
- 
--.PHONY: echo install all clean dist-clean distclean maintainer-clean 	\
--	maintainerclean tarball rpm
-+.PHONY: echo install all targets clean dist-clean distclean \
-+	maintainer-clean maintainerclean tarball rpm
+Best regards,
+Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
