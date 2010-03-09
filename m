@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gy0-f177.google.com ([209.85.160.177])
+Received: from duck.dooz.org ([194.146.227.125])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nn9hO-00089u-E9
-	for kexec@lists.infradead.org; Thu, 04 Mar 2010 11:58:44 +0000
-Received: by gyd12 with SMTP id 12so1217346gyd.36
-	for <kexec@lists.infradead.org>; Thu, 04 Mar 2010 03:58:35 -0800 (PST)
+	id 1Np1XC-0006ug-Ok
+	for kexec@lists.infradead.org; Tue, 09 Mar 2010 15:39:54 +0000
+Received: from bee.dooz.org (serris.dooz.org [88.166.229.232])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by duck.dooz.org (Postfix) with ESMTP id 8ED43C809C
+	for <kexec@lists.infradead.org>; Tue,  9 Mar 2010 16:39:49 +0100 (CET)
+Date: Tue, 9 Mar 2010 16:39:48 +0100
+From: =?iso-8859-1?Q?Lo=EFc?= Minier <lool@dooz.org>
+Subject: Trouble with vmlinuz (bzImage) but works with vmlinux (uncompressed)
+Message-ID: <20100309153948.GB9004@bee.dooz.org>
 MIME-Version: 1.0
-In-Reply-To: <e997b7421003030834r7bec3295s7917bb91a3fa2d27@mail.gmail.com>
-References: <20100303110527.11233.20400.stgit@muvarov>
-	<e997b7421003030834r7bec3295s7917bb91a3fa2d27@mail.gmail.com>
-Date: Thu, 4 Mar 2010 14:58:34 +0300
-Message-ID: <572af9171003040358n25bc2462yc8c16a9acdac70db@mail.gmail.com>
-Subject: Re: [PATCH 1/2] MIPS kexec,kdump support
-From: Maxim Uvarov <muvarov@gmail.com>
+Content-Type: multipart/mixed; boundary="17pEHd4RhPHOinZp"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +24,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "wilbur.chan" <wilbur512@gmail.com>
-Cc: linux-mips@linux-mips.org, horms@verge.net.au, kexec@lists.infradead.org, ralf@linux-mips.org
+To: kexec@lists.infradead.org
 
-2010/3/3 wilbur.chan <wilbur512@gmail.com>:
-> 2010/3/3 Maxim Uvarov <muvarov@gmail.com>:
->> Hello folks,
->>
->> Please find here MIPS crash and kdump patches.
->> This is patch set of 3 patches:
->> 1. generic MIPS changes (kernel);
->> 2. MIPS Cavium Octeon board kexec/kdump code (kernel);
->> 3. Kexec user space MIPS changes.
->>
->> Patches were tested on the latest linux-mips@ git kernel and the latest
->> kexec-tools git on Cavium Octeon 50xx board.
->>
->> I also made the same code working on RMI XLR/XLS boards for both
->> mips32 and mips64 kernels.
->>
->> Best regards,
->> Maxim Uvarov.
->>
->
->> Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
->>
->>
->>
->
-> Hi, Maxim
->
-> In XLR series ,
->
-> 1)How to protect =A0boardinfo and pass it to second kernel ?
->
-It is very simple. I just looked at physical addresses  where
-boardinfo is and protect this
-region.  For xls simple add additional exclude region to setup.c
-static struct boot_mem_map_exclude_region static_exclude_regions[] =3D {
-+	[1] =3D {0xc000000, 0xd000000 }, /*Bootloader stuctures*/
 
-To pass it to second kernel copy pointer to original psb_info to
-static variable in beginning of prom_init() and provide this pointer
-as kexec_args[3].
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-kexec_args[0]  is argc on XLS
-kexec_args[1] is argv on XLS
+        Hey folks
 
-> 2)If all cpus jumped to same entry point , did you change head.s, if so ,=
- how ?
->
-Please take a look how other platforms do this. You need write .macro
-kernel_entry_setup which should be located in somewhere is
-include/asm-mips/mach-rmi. Then you write this macro it will be
-executed before kernel_entry. So after kexec all cpus jump to this
-entry point and after they you can do all things what you want:
-- make cpu0 boot new kernel and other cpus go to boot slaves procedure;
-- take first cpu and make it boot, and all others go to boot slaves procedu=
-re;
-- boot only cpu0 and infinite loop others  cpus (you might want to do
-this for kdump)
->
->
-> Thank you!
->
+ I'm testing kexec on ARM under qemu-system-arm with a mach-versatile
+ kernel (lightly patched).  kexec only works if I pass a vmlinux, but
+ hangs if I pass a vmlinuz.  This sounds like an address computation
+ issue to me.
 
--- =
+ It would seem to me there are two issues here:
+ - kexec-tools should work in both cases, perhaps the address
+   computation is wrong when using a bzImage?
+ - kexec-tools should uncompress the vmlinuz kernel into a vmlinux one
+   before loading it as to allow skipping the "Uncompressing Linux..."
+   step at kexec -e time -- would make the actual kernel switch a faster
+   operation.
 
-Best regards,
-Maxim Uvarov
+ What do you folks think?
+
+ If people want to reproduce, kernel can be grabbed from:
+    http://ports.ubuntu.com/ubuntu-ports/dists/lucid/main/installer-armel/c=
+urrent/images/versatile/netboot/
+ you'll need some rootfs such as an Ubuntu lucid (10.04) armel
+ userspace.  I'm using this kernel to start qemu and am converting it to
+ vmlinux with the attached script.
+
+ Instructions to reproduce are available in the Ubuntu bug where we
+ track this at:
+    https://bugs.launchpad.net/ubuntu/+source/linux/+bug/518567
+
+    Thanks for your insights!
+
+PS: is there a bug tracker for kexec?  I didn't find it in
+http://bugzilla.kernel.org/enter_bug.cgi
+--=20
+Lo=EFc Minier
+
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: attachment; filename=vmlinuz-to-vmlinux
+Content-Transfer-Encoding: quoted-printable
+
+#!/usr/bin/perl -n
+# vmlinuz-to-vmlinux - uncompresses a bzImage kernel into a vmlinux one
+# Copyright (C) 2010 Canonical Ltd
+# Author: Lo=EFc Minier <lool@dooz.org>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+# SOFTWARE IN THE PUBLIC INTEREST, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR
+# OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+# ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTH=
+ER
+# DEALINGS IN THE SOFTWARE.
+#
+# Except as contained in this notice, the name of the author shall not be u=
+sed
+# in advertising or otherwise to promote the sale, use or other dealings in
+# this Software without prior written authorization from the author.
+
+use strict;
+use warnings;
+
+use IO::Uncompress::Gunzip qw(gunzip $GunzipError);
+
+BEGIN { $/ =3D undef }
+
+my $magic =3D pack 'H*', "1f8b0800";
+
+s/.*?\Q$magic\E/$magic/s
+    or die "Couldn't find magic bytes";
+
+gunzip \$_ =3D> \*STDOUT
+    or die "gunzip failed: $GunzipError";
+
+
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--17pEHd4RhPHOinZp--
+
