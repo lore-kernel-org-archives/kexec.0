@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NpdrU-0002Du-KB
-	for kexec@lists.infradead.org; Thu, 11 Mar 2010 08:35:24 +0000
+	id 1Npe4c-0001Jg-Uq
+	for kexec@lists.infradead.org; Thu, 11 Mar 2010 08:48:55 +0000
+Date: Thu, 11 Mar 2010 19:48:31 +1100
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 0/3] Getting biarch support
+Message-ID: <20100311084831.GB5983@verge.net.au>
 References: <m1k4tjb7d1.fsf@fess.ebiederm.org>
-	<20100311092240.21222nl5qlr5mou8@webmail.df.eu>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 11 Mar 2010 00:35:14 -0800
-In-Reply-To: <20100311092240.21222nl5qlr5mou8@webmail.df.eu> (Bernhard Walle's
-	message of "Thu\, 11 Mar 2010 09\:22\:40 +0100")
-Message-ID: <m1ociv9ry5.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1k4tjb7d1.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,31 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bernhard@bwalle.de>
-Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-Bernhard Walle <bernhard@bwalle.de> writes:
+On Thu, Mar 11, 2010 at 12:16:58AM -0800, Eric W. Biederman wrote:
+> 
+> It looks like no one ever tested taking a crashdump
+> from a 64bit kernel with a 32bit userspace on x86,
+> and we have a reuse-cmdline regression fixes follow.
 
-> Zitat von "Eric W. Biederman" <ebiederm@xmission.com>:
->
->>
->> It looks like no one ever tested taking a crashdump
->> from a 64bit kernel with a 32bit userspace on x86,
->> and we have a reuse-cmdline regression fixes follow.
->
-> I didn't even know that it is supposed to work...
+Thanks, these patches all look good to me. I have applied and pushed them.
 
-The x86 biarch tends to be an after thought.  But we
-have to do the hard work for all of the architectures
-where the optimal configuration is 32bit userspace with
-a 64bit kernel.  So we might as well have it work on
-x86 so we can test the code without need an exotic
-architecture.
-
-In my case it was purely code size savings on an embedded
-setup that got me using, and thus fixing it.
-
-Eric
 
 _______________________________________________
 kexec mailing list
