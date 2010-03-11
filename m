@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NpdeC-0006Jo-V6
-	for kexec@lists.infradead.org; Thu, 11 Mar 2010 08:21:41 +0000
-Subject: [PATCH 2/3] kexec: Figure out our native architecture before load
+	id 1Npdek-0007Av-JR
+	for kexec@lists.infradead.org; Thu, 11 Mar 2010 08:22:14 +0000
+Subject: [PATCH 3/3] x86: Fix biarch crashdump setup.
 References: <m1k4tjb7d1.fsf@fess.ebiederm.org>
 From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 11 Mar 2010 00:21:33 -0800
+Date: Thu, 11 Mar 2010 00:22:07 -0800
 In-Reply-To: <m1k4tjb7d1.fsf@fess.ebiederm.org> (Eric W. Biederman's message
 	of "Thu\, 11 Mar 2010 00\:16\:58 -0800")
-Message-ID: <m1bpevb75e.fsf@fess.ebiederm.org>
+Message-ID: <m16353b74g.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,44 +27,64 @@ To: Simon Horman <horms@verge.net.au>
 Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
 
-This moves the computing of our native archtecture earlier so
-that load can use it, as arch/i386/crashdump-x86.c has been
-trying to.
+Generate the correct crashdump header for x86_64 kernels
+when a 32bit kernel is used.
 
 Signed-off-by: Eric W. Biederman <ebiederm@aristanetworks.com>
 ---
- kexec/kexec.c |   12 +++++++-----
- 1 files changed, 7 insertions(+), 5 deletions(-)
+ kexec/arch/i386/crashdump-x86.c |   11 ++++++++++-
+ 1 files changed, 10 insertions(+), 1 deletions(-)
 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 43d0189..16a0ec9 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -695,17 +695,19 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
- 			}
- 		}
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 804dadd..9d37442 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -509,7 +509,7 @@ static struct crash_elf_info elf_info32 =
+ static enum coretype get_core_type(struct kexec_info *info,
+ 				   struct memory_range *range, int ranges)
+ {
+-	if (info->kexec_flags & KEXEC_ARCH_X86_64)
++	if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64)
+ 		return CORE_TYPE_ELF64;
+ 	else {
+ 		/* fall back to default */
+@@ -534,6 +534,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	unsigned long sz, elfcorehdr;
+ 	int nr_ranges, align = 1024;
+ 	struct memory_range *mem_range, *memmap_p;
++	unsigned machine;
+ 
+ 	if (get_crash_memory_ranges(&mem_range, &nr_ranges,
+ 				    info->kexec_flags) < 0)
+@@ -548,6 +549,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 			get_core_type(info, mem_range, nr_ranges);
  	}
-+	/* Figure out our native architecture before load */
-+	native_arch = physical_arch();
-+	if (native_arch < 0) {
-+		return -1;
+ 
++        /* Get the elf architecture of the running kernel */
++	machine = EM_386;
++	if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64) {
++		machine = EM_X86_64;
 +	}
-+	info.kexec_flags |= native_arch;
 +
- 	if (file_type[i].load(argc, argv, kernel_buf,
- 			      kernel_size, &info) < 0) {
- 		fprintf(stderr, "Cannot load %s\n", kernel);
- 		return -1;
+ 	/* Memory regions which panic kernel can safely use to boot into */
+ 	sz = (sizeof(struct memory_range) * (KEXEC_MAX_SEGMENTS + 1));
+ 	memmap_p = xmalloc(sz);
+@@ -571,6 +578,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 
+ 	/* Create elf header segment and store crash image data. */
+ 	if (arch_options.core_header_type == CORE_TYPE_ELF64) {
++		elf_info64.machine = machine;
+ 		if (crash_create_elf64_headers(info, &elf_info64,
+ 					       crash_memory_range, nr_ranges,
+ 					       &tmp, &sz,
+@@ -578,6 +586,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 			return -1;
  	}
- 	/* If we are not in native mode setup an appropriate trampoline */
--	native_arch = physical_arch();
--	if (native_arch < 0) {
--		return -1;
--	}
--	info.kexec_flags |= native_arch;
- 	if (arch_compat_trampoline(&info) < 0) {
- 		return -1;
- 	}
+ 	else {
++		elf_info32.machine = machine;
+ 		if (crash_create_elf32_headers(info, &elf_info32,
+ 					       crash_memory_range, nr_ranges,
+ 					       &tmp, &sz,
 -- 
 1.6.6.1
 
