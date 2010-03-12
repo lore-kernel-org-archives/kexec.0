@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Npe4c-0001Jg-Uq
-	for kexec@lists.infradead.org; Thu, 11 Mar 2010 08:48:55 +0000
-Date: Thu, 11 Mar 2010 19:48:31 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Getting biarch support
-Message-ID: <20100311084831.GB5983@verge.net.au>
-References: <m1k4tjb7d1.fsf@fess.ebiederm.org>
+Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1Nq6nX-0005pX-WD
+	for kexec@lists.infradead.org; Fri, 12 Mar 2010 15:29:16 +0000
+From: Ameya Palande <ameya.palande@nokia.com>
+Subject: [PATCH] Fix unused return value warnings
+Date: Fri, 12 Mar 2010 17:27:24 +0200
+Message-Id: <512b75d438063ff9f35e4334a02c5e2e20bf7ff3.1268407084.git.ameya.palande@nokia.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1k4tjb7d1.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,23 +16,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-On Thu, Mar 11, 2010 at 12:16:58AM -0800, Eric W. Biederman wrote:
-> 
-> It looks like no one ever tested taking a crashdump
-> from a 64bit kernel with a 32bit userspace on x86,
-> and we have a reuse-cmdline regression fixes follow.
-
-Thanks, these patches all look good to me. I have applied and pushed them.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogQW1leWEgUGFsYW5kZSA8YW1leWEucGFsYW5kZUBub2tpYS5jb20+ClRoaXMgcGF0Y2gg
+Zml4ZXMgZm9sbG93aW5nIHdhcm5pbmc6CgprZXhlYy9maXJtd2FyZV9tZW1tYXAuYzogSW4gZnVu
+Y3Rpb24g4oCYcGFyc2VfbnVtZXJpY19zeXNmc+KAmToKa2V4ZWMvZmlybXdhcmVfbWVtbWFwLmM6
+NzA6IGVycm9yOiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYZmdldHPigJksIGRlY2xhcmVk
+CndpdGggYXR0cmlidXRlIHdhcm5fdW51c2VkX3Jlc3VsdAprZXhlYy9maXJtd2FyZV9tZW1tYXAu
+YzogSW4gZnVuY3Rpb24g4oCYcGFyc2Vfc3RyaW5nX3N5c2Zz4oCZOgprZXhlYy9maXJtd2FyZV9t
+ZW1tYXAuYzoxMDM6IGVycm9yOiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYZmdldHPigJks
+IGRlY2xhcmVkCndpdGggYXR0cmlidXRlIHdhcm5fdW51c2VkX3Jlc3VsdAoKU2lnbmVkLW9mZi1i
+eTogQW1leWEgUGFsYW5kZSA8YW1leWEucGFsYW5kZUBub2tpYS5jb20+Ci0tLQoga2V4ZWMvZmly
+bXdhcmVfbWVtbWFwLmMgfCAgIDMyICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tCiAx
+IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQoKZGlmZiAt
+LWdpdCBhL2tleGVjL2Zpcm13YXJlX21lbW1hcC5jIGIva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMK
+aW5kZXggNWExMDFmYi4uNzBlMGY3NCAxMDA2NDQKLS0tIGEva2V4ZWMvZmlybXdhcmVfbWVtbWFw
+LmMKKysrIGIva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMKQEAgLTY3LDExICs2NywxNCBAQCBzdGF0
+aWMgdW5zaWduZWQgbG9uZyBsb25nIHBhcnNlX251bWVyaWNfc3lzZnMoY29uc3QgY2hhciAqZmls
+ZW5hbWUpCiAJCXJldHVybiBVTExPTkdfTUFYOwogCX0KIAotCWZnZXRzKGxpbmVidWZmZXIsIEJV
+RlNJWiwgZnApOwotCWxpbmVidWZmZXJbQlVGU0laLTFdID0gMDsKKwlpZihmZ2V0cyhsaW5lYnVm
+ZmVyLCBCVUZTSVosIGZwKSkgeworCQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7CiAKLQkvKiBs
+ZXQgc3RydG9sbCgpIGRldGVjdCB0aGUgYmFzZSAqLwotCXJldHZhbCA9IHN0cnRvbGwobGluZWJ1
+ZmZlciwgTlVMTCwgMCk7CisJCS8qIGxldCBzdHJ0b2xsKCkgZGV0ZWN0IHRoZSBiYXNlICovCisJ
+CXJldHZhbCA9IHN0cnRvbGwobGluZWJ1ZmZlciwgTlVMTCwgMCk7CisJfSBlbHNlIHsKKwkJcmV0
+dmFsID0gVUxMT05HX01BWDsKKwl9CiAKIAlmY2xvc2UoZnApOwogCkBAIC0xMDAsMTggKzEwMywy
+MSBAQCBzdGF0aWMgY2hhciAqcGFyc2Vfc3RyaW5nX3N5c2ZzKGNvbnN0IGNoYXIgKmZpbGVuYW1l
+KQogCQlyZXR1cm4gTlVMTDsKIAl9CiAKLQlmZ2V0cyhsaW5lYnVmZmVyLCBCVUZTSVosIGZwKTsK
+LQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7Ci0KLQkvKiB0cnVuY2F0ZSB0cmFpbGluZyBuZXds
+aW5lKHMpICovCi0JZW5kID0gbGluZWJ1ZmZlciArIHN0cmxlbihsaW5lYnVmZmVyKSAtIDE7Ci0J
+d2hpbGUgKCplbmQgPT0gJ1xuJykKLQkJKmVuZC0tID0gMDsKKwlpZiAoZmdldHMobGluZWJ1ZmZl
+ciwgQlVGU0laLCBmcCkpIHsKKwkJbGluZWJ1ZmZlcltCVUZTSVotMV0gPSAwOwogCi0JZmNsb3Nl
+KGZwKTsKKwkJLyogdHJ1bmNhdGUgdHJhaWxpbmcgbmV3bGluZShzKSAqLworCQllbmQgPSBsaW5l
+YnVmZmVyICsgc3RybGVuKGxpbmVidWZmZXIpIC0gMTsKIAotCXJldHVybiBsaW5lYnVmZmVyOwor
+CQl3aGlsZSAoKmVuZCA9PSAnXG4nKQorCQkJKmVuZC0tID0gMDsKIAorCQlmY2xvc2UoZnApOwor
+CQlyZXR1cm4gbGluZWJ1ZmZlcjsKKwl9IGVsc2UgeworCQlmY2xvc2UoZnApOworCQlyZXR1cm4g
+TlVMTDsKKwl9CiB9CiAKIHN0YXRpYyBpbnQgcGFyc2VfbWVtbWFwX2VudHJ5KGNvbnN0IGNoYXIg
+KmVudHJ5LCBzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyYW5nZSkKLS0gCjEuNi4zLjMKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
