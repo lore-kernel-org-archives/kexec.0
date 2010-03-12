@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nq6nX-0005pX-WD
-	for kexec@lists.infradead.org; Fri, 12 Mar 2010 15:29:16 +0000
+	id 1Nq9Te-0000uq-Oc
+	for kexec@lists.infradead.org; Fri, 12 Mar 2010 18:20:55 +0000
 From: Ameya Palande <ameya.palande@nokia.com>
-Subject: [PATCH] Fix unused return value warnings
-Date: Fri, 12 Mar 2010 17:27:24 +0200
-Message-Id: <512b75d438063ff9f35e4334a02c5e2e20bf7ff3.1268407084.git.ameya.palande@nokia.com>
-MIME-Version: 1.0
+Subject: [PATCH] kexec-tools: Replace obsolate Copyright tag in rpm spec
+Date: Fri, 12 Mar 2010 20:19:32 +0200
+Message-Id: <aad0905ccdeabca832e9fa051d0e9a3765142df4.1268417835.git.ameya.palande@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,47 +15,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: horms@verge.net.au
 
-RnJvbTogQW1leWEgUGFsYW5kZSA8YW1leWEucGFsYW5kZUBub2tpYS5jb20+ClRoaXMgcGF0Y2gg
-Zml4ZXMgZm9sbG93aW5nIHdhcm5pbmc6CgprZXhlYy9maXJtd2FyZV9tZW1tYXAuYzogSW4gZnVu
-Y3Rpb24g4oCYcGFyc2VfbnVtZXJpY19zeXNmc+KAmToKa2V4ZWMvZmlybXdhcmVfbWVtbWFwLmM6
-NzA6IGVycm9yOiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYZmdldHPigJksIGRlY2xhcmVk
-CndpdGggYXR0cmlidXRlIHdhcm5fdW51c2VkX3Jlc3VsdAprZXhlYy9maXJtd2FyZV9tZW1tYXAu
-YzogSW4gZnVuY3Rpb24g4oCYcGFyc2Vfc3RyaW5nX3N5c2Zz4oCZOgprZXhlYy9maXJtd2FyZV9t
-ZW1tYXAuYzoxMDM6IGVycm9yOiBpZ25vcmluZyByZXR1cm4gdmFsdWUgb2Yg4oCYZmdldHPigJks
-IGRlY2xhcmVkCndpdGggYXR0cmlidXRlIHdhcm5fdW51c2VkX3Jlc3VsdAoKU2lnbmVkLW9mZi1i
-eTogQW1leWEgUGFsYW5kZSA8YW1leWEucGFsYW5kZUBub2tpYS5jb20+Ci0tLQoga2V4ZWMvZmly
-bXdhcmVfbWVtbWFwLmMgfCAgIDMyICsrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tCiAx
-IGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQoKZGlmZiAt
-LWdpdCBhL2tleGVjL2Zpcm13YXJlX21lbW1hcC5jIGIva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMK
-aW5kZXggNWExMDFmYi4uNzBlMGY3NCAxMDA2NDQKLS0tIGEva2V4ZWMvZmlybXdhcmVfbWVtbWFw
-LmMKKysrIGIva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMKQEAgLTY3LDExICs2NywxNCBAQCBzdGF0
-aWMgdW5zaWduZWQgbG9uZyBsb25nIHBhcnNlX251bWVyaWNfc3lzZnMoY29uc3QgY2hhciAqZmls
-ZW5hbWUpCiAJCXJldHVybiBVTExPTkdfTUFYOwogCX0KIAotCWZnZXRzKGxpbmVidWZmZXIsIEJV
-RlNJWiwgZnApOwotCWxpbmVidWZmZXJbQlVGU0laLTFdID0gMDsKKwlpZihmZ2V0cyhsaW5lYnVm
-ZmVyLCBCVUZTSVosIGZwKSkgeworCQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7CiAKLQkvKiBs
-ZXQgc3RydG9sbCgpIGRldGVjdCB0aGUgYmFzZSAqLwotCXJldHZhbCA9IHN0cnRvbGwobGluZWJ1
-ZmZlciwgTlVMTCwgMCk7CisJCS8qIGxldCBzdHJ0b2xsKCkgZGV0ZWN0IHRoZSBiYXNlICovCisJ
-CXJldHZhbCA9IHN0cnRvbGwobGluZWJ1ZmZlciwgTlVMTCwgMCk7CisJfSBlbHNlIHsKKwkJcmV0
-dmFsID0gVUxMT05HX01BWDsKKwl9CiAKIAlmY2xvc2UoZnApOwogCkBAIC0xMDAsMTggKzEwMywy
-MSBAQCBzdGF0aWMgY2hhciAqcGFyc2Vfc3RyaW5nX3N5c2ZzKGNvbnN0IGNoYXIgKmZpbGVuYW1l
-KQogCQlyZXR1cm4gTlVMTDsKIAl9CiAKLQlmZ2V0cyhsaW5lYnVmZmVyLCBCVUZTSVosIGZwKTsK
-LQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7Ci0KLQkvKiB0cnVuY2F0ZSB0cmFpbGluZyBuZXds
-aW5lKHMpICovCi0JZW5kID0gbGluZWJ1ZmZlciArIHN0cmxlbihsaW5lYnVmZmVyKSAtIDE7Ci0J
-d2hpbGUgKCplbmQgPT0gJ1xuJykKLQkJKmVuZC0tID0gMDsKKwlpZiAoZmdldHMobGluZWJ1ZmZl
-ciwgQlVGU0laLCBmcCkpIHsKKwkJbGluZWJ1ZmZlcltCVUZTSVotMV0gPSAwOwogCi0JZmNsb3Nl
-KGZwKTsKKwkJLyogdHJ1bmNhdGUgdHJhaWxpbmcgbmV3bGluZShzKSAqLworCQllbmQgPSBsaW5l
-YnVmZmVyICsgc3RybGVuKGxpbmVidWZmZXIpIC0gMTsKIAotCXJldHVybiBsaW5lYnVmZmVyOwor
-CQl3aGlsZSAoKmVuZCA9PSAnXG4nKQorCQkJKmVuZC0tID0gMDsKIAorCQlmY2xvc2UoZnApOwor
-CQlyZXR1cm4gbGluZWJ1ZmZlcjsKKwl9IGVsc2UgeworCQlmY2xvc2UoZnApOworCQlyZXR1cm4g
-TlVMTDsKKwl9CiB9CiAKIHN0YXRpYyBpbnQgcGFyc2VfbWVtbWFwX2VudHJ5KGNvbnN0IGNoYXIg
-KmVudHJ5LCBzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyYW5nZSkKLS0gCjEuNi4zLjMKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From: Ameya Palande <ameya.palande@nokia.com>
+
+Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
+---
+ kexec-tools.spec.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
+index 6605cbb..2aa1310 100644
+--- a/kexec-tools.spec.in
++++ b/kexec-tools.spec.in
+@@ -2,7 +2,7 @@ Summary: Load one kernel from another
+ Name: kexec-tools
+ Version: 
+ Release: 0
+-Copyright: GPL
++License: GPL
+ Group: Development/Tools
+ Source0:%{name}-%{version}.tar.gz
+ Packager: Eric Biederman <ebiederman@xmission.com>
+-- 
+1.6.3.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
