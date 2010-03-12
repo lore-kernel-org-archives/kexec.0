@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NqDQ2-0005VS-G9
-	for kexec@lists.infradead.org; Fri, 12 Mar 2010 22:33:23 +0000
-Date: Sat, 13 Mar 2010 09:33:01 +1100
+	id 1NqDRH-0005gp-5v
+	for kexec@lists.infradead.org; Fri, 12 Mar 2010 22:34:39 +0000
+Date: Sat, 13 Mar 2010 09:34:18 +1100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Fix unused return value warnings
-Message-ID: <20100312223301.GE3301@verge.net.au>
-References: <512b75d438063ff9f35e4334a02c5e2e20bf7ff3.1268407084.git.ameya.palande@nokia.com>
+Subject: Re: [PATCH] kexec-tools: Replace obsolate Copyright tag in rpm spec
+Message-ID: <20100312223418.GF3301@verge.net.au>
+References: <aad0905ccdeabca832e9fa051d0e9a3765142df4.1268417835.git.ameya.palande@nokia.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <512b75d438063ff9f35e4334a02c5e2e20bf7ff3.1268407084.git.ameya.palande@nokia.com>
+In-Reply-To: <aad0905ccdeabca832e9fa051d0e9a3765142df4.1268417835.git.ameya.palande@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +19,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Ameya Palande <ameya.palande@nokia.com>
 Cc: kexec@lists.infradead.org
 
-T24gRnJpLCBNYXIgMTIsIDIwMTAgYXQgMDU6Mjc6MjRQTSArMDIwMCwgQW1leWEgUGFsYW5kZSB3
-cm90ZToKPiBGcm9tOiBBbWV5YSBQYWxhbmRlIDxhbWV5YS5wYWxhbmRlQG5va2lhLmNvbT4KPiBU
-aGlzIHBhdGNoIGZpeGVzIGZvbGxvd2luZyB3YXJuaW5nOgo+IAo+IGtleGVjL2Zpcm13YXJlX21l
-bW1hcC5jOiBJbiBmdW5jdGlvbiDigJhwYXJzZV9udW1lcmljX3N5c2Zz4oCZOgo+IGtleGVjL2Zp
-cm13YXJlX21lbW1hcC5jOjcwOiBlcnJvcjogaWdub3JpbmcgcmV0dXJuIHZhbHVlIG9mIOKAmGZn
-ZXRz4oCZLCBkZWNsYXJlZAo+IHdpdGggYXR0cmlidXRlIHdhcm5fdW51c2VkX3Jlc3VsdAo+IGtl
-eGVjL2Zpcm13YXJlX21lbW1hcC5jOiBJbiBmdW5jdGlvbiDigJhwYXJzZV9zdHJpbmdfc3lzZnPi
-gJk6Cj4ga2V4ZWMvZmlybXdhcmVfbWVtbWFwLmM6MTAzOiBlcnJvcjogaWdub3JpbmcgcmV0dXJu
-IHZhbHVlIG9mIOKAmGZnZXRz4oCZLCBkZWNsYXJlZAo+IHdpdGggYXR0cmlidXRlIHdhcm5fdW51
-c2VkX3Jlc3VsdAo+IAo+IFNpZ25lZC1vZmYtYnk6IEFtZXlhIFBhbGFuZGUgPGFtZXlhLnBhbGFu
-ZGVAbm9raWEuY29tPgo+IC0tLQo+ICBrZXhlYy9maXJtd2FyZV9tZW1tYXAuYyB8ICAgMzIgKysr
-KysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0KPiAgMSBmaWxlcyBjaGFuZ2VkLCAxOSBpbnNl
-cnRpb25zKCspLCAxMyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvZmlybXdh
-cmVfbWVtbWFwLmMgYi9rZXhlYy9maXJtd2FyZV9tZW1tYXAuYwo+IGluZGV4IDVhMTAxZmIuLjcw
-ZTBmNzQgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMvZmlybXdhcmVfbWVtbWFwLmMKPiArKysgYi9rZXhl
-Yy9maXJtd2FyZV9tZW1tYXAuYwo+IEBAIC02NywxMSArNjcsMTQgQEAgc3RhdGljIHVuc2lnbmVk
-IGxvbmcgbG9uZyBwYXJzZV9udW1lcmljX3N5c2ZzKGNvbnN0IGNoYXIgKmZpbGVuYW1lKQo+ICAJ
-CXJldHVybiBVTExPTkdfTUFYOwo+ICAJfQo+ICAKPiAtCWZnZXRzKGxpbmVidWZmZXIsIEJVRlNJ
-WiwgZnApOwo+IC0JbGluZWJ1ZmZlcltCVUZTSVotMV0gPSAwOwo+ICsJaWYoZmdldHMobGluZWJ1
-ZmZlciwgQlVGU0laLCBmcCkpIHsKPiArCQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7Cj4gIAo+
-IC0JLyogbGV0IHN0cnRvbGwoKSBkZXRlY3QgdGhlIGJhc2UgKi8KPiAtCXJldHZhbCA9IHN0cnRv
-bGwobGluZWJ1ZmZlciwgTlVMTCwgMCk7Cj4gKwkJLyogbGV0IHN0cnRvbGwoKSBkZXRlY3QgdGhl
-IGJhc2UgKi8KPiArCQlyZXR2YWwgPSBzdHJ0b2xsKGxpbmVidWZmZXIsIE5VTEwsIDApOwo+ICsJ
-fSBlbHNlIHsKPiArCQlyZXR2YWwgPSBVTExPTkdfTUFYOwo+ICsJfQo+ICAKPiAgCWZjbG9zZShm
-cCk7CgpDb3VsZCB3ZSBjaGFuZ2UgdGhlIHN0eWxlIG9mIHRoaXMgdG8gc29tZXRoaW5nIGxlc3Mt
-bmVzdGVkPwpBbHNvLCB0aGVyZSBuZWVkcyB0byBiZSBhIHNwYWNlIGFmdGVyIGlmLgoKCXVuc2ln
-bmVkIGxvbmcgbG9uZyByZXR2YWwgPSBVTExPTkdfTUFYOwoKCS4uLgoKCWlmICghZmdldHMobGlu
-ZWJ1ZmZlciwgQlVGU0laLCBmcCkpCgkJZ290byBlcnI7CgoJbGluZWJ1ZmZlcltCVUZTSVotMV0g
-PSAwOwoKCS8qIGxldCBzdHJ0b2xsKCkgZGV0ZWN0IHRoZSBiYXNlICovCglyZXR2YWwgPSBzdHJ0
-b2xsKGxpbmVidWZmZXIsIE5VTEwsIDApOwplcnI6CglmY2xvc2UoZnApOwoKPiAgCj4gQEAgLTEw
-MCwxOCArMTAzLDIxIEBAIHN0YXRpYyBjaGFyICpwYXJzZV9zdHJpbmdfc3lzZnMoY29uc3QgY2hh
-ciAqZmlsZW5hbWUpCj4gIAkJcmV0dXJuIE5VTEw7Cj4gIAl9Cj4gIAo+IC0JZmdldHMobGluZWJ1
-ZmZlciwgQlVGU0laLCBmcCk7Cj4gLQlsaW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7Cj4gLQo+IC0J
-LyogdHJ1bmNhdGUgdHJhaWxpbmcgbmV3bGluZShzKSAqLwo+IC0JZW5kID0gbGluZWJ1ZmZlciAr
-IHN0cmxlbihsaW5lYnVmZmVyKSAtIDE7Cj4gLQl3aGlsZSAoKmVuZCA9PSAnXG4nKQo+IC0JCSpl
-bmQtLSA9IDA7Cj4gKwlpZiAoZmdldHMobGluZWJ1ZmZlciwgQlVGU0laLCBmcCkpIHsKPiArCQls
-aW5lYnVmZmVyW0JVRlNJWi0xXSA9IDA7Cj4gIAo+IC0JZmNsb3NlKGZwKTsKPiArCQkvKiB0cnVu
-Y2F0ZSB0cmFpbGluZyBuZXdsaW5lKHMpICovCj4gKwkJZW5kID0gbGluZWJ1ZmZlciArIHN0cmxl
-bihsaW5lYnVmZmVyKSAtIDE7Cj4gIAo+IC0JcmV0dXJuIGxpbmVidWZmZXI7Cj4gKwkJd2hpbGUg
-KCplbmQgPT0gJ1xuJykKPiArCQkJKmVuZC0tID0gMDsKPiAgCj4gKwkJZmNsb3NlKGZwKTsKPiAr
-CQlyZXR1cm4gbGluZWJ1ZmZlcjsKPiArCX0gZWxzZSB7Cj4gKwkJZmNsb3NlKGZwKTsKPiArCQly
-ZXR1cm4gTlVMTDsKPiArCX0KPiAgfQoKQWdhaW4sIEkgd291bGQgcHJlZmVyIHNvbWV0aGluZyBs
-ZXNzLW5lc3RlZC4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Fri, Mar 12, 2010 at 08:19:32PM +0200, Ameya Palande wrote:
+> From: Ameya Palande <ameya.palande@nokia.com>
+> 
+> Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
+
+Thanks, applied.
+
+> ---
+>  kexec-tools.spec.in |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
+> index 6605cbb..2aa1310 100644
+> --- a/kexec-tools.spec.in
+> +++ b/kexec-tools.spec.in
+> @@ -2,7 +2,7 @@ Summary: Load one kernel from another
+>  Name: kexec-tools
+>  Version: 
+>  Release: 0
+> -Copyright: GPL
+> +License: GPL
+>  Group: Development/Tools
+>  Source0:%{name}-%{version}.tar.gz
+>  Packager: Eric Biederman <ebiederman@xmission.com>
+> -- 
+> 1.6.3.3
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
