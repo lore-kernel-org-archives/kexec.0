@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bw0-f215.google.com ([209.85.218.215])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NsLwQ-00072Y-4W
-	for kexec@lists.infradead.org; Thu, 18 Mar 2010 20:03:42 +0000
-Received: by bwz7 with SMTP id 7so1841022bwz.4
-	for <kexec@lists.infradead.org>; Thu, 18 Mar 2010 13:03:37 -0700 (PDT)
+	id 1NsLwR-00072x-Br
+	for kexec@lists.infradead.org; Thu, 18 Mar 2010 20:03:43 +0000
+Received: by bwz7 with SMTP id 7so1841053bwz.4
+	for <kexec@lists.infradead.org>; Thu, 18 Mar 2010 13:03:38 -0700 (PDT)
 From: Ameya Palande <2ameya@gmail.com>
-Subject: [PATCH 4/6] kexec-tools: Add kdump and kexec_test to rpm spec
-Date: Thu, 18 Mar 2010 22:03:22 +0200
-Message-Id: <988766bf0037f2887c3f0ea6fe31f7364f3c5453.1268942234.git.ameya.palande@nokia.com>
+Subject: [PATCH 5/6] kexec-tools: Add rpm spec file to the dist-clean target
+Date: Thu, 18 Mar 2010 22:03:23 +0200
+Message-Id: <3e757c668eb8f12fc31480a1e156c64744bc04a6.1268942234.git.ameya.palande@nokia.com>
 In-Reply-To: <cover.1268942234.git.ameya.palande@nokia.com>
 References: <cover.1268942234.git.ameya.palande@nokia.com>
 In-Reply-To: <cover.1268942234.git.ameya.palande@nokia.com>
@@ -29,27 +29,35 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: horms@verge.net.au
 
-Without this patch rpmbuild complains about unpackaged kdump and kexec_test
-files.
+This patch adds rpm spec file to the "make dist-clean" target and also removes
+a wrong comment.
 
 Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
 ---
- kexec-tools.spec.in |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ Makefile.in |    3 +--
+ 1 files changed, 1 insertions(+), 2 deletions(-)
 
-diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
-index 2aa1310..5eadece 100644
---- a/kexec-tools.spec.in
-+++ b/kexec-tools.spec.in
-@@ -30,6 +30,8 @@ make install DESTDIR=${RPM_BUILD_ROOT}
- %files
- %defattr(-,root,root)
- %{_sbindir}/kexec
-+%{_sbindir}/kdump
-+%{_libdir}/%{name}/kexec_test
- %doc News
- %doc COPYING
- %doc TODO
+diff --git a/Makefile.in b/Makefile.in
+index 3532457..256f4de 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -126,7 +126,6 @@ all: $(TARGETS)
+ # collect objects to be removed in 'make clean'
+ clean =
+ 
+-# collect objects to be removed in 'make clean'
+ dist =	AUTHORS COPYING INSTALL News TODO Makefile.in configure.ac configure \
+ 	kexec-tools.spec.in config/
+ 
+@@ -235,7 +234,7 @@ distclean: dist-clean
+ 
+ dist-clean: clean
+ 	$(RM) -f config.log config.status config.cache Makefile include/config.h
+-	$(RM) -f include/config.h.in configure
++	$(RM) -f include/config.h.in configure $(SPEC)
+ 	$(RM) -rf autom4te.cache
+ 
+ install: $(TARGETS)
 -- 
 1.6.3.3
 
