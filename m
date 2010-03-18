@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bw0-f215.google.com ([209.85.218.215])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NsLwM-00071Z-SP
+	id 1NsLwQ-00072Y-4W
 	for kexec@lists.infradead.org; Thu, 18 Mar 2010 20:03:42 +0000
-Received: by bwz7 with SMTP id 7so1840966bwz.4
-	for <kexec@lists.infradead.org>; Thu, 18 Mar 2010 13:03:34 -0700 (PDT)
+Received: by bwz7 with SMTP id 7so1841022bwz.4
+	for <kexec@lists.infradead.org>; Thu, 18 Mar 2010 13:03:37 -0700 (PDT)
 From: Ameya Palande <2ameya@gmail.com>
-Subject: [PATCH 2/6] kexec-tools: Use same source in rpm spec and Makefile.in
-Date: Thu, 18 Mar 2010 22:03:20 +0200
-Message-Id: <cdc54cec4aca1a2bf3877fdd6a30232e187908d5.1268942234.git.ameya.palande@nokia.com>
+Subject: [PATCH 4/6] kexec-tools: Add kdump and kexec_test to rpm spec
+Date: Thu, 18 Mar 2010 22:03:22 +0200
+Message-Id: <988766bf0037f2887c3f0ea6fe31f7364f3c5453.1268942234.git.ameya.palande@nokia.com>
 In-Reply-To: <cover.1268942234.git.ameya.palande@nokia.com>
 References: <cover.1268942234.git.ameya.palande@nokia.com>
 In-Reply-To: <cover.1268942234.git.ameya.palande@nokia.com>
@@ -29,33 +29,27 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: horms@verge.net.au
 
+Without this patch rpmbuild complains about unpackaged kdump and kexec_test
+files.
+
 Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
 ---
- Makefile.in |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ kexec-tools.spec.in |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/Makefile.in b/Makefile.in
-index cb0faae..3532457 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -202,7 +202,7 @@ $(TARBALL.gz): $(TARBALL)
- 	gzip -c < $^ > $@
- 
- RPMDIR=rpm
--rpm: $(TARBALL)
-+rpm: $(TARBALL.gz)
- 	$(MKDIR) -p $(RPMDIR)/RPM $(RPMDIR)/SRPM $(RPMDIR)/BUILD \
- 		$(RPMDIR)/SPECS $(RPMDIR)/TMP $(RPMDIR)/SOURCES
- 	unset MAKEFLAGS MAKELEVEL; \
-@@ -213,7 +213,7 @@ rpm: $(TARBALL)
- 		--define '_specdir $(RPMDIR)/SPECS' \
- 		--define '_tmppath $(RPMDIR)/TMP' \
- 		--define '_sourcedir $(RPMDIR)/SOURCES' \
--		$(TARBALL)
-+		$(TARBALL.gz)
- 
- $(SPEC): kexec-tools.spec.in Makefile
- 	$(SED) -e 's,^Version: $$,Version: $(PACKAGE_VERSION),' $< > $@
+diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
+index 2aa1310..5eadece 100644
+--- a/kexec-tools.spec.in
++++ b/kexec-tools.spec.in
+@@ -30,6 +30,8 @@ make install DESTDIR=${RPM_BUILD_ROOT}
+ %files
+ %defattr(-,root,root)
+ %{_sbindir}/kexec
++%{_sbindir}/kdump
++%{_libdir}/%{name}/kexec_test
+ %doc News
+ %doc COPYING
+ %doc TODO
 -- 
 1.6.3.3
 
