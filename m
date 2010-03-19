@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nokia.com ([192.100.122.233] helo=mgw-mx06.nokia.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NsdvQ-0005vv-Qm
-	for kexec@lists.infradead.org; Fri, 19 Mar 2010 15:15:53 +0000
-Subject: Re: [PATCH] kexec-tools: Fix a typo in rpm spec description
-From: Ameya Palande <ameya.palande@nokia.com>
-In-Reply-To: <20100319145942.GT15159@redhat.com>
-References: <dc79caccb36f1bf0dbd5b105cbd4e885ff79dd71.1269007108.git.ameya.palande@nokia.com>
-	<20100319145942.GT15159@redhat.com>
-Date: Fri, 19 Mar 2010 17:14:24 +0200
-Message-ID: <1269011664.2154.0.camel@sanganak>
-Mime-Version: 1.0
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NsixC-0000fh-Fs
+	for kexec@lists.infradead.org; Fri, 19 Mar 2010 20:38:02 +0000
+Subject: Re: [PATCH 6/6] kexec-tools: Use default rpmbuild definations
+References: <cover.1268942234.git.ameya.palande@nokia.com>
+	<cover.1268942234.git.ameya.palande@nokia.com>
+	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Fri, 19 Mar 2010 13:37:50 -0700
+In-Reply-To: <fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
+	(Ameya Palande's message of "Thu\, 18 Mar 2010 22\:03\:24 +0200")
+Message-ID: <m1634s9hep.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +25,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ext Don Zickus <dzickus@redhat.com>
-Cc: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Ameya Palande <2ameya@gmail.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On Fri, 2010-03-19 at 15:59 +0100, ext Don Zickus wrote:
-> On Fri, Mar 19, 2010 at 03:58:52PM +0200, Ameya Palande wrote:
-> > From: Ameya Palande <ameya.palande@nokia.com>
-> > 
-> > Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
-> > ---
-> >  kexec-tools.spec.in |    2 +-
-> >  1 files changed, 1 insertions(+), 1 deletions(-)
-> > 
-> > diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
-> > index 5eadece..ae91b73 100644
-> > --- a/kexec-tools.spec.in
-> > +++ b/kexec-tools.spec.in
-> > @@ -9,7 +9,7 @@ Packager: Eric Biederman <ebiederman@xmission.com>
-> >  BuildRoot: %{_tmppath}/%{name}
-> >  
-> >  %description
-> > -/sbin/kexec is a user space utiltity for loading another kernel
-> > +/sbin/kexec is a user space utilitity for loading another kernel
-> 
-> I believe the word you want is 'utility'. ;-)
+Ameya Palande <2ameya@gmail.com> writes:
 
-Ya! :O Thanks for pointing out!
+> Since current mechanism for building rpm into custom directory is not working,
+> remove it and switch to system defaults for rpmbuild.
 
-Cheers,
-Ameya.
+Does RPM really bit rot that quickly?
 
+I know at the time I added the code it was the only way I could
+get rpm to build an rpm without being root.  Something that seems
+desirable.
+
+Eric
 
 _______________________________________________
 kexec mailing list
