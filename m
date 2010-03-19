@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nokia.com ([192.100.122.233] helo=mgw-mx06.nokia.com)
+Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nscgc-0006bg-N8
-	for kexec@lists.infradead.org; Fri, 19 Mar 2010 13:56:31 +0000
+	id 1NsckS-0000ZY-7y
+	for kexec@lists.infradead.org; Fri, 19 Mar 2010 14:00:28 +0000
 From: Ameya Palande <ameya.palande@nokia.com>
-Subject: [PATCH] kexec-tools: Fix unused return value warning for fread
-Date: Fri, 19 Mar 2010 15:55:04 +0200
-Message-Id: <78968d16b4ea65b185019732d0af5888ef070358.1269006846.git.ameya.palande@nokia.com>
+Subject: [PATCH] kexec-tools: Fix a typo in rpm spec description
+Date: Fri, 19 Mar 2010 15:58:52 +0200
+Message-Id: <dc79caccb36f1bf0dbd5b105cbd4e885ff79dd71.1269007108.git.ameya.palande@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +27,22 @@ From: Ameya Palande <ameya.palande@nokia.com>
 
 Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
 ---
- kexec/arch/arm/kexec-zImage-arm.c |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+ kexec-tools.spec.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
-index 3bb49a7..72fcdd8 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -110,7 +110,11 @@ struct tag * atag_read_tags(void)
- 		return NULL;
- 	}
+diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
+index 5eadece..ae91b73 100644
+--- a/kexec-tools.spec.in
++++ b/kexec-tools.spec.in
+@@ -9,7 +9,7 @@ Packager: Eric Biederman <ebiederman@xmission.com>
+ BuildRoot: %{_tmppath}/%{name}
  
--	fread(buf, sizeof(buf[1]), BOOT_PARAMS_SIZE, fp);
-+	if (!fread(buf, sizeof(buf[1]), BOOT_PARAMS_SIZE, fp)) {
-+		fclose(fp);
-+		return NULL;
-+	}
-+
- 	if (ferror(fp)) {
- 		fprintf(stderr, "Cannot read %s: %s\n",
- 			fn, strerror(errno));
+ %description
+-/sbin/kexec is a user space utiltity for loading another kernel
++/sbin/kexec is a user space utilitity for loading another kernel
+ and asking the currently running kernel to do something with it.
+ A currently running kernel may be asked to start the loaded
+ kernel on reboot, or to start the loaded kernel after it panics.
 -- 
 1.6.3.3
 
