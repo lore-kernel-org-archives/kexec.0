@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from smtprelay01.ispgateway.de ([80.67.18.43])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NsixC-0000fh-Fs
-	for kexec@lists.infradead.org; Fri, 19 Mar 2010 20:38:02 +0000
-Subject: Re: [PATCH 6/6] kexec-tools: Use default rpmbuild definations
-References: <cover.1268942234.git.ameya.palande@nokia.com>
-	<cover.1268942234.git.ameya.palande@nokia.com>
-	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Fri, 19 Mar 2010 13:37:50 -0700
-In-Reply-To: <fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
-	(Ameya Palande's message of "Thu\, 18 Mar 2010 22\:03\:24 +0200")
-Message-ID: <m1634s9hep.fsf@fess.ebiederm.org>
+	id 1NsvCw-00051P-Fv
+	for kexec@lists.infradead.org; Sat, 20 Mar 2010 09:43:07 +0000
+Received: from [83.171.147.124] (helo=[192.168.0.18])
+	by smtprelay01.ispgateway.de with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.68) (envelope-from <bernhard@bwalle.de>) id 1NsvCs-00042r-3L
+	for kexec@lists.infradead.org; Sat, 20 Mar 2010 10:42:58 +0100
+Message-ID: <4BA498D5.8020803@bwalle.de>
+Date: Sat, 20 Mar 2010 10:43:49 +0100
+From: Bernhard Walle <bernhard@bwalle.de>
 MIME-Version: 1.0
+Subject: Re: [PATCH 6/6] kexec-tools: Use default rpmbuild definations
+References: <cover.1268942234.git.ameya.palande@nokia.com>	<cover.1268942234.git.ameya.palande@nokia.com>	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
+	<m1634s9hep.fsf@fess.ebiederm.org>
+In-Reply-To: <m1634s9hep.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,21 +27,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ameya Palande <2ameya@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-Ameya Palande <2ameya@gmail.com> writes:
+Am 19.03.2010 21:37, schrieb Eric W. Biederman:
+> Ameya Palande <2ameya@gmail.com> writes:
+> 
+>> Since current mechanism for building rpm into custom directory is not working,
+>> remove it and switch to system defaults for rpmbuild.
+> 
+> Does RPM really bit rot that quickly?
+> 
+> I know at the time I added the code it was the only way I could
+> get rpm to build an rpm without being root.  Something that seems
+> desirable.
 
-> Since current mechanism for building rpm into custom directory is not working,
-> remove it and switch to system defaults for rpmbuild.
+It works here on openSUSE 11.1 when I change
 
-Does RPM really bit rot that quickly?
+-RPMDIR=rpm
++RPMDIR=$(shell pwd)/rpm
 
-I know at the time I added the code it was the only way I could
-get rpm to build an rpm without being root.  Something that seems
-desirable.
+Of course only after applying the other patches...
 
-Eric
+
+
+Regards,
+Bernhard
 
 _______________________________________________
 kexec mailing list
