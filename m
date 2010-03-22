@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtprelay01.ispgateway.de ([80.67.18.43])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NsvCw-00051P-Fv
-	for kexec@lists.infradead.org; Sat, 20 Mar 2010 09:43:07 +0000
-Received: from [83.171.147.124] (helo=[192.168.0.18])
-	by smtprelay01.ispgateway.de with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.68) (envelope-from <bernhard@bwalle.de>) id 1NsvCs-00042r-3L
-	for kexec@lists.infradead.org; Sat, 20 Mar 2010 10:42:58 +0100
-Message-ID: <4BA498D5.8020803@bwalle.de>
-Date: Sat, 20 Mar 2010 10:43:49 +0100
-From: Bernhard Walle <bernhard@bwalle.de>
-MIME-Version: 1.0
+Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1NtdSR-00072G-56
+	for kexec@lists.infradead.org; Mon, 22 Mar 2010 08:58:03 +0000
 Subject: Re: [PATCH 6/6] kexec-tools: Use default rpmbuild definations
-References: <cover.1268942234.git.ameya.palande@nokia.com>	<cover.1268942234.git.ameya.palande@nokia.com>	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
-	<m1634s9hep.fsf@fess.ebiederm.org>
-In-Reply-To: <m1634s9hep.fsf@fess.ebiederm.org>
+From: Ameya Palande <ameya.palande@nokia.com>
+In-Reply-To: <4BA498D5.8020803@bwalle.de>
+References: <cover.1268942234.git.ameya.palande@nokia.com>
+	<cover.1268942234.git.ameya.palande@nokia.com>
+	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
+	<m1634s9hep.fsf@fess.ebiederm.org>  <4BA498D5.8020803@bwalle.de>
+Date: Mon, 22 Mar 2010 10:56:31 +0200
+Message-ID: <1269248191.2119.2.camel@sanganak>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,31 +25,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: ext Bernhard Walle <bernhard@bwalle.de>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Am 19.03.2010 21:37, schrieb Eric W. Biederman:
-> Ameya Palande <2ameya@gmail.com> writes:
+On Sat, 2010-03-20 at 10:43 +0100, ext Bernhard Walle wrote:
+> Am 19.03.2010 21:37, schrieb Eric W. Biederman:
+> > Ameya Palande <2ameya@gmail.com> writes:
+> > 
+> >> Since current mechanism for building rpm into custom directory is not working,
+> >> remove it and switch to system defaults for rpmbuild.
+> > 
+> > Does RPM really bit rot that quickly?
+> > 
+> > I know at the time I added the code it was the only way I could
+> > get rpm to build an rpm without being root.  Something that seems
+> > desirable.
+
+I can build rpm on ubuntu 9.10 as a normal user without having this
+custom "rpm" directory.
+
+> It works here on openSUSE 11.1 when I change
 > 
->> Since current mechanism for building rpm into custom directory is not working,
->> remove it and switch to system defaults for rpmbuild.
-> 
-> Does RPM really bit rot that quickly?
-> 
-> I know at the time I added the code it was the only way I could
-> get rpm to build an rpm without being root.  Something that seems
-> desirable.
+> -RPMDIR=rpm
+> +RPMDIR=$(shell pwd)/rpm
 
-It works here on openSUSE 11.1 when I change
+On Ubuntu 9.10 when I removed RPMDIR stuff, rpmbuild command takes
+system defaults and builds rpm in $HOME/rpmbuild directory.
 
--RPMDIR=rpm
-+RPMDIR=$(shell pwd)/rpm
+Cheers,
+Ameya.
 
-Of course only after applying the other patches...
-
-
-
-Regards,
-Bernhard
 
 _______________________________________________
 kexec mailing list
