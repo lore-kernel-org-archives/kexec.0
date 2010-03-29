@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nokia.com ([192.100.105.134] helo=mgw-mx09.nokia.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NwDYZ-0002Mx-Ue
-	for kexec@lists.infradead.org; Mon, 29 Mar 2010 11:55:04 +0000
-From: Ameya Palande <ameya.palande@nokia.com>
-Subject: [PATCH] kexec-tools: Use the build date for package release
-Date: Mon, 29 Mar 2010 14:52:58 +0300
-Message-Id: <ef5c633db9ef8fe23d82ddcfd862bf565435ed45.1269863565.git.ameya.palande@nokia.com>
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NwL94-0006sc-E3
+	for kexec@lists.infradead.org; Mon, 29 Mar 2010 20:01:14 +0000
+Date: Mon, 29 Mar 2010 15:01:04 -0500
+From: Jack Steiner <steiner@sgi.com>
+Subject: kdump/kexec on EFI-enabled x2apic platforms
+Message-ID: <20100329200104.GA23760@sgi.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,37 +17,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+Cc: mingo@elte.hu, tglx@linutronix.de, ebiederm@xmission.com, gleb@redhat.com, suresh.b.siddha@intel.com
 
-kexec built from git HEAD shows release date as 13th August 2009, which is not
-correct. Instead of that use the build date as release date.
+All -
 
-Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
----
- configure.ac |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+I just started debugging kdump/kexec on our UV platform and
+have run into some problems. I suspect others have encountered these
+same or similar problems. Any help would be appreciated.
 
-diff --git a/configure.ac b/configure.ac
-index f3994a3..fcf50e4 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -9,7 +9,7 @@ AC_CONFIG_AUX_DIR(./config)
- AC_CONFIG_HEADERS([include/config.h])
- AC_LANG(C)
- 
--AC_DEFINE_UNQUOTED(PACKAGE_DATE, "13th August 2009",
-+AC_DEFINE_UNQUOTED(PACKAGE_DATE, "`date '+%d %B %Y'`",
- 		[Define to the release date of this package])
- 
- 
--- 
-1.6.3.3
+
+
+Our platform uses EFI boot. It is Nehalem based & has a large number of cpus.
+The BIOS enables x2apic mode and the kernel runs with interrupt remapping enabled.
+Note that some apicids have more than 8 bits - x2apic mode is required.
+
+
+I am able to successfully kexec the dump kernel but run into several problems.
+
+	- because the initial kernel boots using EFI, BIOS does not build the legacy
+	  tables that are required to locate the RSDP using the legacy method in
+	  acpi_find_root_pointer(). (When booting with EFI, acpi_find_root_pointer() is
+	  not used. The ACPI tables are found from pointers in EFI tables.)
+
+	- it appears that kdump/kexec intentionally boots the kdump kernel
+	  in a mode does does enable efi mode. (Am I correct here???)
+	  This avoids the issues with EFI virtual mode. However, the result
+	  is that ACPI tables are not found. From the dump kernel:
+
+	  	ACPI Error: A valid RSDP was not found (20090903/tbxfroot-222)
+
+	- Because ACPI tables are not found, the dump kernel does not transition
+	  into x2apic mode. The hardware, however, is still in x2apic mode from the
+	  initial kernel. Later in the boot of the dump kernel, read_apic_id()
+	  tried to read memory-mapped apic registers instead of the MSRs that are
+	  used in x2apic mode. This is not allowed & the dump kernel panics with:
+
+		[    0.000000]  [<ffffffff81b52195>] early_idt_handler+0x55/0x68
+		[    0.000000]  [<ffffffff8101f393>] ? native_apic_mem_read+0x3/0x10
+		[    0.000000]  [<ffffffff8101a3c6>] ? read_apic_id+0x16/0x30
+		[    0.000000]  [<ffffffff81b5f857>] init_apic_mappings+0xe7/0x137
+		[    0.000000]  [<ffffffff81b559fd>] setup_arch+0x900/0xc33
+		[    0.000000]  [<ffffffff81b52bae>] start_kernel+0x6f/0x4a1
+
+
+
+I checked an Intel Nehalem whitebox using the Intel BIOS. The dump kernel does not
+find the RDSP but the initial kernel does not enable x2apic mode either (possibly
+because of an old BIOS - not sure).  As a result, the dump kernel does not hit
+the panic shown above. The kdump kernel successfully boots w/o having discovered
+ACPI tables.
+
+
+How should I proceed?
+	- should I be running the dump kernel with EFI mode enabled?
+	- should I be fixing the issues with x2apic mode in a non-EFI dump kernel?
+	- or should BIOS be building the tables necessary to support both EFI & non-EFI boot.
+
+
+--- jack
+
+
+Jack Steiner (steiner@sgi.com)		SGI - Silicon Graphics, Inc.
 
 
 _______________________________________________
