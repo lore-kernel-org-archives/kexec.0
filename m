@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nuvxp-0005VD-OY
-	for kexec@lists.infradead.org; Thu, 25 Mar 2010 22:55:50 +0000
-Date: Fri, 26 Mar 2010 09:55:05 +1100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 6/6] kexec-tools: Use default rpmbuild definations
-Message-ID: <20100325225505.GF5125@verge.net.au>
-References: <cover.1268942234.git.ameya.palande@nokia.com>
-	<cover.1268942234.git.ameya.palande@nokia.com>
-	<fd9d828f07e6cb070f73872d4427c865e52c5127.1268942234.git.ameya.palande@nokia.com>
-	<m1634s9hep.fsf@fess.ebiederm.org> <4BA498D5.8020803@bwalle.de>
-	<20100324113009.GH10098@verge.net.au> <4BABC8EC.10108@bwalle.de>
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from byebye.mdh.se ([130.243.85.101])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1Nw9AQ-0004Pv-T8
+	for kexec@lists.infradead.org; Mon, 29 Mar 2010 07:13:51 +0000
+Received: from dahlsten.mdh.se (dahlsten.mdh.se [130.243.76.148])
+	by byebye.mdh.se (8.12.11/8.12.11/Debian-5) with ESMTP id
+	o2T7Dd9T008027
+	for <kexec@lists.infradead.org>; Mon, 29 Mar 2010 09:13:39 +0200
+Received: from f-brevik.mdh.local (f-brevik.ita.mdh.se [130.243.82.49])
+	by dahlsten.mdh.se (8.14.1/8.14.1) with ESMTP id o2T7DbvN014044
+	for <kexec@lists.infradead.org>;
+	Mon, 29 Mar 2010 09:13:37 +0200 (MET DST)
+From: =?iso-8859-1?Q?Daniel_Flemstr=F6m?= <daniel.flemstrom@mdh.se>
+Date: Mon, 29 Mar 2010 09:13:36 +0200
+Subject: Anyone working on kexec for embedded powerpc?
+Message-ID: <C7D61FBF.6C26%daniel.flemstrom@mdh.se>
 In-Reply-To: <4BABC8EC.10108@bwalle.de>
+Content-Language: en
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,53 +26,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1933293878=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bernhard Walle <bernhard@bwalle.de>
-Cc: kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Thu, Mar 25, 2010 at 09:34:52PM +0100, Bernhard Walle wrote:
-> Am 24.03.2010 12:30, schrieb Simon Horman:
-> > On Sat, Mar 20, 2010 at 10:43:49AM +0100, Bernhard Walle wrote:
-> >> Am 19.03.2010 21:37, schrieb Eric W. Biederman:
-> >>> Ameya Palande <2ameya@gmail.com> writes:
-> >>>
-> >>>> Since current mechanism for building rpm into custom directory is not working,
-> >>>> remove it and switch to system defaults for rpmbuild.
-> >>>
-> >>> Does RPM really bit rot that quickly?
-> >>>
-> >>> I know at the time I added the code it was the only way I could
-> >>> get rpm to build an rpm without being root.  Something that seems
-> >>> desirable.
-> >>
-> >> It works here on openSUSE 11.1 when I change
-> >>
-> >> -RPMDIR=rpm
-> >> +RPMDIR=$(shell pwd)/rpm
-> >>
-> >> Of course only after applying the other patches...
-> > 
-> > That seems reasonable to me, care to make it a proper patch?
-> 
-> Since 529ad47e356a8e68be9cde771af8e909a784c3fc has been applied which
-> removes that code, this is no longer possible. ;)
+--===============1933293878==
+Content-Language: en
+Content-Type: multipart/alternative;
+	boundary="_000_C7D61FBF6C26danielflemstrommdhse_"
 
-;)
-> 
-> However, I'm fine with that change. The user can always create a custom
-> ~/.rpmmacros like
-> 
->   %_topdir /home/bwalle/src/packages
-> 
-> to build the RPM in a local tree.
+--_000_C7D61FBF6C26danielflemstrommdhse_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Ok, that seems reasonable to me too.
+Hi all!
+I have a mpc8641 hpcn board which i want to run kexec on and also do some r=
+esearch on software restart.
+I think kexec is an excellent idea for embedded systems where you want to h=
+ave quick restarts, but currently I can only see ppc gamecube support.
 
+Somewhere i saw that Benjamin Herrenschmidt had plans, but it was a rather =
+old message. Have anyone done any work with this for powerpc?
+Otherwise i intend do start some work to port it to the powerpc platform(if=
+ possible).
+I guess that the powerpc usage of device tree instead of the "blob" might b=
+e the biggest issue?
+
+Is this the correct place for these discussions?
+
+
+/Daniel Flemstr=F6m
+SE research department
+M=E4lardalen University
+
+
+
+--_000_C7D61FBF6C26danielflemstrommdhse_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<HTML>
+<HEAD>
+<TITLE>Anyone working on kexec for embedded powerpc?</TITLE>
+</HEAD>
+<BODY>
+<FONT FACE=3D"Calibri, Verdana, Helvetica, Arial"><SPAN STYLE=3D'font-size:=
+11pt'>Hi all!<BR>
+I have a mpc8641 hpcn board which i want to run kexec on and also do some r=
+esearch on software restart.<BR>
+I think kexec is an excellent idea for embedded systems where you want to h=
+ave quick restarts, but currently I can only see ppc gamecube support. <BR>
+<BR>
+Somewhere i saw that Benjamin Herrenschmidt had plans, but it was a rather =
+old message. Have anyone done any work with this for powerpc?<BR>
+Otherwise i intend do start some work to port it to the powerpc platform(if=
+ possible).<BR>
+I guess that the powerpc usage of device tree instead of the &#8220;blob&#8=
+221; might be the biggest issue?<BR>
+<BR>
+Is this the correct place for these discussions? <BR>
+<BR>
+<BR>
+/Daniel Flemstr&ouml;m<BR>
+SE research department<BR>
+M&auml;lardalen University<BR>
+<BR>
+&nbsp;</SPAN></FONT>
+</BODY>
+</HTML>
+
+
+--_000_C7D61FBF6C26danielflemstrommdhse_--
+
+
+--===============1933293878==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1933293878==--
+
