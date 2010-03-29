@@ -1,23 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from byebye.mdh.se ([130.243.85.101])
+Received: from smtp.nokia.com ([192.100.105.134] helo=mgw-mx09.nokia.com)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nw9AQ-0004Pv-T8
-	for kexec@lists.infradead.org; Mon, 29 Mar 2010 07:13:51 +0000
-Received: from dahlsten.mdh.se (dahlsten.mdh.se [130.243.76.148])
-	by byebye.mdh.se (8.12.11/8.12.11/Debian-5) with ESMTP id
-	o2T7Dd9T008027
-	for <kexec@lists.infradead.org>; Mon, 29 Mar 2010 09:13:39 +0200
-Received: from f-brevik.mdh.local (f-brevik.ita.mdh.se [130.243.82.49])
-	by dahlsten.mdh.se (8.14.1/8.14.1) with ESMTP id o2T7DbvN014044
-	for <kexec@lists.infradead.org>;
-	Mon, 29 Mar 2010 09:13:37 +0200 (MET DST)
-From: =?iso-8859-1?Q?Daniel_Flemstr=F6m?= <daniel.flemstrom@mdh.se>
-Date: Mon, 29 Mar 2010 09:13:36 +0200
-Subject: Anyone working on kexec for embedded powerpc?
-Message-ID: <C7D61FBF.6C26%daniel.flemstrom@mdh.se>
-In-Reply-To: <4BABC8EC.10108@bwalle.de>
-Content-Language: en
-MIME-Version: 1.0
+	id 1NwDYZ-0002Mx-Ue
+	for kexec@lists.infradead.org; Mon, 29 Mar 2010 11:55:04 +0000
+From: Ameya Palande <ameya.palande@nokia.com>
+Subject: [PATCH] kexec-tools: Use the build date for package release
+Date: Mon, 29 Mar 2010 14:52:58 +0300
+Message-Id: <ef5c633db9ef8fe23d82ddcfd862bf565435ed45.1269863565.git.ameya.palande@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,90 +15,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1933293878=="
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
---===============1933293878==
-Content-Language: en
-Content-Type: multipart/alternative;
-	boundary="_000_C7D61FBF6C26danielflemstrommdhse_"
+kexec built from git HEAD shows release date as 13th August 2009, which is not
+correct. Instead of that use the build date as release date.
 
---_000_C7D61FBF6C26danielflemstrommdhse_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ameya Palande <ameya.palande@nokia.com>
+---
+ configure.ac |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Hi all!
-I have a mpc8641 hpcn board which i want to run kexec on and also do some r=
-esearch on software restart.
-I think kexec is an excellent idea for embedded systems where you want to h=
-ave quick restarts, but currently I can only see ppc gamecube support.
+diff --git a/configure.ac b/configure.ac
+index f3994a3..fcf50e4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -9,7 +9,7 @@ AC_CONFIG_AUX_DIR(./config)
+ AC_CONFIG_HEADERS([include/config.h])
+ AC_LANG(C)
+ 
+-AC_DEFINE_UNQUOTED(PACKAGE_DATE, "13th August 2009",
++AC_DEFINE_UNQUOTED(PACKAGE_DATE, "`date '+%d %B %Y'`",
+ 		[Define to the release date of this package])
+ 
+ 
+-- 
+1.6.3.3
 
-Somewhere i saw that Benjamin Herrenschmidt had plans, but it was a rather =
-old message. Have anyone done any work with this for powerpc?
-Otherwise i intend do start some work to port it to the powerpc platform(if=
- possible).
-I guess that the powerpc usage of device tree instead of the "blob" might b=
-e the biggest issue?
-
-Is this the correct place for these discussions?
-
-
-/Daniel Flemstr=F6m
-SE research department
-M=E4lardalen University
-
-
-
---_000_C7D61FBF6C26danielflemstrommdhse_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<HTML>
-<HEAD>
-<TITLE>Anyone working on kexec for embedded powerpc?</TITLE>
-</HEAD>
-<BODY>
-<FONT FACE=3D"Calibri, Verdana, Helvetica, Arial"><SPAN STYLE=3D'font-size:=
-11pt'>Hi all!<BR>
-I have a mpc8641 hpcn board which i want to run kexec on and also do some r=
-esearch on software restart.<BR>
-I think kexec is an excellent idea for embedded systems where you want to h=
-ave quick restarts, but currently I can only see ppc gamecube support. <BR>
-<BR>
-Somewhere i saw that Benjamin Herrenschmidt had plans, but it was a rather =
-old message. Have anyone done any work with this for powerpc?<BR>
-Otherwise i intend do start some work to port it to the powerpc platform(if=
- possible).<BR>
-I guess that the powerpc usage of device tree instead of the &#8220;blob&#8=
-221; might be the biggest issue?<BR>
-<BR>
-Is this the correct place for these discussions? <BR>
-<BR>
-<BR>
-/Daniel Flemstr&ouml;m<BR>
-SE research department<BR>
-M&auml;lardalen University<BR>
-<BR>
-&nbsp;</SPAN></FONT>
-</BODY>
-</HTML>
-
-
---_000_C7D61FBF6C26danielflemstrommdhse_--
-
-
---===============1933293878==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1933293878==--
-
