@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NwtDw-0002uT-Ef
-	for kexec@lists.infradead.org; Wed, 31 Mar 2010 08:24:30 +0000
+	id 1NwtDw-0002uK-Ez
+	for kexec@lists.infradead.org; Wed, 31 Mar 2010 08:24:29 +0000
 From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: [PATCH 7/7] Let SH adn ARM use common uImage probe code
-Date: Wed, 31 Mar 2010 10:24:18 +0200
-Message-Id: <1270023858-26947-8-git-send-email-sebastian@breakpoint.cc>
+Subject: [PATCH 1/7] slurpfile: use lseek() on character nodes instead of
+	fstat() for file size
+Date: Wed, 31 Mar 2010 10:24:12 +0200
+Message-Id: <1270023858-26947-2-git-send-email-sebastian@breakpoint.cc>
 In-Reply-To: <1270023858-26947-1-git-send-email-sebastian@breakpoint.cc>
 References: <1270023858-26947-1-git-send-email-sebastian@breakpoint.cc>
 List-Id: <kexec.lists.infradead.org>
@@ -23,110 +24,64 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, Marc Andre Tanner <mat@brain-dump.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org
 
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-The now generic probe function is more complete than the currently used.
-It seems that ARM's and SH's uImage are always uncompressed so it might
-be good to check for this.
+fstat() is used to determine the filesize before read() and
+it requires a filesystem. That means that it can not be used
+on character nodes. This makes it impossible to obtains the
+kernel from a char node like mtd or more likely ubi.
+We can't use this in every case because files in /proc don't
+support lseek(). This is required by the powerpc part to read
+some device-tree entries.
 
-Cc: Paul Mundt <lethal@linux-sh.org>
-Cc: Marc Andre Tanner <mat@brain-dump.org>
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kexec/arch/arm/Makefile           |    1 +
- kexec/arch/arm/kexec-uImage-arm.c |   15 ++-------------
- kexec/arch/sh/Makefile            |    1 +
- kexec/arch/sh/kexec-uImage-sh.c   |   15 ++-------------
- 4 files changed, 6 insertions(+), 26 deletions(-)
+ kexec/kexec.c |   23 +++++++++++++++++++++--
+ 1 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
-index 9416339..2ecdb66 100644
---- a/kexec/arch/arm/Makefile
-+++ b/kexec/arch/arm/Makefile
-@@ -5,6 +5,7 @@ arm_KEXEC_SRCS=  kexec/arch/arm/kexec-elf-rel-arm.c
- arm_KEXEC_SRCS+= kexec/arch/arm/kexec-zImage-arm.c
- arm_KEXEC_SRCS+= kexec/arch/arm/kexec-uImage-arm.c
- arm_KEXEC_SRCS+= kexec/arch/arm/kexec-arm.c
-+arm_KEXEC_SRCS+= kexec/kexec-uImage.c
- 
- dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS)			\
- 	kexec/arch/arm/kexec-arm.h					\
-diff --git a/kexec/arch/arm/kexec-uImage-arm.c b/kexec/arch/arm/kexec-uImage-arm.c
-index e881fd8..4875185 100644
---- a/kexec/arch/arm/kexec-uImage-arm.c
-+++ b/kexec/arch/arm/kexec-uImage-arm.c
-@@ -5,24 +5,13 @@
- #include <string.h>
- #include <sys/types.h>
- #include <image.h>
-+#include <kexec-uImage.h>
- #include "../../kexec.h"
- #include "kexec-arm.h"
- 
- int uImage_arm_probe(const char *buf, off_t len)
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index d282ade..fe29fb5 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -475,7 +475,7 @@ char *slurp_file(const char *filename, off_t *r_size)
  {
--	struct image_header header;
--
--	if ((uintmax_t)len < (uintmax_t)sizeof(header))
--		return -1;
--
--	memcpy(&header, buf, sizeof(header));
--
--	if (cpu_to_be32(header.ih_magic) != IH_MAGIC)
--		return -1;
--
--	/* XXX: check CRC Checksum? */
--
--	return 0;
-+	return uImage_probe(buf, len, IH_ARCH_ARM);
- }
- 
- int uImage_arm_load(int argc, char **argv, const char *buf, off_t len,
-diff --git a/kexec/arch/sh/Makefile b/kexec/arch/sh/Makefile
-index 9ccd008..a9f6081 100644
---- a/kexec/arch/sh/Makefile
-+++ b/kexec/arch/sh/Makefile
-@@ -9,6 +9,7 @@ sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-rel-sh.c
- sh_KEXEC_SRCS += kexec/arch/sh/netbsd_booter.S
- sh_KEXEC_SRCS += kexec/arch/sh/crashdump-sh.c
-+sh_KEXEC_SRCS += kexec/kexec-uImage.c
- 
- sh_ADD_BUFFER =
- sh_ADD_SEGMENT =
-diff --git a/kexec/arch/sh/kexec-uImage-sh.c b/kexec/arch/sh/kexec-uImage-sh.c
-index c2bce53..e983165 100644
---- a/kexec/arch/sh/kexec-uImage-sh.c
-+++ b/kexec/arch/sh/kexec-uImage-sh.c
-@@ -7,24 +7,13 @@
- #include <string.h>
- #include <sys/types.h>
- #include <image.h>
-+#include <kexec-uImage.h>
- #include "../../kexec.h"
- #include "kexec-sh.h"
- 
- int uImage_sh_probe(const char *buf, off_t len)
- {
--	struct image_header header;
--
--	if ((uintmax_t)len < (uintmax_t)sizeof(header))
--		return -1;
--
--	memcpy(&header, buf, sizeof(header));
--
--	if (cpu_to_be32(header.ih_magic) != IH_MAGIC)
--		return -1;
--
--	/* XXX: check CRC Checksum? */
--
--	return 0;
-+	return uImage_probe(buf, len, IH_ARCH_SH);
- }
- 
- int uImage_sh_load(int argc, char **argv, const char *buf, off_t len,
+ 	int fd;
+ 	char *buf;
+-	off_t size, progress;
++	off_t size, progress, err;
+ 	ssize_t result;
+ 	struct stat stats;
+ 	
+@@ -494,7 +494,26 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 		die("Cannot stat: %s: %s\n",
+ 			filename, strerror(errno));
+ 	}
+-	size = stats.st_size;
++	/*
++	 * Seek in case the kernel is a character node like /dev/ubi0_0.
++	 * This does not work on regular files which live in /proc and
++	 * we need this for some /proc/device-tree entries
++	 */
++	if (S_ISCHR(stats.st_mode)) {
++
++		size = lseek(fd, 0, SEEK_END);
++		if (size < 0)
++			die("Can not seek file %s: %s\n", filename,
++					strerror(errno));
++
++		err = lseek(fd, 0, SEEK_SET);
++		if (err < 0)
++			die("Can not seek to the begin of file %s: %s\n",
++					filename, strerror(errno));
++	} else {
++		size = stats.st_size;
++	}
++
+ 	*r_size = size;
+ 	buf = xmalloc(size);
+ 	progress = 0;
 -- 
 1.6.5.2
 
