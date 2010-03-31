@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from sous-sol.org ([216.99.217.87] helo=sequoia.sous-sol.org)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nx5Px-000179-J8
-	for kexec@lists.infradead.org; Wed, 31 Mar 2010 21:25:42 +0000
-Date: Wed, 31 Mar 2010 14:25:35 -0700
-From: Chris Wright <chrisw@sous-sol.org>
-Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
-Message-ID: <20100331212535.GR29241@sequoia.sous-sol.org>
-References: <20100331152417.GB13406@hmsreliant.think-freely.org>
+Received: from mga05.intel.com ([192.55.52.89] helo=fmsmga101.fm.intel.com)
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1Nx6O8-0005xh-5b
+	for kexec@lists.infradead.org; Wed, 31 Mar 2010 22:27:52 +0000
+Date: Wed, 31 Mar 2010 15:24:50 -0700
+From: "David N. Lombard" <dnlombar@ichips.intel.com>
+Subject: Re: kdump/kexec on EFI-enabled x2apic platforms
+Message-ID: <20100331222449.GB8257@nlxcldnl2.cl.intel.com>
+References: <20100329200104.GA23760@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100331152417.GB13406@hmsreliant.think-freely.org>
+In-Reply-To: <20100329200104.GA23760@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +23,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, vgoyal@redhat.com
+To: Jack Steiner <steiner@sgi.com>
+Cc: "Siddha, Suresh B" <suresh.b.siddha@intel.com>, "gleb@redhat.com" <gleb@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "mingo@elte.hu" <mingo@elte.hu>, "tglx@linutronix.de" <tglx@linutronix.de>
 
-* Neil Horman (nhorman@tuxdriver.com) wrote:
-> Flush iommu during shutdown
+On Mon, Mar 29, 2010 at 01:01:04PM -0700, Jack Steiner wrote:
+> All -
 > 
-> When using an iommu, its possible, if a kdump kernel boot follows a primary
-> kernel crash, that dma operations might still be in flight from the previous
-> kernel during the kdump kernel boot.  This can lead to memory corruption,
-> crashes, and other erroneous behavior, specifically I've seen it manifest during
-> a kdump boot as endless iommu error log entries of the form:
-> AMD-Vi: Event logged [IO_PAGE_FAULT device=00:14.1 domain=0x000d
-> address=0x000000000245a0c0 flags=0x0070]
+> I just started debugging kdump/kexec on our UV platform and
+> have run into some problems. I suspect others have encountered these
+> same or similar problems. Any help would be appreciated.
+> 
+> 
+> 
+> Our platform uses EFI boot. It is Nehalem based & has a large number of cpus.
+> The BIOS enables x2apic mode and the kernel runs with interrupt remapping enabled.
+> Note that some apicids have more than 8 bits - x2apic mode is required.
 
-We've already fixed this problem once before, so some code shift must
-have brought it back.  Personally, I prefer to do this on the bringup
-path than the teardown path.  Besides keeping the teardown path as
-simple as possible (goal is to get to kdump kernel asap), there's also
-reason to competely flush on startup in genernal in case BIOS has done
-anything unsavory.
+What are you using as a boot loader?  I've tested kexec with elilo 3.8 and
+got good results.  But, that was early last year, so I'll need to try it out
+with production hardware and the current firmware and sw stack.  I'll try to
+get to that this week, and let you know the results.
 
-thanks,
--chris
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
