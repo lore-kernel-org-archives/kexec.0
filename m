@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxLhf-00066M-ER
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 14:49:04 +0000
-Date: Thu, 1 Apr 2010 10:47:36 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1NxLuJ-0000m9-T2
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 15:02:08 +0000
+Date: Thu, 1 Apr 2010 11:02:03 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
-Message-ID: <20100401144736.GA14069@shamino.rdu.redhat.com>
+Message-ID: <20100401150203.GD6844@redhat.com>
 References: <20100331152417.GB13406@hmsreliant.think-freely.org>
-	<20100331155430.GF14011@redhat.com>
-	<20100331182824.GC13406@hmsreliant.think-freely.org>
-	<m1wrwsuxn9.fsf@fess.ebiederm.org>
-	<20100331191811.GD13406@hmsreliant.think-freely.org>
-	<m1sk7guv5u.fsf@fess.ebiederm.org>
-	<20100331202745.GE13406@hmsreliant.think-freely.org>
-	<20100401142902.GF24846@8bytes.org>
+	<20100331212535.GR29241@sequoia.sous-sol.org>
+	<20100401011311.GC2069@localhost.localdomain>
+	<20100401022418.GA1983@redhat.com>
+	<20100401125304.GA13603@shamino.rdu.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100401142902.GF24846@8bytes.org>
+In-Reply-To: <20100401125304.GA13603@shamino.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,90 +27,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Neil Horman <nhorman@redhat.com>
+Cc: Neil Horman <nhorman@tuxdriver.com>, joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, hbabu@us.ibm.com, iommu@lists.linux-foundation.org
 
-On Thu, Apr 01, 2010 at 04:29:02PM +0200, Joerg Roedel wrote:
-> Hi Neil,
-> 
-> first some general words about the problem you discovered: The problem
-> is not caused by in-flight DMA. The problem is that the IOMMU hardware
-> has cached the old DTE entry for the device (including the old
-> page-table root pointer) and is using it still when the kdump kernel has
-> booted. We had this problem once and fixed it by flushing a DTE in the
-> IOMMU before it is used for the first time. This seems to be broken
-> now. Which kernel have you seen this on?
-> 
-First noted on 2.6.32 (the RHEL6 beta kernel), but I've reproduced with the
-latest linus tree as well.
-
-> I am back in office next tuesday and will look into this problem too.
-> 
-Thank you.
-
-> On Wed, Mar 31, 2010 at 04:27:45PM -0400, Neil Horman wrote:
-> > So I'm officially rescinding this patch.
-> 
-> Yeah, the right solution to this problem is to find out why every DTE is
-> not longer flushed before first use.
-> 
-Right, I've checked the commits that chris noted in his previous email and
-they're in place, so I'm not sure how we're getting stale dte's
-
-> > It apparently just covered up the problem, rather than solved it
-> > outright.  This is going to take some more thought on my part.  I read
-> > the code a bit closer, and the amd iommu on boot up currently marks
-> > all its entries as valid and having a valid translation (because if
-> > they're marked as invalid they're passed through untranslated which
-> > strikes me as dangerous, since it means a dma address treated as a bus
-> > address could lead to memory corruption.  The saving grace is that
-> > they are marked as non-readable and non-writeable, so any device doing
-> > a dma after the reinit should get logged (which it does), and then
-> > target aborted (which should effectively squash the translation)
-> 
-> Right. The default for all devices is to forbid DMA.
-> 
-Thanks, glad to know I read that right, took me a bit to understand it :)
-
-> > I'm starting to wonder if:
+On Thu, Apr 01, 2010 at 08:53:04AM -0400, Neil Horman wrote:
+> On Wed, Mar 31, 2010 at 10:24:18PM -0400, Vivek Goyal wrote:
+> > On Wed, Mar 31, 2010 at 09:13:11PM -0400, Neil Horman wrote:
+> > > On Wed, Mar 31, 2010 at 02:25:35PM -0700, Chris Wright wrote:
+> > > > * Neil Horman (nhorman@tuxdriver.com) wrote:
+> > > > > Flush iommu during shutdown
+> > > > > 
+> > > > > When using an iommu, its possible, if a kdump kernel boot follows a primary
+> > > > > kernel crash, that dma operations might still be in flight from the previous
+> > > > > kernel during the kdump kernel boot.  This can lead to memory corruption,
+> > > > > crashes, and other erroneous behavior, specifically I've seen it manifest during
+> > > > > a kdump boot as endless iommu error log entries of the form:
+> > > > > AMD-Vi: Event logged [IO_PAGE_FAULT device=00:14.1 domain=0x000d
+> > > > > address=0x000000000245a0c0 flags=0x0070]
+> > > > 
+> > > > We've already fixed this problem once before, so some code shift must
+> > > > have brought it back.  Personally, I prefer to do this on the bringup
+> > > > path than the teardown path.  Besides keeping the teardown path as
+> > > > simple as possible (goal is to get to kdump kernel asap), there's also
+> > > > reason to competely flush on startup in genernal in case BIOS has done
+> > > > anything unsavory.
+> > > > 
+> > > Chris,
+> > > 	Can you elaborate on what you did with the iommu to make this safe?  It
+> > > will save me time digging through the history on this code, and help me
+> > > understand better whats going on here.
+> > > 
+> > > I was starting to think that we should just leave the iommu on through a kdump,
+> > > and re-construct a new page table based on the old table (filtered by the error
+> > > log) on kdump boot, but it sounds like a better solution might be in place.
+> > > 
 > > 
-> > 1) some dmas are so long lived they start aliasing new dmas that get mapped in
-> > the kdump kernel leading to various erroneous behavior
-> 
-> At least not in this case. Even when this is true the DMA would target
-> memory of the crashed kernel and not the kdump area. This is not even
-> memory corruption because the device will write to memory the driver has
-> allocated for it.
-> 
-Yeah, I figured that old dma's going to old locations were ok, I was more
-concerned that if an 'old' dma lived through our resetting of the iommu page
-table, leading to us pointing an old dma address to a new physical address
-within the new kernel memory space.  Although, given the reset state of the
-tables, for that to happen a dma would have to not attempt a memory transaction
-until sometime later in the boot, which seems...unlikely to say the least, so I
-agree this is almost certainly not happening.
+> > Hi Neil,
+> > 
+> > Is following sequence possible.
+> > 
+> > - In crashed kernel, take away the write permission from all the devices.
+> >   Mark bit 62 zero for all devices in device table.
+> > 
+> > - Leave the iommu on and let the device entries be valid in kdump kernel
+> >   so that any in-flight dma does not become pass through (which can cause
+> >   more damage and corrupt kdump kernel).
+> > 
+> > - During kdump kernel initialization, load a new device table where again
+> >   all the devices don't have write permission. looks like by default
+> >   we create a device table with all bits zero except DEV_ENTRY_VALID
+> >   and DEV_ENTRY_TRANSLATION bit.
+> > 
+> > - Reset the device where we want to setup any dma or operate on.
+> > 
+> > - Allow device to do DMA/write.
+> > 
+> > So by default all the devices will not be able to do write to memory 
+> > and selective devices are given access only after a reset.
+> > 
+> > I am not sure what are the dependencies for loading a new device table
+> > in second kernel. If it requires disabling the IOMMU, then we leave a
+> > window where in-flight dma will become passthrough and has the potential
+> > to corrupt kdump kernel.
+> > 
+> I think this is possible, but I'm a bit concerned with how some devices will
+> handle a reset.  For instance, what will happen to an HBA or a disk, if we reset
+> it as the module is loading?  Is that safe?
 
-> > 2) a slew of target aborts to some hardware results in them being in an
-> > inconsistent state
-> 
-> Thats indeed true. I have seen that with ixgbe cards for example. They
-> seem to be really confused after an target abort.
-> 
-Yeah, this part worries me, target aborts lead to various brain dead hardware
-pieces.  What are you thoughts on leaving the iommu on through a reboot to avoid
-this issue (possibly resetting any pci device that encounters a target abort, as
-noted in the error log on the iommu?
+I think we need to reset devices in driver if "reset_devices" is set. So
+we will not reset these during normal boot.
 
-> > I'm going to try marking the dev table on shutdown such that all devices have no
-> > read/write permissions to see if that changes the situation.  It should I think
-> > give me a pointer as to weather (1) or (2) is the more likely problem.
-> 
-> Probably not. You still need to flush the old entries out of the IOMMU.
-> 
-Yeah, after reading your explination above, I agree
-Neil
+Regarding being safe, I don't know. I am assuming that driver knows (or
+need to know), how to reset device safely while driver is initializing.
+That's the whole assumption kdump is built on, that once driver is
+initializing, it will first reset the device (if reset_devices is set), so
+that chances of device working properly in second kernel increase.
 
-> 
+Vivek
+
 
 _______________________________________________
 kexec mailing list
