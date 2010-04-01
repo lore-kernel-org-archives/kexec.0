@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxAOQ-0002ji-5K
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 02:44:26 +0000
-Date: Wed, 31 Mar 2010 22:44:21 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1NxBe0-0000ET-6e
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 04:04:37 +0000
 Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
-Message-ID: <20100401024421.GA5877@redhat.com>
 References: <20100331152417.GB13406@hmsreliant.think-freely.org>
-	<20100331212535.GR29241@sequoia.sous-sol.org>
+	<20100331155430.GF14011@redhat.com>
+	<20100331182824.GC13406@hmsreliant.think-freely.org>
+	<m1wrwsuxn9.fsf@fess.ebiederm.org>
+	<20100331191811.GD13406@hmsreliant.think-freely.org>
+	<m1sk7guv5u.fsf@fess.ebiederm.org>
+	<20100331202745.GE13406@hmsreliant.think-freely.org>
+From: ebiederm@xmission.com (Eric W. Biederman)
+Date: Wed, 31 Mar 2010 21:04:27 -0700
+In-Reply-To: <20100331202745.GE13406@hmsreliant.think-freely.org> (Neil
+	Horman's message of "Wed\, 31 Mar 2010 16\:27\:45 -0400")
+Message-ID: <m1vdcbstro.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100331212535.GR29241@sequoia.sous-sol.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +29,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chris Wright <chrisw@sous-sol.org>
-Cc: Neil Horman <nhorman@tuxdriver.com>, joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Mar 31, 2010 at 02:25:35PM -0700, Chris Wright wrote:
-> * Neil Horman (nhorman@tuxdriver.com) wrote:
-> > Flush iommu during shutdown
-> > 
-> > When using an iommu, its possible, if a kdump kernel boot follows a primary
-> > kernel crash, that dma operations might still be in flight from the previous
-> > kernel during the kdump kernel boot.  This can lead to memory corruption,
-> > crashes, and other erroneous behavior, specifically I've seen it manifest during
-> > a kdump boot as endless iommu error log entries of the form:
-> > AMD-Vi: Event logged [IO_PAGE_FAULT device=00:14.1 domain=0x000d
-> > address=0x000000000245a0c0 flags=0x0070]
-> 
-> We've already fixed this problem once before, so some code shift must
-> have brought it back.  Personally, I prefer to do this on the bringup
-> path than the teardown path.  Besides keeping the teardown path as
-> simple as possible (goal is to get to kdump kernel asap), there's also
-> reason to competely flush on startup in genernal in case BIOS has done
-> anything unsavory.
+Neil Horman <nhorman@tuxdriver.com> writes:
 
-Can we flush domains (all the I/O TLBs assciated with each domain), during
-initialization? I think all the domain data built by previous kernel will
-be lost and new kernel will have no idea about. 
+> On Wed, Mar 31, 2010 at 12:51:25PM -0700, Eric W. Biederman wrote:
+>> Neil Horman <nhorman@tuxdriver.com> writes:
+>> 
+>> > On Wed, Mar 31, 2010 at 11:57:46AM -0700, Eric W. Biederman wrote:
+>> >> Neil Horman <nhorman@tuxdriver.com> writes:
+>> >> 
+>> >> > On Wed, Mar 31, 2010 at 11:54:30AM -0400, Vivek Goyal wrote:
+>> >> 
+>> >> >> So this call amd_iommu_flush_all_devices() will be able to tell devices
+>> >> >> that don't do any more DMAs and hence it is safe to reprogram iommu
+>> >> >> mapping entries.
+>> >> >> 
+>> >> > It blocks the cpu until any pending DMA operations are complete.  Hmm, as I
+>> >> > think about it, there is still a small possibility that a device like a NIC
+>> >> > which has several buffers pre-dma-mapped could start a new dma before we
+>> >> > completely disabled the iommu, althought thats small.  I never saw that in my
+>> >> > testing, but hitting that would be fairly difficult I think, since its literally
+>> >> > just a few hundred cycles between the flush and the actual hardware disable
+>> >> > operation.
+>> >> >
+>> >> > According to this though:
+>> >> > http://support.amd.com/us/Processor_TechDocs/34434-IOMMU-Rev_1.26_2-11-09.pdf
+>> >> > That window could be closed fairly easily, but simply disabling read and write
+>> >> > permissions for each device table entry prior to calling flush.  If we do that,
+>> >> > then flush the device table, any subsequently started dma operation would just
+>> >> > get noted in the error log, which we could ignore, since we're abot to boot to
+>> >> > the kdump kernel anyway.
+>> >> >
+>> >> > Would you like me to respin w/ that modification?
+>> >> 
+>> >> Disabling permissions on all devices sounds good for the new virtualization
+>> >> capable iommus.  I think older iommus will still be challenged.  I think
+>> >> on x86 we have simply been able to avoid using those older iommus.
+>> >> 
+>> >> I like the direction you are going but please let's put this in a
+>> >> paranoid iommu enable routine.
+>> >> 
+>> > You mean like initialize the device table so that all devices are default
+>> > disabled on boot, and then selectively enable them (perhaps during a
+>> > device_attach)?  I can give that a spin.
+>> 
+>> That sounds good.
+>> 
+>
+> So I'm officially rescinding this patch.  It apparently just covered up the
+> problem, rather than solved it outright.  This is going to take some more
+> thought on my part.  I read the code a bit closer, and the amd iommu on boot up
+> currently marks all its entries as valid and having a valid translation (because
+> if they're marked as invalid they're passed through untranslated which strikes
+> me as dangerous, since it means a dma address treated as a bus address could
+> lead to memory corruption.  The saving grace is that they are marked as
+> non-readable and non-writeable, so any device doing a dma after the reinit
+> should get logged (which it does), and then target aborted (which should
+> effectively squash the translation)
+>
+> I'm starting to wonder if:
+>
+> 1) some dmas are so long lived they start aliasing new dmas that get mapped in
+> the kdump kernel leading to various erroneous behavior
 
-Thanks
-Vivek
+I do know things like arp refreshes used to cause me trouble.  I have
+a particular memory of kexec into memtest86 and a little while later 
+memory corruption.
+
+
+> 2) a slew of target aborts to some hardware results in them being in an
+> inconsistent state
+>
+> I'm going to try marking the dev table on shutdown such that all devices have no
+> read/write permissions to see if that changes the situation.  It should I think
+> give me a pointer as to weather (1) or (2) is the more likely problem.
+>
+> Lots more thinking to do....
+
+I guess I can see devices getting confused by target aborts.
+I'm wondering if (a) we can suppress these DMAs.  or (b) we can reset the pci
+devices before we use them.  With pcie that should be possible.
+
+We used to be able simply not to use the IOMMU in x86 and avoid this trouble.
+Now with per device enables it looks like we need to do something with it.
+
+Eric
+
 
 _______________________________________________
 kexec mailing list
