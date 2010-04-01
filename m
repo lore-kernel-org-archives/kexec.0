@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxJuj-0001CI-GR
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 12:54:26 +0000
-Date: Thu, 1 Apr 2010 08:53:04 -0400
+	id 1NxJyH-00082h-Dj
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 12:58:06 +0000
+Date: Thu, 1 Apr 2010 08:56:48 -0400
 From: Neil Horman <nhorman@redhat.com>
 Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
-Message-ID: <20100401125304.GA13603@shamino.rdu.redhat.com>
+Message-ID: <20100401125648.GB13603@shamino.rdu.redhat.com>
 References: <20100331152417.GB13406@hmsreliant.think-freely.org>
 	<20100331212535.GR29241@sequoia.sous-sol.org>
-	<20100401011311.GC2069@localhost.localdomain>
-	<20100401022418.GA1983@redhat.com>
+	<20100401024421.GA5877@redhat.com>
+	<20100401071040.GU29241@sequoia.sous-sol.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100401022418.GA1983@redhat.com>
+In-Reply-To: <20100401071040.GU29241@sequoia.sous-sol.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,11 +26,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Neil Horman <nhorman@tuxdriver.com>, joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, hbabu@us.ibm.com, iommu@lists.linux-foundation.org
+To: Chris Wright <chrisw@sous-sol.org>
+Cc: Neil Horman <nhorman@tuxdriver.com>, joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Mar 31, 2010 at 10:24:18PM -0400, Vivek Goyal wrote:
-> On Wed, Mar 31, 2010 at 09:13:11PM -0400, Neil Horman wrote:
+On Thu, Apr 01, 2010 at 12:10:40AM -0700, Chris Wright wrote:
+> * Vivek Goyal (vgoyal@redhat.com) wrote:
 > > On Wed, Mar 31, 2010 at 02:25:35PM -0700, Chris Wright wrote:
 > > > * Neil Horman (nhorman@tuxdriver.com) wrote:
 > > > > Flush iommu during shutdown
@@ -49,54 +49,34 @@ On Wed, Mar 31, 2010 at 10:24:18PM -0400, Vivek Goyal wrote:
 > > > simple as possible (goal is to get to kdump kernel asap), there's also
 > > > reason to competely flush on startup in genernal in case BIOS has done
 > > > anything unsavory.
-> > > 
-> > Chris,
-> > 	Can you elaborate on what you did with the iommu to make this safe?  It
-> > will save me time digging through the history on this code, and help me
-> > understand better whats going on here.
 > > 
-> > I was starting to think that we should just leave the iommu on through a kdump,
-> > and re-construct a new page table based on the old table (filtered by the error
-> > log) on kdump boot, but it sounds like a better solution might be in place.
-> > 
+> > Can we flush domains (all the I/O TLBs assciated with each domain), during
+> > initialization? I think all the domain data built by previous kernel will
+> > be lost and new kernel will have no idea about. 
 > 
-> Hi Neil,
+> We first invalidate the device table entry, so new translation requests
+> will see the new domainid for a given BDF.  Then we invalidate the
+> whole set of page tables associated w/ the new domainid.  Now all dma
+> transactions will need page table walk (page tables will be empty excpet
+> for any 1:1 mappings).  Any old domainid's from previous kernel that
+> aren't found in new device table entries are effectively moot.  Just so
+> happens that in kexec/kdump case, they'll be the same domainid's, but
+> that doesn't matter.
 > 
-> Is following sequence possible.
+> thanks,
+> -chris
 > 
-> - In crashed kernel, take away the write permission from all the devices.
->   Mark bit 62 zero for all devices in device table.
-> 
-> - Leave the iommu on and let the device entries be valid in kdump kernel
->   so that any in-flight dma does not become pass through (which can cause
->   more damage and corrupt kdump kernel).
-> 
-> - During kdump kernel initialization, load a new device table where again
->   all the devices don't have write permission. looks like by default
->   we create a device table with all bits zero except DEV_ENTRY_VALID
->   and DEV_ENTRY_TRANSLATION bit.
-> 
-> - Reset the device where we want to setup any dma or operate on.
-> 
-> - Allow device to do DMA/write.
-> 
-> So by default all the devices will not be able to do write to memory 
-> and selective devices are given access only after a reset.
-> 
-> I am not sure what are the dependencies for loading a new device table
-> in second kernel. If it requires disabling the IOMMU, then we leave a
-> window where in-flight dma will become passthrough and has the potential
-> to corrupt kdump kernel.
-> 
-I think this is possible, but I'm a bit concerned with how some devices will
-handle a reset.  For instance, what will happen to an HBA or a disk, if we reset
-it as the module is loading?  Is that safe?
+Additionally chris (this is just for my own education here), what happens when
+we disable the iommu while dma's are in flight?  I ask because from what I read,
+my assumption is that the iommu effectively enters a passive mode where bus
+accesses from devices holding dma addresses that were previously provided by an
+iommu translation will just get strobed onto the bus without being translated
+back to physical addresses.  Won't that result in bus errors causing master
+aborts?  If so, it would seem that it would be further cause to leave the iommu
+on during a crash/kdump boot.
 
 Neil
 
-> Thanks
-> Vivek 
-> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
