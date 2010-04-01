@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
+Received: from sous-sol.org ([216.99.217.87] helo=sequoia.sous-sol.org)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxETb-0005wb-S2
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 07:06:04 +0000
-Date: Thu, 1 Apr 2010 09:05:59 +0200
-From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: Re: [PATCH 3/7] powerpc32: pull in libfdt
-Message-ID: <20100401070559.GA20047@Chamillionaire.breakpoint.cc>
-References: <1270023858-26947-1-git-send-email-sebastian@breakpoint.cc>
-	<1270023858-26947-4-git-send-email-sebastian@breakpoint.cc>
-	<20100331225819.GC10909@verge.net.au>
+	id 1NxEYB-0005Gp-LP
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 07:10:48 +0000
+Date: Thu, 1 Apr 2010 00:10:40 -0700
+From: Chris Wright <chrisw@sous-sol.org>
+Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
+Message-ID: <20100401071040.GU29241@sequoia.sous-sol.org>
+References: <20100331152417.GB13406@hmsreliant.think-freely.org>
+	<20100331212535.GR29241@sequoia.sous-sol.org>
+	<20100401024421.GA5877@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100331225819.GC10909@verge.net.au>
+In-Reply-To: <20100401024421.GA5877@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +25,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Neil Horman <nhorman@tuxdriver.com>, joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Chris Wright <chrisw@sous-sol.org>, hbabu@us.ibm.com, iommu@lists.linux-foundation.org
 
-* Simon Horman | 2010-04-01 09:58:19 [+1100]:
+* Vivek Goyal (vgoyal@redhat.com) wrote:
+> On Wed, Mar 31, 2010 at 02:25:35PM -0700, Chris Wright wrote:
+> > * Neil Horman (nhorman@tuxdriver.com) wrote:
+> > > Flush iommu during shutdown
+> > > 
+> > > When using an iommu, its possible, if a kdump kernel boot follows a primary
+> > > kernel crash, that dma operations might still be in flight from the previous
+> > > kernel during the kdump kernel boot.  This can lead to memory corruption,
+> > > crashes, and other erroneous behavior, specifically I've seen it manifest during
+> > > a kdump boot as endless iommu error log entries of the form:
+> > > AMD-Vi: Event logged [IO_PAGE_FAULT device=00:14.1 domain=0x000d
+> > > address=0x000000000245a0c0 flags=0x0070]
+> > 
+> > We've already fixed this problem once before, so some code shift must
+> > have brought it back.  Personally, I prefer to do this on the bringup
+> > path than the teardown path.  Besides keeping the teardown path as
+> > simple as possible (goal is to get to kdump kernel asap), there's also
+> > reason to competely flush on startup in genernal in case BIOS has done
+> > anything unsavory.
+> 
+> Can we flush domains (all the I/O TLBs assciated with each domain), during
+> initialization? I think all the domain data built by previous kernel will
+> be lost and new kernel will have no idea about. 
 
->Hi,
-Hi,
+We first invalidate the device table entry, so new translation requests
+will see the new domainid for a given BDF.  Then we invalidate the
+whole set of page tables associated w/ the new domainid.  Now all dma
+transactions will need page table walk (page tables will be empty excpet
+for any 1:1 mappings).  Any old domainid's from previous kernel that
+aren't found in new device table entries are effectively moot.  Just so
+happens that in kexec/kdump case, they'll be the same domainid's, but
+that doesn't matter.
 
->I'm seeing some signed vs unsigned comparison warnings in this code.
->Here is a stab that I took at fixing them. Do they seem reasonable to you?
-All but fdt_create() and fdt_strerror() look fine on the first look. The
-two mentioned don't have the .c file updated. fdt_strerror() should
-remain unsigned as the error code is negative.
-
->If so, we could either merge them into your patch or just apply them
->as another patch.
-I would prefer leaving it as it. It is an external library and the time
-we update it, we lose this changes. If you are going to compile this
-with -Werror could you add -Wno-sign-compare for the libfdt part? If not
-please apply it as a separate patch and I try to forward it upstream if
-you don't.
-
-Sebastian
+thanks,
+-chris
 
 _______________________________________________
 kexec mailing list
