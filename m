@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nx8ZQ-0000hb-IT
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 00:47:41 +0000
-Date: Wed, 31 Mar 2010 19:47:33 -0500
-From: Jack Steiner <steiner@sgi.com>
-Subject: Re: kdump/kexec on EFI-enabled x2apic platforms
-Message-ID: <20100401004733.GA23806@sgi.com>
-References: <20100329200104.GA23760@sgi.com>
-	<20100331222449.GB8257@nlxcldnl2.cl.intel.com>
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1Nx8yQ-0006q5-Ke
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 01:13:31 +0000
+Date: Wed, 31 Mar 2010 21:13:11 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
+Message-ID: <20100401011311.GC2069@localhost.localdomain>
+References: <20100331152417.GB13406@hmsreliant.think-freely.org>
+	<20100331212535.GR29241@sequoia.sous-sol.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100331222449.GB8257@nlxcldnl2.cl.intel.com>
+In-Reply-To: <20100331212535.GR29241@sequoia.sous-sol.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +24,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "mingo@elte.hu" <mingo@elte.hu>, "tglx@linutronix.de" <tglx@linutronix.de>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "gleb@redhat.com" <gleb@redhat.com>, "Siddha, Suresh B" <suresh.b.siddha@intel.com>
+To: Chris Wright <chrisw@sous-sol.org>
+Cc: joerg.roedel@amd.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, vgoyal@redhat.com
 
-On Wed, Mar 31, 2010 at 03:24:50PM -0700, David N. Lombard wrote:
-> On Mon, Mar 29, 2010 at 01:01:04PM -0700, Jack Steiner wrote:
-> > All -
+On Wed, Mar 31, 2010 at 02:25:35PM -0700, Chris Wright wrote:
+> * Neil Horman (nhorman@tuxdriver.com) wrote:
+> > Flush iommu during shutdown
 > > 
-> > I just started debugging kdump/kexec on our UV platform and
-> > have run into some problems. I suspect others have encountered these
-> > same or similar problems. Any help would be appreciated.
-> > 
-> > 
-> > 
-> > Our platform uses EFI boot. It is Nehalem based & has a large number of cpus.
-> > The BIOS enables x2apic mode and the kernel runs with interrupt remapping enabled.
-> > Note that some apicids have more than 8 bits - x2apic mode is required.
+> > When using an iommu, its possible, if a kdump kernel boot follows a primary
+> > kernel crash, that dma operations might still be in flight from the previous
+> > kernel during the kdump kernel boot.  This can lead to memory corruption,
+> > crashes, and other erroneous behavior, specifically I've seen it manifest during
+> > a kdump boot as endless iommu error log entries of the form:
+> > AMD-Vi: Event logged [IO_PAGE_FAULT device=00:14.1 domain=0x000d
+> > address=0x000000000245a0c0 flags=0x0070]
 > 
-> What are you using as a boot loader?  I've tested kexec with elilo 3.8 and
-> got good results.  But, that was early last year, so I'll need to try it out
-> with production hardware and the current firmware and sw stack.  I'll try to
-> get to that this week, and let you know the results.
+> We've already fixed this problem once before, so some code shift must
+> have brought it back.  Personally, I prefer to do this on the bringup
+> path than the teardown path.  Besides keeping the teardown path as
+> simple as possible (goal is to get to kdump kernel asap), there's also
+> reason to competely flush on startup in genernal in case BIOS has done
+> anything unsavory.
+> 
+Chris,
+	Can you elaborate on what you did with the iommu to make this safe?  It
+will save me time digging through the history on this code, and help me
+understand better whats going on here.
 
-We use:
-	elilo-3.12-0.3.6
+I was starting to think that we should just leave the iommu on through a kdump,
+and re-construct a new page table based on the old table (filtered by the error
+log) on kdump boot, but it sounds like a better solution might be in place.
 
-AFAICT, the following are the problem areas:
+Thanks
+Neil
 
-	- nehalem platform using a BIOS that puts RSDP at a location that
-	  is not scanned by acpi_find_root_pointer() looking for ACPI tables
-
-	  	[    0.000000] ACPI: RSDP 000000007b7fe014 00024 (v02 INTEL )
-		[    0.000000] ACPI: XSDT 000000007b7fe120 0005C (v01 INTEL  TIANO    00000000      01000013)
-		[    0.000000] ACPI: FACP 000000007b7fc000 000F4 (v03 INTEL  TIANO    00000000 MSFT 01000013)
-		...
-
-	  Booting with EFI works because ACPI tables are pointed to by the EFI tables. However,
-	  the kdump kernel does not enable EFI and the OS uses an alternate method
-	  to locate the ACPI tables. The alternate method fails.
-
-	  	NOTE: with a hacked BIOS that puts the RSDP at 0x9ec00, ACPI tables
-		are correctly discovered & booting the kdump kernel is successful (except
-		that some memory is missing (see next item)).
-
-
-	- number of memory blocks exceeds the size supported by the E820 table. (I'm
-	  still learning - memory is missing from the kdump kernel memory maps. Does
-	  this affect the memory dumpped from the kernel that crashed???)
-
-
-	- x2apic enabled by the BIOS & interrupt remapping enabled by the OS (this
-	  may no longer be an issue but caused problems earlier)
-
-
-
-Appreciate the help....
-
---- jack
+> thanks,
+> -chris
+> 
 
 _______________________________________________
 kexec mailing list
