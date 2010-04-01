@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from 8bytes.org ([88.198.83.132])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxMlD-0005Y1-2w
-	for kexec@lists.infradead.org; Thu, 01 Apr 2010 15:56:47 +0000
-Date: Thu, 1 Apr 2010 17:56:43 +0200
-From: Joerg Roedel <joro@8bytes.org>
+	id 1NxNxA-000245-DP
+	for kexec@lists.infradead.org; Thu, 01 Apr 2010 17:13:13 +0000
+Date: Thu, 1 Apr 2010 13:11:49 -0400
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: [PATCH] amd iommu: force flush of iommu prior during shutdown
-Message-ID: <20100401155643.GG24846@8bytes.org>
+Message-ID: <20100401171149.GH13603@shamino.rdu.redhat.com>
 References: <20100331152417.GB13406@hmsreliant.think-freely.org>
 	<20100331155430.GF14011@redhat.com>
 	<20100331182824.GC13406@hmsreliant.think-freely.org>
@@ -16,9 +16,10 @@ References: <20100331152417.GB13406@hmsreliant.think-freely.org>
 	<20100331202745.GE13406@hmsreliant.think-freely.org>
 	<20100401142902.GF24846@8bytes.org>
 	<20100401144736.GA14069@shamino.rdu.redhat.com>
+	<20100401155643.GG24846@8bytes.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100401144736.GA14069@shamino.rdu.redhat.com>
+In-Reply-To: <20100401155643.GG24846@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,47 +32,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Apr 01, 2010 at 10:47:36AM -0400, Neil Horman wrote:
-> On Thu, Apr 01, 2010 at 04:29:02PM +0200, Joerg Roedel wrote:
-> > I am back in office next tuesday and will look into this problem too.
-> > 
-> Thank you.
+On Thu, Apr 01, 2010 at 05:56:43PM +0200, Joerg Roedel wrote:
+> On Thu, Apr 01, 2010 at 10:47:36AM -0400, Neil Horman wrote:
+> > On Thu, Apr 01, 2010 at 04:29:02PM +0200, Joerg Roedel wrote:
+> > > I am back in office next tuesday and will look into this problem too.
+> > > 
+> > Thank you.
+> 
+> Just took a look and I think the problem is that the devices are
+> attached to domains before the IOMMU hardware is enabled. This happens
+> in the function prealloc_protection_domains(). The attach code issues
+> the dte-invalidate commands but they are not executed because the
+> hardware is off. I will verify this when I have access to hardware
+> again.
+> The possible fix will be to enable the hardware earlier in the
+> initialization path.
+> 
+That sounds like a reasonable theory, I'll try hack something together shortly.
 
-Just took a look and I think the problem is that the devices are
-attached to domains before the IOMMU hardware is enabled. This happens
-in the function prealloc_protection_domains(). The attach code issues
-the dte-invalidate commands but they are not executed because the
-hardware is off. I will verify this when I have access to hardware
-again.
-The possible fix will be to enable the hardware earlier in the
-initialization path.
+> > > Right. The default for all devices is to forbid DMA.
+> > > 
+> > Thanks, glad to know I read that right, took me a bit to understand it :)
+> 
+> I should probably add a comment :-)
+> 
+> > > Thats indeed true. I have seen that with ixgbe cards for example. They
+> > > seem to be really confused after an target abort.
+> > > 
+> > Yeah, this part worries me, target aborts lead to various brain dead hardware
+> > pieces.  What are you thoughts on leaving the iommu on through a reboot to avoid
+> > this issue (possibly resetting any pci device that encounters a target abort, as
+> > noted in the error log on the iommu?
+> 
+> This would only prevent possible data corruption. When the IOMMU is off
+> the devices will not get a target abort but will only write to different
+> physical memory locations. The window where a target abort can happen
+> starts when the kdump kernel re-enables the IOMMU and ends when the new
+> driver for that device attaches. This is a small window but there is not
+> a lot we can do to avoid this small time window.
+> 
+Can you explain this a bit further please?  From what I read, when the iommu is
+disabled, AIUI it does no translations.  That means that any dma addresses which
+the driver mapped via the iommu prior to a crash that are stored in devices will
+just get strobed on the bus without any translation.  If those dma address do
+not lay on top of any physical ram, won't that lead to bus errors, and
+transaction aborts?  Worse, if those dma addresses do lie on top of real
+physical addresses, won't we get corruption in various places?  Or am I missing
+part of how that works?
 
-> > Right. The default for all devices is to forbid DMA.
-> > 
-> Thanks, glad to know I read that right, took me a bit to understand it :)
+Regards
+Neil
 
-I should probably add a comment :-)
-
-> > Thats indeed true. I have seen that with ixgbe cards for example. They
-> > seem to be really confused after an target abort.
-> > 
-> Yeah, this part worries me, target aborts lead to various brain dead hardware
-> pieces.  What are you thoughts on leaving the iommu on through a reboot to avoid
-> this issue (possibly resetting any pci device that encounters a target abort, as
-> noted in the error log on the iommu?
-
-This would only prevent possible data corruption. When the IOMMU is off
-the devices will not get a target abort but will only write to different
-physical memory locations. The window where a target abort can happen
-starts when the kdump kernel re-enables the IOMMU and ends when the new
-driver for that device attaches. This is a small window but there is not
-a lot we can do to avoid this small time window.
-
-	Joerg
-
+> 	Joerg
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
