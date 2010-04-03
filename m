@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from sous-sol.org ([216.99.217.87] helo=x200.localdomain)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NxsA1-0003tH-16
-	for kexec@lists.infradead.org; Sat, 03 Apr 2010 01:28:29 +0000
-Message-Id: <20100403012823.099077735@sous-sol.org>
-Date: Fri, 02 Apr 2010 18:27:55 -0700
-From: Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH 4/4] x86/amd-iommu: use for_each_pci_dev
+Received: from 8bytes.org ([88.198.83.132])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1Ny73E-0000hD-2t
+	for kexec@lists.infradead.org; Sat, 03 Apr 2010 17:22:28 +0000
+Date: Sat, 3 Apr 2010 19:22:24 +0200
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH 3/4] Revert "x86: disable IOMMUs on kernel crash"
+Message-ID: <20100403172224.GO24846@8bytes.org>
 References: <20100403012751.834020949@sous-sol.org>
-Content-Disposition: inline; filename=amd-iommu-use-for_each_pci_dev.patch
+	<20100403012820.229410717@sous-sol.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20100403012820.229410717@sous-sol.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,32 +20,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joerg.roedel@amd.com>
-Cc: nhorman@redhat.com, nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com
+To: Chris Wright <chrisw@sous-sol.org>
+Cc: nhorman@redhat.com, nhorman@tuxdriver.com, Joerg Roedel <joerg.roedel@amd.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com
 
-Replace open coded version with for_each_pci_dev
+On Fri, Apr 02, 2010 at 06:27:54PM -0700, Chris Wright wrote:
+> This effectively reverts commit 61d047be99757fd9b0af900d7abce9a13a337488.
+> 
+> Disabling the IOMMU can potetially allow DMA transactions to
+> complete without being translated.  Leave it enabled, and allow
+> crash kernel to do the IOMMU reinitialization properly.
+> 
+> Cc: Joerg Roedel <joerg.roedel@amd.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Neil Horman <nhorman@tuxdriver.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Signed-off-by: Chris Wright <chrisw@sous-sol.org>
+> ---
+>  arch/x86/kernel/crash.c |    6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -27,7 +27,6 @@
+>  #include <asm/cpu.h>
+>  #include <asm/reboot.h>
+>  #include <asm/virtext.h>
+> -#include <asm/x86_init.h>
+>  
+>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+>  
+> @@ -103,10 +102,5 @@ void native_machine_crash_shutdown(struc
+>  #ifdef CONFIG_HPET_TIMER
+>  	hpet_disable();
+>  #endif
+> -
+> -#ifdef CONFIG_X86_64
+> -	x86_platform.iommu_shutdown();
+> -#endif
+> -
+>  	crash_save_cpu(regs, safe_smp_processor_id());
 
-Signed-off-by: Chris Wright <chrisw@sous-sol.org>
----
- arch/x86/kernel/amd_iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm, I think for this we need to change the gart code too and disable
+the gart before its initialization runs to not re-introduce issues fixed
+in commit bc2cea6a34fdb30f118ec75db39a46a191870607, no?
 
---- a/arch/x86/kernel/amd_iommu.c
-+++ b/arch/x86/kernel/amd_iommu.c
-@@ -2187,7 +2187,7 @@ static void prealloc_protection_domains(
- 	struct dma_ops_domain *dma_dom;
- 	u16 devid;
- 
--	while ((dev = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, dev)) != NULL) {
-+	for_each_pci_dev(dev) {
- 
- 		/* Do we handle this device? */
- 		if (!check_device(&dev->dev))
+	Joerg
 
 
 _______________________________________________
