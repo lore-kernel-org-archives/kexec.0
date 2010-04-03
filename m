@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from sous-sol.org ([216.99.217.87] helo=x200.localdomain)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nxs9u-0003qM-Vy
-	for kexec@lists.infradead.org; Sat, 03 Apr 2010 01:28:23 +0000
-Message-Id: <20100403012751.834020949@sous-sol.org>
-Date: Fri, 02 Apr 2010 18:27:51 -0700
+	id 1Nxs9x-0003s3-Vg
+	for kexec@lists.infradead.org; Sat, 03 Apr 2010 01:28:26 +0000
+Message-Id: <20100403012820.229410717@sous-sol.org>
+Date: Fri, 02 Apr 2010 18:27:54 -0700
 From: Chris Wright <chrisw@sous-sol.org>
-Subject: [PATCH 0/4] AMD IOMMU kdump fix plus cleanups (v2)
+Subject: [PATCH 3/4] Revert "x86: disable IOMMUs on kernel crash"
+References: <20100403012751.834020949@sous-sol.org>
+Content-Disposition: inline; filename=crash-leave-iommu-enabled.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +25,43 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Joerg Roedel <joerg.roedel@amd.com>
 Cc: nhorman@redhat.com, nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, ebiederm@xmission.com, vgoyal@redhat.com
 
-Series includes the following patches:
+This effectively reverts commit 61d047be99757fd9b0af900d7abce9a13a337488.
 
-  x86/amd-iommu: enable iommu before attaching devices
-  x86/amd-iommu: warn when issuing command to uninitialized cmd buffer
-  Revert "x86: disable IOMMUs on kernel crash"
-  x86/amd-iommu: use for_each_pci_dev
+Disabling the IOMMU can potetially allow DMA transactions to
+complete without being translated.  Leave it enabled, and allow
+crash kernel to do the IOMMU reinitialization properly.
 
-First one is the primary bug fix.
+Cc: Joerg Roedel <joerg.roedel@amd.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Neil Horman <nhorman@tuxdriver.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Chris Wright <chrisw@sous-sol.org>
+---
+ arch/x86/kernel/crash.c |    6 ------
+ 1 file changed, 6 deletions(-)
 
-v2
-- add disable_iommus on failure path
-- move removal of CMD_BUFFER_UNINITIALIZED to iommu_enable_command_buffer()
-- fix ";;" typo in patch 2
-- add Revert "x86: disable IOMMUs on kernel crash"
-- add x86/amd-iommu: use for_each_pci_dev
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -27,7 +27,6 @@
+ #include <asm/cpu.h>
+ #include <asm/reboot.h>
+ #include <asm/virtext.h>
+-#include <asm/x86_init.h>
+ 
+ #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+ 
+@@ -103,10 +102,5 @@ void native_machine_crash_shutdown(struc
+ #ifdef CONFIG_HPET_TIMER
+ 	hpet_disable();
+ #endif
+-
+-#ifdef CONFIG_X86_64
+-	x86_platform.iommu_shutdown();
+-#endif
+-
+ 	crash_save_cpu(regs, safe_smp_processor_id());
+ }
 
-thanks,
--chris
 
 _______________________________________________
 kexec mailing list
