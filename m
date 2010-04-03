@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1Ny7Ox-0007t0-RT
-	for kexec@lists.infradead.org; Sat, 03 Apr 2010 17:44:57 +0000
+	id 1Ny7T7-0006CA-FC
+	for kexec@lists.infradead.org; Sat, 03 Apr 2010 17:49:14 +0000
 Subject: Re: [PATCH 3/4] Revert "x86: disable IOMMUs on kernel crash"
 References: <20100403012751.834020949@sous-sol.org>
 	<20100403012820.229410717@sous-sol.org>
-	<20100403172224.GO24846@8bytes.org>
+	<20100403174128.GQ24846@8bytes.org>
 From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Sat, 03 Apr 2010 10:44:22 -0700
-In-Reply-To: <20100403172224.GO24846@8bytes.org> (Joerg Roedel's message of
-	"Sat\, 3 Apr 2010 19\:22\:24 +0200")
-Message-ID: <m18w94l9c9.fsf@fess.ebiederm.org>
+Date: Sat, 03 Apr 2010 10:49:09 -0700
+In-Reply-To: <20100403174128.GQ24846@8bytes.org> (Joerg Roedel's message of
+	"Sat\, 3 Apr 2010 19\:41\:28 +0200")
+Message-ID: <m1vdc8juju.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -67,22 +67,11 @@ Joerg Roedel <joro@8bytes.org> writes:
 >> -
 >>  	crash_save_cpu(regs, safe_smp_processor_id());
 >
-> Hmm, I think for this we need to change the gart code too and disable
-> the gart before its initialization runs to not re-introduce issues fixed
-> in commit bc2cea6a34fdb30f118ec75db39a46a191870607, no?
+> Another problem: This also breaks if the kdump kernel has no
+> iommu-support.
 
-That is a different code path with a different set of assumptions and
-restrictions.  On a normal kexec of course we want to do an orderly shutdown.
-
-For the gart with a little luck we can just ignore it on kexec on
-panic.  Unlike a virtualization capable iommu it doesn't prevent access
-to devices, when it is enabled.   Worst case is that we have to start
-including iommu=off for gart systems. The best case is that we can
-figure out how to have the gart code reinitialize itself sanely,
-starting from some arbitrary point.
-
-machine_crash_shutdown is about doing those things that we can not do
-in any other way.
+Not a problem.  We require a lot of things of the kdump kernel,
+and it is immediately apparent in a basic sanity test.
 
 Eric
 
