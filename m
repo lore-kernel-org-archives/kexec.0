@@ -1,25 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1NyoKV-0002EI-4L
-	for kexec@lists.infradead.org; Mon, 05 Apr 2010 15:35:11 +0000
-Date: Mon, 5 Apr 2010 11:34:55 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH 1/2] x86/amd-iommu: enable iommu before attaching devices
-Message-ID: <20100405153455.GB27116@hmsreliant.think-freely.org>
-References: <m1sk7guv5u.fsf@fess.ebiederm.org>
-	<20100331202745.GE13406@hmsreliant.think-freely.org>
-	<20100401142902.GF24846@8bytes.org>
-	<20100401144736.GA14069@shamino.rdu.redhat.com>
-	<20100401155643.GG24846@8bytes.org>
-	<20100401171149.GH13603@shamino.rdu.redhat.com>
-	<20100401201433.GK24846@8bytes.org>
-	<20100402000012.GA8930@hmsreliant.think-freely.org>
-	<20100402003034.GX29241@sequoia.sous-sol.org>
-	<20100402012353.GY29241@sequoia.sous-sol.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100402012353.GY29241@sequoia.sous-sol.org>
+	id 1NyywJ-0007Vn-KE
+	for kexec@lists.infradead.org; Tue, 06 Apr 2010 02:54:56 +0000
+Date: Tue, 6 Apr 2010 11:45:49 +0900
+From: Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
+Subject: [makedumpfile][patch] handle !SPARSEMEM_EX properly
+Message-Id: <20100406114549.88dae199.nishimura@mxp.nes.nec.co.jp>
+In-Reply-To: <20100406114454.d44aa12c.nishimura@mxp.nes.nec.co.jp>
+References: <20100319182555.GF3565@hmsreliant.think-freely.org>
+	<4BA80AC7.5060807@mxs.nes.nec.co.jp>
+	<20100323110132.GA3429@hmsreliant.think-freely.org>
+	<4BABFDC1.1020801@mxs.nes.nec.co.jp>
+	<20100326010047.GA2949@localhost.localdomain>
+	<4BAC0B2F.1080607@mxs.nes.nec.co.jp>
+	<20100326105445.GA3007@hmsreliant.think-freely.org>
+	<4BB0617C.9030006@mxs.nes.nec.co.jp>
+	<20100406094531.dcf912de.nishimura@mxp.nes.nec.co.jp>
+	<20100406114454.d44aa12c.nishimura@mxp.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,54 +31,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chris Wright <chrisw@sous-sol.org>
-Cc: Neil Horman <nhorman@redhat.com>, Joerg Roedel <joerg.roedel@amd.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, iommu@lists.linux-foundation.org, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: Neil Horman <nhorman@redhat.com>, kexec@lists.infradead.org, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Masayuki Igawa <igawa@mxs.nes.nec.co.jp>, crash-utility@redhat.com
 
-On Thu, Apr 01, 2010 at 06:23:53PM -0700, Chris Wright wrote:
-> Hit another kdump problem as reported by Neil Horman.  When initializaing
-> the IOMMU, we attach devices to their domains before the IOMMU is
-> fully (re)initialized.  Attaching a device will issue some important
-> invalidations.  In the context of the newly kexec'd kdump kernel, the
-> IOMMU may have stale cached data from the original kernel.  Because we
-> do the attach too early, the invalidation commands are placed in the new
-> command buffer before the IOMMU is updated w/ that buffer.  This leaves
-> the stale entries in the kdump context and can renders device unusable.
-> Simply enable the IOMMU before we do the attach.
-> 
-> Cc: Neil Horman <nhorman@tuxdriver.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Chris Wright <chrisw@sous-sol.org>
-> ---
->  arch/x86/kernel/amd_iommu_init.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> --- a/arch/x86/kernel/amd_iommu_init.c
-> +++ b/arch/x86/kernel/amd_iommu_init.c
-> @@ -1288,6 +1288,8 @@ static int __init amd_iommu_init(void)
->  	if (ret)
->  		goto free;
->  
-> +	enable_iommus();
-> +
->  	if (iommu_pass_through)
->  		ret = amd_iommu_init_passthrough();
->  	else
-> @@ -1300,8 +1302,6 @@ static int __init amd_iommu_init(void)
->  
->  	amd_iommu_init_notifier();
->  
-> -	enable_iommus();
-> -
->  	if (iommu_pass_through)
->  		goto out;
->  
-> 
+In !SPARSEMEM_EX case, the symbol mem_section points a array of struct mem_section,
+doesn't point a array of pointer to mem_section[], so I think the check:
 
-FWIW, this patch series fixed the kdump issues I was having on my AMD system
-here.  Thanks Chris
+	if (!is_kvaddr(mem_sec[SECTION_NR_TO_ROOT(nr)]))
+		return NOT_KV_ADDR;
 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+in nr_to_section() is not a valid check in this case.
 
+To make the matters worse, if CONFIG_CGROUP_MEM_RES_CTLR is enabled, the end of
+struct mem_section is padded with 0.
+
+So, reading mem_section by "rd" of crash will look like:
+
+	crash> rd mem_section 128
+	c08b71e0:  c9002003 c9001200 f7000000 00000000   . ..............
+	c08b71f0:  c9002003 c9001260 f6980000 00000000   . ..`...........
+	c08b7200:  c9002003 c90012c0 f6300000 00000000   . ........0.....
+	c08b7210:  c9002003 c9001320 f5c80000 00000000   . .. ...........
+	...
+
+This means nr_to_section() will return 0 when "nr" is 3,7,11,... because it meets
+the condition(mem_sec[SECTION_NR_TO_ROOT(nr)] == mem_sec[nr] == 0 == !is_kvaddr).
+
+As a result, mem_map for section 3,7,11,... cannot be handled properly.
+
+This patch is a fix for this problem. nr_to_section() will check "addr" by
+is_kvaddr() later anyway, so this patch just removes the problematic check.
+
+Signed-off-by: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+Signed-off-by: Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
+---
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 855c718..73fa94f 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3547,9 +3547,6 @@ nr_to_section(unsigned long nr, unsigned long *mem_sec)
+ {
+ 	unsigned long addr;
+ 
+-	if (!is_kvaddr(mem_sec[SECTION_NR_TO_ROOT(nr)]))
+-		return NOT_KV_ADDR;
+-
+ 	if (is_sparsemem_extreme())
+ 		addr = mem_sec[SECTION_NR_TO_ROOT(nr)] +
+ 		    (nr & SECTION_ROOT_MASK()) * SIZE(mem_section);
 
 _______________________________________________
 kexec mailing list
