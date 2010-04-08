@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1Nzusc-0000MU-QK
-	for kexec@lists.infradead.org; Thu, 08 Apr 2010 16:46:59 +0000
-Date: Thu, 8 Apr 2010 12:46:44 -0400
+	id 1Nzuzf-0004EO-4p
+	for kexec@lists.infradead.org; Thu, 08 Apr 2010 16:54:15 +0000
+Date: Thu, 8 Apr 2010 12:54:06 -0400
 From: Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH] kexec: fix 64Gb limit on x86 w/ PAE
-Message-ID: <20100408164644.GB16868@hmsreliant.think-freely.org>
+Subject: Re: /sbin/kexec became zero size... Anyone else?
+Message-ID: <20100408165406.GC16868@hmsreliant.think-freely.org>
+References: <48D17183.7030002@sgi.com> <20080923075202.GA20108@verge.net.au>
+	<48D91C4E.5030704@sgi.com>
+	<20080923174113.GC20638@hmsendeavour.rdu.redhat.com>
+	<48D95253.10400@sgi.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <48D95253.10400@sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,51 +26,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, anderson@redhat.com, vgoyal@redhat.com
+To: Jay Lan <jlan@sgi.com>
+Cc: Neil Horman <nhorman@redhat.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Fix up x86 kexec to exclude memory on i686 kernels beyond 64GB limit
+On Tue, Sep 23, 2008 at 01:32:19PM -0700, Jay Lan wrote:
+> Neil Horman wrote:
+> > On Tue, Sep 23, 2008 at 09:41:50AM -0700, Jay Lan wrote:
+> >> Simon Horman wrote:
+> >>> On Wed, Sep 17, 2008 at 02:07:15PM -0700, Jay Lan wrote:
+> >>>> Hi,
+> >>>>
+> >>>> My root disk was populated with sles10sp2, but the kernel was
+> >>>> 2.6.27-rc5 and /sbin/kexec was built from 2.0.0 version.
+> >>>>
+> >>>> Many times when kdump kernel failed early i found  after reboot that
+> >>>> /sbin/kexec became zero size. There was no warning on executing
+> >>>> '/etc/init.d/kdump start' when /sbin/kexec is zero size. I have
+> >>>> no idea when and how that happened.
+> >>>>
+> >>>> Has anyone else seen this problem?
+> >>> Is it possible that this is caused by filesystem corruption?
+> >> I found the problems, which i can not reliably reproduce, happened
+> >> when i ran into kdump kernel boot failure (yet not every time.)
+> >> What puzzled me was why only /sbin/kexec was affected.
+> >>
+> > This is why most kdump implementations capture vmcore from an initramfs, since
+> > a crash means that you may not be able to trust the integrity of the filesystems
+> > that were mounted before the panic.
+> > 
+> > 
+> >> I can not explain what caused it (otherwise i would be able to
+> >> reproduce it) and do not know where my finger should point to. ;)
+> >> The good news is since i fixed the kernel boot problem it has not
+> >> happened any more.
+> >>
+> >> The distros probably can add a check against zero-sized kexec
+> >> in /etc/init.d/kdump script though.
+> >>
+> > Theres really not a need to.  Filesystems can be corrupted by crashes, thats why
+> > we capture cores from the initrd.  We need to be able to trust the rest of the
+> > system to scan filesystems and do their best to recover when filsystems loose
+> > data.
+> 
+> Hi Neil,
+> 
+> Which rhel release starts doing this?
+> 
+> Thanks,
+>  - jay
+> 
+Its always been that way.
+Neil
 
-We found a problem recently on x86 systems.  If a 32 bit PAE enabled system
-contains more then 64GB of physical ram, the kernel will truncate the max_pfn
-value to 64GB.  Unfortunately it still leaves all the physical memory regions
-present in /proc/iomem.  Since kexec builds its elf headers based on
-/proc/iomem the elf headers indicate the size of memory is larger than what the
-kernel is willing to address.  The result is that, during a copy of
-/proc/vmcore, a read will return -EFAULT when the requested offset is beyond the
-64GB range, leaving the seemingly truncated vmcore useless, as the elf headers
-indicate memory beyond what the file contains.
-
-The fix for it is pretty straightforward, just ensure that, when on x86 systems,
-we don't record any entries in the memory_range array that cross  the 64Gb mark.
-This keeps us in line with the kernel and lets the copy finish sucessfully,
-providing a workable core
-
-Tested successfully by myself
-Originally-authored-by: Dave Anderson <anderson@redhat.com>
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 9d37442..85879a9 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -114,6 +114,15 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
- 		if (end <= 0x0009ffff)
- 			continue;
- 
-+		/*
-+		 *  Exclude any segments starting at or beyond 64GB, and
-+		 *  restrict any segments from ending at or beyond 64GB.
-+		 */
-+		if (start >= 0x1000000000)
-+			continue;
-+		if (end >= 0x1000000000)
-+			end = 0xfffffffff;
-+
- 		crash_memory_range[memory_ranges].start = start;
- 		crash_memory_range[memory_ranges].end = end;
- 		crash_memory_range[memory_ranges].type = type;
-
+> 
+> > 
+> > Regards
+> > Neil
+> >  
+> >> Thanks,
+> >>  - jay
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> > 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
