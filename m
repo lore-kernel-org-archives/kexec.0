@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qy0-f191.google.com ([209.85.221.191])
+Received: from mail-bw0-f213.google.com ([209.85.218.213])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O254g-0007Oi-5F
-	for kexec@lists.infradead.org; Wed, 14 Apr 2010 16:04:22 +0000
-Received: by qyk29 with SMTP id 29so353983qyk.2
-	for <kexec@lists.infradead.org>; Wed, 14 Apr 2010 09:04:19 -0700 (PDT)
+	id 1O2Abs-0000eY-VA
+	for kexec@lists.infradead.org; Wed, 14 Apr 2010 21:59:01 +0000
+Received: by bwz5 with SMTP id 5so742903bwz.20
+	for <kexec@lists.infradead.org>; Wed, 14 Apr 2010 14:58:57 -0700 (PDT)
 MIME-Version: 1.0
-Date: Wed, 14 Apr 2010 12:04:18 -0400
-Message-ID: <i2u64cd42531004140904ve9859bc0l54fd768420810dc@mail.gmail.com>
-Subject: kexec hang : x86 loading 2.6.16.60-0.21-smp from a bootcd that is 
-	running 2.6.27.29-0.1-default
-From: Sumedh Degaonkar <dsumedh@gmail.com>
+In-Reply-To: <20100414152231.GA16779@a1.tnic>
+References: <alpine.DEB.2.00.1004132147260.1881@parag-laptop>
+	<20100414061746.GA23153@liondog.tnic>
+	<alpine.LFD.2.00.1004140712240.15116@i5.linux-foundation.org>
+	<20100414152231.GA16779@a1.tnic>
+Date: Wed, 14 Apr 2010 17:58:57 -0400
+Message-ID: <l2yf7848161004141458k5ff49eefs4c1871e2157df9d5@mail.gmail.com>
+Subject: Re: 2.6.34-rc4 : OOPS in unmap_vma
+From: Parag Warudkar <parag.lkml@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +23,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0974490207=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>, Linus Torvalds <torvalds@linux-foundation.org>, Parag Warudkar <parag.lkml@gmail.com>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org
 
---===============0974490207==
-Content-Type: multipart/alternative; boundary=0016364edb1cd6cc65048434870e
+Hi Borislav
 
---0016364edb1cd6cc65048434870e
-Content-Type: text/plain; charset=ISO-8859-1
+On Wed, Apr 14, 2010 at 11:22 AM, Borislav Petkov <bp@alien8.de> wrote:
 
-Hi all,
+> interesting what he means there - a kexec-enabled kernel or is this the
+> "second" kernel his machine kexec'd into after a previous failure. I
+> think this could clarify the situation a bit.
+>
 
-I have a bootcd that loads '2.6.27.29-0.1-default' and drops to a shell.
-From here I do an nfs mount and pick up a kernel and initrd that I know are
-good.
+It was the kexec'ed kernel that oopsed - the first kernel had no issues.
+It was kexec'ing from 2.6.34-rc4 to the same kernel.
 
-I then try :
-kexec -l <new_kernel> --append=console=tty0 console==ttyS0,9600n8
---initrd=<initrd_location>
-kexec -e
+After that I have tried to reboot via kexec to try to reproduce the
+issue but it either hung completely or resulted in corrupted X and
+non-moving cursor.
+Kexec from Distro kernel to itself works just fine (Ubuntu 2.6.32-20) however.
 
-All I get is : 'Starting new kernel' and machine hangs. No output on serial
-minicom from another linux machine where the serial cable is connected.
+I will start a bisect as soon as find time.
 
-I read that there is a way to test kexec by doing :
-"kexec -l kexec_test" ---> but this does not work for me?
-
-Any tips/ideas on how to debug?
-
-Thanks,
-sumedh
-
---0016364edb1cd6cc65048434870e
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,<br><br>I have a bootcd that loads &#39;2.6.27.29-0.1-default&#39; a=
-nd drops to a shell. From here I do an nfs mount and pick up a kernel and i=
-nitrd that I know are good.<br><br>I then try :<br>kexec -l &lt;new_kernel&=
-gt; --append=3Dconsole=3Dtty0 console=3D=3DttyS0,9600n8 --initrd=3D&lt;init=
-rd_location&gt;<br>
-kexec -e<br><br>All I get is : &#39;Starting new kernel&#39; and machine ha=
-ngs. No output on serial minicom from another linux machine where the seria=
-l cable is connected.<br><br>I read that there is a way to test kexec by do=
-ing : <br>
-&quot;kexec -l kexec_test&quot; ---&gt; but this does not work for me?<br><=
-br>Any tips/ideas on how to debug?<br><br>Thanks,<br>sumedh<br><br><br>
-
---0016364edb1cd6cc65048434870e--
-
-
---===============0974490207==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Parag
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0974490207==--
-
