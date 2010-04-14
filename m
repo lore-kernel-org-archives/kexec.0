@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([78.46.96.112])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O1w3d-0003xt-30
-	for kexec@lists.infradead.org; Wed, 14 Apr 2010 06:26:42 +0000
-Date: Wed, 14 Apr 2010 08:17:46 +0200
-From: Borislav Petkov <bp@alien8.de>
+Received: from smtp1.linux-foundation.org ([140.211.169.13])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1O23gl-0005vP-HG
+	for kexec@lists.infradead.org; Wed, 14 Apr 2010 14:35:36 +0000
+Date: Wed, 14 Apr 2010 07:32:08 -0700 (PDT)
+From: Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: 2.6.34-rc4 : OOPS in unmap_vma
-Message-ID: <20100414061746.GA23153@liondog.tnic>
+In-Reply-To: <20100414061746.GA23153@liondog.tnic>
+Message-ID: <alpine.LFD.2.00.1004140712240.15116@i5.linux-foundation.org>
 References: <alpine.DEB.2.00.1004132147260.1881@parag-laptop>
+	<20100414061746.GA23153@liondog.tnic>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.00.1004132147260.1881@parag-laptop>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,125 +23,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Parag Warudkar <parag.lkml@gmail.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, torvalds@linux-foundation.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
-
-From: Parag Warudkar <parag.lkml@gmail.com>
-Date: Tue, Apr 13, 2010 at 09:53:46PM -0400
-
-(adding kexec people to Cc)
-
-> Not sure if this is related to the recent mm/vma fixes - got this 
-> while rebooting (kexec) latest git -
-
-[..]
-
-> [   11.437727] BUG: unable to handle kernel paging request at 0000000000002203
-> [   11.437745] IP: [<ffffffff810e4107>] unmap_vmas+0x227/0xa90
-> [   11.437764] PGD 0 
-> [   11.437771] Oops: 0000 [#1] PREEMPT SMP 
-> [   11.437782] last sysfs file: /sys/devices/pci0000:00/0000:00:1e.0/0000:86:09.4/local_cpus
-> [   11.437792] CPU 1 
-> [   11.437796] Modules linked in: binfmt_misc lp kvm_intel kvm tpm_infineon snd_hda_codec_atihdmi snd_hda_codec_analog fbcon tileblit font bitblit softcursor snd_hda_intel snd_hda_codec snd_hwdep arc4 snd_pcm_oss snd_mixer_oss snd_pcm snd_seq_dummy snd_seq_oss snd_seq_midi pcmcia snd_rawmidi joydev snd_seq_midi_event iwlagn radeon snd_seq iwlcore ttm snd_timer drm_kms_helper hp_accel mac80211 hp_wmi sdhci_pci ppdev sdhci snd_seq_device coretemp intel_agp yenta_socket lis3lv02d rsrc_nonstatic drm cfg80211 input_polldev parport_pc video snd tpm_tis psmouse serio_raw mmc_core pcmcia_core tpm parport output tpm_bios rfkill wmi soundcore i2c_algo_bit led_class snd_page_alloc acpi_cpufreq agpgart ext3 jbd mbcache xfs exportfs ahci libata e1000e ehci_hcd
-> [   11.437986] 
-> [   11.437994] Pid: 484, comm: udevd Not tainted 2.6.34-rc4 #19 30E7/HP EliteBook 8530p
-> [   11.438001] RIP: 0010:[<ffffffff810e4107>]  [<ffffffff810e4107>] unmap_vmas+0x227/0xa90
-> [   11.438015] RSP: 0018:ffff88013dae5cb8  EFLAGS: 00010206
-> [   11.438023] RAX: 0000000000002203 RBX: 00007f5fffe49000 RCX: 00007f5fffe49fff
-> [   11.438030] RDX: 0000000000001a13 RSI: ffff880001d0d818 RDI: 00007f5fffe4a000
-> [   11.438039] RBP: ffff88013dae5df8 R08: 0000000000000000 R09: 0000000000000000
-> [   11.438047] R10: ffff8800019eff68 R11: dead000000100100 R12: 00007f5fffe49000
-> [   11.438055] R13: 0000000000005e00 R14: ffff88013dacf240 R15: ffff88013ded9500
-> [   11.438064] FS:  0000000000000000(0000) GS:ffff880001d00000(0000) knlGS:0000000000000000
-> [   11.438072] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   11.438078] CR2: 0000000000002203 CR3: 0000000001805000 CR4: 00000000000406e0
-> [   11.438085] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   11.438094] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7: 0000000000000400
-> [   11.438102] Process udevd (pid: 484, threadinfo ffff88013dae4000, task ffff88013dae8000)
-> [   11.438108] Stack:
-> [   11.438112]  0000000000000000 0000000000000000 0000000000000000 ffffea00045150c8
-> [   11.438125] <0> ffff88013fb0daa8 0000000000000000 ffff88013dae5e08 ffff88013ded9500
-> [   11.438138] <0> ffff88013dae5fd8 000000013fb0dab0 ffffffffffffffff 0000000000000000
-> [   11.438155] Call Trace:
-> [   11.438170]  [<ffffffff810e9cfb>] exit_mmap+0xcb/0x1d0
-> [   11.438180]  [<ffffffff81045772>] mmput+0x42/0x110
-> [   11.438190]  [<ffffffff8104a419>] exit_mm+0x109/0x140
-> [   11.438203]  [<ffffffff813f87c6>] ? _raw_spin_unlock_irq+0x26/0x50
-> [   11.438213]  [<ffffffff8108ce20>] ? acct_collect+0x160/0x1b0
-> [   11.438222]  [<ffffffff8104c47c>] do_exit+0x68c/0x7a0
-> [   11.438233]  [<ffffffff8104c5e1>] do_group_exit+0x51/0xc0
-> [   11.438242]  [<ffffffff8104c667>] sys_exit_group+0x17/0x20
-> [   11.438253]  [<ffffffff810030f2>] system_call_fastpath+0x16/0x1b
-> [   11.438260] Code: b8 00 00 00 00 80 ff ff ff 48 21 45 80 48 8b 45 80 48 ff c8 48 3b 85 40 ff ff ff 48 8b 85 50 ff ff ff 48 0f 42 7d 80 48 89 7d 80 <48> 8b 38 48 85 ff 0f 84 f5 04 00 00 48 b8 fb 0f 00 00 00 c0 ff
-
-hmm, it doesn't look like it. Your code translates to something like
-
-   0:   b8 00 00 00 00          mov    $0x0,%eax
-   5:   80 ff ff                cmp    $0xff,%bh
-   8:   ff 48 21                decl   0x21(%rax)
-   b:   45 80 48 8b 45          rex.RB orb    $0x45,-0x75(%r8)
-  10:   80 48 ff c8             orb    $0xc8,-0x1(%rax)
-  14:   48 3b 85 40 ff ff ff    cmp    -0xc0(%rbp),%rax
-  1b:   48 8b 85 50 ff ff ff    mov    -0xb0(%rbp),%rax
-  22:   48 0f 42 7d 80          cmovb  -0x80(%rbp),%rdi
-  27:   48 89 7d 80             mov    %rdi,-0x80(%rbp)
-  2b:*  48 8b 38                mov    (%rax),%rdi     <-- trapping instruction
-  2e:   48 85 ff                test   %rdi,%rdi
-  31:   0f 84 f5 04 00 00       je     0x52c
-  37:   48                      rex.W
-  38:   b8 fb 0f 00 00          mov    $0xffb,%eax
-  3d:   00 c0                   add    %al,%al
-  3f:   ff                      .byte 0xff
+To: Borislav Petkov <bp@alien8.de>
+Cc: Haren Myneni <hbabu@us.ibm.com>, Parag Warudkar <parag.lkml@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
 
-which I could correlate with what I get here (comments added):
 
-	.loc 1 1051 0
-	movabsq	$549755813888, %rax	#, tmp158	PGDIR_SIZE
-.LVL392:
-	leaq	(%r12,%rax), %rax	#,
-	movq	%rax, -88(%rbp)	#, %sfp
-	movabsq	$-549755813888, %rax	#, tmp159	PGDIR_MASK
-	andq	%rax, -88(%rbp)	# tmp159, %sfp
-	movq	-88(%rbp), %rdx	# %sfp, tmp160
-	movq	-72(%rbp), %rax	# %sfp, tmp161
-	decq	%rdx	# tmp160			__boundary
-	decq	%rax	# tmp161			__end
-	cmpq	%rax, %rdx	# tmp161, tmp160	rFLAGS
-	movq	-72(%rbp), %rax	# %sfp,
-	cmovb	-88(%rbp), %rax	# %sfp,,
-	movq	-112(%rbp), %rdx	# %sfp,		pgd
-	movq	%rax, -88(%rbp)	#, %sfp
-	movq	(%rdx), %rax	# <variable>.pgd, pgd$pgd
+On Wed, 14 Apr 2010, Borislav Petkov wrote:
+> 
+> hmm, it doesn't look like it. Your code translates to something like
+> 
+>    0:   b8 00 00 00 00          mov    $0x0,%eax
+>    5:   80 ff ff                cmp    $0xff,%bh
+>    8:   ff 48 21                decl   0x21(%rax)
+>    b:   45 80 48 8b 45          rex.RB orb    $0x45,-0x75(%r8)
+>   10:   80 48 ff c8             orb    $0xc8,-0x1(%rax)
 
-and if this output is correct and if you scroll back a little in your
-assemble output, you should probably see that the value computed in
-pgd_offset() is being saved in -0x80(%rbp) and reloaded again for use.
+There's a large constant (0xffffff8000000000) in there at the beginning, 
+and the disassembly hasn't found the start of the next instruction very 
+cleanly. The same is true at the end: another large constant is cut off in 
+the middle. 
 
-So you oops when dereferencing that pgd value in %rax (%rdx in my case),
-*pgd in pgd_none_or_clear_bad(pgd) which is called in the below fragment
-of unmap_page_range().
+The byte just before the dumped instruction stream is almost certainly 
+'48h', and the last byte of the last constant is 0xff, and the disassembly 
+ends up being:
 
-	pgd = pgd_offset(vma->vm_mm, addr);
-	do {
-		next = pgd_addr_end(addr, end);
-		if (pgd_none_or_clear_bad(pgd)) {
-			(*zap_work)--;
-			continue;
-		}
-		next = zap_pud_range(tlb, vma, pgd, addr, next,
-						zap_work, details);
-	} while (pgd++, addr = next, (addr != end && *zap_work > 0));
+   0:	48 b8 00 00 00 00 80 	mov    $0xffffff8000000000,%rax
+   7:	ff ff ff 
+   a:	48 21 45 80          	and    %rax,-0x80(%rbp)
+   e:	48 8b 45 80          	mov    -0x80(%rbp),%rax
+  12:	48 ff c8             	dec    %rax
+  15:	48 3b 85 40 ff ff ff 	cmp    -0xc0(%rbp),%rax
+  1c:	48 8b 85 50 ff ff ff 	mov    -0xb0(%rbp),%rax
+  23:	48 0f 42 7d 80       	cmovb  -0x80(%rbp),%rdi
+  28:	48 89 7d 80          	mov    %rdi,-0x80(%rbp)
+  2c:*	48 8b 38             	mov    (%rax),%rdi     <-- trapping instruction
+  2f:	48 85 ff             	test   %rdi,%rdi
+  32:	0f 84 f5 04 00 00    	je     0x52d
+  38:	48 b8 fb 0f 00 00 00 	mov    $0xffffc00000000ffb,%rax
+  3f:	c0 ff ff 
 
-so it looks like it tries to find a page table rooted at that address
-but the pointer value of 0000000000002203 is bogus.
+But yes, you found the right spot (that 0xffffff8000000000 constant is 
+-549755813888 decimal):
 
-Which might be because when we iterate over the vmas in unmap_vmas, one
-of those vma->vm_start is invalid...
+> which I could correlate with what I get here (comments added):
 
--- 
-Regards/Gruss,
-    Boris.
+Yup. Close enough. Btw, it's often good to look at both the *.s code _and_ 
+the *.lst code. If you do "make mm/memory.lst", you'll find those big 
+constants easily, and then you'll see the code this way:
+
+	        do {
+	                next = pgd_addr_end(addr, end);
+	ffffffff81b2aa45:       48 b8 00 00 00 00 80    mov    $0x8000000000,%rax
+	ffffffff81b2aa4c:       00 00 00
+	ffffffff81b2aa4f:       49 8d 04 04             lea    (%r12,%rax,1),%rax
+	ffffffff81b2aa53:       48 89 45 a8             mov    %rax,-0x58(%rbp)
+	ffffffff81b2aa57:       48 b8 00 00 00 00 80    mov    $0xffffff8000000000,%rax
+	ffffffff81b2aa5e:       ff ff ff
+	ffffffff81b2aa61:       48 21 45 a8             and    %rax,-0x58(%rbp)
+	ffffffff81b2aa65:       48 8b 45 b8             mov    -0x48(%rbp),%rax
+	ffffffff81b2aa69:       48 8b 55 a8             mov    -0x58(%rbp),%rdx
+	ffffffff81b2aa6d:       48 ff c8                dec    %rax
+	ffffffff81b2aa70:       48 ff ca                dec    %rdx   
+	ffffffff81b2aa73:       48 39 c2                cmp    %rax,%rdx
+	ffffffff81b2aa76:       48 8b 45 b8             mov    -0x48(%rbp),%rax
+	ffffffff81b2aa7a:       48 8b 55 90             mov    -0x70(%rbp),%rdx
+	ffffffff81b2aa7e:       48 0f 42 45 a8          cmovb  -0x58(%rbp),%rax
+	ffffffff81b2aa83:       48 89 45 a8             mov    %rax,-0x58(%rbp)
+	ffffffff81b2aa87:       48 8b 02                mov    (%rdx),%rax
+	void pud_clear_bad(pud_t *);
+	void pmd_clear_bad(pmd_t *);
+	
+	static inline int pgd_none_or_clear_bad(pgd_t *pgd)
+	{
+	        if (pgd_none(*pgd))
+	ffffffff81b2aa8a:       48 85 c0                test   %rax,%rax
+	ffffffff81b2aa8d:       74 20                   je     ffffffff81b2aaaf <unmap_vmas+0x228>
+	                return 1;
+	        if (unlikely(pgd_bad(*pgd))) {
+	ffffffff81b2aa8f:       48 ba fb 0f 00 00 00    mov    $0xffffc00000000ffb,%rdx
+	ffffffff81b2aa96:       c0 ff ff
+	ffffffff81b2aa99:       48 21 c2                and    %rax,%rdx
+	ffffffff81b2aa9c:       48 83 fa 63             cmp    $0x63,%rdx
+	ffffffff81b2aaa0:       0f 84 d9 04 00 00       je     ffffffff81b2af7f <unmap_vmas+0x6f8>
+
+although Parag's compiler has generated much better code (possibly due to 
+config differences, possibly due to compiler versions)
+
+> So you oops when dereferencing that pgd value in %rax (%rdx in my case),
+> *pgd in pgd_none_or_clear_bad(pgd) which is called in the below fragment
+> of unmap_page_range().
+> 
+> 	pgd = pgd_offset(vma->vm_mm, addr);
+> 	do {
+> 		next = pgd_addr_end(addr, end);
+> 		if (pgd_none_or_clear_bad(pgd)) {
+> 			(*zap_work)--;
+> 			continue;
+> 		}
+> 		next = zap_pud_range(tlb, vma, pgd, addr, next,
+> 						zap_work, details);
+> 	} while (pgd++, addr = next, (addr != end && *zap_work > 0));
+
+Correct.
+
+> so it looks like it tries to find a page table rooted at that address
+> but the pointer value of 0000000000002203 is bogus.
+
+Yes, it does look like some strange page table corruption, doesn't look 
+anon_vma related at all. It's intriguing that it started happening now, 
+though, so.. 
+
+				Linus
 
 _______________________________________________
 kexec mailing list
