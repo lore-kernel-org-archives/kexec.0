@@ -1,20 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bw0-f213.google.com ([209.85.218.213])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O2Abs-0000eY-VA
-	for kexec@lists.infradead.org; Wed, 14 Apr 2010 21:59:01 +0000
-Received: by bwz5 with SMTP id 5so742903bwz.20
-	for <kexec@lists.infradead.org>; Wed, 14 Apr 2010 14:58:57 -0700 (PDT)
+Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1O4agj-0002D5-Uy
+	for kexec@lists.infradead.org; Wed, 21 Apr 2010 14:14:03 +0000
+Date: Wed, 21 Apr 2010 16:13:58 +0200
+From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Subject: Re: [PATCH 3/7] powerpc32: pull in libfdt
+Message-ID: <20100421141358.GA5318@Chamillionaire.breakpoint.cc>
+References: <1270023858-26947-1-git-send-email-sebastian@breakpoint.cc>
+	<1270023858-26947-4-git-send-email-sebastian@breakpoint.cc>
+	<20100331225819.GC10909@verge.net.au>
+	<20100401070559.GA20047@Chamillionaire.breakpoint.cc>
+	<20100406061251.GA10387@verge.net.au>
+	<20100406075108.GA29206@Chamillionaire.breakpoint.cc>
+	<20100406084134.GB22427@verge.net.au>
+	<20100406094759.GB30917@Chamillionaire.breakpoint.cc>
+	<20100406234044.GH10356@verge.net.au>
 MIME-Version: 1.0
-In-Reply-To: <20100414152231.GA16779@a1.tnic>
-References: <alpine.DEB.2.00.1004132147260.1881@parag-laptop>
-	<20100414061746.GA23153@liondog.tnic>
-	<alpine.LFD.2.00.1004140712240.15116@i5.linux-foundation.org>
-	<20100414152231.GA16779@a1.tnic>
-Date: Wed, 14 Apr 2010 17:58:57 -0400
-Message-ID: <l2yf7848161004141458k5ff49eefs4c1871e2157df9d5@mail.gmail.com>
-Subject: Re: 2.6.34-rc4 : OOPS in unmap_vma
-From: Parag Warudkar <parag.lkml@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20100406234044.GH10356@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,28 +31,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, Linus Torvalds <torvalds@linux-foundation.org>, Parag Warudkar <parag.lkml@gmail.com>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-Hi Borislav
+* Simon Horman | 2010-04-07 09:40:44 [+1000]:
 
-On Wed, Apr 14, 2010 at 11:22 AM, Borislav Petkov <bp@alien8.de> wrote:
+>Done :-)
 
-> interesting what he means there - a kexec-enabled kernel or is this the
-> "second" kernel his machine kexec'd into after a previous failure. I
-> think this could clarify the situation a bit.
->
+I kinda forgot: What is the status on fixing the signed/unsigned things
+in here?
+Am I looking after it or did you want to push some patches first?
 
-It was the kexec'ed kernel that oopsed - the first kernel had no issues.
-It was kexec'ing from 2.6.34-rc4 to the same kernel.
-
-After that I have tried to reboot via kexec to try to reproduce the
-issue but it either hung completely or resulted in corrupted X and
-non-moving cursor.
-Kexec from Distro kernel to itself works just fine (Ubuntu 2.6.32-20) however.
-
-I will start a bisect as soon as find time.
-
-Parag
+Sebastian
 
 _______________________________________________
 kexec mailing list
