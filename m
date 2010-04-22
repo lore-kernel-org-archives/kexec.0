@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mail-vw0-f49.google.com ([209.85.212.49])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O4wZY-0004BF-Mo
-	for kexec@lists.infradead.org; Thu, 22 Apr 2010 13:36:05 +0000
-Subject: Re: Kexec for ARM: Is it expected to load old kernels?
-References: <4BBFC9F5.3070105@anabaptists.org>
-	<n2id1b08f941004120500o43859311x8331038ceb84d1b7@mail.gmail.com>
-	<4BC3339C.9040903@anabaptists.org> <4BC5F4E9.2000808@anabaptists.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-In-Reply-To: <4BC5F4E9.2000808@anabaptists.org> (Brian Smucker's message of
-	"Wed\, 14 Apr 2010 10\:01\:29 -0700")
-Date: Thu, 22 Apr 2010 06:36:01 -0700
-Message-ID: <m17hnzzk1q.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+	id 1O4zBl-00081t-UI
+	for kexec@lists.infradead.org; Thu, 22 Apr 2010 16:23:42 +0000
+Received: by vws3 with SMTP id 3so1969792vws.36
+	for <kexec@lists.infradead.org>; Thu, 22 Apr 2010 09:23:39 -0700 (PDT)
+From: Vitaly Mayatskikh <v.mayatskih@gmail.com>
+Subject: [PATCH 0/5] Add second memory region for crash kernel
+Date: Thu, 22 Apr 2010 18:23:07 +0200
+Message-Id: <1271953392-6324-1-git-send-email-v.mayatskih@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,29 +17,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Brian Smucker <bsmucker@anabaptists.org>
-Cc: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Cong Wang <amwang@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, Haren Myneni <hbabu@us.ibm.com>, Ingo Molnar <mingo@redhat.com>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-Brian Smucker <bsmucker@anabaptists.org> writes:
+Patch applies to 2.6.34-rc5
 
-> Hello,
->
-> Is there someone who can answer these questions out there?
->
-> Perhaps you could give a name of someone who could help.
+On x86 platform, even if hardware is 64-bit capable, kernel starts
+execution in 32-bit mode. When system is kdump-enabled, crashed kernel
+switches to 32 bit mode and jumps into new kernel. This automatically
+limits location of dump-capture kernel image and it's initrd by first
+4Gb of memory. Switching to 32 bit mode is performed by purgatory
+code, which has relocations of type R_X86_64_32S (32-bit signed), and
+this cuts "good" address space for crash kernel down to 2 Gb. I/O
+regions may cut down this space further.
 
-kexec is designed to boot arbitrary kernels.  How well you can do that
-depends on how close the system can be returned to a state similar to
-reset, and how robust the kernel you are booting is.
+When system has a lot of memory (hundreds of gigabytes), dump-capture
+kernel also needs relatively a lot of memory to account old kernel's
+pages. It may be impossible to reserve enough memory below 2 or even 4
+Gb. Simplest solution is it break dump-capture kernel's reserved
+memory region into two pieces: first (small) region for kernel and
+initrd images may be easily placed in "good" address space in the
+beginning of physical memory, and second region may be located
+anywhere.
 
-If you can get /sbin/kexec to reproduce your normal boot protocol it
-is likely you can get an newer kernel to boot an older one.
+This serie of patches realizes this approach. It requires also changes
+in kexec utility to make this feature work, but is
+backward-compatible: old versions of kexec will work with new
+kernel. I will post patch to kexec-tools upstream separately.
 
-Eric
+Signed-off-by: Vitaly Mayatskikh <v.mayatskih@gmail.com>
+
+ Documentation/kdump/kdump.txt       |   40 ++++++++
+ Documentation/kernel-parameters.txt |   19 +++-
+ arch/x86/kernel/setup.c             |   56 +++++++----
+ include/linux/kexec.h               |    6 +
+ kernel/kexec.c                      |  182 ++++++++++++++++++++++++++---------
+ 5 files changed, 232 insertions(+), 71 deletions(-)
+
 
 _______________________________________________
 kexec mailing list
