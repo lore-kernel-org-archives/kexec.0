@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O4wZN-0003TN-2i
-	for kexec@lists.infradead.org; Thu, 22 Apr 2010 13:35:53 +0000
+	id 1O4wZY-0004BF-Mo
+	for kexec@lists.infradead.org; Thu, 22 Apr 2010 13:36:05 +0000
 Subject: Re: Kexec for ARM: Is it expected to load old kernels?
 References: <4BBFC9F5.3070105@anabaptists.org>
 	<n2id1b08f941004120500o43859311x8331038ceb84d1b7@mail.gmail.com>
 	<4BC3339C.9040903@anabaptists.org> <4BC5F4E9.2000808@anabaptists.org>
 From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 22 Apr 2010 06:35:44 -0700
 In-Reply-To: <4BC5F4E9.2000808@anabaptists.org> (Brian Smucker's message of
 	"Wed\, 14 Apr 2010 10\:01\:29 -0700")
-Message-ID: <m18w8fzk27.fsf@fess.ebiederm.org>
+Date: Thu, 22 Apr 2010 06:36:01 -0700
+Message-ID: <m17hnzzk1q.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
