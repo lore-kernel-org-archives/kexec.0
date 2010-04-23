@@ -1,10 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1O5BGg-0004MP-9q
+	for kexec@lists.infradead.org; Fri, 23 Apr 2010 05:17:34 +0000
+Message-ID: <4BD12E48.3080400@redhat.com>
+Date: Fri, 23 Apr 2010 13:21:12 +0800
+From: Cong Wang <amwang@redhat.com>
 MIME-Version: 1.0
-From: Eric Miao <eric.miao@canonical.com>
-Date: Fri, 23 Apr 2010 10:36:44 +0800
-Message-ID: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
-Subject: [PATCH - kexec] arm: place initrd to safer place according to zImage 
-	length
+Subject: Re: [PATCH 0/5] Add second memory region for crash kernel
+References: <1271953392-6324-1-git-send-email-v.mayatskih@gmail.com>	<m1aasvkupc.fsf@fess.ebiederm.org>
+	<20100422224525.GJ3228@redhat.com>
+	<m1eii7j8ne.fsf@fess.ebiederm.org>
+In-Reply-To: <m1eii7j8ne.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -13,80 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Vitaly Mayatskikh <v.mayatskih@gmail.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-commit 4b6d55c7780dbf383c6b64e560d459d15a891006
-Author: Eric Miao <eric.miao@canonical.com>
-Date:   Fri Apr 23 10:19:43 2010 +0800
+Eric W. Biederman wrote:
+> Vivek Goyal <vgoyal@redhat.com> writes:
+> 
+>> Vitaly, have you really run into cases where 2G upper limit is a concern.
+>> What is the configuration you have, how much memory it has and how much
+>> memory are you planning to reserve for kdump kernel?
+> 
+> A good question.
+> 
 
-    arm: place initrd to safer place according to zImage length
+We have observed that on a machine which has 66G memory, when we do
+crashkernel=1G@4G, kexec failed to load the crash kernel, but the memory
+reservation _did_ succeed.
 
-    The original fixed address of 0x800000 may be overwritten after the
-    kernel is decompressed.  Assume a maximum decompression ratio of 4
-    and place initrd right after that, just to be safer.
-
-    Signed-off-by: Eric Miao <eric.miao@canonical.com>
-
-diff --git a/kexec/arch/arm/kexec-zImage-arm.c
-b/kexec/arch/arm/kexec-zImage-arm.c
-index 72fcdd8..1a446d9 100644
---- a/kexec/arch/arm/kexec-zImage-arm.c
-+++ b/kexec/arch/arm/kexec-zImage-arm.c
-@@ -130,7 +130,7 @@ struct tag * atag_read_tags(void)
- static
- int atag_arm_load(struct kexec_info *info, unsigned long base,
- 	const char *command_line, off_t command_line_len,
--	const char *initrd, off_t initrd_len)
-+	const char *initrd, off_t initrd_len, off_t initrd_off)
- {
- 	struct tag *saved_tags = atag_read_tags();
- 	char *buf;
-@@ -196,10 +196,8 @@ int atag_arm_load(struct kexec_info *info,
-unsigned long base,
- 	add_segment(info, buf, len, base, len);
-
- 	if (initrd) {
--		struct memory_range *range;
--		int ranges;
--		get_memory_ranges(&range, &ranges, info->kexec_flags);
--		*initrd_start = locate_hole(info, initrd_len, getpagesize(),
-range[0].start + 0x800000, ULONG_MAX, INT_MAX);
-+		*initrd_start = locate_hole(info, initrd_len, getpagesize(),
-+				initrd_off, ULONG_MAX, INT_MAX);
- 		if (*initrd_start == ULONG_MAX)
- 			return -1;
- 		add_segment(info, initrd, initrd_len, *initrd_start, initrd_len);
-@@ -219,6 +217,7 @@ int zImage_arm_load(int argc, char **argv, const
-char *buf, off_t len,
- 	const char *ramdisk;
- 	char *ramdisk_buf;
- 	off_t ramdisk_length;
-+	off_t ramdisk_offset;
- 	int opt;
- #define OPT_APPEND	'a'
- #define OPT_RAMDISK	'r'
-@@ -271,9 +270,14 @@ int zImage_arm_load(int argc, char **argv, const
-char *buf, off_t len,
- 	if (base == ULONG_MAX)
- 		return -1;
-
-+	/* assume the maximum kernel compression ratio is 4,
-+	 * and just to be safe, place ramdisk after that
-+	 */
-+	ramdisk_offset = base + len * 4;
-+
- 	if (atag_arm_load(info, base + atag_offset,
- 			 command_line, command_line_len,
--			 ramdisk_buf, ramdisk_length)    == -1)
-+			 ramdisk_buf, ramdisk_length, ramdisk_offset) == -1)
- 		return -1;
-
- 	add_segment(info, buf, len, base + offset, len);
+Thanks.
 
 _______________________________________________
 kexec mailing list
