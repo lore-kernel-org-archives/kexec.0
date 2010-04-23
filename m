@@ -1,17 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O5752-0001au-NN
-	for kexec@lists.infradead.org; Fri, 23 Apr 2010 00:49:17 +0000
-Subject: Re: [PATCH 0/5] Add second memory region for crash kernel
-References: <1271953392-6324-1-git-send-email-v.mayatskih@gmail.com>
-	<m1aasvkupc.fsf@fess.ebiederm.org> <20100422224525.GJ3228@redhat.com>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 22 Apr 2010 17:48:53 -0700
-In-Reply-To: <20100422224525.GJ3228@redhat.com> (Vivek Goyal's message of
-	"Thu\, 22 Apr 2010 18\:45\:25 -0400")
-Message-ID: <m1eii7j8ne.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+From: Eric Miao <eric.miao@canonical.com>
+Date: Fri, 23 Apr 2010 10:36:44 +0800
+Message-ID: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
+Subject: [PATCH - kexec] arm: place initrd to safer place according to zImage 
+	length
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +17,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Vitaly Mayatskikh <v.mayatskih@gmail.com>, Cong Wang <amwang@redhat.com>, Neil Horman <nhorman@tuxdriver.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Haren Myneni <hbabu@us.ibm.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Vivek Goyal <vgoyal@redhat.com> writes:
+commit 4b6d55c7780dbf383c6b64e560d459d15a891006
+Author: Eric Miao <eric.miao@canonical.com>
+Date:   Fri Apr 23 10:19:43 2010 +0800
 
-> On Thu, Apr 22, 2010 at 03:07:11PM -0700, Eric W. Biederman wrote:
->> Vitaly Mayatskikh <v.mayatskih@gmail.com> writes:
->> >
->> > This serie of patches realizes this approach. It requires also changes
->> > in kexec utility to make this feature work, but is
->> > backward-compatible: old versions of kexec will work with new
->> > kernel. I will post patch to kexec-tools upstream separately.
->> 
->> Have you tried loading a 64bit vmlinux directly into a higher address
->> range?  There may be a bit or two missing but you should be able to
->> load a linux kernel above 4GB.  I tested the basics of that mechanism
->> when I made the 64bit relocatable kernel.
->
-> I guess even if it works, for distributions it will become additional
-> liability to carry vmlinux (instead of relocatable bzImage). So we shall
-> have to find a way to make bzImage work.
+    arm: place initrd to safer place according to zImage length
 
-As Peter pointed out we actually have everything thing we need except
-a bit of documentation and the flag that says this is a 64bit kernel.
+    The original fixed address of 0x800000 may be overwritten after the
+    kernel is decompressed.  Assume a maximum decompression ratio of 4
+    and place initrd right after that, just to be safer.
 
-From a testing perspective a 64bit vmlinux should work today without
-changes.  Once it is confirmed there is a solution with the 64bit
-kernel we just need a small patch to boot.txt and a few tweaks to 
-/sbin/kexec to handle a 64bit bzImage.
+    Signed-off-by: Eric Miao <eric.miao@canonical.com>
 
->> I don't buy the argument that there is a direct connection between
->> the amount of memory you have and how much memory it takes to dump it.
->> Even an indirect connections seems suspicious.
->
-> Memory requirement by user space might be of interest though like dump
-> filtering tools. I vaguely remember that it used to first traverse all
-> the memory pages, create some internal data structures and then start
-> dumping.
->
-> So memory required by filtering tool might be directly proportional to
-> amount of memory present in the system.
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c
+b/kexec/arch/arm/kexec-zImage-arm.c
+index 72fcdd8..1a446d9 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -130,7 +130,7 @@ struct tag * atag_read_tags(void)
+ static
+ int atag_arm_load(struct kexec_info *info, unsigned long base,
+ 	const char *command_line, off_t command_line_len,
+-	const char *initrd, off_t initrd_len)
++	const char *initrd, off_t initrd_len, off_t initrd_off)
+ {
+ 	struct tag *saved_tags = atag_read_tags();
+ 	char *buf;
+@@ -196,10 +196,8 @@ int atag_arm_load(struct kexec_info *info,
+unsigned long base,
+ 	add_segment(info, buf, len, base, len);
 
-Assuming your dump filtering tool creates a bitmap of pages to be dumped
-you get a ration of 32K to 1.  Or 3MB for 100GB and 32MB for 1TB.
-Which is noticeable in the worst case but definitely not enough to push
-us past 2GB.
+ 	if (initrd) {
+-		struct memory_range *range;
+-		int ranges;
+-		get_memory_ranges(&range, &ranges, info->kexec_flags);
+-		*initrd_start = locate_hole(info, initrd_len, getpagesize(),
+range[0].start + 0x800000, ULONG_MAX, INT_MAX);
++		*initrd_start = locate_hole(info, initrd_len, getpagesize(),
++				initrd_off, ULONG_MAX, INT_MAX);
+ 		if (*initrd_start == ULONG_MAX)
+ 			return -1;
+ 		add_segment(info, initrd, initrd_len, *initrd_start, initrd_len);
+@@ -219,6 +217,7 @@ int zImage_arm_load(int argc, char **argv, const
+char *buf, off_t len,
+ 	const char *ramdisk;
+ 	char *ramdisk_buf;
+ 	off_t ramdisk_length;
++	off_t ramdisk_offset;
+ 	int opt;
+ #define OPT_APPEND	'a'
+ #define OPT_RAMDISK	'r'
+@@ -271,9 +270,14 @@ int zImage_arm_load(int argc, char **argv, const
+char *buf, off_t len,
+ 	if (base == ULONG_MAX)
+ 		return -1;
 
-> Vitaly, have you really run into cases where 2G upper limit is a concern.
-> What is the configuration you have, how much memory it has and how much
-> memory are you planning to reserve for kdump kernel?
++	/* assume the maximum kernel compression ratio is 4,
++	 * and just to be safe, place ramdisk after that
++	 */
++	ramdisk_offset = base + len * 4;
++
+ 	if (atag_arm_load(info, base + atag_offset,
+ 			 command_line, command_line_len,
+-			 ramdisk_buf, ramdisk_length)    == -1)
++			 ramdisk_buf, ramdisk_length, ramdisk_offset) == -1)
+ 		return -1;
 
-A good question.
-
-Eric
+ 	add_segment(info, buf, len, base + offset, len);
 
 _______________________________________________
 kexec mailing list
