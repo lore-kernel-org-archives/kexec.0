@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25]
-	helo=mx02.colomx.prod.int.phx2.redhat.com)
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1O79C4-0004Dg-Hw
-	for kexec@lists.infradead.org; Wed, 28 Apr 2010 15:28:57 +0000
-Date: Wed, 28 Apr 2010 11:28:55 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1939043863.1233571272468535131.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <427318169.1232291272467931013.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+Received: from smtp.nokia.com ([192.100.105.134] helo=mgw-mx09.nokia.com)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1O7Ovn-0005Nd-Ue
+	for kexec@lists.infradead.org; Thu, 29 Apr 2010 08:17:12 +0000
+Date: Thu, 29 Apr 2010 11:16:17 +0300
+From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
 Subject: Re: [PATCH 1/2] kexec: add phys_offset field
+Message-ID: <20100429081617.GF12682@esdhcp04058.research.nokia.com>
+References: <427318169.1232291272467931013.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+	<1939043863.1233571272468535131.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1939043863.1233571272468535131.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,133 +24,140 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Cc: kexec@lists.infradead.org
+To: ext Dave Anderson <anderson@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-
------ "Mika Westerberg" <ext-mika.1.westerberg@nokia.com> wrote:
-
-> On Wed, Apr 28, 2010 at 04:41:46PM +0200, ext Dave Anderson wrote:
+On Wed, Apr 28, 2010 at 05:28:55PM +0200, ext Dave Anderson wrote:
+> ----- "Mika Westerberg" <ext-mika.1.westerberg@nokia.com> wrote:
+> > > But for x86, their is no concept of a mapped kernel region in addition
+> > > to the unity-mapped region(s), as there is with x86_64 and ia64.  It's
+> > > presumed that the primary kernel is based at physical adress 0, so when
+> > > the PAGE_OFFSET is stripped off, you have the physical address.
 > > 
-> > ----- "Mika Westerberg" <ext-mika.1.westerberg@nokia.com> wrote:
+> > With ARM we have (for the kernel direct mapped region):
 > > 
-> > > On Tue, Apr 27, 2010 at 03:08:54PM +0200, ext Dave Anderson wrote:
-> > > > ----- "Mika Westerberg" <ext-mika.1.westerberg@nokia.com> wrote:
-> > > > > 
-> > > > > Idea here was to make sure that virtual addresses in PT_LOAD segments are
-> > > > > calculated correctly based on PHYS_OFFSET field. For example with OMAP3,
-> > > > > physical memory starts at 0x80000000 so for 0xc0000000 (PAGE_OFFSET) 
-> > > > > we get:
-> > > > > 
-> > > > > 	phdr->p_vaddr = 0x80000000 + 0xc0000000 = 0x40000000
-> > > > > 
-> > > > > which is not correct. But taking PHYS_OFFSET into equation we get
-> > > > > 
-> > > > > 	phdr->p_vaddr = 0x80000000 + 0xc0000000 - 0x80000000 =  0xc0000000
-> > > > > 
-> > > > > which is correct.
-> > > > 
-> > > > Yes, I understand completely -- we've been there...  ;-)
-> > > > 
-> > > > The issue is that there would be a disconnect between the actual kernel
-> > > > virtual addresses used in the vmlinux file vs. your "calculated" virtual
-> > > > addresses in the header, and to me that goes against the grain of what
-> > > > the p_vaddr field is supposed to mean. 
-> > > > 
-> > > > The ELF spec defines them:
-> > > > 
-> > > >   p_vaddr  This member gives the virtual address at which the first
-> > > >            byte of the segment resides in memory.
-> > > > 
-> > > >   p_paddr  On systems for which physical addressing is relevant, this
-> > > >            member is reserved for the segment's physical address.
-> > > >            Because System V ignores physical addressing for application
-> > > >            programs, this member has unspecified contents for executable
-> > > >            files and shared objects.
-> > > > 
-> > > > To me, the term "virtual address" means the virtual addresses used by the
-> > > > executable.  Your scheme "calculates" a p_vaddr based upon the p_paddr.
-> > > 
-> > > Sorry, I have to ask some clarifications to understand this.
-> > > 
-> > > If the kernel image is linked at virtual address 0xc0008000 which is the case
-> > > with ARM kernel for example. Then how following is legitimate kernel virtual
-> > > address?
-> > > 
-> > > 	phdr->p_vaddr = mstart + elf_info->page_offset;
-> > > 
-> > > if the first physical memory region starts for example at 0x80000000, and
-> > > PAGE_OFFSET is 0xc0000000 we get:
-> > > 
-> > > 	phdr->p_vaddr = 0x80000000 + 0xc0000000
-> > > 
-> > > this results virtual address 0x40000000 (in 32-bit) for the kernel direct mapped
-> > > region, which I think is not the same as used by the executable (the vmlinux
-> > > file):
-> > > 
-> > > % objdump -h vmlinux
-> > > 
-> > > vmlinux:     file format elf32-little
-> > > 
-> > > Sections:
-> > > Idx Name          Size      VMA       LMA       File off  Algn
-> > >   0 .note.gnu.build-id 00000024  00000000  00000000  00008000  2**2
-> > >                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-> > >   1 .init         0001f6ed  c0008000  c0008000  00010000  2**5
-> > >                   CONTENTS, ALLOC, LOAD, CODE
-> > >   2 .text         0031706a  c0028000  c0028000  00030000  2**6
-> > >                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-> > > ...
-> > > 
-> > > Am I missing something?
+> > 	paddr = vaddr - PAGE_OFFSET + PHYS_OFFSET
 > > 
-> > I may be missing something w/respect to 32-bit x86, but AIUI, the
-> > unity-mapped region can only map the first 1GB of physical memory,
-> > starting at physical address 0.  So you couldn't do what you suggest,
-> > i.e., where the resultant unity-mapped address wraps around into
-> > the user-space region.
-> 
-> Yeah, but this is what happens with the current code :(
-> 
+> > so it is related to PHYS_OFFSET.
 > > 
-> > But for x86, their is no concept of a mapped kernel region in addition
-> > to the unity-mapped region(s), as there is with x86_64 and ia64.  It's
-> > presumed that the primary kernel is based at physical adress 0, so when
-> > the PAGE_OFFSET is stripped off, you have the physical address.
+> > Is there any (other) way of doing this so that we could get p_vaddr correct? I
+> > checked makedumpfile but it seems not to handle p_vaddr at all so it probably
+> > won't help if we run the dump through it.
 > 
-> With ARM we have (for the kernel direct mapped region):
+> When you say "we" do you mean ARM only?  
+
+Yes :)
+
+> All I'm saying is that things "just work" for the currently-supported 
+> architectures.  The most recent sample x86 kdump vmcore I have looks like this:
 > 
-> 	paddr = vaddr - PAGE_OFFSET + PHYS_OFFSET
+> Program Headers:
+>   Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
+>   NOTE           0x0000b4 0x00000000 0x00000000 0x00450 0x00450     0
+>   LOAD           0x000504 0xc0000000 0x00000000 0xa0000 0xa0000 RWE 0
+>   LOAD           0x0a0504 0xc0100000 0x00100000 0xf00000 0xf00000 RWE 0
+>   LOAD           0xfa0504 0xc5000000 0x05000000 0x1afc0000 0x1afc0000 RWE 0
 > 
-> so it is related to PHYS_OFFSET.
+> Regardless whether the virtual address is in the static kernel text and
+> data section (which is mapped in a special region on x86_64 and ia64) or
+> just generic physical memory above that, it's all zero-based, where the
+> virtual-to-physical translation simply requires stripping of the PAGE_OFFSET.
+> The p_vaddr values above match the kernel virtual addresses used by the
+> corresponding x86 vmlinux.
 > 
-> Is there any (other) way of doing this so that we could get p_vaddr correct? I
-> checked makedumpfile but it seems not to handle p_vaddr at all so it probably
-> won't help if we run the dump through it.
+> So all I'm asking is that you don't muck with that!  ;-)
 
-When you say "we" do you mean ARM only?  
+I'll promise that I don't break it.
 
-All I'm saying is that things "just work" for the currently-supported 
-architectures.  The most recent sample x86 kdump vmcore I have looks like this:
+So how about following? This allows ARM (and maybe some future archs as well) to
+redefine phys_to_virt() but default implementation should work with others.
 
-Program Headers:
-  Type           Offset   VirtAddr   PhysAddr   FileSiz MemSiz  Flg Align
-  NOTE           0x0000b4 0x00000000 0x00000000 0x00450 0x00450     0
-  LOAD           0x000504 0xc0000000 0x00000000 0xa0000 0xa0000 RWE 0
-  LOAD           0x0a0504 0xc0100000 0x00100000 0xf00000 0xf00000 RWE 0
-  LOAD           0xfa0504 0xc5000000 0x05000000 0x1afc0000 0x1afc0000 RWE 0
+Thanks,
+MW
 
-Regardless whether the virtual address is in the static kernel text and
-data section (which is mapped in a special region on x86_64 and ia64) or
-just generic physical memory above that, it's all zero-based, where the
-virtual-to-physical translation simply requires stripping of the PAGE_OFFSET.
-The p_vaddr values above match the kernel virtual addresses used by the
-corresponding x86 vmlinux.
+From dcfda0e78ae9bfe3c9ff5d186c660e5ce1892fbb Mon Sep 17 00:00:00 2001
+From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Date: Thu, 29 Apr 2010 11:07:14 +0300
+Subject: [PATCH] kexec: introduce phys_to_virt() function
 
-So all I'm asking is that you don't muck with that!  ;-)
+This function is used by ELF crashdump code which prepares crash memory headers
+for the dump capture kernel. Most architecture can use default version which
+just adds PAGE_OFFSET to the virtual address but some architectures might need
+some special handling.
 
-Dave
+Signed-off-by: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+---
+ kexec/Makefile        |    2 ++
+ kexec/crashdump-elf.c |    2 +-
+ kexec/crashdump.h     |    3 +++
+ kexec/phys_to_virt.c  |   16 ++++++++++++++++
+ 4 files changed, 22 insertions(+), 1 deletions(-)
+ create mode 100644 kexec/phys_to_virt.c
 
+diff --git a/kexec/Makefile b/kexec/Makefile
+index 4e091ba..77f37ae 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -39,6 +39,8 @@ $(ARCH)_PROC_IOMEM		= kexec/proc_iomem.c
+ KEXEC_SRCS += $($(ARCH)_PROC_IOMEM)
+ $(ARCH)_VIRT_TO_PHYS		= kexec/virt_to_phys.c
+ KEXEC_SRCS += $($(ARCH)_VIRT_TO_PHYS)
++$(ARCH)_PHYS_TO_VIRT		= kexec/phys_to_virt.c
++KEXEC_SRCS += $($(ARCH)_PHYS_TO_VIRT)
+ $(ARCH)_ADD_SEGMENT		= kexec/add_segment.c
+ KEXEC_SRCS += $($(ARCH)_ADD_SEGMENT)
+ $(ARCH)_ADD_BUFFER		= kexec/add_buffer.c
+diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
+index 6bcef8d..f000e42 100644
+--- a/kexec/crashdump-elf.c
++++ b/kexec/crashdump-elf.c
+@@ -236,7 +236,7 @@ int FUNC(struct kexec_info *info,
+ 		 * memory region.
+ 		 */
+ 		phdr->p_paddr = mstart;
+-		phdr->p_vaddr = mstart + elf_info->page_offset;
++		phdr->p_vaddr = phys_to_virt(elf_info, mstart);
+ 		phdr->p_filesz	= phdr->p_memsz	= mend - mstart + 1;
+ 		/* Do we need any alignment of segments? */
+ 		phdr->p_align	= 0;
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 30d6f29..b6e60cc 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -46,6 +46,9 @@ int crash_create_elf64_headers(struct kexec_info *info,
+ 
+ unsigned long crash_architecture(struct crash_elf_info *elf_info);
+ 
++unsigned long phys_to_virt(struct crash_elf_info *elf_info,
++			   unsigned long paddr);
++
+ int xen_present(void);
+ unsigned long xen_architecture(struct crash_elf_info *elf_info);
+ int xen_get_nr_phys_cpus(void);
+diff --git a/kexec/phys_to_virt.c b/kexec/phys_to_virt.c
+new file mode 100644
+index 0000000..2370e56
+--- /dev/null
++++ b/kexec/phys_to_virt.c
+@@ -0,0 +1,16 @@
++#include "kexec.h"
++#include "crashdump.h"
++
++/**
++ * virt_to_phys() - translate physical address to virtual address
++ * @paddr: physical address to translate
++ *
++ * For most architectures physical address is simply virtual address minus
++ * PAGE_OFFSET. Architectures that don't follow this convention should provide
++ * their own implementation.
++ */
++unsigned long
++phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
++{
++	return paddr + elf_info->page_offset;
++}
+-- 
+1.5.6.5
 
 
 _______________________________________________
