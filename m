@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1O7bqo-0000Xr-2n
-	for kexec@lists.infradead.org; Thu, 29 Apr 2010 22:04:56 +0000
+	id 1O9TjS-0001bv-4c
+	for kexec@lists.infradead.org; Wed, 05 May 2010 01:49:03 +0000
 From: Michael Neuling <mikey@neuling.org>
-Subject: Re: general protection error:0
-In-reply-to: <4BD72F0D.5010708@davidnewall.com>
-References: <4BD72F0D.5010708@davidnewall.com>
-Date: Fri, 30 Apr 2010 08:04:03 +1000
-Message-ID: <27864.1272578643@neuling.org>
+MIME-Version: 1.0
+Subject: [PATCH] kexec-tools, ppc64: fix build error on ppc64
+Date: Wed, 05 May 2010 11:48:53 +1000
+Message-ID: <15110.1273024133@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,39 +16,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Newall <kexec@davidnewall.com>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+Cc: Maxim Uvarov <muvarov@gmail.com>, linuxppc-dev@ozlabs.org
 
-David.  
+6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17 "some kexec MIPS
+improvements" broke pp64 as it turned on -Werror for all archs.
 
-> I'm running Ubuntu Hardy with a 2.6.28 kernel on VirtualBox, and want to 
-> simply restart the current kernel (because I'm a kexec noob and that 
-> seems a sensible first step.)  I've put "break=init" on the command line 
-> so it gives me a shell just before pivoting root from the initrd to the 
-> hard-disk.  I do the kexec -l and kexec -e, the kernel (re)starts, does 
-> all of the usual startup things, and drops me back in a shell when it's 
-> about to start init (break=init, remember?)  At this point, when I try 
-> to run almost any command, for example "chroot /root bash", I get 
-> "Segmentation fault" with general protection logged in dmesg, for 
-> example: "bash[1058] general protection ip:b7f0c425 sb:bfb282f4 
-> error:0"  No doubt I'm making a basic mistake, but Google failed to show 
-> me what, hence I'm asking here for suggestions.
-> 
-> Has anyone any suggestion?
+This fixes the warning and hence ppc64 building.
 
-2.6.28 is pretty old these days.  It's unlikely someone here is going to
-help you debug a kernel that ancient.
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+---
+I've posted a second patch to fix the issue of changing one archs
+Makefile, effecting all other archs.
 
-Can you retry with current mainline and kexec-tools user space?  Also
-post your full boot log and kexec -l and -e outputs when you hit this
-problem.
+ kexec/arch/ppc64/fs2dt.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Mikey
+Index: kexec-tools/kexec/arch/ppc64/fs2dt.c
+===================================================================
+--- kexec-tools.orig/kexec/arch/ppc64/fs2dt.c
++++ kexec-tools/kexec/arch/ppc64/fs2dt.c
+@@ -357,7 +357,8 @@ static void putprops(char *fn, struct di
+  * Compare function used to sort the device-tree directories
+  * This function will be passed to scandir.
+  */
+-static int comparefunc(const void *dentry1, const void *dentry2)
++static int comparefunc(const struct dirent **dentry1,
++		       const struct dirent **dentry2)
+ {
+ 	char *str1 = (*(struct dirent **)dentry1)->d_name;
+ 	char *str2 = (*(struct dirent **)dentry2)->d_name;
 
 _______________________________________________
 kexec mailing list
