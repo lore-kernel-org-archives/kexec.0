@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OBP9M-0005Nu-OH
-	for kexec@lists.infradead.org; Mon, 10 May 2010 09:19:45 +0000
-Date: Mon, 10 May 2010 18:19:40 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools, ppc64: Fix segfault on parsing of large
-	device trees.
-Message-ID: <20100510091940.GA16856@verge.net.au>
-References: <4BE78E06.6080601@ozlabs.org>
- <31392.1273467303@neuling.org>
+Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OBR2Z-0006j2-RN
+	for kexec@lists.infradead.org; Mon, 10 May 2010 11:20:52 +0000
+Date: Mon, 10 May 2010 12:20:36 +0100
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v2 6/8] arm: allow passing an ELF64 header to
+	elf_check_arch()
+Message-ID: <20100510112036.GC14337@n2100.arm.linux.org.uk>
+References: <cover.1273041357.git.ext-mika.1.westerberg@nokia.com>
+	<3c8da055f0a84cfd1c6659d9fda24e4eb97ab9fb.1273041358.git.ext-mika.1.westerberg@nokia.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <31392.1273467303@neuling.org>
+In-Reply-To: <3c8da055f0a84cfd1c6659d9fda24e4eb97ab9fb.1273041358.git.ext-mika.1.westerberg@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,31 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, Matt Evans <matt@ozlabs.org>
+To: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-On Mon, May 10, 2010 at 02:55:03PM +1000, Michael Neuling wrote:
+On Wed, May 05, 2010 at 09:54:18AM +0300, Mika Westerberg wrote:
+> This is needed to shut following compiler warning when CONFIG_PROC_VMCORE is
+> enabled:
 > 
+> fs/proc/vmcore.c: In function 'parse_crash_elf64_headers':
+> fs/proc/vmcore.c:500: warning: passing argument 1 of 'elf_check_arch' from
+> incompatible pointer type
 > 
-> In message <4BE78E06.6080601@ozlabs.org> you wrote:
-> > 
-> > ppc64's fs2dt used to use a fixed-size array into which the device tree
-> > was parsed.  There was no bounds checking, so with a large device tree other
-> > heap data ended up getting stomped -- SIGSEGV time.
-> > 
-> > This patch adds a function, 'dt_reserve', to check whether there's enough spa
-> ce
-> > left prior to writing data to the array.  If not, the array is realloced.
-> > 
-> > Signed-off-by: Matt Evans <matt@ozlabs.org>
-> 
-> FWIW...
-> 
-> Ack-by: Michael Neuling <mikey@neuling.org>
-> 
-> (also added linuxppc-dev@ozlabs.org to CC list)
+> ELF32 and ELF64 headers have common fields of same size (namely e_ident and
+> e_machine) which are checked in arm_elf_check_arch().
 
-Thanks, applied.
+This patch is bogus - and shows the dangers of throwing casts into C code
+to shut up warnings without first analysing the code.
+
+Our elf_check_arch() uses:
+	e_machine
+	e_entry
+	e_flags
+thusly:
+        if (x->e_machine != EM_ARM)
+        if (x->e_entry & 1) {
+        } else if (x->e_entry & 3)
+        eflags = x->e_flags;
+
+Now, the Elf32 header looks like this:
+
+typedef struct elf32_hdr{
+  unsigned char e_ident[EI_NIDENT];	/* 0x00 - 0x0F */
+  Elf32_Half    e_type;			/* 0x10 - 0x11 */
+  Elf32_Half    e_machine;		/* 0x12 - 0x13 */
+  Elf32_Word    e_version;		/* 0x14 - 0x17 */
+  Elf32_Addr    e_entry;		/* 0x18 - 0x1b */
+  Elf32_Off     e_phoff;		/* 0x1c - 0x1f */
+  Elf32_Off     e_shoff;		/* 0x20 - 0x23 */
+  Elf32_Word    e_flags;		/* 0x24 - 0x27 */
+
+and Elf64 header:
+
+typedef struct elf64_hdr {
+  unsigned char e_ident[EI_NIDENT];	/* 0x00 - 0x0F */
+  Elf64_Half e_type;			/* 0x10 - 0x11 */
+  Elf64_Half e_machine;			/* 0x12 - 0x13 */
+  Elf64_Word e_version;			/* 0x14 - 0x17 */
+  Elf64_Addr e_entry;			/* 0x18 - 0x1f */
+  Elf64_Off e_phoff;			/* 0x20 - 0x27 */
+  Elf64_Off e_shoff;			/* 0x28 - 0x2f */
+  Elf64_Word e_flags;			/* 0x30 - 0x33 */
+
+Notice that e_entry and e_flags are different sizes and/or different
+offsets, so ARMs elf_check_arch can not work with elf64 headers.  So
+with an ELF64 header, accessing e_flags will result in actually
+accessing the top half of the 64-bit e_phoff, and accessing 32-bit
+e_entry will get us the lower half of the 64-bit e_entry.
+
+Now, here's the question: why does this crashkernel stuff want to
+parse a 64-bit ELF header on a 32-bit only platform where the crashing
+kernel will never generate a 64-bit ELF core file?
 
 _______________________________________________
 kexec mailing list
