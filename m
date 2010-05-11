@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OBRzu-0002Lv-II
-	for kexec@lists.infradead.org; Mon, 10 May 2010 12:22:11 +0000
-Date: Mon, 10 May 2010 13:21:56 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v2 6/8] arm: allow passing an ELF64 header to
-	elf_check_arch()
-Message-ID: <20100510122156.GA7796@n2100.arm.linux.org.uk>
-References: <cover.1273041357.git.ext-mika.1.westerberg@nokia.com>
-	<3c8da055f0a84cfd1c6659d9fda24e4eb97ab9fb.1273041358.git.ext-mika.1.westerberg@nokia.com>
-	<20100510112036.GC14337@n2100.arm.linux.org.uk>
-	<20100510120920.GD11783@esdhcp04058.research.nokia.com>
+Date: Tue, 11 May 2010 12:28:50 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH - kexec] arm: place initrd to safer place according to
+	zImage length
+Message-ID: <20100511032850.GH7649@verge.net.au>
+References: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100510120920.GD11783@esdhcp04058.research.nokia.com>
+In-Reply-To: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,45 +20,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Eric Miao <eric.miao@canonical.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On Mon, May 10, 2010 at 03:09:20PM +0300, Mika Westerberg wrote:
-> I believe that when passing ELF64 header, it fails in following checks:
+On Fri, Apr 23, 2010 at 10:36:44AM +0800, Eric Miao wrote:
+> commit 4b6d55c7780dbf383c6b64e560d459d15a891006
+> Author: Eric Miao <eric.miao@canonical.com>
+> Date:   Fri Apr 23 10:19:43 2010 +0800
 > 
-> 	/* Make sure it's an ARM executable */
-> 	if (x->e_ident[EI_CLASS] != ELF_CLASS)
-> 		return 0;
-> 	if (x->e_machine != EM_ARM)
-> 		return 0;
+>     arm: place initrd to safer place according to zImage length
 > 
-> ELF_CLASS is defined in arch/arm/include/asm/elf.h:
+>     The original fixed address of 0x800000 may be overwritten after the
+>     kernel is decompressed.  Assume a maximum decompression ratio of 4
+>     and place initrd right after that, just to be safer.
 > 
-> #define ELF_CLASS       ELFCLASS32
-> 
-> So if class is different than ELFCLASS32 it returns 0 and never even try to
-> access other fields, right?
+>     Signed-off-by: Eric Miao <eric.miao@canonical.com>
 
-Yes.
-
-> > Now, here's the question: why does this crashkernel stuff want to
-> > parse a 64-bit ELF header on a 32-bit only platform where the crashing
-> > kernel will never generate a 64-bit ELF core file?
-> 
-> I really don't know but fs/proc/vmcore.c is coded in such way that it supports
-> both types of ELF headers. It however, passes the header to elf_check_arch()
-> which in our case should fail if it is something else than ELF32 header.
-
-There's other arches which want elf_check_arch to be a function call, so
-I think my question needs to be looked at more closely - and possibly
-the code changed such that we don't end up with this situation.
-
-Maybe a cleaner solution would be for vmcore.c to split its calls to
-elf_check_arch() - to be elf32_check_arch() and elf64_check_arch() ?
-Platforms where it's just a macro can define both to be elf_check_arch()
-but those where only one flavour is supported should define the unsupported
-flavour to zero - which incidentally would allow the compiler to optimize
-away the unnecessary parts of parse_crash_elf*_headers().
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
