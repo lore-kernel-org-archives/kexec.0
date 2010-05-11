@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vs.topper.me.uk ([87.237.59.66] helo=topper.vs.topper.me.uk)
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OBkUp-00053Y-AY
-	for kexec@lists.infradead.org; Tue, 11 May 2010 08:07:20 +0000
-Message-ID: <4BE9102C.6040404@axio.ms>
-Date: Tue, 11 May 2010 18:07:08 +1000
-From: Matt Evans <matt@axio.ms>
+Received: from mail-wy0-f177.google.com ([74.125.82.177])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1OBtZD-0006NA-DW
+	for kexec@lists.infradead.org; Tue, 11 May 2010 17:48:28 +0000
+Received: by wyj26 with SMTP id 26so1688345wyj.36
+	for <kexec@lists.infradead.org>; Tue, 11 May 2010 10:48:26 -0700 (PDT)
+From: Maxim Uvarov <muvarov@gmail.com>
+Subject: [PATCH 2/2] powerpc new toolchains fix (crt.S)
+Date: Tue, 11 May 2010 21:47:57 +0400
+Message-ID: <20100511174757.19309.30827.stgit@muvarov>
+In-Reply-To: <20100511174749.19309.44615.stgit@muvarov>
+References: <20100511174749.19309.44615.stgit@muvarov>
 MIME-Version: 1.0
-Subject: [PATCH] kexec-tools, ppc64: Fix segfault parsing DR memory property
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,175 +24,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au
+To: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, uvarov@dev.rtsoft.ru
+Cc: lists@nerdbynature.de, horms@verge.net.au, cbouatmailru@gmail.com
 
 
-add_dyn_reconf_usable_mem_property() iterates over memory spans
-in /ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory and intersects
-these with usablemem_rgns ranges.  Not only did it seem to write
-null properties for every range that didn't match, but it used an unchecked
-fixed-size array which will overrun on machines with lots of LMBs.
+This patch is required in case if you are using new toolchains.
 
-This patch stops add_dyn_reconf_usable_mem_property() from adding null ranges
-to the linux,drconf-usable-memory property and removes its fixed-size array,
-as well as the array in add_usable_mem_property, in lieu of malloc/realloc/free.
+Best regards,
+Maxim Uvarov.
 
-Signed-off-by: Matt Evans <matt@ozlabs.org>
+From: Maxim Uvarov <muvarov@gmail.com>
+
+Linker does not provide some vital functions when building freestanding
+applications with a new toolchain, so we have to provide our own CRT.
+
+p.s.
+Without the CRT we won't see any build errors (since the purgatory is
+linked with --no-undefined), but the purgatory code won't work,
+'kexec -e' will just hang the board.
+
+
+I added option to configure to keep code buildable for old toolchais.
+But there should be way to do this automatically.
+
+Author: Anton Vorontsov <avorontsov@ru.mvista.com>
+Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
 ---
- kexec/arch/ppc64/fs2dt.c |   66 +++++++++++++++++++++++++++++++++++++--------
- 1 files changed, 54 insertions(+), 12 deletions(-)
 
-diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-index 762bf04..7470132 100644
---- a/kexec/arch/ppc64/fs2dt.c
-+++ b/kexec/arch/ppc64/fs2dt.c
-@@ -37,7 +37,7 @@
- #define NAMESPACE 16384		/* max bytes for property names */
- #define INIT_TREE_WORDS 65536	/* Initial num words for prop values */
- #define MEMRESERVE 256		/* max number of reserved memory blocks */
--#define MAX_MEMORY_RANGES 1024
-+#define MEM_RANGE_CHUNK_SZ 2048 /* Initial num dwords for mem ranges */
+ configure.ac                |    9 +++++++++
+ purgatory/arch/ppc/Makefile |    3 +++
+ 2 files changed, 12 insertions(+), 0 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index fcf50e4..63606bc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -159,6 +159,15 @@ if test "$with_xen" = yes ; then
+ 		AC_MSG_NOTICE([Xen support disabled])))
+ fi
  
- static char pathname[MAXPATH], *pathstart;
- static char propnames[NAMESPACE] = { 0 };
-@@ -148,7 +148,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- {
- 	char fname[MAXPATH], *bname;
- 	uint64_t buf[32];
--	uint64_t ranges[2*MAX_MEMORY_RANGES];
-+	uint64_t *ranges;
-+	int ranges_size = MEM_RANGE_CHUNK_SZ;
- 	uint64_t base, end, loc_base, loc_end;
- 	size_t i, rngs_cnt, range;
- 	int rlen = 0;
-@@ -165,6 +166,11 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- 		die("unrecoverable error: error seeking in \"%s\": %s\n",
- 			pathname, strerror(errno));
- 
-+	ranges = malloc(ranges_size*8);
-+	if (!ranges)
-+		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-+		    ranges_size*8);
++dnl new toolchains
++if test "$ARCH" = ppc; then
++AC_ARG_WITH([oldtoolchain],
++		AC_HELP_STRING([--with-oldtoolchain],[compile without crt.S
++			required for new toolchains]),
++		AC_DEFINE(PPC_OLDTOOLCHAIN, 1,
++			[Define to compile with old toolchains]))
++fi
 +
- 	rlen = 0;
- 	for (i = 0; i < num_of_lmbs; i++) {
- 		if (read(fd, buf, 24) < 0)
-@@ -180,24 +186,41 @@ static void add_dyn_reconf_usable_mem_property(int fd)
+ dnl ---Sanity checks
+ if test "$CC"      = "no"; then AC_MSG_ERROR([cc not found]); fi
+ if test "$CPP"     = "no"; then AC_MSG_ERROR([cpp not found]); fi
+diff --git a/purgatory/arch/ppc/Makefile b/purgatory/arch/ppc/Makefile
+index 72289a0..d11ec3e 100644
+--- a/purgatory/arch/ppc/Makefile
++++ b/purgatory/arch/ppc/Makefile
+@@ -6,6 +6,9 @@ ppc_PURGATORY_SRCS += purgatory/arch/ppc/v2wrap_32.S
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/misc.S
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/purgatory-ppc.c
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/console-ppc.c
++ifndef PPC_OLDTOOLCHAIN
++	ppc_PURGATORY_SRCS += purgatory/arch/ppc/crt.S
++endif
  
- 		rngs_cnt = 0;
- 		for (range = 0; range < usablemem_rgns.size; range++) {
-+			int add = 0;
- 			loc_base = usablemem_rgns.ranges[range].start;
- 			loc_end = usablemem_rgns.ranges[range].end;
- 			if (loc_base >= base && loc_end <= end) {
--				ranges[rlen++] = loc_base;
--				ranges[rlen++] = loc_end - loc_base;
--				rngs_cnt++;
-+				add = 1;
- 			} else if (base < loc_end && end > loc_base) {
- 				if (loc_base < base)
- 					loc_base = base;
- 				if (loc_end > end)
- 					loc_end = end;
-+				add = 1;
-+			}
-+
-+			if (add) {
-+				if (rlen >= (ranges_size-2)) {
-+					ranges_size += MEM_RANGE_CHUNK_SZ;
-+					ranges = realloc(ranges, ranges_size*8);
-+					if (!ranges)
-+						die("unrecoverable error: can't"
-+						    " realloc %d bytes for"
-+						    " ranges.\n",
-+						    ranges_size*8);
-+				}
- 				ranges[rlen++] = loc_base;
- 				ranges[rlen++] = loc_end - loc_base;
- 				rngs_cnt++;
- 			}
- 		}
--		/* Store the count of (base, size) duple */
--		ranges[tmp_indx] = rngs_cnt;
-+		if (rngs_cnt == 0) {
-+			/* Don't store anything for unwritten iterations! */
-+			rlen = tmp_indx;
-+		} else {
-+			/* Store the count of (base, size) duple */
-+			ranges[tmp_indx] = rngs_cnt;
-+		}
- 	}
- 		
- 	rlen = rlen * sizeof(uint64_t);
-@@ -210,7 +233,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- 	*dt++ = propnum("linux,drconf-usable-memory");
- 	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
- 		dt++;
--	memcpy(dt, &ranges, rlen);
-+	memcpy(dt, ranges, rlen);
-+	free(ranges);
- 	dt += (rlen + 3)/4;
- }
- 
-@@ -218,7 +242,8 @@ static void add_usable_mem_property(int fd, size_t len)
- {
- 	char fname[MAXPATH], *bname;
- 	uint64_t buf[2];
--	uint64_t ranges[2*MAX_MEMORY_RANGES];
-+	uint64_t *ranges;
-+	int ranges_size = MEM_RANGE_CHUNK_SZ;
- 	uint64_t base, end, loc_base, loc_end;
- 	size_t range;
- 	int rlen = 0;
-@@ -247,17 +272,33 @@ static void add_usable_mem_property(int fd, size_t len)
- 	base = buf[0];
- 	end = base + buf[1];
- 
-+	ranges = malloc(ranges_size*8);
-+	if (!ranges)
-+		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-+		    ranges_size*8);
-+
- 	for (range = 0; range < usablemem_rgns.size; range++) {
-+		int add = 0;
- 		loc_base = usablemem_rgns.ranges[range].start;
- 		loc_end = usablemem_rgns.ranges[range].end;
- 		if (loc_base >= base && loc_end <= end) {
--			ranges[rlen++] = loc_base;
--			ranges[rlen++] = loc_end - loc_base;
-+			add = 1;
- 		} else if (base < loc_end && end > loc_base) {
- 			if (loc_base < base)
- 				loc_base = base;
- 			if (loc_end > end)
- 				loc_end = end;
-+			add = 1;
-+		}
-+		if (add) {
-+			if (rlen >= (ranges_size-2)) {
-+				ranges_size += MEM_RANGE_CHUNK_SZ;
-+				ranges = realloc(ranges, ranges_size*8);
-+				if (!ranges) 
-+					die("unrecoverable error: can't realloc"
-+					    "%d bytes for ranges.\n",
-+					    ranges_size*8);
-+			}
- 			ranges[rlen++] = loc_base;
- 			ranges[rlen++] = loc_end - loc_base;
- 		}
-@@ -283,7 +324,8 @@ static void add_usable_mem_property(int fd, size_t len)
- 	*dt++ = propnum("linux,usable-memory");
- 	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
- 		dt++;
--	memcpy(dt,&ranges,rlen);
-+	memcpy(dt, ranges, rlen);
-+	free(ranges);
- 	dt += (rlen + 3)/4;
- }
- 
--- 
-1.6.3.3
+ dist += purgatory/arch/ppc/Makefile $(ppc_PURGATORY_SRCS)		\
+ 	purgatory/arch/ppc/purgatory-ppc.h purgatory/arch/ppc/ppc_asm.h
+
+
 
 
 _______________________________________________
