@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 11 May 2010 12:28:50 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH - kexec] arm: place initrd to safer place according to
-	zImage length
-Message-ID: <20100511032850.GH7649@verge.net.au>
-References: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <h2xf17812d71004221936s779a4585r8b458f7f2630f7b1@mail.gmail.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OBixF-00067j-KR
+	for kexec@lists.infradead.org; Tue, 11 May 2010 06:28:34 +0000
+From: Michael Neuling <mikey@neuling.org>
+Date: Tue, 11 May 2010 16:28:26 +1000
+Subject: [PATCH 1/2] powerpc: Add hcall to read 4 ptes at a time in real mode
+Message-Id: <1273559306.849145.937766276201.qpush@pale>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,27 +15,116 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Miao <eric.miao@canonical.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, Anton Blanchard <anton@samba.org>
 
-On Fri, Apr 23, 2010 at 10:36:44AM +0800, Eric Miao wrote:
-> commit 4b6d55c7780dbf383c6b64e560d459d15a891006
-> Author: Eric Miao <eric.miao@canonical.com>
-> Date:   Fri Apr 23 10:19:43 2010 +0800
-> 
->     arm: place initrd to safer place according to zImage length
-> 
->     The original fixed address of 0x800000 may be overwritten after the
->     kernel is decompressed.  Assume a maximum decompression ratio of 4
->     and place initrd right after that, just to be safer.
-> 
->     Signed-off-by: Eric Miao <eric.miao@canonical.com>
+This adds plpar_pte_read_4_raw() which can be used read 4 PTEs from
+PHYP at a time, while in real mode.
 
-Thanks, applied.
+It also creates a new hcall9 which can be used in real mode.  It's the
+same as plpar_hcall9 but minus the tracing hcall statistics which may
+require variables outside the RMO.
+
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+---
+
+ arch/powerpc/include/asm/hvcall.h               |    1 
+ arch/powerpc/platforms/pseries/hvCall.S         |   38 ++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/plpar_wrappers.h |   18 +++++++++++
+ 3 files changed, 57 insertions(+)
+
+Index: linux-2.6-ozlabs/arch/powerpc/include/asm/hvcall.h
+===================================================================
+--- linux-2.6-ozlabs.orig/arch/powerpc/include/asm/hvcall.h
++++ linux-2.6-ozlabs/arch/powerpc/include/asm/hvcall.h
+@@ -281,6 +281,7 @@ long plpar_hcall_raw(unsigned long opcod
+  */
+ #define PLPAR_HCALL9_BUFSIZE 9
+ long plpar_hcall9(unsigned long opcode, unsigned long *retbuf, ...);
++long plpar_hcall9_raw(unsigned long opcode, unsigned long *retbuf, ...);
+ 
+ /* For hcall instrumentation.  One structure per-hcall, per-CPU */
+ struct hcall_stats {
+Index: linux-2.6-ozlabs/arch/powerpc/platforms/pseries/hvCall.S
+===================================================================
+--- linux-2.6-ozlabs.orig/arch/powerpc/platforms/pseries/hvCall.S
++++ linux-2.6-ozlabs/arch/powerpc/platforms/pseries/hvCall.S
+@@ -228,3 +228,41 @@ _GLOBAL(plpar_hcall9)
+ 	mtcrf	0xff,r0
+ 
+ 	blr				/* return r3 = status */
++
++/* See plpar_hcall_raw to see why this is needed */
++_GLOBAL(plpar_hcall9_raw)
++	HMT_MEDIUM
++
++	mfcr	r0
++	stw	r0,8(r1)
++
++	std     r4,STK_PARM(r4)(r1)     /* Save ret buffer */
++
++	mr	r4,r5
++	mr	r5,r6
++	mr	r6,r7
++	mr	r7,r8
++	mr	r8,r9
++	mr	r9,r10
++	ld	r10,STK_PARM(r11)(r1)	 /* put arg7 in R10 */
++	ld	r11,STK_PARM(r12)(r1)	 /* put arg8 in R11 */
++	ld	r12,STK_PARM(r13)(r1)    /* put arg9 in R12 */
++
++	HVSC				/* invoke the hypervisor */
++
++	mr	r0,r12
++	ld	r12,STK_PARM(r4)(r1)
++	std	r4,  0(r12)
++	std	r5,  8(r12)
++	std	r6, 16(r12)
++	std	r7, 24(r12)
++	std	r8, 32(r12)
++	std	r9, 40(r12)
++	std	r10,48(r12)
++	std	r11,56(r12)
++	std	r0, 64(r12)
++
++	lwz	r0,8(r1)
++	mtcrf	0xff,r0
++
++	blr				/* return r3 = status */
+Index: linux-2.6-ozlabs/arch/powerpc/platforms/pseries/plpar_wrappers.h
+===================================================================
+--- linux-2.6-ozlabs.orig/arch/powerpc/platforms/pseries/plpar_wrappers.h
++++ linux-2.6-ozlabs/arch/powerpc/platforms/pseries/plpar_wrappers.h
+@@ -191,6 +191,24 @@ static inline long plpar_pte_read_raw(un
+ 	return rc;
+ }
+ 
++/*
++ * plpar_pte_read_4_raw can be called in real mode.
++ * ptes must be 8*sizeof(unsigned long)
++ */
++static inline long plpar_pte_read_4_raw(unsigned long flags, unsigned long ptex,
++					unsigned long *ptes)
++
++{
++	long rc;
++	unsigned long retbuf[PLPAR_HCALL9_BUFSIZE];
++
++	rc = plpar_hcall9_raw(H_READ, retbuf, flags | H_READ_4, ptex);
++
++	memcpy(ptes, retbuf, 8*sizeof(unsigned long));
++
++	return rc;
++}
++
+ static inline long plpar_pte_protect(unsigned long flags, unsigned long ptex,
+ 		unsigned long avpn)
+ {
 
 _______________________________________________
 kexec mailing list
