@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OBjW1-0001gV-5s
-	for kexec@lists.infradead.org; Tue, 11 May 2010 07:04:29 +0000
-Subject: Re: [PATCH 2/2] powerpc,kexec: Speedup kexec hpte tear down
-From: Michael Ellerman <michael@ellerman.id.au>
-In-Reply-To: <20100511062826.E1C49D3340@localhost.localdomain>
-References: <20100511062826.E1C49D3340@localhost.localdomain>
-Date: Tue, 11 May 2010 17:04:23 +1000
-Message-ID: <1273561463.9209.138.camel@concordia>
-Mime-Version: 1.0
-Reply-To: michael@ellerman.id.au
+Date: Tue, 11 May 2010 10:17:35 +0300
+From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Subject: Re: [PATCH v2 6/8] arm: allow passing an ELF64 header to
+	elf_check_arch()
+Message-ID: <20100511071735.GF11783@esdhcp04058.research.nokia.com>
+References: <cover.1273041357.git.ext-mika.1.westerberg@nokia.com>
+	<3c8da055f0a84cfd1c6659d9fda24e4eb97ab9fb.1273041358.git.ext-mika.1.westerberg@nokia.com>
+	<20100510112036.GC14337@n2100.arm.linux.org.uk>
+	<20100510120920.GD11783@esdhcp04058.research.nokia.com>
+	<20100510122156.GA7796@n2100.arm.linux.org.uk>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20100510122156.GA7796@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,80 +20,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0930903384=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, kexec@lists.infradead.org, Anton Blanchard <anton@samba.org>, linuxppc-dev@ozlabs.org
+To: ext Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
+On Mon, May 10, 2010 at 02:21:56PM +0200, ext Russell King - ARM Linux wrote:
+> 
+> > > Now, here's the question: why does this crashkernel stuff want to
+> > > parse a 64-bit ELF header on a 32-bit only platform where the crashing
+> > > kernel will never generate a 64-bit ELF core file?
+> > 
+> > I really don't know but fs/proc/vmcore.c is coded in such way that it supports
+> > both types of ELF headers. It however, passes the header to elf_check_arch()
+> > which in our case should fail if it is something else than ELF32 header.
+> 
+> There's other arches which want elf_check_arch to be a function call, so
+> I think my question needs to be looked at more closely - and possibly
+> the code changed such that we don't end up with this situation.
 
---===============0930903384==
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-S056dRzmrEHDBzKyyTOs"
+I quickly checked and it seems that only one arch in addition to ARM wants this
+to be a function:
 
-
---=-S056dRzmrEHDBzKyyTOs
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, 2010-05-11 at 16:28 +1000, Michael Neuling wrote:
-> Currently for kexec the PTE tear down on 1TB segment systems normally
-> requires 3 hcalls for each PTE removal. On a machine with 32GB of
-> memory it can take around a minute to remove all the PTEs.
->=20
-..
-> -	/* TODO: Use bulk call */
-
+arch/frv/include/asm/elf.h:
 ...
-> +	/* Read in batches of 4,
-> +	 * invalidate only valid entries not in the VRMA
-> +	 * hpte_count will be a multiple of 4
-> +         */
-> +	for (i =3D 0; i < hpte_count; i +=3D 4) {
-> +		lpar_rc =3D plpar_pte_read_4_raw(0, i, (void *)ptes);
-> +		if (lpar_rc !=3D H_SUCCESS)
-> +			continue;
-> +		for (j =3D 0; j < 4; j++){
-> +			if ((ptes[j].pteh & HPTE_V_VRMA_MASK) =3D=3D
-> +				HPTE_V_VRMA_MASK)
-> +				continue;
-> +			if (ptes[j].pteh & HPTE_V_VALID)
-> +				plpar_pte_remove_raw(0, i + j, 0,
-> +					&(ptes[j].pteh), &(ptes[j].ptel));
->  		}
+extern int elf_check_arch(const struct elf32_hdr *hdr);
 
-Have you tried using the bulk remove call, if none of the HPTEs are for
-the VRMA? Rumour was it was slower/the-same, but that may have been
-apocryphal.
+and they don't (yet) support kdump.
 
-cheers
+> Maybe a cleaner solution would be for vmcore.c to split its calls to
+> elf_check_arch() - to be elf32_check_arch() and elf64_check_arch() ?
 
---=-S056dRzmrEHDBzKyyTOs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+True. However, there already is another macro in vmcore.c:
+vmcore_elf_check_arch() which is used by 64-bit code. So adding 32- and 64-bit
+versions of elf_check_arch() might be overkill.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+Also elf_check_arch() is used outside vmcore.c as well.
 
-iEYEABECAAYFAkvpAXYACgkQdSjSd0sB4dKXawCeJ7V3TcQtShH5hjQn4YCKEN3V
-C6IAoL6p36Q1m0kH1tnY7k3hevShl1WP
-=OLqj
------END PGP SIGNATURE-----
+> Platforms where it's just a macro can define both to be elf_check_arch()
+> but those where only one flavour is supported should define the unsupported
+> flavour to zero - which incidentally would allow the compiler to optimize
+> away the unnecessary parts of parse_crash_elf*_headers().
 
---=-S056dRzmrEHDBzKyyTOs--
+I agree but changing these needs to be performed on every arch and it might
+cause regressions (at least because it is hard to test on archs that I don't
+have). So I'm not sure if it is worth a risk.
 
+It's up to you, I can implement it this way also if you don't accept the current
+version of the patch.
 
-
---===============0930903384==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Thanks again,
+MW
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0930903384==--
-
-
