@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-wy0-f177.google.com ([74.125.82.177])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OBqq9-0003pV-3n
-	for kexec@lists.infradead.org; Tue, 11 May 2010 14:53:51 +0000
-Received: by wyj26 with SMTP id 26so1522115wyj.36
-	for <kexec@lists.infradead.org>; Tue, 11 May 2010 07:53:42 -0700 (PDT)
+	id 1OBtZ7-0006MM-71
+	for kexec@lists.infradead.org; Tue, 11 May 2010 17:48:27 +0000
+Received: by wyj26 with SMTP id 26so1688259wyj.36
+	for <kexec@lists.infradead.org>; Tue, 11 May 2010 10:48:20 -0700 (PDT)
 From: Maxim Uvarov <muvarov@gmail.com>
-Subject: [PATCH] Fix kexec on powerpc32
-Date: Tue, 11 May 2010 18:53:12 +0400
-Message-ID: <20100511145312.8107.68917.stgit@muvarov>
+Subject: [PATCH 1/2] Fix kexec on powerpc32
+Date: Tue, 11 May 2010 21:47:49 +0400
+Message-ID: <20100511174749.19309.44615.stgit@muvarov>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,32 +26,13 @@ To: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, uvarov@dev.rtsoft.
 Cc: lists@nerdbynature.de, horms@verge.net.au, cbouatmailru@gmail.com
 
 
-Hello everybody,
-
-      Please find here patch for user land kexec-tools application. Following
-      patch makes kexec-tools work for both kexec and kdump. I tested it with 
-      git kernel (linus-tree) and Freescale/Logic MPC8360ERDK board with 
-      mpc83xx_defconfig kernel config.
-
-      kexec:
-      kexec -l vmlinux --command-line="console= ... etc"
-      kexec -e
-
-      kdump:
-      kexec -p vmlinux_dump --command-line="console=... etc"
-      echo c > /proc/sysrq-trigger
-
-      I also think that is is reasonable:
-      - put GAME_CUBE specific code to separate files;
-      - combine  ppc and ppc64 to powerpc directory (I'm planning to do it.
-	And that why in some places my patch have ifdefs for PPC64);
+This patch is required in case if you are using new toolchains.
 
 Best regards,
 Maxim Uvarov.
 
 From: Maxim Uvarov <muvarov@gmail.com>
 
-Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
 Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
 ---
 
