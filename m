@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OC21U-0007As-31
-	for kexec@lists.infradead.org; Wed, 12 May 2010 02:50:13 +0000
-From: Michael Neuling <mikey@neuling.org>
-Subject: Re: [PATCH] kexec-tools,
-	ppc64: Fix segfault parsing DR memory property
-In-reply-to: <4BE9102C.6040404@axio.ms>
-References: <4BE9102C.6040404@axio.ms>
-Date: Wed, 12 May 2010 12:50:07 +1000
-Message-ID: <17320.1273632607@neuling.org>
+Received: from moutng.kundenserver.de ([212.227.126.171])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1OC2rz-00025W-Bh
+	for kexec@lists.infradead.org; Wed, 12 May 2010 03:44:28 +0000
+Date: Tue, 11 May 2010 20:44:24 -0700 (PDT)
+From: Christian Kujau <lists@nerdbynature.de>
+Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
+In-Reply-To: <20100511174749.19309.44615.stgit@muvarov>
+Message-ID: <4BEA2375.7040802@nerdbynature.de>
+References: <20100511174749.19309.44615.stgit@muvarov>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,204 +18,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matt Evans <matt@axio.ms>
-Cc: linuxppc-dev@ozlabs.org, horms@verge.net.au, kexec@lists.infradead.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: kexec@lists.infradead.org, uvarov@dev.rtsoft.ru, linuxppc-dev@lists.ozlabs.org
 
-
-
-In message <4BE9102C.6040404@axio.ms> you wrote:
-> 
-> add_dyn_reconf_usable_mem_property() iterates over memory spans
-> in /ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory and intersects
-> these with usablemem_rgns ranges.  Not only did it seem to write
-> null properties for every range that didn't match, but it used an unchecked
-> fixed-size array which will overrun on machines with lots of LMBs.
-> 
-> This patch stops add_dyn_reconf_usable_mem_property() from adding null ranges
-> to the linux,drconf-usable-memory property and removes its fixed-size array,
-> as well as the array in add_usable_mem_property, in lieu of malloc/realloc/fr
-ee.
-> 
-
-Thanks matt!
-
-Acked-by: Michael Neuling <mikey@neuling.org>
-
-
-> Signed-off-by: Matt Evans <matt@ozlabs.org>
-> ---
->  kexec/arch/ppc64/fs2dt.c |   66 +++++++++++++++++++++++++++++++++++++-------
--
->  1 files changed, 54 insertions(+), 12 deletions(-)
-> 
-> diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-> index 762bf04..7470132 100644
-> --- a/kexec/arch/ppc64/fs2dt.c
-> +++ b/kexec/arch/ppc64/fs2dt.c
-> @@ -37,7 +37,7 @@
->  #define NAMESPACE 16384		/* max bytes for property names */
->  #define INIT_TREE_WORDS 65536	/* Initial num words for prop values */
->  #define MEMRESERVE 256		/* max number of reserved memory blocks
- */
-> -#define MAX_MEMORY_RANGES 1024
-> +#define MEM_RANGE_CHUNK_SZ 2048 /* Initial num dwords for mem ranges */
->  
->  static char pathname[MAXPATH], *pathstart;
->  static char propnames[NAMESPACE] = { 0 };
-> @@ -148,7 +148,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
->  {
->  	char fname[MAXPATH], *bname;
->  	uint64_t buf[32];
-> -	uint64_t ranges[2*MAX_MEMORY_RANGES];
-> +	uint64_t *ranges;
-> +	int ranges_size = MEM_RANGE_CHUNK_SZ;
->  	uint64_t base, end, loc_base, loc_end;
->  	size_t i, rngs_cnt, range;
->  	int rlen = 0;
-> @@ -165,6 +166,11 @@ static void add_dyn_reconf_usable_mem_property(int fd)
->  		die("unrecoverable error: error seeking in \"%s\": %s\n",
->  			pathname, strerror(errno));
->  
-> +	ranges = malloc(ranges_size*8);
-> +	if (!ranges)
-> +		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-> +		    ranges_size*8);
-> +
->  	rlen = 0;
->  	for (i = 0; i < num_of_lmbs; i++) {
->  		if (read(fd, buf, 24) < 0)
-> @@ -180,24 +186,41 @@ static void add_dyn_reconf_usable_mem_property(int fd)
->  
->  		rngs_cnt = 0;
->  		for (range = 0; range < usablemem_rgns.size; range++) {
-> +			int add = 0;
->  			loc_base = usablemem_rgns.ranges[range].start;
->  			loc_end = usablemem_rgns.ranges[range].end;
->  			if (loc_base >= base && loc_end <= end) {
-> -				ranges[rlen++] = loc_base;
-> -				ranges[rlen++] = loc_end - loc_base;
-> -				rngs_cnt++;
-> +				add = 1;
->  			} else if (base < loc_end && end > loc_base) {
->  				if (loc_base < base)
->  					loc_base = base;
->  				if (loc_end > end)
->  					loc_end = end;
-> +				add = 1;
-> +			}
-> +
-> +			if (add) {
-> +				if (rlen >= (ranges_size-2)) {
-> +					ranges_size += MEM_RANGE_CHUNK_SZ;
-> +					ranges = realloc(ranges, ranges_size*8)
-;
-> +					if (!ranges)
-> +						die("unrecoverable error: can't
-"
-> +						    " realloc %d bytes for"
-> +						    " ranges.\n",
-> +						    ranges_size*8);
-> +				}
->  				ranges[rlen++] = loc_base;
->  				ranges[rlen++] = loc_end - loc_base;
->  				rngs_cnt++;
->  			}
->  		}
-> -		/* Store the count of (base, size) duple */
-> -		ranges[tmp_indx] = rngs_cnt;
-> +		if (rngs_cnt == 0) {
-> +			/* Don't store anything for unwritten iterations! */
-> +			rlen = tmp_indx;
-> +		} else {
-> +			/* Store the count of (base, size) duple */
-> +			ranges[tmp_indx] = rngs_cnt;
-> +		}
->  	}
->  		
->  	rlen = rlen * sizeof(uint64_t);
-> @@ -210,7 +233,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
->  	*dt++ = propnum("linux,drconf-usable-memory");
->  	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
->  		dt++;
-> -	memcpy(dt, &ranges, rlen);
-> +	memcpy(dt, ranges, rlen);
-> +	free(ranges);
->  	dt += (rlen + 3)/4;
->  }
->  
-> @@ -218,7 +242,8 @@ static void add_usable_mem_property(int fd, size_t len)
->  {
->  	char fname[MAXPATH], *bname;
->  	uint64_t buf[2];
-> -	uint64_t ranges[2*MAX_MEMORY_RANGES];
-> +	uint64_t *ranges;
-> +	int ranges_size = MEM_RANGE_CHUNK_SZ;
->  	uint64_t base, end, loc_base, loc_end;
->  	size_t range;
->  	int rlen = 0;
-> @@ -247,17 +272,33 @@ static void add_usable_mem_property(int fd, size_t len)
->  	base = buf[0];
->  	end = base + buf[1];
->  
-> +	ranges = malloc(ranges_size*8);
-> +	if (!ranges)
-> +		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-> +		    ranges_size*8);
-> +
->  	for (range = 0; range < usablemem_rgns.size; range++) {
-> +		int add = 0;
->  		loc_base = usablemem_rgns.ranges[range].start;
->  		loc_end = usablemem_rgns.ranges[range].end;
->  		if (loc_base >= base && loc_end <= end) {
-> -			ranges[rlen++] = loc_base;
-> -			ranges[rlen++] = loc_end - loc_base;
-> +			add = 1;
->  		} else if (base < loc_end && end > loc_base) {
->  			if (loc_base < base)
->  				loc_base = base;
->  			if (loc_end > end)
->  				loc_end = end;
-> +			add = 1;
-> +		}
-> +		if (add) {
-> +			if (rlen >= (ranges_size-2)) {
-> +				ranges_size += MEM_RANGE_CHUNK_SZ;
-> +				ranges = realloc(ranges, ranges_size*8);
-> +				if (!ranges) 
-> +					die("unrecoverable error: can't realloc
-"
-> +					    "%d bytes for ranges.\n",
-> +					    ranges_size*8);
-> +			}
->  			ranges[rlen++] = loc_base;
->  			ranges[rlen++] = loc_end - loc_base;
->  		}
-> @@ -283,7 +324,8 @@ static void add_usable_mem_property(int fd, size_t len)
->  	*dt++ = propnum("linux,usable-memory");
->  	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
->  		dt++;
-> -	memcpy(dt,&ranges,rlen);
-> +	memcpy(dt, ranges, rlen);
-> +	free(ranges);
->  	dt += (rlen + 3)/4;
->  }
->  
-> -- 
-> 1.6.3.3
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TWF4aW0gVXZhcm92IHdyb3RlIG9uIDIwMTAtMDUtMTEgMTA6NDcgOgo+IFRoaXMgcGF0Y2ggaXMg
+cmVxdWlyZWQgaW4gY2FzZSBpZiB5b3UgYXJlIHVzaW5nIG5ldyB0b29sY2hhaW5zLgoKSSdtIG9u
+IERlYmlhbi9zdGFibGUgKGJpbnV0aWxzIDIuMTgsIGdjYyA0LjMuMiksIHNvIEkgYXBwbGllZCB5
+b3VyIHBhdGNoZXMgCnRvIHRoZSBsYXRlc3QgLWdpdCBjaGVja291dDoKCkZpcnN0LCBjb21waWxh
+dGlvbiBmYWlscyB3aXRoOgoKY2MxOiB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwpr
+ZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYzogSW4gZnVuY3Rpb24g4oCYZ2V0X2Jhc2VfcmFuZ2Vz
+4oCZOgprZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYzoyNTg6IGVycm9yOiB2YWx1ZSBjb21wdXRl
+ZCBpcyBub3QgdXNlZAptYWtlOiAqKiogW2tleGVjL2FyY2gvcHBjL2tleGVjLXBwYy5vXSBFcnJv
+ciAxCgpTb21laG93IGEgIi0iIGh5cGhlbiBtYWRlIGl0IGludG8gb25lIG9mIHRoZSBmdW5jdGlv
+bnM6Cgo+IC0tLSBhL2tleGVjL2FyY2gvcHBjL2tleGVjLXBwYy5jCj4gKysrIGIva2V4ZWMvYXJj
+aC9wcGMva2V4ZWMtcHBjLmMKWy4uLl0KPiAgCQkJaWYgKGxvY2FsX21lbW9yeV9yYW5nZXMgPj0g
+bWF4X21lbW9yeV9yYW5nZXMpIHsKPiAtCQkJCWZjbG9zZShmaWxlKTsKPiAtCQkJCWJyZWFrOwo+
+ICsJCQkJaWYgKHJlYWxsb2NfbWVtb3J5X3JhbmdlcygpIDwgMCl7Cj4gKwktCQkJCWZjbG9zZShm
+aWxlKTsKCgpSZW1vdmluZyB0aGlzLCBnZXRzIG1lIGZ1cnRoZXIsIHVudGlsOgoKCnB1cmdhdG9y
+eS9hcmNoL3BwYy9jcnQubzogSW4gZnVuY3Rpb24gYF9fbHNocmRpMyc6CigudGV4dCsweGYwKTog
+bXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBgX19sc2hyZGkzJwpwdXJnYXRvcnkvYXJjaC9wcGMvbWlz
+Yy5vOigudGV4dCsweDUwKTogZmlyc3QgZGVmaW5lZCBoZXJlCmNvbGxlY3QyOiBsZCByZXR1cm5l
+ZCAxIGV4aXQgc3RhdHVzCm1ha2U6ICoqKiBbcHVyZ2F0b3J5L3B1cmdhdG9yeS5yb10gRXJyb3Ig
+MQoKQW5kIGhhcyBiZWVuIGRlZmluZWQgaW4gcHVyZ2F0b3J5L2FyY2gvcHBjL2NydC5TIGFuZAou
+L3B1cmdhdG9yeS9hcmNoL3BwYy9taXNjLlMuIFJlbW92aW5nIGl0IGZyb20gZS5nLiBjcnQuUwpt
+YWtlcyBpdCBjb21waWxlLCBJIGhhdmUgbm90IHRlc3RlZCBpdCB5ZXQsIHRob3VnaCA6LSkKClRo
+YW5rcywKQ2hyaXN0aWFuLgoKUFM6IFdoZXJlIGlzIC1XZXJyb3IgZGVmaW5lZD8gSSBjb3VsZCBu
+b3QgZmluZCBpdCBhbnl3aGVyZSBpbiB0aGUga2V4ZWMgCiAgICBzb3VyY2UgKGV4ZWNwdCBpbiBh
+cmNoL21pcHMpLi4uCi0tIAptYWtlIGJ6SW1hZ2UsIG5vdCB3YXIKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
