@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OC7Kv-0000ug-B8
-	for kexec@lists.infradead.org; Wed, 12 May 2010 08:30:37 +0000
-Date: Wed, 12 May 2010 17:30:33 +0900
+	id 1OC7Zo-0007yZ-L1
+	for kexec@lists.infradead.org; Wed, 12 May 2010 08:46:01 +0000
+Date: Wed, 12 May 2010 17:45:54 +0900
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
-Message-ID: <20100512083032.GD18808@verge.net.au>
+Message-ID: <20100512084554.GE18808@verge.net.au>
 References: <20100511174749.19309.44615.stgit@muvarov>
 	<4BEA2375.7040802@nerdbynature.de>
 	<AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
-	<4BEA589A.1080009@ozlabs.org>
+	<4BEA589A.1080009@ozlabs.org> <20100512083032.GD18808@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4BEA589A.1080009@ozlabs.org>
+In-Reply-To: <20100512083032.GD18808@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,18 +29,23 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Matt Evans <matt@ozlabs.org>
 Cc: Maxim Uvarov <muvarov@gmail.com>, kexec@lists.infradead.org
 
-On Wed, May 12, 2010 at 05:28:26PM +1000, Matt Evans wrote:
-> Maxim Uvarov wrote:
-> >
-> > This -Werror came from mips. kexec/arch/mips/Makefile. It is already
-> > removed in the git. We already saw this problem.
+On Wed, May 12, 2010 at 05:30:33PM +0900, Simon Horman wrote:
+> On Wed, May 12, 2010 at 05:28:26PM +1000, Matt Evans wrote:
+> > Maxim Uvarov wrote:
+> > >
+> > > This -Werror came from mips. kexec/arch/mips/Makefile. It is already
+> > > removed in the git. We already saw this problem.
+> > 
+> > BTW, I just did a clone of the kexec git tree repository and the -Werror is 
+> > still in kexec/arch/mips/Makefile.  Simon's patch of May 4th 
+> > ("[PATCH] build: Don't modify CFLAGS in kexec/arch/mips/Makefile") doesn't
+> > seem to be in there [yet].
 > 
-> BTW, I just did a clone of the kexec git tree repository and the -Werror is 
-> still in kexec/arch/mips/Makefile.  Simon's patch of May 4th 
-> ("[PATCH] build: Don't modify CFLAGS in kexec/arch/mips/Makefile") doesn't
-> seem to be in there [yet].
+> I'll investigate why.
 
-I'll investigate why.
+Sorry about that, my pushing was a bit out of sync.
+I think that I've fixed that now. Please let me know if
+there are still patches missing.
 
 
 _______________________________________________
