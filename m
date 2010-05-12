@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from moutng.kundenserver.de ([212.227.126.187])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OC6Gs-00004s-PH
-	for kexec@lists.infradead.org; Wed, 12 May 2010 07:22:23 +0000
-Message-ID: <4BEA5726.50806@nerdbynature.de>
-Date: Wed, 12 May 2010 00:22:14 -0700
-From: Christian Kujau <lists@nerdbynature.de>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OC6Mo-0002pJ-3C
+	for kexec@lists.infradead.org; Wed, 12 May 2010 07:28:31 +0000
+Message-ID: <4BEA589A.1080009@ozlabs.org>
+Date: Wed, 12 May 2010 17:28:26 +1000
+From: Matt Evans <matt@ozlabs.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
-References: <20100511174749.19309.44615.stgit@muvarov>
-In-Reply-To: <20100511174749.19309.44615.stgit@muvarov>
+References: <20100511174749.19309.44615.stgit@muvarov>	<4BEA2375.7040802@nerdbynature.de>
+	<AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
+In-Reply-To: <AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +24,21 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kexec@lists.infradead.org, uvarov@dev.rtsoft.ru, linuxppc-dev@lists.ozlabs.org, horms@verge.net.au, cbouatmailru@gmail.com
+Cc: kexec@lists.infradead.org
 
-On Tue, 11 May 2010 at 21:47, Maxim Uvarov wrote:
-> This patch is required in case if you are using new toolchains.
+Maxim Uvarov wrote:
+>
+> This -Werror came from mips. kexec/arch/mips/Makefile. It is already
+> removed in the git. We already saw this problem.
 
-After kexec-tools compiled, I actually tried it:
+BTW, I just did a clone of the kexec git tree repository and the -Werror is 
+still in kexec/arch/mips/Makefile.  Simon's patch of May 4th 
+("[PATCH] build: Don't modify CFLAGS in kexec/arch/mips/Makefile") doesn't
+seem to be in there [yet].
 
-# kexec -l /boot/2.6/zImage --command-line="root=/dev/hda6 ro"
-# echo $?
-0
-# kexec -e
-Starting new kernel
-Bye!
+Cheers,
 
-....but then the system just hung there, no more messages, I had to
-powercycle it.
-
-The --debug options is listed for "dol-ppc" systems (I have a PowerBook
-G4, not sure if this falls into this category), when I use it the help
-screen of kexec is displayed again and at the bottom:
-
-   Cannot load /boot/2.6/zImage
-
-
-This is with 2.6.34-rc7 (today's git):
-
-# file /boot/2.6/zImage
-/boot/2.6/zImage: ELF 32-bit MSB executable, PowerPC or cisco 4500,
-version 1 (SYSV), statically linked, with unknown capability 0x41000000
-= 0x11676e75, with unknown capability 0x10000 = 0x90402, not stripped
-
-
-.config and dmesg: http://nerdbynature.de/bits/2.6.34-rc7/kexec/
-
-Christian.
--- 
-make bzImage, not war
+Matt
 
 _______________________________________________
 kexec mailing list
