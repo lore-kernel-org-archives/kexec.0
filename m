@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from moutng.kundenserver.de ([212.227.126.171])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OC2rz-00025W-Bh
-	for kexec@lists.infradead.org; Wed, 12 May 2010 03:44:28 +0000
-Date: Tue, 11 May 2010 20:44:24 -0700 (PDT)
-From: Christian Kujau <lists@nerdbynature.de>
-Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
-In-Reply-To: <20100511174749.19309.44615.stgit@muvarov>
-Message-ID: <4BEA2375.7040802@nerdbynature.de>
-References: <20100511174749.19309.44615.stgit@muvarov>
-MIME-Version: 1.0
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OC0ru-0006PR-36
+	for kexec@lists.infradead.org; Wed, 12 May 2010 01:36:14 +0000
+Subject: Re: [PATCH 2/2] powerpc,kexec: Speedup kexec hpte tear down
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <9537.1273626418@neuling.org>
+References: <20100511062826.E1C49D3340@localhost.localdomain>
+	<1273561463.9209.138.camel@concordia> <30983.1273620594@neuling.org>
+	<1273624565.5738.8.camel@concordia> <7247.1273624988@neuling.org>
+	<20100512010003.GB3548@drongo>  <9537.1273626418@neuling.org>
+Date: Wed, 12 May 2010 11:36:11 +1000
+Message-ID: <1273628171.5738.36.camel@concordia>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,37 +22,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0520828576=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kexec@lists.infradead.org, uvarov@dev.rtsoft.ru, linuxppc-dev@lists.ozlabs.org
+To: Michael Neuling <mikey@neuling.org>
+Cc: kexec@lists.infradead.org, Paul Mackerras <paulus@samba.org>, Anton Blanchard <anton@samba.org>, linuxppc-dev@ozlabs.org
 
-TWF4aW0gVXZhcm92IHdyb3RlIG9uIDIwMTAtMDUtMTEgMTA6NDcgOgo+IFRoaXMgcGF0Y2ggaXMg
-cmVxdWlyZWQgaW4gY2FzZSBpZiB5b3UgYXJlIHVzaW5nIG5ldyB0b29sY2hhaW5zLgoKSSdtIG9u
-IERlYmlhbi9zdGFibGUgKGJpbnV0aWxzIDIuMTgsIGdjYyA0LjMuMiksIHNvIEkgYXBwbGllZCB5
-b3VyIHBhdGNoZXMgCnRvIHRoZSBsYXRlc3QgLWdpdCBjaGVja291dDoKCkZpcnN0LCBjb21waWxh
-dGlvbiBmYWlscyB3aXRoOgoKY2MxOiB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwpr
-ZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYzogSW4gZnVuY3Rpb24g4oCYZ2V0X2Jhc2VfcmFuZ2Vz
-4oCZOgprZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYzoyNTg6IGVycm9yOiB2YWx1ZSBjb21wdXRl
-ZCBpcyBub3QgdXNlZAptYWtlOiAqKiogW2tleGVjL2FyY2gvcHBjL2tleGVjLXBwYy5vXSBFcnJv
-ciAxCgpTb21laG93IGEgIi0iIGh5cGhlbiBtYWRlIGl0IGludG8gb25lIG9mIHRoZSBmdW5jdGlv
-bnM6Cgo+IC0tLSBhL2tleGVjL2FyY2gvcHBjL2tleGVjLXBwYy5jCj4gKysrIGIva2V4ZWMvYXJj
-aC9wcGMva2V4ZWMtcHBjLmMKWy4uLl0KPiAgCQkJaWYgKGxvY2FsX21lbW9yeV9yYW5nZXMgPj0g
-bWF4X21lbW9yeV9yYW5nZXMpIHsKPiAtCQkJCWZjbG9zZShmaWxlKTsKPiAtCQkJCWJyZWFrOwo+
-ICsJCQkJaWYgKHJlYWxsb2NfbWVtb3J5X3JhbmdlcygpIDwgMCl7Cj4gKwktCQkJCWZjbG9zZShm
-aWxlKTsKCgpSZW1vdmluZyB0aGlzLCBnZXRzIG1lIGZ1cnRoZXIsIHVudGlsOgoKCnB1cmdhdG9y
-eS9hcmNoL3BwYy9jcnQubzogSW4gZnVuY3Rpb24gYF9fbHNocmRpMyc6CigudGV4dCsweGYwKTog
-bXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBgX19sc2hyZGkzJwpwdXJnYXRvcnkvYXJjaC9wcGMvbWlz
-Yy5vOigudGV4dCsweDUwKTogZmlyc3QgZGVmaW5lZCBoZXJlCmNvbGxlY3QyOiBsZCByZXR1cm5l
-ZCAxIGV4aXQgc3RhdHVzCm1ha2U6ICoqKiBbcHVyZ2F0b3J5L3B1cmdhdG9yeS5yb10gRXJyb3Ig
-MQoKQW5kIGhhcyBiZWVuIGRlZmluZWQgaW4gcHVyZ2F0b3J5L2FyY2gvcHBjL2NydC5TIGFuZAou
-L3B1cmdhdG9yeS9hcmNoL3BwYy9taXNjLlMuIFJlbW92aW5nIGl0IGZyb20gZS5nLiBjcnQuUwpt
-YWtlcyBpdCBjb21waWxlLCBJIGhhdmUgbm90IHRlc3RlZCBpdCB5ZXQsIHRob3VnaCA6LSkKClRo
-YW5rcywKQ2hyaXN0aWFuLgoKUFM6IFdoZXJlIGlzIC1XZXJyb3IgZGVmaW5lZD8gSSBjb3VsZCBu
-b3QgZmluZCBpdCBhbnl3aGVyZSBpbiB0aGUga2V4ZWMgCiAgICBzb3VyY2UgKGV4ZWNwdCBpbiBh
-cmNoL21pcHMpLi4uCi0tIAptYWtlIGJ6SW1hZ2UsIG5vdCB3YXIKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+
+--===============0520828576==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-bu56UQMJhGcW/DJfYuf8"
+
+
+--=-bu56UQMJhGcW/DJfYuf8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, 2010-05-12 at 11:06 +1000, Michael Neuling wrote:
+> > > We probably only do the remove on < 1% of the hptes now.  So I doubt =
+we
+> > > would get a speedup since most of the time we aren't do the remove
+> > > anymore.
+> >=20
+> > It would be nice to have some actual numbers.  Could you add some
+> > counters and print the results at the end?  (Or don't you have any
+> > way to print things at that stage?)
+>=20
+> Printing is hard at that point but I think we can do it.  I'll try to
+> when I get some time.
+
+A version of udbg_putcLP() that uses a raw hcall should work, or there
+was code added to purgatory recently to print to the HV console which
+you could nick.
+
+> A heavily loaded system which kdumps will need a lot more hptes removes
+> than kexec, so stats for both these cases might be useful also.
+
+Yeah, or even a system that is kexec'ed while lots of stuff is still
+running.
+
+cheers
+
+
+
+--=-bu56UQMJhGcW/DJfYuf8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAkvqBgsACgkQdSjSd0sB4dKSBgCfZD3RoXWXft7f8agnCUQbU/Qq
+7/YAn3f/X+Vghs1inbGC4/U57qS/IbaS
+=34Ff
+-----END PGP SIGNATURE-----
+
+--=-bu56UQMJhGcW/DJfYuf8--
+
+
+
+--===============0520828576==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0520828576==--
+
+
