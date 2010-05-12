@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wy0-f177.google.com ([74.125.82.177])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCAnO-0003v0-7i
-	for kexec@lists.infradead.org; Wed, 12 May 2010 12:12:14 +0000
-Received: by wyj26 with SMTP id 26so2315002wyj.36
-	for <kexec@lists.infradead.org>; Wed, 12 May 2010 05:12:13 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <4BEA5726.50806@nerdbynature.de>
-References: <20100511174749.19309.44615.stgit@muvarov>
-	<4BEA5726.50806@nerdbynature.de>
-Date: Wed, 12 May 2010 16:12:12 +0400
-Message-ID: <AANLkTil699YohqNmq1UeAZU7jyrl78d3yfvOD3T_Sx57@mail.gmail.com>
+	id 1OCBqA-0000s6-6L
+	for kexec@lists.infradead.org; Wed, 12 May 2010 13:19:11 +0000
+Date: Wed, 12 May 2010 22:19:03 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
-From: Maxim Uvarov <muvarov@gmail.com>
+Message-ID: <20100512131902.GA8109@verge.net.au>
+References: <20100511174749.19309.44615.stgit@muvarov>
+	<4BEA2375.7040802@nerdbynature.de>
+	<AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,128 +21,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1443074078=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christian Kujau <lists@nerdbynature.de>
-Cc: kexec@lists.infradead.org, uvarov@dev.rtsoft.ru, linuxppc-dev@lists.ozlabs.org, horms@verge.net.au, cbouatmailru@gmail.com
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: Christian Kujau <lists@nerdbynature.de>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
---===============1443074078==
-Content-Type: multipart/alternative; boundary=0016e649864a55b9940486648d2c
-
---0016e649864a55b9940486648d2c
-Content-Type: text/plain; charset=ISO-8859-1
-
-2010/5/12 Christian Kujau <lists@nerdbynature.de>
-
-> On Tue, 11 May 2010 at 21:47, Maxim Uvarov wrote:
-> > This patch is required in case if you are using new toolchains.
->
-> After kexec-tools compiled, I actually tried it:
->
-> # kexec -l /boot/2.6/zImage --command-line="root=/dev/hda6 ro"
-> # echo $?
-> 0
-> # kexec -e
-> Starting new kernel
-> Bye!
->
-> ....but then the system just hung there, no more messages, I had to
-> powercycle it.
->
-> The --debug options is listed for "dol-ppc" systems (I have a PowerBook
-> G4, not sure if this falls into this category), when I use it the help
-> screen of kexec is displayed again and at the bottom:
->
->   Cannot load /boot/2.6/zImage
->
->
-> This is with 2.6.34-rc7 (today's git):
->
-> # file /boot/2.6/zImage
-> /boot/2.6/zImage: ELF 32-bit MSB executable, PowerPC or cisco 4500,
-> version 1 (SYSV), statically linked, with unknown capability 0x41000000
-> = 0x11676e75, with unknown capability 0x10000 = 0x90402, not stripped
->
->
-> .config and dmesg: http://nerdbynature.de/bits/2.6.34-rc7/kexec/
->
-> Christian.
-> --
-> make bzImage, not war
->
-
-
-Can you try vmlinux? I tested only with vmlinux.
-
--- 
-Best regards,
-Maxim Uvarov
-
---0016e649864a55b9940486648d2c
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br><div class=3D"gmail_quote">2010/5/12 Christian Kujau <span dir=3D"l=
-tr">&lt;<a href=3D"mailto:lists@nerdbynature.de">lists@nerdbynature.de</a>&=
-gt;</span><br><blockquote class=3D"gmail_quote" style=3D"border-left: 1px s=
-olid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-<div class=3D"im">On Tue, 11 May 2010 at 21:47, Maxim Uvarov wrote:<br>
-</div><div class=3D"im">&gt; This patch is required in case if you are usin=
-g new toolchains.<br>
-<br>
-</div>After kexec-tools compiled, I actually tried it:<br>
-<br>
-# kexec -l /boot/2.6/zImage --command-line=3D&quot;root=3D/dev/hda6 ro&quot=
-;<br>
-# echo $?<br>
-0<br>
-# kexec -e<br>
-Starting new kernel<br>
-Bye!<br>
-<br>
-....but then the system just hung there, no more messages, I had to<br>
-powercycle it.<br>
-<br>
-The --debug options is listed for &quot;dol-ppc&quot; systems (I have a Pow=
-erBook<br>
-G4, not sure if this falls into this category), when I use it the help<br>
-screen of kexec is displayed again and at the bottom:<br>
-<br>
- =A0 Cannot load /boot/2.6/zImage<br>
-<br>
-<br>
-This is with 2.6.34-rc7 (today&#39;s git):<br>
-<br>
-# file /boot/2.6/zImage<br>
-/boot/2.6/zImage: ELF 32-bit MSB executable, PowerPC or cisco 4500,<br>
-version 1 (SYSV), statically linked, with unknown capability 0x41000000<br>
-=3D 0x11676e75, with unknown capability 0x10000 =3D 0x90402, not stripped<b=
-r>
-<br>
-<br>
-.config and dmesg: <a href=3D"http://nerdbynature.de/bits/2.6.34-rc7/kexec/=
-" target=3D"_blank">http://nerdbynature.de/bits/2.6.34-rc7/kexec/</a><br>
-<div><div></div><div class=3D"h5"><br>
-Christian.<br>
---<br>
-make bzImage, not war<br>
-</div></div></blockquote></div><br><br>Can you try vmlinux? I tested only w=
-ith vmlinux.<br clear=3D"all"><br>-- <br>Best regards,<br>Maxim Uvarov<br>
-
---0016e649864a55b9940486648d2c--
-
-
---===============1443074078==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1443074078==--
-
+T24gV2VkLCBNYXkgMTIsIDIwMTAgYXQgMTA6MzE6MjZBTSArMDQwMCwgTWF4aW0gVXZhcm92IHdy
+b3RlOgo+IDIwMTAvNS8xMiBDaHJpc3RpYW4gS3VqYXUgPGxpc3RzQG5lcmRieW5hdHVyZS5kZT4K
+PiAKPiA+IE1heGltIFV2YXJvdiB3cm90ZSBvbiAyMDEwLTA1LTExIDEwOjQ3IDoKPiA+ID4gVGhp
+cyBwYXRjaCBpcyByZXF1aXJlZCBpbiBjYXNlIGlmIHlvdSBhcmUgdXNpbmcgbmV3IHRvb2xjaGFp
+bnMuCj4gPgo+ID4gSSdtIG9uIERlYmlhbi9zdGFibGUgKGJpbnV0aWxzIDIuMTgsIGdjYyA0LjMu
+MiksIHNvIEkgYXBwbGllZCB5b3VyIHBhdGNoZXMKPiA+IHRvIHRoZSBsYXRlc3QgLWdpdCBjaGVj
+a291dDoKPiA+Cj4gPiBGaXJzdCwgY29tcGlsYXRpb24gZmFpbHMgd2l0aDoKPiA+Cj4gPiBjYzE6
+IHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzCj4gPiBrZXhlYy9hcmNoL3BwYy9rZXhl
+Yy1wcGMuYzogSW4gZnVuY3Rpb24g4oCYZ2V0X2Jhc2VfcmFuZ2Vz4oCZOgo+ID4ga2V4ZWMvYXJj
+aC9wcGMva2V4ZWMtcHBjLmM6MjU4OiBlcnJvcjogdmFsdWUgY29tcHV0ZWQgaXMgbm90IHVzZWQK
+PiA+IG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9wcGMva2V4ZWMtcHBjLm9dIEVycm9yIDEKPiA+Cj4g
+PiBTb21laG93IGEgIi0iIGh5cGhlbiBtYWRlIGl0IGludG8gb25lIG9mIHRoZSBmdW5jdGlvbnM6
+Cj4gPgo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYwo+ID4gPiArKysgYi9r
+ZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYwo+ID4gWy4uLl0KPiA+ID4gICAgICAgICAgICAgICAg
+ICAgICAgIGlmIChsb2NhbF9tZW1vcnlfcmFuZ2VzID49IG1heF9tZW1vcnlfcmFuZ2VzKSB7Cj4g
+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZjbG9zZShmaWxlKTsKPiA+ID4gLSAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGlmIChyZWFsbG9jX21lbW9yeV9yYW5nZXMoKSA8IDApewo+ID4gPiArICAg
+ICAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZjbG9zZShmaWxlKTsKPiA+Cj4gPiBP
+aCwgSSBzZW50IHRoaXMgcGF0Y2ggdHdpY2Ugd2l0aCBzdGcgLWEgYnkgbWlzdGFrZS4gQW5kIHNl
+Y29uZCB2ZXJzaW9uIGhhcwo+ICItIi4gSSB3aWxsIGZpeCBhbmQgcmVzZW5kIHBhdGNoZXMuCj4g
+Cj4gPgo+ID4gUmVtb3ZpbmcgdGhpcywgZ2V0cyBtZSBmdXJ0aGVyLCB1bnRpbDoKPiA+Cj4gPgo+
+ID4gcHVyZ2F0b3J5L2FyY2gvcHBjL2NydC5vOiBJbiBmdW5jdGlvbiBgX19sc2hyZGkzJzoKPiA+
+ICgudGV4dCsweGYwKTogbXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBgX19sc2hyZGkzJwo+ID4gcHVy
+Z2F0b3J5L2FyY2gvcHBjL21pc2MubzooLnRleHQrMHg1MCk6IGZpcnN0IGRlZmluZWQgaGVyZQo+
+ID4gY29sbGVjdDI6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXMKPiA+IG1ha2U6ICoqKiBbcHVy
+Z2F0b3J5L3B1cmdhdG9yeS5yb10gRXJyb3IgMQo+ID4KPiA+IEFuZCBoYXMgYmVlbiBkZWZpbmVk
+IGluIHB1cmdhdG9yeS9hcmNoL3BwYy9jcnQuUyBhbmQKPiA+IC4vcHVyZ2F0b3J5L2FyY2gvcHBj
+L21pc2MuUy4gUmVtb3ZpbmcgaXQgZnJvbSBlLmcuIGNydC5TCj4gPiBtYWtlcyBpdCBjb21waWxl
+LCBJIGhhdmUgbm90IHRlc3RlZCBpdCB5ZXQsIHRob3VnaCA6LSkKPiA+Cj4gCj4gWWVzLCB0aGF0
+IGlzIGV4cGVjdGVkIHJlc3VsdCBmb3Igb2xkIHRvb2wgY2hhaW5zLiBOZXcgdG9vbCBjaGFpbnMg
+KGZyb20gY29kZQo+IHNvdXJjZXJ5ICkgIG5lZWQgdGhpcyBjcnQuUy4KPiBJIHRoaW5rIHdlIGNh
+biBoYXZlIC0td2l0aC1vbGR0b29sY2hhaW4gb3B0aW9uIHRvIGNvbmZpZ3VyZSB0byBwb2ludCB0
+byBvbGQKPiB0b29sIGNoYWlucy4gKG9yIGV2ZW4gcmVuYW1lIGl0IHRvIC0td2l0aC1jcnRzLAo+
+IEkgZG9uJ3Qga25vdyB3aGF0IGlzIGJldHRlci4pCgpJIHRoaW5rIC0td2l0aC1jcnRzIHdvdWxk
+IGJlIGJldHRlciBhcyAtLXdpdGgtb2xkdG9vbGNoYWluIGNvdWxkCm1lYW4gbWFueSB0aGluZ3Mu
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
+bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
