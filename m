@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga06.intel.com ([134.134.136.21] helo=orsmga101.jf.intel.com)
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCYgi-0000zf-4g
-	for kexec@lists.infradead.org; Thu, 13 May 2010 13:42:57 +0000
-Date: Thu, 13 May 2010 06:42:49 -0700
-From: "David N. Lombard" <dnlombar@ichips.intel.com>
-Subject: Re: [RFC PATCH] kexec-tools: Fix option/argument parsing
-Message-ID: <20100513134249.GB8160@nlxcldnl2.cl.intel.com>
-References: <4BEBB4E8.6080000@ozlabs.org>
+	id 1OCZPi-0001ZE-Hp
+	for kexec@lists.infradead.org; Thu, 13 May 2010 14:29:27 +0000
+Date: Thu, 13 May 2010 23:29:15 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec-tools: remove unused code from
+	arch_process_options (arm, cris, ia64, mips, ppc)
+Message-ID: <20100513142909.GA10534@verge.net.au>
+References: <4BEBAB67.30107@ozlabs.org>
+ <4BEBAF60.5000300@ozlabs.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4BEBB4E8.6080000@ozlabs.org>
+In-Reply-To: <4BEBAF60.5000300@ozlabs.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,35 +26,34 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Matt Evans <matt@ozlabs.org>
-Cc: Michael Neuling <mikey@neuling.org>, "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: kexec@lists.infradead.org
 
-On Thu, May 13, 2010 at 01:14:32AM -0700, Matt Evans wrote:
-> Hi,
+On Thu, May 13, 2010 at 05:50:56PM +1000, Matt Evans wrote:
+> Matt Evans wrote:
+> > These architectures don't have any architecture-specific options
+> > (note: distinct from loader options, which are more specific), yet
+> > their arch_process_options() functions contain getopts_long() calls
+> > followed by no argument processing.  The code doesn't do anything,
+> > so this patch removes it.
+> > 
+> > Signed-off-by: Matt Evans <matt@ozlabs.org>
+> > ---
+> >  kexec/arch/arm/kexec-arm.c   |   17 -----------------
+> >  kexec/arch/cris/kexec-cris.c |   17 -----------------
+> >  kexec/arch/ia64/kexec-ia64.c |   21 +++------------------
+> >  kexec/arch/mips/kexec-mips.c |   17 -----------------
+> >  kexec/arch/ppc/kexec-ppc.c   |   17 -----------------
+> >  5 files changed, 3 insertions(+), 86 deletions(-)
 > 
-> 
-> In playing with kexec-tools I've noticed various problems with the argument
-> passing, meaning one has to be careful to use certain forms of arguments
-> and present them in a certain order.
-> 
-> The arguments end up being parsed three times, each getting more specific
-> than the last.  main() looks for general args, arch_process_options() looks
-> for options common to all loaders for the arch, and then finally many
-> file_type load() methods check for options specific to that filetype.
-> 
-> As GNU getopt works, it re-orders the argv[] pushing any args it doesn't
-> recognise to the end.  This includes arguments to valid options which
-> are simply not recognised the first time around.
+> I forgot to add that unfortunately I have only been able to compile this
+> patch on ppc.  Since the code carefully removed doesn't have any effect I
+> am hopeful for the rest...  :-)
 
-This is a long standing problem; I found it years ago.  My patch saved a copy
-of the original argc and then passed that original version to each phase instead
-of the mangled vector.
+Thanks, applied.
 
-I hope your suggestion is accepted or prompts a solution, as the problem can
-be quite vexing...
-
--- 
-David N. Lombard, Intel, Irvine, CA
-I do not speak for Intel Corporation; all comments are strictly my own.
+I successfully compiled the code for the other architectures
+with the exception of cris (as I don't have access to the box
+with that cross compiler at the moment).
 
 _______________________________________________
 kexec mailing list
