@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCaHv-00080Z-VB
-	for kexec@lists.infradead.org; Thu, 13 May 2010 15:25:29 +0000
-Date: Fri, 14 May 2010 00:25:19 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [patch] ppc: Fix gamecube build
-Message-ID: <20100513152519.GA4143@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from gate.crashing.org ([63.228.1.57])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OCcE3-0008Nq-IY
+	for kexec@lists.infradead.org; Thu, 13 May 2010 17:29:36 +0000
+In-Reply-To: <20100512070849.9572.84728.stgit@muvarov>
+References: <20100512070841.9572.78661.stgit@muvarov>
+	<20100512070849.9572.84728.stgit@muvarov>
+Mime-Version: 1.0 (Apple Message framework v753.1)
+Message-Id: <15016EE5-7B40-40C9-9E45-58409644CE17@kernel.crashing.org>
+From: Segher Boessenkool <segher@kernel.crashing.org>
+Subject: Re: [PATCH v2 2/2] powerpc new toolchains fix (crt.S)
+Date: Thu, 13 May 2010 19:27:59 +0200
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,98 +19,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"; DelSp="yes"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
-Cc: Maxim Uvarov <muvarov@gmail.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: lists@nerdbynature.de, kexec@lists.infradead.org, horms@verge.net.au, linuxppc-dev@lists.ozlabs.org
 
-This fixes the kexec-build on ppc32 when
-the --game-cube option is supplied to ./configure.
-It seems to have bit-rotted a little.
+> Linker does not provide some vital functions when building  
+> freestanding
+> applications with a new toolchain,
 
-Cc: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Cc: Maxim Uvarov <muvarov@gmail.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
+That's because the compiler provides those functions, not the linker.
 
-Index: kexec-tools/kexec/arch/ppc/kexec-elf-ppc.c
-===================================================================
---- kexec-tools.orig/kexec/arch/ppc/kexec-elf-ppc.c	2010-05-14 00:18:25.000000000 +0900
-+++ kexec-tools/kexec/arch/ppc/kexec-elf-ppc.c	2010-05-14 00:20:58.000000000 +0900
-@@ -162,17 +162,9 @@ int elf_ppc_load(int argc, char **argv,
- 	unsigned long max_addr, hole_addr;
- 	struct mem_phdr *phdr;
- 	size_t size;
--	unsigned long long *rsvmap_ptr;
--	struct bootblock *bb_ptr;
--	unsigned int nr_segments;
--	unsigned long my_kernel, my_dt_offset;
--	unsigned long my_stack, my_backup_start;
- #ifdef CONFIG_PPC64
- 	unsigned long toc_addr;
- #endif
--	unsigned int slave_code[256 / sizeof(unsigned int)], master_entry;
--	unsigned char *seg_buf = NULL;
--	off_t seg_size = 0;
- #ifdef WITH_GAMECUBE
- 	int target_is_gamecube = 1;
- 	char *arg_buf;
-@@ -183,13 +175,21 @@ int elf_ppc_load(int argc, char **argv,
- 	unsigned char *setup_start;
- 	uint32_t setup_size;
- #else
-+	unsigned long long *rsvmap_ptr;
-+	struct bootblock *bb_ptr;
-+	unsigned int nr_segments;
-+	unsigned long my_kernel, my_dt_offset;
-+	unsigned long my_stack, my_backup_start;
-+	unsigned int slave_code[256 / sizeof(unsigned int)], master_entry;
-+	unsigned char *seg_buf = NULL;
-+	off_t seg_size = 0;
- 	int target_is_gamecube = 0;
- 	unsigned int addr;
- 	unsigned long dtb_addr;
-+#endif
- #define FIXUP_ENTRYS	(20)
- 	char *fixup_nodes[FIXUP_ENTRYS + 1];
- 	int cur_fixup = 0;
--#endif
- 	int opt;
- 
- 	command_line = NULL;
-Index: kexec-tools/kexec/arch/ppc/kexec-ppc.c
-===================================================================
---- kexec-tools.orig/kexec/arch/ppc/kexec-ppc.c	2010-05-14 00:18:25.000000000 +0900
-+++ kexec-tools/kexec/arch/ppc/kexec-ppc.c	2010-05-14 00:20:58.000000000 +0900
-@@ -26,6 +26,11 @@
- 
- #include "config.h"
- 
-+uint64_t rmo_top;
-+unsigned long long crash_base, crash_size;
-+unsigned int rtas_base, rtas_size;
-+int max_memory_ranges;
-+
- #ifdef WITH_GAMECUBE
- #define MAX_MEMORY_RANGES  64
- static struct memory_range memory_range[MAX_MEMORY_RANGES];
-@@ -46,15 +51,11 @@ static int get_memory_ranges_gc(struct m
- }
- #else
- static int use_new_dtb;
--int max_memory_ranges;
- static int nr_memory_ranges, nr_exclude_ranges;
- static struct memory_range *exclude_range;
- static struct memory_range *memory_range;
- static struct memory_range *base_memory_range;
- static uint64_t memory_max;
--uint64_t rmo_top;
--unsigned long long crash_base, crash_size;
--unsigned int rtas_base, rtas_size;
- 
- /*
-  * Count the memory nodes under /proc/device-tree and populate the
+> so we have to provide our own CRT.
+
+...in libgcc.  Why don't you link against that?
+
+> p.s.
+> Without the CRT we won't see any build errors (since the purgatory is
+> linked with --no-undefined), but the purgatory code won't work,
+
+It would be nice if the build would check if anything unexpectedly
+undefined is left.
+
+
+Segher
+
 
 _______________________________________________
 kexec mailing list
