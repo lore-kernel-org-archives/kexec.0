@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCBqA-0000s6-6L
-	for kexec@lists.infradead.org; Wed, 12 May 2010 13:19:11 +0000
-Date: Wed, 12 May 2010 22:19:03 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] Fix kexec on powerpc32
-Message-ID: <20100512131902.GA8109@verge.net.au>
-References: <20100511174749.19309.44615.stgit@muvarov>
-	<4BEA2375.7040802@nerdbynature.de>
-	<AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
+	id 1OCSvk-0001kk-Jn
+	for kexec@lists.infradead.org; Thu, 13 May 2010 07:34:06 +0000
+Message-ID: <4BEBAB67.30107@ozlabs.org>
+Date: Thu, 13 May 2010 17:33:59 +1000
+From: Matt Evans <matt@ozlabs.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTimSATEKI4TdO6zNWSRzl2on4OL5D2GGBlVsndMs@mail.gmail.com>
+Subject: [PATCH] kexec-tools: remove unused code from arch_process_options
+	(arm, cris, ia64, mips, ppc)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,49 +17,183 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: Christian Kujau <lists@nerdbynature.de>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
-T24gV2VkLCBNYXkgMTIsIDIwMTAgYXQgMTA6MzE6MjZBTSArMDQwMCwgTWF4aW0gVXZhcm92IHdy
-b3RlOgo+IDIwMTAvNS8xMiBDaHJpc3RpYW4gS3VqYXUgPGxpc3RzQG5lcmRieW5hdHVyZS5kZT4K
-PiAKPiA+IE1heGltIFV2YXJvdiB3cm90ZSBvbiAyMDEwLTA1LTExIDEwOjQ3IDoKPiA+ID4gVGhp
-cyBwYXRjaCBpcyByZXF1aXJlZCBpbiBjYXNlIGlmIHlvdSBhcmUgdXNpbmcgbmV3IHRvb2xjaGFp
-bnMuCj4gPgo+ID4gSSdtIG9uIERlYmlhbi9zdGFibGUgKGJpbnV0aWxzIDIuMTgsIGdjYyA0LjMu
-MiksIHNvIEkgYXBwbGllZCB5b3VyIHBhdGNoZXMKPiA+IHRvIHRoZSBsYXRlc3QgLWdpdCBjaGVj
-a291dDoKPiA+Cj4gPiBGaXJzdCwgY29tcGlsYXRpb24gZmFpbHMgd2l0aDoKPiA+Cj4gPiBjYzE6
-IHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzCj4gPiBrZXhlYy9hcmNoL3BwYy9rZXhl
-Yy1wcGMuYzogSW4gZnVuY3Rpb24g4oCYZ2V0X2Jhc2VfcmFuZ2Vz4oCZOgo+ID4ga2V4ZWMvYXJj
-aC9wcGMva2V4ZWMtcHBjLmM6MjU4OiBlcnJvcjogdmFsdWUgY29tcHV0ZWQgaXMgbm90IHVzZWQK
-PiA+IG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9wcGMva2V4ZWMtcHBjLm9dIEVycm9yIDEKPiA+Cj4g
-PiBTb21laG93IGEgIi0iIGh5cGhlbiBtYWRlIGl0IGludG8gb25lIG9mIHRoZSBmdW5jdGlvbnM6
-Cj4gPgo+ID4gPiAtLS0gYS9rZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYwo+ID4gPiArKysgYi9r
-ZXhlYy9hcmNoL3BwYy9rZXhlYy1wcGMuYwo+ID4gWy4uLl0KPiA+ID4gICAgICAgICAgICAgICAg
-ICAgICAgIGlmIChsb2NhbF9tZW1vcnlfcmFuZ2VzID49IG1heF9tZW1vcnlfcmFuZ2VzKSB7Cj4g
-PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZjbG9zZShmaWxlKTsKPiA+ID4gLSAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGlmIChyZWFsbG9jX21lbW9yeV9yYW5nZXMoKSA8IDApewo+ID4gPiArICAg
-ICAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZjbG9zZShmaWxlKTsKPiA+Cj4gPiBP
-aCwgSSBzZW50IHRoaXMgcGF0Y2ggdHdpY2Ugd2l0aCBzdGcgLWEgYnkgbWlzdGFrZS4gQW5kIHNl
-Y29uZCB2ZXJzaW9uIGhhcwo+ICItIi4gSSB3aWxsIGZpeCBhbmQgcmVzZW5kIHBhdGNoZXMuCj4g
-Cj4gPgo+ID4gUmVtb3ZpbmcgdGhpcywgZ2V0cyBtZSBmdXJ0aGVyLCB1bnRpbDoKPiA+Cj4gPgo+
-ID4gcHVyZ2F0b3J5L2FyY2gvcHBjL2NydC5vOiBJbiBmdW5jdGlvbiBgX19sc2hyZGkzJzoKPiA+
-ICgudGV4dCsweGYwKTogbXVsdGlwbGUgZGVmaW5pdGlvbiBvZiBgX19sc2hyZGkzJwo+ID4gcHVy
-Z2F0b3J5L2FyY2gvcHBjL21pc2MubzooLnRleHQrMHg1MCk6IGZpcnN0IGRlZmluZWQgaGVyZQo+
-ID4gY29sbGVjdDI6IGxkIHJldHVybmVkIDEgZXhpdCBzdGF0dXMKPiA+IG1ha2U6ICoqKiBbcHVy
-Z2F0b3J5L3B1cmdhdG9yeS5yb10gRXJyb3IgMQo+ID4KPiA+IEFuZCBoYXMgYmVlbiBkZWZpbmVk
-IGluIHB1cmdhdG9yeS9hcmNoL3BwYy9jcnQuUyBhbmQKPiA+IC4vcHVyZ2F0b3J5L2FyY2gvcHBj
-L21pc2MuUy4gUmVtb3ZpbmcgaXQgZnJvbSBlLmcuIGNydC5TCj4gPiBtYWtlcyBpdCBjb21waWxl
-LCBJIGhhdmUgbm90IHRlc3RlZCBpdCB5ZXQsIHRob3VnaCA6LSkKPiA+Cj4gCj4gWWVzLCB0aGF0
-IGlzIGV4cGVjdGVkIHJlc3VsdCBmb3Igb2xkIHRvb2wgY2hhaW5zLiBOZXcgdG9vbCBjaGFpbnMg
-KGZyb20gY29kZQo+IHNvdXJjZXJ5ICkgIG5lZWQgdGhpcyBjcnQuUy4KPiBJIHRoaW5rIHdlIGNh
-biBoYXZlIC0td2l0aC1vbGR0b29sY2hhaW4gb3B0aW9uIHRvIGNvbmZpZ3VyZSB0byBwb2ludCB0
-byBvbGQKPiB0b29sIGNoYWlucy4gKG9yIGV2ZW4gcmVuYW1lIGl0IHRvIC0td2l0aC1jcnRzLAo+
-IEkgZG9uJ3Qga25vdyB3aGF0IGlzIGJldHRlci4pCgpJIHRoaW5rIC0td2l0aC1jcnRzIHdvdWxk
-IGJlIGJldHRlciBhcyAtLXdpdGgtb2xkdG9vbGNoYWluIGNvdWxkCm1lYW4gbWFueSB0aGluZ3Mu
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+These architectures don't have any architecture-specific options
+(note: distinct from loader options, which are more specific), yet
+their arch_process_options() functions contain getopts_long() calls
+followed by no argument processing.  The code doesn't do anything,
+so this patch removes it.
+
+Signed-off-by: Matt Evans <matt@ozlabs.org>
+---
+ kexec/arch/arm/kexec-arm.c   |   17 -----------------
+ kexec/arch/cris/kexec-cris.c |   17 -----------------
+ kexec/arch/ia64/kexec-ia64.c |   21 +++------------------
+ kexec/arch/mips/kexec-mips.c |   17 -----------------
+ kexec/arch/ppc/kexec-ppc.c   |   17 -----------------
+ 5 files changed, 3 insertions(+), 86 deletions(-)
+
+diff --git a/kexec/arch/arm/kexec-arm.c b/kexec/arch/arm/kexec-arm.c
+index 06ed8fd..de3f713 100644
+--- a/kexec/arch/arm/kexec-arm.c
++++ b/kexec/arch/arm/kexec-arm.c
+@@ -88,23 +88,6 @@ void arch_usage(void)
+ 
+ int arch_process_options(int argc, char **argv)
+ {
+-	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
+-		{ 0,			0, NULL, 0 },
+-	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+-	int opt;
+-
+-	opterr = 0; /* Don't complain about unrecognized options here */
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+-		switch(opt) {
+-		default:
+-			break;
+-		}
+-	}
+-	/* Reset getopt for the next pass; called in other source modules */
+-	opterr = 1;
+-	optind = 1;
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/cris/kexec-cris.c b/kexec/arch/cris/kexec-cris.c
+index 30df27e..38876f6 100644
+--- a/kexec/arch/cris/kexec-cris.c
++++ b/kexec/arch/cris/kexec-cris.c
+@@ -54,23 +54,6 @@ void arch_usage(void)
+ 
+ int arch_process_options(int argc, char **argv)
+ {
+-	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
+-		{ 0,                    0, NULL, 0 },
+-	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+-	int opt;
+-
+-	opterr = 0; /* Don't complain about unrecognized options here */
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+-		switch(opt) {
+-		default:
+-			break;
+-		}
+-	}
+-	/* Reset getopt for the next pass; called in other source modules */
+-	opterr = 1;
+-	optind = 1;
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/ia64/kexec-ia64.c b/kexec/arch/ia64/kexec-ia64.c
+index edd3674..aa510a9 100644
+--- a/kexec/arch/ia64/kexec-ia64.c
++++ b/kexec/arch/ia64/kexec-ia64.c
+@@ -180,29 +180,14 @@ void arch_usage(void)
+ 
+ int arch_process_options(int argc, char **argv)
+ {
+-	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
+-		{ 0, 0, NULL, 0 },
+-	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+-	int opt;
++	/* This doesn't belong here!  Some sort of arch_init() ? */
+ 
+ 	/* execute from monarch processor */
+-        cpu_set_t affinity;
++	cpu_set_t affinity;
+ 	CPU_ZERO(&affinity);
+ 	CPU_SET(0, &affinity);
+-        sched_setaffinity(0, sizeof(affinity), &affinity);
++	sched_setaffinity(0, sizeof(affinity), &affinity);
+ 
+-	opterr = 0; /* Don't complain about unrecognized options here */
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+-		switch(opt) {
+-		default:
+-			break;
+-		}
+-	}
+-	/* Reset getopt for the next pass; called in other source modules */
+-	opterr = 1;
+-	optind = 1;
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+index bd12bb3..fe0c945 100644
+--- a/kexec/arch/mips/kexec-mips.c
++++ b/kexec/arch/mips/kexec-mips.c
+@@ -88,23 +88,6 @@ struct arch_options_t arch_options = {
+ 
+ int arch_process_options(int argc, char **argv)
+ {
+-	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
+-		{ 0,                    0, NULL, 0 },
+-	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+-	int opt;
+-
+-	opterr = 0; /* Don't complain about unrecognized options here */
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+-		switch(opt) {
+-		default:
+-			break;
+-		}
+-	}
+-	/* Reset getopt for the next pass; called in other source modules */
+-	opterr = 1;
+-	optind = 1;
+ 	return 0;
+ }
+ 
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index f552d79..effe94c 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -495,23 +495,6 @@ void arch_usage(void)
+ 
+ int arch_process_options(int argc, char **argv)
+ {
+-	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
+-		{ 0, 			0, NULL, 0 },
+-	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+-	int opt;
+-
+-	opterr = 0; /* Don't complain about unrecognized options here */
+-	while((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+-		switch(opt) {
+-		default:
+-			break;
+-		}
+-	}
+-	/* Reset getopt for the next pass; called in other source modules */
+-	opterr = 1;
+-	optind = 1;
+ 	return 0;
+ }
+ 
+-- 
+1.6.3.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
