@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from www.tglx.de ([62.245.132.106])
-	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCq2y-0004vo-FW
-	for kexec@lists.infradead.org; Fri, 14 May 2010 08:15:05 +0000
-Message-ID: <4BED067F.9000902@linutronix.de>
-Date: Fri, 14 May 2010 10:14:55 +0200
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Received: from mga09.intel.com ([134.134.136.24])
+	by bombadil.infradead.org with esmtp (Exim 4.69 #1 (Red Hat Linux))
+	id 1OCv1a-00057I-Gi
+	for kexec@lists.infradead.org; Fri, 14 May 2010 13:33:59 +0000
+Date: Fri, 14 May 2010 06:33:51 -0700
+From: "David N. Lombard" <dnlombar@ichips.intel.com>
+Subject: Re: [RFC PATCH] kexec-tools: Fix option/argument parsing
+Message-ID: <20100514133351.GA27254@nlxcldnl2.cl.intel.com>
+References: <4BEBB4E8.6080000@ozlabs.org> <20100513144549.GB10534@verge.net.au>
+	<5224.1273790243@neuling.org>
 MIME-Version: 1.0
-Subject: Re: kexec powerpc booke
-References: <AANLkTikSH5inonuS6b1n_ZEmQLYoGN0Py0L_RMBEdwJS@mail.gmail.com>
-In-Reply-To: <AANLkTikSH5inonuS6b1n_ZEmQLYoGN0Py0L_RMBEdwJS@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5224.1273790243@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,67 +20,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Michael Neuling <mikey@neuling.org>
+Cc: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
 
-Maxim Uvarov wrote:
-> Sebastian,
-Maxim,
-
-> I saw you did a lot of work for powerpc booke boards. What is the 
-> current status of your patches?
-They worked the last time I checked on v31. Userland is useable however
-you have to tweak the dtb file. Recently I hacked kexec-tools so they can
-suck the dtb from /proc/device-tree while I've been traveling but I had no
-time to test it. Ah and initrd support as well.
-
-> Will they be included to main line?
-I hope so. I fixed what Kumar did not like in the last version. As far as
-I know, he had no time review it.
-
+On Thu, May 13, 2010 at 03:37:23PM -0700, Michael Neuling wrote:
+> In message <20100513144549.GB10534@verge.net.au> you wrote:
+> > On Thu, May 13, 2010 at 06:14:32PM +1000, Matt Evans wrote:
+> > > 
+> > > In playing with kexec-tools I've noticed various problems with the argument
+> > > passing, meaning one has to be careful to use certain forms of arguments
+> > > and present them in a certain order.
+> > > 
+[deletia]
+> > > 
+> > > This behaviour is avoided by using the --opt= forms, but getopt does allow
+> > > both and hence the user can have a fairly frustrating experience.  (Doing
+> > > something unexpected (ex. 3) is more annoying than an error exit (ex. 1)
+> > > in many cases.)
+> > > 
+> > 
+> > This seems reasonable to me.
+> > 
+> > I've compiled tested the code on all architectures except cris (I don't
+> > have my build environment at the moment). I found a minor problem on arm
+> > which I have noted below.
 > 
-> As I understand 8572 board has to work with  your kernel:
+> I suspect it'll break someones kexec scripts, so maybe we take this
+> patch (or something like it) but bump up the release revision to 2.1?
 > 
-> http://git.breakpoint.cc/cgi-bin/gitweb.cgi?p=bigeasy/linux.git;a=shortlog;h=refs/heads/kexec_booke
+How?
 
-Not really. 8572 is SMP and SMP is not supported at the moment. The plan 
-for SMP was
-- pin userland to the boot cpu
-- halt the other cpu in kernel during kexec
-- the what we do right now
-- use the ipic to reset the cpu and bring it back to virgin state.
+Command lines that previously worked will continue to work.
+Command lines that should have worked, but didn't, will now work.
+Command lines that shouldn't have worked will still not work.
 
-That was only the plan I made. Halt the CPU means spin I think so you
-should respect the "reserved region" in dtb.
+The only scripts that may fail are those doing negative testing to check for
+a form that *should* have been allowed--quite clearly, any such negative testing
+was incorrect.
 
-> I tried this kernel and result is hang after "Bye!".  Which kexec-tools 
-> is suitable for your kernel? Can you please throw them to me?
-
-[0] is what I used last time I checked and Simon merged it. So it should
-work. I try to rebase the kernel to v33 and see if it got broken somehow.
-Maybe I should merge console support so it is easier to debug. The plan
-here was to set the uart type & address into the purgatory code from what
-we know from the dtb. However I have no idea how to set the MMU mapping
-for it.
-
-> I posted the patch, which make 83xx classic powerpc work (not booke). 
-> Both kexec and kdump. Now I want to do booke boards workable.
-> That's why I need to know how things are now.  What is already done and 
-> what is needed.
-
-I'm supprised that the UP part is not working. I look at it. I post the 
-proc/dtb-suck-in patches once they are tested. I could push it to my pubic 
-git tree if you want to look at them. SMP support is missing and I haven't
-looked at kdump at all.
-
-[0] 
-http://git.breakpoint.cc/cgi-bin/gitweb.cgi?p=bigeasy/kexec-tools.git;a=shortlog;h=refs/heads/ppc32
-
-Sebastian
+-- 
+David N. Lombard, Intel, Irvine, CA
+I do not speak for Intel Corporation; all comments are strictly my own.
 
 _______________________________________________
 kexec mailing list
