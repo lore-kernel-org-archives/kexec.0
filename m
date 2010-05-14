@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OClFj-0000JE-Tl
-	for kexec@lists.infradead.org; Fri, 14 May 2010 03:07:58 +0000
-Message-ID: <4BECBE89.3020108@ozlabs.org>
-Date: Fri, 14 May 2010 13:07:53 +1000
-From: Matt Evans <matt@ozlabs.org>
-MIME-Version: 1.0
-Subject: [PATCH v2] kexec-tools, ppc64: Fix segfault parsing DR memory property
+	id 1OCm1H-0007pr-AA
+	for kexec@lists.infradead.org; Fri, 14 May 2010 03:57:05 +0000
+From: Michael Neuling <mikey@neuling.org>
+Date: Fri, 14 May 2010 13:57:00 +1000
+Subject: [PATCH 2/2] powerpc, kdump: Fix race in kdump shutdown
+In-Reply-To: <1273559307.55666.645438163872.qpush@pale>
+Message-Id: <20100514035700.90C39CED6C@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,194 +16,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: linuxppc-dev@ozlabs.org, Michael Neuling <mikey@neuling.org>, Simon Horman <horms@verge.net.au>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, Anton Blanchard <anton@samba.org>, jlarrew@linux.vnet.ibm.com
 
-add_dyn_reconf_usable_mem_property() iterates over memory spans
-in /ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory and intersects
-these with usablemem_rgns ranges.  In doing so it used an unchecked
-fixed-size array which will overrun on machines with lots of LMBs.
+When we are crashing, the crashing/primary CPU IPIs the secondaries to
+turn off IRQs, go into real mode and wait in kexec_wait.  While this
+is happening, the primary tears down all the MMU maps.  Unfortunately
+the primary doesn't check to make sure the secondaries have entered
+real mode before doing this.
 
-This patch removes the fixed-sized arrays from
-add_dyn_reconf_usable_mem_property() and add_usable_mem_property(), in lieu of
-malloc/realloc/free.
+On PHYP machines, the secondaries can take a long time shutting down
+the IRQ controller as RTAS calls are need.  These RTAS calls need to
+be serialised which resilts in the secondaries contending in
+lock_rtas() and hence taking a long time to shut down.
 
-Signed-off-by: Matt Evans <matt@ozlabs.org>
+We've hit this on large POWER7 machines, where some secondaries are
+still waiting in lock_rtas(), when the primary tears down the HPTEs.
+
+This patch makes sure all secondaries are in real mode before the
+primary tears down the MMU.  It uses the new kexec_state entry in the
+paca.  It times out if the secondaries don't reach real mode after
+10sec.
+
+Signed-off-by: Michael Neuling <mikey@neuling.org>
 ---
- kexec/arch/ppc64/fs2dt.c |   82 +++++++++++++++++++++++++++++++++++++++-------
- 1 files changed, 70 insertions(+), 12 deletions(-)
 
-diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
-index 762bf04..4400f13 100644
---- a/kexec/arch/ppc64/fs2dt.c
-+++ b/kexec/arch/ppc64/fs2dt.c
-@@ -37,7 +37,7 @@
- #define NAMESPACE 16384		/* max bytes for property names */
- #define INIT_TREE_WORDS 65536	/* Initial num words for prop values */
- #define MEMRESERVE 256		/* max number of reserved memory blocks */
--#define MAX_MEMORY_RANGES 1024
-+#define MEM_RANGE_CHUNK_SZ 2048 /* Initial num dwords for mem ranges */
- 
- static char pathname[MAXPATH], *pathstart;
- static char propnames[NAMESPACE] = { 0 };
-@@ -148,7 +148,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- {
- 	char fname[MAXPATH], *bname;
- 	uint64_t buf[32];
--	uint64_t ranges[2*MAX_MEMORY_RANGES];
-+	uint64_t *ranges;
-+	int ranges_size = MEM_RANGE_CHUNK_SZ;
- 	uint64_t base, end, loc_base, loc_end;
- 	size_t i, rngs_cnt, range;
- 	int rlen = 0;
-@@ -165,6 +166,11 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- 		die("unrecoverable error: error seeking in \"%s\": %s\n",
- 			pathname, strerror(errno));
- 
-+	ranges = malloc(ranges_size*8);
-+	if (!ranges)
-+		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-+		    ranges_size*8);
-+
- 	rlen = 0;
- 	for (i = 0; i < num_of_lmbs; i++) {
- 		if (read(fd, buf, 24) < 0)
-@@ -180,24 +186,57 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- 
- 		rngs_cnt = 0;
- 		for (range = 0; range < usablemem_rgns.size; range++) {
-+			int add = 0;
- 			loc_base = usablemem_rgns.ranges[range].start;
- 			loc_end = usablemem_rgns.ranges[range].end;
- 			if (loc_base >= base && loc_end <= end) {
--				ranges[rlen++] = loc_base;
--				ranges[rlen++] = loc_end - loc_base;
--				rngs_cnt++;
-+				add = 1;
- 			} else if (base < loc_end && end > loc_base) {
- 				if (loc_base < base)
- 					loc_base = base;
- 				if (loc_end > end)
- 					loc_end = end;
-+				add = 1;
-+			}
-+
-+			if (add) {
-+				if (rlen >= (ranges_size-2)) {
-+					ranges_size += MEM_RANGE_CHUNK_SZ;
-+					ranges = realloc(ranges, ranges_size*8);
-+					if (!ranges)
-+						die("unrecoverable error: can't"
-+						    " realloc %d bytes for"
-+						    " ranges.\n",
-+						    ranges_size*8);
-+				}
- 				ranges[rlen++] = loc_base;
- 				ranges[rlen++] = loc_end - loc_base;
- 				rngs_cnt++;
- 			}
- 		}
--		/* Store the count of (base, size) duple */
--		ranges[tmp_indx] = rngs_cnt;
-+		if (rngs_cnt == 0) {
-+			/* We still need to add a counter for every LMB because
-+			 * the kernel parsing code is dumb.  We just have
-+			 * a zero in this case, with no following base/len.
-+			 */
-+			ranges[tmp_indx] = 0;
-+			/* rlen is already just tmp_indx+1 as we didn't write
-+			 * anything.  Check array size here, as we'll probably
-+			 * go on for a while writing zeros now.
-+			 */
-+			if (rlen >= (ranges_size-1)) {
-+				ranges_size += MEM_RANGE_CHUNK_SZ;
-+				ranges = realloc(ranges, ranges_size*8);
-+				if (!ranges)
-+					die("unrecoverable error: can't"
-+					    " realloc %d bytes for"
-+					    " ranges.\n",
-+					    ranges_size*8);
-+			}
-+		} else {
-+			/* Store the count of (base, size) duple */
-+			ranges[tmp_indx] = rngs_cnt;
-+		}
- 	}
- 		
- 	rlen = rlen * sizeof(uint64_t);
-@@ -210,7 +249,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
- 	*dt++ = propnum("linux,drconf-usable-memory");
- 	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
- 		dt++;
--	memcpy(dt, &ranges, rlen);
-+	memcpy(dt, ranges, rlen);
-+	free(ranges);
- 	dt += (rlen + 3)/4;
+ arch/powerpc/kernel/crash.c |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+Index: linux-2.6-ozlabs/arch/powerpc/kernel/crash.c
+===================================================================
+--- linux-2.6-ozlabs.orig/arch/powerpc/kernel/crash.c
++++ linux-2.6-ozlabs/arch/powerpc/kernel/crash.c
+@@ -162,6 +162,33 @@ static void crash_kexec_prepare_cpus(int
+ 	/* Leave the IPI callback set */
  }
  
-@@ -218,7 +258,8 @@ static void add_usable_mem_property(int fd, size_t len)
- {
- 	char fname[MAXPATH], *bname;
- 	uint64_t buf[2];
--	uint64_t ranges[2*MAX_MEMORY_RANGES];
-+	uint64_t *ranges;
-+	int ranges_size = MEM_RANGE_CHUNK_SZ;
- 	uint64_t base, end, loc_base, loc_end;
- 	size_t range;
- 	int rlen = 0;
-@@ -247,17 +288,33 @@ static void add_usable_mem_property(int fd, size_t len)
- 	base = buf[0];
- 	end = base + buf[1];
- 
-+	ranges = malloc(ranges_size*8);
-+	if (!ranges)
-+		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
-+		    ranges_size*8);
++/* wait for all the CPUs to hit real mode but timeout if they don't come in */
++static void crash_kexec_wait_realmode(int cpu)
++{
++	unsigned int msecs;
++	int i;
 +
- 	for (range = 0; range < usablemem_rgns.size; range++) {
-+		int add = 0;
- 		loc_base = usablemem_rgns.ranges[range].start;
- 		loc_end = usablemem_rgns.ranges[range].end;
- 		if (loc_base >= base && loc_end <= end) {
--			ranges[rlen++] = loc_base;
--			ranges[rlen++] = loc_end - loc_base;
-+			add = 1;
- 		} else if (base < loc_end && end > loc_base) {
- 			if (loc_base < base)
- 				loc_base = base;
- 			if (loc_end > end)
- 				loc_end = end;
-+			add = 1;
-+		}
-+		if (add) {
-+			if (rlen >= (ranges_size-2)) {
-+				ranges_size += MEM_RANGE_CHUNK_SZ;
-+				ranges = realloc(ranges, ranges_size*8);
-+				if (!ranges)
-+					die("unrecoverable error: can't realloc"
-+					    "%d bytes for ranges.\n",
-+					    ranges_size*8);
++	/* check the others cpus are now down (via paca kexec_irqs_off == 1) */
++	msecs = 10000;
++	for (i=0; i < NR_CPUS && msecs > 0; i++) {
++		if (i == cpu)
++			continue;
++
++		while (paca[i].kexec_state < KEXEC_STATE_REAL_MODE) {
++			barrier();
++			if (!cpu_possible(i)) {
++				break;
 +			}
- 			ranges[rlen++] = loc_base;
- 			ranges[rlen++] = loc_end - loc_base;
- 		}
-@@ -283,7 +340,8 @@ static void add_usable_mem_property(int fd, size_t len)
- 	*dt++ = propnum("linux,usable-memory");
- 	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
- 		dt++;
--	memcpy(dt,&ranges,rlen);
-+	memcpy(dt, ranges, rlen);
-+	free(ranges);
- 	dt += (rlen + 3)/4;
++			if (!cpu_online(i)) {
++				break;
++			}
++			msecs--;
++			mdelay(1);
++		}
++	}
++	mb();
++}
++
+ /*
+  * This function will be called by secondary cpus or by kexec cpu
+  * if soft-reset is activated to stop some CPUs.
+@@ -419,6 +446,7 @@ void default_machine_crash_shutdown(stru
+ 	crash_kexec_prepare_cpus(crashing_cpu);
+ 	cpu_set(crashing_cpu, cpus_in_crash);
+ 	crash_kexec_stop_spus();
++	crash_kexec_wait_realmode(crashing_cpu);
+ 	if (ppc_md.kexec_cpu_down)
+ 		ppc_md.kexec_cpu_down(1, 0);
  }
- 
--- 
-1.6.3.3
-
 
 _______________________________________________
 kexec mailing list
