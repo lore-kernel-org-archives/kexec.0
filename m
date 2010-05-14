@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OCm1H-0007pn-A2
-	for kexec@lists.infradead.org; Fri, 14 May 2010 03:57:05 +0000
-From: Michael Neuling <mikey@neuling.org>
-Date: Fri, 14 May 2010 13:57:00 +1000
-Subject: [PATCH 1/2] powerpc, kexec: Fix race in kexec shutdown
-In-Reply-To: <1273559307.55666.645438163872.qpush@pale>
-Message-Id: <20100514035700.8B6EDCED6E@localhost.localdomain>
+	id 1OCmIp-0002O8-8C
+	for kexec@lists.infradead.org; Fri, 14 May 2010 04:15:14 +0000
+Message-ID: <4BECCE4D.2030905@ozlabs.org>
+Date: Fri, 14 May 2010 14:15:09 +1000
+From: Matt Evans <matt@ozlabs.org>
+MIME-Version: 1.0
+Subject: [PATCH v2] kexec-tools: Fix option/argument parsing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,241 +16,983 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, Anton Blanchard <anton@samba.org>, jlarrew@linux.vnet.ibm.com
+To: kexec@lists.infradead.org
+Cc: Michael Neuling <mikey@neuling.org>, Simon Horman <horms@verge.net.au>
 
-In kexec_prepare_cpus, the primary CPU IPIs the secondary CPUs to
-kexec_smp_down().  kexec_smp_down() calls kexec_smp_wait() which sets
-the hw_cpu_id() to -1.  The primary does this while leaving IRQs on
-which means the primary can take a timer interrupt which can lead to
-the IPIing one of the secondary CPUs (say, for a scheduler re-balance)
-but since the secondary CPU now has a hw_cpu_id = -1, we IPI CPU
--1... Kaboom!
+Hi,
 
-We are hitting this case regularly on POWER7 machines.  
+v2 changes:
+- Fixed ARM's multiline KEXEC_ALL_OPTIONS #define
+- Removed opterr=0 from main()'s getopts_long() scan, and handle 
+  unknown options in main() (as it now knows about all allowed opts).  
+  Previously it relied on the file_type->load()er parsing & complaining
+  about unknown options; if the loader didn't parse them, no complaint.
 
-There is also a second race, where the primary will tear down the MMU
-mappings before knowing the secondaries have entered real mode.  
+Tested on x86, ppc and compile-tested on my new crisv32-axis-linux-gnu
+crosscompiler :-)
 
-Also, the secondaries are clearing out any pending IPIs before
-guaranteeing that no more will be received.  
 
-This changes kexec_prepare_cpus() so that we turn off IRQs in the
-primary CPU much earlier.  It adds a paca flag to say that the
-secondaries have entered the kexec_smp_down() IPI and turned off IRQs,
-rather than overloading hw_cpu_id with -1.  This new paca flag is
-again used to in indicate when the secondaries has entered real mode.
+Cheers,
 
-It also ensures that all CPUs have their IRQs off before we clear out
-any pending IPI requests (in kexec_cpu_down()) to ensure there are no
-trailing IPIs left unacknowledged.
 
-Signed-off-by: Michael Neuling <mikey@neuling.org>
+Matt
+
+
 ---
+The argument parsing is currently a bit broken as main()'s getopt_long()
+knows nothing about either the architecture-specific options or, even
+more specifically, the architecture-and-loader-specific options.
 
- arch/powerpc/include/asm/kexec.h       |    4 ++
- arch/powerpc/include/asm/paca.h        |    1 
- arch/powerpc/kernel/asm-offsets.c      |    1 
- arch/powerpc/kernel/machine_kexec_64.c |   48 +++++++++++++++++++++++----------
- arch/powerpc/kernel/misc_64.S          |    8 +++--
- arch/powerpc/kernel/paca.c             |    2 +
- 6 files changed, 47 insertions(+), 17 deletions(-)
+This patch introduces new #defines for all architectures,
+KEXEC_ALL_OPTIONS and KEXEC_ALL_OPT_STR.  These contain all possible
+options for a given build, and the getopt_long() passes in main() and
+arch_process_options() will now recognise arch- and loader-specific
+options; these will not be re-ordered in argv[], there is no confusion
+over which argv[] entry is the kernel filename, and using '--opt=foo' and
+'--opt foo' both work.
 
-Index: linux-2.6-ozlabs/arch/powerpc/include/asm/kexec.h
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/include/asm/kexec.h
-+++ linux-2.6-ozlabs/arch/powerpc/include/asm/kexec.h
-@@ -31,6 +31,10 @@
- #define KEXEC_ARCH KEXEC_ARCH_PPC
- #endif
+All architectures have command line options (and #define OPT_BLAHs)
+consolidated into their include/arch/option.h files.  x86_64 builds
+parts of i386/ as well, so now both share a single option.h file (with
+a symlink).
+
+Signed-off-by: Matt Evans <matt@ozlabs.org>
+---
+ kexec/arch/alpha/include/arch/options.h  |    9 +++++
+ kexec/arch/arm/include/arch/options.h    |   29 +++++++++++++++++
+ kexec/arch/arm/kexec-zImage-arm.c        |    3 +-
+ kexec/arch/cris/include/arch/options.h   |   32 ++++++++++++++++--
+ kexec/arch/cris/kexec-elf-cris.c         |    4 +-
+ kexec/arch/i386/include/arch/options.h   |   51 ++++++++++++++++++++++++++++++
+ kexec/arch/i386/kexec-beoboot-x86.c      |    3 +-
+ kexec/arch/i386/kexec-bzImage.c          |    6 +--
+ kexec/arch/i386/kexec-elf-x86.c          |    7 +---
+ kexec/arch/i386/kexec-multiboot-x86.c    |    5 +--
+ kexec/arch/i386/kexec-x86.c              |    4 +-
+ kexec/arch/ia64/include/arch/options.h   |   33 ++++++++++++++++++-
+ kexec/arch/ia64/kexec-elf-ia64.c         |    7 +---
+ kexec/arch/mips/include/arch/options.h   |   27 +++++++++++++++-
+ kexec/arch/mips/kexec-elf-mips.c         |    3 +-
+ kexec/arch/ppc/include/arch/options.h    |   34 ++++++++++++++++++++
+ kexec/arch/ppc/kexec-dol-ppc.c           |    4 +-
+ kexec/arch/ppc/kexec-elf-ppc.c           |    7 +---
+ kexec/arch/ppc/kexec-uImage-ppc.c        |    6 +--
+ kexec/arch/ppc64/include/arch/options.h  |   37 ++++++++++++++++++++-
+ kexec/arch/ppc64/kexec-elf-ppc64.c       |   12 ++++---
+ kexec/arch/ppc64/kexec-ppc64.c           |   12 +++----
+ kexec/arch/s390/include/arch/options.h   |   28 ++++++++++++++++-
+ kexec/arch/s390/kexec-image.c            |    4 +--
+ kexec/arch/sh/include/arch/options.h     |   26 +++++++++++++--
+ kexec/arch/sh/kexec-sh.c                 |    7 +++-
+ kexec/arch/x86_64/include/arch/options.h |   23 +-------------
+ kexec/arch/x86_64/kexec-elf-x86_64.c     |    7 +---
+ kexec/arch/x86_64/kexec-x86_64.c         |    4 +-
+ kexec/kexec.c                            |    6 ++--
+ 30 files changed, 341 insertions(+), 99 deletions(-)
+ mode change 100644 => 120000 kexec/arch/x86_64/include/arch/options.h
+
+diff --git a/kexec/arch/alpha/include/arch/options.h b/kexec/arch/alpha/include/arch/options.h
+index 11557a4..a012c8a 100644
+--- a/kexec/arch/alpha/include/arch/options.h
++++ b/kexec/arch/alpha/include/arch/options.h
+@@ -3,9 +3,18 @@
  
-+#define KEXEC_STATE_NONE 0
-+#define KEXEC_STATE_IRQS_OFF 1
-+#define KEXEC_STATE_REAL_MODE 2
+ #define OPT_ARCH_MAX   (OPT_MAX+0)
+ 
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* See the other architectures for details of these; Alpha has no
++ * loader-specific options yet.
++ */
++#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
 +
- #ifndef __ASSEMBLY__
- #include <linux/cpumask.h>
- #include <asm/reg.h>
-Index: linux-2.6-ozlabs/arch/powerpc/include/asm/paca.h
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/include/asm/paca.h
-+++ linux-2.6-ozlabs/arch/powerpc/include/asm/paca.h
-@@ -82,6 +82,7 @@ struct paca_struct {
- 	s16 hw_cpu_id;			/* Physical processor number */
- 	u8 cpu_start;			/* At startup, processor spins until */
- 					/* this becomes non-zero. */
-+	u8 kexec_state;		/* set when kexec down has irqs off */
- #ifdef CONFIG_PPC_STD_MMU_64
- 	struct slb_shadow *slb_shadow_ptr;
+ #endif /* KEXEC_ARCH_ALPHA_OPTIONS_H */
+diff --git a/kexec/arch/arm/include/arch/options.h b/kexec/arch/arm/include/arch/options.h
+index 248230b..d89c91f 100644
+--- a/kexec/arch/arm/include/arch/options.h
++++ b/kexec/arch/arm/include/arch/options.h
+@@ -3,9 +3,38 @@
  
-Index: linux-2.6-ozlabs/arch/powerpc/kernel/asm-offsets.c
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/kernel/asm-offsets.c
-+++ linux-2.6-ozlabs/arch/powerpc/kernel/asm-offsets.c
-@@ -184,6 +184,7 @@ int main(void)
- #endif /* CONFIG_PPC_STD_MMU_64 */
- 	DEFINE(PACAEMERGSP, offsetof(struct paca_struct, emergency_sp));
- 	DEFINE(PACAHWCPUID, offsetof(struct paca_struct, hw_cpu_id));
-+	DEFINE(PACAKEXECSTATE, offsetof(struct paca_struct, kexec_state));
- 	DEFINE(PACA_STARTPURR, offsetof(struct paca_struct, startpurr));
- 	DEFINE(PACA_STARTSPURR, offsetof(struct paca_struct, startspurr));
- 	DEFINE(PACA_USER_TIME, offsetof(struct paca_struct, user_time));
-Index: linux-2.6-ozlabs/arch/powerpc/kernel/machine_kexec_64.c
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/kernel/machine_kexec_64.c
-+++ linux-2.6-ozlabs/arch/powerpc/kernel/machine_kexec_64.c
-@@ -155,33 +155,38 @@ void kexec_copy_flush(struct kimage *ima
+ #define OPT_ARCH_MAX   (OPT_MAX+0)
  
- #ifdef CONFIG_SMP
- 
--/* FIXME: we should schedule this function to be called on all cpus based
-- * on calling the interrupts, but we would like to call it off irq level
-- * so that the interrupt controller is clean.
-- */
-+static int kexec_all_irq_disabled = 0;
++#define OPT_APPEND	'a'
++#define OPT_RAMDISK	'r'
 +
- static void kexec_smp_down(void *arg)
- {
-+	local_irq_disable();
-+	mb(); /* make sure our irqs are disabled before we say they are */
-+	get_paca()->kexec_state = KEXEC_STATE_IRQS_OFF;
-+	while(kexec_all_irq_disabled == 0)
-+		cpu_relax();
-+	mb(); /* make sure all irqs are disabled before this */
-+	/*
-+	 * Now every CPU has IRQs off, we can clear out any pending
-+	 * IPIs and be sure that no more will come in after this.
-+	 */
- 	if (ppc_md.kexec_cpu_down)
- 		ppc_md.kexec_cpu_down(0, 1);
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
  
--	local_irq_disable();
- 	kexec_smp_wait();
- 	/* NOTREACHED */
- }
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
  
--static void kexec_prepare_cpus(void)
-+static void kexec_prepare_cpus_wait(int wait_state)
- {
- 	int my_cpu, i, notified=-1;
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS				\
++	KEXEC_ARCH_OPTIONS				\
++	{ "command-line",	1, 0, OPT_APPEND },	\
++	{ "append",		1, 0, OPT_APPEND },	\
++	{ "initrd",		1, 0, OPT_RAMDISK },	\
++	{ "ramdisk",		1, 0, OPT_RAMDISK },
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR "a:r:"
++
+ #endif /* KEXEC_ARCH_ARM_OPTIONS_H */
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index 1a446d9..e060f6e 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -219,8 +219,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	off_t ramdisk_length;
+ 	off_t ramdisk_offset;
+ 	int opt;
+-#define OPT_APPEND	'a'
+-#define OPT_RAMDISK	'r'
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "command-line",	1, 0, OPT_APPEND },
+diff --git a/kexec/arch/cris/include/arch/options.h b/kexec/arch/cris/include/arch/options.h
+index bc5f706..1c1a029 100644
+--- a/kexec/arch/cris/include/arch/options.h
++++ b/kexec/arch/cris/include/arch/options.h
+@@ -1,11 +1,35 @@
+-#ifndef KEXEC_ARCH_MIPS_OPTIONS_H
+-#define KEXEC_ARCH_MIPS_OPTIONS_H
++#ifndef KEXEC_ARCH_CRIS_OPTIONS_H
++#define KEXEC_ARCH_CRIS_OPTIONS_H
  
--	smp_call_function(kexec_smp_down, NULL, /* wait */0);
- 	my_cpu = get_cpu();
+-#define OPT_ARCH_MAX   (OPT_MAX+0)
++#define OPT_ARCH_MAX	(OPT_MAX+0)
++#define OPT_APPEND	(OPT_ARCH_MAX+0)
+ 
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
+-#endif /* KEXEC_ARCH_MIPS_OPTIONS_H */
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS \
++	KEXEC_ARCH_OPTIONS \
++	{"append", 1, 0, OPT_APPEND},
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
++#endif /* KEXEC_ARCH_CRIS_OPTIONS_H */
+diff --git a/kexec/arch/cris/kexec-elf-cris.c b/kexec/arch/cris/kexec-elf-cris.c
+index 4b56a20..b48b7b3 100644
+--- a/kexec/arch/cris/kexec-elf-cris.c
++++ b/kexec/arch/cris/kexec-elf-cris.c
+@@ -40,8 +40,6 @@
+ #include <arch/options.h>
+ #include "kexec-cris.h"
+ 
+-#define OPT_APPEND      (OPT_ARCH_MAX+0)
 -
--	/* check the others cpus are now down (via paca hw cpu id == -1) */
-+	/* check the others cpus are now down (via paca kexec_irqs_off == 1) */
- 	for (i=0; i < NR_CPUS; i++) {
- 		if (i == my_cpu)
- 			continue;
+ int elf_cris_probe(const char *buf, off_t len)
+ {
+ 	struct mem_ehdr ehdr;
+@@ -89,8 +87,10 @@ int elf_cris_load(int argc, char **argv, const char *buf, off_t len,
+ 		unsigned int regs[16];
+ 	} cris_regframe;
  
--		while (paca[i].hw_cpu_id != -1) {
-+		while (paca[i].kexec_state < wait_state) {
- 			barrier();
- 			if (!cpu_possible(i)) {
- 				printk("kexec: cpu %d hw_cpu_id %d is not"
-@@ -201,20 +206,35 @@ static void kexec_prepare_cpus(void)
- 			}
- 			if (i != notified) {
- 				printk( "kexec: waiting for cpu %d (physical"
--						" %d) to go down\n",
--						i, paca[i].hw_cpu_id);
-+						" %d) to enter %i state\n",
-+					i, paca[i].hw_cpu_id, wait_state);
- 				notified = i;
- 			}
- 		}
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
++		{"append", 1, 0, OPT_APPEND},
+ 		{ 0, 0, 0, 0 },
+ 	};
+ 
+diff --git a/kexec/arch/i386/include/arch/options.h b/kexec/arch/i386/include/arch/options.h
+index 0695f37..990527c 100644
+--- a/kexec/arch/i386/include/arch/options.h
++++ b/kexec/arch/i386/include/arch/options.h
+@@ -1,6 +1,15 @@
+ #ifndef KEXEC_ARCH_I386_OPTIONS_H
+ #define KEXEC_ARCH_I386_OPTIONS_H
+ 
++/*
++ *************************************************************************
++ * NOTE NOTE NOTE
++ * This file is included for i386 builds *and* x86_64 builds (which build
++ * both x86_64 and i386 loaders).
++ * It contains the combined set of options used by i386 and x86_64.
++ *************************************************************************
++ */
++
+ #define OPT_RESET_VGA      (OPT_MAX+0)
+ #define OPT_SERIAL         (OPT_MAX+1)
+ #define OPT_SERIAL_BAUD    (OPT_MAX+2)
+@@ -10,6 +19,18 @@
+ #define OPT_ELF64_CORE     (OPT_MAX+6)
+ #define OPT_ARCH_MAX       (OPT_MAX+7)
+ 
++#define OPT_APPEND		(OPT_ARCH_MAX+0)
++#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
++#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
++#define OPT_ARGS_ELF    	(OPT_ARCH_MAX+3)
++#define OPT_ARGS_LINUX  	(OPT_ARCH_MAX+4)
++#define OPT_ARGS_NONE   	(OPT_ARCH_MAX+5)
++#define OPT_CL  		(OPT_ARCH_MAX+6)
++#define OPT_MOD 		(OPT_ARCH_MAX+7)
++#define OPT_VGA 		(OPT_ARCH_MAX+8)
++#define OPT_REAL_MODE		(OPT_ARCH_MAX+9)
++
++/* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 	{ "reset-vga",	    0, 0, OPT_RESET_VGA }, \
+@@ -22,5 +43,35 @@
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS \
++	KEXEC_ARCH_OPTIONS \
++	{ "command-line",	1, NULL, OPT_APPEND },		\
++	{ "append",		1, NULL, OPT_APPEND },		\
++	{ "reuse-cmdline",	0, NULL, OPT_REUSE_CMDLINE },	\
++	{ "initrd",		1, NULL, OPT_RAMDISK },		\
++	{ "ramdisk",		1, NULL, OPT_RAMDISK },		\
++	{ "args-elf",		0, NULL, OPT_ARGS_ELF },	\
++	{ "args-linux",		0, NULL, OPT_ARGS_LINUX },	\
++	{ "args-none",		0, NULL, OPT_ARGS_NONE },	\
++	{ "debug",		0, NULL, OPT_DEBUG },		\
++	{ "module",		1, 0, OPT_MOD },		\
++	{ "real-mode",		0, NULL, OPT_REAL_MODE },
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
+ #endif /* KEXEC_ARCH_I386_OPTIONS_H */
+ 
+diff --git a/kexec/arch/i386/kexec-beoboot-x86.c b/kexec/arch/i386/kexec-beoboot-x86.c
+index 27c5a2c..6d459ae 100644
+--- a/kexec/arch/i386/kexec-beoboot-x86.c
++++ b/kexec/arch/i386/kexec-beoboot-x86.c
+@@ -84,7 +84,8 @@ int beoboot_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+ 	int debug, real_mode_entry;
+ 	int opt;
+ 	int result;
+-#define OPT_REAL_MODE	(OPT_ARCH_MAX+0)
++
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "debug",		0, 0, OPT_DEBUG },
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index 53a50b3..ae18689 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -341,10 +341,8 @@ int bzImage_load(int argc, char **argv, const char *buf, off_t len,
+ 	int debug, real_mode_entry;
+ 	int opt;
+ 	int result;
+-#define OPT_APPEND		(OPT_ARCH_MAX+0)
+-#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+-#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+-#define OPT_REAL_MODE		(OPT_ARCH_MAX+3)
++
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "debug",		0, 0, OPT_DEBUG },
+diff --git a/kexec/arch/i386/kexec-elf-x86.c b/kexec/arch/i386/kexec-elf-x86.c
+index 2cb9d11..2e9cf9a 100644
+--- a/kexec/arch/i386/kexec-elf-x86.c
++++ b/kexec/arch/i386/kexec-elf-x86.c
+@@ -99,13 +99,8 @@ int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
+ #define ARG_STYLE_LINUX 1
+ #define ARG_STYLE_NONE  2
+ 	int opt;
+-#define OPT_APPEND		(OPT_ARCH_MAX+0)
+-#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+-#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+-#define OPT_ARGS_ELF    	(OPT_ARCH_MAX+3)
+-#define OPT_ARGS_LINUX  	(OPT_ARCH_MAX+4)
+-#define OPT_ARGS_NONE   	(OPT_ARCH_MAX+5)
+ 
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "command-line",	1, NULL, OPT_APPEND },
+diff --git a/kexec/arch/i386/kexec-multiboot-x86.c b/kexec/arch/i386/kexec-multiboot-x86.c
+index 970de2a..23dab7b 100644
+--- a/kexec/arch/i386/kexec-multiboot-x86.c
++++ b/kexec/arch/i386/kexec-multiboot-x86.c
+@@ -157,10 +157,7 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	uint32_t u;
+ 	int opt;
+ 	int modules, mod_command_line_space;
+-#define OPT_CL  		(OPT_ARCH_MAX+0)
+-#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+-#define OPT_MOD 		(OPT_ARCH_MAX+2)
+-#define OPT_VGA 		(OPT_ARCH_MAX+3)
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "command-line",		1, 0, OPT_CL },
+diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+index d33a14b..5c701aa 100644
+--- a/kexec/arch/i386/kexec-x86.c
++++ b/kexec/arch/i386/kexec-x86.c
+@@ -69,10 +69,10 @@ struct arch_options_t arch_options = {
+ int arch_process_options(int argc, char **argv)
+ {
+ 	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
++		KEXEC_ALL_OPTIONS
+ 		{ 0, 			0, NULL, 0 },
+ 	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
++	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 	int opt;
+ 	unsigned long value;
+ 	char *end;
+diff --git a/kexec/arch/ia64/include/arch/options.h b/kexec/arch/ia64/include/arch/options.h
+index 3053576..e8754ad 100644
+--- a/kexec/arch/ia64/include/arch/options.h
++++ b/kexec/arch/ia64/include/arch/options.h
+@@ -1,11 +1,42 @@
+ #ifndef KEXEC_ARCH_IA64_OPTIONS_H
+ #define KEXEC_ARCH_IA64_OPTIONS_H
+ 
+-#define OPT_ARCH_MAX   (OPT_MAX+0)
++#define OPT_ARCH_MAX	(OPT_MAX+0)
++#define OPT_APPEND	(OPT_ARCH_MAX+0)
++#define OPT_RAMDISK	(OPT_ARCH_MAX+1)
++#define OPT_NOIO	(OPT_ARCH_MAX+2)
++#define OPT_VMM		(OPT_ARCH_MAX+3)
+ 
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS			\
++	KEXEC_ARCH_OPTIONS			\
++	{"command-line", 1, 0, OPT_APPEND},	\
++	{"append",	 1, 0, OPT_APPEND},	\
++	{"initrd",	 1, 0, OPT_RAMDISK},	\
++	{"noio",	 0, 0, OPT_NOIO},	\
++	{"vmm",		 1, 0, OPT_VMM},	\
++
++#define KEXEC_ALL_OPT_STR KEXEC_OPT_STR
++
+ #endif /* KEXEC_ARCH_IA64_OPTIONS_H */
+diff --git a/kexec/arch/ia64/kexec-elf-ia64.c b/kexec/arch/ia64/kexec-elf-ia64.c
+index 3bb5a4d..8da061e 100644
+--- a/kexec/arch/ia64/kexec-elf-ia64.c
++++ b/kexec/arch/ia64/kexec-elf-ia64.c
+@@ -45,11 +45,6 @@
+ #include "crashdump-ia64.h"
+ #include <arch/options.h>
+ 
+-#define OPT_APPEND	(OPT_ARCH_MAX+0)
+-#define OPT_RAMDISK	(OPT_ARCH_MAX+1)
+-#define OPT_NOIO	(OPT_ARCH_MAX+2)
+-#define OPT_VMM		(OPT_ARCH_MAX+3)
+-
+ static const int probe_debug = 0;
+ extern unsigned long saved_efi_memmap_size;
+ 
+@@ -136,6 +131,8 @@ int elf_ia64_load(int argc, char **argv, const char *buf, off_t len,
+ 	int result;
+ 	int opt;
+ 	char *efi_memmap_buf, *boot_param;
++
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{"command-line", 1, 0, OPT_APPEND},
+diff --git a/kexec/arch/mips/include/arch/options.h b/kexec/arch/mips/include/arch/options.h
+index bc5f706..07b4f63 100644
+--- a/kexec/arch/mips/include/arch/options.h
++++ b/kexec/arch/mips/include/arch/options.h
+@@ -1,11 +1,36 @@
+ #ifndef KEXEC_ARCH_MIPS_OPTIONS_H
+ #define KEXEC_ARCH_MIPS_OPTIONS_H
+ 
+-#define OPT_ARCH_MAX   (OPT_MAX+0)
++#define OPT_ARCH_MAX	(OPT_MAX+0)
++#define OPT_APPEND	(OPT_ARCH_MAX+0)
+ 
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS			\
++	KEXEC_ARCH_OPTIONS		       	\
++	{"command-line", 1, 0, OPT_APPEND},	\
++	{"append",	 1, 0, OPT_APPEND},
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
+ #endif /* KEXEC_ARCH_MIPS_OPTIONS_H */
+diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+index ce6bf0c..a9c865e 100644
+--- a/kexec/arch/mips/kexec-elf-mips.c
++++ b/kexec/arch/mips/kexec-elf-mips.c
+@@ -35,7 +35,6 @@ static const int probe_debug = 0;
+ #define BOOTLOADER         "kexec"
+ #define MAX_COMMAND_LINE   256
+ #define UPSZ(X) ((sizeof(X) + 3) & ~3)
+-#define OPT_APPEND	(OPT_ARCH_MAX+0)
+ static char cmdline_buf[256] = "kexec ";
+ 
+ int elf_mips_probe(const char *buf, off_t len)
+@@ -82,6 +81,8 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+ 	unsigned long cmdline_addr;
+ 	size_t i;
+ 	unsigned long bss_start = 0, bss_size = 0;
++
++	/* See options.h if adding any more options. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{"command-line", 1, 0, OPT_APPEND},
+diff --git a/kexec/arch/ppc/include/arch/options.h b/kexec/arch/ppc/include/arch/options.h
+index df14db5..f646ccc 100644
+--- a/kexec/arch/ppc/include/arch/options.h
++++ b/kexec/arch/ppc/include/arch/options.h
+@@ -3,9 +3,43 @@
+ 
+ #define OPT_ARCH_MAX   (OPT_MAX+0)
+ 
++/* All 'local' loader options: */
++#define OPT_APPEND      (OPT_ARCH_MAX+0)
++#define OPT_GAMECUBE    (OPT_ARCH_MAX+1)
++#define OPT_DTB         (OPT_ARCH_MAX+2)
++#define OPT_NODES       (OPT_ARCH_MAX+3)
++
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS \
++	KEXEC_ARCH_OPTIONS \
++	{"command-line", 1, 0, OPT_APPEND},\
++	{"append",	 1, 0, OPT_APPEND},\
++	{"gamecube",	 1, 0, OPT_GAMECUBE},\
++	{"dtb",	    1, 0, OPT_DTB},\
++	{"reuse-node",	   1, 0, OPT_NODES},\
++	{"debug",	 0, 0, OPT_DEBUG},
++
++#define KEXEC_ALL_OPT_STR KEXEC_OPT_STR
++
+ #endif /* KEXEC_ARCH_PPC_OPTIONS_H */
+diff --git a/kexec/arch/ppc/kexec-dol-ppc.c b/kexec/arch/ppc/kexec-dol-ppc.c
+index 83c122a..8de5293 100644
+--- a/kexec/arch/ppc/kexec-dol-ppc.c
++++ b/kexec/arch/ppc/kexec-dol-ppc.c
+@@ -335,8 +335,8 @@ int dol_ppc_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+ 	unsigned long lowest_start;
+ 	int i, j, k;
+ 	int opt;
+-#define OPT_APPEND      (OPT_ARCH_MAX+0)
+ 
++	/* See options.h -- add any more there, too. */
+         static const struct option options[] = {
+                 KEXEC_ARCH_OPTIONS
+                 {"debug",        0, 0, OPT_DEBUG},
+@@ -344,7 +344,7 @@ int dol_ppc_load(int argc, char **argv, const char *buf, off_t UNUSED(len),
+                 {"append",       1, 0, OPT_APPEND},
+                 {0, 0, 0, 0},
+         };
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
++	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+ 
+ 	/*
+ 	 * Parse the command line arguments
+diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+index a54a5d5..cb2c07a 100644
+--- a/kexec/arch/ppc/kexec-elf-ppc.c
++++ b/kexec/arch/ppc/kexec-elf-ppc.c
+@@ -113,10 +113,7 @@ static void gamecube_hack_addresses(struct mem_ehdr *ehdr)
  	}
-+	mb();
-+}
-+
-+static void kexec_prepare_cpus(void)
-+{
-+
-+	smp_call_function(kexec_smp_down, NULL, /* wait */0);
-+	local_irq_disable();
-+	mb(); /* make sure IRQs are disabled before we say they are */
-+	get_paca()->kexec_state = KEXEC_STATE_IRQS_OFF;
-+
-+	kexec_prepare_cpus_wait(KEXEC_STATE_IRQS_OFF);
-+	/* we are sure every CPU has IRQs off at this point */
-+	kexec_all_irq_disabled = 1;
- 
- 	/* after we tell the others to go down */
- 	if (ppc_md.kexec_cpu_down)
- 		ppc_md.kexec_cpu_down(0, 0);
- 
--	put_cpu();
-+	/* Before removing MMU mapings make sure all CPUs have entered real mode */
-+	kexec_prepare_cpus_wait(KEXEC_STATE_REAL_MODE);
- 
--	local_irq_disable();
-+	put_cpu();
  }
  
- #else /* ! SMP */
-Index: linux-2.6-ozlabs/arch/powerpc/kernel/misc_64.S
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/kernel/misc_64.S
-+++ linux-2.6-ozlabs/arch/powerpc/kernel/misc_64.S
-@@ -24,6 +24,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/cputable.h>
- #include <asm/thread_info.h>
-+#include <asm/kexec.h>
+-#define OPT_APPEND	(OPT_ARCH_MAX+0)
+-#define OPT_GAMECUBE	(OPT_ARCH_MAX+1)
+-#define OPT_DTB		(OPT_ARCH_MAX+2)
+-#define OPT_NODES	(OPT_ARCH_MAX+3)
++/* See options.h -- add any more there, too. */
+ static const struct option options[] = {
+ 	KEXEC_ARCH_OPTIONS
+ 	{"command-line", 1, 0, OPT_APPEND},
+@@ -126,7 +123,7 @@ static const struct option options[] = {
+ 	{"reuse-node",     1, 0, OPT_NODES},
+ 	{0, 0, 0, 0},
+ };
+-static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
++static const char short_options[] = KEXEC_ARCH_OPT_STR;
  
- 	.text
+ void elf_ppc_usage(void)
+ {
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index 0a655a3..45cde2f 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -14,9 +14,7 @@
+ #include "fixup_dtb.h"
+ #include <kexec-uImage.h>
  
-@@ -471,6 +472,10 @@ _GLOBAL(kexec_wait)
- 1:	mflr	r5
- 	addi	r5,r5,kexec_flag-1b
+-#define OPT_APPEND      (OPT_ARCH_MAX+0)
+-#define OPT_DTB         (OPT_ARCH_MAX+1)
+-#define OPT_NODES       (OPT_ARCH_MAX+2)
++/* See options.h -- add any more there, too. */
+ static const struct option options[] = {
+ 	KEXEC_ARCH_OPTIONS
+ 	{"command-line",	1, 0, OPT_APPEND},
+@@ -25,7 +23,7 @@ static const struct option options[] = {
+ 	{"reuse-node",	1, 0, OPT_NODES},
+ 	{0, 0, 0, 0},
+ };
+-static const char short_options[] = KEXEC_ARCH_OPT_STR "d";
++static const char short_options[] = KEXEC_ARCH_OPT_STR;
  
-+	li	r4,KEXEC_STATE_REAL_MODE
-+	stb	r4,PACAKEXECSTATE(r13)
-+	SYNC
+ void uImage_ppc_usage(void)
+ {
+diff --git a/kexec/arch/ppc64/include/arch/options.h b/kexec/arch/ppc64/include/arch/options.h
+index 973cd4f..8f11c83 100644
+--- a/kexec/arch/ppc64/include/arch/options.h
++++ b/kexec/arch/ppc64/include/arch/options.h
+@@ -1,13 +1,46 @@
+ #ifndef KEXEC_ARCH_PPC64_OPTIONS_H
+ #define KEXEC_ARCH_PPC64_OPTIONS_H
+ 
+-#define OPT_ARCH_MAX   (OPT_MAX+0)
+-#define OPT_ELF64_CORE  (OPT_MAX+1)
++#define OPT_ELF64_CORE		(OPT_MAX+0)
++#define OPT_ARCH_MAX		(OPT_MAX+1)
+ 
++/* All 'local' loader options: */
++#define OPT_APPEND		(OPT_ARCH_MAX+0)
++#define OPT_RAMDISK		(OPT_ARCH_MAX+1)
++#define OPT_DEVICETREEBLOB	(OPT_ARCH_MAX+2)
++#define OPT_ARGS_IGNORE		(OPT_ARCH_MAX+3)
 +
- 99:	HMT_LOW
- #ifdef CONFIG_KEXEC		/* use no memory without kexec */
- 	lwz	r4,0(r5)
-@@ -494,14 +499,11 @@ kexec_flag:
-  * note: this is a terminal routine, it does not save lr
-  *
-  * get phys id from paca
-- * set paca id to -1 to say we got here
-  * switch to real mode
-  * join other cpus in kexec_wait(phys_id)
-  */
- _GLOBAL(kexec_smp_wait)
- 	lhz	r3,PACAHWCPUID(r13)
--	li	r4,-1
--	sth	r4,PACAHWCPUID(r13)	/* let others know we left */
- 	bl	real_mode
- 	b	.kexec_wait
++/* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 	{ "elf64-core-headers", 0, 0, OPT_ELF64_CORE }, \
  
-Index: linux-2.6-ozlabs/arch/powerpc/kernel/paca.c
-===================================================================
---- linux-2.6-ozlabs.orig/arch/powerpc/kernel/paca.c
-+++ linux-2.6-ozlabs/arch/powerpc/kernel/paca.c
-@@ -18,6 +18,7 @@
- #include <asm/pgtable.h>
- #include <asm/iseries/lpar_map.h>
- #include <asm/iseries/hv_types.h>
-+#include <asm/kexec.h>
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
  
- /* This symbol is provided by the linker - let it fill in the paca
-  * field correctly */
-@@ -97,6 +98,7 @@ void __init initialise_paca(struct paca_
- 	new_paca->kernelbase = (unsigned long) _stext;
- 	new_paca->kernel_msr = MSR_KERNEL;
- 	new_paca->hw_cpu_id = 0xffff;
-+	new_paca->kexec_state = KEXEC_STATE_NONE;
- 	new_paca->__current = &init_task;
- #ifdef CONFIG_PPC_STD_MMU_64
- 	new_paca->slb_shadow_ptr = &slb_shadow[cpu];
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS \
++	KEXEC_ARCH_OPTIONS				\
++	{ "command-line",       1, NULL, OPT_APPEND },	\
++	{ "append",             1, NULL, OPT_APPEND },	\
++	{ "ramdisk",            1, NULL, OPT_RAMDISK },	\
++	{ "initrd",             1, NULL, OPT_RAMDISK },		\
++	{ "devicetreeblob",     1, NULL, OPT_DEVICETREEBLOB },	\
++	{ "args-linux",         0, NULL, OPT_ARGS_IGNORE },
++
++#define KEXEC_ALL_OPT_STR KEXEC_OPT_STR
++
++
+ #endif /* KEXEC_ARCH_PPC64_OPTIONS_H */
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index d65a5d5..ab6da7c 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -93,11 +93,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	uint32_t my_run_at_load;
+ 	unsigned int slave_code[256/sizeof (unsigned int)], master_entry;
+ 
+-#define OPT_APPEND     (OPT_ARCH_MAX+0)
+-#define OPT_RAMDISK     (OPT_ARCH_MAX+1)
+-#define OPT_DEVICETREEBLOB     (OPT_ARCH_MAX+2)
+-#define OPT_ARGS_IGNORE		(OPT_ARCH_MAX+3)
+-
++	/* See options.h -- add any more there, too. */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "command-line",       1, NULL, OPT_APPEND },
+@@ -347,5 +343,11 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 
+ void elf_ppc64_usage(void)
+ {
++	fprintf(stderr, "     --command-line=<Command line> command line to append.\n");
++	fprintf(stderr, "     --append=<Command line> same as --command-line.\n");
++	fprintf(stderr, "     --ramdisk=<filename> Initial RAM disk.\n");
++	fprintf(stderr, "     --initrd=<filename> same as --ramdisk.\n");
++	fprintf(stderr, "     --devicetreeblob=<filename> Specify device tree blob file.\n");
++
+ 	fprintf(stderr, "elf support is still broken\n");
+ }
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index f9dc65b..48ea421 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -735,11 +735,6 @@ int file_types = sizeof(file_type) / sizeof(file_type[0]);
+ 
+ void arch_usage(void)
+ {
+-	fprintf(stderr, "     --command-line=<Command line> command line to append.\n");
+-	fprintf(stderr, "     --append=<Command line> same as --command-line.\n");
+-	fprintf(stderr, "     --ramdisk=<filename> Initial RAM disk.\n");
+-	fprintf(stderr, "     --initrd=<filename> same as --ramdisk.\n");
+-	fprintf(stderr, "     --devicetreeblob=<filename> Specify device tree blob file.\n");
+ 	fprintf(stderr, "     --elf64-core-headers Prepare core headers in ELF64 format\n");
+ }
+ 
+@@ -749,11 +744,14 @@ struct arch_options_t arch_options = {
+ 
+ int arch_process_options(int argc, char **argv)
+ {
++	/* We look for all options so getopt_long doesn't start reordering
++	 * argv[] before file_type[n].load() gets a look in.
++	 */
+ 	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
++		KEXEC_ALL_OPTIONS
+ 		{ 0, 0, NULL, 0 },
+ 	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
++	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 	int opt;
+ 
+ 	opterr = 0; /* Don't complain about unrecognized options here */
+diff --git a/kexec/arch/s390/include/arch/options.h b/kexec/arch/s390/include/arch/options.h
+index 2979617..b57539f 100644
+--- a/kexec/arch/s390/include/arch/options.h
++++ b/kexec/arch/s390/include/arch/options.h
+@@ -1,11 +1,37 @@
+ #ifndef KEXEC_ARCH_S390_OPTIONS_H
+ #define KEXEC_ARCH_S390_OPTIONS_H
+ 
+-#define OPT_ARCH_MAX   (OPT_MAX+0)
++#define OPT_ARCH_MAX	(OPT_MAX+0)
++#define OPT_APPEND	OPT_MAX+0
++#define OPT_RAMDISK	OPT_MAX+1
+ 
++/* Options relevant to the architecture (excluding loader-specific ones),
++ * in this case none:
++ */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS				\
++	KEXEC_ARCH_OPTIONS				\
++	{"command-line",     1, 0, OPT_APPEND},		\
++	{"initrd",	     1, 0, OPT_RAMDISK},
++
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
+ #endif /* KEXEC_ARCH_S390_OPTIONS_H */
+diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+index 13e550d..7ef8e29 100644
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -19,9 +19,7 @@
+ #include <getopt.h>
+ #include "../../kexec.h"
+ #include "kexec-s390.h"
+-
+-#define OPT_APPEND     OPT_MAX+0
+-#define OPT_RAMDISK    OPT_MAX+1
++#include <arch/options.h>
+ 
+ int
+ image_s390_load(int argc, char **argv, const char *kernel_buf,
+diff --git a/kexec/arch/sh/include/arch/options.h b/kexec/arch/sh/include/arch/options.h
+index e02960d..4bdd6a3 100644
+--- a/kexec/arch/sh/include/arch/options.h
++++ b/kexec/arch/sh/include/arch/options.h
+@@ -7,16 +7,36 @@
+ #define OPT_NBSD_HOWTO   (OPT_ARCH_MAX+3)
+ #define OPT_NBSD_MROOT   (OPT_ARCH_MAX+4)
+ 
+-
++/* Options relevant to the architecture (excluding loader-specific ones): */
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+         {"command-line",   1, 0, OPT_APPEND}, \
+         {"append",         1, 0, OPT_APPEND}, \
+         {"empty-zero",     1, 0, OPT_APPEND}, \
+         {"howto",          1, 0, OPT_NBSD_HOWTO}, \
+-        {"miniroot",       1, 0, OPT_NBSD_MROOT}, \
+-
++        {"miniroot",       1, 0, OPT_NBSD_MROOT},
++/* These options seem to be loader-specific rather than cris-specific, so
++ * ought to be moved to KEXEC_ALL_OPTIONS below and parsed in the relevant 
++ * loader, e.g. kexec-netbsd-sh.c
++ */
+ 
+ #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+ 
++/* The following two #defines list ALL of the options added by all of the
++ * architecture's loaders.
++ * o	main() uses this complete list to scan for its options, ignoring
++ *	arch-specific/loader-specific ones.
++ * o	Then, arch_process_options() uses this complete list to scan for its
++ *	options, ignoring general/loader-specific ones.
++ * o	Then, the file_type[n].load re-scans for options, using
++ *	KEXEC_ARCH_OPTIONS plus its loader-specific options subset.
++ *	Any unrecognised options cause an error here.
++ *
++ * This is done so that main()'s/arch_process_options()'s getopt_long() calls
++ * don't choose a kernel filename from random arguments to options they don't
++ * recognise -- as they now recognise (if not act upon) all possible options.
++ */
++#define KEXEC_ALL_OPTIONS KEXEC_ARCH_OPTIONS
++#define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
++
+ #endif /* KEXEC_ARCH_SH_OPTIONS_H */
+diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+index 1ad3d38..4b21ee8 100644
+--- a/kexec/arch/sh/kexec-sh.c
++++ b/kexec/arch/sh/kexec-sh.c
+@@ -97,8 +97,13 @@ void arch_usage(void)
+ 
+ int arch_process_options(int argc, char **argv)
+ {
++	/* The common options amongst loaders (e.g. --append) should be read
++	 * here, and the loader-specific options (e.g. NetBSD stuff) should
++	 * then be re-parsed in the loader.
++	 * (e.g. in kexec-netbsd-sh.c, for example.)
++	 */
+ 	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
++		KEXEC_ALL_OPTIONS
+ 		{ 0, 			0, NULL, 0 },
+ 	};
+ 	static const char short_options[] = KEXEC_ARCH_OPT_STR;
+diff --git a/kexec/arch/x86_64/include/arch/options.h b/kexec/arch/x86_64/include/arch/options.h
+deleted file mode 100644
+index 75065b9..0000000
+--- a/kexec/arch/x86_64/include/arch/options.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-#ifndef KEXEC_ARCH_X86_64_OPTIONS_H
+-#define KEXEC_ARCH_X86_64_OPTIONS_H
+-
+-#define OPT_RESET_VGA      (OPT_MAX+0)
+-#define OPT_SERIAL         (OPT_MAX+1)
+-#define OPT_SERIAL_BAUD    (OPT_MAX+2)
+-#define OPT_CONSOLE_VGA    (OPT_MAX+3)
+-#define OPT_CONSOLE_SERIAL (OPT_MAX+4)
+-#define OPT_ARCH_MAX       (OPT_MAX+5)
+-
+-#define KEXEC_ARCH_OPTIONS \
+-	KEXEC_OPTIONS \
+-	{ "reset-vga",	    0, 0, OPT_RESET_VGA }, \
+-	{ "serial",	    1, 0, OPT_SERIAL }, \
+-	{ "serial-baud",    1, 0, OPT_SERIAL_BAUD }, \
+-	{ "console-vga",    0, 0, OPT_CONSOLE_VGA }, \
+-	{ "console-serial", 0, 0, OPT_CONSOLE_SERIAL }, \
+-
+-#define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
+-
+-#endif /* KEXEC_ARCH_X86_64_OPTIONS_H */
+-
+diff --git a/kexec/arch/x86_64/include/arch/options.h b/kexec/arch/x86_64/include/arch/options.h
+new file mode 120000
+index 0000000..047b0f9
+--- /dev/null
++++ b/kexec/arch/x86_64/include/arch/options.h
+@@ -0,0 +1 @@
++../../../i386/include/arch/options.h
+\ No newline at end of file
+diff --git a/kexec/arch/x86_64/kexec-elf-x86_64.c b/kexec/arch/x86_64/kexec-elf-x86_64.c
+index 20c7d77..a8204bc 100644
+--- a/kexec/arch/x86_64/kexec-elf-x86_64.c
++++ b/kexec/arch/x86_64/kexec-elf-x86_64.c
+@@ -98,13 +98,8 @@ int elf_x86_64_load(int argc, char **argv, const char *buf, off_t len,
+ #define ARG_STYLE_LINUX 1
+ #define ARG_STYLE_NONE  2
+ 	int opt;
+-#define OPT_APPEND		(OPT_ARCH_MAX+0)
+-#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+1)
+-#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
+-#define OPT_ARGS_ELF		(OPT_ARCH_MAX+3)
+-#define OPT_ARGS_LINUX		(OPT_ARCH_MAX+4)
+-#define OPT_ARGS_NONE		(OPT_ARCH_MAX+5)
+ 
++	/* See options.h and add any new options there too! */
+ 	static const struct option options[] = {
+ 		KEXEC_ARCH_OPTIONS
+ 		{ "command-line",	1, NULL, OPT_APPEND },
+diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+index 49bfd36..a4f2d10 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.c
++++ b/kexec/arch/x86_64/kexec-x86_64.c
+@@ -74,10 +74,10 @@ static struct {
+ int arch_process_options(int argc, char **argv)
+ {
+ 	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
++		KEXEC_ALL_OPTIONS
+ 		{ 0, 			0, NULL, 0 },
+ 	};
+-	static const char short_options[] = KEXEC_ARCH_OPT_STR;
++	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 	int opt;
+ 	unsigned long value;
+ 	char *end;
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index e9a13a7..2d8258f 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1062,17 +1062,17 @@ int main(int argc, char *argv[])
+ 	int result = 0;
+ 	int fileind;
+ 	static const struct option options[] = {
+-		KEXEC_ARCH_OPTIONS
++		KEXEC_ALL_OPTIONS
+ 		{ 0, 0, 0, 0},
+ 	};
+-	static const char short_options[] = KEXEC_OPT_STR;
++	static const char short_options[] = KEXEC_ALL_OPT_STR;
+ 
+ 	arch_init();
+ 
+-	opterr = 0; /* Don't complain about unrecognized options here */
+ 	while ((opt = getopt_long(argc, argv, short_options,
+ 				  options, 0)) != -1) {
+ 		switch(opt) {
++		case '?':
+ 		case OPT_HELP:
+ 			usage();
+ 			return 0;
+-- 
+1.6.3.3
+
 
 _______________________________________________
 kexec mailing list
