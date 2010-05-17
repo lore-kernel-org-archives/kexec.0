@@ -1,17 +1,15 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from chamillionaire.breakpoint.cc ([85.10.199.196])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from ozlabs.org ([203.10.76.45])
 	by bombadil.infradead.org with esmtps (Exim 4.69 #1 (Red Hat Linux))
-	id 1OE57h-0005n9-Cd
-	for kexec@lists.infradead.org; Mon, 17 May 2010 18:33:06 +0000
-Date: Mon, 17 May 2010 20:32:59 +0200
-From: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Subject: Re: kexec powerpc booke
-Message-ID: <20100517183259.GA30249@Chamillionaire.breakpoint.cc>
-References: <AANLkTikSH5inonuS6b1n_ZEmQLYoGN0Py0L_RMBEdwJS@mail.gmail.com>
-	<4BED067F.9000902@linutronix.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4BED067F.9000902@linutronix.de>
+	id 1OE9le-0004OV-Uy
+	for kexec@lists.infradead.org; Mon, 17 May 2010 23:30:41 +0000
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: [PATCH v2] kexec-tools,
+	ppc64: Fix segfault parsing DR memory property
+In-reply-to: <4BECBE89.3020108@ozlabs.org>
+References: <4BECBE89.3020108@ozlabs.org>
+Date: Tue, 18 May 2010 09:30:32 +1000
+Message-ID: <23148.1274139032@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,51 +18,216 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
-
-* Sebastian Andrzej Siewior | 2010-05-14 10:14:55 [+0200]:
-
->Maxim Uvarov wrote:
->>Sebastian,
->Maxim,
->
->>I tried this kernel and result is hang after "Bye!".  Which
->>kexec-tools is suitable for your kernel? Can you please throw them
->>to me?
-Please look into branch kexec_v6_v33-rc7 or kexec_v6 at [0] gitweb [1].
-The problem with v5 was that it never hit the mailing list as it was my
-internal testing which did not work as expected. v6 got published as
-v4 on the mailing list. Sorry for that.
-
->>I posted the patch, which make 83xx classic powerpc work (not
->>booke). Both kexec and kdump. Now I want to do booke boards
->>workable.
->>That's why I need to know how things are now.  What is already done
->>and what is needed.
-
-I had a brief look at it. It looks like you pulled the dtb scanning tree
-from ppc64. Could that be?
-At [2] in ppc32 branch is my current statenincluding ramdisk support.
-ppc32_hacking has dtb suckin code from /proc with libfdt support. The
-whole think basically works however later during the init of the serial
-line the box hangs. I haven't figured what is going wrong, maybe the
-order is important. The interrupt numbers mach on the other hand :)
-
-I pulled in libfdt because I gives nicer dtb handling than what ppc64
-has. I did not have much more time I could spent on it so the auto-dtb
-code is not complete.
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: Matt Evans <matt@ozlabs.org>
+Cc: linuxppc-dev@ozlabs.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
 
-[0] git://git.breakpoint.cc/bigeasy/linux.git
-[1] http://git.breakpoint.cc/cgi-bin/gitweb.cgi?p=bigeasy/linux.git;a=shortlog;h=refs/heads/kexec_v6
-[2] http://git.breakpoint.cc/cgi-bin/gitweb.cgi?p=bigeasy/kexec-tools.git
 
-Sebastian
+In message <4BECBE89.3020108@ozlabs.org> you wrote:
+> add_dyn_reconf_usable_mem_property() iterates over memory spans
+> in /ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory and intersects
+> these with usablemem_rgns ranges.  In doing so it used an unchecked
+> fixed-size array which will overrun on machines with lots of LMBs.
+> 
+> This patch removes the fixed-sized arrays from
+> add_dyn_reconf_usable_mem_property() and add_usable_mem_property(), in lieu o
+f
+> malloc/realloc/free.
+> 
+> Signed-off-by: Matt Evans <matt@ozlabs.org>
+
+So this works our large P7 machine unlike the last one.
+
+Acked-by: Michael Neuling <mikey@neuling.org>
+
+
+> ---
+>  kexec/arch/ppc64/fs2dt.c |   82 +++++++++++++++++++++++++++++++++++++++-----
+--
+>  1 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kexec/arch/ppc64/fs2dt.c b/kexec/arch/ppc64/fs2dt.c
+> index 762bf04..4400f13 100644
+> --- a/kexec/arch/ppc64/fs2dt.c
+> +++ b/kexec/arch/ppc64/fs2dt.c
+> @@ -37,7 +37,7 @@
+>  #define NAMESPACE 16384		/* max bytes for property names */
+>  #define INIT_TREE_WORDS 65536	/* Initial num words for prop values */
+>  #define MEMRESERVE 256		/* max number of reserved memory blocks
+ */
+> -#define MAX_MEMORY_RANGES 1024
+> +#define MEM_RANGE_CHUNK_SZ 2048 /* Initial num dwords for mem ranges */
+>  
+>  static char pathname[MAXPATH], *pathstart;
+>  static char propnames[NAMESPACE] = { 0 };
+> @@ -148,7 +148,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
+>  {
+>  	char fname[MAXPATH], *bname;
+>  	uint64_t buf[32];
+> -	uint64_t ranges[2*MAX_MEMORY_RANGES];
+> +	uint64_t *ranges;
+> +	int ranges_size = MEM_RANGE_CHUNK_SZ;
+>  	uint64_t base, end, loc_base, loc_end;
+>  	size_t i, rngs_cnt, range;
+>  	int rlen = 0;
+> @@ -165,6 +166,11 @@ static void add_dyn_reconf_usable_mem_property(int fd)
+>  		die("unrecoverable error: error seeking in \"%s\": %s\n",
+>  			pathname, strerror(errno));
+>  
+> +	ranges = malloc(ranges_size*8);
+> +	if (!ranges)
+> +		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
+> +		    ranges_size*8);
+> +
+>  	rlen = 0;
+>  	for (i = 0; i < num_of_lmbs; i++) {
+>  		if (read(fd, buf, 24) < 0)
+> @@ -180,24 +186,57 @@ static void add_dyn_reconf_usable_mem_property(int fd)
+>  
+>  		rngs_cnt = 0;
+>  		for (range = 0; range < usablemem_rgns.size; range++) {
+> +			int add = 0;
+>  			loc_base = usablemem_rgns.ranges[range].start;
+>  			loc_end = usablemem_rgns.ranges[range].end;
+>  			if (loc_base >= base && loc_end <= end) {
+> -				ranges[rlen++] = loc_base;
+> -				ranges[rlen++] = loc_end - loc_base;
+> -				rngs_cnt++;
+> +				add = 1;
+>  			} else if (base < loc_end && end > loc_base) {
+>  				if (loc_base < base)
+>  					loc_base = base;
+>  				if (loc_end > end)
+>  					loc_end = end;
+> +				add = 1;
+> +			}
+> +
+> +			if (add) {
+> +				if (rlen >= (ranges_size-2)) {
+> +					ranges_size += MEM_RANGE_CHUNK_SZ;
+> +					ranges = realloc(ranges, ranges_size*8)
+;
+> +					if (!ranges)
+> +						die("unrecoverable error: can't
+"
+> +						    " realloc %d bytes for"
+> +						    " ranges.\n",
+> +						    ranges_size*8);
+> +				}
+>  				ranges[rlen++] = loc_base;
+>  				ranges[rlen++] = loc_end - loc_base;
+>  				rngs_cnt++;
+>  			}
+>  		}
+> -		/* Store the count of (base, size) duple */
+> -		ranges[tmp_indx] = rngs_cnt;
+> +		if (rngs_cnt == 0) {
+> +			/* We still need to add a counter for every LMB because
+> +			 * the kernel parsing code is dumb.  We just have
+> +			 * a zero in this case, with no following base/len.
+> +			 */
+> +			ranges[tmp_indx] = 0;
+> +			/* rlen is already just tmp_indx+1 as we didn't write
+> +			 * anything.  Check array size here, as we'll probably
+> +			 * go on for a while writing zeros now.
+> +			 */
+> +			if (rlen >= (ranges_size-1)) {
+> +				ranges_size += MEM_RANGE_CHUNK_SZ;
+> +				ranges = realloc(ranges, ranges_size*8);
+> +				if (!ranges)
+> +					die("unrecoverable error: can't"
+> +					    " realloc %d bytes for"
+> +					    " ranges.\n",
+> +					    ranges_size*8);
+> +			}
+> +		} else {
+> +			/* Store the count of (base, size) duple */
+> +			ranges[tmp_indx] = rngs_cnt;
+> +		}
+>  	}
+>  		
+>  	rlen = rlen * sizeof(uint64_t);
+> @@ -210,7 +249,8 @@ static void add_dyn_reconf_usable_mem_property(int fd)
+>  	*dt++ = propnum("linux,drconf-usable-memory");
+>  	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
+>  		dt++;
+> -	memcpy(dt, &ranges, rlen);
+> +	memcpy(dt, ranges, rlen);
+> +	free(ranges);
+>  	dt += (rlen + 3)/4;
+>  }
+>  
+> @@ -218,7 +258,8 @@ static void add_usable_mem_property(int fd, size_t len)
+>  {
+>  	char fname[MAXPATH], *bname;
+>  	uint64_t buf[2];
+> -	uint64_t ranges[2*MAX_MEMORY_RANGES];
+> +	uint64_t *ranges;
+> +	int ranges_size = MEM_RANGE_CHUNK_SZ;
+>  	uint64_t base, end, loc_base, loc_end;
+>  	size_t range;
+>  	int rlen = 0;
+> @@ -247,17 +288,33 @@ static void add_usable_mem_property(int fd, size_t len)
+>  	base = buf[0];
+>  	end = base + buf[1];
+>  
+> +	ranges = malloc(ranges_size*8);
+> +	if (!ranges)
+> +		die("unrecoverable error: can't alloc %d bytes for ranges.\n",
+> +		    ranges_size*8);
+> +
+>  	for (range = 0; range < usablemem_rgns.size; range++) {
+> +		int add = 0;
+>  		loc_base = usablemem_rgns.ranges[range].start;
+>  		loc_end = usablemem_rgns.ranges[range].end;
+>  		if (loc_base >= base && loc_end <= end) {
+> -			ranges[rlen++] = loc_base;
+> -			ranges[rlen++] = loc_end - loc_base;
+> +			add = 1;
+>  		} else if (base < loc_end && end > loc_base) {
+>  			if (loc_base < base)
+>  				loc_base = base;
+>  			if (loc_end > end)
+>  				loc_end = end;
+> +			add = 1;
+> +		}
+> +		if (add) {
+> +			if (rlen >= (ranges_size-2)) {
+> +				ranges_size += MEM_RANGE_CHUNK_SZ;
+> +				ranges = realloc(ranges, ranges_size*8);
+> +				if (!ranges)
+> +					die("unrecoverable error: can't realloc
+"
+> +					    "%d bytes for ranges.\n",
+> +					    ranges_size*8);
+> +			}
+>  			ranges[rlen++] = loc_base;
+>  			ranges[rlen++] = loc_end - loc_base;
+>  		}
+> @@ -283,7 +340,8 @@ static void add_usable_mem_property(int fd, size_t len)
+>  	*dt++ = propnum("linux,usable-memory");
+>  	if ((rlen >= 8) && ((unsigned long)dt & 0x4))
+>  		dt++;
+> -	memcpy(dt,&ranges,rlen);
+> +	memcpy(dt, ranges, rlen);
+> +	free(ranges);
+>  	dt += (rlen + 3)/4;
+>  }
+>  
+> -- 
+> 1.6.3.3
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
