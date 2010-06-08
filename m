@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pv0-f177.google.com ([74.125.83.177])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OLuWB-0006YE-HI
-	for kexec@lists.infradead.org; Tue, 08 Jun 2010 08:50:44 +0000
-Received: by pvg11 with SMTP id 11so1468229pvg.36
-	for <kexec@lists.infradead.org>; Tue, 08 Jun 2010 01:50:42 -0700 (PDT)
-Date: Tue, 8 Jun 2010 16:54:40 +0800
-From: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH] Fix Oops in crash_shrink_memory
-Message-ID: <20100608085440.GC7110@cr0.nay.redhat.com>
-References: <1275895711.4365.18.camel@pavan.naregundi>
-	<1275980857.2583.15.camel@pavan.naregundi>
-	<20100608075959.GB7110@cr0.nay.redhat.com>
-	<1275986405.5015.13.camel@pavan.naregundi>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1275986405.5015.13.camel@pavan.naregundi>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OM12k-00021T-6B
+	for kexec@lists.infradead.org; Tue, 08 Jun 2010 15:48:47 +0000
+Subject: Re: [PATCH] kexec, ppc64:  Wait for online/possible CPUs only.
+From: Michael Ellerman <michael@ellerman.id.au>
+In-Reply-To: <4C0DF36A.3080401@ozlabs.org>
+References: <4C0DF36A.3080401@ozlabs.org>
+Date: Wed, 09 Jun 2010 01:48:40 +1000
+Message-ID: <1276012120.32509.26.camel@concordia>
+Mime-Version: 1.0
+Reply-To: michael@ellerman.id.au
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,102 +19,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============2094120541=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavan Naregundi <pavan@linux.vnet.ibm.com>
-Cc: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com
+To: Matt Evans <matt@ozlabs.org>
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>
 
-T24gVHVlLCBKdW4gMDgsIDIwMTAgYXQgMDI6MTA6MDVQTSArMDUzMCwgUGF2YW4gTmFyZWd1bmRp
-IHdyb3RlOgo+T24gVHVlLCAyMDEwLTA2LTA4IGF0IDE1OjU5ICswODAwLCBBbcOpcmljbyBXYW5n
-IHdyb3RlOgo+PiBPbiBUdWUsIEp1biAwOCwgMjAxMCBhdCAxMjozNzozN1BNICswNTMwLCBQYXZh
-biBOYXJlZ3VuZGkgd3JvdGU6Cj4+ID5BZGRpbmcgQ0Mncy4uCj4+ID4KPj4gPgo+PiA+T24gTW9u
-LCAyMDEwLTA2LTA3IGF0IDEyOjU4ICswNTMwLCBQYXZhbiBOYXJlZ3VuZGkgd3JvdGU6Cj4+ID4+
-IEhpIEV2ZXJ5b25lLAo+PiA+PiAKPj4gPj4gUGxlYXNlIGFkZCBtZSB0byBDQyBpbiB5b3VyIHJl
-cGx5Li4KPj4gPj4gCj4+ID4+IFdoZW4gY3Jhc2hrZXJuZWwgaXMgbm90IGVuYWJsZWQsICJlY2hv
-IDAgPiAvc3lzL2tlcm5lbC9rZXhlY19jcmFzaF9zaXplIgo+PiA+PiB3aWxsIGdlbmVyYXRlIE9P
-UFMgbWVzc2FnZSBpbiB0aGUga2VybmVsLiBCZWxvdyBpcyB0aGUgT09QUyBtZXNzYWdlIGFuZAo+
-PiA+PiBvdGhlciBkZXRhaWxzLAo+PiA+PiAKPj4gPj4gIyBjYXQgL3Byb2MvY21kbGluZSAKPj4g
-Pj4gcm8gIExBTkc9ZW5fVVMuVVRGLTggU1lTRk9OVD1sYXRhcmN5cmhlYi1zdW4xNiBLRVlUQUJM
-RT11cyBjb25zb2xlPWh2YzAKPj4gPj4gcmhnYiByb290PVVVSUQ9ZWFmZDk4NzQtMDEwYy00NmY5
-LWEwYzYtZWE4ZGI3YzYxYWMzCj4+ID4+ICMgdW5hbWUgLWEKPj4gPj4gTGludXggWFhYWFhYWFgg
-Mi42LjM1LXJjMSAjMSBTTVAgTW9uIEp1biA3IDE4OjA0OjUzIElTVCAyMDEwIHBwYzY0IHBwYzY0
-Cj4+ID4+IHBwYzY0IEdOVS9MaW51eAo+PiA+PiAjIGNkIC9zeXMva2VybmVsLwo+PiA+PiAjIGxz
-Cj4+ID4+IGRlYnVnICAgICAgICAgICAgICAga2V4ZWNfbG9hZGVkICBwcm9maWxpbmcgICAgICB1
-ZXZlbnRfc2VxbnVtCj4+ID4+IGtleGVjX2NyYXNoX2xvYWRlZCAgbW0gICAgICAgICAgICBzZWN1
-cml0eSAgICAgICB2bWNvcmVpbmZvCj4+ID4+IGtleGVjX2NyYXNoX3NpemUgICAgbm90ZXMgICAg
-ICAgICB1ZXZlbnRfaGVscGVyCj4+ID4+ICMgY2F0IGtleGVjX2NyYXNoX2xvYWRlZAo+PiA+PiAw
-Cj4+ID4+ICMgY2F0IGtleGVjX2xvYWRlZAo+PiA+PiAwCj4+ID4+ICMgY2F0IGtleGVjX2NyYXNo
-X3NpemUKPj4gPj4gMQo+PiA+PiAjIGVjaG8gMCA+IGtleGVjX2NyYXNoX3NpemUKPj4gPj4gVW5h
-YmxlIHRvIGhhbmRsZSBrZXJuZWwgcGFnaW5nIHJlcXVlc3QgZm9yIGRhdGEgYXQgYWRkcmVzcyAw
-eDAwMDAwMDMwCj4+ID4+IEZhdWx0aW5nIGluc3RydWN0aW9uIGFkZHJlc3M6IDB4YzAwMDAwMDAw
-MDA5MzBiNAo+PiA+PiBPb3BzOiBLZXJuZWwgYWNjZXNzIG9mIGJhZCBhcmVhLCBzaWc6IDExIFsj
-MV0KPj4gPj4gU01QIE5SX0NQVVM9MTAyNCBOVU1BIHBTZXJpZXMKPj4gPj4gbGFzdCBzeXNmcyBm
-aWxlOiAvc3lzL2tlcm5lbC9rZXhlY19jcmFzaF9zaXplCj4+ID4+IE1vZHVsZXMgbGlua2VkIGlu
-OiBzdW5ycGMgaXB2NiBleHQzIGpiZCBkbV9taXJyb3IgZG1fcmVnaW9uX2hhc2ggZG1fbG9nCj4+
-ID4+IGRtX211bHRpcGF0aCBkbV9tb2QgdWlucHV0IHNnIGVoZWEgc3JfbW9kIGlibXZldGggY2Ry
-b20gZXh0NCBqYmQyCj4+ID4+IG1iY2FjaGUgc2RfbW9kIGNyY190MTBkaWYgaWJtdnNjc2ljIHNj
-c2lfdHJhbnNwb3J0X3NycCBzY3NpX3RndCBbbGFzdAo+PiA+PiB1bmxvYWRlZDogc2NzaV93YWl0
-X3NjYW5dCj4+ID4+IE5JUDogYzAwMDAwMDAwMDA5MzBiNCBMUjogYzAwMDAwMDAwMDA5MzBhYyBD
-VFI6IGMwMDAwMDAwMDAwYjdjZTAKPj4gPj4gUkVHUzogYzAwMDAwMDBiNzgwMzc1MCBUUkFQOiAw
-MzAwICAgTm90IHRhaW50ZWQgICgyLjYuMzUtcmMxKQo+PiA+PiBNU1I6IDgwMDAwMDAwMDAwMDkw
-MzIgPEVFLE1FLElSLERSPiAgQ1I6IDI4MjQyNDgyICBYRVI6IDIwMDAwMDAwCj4+ID4+IERBUjog
-MDAwMDAwMDAwMDAwMDAzMCwgRFNJU1I6IDAwMDAwMDAwNDAwMDAwMDAKPj4gPj4gVEFTSyA9IGMw
-MDAwMDAwYjljYzNkYzBbMTM4MV0gJ2Jhc2gnIFRIUkVBRDogYzAwMDAwMDBiNzgwMDAwMCBDUFU6
-IDEyCj4+ID4+IEdQUjAwOiBjMDAwMDAwMDAwMDkzMGFjIGMwMDAwMDAwYjc4MDM5ZDAgYzAwMDAw
-MDAwMGU4ODVhOAo+PiA+PiBjMDAwMDAwMDAwZjQyOTUwIAo+PiA+PiBHUFIwNDogYzAwMDAwMDBi
-NzgwM2FmMCAwMDAwMDAwMDAwMDAwMDA4IDAwMDAwMDAwMDAwMDAwMDIKPj4gPj4gYzAwMDAwMDAw
-MDVjNjQzOCAKPj4gPj4gR1BSMDg6IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDA4MDAwMDAwYyAw
-MDAwMDAwMDAwMDAwMDAwCj4+ID4+IDAwMDAwMDAwMDAwMDAwMDAgCj4+ID4+IEdQUjEyOiAwMDAw
-MDAwMDQwMjQyNDQ4IGMwMDAwMDAwMDc0NDFlMDAgMDAwMDAwMDAxMDBmNjIxMAo+PiA+PiAwMDAw
-MDAwMDAwMDAwMDAwIAo+PiA+PiBHUFIxNjogMDAwMDAwMDAxMDBmNGEzOCAwMDAwMDAwMDEwMGNm
-Yjk4IDAwMDAwMDAwMTAwZjRiZGMKPj4gPj4gMDAwMDAwMDAxMDBmNGI0YyAKPj4gPj4gR1BSMjA6
-IDAwMDAwMDAwMTAzZjRkZTggMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDAwCj4+ID4+
-IDAwMDAwMDAwMTAwZjAwMDAgCj4+ID4+IEdQUjI0OiBjMDAwMDAwMDAwNWM2NWMwIDAwMDAwMDAw
-MDAwMDAwMDAgYzAwMDAwMDAwMGRhODNlMAo+PiA+PiBjMDAwMDAwMGJjNjdmNzgwIAo+PiA+PiBH
-UFIyODogYzAwMDAwMDBiYzY4NGFlMCBjMDAwMDAwMDAwZjQyOTUwIGMwMDAwMDAwMDBlMWUzZjgK
-Pj4gPj4gYzAwMDAwMDAwMGRhODQwOCAKPj4gPj4gTklQIFtjMDAwMDAwMDAwMDkzMGI0XSAucmVs
-ZWFzZV9yZXNvdXJjZSsweDM0LzB4ZTAKPj4gPj4gTFIgW2MwMDAwMDAwMDAwOTMwYWNdIC5yZWxl
-YXNlX3Jlc291cmNlKzB4MmMvMHhlMAo+PiA+PiBDYWxsIFRyYWNlOgo+PiA+PiBbYzAwMDAwMDBi
-NzgwMzlkMF0gW2MwMDAwMDAwMDAwOTMwYWNdIC5yZWxlYXNlX3Jlc291cmNlKzB4MmMvMHhlMAo+
-PiA+PiAodW5yZWxpYWJsZSkKPj4gPj4gW2MwMDAwMDAwYjc4MDNhNjBdIFtjMDAwMDAwMDAwMGQ0
-ZmM4XSAuY3Jhc2hfc2hyaW5rX21lbW9yeSsweDFjOC8weDFmMAo+PiA+PiBbYzAwMDAwMDBiNzgw
-M2IzMF0gW2MwMDAwMDAwMDAwYjdkMzhdIC5rZXhlY19jcmFzaF9zaXplX3N0b3JlKzB4NTgvMHg5
-MAo+PiA+PiBbYzAwMDAwMDBiNzgwM2JjMF0gW2MwMDAwMDAwMDAyYjBiYjRdIC5rb2JqX2F0dHJf
-c3RvcmUrMHgzNC8weDUwCj4+ID4+IFtjMDAwMDAwMGI3ODAzYzMwXSBbYzAwMDAwMDAwMDIyNmQ1
-Y10gLnN5c2ZzX3dyaXRlX2ZpbGUrMHhlYy8weDFmMAo+PiA+PiBbYzAwMDAwMDBiNzgwM2NlMF0g
-W2MwMDAwMDAwMDAxOWUwYmNdIC52ZnNfd3JpdGUrMHhlYy8weDFmMAo+PiA+PiBbYzAwMDAwMDBi
-NzgwM2Q4MF0gW2MwMDAwMDAwMDAxOWUyZThdIC5TeVNfd3JpdGUrMHg1OC8weGIwCj4+ID4+IFtj
-MDAwMDAwMGI3ODAzZTMwXSBbYzAwMDAwMDAwMDAwODUyY10gc3lzY2FsbF9leGl0KzB4MC8weDQw
-Cj4+ID4+IEluc3RydWN0aW9uIGR1bXA6Cj4+ID4+IGZiYTFmZmU4IGZiYzFmZmYwIGZiZTFmZmY4
-IGViYzJiMjI4IDdjN2YxYjc4IGY4MDEwMDEwIGY4MjFmZjcxIGViYmU4MDAwIAo+PiA+PiA3ZmEz
-ZWI3OCA0ODRlMzVkOSA2MDAwMDAwMCBlOTdmMDAyMCA8ZTkyYjAwMzA+IDJmYTkwMDAwIDQxOWUw
-MDJjCj4+ID4+IDdmYmY0ODAwIAo+PiA+PiAtLS1bIGVuZCB0cmFjZSBhZmJjNzgwNDYyYzliZjRl
-IF0tLS0KPj4gPj4gCj4+ID4+IFdoZW4gY3Jhc2hrZXJuZWwgaXMgbm90IGVuYWJsZWQsIGNyYXNo
-a19yZXMgcmVzb3VyY2UgaGF2ZSBub3QgYmVlbgo+PiA+PiByZXNlcnZlZC4gSGVuY2UgY3Jhc2hr
-X3Jlcy5wYXJlbnQgd2lsbCBiZSBOVUxMLgo+PiA+PiAKPj4gPj4gQXR0YWNoaW5nIGEgc2ltcGxl
-IHBhdGNoIHRvIHRoaXMgcHJvYmxlbS4gUGF0Y2ggaXMgdGVzdGVkIGFuZCByZXNvbHZlcyB0aGlz
-IGJ1Zy4KPj4gCj4+IAo+PiBPdWNoLi4uCj4+IAo+PiBUaGUgcGF0Y2ggaW5kZWVkIGFkZHJlc3Nl
-cyB0aGUgcHJvYmxlbSwgbG9va3MgZ29vZCB0byBtZS4KPj4gUGxlYXNlIGFkZCB5b3VyIFNpZ25l
-ZC1vZmYtYnkgYW5kIG15Ogo+PiAKPj4gUmV2aWV3ZWQtYnk6IFdBTkcgQ29uZyA8eGl5b3Uud2Fu
-Z2NvbmdAZ21haWwuY29tPgo+PiAKPj4gQW5vdGhlciBwcm9ibGVtIGlzIHRoYXQgeW91IHNob3Vs
-ZCBnZXQgMCBpbnN0ZWFkIG9mIDEgd2hlbiB5b3UgZG9uJ3QKPj4gcmVzZXJ2ZSBhbnkgbWVtb3J5
-Lgo+Cj5XZSBnZXQgMSBoZXJlIGJlY2F1c2UsIGNyYXNoX2dldF9tZW1vcnlfc2l6ZSgpIGFkZHMg
-MSBhcyBiZWxvdywgCj4KPnNpemUgPSBjcmFzaGtfcmVzLmVuZCAtIGNyYXNoa19yZXMuc3RhcnQg
-KyAxOwo+Cj5XZSBjYW50IHJlbW92ZSB0aGlzIGFkZGl0aW9uLCBhcyBpdCBpcyByZXF1aXJlZCB0
-byBkaXNwbGF5IGNvcnJlY3Qgc2l6ZQo+aW4gY2FzZSBpZiB3ZSByZXNlcnZlIHRoZSBjcmFzaCBt
-ZW1vcnkuCgpZZWFoLCBidXQgMCBpcyBhIHNwZWNpYWwgY2FzZSwgaXNuJ3QgaXQ/CgoKPgo+Q29t
-aW5nIGJhY2sgdG8gaXNzdWUuLiBBdHRhY2hpbmcgdGhlIHBhdGNoIGFnYWluLgo+Cj5TaWduZWQt
-b2ZmLWJ5OiBQYXZhbiBOYXJlZ3VuZGkgPHBhdmFuQGxpbnV4LnZuZXQuaWJtLmNvbT4KPlJldmll
-d2VkLWJ5OiBXQU5HIENvbmcgPHhpeW91Lndhbmdjb25nQGdtYWlsLmNvbT4KClRoYW5rcyEKCgo+
-LS0tCgo+ZGlmZiAtTmF1ciBhL2tlcm5lbC9rZXhlYy5jIGIva2VybmVsL2tleGVjLmMKPi0tLSBh
-L2tlcm5lbC9rZXhlYy5jCTIwMTAtMDYtMDcgMTg6NDU6NTUuMDUwMDAwMDAwICswNTMwCj4rKysg
-Yi9rZXJuZWwva2V4ZWMuYwkyMDEwLTA2LTA3IDE4OjUwOjI4LjA3MDAwMDAwNCArMDUzMAo+QEAg
-LTExMzQsNyArMTEzNCw3IEBACj4gCj4gCWZyZWVfcmVzZXJ2ZWRfcGh5c19yYW5nZShlbmQsIGNy
-YXNoa19yZXMuZW5kKTsKPiAKPi0JaWYgKHN0YXJ0ID09IGVuZCkKPisJaWYgKChzdGFydCA9PSBl
-bmQpICYmIChjcmFzaGtfcmVzLnBhcmVudCAhPSBOVUxMKSkKPiAJCXJlbGVhc2VfcmVzb3VyY2Uo
-JmNyYXNoa19yZXMpOwo+IAljcmFzaGtfcmVzLmVuZCA9IGVuZCAtIDE7Cj4gCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+
+--===============2094120541==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature"; boundary="=-KxNLyB8Mjv7qip1R+Pg1"
+
+
+--=-KxNLyB8Mjv7qip1R+Pg1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, 2010-06-08 at 17:38 +1000, Matt Evans wrote:
+> kexec_perpare_cpus_wait() iterates i through NR_CPUS to check
+> paca[i].kexec_state of each to make sure they have quiesced.
+> However now we have dynamic PACA allocation, paca[NR_CPUS] is not necessa=
+rily
+> valid and we overrun the array;  spurious "cpu is not possible, ignoring"
+> errors result.  This patch iterates for_each_online_cpu so stays
+> within the bounds of paca[] -- and every CPU is now 'possible'.
+>=20
+> Signed-off-by: Matt Evans <matt@ozlabs.org>
+
+Looks good ..
+
+Cautiously-acked-by: Michael Ellerman <michael@ellerman.id.au>
+
+> -			if (!cpu_online(i)) {
+> -				/* Fixme: this can be spinning in
+> -				 * pSeries_secondary_wait with a paca
+> -				 * waiting for it to go online.
+> -				 */
+> -				printk("kexec: cpu %d hw_cpu_id %d is not"
+> -						" online, ignoring\n",
+> -						i, paca[i].hw_cpu_id);
+> -				break;
+> -			}
+
+I don't see how the state in the Fixme could ever happen, but maybe
+Milton can seeing I think he wrote it?
+
+cheers
+
+
+--=-KxNLyB8Mjv7qip1R+Pg1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAkwOZlEACgkQdSjSd0sB4dIZIwCfRrnX1Px5GqEWtsfT7b7s31dc
+bs0AniJbGiQK3IOSHsKPTLekh1JgKo6C
+=l83F
+-----END PGP SIGNATURE-----
+
+--=-KxNLyB8Mjv7qip1R+Pg1--
+
+
+
+--===============2094120541==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============2094120541==--
+
+
