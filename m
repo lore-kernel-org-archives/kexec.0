@@ -1,31 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.31.143])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OLvJj-0006To-TP
-	for kexec@lists.infradead.org; Tue, 08 Jun 2010 09:41:57 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp01.au.ibm.com (8.14.4/8.13.1) with ESMTP id o589dKBB019904
-	for <kexec@lists.infradead.org>; Tue, 8 Jun 2010 19:39:20 +1000
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o589fn1S1892484
-	for <kexec@lists.infradead.org>; Tue, 8 Jun 2010 19:41:49 +1000
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	o589fnNQ032138
-	for <kexec@lists.infradead.org>; Tue, 8 Jun 2010 19:41:49 +1000
+Received: from koto.vergenet.net ([210.128.90.7])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OMCDy-0007mV-8v
+	for kexec@lists.infradead.org; Wed, 09 Jun 2010 03:45:07 +0000
+Date: Wed, 9 Jun 2010 12:44:52 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH] Fix Oops in crash_shrink_memory
-From: Pavan Naregundi <pavan@linux.vnet.ibm.com>
-In-Reply-To: <20100608085440.GC7110@cr0.nay.redhat.com>
+Message-ID: <20100609034452.GA28948@verge.net.au>
 References: <1275895711.4365.18.camel@pavan.naregundi>
 	<1275980857.2583.15.camel@pavan.naregundi>
 	<20100608075959.GB7110@cr0.nay.redhat.com>
 	<1275986405.5015.13.camel@pavan.naregundi>
 	<20100608085440.GC7110@cr0.nay.redhat.com>
-Content-Type: multipart/mixed; boundary="=-UjZPw9uN276Sg9F17UxT"
-Date: Tue, 08 Jun 2010 15:11:47 +0530
-Message-ID: <1275990107.5015.55.camel@pavan.naregundi>
-Mime-Version: 1.0
+	<1275990107.5015.55.camel@pavan.naregundi>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1275990107.5015.55.camel@pavan.naregundi>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,184 +24,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?ISO-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>
-Cc: hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Pavan Naregundi <pavan@linux.vnet.ibm.com>
+Cc: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com
 
-
---=-UjZPw9uN276Sg9F17UxT
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-On Tue, 2010-06-08 at 16:54 +0800, Américo Wang wrote:
-> On Tue, Jun 08, 2010 at 02:10:05PM +0530, Pavan Naregundi wrote:
-> >On Tue, 2010-06-08 at 15:59 +0800, Américo Wang wrote:
-> >> On Tue, Jun 08, 2010 at 12:37:37PM +0530, Pavan Naregundi wrote:
-> >> >Adding CC's..
-> >> >
-> >> >
-> >> >On Mon, 2010-06-07 at 12:58 +0530, Pavan Naregundi wrote:
-> >> >> Hi Everyone,
-> >> >> 
-> >> >> Please add me to CC in your reply..
-> >> >> 
-> >> >> When crashkernel is not enabled, "echo 0 > /sys/kernel/kexec_crash_size"
-> >> >> will generate OOPS message in the kernel. Below is the OOPS message and
-> >> >> other details,
-> >> >> 
-> >> >> # cat /proc/cmdline 
-> >> >> ro  LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us console=hvc0
-> >> >> rhgb root=UUID=eafd9874-010c-46f9-a0c6-ea8db7c61ac3
-> >> >> # uname -a
-> >> >> Linux XXXXXXXX 2.6.35-rc1 #1 SMP Mon Jun 7 18:04:53 IST 2010 ppc64 ppc64
-> >> >> ppc64 GNU/Linux
-> >> >> # cd /sys/kernel/
-> >> >> # ls
-> >> >> debug               kexec_loaded  profiling      uevent_seqnum
-> >> >> kexec_crash_loaded  mm            security       vmcoreinfo
-> >> >> kexec_crash_size    notes         uevent_helper
-> >> >> # cat kexec_crash_loaded
-> >> >> 0
-> >> >> # cat kexec_loaded
-> >> >> 0
-> >> >> # cat kexec_crash_size
-> >> >> 1
-> >> >> # echo 0 > kexec_crash_size
-> >> >> Unable to handle kernel paging request for data at address 0x00000030
-> >> >> Faulting instruction address: 0xc0000000000930b4
-> >> >> Oops: Kernel access of bad area, sig: 11 [#1]
-> >> >> SMP NR_CPUS=1024 NUMA pSeries
-> >> >> last sysfs file: /sys/kernel/kexec_crash_size
-> >> >> Modules linked in: sunrpc ipv6 ext3 jbd dm_mirror dm_region_hash dm_log
-> >> >> dm_multipath dm_mod uinput sg ehea sr_mod ibmveth cdrom ext4 jbd2
-> >> >> mbcache sd_mod crc_t10dif ibmvscsic scsi_transport_srp scsi_tgt [last
-> >> >> unloaded: scsi_wait_scan]
-> >> >> NIP: c0000000000930b4 LR: c0000000000930ac CTR: c0000000000b7ce0
-> >> >> REGS: c0000000b7803750 TRAP: 0300   Not tainted  (2.6.35-rc1)
-> >> >> MSR: 8000000000009032 <EE,ME,IR,DR>  CR: 28242482  XER: 20000000
-> >> >> DAR: 0000000000000030, DSISR: 0000000040000000
-> >> >> TASK = c0000000b9cc3dc0[1381] 'bash' THREAD: c0000000b7800000 CPU: 12
-> >> >> GPR00: c0000000000930ac c0000000b78039d0 c000000000e885a8
-> >> >> c000000000f42950 
-> >> >> GPR04: c0000000b7803af0 0000000000000008 0000000000000002
-> >> >> c0000000005c6438 
-> >> >> GPR08: 0000000000000000 000000008000000c 0000000000000000
-> >> >> 0000000000000000 
-> >> >> GPR12: 0000000040242448 c000000007441e00 00000000100f6210
-> >> >> 0000000000000000 
-> >> >> GPR16: 00000000100f4a38 00000000100cfb98 00000000100f4bdc
-> >> >> 00000000100f4b4c 
-> >> >> GPR20: 00000000103f4de8 0000000000000000 0000000000000000
-> >> >> 00000000100f0000 
-> >> >> GPR24: c0000000005c65c0 0000000000000000 c000000000da83e0
-> >> >> c0000000bc67f780 
-> >> >> GPR28: c0000000bc684ae0 c000000000f42950 c000000000e1e3f8
-> >> >> c000000000da8408 
-> >> >> NIP [c0000000000930b4] .release_resource+0x34/0xe0
-> >> >> LR [c0000000000930ac] .release_resource+0x2c/0xe0
-> >> >> Call Trace:
-> >> >> [c0000000b78039d0] [c0000000000930ac] .release_resource+0x2c/0xe0
-> >> >> (unreliable)
-> >> >> [c0000000b7803a60] [c0000000000d4fc8] .crash_shrink_memory+0x1c8/0x1f0
-> >> >> [c0000000b7803b30] [c0000000000b7d38] .kexec_crash_size_store+0x58/0x90
-> >> >> [c0000000b7803bc0] [c0000000002b0bb4] .kobj_attr_store+0x34/0x50
-> >> >> [c0000000b7803c30] [c000000000226d5c] .sysfs_write_file+0xec/0x1f0
-> >> >> [c0000000b7803ce0] [c00000000019e0bc] .vfs_write+0xec/0x1f0
-> >> >> [c0000000b7803d80] [c00000000019e2e8] .SyS_write+0x58/0xb0
-> >> >> [c0000000b7803e30] [c00000000000852c] syscall_exit+0x0/0x40
-> >> >> Instruction dump:
-> >> >> fba1ffe8 fbc1fff0 fbe1fff8 ebc2b228 7c7f1b78 f8010010 f821ff71 ebbe8000 
-> >> >> 7fa3eb78 484e35d9 60000000 e97f0020 <e92b0030> 2fa90000 419e002c
-> >> >> 7fbf4800 
-> >> >> ---[ end trace afbc780462c9bf4e ]---
-> >> >> 
-> >> >> When crashkernel is not enabled, crashk_res resource have not been
-> >> >> reserved. Hence crashk_res.parent will be NULL.
-> >> >> 
-> >> >> Attaching a simple patch to this problem. Patch is tested and resolves this bug.
-> >> 
-> >> 
-> >> Ouch...
-> >> 
-> >> The patch indeed addresses the problem, looks good to me.
-> >> Please add your Signed-off-by and my:
-> >> 
-> >> Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
-> >> 
-> >> Another problem is that you should get 0 instead of 1 when you don't
-> >> reserve any memory.
-> >
-> >We get 1 here because, crash_get_memory_size() adds 1 as below, 
-> >
-> >size = crashk_res.end - crashk_res.start + 1;
-> >
-> >We cant remove this addition, as it is required to display correct size
-> >in case if we reserve the crash memory.
-> 
-> Yeah, but 0 is a special case, isn't it?
-
-Yes, it is a special case.
-
-Prepared a new patch which solves both of this issues.
-
-1. OOPs in crash_shrink_memory
-2. make crash_get_memory_size to return correct size, in case of crash
-memory not reserved.
-
-Patch is tested.
-
-Thank You.
-
-Signed-off-by: Pavan Naregundi <pavan@linux.vnet.ibm.com>
-Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
----
-
-
-
-
---=-UjZPw9uN276Sg9F17UxT
-Content-Disposition: attachment; filename="fix-kexec.patch"
-Content-Type: text/x-patch; name="fix-kexec.patch"; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-diff -Naur a/kernel/kexec.c b/kernel/kexec.c
---- a/kernel/kexec.c	2010-06-08 21:17:21.850000033 +0530
-+++ b/kernel/kexec.c	2010-06-08 21:19:26.190000043 +0530
-@@ -1089,9 +1089,10 @@
- 
- size_t crash_get_memory_size(void)
- {
--	size_t size;
-+	size_t size = 0;
- 	mutex_lock(&kexec_mutex);
--	size = crashk_res.end - crashk_res.start + 1;
-+	if(crashk_res.end != crashk_res.start)
-+		size = crashk_res.end - crashk_res.start + 1;
- 	mutex_unlock(&kexec_mutex);
- 	return size;
- }
-@@ -1134,7 +1135,7 @@
- 
- 	free_reserved_phys_range(end, crashk_res.end);
- 
--	if (start == end)
-+	if ((start == end) && (crashk_res.parent != NULL))
- 		release_resource(&crashk_res);
- 	crashk_res.end = end - 1;
- 
-
---=-UjZPw9uN276Sg9F17UxT
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---=-UjZPw9uN276Sg9F17UxT--
-
-
+T24gVHVlLCBKdW4gMDgsIDIwMTAgYXQgMDM6MTE6NDdQTSArMDUzMCwgUGF2YW4gTmFyZWd1bmRp
+IHdyb3RlOgo+IE9uIFR1ZSwgMjAxMC0wNi0wOCBhdCAxNjo1NCArMDgwMCwgQW3DqXJpY28gV2Fu
+ZyB3cm90ZToKPiA+IE9uIFR1ZSwgSnVuIDA4LCAyMDEwIGF0IDAyOjEwOjA1UE0gKzA1MzAsIFBh
+dmFuIE5hcmVndW5kaSB3cm90ZToKPiA+ID5PbiBUdWUsIDIwMTAtMDYtMDggYXQgMTU6NTkgKzA4
+MDAsIEFtw6lyaWNvIFdhbmcgd3JvdGU6Cj4gPiA+PiBPbiBUdWUsIEp1biAwOCwgMjAxMCBhdCAx
+MjozNzozN1BNICswNTMwLCBQYXZhbiBOYXJlZ3VuZGkgd3JvdGU6Cj4gPiA+PiA+QWRkaW5nIEND
+J3MuLgo+ID4gPj4gPgo+ID4gPj4gPgo+ID4gPj4gPk9uIE1vbiwgMjAxMC0wNi0wNyBhdCAxMjo1
+OCArMDUzMCwgUGF2YW4gTmFyZWd1bmRpIHdyb3RlOgo+ID4gPj4gPj4gSGkgRXZlcnlvbmUsCj4g
+PiA+PiA+PiAKPiA+ID4+ID4+IFBsZWFzZSBhZGQgbWUgdG8gQ0MgaW4geW91ciByZXBseS4uCj4g
+PiA+PiA+PiAKPiA+ID4+ID4+IFdoZW4gY3Jhc2hrZXJuZWwgaXMgbm90IGVuYWJsZWQsICJlY2hv
+IDAgPiAvc3lzL2tlcm5lbC9rZXhlY19jcmFzaF9zaXplIgo+ID4gPj4gPj4gd2lsbCBnZW5lcmF0
+ZSBPT1BTIG1lc3NhZ2UgaW4gdGhlIGtlcm5lbC4gQmVsb3cgaXMgdGhlIE9PUFMgbWVzc2FnZSBh
+bmQKPiA+ID4+ID4+IG90aGVyIGRldGFpbHMsCj4gPiA+PiA+PiAKPiA+ID4+ID4+ICMgY2F0IC9w
+cm9jL2NtZGxpbmUgCj4gPiA+PiA+PiBybyAgTEFORz1lbl9VUy5VVEYtOCBTWVNGT05UPWxhdGFy
+Y3lyaGViLXN1bjE2IEtFWVRBQkxFPXVzIGNvbnNvbGU9aHZjMAo+ID4gPj4gPj4gcmhnYiByb290
+PVVVSUQ9ZWFmZDk4NzQtMDEwYy00NmY5LWEwYzYtZWE4ZGI3YzYxYWMzCj4gPiA+PiA+PiAjIHVu
+YW1lIC1hCj4gPiA+PiA+PiBMaW51eCBYWFhYWFhYWCAyLjYuMzUtcmMxICMxIFNNUCBNb24gSnVu
+IDcgMTg6MDQ6NTMgSVNUIDIwMTAgcHBjNjQgcHBjNjQKPiA+ID4+ID4+IHBwYzY0IEdOVS9MaW51
+eAo+ID4gPj4gPj4gIyBjZCAvc3lzL2tlcm5lbC8KPiA+ID4+ID4+ICMgbHMKPiA+ID4+ID4+IGRl
+YnVnICAgICAgICAgICAgICAga2V4ZWNfbG9hZGVkICBwcm9maWxpbmcgICAgICB1ZXZlbnRfc2Vx
+bnVtCj4gPiA+PiA+PiBrZXhlY19jcmFzaF9sb2FkZWQgIG1tICAgICAgICAgICAgc2VjdXJpdHkg
+ICAgICAgdm1jb3JlaW5mbwo+ID4gPj4gPj4ga2V4ZWNfY3Jhc2hfc2l6ZSAgICBub3RlcyAgICAg
+ICAgIHVldmVudF9oZWxwZXIKPiA+ID4+ID4+ICMgY2F0IGtleGVjX2NyYXNoX2xvYWRlZAo+ID4g
+Pj4gPj4gMAo+ID4gPj4gPj4gIyBjYXQga2V4ZWNfbG9hZGVkCj4gPiA+PiA+PiAwCj4gPiA+PiA+
+PiAjIGNhdCBrZXhlY19jcmFzaF9zaXplCj4gPiA+PiA+PiAxCj4gPiA+PiA+PiAjIGVjaG8gMCA+
+IGtleGVjX2NyYXNoX3NpemUKPiA+ID4+ID4+IFVuYWJsZSB0byBoYW5kbGUga2VybmVsIHBhZ2lu
+ZyByZXF1ZXN0IGZvciBkYXRhIGF0IGFkZHJlc3MgMHgwMDAwMDAzMAo+ID4gPj4gPj4gRmF1bHRp
+bmcgaW5zdHJ1Y3Rpb24gYWRkcmVzczogMHhjMDAwMDAwMDAwMDkzMGI0Cj4gPiA+PiA+PiBPb3Bz
+OiBLZXJuZWwgYWNjZXNzIG9mIGJhZCBhcmVhLCBzaWc6IDExIFsjMV0KPiA+ID4+ID4+IFNNUCBO
+Ul9DUFVTPTEwMjQgTlVNQSBwU2VyaWVzCj4gPiA+PiA+PiBsYXN0IHN5c2ZzIGZpbGU6IC9zeXMv
+a2VybmVsL2tleGVjX2NyYXNoX3NpemUKPiA+ID4+ID4+IE1vZHVsZXMgbGlua2VkIGluOiBzdW5y
+cGMgaXB2NiBleHQzIGpiZCBkbV9taXJyb3IgZG1fcmVnaW9uX2hhc2ggZG1fbG9nCj4gPiA+PiA+
+PiBkbV9tdWx0aXBhdGggZG1fbW9kIHVpbnB1dCBzZyBlaGVhIHNyX21vZCBpYm12ZXRoIGNkcm9t
+IGV4dDQgamJkMgo+ID4gPj4gPj4gbWJjYWNoZSBzZF9tb2QgY3JjX3QxMGRpZiBpYm12c2NzaWMg
+c2NzaV90cmFuc3BvcnRfc3JwIHNjc2lfdGd0IFtsYXN0Cj4gPiA+PiA+PiB1bmxvYWRlZDogc2Nz
+aV93YWl0X3NjYW5dCj4gPiA+PiA+PiBOSVA6IGMwMDAwMDAwMDAwOTMwYjQgTFI6IGMwMDAwMDAw
+MDAwOTMwYWMgQ1RSOiBjMDAwMDAwMDAwMGI3Y2UwCj4gPiA+PiA+PiBSRUdTOiBjMDAwMDAwMGI3
+ODAzNzUwIFRSQVA6IDAzMDAgICBOb3QgdGFpbnRlZCAgKDIuNi4zNS1yYzEpCj4gPiA+PiA+PiBN
+U1I6IDgwMDAwMDAwMDAwMDkwMzIgPEVFLE1FLElSLERSPiAgQ1I6IDI4MjQyNDgyICBYRVI6IDIw
+MDAwMDAwCj4gPiA+PiA+PiBEQVI6IDAwMDAwMDAwMDAwMDAwMzAsIERTSVNSOiAwMDAwMDAwMDQw
+MDAwMDAwCj4gPiA+PiA+PiBUQVNLID0gYzAwMDAwMDBiOWNjM2RjMFsxMzgxXSAnYmFzaCcgVEhS
+RUFEOiBjMDAwMDAwMGI3ODAwMDAwIENQVTogMTIKPiA+ID4+ID4+IEdQUjAwOiBjMDAwMDAwMDAw
+MDkzMGFjIGMwMDAwMDAwYjc4MDM5ZDAgYzAwMDAwMDAwMGU4ODVhOAo+ID4gPj4gPj4gYzAwMDAw
+MDAwMGY0Mjk1MCAKPiA+ID4+ID4+IEdQUjA0OiBjMDAwMDAwMGI3ODAzYWYwIDAwMDAwMDAwMDAw
+MDAwMDggMDAwMDAwMDAwMDAwMDAwMgo+ID4gPj4gPj4gYzAwMDAwMDAwMDVjNjQzOCAKPiA+ID4+
+ID4+IEdQUjA4OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwODAwMDAwMGMgMDAwMDAwMDAwMDAw
+MDAwMAo+ID4gPj4gPj4gMDAwMDAwMDAwMDAwMDAwMCAKPiA+ID4+ID4+IEdQUjEyOiAwMDAwMDAw
+MDQwMjQyNDQ4IGMwMDAwMDAwMDc0NDFlMDAgMDAwMDAwMDAxMDBmNjIxMAo+ID4gPj4gPj4gMDAw
+MDAwMDAwMDAwMDAwMCAKPiA+ID4+ID4+IEdQUjE2OiAwMDAwMDAwMDEwMGY0YTM4IDAwMDAwMDAw
+MTAwY2ZiOTggMDAwMDAwMDAxMDBmNGJkYwo+ID4gPj4gPj4gMDAwMDAwMDAxMDBmNGI0YyAKPiA+
+ID4+ID4+IEdQUjIwOiAwMDAwMDAwMDEwM2Y0ZGU4IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAw
+MDAwMDAwMAo+ID4gPj4gPj4gMDAwMDAwMDAxMDBmMDAwMCAKPiA+ID4+ID4+IEdQUjI0OiBjMDAw
+MDAwMDAwNWM2NWMwIDAwMDAwMDAwMDAwMDAwMDAgYzAwMDAwMDAwMGRhODNlMAo+ID4gPj4gPj4g
+YzAwMDAwMDBiYzY3Zjc4MCAKPiA+ID4+ID4+IEdQUjI4OiBjMDAwMDAwMGJjNjg0YWUwIGMwMDAw
+MDAwMDBmNDI5NTAgYzAwMDAwMDAwMGUxZTNmOAo+ID4gPj4gPj4gYzAwMDAwMDAwMGRhODQwOCAK
+PiA+ID4+ID4+IE5JUCBbYzAwMDAwMDAwMDA5MzBiNF0gLnJlbGVhc2VfcmVzb3VyY2UrMHgzNC8w
+eGUwCj4gPiA+PiA+PiBMUiBbYzAwMDAwMDAwMDA5MzBhY10gLnJlbGVhc2VfcmVzb3VyY2UrMHgy
+Yy8weGUwCj4gPiA+PiA+PiBDYWxsIFRyYWNlOgo+ID4gPj4gPj4gW2MwMDAwMDAwYjc4MDM5ZDBd
+IFtjMDAwMDAwMDAwMDkzMGFjXSAucmVsZWFzZV9yZXNvdXJjZSsweDJjLzB4ZTAKPiA+ID4+ID4+
+ICh1bnJlbGlhYmxlKQo+ID4gPj4gPj4gW2MwMDAwMDAwYjc4MDNhNjBdIFtjMDAwMDAwMDAwMGQ0
+ZmM4XSAuY3Jhc2hfc2hyaW5rX21lbW9yeSsweDFjOC8weDFmMAo+ID4gPj4gPj4gW2MwMDAwMDAw
+Yjc4MDNiMzBdIFtjMDAwMDAwMDAwMGI3ZDM4XSAua2V4ZWNfY3Jhc2hfc2l6ZV9zdG9yZSsweDU4
+LzB4OTAKPiA+ID4+ID4+IFtjMDAwMDAwMGI3ODAzYmMwXSBbYzAwMDAwMDAwMDJiMGJiNF0gLmtv
+YmpfYXR0cl9zdG9yZSsweDM0LzB4NTAKPiA+ID4+ID4+IFtjMDAwMDAwMGI3ODAzYzMwXSBbYzAw
+MDAwMDAwMDIyNmQ1Y10gLnN5c2ZzX3dyaXRlX2ZpbGUrMHhlYy8weDFmMAo+ID4gPj4gPj4gW2Mw
+MDAwMDAwYjc4MDNjZTBdIFtjMDAwMDAwMDAwMTllMGJjXSAudmZzX3dyaXRlKzB4ZWMvMHgxZjAK
+PiA+ID4+ID4+IFtjMDAwMDAwMGI3ODAzZDgwXSBbYzAwMDAwMDAwMDE5ZTJlOF0gLlN5U193cml0
+ZSsweDU4LzB4YjAKPiA+ID4+ID4+IFtjMDAwMDAwMGI3ODAzZTMwXSBbYzAwMDAwMDAwMDAwODUy
+Y10gc3lzY2FsbF9leGl0KzB4MC8weDQwCj4gPiA+PiA+PiBJbnN0cnVjdGlvbiBkdW1wOgo+ID4g
+Pj4gPj4gZmJhMWZmZTggZmJjMWZmZjAgZmJlMWZmZjggZWJjMmIyMjggN2M3ZjFiNzggZjgwMTAw
+MTAgZjgyMWZmNzEgZWJiZTgwMDAgCj4gPiA+PiA+PiA3ZmEzZWI3OCA0ODRlMzVkOSA2MDAwMDAw
+MCBlOTdmMDAyMCA8ZTkyYjAwMzA+IDJmYTkwMDAwIDQxOWUwMDJjCj4gPiA+PiA+PiA3ZmJmNDgw
+MCAKPiA+ID4+ID4+IC0tLVsgZW5kIHRyYWNlIGFmYmM3ODA0NjJjOWJmNGUgXS0tLQo+ID4gPj4g
+Pj4gCj4gPiA+PiA+PiBXaGVuIGNyYXNoa2VybmVsIGlzIG5vdCBlbmFibGVkLCBjcmFzaGtfcmVz
+IHJlc291cmNlIGhhdmUgbm90IGJlZW4KPiA+ID4+ID4+IHJlc2VydmVkLiBIZW5jZSBjcmFzaGtf
+cmVzLnBhcmVudCB3aWxsIGJlIE5VTEwuCj4gPiA+PiA+PiAKPiA+ID4+ID4+IEF0dGFjaGluZyBh
+IHNpbXBsZSBwYXRjaCB0byB0aGlzIHByb2JsZW0uIFBhdGNoIGlzIHRlc3RlZCBhbmQgcmVzb2x2
+ZXMgdGhpcyBidWcuCj4gPiA+PiAKPiA+ID4+IAo+ID4gPj4gT3VjaC4uLgo+ID4gPj4gCj4gPiA+
+PiBUaGUgcGF0Y2ggaW5kZWVkIGFkZHJlc3NlcyB0aGUgcHJvYmxlbSwgbG9va3MgZ29vZCB0byBt
+ZS4KPiA+ID4+IFBsZWFzZSBhZGQgeW91ciBTaWduZWQtb2ZmLWJ5IGFuZCBteToKPiA+ID4+IAo+
+ID4gPj4gUmV2aWV3ZWQtYnk6IFdBTkcgQ29uZyA8eGl5b3Uud2FuZ2NvbmdAZ21haWwuY29tPgo+
+ID4gPj4gCj4gPiA+PiBBbm90aGVyIHByb2JsZW0gaXMgdGhhdCB5b3Ugc2hvdWxkIGdldCAwIGlu
+c3RlYWQgb2YgMSB3aGVuIHlvdSBkb24ndAo+ID4gPj4gcmVzZXJ2ZSBhbnkgbWVtb3J5Lgo+ID4g
+Pgo+ID4gPldlIGdldCAxIGhlcmUgYmVjYXVzZSwgY3Jhc2hfZ2V0X21lbW9yeV9zaXplKCkgYWRk
+cyAxIGFzIGJlbG93LCAKPiA+ID4KPiA+ID5zaXplID0gY3Jhc2hrX3Jlcy5lbmQgLSBjcmFzaGtf
+cmVzLnN0YXJ0ICsgMTsKPiA+ID4KPiA+ID5XZSBjYW50IHJlbW92ZSB0aGlzIGFkZGl0aW9uLCBh
+cyBpdCBpcyByZXF1aXJlZCB0byBkaXNwbGF5IGNvcnJlY3Qgc2l6ZQo+ID4gPmluIGNhc2UgaWYg
+d2UgcmVzZXJ2ZSB0aGUgY3Jhc2ggbWVtb3J5Lgo+ID4gCj4gPiBZZWFoLCBidXQgMCBpcyBhIHNw
+ZWNpYWwgY2FzZSwgaXNuJ3QgaXQ/Cj4gCj4gWWVzLCBpdCBpcyBhIHNwZWNpYWwgY2FzZS4KPiAK
+PiBQcmVwYXJlZCBhIG5ldyBwYXRjaCB3aGljaCBzb2x2ZXMgYm90aCBvZiB0aGlzIGlzc3Vlcy4K
+PiAKPiAxLiBPT1BzIGluIGNyYXNoX3Nocmlua19tZW1vcnkKPiAyLiBtYWtlIGNyYXNoX2dldF9t
+ZW1vcnlfc2l6ZSB0byByZXR1cm4gY29ycmVjdCBzaXplLCBpbiBjYXNlIG9mIGNyYXNoCj4gbWVt
+b3J5IG5vdCByZXNlcnZlZC4KPiAKPiBQYXRjaCBpcyB0ZXN0ZWQuCj4gCj4gVGhhbmsgWW91Lgo+
+IAo+IFNpZ25lZC1vZmYtYnk6IFBhdmFuIE5hcmVndW5kaSA8cGF2YW5AbGludXgudm5ldC5pYm0u
+Y29tPgo+IFJldmlld2VkLWJ5OiBXQU5HIENvbmcgPHhpeW91Lndhbmdjb25nQGdtYWlsLmNvbT4K
+PiAtLS0KPiAKPiAKPiAKCj4gZGlmZiAtTmF1ciBhL2tlcm5lbC9rZXhlYy5jIGIva2VybmVsL2tl
+eGVjLmMKPiAtLS0gYS9rZXJuZWwva2V4ZWMuYwkyMDEwLTA2LTA4IDIxOjE3OjIxLjg1MDAwMDAz
+MyArMDUzMAo+ICsrKyBiL2tlcm5lbC9rZXhlYy5jCTIwMTAtMDYtMDggMjE6MTk6MjYuMTkwMDAw
+MDQzICswNTMwCj4gQEAgLTEwODksOSArMTA4OSwxMCBAQAo+ICAKPiAgc2l6ZV90IGNyYXNoX2dl
+dF9tZW1vcnlfc2l6ZSh2b2lkKQo+ICB7Cj4gLQlzaXplX3Qgc2l6ZTsKPiArCXNpemVfdCBzaXpl
+ID0gMDsKPiAgCW11dGV4X2xvY2soJmtleGVjX211dGV4KTsKPiAtCXNpemUgPSBjcmFzaGtfcmVz
+LmVuZCAtIGNyYXNoa19yZXMuc3RhcnQgKyAxOwo+ICsJaWYoY3Jhc2hrX3Jlcy5lbmQgIT0gY3Jh
+c2hrX3Jlcy5zdGFydCkKPiArCQlzaXplID0gY3Jhc2hrX3Jlcy5lbmQgLSBjcmFzaGtfcmVzLnN0
+YXJ0ICsgMTsKCk1pbm9yIHN0eWxlLWlzc3VlOiB0aGVyZSBzaG91bGQgYmUgYSBzcGFjZSBiZXR3
+ZWVuIGlmIGFuZCAoLgoKPiAgCW11dGV4X3VubG9jaygma2V4ZWNfbXV0ZXgpOwo+ICAJcmV0dXJu
+IHNpemU7Cj4gIH0KPiBAQCAtMTEzNCw3ICsxMTM1LDcgQEAKPiAgCj4gIAlmcmVlX3Jlc2VydmVk
+X3BoeXNfcmFuZ2UoZW5kLCBjcmFzaGtfcmVzLmVuZCk7Cj4gIAo+IC0JaWYgKHN0YXJ0ID09IGVu
+ZCkKPiArCWlmICgoc3RhcnQgPT0gZW5kKSAmJiAoY3Jhc2hrX3Jlcy5wYXJlbnQgIT0gTlVMTCkp
+Cj4gIAkJcmVsZWFzZV9yZXNvdXJjZSgmY3Jhc2hrX3Jlcyk7Cj4gIAljcmFzaGtfcmVzLmVuZCA9
+IGVuZCAtIDE7Cj4gIAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
