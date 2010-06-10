@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-iw0-f177.google.com ([209.85.214.177])
+Received: from koto.vergenet.net ([210.128.90.7])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OMEqj-00042C-Pi
-	for kexec@lists.infradead.org; Wed, 09 Jun 2010 06:33:18 +0000
-Received: by iwn34 with SMTP id 34so6269014iwn.36
-	for <kexec@lists.infradead.org>; Tue, 08 Jun 2010 23:33:14 -0700 (PDT)
+	id 1OMVc1-0005Ef-1C
+	for kexec@lists.infradead.org; Thu, 10 Jun 2010 00:27:13 +0000
+Date: Thu, 10 Jun 2010 09:27:04 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec fail on ia64 platform
+Message-ID: <20100610002703.GR6426@verge.net.au>
+References: <AANLkTilNsIvlsoALcESOoA0q2K8Ao5dMW3GjkHvKpSCX@mail.gmail.com>
 MIME-Version: 1.0
-Date: Wed, 9 Jun 2010 14:33:14 +0800
-Message-ID: <AANLkTilNsIvlsoALcESOoA0q2K8Ao5dMW3GjkHvKpSCX@mail.gmail.com>
-Subject: kexec fail on ia64 platform
-From: =?GB2312?B?1tzQ2w==?= <jencce2002@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <AANLkTilNsIvlsoALcESOoA0q2K8Ao5dMW3GjkHvKpSCX@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,65 +19,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0148917436=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: =?utf-8?B?5ZGo6ZuE?= <jencce2002@gmail.com>
+Cc: kexec@lists.infradead.org
 
---===============0148917436==
-Content-Type: multipart/alternative; boundary=0016e68dd2649ea59f04889314d5
-
---0016e68dd2649ea59f04889314d5
-Content-Type: text/plain; charset=ISO-8859-1
-
-hello everyone,
-           sorry to bother you. I have a problem with kexec tools. when i
-use it on a ia64 machine, it does't work.
-           situation 1 : after executing "kexec -l ***" and "kexec -e" ,
-many "cpu # is now offline" printed out, then the system lose response.
-           situation 2 (mostly): after many "cpu # is now offline" printed
-out, some warn info printed out , and then a call trace..  system lose
-response...    warn info is : Unexpected irq vector 0x44 on cpu 11! .. ..
-call trace has info like : fixup_irqs , take_cpu_down, etc..
-           Is there something wrong with my current kernel ? but it is an
-usual 2.6.28.10. Does kexec support IA64 fully?
-           Thanks alot. bow. :)
-
-
-jencce chou.
-
---0016e68dd2649ea59f04889314d5
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-hello everyone, <br>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 sorry to bother you. I h=
-ave a problem with kexec tools. when i use it on a ia64 machine, it does&#3=
-9;t work. <br>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 situation 1 : after executing =
-&quot;kexec -l ***&quot; and &quot;kexec -e&quot; , many &quot;cpu # is now=
- offline&quot; printed out, then the system lose response.<br>
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 situation 2 (mostly): after many &quot;cpu #=
- is now offline&quot; printed out, some warn info printed out , and then a =
-call trace..=A0 system lose response...=A0=A0=A0 warn info is : Unexpected =
-irq vector 0x44 on cpu 11! .. ..=A0 call trace has info like : fixup_irqs ,=
- take_cpu_down, etc..<br>
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Is there something wrong with my current ker=
-nel ? but it is an usual 2.6.28.10. Does kexec support IA64 fully?<br>=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0 Thanks alot. bow. :)<br><br><br>jencce chou.<br=
->
-
---0016e68dd2649ea59f04889314d5--
-
-
---===============0148917436==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0148917436==--
-
+T24gV2VkLCBKdW4gMDksIDIwMTAgYXQgMDI6MzM6MTRQTSArMDgwMCwg5ZGo6ZuEIHdyb3RlOgo+
+IGhlbGxvIGV2ZXJ5b25lLAo+ICAgICAgICAgICAgc29ycnkgdG8gYm90aGVyIHlvdS4gSSBoYXZl
+IGEgcHJvYmxlbSB3aXRoIGtleGVjIHRvb2xzLiB3aGVuIGkKPiB1c2UgaXQgb24gYSBpYTY0IG1h
+Y2hpbmUsIGl0IGRvZXMndCB3b3JrLgo+ICAgICAgICAgICAgc2l0dWF0aW9uIDEgOiBhZnRlciBl
+eGVjdXRpbmcgImtleGVjIC1sICoqKiIgYW5kICJrZXhlYyAtZSIgLAo+IG1hbnkgImNwdSAjIGlz
+IG5vdyBvZmZsaW5lIiBwcmludGVkIG91dCwgdGhlbiB0aGUgc3lzdGVtIGxvc2UgcmVzcG9uc2Uu
+Cj4gICAgICAgICAgICBzaXR1YXRpb24gMiAobW9zdGx5KTogYWZ0ZXIgbWFueSAiY3B1ICMgaXMg
+bm93IG9mZmxpbmUiIHByaW50ZWQKPiBvdXQsIHNvbWUgd2FybiBpbmZvIHByaW50ZWQgb3V0ICwg
+YW5kIHRoZW4gYSBjYWxsIHRyYWNlLi4gIHN5c3RlbSBsb3NlCj4gcmVzcG9uc2UuLi4gICAgd2Fy
+biBpbmZvIGlzIDogVW5leHBlY3RlZCBpcnEgdmVjdG9yIDB4NDQgb24gY3B1IDExISAuLiAuLgo+
+IGNhbGwgdHJhY2UgaGFzIGluZm8gbGlrZSA6IGZpeHVwX2lycXMgLCB0YWtlX2NwdV9kb3duLCBl
+dGMuLgo+ICAgICAgICAgICAgSXMgdGhlcmUgc29tZXRoaW5nIHdyb25nIHdpdGggbXkgY3VycmVu
+dCBrZXJuZWwgPyBidXQgaXQgaXMgYW4KPiB1c3VhbCAyLjYuMjguMTAuIERvZXMga2V4ZWMgc3Vw
+cG9ydCBJQTY0IGZ1bGx5Pwo+ICAgICAgICAgICAgVGhhbmtzIGFsb3QuIGJvdy4gOikKCkhpLAoK
+Mi42LjI4IHNob3VsZCBiZSBuZXcgZW5vdWdoLCBidXQgaXMgaXQgcG9zc2libGUgdG8gY2hlY2sK
+dXNpbmcgYSBtb3JlIHJlY2VudCBrZXJuZWwgKGUuZy4gMi42LjM0KSBhbmQgdGhlIGxhdGVzdCBr
+ZXhlYy10b29scwooMi4wLjEpPwoKSWYgdGhlIHByb2JsZW0gcGVyc2lzdHMsIHRoZW4gYSBjb3B5
+IG9mIHRoZSBzdGFjayB0cmFjZSB3b3VsZCBiZSB1c2VmdWwuCkkgdXN1YWxseSBjb2xsZWN0IHRo
+ZXNlIGJ5IHVzaW5nIGEgc2VyaWFsIGNvbnNvbGUuCgpUaGFua3MuCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
