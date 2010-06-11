@@ -1,33 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp04.in.ibm.com ([122.248.162.4])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OMEl0-00037Q-6Y
-	for kexec@lists.infradead.org; Wed, 09 Jun 2010 06:27:24 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp04.in.ibm.com (8.14.4/8.13.1) with ESMTP id o596RFkr011631
-	for <kexec@lists.infradead.org>; Wed, 9 Jun 2010 11:57:15 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	o596RFuh3408044
-	for <kexec@lists.infradead.org>; Wed, 9 Jun 2010 11:57:15 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	o596REvx016501
-	for <kexec@lists.infradead.org>; Wed, 9 Jun 2010 16:27:14 +1000
-Subject: Re: [PATCH] Fix Oops in crash_shrink_memory
-From: Pavan Naregundi <pavan@linux.vnet.ibm.com>
-In-Reply-To: <20100609034452.GA28948@verge.net.au>
-References: <1275895711.4365.18.camel@pavan.naregundi>
-	<1275980857.2583.15.camel@pavan.naregundi>
-	<20100608075959.GB7110@cr0.nay.redhat.com>
-	<1275986405.5015.13.camel@pavan.naregundi>
-	<20100608085440.GC7110@cr0.nay.redhat.com>
-	<1275990107.5015.55.camel@pavan.naregundi>
-	<20100609034452.GA28948@verge.net.au>
-Content-Type: multipart/mixed; boundary="=-ZBEnjtOTrjoQtILgUu8P"
-Date: Wed, 09 Jun 2010 11:57:14 +0530
-Message-ID: <1276064834.2622.7.camel@pavan.naregundi>
-Mime-Version: 1.0
+Received: from mail-iw0-f177.google.com ([209.85.214.177])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OMxmL-0003Ff-Hf
+	for kexec@lists.infradead.org; Fri, 11 Jun 2010 06:31:46 +0000
+Received: by iwn34 with SMTP id 34so981962iwn.36
+	for <kexec@lists.infradead.org>; Thu, 10 Jun 2010 23:31:43 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20100610002703.GR6426@verge.net.au>
+References: <AANLkTilNsIvlsoALcESOoA0q2K8Ao5dMW3GjkHvKpSCX@mail.gmail.com>
+	<20100610002703.GR6426@verge.net.au>
+Date: Fri, 11 Jun 2010 14:31:42 +0800
+Message-ID: <AANLkTikkTft1lS5oZ4b-8vz7aqVy6As_HHNC4V8nVZj5@mail.gmail.com>
+Subject: Re: kexec fail on ia64 platform
+From: =?GB2312?B?1tzQ2w==?= <jencce2002@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,184 +21,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: multipart/mixed; boundary="===============1714682181=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: =?ISO-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, hbabu@us.ibm.com
+Cc: kexec@lists.infradead.org
+
+--===============1714682181==
+Content-Type: multipart/alternative; boundary=001485eba7acd7a88c0488bb4a7d
+
+--001485eba7acd7a88c0488bb4a7d
+Content-Type: text/plain; charset=GB2312
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+      kexec-tools version 2.0.1 works well on my machine. thanks very much.
+kernel version still 2.6.28.10.  :)
+      but under in the file kexec-tools-2.0.1/News,  i dont see any changes=
+.
+I'm interested in it , where can i find this info ? thanks
+
+jencce
+
+2010/6/10 Simon Horman <horms@verge.net.au>
+
+> On Wed, Jun 09, 2010 at 02:33:14PM +0800, =D6=DC=D0=DB wrote:
+> > hello everyone,
+> >            sorry to bother you. I have a problem with kexec tools. when=
+ i
+> > use it on a ia64 machine, it does't work.
+> >            situation 1 : after executing "kexec -l ***" and "kexec -e" =
+,
+> > many "cpu # is now offline" printed out, then the system lose response.
+> >            situation 2 (mostly): after many "cpu # is now offline"
+> printed
+> > out, some warn info printed out , and then a call trace..  system lose
+> > response...    warn info is : Unexpected irq vector 0x44 on cpu 11! .. =
+..
+> > call trace has info like : fixup_irqs , take_cpu_down, etc..
+> >            Is there something wrong with my current kernel ? but it is =
+an
+> > usual 2.6.28.10. Does kexec support IA64 fully?
+> >            Thanks alot. bow. :)
+>
+> Hi,
+>
+> 2.6.28 should be new enough, but is it possible to check
+> using a more recent kernel (e.g. 2.6.34) and the latest kexec-tools
+> (2.0.1)?
+>
+> If the problem persists, then a copy of the stack trace would be useful.
+> I usually collect these by using a serial console.
+>
+> Thanks.
+>
+
+--001485eba7acd7a88c0488bb4a7d
+Content-Type: text/html; charset=GB2312
+Content-Transfer-Encoding: quoted-printable
+
+Hi,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; kexec-tools version 2.0.1 works well =
+on my machine. thanks very much.<br>kernel version still 2.6.28.10.&nbsp; :=
+)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; but under in the file kexec-tools-2.0.1=
+/News,&nbsp; i dont see any changes. I&#39;m interested in it , where can i=
+ find this info ? thanks<br>
+<br>jencce<br>&nbsp;<br><div class=3D"gmail_quote">2010/6/10 Simon Horman <=
+span dir=3D"ltr">&lt;<a href=3D"mailto:horms@verge.net.au">horms@verge.net.=
+au</a>&gt;</span><br><blockquote class=3D"gmail_quote" style=3D"border-left=
+: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1e=
+x;">
+<div><div></div><div class=3D"h5">On Wed, Jun 09, 2010 at 02:33:14PM +0800,=
+ =D6=DC=D0=DB wrote:<br>
+&gt; hello everyone,<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;sorry to bother you. I have a=
+ problem with kexec tools. when i<br>
+&gt; use it on a ia64 machine, it does&#39;t work.<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;situation 1 : after executing=
+ &quot;kexec -l ***&quot; and &quot;kexec -e&quot; ,<br>
+&gt; many &quot;cpu # is now offline&quot; printed out, then the system los=
+e response.<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;situation 2 (mostly): after m=
+any &quot;cpu # is now offline&quot; printed<br>
+&gt; out, some warn info printed out , and then a call trace.. &nbsp;system=
+ lose<br>
+&gt; response... &nbsp; &nbsp;warn info is : Unexpected irq vector 0x44 on =
+cpu 11! .. ..<br>
+&gt; call trace has info like : fixup_irqs , take_cpu_down, etc..<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Is there something wrong with=
+ my current kernel ? but it is an<br>
+&gt; usual 2.6.28.10. Does kexec support IA64 fully?<br>
+&gt; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Thanks alot. bow. :)<br>
+<br>
+</div></div>Hi,<br>
+<br>
+2.6.28 should be new enough, but is it possible to check<br>
+using a more recent kernel (e.g. 2.6.34) and the latest kexec-tools<br>
+(2.0.1)?<br>
+<br>
+If the problem persists, then a copy of the stack trace would be useful.<br=
+>
+I usually collect these by using a serial console.<br>
+<br>
+Thanks.<br>
+</blockquote></div><br>
+
+--001485eba7acd7a88c0488bb4a7d--
 
 
---=-ZBEnjtOTrjoQtILgUu8P
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-On Wed, 2010-06-09 at 12:44 +0900, Simon Horman wrote:
-> On Tue, Jun 08, 2010 at 03:11:47PM +0530, Pavan Naregundi wrote:
-> > On Tue, 2010-06-08 at 16:54 +0800, Américo Wang wrote:
-> > > On Tue, Jun 08, 2010 at 02:10:05PM +0530, Pavan Naregundi wrote:
-> > > >On Tue, 2010-06-08 at 15:59 +0800, Américo Wang wrote:
-> > > >> On Tue, Jun 08, 2010 at 12:37:37PM +0530, Pavan Naregundi wrote:
-> > > >> >Adding CC's..
-> > > >> >
-> > > >> >
-> > > >> >On Mon, 2010-06-07 at 12:58 +0530, Pavan Naregundi wrote:
-> > > >> >> Hi Everyone,
-> > > >> >> 
-> > > >> >> Please add me to CC in your reply..
-> > > >> >> 
-> > > >> >> When crashkernel is not enabled, "echo 0 > /sys/kernel/kexec_crash_size"
-> > > >> >> will generate OOPS message in the kernel. Below is the OOPS message and
-> > > >> >> other details,
-> > > >> >> 
-> > > >> >> # cat /proc/cmdline 
-> > > >> >> ro  LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYTABLE=us console=hvc0
-> > > >> >> rhgb root=UUID=eafd9874-010c-46f9-a0c6-ea8db7c61ac3
-> > > >> >> # uname -a
-> > > >> >> Linux XXXXXXXX 2.6.35-rc1 #1 SMP Mon Jun 7 18:04:53 IST 2010 ppc64 ppc64
-> > > >> >> ppc64 GNU/Linux
-> > > >> >> # cd /sys/kernel/
-> > > >> >> # ls
-> > > >> >> debug               kexec_loaded  profiling      uevent_seqnum
-> > > >> >> kexec_crash_loaded  mm            security       vmcoreinfo
-> > > >> >> kexec_crash_size    notes         uevent_helper
-> > > >> >> # cat kexec_crash_loaded
-> > > >> >> 0
-> > > >> >> # cat kexec_loaded
-> > > >> >> 0
-> > > >> >> # cat kexec_crash_size
-> > > >> >> 1
-> > > >> >> # echo 0 > kexec_crash_size
-> > > >> >> Unable to handle kernel paging request for data at address 0x00000030
-> > > >> >> Faulting instruction address: 0xc0000000000930b4
-> > > >> >> Oops: Kernel access of bad area, sig: 11 [#1]
-> > > >> >> SMP NR_CPUS=1024 NUMA pSeries
-> > > >> >> last sysfs file: /sys/kernel/kexec_crash_size
-> > > >> >> Modules linked in: sunrpc ipv6 ext3 jbd dm_mirror dm_region_hash dm_log
-> > > >> >> dm_multipath dm_mod uinput sg ehea sr_mod ibmveth cdrom ext4 jbd2
-> > > >> >> mbcache sd_mod crc_t10dif ibmvscsic scsi_transport_srp scsi_tgt [last
-> > > >> >> unloaded: scsi_wait_scan]
-> > > >> >> NIP: c0000000000930b4 LR: c0000000000930ac CTR: c0000000000b7ce0
-> > > >> >> REGS: c0000000b7803750 TRAP: 0300   Not tainted  (2.6.35-rc1)
-> > > >> >> MSR: 8000000000009032 <EE,ME,IR,DR>  CR: 28242482  XER: 20000000
-> > > >> >> DAR: 0000000000000030, DSISR: 0000000040000000
-> > > >> >> TASK = c0000000b9cc3dc0[1381] 'bash' THREAD: c0000000b7800000 CPU: 12
-> > > >> >> GPR00: c0000000000930ac c0000000b78039d0 c000000000e885a8
-> > > >> >> c000000000f42950 
-> > > >> >> GPR04: c0000000b7803af0 0000000000000008 0000000000000002
-> > > >> >> c0000000005c6438 
-> > > >> >> GPR08: 0000000000000000 000000008000000c 0000000000000000
-> > > >> >> 0000000000000000 
-> > > >> >> GPR12: 0000000040242448 c000000007441e00 00000000100f6210
-> > > >> >> 0000000000000000 
-> > > >> >> GPR16: 00000000100f4a38 00000000100cfb98 00000000100f4bdc
-> > > >> >> 00000000100f4b4c 
-> > > >> >> GPR20: 00000000103f4de8 0000000000000000 0000000000000000
-> > > >> >> 00000000100f0000 
-> > > >> >> GPR24: c0000000005c65c0 0000000000000000 c000000000da83e0
-> > > >> >> c0000000bc67f780 
-> > > >> >> GPR28: c0000000bc684ae0 c000000000f42950 c000000000e1e3f8
-> > > >> >> c000000000da8408 
-> > > >> >> NIP [c0000000000930b4] .release_resource+0x34/0xe0
-> > > >> >> LR [c0000000000930ac] .release_resource+0x2c/0xe0
-> > > >> >> Call Trace:
-> > > >> >> [c0000000b78039d0] [c0000000000930ac] .release_resource+0x2c/0xe0
-> > > >> >> (unreliable)
-> > > >> >> [c0000000b7803a60] [c0000000000d4fc8] .crash_shrink_memory+0x1c8/0x1f0
-> > > >> >> [c0000000b7803b30] [c0000000000b7d38] .kexec_crash_size_store+0x58/0x90
-> > > >> >> [c0000000b7803bc0] [c0000000002b0bb4] .kobj_attr_store+0x34/0x50
-> > > >> >> [c0000000b7803c30] [c000000000226d5c] .sysfs_write_file+0xec/0x1f0
-> > > >> >> [c0000000b7803ce0] [c00000000019e0bc] .vfs_write+0xec/0x1f0
-> > > >> >> [c0000000b7803d80] [c00000000019e2e8] .SyS_write+0x58/0xb0
-> > > >> >> [c0000000b7803e30] [c00000000000852c] syscall_exit+0x0/0x40
-> > > >> >> Instruction dump:
-> > > >> >> fba1ffe8 fbc1fff0 fbe1fff8 ebc2b228 7c7f1b78 f8010010 f821ff71 ebbe8000 
-> > > >> >> 7fa3eb78 484e35d9 60000000 e97f0020 <e92b0030> 2fa90000 419e002c
-> > > >> >> 7fbf4800 
-> > > >> >> ---[ end trace afbc780462c9bf4e ]---
-> > > >> >> 
-> > > >> >> When crashkernel is not enabled, crashk_res resource have not been
-> > > >> >> reserved. Hence crashk_res.parent will be NULL.
-> > > >> >> 
-> > > >> >> Attaching a simple patch to this problem. Patch is tested and resolves this bug.
-> > > >> 
-> > > >> 
-> > > >> Ouch...
-> > > >> 
-> > > >> The patch indeed addresses the problem, looks good to me.
-> > > >> Please add your Signed-off-by and my:
-> > > >> 
-> > > >> Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
-> > > >> 
-> > > >> Another problem is that you should get 0 instead of 1 when you don't
-> > > >> reserve any memory.
-> > > >
-> > > >We get 1 here because, crash_get_memory_size() adds 1 as below, 
-> > > >
-> > > >size = crashk_res.end - crashk_res.start + 1;
-> > > >
-> > > >We cant remove this addition, as it is required to display correct size
-> > > >in case if we reserve the crash memory.
-> > > 
-> > > Yeah, but 0 is a special case, isn't it?
-> > 
-> > Yes, it is a special case.
-> > 
-> > Prepared a new patch which solves both of this issues.
-> > 
-> > 1. OOPs in crash_shrink_memory
-> > 2. make crash_get_memory_size to return correct size, in case of crash
-> > memory not reserved.
-> > 
-> > Patch is tested.
-> > 
-
-> > +	if(crashk_res.end != crashk_res.start)
-> > +		size = crashk_res.end - crashk_res.start + 1;
-> 
-> Minor style-issue: there should be a space between if and (.
-> 
-
-Sorry for that.
-
-Resending the patch with fixed style issues.
-
-Signed-off-by: Pavan Naregundi <pavan@linux.vnet.ibm.com>
-Reviewed-by: WANG Cong <xiyou.wangcong@gmail.com>
---
-
-
-
---=-ZBEnjtOTrjoQtILgUu8P
-Content-Disposition: attachment; filename="fix-kexec.patch"
-Content-Type: text/x-patch; name="fix-kexec.patch"; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-diff -Naur a/kernel/kexec.c b/kernel/kexec.c
---- a/kernel/kexec.c	2010-06-08 21:17:21.850000033 +0530
-+++ b/kernel/kexec.c	2010-06-09 18:01:37.590007921 +0530
-@@ -1089,9 +1089,10 @@
- 
- size_t crash_get_memory_size(void)
- {
--	size_t size;
-+	size_t size = 0;
- 	mutex_lock(&kexec_mutex);
--	size = crashk_res.end - crashk_res.start + 1;
-+	if (crashk_res.end != crashk_res.start)
-+		size = crashk_res.end - crashk_res.start + 1;
- 	mutex_unlock(&kexec_mutex);
- 	return size;
- }
-@@ -1134,7 +1135,7 @@
- 
- 	free_reserved_phys_range(end, crashk_res.end);
- 
--	if (start == end)
-+	if ((start == end) && (crashk_res.parent != NULL))
- 		release_resource(&crashk_res);
- 	crashk_res.end = end - 1;
- 
-
---=-ZBEnjtOTrjoQtILgUu8P
+--===============1714682181==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -224,6 +139,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---=-ZBEnjtOTrjoQtILgUu8P--
-
+--===============1714682181==--
 
