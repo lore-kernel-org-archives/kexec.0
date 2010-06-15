@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from az33egw02.freescale.net ([192.88.158.103])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OOFUm-000713-6N
-	for kexec@lists.infradead.org; Mon, 14 Jun 2010 19:38:57 +0000
-Received: from az33smr01.freescale.net (az33smr01.freescale.net [10.64.34.199])
-	by az33egw02.freescale.net (8.14.3/az33egw02) with ESMTP id
-	o5EJcg6o013098
-	for <kexec@lists.infradead.org>; Mon, 14 Jun 2010 12:38:42 -0700 (MST)
-From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH] Restore kexec uImage-ppc to working state
-Date: Mon, 14 Jun 2010 14:38:42 -0500
-Message-Id: <1276544322-30412-1-git-send-email-msm@freescale.com>
+Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OOc7D-0001T6-K3
+	for kexec@lists.infradead.org; Tue, 15 Jun 2010 19:48:08 +0000
+Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
+	by relay1.corp.sgi.com (Postfix) with ESMTP id 8B6D78F8084
+	for <kexec@lists.infradead.org>; Tue, 15 Jun 2010 12:48:04 -0700 (PDT)
+Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
+	by estes.americas.sgi.com (Postfix) with ESMTP id 6150F7001ADC
+	for <kexec@lists.infradead.org>; Tue, 15 Jun 2010 14:48:04 -0500 (CDT)
+Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
+	(envelope-from <cpw@sgi.com>) id 1OOc8N-0005VR-Ki
+	for kexec@lists.infradead.org; Tue, 15 Jun 2010 14:49:19 -0500
+Subject: [PATCH] kexec: extend for large cpu count and memory
+Message-Id: <E1OOc8N-0005VR-Ki@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Tue, 15 Jun 2010 14:49:19 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,138 +31,105 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Booting with uImage-ppc was broken by previous work, this
-patch should restore it to working order
 
-Signed-off-by: Matthew McClintock <msm@freescale.com>
+The MAX_MEMORY_RANGES of 64 is too small for a very large NUMA machine.
+(A 512 processor SGI UV, for example.)
+ Gentlemen,
+  You may judge increasing MAX_MEMORY_RANGES to 1024 may be excessive
+  and I will not argue against setting it to maybe half of that.  But a large
+  number is the easy cure, in lieu of sizing memory_range[] and
+  crash_memory_range[] dynamically.
+
+And fix a temporary workaround (hack) in load_crashdump_segments() that
+assumes that 16k is sufficient for the size of the crashdump elf header.
+This is too small for a machine with a large cpu count. A PT_NOTE is created
+in the elf header for each cpu.
+
+And the below fiddling with temp_region is just to prevent compiler warnings.
+
+Diffed against kexec-tools-2.0.1
+
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+
 ---
- kexec/arch/ppc/kexec-ppc.c         |   68 ++++++++++++++++++++++-------------
- kexec/arch/ppc/kexec-uImage-ppc.c  |    5 +--
- purgatory/arch/ppc/purgatory-ppc.c |    5 +++
- 3 files changed, 49 insertions(+), 29 deletions(-)
+ kexec/arch/i386/kexec-x86.h          |    2 +-
+ kexec/arch/x86_64/crashdump-x86_64.c |   19 +++++++++++++++----
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index 55cadd6..c073f56 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -261,11 +261,28 @@ static int get_base_ranges(void)
- 					break;
- 				}
- 			}
--			base_memory_range[local_memory_ranges].start =
--				((uint32_t *)buf)[0];
--			base_memory_range[local_memory_ranges].end  =
--				base_memory_range[local_memory_ranges].start +
--				((uint32_t *)buf)[1];
-+
-+			if (n == 8)
-+			{
-+				base_memory_range[local_memory_ranges].start =
-+					((uint32_t *)buf)[0];
-+				base_memory_range[local_memory_ranges].end  =
-+					base_memory_range[local_memory_ranges].start +
-+					((uint32_t *)buf)[1];
-+			}
-+			else if (n == 16)
-+			{
-+				base_memory_range[local_memory_ranges].start =
-+                                        ((uint64_t *)buf)[0];
-+                                base_memory_range[local_memory_ranges].end  =
-+                                        base_memory_range[local_memory_ranges].start +
-+                                        ((uint64_t *)buf)[1];
-+			}
-+			else
-+			{
-+				fprintf(stderr, "Mem node has invalid size: %d\n", n);
-+				return -1;
-+			}
- 			base_memory_range[local_memory_ranges].type = RANGE_RAM;
- 			local_memory_ranges++;
- 			dbgprintf("%016llx-%016llx : %x\n",
-@@ -327,27 +344,28 @@ static int get_devtree_details(unsigned long kexec_flags)
- 		}
+Index: kexec-tools-2.0.1/kexec/arch/i386/kexec-x86.h
+===================================================================
+--- kexec-tools-2.0.1.orig/kexec/arch/i386/kexec-x86.h
++++ kexec-tools-2.0.1/kexec/arch/i386/kexec-x86.h
+@@ -1,7 +1,7 @@
+ #ifndef KEXEC_X86_H
+ #define KEXEC_X86_H
  
- 		if (strncmp(dentry->d_name, "chosen", 6) == 0) {
--			strcat(fname, "/linux,kernel-end");
--			file = fopen(fname, "r");
--			if (!file) {
--				perror(fname);
--				goto error_opencdir;
--			}
--			if (fread(&tmp_long, sizeof(unsigned long), 1, file)
--					!= 1) {
--				perror(fname);
--				goto error_openfile;
--			}
--			kernel_end = tmp_long;
--			fclose(file);
--
--			/* Add kernel memory to exclude_range */
--			exclude_range[i].start = 0x0UL;
--			exclude_range[i].end = kernel_end;
--			i++;
--			if (i >= max_memory_ranges)
--				realloc_memory_ranges();
-+			/* only reserve kernel region if we are doing a crash kernel */
- 			if (kexec_flags & KEXEC_ON_CRASH) {
-+				strcat(fname, "/linux,kernel-end");
-+				file = fopen(fname, "r");
-+				if (!file) {
-+					perror(fname);
-+					goto error_opencdir;
-+				}
-+				if (fread(&tmp_long, sizeof(unsigned long), 1, file)
-+						!= 1) {
-+					perror(fname);
-+					goto error_openfile;
-+				}
-+				kernel_end = tmp_long;
-+				fclose(file);
-+
-+				/* Add kernel memory to exclude_range */
-+				exclude_range[i].start = 0x0UL;
-+				exclude_range[i].end = kernel_end;
-+				i++;
-+				if (i >= max_memory_ranges)
-+					realloc_memory_ranges();
- 				memset(fname, 0, sizeof(fname));
- 				strcpy(fname, device_tree);
- 				strcat(fname, dentry->d_name);
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 45cde2f..4a8d28d 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -133,13 +133,10 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	addr = dtb_addr;
- 	elf_rel_set_symbol(&info->rhdr, "dt_offset", &addr, sizeof(addr));
+-#define MAX_MEMORY_RANGES 64
++#define MAX_MEMORY_RANGES 1024
  
--	addr = rmo_top;
--	elf_rel_set_symbol(&info->rhdr, "mem_size", &addr, sizeof(addr));
--
- #define PUL_STACK_SIZE  (16 * 1024)
- 	addr = locate_hole(info, PUL_STACK_SIZE, 0, 0, -1, 1);
- 	addr += PUL_STACK_SIZE;
--	elf_rel_set_symbol(&info->rhdr, "pul_stack", &addr, sizeof(addr));
-+	elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
- 	/* No allocation past here in order not to overwrite the stack */
- #undef PUL_STACK_SIZE
+ enum coretype {
+ 	CORE_TYPE_UNDEF = 0,
+Index: kexec-tools-2.0.1/kexec/arch/x86_64/crashdump-x86_64.c
+===================================================================
+--- kexec-tools-2.0.1.orig/kexec/arch/x86_64/crashdump-x86_64.c
++++ kexec-tools-2.0.1/kexec/arch/x86_64/crashdump-x86_64.c
+@@ -268,6 +268,9 @@ static int exclude_region(int *nr_ranges
+ {
+ 	int i, j, tidx = -1;
+ 	struct memory_range temp_region;
++	temp_region.start = 0;
++	temp_region.end = 0;
++	temp_region.type = 0;
  
-diff --git a/purgatory/arch/ppc/purgatory-ppc.c b/purgatory/arch/ppc/purgatory-ppc.c
-index 3d7d484..349e750 100644
---- a/purgatory/arch/ppc/purgatory-ppc.c
-+++ b/purgatory/arch/ppc/purgatory-ppc.c
-@@ -39,3 +39,8 @@ void post_verification_setup_arch(void)
- 	if (panic_kernel)
- 		crashdump_backup_memory();
- }
-+
-+void crashdump_backup_memory(void)
-+{
-+	return;
-+}
--- 
-1.6.0.6
-
+ 	for (i = 0; i < (*nr_ranges); i++) {
+ 		unsigned long long mstart, mend;
+@@ -403,6 +406,7 @@ static int delete_memmap(struct memory_r
+ 				memmap_p[i].end = addr - 1;
+ 				temp_region.start = addr + size;
+ 				temp_region.end = mend;
++				temp_region.type = memmap_p[i].type;
+ 				operation = 1;
+ 				tidx = i;
+ 				break;
+@@ -580,7 +584,7 @@ int load_crashdump_segments(struct kexec
+ 				unsigned long max_addr, unsigned long min_base)
+ {
+ 	void *tmp;
+-	unsigned long sz, elfcorehdr;
++	unsigned long sz, bufsz, memsz, elfcorehdr;
+ 	int nr_ranges, align = 1024, i;
+ 	struct memory_range *mem_range, *memmap_p;
+ 
+@@ -613,9 +617,10 @@ int load_crashdump_segments(struct kexec
+ 	/* Create elf header segment and store crash image data. */
+ 	if (crash_create_elf64_headers(info, &elf_info,
+ 				       crash_memory_range, nr_ranges,
+-				       &tmp, &sz,
++				       &tmp, &bufsz,
+ 				       ELF_CORE_HEADER_ALIGN) < 0)
+ 		return -1;
++	/* the size of the elf headers allocated is returned in 'bufsz' */
+ 
+ 	/* Hack: With some ld versions (GNU ld version 2.14.90.0.4 20030523),
+ 	 * vmlinux program headers show a gap of two pages between bss segment
+@@ -624,9 +629,15 @@ int load_crashdump_segments(struct kexec
+ 	 * elf core header segment to 16K to avoid being placed in such gaps.
+ 	 * This is a makeshift solution until it is fixed in kernel.
+ 	 */
+-	elfcorehdr = add_buffer(info, tmp, sz, 16*1024, align, min_base,
++	if (bufsz < (16*1024))
++		/* bufsize is big enough for all the PT_NOTE's and PT_LOAD's */
++		memsz = 16*1024;
++		/* memsz will be the size of the memory hole we look for */
++	else
++		memsz = bufsz;
++	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
+ 							max_addr, -1);
+-	if (delete_memmap(memmap_p, elfcorehdr, sz) < 0)
++	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
+ 		return -1;
+ 	cmdline_add_memmap(mod_cmdline, memmap_p);
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
 
 _______________________________________________
 kexec mailing list
