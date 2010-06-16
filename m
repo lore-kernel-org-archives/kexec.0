@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from koto.vergenet.net ([210.128.90.7])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OOiWh-0006W5-Jv
-	for kexec@lists.infradead.org; Wed, 16 Jun 2010 02:38:52 +0000
-Date: Wed, 16 Jun 2010 11:38:44 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Restore kexec uImage-ppc to working state
-Message-ID: <20100616023844.GC28659@verge.net.au>
-References: <1276544322-30412-1-git-send-email-msm@freescale.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1276544322-30412-1-git-send-email-msm@freescale.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OOltX-0000Pz-AB
+	for kexec@lists.infradead.org; Wed, 16 Jun 2010 06:14:40 +0000
+Date: Wed, 16 Jun 2010 15:06:00 +0900 (JST)
+Message-Id: <20100616.150600.74077966.igawa@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: output files filling ramdisk
+From: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+In-Reply-To: <E1OOc8T-0005Va-Fb@eag09.americas.sgi.com>
+References: <E1OOc8T-0005Va-Fb@eag09.americas.sgi.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,149 +22,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
+To: cpw@sgi.com
+Cc: oomichi@mxs.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
-CCed linuxppc-dev to fish for an ack.
+Hi,
 
-On Mon, Jun 14, 2010 at 02:38:42PM -0500, Matthew McClintock wrote:
-> Booting with uImage-ppc was broken by previous work, this
-> patch should restore it to working order
+Thank you for your patch.
+We'll merge and test it.
+
+But I have a question.
+What is your tested CPU arch? (x86/x86_64/ia64...)
+
+And could you separate this patch like below?
+o [1/2] output files filling ramdisk
+o [2/2] update LATEST_VERSION
+
+-- 
+Regards,
+Masayuki Igawa
+
+
+From: Cliff Wickman <cpw@sgi.com>
+Subject: [PATCH] makedumpfile: output files filling ramdisk
+Date: Tue, 15 Jun 2010 14:49:25 -0500
+
 > 
-> Signed-off-by: Matthew McClintock <msm@freescale.com>
+> makedumpfile's path FILENAME_BITMAP "/tmp/..." causes it to try to write
+> bitmap files to the ramdisk.  These can be very large if the machine has
+> lots of memory, and so writing the file can fail.
+> 
+> makedumpfile is exec'd by kdumptool. And kdumptool should chroot to
+> its --root directory.  But if the intent is to avoid this problem it
+> doesn't seem to work.  That may be the proper fix, rather than the below.
+> 
+> A TMPDIR environment variable is set in the script
+> /lib/mkinitrd/scripts/boot-kdump.sh. So this patch assumes that
+> the FILENAME_BITMAP path should be based at TMPDIR.
+> 
+> Also below, LATEST_VERSION is updated to KERNEL_VERSION(2, 6, 32), as this
+> seems to work on 2.6.32 and prevents a makedumpfile grumbling.
+> 
+> Diffed against makedumpfile-1.3.5
+> 
+> Signed-off-by: Cliff Wickman <cpw@sgi.com>
 > ---
->  kexec/arch/ppc/kexec-ppc.c         |   68 ++++++++++++++++++++++-------------
->  kexec/arch/ppc/kexec-uImage-ppc.c  |    5 +--
->  purgatory/arch/ppc/purgatory-ppc.c |    5 +++
->  3 files changed, 49 insertions(+), 29 deletions(-)
+>  makedumpfile.c |   13 ++++++++++---
+>  makedumpfile.h |    4 ++--
+>  2 files changed, 12 insertions(+), 5 deletions(-)
 > 
-> diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-> index 55cadd6..c073f56 100644
-> --- a/kexec/arch/ppc/kexec-ppc.c
-> +++ b/kexec/arch/ppc/kexec-ppc.c
-> @@ -261,11 +261,28 @@ static int get_base_ranges(void)
->  					break;
->  				}
->  			}
-> -			base_memory_range[local_memory_ranges].start =
-> -				((uint32_t *)buf)[0];
-> -			base_memory_range[local_memory_ranges].end  =
-> -				base_memory_range[local_memory_ranges].start +
-> -				((uint32_t *)buf)[1];
-> +
-> +			if (n == 8)
-> +			{
-> +				base_memory_range[local_memory_ranges].start =
-> +					((uint32_t *)buf)[0];
-> +				base_memory_range[local_memory_ranges].end  =
-> +					base_memory_range[local_memory_ranges].start +
-> +					((uint32_t *)buf)[1];
-> +			}
-> +			else if (n == 16)
-> +			{
-> +				base_memory_range[local_memory_ranges].start =
-> +                                        ((uint64_t *)buf)[0];
-> +                                base_memory_range[local_memory_ranges].end  =
-> +                                        base_memory_range[local_memory_ranges].start +
-> +                                        ((uint64_t *)buf)[1];
-> +			}
-> +			else
-> +			{
-> +				fprintf(stderr, "Mem node has invalid size: %d\n", n);
-> +				return -1;
-> +			}
->  			base_memory_range[local_memory_ranges].type = RANGE_RAM;
->  			local_memory_ranges++;
->  			dbgprintf("%016llx-%016llx : %x\n",
-> @@ -327,27 +344,28 @@ static int get_devtree_details(unsigned long kexec_flags)
->  		}
+> Index: makedumpfile-1.3.5/makedumpfile.c
+> ===================================================================
+> --- makedumpfile-1.3.5.orig/makedumpfile.c
+> +++ makedumpfile-1.3.5/makedumpfile.c
+> @@ -933,14 +933,21 @@ int
+>  open_dump_bitmap(void)
+>  {
+>  	int i, fd;
+> +	char *tmpname;
 >  
->  		if (strncmp(dentry->d_name, "chosen", 6) == 0) {
-> -			strcat(fname, "/linux,kernel-end");
-> -			file = fopen(fname, "r");
-> -			if (!file) {
-> -				perror(fname);
-> -				goto error_opencdir;
-> -			}
-> -			if (fread(&tmp_long, sizeof(unsigned long), 1, file)
-> -					!= 1) {
-> -				perror(fname);
-> -				goto error_openfile;
-> -			}
-> -			kernel_end = tmp_long;
-> -			fclose(file);
-> -
-> -			/* Add kernel memory to exclude_range */
-> -			exclude_range[i].start = 0x0UL;
-> -			exclude_range[i].end = kernel_end;
-> -			i++;
-> -			if (i >= max_memory_ranges)
-> -				realloc_memory_ranges();
-> +			/* only reserve kernel region if we are doing a crash kernel */
->  			if (kexec_flags & KEXEC_ON_CRASH) {
-> +				strcat(fname, "/linux,kernel-end");
-> +				file = fopen(fname, "r");
-> +				if (!file) {
-> +					perror(fname);
-> +					goto error_opencdir;
-> +				}
-> +				if (fread(&tmp_long, sizeof(unsigned long), 1, file)
-> +						!= 1) {
-> +					perror(fname);
-> +					goto error_openfile;
-> +				}
-> +				kernel_end = tmp_long;
-> +				fclose(file);
+> -	if ((info->name_bitmap
+> -	    = (char *)malloc(sizeof(FILENAME_BITMAP))) == NULL) {
+> +	tmpname = getenv("TMPDIR");
+> +	if (!tmpname)
+> +		tmpname = "/tmp";
 > +
-> +				/* Add kernel memory to exclude_range */
-> +				exclude_range[i].start = 0x0UL;
-> +				exclude_range[i].end = kernel_end;
-> +				i++;
-> +				if (i >= max_memory_ranges)
-> +					realloc_memory_ranges();
->  				memset(fname, 0, sizeof(fname));
->  				strcpy(fname, device_tree);
->  				strcat(fname, dentry->d_name);
-> diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-> index 45cde2f..4a8d28d 100644
-> --- a/kexec/arch/ppc/kexec-uImage-ppc.c
-> +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-> @@ -133,13 +133,10 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
->  	addr = dtb_addr;
->  	elf_rel_set_symbol(&info->rhdr, "dt_offset", &addr, sizeof(addr));
+> +	if ((info->name_bitmap = (char *)malloc(sizeof(FILENAME_BITMAP) +
+> +						strlen(tmpname) + 1)) == NULL) {
+>  		ERRMSG("Can't allocate memory for the filename. %s\n",
+>  		    strerror(errno));
+>  		return FALSE;
+>  	}
+> -	strcpy(info->name_bitmap, FILENAME_BITMAP);
+> +	strcpy(info->name_bitmap, tmpname);
+> +	strcat(info->name_bitmap, "/");
+> +	strcat(info->name_bitmap, FILENAME_BITMAP);
+>  	if ((fd = mkstemp(info->name_bitmap)) < 0) {
+>  		ERRMSG("Can't open the bitmap file(%s). %s\n",
+>  		    info->name_bitmap, strerror(errno));
+> Index: makedumpfile-1.3.5/makedumpfile.h
+> ===================================================================
+> --- makedumpfile-1.3.5.orig/makedumpfile.h
+> +++ makedumpfile-1.3.5/makedumpfile.h
+> @@ -230,7 +230,7 @@ do { \
+>  #define BUFSIZE_FGETS		(1500)
+>  #define BUFSIZE_BITMAP		(4096)
+>  #define PFN_BUFBITMAP		(BITPERBYTE*BUFSIZE_BITMAP)
+> -#define FILENAME_BITMAP		"/tmp/kdump_bitmapXXXXXX"
+> +#define FILENAME_BITMAP		"kdump_bitmapXXXXXX"
+>  #define FILENAME_STDOUT		"STDOUT"
 >  
-> -	addr = rmo_top;
-> -	elf_rel_set_symbol(&info->rhdr, "mem_size", &addr, sizeof(addr));
-> -
->  #define PUL_STACK_SIZE  (16 * 1024)
->  	addr = locate_hole(info, PUL_STACK_SIZE, 0, 0, -1, 1);
->  	addr += PUL_STACK_SIZE;
-> -	elf_rel_set_symbol(&info->rhdr, "pul_stack", &addr, sizeof(addr));
-> +	elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
->  	/* No allocation past here in order not to overwrite the stack */
->  #undef PUL_STACK_SIZE
+>  /*
+> @@ -449,7 +449,7 @@ do { \
+>  #define KVER_MIN_SHIFT 16
+>  #define KERNEL_VERSION(x,y,z) (((x) << KVER_MAJ_SHIFT) | ((y) << KVER_MIN_SHIFT) | (z))
+>  #define OLDEST_VERSION		KERNEL_VERSION(2, 6, 15)/* linux-2.6.15 */
+> -#define LATEST_VERSION		KERNEL_VERSION(2, 6, 31)/* linux-2.6.31 */
+> +#define LATEST_VERSION		KERNEL_VERSION(2, 6, 32)/* linux-2.6.32 */
 >  
-> diff --git a/purgatory/arch/ppc/purgatory-ppc.c b/purgatory/arch/ppc/purgatory-ppc.c
-> index 3d7d484..349e750 100644
-> --- a/purgatory/arch/ppc/purgatory-ppc.c
-> +++ b/purgatory/arch/ppc/purgatory-ppc.c
-> @@ -39,3 +39,8 @@ void post_verification_setup_arch(void)
->  	if (panic_kernel)
->  		crashdump_backup_memory();
->  }
-> +
-> +void crashdump_backup_memory(void)
-> +{
-> +	return;
-> +}
-> -- 
-> 1.6.0.6
-> 
+>  /*
+>   * vmcoreinfo in /proc/vmcore
 > 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
 
 _______________________________________________
 kexec mailing list
