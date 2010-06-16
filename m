@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay1.sgi.com ([192.48.179.29] helo=relay.sgi.com)
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OOslY-0007a3-Sa
-	for kexec@lists.infradead.org; Wed, 16 Jun 2010 13:34:54 +0000
+	id 1OOt00-00005i-6j
+	for kexec@lists.infradead.org; Wed, 16 Jun 2010 13:49:48 +0000
 Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
-	by relay1.corp.sgi.com (Postfix) with ESMTP id 0DEAC8F80CD
-	for <kexec@lists.infradead.org>; Wed, 16 Jun 2010 06:34:52 -0700 (PDT)
+	by relay2.corp.sgi.com (Postfix) with ESMTP id 12D793040ED
+	for <kexec@lists.infradead.org>; Wed, 16 Jun 2010 06:49:47 -0700 (PDT)
 Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
-	by estes.americas.sgi.com (Postfix) with ESMTP id D6F64700193B
-	for <kexec@lists.infradead.org>; Wed, 16 Jun 2010 08:34:51 -0500 (CDT)
+	by estes.americas.sgi.com (Postfix) with ESMTP id 9A372700193D
+	for <kexec@lists.infradead.org>; Wed, 16 Jun 2010 08:49:46 -0500 (CDT)
 Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
-	(envelope-from <cpw@sgi.com>) id 1OOsmn-0001CG-Pk
-	for kexec@lists.infradead.org; Wed, 16 Jun 2010 08:36:09 -0500
-Subject: [PATCH] kexec: extend for large cpu count and memory
-Message-Id: <E1OOsmn-0001CG-Pk@eag09.americas.sgi.com>
+	(envelope-from <cpw@sgi.com>) id 1OOt1E-0001GS-Ih
+	for kexec@lists.infradead.org; Wed, 16 Jun 2010 08:51:04 -0500
+Subject: [PATCH] makedumpfile: output files filling ramdisk
+Message-Id: <E1OOt1E-0001GS-Ih@eag09.americas.sgi.com>
 From: Cliff Wickman <cpw@sgi.com>
-Date: Wed, 16 Jun 2010 08:36:09 -0500
+Date: Wed, 16 Jun 2010 08:51:04 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,86 +32,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 
-Simon,
-  per your reply to my first version
-  > Could you provide a diff against the current git tree?
-  done
-  > In particular, I think that the temp_region fiddling has already been done.
-  dropped from this patch
+Tested on SGI UV, which is x86_64.
 
-The MAX_MEMORY_RANGES of 64 is too small for a very large NUMA machine.
-(A 512 processor SGI UV, for example.)
+makedumpfile's path FILENAME_BITMAP "/tmp/..." causes it to try to write
+bitmap files to the ramdisk.  These can be very large if the machine has
+lots of memory, and so writing the file can fail.
 
-And fix a temporary workaround (hack) in load_crashdump_segments() that
-assumes that 16k is sufficient for the size of the crashdump elf header.
-This is too small for a machine with a large cpu count. A PT_NOTE is created
-in the elf header for each cpu.
+(makedumpfile is exec'd by kdumptool. And kdumptool should chroot to
+ its --root directory.  But if the intent is to avoid this problem it
+ doesn't seem to work.  That may be the proper fix, rather than the below.)
 
-Diffed against git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
+A TMPDIR environment variable is set in the script
+/lib/mkinitrd/scripts/boot-kdump.sh. So this patch assumes that
+the FILENAME_BITMAP path should be based at TMPDIR.
+
+Diffed against makedumpfile-1.3.5
 
 Signed-off-by: Cliff Wickman <cpw@sgi.com>
 
 ---
- kexec/arch/i386/kexec-x86.h          |    2 +-
- kexec/arch/x86_64/crashdump-x86_64.c |   15 +++++++++++----
+ makedumpfile.c |   13 ++++++++++---
+ makedumpfile.h |    4 ++--
  2 files changed, 12 insertions(+), 5 deletions(-)
 
-Index: kexec-tools/kexec/arch/i386/kexec-x86.h
+Index: makedumpfile-1.3.5/makedumpfile.c
 ===================================================================
---- kexec-tools.orig/kexec/arch/i386/kexec-x86.h
-+++ kexec-tools/kexec/arch/i386/kexec-x86.h
-@@ -1,7 +1,7 @@
- #ifndef KEXEC_X86_H
- #define KEXEC_X86_H
- 
--#define MAX_MEMORY_RANGES 64
-+#define MAX_MEMORY_RANGES 1024
- 
- enum coretype {
- 	CORE_TYPE_UNDEF = 0,
-Index: kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c
-===================================================================
---- kexec-tools.orig/kexec/arch/x86_64/crashdump-x86_64.c
-+++ kexec-tools/kexec/arch/x86_64/crashdump-x86_64.c
-@@ -591,7 +591,7 @@ int load_crashdump_segments(struct kexec
- 				unsigned long max_addr, unsigned long min_base)
+--- makedumpfile-1.3.5.orig/makedumpfile.c
++++ makedumpfile-1.3.5/makedumpfile.c
+@@ -933,14 +933,21 @@ int
+ open_dump_bitmap(void)
  {
- 	void *tmp;
--	unsigned long sz, elfcorehdr;
-+	unsigned long sz, bufsz, memsz, elfcorehdr;
- 	int nr_ranges, align = 1024, i;
- 	struct memory_range *mem_range, *memmap_p;
+ 	int i, fd;
++	char *tmpname;
  
-@@ -637,9 +637,10 @@ int load_crashdump_segments(struct kexec
- 	/* Create elf header segment and store crash image data. */
- 	if (crash_create_elf64_headers(info, &elf_info,
- 				       crash_memory_range, nr_ranges,
--				       &tmp, &sz,
-+				       &tmp, &bufsz,
- 				       ELF_CORE_HEADER_ALIGN) < 0)
- 		return -1;
-+	/* the size of the elf headers allocated is returned in 'bufsz' */
+-	if ((info->name_bitmap
+-	    = (char *)malloc(sizeof(FILENAME_BITMAP))) == NULL) {
++	tmpname = getenv("TMPDIR");
++	if (!tmpname)
++		tmpname = "/tmp";
++
++	if ((info->name_bitmap = (char *)malloc(sizeof(FILENAME_BITMAP) +
++						strlen(tmpname) + 1)) == NULL) {
+ 		ERRMSG("Can't allocate memory for the filename. %s\n",
+ 		    strerror(errno));
+ 		return FALSE;
+ 	}
+-	strcpy(info->name_bitmap, FILENAME_BITMAP);
++	strcpy(info->name_bitmap, tmpname);
++	strcat(info->name_bitmap, "/");
++	strcat(info->name_bitmap, FILENAME_BITMAP);
+ 	if ((fd = mkstemp(info->name_bitmap)) < 0) {
+ 		ERRMSG("Can't open the bitmap file(%s). %s\n",
+ 		    info->name_bitmap, strerror(errno));
+Index: makedumpfile-1.3.5/makedumpfile.h
+===================================================================
+--- makedumpfile-1.3.5.orig/makedumpfile.h
++++ makedumpfile-1.3.5/makedumpfile.h
+@@ -230,7 +230,7 @@ do { \
+ #define BUFSIZE_FGETS		(1500)
+ #define BUFSIZE_BITMAP		(4096)
+ #define PFN_BUFBITMAP		(BITPERBYTE*BUFSIZE_BITMAP)
+-#define FILENAME_BITMAP		"/tmp/kdump_bitmapXXXXXX"
++#define FILENAME_BITMAP		"kdump_bitmapXXXXXX"
+ #define FILENAME_STDOUT		"STDOUT"
  
- 	/* Hack: With some ld versions (GNU ld version 2.14.90.0.4 20030523),
- 	 * vmlinux program headers show a gap of two pages between bss segment
-@@ -648,9 +649,15 @@ int load_crashdump_segments(struct kexec
- 	 * elf core header segment to 16K to avoid being placed in such gaps.
- 	 * This is a makeshift solution until it is fixed in kernel.
- 	 */
--	elfcorehdr = add_buffer(info, tmp, sz, 16*1024, align, min_base,
-+	if (bufsz < (16*1024))
-+		/* bufsize is big enough for all the PT_NOTE's and PT_LOAD's */
-+		memsz = 16*1024;
-+		/* memsz will be the size of the memory hole we look for */
-+	else
-+		memsz = bufsz;
-+	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
- 							max_addr, -1);
--	if (delete_memmap(memmap_p, elfcorehdr, sz) < 0)
-+	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
- 		return -1;
- 	cmdline_add_memmap(mod_cmdline, memmap_p);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+ /*
 
 _______________________________________________
 kexec mailing list
