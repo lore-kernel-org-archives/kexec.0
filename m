@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bw0-f49.google.com ([209.85.214.49])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OSVM3-000078-M9
-	for kexec@lists.infradead.org; Sat, 26 Jun 2010 13:23:32 +0000
-Received: by bwz20 with SMTP id 20so70001bwz.36
-	for <kexec@lists.infradead.org>; Sat, 26 Jun 2010 06:23:29 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <m1mxuqu8yr.fsf@fess.ebiederm.org>
-References: <20100619132633.GA24277@basil.fritz.box>
-	<m1mxuqu8yr.fsf@fess.ebiederm.org>
-From: Michael Kerrisk <mtk.manpages@gmail.com>
-Date: Sat, 26 Jun 2010 15:23:08 +0200
-Message-ID: <AANLkTillNx5owgU4O71izNz9FEL06MiI-FquTZ3ofktP@mail.gmail.com>
-Subject: Re: [PATCH] kexec_load manpage
-Reply-To: mtk.manpages@gmail.com
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OT5dw-0007Bs-Kj
+	for kexec@lists.infradead.org; Mon, 28 Jun 2010 04:08:26 +0000
+Date: Mon, 28 Jun 2010 13:01:13 +0900 (JST)
+Message-Id: <20100628.130113.166830409.igawa@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH] add missing options to the --help output
+From: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+In-Reply-To: <20100622.171909.16259691.igawa@mxs.nes.nec.co.jp>
+References: <1414379256.643411277182628954.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+	<1205413910.643441277182670290.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+	<20100622.171909.16259691.igawa@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,195 +20,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, Andi Kleen <andi@firstfloor.org>
-Cc: linux-man@vger.kernel.org, Kexec Mailing List <kexec@lists.infradead.org>
+To: caiqian@redhat.com
+Cc: oomichi@mxs.nes.nec.co.jp, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hi Andi,
+Hi, CAI.
 
-Are Eric's suggestions of "physical" below correct? If so, could you
-amend the page and resubmit?
+From: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH] add missing options to the --help output
+Date: Tue, 22 Jun 2010 17:19:09 +0900 (JST)
+> Thank you for your patch.
+> I'll check it.
 
-Also, I'd prefer to have the reboot.2 and kexec_load.2 page as
-separate patches, so could you split them on the resend please?
+I've changed your patch for adding other options and fixing the format.
+I'll merge and push this patch.
 
-Thanks,
+If you have questions or comments, please let me know that.
 
-Michael
+====
+commit ea35b5782aea1fc1d8d521cb19c7467f5ab0e8cb
+Author: caiqian@redhat.com <caiqian@redhat.com>
+Date:   Tue Jun 22 00:57:50 2010 -0400
 
-On Sat, Jun 19, 2010 at 9:18 PM, Eric W. Biederman
-<ebiederm@xmission.com> wrote:
-> Andi Kleen <andi@firstfloor.org> writes:
->
->> Here are the beginnings of a kexec_load manpage.
->>
->> Probably needs some more review from Eric and may need some additional
->> information.
->>
->> The syscall is actually only usable with a kernel patch to export
->> the header I just sent separately.
->
-> The syscall has been used for years with a separate non-kernel header.
->
->
-> Eric
->
->
->> Also added the kexec subcall to reboot(2)
->>
->> -Andi
->>
->> diff --git a/man2/kexec_load.2 b/man2/kexec_load.2
->> new file mode 100644
->> index 0000000..f486641
->> --- /dev/null
->> +++ b/man2/kexec_load.2
->> @@ -0,0 +1,94 @@
->> +.TH KEXEC_LOAD 2 2010-06-16 "Linux" "Linux Programmer's Manual"
->> +.SH NAME
->> +kexec_load \- Load a new kernel for later execution.
->> +.SH SYNOPSIS
->> +.b #include <linux/kexec.h>
->> +.br
->> +.BI "long kexec_load(unsigned long " entry ", unsigned long " nr_segmen=
-ts ","
->> +.br
->> +.BI =A0 =A0 =A0 "struct kexec_segment *" segments ", unsigned long " fl=
-ags ");"
->> +.SH DESCRIPTION
->> +.BR kexec_load
->> +loads a new kernel that can be executed later
->> +by
->> +.I reboot(2).
->> +An alternative approach is to specify
->> +.B KEXEC_ON_CRASH
->> +in the
->> +.I flags
->> +argument and then the new kernel will be automatically executed on a
->> +system crash.
->> +.\" XXX figure out how this is really used
->> +With
->> +.B KEXEC_PRESERVE_CONTEXT
->> +specified in
->> +.I flags
->> +kexec will preserve the system hard and
->> +software state before executing the kexec kernel. This
->> +could be used for system suspend.
->> +
->> +.I flags
->> +also contains the architecture of the executed kernel or
->> +be
->> +.I KEXEC_ARCH_DEFAULT
->> +for the current architecture.
->> +Valid architectures are
->> +.I KEXEC_ARCH_I386,
->> +.I KEXEC_ARCH_X86_64,
->> +.I KEXEC_ARCH_PPC,
->> +.I KEXEC_ARCH_PPC64,
->> +.I KEXEC_ARCH_IA_64,
->> +.I KEXEC_ARCH_ARM,
->> +.I KEXEC_ARCH_S390,
->> +.I KEXEC_ARCH_SH,
->> +.I KEXEC_ARCH_MIPS,
->> +.I KEXEC_ARCH_MIPS_LE.
->> +The architecture must be executable on the CPU of the system.
->> +
->> +.I entry
->> +is the virtual entry address in the kernel image.
->
-> Physical.
->
->> +.I nr_segments
->> +is the number of segments pointed to by the
->> +.I segments
->> +pointer.
->> +.I segments
->> +is an array of
->> +.I struct kexec_segment
->> +structures which define the kernel layout:
->> +.in +4n
->> +.nf
->> +
->> +struct kexec_segment {
->> + =A0 =A0 void =A0 *buf; =A0 =A0/* Buffer in user space */
->> + =A0 =A0 size_t =A0bufsz; =A0/* Buffer length in user space */
->> + =A0 =A0 void =A0 *mem; =A0 =A0/* Virtual address of kernel */
->> + =A0 =A0 size_t =A0memsz; =A0/* Virtual address length */
->
-> There are again physical addresses.
->
-> There is an expectation that at hand off from sys_kexec that
-> virtual and physical addresses will be identity mapped. =A0But
-> this isn't the old Alpha booting convention where you have
-> a virtual address and then you have to parse the page table
-> to figure out where your kernel was actually loaded.
->
->> +};
->> +.fi
->> +.in
->> +.PP
->> +.\" XXX elaborate on this
->> +The kernel image defined by
->> +.I segments
->> +is copied from the calling process into previously reserved memory.
->> +.SH CONFORMING TO
->> +This system call is Linux-specific.
->> +.SH NOTES
->> +kexec_load is currently not defined in glibc. To call it use:
->> +.in +4n
->> +.nf
->> +#define _GNU_SOURCE
->> +#include <syscall.h>
->> +#include <asm/unistd.h>
->> +#include <linux/kexec.h>
->> +
->> +ret =3D syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
->> +.fi
->> +.in
->> +.PP
->> +.I linux/kexec.h as a exported header is only available in 2.6.38
->> +and later kernels, in earlier kernels the constants need to be copied
->> +out of the kernel source.
->> +.SH SEE ALSO
->> +.BR syscall (2),
->> +.BR reboot (2)
->> diff --git a/man2/reboot.2 b/man2/reboot.2
->> index 253bd34..87204b1 100644
->> --- a/man2/reboot.2
->> +++ b/man2/reboot.2
->> @@ -139,6 +139,11 @@ For the i386 architecture, the additional argument =
-does not do
->> =A0anything at present (2.1.122), but the type of reboot can be
->> =A0determined by kernel command-line arguments ("reboot=3D...") to be
->> =A0either warm or cold, and either hard or through the BIOS.
->> +.TP
->> +.B LINUX_REBOOT_KEXEC
->> +executes a kernel that has been loaded earlier
->> +with
->> +.I kexec_load(2).
->> =A0.SH "RETURN VALUE"
->> =A0For the values of
->> =A0.I cmd
->> @@ -177,4 +182,5 @@ and should not be used in programs intended to be po=
-rtable.
->> =A0.BR capabilities (7),
->> =A0.BR ctrlaltdel (8),
->> =A0.BR halt (8),
->> -.BR reboot (8)
->> +.BR reboot (8),
->> +.BR kexec_load (2)
->
+    add missing options to the --help output
+    
+    It tries to keep --help output and manpage in sync.
+    
+    Signed-off-by: CAI Qian <caiqian@redhat.com>
+    Signed-off-by: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 89360bd..7ad6199 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -622,9 +622,19 @@ print_usage(void)
+ 	MSG("  Rearranging the dump data in the flattened format to a readable DUMPFILE:\n");
+ 	MSG("  # makedumpfile -R DUMPFILE\n");
+ 	MSG("\n");
++	MSG("  Split the dump data to multiple DUMPFILEs in parallel:\n");
++	MSG("  # makedumpfile --split [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE1\\\n");
++	MSG("    DUMPFILE2 DUMPFILE3 ..\n");
++	MSG("\n");
++	MSG("  Reassemble multiple DUMPFILEs:\n");
++	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\\\n");
++	MSG("\n");
+ 	MSG("  Generating VMCOREINFO:\n");
+ 	MSG("  # makedumpfile -g VMCOREINFO -x VMLINUX\n");
+ 	MSG("\n");
++	MSG("  Extracting the dmesg log from a VMCORE:\n");
++	MSG("  # makedumpfile --dump-dmesg [-x VMLINUX|-i VMCOREINFO] VMCORE LOGFILE\n");
++	MSG("\n");
+ 	MSG("\n");
+ 	MSG("  Creating DUMPFILE of Xen:\n");
+ 	MSG("  # makedumpfile -E [--xen-syms XEN-SYMS|--xen-vmcoreinfo VMCOREINFO] VMCORE DUMPFILE\n");
+@@ -673,8 +683,9 @@ print_usage(void)
+ 	MSG("      Specify VMCOREINFO instead of VMLINUX for analyzing the first kernel's\n");
+ 	MSG("      memory usage.\n");
+ 	MSG("      VMCOREINFO should be made beforehand by makedumpfile with -g option,\n");
+-	MSG("      and it contains the first kernel's information. If Dump_Level is 2 or\n");
+-	MSG("      more and [-x VMLINUX] is not specified, this option is necessary.\n");
++	MSG("      and it contains the first kernel's information. This option is necessary\n");
++	MSG("      if VMCORE does not contain VMCOREINFO, [-x VMLINUX] is not specified,\n");
++	MSG("      and dump_level is 2 or more.\n");
+ 	MSG("\n");
+ 	MSG("  [-g VMCOREINFO]:\n");
+ 	MSG("      Generate VMCOREINFO from the first kernel's VMLINUX.\n");
+@@ -694,6 +705,18 @@ print_usage(void)
+ 	MSG("      Rearrange the dump data in the flattened format from the standard input\n");
+ 	MSG("      to a readable DUMPFILE.\n");
+ 	MSG("\n");
++	MSG("  [--split]:\n");
++	MSG("      Split the dump data to multiple DUMPFILEs in parallel. If specifying\n");
++	MSG("      DUMPFILEs on different storage devices, a device can share I/O load with\n");
++	MSG("      other devices and it reduces time for saving the dump data. The file size\n");
++	MSG("      of each DUMPFILE is smaller than the system memory size which is divided\n");
++	MSG("      by the number of DUMPFILEs.\n");
++	MSG("      This feature supports only the kdump-compressed format.\n");
++	MSG("\n");
++	MSG("  [--reassemble]:\n");
++	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
++	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
++	MSG("\n");
+ 	MSG("  [--xen-syms XEN-SYMS]:\n");
+ 	MSG("      Specify the XEN-SYMS to analyze Xen's memory usage.\n");
+ 	MSG("\n");
+@@ -735,6 +758,13 @@ print_usage(void)
+ 	MSG("      of virtual address. If specifing the VIRTUAL_ADDRESS, its physical\n");
+ 	MSG("      address is printed.\n");
+ 	MSG("\n");
++	MSG("  [--dump-dmesg]:\n");
++	MSG("      This option overrides the normal behavior of makedumpfile. Instead of\n");
++	MSG("      compressing and filtering a VMCORE to make it smaller, it simply\n");
++	MSG("      extracts the dmesg log from a VMCORE and writes it to the specified\n");
++	MSG("      LOGFILE. If a VMCORE does not contain VMCOREINFO for dmesg, it is\n");
++	MSG("      necessary to specfiy [-x VMLINUX] or [-i VMCOREINFO].\n");
++	MSG("\n");
+ 	MSG("  [-D]:\n");
+ 	MSG("      Print debugging message.\n");
+ 	MSG("\n");
+@@ -744,6 +774,10 @@ print_usage(void)
+ 	MSG("  [-h]:\n");
+ 	MSG("      Show help message.\n");
+ 	MSG("\n");
++	MSG("  [-b <order>]\n");
++	MSG("      Specify the cache 2^order pages in ram when generating vmcore info\n");
++	MSG("      before writing to output\n");
++	MSG("\n");
+ 	MSG("  [-v]:\n");
+ 	MSG("      Show the version of makedumpfile.\n");
+ 	MSG("\n");
+====
 
 
-
--- =
-
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Author of "The Linux Programming Interface" http://blog.man7.org/
+Thanks.
+-- Masayuki Igawa
 
 _______________________________________________
 kexec mailing list
