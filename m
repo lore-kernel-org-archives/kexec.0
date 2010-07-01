@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 1 Jul 2010 09:42:55 +0300
-From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Received: from mx4-phx2.redhat.com ([209.132.183.25]
+	helo=mx02.colomx.prod.int.phx2.redhat.com)
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OUK6m-0000Bw-1b
+	for kexec@lists.infradead.org; Thu, 01 Jul 2010 13:47:16 +0000
+Date: Thu, 1 Jul 2010 09:47:14 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <2026062630.609651277992034780.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <1274198794.609431277991897515.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 Subject: Re: [PATCH 0/4] crash utility: add ARM crashdump support
-Message-ID: <20100701064255.GA25358@esdhcp04058.research.nokia.com>
-References: <1093965077.507331277902686384.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-	<482970280.508981277903458507.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <482970280.508981277903458507.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,47 +22,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ext Dave Anderson <anderson@redhat.com>
-Cc: Jan Karlsson <Jan.Karlsson@sonyericsson.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Thomas.Fange@sonyericsson.com" <Thomas.Fange@sonyericsson.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "crash-utility@redhat.com" <crash-utility@redhat.com>
+To: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Cc: kexec@lists.infradead.org, "Discussion list for crash utility usage,
+	maintenance and development" <crash-utility@redhat.com>
 
-On Wed, Jun 30, 2010 at 03:10:58PM +0200, ext Dave Anderson wrote:
+
+----- "Mika Westerberg" <ext-mika.1.westerberg@nokia.com> wrote:
 > 
-> Actually I have a problem with this -- although I think it's a good one for you...
+> On Wed, Jun 30, 2010 at 03:10:58PM +0200, ext Dave Anderson wrote:
 > 
-> As I understand it, this patch-set will run on an ARM host against either
-> an ARM kdump-ELF or makedumpfile-generated dumpfile, and presumably on a
-> live ARM system.
-
-Right. Except that current patch set only supports makedumpfile generated
-dumpfile.
-
-> As it turns out, over the last couple of weeks, I've been going back-and-forth
-> with another ARM-support patch-set created by Jan Karlsson and Thomas Fange of 
-> Sony Ericcson.  However, their patch set is designed to be built on and run
-> on a 32-bit x86 host, although I think that with a very minor tweak, it could
-> also could be built and run on an ARM host.  For that reason, it doesn't support
-> running on a live ARM system, but rather only for ARM dumpfiles running
-> on an x86 host (or x86_64 given its capability of running 32-bit binaries).
-
-Good to know. I didn't notice that someone else was doing the similar thing.
-
-As there is no cross-architecture support in current crash, I decided to take
-the easiest route and make it run natively on ARM. It works on i386 as well but
-only because of the same endianess and word size. So I'm currently running this
-on the target device or under ARM linux-user QEMU.
-
-> In any case, I'm more than happy to fold in ARM support, but I don't know what
-> to do in this case.
+> > In any case, I'm more than happy to fold in ARM support, but I don't know what
+> > to do in this case.
+> > 
+> > I wonder if it would it be possible for you, Jan and Thomas to somehow collaborate
+> > on this effort?  It seems that both sides would benefit from the work of the other
+> > side.  I've added them to the cc list.
 > 
-> I wonder if it would it be possible for you, Jan and Thomas to somehow collaborate
-> on this effort?  It seems that both sides would benefit from the work of the other
-> side.  I've added them to the cc list.
+> Sure. Can those patches be found in some public ML? I quickly searched but
+> couldn't find anything.
+> 
+> Regards,
+> MW
 
-Sure. Can those patches be found in some public ML? I quickly searched but
-couldn't find anything.
+Jan is contacting you off-list.
 
-Regards,
-MW
+Thanks,
+  Dave
 
 _______________________________________________
 kexec mailing list
