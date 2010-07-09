@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OX7J4-0006Ny-Ji
-	for kexec@lists.infradead.org; Fri, 09 Jul 2010 06:43:31 +0000
-Date: Fri, 9 Jul 2010 15:43:25 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec for powerpc mpc85xx processors
-Message-ID: <20100709064324.GA24576@verge.net.au>
-References: <AANLkTink0yPL5tiAZ88LsALQ0Xf0EeJjPOHCV-YO5ll5@mail.gmail.com>
-	<1278656898.25847.2.camel@localhost>
+	id 1OXDg5-0007Bj-7t
+	for kexec@lists.infradead.org; Fri, 09 Jul 2010 13:31:41 +0000
+Date: Fri, 9 Jul 2010 09:31:38 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: Kdump and kexec
+Message-ID: <20100709133138.GB3672@redhat.com>
+References: <E27739FC41FADC49A98999F21AC13A4303EAB58A80@CHNINMSMBX01.chennaiodc.lntinfotech.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1278656898.25847.2.camel@localhost>
+In-Reply-To: <E27739FC41FADC49A98999F21AC13A4303EAB58A80@CHNINMSMBX01.chennaiodc.lntinfotech.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,23 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: krish <radhakrishna.p@gmail.com>, kexec@lists.infradead.org
+To: Dinesh Thanumoorthy <Dinesh.Thanumoorthy@lntinfotech.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-On Fri, Jul 09, 2010 at 01:28:18AM -0500, Matthew McClintock wrote:
-> On Fri, 2010-07-09 at 11:39 +0530, krish wrote:
-> > Hi,
-> > 
-> > Is kexec-tools support powerpc mpc85xx processors. If so, please help
-> > me to compile the package for powerpc processors.
-> > 
+On Fri, Jul 09, 2010 at 10:35:07AM +0530, Dinesh Thanumoorthy wrote:
+> Hi,
 > 
-> Some work has been done recently on the kernel side and kexec side.
-> First, what version of the kernel are you running? Secondly, you will
-> need to get kexec from git or possibly a very recent version for it to
-> work.
+>      Problem :
+> 
+> 
+> 
+>                     I am using KVM-88 modules  with 2.6.21 public kernel.
+> 
+>  I simulate a crash and load new kernel with kexec is fine. But after inserting kvm modules ,It is hanging .
+> 
 
-Current git and 2.0.2-rc1 are the same thing at this moment :-)
+CCing to kexec mailig list. 
+
+IIRC, there were issues with kvm + kexec as kvm was doing something
+special. Try newer/latest kernels and i think it should work.
+
+Thanks
+Vivek
+
+
+> 
+> 
+> 
+>  Could u please suggest some ideas to resolve the problem
+> 
+> 
+> Reg
+> Dinesh.T
+> 
+> ________________________________
+> This Email may contain confidential or privileged information for the intended recipient (s) If you are not the intended recipient, please do not use or disseminate the information, notify the sender and delete it from your system.
+> 
+> ______________________________________________________________________
 
 _______________________________________________
 kexec mailing list
