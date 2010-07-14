@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OYfq3-0000zI-U2
-	for kexec@lists.infradead.org; Tue, 13 Jul 2010 13:48:00 +0000
-Date: Tue, 13 Jul 2010 09:46:09 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH] powerpc: Add vmcoreinfo symbols to allow makdumpfile to
-	filter core files properly
-Message-ID: <20100713134609.GA14514@hmsreliant.think-freely.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OYu5n-0003RL-7z
+	for kexec@lists.infradead.org; Wed, 14 Jul 2010 05:01:11 +0000
+Date: Wed, 14 Jul 2010 14:01:03 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec -l could not find a free area of memory locate_hole failed
+Message-ID: <20100714050103.GA29498@verge.net.au>
+References: <BAY157-w54278284B21FED4E234976D4B80@phx.gbl>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <BAY157-w54278284B21FED4E234976D4B80@phx.gbl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +23,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, hbabu@us.ibm.com, benh@kernel.crashing.org, paulus@samba.org, linuxppc-dev@ozlabs.org
-Cc: nhorman@tuxdriver.com
+To: Brian Cockrell <bjcockrell@hotmail.com>
+Cc: kexec@lists.infradead.org
 
-Hey all-
-	About 2 years ago now, I sent this patch upstream to allow makedumpfile
-to properly filter cores on ppc64:
-http://www.mail-archive.com/kexec@lists.infradead.org/msg02426.html
-It got acks from the kexec folks so I pulled it into RHEL, but I never checked
-back here to make sure it ever made it in, which apparently it didn't.  It still
-needs to be included, so I'm reposting it here, making sure to copy all the ppc
-folks this time.  I've retested it on the latest linus kernel and it works fine,
-allowing makedumpfile to find all the symbols it needs to properly strip a
-vmcore on ppc64.
+On Mon, Jul 12, 2010 at 11:31:50PM +0000, Brian Cockrell wrote:
+> 
+> I received the message "Could not find a free area of memory of 21b1a000 bytes...Locate_hole failed" while attempting to perform a kexec-l on an image file of approximately 550mb.  Hardware is x86 with 4GB memory.  Kernel is 2.6.34 and booted via Livecd.  free is showing 3047324kb free memory available.  Dmesg is showing nothing.  I am able to boot a 400mb image. Suggested debug steps?
 
-Neil
+Hi Brian,
 
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+I would guess that the problem is that the code can't find
+a (continuous) range of physical memory to place the image.
 
+I'm a bit rust on this portion of the code, but as I understand
+it kexec works out the memory segments that it needs
+and tries to place each of them in a valid "System RAM" region.
 
- machine_kexec.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The code that is failing would be a good place to start,
+kexec/kexec.c:locate_hole() of kexec-tools.
 
+The memory regions are set up by inspecting /sys/firmware,
+or if that fails, using /proc/iomem. See
+kexec/arch/i386/kexec-x86-common.c:get_memory_ranges_sysfs().
 
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-index bb3d893..0df7031 100644
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -45,6 +45,18 @@ void machine_kexec_cleanup(struct kimage *image)
- 		ppc_md.machine_kexec_cleanup(image);
- }
- 
-+void arch_crash_save_vmcoreinfo(void)
-+{
-+
-+#ifdef CONFIG_NEED_MULTIPLE_NODES
-+	VMCOREINFO_SYMBOL(node_data);
-+	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
-+#endif
-+#ifndef CONFIG_NEED_MULTIPLE_NODES
-+	VMCOREINFO_SYMBOL(contig_page_data);
-+#endif
-+}
-+
- /*
-  * Do not allocate memory (or fail in any way) in machine_kexec().
-  * We are past the point of no return, committed to rebooting now.
+550Mb, is a rather large image. I'm curious to know why.
+
 
 _______________________________________________
 kexec mailing list
