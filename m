@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OZf9E-0002CS-MY
-	for kexec@lists.infradead.org; Fri, 16 Jul 2010 07:15:54 +0000
-Date: Fri, 16 Jul 2010 16:15:47 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Kexec Reboot Network Issue
-Message-ID: <20100716071547.GB20761@verge.net.au>
-References: <4C3EF80B.1040400@symplicity.com>
-	<20100715142003.GB19856@verge.net.au>
-	<4C3F2ACF.60601@symplicity.com>
+Date: Fri, 16 Jul 2010 11:14:05 +0300
+From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Subject: Re: [PATCH v2 6/8] arm: allow passing an ELF64 header to
+	elf_check_arch()
+Message-ID: <20100716081405.GR4247@esdhcp04058.research.nokia.com>
+References: <cover.1273041357.git.ext-mika.1.westerberg@nokia.com>
+	<3c8da055f0a84cfd1c6659d9fda24e4eb97ab9fb.1273041358.git.ext-mika.1.westerberg@nokia.com>
+	<20100510112036.GC14337@n2100.arm.linux.org.uk>
+	<20100510120920.GD11783@esdhcp04058.research.nokia.com>
+	<20100510122156.GA7796@n2100.arm.linux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4C3F2ACF.60601@symplicity.com>
+In-Reply-To: <20100510122156.GA7796@n2100.arm.linux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,75 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Richard Genthner <rgenthner@symplicity.com>
-Cc: netdev@vger.kernel.org, Matt Carlson <mcarlson@broadcom.com>, kexec@lists.infradead.org, Michael Chan <mchan@broadcom.com>
+To: ext Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-[ CCed Michael Chan, Matt Carlson and Netdev ]
-
-On Thu, Jul 15, 2010 at 11:35:43AM -0400, Richard Genthner wrote:
-> On 07/15/2010 10:20 AM, Simon Horman wrote:
-> >On Thu, Jul 15, 2010 at 07:59:07AM -0400, Richard Genthner wrote:
-> >>I'm currently using the following string:
-> >>
-> >>kexex --type=elf-x86_64 --args-linux -l /boot/vmlinuz-2.6.18-12.el5
-> >>--initrid=/boot/initrd-2.6.18-128.el6.img --append="`cat
-> >>/proc/cmdline`"
-> >>kexec -e
-> >>
-> >>Some times we can get to the box from any subnet, other times we can
-> >>only get to the box from the same subnet only. Our solution to this
-> >>is to down the iface and then restart networking. Has anyone else
-> >>run into this issue?
-> >Hi Richard,
-> >
-> >could you be more specific about which NIC you are using?
-> >And is it at all possible to test a newer kernel version?
-> >
-> >What I suspect is happening is that the NIC is getting into an unknown
-> >state. And what I'm hoping is that is a problem thats already been
-> >addressed.
->
-> I would try a different kenerl but our cluster fs has us locked to
-> this kernel until we finish the upgrade to the new cluster fs
-> version. heres ethtool on the iface
+On Mon, May 10, 2010 at 02:21:56PM +0200, ext Russell King - ARM Linux wrote:
+> On Mon, May 10, 2010 at 03:09:20PM +0300, Mika Westerberg wrote:
+[...]
+> > I really don't know but fs/proc/vmcore.c is coded in such way that it supports
+> > both types of ELF headers. It however, passes the header to elf_check_arch()
+> > which in our case should fail if it is something else than ELF32 header.
 > 
-> from lshw
-> *-network
->                 description: Ethernet interface
->                 product: NetXtreme BCM5721 Gigabit Ethernet PCI Express
->                 vendor: Broadcom Corporation
->                 physical id: 0
->                 bus info: pci@0000:03:00.0
->                 logical name: eth0
->                 version: 21
->                 serial: 00:25:64:3b:9c:ae
->                 size: 1GB/s
->                 capacity: 1GB/s
->                 width: 64 bits
->                 clock: 33MHz
->                 capabilities: pm vpd msi pciexpress bus_master
-> cap_list ethernet physical tp 10bt 10bt-fd 100bt 100bt-fd 1000bt
-> 1000bt-fd autonegotiation
->                 configuration: autonegotiation=on broadcast=yes
-> driver=tg3 driverversion=3.93 duplex=full firmware=5721-v3.65,
-> ASFIPMI v6.25 ip=172.16.1.123 latency=0 link=yes module=tg3
-> multicast=yes port=twisted pair speed=1GB/s
+> There's other arches which want elf_check_arch to be a function call, so
+> I think my question needs to be looked at more closely - and possibly
+> the code changed such that we don't end up with this situation.
+> 
+> Maybe a cleaner solution would be for vmcore.c to split its calls to
+> elf_check_arch() - to be elf32_check_arch() and elf64_check_arch() ?
+> Platforms where it's just a macro can define both to be elf_check_arch()
+> but those where only one flavour is supported should define the unsupported
+> flavour to zero - which incidentally would allow the compiler to optimize
+> away the unnecessary parts of parse_crash_elf*_headers().
 
-Hi Richard,
+Russell,
 
-first, please don't top-post, its not the done thing in these parts.
+I noticed that you applied all the kdump patches except this and the
+CONFIG_CRASH_DUMP patch. Thanks.
 
-I had a quick hunt through the git change log and the onl changed that
-jumped out was "[TG3]: Fix msi issue with kexec/kdump"[1], but this
-seems to have been back-ported to the initrd-2.6.18-128.el5 (I assume
-you meant 5 not 6) kernel.
+Should I update this patch as you describe above? So that we don't need to
+perform any casting but just have elf_check_arch() separated into 32- and 64-bit
+versions. Or is there something else preventing these 2 patches to be merged?
 
-[1] http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=ee6a99b539a50b4e9398938a0a6d37f8bf911550
-
-In any case I strongly suspect that the problem is a kernel problem and as
-such can't be solved modifying the kernel or at least tg.ko module (which
-is probably in the initrd). I suggest logging bug report with Red Hat.
-
+Thanks,
+MW
 
 _______________________________________________
 kexec mailing list
