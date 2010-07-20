@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tx2ehsobe003.messaging.microsoft.com ([65.55.88.13]
-	helo=TX2EHSOBE005.bigfish.com)
+Received: from tx2ehsobe005.messaging.microsoft.com ([65.55.88.15]
+	helo=TX2EHSOBE010.bigfish.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1ObJDb-0005JB-SF
-	for kexec@lists.infradead.org; Tue, 20 Jul 2010 20:15:13 +0000
+	id 1ObJDc-0005JO-QF
+	for kexec@lists.infradead.org; Tue, 20 Jul 2010 20:15:14 +0000
 From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH v2 5/7] Add support for ramdisk on ppc32 for uImage-ppc and
-	Elf-ppc
-Date: Tue, 20 Jul 2010 15:14:58 -0500
-Message-ID: <1279656900-27458-5-git-send-email-msm@freescale.com>
-In-Reply-To: <1279656900-27458-4-git-send-email-msm@freescale.com>
+Subject: [PATCH v2 7/7] Add documentation/howto for mpc85xx systems
+Date: Tue, 20 Jul 2010 15:15:00 -0500
+Message-ID: <1279656900-27458-7-git-send-email-msm@freescale.com>
+In-Reply-To: <1279656900-27458-6-git-send-email-msm@freescale.com>
 References: <1279656900-27458-1-git-send-email-msm@freescale.com>
 	<1279656900-27458-2-git-send-email-msm@freescale.com>
 	<1279656900-27458-3-git-send-email-msm@freescale.com>
 	<1279656900-27458-4-git-send-email-msm@freescale.com>
+	<1279656900-27458-5-git-send-email-msm@freescale.com>
+	<1279656900-27458-6-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,325 +31,208 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Matthew McClintock <msm@freescale.com>, linuxppc-dev@lists.ozlabs.org
 
-This fixes --reuseinitrd and --ramdisk option for ppc32 on
-uImage-ppc and Elf. It works for normal kexec as well as for
-kdump.
-
-When using --reuseinitrd you need to specifify retain_initrd
-on the command line. Also, if you are doing kdump you need to make
-sure your initrd lives in the crashdump region otherwise the
-kdump kernel will not be able to access it. The --ramdisk option
-should always work.
-
 Signed-off-by: Matthew McClintock <msm@freescale.com>
 ---
- kexec/arch/ppc/Makefile               |    1 +
- kexec/arch/ppc/include/arch/options.h |    3 +
- kexec/arch/ppc/kexec-elf-ppc.c        |   44 ++++++++++++++++++++-
- kexec/arch/ppc/kexec-ppc.c            |    6 +++
- kexec/arch/ppc/kexec-ppc.h            |    2 +
- kexec/arch/ppc/kexec-uImage-ppc.c     |   68 +++++++++++++++++++++++++++++++-
- 6 files changed, 118 insertions(+), 6 deletions(-)
+ doc/mpc85xx.txt |  190 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 190 insertions(+), 0 deletions(-)
+ create mode 100644 doc/mpc85xx.txt
 
-diff --git a/kexec/arch/ppc/Makefile b/kexec/arch/ppc/Makefile
-index 5988213..c963175 100644
---- a/kexec/arch/ppc/Makefile
-+++ b/kexec/arch/ppc/Makefile
-@@ -21,6 +21,7 @@ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/arch/ppc/libfdt/%)
- CPPFLAGS+=-I$(srcdir)/kexec/arch/$(ARCH)/libfdt
- 
- ppc_KEXEC_SRCS += $(libfdt_SRCS)
-+ppc_ARCH_REUSE_INITRD =
- 
- dist += kexec/arch/ppc/Makefile $(ppc_KEXEC_SRCS)			\
- 	kexec/arch/ppc/kexec-ppc.h kexec/arch/ppc/ppc_asm.h		\
-diff --git a/kexec/arch/ppc/include/arch/options.h b/kexec/arch/ppc/include/arch/options.h
-index f646ccc..0c00ea7 100644
---- a/kexec/arch/ppc/include/arch/options.h
-+++ b/kexec/arch/ppc/include/arch/options.h
-@@ -8,6 +8,7 @@
- #define OPT_GAMECUBE    (OPT_ARCH_MAX+1)
- #define OPT_DTB         (OPT_ARCH_MAX+2)
- #define OPT_NODES       (OPT_ARCH_MAX+3)
-+#define OPT_RAMDISK	(OPT_ARCH_MAX+4)
- 
- /* Options relevant to the architecture (excluding loader-specific ones),
-  * in this case none:
-@@ -35,6 +36,8 @@
- 	KEXEC_ARCH_OPTIONS \
- 	{"command-line", 1, 0, OPT_APPEND},\
- 	{"append",	 1, 0, OPT_APPEND},\
-+	{"ramdisk",	 1, 0, OPT_APPEND},\
-+	{"initrd",	 1, 0, OPT_APPEND},\
- 	{"gamecube",	 1, 0, OPT_GAMECUBE},\
- 	{"dtb",	    1, 0, OPT_DTB},\
- 	{"reuse-node",	   1, 0, OPT_NODES},\
-diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index 87e6507..58bba54 100644
---- a/kexec/arch/ppc/kexec-elf-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -127,6 +127,8 @@ static const struct option options[] = {
- 	KEXEC_ARCH_OPTIONS
- 	{"command-line", 1, 0, OPT_APPEND},
- 	{"append",       1, 0, OPT_APPEND},
-+	{"ramdisk",	 1, 0, OPT_RAMDISK},
-+	{"initrd",	 1, 0, OPT_RAMDISK},
- 	{"gamecube",     1, 0, OPT_GAMECUBE},
- 	{"dtb",     1, 0, OPT_DTB},
- 	{"reuse-node",     1, 0, OPT_NODES},
-@@ -139,10 +141,12 @@ void elf_ppc_usage(void)
- 	printf(
- 	     "    --command-line=STRING Set the kernel command line to STRING.\n"
- 	     "    --append=STRING       Set the kernel command line to STRING.\n"
-+	     "    --ramdisk=<filename>  Initial RAM disk.\n"
-+	     "    --initrd=<filename>   same as --ramdisk\n"
- 	     "    --gamecube=1|0        Enable/disable support for ELFs with changed\n"
- 	     "                          addresses suitable for the GameCube.\n"
--	     "     --dtb=<filename>     Specify device tree blob file.\n"
--	     "     --reuse-node=node    Specify nodes which should be taken from /proc/device-tree.\n"
-+	     "    --dtb=<filename>	   Specify device tree blob file.\n"
-+	     "    --reuse-node=node	   Specify nodes which should be taken from /proc/device-tree.\n"
- 	     "                          Can be set multiple times.\n"
- 	     );
- }
-@@ -177,7 +181,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	unsigned long my_kernel, my_dt_offset;
- 	unsigned long my_stack, my_backup_start;
- 	unsigned int slave_code[256 / sizeof(unsigned int)], master_entry;
--	unsigned char *seg_buf = NULL;
-+	char *seg_buf = NULL;
- 	off_t seg_size = 0;
- 	int target_is_gamecube = 0;
- 	unsigned int addr;
-@@ -193,6 +197,8 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	dtb = NULL;
- 	max_addr = LONG_MAX;
- 	hole_addr = 0;
-+	kernel_addr = 0;
-+	ramdisk = 0;
- 
- 	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
- 		switch (opt) {
-@@ -207,6 +213,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 		case OPT_APPEND:
- 			command_line = optarg;
- 			break;
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
- 		case OPT_GAMECUBE:
- 			target_is_gamecube = atoi(optarg);
- 			break;
-@@ -234,6 +243,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 		command_line_len = strlen(command_line) + 1;
- 	}
- 
-+	if (ramdisk && reuse_initrd)
-+		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
+diff --git a/doc/mpc85xx.txt b/doc/mpc85xx.txt
+new file mode 100644
+index 0000000..af96841
+--- /dev/null
++++ b/doc/mpc85xx.txt
+@@ -0,0 +1,190 @@
++			  mpc85xx kexec howto
++			  -------------------
 +
- 	fixup_nodes[cur_fixup] = NULL;
- 
- 	/* Need to append some command line parameters internally in case of
-@@ -339,6 +351,32 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
- 			purgatory_size, 0, elf_max_addr(&ehdr), 1, 0);
- 
-+	if (ramdisk)
-+	{
-+		seg_buf = slurp_file(ramdisk, &seg_size);
-+		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
-+			0, 0, max_addr, 1);
-+		ramdisk_base = hole_addr;
-+		ramdisk_size = seg_size;
-+	}
-+	if (reuse_initrd)
-+	{
-+		ramdisk_base = initrd_base;
-+		ramdisk_size = initrd_size;
-+	}
++		  Matthew McClintock <msm@freescale.com>
++			Last Updated: 2010-07-20
 +
-+	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
-+		if ( (ramdisk_base < crash_base) ||
-+			(ramdisk_base > crash_base + crash_size) )
-+		{
-+			printf("WARNING: ramdisk is above crashkernel region!\n");
-+		}
-+		else if (ramdisk_base + initrd_size > crash_base + crash_size)
-+		{
-+			printf("WARNING: ramdisk overflows crashkernel region!\n");
-+		}
-+	}
++There is some terminology that will be useful which will be described here.
 +
- 	if (dtb) {
- 		char *blob_buf;
- 		off_t blob_size = 0;
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index d9f1d05..7adea2b 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -33,6 +33,12 @@ unsigned long long ramdisk_base = 0, ramdisk_size = 0;
- unsigned long long devicetree_base = 0, devicetree_size = 0;
- unsigned int rtas_base, rtas_size;
- int max_memory_ranges;
-+const char *ramdisk;
++boot kernel - the first one that you start, from u-boot for instance
++kexec kernel - the kernel that you reboot into when running "kexec -e"
++kdump kernel - the kernel that you reboot into after the boot kernel crash
++relocatable kernel - kernel that can boot from a 256MB alignment of physical
++		     memory (for mpc85xx systems at least)
 +
-+void arch_reuse_initrd(void)
-+{
-+	reuse_initrd = 1;
-+}
- 
- #ifdef WITH_GAMECUBE
- #define MAX_MEMORY_RANGES  64
-diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
-index aefdc6f..5ad3575 100644
---- a/kexec/arch/ppc/kexec-ppc.h
-+++ b/kexec/arch/ppc/kexec-ppc.h
-@@ -65,8 +65,10 @@ typedef struct mem_rgns {
- extern mem_rgns_t usablemem_rgns;
- extern int max_memory_ranges;
- extern unsigned long long initrd_base, initrd_size;
-+extern unsigned long long ramdisk_base, ramdisk_size;
- extern unsigned long long devicetree_base, devicetree_size;
- extern unsigned char reuse_initrd;
-+extern const char *ramdisk;
- #define COMMAND_LINE_SIZE	512 /* from kernel */
- /*fs2dt*/
- void reserve(unsigned long long where, unsigned long long length);
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 21a7c1b..310d6c3 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -14,12 +14,16 @@
- #include "kexec-ppc.h"
- #include "fixup_dtb.h"
- #include <kexec-uImage.h>
-+#include "crashdump-powerpc.h"
-+#include <limits.h>
- 
- /* See options.h -- add any more there, too. */
- static const struct option options[] = {
- 	KEXEC_ARCH_OPTIONS
- 	{"command-line",	1, 0, OPT_APPEND},
- 	{"append",	1, 0, OPT_APPEND},
-+	{"ramdisk",	1, 0, OPT_RAMDISK},
-+	{"initrd",	1, 0, OPT_RAMDISK},
- 	{"dtb",		1, 0, OPT_DTB},
- 	{"reuse-node",	1, 0, OPT_NODES},
- 	{0, 0, 0, 0},
-@@ -31,8 +35,10 @@ void uImage_ppc_usage(void)
- 	printf(
- 			"    --command-line=STRING Set the kernel command line to STRING.\n"
- 			"    --append=STRING       Set the kernel command line to STRING.\n"
--			"     --dtb=<filename>     Specify device tree blob file.\n"
--			"     --reuse-node=node    Specify nodes which should be taken from /proc/device-tree.\n"
-+			"    --ramdisk=<filename>  Initial RAM disk.\n"
-+			"    --initrd=<filename>   same as --ramdisk\n"
-+			"    --dtb=<filename>      Specify device tree blob file.\n"
-+			"    --reuse-node=node     Specify nodes which should be taken from /proc/device-tree.\n"
- 			"                          Can be set multiple times.\n"
- 	);
- }
-@@ -46,7 +52,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 		off_t len, struct kexec_info *info, unsigned int load_addr,
- 		unsigned int ep)
- {
--	char *command_line, *cmdline_buf;
-+	char *command_line, *cmdline_buf, *crash_cmdline;
- 	int command_line_len;
- 	char *dtb;
- 	unsigned int addr;
-@@ -56,10 +62,15 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	int cur_fixup = 0;
- 	int opt;
- 	int ret;
-+	char *seg_buf = NULL;
-+	off_t seg_size = 0;
-+	unsigned long long hole_addr;
-+	unsigned long max_addr;
- 
- 	cmdline_buf = NULL;
- 	command_line = NULL;
- 	dtb = NULL;
-+	max_addr = LONG_MAX;
- 
- 	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
- 		switch (opt) {
-@@ -75,6 +86,10 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 			command_line = optarg;
- 			break;
- 
-+		case OPT_RAMDISK:
-+			ramdisk = optarg;
-+			break;
++Each of the above types of kernels have specific requirements, they can
++all be different kernels or all the same kernel depending on your
++particular requirements.
 +
- 		case OPT_DTB:
- 			dtb = optarg;
- 			break;
-@@ -90,6 +105,9 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 		}
- 	}
- 
-+	if (ramdisk && reuse_initrd)
-+		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
++1) Build kernel for kexec (i.e. running kexec -e to reboot)
 +
- 	command_line_len = 0;
- 	if (command_line) {
- 		command_line_len = strlen(command_line) + 1;
-@@ -114,10 +132,54 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	}
- 	add_segment(info, buf, len, load_addr, len + (1 * 1024 * 1024));
- 
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+                crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
-+                memset((void *)crash_cmdline, 0, COMMAND_LINE_SIZE);
-+        } else
-+                crash_cmdline = NULL;
++This case is the simplest. You need to enable CONFIG_KEXEC for kexec for the
++"boot kernel", the kexec kernel can be a any kernel that already boots on your
++platform. However, if you want to be able run kexec again after rebooting once
++you will need to have CONFIG_KEXEC enabled for the kexec kernel as well.
++	
++2) Build for kdump (i.e. for rebooting when your main kernel crashes)
 +
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		ret = load_crashdump_segments(info, crash_cmdline,
-+						max_addr, 0);
-+		if (ret < 0) {
-+			return -1;
-+		}
-+	}
++In this situation, you need to be aware that the kdump kernel will boot from
++a different physical address than your boot kernel (or even the kexec kernel). 
++There are two approaches to this. First, you can build a relocatable kernel
++which will boot from a different physical address with no changes. This method
++is ideal as it would even allow your boot kernel and kdump kernel to be the
++same one. Optionally, you can build a kernel with custom physical address and
++kernel base address according to where you will load the kdump kernel*, but
++it's much easier to just use a relocatable kernel and let things work
++themselves out at run time.
 +
- 	cmdline_buf = xmalloc(COMMAND_LINE_SIZE);
- 	memset((void *)cmdline_buf, 0, COMMAND_LINE_SIZE);
- 	if (command_line)
- 		strncat(cmdline_buf, command_line, command_line_len);
-+	if (crash_cmdline)
-+		strncat(cmdline_buf, crash_cmdline,
-+			sizeof(crash_cmdline) -
-+			strlen(crash_cmdline) - 1);
++You will need to enable CONFIG_CRASH_DUMP on the boot kernel. You can chose to
++enable CONFIG_RELOCATABLE for the kdump kernel, and you will still want to
++verify that CONFIG_KERNEL_START and CONFIG_PHYSICAL_START have sane defaults.
++Most likely, you can leave these as 0xC0000000 and 0x0000000 respectively.
++Finally, on the kdump kernel you will want to make sure CONFIG_PROC_VMCORE is
++enabled as well so the core dump is exported via /proc/vmcore. You can just 
++enable all these options on the boot and kdump and use the same kernel for both
++which is the simplest option.
 +
-+	if (ramdisk)
-+	{
-+		seg_buf = slurp_file(ramdisk, &seg_size);
-+		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
-+			0, 0, max_addr, 1);
-+		ramdisk_base = hole_addr;
-+		ramdisk_size = seg_size;
-+	}
-+	if (reuse_initrd)
-+	{
-+		ramdisk_base = initrd_base;
-+		ramdisk_size = initrd_size;
-+	}
++Summary of 1 & 2:
 +
-+	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
-+		if ( (ramdisk_base < crash_base) ||
-+		     (ramdisk_base > crash_base + crash_size) )
-+		{
-+			printf("WARNING: ramdisk is above crashkernel region!\n");
-+		}
-+		else if (ramdisk_base + ramdisk_size > crash_base + crash_size)
-+		{
-+			printf("WARNING: ramdisk overflows crashkernel region!\n");
-+		}
-+	}
- 
- 	if (dtb) {
- 		char *blob_buf;
++Just enable kexec, crash support, and relocatable kernel and you should be good
++to go for all of the above scenarios using the same kernel.
++
++3) Obtaining a device tree
++
++You best bet for getting a working device tree is to pull the one the current
++kernel is using. The easiest way to do this is use the device tree compiler
++to create one from the proc file system
++
++	$ dtc -I fs -O dtb /proc/device-tree/ > flat-device-tree
++
++Kexec should be able to take this flat device tree, and modifiy it/update it
++as needed for your particular scenario. It will update memreserve regions, add
++initrd/ramdisks, fixup the command line, etc.
++
++NOTE: If no device tree is given, kexec will do the above on it's own to 
++      obtain a useable device tree. You can specify the device tree to use
++      with the --dtb=<flat_device_tree_blob> kexec argument.
++
++4) Kexec'ing a new kernel
++
++If you have followed the procedure above you need to do the following to reboot
++into a new kexec kernel.
++
++	$ kexec -l {uImage,vmlinux}
++	$ kexec -e
++
++These options will boot the new kernel, you should see some message as shown
++below.  NOTE: The old command line is used, so if you are booting from an NFS
++mount it should work fine, however it you are using an initrd/ramdisk there are
++caveats to consider (see #6 below).
++
++	sd 2:0:0:0: [sda] Synchronizing SCSI cache
++	Starting new kernel
++	Bye!
++	Reserving 256MB of memory at 512MB for crashkernel (System RAM: 4096MB)
++	Using MPC8572 DS machine description
++	[snip]
++
++5) Setting for a kdump kernel
++
++For the boot kernel, you need to reserve a region of memory for the kdump kernel
++to use when the system crashes. This region is removed for use from the boot
++kernel and when the system crashes the kdump kernel will operate out of this
++region exclusively. For mpc85xx, we need to pick a region aligned at 256MB if we
++are using a relocatable kernel, other than that the size allocated needs to leave
++enough memory for your kdump environment to function properly as well as store
++the kdump kernel and any other items added (this would most likely be a ramdisk).
++Some valid options are:
++
++	crashkernel={128M,256M,512M}@{256M,512M} and others
++
++For the example below we choose 256MB (0x10000000) of memory located at offset 
++512MB (0x20000000). The command line option would look like this.
++
++	crashkernel=256M@512M
++	
++You can see the values the kernel parsed by running looking
++at your proc entries. In this case, the physical address is a 64bit value.
++
++	$ hexdump -C /proc/device-tree/chosen/linux,crashkernel-base 
++	00000000  00 00 00 00 20 00 00 00                           |.... ...|
++	00000008
++	$ hexdump -C /proc/device-tree/chosen/linux,crashkernel-size 
++	00000000  00 00 00 00 10 00 00 00                           |........|
++	00000008
++
++Kdump kernels are only run when the current kernel crashes, there you can not
++just restart your system. However, you can still trigger a crash for testing 
++purposes by enabling CONFIG_MAGIC_SYSRQ and executing the following.
++
++	$ echo c > /proc/sysrq-trigger
++
++However, before this we need to setup our kdump kernel as shown below.
++
++	$ kexec -p {uImage.reloc, vmlinux}
++
++The kernel we pass in is a relocatable kernel, in the case of vmlinux no changes
++are required since there is no wrapper specifically assigning it to a certain
++address. However, kexec will attempt to honor the addresses given to mkimage
++when you created your uImage, therefore you need to create a uImage with the
++appropriate load and entry address
++
++	$ mkimage -A ppc -O linux -T kernel -C gzip -a 0x20000000 -e 0x20000000
++	-n Linux-2.6.35-rc3
++	Image Name:   Linux-2.6.35-rc3-00246-gd666cd8-
++	Created:      Wed Jul 14 17:34:19 2010
++	Image Type:   PowerPC Linux Kernel Image (gzip compressed)
++	Data Size:    3261979 Bytes = 3185.53 kB = 3.11 MB
++	Load Address: 0x20000000
++	Entry Point:  0x20000000
++
++You do not sctrictly need to use a RELOCATABLE kernel, you can build a kernel
++that can execute from this load address and entry point and it would your 
++kdump kernel would still function properly.
++
++The above load address aligns with the crashkernel argument we passed
++in via the command line. It is important to make sure these addresses match
++each other when using uImage. It's less important for vmlinux since kexec will
++attempt to load it at the first available region which should match correctly.
++	
++6) Misc. options to kexec
++
++There are a few options you can pass into kexec to modify it's behaviour. First,
++if you want to reuse your current initrd/ramdisk you can use the following.
++You will also need to add "retain_initrd" to the boot kernel command line for
++this option to work. So now your command line would look something like this.
++
++	crashkernel=256M@512M retain_initrd
++
++NOTE: If you are setting up a kdump kernel, you will need to make sure your 
++original initrd/ramdisk resides in the memory range reserved for the kdump
++kernel, otherwise the kdump kernel won't be able to access it. For example
++it needs to live within the 512MB-768M range in this case. A warning will
++be displayed if this is not the case.
++
++	$ kexec -p uImage.reloc --reuseinitrd
++
++It's even easier to specify a new ramdisk and you don't need to modify your
++boot kernel command line. You also might need to update your command line to
++boot with your new ramdisk, you can do it via the --command-line option as well
++as add any other changes you want to the command line as well.
++
++	$ kexec -p uImage.reloc --ramdisk=rootfs.ext2.gz
++	  --command-line="root=/dev/ram rw console=ttyS0,115200"
++
++or the following if you wanted kexec and add "retain_initrd" to the command
++line and boot with a ramdisk
++
++	$ kexec -l uImage --ramdisk=rootfs.ext2.gz 
++          --command-line="`cat /proc/cmdline` retain_initrd"
++	$ kexec -e
++
++7) After a crash
++
++If you have a kdump kernel loaded and your system crashes you can now debug
++the crash.
++
++	$ gdb vmlinux /proc/vmcore
++
++You might need to copy these files elsewhere or setup your ramdisk to do these
++things automatically.
 -- 
 1.6.0.6
 
