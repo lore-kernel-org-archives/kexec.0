@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OaLRk-0002VQ-5u
-	for kexec@lists.infradead.org; Sun, 18 Jul 2010 04:25:49 +0000
-Subject: Re: Kexec Reboot Network Issue
-References: <4C3EF80B.1040400@symplicity.com>
-	<20100715142003.GB19856@verge.net.au> <4C3F2ACF.60601@symplicity.com>
-	<20100716071547.GB20761@verge.net.au>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Sat, 17 Jul 2010 21:25:26 -0700
-In-Reply-To: <20100716071547.GB20761@verge.net.au> (Simon Horman's message of
-	"Fri\, 16 Jul 2010 16\:15\:47 +0900")
-Message-ID: <m1630dh0w9.fsf@fess.ebiederm.org>
+Received: from tx2ehsobe001.messaging.microsoft.com ([65.55.88.11]
+	helo=TX2EHSOBE001.bigfish.com)
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1ObJDa-0005Gx-6a
+	for kexec@lists.infradead.org; Tue, 20 Jul 2010 20:15:11 +0000
+From: Matthew McClintock <msm@freescale.com>
+Subject: [PATCH v2 4/7] Update Elf-ppc to support crash kernel and misc fixes
+Date: Tue, 20 Jul 2010 15:14:57 -0500
+Message-ID: <1279656900-27458-4-git-send-email-msm@freescale.com>
+In-Reply-To: <1279656900-27458-3-git-send-email-msm@freescale.com>
+References: <1279656900-27458-1-git-send-email-msm@freescale.com>
+	<1279656900-27458-2-git-send-email-msm@freescale.com>
+	<1279656900-27458-3-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,83 +25,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: netdev@vger.kernel.org, Michael Chan <mchan@broadcom.com>, Matt Carlson <mcarlson@broadcom.com>, kexec@lists.infradead.org, Richard Genthner <rgenthner@symplicity.com>
+To: kexec@lists.infradead.org
+Cc: Matthew McClintock <msm@freescale.com>, linuxppc-dev@lists.ozlabs.org
 
-Simon Horman <horms@verge.net.au> writes:
+Use current command line if none given, specifically useful for
+when arguments are added causing the use of the current cmdline
+to not occur
 
-> [ CCed Michael Chan, Matt Carlson and Netdev ]
->
-> On Thu, Jul 15, 2010 at 11:35:43AM -0400, Richard Genthner wrote:
->> On 07/15/2010 10:20 AM, Simon Horman wrote:
->> >On Thu, Jul 15, 2010 at 07:59:07AM -0400, Richard Genthner wrote:
->> >>I'm currently using the following string:
->> >>
->> >>kexex --type=elf-x86_64 --args-linux -l /boot/vmlinuz-2.6.18-12.el5
->> >>--initrid=/boot/initrd-2.6.18-128.el6.img --append="`cat
->> >>/proc/cmdline`"
->> >>kexec -e
->> >>
->> >>Some times we can get to the box from any subnet, other times we can
->> >>only get to the box from the same subnet only. Our solution to this
->> >>is to down the iface and then restart networking. Has anyone else
->> >>run into this issue?
->> >Hi Richard,
->> >
->> >could you be more specific about which NIC you are using?
->> >And is it at all possible to test a newer kernel version?
->> >
->> >What I suspect is happening is that the NIC is getting into an unknown
->> >state. And what I'm hoping is that is a problem thats already been
->> >addressed.
->>
->> I would try a different kenerl but our cluster fs has us locked to
->> this kernel until we finish the upgrade to the new cluster fs
->> version. heres ethtool on the iface
->> 
->> from lshw
->> *-network
->>                 description: Ethernet interface
->>                 product: NetXtreme BCM5721 Gigabit Ethernet PCI Express
->>                 vendor: Broadcom Corporation
->>                 physical id: 0
->>                 bus info: pci@0000:03:00.0
->>                 logical name: eth0
->>                 version: 21
->>                 serial: 00:25:64:3b:9c:ae
->>                 size: 1GB/s
->>                 capacity: 1GB/s
->>                 width: 64 bits
->>                 clock: 33MHz
->>                 capabilities: pm vpd msi pciexpress bus_master
->> cap_list ethernet physical tp 10bt 10bt-fd 100bt 100bt-fd 1000bt
->> 1000bt-fd autonegotiation
->>                 configuration: autonegotiation=on broadcast=yes
->> driver=tg3 driverversion=3.93 duplex=full firmware=5721-v3.65,
->> ASFIPMI v6.25 ip=172.16.1.123 latency=0 link=yes module=tg3
->> multicast=yes port=twisted pair speed=1GB/s
->
-> Hi Richard,
->
-> first, please don't top-post, its not the done thing in these parts.
->
-> I had a quick hunt through the git change log and the onl changed that
-> jumped out was "[TG3]: Fix msi issue with kexec/kdump"[1], but this
-> seems to have been back-ported to the initrd-2.6.18-128.el5 (I assume
-> you meant 5 not 6) kernel.
->
-> [1] http://git.kernel.org/?p=linux/kernel/git/torvalds/linux-2.6.git;a=commit;h=ee6a99b539a50b4e9398938a0a6d37f8bf911550
->
-> In any case I strongly suspect that the problem is a kernel problem and as
-> such can't be solved modifying the kernel or at least tg.ko module (which
-> is probably in the initrd). I suggest logging bug report with Red Hat.
+We also try to load the dtb above the kernel, this is useful for
+relocatable kernels where they device tree needs to reside just
+above the kernel base address
 
-The classic workaround is to rmmod the driver before calling kexec.
-Frequently driver remove methods used by rmmod are much more tested
-then the shutdown methods used by kexec and reboot.
+Set the kernel entry address in the relocatable purgatory code
+so we jump to the correct start address if not the default. Useful
+for relocatable kernels
+
+Signed-off-by: Matthew McClintock <msm@freescale.com>
+---
+ kexec/arch/ppc/kexec-elf-ppc.c |   26 ++++++++++++++------------
+ kexec/arch/ppc/kexec-ppc.c     |    7 ++++---
+ 2 files changed, 18 insertions(+), 15 deletions(-)
+
+diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+index ab2d343..87e6507 100644
+--- a/kexec/arch/ppc/kexec-elf-ppc.c
++++ b/kexec/arch/ppc/kexec-elf-ppc.c
+@@ -182,6 +182,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	int target_is_gamecube = 0;
+ 	unsigned int addr;
+ 	unsigned long dtb_addr;
++	unsigned long kernel_addr;
+ #endif
+ #define FIXUP_ENTRYS	(20)
+ 	char *fixup_nodes[FIXUP_ENTRYS + 1];
+@@ -228,6 +229,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	command_line_len = 0;
+ 	if (command_line) {
+ 		command_line_len = strlen(command_line) + 1;
++	} else {
++		command_line = get_command_line();
++		command_line_len = strlen(command_line) + 1;
+ 	}
+ 
+ 	fixup_nodes[cur_fixup] = NULL;
+@@ -264,11 +268,11 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	if (size > phdr->p_memsz)
+ 		size = phdr->p_memsz;
+ 
+-	hole_addr = locate_hole(info, size, 0, 0, max_addr, 1);
++	kernel_addr = locate_hole(info, size, 0, 0, max_addr, 1);
+ #ifdef CONFIG_PPC64
+-	ehdr.e_phdr[0].p_paddr = (Elf64_Addr)hole_addr;
++	ehdr.e_phdr[0].p_paddr = (Elf64_Addr)kernel_addr;
+ #else
+-	ehdr.e_phdr[0].p_paddr = hole_addr;
++	ehdr.e_phdr[0].p_paddr = kernel_addr;
+ #endif
+ 
+ 	/* Load the Elf data */
+@@ -343,10 +347,11 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 		blob_buf = slurp_file(dtb, &blob_size);
+ 		if (!blob_buf || !blob_size)
+ 			die("Device tree seems to be an empty file.\n");
++
+ 		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes,
+ 				cmdline_buf);
+-		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, 0,
+-				KERNEL_ACCESS_TOP, -1);
++		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, kernel_addr,
++				kernel_addr + KERNEL_ACCESS_TOP, -1);
+ 	} else {
+ 		/* create from fs2dt */
+ 		seg_buf = NULL;
+@@ -364,19 +369,16 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 
+ 
+ 	if (dtb) {
+-		/* set various variables for the purgatory */
+-		addr = ehdr.e_entry;
++		/* set various variables for the purgatory  ehdr.e_entry is a
++		 * virtual address, we can use kernel_addr which
++		 * should be the physical start address of the kernel */
++		addr = kernel_addr;
+ 		elf_rel_set_symbol(&info->rhdr, "kernel", &addr, sizeof(addr));
+ 
+ 		addr = dtb_addr;
+ 		elf_rel_set_symbol(&info->rhdr, "dt_offset",
+ 						&addr, sizeof(addr));
+ 
+-		addr = rmo_top;
+-
+-		elf_rel_set_symbol(&info->rhdr, "mem_size",
+-						&addr, sizeof(addr));
+-
+ #define PUL_STACK_SIZE	(16 * 1024)
+ 		addr = locate_hole(info, PUL_STACK_SIZE, 0, 0,
+ 				elf_max_addr(&ehdr), 1);
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index d7afad6..d9f1d05 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -27,9 +27,10 @@
+ #include "config.h"
+ 
+ uint64_t rmo_top;
+-unsigned long long crash_base, crash_size;
+-unsigned long long initrd_base, initrd_size;
+-unsigned long long devicetree_base, devicetree_size;
++unsigned long long crash_base = 0, crash_size = 0;
++unsigned long long initrd_base = 0, initrd_size = 0;
++unsigned long long ramdisk_base = 0, ramdisk_size = 0;
++unsigned long long devicetree_base = 0, devicetree_size = 0;
+ unsigned int rtas_base, rtas_size;
+ int max_memory_ranges;
+ 
+-- 
+1.6.0.6
 
 
-Eric
 
 _______________________________________________
 kexec mailing list
