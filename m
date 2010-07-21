@@ -2,12 +2,13 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tx2ehsobe001.messaging.microsoft.com ([65.55.88.11]
 	helo=TX2EHSOBE001.bigfish.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1ObR9I-00037S-Nm
-	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:17 +0000
+	id 1ObR9K-0003FC-CJ
+	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:19 +0000
 From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH v3 4/7] Update Elf-ppc to support crash kernel and misc fixes
-Date: Tue, 20 Jul 2010 23:43:01 -0500
-Message-ID: <1279687384-9770-5-git-send-email-msm@freescale.com>
+Subject: [PATCH v3 5/7] Add support for ramdisk on ppc32 for uImage-ppc and
+	Elf-ppc
+Date: Tue, 20 Jul 2010 23:43:02 -0500
+Message-ID: <1279687384-9770-6-git-send-email-msm@freescale.com>
 In-Reply-To: <1279687384-9770-1-git-send-email-msm@freescale.com>
 References: <1279687384-9770-1-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
@@ -26,98 +27,331 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: muvarov@gmail.com, Matthew McClintock <msm@freescale.com>, sebastian@breakpoint.cc
 
-Use current command line if none given, specifically useful for
-when arguments are added causing the use of the current cmdline
-to not occur
+This fixes --reuseinitrd and --ramdisk option for ppc32 on
+uImage-ppc and Elf. It works for normal kexec as well as for
+kdump.
 
-We also try to load the dtb above the kernel, this is useful for
-relocatable kernels where they device tree needs to reside just
-above the kernel base address
-
-Set the kernel entry address in the relocatable purgatory code
-so we jump to the correct start address if not the default. Useful
-for relocatable kernels
+When using --reuseinitrd you need to specifify retain_initrd
+on the command line. Also, if you are doing kdump you need to make
+sure your initrd lives in the crashdump region otherwise the
+kdump kernel will not be able to access it. The --ramdisk option
+should always work.
 
 Signed-off-by: Matthew McClintock <msm@freescale.com>
 ---
- kexec/arch/ppc/kexec-elf-ppc.c |   26 ++++++++++++++------------
- 1 files changed, 14 insertions(+), 12 deletions(-)
+ kexec/arch/ppc/Makefile               |    1 +
+ kexec/arch/ppc/include/arch/options.h |    3 +
+ kexec/arch/ppc/kexec-elf-ppc.c        |   44 ++++++++++++++++++++-
+ kexec/arch/ppc/kexec-ppc.c            |   11 ++++-
+ kexec/arch/ppc/kexec-ppc.h            |    2 +
+ kexec/arch/ppc/kexec-uImage-ppc.c     |   68 +++++++++++++++++++++++++++++++-
+ 6 files changed, 121 insertions(+), 8 deletions(-)
 
+diff --git a/kexec/arch/ppc/Makefile b/kexec/arch/ppc/Makefile
+index 5988213..c963175 100644
+--- a/kexec/arch/ppc/Makefile
++++ b/kexec/arch/ppc/Makefile
+@@ -21,6 +21,7 @@ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/arch/ppc/libfdt/%)
+ CPPFLAGS+=-I$(srcdir)/kexec/arch/$(ARCH)/libfdt
+ 
+ ppc_KEXEC_SRCS += $(libfdt_SRCS)
++ppc_ARCH_REUSE_INITRD =
+ 
+ dist += kexec/arch/ppc/Makefile $(ppc_KEXEC_SRCS)			\
+ 	kexec/arch/ppc/kexec-ppc.h kexec/arch/ppc/ppc_asm.h		\
+diff --git a/kexec/arch/ppc/include/arch/options.h b/kexec/arch/ppc/include/arch/options.h
+index f646ccc..0c00ea7 100644
+--- a/kexec/arch/ppc/include/arch/options.h
++++ b/kexec/arch/ppc/include/arch/options.h
+@@ -8,6 +8,7 @@
+ #define OPT_GAMECUBE    (OPT_ARCH_MAX+1)
+ #define OPT_DTB         (OPT_ARCH_MAX+2)
+ #define OPT_NODES       (OPT_ARCH_MAX+3)
++#define OPT_RAMDISK	(OPT_ARCH_MAX+4)
+ 
+ /* Options relevant to the architecture (excluding loader-specific ones),
+  * in this case none:
+@@ -35,6 +36,8 @@
+ 	KEXEC_ARCH_OPTIONS \
+ 	{"command-line", 1, 0, OPT_APPEND},\
+ 	{"append",	 1, 0, OPT_APPEND},\
++	{"ramdisk",	 1, 0, OPT_APPEND},\
++	{"initrd",	 1, 0, OPT_APPEND},\
+ 	{"gamecube",	 1, 0, OPT_GAMECUBE},\
+ 	{"dtb",	    1, 0, OPT_DTB},\
+ 	{"reuse-node",	   1, 0, OPT_NODES},\
 diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index ab2d343..87e6507 100644
+index 87e6507..58bba54 100644
 --- a/kexec/arch/ppc/kexec-elf-ppc.c
 +++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -182,6 +182,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+@@ -127,6 +127,8 @@ static const struct option options[] = {
+ 	KEXEC_ARCH_OPTIONS
+ 	{"command-line", 1, 0, OPT_APPEND},
+ 	{"append",       1, 0, OPT_APPEND},
++	{"ramdisk",	 1, 0, OPT_RAMDISK},
++	{"initrd",	 1, 0, OPT_RAMDISK},
+ 	{"gamecube",     1, 0, OPT_GAMECUBE},
+ 	{"dtb",     1, 0, OPT_DTB},
+ 	{"reuse-node",     1, 0, OPT_NODES},
+@@ -139,10 +141,12 @@ void elf_ppc_usage(void)
+ 	printf(
+ 	     "    --command-line=STRING Set the kernel command line to STRING.\n"
+ 	     "    --append=STRING       Set the kernel command line to STRING.\n"
++	     "    --ramdisk=<filename>  Initial RAM disk.\n"
++	     "    --initrd=<filename>   same as --ramdisk\n"
+ 	     "    --gamecube=1|0        Enable/disable support for ELFs with changed\n"
+ 	     "                          addresses suitable for the GameCube.\n"
+-	     "     --dtb=<filename>     Specify device tree blob file.\n"
+-	     "     --reuse-node=node    Specify nodes which should be taken from /proc/device-tree.\n"
++	     "    --dtb=<filename>	   Specify device tree blob file.\n"
++	     "    --reuse-node=node	   Specify nodes which should be taken from /proc/device-tree.\n"
+ 	     "                          Can be set multiple times.\n"
+ 	     );
+ }
+@@ -177,7 +181,7 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	unsigned long my_kernel, my_dt_offset;
+ 	unsigned long my_stack, my_backup_start;
+ 	unsigned int slave_code[256 / sizeof(unsigned int)], master_entry;
+-	unsigned char *seg_buf = NULL;
++	char *seg_buf = NULL;
+ 	off_t seg_size = 0;
  	int target_is_gamecube = 0;
  	unsigned int addr;
- 	unsigned long dtb_addr;
-+	unsigned long kernel_addr;
- #endif
- #define FIXUP_ENTRYS	(20)
- 	char *fixup_nodes[FIXUP_ENTRYS + 1];
-@@ -228,6 +229,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+@@ -193,6 +197,8 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	dtb = NULL;
+ 	max_addr = LONG_MAX;
+ 	hole_addr = 0;
++	kernel_addr = 0;
++	ramdisk = 0;
+ 
+ 	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+ 		switch (opt) {
+@@ -207,6 +213,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 		case OPT_APPEND:
+ 			command_line = optarg;
+ 			break;
++		case OPT_RAMDISK:
++			ramdisk = optarg;
++			break;
+ 		case OPT_GAMECUBE:
+ 			target_is_gamecube = atoi(optarg);
+ 			break;
+@@ -234,6 +243,9 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 		command_line_len = strlen(command_line) + 1;
+ 	}
+ 
++	if (ramdisk && reuse_initrd)
++		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
++
+ 	fixup_nodes[cur_fixup] = NULL;
+ 
+ 	/* Need to append some command line parameters internally in case of
+@@ -339,6 +351,32 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
+ 			purgatory_size, 0, elf_max_addr(&ehdr), 1, 0);
+ 
++	if (ramdisk)
++	{
++		seg_buf = slurp_file(ramdisk, &seg_size);
++		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
++			0, 0, max_addr, 1);
++		ramdisk_base = hole_addr;
++		ramdisk_size = seg_size;
++	}
++	if (reuse_initrd)
++	{
++		ramdisk_base = initrd_base;
++		ramdisk_size = initrd_size;
++	}
++
++	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
++		if ( (ramdisk_base < crash_base) ||
++			(ramdisk_base > crash_base + crash_size) )
++		{
++			printf("WARNING: ramdisk is above crashkernel region!\n");
++		}
++		else if (ramdisk_base + initrd_size > crash_base + crash_size)
++		{
++			printf("WARNING: ramdisk overflows crashkernel region!\n");
++		}
++	}
++
+ 	if (dtb) {
+ 		char *blob_buf;
+ 		off_t blob_size = 0;
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index e1547a8..c36c7b3 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -27,10 +27,17 @@
+ #include "config.h"
+ 
+ uint64_t rmo_top;
+-unsigned long long crash_base, crash_size;
+-unsigned long long initrd_base, initrd_size;
++unsigned long long crash_base = 0, crash_size = 0;
++unsigned long long initrd_base = 0, initrd_size = 0;
++unsigned long long ramdisk_base = 0, ramdisk_size = 0;
+ unsigned int rtas_base, rtas_size;
+ int max_memory_ranges;
++const char *ramdisk;
++
++void arch_reuse_initrd(void)
++{
++	reuse_initrd = 1;
++}
+ 
+ #ifdef WITH_GAMECUBE
+ #define MAX_MEMORY_RANGES  64
+diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
+index fc0471f..d25138a 100644
+--- a/kexec/arch/ppc/kexec-ppc.h
++++ b/kexec/arch/ppc/kexec-ppc.h
+@@ -65,7 +65,9 @@ typedef struct mem_rgns {
+ extern mem_rgns_t usablemem_rgns;
+ extern int max_memory_ranges;
+ extern unsigned long long initrd_base, initrd_size;
++extern unsigned long long ramdisk_base, ramdisk_size;
+ extern unsigned char reuse_initrd;
++extern const char *ramdisk;
+ #define COMMAND_LINE_SIZE	512 /* from kernel */
+ /*fs2dt*/
+ void reserve(unsigned long long where, unsigned long long length);
+diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
+index 21a7c1b..310d6c3 100644
+--- a/kexec/arch/ppc/kexec-uImage-ppc.c
++++ b/kexec/arch/ppc/kexec-uImage-ppc.c
+@@ -14,12 +14,16 @@
+ #include "kexec-ppc.h"
+ #include "fixup_dtb.h"
+ #include <kexec-uImage.h>
++#include "crashdump-powerpc.h"
++#include <limits.h>
+ 
+ /* See options.h -- add any more there, too. */
+ static const struct option options[] = {
+ 	KEXEC_ARCH_OPTIONS
+ 	{"command-line",	1, 0, OPT_APPEND},
+ 	{"append",	1, 0, OPT_APPEND},
++	{"ramdisk",	1, 0, OPT_RAMDISK},
++	{"initrd",	1, 0, OPT_RAMDISK},
+ 	{"dtb",		1, 0, OPT_DTB},
+ 	{"reuse-node",	1, 0, OPT_NODES},
+ 	{0, 0, 0, 0},
+@@ -31,8 +35,10 @@ void uImage_ppc_usage(void)
+ 	printf(
+ 			"    --command-line=STRING Set the kernel command line to STRING.\n"
+ 			"    --append=STRING       Set the kernel command line to STRING.\n"
+-			"     --dtb=<filename>     Specify device tree blob file.\n"
+-			"     --reuse-node=node    Specify nodes which should be taken from /proc/device-tree.\n"
++			"    --ramdisk=<filename>  Initial RAM disk.\n"
++			"    --initrd=<filename>   same as --ramdisk\n"
++			"    --dtb=<filename>      Specify device tree blob file.\n"
++			"    --reuse-node=node     Specify nodes which should be taken from /proc/device-tree.\n"
+ 			"                          Can be set multiple times.\n"
+ 	);
+ }
+@@ -46,7 +52,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 		off_t len, struct kexec_info *info, unsigned int load_addr,
+ 		unsigned int ep)
+ {
+-	char *command_line, *cmdline_buf;
++	char *command_line, *cmdline_buf, *crash_cmdline;
+ 	int command_line_len;
+ 	char *dtb;
+ 	unsigned int addr;
+@@ -56,10 +62,15 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 	int cur_fixup = 0;
+ 	int opt;
+ 	int ret;
++	char *seg_buf = NULL;
++	off_t seg_size = 0;
++	unsigned long long hole_addr;
++	unsigned long max_addr;
+ 
+ 	cmdline_buf = NULL;
+ 	command_line = NULL;
+ 	dtb = NULL;
++	max_addr = LONG_MAX;
+ 
+ 	while ((opt = getopt_long(argc, argv, short_options, options, 0)) != -1) {
+ 		switch (opt) {
+@@ -75,6 +86,10 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 			command_line = optarg;
+ 			break;
+ 
++		case OPT_RAMDISK:
++			ramdisk = optarg;
++			break;
++
+ 		case OPT_DTB:
+ 			dtb = optarg;
+ 			break;
+@@ -90,6 +105,9 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 		}
+ 	}
+ 
++	if (ramdisk && reuse_initrd)
++		die("Can't specify --ramdisk or --initrd with --reuseinitrd\n");
++
  	command_line_len = 0;
  	if (command_line) {
  		command_line_len = strlen(command_line) + 1;
-+	} else {
-+		command_line = get_command_line();
-+		command_line_len = strlen(command_line) + 1;
+@@ -114,10 +132,54 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
  	}
+ 	add_segment(info, buf, len, load_addr, len + (1 * 1024 * 1024));
  
- 	fixup_nodes[cur_fixup] = NULL;
-@@ -264,11 +268,11 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	if (size > phdr->p_memsz)
- 		size = phdr->p_memsz;
- 
--	hole_addr = locate_hole(info, size, 0, 0, max_addr, 1);
-+	kernel_addr = locate_hole(info, size, 0, 0, max_addr, 1);
- #ifdef CONFIG_PPC64
--	ehdr.e_phdr[0].p_paddr = (Elf64_Addr)hole_addr;
-+	ehdr.e_phdr[0].p_paddr = (Elf64_Addr)kernel_addr;
- #else
--	ehdr.e_phdr[0].p_paddr = hole_addr;
-+	ehdr.e_phdr[0].p_paddr = kernel_addr;
- #endif
- 
- 	/* Load the Elf data */
-@@ -343,10 +347,11 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 		blob_buf = slurp_file(dtb, &blob_size);
- 		if (!blob_buf || !blob_size)
- 			die("Device tree seems to be an empty file.\n");
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++                crash_cmdline = xmalloc(COMMAND_LINE_SIZE);
++                memset((void *)crash_cmdline, 0, COMMAND_LINE_SIZE);
++        } else
++                crash_cmdline = NULL;
 +
- 		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes,
- 				cmdline_buf);
--		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, 0,
--				KERNEL_ACCESS_TOP, -1);
-+		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, kernel_addr,
-+				kernel_addr + KERNEL_ACCESS_TOP, -1);
- 	} else {
- 		/* create from fs2dt */
- 		seg_buf = NULL;
-@@ -364,19 +369,16 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		ret = load_crashdump_segments(info, crash_cmdline,
++						max_addr, 0);
++		if (ret < 0) {
++			return -1;
++		}
++	}
++
+ 	cmdline_buf = xmalloc(COMMAND_LINE_SIZE);
+ 	memset((void *)cmdline_buf, 0, COMMAND_LINE_SIZE);
+ 	if (command_line)
+ 		strncat(cmdline_buf, command_line, command_line_len);
++	if (crash_cmdline)
++		strncat(cmdline_buf, crash_cmdline,
++			sizeof(crash_cmdline) -
++			strlen(crash_cmdline) - 1);
++
++	if (ramdisk)
++	{
++		seg_buf = slurp_file(ramdisk, &seg_size);
++		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
++			0, 0, max_addr, 1);
++		ramdisk_base = hole_addr;
++		ramdisk_size = seg_size;
++	}
++	if (reuse_initrd)
++	{
++		ramdisk_base = initrd_base;
++		ramdisk_size = initrd_size;
++	}
++
++	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
++		if ( (ramdisk_base < crash_base) ||
++		     (ramdisk_base > crash_base + crash_size) )
++		{
++			printf("WARNING: ramdisk is above crashkernel region!\n");
++		}
++		else if (ramdisk_base + ramdisk_size > crash_base + crash_size)
++		{
++			printf("WARNING: ramdisk overflows crashkernel region!\n");
++		}
++	}
  
  	if (dtb) {
--		/* set various variables for the purgatory */
--		addr = ehdr.e_entry;
-+		/* set various variables for the purgatory  ehdr.e_entry is a
-+		 * virtual address, we can use kernel_addr which
-+		 * should be the physical start address of the kernel */
-+		addr = kernel_addr;
- 		elf_rel_set_symbol(&info->rhdr, "kernel", &addr, sizeof(addr));
- 
- 		addr = dtb_addr;
- 		elf_rel_set_symbol(&info->rhdr, "dt_offset",
- 						&addr, sizeof(addr));
- 
--		addr = rmo_top;
--
--		elf_rel_set_symbol(&info->rhdr, "mem_size",
--						&addr, sizeof(addr));
--
- #define PUL_STACK_SIZE	(16 * 1024)
- 		addr = locate_hole(info, PUL_STACK_SIZE, 0, 0,
- 				elf_max_addr(&ehdr), 1);
+ 		char *blob_buf;
 -- 
 1.6.0.6
 
