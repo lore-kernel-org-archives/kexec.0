@@ -2,12 +2,13 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tx2ehsobe003.messaging.microsoft.com ([65.55.88.13]
 	helo=TX2EHSOBE005.bigfish.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1ObR9L-0003Hp-5l
-	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:21 +0000
+	id 1ObR9N-0003Hp-OX
+	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:23 +0000
 From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH v3 6/7] Add support for reworking flat device tree support
-Date: Tue, 20 Jul 2010 23:43:03 -0500
-Message-ID: <1279687384-9770-7-git-send-email-msm@freescale.com>
+Subject: [PATCH v3 2/7] Fix case where phys_addr_t != unsigned long when
+	reading proc entries
+Date: Tue, 20 Jul 2010 23:42:59 -0500
+Message-ID: <1279687384-9770-3-git-send-email-msm@freescale.com>
 In-Reply-To: <1279687384-9770-1-git-send-email-msm@freescale.com>
 References: <1279687384-9770-1-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
@@ -26,725 +27,338 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: muvarov@gmail.com, Matthew McClintock <msm@freescale.com>, sebastian@breakpoint.cc
 
-Currently, the device tree is passed as is. You can optionally
-update the command line and specifically listed nodes but nothing
-is updated automatically.
-
-This patch updates the memreserve regions, memory node, initrd
-nodes and attempts to make the device tree look as it should. Some
-code is borrowed from the u-boot routines which do similiar things
-
-Also, now if no flat device tree is passed to kexec it will attempt
-to rebuild one from the /proc/device-tree file system to use for
-the kexec'ed kernel for both uImage and elf formats
+On some actitectures the physical memory can be 64 bits, therefore
+the code that reads proc entries needs to take into account it could
+read either a 32 bit or 64bit value for the physical addresses.
 
 Signed-off-by: Matthew McClintock <msm@freescale.com>
 ---
- kexec/arch/ppc/fixup_dtb.c        |  298 ++++++++++++++++++++++++++++++++++++-
- kexec/arch/ppc/fixup_dtb.h        |    6 +-
- kexec/arch/ppc/kexec-elf-ppc.c    |  159 ++++++--------------
- kexec/arch/ppc/kexec-ppc.h        |    1 +
- kexec/arch/ppc/kexec-uImage-ppc.c |   65 +++++---
- kexec/arch/ppc/ops.h              |    1 -
- 6 files changed, 390 insertions(+), 140 deletions(-)
+ kexec/arch/ppc/kexec-elf-ppc.c |    1 -
+ kexec/arch/ppc/kexec-ppc.c     |  198 +++++++++++++++++++++++-----------------
+ 2 files changed, 114 insertions(+), 85 deletions(-)
 
-diff --git a/kexec/arch/ppc/fixup_dtb.c b/kexec/arch/ppc/fixup_dtb.c
-index 40e9350..26c23a3 100644
---- a/kexec/arch/ppc/fixup_dtb.c
-+++ b/kexec/arch/ppc/fixup_dtb.c
-@@ -8,13 +8,35 @@
- #include <sys/stat.h>
- 
- #include "../../kexec.h"
-+#include "../../kexec-syscall.h"
- #include <libfdt.h>
- #include "ops.h"
- #include "page.h"
- #include "fixup_dtb.h"
-+#include "kexec-ppc.h"
- 
- const char proc_dts[] = "/proc/device-tree";
- 
-+#ifdef DEBUG
-+static void print_fdt_reserve_regions(char *blob_buf)
-+{
-+	int i, num;
-+
-+	/* Print out a summary of the final reserve regions */
-+	num =  fdt_num_mem_rsv(blob_buf);
-+	printf ("reserve regions: %d\n", num);
-+	for (i = 0; i < num; i++) {
-+		uint64_t offset, size;
-+
-+		if (fdt_get_mem_rsv(blob_buf, i, &offset, &size) == 0) {
-+			printf("%d: offset: %llx, size: %llx\n", i, offset, size);
-+		} else {
-+			printf("Error retreiving reserved region\n");
-+		}
-+	}
-+}
-+#endif
-+
- static void fixup_nodes(char *nodes[])
- {
- 	int index = 0;
-@@ -92,14 +114,288 @@ static void fixup_cmdline(const char *cmdline)
- 	return;
- }
- 
--char *fixup_dtb_nodes(char *blob_buf, off_t *blob_size, char *nodes[], char *cmdline)
-+#define EXPAND_GRANULARITY     1024
-+
-+static char *expand_buf(int minexpand, char *blob_buf, off_t *blob_size)
-+{
-+	int size = fdt_totalsize(blob_buf);
-+	int rc;
-+
-+	size = _ALIGN(size + minexpand, EXPAND_GRANULARITY);
-+	blob_buf = realloc(blob_buf, size);
-+	if (!blob_buf)
-+		fatal("Couldn't find %d bytes to expand device tree\n\r", size);
-+	rc = fdt_open_into(blob_buf, blob_buf, size);
-+	if (rc != 0)
-+		fatal("Couldn't expand fdt into new buffer: %s\n\r",
-+			fdt_strerror(rc));
-+
-+	*blob_size = fdt_totalsize(blob_buf);
-+
-+	return blob_buf;
-+}
-+
-+static void fixup_reserve_regions(struct kexec_info *info, char *blob_buf, off_t *blob_size)
- {
-+	int ret, i;
-+	int nodeoffset;
-+
-+	/* If this is a KEXEC kernel we add all regions since they will
-+	 * all need to be saved */
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		for (i = 0; i < info->nr_segments; i++) {
-+			uint64_t address = (unsigned long)info->segment[i].mem;
-+			uint64_t size = info->segment[i].memsz;
-+
-+			while ((i+1) < info->nr_segments &&
-+			      (address + size == (unsigned long)info->segment[i+1].mem)) {
-+				size += info->segment[++i].memsz;
-+			}
-+
-+			ret = fdt_add_mem_rsv(blob_buf, address, size);
-+			if (ret) {
-+				printf("%s: Error adding memory range to memreserve!\n",
-+					fdt_strerror(ret));
-+				goto out;
-+			}
-+		}
-+	} else {
-+		/* Otherwise we just add back the ramdisk and the device tree
-+		 * is already in the list */
-+		ret = fdt_add_mem_rsv(blob_buf, ramdisk_base, ramdisk_size);
-+		if (ret) {
-+			printf("%s: Unable to add new reserved memory for initrd flat device tree\n",
-+				fdt_strerror(ret));
-+			goto out;
-+		}
-+	}
-+
-+	/* Add reserve regions for cpu-release-addr */
-+	nodeoffset = fdt_node_offset_by_prop_value(blob_buf, -1, "device_type", "cpu", 4);
-+	while (nodeoffset != -FDT_ERR_NOTFOUND) {
-+		const void *buf;
-+		int sz, ret;
-+		u64 val = 0;
-+
-+		buf = fdt_getprop(blob_buf, nodeoffset, "cpu-release-addr", &sz);
-+		if (sz == 4) {
-+			val = *(u32 *)buf;
-+		} else if (sz == 8) {
-+			val = *(u64 *)buf;
-+		}
-+
-+		if (val) {
-+			ret = fdt_add_mem_rsv(blob_buf, PAGE_ALIGN(val-PAGE_SIZE), PAGE_SIZE);
-+			if (ret)
-+				printf("%s: Unable to add reserve for cpu-release-addr!\n",
-+					fdt_strerror(ret));
-+		}
-+
-+		nodeoffset = fdt_node_offset_by_prop_value(blob_buf, nodeoffset,
-+				"device_type", "cpu", 4);
-+	}
-+
-+out:	;
-+
-+#ifdef DEBUG
-+	print_fdt_reserve_regions(blob_buf);
-+#endif
-+}
-+
-+static void fixup_memory(struct kexec_info *info, char *blob_buf)
-+{
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		int nodeoffset, len = 0;
-+		u8 tmp[16];
-+		const unsigned long *addrcell, *sizecell;
-+
-+		nodeoffset = fdt_path_offset(blob_buf, "/memory");
-+
-+		if (nodeoffset < 0) {
-+			printf("Error searching for memory node!\n");
-+			return;
-+		}
-+
-+		addrcell = fdt_getprop(blob_buf, 0, "#address-cells", NULL);
-+		/* use shifts and mask to ensure endianness */
-+		if ((addrcell) && (*addrcell == 2)) {
-+			tmp[0] = (crash_base >> 56) & 0xff;
-+			tmp[1] = (crash_base >> 48) & 0xff;
-+			tmp[2] = (crash_base >> 40) & 0xff;
-+			tmp[3] = (crash_base >> 32) & 0xff;
-+			tmp[4] = (crash_base >> 24) & 0xff;
-+			tmp[5] = (crash_base >> 16) & 0xff;
-+			tmp[6] = (crash_base >>  8) & 0xff;
-+			tmp[7] = (crash_base      ) & 0xff;
-+			len = 8;
-+		} else {
-+			tmp[0] = (crash_base >> 24) & 0xff;
-+			tmp[1] = (crash_base >> 16) & 0xff;
-+			tmp[2] = (crash_base >>  8) & 0xff;
-+			tmp[3] = (crash_base      ) & 0xff;
-+			len = 4;
-+		}
-+
-+		sizecell = fdt_getprop(blob_buf, 0, "#size-cells", NULL);
-+		/* use shifts and mask to ensure endianness */
-+		if ((sizecell) && (*sizecell == 2)) {
-+			tmp[0+len] = (crash_size >> 56) & 0xff;
-+			tmp[1+len] = (crash_size >> 48) & 0xff;
-+			tmp[2+len] = (crash_size >> 40) & 0xff;
-+			tmp[3+len] = (crash_size >> 32) & 0xff;
-+			tmp[4+len] = (crash_size >> 24) & 0xff;
-+			tmp[5+len] = (crash_size >> 16) & 0xff;
-+			tmp[6+len] = (crash_size >>  8) & 0xff;
-+			tmp[7+len] = (crash_size      ) & 0xff;
-+			len += 8;
-+		} else {
-+			tmp[0+len] = (crash_size >> 24) & 0xff;
-+			tmp[1+len] = (crash_size >> 16) & 0xff;
-+			tmp[2+len] = (crash_size >>  8) & 0xff;
-+			tmp[3+len] = (crash_size      ) & 0xff;
-+			len += 4;
-+		}
-+
-+		if (fdt_setprop(blob_buf, nodeoffset, "reg", tmp, len) != 0) {
-+			printf ("Error setting memory node!\n");
-+		}
-+
-+		fdt_delprop(blob_buf, nodeoffset, "linux,usable-memory");
-+	}
-+}
-+
-+/* removes crashkernel nodes if they exist and we are *rebooting*
-+ * into a crashkernel. These nodes should not exist after we
-+ * crash and reboot into a new kernel
-+ */
-+static void fixup_crashkernel(struct kexec_info *info, char *blob_buf)
-+{
-+	int nodeoffset;
-+
-+	nodeoffset = fdt_path_offset(blob_buf, "/chosen");
-+
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		if (nodeoffset < 0) {
-+			printf("fdt_crashkernel: %s\n", fdt_strerror(nodeoffset));
-+			return;
-+		}
-+
-+		fdt_delprop(blob_buf, nodeoffset, "linux,crashkernel-base");
-+		fdt_delprop(blob_buf, nodeoffset, "linux,crashkernel-size");
-+	}
-+}
-+/* remove the old chosen nodes if they exist and add correct chosen
-+ * nodes if we have an initd
-+ */
-+static void fixup_initrd(char *blob_buf)
-+{
-+	int err, nodeoffset;
-+	unsigned long tmp;
-+
-+	nodeoffset = fdt_path_offset(blob_buf, "/chosen");
-+
-+	if ((reuse_initrd || ramdisk) &&
-+		((ramdisk_base != 0) && (ramdisk_size != 0))) {
-+		if (nodeoffset < 0) {
-+			printf("fdt_initrd: %s\n", fdt_strerror(nodeoffset));
-+			return;
-+		}
-+
-+		tmp = ramdisk_base;
-+		err = fdt_setprop(blob_buf, nodeoffset,
-+			"linux,initrd-start", &tmp, sizeof(tmp));
-+		if (err < 0) {
-+			printf("WARNING: "
-+				"could not set linux,initrd-start %s.\n",
-+				fdt_strerror(err));
-+				return;
-+		}
-+
-+		tmp = ramdisk_base + ramdisk_size + 1;
-+		err = fdt_setprop(blob_buf, nodeoffset,
-+			"linux,initrd-end", &tmp, sizeof(tmp));
-+		if (err < 0) {
-+			printf("WARNING: could not set linux,initrd-end %s.\n",
-+				fdt_strerror(err));
-+				return;
-+		}
-+	} else {
-+		fdt_delprop(blob_buf, nodeoffset, "linux,initrd-start");
-+		fdt_delprop(blob_buf, nodeoffset, "linux,initrd-end");
-+	}
-+}
-+
-+char *fixup_dtb_init(struct kexec_info *info, char *blob_buf, off_t *blob_size,
-+			unsigned long hole_addr, unsigned long *dtb_addr)
-+{
-+	int ret, i, num = fdt_num_mem_rsv(blob_buf);
-+
- 	fdt_init(blob_buf);
- 
-+	/* Remove the existing reserve regions as they will no longer
-+	 * be valid after we reboot */
-+	for (i = num - 1; i >= 0; i--) {
-+		ret = fdt_del_mem_rsv(blob_buf, i);
-+		if (ret) {
-+			printf("%s: Error deleting memory reserve region %d from device tree!\n",
-+					fdt_strerror(ret), i);
-+		}
-+	}
-+
-+	/* Pack the FDT first, so we don't grow excessively if there is already free space */
-+	ret = fdt_pack(blob_buf);
-+	if (ret)
-+		printf("%s: Unable to pack flat device tree\n", fdt_strerror(ret));
-+
-+	/* info->nr_segments just a guide, will grow by at least EXPAND_GRANULARITY */
-+	blob_buf = expand_buf(info->nr_segments, blob_buf, blob_size);
-+
-+	/* add reserve region for *THIS* fdt */
-+	*dtb_addr = locate_hole(info, *blob_size, 0,
-+				hole_addr, hole_addr+KERNEL_ACCESS_TOP, -1);
-+	ret = fdt_add_mem_rsv(blob_buf, *dtb_addr, PAGE_ALIGN(*blob_size));
-+	if (ret) {
-+		printf("%s: Unable to add new reserved memory for the flat device tree\n",
-+			fdt_strerror(ret));
-+	}
-+
-+	return blob_buf;
-+}
-+
-+#ifdef DEBUG
-+static void save_fixed_up_dtb(char *blob_buf, off_t blob_size)
-+{
-+	FILE *fp;
-+
-+	fp = fopen("debug.dtb", "w");
-+	if (fp) {
-+		if ( blob_size == fwrite(blob_buf, sizeof(char), blob_size, fp)) {
-+			printf("debug.dtb written\n");
-+		} else {
-+			printf("Unable to write debug.dtb\n");
-+		}
-+	} else {
-+		printf("Unable to dump flat device tree to debug.dtb\n");
-+	}
-+}
-+#endif
-+
-+char *fixup_dtb_finalize(struct kexec_info *info, char *blob_buf, off_t *blob_size,
-+			char *nodes[], char *cmdline)
-+{
- 	fixup_nodes(nodes);
- 	fixup_cmdline(cmdline);
-+	fixup_reserve_regions(info, blob_buf, blob_size);
-+	fixup_memory(info, blob_buf);
-+	fixup_initrd(blob_buf);
-+	fixup_crashkernel(info, blob_buf);
- 
- 	blob_buf = (char *)dt_ops.finalize();
- 	*blob_size = fdt_totalsize(blob_buf);
-+
-+#ifdef DEBUG
-+	save_fixed_up_dtb(blob_buf, *blob_size);
-+#endif
-+
- 	return blob_buf;
- }
-diff --git a/kexec/arch/ppc/fixup_dtb.h b/kexec/arch/ppc/fixup_dtb.h
-index 0ff981e..b706a5a 100644
---- a/kexec/arch/ppc/fixup_dtb.h
-+++ b/kexec/arch/ppc/fixup_dtb.h
-@@ -1,6 +1,10 @@
- #ifndef __FIXUP_DTB_H
- #define __FIXUP_DTB_H
- 
--char *fixup_dtb_nodes(char *blob_buf, off_t *blob_size, char *nodes[], char *cmdline);
-+char *fixup_dtb_init(struct kexec_info *info, char *blob_buf, off_t *blob_size,
-+			unsigned long hole_addr, unsigned long *dtb_addr);
-+
-+char *fixup_dtb_finalize(struct kexec_info *info, char *blob_buf, off_t *blob_size,
-+			char *nodes[], char *cmdline);
- 
- #endif
 diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index 58bba54..68e01b7 100644
+index d155bde..ab2d343 100644
 --- a/kexec/arch/ppc/kexec-elf-ppc.c
 +++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -175,23 +175,20 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	unsigned char *setup_start;
- 	uint32_t setup_size;
- #else
--	unsigned long long *rsvmap_ptr;
--	struct bootblock *bb_ptr;
--	unsigned int nr_segments;
--	unsigned long my_kernel, my_dt_offset;
--	unsigned long my_stack, my_backup_start;
--	unsigned int slave_code[256 / sizeof(unsigned int)], master_entry;
- 	char *seg_buf = NULL;
- 	off_t seg_size = 0;
- 	int target_is_gamecube = 0;
- 	unsigned int addr;
- 	unsigned long dtb_addr;
-+	unsigned long dtb_addr_actual;
- 	unsigned long kernel_addr;
- #endif
- #define FIXUP_ENTRYS	(20)
- 	char *fixup_nodes[FIXUP_ENTRYS + 1];
- 	int cur_fixup = 0;
- 	int opt;
-+	char *blob_buf = NULL;
-+	off_t blob_size = 0;
+@@ -32,7 +32,6 @@
  
- 	command_line = NULL;
- 	dtb = NULL;
-@@ -351,137 +348,75 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
- 			purgatory_size, 0, elf_max_addr(&ehdr), 1, 0);
+ static const int probe_debug = 0;
  
--	if (ramdisk)
--	{
-+	/* Here we need to initialize the device tree, and find out where
-+	 * it is going to live so we can place it directly after the
-+	 * kernel image */
-+	if (dtb) {
-+		/* Grab device tree from buffer */
-+		blob_buf = slurp_file(dtb, &blob_size);
-+	} else {
-+		create_flatten_tree(info, (unsigned char **)&blob_buf,
-+				(unsigned long *)&blob_size, cmdline_buf);
-+	}
-+	if (!blob_buf || !blob_size)
-+		die("Device tree seems to be an empty file.\n");
+-unsigned long long initrd_base, initrd_size;
+ unsigned char reuse_initrd;
+ const char *ramdisk;
+ int create_flatten_tree(struct kexec_info *, unsigned char **, unsigned long *,
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index ca33303..e1547a8 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -28,6 +28,7 @@
+ 
+ uint64_t rmo_top;
+ unsigned long long crash_base, crash_size;
++unsigned long long initrd_base, initrd_size;
+ unsigned int rtas_base, rtas_size;
+ int max_memory_ranges;
+ 
+@@ -262,14 +263,14 @@ static int get_base_ranges(void)
+ 				}
+ 			}
+ 
+-			if (n == 8) {
++			if (n == sizeof(uint32_t) * 2) {
+ 				base_memory_range[local_memory_ranges].start =
+ 					((uint32_t *)buf)[0];
+ 				base_memory_range[local_memory_ranges].end  =
+ 					base_memory_range[local_memory_ranges].start +
+ 					((uint32_t *)buf)[1];
+ 			}
+-			else if (n == 16) {
++			else if (n == sizeof(uint64_t) * 2) {
+ 				base_memory_range[local_memory_ranges].start =
+                                         ((uint64_t *)buf)[0];
+                                 base_memory_range[local_memory_ranges].end  =
+@@ -317,9 +318,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 	DIR *dir, *cdir;
+ 	FILE *file;
+ 	struct dirent *dentry;
+-	struct stat fstat;
+ 	int n, i = 0;
+-	unsigned long tmp_long;
+ 
+ 	if ((dir = opendir(device_tree)) == NULL) {
+ 		perror(device_tree);
+@@ -349,12 +348,18 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 					perror(fname);
+ 					goto error_opencdir;
+ 				}
+-				if (fread(&tmp_long, sizeof(unsigned long), 1, file)
+-						!= 1) {
++				if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
+ 					perror(fname);
+ 					goto error_openfile;
+ 				}
+-				kernel_end = tmp_long;
++				if (n == sizeof(uint32_t)) {
++					kernel_end = ((uint32_t *)buf)[0];
++				} else if (n == sizeof(uint64_t)) {
++					kernel_end = ((uint64_t *)buf)[0];
++				} else {
++					fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
++					goto error_openfile;
++				}
+ 				fclose(file);
+ 
+ 				/* Add kernel memory to exclude_range */
+@@ -364,37 +369,50 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				if (i >= max_memory_ranges)
+ 					realloc_memory_ranges();
+ 				memset(fname, 0, sizeof(fname));
+-				strcpy(fname, device_tree);
+-				strcat(fname, dentry->d_name);
+-				strcat(fname, "/linux,crashkernel-base");
++				sprintf(fname, "%s%s%s",
++					device_tree, dentry->d_name,
++					"/linux,crashkernel-base");
+ 				file = fopen(fname, "r");
+ 				if (!file) {
+ 					perror(fname);
+ 					goto error_opencdir;
+ 				}
+-				if (fread(&tmp_long, sizeof(unsigned long), 1,
+-						file) != 1) {
++				if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
+ 					perror(fname);
+ 					goto error_openfile;
+ 				}
+-				crash_base = tmp_long;
++				if (n == sizeof(uint32_t)) {
++					crash_base = ((uint32_t *)buf)[0];
++				} else if (n == sizeof(uint64_t)) {
++					crash_base = ((uint64_t *)buf)[0];
++				} else {
++					fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
++					goto error_openfile;
++				}
+ 				fclose(file);
+ 
+ 				memset(fname, 0, sizeof(fname));
+-				strcpy(fname, device_tree);
+-				strcat(fname, dentry->d_name);
+-				strcat(fname, "/linux,crashkernel-size");
++				sprintf(fname, "%s%s%s",
++					device_tree, dentry->d_name,
++					"/linux,crashkernel-size");
+ 				file = fopen(fname, "r");
+ 				if (!file) {
+ 					perror(fname);
+ 					goto error_opencdir;
+ 				}
+-				if (fread(&tmp_long, sizeof(unsigned long), 1,
+-						file) != 1) {
++				if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
+ 					perror(fname);
+ 					goto error_openfile;
+ 				}
+-				crash_size = tmp_long;
++				if (n == sizeof(uint32_t)) {
++					crash_size = ((uint32_t *)buf)[0];
++				} else if (n == sizeof(uint64_t)) {
++					crash_size = ((uint64_t *)buf)[0];
++				} else {
++					fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
++					goto error_openfile;
++				}
++				fclose(file);
+ 
+ 				if (crash_base > mem_min)
+ 					mem_min = crash_base;
+@@ -405,10 +423,74 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				reserve(KDUMP_BACKUP_LIMIT,
+ 						crash_base-KDUMP_BACKUP_LIMIT);
+ 			}
++			/* reserve the initrd_start and end locations. */
+ 			memset(fname, 0, sizeof(fname));
+-			strcpy(fname, device_tree);
+-			strcat(fname, dentry->d_name);
+-			strcat(fname, "/linux,htab-base");
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,initrd-start");
++			file = fopen(fname, "r");
++			if (!file) {
++				errno = 0;
++				initrd_start = 0;
++			} else {
++				if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
++					perror(fname);
++					goto error_openfile;
++				}
++				if (n == sizeof(uint32_t)) {
++					initrd_start = ((uint32_t *)buf)[0];
++				} else if (n == sizeof(uint64_t)) {
++					initrd_start = ((uint64_t *)buf)[0];
++				} else {
++					fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
++					goto error_openfile;
++				}
++				fclose(file);
++			}
 +
-+	/* initial fixup for device tree */
-+	blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, kernel_addr, &dtb_addr);
++			memset(fname, 0, sizeof(fname));
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,initrd-end");
++			file = fopen(fname, "r");
++			if (!file) {
++				errno = 0;
++				initrd_end = 0;
++			} else {
++				if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
++					perror(fname);
++					goto error_openfile;
++				}
++				if (n == sizeof(uint32_t)) {
++					initrd_end = ((uint32_t *)buf)[0];
++				} else if (n == sizeof(uint64_t)) {
++					initrd_end = ((uint64_t *)buf)[0];
++				} else {
++					fprintf(stderr, "%s node has invalid size: %d\n", fname, n);
++					goto error_openfile;
++				}
++				fclose(file);
++			}
 +
-+	if (ramdisk) {
- 		seg_buf = slurp_file(ramdisk, &seg_size);
-+		/* load the ramdisk *above* the device tree */
- 		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
--			0, 0, max_addr, 1);
-+				0, dtb_addr + blob_size + 1,  max_addr, -1);
- 		ramdisk_base = hole_addr;
- 		ramdisk_size = seg_size;
- 	}
--	if (reuse_initrd)
--	{
-+	if (reuse_initrd) {
- 		ramdisk_base = initrd_base;
- 		ramdisk_size = initrd_size;
- 	}
- 
- 	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
- 		if ( (ramdisk_base < crash_base) ||
--			(ramdisk_base > crash_base + crash_size) )
--		{
-+			(ramdisk_base > crash_base + crash_size) ) {
- 			printf("WARNING: ramdisk is above crashkernel region!\n");
- 		}
--		else if (ramdisk_base + initrd_size > crash_base + crash_size)
--		{
-+		else if (ramdisk_base + initrd_size > crash_base + crash_size) {
- 			printf("WARNING: ramdisk overflows crashkernel region!\n");
- 		}
- 	}
- 
--	if (dtb) {
--		char *blob_buf;
--		off_t blob_size = 0;
--
--		/* Grab device tree from buffer */
--		blob_buf = slurp_file(dtb, &blob_size);
--		if (!blob_buf || !blob_size)
--			die("Device tree seems to be an empty file.\n");
--
--		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes,
--				cmdline_buf);
--		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, kernel_addr,
--				kernel_addr + KERNEL_ACCESS_TOP, -1);
--	} else {
--		/* create from fs2dt */
--		seg_buf = NULL;
--		seg_size = 0;
--		create_flatten_tree(info, (unsigned char **)&seg_buf,
--				(unsigned long *)&seg_size, cmdline_buf);
--		add_buffer(info, seg_buf, seg_size, seg_size,
--#ifdef CONFIG_PPC64
--				0, 0,  max_addr, -1);
--#else
--		/* load dev tree at 16 Mb offset from kernel load address */
--			0, 0, ehdr.e_phdr[0].p_paddr + SIZE_16M, -1);
--#endif
-+	/* Perform final fixup on devie tree, i.e. everything beside what
-+	 * was done above */
-+	fixup_dtb_finalize(info, blob_buf, &blob_size, fixup_nodes,
-+			cmdline_buf);
-+	dtb_addr_actual = add_buffer(info, blob_buf, blob_size, blob_size, 0, dtb_addr,
-+			kernel_addr + KERNEL_ACCESS_TOP, 1);
-+	if (dtb_addr_actual != dtb_addr) {
-+		die("Error device tree not loadded to address it was expecting to be loaded too!\n");
- 	}
- 
-+	/* set various variables for the purgatory  ehdr.e_entry is a
-+	 * virtual address, we can use kernel_addr which
-+	 * should be the physical start address of the kernel */
-+	addr = kernel_addr;
-+	elf_rel_set_symbol(&info->rhdr, "kernel", &addr, sizeof(addr));
- 
--	if (dtb) {
--		/* set various variables for the purgatory  ehdr.e_entry is a
--		 * virtual address, we can use kernel_addr which
--		 * should be the physical start address of the kernel */
--		addr = kernel_addr;
--		elf_rel_set_symbol(&info->rhdr, "kernel", &addr, sizeof(addr));
--
--		addr = dtb_addr;
--		elf_rel_set_symbol(&info->rhdr, "dt_offset",
--						&addr, sizeof(addr));
-+	addr = dtb_addr;
-+	elf_rel_set_symbol(&info->rhdr, "dt_offset",
-+					&addr, sizeof(addr));
- 
- #define PUL_STACK_SIZE	(16 * 1024)
--		addr = locate_hole(info, PUL_STACK_SIZE, 0, 0,
-+	addr = locate_hole(info, PUL_STACK_SIZE, 0, 0,
- 				elf_max_addr(&ehdr), 1);
--		addr += PUL_STACK_SIZE;
--		elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
-+	addr += PUL_STACK_SIZE;
-+	elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
- #undef PUL_STACK_SIZE
- 
--		addr = elf_rel_get_addr(&info->rhdr, "purgatory_start");
--		info->entry = (void *)addr;
--
--	} else { /*from fs2dt*/
--
--		/* patch reserve map address for flattened device-tree
--		 * find last entry (both 0) in the reserve mem list.  Assume DT
--		 * entry is before this one
--		 */
--		bb_ptr = (struct bootblock *)(
--			(unsigned char *)info->segment[(info->nr_segments) -
--				1].buf);
--		rsvmap_ptr = (unsigned long long *)(
--			(unsigned char *)info->segment[(info->nr_segments) -
--				1].buf + bb_ptr->off_mem_rsvmap);
--		while (*rsvmap_ptr || *(rsvmap_ptr + 1))
--			rsvmap_ptr += 2;
--		rsvmap_ptr -= 2;
--		*rsvmap_ptr = (unsigned long)(
--				info->segment[(info->nr_segments)-1].mem);
--		rsvmap_ptr++;
--		*rsvmap_ptr = (unsigned long long)bb_ptr->totalsize;
--
--		nr_segments = info->nr_segments;
--
--		/* Set kernel */
--		my_kernel = (unsigned long)info->segment[0].mem;
--		elf_rel_set_symbol(&info->rhdr, "kernel", &my_kernel,
--				sizeof(my_kernel));
--
--		/* Set dt_offset */
--		my_dt_offset = (unsigned long)info->segment[nr_segments -
--			1].mem;
--		elf_rel_set_symbol(&info->rhdr, "dt_offset", &my_dt_offset,
--				sizeof(my_dt_offset));
--
--		/* get slave code from new kernel, put in purgatory */
--		elf_rel_get_symbol(&info->rhdr, "purgatory_start", slave_code,
--				sizeof(slave_code));
--		master_entry = slave_code[0];
--		memcpy(slave_code, info->segment[0].buf, sizeof(slave_code));
--		slave_code[0] = master_entry;
--		elf_rel_set_symbol(&info->rhdr, "purgatory_start", slave_code,
--				sizeof(slave_code));
--
--		/* Set stack address */
--		my_stack = locate_hole(info, 16*1024, 0, 0, max_addr, 1);
--		my_stack += 16*1024;
--		elf_rel_set_symbol(&info->rhdr, "stack", &my_stack,
--				sizeof(my_stack));
--	}
--
--	if (info->kexec_flags & KEXEC_ON_CRASH) {
--		/* Set backup address */
--		my_backup_start = info->backup_start;
--		elf_rel_set_symbol(&info->rhdr, "backup_start",
--				&my_backup_start, sizeof(my_backup_start));
--	}
-+	addr = elf_rel_get_addr(&info->rhdr, "purgatory_start");
-+	info->entry = (void *)addr;
- #endif
++			if ((initrd_end - initrd_start) != 0 ) {
++				initrd_base = initrd_start;
++				initrd_size = initrd_end - initrd_start + 1;
++			}
 +
- 	return 0;
- }
-diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
-index d25138a..7f96be8 100644
---- a/kexec/arch/ppc/kexec-ppc.h
-+++ b/kexec/arch/ppc/kexec-ppc.h
-@@ -64,6 +64,7 @@ typedef struct mem_rgns {
- } mem_rgns_t;
- extern mem_rgns_t usablemem_rgns;
- extern int max_memory_ranges;
-+extern unsigned long long crash_base, crash_size;
- extern unsigned long long initrd_base, initrd_size;
- extern unsigned long long ramdisk_base, ramdisk_size;
- extern unsigned char reuse_initrd;
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 310d6c3..1d71374 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -17,6 +17,9 @@
- #include "crashdump-powerpc.h"
- #include <limits.h>
- 
-+int create_flatten_tree(struct kexec_info *, unsigned char **, unsigned long *,
-+			char *);
++			if (reuse_initrd) {
++				/* Add initrd address to exclude_range */
++				exclude_range[i].start = initrd_start;
++				exclude_range[i].end = initrd_end;
++				i++;
++				if (i >= max_memory_ranges)
++					realloc_memory_ranges();
++			}
 +
- /* See options.h -- add any more there, too. */
- static const struct option options[] = {
- 	KEXEC_ARCH_OPTIONS
-@@ -57,6 +60,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	char *dtb;
- 	unsigned int addr;
- 	unsigned long dtb_addr;
-+	unsigned long dtb_addr_actual;
- #define FIXUP_ENTRYS    (20)
- 	char *fixup_nodes[FIXUP_ENTRYS + 1];
- 	int cur_fixup = 0;
-@@ -66,6 +70,8 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	off_t seg_size = 0;
- 	unsigned long long hole_addr;
- 	unsigned long max_addr;
-+	char *blob_buf = NULL;
-+	off_t blob_size = 0;
++			/* HTAB */
++			memset(fname, 0, sizeof(fname));
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,htab-base");
+ 			file = fopen(fname, "r");
+ 			if (!file) {
+ 				closedir(cdir);
+@@ -426,9 +508,9 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				goto error_openfile;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+-			strcpy(fname, device_tree);
+-			strcat(fname, dentry->d_name);
+-			strcat(fname, "/linux,htab-size");
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,htab-size");
+ 			file = fopen(fname, "r");
+ 			if (!file) {
+ 				perror(fname);
+@@ -446,59 +528,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 			if (i >= max_memory_ranges)
+ 				realloc_memory_ranges();
  
- 	cmdline_buf = NULL;
- 	command_line = NULL;
-@@ -155,50 +161,59 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 			sizeof(crash_cmdline) -
- 			strlen(crash_cmdline) - 1);
- 
--	if (ramdisk)
--	{
-+	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
-+				purgatory_size, 0, -1, -1, 0);
-+
-+	/* Here we need to initialize the device tree, and find out where
-+	 * it is going to live so we can place it directly after the
-+	 * kernel image */
-+	if (dtb) {
-+		/* Grab device tree from buffer */
-+		blob_buf = slurp_file(dtb, &blob_size);
-+	} else {
-+		create_flatten_tree(info, (unsigned char **)&blob_buf,
-+				(unsigned long *)&blob_size, cmdline_buf);
-+	}
-+	if (!blob_buf || !blob_size)
-+		die("Device tree seems to be an empty file.\n");
-+
-+	/* initial fixup for device tree */
-+	blob_buf = fixup_dtb_init(info, blob_buf, &blob_size, load_addr, &dtb_addr);
-+
-+	if (ramdisk) {
- 		seg_buf = slurp_file(ramdisk, &seg_size);
-+		/* Load ramdisk at top of memory */
- 		hole_addr = add_buffer(info, seg_buf, seg_size, seg_size,
--			0, 0, max_addr, 1);
-+				0, dtb_addr + blob_size, max_addr, -1);
- 		ramdisk_base = hole_addr;
- 		ramdisk_size = seg_size;
- 	}
--	if (reuse_initrd)
--	{
-+	if (reuse_initrd) {
- 		ramdisk_base = initrd_base;
- 		ramdisk_size = initrd_size;
- 	}
- 
- 	if (info->kexec_flags & KEXEC_ON_CRASH && ramdisk_base != 0) {
- 		if ( (ramdisk_base < crash_base) ||
--		     (ramdisk_base > crash_base + crash_size) )
--		{
-+		     (ramdisk_base > crash_base + crash_size) ) {
- 			printf("WARNING: ramdisk is above crashkernel region!\n");
- 		}
--		else if (ramdisk_base + ramdisk_size > crash_base + crash_size)
--		{
-+		else if (ramdisk_base + ramdisk_size > crash_base + crash_size) {
- 			printf("WARNING: ramdisk overflows crashkernel region!\n");
- 		}
- 	}
- 
--	if (dtb) {
--		char *blob_buf;
--		off_t blob_size = 0;
+-			/* reserve the initrd_start and end locations. */
+-			if (reuse_initrd) {
+-				memset(fname, 0, sizeof(fname));
+-				strcpy(fname, device_tree);
+-				strcat(fname, dentry->d_name);
+-				strcat(fname, "/linux,initrd-start");
+-				file = fopen(fname, "r");
+-				if (!file) {
+-					perror(fname);
+-					goto error_opencdir;
+-				}
+-				/* check for 4 and 8 byte initrd offset sizes */
+-				if (stat(fname, &fstat) != 0) {
+-					perror(fname);
+-					goto error_openfile;
+-				}
+-				if (fread(&initrd_start, fstat.st_size, 1, file)
+-						!= 1) {
+-					perror(fname);
+-					goto error_openfile;
+-				}
+-				fclose(file);
 -
--		/* Grab device tree from buffer */
--		blob_buf = slurp_file(dtb, &blob_size);
--		if (!blob_buf || !blob_size)
--			die("Device tree seems to be an empty file.\n");
--		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes, cmdline_buf);
--		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, load_addr,
--				load_addr + KERNEL_ACCESS_TOP, -1);
--	} else {
--		dtb_addr = 0;
-+	/* Perform final fixup on devie tree, i.e. everything beside what
-+	 * was done above */
-+	fixup_dtb_finalize(info, blob_buf, &blob_size, fixup_nodes,
-+			cmdline_buf);
-+	dtb_addr_actual = add_buffer(info, blob_buf, blob_size, blob_size, 0, dtb_addr,
-+			load_addr + KERNEL_ACCESS_TOP, 1);
-+	if (dtb_addr_actual != dtb_addr) {
-+		printf("dtb_addr_actual: %lx, dtb_addr: %lx\n", dtb_addr_actual, dtb_addr);
-+		die("Error device tree not loadded to address it was expecting to be loaded too!\n");
- 	}
- 
--	elf_rel_build_load(info, &info->rhdr, (const char *)purgatory,
--			purgatory_size, 0, -1, -1, 0);
+-				memset(fname, 0, sizeof(fname));
+-				strcpy(fname, device_tree);
+-				strcat(fname, dentry->d_name);
+-				strcat(fname, "/linux,initrd-end");
+-				file = fopen(fname, "r");
+-				if (!file) {
+-					perror(fname);
+-					goto error_opencdir;
+-				}
+-				/* check for 4 and 8 byte initrd offset sizes */
+-				if (stat(fname, &fstat) != 0) {
+-					perror(fname);
+-					goto error_openfile;
+-				}
+-				if (fread(&initrd_end, fstat.st_size, 1, file)
+-						!= 1) {
+-					perror(fname);
+-					goto error_openfile;
+-				}
+-				fclose(file);
 -
- 	/* set various variables for the purgatory */
- 	addr = ep;
- 	elf_rel_set_symbol(&info->rhdr, "kernel", &addr, sizeof(addr));
-diff --git a/kexec/arch/ppc/ops.h b/kexec/arch/ppc/ops.h
-index f33e941..a2eb140 100644
---- a/kexec/arch/ppc/ops.h
-+++ b/kexec/arch/ppc/ops.h
-@@ -147,5 +147,4 @@ static inline char *get_path(const void *phandle, char *buf, int len)
- 
- #define fatal(args...) { printf(args); exit(1); }
- 
--char *fixup_dtb_nodes(char *blob_buf, off_t *blob_size, char *nodes[], char *cmdline);
- #endif /* _PPC_BOOT_OPS_H_ */
+-				/* Add initrd address to exclude_range */
+-				exclude_range[i].start = initrd_start;
+-				exclude_range[i].end = initrd_end;
+-				i++;
+-				if (i >= max_memory_ranges)
+-					realloc_memory_ranges();
+-			}
+ 		} /* chosen */
+-
+ 		if (strncmp(dentry->d_name, "rtas", 4) == 0) {
+ 			strcat(fname, "/linux,rtas-base");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+@@ -511,9 +541,9 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				goto error_openfile;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+-			strcpy(fname, device_tree);
+-			strcat(fname, dentry->d_name);
+-			strcat(fname, "/rtas-size");
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,rtas-size");
+ 			if ((file = fopen(fname, "r")) == NULL) {
+ 				perror(fname);
+ 				goto error_opencdir;
+@@ -543,7 +573,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				perror(fname);
+ 				goto error_openfile;
+ 			}
+-			if (n == 8) {
++			if (n == sizeof(uint64_t)) {
+ 				rmo_base = ((uint32_t *)buf)[0];
+ 				rmo_top = rmo_base + ((uint32_t *)buf)[1];
+ 			} else if (n == 16) {
+@@ -580,9 +610,9 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 				return -1;
+ 			}
+ 			memset(fname, 0, sizeof(fname));
+-			strcpy(fname, device_tree);
+-			strcat(fname, dentry->d_name);
+-			strcat(fname, "/linux,tce-size");
++			sprintf(fname, "%s%s%s",
++				device_tree, dentry->d_name,
++				"/linux,tce-size");
+ 			file = fopen(fname, "r");
+ 			if (!file) {
+ 				perror(fname);
 -- 
 1.6.0.6
 
