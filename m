@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tx2ehsobe003.messaging.microsoft.com ([65.55.88.13]
-	helo=TX2EHSOBE005.bigfish.com)
+Received: from tx2ehsobe004.messaging.microsoft.com ([65.55.88.14]
+	helo=TX2EHSOBE008.bigfish.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1ObR9F-00037M-1z
-	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:13 +0000
+	id 1ObR9G-00037R-AT
+	for kexec@lists.infradead.org; Wed, 21 Jul 2010 04:43:15 +0000
 From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH v3 1/7] Restore kexec uImage-ppc to working state
-Date: Tue, 20 Jul 2010 23:42:58 -0500
-Message-ID: <1279687384-9770-2-git-send-email-msm@freescale.com>
+Subject: [PATCH v3 3/7] Update uImage to support crash kernel and misc fixes
+Date: Tue, 20 Jul 2010 23:43:00 -0500
+Message-ID: <1279687384-9770-4-git-send-email-msm@freescale.com>
 In-Reply-To: <1279687384-9770-1-git-send-email-msm@freescale.com>
 References: <1279687384-9770-1-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
@@ -26,132 +26,113 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: muvarov@gmail.com, Matthew McClintock <msm@freescale.com>, sebastian@breakpoint.cc
 
-Booting with uImage-ppc was broken by previous work, this
-patch should restore it to working order
+Use current command line if none given, specifically useful for
+when arguments are added causing the use of the current cmdline
+to not occur.
+
+We also try to load the dtb above the kernel, this is useful for
+relocatable kernels where they device tree needs to reside just
+above the kernel base address.
+
+Only allocate 1 MiB extra for bss space after kernel as it appears
+to be more than adequate.
 
 Signed-off-by: Matthew McClintock <msm@freescale.com>
 ---
- kexec/arch/ppc/kexec-ppc.c         |   65 ++++++++++++++++++++++--------------
- kexec/arch/ppc/kexec-uImage-ppc.c  |    5 +--
- purgatory/arch/ppc/purgatory-ppc.c |    5 +++
- 3 files changed, 46 insertions(+), 29 deletions(-)
+ kexec/arch/ppc/kexec-uImage-ppc.c |   32 ++++++++++++++++++++++----------
+ 1 files changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index 55cadd6..ca33303 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -261,11 +261,25 @@ static int get_base_ranges(void)
- 					break;
- 				}
- 			}
--			base_memory_range[local_memory_ranges].start =
--				((uint32_t *)buf)[0];
--			base_memory_range[local_memory_ranges].end  =
--				base_memory_range[local_memory_ranges].start +
--				((uint32_t *)buf)[1];
-+
-+			if (n == 8) {
-+				base_memory_range[local_memory_ranges].start =
-+					((uint32_t *)buf)[0];
-+				base_memory_range[local_memory_ranges].end  =
-+					base_memory_range[local_memory_ranges].start +
-+					((uint32_t *)buf)[1];
-+			}
-+			else if (n == 16) {
-+				base_memory_range[local_memory_ranges].start =
-+                                        ((uint64_t *)buf)[0];
-+                                base_memory_range[local_memory_ranges].end  =
-+                                        base_memory_range[local_memory_ranges].start +
-+                                        ((uint64_t *)buf)[1];
-+			}
-+			else {
-+				fprintf(stderr, "Mem node has invalid size: %d\n", n);
-+				return -1;
-+			}
- 			base_memory_range[local_memory_ranges].type = RANGE_RAM;
- 			local_memory_ranges++;
- 			dbgprintf("%016llx-%016llx : %x\n",
-@@ -327,27 +341,28 @@ static int get_devtree_details(unsigned long kexec_flags)
- 		}
- 
- 		if (strncmp(dentry->d_name, "chosen", 6) == 0) {
--			strcat(fname, "/linux,kernel-end");
--			file = fopen(fname, "r");
--			if (!file) {
--				perror(fname);
--				goto error_opencdir;
--			}
--			if (fread(&tmp_long, sizeof(unsigned long), 1, file)
--					!= 1) {
--				perror(fname);
--				goto error_openfile;
--			}
--			kernel_end = tmp_long;
--			fclose(file);
--
--			/* Add kernel memory to exclude_range */
--			exclude_range[i].start = 0x0UL;
--			exclude_range[i].end = kernel_end;
--			i++;
--			if (i >= max_memory_ranges)
--				realloc_memory_ranges();
-+			/* only reserve kernel region if we are doing a crash kernel */
- 			if (kexec_flags & KEXEC_ON_CRASH) {
-+				strcat(fname, "/linux,kernel-end");
-+				file = fopen(fname, "r");
-+				if (!file) {
-+					perror(fname);
-+					goto error_opencdir;
-+				}
-+				if (fread(&tmp_long, sizeof(unsigned long), 1, file)
-+						!= 1) {
-+					perror(fname);
-+					goto error_openfile;
-+				}
-+				kernel_end = tmp_long;
-+				fclose(file);
-+
-+				/* Add kernel memory to exclude_range */
-+				exclude_range[i].start = 0x0UL;
-+				exclude_range[i].end = kernel_end;
-+				i++;
-+				if (i >= max_memory_ranges)
-+					realloc_memory_ranges();
- 				memset(fname, 0, sizeof(fname));
- 				strcpy(fname, device_tree);
- 				strcat(fname, dentry->d_name);
 diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 45cde2f..4a8d28d 100644
+index 4a8d28d..21a7c1b 100644
 --- a/kexec/arch/ppc/kexec-uImage-ppc.c
 +++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -133,13 +133,10 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	addr = dtb_addr;
- 	elf_rel_set_symbol(&info->rhdr, "dt_offset", &addr, sizeof(addr));
+@@ -10,6 +10,7 @@
+ #include <getopt.h>
+ #include <arch/options.h>
+ #include "../../kexec.h"
++#include "../../kexec-syscall.h"
+ #include "kexec-ppc.h"
+ #include "fixup_dtb.h"
+ #include <kexec-uImage.h>
+@@ -45,7 +46,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 		off_t len, struct kexec_info *info, unsigned int load_addr,
+ 		unsigned int ep)
+ {
+-	char *command_line;
++	char *command_line, *cmdline_buf;
+ 	int command_line_len;
+ 	char *dtb;
+ 	unsigned int addr;
+@@ -56,6 +57,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 	int opt;
+ 	int ret;
  
--	addr = rmo_top;
--	elf_rel_set_symbol(&info->rhdr, "mem_size", &addr, sizeof(addr));
--
- #define PUL_STACK_SIZE  (16 * 1024)
- 	addr = locate_hole(info, PUL_STACK_SIZE, 0, 0, -1, 1);
- 	addr += PUL_STACK_SIZE;
--	elf_rel_set_symbol(&info->rhdr, "pul_stack", &addr, sizeof(addr));
-+	elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
- 	/* No allocation past here in order not to overwrite the stack */
- #undef PUL_STACK_SIZE
++	cmdline_buf = NULL;
+ 	command_line = NULL;
+ 	dtb = NULL;
  
-diff --git a/purgatory/arch/ppc/purgatory-ppc.c b/purgatory/arch/ppc/purgatory-ppc.c
-index 3d7d484..349e750 100644
---- a/purgatory/arch/ppc/purgatory-ppc.c
-+++ b/purgatory/arch/ppc/purgatory-ppc.c
-@@ -39,3 +39,8 @@ void post_verification_setup_arch(void)
- 	if (panic_kernel)
- 		crashdump_backup_memory();
- }
+@@ -89,24 +91,34 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 	}
+ 
+ 	command_line_len = 0;
+-	if (command_line)
++	if (command_line) {
++		command_line_len = strlen(command_line) + 1;
++	} else {
++		command_line = get_command_line();
+ 		command_line_len = strlen(command_line) + 1;
++	}
+ 
+ 	fixup_nodes[cur_fixup] = NULL;
+ 
+ 	/*
+ 	 * len contains the length of the whole kernel image except the bss
+-	 * section. The 3 MiB should cover it. The purgatory and the dtb are
++	 * section. The 1 MiB should cover it. The purgatory and the dtb are
+ 	 * allocated from memtop down towards zero so we should never get too
+ 	 * close to the bss :)
+ 	 */
+-	ret = valid_memory_range(info, load_addr, len + 3 * 1024 * 1024);
++	ret = valid_memory_range(info, load_addr, load_addr + (len + (1 * 1024 * 1024)));
+ 	if (!ret) {
+ 		printf("Can't add kernel to addr 0x%08x len %ld\n",
+-				load_addr, len + 3 * 1024 * 1024);
++				load_addr, len + (1 * 1024 * 1024));
+ 		return -1;
+ 	}
+-	add_segment(info, buf, len, load_addr, len + 3 * 1024 * 1024);
++	add_segment(info, buf, len, load_addr, len + (1 * 1024 * 1024));
 +
-+void crashdump_backup_memory(void)
-+{
-+	return;
-+}
++	cmdline_buf = xmalloc(COMMAND_LINE_SIZE);
++	memset((void *)cmdline_buf, 0, COMMAND_LINE_SIZE);
++	if (command_line)
++		strncat(cmdline_buf, command_line, command_line_len);
++
+ 	if (dtb) {
+ 		char *blob_buf;
+ 		off_t blob_size = 0;
+@@ -115,10 +127,9 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 		blob_buf = slurp_file(dtb, &blob_size);
+ 		if (!blob_buf || !blob_size)
+ 			die("Device tree seems to be an empty file.\n");
+-		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes, command_line);
+-
+-		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, 0,
+-				KERNEL_ACCESS_TOP, -1);
++		blob_buf = fixup_dtb_nodes(blob_buf, &blob_size, fixup_nodes, cmdline_buf);
++		dtb_addr = add_buffer(info, blob_buf, blob_size, blob_size, 0, load_addr,
++				load_addr + KERNEL_ACCESS_TOP, -1);
+ 	} else {
+ 		dtb_addr = 0;
+ 	}
+@@ -142,6 +153,7 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
+ 
+ 	addr = elf_rel_get_addr(&info->rhdr, "purgatory_start");
+ 	info->entry = (void *)addr;
++
+ 	return 0;
+ }
+ 
 -- 
 1.6.0.6
 
