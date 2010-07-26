@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OdVK1-0000v0-H1
-	for kexec@lists.infradead.org; Mon, 26 Jul 2010 21:34:54 +0000
-Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
-	by relay3.corp.sgi.com (Postfix) with ESMTP id 1DB93AC001
-	for <kexec@lists.infradead.org>; Mon, 26 Jul 2010 14:34:50 -0700 (PDT)
-Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
-	by estes.americas.sgi.com (Postfix) with ESMTP id D5AE37000756
-	for <kexec@lists.infradead.org>; Mon, 26 Jul 2010 16:34:49 -0500 (CDT)
-Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
-	(envelope-from <cpw@sgi.com>) id 1OdVKg-00056N-Cd
-	for kexec@lists.infradead.org; Mon, 26 Jul 2010 16:35:34 -0500
-Subject: [PATCH] kexec: fix /sys/firmware/memmap memory range overlaps
-Message-Id: <E1OdVKg-00056N-Cd@eag09.americas.sgi.com>
-From: Cliff Wickman <cpw@sgi.com>
-Date: Mon, 26 Jul 2010 16:35:34 -0500
+	id 1OdVs1-0000P5-UX
+	for kexec@lists.infradead.org; Mon, 26 Jul 2010 22:10:03 +0000
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: [PATCH] Enable kdump with EFI boot
+Date: Mon, 26 Jul 2010 18:09:18 -0400
+MIME-Version: 1.0
+Message-Id: <C0CB2D0F31868Bindou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +16,274 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+
+Hi all,
+
+The attached patch enables kdump on EFI-boot machine.
+
+[Background]
+Current kdump does not work on EFI-boot system because 2nd kernel cannot
+find ACPI Table(RSDP). The URL below explains this problem.
+http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
+
+This problem can be solved by fixing kexec-tools so that it can set up
+struct efi_info correctly in the boot_params for 2nd kernel. However
+there is another problem.
+
+When the 1st kernel boots, EFI system table(efi_system_table_t) is
+modified by SetVirtualAddressMap, which is one of EFI runtime service.
+This runtime changes physical address in EFI system table to virtual
+address.
+
+When the 2nd kernel boots, it also receives the same EFI system table,
+and the address included in it is already virtual address(1st kernel
+rewrote it).  But 2nd kernel does not know that, 2nd kernel thinks it is
+a physical address. This causes problems.
+
+For example, the following is a part of efi_init().
+
+c16 = tmp = early_ioremap(efi.systab->fw_vendor, 2);
+if (c16) {
+    for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+        vendor[i] = *c16++;
+    vendor[i] = '\0';
+} else
+    printk(KERN_ERR PFX "Could not map the firmware vendor!\n");
+
+2nd kernel thinks efi.systab->fw_vendor has a physical address and tries
+to change it to virtual address, but it is already virtual address, so
+this code fails and 2nd kernel hangs up.
+
+[How to fix]
+My solution is as follows.
+1) Export physical address of each EFI system table entry via debugfs
+/sys/kernel/debug/efi/systab/fw_vendor
+/sys/kernel/debug/efi/systab/tables
+/sys/kernel/debug/efi/systab/runtime
+
+Kexec-tools can get physical address of each entry in EFI system table
+via these entries. Kexec tools adds these physical addresses to boot
+parameters
+ex.)
+efi_systab_fw_vendor=0x7a6a1398 efi_systab_tables=0x7a6a2e18 \
+efi_systab_runtime=0x7a6a3e18
+
+2) Kernel parses these parameters and use them in efi_init()
 
 
-The memory ranges derived from /sys/firmware/memmap may overlap, causing
-the kexec command to fail to load the crash kernel.  The typical failure
-reports 'Overlapping memory segments at 0x...'.
+So, what this patch is doing is:
+- Add debugfs interface for each EFI system table entry
+- eif_init() gets physical address of each EFI system table entry from
+  boot paramteter instead of the table
+- Don't call SetVirtualAddressMap in 2nd kernel because panic occurred
+  when SetVirtualAddressMap is called in 2nd kernel. This is called in
+  1st kernel, and doesn't need to be called again.
 
-The preferred remedy might be to fix the BIOS or the kernel, but given
-that they may at times generate overlaps, a check in the kexec command
-will prevent crash dumps from being effectively disabled.
+Any comments would be appreciated!
 
-Diffed against git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
-
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
 ---
- kexec/arch/i386/kexec-x86-common.c |   78 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
+ arch/x86/kernel/efi.c |  132 +++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 123 insertions(+), 9 deletions(-)
 
-Index: kexec-tools/kexec/arch/i386/kexec-x86-common.c
-===================================================================
---- kexec-tools.orig/kexec/arch/i386/kexec-x86-common.c
-+++ kexec-tools/kexec/arch/i386/kexec-x86-common.c
-@@ -129,6 +129,78 @@ static int get_memory_ranges_sysfs(struc
- 	return 0;
- }
+diff -Nurp linux-2.6.35-rc6.org/arch/x86/kernel/efi.c linux-2.6.35-rc6/arch/x86/kernel/efi.c
+--- linux-2.6.35-rc6.org/arch/x86/kernel/efi.c	2010-07-26 12:02:31.216675044 -0400
++++ linux-2.6.35-rc6/arch/x86/kernel/efi.c	2010-07-26 12:17:24.486677191 -0400
+@@ -36,6 +36,8 @@
+ #include <linux/io.h>
+ #include <linux/reboot.h>
+ #include <linux/bcd.h>
++#include <linux/crash_dump.h>
++#include <linux/debugfs.h>
  
-+static void remove_range(struct memory_range *range, int nr_ranges, int index)
-+{
-+	int i, j;
+ #include <asm/setup.h>
+ #include <asm/efi.h>
+@@ -314,6 +316,97 @@ static void __init print_efi_memmap(void
+ }
+ #endif  /*  EFI_DEBUG  */
+ 
++unsigned long systab_fw_vendor_paddr;
++unsigned long systab_runtime_paddr;
++unsigned long systab_tables_paddr;
 +
-+	for (i = index; i < (nr_ranges-1); i++) {
-+		j = i+1;
-+		range[i] = range[j];
-+	}
++static struct debugfs_blob_wrapper fw_vendor_blob = {
++	.data		= &systab_fw_vendor_paddr,
++	.size		= sizeof(systab_fw_vendor_paddr),
++};
++
++static struct debugfs_blob_wrapper runtime_blob = {
++	.data		= &systab_runtime_paddr,
++	.size		= sizeof(systab_runtime_paddr),
++};
++
++static struct debugfs_blob_wrapper tables_blob = {
++	.data		= &systab_tables_paddr,
++	.size		= sizeof(systab_tables_paddr),
++};
++
++static int __init setup_systab_fw_vendor_paddr(char *arg)
++{
++	systab_fw_vendor_paddr = simple_strtoul(arg, NULL, 16);
++	return 0;
++}
++early_param("efi_systab_fw_vendor", setup_systab_fw_vendor_paddr);
++
++static int __init setup_systab_runtime_paddr(char *arg)
++{
++	systab_runtime_paddr = simple_strtoul(arg, NULL, 16);
++	return 0;
++}
++early_param("efi_systab_runtime", setup_systab_runtime_paddr);
++
++static int __init setup_systab_tables_paddr(char *arg)
++{
++	systab_tables_paddr = simple_strtoul(arg, NULL, 16);
++	return 0;
++}
++early_param("efi_systab_tables", setup_systab_tables_paddr);
++
++static int create_debug_files_systab (struct dentry *root)
++{
++	struct dentry *systab_dir, *fw_vendor, *runtime, *tables;
++
++	systab_dir = debugfs_create_dir("systab", root);
++	if (!systab_dir)
++		return -1;
++
++	fw_vendor = debugfs_create_blob("fw_vendor", S_IRUGO, systab_dir,
++				            &fw_vendor_blob);
++	if (!fw_vendor)
++		goto err_fw;
++
++	runtime = debugfs_create_blob("runtime", S_IRUGO, systab_dir,
++				            &runtime_blob);
++	if (!runtime)
++		goto err_runtime;
++
++	tables = debugfs_create_blob("tables", S_IRUGO, systab_dir,
++				            &tables_blob);
++	if (tables)
++		return 0;
++
++	debugfs_remove(runtime);
++err_runtime:
++	debugfs_remove(fw_vendor);
++err_fw:
++	debugfs_remove(systab_dir);
++	return -1;
 +}
 +
-+/**
-+ * Verifies and corrects any overlapping ranges.
-+ * The ranges array is assumed to be sorted already.
-+ *
-+ * @param[out] range pointer that will be set to an array that holds the
-+ *             memory ranges
-+ * @param[out] ranges number of ranges valid in @p range
-+ *
-+ * @return 0 on success, any other value on failure.
-+ */
-+static int fixup_memory_ranges_sysfs(struct memory_range **range, int *ranges)
++static int crate_debug_files (void)
 +{
-+	int i;
-+	int j;
-+	int change_made;
-+	int nr_ranges = *ranges;
-+	struct memory_range *rp = *range;
++	int error;
++	struct dentry *efi_dir;
 +
-+again:
-+	change_made = 0;
-+	for (i = 0; i < (nr_ranges-1); i++) {
-+		j = i+1;
-+		if (rp[i].start > rp[j].start) {
-+			fprintf(stderr, "sysfs memory out of order!!\n");
-+			return 1;
-+		}
++	efi_dir = debugfs_create_dir("efi", NULL);
++	if (!efi_dir)
++		return -1;
 +
-+		if (rp[i].type != rp[j].type)
-+			continue;
-+
-+		if (rp[i].start == rp[j].start) {
-+			if (rp[i].end >= rp[j].end) {
-+				remove_range(rp, nr_ranges, j);
-+				nr_ranges--;
-+				change_made++;
-+			} else {
-+				remove_range(rp, nr_ranges, i);
-+				nr_ranges--;
-+				change_made++;
-+			}
-+		} else {
-+			if (rp[i].end > rp[j].start) {
-+				if (rp[i].end < rp[j].end) {
-+					rp[j].start = rp[i].end;
-+					change_made++;
-+				} else if (rp[i].end >= rp[j].end) {
-+					remove_range(rp, nr_ranges, j);
-+					nr_ranges--;
-+					change_made++;
-+				}
-+			}
-+		}
++	error = create_debug_files_systab(efi_dir);
++	if (error) {
++		debugfs_remove(efi_dir);
++		return -1;
 +	}
 +
-+	/* fixing/removing an entry may make it wrong relative to the next */
-+	if (change_made)
-+		goto again;
-+
-+	*ranges = nr_ranges;
 +	return 0;
 +}
 +
- /**
-  * Return a sorted list of memory ranges.
-  *
-@@ -155,9 +227,11 @@ int get_memory_ranges(struct memory_rang
- 	 * even if we have /sys/firmware/memmap. Without that, /proc/vmcore
- 	 * is empty in the kdump kernel.
- 	 */
--	if (!xen_present() && have_sys_firmware_memmap())
-+	if (!xen_present() && have_sys_firmware_memmap()) {
- 		ret = get_memory_ranges_sysfs(range, ranges);
--	else
-+		if (!ret)
-+			ret = fixup_memory_ranges_sysfs(range, ranges);
-+	} else
- 		ret = get_memory_ranges_proc_iomem(range, ranges);
++late_initcall(crate_debug_files);
++
+ void __init efi_init(void)
+ {
+ 	efi_config_table_t *config_tables;
+@@ -322,6 +415,7 @@ void __init efi_init(void)
+ 	char vendor[100] = "unknown";
+ 	int i = 0;
+ 	void *tmp;
++	resource_size_t phys_addr;
  
+ #ifdef CONFIG_X86_32
+ 	efi_phys.systab = (efi_system_table_t *)boot_params.efi_info.efi_systab;
+@@ -353,7 +447,11 @@ void __init efi_init(void)
  	/*
+ 	 * Show what we know for posterity
+ 	 */
+-	c16 = tmp = early_ioremap(efi.systab->fw_vendor, 2);
++	if (is_kdump_kernel() && systab_fw_vendor_paddr != 0)
++		phys_addr = systab_fw_vendor_paddr;
++	else
++		phys_addr = efi.systab->fw_vendor;
++	c16 = tmp = early_ioremap(phys_addr, 2);
+ 	if (c16) {
+ 		for (i = 0; i < sizeof(vendor) - 1 && *c16; ++i)
+ 			vendor[i] = *c16++;
+@@ -369,8 +467,12 @@ void __init efi_init(void)
+ 	/*
+ 	 * Let's see what config tables the firmware passed to us.
+ 	 */
++	if (is_kdump_kernel() && systab_tables_paddr != 0)
++		phys_addr = systab_tables_paddr;
++	else
++		phys_addr = efi.systab->tables;
+ 	config_tables = early_ioremap(
+-		efi.systab->tables,
++		phys_addr,
+ 		efi.systab->nr_tables * sizeof(efi_config_table_t));
+ 	if (config_tables == NULL)
+ 		printk(KERN_ERR "Could not map EFI Configuration Table!\n");
+@@ -418,8 +520,11 @@ void __init efi_init(void)
+ 	 * address of several of the EFI runtime functions, needed to
+ 	 * set the firmware into virtual mode.
+ 	 */
+-	runtime = early_ioremap((unsigned long)efi.systab->runtime,
+-				sizeof(efi_runtime_services_t));
++	if (is_kdump_kernel() && systab_runtime_paddr != 0)
++		phys_addr = systab_runtime_paddr;
++	else
++		phys_addr = (unsigned long)efi.systab->runtime;
++	runtime = early_ioremap(phys_addr, sizeof(efi_runtime_services_t));
+ 	if (runtime != NULL) {
+ 		/*
+ 		 * We will only need *early* access to the following
+@@ -465,6 +570,12 @@ void __init efi_init(void)
+ #if EFI_DEBUG
+ 	print_efi_memmap();
+ #endif
++	/* Save original physical address */
++	if (!is_kdump_kernel()) {
++		systab_fw_vendor_paddr = efi.systab->fw_vendor;
++		systab_tables_paddr = efi.systab->tables;
++		systab_runtime_paddr = (unsigned long)efi.systab->runtime;
++	}
+ }
+ 
+ static void __init runtime_code_page_mkexec(void)
+@@ -544,11 +655,14 @@ void __init efi_enter_virtual_mode(void)
+ 
+ 	BUG_ON(!efi.systab);
+ 
+-	status = phys_efi_set_virtual_address_map(
+-		memmap.desc_size * memmap.nr_map,
+-		memmap.desc_size,
+-		memmap.desc_version,
+-		memmap.phys_map);
++	if (!is_kdump_kernel())
++		status = phys_efi_set_virtual_address_map(
++			memmap.desc_size * memmap.nr_map,
++			memmap.desc_size,
++			memmap.desc_version,
++			memmap.phys_map);
++	else
++		status = EFI_SUCCESS;
+ 
+ 	if (status != EFI_SUCCESS) {
+ 		printk(KERN_ALERT "Unable to switch EFI into virtual mode "
+
 
 _______________________________________________
 kexec mailing list
