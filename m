@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vw0-f49.google.com ([209.85.212.49])
+Received: from mail-pz0-f49.google.com ([209.85.210.49])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OdbKb-0000tG-3Q
-	for kexec@lists.infradead.org; Tue, 27 Jul 2010 03:59:54 +0000
-Received: by vws11 with SMTP id 11so3492809vws.36
-	for <kexec@lists.infradead.org>; Mon, 26 Jul 2010 20:59:51 -0700 (PDT)
+	id 1OdgE3-0005Wj-C4
+	for kexec@lists.infradead.org; Tue, 27 Jul 2010 09:13:28 +0000
+Received: by pzk3 with SMTP id 3so1587695pzk.36
+	for <kexec@lists.infradead.org>; Tue, 27 Jul 2010 02:13:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20100727025506.GA1944@verge.net.au>
-References: <1279687384-9770-1-git-send-email-msm@freescale.com>
-	<20100727025506.GA1944@verge.net.au>
-Date: Tue, 27 Jul 2010 07:59:51 +0400
-Message-ID: <AANLkTin_e7twax5Ci683eAXVzuBzmyRA_5=EEWBnmk99@mail.gmail.com>
-Subject: Re: [PATCH v3 0/7] Fixup booting with device trees and uImage/elf on 
-	ppc32
-From: Maxim Uvarov <muvarov@gmail.com>
+In-Reply-To: <20100726152315.GA18789@hmsreliant.think-freely.org>
+References: <20100713134609.GA14514@hmsreliant.think-freely.org>
+	<20100726152315.GA18789@hmsreliant.think-freely.org>
+Date: Tue, 27 Jul 2010 17:13:24 +0800
+Message-ID: <AANLkTimx4=y4DgreWJOQ2=y4CmMm1p7bku=UJtsXXss3@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: Add vmcoreinfo symbols to allow makdumpfile to 
+	filter core files properly
+From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,185 +22,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0486048398=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Matthew McClintock <msm@freescale.com>, sebastian@breakpoint.cc, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: linuxppc-dev@ozlabs.org, benh@kernel.crashing.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, paulus@samba.org, vgoyal@redhat.com
 
---===============0486048398==
-Content-Type: multipart/alternative; boundary=0016e64cad1e7907a3048c56887b
-
---0016e64cad1e7907a3048c56887b
-Content-Type: text/plain; charset=ISO-8859-1
-
-2010/7/27 Simon Horman <horms@verge.net.au>
-
-> [Cced linuxppc-dev]
->
-> On Tue, Jul 20, 2010 at 11:42:57PM -0500, Matthew McClintock wrote:
-> > This patch series adds full support for booting with a flat device tree
-> > with either uImage or elf file formats. Kexec and Kdump should work, and
-> > you should also be able to use ramdisks or reuse your current ramdisk as
-> well
-> >
-> > This patch series was tested on an mpc85xx system with a kernel version
-> > 2.6.35-rc3
-> >
-> > v1: Initial version
-> >
-> > v2: Added support for fs2dt (file system to device tree)
-> >
-> > v3: Fix some misc. git problems I had and other code cleanups
->
-> Hi Matthew,
->
-> I'm a little concerned that these changes are non trivial and haven't had
-> much review. But I am prepared to put them into my tree once 2.0.2 is
-> released - perhaps that way they will get some test coverage. Does
-> that work for you?
->
-> Actually  Matthew did that did not work before. Like kdump for booke. But
-because kernel patches are not already in it's not urgent to commit it right
-now.
-
-> >
-> > Matthew McClintock (7):
-> >   Restore kexec uImage-ppc to working state
-> >   Fix case where phys_addr_t != unsigned long when reading proc entries
-> >   Update uImage to support crash kernel and misc fixes
-> >   Update Elf-ppc to support crash kernel and misc fixes
-> >   Add support for ramdisk on ppc32 for uImage-ppc and Elf-ppc
-> >   Add support for reworking flat device tree support
-> >   Add documentation/howto for mpc85xx systems
-> >
-> >  doc/mpc85xx.txt                       |  190 +++++++++++++++++++++
-> >  kexec/arch/ppc/Makefile               |    1 +
-> >  kexec/arch/ppc/fixup_dtb.c            |  298
-> ++++++++++++++++++++++++++++++++-
-> >  kexec/arch/ppc/fixup_dtb.h            |    6 +-
-> >  kexec/arch/ppc/include/arch/options.h |    3 +
-> >  kexec/arch/ppc/kexec-elf-ppc.c        |  186 +++++++++------------
-> >  kexec/arch/ppc/kexec-ppc.c            |  262
-> +++++++++++++++++------------
-> >  kexec/arch/ppc/kexec-ppc.h            |    3 +
-> >  kexec/arch/ppc/kexec-uImage-ppc.c     |  136 ++++++++++++---
-> >  kexec/arch/ppc/ops.h                  |    1 -
-> >  purgatory/arch/ppc/purgatory-ppc.c    |    5 +
-> >  11 files changed, 852 insertions(+), 239 deletions(-)
-> >  create mode 100644 doc/mpc85xx.txt
-> >
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
->
-
-
-
--- 
-Best regards,
-Maxim Uvarov
-
---0016e64cad1e7907a3048c56887b
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br><br><div class=3D"gmail_quote">2010/7/27 Simon Horman <span dir=3D"ltr"=
->&lt;<a href=3D"mailto:horms@verge.net.au">horms@verge.net.au</a>&gt;</span=
-><br><blockquote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; =
-border-left: 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-[Cced linuxppc-dev]<br>
-<div class=3D"im"><br>
-On Tue, Jul 20, 2010 at 11:42:57PM -0500, Matthew McClintock wrote:<br>
-&gt; This patch series adds full support for booting with a flat device tre=
-e<br>
-&gt; with either uImage or elf file formats. Kexec and Kdump should work, a=
-nd<br>
-&gt; you should also be able to use ramdisks or reuse your current ramdisk =
-as well<br>
-&gt;<br>
-&gt; This patch series was tested on an mpc85xx system with a kernel versio=
-n<br>
-&gt; 2.6.35-rc3<br>
-&gt;<br>
-&gt; v1: Initial version<br>
-&gt;<br>
-&gt; v2: Added support for fs2dt (file system to device tree)<br>
-&gt;<br>
-&gt; v3: Fix some misc. git problems I had and other code cleanups<br>
-<br>
-</div>Hi Matthew,<br>
-<br>
-I&#39;m a little concerned that these changes are non trivial and haven&#39=
-;t had<br>
-much review. But I am prepared to put them into my tree once 2.0.2 is<br>
-released - perhaps that way they will get some test coverage. Does<br>
-that work for you?<br>
-<div class=3D"im"><br></div></blockquote><div>Actually=A0 Matthew did that =
-did not work before. Like kdump for booke. But because kernel patches are n=
-ot already in it&#39;s not urgent to commit it right now. <br></div><blockq=
-uote class=3D"gmail_quote" style=3D"margin: 0pt 0pt 0pt 0.8ex; border-left:=
- 1px solid rgb(204, 204, 204); padding-left: 1ex;">
-<div class=3D"im">
-&gt;<br>
-&gt; Matthew McClintock (7):<br>
-&gt; =A0 Restore kexec uImage-ppc to working state<br>
-&gt; =A0 Fix case where phys_addr_t !=3D unsigned long when reading proc en=
-tries<br>
-&gt; =A0 Update uImage to support crash kernel and misc fixes<br>
-&gt; =A0 Update Elf-ppc to support crash kernel and misc fixes<br>
-&gt; =A0 Add support for ramdisk on ppc32 for uImage-ppc and Elf-ppc<br>
-&gt; =A0 Add support for reworking flat device tree support<br>
-&gt; =A0 Add documentation/howto for mpc85xx systems<br>
-&gt;<br>
-&gt; =A0doc/mpc85xx.txt =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A019=
-0 +++++++++++++++++++++<br>
-&gt; =A0kexec/arch/ppc/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A01 +<br=
->
-&gt; =A0kexec/arch/ppc/fixup_dtb.c =A0 =A0 =A0 =A0 =A0 =A0| =A0298 ++++++++=
-++++++++++++++++++++++++-<br>
-&gt; =A0kexec/arch/ppc/fixup_dtb.h =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A06 +-<br>
-&gt; =A0kexec/arch/ppc/include/arch/options.h | =A0 =A03 +<br>
-&gt; =A0kexec/arch/ppc/kexec-elf-ppc.c =A0 =A0 =A0 =A0| =A0186 +++++++++---=
----------<br>
-&gt; =A0kexec/arch/ppc/kexec-ppc.c =A0 =A0 =A0 =A0 =A0 =A0| =A0262 ++++++++=
-+++++++++------------<br>
-&gt; =A0kexec/arch/ppc/kexec-ppc.h =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A03 +<br>
-&gt; =A0kexec/arch/ppc/kexec-uImage-ppc.c =A0 =A0 | =A0136 ++++++++++++---<=
-br>
-&gt; =A0kexec/arch/ppc/ops.h =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A01 =
--<br>
-&gt; =A0purgatory/arch/ppc/purgatory-ppc.c =A0 =A0| =A0 =A05 +<br>
-&gt; =A011 files changed, 852 insertions(+), 239 deletions(-)<br>
-&gt; =A0create mode 100644 doc/mpc85xx.txt<br>
-&gt;<br>
-&gt;<br>
-&gt;<br>
-</div>&gt; _______________________________________________<br>
-&gt; kexec mailing list<br>
-&gt; <a href=3D"mailto:kexec@lists.infradead.org">kexec@lists.infradead.org=
-</a><br>
-&gt; <a href=3D"http://lists.infradead.org/mailman/listinfo/kexec" target=
-=3D"_blank">http://lists.infradead.org/mailman/listinfo/kexec</a><br>
-</blockquote></div><br><br clear=3D"all"><br>-- <br>Best regards,<br>Maxim =
-Uvarov<br>
-
---0016e64cad1e7907a3048c56887b--
-
-
---===============0486048398==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0486048398==--
-
+T24gTW9uLCBKdWwgMjYsIDIwMTAgYXQgMTE6MjMgUE0sIE5laWwgSG9ybWFuIDxuaG9ybWFuQHR1
+eGRyaXZlci5jb20+IHdyb3RlOgo+IE9uIFR1ZSwgSnVsIDEzLCAyMDEwIGF0IDA5OjQ2OjA5QU0g
+LTA0MDAsIE5laWwgSG9ybWFuIHdyb3RlOgo+PiBIZXkgYWxsLQo+PiDCoCDCoCDCoCBBYm91dCAy
+IHllYXJzIGFnbyBub3csIEkgc2VudCB0aGlzIHBhdGNoIHVwc3RyZWFtIHRvIGFsbG93IG1ha2Vk
+dW1wZmlsZQo+PiB0byBwcm9wZXJseSBmaWx0ZXIgY29yZXMgb24gcHBjNjQ6Cj4+IGh0dHA6Ly93
+d3cubWFpbC1hcmNoaXZlLmNvbS9rZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnL21zZzAyNDI2Lmh0
+bWwKPj4gSXQgZ290IGFja3MgZnJvbSB0aGUga2V4ZWMgZm9sa3Mgc28gSSBwdWxsZWQgaXQgaW50
+byBSSEVMLCBidXQgSSBuZXZlciBjaGVja2VkCj4+IGJhY2sgaGVyZSB0byBtYWtlIHN1cmUgaXQg
+ZXZlciBtYWRlIGl0IGluLCB3aGljaCBhcHBhcmVudGx5IGl0IGRpZG4ndC4gwqBJdCBzdGlsbAo+
+PiBuZWVkcyB0byBiZSBpbmNsdWRlZCwgc28gSSdtIHJlcG9zdGluZyBpdCBoZXJlLCBtYWtpbmcg
+c3VyZSB0byBjb3B5IGFsbCB0aGUgcHBjCj4+IGZvbGtzIHRoaXMgdGltZS4gwqBJJ3ZlIHJldGVz
+dGVkIGl0IG9uIHRoZSBsYXRlc3QgbGludXMga2VybmVsIGFuZCBpdCB3b3JrcyBmaW5lLAo+PiBh
+bGxvd2luZyBtYWtlZHVtcGZpbGUgdG8gZmluZCBhbGwgdGhlIHN5bWJvbHMgaXQgbmVlZHMgdG8g
+cHJvcGVybHkgc3RyaXAgYQo+PiB2bWNvcmUgb24gcHBjNjQuCj4+Cj4+IE5laWwKPj4KPj4gU2ln
+bmVkLW9mZi1ieTogTmVpbCBIb3JtYW4gPG5ob3JtYW5AdHV4ZHJpdmVyLmNvbT4KPj4KPiBQaW5n
+LCBhbnlvbmUgd2FudCB0byBjaGltZSBpbiBvbiB0aGlzLCBpdHMgbmVlZGVkIGZvciBkdW1wIGZp
+bHRlcmluZyB0byB3b3JrCj4gcHJvcGVybHkgb24gcHBjNjQKClRoaXMgcGF0Y2ggbG9va3MgZ29v
+ZCBmb3IgbWUuCgpSZXZpZXdlZC1ieTogV0FORyBDb25nIDx4aXlvdS53YW5nY29uZ0BnbWFpbC5j
+b20+CgpUaGFua3MhCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
