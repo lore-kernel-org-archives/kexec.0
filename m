@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OePG2-00060W-B5
-	for kexec@lists.infradead.org; Thu, 29 Jul 2010 09:18:30 +0000
-Date: Thu, 29 Jul 2010 18:18:26 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/7] Fixup booting with device trees and uImage/elf
-	on ppc32
-Message-ID: <20100729091825.GE10021@verge.net.au>
-References: <1279687384-9770-1-git-send-email-msm@freescale.com>
-	<20100727025506.GA1944@verge.net.au>
-	<14FA0578-0D5B-48D1-BF5D-EB39DF1432D1@freescale.com>
+	id 1OeTOl-0002t4-M1
+	for kexec@lists.infradead.org; Thu, 29 Jul 2010 13:43:50 +0000
+Date: Thu, 29 Jul 2010 09:43:43 -0400
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: In place kexec
+Message-ID: <20100729134343.GA31490@shamino.rdu.redhat.com>
+References: <4C50A7AD.8040902@zytor.com>
+ <m1y6cvtgd0.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <14FA0578-0D5B-48D1-BF5D-EB39DF1432D1@freescale.com>
+In-Reply-To: <m1y6cvtgd0.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,43 +24,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: muvarov@gmail.com, linuxppc-dev@lists.ozlabs.org, sebastian@breakpoint.cc, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "H. Peter Anvin" <hpa@zytor.com>
 
-On Mon, Jul 26, 2010 at 11:22:58PM -0500, Matthew McClintock wrote:
+On Wed, Jul 28, 2010 at 03:02:19PM -0700, Eric W. Biederman wrote:
+> "H. Peter Anvin" <hpa@zytor.com> writes:
 > 
-> On Jul 26, 2010, at 9:55 PM, Simon Horman wrote:
+> > We are getting a claim that the qla driver corrupts memory after a
+> > kexec, apparently due to a DMA engine left running in the before-kernel.
+> >
+> > For an in-place kexec (as opposed to a crash dump kexec, where we switch
+> > into dedicated memory), what shutdown paths get executed?
 > 
-> > [Cced linuxppc-dev]
-> > 
-> > On Tue, Jul 20, 2010 at 11:42:57PM -0500, Matthew McClintock wrote:
-> >> This patch series adds full support for booting with a flat device tree
-> >> with either uImage or elf file formats. Kexec and Kdump should work, and
-> >> you should also be able to use ramdisks or reuse your current ramdisk as well
-> >> 
-> >> This patch series was tested on an mpc85xx system with a kernel version
-> >> 2.6.35-rc3
-> >> 
-> >> v1: Initial version
-> >> 
-> >> v2: Added support for fs2dt (file system to device tree)
-> >> 
-> >> v3: Fix some misc. git problems I had and other code cleanups
-> > 
-> > Hi Matthew,
-> > 
-> > I'm a little concerned that these changes are non trivial and haven't had
-> > much review. But I am prepared to put them into my tree once 2.0.2 is
-> > released - perhaps that way they will get some test coverage. Does
-> > that work for you?
+> It is the normal reboot path, so the device shutdown method gets
+> executed.
 > 
-> Either way works for me. I know they could use more review, however as Maxim said the current tree does not work AFAIK. Either way, I'm willing to keeping addressing everyones concerns and wait or move forward and make some quick fixes as well.
+> Eric
+> 
+Check your iommu.  We've had lots of problems with them in the past, and in the
+crash path we explicity leave the iommu on now, whereas the normal shutdown path
+turns it off.  If some other dma-capable device doesn't shut down properly and
+keeps dma operations going, you're liable to get memory corruption when the
+iommu re-initalizes.  
 
-All applied.
+Neil
 
-I made some minor changes to three of the patches.
-I have noted each change in separate emails.
-
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
