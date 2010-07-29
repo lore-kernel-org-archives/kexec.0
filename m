@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OeKY3-0006j7-NJ
-	for kexec@lists.infradead.org; Thu, 29 Jul 2010 04:16:50 +0000
-Date: Thu, 29 Jul 2010 13:16:41 +0900
+	id 1OeL9H-0005Nm-Gl
+	for kexec@lists.infradead.org; Thu, 29 Jul 2010 04:55:16 +0000
+Date: Thu, 29 Jul 2010 13:55:10 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: [patch] MAINTAINERS: kexec-tools has moved
-Message-ID: <20100729041641.GA32220@verge.net.au>
+Subject: [announce] kexec-tools has moved
+Message-ID: <20100729045510.GA429@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -21,27 +21,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
+To: kexec@lists.infradead.org
+Cc: Neil Horman <nhorman@redhat.com>, Ben Collins <bcollins@ubuntu.com>, Werner Almesberger <werner@almesberger.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Khalid Aziz <khalid_aziz@hp.com>, David Woodhouse <dwmw2@infradead.org>, Vivek Goyal <vgoyal@redhat.com>, linuxbios@linuxbios.org
 
-Kexec tools has been moved to http://kernel.org/pub/linux/utils/kernel/kexec/
-as user-space code shouldn't be in /pub/linux/kernel
+Hi,
 
-Signed-off-by: Simon Horman <horms@verge.net.au>
+as user-space code isn't supposed to live in kernel.org/pub/linux/kernel/
+or kernel.org/pub/scm/linux/kernel/, effective immediately kexec-tools has
+moved to:
 
-Index: linux-2.6/MAINTAINERS
-===================================================================
---- linux-2.6.orig/MAINTAINERS	2010-07-29 13:10:04.000000000 +0900
-+++ linux-2.6/MAINTAINERS	2010-07-29 13:11:40.000000000 +0900
-@@ -3334,7 +3334,7 @@ F:	drivers/s390/kvm/
- 
- KEXEC
- M:	Eric Biederman <ebiederm@xmission.com>
--W:	http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
-+W:	http://kernel.org/pub/linux/utils/kernel/kexec/
- L:	kexec@lists.infradead.org
- S:	Maintained
- F:	include/linux/kexec.h
+Download: http://kernel.org/pub/linux/utils/kernel/kexec/
+Git:      git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+          http://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+          https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+Git-Web:  http://git.kernel.org/?p=utils/kernel/kexec/kexec-tools.git
+
 
 _______________________________________________
 kexec mailing list
