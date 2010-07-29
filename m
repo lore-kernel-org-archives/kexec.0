@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from db3ehsobe003.messaging.microsoft.com ([213.199.154.141]
-	helo=DB3EHSOBE003.bigfish.com)
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OeVaa-0002wo-IY
-	for kexec@lists.infradead.org; Thu, 29 Jul 2010 16:04:13 +0000
-Subject: Re: [PATCH v2 5/7] Add support for ramdisk on ppc32 for uImage-ppc
-	and Elf-ppc
-MIME-Version: 1.0 (Apple Message framework v1081)
-From: Matthew McClintock <msm@freescale.com>
-In-Reply-To: <20100729083324.GC10021@verge.net.au>
-Date: Thu, 29 Jul 2010 11:03:54 -0500
-Message-ID: <96019506-16C7-46A2-A051-2EFA5CE910B2@freescale.com>
-References: <1279656900-27458-1-git-send-email-msm@freescale.com>
-	<1279656900-27458-2-git-send-email-msm@freescale.com>
-	<1279656900-27458-3-git-send-email-msm@freescale.com>
-	<1279656900-27458-4-git-send-email-msm@freescale.com>
-	<1279656900-27458-5-git-send-email-msm@freescale.com>
-	<20100729083324.GC10021@verge.net.au>
+	id 1OeXGz-0002HZ-HX
+	for kexec@lists.infradead.org; Thu, 29 Jul 2010 17:52:07 +0000
+Message-ID: <4C51BFA5.60507@zytor.com>
+Date: Thu, 29 Jul 2010 10:51:33 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
+Subject: Re: In place kexec
+References: <4C50A7AD.8040902@zytor.com> <m1y6cvtgd0.fsf@fess.ebiederm.org>
+	<20100729134343.GA31490@shamino.rdu.redhat.com>
+	<4C519853.2040206@zytor.com>
+	<20100729150640.GF31490@shamino.rdu.redhat.com>
+In-Reply-To: <20100729150640.GF31490@shamino.rdu.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,31 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: Neil Horman <nhorman@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
+On 07/29/2010 08:06 AM, Neil Horman wrote:
+>>
+>> Sorry, can we keep the discussions of kexec-on-crash and kexec-in-place
+>> clearly separated, please?  The qla driver issue is supposed to be
+>> kexec-in-place, and it sounds like you're talking about kexec-on-crash.
+>>
+> No, I'm just indicating a difference between the two paths, and I'm doing so
+> because we used to have simmilar dma problems in the crash path, which we
+> resolved by not turning of the iommu during shutdown, which is different from
+> the in-place path.  Just trying to give you some thoughts about where to look
 
-On Jul 29, 2010, at 3:33 AM, Simon Horman wrote:
+Fair enough... just wanted to flag this as a problem, because it has
+already been the source of a lot of confusion.
 
-> On Tue, Jul 20, 2010 at 03:14:58PM -0500, Matthew McClintock wrote:
->> This fixes --reuseinitrd and --ramdisk option for ppc32 on
->> uImage-ppc and Elf. It works for normal kexec as well as for
->> kdump.
->> 
->> When using --reuseinitrd you need to specifify retain_initrd
->> on the command line. Also, if you are doing kdump you need to make
->> sure your initrd lives in the crashdump region otherwise the
->> kdump kernel will not be able to access it. The --ramdisk option
->> should always work.
-> 
-> Thanks, I have applied this change.
-> I had to do a minor merge on the Makefile,
-> could you verify that the result is correct?
-> 
+	-hpa
 
-Tested and looks good.
-
--M
+-- 
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
 
 
 _______________________________________________
