@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OehWo-0006zn-Lr
-	for kexec@lists.infradead.org; Fri, 30 Jul 2010 04:49:03 +0000
-Message-ID: <4C5259C4.1010006@ozlabs.org>
-Date: Fri, 30 Jul 2010 14:49:08 +1000
-From: Matt Evans <matt@ozlabs.org>
+	id 1OehmM-0002pv-Hy
+	for kexec@lists.infradead.org; Fri, 30 Jul 2010 05:05:07 +0000
+Message-ID: <4C525D6A.4000007@zytor.com>
+Date: Thu, 29 Jul 2010 22:04:42 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Subject: [PATCH 2/2] powerpc/kexec: Fix orphaned offline CPUs across kexec
-References: <4C5258C8.1030305@ozlabs.org>
-In-Reply-To: <4C5258C8.1030305@ozlabs.org>
+Subject: Re: In place kexec
+References: <4C50A7AD.8040902@zytor.com>
+	<m1y6cvtgd0.fsf@fess.ebiederm.org>	<20100729134343.GA31490@shamino.rdu.redhat.com>	<4C519853.2040206@zytor.com>	<20100729150640.GF31490@shamino.rdu.redhat.com>	<4C51BFA5.60507@zytor.com>
+	<m1k4oe88n9.fsf@fess.ebiederm.org>	<4C51C878.2090102@zytor.com>
+	<20100729191654.GB28704@redhat.com>	<m1lj8uvzgy.fsf@fess.ebiederm.org>	<20100729125535.85dfd7da.randy.dunlap@oracle.com>	<4C524934.5070806@zytor.com>
+	<m1d3u5ins8.fsf@fess.ebiederm.org>
+In-Reply-To: <m1d3u5ins8.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,77 +26,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org
-Cc: Michael Neuling <mikey@neuling.org>, Milton Miller <miltonm@bga.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, Neil Horman <nhorman@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, Andrew Vasquez <andrew.vasquez@qlogic.com>, linux-driver@qlogic.com, Vivek Goyal <vgoyal@redhat.com>
 
-When CPU hotplug is used, some CPUs may be offline at the time a kexec is
-performed.  The subsequent kernel may expect these CPUs to be already running,
-and will declare them stuck.  On pseries, there's also a soft-offline (cede)
-state that CPUs may be in; this can also cause problems as the kexeced kernel
-may ask RTAS if they're online -- and RTAS would say they are.  The CPU will
-either appear stuck, or will cause a crash as we replace its cede loop beneath
-it.
+On 07/29/2010 09:41 PM, Eric W. Biederman wrote:
+> 
+> There isn't a bus master shut off at the core level.  When we did
+> the original analysis it turned out that the bus mastering bit
+> was implemented on a lot of devices in advisory way, so it didn't
+> make sense to count on it.
+> 
 
-This patch kicks each present offline CPU awake before the kexec, so that
-none are forever lost to these assumptions in the subsequent kernel.
+But does it make sense to not flip the bit for the cases where it is
+implemented properly?
 
-Now, the behaviour is that all available CPUs that were offlined are now
-online & usable after the kexec.  This mimics the behaviour of a full reboot
-(on which all CPUs will be restarted).
+> That said it looks like the code to do the shutdown is in
+> qla2x00_remove_one so it should be too hard if someone cared to
+> extract just the hardware bits.
 
-Signed-off-by: Matt Evans <matt@ozlabs.org>
----
- arch/powerpc/kernel/machine_kexec_64.c |   26 +++++++++++++++++++++++++-
- 1 files changed, 25 insertions(+), 1 deletions(-)
+Charming.  Code is there, just not hooked up.
 
-diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-index aa3d5cd..37f805e 100644
---- a/arch/powerpc/kernel/machine_kexec_64.c
-+++ b/arch/powerpc/kernel/machine_kexec_64.c
-@@ -16,6 +16,7 @@
- #include <linux/init_task.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
-+#include <linux/cpu.h>
- 
- #include <asm/page.h>
- #include <asm/current.h>
-@@ -213,9 +214,32 @@ static void kexec_prepare_cpus_wait(int wait_state)
- 	mb();
- }
- 
--static void kexec_prepare_cpus(void)
-+/*
-+ * We need to make sure each present CPU is online.  The next kernel will scan
-+ * the device tree and assume primary threads are online and query secondary
-+ * threads via RTAS to online them if required.  If we don't online primary
-+ * threads, they will be stuck.  However, we also online secondary threads as we
-+ * may be using 'cede offline'.  In this case RTAS doesn't see the secondary
-+ * threads as offline -- and again, these CPUs will be stuck.
-+ *
-+ * So, we online all CPUs that should be running, including secondary threads.
-+ */
-+static void wake_offline_cpus(void)
- {
-+	int cpu = 0;
-+
-+	for_each_present_cpu(cpu) {
-+		if (!cpu_online(cpu)) {
-+			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
-+			       cpu);
-+			cpu_up(cpu);
-+		}
-+	}
-+}
- 
-+static void kexec_prepare_cpus(void)
-+{
-+	wake_offline_cpus();
- 	smp_call_function(kexec_smp_down, NULL, /* wait */0);
- 	local_irq_disable();
- 	mb(); /* make sure IRQs are disabled before we say they are */
+	-hpa
+
 -- 
-1.6.3.3
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
 
 
 _______________________________________________
