@@ -1,24 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g6t0186.atlanta.hp.com ([15.193.32.63])
+Received: from avexcashub1.qlogic.com ([198.70.193.61])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OexO9-0005IE-K8
-	for kexec@lists.infradead.org; Fri, 30 Jul 2010 21:45:13 +0000
+	id 1OeyRF-0000IN-MJ
+	for kexec@lists.infradead.org; Fri, 30 Jul 2010 22:52:26 +0000
+Date: Fri, 30 Jul 2010 15:52:22 -0700
+From: Andrew Vasquez <andrew.vasquez@qlogic.com>
 Subject: Re: In place kexec
-From: Khalid Aziz <khalid_aziz@hp.com>
-In-Reply-To: <1280524696.30160.34.camel@localhost>
-References: <4C50A7AD.8040902@zytor.com> <m1y6cvtgd0.fsf@fess.ebiederm.org>
-	<20100729134343.GA31490@shamino.rdu.redhat.com>
-	<4C519853.2040206@zytor.com>
-	<20100729150640.GF31490@shamino.rdu.redhat.com>	<4C51BFA5.60507@zytor.com>
-	<m1k4oe88n9.fsf@fess.ebiederm.org>	<4C51C878.2090102@zytor.com>
-	<20100729191654.GB28704@redhat.com>	<m1lj8uvzgy.fsf@fess.ebiederm.org>
+Message-ID: <20100730225222.GA14545@plapp.qlogic.org>
+References: <4C51C878.2090102@zytor.com> <20100729191654.GB28704@redhat.com>
+	<m1lj8uvzgy.fsf@fess.ebiederm.org>
 	<20100729125535.85dfd7da.randy.dunlap@oracle.com>
 	<4C524934.5070806@zytor.com> <m1d3u5ins8.fsf@fess.ebiederm.org>
-	<1280508817.28006.0.camel@macbook.infradead.org>	<4C533922.10901@zytor.com>
-	<1280524696.30160.34.camel@localhost>
-Date: Fri, 30 Jul 2010 15:44:58 -0600
-Message-Id: <1280526298.30160.39.camel@localhost>
-Mime-Version: 1.0
+	<4C525D6A.4000007@zytor.com> <m1aap93pak.fsf@fess.ebiederm.org>
+	<4C5300B9.2080507@zytor.com> <m1sk30zuis.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1sk30zuis.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,37 +28,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, Neil Horman <nhorman@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "linux-driver@qlogic.com" <linux-driver@qlogic.com>, David Woodhouse <dwmw2@infradead.org>, Vivek Goyal <vgoyal@redhat.com>, Andrew Vasquez <andrew.vasquez@qlogic.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, Neil Horman <nhorman@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Linux Driver <Linux-Driver@qlogic.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, 2010-07-30 at 21:18 +0000, Aziz, Khalid wrote:
-> There were some discussions regarding this and this code was removed by
-> the time it was merged into mainline kernel. I can't remember the
-> details of why. I remember one report of kernel hang on kexec that
-> seemed to happen in device_shootdown(). I will look for any discussion
-> threads I can find.
+On Fri, 30 Jul 2010, Eric W. Biederman wrote:
+
+> "H. Peter Anvin" <hpa@zytor.com> writes:
 > 
+> > On 07/30/2010 09:30 AM, Eric W. Biederman wrote:
+> >> 
+> >>>> That said it looks like the code to do the shutdown is in
+> >>>> qla2x00_remove_one so it should be too hard if someone cared to
+> >>>> extract just the hardware bits.
+> >>>
+> >>> Charming.  Code is there, just not hooked up.
+> >> 
+> >> Using the .remove method in reboot is a fight a lost long ago.
+> >> 
+> >
+> > Could you elucidate, please?
+> 
+> My original proposal was for device_shutdown to call the .remove
+> methods as those are well exercised and tested in development. aka
+> rmmod.
+> 
+> It was argued (with some merit) that for a system reboot we don't want
+> to perform all of the subsystem registration work, to make it more
+> likely that reboot -f will reboot even if there is a kernel oops.
+> 
+> What I proposed and unfortunately failed to write the patch for at the
+> time is was to have the device remove path call shutdown before calling
+> remove, so drivers wouldn't have to code it all up twice.
+> 
+> A lot of the disk drivers implement .shutdown these days and there aren't
+> may bug reports about kexec failing.  So I would be reluctant to change
+> things other than on a driver by driver basis unless I had a lot of time
+> for testing etc.
+> 
+> It might be worth playing with adding a pci_clear_master in
+> pci_device_shutdown.  It has the potential to break things like usb
+> keyboards, so I would be careful.  If it doesn't break fundamental
+> things like usb a pci_clear_master when shutting down devices should
+> improve reliability somewhat.
+> 
+> And of course there is the old staple of work arounds: "rmmod <driver>"
+> before calling kexec --exec.
 
-These are the messages I could find discussing the code that disables
-PCI Master bit, before the code doing that was removed from ia64 tree:
+Looking through all these emails, what's the upshot here?  Is the
+expectation, for all storage drivers to starting to implement some
+'minimal' level of shutdown with the hardware/firmware during the
+.shutdown callback?
 
-<https://lists.linux-foundation.org/pipermail/fastboot/2006-June/010175.html>
-<https://lists.linux-foundation.org/pipermail/fastboot/2006-June/010176.html>
-<https://lists.linux-foundation.org/pipermail/fastboot/2006-June/010178.html>
-<https://lists.linux-foundation.org/pipermail/fastboot/2006-June/010214.html>
 
-May be it is time to revisit this, for more than just ia64.
-
--- 
-Khalid
-====================================================================
-Khalid Aziz                             Telco Platform Software, ISB
-(970)898-9214                                        Hewlett-Packard
-khalid.aziz@hp.com                                  Fort Collins, CO
-
-"The Linux kernel is subject to relentless development" 
-                                - Alessandro Rubini
-
+--
+Andrew Vasquez
 
 _______________________________________________
 kexec mailing list
