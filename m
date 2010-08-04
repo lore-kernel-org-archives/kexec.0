@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+Received: from one.firstfloor.org ([213.235.205.2])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OgfKb-00010a-HH
-	for kexec@lists.infradead.org; Wed, 04 Aug 2010 14:52:34 +0000
-Date: Wed, 4 Aug 2010 10:49:29 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH] powerpc: Add vmcoreinfo symbols to allow makdumpfile to
-	filter core files properly
-Message-ID: <20100804144929.GA13970@hmsreliant.think-freely.org>
-References: <20100713134609.GA14514@hmsreliant.think-freely.org>
+	id 1OgfWs-0003oT-L4
+	for kexec@lists.infradead.org; Wed, 04 Aug 2010 15:05:15 +0000
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: [rfc] Merge kexec-tools into the kernel tree
+References: <20100804070647.GB24064@verge.net.au>
+	<m17hk6de62.fsf@fess.ebiederm.org>
+Date: Wed, 04 Aug 2010 17:05:08 +0200
+In-Reply-To: <m17hk6de62.fsf@fess.ebiederm.org> (Eric W. Biederman's message
+	of "Wed, 04 Aug 2010 00:34:29 -0700")
+Message-ID: <87bp9ie7vf.fsf@basil.nowhere.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100713134609.GA14514@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, hbabu@us.ibm.com, benh@kernel.crashing.org, paulus@samba.org, linuxppc-dev@ozlabs.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Neuling <mikey@neuling.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, Jul 13, 2010 at 09:46:09AM -0400, Neil Horman wrote:
-> Hey all-
-> 	About 2 years ago now, I sent this patch upstream to allow makedumpfile
-> to properly filter cores on ppc64:
-> http://www.mail-archive.com/kexec@lists.infradead.org/msg02426.html
-> It got acks from the kexec folks so I pulled it into RHEL, but I never checked
-> back here to make sure it ever made it in, which apparently it didn't.  It still
-> needs to be included, so I'm reposting it here, making sure to copy all the ppc
-> folks this time.  I've retested it on the latest linus kernel and it works fine,
-> allowing makedumpfile to find all the symbols it needs to properly strip a
-> vmcore on ppc64.
-> 
-> Neil
-> 
-> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> 
-> 
->  machine_kexec.c |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> 
-> diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-> index bb3d893..0df7031 100644
-> --- a/arch/powerpc/kernel/machine_kexec.c
-> +++ b/arch/powerpc/kernel/machine_kexec.c
-> @@ -45,6 +45,18 @@ void machine_kexec_cleanup(struct kimage *image)
->  		ppc_md.machine_kexec_cleanup(image);
->  }
->  
-> +void arch_crash_save_vmcoreinfo(void)
-> +{
-> +
-> +#ifdef CONFIG_NEED_MULTIPLE_NODES
-> +	VMCOREINFO_SYMBOL(node_data);
-> +	VMCOREINFO_LENGTH(node_data, MAX_NUMNODES);
-> +#endif
-> +#ifndef CONFIG_NEED_MULTIPLE_NODES
-> +	VMCOREINFO_SYMBOL(contig_page_data);
-> +#endif
-> +}
-> +
->  /*
->   * Do not allocate memory (or fail in any way) in machine_kexec().
->   * We are past the point of no return, committed to rebooting now.
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+ebiederm@xmission.com (Eric W. Biederman) writes:
+>
+> I'm afraid that someone has a good answer for why their lives would be
+> simpler if /sbin/kexec was in the kernel tree and I will be absolutely
+> horrified and about someones stupidity when I hear that answer.
 
-Ping yet again. Ben, This needs review/acceptance from you or Paul
-Neil
+Same here. In fact I guess it would be counter productive: it would
+discourage a stable API between the kernel and the user tool.
+We're seeing this problem with other user tools which are in 
+the kernel tree.
+
+-Andi
+
+-- 
+ak@linux.intel.com -- Speaking for myself only.
 
 _______________________________________________
 kexec mailing list
