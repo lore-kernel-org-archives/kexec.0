@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from smtprelay03.ispgateway.de ([80.67.29.28])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OgYUx-0007ze-JC
-	for kexec@lists.infradead.org; Wed, 04 Aug 2010 07:34:51 +0000
+	id 1OgZ1X-0001Kf-QE
+	for kexec@lists.infradead.org; Wed, 04 Aug 2010 08:08:31 +0000
+Date: Wed, 4 Aug 2010 10:08:13 +0200
+From: Bernhard Walle <bernhard@bwalle.de>
 Subject: Re: [rfc] Merge kexec-tools into the kernel tree
+Message-ID: <20100804080813.GA20178@bwalle.de>
 References: <20100804070647.GB24064@verge.net.au>
-From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Wed, 04 Aug 2010 00:34:29 -0700
-In-Reply-To: <20100804070647.GB24064@verge.net.au> (Simon Horman's message of
-	"Wed\, 4 Aug 2010 16\:06\:48 +0900")
-Message-ID: <m17hk6de62.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20100804070647.GB24064@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +24,26 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Simon Horman <horms@verge.net.au> writes:
-
-> Hi,
->
-> After all the excitement of relocating kexec-tools from
-> one location on kernel.org to another last week it was
-> suggested to me by Michael Neuling that the merging
-> kexec-tools into the kernel tree would be a good idea.
->
+* Simon Horman <horms@verge.net.au> [2010-08-04 09:06]:
+> 
 > Given that there have been a bunch of issues with kexec
 > on power that this would resolve. and there is precedence
 > for tools in the kernel tree, this sounds entirely reasonable to me.
 > So with my kexec-tools maintainer hat on, I would like to start
 > a conversation about this.
 
-What are the issues with kexec on power?  Did someone fail to maintain
-ABI compatibility?
+Well, honestly I don't understand the reason behind it.
 
-The interface isn't even supposed to be linux specific, so I can't
-imagine what would motivate moving this into the kernel tree.
+If it's about dependencies between the kexec binary and the kernel
+version -- there are also dependencies between makedumpfile and crash to
+the kernel version. Should we move makedumpfile and crash in the kernel
+tree, too (which means that we have a GDB copy in the kernel tree)?
 
-I'm afraid that someone has a good answer for why their lives would be
-simpler if /sbin/kexec was in the kernel tree and I will be absolutely
-horrified and about someones stupidity when I hear that answer.
 
-Eric
+Regards,
+Bernhard
 
 _______________________________________________
 kexec mailing list
