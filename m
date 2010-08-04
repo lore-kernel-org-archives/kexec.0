@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail-pw0-f49.google.com ([209.85.160.49])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OgY3z-00056E-1W
-	for kexec@lists.infradead.org; Wed, 04 Aug 2010 07:06:56 +0000
-Date: Wed, 4 Aug 2010 16:06:48 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: [rfc] Merge kexec-tools into the kernel tree
-Message-ID: <20100804070647.GB24064@verge.net.au>
+	id 1OgYFP-0007PM-Pu
+	for kexec@lists.infradead.org; Wed, 04 Aug 2010 07:18:45 +0000
+Received: by pwj7 with SMTP id 7so2160458pwj.36
+	for <kexec@lists.infradead.org>; Wed, 04 Aug 2010 00:18:42 -0700 (PDT)
+Date: Wed, 4 Aug 2010 15:22:46 +0800
+From: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>
+Subject: Re: [rfc] Merge kexec-tools into the kernel tree
+Message-ID: <20100804072246.GA5263@cr0.nay.redhat.com>
+References: <20100804070647.GB24064@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20100804070647.GB24064@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,48 +25,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Michael Neuling <mikey@neuling.org>, Linus Torvalds <torvalds@linux-foundation.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi,
+On Wed, Aug 04, 2010 at 04:06:48PM +0900, Simon Horman wrote:
+>Hi,
+>
+>After all the excitement of relocating kexec-tools from
+>one location on kernel.org to another last week it was
+>suggested to me by Michael Neuling that the merging
+>kexec-tools into the kernel tree would be a good idea.
+>
+>Given that there have been a bunch of issues with kexec
+>on power that this would resolve. and there is precedence
+>for tools in the kernel tree, this sounds entirely reasonable to me.
+>So with my kexec-tools maintainer hat on, I would like to start
+>a conversation about this.
+>
 
-After all the excitement of relocating kexec-tools from
-one location on kernel.org to another last week it was
-suggested to me by Michael Neuling that the merging
-kexec-tools into the kernel tree would be a good idea.
-
-Given that there have been a bunch of issues with kexec
-on power that this would resolve. and there is precedence
-for tools in the kernel tree, this sounds entirely reasonable to me.
-So with my kexec-tools maintainer hat on, I would like to start
-a conversation about this.
-
-In order to move the conversation along I have prepared a tree -
-a recent clone of Linus's tree + kexec tools.
-
-http://git.kernel.org/?p=linux/kernel/git/horms/kexec-tools-in-kernel-tree.git
-
-I think that a good next step would be to get this tree into linux-next.
-And then if all goes well, as Linus to pull the change some time in the future.
-
-
-
-
-
-For reference the steps taken to make the tree above were roughly as follows.
-Thanks to Michael for assistance with this.
-
-git clone
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git
-git clone git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-cd linux-2.6
-
-git remote add -f kexec ../kexec-tools
-git merge -s ours --no-commit kexec/master
-git read-tree --prefix=tools/kexec/ -u kexec/master
-git commit -m "Merge kexec-tools into subdirectory tools/kexec"
-
+But why? Just to draw more attentions from kernel community?
 
 _______________________________________________
 kexec mailing list
