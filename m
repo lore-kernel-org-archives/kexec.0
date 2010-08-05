@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gw0-f49.google.com ([74.125.83.49])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ogr2f-0002XG-EX
-	for kexec@lists.infradead.org; Thu, 05 Aug 2010 03:22:49 +0000
-Received: by gwb10 with SMTP id 10so2793808gwb.36
-	for <kexec@lists.infradead.org>; Wed, 04 Aug 2010 20:22:48 -0700 (PDT)
-Date: Thu, 5 Aug 2010 11:26:58 +0800
-From: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>
+	id 1Ogu7l-0005ov-Md
+	for kexec@lists.infradead.org; Thu, 05 Aug 2010 06:40:19 +0000
+Date: Thu, 5 Aug 2010 15:40:12 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [rfc] Merge kexec-tools into the kernel tree
-Message-ID: <20100805032658.GB5235@cr0.nay.redhat.com>
-References: <20100804070647.GB24064@verge.net.au>
-	<m17hk6de62.fsf@fess.ebiederm.org> <30114.1280963486@neuling.org>
-	<m1vd7q0vsx.fsf@fess.ebiederm.org> <5789.1280971186@neuling.org>
+Message-ID: <20100805064011.GB4630@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5789.1280971186@neuling.org>
+In-Reply-To: <20100804070647.GB24064@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,22 +22,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Neuling <mikey@neuling.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andi Kleen <andi@firstfloor.org>, Michael Neuling <mikey@neuling.org>, Linus Torvalds <torvalds@linux-foundation.org>, Neil Horman <nhorman@redhat.com>
 
-On Thu, Aug 05, 2010 at 11:19:46AM +1000, Michael Neuling wrote:
->> If we talk about analyzing and filtering crash dumps, I can totally
->> see an argument for putting something under tools/ if the authors of
->> mkdumpfile and crash are interested.  Those tools fundamentally really
->> do follow kernel internals.
->
->I agree that the argument is stronger for tools/ inclusion if internal
->APIs need to be followed.  Of course perf doesn't need internals APIs
->and it's in tools/.
->
+On Wed, Aug 04, 2010 at 04:06:48PM +0900, Simon Horman wrote:
+> Hi,
+> 
+> After all the excitement of relocating kexec-tools from
+> one location on kernel.org to another last week it was
+> suggested to me by Michael Neuling that the merging
+> kexec-tools into the kernel tree would be a good idea.
+> 
+> Given that there have been a bunch of issues with kexec
+> on power that this would resolve. and there is precedence
+> for tools in the kernel tree, this sounds entirely reasonable to me.
+> So with my kexec-tools maintainer hat on, I would like to start
+> a conversation about this.
 
-Well, I don't remember clearly why perf was proposed to be included into
-kernel tree by Ingo, I think it was internal API/ABI issue as well.
+Thanks to everyone for their responses. I think we can safely conclude
+that the body of opinion is that its not appropriate for kexec-tools
+to be included in the kernel tree. Primarily because it isn't tied
+closely to the kernel ABI. As such I withdraw this proposal.
+
+Thanks in particular to those who offered ideas on how to resolve
+some of the problems that kexec-tools faces. Lets make those ideas happen.
+
 
 _______________________________________________
 kexec mailing list
