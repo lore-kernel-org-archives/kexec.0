@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ogu7l-0005ov-Md
-	for kexec@lists.infradead.org; Thu, 05 Aug 2010 06:40:19 +0000
-Date: Thu, 5 Aug 2010 15:40:12 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [rfc] Merge kexec-tools into the kernel tree
-Message-ID: <20100805064011.GB4630@verge.net.au>
+	id 1Oh04H-000807-NG
+	for kexec@lists.infradead.org; Thu, 05 Aug 2010 13:01:06 +0000
+Date: Thu, 5 Aug 2010 09:00:59 -0400
+From: Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH] powerpc: Add vmcoreinfo symbols to allow makdumpfile to
+	filter core files properly
+Message-ID: <20100805130059.GA2863@shamino.rdu.redhat.com>
+References: <20100713134609.GA14514@hmsreliant.think-freely.org>
+	<20100804144929.GA13970@hmsreliant.think-freely.org>
+	<1280973866.1902.168.camel@pasglop>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100804070647.GB24064@verge.net.au>
+In-Reply-To: <1280973866.1902.168.camel@pasglop>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,30 +26,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andi Kleen <andi@firstfloor.org>, Michael Neuling <mikey@neuling.org>, Linus Torvalds <torvalds@linux-foundation.org>, Neil Horman <nhorman@redhat.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Neil Horman <nhorman@tuxdriver.com>, hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, paulus@samba.org, vgoyal@redhat.com
 
-On Wed, Aug 04, 2010 at 04:06:48PM +0900, Simon Horman wrote:
-> Hi,
+On Thu, Aug 05, 2010 at 12:04:26PM +1000, Benjamin Herrenschmidt wrote:
+> On Wed, 2010-08-04 at 10:49 -0400, Neil Horman wrote:
+> > Ping yet again. Ben, This needs review/acceptance from you or Paul
+> > Neil 
 > 
-> After all the excitement of relocating kexec-tools from
-> one location on kernel.org to another last week it was
-> suggested to me by Michael Neuling that the merging
-> kexec-tools into the kernel tree would be a good idea.
+> Isn't it already in powerpc-next about to be pulled by Linus ?
 > 
-> Given that there have been a bunch of issues with kexec
-> on power that this would resolve. and there is precedence
-> for tools in the kernel tree, this sounds entirely reasonable to me.
-> So with my kexec-tools maintainer hat on, I would like to start
-> a conversation about this.
+Yes, there it is.  Apologies.  For whatever reason, I was looking on the main
+branch of your tree.  It didn't occur to me to check your next branch.  Sorry.
 
-Thanks to everyone for their responses. I think we can safely conclude
-that the body of opinion is that its not appropriate for kexec-tools
-to be included in the kernel tree. Primarily because it isn't tied
-closely to the kernel ABI. As such I withdraw this proposal.
+> In general, I recommend you check the status of your patches on
+> patchwork. I'm nagging Jeremy to add a feature so it emails the
+> submitter when the patch status changes :-)
+> 
+Noted, I'll remember that.  Email from patchwork would be a nice feature. +1
+from me. 
 
-Thanks in particular to those who offered ideas on how to resolve
-some of the problems that kexec-tools faces. Lets make those ideas happen.
+Thanks & Regards
+Neil
 
+> Cheers,
+> Ben.
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
