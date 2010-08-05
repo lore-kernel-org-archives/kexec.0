@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f49.google.com ([209.85.210.49])
+Received: from mail-gw0-f49.google.com ([74.125.83.49])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OgqyB-0003ZE-SJ
-	for kexec@lists.infradead.org; Thu, 05 Aug 2010 03:18:12 +0000
-Received: by pzk3 with SMTP id 3so2664050pzk.36
-	for <kexec@lists.infradead.org>; Wed, 04 Aug 2010 20:18:10 -0700 (PDT)
-Date: Thu, 5 Aug 2010 11:22:17 +0800
+	id 1Ogr2f-0002XG-EX
+	for kexec@lists.infradead.org; Thu, 05 Aug 2010 03:22:49 +0000
+Received: by gwb10 with SMTP id 10so2793808gwb.36
+	for <kexec@lists.infradead.org>; Wed, 04 Aug 2010 20:22:48 -0700 (PDT)
+Date: Thu, 5 Aug 2010 11:26:58 +0800
 From: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>
 Subject: Re: [rfc] Merge kexec-tools into the kernel tree
-Message-ID: <20100805032217.GA5235@cr0.nay.redhat.com>
+Message-ID: <20100805032658.GB5235@cr0.nay.redhat.com>
 References: <20100804070647.GB24064@verge.net.au>
 	<m17hk6de62.fsf@fess.ebiederm.org> <30114.1280963486@neuling.org>
+	<m1vd7q0vsx.fsf@fess.ebiederm.org> <5789.1280971186@neuling.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <30114.1280963486@neuling.org>
+In-Reply-To: <5789.1280971186@neuling.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,66 +30,19 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Michael Neuling <mikey@neuling.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-On Thu, Aug 05, 2010 at 09:11:26AM +1000, Michael Neuling wrote:
->> > After all the excitement of relocating kexec-tools from
->> > one location on kernel.org to another last week it was
->> > suggested to me by Michael Neuling that the merging
->> > kexec-tools into the kernel tree would be a good idea.
->> >
->> > Given that there have been a bunch of issues with kexec
->> > on power that this would resolve. and there is precedence
->> > for tools in the kernel tree, this sounds entirely reasonable to me.
->> > So with my kexec-tools maintainer hat on, I would like to start
->> > a conversation about this.
->> 
->> What are the issues with kexec on power?  Did someone fail to maintain
->> ABI compatibility?
->> 
->> The interface isn't even supposed to be linux specific, so I can't
->> imagine what would motivate moving this into the kernel tree.
->> 
->> I'm afraid that someone has a good answer for why their lives would be
->> simpler if /sbin/kexec was in the kernel tree and I will be absolutely
->> horrified and about someones stupidity when I hear that answer.
+On Thu, Aug 05, 2010 at 11:19:46AM +1000, Michael Neuling wrote:
+>> If we talk about analyzing and filtering crash dumps, I can totally
+>> see an argument for putting something under tools/ if the authors of
+>> mkdumpfile and crash are interested.  Those tools fundamentally really
+>> do follow kernel internals.
 >
->I may have misrepresented how bad it is for power to Horms.  None of the
->issues would be solved by a merge, but it would make life easier IMHO.
->
->In power we've added features to kexec which have required changes to
->both the kernel and kexec-tools.  These have been backwards compatible,
->so not to break to the ABI.  The problem here is getting users and
->distros to take the correct versions of both sources if they want this
->new feature.
->
->Similarly with bugs.  We recently went through a round of bug fixes for
->new larger power7 machines.  We found bugs in both kexec-tools and the
->kernel.  That meant we had to ensure users and distros were getting
->correctly updated versions of both tools.
-
-
-I am afraid kexec-tools is not alone, there are plenty of user-space
-applications which rely on some new kernel feature after a specific version.
-If this could be a reason for inclusion into kernel tree, then much more
-applications shall be included too. And if this happened, Linux would be
-more like *BSD.
-
-Also, this is a big reason why linux distributions exist. They are
-responsible for collecting the right version of some application and the
-right version of kernel that makes them work together.
-
-So, I think  _we_ should get used to this unless Linus decides to change
-this model.
-
->Neither of these problems are show stoppers or power specific but I
->think it would make life easier in these scenarios if the sources were
->merged.  We could just tell users and distros to grab (say) 2.6.35
->sources and we'd know they'd be right for both userspace and the kernel.
+>I agree that the argument is stronger for tools/ inclusion if internal
+>APIs need to be followed.  Of course perf doesn't need internals APIs
+>and it's in tools/.
 >
 
-I think the solution is documention, or release notes, not including
-it into kernel tree.
-
-Thanks.
+Well, I don't remember clearly why perf was proposed to be included into
+kernel tree by Ingo, I think it was internal API/ABI issue as well.
 
 _______________________________________________
 kexec mailing list
