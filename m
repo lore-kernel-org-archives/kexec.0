@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Oh04H-000807-NG
-	for kexec@lists.infradead.org; Thu, 05 Aug 2010 13:01:06 +0000
-Date: Thu, 5 Aug 2010 09:00:59 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH] powerpc: Add vmcoreinfo symbols to allow makdumpfile to
-	filter core files properly
-Message-ID: <20100805130059.GA2863@shamino.rdu.redhat.com>
-References: <20100713134609.GA14514@hmsreliant.think-freely.org>
-	<20100804144929.GA13970@hmsreliant.think-freely.org>
-	<1280973866.1902.168.camel@pasglop>
+	id 1OhWOc-0003XT-JD
+	for kexec@lists.infradead.org; Fri, 06 Aug 2010 23:32:15 +0000
+Date: Sat, 7 Aug 2010 08:32:07 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [patch] MAINTAINERS: kexec-tools has moved
+Message-ID: <20100806233203.GA10040@verge.net.au>
+References: <20100729041641.GA32220@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1280973866.1902.168.camel@pasglop>
+In-Reply-To: <20100729041641.GA32220@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +23,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Neil Horman <nhorman@tuxdriver.com>, hbabu@us.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, paulus@samba.org, vgoyal@redhat.com
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Eric Biederman <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>
 
-On Thu, Aug 05, 2010 at 12:04:26PM +1000, Benjamin Herrenschmidt wrote:
-> On Wed, 2010-08-04 at 10:49 -0400, Neil Horman wrote:
-> > Ping yet again. Ben, This needs review/acceptance from you or Paul
-> > Neil 
+On Thu, Jul 29, 2010 at 01:16:41PM +0900, Simon Horman wrote:
+> Kexec tools has been moved to http://kernel.org/pub/linux/utils/kernel/kexec/
+> as user-space code shouldn't be in /pub/linux/kernel
 > 
-> Isn't it already in powerpc-next about to be pulled by Linus ?
-> 
-Yes, there it is.  Apologies.  For whatever reason, I was looking on the main
-branch of your tree.  It didn't occur to me to check your next branch.  Sorry.
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-> In general, I recommend you check the status of your patches on
-> patchwork. I'm nagging Jeremy to add a feature so it emails the
-> submitter when the patch status changes :-)
-> 
-Noted, I'll remember that.  Email from patchwork would be a nice feature. +1
-from me. 
+Eric, ping.
 
-Thanks & Regards
-Neil
+What is your preferred path for this change to get merged?
 
-> Cheers,
-> Ben.
 > 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> Index: linux-2.6/MAINTAINERS
+> ===================================================================
+> --- linux-2.6.orig/MAINTAINERS	2010-07-29 13:10:04.000000000 +0900
+> +++ linux-2.6/MAINTAINERS	2010-07-29 13:11:40.000000000 +0900
+> @@ -3334,7 +3334,7 @@ F:	drivers/s390/kvm/
+>  
+>  KEXEC
+>  M:	Eric Biederman <ebiederm@xmission.com>
+> -W:	http://ftp.kernel.org/pub/linux/kernel/people/horms/kexec-tools/
+> +W:	http://kernel.org/pub/linux/utils/kernel/kexec/
+>  L:	kexec@lists.infradead.org
+>  S:	Maintained
+>  F:	include/linux/kexec.h
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
 _______________________________________________
 kexec mailing list
