@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OjMI4-0007Pu-Ds
-	for kexec@lists.infradead.org; Thu, 12 Aug 2010 01:09:05 +0000
-Date: Wed, 11 Aug 2010 21:08:58 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: kexec problem on CentOS 5.3
-Message-ID: <20100812010858.GC2258@localhost.localdomain>
-References: <1281558332.1953.1058.camel@ijosh1>
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OjMsT-0001Vl-SC
+	for kexec@lists.infradead.org; Thu, 12 Aug 2010 01:46:43 +0000
+Message-ID: <4C635268.1030709@zytor.com>
+Date: Wed, 11 Aug 2010 18:46:16 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1281558332.1953.1058.camel@ijosh1>
+Subject: Re: Question regardin intel64 arch and page table setup
+References: <20100811194734.GD23317@hmsreliant.think-freely.org>
+	<4C6301C2.5020808@zytor.com>
+	<20100812010506.GB2258@localhost.localdomain>
+In-Reply-To: <20100812010506.GB2258@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,33 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Josh England <josh@tgsmc.com>
-Cc: kexec@lists.infradead.org
+To: Neil Horman <nhorman@redhat.com>
+Cc: kexec@lists.infradead.org, ebiederm@xmission.com, Neil Horman <nhorman@tuxdriver.com>
 
-On Wed, Aug 11, 2010 at 01:25:32PM -0700, Josh England wrote:
-> I'm running CentOS 5.3 on x86_64 platform with kernel version
-> 2.6.18-128.el5 and having issues running kexec.  I've got the kernel
-> built with CONFIG_KEXEC and CONFIG_CRASH_DUMP, and I'm booting with
-> crashkernel=64M@16M, but anytime I try to load a kernel with kexec I get
-> the following:
+On 08/11/2010 06:05 PM, Neil Horman wrote:
+>
+> Thanks for all the info, guys.  I hadn't considered that we couldn't access the
+> 64 bit startup point for the bzImage.  I just figured we could jump to
+> startup_32 + 0x200 in the bzImage header once I had the page table bit set up
+> properly.
 > 
-> Invalid memory segment (nil) - 0x309fff
+> I hadn't considered the problems we might encounter with driver issues loading
+> above 4gb and what have you, nor the starting of AP's.  
 > 
-> Did I miss something somewhere?  I will provide any additional
-> information if needed.
+> Regardless, I'll keep tinkering.  One more question.  When setting up the page
+> table in the panic boot case, is it sufficient to setup an identity map for the
+> pages in the reserved crashkernel range, or do we need to identity map the
+> entire range of ram?
 > 
-ususally I see erors like that when you don't have sufficient memory reserved.
-try bumping up your crashkernel allocation to 128M
-Neil
 
-> -JE
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Not clear to me.  Probably the former, but you might find problems.
+
+Another issue: if you are planning to run SMP, the AP trampoline needs
+low memory, too.
+
+	-hpa
+
+-- 
+H. Peter Anvin, Intel Open Source Technology Center
+I work for Intel.  I don't speak on their behalf.
+
 
 _______________________________________________
 kexec mailing list
