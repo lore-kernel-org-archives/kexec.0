@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OjMsT-0001Vl-SC
-	for kexec@lists.infradead.org; Thu, 12 Aug 2010 01:46:43 +0000
-Message-ID: <4C635268.1030709@zytor.com>
-Date: Wed, 11 Aug 2010 18:46:16 -0700
+	id 1OjMzA-0002Y5-Lg
+	for kexec@lists.infradead.org; Thu, 12 Aug 2010 01:53:37 +0000
+Message-ID: <4C635409.2060602@zytor.com>
+Date: Wed, 11 Aug 2010 18:53:13 -0700
 From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
 Subject: Re: Question regardin intel64 arch and page table setup
@@ -28,7 +28,6 @@ To: Neil Horman <nhorman@redhat.com>
 Cc: kexec@lists.infradead.org, ebiederm@xmission.com, Neil Horman <nhorman@tuxdriver.com>
 
 On 08/11/2010 06:05 PM, Neil Horman wrote:
->
 > Thanks for all the info, guys.  I hadn't considered that we couldn't access the
 > 64 bit startup point for the bzImage.  I just figured we could jump to
 > startup_32 + 0x200 in the bzImage header once I had the page table bit set up
@@ -42,11 +41,14 @@ On 08/11/2010 06:05 PM, Neil Horman wrote:
 > pages in the reserved crashkernel range, or do we need to identity map the
 > entire range of ram?
 > 
+> Best
+> Neil
 
-Not clear to me.  Probably the former, but you might find problems.
-
-Another issue: if you are planning to run SMP, the AP trampoline needs
-low memory, too.
+One thing... if the crashkernel reservation can be made non-contiguous,
+it probably doesn't require a whole lot of memory below 1 MiB (a handful
+of pages) and below 4 GiB (probably less than a megabyte) to achieve
+full functionality.  It just means that the crashkernel has to operate
+with a true memory map for its reservations.
 
 	-hpa
 
