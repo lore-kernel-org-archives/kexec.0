@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ok3PP-0000EW-IL
-	for kexec@lists.infradead.org; Fri, 13 Aug 2010 23:11:32 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <F0CB3B1C601247indou.takao@jp.fujitsu.com>
-	<4C65C630.4070008@zytor.com>
-	<987664A83D2D224EAE907B061CE93D53015B2DAD87@orsmsx505.amr.corp.intel.com>
-Date: Fri, 13 Aug 2010 16:11:20 -0700
-In-Reply-To: <987664A83D2D224EAE907B061CE93D53015B2DAD87@orsmsx505.amr.corp.intel.com>
-	(Tony Luck's message of "Fri, 13 Aug 2010 15:33:56 -0700")
-Message-ID: <m1r5i2kt0n.fsf@fess.ebiederm.org>
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Ok3V4-0001Pa-P5
+	for kexec@lists.infradead.org; Fri, 13 Aug 2010 23:17:23 +0000
+Message-ID: <4C65D263.6050904@zytor.com>
+Date: Fri, 13 Aug 2010 16:16:51 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH][EFI] Run EFI in physical mode
+References: <F0CB3B1C601247indou.takao@jp.fujitsu.com>	<4C65C630.4070008@zytor.com>	<987664A83D2D224EAE907B061CE93D53015B2DAD87@orsmsx505.amr.corp.intel.com>
+	<m1r5i2kt0n.fsf@fess.ebiederm.org>
+In-Reply-To: <m1r5i2kt0n.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,38 +23,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, Takao Indoh <indou.takao@jp.fujitsu.com>, "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
 
-"Luck, Tony" <tony.luck@intel.com> writes:
+On 08/13/2010 04:11 PM, Eric W. Biederman wrote:
+> 
+> As to Peter's question I did not see any of that code that affected
+> anything that ia64 used.
+> 
 
->> does this affect ia64 in any way?
->
-> I remember Eric complaining that set_virtual_address_map() was a one
-> way trap door with no way to get back to physical mode ... and thus
-> this was a big problem to support kexec on ia64. And yet we still call
-> it, and ia64 can do kexec. So some other work around must have been
-> found. Can't immediately remember what it was though.
+I guess my real question was "is this something IA64 could benefit from
+and/or could we make the IA64 code more similar to the x86 bits"?
 
-There is a hack in the code someplace on ia64 to pass the virtual
-address efi was mapped at to the next kernel, and have the kernel make
-certain to use efi there, without calling set_virtual_address_map().
-For similar kernels that is fine at some point I expect kernel
-divergence will make that scheme unworkable.  Essentially this is the
-same as using physical addresses but starting with the virtual addresses.
+	-hpa
 
-For ia64 I seem to recall some weird floating point fixup routines that
-benefited from the speed set_virtual_address_map() provided.  For x86_64
-where the primary (sole?) reason for enabling EFI handling is to set efi
-variables from linux, I don't see a case where enabling virtual mode
-makes sense.  If EFI stays around on x86, always running the calls in
-physical mode and in other ways slowly decreasing our dependence on
-perfect efi implementations seems necessary.
-
-As to Peter's question I did not see any of that code that affected
-anything that ia64 used.
-
-Eric
 
 _______________________________________________
 kexec mailing list
