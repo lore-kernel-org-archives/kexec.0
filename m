@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([198.137.202.10])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OkqbL-0006yy-4S
-	for kexec@lists.infradead.org; Mon, 16 Aug 2010 03:43:08 +0000
+Received: from mail-qy0-f170.google.com ([209.85.216.170])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Okrmf-0006Xy-D6
+	for kexec@lists.infradead.org; Mon, 16 Aug 2010 04:58:54 +0000
+Received: by qyk35 with SMTP id 35so2982292qyk.15
+	for <kexec@lists.infradead.org>; Sun, 15 Aug 2010 21:58:52 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <faf83501-1e53-459d-88ed-2ac5963a37f2@email.android.com>
 References: <F0CB3B1C601247indou.takao@jp.fujitsu.com>
 	<AANLkTimM0H0ryre3pXsXQ6c0e3=v_36-h0TsXzriMWXe@mail.gmail.com>
-In-Reply-To: <AANLkTimM0H0ryre3pXsXQ6c0e3=v_36-h0TsXzriMWXe@mail.gmail.com>
-MIME-Version: 1.0
+	<faf83501-1e53-459d-88ed-2ac5963a37f2@email.android.com>
+Date: Mon, 16 Aug 2010 12:58:52 +0800
+Message-ID: <AANLkTimtH41djAF5OxXCeVS8cHg_JCBd+wQ1iT1BUWgX@mail.gmail.com>
 Subject: Re: [PATCH][EFI] Run EFI in physical mode
-From: "H. Peter Anvin" <hpa@zytor.com>
-Date: Sun, 15 Aug 2010 20:27:49 -0700
-Message-ID: <faf83501-1e53-459d-88ed-2ac5963a37f2@email.android.com>
+From: huang ying <huang.ying.caritas@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,46 +22,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: huang ying <huang.ying.caritas@gmail.com>, Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, tglx@linutronix.de, vgoyal@redhat.com
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, tglx@linutronix.de, vgoyal@redhat.com
 
-Tm8sIGl0IHNob3VsZCBub3QgYmUgZHluYW1pYzsgcmF0aGVyIHdlIHNob3VsZCB1bmlmeSBhbGwg
-dGhlIHVzZXJzIHdobyBuZWVkIGEgMToxIG1hcCBhbmQganVzdCBrZWVwIHRoYXQgcGFnZSB0YWJs
-ZSBzZXQgYXJvdW5kLgoKImh1YW5nIHlpbmciIDxodWFuZy55aW5nLmNhcml0YXNAZ21haWwuY29t
-PiB3cm90ZToKCj5PbiBTYXQsIEF1ZyAxNCwgMjAxMCBhdCAzOjE4IEFNLCBUYWthbyBJbmRvaCA8
-aW5kb3UudGFrYW9AanAuZnVqaXRzdS5jb20+IHdyb3RlOgo+PiBkaWZmIC1OdXJwIGxpbnV4LTIu
-Ni4zNS5vcmcvYXJjaC94ODYva2VybmVsL2VmaV82NC5jIGxpbnV4LTIuNi4zNS9hcmNoL3g4Ni9r
-ZXJuZWwvZWZpXzY0LmMKPj4gLS0tIGxpbnV4LTIuNi4zNS5vcmcvYXJjaC94ODYva2VybmVsL2Vm
-aV82NC5jIMKgIDIwMTAtMDgtMDEgMTg6MTE6MTQuMDAwMDAwMDAwIC0wNDAwCj4+ICsrKyBsaW51
-eC0yLjYuMzUvYXJjaC94ODYva2VybmVsL2VmaV82NC5jIMKgIMKgIMKgIDIwMTAtMDgtMTMgMTQ6
-Mzk6MjUuODE5MTA1MDA0IC0wNDAwCj4+IEBAIC0zOSw3ICszOSw5IEBACj4+IMKgI2luY2x1ZGUg
-PGFzbS9maXhtYXAuaD4KPj4KPj4gwqBzdGF0aWMgcGdkX3Qgc2F2ZV9wZ2QgX19pbml0ZGF0YTsK
-Pj4gLXN0YXRpYyB1bnNpZ25lZCBsb25nIGVmaV9mbGFncyBfX2luaXRkYXRhOwo+PiArc3RhdGlj
-IHVuc2lnbmVkIGxvbmcgZWZpX2ZsYWdzOwo+PiArc3RhdGljIHBnZF90IGVmaV9wZ2RbUFRSU19Q
-RVJfUEdEXSBfX3BhZ2VfYWxpZ25lZF9ic3M7Cj4+ICtzdGF0aWMgdW5zaWduZWQgbG9uZyBzYXZl
-X2NyMzsKPj4KPj4gwqBzdGF0aWMgdm9pZCBfX2luaXQgZWFybHlfbWFwcGluZ19zZXRfZXhlYyh1
-bnNpZ25lZCBsb25nIHN0YXJ0LAo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHVuc2lnbmVkIGxvbmcgZW5kLAo+PiBAQCAtOTgs
-NiArMTAwLDE5IEBAIHZvaWQgX19pbml0IGVmaV9jYWxsX3BoeXNfZXBpbG9nKHZvaWQpCj4+IMKg
-IMKgIMKgIMKgZWFybHlfcnVudGltZV9jb2RlX21hcHBpbmdfc2V0X2V4ZWMoMCk7Cj4+IMKgfQo+
-Pgo+PiArdm9pZCBlZmlfY2FsbF9waHlzX3ByZWxvZ19pbl9waHlzbW9kZSh2b2lkKQo+PiArewo+
-PiArIMKgIMKgIMKgIGxvY2FsX2lycV9zYXZlKGVmaV9mbGFncyk7Cj4+ICsgwqAgwqAgwqAgc2F2
-ZV9jcjMgPSByZWFkX2NyMygpOwo+PiArIMKgIMKgIMKgIHdyaXRlX2NyMyh2aXJ0X3RvX3BoeXMo
-ZWZpX3BnZCkpOwo+PiArfQo+PiArCj4+ICt2b2lkIGVmaV9jYWxsX3BoeXNfZXBpbG9nX2luX3Bo
-eXNtb2RlKHZvaWQpCj4+ICt7Cj4+ICsgwqAgwqAgwqAgd3JpdGVfY3IzKHNhdmVfY3IzKTsKPj4g
-KyDCoCDCoCDCoCBsb2NhbF9pcnFfcmVzdG9yZShlZmlfZmxhZ3MpOwo+PiArfQo+Cj5lZmlfZmxh
-Z3MgYW5kIHNhdmVfY3IzIHNob3VsZCBiZSBwZXItQ1BVLCBiZWNhdXNlIHRoZXkgbm93IHdpbGwg
-YmUKPnVzZWQgYWZ0ZXIgU01QIGlzIGVuYWJsZWQuCj4KPmVmaV9wZ2Qgc2hvdWxkIGJlIGR5bmFt
-aWNhbGx5IGFsbG9jYXRlZCBpbnN0ZWFkIG9mIHN0YXRpY2FsbHkKPmFsbG9jYXRlZCwgYmVjYXVz
-ZSBFRkkgbWF5IGJlIG5vdCBlbmFibGVkIG9uIHNvbWUgcGxhdGZvcm0uCj4KPkFuZCBJIHRoaW5r
-IGl0IGlzIGJldHRlciB0byB1bmlmeSBlYXJseSBwaHlzaWNhbCBtb2RlIHdpdGggcnVuLXRpbWUK
-PnBoeXNpY2FsIG1vZGUuIEp1c3QgYWxsb2NhdGUgdGhlIHBhZ2UgdGFibGUgd2l0aCBlYXJseSBw
-YWdlIGFsbG9jYXRvcgo+KGxtYj8pLgo+Cj5CZXN0IFJlZ2FyZHMsCj5IdWFuZyBZaW5nCj4KCi0t
-IApTZW50IGZyb20gbXkgbW9iaWxlIHBob25lLiAgUGxlYXNlIHBhcmRvbiBhbnkgbGFjayBvZiBm
-b3JtYXR0aW5nLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Mon, Aug 16, 2010 at 11:27 AM, H. Peter Anvin <hpa@zytor.com> wrote:
+> No, it should not be dynamic; rather we should unify all the users who need a 1:1 map and just keep that page table set around.
+
+Agree. One known issue of global 1:1 map is that we need to make at
+least part of page table PAGE_KERNEL_EXEC for EFI runtime code, and
+change_page_attr can not be used before page allocator is available.
+
+Best Regards,
+Huang Ying
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
