@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail-qw0-f49.google.com ([209.85.216.49])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OkoXh-0002sx-La
-	for kexec@lists.infradead.org; Mon, 16 Aug 2010 01:31:14 +0000
-Date: Mon, 16 Aug 2010 10:31:10 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH][EFI] Run EFI in physical mode
-Message-ID: <20100816013109.GS10165@verge.net.au>
-References: <F0CB3B1C601247indou.takao@jp.fujitsu.com>
-	<4C65C630.4070008@zytor.com>
-	<987664A83D2D224EAE907B061CE93D53015B2DAD87@orsmsx505.amr.corp.intel.com>
-	<m1r5i2kt0n.fsf@fess.ebiederm.org> <4C65D263.6050904@zytor.com>
-	<AANLkTim8U87uZ73BcFc42O6EFWuNkA5UjhhiNeVLtAWT@mail.gmail.com>
+	id 1Okok2-0004oW-9H
+	for kexec@lists.infradead.org; Mon, 16 Aug 2010 01:43:59 +0000
+Received: by qwe4 with SMTP id 4so5007493qwe.36
+	for <kexec@lists.infradead.org>; Sun, 15 Aug 2010 18:43:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTim8U87uZ73BcFc42O6EFWuNkA5UjhhiNeVLtAWT@mail.gmail.com>
+In-Reply-To: <F0CB3B1C601247indou.takao@jp.fujitsu.com>
+References: <F0CB3B1C601247indou.takao@jp.fujitsu.com>
+Date: Mon, 16 Aug 2010 09:43:56 +0800
+Message-ID: <AANLkTimM0H0ryre3pXsXQ6c0e3=v_36-h0TsXzriMWXe@mail.gmail.com>
+Subject: Re: [PATCH][EFI] Run EFI in physical mode
+From: huang ying <huang.ying.caritas@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +20,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tony Luck <tony.luck@gmail.com>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, "nhorman@tuxdriver.com" <nhorman@tuxdriver.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mingo@redhat.com" <mingo@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "vgoyal@redhat.com" <vgoyal@redhat.com>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
 
-On Fri, Aug 13, 2010 at 04:36:03PM -0700, Tony Luck wrote:
-> On Fri, Aug 13, 2010 at 4:16 PM, H. Peter Anvin <hpa@zytor.com> wrote:
-> > I guess my real question was "is this something IA64 could benefit from
-> > and/or could we make the IA64 code more similar to the x86 bits"?
-> 
-> If Eric's recollection about the "weird floating point fixup routines"[1]
-> performance issues are correct - then ia64 won't want to do this.
-
-I proposed something similar to this for ia64 at one point to solve the
-problem of kexecing to Xen - which at that time mapped EFI to a different
-location to Linux.
-
-As I recall, the idea was shot-down by SGI Altix people on the basis
-potential performance problems. I don't recall any reasons more specific
-than that being given (and to be honest I was less than happy about
-it at the time).
-
-In the end I moved EFI in Xen to match Linux and have been able to ignore
-the problem ever since. Though as Eric pointed out elsewhere in this
-thread, there is ample scope for incompatibilities with future/other
-kernels.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBBdWcgMTQsIDIwMTAgYXQgMzoxOCBBTSwgVGFrYW8gSW5kb2ggPGluZG91LnRha2Fv
+QGpwLmZ1aml0c3UuY29tPiB3cm90ZToKPiBkaWZmIC1OdXJwIGxpbnV4LTIuNi4zNS5vcmcvYXJj
+aC94ODYva2VybmVsL2VmaV82NC5jIGxpbnV4LTIuNi4zNS9hcmNoL3g4Ni9rZXJuZWwvZWZpXzY0
+LmMKPiAtLS0gbGludXgtMi42LjM1Lm9yZy9hcmNoL3g4Ni9rZXJuZWwvZWZpXzY0LmMgwqAgMjAx
+MC0wOC0wMSAxODoxMToxNC4wMDAwMDAwMDAgLTA0MDAKPiArKysgbGludXgtMi42LjM1L2FyY2gv
+eDg2L2tlcm5lbC9lZmlfNjQuYyDCoCDCoCDCoCAyMDEwLTA4LTEzIDE0OjM5OjI1LjgxOTEwNTAw
+NCAtMDQwMAo+IEBAIC0zOSw3ICszOSw5IEBACj4gwqAjaW5jbHVkZSA8YXNtL2ZpeG1hcC5oPgo+
+Cj4gwqBzdGF0aWMgcGdkX3Qgc2F2ZV9wZ2QgX19pbml0ZGF0YTsKPiAtc3RhdGljIHVuc2lnbmVk
+IGxvbmcgZWZpX2ZsYWdzIF9faW5pdGRhdGE7Cj4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIGVmaV9m
+bGFnczsKPiArc3RhdGljIHBnZF90IGVmaV9wZ2RbUFRSU19QRVJfUEdEXSBfX3BhZ2VfYWxpZ25l
+ZF9ic3M7Cj4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIHNhdmVfY3IzOwo+Cj4gwqBzdGF0aWMgdm9p
+ZCBfX2luaXQgZWFybHlfbWFwcGluZ19zZXRfZXhlYyh1bnNpZ25lZCBsb25nIHN0YXJ0LAo+IMKg
+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
+IMKgdW5zaWduZWQgbG9uZyBlbmQsCj4gQEAgLTk4LDYgKzEwMCwxOSBAQCB2b2lkIF9faW5pdCBl
+ZmlfY2FsbF9waHlzX2VwaWxvZyh2b2lkKQo+IMKgIMKgIMKgIMKgZWFybHlfcnVudGltZV9jb2Rl
+X21hcHBpbmdfc2V0X2V4ZWMoMCk7Cj4gwqB9Cj4KPiArdm9pZCBlZmlfY2FsbF9waHlzX3ByZWxv
+Z19pbl9waHlzbW9kZSh2b2lkKQo+ICt7Cj4gKyDCoCDCoCDCoCBsb2NhbF9pcnFfc2F2ZShlZmlf
+ZmxhZ3MpOwo+ICsgwqAgwqAgwqAgc2F2ZV9jcjMgPSByZWFkX2NyMygpOwo+ICsgwqAgwqAgwqAg
+d3JpdGVfY3IzKHZpcnRfdG9fcGh5cyhlZmlfcGdkKSk7Cj4gK30KPiArCj4gK3ZvaWQgZWZpX2Nh
+bGxfcGh5c19lcGlsb2dfaW5fcGh5c21vZGUodm9pZCkKPiArewo+ICsgwqAgwqAgwqAgd3JpdGVf
+Y3IzKHNhdmVfY3IzKTsKPiArIMKgIMKgIMKgIGxvY2FsX2lycV9yZXN0b3JlKGVmaV9mbGFncyk7
+Cj4gK30KCmVmaV9mbGFncyBhbmQgc2F2ZV9jcjMgc2hvdWxkIGJlIHBlci1DUFUsIGJlY2F1c2Ug
+dGhleSBub3cgd2lsbCBiZQp1c2VkIGFmdGVyIFNNUCBpcyBlbmFibGVkLgoKZWZpX3BnZCBzaG91
+bGQgYmUgZHluYW1pY2FsbHkgYWxsb2NhdGVkIGluc3RlYWQgb2Ygc3RhdGljYWxseQphbGxvY2F0
+ZWQsIGJlY2F1c2UgRUZJIG1heSBiZSBub3QgZW5hYmxlZCBvbiBzb21lIHBsYXRmb3JtLgoKQW5k
+IEkgdGhpbmsgaXQgaXMgYmV0dGVyIHRvIHVuaWZ5IGVhcmx5IHBoeXNpY2FsIG1vZGUgd2l0aCBy
+dW4tdGltZQpwaHlzaWNhbCBtb2RlLiBKdXN0IGFsbG9jYXRlIHRoZSBwYWdlIHRhYmxlIHdpdGgg
+ZWFybHkgcGFnZSBhbGxvY2F0b3IKKGxtYj8pLgoKQmVzdCBSZWdhcmRzLApIdWFuZyBZaW5nCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
