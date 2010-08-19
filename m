@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Olwc9-0004Hb-Rh
-	for kexec@lists.infradead.org; Thu, 19 Aug 2010 04:20:31 +0000
-Date: Thu, 19 Aug 2010 13:20:23 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Misc. bug fixes for ppc32
-Message-ID: <20100819042023.GC13965@verge.net.au>
-References: <1282163726-21186-1-git-send-email-msm@freescale.com>
+Received: from tx2ehsobe002.messaging.microsoft.com ([65.55.88.12]
+	helo=TX2EHSOBE004.bigfish.com)
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OlxBh-00020S-CK
+	for kexec@lists.infradead.org; Thu, 19 Aug 2010 04:57:14 +0000
+From: Matthew McClintock <msm@freescale.com>
+Subject: [PATCH v2 1/3] Ramdisk address was not copied correctly on kexec'ed
+	kernel
+Date: Wed, 18 Aug 2010 23:56:49 -0500
+Message-ID: <1282193811-23098-2-git-send-email-msm@freescale.com>
+In-Reply-To: <20100819042023.GC13965@verge.net.au>
+References: <20100819042023.GC13965@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1282163726-21186-1-git-send-email-msm@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,17 +24,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: muvarov@gmail.com, Kumar Gala <kumar.gala@freescale.com>, kexec@lists.infradead.org, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+To: kexec@lists.infradead.org
+Cc: muvarov@gmail.com, linuxppc-dev@ozlabs.org, Kumar Gala <kumar.gala@freescale.com>, Sebastian Andrzej Siewior <sebastian@breakpoint.cc>, Matthew McClintock <msm@freescale.com>
 
-On Wed, Aug 18, 2010 at 03:35:23PM -0500, Matthew McClintock wrote:
-> This patch series fixes a few issues I have discovered with my previous
-> patch series. Nothing new has been added.
 
-Hi Matthew,
+Signed-off-by: Matthew McClintock <msm@freescale.com>
+---
+ kexec/arch/ppc/fixup_dtb.c |    2 +-
+ kexec/arch/ppc/kexec-ppc.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-could you provide signed-off-by lines for each of the patches
-and repost including linuxppc-dev@ozlabs.org on the CC list?
+diff --git a/kexec/arch/ppc/fixup_dtb.c b/kexec/arch/ppc/fixup_dtb.c
+index 26c23a3..09f9ac1 100644
+--- a/kexec/arch/ppc/fixup_dtb.c
++++ b/kexec/arch/ppc/fixup_dtb.c
+@@ -311,7 +311,7 @@ static void fixup_initrd(char *blob_buf)
+ 				return;
+ 		}
+ 
+-		tmp = ramdisk_base + ramdisk_size + 1;
++		tmp = ramdisk_base + ramdisk_size;
+ 		err = fdt_setprop(blob_buf, nodeoffset,
+ 			"linux,initrd-end", &tmp, sizeof(tmp));
+ 		if (err < 0) {
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index c36c7b3..ab76d6f 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -481,7 +481,7 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 
+ 			if ((initrd_end - initrd_start) != 0 ) {
+ 				initrd_base = initrd_start;
+-				initrd_size = initrd_end - initrd_start + 1;
++				initrd_size = initrd_end - initrd_start;
+ 			}
+ 
+ 			if (reuse_initrd) {
+-- 
+1.6.0.6
 
 
 
