@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Oo3qX-00073D-Om
-	for kexec@lists.infradead.org; Wed, 25 Aug 2010 00:28:07 +0000
-Date: Wed, 25 Aug 2010 10:23:44 +1000
-From: Anton Blanchard <anton@samba.org>
-Subject: [PATCH 2/2] powerpc: kdump: Override
-	crash_free_reserved_phys_range to avoid freeing RTAS
-Message-ID: <20100825002344.GA8430@kryten>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Oo40W-00087L-1H
+	for kexec@lists.infradead.org; Wed, 25 Aug 2010 00:38:25 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20100825002258.GD28360@kryten>
+Date: Tue, 24 Aug 2010 17:37:57 -0700
+In-Reply-To: <20100825002258.GD28360@kryten> (Anton Blanchard's message of
+	"Wed, 25 Aug 2010 10:22:58 +1000")
+Message-ID: <m139u37cii.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100825002258.GD28360@kryten>
+Subject: Re: [PATCH 1/2] kdump: Allow shrinking of kdump region to be
+	overridden
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,67 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: benh@kernel.crashing.org, ebiederm@xmission.com, akpm@linux-foundation.org
-Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Anton Blanchard <anton@samba.org>
+Cc: benh@kernel.crashing.org, akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org
 
+Anton Blanchard <anton@samba.org> writes:
 
-The crashkernel region will almost always overlap RTAS. If we free the
-crashkernel region via "echo 0 > /sys/kernel/kexec_crash_size" then we will
-free RTAS and the machine will crash in confusing and exciting ways.
+> On ppc64 the crashkernel region almost always overlaps an area of firmware.
+> This works fine except when using the sysfs interface to reduce the kdump
+> region. If we free the firmware area we are guaranteed to crash.
 
-Override crash_free_reserved_phys_range and check for overlap with RTAS.
+That is ppc64 bug.  firmware should not be in the reserved region.  Any
+random kernel like thing can be put in to that region at any valid
+address and the fact that shrinking the region frees your firmware means
+that using that region could also stomp your firmware (which I assume
+would be a bad thing).
 
-Signed-off-by: Anton Blanchard <anton@samba.org>
----
+So please fix the ppc64 reservation.
 
-Index: powerpc.git/arch/powerpc/kernel/crash_dump.c
-===================================================================
---- powerpc.git.orig/arch/powerpc/kernel/crash_dump.c	2010-08-24 09:24:32.219643256 +1000
-+++ powerpc.git/arch/powerpc/kernel/crash_dump.c	2010-08-24 09:46:22.826868330 +1000
-@@ -19,6 +19,7 @@
- #include <asm/prom.h>
- #include <asm/firmware.h>
- #include <asm/uaccess.h>
-+#include <asm/rtas.h>
- 
- #ifdef DEBUG
- #include <asm/udbg.h>
-@@ -141,3 +142,35 @@ ssize_t copy_oldmem_page(unsigned long p
- 
- 	return csize;
- }
-+
-+#ifdef CONFIG_PPC_RTAS
-+/*
-+ * The crashkernel region will almost always overlap the RTAS region, so
-+ * we have to be careful when shrinking the crashkernel region.
-+ */
-+void crash_free_reserved_phys_range(unsigned long begin, unsigned long end)
-+{
-+	unsigned long addr;
-+	const u32 *basep, *sizep;
-+	unsigned int rtas_start = 0, rtas_end = 0;
-+
-+	basep = of_get_property(rtas.dev, "linux,rtas-base", NULL);
-+	sizep = of_get_property(rtas.dev, "rtas-size", NULL);
-+
-+	if (basep && sizep) {
-+		rtas_start = *basep;
-+		rtas_end = *basep + *sizep;
-+	}
-+
-+	for (addr = begin; addr < end; addr += PAGE_SIZE) {
-+		/* Does this page overlap with the RTAS region? */
-+		if (addr <= rtas_end && ((addr + PAGE_SIZE) > rtas_start))
-+			continue;
-+
-+		ClearPageReserved(pfn_to_page(addr >> PAGE_SHIFT));
-+		init_page_count(pfn_to_page(addr >> PAGE_SHIFT));
-+		free_page((unsigned long)__va(addr));
-+		totalram_pages++;
-+	}
-+}
-+#endif
+Eric
 
 _______________________________________________
 kexec mailing list
