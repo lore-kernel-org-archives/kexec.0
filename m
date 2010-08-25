@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OniE4-0000P5-S3
-	for kexec@lists.infradead.org; Tue, 24 Aug 2010 01:22:57 +0000
-Date: Tue, 24 Aug 2010 10:22:49 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: extend KCORE_ELF_HEADERS_SIZE for large memory
-Message-ID: <20100824012246.GA16675@verge.net.au>
-References: <E1OneP7-0008Vq-K8@eag09.americas.sgi.com>
+Received: from ozlabs.org ([203.10.76.45])
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Oo3qX-00073E-Oc
+	for kexec@lists.infradead.org; Wed, 25 Aug 2010 00:28:07 +0000
+Date: Wed, 25 Aug 2010 10:22:58 +1000
+From: Anton Blanchard <anton@samba.org>
+Subject: [PATCH 1/2] kdump: Allow shrinking of kdump region to be overridden
+Message-ID: <20100825002258.GD28360@kryten>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1OneP7-0008Vq-K8@eag09.americas.sgi.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +21,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cliff Wickman <cpw@sgi.com>
-Cc: kexec@lists.infradead.org
+To: benh@kernel.crashing.org, ebiederm@xmission.com, akpm@linux-foundation.org
+Cc: linuxppc-dev@ozlabs.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Mon, Aug 23, 2010 at 04:18:05PM -0500, Cliff Wickman wrote:
-> 
-> A customer has seen the kexec command exhaust its buffer for the ELF headers
-> from /proc/kcore.  It found 147 program headers, which requires a buffer of
-> over 8k.
-> (This overflow was on an SGI UV with an extremely large memory, hence
->  many ram ranges.)
-> The default buffer size of 4k is configured in KCORE_ELF_HEADERS_SIZE.
-> 
-> The easy solution would probably be to increase the buffer to 16k.
-> That is room for 291 entries, on x86_64.
-> 
-> You might want to make the command dynamically enlarge the buffer when
-> it is found to be too small, but I don't think this command's use of a
-> little more memory is of concern.  So there is probably no reason to
-> change the program logic in this area.
 
-Thanks Cliff,
+On ppc64 the crashkernel region almost always overlaps an area of firmware.
+This works fine except when using the sysfs interface to reduce the kdump
+region. If we free the firmware area we are guaranteed to crash.
 
-applied.
+Rename free_reserved_phys_range to crash_free_reserved_phys_range and make
+it a weak function so we can override it.
 
+Signed-off-by: Anton Blanchard <anton@samba.org>
+---
+
+Index: powerpc.git/kernel/kexec.c
+===================================================================
+--- powerpc.git.orig/kernel/kexec.c	2010-08-25 10:12:11.493863566 +1000
++++ powerpc.git/kernel/kexec.c	2010-08-25 10:12:35.907264327 +1000
+@@ -1097,7 +1097,8 @@ size_t crash_get_memory_size(void)
+ 	return size;
+ }
+ 
+-static void free_reserved_phys_range(unsigned long begin, unsigned long end)
++void __weak crash_free_reserved_phys_range(unsigned long begin,
++					   unsigned long end)
+ {
+ 	unsigned long addr;
+ 
+@@ -1133,7 +1134,7 @@ int crash_shrink_memory(unsigned long ne
+ 	start = roundup(start, PAGE_SIZE);
+ 	end = roundup(start + new_size, PAGE_SIZE);
+ 
+-	free_reserved_phys_range(end, crashk_res.end);
++	crash_free_reserved_phys_range(end, crashk_res.end);
+ 
+ 	if ((start == end) && (crashk_res.parent != NULL))
+ 		release_resource(&crashk_res);
+Index: powerpc.git/include/linux/kexec.h
+===================================================================
+--- powerpc.git.orig/include/linux/kexec.h	2010-08-25 10:12:11.483862172 +1000
++++ powerpc.git/include/linux/kexec.h	2010-08-25 10:12:13.664166570 +1000
+@@ -208,6 +208,7 @@ int __init parse_crashkernel(char *cmdli
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+ int crash_shrink_memory(unsigned long new_size);
+ size_t crash_get_memory_size(void);
++void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+ 
+ #else /* !CONFIG_KEXEC */
+ struct pt_regs;
 
 _______________________________________________
 kexec mailing list
