@@ -1,13 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH v2 3/6] crash: add support for ARM kernel image
-Date: Thu, 26 Aug 2010 15:02:29 +0300
-Message-Id: <00390eaa9f45436a54092c518abb1f8022f2fd9c.1282822832.git.ext-mika.1.westerberg@nokia.com>
-In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
-In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
-References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
-References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
-MIME-Version: 1.0
+Subject: [PATCH v2 0/6] crash utility - add ARM support
+Date: Thu, 26 Aug 2010 15:02:26 +0300
+Message-Id: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,63 +11,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com
 Cc: kexec@lists.infradead.org, Thomas.Fange@sonyericsson.com, Jan.Karlsson@sonyericsson.com, "\\\"Mika Westerberg\\\"" <ext-mika.1.westerberg@nokia.com>, linux-arm-kernel@lists.infradead.org, crash-utility@redhat.com
 
-QVJNIGtlcm5lbCBpbWFnZSBpcyBzbGlnaHRseSBkaWZmZXJlbnQgdGhhbiB0aGUgY3VycmVudGx5
-IHN1cHBvcnRlZCBpbWFnZXMgc28KaW1wbGVtZW50IG5lY2Vzc2FyeSBzdXBwb3J0IGZvciBpdC4K
-ClNpZ25lZC1vZmYtYnk6IEphbiBLYXJsc3NvbiA8amFuLmthcmxzc29uQHNvbnllcmljc3Nvbi5j
-b20+ClNpZ25lZC1vZmYtYnk6IFRob21hcyBGw6RuZ2UgPHRob21hcy5mYW5nZUBzb255ZXJpY3Nz
-b24uY29tPgpTaWduZWQtb2ZmLWJ5OiBNaWthIFdlc3RlcmJlcmcgPGV4dC1taWthLjEud2VzdGVy
-YmVyZ0Bub2tpYS5jb20+Ci0tLQoga2VybmVsLmMgICAgICAgICAgICB8ICAgIDMgKystCiBsa2Nk
-X3ZtZHVtcF92Ml92My5oIHwgICAgNCArKy0tCiBzeW1ib2xzLmMgICAgICAgICAgIHwgICAxNSAr
-KysrKysrKysrKysrLS0KIDMgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgNSBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXJuZWwuYyBiL2tlcm5lbC5jCmluZGV4IDAzYzYyMGIu
-LjVkYzJjNDUgMTAwNzU1Ci0tLSBhL2tlcm5lbC5jCisrKyBiL2tlcm5lbC5jCkBAIC03NTcsNyAr
-NzU3LDggQEAgdmVyaWZ5X3ZlcnNpb24odm9pZCkKIAogCWlmICghKHNwID0gc3ltYm9sX3NlYXJj
-aCgibGludXhfYmFubmVyIikpKQogCQllcnJvcihGQVRBTCwgImxpbnV4X2Jhbm5lciBzeW1ib2wg
-ZG9lcyBub3QgZXhpc3Q/XG4iKTsKLQllbHNlIGlmICgoc3AtPnR5cGUgPT0gJ1InKSB8fCAoc3At
-PnR5cGUgPT0gJ3InKSkKKwllbHNlIGlmICgoc3AtPnR5cGUgPT0gJ1InKSB8fCAoc3AtPnR5cGUg
-PT0gJ3InKSB8fAorCQkgKG1hY2hpbmVfdHlwZSgiQVJNIikgJiYgc3AtPnR5cGUgPT0gJ1QnKSkK
-IAkJbGludXhfYmFubmVyID0gc3ltYm9sX3ZhbHVlKCJsaW51eF9iYW5uZXIiKTsKIAllbHNlCiAJ
-CWdldF9zeW1ib2xfZGF0YSgibGludXhfYmFubmVyIiwgc2l6ZW9mKHVsb25nKSwgJmxpbnV4X2Jh
-bm5lcik7CmRpZmYgLS1naXQgYS9sa2NkX3ZtZHVtcF92Ml92My5oIGIvbGtjZF92bWR1bXBfdjJf
-djMuaAppbmRleCAwMDZiMGI2Li5hZmRjYzUzIDEwMDc1NQotLS0gYS9sa2NkX3ZtZHVtcF92Ml92
-My5oCisrKyBiL2xrY2Rfdm1kdW1wX3YyX3YzLmgKQEAgLTM1LDcgKzM1LDcgQEAKICNpbmNsdWRl
-IDxhc20vdm1kdW1wLmg+ICAgICAgICAgICAgICAgICAvKiBmb3IgYXJjaGl0ZWN0dXJlLXNwZWNp
-ZmljIGhlYWRlciAqLwogI2VuZGlmCiAKLSNpZiBkZWZpbmVkKFg4NikgfHwgZGVmaW5lZChQUEMp
-IHx8IGRlZmluZWQoUzM5MCkgfHwgZGVmaW5lZChTMzkwWCkKKyNpZiBkZWZpbmVkKEFSTSkgfHwg
-ZGVmaW5lZChYODYpIHx8IGRlZmluZWQoUFBDKSB8fCBkZWZpbmVkKFMzOTApIHx8IGRlZmluZWQo
-UzM5MFgpCiAKIC8qCiAgKiBLZXJuZWwgaGVhZGVyIGZpbGUgZm9yIExpbnV4IGNyYXNoIGR1bXBz
-LgpAQCAtOTIsNyArOTIsNyBAQCB0eXBlZGVmIHN0cnVjdCBfZHVtcF9oZWFkZXJfYXNtX3Mgewog
-CiAjZW5kaWYgLyogX0FTTV9WTURVTVBfSCAqLwogCi0jZW5kaWYgLyogWDg2IHx8IFBQQyAqLwor
-I2VuZGlmIC8qIEFSTSB8fCBYODYgfHwgUFBDICovCiAKICNpZiBkZWZpbmVkKEFMUEhBKSB8fCBk
-ZWZpbmVkKElBNjQpIHx8IGRlZmluZWQoWDg2XzY0KSB8fCBkZWZpbmVkKFBQQzY0KQogCmRpZmYg
-LS1naXQgYS9zeW1ib2xzLmMgYi9zeW1ib2xzLmMKaW5kZXggNWNlMmY2MS4uMzEwOWFlOCAxMDA3
-NTUKLS0tIGEvc3ltYm9scy5jCisrKyBiL3N5bWJvbHMuYwpAQCAtNDkwLDcgKzQ5MCw4IEBAIGdl
-dF90ZXh0X2luaXRfc3BhY2Uodm9pZCkKIAkJcmV0dXJuOwogCiAJaWYgKCgoc2VjdGlvbiA9IGdl
-dF9rZXJuZWxfc2VjdGlvbigiLnRleHQuaW5pdCIpKSA9PSBOVUxMKSAmJgotCSAgICAoKHNlY3Rp
-b24gPSBnZXRfa2VybmVsX3NlY3Rpb24oIi5pbml0LnRleHQiKSkgPT0gTlVMTCkpIHsKKwkgICAg
-KChzZWN0aW9uID0gZ2V0X2tlcm5lbF9zZWN0aW9uKCIuaW5pdC50ZXh0IikpID09IE5VTEwpICYm
-CisJICAgIChtYWNoaW5lX3R5cGUoIkFSTSIpICYmIChzZWN0aW9uID0gZ2V0X2tlcm5lbF9zZWN0
-aW9uKCIuaW5pdCIpKSA9PSBOVUxMKSkgewogCQllcnJvcihXQVJOSU5HLCAiY2Fubm90IGRldGVy
-bWluZSB0ZXh0IGluaXQgc3BhY2VcbiIpOwogCQlyZXR1cm47CiAJfQpAQCAtMjY2MCw2ICsyNjYx
-LDExIEBAIGlzX2tlcm5lbChjaGFyICpmaWxlKQogCQkJCWdvdG8gYmFpbG91dDsKIAkJCWJyZWFr
-OwogCisJCWNhc2UgRU1fQVJNOgorCQkJaWYgKG1hY2hpbmVfdHlwZV9taXNtYXRjaChmaWxlLCAi
-QVJNIiwgTlVMTCwgMCkpCisJCQkJZ290byBiYWlsb3V0OworCQkJYnJlYWs7CisKIAkJZGVmYXVs
-dDoKIAkJCWlmIChtYWNoaW5lX3R5cGVfbWlzbWF0Y2goZmlsZSwgIih1bmtub3duKSIsIE5VTEws
-IDApKQogCQkJCWdvdG8gYmFpbG91dDsKQEAgLTI3NDgsNyArMjc1NCw3IEBAIGlzX3NoYXJlZF9v
-YmplY3QoY2hhciAqZmlsZSkKIAkJc3dpdGNoIChzd2FwMTYoZWxmMzItPmVfbWFjaGluZSwgc3dh
-cCkpCiAJCXsKIAkJY2FzZSBFTV8zODY6Ci0JCQlpZiAobWFjaGluZV90eXBlKCJYODYiKSkKKwkJ
-CWlmIChtYWNoaW5lX3R5cGUoIlg4NiIpIHx8IG1hY2hpbmVfdHlwZSgiQVJNIikpCiAJCQkJcmV0
-dXJuIFRSVUU7CiAJCQlicmVhazsKIApAQCAtMjc1Niw2ICsyNzYyLDExIEBAIGlzX3NoYXJlZF9v
-YmplY3QoY2hhciAqZmlsZSkKIAkJCWlmIChtYWNoaW5lX3R5cGUoIlMzOTAiKSkKIAkJCQlyZXR1
-cm4gVFJVRTsKIAkJCWJyZWFrOworCisJCWNhc2UgRU1fQVJNOgorCQkJaWYgKG1hY2hpbmVfdHlw
-ZSgiQVJNIikpCisJCQkJcmV0dXJuIFRSVUU7CisJCQlicmVhazsKIAkJfQogCiAJCWlmIChDUkFT
-SERFQlVHKDEpKQotLSAKMS41LjYuNQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Dave,
+
+This series brings ARM support for the crash utility. This is the result of
+collaboration work with Nokia and SonyEricsson. Basically we combined our
+versions of the code. Previous version of the patches can be found here:
+
+	http://lists.infradead.org/pipermail/linux-arm-kernel/2010-June/019188.html
+
+We tried to keep any ARM specific changes isolated with #ifdefs and similar so
+that it should not cause any problems with other archs.
+
+In this series:
+	o crash can be build as native ARM binary or "cross" version running on
+	  x86 host (make target=ARM to build "cross" version)
+	o supports kdump, diskdump and /dev/mem (live system)
+	o stack unwinding with both framepointers and ARM unwind tables
+	o most of the arch specific code is implemented
+
+The patches apply on top of crash 5.0.6 sources.
+
+Best regards,
+MW
+
+Jan Karlsson (1):
+  crash: update IRQ flags
+
+Mika Westerberg (5):
+  configure/Makefile: add support for ARM targets
+  crash: add support for ARM kernel image
+  crash/diskdump: add ARM support
+  crash/kdump: add ARM support
+  crash: add ARM crashdump support
+
+ Makefile            |   30 +-
+ arm.c               | 1741 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ configure.c         |   32 +-
+ defs.h              |  245 +++++++-
+ diskdump.c          |   42 ++-
+ kernel.c            |    3 +-
+ lkcd_vmdump_v2_v3.h |    4 +-
+ netdump.c           |  115 ++++
+ symbols.c           |   15 +-
+ unwind_arm.c        |  697 +++++++++++++++++++++
+ 10 files changed, 2902 insertions(+), 22 deletions(-)
+ create mode 100644 arm.c
+ create mode 100644 unwind_arm.c
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
