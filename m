@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH v2 4/6] crash/diskdump: add ARM support
-Date: Thu, 26 Aug 2010 15:02:30 +0300
-Message-Id: <4077ca13865cabc9dafb64b4d533388897a4aa81.1282822832.git.ext-mika.1.westerberg@nokia.com>
+Subject: [PATCH v2 3/6] crash: add support for ARM kernel image
+Date: Thu, 26 Aug 2010 15:02:29 +0300
+Message-Id: <00390eaa9f45436a54092c518abb1f8022f2fd9c.1282822832.git.ext-mika.1.westerberg@nokia.com>
 In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
 In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
 References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
 References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,120 +16,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com
 Cc: kexec@lists.infradead.org, Thomas.Fange@sonyericsson.com, Jan.Karlsson@sonyericsson.com, "\\\"Mika Westerberg\\\"" <ext-mika.1.westerberg@nokia.com>, linux-arm-kernel@lists.infradead.org, crash-utility@redhat.com
 
-This patch adds ARM support for makedumpfile generated diskdump files.
-
-Signed-off-by: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
----
- diskdump.c |   34 +++++++++++++++++++++++++++++++---
- 1 files changed, 31 insertions(+), 3 deletions(-)
-
-diff --git a/diskdump.c b/diskdump.c
-index 79e72ad..3aab338 100644
---- a/diskdump.c
-+++ b/diskdump.c
-@@ -249,6 +249,9 @@ restart:
- 	else if (STRNEQ(header->utsname.machine, "ppc64") &&
- 	    machine_type_mismatch(file, "PPC64", NULL, 0))
- 		goto err;
-+	else if (STRNEQ(header->utsname.machine, "arm") &&
-+	    machine_type_mismatch(file, "ARM", NULL, 0))
-+		goto err;
- 
- 	if (header->block_size != block_size) {
- 		block_size = header->block_size;
-@@ -335,7 +338,9 @@ restart:
- 
- 	dd->header = header;
- 
--	if (machine_type("X86"))
-+	if (machine_type("ARM"))
-+		dd->machine_type = EM_ARM;
-+	else if (machine_type("X86"))
- 		dd->machine_type = EM_386;
- 	else if (machine_type("X86_64"))
- 		dd->machine_type = EM_X86_64;
-@@ -516,6 +521,17 @@ page_is_cached(physaddr_t paddr)
- }
- 
- /*
-+ * Translate physical address in paddr to PFN number. This means normally that
-+ * we just shift paddr by some constant. Some architectures need special
-+ * handling for this, however.
-+ */
-+static ulong
-+paddr_to_pfn(physaddr_t paddr)
-+{
-+	return paddr >> dd->block_shift;
-+}
-+
-+/*
-  *  Cache the page's data.
-  *
-  *  If an empty page cache location is available, take it.  Otherwise, evict
-@@ -560,7 +576,7 @@ cache_page(physaddr_t paddr)
- 	dd->page_cache_hdr[i].pg_hit_count++;
- 
- 	/* find page descriptor */
--	pfn = paddr >> dd->block_shift;
-+	pfn = paddr_to_pfn(paddr);
- 	desc_pos = pfn_to_pos(pfn);
- 	seek_offset = dd->data_offset
- 			+ (off_t)(desc_pos - 1)*sizeof(page_desc_t);
-@@ -613,7 +629,7 @@ read_diskdump(int fd, void *bufptr, int cnt, ulong addr, physaddr_t paddr)
- 	physaddr_t curpaddr;
- 	ulong pfn, page_offset;
- 
--	pfn = paddr >> dd->block_shift;
-+	pfn = paddr_to_pfn(paddr);
- 
- 	if (KDUMP_SPLIT()) {
- 		/* Find proper dd */
-@@ -687,6 +703,12 @@ get_diskdump_regs_ppc64(struct bt_info *bt, ulong *eip, ulong *esp)
- 	machdep->get_stack_frame(bt, eip, esp);
- }
- 
-+static void
-+get_diskdump_regs_arm(struct bt_info *bt, ulong *eip, ulong *esp)
-+{
-+	machdep->get_stack_frame(bt, eip, esp);
-+}
-+
- /*
-  *  Send the request to the proper architecture hander.
-  */
-@@ -696,6 +718,10 @@ get_diskdump_regs(struct bt_info *bt, ulong *eip, ulong *esp)
- {
- 	switch (dd->machine_type) 
- 	{
-+	case EM_ARM:
-+		get_diskdump_regs_arm(bt, eip, esp);
-+		break;
-+
- 	case EM_386:
- 		return get_netdump_regs_x86(bt, eip, esp);
- 		break;
-@@ -784,6 +810,8 @@ __diskdump_memory_dump(FILE *fp)
-         fprintf(fp, "      machine_type: %d ", dd->machine_type);
- 	switch (dd->machine_type)
- 	{
-+	case EM_ARM:
-+		fprintf(fp, "(EM_ARM)\n"); break;
- 	case EM_386:
- 		fprintf(fp, "(EM_386)\n"); break;
- 	case EM_X86_64:
--- 
-1.5.6.5
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QVJNIGtlcm5lbCBpbWFnZSBpcyBzbGlnaHRseSBkaWZmZXJlbnQgdGhhbiB0aGUgY3VycmVudGx5
+IHN1cHBvcnRlZCBpbWFnZXMgc28KaW1wbGVtZW50IG5lY2Vzc2FyeSBzdXBwb3J0IGZvciBpdC4K
+ClNpZ25lZC1vZmYtYnk6IEphbiBLYXJsc3NvbiA8amFuLmthcmxzc29uQHNvbnllcmljc3Nvbi5j
+b20+ClNpZ25lZC1vZmYtYnk6IFRob21hcyBGw6RuZ2UgPHRob21hcy5mYW5nZUBzb255ZXJpY3Nz
+b24uY29tPgpTaWduZWQtb2ZmLWJ5OiBNaWthIFdlc3RlcmJlcmcgPGV4dC1taWthLjEud2VzdGVy
+YmVyZ0Bub2tpYS5jb20+Ci0tLQoga2VybmVsLmMgICAgICAgICAgICB8ICAgIDMgKystCiBsa2Nk
+X3ZtZHVtcF92Ml92My5oIHwgICAgNCArKy0tCiBzeW1ib2xzLmMgICAgICAgICAgIHwgICAxNSAr
+KysrKysrKysrKysrLS0KIDMgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKSwgNSBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXJuZWwuYyBiL2tlcm5lbC5jCmluZGV4IDAzYzYyMGIu
+LjVkYzJjNDUgMTAwNzU1Ci0tLSBhL2tlcm5lbC5jCisrKyBiL2tlcm5lbC5jCkBAIC03NTcsNyAr
+NzU3LDggQEAgdmVyaWZ5X3ZlcnNpb24odm9pZCkKIAogCWlmICghKHNwID0gc3ltYm9sX3NlYXJj
+aCgibGludXhfYmFubmVyIikpKQogCQllcnJvcihGQVRBTCwgImxpbnV4X2Jhbm5lciBzeW1ib2wg
+ZG9lcyBub3QgZXhpc3Q/XG4iKTsKLQllbHNlIGlmICgoc3AtPnR5cGUgPT0gJ1InKSB8fCAoc3At
+PnR5cGUgPT0gJ3InKSkKKwllbHNlIGlmICgoc3AtPnR5cGUgPT0gJ1InKSB8fCAoc3AtPnR5cGUg
+PT0gJ3InKSB8fAorCQkgKG1hY2hpbmVfdHlwZSgiQVJNIikgJiYgc3AtPnR5cGUgPT0gJ1QnKSkK
+IAkJbGludXhfYmFubmVyID0gc3ltYm9sX3ZhbHVlKCJsaW51eF9iYW5uZXIiKTsKIAllbHNlCiAJ
+CWdldF9zeW1ib2xfZGF0YSgibGludXhfYmFubmVyIiwgc2l6ZW9mKHVsb25nKSwgJmxpbnV4X2Jh
+bm5lcik7CmRpZmYgLS1naXQgYS9sa2NkX3ZtZHVtcF92Ml92My5oIGIvbGtjZF92bWR1bXBfdjJf
+djMuaAppbmRleCAwMDZiMGI2Li5hZmRjYzUzIDEwMDc1NQotLS0gYS9sa2NkX3ZtZHVtcF92Ml92
+My5oCisrKyBiL2xrY2Rfdm1kdW1wX3YyX3YzLmgKQEAgLTM1LDcgKzM1LDcgQEAKICNpbmNsdWRl
+IDxhc20vdm1kdW1wLmg+ICAgICAgICAgICAgICAgICAvKiBmb3IgYXJjaGl0ZWN0dXJlLXNwZWNp
+ZmljIGhlYWRlciAqLwogI2VuZGlmCiAKLSNpZiBkZWZpbmVkKFg4NikgfHwgZGVmaW5lZChQUEMp
+IHx8IGRlZmluZWQoUzM5MCkgfHwgZGVmaW5lZChTMzkwWCkKKyNpZiBkZWZpbmVkKEFSTSkgfHwg
+ZGVmaW5lZChYODYpIHx8IGRlZmluZWQoUFBDKSB8fCBkZWZpbmVkKFMzOTApIHx8IGRlZmluZWQo
+UzM5MFgpCiAKIC8qCiAgKiBLZXJuZWwgaGVhZGVyIGZpbGUgZm9yIExpbnV4IGNyYXNoIGR1bXBz
+LgpAQCAtOTIsNyArOTIsNyBAQCB0eXBlZGVmIHN0cnVjdCBfZHVtcF9oZWFkZXJfYXNtX3Mgewog
+CiAjZW5kaWYgLyogX0FTTV9WTURVTVBfSCAqLwogCi0jZW5kaWYgLyogWDg2IHx8IFBQQyAqLwor
+I2VuZGlmIC8qIEFSTSB8fCBYODYgfHwgUFBDICovCiAKICNpZiBkZWZpbmVkKEFMUEhBKSB8fCBk
+ZWZpbmVkKElBNjQpIHx8IGRlZmluZWQoWDg2XzY0KSB8fCBkZWZpbmVkKFBQQzY0KQogCmRpZmYg
+LS1naXQgYS9zeW1ib2xzLmMgYi9zeW1ib2xzLmMKaW5kZXggNWNlMmY2MS4uMzEwOWFlOCAxMDA3
+NTUKLS0tIGEvc3ltYm9scy5jCisrKyBiL3N5bWJvbHMuYwpAQCAtNDkwLDcgKzQ5MCw4IEBAIGdl
+dF90ZXh0X2luaXRfc3BhY2Uodm9pZCkKIAkJcmV0dXJuOwogCiAJaWYgKCgoc2VjdGlvbiA9IGdl
+dF9rZXJuZWxfc2VjdGlvbigiLnRleHQuaW5pdCIpKSA9PSBOVUxMKSAmJgotCSAgICAoKHNlY3Rp
+b24gPSBnZXRfa2VybmVsX3NlY3Rpb24oIi5pbml0LnRleHQiKSkgPT0gTlVMTCkpIHsKKwkgICAg
+KChzZWN0aW9uID0gZ2V0X2tlcm5lbF9zZWN0aW9uKCIuaW5pdC50ZXh0IikpID09IE5VTEwpICYm
+CisJICAgIChtYWNoaW5lX3R5cGUoIkFSTSIpICYmIChzZWN0aW9uID0gZ2V0X2tlcm5lbF9zZWN0
+aW9uKCIuaW5pdCIpKSA9PSBOVUxMKSkgewogCQllcnJvcihXQVJOSU5HLCAiY2Fubm90IGRldGVy
+bWluZSB0ZXh0IGluaXQgc3BhY2VcbiIpOwogCQlyZXR1cm47CiAJfQpAQCAtMjY2MCw2ICsyNjYx
+LDExIEBAIGlzX2tlcm5lbChjaGFyICpmaWxlKQogCQkJCWdvdG8gYmFpbG91dDsKIAkJCWJyZWFr
+OwogCisJCWNhc2UgRU1fQVJNOgorCQkJaWYgKG1hY2hpbmVfdHlwZV9taXNtYXRjaChmaWxlLCAi
+QVJNIiwgTlVMTCwgMCkpCisJCQkJZ290byBiYWlsb3V0OworCQkJYnJlYWs7CisKIAkJZGVmYXVs
+dDoKIAkJCWlmIChtYWNoaW5lX3R5cGVfbWlzbWF0Y2goZmlsZSwgIih1bmtub3duKSIsIE5VTEws
+IDApKQogCQkJCWdvdG8gYmFpbG91dDsKQEAgLTI3NDgsNyArMjc1NCw3IEBAIGlzX3NoYXJlZF9v
+YmplY3QoY2hhciAqZmlsZSkKIAkJc3dpdGNoIChzd2FwMTYoZWxmMzItPmVfbWFjaGluZSwgc3dh
+cCkpCiAJCXsKIAkJY2FzZSBFTV8zODY6Ci0JCQlpZiAobWFjaGluZV90eXBlKCJYODYiKSkKKwkJ
+CWlmIChtYWNoaW5lX3R5cGUoIlg4NiIpIHx8IG1hY2hpbmVfdHlwZSgiQVJNIikpCiAJCQkJcmV0
+dXJuIFRSVUU7CiAJCQlicmVhazsKIApAQCAtMjc1Niw2ICsyNzYyLDExIEBAIGlzX3NoYXJlZF9v
+YmplY3QoY2hhciAqZmlsZSkKIAkJCWlmIChtYWNoaW5lX3R5cGUoIlMzOTAiKSkKIAkJCQlyZXR1
+cm4gVFJVRTsKIAkJCWJyZWFrOworCisJCWNhc2UgRU1fQVJNOgorCQkJaWYgKG1hY2hpbmVfdHlw
+ZSgiQVJNIikpCisJCQkJcmV0dXJuIFRSVUU7CisJCQlicmVhazsKIAkJfQogCiAJCWlmIChDUkFT
+SERFQlVHKDEpKQotLSAKMS41LjYuNQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
