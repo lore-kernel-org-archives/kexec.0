@@ -1,8 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH v2 0/6] crash utility - add ARM support
-Date: Thu, 26 Aug 2010 15:02:26 +0300
-Message-Id: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+Subject: [PATCH v2 2/6] configure/Makefile: add support for ARM targets
+Date: Thu, 26 Aug 2010 15:02:28 +0300
+Message-Id: <a3ea7a89f09cc3d5e5677338cc7cb5d1e29f7922.1282822832.git.ext-mika.1.westerberg@nokia.com>
+In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+In-Reply-To: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+References: <cover.1282822832.git.ext-mika.1.westerberg@nokia.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -11,63 +16,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com
 Cc: kexec@lists.infradead.org, Thomas.Fange@sonyericsson.com, Jan.Karlsson@sonyericsson.com, "\\\"Mika Westerberg\\\"" <ext-mika.1.westerberg@nokia.com>, linux-arm-kernel@lists.infradead.org, crash-utility@redhat.com
 
-Hi Dave,
-
-This series brings ARM support for the crash utility. This is the result of
-collaboration work with Nokia and SonyEricsson. Basically we combined our
-versions of the code. Previous version of the patches can be found here:
-
-	http://lists.infradead.org/pipermail/linux-arm-kernel/2010-June/019188.html
-
-We tried to keep any ARM specific changes isolated with #ifdefs and similar so
-that it should not cause any problems with other archs.
-
-In this series:
-	o crash can be build as native ARM binary or "cross" version running on
-	  x86 host (make target=ARM to build "cross" version)
-	o supports kdump, diskdump and /dev/mem (live system)
-	o stack unwinding with both framepointers and ARM unwind tables
-	o most of the arch specific code is implemented
-
-The patches apply on top of crash 5.0.6 sources.
-
-Best regards,
-MW
-
-Jan Karlsson (1):
-  crash: update IRQ flags
-
-Mika Westerberg (5):
-  configure/Makefile: add support for ARM targets
-  crash: add support for ARM kernel image
-  crash/diskdump: add ARM support
-  crash/kdump: add ARM support
-  crash: add ARM crashdump support
-
- Makefile            |   30 +-
- arm.c               | 1741 +++++++++++++++++++++++++++++++++++++++++++++++++++
- configure.c         |   32 +-
- defs.h              |  245 +++++++-
- diskdump.c          |   42 ++-
- kernel.c            |    3 +-
- lkcd_vmdump_v2_v3.h |    4 +-
- netdump.c           |  115 ++++
- symbols.c           |   15 +-
- unwind_arm.c        |  697 +++++++++++++++++++++
- 10 files changed, 2902 insertions(+), 22 deletions(-)
- create mode 100644 arm.c
- create mode 100644 unwind_arm.c
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+QWRkIHN1cHBvcnQgdG8gYnVpbGQgZm9yIEFSTSB0YXJnZXRzLiBUaGlzIGluY2x1ZGVzIG5hdGl2
+ZSBBUk0gYnVpbGQsIGFuZCBhbHNvCkFSTSBvbiB4ODYgKHdoaWNoIHdvcmtzIGJlY2F1c2Ugb2Yg
+dGhlIHNhbWUgd29yZCBzaXplIGFuZCBlbmRpYW5uZXNzKS4KClNpZ25lZC1vZmYtYnk6IEphbiBL
+YXJsc3NvbiA8amFuLmthcmxzc29uQHNvbnllcmljc3Nvbi5jb20+ClNpZ25lZC1vZmYtYnk6IFRo
+b21hcyBGw6RuZ2UgPHRob21hcy5mYW5nZUBzb255ZXJpY3Nzb24uY29tPgpTaWduZWQtb2ZmLWJ5
+OiBNaWthIFdlc3RlcmJlcmcgPGV4dC1taWthLjEud2VzdGVyYmVyZ0Bub2tpYS5jb20+Ci0tLQog
+TWFrZWZpbGUgICAgfCAgIDE4ICsrKysrKysrKysrKysrKy0tLQogY29uZmlndXJlLmMgfCAgIDMy
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCiAyIGZpbGVzIGNoYW5nZWQsIDQ2IGlu
+c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvTWFrZWZpbGUgYi9NYWtl
+ZmlsZQppbmRleCBjMmEyYWMwLi4wMzhjODg3IDEwMDY0NAotLS0gYS9NYWtlZmlsZQorKysgYi9N
+YWtlZmlsZQpAQCAtMzIsNiArMzIsMTIgQEAgaWZlcSAoJChBUkNIKSwgcHBjNjQpCiBDT05GX0ZM
+QUdTID0gLW02NAogZW5kaWYKIAoraWZlcSAoJChUQVJHRVQpLCBBUk0pCitpZmVxICgkKEFSQ0gp
+LCBpMzg2KQorR0RCX0NPTkZfRkxBR1MgPSAtLXRhcmdldD1hcm0tZWxmLWxpbnV4CitlbmRpZgor
+ZW5kaWYKKwogIwogIyBHREIsIEdEQl9GSUxFUywgR0RCX09GSUxFUyBhbmQgR0RCX1BBVENIX0ZJ
+TEVTIHdpbGwgYmUgY29uZmlndXJlZCBhdXRvbWF0aWNhbGx5IGJ5IGNvbmZpZ3VyZSAKICMKQEAg
+LTI0MCwxMSArMjQ2LDE3IEBAIEdEQl9JTkNMVURFX0RJUkVDVE9SWT0uLyR7R0RCfS9pbmNsdWRl
+CiAKIFJFREhBVEZMQUdTPS1EUkVESEFUCiAKKyMgdGFyZ2V0IGNvdWxkIGJlIHNldCBvbiBjb21t
+YW5kIGxpbmUgd2hlbiBpbnZva2luZyBtYWtlLiBMaWtlOiBtYWtlIHRhcmdldD1BUk0KKyMgb3Ro
+ZXJ3aXNlIHRhcmdldCB3aWxsIGJlIHRoZSBzYW1lIGFzIHRoZSBob3N0CitpZm5lcSAoJCh0YXJn
+ZXQpLCkKK0NPTkZfVEFSR0VUX0ZMQUc9Ii10JCh0YXJnZXQpIgorZW5kaWYKKwogIyBUbyBidWls
+ZCB0aGUgZXh0ZW5zaW9ucyBsaWJyYXJ5IGJ5IGRlZmF1bHQsIHVuY29tbWVudCB0aGUgdGhpcmQg
+Y29tbWFuZAogIyBsaW5lIGJlbG93LiAgT3RoZXJ3aXNlIHRoZXkgY2FuIGJlIGJ1aWx0IGJ5IGVu
+dGVyaW5nICJtYWtlIGV4dGVuc2lvbnMiLgogCiBhbGw6IG1ha2VfY29uZmlndXJlCi0JQC4vY29u
+ZmlndXJlIC1wICJSUE1QS0c9JHtSUE1QS0d9IiAtYgorCUAuL2NvbmZpZ3VyZSAke0NPTkZfVEFS
+R0VUX0ZMQUd9IC1wICJSUE1QS0c9JHtSUE1QS0d9IiAtYgogCUBtYWtlIC0tbm8tcHJpbnQtZGly
+ZWN0b3J5IGdkYl9tZXJnZQogIwlAbWFrZSAtLW5vLXByaW50LWRpcmVjdG9yeSBleHRlbnNpb25z
+CiAKQEAgLTI1NCw3ICsyNjYsNyBAQCBnZGJfbWVyZ2U6IGZvcmNlCiAJQGVjaG8gIiR7TERGTEFH
+U30gLWx6IC1sZGwgLXJkeW5hbWljIiA+ICR7R0RCfS9nZGIvbWVyZ2VsaWJzCiAJQGVjaG8gIi4u
+Ly4uLyR7UFJPR1JBTX0gLi4vLi4vJHtQUk9HUkFNfWxpYi5hIiA+ICR7R0RCfS9nZGIvbWVyZ2Vv
+YmoKIAlAaWYgWyAhIC1mICR7R0RCfS9jb25maWcuc3RhdHVzIF07IHRoZW4gXAotCSAgKGNkICR7
+R0RCfTsgLi9jb25maWd1cmUgLS13aXRoLXNlcGFyYXRlLWRlYnVnLWRpcj0vdXNyL2xpYi9kZWJ1
+ZyBcCisJICAoY2QgJHtHREJ9OyAuL2NvbmZpZ3VyZSAke0dEQl9DT05GX0ZMQUdTfSAtLXdpdGgt
+c2VwYXJhdGUtZGVidWctZGlyPS91c3IvbGliL2RlYnVnIFwKIAkgICAgLS13aXRoLWJ1Z3VybD0i
+IiAtLXdpdGgtZXhwYXQ9bm8gLS13aXRoLXB5dGhvbj1ubzsgXAogCSAgbWFrZSAtLW5vLXByaW50
+LWRpcmVjdG9yeTspIFwKIAllbHNlIChjZCAke0dEQn0vZ2RiOyBtYWtlIC0tbm8tcHJpbnQtZGly
+ZWN0b3J5Oyk7IGZpCkBAIC01OTEsNyArNjAzLDcgQEAgZGlzOgogCW9iamR1bXAgLS1kaXNhc3Nl
+bWJsZSAtLWxpbmUtbnVtYmVycyAke1BST0dSQU19ID4gJHtQUk9HUkFNfS5kaXMKIAogZXh0ZW5z
+aW9uczogbWFrZV9jb25maWd1cmUKLQlALi9jb25maWd1cmUgLXEgLWIKKwlALi9jb25maWd1cmUg
+JHtDT05GX1RBUkdFVF9GTEFHfSAtcSAtYgogCUBtYWtlIC0tbm8tcHJpbnQtZGlyZWN0b3J5IGRv
+X2V4dGVuc2lvbnMKIAogZG9fZXh0ZW5zaW9uczoKZGlmZiAtLWdpdCBhL2NvbmZpZ3VyZS5jIGIv
+Y29uZmlndXJlLmMKaW5kZXggNjI3YmI4My4uYTRiM2EwZSAxMDA3NTUKLS0tIGEvY29uZmlndXJl
+LmMKKysrIGIvY29uZmlndXJlLmMKQEAgLTkwLDYgKzkwLDcgQEAgdm9pZCBtYWtlX3NwZWNfZmls
+ZShzdHJ1Y3Qgc3VwcG9ydGVkX2dkYl92ZXJzaW9uICopOwogI3VuZGVmIFMzOTBYCiAjdW5kZWYg
+UFBDNjQKICN1bmRlZiBYODZfNjQKKyN1bmRlZiBBUk0KIAogI2RlZmluZSBYODYgICAgIDEKICNk
+ZWZpbmUgQUxQSEEgICAyCkBAIC05OSw2ICsxMDAsNyBAQCB2b2lkIG1ha2Vfc3BlY19maWxlKHN0
+cnVjdCBzdXBwb3J0ZWRfZ2RiX3ZlcnNpb24gKik7CiAjZGVmaW5lIFMzOTBYICAgNgogI2RlZmlu
+ZSBQUEM2NCAgIDcKICNkZWZpbmUgWDg2XzY0ICA4CisjZGVmaW5lIEFSTQk5CiAKICNkZWZpbmUg
+VEFSR0VUX1g4NiAgICAiVEFSR0VUPVg4NiIKICNkZWZpbmUgVEFSR0VUX0FMUEhBICAiVEFSR0VU
+PUFMUEhBIgpAQCAtMTA4LDYgKzExMCw3IEBAIHZvaWQgbWFrZV9zcGVjX2ZpbGUoc3RydWN0IHN1
+cHBvcnRlZF9nZGJfdmVyc2lvbiAqKTsKICNkZWZpbmUgVEFSR0VUX1MzOTBYICAiVEFSR0VUPVMz
+OTBYIgogI2RlZmluZSBUQVJHRVRfUFBDNjQgICJUQVJHRVQ9UFBDNjQiCiAjZGVmaW5lIFRBUkdF
+VF9YODZfNjQgIlRBUkdFVD1YODZfNjQiCisjZGVmaW5lIFRBUkdFVF9BUk0gICAgIlRBUkdFVD1B
+Uk0iCiAKICNkZWZpbmUgVEFSR0VUX0NGTEFHU19YODYgICAgIlRBUkdFVF9DRkxBR1M9LURfRklM
+RV9PRkZTRVRfQklUUz02NCIKICNkZWZpbmUgVEFSR0VUX0NGTEFHU19BTFBIQSAgIlRBUkdFVF9D
+RkxBR1M9IgpAQCAtMTE3LDYgKzEyMCw3IEBAIHZvaWQgbWFrZV9zcGVjX2ZpbGUoc3RydWN0IHN1
+cHBvcnRlZF9nZGJfdmVyc2lvbiAqKTsKICNkZWZpbmUgVEFSR0VUX0NGTEFHU19TMzkwWCAgIlRB
+UkdFVF9DRkxBR1M9IgogI2RlZmluZSBUQVJHRVRfQ0ZMQUdTX1BQQzY0ICAiVEFSR0VUX0NGTEFH
+Uz0tbTY0IgogI2RlZmluZSBUQVJHRVRfQ0ZMQUdTX1g4Nl82NCAiVEFSR0VUX0NGTEFHUz0iCisj
+ZGVmaW5lIFRBUkdFVF9DRkxBR1NfQVJNICAgICJUQVJHRVRfQ0ZMQUdTPS1EX0ZJTEVfT0ZGU0VU
+X0JJVFM9NjQiCiAKIC8qCiAgKiAgVGhlIG9yaWdpbmFsIHBsYW4gd2FzIHRvIGFsbG93IHRoZSB1
+c2Ugb2YgYSBwYXJ0aWN1bGFyIHZlcnNpb24KQEAgLTE5Myw2ICsxOTcsNyBAQCBzdHJ1Y3QgdGFy
+Z2V0X2RhdGEgewogCWNoYXIgZ2RiX3ZlcnNpb25bTUFYU1RSTEVOXTsKIAljaGFyIHJlbGVhc2Vb
+TUFYU1RSTEVOXTsKIAlzdHJ1Y3Qgc3RhdCBzdGF0YnVmOworCWNvbnN0IGNoYXIgKnRhcmdldF9h
+c19wYXJhbTsKIH0gdGFyZ2V0X2RhdGEgPSB7IDAgfTsgCiAKIGludApAQCAtMjAzLDcgKzIwOCw3
+IEBAIG1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KQogCiAJc3AgPSBzZXR1cF9nZGJfZGVmYXVs
+dHMoKTsKIAotCXdoaWxlICgoYyA9IGdldG9wdChhcmdjLCBhcmd2LCAiZ3Nxbld3dWJkcjpwOlA6
+IikpID4gMCkgeworCXdoaWxlICgoYyA9IGdldG9wdChhcmdjLCBhcmd2LCAiZ3Nxbld3dWJkcjpw
+OlA6dDoiKSkgPiAwKSB7CiAJCXN3aXRjaCAoYykgewogCQljYXNlICdxJzoKIAkJCXRhcmdldF9k
+YXRhLmZsYWdzIHw9IFFVSUVUOwpAQCAtMjM2LDYgKzI0MSw5IEBAIG1haW4oaW50IGFyZ2MsIGNo
+YXIgKiphcmd2KQogCQljYXNlICdnJzoKIAkJCWdkYl9jb25maWd1cmUoc3ApOwogCQkJYnJlYWs7
+CisJCWNhc2UgJ3QnOgorCQkJdGFyZ2V0X2RhdGEudGFyZ2V0X2FzX3BhcmFtID0gb3B0YXJnOwor
+CQkJYnJlYWs7CiAJCX0KIAl9CiAKQEAgLTI3NCw2ICsyODIsMjEgQEAgZ2V0X2N1cnJlbnRfY29u
+ZmlndXJhdGlvbih2b2lkKQogI2lmZGVmIF9feDg2XzY0X18KICAgICAgICAgdGFyZ2V0X2RhdGEu
+dGFyZ2V0ID0gWDg2XzY0OwogI2VuZGlmCisjaWZkZWYgX19hcm1fXworICAgICAgICB0YXJnZXRf
+ZGF0YS50YXJnZXQgPSBBUk07CisjZW5kaWYKKyAgICAgICAgLyogb3ZlcnJpZGUgdGFyZ2V0IGlm
+IHNwZWNpZmllZCBvbiBjb21tYW5kIGxpbmUgKi8KKwlpZiAodGFyZ2V0X2RhdGEudGFyZ2V0X2Fz
+X3BhcmFtICE9IDApIHsKKwkJaWYgKHRhcmdldF9kYXRhLnRhcmdldCA9PSBYODYgJiYKKwkJICAg
+IHN0cmNtcCh0YXJnZXRfZGF0YS50YXJnZXRfYXNfcGFyYW0sICJBUk0iKSA9PSAwKSB7CisJCQkv
+KiBkZWJ1Z2dpbmcgb2YgQVJNIGNvcmUgZmlsZXMgb25seSBzdXBwb3J0ZWQgb24gWDg2ICovCisJ
+CQl0YXJnZXRfZGF0YS50YXJnZXQgPSBBUk07CisJCX0gZWxzZSB7CisJCQlmcHJpbnRmKHN0ZGVy
+ciwKKwkJCQkidGFyZ2V0IFwiJXNcIiBpcyBub3Qgc3VwcG9ydGVkIG9uIHRoaXMgYXJjaGl0ZWN0
+dXJlXG4iLAorCQkJCXRhcmdldF9kYXRhLnRhcmdldF9hc19wYXJhbSk7CisJCX0KKyAgICAgICAg
+fQogCiAgICAgICAgIGlmICgoZnAgPSBmb3BlbigiTWFrZWZpbGUiLCAiciIpKSA9PSBOVUxMKSB7
+CiAJCXBlcnJvcigiTWFrZWZpbGUiKTsKQEAgLTM3NCw2ICszOTcsOSBAQCBzaG93X2NvbmZpZ3Vy
+YXRpb24odm9pZCkKIAljYXNlIFg4Nl82NDoKIAkJcHJpbnRmKCJUQVJHRVQ6IFg4Nl82NFxuIik7
+CiAJCWJyZWFrOworCWNhc2UgQVJNOgorCQlwcmludGYoIlRBUkdFVDogQVJNXG4iKTsKKwkJYnJl
+YWs7CiAJfQogCiAJaWYgKHN0cmxlbih0YXJnZXRfZGF0YS5wcm9ncmFtKSkgewpAQCAtNDM3LDYg
+KzQ2MywxMCBAQCBidWlsZF9jb25maWd1cmUoc3RydWN0IHN1cHBvcnRlZF9nZGJfdmVyc2lvbiAq
+c3ApCiAgICAgICAgICAgICAgICAgdGFyZ2V0ID0gVEFSR0VUX1g4Nl82NDsKICAgICAgICAgICAg
+ICAgICB0YXJnZXRfQ0ZMQUdTID0gVEFSR0VUX0NGTEFHU19YODZfNjQ7CiAgICAgICAgICAgICAg
+ICAgYnJlYWs7CisJY2FzZSBBUk06CisgICAgICAgICAgICAgICAgdGFyZ2V0ID0gVEFSR0VUX0FS
+TTsKKyAgICAgICAgICAgICAgICB0YXJnZXRfQ0ZMQUdTID0gVEFSR0VUX0NGTEFHU19BUk07Cisg
+ICAgICAgICAgICAgICAgYnJlYWs7CiAJfQogCiAJbWFrZWZpbGVfc2V0dXAoJmZwMSwgJmZwMik7
+Ci0tIAoxLjUuNi41CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
