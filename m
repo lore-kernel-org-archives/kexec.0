@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from hera.kernel.org ([140.211.167.34])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Oq7Nc-0004Xi-7F
-	for kexec@lists.infradead.org; Mon, 30 Aug 2010 16:38:44 +0000
-Message-ID: <4C7BDE6E.8030107@kernel.org>
-Date: Mon, 30 Aug 2010 18:38:06 +0200
+	id 1Oq8Cw-0007lh-QS
+	for kexec@lists.infradead.org; Mon, 30 Aug 2010 17:31:47 +0000
+Message-ID: <4C7BEB00.9060801@kernel.org>
+Date: Mon, 30 Aug 2010 19:31:44 +0200
 From: Tejun Heo <tj@kernel.org>
 MIME-Version: 1.0
 Subject: Re: kdump regression compared to v2.6.35
 References: <1331313838.1541221283181038073.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <1331313838.1541221283181038073.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+	<4C7BDE6E.8030107@kernel.org>
+In-Reply-To: <4C7BDE6E.8030107@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,12 +26,10 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: caiqian@redhat.com
 Cc: torvalds@linux-foundation.org, linux-next@vger.kernel.org, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 
-Can you please try the following patch?
-
-Thanks.
+Please try this one instead.  Thanks.
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index a2dccfc..f57cd6e 100644
+index a2dccfc..75cdbc2 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
 @@ -1224,6 +1224,8 @@ __acquires(&gcwq->lock)
@@ -84,11 +83,12 @@ index a2dccfc..f57cd6e 100644
 
  		INIT_LIST_HEAD(&gcwq->idle_list);
  		for (i = 0; i < BUSY_WORKER_HASH_SIZE; i++)
-@@ -3583,6 +3590,7 @@ static int __init init_workqueues(void)
+@@ -3583,6 +3590,8 @@ static int __init init_workqueues(void)
  		struct global_cwq *gcwq = get_gcwq(cpu);
  		struct worker *worker;
 
-+		gcwq->flags &= ~GCWQ_DISASSOCIATED;
++		if (cpu != WORK_CPU_UNBOUND)
++			gcwq->flags &= ~GCWQ_DISASSOCIATED;
  		worker = create_worker(gcwq, true);
  		BUG_ON(!worker);
  		spin_lock_irq(&gcwq->lock);
