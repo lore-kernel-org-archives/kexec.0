@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from hera.kernel.org ([140.211.167.34])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Oq5m5-0003DT-Sv
-	for kexec@lists.infradead.org; Mon, 30 Aug 2010 14:55:54 +0000
-Message-ID: <4C7BC675.8050506@kernel.org>
-Date: Mon, 30 Aug 2010 16:55:49 +0200
+	id 1Oq7Nc-0004Xi-7F
+	for kexec@lists.infradead.org; Mon, 30 Aug 2010 16:38:44 +0000
+Message-ID: <4C7BDE6E.8030107@kernel.org>
+Date: Mon, 30 Aug 2010 18:38:06 +0200
 From: Tejun Heo <tj@kernel.org>
 MIME-Version: 1.0
 Subject: Re: kdump regression compared to v2.6.35
-References: <1706089082.1537331283179884183.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <1706089082.1537331283179884183.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+References: <1331313838.1541221283181038073.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <1331313838.1541221283181038073.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,39 +22,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: CAI Qian <caiqian@redhat.com>
+To: caiqian@redhat.com
 Cc: torvalds@linux-foundation.org, linux-next@vger.kernel.org, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 
-On 08/30/2010 04:51 PM, CAI Qian wrote:
-> kintegrityd   R  running task        0    13      2 0x00000008
->  ffffffffffffff10 ffffffff81078e25 0000000000000010 0000000000000206
->  ffff88046dcf1e40 0000000000000018 ffff88046dc9a440 ffff88046dc9a440
->  ffff88088e231f00 ffff88088e239300 ffff88046dcf1ee0 ffffffff810796e8
-> Call Trace:
->  [<ffffffff81078e25>] ? worker_maybe_bind_and_lock+0x55/0xf0
->  [<ffffffff810796e8>] ? rescuer_thread+0x108/0x1d0
->  [<ffffffff810795e0>] ? rescuer_thread+0x0/0x1d0
->  [<ffffffff810795e0>] ? rescuer_thread+0x0/0x1d0
->  [<ffffffff8107fc06>] ? kthread+0x96/0xa0
->  [<ffffffff8100be84>] ? kernel_thread_helper+0x4/0x10
->  [<ffffffff8107fb70>] ? kthread+0x0/0xa0
->  [<ffffffff8100be80>] ? kernel_thread_helper+0x0/0x10
-...
-> runnable tasks:
->             task   PID         tree-key  switches  prio     exec-runtime         sum-exec        sum-sleep
-> ----------------------------------------------------------------------------------------------------------
->          swapper     1       296.512617        23   120       296.512617       282.090606         0.046441 /
->      sync_supers    11       293.512617         2   120       293.512617         0.002502      5354.887736 /
-> R    kintegrityd    13      2382.377879         1   100      2382.377879    180846.751167         0.001076 /
-
-Looks like kintegrityd went bonkers.  Maybe it has some busy wait
-which doesn't quite work well with how cmwq schedules works.  I'll
-look into it.  Can you please attach your .config?
+Can you please try the following patch?
 
 Thanks.
 
--- 
-tejun
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index a2dccfc..f57cd6e 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1224,6 +1224,8 @@ __acquires(&gcwq->lock)
+ {
+ 	struct global_cwq *gcwq = worker->gcwq;
+ 	struct task_struct *task = worker->task;
++	static unsigned int cnt;
++	int rc;
+
+ 	while (true) {
+ 		/*
+@@ -1232,8 +1234,11 @@ __acquires(&gcwq->lock)
+ 		 * it races with cpu hotunplug operation.  Verify
+ 		 * against GCWQ_DISASSOCIATED.
+ 		 */
+-		if (!(gcwq->flags & GCWQ_DISASSOCIATED))
+-			set_cpus_allowed_ptr(task, get_cpu_mask(gcwq->cpu));
++		if (!(gcwq->flags & GCWQ_DISASSOCIATED)) {
++			rc = set_cpus_allowed_ptr(task, get_cpu_mask(gcwq->cpu));
++			if (rc && ++cnt < 10)
++				printk("XXX set_cpus_allowed_ptr() failed w/ %d\n", rc);
++		}
+
+ 		spin_lock_irq(&gcwq->lock);
+ 		if (gcwq->flags & GCWQ_DISASSOCIATED)
+@@ -1985,13 +1990,16 @@ repeat:
+ 		struct cpu_workqueue_struct *cwq = get_cwq(tcpu, wq);
+ 		struct global_cwq *gcwq = cwq->gcwq;
+ 		struct work_struct *work, *n;
++		bool bound;
+
+ 		__set_current_state(TASK_RUNNING);
+ 		mayday_clear_cpu(cpu, wq->mayday_mask);
+
+ 		/* migrate to the target cpu if possible */
+ 		rescuer->gcwq = gcwq;
+-		worker_maybe_bind_and_lock(rescuer);
++		printk("XXX %s: rescuer dispatching to cpu%u\n", wq->name, gcwq->cpu);
++		bound = worker_maybe_bind_and_lock(rescuer);
++		printk("XXX %s: rescuer done binding, bound=%d\n", wq->name, bound);
+
+ 		/*
+ 		 * Slurp in all works issued via this workqueue and
+@@ -3558,8 +3566,7 @@ static int __init init_workqueues(void)
+ 		spin_lock_init(&gcwq->lock);
+ 		INIT_LIST_HEAD(&gcwq->worklist);
+ 		gcwq->cpu = cpu;
+-		if (cpu == WORK_CPU_UNBOUND)
+-			gcwq->flags |= GCWQ_DISASSOCIATED;
++		gcwq->flags |= GCWQ_DISASSOCIATED;
+
+ 		INIT_LIST_HEAD(&gcwq->idle_list);
+ 		for (i = 0; i < BUSY_WORKER_HASH_SIZE; i++)
+@@ -3583,6 +3590,7 @@ static int __init init_workqueues(void)
+ 		struct global_cwq *gcwq = get_gcwq(cpu);
+ 		struct worker *worker;
+
++		gcwq->flags &= ~GCWQ_DISASSOCIATED;
+ 		worker = create_worker(gcwq, true);
+ 		BUG_ON(!worker);
+ 		spin_lock_irq(&gcwq->lock);
 
 _______________________________________________
 kexec mailing list
