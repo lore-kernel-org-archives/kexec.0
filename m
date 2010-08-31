@@ -2,13 +2,18 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx4-phx2.redhat.com ([209.132.183.25]
 	helo=mx02.colomx.prod.int.phx2.redhat.com)
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OqF78-0005Ep-88
-	for kexec@lists.infradead.org; Tue, 31 Aug 2010 00:54:16 +0000
-Date: Mon, 30 Aug 2010 20:53:35 -0400 (EDT)
+	id 1OqIyE-0006gR-FP
+	for kexec@lists.infradead.org; Tue, 31 Aug 2010 05:01:22 +0000
+Received: from mail06.corp.redhat.com (zmail06.collab.prod.int.phx2.redhat.com
+	[10.5.5.45])
+	by mx02.colomx.prod.int.phx2.redhat.com (8.13.8/8.13.8) with ESMTP id
+	o7V51FE5014440
+	for <kexec@lists.infradead.org>; Tue, 31 Aug 2010 01:01:15 -0400
+Date: Tue, 31 Aug 2010 01:01:15 -0400 (EDT)
 From: caiqian@redhat.com
-Message-ID: <2044609874.1606211283216015254.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <71887879.1606161283215975799.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Subject: Re: kdump regression compared to v2.6.35
+Message-ID: <669158817.1613651283230875215.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <820693542.1613251283229007181.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Subject: makedumpfile failed for 2.6.36-rc2
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,262 +27,839 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tejun Heo <tj@kernel.org>
-Cc: kexec <kexec@lists.infradead.org>, linux-next@vger.kernel.org, torvalds@linux-foundation.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: kexec <kexec@lists.infradead.org>
 
+Just a head-up,
 
------ "Tejun Heo" <tj@kernel.org> wrote:
+# makedumpfile -c -d 31 /proc/vmcore vmcore.c31
 
-> Please try this one instead.  Thanks.
-Unable to reproduce it any more after applied the patch,
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027000, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027000).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027020, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027020).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027040, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027040).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027060, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027060).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027080, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027080).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800270a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800270a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800270c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800270c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800270e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800270e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027100, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027100).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027120, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027120).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027140, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027140).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027160, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027160).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027180, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027180).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800271a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800271a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800271c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800271c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800271e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800271e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027200, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027200).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027220, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027220).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027240, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027240).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027260, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027260).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027280, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027280).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800272a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800272a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800272c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800272c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800272e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800272e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027300, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027300).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027320, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027320).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027340, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027340).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027360, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027360).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027380, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027380).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800273a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800273a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800273c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800273c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800273e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800273e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027400, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027400).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027420, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027420).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027440, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027440).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027460, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027460).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027480, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027480).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800274a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800274a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800274c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800274c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800274e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800274e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027500, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027500).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027520, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027520).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027540, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027540).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027560, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027560).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027580, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027580).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800275a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800275a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800275c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800275c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800275e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800275e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027600, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027600).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027620, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027620).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027640, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027640).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027660, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027660).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027680, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027680).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800276a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800276a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800276c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800276c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800276e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800276e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027700, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027700).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027720, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027720).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027740, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027740).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027760, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027760).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027780, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027780).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800277a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800277a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800277c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800277c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800277e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800277e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027800, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027800).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027820, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027820).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027840, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027840).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027860, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027860).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027880, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027880).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800278a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800278a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800278c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800278c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800278e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800278e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027900, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027900).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027920, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027920).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027940, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027940).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027960, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027960).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027980, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027980).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800279a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800279a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800279c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800279c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8804800279e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8804800279e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027a00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027a00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027a20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027a20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027a40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027a40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027a60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027a60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027a80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027a80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027aa0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027aa0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ac0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ac0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ae0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ae0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027b00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027b00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027b20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027b20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027b40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027b40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027b60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027b60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027b80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027b80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ba0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ba0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027bc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027bc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027be0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027be0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027c00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027c00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027c20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027c20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027c40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027c40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027c60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027c60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027c80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027c80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ca0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ca0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027cc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027cc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ce0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ce0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027d00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027d00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027d20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027d20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027d40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027d40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027d60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027d60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027d80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027d80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027da0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027da0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027dc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027dc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027de0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027de0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027e00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027e00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027e20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027e20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027e40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027e40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027e60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027e60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027e80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027e80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ea0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ea0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ec0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ec0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027ee0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027ee0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027f00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027f00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027f20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027f20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027f40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027f40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027f60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027f60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027f80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027f80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027fa0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027fa0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027fc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027fc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880480027fe0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880480027fe0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027000, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027000).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027020, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027020).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027040, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027040).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027060, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027060).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027080, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027080).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800270a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800270a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800270c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800270c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800270e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800270e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027100, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027100).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027120, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027120).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027140, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027140).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027160, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027160).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027180, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027180).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800271a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800271a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800271c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800271c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800271e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800271e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027200, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027200).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027220, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027220).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027240, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027240).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027260, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027260).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027280, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027280).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800272a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800272a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800272c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800272c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800272e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800272e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027300, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027300).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027320, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027320).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027340, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027340).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027360, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027360).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027380, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027380).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800273a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800273a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800273c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800273c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800273e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800273e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027400, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027400).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027420, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027420).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027440, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027440).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027460, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027460).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027480, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027480).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800274a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800274a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800274c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800274c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800274e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800274e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027500, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027500).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027520, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027520).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027540, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027540).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027560, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027560).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027580, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027580).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800275a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800275a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800275c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800275c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800275e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800275e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027600, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027600).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027620, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027620).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027640, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027640).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027660, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027660).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027680, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027680).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800276a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800276a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800276c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800276c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800276e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800276e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027700, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027700).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027720, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027720).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027740, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027740).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027760, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027760).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027780, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027780).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800277a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800277a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800277c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800277c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800277e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800277e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027800, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027800).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027820, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027820).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027840, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027840).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027860, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027860).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027880, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027880).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800278a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800278a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800278c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800278c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800278e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800278e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027900, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027900).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027920, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027920).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027940, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027940).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027960, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027960).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027980, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027980).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800279a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800279a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800279c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800279c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff8808800279e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff8808800279e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027a00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027a00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027a20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027a20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027a40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027a40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027a60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027a60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027a80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027a80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027aa0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027aa0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ac0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ac0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ae0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ae0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027b00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027b00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027b20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027b20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027b40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027b40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027b60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027b60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027b80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027b80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ba0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ba0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027bc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027bc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027be0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027be0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027c00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027c00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027c20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027c20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027c40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027c40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027c60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027c60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027c80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027c80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ca0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ca0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027cc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027cc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ce0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ce0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027d00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027d00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027d20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027d20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027d40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027d40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027d60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027d60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027d80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027d80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027da0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027da0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027dc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027dc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027de0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027de0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027e00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027e00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027e20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027e20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027e40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027e40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027e60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027e60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027e80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027e80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ea0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ea0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ec0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ec0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027ee0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027ee0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027f00, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027f00).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027f20, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027f20).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027f40, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027f40).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027f60, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027f60).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027f80, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027f80).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027fa0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027fa0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027fc0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027fc0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880880027fe0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880880027fe0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027000, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027000).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027020, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027020).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027040, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027040).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027060, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027060).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027080, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027080).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800270a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800270a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800270c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800270c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800270e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800270e0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027100, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027100).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027120, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027120).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027140, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027140).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027160, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027160).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c80027180, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c80027180).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800271a0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800271a0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800271c0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800271c0).
+readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffff880c800271e0, size:32
+section_mem_map_addr: Can't get a struct mem_section(ffff880c800271e0).
+Excluding unnecessary pages        : [ 25 %] readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
+readmem: type_addr: 0, addr:ffffea000fb49000, size:4096
+readmem: type_addr: 0, addr:ffffea000fb48000, size:8192
+readmem: type_addr: 0, addr:ffffea000fb47000, size:12288
+readmem: type_addr: 0, addr:ffffea000fb46000, size:16384
+readmem: type_addr: 0, addr:ffffea000fb45000, size:20480
+readmem: type_addr: 0, addr:ffffea000fb44000, size:24576
+readmem: type_addr: 0, addr:ffffea000fb43000, size:28672
+__exclude_unnecessary_pages: Can't read the buffer of struct page.
+create_2nd_bitmap: Can't exclude unnecessary pages.
 
-NET: Registered protocol family 16
-ACPI FADT declares the system doesn't support PCIe ASPM, so disable it
-ACPI: bus type pci registered
-PCI: MMCONFIG for domain 0000 [bus 00-ff] at [mem 0x80000000-0x8fffffff] (base 0x80000000)
-PCI: MMCONFIG at [mem 0x80000000-0x8fffffff] reserved in E820
-PCI: Using configuration type 1 for base access
-bio: create slab <bio-0> at 0
-XXX kintegrityd: rescuer dispatching to cpu0
-XXX kintegrityd: rescuer done binding, bound=1
-XXX kintegrityd: rescuer dispatching to cpu5
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu6
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu10
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu13
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu14
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu18
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu21
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu22
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu30
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu32
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu33
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu34
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu35
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu37
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu42
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu45
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu46
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu48
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu50
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu53
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu54
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu57
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu58
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu60
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu61
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kintegrityd: rescuer dispatching to cpu62
-XXX kintegrityd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu0
-XXX kblockd: rescuer done binding, bound=1
-XXX kblockd: rescuer dispatching to cpu5
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu6
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu10
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu13
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu14
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu18
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu21
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu22
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu30
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu32
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu33
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu34
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu35
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu37
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu40
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu41
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu45
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu46
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu50
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu51
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu53
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu54
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu56
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu61
-XXX kblockd: rescuer done binding, bound=0
-XXX kblockd: rescuer dispatching to cpu62
-XXX kblockd: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu0
-XXX kacpid: rescuer done binding, bound=1
-XXX kacpid: rescuer dispatching to cpu5
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu6
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu10
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu13
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu14
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu18
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu21
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu22
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu30
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu32
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu33
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu34
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu35
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu37
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu40
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu41
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu45
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu46
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu50
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu51
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu53
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu54
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu56
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu61
-XXX kacpid: rescuer done binding, bound=0
-XXX kacpid: rescuer dispatching to cpu62
-XXX kacpid: rescuer done binding, bound=0
-ACPI Error: Field [CPB3] at 96 exceeds Buffer [NULL] size 64 (bits) (20100702/dsopcode-597)
-ACPI Error (psparse-0537): Method parse/execution failed [\_SB_._OSC] (Node ffff880c6e58cf38), AE_AML_BUFFER_LIMIT
-ACPI: Interpreter enabled
-ACPI: (supports S0 S1 S5)
-ACPI: Using IOAPIC for interrupt routing
-ACPI: No dock devices found.
-PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
-ACPI: PCI Root Bridge [IOH0] (domain 0000 [bus 00-7f])
-...
-
-> 
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index a2dccfc..75cdbc2 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -1224,6 +1224,8 @@ __acquires(&gcwq->lock)
->  {
->  	struct global_cwq *gcwq = worker->gcwq;
->  	struct task_struct *task = worker->task;
-> +	static unsigned int cnt;
-> +	int rc;
-> 
->  	while (true) {
->  		/*
-> @@ -1232,8 +1234,11 @@ __acquires(&gcwq->lock)
->  		 * it races with cpu hotunplug operation.  Verify
->  		 * against GCWQ_DISASSOCIATED.
->  		 */
-> -		if (!(gcwq->flags & GCWQ_DISASSOCIATED))
-> -			set_cpus_allowed_ptr(task, get_cpu_mask(gcwq->cpu));
-> +		if (!(gcwq->flags & GCWQ_DISASSOCIATED)) {
-> +			rc = set_cpus_allowed_ptr(task, get_cpu_mask(gcwq->cpu));
-> +			if (rc && ++cnt < 10)
-> +				printk("XXX set_cpus_allowed_ptr() failed w/ %d\n", rc);
-> +		}
-> 
->  		spin_lock_irq(&gcwq->lock);
->  		if (gcwq->flags & GCWQ_DISASSOCIATED)
-> @@ -1985,13 +1990,16 @@ repeat:
->  		struct cpu_workqueue_struct *cwq = get_cwq(tcpu, wq);
->  		struct global_cwq *gcwq = cwq->gcwq;
->  		struct work_struct *work, *n;
-> +		bool bound;
-> 
->  		__set_current_state(TASK_RUNNING);
->  		mayday_clear_cpu(cpu, wq->mayday_mask);
-> 
->  		/* migrate to the target cpu if possible */
->  		rescuer->gcwq = gcwq;
-> -		worker_maybe_bind_and_lock(rescuer);
-> +		printk("XXX %s: rescuer dispatching to cpu%u\n", wq->name,
-> gcwq->cpu);
-> +		bound = worker_maybe_bind_and_lock(rescuer);
-> +		printk("XXX %s: rescuer done binding, bound=%d\n", wq->name,
-> bound);
-> 
->  		/*
->  		 * Slurp in all works issued via this workqueue and
-> @@ -3558,8 +3566,7 @@ static int __init init_workqueues(void)
->  		spin_lock_init(&gcwq->lock);
->  		INIT_LIST_HEAD(&gcwq->worklist);
->  		gcwq->cpu = cpu;
-> -		if (cpu == WORK_CPU_UNBOUND)
-> -			gcwq->flags |= GCWQ_DISASSOCIATED;
-> +		gcwq->flags |= GCWQ_DISASSOCIATED;
-> 
->  		INIT_LIST_HEAD(&gcwq->idle_list);
->  		for (i = 0; i < BUSY_WORKER_HASH_SIZE; i++)
-> @@ -3583,6 +3590,8 @@ static int __init init_workqueues(void)
->  		struct global_cwq *gcwq = get_gcwq(cpu);
->  		struct worker *worker;
-> 
-> +		if (cpu != WORK_CPU_UNBOUND)
-> +			gcwq->flags &= ~GCWQ_DISASSOCIATED;
->  		worker = create_worker(gcwq, true);
->  		BUG_ON(!worker);
->  		spin_lock_irq(&gcwq->lock);
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
