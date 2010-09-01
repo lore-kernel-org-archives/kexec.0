@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25]
-	helo=mx02.colomx.prod.int.phx2.redhat.com)
+Received: from mail-ew0-f49.google.com ([209.85.215.49])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OqfgM-0001rU-7V
-	for kexec@lists.infradead.org; Wed, 01 Sep 2010 05:16:22 +0000
-Date: Wed, 1 Sep 2010 01:16:20 -0400 (EDT)
-From: CAI Qian <caiqian@redhat.com>
-Message-ID: <601148450.1773381283318180197.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <20100901133319.10518b01.oomichi@mxs.nes.nec.co.jp>
-Subject: Re: makedumpfile failed for 2.6.36-rc2
+	id 1OqmHx-0000Ni-B2
+	for kexec@lists.infradead.org; Wed, 01 Sep 2010 12:19:38 +0000
+Received: by ewy9 with SMTP id 9so4882017ewy.36
+	for <kexec@lists.infradead.org>; Wed, 01 Sep 2010 05:19:35 -0700 (PDT)
+From: Maxim Uvarov <muvarov@gmail.com>
+Subject: [PATCH] Add CFLAGS to compile mips purgatory
+Date: Wed, 01 Sep 2010 16:19:32 +0400
+Message-ID: <20100901121932.16599.8572.stgit@muvarov>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,68 +22,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+
+Required in case if "-mabi=64" option was specified to build 64 bit mips
+application, if not compiler tries to link 64 bit binaries with 32 bit
+system libraries.
+Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
+---
+
+ kexec/Makefile     |    2 +-
+ purgatory/Makefile |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/Makefile b/kexec/Makefile
+index 77f37ae..23385fc 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -77,7 +77,7 @@ KEXEC_MANPAGE = $(MANDIR)/man8/kexec.8
+ 
+ $(KEXEC): $(KEXEC_OBJS) $(UTIL_LIB)
+ 	@$(MKDIR) -p $(@D)
+-	$(LINK.o) -o $@ $^ $(LIBS)
++	$(LINK.o) -o $@ $^ $(CFLAGS) $(LIBS)
+ 
+ $(KEXEC): CPPFLAGS+=-I$(srcdir)/kexec/arch/$(ARCH)/include
+ 
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index aa3a788..ea0c19a 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -61,7 +61,7 @@ $(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
+ 
+ $(PURGATORY): $(PURGATORY_OBJS)
+ 	$(MKDIR) -p $(@D)
+-	$(CC) $(LDFLAGS) -o $@ $^
++	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+ 
+ #	$(LD) $(LDFLAGS) $(EXTRA_LDFLAGS) --no-undefined -e purgatory_start -r -o $@ $(PURGATORY_OBJS) $(UTIL_LIB)
+ 
 
 
------ "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
+Best regards,
+Maxim Uvarov.
 
-> Hi Cai,
-> 
-> On Tue, 31 Aug 2010 04:29:02 -0400 (EDT)
-> CAI Qian <caiqian@redhat.com> wrote:
-> > > > > I'd like to reproduce the same problem on my machine,
-> > > > > could you please send your kernel .config file ?
-> > > >
-> > > > Attached.
-> > > 
-> > > Thank you.
-> > > The linux-2.6.36-rc2 kernel is building now with your .config
-> file.
-> > > After building, I will test makedumpfile on the kernel.
-> 
-> I built linux-2.6.36-rc2 kernel with your .config file, but it gets a
-> panic while 1st-kernel is booting. I'm not digging the cause.
-Another pointer is that 2.6.35-rc1 worked fine for me, while 2.6.35-rc4 and beyond started to fail.
-> So I built linux-2.6.36-rc2 kernel with my .config file instead, and
-> it
-> can boot and the kdump is successful. But makedumpfile runs
-> successfully,
-> so I cannot reproduce the problem which you reported.
-> 
-> I will try linux-2.6.36-rc3 kernel with your .config file later.
-> BTW, do you have the way how I get the compressed copy of your
-> /proc/vmcore ?
-> I'd like to research the problem directly.
-> 
-> 
-> > > >> readmem: Can't seek the dump memory(/proc/vmcore). Invalid
-> > > argument
-> > > 
-> > > lseek(2) failed with "Invalid argument", so the problem may be due
-> to
-> > > an
-> > > invalid offset. I'd like to know its value, so can you try the
-> > > attached
-> > > patch in the condition makedumpfile fails ?
-> > > And can you send the output of `readelf -a /proc/vmcore` ?
-> > Here you go,
-> > readmem: Can't seek the dump memory(/proc/vmcore). Invalid argument
-> > readmem: type_addr: 0, addr:ffff880480027000, size:32
-> 
-> The above output does not include the offset value which should be
-> printed by my previous patch. Could you check the patch is applied
-> to right place (lseek(2) call in readmem() function) ?
-> In addiction, could you operate makedumpfile with "-D" option ?
-> 
-> 
-> Thanks
-> Ken'ichi Ohmichi
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 _______________________________________________
 kexec mailing list
