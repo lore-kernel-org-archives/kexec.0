@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OrKfk-0003ub-Ns
-	for kexec@lists.infradead.org; Fri, 03 Sep 2010 01:02:30 +0000
-Date: Fri, 3 Sep 2010 10:00:50 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Received: from moutng.kundenserver.de ([212.227.126.171])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OrUiv-0005f4-WE
+	for kexec@lists.infradead.org; Fri, 03 Sep 2010 11:46:26 +0000
+From: Arnd Bergmann <arnd@arndb.de>
 Subject: Re: fix /proc/vmcore seek
-Message-Id: <20100903100050.1943c4c3.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <2091492614.1926861283437436205.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Date: Fri, 3 Sep 2010 13:45:50 +0200
 References: <201009021420.19914.arnd@arndb.de>
 	<2091492614.1926861283437436205.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Mime-Version: 1.0
+	<20100903100050.1943c4c3.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20100903100050.1943c4c3.oomichi@mxs.nes.nec.co.jp>
+MIME-Version: 1.0
+Message-Id: <201009031345.50837.arnd@arndb.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,70 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: CAI Qian <caiqian@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, fweisbec@gmail.com, mingo@elte.hu, kexec <kexec@lists.infradead.org>, viro@zeniv.linux.org.uk, jkacur@redhat.com, akpm@linux-foundation.org, tglx@linutronix.de, kamezawa hiroyu <kamezawa.hiroyu@jp.fujitsu.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: CAI Qian <caiqian@redhat.com>, fweisbec@gmail.com, mingo@elte.hu, kexec <kexec@lists.infradead.org>, viro@zeniv.linux.org.uk, jkacur@redhat.com, akpm@linux-foundation.org, tglx@linutronix.de, kamezawa hiroyu <kamezawa.hiroyu@jp.fujitsu.com>
 
-
-Hi CAI, Arnd,
-
-On Thu, 2 Sep 2010 10:23:56 -0400 (EDT)
-CAI Qian <caiqian@redhat.com> wrote:
+On Friday 03 September 2010, Ken'ichi Ohmichi wrote:
+> Thank you for investigating.
+> IIUC, this problem may happen if using "cp" command instead of
+> makedumpfile.
 > 
-> ----- "Arnd Bergmann" <arnd@arndb.de> wrote:
+> Does the following method in generic_file_llseek_unlocked() fail ?
+> Is inode->i_sb->s_maxbytes too small ?
 > 
-> > Commit 73296bc611 "procfs: Use generic_file_llseek in /proc/vmcore"
-> > broke
-> > seeking on /proc/vmcore. This changes it back to use default_llseek
-> > in order to restore the original behaviour.
-> > 
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Frederic Weisbecker <fweisbec@gmail.com>
-> > Cc: stable@kernel.org
-> > 
-> > ---
-> > On Thursday 02 September 2010, CAI Qian wrote:
-> > > 
-> > > Ken'ichi, it turned out this kernel patch caused makedumpfile
-> > failure below.
-> > > I am not sure if this is a kernel bug or makedumpfile needs to catch
-> > up with
-> > > the change.
-> > 
-> > It doesn't matter who is correct here. A user program regressed
-> > because of a
-> > kernel change, so we need to fix the kernel. Thanks for the report!
-> > 
-> > Please try this patch.
->
-> Confirmed makedumpfile is working again after applied this patch.
+>      65         if (offset < 0 || offset > inode->i_sb->s_maxbytes)
+>      66                 return -EINVAL;
+> 
 
-Thank you for investigating.
-IIUC, this problem may happen if using "cp" command instead of
-makedumpfile.
+Yes, that is the main difference between generic_file_llseek and
+default_llseek, besides the use of the BKL. We have discussed
+changing this before, but so far without a conclusive answer.
 
-Does the following method in generic_file_llseek_unlocked() fail ?
-Is inode->i_sb->s_maxbytes too small ?
+If we can come up with a better test here, we might be able
+to just kill default_llseek in favor of generic_file_llseek.
 
-     65         if (offset < 0 || offset > inode->i_sb->s_maxbytes)
-     66                 return -EINVAL;
+The problem is handling the special cases here. For a /proc file,
+s_maxbytes is probably always zero, but that could be changed,
+same for file systems using get_sb_single.
+For some reason, get_sb_pseudo sets does set s_maxbytes while
+get_sb_single/simple_fill_super does not.
 
+Character devices are also special, because the s_maxbytes for
+them AFAICT is the one from the file system holding the device,
+so using generic_file_llseek would definitely be incorrect for them.
 
-Thanks
-Ken'ichi Ohmichi
-
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -163,7 +163,7 @@ static ssize_t read_vmcore(struct file *file, char
-> > __user *buffer,
-> >  
-> >  static const struct file_operations proc_vmcore_operations = {
-> >  	.read		= read_vmcore,
-> > -	.llseek		= generic_file_llseek,
-> > +	.llseek		= default_llseek,
-> >  };
-> >  
-> >  static struct vmcore* __init get_new_element(void)
-> > 
+	Arnd
 
 _______________________________________________
 kexec mailing list
