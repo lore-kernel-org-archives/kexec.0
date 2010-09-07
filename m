@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-ey0-f177.google.com ([209.85.215.177])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OsdEE-0003Mc-VV
-	for kexec@lists.infradead.org; Mon, 06 Sep 2010 15:03:28 +0000
-Received: by eye22 with SMTP id 22so2296171eye.36
-	for <kexec@lists.infradead.org>; Mon, 06 Sep 2010 08:03:25 -0700 (PDT)
+	id 1Oszog-0000zR-LV
+	for kexec@lists.infradead.org; Tue, 07 Sep 2010 15:10:37 +0000
+Received: by eye22 with SMTP id 22so2688159eye.36
+	for <kexec@lists.infradead.org>; Tue, 07 Sep 2010 08:10:32 -0700 (PDT)
 From: Maxim Uvarov <muvarov@gmail.com>
-Subject: [PATCH] Revert "powerpc new toolchains fix (crt.S)"
-Date: Mon, 06 Sep 2010 19:03:22 +0400
-Message-ID: <20100906150322.5887.25098.stgit@muvarov>
+Subject: [PATCH 1/2] Revert "powerpc new toolchains fix (crt.S)"
+Date: Tue, 07 Sep 2010 19:10:25 +0400
+Message-ID: <20100907151025.5784.98190.stgit@muvarov>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,6 +23,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
+Cc: horms@verge.net.au
 
 This reverts commit 45e8f29639d9f97b74389e5bd28c7a5cccbf3e2a.
 purgatory/arch/ppc/crt.S and purgatory/arch/ppc/misc.S are the same
