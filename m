@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.10.76.45])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ot7vR-0002Wi-CQ
-	for kexec@lists.infradead.org; Tue, 07 Sep 2010 23:50:07 +0000
-From: Michael Neuling <mikey@neuling.org>
-Subject: Re: kexec on ppc64
-In-reply-to: <0D324CAF-2A5D-4363-9000-7EB48179C11C@freescale.com>
-References: <0D324CAF-2A5D-4363-9000-7EB48179C11C@freescale.com>
-Date: Wed, 08 Sep 2010 09:49:59 +1000
-Message-ID: <19803.1283903399@neuling.org>
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OtMKW-0005W9-BU
+	for kexec@lists.infradead.org; Wed, 08 Sep 2010 15:12:57 +0000
+Subject: [PATCH] x86: copy_oldmem_page using cached addressing
+Message-Id: <E1OtMLz-0001yp-Ia@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Wed, 08 Sep 2010 10:14:27 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,20 +20,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: kexec@lists.infradead.org, mingo@elte.hu
+Cc: linux-kernel@vger.kernel.org
 
-> I'm trying to determine how kexec'ing works on 64 bit powerpc. When
-> allocating a region for the kexec'ed kernel is it ever the same as the
-> currently running kernel or do you always boot the kexec'ed kernel
-> from a different memory region? I understand that a crash kernel will
-> be in a different region, however I was hoping to confirm the behavior
-> for a normal "kexec -e".
+From: Cliff Wickman <cpw@sgi.com>
 
-The kernel will be loaded at a non zero address, but it will copy itself
-to zero before it starts running.
+The copy of /proc/vmcore to a user buffer proceeds much faster
+if the kernel addresses memory as cached.
 
-Mikey
+With this patch we have seen an increase in transfer rate from less than
+15MB/s to 80-460MB/s, depending on size of the transfer.  This makes
+a big difference in time needed to save a system dump.
+
+(Does anyone know of a reason why copy_oldmem_page() would need
+ to use uncached addresses?)
+
+Diffed against 2.6.36-rc3
+
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+---
+ arch/x86/kernel/crash_dump_64.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Index: linus.current/arch/x86/kernel/crash_dump_64.c
+===================================================================
+--- linus.current.orig/arch/x86/kernel/crash_dump_64.c
++++ linus.current/arch/x86/kernel/crash_dump_64.c
+@@ -34,7 +34,7 @@ ssize_t copy_oldmem_page(unsigned long p
+ 	if (!csize)
+ 		return 0;
+ 
+-	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
++	vaddr = ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
+ 	if (!vaddr)
+ 		return -ENOMEM;
+ 
 
 _______________________________________________
 kexec mailing list
