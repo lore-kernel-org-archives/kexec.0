@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OtcJZ-0001L8-7E
-	for kexec@lists.infradead.org; Thu, 09 Sep 2010 08:17:01 +0000
-Date: Thu, 9 Sep 2010 17:16:56 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] Revert "powerpc new toolchains fix (crt.S)"
-Message-ID: <20100909081656.GL19303@verge.net.au>
-References: <20100907151025.5784.98190.stgit@muvarov>
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1OtoHk-0007Kc-8Q
+	for kexec@lists.infradead.org; Thu, 09 Sep 2010 21:04:01 +0000
+Date: Thu, 9 Sep 2010 17:01:13 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: [PATCH] ppc64: increase TREEWORDS value in ppc64
+Message-ID: <20100909210113.GB22581@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20100907151025.5784.98190.stgit@muvarov>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,15 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, nhorman@tuxdriver.com, vgoyal@redhat.com
 
-On Tue, Sep 07, 2010 at 07:10:25PM +0400, Maxim Uvarov wrote:
-> This reverts commit 45e8f29639d9f97b74389e5bd28c7a5cccbf3e2a.
-> purgatory/arch/ppc/crt.S and purgatory/arch/ppc/misc.S are the same
-> files.
+hey-
+     Got a segfault recently on ppc64 kexec with a system with 256Gb of ram.
+Tracked it back to running over the end of the device tree buffer that we have
+allocated.  I can't find any docs on how big the device tree can legally be, so
+for now I figure just upping its size is sufficient.  Confirmed that this fixed
+the segfault.
 
-Thanks, applied both patches.
+Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+
+
+ fs2dt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+index 238a3f2..2f0f937 100644
+--- a/kexec/arch/ppc/fs2dt.c
++++ b/kexec/arch/ppc/fs2dt.c
+@@ -33,7 +33,7 @@
+ 
+ #define MAXPATH			1024	/* max path name length */
+ #define NAMESPACE		16384	/* max bytes for property names */
+-#define TREEWORDS		65536	/* max 32 bit words for properties */
++#define TREEWORDS		131070	/* max 32 bit words for properties */
+ #define MEMRESERVE		256	/* max number of reserved memory blks */
+ #define MAX_MEMORY_RANGES	1024
+ #define COMMAND_LINE_SIZE	512	/* from kernel */
 
 _______________________________________________
 kexec mailing list
