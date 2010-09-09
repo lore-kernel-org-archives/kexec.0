@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OtaAi-0003Qr-EV
-	for kexec@lists.infradead.org; Thu, 09 Sep 2010 05:59:47 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <m1y6bcf2aq.fsf@fess.ebiederm.org>
-	<20100909013546.GD5783@verge.net.au>
-	<m1bp877kol.fsf@fess.ebiederm.org>
-	<20100909024213.GC19303@verge.net.au>
-Date: Wed, 08 Sep 2010 22:59:33 -0700
-In-Reply-To: <20100909024213.GC19303@verge.net.au> (Simon Horman's message of
-	"Thu, 9 Sep 2010 11:42:13 +0900")
-Message-ID: <m14odzfoe2.fsf@fess.ebiederm.org>
+Received: from mx2.mail.elte.hu ([157.181.151.9])
+	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Otbrn-0005F7-U5
+	for kexec@lists.infradead.org; Thu, 09 Sep 2010 07:48:21 +0000
+Date: Thu, 9 Sep 2010 09:48:13 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH] x86: copy_oldmem_page using cached addressing
+Message-ID: <20100909074813.GA8355@elte.hu>
+References: <E1OtMLz-0001yp-Ia@eag09.americas.sgi.com>
+	<m1eid4gi0g.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
+Content-Disposition: inline
+In-Reply-To: <m1eid4gi0g.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,26 +24,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>, linux-kernel@vger.kernel.org
 
-Simon Horman <horms@verge.net.au> writes:
 
-> I'd rather edit the patch to avoid breaking bisection.
-> Is that ok with you?
+* Eric W. Biederman <ebiederm@xmission.com> wrote:
 
-No real problem, and my patchset is just intrusive enough someone might
-care and try and bisect a problem.
+> Cliff Wickman <cpw@sgi.com> writes:
+> 
+> > From: Cliff Wickman <cpw@sgi.com>
+> >
+> > The copy of /proc/vmcore to a user buffer proceeds much faster
+> > if the kernel addresses memory as cached.
+> >
+> > With this patch we have seen an increase in transfer rate from less than
+> > 15MB/s to 80-460MB/s, depending on size of the transfer.  This makes
+> > a big difference in time needed to save a system dump.
+> >
+> > (Does anyone know of a reason why copy_oldmem_page() would need
+> >  to use uncached addresses?)
+> >
+> > Diffed against 2.6.36-rc3
+> 
+> I believe this code simply predates being able to specify the
+> caching attributes at ioremap time.  Being cached in this case
+> actually looks more correct, as that is the default for RAM
+> and we are talking about RAM.
+> 
+> Ultimately either there is another cpu running wild with these pages
+> mapped with some random set of attributes, and we cannot get the
+> permissions right or we have captured all of the cpus and this is the
+> only mapping so it doesn't matter.
+> 
+> Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-In general I wouldn't fix that patch (after I had made it public) and
-would simply send a correcting patch because it can quickly become
-confusing, which patch should go where when.
+Applied, thanks guys. Note, i also added a -stable tag, as kdump is 
+typically used with enterprise setups and we want this (low-risk, 
+high-impact) improvement to be propagated far back the -stable series.
 
-Here I don't think there is any danger of confusion so I don't think
-that changing history that has only been on my devel branch is worth
-worrying about.
+Thanks,
 
-Eric
+	Ingo
 
 _______________________________________________
 kexec mailing list
