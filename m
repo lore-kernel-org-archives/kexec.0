@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ou94x-0006HD-Dg
-	for kexec@lists.infradead.org; Fri, 10 Sep 2010 19:16:08 +0000
+	id 1Ou97v-0006dw-0p
+	for kexec@lists.infradead.org; Fri, 10 Sep 2010 19:19:12 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1616446052.695411284137699709.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Date: Fri, 10 Sep 2010 12:15:42 -0700
 In-Reply-To: <1616446052.695411284137699709.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
 	(caiqian@redhat.com's message of "Fri, 10 Sep 2010 12:54:59 -0400
 	(EDT)")
-Message-ID: <m1d3sle7fl.fsf@fess.ebiederm.org>
+References: <1616446052.695411284137699709.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Date: Fri, 10 Sep 2010 12:19:06 -0700
+Message-ID: <m1aanpe79x.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
 List-Id: <kexec.lists.infradead.org>
