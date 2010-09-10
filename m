@@ -1,7 +1,7 @@
 From: Eric W. Biederman <ebiederm@xmission.com>
 Date: Fri, 10 Sep 2010 11:57:36 -0700
 Subject: [PATCH] x86 crashdump: On x86_64 generate EM_X86_64 crashdump headers.
-Message-ID: <mailman.236.1284146170.27306.kexec@lists.infradead.org>
+Message-ID: <mailman.237.1284146353.27306.kexec@lists.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
