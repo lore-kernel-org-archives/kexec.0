@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx3-phx2.redhat.com ([209.132.183.24]
+	helo=mx01.colomx.prod.int.phx2.redhat.com)
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OuHGD-0001JK-AY
-	for kexec@lists.infradead.org; Sat, 11 Sep 2010 04:00:18 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <2021475052.729451284170746624.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Date: Fri, 10 Sep 2010 21:00:09 -0700
-In-Reply-To: <2021475052.729451284170746624.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-	(CAI Qian's message of "Fri, 10 Sep 2010 22:05:46 -0400 (EDT)")
-Message-ID: <m1zkvp3p6e.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+	id 1OuHew-0005mF-Bk
+	for kexec@lists.infradead.org; Sat, 11 Sep 2010 04:25:51 +0000
+Date: Sat, 11 Sep 2010 00:25:48 -0400 (EDT)
+From: caiqian@redhat.com
+Message-ID: <652751907.729931284179148661.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <1780019082.729911284179131961.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
 Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,45 +18,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: CAI Qian <caiqian@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-Q0FJIFFpYW4gPGNhaXFpYW5AcmVkaGF0LmNvbT4gd3JpdGVzOgoKPj4gVGhpcyBmYWlsZWQgdG8g
-YnVpbGQgZm9yIG1lLgo+PiAKPj4ga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYzogSW4g
-ZnVuY3Rpb24KPj4g4oCYbG9hZF9jcmFzaGR1bXBfc2VnbWVudHPigJk6Cj4+IGtleGVjL2FyY2gv
-aTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjog4oCYS0VYRUNfQVJDSF9OQVRJVkXigJkK
-Pj4gdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pCj4+IGtleGVjL2FyY2gv
-aTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjogKEVhY2ggdW5kZWNsYXJlZAo+PiBpZGVu
-dGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZQo+PiBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1w
-LXg4Ni5jOjcwMzogZXJyb3I6IGZvciBlYWNoIGZ1bmN0aW9uIGl0Cj4+IGFwcGVhcnMgaW4uKQo+
-PiBtYWtlOiAqKiogW2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2Lm9dIEVycm9yIDEKPj4g
-Pgo+PiA+IFRoZSBhY3RpdmUgcGFydCBvZiB0aGUgZml4IGlzIGJlbG93IChJIGhhdmUgYW4gZWFy
-bGllciBwYXRjaCB0aGF0Cj4+ID4ganVzdAo+PiA+IGRlZmluZXMgS0VYRUNfQVJDSF9OQVRJVkUp
-Lgo+IEkganVzdCByZWFsaXplZCB5b3Ugc2FpZCB0aGUgZWFybGllciBwYXRjaCBkZWZpbmVkIEtF
-WEVDX0FSQ0hfTkFUSVZFLiBOb3csIGtleGVjIGZhaWxlZCB0byBsb2FkLgo+IC9zYmluL2tleGVj
-IC1wICctLWNvbW1hbmQtbGluZT1ybyByb290PS9kZXYvbWFwcGVyL3ZnX2ludGVsczNlMzYwMS1s
-dl9yb290IHJkX0xWTV9MVj12Z19pbnRlbHMzZTM2MDEvbHZfcm9vdCByZF9MVk1fTFY9dmdfaW50
-ZWxzM2UzNjAxL2x2X3N3YXAgcmRfTk9fTFVLUyByZF9OT19NRCByZF9OT19ETSBMQU5HPWVuX1VT
-LlVURi04IFNZU0ZPTlQ9bGF0YXJjeXJoZWItc3VuMTYgS0VZQk9BUkRUWVBFPXBjIEtFWVRBQkxF
-PXVzIGNvbnNvbGU9dHR5UzAsMTE1MjAwbjgxIGlycXBvbGwgbWF4Y3B1cz0xIHJlc2V0X2Rldmlj
-ZXMgY2dyb3VwX2Rpc2FibGU9bWVtb3J5IHN5c3JxX2Fsd2F5c19lbmFibGVkICcgLS1pbml0cmQ9
-L2Jvb3QvaW5pdHJkLTIuNi4zNi1yYzItbW0xLWZpeCtrZHVtcC5pbWcgL2Jvb3Qvdm1saW51ei0y
-LjYuMzYtcmMyLW1tMS1maXgrCj4gdW5zdXBwb3J0ZWQgY3Jhc2hkdW1wIGFyY2hpdGVjdHVyZTog
-NWM0MjAwMDAKPiBDYW5ub3QgbG9hZCAvYm9vdC92bWxpbnV6LTIuNi4zNi1yYzItbW0xLWZpeCsK
-CiFAIyRAISBJIHdhcyByZWFkaW5nIGZyb20gdGhlIHdyb25nIHZhcmlhYmxlLiAgTXkgYXBvbG9n
-aWVzLiAgSSByZWFsbHkKIGRpZCBtZWFuIHRvIGdpdmUgeW91IHNvbWV0aGluZyB0aGF0IHdvdWxk
-IHdvcmsuCgpJIGhhdmUgZml4ZWQgdGhlIHdyb25nIHZhcmlhYmxlIHByb2JsZW0gYW5kIEkgYWxz
-byBzcG90dGVkIGFub3RoZXIKYXJjaGl0ZWN0dXJlIHRlc3QgaW4gY3Jhc2hkdW1wLXg4NmUgdGhh
-dCB3b3VsZCBvbmx5IHdvcmsgb24gaTM4NiwgYW5kCmZpeGVkIHRoYXQuCgpUaGUgbmV3IHZlcnNp
-b24gaXMgdXAgYXQ6CmdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
-dC9lYmllZGVybS9rZXhlYy10b29scy1kZXZlbC5naXQKClNvIGlmIHlvdSB3YW50IHRvIGxpdmUg
-b24gdGhlIGJsZWVkaW5nIGVkZ2UgYW5kIHNlZSBpZiBJIGhhdmUgZml4ZWQKYWxsIG9mIG15IHRo
-aW5rb3MgeW91IGNhbiB0ZXN0IHRoYXQuCgpJIGhvcGUgdGhpcyBnZXRzIHRoZSB3ZWlyZCBiaWFy
-Y2ggc29mdHdhcmUgYXJjaGl0ZWN0dXJlIHJpZ2h0IGZpbmFsbHkuCgpFcmljCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+
+> I have fixed the wrong variable problem and I also spotted another
+> architecture test in crashdump-x86e that would only work on i386, and
+> fixed that.
+> 
+> The new version is up at:
+> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/kexec-tools-devel.git
+# /sbin/kexec -p '--command-line=ro root=/dev/mapper/vg_intels3e3601-lv_root rd_LVM_LV=vg_intels3e3601/lv_root rd_LVM_LV=vg_intels3e3601/lv_swap rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc KEYTABLE=us console=ttyS0,115200n81 irqpoll maxcpus=1 reset_devices cgroup_disable=memory sysrq_always_enabled ' --initrd=/boot/initrd-2.6.32-71.el6.bz623007.x86_64kdump.img /boot/vmlinuz-2.6.32-71.el6.bz623007.x86_64
+Segmentation fault (core dumped)
+
+(gdb) bt
+#0  0x0000000000000001 in ?? ()
+#1  0x0000000000406eb7 in crash_create_elf64_headers (info=0x7fffae61c880, elf_info=0x7fffae6144b0, range=0x635ec0, ranges=21, buf=<value optimized out>, 
+    size=0x7fffae6144b0, align=1024) at kexec/crashdump-elf.c:147
+#2  0x000000000040b2e0 in load_crashdump_segments (info=0x7fffae61c880, 
+    mod_cmdline=0x1645150 "ro root=/dev/mapper/vg_intels3e3601-lv_root rd_LVM_LV=vg_intels3e3601/lv_root rd_LVM_LV=vg_intels3e3601/lv_swap rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc "..., max_addr=18446744073709551615, min_base=0)
+    at kexec/arch/i386/crashdump-x86.c:772
+#3  0x0000000000408526 in do_bzImage_load (info=0x7fffae61c880, kernel=0x7fb6382ff010 "\352\005", kernel_len=3791104, 
+    command_line=0x1645010 "ro root=/dev/mapper/vg_intels3e3601-lv_root rd_LVM_LV=vg_intels3e3601/lv_root rd_LVM_LV=vg_intels3e3601/lv_swap rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc "..., command_line_len=312, initrd=0x7fb637ebc010 "\037\213\b", initrd_len=4466561, 
+    real_mode_entry=0, debug=0) at kexec/arch/i386/kexec-bzImage.c:186
+#4  0x00000000004086fa in bzImage_load (argc=<value optimized out>, argv=<value optimized out>, buf=0x7fb6382ff010 "\352\005", len=3791104, 
+    info=0x7fffae61c880) at kexec/arch/i386/kexec-bzImage.c:402
+#5  0x0000000000402879 in my_load (type=0x0, fileind=<value optimized out>, argc=5, argv=0x7fffae61cb98, kexec_flags=<value optimized out>, entry=0x0)
+    at kexec/kexec.c:724
+#6  0x0000000000403357 in main (argc=5, argv=0x7fffae61cb98) at kexec/kexec.c:1208
+
+> 
+> So if you want to live on the bleeding edge and see if I have fixed
+> all of my thinkos you can test that.
+> 
+> I hope this gets the weird biarch software architecture right
+> finally.
+> 
+> Eric
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
