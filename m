@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mx3-phx2.redhat.com ([209.132.183.24]
+	helo=mx01.colomx.prod.int.phx2.redhat.com)
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ou97v-0006dw-0p
-	for kexec@lists.infradead.org; Fri, 10 Sep 2010 19:19:12 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-In-Reply-To: <1616446052.695411284137699709.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-	(caiqian@redhat.com's message of "Fri, 10 Sep 2010 12:54:59 -0400
-	(EDT)")
-References: <1616446052.695411284137699709.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Date: Fri, 10 Sep 2010 12:19:06 -0700
-Message-ID: <m1aanpe79x.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+	id 1OuF5I-0001Dg-9R
+	for kexec@lists.infradead.org; Sat, 11 Sep 2010 01:40:53 +0000
+Date: Fri, 10 Sep 2010 21:40:50 -0400 (EDT)
+From: CAI Qian <caiqian@redhat.com>
+Message-ID: <1457264274.728411284169250637.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <m1aanpe79x.fsf@fess.ebiederm.org>
 Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,94 +18,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: caiqian@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-caiqian@redhat.com writes:
-
-> BTW, kexec commandline was like this if helps.
->
-> /sbin/kexec -p '--command-line=ro root=/dev/mapper/vg_intels3e3601-lv_root rd_LVM_LV=vg_intels3e3601/lv_root rd_LVM_LV=vg_intels3e3601/lv_swap rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc KEYTABLE=us console=ttyS0,115200n81 irqpoll maxcpus=1 reset_devices cgroup_disable=memory sysrq_always_enabled ' --initrd=/boot/initrd-2.6.36-rc2-mm1-fix+kdump.img /boot/vmlinuz-2.6.36-rc2-mm1-fix+
->
-
-Thanks for keeping me honest.  It looks like I did something foolish,
-and wound up putting 386 headers on the x86_64 crash dump.
-
-I have rebased updated my kexec-tools-devel branch.  Could you try it
-now?  I haven't had a chance to test it yet but when I inspected the
-code it appeared very obvious what I had done wrong.
-
-The active part of the fix is below (I have an earlier patch that just
-defines KEXEC_ARCH_NATIVE).
-
-Eric
----
-
-From 0a9bffb31c3aee53f58c62dde349c2842060c760 Mon Sep 17 00:00:00 2001
-From: Eric W. Biederman <ebiederm@xmission.com>
-Date: Fri, 10 Sep 2010 11:57:36 -0700
-Subject: [PATCH] x86 crashdump: On x86_64 generate EM_X86_64 crashdump headers.
-
-Paper bag time.  I forgot to double check my changes worked
-on x86_64.  So I wound up with x86_64 putting i386 crashdump headers
-on when it generated a crashdump header.  Ouch!
-
-Fix it by using the new KEXEC_ARCH_NATIVE value so we can see what
-we are doing.
-
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- kexec/arch/i386/crashdump-x86.c |   17 +++++++++++++++--
- 1 files changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 06e5ae9..e202e36 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -690,19 +690,32 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	int nr_ranges, align = 1024, i;
- 	struct memory_range *mem_range, *memmap_p;
- 	struct crash_elf_info elf_info;
-+	unsigned kexec_arch;
- 
- 	/* Constant parts of the elf_info */
- 	elf_info.data             = ELFDATA2LSB;
- 	elf_info.backup_src_start = BACKUP_SRC_START;
- 	elf_info.backup_src_end   = BACKUP_SRC_END;
- 
-+	/* Get the architecture of the running kernel */
-+	kexec_arch = elf_info.machine & KEXEC_ARCH_MASK;
-+	if (kexec_arch == KEXEC_ARCH_DEFAULT)
-+		kexec_arch = KEXEC_ARCH_NATIVE;
-+	
-         /* Get the elf architecture of the running kernel */
--	if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64) {
-+	switch(kexec_arch) {
-+	case KEXEC_ARCH_X86_64:
- 		elf_info.machine = EM_X86_64;
--	} else {
-+		break;
-+	case KEXEC_ARCH_386:
- 		elf_info.machine       = EM_386;
- 		elf_info.lowmem_limit  = X86_MAXMEM;
- 		elf_info.get_note_info = get_crash_notes;
-+		break;
-+	default:
-+		fprintf(stderr, "unsupported crashdump architecture: %04x\n",
-+			kexec_arch);
-+		return -1;
- 	}
- 
- 	if (get_crash_memory_ranges(&mem_range, &nr_ranges,
--- 
-1.6.5.2.143.g8cc62
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ci0tLS0tICJFcmljIFcuIEJpZWRlcm1hbiIgPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4gd3JvdGU6
+Cgo+IGNhaXFpYW5AcmVkaGF0LmNvbSB3cml0ZXM6Cj4gCj4gPiBCVFcsIGtleGVjIGNvbW1hbmRs
+aW5lIHdhcyBsaWtlIHRoaXMgaWYgaGVscHMuCj4gPgo+ID4gL3NiaW4va2V4ZWMgLXAgJy0tY29t
+bWFuZC1saW5lPXJvCj4gcm9vdD0vZGV2L21hcHBlci92Z19pbnRlbHMzZTM2MDEtbHZfcm9vdAo+
+IHJkX0xWTV9MVj12Z19pbnRlbHMzZTM2MDEvbHZfcm9vdCByZF9MVk1fTFY9dmdfaW50ZWxzM2Uz
+NjAxL2x2X3N3YXAKPiByZF9OT19MVUtTIHJkX05PX01EIHJkX05PX0RNIExBTkc9ZW5fVVMuVVRG
+LTgKPiBTWVNGT05UPWxhdGFyY3lyaGViLXN1bjE2IEtFWUJPQVJEVFlQRT1wYyBLRVlUQUJMRT11
+cwo+IGNvbnNvbGU9dHR5UzAsMTE1MjAwbjgxIGlycXBvbGwgbWF4Y3B1cz0xIHJlc2V0X2Rldmlj
+ZXMKPiBjZ3JvdXBfZGlzYWJsZT1tZW1vcnkgc3lzcnFfYWx3YXlzX2VuYWJsZWQgJwo+IC0taW5p
+dHJkPS9ib290L2luaXRyZC0yLjYuMzYtcmMyLW1tMS1maXgra2R1bXAuaW1nCj4gL2Jvb3Qvdm1s
+aW51ei0yLjYuMzYtcmMyLW1tMS1maXgrCj4gPgo+IAo+IFRoYW5rcyBmb3Iga2VlcGluZyBtZSBo
+b25lc3QuICBJdCBsb29rcyBsaWtlIEkgZGlkIHNvbWV0aGluZyBmb29saXNoLAo+IGFuZCB3b3Vu
+ZCB1cCBwdXR0aW5nIDM4NiBoZWFkZXJzIG9uIHRoZSB4ODZfNjQgY3Jhc2ggZHVtcC4KPiAKPiBJ
+IGhhdmUgcmViYXNlZCB1cGRhdGVkIG15IGtleGVjLXRvb2xzLWRldmVsIGJyYW5jaC4gIENvdWxk
+IHlvdSB0cnkgaXQKPiBub3c/ICBJIGhhdmVuJ3QgaGFkIGEgY2hhbmNlIHRvIHRlc3QgaXQgeWV0
+IGJ1dCB3aGVuIEkgaW5zcGVjdGVkIHRoZQo+IGNvZGUgaXQgYXBwZWFyZWQgdmVyeSBvYnZpb3Vz
+IHdoYXQgSSBoYWQgZG9uZSB3cm9uZy4KVGhpcyBmYWlsZWQgdG8gYnVpbGQgZm9yIG1lLgoKa2V4
+ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYzogSW4gZnVuY3Rpb24g4oCYbG9hZF9jcmFzaGR1
+bXBfc2VnbWVudHPigJk6CmtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJv
+cjog4oCYS0VYRUNfQVJDSF9OQVRJVkXigJkgdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMg
+ZnVuY3Rpb24pCmtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjogKEVh
+Y2ggdW5kZWNsYXJlZCBpZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZQprZXhlYy9hcmNo
+L2kzODYvY3Jhc2hkdW1wLXg4Ni5jOjcwMzogZXJyb3I6IGZvciBlYWNoIGZ1bmN0aW9uIGl0IGFw
+cGVhcnMgaW4uKQptYWtlOiAqKiogW2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2Lm9dIEVy
+cm9yIDEKPiAKPiBUaGUgYWN0aXZlIHBhcnQgb2YgdGhlIGZpeCBpcyBiZWxvdyAoSSBoYXZlIGFu
+IGVhcmxpZXIgcGF0Y2ggdGhhdAo+IGp1c3QKPiBkZWZpbmVzIEtFWEVDX0FSQ0hfTkFUSVZFKS4K
+PiAKPiBFcmljCj4gLS0tCj4gCj4gRnJvbSAwYTliZmZiMzFjM2FlZTUzZjU4YzYyZGRlMzQ5YzI4
+NDIwNjBjNzYwIE1vbiBTZXAgMTcgMDA6MDA6MDAKPiAyMDAxCj4gRnJvbTogRXJpYyBXLiBCaWVk
+ZXJtYW4gPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4KPiBEYXRlOiBGcmksIDEwIFNlcCAyMDEwIDEx
+OjU3OjM2IC0wNzAwCj4gU3ViamVjdDogW1BBVENIXSB4ODYgY3Jhc2hkdW1wOiBPbiB4ODZfNjQg
+Z2VuZXJhdGUgRU1fWDg2XzY0IGNyYXNoZHVtcAo+IGhlYWRlcnMuCj4gCj4gUGFwZXIgYmFnIHRp
+bWUuICBJIGZvcmdvdCB0byBkb3VibGUgY2hlY2sgbXkgY2hhbmdlcyB3b3JrZWQKPiBvbiB4ODZf
+NjQuICBTbyBJIHdvdW5kIHVwIHdpdGggeDg2XzY0IHB1dHRpbmcgaTM4NiBjcmFzaGR1bXAgaGVh
+ZGVycwo+IG9uIHdoZW4gaXQgZ2VuZXJhdGVkIGEgY3Jhc2hkdW1wIGhlYWRlci4gIE91Y2ghCj4g
+Cj4gRml4IGl0IGJ5IHVzaW5nIHRoZSBuZXcgS0VYRUNfQVJDSF9OQVRJVkUgdmFsdWUgc28gd2Ug
+Y2FuIHNlZSB3aGF0Cj4gd2UgYXJlIGRvaW5nLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVyaWMgVy4g
+QmllZGVybWFuIDxlYmllZGVybUB4bWlzc2lvbi5jb20+Cj4gLS0tCj4gIGtleGVjL2FyY2gvaTM4
+Ni9jcmFzaGR1bXAteDg2LmMgfCAgIDE3ICsrKysrKysrKysrKysrKy0tCj4gIDEgZmlsZXMgY2hh
+bmdlZCwgMTUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEv
+a2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+IGIva2V4ZWMvYXJjaC9pMzg2L2NyYXNo
+ZHVtcC14ODYuYwo+IGluZGV4IDA2ZTVhZTkuLmUyMDJlMzYgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMv
+YXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYwo+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1
+bXAteDg2LmMKPiBAQCAtNjkwLDE5ICs2OTAsMzIgQEAgaW50IGxvYWRfY3Jhc2hkdW1wX3NlZ21l
+bnRzKHN0cnVjdCBrZXhlY19pbmZvCj4gKmluZm8sIGNoYXIqIG1vZF9jbWRsaW5lLAo+ICAJaW50
+IG5yX3JhbmdlcywgYWxpZ24gPSAxMDI0LCBpOwo+ICAJc3RydWN0IG1lbW9yeV9yYW5nZSAqbWVt
+X3JhbmdlLCAqbWVtbWFwX3A7Cj4gIAlzdHJ1Y3QgY3Jhc2hfZWxmX2luZm8gZWxmX2luZm87Cj4g
+Kwl1bnNpZ25lZCBrZXhlY19hcmNoOwo+ICAKPiAgCS8qIENvbnN0YW50IHBhcnRzIG9mIHRoZSBl
+bGZfaW5mbyAqLwo+ICAJZWxmX2luZm8uZGF0YSAgICAgICAgICAgICA9IEVMRkRBVEEyTFNCOwo+
+ICAJZWxmX2luZm8uYmFja3VwX3NyY19zdGFydCA9IEJBQ0tVUF9TUkNfU1RBUlQ7Cj4gIAllbGZf
+aW5mby5iYWNrdXBfc3JjX2VuZCAgID0gQkFDS1VQX1NSQ19FTkQ7Cj4gIAo+ICsJLyogR2V0IHRo
+ZSBhcmNoaXRlY3R1cmUgb2YgdGhlIHJ1bm5pbmcga2VybmVsICovCj4gKwlrZXhlY19hcmNoID0g
+ZWxmX2luZm8ubWFjaGluZSAmIEtFWEVDX0FSQ0hfTUFTSzsKPiArCWlmIChrZXhlY19hcmNoID09
+IEtFWEVDX0FSQ0hfREVGQVVMVCkKPiArCQlrZXhlY19hcmNoID0gS0VYRUNfQVJDSF9OQVRJVkU7
+Cj4gKwkKPiAgICAgICAgICAvKiBHZXQgdGhlIGVsZiBhcmNoaXRlY3R1cmUgb2YgdGhlIHJ1bm5p
+bmcga2VybmVsICovCj4gLQlpZiAoKGluZm8tPmtleGVjX2ZsYWdzICYgS0VYRUNfQVJDSF9NQVNL
+KSA9PSBLRVhFQ19BUkNIX1g4Nl82NCkgewo+ICsJc3dpdGNoKGtleGVjX2FyY2gpIHsKPiArCWNh
+c2UgS0VYRUNfQVJDSF9YODZfNjQ6Cj4gIAkJZWxmX2luZm8ubWFjaGluZSA9IEVNX1g4Nl82NDsK
+PiAtCX0gZWxzZSB7Cj4gKwkJYnJlYWs7Cj4gKwljYXNlIEtFWEVDX0FSQ0hfMzg2Ogo+ICAJCWVs
+Zl9pbmZvLm1hY2hpbmUgICAgICAgPSBFTV8zODY7Cj4gIAkJZWxmX2luZm8ubG93bWVtX2xpbWl0
+ICA9IFg4Nl9NQVhNRU07Cj4gIAkJZWxmX2luZm8uZ2V0X25vdGVfaW5mbyA9IGdldF9jcmFzaF9u
+b3RlczsKPiArCQlicmVhazsKPiArCWRlZmF1bHQ6Cj4gKwkJZnByaW50ZihzdGRlcnIsICJ1bnN1
+cHBvcnRlZCBjcmFzaGR1bXAgYXJjaGl0ZWN0dXJlOiAlMDR4XG4iLAo+ICsJCQlrZXhlY19hcmNo
+KTsKPiArCQlyZXR1cm4gLTE7Cj4gIAl9Cj4gIAo+ICAJaWYgKGdldF9jcmFzaF9tZW1vcnlfcmFu
+Z2VzKCZtZW1fcmFuZ2UsICZucl9yYW5nZXMsCj4gLS0gCj4gMS42LjUuMi4xNDMuZzhjYzYyCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
