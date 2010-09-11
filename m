@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25]
-	helo=mx02.colomx.prod.int.phx2.redhat.com)
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OuFTR-0005BS-6g
-	for kexec@lists.infradead.org; Sat, 11 Sep 2010 02:05:50 +0000
-Date: Fri, 10 Sep 2010 22:05:46 -0400 (EDT)
-From: CAI Qian <caiqian@redhat.com>
-Message-ID: <2021475052.729451284170746624.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <1457264274.728411284169250637.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
+	id 1OuHGD-0001JK-AY
+	for kexec@lists.infradead.org; Sat, 11 Sep 2010 04:00:18 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <2021475052.729451284170746624.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Date: Fri, 10 Sep 2010 21:00:09 -0700
+In-Reply-To: <2021475052.729451284170746624.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+	(CAI Qian's message of "Fri, 10 Sep 2010 22:05:46 -0400 (EDT)")
+Message-ID: <m1zkvp3p6e.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: [GIT PULL] Please pull x86 biarch crashdump support and misc devel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,20 +23,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: CAI Qian <caiqian@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, Kexec Mailing List <kexec@lists.infradead.org>
 
-Cj4gVGhpcyBmYWlsZWQgdG8gYnVpbGQgZm9yIG1lLgo+IAo+IGtleGVjL2FyY2gvaTM4Ni9jcmFz
-aGR1bXAteDg2LmM6IEluIGZ1bmN0aW9uCj4g4oCYbG9hZF9jcmFzaGR1bXBfc2VnbWVudHPigJk6
-Cj4ga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYzo3MDM6IGVycm9yOiDigJhLRVhFQ19B
-UkNIX05BVElWReKAmQo+IHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKQo+
-IGtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjogKEVhY2ggdW5kZWNs
-YXJlZAo+IGlkZW50aWZpZXIgaXMgcmVwb3J0ZWQgb25seSBvbmNlCj4ga2V4ZWMvYXJjaC9pMzg2
-L2NyYXNoZHVtcC14ODYuYzo3MDM6IGVycm9yOiBmb3IgZWFjaCBmdW5jdGlvbiBpdAo+IGFwcGVh
-cnMgaW4uKQo+IG1ha2U6ICoqKiBba2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYub10gRXJy
-b3IgMQo+ID4KPiA+IFRoZSBhY3RpdmUgcGFydCBvZiB0aGUgZml4IGlzIGJlbG93IChJIGhhdmUg
-YW4gZWFybGllciBwYXRjaCB0aGF0Cj4gPiBqdXN0Cj4gPiBkZWZpbmVzIEtFWEVDX0FSQ0hfTkFU
-SVZFKS4KSSBqdXN0IHJlYWxpemVkIHlvdSBzYWlkIHRoZSBlYXJsaWVyIHBhdGNoIGRlZmluZWQg
-S0VYRUNfQVJDSF9OQVRJVkUuIE5vdywga2V4ZWMgZmFpbGVkIHRvIGxvYWQuCi9zYmluL2tleGVj
+Q0FJIFFpYW4gPGNhaXFpYW5AcmVkaGF0LmNvbT4gd3JpdGVzOgoKPj4gVGhpcyBmYWlsZWQgdG8g
+YnVpbGQgZm9yIG1lLgo+PiAKPj4ga2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYzogSW4g
+ZnVuY3Rpb24KPj4g4oCYbG9hZF9jcmFzaGR1bXBfc2VnbWVudHPigJk6Cj4+IGtleGVjL2FyY2gv
+aTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjog4oCYS0VYRUNfQVJDSF9OQVRJVkXigJkK
+Pj4gdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pCj4+IGtleGVjL2FyY2gv
+aTM4Ni9jcmFzaGR1bXAteDg2LmM6NzAzOiBlcnJvcjogKEVhY2ggdW5kZWNsYXJlZAo+PiBpZGVu
+dGlmaWVyIGlzIHJlcG9ydGVkIG9ubHkgb25jZQo+PiBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1w
+LXg4Ni5jOjcwMzogZXJyb3I6IGZvciBlYWNoIGZ1bmN0aW9uIGl0Cj4+IGFwcGVhcnMgaW4uKQo+
+PiBtYWtlOiAqKiogW2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2Lm9dIEVycm9yIDEKPj4g
+Pgo+PiA+IFRoZSBhY3RpdmUgcGFydCBvZiB0aGUgZml4IGlzIGJlbG93IChJIGhhdmUgYW4gZWFy
+bGllciBwYXRjaCB0aGF0Cj4+ID4ganVzdAo+PiA+IGRlZmluZXMgS0VYRUNfQVJDSF9OQVRJVkUp
+Lgo+IEkganVzdCByZWFsaXplZCB5b3Ugc2FpZCB0aGUgZWFybGllciBwYXRjaCBkZWZpbmVkIEtF
+WEVDX0FSQ0hfTkFUSVZFLiBOb3csIGtleGVjIGZhaWxlZCB0byBsb2FkLgo+IC9zYmluL2tleGVj
 IC1wICctLWNvbW1hbmQtbGluZT1ybyByb290PS9kZXYvbWFwcGVyL3ZnX2ludGVsczNlMzYwMS1s
 dl9yb290IHJkX0xWTV9MVj12Z19pbnRlbHMzZTM2MDEvbHZfcm9vdCByZF9MVk1fTFY9dmdfaW50
 ZWxzM2UzNjAxL2x2X3N3YXAgcmRfTk9fTFVLUyByZF9OT19NRCByZF9OT19ETSBMQU5HPWVuX1VT
@@ -43,8 +46,18 @@ LlVURi04IFNZU0ZPTlQ9bGF0YXJjeXJoZWItc3VuMTYgS0VZQk9BUkRUWVBFPXBjIEtFWVRBQkxF
 PXVzIGNvbnNvbGU9dHR5UzAsMTE1MjAwbjgxIGlycXBvbGwgbWF4Y3B1cz0xIHJlc2V0X2Rldmlj
 ZXMgY2dyb3VwX2Rpc2FibGU9bWVtb3J5IHN5c3JxX2Fsd2F5c19lbmFibGVkICcgLS1pbml0cmQ9
 L2Jvb3QvaW5pdHJkLTIuNi4zNi1yYzItbW0xLWZpeCtrZHVtcC5pbWcgL2Jvb3Qvdm1saW51ei0y
-LjYuMzYtcmMyLW1tMS1maXgrCnVuc3VwcG9ydGVkIGNyYXNoZHVtcCBhcmNoaXRlY3R1cmU6IDVj
-NDIwMDAwCkNhbm5vdCBsb2FkIC9ib290L3ZtbGludXotMi42LjM2LXJjMi1tbTEtZml4Kwo+ID4K
-PiA+IEVyaWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+LjYuMzYtcmMyLW1tMS1maXgrCj4gdW5zdXBwb3J0ZWQgY3Jhc2hkdW1wIGFyY2hpdGVjdHVyZTog
+NWM0MjAwMDAKPiBDYW5ub3QgbG9hZCAvYm9vdC92bWxpbnV6LTIuNi4zNi1yYzItbW0xLWZpeCsK
+CiFAIyRAISBJIHdhcyByZWFkaW5nIGZyb20gdGhlIHdyb25nIHZhcmlhYmxlLiAgTXkgYXBvbG9n
+aWVzLiAgSSByZWFsbHkKIGRpZCBtZWFuIHRvIGdpdmUgeW91IHNvbWV0aGluZyB0aGF0IHdvdWxk
+IHdvcmsuCgpJIGhhdmUgZml4ZWQgdGhlIHdyb25nIHZhcmlhYmxlIHByb2JsZW0gYW5kIEkgYWxz
+byBzcG90dGVkIGFub3RoZXIKYXJjaGl0ZWN0dXJlIHRlc3QgaW4gY3Jhc2hkdW1wLXg4NmUgdGhh
+dCB3b3VsZCBvbmx5IHdvcmsgb24gaTM4NiwgYW5kCmZpeGVkIHRoYXQuCgpUaGUgbmV3IHZlcnNp
+b24gaXMgdXAgYXQ6CmdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
+dC9lYmllZGVybS9rZXhlYy10b29scy1kZXZlbC5naXQKClNvIGlmIHlvdSB3YW50IHRvIGxpdmUg
+b24gdGhlIGJsZWVkaW5nIGVkZ2UgYW5kIHNlZSBpZiBJIGhhdmUgZml4ZWQKYWxsIG9mIG15IHRo
+aW5rb3MgeW91IGNhbiB0ZXN0IHRoYXQuCgpJIGhvcGUgdGhpcyBnZXRzIHRoZSB3ZWlyZCBiaWFy
+Y2ggc29mdHdhcmUgYXJjaGl0ZWN0dXJlIHJpZ2h0IGZpbmFsbHkuCgpFcmljCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
