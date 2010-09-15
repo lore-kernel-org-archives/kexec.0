@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25]
-	helo=mx02.colomx.prod.int.phx2.redhat.com)
+Received: from out01.mta.xmission.com ([166.70.13.231])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OvQtq-0003gV-5y
-	for kexec@lists.infradead.org; Tue, 14 Sep 2010 08:29:59 +0000
-Date: Tue, 14 Sep 2010 04:29:54 -0400 (EDT)
-From: CAI Qian <caiqian@redhat.com>
-Message-ID: <391574593.869121284452994336.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <4C8F31A9.7070507@kernel.org>
-Subject: Re: kvm kdump regression
+	id 1OvwNG-0002Vs-Oe
+	for kexec@lists.infradead.org; Wed, 15 Sep 2010 18:06:30 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <A0628CD0-7A34-488D-A8C8-D8C12C6E8141@freescale.com>
+Date: Wed, 15 Sep 2010 11:05:39 -0700
+In-Reply-To: <A0628CD0-7A34-488D-A8C8-D8C12C6E8141@freescale.com> (Matthew
+	McClintock's message of "Thu, 9 Sep 2010 16:25:53 -0500")
+Message-ID: <m1tylq7uh8.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: Optimizations for purgatory
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,57 +23,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tejun Heo <tj@kernel.org>
-Cc: graff yang <graff.yang@gmail.com>, Marcelo Tosatti <mtosatti@redhat.com>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, dhowells@redhat.com, sonic adi <sonic.adi@gmail.com>, Chris Lalancette <clalance@redhat.com>, Avi Kivity <avi@redhat.com>
+To: Matthew McClintock <msm@freescale.com>
+Cc: kexec@lists.infradead.org
 
+Matthew McClintock <msm@freescale.com> writes:
 
------ "Tejun Heo" <tj@kernel.org> wrote:
+> Hello all,
+>
+> I've been compiling kexec-tools natively for ppc32 and everything has been working fine. However, I recently had to start cross compiling on an x86_64 box and I ran into an issue with the code generation in purgatory. I can eliminate the my issue by stepping down to (or up?) to -O2 -fno-reorder-blocks. Somehow -freorder-blocks is causing a problem even though according to the gcc documentation -Os disables this flag [1]. If I had to make a guess, I would think that purgatory elf relocatable generated with my compiler is not being properly updated by kexec-tools before being passed to the kernel.
+>
+> So my question is two-fold...
+>
+> 1) Is there any reason we don't just use -O0 instead of -0s? This
+> would provide a consistent set of compiler optimization flags across
+> all versions of gcc and we don't have to worry about a flag being
+> added or removed across versions. Or perhaps explicitly list all
+> desired flags?
 
-> On 09/14/2010 05:09 AM, CAI Qian wrote:
-> > This commit introduced a regression that an empty vmcore was
-> generated on a kvm guest.
-> > ioremap: invalid physical address db74000000000000
-> > ------------[ cut here ]------------
-> > WARNING: at arch/x86/mm/ioremap.c:83 __ioremap_caller+0x307/0x380()
-> > Hardware name: KVM
-> > Modules linked in:
-> > Pid: 1, comm: swapper Not tainted 2.6.36-rc2-mm1+ #2
-> > Call Trace:
-> >  [<ffffffff8105f48f>] warn_slowpath_common+0x7f/0xc0
-> >  [<ffffffff8103052e>] ? copy_oldmem_page+0x4e/0xc0
-> >  [<ffffffff8105f4ea>] warn_slowpath_null+0x1a/0x20
-> >  [<ffffffff8103f0a7>] __ioremap_caller+0x307/0x380
-> >  [<ffffffff8103f1f7>] ioremap_nocache+0x17/0x20
-> >  [<ffffffff8103052e>] copy_oldmem_page+0x4e/0xc0
-> >  [<ffffffff811af4ca>] read_from_oldmem+0x7a/0xb0
-> >  [<ffffffff81c4f70b>] merge_note_headers_elf64.clone.1+0x6c/0x21f
-> >  [<ffffffff8103056e>] ? copy_oldmem_page+0x8e/0xc0
-> >  [<ffffffff811af4ca>] ? read_from_oldmem+0x7a/0xb0
-> >  [<ffffffff81c4fa5b>] vmcore_init+0x19d/0x396
-> >  [<ffffffff81c4f8be>] ? vmcore_init+0x0/0x396
-> >  [<ffffffff81002053>] do_one_initcall+0x43/0x190
-> >  [<ffffffff81c278ab>] kernel_init+0x2a0/0x330
-> >  [<ffffffff8100be84>] kernel_thread_helper+0x4/0x10
-> >  [<ffffffff81c2760b>] ? kernel_init+0x0/0x330
-> >  [<ffffffff8100be80>] ? kernel_thread_helper+0x0/0x10
-> > ---[ end trace 93d72a36b9146f22 ]---
-> > Kdump: vmcore not initialized
-> > 
-> > commit 020ec6537aa65c18e9084c568d7b94727f2026fd
-> > Author: Tejun Heo <tj@kernel.org>
-> > Date:   Fri Apr 9 18:57:00 2010 +0900
-> > 
-> >     percpu: factor out pcpu_addr_in_first/reserved_chunk() and
-> update per_cpu_ptr_to_phys()
-> 
-> Hmm... I'm confused.  Isn't this the one fixed by commit 9983b6f0
-> (percpu: fix first chunk match in per_cpu_ptr_to_phys())?
-No, it did not. 2.6.36-rc2-mm1 still had the same problem.
-> 
-> Thanks.
-> 
-> -- 
-> tejun
+So -O0 should do no optimization.  Last I looked the trick with the
+purgatory code was to compile it cleanly enough that we had support of
+the different relocation types needed in order to relocate the code
+at link time.  Usually this winds up being a small subset of the
+linking types of what the architecture supports.
+
+> 2) Has anyone else experienced issue with purgatory code not being
+> generated correctly? Specifically looking at a disassebly it looks
+> like -freorder-blocks is changed how functions return. On ppc for
+> example it appears that the functions are not returning using the link
+> register and instead are just branching.
+
+The only problem I have previously seen is having an unsupported
+relocation type.  Can you confirm that isn't happening.  Ultimately
+if your gcc isn't compiling the code correctly unless we understand
+exactly why that doesn't work we can't make a sensible judgement
+on a good work around.
+
+Eric
 
 _______________________________________________
 kexec mailing list
