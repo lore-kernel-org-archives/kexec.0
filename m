@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from hera.kernel.org ([140.211.167.34])
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ow9Nk-0001F6-5M
-	for kexec@lists.infradead.org; Thu, 16 Sep 2010 07:59:48 +0000
-Message-ID: <4C91CE6E.5030500@kernel.org>
-Date: Thu, 16 Sep 2010 09:59:42 +0200
-From: Tejun Heo <tj@kernel.org>
-MIME-Version: 1.0
-Subject: Re: [PATCH] fix kvm kdump regression
-References: <1301046921.1075601284613078206.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <1301046921.1075601284613078206.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OwHXA-0006Uw-Oj
+	for kexec@lists.infradead.org; Thu, 16 Sep 2010 16:42:05 +0000
+Subject: [PATCH] x86: saving vmcore with non-lazy freeing of vmas 
+Message-Id: <E1OwHZ4-0005WK-Tw@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Thu, 16 Sep 2010 11:44:02 -0500
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,55 +15,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: caiqian@redhat.com
-Cc: graff.yang@gmail.com, Marcelo Tosatti <mtosatti@redhat.com>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Cliff Wickman <cpw@sgi.com>, dhowells@redhat.com, sonic.adi@gmail.com, Chris Lalancette <clalance@redhat.com>, Avi Kivity <avi@redhat.com>, stable@kernel.org
+To: kexec@lists.infradead.org, mingo@elte.hu
+Cc: linux-kernel@vger.kernel.org
 
-On 09/16/2010 06:57 AM, caiqian@redhat.com wrote:
-> 020ec6537aa65c18e9084c568d7b94727f2026fd introduced a regression that an empty vmcore was generated during kdump on a kvm guest.
-> ioremap: invalid physical address db74000000000000
-> ------------[ cut here ]------------
-> WARNING: at arch/x86/mm/ioremap.c:83 __ioremap_caller+0x307/0x380()
-> Hardware name: KVM
-> Modules linked in:
-> Pid: 1, comm: swapper Not tainted 2.6.36-rc2-mm1+ #2
-> Call Trace:
->  [<ffffffff8105f48f>] warn_slowpath_common+0x7f/0xc0
->  [<ffffffff8103052e>] ? copy_oldmem_page+0x4e/0xc0
->  [<ffffffff8105f4ea>] warn_slowpath_null+0x1a/0x20
->  [<ffffffff8103f0a7>] __ioremap_caller+0x307/0x380
->  [<ffffffff8103f1f7>] ioremap_nocache+0x17/0x20
->  [<ffffffff8103052e>] copy_oldmem_page+0x4e/0xc0
->  [<ffffffff811af4ca>] read_from_oldmem+0x7a/0xb0
->  [<ffffffff81c4f70b>] merge_note_headers_elf64.clone.1+0x6c/0x21f
->  [<ffffffff8103056e>] ? copy_oldmem_page+0x8e/0xc0
->  [<ffffffff811af4ca>] ? read_from_oldmem+0x7a/0xb0
->  [<ffffffff81c4fa5b>] vmcore_init+0x19d/0x396
->  [<ffffffff81c4f8be>] ? vmcore_init+0x0/0x396
->  [<ffffffff81002053>] do_one_initcall+0x43/0x190
->  [<ffffffff81c278ab>] kernel_init+0x2a0/0x330
->  [<ffffffff8100be84>] kernel_thread_helper+0x4/0x10
->  [<ffffffff81c2760b>] ? kernel_init+0x0/0x330
->  [<ffffffff8100be80>] ? kernel_thread_helper+0x0/0x10
-> ---[ end trace 93d72a36b9146f22 ]---
-> Kdump: vmcore not initialized
-> 
-> This patch fixed it by reverting a chunk of the above commit and 9983b6f0cf8263e51bcf4c8a9dc0c1ef175b3c60 which is based on it.
-> 
-> Signed-off-by: CAI Qian <caiqian@redhat.com>
+From: Cliff Wickman <cpw@sgi.com>
 
-Sorry about the delay but I'm prepping a debug patch.  Let's root
-cause and see if it can be fixed without reverting it as there are
-further changes which depend on the commit and we'll have to hunt it
-down anyway.
+During the reading of /proc/vmcore the kernel is doing ioremap()/iounmap()
+repeatedly. And the buildup of un-flushed vm_area_struct's is causing
+a great deal of overhead. (rb_next() is chewing up most of that time).
 
-Thanks.
+This solution is to provide function set_iounmap_nonlazy(). It causes a
+subsequent call to iounmap() to immediately purge the vma area (with
+try_purge_vmap_area_lazy()).
 
--- 
-tejun
+With this patch we have seen the time for writing a 250MB compressed dump
+drop from 71 seconds to 44 seconds.
+
+Diffed against 2.6.36-rc3
+
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+
+---
+ arch/x86/include/asm/io.h       |    1 +
+ arch/x86/kernel/crash_dump_64.c |    1 +
+ mm/vmalloc.c                    |    9 +++++++++
+ 3 files changed, 11 insertions(+)
+
+Index: linus.current/arch/x86/kernel/crash_dump_64.c
+===================================================================
+--- linus.current.orig/arch/x86/kernel/crash_dump_64.c
++++ linus.current/arch/x86/kernel/crash_dump_64.c
+@@ -46,6 +46,7 @@ ssize_t copy_oldmem_page(unsigned long p
+ 	} else
+ 		memcpy(buf, vaddr + offset, csize);
+ 
++	set_iounmap_nonlazy();
+ 	iounmap(vaddr);
+ 	return csize;
+ }
+Index: linus.current/mm/vmalloc.c
+===================================================================
+--- linus.current.orig/mm/vmalloc.c
++++ linus.current/mm/vmalloc.c
+@@ -517,6 +517,15 @@ static atomic_t vmap_lazy_nr = ATOMIC_IN
+ static void purge_fragmented_blocks_allcpus(void);
+ 
+ /*
++ * called before a call to iounmap() if the caller wants vm_area_struct's
++ * immediately freed.
++ */
++void set_iounmap_nonlazy(void)
++{
++	atomic_set(&vmap_lazy_nr, lazy_max_pages()+1);
++}
++
++/*
+  * Purges all lazily-freed vmap areas.
+  *
+  * If sync is 0 then don't purge if there is already a purge in progress.
+Index: linus.current/arch/x86/include/asm/io.h
+===================================================================
+--- linus.current.orig/arch/x86/include/asm/io.h
++++ linus.current/arch/x86/include/asm/io.h
+@@ -206,6 +206,7 @@ static inline void __iomem *ioremap(reso
+ 
+ extern void iounmap(volatile void __iomem *addr);
+ 
++extern void set_iounmap_nonlazy(void);
+ 
+ #ifdef __KERNEL__
+ 
 
 _______________________________________________
 kexec mailing list
