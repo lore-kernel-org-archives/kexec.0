@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe006.messaging.microsoft.com ([216.32.180.16]
-	helo=VA3EHSOBE006.bigfish.com)
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ovy9I-0001J8-TP
-	for kexec@lists.infradead.org; Wed, 15 Sep 2010 20:00:10 +0000
-Subject: Re: Optimizations for purgatory
-MIME-Version: 1.0 (Apple Message framework v1081)
-From: Matthew McClintock <msm@freescale.com>
-In-Reply-To: <m1tylq7uh8.fsf@fess.ebiederm.org>
-Date: Wed, 15 Sep 2010 15:00:02 -0500
-Message-ID: <F154EA3B-DB1D-4981-AEC6-0687B64B0B99@freescale.com>
-References: <A0628CD0-7A34-488D-A8C8-D8C12C6E8141@freescale.com>
-	<m1tylq7uh8.fsf@fess.ebiederm.org>
+Received: from mx3-phx2.redhat.com ([209.132.183.24]
+	helo=mx01.colomx.prod.int.phx2.redhat.com)
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Ow6YN-0005TN-QS
+	for kexec@lists.infradead.org; Thu, 16 Sep 2010 04:58:36 +0000
+Date: Thu, 16 Sep 2010 00:57:58 -0400 (EDT)
+From: caiqian@redhat.com
+Message-ID: <1301046921.1075601284613078206.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <387799126.1075471284612953135.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
+Subject: [PATCH] fix kvm kdump regression
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,77 +22,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+To: tj@kernel.org
+Cc: graff.yang@gmail.com, Marcelo Tosatti <mtosatti@redhat.com>, kexec <kexec@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Cliff Wickman <cpw@sgi.com>, dhowells@redhat.com, sonic.adi@gmail.com, Chris Lalancette <clalance@redhat.com>, Avi Kivity <avi@redhat.com>, stable@kernel.org
 
+020ec6537aa65c18e9084c568d7b94727f2026fd introduced a regression that an empty vmcore was generated during kdump on a kvm guest.
+ioremap: invalid physical address db74000000000000
+------------[ cut here ]------------
+WARNING: at arch/x86/mm/ioremap.c:83 __ioremap_caller+0x307/0x380()
+Hardware name: KVM
+Modules linked in:
+Pid: 1, comm: swapper Not tainted 2.6.36-rc2-mm1+ #2
+Call Trace:
+ [<ffffffff8105f48f>] warn_slowpath_common+0x7f/0xc0
+ [<ffffffff8103052e>] ? copy_oldmem_page+0x4e/0xc0
+ [<ffffffff8105f4ea>] warn_slowpath_null+0x1a/0x20
+ [<ffffffff8103f0a7>] __ioremap_caller+0x307/0x380
+ [<ffffffff8103f1f7>] ioremap_nocache+0x17/0x20
+ [<ffffffff8103052e>] copy_oldmem_page+0x4e/0xc0
+ [<ffffffff811af4ca>] read_from_oldmem+0x7a/0xb0
+ [<ffffffff81c4f70b>] merge_note_headers_elf64.clone.1+0x6c/0x21f
+ [<ffffffff8103056e>] ? copy_oldmem_page+0x8e/0xc0
+ [<ffffffff811af4ca>] ? read_from_oldmem+0x7a/0xb0
+ [<ffffffff81c4fa5b>] vmcore_init+0x19d/0x396
+ [<ffffffff81c4f8be>] ? vmcore_init+0x0/0x396
+ [<ffffffff81002053>] do_one_initcall+0x43/0x190
+ [<ffffffff81c278ab>] kernel_init+0x2a0/0x330
+ [<ffffffff8100be84>] kernel_thread_helper+0x4/0x10
+ [<ffffffff81c2760b>] ? kernel_init+0x0/0x330
+ [<ffffffff8100be80>] ? kernel_thread_helper+0x0/0x10
+---[ end trace 93d72a36b9146f22 ]---
+Kdump: vmcore not initialized
 
-On Sep 15, 2010, at 1:05 PM, Eric W. Biederman wrote:
+This patch fixed it by reverting a chunk of the above commit and 9983b6f0cf8263e51bcf4c8a9dc0c1ef175b3c60 which is based on it.
 
-> Matthew McClintock <msm@freescale.com> writes:
->> 1) Is there any reason we don't just use -O0 instead of -0s? This
->> would provide a consistent set of compiler optimization flags across
->> all versions of gcc and we don't have to worry about a flag being
->> added or removed across versions. Or perhaps explicitly list all
->> desired flags?
-> 
-> So -O0 should do no optimization.
+Signed-off-by: CAI Qian <caiqian@redhat.com>
 
-Right, a consistent set of optimizations (none) =)
-
-> Last I looked the trick with the
-> purgatory code was to compile it cleanly enough that we had support of
-> the different relocation types needed in order to relocate the code
-> at link time.  Usually this winds up being a small subset of the
-> linking types of what the architecture supports.
-
-AFAICT, it's not the linking types themselves. On ppc kexec-tools will die() if it encounters an unknown relocation type. I have also confirmed this with objdump -r. However, I must admit my naivety on the subject so I could be missing something here.
-
-> 
->> 2) Has anyone else experienced issue with purgatory code not being
->> generated correctly? Specifically looking at a disassebly it looks
->> like -freorder-blocks is changed how functions return. On ppc for
->> example it appears that the functions are not returning using the link
->> register and instead are just branching.
-> 
-> The only problem I have previously seen is having an unsupported
-> relocation type.  Can you confirm that isn't happening.  Ultimately
-> if your gcc isn't compiling the code correctly unless we understand
-> exactly why that doesn't work we can't make a sensible judgement
-> on a good work around.
-
-I confirmed 'objdump -r purgatory/purgatory.ro' does not have any entries covered by machine_apply_elf_rel(). I took some time to look at the assembly itself too and I notice one thing in common with the code that does not work. Basically, some functions don't use the link register to return... see below for a quick snippet:
-
-Bad broken purgatory (with -Os):
-
-00000000 <verify_sha256_digest>:
-       0:       94 21 ff 50     stwu    r1,-176(r1)
-       4:       7c 08 02 a6     mflr    r0
-       8:       90 01 00 b4     stw     r0,180(r1)
-       c:       bf a1 00 a4     stmw    r29,164(r1)
-...[snip]...
-     11c:       48 00 00 01     bl      11c <verify_sha256_digest+0x11c>
-     120:       48 00 00 00     b       120 <verify_sha256_digest+0x120>
-     124:       39 61 00 b0     addi    r11,r1,176
-     128:       48 00 00 00     b       128 <verify_sha256_digest+0x128>  <-- Not using the link register return...
-
-Good working purgatory (with -O0):
-
-00000000 <verify_sha256_digest>:
-       0:       94 21 ff 50     stwu    r1,-176(r1)
-       4:       7c 08 02 a6     mflr    r0
-       8:       90 01 00 b4     stw     r0,180(r1)
-       c:       93 e1 00 ac     stw     r31,172(r1)
-...[snip]...
-     1c8:       7c 08 03 a6     mtlr    r0
-     1cc:       83 eb ff fc     lwz     r31,-4(r11)
-     1d0:       7d 61 5b 78     mr      r1,r11
-     1d4:       4e 80 00 20     blr
-
-
--M
-
-
-
+diff --git a/mm/percpu.c b/mm/percpu.c
+index 77e3f5a..0dbb12a 100644
+--- a/mm/percpu.c
++++ b/mm/percpu.c
+@@ -986,38 +986,10 @@ bool is_kernel_percpu_address(unsigned long addr)
+  */
+ phys_addr_t per_cpu_ptr_to_phys(void *addr)
+ {
+-	void __percpu *base = __addr_to_pcpu_ptr(pcpu_base_addr);
+-	bool in_first_chunk = false;
+-	unsigned long first_start, first_end;
+-	unsigned int cpu;
+-
+-	/*
+-	 * The following test on first_start/end isn't strictly
+-	 * necessary but will speed up lookups of addresses which
+-	 * aren't in the first chunk.
+-	 */
+-	first_start = pcpu_chunk_addr(pcpu_first_chunk, pcpu_first_unit_cpu, 0);
+-	first_end = pcpu_chunk_addr(pcpu_first_chunk, pcpu_last_unit_cpu,
+-				    pcpu_unit_pages);
+-	if ((unsigned long)addr >= first_start &&
+-	    (unsigned long)addr < first_end) {
+-		for_each_possible_cpu(cpu) {
+-			void *start = per_cpu_ptr(base, cpu);
+-
+-			if (addr >= start && addr < start + pcpu_unit_size) {
+-				in_first_chunk = true;
+-				break;
+-			}
+-		}
+-	}
+-
+-	if (in_first_chunk) {
+-		if ((unsigned long)addr < VMALLOC_START ||
+-		    (unsigned long)addr >= VMALLOC_END)
+-			return __pa(addr);
+-		else
+-			return page_to_phys(vmalloc_to_page(addr));
+-	} else
++	if ((unsigned long)addr < VMALLOC_START ||
++			(unsigned long)addr >= VMALLOC_END)
++		return __pa(addr);
++	else
+ 		return page_to_phys(pcpu_addr_to_page(addr));
+ }
 
 _______________________________________________
 kexec mailing list
