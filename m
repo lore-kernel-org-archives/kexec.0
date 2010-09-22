@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1OyDS9-0004Wk-Ab
-	for kexec@lists.infradead.org; Wed, 22 Sep 2010 00:44:54 +0000
-Date: Wed, 22 Sep 2010 09:44:48 +0900
-From: Simon Horman <horms@verge.net.au>
+	id 1OyP9Y-0007sk-K7
+	for kexec@lists.infradead.org; Wed, 22 Sep 2010 13:14:29 +0000
+Date: Wed, 22 Sep 2010 09:14:25 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] pci: add quirk for non-symmetric-mode irq routing to
 	versions 0 and 4 of the MCP55 northbridge
-Message-ID: <20100922004448.GI3243@verge.net.au>
+Message-ID: <20100922131425.GA19161@redhat.com>
 References: <20100921175439.GA21044@hmsreliant.think-freely.org>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -25,7 +25,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Neil Horman <nhorman@tuxdriver.com>
-Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, vgoyal@redhat.com, jbarnes@virtuousgeek.org
+Cc: linux-pci@vger.kernel.org, horms@verge.net.au, kexec@lists.infradead.org, jbarnes@virtuousgeek.org
 
 On Tue, Sep 21, 2010 at 01:54:39PM -0400, Neil Horman wrote:
 >     	A long time ago I worked on a RHEL5 bug in which kdump hung during boot
@@ -48,8 +48,82 @@ On Tue, Sep 21, 2010 at 01:54:39PM -0400, Neil Horman wrote:
 >     systems.
 >     
 >     Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> 
 
-FWIW, Acked-by: Simon Horman <horms@verge.net.au>
+Ideally I would have liked it to happen only in second kernel but Neil
+had mentioned that these PCI quirks get applied after calibration etc. So
+that option seems to be out of window.
+
+Once the early initialization of APIC happens and we don't rely on legacy
+mode, we can get rid of this piece of code.
+
+So I think it is ok to have this quirk to make kdump work on this
+paticular chipset.
+
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Vivek
+
+> 
+>  drivers/pci/quirks.c    |   31 +++++++++++++++++++++++++++++++
+>  include/linux/pci_ids.h |    2 ++
+>  2 files changed, 33 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 89ed181..ff2964c 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2276,6 +2276,37 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+>  			PCI_DEVICE_ID_NVIDIA_NVENET_15,
+>  			nvenet_msi_disable);
+>  
+> +/*
+> + * Some versions of the MCP55 bridge from nvidia have a legacy irq routing
+> + * config register.  This register controls the routing of legacy interrupts
+> + * from devices that route through the MCP55.  If this register is misprogramed
+> + * interrupts are only sent to the bsp, unlike conventional systems where the
+> + * irq is broadxast to all online cpus.  Not having this register set
+> + * properly prevents kdump from booting up properly, so lets make sure that
+> + * we have it set correctly.
+> + * Note this is an undocumented register.
+> + */
+> +static void __devinit nvbridge_check_legacy_irq_routing(struct pci_dev *dev)
+> +{
+> +	u32 cfg;
+> +
+> +	pci_read_config_dword(dev, 0x74, &cfg);
+> +
+> +	if (cfg & ((1 << 2) | (1 << 15))) {
+> +		printk(KERN_INFO "Rewriting irq routing register on MCP55\n");
+> +		cfg &= ~((1 << 2) | (1 << 15));
+> +		pci_write_config_dword(dev, 0x74, cfg);
+> +	}
+> +}
+> +
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+> +			PCI_DEVICE_ID_NVIDIA_MCP55_BRIDGE_V0,
+> +			nvbridge_check_legacy_irq_routing);
+> +
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA,
+> +			PCI_DEVICE_ID_NVIDIA_MCP55_BRIDGE_V4,
+> +			nvbridge_check_legacy_irq_routing);
+> +
+>  static int __devinit ht_check_msi_mapping(struct pci_dev *dev)
+>  {
+>  	int pos, ttl = 48;
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 10d3330..58d3153 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -1246,6 +1246,8 @@
+>  #define PCI_DEVICE_ID_NVIDIA_GEFORCE_FX_GO5700_2    0x0348
+>  #define PCI_DEVICE_ID_NVIDIA_QUADRO_FX_GO1000       0x034C
+>  #define PCI_DEVICE_ID_NVIDIA_QUADRO_FX_1100         0x034E
+> +#define PCI_DEVICE_ID_NVIDIA_MCP55_BRIDGE_V0	    0x0360
+> +#define PCI_DEVICE_ID_NVIDIA_MCP55_BRIDGE_V4	    0x0364
+>  #define PCI_DEVICE_ID_NVIDIA_NVENET_15              0x0373
+>  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP61_SATA      0x03E7
+>  #define PCI_DEVICE_ID_NVIDIA_NFORCE_MCP61_SMBUS	    0x03EB
 
 _______________________________________________
 kexec mailing list
