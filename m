@@ -1,24 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from db3ehsobe004.messaging.microsoft.com ([213.199.154.142]
-	helo=DB3EHSOBE004.bigfish.com)
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1OyBnf-0007wg-0f
-	for kexec@lists.infradead.org; Tue, 21 Sep 2010 22:58:59 +0000
-Received: from mail44-db3 (localhost.localdomain [127.0.0.1])	by
-	mail44-db3-R.bigfish.com (Postfix) with ESMTP id 4EFBE1BA8432	for
-	<kexec@lists.infradead.org>; Tue, 21 Sep 2010 22:58:56 +0000 (UTC)
-Received: from DB3EHSMHS007.bigfish.com (unknown [10.3.81.243])	by
-	mail44-db3.bigfish.com (Postfix) with ESMTP id 1509D184004B	for
-	<kexec@lists.infradead.org>; Tue, 21 Sep 2010 22:58:56 +0000 (UTC)
-Received: from az33smr02.freescale.net (az33smr02.freescale.net
-	[10.64.34.200])	by az33egw02.freescale.net (8.14.3/8.14.3) with ESMTP
-	id o8LMwqAd010136	for <kexec@lists.infradead.org>;
-	Tue, 21 Sep 2010 15:58:52 -0700 (MST)
-From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH] kexec/arch/ppc/fixup_dtb.c: Calcuate new FDT size correctly
-Date: Tue, 21 Sep 2010 17:58:51 -0500
-Message-ID: <1285109931-21184-1-git-send-email-msm@freescale.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1OyD3b-0004u6-GF
+	for kexec@lists.infradead.org; Wed, 22 Sep 2010 00:19:32 +0000
+Date: Wed, 22 Sep 2010 09:19:26 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec/arch/ppc/fixup_dtb.c: Calcuate new FDT size
+	correctly
+Message-ID: <20100922001926.GG3243@verge.net.au>
+References: <1285109931-21184-1-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1285109931-21184-1-git-send-email-msm@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,37 +24,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Matthew McClintock <msm@freescale.com>
+To: Matthew McClintock <msm@freescale.com>
+Cc: kexec@lists.infradead.org
 
-It was possible to not add enough space when we allocate
-more space for more memory reserve regions, this was because
-we were incorrectly accounting for the size of a reserve
-region. This corrects the assumed size for a resize region
-
-Signed-off-by: Matthew McClintock <msm@freescale.com>
----
- kexec/arch/ppc/fixup_dtb.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
-
-diff --git a/kexec/arch/ppc/fixup_dtb.c b/kexec/arch/ppc/fixup_dtb.c
-index 205fd77..29e428c 100644
---- a/kexec/arch/ppc/fixup_dtb.c
-+++ b/kexec/arch/ppc/fixup_dtb.c
-@@ -354,7 +354,8 @@ char *fixup_dtb_init(struct kexec_info *info, char *blob_buf, off_t *blob_size,
- 		printf("%s: Unable to pack flat device tree\n", fdt_strerror(ret));
- 
- 	/* info->nr_segments just a guide, will grow by at least EXPAND_GRANULARITY */
--	blob_buf = expand_buf(info->nr_segments, blob_buf, blob_size);
-+	blob_buf = expand_buf(info->nr_segments * sizeof(struct fdt_reserve_entry),
-+				 blob_buf, blob_size);
- 
- 	/* add reserve region for *THIS* fdt */
- 	*dtb_addr = locate_hole(info, *blob_size, 0,
--- 
-1.6.0.6
+On Tue, Sep 21, 2010 at 05:58:51PM -0500, Matthew McClintock wrote:
+> It was possible to not add enough space when we allocate
+> more space for more memory reserve regions, this was because
+> we were incorrectly accounting for the size of a reserve
+> region. This corrects the assumed size for a resize region
+> 
+> Signed-off-by: Matthew McClintock <msm@freescale.com>
 
 
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
