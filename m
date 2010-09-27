@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from rcsinet10.oracle.com ([148.87.113.121])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P06lT-0002cJ-I2
-	for kexec@lists.infradead.org; Mon, 27 Sep 2010 06:00:41 +0000
-Message-ID: <4CA03295.2060809@kernel.org>
-Date: Sun, 26 Sep 2010 22:58:45 -0700
+	id 1P07H7-0004hC-CY
+	for kexec@lists.infradead.org; Mon, 27 Sep 2010 06:33:22 +0000
+Message-ID: <4CA03A2D.4050503@kernel.org>
+Date: Sun, 26 Sep 2010 23:31:09 -0700
 From: Yinghai Lu <yinghai@kernel.org>
 MIME-Version: 1.0
 Subject: Re: kexec load failure introduced by "x86,
@@ -24,7 +24,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: caiqian@redhat.com
-Cc: linux-next <linux-next@vger.kernel.org>, kexec <kexec@lists.infradead.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@elte.hu>, kexec <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>
 
 Please check this one on top of tip or next.
 
