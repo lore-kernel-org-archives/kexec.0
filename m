@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from rcsinet10.oracle.com ([148.87.113.121])
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P0M7J-0003eq-GO
-	for kexec@lists.infradead.org; Mon, 27 Sep 2010 22:24:15 +0000
-Message-ID: <4CA11918.7050708@kernel.org>
-Date: Mon, 27 Sep 2010 15:22:16 -0700
+	id 1P0QAT-0007gG-DA
+	for kexec@lists.infradead.org; Tue, 28 Sep 2010 02:43:46 +0000
+Message-ID: <4CA155F2.5030101@kernel.org>
+Date: Mon, 27 Sep 2010 19:41:54 -0700
 From: Yinghai Lu <yinghai@kernel.org>
 MIME-Version: 1.0
 Subject: Re: kexec load failure introduced by "x86,
 	memblock: Replace e820_/_early string with memblock_"
 References: <632974489.2046131285586512527.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <632974489.2046131285586512527.JavaMail.root@zmail06.collab.prod.int.phx2.redhat.com>
-Content-Type: multipart/mixed; boundary="------------010001080501070701010608"
+	<4CA11918.7050708@kernel.org> <4CA11FB7.2080101@zytor.com>
+	<4CA126BE.7000609@kernel.org> <4CA1283C.9010105@zytor.com>
+	<4CA12976.5060504@kernel.org> <4CA129EB.5000309@zytor.com>
+	<4CA12BAB.1040308@kernel.org> <20100928005358.GA6456@redhat.com>
+In-Reply-To: <20100928005358.GA6456@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,94 +23,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: caiqian@redhat.com
-Cc: Ingo Molnar <mingo@elte.hu>, kexec <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@elte.hu>, kexec <kexec@lists.infradead.org>, caiqian@redhat.com, "H. Peter Anvin" <hpa@zytor.com>
 
-This is a multi-part message in MIME format.
---------------010001080501070701010608
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On 09/27/2010 05:53 PM, Vivek Goyal wrote:
+> Actually, hardcoding the upper limit to 4G is probably not the best idea.
+> Kexec loads the the relocatable binary (purgatory) and I remember that
+> one of the generated relocation type was signed 32 bit and allowed max value
+> to be 2G only. So IIRC, purgatory code always needed to be loaded below 2G.
 
-On 09/27/2010 04:21 AM, caiqian@redhat.com wrote:
+also kexec want bzImage under 37ffffff.
+
 > 
-> ----- "CAI Qian" <caiqian@redhat.com> wrote:
+> I liked HPA's other idea better of introducing memblock_find_in_range_lowest() 
+> so that we search bottom up and not rely on a specific upper limit.
 > 
->> ----- "Yinghai Lu" <yinghai@kernel.org> wrote:
->>
->>> Please check this one on top of tip or next.
->> This failed for both trees.
->> [root@localhost linux-next]# patch -Np1 <memblock.patch
->> patching file arch/x86/kernel/setup.c
->> Hunk #1 FAILED at 516.
->> 1 out of 1 hunk FAILED -- saving rejects to file
->> arch/x86/kernel/setup.c.rej
-> After manually applied the patch on the top of the latest mmotm tree, now there was no /proc/vmcore exported to the second kernel anymore. It could be the results of other recent commits in mmotm though. It said,
-> 
-> Warning: Core image elf header is notsane
-> Kdump: vmcore not initialized
-> 
-> Here is the dmesg from the second kernel,
-> 
-> Initializing cgroup subsys cpuset
-> Linux version 2.6.36-rc5-mm1+ (root@localhost.localdomain) (gcc version 4.4.4 20100726 (Red Hat 4.4.4-13) (GCC) ) #6 SMP Mon Sep 27 07:00:15 EDT 2010
-> Command line: ro root=/dev/mapper/VolGroup-lv_root rd_LVM_LV=VolGroup/lv_root rd_LVM_LV=VolGroup/lv_swap rd_NO_LUKS rd_NO_MD rd_NO_DM LANG=en_US.UTF-8 SYSFONT=latarcyrheb-sun16 KEYBOARDTYPE=pc KEYTABLE=us rhgb quiet console=tty0 console=ttyS0,115200 crashkernel=128M irqpoll maxcpus=1 reset_devices cgroup_disable=memory  memmap=exactmap memmap=640K@0K memmap=130408K@32768K elfcorehdr=163176K kexec_jump_back_entry=0x000000000232f063
-> BIOS-provided physical RAM map:
->  BIOS-e820: 0000000000000100 - 000000000009f400 (usable)
->  BIOS-e820: 000000000009f400 - 00000000000a0000 (reserved)
->  BIOS-e820: 00000000000f0000 - 0000000000100000 (reserved)
->  BIOS-e820: 0000000000100000 - 00000000dfffb000 (usable)
->  BIOS-e820: 00000000dfffb000 - 00000000e0000000 (reserved)
->  BIOS-e820: 00000000fffbc000 - 0000000100000000 (reserved)
->  BIOS-e820: 0000000100000000 - 0000000ca0000000 (usable)
-> last_pfn = 0xca0000 max_arch_pfn = 0x400000000
-> NX (Execute Disable) protection: active
-> user-defined physical RAM map:
->  user: 0000000000000000 - 00000000000a0000 (usable)
->  user: 0000000002000000 - 0000000009f5a000 (usable)
-...
 
-> Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-> Warning: Core image elf header is notsane
-> Kdump: vmcore not initialized
-> 
->>
+Please check.
 
-it should work on tip..., I tested on RHEL 6.0 beta.
-with
-/etc/init.d/kdump restart
-
-BTW, second kernel is not supposed to take crashkernel=128M again.
-/etc/init.d/kdump scripts remove that while using /proc/cmdline.
-
-please refer
-http://people.redhat.com/mingo/tip.git/readme.txt
-to get tip/master
-
-and apply attached patch
-cat crashkernel_limit.patch | patch -p1
-
-Thanks
-
-Yinghai
-
-
---------------010001080501070701010608
-Content-Type: text/x-patch;
- name="crashkernel_limit.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="crashkernel_limit.patch"
-
-[PATCH -v2] x86, memblock: Fix crashkernel allocation
+[PATCH -v4] x86, memblock: Fix crashkernel allocation
 
 Cai Qian found crashkernel is broken with x86 memblock changes
 1. crashkernel=128M@32M always reported that range is used, even first kernel is small
    no one use that range
 2. always get following report when using "kexec -p"
-	Could not find a free area of memory of a000 bytes...
-	locate_hole failed
+        Could not find a free area of memory of a000 bytes...
+        locate_hole failed
 
 The root cause is that generic memblock_find_in_range() will try to get range from top_down.
 But crashkernel do need from low and specified range.
@@ -115,44 +60,104 @@ But crashkernel do need from low and specified range.
 Let's limit the target range with rash_base + crash_size to make sure that
 We get range from bottom.
 
--v2: don't limit it with 0xffffffff, in case kexec will use bzImage 64bit entry or vmlinux,
-     and try to allocate huge area for crashkernel.
+-v4: add find_memblock_find_in_range_lowest() according to hpa and vivik.
 
 Reported-and-Bisected-by: CAI Qian <caiqian@redhat.com>
 Signed-off-by: Yinghai Lu <yinghai@kernel.org>
 
 ---
- arch/x86/kernel/setup.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/memblock.h |    2 +
+ arch/x86/kernel/setup.c         |    8 +++---
+ arch/x86/mm/memblock.c          |   52 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 58 insertions(+), 4 deletions(-)
 
+Index: linux-2.6/arch/x86/mm/memblock.c
+===================================================================
+--- linux-2.6.orig/arch/x86/mm/memblock.c
++++ linux-2.6/arch/x86/mm/memblock.c
+@@ -352,3 +352,55 @@ u64 __init memblock_x86_hole_size(u64 st
+ 
+ 	return end - start - ((u64)ram << PAGE_SHIFT);
+ }
++
++/* Check for already reserved areas */
++static inline bool __init check_with_memblock_reserved(u64 *addrp, u64 size, u64 align)
++{
++	u64 addr = *addrp;
++	bool changed = false;
++	struct memblock_region *r;
++again:
++	for_each_memblock(reserved, r) {
++		if ((addr + size) > r->base && addr < (r->base + r->size)) {
++			addr = round_up(r->base + r->size, align);
++			changed = true;
++			goto again;
++		}
++	}
++
++	if (changed)
++		*addrp = addr;
++
++	return changed;
++}
++
++/*
++ * Find a free area with specified alignment in a specific range from bottom up
++ */
++u64 __init memblock_find_in_range_lowest(u64 start, u64 end, u64 size, u64 align)
++{
++	struct memblock_region *r;
++
++	for_each_memblock(memory, r) {
++		u64 ei_start = r->base;
++		u64 ei_last = ei_start + r->size;
++		u64 addr, last;
++
++		addr = round_up(ei_start, align);
++		if (addr < start)
++			addr = round_up(start, align);
++		if (addr >= ei_last)
++			continue;
++		while (check_with_memblock_reserved(&addr, size, align) && addr+size <= ei_last)
++			;
++		last = addr + size;
++		if (last > ei_last)
++			continue;
++		if (last > end)
++			continue;
++
++		return addr;
++	}
++
++	return MEMBLOCK_ERROR;
++}
+Index: linux-2.6/arch/x86/include/asm/memblock.h
+===================================================================
+--- linux-2.6.orig/arch/x86/include/asm/memblock.h
++++ linux-2.6/arch/x86/include/asm/memblock.h
+@@ -18,4 +18,6 @@ u64 memblock_x86_find_in_range_node(int
+ u64 memblock_x86_free_memory_in_range(u64 addr, u64 limit);
+ u64 memblock_x86_memory_in_range(u64 addr, u64 limit);
+ 
++u64 memblock_find_in_range_lowest(u64 start, u64 end, u64 size, u64 align);
++
+ #endif
 Index: linux-2.6/arch/x86/kernel/setup.c
 ===================================================================
 --- linux-2.6.orig/arch/x86/kernel/setup.c
 +++ linux-2.6/arch/x86/kernel/setup.c
-@@ -516,19 +516,28 @@ static void __init reserve_crashkernel(v
- 
- 	/* 0 means: find the address automatically */
+@@ -518,8 +518,8 @@ static void __init reserve_crashkernel(v
  	if (crash_base <= 0) {
-+		unsigned long long start = 0;
  		const unsigned long long alignment = 16<<20;	/* 16M */
  
 -		crash_base = memblock_find_in_range(alignment, ULONG_MAX, crash_size,
 -				 alignment);
--		if (crash_base == MEMBLOCK_ERROR) {
-+		crash_base = alignment;
-+		while ((crash_base + crash_size) <= total_mem) {
-+			start = memblock_find_in_range(crash_base,
-+				crash_base + crash_size, crash_size, alignment);
-+
-+			if (start == crash_base)
-+				break;
-+
-+			crash_base += alignment;
-+		}
-+		if (start != crash_base) {
++		crash_base = memblock_find_in_range_lowest(alignment,
++					 ULONG_MAX, crash_size, alignment);
+ 		if (crash_base == MEMBLOCK_ERROR) {
  			pr_info("crashkernel reservation failed - No suitable area found.\n");
  			return;
- 		}
+@@ -527,8 +527,8 @@ static void __init reserve_crashkernel(v
  	} else {
  		unsigned long long start;
  
@@ -164,16 +169,7 @@ Index: linux-2.6/arch/x86/kernel/setup.c
  			pr_info("crashkernel reservation failed - memory is in use.\n");
  			return;
 
---------------010001080501070701010608
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---------------010001080501070701010608--
-
