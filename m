@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailgw.miraclelinux.com ([122.212.45.247])
+Received: from mail-ey0-f177.google.com ([209.85.215.177])
 	by bombadil.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1P1GFg-00088O-Nv
-	for kexec@lists.infradead.org; Thu, 30 Sep 2010 10:20:38 +0000
-Message-ID: <4CA46477.80704@miraclelinux.com>
-Date: Thu, 30 Sep 2010 19:20:39 +0900
-From: Makito SHIOKAWA <mshiokawa@miraclelinux.com>
+	id 1P1LQk-0003Wz-1t
+	for kexec@lists.infradead.org; Thu, 30 Sep 2010 15:52:23 +0000
+Received: by eye22 with SMTP id 22so1001333eye.36
+	for <kexec@lists.infradead.org>; Thu, 30 Sep 2010 08:52:20 -0700 (PDT)
+Subject: [PATCH] kexec/powerpc fix optimization for size (gcc -Os) build
+From: Maxim Uvarov <muvarov@gmail.com>
+Date: Thu, 30 Sep 2010 19:52:16 +0400
+Message-ID: <20100930155216.32565.36595.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Subject: Re: Can't kexec/kdump on mpc85xx
-References: <4C9FFA9E.4080705@miraclelinux.com>
-	<81FA9276-7283-4106-9155-83F17327D496@freescale.com>
-	<4CA163C5.1060704@miraclelinux.com>
-	<F2D9449F-2C78-4051-B1A9-32BD3CEF9366@freescale.com>
-	<4CA2FAE9.3010109@miraclelinux.com>
-	<1880BF7C-E151-401D-B20A-EC1113B92A6F@freescale.com>
-In-Reply-To: <1880BF7C-E151-401D-B20A-EC1113B92A6F@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,71 +18,276 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew McClintock <msm@freescale.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: msm@freescale.com, mshiokawa@miraclelinux.com
 
-(2010/09/30 0:58), Matthew McClintock wrote:
+    crt.S patch had fixes for gcc -Os (optimaze for size), same as
+    kernel has. Without this fixes powerpc gcc 4.4 generates forever
+    loop functions for kexec.
 
-> There are some other patches I sent upstream after 2.6.35 that fix these issues...
-
-I've missed your recent patches. After applying below patches to linux-2.6.35, 
-CONFIG_CRASH_DUMP, CONFIG_PROC_VMCORE were settable and second kernel booted 
-normally on "kexec -p".
-
-* powerpc/kexec: Adds correct calling convention for kexec purgatory
-* powerpc/85xx: kexec for SMP 85xx BookE systems
-* powerpc/crashdump: Fix issues with kexec and 36bit physical addr
-
-And at last, I could see /proc/vmcore!
-
----
-# gdb /boot/vmlinux /proc/vmcore
-GNU gdb Red Hat Linux (6.5-16rh)
-Copyright (C) 2006 Free Software Foundation, Inc.
-GDB is free software, covered by the GNU General Public License, and you are
-welcome to change it and/or distribute copies of it under certain conditions.
-Type "show copying" to see the conditions.
-There is absolutely no warranty for GDB.  Type "show warranty" for details.
-This GDB was configured as "ppc-asianux-linux-gnu"...Using host libthread_db lib
-rary "/lib/libthread_db.so.1".
-
-
-warning: exec file is newer than core file.
-#0  0xc01b8054 in sysrq_handle_crash (key=99, tty=0x0)
-     at drivers/char/sysrq.c:135
-135     drivers/char/sysrq.c: No such file or directory.
-         in drivers/char/sysrq.c
-(gdb) bt
-#0  0xc01b8054 in sysrq_handle_crash (key=99, tty=0x0)
-     at drivers/char/sysrq.c:135
-#1  0xc01b831c in __handle_sysrq (key=99, tty=0x0, check_mask=0)
-     at drivers/char/sysrq.c:523
-#2  0xc01b847c in write_sysrq_trigger (file=<value optimized out>,
-     buf=<value optimized out>, count=2, ppos=0xc01bf3b0)
-     at drivers/char/sysrq.c:768
-#3  0xc00f1cfc in proc_reg_write (file=0x63, buf=0x0, count=4294967295,
-     ppos=0xc01bf3b0) at fs/proc/inode.c:185
-#4  0xc00a94e0 in vfs_write (file=0xdfb84400,
-     buf=0x48020000 <Address 0x48020000 out of bounds>,
-     count=<value optimized out>, pos=0xdfbbbf20) at fs/read_write.c:366
-#5  0xc00a96bc in sys_write (fd=<value optimized out>,
-     buf=0x48020000 <Address 0x48020000 out of bounds>, count=2)
-     at fs/read_write.c:418
-#6  0xc001059c in syscall_dotrace_cont ()
-#7  0xc01b831c in __handle_sysrq (key=2, tty=0xfeb2ff4, check_mask=0)
-     at drivers/char/sysrq.c:523
-#8  0x00000000 in ?? ()
+    This happends because crtsavres code was spit up to individual files
+    (http://gcc.gnu.org/ml/gcc-patches/2008-03/msg01294.html) and
+    kexec purgatory code has following options:
+    --no-undefined -nostartfiles -nostdlib -nodefaultlibs
+    So in that case crtasaveregs function are not defined and final object
+    file has been linked without them.  This does not happen with applications
+    built without -nostdlib, because gcc will add it's standard functions.
+Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
 ---
 
-After all, problem was only kexec-tools' cross compiling optimization issue. 
-Thanks a lot!
+ purgatory/arch/ppc/misc.S |  229 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 229 insertions(+), 0 deletions(-)
 
--- 
-Makito SHIOKAWA <mshiokawa@miraclelinux.com>
+diff --git a/purgatory/arch/ppc/misc.S b/purgatory/arch/ppc/misc.S
+index b0a5486..bc6a18d 100644
+--- a/purgatory/arch/ppc/misc.S
++++ b/purgatory/arch/ppc/misc.S
+@@ -16,6 +16,235 @@
+ 
+ #include "ppc_asm.h"	
+ 
++/* This is from linux-2.6/arch/powerpc/lib/crtsavres.S:
++ *
++ * Special support for eabi and SVR4
++ *
++ *   Copyright (C) 1995, 1996, 1998, 2000, 2001 Free Software Foundation, Inc.
++ *   Copyright 2008 Freescale Semiconductor, Inc.
++ *   Written By Michael Meissner
++ *
++ * Based on gcc/config/rs6000/crtsavres.asm from gcc
++ *
++ * This file is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2, or (at your option) any
++ * later version.
++ *
++ * In addition to the permissions in the GNU General Public License, the
++ * Free Software Foundation gives you unlimited permission to link the
++ * compiled version of this file with other programs, and to distribute
++ * those programs without any restriction coming from the use of this
++ * file.  (The General Public License restrictions do apply in other
++ * respects; for example, they cover modification of the file, and
++ * distribution when not linked into another program.)
++ *
++ * This file is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; see the file COPYING.  If not, write to
++ * the Free Software Foundation, 51 Franklin Street, Fifth Floor,
++ * Boston, MA 02110-1301, USA.
++ *
++ *    As a special exception, if you link this library with files
++ *    compiled with GCC to produce an executable, this does not cause
++ *    the resulting executable to be covered by the GNU General Public License.
++ *    This exception does not however invalidate any other reasons why
++ *    the executable file might be covered by the GNU General Public License.
++ */
++#include "config.h"
++
++#define _GLOBAL(name) \
++	.type name,@function; \
++	.globl name; \
++name:
++
++/* Routines for saving integer registers, called by the compiler.  */
++/* Called with r11 pointing to the stack header word of the caller of the */
++/* function, just beyond the end of the integer save area.  */
++
++_GLOBAL(_savegpr_14)
++_GLOBAL(_save32gpr_14)
++	stw	14,-72(11)	/* save gp registers */
++_GLOBAL(_savegpr_15)
++_GLOBAL(_save32gpr_15)
++	stw	15,-68(11)
++_GLOBAL(_savegpr_16)
++_GLOBAL(_save32gpr_16)
++	stw	16,-64(11)
++_GLOBAL(_savegpr_17)
++_GLOBAL(_save32gpr_17)
++	stw	17,-60(11)
++_GLOBAL(_savegpr_18)
++_GLOBAL(_save32gpr_18)
++	stw	18,-56(11)
++_GLOBAL(_savegpr_19)
++_GLOBAL(_save32gpr_19)
++	stw	19,-52(11)
++_GLOBAL(_savegpr_20)
++_GLOBAL(_save32gpr_20)
++	stw	20,-48(11)
++_GLOBAL(_savegpr_21)
++_GLOBAL(_save32gpr_21)
++	stw	21,-44(11)
++_GLOBAL(_savegpr_22)
++_GLOBAL(_save32gpr_22)
++	stw	22,-40(11)
++_GLOBAL(_savegpr_23)
++_GLOBAL(_save32gpr_23)
++	stw	23,-36(11)
++_GLOBAL(_savegpr_24)
++_GLOBAL(_save32gpr_24)
++	stw	24,-32(11)
++_GLOBAL(_savegpr_25)
++_GLOBAL(_save32gpr_25)
++	stw	25,-28(11)
++_GLOBAL(_savegpr_26)
++_GLOBAL(_save32gpr_26)
++	stw	26,-24(11)
++_GLOBAL(_savegpr_27)
++_GLOBAL(_save32gpr_27)
++	stw	27,-20(11)
++_GLOBAL(_savegpr_28)
++_GLOBAL(_save32gpr_28)
++	stw	28,-16(11)
++_GLOBAL(_savegpr_29)
++_GLOBAL(_save32gpr_29)
++	stw	29,-12(11)
++_GLOBAL(_savegpr_30)
++_GLOBAL(_save32gpr_30)
++	stw	30,-8(11)
++_GLOBAL(_savegpr_31)
++_GLOBAL(_save32gpr_31)
++	stw	31,-4(11)
++	blr
++
++/* Routines for restoring integer registers, called by the compiler.  */
++/* Called with r11 pointing to the stack header word of the caller of the */
++/* function, just beyond the end of the integer restore area.  */
++
++_GLOBAL(_restgpr_14)
++_GLOBAL(_rest32gpr_14)
++	lwz	14,-72(11)	/* restore gp registers */
++_GLOBAL(_restgpr_15)
++_GLOBAL(_rest32gpr_15)
++	lwz	15,-68(11)
++_GLOBAL(_restgpr_16)
++_GLOBAL(_rest32gpr_16)
++	lwz	16,-64(11)
++_GLOBAL(_restgpr_17)
++_GLOBAL(_rest32gpr_17)
++	lwz	17,-60(11)
++_GLOBAL(_restgpr_18)
++_GLOBAL(_rest32gpr_18)
++	lwz	18,-56(11)
++_GLOBAL(_restgpr_19)
++_GLOBAL(_rest32gpr_19)
++	lwz	19,-52(11)
++_GLOBAL(_restgpr_20)
++_GLOBAL(_rest32gpr_20)
++	lwz	20,-48(11)
++_GLOBAL(_restgpr_21)
++_GLOBAL(_rest32gpr_21)
++	lwz	21,-44(11)
++_GLOBAL(_restgpr_22)
++_GLOBAL(_rest32gpr_22)
++	lwz	22,-40(11)
++_GLOBAL(_restgpr_23)
++_GLOBAL(_rest32gpr_23)
++	lwz	23,-36(11)
++_GLOBAL(_restgpr_24)
++_GLOBAL(_rest32gpr_24)
++	lwz	24,-32(11)
++_GLOBAL(_restgpr_25)
++_GLOBAL(_rest32gpr_25)
++	lwz	25,-28(11)
++_GLOBAL(_restgpr_26)
++_GLOBAL(_rest32gpr_26)
++	lwz	26,-24(11)
++_GLOBAL(_restgpr_27)
++_GLOBAL(_rest32gpr_27)
++	lwz	27,-20(11)
++_GLOBAL(_restgpr_28)
++_GLOBAL(_rest32gpr_28)
++	lwz	28,-16(11)
++_GLOBAL(_restgpr_29)
++_GLOBAL(_rest32gpr_29)
++	lwz	29,-12(11)
++_GLOBAL(_restgpr_30)
++_GLOBAL(_rest32gpr_30)
++	lwz	30,-8(11)
++_GLOBAL(_restgpr_31)
++_GLOBAL(_rest32gpr_31)
++	lwz	31,-4(11)
++	blr
++
++/* Routines for restoring integer registers, called by the compiler.  */
++/* Called with r11 pointing to the stack header word of the caller of the */
++/* function, just beyond the end of the integer restore area.  */
++
++_GLOBAL(_restgpr_14_x)
++_GLOBAL(_rest32gpr_14_x)
++	lwz	14,-72(11)	/* restore gp registers */
++_GLOBAL(_restgpr_15_x)
++_GLOBAL(_rest32gpr_15_x)
++	lwz	15,-68(11)
++_GLOBAL(_restgpr_16_x)
++_GLOBAL(_rest32gpr_16_x)
++	lwz	16,-64(11)
++_GLOBAL(_restgpr_17_x)
++_GLOBAL(_rest32gpr_17_x)
++	lwz	17,-60(11)
++_GLOBAL(_restgpr_18_x)
++_GLOBAL(_rest32gpr_18_x)
++	lwz	18,-56(11)
++_GLOBAL(_restgpr_19_x)
++_GLOBAL(_rest32gpr_19_x)
++	lwz	19,-52(11)
++_GLOBAL(_restgpr_20_x)
++_GLOBAL(_rest32gpr_20_x)
++	lwz	20,-48(11)
++_GLOBAL(_restgpr_21_x)
++_GLOBAL(_rest32gpr_21_x)
++	lwz	21,-44(11)
++_GLOBAL(_restgpr_22_x)
++_GLOBAL(_rest32gpr_22_x)
++	lwz	22,-40(11)
++_GLOBAL(_restgpr_23_x)
++_GLOBAL(_rest32gpr_23_x)
++	lwz	23,-36(11)
++_GLOBAL(_restgpr_24_x)
++_GLOBAL(_rest32gpr_24_x)
++	lwz	24,-32(11)
++_GLOBAL(_restgpr_25_x)
++_GLOBAL(_rest32gpr_25_x)
++	lwz	25,-28(11)
++_GLOBAL(_restgpr_26_x)
++_GLOBAL(_rest32gpr_26_x)
++	lwz	26,-24(11)
++_GLOBAL(_restgpr_27_x)
++_GLOBAL(_rest32gpr_27_x)
++	lwz	27,-20(11)
++_GLOBAL(_restgpr_28_x)
++_GLOBAL(_rest32gpr_28_x)
++	lwz	28,-16(11)
++_GLOBAL(_restgpr_29_x)
++_GLOBAL(_rest32gpr_29_x)
++	lwz	29,-12(11)
++_GLOBAL(_restgpr_30_x)
++_GLOBAL(_rest32gpr_30_x)
++	lwz	30,-8(11)
++_GLOBAL(_restgpr_31_x)
++_GLOBAL(_rest32gpr_31_x)
++	lwz	0,4(11)
++	lwz	31,-4(11)
++	mtlr	0
++	mr	1,11
++	blr
++
+ 	.text
+ 
+ /*
+
+
+Best regards,
+Maxim Uvarov.
+
+
 
 _______________________________________________
 kexec mailing list
