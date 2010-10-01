@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe005.messaging.microsoft.com ([216.32.180.31]
-	helo=VA3EHSOBE005.bigfish.com)
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
 	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P1WIp-00016K-19
-	for kexec@lists.infradead.org; Fri, 01 Oct 2010 03:28:55 +0000
-Subject: Re: Can't kexec/kdump on mpc85xx
-MIME-Version: 1.0 (Apple Message framework v1081)
-From: Matthew McClintock <msm@freescale.com>
-In-Reply-To: <4CA55247.7050607@miraclelinux.com>
-Date: Thu, 30 Sep 2010 22:28:59 -0500
-Message-ID: <D6F82B2A-C284-42D4-A296-5C5F5AA2D7E2@freescale.com>
-References: <4C9FFA9E.4080705@miraclelinux.com>
-	<81FA9276-7283-4106-9155-83F17327D496@freescale.com>
-	<4CA163C5.1060704@miraclelinux.com>
-	<F2D9449F-2C78-4051-B1A9-32BD3CEF9366@freescale.com>
-	<4CA2FAE9.3010109@miraclelinux.com>
-	<1880BF7C-E151-401D-B20A-EC1113B92A6F@freescale.com>
-	<4CA46477.80704@miraclelinux.com>
-	<2FD3D9F4-137C-4044-B4F7-2E62254F2DC8@freescale.com>
-	<4CA55247.7050607@miraclelinux.com>
+	id 1P1dLr-0005H8-Bz
+	for kexec@lists.infradead.org; Fri, 01 Oct 2010 11:00:32 +0000
+Date: Fri, 1 Oct 2010 06:56:22 -0400
+From: Neil Horman <nhorman@tuxdriver.com>
+Subject: Re: [PATCH] ppc64: increase TREEWORDS value in ppc64
+Message-ID: <20101001105622.GA8958@hmsreliant.think-freely.org>
+References: <20100909210113.GB22581@hmsreliant.think-freely.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20100909210113.GB22581@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,25 +23,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Makito SHIOKAWA <mshiokawa@miraclelinux.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: benh@kernel.crashing.org, horms@verge.net.au, vgoyal@redhat.com
 
-
-On Sep 30, 2010, at 10:15 PM, Makito SHIOKAWA wrote:
-
-> (2010/10/01 1:03), Matthew McClintock wrote:
+On Thu, Sep 09, 2010 at 05:01:13PM -0400, Neil Horman wrote:
+> hey-
+>      Got a segfault recently on ppc64 kexec with a system with 256Gb of ram.
+> Tracked it back to running over the end of the device tree buffer that we have
+> allocated.  I can't find any docs on how big the device tree can legally be, so
+> for now I figure just upping its size is sufficient.  Confirmed that this fixed
+> the segfault.
 > 
->> What compiler were you using? One from Freescale or did you build your own?
+> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
 > 
-> Do you mean a cross compiler I was using before "Sourcery G++ Lite 4.4-254 for Power GNU/Linux"? Then, it is a one build by my own (gcc-4.1.1, glibc-2.5), but I get compile errors building 2.6.35 so I'm not using it.
 > 
-> -- 
-> Makito SHIOKAWA <mshiokawa@miraclelinux.com>
+>  fs2dt.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> 
+> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+> index 238a3f2..2f0f937 100644
+> --- a/kexec/arch/ppc/fs2dt.c
+> +++ b/kexec/arch/ppc/fs2dt.c
+> @@ -33,7 +33,7 @@
+>  
+>  #define MAXPATH			1024	/* max path name length */
+>  #define NAMESPACE		16384	/* max bytes for property names */
+> -#define TREEWORDS		65536	/* max 32 bit words for properties */
+> +#define TREEWORDS		131070	/* max 32 bit words for properties */
+>  #define MEMRESERVE		256	/* max number of reserved memory blks */
+>  #define MAX_MEMORY_RANGES	1024
+>  #define COMMAND_LINE_SIZE	512	/* from kernel */
 > 
 
-That is what I was looking for. I was having the purgatory optimization issue with that exact same compiler.
+Ben, do you have any thoughts on this?  It would be nice if we could avoid
+just making this buffer bigger until the crashes stop :)
 
--M
+Neil
+
 
 _______________________________________________
 kexec mailing list
