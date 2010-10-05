@@ -1,17 +1,15 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from va3ehsobe010.messaging.microsoft.com ([216.32.180.30]
-	helo=VA3EHSOBE010.bigfish.com)
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P3FCp-0005hW-Q9
-	for kexec@lists.infradead.org; Tue, 05 Oct 2010 21:37:52 +0000
-Subject: Re: [PATCH] kexec/ppc: Use -O0 instead of -Os for purgatory
-MIME-Version: 1.0 (Apple Message framework v1081)
-From: Matthew McClintock <msm@freescale.com>
-In-Reply-To: <AANLkTikW216sA4nu1bwmjLG7RY3hHwMB7A6yvKgNoNZZ@mail.gmail.com>
-Date: Tue, 5 Oct 2010 16:37:50 -0500
-Message-ID: <655DCE1B-CFCF-403B-9E90-9A8A50F24372@freescale.com>
-References: <1286306243-14236-1-git-send-email-msm@freescale.com>
-	<AANLkTikW216sA4nu1bwmjLG7RY3hHwMB7A6yvKgNoNZZ@mail.gmail.com>
+	id 1P3G24-0001di-07
+	for kexec@lists.infradead.org; Tue, 05 Oct 2010 22:30:48 +0000
+Message-ID: <4CABA6E5.6030601@zytor.com>
+Date: Tue, 05 Oct 2010 15:29:57 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] x86, memblock: Fix crashkernel allocation
+References: <4CAA4BD5.4020505@kernel.org> <4CAA4DE2.1020406@kernel.org>
+In-Reply-To: <4CAA4DE2.1020406@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +21,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kexec@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
 
+On 10/04/2010 02:57 PM, Yinghai Lu wrote:
+>
+> +#define DEFAULT_BZIMAGE_ADDR_MAX 0x37FFFFFF
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long total_mem;
+> @@ -518,17 +519,28 @@ static void __init reserve_crashkernel(v
+>  	if (crash_base <= 0) {
+>  		const unsigned long long alignment = 16<<20;	/* 16M */
+>  
+> -		crash_base = memblock_find_in_range(alignment, ULONG_MAX, crash_size,
+> -				 alignment);
+> +		/*
+> +		 * Assume half crash_size is for bzImage
+> +		 *  kexec want bzImage is below DEFAULT_BZIMAGE_ADDR_MAX
+> +		 */
+> +		crash_base = memblock_find_in_range(alignment,
+> +				DEFAULT_BZIMAGE_ADDR_MAX + crash_size/2,
+> +				crash_size, alignment);
+> +
+>  		if (crash_base == MEMBLOCK_ERROR) {
+> -			pr_info("crashkernel reservation failed - No suitable area found.\n");
+> -			return;
+> +			crash_base = memblock_find_in_range(alignment,
+> +					 ULONG_MAX, crash_size, alignment);
+> +
+> +			if (crash_base == MEMBLOCK_ERROR) {
+> +				pr_info("crashkernel reservation failed - No suitable area found.\n");
+> +				return;
+> +			}
+>  		}
+>  
 
-On Oct 5, 2010, at 4:26 PM, Maxim Uvarov wrote:
+Okay, this *really* doesn't make sense.
 
-> I'm ok with that changes. I'm not sure why kernel did not turn this
-> optimization off and goes
-> with compiling crt.s with sources. There could be a reasons for that.
-> More likely to not put anything from
-> libgcc to kernel. We should do the same for purgatory code. So maybe
-> it's reasonable
-> to apply my patch and go the same way as kernel goes (but it will
-> break old compilers, that should not
-> be huge problem.)
-> 
+It's bad enough that kexec doesn't know what memory is safe for it, but
+why the heck the heuristic that "half is for bzImage and the rest can go
+beyond the heuristic limit"?  Can't we at least simply cap the region to
+the default, unless the kexec system has passed in some knowable
+alternative?  Furthermore, why bother having the "fallback" at all
+(certainly without having a message!?)  If we don't get the memory area
+we need we're likely to randomly fail anyway.
 
-Wait, do your recent patches have a similar effect?
+Let me be completely clear -- it's obvious from all of this that kexec
+is fundamentally broken by design: if kexec can't communicate the safe
+memory to use it's busted seven ways to Sunday and it needs to be fixed.
+ However, in the meantime I can see capping the memory available to it
+as a temporary band-aid, but a fallback to picking random memory is
+nuts, especially on the motivation that "a future kexec version might be
+able to use it."  If so, the "future kexec tools" should SAY SO.
 
--M
+This is beyond crazy -- it's complete and total bonkers.
 
-
+	-hpa
 
 _______________________________________________
 kexec mailing list
