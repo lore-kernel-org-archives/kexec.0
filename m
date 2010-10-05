@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
-	by casper.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P3Esq-0004Ba-Dz
-	for kexec@lists.infradead.org; Tue, 05 Oct 2010 21:17:13 +0000
-Message-ID: <4CAB957B.1030202@zytor.com>
-Date: Tue, 05 Oct 2010 14:15:39 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from mail-iw0-f177.google.com ([209.85.214.177])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1P3F1b-0005bC-NQ
+	for kexec@lists.infradead.org; Tue, 05 Oct 2010 21:26:20 +0000
+Received: by iwn1 with SMTP id 1so2323543iwn.36
+	for <kexec@lists.infradead.org>; Tue, 05 Oct 2010 14:26:14 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/4] x86, memblock: Fix crashkernel allocation
-References: <4CAA4BD5.4020505@kernel.org> <4CAA4DE2.1020406@kernel.org>
-In-Reply-To: <4CAA4DE2.1020406@kernel.org>
+In-Reply-To: <1286306243-14236-1-git-send-email-msm@freescale.com>
+References: <1286306243-14236-1-git-send-email-msm@freescale.com>
+Date: Wed, 6 Oct 2010 01:26:14 +0400
+Message-ID: <AANLkTikW216sA4nu1bwmjLG7RY3hHwMB7A6yvKgNoNZZ@mail.gmail.com>
+Subject: Re: [PATCH] kexec/ppc: Use -O0 instead of -Os for purgatory
+From: Maxim Uvarov <muvarov@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,67 +20,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: Jeremy Fitzhardinge <jeremy@goop.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
+To: Matthew McClintock <msm@freescale.com>
+Cc: kexec@lists.infradead.org
 
-On 10/04/2010 02:57 PM, Yinghai Lu wrote:
+I'm ok with that changes. I'm not sure why kernel did not turn this
+optimization off and goes
+with compiling crt.s with sources. There could be a reasons for that.
+More likely to not put anything from
+libgcc to kernel. We should do the same for purgatory code. So maybe
+it's reasonable
+to apply my patch and go the same way as kernel goes (but it will
+break old compilers, that should not
+be huge problem.)
+
+Maxim.
+
+2010/10/5 Matthew McClintock <msm@freescale.com>:
+> Purgatory code with -Os is not working on certain compilers,
+> instead of finding out the hard way, just compile with -O0
 >
-> +#define DEFAULT_BZIMAGE_ADDR_MAX 0x37FFFFFF
->  static void __init reserve_crashkernel(void)
->  {
->  	unsigned long long total_mem;
-> @@ -518,17 +519,28 @@ static void __init reserve_crashkernel(v
->  	if (crash_base <= 0) {
->  		const unsigned long long alignment = 16<<20;	/* 16M */
->  
-> -		crash_base = memblock_find_in_range(alignment, ULONG_MAX, crash_size,
-> -				 alignment);
-> +		/*
-> +		 * Assume half crash_size is for bzImage
-> +		 *  kexec want bzImage is below DEFAULT_BZIMAGE_ADDR_MAX
-> +		 */
-> +		crash_base = memblock_find_in_range(alignment,
-> +				DEFAULT_BZIMAGE_ADDR_MAX + crash_size/2,
-> +				crash_size, alignment);
+> Signed-off-by: Matthew McClintock <msm@freescale.com>
+> ---
+> Tried to get a dicussion going on this issue, but for now I
+> suspect it is better to have a working kexec on ppc instead of
+> waiting
+>
+> =A0purgatory/arch/ppc/Makefile | =A0 =A02 ++
+> =A01 files changed, 2 insertions(+), 0 deletions(-)
+>
+> diff --git a/purgatory/arch/ppc/Makefile b/purgatory/arch/ppc/Makefile
+> index 72289a0..319870e 100644
+> --- a/purgatory/arch/ppc/Makefile
+> +++ b/purgatory/arch/ppc/Makefile
+> @@ -2,6 +2,8 @@
+> =A0# Purgatory ppc
+> =A0#
+>
+> +ppc_PURGATORY_EXTRA_CFLAGS =3D -O0
 > +
->  		if (crash_base == MEMBLOCK_ERROR) {
-> -			pr_info("crashkernel reservation failed - No suitable area found.\n");
-> -			return;
-> +			crash_base = memblock_find_in_range(alignment,
-> +					 ULONG_MAX, crash_size, alignment);
-> +
-> +			if (crash_base == MEMBLOCK_ERROR) {
-> +				pr_info("crashkernel reservation failed - No suitable area found.\n");
-> +				return;
-> +			}
->  		}
->  
+> =A0ppc_PURGATORY_SRCS +=3D purgatory/arch/ppc/v2wrap_32.S
+> =A0ppc_PURGATORY_SRCS +=3D purgatory/arch/ppc/misc.S
+> =A0ppc_PURGATORY_SRCS +=3D purgatory/arch/ppc/purgatory-ppc.c
+> --
+> 1.6.6.1
+>
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-Okay, this *really* doesn't make sense.
 
-It's bad enough that kexec doesn't know what memory is safe for it, but
-why the heck the heuristic that "half is for bzImage and the rest can go
-beyond the heuristic limit"?  Can't we at least simply cap the region to
-the default, unless the kexec system has passed in some knowable
-alternative?  Furthermore, why bother having the "fallback" at all
-(certainly without having a message!?)  If we don't get the memory area
-we need we're likely to randomly fail anyway.
 
-Let me be completely clear -- it's obvious from all of this that kexec
-is fundamentally broken by design: if kexec can't communicate the safe
-memory to use it's busted seven ways to Sunday and it needs to be fixed.
- However, in the meantime I can see capping the memory available to it
-as a temporary band-aid, but a fallback to picking random memory is
-nuts, especially on the motivation that "a future kexec version might be
-able to use it."  If so, the "future kexec tools" should SAY SO.
+-- =
 
-This is beyond crazy -- it's complete and total bonkers.
-
-	-hpa
+Best regards,
+Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
