@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tx2ehsobe004.messaging.microsoft.com ([65.55.88.14]
-	helo=TX2EHSOBE008.bigfish.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P3Cpk-0005q4-Qn
-	for kexec@lists.infradead.org; Tue, 05 Oct 2010 19:05:53 +0000
-Received: from mail71-tx2 (localhost.localdomain [127.0.0.1])	by
-	mail71-tx2-R.bigfish.com (Postfix) with ESMTP id 547AED883C6	for
-	<kexec@lists.infradead.org>; Tue,  5 Oct 2010 19:05:50 +0000 (UTC)
-Received: from TX2EHSMHS042.bigfish.com (unknown [10.9.14.241])	by
-	mail71-tx2.bigfish.com (Postfix) with ESMTP id DBE30B18060	for
-	<kexec@lists.infradead.org>; Tue,  5 Oct 2010 19:05:38 +0000 (UTC)
-Received: from az33smr02.freescale.net (az33smr02.freescale.net
-	[10.64.34.200])	by az33egw02.freescale.net (8.14.3/8.14.3) with ESMTP
-	id
-	o95J5aXY026017	for <kexec@lists.infradead.org>; Tue, 5 Oct 2010 12:05:36
-	-0700 (MST)
-From: Matthew McClintock <msm@freescale.com>
-Subject: [PATCH] kexec/ppc: Use -O0 instead of -Os for purgatory
-Date: Tue, 5 Oct 2010 14:17:23 -0500
-Message-ID: <1286306243-14236-1-git-send-email-msm@freescale.com>
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+	by casper.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1P3Esq-0004Ba-Dz
+	for kexec@lists.infradead.org; Tue, 05 Oct 2010 21:17:13 +0000
+Message-ID: <4CAB957B.1030202@zytor.com>
+Date: Tue, 05 Oct 2010 14:15:39 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] x86, memblock: Fix crashkernel allocation
+References: <4CAA4BD5.4020505@kernel.org> <4CAA4DE2.1020406@kernel.org>
+In-Reply-To: <4CAA4DE2.1020406@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,38 +22,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Matthew McClintock <msm@freescale.com>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
 
-Purgatory code with -Os is not working on certain compilers,
-instead of finding out the hard way, just compile with -O0
+On 10/04/2010 02:57 PM, Yinghai Lu wrote:
+>
+> +#define DEFAULT_BZIMAGE_ADDR_MAX 0x37FFFFFF
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long total_mem;
+> @@ -518,17 +519,28 @@ static void __init reserve_crashkernel(v
+>  	if (crash_base <= 0) {
+>  		const unsigned long long alignment = 16<<20;	/* 16M */
+>  
+> -		crash_base = memblock_find_in_range(alignment, ULONG_MAX, crash_size,
+> -				 alignment);
+> +		/*
+> +		 * Assume half crash_size is for bzImage
+> +		 *  kexec want bzImage is below DEFAULT_BZIMAGE_ADDR_MAX
+> +		 */
+> +		crash_base = memblock_find_in_range(alignment,
+> +				DEFAULT_BZIMAGE_ADDR_MAX + crash_size/2,
+> +				crash_size, alignment);
+> +
+>  		if (crash_base == MEMBLOCK_ERROR) {
+> -			pr_info("crashkernel reservation failed - No suitable area found.\n");
+> -			return;
+> +			crash_base = memblock_find_in_range(alignment,
+> +					 ULONG_MAX, crash_size, alignment);
+> +
+> +			if (crash_base == MEMBLOCK_ERROR) {
+> +				pr_info("crashkernel reservation failed - No suitable area found.\n");
+> +				return;
+> +			}
+>  		}
+>  
 
-Signed-off-by: Matthew McClintock <msm@freescale.com>
----
-Tried to get a dicussion going on this issue, but for now I
-suspect it is better to have a working kexec on ppc instead of
-waiting
+Okay, this *really* doesn't make sense.
 
- purgatory/arch/ppc/Makefile |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+It's bad enough that kexec doesn't know what memory is safe for it, but
+why the heck the heuristic that "half is for bzImage and the rest can go
+beyond the heuristic limit"?  Can't we at least simply cap the region to
+the default, unless the kexec system has passed in some knowable
+alternative?  Furthermore, why bother having the "fallback" at all
+(certainly without having a message!?)  If we don't get the memory area
+we need we're likely to randomly fail anyway.
 
-diff --git a/purgatory/arch/ppc/Makefile b/purgatory/arch/ppc/Makefile
-index 72289a0..319870e 100644
---- a/purgatory/arch/ppc/Makefile
-+++ b/purgatory/arch/ppc/Makefile
-@@ -2,6 +2,8 @@
- # Purgatory ppc
- #
- 
-+ppc_PURGATORY_EXTRA_CFLAGS = -O0
-+
- ppc_PURGATORY_SRCS += purgatory/arch/ppc/v2wrap_32.S
- ppc_PURGATORY_SRCS += purgatory/arch/ppc/misc.S
- ppc_PURGATORY_SRCS += purgatory/arch/ppc/purgatory-ppc.c
--- 
-1.6.6.1
+Let me be completely clear -- it's obvious from all of this that kexec
+is fundamentally broken by design: if kexec can't communicate the safe
+memory to use it's busted seven ways to Sunday and it needs to be fixed.
+ However, in the meantime I can see capping the memory available to it
+as a temporary band-aid, but a fallback to picking random memory is
+nuts, especially on the motivation that "a future kexec version might be
+able to use it."  If so, the "future kexec tools" should SAY SO.
 
+This is beyond crazy -- it's complete and total bonkers.
 
+	-hpa
 
 _______________________________________________
 kexec mailing list
