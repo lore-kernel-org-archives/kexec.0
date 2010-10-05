@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by bombadil.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P1dLr-0005H8-Bz
-	for kexec@lists.infradead.org; Fri, 01 Oct 2010 11:00:32 +0000
-Date: Fri, 1 Oct 2010 06:56:22 -0400
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH] ppc64: increase TREEWORDS value in ppc64
-Message-ID: <20101001105622.GA8958@hmsreliant.think-freely.org>
-References: <20100909210113.GB22581@hmsreliant.think-freely.org>
+Received: from tx2ehsobe004.messaging.microsoft.com ([65.55.88.14]
+	helo=TX2EHSOBE008.bigfish.com)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1P3Cpk-0005q4-Qn
+	for kexec@lists.infradead.org; Tue, 05 Oct 2010 19:05:53 +0000
+Received: from mail71-tx2 (localhost.localdomain [127.0.0.1])	by
+	mail71-tx2-R.bigfish.com (Postfix) with ESMTP id 547AED883C6	for
+	<kexec@lists.infradead.org>; Tue,  5 Oct 2010 19:05:50 +0000 (UTC)
+Received: from TX2EHSMHS042.bigfish.com (unknown [10.9.14.241])	by
+	mail71-tx2.bigfish.com (Postfix) with ESMTP id DBE30B18060	for
+	<kexec@lists.infradead.org>; Tue,  5 Oct 2010 19:05:38 +0000 (UTC)
+Received: from az33smr02.freescale.net (az33smr02.freescale.net
+	[10.64.34.200])	by az33egw02.freescale.net (8.14.3/8.14.3) with ESMTP
+	id
+	o95J5aXY026017	for <kexec@lists.infradead.org>; Tue, 5 Oct 2010 12:05:36
+	-0700 (MST)
+From: Matthew McClintock <msm@freescale.com>
+Subject: [PATCH] kexec/ppc: Use -O0 instead of -Os for purgatory
+Date: Tue, 5 Oct 2010 14:17:23 -0500
+Message-ID: <1286306243-14236-1-git-send-email-msm@freescale.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20100909210113.GB22581@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +33,36 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: benh@kernel.crashing.org, horms@verge.net.au, vgoyal@redhat.com
+Cc: Matthew McClintock <msm@freescale.com>
 
-On Thu, Sep 09, 2010 at 05:01:13PM -0400, Neil Horman wrote:
-> hey-
->      Got a segfault recently on ppc64 kexec with a system with 256Gb of ram.
-> Tracked it back to running over the end of the device tree buffer that we have
-> allocated.  I can't find any docs on how big the device tree can legally be, so
-> for now I figure just upping its size is sufficient.  Confirmed that this fixed
-> the segfault.
-> 
-> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-> 
-> 
->  fs2dt.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> 
-> diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
-> index 238a3f2..2f0f937 100644
-> --- a/kexec/arch/ppc/fs2dt.c
-> +++ b/kexec/arch/ppc/fs2dt.c
-> @@ -33,7 +33,7 @@
->  
->  #define MAXPATH			1024	/* max path name length */
->  #define NAMESPACE		16384	/* max bytes for property names */
-> -#define TREEWORDS		65536	/* max 32 bit words for properties */
-> +#define TREEWORDS		131070	/* max 32 bit words for properties */
->  #define MEMRESERVE		256	/* max number of reserved memory blks */
->  #define MAX_MEMORY_RANGES	1024
->  #define COMMAND_LINE_SIZE	512	/* from kernel */
-> 
+Purgatory code with -Os is not working on certain compilers,
+instead of finding out the hard way, just compile with -O0
 
-Ben, do you have any thoughts on this?  It would be nice if we could avoid
-just making this buffer bigger until the crashes stop :)
+Signed-off-by: Matthew McClintock <msm@freescale.com>
+---
+Tried to get a dicussion going on this issue, but for now I
+suspect it is better to have a working kexec on ppc instead of
+waiting
 
-Neil
+ purgatory/arch/ppc/Makefile |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/purgatory/arch/ppc/Makefile b/purgatory/arch/ppc/Makefile
+index 72289a0..319870e 100644
+--- a/purgatory/arch/ppc/Makefile
++++ b/purgatory/arch/ppc/Makefile
+@@ -2,6 +2,8 @@
+ # Purgatory ppc
+ #
+ 
++ppc_PURGATORY_EXTRA_CFLAGS = -O0
++
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/v2wrap_32.S
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/misc.S
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/purgatory-ppc.c
+-- 
+1.6.6.1
+
 
 
 _______________________________________________
