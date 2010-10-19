@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1P8Dlq-0005Kt-DG
-	for kexec@lists.infradead.org; Tue, 19 Oct 2010 15:06:35 +0000
-Date: Tue, 19 Oct 2010 17:06:30 +0200
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH,RFC] - make /proc/vmcore accesable on x86_64
-Message-ID: <20101019150630.GA1870@jolsa.brq.redhat.com>
+	id 1P8Ed9-0004KM-NK
+	for kexec@lists.infradead.org; Tue, 19 Oct 2010 16:01:42 +0000
+Date: Tue, 19 Oct 2010 18:02:07 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec/powerpc fix optimization for size (gcc -Os) build
+Message-ID: <20101019160205.GA25114@verge.net.au>
+References: <20100930155216.32565.36595.stgit@localhost.localdomain>
+	<1287465116.2190.8.camel@mattsm-VirtualBox>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <1287465116.2190.8.camel@mattsm-VirtualBox>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +24,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: Matthew McClintock <msm@freescale.com>
+Cc: Maxim Uvarov <muvarov@gmail.com>, mshiokawa@miraclelinux.com, kexec@lists.infradead.org
 
-hi,
+On Tue, Oct 19, 2010 at 12:11:56AM -0500, Matthew McClintock wrote:
+> On Thu, 2010-09-30 at 19:52 +0400, Maxim Uvarov wrote:
+> > crt.S patch had fixes for gcc -Os (optimaze for size), same as
+> >     kernel has. Without this fixes powerpc gcc 4.4 generates forever
+> >     loop functions for kexec.
+> > 
+> >     This happends because crtsavres code was spit up to individual files
+> >     (http://gcc.gnu.org/ml/gcc-patches/2008-03/msg01294.html) and
+> >     kexec purgatory code has following options:
+> >     --no-undefined -nostartfiles -nostdlib -nodefaultlibs
+> >     So in that case crtasaveregs function are not defined and final object
+> >     file has been linked without them.  This does not happen with applications
+> >     built without -nostdlib, because gcc will add it's standard functions.
+> > Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
+> 
+> Acked-by: Matthew McClintock <msm@freescale.com> 
+> 
+> In lieu of
+> http://lists.infradead.org/pipermail/kexec/2010-October/004600.html
 
-I was playing around with preserve context feature on x86_64
-and was not able to get the /proc/vmcore in the kexec-ed
-kernel until I aplied attached patch.
-
-I'm not at all sure this is right fix ;) but it seems
-that /proc/vmcore is not loaded since the machine field in the
-elf header is wrong.
-
-
-If the x86_64 arch returns 0 (KEXEC_ARCH_DEFAULT) then following
-condition in load_crashdump_segments function will fill 386 as the
-machine for the vmcore elf header..
-
-...
-
-        if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64)
-        {
-                elf_info.machine = EM_X86_64;
-        } else {
-                elf_info.machine       = EM_386;
-                elf_info.lowmem_limit  = X86_MAXMEM;
-                elf_info.get_note_info = get_crash_notes;
-        }
-...
-
-ending with kexec-ed kernel failing check for the machine,
-and disabling vmcore interface...
-
-
-I'm guessing that the reason is the load_crashdump_segments function
-being shared among 32 and 64 bits.. but again, not sure ;)
-
-
-My goal is to share data within the host and kexec-ed kernel,
-so I'd like to use the /proc/vmcore for that.. any other
-ideas are welcome :)
-
-
-thanks,
-jirka
----
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 06e5ae9..40f989a 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -691,6 +691,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	struct memory_range *mem_range, *memmap_p;
- 	struct crash_elf_info elf_info;
- 
-+	memset(&elf_info, 0x0, sizeof(elf_info));
-+
- 	/* Constant parts of the elf_info */
- 	elf_info.data             = ELFDATA2LSB;
- 	elf_info.backup_src_start = BACKUP_SRC_START;
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 3092643..c34fd92 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -134,10 +134,7 @@ int arch_process_options(int argc, char **argv)
- }
- 
- const struct arch_map_entry arches[] = {
--	/* For compatibility with older patches
--	 * use KEXEC_ARCH_DEFAULT instead of KEXEC_ARCH_X86_64 here.
--	 */
--	{ "x86_64", KEXEC_ARCH_DEFAULT },
-+	{ "x86_64", KEXEC_ARCH_X86_64 },
- 	{ NULL, 0 },
- };
- 
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
