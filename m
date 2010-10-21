@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-outbound-2.vmware.com ([65.115.85.73])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1P90WR-0002mZ-9X
-	for kexec@lists.infradead.org; Thu, 21 Oct 2010 19:10:07 +0000
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1P91jO-0000Om-0T
+	for kexec@lists.infradead.org; Thu, 21 Oct 2010 20:27:32 +0000
+Message-ID: <4CC0A204.4060403@zytor.com>
+Date: Thu, 21 Oct 2010 13:26:44 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+MIME-Version: 1.0
 Subject: Re: [RFC PATCH] Bug during kexec...not all cpus are stopped
-From: Alok Kataria <akataria@vmware.com>
-In-Reply-To: <1286929430.15658.30.camel@ank32.eng.vmware.com>
-References: <1286570087.8769.27.camel@ank32.eng.vmware.com>
-	<1286816964.1372.2.camel@ank32.eng.vmware.com>
-	<m1lj64ppri.fsf@fess.ebiederm.org>
-	<1286826083.1372.15.camel@ank32.eng.vmware.com>
-	<20101011213901.GR12743@redhat.com> <m1hbgs5qkc.fsf@fess.ebiederm.org>
-	<20101012221717.GA27478@redhat.com>
+References: <1286570087.8769.27.camel@ank32.eng.vmware.com>	
+	<1286816964.1372.2.camel@ank32.eng.vmware.com>	
+	<m1lj64ppri.fsf@fess.ebiederm.org>	
+	<1286826083.1372.15.camel@ank32.eng.vmware.com>	
+	<20101011213901.GR12743@redhat.com>
+	<m1hbgs5qkc.fsf@fess.ebiederm.org>	
+	<20101012221717.GA27478@redhat.com>	
 	<1286929430.15658.30.camel@ank32.eng.vmware.com>
-Date: Thu, 21 Oct 2010 12:09:16 -0700
-Message-Id: <1287688156.27008.13.camel@ank32.eng.vmware.com>
-Mime-Version: 1.0
-Reply-To: akataria@vmware.com
+	<1287688156.27008.13.camel@ank32.eng.vmware.com>
+In-Reply-To: <1287688156.27008.13.camel@ank32.eng.vmware.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,202 +30,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: "jeremy@xensource.com" <jeremy@xensource.com>, Daniel Hecht <dhecht@vmware.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: akataria@vmware.com
+Cc: "jeremy@xensource.com" <jeremy@xensource.com>, Daniel Hecht <dhecht@vmware.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
 
-
-On Tue, 2010-10-12 at 17:23 -0700, Alok Kataria wrote:
-> On Tue, 2010-10-12 at 15:17 -0700, Vivek Goyal wrote:
-> > On Mon, Oct 11, 2010 at 03:10:11PM -0700, Eric W. Biederman wrote:
-> > > Vivek Goyal <vgoyal@redhat.com> writes:
-> > > 
-> > > > On Mon, Oct 11, 2010 at 12:41:23PM -0700, Alok Kataria wrote:
-> > > 
-> > > > I don't think that kdump path uses smp_send_stop().
-> > > 
-> > > It doesn't.
-> > > 
-> > > > IIUC, on x86, we directly send NMI to other cpus.
-> > > >
-> > > > native_machine_crash_shutdown()
-> > > >   kdump_nmi_shootdown_cpus()
-> > > >         nmi_shootdown_cpus()
-> > > >            smp_send_nmi_allbutself
-> > > >                 apic->send_IPI_allbutself(NMI_VECTOR);
-> > > >
-> > > > So above description should be limited to only panic() path.
-> > > 
-> > > Is it actually confusing?  With respect to documenting the line
-> > > of thinking it seems reasonable.
-> > > 
-> > 
-> > No, just wanted to point out that let us modify the changelog to remove
-> > keyword "kdump" from it. 
-> > 
-> > > > On a side note, I am wondering why panic() and kdump path can't share the
-> > > > shutdown routine.
-> > > 
-> > > Hysterical raisins.  Andi's change to smp_send_stop says that NMIs not
-> > > working on some boxes.  When someone wants to weed through all of the
-> > > insanity it would probably be good to get the panic and the kdump paths
-> > > sharing code.  For now simply separating panic and reboot should be
-> > > enough, and it lets the code evolve where it needs to.
-> > > 
-> > 
-> > Ok. Agreed that atleast conceptually kdump and panic() path should share
-> > the code. But that's a different problem altogether and this patch can go in.
+On 10/21/2010 12:09 PM, Alok Kataria wrote:
 > 
-> Okay now that we all agree, let me repost a patch with the updated
-> changelog, this fits on top of tip/master. 
-
-Hi Ingo, HPA
-
-I don't think this patch was picked up for tip, now that the 2.6.37
-merge window is open can you please pick this up push it upstream.
-This patch fixes a legitimate regression, which was introduced during
-2.6.30, by commit id 4ef702c10b5df18ab04921fc252c26421d4d6c75.
-
-Thanks,
-Alok
-
-> 
-> --
-> 
-> x86 smp_ops now has a new op, stop_other_cpus which takes a parameter "wait"
-> this allows the caller to specify if it wants to stop until all the cpus
-> have processed the stop IPI. This is required specifically for the kexec case
-> where we should wait for all the cpus to be stopped before starting the new
-> kernel.
-> We now wait for the cpus to stop in all cases except for panic where we expect
-> things to be broken and we are doing our best to make things work anyway.
-> 
-> 
-> Signed-off-by: Alok N Kataria <akataria@vmware.com>
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Jeremy Fitzhardinge <jeremy@xensource.com>
-> 
-> Index: linux-x86-tree.git/arch/x86/include/asm/smp.h
-> ===================================================================
-> --- linux-x86-tree.git.orig/arch/x86/include/asm/smp.h	2010-02-07 16:37:26.000000000 -0800
-> +++ linux-x86-tree.git/arch/x86/include/asm/smp.h	2010-10-12 16:37:04.000000000 -0700
-> @@ -50,7 +50,7 @@ struct smp_ops {
->  	void (*smp_prepare_cpus)(unsigned max_cpus);
->  	void (*smp_cpus_done)(unsigned max_cpus);
->  
-> -	void (*smp_send_stop)(void);
-> +	void (*stop_other_cpus)(int wait);
->  	void (*smp_send_reschedule)(int cpu);
->  
->  	int (*cpu_up)(unsigned cpu);
-> @@ -73,7 +73,12 @@ extern struct smp_ops smp_ops;
->  
->  static inline void smp_send_stop(void)
->  {
-> -	smp_ops.smp_send_stop();
-> +	smp_ops.stop_other_cpus(0);
-> +}
-> +
-> +static inline void stop_other_cpus(void)
-> +{
-> +	smp_ops.stop_other_cpus(1);
->  }
->  
->  static inline void smp_prepare_boot_cpu(void)
-> Index: linux-x86-tree.git/arch/x86/kernel/reboot.c
-> ===================================================================
-> --- linux-x86-tree.git.orig/arch/x86/kernel/reboot.c	2010-08-17 12:09:51.000000000 -0700
-> +++ linux-x86-tree.git/arch/x86/kernel/reboot.c	2010-10-12 16:37:04.000000000 -0700
-> @@ -641,7 +641,7 @@ void native_machine_shutdown(void)
->  	/* O.K Now that I'm on the appropriate processor,
->  	 * stop all of the others.
->  	 */
-> -	smp_send_stop();
-> +	stop_other_cpus();
->  #endif
->  
->  	lapic_shutdown();
-> Index: linux-x86-tree.git/arch/x86/kernel/smp.c
-> ===================================================================
-> --- linux-x86-tree.git.orig/arch/x86/kernel/smp.c	2010-07-08 13:53:34.000000000 -0700
-> +++ linux-x86-tree.git/arch/x86/kernel/smp.c	2010-10-12 16:37:04.000000000 -0700
-> @@ -159,10 +159,10 @@ asmlinkage void smp_reboot_interrupt(voi
->  	irq_exit();
->  }
->  
-> -static void native_smp_send_stop(void)
-> +static void native_stop_other_cpus(int wait)
->  {
->  	unsigned long flags;
-> -	unsigned long wait;
-> +	unsigned long timeout;
->  
->  	if (reboot_force)
->  		return;
-> @@ -179,9 +179,12 @@ static void native_smp_send_stop(void)
->  	if (num_online_cpus() > 1) {
->  		apic->send_IPI_allbutself(REBOOT_VECTOR);
->  
-> -		/* Don't wait longer than a second */
-> -		wait = USEC_PER_SEC;
-> -		while (num_online_cpus() > 1 && wait--)
-> +		/*
-> +		 * Don't wait longer than a second if the caller
-> +		 * didn't ask us to wait.
-> +		 */
-> +		timeout = USEC_PER_SEC;
-> +		while (num_online_cpus() > 1 && (wait || timeout--))
->  			udelay(1);
->  	}
->  
-> @@ -227,7 +230,7 @@ struct smp_ops smp_ops = {
->  	.smp_prepare_cpus	= native_smp_prepare_cpus,
->  	.smp_cpus_done		= native_smp_cpus_done,
->  
-> -	.smp_send_stop		= native_smp_send_stop,
-> +	.stop_other_cpus	= native_stop_other_cpus,
->  	.smp_send_reschedule	= native_smp_send_reschedule,
->  
->  	.cpu_up			= native_cpu_up,
-> Index: linux-x86-tree.git/arch/x86/xen/enlighten.c
-> ===================================================================
-> --- linux-x86-tree.git.orig/arch/x86/xen/enlighten.c	2010-10-12 16:36:28.000000000 -0700
-> +++ linux-x86-tree.git/arch/x86/xen/enlighten.c	2010-10-12 16:37:04.000000000 -0700
-> @@ -1019,7 +1019,7 @@ static void xen_reboot(int reason)
->  	struct sched_shutdown r = { .reason = reason };
->  
->  #ifdef CONFIG_SMP
-> -	smp_send_stop();
-> +	stop_other_cpus();
->  #endif
->  
->  	if (HYPERVISOR_sched_op(SCHEDOP_shutdown, &r))
-> Index: linux-x86-tree.git/arch/x86/xen/smp.c
-> ===================================================================
-> --- linux-x86-tree.git.orig/arch/x86/xen/smp.c	2010-08-17 12:09:51.000000000 -0700
-> +++ linux-x86-tree.git/arch/x86/xen/smp.c	2010-10-12 16:37:04.000000000 -0700
-> @@ -400,9 +400,9 @@ static void stop_self(void *v)
->  	BUG();
->  }
->  
-> -static void xen_smp_send_stop(void)
-> +static void xen_stop_other_cpus(int wait)
->  {
-> -	smp_call_function(stop_self, NULL, 0);
-> +	smp_call_function(stop_self, NULL, wait);
->  }
->  
->  static void xen_smp_send_reschedule(int cpu)
-> @@ -470,7 +470,7 @@ static const struct smp_ops xen_smp_ops 
->  	.cpu_disable = xen_cpu_disable,
->  	.play_dead = xen_play_dead,
->  
-> -	.smp_send_stop = xen_smp_send_stop,
-> +	.stop_other_cpus = xen_stop_other_cpus,
->  	.smp_send_reschedule = xen_smp_send_reschedule,
->  
->  	.send_call_func_ipi = xen_smp_send_call_function_ipi,
+> I don't think this patch was picked up for tip, now that the 2.6.37
+> merge window is open can you please pick this up push it upstream.
+> This patch fixes a legitimate regression, which was introduced during
+> 2.6.30, by commit id 4ef702c10b5df18ab04921fc252c26421d4d6c75.
 > 
 
+It probably would have helped if the patch had had a proper patch header
+and so on, and *in particular* not buried in a tree with [RFC PATCH].
+RFC strongly implies that the patch is intended as a base for
+discussion, and is explicitly not intended to be committed.
+
+	-hpa
 
 _______________________________________________
 kexec mailing list
