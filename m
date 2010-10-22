@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1P92dR-0003dm-IG
-	for kexec@lists.infradead.org; Thu, 21 Oct 2010 21:25:21 +0000
-Message-ID: <4CC0AF9A.9050307@zytor.com>
-Date: Thu, 21 Oct 2010 14:24:42 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1P9StW-0002cM-Hw
+	for kexec@lists.infradead.org; Sat, 23 Oct 2010 01:27:39 +0000
+Date: Fri, 22 Oct 2010 10:54:12 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH,RFC] - make /proc/vmcore accesable on x86_64
+Message-ID: <20101022085412.GA8267@verge.net.au>
+References: <20101019150630.GA1870@jolsa.brq.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [RFC PATCH] Bug during kexec...not all cpus are stopped
-References: <1286570087.8769.27.camel@ank32.eng.vmware.com>	
-	<1286816964.1372.2.camel@ank32.eng.vmware.com>	
-	<m1lj64ppri.fsf@fess.ebiederm.org>	
-	<1286826083.1372.15.camel@ank32.eng.vmware.com>	
-	<20101011213901.GR12743@redhat.com>
-	<m1hbgs5qkc.fsf@fess.ebiederm.org>	
-	<20101012221717.GA27478@redhat.com>	
-	<1286929430.15658.30.camel@ank32.eng.vmware.com>	
-	<1287688156.27008.13.camel@ank32.eng.vmware.com>	
-	<4CC0A204.4060403@zytor.com>
-	<1287695406.27008.31.camel@ank32.eng.vmware.com>
-In-Reply-To: <1287695406.27008.31.camel@ank32.eng.vmware.com>
+Content-Disposition: inline
+In-Reply-To: <20101019150630.GA1870@jolsa.brq.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,32 +23,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: akataria@vmware.com
-Cc: "jeremy@xensource.com" <jeremy@xensource.com>, Daniel Hecht <dhecht@vmware.com>, the arch/x86 maintainers <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: kexec@lists.infradead.org
 
-On 10/21/2010 02:10 PM, Alok Kataria wrote:
+On Tue, Oct 19, 2010 at 05:06:30PM +0200, Jiri Olsa wrote:
+> hi,
 > 
-> On Thu, 2010-10-21 at 13:26 -0700, H. Peter Anvin wrote:
->> On 10/21/2010 12:09 PM, Alok Kataria wrote:
->>>
->>> I don't think this patch was picked up for tip, now that the 2.6.37
->>> merge window is open can you please pick this up push it upstream.
->>> This patch fixes a legitimate regression, which was introduced during
->>> 2.6.30, by commit id 4ef702c10b5df18ab04921fc252c26421d4d6c75.
->>>
->>
->> It probably would have helped if the patch had had a proper patch header
->> and so on, and *in particular* not buried in a tree with [RFC PATCH].
->> RFC strongly implies that the patch is intended as a base for
->> discussion, and is explicitly not intended to be committed.
+> I was playing around with preserve context feature on x86_64
+> and was not able to get the /proc/vmcore in the kexec-ed
+> kernel until I aplied attached patch.
 > 
-> I see, I have sent another mail with the patch.
+> I'm not at all sure this is right fix ;) but it seems
+> that /proc/vmcore is not loaded since the machine field in the
+> elf header is wrong.
 > 
+> 
+> If the x86_64 arch returns 0 (KEXEC_ARCH_DEFAULT) then following
+> condition in load_crashdump_segments function will fill 386 as the
+> machine for the vmcore elf header..
+> 
+> ...
+> 
+>         if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64)
+>         {
+>                 elf_info.machine = EM_X86_64;
+>         } else {
+>                 elf_info.machine       = EM_386;
+>                 elf_info.lowmem_limit  = X86_MAXMEM;
+>                 elf_info.get_note_info = get_crash_notes;
+>         }
+> ...
+> 
+> ending with kexec-ed kernel failing check for the machine,
+> and disabling vmcore interface...
+> 
+> 
+> I'm guessing that the reason is the load_crashdump_segments function
+> being shared among 32 and 64 bits.. but again, not sure ;)
+> 
+> 
+> My goal is to share data within the host and kexec-ed kernel,
+> so I'd like to use the /proc/vmcore for that.. any other
+> ideas are welcome :)
 
-I already took the patch and am running it through compile tests, but
-that was mostly for future reference.
+This approach seems reasonable to me.
+I'll push it if a I don't hear any objections
+in the near future.
 
-	-hpa
+> 
+> 
+> thanks,
+> jirka
+> ---
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index 06e5ae9..40f989a 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -691,6 +691,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+>  	struct memory_range *mem_range, *memmap_p;
+>  	struct crash_elf_info elf_info;
+>  
+> +	memset(&elf_info, 0x0, sizeof(elf_info));
+> +
+>  	/* Constant parts of the elf_info */
+>  	elf_info.data             = ELFDATA2LSB;
+>  	elf_info.backup_src_start = BACKUP_SRC_START;
+> diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+> index 3092643..c34fd92 100644
+> --- a/kexec/arch/x86_64/kexec-x86_64.c
+> +++ b/kexec/arch/x86_64/kexec-x86_64.c
+> @@ -134,10 +134,7 @@ int arch_process_options(int argc, char **argv)
+>  }
+>  
+>  const struct arch_map_entry arches[] = {
+> -	/* For compatibility with older patches
+> -	 * use KEXEC_ARCH_DEFAULT instead of KEXEC_ARCH_X86_64 here.
+> -	 */
+> -	{ "x86_64", KEXEC_ARCH_DEFAULT },
+> +	{ "x86_64", KEXEC_ARCH_X86_64 },
+>  	{ NULL, 0 },
+>  };
+>  
+> 
 
 _______________________________________________
 kexec mailing list
