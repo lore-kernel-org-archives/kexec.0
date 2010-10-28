@@ -1,22 +1,20 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from one.firstfloor.org ([213.235.205.2])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PBRYB-0007g2-Mf
-	for kexec@lists.infradead.org; Thu, 28 Oct 2010 12:25:48 +0000
-Date: Thu, 28 Oct 2010 14:25:40 +0200
-From: Andi Kleen <andi@firstfloor.org>
-Subject: Re: [PATCH] kexec_load manpage
-Message-ID: <20101028122540.GA29759@basil.fritz.box>
-References: <20100619132633.GA24277@basil.fritz.box>
-	<m1mxuqu8yr.fsf@fess.ebiederm.org>
-	<AANLkTillNx5owgU4O71izNz9FEL06MiI-FquTZ3ofktP@mail.gmail.com>
-	<AANLkTi=HKMce2UojSRmqVdoLO3H4v+6Xtp-bgFuHwH+D@mail.gmail.com>
-	<AANLkTinHP0Z-sQOgtETQsQ_5ZV1UbT+tGDJ47B23E4=0@mail.gmail.com>
-	<20101024213802.GB9922@basil.fritz.box>
-	<20101028121417.GD16206@verge.net.au>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from nlpi087.prodigy.net ([207.115.36.103])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PBZyS-0006Gr-OC
+	for kexec@lists.infradead.org; Thu, 28 Oct 2010 21:25:30 +0000
+Received: from alexandria.lan (ppp-70-248-74-84.dsl.ksc2mo.swbell.net
+	[70.248.74.84])
+	by nlpi087.prodigy.net (8.14.4 biz_spool_out_ldap/8.14.4) with ESMTP id
+	o9SLPRpk009495
+	for <kexec@lists.infradead.org>; Thu, 28 Oct 2010 16:25:27 -0500
+Date: Thu, 28 Oct 2010 16:25:27 -0500
+From: Austin Morgan <admorgan@morgancomputers.net>
+Subject: [PATCH] slurpfile: use lseek() on block nodes instead of fstat()
+	for file size
+Message-ID: <20101028212515.GA24848@alexandria.lan>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20101028121417.GD16206@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,35 +26,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-man@vger.kernel.org, Andi Kleen <andi@firstfloor.org>, Kexec Mailing List <kexec@lists.infradead.org>, Michael Kerrisk <mtk.manpages@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Thu, Oct 28, 2010 at 09:14:17PM +0900, Simon Horman wrote:
-> On Sun, Oct 24, 2010 at 11:38:02PM +0200, Andi Kleen wrote:
-> > On Sun, Oct 24, 2010 at 04:56:24PM +0200, Michael Kerrisk wrote:
-> > > Hey Andi,
-> > > 
-> > > I'd like to push this page out the door, but I'm blocked doing so
-> > > until I hear back from you regarding the question below (plus a new
-> > > version of the page, if needed please).
-> > 
-> > Probably. Eric should know.
-> > 
-> > Frankly without an header the syscall is pretty much unusable
-> > for normal programs anyways, so I gave up on this.
-> 
-> I'm not sure that I ever understood the impasse over the header.
+fstat() is used to determine the file size before read() and
+it requires a files ystem. That means that it can not be used
+on block nodes. This makes it impossible to obtain the
+kernel from a raw block device.
 
-It's basically: should kexec_load only be used from kexec(8)
-or is it a generally available syscall.
+We can't use this in every case because files in /proc doesn't
+support lseek().
 
-If the former is true no header or manpage is needed.
-For the later both are.
+Signed-off-by: Austin Morgan <admorgan@morgancomputers.net>
+---
+ kexec/kexec.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
--Andi
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 10ad41d..e9d6a54 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -499,7 +499,7 @@ char *slurp_file(const char *filename, off_t *r_size)
+ 	 * This does not work on regular files which live in /proc and
+ 	 * we need this for some /proc/device-tree entries
+ 	 */
+-	if (S_ISCHR(stats.st_mode)) {
++	if (S_ISCHR(stats.st_mode) || S_ISBLK(stats.st_mode)) {
+ 
+ 		size = lseek(fd, 0, SEEK_END);
+ 		if (size < 0)
 -- 
-ak@linux.intel.com -- Speaking for myself only.
+1.7.2.2
+
 
 _______________________________________________
 kexec mailing list
