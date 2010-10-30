@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PBjnC-0008Lm-AN
-	for kexec@lists.infradead.org; Fri, 29 Oct 2010 07:54:31 +0000
-Date: Fri, 29 Oct 2010 09:54:25 +0200
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH] - make /proc/vmcore accesable on x86_64
-Message-ID: <20101029075425.GA1978@jolsa.brq.redhat.com>
-References: <20101019150630.GA1870@jolsa.brq.redhat.com>
-	<20101022085412.GA8267@verge.net.au>
-	<20101028121627.GE16206@verge.net.au>
+	id 1PC1JZ-0000tR-OG
+	for kexec@lists.infradead.org; Sat, 30 Oct 2010 02:37:06 +0000
+Date: Sat, 30 Oct 2010 11:36:44 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec_load manpage
+Message-ID: <20101030023644.GC12842@verge.net.au>
+References: <20100619132633.GA24277@basil.fritz.box>
+	<m1mxuqu8yr.fsf@fess.ebiederm.org>
+	<AANLkTillNx5owgU4O71izNz9FEL06MiI-FquTZ3ofktP@mail.gmail.com>
+	<AANLkTi=HKMce2UojSRmqVdoLO3H4v+6Xtp-bgFuHwH+D@mail.gmail.com>
+	<AANLkTinHP0Z-sQOgtETQsQ_5ZV1UbT+tGDJ47B23E4=0@mail.gmail.com>
+	<20101024213802.GB9922@basil.fritz.box>
+	<20101028121417.GD16206@verge.net.au>
+	<20101028122540.GA29759@basil.fritz.box>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20101028121627.GE16206@verge.net.au>
+In-Reply-To: <20101028122540.GA29759@basil.fritz.box>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,92 +30,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Andi Kleen <andi@firstfloor.org>
+Cc: linux-man@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, Michael Kerrisk <mtk.manpages@gmail.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Thu, Oct 28, 2010 at 09:16:27PM +0900, Simon Horman wrote:
-> On Fri, Oct 22, 2010 at 10:54:12AM +0200, Simon Horman wrote:
-> > On Tue, Oct 19, 2010 at 05:06:30PM +0200, Jiri Olsa wrote:
-
-SNIP
-
-> > > My goal is to share data within the host and kexec-ed kernel,
-> > > so I'd like to use the /proc/vmcore for that.. any other
-> > > ideas are welcome :)
+On Thu, Oct 28, 2010 at 02:25:40PM +0200, Andi Kleen wrote:
+> On Thu, Oct 28, 2010 at 09:14:17PM +0900, Simon Horman wrote:
+> > On Sun, Oct 24, 2010 at 11:38:02PM +0200, Andi Kleen wrote:
+> > > On Sun, Oct 24, 2010 at 04:56:24PM +0200, Michael Kerrisk wrote:
+> > > > Hey Andi,
+> > > > 
+> > > > I'd like to push this page out the door, but I'm blocked doing so
+> > > > until I hear back from you regarding the question below (plus a new
+> > > > version of the page, if needed please).
+> > > 
+> > > Probably. Eric should know.
+> > > 
+> > > Frankly without an header the syscall is pretty much unusable
+> > > for normal programs anyways, so I gave up on this.
 > > 
-> > This approach seems reasonable to me.
-> > I'll push it if a I don't hear any objections
-> > in the near future.
+> > I'm not sure that I ever understood the impasse over the header.
 > 
-> Hi Jiru,
+> It's basically: should kexec_load only be used from kexec(8)
+> or is it a generally available syscall.
 > 
-> could you please submit this as a formal patch with a signed-off-by line?
-sure, it's attached
+> If the former is true no header or manpage is needed.
+> For the later both are.
 
-thanks,
-jirka
----
+Magnus Damm is interested in having a kexec-tools module for busybox [1].
+And I suspect that would be somewhat less tedious to implement
+if kexec was a generally available syscall.
 
-hi,
+[1] http://tree.celinuxforum.org/pipermail/celinux-dev/2010-October/002057.html
 
-I was playing around with preserve context feature on x86_64
-and was not able to get the /proc/vmcore in the kexec-ed
-kernel until I aplied attached patch.
-
-If the x86_64 arch returns 0 (KEXEC_ARCH_DEFAULT) then following
-condition in load_crashdump_segments function will fill 386 as the
-machine for the vmcore elf header..
-
-...
-
-        if ((info->kexec_flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_X86_64)
-        {
-                elf_info.machine = EM_X86_64;
-        } else {
-                elf_info.machine       = EM_386;
-                elf_info.lowmem_limit  = X86_MAXMEM;
-                elf_info.get_note_info = get_crash_notes;
-        }
-...
-
-ending with kexec-ed kernel failing check for the machine,
-and disabling vmcore interface.
-
-wbr,
-jirka
-
-
-Signed-off-by: Jiri Olsa <jolsa@redhat.com>
----
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index 06e5ae9..40f989a 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -691,6 +691,8 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
- 	struct memory_range *mem_range, *memmap_p;
- 	struct crash_elf_info elf_info;
- 
-+	memset(&elf_info, 0x0, sizeof(elf_info));
-+
- 	/* Constant parts of the elf_info */
- 	elf_info.data             = ELFDATA2LSB;
- 	elf_info.backup_src_start = BACKUP_SRC_START;
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 3092643..c34fd92 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -134,10 +134,7 @@ int arch_process_options(int argc, char **argv)
- }
- 
- const struct arch_map_entry arches[] = {
--	/* For compatibility with older patches
--	 * use KEXEC_ARCH_DEFAULT instead of KEXEC_ARCH_X86_64 here.
--	 */
--	{ "x86_64", KEXEC_ARCH_DEFAULT },
-+	{ "x86_64", KEXEC_ARCH_X86_64 },
- 	{ NULL, 0 },
- };
- 
 
 _______________________________________________
 kexec mailing list
