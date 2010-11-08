@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nokia.com ([192.100.122.233] helo=mgw-mx06.nokia.com)
+Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PFMjv-0001ZB-B9
-	for kexec@lists.infradead.org; Mon, 08 Nov 2010 08:06:08 +0000
+	id 1PFMk7-0001a3-F4
+	for kexec@lists.infradead.org; Mon, 08 Nov 2010 08:06:20 +0000
 From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH v2 2/2] ARM: don't depend on vmalloc_start
-Date: Mon,  8 Nov 2010 09:59:28 +0200
-Message-Id: <f8ed2b94b119fefb6c5f86cd6d9c22bc3d5026ad.1289202688.git.ext-mika.1.westerberg@nokia.com>
+Subject: [PATCH v2 1/2] ARM: determine PAGE_OFFSET from _stext
+Date: Mon,  8 Nov 2010 09:59:27 +0200
+Message-Id: <eeee74fa4f26d7a83f13e71afe09b9f98c1a5ee0.1289202688.git.ext-mika.1.westerberg@nokia.com>
 In-Reply-To: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
 References: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
 In-Reply-To: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
@@ -27,97 +27,41 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: igawa@mxs.nes.nec.co.jp
 Cc: kexec@lists.infradead.org, Mika Westerberg <ext-mika.1.westerberg@nokia.com>
 
-In ARM, modules are placed in vmalloc'ed area right above user stack and the rest
-of the vmalloc area is somewhere after high_memory (this can be different from
-different platforms). This value is not stored in vmcoreinfo so we have no means
-to find out the correct vmalloc_start value.
-
-So we assume that all V->P translations are within the kernel direct mapped
-memory and use translation tables only when '--vtop' option is passed.
+It is normal that we can have different values for PAGE_OFFSET depending on
+selected VM split. We avoid the hard-coded value and derive the value from the
+_stext symbol instead.
 
 Signed-off-by: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
 ---
- arm.c |   48 ++++++++----------------------------------------
- 1 files changed, 8 insertions(+), 40 deletions(-)
+ arm.c          |    2 +-
+ makedumpfile.h |    1 -
+ 2 files changed, 1 insertions(+), 2 deletions(-)
 
 diff --git a/arm.c b/arm.c
-index 3ea450a..00ca654 100644
+index 3fc0599..3ea450a 100644
 --- a/arm.c
 +++ b/arm.c
-@@ -79,47 +79,17 @@ get_phys_base_arm(void)
- int
- get_machdep_info_arm(void)
+@@ -81,7 +81,7 @@ get_machdep_info_arm(void)
  {
--	unsigned long vmlist, vmalloc_start;
--
- 	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
+ 	unsigned long vmlist, vmalloc_start;
+ 
+-	info->page_offset = __PAGE_OFFSET;
++	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
  	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
  	info->kernel_start = SYMBOL(_stext);
  	info->section_size_bits = _SECTION_SIZE_BITS;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 3f39a88..6d91d51 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -507,7 +507,6 @@ do { \
+ #define VMEMMAP_END		(info->vmemmap_end)
  
--	/*
--	 * For the compatibility, makedumpfile should run without the symbol
--	 * vmlist and the offset of vm_struct.addr if they are not necessary.
--	 */
--	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL) ||
--		OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE) {
--		return TRUE;
--	}
--
--	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
--		ERRMSG("Can't get vmlist.\n");
--		return FALSE;
--	}
--	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
--		     sizeof(vmalloc_start))) {
--		ERRMSG("Can't get vmalloc_start.\n");
--		return FALSE;
--	}
--
--	info->vmalloc_start = vmalloc_start;
--
- 	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
- 	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
--	DEBUG_MSG("vmalloc_start: %lx\n", vmalloc_start);
- 
- 	return TRUE;
- }
- 
--static int
--is_vmalloc_addr_arm(unsigned long vaddr)
--{
--	return (info->vmalloc_start && vaddr >= info->vmalloc_start);
--}
--
- /*
-  * vtop_arm() - translate arbitrary virtual address to physical
-  * @vaddr: virtual address to translate
-@@ -184,17 +154,15 @@ vtop_arm(unsigned long vaddr)
- unsigned long long
- vaddr_to_paddr_arm(unsigned long vaddr)
- {
--	unsigned long long paddr = vaddr_to_paddr_general(vaddr);
--
--	if (paddr != NOT_PADDR)
--		return paddr;
--
--	if (is_vmalloc_addr_arm(vaddr))
--		paddr = vtop_arm(vaddr);
--	else
--		paddr = __pa(vaddr);
-+	/*
-+	 * Only use translation tables when user has explicitly requested us to
-+	 * perform translation for a given address. Otherwise we assume that the
-+	 * translation is done within the kernel direct mapped region.
-+	 */
-+	if (info->vaddr_for_vtop == vaddr)
-+		return vtop_arm(vaddr);
- 
--	return paddr;
-+	return __pa(vaddr);
- }
- 
- #endif /* __arm__ */
+ #ifdef __arm__
+-#define __PAGE_OFFSET		(0xc0000000)
+ #define KVBASE_MASK		(0xffff)
+ #define KVBASE			(SYMBOL(_stext) & ~KVBASE_MASK)
+ #define _SECTION_SIZE_BITS	(28)
 -- 
 1.5.6.5
 
