@@ -1,16 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.nokia.com ([192.100.122.230] helo=mgw-mx03.nokia.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PFMk7-0001a3-F4
-	for kexec@lists.infradead.org; Mon, 08 Nov 2010 08:06:20 +0000
-From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH v2 1/2] ARM: determine PAGE_OFFSET from _stext
-Date: Mon,  8 Nov 2010 09:59:27 +0200
-Message-Id: <eeee74fa4f26d7a83f13e71afe09b9f98c1a5ee0.1289202688.git.ext-mika.1.westerberg@nokia.com>
-In-Reply-To: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
-References: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
-In-Reply-To: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
-References: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
+Received: from eu1sys200aog109.obsmtp.com ([207.126.144.127])
+	by canuck.infradead.org with smtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PFNKx-0002KK-BR
+	for kexec@lists.infradead.org; Mon, 08 Nov 2010 08:44:24 +0000
+Received: from zeta.dmz-ap.st.com (ns6.st.com [138.198.234.13])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9970726C
+	for <kexec@lists.infradead.org>; Mon,  8 Nov 2010 08:44:11 +0000 (GMT)
+Received: from relay1.stm.gmessaging.net (unknown [10.230.100.17])
+	by zeta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 45BC7CD6
+	for <kexec@lists.infradead.org>; Mon,  8 Nov 2010 08:43:01 +0000 (GMT)
+Received: from exdcvycastm003.EQ1STM.local (alteon-source-exch [10.230.100.61])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(Client CN "exdcvycastm003", Issuer "exdcvycastm003" (not verified))
+	by relay1.stm.gmessaging.net (Postfix) with ESMTPS id C4D2B24C2F8
+	for <kexec@lists.infradead.org>; Mon,  8 Nov 2010 09:42:54 +0100 (CET)
+From: Per Fransson <per.xx.fransson@stericsson.com>
+Subject: [RFC 1/2] Selective MMU identity mapping for kexec
+Date: Mon, 8 Nov 2010 09:42:36 +0100
+Message-ID: <1289205757-14620-2-git-send-email-per.xx.fransson@stericsson.com>
+In-Reply-To: <1289205757-14620-1-git-send-email-per.xx.fransson@stericsson.com>
+References: <1289205757-14620-1-git-send-email-per.xx.fransson@stericsson.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,51 +29,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: igawa@mxs.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+To: kexec@lists.infradead.org
+Cc: Per Fransson <per.xx.fransson@stericsson.com>
 
-It is normal that we can have different values for PAGE_OFFSET depending on
-selected VM split. We avoid the hard-coded value and derive the value from the
-_stext symbol instead.
-
-Signed-off-by: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Signed-off-by: Per Fransson <per.xx.fransson@stericsson.com>
 ---
- arm.c          |    2 +-
- makedumpfile.h |    1 -
- 2 files changed, 1 insertions(+), 2 deletions(-)
+ arch/arm/mm/proc-v7.S |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
 
-diff --git a/arm.c b/arm.c
-index 3fc0599..3ea450a 100644
---- a/arm.c
-+++ b/arm.c
-@@ -81,7 +81,7 @@ get_machdep_info_arm(void)
- {
- 	unsigned long vmlist, vmalloc_start;
+diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+index 2b5b20b..b249143 100644
+--- a/arch/arm/mm/proc-v7.S
++++ b/arch/arm/mm/proc-v7.S
+@@ -61,6 +61,9 @@ ENDPROC(cpu_v7_proc_fin)
+  */
+ 	.align	5
+ ENTRY(cpu_v7_reset)
++	mrc	p15, 0, ip, c1, c0, 0		@ ctrl register
++	bic	ip, ip, #0x0001			@ ...............m
++	mcr	p15, 0, ip, c1, c0, 0		@ ctrl register
+ 	mov	pc, r0
+ ENDPROC(cpu_v7_reset)
  
--	info->page_offset = __PAGE_OFFSET;
-+	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
- 	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
- 	info->kernel_start = SYMBOL(_stext);
- 	info->section_size_bits = _SECTION_SIZE_BITS;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 3f39a88..6d91d51 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -507,7 +507,6 @@ do { \
- #define VMEMMAP_END		(info->vmemmap_end)
- 
- #ifdef __arm__
--#define __PAGE_OFFSET		(0xc0000000)
- #define KVBASE_MASK		(0xffff)
- #define KVBASE			(SYMBOL(_stext) & ~KVBASE_MASK)
- #define _SECTION_SIZE_BITS	(28)
 -- 
-1.5.6.5
+1.7.2.2
 
 
 _______________________________________________
