@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from smtp.nokia.com ([192.100.105.134] helo=mgw-mx09.nokia.com)
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PEC2m-0000QS-MC
-	for kexec@lists.infradead.org; Fri, 05 Nov 2010 02:28:46 +0000
-Date: Fri, 05 Nov 2010 11:18:42 +0900 (JST)
-Message-Id: <20101105.111842.14992809.igawa@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH 2/2] ARM: don't depend on vmalloc_start
-From: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
-In-Reply-To: <d7f8e9b169c05bc7643b2c01929e38ac3fadf035.1288788355.git.ext-mika.1.westerberg@nokia.com>
-References: <cover.1288788355.git.ext-mika.1.westerberg@nokia.com>
-	<cover.1288788355.git.ext-mika.1.westerberg@nokia.com>
-	<d7f8e9b169c05bc7643b2c01929e38ac3fadf035.1288788355.git.ext-mika.1.westerberg@nokia.com>
-Mime-Version: 1.0
+	id 1PFMju-0001ZA-QR
+	for kexec@lists.infradead.org; Mon, 08 Nov 2010 08:06:07 +0000
+From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
+Subject: [PATCH v2 0/2] makedumpfile: few ARM fixes
+Date: Mon,  8 Nov 2010 09:59:26 +0200
+Message-Id: <cover.1289202688.git.ext-mika.1.westerberg@nokia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,242 +15,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1797039718=="
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ext-mika.1.westerberg@nokia.com
-Cc: kexec@lists.infradead.org
+To: igawa@mxs.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, Mika Westerberg <ext-mika.1.westerberg@nokia.com>
 
---===============1797039718==
-Content-Type: Multipart/Signed; protocol="application/pkcs7-signature";
- micalg=sha1;
- boundary="--Security_Multipart(Fri_Nov__5_11_18_42_2010_421)--"
-Content-Transfer-Encoding: 7bit
+Hi,
 
-----Security_Multipart(Fri_Nov__5_11_18_42_2010_421)--
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+While using makedumpfile on ARM I found few issues from the current
+implementation. Basically the current implementation only works on
+3G/1G VM split but not others.
 
-Hi Mika,
-Thank you for your patches.
+These patches should make makedumpfile on ARM to work on other VM
+split values as well. I've tested with 1G/3G, 2G/2G, 3G/1G, and
+VMSPLIT_3G_OPT (2.7G/1.3G).
 
-Some comments are below.
+Changes to previous version:
+	- removed any references to vmalloc_start as per review comments
 
+This version still allows users to use '--vtop' option to perform V->P
+translations via page tables.
 
-From: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-Subject: [PATCH 2/2] ARM: don't depend on vmalloc_start
-Date: Thu,  4 Nov 2010 10:15:17 +0200
+Regards,
+MW
 
-> In ARM, modules are placed in vmalloc'ed area right above user stack and the
-> rest of the vmalloc area is somewhere after high_memory (this can be different
-> on different platforms). Since this value is not stored in vmcoreinfo, we have
-> no means to find out the correct value for vmalloc_start.
-> 
-> So we assume that all V->P translations are within the kernel direct mapped
-> memory and use translation tables only when '--vtop' option is passed.
-> 
-> Signed-off-by: Mika Westerberg <ext-mika.1.westerberg@nokia.com>
-> ---
->  arm.c |   40 +++++++++++++++++++---------------------
->  1 files changed, 19 insertions(+), 21 deletions(-)
-> 
-> diff --git a/arm.c b/arm.c
-> index 3ea450a..6469f03 100644
-> --- a/arm.c
-> +++ b/arm.c
-> @@ -86,6 +86,9 @@ get_machdep_info_arm(void)
->  	info->kernel_start = SYMBOL(_stext);
->  	info->section_size_bits = _SECTION_SIZE_BITS;
->  
-> +	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
-> +	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
-> +
->  	/*
->  	 * For the compatibility, makedumpfile should run without the symbol
->  	 * vmlist and the offset of vm_struct.addr if they are not necessary.
-> @@ -95,31 +98,28 @@ get_machdep_info_arm(void)
->  		return TRUE;
->  	}
->  
-> +	/*
-> +	 * In ARM the VMALLOC_START can be redefined per platform and we have no
-> +	 * means to read that from the vmcore (there is currently no vmcoreinfo
-> +	 * which specifies that), so we are not going to use vmalloc_start for
-> +	 * anything.
-> +	 */
->  	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
->  		ERRMSG("Can't get vmlist.\n");
-> -		return FALSE;
-> +		return TRUE;
->  	}
->  	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
->  		     sizeof(vmalloc_start))) {
->  		ERRMSG("Can't get vmalloc_start.\n");
-> -		return FALSE;
-> +		return TRUE;
->  	}
+Mika Westerberg (2):
+  ARM: determine PAGE_OFFSET from _stext
+  ARM: don't depend on vmalloc_start
 
-I think this code can be removed.
-Because this code is easy to misunderstand for users and
-there are no means to check now.
+ arm.c          |   50 +++++++++-----------------------------------------
+ makedumpfile.h |    1 -
+ 2 files changed, 9 insertions(+), 42 deletions(-)
 
->  
->  	info->vmalloc_start = vmalloc_start;
-> -
-> -	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
-> -	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
->  	DEBUG_MSG("vmalloc_start: %lx\n", vmalloc_start);
-
-These codes too?
-There is no need 'info->vmalloc_start' by removing is_vmalloc_addr_arm() in ARM now.
-
->  
->  	return TRUE;
->  }
->  
-> -static int
-> -is_vmalloc_addr_arm(unsigned long vaddr)
-> -{
-> -	return (info->vmalloc_start && vaddr >= info->vmalloc_start);
-> -}
-> -
->  /*
->   * vtop_arm() - translate arbitrary virtual address to physical
->   * @vaddr: virtual address to translate
-> @@ -184,17 +184,15 @@ vtop_arm(unsigned long vaddr)
->  unsigned long long
->  vaddr_to_paddr_arm(unsigned long vaddr)
->  {
-> -	unsigned long long paddr = vaddr_to_paddr_general(vaddr);
-> -
-> -	if (paddr != NOT_PADDR)
-> -		return paddr;
-> -
-> -	if (is_vmalloc_addr_arm(vaddr))
-> -		paddr = vtop_arm(vaddr);
-> -	else
-> -		paddr = __pa(vaddr);
-> +	/*
-> +	 * Only use translation tables when user has explicitly requested us to
-> +	 * perform translation for a given address. Otherwise we assume that the
-> +	 * translation is done within the kernel direct mapped region.
-> +	 */
-> +	if (info->vaddr_for_vtop == vaddr)
-> +		return vtop_arm(vaddr);
->  
-> -	return paddr;
-> +	return __pa(vaddr);
->  }
-
-Why do you use vtop tranlation only when '--vtop' option is passed?
-I think if you don't need vtop translation, vtop_arm() can be removed
-and vaddr_to_paddr_arm() can be like below.
-===
-unsigned long long
-vaddr_to_paddr_arm(unsigned long vaddr)
-{
-	unsigned long long paddr;
-
-	paddr = __pa(vaddr);
-
-	if (info->vaddr_for_vtop == vaddr)
-		MSG("  VADDR : %08lx => PADDR : %08lx\n", vaddr, paddr);
-
-	return paddr;
-}
-===
-
-Thanks.
--- Masayuki Igawa
-
->  
->  #endif /* __arm__ */
-> -- 
-> 1.5.6.5
-> 
-
-
-----Security_Multipart(Fri_Nov__5_11_18_42_2010_421)--
-Content-Type: application/pkcs7-signature
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIILkDCCAygw
-ggKRoAMCAQICED6qVN6s1GhrOxs5RUlMGiYwDQYJKoZIhvcNAQEFBQAwgcExCzAJBgNVBAYTAlVT
-MRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMiBQdWJsaWMgUHJpbWFy
-eSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2ln
-biwgSW5jLiAtIEZvciBhdXRob3JpemVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVz
-dCBOZXR3b3JrMB4XDTA1MTAwNDAwMDAwMFoXDTE1MTAwMzIzNTk1OVowaDEcMBoGA1UEChMTVmVy
-aVNpZ24gSmFwYW4gSy5LLjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazEnMCUGA1UE
-AxMeVmVyaVNpZ24gSmFwYW4gQ2xhc3MgMiBDQSAtIEcyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCB
-iQKBgQDkmy8PT4pRBLavMmVN7iGZuYUtbL0Wlcx1uZ3RQvguCNzHpcnd4UEP+KRAMQIZDLazQtUt
-4kipNciXl7GKn0Z+62zZ+UW5jBAf6fPptjIcx5Vre1XWLq6cm3ku++NZqWhrjlcVE8NEqg5x7s9d
-5KjvDXSSt/G/dK4vjNdZlgbmCQIDAQABo3kwdzAMBgNVHRMEBTADAQH/MDQGA1UdHwQtMCswKaAn
-oCWGI2h0dHA6Ly9jcmwudmVyaXNpZ24uY29tL3BjYTItZzIuY3JsMAsGA1UdDwQEAwIBBjAkBgNV
-HREEHTAbpBkwFzEVMBMGA1UEAxMMQWZmU0NDMi0xLTIxMA0GCSqGSIb3DQEBBQUAA4GBAD2ZOCxM
-2RzB0+PqBK1qPl03751V04n15PHYkvmTtQ7YldGjhbgykNoOU9AsrY8qUPuvA3y7UwxEmoEsYNhL
-ar3TDbURqESqSza8zjDByeCQjYk6jb1eXdhfV+z3JQmgVCAr94Sy6RBR/OoWbS41LR0Hd1MagvqR
-8HSbUbfGBBFPMIIECTCCA3KgAwIBAgIQLejPQByLYoDp9tJY/tI+XDANBgkqhkiG9w0BAQUFADBo
-MRwwGgYDVQQKExNWZXJpU2lnbiBKYXBhbiBLLksuMR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBO
-ZXR3b3JrMScwJQYDVQQDEx5WZXJpU2lnbiBKYXBhbiBDbGFzcyAyIENBIC0gRzIwHhcNMDcxMTE5
-MDAwMDAwWhcNMTIxMTE4MjM1OTU5WjCB5jEYMBYGA1UEChMPTkVDIENvcnBvcmF0aW9uMR8wHQYD
-VQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMT0wOwYDVQQLEzRUZXJtcyBvZiB1c2UgYXQgaHR0
-cHM6Ly93d3cudmVyaXNpZ24uY28uanAvcnBhIChjKTA3MTUwMwYDVQQLEyxDbGFzcyAyIE1hbmFn
-ZWQgUEtJIEluZGl2aWR1YWwgU3Vic2NyaWJlciBDQTEzMDEGA1UEAxMqTkVDIEdyb3VwIENlcnRp
-ZmljYXRpb24gQXV0aG9yaXR5IFNNSU1FIEcyMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9
-9DSvVQD51qvx3X7/kdyAe0C3wD2BNMYLDXduvIQZjtHiAj3se1pjhT4NqZotJutZ5Q5h/JHxjzKx
-acBjvJyTcquOH2jmS9SWUa3ATRflyprMF2wtIMCUYexapr4cTqW6E8tre+16/aIHPaXoh+mufEW1
-JJ+Gl4ZzptBFKG32qwIDAQABo4IBMzCCAS8wEgYDVR0TAQH/BAgwBgEB/wIBADB0BgNVHSAEbTBr
-MGkGC2CGSAGG+EUBBxcCMFowKgYIKwYBBQUHAgEWHmh0dHBzOi8vd3d3LnZlcmlzaWduLmNvLmpw
-L2NwczAsBggrBgEFBQcCAjAgGh5odHRwczovL3d3dy52ZXJpc2lnbi5jby5qcC9ycGEwPgYDVR0f
-BDcwNTAzoDGgL4YtaHR0cDovL2NybC52ZXJpc2lnbi5jby5qcC9WU0pfQzJDQV9HMl9DUkwuY3Js
-MA4GA1UdDwEB/wQEAwIBBjARBglghkgBhvhCAQEEBAMCAQYwIQYDVR0RBBowGKQWMBQxEjAQBgNV
-BAMTCUMxQzItMS00MTAdBgNVHQ4EFgQU+zF3gPZvdEu+YvO/ahDhjkuZe7MwDQYJKoZIhvcNAQEF
-BQADgYEAWvqCK9h2/lcyG0mgjl2tRjnF/BGbfHULDHPU+2KyuAgI2Cv8vcf/Hxycd4iL5ih77ECz
-EQgmW4ngKanfpdWhMvV4E8ohMY8cA2lJv/E/WemqHDNF7CZgwCOZL/+B+aJvCCKAdd6iLqp76sTF
-yhRGzHznH8LcITyePSLq2trnG5cwggRTMIIDvKADAgECAhBJ910HigEy6kgd8eqZ4gUcMA0GCSqG
-SIb3DQEBBQUAMIHmMRgwFgYDVQQKEw9ORUMgQ29ycG9yYXRpb24xHzAdBgNVBAsTFlZlcmlTaWdu
-IFRydXN0IE5ldHdvcmsxPTA7BgNVBAsTNFRlcm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy52ZXJp
-c2lnbi5jby5qcC9ycGEgKGMpMDcxNTAzBgNVBAsTLENsYXNzIDIgTWFuYWdlZCBQS0kgSW5kaXZp
-ZHVhbCBTdWJzY3JpYmVyIENBMTMwMQYDVQQDEypORUMgR3JvdXAgQ2VydGlmaWNhdGlvbiBBdXRo
-b3JpdHkgU01JTUUgRzIwHhcNMTAwNzA0MDAwMDAwWhcNMTIwNzAzMjM1OTU5WjCB6DEYMBYGA1UE
-ChQPTkVDIENvcnBvcmF0aW9uMTMwMQYDVQQLFCpORUMgR3JvdXAgQ2VydGlmaWNhdGlvbiBBdXRo
-b3JpdHkgU01JTUUgRzIxNTAzBgNVBAsTLFRlcm1zIG9mIHVzZSBhdCB3d3cudmVyaXNpZ24uY28u
-anAvcnBhIChjKTA3MTgwNgYDVQQDEy9NYXNheXVraSBJZ2F3YSAoMTAwNzA1IGlnYXdhLm14cy5u
-ZXMubmVjLmNvLmpwKTEmMCQGCSqGSIb3DQEJARYXaWdhd2FAbXhzLm5lcy5uZWMuY28uanAwgZ8w
-DQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBANFI8Radlm8Opo0ST2TRvXBt+hUEa2uFQz62CWQqxl+0
-XHoMfX+xu2Nf8iTD4IDhj6NnlkO1GuN9wS2mf66siGRKH5Ib8XHjbJoeeoiGAKDGwqtbbhaa5Mg2
-id6vgT2l7fuRaWgeFmgniNNz4j7DsyoGtCN6F5QJlh+GxbWPFiF9AgMBAAGjgf0wgfowCQYDVR0T
-BAIwADALBgNVHQ8EBAMCBaAwcgYDVR0fBGswaTBnoGWgY4ZhaHR0cDovL29uc2l0ZWNybC52ZXJp
-c2lnbi5jby5qcC9ORUNDb3Jwb3JhdGlvbk5FQ0dyb3VwQ2VydGlmaWNhdGlvbkF1dGhvcml0eVNN
-SU1FRzIvTGF0ZXN0Q1JMLmNybDBGBgNVHSAEPzA9MDsGC2CGSAGG+EUBBxcCMCwwKgYIKwYBBQUH
-AgEWHmh0dHBzOi8vd3d3LnZlcmlzaWduLmNvLmpwL3JwYTARBglghkgBhvhCAQEEBAMCBSAwEQYK
-YIZIAYb4RQEGCQQDAQH/MA0GCSqGSIb3DQEBBQUAA4GBAC374/pnhVS6BeMtRPZ+fj/wdmg1rl7q
-KgWVfGOAhUpGsKUflbzuqfC5l8aISXfwiHpglX0ahGINSx+/aFT09fYQ/go4hzLhAmUrR4yvrDwq
-+3G19RbPRvtsOPMzf+guHZ7WwhT8bLgE9uPTnIiXGpnvzq3FLvW5sUbZlWFlf0OnMYICLDCCAigC
-AQEwgfswgeYxGDAWBgNVBAoTD05FQyBDb3Jwb3JhdGlvbjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1
-c3QgTmV0d29yazE9MDsGA1UECxM0VGVybXMgb2YgdXNlIGF0IGh0dHBzOi8vd3d3LnZlcmlzaWdu
-LmNvLmpwL3JwYSAoYykwNzE1MDMGA1UECxMsQ2xhc3MgMiBNYW5hZ2VkIFBLSSBJbmRpdmlkdWFs
-IFN1YnNjcmliZXIgQ0ExMzAxBgNVBAMTKk5FQyBHcm91cCBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0
-eSBTTUlNRSBHMgIQSfddB4oBMupIHfHqmeIFHDAJBgUrDgMCGgUAoIGHMBgGCSqGSIb3DQEJAzEL
-BgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTEwMTEwNTAyMTg0MlowIwYJKoZIhvcNAQkEMRYE
-FB5byV8/pFwU1GSgFWwQIzxjvH8gMCgGCSqGSIb3DQEJDzEbMBkwCwYJYIZIAWUDBAECMAoGCCqG
-SIb3DQMHMA0GCSqGSIb3DQEBAQUABIGAlXfIXHOCnGdTVqlhKxdiHFwDO6l4f7YpLOy3P2jBdxJE
-8yTCty0eknIz+DMGsXJmvH6xTOUsSkvo5aiASmVkw5gFaA/hlhYhuQjnz6s4VwYVAtT4Mqust7ol
-goLZSCNU6v7+QLmM94pFyOAtP/fK2JkFDEbrCPi3ThQJ5kypMVkAAAAAAAA=
-
-----Security_Multipart(Fri_Nov__5_11_18_42_2010_421)----
-
-
---===============1797039718==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1797039718==--
-
