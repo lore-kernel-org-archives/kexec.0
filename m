@@ -1,29 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp08.au.ibm.com ([202.81.31.141])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PGnh5-0002dw-82
-	for kexec@lists.infradead.org; Fri, 12 Nov 2010 07:05:11 +0000
-Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [202.81.31.246])
-	by e23smtp08.au.ibm.com (8.14.4/8.13.1) with ESMTP id oAC751Jv013689
-	for <kexec@lists.infradead.org>; Fri, 12 Nov 2010 18:05:01 +1100
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	oAC751RX2416880
-	for <kexec@lists.infradead.org>; Fri, 12 Nov 2010 18:05:01 +1100
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	oAC7508K030116
-	for <kexec@lists.infradead.org>; Fri, 12 Nov 2010 18:05:01 +1100
-Message-ID: <4CDCE715.4050708@linux.vnet.ibm.com>
-Date: Fri, 12 Nov 2010 12:34:53 +0530
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Received: from mail-ew0-f49.google.com ([209.85.215.49])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PHDGW-0008M0-He
+	for kexec@lists.infradead.org; Sat, 13 Nov 2010 10:23:25 +0000
+Received: by ewy19 with SMTP id 19so2255504ewy.36
+	for <kexec@lists.infradead.org>; Sat, 13 Nov 2010 02:23:22 -0800 (PST)
+Subject: [PATCH] Patch adds kernel data section to final vmcore. This forces
+	gdb read kernel
+From: Maxim Uvarov <muvarov@gmail.com>
+Date: Sat, 13 Nov 2010 13:23:20 +0300
+Message-ID: <20101113102320.3273.3435.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1] makedumpfile: s390x: Add support for s390x crashdump
-	analysis
-References: <20101111052840.14598.72719.stgit@mars.in.ibm.com>
-	<20101112102856.a20dae40.oomichi@mxs.nes.nec.co.jp>
-	<20101112113318.a69b0b57.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20101112113318.a69b0b57.oomichi@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,44 +23,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>, Michael Holzheu <holzheu@de.ibm.com>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: kexec@lists.infradead.org
 
-Hi Ken'ichi,
+From: Maxim Uvarov <muvarov@gmail.com>
 
-On 11/12/2010 08:03 AM, Ken'ichi Ohmichi wrote:
-> 
-> Hi Mahesh,
-> 
-> On Fri, 12 Nov 2010 10:28:56 +0900
-> "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp> wrote:
->>
->> On Thu, 11 Nov 2010 11:04:17 +0530
->> Mahesh J Salgaonkar <mahesh@linux.vnet.in.ibm.com> wrote:
->>>
->>> This patch adds support for processing s390x kernel crashdumps.
->>>
->>> The changes have been tested on s390x system.
->>> The dump compression and filtering (for all dump levels 1,2,4,8,16 and 31)
->>> tests are succussfull.
->>
->> What version of linux kernel are the above tests on ?
->> I'd like to write the version on README file.
-> 
-> Also, please let me know the memory model (flatmem, discontigmem,
-> or sparsemem) too.
-> 
->   # make menuconfig
->   -> Processor type and features
->      -> Memory model
-> 
+static data from dump instead of not initialized values from vmlinux.
+Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
+---
 
-I have tested this on RHEL6.0 GA kernel version 2.6.32-71.el6.s390x.
+ kexec/arch/mips/crashdump-mips.c |   49 ++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 49 insertions(+), 0 deletions(-)
 
-The memory model is 'Sparse Memory'
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index 17cf52d..5ea4f4f 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -49,6 +49,49 @@ static struct memory_range crash_reserved_mem;
+  */
+ unsigned long long saved_max_mem;
+ 
++/* Read kernel physical load addr from the file returned by proc_iomem()
++ * (Kernel Code) and store in kexec_info */
++static int get_kernel_paddr(struct kexec_info *info)
++{
++	uint64_t start;
++
++	if (xen_present()) /* Kernel not entity mapped under Xen */
++		return 0;
++
++	if (parse_iomem_single("Kernel code\n", &start, NULL) == 0) {
++		info->kern_paddr_start = start;
++#ifdef DEBUG
++		printf("kernel load physical addr start = 0x%lx\n", start);
++#endif
++		return 0;
++	}
++
++	fprintf(stderr, "Cannot determine kernel physical load addr\n");
++	return -1;
++}
++
++static int get_kernel_vaddr_and_size(struct kexec_info *info)
++{
++	uint64_t end;
++
++	if (!info->kern_paddr_start)
++		return -1;
++
++	info->kern_vaddr_start =  info->kern_paddr_start | 0xffffffff80000000UL;
++	if (parse_iomem_single("Kernel data\n", NULL, &end) == 0) {
++		info->kern_size = end - info->kern_paddr_start;
++#ifdef DEBUG
++		printf("kernel_vaddr= 0x%llx paddr %llx\n",
++				info->kern_vaddr_start,
++				info->kern_paddr_start);
++		printf("kernel size = 0x%llx\n", info->kern_size);
++#endif
++		return 0;
++		}
++	fprintf(stderr, "Cannot determine kernel virtual load addr and  size\n");
++	return -1;
++}
++
+ /* Removes crash reserve region from list of memory chunks for whom elf program
+  * headers have to be created. Assuming crash reserve region to be a single
+  * continuous area fully contained inside one of the memory chunks */
+@@ -313,6 +356,12 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	int nr_ranges, align = 1024;
+ 	struct memory_range *mem_range;
+ 
++	if (get_kernel_paddr(info))
++		return -1;
++
++	if (get_kernel_vaddr_and_size(info))
++		return -1;
++
+ 	if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
+ 		return -1;
+ 
 
-Thanks,
--Mahesh.
+
+Best regards,
+Maxim Uvarov.
+
+
 
 _______________________________________________
 kexec mailing list
