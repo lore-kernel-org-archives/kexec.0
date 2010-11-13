@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ew0-f49.google.com ([209.85.215.49])
+Received: from mail-ey0-f177.google.com ([209.85.215.177])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PHDGW-0008M0-He
-	for kexec@lists.infradead.org; Sat, 13 Nov 2010 10:23:25 +0000
-Received: by ewy19 with SMTP id 19so2255504ewy.36
-	for <kexec@lists.infradead.org>; Sat, 13 Nov 2010 02:23:22 -0800 (PST)
-Subject: [PATCH] Patch adds kernel data section to final vmcore. This forces
-	gdb read kernel
+	id 1PHDIS-0008P2-U6
+	for kexec@lists.infradead.org; Sat, 13 Nov 2010 10:25:25 +0000
+Received: by eyd9 with SMTP id 9so2289561eyd.36
+	for <kexec@lists.infradead.org>; Sat, 13 Nov 2010 02:25:20 -0800 (PST)
+Subject: [PATCH] Add kernel data section to final vmcore
 From: Maxim Uvarov <muvarov@gmail.com>
-Date: Sat, 13 Nov 2010 13:23:20 +0300
-Message-ID: <20101113102320.3273.3435.stgit@localhost.localdomain>
+Date: Sat, 13 Nov 2010 13:25:19 +0300
+Message-ID: <20101113102519.3354.73362.stgit@localhost.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,6 +26,7 @@ To: kexec@lists.infradead.org
 
 From: Maxim Uvarov <muvarov@gmail.com>
 
+Patch adds kernel data section to final vmcore. This forces gdb read kernel
 static data from dump instead of not initialized values from vmlinux.
 Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
 ---
