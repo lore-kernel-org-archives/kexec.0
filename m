@@ -1,31 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp07.in.ibm.com ([122.248.162.7])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PIF72-0005xz-37
-	for kexec@lists.infradead.org; Tue, 16 Nov 2010 06:33:53 +0000
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
-	by e28smtp07.in.ibm.com (8.14.4/8.13.1) with ESMTP id oAG6Xi76016063
-	for <kexec@lists.infradead.org>; Tue, 16 Nov 2010 12:03:44 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	oAG6XhcX2224378
-	for <kexec@lists.infradead.org>; Tue, 16 Nov 2010 12:03:43 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	oAG6Xh5K024948
-	for <kexec@lists.infradead.org>; Tue, 16 Nov 2010 12:03:43 +0530
-Message-ID: <4CE225C6.8020202@linux.vnet.ibm.com>
-Date: Tue, 16 Nov 2010 12:03:42 +0530
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v1] makedumpfile: s390x: Add support for s390x crashdump
-	analysis
-References: <20101111052840.14598.72719.stgit@mars.in.ibm.com>
-	<20101112102856.a20dae40.oomichi@mxs.nes.nec.co.jp>
-	<20101112113318.a69b0b57.oomichi@mxs.nes.nec.co.jp>
-	<4CDCE715.4050708@linux.vnet.ibm.com>
-	<20101115125406.5acb1fdc.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20101115125406.5acb1fdc.oomichi@mxs.nes.nec.co.jp>
+	id 1PIWOy-0008F9-TK
+	for kexec@lists.infradead.org; Wed, 17 Nov 2010 01:01:34 +0000
+Date: Wed, 17 Nov 2010 09:37:22 +0900
+From: Masayuki Igawa <igawa@mxs.nes.nec.co.jp>
+Subject: makedumpfile-1.3.7: Support ARM and s390x.
+Message-Id: <20101117093722.f7bb72e4.igawa@mxs.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,45 +20,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec-ml <kexec@lists.infradead.org>, Michael Holzheu <holzheu@de.ibm.com>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: kexec@lists.infradead.org
+Cc: mahesh@linux.vnet.ibm.com, caiqian@redhat.com, ext-mika.1.westerberg@nokia.com
 
-Hi Ken'ichi,
+Hi,
 
-On 11/15/2010 09:24 AM, Ken'ichi Ohmichi wrote:
-> 
-> Hi Mahesh,
-> 
-> On Fri, 12 Nov 2010 12:34:53 +0530
-> Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
->>>>>
->>>>> This patch adds support for processing s390x kernel crashdumps.
->>>>>
->>>>> The changes have been tested on s390x system.
->>>>> The dump compression and filtering (for all dump levels 1,2,4,8,16 and 31)
->>>>> tests are succussfull.
->>>>
->>>> What version of linux kernel are the above tests on ?
->>>> I'd like to write the version on README file.
->>>
->>> Also, please let me know the memory model (flatmem, discontigmem,
->>> or sparsemem) too.
->>>
->>>   # make menuconfig
->>>   -> Processor type and features
->>>      -> Memory model
->>>
->>
->> I have tested this on RHEL6.0 GA kernel version 2.6.32-71.el6.s390x.
->>
->> The memory model is 'Sparse Memory'
-> 
-> Thank you.
-> Your patch has been merged to git tree.
-I pulled in your latest changes and tested on s390x system, works fine.
+makedumpfile version 1.3.7 is released.
+Your comments/patches are welcome.
 
-Thanks for your help.
--Mahesh.
+Changelog:
+o New feature
+  - Add ARM crashdump support. (by Mika Westerberg)
+  - Add s390x crashdump support. (by Mahesh J Salgaonkar, Ken'ichi Ohmichi)
+  - Add linux-2.6.35 - 2.6.36 support. (by Ken'ichi Ohmichi)
+  - Print the execution times of each step. (by Ken'ichi Ohmichi)
+    Example)
+      # makedumpfile --message-level 16 -c -d31 /proc/vmcore dump.cd31
+      STEP [Checking for memory holes  ] : 0.000015984 seconds
+      STEP [Excluding unnecessary pages] : 3.000708797 seconds
+      STEP [Excluding free pages       ] : 0.000030380 seconds
+      STEP [Copying data               ] : 9.000603782 seconds
+  - (Speed up) Don't search struct page(s) for excluding cache/cache private
+    /user data, if unnecessary. (by Ken'ichi Ohmichi)
+
+o Bugfix
+  - Use ARCH_PFN_OFFSET for pfn_to_paddr/paddr_to_pfn translations. (by Mika Westerberg)
+  - Use ULONGLONG_MAX to for invalid pfn. (by Mika Westerberg)
+  - Add missing options to the --help output. (by CAI Qian)
+  - Fix "Copying data" step by including the write time for zero_page. (by Ken'ichi Ohmichi)
+  - Fix right nr_cpus in kdump main header. (by Ken'ichi Ohmichi)
+  - Fix the size of "log_end" which has been changed since linux-2.6.25. (by Ken'ichi Ohmichi)
+
+o Code Cleanup
+  - Fix 'ERROR: do not use assignment in if condition' by checkpatch.pl. (by Masayuki Igawa)
+  - Merge the almost same codes which print an execution time. (by Ken'ichi Ohmichi)
+  - Print the offset value if a lseek error happens in readmem(). (by Ken'ichi Ohmichi)
+
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Masayuki Igawa
 
 _______________________________________________
 kexec mailing list
