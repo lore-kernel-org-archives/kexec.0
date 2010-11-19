@@ -1,9 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Per Fransson <per.xx.fransson@stericsson.com>
-Subject: [PATCH] Add call to non-crashing cores through IPI
-Date: Fri, 19 Nov 2010 11:08:30 +0100
-Message-ID: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
-MIME-Version: 1.0
+Received: from kroah.org ([198.145.64.141] helo=coco.kroah.org)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PJYlq-0000aa-Nv
+	for kexec@lists.infradead.org; Fri, 19 Nov 2010 21:45:27 +0000
+Message-Id: <20101119214410.572906410@clark.site>
+Date: Fri, 19 Nov 2010 13:42:54 -0800
+From: Greg KH <gregkh@suse.de>
+Subject: [14/45] x86, kdump: Change copy_oldmem_page() to use cached addressing
+In-Reply-To: <20101119214439.GA26350@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -12,72 +16,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
-Cc: Per Fransson <per.xx.fransson@stericsson.com>
+To: linux-kernel@vger.kernel.org, stable@kernel.org
+Cc: Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, torvalds@linux-foundation.org, stable-review@kernel.org, alan@lxorguk.ukuu.org.uk
 
-When kexec is used to start a crash kernel the other cores
-are notified. These non-crashing cores will save their state
-in the crash notes and then do nothing.
+2.6.32-stable review patch.  If anyone has any objections, please let us know.
 
-Signed-off-by: Per Fransson <per.xx.fransson@stericsson.com>
+------------------
+
+From: Cliff Wickman <cpw@sgi.com>
+
+commit 37a2f9f30a360fb03522d15c85c78265ccd80287 upstream.
+
+The copy of /proc/vmcore to a user buffer proceeds much faster
+if the kernel addresses memory as cached.
+
+With this patch we have seen an increase in transfer rate from
+less than 15MB/s to 80-460MB/s, depending on size of the
+transfer. This makes a big difference in time needed to save a
+system dump.
+
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org
+LKML-Reference: <E1OtMLz-0001yp-Ia@eag09.americas.sgi.com>
+Signed-off-by: Ingo Molnar <mingo@elte.hu>
+Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
+
 ---
- arch/arm/kernel/machine_kexec.c |   28 ++++++++++++++++++++++++++++
- 1 files changed, 28 insertions(+), 0 deletions(-)
+ arch/x86/kernel/crash_dump_64.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index 3a8fd51..56683db 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -23,6 +23,8 @@ extern unsigned long kexec_indirection_page;
- extern unsigned long kexec_mach_type;
- extern unsigned long kexec_boot_atags;
+--- a/arch/x86/kernel/crash_dump_64.c
++++ b/arch/x86/kernel/crash_dump_64.c
+@@ -34,7 +34,7 @@ ssize_t copy_oldmem_page(unsigned long p
+ 	if (!csize)
+ 		return 0;
  
-+static atomic_t waiting_for_crash_ipi;
-+
- /*
-  * Provide a dummy crash_notes definition while crash dump arrives to arm.
-  * This prevents breakage of crash_notes attribute in kernel/ksysfs.c.
-@@ -37,8 +39,34 @@ void machine_kexec_cleanup(struct kimage *image)
- {
- }
+-	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
++	vaddr = ioremap_cache(pfn << PAGE_SHIFT, PAGE_SIZE);
+ 	if (!vaddr)
+ 		return -ENOMEM;
  
-+void machine_crash_nonpanic_core(void *unused)
-+{
-+	struct pt_regs regs;
-+
-+	crash_setup_regs(&regs, NULL);
-+	printk(KERN_EMERG "CPU %u will stop doing anything useful since another CPU has crashed\n",
-+	       smp_processor_id());
-+	crash_save_cpu(&regs, smp_processor_id());
-+	flush_cache_all();
-+
-+	atomic_dec(&waiting_for_crash_ipi);
-+	while (1)
-+		cpu_relax();
-+}
-+
- void machine_crash_shutdown(struct pt_regs *regs)
- {
-+	unsigned long msecs;
-+
-+	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
-+
-+	local_irq_enable();
-+	smp_call_function(machine_crash_nonpanic_core, NULL, false);
-+	msecs = 1000; /* Wait at most a second for the other cpus to stop */
-+	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
-+		mdelay(1);
-+		msecs--;
-+	}
- 	local_irq_disable();
- 	crash_save_cpu(regs, smp_processor_id());
- 
--- 
-1.7.2.2
+
 
 
 _______________________________________________
