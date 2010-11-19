@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kroah.org ([198.145.64.141] helo=coco.kroah.org)
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PJYlo-0000aG-PN
-	for kexec@lists.infradead.org; Fri, 19 Nov 2010 21:45:25 +0000
-Message-Id: <20101119214410.087440440@clark.site>
-Date: Fri, 19 Nov 2010 13:42:48 -0800
+	id 1PJYyT-0001br-Lq
+	for kexec@lists.infradead.org; Fri, 19 Nov 2010 21:58:30 +0000
+Message-Id: <20101119215639.983226733@clark.site>
+Date: Fri, 19 Nov 2010 13:55:36 -0800
 From: Greg KH <gregkh@suse.de>
-Subject: [08/45] mm, x86: Saving vmcore with non-lazy freeing of vmas
-In-Reply-To: <20101119214439.GA26350@kroah.com>
+Subject: [15/82] mm, x86: Saving vmcore with non-lazy freeing of vmas
+In-Reply-To: <20101119215658.GA7804@kroah.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,7 +24,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, stable@kernel.org
 Cc: Ingo Molnar <mingo@elte.hu>, kexec@lists.infradead.org, Cliff Wickman <cpw@sgi.com>, akpm@linux-foundation.org, torvalds@linux-foundation.org, stable-review@kernel.org, alan@lxorguk.ukuu.org.uk
 
-2.6.32-stable review patch.  If anyone has any objections, please let us know.
+2.6.35-stable review patch.  If anyone has any objections, please let us know.
 
 ------------------
 
@@ -59,14 +59,14 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@suse.de>
 
 --- a/arch/x86/include/asm/io.h
 +++ b/arch/x86/include/asm/io.h
-@@ -172,6 +172,7 @@ static inline void __iomem *ioremap(reso
+@@ -206,6 +206,7 @@ static inline void __iomem *ioremap(reso
  
  extern void iounmap(volatile void __iomem *addr);
  
 +extern void set_iounmap_nonlazy(void);
  
- #ifdef CONFIG_X86_32
- # include "io_32.h"
+ #ifdef __KERNEL__
+ 
 --- a/arch/x86/kernel/crash_dump_64.c
 +++ b/arch/x86/kernel/crash_dump_64.c
 @@ -46,6 +46,7 @@ ssize_t copy_oldmem_page(unsigned long p
