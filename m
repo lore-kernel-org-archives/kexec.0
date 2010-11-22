@@ -1,6 +1,6 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
+In-Reply-To: <AANLkTikQX9YqR42u6ppzceHL58JqBsVxR3YJr6_BarbY@mail.gmail.com>
 References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<20101122072420.GC14080@gw.healthdatacare.com>
 	<AANLkTikJiXFG_kGV4=wTKOzViy-h9VtGRHKVBuh76fE2@mail.gmail.com>
@@ -11,8 +11,9 @@ References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<AANLkTinj5wnP4823bacK6rs3nQbw3qtqDDjYof2-ALUk@mail.gmail.com>
 	<AANLkTi=Ok09NjwZQCb5njqgLfT=K8Zd2fK1VteRb_MNv@mail.gmail.com>
 	<AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
-Date: Mon, 22 Nov 2010 23:14:21 +0100
-Message-ID: <AANLkTikQX9YqR42u6ppzceHL58JqBsVxR3YJr6_BarbY@mail.gmail.com>
+	<AANLkTikQX9YqR42u6ppzceHL58JqBsVxR3YJr6_BarbY@mail.gmail.com>
+Date: Mon, 22 Nov 2010 23:30:32 +0100
+Message-ID: <AANLkTikmq7ykPQ05fAvbpeXN6PZqcNKms8rJvVV0BOqw@mail.gmail.com>
 Subject: Re: [PATCH] Add call to non-crashing cores through IPI
 From: Per Fransson <per.fransson.ml@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -30,44 +31,29 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Maxim Uvarov <muvarov@gmail.com>
 Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 
+On Mon, Nov 22, 2010 at 11:14 PM, Per Fransson
+<per.fransson.ml@gmail.com> wrote:
+>>>
+>>> That's for the situation when the other core tries to send an IPI at
+>>> the same time. Unlikely but both cores may deadlock.
+>>>
 >>
->> That's for the situation when the other core tries to send an IPI at
->> the same time. Unlikely but both cores may deadlock.
+>> Am I right that deadlock can occur only if the same IPI was sent? And
+>> there should
+>> be no situation when CRASH_DUMP IPI was sent from different processors at
+>> the same time.
 >>
 >
-> Am I right that deadlock can occur only if the same IPI was sent? And
-> there should
-> be no situation when CRASH_DUMP IPI was sent from different processors at
-> the same time.
+> I hope you are right, but I can't see why we couldn't get a crash IPI
+> from several
+> processors at the same time, unfortunately.
 >
 
-I hope you are right, but I can't see why we couldn't get a crash IPI
-from several
-processors at the same time, unfortunately.
-
-Even if such a thing can happen however, the timeout in my original suggestion
-(ignoring the interrupt enabling) should keep us from deadlocking indefinitely.
+I'll just follow up my own post here. On second thought, crash_kexec()
+takes the kexec_mutex,
+so simultaneous crash IPIs probably couldn't happen.
 
 /Per
-
->> I actually had a patch to allow this which was really complicated and
->> it still failed in a real-world scenario which I could foresee.
->>
->> --
->> Catalin
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
->
->
->
-> --
-> Best regards,
-> Maxim Uvarov
->
 
 _______________________________________________
 kexec mailing list
