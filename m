@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PKajM-0003gB-6O
-	for kexec@lists.infradead.org; Mon, 22 Nov 2010 18:03:08 +0000
-Date: Mon, 22 Nov 2010 09:59:09 -0800
-From: Greg KH <gregkh@suse.de>
-Subject: Re: [Stable-review] [08/45] mm, x86: Saving vmcore with non-lazy
-	freeing of vmas
-Message-ID: <20101122175909.GB18867@suse.de>
-References: <20101119214410.087440440@clark.site>
-	<1290219372.3818.113.camel@localhost>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1290219372.3818.113.camel@localhost>
+In-Reply-To: <AANLkTi=Ok09NjwZQCb5njqgLfT=K8Zd2fK1VteRb_MNv@mail.gmail.com>
+References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
+	<20101122072420.GC14080@gw.healthdatacare.com>
+	<AANLkTikJiXFG_kGV4=wTKOzViy-h9VtGRHKVBuh76fE2@mail.gmail.com>
+	<20101122104740.GA30744@n2100.arm.linux.org.uk>
+	<20101122112759.GA31227@n2100.arm.linux.org.uk>
+	<AANLkTi=jXuupD+_t663_8haxgB-7Agf7UVcnjBQk+Z-Y@mail.gmail.com>
+	<20101122144040.GM31227@n2100.arm.linux.org.uk>
+	<AANLkTinj5wnP4823bacK6rs3nQbw3qtqDDjYof2-ALUk@mail.gmail.com>
+	<AANLkTi=Ok09NjwZQCb5njqgLfT=K8Zd2fK1VteRb_MNv@mail.gmail.com>
+Date: Mon, 22 Nov 2010 23:09:51 +0300
+Message-ID: <AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
+Subject: Re: [PATCH] Add call to non-crashing cores through IPI
+From: Maxim Uvarov <muvarov@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +26,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: akpm@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@kernel.org, stable-review@kernel.org, Ingo Molnar <mingo@elte.hu>, torvalds@linux-foundation.org, Cliff Wickman <cpw@sgi.com>, alan@lxorguk.ukuu.org.uk
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Per Fransson <per.fransson.ml@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 
-On Sat, Nov 20, 2010 at 02:16:12AM +0000, Ben Hutchings wrote:
-> On Fri, 2010-11-19 at 13:42 -0800, Greg KH wrote:
-> > 2.6.32-stable review patch.  If anyone has any objections, please let us know.
-> > 
-> > ------------------
-> > 
-> > From: Cliff Wickman <cpw@sgi.com>
-> > 
-> > commit 3ee48b6af49cf534ca2f481ecc484b156a41451d upstream.
-> > 
-> > During the reading of /proc/vmcore the kernel is doing
-> > ioremap()/iounmap() repeatedly. And the buildup of un-flushed
-> > vm_area_struct's is causing a great deal of overhead. (rb_next()
-> > is chewing up most of that time).
-> > 
-> > This solution is to provide function set_iounmap_nonlazy(). It
-> > causes a subsequent call to iounmap() to immediately purge the
-> > vma area (with try_purge_vmap_area_lazy()).
-> > 
-> > With this patch we have seen the time for writing a 250MB
-> > compressed dump drop from 71 seconds to 44 seconds.
-> [...]
-> 
-> Useful, but it doesn't seem to meet the criteria for stable updates.
+2010/11/22 Catalin Marinas <catalin.marinas@arm.com>:
+> On 22 November 2010 17:03, Per Fransson <per.fransson.ml@gmail.com> wrote:
+>> On the other hand, do we really need to enable the interrupts before
+>> performing an ipi?
+>> The important thing must be for them to be enabled on the
+>> receiving/callee cores. It's not
+>> as if we want the crashing core to be interruptable, is it?
+>
+> That's for the situation when the other core tries to send an IPI at
+> the same time. Unlikely but both cores may deadlock.
+>
 
-I disagree, it's a major speedup, and an obvious bugfix for the problem.
+Am I right that deadlock can occur only if the same IPI was sent? And
+there should
+be no situation when CRASH_DUMP IPI was sent from different processors at
+the same time.
 
-thanks,
+> I actually had a patch to allow this which was really complicated and
+> it still failed in a real-world scenario which I could foresee.
+>
+> --
+> Catalin
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-greg k-h
+
+
+-- 
+Best regards,
+Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
