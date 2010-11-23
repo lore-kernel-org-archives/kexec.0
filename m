@@ -1,6 +1,6 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <AANLkTikQX9YqR42u6ppzceHL58JqBsVxR3YJr6_BarbY@mail.gmail.com>
+In-Reply-To: <AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
 References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<20101122072420.GC14080@gw.healthdatacare.com>
 	<AANLkTikJiXFG_kGV4=wTKOzViy-h9VtGRHKVBuh76fE2@mail.gmail.com>
@@ -11,11 +11,10 @@ References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<AANLkTinj5wnP4823bacK6rs3nQbw3qtqDDjYof2-ALUk@mail.gmail.com>
 	<AANLkTi=Ok09NjwZQCb5njqgLfT=K8Zd2fK1VteRb_MNv@mail.gmail.com>
 	<AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
-	<AANLkTikQX9YqR42u6ppzceHL58JqBsVxR3YJr6_BarbY@mail.gmail.com>
-Date: Mon, 22 Nov 2010 23:30:32 +0100
-Message-ID: <AANLkTikmq7ykPQ05fAvbpeXN6PZqcNKms8rJvVV0BOqw@mail.gmail.com>
+Date: Tue, 23 Nov 2010 09:14:58 +0000
+Message-ID: <AANLkTimC04kAFws0rAyvfARauiNvyYriJnxJ6KH+UHtU@mail.gmail.com>
 Subject: Re: [PATCH] Add call to non-crashing cores through IPI
-From: Per Fransson <per.fransson.ml@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,31 +28,30 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Maxim Uvarov <muvarov@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
+Cc: Per Fransson <per.fransson.ml@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 
-On Mon, Nov 22, 2010 at 11:14 PM, Per Fransson
-<per.fransson.ml@gmail.com> wrote:
->>>
->>> That's for the situation when the other core tries to send an IPI at
->>> the same time. Unlikely but both cores may deadlock.
->>>
+On 22 November 2010 20:09, Maxim Uvarov <muvarov@gmail.com> wrote:
+> 2010/11/22 Catalin Marinas <catalin.marinas@arm.com>:
+>> On 22 November 2010 17:03, Per Fransson <per.fransson.ml@gmail.com> wrote:
+>>> On the other hand, do we really need to enable the interrupts before
+>>> performing an ipi?
+>>> The important thing must be for them to be enabled on the
+>>> receiving/callee cores. It's not
+>>> as if we want the crashing core to be interruptable, is it?
 >>
->> Am I right that deadlock can occur only if the same IPI was sent? And
->> there should
->> be no situation when CRASH_DUMP IPI was sent from different processors at
->> the same time.
+>> That's for the situation when the other core tries to send an IPI at
+>> the same time. Unlikely but both cores may deadlock.
 >>
 >
-> I hope you are right, but I can't see why we couldn't get a crash IPI
-> from several
-> processors at the same time, unfortunately.
->
+> Am I right that deadlock can occur only if the same IPI was sent?
 
-I'll just follow up my own post here. On second thought, crash_kexec()
-takes the kexec_mutex,
-so simultaneous crash IPIs probably couldn't happen.
+Not necessarily. It depends on whether the CPU issuing the IPI needs
+to wait for the completion of the cross-call. If you don't need to
+wait, you can send the IPI with the interrupts disabled (the platform
+smp_cross_call is already called with interrupts disabled).
 
-/Per
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
