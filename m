@@ -1,6 +1,6 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <1290516530.6381.18.camel@e102109-lin.cambridge.arm.com>
+In-Reply-To: <AANLkTikoZ+DDj6Fj-+ig=mcNydFzUO1YFZjnMsuEUq7Z@mail.gmail.com>
 References: <20101122104740.GA30744@n2100.arm.linux.org.uk>
 	<20101122112759.GA31227@n2100.arm.linux.org.uk>
 	<AANLkTi=jXuupD+_t663_8haxgB-7Agf7UVcnjBQk+Z-Y@mail.gmail.com>
@@ -13,10 +13,11 @@ References: <20101122104740.GA30744@n2100.arm.linux.org.uk>
 	<AANLkTi=u6MPrA4JqJ1C3dAC5FLZCb7vKNtDV4-bOkSBy@mail.gmail.com>
 	<20101123124138.GI14080@gw.healthdatacare.com>
 	<1290516530.6381.18.camel@e102109-lin.cambridge.arm.com>
-Date: Tue, 23 Nov 2010 16:01:33 +0300
-Message-ID: <AANLkTikoZ+DDj6Fj-+ig=mcNydFzUO1YFZjnMsuEUq7Z@mail.gmail.com>
+	<AANLkTikoZ+DDj6Fj-+ig=mcNydFzUO1YFZjnMsuEUq7Z@mail.gmail.com>
+Date: Tue, 23 Nov 2010 17:31:17 +0100
+Message-ID: <AANLkTi=hgMzU7LjahE67Lq2x1rYAS50-k+HYMjiB_VsA@mail.gmail.com>
 Subject: Re: [PATCH] Add call to non-crashing cores through IPI
-From: Maxim Uvarov <muvarov@gmail.com>
+From: Per Fransson <per.fransson.ml@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,60 +30,26 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Per Fransson <per.fransson.ml@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 
-2010/11/23 Catalin Marinas <catalin.marinas@arm.com>:
-> On Tue, 2010-11-23 at 12:41 +0000, Mika Westerberg wrote:
->> On Tue, Nov 23, 2010 at 12:37:04PM +0000, Catalin Marinas wrote:
->> > On 23 November 2010 10:57, Per Fransson <per.fransson.ml@gmail.com> wr=
-ote:
->> > >>> Am I right that deadlock can occur only if the same IPI was sent?
->> > >>
->> > >> Not necessarily. It depends on whether the CPU issuing the IPI needs
->> > >> to wait for the completion of the cross-call. If you don't need to
->> > >> wait, you can send the IPI with the interrupts disabled (the platfo=
-rm
->> > >> smp_cross_call is already called with interrupts disabled).
->> > >>
->> > >
->> > > Well, smp_call_function() only optionally waits. As long as we choos=
-e not to,
->> > > using that function to ask the other cores to save their states and =
-idle, should
->> > > be ok, right? In that case we don't need another ipi_msg_type and we=
- can do
->> > > it with the interrupts of the ipi caller disabled.
->> >
->> > I think that should work but we still have a WARN_ON_ONCE in the
->> > generic smp_call_function_*() if interrupts are disabled.
+>>> But when we are crashing we have oops_in_progress set:
+>>>
+>>> =A0 =A0 =A0 =A0 WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
+>>> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&& !oops_in_progress);
+>>>
+>>> so this warning is never printed, right?
 >>
->> But when we are crashing we have oops_in_progress set:
+>> Right. So just make sure the caller doesn't set the 'wait' argument.
 >>
->> =A0 =A0 =A0 =A0 WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
->> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&& !oops_in_progress);
->>
->> so this warning is never printed, right?
 >
-> Right. So just make sure the caller doesn't set the 'wait' argument.
+> Please double check it. In powerpc crashdump =A0case =A0oops_in_progress =
+is not set.
 >
 
-Please double check it. In powerpc crashdump  case  oops_in_progress is not=
- set.
+I tried this. Didn't get the warning.
 
-Maxim.
-> --
-> Catalin
->
->
->
-
-
-
--- =
-
-Best regards,
-Maxim Uvarov
+/Per
 
 _______________________________________________
 kexec mailing list
