@@ -1,8 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 23 Nov 2010 14:41:38 +0200
-From: Mika Westerberg <mika.westerberg@iki.fi>
+Received: from service87.mimecast.com ([94.185.240.25])
+	by canuck.infradead.org with smtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PKsJ0-0000XA-VI
+	for kexec@lists.infradead.org; Tue, 23 Nov 2010 12:49:07 +0000
 Subject: Re: [PATCH] Add call to non-crashing cores through IPI
-Message-ID: <20101123124138.GI14080@gw.healthdatacare.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+In-Reply-To: <20101123124138.GI14080@gw.healthdatacare.com>
 References: <20101122104740.GA30744@n2100.arm.linux.org.uk>
 	<20101122112759.GA31227@n2100.arm.linux.org.uk>
 	<AANLkTi=jXuupD+_t663_8haxgB-7Agf7UVcnjBQk+Z-Y@mail.gmail.com>
@@ -13,9 +16,10 @@ References: <20101122104740.GA30744@n2100.arm.linux.org.uk>
 	<AANLkTimC04kAFws0rAyvfARauiNvyYriJnxJ6KH+UHtU@mail.gmail.com>
 	<AANLkTikh11_Mx6Z2po9t3RDp68te5o5LdnR0hYOexF=T@mail.gmail.com>
 	<AANLkTi=u6MPrA4JqJ1C3dAC5FLZCb7vKNtDV4-bOkSBy@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=u6MPrA4JqJ1C3dAC5FLZCb7vKNtDV4-bOkSBy@mail.gmail.com>
+	<20101123124138.GI14080@gw.healthdatacare.com>
+Date: Tue, 23 Nov 2010 12:48:50 +0000
+Message-ID: <1290516530.6381.18.camel@e102109-lin.cambridge.arm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,35 +32,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
+To: Mika Westerberg <mika.westerberg@iki.fi>
 Cc: Per Fransson <per.fransson.ml@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Maxim Uvarov <muvarov@gmail.com>, linux-arm-kernel@lists.infradead.org
 
-On Tue, Nov 23, 2010 at 12:37:04PM +0000, Catalin Marinas wrote:
-> On 23 November 2010 10:57, Per Fransson <per.fransson.ml@gmail.com> wrote:
-> >>> Am I right that deadlock can occur only if the same IPI was sent?
-> >>
-> >> Not necessarily. It depends on whether the CPU issuing the IPI needs
-> >> to wait for the completion of the cross-call. If you don't need to
-> >> wait, you can send the IPI with the interrupts disabled (the platform
-> >> smp_cross_call is already called with interrupts disabled).
-> >>
+On Tue, 2010-11-23 at 12:41 +0000, Mika Westerberg wrote:
+> On Tue, Nov 23, 2010 at 12:37:04PM +0000, Catalin Marinas wrote:
+> > On 23 November 2010 10:57, Per Fransson <per.fransson.ml@gmail.com> wrote:
+> > >>> Am I right that deadlock can occur only if the same IPI was sent?
+> > >>
+> > >> Not necessarily. It depends on whether the CPU issuing the IPI needs
+> > >> to wait for the completion of the cross-call. If you don't need to
+> > >> wait, you can send the IPI with the interrupts disabled (the platform
+> > >> smp_cross_call is already called with interrupts disabled).
+> > >>
+> > >
+> > > Well, smp_call_function() only optionally waits. As long as we choose not to,
+> > > using that function to ask the other cores to save their states and idle, should
+> > > be ok, right? In that case we don't need another ipi_msg_type and we can do
+> > > it with the interrupts of the ipi caller disabled.
 > >
-> > Well, smp_call_function() only optionally waits. As long as we choose not to,
-> > using that function to ask the other cores to save their states and idle, should
-> > be ok, right? In that case we don't need another ipi_msg_type and we can do
-> > it with the interrupts of the ipi caller disabled.
+> > I think that should work but we still have a WARN_ON_ONCE in the
+> > generic smp_call_function_*() if interrupts are disabled.
 > 
-> I think that should work but we still have a WARN_ON_ONCE in the
-> generic smp_call_function_*() if interrupts are disabled.
+> But when we are crashing we have oops_in_progress set:
+> 
+>         WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
+>                      && !oops_in_progress);
+> 
+> so this warning is never printed, right?
 
-But when we are crashing we have oops_in_progress set:
+Right. So just make sure the caller doesn't set the 'wait' argument.
 
-        WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
-                     && !oops_in_progress);
+-- 
+Catalin
 
-so this warning is never printed, right?
 
-MW
 
 _______________________________________________
 kexec mailing list
