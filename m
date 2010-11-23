@@ -1,6 +1,6 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <AANLkTimC04kAFws0rAyvfARauiNvyYriJnxJ6KH+UHtU@mail.gmail.com>
+In-Reply-To: <AANLkTikh11_Mx6Z2po9t3RDp68te5o5LdnR0hYOexF=T@mail.gmail.com>
 References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<20101122072420.GC14080@gw.healthdatacare.com>
 	<AANLkTikJiXFG_kGV4=wTKOzViy-h9VtGRHKVBuh76fE2@mail.gmail.com>
@@ -12,10 +12,11 @@ References: <1290161310-22808-1-git-send-email-per.xx.fransson@stericsson.com>
 	<AANLkTi=Ok09NjwZQCb5njqgLfT=K8Zd2fK1VteRb_MNv@mail.gmail.com>
 	<AANLkTimTXfeAiRcO0mUp8DsTB5BSCe+94-QH-Kht0AR6@mail.gmail.com>
 	<AANLkTimC04kAFws0rAyvfARauiNvyYriJnxJ6KH+UHtU@mail.gmail.com>
-Date: Tue, 23 Nov 2010 11:57:00 +0100
-Message-ID: <AANLkTikh11_Mx6Z2po9t3RDp68te5o5LdnR0hYOexF=T@mail.gmail.com>
+	<AANLkTikh11_Mx6Z2po9t3RDp68te5o5LdnR0hYOexF=T@mail.gmail.com>
+Date: Tue, 23 Nov 2010 12:37:04 +0000
+Message-ID: <AANLkTi=u6MPrA4JqJ1C3dAC5FLZCb7vKNtDV4-bOkSBy@mail.gmail.com>
 Subject: Re: [PATCH] Add call to non-crashing cores through IPI
-From: Per Fransson <per.fransson.ml@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,24 +28,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Per Fransson <per.fransson.ml@gmail.com>
 Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Mika Westerberg <mika.westerberg@iki.fi>, kexec@lists.infradead.org, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Maxim Uvarov <muvarov@gmail.com>, linux-arm-kernel@lists.infradead.org
 
->> Am I right that deadlock can occur only if the same IPI was sent?
+On 23 November 2010 10:57, Per Fransson <per.fransson.ml@gmail.com> wrote:
+>>> Am I right that deadlock can occur only if the same IPI was sent?
+>>
+>> Not necessarily. It depends on whether the CPU issuing the IPI needs
+>> to wait for the completion of the cross-call. If you don't need to
+>> wait, you can send the IPI with the interrupts disabled (the platform
+>> smp_cross_call is already called with interrupts disabled).
+>>
 >
-> Not necessarily. It depends on whether the CPU issuing the IPI needs
-> to wait for the completion of the cross-call. If you don't need to
-> wait, you can send the IPI with the interrupts disabled (the platform
-> smp_cross_call is already called with interrupts disabled).
->
+> Well, smp_call_function() only optionally waits. As long as we choose not to,
+> using that function to ask the other cores to save their states and idle, should
+> be ok, right? In that case we don't need another ipi_msg_type and we can do
+> it with the interrupts of the ipi caller disabled.
 
-Well, smp_call_function() only optionally waits. As long as we choose not to,
-using that function to ask the other cores to save their states and idle, should
-be ok, right? In that case we don't need another ipi_msg_type and we can do
-it with the interrupts of the ipi caller disabled.
+I think that should work but we still have a WARN_ON_ONCE in the
+generic smp_call_function_*() if interrupts are disabled.
 
-/Per
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
