@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mail.sysgo.com ([195.145.229.155])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PLQwq-0004jd-Se
-	for kexec@lists.infradead.org; Thu, 25 Nov 2010 01:48:33 +0000
-Date: Thu, 25 Nov 2010 10:48:28 +0900
-From: Simon Horman <horms@verge.net.au>
+	id 1PLWMq-0001yK-E8
+	for kexec@lists.infradead.org; Thu, 25 Nov 2010 07:35:45 +0000
+Date: Thu, 25 Nov 2010 08:35:37 +0100
+From: Pavel Machek <pma@sysgo.com>
 Subject: Re: [PATCH] kdump: update kexec-tools URL and Vivek's email
-Message-ID: <20101125014828.GA19623@verge.net.au>
+Message-ID: <20101125073537.GB3817@pma.sysgo.com>
 References: <1290648612-14964-1-git-send-email-horms@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -23,13 +23,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, Jiri Kosina <trivial@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Pavel Machek <pma@sysgo.com>
+To: Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@osdl.org>
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, Andrew Morton <akpm@osdl.org>, Jiri Kosina <trivial@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-[ repost with Andrew's correct email address ]
-
-On Thu, Nov 25, 2010 at 10:30:12AM +0900, Simon Horman wrote:
+On Thu 2010-11-25 10:30:12, Simon Horman wrote:
 > Signed-off-by: Simon Horman <horms@verge.net.au>
+
+Thanks!
+
 > ---
 >  Documentation/kdump/kdump.txt |   15 +++++++++------
 >  1 files changed, 9 insertions(+), 6 deletions(-)
@@ -73,8 +74,6 @@ On Thu, Nov 25, 2010 at 10:30:12AM +0900, Simon Horman wrote:
 > +Vivek Goyal (vgoyal@redhat.com)
 >  Maneesh Soni (maneesh@in.ibm.com)
 >  
-> -- 
-> 1.7.2.3
 > 
 
 _______________________________________________
