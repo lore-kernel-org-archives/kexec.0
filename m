@@ -1,9 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Per Fransson <per.xx.fransson@stericsson.com>
-Subject: [PATCH v2] Add call to non-crashing cores through IPI
-Date: Wed, 24 Nov 2010 09:28:28 +0100
-Message-ID: <1290587308-22038-1-git-send-email-per.xx.fransson@stericsson.com>
-MIME-Version: 1.0
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PLQfM-00046M-5W
+	for kexec@lists.infradead.org; Thu, 25 Nov 2010 01:30:29 +0000
+From: Simon Horman <horms@verge.net.au>
+Subject: [PATCH] kdump: update kexec-tools URL and Vivek's email
+Date: Thu, 25 Nov 2010 10:30:12 +0900
+Message-Id: <1290648612-14964-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -12,77 +15,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
-Cc: Per Fransson <per.xx.fransson@stericsson.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Randy Dunlap <randy.dunlap@oracle.com>, Jiri Kosina <trivial@kernel.org>, Pavel Machek <pma@sysgo.com>, Simon Horman <horms@verge.net.au>, Andrew Morton <akpm@linux-foundation.or>, Vivek Goyal <vgoyal@redhat.com>
 
-v2 changes:
-* the interrupts of the calling core are no longer disabled
-  before performing the IPI
+Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
+ Documentation/kdump/kdump.txt |   15 +++++++++------
+ 1 files changed, 9 insertions(+), 6 deletions(-)
 
-When kexec is used to start a crash kernel the other cores
-are notified. These non-crashing cores will save their state
-in the crash notes and then do nothing.
-
-Signed-off-by: Per Fransson <per.xx.fransson@stericsson.com>
----
- arch/arm/kernel/machine_kexec.c |   27 +++++++++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index 3a8fd51..57a7f2f 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -23,6 +23,8 @@ extern unsigned long kexec_indirection_page;
- extern unsigned long kexec_mach_type;
- extern unsigned long kexec_boot_atags;
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index cab61d8..7a9e0b4 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -65,18 +65,21 @@ Install kexec-tools
  
-+static atomic_t waiting_for_crash_ipi;
-+
- /*
-  * Provide a dummy crash_notes definition while crash dump arrives to arm.
-  * This prevents breakage of crash_notes attribute in kernel/ksysfs.c.
-@@ -37,9 +39,34 @@ void machine_kexec_cleanup(struct kimage *image)
- {
- }
+ 2) Download the kexec-tools user-space package from the following URL:
  
-+void machine_crash_nonpanic_core(void *unused)
-+{
-+	struct pt_regs regs;
-+
-+	crash_setup_regs(&regs, NULL);
-+	printk(KERN_EMERG "CPU %u will stop doing anything useful since another CPU has crashed\n",
-+	       smp_processor_id());
-+	crash_save_cpu(&regs, smp_processor_id());
-+	flush_cache_all();
-+
-+	atomic_dec(&waiting_for_crash_ipi);
-+	while (1)
-+		cpu_relax();
-+}
-+
- void machine_crash_shutdown(struct pt_regs *regs)
- {
-+	unsigned long msecs;
-+
- 	local_irq_disable();
-+
-+	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
-+	smp_call_function(machine_crash_nonpanic_core, NULL, false);
-+	msecs = 1000; /* Wait at most a second for the other cpus to stop */
-+	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
-+		mdelay(1);
-+		msecs--;
-+	}
- 	crash_save_cpu(regs, smp_processor_id());
+-http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/kexec-tools.tar.gz
++http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
  
- 	printk(KERN_INFO "Loading crashdump kernel...\n");
+ This is a symlink to the latest version.
+ 
+ The latest kexec-tools git tree is available at:
+ 
+-git://git.kernel.org/pub/scm/linux/kernel/git/horms/kexec-tools.git
+-or
+-http://www.kernel.org/git/?p=linux/kernel/git/horms/kexec-tools.git
++git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
++and
++http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
++
++There is also a gitweb interface available at
++http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+ 
+ More information about kexec-tools can be found at
+-http://www.kernel.org/pub/linux/kernel/people/horms/kexec-tools/README.html
++http://www.kernel.org/pub/linux/utils/kernel/kexec/README.html
+ 
+ 3) Unpack the tarball with the tar command, as follows:
+ 
+@@ -439,6 +442,6 @@ To Do
+ Contact
+ =======
+ 
+-Vivek Goyal (vgoyal@in.ibm.com)
++Vivek Goyal (vgoyal@redhat.com)
+ Maneesh Soni (maneesh@in.ibm.com)
+ 
 -- 
-1.7.2.2
+1.7.2.3
 
 
 _______________________________________________
