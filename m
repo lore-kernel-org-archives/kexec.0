@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 25 Nov 2010 22:06:12 -0600
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2] Add call to non-crashing cores through IPI
-Message-ID: <20101126040612.GA6598@lixom.net>
-References: <1290587308-22038-1-git-send-email-per.xx.fransson@stericsson.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1290587308-22038-1-git-send-email-per.xx.fransson@stericsson.com>
+In-Reply-To: <20101126040612.GA6598@lixom.net>
+References: <1290587308-22038-1-git-send-email-per.xx.fransson@stericsson.com>
+	<20101126040612.GA6598@lixom.net>
+Date: Mon, 29 Nov 2010 13:46:26 +0100
+Message-ID: <AANLkTinF0Ndb9-3z1ZeMBjPRH5jXWNA+BL6QpS+--0A4@mail.gmail.com>
+Subject: Re: [PATCH v2] Add call to non-crashing cores through IPI
+From: Per Fransson <per.fransson.ml@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,96 +15,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Per Fransson <per.xx.fransson@stericsson.com>
+To: Olof Johansson <olof@lixom.net>
 Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 
-Hi,
+>> =A0void machine_crash_shutdown(struct pt_regs *regs)
+>> =A0{
+>> + =A0 =A0 unsigned long msecs;
+>
+> Int should be enough here? Not that it makes a difference on ARM, but
+> anyway. :)
+>
+>> +
+>> =A0 =A0 =A0 local_irq_disable();
+>> +
+>> + =A0 =A0 atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
+>> + =A0 =A0 smp_call_function(machine_crash_nonpanic_core, NULL, false);
+>> + =A0 =A0 msecs =3D 1000; /* Wait at most a second for the other cpus to=
+ stop */
+>> + =A0 =A0 while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
+>> + =A0 =A0 =A0 =A0 =A0 =A0 mdelay(1);
+>> + =A0 =A0 =A0 =A0 =A0 =A0 msecs--;
+>> + =A0 =A0 }
 
-Just a couple of nitpicks below. It's also common to prefix the patch
-subject with the subsystem (i.e. "ARM: kexec: ...")
+The choice of type comes from the corresponding x86 code in
 
+    arch/x86/kernel/reboot.c:nmi_shootdown_cpus()
 
--Olof
+Should we deviate?
 
-On Wed, Nov 24, 2010 at 09:28:28AM +0100, Per Fransson wrote:
-> v2 changes:
-> * the interrupts of the calling core are no longer disabled
->   before performing the IPI
-> ---
-> 
-> When kexec is used to start a crash kernel the other cores
-> are notified. These non-crashing cores will save their state
-> in the crash notes and then do nothing.
-> 
-> Signed-off-by: Per Fransson <per.xx.fransson@stericsson.com>
-> ---
->  arch/arm/kernel/machine_kexec.c |   27 +++++++++++++++++++++++++++
->  1 files changed, 27 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-> index 3a8fd51..57a7f2f 100644
-> --- a/arch/arm/kernel/machine_kexec.c
-> +++ b/arch/arm/kernel/machine_kexec.c
-> @@ -23,6 +23,8 @@ extern unsigned long kexec_indirection_page;
->  extern unsigned long kexec_mach_type;
->  extern unsigned long kexec_boot_atags;
->  
-> +static atomic_t waiting_for_crash_ipi;
-> +
->  /*
->   * Provide a dummy crash_notes definition while crash dump arrives to arm.
->   * This prevents breakage of crash_notes attribute in kernel/ksysfs.c.
-> @@ -37,9 +39,34 @@ void machine_kexec_cleanup(struct kimage *image)
->  {
->  }
->  
-> +void machine_crash_nonpanic_core(void *unused)
-> +{
-> +	struct pt_regs regs;
-> +
-> +	crash_setup_regs(&regs, NULL);
-> +	printk(KERN_EMERG "CPU %u will stop doing anything useful since another CPU has crashed\n",
-> +	       smp_processor_id());
-
-No other architecture has verbose output like this. Maybe lower it to
-KERN_DEBUG if you feel it's needed on a production kernel?
-
-> +	crash_save_cpu(&regs, smp_processor_id());
-> +	flush_cache_all();
-> +
-> +	atomic_dec(&waiting_for_crash_ipi);
-> +	while (1)
-> +		cpu_relax();
-> +}
-> +
->  void machine_crash_shutdown(struct pt_regs *regs)
->  {
-> +	unsigned long msecs;
-
-Int should be enough here? Not that it makes a difference on ARM, but
-anyway. :)
-
-> +
->  	local_irq_disable();
-> +
-> +	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
-> +	smp_call_function(machine_crash_nonpanic_core, NULL, false);
-> +	msecs = 1000; /* Wait at most a second for the other cpus to stop */
-> +	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
-> +		mdelay(1);
-> +		msecs--;
-> +	}
-
-If anything, logging here if not all cpus were stopped would be more
-useful.
-
->  	crash_save_cpu(regs, smp_processor_id());
->  
->  	printk(KERN_INFO "Loading crashdump kernel...\n");
+Regards,
+Per
 
 _______________________________________________
 kexec mailing list
