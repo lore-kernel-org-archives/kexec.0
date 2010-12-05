@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0017.houston.hp.com ([15.201.24.20])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1POYGq-0005SU-92
-	for kexec@lists.infradead.org; Fri, 03 Dec 2010 16:14:06 +0000
-Received: from g4t0009.houston.hp.com (g4t0009.houston.hp.com [16.234.32.26])
-	by g4t0017.houston.hp.com (Postfix) with ESMTP id DBDC738B86
-	for <kexec@lists.infradead.org>; Fri,  3 Dec 2010 16:14:02 +0000 (UTC)
-Received: from [16.17.222.159] (unknown [16.17.222.159])
-	by g4t0009.houston.hp.com (Postfix) with ESMTP id 6FC7AC18B
-	for <kexec@lists.infradead.org>; Fri,  3 Dec 2010 16:14:02 +0000 (UTC)
-Message-ID: <4CF91748.5000401@hp.com>
-Date: Fri, 03 Dec 2010 17:14:00 +0100
-From: Louis Bouchard <louis.bouchard@hp.com>
+Received: from mail-fx0-f49.google.com ([209.85.161.49])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PPFgN-0004gL-4z
+	for kexec@lists.infradead.org; Sun, 05 Dec 2010 14:35:20 +0000
+Received: by fxm19 with SMTP id 19so5648548fxm.36
+	for <kexec@lists.infradead.org>; Sun, 05 Dec 2010 06:35:17 -0800 (PST)
+From: Maciej Rutecki <maciej.rutecki@gmail.com>
+Subject: Re: kdump broken on 2.6.37-rc4
+Date: Sun, 5 Dec 2010 15:35:12 +0100
+References: <20101203111623.GA2741@redhat.com>
+In-Reply-To: <20101203111623.GA2741@redhat.com>
 MIME-Version: 1.0
-Subject: kdump_post : busybox returns "Applet not found"
+Message-Id: <201012051535.12700.maciej.rutecki@gmail.com>
+Reply-To: maciej.rutecki@gmail.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,90 +21,23 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============1916211859=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Stanislaw Gruszka <sgruszka@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
---===============1916211859==
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-
-<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-</head>
-<body text="#000000" bgcolor="#ffffff">
-Hello (again)<br>
-<br>
-I did not think that I would come back to you so quickly, but I am
-having an issue with RHEL6 implementation of kexec-tools (apparently
-adapted for kexec-tools 2.0) while testing crashdc on RHEL6 (the
-initial release).<br>
-<br>
-Everytime I trigger a crash with 'kdump_post' set to
-/var/crash/scripts/kdump_post.sh I get the following from busybox :
-kdump-post.sh: applet not found<br>
-<br>
-<blockquote><tt>Copying data&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; : [100%]</tt><br>
-  <tt>Saving core complete</tt><br>
-  <tt>kdump-post.sh: applet not found</tt><br>
-  <tt>dropping to initramfs shell</tt><br>
-  <tt>exiting this shell will reboot your system</tt><br>
-</blockquote>
-For a while, I thought that my crashdc calling script was in cause, but
-I changed kdump_post.sh to one single "echo This is working" line and I
-still get the same thing :<br>
-<br>
-<blockquote><tt># cat /var/crash/scripts/kdump-post.sh</tt><br>
-  <tt>echo "This is working"</tt><br>
-  <tt>/var/crash/scripts/kdump-post.sh</tt><br>
-  <tt>kdump-post.sh: applet not found</tt><br>
-  <tt>msh/ # /var/crash/scripts/kdump-post.sh</tt><br>
-  <tt>This is working</tt><br>
-</blockquote>
-FYI, my crashdc scripts all work fine when I call them manually from
-the CLI.<br>
-<br>
-I did not encounter this situation with SLES11, but from what I gather,
-it does not rely on&nbsp; busybox.<br>
-<br>
-Maybe someone could suggest ways to further investigate this issue. I'm
-available to test.<br>
-<br>
-Kind regard,<br>
-<br>
-...Louis<br>
-<br>
-<pre class="moz-signature" cols="72">-- 
-Louis Bouchard
-Linux Support Engineer
-Team lead, EMEA Linux Competency Center,
-Linux Advocate, HP
-
-HP Technology Services - Global Competency Center
-Hewlett-Packard Company
-
-<a class="moz-txt-link-abbreviated" href="mailto:louis.bouchard@hp.com">louis.bouchard@hp.com</a>     / Email
-Mon-Fri 9-17&lt;WET&gt;,&lt;GMT+2&gt; / Working Hours
-Mark Fay                  / Manager
-<a class="moz-txt-link-abbreviated" href="mailto:mark.fay@hp.com">mark.fay@hp.com</a>           / Manager's Email
-</pre>
-</body>
-</html>
-
-
---===============1916211859==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============1916211859==--
+T24gcGnEhXRlaywgMyBncnVkbmlhIDIwMTAgbyAxMjoxNjozOCBTdGFuaXNsYXcgR3J1c3prYSB3
+cm90ZToKPiBPbiBteSBULTYwIGxhcHRvcCwgaTY4NiBzeXN0ZW0gd2l0aCAyLjYuMzctcmM0IGtl
+cm5lbCwKPiAiZWNobyBjID4gL3Byb2Mvc3lzcnEtdHJpZ2dlciIganVzdCBodW5nIHRoZSBzeXN0
+ZW0uIEtkdW1wCj4gd29ya3Mgb24gMi42LjM2LiBJcyB0aGlzIGtub3duIGlzc3VlPyBJZiBub3Qs
+IHdoYXQgaW5mbwo+IEkgc2hvdWxkIHByb3ZpZGUgdG8gc29sdmUgaXQgKEkgdGhpbmsgdGhlIGVh
+c2llc3Qgd2F5Cj4gdG8gc29sdmUgdGhlIHByb2JsZW0gd291bGQgYmUgYmlzZWN0KSA/Cj4gCgpJ
+IGNyZWF0ZWQgYSBCdWd6aWxsYSBlbnRyeSBhdCAKaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3Jn
+L3Nob3dfYnVnLmNnaT9pZD0yNDM3Mgpmb3IgeW91ciBidWcgcmVwb3J0LCBwbGVhc2UgYWRkIHlv
+dXIgYWRkcmVzcyB0byB0aGUgQ0MgbGlzdCBpbiB0aGVyZSwgdGhhbmtzIQoKLS0gCk1hY2llaiBS
+dXRlY2tpCmh0dHA6Ly93d3cubWFjaWVrLnVuaXh5LnBsCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
