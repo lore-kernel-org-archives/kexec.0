@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PQLKQ-000714-Tq
-	for kexec@lists.infradead.org; Wed, 08 Dec 2010 14:49:12 +0000
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: [PATCH] Update MCP55 quirk to not affect non HyperTransport variants
-Date: Wed,  8 Dec 2010 09:47:48 -0500
-Message-Id: <1291819668-15624-1-git-send-email-nhorman@tuxdriver.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PQN7z-0001FV-5e
+	for kexec@lists.infradead.org; Wed, 08 Dec 2010 16:44:28 +0000
+Date: Wed, 8 Dec 2010 11:44:23 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] Update MCP55 quirk to not affect non HyperTransport
+	variants
+Message-ID: <20101208164423.GH31703@redhat.com>
+References: <1291819668-15624-1-git-send-email-nhorman@tuxdriver.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1291819668-15624-1-git-send-email-nhorman@tuxdriver.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,39 +20,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, Neil Horman <nhorman@tuxdriver.com>
+To: Neil Horman <nhorman@tuxdriver.com>
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>
 
-SSB3cm90ZSB0aGlzIHF1aXJrIGF3aGlsZSBhZ28gdG8gcHJvcGVybHkgc2V0dXAgTUNQNTUgY2hp
-cHMgb24gaHlwZXJ0cmFuc3BvcnQKYnVzc2VzIHNvIHRoYXQgaW50ZXJydXB0cyByZWFjaGVkIHdo
-YXRldmVyIGNwdSBoYXBwZW5kIHRvIGJvb3QgdGhlIGtkdW1wIGtlcm5lbC4Kd2hpbGUgdGhhdCB3
-b3JrcyB3ZWxsLCBpdCB3YXMgcmVjZW50bHkgc2hvd24gdG8gbWUgdGhhdCBhIGEgbm9uLWh5cGVy
-dHJhbnNwb3J0CnZhcmlhbnQgb2YgdGhlIE1DUDU1IGV4aXN0cywgYW5kIG9uIHRob3NlIHN5c3Rl
-bSB0aGUgcmVnaXN0ZXIgdGhhdCB0aGlzIHF1aXJrCm1hbmlwdWxhdGVzIGNhdXNlcyBoYW5ncyBp
-ZiB5b3Ugd3JpdGUgdG8gaXQuICBTaW5jZSB0aGUgcXVpcmsgd2FzIG9ubHkgbWVhbnQgdG8KaGFu
-ZGxlIGVycm9ycyBmb3VuZCBvbiBNQ1A1NSBjaGlwcyB0aGF0IGhhdmUgYSBIVCBpbnRlcmZhY2Us
-IHRoaXMgcGF0Y2ggYWRkcyBhCmZpbHRlciB0byBtYWtlIHN1cmUgdGhlIGNoaXAgaXMgYW4gSFQg
-Y2FwYWJsZSBiZWZvcmUgbWFraW5nIHRoZSBuZWVkZWQgcmVnaXN0ZXIKYWRqdXN0bWVudC4gIFRo
-aXMgbGV0cyB0aGUgYnJva2VuIE1DUDU1cyB3b3JrIHdpdGgga2R1bXAgd2hpbGUgbm90IGJyZWFr
-aW5nIHRoZQpub24tSFQgdmFyaWFudHMuCgpSZXNvbHZlcyBodHRwczovL2J1Z3ppbGxhLmtlcm5l
-bC5vcmcvc2hvd19idWcuY2dpP2lkPTIzOTUyCgpUZXN0ZWQgc3VjY2Vzc2Z1bGx5IGJ5IHRoZSBy
-ZXBvcnRlciBhbmQgbXlzZWxmLgoKUmVwb3J0ZWQtYnk6IE1hdGhpZXUgQsOpcmFyZCA8bWF0aGll
-dUBtYmVyYXJkLmV1PgpDQzogbGludXgtcGNpQHZnZXIua2VybmVsLm9yZwpDQzoga2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpDQzogVml2ZWsgR295YWwgPHZnb3lhbEByZWRoYXQuY29tPgpDQzog
-SmVzc2UgQmFybmVzIDxqYmFybmVzQHZpcnR1b3VzZ2Vlay5vcmc+ClNpZ25lZC1vZmYtYnk6IE5l
-aWwgSG9ybWFuIDxuaG9ybWFuQHR1eGRyaXZlci5jb20+Ci0tLQogZHJpdmVycy9wY2kvcXVpcmtz
-LmMgfCAgICAzICsrKwogMSBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDAgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kvcXVpcmtzLmMgYi9kcml2ZXJzL3BjaS9x
-dWlya3MuYwppbmRleCA2ZjkzNTBjLi4zMTNjMGJkIDEwMDY0NAotLS0gYS9kcml2ZXJzL3BjaS9x
-dWlya3MuYworKysgYi9kcml2ZXJzL3BjaS9xdWlya3MuYwpAQCAtMjMyOSw2ICsyMzI5LDkgQEAg
-c3RhdGljIHZvaWQgX19kZXZpbml0IG52YnJpZGdlX2NoZWNrX2xlZ2FjeV9pcnFfcm91dGluZyhz
-dHJ1Y3QgcGNpX2RldiAqZGV2KQogewogCXUzMiBjZmc7CiAKKwlpZiAoIXBjaV9maW5kX2NhcGFi
-aWxpdHkoZGV2LCBQQ0lfQ0FQX0lEX0hUKSkKKwkJcmV0dXJuOworCiAJcGNpX3JlYWRfY29uZmln
-X2R3b3JkKGRldiwgMHg3NCwgJmNmZyk7CiAKIAlpZiAoY2ZnICYgKCgxIDw8IDIpIHwgKDEgPDwg
-MTUpKSkgewotLSAKMS43LjIuMwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, Dec 08, 2010 at 09:47:48AM -0500, Neil Horman wrote:
+> I wrote this quirk awhile ago to properly setup MCP55 chips on hypertrans=
+port
+> busses so that interrupts reached whatever cpu happend to boot the kdump =
+kernel.
+> while that works well, it was recently shown to me that a a non-hypertran=
+sport
+> variant of the MCP55 exists, and on those system the register that this q=
+uirk
+> manipulates causes hangs if you write to it.  Since the quirk was only me=
+ant to
+> handle errors found on MCP55 chips that have a HT interface, this patch a=
+dds a
+> filter to make sure the chip is an HT capable before making the needed re=
+gister
+> adjustment.  This lets the broken MCP55s work with kdump while not breaki=
+ng the
+> non-HT variants.
+> =
+
+
+So Neil, with non hypertransport MCP55s, interrupts are delivered to
+all the cpus and seond kernel still boots?
+
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
+
+Thanks
+Vivek
+
+> Resolves https://bugzilla.kernel.org/show_bug.cgi?id=3D23952
+> =
+
+> Tested successfully by the reporter and myself.
+> =
+
+> Reported-by: Mathieu B=E9rard <mathieu@mberard.eu>
+> CC: linux-pci@vger.kernel.org
+> CC: kexec@lists.infradead.org
+> CC: Vivek Goyal <vgoyal@redhat.com>
+> CC: Jesse Barnes <jbarnes@virtuousgeek.org>
+> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> ---
+>  drivers/pci/quirks.c |    3 +++
+>  1 files changed, 3 insertions(+), 0 deletions(-)
+> =
+
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 6f9350c..313c0bd 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -2329,6 +2329,9 @@ static void __devinit nvbridge_check_legacy_irq_rou=
+ting(struct pci_dev *dev)
+>  {
+>  	u32 cfg;
+>  =
+
+> +	if (!pci_find_capability(dev, PCI_CAP_ID_HT))
+> +		return;
+> +
+>  	pci_read_config_dword(dev, 0x74, &cfg);
+>  =
+
+>  	if (cfg & ((1 << 2) | (1 << 15))) {
+> -- =
+
+> 1.7.2.3
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
