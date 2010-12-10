@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
+Received: from charlotte.tuxdriver.com ([70.61.120.58] helo=smtp.tuxdriver.com)
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PQq6s-0007xB-2u
-	for kexec@lists.infradead.org; Thu, 09 Dec 2010 23:41:19 +0000
-Date: Thu, 9 Dec 2010 15:40:41 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
+	id 1PR1Ym-0004NX-Je
+	for kexec@lists.infradead.org; Fri, 10 Dec 2010 11:54:49 +0000
+Date: Fri, 10 Dec 2010 06:54:41 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
 Subject: Re: [PATCH] Update MCP55 quirk to not affect non HyperTransport
 	variants
-Message-Id: <20101209154041.8a54dba8.akpm@linux-foundation.org>
-In-Reply-To: <1291819668-15624-1-git-send-email-nhorman@tuxdriver.com>
+Message-ID: <20101210115441.GB13606@hmsreliant.think-freely.org>
 References: <1291819668-15624-1-git-send-email-nhorman@tuxdriver.com>
-Mime-Version: 1.0
+	<20101209154041.8a54dba8.akpm@linux-foundation.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20101209154041.8a54dba8.akpm@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +25,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@tuxdriver.com>
-Cc: linux-pci@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jesse Barnes <jbarnes@virtuousgeek.org>, stable@kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed,  8 Dec 2010 09:47:48 -0500
-Neil Horman <nhorman@tuxdriver.com> wrote:
+On Thu, Dec 09, 2010 at 03:40:41PM -0800, Andrew Morton wrote:
+> On Wed,  8 Dec 2010 09:47:48 -0500
+> Neil Horman <nhorman@tuxdriver.com> wrote:
+> 
+> > I wrote this quirk awhile ago to properly setup MCP55 chips on hypertransport
+> > busses so that interrupts reached whatever cpu happend to boot the kdump kernel.
+> > while that works well, it was recently shown to me that a a non-hypertransport
+> > variant of the MCP55 exists, and on those system the register that this quirk
+> > manipulates causes hangs if you write to it.  Since the quirk was only meant to
+> > handle errors found on MCP55 chips that have a HT interface, this patch adds a
+> > filter to make sure the chip is an HT capable before making the needed register
+> > adjustment.  This lets the broken MCP55s work with kdump while not breaking the
+> > non-HT variants.
+> > 
+> > Resolves https://bugzilla.kernel.org/show_bug.cgi?id=23952
+> > 
+> > Tested successfully by the reporter and myself.
+> > 
+> > Reported-by: Mathieu B__rard <mathieu@mberard.eu>
+> > CC: linux-pci@vger.kernel.org
+> > CC: kexec@lists.infradead.org
+> > CC: Vivek Goyal <vgoyal@redhat.com>
+> > CC: Jesse Barnes <jbarnes@virtuousgeek.org>
+> > Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
+> 
+> That needed a Cc:<stable@kernel.org> as well.  Please don't forget to
+> remember -stable.
+Thanks, Cc'ing stable on the thread
 
-> I wrote this quirk awhile ago to properly setup MCP55 chips on hypertransport
-> busses so that interrupts reached whatever cpu happend to boot the kdump kernel.
-> while that works well, it was recently shown to me that a a non-hypertransport
-> variant of the MCP55 exists, and on those system the register that this quirk
-> manipulates causes hangs if you write to it.  Since the quirk was only meant to
-> handle errors found on MCP55 chips that have a HT interface, this patch adds a
-> filter to make sure the chip is an HT capable before making the needed register
-> adjustment.  This lets the broken MCP55s work with kdump while not breaking the
-> non-HT variants.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 > 
-> Resolves https://bugzilla.kernel.org/show_bug.cgi?id=23952
-> 
-> Tested successfully by the reporter and myself.
-> 
-> Reported-by: Mathieu B__rard <mathieu@mberard.eu>
-> CC: linux-pci@vger.kernel.org
-> CC: kexec@lists.infradead.org
-> CC: Vivek Goyal <vgoyal@redhat.com>
-> CC: Jesse Barnes <jbarnes@virtuousgeek.org>
-> Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-
-That needed a Cc:<stable@kernel.org> as well.  Please don't forget to
-remember -stable.
 
 _______________________________________________
 kexec mailing list
