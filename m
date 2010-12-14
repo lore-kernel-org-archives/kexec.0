@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PSZCa-0006UD-L4
-	for kexec@lists.infradead.org; Tue, 14 Dec 2010 18:02:19 +0000
+	id 1PSdWw-0000NE-CO
+	for kexec@lists.infradead.org; Tue, 14 Dec 2010 22:39:38 +0000
 From: Takao Indoh <indou.takao@jp.fujitsu.com>
 Subject: Re: [PATCH v2][EFI] Run EFI in physical mode
-Date: Tue, 14 Dec 2010 13:01:26 -0500
+Date: Tue, 14 Dec 2010 17:38:47 -0500
 MIME-Version: 1.0
 In-Reply-To: <4D06E7FE.5000600@jp.fujitsu.com>
 References: <F7CB3D97D99F33indou.takao@jp.fujitsu.com>
 	<4D06E7FE.5000600@jp.fujitsu.com>
-Message-Id: <9CB9BB8ED64BAindou.takao@jp.fujitsu.com>
+Message-Id: <ACB9BDFABD971indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,12 +19,12 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>
-Cc: nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com
+Cc: horms@verge.net.au, nhorman@tuxdriver.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, vgoyal@redhat.com
 
 On Tue, 14 Dec 2010 12:43:58 +0900, Kenji Kaneshige wrote:
 
@@ -51,32 +51,19 @@ On Tue, 14 Dec 2010 12:43:58 +0900, Kenji Kaneshige wrote:
 >			swapper_pg_dir + KERNEL_PGD_BOUNDARY, 
 >KERNEL_PGD_PTRS);
 
-Agree, I'll merge this to the patch. And I got another bug report. This
-should be also merged.
 
+Besides this bug, I'm thinking that we need global TLB flush after
+restoring cr3 because EFI code page is mapped with PAGE_KERNEL_EXEC.
 
-@@ -177,8 +177,8 @@ void __init efi_pagetable_init(void)
- 	memset(efi_pgd, 0, sizeof(efi_pgd));
- 	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
- 		md = p;
--		if (!(md->type & EFI_RUNTIME_SERVICES_CODE) &&
--		    !(md->type & EFI_RUNTIME_SERVICES_DATA))
-+		if ((md->type != EFI_RUNTIME_SERVICES_CODE) &&
-+		    (md->type != EFI_RUNTIME_SERVICES_DATA))
- 			continue;
- 
- 		start_pfn = md->phys_addr >> PAGE_SHIFT;
-@@ -191,7 +191,7 @@ void __init efi_pagetable_init(void)
- 			pud = fill_pud(pgd, vaddr);
- 			pmd = fill_pmd(pud, vaddr);
- 			pte = fill_pte(pmd, vaddr);
--			if (md->type & EFI_RUNTIME_SERVICES_CODE)
-+			if (md->type == EFI_RUNTIME_SERVICES_CODE)
- 				set_pte(pte, pfn_pte(pfn, PAGE_KERNEL_EXEC));
- 			else
- 				set_pte(pte, pfn_pte(pfn, PAGE_KERNEL));
+ void efi_call_phys_epilog_in_physmode(void)
+ {
+ 	write_cr3(get_cpu_var(save_cr3));
++	if (cpu_has_pge)
++		__flush_tlb_global();
+ 	local_irq_restore(get_cpu_var(efi_flags));
+ }
 
-
+Somethinkg like this. Anybody comments?
 
 Thanks,
 Takao Indoh
@@ -544,17 +531,6 @@ Takao Indoh
 >> Please read the FAQ at  http://www.tux.org/lkml/
 >>
 >>
->
->
->
->_______________________________________________
->kexec mailing list
->kexec@lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
-
----
-印藤隆夫(INDOH Takao)
- E-Mail : indou.takao@jp.fujitsu.com
 
 _______________________________________________
 kexec mailing list
