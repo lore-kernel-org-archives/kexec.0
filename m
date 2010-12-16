@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ww0-f41.google.com ([74.125.82.41])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PTFpg-0004zY-0q
-	for kexec@lists.infradead.org; Thu, 16 Dec 2010 15:33:29 +0000
-Received: by wwi18 with SMTP id 18so439457wwi.0
-	for <kexec@lists.infradead.org>; Thu, 16 Dec 2010 07:33:25 -0800 (PST)
+Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PTKLi-0005H0-Kn
+	for kexec@lists.infradead.org; Thu, 16 Dec 2010 20:22:51 +0000
+Message-ID: <4D0A74F6.6070002@zytor.com>
+Date: Thu, 16 Dec 2010 12:22:14 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
 MIME-Version: 1.0
-In-Reply-To: <20101216020514.GJ3558@verge.net.au>
-References: <20101216020514.GJ3558@verge.net.au>
-Date: Thu, 16 Dec 2010 18:33:25 +0300
-Message-ID: <AANLkTikX5_JURn11n-kOt_4VOjCn6hVQiNgSS1OnqKvQ@mail.gmail.com>
-Subject: Re: mips: elfinfo
-From: Maxim Uvarov <muvarov@gmail.com>
+Subject: Re: [PATCH v2][EFI] Run EFI in physical mode
+References: <F7CB3D97D99F33indou.takao@jp.fujitsu.com>
+	<4D06E7FE.5000600@jp.fujitsu.com>
+	<9CB9BB8ED64BAindou.takao@jp.fujitsu.com>
+In-Reply-To: <9CB9BB8ED64BAindou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,230 +20,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: nhorman@tuxdriver.com, horms@verge.net.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>, tglx@linutronix.de, vgoyal@redhat.com
 
-2010/12/16 Simon Horman <horms@verge.net.au>:
-> Hi Maxim,
->
-> I noticed that your change "Patch adds kernel data section to final vmcor=
-e.
-> This forces gdb read kernel" causes the build to break as it was applied
-> after Eric's "crashdump: Move kern_vaddr_start from kexec_info into
-> crash_elf_info" patch.
->
-> I have it in mind to resolve this something along the lines of
-> the patch below. However, I now see the following warning:
->
-> =A0 =A0 =A0 =A0kexec/arch/mips/crashdump-mips.c: In function `get_kernel_=
-vaddr_and_size':
-> =A0 =A0 =A0 =A0kexec/arch/mips/crashdump-mips.c:81: warning: integer cons=
-tant is too large for "unsigned long" type
->
-> Which corresponds to this code:
->
-> =A0 =A0 =A0 =A0elf_info->kern_vaddr_start =3D elf_info->kern_paddr_start |
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A00xffffffff80000000UL;
->
-> I am compiling for 32-bit, so at a glance that constant does
-> seem to large.
->
+On 12/14/2010 10:01 AM, Takao Indoh wrote:
+> On Tue, 14 Dec 2010 12:43:58 +0900, Kenji Kaneshige wrote:
+> 
+>> Hi,
+>>
+>> I tested this patch on the system that has large amount of memory (1TB),
+>> and I encountered the immediate system reset problem that happens every
+>> time I modify the EFI boot entry using efibootmgr command. It seems that
+>> triple fault happens due to the incorrect page table setup.
+>>
+>>> +void __init efi_pagetable_init(void)
+>>> +{
+>> (snip.)
+>>> +	pgd = efi_pgd + pgd_index(PAGE_OFFSET);
+>>> +	set_pgd(pgd, *pgd_offset_k(PAGE_OFFSET));
+>>> +	pgd = efi_pgd + pgd_index(__START_KERNEL_map);
+>>> +	set_pgd(pgd, *pgd_offset_k(__START_KERNEL_map));
+>>> +}
+>>
+>> Maybe we need to map whole kernel address space. The problem doesn't
+>> happen by modifying as follows.
+>>
+>> 	clone_pgd_range(efi_pgd + KERNEL_PGD_BOUNDARY,
+>> 			swapper_pg_dir + KERNEL_PGD_BOUNDARY, 
+>> KERNEL_PGD_PTRS);
+> 
+> Agree, I'll merge this to the patch. And I got another bug report. This
+> should be also merged.
+> 
+> 
+> @@ -177,8 +177,8 @@ void __init efi_pagetable_init(void)
+>  	memset(efi_pgd, 0, sizeof(efi_pgd));
+>  	for (p = memmap.map; p < memmap.map_end; p += memmap.desc_size) {
+>  		md = p;
+> -		if (!(md->type & EFI_RUNTIME_SERVICES_CODE) &&
+> -		    !(md->type & EFI_RUNTIME_SERVICES_DATA))
+> +		if ((md->type != EFI_RUNTIME_SERVICES_CODE) &&
+> +		    (md->type != EFI_RUNTIME_SERVICES_DATA))
+>  			continue;
+>  
+>  		start_pfn = md->phys_addr >> PAGE_SHIFT;
+> @@ -191,7 +191,7 @@ void __init efi_pagetable_init(void)
+>  			pud = fill_pud(pgd, vaddr);
+>  			pmd = fill_pmd(pud, vaddr);
+>  			pte = fill_pte(pmd, vaddr);
+> -			if (md->type & EFI_RUNTIME_SERVICES_CODE)
+> +			if (md->type == EFI_RUNTIME_SERVICES_CODE)
+>  				set_pte(pte, pfn_pte(pfn, PAGE_KERNEL_EXEC));
+>  			else
+>  				set_pte(pte, pfn_pte(pfn, PAGE_KERNEL));
+> 
 
-Ah, yes this values does not fit to 32 bit UL.
+Note: the current kernel has initial_page_table around for 32 bits; we
+should do the equivalent for 64 bits and always keep a 1:1 page table
+set around instead of having a special page table.  As such, I would
+prefer to not merge a patchset that adds yet another set of ad hoc page
+tables if at all possible.
 
-> Also, if you have any tips on a cross-compiling environment for 64bit
-> on a x86_32 or x86_64 host I would be most grateful.
->
+	-hpa
 
-I tested it with building on 32 bit host. readelf -a shows that vmcore
-had memory segment according to kernel memory.
-So that, gdb began to read real values instead of uninitialized.
-
-Actually  elf_info->kern_paddr_start | 0xffffffff80000000UL; is needed
-only for 64 bit mips.
-Because we read kernel memory ranges from /proc/vmcore and there are
-values without 0xffffffff at the beginning.
-But 0xfffff... are needed in case if we need access to this address from ke=
-rnel.
-
-32 bit mips kernel does not need adding 0xfffffff.  But it think there
-will be only warning and nothing wrong.
-
-Maxim.
-
->
-> diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump=
--mips.c
-> index 5ea4f4f..b937ab5 100644
-> --- a/kexec/arch/mips/crashdump-mips.c
-> +++ b/kexec/arch/mips/crashdump-mips.c
-> @@ -51,7 +51,7 @@ unsigned long long saved_max_mem;
->
-> =A0/* Read kernel physical load addr from the file returned by proc_iomem=
-()
-> =A0* (Kernel Code) and store in kexec_info */
-> -static int get_kernel_paddr(struct kexec_info *info)
-> +static int get_kernel_paddr(struct crash_elf_info *elf_info)
-> =A0{
-> =A0 =A0 =A0 =A0uint64_t start;
->
-> @@ -59,7 +59,7 @@ static int get_kernel_paddr(struct kexec_info *info)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
->
-> =A0 =A0 =A0 =A0if (parse_iomem_single("Kernel code\n", &start, NULL) =3D=
-=3D 0) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->kern_paddr_start =3D start;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 elf_info->kern_paddr_start =3D start;
-> =A0#ifdef DEBUG
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0printf("kernel load physical addr start =
-=3D 0x%lx\n", start);
-> =A0#endif
-> @@ -70,21 +70,22 @@ static int get_kernel_paddr(struct kexec_info *info)
-> =A0 =A0 =A0 =A0return -1;
-> =A0}
->
-> -static int get_kernel_vaddr_and_size(struct kexec_info *info)
-> +static int get_kernel_vaddr_and_size(struct crash_elf_info *elf_info)
-> =A0{
-> =A0 =A0 =A0 =A0uint64_t end;
->
-> - =A0 =A0 =A0 if (!info->kern_paddr_start)
-> + =A0 =A0 =A0 if (!elf_info->kern_paddr_start)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
->
-> - =A0 =A0 =A0 info->kern_vaddr_start =3D =A0info->kern_paddr_start | 0xff=
-ffffff80000000UL;
-> + =A0 =A0 =A0 elf_info->kern_vaddr_start =3D elf_info->kern_paddr_start |
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 0xffffffff80000000UL;
-> =A0 =A0 =A0 =A0if (parse_iomem_single("Kernel data\n", NULL, &end) =3D=3D=
- 0) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->kern_size =3D end - info->kern_paddr_=
-start;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 elf_info->kern_size =3D end - elf_info->ker=
-n_paddr_start;
-> =A0#ifdef DEBUG
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0printf("kernel_vaddr=3D 0x%llx paddr %llx\=
-n",
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->kern_=
-vaddr_start,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 info->kern_=
-paddr_start);
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 printf("kernel size =3D 0x%llx\n", info->ke=
-rn_size);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 elf_info->k=
-ern_vaddr_start,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 elf_info->k=
-ern_paddr_start);
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 printf("kernel size =3D 0x%llx\n", elf_info=
-->kern_size);
-> =A0#endif
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return 0;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0}
-> @@ -355,11 +356,20 @@ int load_crashdump_segments(struct kexec_info *info=
-, char* mod_cmdline,
-> =A0 =A0 =A0 =A0unsigned long sz, elfcorehdr;
-> =A0 =A0 =A0 =A0int nr_ranges, align =3D 1024;
-> =A0 =A0 =A0 =A0struct memory_range *mem_range;
-> + =A0 =A0 =A0 crash_create_elf_headers_func crash_create =3D crash_create=
-_elf32_headers;
-> + =A0 =A0 =A0 struct crash_elf_info *elf_info =3D &elf_info32;
->
-> - =A0 =A0 =A0 if (get_kernel_paddr(info))
-> +#ifdef __mips64
-> + =A0 =A0 =A0 if (arch_options.core_header_type =3D=3D CORE_TYPE_ELF64) {
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 elf_info =3D &elf_info64;
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 crash_create =3D crash_create_elf64;
-> + =A0 =A0 =A0 }
-> +#endif
-> +
-> + =A0 =A0 =A0 if (get_kernel_paddr(elf_info))
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
->
-> - =A0 =A0 =A0 if (get_kernel_vaddr_and_size(info))
-> + =A0 =A0 =A0 if (get_kernel_vaddr_and_size(elf_info))
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
->
-> =A0 =A0 =A0 =A0if (get_crash_memory_ranges(&mem_range, &nr_ranges) < 0)
-> @@ -373,28 +383,9 @@ int load_crashdump_segments(struct kexec_info *info,=
- char* mod_cmdline,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0crash_rese=
-rved_mem.start,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0crash_rese=
-rved_mem.end, -1);
->
-> -#ifdef __mips64
-> - =A0 =A0 =A0 /* Create elf header segment and store crash image data. */
-> - =A0 =A0 =A0 if (arch_options.core_header_type =3D=3D CORE_TYPE_ELF64) {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (crash_create_elf64_headers(info, &elf_i=
-nfo64,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 crash_memory_range, nr_rang=
-es,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &tmp, &sz,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ELF_CORE_HEADER_ALIGN) < 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
-> - =A0 =A0 =A0 } else {
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 if (crash_create_elf32_headers(info, &elf_i=
-nfo32,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 crash_memory_range, nr_rang=
-es,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 &tmp, &sz,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 ELF_CORE_HEADER_ALIGN) < 0)
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 return -1;
-> - =A0 =A0 =A0 }
-> -#else
-> - =A0 =A0 =A0 if (crash_create_elf32_headers(info, &elf_info32,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 crash_memory_range, nr_ranges,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 &tmp, &sz,
-> - =A0 =A0 =A0 =A0 =A0 =A0 =A0 ELF_CORE_HEADER_ALIGN) < 0)
-> + =A0 =A0 =A0 if (crash_create(info, elf_info, crash_memory_range, nr_ran=
-ges,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0&tmp, &sz, ELF_CORE_HEAD=
-ER_ALIGN) < 0)
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0return -1;
-> -#endif
-> =A0 =A0 =A0 =A0elfcorehdr =3D add_buffer(info, tmp, sz, sz, align,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0crash_reserved_mem.start,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0crash_reserved_mem.end, -1);
-> diff --git a/kexec/crashdump.h b/kexec/crashdump.h
-> index eccdb9f..060bb88 100644
-> --- a/kexec/crashdump.h
-> +++ b/kexec/crashdump.h
-> @@ -35,6 +35,13 @@ struct crash_elf_info {
-> =A0 =A0 =A0 =A0int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *le=
-n);
-> =A0};
->
-> +typedef int(*crash_create_elf_headers_func)(struct kexec_info *info,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 struct crash_elf_info *elf_info,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 struct memory_range *range,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 int ranges,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 void **buf, unsigned long *size,
-> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0 unsigned long align);
-> +
-> =A0int crash_create_elf32_headers(struct kexec_info *info,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct crash_=
-elf_info *elf_info,
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 struct memory=
-_range *range, int ranges,
->
-
-
-
--- =
-
-Best regards,
-Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
