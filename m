@@ -1,17 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PTOWp-0004En-7M
-	for kexec@lists.infradead.org; Fri, 17 Dec 2010 00:50:39 +0000
-Date: Fri, 17 Dec 2010 09:50:31 +0900
+	id 1PUSvv-0007KS-N3
+	for kexec@lists.infradead.org; Sun, 19 Dec 2010 23:44:57 +0000
+Date: Mon, 20 Dec 2010 08:44:50 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec fixes?
-Message-ID: <20101217005031.GB3434@verge.net.au>
+Subject: Re: mips: elfinfo
+Message-ID: <20101219234450.GA13595@verge.net.au>
 References: <20101216020514.GJ3558@verge.net.au>
-	<m139pxuy6e.fsf@fess.ebiederm.org>
+	<AANLkTikX5_JURn11n-kOt_4VOjCn6hVQiNgSS1OnqKvQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m139pxuy6e.fsf@fess.ebiederm.org>
+In-Reply-To: <AANLkTikX5_JURn11n-kOt_4VOjCn6hVQiNgSS1OnqKvQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,33 +20,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: Maxim Uvarov <muvarov@gmail.com>
+Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Thu, Dec 16, 2010 at 02:53:45PM -0800, Eric W. Biederman wrote:
-> 
-> Simon did you ever get my last round of fixes for i386 after
-> my other changes merged?
-> 
-> I was testing them in my tree, and I was trying to be careful
-> and not send you something bad.  I completed my testing and
-> but I forget to send you a pull request.
-
-Hi Eric,
-
-I don't think that I received a pull request and in
-any case I don't have anything other than mips fix(es) pending.
-So if its not in my tree could you (rebase and) send it again?
-
-Its been a while since there was a release, so it might
-be nice (for me) to get a 2.0.3 out the door some time.
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBEZWMgMTYsIDIwMTAgYXQgMDY6MzM6MjVQTSArMDMwMCwgTWF4aW0gVXZhcm92IHdy
+b3RlOgo+IDIwMTAvMTIvMTYgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ogo+ID4g
+SGkgTWF4aW0sCj4gPgo+ID4gSSBub3RpY2VkIHRoYXQgeW91ciBjaGFuZ2UgIlBhdGNoIGFkZHMg
+a2VybmVsIGRhdGEgc2VjdGlvbiB0byBmaW5hbCB2bWNvcmUuCj4gPiBUaGlzIGZvcmNlcyBnZGIg
+cmVhZCBrZXJuZWwiIGNhdXNlcyB0aGUgYnVpbGQgdG8gYnJlYWsgYXMgaXQgd2FzIGFwcGxpZWQK
+PiA+IGFmdGVyIEVyaWMncyAiY3Jhc2hkdW1wOiBNb3ZlIGtlcm5fdmFkZHJfc3RhcnQgZnJvbSBr
+ZXhlY19pbmZvIGludG8KPiA+IGNyYXNoX2VsZl9pbmZvIiBwYXRjaC4KPiA+Cj4gPiBJIGhhdmUg
+aXQgaW4gbWluZCB0byByZXNvbHZlIHRoaXMgc29tZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZgo+
+ID4gdGhlIHBhdGNoIGJlbG93LiBIb3dldmVyLCBJIG5vdyBzZWUgdGhlIGZvbGxvd2luZyB3YXJu
+aW5nOgo+ID4KPiA+IMKgIMKgIMKgIMKga2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmM6
+IEluIGZ1bmN0aW9uIGBnZXRfa2VybmVsX3ZhZGRyX2FuZF9zaXplJzoKPiA+IMKgIMKgIMKgIMKg
+a2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmM6ODE6IHdhcm5pbmc6IGludGVnZXIgY29u
+c3RhbnQgaXMgdG9vIGxhcmdlIGZvciAidW5zaWduZWQgbG9uZyIgdHlwZQo+ID4KPiA+IFdoaWNo
+IGNvcnJlc3BvbmRzIHRvIHRoaXMgY29kZToKPiA+Cj4gPiDCoCDCoCDCoCDCoGVsZl9pbmZvLT5r
+ZXJuX3ZhZGRyX3N0YXJ0ID0gZWxmX2luZm8tPmtlcm5fcGFkZHJfc3RhcnQgfAo+ID4gwqAgwqAg
+wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAweGZm
+ZmZmZmZmODAwMDAwMDBVTDsKPiA+Cj4gPiBJIGFtIGNvbXBpbGluZyBmb3IgMzItYml0LCBzbyBh
+dCBhIGdsYW5jZSB0aGF0IGNvbnN0YW50IGRvZXMKPiA+IHNlZW0gdG8gbGFyZ2UuCj4gPgo+IAo+
+IEFoLCB5ZXMgdGhpcyB2YWx1ZXMgZG9lcyBub3QgZml0IHRvIDMyIGJpdCBVTC4KPiAKPiA+IEFs
+c28sIGlmIHlvdSBoYXZlIGFueSB0aXBzIG9uIGEgY3Jvc3MtY29tcGlsaW5nIGVudmlyb25tZW50
+IGZvciA2NGJpdAo+ID4gb24gYSB4ODZfMzIgb3IgeDg2XzY0IGhvc3QgSSB3b3VsZCBiZSBtb3N0
+IGdyYXRlZnVsLgo+ID4KPiAKPiBJIHRlc3RlZCBpdCB3aXRoIGJ1aWxkaW5nIG9uIDMyIGJpdCBo
+b3N0LiByZWFkZWxmIC1hIHNob3dzIHRoYXQgdm1jb3JlCj4gaGFkIG1lbW9yeSBzZWdtZW50IGFj
+Y29yZGluZyB0byBrZXJuZWwgbWVtb3J5Lgo+IFNvIHRoYXQsIGdkYiBiZWdhbiB0byByZWFkIHJl
+YWwgdmFsdWVzIGluc3RlYWQgb2YgdW5pbml0aWFsaXplZC4KPiAKPiBBY3R1YWxseSAgZWxmX2lu
+Zm8tPmtlcm5fcGFkZHJfc3RhcnQgfCAweGZmZmZmZmZmODAwMDAwMDBVTDsgaXMgbmVlZGVkCj4g
+b25seSBmb3IgNjQgYml0IG1pcHMuCj4gQmVjYXVzZSB3ZSByZWFkIGtlcm5lbCBtZW1vcnkgcmFu
+Z2VzIGZyb20gL3Byb2Mvdm1jb3JlIGFuZCB0aGVyZSBhcmUKPiB2YWx1ZXMgd2l0aG91dCAweGZm
+ZmZmZmZmIGF0IHRoZSBiZWdpbm5pbmcuCj4gQnV0IDB4ZmZmZmYuLi4gYXJlIG5lZWRlZCBpbiBj
+YXNlIGlmIHdlIG5lZWQgYWNjZXNzIHRvIHRoaXMgYWRkcmVzcyBmcm9tIGtlcm5lbC4KPiAKPiAz
+MiBiaXQgbWlwcyBrZXJuZWwgZG9lcyBub3QgbmVlZCBhZGRpbmcgMHhmZmZmZmZmLiAgQnV0IGl0
+IHRoaW5rIHRoZXJlCj4gd2lsbCBiZSBvbmx5IHdhcm5pbmcgYW5kIG5vdGhpbmcgd3JvbmcuCgpV
+bmRlcnN0b29kLCBidXQgaXQgd291bGQgYmUgbmljZSB0byBlbGltaW5hdGUgdGhlIHdhcm5pbmcu
+CkFzIGxvYWRfY3Jhc2hkdW1wX3NlZ21lbnRzKCkgaXMgYWxyZWFkeSAzMi82NCBiaXQgYXdhcmUg
+SSB3b25kZXIKaWYgd2UgY291bGQganVzdCBwYXNzIGFwcHJvcHJpYXRlIGNvbnN0YW50IGZyb20g
+dGhlcmUgYXMKYSBwYXJhbWV0ZXIgb2YgZ2V0X2tlcm5lbF92YWRkcl9hbmRfc2l6ZSgpLgoKUGVy
+aGFwcyBzb21ldGhpbmcgbGlrZSB0aGUgZm9sbG93aW5nIHdoaWNoCmFwcGxpZXMgb24gdG9wIG9m
+IG15IHByZXZpb3VzIHBhdGNoLgoKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvbWlwcy9jcmFzaGR1
+bXAtbWlwcy5jIGIva2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmMKaW5kZXggYjkzN2Fi
+NS4uYWE1MDEwOSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmMK
+KysrIGIva2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmMKQEAgLTcwLDcgKzcwLDggQEAg
+c3RhdGljIGludCBnZXRfa2VybmVsX3BhZGRyKHN0cnVjdCBjcmFzaF9lbGZfaW5mbyAqZWxmX2lu
+Zm8pCiAJcmV0dXJuIC0xOwogfQogCi1zdGF0aWMgaW50IGdldF9rZXJuZWxfdmFkZHJfYW5kX3Np
+emUoc3RydWN0IGNyYXNoX2VsZl9pbmZvICplbGZfaW5mbykKK3N0YXRpYyBpbnQgZ2V0X2tlcm5l
+bF92YWRkcl9hbmRfc2l6ZShzdHJ1Y3QgY3Jhc2hfZWxmX2luZm8gKmVsZl9pbmZvLAorCQkJCSAg
+ICAgdW5zaWduZWQgbG9uZyBzdGFydF9vZmZzZXQpCiB7CiAJdWludDY0X3QgZW5kOwogCkBAIC03
+OCw3ICs3OSw3IEBAIHN0YXRpYyBpbnQgZ2V0X2tlcm5lbF92YWRkcl9hbmRfc2l6ZShzdHJ1Y3Qg
+Y3Jhc2hfZWxmX2luZm8gKmVsZl9pbmZvKQogCQlyZXR1cm4gLTE7CiAKIAllbGZfaW5mby0+a2Vy
+bl92YWRkcl9zdGFydCA9IGVsZl9pbmZvLT5rZXJuX3BhZGRyX3N0YXJ0IHwKLQkJCQkJMHhmZmZm
+ZmZmZjgwMDAwMDAwVUw7CisJCQkJCXN0YXJ0X29mZnNldDsKIAlpZiAocGFyc2VfaW9tZW1fc2lu
+Z2xlKCJLZXJuZWwgZGF0YVxuIiwgTlVMTCwgJmVuZCkgPT0gMCkgewogCQllbGZfaW5mby0+a2Vy
+bl9zaXplID0gZW5kIC0gZWxmX2luZm8tPmtlcm5fcGFkZHJfc3RhcnQ7CiAjaWZkZWYgREVCVUcK
+QEAgLTM1OCwxOCArMzU5LDIwIEBAIGludCBsb2FkX2NyYXNoZHVtcF9zZWdtZW50cyhzdHJ1Y3Qg
+a2V4ZWNfaW5mbyAqaW5mbywgY2hhciogbW9kX2NtZGxpbmUsCiAJc3RydWN0IG1lbW9yeV9yYW5n
+ZSAqbWVtX3JhbmdlOwogCWNyYXNoX2NyZWF0ZV9lbGZfaGVhZGVyc19mdW5jIGNyYXNoX2NyZWF0
+ZSA9IGNyYXNoX2NyZWF0ZV9lbGYzMl9oZWFkZXJzOwogCXN0cnVjdCBjcmFzaF9lbGZfaW5mbyAq
+ZWxmX2luZm8gPSAmZWxmX2luZm8zMjsKKwl1bnNpZ25lZCBsb25nIHN0YXJ0X29mZnNldCA9IDB4
+ODAwMDAwMDBVTDsKIAogI2lmZGVmIF9fbWlwczY0CiAJaWYgKGFyY2hfb3B0aW9ucy5jb3JlX2hl
+YWRlcl90eXBlID09IENPUkVfVFlQRV9FTEY2NCkgewogCQllbGZfaW5mbyA9ICZlbGZfaW5mbzY0
+OwogCQljcmFzaF9jcmVhdGUgPSBjcmFzaF9jcmVhdGVfZWxmNjQ7CisJCXN0YXJ0X29mZnNldCA9
+IDB4ZmZmZmZmZmY4MDAwMDAwMFVMOwogCX0KICNlbmRpZgogCiAJaWYgKGdldF9rZXJuZWxfcGFk
+ZHIoZWxmX2luZm8pKQogCQlyZXR1cm4gLTE7CiAKLQlpZiAoZ2V0X2tlcm5lbF92YWRkcl9hbmRf
+c2l6ZShlbGZfaW5mbykpCisJaWYgKGdldF9rZXJuZWxfdmFkZHJfYW5kX3NpemUoZWxmX2luZm8s
+IHN0YXJ0X29mZnNldCkpCiAJCXJldHVybiAtMTsKIAogCWlmIChnZXRfY3Jhc2hfbWVtb3J5X3Jh
+bmdlcygmbWVtX3JhbmdlLCAmbnJfcmFuZ2VzKSA8IDApCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
