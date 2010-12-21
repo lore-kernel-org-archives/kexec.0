@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PUwmL-00082e-4Q
-	for kexec@lists.infradead.org; Tue, 21 Dec 2010 07:37:02 +0000
-Date: Tue, 21 Dec 2010 16:36:54 +0900
+	id 1PUyZ3-0003dk-Q0
+	for kexec@lists.infradead.org; Tue, 21 Dec 2010 09:31:26 +0000
+Date: Tue, 21 Dec 2010 18:31:21 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: mips: elfinfo
-Message-ID: <20101221073652.GA14715@verge.net.au>
+Subject: Re: kexec fixes?
+Message-ID: <20101221093121.GA10505@verge.net.au>
 References: <20101216020514.GJ3558@verge.net.au>
-	<AANLkTikX5_JURn11n-kOt_4VOjCn6hVQiNgSS1OnqKvQ@mail.gmail.com>
-	<20101219234450.GA13595@verge.net.au>
-	<AANLkTi=OXyJJ_i4q7w+g81NFA=d-+ZmFyDWJ-ZwiXkhs@mail.gmail.com>
+	<m139pxuy6e.fsf@fess.ebiederm.org>
+	<20101217005031.GB3434@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <AANLkTi=OXyJJ_i4q7w+g81NFA=d-+ZmFyDWJ-ZwiXkhs@mail.gmail.com>
+In-Reply-To: <20101217005031.GB3434@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,57 +21,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org
 
-T24gVHVlLCBEZWMgMjEsIDIwMTAgYXQgMTA6MDQ6MzRBTSArMDMwMCwgTWF4aW0gVXZhcm92IHdy
-b3RlOgo+IDIwMTAvMTIvMjAgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ogo+ID4g
-T24gVGh1LCBEZWMgMTYsIDIwMTAgYXQgMDY6MzM6MjVQTSArMDMwMCwgTWF4aW0gVXZhcm92IHdy
-b3RlOgo+ID4+IDIwMTAvMTIvMTYgU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ogo+
-ID4+ID4gSGkgTWF4aW0sCj4gPj4gPgo+ID4+ID4gSSBub3RpY2VkIHRoYXQgeW91ciBjaGFuZ2Ug
-IlBhdGNoIGFkZHMga2VybmVsIGRhdGEgc2VjdGlvbiB0byBmaW5hbCB2bWNvcmUuCj4gPj4gPiBU
-aGlzIGZvcmNlcyBnZGIgcmVhZCBrZXJuZWwiIGNhdXNlcyB0aGUgYnVpbGQgdG8gYnJlYWsgYXMg
-aXQgd2FzIGFwcGxpZWQKPiA+PiA+IGFmdGVyIEVyaWMncyAiY3Jhc2hkdW1wOiBNb3ZlIGtlcm5f
-dmFkZHJfc3RhcnQgZnJvbSBrZXhlY19pbmZvIGludG8KPiA+PiA+IGNyYXNoX2VsZl9pbmZvIiBw
-YXRjaC4KPiA+PiA+Cj4gPj4gPiBJIGhhdmUgaXQgaW4gbWluZCB0byByZXNvbHZlIHRoaXMgc29t
-ZXRoaW5nIGFsb25nIHRoZSBsaW5lcyBvZgo+ID4+ID4gdGhlIHBhdGNoIGJlbG93LiBIb3dldmVy
-LCBJIG5vdyBzZWUgdGhlIGZvbGxvd2luZyB3YXJuaW5nOgo+ID4+ID4KPiA+PiA+IMKgIMKgIMKg
-IMKga2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmM6IEluIGZ1bmN0aW9uIGBnZXRfa2Vy
-bmVsX3ZhZGRyX2FuZF9zaXplJzoKPiA+PiA+IMKgIMKgIMKgIMKga2V4ZWMvYXJjaC9taXBzL2Ny
-YXNoZHVtcC1taXBzLmM6ODE6IHdhcm5pbmc6IGludGVnZXIgY29uc3RhbnQgaXMgdG9vIGxhcmdl
-IGZvciAidW5zaWduZWQgbG9uZyIgdHlwZQo+ID4+ID4KPiA+PiA+IFdoaWNoIGNvcnJlc3BvbmRz
-IHRvIHRoaXMgY29kZToKPiA+PiA+Cj4gPj4gPiDCoCDCoCDCoCDCoGVsZl9pbmZvLT5rZXJuX3Zh
-ZGRyX3N0YXJ0ID0gZWxmX2luZm8tPmtlcm5fcGFkZHJfc3RhcnQgfAo+ID4+ID4gwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAweGZmZmZm
-ZmZmODAwMDAwMDBVTDsKPiA+PiA+Cj4gPj4gPiBJIGFtIGNvbXBpbGluZyBmb3IgMzItYml0LCBz
-byBhdCBhIGdsYW5jZSB0aGF0IGNvbnN0YW50IGRvZXMKPiA+PiA+IHNlZW0gdG8gbGFyZ2UuCj4g
-Pj4gPgo+ID4+Cj4gPj4gQWgsIHllcyB0aGlzIHZhbHVlcyBkb2VzIG5vdCBmaXQgdG8gMzIgYml0
-IFVMLgo+ID4+Cj4gPj4gPiBBbHNvLCBpZiB5b3UgaGF2ZSBhbnkgdGlwcyBvbiBhIGNyb3NzLWNv
-bXBpbGluZyBlbnZpcm9ubWVudCBmb3IgNjRiaXQKPiA+PiA+IG9uIGEgeDg2XzMyIG9yIHg4Nl82
-NCBob3N0IEkgd291bGQgYmUgbW9zdCBncmF0ZWZ1bC4KPiA+PiA+Cj4gPj4KPiA+PiBJIHRlc3Rl
-ZCBpdCB3aXRoIGJ1aWxkaW5nIG9uIDMyIGJpdCBob3N0LiByZWFkZWxmIC1hIHNob3dzIHRoYXQg
-dm1jb3JlCj4gPj4gaGFkIG1lbW9yeSBzZWdtZW50IGFjY29yZGluZyB0byBrZXJuZWwgbWVtb3J5
-Lgo+ID4+IFNvIHRoYXQsIGdkYiBiZWdhbiB0byByZWFkIHJlYWwgdmFsdWVzIGluc3RlYWQgb2Yg
-dW5pbml0aWFsaXplZC4KPiA+Pgo+ID4+IEFjdHVhbGx5IMKgZWxmX2luZm8tPmtlcm5fcGFkZHJf
-c3RhcnQgfCAweGZmZmZmZmZmODAwMDAwMDBVTDsgaXMgbmVlZGVkCj4gPj4gb25seSBmb3IgNjQg
-Yml0IG1pcHMuCj4gPj4gQmVjYXVzZSB3ZSByZWFkIGtlcm5lbCBtZW1vcnkgcmFuZ2VzIGZyb20g
-L3Byb2Mvdm1jb3JlIGFuZCB0aGVyZSBhcmUKPiA+PiB2YWx1ZXMgd2l0aG91dCAweGZmZmZmZmZm
-IGF0IHRoZSBiZWdpbm5pbmcuCj4gPj4gQnV0IDB4ZmZmZmYuLi4gYXJlIG5lZWRlZCBpbiBjYXNl
-IGlmIHdlIG5lZWQgYWNjZXNzIHRvIHRoaXMgYWRkcmVzcyBmcm9tIGtlcm5lbC4KPiA+Pgo+ID4+
-IDMyIGJpdCBtaXBzIGtlcm5lbCBkb2VzIG5vdCBuZWVkIGFkZGluZyAweGZmZmZmZmYuIMKgQnV0
-IGl0IHRoaW5rIHRoZXJlCj4gPj4gd2lsbCBiZSBvbmx5IHdhcm5pbmcgYW5kIG5vdGhpbmcgd3Jv
-bmcuCj4gPgo+ID4gVW5kZXJzdG9vZCwgYnV0IGl0IHdvdWxkIGJlIG5pY2UgdG8gZWxpbWluYXRl
-IHRoZSB3YXJuaW5nLgo+ID4gQXMgbG9hZF9jcmFzaGR1bXBfc2VnbWVudHMoKSBpcyBhbHJlYWR5
-IDMyLzY0IGJpdCBhd2FyZSBJIHdvbmRlcgo+ID4gaWYgd2UgY291bGQganVzdCBwYXNzIGFwcHJv
-cHJpYXRlIGNvbnN0YW50IGZyb20gdGhlcmUgYXMKPiA+IGEgcGFyYW1ldGVyIG9mIGdldF9rZXJu
-ZWxfdmFkZHJfYW5kX3NpemUoKS4KPiA+Cj4gPiBQZXJoYXBzIHNvbWV0aGluZyBsaWtlIHRoZSBm
-b2xsb3dpbmcgd2hpY2gKPiA+IGFwcGxpZXMgb24gdG9wIG9mIG15IHByZXZpb3VzIHBhdGNoLgo+
-ID4KPiBZZXMsIHRoYXQgaGFzIHRvIHdvcmsuIFRoYW5rcy4KClRoYW5rcywgSSBoYXZlIHB1c2hl
-ZCB0aGlzIGFuZCB0aGUgcHJldmlvdXMgY2hhbmdlLgoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+On Fri, Dec 17, 2010 at 09:50:31AM +0900, Simon Horman wrote:
+> On Thu, Dec 16, 2010 at 02:53:45PM -0800, Eric W. Biederman wrote:
+> > 
+> > Simon did you ever get my last round of fixes for i386 after
+> > my other changes merged?
+> > 
+> > I was testing them in my tree, and I was trying to be careful
+> > and not send you something bad.  I completed my testing and
+> > but I forget to send you a pull request.
+> 
+> Hi Eric,
+> 
+> I don't think that I received a pull request and in
+> any case I don't have anything other than mips fix(es) pending.
+> So if its not in my tree could you (rebase and) send it again?
+> 
+> Its been a while since there was a release, so it might
+> be nice (for me) to get a 2.0.3 out the door some time.
+
+Hi Eric,
+
+do you have any pending changes?
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
