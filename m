@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PUyZ3-0003dk-Q0
-	for kexec@lists.infradead.org; Tue, 21 Dec 2010 09:31:26 +0000
-Date: Tue, 21 Dec 2010 18:31:21 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec fixes?
-Message-ID: <20101221093121.GA10505@verge.net.au>
-References: <20101216020514.GJ3558@verge.net.au>
-	<m139pxuy6e.fsf@fess.ebiederm.org>
-	<20101217005031.GB3434@verge.net.au>
+Received: from cantor.suse.de ([195.135.220.2] helo=mx1.suse.de)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PVZ4h-0005AV-K4
+	for kexec@lists.infradead.org; Thu, 23 Dec 2010 00:30:32 +0000
+Date: Wed, 22 Dec 2010 16:29:35 -0800
+From: Greg KH <gregkh@suse.de>
+Subject: Re: [RFC][PATCH] Add a sysctl option controlling kexec when MCE
+	occurred
+Message-ID: <20101223002935.GA9811@suse.de>
+References: <5C4C569E8A4B9B42A84A977CF070A35B2C132F68FC@USINDEVS01.corp.hds.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20101217005031.GB3434@verge.net.au>
+In-Reply-To: <5C4C569E8A4B9B42A84A977CF070A35B2C132F68FC@USINDEVS01.corp.hds.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,31 +24,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+To: Seiji Aguchi <seiji.aguchi@hds.com>
+Cc: "hawk@comx.dk" <hawk@comx.dk>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "drosenberg@vsecurity.com" <drosenberg@vsecurity.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "rdunlap@xenotime.net" <rdunlap@xenotime.net>, "andi@firstfloor.org" <andi@firstfloor.org>, "hpa@zytor.com" <hpa@zytor.com>, "akpm@linuxfoundation.org" <akpm@linuxfoundation.org>, "ext-andriy.shevchenko@nokia.com" <ext-andriy.shevchenko@nokia.com>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "x86@kernel.org" <x86@kernel.org>, "opurdila@ixiacom.com" <opurdila@ixiacom.com>, "mingo@redhat.com" <mingo@redhat.com>, "ying.huang@intel.com" <ying.huang@intel.com>, "kees.cook@canonical.com" <kees.cook@canonical.com>, "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>, "dzickus@redhat.com" <dzickus@redhat.com>, "len.brown@intel.com" <len.brown@intel.com>, "seto.hidetoshi@jp.fujitsu.com" <seto.hidetoshi@jp.fujitsu.com>, "hadi@cyberus.ca" <hadi@cyberus.ca>, "tglx@linutronix.de" <tglx@linutronix.de>, "hidave.darkstar@gmail.com" <hidave.darkstar@gmail.com>, "eugeneteo@kernel.org" <eugeneteo@kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Satoru Moriya <satoru.moriya@hds.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "tj@kernel.org" <tj@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 
-On Fri, Dec 17, 2010 at 09:50:31AM +0900, Simon Horman wrote:
-> On Thu, Dec 16, 2010 at 02:53:45PM -0800, Eric W. Biederman wrote:
-> > 
-> > Simon did you ever get my last round of fixes for i386 after
-> > my other changes merged?
-> > 
-> > I was testing them in my tree, and I was trying to be careful
-> > and not send you something bad.  I completed my testing and
-> > but I forget to send you a pull request.
-> 
-> Hi Eric,
-> 
-> I don't think that I received a pull request and in
-> any case I don't have anything other than mips fix(es) pending.
-> So if its not in my tree could you (rebase and) send it again?
-> 
-> Its been a while since there was a release, so it might
-> be nice (for me) to get a 2.0.3 out the door some time.
+On Wed, Dec 22, 2010 at 06:35:40PM -0500, Seiji Aguchi wrote:
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -81,6 +81,9 @@
+>  #include <linux/nmi.h>
+>  #endif
+>  
+> +#ifdef CONFIG_X86_MCE
+> +#include <asm/mce.h>
+> +#endif
 
-Hi Eric,
+Please don't put ifdefs in .c files, you do that a lot for this option.
+Just make it work on all platforms and then you will not need the
+#ifdef.
 
-do you have any pending changes?
+thanks,
+
+greg k-h
 
 _______________________________________________
 kexec mailing list
