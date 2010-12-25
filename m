@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PVrHk-0005PH-Kb
-	for kexec@lists.infradead.org; Thu, 23 Dec 2010 19:57:13 +0000
+	id 1PWXnF-00036E-Mt
+	for kexec@lists.infradead.org; Sat, 25 Dec 2010 17:20:34 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <5C4C569E8A4B9B42A84A977CF070A35B2C132F68FC@USINDEVS01.corp.hds.com>
 	<aab9953c699dace1ed94efd6505c7844.squirrel@www.firstfloor.org>
 	<20101223091851.GC30055@liondog.tnic>
 	<5C4C569E8A4B9B42A84A977CF070A35B2C132F6BB0@USINDEVS01.corp.hds.com>
-Date: Thu, 23 Dec 2010 11:56:21 -0800
-In-Reply-To: <5C4C569E8A4B9B42A84A977CF070A35B2C132F6BB0@USINDEVS01.corp.hds.com>
-	(Seiji Aguchi's message of "Thu, 23 Dec 2010 12:31:24 -0500")
-Message-ID: <m11v58xnyy.fsf@fess.ebiederm.org>
+	<m11v58xnyy.fsf@fess.ebiederm.org>
+	<5C4C569E8A4B9B42A84A977CF070A35B2C132F6CFA@USINDEVS01.corp.hds.com>
+Date: Sat, 25 Dec 2010 09:19:54 -0800
+In-Reply-To: <5C4C569E8A4B9B42A84A977CF070A35B2C132F6CFA@USINDEVS01.corp.hds.com>
+	(Seiji Aguchi's message of "Sat, 25 Dec 2010 09:56:50 -0500")
+Message-ID: <m1oc89ixc5.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [RFC][PATCH] Add a sysctl option controlling kexec when MCE
 	occurred
@@ -34,40 +36,35 @@ Seiji Aguchi <seiji.aguchi@hds.com> writes:
 
 > Hi,
 >
-> I agree with Borislav that kexec shouldn't start at all because we can't guarantee 
-> a stable system anymore when MCE is reported.
-
-In the case of kexec on panic we can never guarantee a stable system.
-But the odds are much better of executing non-corrupt code  and of
-telling people you had a hardware error if you go through the kexec
-on panic process.
-
-If I read Andi's patch correctly he was suggesting to not allow any more
-mces to be reported on that path.
-
-
-> On the other hand, I understand there are people like Andi who want to start kexec 
-> even if MCE occurred.
+> Thank you for giving your comments.
 >
-> That is why I propose adding a new option controlling kexec behaviour
-> when MCE occurred.
+>>So what is the problem you are trying to avoid, and why can't we do
+>>something in the kernels initialization path to avoid initializing
+>>when there is a problem?
+>
+> Kdump gets a dump disk identifier based on information from memory.
+>
+> So, kdump may receive wrong identifier when it starts after MCE 
+> occurred, because MCE is reported by memory, cache, and TLB errors
+>
+> In the worst case, kdump will overwrite user data if it recognizes a 
+> disk saving user data as a dump disk.
 
-What do you gain but not doing the kexec on panic, when you have the
-system configured to take one.  We already have the big policy knobs
-to enable or disable this kind of behavior.
+Absurdly unlikely there is a sha256 checksum verified over the
+kdump kernel before it starts booting.  If you have very broken
+memory it is possible, but absurdly unlikely that the machine will
+even boot if you are having enough uncorrectable memory errors
+an hour to get past the sha256 checksum and then be corruppt.
 
-> I don't stick to "sysctl".
+> Kdump shouldn't write any data to disk when information from
+> hardware is incredible because saving user data is always first 
+> priority.
 
-I think adding a sysctl in this path or any unnecessary code will make
-things less reliable.
+Which is what is already implemented.
 
-Last time this happened to me (about a week ago).  The kexec on panic
-from a ecc reported memory error worked just fine.  Aka in the real
-world it seems to work.
+It looks to me like you are jumping at shadows, and adding
+complexity to the kernel with no gain, and significant cost.
 
-So what is the problem you are trying to avoid, and why can't we do
-something in the kernels initialization path to avoid initializing
-when there is a problem?
 
 Eric
 
