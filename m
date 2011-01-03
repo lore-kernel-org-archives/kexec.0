@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.windriver.com ([147.11.1.11])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PZIJq-0006No-GT
-	for kexec@lists.infradead.org; Sun, 02 Jan 2011 07:25:37 +0000
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [34-longterm 226/260] mm,
-	x86: Saving vmcore with non-lazy freeing of vmas
-Date: Sun,  2 Jan 2011 02:18:42 -0500
-Message-Id: <1293952756-15010-227-git-send-email-paul.gortmaker@windriver.com>
-In-Reply-To: <1293952756-15010-1-git-send-email-paul.gortmaker@windriver.com>
-References: <1293952756-15010-1-git-send-email-paul.gortmaker@windriver.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PZcXn-00010c-OL
+	for kexec@lists.infradead.org; Mon, 03 Jan 2011 05:01:20 +0000
+Date: Mon, 3 Jan 2011 10:31:09 +0530
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: How does kdump deal with trampoline allocation?
+Message-ID: <20110103050109.GA3764@redhat.com>
+References: <4D18F798.4010708@zytor.com> <20101228000651.GB4142@redhat.com>
+	<4D192BC3.8040802@zytor.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4D192BC3.8040802@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,89 +20,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: stable@kernel.org, linux-kernel@vger.kernel.org
-Cc: Cliff Wickman <cpw@sgi.com>, kexec@lists.infradead.org, stable-review@kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@elte.hu>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Yinghai Lu <yinghai@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-From: Cliff Wickman <cpw@sgi.com>
+On Mon, Dec 27, 2010 at 04:13:55PM -0800, H. Peter Anvin wrote:
+> On 12/27/2010 04:06 PM, Vivek Goyal wrote:
+> > On Mon, Dec 27, 2010 at 12:31:20PM -0800, H. Peter Anvin wrote:
+> >> Hi guys,
+> >>
+> >> I'm planning a major overhaul of the trampoline allocation in x86, and
+> >> I'm trying to understand how kdump deals with it.  The trampoline has to
+> >> be allocated in low memory (< 1 MiB) and obviously that doesn't include
+> >> the kdump area at all.
+> > 
+> > Hi Peter,
+> > 
+> > Kdump has the concept of backup area. We backup the contents of first
+> > 640KB of physical RAM in kdump reserved area and then allow kdump kernel
+> > to use first 640KB of memory. So any trampoline allocation can be done
+> > in low memory area without overwritting the contents of first kernel.
+> > 
+> 
+> OK, that's straightforward.  That presumably means that the low 640K is
+> marked unused in the memory map that memblock sees during early startup.
 
-commit 3ee48b6af49cf534ca2f481ecc484b156a41451d upstream.
+Yes, the available memory for second kernel is told to second kernel with
+kernel command line option "memmap=", hence it should be visible to 
+memblock and it should be able to allocate this memory.
 
-During the reading of /proc/vmcore the kernel is doing
-ioremap()/iounmap() repeatedly. And the buildup of un-flushed
-vm_area_struct's is causing a great deal of overhead. (rb_next()
-is chewing up most of that time).
-
-This solution is to provide function set_iounmap_nonlazy(). It
-causes a subsequent call to iounmap() to immediately purge the
-vma area (with try_purge_vmap_area_lazy()).
-
-With this patch we have seen the time for writing a 250MB
-compressed dump drop from 71 seconds to 44 seconds.
-
-Signed-off-by: Cliff Wickman <cpw@sgi.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org
-LKML-Reference: <E1OwHZ4-0005WK-Tw@eag09.americas.sgi.com>
-Signed-off-by: Ingo Molnar <mingo@elte.hu>
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
----
- arch/x86/include/asm/io.h       |    1 +
- arch/x86/kernel/crash_dump_64.c |    1 +
- mm/vmalloc.c                    |    9 +++++++++
- 3 files changed, 11 insertions(+), 0 deletions(-)
-
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 30a3e97..6a45ec4 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -206,6 +206,7 @@ static inline void __iomem *ioremap(resource_size_t offset, unsigned long size)
- 
- extern void iounmap(volatile void __iomem *addr);
- 
-+extern void set_iounmap_nonlazy(void);
- 
- #ifdef __KERNEL__
- 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index 045b36c..ce96a6b 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -46,6 +46,7 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 	} else
- 		memcpy(buf, vaddr + offset, csize);
- 
-+	set_iounmap_nonlazy();
- 	iounmap(vaddr);
- 	return csize;
- }
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index ae00746..20a402c 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -513,6 +513,15 @@ static atomic_t vmap_lazy_nr = ATOMIC_INIT(0);
- static void purge_fragmented_blocks_allcpus(void);
- 
- /*
-+ * called before a call to iounmap() if the caller wants vm_area_struct's
-+ * immediately freed.
-+ */
-+void set_iounmap_nonlazy(void)
-+{
-+	atomic_set(&vmap_lazy_nr, lazy_max_pages()+1);
-+}
-+
-+/*
-  * Purges all lazily-freed vmap areas.
-  *
-  * If sync is 0 then don't purge if there is already a purge in progress.
--- 
-1.7.3.3
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
