@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-a02.ithnet.com ([217.64.83.97] helo=ithnet.com)
-	by canuck.infradead.org with smtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PZmvf-0001KU-Dd
-	for kexec@lists.infradead.org; Mon, 03 Jan 2011 16:06:40 +0000
-Date: Mon, 3 Jan 2011 17:06:32 +0100
-From: Stephan von Krawczynski <skraw@ithnet.com>
-Subject: kexec on mobile ARM device
-Message-Id: <20110103170632.4694d330.skraw@ithnet.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PalAD-0000EI-8I
+	for kexec@lists.infradead.org; Thu, 06 Jan 2011 08:25:42 +0000
+From: Amerigo Wang <amwang@redhat.com>
+Subject: [Patch] kexec_load: check CAP_SYS_MODULE
+Date: Thu,  6 Jan 2011 16:25:25 +0800
+Message-Id: <1294302325-22593-1-git-send-email-amwang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,19 +15,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, WANG Cong <amwang@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-Hello all,
+Eric pointed out that kexec_load() actually allows you to
+run any code you want in ring0, this is more like CAP_SYS_MODULE.
 
-as quite some of us have mobile android phones with arm, how are chances to get kexec working with such kernels? The memory model is assumed to be "discontigmem", kernel version 2.6.32.9. Has anyone tried that already?
+Reported-by: Eric Paris <eparis@redhat.com>
+Signed-off-by: WANG Cong <amwang@redhat.com>
 
--- 
-Regards,
-Stephan
+---
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index b55045b..c30d613 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -945,7 +945,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	int result;
+ 
+ 	/* We only trust the superuser with rebooting the system. */
+-	if (!capable(CAP_SYS_BOOT))
++	if (!capable(CAP_SYS_BOOT) || !capable(CAP_SYS_MODULE))
+ 		return -EPERM;
+ 
+ 	/*
 
 _______________________________________________
 kexec mailing list
