@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PbIyw-00082Q-8S
-	for kexec@lists.infradead.org; Fri, 07 Jan 2011 20:32:19 +0000
-Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
-From: Eric Paris <eparis@redhat.com>
-In-Reply-To: <m1k4igjwzf.fsf@fess.ebiederm.org>
+	id 1PbJSH-0000DR-4P
+	for kexec@lists.infradead.org; Fri, 07 Jan 2011 21:02:37 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1294302325-22593-1-git-send-email-amwang@redhat.com>
 	<m1bp3uifln.fsf@fess.ebiederm.org>
 	<AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
 	<m1k4igjwzf.fsf@fess.ebiederm.org>
-Date: Fri, 07 Jan 2011 15:32:13 -0500
-Message-ID: <1294432333.3237.107.camel@localhost.localdomain>
-Mime-Version: 1.0
+	<1294432333.3237.107.camel@localhost.localdomain>
+Date: Fri, 07 Jan 2011 13:02:32 -0800
+In-Reply-To: <1294432333.3237.107.camel@localhost.localdomain> (Eric Paris's
+	message of "Fri, 07 Jan 2011 15:32:13 -0500")
+Message-ID: <m18vywh1g7.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +27,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Eric Paris <eparis@redhat.com>
 Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, linux-kernel@vger.kernel.org
 
-On Fri, 2011-01-07 at 12:10 -0800, Eric W. Biederman wrote:
-> Eric Paris <eparis@parisplace.org> writes:
+Eric Paris <eparis@redhat.com> writes:
 
-> >> CAP_SYS_BOOT is the correct capability.  Sure you can run any
-> >> code but only after rebooting.  I don't see how this differs
-> >> from any other reboot scenario.
-> >
-> > The difference is that after a reboot the bootloader and the system
-> > control what code is run.  kexec_load() immediately runs the new
-> > kernel which is not controlled by the bootloader or by the system.
-> > Imagine a situation where the bootloader and the /boot directory are
-> > RO (enforced by hardware).   kexec_load() would let you run any kernel
-> > code you want on the box whereas reboot would not.
-> 
-> The scenario is imaginable (not common but imaginable) but I don't see
-> how requiring CAP_SYS_MODULE makes anything better.
-> 
-> If I was building a configuration where I didn't want anyone to be able
-> to direct the kernel into a different state by locking down the
-> bootloaders I expect I would compile out the syscall as well.
+>> If I was building a configuration where I didn't want anyone to be able
+>> to direct the kernel into a different state by locking down the
+>> bootloaders I expect I would compile out the syscall as well.
+>
+> As sad as it may sound the vast majority of people don't build their own
+> kernels.  And even those people who have the intelligence to do it are
+> often constrained by some non-technical policy to run 'approved'
+> kernels. 
 
-As sad as it may sound the vast majority of people don't build their own
-kernels.  And even those people who have the intelligence to do it are
-often constrained by some non-technical policy to run 'approved'
-kernels. 
+Yes I am aware of the crazy game that is called approved kernels.  Where
+there are too many regressions for people to trust new kernel releases
+but people want to change the kernel and the setup from what was tested
+and still have the stamp of approval anyway.  Financially it seems to
+make people money, but as best I can tell that game is ultimately what
+killed unix.
 
-> Most bootloaders have the option of booting something else the mechanism
-> is just different. I really don't see what the addition of
-> CAP_SYS_MODULE gains you.
-> 
-> Right now CAP_SYS_BOOT still makes sense to me and CAP_SYS_MODULE stills
-> seems like nonsense in this context.
+In this instance you seem to be redefining CAP_SYS_MODULE and
+CAP_SYS_REBOOT so you can play that game. 
 
-There is no question in my mind that CAP_SYS_BOOT makes sense.  We are
-violently agreed on that point.  The problem is reboot() != kexec_load()
-kexec_load() is as close to init_module() as it is to reboot().
+> Maybe I didn't make it clear how this is going to be used.  I plan to
+> drop CAP_SYS_MODULE to stop root from loading their own modules and
+> running their own code in the kernel.  I can control reboot() since I
+> control the platform and the bootloader.  I cannot control kexec().  I'm
+> also required to use a generic distro kernel (bet you can't guess which
+> one)
 
-Maybe I didn't make it clear how this is going to be used.  I plan to
-drop CAP_SYS_MODULE to stop root from loading their own modules and
-running their own code in the kernel.  I can control reboot() since I
-control the platform and the bootloader.  I cannot control kexec().  I'm
-also required to use a generic distro kernel (bet you can't guess which
-one)
+If you are truly locked down I recommend dropping CAP_SYS_REBOOT and
+setting up a watchdog that keeps the system from rebooting (standard
+practice in embedded kinds of setups like you describe).  That should
+meet everyone requirements without needing to game the system.
 
-The only solution I see to solve the problem is to gate kexec on
-CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
-close to module_init() than it is to reboot().
+> The only solution I see to solve the problem is to gate kexec on
+> CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
+> close to module_init() than it is to reboot().
 
--Eric
+kexec_load is nothing like module_init().  All it does it puts data in
+memory for use by a subsequent reboot.  /sbin/kexec is a bootloader that
+runs inside of linux.  All you are noticing is that if you don't control
+/sbin/kexec you aren't controlling the bootloader.
 
+Eric
 
 _______________________________________________
 kexec mailing list
