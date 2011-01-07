@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PbIeO-0007KF-6w
-	for kexec@lists.infradead.org; Fri, 07 Jan 2011 20:11:05 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+	id 1PbIyw-00082Q-8S
+	for kexec@lists.infradead.org; Fri, 07 Jan 2011 20:32:19 +0000
+Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
+From: Eric Paris <eparis@redhat.com>
+In-Reply-To: <m1k4igjwzf.fsf@fess.ebiederm.org>
 References: <1294302325-22593-1-git-send-email-amwang@redhat.com>
 	<m1bp3uifln.fsf@fess.ebiederm.org>
 	<AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
-Date: Fri, 07 Jan 2011 12:10:44 -0800
-In-Reply-To: <AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
-	(Eric Paris's message of "Thu, 6 Jan 2011 14:02:47 -0500")
-Message-ID: <m1k4igjwzf.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
-Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
+	<m1k4igjwzf.fsf@fess.ebiederm.org>
+Date: Fri, 07 Jan 2011 15:32:13 -0500
+Message-ID: <1294432333.3237.107.camel@localhost.localdomain>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +21,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Paris <eparis@parisplace.org>
-Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, eparis@redhat.com, linux-kernel@vger.kernel.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, linux-kernel@vger.kernel.org
 
-RXJpYyBQYXJpcyA8ZXBhcmlzQHBhcmlzcGxhY2Uub3JnPiB3cml0ZXM6Cgo+IE9uIFRodSwgSmFu
-IDYsIDIwMTEgYXQgMzo0NyBBTSwgRXJpYyBXLiBCaWVkZXJtYW4gPGViaWVkZXJtQHhtaXNzaW9u
-LmNvbT4gd3JvdGU6Cj4+IEFtZXJpZ28gV2FuZyA8YW13YW5nQHJlZGhhdC5jb20+IHdyaXRlczoK
-Pj4KPj4+IEVyaWMgcG9pbnRlZCBvdXQgdGhhdCBrZXhlY19sb2FkKCkgYWN0dWFsbHkgYWxsb3dz
-IHlvdSB0bwo+Pj4gcnVuIGFueSBjb2RlIHlvdSB3YW50IGluIHJpbmcwLCB0aGlzIGlzIG1vcmUg
-bGlrZSBDQVBfU1lTX01PRFVMRS4KPj4KPj4gTGV0IG1lIGdldCB0aGlzIHN0cmFpZ2h0IHlvdSB3
-YW50IHRvIG1ha2UgdGhlIHBlcm1pc3Npb24gY2hlY2tzCj4+IGxlc3Mgc3RyaW5nZW50IGJ5IGFs
-bG93aW5nIGVpdGhlciBDQVBfU1lTX01PRFVMRSBvciBDQVBfU1lTX0JPT1Q/Cj4KPiBOb3BlLCBy
-ZWFkIG15IHBhdGNoIGFnYWluLiAgSXQgYWN0dWFsbHkgcmVxdWlyZXMgQk9USCBvZiB0aGVtLgoK
-QWggcmlnaHQuICBUZXN0aW5nIHRoZSBuZWdhdGl2ZSBhbmQgZ29pbmcgdG8gLUVQRVJNLgoKPj4g
-Q0FQX1NZU19CT09UIGlzIHRoZSBjb3JyZWN0IGNhcGFiaWxpdHkuIMKgU3VyZSB5b3UgY2FuIHJ1
-biBhbnkKPj4gY29kZSBidXQgb25seSBhZnRlciByZWJvb3RpbmcuIMKgSSBkb24ndCBzZWUgaG93
-IHRoaXMgZGlmZmVycwo+PiBmcm9tIGFueSBvdGhlciByZWJvb3Qgc2NlbmFyaW8uCj4KPiBUaGUg
-ZGlmZmVyZW5jZSBpcyB0aGF0IGFmdGVyIGEgcmVib290IHRoZSBib290bG9hZGVyIGFuZCB0aGUg
-c3lzdGVtCj4gY29udHJvbCB3aGF0IGNvZGUgaXMgcnVuLiAga2V4ZWNfbG9hZCgpIGltbWVkaWF0
-ZWx5IHJ1bnMgdGhlIG5ldwo+IGtlcm5lbCB3aGljaCBpcyBub3QgY29udHJvbGxlZCBieSB0aGUg
-Ym9vdGxvYWRlciBvciBieSB0aGUgc3lzdGVtLgo+IEltYWdpbmUgYSBzaXR1YXRpb24gd2hlcmUg
-dGhlIGJvb3Rsb2FkZXIgYW5kIHRoZSAvYm9vdCBkaXJlY3RvcnkgYXJlCj4gUk8gKGVuZm9yY2Vk
-IGJ5IGhhcmR3YXJlKS4gICBrZXhlY19sb2FkKCkgd291bGQgbGV0IHlvdSBydW4gYW55IGtlcm5l
-bAo+IGNvZGUgeW91IHdhbnQgb24gdGhlIGJveCB3aGVyZWFzIHJlYm9vdCB3b3VsZCBub3QuCgpU
-aGUgc2NlbmFyaW8gaXMgaW1hZ2luYWJsZSAobm90IGNvbW1vbiBidXQgaW1hZ2luYWJsZSkgYnV0
-IEkgZG9uJ3Qgc2VlCmhvdyByZXF1aXJpbmcgQ0FQX1NZU19NT0RVTEUgbWFrZXMgYW55dGhpbmcg
-YmV0dGVyLgoKSWYgSSB3YXMgYnVpbGRpbmcgYSBjb25maWd1cmF0aW9uIHdoZXJlIEkgZGlkbid0
-IHdhbnQgYW55b25lIHRvIGJlIGFibGUKdG8gZGlyZWN0IHRoZSBrZXJuZWwgaW50byBhIGRpZmZl
-cmVudCBzdGF0ZSBieSBsb2NraW5nIGRvd24gdGhlCmJvb3Rsb2FkZXJzIEkgZXhwZWN0IEkgd291
-bGQgY29tcGlsZSBvdXQgdGhlIHN5c2NhbGwgYXMgd2VsbC4KCk1vc3QgYm9vdGxvYWRlcnMgaGF2
-ZSB0aGUgb3B0aW9uIG9mIGJvb3Rpbmcgc29tZXRoaW5nIGVsc2UgdGhlIG1lY2hhbmlzbQppcyBq
-dXN0IGRpZmZlcmVudC4gSSByZWFsbHkgZG9uJ3Qgc2VlIHdoYXQgdGhlIGFkZGl0aW9uIG9mCkNB
-UF9TWVNfTU9EVUxFIGdhaW5zIHlvdS4KClJpZ2h0IG5vdyBDQVBfU1lTX0JPT1Qgc3RpbGwgbWFr
-ZXMgc2Vuc2UgdG8gbWUgYW5kIENBUF9TWVNfTU9EVUxFIHN0aWxscwpzZWVtcyBsaWtlIG5vbnNl
-bnNlIGluIHRoaXMgY29udGV4dC4KCkVyaWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Fri, 2011-01-07 at 12:10 -0800, Eric W. Biederman wrote:
+> Eric Paris <eparis@parisplace.org> writes:
+
+> >> CAP_SYS_BOOT is the correct capability.  Sure you can run any
+> >> code but only after rebooting.  I don't see how this differs
+> >> from any other reboot scenario.
+> >
+> > The difference is that after a reboot the bootloader and the system
+> > control what code is run.  kexec_load() immediately runs the new
+> > kernel which is not controlled by the bootloader or by the system.
+> > Imagine a situation where the bootloader and the /boot directory are
+> > RO (enforced by hardware).   kexec_load() would let you run any kernel
+> > code you want on the box whereas reboot would not.
+> 
+> The scenario is imaginable (not common but imaginable) but I don't see
+> how requiring CAP_SYS_MODULE makes anything better.
+> 
+> If I was building a configuration where I didn't want anyone to be able
+> to direct the kernel into a different state by locking down the
+> bootloaders I expect I would compile out the syscall as well.
+
+As sad as it may sound the vast majority of people don't build their own
+kernels.  And even those people who have the intelligence to do it are
+often constrained by some non-technical policy to run 'approved'
+kernels. 
+
+> Most bootloaders have the option of booting something else the mechanism
+> is just different. I really don't see what the addition of
+> CAP_SYS_MODULE gains you.
+> 
+> Right now CAP_SYS_BOOT still makes sense to me and CAP_SYS_MODULE stills
+> seems like nonsense in this context.
+
+There is no question in my mind that CAP_SYS_BOOT makes sense.  We are
+violently agreed on that point.  The problem is reboot() != kexec_load()
+kexec_load() is as close to init_module() as it is to reboot().
+
+Maybe I didn't make it clear how this is going to be used.  I plan to
+drop CAP_SYS_MODULE to stop root from loading their own modules and
+running their own code in the kernel.  I can control reboot() since I
+control the platform and the bootloader.  I cannot control kexec().  I'm
+also required to use a generic distro kernel (bet you can't guess which
+one)
+
+The only solution I see to solve the problem is to gate kexec on
+CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
+close to module_init() than it is to reboot().
+
+-Eric
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
