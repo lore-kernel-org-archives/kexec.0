@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Pbkiy-0001Jr-Sd
-	for kexec@lists.infradead.org; Sun, 09 Jan 2011 02:09:42 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1294302325-22593-1-git-send-email-amwang@redhat.com>
-	<m1bp3uifln.fsf@fess.ebiederm.org>
-	<AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
-	<m1k4igjwzf.fsf@fess.ebiederm.org>
-	<1294432333.3237.107.camel@localhost.localdomain>
-	<m18vywh1g7.fsf@fess.ebiederm.org>
-	<1294447189.3237.132.camel@localhost.localdomain>
-Date: Sat, 08 Jan 2011 18:09:17 -0800
-In-Reply-To: <1294447189.3237.132.camel@localhost.localdomain> (Eric Paris's
-	message of "Fri, 07 Jan 2011 19:39:49 -0500")
-Message-ID: <m1k4ieesky.fsf@fess.ebiederm.org>
+Received: from mail-yw0-f49.google.com ([209.85.213.49])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PcFmU-0004js-SX
+	for kexec@lists.infradead.org; Mon, 10 Jan 2011 11:19:23 +0000
+Received: by ywf7 with SMTP id 7so8085156ywf.36
+	for <kexec@lists.infradead.org>; Mon, 10 Jan 2011 03:19:21 -0800 (PST)
+Date: Mon, 10 Jan 2011 09:19:15 -0200
+From: Leonardo Chiquitto <leonardo.lists@gmail.com>
+Subject: [PATCH] ifdown: really set down all active interfaces
+Message-ID: <20110110111915.GA30397@libre.l.ngdn.org>
 MIME-Version: 1.0
-Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,105 +23,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Paris <eparis@redhat.com>
-Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-Eric Paris <eparis@redhat.com> writes:
+Hello,
 
-> On Fri, 2011-01-07 at 13:02 -0800, Eric W. Biederman wrote:
->> Eric Paris <eparis@redhat.com> writes:
->
->> Yes I am aware of the crazy game that is called approved kernels.  Where
->> there are too many regressions for people to trust new kernel releases
->> but people want to change the kernel and the setup from what was tested
->> and still have the stamp of approval anyway.  Financially it seems to
->> make people money, but as best I can tell that game is ultimately what
->> killed unix.
->
-> I don't believe this is a particularly relevant line of conversion and
-> should probably drop it, but I can't completely leave it alone.  We
-> obviously have a very different understanding of what concerning the
-> unix wars brought about its death.  I'd think it obvious that the very
-> fact that this conversation is taking place shows that the exact
-> opposite of the unix wars problems are being seen here.  You clearly
-> have personal opinions about the benefits of custom built kernels, but
-> they are not the opinions of the vast majority of linux users.  I rarely
-> run disto kernels and I'm sure few on lkml do, but it doesn't change the
-> fact that most users, especially large IT environments, require system
-> standardization.  I hope to address the needs of this portion of the
-> linux community even if you might wish they functioned differently.
+We've got a bug report of random memory corruption when using kexec.
+The test case to reproduce the problem sets up bonding between two
+tg3 NICs and transmits some data just before calling kexec to boot
+the new kernel. Around one in every one hundred boots would crash
+early with different signatures.
 
-Sure and if you have a good clear architecture not an adhoc set of goals
-getting it into the standard kernel makes sense.
+We confirmed that the patch below resolves the problem. Please, could
+you review and consider it for upstream inclusion?
 
-Trying to shoe horn everyone crazy ideas into the standard kernel before
-they are well thought out is a bad idea.
+Thanks,
+Leonardo
 
-What I am most sensitive to about distro kernels is the massive
-stagnation that happens (it gets extremely silly to run a kernel that is
-several years old on bleeding edge hardware) as well as the crazy hacks
-that I see people asking for because they must use a distro kernel for
-random reasons.
+Before executing the new kernel, kexec disables all network interfaces
+to prevent problems like random memory corruption caused by in flight
+DMAs.
 
->> In this instance you seem to be redefining CAP_SYS_MODULE and
->> CAP_SYS_REBOOT so you can play that game.
->
-> Clearly I am refining the meaning of both in some way.  Personally I
-> think the current differentiation is wrong.
+The current algorithm uses the SIOCGIFCONF to enumerate all interfaces
+before shutting them down. However, this ioctl returns only the interfaces
+that have an IP address set. This means that in some setups, kexec may
+skip interfaces that are up and running. A common example is in bonding,
+where the enslaved interfaces are up but may not have an IP address
+configured.
 
-To some extent I agree.  The old check for being uid == 0 is the only
-real check that makes much sense.
+This patch replaces SIOCGIFCONF with if_nameindex() to enumerate all
+network interfaces available, regardless of having an IP address set
+or not.
 
->> > Maybe I didn't make it clear how this is going to be used.  I plan to
->> > drop CAP_SYS_MODULE to stop root from loading their own modules and
->> > running their own code in the kernel.  I can control reboot() since I
->> > control the platform and the bootloader.  I cannot control kexec().  I'm
->> > also required to use a generic distro kernel (bet you can't guess which
->> > one)
->> 
->> If you are truly locked down I recommend dropping CAP_SYS_REBOOT and
->> setting up a watchdog that keeps the system from rebooting (standard
->> practice in embedded kinds of setups like you describe).  That should
->> meet everyone requirements without needing to game the system.
->
-> This does not meet the set of requirements.  I recognize that you don't
-> have the full architecture in mind (and apologize that I can't describe
-> it much better than I am already), but root should still be allowed to
-> reboot the machine.  This is not an embedded platform.  Nor one in which
-> a watchdog task makes any sense at all.
+Signed-off-by: Leonardo Chiquitto <lchiquitto@novell.com>
 
-What you are asking for if I understand this correctly is a way to
-disable sys_kexec_load?
+---
+ kexec/ifdown.c |   42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-What strange things are you trying to accomplish on top of a
-distribution kernel?
-
->> > The only solution I see to solve the problem is to gate kexec on
->> > CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
->> > close to module_init() than it is to reboot().
->> 
->> kexec_load is nothing like module_init().  All it does it puts data in
->> memory for use by a subsequent reboot.  /sbin/kexec is a bootloader that
->> runs inside of linux.  All you are noticing is that if you don't control
->> /sbin/kexec you aren't controlling the bootloader.
->
-> Does that mean you would instead prefer that we check CAP_SYS_MODULE in
-> sys_reboot() when LINUX_REBOOT_CMD_KEXEC is set (or really
-> kernel_kexec())?  It seems to me you indicate that is the more analogous
-> location since it is the actual place where we load new kernel code on
-> the running system (aka what sys_module was intended to protect)?
-
-We aren't dealing with modules I think CAP_SYS_MODULE is totally
-irrelevant in the context of kexec.
-
-I think to accomplish what you want we either need a way to disable
-sys_kexec_load or possibly a new very targeted capability bit.
-
-You are making it so that giving someone CAP_SYS_MODULE is giving more
-than the ability to load kernel modules.  Which seems non-intuitive from
-a system management point of view.
-
-Eric
+Index: kexec-tools/kexec/ifdown.c
+===================================================================
+--- kexec-tools.orig/kexec/ifdown.c
++++ kexec-tools/kexec/ifdown.c
+@@ -19,8 +19,6 @@ char *v_ifdown = "@(#)ifdown.c  1.11  02
+ #include <net/if.h>
+ #include <netinet/in.h>
+ 
+-#define MAX_IFS	64
+-
+ /*
+  *	First, we find all shaper devices and down them. Then we
+  *	down all real interfaces. This is because the comment in the
+@@ -29,43 +27,45 @@ char *v_ifdown = "@(#)ifdown.c  1.11  02
+  */
+ int ifdown(void)
+ {
+-	struct ifreq ifr[MAX_IFS];
+-	struct ifconf ifc;
+-	int i, fd;
+-	int numif;
+-	int shaper;
++	struct if_nameindex *ifa, *ifp;
++	struct ifreq ifr;
++	int fd, shaper;
+ 
+ 	if ((fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+ 		fprintf(stderr, "ifdown: ");
+ 		perror("socket");
+ 		return -1;
+ 	}
+-	ifc.ifc_len = sizeof(ifr);
+-	ifc.ifc_req = ifr;
+ 
+-	if (ioctl(fd, SIOCGIFCONF, &ifc) < 0) {
++	if ((ifa = if_nameindex()) == NULL) {
+ 		fprintf(stderr, "ifdown: ");
+-		perror("SIOCGIFCONF");
+-		close(fd);
++		perror("if_nameindex");
+ 		return -1;
+ 	}
+-	numif = ifc.ifc_len / sizeof(struct ifreq);
+ 
+ 	for (shaper = 1; shaper >= 0; shaper--) {
+-		for (i = 0; i < numif; i++) {
++		for (ifp = ifa; ifp->if_index; ifp++) {
+ 
+-			if ((strncmp(ifr[i].ifr_name, "shaper", 6) == 0)
++			if ((strncmp(ifp->if_name, "shaper", 6) == 0)
+ 			    != shaper) continue;
+-
+-			if (strcmp(ifr[i].ifr_name, "lo") == 0)
++			if (strcmp(ifp->if_name, "lo") == 0)
+ 				continue;
+-			if (strchr(ifr[i].ifr_name, ':') != NULL)
++			if (strchr(ifp->if_name, ':') != NULL)
+ 				continue;
+-			ifr[i].ifr_flags &= ~(IFF_UP);
+-			if (ioctl(fd, SIOCSIFFLAGS, &ifr[i]) < 0) {
++
++			strncpy(ifr.ifr_name, ifp->if_name, IFNAMSIZ);
++			if (ioctl(fd, SIOCGIFFLAGS, &ifr) < 0) {
+ 				fprintf(stderr, "ifdown: shutdown ");
+-				perror(ifr[i].ifr_name);
++				perror(ifp->if_name);
++				return -1;
+ 			}
++			ifr.ifr_flags &= ~(IFF_UP);
++			if (ioctl(fd, SIOCSIFFLAGS, &ifr) < 0) {
++				fprintf(stderr, "ifdown: shutdown ");
++				perror(ifp->if_name);
++				return -1;
++			}
++
+ 		}
+ 	}
+ 	close(fd);
 
 _______________________________________________
 kexec mailing list
