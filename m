@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cavan.codon.org.uk ([93.93.128.6])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PdRBQ-0004AA-NB
-	for kexec@lists.infradead.org; Thu, 13 Jan 2011 17:42:01 +0000
-Date: Thu, 13 Jan 2011 17:41:39 +0000
-From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [PATCH v2][EFI] Run EFI in physical mode
-Message-ID: <20110113174139.GB22823@srcf.ucam.org>
-References: <F7CB3D97D99F33indou.takao@jp.fujitsu.com>
-	<4D06E7FE.5000600@jp.fujitsu.com>
-	<9CB9BB8ED64BAindou.takao@jp.fujitsu.com>
-	<20110113163838.GA21289@srcf.ucam.org>
-	<m1bp3kbu6t.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1bp3kbu6t.fsf@fess.ebiederm.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Pdpcm-0005vW-Ag
+	for kexec@lists.infradead.org; Fri, 14 Jan 2011 19:47:53 +0000
+Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
+From: Eric Paris <eparis@redhat.com>
+Date: Fri, 14 Jan 2011 14:47:31 -0500
+In-Reply-To: <m1k4ieesky.fsf@fess.ebiederm.org>
+References: <1294302325-22593-1-git-send-email-amwang@redhat.com>
+	<m1bp3uifln.fsf@fess.ebiederm.org>
+	<AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
+	<m1k4igjwzf.fsf@fess.ebiederm.org>
+	<1294432333.3237.107.camel@localhost.localdomain>
+	<m18vywh1g7.fsf@fess.ebiederm.org>
+	<1294447189.3237.132.camel@localhost.localdomain>
+	<m1k4ieesky.fsf@fess.ebiederm.org>
+Message-ID: <1295034466.2816.13.camel@localhost.localdomain>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,40 +30,74 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, nhorman@tuxdriver.com, hpa@zytor.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, Kenji Kaneshige <kaneshige.kenji@jp.fujitsu.com>, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, linux-kernel@vger.kernel.org
 
-On Thu, Jan 13, 2011 at 09:16:26AM -0800, Eric W. Biederman wrote:
-> Matthew Garrett <mjg@redhat.com> writes:
+On Sat, 2011-01-08 at 18:09 -0800, Eric W. Biederman wrote:
+> Eric Paris <eparis@redhat.com> writes:
+
+> What you are asking for if I understand this correctly is a way to
+> disable sys_kexec_load?
 > 
-> > We're seeing issues with some Dell hardware when EFI is run in physical 
-> > mode - it seems that Windows uses virtual mode, so the physical path is 
-> > never exercised. I'm not sure that changing the default to physical is 
-> > going to be possible without compatibility issues.
+> What strange things are you trying to accomplish on top of a
+> distribution kernel?
+
+I've already described the situation.  We'd like to launch machines in
+which root in unable to easily run their own kernel code.  This is
+largely easy to do if you control the platform which holds the
+bootloader and you drop CAP_SYS_MODULE and CAP_SYS_RAWIO before you
+allow 'root' access to the machine.  Except kexec.  kexec seems to
+believe that running any code you want in kernel space is the same as
+rebooting a machine.  It's not.
+
+> >> > The only solution I see to solve the problem is to gate kexec on
+> >> > CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
+> >> > close to module_init() than it is to reboot().
+> >> 
+> >> kexec_load is nothing like module_init().  All it does it puts data in
+> >> memory for use by a subsequent reboot.  /sbin/kexec is a bootloader that
+> >> runs inside of linux.  All you are noticing is that if you don't control
+> >> /sbin/kexec you aren't controlling the bootloader.
+> >
+> > Does that mean you would instead prefer that we check CAP_SYS_MODULE in
+> > sys_reboot() when LINUX_REBOOT_CMD_KEXEC is set (or really
+> > kernel_kexec())?  It seems to me you indicate that is the more analogous
+> > location since it is the actual place where we load new kernel code on
+> > the running system (aka what sys_module was intended to protect)?
 > 
-> The bootloaders use physical mode, and there shouldn't be a separate
-> physical vs virtual mode.  It should be the same code with or without
-> relocations applied.  At worst we can set virtual address to the
-> physical address, on buggy boards.
+> We aren't dealing with modules I think CAP_SYS_MODULE is totally
+> irrelevant in the context of kexec.
+> 
+> I think to accomplish what you want we either need a way to disable
+> sys_kexec_load or possibly a new very targeted capability bit.
+> 
+> You are making it so that giving someone CAP_SYS_MODULE is giving more
+> than the ability to load kernel modules.  Which seems non-intuitive from
+> a system management point of view.
 
-Haven't we learned that failing to mimic Windows as closely as possible 
-in firmware interactions is a recipe for immense disaster yet? We'll 
-never successfully blacklist every broken machine.
+I'm looking at what CAP_SYS_MODULE means in terms of operation of the
+system and applying it where it fits.  A task with CAP_SYS_MODULE can
+run any code they want in ring0 without any method for the hardware or
+platform to determine or inspect what code is running or to realize that
+the code it thought was running wasn't.  This is exactly what kexec()
+allows.  Do you not see where these two operations are very similar?
 
-> Honestly if the problem is the EFI code is so buggy we can't use it
-> in physical mode the answer is almost certainly not to use the
-> buggy EFI code.
+I'm not giving anyone anything new.  I'm further restricting access.
+Having CAP_SYS_MODULE alone won't let you use kexec.  And it's not like
+anyone would have to grant any new permissions or make any userspace
+changes for this to be backwards compatible (unless someone has an suid
+kexec app which drops permissions explictly, which seems braindead, if
+you don't trust that whole app your fscked anyway).  Maybe you don't
+realize how caps work.  On nearly every system out there uid==0 means
+you have all capabilities.  If you drop them, just exec something and
+you get them back.
 
-Which would be fine, except...
+I'm willing to accept a way to disable kexec or even a new cap (since I
+think CAP_SYS_REBOOT is really wrong) but I still think that the
+operation CAP_SYS_MODULE was intended to mediate is the operation that's
+happening here.
 
-> The only bits that I don't think have an alternative are the firmware
-> variable accesses.   Which are a nice to have, but not a show stopper
-> anywhere.
+-Eric
 
-It's not typically possible to set up the bootloader without EFI 
-variable acccess.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
 
 _______________________________________________
 kexec mailing list
