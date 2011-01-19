@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Pdpcm-0005vW-Ag
-	for kexec@lists.infradead.org; Fri, 14 Jan 2011 19:47:53 +0000
-Subject: Re: [Patch] kexec_load: check CAP_SYS_MODULE
+	id 1PfgZz-000783-4e
+	for kexec@lists.infradead.org; Wed, 19 Jan 2011 22:32:39 +0000
 From: Eric Paris <eparis@redhat.com>
-Date: Fri, 14 Jan 2011 14:47:31 -0500
-In-Reply-To: <m1k4ieesky.fsf@fess.ebiederm.org>
-References: <1294302325-22593-1-git-send-email-amwang@redhat.com>
-	<m1bp3uifln.fsf@fess.ebiederm.org>
-	<AANLkTinLhAuSny735kofonAkaqwJvjjDHMUed_r03rVc@mail.gmail.com>
-	<m1k4igjwzf.fsf@fess.ebiederm.org>
-	<1294432333.3237.107.camel@localhost.localdomain>
-	<m18vywh1g7.fsf@fess.ebiederm.org>
-	<1294447189.3237.132.camel@localhost.localdomain>
-	<m1k4ieesky.fsf@fess.ebiederm.org>
-Message-ID: <1295034466.2816.13.camel@localhost.localdomain>
-Mime-Version: 1.0
+Subject: [PATCH] kexec: include sysctl to disable
+Date: Wed, 19 Jan 2011 17:26:30 -0500
+Message-ID: <20110119222630.6755.63928.stgit@paris.rdu.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,74 +20,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, Amerigo Wang <amwang@redhat.com>, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: ebiederm@xmission.com
 
-On Sat, 2011-01-08 at 18:09 -0800, Eric W. Biederman wrote:
-> Eric Paris <eparis@redhat.com> writes:
+much like /proc/sys/kernel/modules_disable is used to disable module
+loading, /proc/sys/kernel/kexec_disable is used to disable kexec code
+loading.  It would still be possible to use kexec -l to load a kernel, set
+the tunable to 1 so the kernel waiting to boot couldn't change, and then
+launch the kernel at a later time (through kexec -e or through a crash)
 
-> What you are asking for if I understand this correctly is a way to
-> disable sys_kexec_load?
-> 
-> What strange things are you trying to accomplish on top of a
-> distribution kernel?
+Signed-off-by: Eric Paris <eparis@redhat.com>
+---
 
-I've already described the situation.  We'd like to launch machines in
-which root in unable to easily run their own kernel code.  This is
-largely easy to do if you control the platform which holds the
-bootloader and you drop CAP_SYS_MODULE and CAP_SYS_RAWIO before you
-allow 'root' access to the machine.  Except kexec.  kexec seems to
-believe that running any code you want in kernel space is the same as
-rebooting a machine.  It's not.
+ include/linux/kexec.h |    2 ++
+ kernel/kexec.c        |    4 ++++
+ kernel/sysctl.c       |   13 +++++++++++++
+ 3 files changed, 19 insertions(+), 0 deletions(-)
 
-> >> > The only solution I see to solve the problem is to gate kexec on
-> >> > CAP_SYS_MODULE.  Which makes sense since kexec() is in many respects
-> >> > close to module_init() than it is to reboot().
-> >> 
-> >> kexec_load is nothing like module_init().  All it does it puts data in
-> >> memory for use by a subsequent reboot.  /sbin/kexec is a bootloader that
-> >> runs inside of linux.  All you are noticing is that if you don't control
-> >> /sbin/kexec you aren't controlling the bootloader.
-> >
-> > Does that mean you would instead prefer that we check CAP_SYS_MODULE in
-> > sys_reboot() when LINUX_REBOOT_CMD_KEXEC is set (or really
-> > kernel_kexec())?  It seems to me you indicate that is the more analogous
-> > location since it is the actual place where we load new kernel code on
-> > the running system (aka what sys_module was intended to protect)?
-> 
-> We aren't dealing with modules I think CAP_SYS_MODULE is totally
-> irrelevant in the context of kexec.
-> 
-> I think to accomplish what you want we either need a way to disable
-> sys_kexec_load or possibly a new very targeted capability bit.
-> 
-> You are making it so that giving someone CAP_SYS_MODULE is giving more
-> than the ability to load kernel modules.  Which seems non-intuitive from
-> a system management point of view.
-
-I'm looking at what CAP_SYS_MODULE means in terms of operation of the
-system and applying it where it fits.  A task with CAP_SYS_MODULE can
-run any code they want in ring0 without any method for the hardware or
-platform to determine or inspect what code is running or to realize that
-the code it thought was running wasn't.  This is exactly what kexec()
-allows.  Do you not see where these two operations are very similar?
-
-I'm not giving anyone anything new.  I'm further restricting access.
-Having CAP_SYS_MODULE alone won't let you use kexec.  And it's not like
-anyone would have to grant any new permissions or make any userspace
-changes for this to be backwards compatible (unless someone has an suid
-kexec app which drops permissions explictly, which seems braindead, if
-you don't trust that whole app your fscked anyway).  Maybe you don't
-realize how caps work.  On nearly every system out there uid==0 means
-you have all capabilities.  If you drop them, just exec something and
-you get them back.
-
-I'm willing to accept a way to disable kexec or even a new cap (since I
-think CAP_SYS_REBOOT is really wrong) but I still think that the
-operation CAP_SYS_MODULE was intended to mediate is the operation that's
-happening here.
-
--Eric
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 03e8e8d..fd8b2b8 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -195,6 +195,8 @@ extern struct kimage *kexec_crash_image;
+ #define VMCOREINFO_NOTE_SIZE       (KEXEC_NOTE_HEAD_BYTES*2 + VMCOREINFO_BYTES \
+ 				    + VMCOREINFO_NOTE_NAME_BYTES)
+ 
++extern int kexec_load_disabled;
++
+ /* Location of a reserved region to hold the crash kernel.
+  */
+ extern struct resource crashk_res;
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 213ce69..5aff5cd 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -48,6 +48,7 @@ static unsigned char vmcoreinfo_data[VMCOREINFO_BYTES];
+ u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+ size_t vmcoreinfo_size;
+ size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
++int kexec_load_disabled;
+ 
+ /* Location of the reserved area for the crash kernel */
+ struct resource crashk_res = {
+@@ -949,6 +950,9 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	    !capable(CAP_SYS_MODULE))
+ 		return -EPERM;
+ 
++	if (kexec_load_disabled)
++		return -EPERM;
++
+ 	/*
+ 	 * Verify we have a legal set of flags
+ 	 * This leaves us room for future extensions.
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 0e1ac51..1fdc973 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -55,6 +55,7 @@
+ #include <linux/kprobes.h>
+ #include <linux/pipe_fs_i.h>
+ #include <linux/oom.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/uaccess.h>
+ #include <asm/processor.h>
+@@ -569,6 +570,18 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= &one,
+ 	},
+ #endif
++#ifdef CONFIG_KEXEC
++	{
++		.procname	= "kexec_load_disabled",
++		.data		= &kexec_load_disabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		/* only handle a transition from default "0" to "1" */
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &one,
++		.extra2		= &one,
++	},
++#endif
+ #ifdef CONFIG_HOTPLUG
+ 	{
+ 		.procname	= "hotplug",
 
 
 _______________________________________________
