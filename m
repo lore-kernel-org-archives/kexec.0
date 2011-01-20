@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from lo.gmane.org ([80.91.229.12])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PfnAo-0004G8-ED
-	for kexec@lists.infradead.org; Thu, 20 Jan 2011 05:35:06 +0000
-Received: from list by lo.gmane.org with local (Exim 4.69)
-	(envelope-from <glkk-kexec@m.gmane.org>) id 1PfnAm-0004gV-Ln
-	for kexec@lists.infradead.org; Thu, 20 Jan 2011 06:35:04 +0100
-Received: from 60.247.97.98 ([60.247.97.98])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Thu, 20 Jan 2011 06:35:04 +0100
-Received: from xiyou.wangcong by 60.247.97.98 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <kexec@lists.infradead.org>; Thu, 20 Jan 2011 06:35:04 +0100
-From: WANG Cong <xiyou.wangcong@gmail.com>
-Subject: Re: [PATCH] kexec: include sysctl to disable
-Date: Thu, 20 Jan 2011 05:32:50 +0000 (UTC)
-Message-ID: <ih8he2$41t$2@dough.gmane.org>
-References: <20110119222630.6755.63928.stgit@paris.rdu.redhat.com>
-	<ih8gpe$41t$1@dough.gmane.org>
-Mime-Version: 1.0
+Received: from willeweb.com ([166.70.233.13] helo=mail.willeweb.com)
+	by casper.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Pg0vG-0002PV-T0
+	for kexec@lists.infradead.org; Thu, 20 Jan 2011 20:15:59 +0000
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+	by mail.willeweb.com (Postfix) with ESMTP id 88406121405C
+	for <kexec@lists.infradead.org>; Thu, 20 Jan 2011 13:14:27 -0700 (MST)
+From: wille <junk@willeweb.com>
+Subject: kexec: Overlapping memory segments error
+Date: Thu, 20 Jan 2011 13:14:27 -0700
+MIME-Version: 1.0
+Content-Disposition: inline
+Message-Id: <201101201314.27153.junk@willeweb.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,31 +25,31 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jan 2011 05:21:50 +0000, WANG Cong wrote:
+I am running a minimal system with a stripped down x86 2.6.32 Linux kernel.  
+From this environment I kexec to an Ubuntu Lucid i386 2.6.32 kernel.  This 
+works fine on *most* hardware, but on some machines the kexec -l fails with 
+overlapping memory segments.
 
-> On Wed, 19 Jan 2011 17:26:30 -0500, Eric Paris wrote:
-> 
->> much like /proc/sys/kernel/modules_disable is used to disable module
->> loading, /proc/sys/kernel/kexec_disable is used to disable kexec code
->> loading.  It would still be possible to use kexec -l to load a kernel,
->> set the tunable to 1 so the kernel waiting to boot couldn't change, and
->> then launch the kernel at a later time (through kexec -e or through a
->> crash)
->> 
->> 
-> But root can still change it to 0 and do kexec like normal, right?
+First I used the kexec which comes with the Lucid i386 distro (kexec-tools 
+2.0.1 released 13th August 2009).  Then I built kexec from the head of the 
+git tree, which includes the patch "kexec: fix /sys/firmware/memmap memory 
+range overlaps".  I was hopeful this patch would fix my problem, but it 
+still fails with an "Overlapping memory segments" error.
 
-Er... never mind, it is a one-way road...
+As a specific example, on a Dell Latitude E6410 (which uses an Intel i7 
+processor) the kexec -l fails with the following messages:
 
-Looks like a good balance between reusing CAP_SYS_MODULE and introducing
-a new CAP_SYS_XXX.
+    setup_linux_vesafb: 640x480x16 @ e1000000 +12c000
+    Overlapping memory segments at 0x7ffff000
 
-Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
+One final clue: if I do the same kexec -l, but without the --initrd option I 
+don't get the "Overlapping memory segments..." message, but of course 
+without an initrd the system doesn't boot.
 
-Thanks.
+Any ideas?
 
+-wille
 
 _______________________________________________
 kexec mailing list
