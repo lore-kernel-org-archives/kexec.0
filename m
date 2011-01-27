@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tuxdriver-1-pt.tunnel.tserv13.ash1.ipv6.he.net
-	([2001:470:7:9c9::2] helo=smtp.tuxdriver.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PiX1M-00054A-Q0
-	for kexec@lists.infradead.org; Thu, 27 Jan 2011 18:56:41 +0000
-Date: Thu, 27 Jan 2011 13:56:27 -0500
-From: Neil Horman <nhorman@tuxdriver.com>
-Subject: Re: [PATCH] kexec: include sysctl to disable
-Message-ID: <20110127185627.GA3455@shamino.rdu.redhat.com>
-References: <20110119222630.6755.63928.stgit@paris.rdu.redhat.com>
-	<ih8gpe$41t$1@dough.gmane.org> <ih8he2$41t$2@dough.gmane.org>
-	<AANLkTi=LJWvT5r=0rSBxV4aQdm6n2YAS_0y0RkKdTXQp@mail.gmail.com>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PiU58-0003N2-La
+	for kexec@lists.infradead.org; Thu, 27 Jan 2011 15:48:23 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20110125134748.GA10051@laptop>
+	<AANLkTinU0KYiCd4p=z+=ojbkeEoT2G+CAYvdRU02KJEn@mail.gmail.com>
+	<20110126124954.GC24527@laptop> <20110126125813.GA26952@elte.hu>
+	<20110126133400.GA3399@laptop> <20110126140030.GB30064@elte.hu>
+	<4D40F5FD.6090507@zytor.com> <20110127114113.GB20279@elte.hu>
+Date: Thu, 27 Jan 2011 07:47:54 -0800
+In-Reply-To: <20110127114113.GB20279@elte.hu> (Ingo Molnar's message of "Thu, 
+	27 Jan 2011 12:41:13 +0100")
+Message-ID: <m1aaimxs9h.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <AANLkTi=LJWvT5r=0rSBxV4aQdm6n2YAS_0y0RkKdTXQp@mail.gmail.com>
+Subject: Re: [PATCH 0/2][concept RFC] x86: BIOS-save kernel log to disk upon
+	panic
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +24,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Eric Paris <eparis@parisplace.org>
-Cc: WANG Cong <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Paris <eparis@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Ingo Molnar <mingo@elte.hu>
+Cc: Willy Tarreau <wtarreau@hera.kernel.org>, Dirk Hohndel <hohndel@infradead.org>, =?utf-8?B?RnLDqWTDqXJpYw==?= Weisbecker <fweisbec@gmail.com>, FBDEV-ML <linux-fbdev@vger.kernel.org>, IDE-ML <linux-ide@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, James Bottomley <James.Bottomley@suse.de>, "H. Peter Anvin" <hpa@zytor.com>, X86-ML <x86@kernel.org>, "Ahmed S. Darwish" <darwish.07@gmail.com>, Ingo Molnar <mingo@redhat.com>, Jeff Garzik <jgarzik@pobox.com>, Vivek Goyal <vgoyal@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Dirk.Hohndel@intel.com, Borislav Petkov <bp@alien8.de>, Dave Jones <davej@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Mark Lord <kernel@teksavvy.com>, Arjan van de Ven <arjan@infradead.org>, Tony Luck <tony.luck@intel.com>, KEXEC-ML <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Willy Tarreau <w@1wt.eu>
 
-On Thu, Jan 27, 2011 at 01:40:02PM -0500, Eric Paris wrote:
-> Ping, not hearing any argument is usually a good thing   :)
-> =
+Ingo Molnar <mingo@elte.hu> writes:
 
-> -Eric
-> =
+> * H. Peter Anvin <hpa@zytor.com> wrote:
+>
+>> On 01/26/2011 06:00 AM, Ingo Molnar wrote:
+>> >
+>> >I mean, use the warm reset vector to truly reset the box.
+>> >
+>> >Then, once a stable known-good kernel boots, *that* kernel can then recover all the
+>> >log data which is sitting in a well-known place in RAM, automatically and
+>> >transparently.
+>> >
+>> >Basically a bit like kexec, just more convenient and it also goes through the BIOS
+>> >warm reset, so it might work better than kexec ...
+>> >
+>> 
+>> The problem is that the BIOS will often wipe memory.
+>
+> Yes - but at least a long time ago there used to be modi of reboot when the BIOS did 
+> not do this. Whether that's possible at all with modern BIOSen is a
+> big question ...
 
-> On Thu, Jan 20, 2011 at 12:32 AM, WANG Cong <xiyou.wangcong@gmail.com> wr=
-ote:
-> =
+As I recall that was how you went from 32bit mode to 16bit real mode.
+The issue is that mode never reset the hardware it simply changed the
+cpu mode.
 
-> >> On Wed, 19 Jan 2011 17:26:30 -0500, Eric Paris wrote:
-> >>
-> >>> much like /proc/sys/kernel/modules_disable is used to disable module
-> >>> loading, /proc/sys/kernel/kexec_disable is used to disable kexec code
-> >>> loading. =A0It would still be possible to use kexec -l to load a kern=
-el,
-> >>> set the tunable to 1 so the kernel waiting to boot couldn't change, a=
-nd
-> >>> then launch the kernel at a later time (through kexec -e or through a
-> >>> crash)
-> =
-
-> > Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
-> =
-
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> =
-
+Eric
 
 _______________________________________________
 kexec mailing list
