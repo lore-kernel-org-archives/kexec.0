@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
+Received: from mail-iw0-f177.google.com ([209.85.214.177])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PiJcm-0006ge-GE
-	for kexec@lists.infradead.org; Thu, 27 Jan 2011 04:38:25 +0000
-Message-ID: <4D40F5FD.6090507@zytor.com>
-Date: Wed, 26 Jan 2011 20:35:09 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+	id 1PiWlI-0004su-KN
+	for kexec@lists.infradead.org; Thu, 27 Jan 2011 18:40:05 +0000
+Received: by iwn38 with SMTP id 38so2334924iwn.36
+	for <kexec@lists.infradead.org>; Thu, 27 Jan 2011 10:40:02 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2][concept RFC] x86: BIOS-save kernel log to disk upon
-	panic
-References: <20110125134748.GA10051@laptop>
-	<AANLkTinU0KYiCd4p=z+=ojbkeEoT2G+CAYvdRU02KJEn@mail.gmail.com>
-	<20110126124954.GC24527@laptop>
-	<20110126125813.GA26952@elte.hu> <20110126133400.GA3399@laptop>
-	<20110126140030.GB30064@elte.hu>
-In-Reply-To: <20110126140030.GB30064@elte.hu>
+In-Reply-To: <ih8he2$41t$2@dough.gmane.org>
+References: <20110119222630.6755.63928.stgit@paris.rdu.redhat.com>
+	<ih8gpe$41t$1@dough.gmane.org> <ih8he2$41t$2@dough.gmane.org>
+Date: Thu, 27 Jan 2011 13:40:02 -0500
+Message-ID: <AANLkTi=LJWvT5r=0rSBxV4aQdm6n2YAS_0y0RkKdTXQp@mail.gmail.com>
+Subject: Re: [PATCH] kexec: include sysctl to disable
+From: Eric Paris <eparis@parisplace.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +21,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Willy Tarreau <wtarreau@hera.kernel.org>, Dirk Hohndel <hohndel@infradead.org>, =?ISO-8859-1?Q?Fr=E9d=E9ric_W?= =?ISO-8859-1?Q?eisbecker?= <fweisbec@gmail.com>, FBDEV-ML <linux-fbdev@vger.kernel.org>, IDE-ML <linux-ide@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, James Bottomley <James.Bottomley@suse.de>, X86-ML <x86@kernel.org>, "Ahmed S. Darwish" <darwish.07@gmail.com>, Ingo Molnar <mingo@redhat.com>, Jeff Garzik <jgarzik@pobox.com>, Vivek Goyal <vgoyal@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Dirk.Hohndel@intel.com, Borislav Petkov <bp@alien8.de>, Dave Jones <davej@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Arjan van de Ven <arjan@infradead.org>, Tony Luck <tony.luck@intel.com>, KEXEC-ML <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Tejun Heo <tj@kernel.org>, Mark Lord <kernel@teksavvy.com>, Linus Torvalds <torvalds@linux-foundation.org>, Willy Tarreau <w@1wt.eu>
+To: WANG Cong <xiyou.wangcong@gmail.com>, Eric Paris <eparis@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On 01/26/2011 06:00 AM, Ingo Molnar wrote:
->
-> I mean, use the warm reset vector to truly reset the box.
->
-> Then, once a stable known-good kernel boots, *that* kernel can then recover all the
-> log data which is sitting in a well-known place in RAM, automatically and
-> transparently.
->
-> Basically a bit like kexec, just more convenient and it also goes through the BIOS
-> warm reset, so it might work better than kexec ...
->
+Ping, not hearing any argument is usually a good thing   :)
 
-The problem is that the BIOS will often wipe memory.
+-Eric
 
-	-hpa
+On Thu, Jan 20, 2011 at 12:32 AM, WANG Cong <xiyou.wangcong@gmail.com> wrot=
+e:
+
+>> On Wed, 19 Jan 2011 17:26:30 -0500, Eric Paris wrote:
+>>
+>>> much like /proc/sys/kernel/modules_disable is used to disable module
+>>> loading, /proc/sys/kernel/kexec_disable is used to disable kexec code
+>>> loading. =A0It would still be possible to use kexec -l to load a kernel,
+>>> set the tunable to 1 so the kernel waiting to boot couldn't change, and
+>>> then launch the kernel at a later time (through kexec -e or through a
+>>> crash)
+
+> Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
 
 _______________________________________________
 kexec mailing list
