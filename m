@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PiWvK-00050c-Ox
-	for kexec@lists.infradead.org; Thu, 27 Jan 2011 18:50:27 +0000
-Date: Thu, 27 Jan 2011 13:50:21 -0500
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from tuxdriver-1-pt.tunnel.tserv13.ash1.ipv6.he.net
+	([2001:470:7:9c9::2] helo=smtp.tuxdriver.com)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1PiX1M-00054A-Q0
+	for kexec@lists.infradead.org; Thu, 27 Jan 2011 18:56:41 +0000
+Date: Thu, 27 Jan 2011 13:56:27 -0500
+From: Neil Horman <nhorman@tuxdriver.com>
 Subject: Re: [PATCH] kexec: include sysctl to disable
-Message-ID: <20110127185021.GE23047@redhat.com>
+Message-ID: <20110127185627.GA3455@shamino.rdu.redhat.com>
 References: <20110119222630.6755.63928.stgit@paris.rdu.redhat.com>
 	<ih8gpe$41t$1@dough.gmane.org> <ih8he2$41t$2@dough.gmane.org>
 	<AANLkTi=LJWvT5r=0rSBxV4aQdm6n2YAS_0y0RkKdTXQp@mail.gmail.com>
@@ -32,14 +33,6 @@ On Thu, Jan 27, 2011 at 01:40:02PM -0500, Eric Paris wrote:
 > Ping, not hearing any argument is usually a good thing   :)
 > =
 
-
-So if we allowing locking down module loading, why not allow locking down
-kexec kernel loading, hence...
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Vivek
-
 > -Eric
 > =
 
@@ -60,11 +53,16 @@ nd
 > =
 
 > > Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+> =
+
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> =
+
 
 _______________________________________________
 kexec mailing list
