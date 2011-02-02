@@ -1,19 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from terminus.zytor.com ([198.137.202.10] helo=mail.zytor.com)
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PiUVU-0003cJ-No
-	for kexec@lists.infradead.org; Thu, 27 Jan 2011 16:15:37 +0000
-Message-ID: <4D41997D.5070206@zytor.com>
-Date: Thu, 27 Jan 2011 08:12:45 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
+From: Per Fransson <per.xx.fransson@stericsson.com>
+Subject: [PATCH v2] ARM: kexec: selective MMU identity mapping
+Date: Wed, 2 Feb 2011 15:43:29 +0100
+Message-ID: <1296657809-1589-1-git-send-email-per.xx.fransson@stericsson.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/2][concept RFC] x86: BIOS-save kernel log to disk upon
-	panic
-References: <20110125134748.GA10051@laptop>	<AANLkTinU0KYiCd4p=z+=ojbkeEoT2G+CAYvdRU02KJEn@mail.gmail.com>	<20110126124954.GC24527@laptop>
-	<20110126125813.GA26952@elte.hu>	<20110126133400.GA3399@laptop>
-	<20110126140030.GB30064@elte.hu>	<4D40F5FD.6090507@zytor.com>
-	<20110127114113.GB20279@elte.hu> <m1aaimxs9h.fsf@fess.ebiederm.org>
-In-Reply-To: <m1aaimxs9h.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,28 +12,288 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Willy Tarreau <wtarreau@hera.kernel.org>, Dirk Hohndel <hohndel@infradead.org>, =?ISO-8859-1?Q?Fr=E9d=E9ric_W?= =?ISO-8859-1?Q?eisbecker?= <fweisbec@gmail.com>, FBDEV-ML <linux-fbdev@vger.kernel.org>, IDE-ML <linux-ide@vger.kernel.org>, Randy Dunlap <rdunlap@xenotime.net>, James Bottomley <James.Bottomley@suse.de>, X86-ML <x86@kernel.org>, "Ahmed S. Darwish" <darwish.07@gmail.com>, Ingo Molnar <mingo@redhat.com>, Ingo Molnar <mingo@elte.hu>, Jeff Garzik <jgarzik@pobox.com>, Vivek Goyal <vgoyal@redhat.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Dirk.Hohndel@intel.com, Borislav Petkov <bp@alien8.de>, Dave Jones <davej@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Mark Lord <kernel@teksavvy.com>, Arjan van de Ven <arjan@infradead.org>, Tony Luck <tony.luck@intel.com>, KEXEC-ML <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Haren Myneni <hbabu@us.ibm.com>, Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, Willy Tarreau <w@1wt.eu>
+To: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org
+Cc: Per Fransson <per.xx.fransson@stericsson.com>
 
-On 01/27/2011 07:47 AM, Eric W. Biederman wrote:
->>
->> Yes - but at least a long time ago there used to be modi of reboot when the BIOS did
->> not do this. Whether that's possible at all with modern BIOSen is a
->> big question ...
->
-> As I recall that was how you went from 32bit mode to 16bit real mode.
-> The issue is that mode never reset the hardware it simply changed the
-> cpu mode.
->
+When restarting using the kernel kexec functionality the MMU
+needs to be turned off. Any code which does this needs to use
+identity mapped addresses to get reliable results. In the ARM
+kexec case this identity mapping is done:
 
-Quite correct.  It doesn't just bypass the memory wipe, it bypasses the 
-entire POST.
+- using the page table of the current task
 
-	-hpa
+- for all addresses normally used by user space,
+  i.e. 0x00000000-PAGE_OFFSET
+
+If kexec is used at a kernel crash to collect a core dump this
+means that we lose important information.
+
+This is what this patches does:
+
+* Actually turns off the MMU, which has been omitted by mistake
+
+* Sets up a more selective identity mapping
+
+* Restores the old mapping once the MMU is off
+
+Signed-off-by: Per Fransson <per.xx.fransson@stericsson.com>
+---
+v2 changes:
+
+* now uses (modified versions of) the identity mapping functions in idmap.c
+  as they look in 2.6.38-rc1. Some pud-level code has been added there in
+  linux-next.
+
+ arch/arm/include/asm/pgtable.h    |    4 +++-
+ arch/arm/kernel/machine_kexec.c   |   26 +++++++++++++++++++++-----
+ arch/arm/kernel/relocate_kernel.S |   23 +++++++++++++++++++++++
+ arch/arm/kernel/smp.c             |    7 ++++---
+ arch/arm/mm/idmap.c               |   20 +++++++++++++++-----
+ arch/arm/mm/proc-v7.S             |    4 ++++
+ include/linux/kexec.h             |    6 +++++-
+ 7 files changed, 75 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
+index ebcb643..08dd591 100644
+--- a/arch/arm/include/asm/pgtable.h
++++ b/arch/arm/include/asm/pgtable.h
+@@ -458,6 +458,7 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ #define kern_addr_valid(addr)	(1)
+ 
+ #include <asm-generic/pgtable.h>
++#include <linux/kexec.h>
+ 
+ /*
+  * We provide our own arch_get_unmapped_area to cope with VIPT caches.
+@@ -473,7 +474,8 @@ static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ 
+ #define pgtable_cache_init() do { } while (0)
+ 
+-void identity_mapping_add(pgd_t *, unsigned long, unsigned long);
++void identity_mapping_add(pgd_t *, unsigned long, unsigned long,
++			  struct kexec_mmu_ent *);
+ void identity_mapping_del(pgd_t *, unsigned long, unsigned long);
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+index 30ead13..bd53684 100644
+--- a/arch/arm/kernel/machine_kexec.c
++++ b/arch/arm/kernel/machine_kexec.c
+@@ -16,8 +16,6 @@
+ extern const unsigned char relocate_new_kernel[];
+ extern const unsigned int relocate_new_kernel_size;
+ 
+-extern void setup_mm_for_reboot(char mode);
+-
+ extern unsigned long kexec_start_address;
+ extern unsigned long kexec_indirection_page;
+ extern unsigned long kexec_mach_type;
+@@ -79,9 +77,9 @@ void machine_kexec(struct kimage *image)
+ {
+ 	unsigned long page_list;
+ 	unsigned long reboot_code_buffer_phys;
++	unsigned long cpu_reset_phys;
+ 	void *reboot_code_buffer;
+ 
+-
+ 	page_list = image->head & PAGE_MASK;
+ 
+ 	/* we need both effective and real address here */
+@@ -95,18 +93,36 @@ void machine_kexec(struct kimage *image)
+ 	kexec_mach_type = machine_arch_type;
+ 	kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
+ 
++	/* Identity map the code which turns off the mmu (cpu_reset) and
++	   the code which will be executed immediately afterwards
++	   (relocate_new_kernel).
++	   Store the old entries so they can be restored. */
++	/* cpu_reset cannot be used directly when MULTI_CPU is true, see
++	   cpu-multi32.h, instead processor.reset will have to be used */
++#ifdef MULTI_CPU
++	cpu_reset_phys = virt_to_phys(processor.reset);
++#else
++	cpu_reset_phys = virt_to_phys(cpu_reset);
++#endif
++
++	identity_mapping_add(current->active_mm->pgd, cpu_reset_phys,
++			     ALIGN(cpu_reset_phys, PGDIR_SIZE)+PGDIR_SIZE,
++			     &kexec_mmu_ents[0]);
++	identity_mapping_add(current->active_mm->pgd, reboot_code_buffer_phys,
++			     ALIGN(reboot_code_buffer_phys, PGDIR_SIZE)
++			     + PGDIR_SIZE, &kexec_mmu_ents[2]);
++	local_flush_tlb_all();
++
+ 	/* copy our kernel relocation code to the control code page */
+ 	memcpy(reboot_code_buffer,
+ 	       relocate_new_kernel, relocate_new_kernel_size);
+ 
+-
+ 	flush_icache_range((unsigned long) reboot_code_buffer,
+ 			   (unsigned long) reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
+ 	printk(KERN_INFO "Bye!\n");
+ 
+ 	local_irq_disable();
+ 	local_fiq_disable();
+-	setup_mm_for_reboot(0); /* mode is not used, so just pass 0*/
+ 	flush_cache_all();
+ 	outer_flush_all();
+ 	outer_disable();
+diff --git a/arch/arm/kernel/relocate_kernel.S b/arch/arm/kernel/relocate_kernel.S
+index 9cf4cbf..a5e155e 100644
+--- a/arch/arm/kernel/relocate_kernel.S
++++ b/arch/arm/kernel/relocate_kernel.S
+@@ -7,6 +7,24 @@
+ 	.globl relocate_new_kernel
+ relocate_new_kernel:
+ 
++	/* We get here when the MMU is in a transitional state.
++	   Wait for the virtual address mapping to wear off before
++	   overwriting the identity mappings (set up for the sake
++	   of MMU disabling) with the previous mappings. */
++	ldr	r0, =100
++0:
++	subs	r0, r0, #1
++	beq	0b
++
++	adr	r0, kexec_mmu_ents
++	.rept 4
++	ldr	r1, [r0], #4
++	ldr	r2, [r0], #4
++	str	r2, [r1], #4
++	ldr	r2, [r0], #4
++	str	r2, [r1], #4
++	.endr
++
+ 	ldr	r0,kexec_indirection_page
+ 	ldr	r1,kexec_start_address
+ 
+@@ -69,6 +87,11 @@ kexec_start_address:
+ kexec_indirection_page:
+ 	.long	0x0
+ 
++	.globl kexec_mmu_ents
++kexec_mmu_ents:
++	.space 4*12, 0
++
++
+ 	.globl kexec_mach_type
+ kexec_mach_type:
+ 	.long	0x0
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 4539ebc..607b6a8 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -93,10 +93,11 @@ int __cpuinit __cpu_up(unsigned int cpu)
+ 
+ 	if (PHYS_OFFSET != PAGE_OFFSET) {
+ #ifndef CONFIG_HOTPLUG_CPU
+-		identity_mapping_add(pgd, __pa(__init_begin), __pa(__init_end));
++		identity_mapping_add(pgd, __pa(__init_begin), __pa(__init_end),
++				     NULL);
+ #endif
+-		identity_mapping_add(pgd, __pa(_stext), __pa(_etext));
+-		identity_mapping_add(pgd, __pa(_sdata), __pa(_edata));
++		identity_mapping_add(pgd, __pa(_stext), __pa(_etext), NULL);
++		identity_mapping_add(pgd, __pa(_sdata), __pa(_edata), NULL);
+ 	}
+ 
+ 	/*
+diff --git a/arch/arm/mm/idmap.c b/arch/arm/mm/idmap.c
+index 5729944..d5d313d 100644
+--- a/arch/arm/mm/idmap.c
++++ b/arch/arm/mm/idmap.c
+@@ -1,14 +1,19 @@
+ #include <linux/kernel.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/cputype.h>
+ #include <asm/pgalloc.h>
+ #include <asm/pgtable.h>
+ 
+ static void idmap_add_pmd(pgd_t *pgd, unsigned long addr, unsigned long end,
+-	unsigned long prot)
++			  unsigned long prot, struct kexec_mmu_ent *store)
+ {
+ 	pmd_t *pmd = pmd_offset(pgd, addr);
+-
++	if (store) {
++		pmd_t *pmd_store = pmd_offset(&store->store, addr);
++		pmd_store[0] = pmd[0];
++		pmd_store[1] = pmd[1];
++	}
+ 	addr = (addr & PMD_MASK) | prot;
+ 	pmd[0] = __pmd(addr);
+ 	addr += SECTION_SIZE;
+@@ -16,7 +21,8 @@ static void idmap_add_pmd(pgd_t *pgd, unsigned long addr, unsigned long end,
+ 	flush_pmd_entry(pmd);
+ }
+ 
+-void identity_mapping_add(pgd_t *pgd, unsigned long addr, unsigned long end)
++void identity_mapping_add(pgd_t *pgd, unsigned long addr, unsigned long end,
++			  struct kexec_mmu_ent *store)
+ {
+ 	unsigned long prot, next;
+ 
+@@ -27,7 +33,11 @@ void identity_mapping_add(pgd_t *pgd, unsigned long addr, unsigned long end)
+ 	pgd += pgd_index(addr);
+ 	do {
+ 		next = pgd_addr_end(addr, end);
+-		idmap_add_pmd(pgd, addr, next, prot);
++		idmap_add_pmd(pgd, addr, next, prot, store);
++		if (store) {
++			store->ptr = (pgd_t *)virt_to_phys(pgd);
++			store++;
++		}
+ 	} while (pgd++, addr = next, addr != end);
+ }
+ 
+@@ -62,6 +72,6 @@ void setup_mm_for_reboot(char mode)
+ 	 * we don't have any user-mode mappings so we use the context that we
+ 	 * "borrowed".
+ 	 */
+-	identity_mapping_add(current->active_mm->pgd, 0, TASK_SIZE);
++	identity_mapping_add(current->active_mm->pgd, 0, TASK_SIZE, NULL);
+ 	local_flush_tlb_all();
+ }
+diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+index 0c1172b..762bb43 100644
+--- a/arch/arm/mm/proc-v7.S
++++ b/arch/arm/mm/proc-v7.S
+@@ -61,6 +61,10 @@ ENDPROC(cpu_v7_proc_fin)
+  */
+ 	.align	5
+ ENTRY(cpu_v7_reset)
++	sub	pc, pc, #PAGE_OFFSET+4		@ go to physical addresses
++	mrc	p15, 0, ip, c1, c0, 0		@ ctrl register
++	bic	ip, ip, #0x0001			@ ...............m
++	mcr	p15, 0, ip, c1, c0, 0		@ ctrl register
+ 	mov	pc, r0
+ ENDPROC(cpu_v7_reset)
+ 
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 03e8e8d..6a1345b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -106,7 +106,11 @@ struct kimage {
+ #endif
+ };
+ 
+-
++struct kexec_mmu_ent {
++	pgd_t *ptr;
++	pgd_t store;
++};
++extern struct kexec_mmu_ent kexec_mmu_ents[4];
+ 
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+-- 
+1.7.3.2
+
 
 _______________________________________________
 kexec mailing list
