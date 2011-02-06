@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mail-ww0-f49.google.com ([74.125.82.49])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Pm6jh-0000uh-Tp
+	for kexec@lists.infradead.org; Sun, 06 Feb 2011 15:41:14 +0000
+Received: by wwb17 with SMTP id 17so4066681wwb.18
+	for <kexec@lists.infradead.org>; Sun, 06 Feb 2011 07:41:12 -0800 (PST)
+Date: Sun, 6 Feb 2011 17:41:08 +0200
+From: "Ahmed S. Darwish" <darwish.07@gmail.com>
+Subject: [PATCH -next] Documentation: Improve crashkernel= description
+Message-ID: <20110206154108.GA16542@laptop>
 MIME-Version: 1.0
-In-Reply-To: <20110203073232.GA2708@acer>
-References: <1296657809-1589-1-git-send-email-per.xx.fransson@stericsson.com>
-	<20110203073232.GA2708@acer>
-Date: Thu, 3 Feb 2011 11:14:45 +0100
-Message-ID: <AANLkTi=ft4rvX4RmNr1veiWR7ED1aLp94hm0Ky8q4-OW@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: kexec: selective MMU identity mapping
-From: Per Fransson <per.fransson.ml@gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,78 +23,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mika Westerberg <mika.westerberg@iki.fi>, Nicolas Pitre <nico@fluxnic.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Randy Dunlap <rdunlap@xenotime.net>, Vivek Goyal <vgoyal@redhat.com>, Haren Myneni <hbabu@us.ibm.com>
+Cc: linux-doc@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, LKML <linux-kernel@vger.kernel.org>
 
-Hi,
+(Also applicable over 2.6.38-rc3)
 
-Ok, I've tried to summarize your comments:
+Had to explore two C code files to make sense of the 'crashkernel='
+kernel parameter values.  Improve the situation.
 
-* Break out turning off the MMU.
+Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
+---
 
-  - Not sure about this one, the changes rely on each other anyway.
-But if you insist...
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index 89835a4..8f26b42 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -545,9 +545,12 @@ and is between 256 and 4096 characters. It is defined in the file
+ 			Format:
+ 			<first_slot>,<last_slot>,<port>,<enum_bit>[,<debug>]
+ 
+-	crashkernel=nn[KMG]@ss[KMG]
+-			[KNL] Reserve a chunk of physical memory to
+-			hold a kernel to switch to with kexec on panic.
++	crashkernel=size[KMG][@offset[KMG]]
++			[KNL] Using kexec, Linux can switch to a 'crash kernel'
++			upon panic. This parameter reserves the physical
++			memory region [offset, offset + size] for that kernel
++			image. If the '@offset' part was ignored, Linux finds
++			a suitable crash image start address automatically.
+ 
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+ 			[KNL] Same as above, but depends on the memory
 
-* Don't add a kexec specific structure as argument to identity_mapping_add().
+regards,
 
-  - How about a separate 'store_mapping_for(<address to store for>,
-<where to store>)' function?
-    Could it be placed idmap.c as well?
-
-* Always use processor.reset, regardless of #ifdef MULTI_CPU
-
-  - Yes
-
-* beq -> bneq in relocate_new_kernel()
-
-  - errare humanum est =o)
-
-* better way to check for the MMU actually being off?
-
-  - Will reading the M bit of the System Control Register do?
-
-* Prettier, more general copy lists for restoring the page table entries.
-
-  - Are there any such pre-existing types, e.g.
-
-        struct {
-            size_t howmuch;
-            void * towhere;
-            char what[0];
-        }
-
-    or something similar?
-
-* The old 0x0-PAGE_OFFSET 1-1 mapping doesn't cover the physical
-addresses needed if these are
-  higher, e.g. 0xd0000000--. Thus it will never work.
-
-  - My patch will identity map the needed addresses regardless of
-whether they are located in the
-    user or kernel space ranges. This at least *could* work, if we are
-lucky and it doesn't coincide
-    with the mappings for the code we still need to run before turning
-off the MMU.
-
-* The jump to physical addresses in cpu_reset() needs to account for
-PHYS_OFFSET!=0
-
-  - Yes
-
-* Move ARM specific struct definitions to ARM specific header
-
-  - Yes
-
-* Tested on ARMv4/v5 CPUs?
-
-  - No, sorry, there are none available to me. They should work like
-they used to if they don't use
-    any other code than the cpu_reset() and relocate_new_kernel()
-functions once the MMU has been
-    turned off.
-
-Regards,
-Per
+-- 
+Darwish
+http://darwish.07.googlepages.com
 
 _______________________________________________
 kexec mailing list
