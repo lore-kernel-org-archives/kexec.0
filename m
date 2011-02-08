@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp03.srv.cs.cmu.edu ([128.2.217.198])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PmuHI-0005yw-7f
-	for kexec@lists.infradead.org; Tue, 08 Feb 2011 20:35:12 +0000
-Received: from jaguar.home (pool-173-75-141-44.pitbpa.fios.verizon.net
-	[173.75.141.44]) (authenticated bits=0)
-	by smtp03.srv.cs.cmu.edu (8.13.6/8.13.6) with ESMTP id p18KZ9t6024865
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NO)
-	for <kexec@lists.infradead.org>; Tue, 8 Feb 2011 15:35:10 -0500 (EST)
-Received: from ecc by jaguar.home with local (Exim 4.72)
-	(envelope-from <ecc@cmu.edu>) id 1PmuHF-000341-Od
-	for kexec@lists.infradead.org; Tue, 08 Feb 2011 15:35:09 -0500
-Date: Tue, 8 Feb 2011 15:35:09 -0500
-From: Eric Cooper <ecc@cmu.edu>
-Subject: kexec problems on kirkwood
-Message-ID: <20110208203509.GA11748@localhost>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Pmvqg-0006kT-IZ
+	for kexec@lists.infradead.org; Tue, 08 Feb 2011 22:15:51 +0000
+Date: Wed, 9 Feb 2011 07:15:45 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec-tools: Don't duplicate the bzImage header area
+Message-ID: <20110208221545.GJ5540@verge.net.au>
+References: <20110208152036.GA6615@laptop>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20110208152036.GA6615@laptop>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,34 +23,78 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-I've been trying to use kexec on a Seagate DockStar (kirkwood-based).
+On Tue, Feb 08, 2011 at 05:20:36PM +0200, Ahmed S. Darwish wrote:
+> Hi,
+> 
+> Don't wholeheartedly copy the 32-Kbytes bzImage header area to the stack,
+> just use a constant pointer instead.
+>
+> Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
 
-Using a minimal kernel with a built-in initramfs, I've been able to
-successfully kexec a ~1M kernel with a ~2.7M initrd.  But if I then
-use *that* kernel to try to kexec itself (for example, using "reboot"
-when the kexec-tools package is installed), it fails during the
-"Uncompressing the kernel" code.
+Hi Ahmed,
 
-It fails with both gzip and lzma compressed images.  The precise
-failure seems to depend on the size of the kernel -- sometimes it
-complains about a corrupt image, sometimes it just hangs.  I added
-some print statements to the decompress-inflate code, and I've seen
-all sorts of error messages.
+this seems reasonable to me, I have a minor comment below.
 
-I then found the same failure-during-decompression occurs if I try to
-use the minimal kernel to kexec itself, or the bigger kernel to kexec
-anything.
+> ---
+> 
+> (If this is accepted, I'll send a similar patch for the setup header)
+> 
+> diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+> index 83d3a69..2312eb8 100644
+> --- a/kexec/arch/i386/kexec-bzImage.c
+> +++ b/kexec/arch/i386/kexec-bzImage.c
+> @@ -43,32 +43,32 @@ static const int probe_debug = 0;
+>  
+>  int bzImage_probe(const char *buf, off_t len)
+>  {
+> -	struct x86_linux_header header;
+> +	const struct x86_linux_header *header;
+>  	if ((uintmax_t)len < (uintmax_t)sizeof(header)) {
+>  		return -1;
+>  	}
+> -	memcpy(&header, buf, sizeof(header));
+> -	if (memcmp(header.header_magic, "HdrS", 4) != 0) {
+> +	header = (void *)buf;
 
-So the successful kexec seems to be a lucky fluke, and there's still
-something not set up correctly in the post-kexec environment.
+Perhaps casting to (struct x86_linux_header*) would read better?
 
-Any suggestions on where to look or how to debug this would be very
-welcome.
-
--- 
-Eric Cooper             e c c @ c m u . e d u
+> +	if (memcmp(header->header_magic, "HdrS", 4) != 0) {
+>  		if (probe_debug) {
+>  			fprintf(stderr, "Not a bzImage\n");
+>  		}
+>  		return -1;
+>  	}
+> -	if (header.boot_sector_magic != 0xAA55) {
+> +	if (header->boot_sector_magic != 0xAA55) {
+>  		if (probe_debug) {
+>  			fprintf(stderr, "No x86 boot sector present\n");
+>  		}
+>  		/* No x86 boot sector present */
+>  		return -1;
+>  	}
+> -	if (header.protocol_version < 0x0200) {
+> +	if (header->protocol_version < 0x0200) {
+>  		if (probe_debug) {
+>  			fprintf(stderr, "Must be at least protocol version 2.00\n");
+>  		}
+>  		/* Must be at least protocol version 2.00 */
+>  		return -1;
+>  	}
+> -	if ((header.loadflags & 1) == 0) {
+> +	if ((header->loadflags & 1) == 0) {
+>  		if (probe_debug) {
+>  			fprintf(stderr, "zImage not a bzImage\n");
+>  		}
+> 
+> thanks,
+> 
+> -- 
+> Darwish
+> http://darwish.07.googlepages.com
+> 
 
 _______________________________________________
 kexec mailing list
