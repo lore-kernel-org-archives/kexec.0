@@ -1,17 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PnJPo-0007Ly-Ma
-	for kexec@lists.infradead.org; Wed, 09 Feb 2011 23:25:41 +0000
-Date: Thu, 10 Feb 2011 08:25:32 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] kexec-tools: Don't duplicate the bzImage header area
-Message-ID: <20110209232529.GA6902@verge.net.au>
-References: <20110208152036.GA6615@laptop> <20110208221545.GJ5540@verge.net.au>
-	<20110209111304.GA6972@laptop>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110209111304.GA6972@laptop>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Prj1s-0006n5-QB
+	for kexec@lists.infradead.org; Tue, 22 Feb 2011 03:35:13 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id AC9793EE0BC
+	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 92BFC45DE4E
+	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 79FAC45DE4D
+	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6D45E1DB8037
+	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.249.87.105])
+	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3AE231DB802F
+	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
+Date: Tue, 22 Feb 2011 12:34:58 +0900 (   )
+Message-Id: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
+Subject: makedumpfile's segmentation fault with option -V
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,42 +35,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc: Haren Myneni <hbabu@us.ibm.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Wed, Feb 09, 2011 at 01:13:04PM +0200, Ahmed S. Darwish wrote:
-> On Wed, Feb 09, 2011 at 07:15:45AM +0900, Simon Horman wrote:
-> > On Tue, Feb 08, 2011 at 05:20:36PM +0200, Ahmed S. Darwish wrote:
-> > > 
-> > > diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-> > > index 83d3a69..2312eb8 100644
-> > > --- a/kexec/arch/i386/kexec-bzImage.c
-> > > +++ b/kexec/arch/i386/kexec-bzImage.c
-> > > @@ -43,32 +43,32 @@ static const int probe_debug = 0;
-> > >  
-> > >  int bzImage_probe(const char *buf, off_t len)
-> > >  {
-> > > -	struct x86_linux_header header;
-> > > +	const struct x86_linux_header *header;
-> > >  	if ((uintmax_t)len < (uintmax_t)sizeof(header)) {
-> > >  		return -1;
-> > >  	}
-> > > -	memcpy(&header, buf, sizeof(header));
-> > > -	if (memcmp(header.header_magic, "HdrS", 4) != 0) {
-> > > +	header = (void *)buf;
-> > 
-> > Perhaps casting to (struct x86_linux_header*) would read better?
-> > 
-> 
-> I felt that '(const struct x86_linux_header *)' is a bit long, but it's
-> not a big deal. Attached is the same patch with that line modified:
-> 
-> ==>
-> 
-> Don't wholeheartedly copy the 32-Kbytes bzImage header area to the stack,
-> just use a constant pointer instead.
+Hello,
 
-Thanks, applied.
+On fc14 and el6 on x86_64, makedumpfile has resulted in segmentation
+fault with option -V.
+
+  $ makedumpfile -V
+  Segmentation fault (core dumped)
+
+I've found this by mistaking -v for -V to display version information.
+
+Thanks.
+HATAYAMA Daisuke
 
 
 _______________________________________________
