@@ -1,27 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Prj1s-0006n5-QB
-	for kexec@lists.infradead.org; Tue, 22 Feb 2011 03:35:13 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id AC9793EE0BC
-	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 92BFC45DE4E
-	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 79FAC45DE4D
-	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6D45E1DB8037
-	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
-Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.249.87.105])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 3AE231DB802F
-	for <kexec@lists.infradead.org>; Tue, 22 Feb 2011 12:35:08 +0900 (JST)
-Date: Tue, 22 Feb 2011 12:34:58 +0900 (   )
-Message-Id: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
-Subject: makedumpfile's segmentation fault with option -V
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+	id 1PrkJx-0006xP-4Z
+	for kexec@lists.infradead.org; Tue, 22 Feb 2011 04:57:58 +0000
+Date: Tue, 22 Feb 2011 13:56:01 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: makedumpfile's segmentation fault with option -V
+Message-Id: <20110222135601.19799711.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
+References: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -35,21 +22,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: kexec@lists.infradead.org
 
-Hello,
 
-On fc14 and el6 on x86_64, makedumpfile has resulted in segmentation
-fault with option -V.
+Hi,
 
-  $ makedumpfile -V
-  Segmentation fault (core dumped)
+On Tue, 22 Feb 2011 12:34:58 +0900 (   )
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> 
+> On fc14 and el6 on x86_64, makedumpfile has resulted in segmentation
+> fault with option -V.
+> 
+>   $ makedumpfile -V
+>   Segmentation fault (core dumped)
+> 
+> I've found this by mistaking -v for -V to display version information.
 
-I've found this by mistaking -v for -V to display version information.
+Thank you for the report.
+That is a bug, and it will be fixed.
 
-Thanks.
-HATAYAMA Daisuke
+-V option is not public, and it is used internally for --vtop option.
+A bug is that the second argument in getopt_long() includes 'V'.
+This patch fixes it.
 
+
+Thanks
+Ken'ichi Ohmichi
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 80f6b70..8847668 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -7844,7 +7844,7 @@ main(int argc, char *argv[])
+
+        info->block_order = DEFAULT_ORDER;
+        message_level = DEFAULT_MSG_LEVEL;
+-       while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:MRrsVvXx:", longopts,
++       while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:MRrsvXx:", longopts,
+            NULL)) != -1) {
+                switch (opt) {
+                case 'b':
+---
 
 _______________________________________________
 kexec mailing list
