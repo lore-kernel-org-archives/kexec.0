@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PrkJx-0006xP-4Z
-	for kexec@lists.infradead.org; Tue, 22 Feb 2011 04:57:58 +0000
-Date: Tue, 22 Feb 2011 13:56:01 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: makedumpfile's segmentation fault with option -V
-Message-Id: <20110222135601.19799711.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
-References: <20110222.123458.104045336.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PsHc4-0002xk-LI
+	for kexec@lists.infradead.org; Wed, 23 Feb 2011 16:30:53 +0000
+Received: from estes.americas.sgi.com (estes.americas.sgi.com [128.162.236.10])
+	by relay2.corp.sgi.com (Postfix) with ESMTP id 5D400304081
+	for <kexec@lists.infradead.org>; Wed, 23 Feb 2011 08:30:50 -0800 (PST)
+Received: from eag09.americas.sgi.com (eag09.americas.sgi.com [128.162.232.15])
+	by estes.americas.sgi.com (Postfix) with ESMTP id 41B557001DAC
+	for <kexec@lists.infradead.org>; Wed, 23 Feb 2011 10:30:50 -0600 (CST)
+Received: from cpw by eag09.americas.sgi.com with local (Exim 4.69)
+	(envelope-from <cpw@sgi.com>) id 1PsHcr-0001Vm-Om
+	for kexec@lists.infradead.org; Wed, 23 Feb 2011 10:31:41 -0600
+Subject: [PATCH] kexec: extend KCORE_ELF_HEADERS_SIZE again
+Message-Id: <E1PsHcr-0001Vm-Om@eag09.americas.sgi.com>
+From: Cliff Wickman <cpw@sgi.com>
+Date: Wed, 23 Feb 2011 10:31:41 -0600
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,52 +24,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
 
-Hi,
+I thought that this patch was added to the kexec tree, but I don't find it in
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+So I'm submitting it again for your consideration.
 
-On Tue, 22 Feb 2011 12:34:58 +0900 (   )
-HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+A customer machine has run over the limit that we increased in October.
+
+> When boot.kdump runs:
 > 
-> On fc14 and el6 on x86_64, makedumpfile has resulted in segmentation
-> fault with option -V.
-> 
->   $ makedumpfile -V
->   Segmentation fault (core dumped)
-> 
-> I've found this by mistaking -v for -V to display version information.
+> Loading kdump
+> 297 segments require a 16696-byte buffer
+> KCORE_ELF_HEADERS_SIZE 16384 too small
+> ELF core (kcore) parse failed
+> Cannot load /boot/vmlinuz-2.6.32.12-0.7.1-uv
+>                                                                     failed
 
-Thank you for the report.
-That is a bug, and it will be fixed.
+Just barely overflowed. But I suggest doubling the buffer.
 
--V option is not public, and it is used internally for --vtop option.
-A bug is that the second argument in getopt_long() includes 'V'.
-This patch fixes it.
+Signed-off-by: Cliff Wickman <cpw@sgi.com>
 
-
-Thanks
-Ken'ichi Ohmichi
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 80f6b70..8847668 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7844,7 +7844,7 @@ main(int argc, char *argv[])
-
-        info->block_order = DEFAULT_ORDER;
-        message_level = DEFAULT_MSG_LEVEL;
--       while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:MRrsVvXx:", longopts,
-+       while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:MRrsvXx:", longopts,
-            NULL)) != -1) {
-                switch (opt) {
-                case 'b':
 ---
+ kexec/crashdump.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: kexec-tools-2.0.1/kexec/crashdump.h
+===================================================================
+--- kexec-tools-2.0.1.orig/kexec/crashdump.h
++++ kexec-tools-2.0.1/kexec/crashdump.h
+@@ -7,8 +7,8 @@ extern int get_xen_vmcoreinfo(uint64_t *
+ 
+ /* Need to find a better way to determine per cpu notes section size. */
+ #define MAX_NOTE_BYTES		1024
+-/* Expecting ELF headers to fit in 16K. Increase it if you need more. */
+-#define KCORE_ELF_HEADERS_SIZE  16384
++/* Expecting ELF headers to fit in 32K. Increase it if you need more. */
++#define KCORE_ELF_HEADERS_SIZE  32768
+ /* The address of the ELF header is passed to the secondary kernel
+  * using the kernel command line option memmap=nnn.
+  * The smallest unit the kernel accepts is in kilobytes,
 
 _______________________________________________
 kexec mailing list
