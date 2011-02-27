@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-bw0-f49.google.com ([209.85.214.49])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Ptimm-0002a5-Uu
-	for kexec@lists.infradead.org; Sun, 27 Feb 2011 15:43:54 +0000
-Received: by bwz1 with SMTP id 1so3322627bwz.36
-	for <kexec@lists.infradead.org>; Sun, 27 Feb 2011 07:43:51 -0800 (PST)
-Date: Sun, 27 Feb 2011 17:43:46 +0200
-From: "Ahmed S. Darwish" <darwish.07@gmail.com>
-Subject: Re: Saveoops: Making Kexec purgatory position-independent?
-Message-ID: <20110227154346.GA18300@laptop>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PtlQb-0003YK-AP
+	for kexec@lists.infradead.org; Sun, 27 Feb 2011 18:33:10 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20110226162008.GA23879@laptop> <4D6972CE.8040401@zytor.com>
 	<m14o7q5m6d.fsf@fess.ebiederm.org> <20110227132409.GA4036@laptop>
-	<20110227141600.GA27699@redhat.com>
+Date: Sun, 27 Feb 2011 10:32:43 -0800
+In-Reply-To: <20110227132409.GA4036@laptop> (Ahmed S. Darwish's message of
+	"Sun, 27 Feb 2011 15:24:09 +0200")
+Message-ID: <m1vd055nw4.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110227141600.GA27699@redhat.com>
+Subject: Re: Saveoops: Making Kexec purgatory position-independent?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,94 +24,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: X86-ML <x86@kernel.org>, KEXEC-ML <kexec@lists.infradead.org>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>
+To: "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc: X86-ML <x86@kernel.org>, KEXEC-ML <kexec@lists.infradead.org>, Haren Myneni <hbabu@us.ibm.com>, Simon Horman <horms@verge.net.au>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@elte.hu>, Vivek Goyal <vgoyal@redhat.com>
 
-On Sun, Feb 27, 2011 at 09:16:00AM -0500, Vivek Goyal wrote:
-> On Sun, Feb 27, 2011 at 03:24:09PM +0200, Ahmed S. Darwish wrote:
-> > 
-> > This is in fact my plan. Using Syslinux, I loaded 'purgatory.ro' to RAM
-> > thinking that it will still be needed. Re-checking the purgatory code
-> > now after reading above note, it seems it does 5 important points:
-> > 
-> >    a) reset the VGA (if instructed)
-> >    b) reset the PIC to legacy mode (if instructed)
-> >    c) check the overall integrity of the second kernel image (SHA-2)
-> >    d) setup the environment for second kernel entry (switch back to
-> >       32-bit protected mode in x86-64, reset registers, etc)
-> >    e) saves the first 640K in a backup region
-> > 
-> > So (a) and (b) can be done elsewhere if needed; (c) isn't needed cause
-> > if the bootloader corrupts images, we have bigger problems;
-> 
-> First kernel boot itself could corrupt the second kernel?
-> 
+"Ahmed S. Darwish" <darwish.07@gmail.com> writes:
 
-Indeed; that didn't pass my mind though. Linus was also quite nervous
-of writing to disk upon panic, so some validity guarantee of the second
-kernel image will be asked for.
+> On Sat, Feb 26, 2011 at 04:57:30PM -0800, Eric W. Biederman wrote:
+>> "H. Peter Anvin" <hpa@zytor.com> writes:
+>> >
+>> > I can't see any sane reason to *not* make kexec purgatory
+>> > position-independent.  It is the obvious thing to do.
+>> 
+>> This isn't a case of the code not being position independent.  This is
+>> case of where the relocations are applied.
+>> 
+>> I can see a couple of handling this with different tradeoffs.
+>> 
+>> 1) We teach bootloaders how to load two kernels at once.  This
+>>    completely avoids the purgatory, as it is replaced by code in the
+>>    bootloader that already exists to load the primary kernel and setup
+>>    it's arguments.
+>> 
+>
+> This is in fact my plan. Using Syslinux, I loaded 'purgatory.ro' to RAM
+> thinking that it will still be needed. Re-checking the purgatory code
+> now after reading above note, it seems it does 5 important points:
+>
+>    a) reset the VGA (if instructed)
+>    b) reset the PIC to legacy mode (if instructed)
+>    c) check the overall integrity of the second kernel image (SHA-2)
+>    d) setup the environment for second kernel entry (switch back to
+>       32-bit protected mode in x86-64, reset registers, etc)
+>    e) saves the first 640K in a backup region
+>
+> So (a) and (b) can be done elsewhere if needed; (c) isn't needed cause
+> if the bootloader corrupts images, we have bigger problems; (d) can be
+> done as a stub; (e), on the contrary of kdump, isn't critical for my
+> goals.
 
-That means, I guess, that the purgatory will still be needed. Eric, any
-thoughts?
+(c) Is needed somewhere on the initialization path, because we don't start
+    running until after a kernel has crashed.  For a first prototype it
+    can probably be skipped.
+(e) Is there because the first 640K is the only memory of the original
+    kernel that we use.
 
-> Secondly, Once you are booted sucessfully, I guess same can be used for
-> regular kernel crash without reloading the kdump kernel (For poeple who are
-> looking to capture just logs). If yes, it will be good to check integrity
-> of second kernel image.
-> 
+I suspect the copying of the first 640K to somewhere reserved for it,
+and the verifying the sha256 checksum are things we can move into the
+kernels boot.
 
-Didn't understand the above paragraph, but in all cases, it seems that
-checking the second kernel integrity will be quite important.
+But seriously prototype it and get something that works.  I don't know
+of a case where in practice I have gotten a checksum failure.
 
-Maybe we'll also need to check the integrity of the integrator :)
+Saving the first 640K is sort of important but again we don't do much
+down there except boot secondary cpus so you can probably deal with that
+later.
 
-> Is bootloader going to set up the kernels in such a way that second kernel
-> boot is not going to overwrite the first kernel's memory? Otherwise how
-> do we make sure that second kernel does not overwrite the oops/logs
-> information you are trying to save.
-> 
+There is also some magic we do with ELF headers to describe memory
+regions and to find elf notes written by the crashed kernel when it goes
+down.  Those notes the existing tools use to find all kinds of things.
+See vmcore-to-dmesg in the /sbin/kexec source tree.  If you don't want
+the full core I expect you want to be able to run that program.
 
-There will be some sort of protection for the logs area, yes. How such
-communication between the two kernels will occur, I don't know. For now,
-I'm focused on loading and booting the second kernel.
+I'm not ready to change how the crash recovery kernel on finds what is
+going on.  The elf header and elf notes.  It is already kernel agnostic
+etc, but I am totally willing to change how we implement it.
 
-> On a side note, does UEFI provide some functionality where first kernel
-> can save some limited amount of buffer and retrieve it back when a new
-> kernel is booting. I might be completely into weedes here. This is just
-> based on discussion with somebody long back who mentioned that UEFI
-> might allow us to save kernel oops and the retrieve it back when fresh
-> kernel is booting.
-> 
+Eric
 
-I have zero contact with EFI, though there's some sort of ACPI-interfaced
-nonvolatile RAM in modern high-end x86 servers.
-
-> Do two kernels boot from mutually exclusive locations or you will continue
-> to copy new kernel at some low meory address and boot from there? Copying
-> will again lead to issue of how not to overwrite or concept of backup
-> region. For not copying we need to make sure what the highest address
-> kernel can boot from and also letting first kernel know not to overwrite
-> second kernel.
-> 
-
-Yes, I'll need to utilize the boot protocol for this, making sure the
-first kernel mark the second one's loaded image (and its purgatory) as
-reserved.
-
-> Above are just some random thoughts without going into details of the
-> proposal.
-
-Appreciated! I need all input possible at this stage.
-
-> Thanks
-> Vivek
-> 
-
-thanks,
-
--- 
-Darwish
-http://darwish.07.googlepages.com
 
 _______________________________________________
 kexec mailing list
