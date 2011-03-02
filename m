@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PuuoK-0001Oi-1F
+	id 1PuuoK-0001Oh-1A
 	for kexec@lists.infradead.org; Wed, 02 Mar 2011 22:46:25 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH 1/2] Remove bogus check for too many program headers
-Date: Thu,  3 Mar 2011 07:46:15 +0900
-Message-Id: <1299105976-11360-1-git-send-email-horms@verge.net.au>
-MIME-Version: 1.0
+Subject: [PATCH 2/2] Avoid signed/unsigned comparsions
+Date: Thu,  3 Mar 2011 07:46:16 +0900
+Message-Id: <1299105976-11360-2-git-send-email-horms@verge.net.au>
+In-Reply-To: <1299105976-11360-1-git-send-email-horms@verge.net.au>
+References: <1299105976-11360-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,41 +17,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-VGhpcyB0ZXN0IGFwcGVhcnMgYm9ndXMgYmVjYXVzZSB0aGUgZV9waG51bSBlbGVtZW50IG9mIEVs
-ZjMyX1BoZHIgYW5kCmlzIGFuIHVuc2lnbmVkIDE2Yml0IGVudGl0eS4KClRoaXMgYWRkcmVzc2Vz
-IHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6Cgp2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmM6IElu
-IGZ1bmN0aW9uICdyZWFkX2VsZjMyJzoKdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jOjExNjog
-d2FybmluZzogY29tcGFyaXNvbiBpcyBhbHdheXMgZmFsc2UgZHVlIHRvIGxpbWl0ZWQgcmFuZ2Ug
-b2YgZGF0YSB0eXBlCnZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzogSW4gZnVuY3Rpb24g4oCY
-cmVhZF9lbGY2NOKAmToKdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jOjE5Mjogd2FybmluZzog
-Y29tcGFyaXNvbiBpcyBhbHdheXMgZmFsc2UgZHVlIHRvIGxpbWl0ZWQgcmFuZ2Ugb2YgZGF0YSB0
-eXBlCgpDYzogRXJpYyBXLiBCaWVkZXJtYW4gPGViaWVkZXJtQHhtaXNzaW9uLmNvbT4KU2lnbmVk
-LW9mZi1ieTogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+Ci0tLQogdm1jb3JlLWRt
-ZXNnL3ZtY29yZS1kbWVzZy5jIHwgICAgOCAtLS0tLS0tLQogMSBmaWxlcyBjaGFuZ2VkLCAwIGlu
-c2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvdm1jb3JlLWRtZXNnL3Zt
-Y29yZS1kbWVzZy5jIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCmluZGV4IDcwMTU4OTQu
-LjM2NWUyOTMgMTAwNjQ0Ci0tLSBhL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYworKysgYi92
-bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmMKQEAgLTExMywxMCArMTEzLDYgQEAgc3RhdGljIHZv
-aWQgcmVhZF9lbGYzMihpbnQgZmQpCiAJCQllaGRyLmVfcGhlbnRzaXplLCBzaXplb2YoRWxmMzJf
-UGhkcikpOwogCQlleGl0KDEyKTsKIAl9Ci0JaWYgKGVoZHIuZV9waG51bSA+IFVMT05HX01BWC9z
-aXplb2YoRWxmNjRfUGhkcikpIHsKLQkJZnByaW50ZihzdGRlcnIsICJUb28gbWFueSBlbGYgcHJv
-Z3JhbSBoZWFkZXIgZW50cmllc1xuIik7Ci0JCWV4aXQoMTMpOwotCX0KIAlwaGRyczMyX3NpemUg
-PSBlaGRyLmVfcGhudW0gKiBzaXplb2YoRWxmMzJfUGhkcik7CiAJcGhkcnNfc2l6ZSA9IGVoZHIu
-ZV9waG51bSAqIHNpemVvZihFbGY2NF9QaGRyKTsKIAlwaGRyMzIgPSBjYWxsb2MoZWhkci5lX3Bo
-bnVtLCBzaXplb2YoRWxmMzJfUGhkcikpOwpAQCAtMTg5LDEwICsxODUsNiBAQCBzdGF0aWMgdm9p
-ZCByZWFkX2VsZjY0KGludCBmZCkKIAkJCWVoZHIuZV9waGVudHNpemUsIHNpemVvZihFbGY2NF9Q
-aGRyKSk7CiAJCWV4aXQoMTIpOwogCX0KLQlpZiAoZWhkci5lX3BobnVtID4gVUxPTkdfTUFYL3Np
-emVvZihFbGY2NF9QaGRyKSkgewotCQlmcHJpbnRmKHN0ZGVyciwgIlRvbyBtYW55IHByb2dyYW0g
-aGVhZGVyIGVudHJpZXNcbiIpOwotCQlleGl0KDEzKTsKLQl9CiAJcGhkcnNfc2l6ZSA9IGVoZHIu
-ZV9waG51bSAqIHNpemVvZihFbGY2NF9QaGRyKTsKIAlwaGRyNjQgPSBjYWxsb2MoZWhkci5lX3Bo
-bnVtLCBzaXplb2YoRWxmNjRfUGhkcikpOwogCWlmICghcGhkcjY0KSB7Ci0tIAoxLjcuMi4zCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ vmcore-dmesg/vmcore-dmesg.c |   12 ++++--------
+ 1 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+index 365e293..f7eef16 100644
+--- a/vmcore-dmesg/vmcore-dmesg.c
++++ b/vmcore-dmesg/vmcore-dmesg.c
+@@ -79,8 +79,7 @@ static void read_elf32(int fd)
+ {
+ 	Elf32_Ehdr ehdr32;
+ 	Elf32_Phdr *phdr32;
+-	size_t phdrs32_size, phdrs_size;
+-	ssize_t ret, i;
++	ssize_t phdrs32_size, phdrs_size, ret, i;
+ 
+ 	ret = pread(fd, &ehdr32, sizeof(ehdr32), 0);
+ 	if (ret != sizeof(ehdr32)) {
+@@ -151,8 +150,7 @@ static void read_elf64(int fd)
+ {
+ 	Elf64_Ehdr ehdr64;
+ 	Elf64_Phdr *phdr64;
+-	size_t phdrs_size;
+-	ssize_t ret, i;
++	size_t phdrs_size, ret, i;
+ 
+ 	ret = pread(fd, &ehdr64, sizeof(ehdr64), 0);
+ 	if (ret != sizeof(ehdr)) {
+@@ -240,8 +238,7 @@ static void scan_vmcoreinfo(char *start, size_t size)
+ 	};
+ 
+ 	for (pos = start; pos <= last; pos = eol + 1) {
+-		size_t len;
+-		int i;
++		size_t len, i;
+ 		/* Find the end of the current line */
+ 		for (eol = pos; (eol <= last) && (*eol != '\n') ; eol++)
+ 			;
+@@ -274,8 +271,7 @@ static void scan_vmcoreinfo(char *start, size_t size)
+ static void scan_notes(int fd, loff_t start, loff_t lsize)
+ {
+ 	char *buf, *last, *note, *next;
+-	size_t size;
+-	ssize_t ret;
++	ssize_t size, ret;
+ 
+ 	if (lsize > LONG_MAX) {
+ 		fprintf(stderr, "Unable to handle note section of %llu bytes\n",
+-- 
+1.7.2.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
