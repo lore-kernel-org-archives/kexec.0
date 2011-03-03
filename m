@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PvGOT-0002qI-CG
-	for kexec@lists.infradead.org; Thu, 03 Mar 2011 21:49:10 +0000
+	id 1PvGPW-0002qm-GR
+	for kexec@lists.infradead.org; Thu, 03 Mar 2011 21:50:15 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-Date: Thu, 03 Mar 2011 13:48:54 -0800
-Message-ID: <m1k4gfswmx.fsf@fess.ebiederm.org>
+References: <1299105976-11360-1-git-send-email-horms@verge.net.au>
+Date: Thu, 03 Mar 2011 13:50:09 -0800
+In-Reply-To: <1299105976-11360-1-git-send-email-horms@verge.net.au> (Simon
+	Horman's message of "Thu, 3 Mar 2011 07:46:15 +0900")
+Message-ID: <m1ei6nswku.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: [PULL] x86_64 kdump fixes
+Subject: Re: [PATCH 1/2] Remove bogus check for too many program headers
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,29 +19,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+Cc: kexec@lists.infradead.org
 
-
-These are bug fixes that were tested several months ago and I forgot to
-ask for them to be pulled.  I have tested against the latest tree and
-these changes still apply and build cleanly.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/kexec-tools-devel.git 
-
-
-Eric W. Biederman (2):
-      kexec-syscall.h: Document what the architecture default arch is.
-      x86 crashdump: On x86_64 generate EM_X86_64 crashdump headers.
-
-Eric
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+U2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdyaXRlczoKCj4gVGhpcyB0ZXN0IGFw
+cGVhcnMgYm9ndXMgYmVjYXVzZSB0aGUgZV9waG51bSBlbGVtZW50IG9mIEVsZjMyX1BoZHIgYW5k
+Cj4gaXMgYW4gdW5zaWduZWQgMTZiaXQgZW50aXR5LgoKVGhlIHRlc3QgaXMgYSBiYXNpYyBzYW5p
+dHkgY2hlY2ssIHRoYXQgYXBwYXJlbnRseSBjYW4gbmV2ZXIgZmFpbC4gIFNvIEkKc2VlIG5vIGhh
+cm0gaW4gcmVtb3ZpbmcgaXQuCgpSZXZpZXdlZC1ieTogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJp
+ZWRlcm1AeG1pc3Npb24uY29tPgoKCj4gVGhpcyBhZGRyZXNzZXMgdGhlIGZvbGxvd2luZyB3YXJu
+aW5nczoKPgo+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzogSW4gZnVuY3Rpb24gJ3JlYWRf
+ZWxmMzInOgo+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzoxMTY6IHdhcm5pbmc6IGNvbXBh
+cmlzb24gaXMgYWx3YXlzIGZhbHNlIGR1ZSB0byBsaW1pdGVkIHJhbmdlIG9mIGRhdGEgdHlwZQo+
+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzogSW4gZnVuY3Rpb24g4oCYcmVhZF9lbGY2NOKA
+mToKPiB2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmM6MTkyOiB3YXJuaW5nOiBjb21wYXJpc29u
+IGlzIGFsd2F5cyBmYWxzZSBkdWUgdG8gbGltaXRlZCByYW5nZSBvZiBkYXRhIHR5cGUKPgo+IENj
+OiBFcmljIFcuIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IFNpZ25lZC1vZmYt
+Ynk6IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pgo+IC0tLQo+ICB2bWNvcmUtZG1l
+c2cvdm1jb3JlLWRtZXNnLmMgfCAgICA4IC0tLS0tLS0tCj4gIDEgZmlsZXMgY2hhbmdlZCwgMCBp
+bnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL3ZtY29yZS1kbWVz
+Zy92bWNvcmUtZG1lc2cuYyBiL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+IGluZGV4IDcw
+MTU4OTQuLjM2NWUyOTMgMTAwNjQ0Cj4gLS0tIGEvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5j
+Cj4gKysrIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gQEAgLTExMywxMCArMTEzLDYg
+QEAgc3RhdGljIHZvaWQgcmVhZF9lbGYzMihpbnQgZmQpCj4gIAkJCWVoZHIuZV9waGVudHNpemUs
+IHNpemVvZihFbGYzMl9QaGRyKSk7Cj4gIAkJZXhpdCgxMik7Cj4gIAl9Cj4gLQlpZiAoZWhkci5l
+X3BobnVtID4gVUxPTkdfTUFYL3NpemVvZihFbGY2NF9QaGRyKSkgewo+IC0JCWZwcmludGYoc3Rk
+ZXJyLCAiVG9vIG1hbnkgZWxmIHByb2dyYW0gaGVhZGVyIGVudHJpZXNcbiIpOwo+IC0JCWV4aXQo
+MTMpOwo+IC0JfQo+ICAJcGhkcnMzMl9zaXplID0gZWhkci5lX3BobnVtICogc2l6ZW9mKEVsZjMy
+X1BoZHIpOwo+ICAJcGhkcnNfc2l6ZSA9IGVoZHIuZV9waG51bSAqIHNpemVvZihFbGY2NF9QaGRy
+KTsKPiAgCXBoZHIzMiA9IGNhbGxvYyhlaGRyLmVfcGhudW0sIHNpemVvZihFbGYzMl9QaGRyKSk7
+Cj4gQEAgLTE4OSwxMCArMTg1LDYgQEAgc3RhdGljIHZvaWQgcmVhZF9lbGY2NChpbnQgZmQpCj4g
+IAkJCWVoZHIuZV9waGVudHNpemUsIHNpemVvZihFbGY2NF9QaGRyKSk7Cj4gIAkJZXhpdCgxMik7
+Cj4gIAl9Cj4gLQlpZiAoZWhkci5lX3BobnVtID4gVUxPTkdfTUFYL3NpemVvZihFbGY2NF9QaGRy
+KSkgewo+IC0JCWZwcmludGYoc3RkZXJyLCAiVG9vIG1hbnkgcHJvZ3JhbSBoZWFkZXIgZW50cmll
+c1xuIik7Cj4gLQkJZXhpdCgxMyk7Cj4gLQl9Cj4gIAlwaGRyc19zaXplID0gZWhkci5lX3BobnVt
+ICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+ICAJcGhkcjY0ID0gY2FsbG9jKGVoZHIuZV9waG51bSwg
+c2l6ZW9mKEVsZjY0X1BoZHIpKTsKPiAgCWlmICghcGhkcjY0KSB7CgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
