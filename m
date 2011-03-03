@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PvGPW-0002qm-GR
-	for kexec@lists.infradead.org; Thu, 03 Mar 2011 21:50:15 +0000
+	id 1PvGSs-0002sT-4t
+	for kexec@lists.infradead.org; Thu, 03 Mar 2011 21:53:42 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <1299105976-11360-1-git-send-email-horms@verge.net.au>
-Date: Thu, 03 Mar 2011 13:50:09 -0800
-In-Reply-To: <1299105976-11360-1-git-send-email-horms@verge.net.au> (Simon
-	Horman's message of "Thu, 3 Mar 2011 07:46:15 +0900")
-Message-ID: <m1ei6nswku.fsf@fess.ebiederm.org>
+	<1299105976-11360-2-git-send-email-horms@verge.net.au>
+Date: Thu, 03 Mar 2011 13:53:33 -0800
+In-Reply-To: <1299105976-11360-2-git-send-email-horms@verge.net.au> (Simon
+	Horman's message of "Thu, 3 Mar 2011 07:46:16 +0900")
+Message-ID: <m162rzswf6.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] Remove bogus check for too many program headers
+Subject: Re: [PATCH 2/2] Avoid signed/unsigned comparsions
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,46 +20,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-U2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdyaXRlczoKCj4gVGhpcyB0ZXN0IGFw
-cGVhcnMgYm9ndXMgYmVjYXVzZSB0aGUgZV9waG51bSBlbGVtZW50IG9mIEVsZjMyX1BoZHIgYW5k
-Cj4gaXMgYW4gdW5zaWduZWQgMTZiaXQgZW50aXR5LgoKVGhlIHRlc3QgaXMgYSBiYXNpYyBzYW5p
-dHkgY2hlY2ssIHRoYXQgYXBwYXJlbnRseSBjYW4gbmV2ZXIgZmFpbC4gIFNvIEkKc2VlIG5vIGhh
-cm0gaW4gcmVtb3ZpbmcgaXQuCgpSZXZpZXdlZC1ieTogIkVyaWMgVy4gQmllZGVybWFuIiA8ZWJp
-ZWRlcm1AeG1pc3Npb24uY29tPgoKCj4gVGhpcyBhZGRyZXNzZXMgdGhlIGZvbGxvd2luZyB3YXJu
-aW5nczoKPgo+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzogSW4gZnVuY3Rpb24gJ3JlYWRf
-ZWxmMzInOgo+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzoxMTY6IHdhcm5pbmc6IGNvbXBh
-cmlzb24gaXMgYWx3YXlzIGZhbHNlIGR1ZSB0byBsaW1pdGVkIHJhbmdlIG9mIGRhdGEgdHlwZQo+
-IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzogSW4gZnVuY3Rpb24g4oCYcmVhZF9lbGY2NOKA
-mToKPiB2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmM6MTkyOiB3YXJuaW5nOiBjb21wYXJpc29u
-IGlzIGFsd2F5cyBmYWxzZSBkdWUgdG8gbGltaXRlZCByYW5nZSBvZiBkYXRhIHR5cGUKPgo+IENj
-OiBFcmljIFcuIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IFNpZ25lZC1vZmYt
-Ynk6IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pgo+IC0tLQo+ICB2bWNvcmUtZG1l
-c2cvdm1jb3JlLWRtZXNnLmMgfCAgICA4IC0tLS0tLS0tCj4gIDEgZmlsZXMgY2hhbmdlZCwgMCBp
-bnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL3ZtY29yZS1kbWVz
-Zy92bWNvcmUtZG1lc2cuYyBiL3ZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYwo+IGluZGV4IDcw
-MTU4OTQuLjM2NWUyOTMgMTAwNjQ0Cj4gLS0tIGEvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5j
-Cj4gKysrIGIvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gQEAgLTExMywxMCArMTEzLDYg
-QEAgc3RhdGljIHZvaWQgcmVhZF9lbGYzMihpbnQgZmQpCj4gIAkJCWVoZHIuZV9waGVudHNpemUs
-IHNpemVvZihFbGYzMl9QaGRyKSk7Cj4gIAkJZXhpdCgxMik7Cj4gIAl9Cj4gLQlpZiAoZWhkci5l
-X3BobnVtID4gVUxPTkdfTUFYL3NpemVvZihFbGY2NF9QaGRyKSkgewo+IC0JCWZwcmludGYoc3Rk
-ZXJyLCAiVG9vIG1hbnkgZWxmIHByb2dyYW0gaGVhZGVyIGVudHJpZXNcbiIpOwo+IC0JCWV4aXQo
-MTMpOwo+IC0JfQo+ICAJcGhkcnMzMl9zaXplID0gZWhkci5lX3BobnVtICogc2l6ZW9mKEVsZjMy
-X1BoZHIpOwo+ICAJcGhkcnNfc2l6ZSA9IGVoZHIuZV9waG51bSAqIHNpemVvZihFbGY2NF9QaGRy
-KTsKPiAgCXBoZHIzMiA9IGNhbGxvYyhlaGRyLmVfcGhudW0sIHNpemVvZihFbGYzMl9QaGRyKSk7
-Cj4gQEAgLTE4OSwxMCArMTg1LDYgQEAgc3RhdGljIHZvaWQgcmVhZF9lbGY2NChpbnQgZmQpCj4g
-IAkJCWVoZHIuZV9waGVudHNpemUsIHNpemVvZihFbGY2NF9QaGRyKSk7Cj4gIAkJZXhpdCgxMik7
-Cj4gIAl9Cj4gLQlpZiAoZWhkci5lX3BobnVtID4gVUxPTkdfTUFYL3NpemVvZihFbGY2NF9QaGRy
-KSkgewo+IC0JCWZwcmludGYoc3RkZXJyLCAiVG9vIG1hbnkgcHJvZ3JhbSBoZWFkZXIgZW50cmll
-c1xuIik7Cj4gLQkJZXhpdCgxMyk7Cj4gLQl9Cj4gIAlwaGRyc19zaXplID0gZWhkci5lX3BobnVt
-ICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+ICAJcGhkcjY0ID0gY2FsbG9jKGVoZHIuZV9waG51bSwg
-c2l6ZW9mKEVsZjY0X1BoZHIpKTsKPiAgCWlmICghcGhkcjY0KSB7CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+Simon Horman <horms@verge.net.au> writes:
+
+At least the change of ret from ssize_t to size_t is bogus.
+pread returns a ssize_t and I am comparing it against sizeof(X).  We
+might as we type convert in the comparison.   That test is a necessary 
+and real comparison and I don't think hiding that fact with an implicit
+conversion does anything but obfuscate things.
+
+> Cc: Eric W. Biederman <ebiederm@xmission.com>
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> ---
+>  vmcore-dmesg/vmcore-dmesg.c |   12 ++++--------
+>  1 files changed, 4 insertions(+), 8 deletions(-)
+>
+> diff --git a/vmcore-dmesg/vmcore-dmesg.c b/vmcore-dmesg/vmcore-dmesg.c
+> index 365e293..f7eef16 100644
+> --- a/vmcore-dmesg/vmcore-dmesg.c
+> +++ b/vmcore-dmesg/vmcore-dmesg.c
+> @@ -79,8 +79,7 @@ static void read_elf32(int fd)
+>  {
+>  	Elf32_Ehdr ehdr32;
+>  	Elf32_Phdr *phdr32;
+> -	size_t phdrs32_size, phdrs_size;
+> -	ssize_t ret, i;
+> +	ssize_t phdrs32_size, phdrs_size, ret, i;
+>  
+>  	ret = pread(fd, &ehdr32, sizeof(ehdr32), 0);
+>  	if (ret != sizeof(ehdr32)) {
+> @@ -151,8 +150,7 @@ static void read_elf64(int fd)
+>  {
+>  	Elf64_Ehdr ehdr64;
+>  	Elf64_Phdr *phdr64;
+> -	size_t phdrs_size;
+> -	ssize_t ret, i;
+> +	size_t phdrs_size, ret, i;
+>  
+>  	ret = pread(fd, &ehdr64, sizeof(ehdr64), 0);
+>  	if (ret != sizeof(ehdr)) {
+> @@ -240,8 +238,7 @@ static void scan_vmcoreinfo(char *start, size_t size)
+>  	};
+>  
+>  	for (pos = start; pos <= last; pos = eol + 1) {
+> -		size_t len;
+> -		int i;
+> +		size_t len, i;
+>  		/* Find the end of the current line */
+>  		for (eol = pos; (eol <= last) && (*eol != '\n') ; eol++)
+>  			;
+> @@ -274,8 +271,7 @@ static void scan_vmcoreinfo(char *start, size_t size)
+>  static void scan_notes(int fd, loff_t start, loff_t lsize)
+>  {
+>  	char *buf, *last, *note, *next;
+> -	size_t size;
+> -	ssize_t ret;
+> +	ssize_t size, ret;
+>  
+>  	if (lsize > LONG_MAX) {
+>  		fprintf(stderr, "Unable to handle note section of %llu bytes\n",
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
