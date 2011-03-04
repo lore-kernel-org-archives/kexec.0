@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1PvIcE-0004JL-Pj
-	for kexec@lists.infradead.org; Fri, 04 Mar 2011 00:11:32 +0000
-Date: Fri, 4 Mar 2011 09:11:27 +0900
+	id 1PvIkZ-0004NZ-DO
+	for kexec@lists.infradead.org; Fri, 04 Mar 2011 00:20:08 +0000
+Date: Fri, 4 Mar 2011 09:20:03 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] Remove bogus check for too many program headers
-Message-ID: <20110304001127.GC15019@verge.net.au>
-References: <1299105976-11360-1-git-send-email-horms@verge.net.au>
-	<m1ei6nswku.fsf@fess.ebiederm.org>
+Subject: Re: [PULL] x86_64 kdump fixes
+Message-ID: <20110304002003.GH15019@verge.net.au>
+References: <m1k4gfswmx.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m1ei6nswku.fsf@fess.ebiederm.org>
+In-Reply-To: <m1k4gfswmx.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,49 +19,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-T24gVGh1LCBNYXIgMDMsIDIwMTEgYXQgMDE6NTA6MDlQTSAtMDgwMCwgRXJpYyBXLiBCaWVkZXJt
-YW4gd3JvdGU6Cj4gU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+IHdyaXRlczoKPiAK
-PiA+IFRoaXMgdGVzdCBhcHBlYXJzIGJvZ3VzIGJlY2F1c2UgdGhlIGVfcGhudW0gZWxlbWVudCBv
-ZiBFbGYzMl9QaGRyIGFuZAo+ID4gaXMgYW4gdW5zaWduZWQgMTZiaXQgZW50aXR5Lgo+IAo+IFRo
-ZSB0ZXN0IGlzIGEgYmFzaWMgc2FuaXR5IGNoZWNrLCB0aGF0IGFwcGFyZW50bHkgY2FuIG5ldmVy
-IGZhaWwuICBTbyBJCj4gc2VlIG5vIGhhcm0gaW4gcmVtb3ZpbmcgaXQuCgpUaGFua3MsIEkgd2ls
-bCBwdXNoIHRoaXMgY2hhbmdlLgoKPiBSZXZpZXdlZC1ieTogIkVyaWMgVy4gQmllZGVybWFuIiA8
-ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IAo+IAo+ID4gVGhpcyBhZGRyZXNzZXMgdGhlIGZvbGxv
-d2luZyB3YXJuaW5nczoKPiA+Cj4gPiB2bWNvcmUtZG1lc2cvdm1jb3JlLWRtZXNnLmM6IEluIGZ1
-bmN0aW9uICdyZWFkX2VsZjMyJzoKPiA+IHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYzoxMTY6
-IHdhcm5pbmc6IGNvbXBhcmlzb24gaXMgYWx3YXlzIGZhbHNlIGR1ZSB0byBsaW1pdGVkIHJhbmdl
-IG9mIGRhdGEgdHlwZQo+ID4gdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jOiBJbiBmdW5jdGlv
-biDigJhyZWFkX2VsZjY04oCZOgo+ID4gdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jOjE5Mjog
-d2FybmluZzogY29tcGFyaXNvbiBpcyBhbHdheXMgZmFsc2UgZHVlIHRvIGxpbWl0ZWQgcmFuZ2Ug
-b2YgZGF0YSB0eXBlCj4gPgo+ID4gQ2M6IEVyaWMgVy4gQmllZGVybWFuIDxlYmllZGVybUB4bWlz
-c2lvbi5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5l
-dC5hdT4KPiA+IC0tLQo+ID4gIHZtY29yZS1kbWVzZy92bWNvcmUtZG1lc2cuYyB8ICAgIDggLS0t
-LS0tLS0KPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDAgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMo
-LSkKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jIGIvdm1j
-b3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gPiBpbmRleCA3MDE1ODk0Li4zNjVlMjkzIDEwMDY0
-NAo+ID4gLS0tIGEvdm1jb3JlLWRtZXNnL3ZtY29yZS1kbWVzZy5jCj4gPiArKysgYi92bWNvcmUt
-ZG1lc2cvdm1jb3JlLWRtZXNnLmMKPiA+IEBAIC0xMTMsMTAgKzExMyw2IEBAIHN0YXRpYyB2b2lk
-IHJlYWRfZWxmMzIoaW50IGZkKQo+ID4gIAkJCWVoZHIuZV9waGVudHNpemUsIHNpemVvZihFbGYz
-Ml9QaGRyKSk7Cj4gPiAgCQlleGl0KDEyKTsKPiA+ICAJfQo+ID4gLQlpZiAoZWhkci5lX3BobnVt
-ID4gVUxPTkdfTUFYL3NpemVvZihFbGY2NF9QaGRyKSkgewo+ID4gLQkJZnByaW50ZihzdGRlcnIs
-ICJUb28gbWFueSBlbGYgcHJvZ3JhbSBoZWFkZXIgZW50cmllc1xuIik7Cj4gPiAtCQlleGl0KDEz
-KTsKPiA+IC0JfQo+ID4gIAlwaGRyczMyX3NpemUgPSBlaGRyLmVfcGhudW0gKiBzaXplb2YoRWxm
-MzJfUGhkcik7Cj4gPiAgCXBoZHJzX3NpemUgPSBlaGRyLmVfcGhudW0gKiBzaXplb2YoRWxmNjRf
-UGhkcik7Cj4gPiAgCXBoZHIzMiA9IGNhbGxvYyhlaGRyLmVfcGhudW0sIHNpemVvZihFbGYzMl9Q
-aGRyKSk7Cj4gPiBAQCAtMTg5LDEwICsxODUsNiBAQCBzdGF0aWMgdm9pZCByZWFkX2VsZjY0KGlu
-dCBmZCkKPiA+ICAJCQllaGRyLmVfcGhlbnRzaXplLCBzaXplb2YoRWxmNjRfUGhkcikpOwo+ID4g
-IAkJZXhpdCgxMik7Cj4gPiAgCX0KPiA+IC0JaWYgKGVoZHIuZV9waG51bSA+IFVMT05HX01BWC9z
-aXplb2YoRWxmNjRfUGhkcikpIHsKPiA+IC0JCWZwcmludGYoc3RkZXJyLCAiVG9vIG1hbnkgcHJv
-Z3JhbSBoZWFkZXIgZW50cmllc1xuIik7Cj4gPiAtCQlleGl0KDEzKTsKPiA+IC0JfQo+ID4gIAlw
-aGRyc19zaXplID0gZWhkci5lX3BobnVtICogc2l6ZW9mKEVsZjY0X1BoZHIpOwo+ID4gIAlwaGRy
-NjQgPSBjYWxsb2MoZWhkci5lX3BobnVtLCBzaXplb2YoRWxmNjRfUGhkcikpOwo+ID4gIAlpZiAo
-IXBoZHI2NCkgewo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Thu, Mar 03, 2011 at 01:48:54PM -0800, Eric W. Biederman wrote:
+> 
+> These are bug fixes that were tested several months ago and I forgot to
+> ask for them to be pulled.  I have tested against the latest tree and
+> these changes still apply and build cleanly.
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/kexec-tools-devel.git 
+> 
+> 
+> Eric W. Biederman (2):
+>       kexec-syscall.h: Document what the architecture default arch is.
+>       x86 crashdump: On x86_64 generate EM_X86_64 crashdump headers.
+
+Thanks, applied.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
