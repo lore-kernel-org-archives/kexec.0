@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from mail-vw0-f49.google.com ([209.85.212.49])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PxIJ3-0003Ue-H0
-	for kexec@lists.infradead.org; Wed, 09 Mar 2011 12:15:58 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id p29CFo2V028735
-	for <kexec@lists.infradead.org>; Wed, 9 Mar 2011 23:15:50 +1100
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p29CFo382539678
-	for <kexec@lists.infradead.org>; Wed, 9 Mar 2011 23:15:50 +1100
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p29CFolp024125
-	for <kexec@lists.infradead.org>; Wed, 9 Mar 2011 23:15:50 +1100
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: Copy correct nr_cpus info to dumpfile during
-	re-filtering
-Date: Wed, 09 Mar 2011 17:45:48 +0530
-Message-ID: <20110309121506.13403.73845.stgit@mars.in.ibm.com>
+	id 1PxINx-0003X3-15
+	for kexec@lists.infradead.org; Wed, 09 Mar 2011 12:21:01 +0000
+Received: by vws7 with SMTP id 7so412909vws.36
+	for <kexec@lists.infradead.org>; Wed, 09 Mar 2011 04:20:59 -0800 (PST)
+Date: Wed, 9 Mar 2011 20:20:46 +0800
+From: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>
+Subject: Re: [PATCH 1/2] kdump: Allow shrinking of kdump region to be
+	overridden
+Message-ID: <20110309122046.GC16951@cr0.redhat.com>
+References: <20100825002258.GD28360@kryten> <m139u37cii.fsf@fess.ebiederm.org>
+	<4D771EE6.5050404@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4D771EE6.5050404@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,37 +27,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>, Dave Anderson <anderson@redhat.com>
+To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, Anton Blanchard <anton@samba.org>
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+On Wed, Mar 09, 2011 at 12:02:06PM +0530, Mahesh Jagannath Salgaonkar wrote:
+>On 08/25/2010 06:07 AM, Eric W. Biederman wrote:
+>> Anton Blanchard <anton@samba.org> writes:
+>> 
+>>> On ppc64 the crashkernel region almost always overlaps an area of firmware.
+>>> This works fine except when using the sysfs interface to reduce the kdump
+>>> region. If we free the firmware area we are guaranteed to crash.
+>> 
+>> That is ppc64 bug.  firmware should not be in the reserved region.  Any
+>> random kernel like thing can be put in to that region at any valid
+>> address and the fact that shrinking the region frees your firmware means
+>> that using that region could also stomp your firmware (which I assume
+>> would be a bad thing).
+>The issue only happens while shrinking the region using sysfs interface.
+>We already have checks in kexec for not to stomp over on the firmware
+>overlap area while loading capture kernel. Currently we do a top-down
+>allocation for the firmware region which means it sits at the top of the
+>RMO, right in the middle of the crashdump region. We can not move the
+>crashkernel region beyond firmware region because kernel needs its some
+>of memory in RMO region.
 
-During re-filtering nr_cpus is to 0 in the o/p dumpfile and hence crash
-utility fails to open the re-filtered dumpfile.
+The crashkernel region is specified via kernel cmdline, so why
+not just drop a failure when it overlaps with RMO region?
+Am I missing something?
 
-This patch fixes this issue by copying nr_cpus info from kdump-compressed
-dumpfile to info->nr_cpus which then get's correctly copied to o/p
-dumpfile.
-
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
-
- makedumpfile.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index a0fad6a..7d0c663 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -924,6 +924,7 @@ get_kdump_compressed_header_info(char *filename)
- 		goto error;
- 	}
- 	memcpy(info->kh_memory, &kh, sizeof(kh));
-+	info->nr_cpus = dh.nr_cpus;
- 
- 	if (dh.header_version >= 3) {
- 		/* A dumpfile contains vmcoreinfo data. */
-
+Thanks.
 
 _______________________________________________
 kexec mailing list
