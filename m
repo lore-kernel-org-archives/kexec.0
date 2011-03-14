@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Pz1EV-0005ky-Gg
-	for kexec@lists.infradead.org; Mon, 14 Mar 2011 06:26:25 +0000
+	id 1Pz16q-0005jM-A4
+	for kexec@lists.infradead.org; Mon, 14 Mar 2011 06:18:30 +0000
 Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
-	by e23smtp06.au.ibm.com (8.14.4/8.13.1) with ESMTP id p2E6QFxx023044
-	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:26:15 +1100
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+	by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id p2E6IOKF016294
+	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:18:24 +1100
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
 	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p2E6QJWR2367592
-	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:26:19 +1100
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p2E6QJJD005888
-	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:26:19 +1100
-Message-ID: <4D7DB509.5070107@linux.vnet.ibm.com>
-Date: Mon, 14 Mar 2011 11:56:17 +0530
+	p2E6IOar2064474
+	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:18:24 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p2E6INZh016646
+	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 17:18:24 +1100
+Message-ID: <4D7DB32B.9030705@linux.vnet.ibm.com>
+Date: Mon, 14 Mar 2011 11:48:19 +0530
 From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v1 0/6] makedumpfile: makedumpfile enhancement to filter
 	out kernel data from vmcore
-References: <20110311075647.14587.50626.stgit@mars.in.ibm.com>
-	<20110314105545.547fbac8.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110314105545.547fbac8.oomichi@mxs.nes.nec.co.jp>
+References: <1823425025.382709.1299852470929.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <1823425025.382709.1299852470929.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,15 +34,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Dave Anderson <anderson@redhat.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Reinhard <BUENDGEN@de.ibm.com>
 
-On 03/14/2011 07:25 AM, Ken'ichi Ohmichi wrote:
+On 03/11/2011 07:37 PM, Dave Anderson wrote:
 > 
-> Hi Mahesh,
 > 
-> On Fri, 11 Mar 2011 13:34:32 +0530
-> Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+> ----- Original Message -----
+>> Hi All,
 >>
 >> Please find the makedumpfile enhancement patchset that introduces a data
 >> filtering feature which enables makedumpfile to filter out desired kernel
@@ -59,38 +57,70 @@ On 03/14/2011 07:25 AM, Ken'ichi Ohmichi wrote:
 >> filtered out while creating o/p DUMPFILE. The Syntax for filter commands are
 >> provided in the filter.conf(8) man page.
 >>
->> The first 4 patches prepares the base work for filtering framework. The last 2
+>> The first 4 patches prepares the base work for filtering framework.  The last 2
 >> patches implements the generic filtering framework to erase desired kernel
 >> data.
 >>
 >> I have tested these patches on x86_64 and s390x architecture against RHEL6 GA
->> kernel. The feature supports filtering data from ELF as well as
->> kdump-compressed formatted dump.
+>> kernel. The feature supports filtering data from ELF as well as kdump-compressed
+>> formatted dump.
 >>
 >> Please review the patchset and let me know your comments.
+>>
+>> Thanks,
+>> -Mahesh.
 > 
-> This patchset is interesting, and I start reviewing.
-> I haven't reviewed the code yet, and this is a quick review.
+> Hi Mahesh,
 > 
-> * About the filename of configuration.
->   Is filter.conf only for makedumpfile command ?
->   If so, I feel filter.conf is too generic file name.
->   How about makedumpfile.conf ?
+> Is there any notation in the filtered ELF kdump or compressed kdump file
+> that filtering has been done?  Given that there may be potential ramifications
+> in crash utility behavior (or outright failure?), the crash utility should
+> display a warning message early on during invocation.
 
-:-) I initially started with that name. But since it was only for
-filtering purpose I went for filter.conf. However, I am ok with the name
-makdumpfile.conf
-> 
->   If makedumpfile.conf, it is clear that the file is only for
->   makedumpfile, and we will be able to use the file for not only
->   erasing secret data but also other purpose.
->   (ex: specifying the other options like -d 31 in the file)
+Hmm... I did not think about it. I am thinking of following approach:
 
-Agree, Makes sense.
+- Set a bit in dump_level (DL_FILTER_KERNEL_DATA => 0x800) that will
+denote that filtering has been done.
+- For compressed kdump file we anyway have dump_level available in kdump
+sub header
+- For ELF kdump, currently we do not have any way to convey dump_level
+info to crash utility (Ken'chi, correct me if I am wrong). How about
+introducing an additional ELF note (NT_DUMP_LEVEL) that will include
+dump_level info.
+
+Any other suggestions are welcome.
+
+Thanks,
+-Mahesh.
+> 
+> Thanks,
+>   Dave
 > 
 > 
-> Thanks
-> Ken'ichi Ohmichi
+>> ---
+>>
+>> Mahesh Salgaonkar (6):
+>> makedumpfile: Add '--config' option to specify filter config file.
+>> makedumpfile: Apply relocation while loading module debuginfo.
+>> makedumpfile: Load the module symbol data from vmcore.
+>> makedumpfile: Introduce routines to get type name from debuginfo.
+>> makedumpfile: Read and process filter commands from config file.
+>> makedumpfile: Read and process 'for' command from config file.
+>>
+>>
+>> Makefile | 8
+>> filter.conf | 149 ++++
+>> filter.conf.8 | 419 +++++++++++
+>> makedumpfile.8 | 20 +
+>> makedumpfile.c | 2113
+>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+>> makedumpfile.h | 152 ++++
+>> 6 files changed, 2782 insertions(+), 79 deletions(-)
+>> create mode 100644 filter.conf
+>> create mode 100644 filter.conf.8
+>>
+>> --
+>> Signature
 
 
 _______________________________________________
