@@ -1,19 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PzNYk-0006Xk-4z
-	for kexec@lists.infradead.org; Tue, 15 Mar 2011 06:16:47 +0000
-Date: Tue, 15 Mar 2011 15:12:47 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH v1 0/6] makedumpfile: makedumpfile enhancement to filter
-	out kernel data from vmcore
-Message-Id: <20110315151247.23fc84bc.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <4D7EF934.3090008@linux.vnet.ibm.com>
-References: <20110311075647.14587.50626.stgit@mars.in.ibm.com>
-	<1823425025.382709.1299852470929.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-	<20110314114457.7e252f0d.oomichi@mxs.nes.nec.co.jp>
-	<4D7EF934.3090008@linux.vnet.ibm.com>
-Mime-Version: 1.0
+	id 1PzP3Y-00070Q-GE
+	for kexec@lists.infradead.org; Tue, 15 Mar 2011 07:52:41 +0000
+Received: by iyf40 with SMTP id 40so382059iyf.36
+	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 00:52:39 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20110314181315.GA16075@in.ibm.com>
+References: <20100825002258.GD28360@kryten> <m139u37cii.fsf@fess.ebiederm.org>
+	<4D771EE6.5050404@linux.vnet.ibm.com>
+	<20110309122046.GC16951@cr0.redhat.com>
+	<20110309234657.264d3080@kryten>
+	<20110309142108.GD16951@cr0.redhat.com>
+	<20110314181315.GA16075@in.ibm.com>
+Date: Tue, 15 Mar 2011 15:52:38 +0800
+Message-ID: <AANLkTi=aDzCaa7_=5XTrnJCzmZPrDy3omXwDarEF8XmH@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kdump: Allow shrinking of kdump region to be
+	overridden
+From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,116 +30,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: mahesh@linux.vnet.ibm.com
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, Anton Blanchard <anton@samba.org>
 
+On Tue, Mar 15, 2011 at 2:13 AM, Mahesh J Salgaonkar
+<mahesh@linux.vnet.ibm.com> wrote:
+>
+> During free we do free all of them including RMO region. But since the rtas
+> region is always on top of RMO, crashkernel memory overlaps rtas region and
+> we endup freeing that even, which is causing the crash.
+>
 
-Hi Mahesh,
+Okay, but with this patch applied, we will just ignore rtas region, right?
+Thus, when I echo 0 to free all the 128M crashkernel memory, the final
+result will be 32M left, which means crash_size will still show 32M.
+This looks odd.
 
-On Tue, 15 Mar 2011 10:59:24 +0530
-Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> >>
-> >> Is there any notation in the filtered ELF kdump or compressed kdump file
-> >> that filtering has been done?  Given that there may be potential ramifications
-> >> in crash utility behavior (or outright failure?), the crash utility should
-> >> display a warning message early on during invocation.
-> > 
-> > That is a good point.
-> > 
-> > How about adding new members (like offset_eraseinfo, size_eraseinfo)
-> > into the sub header in compressed kdump file, and setting version 5
-> > in the header version (disk_dump_header.header_version) ?
-> > These members show the erased information like the following:
-> > 
-> > struct kdump_sub_header {
-> >         unsigned long   phys_base;
-> >         int             dump_level;     /* header_version 1 and later */
-> >         int             split;          /* header_version 2 and later */
-> >         unsigned long   start_pfn;      /* header_version 2 and later */
-> >         unsigned long   end_pfn;        /* header_version 2 and later */
-> >         off_t           offset_vmcoreinfo;/* header_version 3 and later */
-> >         unsigned long   size_vmcoreinfo;  /* header_version 3 and later */
-> >         off_t           offset_note;      /* header_version 4 and later */
-> >         unsigned long   size_note;        /* header_version 4 and later */
-> > +       off_t           offset_eraseinfo; /* header_version 5 and later */
-> > +       unsigned long   size_eraseinfo;   /* header_version 5 and later */
-> > };
-> > 
-> > The erased information contains only effective lines in the
-> > configuration file.
-> 
-> Do you mean the info would contain symbol name/expression, resolved
-> symbol/vmalloc addresses and its sizes that got filtered out?
-> 
-> What I mean by symbol expression is, user can ask makedumpfile to erase
-> a data referred by a member from the symbol variable of structure type.
-> e.g.
-> 	struct S1 {
-> 		int a;
-> 	};
-> 	struct S2 {
-> 		struct S1 *mystruct1;
-> 	};
-> 
-> 	struct S2 mystruct2;
-> 
-> 	#Filter command
-> 	erase mystruct2.mystruct1.a
-> 
-> So the erase information in kdump header would contain:
-> 
-> -----------------------------------
-> Symbol Name: mystruct2.mystruct1.a
-> Filter Addr: &mystruct2.mystruct1->a
-> Filter Size: 4	(sizeof type int)
-> -----------------------------------
-> 
-> For erase commands in loop construct we will have multiple Filter addresses.
-> 
-> Please let me know your comment on the above format.
+How about skipping the 32M as a whole? I mean once the region being freed
+has overlap with this rtas region, skip the whole rtas region, and let
+crash_size
+show 0?
 
-In my idea, offset_eraseinfo points the *file offset* of the erased
-information and size_eraseinfo is the information size.
-
-The erased information would contain *multiple* erased symbol names.
-For example, the following is based on your above example.
-
- 	struct S1 {
- 		int a;
- 		int b;
- 		int c;
- 	};
- 	struct S2 {
- 		struct S1 *mystruct1;
- 		struct S1 *mystruct2;
- 	};
- 
- 	struct S2 mystruct2;
- 
- 	#Filter command
- 	erase mystruct2.mystruct1.a
- 	erase mystruct2.mystruct1.c
- 	erase mystruct2.mystruct2.b
-
-	#The erased information
- 	erase mystruct2.mystruct1.a 4
- 	erase mystruct2.mystruct1.c 4
- 	erase mystruct2.mystruct2.b 4
-
-
-The dumpfile image :
-
-       header             dump data             the erased information
-+------------------+-----------------------+-------------------------------+
-| ................ | ..................... | erase mystruct2.mystruct1.a 4 |
-| offset_eraseinfo | ..................... | erase mystruct2.mystruct1.c 4 |
-|   size_eraseinfo | ..................... | erase mystruct2.mystruct2.b 4 |
-+------------------+-------------------------------------------------------+
-                                           : offset_eraseinfo (offset in dumpfile)
-                                            <------ size_eraseinfo ------->
-                                            
-Thanks
-Ken'ichi Ohmichi
+Thanks.
 
 _______________________________________________
 kexec mailing list
