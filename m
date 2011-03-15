@@ -1,33 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([122.248.162.5])
+Received: from e23smtp06.au.ibm.com ([202.81.31.148])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PzCGl-0002X3-0o
-	for kexec@lists.infradead.org; Mon, 14 Mar 2011 18:13:28 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp05.in.ibm.com (8.14.4/8.13.1) with ESMTP id p2EIDJ5i030575
-	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 23:43:19 +0530
-Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p2EIDJP41749242
-	for <kexec@lists.infradead.org>; Mon, 14 Mar 2011 23:43:19 +0530
-Received: from d28av04.in.ibm.com (loopback [127.0.0.1])
-	by d28av04.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p2EIDJ4s006104
-	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 05:13:19 +1100
-Date: Mon, 14 Mar 2011 23:43:15 +0530
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: Re: [PATCH 1/2] kdump: Allow shrinking of kdump region to be
-	overridden
-Message-ID: <20110314181315.GA16075@in.ibm.com>
-References: <20100825002258.GD28360@kryten> <m139u37cii.fsf@fess.ebiederm.org>
-	<4D771EE6.5050404@linux.vnet.ibm.com>
-	<20110309122046.GC16951@cr0.redhat.com>
-	<20110309234657.264d3080@kryten>
-	<20110309142108.GD16951@cr0.redhat.com>
+	id 1PzMp7-0006NZ-FP
+	for kexec@lists.infradead.org; Tue, 15 Mar 2011 05:29:38 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
+	by e23smtp06.au.ibm.com (8.14.4/8.13.1) with ESMTP id p2F5TSl3008130
+	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 16:29:28 +1100
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p2F5TXB32285674
+	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 16:29:33 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p2F5TW0p020605
+	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 16:29:33 +1100
+Message-ID: <4D7EF934.3090008@linux.vnet.ibm.com>
+Date: Tue, 15 Mar 2011 10:59:24 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110309142108.GD16951@cr0.redhat.com>
-Reply-To: mahesh@linux.vnet.ibm.com
+Subject: Re: [PATCH v1 0/6] makedumpfile: makedumpfile enhancement to filter
+	out kernel data from vmcore
+References: <20110311075647.14587.50626.stgit@mars.in.ibm.com>
+	<1823425025.382709.1299852470929.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+	<20110314114457.7e252f0d.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110314114457.7e252f0d.oomichi@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,68 +32,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: =?iso-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org, "Eric W. Biederman" <ebiederm@xmission.com>, akpm@linux-foundation.org, Anton Blanchard <anton@samba.org>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>, Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
 
-On Wed, Mar 09, 2011 at 10:21:08PM +0800, Am=E9rico Wang wrote:
-> On Wed, Mar 09, 2011 at 11:46:57PM +1100, Anton Blanchard wrote:
-> >
-> >Hi,
-> >
-> >> The crashkernel region is specified via kernel cmdline, so why
-> >> not just drop a failure when it overlaps with RMO region?
-> >> Am I missing something?
-> >
-> >Unfortunately a ppc64 kernel requires a chunk of RMO memory. We would
-> >need the ability to specify multiple crashkernel regions - about 32MB
-> >in the RMO and the rest can be anywhere. That sounds pretty fragile for
-> >a user to configure successfully on the cmdline.
-> >
-> >Thats why the ppc64 crashkernel region begins mid way through the RMO
-> >region. It means both kernels get a chunk of RMO and we only have to
-> >deal with one crashkernel reservation in all the tools and
-> >documentation.
-> >
-> =
+Hi Ken'chi,
 
-> So, when I specify 128M in cmdline, 32M of them are RMO, and the
-> rest 96M are normal memory? And when I want to free all of them,
-> actually the 32M RMO will never be freed?
+On 03/14/2011 08:14 AM, Ken'ichi Ohmichi wrote:
+> 
+> Hi Dave, Mahesh,
+> 
+> On Fri, 11 Mar 2011 09:07:50 -0500 (EST)
+> Dave Anderson <anderson@redhat.com> wrote:
+>>>
+>>> Please find the makedumpfile enhancement patchset that introduces a data
+>>> filtering feature which enables makedumpfile to filter out desired kernel
+>>> symbol data and it's members from the specified VMCORE file. The data to be
+>>> filtered out is poisoned with character 'X' (58 in Hex).
+>>>
+>>> This feature will be very useful for the customers who wants to erase the
+>>> customer sensitive data like security keys and other confidential data, in
+>>> DUMPFILE before sending it to support team for analysis.
+>>>
+>>> This feature introduces a filter config file where, using filter commands,
+>>> user can specify desired kernel data symbols and it's members that need to be
+>>> filtered out while creating o/p DUMPFILE. The Syntax for filter commands are
+>>> provided in the filter.conf(8) man page.
+>>>
+>>> The first 4 patches prepares the base work for filtering framework.  The last 2
+>>> patches implements the generic filtering framework to erase desired kernel
+>>> data.
+>>>
+>>> I have tested these patches on x86_64 and s390x architecture against RHEL6 GA
+>>> kernel. The feature supports filtering data from ELF as well as kdump-compressed
+>>> formatted dump.
+>>>
+>>> Please review the patchset and let me know your comments.
+>>>
+>>> Thanks,
+>>> -Mahesh.
+>>
+>> Hi Mahesh,
+>>
+>> Is there any notation in the filtered ELF kdump or compressed kdump file
+>> that filtering has been done?  Given that there may be potential ramifications
+>> in crash utility behavior (or outright failure?), the crash utility should
+>> display a warning message early on during invocation.
+> 
+> That is a good point.
+> 
+> How about adding new members (like offset_eraseinfo, size_eraseinfo)
+> into the sub header in compressed kdump file, and setting version 5
+> in the header version (disk_dump_header.header_version) ?
+> These members show the erased information like the following:
+> 
+> struct kdump_sub_header {
+>         unsigned long   phys_base;
+>         int             dump_level;     /* header_version 1 and later */
+>         int             split;          /* header_version 2 and later */
+>         unsigned long   start_pfn;      /* header_version 2 and later */
+>         unsigned long   end_pfn;        /* header_version 2 and later */
+>         off_t           offset_vmcoreinfo;/* header_version 3 and later */
+>         unsigned long   size_vmcoreinfo;  /* header_version 3 and later */
+>         off_t           offset_note;      /* header_version 4 and later */
+>         unsigned long   size_note;        /* header_version 4 and later */
+> +       off_t           offset_eraseinfo; /* header_version 5 and later */
+> +       unsigned long   size_eraseinfo;   /* header_version 5 and later */
+> };
+> 
+> The erased information contains only effective lines in the
+> configuration file.
 
-In ppc64 implementation the crashkernel region begins mid way through
-the RMO and spans across into the normal memory. For e.g. on power system
-with 128M RMO size, when user specifies 128M in cmdline, the crashkernel
-starts from default offset 64M through 192M. Which means 64M in RMO region
-and rest beyond RMO.
+Do you mean the info would contain symbol name/expression, resolved
+symbol/vmalloc addresses and its sizes that got filtered out?
 
- <-------------------RMO--------------->
-                             <---rtas-->
-0                    64M               128M                     End
-|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|
-           Crash_start|<------------128M----------->| Crash End
+What I mean by symbol expression is, user can ask makedumpfile to erase
+a data referred by a member from the symbol variable of structure type.
+e.g.
+	struct S1 {
+		int a;
+	};
+	struct S2 {
+		struct S1 *mystruct1;
+	};
 
-During free we do free all of them including RMO region. But since the rtas
-region is always on top of RMO, crashkernel memory overlaps rtas region and
-we endup freeing that even, which is causing the crash.
+	struct S2 mystruct2;
 
-> =
+	#Filter command
+	erase mystruct2.mystruct1.a
 
-> =
+So the erase information in kdump header would contain:
 
+-----------------------------------
+Symbol Name: mystruct2.mystruct1.a
+Filter Addr: &mystruct2.mystruct1->a
+Filter Size: 4	(sizeof type int)
+-----------------------------------
+
+For erase commands in loop construct we will have multiple Filter addresses.
+
+Please let me know your comment on the above format.
+
+Hi Dave,
+
+Do you think the above information would be enough for crash utility to
+interpret?
+
+Thanks,
+-Mahesh.
+
+> In case of ELF kdump file, how about adding a ELF note section
+> which also show the erased information ?
+> 
+> The crash utility will be able to know the name list of the
+> erased symbols from the information.
+> 
+> 
+> Thanks
+> Ken'ichi Ohmichi
+> 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
 
--- =
-
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
 _______________________________________________
 kexec mailing list
