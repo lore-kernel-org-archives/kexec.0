@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-wy0-f177.google.com ([74.125.82.177])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PzRXg-0008Dh-Uw
-	for kexec@lists.infradead.org; Tue, 15 Mar 2011 10:31:57 +0000
-Received: by wyb28 with SMTP id 28so387650wyb.36
-	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 03:31:55 -0700 (PDT)
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1PzVSl-0001w3-62
+	for kexec@lists.infradead.org; Tue, 15 Mar 2011 14:43:09 +0000
+Date: Tue, 15 Mar 2011 10:43:01 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <2104293694.426816.1300200181206.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <4D7EF934.3090008@linux.vnet.ibm.com>
+Subject: Re: [PATCH v1 0/6] makedumpfile: makedumpfile enhancement to filter
+	out kernel data from vmcore
 MIME-Version: 1.0
-From: Anggriawan Sugianto <anggriawan.sugianto@gmail.com>
-Date: Tue, 15 Mar 2011 17:31:34 +0700
-Message-ID: <AANLkTikKgVYjO_v0xTHg-H1c0R1Z6QxuyVTDkx8Jy6zg@mail.gmail.com>
-Subject: kexec on ARM - oops undefined instruction
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,103 +22,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-
-Dear all,
-
-Currently I am learning about how kexec works in ARM kernel. I have
-cross-compiled kexec-tools successfully, but when I run kexec, it
-gives me kernel oops - undefined instruction.
-_______________
-
-#> ./kexec -l zImage --command-line=`cat /proc/cmdline`
-#> ./kexec -e
-Starting new kernel
-Bye!
-.
-.
-Internal error: Oops - undefined instruction: 0 [#1] PREEMPT
-Modules linked in:
- wl(P)(0xbf1d8000) kernel version : 0068_262 RELEASE preempt mod_unload ARMv7
- snd_usb_audio(0xbf1c5000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- snd_usb_lib(0xbf1c0000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- snd_seq_midi(0xbf1b6000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- snd_rawmidi(0xbf1ad000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- ftdi_sio(0xbf1a1000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- snd_hwdep(0xbf19a000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- usbhid(0xbf181000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- usbserial(0xbf177000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- sdp_mac(0xbf16e000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- usb_storage(0xbf161000) kernel version : 1005_272 RELEASE preempt
-mod_unload ARMv7
- ohci_hcd(0xbf155000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- ehci_hcd(0xbf146000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- usbcore(0xbf127000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- fpi(P)(0xbf120000) kernel version : 0068_262 RELEASE preempt mod_unload ARMv7
- sdp_ahci(0xbf115000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- libata(0xbf0f4000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- sd_mod(0xbf0ea000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- sr_mod(0xbf0e2000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
- cdrom(0xbf0d5000) kernel version : 1005_272 RELEASE preempt mod_unload ARMv7
-
-CPU: 0    Tainted: P            (2.6.30.9 #48)
-pc : [<747e4000>]    lr : [<c002acbc>]    psr: 60000013
-sp : c768de58  ip : c6d92fc0  fp : c768de6c
-r10: 00000000  r9 : c768c000  r8 : c0025568
-r7 : 00000000  r6 : 45584543  r5 : c6ee3000  r4 : 747e3000
-r3 : 00000c02  r2 : 000005f8  r1 : 000005f8  r0 : 747e3000
-Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
-Control: 10c53c7d  Table: 74690019  DAC: 00000015
-Process kexec (pid: 501, stack limit = 0xc768c2e0)
-.
-.
-Backtrace:
-Function entered at [<c002abb4>] from [<c008cfe0>]
- r5:28121969 r4:c0477a70
-Function entered at [<c008cf90>] from [<c005b4e0>]
- r4:fee1dead r3:45584543
-Function entered at [<c005b34c>] from [<c00253c0>]
- r7:00000058 r6:410338d8 r5:41033ac4 r4:0d696914
-Code: 00000000 00000000 00000000 00000000 (dc9d7fc2)
-_______________
-
-I see the backtrace & lr. It guides me to:
-
-$ cat objdump.txt | grep c002acbc
-c002abc8:       e59fc0ec        ldr     ip, [pc, #236]  ; c002acbc
-<machine_kexec+0x108>
-c002acbc:       c03dc768        .word   0xc03dc768
-
-$ cat objdump.txt | grep c002abb4
-c002abb4 <machine_kexec>:
-c002abb4:       e1a0c00d        mov     ip, sp
-c008cfdc:       ebfe76f4        bl      c002abb4 <machine_kexec>
-c008d234:       ebfe765e        bl      c002abb4 <machine_kexec>
-
-$ cat objdump.txt | grep c008cf90
-c005b4dc:       eb00c6ab        bl      c008cf90 <kernel_kexec>
-c008cf90 <kernel_kexec>:
-c008cf90:       e1a0c00d        mov     ip, sp
-
-_______________
-
-Can anyone help me what's wrong with "oops - undefined instruction" ?
-
-Does it mean there is something wrong with machine_kexec() call in
-kernel_kexec() function in <kernel_source>/kernel/kexec.c ? Or, is the
-problem located in linked modules?
-
-Thank you for your time.
+To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Reinhard <BUENDGEN@de.ibm.com>
 
 
-Regards,
-Anggriawan Sugianto
+----- Original Message -----
+>
+>Hi Ken'chi,
+>
+>On 03/14/2011 08:14 AM, Ken'ichi Ohmichi wrote:
+>> 
+>> Hi Dave, Mahesh,
+>> 
+>> On Fri, 11 Mar 2011 09:07:50 -0500 (EST)
+>> Dave Anderson <anderson at redhat.com> wrote:
+>>>>
+>>>> Please find the makedumpfile enhancement patchset that introduces a data
+>>>> filtering feature which enables makedumpfile to filter out desired kernel
+>>>> symbol data and it's members from the specified VMCORE file. The data to be
+>>>> filtered out is poisoned with character 'X' (58 in Hex).
+>>>>
+>>>> This feature will be very useful for the customers who wants to erase the
+>>>> customer sensitive data like security keys and other confidential data, in
+>>>> DUMPFILE before sending it to support team for analysis.
+>>>>
+>>>> This feature introduces a filter config file where, using filter commands,
+>>>> user can specify desired kernel data symbols and it's members that need to be
+>>>> filtered out while creating o/p DUMPFILE. The Syntax for filter commands are
+>>>> provided in the filter.conf(8) man page.
+>>>>
+>>>> The first 4 patches prepares the base work for filtering framework.  The last 2
+>>>> patches implements the generic filtering framework to erase desired kernel
+>>>> data.
+>>>>
+>>>> I have tested these patches on x86_64 and s390x architecture against RHEL6 GA
+>>>> kernel. The feature supports filtering data from ELF as well as kdump-compressed
+>>>> formatted dump.
+>>>>
+>>>> Please review the patchset and let me know your comments.
+>>>>
+>>>> Thanks,
+>>>> -Mahesh.
+>>>
+>>> Hi Mahesh,
+>>>
+>>> Is there any notation in the filtered ELF kdump or compressed kdump file
+>>> that filtering has been done?  Given that there may be potential ramifications
+>>> in crash utility behavior (or outright failure?), the crash utility should
+>>> display a warning message early on during invocation.
+>> 
+>> That is a good point.
+>> 
+>> How about adding new members (like offset_eraseinfo, size_eraseinfo)
+>> into the sub header in compressed kdump file, and setting version 5
+>> in the header version (disk_dump_header.header_version) ?
+>> These members show the erased information like the following:
+>> 
+>> struct kdump_sub_header {
+>>         unsigned long   phys_base;
+>>         int             dump_level;     /* header_version 1 and later */
+>>         int             split;          /* header_version 2 and later */
+>>         unsigned long   start_pfn;      /* header_version 2 and later */
+>>         unsigned long   end_pfn;        /* header_version 2 and later */
+>>         off_t           offset_vmcoreinfo;/* header_version 3 and later */
+>>         unsigned long   size_vmcoreinfo;  /* header_version 3 and later */
+>>         off_t           offset_note;      /* header_version 4 and later */
+>>         unsigned long   size_note;        /* header_version 4 and later */
+>> +       off_t           offset_eraseinfo; /* header_version 5 and later */
+>> +       unsigned long   size_eraseinfo;   /* header_version 5 and later */
+>> };
+>> 
+>> The erased information contains only effective lines in the
+>> configuration file.
+>
+>Do you mean the info would contain symbol name/expression, resolved
+>symbol/vmalloc addresses and its sizes that got filtered out?
+>
+>What I mean by symbol expression is, user can ask makedumpfile to erase
+>a data referred by a member from the symbol variable of structure type.
+>e.g.
+>	struct S1 {
+>		int a;
+>	};
+>	struct S2 {
+>		struct S1 *mystruct1;
+>	};
+>
+>	struct S2 mystruct2;
+>
+>	#Filter command
+>	erase mystruct2.mystruct1.a
+>
+>So the erase information in kdump header would contain:
+>
+>-----------------------------------
+>Symbol Name: mystruct2.mystruct1.a
+>Filter Addr: &mystruct2.mystruct1->a
+>Filter Size: 4	(sizeof type int)
+>-----------------------------------
+>
+>For erase commands in loop construct we will have multiple Filter addresses.
+>
+>Please let me know your comment on the above format.
+>
+>Hi Dave,
+>
+>Do you think the above information would be enough for crash utility to
+>interpret?
+
+To clarify -- I have *no* plans to *interpret* the filter data.  I just
+want to know that filtering has been done, and to display a WARNING 
+message early on during crash invocation that it has been done.  And
+when things subsequently break, at least the user knows why, and I don't
+get a bunch of unexplainable bug reports.
+
+So about as far as I would take it in the crash utility would be for the
+"help -n" output to display the filter data strings that are appended to
+the dumpfile or stored in an ELF note -- much the same way that VMCOREINFO
+data can be dumped.
+
+Dave
+
+
+
+
+>Thanks,
+>-Mahesh.
+>
+>> In case of ELF kdump file, how about adding a ELF note section
+>> which also show the erased information ?
+>> 
+>> The crash utility will be able to know the name list of the
+>> erased symbols from the information.
+>> 
+>> 
+>> Thanks
+>> Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
