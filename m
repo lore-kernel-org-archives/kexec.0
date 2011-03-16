@@ -1,25 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp08.in.ibm.com ([122.248.162.8])
+Received: from e28smtp03.in.ibm.com ([122.248.162.3])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1PzXkQ-0003OC-CQ
-	for kexec@lists.infradead.org; Tue, 15 Mar 2011 17:09:31 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp08.in.ibm.com (8.14.4/8.13.1) with ESMTP id p2FGEdBP025475
-	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 21:44:39 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p2FH9PBf3383522
-	for <kexec@lists.infradead.org>; Tue, 15 Mar 2011 22:39:25 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p2FH9OgI007511
-	for <kexec@lists.infradead.org>; Wed, 16 Mar 2011 04:09:24 +1100
+	id 1PzjQa-0000Zc-Vn
+	for kexec@lists.infradead.org; Wed, 16 Mar 2011 05:37:50 +0000
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+	by e28smtp03.in.ibm.com (8.14.4/8.13.1) with ESMTP id p2G5bfnA026676
+	for <kexec@lists.infradead.org>; Wed, 16 Mar 2011 11:07:41 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p2G5bfKR3637314
+	for <kexec@lists.infradead.org>; Wed, 16 Mar 2011 11:07:41 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p2G5bgJ5012494
+	for <kexec@lists.infradead.org>; Wed, 16 Mar 2011 11:07:43 +0530
+Date: Wed, 16 Mar 2011 11:07:40 +0530
 From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: [PATCH] makedumpfile: s390x: Fix KVBASE to correct value for s390x
-	arcitecture.
-Date: Tue, 15 Mar 2011 22:39:23 +0530
-Message-ID: <20110315170902.32471.52757.stgit@mars.in.ibm.com>
+Subject: Re: [PATCH v1 0/6] makedumpfile: makedumpfile enhancement to
+	filter out kernel data from vmcore
+Message-ID: <20110316053740.GA6854@in.ibm.com>
+References: <20110311075647.14587.50626.stgit@mars.in.ibm.com>
+	<1823425025.382709.1299852470929.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+	<20110314114457.7e252f0d.oomichi@mxs.nes.nec.co.jp>
+	<4D7EF934.3090008@linux.vnet.ibm.com>
+	<20110315151247.23fc84bc.oomichi@mxs.nes.nec.co.jp>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110315151247.23fc84bc.oomichi@mxs.nes.nec.co.jp>
+Reply-To: mahesh@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,39 +40,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>, Michael Holzheu <holzheu@de.ibm.com>, Sachin P Sant <sachinp@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Dave Anderson <anderson@redhat.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+Hi Ken'inchi,
 
-While excluding free pages from s390x dumps taken on LPAR, makedumpfile
-fails to convert page address to pfn. The reason is, the memory for
-mem_section structure is allocated below '_stext' and since KVBASE is
-set to SYMBOL(_stext), the function is_kvaddr() fails and return NULL
-address.
+On Tue, Mar 15, 2011 at 03:12:47PM +0900, Ken'ichi Ohmichi wrote:
+> 
+> Hi Mahesh,
+> 
+> In my idea, offset_eraseinfo points the *file offset* of the erased
+> information and size_eraseinfo is the information size.
+> 
+> The erased information would contain *multiple* erased symbol names.
+> For example, the following is based on your above example.
+> 
+>  	struct S1 {
+>  		int a;
+>  		int b;
+>  		int c;
+>  	};
+>  	struct S2 {
+>  		struct S1 *mystruct1;
+>  		struct S1 *mystruct2;
+>  	};
+> 
+>  	struct S2 mystruct2;
+> 
+>  	#Filter command
+>  	erase mystruct2.mystruct1.a
+>  	erase mystruct2.mystruct1.c
+>  	erase mystruct2.mystruct2.b
+> 
+> 	#The erased information
+>  	erase mystruct2.mystruct1.a 4
+>  	erase mystruct2.mystruct1.c 4
+>  	erase mystruct2.mystruct2.b 4
+> 
+> 
+> The dumpfile image :
+> 
+>        header             dump data             the erased information
+> +------------------+-----------------------+-------------------------------+
+> | ................ | ..................... | erase mystruct2.mystruct1.a 4 |
+> | offset_eraseinfo | ..................... | erase mystruct2.mystruct1.c 4 |
+> |   size_eraseinfo | ..................... | erase mystruct2.mystruct2.b 4 |
+> +------------------+-------------------------------------------------------+
+>                                            : offset_eraseinfo (offset in dumpfile)
+>                                             <------ size_eraseinfo ------->
+>                                             
 
-Set KVBASE to KENRELBASE(0) for s390x architecture to fix this issue.
+Will work on the cahnge.
 
+Thanks,
+-Mahesh.
+> Thanks
+> Ken'ichi Ohmichi
+
+-- 
 Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
-
- makedumpfile.h |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 11e1a93..4ec77b7 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -615,7 +615,7 @@ do { \
- #ifdef __s390x__
- #define __PAGE_OFFSET		(info->page_size - 1)
- #define KERNELBASE		(0)
--#define KVBASE			(SYMBOL(_stext))
-+#define KVBASE			KERNELBASE
- #define _SECTION_SIZE_BITS	(28)
- #define _MAX_PHYSMEM_BITS	(42)
- 
-
 
 _______________________________________________
 kexec mailing list
