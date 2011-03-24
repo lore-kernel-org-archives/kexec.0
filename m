@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pw0-f49.google.com ([209.85.160.49])
+Received: from gate.crashing.org ([63.228.1.57])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q2YFQ-0003r0-Li
-	for kexec@lists.infradead.org; Thu, 24 Mar 2011 00:17:58 +0000
-Received: by pwi8 with SMTP id 8so1267691pwi.36
-	for <kexec@lists.infradead.org>; Wed, 23 Mar 2011 17:17:54 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20110322083453.M34905@cdotd.ernet.in>
-References: <20110322083453.M34905@cdotd.ernet.in>
-Date: Wed, 23 Mar 2011 17:17:54 -0700
-Message-ID: <AANLkTincRC3upuXNOA7DO4k56RddKm4QbpxZGq8--tuC@mail.gmail.com>
-Subject: Re: KEXEC on Montavista PPC LINUX (2.6.10) with U-BOOT
-From: Maxim Uvarov <muvarov@gmail.com>
+	id 1Q2cEy-0005AH-59
+	for kexec@lists.infradead.org; Thu, 24 Mar 2011 04:33:45 +0000
+Subject: Re: [PATCH 1/2] kdump: Allow shrinking of kdump region to be
+	overridden
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+In-Reply-To: <im6fj2$576$1@dough.gmane.org>
+References: <20100825002258.GD28360@kryten> <m139u37cii.fsf@fess.ebiederm.org>
+	<4D771EE6.5050404@linux.vnet.ibm.com>
+	<20110309122046.GC16951@cr0.redhat.com>
+	<20110309234657.264d3080@kryten>
+	<20110309142108.GD16951@cr0.redhat.com>
+	<20110314181315.GA16075@in.ibm.com>
+	<AANLkTi=aDzCaa7_=5XTrnJCzmZPrDy3omXwDarEF8XmH@mail.gmail.com>
+	<20110315165219.GA22509@in.ibm.com>  <im6fj2$576$1@dough.gmane.org>
+Date: Thu, 24 Mar 2011 15:33:30 +1100
+Message-ID: <1300941210.2402.414.camel@pasglop>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,117 +30,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Deepak Gaur <dgaur@cdotd.ernet.in>
-Cc: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linuxppc-dev@ozlabs.org, Anton Blanchard <anton@au1.ibm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, WANG Cong <xiyou.wangcong@gmail.com>
 
-Deepack,
+On Mon, 2011-03-21 at 03:10 +0000, WANG Cong wrote:
+> On Tue, 15 Mar 2011 22:22:19 +0530, Mahesh J Salgaonkar wrote:
 
-it's  better to read docs which came with BSP. If your kernel is
-2.6.10 then kexec tools there should be a little bit different with
-main line (I synced them later). So probably you need
---start-memory-range=<addr> --end-memory-range=<addr>  to be set. It's
-better to ask support if something does not work out of box in your
-build. I think people here can't help you because they don't  know
-internals of environment  you have (Montavista PPC LINUX).
+> >> Okay, but with this patch applied, we will just ignore rtas region,
+> >> right?
+> > Correct.
+> >> Thus, when I echo 0 to free all the 128M crashkernel memory, the final
+> >> result will be 32M left, which means crash_size will still show 32M.
+> >> This looks odd.
+> >> 
+> >> How about skipping the 32M as a whole? I mean once the region being
+> >> freed has overlap with this rtas region, skip the whole rtas region,
+> >> and let crash_size
+> >> show 0?
+> > The existing code from crash_shrink_memory() function reduces the crash
+> > size to 0 when echo'ed 0. I did test this patchset and verified that
+> > /sys/kernel/kexec_crash_size show 0 value.
+> 
+> Oh, ok.
+> 
+> Acked-by: WANG Cong <xiyou.wangcong@gmail.com>
 
-Maxim.
+So Eric, what's the right approach to get that merged ? This is a bug
+gating an important delivery for us, and the patch doesn't appear
+terribly invasive ? :-)
 
-2011/3/22 Deepak Gaur <dgaur@cdotd.ernet.in>:
-> Hi All
->
-> I have a MPC8560 based custom board with linux 2.6.10 as OS and U-BOOT as a
-> bootloader.
-> The compressed OS and rootfilesytem are combined in one multi image
-> (ubImgae)and it resides in a flash partition as raw data. Bootloader is able
-> to load the image, decompress it and execute it . The sytem comes up
-> properly.
->
-> In order to reduce the bootup time i was planning to use kexec to reboot the
-> OS. My version of kexec is
-> ./kexec -v
-> kexec 1.101 released 15 February 2005
->
-> I tried to load the OS+Rootfile Filesystem (with U-BOOT header) but it gave
-> following output
->
-> ./kexec -l ./ubImage --append=\"`cat /proc/cmdline`\"
-> Invalid memory range : (nil) - (nil)
-> Could not get memory layout
->
-> My question is
->
-> Does Kexec understand u-boot images ? Or I am missing some parameters
->
-> I searched the Internet forum for this and got the guideline that os and
-> initrd should be given seperately (---initrd=/boot/vmlinuz-rootfs.img)
->
-> but the kexec does not recognize such an option and its help does not show
-> any such option (--initrd)
->
-> # ./kexec --help
-> kexec 1.101 released 15 February 2005
-> Usage: kexec [OPTION]... [kernel]
-> Directly reboot into a new kernel
->
-> -h, --help Print this help.
-> -v, --version Print the version of kexec.
-> -f, --force Force an immediate kexec, don't call shutdown.
-> -x, --no-ifdown Don't bring down network interfaces.
-> (if used, must be last option specified)
-> -l, --load Load the new kernel into the current kernel.
-> -p, --load-panic Load the new kernel for use on panic.
-> -u, --unload Unload the current kexec target kernel.
-> -e, --exec Execute a currently loaded kernel.
-> -t, --type=TYPE Specify the new kernel is of this type.
-> --mem-min=<addr> Specify the lowest memory addres to load code into.
-> --mem-max=<addr> Specify the highest memory addres to load code into.
->
-> Supported kernel file types and options:
-> elf-ppc
-> --command-line=STRING Set the kernel command line to STRING.
-> --append=STRING Set the kernel command line to STRING.
-> --gamecube=1|0 Enable/disable support for ELFs with changed
-> addresses suitable for the GameCube.
-> dol-ppc
-> -d, --debug Enable debugging to help spot a failure.
-> --command-line=STRING Set the kernel command line to STRING.
-> --append=STRING Set the kernel command line to STRING.
-> Architecture options:
-> the following parameters should be specified:
-> --start-memory-range=<addr>
-> --end-memory-range=<addr>
->
-> for this reason i was trying with a combined OS and Rootfs image
->
-> my kernel command line is
->
-> # cat /proc/cmdline
-> console=ttyCPM,9600n8 wdt=1 ip=dhcp root=/dev/ram0 rw crashkernel=128M@16M
->
-> and I have compiled the kernel with all option related to KEXEC on.
->
-> Please help me in understand the method for using kexec with U-BOOT as a
-> bootloader. The ARCH is ppc in kernel 2.6.10.
->
-> Do i need to use kexec with uncompressed OS image , but as the tool kexec
-> does not recognize --initrd option, how to inform kexec abt it?
->
-> with regards,
->
-> Deepak Gaur
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
->
+I can send it to Linus myself if you prefer and give me your Ack.
+
+Cheers,
+Ben.
 
 
-
--- 
-Best regards,
-Maxim Uvarov
 
 _______________________________________________
 kexec mailing list
