@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-iy0-f177.google.com ([209.85.210.177])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q4xBZ-0007Gx-BS
-	for kexec@lists.infradead.org; Wed, 30 Mar 2011 15:19:54 +0000
-Received: by iyb39 with SMTP id 39so1596273iyb.36
-	for <kexec@lists.infradead.org>; Wed, 30 Mar 2011 08:19:50 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
-References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
-Date: Wed, 30 Mar 2011 23:19:50 +0800
-Message-ID: <AANLkTi=cne0mSNOV0BC3X-SGeNOPPa5MSUf3L6yLJ1-t@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1Q4xdo-0007am-Gx
+	for kexec@lists.infradead.org; Wed, 30 Mar 2011 15:49:06 +0000
+Date: Wed, 30 Mar 2011 11:48:34 -0400
+From: Neil Horman <nhorman@redhat.com>
 Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
 	enabling interrupt
-From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
+Message-ID: <20110330154834.GA3421@hmsreliant.think-freely.org>
+References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +20,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, Ingo Molnar <mingo@elte.hu>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Ingo Molnar <mingo@elte.hu>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gV2VkLCBNYXIgMzAsIDIwMTEgYXQgMTI6MzUgQU0sIFRha2FvIEluZG9oCjxpbmRvdS50YWth
-b0BqcC5mdWppdHN1LmNvbT4gd3JvdGU6Cj4gSGkgYWxsLAo+Cj4gVGhpcyBwYXRjaCByZW5hbWVz
-IGluaXRfY2FsbF9zaW5nbGVfZGF0YSgpIHRvIGNhbGxfZnVuY3Rpb25faW5pdCgpIGFuZAo+IGNh
-bGxzIGl0IGluIHN0YXJ0X2tlcm5lbCgpIHNvIHRoYXQgY2FsbF9zaW5nbGVfcXVldWUgY2FuIGJl
-IGluaXRpYWxpemVkCj4gYmVmb3JlIGVuYWJsaW5nIGludGVycnVwdC4KPgo+IFRoZXJlIGlzIGEg
-cHJvYmxlbSB0aGF0IGtkdW1wKDJuZCBrZXJuZWwpIHNvbWV0aW1lcyBoYW5ncyB1cCBkdWUgdG8K
-PiBwZW5kaW5nIElQSSBmcm9tIDFzdCBrZXJuZWwuIEtlcm5lbCBwYW5pYyBvY2N1cnMgYmVjYXVz
-ZSBJUEkgY29tZXMKPiBiZWZvcmUgY2FsbF9zaW5nbGVfcXVldWUgaXMgaW5pdGlhbGl6ZWQuIFRo
-ZSBkZXRhaWxzIGFyZSBhcyBmb2xsb3dzLgo+ICgxKSAybmQga2VybmVsIGJvb3QgdXAKPiAoMikg
-QSBwZW5kaW5nIElQSSBmcm9tIDFzdCBrZXJuZWwgY29tZXMgd2hlbiBpcnFzIGFyZSBmaXJzdCBl
-bmFibGVkCj4gwqAgwqBpbiBzdGFydF9rZXJuZWwoKS4KPiAoMykgS2VybmVsIHRyaWVzIHRvIGhh
-bmRsZSB0aGUgaW50ZXJydXB0LCBidXQgY2FsbF9zaW5nbGVfcXVldWUgaXMgbm90Cj4gwqAgwqBp
-bml0aWFsaXplZCB5ZXQgYXQgdGhpcyBwb2ludC4gQXMgYSByZXN1bHQsIGluIHRoZQo+IMKgIMKg
-Z2VuZXJpY19zbXBfY2FsbF9mdW5jdGlvbl9zaW5nbGVfaW50ZXJydXB0KCksIE5VTEwgcG9pbnRl
-cgo+IMKgIMKgZGVyZWZlcmVuY2Ugb2NjdXJzIHdoZW4gbGlzdF9yZXBsYWNlX2luaXQoKSB0cmll
-cyB0byBhY2Nlc3MKPiDCoCDCoCZxLT5saXN0Lm5leHQuCj4gVGhlcmVmb3JlIHRoaXMgcGF0Y2gg
-Y2hhbmdlcyB0aGUgbmFtZSBvZiBpbml0X2NhbGxfc2luZ2xlX2RhdGEoKSB0bwo+IGNhbGxfZnVu
-Y3Rpb25faW5pdCgpIGFuZCBjYWxscyBpdCBiZWZvcmUgbG9jYWxfaXJxX2VuYWJsZSgpIGluCj4g
-c3RhcnRfa2VybmVsKCkuCj4KPiB2MjoKPiAtIFJlbmFtZSBpbml0X2NhbGxfc2luZ2xlX2RhdGEo
-KSB0byBjYWxsX2Z1bmN0aW9uX2luaXQoKSBhbmQgY2FsbHMgaXQgaW4KPiDCoHN0YXJ0X2tlcm5l
-bCgpCj4gLSBDaGFuZ2UgaW5zZXJ0IHBvc2l0aW9uIGluIHN0YXJ0X2tlcm5lbCgpLgo+IC0gQWRq
-dXN0IGZvciBDT05GSUdfU01QL0NPTkZJR19VU0VfR0VORVJJQ19TTVBfSEVMUEVSUyBvcHRpb25z
-Cj4gLSBSZWJhc2VkIHRvIExpbnVzJ3MgbGF0ZXN0IHRyZWUKPgoKTG9va3MgZ29vZCB0byBteSBl
-eWVzLAoKUmV2aWV3ZWQtYnk6IFdBTkcgQ29uZyA8eGl5b3Uud2FuZ2NvbmdAZ21haWwuY29tPgoK
-VGhhbmtzLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Tue, Mar 29, 2011 at 12:35:04PM -0400, Takao Indoh wrote:
+> Hi all,
+> 
+> This patch renames init_call_single_data() to call_function_init() and
+> calls it in start_kernel() so that call_single_queue can be initialized
+> before enabling interrupt.
+> 
+> There is a problem that kdump(2nd kernel) sometimes hangs up due to
+> pending IPI from 1st kernel. Kernel panic occurs because IPI comes
+> before call_single_queue is initialized. The details are as follows.
+> (1) 2nd kernel boot up
+> (2) A pending IPI from 1st kernel comes when irqs are first enabled
+>     in start_kernel().
+> (3) Kernel tries to handle the interrupt, but call_single_queue is not
+>     initialized yet at this point. As a result, in the
+>     generic_smp_call_function_single_interrupt(), NULL pointer
+>     dereference occurs when list_replace_init() tries to access
+>     &q->list.next.
+> Therefore this patch changes the name of init_call_single_data() to
+> call_function_init() and calls it before local_irq_enable() in
+> start_kernel().
+> 
+> v2:
+> - Rename init_call_single_data() to call_function_init() and calls it in
+>   start_kernel()
+> - Change insert position in start_kernel().
+> - Adjust for CONFIG_SMP/CONFIG_USE_GENERIC_SMP_HELPERS options
+> - Rebased to Linus's latest tree
+> 
+> v1:
+> https://lkml.org/lkml/2011/3/25/317
+> - Divide init_call_single_data() into two functions,
+>    o init_call_single_data: initialize call_single_queue
+>    o init_hotplug_cfd: initialize hotplug_cfd_notifier
+>   And call init_call_single_data before local_irq_enable() in
+>   start_kernel().
+> 
+> v0:
+> https://lkml.org/lkml/2011/3/23/417
+> - In generic_smp_call_function_single_interrupt(), check if
+>   call_single_queue was initialized or not, and just return if not
+>   initialized.
+> 
+> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+> ---
+>  include/linux/smp.h |    5 ++++-
+>  init/main.c         |    1 +
+>  kernel/smp.c        |    5 +----
+>  3 files changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/smp.h b/include/linux/smp.h
+> index 74243c8..4fb3eac 100644
+> --- a/include/linux/smp.h
+> +++ b/include/linux/smp.h
+> @@ -85,12 +85,15 @@ int smp_call_function_any(const struct cpumask *mask,
+>   * Generic and arch helpers
+>   */
+>  #ifdef CONFIG_USE_GENERIC_SMP_HELPERS
+> +void __init call_function_init(void);
+>  void generic_smp_call_function_single_interrupt(void);
+>  void generic_smp_call_function_interrupt(void);
+>  void ipi_call_lock(void);
+>  void ipi_call_unlock(void);
+>  void ipi_call_lock_irq(void);
+>  void ipi_call_unlock_irq(void);
+> +#else
+> +static inline void call_function_init(void) { }
+>  #endif
+>  
+>  /*
+> @@ -144,7 +147,7 @@ static inline void smp_send_reschedule(int cpu) { }
+>  #define smp_prepare_boot_cpu()			do {} while (0)
+>  #define smp_call_function_many(mask, func, info, wait) \
+>  			(up_smp_call_function(func, info))
+> -static inline void init_call_single_data(void) { }
+> +static inline void call_function_init(void) { }
+>  
+>  static inline int
+>  smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
+> diff --git a/init/main.c b/init/main.c
+> index 4a9479e..12821d1 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -539,6 +539,7 @@ asmlinkage void __init start_kernel(void)
+>  	timekeeping_init();
+>  	time_init();
+>  	profile_init();
+> +	call_function_init();
+>  	if (!irqs_disabled())
+>  		printk(KERN_CRIT "start_kernel(): bug: interrupts were "
+>  				 "enabled early\n");
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index 73a1951..fb67dfa 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -74,7 +74,7 @@ static struct notifier_block __cpuinitdata hotplug_cfd_notifier = {
+>  	.notifier_call		= hotplug_cfd,
+>  };
+>  
+> -static int __cpuinit init_call_single_data(void)
+> +void __init call_function_init(void)
+>  {
+>  	void *cpu = (void *)(long)smp_processor_id();
+>  	int i;
+> @@ -88,10 +88,7 @@ static int __cpuinit init_call_single_data(void)
+>  
+>  	hotplug_cfd(&hotplug_cfd_notifier, CPU_UP_PREPARE, cpu);
+>  	register_cpu_notifier(&hotplug_cfd_notifier);
+> -
+> -	return 0;
+>  }
+> -early_initcall(init_call_single_data);
+>  
+>  /*
+>   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
+> 
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
