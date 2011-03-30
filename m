@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q4iln-0001Yo-AE
-	for kexec@lists.infradead.org; Tue, 29 Mar 2011 23:56:20 +0000
-From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH 1/3] build: Pass --no-undefined as a linker option
-Date: Wed, 30 Mar 2011 08:56:07 +0900
-Message-Id: <1301442969-11811-2-git-send-email-horms@verge.net.au>
-In-Reply-To: <1301442969-11811-1-git-send-email-horms@verge.net.au>
+	id 1Q4lI0-0002iN-Do
+	for kexec@lists.infradead.org; Wed, 30 Mar 2011 02:37:47 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: gcc (4.6) compile warnings/errors
 References: <1301442969-11811-1-git-send-email-horms@verge.net.au>
+Date: Tue, 29 Mar 2011 19:37:38 -0700
+In-Reply-To: <1301442969-11811-1-git-send-email-horms@verge.net.au> (Simon
+	Horman's message of "Wed, 30 Mar 2011 08:56:06 +0900")
+Message-ID: <m139m5gwp9.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,39 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-gcc-4.6 does not accept --no-undefined as a compiler option
+Simon Horman <horms@verge.net.au> writes:
 
-Reported-by: Civil <civil.over@gmail.com>
-Signed-off-by: Simon Horman <horms@verge.net.au>
----
- purgatory/Makefile |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+> Hi,
+>
+> this short series resolves a  error and some warnings
+> when compiling for x86_64 using gcc-4.6.
 
-diff --git a/purgatory/Makefile b/purgatory/Makefile
-index ea0c19a..ee1679c 100644
---- a/purgatory/Makefile
-+++ b/purgatory/Makefile
-@@ -56,8 +56,8 @@ $(PURGATORY): CPPFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS) \
- 			-I$(srcdir)/include \
- 			-I$(shell $(CC) -print-file-name=include)
- $(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
--			--no-undefined -nostartfiles -nostdlib -nodefaultlibs \
--			-e purgatory_start -r
-+			-Wl,--no-undefined -nostartfiles -nostdlib \
-+			-nodefaultlibs -e purgatory_start -r
- 
- $(PURGATORY): $(PURGATORY_OBJS)
- 	$(MKDIR) -p $(@D)
--- 
-1.7.2.3
+This series seems reasonable to me.
+
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+Eric
 
 
 _______________________________________________
