@@ -1,17 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from lo.gmane.org ([80.91.229.12])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q4xdo-0007am-Gx
-	for kexec@lists.infradead.org; Wed, 30 Mar 2011 15:49:06 +0000
-Date: Wed, 30 Mar 2011 11:48:34 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
-	enabling interrupt
-Message-ID: <20110330154834.GA3421@hmsreliant.think-freely.org>
-References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
+	id 1Q5MF4-00065Y-FF
+	for kexec@lists.infradead.org; Thu, 31 Mar 2011 18:05:11 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <glkk-kexec@m.gmane.org>) id 1Q5MEz-0005IW-8S
+	for kexec@lists.infradead.org; Thu, 31 Mar 2011 20:05:05 +0200
+Received: from 134.134.139.76 ([134.134.139.76])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Thu, 31 Mar 2011 20:05:05 +0200
+Received: from christopher.leech by 134.134.139.76 with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Thu, 31 Mar 2011 20:05:05 +0200
+From: Chris Leech <christopher.leech@linux.intel.com>
+Subject: Re: [PATCH V2] kexec, x86: fix kexec
+	=?utf-8?b?d2hlbglib290X3BhcmFtcy5oYXJkd2FyZV9zdWJhcmNo?= != 0
+Date: Thu, 31 Mar 2011 17:21:15 +0000 (UTC)
+Message-ID: <loom.20110331T191730-224@post.gmane.org>
+References: <20110328194049.32626.74038.stgit@localhost6.localdomain6>
+	<20110328215011.30400.91252.stgit@localhost6.localdomain6>
+	<ims7bl$ik5$1@dough.gmane.org>
+	<20110329232259.GC27905@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,131 +35,114 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Ingo Molnar <mingo@elte.hu>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On Tue, Mar 29, 2011 at 12:35:04PM -0400, Takao Indoh wrote:
-> Hi all,
-> 
-> This patch renames init_call_single_data() to call_function_init() and
-> calls it in start_kernel() so that call_single_queue can be initialized
-> before enabling interrupt.
-> 
-> There is a problem that kdump(2nd kernel) sometimes hangs up due to
-> pending IPI from 1st kernel. Kernel panic occurs because IPI comes
-> before call_single_queue is initialized. The details are as follows.
-> (1) 2nd kernel boot up
-> (2) A pending IPI from 1st kernel comes when irqs are first enabled
->     in start_kernel().
-> (3) Kernel tries to handle the interrupt, but call_single_queue is not
->     initialized yet at this point. As a result, in the
->     generic_smp_call_function_single_interrupt(), NULL pointer
->     dereference occurs when list_replace_init() tries to access
->     &q->list.next.
-> Therefore this patch changes the name of init_call_single_data() to
-> call_function_init() and calls it before local_irq_enable() in
-> start_kernel().
-> 
-> v2:
-> - Rename init_call_single_data() to call_function_init() and calls it in
->   start_kernel()
-> - Change insert position in start_kernel().
-> - Adjust for CONFIG_SMP/CONFIG_USE_GENERIC_SMP_HELPERS options
-> - Rebased to Linus's latest tree
-> 
-> v1:
-> https://lkml.org/lkml/2011/3/25/317
-> - Divide init_call_single_data() into two functions,
->    o init_call_single_data: initialize call_single_queue
->    o init_hotplug_cfd: initialize hotplug_cfd_notifier
->   And call init_call_single_data before local_irq_enable() in
->   start_kernel().
-> 
-> v0:
-> https://lkml.org/lkml/2011/3/23/417
-> - In generic_smp_call_function_single_interrupt(), check if
->   call_single_queue was initialized or not, and just return if not
->   initialized.
-> 
-> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
-> ---
->  include/linux/smp.h |    5 ++++-
->  init/main.c         |    1 +
->  kernel/smp.c        |    5 +----
->  3 files changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/smp.h b/include/linux/smp.h
-> index 74243c8..4fb3eac 100644
-> --- a/include/linux/smp.h
-> +++ b/include/linux/smp.h
-> @@ -85,12 +85,15 @@ int smp_call_function_any(const struct cpumask *mask,
->   * Generic and arch helpers
->   */
->  #ifdef CONFIG_USE_GENERIC_SMP_HELPERS
-> +void __init call_function_init(void);
->  void generic_smp_call_function_single_interrupt(void);
->  void generic_smp_call_function_interrupt(void);
->  void ipi_call_lock(void);
->  void ipi_call_unlock(void);
->  void ipi_call_lock_irq(void);
->  void ipi_call_unlock_irq(void);
-> +#else
-> +static inline void call_function_init(void) { }
->  #endif
->  
->  /*
-> @@ -144,7 +147,7 @@ static inline void smp_send_reschedule(int cpu) { }
->  #define smp_prepare_boot_cpu()			do {} while (0)
->  #define smp_call_function_many(mask, func, info, wait) \
->  			(up_smp_call_function(func, info))
-> -static inline void init_call_single_data(void) { }
-> +static inline void call_function_init(void) { }
->  
->  static inline int
->  smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
-> diff --git a/init/main.c b/init/main.c
-> index 4a9479e..12821d1 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -539,6 +539,7 @@ asmlinkage void __init start_kernel(void)
->  	timekeeping_init();
->  	time_init();
->  	profile_init();
-> +	call_function_init();
->  	if (!irqs_disabled())
->  		printk(KERN_CRIT "start_kernel(): bug: interrupts were "
->  				 "enabled early\n");
-> diff --git a/kernel/smp.c b/kernel/smp.c
-> index 73a1951..fb67dfa 100644
-> --- a/kernel/smp.c
-> +++ b/kernel/smp.c
-> @@ -74,7 +74,7 @@ static struct notifier_block __cpuinitdata hotplug_cfd_notifier = {
->  	.notifier_call		= hotplug_cfd,
->  };
->  
-> -static int __cpuinit init_call_single_data(void)
-> +void __init call_function_init(void)
->  {
->  	void *cpu = (void *)(long)smp_processor_id();
->  	int i;
-> @@ -88,10 +88,7 @@ static int __cpuinit init_call_single_data(void)
->  
->  	hotplug_cfd(&hotplug_cfd_notifier, CPU_UP_PREPARE, cpu);
->  	register_cpu_notifier(&hotplug_cfd_notifier);
-> -
-> -	return 0;
->  }
-> -early_initcall(init_call_single_data);
->  
->  /*
->   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
-> 
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Simon Horman <horms@...> writes:
 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> On Tue, Mar 29, 2011 at 09:04:53AM +0000, WANG Cong wrote:
+> > On Mon, 28 Mar 2011 14:50:11 -0700, Chris Leech wrote:
+> > 
+> > > kexec needs to keep the subarch setting the same as the running kernel
+> > > in the boot parameters, or the kernel will die in early setup.  I ran
+> > > into this with X86_SUBARCH_MRST, but it should apply to CE4100 and any
+> > > future subarch that uses non-default early setup code.
+> > > 
+> > > This patch requires debugfs mounted at /sys/kernel/debug, as that's the
+> > > only way I know of to get at the running kernels boot_params. Without
+> > > debugfs mounted it falls back to the current behavior of assuming
+> > > subarch 0.
+> > > 
+> > ...
+> > >  
+> > > +#define BOOT_PARAMS_DBGFS	"/sys/kernel/debug/boot_params/data"
+> > 
+> > A minor issue here is that you are using a hard-coded debugfs path,
+> > debugfs can be also mounted to /debug too, so it is better that if we can 
+> > search the path dynamically here.
+> 
+> Do you think it would be better for the code to loop through
+> a few common alternatives for the path?
+> 
+
+Not fully tested, but instead of looping through possible mount points maybe 
+look through mtab in search of debugfs by fs type.
+
+Something like this?
+
+kexec, x86: search for debugfs mountpoint in /etc/mtab
+
+From: Chris Leech <christopher.leech@linux.intel.com>
+
+Signed-off-by: Chris Leech <christopher.leech@linux.intel.com>
+---
+ kexec/arch/i386/x86-linux-setup.c |   35 +++++++++++++++++++++++++++++++++--
+ 1 files changed, 33 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-
+setup.c
+index 50b32be..0528cea 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -30,6 +30,7 @@
+ #include <linux/fb.h>
+ #include <unistd.h>
+ #include <dirent.h>
++#include <mntent.h>
+ #include <x86/x86-linux.h>
+ #include "../../kexec.h"
+ #include "kexec-x86.h"
+@@ -397,14 +398,44 @@ out:
+ 		real_mode->eddbuf_entries);
+ }
+ 
+-#define BOOT_PARAMS_DBGFS	"/sys/kernel/debug/boot_params/data"
++/*
++ * This really only makes sense for virtual filesystems that are only expected
++ * to be mounted once (sysfs, debugsfs, proc), as it will return the first
++ * instance listed in mtab.
++ */
++char *find_mnt_by_fsname(char *fsname)
++{
++	FILE *mtab;
++	struct mntent *mnt;
++	char *mntdir;
++
++	mtab = setmntent("/etc/mtab", "r");
++	if (!mtab)
++		return NULL;
++	for(mnt = getmntent(mtab); mnt; mnt = getmntent(mtab)) {
++		if (strcmp(mnt->mnt_fsname, fsname) == 0)
++			break;
++	}
++	mntdir = mnt ? strdup(mnt->mnt_dir) : NULL;
++	endmntent(mtab);
++	return mntdir;
++}
+ 
+ void setup_subarch(struct x86_linux_param_header *real_mode)
+ {
+ 	int data_file;
+ 	const off_t offset = offsetof(typeof(*real_mode), hardware_subarch);
++	char *debugfs_mnt;
++	char filename[PATH_MAX];
++
++	debugfs_mnt = find_mnt_by_fsname("debugfs");
++	if (!debugfs_mnt)
++		return;
++	snprintf(filename, PATH_MAX, "%s/%s", debugfs_mnt, "boot_params/data");
++	filename[PATH_MAX-1] = 0;
++	free(debugfs_mnt);
+ 
+-	data_file = open(BOOT_PARAMS_DBGFS, O_RDONLY);
++	data_file = open(filename, O_RDONLY);
+ 	if (data_file < 0)
+ 		return;
+ 	if (lseek(data_file, offset, SEEK_SET) < 0)
+
+
+
+
 
 _______________________________________________
 kexec mailing list
