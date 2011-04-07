@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from www.linutronix.de ([62.245.132.108] helo=linutronix.de)
+Received: from mo-p00-ob.rzone.de ([81.169.146.161])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q7kUa-0005Ij-V2
-	for kexec@lists.infradead.org; Thu, 07 Apr 2011 08:23:05 +0000
-Message-ID: <4D9D7465.8030102@linutronix.de>
-Date: Thu, 07 Apr 2011 10:23:01 +0200
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+	id 1Q7lxN-0005rp-H4
+	for kexec@lists.infradead.org; Thu, 07 Apr 2011 09:56:54 +0000
+Date: Thu, 7 Apr 2011 11:56:47 +0200
+From: Olaf Hering <olaf@aepfle.de>
+Subject: dynamic oldmem in kdump kernel
+Message-ID: <20110407095646.GA30788@aepfle.de>
 MIME-Version: 1.0
-Subject: Re: Question regarding the kexec support for FSL Book E
-References: <4D9D5F17.2040208@in.ibm.com>
-In-Reply-To: <4D9D5F17.2040208@in.ibm.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,64 +17,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Suzuki Poulose <suzuki@in.ibm.com>
-Cc: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 
-Suzuki Poulose wrote:
-> Hi Sebastian,
-Hi,
 
-> I am working on the Kexec support for PPC44x based boards. I was going 
-> through
-> the patchset that you have posted for FSL Book E. I was not able to 
-> understand
-> some parts of the setup code. If you have some time, could you please 
-> help me by
-> answering the questions below :
-> 
-> Here is what I understood from the code walk through :
-> 
-> In relocate_kernel :, we try to setup a 1:1 mapping for 0-2GB of memory 
-> so that
-> the code could run with the MMU switched on. We leave a temparory 
-> mapping in
-> place and create the mapping for 0-2GiB.
-> 
-> Q1: Does the temparory mapping cover the code which sets up the mapping 
-> ? i.e,
-> the code in fsl_booke_entry_mapping.S ?
+Recently kdump for pv-on-hvm Xen guests was implemented by me.
 
-Yes, it does. Please keep in mind that relocate_new_kernel is kmalloc()
-into a separate page while running. This is not just the case for
-FSL-BookE but for all arches.
+One issue remains:
+The xen_balloon driver in the guest frees guest pages and gives them
+back to the hypervisor. These pages are marked as mmio in the
+hypervisor. During a read of such a page via the /proc/vmcore interface
+the hypervisor calls the qemu-dm process. qemu-dm tries to map the page,
+this attempt fails because the page is not backed by ram and 0xff is
+returned. All this generates high load in dom0 because the reads come
+as 8byte requests.
 
-> Q2: Does the relocate kernel also get loaded within the 0-2GB memory ? 
+There seems to be no way to make the crash kernel aware of the state of
+individual pages in the crashed kernel, it is not aware of memory
+ballooning. And doing that from within the "kernel to crash" seems error
+prone. Since over time the fragmentation will increase, it would be best
+if the crash kernel itself queries the state of oldmem pages. 
 
-Yes. We don't have a mapping >2GiB.
+If copy_oldmem_page() would call a function, a hook, provided by the Xen
+pv-on-hvm drivers to query if the pfn to read from is really backed by
+ram the load issue could be avoided. Unfortunately, even Xen needs to
+get a new interface to query the state of individual hvm guest pfns for
+the purpose mentioned above.
 
-> If so,
-> won't we have multiple mappings for the code we are executing, unless we 
-> were
-> mapped 1:1 by the primary kernel ?
 
-The primary kernel maps 0-2GiB 1:1. We jump to relocate_new_kernel() which
-is somewhere within 0..2GiB and not part of the original kernel image.
-This code has a page list of the new kernel. It copies the new kernel to
-its final position and overwrites the old kernel. This is not a problem as
-you remember relocate_new_kernel() is no longer part of the old image.
 
-Once the image is copied, we jump to purgatory and then to the new kernel.
+Another issue, slightly related, is memory hotplug.
+How is this currently handled for kdump?  Is there code which
+automatically reconfigures the kdump kernel with the new memory ranges?
 
-> Thanks
-> Suzuki Poulose
-> Linux Technology Center
-> IBM India
 
-Sebastian
+Olaf
+
 
 _______________________________________________
 kexec mailing list
