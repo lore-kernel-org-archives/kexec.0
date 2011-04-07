@@ -1,17 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pw0-f49.google.com ([209.85.160.49])
+Received: from e33.co.us.ibm.com ([32.97.110.151])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q7mMp-00063V-55
-	for kexec@lists.infradead.org; Thu, 07 Apr 2011 10:23:15 +0000
-Received: by pwi8 with SMTP id 8so1080442pwi.36
-	for <kexec@lists.infradead.org>; Thu, 07 Apr 2011 03:23:08 -0700 (PDT)
+	id 1Q7n4c-0006N2-Ji
+	for kexec@lists.infradead.org; Thu, 07 Apr 2011 11:08:27 +0000
+Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
+	[9.17.195.106])
+	by e33.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p37B1XHo013679
+	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 05:01:33 -0600
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p37B8IXR119776
+	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 05:08:18 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
+	id p37B8HUi010555
+	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 05:08:17 -0600
+Message-ID: <4D9D9B1E.70001@in.ibm.com>
+Date: Thu, 07 Apr 2011 16:38:14 +0530
+From: Suzuki Poulose <suzuki@in.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20110407095646.GA30788@aepfle.de>
-References: <20110407095646.GA30788@aepfle.de>
-Date: Thu, 7 Apr 2011 18:23:07 +0800
-Message-ID: <BANLkTimXRcKyWdUxS2TRzibcSUdCfObH3g@mail.gmail.com>
-Subject: Re: dynamic oldmem in kdump kernel
-From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
+Subject: Re: Question regarding the kexec support for FSL Book E
+References: <4D9D5F17.2040208@in.ibm.com> <4D9D7465.8030102@linutronix.de>
+In-Reply-To: <4D9D7465.8030102@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,44 +30,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Olaf Hering <olaf@aepfle.de>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
 
-T24gVGh1LCBBcHIgNywgMjAxMSBhdCA1OjU2IFBNLCBPbGFmIEhlcmluZyA8b2xhZkBhZXBmbGUu
-ZGU+IHdyb3RlOgo+Cj4gUmVjZW50bHkga2R1bXAgZm9yIHB2LW9uLWh2bSBYZW4gZ3Vlc3RzIHdh
-cyBpbXBsZW1lbnRlZCBieSBtZS4KPgo+IE9uZSBpc3N1ZSByZW1haW5zOgo+IFRoZSB4ZW5fYmFs
-bG9vbiBkcml2ZXIgaW4gdGhlIGd1ZXN0IGZyZWVzIGd1ZXN0IHBhZ2VzIGFuZCBnaXZlcyB0aGVt
-Cj4gYmFjayB0byB0aGUgaHlwZXJ2aXNvci4gVGhlc2UgcGFnZXMgYXJlIG1hcmtlZCBhcyBtbWlv
-IGluIHRoZQo+IGh5cGVydmlzb3IuIER1cmluZyBhIHJlYWQgb2Ygc3VjaCBhIHBhZ2UgdmlhIHRo
-ZSAvcHJvYy92bWNvcmUgaW50ZXJmYWNlCj4gdGhlIGh5cGVydmlzb3IgY2FsbHMgdGhlIHFlbXUt
-ZG0gcHJvY2Vzcy4gcWVtdS1kbSB0cmllcyB0byBtYXAgdGhlIHBhZ2UsCj4gdGhpcyBhdHRlbXB0
-IGZhaWxzIGJlY2F1c2UgdGhlIHBhZ2UgaXMgbm90IGJhY2tlZCBieSByYW0gYW5kIDB4ZmYgaXMK
-PiByZXR1cm5lZC4gQWxsIHRoaXMgZ2VuZXJhdGVzIGhpZ2ggbG9hZCBpbiBkb20wIGJlY2F1c2Ug
-dGhlIHJlYWRzIGNvbWUKPiBhcyA4Ynl0ZSByZXF1ZXN0cy4KPgo+IFRoZXJlIHNlZW1zIHRvIGJl
-IG5vIHdheSB0byBtYWtlIHRoZSBjcmFzaCBrZXJuZWwgYXdhcmUgb2YgdGhlIHN0YXRlIG9mCj4g
-aW5kaXZpZHVhbCBwYWdlcyBpbiB0aGUgY3Jhc2hlZCBrZXJuZWwsIGl0IGlzIG5vdCBhd2FyZSBv
-ZiBtZW1vcnkKPiBiYWxsb29uaW5nLiBBbmQgZG9pbmcgdGhhdCBmcm9tIHdpdGhpbiB0aGUgImtl
-cm5lbCB0byBjcmFzaCIgc2VlbXMgZXJyb3IKPiBwcm9uZS4gU2luY2Ugb3ZlciB0aW1lIHRoZSBm
-cmFnbWVudGF0aW9uIHdpbGwgaW5jcmVhc2UsIGl0IHdvdWxkIGJlIGJlc3QKPiBpZiB0aGUgY3Jh
-c2gga2VybmVsIGl0c2VsZiBxdWVyaWVzIHRoZSBzdGF0ZSBvZiBvbGRtZW0gcGFnZXMuCj4KPiBJ
-ZiBjb3B5X29sZG1lbV9wYWdlKCkgd291bGQgY2FsbCBhIGZ1bmN0aW9uLCBhIGhvb2ssIHByb3Zp
-ZGVkIGJ5IHRoZSBYZW4KPiBwdi1vbi1odm0gZHJpdmVycyB0byBxdWVyeSBpZiB0aGUgcGZuIHRv
-IHJlYWQgZnJvbSBpcyByZWFsbHkgYmFja2VkIGJ5Cj4gcmFtIHRoZSBsb2FkIGlzc3VlIGNvdWxk
-IGJlIGF2b2lkZWQuIFVuZm9ydHVuYXRlbHksIGV2ZW4gWGVuIG5lZWRzIHRvCj4gZ2V0IGEgbmV3
-IGludGVyZmFjZSB0byBxdWVyeSB0aGUgc3RhdGUgb2YgaW5kaXZpZHVhbCBodm0gZ3Vlc3QgcGZu
-cyBmb3IKPiB0aGUgcHVycG9zZSBtZW50aW9uZWQgYWJvdmUuCgpUaGlzIG1ha2VzIHNlbnNlIGZv
-ciBtZSwgd2UgbWlnaHQgbmVlZCBhIFhlbi1zcGVjaWZpYyBjb3B5X29sZG1lbV9wYWdlKCkKaG9v
-ayBhbmQgYSBuYXRpdmUgaG9vay4KCj4KPiBBbm90aGVyIGlzc3VlLCBzbGlnaHRseSByZWxhdGVk
-LCBpcyBtZW1vcnkgaG90cGx1Zy4KPiBIb3cgaXMgdGhpcyBjdXJyZW50bHkgaGFuZGxlZCBmb3Ig
-a2R1bXA/IMKgSXMgdGhlcmUgY29kZSB3aGljaAo+IGF1dG9tYXRpY2FsbHkgcmVjb25maWd1cmVz
-IHRoZSBrZHVtcCBrZXJuZWwgd2l0aCB0aGUgbmV3IG1lbW9yeSByYW5nZXM/Cj4KCk5vLCB0aGUg
-Y3Jhc2hrZXJuZWwgbWVtb3J5IGlzIHJlc2VydmVkIGR1cmluZyBib290LCBhbmQgaXQgaXMgc3Rh
-dGljIGFmdGVyCnRoYXQgKGV4Y2VwdCB5b3UgY2FuIHNocmluayB0aGlzIG1lbW9yeSB2aWEgL3N5
-cykuIEtkdW1wIGlzbid0IGF3YXJlIG9mCm1lbW9yeSBob3RwbHVnLgoKVGhhbmtzLgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+
+Thanks a lot for the response. Please
+
+On 04/07/11 13:53, Sebastian Andrzej Siewior wrote:
+> Suzuki Poulose wrote:
+>> Hi Sebastian,
+> Hi,
+>
+>> I am working on the Kexec support for PPC44x based boards. I was going through
+>> the patchset that you have posted for FSL Book E. I was not able to understand
+>> some parts of the setup code. If you have some time, could you please help me by
+>> answering the questions below :
+>>
+>> Here is what I understood from the code walk through :
+>>
+>> In relocate_kernel :, we try to setup a 1:1 mapping for 0-2GB of memory so that
+>> the code could run with the MMU switched on. We leave a temparory mapping in
+>> place and create the mapping for 0-2GiB.
+>>
+>> Q1: Does the temparory mapping cover the code which sets up the mapping ? i.e,
+>> the code in fsl_booke_entry_mapping.S ?
+>
+> Yes, it does. Please keep in mind that relocate_new_kernel is kmalloc()
+> into a separate page while running. This is not just the case for
+> FSL-BookE but for all arches.
+>
+>> Q2: Does the relocate kernel also get loaded within the 0-2GB memory ?
+>
+The above should have been relocate_new_kernel(), loaded into 0-2GB virtual address ?
+> Yes. We don't have a mapping >2GiB.
+>
+
+>> If so,
+>> won't we have multiple mappings for the code we are executing, unless we were
+>> mapped 1:1 by the primary kernel ?
+>
+> The primary kernel maps 0-2GiB 1:1. We jump to relocate_new_kernel() which
+> is somewhere within 0..2GiB and not part of the original kernel image.
+So the 0-2GiB 1:1 mapping, could create a 1:1 entry for the
+relocate_new_kernel()'s physical address(which is again somewhere in 0..2GiB) too.
+But the virtual address for relocate_new_kernel() could be different (not
+necessarily 1:1, as mapped by the primary kernel). So we will have one mapping setup
+by the primary kernel and the other by the 1:1 mapping.
+This is the case of "multiple mappings", I was referring to above.
+
+How is this case taken care of ? Is it via the temporary mapping ? What is the virtual
+  address used by temporary mapping for the "relocate_new_kernel()" ?
+
+
+Thanks
+Suzuki
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
