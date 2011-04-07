@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q7pSS-0007bK-Rb
-	for kexec@lists.infradead.org; Thu, 07 Apr 2011 13:41:13 +0000
-Date: Thu, 7 Apr 2011 09:40:46 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
-	enabling interrupt
-Message-ID: <20110407134046.GA27778@redhat.com>
-References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
-	<20110406204742.GH18777@redhat.com>
-	<EBCBF4AC9FDAD4indou.takao@jp.fujitsu.com>
-	<ECCBF4AD4D39CDindou.takao@jp.fujitsu.com>
+Received: from am1ehsobe005.messaging.microsoft.com ([213.199.154.208]
+	helo=AM1EHSOBE005.bigfish.com)
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1Q7qzV-0008Vh-CZ
+	for kexec@lists.infradead.org; Thu, 07 Apr 2011 15:19:26 +0000
+From: McClintock Matthew-B29882 <B29882@freescale.com>
+Subject: Re: Question regarding the kexec support for FSL Book E
+Date: Thu, 7 Apr 2011 15:19:12 +0000
+Message-ID: <BANLkTimw4e=mF-8K+zwtXed9BcA1c8=7-g@mail.gmail.com>
+References: <4D9D5F17.2040208@in.ibm.com> <4D9D7465.8030102@linutronix.de>
+	<4D9D9B1E.70001@in.ibm.com>
+In-Reply-To: <4D9D9B1E.70001@in.ibm.com>
+Content-Language: en-US
+Content-ID: <FBEACFE2F1CEA046820AF32EB0A1E611@freescale.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ECCBF4AD4D39CDindou.takao@jp.fujitsu.com>
+Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,77 +23,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Ingo Molnar <mingo@elte.hu>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+To: Suzuki Poulose <suzuki@in.ibm.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
 
-On Wed, Apr 06, 2011 at 06:52:27PM -0400, Takao Indoh wrote:
-> On Wed, 06 Apr 2011 18:47:36 -0400, Takao Indoh wrote:
-> 
-> >On Wed, 6 Apr 2011 16:47:42 -0400, Vivek Goyal wrote:
-> >
-> >>On Tue, Mar 29, 2011 at 12:35:04PM -0400, Takao Indoh wrote:
-> >>> Hi all,
-> >>> 
-> >>> This patch renames init_call_single_data() to call_function_init() and
-> >>> calls it in start_kernel() so that call_single_queue can be initialized
-> >>> before enabling interrupt.
-> >>> 
-> >>> There is a problem that kdump(2nd kernel) sometimes hangs up due to
-> >>> pending IPI from 1st kernel. Kernel panic occurs because IPI comes
-> >>> before call_single_queue is initialized. The details are as follows.
-> >>> (1) 2nd kernel boot up
-> >>> (2) A pending IPI from 1st kernel comes when irqs are first enabled
-> >>>     in start_kernel().
-> >>> (3) Kernel tries to handle the interrupt, but call_single_queue is not
-> >>>     initialized yet at this point. As a result, in the
-> >>>     generic_smp_call_function_single_interrupt(), NULL pointer
-> >>>     dereference occurs when list_replace_init() tries to access
-> >>>     &q->list.next.
-> >>> Therefore this patch changes the name of init_call_single_data() to
-> >>> call_function_init() and calls it before local_irq_enable() in
-> >>> start_kernel().
-> >>> 
-> >>> v2:
-> >>> - Rename init_call_single_data() to call_function_init() and calls it in
-> >>>   start_kernel()
-> >>> - Change insert position in start_kernel().
-> >>> - Adjust for CONFIG_SMP/CONFIG_USE_GENERIC_SMP_HELPERS options
-> >>> - Rebased to Linus's latest tree
-> >>> 
-> >>> v1:
-> >>> https://lkml.org/lkml/2011/3/25/317
-> >>> - Divide init_call_single_data() into two functions,
-> >>>    o init_call_single_data: initialize call_single_queue
-> >>>    o init_hotplug_cfd: initialize hotplug_cfd_notifier
-> >>>   And call init_call_single_data before local_irq_enable() in
-> >>>   start_kernel().
-> >>> 
-> >>> v0:
-> >>> https://lkml.org/lkml/2011/3/23/417
-> >>> - In generic_smp_call_function_single_interrupt(), check if
-> >>>   call_single_queue was initialized or not, and just return if not
-> >>>   initialized.
-> >>> 
-> >>> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+On Thu, Apr 7, 2011 at 6:08 AM, Suzuki Poulose <suzuki@in.ibm.com> wrote:
+> So the 0-2GiB 1:1 mapping, could create a 1:1 entry for the
+> relocate_new_kernel()'s physical address(which is again somewhere in
+> 0..2GiB) too.
+> But the virtual address for relocate_new_kernel() could be different (not
+> necessarily 1:1, as mapped by the primary kernel). So we will have one
+> mapping setup
+> by the primary kernel and the other by the 1:1 mapping.
+> This is the case of "multiple mappings", I was referring to above.
+>
+> How is this case taken care of ? Is it via the temporary mapping ? What is
+> the virtual
+> =A0address used by temporary mapping for the "relocate_new_kernel()" ?
 
-[..]
-> >So, list_empty(list)? is always false, if I am not missing something.
-> 
-> No, list_empty(list)? is always *true*.
-> 
+When you load the new kexec image with kexec -l, I believe we make
+sure we are in the first 2gb of memory. Then when you kexec, all the
+TLB's are torn down and we setup a 1:1 virtual:physical mapping for
+the first 2GB of memory. Then some assembly copies kernel from the
+stored location to the destination and we boot the new kernel.
 
-ok, I got it. So list_replace_init() is fine even if q->list is empty. So
-when a pending IPI from previous kernel comes, q->list will be empty
-and we will simply do nothing. Sounds reaosnable to me.
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Thanks
-Vivek
+-M
 
 _______________________________________________
 kexec mailing list
