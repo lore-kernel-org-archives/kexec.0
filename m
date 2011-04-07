@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mo-p00-ob.rzone.de ([81.169.146.161])
+Received: from mail-pw0-f49.google.com ([209.85.160.49])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q7lxN-0005rp-H4
-	for kexec@lists.infradead.org; Thu, 07 Apr 2011 09:56:54 +0000
-Date: Thu, 7 Apr 2011 11:56:47 +0200
-From: Olaf Hering <olaf@aepfle.de>
-Subject: dynamic oldmem in kdump kernel
-Message-ID: <20110407095646.GA30788@aepfle.de>
+	id 1Q7mMp-00063V-55
+	for kexec@lists.infradead.org; Thu, 07 Apr 2011 10:23:15 +0000
+Received: by pwi8 with SMTP id 8so1080442pwi.36
+	for <kexec@lists.infradead.org>; Thu, 07 Apr 2011 03:23:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <20110407095646.GA30788@aepfle.de>
+References: <20110407095646.GA30788@aepfle.de>
+Date: Thu, 7 Apr 2011 18:23:07 +0800
+Message-ID: <BANLkTimXRcKyWdUxS2TRzibcSUdCfObH3g@mail.gmail.com>
+Subject: Re: dynamic oldmem in kdump kernel
+From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,47 +20,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+To: Olaf Hering <olaf@aepfle.de>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-
-Recently kdump for pv-on-hvm Xen guests was implemented by me.
-
-One issue remains:
-The xen_balloon driver in the guest frees guest pages and gives them
-back to the hypervisor. These pages are marked as mmio in the
-hypervisor. During a read of such a page via the /proc/vmcore interface
-the hypervisor calls the qemu-dm process. qemu-dm tries to map the page,
-this attempt fails because the page is not backed by ram and 0xff is
-returned. All this generates high load in dom0 because the reads come
-as 8byte requests.
-
-There seems to be no way to make the crash kernel aware of the state of
-individual pages in the crashed kernel, it is not aware of memory
-ballooning. And doing that from within the "kernel to crash" seems error
-prone. Since over time the fragmentation will increase, it would be best
-if the crash kernel itself queries the state of oldmem pages. 
-
-If copy_oldmem_page() would call a function, a hook, provided by the Xen
-pv-on-hvm drivers to query if the pfn to read from is really backed by
-ram the load issue could be avoided. Unfortunately, even Xen needs to
-get a new interface to query the state of individual hvm guest pfns for
-the purpose mentioned above.
-
-
-
-Another issue, slightly related, is memory hotplug.
-How is this currently handled for kdump?  Is there code which
-automatically reconfigures the kdump kernel with the new memory ranges?
-
-
-Olaf
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBBcHIgNywgMjAxMSBhdCA1OjU2IFBNLCBPbGFmIEhlcmluZyA8b2xhZkBhZXBmbGUu
+ZGU+IHdyb3RlOgo+Cj4gUmVjZW50bHkga2R1bXAgZm9yIHB2LW9uLWh2bSBYZW4gZ3Vlc3RzIHdh
+cyBpbXBsZW1lbnRlZCBieSBtZS4KPgo+IE9uZSBpc3N1ZSByZW1haW5zOgo+IFRoZSB4ZW5fYmFs
+bG9vbiBkcml2ZXIgaW4gdGhlIGd1ZXN0IGZyZWVzIGd1ZXN0IHBhZ2VzIGFuZCBnaXZlcyB0aGVt
+Cj4gYmFjayB0byB0aGUgaHlwZXJ2aXNvci4gVGhlc2UgcGFnZXMgYXJlIG1hcmtlZCBhcyBtbWlv
+IGluIHRoZQo+IGh5cGVydmlzb3IuIER1cmluZyBhIHJlYWQgb2Ygc3VjaCBhIHBhZ2UgdmlhIHRo
+ZSAvcHJvYy92bWNvcmUgaW50ZXJmYWNlCj4gdGhlIGh5cGVydmlzb3IgY2FsbHMgdGhlIHFlbXUt
+ZG0gcHJvY2Vzcy4gcWVtdS1kbSB0cmllcyB0byBtYXAgdGhlIHBhZ2UsCj4gdGhpcyBhdHRlbXB0
+IGZhaWxzIGJlY2F1c2UgdGhlIHBhZ2UgaXMgbm90IGJhY2tlZCBieSByYW0gYW5kIDB4ZmYgaXMK
+PiByZXR1cm5lZC4gQWxsIHRoaXMgZ2VuZXJhdGVzIGhpZ2ggbG9hZCBpbiBkb20wIGJlY2F1c2Ug
+dGhlIHJlYWRzIGNvbWUKPiBhcyA4Ynl0ZSByZXF1ZXN0cy4KPgo+IFRoZXJlIHNlZW1zIHRvIGJl
+IG5vIHdheSB0byBtYWtlIHRoZSBjcmFzaCBrZXJuZWwgYXdhcmUgb2YgdGhlIHN0YXRlIG9mCj4g
+aW5kaXZpZHVhbCBwYWdlcyBpbiB0aGUgY3Jhc2hlZCBrZXJuZWwsIGl0IGlzIG5vdCBhd2FyZSBv
+ZiBtZW1vcnkKPiBiYWxsb29uaW5nLiBBbmQgZG9pbmcgdGhhdCBmcm9tIHdpdGhpbiB0aGUgImtl
+cm5lbCB0byBjcmFzaCIgc2VlbXMgZXJyb3IKPiBwcm9uZS4gU2luY2Ugb3ZlciB0aW1lIHRoZSBm
+cmFnbWVudGF0aW9uIHdpbGwgaW5jcmVhc2UsIGl0IHdvdWxkIGJlIGJlc3QKPiBpZiB0aGUgY3Jh
+c2gga2VybmVsIGl0c2VsZiBxdWVyaWVzIHRoZSBzdGF0ZSBvZiBvbGRtZW0gcGFnZXMuCj4KPiBJ
+ZiBjb3B5X29sZG1lbV9wYWdlKCkgd291bGQgY2FsbCBhIGZ1bmN0aW9uLCBhIGhvb2ssIHByb3Zp
+ZGVkIGJ5IHRoZSBYZW4KPiBwdi1vbi1odm0gZHJpdmVycyB0byBxdWVyeSBpZiB0aGUgcGZuIHRv
+IHJlYWQgZnJvbSBpcyByZWFsbHkgYmFja2VkIGJ5Cj4gcmFtIHRoZSBsb2FkIGlzc3VlIGNvdWxk
+IGJlIGF2b2lkZWQuIFVuZm9ydHVuYXRlbHksIGV2ZW4gWGVuIG5lZWRzIHRvCj4gZ2V0IGEgbmV3
+IGludGVyZmFjZSB0byBxdWVyeSB0aGUgc3RhdGUgb2YgaW5kaXZpZHVhbCBodm0gZ3Vlc3QgcGZu
+cyBmb3IKPiB0aGUgcHVycG9zZSBtZW50aW9uZWQgYWJvdmUuCgpUaGlzIG1ha2VzIHNlbnNlIGZv
+ciBtZSwgd2UgbWlnaHQgbmVlZCBhIFhlbi1zcGVjaWZpYyBjb3B5X29sZG1lbV9wYWdlKCkKaG9v
+ayBhbmQgYSBuYXRpdmUgaG9vay4KCj4KPiBBbm90aGVyIGlzc3VlLCBzbGlnaHRseSByZWxhdGVk
+LCBpcyBtZW1vcnkgaG90cGx1Zy4KPiBIb3cgaXMgdGhpcyBjdXJyZW50bHkgaGFuZGxlZCBmb3Ig
+a2R1bXA/IMKgSXMgdGhlcmUgY29kZSB3aGljaAo+IGF1dG9tYXRpY2FsbHkgcmVjb25maWd1cmVz
+IHRoZSBrZHVtcCBrZXJuZWwgd2l0aCB0aGUgbmV3IG1lbW9yeSByYW5nZXM/Cj4KCk5vLCB0aGUg
+Y3Jhc2hrZXJuZWwgbWVtb3J5IGlzIHJlc2VydmVkIGR1cmluZyBib290LCBhbmQgaXQgaXMgc3Rh
+dGljIGFmdGVyCnRoYXQgKGV4Y2VwdCB5b3UgY2FuIHNocmluayB0aGlzIG1lbW9yeSB2aWEgL3N5
+cykuIEtkdW1wIGlzbid0IGF3YXJlIG9mCm1lbW9yeSBob3RwbHVnLgoKVGhhbmtzLgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
