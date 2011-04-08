@@ -1,30 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e34.co.us.ibm.com ([32.97.110.152])
+Received: from mail-pw0-f49.google.com ([209.85.160.49])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1Q83bU-0005hD-W1
-	for kexec@lists.infradead.org; Fri, 08 Apr 2011 04:47:30 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e34.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p384ZMfw009486
-	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 22:35:22 -0600
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	p384lOd3101530
-	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 22:47:24 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p384lNMF027934
-	for <kexec@lists.infradead.org>; Thu, 7 Apr 2011 22:47:24 -0600
-Message-ID: <4D9E9355.8010407@in.ibm.com>
-Date: Fri, 08 Apr 2011 10:17:17 +0530
-From: Suzuki Poulose <suzuki@in.ibm.com>
+	id 1Q89GP-0007S0-Vr
+	for kexec@lists.infradead.org; Fri, 08 Apr 2011 10:50:06 +0000
+Received: by pwi8 with SMTP id 8so1454106pwi.36
+	for <kexec@lists.infradead.org>; Fri, 08 Apr 2011 03:50:03 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: Question regarding the kexec support for FSL Book E
-References: <4D9D5F17.2040208@in.ibm.com> <4D9D7465.8030102@linutronix.de>
-	<4D9D9B1E.70001@in.ibm.com>
-	<BANLkTimw4e=mF-8K+zwtXed9BcA1c8=7-g@mail.gmail.com>
-	<20110407162258.GA15298@linutronix.de>
-In-Reply-To: <20110407162258.GA15298@linutronix.de>
+In-Reply-To: <20110407131250.GA1571@aepfle.de>
+References: <20110407095646.GA30788@aepfle.de>
+	<BANLkTimXRcKyWdUxS2TRzibcSUdCfObH3g@mail.gmail.com>
+	<20110407131250.GA1571@aepfle.de>
+Date: Fri, 8 Apr 2011 18:49:15 +0800
+Message-ID: <BANLkTim=Sch-ZM-N=oDkg+N5F-WPGV4qNQ@mail.gmail.com>
+Subject: Re: dynamic oldmem in kdump kernel
+From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,60 +22,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: McClintock Matthew-B29882 <B29882@freescale.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
+To: Olaf Hering <olaf@aepfle.de>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 04/07/11 21:52, Sebastian Andrzej Siewior wrote:
-> * McClintock Matthew-B29882 | 2011-04-07 15:19:12 [+0000]:
->
->> On Thu, Apr 7, 2011 at 6:08 AM, Suzuki Poulose<suzuki@in.ibm.com>  wrote:
->>> How is this case taken care of ? Is it via the temporary mapping ? What is
->>> the virtual
->>>   address used by temporary mapping for the "relocate_new_kernel()" ?
->
-> It is the same as the physical :) It is hard to tell where exactly the
-> kernel image will be. It is somewhere between 0 and
-> KEXEC_CONTROL_MEMORY_LIMIT. It is allocated in
-> kimage_alloc_normal_control_pages(). It should not matter where it is.
-
-I guess I got my answer :). The virtual address of the relocate_new_kernel() is
-a kernel space VA, and hence would be above 2G (> PAGE_OFFSET), so there won't
-be a clash of the 1:1 mapping that we create. Also, the src/destination pages
-won't overlap the with the relocate_new_kernel. Hence we are safe.
-
->
->> When you load the new kexec image with kexec -l, I believe we make
->> sure we are in the first 2gb of memory. Then when you kexec, all the
->> TLB's are torn down and we setup a 1:1 virtual:physical mapping for
->> the first 2GB of memory. Then some assembly copies kernel from the
->> stored location to the destination and we boot the new kernel.
->
-> arch/powerpc/include/asm/kexec.h:
-> |#ifdef CONFIG_FSL_BOOKE
-> |
-> |/*
-> | * On FSL-BookE we setup a 1:1 mapping which covers the first 2GiB of memory
-> | * and therefore we can only deal with memory within this range
-> | */
-> |#define KEXEC_SOURCE_MEMORY_LIMIT      (2 * 1024 * 1024 * 1024UL - 1)
-> |#define KEXEC_DESTINATION_MEMORY_LIMIT (2 * 1024 * 1024 * 1024UL - 1)
-> |#define KEXEC_CONTROL_MEMORY_LIMIT     (2 * 1024 * 1024 * 1024UL - 1)
-> |
-> |#else
->
-> So the kernel never gives memory above 2GiB to userland.
-Right. If the page allocated is above 2GiB Physical Address, it is discarded,
-and we look for new page.
-
-Thanks
-
-Suzuki
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBBcHIgNywgMjAxMSBhdCA5OjEyIFBNLCBPbGFmIEhlcmluZyA8b2xhZkBhZXBmbGUu
+ZGU+IHdyb3RlOgo+IE9uIFRodSwgQXByIDA3LCBBbcOpcmljbyBXYW5nIHdyb3RlOgo+Cj4+IE9u
+IFRodSwgQXByIDcsIDIwMTEgYXQgNTo1NiBQTSwgT2xhZiBIZXJpbmcgPG9sYWZAYWVwZmxlLmRl
+PiB3cm90ZToKPj4gPiBBbm90aGVyIGlzc3VlLCBzbGlnaHRseSByZWxhdGVkLCBpcyBtZW1vcnkg
+aG90cGx1Zy4KPj4gPiBIb3cgaXMgdGhpcyBjdXJyZW50bHkgaGFuZGxlZCBmb3Iga2R1bXA/IMKg
+SXMgdGhlcmUgY29kZSB3aGljaAo+PiA+IGF1dG9tYXRpY2FsbHkgcmVjb25maWd1cmVzIHRoZSBr
+ZHVtcCBrZXJuZWwgd2l0aCB0aGUgbmV3IG1lbW9yeSByYW5nZXM/Cj4+ID4KPj4KPj4gTm8sIHRo
+ZSBjcmFzaGtlcm5lbCBtZW1vcnkgaXMgcmVzZXJ2ZWQgZHVyaW5nIGJvb3QsIGFuZCBpdCBpcyBz
+dGF0aWMgYWZ0ZXIKPj4gdGhhdCAoZXhjZXB0IHlvdSBjYW4gc2hyaW5rIHRoaXMgbWVtb3J5IHZp
+YSAvc3lzKS4KPgo+IEkgbWVhbnQgdGhlIG92ZXJhbGwgYW1vdW50IG9mIG1lbW9yeSBjaGFuZ2Vk
+IGJ5IG1lbW9yeSBob3RwbHVnIGV2ZW50cywKPiBub3QgdGhlIHNtYWxsIG1lbW9yeSByYW5nZSBm
+b3IgdGhlIGNyYXNoIGtlcm5lbCBpdHNlbGYuCj4KPj4gS2R1bXAgaXNuJ3QgYXdhcmUgb2YgbWVt
+b3J5IGhvdHBsdWcuCj4KPiBPay4gwqBQZXJoYXBzIHRoZXJlIGFyZSBob3RwbHVnIGV2ZW50cyB3
+aGVyZSBhIGhlbHBlciBzY3JpcHQgY291bGQgcnVuCj4gc29tZXRoaW5nIGxpa2UgJ3Jja2R1bXAg
+cmVzdGFydCcuCj4KClRoYXQgd2lsbCBub3Qgd29yay4KCllvdSBuZWVkIHRvIGNoYW5nZSB0aGUg
+a2VybmVsIHRvIGxldCBjcmFzaGtlcm5lbCBtZW1vcnkgdG8gYmUgYXdhcmUKb2YgbWVtb3J5LWhv
+dHBsdWcsIHdoaWNoIG1lYW5zIHlvdSBuZWVkIHRvIHJlLXNlYXJjaCBmb3IgYSBzdWl0YWJsZQpt
+ZW1vcnkgcmFuZ2UgaW4gdGhlIG5ld2x5IGFkZGVkIG1lbW9yeS4KClRoYW5rcy4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
