@@ -1,28 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from e32.co.us.ibm.com ([32.97.110.150])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QAq8Y-0001l5-5O
-	for kexec@lists.infradead.org; Fri, 15 Apr 2011 21:01:10 +0000
-Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
-	[9.17.195.228])
-	by e32.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p3FKo0c1008627
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 14:50:00 -0600
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p3FL11qb103378
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:01:01 -0600
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p3FL1067029236
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:01:00 -0600
-Date: Fri, 15 Apr 2011 14:00:51 -0700
-From: Nishanth Aravamudan <nacc@us.ibm.com>
+	id 1QAqFb-0001no-FE
+	for kexec@lists.infradead.org; Fri, 15 Apr 2011 21:08:27 +0000
+Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
+	[9.17.195.226])
+	by e32.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p3FKvJPE016379
+	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 14:57:19 -0600
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p3FL8KHV099332
+	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:08:20 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
+	id p3FL8KKO003135
+	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:08:20 -0600
+Date: Fri, 15 Apr 2011 14:08:19 -0700
+From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 Subject: Re: [PATCH] powerpc: Fix kexec-related UP build error
-Message-ID: <20110415210051.GA31245@us.ibm.com>
+Message-ID: <20110415210819.GE2283@linux.vnet.ibm.com>
 References: <20110415202916.GA6758@linux.vnet.ibm.com>
+	<20110415210051.GA31245@us.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110415202916.GA6758@linux.vnet.ibm.com>
+In-Reply-To: <20110415210051.GA31245@us.ibm.com>
+Reply-To: paulmck@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,24 +37,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+To: Nishanth Aravamudan <nacc@us.ibm.com>
 Cc: paulus@samba.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On 15.04.2011 [13:29:16 -0700], Paul E. McKenney wrote:
-> Hello!
+On Fri, Apr 15, 2011 at 02:00:51PM -0700, Nishanth Aravamudan wrote:
+> Hi Paul,
 > 
-> The following patch fixes a UP build problem for kexec() on powerpc.
-> When the crash_kexec_wait_realmode() function was added, it was
-> placed in only two of the three required locations.
+> On 15.04.2011 [13:29:16 -0700], Paul E. McKenney wrote:
+> > Hello!
+> > 
+> > The following patch fixes a UP build problem for kexec() on powerpc.
+> > When the crash_kexec_wait_realmode() function was added, it was
+> > placed in only two of the three required locations.
+> 
+> I believe the fix has already been posted as
+> 
+> http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-April/089559.html
 
-I believe the fix has already been posted as
+So it has!  Thank you for the pointer.
 
-http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-April/089559.html
-
-Thanks,
-Nish 
+							Thanx, Paul
 
 _______________________________________________
 kexec mailing list
