@@ -1,30 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QAqFb-0001no-FE
-	for kexec@lists.infradead.org; Fri, 15 Apr 2011 21:08:27 +0000
-Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
-	[9.17.195.226])
-	by e32.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p3FKvJPE016379
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 14:57:19 -0600
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p3FL8KHV099332
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:08:20 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p3FL8KKO003135
-	for <kexec@lists.infradead.org>; Fri, 15 Apr 2011 15:08:20 -0600
-Date: Fri, 15 Apr 2011 14:08:19 -0700
-From: "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Subject: Re: [PATCH] powerpc: Fix kexec-related UP build error
-Message-ID: <20110415210819.GE2283@linux.vnet.ibm.com>
-References: <20110415202916.GA6758@linux.vnet.ibm.com>
-	<20110415210051.GA31245@us.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110415210051.GA31245@us.ibm.com>
-Reply-To: paulmck@linux.vnet.ibm.com
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1QBNMK-00030k-7q
+	for kexec@lists.infradead.org; Sun, 17 Apr 2011 08:29:33 +0000
+From: Amerigo Wang <amwang@redhat.com>
+Subject: [Patch] kexec: fix the missing i386 part in commit 1100580b05e
+Date: Sun, 17 Apr 2011 16:29:05 +0800
+Message-Id: <1303028945-15298-1-git-send-email-amwang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,30 +15,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Nishanth Aravamudan <nacc@us.ibm.com>
-Cc: paulus@samba.org, linuxppc-dev@lists.ozlabs.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>, Amerigo Wang <amwang@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Apr 15, 2011 at 02:00:51PM -0700, Nishanth Aravamudan wrote:
-> Hi Paul,
-> 
-> On 15.04.2011 [13:29:16 -0700], Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > The following patch fixes a UP build problem for kexec() on powerpc.
-> > When the crash_kexec_wait_realmode() function was added, it was
-> > placed in only two of the three required locations.
-> 
-> I believe the fix has already been posted as
-> 
-> http://lists.ozlabs.org/pipermail/linuxppc-dev/2011-April/089559.html
+Vivek pointed out that I missed the i386 part in this commit,
 
-So it has!  Thank you for the pointer.
+	commit 1100580b05e3fdfe648d9be8617d962b11f4b88b
+	Author: Amerigo Wang <amwang@redhat.com>
+	Date:   Thu Mar 3 00:10:43 2011 +0800
 
-							Thanx, Paul
+	    get the backup area dynamically
+
+Yes. The customer who reported that bug definitely only
+tested it on x86_64. Now make it complete.
+
+Signed-off-by: Amerigo Wang <amwang@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>
+
+---
+diff --git a/kexec/arch/i386/kexec-x86.c b/kexec/arch/i386/kexec-x86.c
+index 5c701aa..014ecd5 100644
+--- a/kexec/arch/i386/kexec-x86.c
++++ b/kexec/arch/i386/kexec-x86.c
+@@ -184,6 +184,10 @@ void arch_update_purgatory(struct kexec_info *info)
+ 		&arch_options.console_vga, sizeof(arch_options.console_vga));
+ 	elf_rel_set_symbol(&info->rhdr, "console_serial",
+ 		&arch_options.console_serial, sizeof(arch_options.console_serial));
++	elf_rel_set_symbol(&info->rhdr, "backup_src_start",
++		&info->backup_src_start, sizeof(info->backup_src_start));
++	elf_rel_set_symbol(&info->rhdr, "backup_src_size",
++		&info->backup_src_size, sizeof(info->backup_src_size));
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		panic_kernel = 1;
+ 		elf_rel_set_symbol(&info->rhdr, "backup_start",
 
 _______________________________________________
 kexec mailing list
