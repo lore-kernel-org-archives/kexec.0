@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from [220.231.59.163] (helo=mail2.thunderst.com)
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QCEBd-0007Bx-Jy
-	for kexec@lists.infradead.org; Tue, 19 Apr 2011 16:54:02 +0000
-Date: Tue, 19 Apr 2011 12:53:59 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch] kexec: fix the missing i386 part in commit 1100580b05e
-Message-ID: <20110419165359.GI31712@redhat.com>
-References: <1303028945-15298-1-git-send-email-amwang@redhat.com>
-	<20110418125802.GD30783@redhat.com> <4DAD8461.5050101@redhat.com>
-	<4DADB63D.8050001@redhat.com>
+	id 1QCRhN-0004bD-SA
+	for kexec@lists.infradead.org; Wed, 20 Apr 2011 07:19:43 +0000
+Received: from [192.168.9.235] (unknown [192.168.9.235])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail2.thunderst.com (Postfix) with ESMTP id D31C616D0081
+	for <kexec@lists.infradead.org>; Wed, 20 Apr 2011 15:19:37 +0800 (CST)
+Message-ID: <4DAE8906.5010605@Thunderst.com>
+Date: Wed, 20 Apr 2011 15:19:34 +0800
+From: zhangchenyu <zhangcy0228@Thunderst.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4DADB63D.8050001@redhat.com>
+Subject: Re: [KEXEC] [ARM]
+References: <1207900080.15605.14.camel@x61.ebiederm.org>
+	<4DAD7D87.9040608@Thunderst.com>
+In-Reply-To: <4DAD7D87.9040608@Thunderst.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,28 +24,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cong Wang <amwang@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-T24gV2VkLCBBcHIgMjAsIDIwMTEgYXQgMTI6MjA6MTNBTSArMDgwMCwgQ29uZyBXYW5nIHdyb3Rl
-Ogo+IOS6jiAyMDEx5bm0MDTmnIgxOeaXpSAyMDo0NywgQ29uZyBXYW5nIOWGmemBkzoKPiA+5LqO
-IDIwMTHlubQwNOaciDE45pelIDIwOjU4LCBWaXZlayBHb3lhbCDlhpnpgZM6Cj4gPj5IYXZlIHlv
-dSB2ZXJpZmllZCB0aGUgY29udGVudHMgb2YgYmFja3VwIGFyZWE/IEkgd2FudCB0byBtYWtlIHN1
-cmUgdGhhdAo+ID4+ZXZlcnl0aGluZyBpcyB3b3JraW5nIGFuZCBpbiBzZWNvbmQga2VybmVsIHdo
-ZW4gd2UgcmVhZCB1cCB2bWNvcmUsIHdlCj4gPj5kbyByZWFkIGNvbnRlbnRzIHByb3Blcmx5Lgo+
-ID4+Cj4gPgo+ID5Ob3QgeWV0LCBJIGFtIHN0aWxsIHRyeWluZyB0byBmaWd1cmUgb3V0IHdoYXQg
-dGhlIHByb2JsZW0gaXMuCj4gPkkgd2lsbCBzZW5kIGFub3RoZXIgcGF0Y2ggb25jZSBJIGtub3cg
-aG93IHRvIGZpeCBpdCwgc28sIGFsdGhvdWdoIHRoaXMKPiA+cGF0Y2ggZG9lc24ndCBmaXggdGhh
-dCBwcm9ibGVtLCBpdCBpcyBjbGVhcmx5IG5lZWRlZC4KPiAKPiBPaywgdGhlIGlzc3VlIEkgZGlz
-Y3Vzc2VkIHdpdGggVml2ZWsgZG9lcyBfbm90XyBhcHBseSB0byB1cHN0cmVhbSwKPiB0aGF0IGlz
-IGEgbWlzdGFrZSB3aGVuIEkgYmFja3BvcnRlZCB0aGUgcGF0Y2ggdG8gUkhFTDUuCj4gCj4gU28s
-IGZvciB1cHN0cmVhbSB0aGUgcGF0Y2ggaW4gdGhpcyB0aHJlYWQgaXMgZW5vdWdoLgo+IAo+IEhv
-cGUgdGhpcyBpcyBjbGVhciBub3cuCgpTbyBhZ2FpbiwgaGF2ZSB5b3UgZG9uZSB0ZXN0aW5nIG9u
-IHVwc3RyZWFtIGtlcm5lbHMgdG8gbWFrZSBzdXJlIGJhY2t1cAphcmVhIGNvbnRlbnRzIGFyZSBm
-aW5lPwoKVGhhbmtzClZpdmVrCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+aGk6CkkgdXNlZCBzdGFuZGFyZCBhcm0tbGludXgtZ2NjLCBhbmQgY29uZmlndXJlZCBhcyBmb2xs
+b3c6CgpMREZMQUdTPS1zdGF0aWMgClRBUkdFVF9DQz0vb3B0L3Vzci9sb2NhbC9hcm0vNC4zLjIv
+YmluL2FybS1ub25lLWxpbnV4LWdudWVhYmktZ2NjIApUQVJHRVRfTEQ9L29wdC91c3IvbG9jYWwv
+YXJtLzQuMy4yL2Jpbi9hcm0tbm9uZS1saW51eC1nbnVlYWJpLWxkIAouL2NvbmZpZ3VyZSBhcm0g
+LS1idWlsZD14ODZfNjQtcGMtbGludXgtZ251IC0taG9zdD14ODZfNjQtcGMtbGludXgtZ251IAot
+LXRhcmdldD1hcm0tbm9uZS1saW51eC1nbnVlYWJpCgphbmQgd2hlbiBJIGV4ZWN1dGUgb24gYW5k
+cm9pZCBhcyBmb2xsb3c6CiMgL2RhdGEva2V4ZWMKL2RhdGEva2V4ZWMKL2RhdGEva2V4ZWM6IDY6
+IFN5bnRheCBlcnJvcjogZW5kIG9mIGZpbGUgdW5leHBlY3RlZCAoZXhwZWN0aW5nICIpIikKCmFu
+ZCBJIGZvdW5kIHRoYXQgIi9idWlsZC9zYmluL2tleGVjIiBJIGNvbXBpbGVkIGlzIGZvciB4ODZf
+NjQ6CnJvb3RAemN5NjE4LU9wdGlQbGV4LTM4MDovemN5X3dvcmtzcGFjZS96Y3lfbGludXhfYWNj
+dW11bGF0aW9uL2tkdW1wK2tleGVjL2tleGVjLXRvb2xzLTIuMC4yIyAKZmlsZSBidWlsZC9zYmlu
+L2tleGVjCmJ1aWxkL3NiaW4va2V4ZWM6IEVMRiA2NC1iaXQgTFNCIGV4ZWN1dGFibGUsIHg4Ni02
+NCwgdmVyc2lvbiAxIAooR05VL0xpbnV4KSwgc3RhdGljYWxseSBsaW5rZWQsIGZvciBHTlUvTGlu
+dXggMi42LjE1LCBub3Qgc3RyaXBwZWQKCnJvb3RAemN5NjE4LU9wdGlQbGV4LTM4MDovemN5X3dv
+cmtzcGFjZS96Y3lfbGludXhfYWNjdW11bGF0aW9uL2tkdW1wK2tleGVjL2tleGVjLXRvb2xzLTIu
+MC4yIyAKZmlsZSBidWlsZC9zYmluL2tkdW1wCmJ1aWxkL3NiaW4va2R1bXA6IEVMRiAzMi1iaXQg
+TFNCIGV4ZWN1dGFibGUsIEFSTSwgdmVyc2lvbiAxIChTWVNWKSwgCmR5bmFtaWNhbGx5IGxpbmtl
+ZCAodXNlcyBzaGFyZWQgbGlicyksIGZvciBHTlUvTGludXggMi42LjE0LCBub3Qgc3RyaXBwZWQK
+CmFuZCBJIHdhbnQgdG8ga25vdyBob3cgdG8gY29tcGlsZSBpdCBmb3IgYXJtLCBiZWNhdXNlIEkg
+dGhvdWdodCB0aGF0IEkgCmhhdmUgbWFkZSBtYWtlZmlsZSBmb3IgYXJtIGJ1dCBpdCBpcyBub3Qu
+CgpDb3VsZCBzb21lYm9keSBoZWxwIG1lPyBJIHdvdWxkIHZlcnkgYXBwcmVjaWF0ZSBpdC4KClRo
+YW5rIHlvdSB2ZXJ5IG11Y2guCgpPbiAyMDEx5bm0MDTmnIgxOeaXpSAyMDoxOCwgemhhbmdjaGVu
+eXUgd3JvdGU6Cj4gaGk6Cj4gSSBoYXZlIGNvbXBpbGVkIGtleGUtdG9vbHMtMi4wLjIgZm9yIGFy
+bSwKPgo+IExERkxBR1M9LXN0YXRpYyBUQVJHRVRfQ0M9L29wdC9hcm0tZWFiaS00LjQuMC9iaW4v
+YXJtLWVhYmktZ2NjIAo+IC4vY29uZmlndXJlIGFybSAtLWJ1aWxkPWFybS1ub25lLWxpbnV4LWdu
+dWVhYmkgCj4gLS10YXJnZXQ9YXJtLW5vbmUtbGludXgtZ251ZWFiaSAtLWhvc3Q9aTY4Ni1wYy1s
+aW51eC1nbnUKPgo+IGFuZCBnZW5lcmF0ZWQga2V4ZWMgYW5kIGtkdW1wIGluIGtleGVjLXRvb2xz
+LTIuMC4yL2J1aWxkL3NiaW4vLiBUaGVuIEkgCj4gdXNlZCAiYWRiIHB1c2giIGNvbW1hbmQgdG8g
+ZG93bmxvYWQga2V4ZWMgYW5kIGtkdW1wIGluIC9kYXRhIHdoaWNoIGlzIAo+IGFuIGFuZHJvaWQg
+ZGlyZWN0b3J5LCBhbmQgbWFkZSAiY2htb2QgNzU1IC9kYXRhL2tleGVjIi4gQnV0IHdoZW4gSSBk
+aWQgCj4gIi9kYXRhL2tleGVjIiwgSSBnb3QgdGhlIHJlc3VsdCBhcyBmb2xsb3c6Cj4KPiAjIC9k
+YXRhL2tleGVjCj4gL2RhdGEva2V4ZWMKPiDph43mq7YZP+aInemEiSUQc+mEiSXll5RCEOmEiSU/
+QxjphIkl5oCLQzogbm90IGZvdW5kCj4gf0VMRgIBAQMCOiBub3QgZm91bmQKPiAvZGF0YS9rZXhl
+YzogMjogU3ludGF4IGVycm9yOiB3b3JkIHVuZXhwZWN0ZWQgKGV4cGVjdGluZyAiKSIpCj4KPiBJ
+IGRvIG5vdCB3aHkuIENhbiBzb21lIG9uZSB0ZWxsIG1lPwo+Cj4gVGhhbmsgeW91IHZlcnkgbXVj
+aC4KPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
