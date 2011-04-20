@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e37.co.us.ibm.com ([32.97.110.158])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QCTla-0005jq-5v
-	for kexec@lists.infradead.org; Wed, 20 Apr 2011 09:32:10 +0000
-Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
-	[9.17.195.228])
-	by e37.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p3K9TJWA026859
-	for <kexec@lists.infradead.org>; Wed, 20 Apr 2011 03:29:19 -0600
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p3K9W47d161878
-	for <kexec@lists.infradead.org>; Wed, 20 Apr 2011 03:32:04 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p3K9W4hG028086
-	for <kexec@lists.infradead.org>; Wed, 20 Apr 2011 03:32:04 -0600
-Message-ID: <4DAEA812.4050901@in.ibm.com>
-Date: Wed, 20 Apr 2011 15:02:02 +0530
-From: Suzuki Poulose <suzuki@in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1QCV0x-0006tb-QX
+	for kexec@lists.infradead.org; Wed, 20 Apr 2011 10:52:08 +0000
+Message-ID: <4DAEBAD2.5080004@redhat.com>
+Date: Wed, 20 Apr 2011 18:52:02 +0800
+From: Cong Wang <amwang@redhat.com>
 MIME-Version: 1.0
-Subject: [PATCH] Fix memory access errors for kexec PPC
+Subject: Re: [Patch] kexec: fix the missing i386 part in commit 1100580b05e
+References: <1303028945-15298-1-git-send-email-amwang@redhat.com>
+	<20110418125802.GD30783@redhat.com>
+	<4DAD8461.5050101@redhat.com> <4DADB63D.8050001@redhat.com>
+	<20110419165359.GI31712@redhat.com>
+In-Reply-To: <20110419165359.GI31712@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,73 +21,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: horms@verge.net.au
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-Hi,
-
-I was trying the kexec for ppc32 and came across a couple of memory errors
-while running with glibc.
-
-The attached patch is the outcome of the glibc's alerts !
-We define buf[MAXBYTES-1] and issue  fread(buf, 1, MAXBYTES, file), which glibc
-reports an error.
-
-Also there is a typo in the realloc_memory_ranges() code for ppc which causes in
-a double free().
-
-Kindly apply.
-
-
-Thanks
-Suzuki
-
-
----
-
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
-
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index 7bfad20..7853dbe 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -83,7 +83,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
-  	int memory_ranges = 0;
-  	char device_tree[256] = "/proc/device-tree/";
-  	char fname[256];
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
-  	DIR *dir, *dmem;
-  	FILE *file;
-  	struct dirent *dentry, *mentry;
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index ab76d6f..837021f 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -196,7 +196,7 @@ static int realloc_memory_ranges(void)
-  	if (!memory_range)
-  		goto err;
-  
--	base_memory_range = (struct memory_range *) realloc(memory_range,
-+	base_memory_range = (struct memory_range *) realloc(base_memory_range,
-  			memory_range_len);
-  	if (!base_memory_range)
-  		goto err;
-@@ -319,7 +319,7 @@ static int get_devtree_details(unsigned long kexec_flags)
-  	unsigned long long htab_base, htab_size;
-  	unsigned long long kernel_end;
-  	unsigned long long initrd_start, initrd_end;
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
-  	char device_tree[256] = "/proc/device-tree/";
-  	char fname[256];
-  	DIR *dir, *cdir;
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTHlubQwNOaciDIw5pelIDAwOjUzLCBWaXZlayBHb3lhbCDlhpnpgZM6Cj4gT24gV2Vk
+LCBBcHIgMjAsIDIwMTEgYXQgMTI6MjA6MTNBTSArMDgwMCwgQ29uZyBXYW5nIHdyb3RlOgo+PiDk
+uo4gMjAxMeW5tDA05pyIMTnml6UgMjA6NDcsIENvbmcgV2FuZyDlhpnpgZM6Cj4+PiDkuo4gMjAx
+MeW5tDA05pyIMTjml6UgMjA6NTgsIFZpdmVrIEdveWFsIOWGmemBkzoKPj4+PiBIYXZlIHlvdSB2
+ZXJpZmllZCB0aGUgY29udGVudHMgb2YgYmFja3VwIGFyZWE/IEkgd2FudCB0byBtYWtlIHN1cmUg
+dGhhdAo+Pj4+IGV2ZXJ5dGhpbmcgaXMgd29ya2luZyBhbmQgaW4gc2Vjb25kIGtlcm5lbCB3aGVu
+IHdlIHJlYWQgdXAgdm1jb3JlLCB3ZQo+Pj4+IGRvIHJlYWQgY29udGVudHMgcHJvcGVybHkuCj4+
+Pj4KPj4+Cj4+PiBOb3QgeWV0LCBJIGFtIHN0aWxsIHRyeWluZyB0byBmaWd1cmUgb3V0IHdoYXQg
+dGhlIHByb2JsZW0gaXMuCj4+PiBJIHdpbGwgc2VuZCBhbm90aGVyIHBhdGNoIG9uY2UgSSBrbm93
+IGhvdyB0byBmaXggaXQsIHNvLCBhbHRob3VnaCB0aGlzCj4+PiBwYXRjaCBkb2Vzbid0IGZpeCB0
+aGF0IHByb2JsZW0sIGl0IGlzIGNsZWFybHkgbmVlZGVkLgo+Pgo+PiBPaywgdGhlIGlzc3VlIEkg
+ZGlzY3Vzc2VkIHdpdGggVml2ZWsgZG9lcyBfbm90XyBhcHBseSB0byB1cHN0cmVhbSwKPj4gdGhh
+dCBpcyBhIG1pc3Rha2Ugd2hlbiBJIGJhY2twb3J0ZWQgdGhlIHBhdGNoIHRvIFJIRUw1Lgo+Pgo+
+PiBTbywgZm9yIHVwc3RyZWFtIHRoZSBwYXRjaCBpbiB0aGlzIHRocmVhZCBpcyBlbm91Z2guCj4+
+Cj4+IEhvcGUgdGhpcyBpcyBjbGVhciBub3cuCj4KPiBTbyBhZ2FpbiwgaGF2ZSB5b3UgZG9uZSB0
+ZXN0aW5nIG9uIHVwc3RyZWFtIGtlcm5lbHMgdG8gbWFrZSBzdXJlIGJhY2t1cAo+IGFyZWEgY29u
+dGVudHMgYXJlIGZpbmU/CgpJIGRpZCBhIGNyYXNoIHJlYm9vdCB0ZXN0IGFuZCBkaWRuJ3Qgc2Vl
+IGFueSBwcm9ibGVtcywKYnV0IEkgZGlkbid0IGNoZWNrIHRoZSBiYWNrdXAgYXJlYSBjb250ZW50
+cy4gOi0vCgpJIHdpbGwgbG9vayBhdCB0aGlzIHNob3J0bHkuCgpUaGFua3MuCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
