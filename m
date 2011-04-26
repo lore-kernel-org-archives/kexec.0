@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QCV0x-0006tb-QX
-	for kexec@lists.infradead.org; Wed, 20 Apr 2011 10:52:08 +0000
-Message-ID: <4DAEBAD2.5080004@redhat.com>
-Date: Wed, 20 Apr 2011 18:52:02 +0800
-From: Cong Wang <amwang@redhat.com>
+Received: from mail51.messagelabs.com ([216.82.241.99])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1QEmvg-0003y5-M7
+	for kexec@lists.infradead.org; Tue, 26 Apr 2011 18:24:09 +0000
+Subject: kexec-tools support for add_efi_memmap
+From: Ben Romer <benjamin.romer@unisys.com>
+Date: Tue, 26 Apr 2011 14:24:50 -0400
+Message-ID: <1303842290.20829.57.camel@ustr-romerbm>
 MIME-Version: 1.0
-Subject: Re: [Patch] kexec: fix the missing i386 part in commit 1100580b05e
-References: <1303028945-15298-1-git-send-email-amwang@redhat.com>
-	<20110418125802.GD30783@redhat.com>
-	<4DAD8461.5050101@redhat.com> <4DADB63D.8050001@redhat.com>
-	<20110419165359.GI31712@redhat.com>
-In-Reply-To: <20110419165359.GI31712@redhat.com>
+Reply-To: benjamin.romer@unisys.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,32 +17,99 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: horms@verge.net.au, kexec@lists.infradead.org
 
-5LqOIDIwMTHlubQwNOaciDIw5pelIDAwOjUzLCBWaXZlayBHb3lhbCDlhpnpgZM6Cj4gT24gV2Vk
-LCBBcHIgMjAsIDIwMTEgYXQgMTI6MjA6MTNBTSArMDgwMCwgQ29uZyBXYW5nIHdyb3RlOgo+PiDk
-uo4gMjAxMeW5tDA05pyIMTnml6UgMjA6NDcsIENvbmcgV2FuZyDlhpnpgZM6Cj4+PiDkuo4gMjAx
-MeW5tDA05pyIMTjml6UgMjA6NTgsIFZpdmVrIEdveWFsIOWGmemBkzoKPj4+PiBIYXZlIHlvdSB2
-ZXJpZmllZCB0aGUgY29udGVudHMgb2YgYmFja3VwIGFyZWE/IEkgd2FudCB0byBtYWtlIHN1cmUg
-dGhhdAo+Pj4+IGV2ZXJ5dGhpbmcgaXMgd29ya2luZyBhbmQgaW4gc2Vjb25kIGtlcm5lbCB3aGVu
-IHdlIHJlYWQgdXAgdm1jb3JlLCB3ZQo+Pj4+IGRvIHJlYWQgY29udGVudHMgcHJvcGVybHkuCj4+
-Pj4KPj4+Cj4+PiBOb3QgeWV0LCBJIGFtIHN0aWxsIHRyeWluZyB0byBmaWd1cmUgb3V0IHdoYXQg
-dGhlIHByb2JsZW0gaXMuCj4+PiBJIHdpbGwgc2VuZCBhbm90aGVyIHBhdGNoIG9uY2UgSSBrbm93
-IGhvdyB0byBmaXggaXQsIHNvLCBhbHRob3VnaCB0aGlzCj4+PiBwYXRjaCBkb2Vzbid0IGZpeCB0
-aGF0IHByb2JsZW0sIGl0IGlzIGNsZWFybHkgbmVlZGVkLgo+Pgo+PiBPaywgdGhlIGlzc3VlIEkg
-ZGlzY3Vzc2VkIHdpdGggVml2ZWsgZG9lcyBfbm90XyBhcHBseSB0byB1cHN0cmVhbSwKPj4gdGhh
-dCBpcyBhIG1pc3Rha2Ugd2hlbiBJIGJhY2twb3J0ZWQgdGhlIHBhdGNoIHRvIFJIRUw1Lgo+Pgo+
-PiBTbywgZm9yIHVwc3RyZWFtIHRoZSBwYXRjaCBpbiB0aGlzIHRocmVhZCBpcyBlbm91Z2guCj4+
-Cj4+IEhvcGUgdGhpcyBpcyBjbGVhciBub3cuCj4KPiBTbyBhZ2FpbiwgaGF2ZSB5b3UgZG9uZSB0
-ZXN0aW5nIG9uIHVwc3RyZWFtIGtlcm5lbHMgdG8gbWFrZSBzdXJlIGJhY2t1cAo+IGFyZWEgY29u
-dGVudHMgYXJlIGZpbmU/CgpJIGRpZCBhIGNyYXNoIHJlYm9vdCB0ZXN0IGFuZCBkaWRuJ3Qgc2Vl
-IGFueSBwcm9ibGVtcywKYnV0IEkgZGlkbid0IGNoZWNrIHRoZSBiYWNrdXAgYXJlYSBjb250ZW50
-cy4gOi0vCgpJIHdpbGwgbG9vayBhdCB0aGlzIHNob3J0bHkuCgpUaGFua3MuCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Simon! 
+
+I'm working on supporting linux on a Unisys virtualization platform
+called s-Par, and I've put together a patch for kexec-tools that I'd
+like to submit. s-Par is an EFI-based virtualization system that splits
+up a machine in a way similar to the way Xen does, using a hypervisor,
+and we have a virtual EFI environment that runs for each guest
+partition. This is a "pure" EFI environment, so it doesn't have a
+fully-defined e820 table. To boot linux on our platform, we have to use
+the "add_efi_memmap" parameter to fill out the kernel's memory map with
+the additional entries from EFI.
+
+This causes problems when we try to kexec, because the kexec loader is
+using the /sys/firmware information which is incomplete. It ends up
+causing the kernel and initrd to overlap in memory, which of course
+doesn't work. 
+
+I found some discussion of a similar problem on the LKML - a patch from
+Mike Travis, specifically, in a thread called "[Patch 1/1] x86 efi:
+insert add_efi_memmap entries into both e820 maps" from May 12, 2010 -
+the end of which said that the loader needed work rather than the kernel
+being modified. 
+
+The patch below checks for the add_efi_memmap option in the kernel
+command line, and switches to using /proc/iomem instead of /sys/memmap
+when the option is found. I think this might fix the general case and I
+know it will allow linux to successfully kexec on our platform.
+
+Would you mind taking a look and letting me know what you think? Thanks
+in advance. :) If this looks okay to you I'll type up and send a formal
+patch email. Sometimes our email system eats patches so if this doesn't
+come through cleanly I'll try again with a different account.
+
+-- Ben
+
+diff --git a/kexec/arch/i386/kexec-x86-common.c
+b/kexec/arch/i386/kexec-x86-common.c
+index ba54973..474e680 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -202,6 +202,28 @@ again:
+ }
+ 
+ /**
++ * Detect the add_efi_memmap kernel parameter.
++ *
++ * On some EFI-based systems, the e820 map is empty, or does not
+contain a
++ * complete memory map. The add_efi_memmap parameter adds these entries
+to
++ * the kernel's memory map, but does not add them under sysfs, which
+causes
++ * kexec to fail in a way similar to how it does not work on Xen.
++ *
++ * @return 1 if parameter is present, 0 if not or if an error occurs.
++ */
++int efi_map_added( void ) {
++	char buf[512], *res;
++	FILE *fp = fopen( "/proc/cmdline", "r" );
++	if( fp ) {
++		res = fgets( buf, 512, fp );
++		fclose( fp );
++		return strstr( buf, "add_efi_memmap" ) != NULL;
++	} else {
++		return 0;
++	}
++}
++
++/**
+  * Return a sorted list of memory ranges.
+  *
+  * If we have the /sys/firmware/memmap interface, then use that. If
+not,
+@@ -227,7 +249,7 @@ int get_memory_ranges(struct memory_range **range,
+int *ranges,
+ 	 * even if we have /sys/firmware/memmap. Without that, /proc/vmcore
+ 	 * is empty in the kdump kernel.
+ 	 */
+-	if (!xen_present() && have_sys_firmware_memmap()) {
++	if (!efi_map_added() && !xen_present() && have_sys_firmware_memmap())
+{
+ 		ret = get_memory_ranges_sysfs(range, ranges);
+ 		if (!ret)
+ 			ret = fixup_memory_ranges_sysfs(range, ranges);
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
