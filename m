@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail28.messagelabs.com ([216.82.249.131])
+Received: from mail29.messagelabs.com ([216.82.249.147])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QF3uX-000352-9U
-	for kexec@lists.infradead.org; Wed, 27 Apr 2011 12:32:06 +0000
-Subject: Re: kexec-tools support for add_efi_memmap
+	id 1QF4Gq-0003Jp-HY
+	for kexec@lists.infradead.org; Wed, 27 Apr 2011 12:55:15 +0000
+Subject: [PATCH 2.0.2] use /proc/iomem for map with "add_efi_memmap" kernel
+	option
 From: Ben Romer <benjamin.romer@unisys.com>
-In-Reply-To: <20110427061630.GF14497@verge.net.au>
-References: <1303842290.20829.57.camel@ustr-romerbm>
-	<20110427061630.GF14497@verge.net.au>
-Date: Wed, 27 Apr 2011 08:32:47 -0400
-Message-ID: <1303907567.20829.60.camel@ustr-romerbm>
+Date: Wed, 27 Apr 2011 08:56:09 -0400
+Message-ID: <1303908969.20180.8.camel@ustr-romerbm>
 MIME-Version: 1.0
 Reply-To: benjamin.romer@unisys.com
 List-Id: <kexec.lists.infradead.org>
@@ -24,72 +22,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec <kexec@lists.infradead.org>
+Cc: horms <horms@verge.net.au>
 
-Will do! Thanks! :)
+This patch changes the behavior of the kexec loader when the
+"add_efi_memmap" option is present on the currently running kernel's
+command line, to read the kernel memory map from /proc/iomem instead
+of /sys/firmware/memmap. 
 
-On Wed, 2011-04-27 at 01:16 -0500, Simon Horman wrote:
-> On Tue, Apr 26, 2011 at 02:24:50PM -0400, Ben Romer wrote:
-> > Hi Simon! 
-> > 
-> > I'm working on supporting linux on a Unisys virtualization platform
-> > called s-Par, and I've put together a patch for kexec-tools that I'd
-> > like to submit. s-Par is an EFI-based virtualization system that splits
-> > up a machine in a way similar to the way Xen does, using a hypervisor,
-> > and we have a virtual EFI environment that runs for each guest
-> > partition. This is a "pure" EFI environment, so it doesn't have a
-> > fully-defined e820 table. To boot linux on our platform, we have to use
-> > the "add_efi_memmap" parameter to fill out the kernel's memory map with
-> > the additional entries from EFI.
-> > 
-> > This causes problems when we try to kexec, because the kexec loader is
-> > using the /sys/firmware information which is incomplete. It ends up
-> > causing the kernel and initrd to overlap in memory, which of course
-> > doesn't work. 
-> > 
-> > I found some discussion of a similar problem on the LKML - a patch from
-> > Mike Travis, specifically, in a thread called "[Patch 1/1] x86 efi:
-> > insert add_efi_memmap entries into both e820 maps" from May 12, 2010 -
-> > the end of which said that the loader needed work rather than the kernel
-> > being modified. 
-> > 
-> > The patch below checks for the add_efi_memmap option in the kernel
-> > command line, and switches to using /proc/iomem instead of /sys/memmap
-> > when the option is found. I think this might fix the general case and I
-> > know it will allow linux to successfully kexec on our platform.
-> > 
-> > Would you mind taking a look and letting me know what you think? Thanks
-> > in advance. :) If this looks okay to you I'll type up and send a formal
-> > patch email. Sometimes our email system eats patches so if this doesn't
-> > come through cleanly I'll try again with a different account.
-> 
-> Hi Ben,
-> 
-> this looks good to me. Could you please make it a formal submission
-> by supplying a Signed-off-by line?
-> 
+On EFI systems, sometimes the e820 table is missing or incomplete.
+Systems like these use the "add_efi_memmap" option to add EFI's memory
+table entries to the kernel's memory table to build a complete picture
+of the system's memory; however, using the option does not add these
+entries to the table used to populate /sys/firmware/memmap, which is
+meant to be a pristine original copy. 
 
--- 
-Ben Romer | Software Engineer |
-Virtual Systems Development
-Unisys Corporation |  2476
-Swedesford Rd |  Malvern, PA 19355
-|  610-648-7140 
+The kexec loader uses the pristine memory map by default, which causes
+problems when the loader doesn't have a complete picture of the system
+and incorrectly loads the kernel or ramdisk in places that aren't
+actually usable. This change makes the kexec loader check the running
+kernel's command line for the "add_efi_memmap" option and if it finds
+it, will use the modified map instead of the original map.
 
-THIS COMMUNICATION MAY CONTAIN
-CONFIDENTIAL AND/OR OTHERWISE
-PROPRIETARY MATERIAL and is thus for
-use only by the intended recipient.
-If you received this in error,
-please contact the sender and delete
-the e-mail and its attachments from
-all computers. 
+signed-off-by: Benjamin Romer <benjamin.romer@unisys.com>
+---
 
-
-
-
-
+diff --git a/kexec/arch/i386/kexec-x86-common.c
+b/kexec/arch/i386/kexec-x86-common.c
+index ba54973..474e680 100644
+--- a/kexec/arch/i386/kexec-x86-common.c
++++ b/kexec/arch/i386/kexec-x86-common.c
+@@ -202,6 +202,28 @@ again:
+ }
+ 
+ /**
++ * Detect the add_efi_memmap kernel parameter.
++ *
++ * On some EFI-based systems, the e820 map is empty, or does not
+contain a
++ * complete memory map. The add_efi_memmap parameter adds these entries
+to
++ * the kernel's memory map, but does not add them under sysfs, which
+causes
++ * kexec to fail in a way similar to how it does not work on Xen.
++ *
++ * @return 1 if parameter is present, 0 if not or if an error occurs.
++ */
++int efi_map_added( void ) {
++	char buf[512], *res;
++	FILE *fp = fopen( "/proc/cmdline", "r" );
++	if( fp ) {
++		res = fgets( buf, 512, fp );
++		fclose( fp );
++		return strstr( buf, "add_efi_memmap" ) != NULL;
++	} else {
++		return 0;
++	}
++}
++
++/**
+  * Return a sorted list of memory ranges.
+  *
+  * If we have the /sys/firmware/memmap interface, then use that. If
+not,
+@@ -227,7 +249,7 @@ int get_memory_ranges(struct memory_range **range,
+int *ranges,
+ 	 * even if we have /sys/firmware/memmap. Without that, /proc/vmcore
+ 	 * is empty in the kdump kernel.
+ 	 */
+-	if (!xen_present() && have_sys_firmware_memmap()) {
++	if (!efi_map_added() && !xen_present() && have_sys_firmware_memmap())
+{
+ 		ret = get_memory_ranges_sysfs(range, ranges);
+ 		if (!ret)
+ 			ret = fixup_memory_ranges_sysfs(range, ranges);
 
 
 
