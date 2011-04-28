@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QFR4H-00073p-Lm
-	for kexec@lists.infradead.org; Thu, 28 Apr 2011 13:15:42 +0000
-Date: Thu, 28 Apr 2011 09:15:39 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch] kexec: remove duplicated backup_src_start field from
-	struct crash_elf_info
-Message-ID: <20110428131539.GA7883@redhat.com>
-References: <1303875207-9273-1-git-send-email-amwang@redhat.com>
-	<20110427150151.GB7790@redhat.com> <4DB91DFC.4060708@redhat.com>
+Received: from mail200.messagelabs.com ([216.82.254.195])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1QFRjr-0007ZW-8F
+	for kexec@lists.infradead.org; Thu, 28 Apr 2011 13:58:40 +0000
+Subject: Re: [PATCH 2.0.2] use /proc/iomem for map with "add_efi_memmap"
+	kernel option
+From: Ben Romer <benjamin.romer@unisys.com>
+In-Reply-To: <20110427231136.GB14272@verge.net.au>
+References: <1303908969.20180.8.camel@ustr-romerbm>
+	<20110427231136.GB14272@verge.net.au>
+Date: Thu, 28 Apr 2011 10:00:15 -0400
+Message-ID: <1303999215.27930.0.camel@ustr-romerbm>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4DB91DFC.4060708@redhat.com>
+Reply-To: benjamin.romer@unisys.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,55 +21,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Cong Wang <amwang@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec <kexec@lists.infradead.org>
 
-T24gVGh1LCBBcHIgMjgsIDIwMTEgYXQgMDM6NTc6NDhQTSArMDgwMCwgQ29uZyBXYW5nIHdyb3Rl
-Ogo+IOS6jiAyMDEx5bm0MDTmnIgyN+aXpSAyMzowMSwgVml2ZWsgR295YWwg5YaZ6YGTOgo+ID5B
-bWVyaWdvLAo+ID4KPiA+Tm93IHdobyB3aWxsIGRvIGZvbGxvd2luZyBpbml0aWFsaXphdGlvbiBm
-b3IgcHBjPwo+ID4KPiA+aW5mby0+YmFja3VwX3NyY19zdGFydCA9IEJBQ0tVUF9TUkNfU1RBUlQ7
-Cj4gPmluZm8tPmJhY2t1cF9zeiA9IEJBQ0tVUF9TUkNfRU5EIC0gQkFDS1VQX1NSQ19TVEFSVCAr
-IDE7Cj4gPgo+ID5JIHRoaW5rIEkgaGF2ZSBjb25jZXJuIGZvciBtaXBzIHRvby4KPiAKPiBSaWdo
-dCwgd2UgbmVlZCB0byBpbml0aWFsaXplIHRoZW0gaW4gbG9hZF9jcmFzaGR1bXBfc2VnbWVudHMo
-KS4KPiAKPiBIb3cgYWJvdXQgdGhlIGF0dGFjaGVkIHBhdGNoPyBJdCBpcyB1bnRlc3RlZC4KPiAK
-Cj4gU2lnbmVkLW9mZi1ieTogV0FORyBDb25nIDxhbXdhbmdAcmVkaGF0LmNvbT4KCk9rLCB0aGlz
-IG9uZSBsb29rcyBiZXR0ZXIuCgpWaXZlawoKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9taXBz
-L2NyYXNoZHVtcC1taXBzLmMgYi9rZXhlYy9hcmNoL21pcHMvY3Jhc2hkdW1wLW1pcHMuYwo+IGlu
-ZGV4IDRmZDZjMzAuLmU5MGIzNjIgMTAwNjQ0Cj4gLS0tIGEva2V4ZWMvYXJjaC9taXBzL2NyYXNo
-ZHVtcC1taXBzLmMKPiArKysgYi9rZXhlYy9hcmNoL21pcHMvY3Jhc2hkdW1wLW1pcHMuYwo+IEBA
-IC0zNzQsNiArMzc0LDggQEAgaW50IGxvYWRfY3Jhc2hkdW1wX3NlZ21lbnRzKHN0cnVjdCBrZXhl
-Y19pbmZvICppbmZvLCBjaGFyKiBtb2RfY21kbGluZSwKPiAgCWlmIChnZXRfY3Jhc2hfbWVtb3J5
-X3JhbmdlcygmbWVtX3JhbmdlLCAmbnJfcmFuZ2VzKSA8IDApCj4gIAkJcmV0dXJuIC0xOwo+ICAK
-PiArCWluZm8tPmJhY2t1cF9zcmNfc3RhcnQgPSBCQUNLVVBfU1JDX1NUQVJUOwo+ICsJaW5mby0+
-YmFja3VwX3NyY19zaXplID0gQkFDS1VQX1NSQ19TSVpFOwo+ICAJLyogQ3JlYXRlIGEgYmFja3Vw
-IHJlZ2lvbiBzZWdtZW50IHRvIHN0b3JlIGJhY2t1cCBkYXRhKi8KPiAgCXN6ID0gKEJBQ0tVUF9T
-UkNfU0laRSArIGFsaWduIC0gMSkgJiB+KGFsaWduIC0gMSk7Cj4gIAl0bXAgPSB4bWFsbG9jKHN6
-KTsKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9wcGMvY3Jhc2hkdW1wLXBvd2VycGMuYyBiL2tl
-eGVjL2FyY2gvcHBjL2NyYXNoZHVtcC1wb3dlcnBjLmMKPiBpbmRleCAzNzExMzdjLi4xZGQ2NDg1
-IDEwMDY0NAo+IC0tLSBhL2tleGVjL2FyY2gvcHBjL2NyYXNoZHVtcC1wb3dlcnBjLmMKPiArKysg
-Yi9rZXhlYy9hcmNoL3BwYy9jcmFzaGR1bXAtcG93ZXJwYy5jCj4gQEAgLTMyOCw2ICszMjgsOCBA
-QCBpbnQgbG9hZF9jcmFzaGR1bXBfc2VnbWVudHMoc3RydWN0IGtleGVjX2luZm8gKmluZm8sIGNo
-YXIgKm1vZF9jbWRsaW5lLAo+ICAJaWYgKGdldF9jcmFzaF9tZW1vcnlfcmFuZ2VzKCZtZW1fcmFu
-Z2UsICZucl9yYW5nZXMpIDwgMCkKPiAgCQlyZXR1cm4gLTE7Cj4gIAo+ICsJaW5mby0+YmFja3Vw
-X3NyY19zdGFydCA9IEJBQ0tVUF9TUkNfU1RBUlQ7Cj4gKwlpbmZvLT5iYWNrdXBfc3JjX3NpemUg
-PSBCQUNLVVBfU1JDX1NJWkU7Cj4gIAkvKiBDcmVhdGUgYSBiYWNrdXAgcmVnaW9uIHNlZ21lbnQg
-dG8gc3RvcmUgYmFja3VwIGRhdGEqLwo+ICAJc3ogPSAoQkFDS1VQX1NSQ19TSVpFICsgYWxpZ24g
-LSAxKSAmIH4oYWxpZ24gLSAxKTsKPiAgCXRtcCA9IHhtYWxsb2Moc3opOwo+IGRpZmYgLS1naXQg
-YS9rZXhlYy9hcmNoL3BwYzY0L2NyYXNoZHVtcC1wcGM2NC5jIGIva2V4ZWMvYXJjaC9wcGM2NC9j
-cmFzaGR1bXAtcHBjNjQuYwo+IGluZGV4IDZhNjZmMmEuLmQ1MmI0MzggMTAwNjQ0Cj4gLS0tIGEv
-a2V4ZWMvYXJjaC9wcGM2NC9jcmFzaGR1bXAtcHBjNjQuYwo+ICsrKyBiL2tleGVjL2FyY2gvcHBj
-NjQvY3Jhc2hkdW1wLXBwYzY0LmMKPiBAQCAtMzkwLDYgKzM5MCw4IEBAIGludCBsb2FkX2NyYXNo
-ZHVtcF9zZWdtZW50cyhzdHJ1Y3Qga2V4ZWNfaW5mbyAqaW5mbywgY2hhciogbW9kX2NtZGxpbmUs
-Cj4gIAlpZiAoZ2V0X2NyYXNoX21lbW9yeV9yYW5nZXMoJm1lbV9yYW5nZSwgJm5yX3Jhbmdlcykg
-PCAwKQo+ICAJCXJldHVybiAtMTsKPiAgCj4gKwlpbmZvLT5iYWNrdXBfc3JjX3N0YXJ0ID0gQkFD
-S1VQX1NSQ19TVEFSVDsKPiArCWluZm8tPmJhY2t1cF9zcmNfc2l6ZSA9IEJBQ0tVUF9TUkNfU0la
-RTsKPiAgCS8qIENyZWF0ZSBhIGJhY2t1cCByZWdpb24gc2VnbWVudCB0byBzdG9yZSBiYWNrdXAg
-ZGF0YSovCj4gIAlzeiA9IChCQUNLVVBfU1JDX1NJWkUgKyBhbGlnbiAtIDEpICYgfihhbGlnbiAt
-IDEpOwo+ICAJdG1wID0geG1hbGxvYyhzeik7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+Great!! Thank you very much. I really appreciate it. :)
+
+On Wed, 2011-04-27 at 18:11 -0500, Simon Horman wrote:
+> On Wed, Apr 27, 2011 at 08:56:09AM -0400, Ben Romer wrote:
+> > This patch changes the behavior of the kexec loader when the
+> > "add_efi_memmap" option is present on the currently running kernel's
+> > command line, to read the kernel memory map from /proc/iomem instead
+> > of /sys/firmware/memmap. 
+> > 
+> > On EFI systems, sometimes the e820 table is missing or incomplete.
+> > Systems like these use the "add_efi_memmap" option to add EFI's memory
+> > table entries to the kernel's memory table to build a complete picture
+> > of the system's memory; however, using the option does not add these
+> > entries to the table used to populate /sys/firmware/memmap, which is
+> > meant to be a pristine original copy. 
+> > 
+> > The kexec loader uses the pristine memory map by default, which causes
+> > problems when the loader doesn't have a complete picture of the system
+> > and incorrectly loads the kernel or ramdisk in places that aren't
+> > actually usable. This change makes the kexec loader check the running
+> > kernel's command line for the "add_efi_memmap" option and if it finds
+> > it, will use the modified map instead of the original map.
+> > 
+> > signed-off-by: Benjamin Romer <benjamin.romer@unisys.com>
+> 
+> Thanks, applied.
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
