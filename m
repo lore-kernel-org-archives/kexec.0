@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail200.messagelabs.com ([216.82.254.195])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QFRjr-0007ZW-8F
-	for kexec@lists.infradead.org; Thu, 28 Apr 2011 13:58:40 +0000
-Subject: Re: [PATCH 2.0.2] use /proc/iomem for map with "add_efi_memmap"
-	kernel option
-From: Ben Romer <benjamin.romer@unisys.com>
-In-Reply-To: <20110427231136.GB14272@verge.net.au>
-References: <1303908969.20180.8.camel@ustr-romerbm>
-	<20110427231136.GB14272@verge.net.au>
-Date: Thu, 28 Apr 2011 10:00:15 -0400
-Message-ID: <1303999215.27930.0.camel@ustr-romerbm>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1QFZKt-0003pV-1d
+	for kexec@lists.infradead.org; Thu, 28 Apr 2011 22:05:23 +0000
+Date: Fri, 29 Apr 2011 07:05:16 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [Patch] kexec: remove duplicated backup_src_start field from
+	struct crash_elf_info
+Message-ID: <20110428220515.GI3610@verge.net.au>
+References: <1303875207-9273-1-git-send-email-amwang@redhat.com>
+	<20110427150151.GB7790@redhat.com> <4DB91DFC.4060708@redhat.com>
+	<20110428131539.GA7883@redhat.com>
 MIME-Version: 1.0
-Reply-To: benjamin.romer@unisys.com
+Content-Disposition: inline
+In-Reply-To: <20110428131539.GA7883@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +22,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec <kexec@lists.infradead.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org, Cong Wang <amwang@redhat.com>
 
-Great!! Thank you very much. I really appreciate it. :)
-
-On Wed, 2011-04-27 at 18:11 -0500, Simon Horman wrote:
-> On Wed, Apr 27, 2011 at 08:56:09AM -0400, Ben Romer wrote:
-> > This patch changes the behavior of the kexec loader when the
-> > "add_efi_memmap" option is present on the currently running kernel's
-> > command line, to read the kernel memory map from /proc/iomem instead
-> > of /sys/firmware/memmap. 
-> > 
-> > On EFI systems, sometimes the e820 table is missing or incomplete.
-> > Systems like these use the "add_efi_memmap" option to add EFI's memory
-> > table entries to the kernel's memory table to build a complete picture
-> > of the system's memory; however, using the option does not add these
-> > entries to the table used to populate /sys/firmware/memmap, which is
-> > meant to be a pristine original copy. 
-> > 
-> > The kexec loader uses the pristine memory map by default, which causes
-> > problems when the loader doesn't have a complete picture of the system
-> > and incorrectly loads the kernel or ramdisk in places that aren't
-> > actually usable. This change makes the kexec loader check the running
-> > kernel's command line for the "add_efi_memmap" option and if it finds
-> > it, will use the modified map instead of the original map.
-> > 
-> > signed-off-by: Benjamin Romer <benjamin.romer@unisys.com>
-> 
-> Thanks, applied.
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBBcHIgMjgsIDIwMTEgYXQgMDk6MTU6MzlBTSAtMDQwMCwgVml2ZWsgR295YWwgd3Jv
+dGU6Cj4gT24gVGh1LCBBcHIgMjgsIDIwMTEgYXQgMDM6NTc6NDhQTSArMDgwMCwgQ29uZyBXYW5n
+IHdyb3RlOgo+ID4g5LqOIDIwMTHlubQwNOaciDI35pelIDIzOjAxLCBWaXZlayBHb3lhbCDlhpnp
+gZM6Cj4gPiA+QW1lcmlnbywKPiA+ID4KPiA+ID5Ob3cgd2hvIHdpbGwgZG8gZm9sbG93aW5nIGlu
+aXRpYWxpemF0aW9uIGZvciBwcGM/Cj4gPiA+Cj4gPiA+aW5mby0+YmFja3VwX3NyY19zdGFydCA9
+IEJBQ0tVUF9TUkNfU1RBUlQ7Cj4gPiA+aW5mby0+YmFja3VwX3N6ID0gQkFDS1VQX1NSQ19FTkQg
+LSBCQUNLVVBfU1JDX1NUQVJUICsgMTsKPiA+ID4KPiA+ID5JIHRoaW5rIEkgaGF2ZSBjb25jZXJu
+IGZvciBtaXBzIHRvby4KPiA+IAo+ID4gUmlnaHQsIHdlIG5lZWQgdG8gaW5pdGlhbGl6ZSB0aGVt
+IGluIGxvYWRfY3Jhc2hkdW1wX3NlZ21lbnRzKCkuCj4gPiAKPiA+IEhvdyBhYm91dCB0aGUgYXR0
+YWNoZWQgcGF0Y2g/IEl0IGlzIHVudGVzdGVkLgo+ID4gCj4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBX
+QU5HIENvbmcgPGFtd2FuZ0ByZWRoYXQuY29tPgo+IAo+IE9rLCB0aGlzIG9uZSBsb29rcyBiZXR0
+ZXIuCgpWaXZlaywgY2FuIEkgdGFrZSB0aGF0IGFzIGFuIEFja2VkLWJ5PwoKQ29uZywgY2FuIHlv
+dSBjbGFyaWZ5IGlmIEkgbmVlZCB0byByZXZlcnQgYW55IG9mIHlvdXIgcmVjZW50IHBhdGNoZXMg
+b3IKbm90PwoKVGhhbmtzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
