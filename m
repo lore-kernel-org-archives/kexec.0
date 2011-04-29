@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QFdvm-0005tB-Jl
-	for kexec@lists.infradead.org; Fri, 29 Apr 2011 02:59:49 +0000
-Message-ID: <4DBA299C.6020003@redhat.com>
-Date: Fri, 29 Apr 2011 10:59:40 +0800
-From: Cong Wang <amwang@redhat.com>
-MIME-Version: 1.0
+	id 1QFg4q-0006bw-JA
+	for kexec@lists.infradead.org; Fri, 29 Apr 2011 05:17:17 +0000
+Date: Fri, 29 Apr 2011 14:17:09 +0900
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [Patch] kexec: remove duplicated backup_src_start field from
 	struct crash_elf_info
+Message-ID: <20110429051705.GA12758@verge.net.au>
 References: <1303875207-9273-1-git-send-email-amwang@redhat.com>
 	<20110427150151.GB7790@redhat.com> <4DB91DFC.4060708@redhat.com>
 	<20110428131539.GA7883@redhat.com>
-	<20110428220515.GI3610@verge.net.au>
-In-Reply-To: <20110428220515.GI3610@verge.net.au>
+	<20110428220515.GI3610@verge.net.au> <4DBA299C.6020003@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4DBA299C.6020003@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,29 +23,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
+To: Cong Wang <amwang@redhat.com>
 Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-5LqOIDIwMTHlubQwNOaciDI55pelIDA2OjA1LCBTaW1vbiBIb3JtYW4g5YaZ6YGTOgo+IE9uIFRo
-dSwgQXByIDI4LCAyMDExIGF0IDA5OjE1OjM5QU0gLTA0MDAsIFZpdmVrIEdveWFsIHdyb3RlOgo+
-PiBPbiBUaHUsIEFwciAyOCwgMjAxMSBhdCAwMzo1Nzo0OFBNICswODAwLCBDb25nIFdhbmcgd3Jv
-dGU6Cj4+PiDkuo4gMjAxMeW5tDA05pyIMjfml6UgMjM6MDEsIFZpdmVrIEdveWFsIOWGmemBkzoK
-Pj4+PiBBbWVyaWdvLAo+Pj4+Cj4+Pj4gTm93IHdobyB3aWxsIGRvIGZvbGxvd2luZyBpbml0aWFs
-aXphdGlvbiBmb3IgcHBjPwo+Pj4+Cj4+Pj4gaW5mby0+YmFja3VwX3NyY19zdGFydCA9IEJBQ0tV
-UF9TUkNfU1RBUlQ7Cj4+Pj4gaW5mby0+YmFja3VwX3N6ID0gQkFDS1VQX1NSQ19FTkQgLSBCQUNL
-VVBfU1JDX1NUQVJUICsgMTsKPj4+Pgo+Pj4+IEkgdGhpbmsgSSBoYXZlIGNvbmNlcm4gZm9yIG1p
-cHMgdG9vLgo+Pj4KPj4+IFJpZ2h0LCB3ZSBuZWVkIHRvIGluaXRpYWxpemUgdGhlbSBpbiBsb2Fk
-X2NyYXNoZHVtcF9zZWdtZW50cygpLgo+Pj4KPj4+IEhvdyBhYm91dCB0aGUgYXR0YWNoZWQgcGF0
-Y2g/IEl0IGlzIHVudGVzdGVkLgo+Pj4KPj4KPj4+IFNpZ25lZC1vZmYtYnk6IFdBTkcgQ29uZzxh
-bXdhbmdAcmVkaGF0LmNvbT4KPj4KPj4gT2ssIHRoaXMgb25lIGxvb2tzIGJldHRlci4KPgo+IFZp
-dmVrLCBjYW4gSSB0YWtlIHRoYXQgYXMgYW4gQWNrZWQtYnk/Cj4KPiBDb25nLCBjYW4geW91IGNs
-YXJpZnkgaWYgSSBuZWVkIHRvIHJldmVydCBhbnkgb2YgeW91ciByZWNlbnQgcGF0Y2hlcyBvcgo+
-IG5vdD8KCk5vLCB0aGF0IGF0dGFjaGVkIHBhdGNoIGlzIHJpZ2h0IHRvIGZpeCB0aGUgZmlyc3Qg
-b25lLCBzbyB5b3UgZG9uJ3QKbmVlZCB0byByZXZlcnQgYW55dGhpbmcuCgpUaGFua3MhCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+T24gRnJpLCBBcHIgMjksIDIwMTEgYXQgMTA6NTk6NDBBTSArMDgwMCwgQ29uZyBXYW5nIHdyb3Rl
+Ogo+IOS6jiAyMDEx5bm0MDTmnIgyOeaXpSAwNjowNSwgU2ltb24gSG9ybWFuIOWGmemBkzoKPiA+
+T24gVGh1LCBBcHIgMjgsIDIwMTEgYXQgMDk6MTU6MzlBTSAtMDQwMCwgVml2ZWsgR295YWwgd3Jv
+dGU6Cj4gPj5PbiBUaHUsIEFwciAyOCwgMjAxMSBhdCAwMzo1Nzo0OFBNICswODAwLCBDb25nIFdh
+bmcgd3JvdGU6Cj4gPj4+5LqOIDIwMTHlubQwNOaciDI35pelIDIzOjAxLCBWaXZlayBHb3lhbCDl
+hpnpgZM6Cj4gPj4+PkFtZXJpZ28sCj4gPj4+Pgo+ID4+Pj5Ob3cgd2hvIHdpbGwgZG8gZm9sbG93
+aW5nIGluaXRpYWxpemF0aW9uIGZvciBwcGM/Cj4gPj4+Pgo+ID4+Pj5pbmZvLT5iYWNrdXBfc3Jj
+X3N0YXJ0ID0gQkFDS1VQX1NSQ19TVEFSVDsKPiA+Pj4+aW5mby0+YmFja3VwX3N6ID0gQkFDS1VQ
+X1NSQ19FTkQgLSBCQUNLVVBfU1JDX1NUQVJUICsgMTsKPiA+Pj4+Cj4gPj4+PkkgdGhpbmsgSSBo
+YXZlIGNvbmNlcm4gZm9yIG1pcHMgdG9vLgo+ID4+Pgo+ID4+PlJpZ2h0LCB3ZSBuZWVkIHRvIGlu
+aXRpYWxpemUgdGhlbSBpbiBsb2FkX2NyYXNoZHVtcF9zZWdtZW50cygpLgo+ID4+Pgo+ID4+Pkhv
+dyBhYm91dCB0aGUgYXR0YWNoZWQgcGF0Y2g/IEl0IGlzIHVudGVzdGVkLgo+ID4+Pgo+ID4+Cj4g
+Pj4+U2lnbmVkLW9mZi1ieTogV0FORyBDb25nPGFtd2FuZ0ByZWRoYXQuY29tPgo+ID4+Cj4gPj5P
+aywgdGhpcyBvbmUgbG9va3MgYmV0dGVyLgo+ID4KPiA+Vml2ZWssIGNhbiBJIHRha2UgdGhhdCBh
+cyBhbiBBY2tlZC1ieT8KPiA+Cj4gPkNvbmcsIGNhbiB5b3UgY2xhcmlmeSBpZiBJIG5lZWQgdG8g
+cmV2ZXJ0IGFueSBvZiB5b3VyIHJlY2VudCBwYXRjaGVzIG9yCj4gPm5vdD8KPiAKPiBObywgdGhh
+dCBhdHRhY2hlZCBwYXRjaCBpcyByaWdodCB0byBmaXggdGhlIGZpcnN0IG9uZSwgc28geW91IGRv
+bid0Cj4gbmVlZCB0byByZXZlcnQgYW55dGhpbmcuCgpUaGFua3MsIHB1c2hlZC4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
