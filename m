@@ -1,65 +1,142 @@
-From: Suzuki Poulose <suzuki@in.ibm.com>
-Date: Wed, 27 Apr 2011 15:38:49 +0530
-Subject: [PATCH] Fix memory errors on ppc
-Message-ID: <mailman.211.1303905936.1530.kexec@lists.infradead.org>
-List-Id: <kexec.lists.infradead.org>
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mo-p00-ob.rzone.de ([81.169.146.162])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1QGqH0-0004qE-3r
+	for kexec@lists.infradead.org; Mon, 02 May 2011 10:22:39 +0000
+Date: Mon, 2 May 2011 12:22:30 +0200
+From: Olaf Hering <olaf@aepfle.de>
+Subject: Re: dynamic oldmem in kdump kernel
+Message-ID: <20110502102230.GA9497@aepfle.de>
+References: <20110407095646.GA30788@aepfle.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110407095646.GA30788@aepfle.de>
+List-Id: <kexec.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/kexec/>
+List-Post: <mailto:kexec@lists.infradead.org>
+List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: kexec@lists.infradead.org
+Sender: kexec-bounces@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 
-Fixes buffer overflow and improper realloc() in realloc_memory_ranges().
+On Thu, Apr 07, Olaf Hering wrote:
 
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
-(manually applied)
-Signed-off-by: Simon Horman <horms@verge.net.au>
+> Recently kdump for pv-on-hvm Xen guests was implemented by me.
+> 
+> One issue remains:
+> The xen_balloon driver in the guest frees guest pages and gives them
+> back to the hypervisor. These pages are marked as mmio in the
+> hypervisor. During a read of such a page via the /proc/vmcore interface
+> the hypervisor calls the qemu-dm process. qemu-dm tries to map the page,
+> this attempt fails because the page is not backed by ram and 0xff is
+> returned. All this generates high load in dom0 because the reads come
+> as 8byte requests.
+> 
+> There seems to be no way to make the crash kernel aware of the state of
+> individual pages in the crashed kernel, it is not aware of memory
+> ballooning. And doing that from within the "kernel to crash" seems error
+> prone. Since over time the fragmentation will increase, it would be best
+> if the crash kernel itself queries the state of oldmem pages. 
+
+
+Here is a version that works for me.
+
+A hook is called for each pfn. If the hook returns 0 the pfn is not ram,
+and the range is cleared, for sparse vmcore files.
+Otherwise the pfn is handled as ram. In the worst case each read attempt
+will be handled by qemu-dm process which causes just some load in dom0.
+
+
+This patch still lacks locking.
+How can I make sure unregister_oldmem_pfn_is_ram() is not called while
+the loop in read_from_oldmem() is still active?
+Is there an example of similar code already in the kernel?
+
+Olaf
+
 ---
- kexec/arch/ppc/crashdump-powerpc.c |    2 +-
- kexec/arch/ppc/kexec-ppc.c         |    7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ fs/proc/vmcore.c           |   29 ++++++++++++++++++++++++++---
+ include/linux/crash_dump.h |    5 +++++
+ 2 files changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index eb82122..371137c 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -79,7 +79,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 	int memory_ranges = 0;
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
- 	DIR *dir, *dmem;
- 	FILE *file;
- 	struct dirent *dentry, *mentry;
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index ab76d6f..db00b96 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -192,11 +192,12 @@ static int realloc_memory_ranges(void)
- 	max_memory_ranges++;
- 	memory_range_len = sizeof(struct memory_range) * max_memory_ranges;
+Index: linux-2.6.39-rc5/fs/proc/vmcore.c
+===================================================================
+--- linux-2.6.39-rc5.orig/fs/proc/vmcore.c
++++ linux-2.6.39-rc5/fs/proc/vmcore.c
+@@ -35,6 +35,22 @@ static u64 vmcore_size;
  
--	memory_range = (struct memory_range *) malloc(memory_range_len);
-+	memory_range = (struct memory_range *) realloc(memory_range,
-+						       memory_range_len);
- 	if (!memory_range)
- 		goto err;
+ static struct proc_dir_entry *proc_vmcore = NULL;
  
--	base_memory_range = (struct memory_range *) realloc(memory_range,
-+	base_memory_range = (struct memory_range *) realloc(base_memory_range,
- 			memory_range_len);
- 	if (!base_memory_range)
- 		goto err;
-@@ -319,7 +320,7 @@ static int get_devtree_details(unsigned long kexec_flags)
- 	unsigned long long htab_base, htab_size;
- 	unsigned long long kernel_end;
- 	unsigned long long initrd_start, initrd_end;
--	char buf[MAXBYTES-1];
-+	char buf[MAXBYTES];
- 	char device_tree[256] = "/proc/device-tree/";
- 	char fname[256];
- 	DIR *dir, *cdir;
--- 
-1.7.4.1
++/* returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error */
++static int (*oldmem_pfn_is_ram)(unsigned long pfn);
++
++void register_oldmem_pfn_is_ram(int (*fn)(unsigned long))
++{
++	oldmem_pfn_is_ram = fn;
++}
++
++void unregister_oldmem_pfn_is_ram(void)
++{
++	oldmem_pfn_is_ram = NULL;
++}
++
++EXPORT_SYMBOL_GPL(register_oldmem_pfn_is_ram);
++EXPORT_SYMBOL_GPL(unregister_oldmem_pfn_is_ram);
++
+ /* Reads a page from the oldmem device from given offset. */
+ static ssize_t read_from_oldmem(char *buf, size_t count,
+ 				u64 *ppos, int userbuf)
+@@ -42,6 +58,7 @@ static ssize_t read_from_oldmem(char *bu
+ 	unsigned long pfn, offset;
+ 	size_t nr_bytes;
+ 	ssize_t read = 0, tmp;
++	int (*fn)(unsigned long);
+ 
+ 	if (!count)
+ 		return 0;
+@@ -55,9 +72,15 @@ static ssize_t read_from_oldmem(char *bu
+ 		else
+ 			nr_bytes = count;
+ 
+-		tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
+-		if (tmp < 0)
+-			return tmp;
++		fn = oldmem_pfn_is_ram;
++		/* if pfn is not ram, return zeros for spares dump files */
++		if (fn && fn(pfn) == 0)
++			memset(buf, 0, nr_bytes);
++		else {
++			tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
++			if (tmp < 0)
++				return tmp;
++		}
+ 		*ppos += nr_bytes;
+ 		count -= nr_bytes;
+ 		buf += nr_bytes;
+Index: linux-2.6.39-rc5/include/linux/crash_dump.h
+===================================================================
+--- linux-2.6.39-rc5.orig/include/linux/crash_dump.h
++++ linux-2.6.39-rc5/include/linux/crash_dump.h
+@@ -66,6 +66,11 @@ static inline void vmcore_unusable(void)
+ 	if (is_kdump_kernel())
+ 		elfcorehdr_addr = ELFCORE_ADDR_ERR;
+ }
++
++#define HAVE_OLDMEM_PFN_IS_RAM 1
++extern void register_oldmem_pfn_is_ram(int (*fn)(unsigned long));
++extern void unregister_oldmem_pfn_is_ram(void);
++
+ #else /* !CONFIG_CRASH_DUMP */
+ static inline int is_kdump_kernel(void) { return 0; }
+ #endif /* CONFIG_CRASH_DUMP */
 
-
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
