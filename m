@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mo-p00-ob.rzone.de ([81.169.146.162])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QGqH0-0004qE-3r
-	for kexec@lists.infradead.org; Mon, 02 May 2011 10:22:39 +0000
-Date: Mon, 2 May 2011 12:22:30 +0200
+	id 1QHKxC-0002QW-2D
+	for kexec@lists.infradead.org; Tue, 03 May 2011 19:08:15 +0000
+Date: Tue, 3 May 2011 21:08:06 +0200
 From: Olaf Hering <olaf@aepfle.de>
-Subject: Re: dynamic oldmem in kdump kernel
-Message-ID: <20110502102230.GA9497@aepfle.de>
+Subject: [PATCH] add hook to read_from_oldmem() to check for non-ram pages
+Message-ID: <20110503190806.GA12485@aepfle.de>
 References: <20110407095646.GA30788@aepfle.de>
 MIME-Version: 1.0
 Content-Disposition: inline
@@ -24,66 +24,81 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-
-On Thu, Apr 07, Olaf Hering wrote:
-
-> Recently kdump for pv-on-hvm Xen guests was implemented by me.
-> 
-> One issue remains:
-> The xen_balloon driver in the guest frees guest pages and gives them
-> back to the hypervisor. These pages are marked as mmio in the
-> hypervisor. During a read of such a page via the /proc/vmcore interface
-> the hypervisor calls the qemu-dm process. qemu-dm tries to map the page,
-> this attempt fails because the page is not backed by ram and 0xff is
-> returned. All this generates high load in dom0 because the reads come
-> as 8byte requests.
-> 
-> There seems to be no way to make the crash kernel aware of the state of
-> individual pages in the crashed kernel, it is not aware of memory
-> ballooning. And doing that from within the "kernel to crash" seems error
-> prone. Since over time the fragmentation will increase, it would be best
-> if the crash kernel itself queries the state of oldmem pages. 
+Cc: akpm@linux-foundation.org
 
 
-Here is a version that works for me.
+The balloon driver in a Xen guest frees guest pages and marks them as
+mmio. When the kernel crashes and the crash kernel attempts to read the
+oldmem via /proc/vmcore a read from ballooned pages will generate 100%
+load in dom0 because Xen asks qemu-dm for the page content. Since the
+reads come in as 8byte requests each ballooned page is tried 512 times.
 
-A hook is called for each pfn. If the hook returns 0 the pfn is not ram,
-and the range is cleared, for sparse vmcore files.
-Otherwise the pfn is handled as ram. In the worst case each read attempt
-will be handled by qemu-dm process which causes just some load in dom0.
+With this change a hook can be registered which checks wether the given
+pfn is really ram. The hook has to return a value > 0 for ram pages, a
+value < 0 on error (because the hypercall is not known) and 0 for
+non-ram pages.
+
+This will reduce the time to read /proc/vmcore.  Without this change a
+512M guest with 128M crashkernel region needs 200 seconds to read it,
+with this change it takes just 2 seconds.
 
 
-This patch still lacks locking.
-How can I make sure unregister_oldmem_pfn_is_ram() is not called while
-the loop in read_from_oldmem() is still active?
-Is there an example of similar code already in the kernel?
-
-Olaf
+Signed-off-by: Olaf Hering <olaf@aepfle.de>
 
 ---
- fs/proc/vmcore.c           |   29 ++++++++++++++++++++++++++---
- include/linux/crash_dump.h |    5 +++++
- 2 files changed, 31 insertions(+), 3 deletions(-)
+ fs/proc/vmcore.c           |   50 ++++++++++++++++++++++++++++++++++++++++++---
+ include/linux/crash_dump.h |    5 ++++
+ 2 files changed, 52 insertions(+), 3 deletions(-)
 
 Index: linux-2.6.39-rc5/fs/proc/vmcore.c
 ===================================================================
 --- linux-2.6.39-rc5.orig/fs/proc/vmcore.c
 +++ linux-2.6.39-rc5/fs/proc/vmcore.c
-@@ -35,6 +35,22 @@ static u64 vmcore_size;
+@@ -18,6 +18,7 @@
+ #include <linux/init.h>
+ #include <linux/crash_dump.h>
+ #include <linux/list.h>
++#include <linux/wait.h>
+ #include <asm/uaccess.h>
+ #include <asm/io.h>
+ 
+@@ -35,6 +36,44 @@ static u64 vmcore_size;
  
  static struct proc_dir_entry *proc_vmcore = NULL;
  
 +/* returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error */
 +static int (*oldmem_pfn_is_ram)(unsigned long pfn);
++static DECLARE_WAIT_QUEUE_HEAD(oldmem_fn_waitq);
++static atomic_t oldmem_fn_refcount = ATOMIC_INIT(0);
 +
 +void register_oldmem_pfn_is_ram(int (*fn)(unsigned long))
 +{
-+	oldmem_pfn_is_ram = fn;
++	if (oldmem_pfn_is_ram == NULL)
++		oldmem_pfn_is_ram = fn;
 +}
 +
 +void unregister_oldmem_pfn_is_ram(void)
 +{
++	wait_event(oldmem_fn_waitq, atomic_read(&oldmem_fn_refcount) == 0);
 +	oldmem_pfn_is_ram = NULL;
++	wmb();
++}
++
++static int pfn_is_ram(unsigned long pfn)
++{
++	int (*fn)(unsigned long);
++	/* pfn is ram unless fn() checks pagetype */
++	int ret = 1;
++
++	atomic_inc(&oldmem_fn_refcount);
++	smp_mb__after_atomic_inc();
++	fn = oldmem_pfn_is_ram;
++	if (fn)
++		ret = fn(pfn);
++	if (atomic_dec_and_test(&oldmem_fn_refcount))
++		wake_up(&oldmem_fn_waitq);
++
++	return ret;
 +}
 +
 +EXPORT_SYMBOL_GPL(register_oldmem_pfn_is_ram);
@@ -92,24 +107,15 @@ Index: linux-2.6.39-rc5/fs/proc/vmcore.c
  /* Reads a page from the oldmem device from given offset. */
  static ssize_t read_from_oldmem(char *buf, size_t count,
  				u64 *ppos, int userbuf)
-@@ -42,6 +58,7 @@ static ssize_t read_from_oldmem(char *bu
- 	unsigned long pfn, offset;
- 	size_t nr_bytes;
- 	ssize_t read = 0, tmp;
-+	int (*fn)(unsigned long);
- 
- 	if (!count)
- 		return 0;
-@@ -55,9 +72,15 @@ static ssize_t read_from_oldmem(char *bu
+@@ -55,9 +94,14 @@ static ssize_t read_from_oldmem(char *bu
  		else
  			nr_bytes = count;
  
 -		tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
 -		if (tmp < 0)
 -			return tmp;
-+		fn = oldmem_pfn_is_ram;
 +		/* if pfn is not ram, return zeros for spares dump files */
-+		if (fn && fn(pfn) == 0)
++		if (pfn_is_ram(pfn) == 0)
 +			memset(buf, 0, nr_bytes);
 +		else {
 +			tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
