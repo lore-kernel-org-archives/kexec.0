@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pw0-f49.google.com ([209.85.160.49])
+Received: from e23smtp06.au.ibm.com ([202.81.31.148])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QHgvN-0005sj-RH
-	for kexec@lists.infradead.org; Wed, 04 May 2011 18:35:50 +0000
-Received: by pwi8 with SMTP id 8so749403pwi.36
-	for <kexec@lists.infradead.org>; Wed, 04 May 2011 11:35:46 -0700 (PDT)
+	id 1QHhr4-0006Ol-18
+	for kexec@lists.infradead.org; Wed, 04 May 2011 19:35:27 +0000
+Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [202.81.31.246])
+	by e23smtp06.au.ibm.com (8.14.4/8.13.1) with ESMTP id p44JYvnC011133
+	for <kexec@lists.infradead.org>; Thu, 5 May 2011 05:34:57 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p44JZHEv2494686
+	for <kexec@lists.infradead.org>; Thu, 5 May 2011 05:35:18 +1000
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p44JZHPY020451
+	for <kexec@lists.infradead.org>; Thu, 5 May 2011 05:35:17 +1000
+Date: Thu, 5 May 2011 01:05:09 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Subject: [RFC] Kdump and memory error handling
+Message-ID: <20110504193509.GA5342@in.ibm.com>
 MIME-Version: 1.0
-Date: Wed, 4 May 2011 11:35:46 -0700
-Message-ID: <BANLkTinOd+kmJKMdtW7saW0eWHN9xbO_3w@mail.gmail.com>
-Subject: Kexec & Memory Zones question
-From: Sujit V <sujit.linux@gmail.com>
+Content-Disposition: inline
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +33,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Srivatsa Vaddagiri <vatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, "Luck,
+	Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Andi Kleen <andi@firstfloor.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On our x86_64 NUMA hardware running linux 2.6.23 with two memory nodes
- have the following zone layout
-DMA   0 - 16MB
-DMA32   16MB to 4GB
-NORMAL 4GB to 96GB
+Hi All,
+        We've been trying to study and improve the kdump behaviour when
+a panic is triggered due to an unrecoverable memory error causing a
+machine check exception (MCE) followed by a kernel panic.
 
-We had the crashkernel boot param as 128M@16M.
-I am using kexec-tools-2.0.0
+In this context we foresee a few issues in capturing kdump and would
+like to receive comments about the ways to handle them.
 
-We observed that the reserved crashkernel memory was getting used by
-the system.
-We found out by kdb  that around 17MB of physical memory the memory
-contents were changing which proved that the system was
-using the memory which is actually reserved for crash kernel.
-[ If I load crash kernel using kexec then the system would crash. The
-back trace was always in the megasas driver. ]
+Probable Issues when capturing coredump through kdump following a memory
+error
+---------------------------
+- First, a coredump of the memory from the crashing kernel isn't really
+  helpful in debugging the crash that was caused due to a faulty memory.
+  Collecting the same has some of the problems illustrated below. It should
+  therefore suffice to let the user know the reason of the crash
+  rather than provide a complete dump of the memory.
 
-My Question is
-1) Should the crashkernel memory be located past the DMA32 zone.?
+  For this, a 'slim' yet crash-tool readable coredump containing:
+  - message about the cause (such as crash due to unrecoverable memory error)
+    in the coredump's elf-note section.
+  - and no data from the memory of the 'crashing' kernel (their elf
+    sections can be reduced to zero length).
+  may be suitable.
 
-I have tried the following
-(1) crashkernel=128M@4GB  ( So the memory reservation is past DMA32)
-In this scenario the kexec tools gave an error "Could not find a free
-area of memory of xyz bytes"
+- Alternatively, if the kdump kernel decides to capture the coredump,
+  its attempts to read the faulty memory location may lead to subsequent 
+  faults in the context of kdump kernel with fatal consequences. This
+  may either be avoided by:
 
-(2) I changed the max of DMA32 to 1GB
-     crashkernel=128M@1G
-Still kexec gave the same error "Could not find a free area of memory
-of xyz bytes"
+  a) Pass the address of the corrupt memory location to the kdump kernel
+  and skip reading that location while creating the vmcore. This needs
+  an instance of 'struct mce' (from the 'crashing' kernel), which
+  already contains the faulty memory address (in the physical address
+  form, which should be confirmed using the IA32_MCi_MISC[8:6] bits stored
+  in 'misc' field of 'struct mce') to be populated inside the elf
+  (-notes?) section.
 
-Is there any specific restriction on where the crashkernel memory
-could be located.?
+  b) Use modified copy applications (such as a modified 'cp' command)
+  that can map the /dev/oldmem into user-space and then initiate the
+  creation of vmcore. In this method, the user-space process performing
+  the copy will receive a SIGBUS while consuming the faulty memory (through
+  INT18 -> do_machine_check) but it must be modified to be resilient to the
+  signal, while intelligently skipping to the subsequent memory location
+  for further copying. Meanwhile the data for the faulty memory location
+  can be represented using 'zero-ed' data and the vmcore enhanced to
+  indicate the cause of the crash as one resulting from a fatal MCE.
 
-Is it ok to be in the DMA32 region OR it should be beyond the DMA32 region.
+Any thoughts/suggestions?
 
-Thanks
+Thanks,
+K.Prasad
+
 
 _______________________________________________
 kexec mailing list
