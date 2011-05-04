@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QHiHe-0006eI-TJ
-	for kexec@lists.infradead.org; Wed, 04 May 2011 20:02:55 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-Date: Wed, 4 May 2011 13:02:25 -0700
-Subject: RE: [RFC] Kdump and memory error handling
-Message-ID: <987664A83D2D224EAE907B061CE93D5301C53C9966@orsmsx505.amr.corp.intel.com>
+Received: from one.firstfloor.org ([213.235.205.2])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1QHiqs-00072d-SI
+	for kexec@lists.infradead.org; Wed, 04 May 2011 20:39:19 +0000
+Date: Wed, 4 May 2011 22:39:14 +0200
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: [RFC] Kdump and memory error handling
+Message-ID: <20110504203914.GC1737@one.firstfloor.org>
 References: <20110504193509.GA5342@in.ibm.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <20110504193509.GA5342@in.ibm.com>
-Content-Language: en-US
-MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,19 +23,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "prasad@linux.vnet.ibm.com" <prasad@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: Srivatsa Vaddagiri <vatsa@in.ibm.com>, Andi Kleen <andi@firstfloor.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: Srivatsa Vaddagiri <vatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, "Luck,
+	Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Your first suggestion of a "slim" dump makes the most sense. The
-purpose of a crash dump is a research resource to find out why
-the system crashed - but in the case of a machine check, we already
-have the reasons for the crash captured by the machine check handler.
+> Any thoughts/suggestions?
 
-Perhaps you could include __log_buf[] in the slim crash dump? Assuming
-that the machine check is not a result of an uncorrectable error
-in this memory range.
+My old attempts to solve this are
 
--Tony
+Don't dump on MCE:
+
+http://git.kernel.org/?p=linux/kernel/git/ak/linux-mce-2.6.git;a=shortlog;h=refs/heads/mce/xpanic
+
+Handle dumps of corrupted memory regresions:
+
+http://git.kernel.org/?p=linux/kernel/git/ak/linux-mce-2.6.git;a=shortlog;h=refs/heads/mce/crashdump
+
+IMHO these patches are still the right solutions for this.
+
+-Andi
 
 _______________________________________________
 kexec mailing list
