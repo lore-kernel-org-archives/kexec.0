@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mo-p00-ob6.rzone.de ([2a01:238:20a:202:53f0::1])
+Received: from smtp1.linux-foundation.org ([140.211.169.13])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QHxlf-0005Pa-95
-	for kexec@lists.infradead.org; Thu, 05 May 2011 12:34:56 +0000
-Date: Thu, 5 May 2011 14:34:46 +0200
-From: Olaf Hering <olaf@aepfle.de>
-Subject: Re: [PATCH] detect Xen dom0 properly to avoid conflict with
-	pv_on_hvm domU
-Message-ID: <20110505123446.GA4214@aepfle.de>
-References: <20110504163232.GA24669@aepfle.de>
-	<20110505122003.GM22010@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110505122003.GM22010@verge.net.au>
+	id 1QI642-0001sw-8i
+	for kexec@lists.infradead.org; Thu, 05 May 2011 21:26:28 +0000
+Date: Thu, 5 May 2011 14:25:51 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] add hook to read_from_oldmem() to check for non-ram pages
+Message-Id: <20110505142551.b4d2d95a.akpm@linux-foundation.org>
+In-Reply-To: <20110503190806.GA12485@aepfle.de>
+References: <20110407095646.GA30788@aepfle.de>
+	<20110503190806.GA12485@aepfle.de>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,25 +23,149 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: Olaf Hering <olaf@aepfle.de>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Thu, May 05, Simon Horman wrote:
+On Tue, 3 May 2011 21:08:06 +0200
+Olaf Hering <olaf@aepfle.de> wrote:
 
-> On Wed, May 04, 2011 at 06:32:32PM +0200, Olaf Hering wrote:
-
-> > +static int is_dom0;
 > 
-> I think you need to explicitly initialise is_dom0 to 0.
+> The balloon driver in a Xen guest frees guest pages and marks them as
+> mmio. When the kernel crashes and the crash kernel attempts to read the
+> oldmem via /proc/vmcore a read from ballooned pages will generate 100%
+> load in dom0 because Xen asks qemu-dm for the page content. Since the
+> reads come in as 8byte requests each ballooned page is tried 512 times.
+> 
+> With this change a hook can be registered which checks wether the given
+> pfn is really ram. The hook has to return a value > 0 for ram pages, a
+> value < 0 on error (because the hypercall is not known) and 0 for
+> non-ram pages.
+> 
+> This will reduce the time to read /proc/vmcore.  Without this change a
+> 512M guest with 128M crashkernel region needs 200 seconds to read it,
+> with this change it takes just 2 seconds.
 
-Globals are always initialized to zero, its a C language thing.
+Seems reasonable, I suppose.
 
-> Alternatively, is it really such a burden to call access()
-> each time xen_present() is called?  (I'm ambivalent with regards to this).
+Is there some suitable ifdef we can put around this stuff to avoid
+adding it to kernel builds which will never use it?
 
-Probably not, its called a dozen times in my testing.
+> ...
+>
+> --- linux-2.6.39-rc5.orig/fs/proc/vmcore.c
+> +++ linux-2.6.39-rc5/fs/proc/vmcore.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/init.h>
+>  #include <linux/crash_dump.h>
+>  #include <linux/list.h>
+> +#include <linux/wait.h>
+>  #include <asm/uaccess.h>
+>  #include <asm/io.h>
+>  
+> @@ -35,6 +36,44 @@ static u64 vmcore_size;
+>  
+>  static struct proc_dir_entry *proc_vmcore = NULL;
+>  
+> +/* returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error */
+> +static int (*oldmem_pfn_is_ram)(unsigned long pfn);
+> +static DECLARE_WAIT_QUEUE_HEAD(oldmem_fn_waitq);
+> +static atomic_t oldmem_fn_refcount = ATOMIC_INIT(0);
+> +
+> +void register_oldmem_pfn_is_ram(int (*fn)(unsigned long))
+> +{
+> +	if (oldmem_pfn_is_ram == NULL)
+> +		oldmem_pfn_is_ram = fn;
+> +}
 
-Olaf
+This is racy, and it should return a success code.  And we may as well
+mark it __must_check to prevent people from cheating.
+
+> +void unregister_oldmem_pfn_is_ram(void)
+> +{
+> +	wait_event(oldmem_fn_waitq, atomic_read(&oldmem_fn_refcount) == 0);
+> +	oldmem_pfn_is_ram = NULL;
+> +	wmb();
+> +}
+
+I'd say we should do away with the (also racy) refcount thing. 
+Instead, require that callers not be using the thing when they
+unregister.  ie: that callers not be buggy.
+
+> +static int pfn_is_ram(unsigned long pfn)
+> +{
+> +	int (*fn)(unsigned long);
+> +	/* pfn is ram unless fn() checks pagetype */
+> +	int ret = 1;
+> +
+> +	atomic_inc(&oldmem_fn_refcount);
+> +	smp_mb__after_atomic_inc();
+> +	fn = oldmem_pfn_is_ram;
+> +	if (fn)
+> +		ret = fn(pfn);
+> +	if (atomic_dec_and_test(&oldmem_fn_refcount))
+> +		wake_up(&oldmem_fn_waitq);
+> +
+> +	return ret;
+> +}
+
+This function would have been a suitable place at which to document the
+entire feature.  As it stands, anyone who is reading this code won't
+have any clue why it exists.
+
+> +EXPORT_SYMBOL_GPL(register_oldmem_pfn_is_ram);
+> +EXPORT_SYMBOL_GPL(unregister_oldmem_pfn_is_ram);
+
+Each export should be placed immediately after the function which is
+being exported, please.  Checkpatch reports this.  Please use checkpatch.
+
+
+>  /* Reads a page from the oldmem device from given offset. */
+>  static ssize_t read_from_oldmem(char *buf, size_t count,
+>  				u64 *ppos, int userbuf)
+> @@ -55,9 +94,14 @@ static ssize_t read_from_oldmem(char *bu
+>  		else
+>  			nr_bytes = count;
+>  
+> -		tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
+> -		if (tmp < 0)
+> -			return tmp;
+> +		/* if pfn is not ram, return zeros for spares dump files */
+
+typo.
+
+Also, sentences start with capital letters!
+
+> +		if (pfn_is_ram(pfn) == 0)
+> +			memset(buf, 0, nr_bytes);
+> +		else {
+> +			tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
+> +			if (tmp < 0)
+> +				return tmp;
+> +		}
+>  		*ppos += nr_bytes;
+>  		count -= nr_bytes;
+>  		buf += nr_bytes;
+> Index: linux-2.6.39-rc5/include/linux/crash_dump.h
+> ===================================================================
+> --- linux-2.6.39-rc5.orig/include/linux/crash_dump.h
+> +++ linux-2.6.39-rc5/include/linux/crash_dump.h
+> @@ -66,6 +66,11 @@ static inline void vmcore_unusable(void)
+>  	if (is_kdump_kernel())
+>  		elfcorehdr_addr = ELFCORE_ADDR_ERR;
+>  }
+> +
+> +#define HAVE_OLDMEM_PFN_IS_RAM 1
+
+What's this for?
+
+> +extern void register_oldmem_pfn_is_ram(int (*fn)(unsigned long));
+
+"unsigned long pfn" in the declaration, please.  This has good
+documentation value.
+
+> +extern void unregister_oldmem_pfn_is_ram(void);
+
+
 
 _______________________________________________
 kexec mailing list
