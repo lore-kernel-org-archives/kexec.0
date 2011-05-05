@@ -1,30 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e38.co.us.ibm.com ([32.97.110.159])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QHuow-0003aX-SD
-	for kexec@lists.infradead.org; Thu, 05 May 2011 09:26:08 +0000
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e38.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p451qlne007284
-	for <kexec@lists.infradead.org>; Wed, 4 May 2011 19:52:47 -0600
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p459R59Y121944
-	for <kexec@lists.infradead.org>; Thu, 5 May 2011 03:27:05 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p453PUvx015199
-	for <kexec@lists.infradead.org>; Wed, 4 May 2011 21:25:30 -0600
-Date: Thu, 5 May 2011 14:55:55 +0530
-From: Srivatsa Vaddagiri <vatsa@linux.vnet.ibm.com>
-Subject: Re: [RFC] Kdump and memory error handling
-Message-ID: <20110505092555.GA17414@linux.vnet.ibm.com>
-References: <20110504193509.GA5342@in.ibm.com>
-	<20110504203914.GC1737@one.firstfloor.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1QHxXM-0005IJ-00
+	for kexec@lists.infradead.org; Thu, 05 May 2011 12:20:09 +0000
+Date: Thu, 5 May 2011 21:20:03 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] detect Xen dom0 properly to avoid conflict with
+	pv_on_hvm domU
+Message-ID: <20110505122003.GM22010@verge.net.au>
+References: <20110504163232.GA24669@aepfle.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110504203914.GC1737@one.firstfloor.org>
-Reply-To: vatsa@linux.vnet.ibm.com
+In-Reply-To: <20110504163232.GA24669@aepfle.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,18 +24,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "K.Prasad" <prasad@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Olaf Hering <olaf@aepfle.de>
+Cc: kexec@lists.infradead.org
 
-On Wed, May 04, 2011 at 10:39:14PM +0200, Andi Kleen wrote:
-> Handle dumps of corrupted memory regresions:
+On Wed, May 04, 2011 at 06:32:32PM +0200, Olaf Hering wrote:
+> A Xen HVM guest with PV drivers loaded has also a /proc/xen directory.
+> But such a guest is an ordinary PC and the special handling for dom0
+> breaks kdump in this environment.
+> Test for /proc/xen/capabilities instead and cache the result.
 > 
-> http://git.kernel.org/?p=linux/kernel/git/ak/linux-mce-2.6.git;a=shortlog;h=refs/heads/mce/crashdump
+> Also make two variables static, they are only used in this file.
+> 
+> Signed-off-by: Olaf Hering <olaf@aepfle.de>
+> 
+> ---
+>  kexec/crashdump-xen.c |   15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> Index: kexec-tools-0.8.15/kexec/crashdump-xen.c
+> ===================================================================
+> --- kexec-tools-0.8.15.orig/kexec/crashdump-xen.c
+> +++ kexec-tools-0.8.15/kexec/crashdump-xen.c
+> @@ -25,14 +25,19 @@ struct crash_note_info {
+>  	unsigned long length;
+>  };
+>  
+> -int xen_phys_cpus = 0;
+> -struct crash_note_info *xen_phys_notes;
+> +static int xen_phys_cpus;
+> +static struct crash_note_info *xen_phys_notes;
+> +static int is_dom0;
 
-What happens when mce is disabled and capture kernel reads corrupted memory? 
-Does that result in dump having erroneous data in dump?
+I think you need to explicitly initialise is_dom0 to 0.
 
-- vatsa
+Alternatively, is it really such a burden to call access()
+each time xen_present() is called?  (I'm ambivalent with regards to this).
+
+>  
+>  int xen_present(void)
+>  {
+> -	struct stat buf;
+> -
+> -	return stat("/proc/xen", &buf) == 0;
+> +	if (!is_dom0) {
+> +		if (access("/proc/xen/capabilities", F_OK) == 0)
+> +			is_dom0 = 1;
+> +		else
+> +			is_dom0 = -1;
+> +	}
+> +	return is_dom0 > 0;
+>  }
+>  
+>  unsigned long xen_architecture(struct crash_elf_info *elf_info)
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
