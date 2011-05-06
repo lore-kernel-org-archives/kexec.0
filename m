@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mo-p00-ob.rzone.de ([81.169.146.162])
+Received: from mail-bw0-f49.google.com ([209.85.214.49])
 	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QIKxK-0007jM-9f
-	for kexec@lists.infradead.org; Fri, 06 May 2011 13:20:31 +0000
-Date: Fri, 6 May 2011 15:20:24 +0200
-From: Olaf Hering <olaf@aepfle.de>
-Subject: [PATCH v2] add hook to read_from_oldmem() to check for non-ram pages
-Message-ID: <20110506132024.GA19233@aepfle.de>
-References: <20110407095646.GA30788@aepfle.de>
-	<20110503190806.GA12485@aepfle.de>
+	id 1QIM6F-000069-UP
+	for kexec@lists.infradead.org; Fri, 06 May 2011 14:33:48 +0000
+Received: by bwz1 with SMTP id 1so3354389bwz.36
+	for <kexec@lists.infradead.org>; Fri, 06 May 2011 07:33:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110503190806.GA12485@aepfle.de>
+Date: Fri, 6 May 2011 22:33:45 +0800
+Message-ID: <BANLkTi=Jt=Q9Q9kM4ogtpW0PN7k=WSLtTQ@mail.gmail.com>
+Subject: kdump without the kexec
+From: Lei Wen <adrian.wenl@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +22,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Cc: akpm@linux-foundation.org
+To: kexec@lists.infradead.org
 
+Hi,
 
-The balloon driver in a Xen guest frees guest pages and marks them as
-mmio. When the kernel crashes and the crash kernel attempts to read the
-oldmem via /proc/vmcore a read from ballooned pages will generate 100%
-load in dom0 because Xen asks qemu-dm for the page content. Since the
-reads come in as 8byte requests each ballooned page is tried 512 times.
+Is there any existed solution that could make the kdump without the kexec?
+For some kind of system hang, always hardware bug, or software deadlock, which
+could not trigger the kernel oops, so that the first kernel cannot
+load the second kernel
+with kexec tool. The only way here is to directly press the reset key.
 
-With this change a hook can be registered which checks wether the given
-pfn is really ram. The hook has to return a value > 0 for ram pages, a
-value < 0 on error (because the hypercall is not known) and 0 for
-non-ram pages.
+We could be assure that the ddr memory would not be corrupted by this
+way of reset
+(for we don't shutdown the ddr power during the reset). So my question
+is that whether
+we could take use of bootloader, like the u-boot, to pretend we are
+loading the second kernel
+after the reset behavior and then perform the kdump process?
 
-This will reduce the time to read /proc/vmcore.  Without this change a
-512M guest with 128M crashkernel region needs 200 seconds to read it,
-with this change it takes just 2 seconds.
-
-
-Signed-off-by: Olaf Hering <olaf@aepfle.de>
-
----
-v2:
- remove refcounting, called function has to take care of module refcounting
- add comments to pfn_is_ram()
- register_oldmem_pfn_is_ram() returns -EBUSY if a function is already registerd
- move exports close to exported function
- update prototypes to include 'pfn'
-
- fs/proc/vmcore.c           |   52 ++++++++++++++++++++++++++++++++++++++++++---
- include/linux/crash_dump.h |    5 ++++
- 2 files changed, 54 insertions(+), 3 deletions(-)
-
-Index: linux-2.6.39-rc6/fs/proc/vmcore.c
-===================================================================
---- linux-2.6.39-rc6.orig/fs/proc/vmcore.c
-+++ linux-2.6.39-rc6/fs/proc/vmcore.c
-@@ -35,6 +35,46 @@ static u64 vmcore_size;
- 
- static struct proc_dir_entry *proc_vmcore = NULL;
- 
-+/*
-+ * Returns > 0 for RAM pages, 0 for non-RAM pages, < 0 on error
-+ * The called function has to take care of module refcounting.
-+ */
-+static int (*oldmem_pfn_is_ram)(unsigned long pfn);
-+
-+int register_oldmem_pfn_is_ram(int (*fn)(unsigned long pfn))
-+{
-+	if (oldmem_pfn_is_ram)
-+		return -EBUSY;
-+	oldmem_pfn_is_ram = fn;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(register_oldmem_pfn_is_ram);
-+
-+void unregister_oldmem_pfn_is_ram(void)
-+{
-+	oldmem_pfn_is_ram = NULL;
-+	wmb();
-+}
-+EXPORT_SYMBOL_GPL(unregister_oldmem_pfn_is_ram);
-+
-+static int pfn_is_ram(unsigned long pfn)
-+{
-+	int (*fn)(unsigned long pfn);
-+	/* pfn is ram unless fn() checks pagetype */
-+	int ret = 1;
-+
-+	/*
-+	 * Ask hypervisor if the pfn is really ram.
-+	 * A ballooned page contains no data and reading from such a page
-+	 * will cause high load in the hypervisor.
-+	 */
-+	fn = oldmem_pfn_is_ram;
-+	if (fn)
-+		ret = fn(pfn);
-+
-+	return ret;
-+}
-+
- /* Reads a page from the oldmem device from given offset. */
- static ssize_t read_from_oldmem(char *buf, size_t count,
- 				u64 *ppos, int userbuf)
-@@ -55,9 +95,15 @@ static ssize_t read_from_oldmem(char *bu
- 		else
- 			nr_bytes = count;
- 
--		tmp = copy_oldmem_page(pfn, buf, nr_bytes, offset, userbuf);
--		if (tmp < 0)
--			return tmp;
-+		/* If pfn is not ram, return zeros for sparse dump files */
-+		if (pfn_is_ram(pfn) == 0)
-+			memset(buf, 0, nr_bytes);
-+		else {
-+			tmp = copy_oldmem_page(pfn, buf, nr_bytes,
-+						offset, userbuf);
-+			if (tmp < 0)
-+				return tmp;
-+		}
- 		*ppos += nr_bytes;
- 		count -= nr_bytes;
- 		buf += nr_bytes;
-Index: linux-2.6.39-rc6/include/linux/crash_dump.h
-===================================================================
---- linux-2.6.39-rc6.orig/include/linux/crash_dump.h
-+++ linux-2.6.39-rc6/include/linux/crash_dump.h
-@@ -66,6 +66,11 @@ static inline void vmcore_unusable(void)
- 	if (is_kdump_kernel())
- 		elfcorehdr_addr = ELFCORE_ADDR_ERR;
- }
-+
-+#define HAVE_OLDMEM_PFN_IS_RAM 1
-+extern int register_oldmem_pfn_is_ram(int (*fn)(unsigned long pfn));
-+extern void unregister_oldmem_pfn_is_ram(void);
-+
- #else /* !CONFIG_CRASH_DUMP */
- static inline int is_kdump_kernel(void) { return 0; }
- #endif /* CONFIG_CRASH_DUMP */
+Best regards,
+Lei
 
 _______________________________________________
 kexec mailing list
