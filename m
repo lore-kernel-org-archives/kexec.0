@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp1.linux-foundation.org ([140.211.169.13])
-	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
-	id 1QIR7u-0002nf-Ju
-	for kexec@lists.infradead.org; Fri, 06 May 2011 19:55:54 +0000
-Date: Fri, 6 May 2011 12:55:46 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] add hook to read_from_oldmem() to check for non-ram pages
-Message-Id: <20110506125546.72d138ed.akpm@linux-foundation.org>
-In-Reply-To: <20110506193916.GA26129@aepfle.de>
-References: <20110407095646.GA30788@aepfle.de>
-	<20110503190806.GA12485@aepfle.de>
-	<20110505142551.b4d2d95a.akpm@linux-foundation.org>
-	<20110506105545.GA16945@aepfle.de>
-	<20110506123019.80461d5d.akpm@linux-foundation.org>
-	<20110506193916.GA26129@aepfle.de>
-Mime-Version: 1.0
+Received: from smtprelay06.ispgateway.de ([80.67.31.96])
+	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
+	id 1QIcLw-0006Ih-1u
+	for kexec@lists.infradead.org; Sat, 07 May 2011 07:55:04 +0000
+Received: from [78.47.165.117] (helo=regiomontanus.bwalle.de)
+	by smtprelay06.ispgateway.de with esmtpsa (TLSv1:AES128-SHA:128)
+	(Exim 4.68) (envelope-from <bernhard@bwalle.de>) id 1QIcLt-00050y-KI
+	for kexec@lists.infradead.org; Sat, 07 May 2011 09:55:01 +0200
+Date: Sat, 7 May 2011 09:55:00 +0200
+From: Bernhard Walle <bernhard@bwalle.de>
+Subject: Re: kdump without the kexec
+Message-ID: <20110507075500.GB29941@regiomontanus.bwalle.de>
+References: <BANLkTi=Jt=Q9Q9kM4ogtpW0PN7k=WSLtTQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <BANLkTi=Jt=Q9Q9kM4ogtpW0PN7k=WSLtTQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,28 +27,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Olaf Hering <olaf@aepfle.de>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org
 
-On Fri, 6 May 2011 21:39:16 +0200
-Olaf Hering <olaf@aepfle.de> wrote:
-
-> On Fri, May 06, Andrew Morton wrote:
+* Lei Wen <adrian.wenl@gmail.com> [2011-05-06 16:33]:
 > 
-> > So as your module will have a reference to vmcore.c's register and unregister
-> > functions, nothing needs to be done: the presence of the client module alone
-> > will pin the vmcore.c module.
+> Is there any existed solution that could make the kdump without the kexec?
+> For some kind of system hang, always hardware bug, or software deadlock, which
+> could not trigger the kernel oops, so that the first kernel cannot
+> load the second kernel
+> with kexec tool. The only way here is to directly press the reset key.
 > 
-> I meant the other way around. Keep /proc/vmcore open and read from it,
-> then try to rmmod foo.ko which provides fn().
-> 
+> We could be assure that the ddr memory would not be corrupted by this
+> way of reset
+> (for we don't shutdown the ddr power during the reset). So my question
+> is that whether
+> we could take use of bootloader, like the u-boot, to pretend we are
+> loading the second kernel
+> after the reset behavior and then perform the kdump process?
 
-The client foo.ko will need to prevent itself from being unloaded while
-it's actively doing stuff, yes.  Typically that would be done in its
-module_exit() function - wait for current activity to complete and
-block new activity.  The "block new activity" thing should be automatic
-because nobody has any more references to anything in the module.
+Did you try sysrq-c? Which platform? Most of them have the concept of a
+NMI that also can trigger kdump.
 
+
+Regards,
+Bernhard
 
 _______________________________________________
 kexec mailing list
