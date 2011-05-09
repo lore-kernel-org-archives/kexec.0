@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QJTts-00047d-4R
-	for kexec@lists.infradead.org; Mon, 09 May 2011 17:05:40 +0000
-Date: Mon, 9 May 2011 13:05:28 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Bug] Kdump does not work when panic triggered due to MCE
-Message-ID: <20110509170528.GG5975@redhat.com>
-References: <20110506165412.GB2719@in.ibm.com>
-	<20110509123902.GA5975@redhat.com>
-	<20110509165357.GB1963@in.ibm.com>
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+	by canuck.infradead.org with esmtps (Exim 4.72 #1 (Red Hat Linux))
+	id 1QJUHE-0004Cq-3n
+	for kexec@lists.infradead.org; Mon, 09 May 2011 17:29:49 +0000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
+	by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id p49HTiMo005600
+	for <kexec@lists.infradead.org>; Tue, 10 May 2011 03:29:44 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p49HTWtA1183836
+	for <kexec@lists.infradead.org>; Tue, 10 May 2011 03:29:32 +1000
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p49HTho6024299
+	for <kexec@lists.infradead.org>; Tue, 10 May 2011 03:29:44 +1000
+Date: Mon, 9 May 2011 22:59:35 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Subject: Re: [RFC] Kdump and memory error handling
+Message-ID: <20110509172935.GD1963@in.ibm.com>
+References: <20110504193509.GA5342@in.ibm.com>
+	<20110504203914.GC1737@one.firstfloor.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110509165357.GB1963@in.ibm.com>
+In-Reply-To: <20110504203914.GC1737@one.firstfloor.org>
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,66 +36,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Cc: Andi Kleen <andi@firstfloor.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Luck,
-	Tony" <tony.luck@intel.com>
+To: Andi Kleen <andi@firstfloor.org>
+Cc: Srivatsa Vaddagiri <vatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "Luck,
+	Tony" <tony.luck@intel.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Mon, May 09, 2011 at 10:23:57PM +0530, K.Prasad wrote:
-> On Mon, May 09, 2011 at 08:39:02AM -0400, Vivek Goyal wrote:
-> > On Fri, May 06, 2011 at 10:24:12PM +0530, K.Prasad wrote:
-> > > Hi All,
-> > > 	I wanted to test the behaviour of kdump when panic is triggered
-> > > due to MCE on x86 and found that kdump is not captured.
-> > > 
-> > > While the kdump service is configured and running and non-MCE panics
-> > > (such as those triggered through to /proc/sysrq-trigger) successfully
-> > > capture a kdump, any fatal MCE error injected through the mce-inject
-> > > tool causes a reboot of the machine.
-> > > 
-> > > The code has been traced (using early_serial_putc()) to enter the kexec
-> > > path i.e. panic()->crash_kexec()->machine_kexec()->relocate_kernel()
-> > > but is untraceable further.
-> > > 
-> > > Kdump works fine when the same the similar test is carried out inside a
-> > > KVM guest.
-> > > 
-> > > Has anybody tested this before? Or have found kdump working when fatal
-> > > MCEs have actually occurred?
-> > 
-> > Prasad,
-> > 
-> > I have never tried taking dump in MCE situation. Does kdump work on this
-> > machine with normal panic()?
-> > 
+On Wed, May 04, 2011 at 10:39:14PM +0200, Andi Kleen wrote:
+> > Any thoughts/suggestions?
 > 
-> Hi Vivek,
-> 	kdump worked fine on this machine for non-MCE triggered panic
-> calls (the /proc/sysrq-trigger initiated crashes got the kdump fine).
+> My old attempts to solve this are
 > 
-> > Use --debug and --serial option in kexec-tools to print some debug message
-> > and look for "I am in purgatory". This will tell you whether you hanged
-> > in first kernel or second kernel.
-> > 
+> Don't dump on MCE:
 > 
-> There were no boot logs from the second kernel while the "Rebooting in X
-> seconds..." message had appeared before the system rebooted, suggesting
-> that the second kernel did not boot at all.
+> http://git.kernel.org/?p=linux/kernel/git/ak/linux-mce-2.6.git;a=shortlog;h=refs/heads/mce/xpanic
 > 
-> > Then put "outb()" messages in the kernel to trace what happened. 
-> > 
-> 
-> The outb logs showed that the system entered machine_kexec function (traceable
-> upto relocate_kernel) but then rebooted from inside the panic() function.
 
-Ok, that means that we returned from crash_kexec() function instead of
-transitioning into second kernel. This is strange. machine_kexec() is not
-supposed to return until and unless it finds that there is no crash
-kernel loaded. As per your mail you can trace it to relocate_kernel()
-being entered. So only thing I can suggest is debug relocate_kernel()
-code now to see why it is returning.
+The problem we seen in avoiding a panic->crash_kexec->[coredump capture] is
+that the user may not have a means to know the reason for crash, unless
+the serial console is connected to capture and store the panic string.
 
-Thanks
-Vivek
+Alternatively a 'slim' kdump (as described here:
+https://lkml.org/lkml/2011/5/4/396) would not contain meaningless data from
+the old memory, but inform the user about the cause of the crash. I'm
+intending to post some patches with a quick implementation of it soon.
+
+> Handle dumps of corrupted memory regresions:
+> 
+> http://git.kernel.org/?p=linux/kernel/git/ak/linux-mce-2.6.git;a=shortlog;h=refs/heads/mce/crashdump
+> 
+
+> IMHO these patches are still the right solutions for this.
+> 
+
+Like Vatsa had raised, the processor's behaviour upon reading (or any I/O
+operation) the faulty memory location isn't clearly defined (to the
+extent I read through System Programming Guide Part 1, Volume 3A,
+Chapter 15). In such a scenario, disabling MCE for the kdump kernel (which can
+potentially read the faulty memory) is making things hazy.
+
+Thanks,
+K.Prasad
 
 
 _______________________________________________
