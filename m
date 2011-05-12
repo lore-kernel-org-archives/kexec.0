@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from lo.gmane.org ([80.91.229.12])
 	by canuck.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QKB2H-0000xi-KK
-	for kexec@lists.infradead.org; Wed, 11 May 2011 15:09:14 +0000
-Date: Wed, 11 May 2011 11:09:08 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1QKSjs-0000s8-Ej
+	for kexec@lists.infradead.org; Thu, 12 May 2011 10:03:25 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <glkk-kexec@m.gmane.org>) id 1QKSjm-0004A9-T1
+	for kexec@lists.infradead.org; Thu, 12 May 2011 12:03:18 +0200
+Received: from 123.124.21.93 ([123.124.21.93])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Thu, 12 May 2011 12:03:18 +0200
+Received: from xiyou.wangcong by 123.124.21.93 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Thu, 12 May 2011 12:03:18 +0200
+From: WANG Cong <xiyou.wangcong@gmail.com>
 Subject: Re: Kexec & Memory Zones question
-Message-ID: <20110511150908.GG31633@redhat.com>
+Date: Thu, 12 May 2011 10:03:03 +0000 (UTC)
+Message-ID: <iqgb8m$ruq$1@dough.gmane.org>
 References: <BANLkTinOd+kmJKMdtW7saW0eWHN9xbO_3w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <BANLkTinOd+kmJKMdtW7saW0eWHN9xbO_3w@mail.gmail.com>
+	<20110511150908.GG31633@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +32,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Sujit V <sujit.linux@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Wed, May 04, 2011 at 11:35:46AM -0700, Sujit V wrote:
-> On our x86_64 NUMA hardware running linux 2.6.23 with two memory nodes
->  have the following zone layout
-> DMA   0 - 16MB
-> DMA32   16MB to 4GB
-> NORMAL 4GB to 96GB
+On Wed, 11 May 2011 11:09:08 -0400, Vivek Goyal wrote:
+
+> We have discussed this in the past and due to various reasons the max
+> amount of RAM you can boot your kernel from seems to be 896MB for x86_64
+> and 512MB for 32bit. I shall have to open a previous thread with hpa to
+> get exact numbers. So loading kernel even higher is not the solution.
 > 
-> We had the crashkernel boot param as 128M@16M.
-> I am using kexec-tools-2.0.0
-> 
-> We observed that the reserved crashkernel memory was getting used by
-> the system.
-> We found out by kdb  that around 17MB of physical memory the memory
-> contents were changing which proved that the system was
-> using the memory which is actually reserved for crash kernel.
-> [ If I load crash kernel using kexec then the system would crash. The
-> back trace was always in the megasas driver. ]
 
-This is problematic. This memory has been reserved by kernel in early
-boot and nobody else should be using this memory. This sounds like a
-but somewhere.
+On the kexec-tools side, I think the limit is hard-coded,
 
-> 
-> My Question is
-> 1) Should the crashkernel memory be located past the DMA32 zone.?
-> 
-> I have tried the following
-> (1) crashkernel=128M@4GB  ( So the memory reservation is past DMA32)
-> In this scenario the kexec tools gave an error "Could not find a free
-> area of memory of xyz bytes"
-> 
-> (2) I changed the max of DMA32 to 1GB
->      crashkernel=128M@1G
-> Still kexec gave the same error "Could not find a free area of memory
-> of xyz bytes"
+./include/x86/x86-linux.h:250:#define DEFAULT_INITRD_ADDR_MAX 0x37FFFFFF
 
-We have discussed this in the past and due to various reasons the max
-amount of RAM you can boot your kernel from seems to be 896MB for
-x86_64 and 512MB for 32bit. I shall have to open a previous thread
-with hpa to get exact numbers. So loading kernel even higher is not
-the solution.
+but we have,
 
-We need to figure out who is using this memory and where is the bug
-and fix it.
+        initrd_addr_max = DEFAULT_INITRD_ADDR_MAX;
+        if (real_mode->protocol_version >= 0x0203) {
+                initrd_addr_max = real_mode->initrd_addr_max;
+                dbgprintf("initrd_addr_max is 0x%lx\n", initrd_addr_max);
+        }
 
-Thanks
-Vivek
+
+so, from the code, initrd_addr_max can be provided by the bootloader.
+
+I remember on the kernel side there's also such a limit, but I can't
+find where it is. I am wondering what prevents us from increasing this 
+limit to 4G on i386 and even higher on x86_64.
+
+Thanks.
+
 
 _______________________________________________
 kexec mailing list
