@@ -1,16 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from e34.co.us.ibm.com ([32.97.110.152])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QMVcR-00056z-Ex
-	for kexec@lists.infradead.org; Wed, 18 May 2011 01:32:12 +0000
-Date: Wed, 18 May 2011 09:49:34 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH v2 0/8] makedumpfile: makedumpfile enhancement to filter
-	out kernel data from vmcore
-Message-Id: <20110518094934.0d20f7b4.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110517195751.12740.97565.stgit@mars.in.ibm.com>
-References: <20110517195751.12740.97565.stgit@mars.in.ibm.com>
-Mime-Version: 1.0
+	id 1QMO7A-0001F0-FL
+	for kexec@lists.infradead.org; Tue, 17 May 2011 17:31:25 +0000
+Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
+	[9.17.195.228])
+	by e34.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p4HHIkwX030677
+	for <kexec@lists.infradead.org>; Tue, 17 May 2011 11:18:46 -0600
+Received: from d03av05.boulder.ibm.com (d03av05.boulder.ibm.com [9.17.195.85])
+	by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP
+	id p4HHV2JV057056
+	for <kexec@lists.infradead.org>; Tue, 17 May 2011 11:31:11 -0600
+Received: from d03av05.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av05.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
+	id p4HHUwan014036
+	for <kexec@lists.infradead.org>; Tue, 17 May 2011 11:30:58 -0600
+Received: from d27ml101.rchland.ibm.com (d27ml101.rchland.ibm.com
+	[9.10.229.40])
+	by d03av05.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
+	p4HHUwZ6013886
+	for <kexec@lists.infradead.org>; Tue, 17 May 2011 11:30:58 -0600
+Subject: kdump with /proc/oldproc 
+Message-ID: <OFC164F955.6ED93986-ON86257893.00589FE8-86257893.006037E5@us.ibm.com>
+From: Nathan D Miller <nathanm2@us.ibm.com>
+Date: Tue, 17 May 2011 12:30:58 -0500
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,96 +33,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0416833441=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, V Srivatsa <vsrivatsa@in.ibm.com>
+To: kexec@lists.infradead.org
+
+--===============0416833441==
+Content-type: multipart/alternative; 
+	Boundary="0__=09BBF200DFCB19788f9e8a93df938690918c09BBF200DFCB1978"
+Content-Disposition: inline
+
+--0__=09BBF200DFCB19788f9e8a93df938690918c09BBF200DFCB1978
+Content-type: text/plain; charset=US-ASCII
+Content-transfer-encoding: quoted-printable
 
 
-Hi Mahesh,
 
-Thank you for the patches.
+Hello-
 
-But now I am out of the makedumpfile devel and other OSS devels.
-The main maintainer of makedumpfile is Tachibana-san (tachibana@mxm.nes.nec.co.jp)
-and he will help you.
+Has anyone tried reconstituting a portion of the old kernel's /proc whi=
+le
+in the capture kernel?
+
+I had the idea while digging through the kexec/kdump code and it seemed=
+
+intriguing.
+
+It might be a means by which user-space dump applications running under=
+ the
+capture kernel could interrogate the old system, and identify bad proce=
+sses
+that instigated the panic.  In particular, I'm thinking of Out Of Memor=
+y
+scenarios.   We've modified our kernel to panic instead of invoking the=
+
+kernel's OOM killer, but we still have the problem of identifying the "=
+bad"
+process while running in the capture kernel.
+
+Perhaps everything could be accomplished using some sort of FUSE
+file-system around /proc/oldmem and /proc/vmcore.  Not all the proc/<pi=
+d>/
+files would need to be implemented, of course.  In addition, each old
+process could have its own 'vmcore' file for getting a core dump of the=
+
+original process.
+
+What do you think?  Am I tilting at windmills here?
+
+Nate=
+
+--0__=09BBF200DFCB19788f9e8a93df938690918c09BBF200DFCB1978
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+Content-transfer-encoding: quoted-printable
+
+<html><body>
+<p><font size=3D"2" face=3D"sans-serif">Hello-</font><br>
+<br>
+<font size=3D"2" face=3D"sans-serif">Has anyone tried reconstituting a =
+portion of the old kernel's /proc while in the capture kernel?</font><b=
+r>
+<br>
+<font size=3D"2" face=3D"sans-serif">I had the idea while digging throu=
+gh the kexec/kdump code and it seemed intriguing. </font><br>
+<br>
+<font size=3D"2" face=3D"sans-serif">It might be a means by which user-=
+space dump applications running under the capture kernel could interrog=
+ate the old system, and identify bad processes that instigated the pani=
+c.  In particular, I'm thinking of Out Of Memory scenarios.   We've mod=
+ified our kernel to panic instead of invoking the kernel's OOM killer, =
+but we still have the problem of identifying the &quot;bad&quot; proces=
+s while running in the capture kernel.  </font><br>
+<br>
+<font size=3D"2" face=3D"sans-serif">Perhaps everything could be accomp=
+lished using some sort of FUSE file-system around /proc/oldmem and /pro=
+c/vmcore.  Not all the proc/&lt;pid&gt;/ files would need to be impleme=
+nted, of course.  In addition, each old process could have its own 'vmc=
+ore' file for getting a core dump of the original process. </font><br>
+<br>
+<font size=3D"2" face=3D"sans-serif">What do you think?  Am I tilting a=
+t windmills here? </font><br>
+<br>
+<font size=3D"2" face=3D"sans-serif">Nate</font><br>
+</body></html>=
+
+--0__=09BBF200DFCB19788f9e8a93df938690918c09BBF200DFCB1978--
 
 
-Thanks
-Ken'ichi Ohmichi
 
---
-On Wed, 18 May 2011 01:29:06 +0530
-Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
->
-> Hi All,
-> 
-> Please find the version 2 of makedumpfile enhancement patchset that introduces
-> a data filtering feature which enables makedumpfile to filter out desired kernel
-> symbol data and it's members from the specified VMCORE file. The data to be
-> filtered out is poisoned with character 'X' (58 in Hex).
-> 
-> This feature will be very useful for the customers who wants to erase the
-> customer sensitive data like security keys and other confidential data, in
-> DUMPFILE before sending it to support team for analysis.
-> 
-> This feature introduces a filter config file where, using filter commands,
-> user can specify desired kernel data symbols and it's members that need to be
-> filtered out while creating o/p DUMPFILE. The Syntax for filter commands are
-> provided in the makedumpfile.conf(8) man page.
-> 
-> The first 4 patches prepares the base work for filtering framework. The
-> patches 5 and 6 implements the generic filtering framework to erase desired
-> kernel data. The last two patches implements inclusion of eraseinfo data into
-> o/p dumpfile (kdump as well as ELF). The eraseinfo data contains the
-> effective lines from configuration files.
-> 
-> I have tested these patches on x86_64 and s390x architecture against RHEL6 GA
-> kernel. The feature supports filtering data from ELF as well as
-> kdump-compressed formatted dump.
-> 
-> Change in v2:
-> - Changes in patch 5 and inclusion of new patches 7 & 8
-> - Re-named filter.conf file to makedumpfile.conf and some cleanup work.
-> - Introduced last two patches that implements inclusion of eraseinfo data
->   into kdump compressed as well as ELF formatted dumpfile.
-> 
-> Please review the patchset and let me know your comments.
-> 
-> Thanks,
-> -Mahesh.
-> ---
-> 
-> Mahesh Salgaonkar (8):
->       makedumpfile: Add '--config' option to specify filter config file.
->       makedumpfile: Apply relocation while loading module debuginfo.
->       makedumpfile: Load the module symbol data from vmcore.
->       makedumpfile: Introduce routines to get type name from debuginfo.
->       makedumpfile: Read and process filter commands from config file.
->       makedumpfile: Read and process 'for' command from config file.
->       makedumpfile: Add erased information in compressed kdump file
->       makedumpfile: Add erase information in ELF formatted dumpfile
-> 
-> 
->  IMPLEMENTATION      |    6 
->  Makefile            |    8 
->  diskdump_mod.h      |    2 
->  makedumpfile.8      |   20 
->  makedumpfile.c      | 2747 ++++++++++++++++++++++++++++++++++++++++++++++++---
->  makedumpfile.conf   |  149 +++
->  makedumpfile.conf.8 |  419 ++++++++
->  makedumpfile.h      |  199 ++++
->  8 files changed, 3394 insertions(+), 156 deletions(-)
->  create mode 100644 makedumpfile.conf
->  create mode 100644 makedumpfile.conf.8
-> 
-> -- 
-> Signature
-
+--===============0416833441==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0416833441==--
+
+
