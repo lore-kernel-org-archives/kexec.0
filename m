@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by casper.infradead.org with esmtp (Exim 4.72 #1 (Red Hat Linux))
-	id 1QKeI2-0004bm-VZ
-	for kexec@lists.infradead.org; Thu, 12 May 2011 22:23:29 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [RFC] Kdump and memory error handling
-References: <20110504193509.GA5342@in.ibm.com>
-Date: Thu, 12 May 2011 15:22:44 -0700
-In-Reply-To: <20110504193509.GA5342@in.ibm.com> (K. Prasad's message of "Thu, 
-	5 May 2011 01:05:09 +0530")
-Message-ID: <m1hb8zmudn.fsf@fess.ebiederm.org>
+Received: from mail-fx0-f49.google.com ([209.85.161.49])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QMLam-0008N1-Jn
+	for kexec@lists.infradead.org; Tue, 17 May 2011 14:49:50 +0000
+Received: by fxm14 with SMTP id 14so577672fxm.36
+	for <kexec@lists.infradead.org>; Tue, 17 May 2011 07:49:46 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <iqaql8$tt2$1@dough.gmane.org>
+References: <BANLkTi=Jt=Q9Q9kM4ogtpW0PN7k=WSLtTQ@mail.gmail.com>
+	<20110507075500.GB29941@regiomontanus.bwalle.de>
+	<BANLkTikgb4f-OTj1zdw9OkOWb-OZpwJS7g@mail.gmail.com>
+	<iq82ct$bs6$1@dough.gmane.org>
+	<BANLkTin=0D6dZANXtKKDR=JMFaB5wHzr2A@mail.gmail.com>
+	<iqaql8$tt2$1@dough.gmane.org>
+Date: Tue, 17 May 2011 22:49:45 +0800
+Message-ID: <BANLkTintTcL+WdthGRcbOnEBZdLucuO30g@mail.gmail.com>
+Subject: Re: kdump without the kexec
+From: Lei Wen <adrian.wenl@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +29,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: prasad@linux.vnet.ibm.com
-Cc: "Luck, Tony" <tony.luck@intel.com>, Andi Kleen <andi@firstfloor.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Srivatsa Vaddagiri <vatsa@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: WANG Cong <xiyou.wangcong@gmail.com>
+Cc: kexec@lists.infradead.org
 
-"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+On Tue, May 10, 2011 at 3:48 PM, WANG Cong <xiyou.wangcong@gmail.com> wrote:
+> On Mon, 09 May 2011 15:04:42 +0800, Lei Wen wrote:
+>
+>> Hi Cong,
+>>
+>> On Mon, May 9, 2011 at 2:42 PM, WANG Cong
+>> <xiyou.wangcong@gmail.com> wrote:
+>>> On Sun, 08 May 2011 23:31:30 +0800, Lei Wen wrote:
+>>>
+>>>> Hi Bernhard,
+>>>>
+>>>> On Sat, May 7, 2011 at 3:55 PM, Bernhard Walle
+>>>> <bernhard@bwalle.de> wrote:
+>>>>> * Lei Wen <adrian.wenl@gmail.com>
+>>>>> [2011-05-06 16:33]:
+>>>>>>
+>>>>>> Is there any existed solution that could make the kdump without the
+>>>>>> kexec? For some kind of system hang, always hardware bug, or
+>>>>>> software deadlock, which could not trigger the kernel oops, so that
+>>>>>> the first kernel cannot load the second kernel
+>>>>>> with kexec tool. The only way here is to directly press the reset
+>>>>>> key.
+>>>>>>
+>>>>>> We could be assure that the ddr memory would not be corrupted by
+>>>>>> this way of reset
+>>>>>> (for we don't shutdown the ddr power during the reset). So my
+>>>>>> question is that whether
+>>>>>> we could take use of bootloader, like the u-boot, to pretend we are
+>>>>>> loading the second kernel
+>>>>>> after the reset behavior and then perform the kdump process?
+>>>>>
+>>>>> Did you try sysrq-c? Which platform? Most of them have the concept of
+>>>>> a NMI that also can trigger kdump.
+>>>>>
+>>>>>
+>>>> For some case, the sysrq-c also cannot help, as the cpu is not
+>>>> responding anymore for some
+>>>> hw bug. I am running on arm board, there is no NMI concept on it... So
+>>>> the only help is to put the hw reset and wish the bootloader do the
+>>>> task which is expected
+>>>> done by the kexec...
+>>>
+>>> Then kdump can't help in this case.
+>>>
+>>> And I am afraid you can't use the normal bootloader (e.g. grub, uboot),
+>>> because we load the second kernel *while* running the first kernel,
+>>> which means, for example, on x86 we are in protect mode after the
+>>> kernel boots, not in the real mode in which grub starts.
+>>>
+>>> What's more, kdump will not hw-reset the devices unless you add
+>>> "reset_devices" to the second kernel.
+>>>
+>> I see...
+>> But what I am care is the memory dump done by the kdump. If I could boot
+>> the second kernel without break the first kernel's space, that by put
+>> the second kernel just in the space that has been reserved by the first
+>> kernel. Is that possible to use the bootloader to perform such task?
+>>
+>> The devices state is not really cared by us, for the only interesting
+>> point is the
+>> memory context left by the first kernel.
+>
+> You need to pass correct kernel parameters to the second kernel to make
+> this happen, kexec uses "memmap=exactmap memmap=XXX ..." to describe the
+> memory map used by the second kernel.
+>
+> This is _not_ hard for normal bootloaders, the problem is still that you
+> need to load the second kernel before the first kernel crashes and during
+> the first kernel is running.
+>
+Thanks for this hint. :) I would have it a try.
 
-> Hi All,
->         We've been trying to study and improve the kdump behaviour when
-> a panic is triggered due to an unrecoverable memory error causing a
-> machine check exception (MCE) followed by a kernel panic.
->
-> In this context we foresee a few issues in capturing kdump and would
-> like to receive comments about the ways to handle them.
->
-> Probable Issues when capturing coredump through kdump following a memory
-> error
-> ---------------------------
-> - First, a coredump of the memory from the crashing kernel isn't really
->   helpful in debugging the crash that was caused due to a faulty memory.
->   Collecting the same has some of the problems illustrated below. It should
->   therefore suffice to let the user know the reason of the crash
->   rather than provide a complete dump of the memory.
->
->   For this, a 'slim' yet crash-tool readable coredump containing:
->   - message about the cause (such as crash due to unrecoverable memory error)
->     in the coredump's elf-note section.
->   - and no data from the memory of the 'crashing' kernel (their elf
->     sections can be reduced to zero length).
->   may be suitable.
->
-> - Alternatively, if the kdump kernel decides to capture the coredump,
->   its attempts to read the faulty memory location may lead to subsequent 
->   faults in the context of kdump kernel with fatal consequences. This
->   may either be avoided by:
->
->   a) Pass the address of the corrupt memory location to the kdump kernel
->   and skip reading that location while creating the vmcore. This needs
->   an instance of 'struct mce' (from the 'crashing' kernel), which
->   already contains the faulty memory address (in the physical address
->   form, which should be confirmed using the IA32_MCi_MISC[8:6] bits stored
->   in 'misc' field of 'struct mce') to be populated inside the elf
->   (-notes?) section.
->
->   b) Use modified copy applications (such as a modified 'cp' command)
->   that can map the /dev/oldmem into user-space and then initiate the
->   creation of vmcore. In this method, the user-space process performing
->   the copy will receive a SIGBUS while consuming the faulty memory (through
->   INT18 -> do_machine_check) but it must be modified to be resilient to the
->   signal, while intelligently skipping to the subsequent memory location
->   for further copying. Meanwhile the data for the faulty memory location
->   can be represented using 'zero-ed' data and the vmcore enhanced to
->   indicate the cause of the crash as one resulting from a fatal MCE.
->
-> Any thoughts/suggestions?
-
-In practice this all works for me.
-
-I have received several crash dumps where there was an mce error.
-
-I admit I have my userspace configured to just grab the dmesg from the
-kernel log and not do a full crash dump.  So in that sense I am already
-a slim crash dump.
-
-But in practice with real hardware errors it is working today without
-kernel changes.
-
-Eric
+Best regards,
+Lei
 
 _______________________________________________
 kexec mailing list
