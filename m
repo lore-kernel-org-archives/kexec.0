@@ -1,29 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+Received: from e28smtp04.in.ibm.com ([122.248.162.4])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QMO13-0001Bb-DO
-	for kexec@lists.infradead.org; Tue, 17 May 2011 17:25:06 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp02.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4HHJHhx024162
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 03:19:17 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4HHP2TD1159396
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 03:25:02 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4HHP13P031805
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 03:25:01 +1000
-Date: Tue, 17 May 2011 22:54:50 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: Re: [RFC] Kdump and memory error handling
-Message-ID: <20110517172450.GC24131@in.ibm.com>
-References: <20110504193509.GA5342@in.ibm.com>
-	<m1hb8zmudn.fsf@fess.ebiederm.org>
+	id 1QMQQt-0002OB-LC
+	for kexec@lists.infradead.org; Tue, 17 May 2011 19:59:57 +0000
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+	by e28smtp04.in.ibm.com (8.14.4/8.13.1) with ESMTP id p4HJxlSG030571
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 01:29:47 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p4HJxlT74550760
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 01:29:47 +0530
+Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
+	by d28av05.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p4HJxkP4008812
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 05:59:46 +1000
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/8] makedumpfile: makedumpfile enhancement to filter out
+	kernel data from vmcore
+Date: Wed, 18 May 2011 01:29:06 +0530
+Message-ID: <20110517195751.12740.97565.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1hb8zmudn.fsf@fess.ebiederm.org>
-Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,87 +32,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, Andi Kleen <andi@firstfloor.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Srivatsa Vaddagiri <vatsa@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-On Thu, May 12, 2011 at 03:22:44PM -0700, Eric W. Biederman wrote:
-> "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
-> 
-> > Hi All,
-> >         We've been trying to study and improve the kdump behaviour when
-> > a panic is triggered due to an unrecoverable memory error causing a
-> > machine check exception (MCE) followed by a kernel panic.
-> >
-> > In this context we foresee a few issues in capturing kdump and would
-> > like to receive comments about the ways to handle them.
-> >
-> > Probable Issues when capturing coredump through kdump following a memory
-> > error
-> > ---------------------------
-> > - First, a coredump of the memory from the crashing kernel isn't really
-> >   helpful in debugging the crash that was caused due to a faulty memory.
-> >   Collecting the same has some of the problems illustrated below. It should
-> >   therefore suffice to let the user know the reason of the crash
-> >   rather than provide a complete dump of the memory.
-> >
-> >   For this, a 'slim' yet crash-tool readable coredump containing:
-> >   - message about the cause (such as crash due to unrecoverable memory error)
-> >     in the coredump's elf-note section.
-> >   - and no data from the memory of the 'crashing' kernel (their elf
-> >     sections can be reduced to zero length).
-> >   may be suitable.
-> >
-> > - Alternatively, if the kdump kernel decides to capture the coredump,
-> >   its attempts to read the faulty memory location may lead to subsequent 
-> >   faults in the context of kdump kernel with fatal consequences. This
-> >   may either be avoided by:
-> >
-> >   a) Pass the address of the corrupt memory location to the kdump kernel
-> >   and skip reading that location while creating the vmcore. This needs
-> >   an instance of 'struct mce' (from the 'crashing' kernel), which
-> >   already contains the faulty memory address (in the physical address
-> >   form, which should be confirmed using the IA32_MCi_MISC[8:6] bits stored
-> >   in 'misc' field of 'struct mce') to be populated inside the elf
-> >   (-notes?) section.
-> >
-> >   b) Use modified copy applications (such as a modified 'cp' command)
-> >   that can map the /dev/oldmem into user-space and then initiate the
-> >   creation of vmcore. In this method, the user-space process performing
-> >   the copy will receive a SIGBUS while consuming the faulty memory (through
-> >   INT18 -> do_machine_check) but it must be modified to be resilient to the
-> >   signal, while intelligently skipping to the subsequent memory location
-> >   for further copying. Meanwhile the data for the faulty memory location
-> >   can be represented using 'zero-ed' data and the vmcore enhanced to
-> >   indicate the cause of the crash as one resulting from a fatal MCE.
-> >
-> > Any thoughts/suggestions?
-> 
-> In practice this all works for me.
-> 
-> I have received several crash dumps where there was an mce error.
-> 
-> I admit I have my userspace configured to just grab the dmesg from the
-> kernel log and not do a full crash dump.  So in that sense I am already
-> a slim crash dump.
-> 
-> But in practice with real hardware errors it is working today without
-> kernel changes.
->
+Hi All,
 
-The problem with the existing kernel code is that it allows for the old
-kernel's memory regions to be read (through read_vmcore function),
-although intelligent userspace tools may avoid such a possibility (like
-the one you mentioned).
+Please find the version 2 of makedumpfile enhancement patchset that introduces
+a data filtering feature which enables makedumpfile to filter out desired kernel
+symbol data and it's members from the specified VMCORE file. The data to be
+filtered out is poisoned with character 'X' (58 in Hex).
 
-Given that the system can experience recursive MCE faults while reading
-the corrupt memory region, a 'slim' vmcore region presented by the kernel
-to the user-space would be a safe option. We could also use such a dump to
-include more relevant information such as address of corrupt memory,
-type of memory error, etc.
+This feature will be very useful for the customers who wants to erase the
+customer sensitive data like security keys and other confidential data, in
+DUMPFILE before sending it to support team for analysis.
+
+This feature introduces a filter config file where, using filter commands,
+user can specify desired kernel data symbols and it's members that need to be
+filtered out while creating o/p DUMPFILE. The Syntax for filter commands are
+provided in the makedumpfile.conf(8) man page.
+
+The first 4 patches prepares the base work for filtering framework. The
+patches 5 and 6 implements the generic filtering framework to erase desired
+kernel data. The last two patches implements inclusion of eraseinfo data into
+o/p dumpfile (kdump as well as ELF). The eraseinfo data contains the
+effective lines from configuration files.
+
+I have tested these patches on x86_64 and s390x architecture against RHEL6 GA
+kernel. The feature supports filtering data from ELF as well as
+kdump-compressed formatted dump.
+
+Change in v2:
+- Changes in patch 5 and inclusion of new patches 7 & 8
+- Re-named filter.conf file to makedumpfile.conf and some cleanup work.
+- Introduced last two patches that implements inclusion of eraseinfo data
+  into kdump compressed as well as ELF formatted dumpfile.
+
+Please review the patchset and let me know your comments.
 
 Thanks,
-K.Prasad
+-Mahesh.
+---
 
+Mahesh Salgaonkar (8):
+      makedumpfile: Add '--config' option to specify filter config file.
+      makedumpfile: Apply relocation while loading module debuginfo.
+      makedumpfile: Load the module symbol data from vmcore.
+      makedumpfile: Introduce routines to get type name from debuginfo.
+      makedumpfile: Read and process filter commands from config file.
+      makedumpfile: Read and process 'for' command from config file.
+      makedumpfile: Add erased information in compressed kdump file
+      makedumpfile: Add erase information in ELF formatted dumpfile
+
+
+ IMPLEMENTATION      |    6 
+ Makefile            |    8 
+ diskdump_mod.h      |    2 
+ makedumpfile.8      |   20 
+ makedumpfile.c      | 2747 ++++++++++++++++++++++++++++++++++++++++++++++++---
+ makedumpfile.conf   |  149 +++
+ makedumpfile.conf.8 |  419 ++++++++
+ makedumpfile.h      |  199 ++++
+ 8 files changed, 3394 insertions(+), 156 deletions(-)
+ create mode 100644 makedumpfile.conf
+ create mode 100644 makedumpfile.conf.8
+
+-- 
+Signature
 
 _______________________________________________
 kexec mailing list
