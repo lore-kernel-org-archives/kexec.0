@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
+Received: from e23smtp01.au.ibm.com ([202.81.31.143])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QMQWs-0002UD-JX
-	for kexec@lists.infradead.org; Tue, 17 May 2011 20:06:10 +0000
-Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [202.81.31.246])
-	by e23smtp02.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4HK0IJX023418
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:00:18 +1000
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
-	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4HK5oTB1081588
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:05:50 +1000
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
-	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4HK638F008796
-	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:06:03 +1000
+	id 1QMQY1-0002W1-L3
+	for kexec@lists.infradead.org; Tue, 17 May 2011 20:07:20 +0000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
+	by e23smtp01.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4HK32Zh004323
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:03:02 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p4HK6llq1273924
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:06:47 +1000
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p4HK79iw008238
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 06:07:10 +1000
 From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: [PATCH v2 6/8] makedumpfile: Read and process 'for' command from
-	config file.
-Date: Wed, 18 May 2011 01:35:19 +0530
-Message-ID: <20110517200514.12740.86690.stgit@mars.in.ibm.com>
+Subject: [PATCH v2 7/8] makedumpfile: Add erased information in compressed
+	kdump file
+Date: Wed, 18 May 2011 01:36:17 +0530
+Message-ID: <20110517200608.12740.68790.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,1087 +33,717 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+Cc: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>, V Srivatsa <vsrivatsa@in.ibm.com>, Dave Anderson <anderson@redhat.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
 From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-This patch adds support to read and process 'for' command from config file
-to filter multiple memory locations that are accessible through an array,
-link list or list_head.
+Include the erase information in the makedumpfile generated dumpfile. The
+erased information contains only effective lines from the filter
+configuration file. This patch supports inclusion of erase information in
+kdump compressed, flatten and split dumpfiles. On re-filtering, the erase
+information from input dumpfile (if any) will be carried over to resulting
+dumpfile.
 
-The syntax for 'for' (loop construct) filter command is:
+This patch introduces new members offset_eraseinfo, size_eraseinfo into the
+sub header in compressed kdump file.
 
-for <id> in {<ArrayVar> |
-	     <StructVar> via <NextMember> |
-	     <ListHeadVar> within <StructName>:<ListHeadMember>}
-	erase <id>[.MemberExpression] [size <SizeExpression>|nullify]
-	[erase <id> ...]
-	[...]
-endfor
+The erased information would contain *multiple* erased symbol names.
+For example, the following is based on your above example.
 
-Updated filter.conf(8) man page that describes the syntax for loop construct.
+	struct S1 {
+		int a;
+		int b;
+		int c;
+	};
+	struct S2 {
+		struct S1 *mystruct1;
+		struct S1 *mystruct2;
+	};
+
+	struct S2 mystruct2;
+
+	#Filter command
+	erase mystruct2.mystruct1.a
+	erase mystruct2.mystruct1.c
+	erase mystruct2.mystruct2.b
+
+	#The erased information
+	erase mystruct2.mystruct1.a 4
+	erase mystruct2.mystruct1.c 4
+	erase mystruct2.mystruct2.b 4
+
+The dumpfile image :
+
+       header             dump data             the erased information
++------------------+-----------------------+-------------------------------+
+| ................ | ..................... | erase mystruct2.mystruct1.a 4 |
+| offset_eraseinfo | ..................... | erase mystruct2.mystruct1.c 4 |
+|   size_eraseinfo | ..................... | erase mystruct2.mystruct2.b 4 |
++------------------+-------------------------------------------------------+
+                                           : offset_eraseinfo (offset in
+                                             dumpfile)
+                                            <------ size_eraseinfo ------->
 
 Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-Signed-off-by: Prerna Saxena <prerna@linux.vnet.ibm.com>
 ---
 
- makedumpfile.c      |  533 ++++++++++++++++++++++++++++++++++++++++++++++++++-
- makedumpfile.conf   |   67 ++++++
- makedumpfile.conf.8 |  212 ++++++++++++++++++++
- makedumpfile.h      |   19 ++
- 4 files changed, 814 insertions(+), 17 deletions(-)
+ IMPLEMENTATION |    6 +
+ diskdump_mod.h |    2 
+ makedumpfile.c |  359 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ makedumpfile.h |   30 +++++
+ 4 files changed, 387 insertions(+), 10 deletions(-)
 
+diff --git a/IMPLEMENTATION b/IMPLEMENTATION
+index 9aea0d4..c11bd36 100644
+--- a/IMPLEMENTATION
++++ b/IMPLEMENTATION
+@@ -25,6 +25,10 @@
+     |         page data (pfn 1)                |
+     |                        :                 |
+     |         page data (pfn Z)                |
++    +------------------------------------------+ offset_eraseinfo
++    | erase mystruct2.mystruct1.var 4          |
++    | erase mystruct2.mystruct1.ptr nullify    |
++    | erase mystruct2.mystruct.array 100       |
+     +------------------------------------------+
+ 
+ 
+@@ -71,6 +75,8 @@
+ 	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
+ 	off_t		offset_note;      /* header_version 4 and later */
+ 	unsigned long	size_note;        /* header_version 4 and later */
++	off_t		offset_eraseinfo; /* header_version 5 and later */
++	unsigned long	size_eraseinfo;   /* header_version 5 and later */
+     };
+ 
+   - 1st-bitmap
+diff --git a/diskdump_mod.h b/diskdump_mod.h
+index bab991c..2022770 100644
+--- a/diskdump_mod.h
++++ b/diskdump_mod.h
+@@ -75,6 +75,8 @@ struct kdump_sub_header {
+ 	unsigned long	size_vmcoreinfo;  /* header_version 3 and later */
+ 	off_t		offset_note;      /* header_version 4 and later */
+ 	unsigned long	size_note;        /* header_version 4 and later */
++	off_t		offset_eraseinfo; /* header_version 5 and later */
++	unsigned long	size_eraseinfo;   /* header_version 5 and later */
+ };
+ 
+ /* page flags */
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 1c7237a..a616bae 100644
+index a616bae..b5ad5f7 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -7788,13 +7788,20 @@ free_config_entry(struct config_entry *ce)
- void
- free_config(struct config *config)
- {
-+	int i;
- 	if (config) {
- 		if (config->module_name)
- 			free(config->module_name);
-+		for (i = 0; i < config->num_filter_symbols; i++) {
-+			if (config->filter_symbol[i])
-+				free_config_entry(config->filter_symbol[i]);
-+			if (config->size_symbol[i])
-+				free_config_entry(config->size_symbol[i]);
-+		}
- 		if (config->filter_symbol)
--			free_config_entry(config->filter_symbol);
-+			free(config->filter_symbol);
- 		if (config->size_symbol)
--			free_config_entry(config->size_symbol);
-+			free(config->size_symbol);
- 		free(config);
- 	}
- }
-@@ -7851,7 +7858,16 @@ create_config_entry(const char *token, unsigned short flag, int line)
- 			/* First node is always a symbol name */
- 			ptr->flag |= SYMBOL_ENTRY;
- 		}
--		if (flag & FILTER_ENTRY) {
-+		if (flag & ITERATION_ENTRY) {
-+			/* Max depth for iteration entry is 1 */
-+			if (depth > 0) {
-+				ERRMSG("Config error at %d: Invalid iteration "
-+					"variable entry.\n", line);
-+				goto err_out;
-+			}
-+			ptr->name = strdup(cur);
-+		}
-+		if (flag & (FILTER_ENTRY | LIST_ENTRY)) {
- 			ptr->name = strdup(cur);
- 		}
- 		if (flag & SIZE_ENTRY) {
-@@ -8050,6 +8066,7 @@ get_config_token(char *expected_token, unsigned char flag, int *line,
- static int
- read_size_entry(struct config *config, int line)
- {
-+	int idx = config->num_filter_symbols - 1;
- 	char *token = get_config_token(NULL, 0, &line, NULL, NULL);
+@@ -29,6 +29,8 @@ struct DumpInfo		*info = NULL;
+ struct module_sym_table	mod_st = { 0 };
+ struct filter_info	*filter_info = NULL;
+ struct filter_config	filter_config;
++struct erase_info	*erase_info = NULL;
++unsigned long		num_erase_info = 1; /* Node 0 is unused. */
  
- 	if (!token || IS_KEYWORD(token)) {
-@@ -8057,12 +8074,19 @@ read_size_entry(struct config *config, int line)
- 		" 'size' keyword.\n", line);
- 		return FALSE;
+ char filename_stdout[] = FILENAME_STDOUT;
+ int message_level;
+@@ -951,6 +953,11 @@ get_kdump_compressed_header_info(char *filename)
+ 		info->offset_note = kh.offset_note;
+ 		info->size_note   = kh.size_note;
  	}
--	config->size_symbol = create_config_entry(token, SIZE_ENTRY, line);
--	if (!config->size_symbol) {
-+	config->size_symbol[idx] = create_config_entry(token, SIZE_ENTRY, line);
-+	if (!config->size_symbol[idx]) {
- 		ERRMSG("Error at line %d: Failed to read size symbol\n",
- 									line);
- 		return FALSE;
- 	}
-+	if (config->iter_entry && config->size_symbol[idx]->name &&
-+					(!strcmp(config->size_symbol[idx]->name,
-+					config->iter_entry->name))) {
-+		config->size_symbol[idx]->flag &= ~SYMBOL_ENTRY;
-+		config->size_symbol[idx]->flag |= VAR_ENTRY;
-+		config->size_symbol[idx]->refer_to = config->iter_entry;
++	if (dh.header_version >= 5) {
++		/* A dumpfile contains erased information. */
++		info->offset_eraseinfo = kh.offset_eraseinfo;
++		info->size_eraseinfo   = kh.size_eraseinfo;
 +	}
  	return TRUE;
+ error:
+ 	free(info->dh_memory);
+@@ -5932,7 +5939,7 @@ write_kdump_header(void)
+ 	 * Write common header
+ 	 */
+ 	strncpy(dh->signature, KDUMP_SIGNATURE, strlen(KDUMP_SIGNATURE));
+-	dh->header_version = 4;
++	dh->header_version = 5;
+   	dh->block_size     = info->page_size;
+ 	dh->sub_hdr_size   = sizeof(kh) + info->size_note;
+ 	dh->sub_hdr_size   = divideup(dh->sub_hdr_size, dh->block_size);
+@@ -6000,10 +6007,17 @@ write_kdump_header(void)
+ 			kh.size_vmcoreinfo = info->size_vmcoreinfo;
+ 		}
+ 	}
+-	if (!write_buffer(info->fd_dumpfile, dh->block_size, &kh,
+-	    size, info->name_dumpfile))
+-		goto out;
++	/*
++	 * While writing dump data to STDOUT, delay the writing of sub header
++	 * untill we gather erase info offset and size.
++	 */
++	if (!info->flag_flatten) {
++		if (!write_buffer(info->fd_dumpfile, dh->block_size, &kh,
++		    size, info->name_dumpfile))
++			goto out;
++	}
+ 
++	info->sub_header = kh;
+ 	info->offset_bitmap1
+ 	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size) * dh->block_size;
+ 
+@@ -6061,12 +6075,39 @@ split_filter_info(struct filter_info *prev, unsigned long long next_paddr,
+ 		return;
+ 	}
+ 	new->nullify = prev->nullify;
++	new->erase_info_idx = prev->erase_info_idx;
++	new->size_idx = prev->size_idx;
+ 	new->paddr = next_paddr;
+ 	new->size = size;
+ 	new->next = prev->next;
+ 	prev->next = new;
  }
  
-@@ -8076,6 +8100,7 @@ read_size_entry(struct config *config, int line)
- static int
- read_filter_entry(struct config *config, int line)
- {
-+	int size, idx;
- 	char *token = get_config_token(NULL, 0, &line, NULL, NULL);
- 
- 	if (!token || IS_KEYWORD(token)) {
-@@ -8083,15 +8108,41 @@ read_filter_entry(struct config *config, int line)
- 		" 'erase' command.\n", line);
- 		return FALSE;
- 	}
--	config->filter_symbol =
-+
-+	idx = config->num_filter_symbols;
-+	config->num_filter_symbols++;
-+	size = config->num_filter_symbols * sizeof(struct config_entry *);
-+	config->filter_symbol = realloc(config->filter_symbol, size);
-+	config->size_symbol = realloc(config->size_symbol, size);
-+
-+	if (!config->filter_symbol || !config->size_symbol) {
-+		ERRMSG("Can't get memory to read config symbols.\n");
-+		return FALSE;
-+	}
-+	config->filter_symbol[idx] = NULL;
-+	config->size_symbol[idx] = NULL;
-+
-+	config->filter_symbol[idx] =
- 			create_config_entry(token, FILTER_ENTRY, line);
--	if (!config->filter_symbol) {
-+	if (!config->filter_symbol[idx]) {
- 		ERRMSG("Error at line %d: Failed to read filter symbol\n",
- 									line);
- 		return FALSE;
- 	}
-+	if (config->iter_entry) {
-+		if (strcmp(config->filter_symbol[idx]->name,
-+				config->iter_entry->name)) {
-+			ERRMSG("Config error at %d: unused iteration"
-+				" variable '%s'.\n", line,
-+				config->iter_entry->name);
-+			return FALSE;
-+		}
-+		config->filter_symbol[idx]->flag &= ~SYMBOL_ENTRY;
-+		config->filter_symbol[idx]->flag |= VAR_ENTRY;
-+		config->filter_symbol[idx]->refer_to = config->iter_entry;
-+	}
- 	if (get_config_token("nullify", 0, &line, NULL, NULL)) {
--		config->filter_symbol->nullify = 1;
-+		config->filter_symbol[idx]->nullify = 1;
- 	}
- 	else if (get_config_token("size", 0, &line, NULL, NULL)) {
- 		if (!read_size_entry(config, line))
-@@ -8100,6 +8151,150 @@ read_filter_entry(struct config *config, int line)
- 	return TRUE;
- }
- 
-+static int
-+add_traversal_entry(struct config_entry *ce, char *member, int line)
++void
++update_erase_info(struct filter_info *fi)
 +{
-+	if (!ce)
-+		return FALSE;
++	struct erase_info *ei;
 +
-+	while (ce->next)
-+		ce = ce->next;
++	if (!fi->erase_info_idx)
++		return;
 +
-+	ce->next = create_config_entry(member, LIST_ENTRY, line);
-+	if (ce->next == NULL) {
-+		ERRMSG("Error at line %d: Failed to read 'via' member\n",
-+									line);
++	ei = &erase_info[fi->erase_info_idx];
++
++	if (!ei->sizes) {
++		/* First time, allocate sizes array */
++		ei->sizes = calloc(ei->num_sizes, sizeof(long));
++		if (!ei->sizes) {
++			ERRMSG("Can't allocate memory for erase info sizes\n");
++			return;
++		}
++	}
++	ei->erased = 1;
++	if (!fi->nullify)
++		ei->sizes[fi->size_idx] += fi->size;
++	else
++		ei->sizes[fi->size_idx] = -1;
++}
++
+ int
+ extract_filter_info(unsigned long long start_paddr,
+ 			unsigned long long end_paddr,
+@@ -6100,6 +6141,7 @@ extract_filter_info(unsigned long long start_paddr,
+ 			filter_info = fi->next;
+ 		else
+ 			prev->next = fi->next;
++		update_erase_info(fi);
+ 		free(fi);
+ 		return TRUE;
+ 	}
+@@ -6567,6 +6609,159 @@ out:
+ 	return ret;
+ }
+ 
++/*
++ * Copy eraseinfo from input dumpfile/vmcore to output dumpfile.
++ */
++static int
++copy_eraseinfo(struct cache_data *cd_eraseinfo)
++{
++	char *buf = NULL;
++	int ret = FALSE;
++
++	buf = malloc(info->size_eraseinfo);
++	if (buf == NULL) {
++		ERRMSG("Can't allocate memory for erase info section. %s\n",
++		    strerror(errno));
 +		return FALSE;
 +	}
-+
-+	ce->next->flag |= TRAVERSAL_ENTRY;
-+	ce->next->flag &= ~SYMBOL_ENTRY;
-+	return TRUE;
++	if (lseek(info->fd_memory, info->offset_eraseinfo, SEEK_SET) < 0) {
++		ERRMSG("Can't seek the dump memory(%s). %s\n",
++		    info->name_memory, strerror(errno));
++		goto out;
++	}
++	if (read(info->fd_memory, buf, info->size_eraseinfo)
++	    != info->size_eraseinfo) {
++		ERRMSG("Can't read the dump memory(%s). %s\n",
++		    info->name_memory, strerror(errno));
++		goto out;
++	}
++	if (!write_cache(cd_eraseinfo, buf, info->size_eraseinfo))
++		goto out;
++	ret = TRUE;
++out:
++	if (buf)
++		free(buf);
++	return ret;
 +}
 +
 +static int
-+read_list_entry(struct config *config, int line)
++update_sub_header(void)
 +{
-+	char *token = get_config_token(NULL, 0, &line, NULL, NULL);
++	off_t offset;
 +
-+	if (!token || IS_KEYWORD(token)) {
-+		ERRMSG("Config error at %d: expected list symbol after"
-+		" 'in' keyword.\n", line);
++	/* seek to kdump sub header offset */
++	offset = DISKDUMP_HEADER_BLOCKS * info->page_size;
++
++	info->sub_header.offset_eraseinfo = info->offset_eraseinfo;
++	info->sub_header.size_eraseinfo = info->size_eraseinfo;
++
++	if (!write_buffer(info->fd_dumpfile, offset, &info->sub_header,
++			sizeof(struct kdump_sub_header), info->name_dumpfile))
 +		return FALSE;
-+	}
-+	config->list_entry = create_config_entry(token, LIST_ENTRY, line);
-+	if (!config->list_entry) {
-+		ERRMSG("Error at line %d: Failed to read list symbol\n",
-+									line);
-+		return FALSE;
-+	}
-+	/* Check if user has provided 'via' or 'within' keyword */
-+	if (get_config_token("via", 0, &line, NULL, NULL)) {
-+		/* next token is traversal member NextMember */
-+		token = get_config_token(NULL, 0, &line, NULL, NULL);
-+		if (!token) {
-+			ERRMSG("Config error at %d: expected member name after"
-+			" 'via' keyword.\n", line);
-+			return FALSE;
-+		}
-+		if (!add_traversal_entry(config->list_entry, token, line))
-+			return FALSE;
-+	}
-+	else if (get_config_token("within", 0, &line, NULL, NULL)) {
-+		char *s_name, *lh_member;
-+		/* next value is StructName:ListHeadMember */
-+		s_name = get_config_token(NULL, 0, &line, NULL, NULL);
-+		if (!s_name || IS_KEYWORD(s_name)) {
-+			ERRMSG("Config error at %d: expected struct name after"
-+			" 'within' keyword.\n", line);
-+			return FALSE;
-+		}
-+		lh_member = strchr(s_name, ':');
-+		if (lh_member) {
-+			*lh_member++ = '\0';
-+			if (!strlen(lh_member)) {
-+				ERRMSG("Config error at %d: expected list_head"
-+					" member after ':'.\n", line);
-+				return FALSE;
-+			}
-+			config->iter_entry->next =
-+				create_config_entry(lh_member,
-+							ITERATION_ENTRY, line);
-+			if (!config->iter_entry->next)
-+				return FALSE;
-+			config->iter_entry->next->flag &= ~SYMBOL_ENTRY;
-+		}
-+		if (!strlen(s_name)) {
-+			ERRMSG("Config error at %d: Invalid token found "
-+				"after 'within' keyword.\n", line);
-+			return FALSE;
-+		}
-+		config->iter_entry->type_name = strdup(s_name);
-+	}
++
 +	return TRUE;
 +}
 +
 +/*
-+ * Read the iteration entry (LoopConstruct). The syntax is:
-+ *
-+ *	for <id> in {<ArrayVar> |
-+ *		    <StructVar> via <NextMember> |
-+ *		    <ListHeadVar> within <StructName>:<ListHeadMember>}
-+ *		erase <id>[.MemberExpression] [size <SizeExpression>|nullify]
-+ *		[erase <id>...]
-+ *		[...]
-+ *	endfor
++ * Traverse through eraseinfo nodes and write it to the o/p dumpfile if the
++ * node has erased flag set.
 + */
-+static int
-+read_iteration_entry(struct config *config, int line)
++int
++write_eraseinfo(struct cache_data *cd_page, unsigned long *size_out)
 +{
-+	int eof = 0;
-+	char *token = get_config_token(NULL, 0, &line, NULL, NULL);
++	int i, j, obuf_size = 0, ei_size = 0;
++	int ret = FALSE;
++	unsigned long size_eraseinfo = 0;
++	char *obuf = NULL;
++	char size_str[MAX_SIZE_STR_LEN];
 +
-+	if (!token || IS_KEYWORD(token)) {
-+		ERRMSG("Config error at %d: expected iteration VAR entry after"
-+		" 'for' keyword.\n", line);
-+		return FALSE;
-+	}
-+	config->iter_entry =
-+		create_config_entry(token, ITERATION_ENTRY, line);
-+	if (!config->iter_entry) {
-+		ERRMSG("Error at line %d: "
-+			"Failed to read iteration VAR entry.\n", line);
-+		return FALSE;
-+	}
-+	if (!get_config_token("in", 0, &line, NULL, NULL)) {
-+		char *token;
-+		token = get_config_token(NULL, 0, &line, NULL, NULL);
-+		if (token)
-+			ERRMSG("Config error at %d: Invalid token '%s'.\n",
-+								line, token);
-+		ERRMSG("Config error at %d: expected token 'in'.\n", line);
-+		return FALSE;
-+	}
-+	if (!read_list_entry(config, line))
-+		return FALSE;
++	for (i = 1; i < num_erase_info; i++) {
++		if (!erase_info[i].erased)
++			continue;
++		for (j = 0; j < erase_info[i].num_sizes; j++) {
++			if (erase_info[i].sizes[j] > 0)
++				sprintf(size_str, "%ld\n",
++						erase_info[i].sizes[j]);
++			else if (erase_info[i].sizes[j] == -1)
++				sprintf(size_str, "nullify\n");
 +
-+	while (!get_config_token("endfor", 0, &line, NULL, &eof) && !eof) {
-+		if (get_config_token("erase", 0, &line, NULL, NULL)) {
-+			if (!read_filter_entry(config, line))
-+				return FALSE;
++			/* Calculate the required buffer size. */
++			ei_size = strlen("erase ") +
++					strlen(erase_info[i].symbol_expr) + 1 +
++					strlen(size_str) +
++					1;
++			/*
++			 * If obuf is allocated in the previous run and is
++			 * big enough to hold current erase info string then
++			 * reuse it otherwise realloc.
++			 */
++			if (ei_size > obuf_size) {
++				obuf_size = ei_size;
++				obuf = realloc(obuf, obuf_size);
++				if (!obuf) {
++					ERRMSG("Can't allocate memory for"
++						" output buffer\n");
++					return FALSE;
++				}
++			}
++			sprintf(obuf, "erase %s %s", erase_info[i].symbol_expr,
++							size_str);
++			DEBUG_MSG(obuf);
++			if (!write_cache(cd_page, obuf, strlen(obuf)))
++				goto out;
++			size_eraseinfo += strlen(obuf);
 +		}
-+		else {
-+			token = get_config_token(NULL, 0, &line, NULL, NULL);
-+			ERRMSG("Config error at %d: "
-+				"Invalid token '%s'.\n", line, token);
++	}
++	/*
++	 * Write the remainder.
++	 */
++	if (!write_cache_bufsz(cd_page))
++		goto out;
++
++	*size_out = size_eraseinfo;
++	ret = TRUE;
++out:
++	if (obuf)
++		free(obuf);
++
++	return ret;
++}
++
++int
++write_kdump_eraseinfo(struct cache_data *cd_page)
++{
++	off_t offset_eraseinfo;
++	unsigned long size_eraseinfo;
++
++	DEBUG_MSG("Writing erase info...\n");
++	offset_eraseinfo = cd_page->offset;
++
++	/*
++	 * In case of refiltering copy the existing eraseinfo from input
++	 * dumpfile to o/p dumpfile.
++	 */
++	if (info->offset_eraseinfo && info->size_eraseinfo) {
++		if (!copy_eraseinfo(cd_page))
 +			return FALSE;
-+		}
 +	}
-+	if (eof) {
-+		ERRMSG("Config error at %d: No matching 'endfor' found.\n",
-+									line);
++
++	/* Initialize eraseinfo offset with new offset value. */
++	info->offset_eraseinfo = offset_eraseinfo;
++
++	if (!write_eraseinfo(cd_page, &size_eraseinfo))
 +		return FALSE;
-+	}
++
++	info->size_eraseinfo += size_eraseinfo;
++	DEBUG_MSG("offset_eraseinfo: %lx, size_eraseinfo: %ld\n",
++			info->offset_eraseinfo, info->size_eraseinfo);
++
++	/* Update the erase info offset and size in kdump sub header */
++	if (!update_sub_header())
++		return FALSE;
++
 +	return TRUE;
 +}
 +
- /*
-  * Configuration file 'makedumpfile.conf' contains filter commands.
-  * Every individual filter command is considered as a config entry. A config
-@@ -8125,6 +8320,13 @@ get_config(int skip)
- 		if (!read_filter_entry(config, line_count))
- 			goto err_out;
+ int
+ write_kdump_bitmap(void)
+ {
+@@ -7391,6 +7586,8 @@ writeout_dumpfile(void)
+ 			goto out;
+ 		if (!write_kdump_pages(&cd_header, &cd_page))
+ 			goto out;
++		if (!write_kdump_eraseinfo(&cd_page))
++			goto out;
+ 		if (!write_kdump_bitmap())
+ 			goto out;
  	}
-+	else if (get_config_token("for", 0, &line_count, &cur_module, &eof)) {
-+		if (cur_module)
-+			config->module_name = strdup(cur_module);
-+
-+		if (!read_iteration_entry(config, line_count))
-+			goto err_out;
-+	}
- 	else {
- 		if (!eof) {
- 			token = get_config_token(NULL, 0, &line_count,
-@@ -8193,6 +8395,24 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_addr,
- 				ce->array_length = 0;
- 		}
+@@ -7781,6 +7978,8 @@ free_config_entry(struct config_entry *ce)
+ 			free(p->name);
+ 		if (p->type_name)
+ 			free(p->type_name);
++		if (p->symbol_expr)
++			free(p->symbol_expr);
+ 		free(p);
  	}
-+	else if (ce->flag & VAR_ENTRY) {
-+		/* iteration variable.
-+		 * read the value from ce->refer_to
-+		 */
-+		ce->addr = ce->refer_to->addr;
-+		ce->sym_addr = ce->refer_to->sym_addr;
-+		ce->size = ce->refer_to->size;
-+		ce->type_flag = ce->refer_to->type_flag;
-+		if (!ce->type_name)
-+			ce->type_name = strdup(ce->refer_to->type_name);
-+
-+		/* This entry has been changed hence next entry needs to
-+		 * be resolved accordingly.
-+		 */
-+		if (ce->next)
-+			ce->next->flag &= ~ENTRY_RESOLVED;
-+		return TRUE;
-+	}
- 	else {
- 		/* find the member offset */
- 		ce->offset = get_member_offset(base_struct_name,
-@@ -8216,9 +8436,58 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_addr,
- 				ce->line, base_struct_name, ce->name);
+ }
+@@ -8129,6 +8328,13 @@ read_filter_entry(struct config *config, int line)
+ 									line);
  		return FALSE;
  	}
-+	if (!strcmp(ce->type_name, "list_head")) {
-+		ce->type_flag |= TYPE_LIST_HEAD;
-+		/* If this list head expression is a LIST entry then
-+		 * mark the next entry as TRAVERSAL_ENTRY, if any.
-+		 * Error out if next entry is not a last node.
-+		 */
-+		if ((ce->flag & LIST_ENTRY) && ce->next) {
-+			if (ce->next->next) {
-+				ERRMSG("Config error at %d: Only one traversal"
-+					" entry is allowed for list_head type"
-+					" LIST entry", ce->line);
-+				return FALSE;
-+			}
-+			ce->next->flag |= TRAVERSAL_ENTRY;
-+		}
-+	}
- 	ce->addr = ce->sym_addr;
- 	if (ce->size < 0)
- 		ce->size = 0;
-+	if ((ce->flag & LIST_ENTRY) && !ce->next) {
-+		/* This is the last node of LIST entry.
-+		 * For the list entry symbol, the allowed data types are:
-+		 * Array, Structure Pointer (with 'next' member) and list_head.
-+		 *
-+		 * If this is a struct or list_head data type then
-+		 * create a leaf node entry with 'next' member.
-+		 */
-+		if ((ce->type_flag & TYPE_BASE)
-+					&& (strcmp(ce->type_name, "void")))
-+			return FALSE;
 +
-+		if ((ce->type_flag & TYPE_LIST_HEAD)
-+			|| ((ce->type_flag & (TYPE_STRUCT | TYPE_ARRAY))
-+							== TYPE_STRUCT)) {
-+			if (!(ce->flag & TRAVERSAL_ENTRY)) {
-+				ce->next = create_config_entry("next",
-+							LIST_ENTRY, ce->line);
-+				if (ce->next == NULL)
-+					return FALSE;
++	/*
++	 * Save the symbol expression string for generation of eraseinfo data
++	 * later while writing dumpfile.
++	 */
++	config->filter_symbol[idx]->symbol_expr = strdup(token);
 +
-+				ce->next->flag |= TRAVERSAL_ENTRY;
-+				ce->next->flag &= ~SYMBOL_ENTRY;
-+			}
-+		}
-+		if (ce->flag & TRAVERSAL_ENTRY) {
-+			/* type name of traversal entry should match with
-+			 * that of parent node.
-+			 */
-+			if (strcmp(base_struct_name, ce->type_name))
-+				return FALSE;
-+		}
-+	}
- 	if ((ce->type_flag & (TYPE_ARRAY | TYPE_PTR)) == TYPE_PTR) {
- 		/* If it's a pointer variable (not array) then read the
- 		 * pointer value. */
-@@ -8227,7 +8496,7 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_addr,
- 		/*
- 		 * if it is a void pointer then reset the size to 0
- 		 * User need to provide a size to filter data referenced
--		 * by 'void *' pointer.
-+		 * by 'void *' pointer or nullify option.
- 		 */
- 		if (!strcmp(ce->type_name, "void"))
- 			ce->size = 0;
-@@ -8286,6 +8555,8 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_addr,
- 		free(val);
- 	}
- 	ce->flag |= ENTRY_RESOLVED;
-+	if (ce->next)
-+		ce->next->flag &= ~ENTRY_RESOLVED;
- 	return TRUE;
- }
- 
-@@ -8294,18 +8565,87 @@ get_config_symbol_addr(struct config_entry *ce,
- 			unsigned long long base_addr,
- 			char *base_struct_name)
- {
-+	unsigned long long addr = 0;
-+
- 	if (!(ce->flag & ENTRY_RESOLVED)) {
- 		if (!resolve_config_entry(ce, base_addr, base_struct_name))
- 			return 0;
- 	}
- 
-+	if ((ce->flag & LIST_ENTRY)) {
-+		/* handle List entry differently */
-+		if (!ce->next) {
-+			/* leaf node. */
-+			if (ce->type_flag & TYPE_ARRAY) {
-+				if (ce->index == ce->array_length)
-+					return 0;
-+				if (!(ce->type_flag & TYPE_PTR))
-+					return (ce->addr +
-+							(ce->index * ce->size));
-+				/* Array of pointers.
-+				 *
-+				 * Array may contain NULL pointers at some
-+				 * indexes. Hence return the next non-null
-+				 * address value.
-+				 */
-+				while (ce->index < ce->array_length) {
-+					addr = read_pointer_value(ce->addr +
-+						(ce->index * pointer_size));
-+					ce->index++;
-+					if (addr)
-+						break;
-+				}
-+				return addr;
-+			}
-+			else {
-+				if (ce->addr == ce->cmp_addr)
-+					return 0;
-+
-+				/* Set the leaf node as unresolved, so that
-+				 * it will be resolved every time when
-+				 * get_config_symbol_addr is called untill
-+				 * it hits the exit condiftion.
-+				 */
-+				ce->flag &= ~ENTRY_RESOLVED;
-+			}
-+		}
-+		else if ((ce->next->next == NULL) &&
-+					!(ce->next->type_flag & TYPE_ARRAY)) {
-+			/* the next node is leaf node. for non-array element
-+			 * Set the sym_addr and addr of this node with that of
-+			 * leaf node.
-+			 */
-+			addr = ce->addr;
-+			ce->addr = ce->next->addr;
-+
-+			if (!(ce->type_flag & TYPE_LIST_HEAD)) {
-+				if (addr == ce->next->cmp_addr)
-+					return 0;
-+
-+				if (!ce->next->cmp_addr) {
-+					/* safeguard against circular
-+					 * link-list
-+					 */
-+					ce->next->cmp_addr = addr;
-+				}
-+
-+				/* Force resolution of traversal node */
-+				if (ce->addr && !resolve_config_entry(ce->next,
-+						ce->addr, ce->type_name))
-+					return 0;
-+
-+				return addr;
-+			}
-+		}
-+	}
-+
- 	if (ce->next && ce->addr) {
- 		/* Populate nullify flag down the list */
- 		ce->next->nullify = ce->nullify;
- 		return get_config_symbol_addr(ce->next, ce->addr,
- 							ce->type_name);
- 	}
--	else if (ce->nullify) {
-+	else if (!ce->next && ce->nullify) {
- 		/* nullify is applicable to pointer type */
- 		if (ce->type_flag & TYPE_PTR)
- 			return ce->sym_addr;
-@@ -8340,6 +8680,48 @@ get_config_symbol_size(struct config_entry *ce,
- 	}
- }
- 
-+static int
-+resolve_list_entry(struct config_entry *ce, unsigned long long base_addr,
-+			char *base_struct_name, char **out_type_name,
-+			unsigned char *out_type_flag)
-+{
-+	if (!(ce->flag & ENTRY_RESOLVED)) {
-+		if (!resolve_config_entry(ce, base_addr, base_struct_name))
-+			return FALSE;
-+	}
-+
-+	if (ce->next && (ce->next->flag & TRAVERSAL_ENTRY) &&
-+				(ce->type_flag & TYPE_ARRAY)) {
-+		/*
-+		 * We are here because user has provided
-+		 * traversal member for ArrayVar using 'via' keyword.
-+		 *
-+		 * Print warning and continue.
-+		 */
-+		ERRMSG("Warning: line %d: 'via' keyword not required "
-+			"for ArrayVar.\n", ce->next->line);
-+		free_config_entry(ce->next);
-+		ce->next = NULL;
-+	}
-+	if ((ce->type_flag & TYPE_LIST_HEAD) && ce->next &&
-+			(ce->next->flag & TRAVERSAL_ENTRY)) {
-+		/* set cmp_addr for list empty condition.  */
-+		ce->next->cmp_addr = ce->sym_addr;
-+	}
-+	if (ce->next && ce->addr) {
-+		return resolve_list_entry(ce->next, ce->addr,
-+				ce->type_name, out_type_name, out_type_flag);
-+	}
-+	else {
-+		ce->index = 0;
-+		if (out_type_name)
-+			*out_type_name = ce->type_name;
-+		if (out_type_flag)
-+			*out_type_flag = ce->type_flag;
-+	}
-+	return TRUE;
-+}
-+
- /*
+ 	if (config->iter_entry) {
+ 		if (strcmp(config->filter_symbol[idx]->name,
+ 				config->iter_entry->name)) {
+@@ -8726,8 +8932,11 @@ resolve_list_entry(struct config_entry *ce, unsigned long long base_addr,
   * Insert the filter info node using insertion sort.
   * If filter node for a given paddr is aready present then update the size
-@@ -8420,6 +8802,107 @@ update_filter_info(struct config_entry *filter_symbol,
+  * and delete the fl_info node passed.
++ *
++ * Return 1 on successfull insertion.
++ * Return 0 if filter node with same paddr is found.
+  */
+-void
++int
+ insert_filter_info(struct filter_info *fl_info)
+ {
+ 	struct filter_info *prev = NULL;
+@@ -8735,7 +8944,7 @@ insert_filter_info(struct filter_info *fl_info)
+ 
+ 	if (!ptr) {
+ 		filter_info = fl_info;
+-		return;
++		return 1;
+ 	}
+ 
+ 	while (ptr) {
+@@ -8748,7 +8957,7 @@ insert_filter_info(struct filter_info *fl_info)
+ 		if (fl_info->size > ptr->size)
+ 			ptr->size = fl_info->size;
+ 		free(fl_info);
+-		return;
++		return 0;
+ 	}
+ 
+ 	if (prev) {
+@@ -8759,7 +8968,80 @@ insert_filter_info(struct filter_info *fl_info)
+ 		fl_info->next = filter_info;
+ 		filter_info = fl_info;
+ 	}
+-	return;
++	return 1;
++}
++
++/*
++ * Create an erase info node for each erase command. One node per erase
++ * command even if it is part of loop construct.
++ * For erase commands that are not part of loop construct, the num_sizes will
++ * always be 1
++ * For erase commands that are part of loop construct, the num_sizes may be
++ * 1 or >1 depending on number iterations. This function will called multiple
++ * times depending on iterations. At first invokation create a node and
++ * increment num_sizes for subsequent invokations.
++ *
++ * The valid erase info node starts from index value 1. (index 0 is invalid
++ * index).
++ *
++ *            Index 0     1        2        3
++ *             +------+--------+--------+--------+
++ * erase_info->|Unused|        |        |        |......
++ *             +------+--------+--------+--------+
++ *                        |        .        .        .....
++ *                        V
++ *                   +---------+
++ *                   | char*   |----> Original erase command string
++ *                   +---------+
++ *                   |num_sizes|
++ *                   +---------+      +--+--+--+
++ *                   | sizes   |----> |  |  |  |... Sizes array of num_sizes
++ *                   +---------+      +--+--+--+
++ *
++ * On success, return the index value of erase node for given erase command.
++ * On failure, return 0.
++ */
++static int
++add_erase_info_node(struct config_entry *filter_symbol)
++{
++	int idx = filter_symbol->erase_info_idx;
++
++	/*
++	 * Check if node is already created, if yes, increment the num_sizes.
++	 */
++	if (idx) {
++		erase_info[idx].num_sizes++;
++		return idx;
++	}
++
++	/* Allocate a new node. */
++	DEBUG_MSG("Allocating new erase info node for command \"%s\"\n",
++			filter_symbol->symbol_expr);
++	idx = num_erase_info++;
++	erase_info = realloc(erase_info,
++			sizeof(struct erase_info) * num_erase_info);
++	if (!erase_info) {
++		ERRMSG("Can't get memory to create erase information.\n");
++		return 0;
++	}
++
++	memset(&erase_info[idx], 0, sizeof(struct erase_info));
++	erase_info[idx].symbol_expr = filter_symbol->symbol_expr;
++	erase_info[idx].num_sizes = 1;
++
++	filter_symbol->symbol_expr = NULL;
++	filter_symbol->erase_info_idx = idx;
++
++	return idx;
++}
++
++/* Return the index value in sizes array for given erase command index. */
++static inline int
++get_size_index(int ei_idx)
++{
++	if (ei_idx)
++		return erase_info[ei_idx].num_sizes - 1;
++	return 0;
+ }
+ 
+ int
+@@ -8798,7 +9080,10 @@ update_filter_info(struct config_entry *filter_symbol,
+ 	fl_info->size = size;
+ 	fl_info->nullify = filter_symbol->nullify;
+ 
+-	insert_filter_info(fl_info);
++	if (insert_filter_info(fl_info)) {
++		fl_info->erase_info_idx = add_erase_info_node(filter_symbol);
++		fl_info->size_idx = get_size_index(fl_info->erase_info_idx);
++	}
  	return TRUE;
  }
  
-+int
-+initialize_iteration_entry(struct config_entry *ie,
-+				char *type_name, unsigned char type_flag)
-+{
-+	if (!(ie->flag & ITERATION_ENTRY))
-+		return FALSE;
-+
-+	if (type_flag & TYPE_LIST_HEAD) {
-+		if (!ie->type_name) {
-+			ERRMSG("Config error at %d: Use 'within' keyword "
-+				"to specify StructName:ListHeadMember.\n",
-+				ie->line);
-+			return FALSE;
+@@ -9049,6 +9334,7 @@ void
+ clear_filter_info(void)
+ {
+ 	struct filter_info *prev, *fi = filter_info;
++	int i;
+ 
+ 	/* Delete filter_info nodes that are left out. */
+ 	while (fi) {
+@@ -9057,6 +9343,13 @@ clear_filter_info(void)
+ 		free(prev);
+ 	}
+ 	filter_info = NULL;
++	if (erase_info) {
++		for (i = 1; i < num_erase_info; i++) {
++			free(erase_info[i].symbol_expr);
++			free(erase_info[i].sizes);
 +		}
-+		/*
-+		 * If the LIST entry is of list_head type and user has not
-+		 * specified the member name where iteration entry is hooked
-+		 * on to list_head, then we default to member name 'list'.
-+		 */
-+		if (!ie->next) {
-+			ie->next = create_config_entry("list", ITERATION_ENTRY,
-+								ie->line);
-+			ie->next->flag &= ~SYMBOL_ENTRY;
-+		}
++		free(erase_info);
 +	}
-+	else {
-+		if (ie->type_name) {
-+			/* looks like user has used 'within' keyword for
-+			 * non-list_head VAR. Print the warning and continue.
-+			 */
-+			ERRMSG("Warning: line %d: 'within' keyword not "
-+				"required for ArrayVar/StructVar.\n", ie->line);
-+			free(ie->type_name);
+ }
+ 
+ int
+@@ -9245,6 +9538,8 @@ store_splitting_info(void)
+ 		}
+ 		SPLITTING_START_PFN(i) = kh.start_pfn;
+ 		SPLITTING_END_PFN(i)   = kh.end_pfn;
++		SPLITTING_OFFSET_EI(i) = kh.offset_eraseinfo;
++		SPLITTING_SIZE_EI(i)   = kh.size_eraseinfo;
+ 	}
+ 	return TRUE;
+ }
+@@ -9452,6 +9747,7 @@ reassemble_kdump_pages(void)
+ 	struct cache_data cd_pd, cd_data;
+ 	struct timeval tv_start;
+ 	char *data = NULL;
++	unsigned long data_buf_size = info->page_size;
+ 
+ 	initialize_2nd_bitmap(&bitmap2);
+ 
+@@ -9465,7 +9761,7 @@ reassemble_kdump_pages(void)
+ 		free_cache_data(&cd_pd);
+ 		return FALSE;
+ 	}
+-	if ((data = malloc(info->page_size)) == NULL) {
++	if ((data = malloc(data_buf_size)) == NULL) {
+ 		ERRMSG("Can't allcate memory for page data.\n");
+ 		free_cache_data(&cd_pd);
+ 		free_cache_data(&cd_data);
+@@ -9570,6 +9866,49 @@ reassemble_kdump_pages(void)
+ 	if (!write_cache_bufsz(&cd_data))
+ 		goto out;
+ 
++	info->offset_eraseinfo = cd_data.offset;
++	/* Copy eraseinfo from split dumpfiles to o/p dumpfile */
++	for (i = 0; i < info->num_dumpfile; i++) {
++		if (!SPLITTING_SIZE_EI(i))
++			continue;
 +
-+			/* remove the next list_head member from iteration
-+			 * entry that would have added as part of 'within'
-+			 * keyword processing.
-+			 */
-+			if (ie->next) {
-+				free_config_entry(ie->next);
-+				ie->next = NULL;
++		if (SPLITTING_SIZE_EI(i) > data_buf_size) {
++			data_buf_size = SPLITTING_SIZE_EI(i);
++			if ((data = realloc(data, data_buf_size)) == NULL) {
++				ERRMSG("Can't allcate memory for eraseinfo"
++					" data.\n");
++				goto out;
 +			}
 +		}
-+		ie->type_name = strdup(type_name);
-+	}
-+
-+	if (!ie->size) {
-+		ie->size = get_structure_size(ie->type_name,
-+						DWARF_INFO_GET_STRUCT_SIZE);
-+		if (ie->size == FAILED_DWARFINFO) {
-+			ERRMSG("Config error at %d: "
-+				"Can't get size for type: %s.\n",
-+				ie->line, ie->type_name);
-+			return FALSE;
++		if ((fd = open(SPLITTING_DUMPFILE(i), O_RDONLY)) < 0) {
++			ERRMSG("Can't open a file(%s). %s\n",
++			    SPLITTING_DUMPFILE(i), strerror(errno));
++			goto out;
 +		}
-+		else if (ie->size == NOT_FOUND_STRUCTURE) {
-+			ERRMSG("Config error at %d: "
-+				"Can't find structure: %s.\n",
-+				ie->line, ie->type_name);
-+			return FALSE;
++		if (lseek(fd, SPLITTING_OFFSET_EI(i), SEEK_SET) < 0) {
++			ERRMSG("Can't seek a file(%s). %s\n",
++			    SPLITTING_DUMPFILE(i), strerror(errno));
++			goto out;
 +		}
-+	}
-+	if (type_flag & TYPE_LIST_HEAD) {
-+		if (!resolve_config_entry(ie->next, 0, ie->type_name))
-+			return FALSE;
-+
-+		if (strcmp(ie->next->type_name, "list_head")) {
-+			ERRMSG("Config error at %d: "
-+				"Member '%s' is not of 'list_head' type.\n",
-+				ie->next->line, ie->next->name);
-+			return FALSE;
++		if (read(fd, data, SPLITTING_SIZE_EI(i)) !=
++						SPLITTING_SIZE_EI(i)) {
++			ERRMSG("Can't read a file(%s). %s\n",
++			    SPLITTING_DUMPFILE(i), strerror(errno));
++			goto out;
 +		}
++		if (!write_cache(&cd_data, data, SPLITTING_SIZE_EI(i)))
++			goto out;
++		info->size_eraseinfo += SPLITTING_SIZE_EI(i);
++
++		close(fd);
++		fd = 0;
 +	}
-+	return TRUE;
-+}
++	if (!write_cache_bufsz(&cd_data))
++		goto out;
 +
-+int
-+list_entry_empty(struct config_entry *le, struct config_entry *ie)
-+{
-+	unsigned long long addr;
++	if (!update_sub_header())
++		goto out;
 +
-+	/* Error out if arguments are not correct */
-+	if (!(le->flag & LIST_ENTRY) || !(ie->flag & ITERATION_ENTRY)) {
-+		ERRMSG("Invalid arguments\n");
-+		return TRUE;
-+	}
-+	addr = get_config_symbol_addr(le, 0, NULL);
-+	if (!addr)
-+		return TRUE;
-+
-+	if (ie->next) {
-+		/* we are dealing with list_head */
-+		ie->next->addr = addr;
-+		ie->addr = addr - ie->next->offset;
-+		//resolve_iteration_entry(ie, addr);
-+	}
-+	else
-+		ie->addr = addr;
-+	return FALSE;
-+}
-+
- /*
-  * Process the config entry that has been read by get_config.
-  * return TRUE on success
-@@ -8427,7 +8910,35 @@ update_filter_info(struct config_entry *filter_symbol,
- int
- process_config(struct config *config)
- {
--	update_filter_info(config->filter_symbol, config->size_symbol);
-+	int i;
-+	if (config->list_entry) {
-+		unsigned char type_flag;
-+		char *type_name = NULL;
-+		/*
-+		 * We are dealing with 'for' command.
-+		 * - First resolve list entry.
-+		 * - Initialize iteration entry for iteration.
-+		 * - Populate iteration entry untill list entry empty.
-+		 */
-+		if (!resolve_list_entry(config->list_entry, 0, NULL,
-+					&type_name, &type_flag)) {
-+			return FALSE;
-+		}
-+		if (!initialize_iteration_entry(config->iter_entry,
-+						type_name, type_flag)) {
-+			return FALSE;
-+		}
-+
-+		while (!list_entry_empty(config->list_entry,
-+						config->iter_entry)) {
-+			for (i = 0; i < config->num_filter_symbols; i++)
-+				update_filter_info(config->filter_symbol[i],
-+							config->size_symbol[i]);
-+		}
-+	}
-+	else
-+		update_filter_info(config->filter_symbol[0],
-+						config->size_symbol[0]);
+ 	print_progress(PROGRESS_COPY, num_dumpable, num_dumpable);
+ 	print_execution_time(PROGRESS_COPY, &tv_start);
  
- 	return TRUE;
- }
-diff --git a/makedumpfile.conf b/makedumpfile.conf
-index 3d47e25..03e604a 100644
---- a/makedumpfile.conf
-+++ b/makedumpfile.conf
-@@ -80,3 +80,70 @@
- ##	erase cred_jar.array
- ##	erase vmlist.addr nullify
- ##
-+##
-+## - To filter kernel data referred through Array/list_head Symbol
-+## =================================================================
-+## Syntax:
-+## for <id> in { <ArrayVar> |
-+##		 <StructVar> via <NextMember> |
-+##		 <ListHeadVar> within <StructName>:<ListHeadMember> }
-+##	erase <id>[.MemberExpression] [size <SizeExpression>|nullify]
-+##	[erase <id> ...]
-+##	[...]
-+## endfor
-+##
-+## where
-+##	<id>
-+##		Arbitrary name used to temporarily point to elements of the
-+##		list. Referred as iteration variable.
-+##	<ArrayVar>
-+##		A simple expression in the form of <Symbol>[.member[...]] that
-+##		results into an array variable.
-+##	<StructVar>
-+##		A simple expression in the form of <Symbol>[.member[...]] that
-+##		results into a variable that points to a structure.
-+##	<NextMember>
-+##		Member within <StructVar> that points to an object of same
-+##		type that of <StructVar>.
-+##	<ListHeadVar>
-+##		A simple expression in the form of <Symbol>[.member[...]] that
-+##		results into a variable of type struct list_head.
-+##	<StructName>
-+##		Name of the structure type that can be traversed using
-+##		HEAD variable <ListHeadVar> and contains a member named
-+##		<ListHeadMember>.
-+##	<ListHeadMember>
-+##		Name of a member in <StructName>, of type struct list_head.
-+##	<MemberExpression>
-+##		A simple expression in the form of [.member[...]] to specify a
-+##		member or component of a member in <ArrayVar>, <StructVar> or
-+##		<StructName>.
-+##	<SizeExpression>
-+##		One of the following:
-+##		- An integer value.
-+##		- <Symbol>[.member[...]]
-+##		- <id>[.MemberExpresion]
-+##
-+## The <ArrayVar>, <StructVar> and <ListHeadVar> is also referred as LIST
-+## entry
-+##
-+## Filter out the specified size of the data accessible through LIST entries.
-+## e.g.
-+##	[vmlinux]
-+##	# Traversing <ListHeadVar>
-+##	for m in modules.next within module:list
-+##		erase m.holders_dir.name
-+##	endfor
-+##	# Traversing <ArrayVar>
-+##	for lc in lowcore_ptr
-+##		erase lc
-+##	endfor
-+##	# Traversing link-list
-+##	for cj in cred_jar via slabp_cache
-+##		erase cj.name
-+##	endfor
-+##	[z90crypt]
-+##	for ap_dev in ap_device_list.next within ap_device:list
-+##		erase ap_dev.reply.message size ap_dev.reply.length
-+##	endfor
-+##
-diff --git a/makedumpfile.conf.8 b/makedumpfile.conf.8
-index 0a7d22a..ef0e86a 100644
---- a/makedumpfile.conf.8
-+++ b/makedumpfile.conf.8
-@@ -48,17 +48,21 @@ will skip the section with a warning message.
- .SH FILTER COMMANDS
- .SS filter command
- .PP
--A filter command is an erase command. Each erase command must start with a new
--line. Each filter command describes data in the dump to be erased.
-+A filter command is either an erase command or a loop construct. Each erase
-+command and loop construct must start with a new line. Each filter command
-+describes data in the dump to be erased. Syntax:
- 
- .br
--<\fIEraseCommands\fR>
-+<\fIEraseCommands\fR>|<\fILoopConstruct\fR>
- .br
- 
- where
- .TP
- <\fIEraseCommands\fR>
- Described in the subsection \fBerase command\fR of this manual page.
-+.TP
-+<\fILoopConstruct\fR>
-+Described in the subsection \fBLoop construct\fR of this manual page.
- .SS erase command
- .PP
- Erase specified size of a kernel data referred by specified kernel/module
-@@ -207,6 +211,208 @@ erase mystruct2.addr size mystruct2.addr_size
- .br
- .B EOF
- 
-+.SS Loop construct
-+.PP
-+A Loop construct allows the user to traverse the linked list or array elements
-+and erase the data contents referred by each element.
-+
-+.br
-+\fBfor\fR <\fIid\fR> \fBin\fR {<\fIArrayVar\fR> |
-+.br
-+		   <\fIStructVar\fR> \fBvia\fR <\fINextMember\fR> |
-+.br
-+		   <\fIListHeadVar\fR> \fBwithin\fR
-+<\fIStructName\fR>\fB:\fR<\fIListHeadMember\fR>}
-+.br
-+	\fBerase\fR <\fIid\fR>[.\fIMemberExpression\fR]
-+[\fBsize\fR <\fISizeExpression\fR>|\fBnullify\fR]
-+.br
-+	[\fBerase\fR <\fIid\fR>...]
-+.br
-+	[...]
-+.br
-+\fBendfor\fR
-+.PP
-+where
-+.PP
-+.TP
-+<\fIid\fR>
-+Arbitrary name used to temporarily point to elements of the list. This is
-+also called iteration variable.
-+.TP
-+<\fIArrayVar\fR>
-+A simple expression in the form of <\fISymbol\fR>[.\fImember\fR[...]] that
-+results into an array variable.
-+.TP
-+<\fIStructVar\fR>
-+A simple expression in the form of <\fISymbol\fR>[.\fImember\fR[...]] that
-+results into a variable that points to a structure.
-+.TP
-+<\fINextMember\fR>
-+Member within <\fIStructVar\fR> that points to an object of same type that of
-+<\fIStructVar\fR>.
-+.TP
-+<\fIListHeadVar\fR>
-+A simple expression in the form of <\fISymbol\fR>[.\fImember\fR[...]] that
-+results into a variable of type struct list_head.
-+.TP
-+<\fIStructName\fR>
-+Name of the structure type that can be traversed using HEAD variable
-+<\fIListHeadVar\fR> and contains a member named <\fIListHeadMember\fR>.
-+.TP
-+<\fIListHeadMember\fR>
-+Name of a member in <\fIStructName\fR>, of type struct list_head.
-+.TP
-+<\fIMemberExpression\fR>
-+A simple expression in the form of [.\fImember\fR[...]] to specify a member
-+or component of an element in <\fIArrayVar\fR>, <\fIStructVar\fR>
-+or <\fIStructName\fR>.
-+.TP
-+<\fISizeExpression\fR>
-+Size value in the form of <\fISizeValue\fR>, <\fIid\fR>[.\fIMemberExpression\fR]
-+or <\fISymbol\fR>[.\fImember\fR[...]].
-+.PP
-+The \fBfor\fR loop construct allows to iterate on list of elements in an array
-+or linked lists. Each element in the list is assigned to iteration variable
-+<\fIid\fR>. The type of the iteration variable is determined by that of the
-+list elements. The entry specified after '\fBin\fR' terminal is called LIST
-+entry. The LIST entry can be an array variable, structure variable/pointer or a
-+struct list_head type variable. The set of \fBerase\fR commands specified
-+between \fBfor\fR and \fBendfor\fR, will be executed for each element in the
-+LIST entry.
-+.PP
-+If the LIST entry specified is an array variable, then the loop will be
-+executed for each array element. The size of the array will be determined by
-+using dwarf information.
-+.PP
-+If the LIST entry specified is a structure variable/pointer, then a traversal
-+member (<\fINextMember\fR>) must be specified using '\fBvia\fR' terminal. The
-+\fBfor\fR loop will continue until the value of traversal member is NULL or
-+matches with address of the first node <\fIStructVar\fR> if it is a circular
-+linked list.
-+.PP
-+If the LIST entry is specified using a struct list_head type variable, then
-+\fBwithin\fR terminal must be used to specify the structure name
-+<\fIStructName\fR> that is surrounding to it along with the struct list_head
-+type member after '\fB:\fR' which is part of the linked list. In the erase
-+statement <\fIid\fR> then denotes the structure that the list_head is
-+contained in (ELEMENT_OF).
-+.PP
-+The below example illustrates how to use loop construct for traversing
-+Array, linked list via next member and list_head.
-+
-+.B Example:
-+.PP
-+Assuming following piece of code is from kernel module 'mymodule':
-+.br
-+
-+struct s1 {
-+.br
-+	struct *next;
-+.br
-+	struct list_head list;
-+.br
-+	char private[100];
-+.br
-+	void *key;
-+.br
-+	long key_size;
-+.br
-+};
-+.br
-+
-+/* Global symbols */
-+.br
-+struct s1 mystruct1;
-+.br
-+static LIST_HEAD(s1_list_head);
-+.br
-+struct s1 myarray[100];
-+.br
-+
-+void foo()
-+.br
-+{
-+.br
-+	struct s1 *s1_ptr;
-+.br
-+	...
-+.br
-+	...
-+.br
-+	s1_ptr = malloc(...);
-+.br
-+	...
-+.br
-+	...
-+.br
-+	list_add(&s1_ptr->list, &s1_list_head);
-+.br
-+	...
-+.br
-+}
-+.br
-+
-+\fBmakedumpfile.conf:\fR
-+.br
-+[mymodule]
-+.br
-+# erase private fields from list starting with mystruct1 connected via
-+.br
-+# 'next' member:
-+.br
-+for mys1 in mystruct1 via next
-+.br
-+	erase mys1.private
-+.br
-+	erase mys1.key size mys1.key_size
-+.br
-+endfor
-+.br
-+
-+# erase private fields from list starting with list_head variable
-+.br
-+# s1_list_head.
-+.br
-+for mys1 in s1_list_head.next within s1:list
-+.br
-+	erase mys1.private
-+.br
-+	erase mys1.key size mys1.key_size
-+.br
-+endfor
-+.br
-+
-+# erase private fields from all elements of the array myarray:
-+.br
-+for mys1 in myarray
-+.br
-+	erase mys1.private
-+.br
-+	erase mys1.key size mys1.key_size
-+.br
-+endfor
-+.br
-+.B EOF
-+.PP
-+In the above example, the first \fBfor\fR construct traverses the linked list
-+through a specified structure variable \fBmystruct1\fR of type \fBstruct s1\fR.
-+The linked list can be traversed using '\fBnext\fR' member of \fBmystruct1\fR.
-+Hence a \fBvia\fR terminal has been used to specify the traversal member
-+name '\fBnext\fR'.
-+.PP
-+The second \fBfor\fR construct traverses the linked list through a specified
-+struct list_head variable \fBs1_list_head.next\fR. The global symbol
-+\fBs1_list_head\fR is a start address of the linked list and its \fBnext\fR
-+member points to the address of struct list_head type member '\fBlist\fR' from
-+\fBstruct s1\fR. Hence a \fBwithin\fR terminal is used to specify the structure
-+name '\fBs1\fR' that can be traversed using \fBs1_list_head.next\fR variable
-+along with the name of struct list_head type member '\fBlist\fR' which is part
-+of the linked list that starts from \fBs1_list_head\fR global symbol.
-+.PP
-+The third \fBfor\fR construct traverses the array elements specified through
-+a array variable \fBmyarray\fR.
-+.br
- .SH SEE ALSO
- .PP
- makedumpfile(8)
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 94f3521..1c61edb 100644
+index 1c61edb..2e4b902 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -1275,6 +1275,7 @@ struct dwarf_info {
- #define TYPE_ARRAY	0x02
- #define TYPE_PTR	0x04
- #define TYPE_STRUCT	0x08
-+#define TYPE_LIST_HEAD	0x10
- 
- extern struct dwarf_info	dwarf_info;
- 
-@@ -1297,18 +1298,25 @@ struct config_entry {
- 	unsigned long long	sym_addr;	/* Symbol address */
- 	unsigned long long	addr;		/* Symbol address or
- 						   value pointed by sym_addr */
-+	unsigned long long	cmp_addr;	/* for LIST_ENTRY */
- 	unsigned long		offset;
- 	unsigned long		type_flag;
- 	long			array_length;
-+	long			index;
- 	long			size;
- 	int			line;	/* Line number in config file. */
-+	struct config_entry	*refer_to;
- 	struct config_entry	*next;
- };
- 
- /* flags for config_entry.flag */
- #define FILTER_ENTRY	0x0001
- #define SIZE_ENTRY	0x0002
-+#define ITERATION_ENTRY	0x0004
-+#define LIST_ENTRY	0x0008
- #define SYMBOL_ENTRY	0x0010
-+#define VAR_ENTRY	0x0020
-+#define TRAVERSAL_ENTRY	0x0040
- #define ENTRY_RESOLVED	0x8000
+@@ -434,6 +434,8 @@ do { \
+ #define SPLITTING_FD_BITMAP(i)	info->splitting_info[i].fd_bitmap
+ #define SPLITTING_START_PFN(i)	info->splitting_info[i].start_pfn
+ #define SPLITTING_END_PFN(i)	info->splitting_info[i].end_pfn
++#define SPLITTING_OFFSET_EI(i)	info->splitting_info[i].offset_eraseinfo
++#define SPLITTING_SIZE_EI(i)	info->splitting_info[i].size_eraseinfo
  
  /*
-@@ -1329,13 +1337,18 @@ struct filter_config {
+  * kernel version
+@@ -499,6 +501,8 @@ do { \
+ #define XEN_ELFNOTE_CRASH_INFO	(0x1000001)
+ #define SIZE_XEN_CRASH_INFO_V2	(sizeof(unsigned long) * 10)
  
- struct config {
- 	char			*module_name;
--	struct config_entry	*filter_symbol;
--	struct config_entry	*size_symbol;
-+	struct config_entry	*iter_entry;
-+	struct config_entry	*list_entry;
-+	int			num_filter_symbols;
-+	struct config_entry	**filter_symbol;
-+	struct config_entry	**size_symbol;
++#define MAX_SIZE_STR_LEN (21)
++
+ /*
+  * The value of dependence on machine
+  */
+@@ -841,6 +845,8 @@ struct splitting_info {
+ 	int 			fd_bitmap;
+ 	unsigned long long	start_pfn;
+ 	unsigned long long	end_pfn;
++	off_t			offset_eraseinfo;
++	unsigned long		size_eraseinfo;
+ } splitting_info_t;
+ 
+ struct DumpInfo {
+@@ -905,6 +911,7 @@ struct DumpInfo {
+ 	struct dump_bitmap 		*bitmap1;
+ 	struct dump_bitmap 		*bitmap2;
+ 	struct disk_dump_header		*dump_header;
++	struct kdump_sub_header		sub_header;
+ 
+ 	/*
+ 	 * ELF header info:
+@@ -973,6 +980,12 @@ struct DumpInfo {
+ 	unsigned long		size_note;
+ 
+ 	/*
++	 * erased information in dump memory image info:
++	 */
++	off_t			offset_eraseinfo;
++	unsigned long		size_eraseinfo;
++
++	/*
+ 	 * for Xen extraction
+ 	 */
+ 	off_t			offset_xen_crash_info;
+@@ -1280,12 +1293,27 @@ struct dwarf_info {
+ extern struct dwarf_info	dwarf_info;
+ 
+ /*
++ * Erase information, original symbol expressions.
++ */
++struct erase_info {
++	char		*symbol_expr;
++	int		num_sizes;
++	long		*sizes;
++	int		erased;		/* 1= erased, 0= Not erased */
++};
++
++/*
+  * Filtering information
+  */
+ struct filter_info {
+ 	unsigned long long      address;
+ 	unsigned long long      paddr;
+ 	long			size;
++
++	/* direct access to update erase information node */
++	int			erase_info_idx;	/* 0= invalid index */
++	int			size_idx;
++
+ 	struct filter_info      *next;
+ 	unsigned short          nullify;
  };
- 
- #define IS_KEYWORD(tkn)	\
- 	(!strcmp(tkn, "erase") || !strcmp(tkn, "size") || \
--	!strcmp(tkn, "nullify"))
-+	!strcmp(tkn, "nullify") || !strcmp(tkn, "for") || \
-+	!strcmp(tkn, "in") || !strcmp(tkn, "within") || \
-+	!strcmp(tkn, "endfor"))
- 
- int readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size);
- off_t paddr_to_offset(unsigned long long paddr);
+@@ -1293,6 +1321,7 @@ struct filter_info {
+ struct config_entry {
+ 	char			*name;
+ 	char			*type_name;
++	char			*symbol_expr;	/* original symbol expression */
+ 	unsigned short		flag;
+ 	unsigned short		nullify;
+ 	unsigned long long	sym_addr;	/* Symbol address */
+@@ -1305,6 +1334,7 @@ struct config_entry {
+ 	long			index;
+ 	long			size;
+ 	int			line;	/* Line number in config file. */
++	int			erase_info_idx;	/* 0= invalid index */
+ 	struct config_entry	*refer_to;
+ 	struct config_entry	*next;
+ };
 
 
 _______________________________________________
