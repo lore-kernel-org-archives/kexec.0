@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pz0-f49.google.com ([209.85.210.49])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QMW8R-0005Nq-Uj
-	for kexec@lists.infradead.org; Wed, 18 May 2011 02:05:17 +0000
-Received: by pzk28 with SMTP id 28so595290pzk.36
-	for <kexec@lists.infradead.org>; Tue, 17 May 2011 19:05:14 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <iqgb8m$ruq$1@dough.gmane.org>
-References: <BANLkTinOd+kmJKMdtW7saW0eWHN9xbO_3w@mail.gmail.com>
-	<20110511150908.GG31633@redhat.com> <iqgb8m$ruq$1@dough.gmane.org>
-Date: Tue, 17 May 2011 19:05:13 -0700
-Message-ID: <BANLkTi=ds+qwHd5D3LiYQQf6-zqDOkZ_dw@mail.gmail.com>
-Subject: Re: Kexec & Memory Zones question
-From: Sujit V <sujit.linux@gmail.com>
+Received: from lo.gmane.org ([80.91.229.12])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QMWVJ-0005WH-T9
+	for kexec@lists.infradead.org; Wed, 18 May 2011 02:28:54 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+	(envelope-from <glkk-kexec@m.gmane.org>) id 1QMWVF-0006DJ-Q8
+	for kexec@lists.infradead.org; Wed, 18 May 2011 04:28:49 +0200
+Received: from 60.247.97.98 ([60.247.97.98])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 04:28:49 +0200
+Received: from xiyou.wangcong by 60.247.97.98 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <kexec@lists.infradead.org>; Wed, 18 May 2011 04:28:49 +0200
+From: WANG Cong <xiyou.wangcong@gmail.com>
+Subject: Re: kdump with /proc/oldproc
+Date: Wed, 18 May 2011 02:28:38 +0000 (UTC)
+Message-ID: <iqvasm$ctv$1@dough.gmane.org>
+References: <OFC164F955.6ED93986-ON86257893.00589FE8-86257893.006037E5@us.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,100 +27,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: WANG Cong <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-We found the root cause for this issue in the bootmem allocator.
+On Tue, 17 May 2011 12:30:58 -0500, Nathan D Miller wrote:
 
-The 96GB NUMA system has two memory nodes each with 48GB.
-node 0 had zone dma, dma32 & normal
-node 1 had only zone normal.
+> Hello-
+> 
+> Has anyone tried reconstituting a portion of the old kernel's /proc
+> while in the capture kernel?
+> 
+> I had the idea while digging through the kexec/kdump code and it seemed
+> intriguing.
+> 
+> It might be a means by which user-space dump applications running under
+> the capture kernel could interrogate the old system, and identify bad
+> processes that instigated the panic.  In particular, I'm thinking of Out
+> Of Memory scenarios.   We've modified our kernel to panic instead of
+> invoking the kernel's OOM killer, but we still have the problem of
+> identifying the "bad" process while running in the capture kernel.
+> 
+> Perhaps everything could be accomplished using some sort of FUSE
+> file-system around /proc/oldmem and /proc/vmcore.  Not all the
+> proc/<pid>/ files would need to be implemented, of course.  In addition,
+> each old process could have its own 'vmcore' file for getting a core
+> dump of the original process.
+> 
 
-During the early boot i.e kernel/setup.c
-The bootmem allocator uses the API find_free_area from the e820 map to
-allocate some of its data structures.[ i.e the bitmap ]
-(The bootmem bitmap is used to track free & used pages with 1bit for
-4K page. The reserve_bootmem() API is used to reserve)
+Well, actually you don't need to bother the old /proc
+to find which process is the killer. The old dmesg contains
+the PID/comm of the killer process, and we have a tool named
+vmcore-dmesg to read out the dmesg from the vmcore.
 
-The amount of memory required to represent the bitmap for node 0 with
-48GB is. (48GB / (4K * 8)) =3D 1.5MB
+With the utility 'crash', you can query any info of any process
+in the old kernel, so why do you need a per-process vmcore anyway?
 
-The start address of the free area of size 1.5 MB returned by e820 map was
->> bitmap starts at  PA (0xf9b000) size 1.5MB
-0xf9b000 + 1.5 MB =3D 17.13MB
+Thanks.
 
-The bootmem bitmap used the 1.13MB section from the supposed
-crashkernel reserved area.
-Later when boot param parsing looks at the crashkernel=3D128M@16M and
-reserves the area using the reserve_bootmem().
-
-
-Later when paging_init() is called the bootmem allocator is retired.
-At this point it free's the memory allocated to the bitmap & gives it
-to the system page allocator.
-i.e pages from 16MB to 17.13 MB are given to the system page
-allocator. (Even though the page is reserved by crashkernel.  ]
-
-So pages in this memory range were given some system resources.
-When kexec loaded the kdump kernel in the 128M@16M range it corrupted
-that memory & we saw the system crash.
-
-I fixed the boot mem allocator and then things worked correctly.
-
-
-Ours is a 2.6.23 kernel.
-The later versions of the kernel have some other mechanism for early
-memory reservation (like early_res & memblock)
-
-
-Thanks
-
-
-
-
-
-On Thu, May 12, 2011 at 3:03 AM, WANG Cong <xiyou.wangcong@gmail.com> wrote:
-> On Wed, 11 May 2011 11:09:08 -0400, Vivek Goyal wrote:
->
->> We have discussed this in the past and due to various reasons the max
->> amount of RAM you can boot your kernel from seems to be 896MB for x86_64
->> and 512MB for 32bit. I shall have to open a previous thread with hpa to
->> get exact numbers. So loading kernel even higher is not the solution.
->>
->
-> On the kexec-tools side, I think the limit is hard-coded,
->
-> ./include/x86/x86-linux.h:250:#define DEFAULT_INITRD_ADDR_MAX 0x37FFFFFF
->
-> but we have,
->
-> =A0 =A0 =A0 =A0initrd_addr_max =3D DEFAULT_INITRD_ADDR_MAX;
-> =A0 =A0 =A0 =A0if (real_mode->protocol_version >=3D 0x0203) {
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0initrd_addr_max =3D real_mode->initrd_addr=
-_max;
-> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0dbgprintf("initrd_addr_max is 0x%lx\n", in=
-itrd_addr_max);
-> =A0 =A0 =A0 =A0}
->
->
-> so, from the code, initrd_addr_max can be provided by the bootloader.
->
-> I remember on the kernel side there's also such a limit, but I can't
-> find where it is. I am wondering what prevents us from increasing this
-> limit to 4G on i386 and even higher on x86_64.
->
-> Thanks.
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
 
 _______________________________________________
 kexec mailing list
