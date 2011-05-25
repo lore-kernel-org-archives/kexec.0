@@ -1,24 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.31.143])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QP8q9-0007ls-Pe
-	for kexec@lists.infradead.org; Wed, 25 May 2011 07:49:14 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp01.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4P7j0T0009232
-	for <kexec@lists.infradead.org>; Wed, 25 May 2011 17:45:00 +1000
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4P7nB8N987328
-	for <kexec@lists.infradead.org>; Wed, 25 May 2011 17:49:11 +1000
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4P7nAGx004730
-	for <kexec@lists.infradead.org>; Wed, 25 May 2011 17:49:11 +1000
-Subject: [PATCH] makedumpfile: s390x: Fix dump refiltering for s390x.
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Wed, 25 May 2011 13:19:08 +0530
-Message-ID: <20110525074907.17025.26375.stgit@mars.in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QPJF8-0005hQ-OX
+	for kexec@lists.infradead.org; Wed, 25 May 2011 18:55:43 +0000
+Date: Wed, 25 May 2011 14:55:24 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2 0/8] makedumpfile: makedumpfile enhancement to filter
+	out kernel data from vmcore
+Message-ID: <20110525185524.GA6724@redhat.com>
+References: <20110517195751.12740.97565.stgit@mars.in.ibm.com>
+	<20110524203542.GH3860@redhat.com>
+	<20110525074407.GA9525@in.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110525074407.GA9525@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,40 +26,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Tachibana-san <tachibana@mxn.nes.nec.co.jp>
-Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, V Srivatsa <vatsa@linux.vnet.ibm.com>, Tachibana <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+On Wed, May 25, 2011 at 01:14:07PM +0530, Mahesh J Salgaonkar wrote:
+> On 2011-05-24 16:35:42 Tue, Vivek Goyal wrote:
+> > On Wed, May 18, 2011 at 01:29:06AM +0530, Mahesh J Salgaonkar wrote:
+> > > Hi All,
+> > > 
+> > > Please find the version 2 of makedumpfile enhancement patchset that introduces
+> > > a data filtering feature which enables makedumpfile to filter out desired kernel
+> > > symbol data and it's members from the specified VMCORE file. The data to be
+> > > filtered out is poisoned with character 'X' (58 in Hex).
+> > > 
+> > > This feature will be very useful for the customers who wants to erase the
+> > > customer sensitive data like security keys and other confidential data, in
+> > > DUMPFILE before sending it to support team for analysis.
+> > 
+> > Mahesh,
+> > 
+> > Apart from security keys, what are the other examples of data which needs
+> > to be removed?
+> 
+> The idea is to allow customer to remove any such confidential data that
+> he thinks should not be disclosed outside. The framework is generic
+> enough to accommodate any new such fields.
 
-On s390x, dump refiltering fails in get_machdep_info_s390x() function while
-reading vmlist kernel symbol data. It fails in vaddr_to_paddr_s390x()
-function while resolving vmlist kernel symbol address. Since the vmlist
-kernel symbol address is not a vmalloc address, the function returns failure.
+So what is that info which customer whould like to erase (apart from
+security keys?) Do we have some more concrete examples?
 
-Fix the vaddr_to_paddr_s390x() function to translate non-vmalloc'ed
-address into physical adddress.
+> The is intended just as a
+> security filter and not to be used as detrimental to crash's analysis of the
+> dump.
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- s390x.c |    4 +---
- 1 files changed, 1 insertions(+), 3 deletions(-)
+How would we know in advance that what symbols crash is dependent on
+to even open crash dump and we are not erasing one of those symbols. In
+other mail Dave mentioned two symbols (vmlist and one more) which crash
+is dependent on and we seem to be clearing that.
 
-diff --git a/s390x.c b/s390x.c
-index 128e5f0..49658d0 100644
---- a/s390x.c
-+++ b/s390x.c
-@@ -269,9 +269,7 @@ vaddr_to_paddr_s390x(unsigned long vaddr)
- 		paddr = vtop_s390x(vaddr);
- 	}
- 	else {
--		ERRMSG("Can't convert a virtual address(%lx) to " \
--		    "physical address.\n", vaddr);
--		return NOT_PADDR;
-+		paddr = vaddr - KVBASE;
- 	}
- 
- 	return paddr;
+I am worried about filtering out symbols which make crash non functional.
+Dave mentioned that one can remove the pointer which contains the list
+of modules etc. I am worried what if module caused the crash and we break
+the chain in such a way that reaching to module data structures is not
+possible anymore.
 
+If security key is only example, should we just hardcode that in makedumpfile
+to wipe that info instead of creating a generic framework for this. If we
+give user too much flexibility they might delete way too many symbols to
+be safe and that might result in un-analyzable crash dump.
+
+> 
+> > 
+> > By erasing the data, you mean you set it to zero? Will it make sense to
+> > poison it with some specific pattern so that if crash or other tool
+> > are looking into it they know it has been posioned and it is not a
+> > case of corruption. This might help if a user erased a symbol which was
+> > required by crash for some analysis etc.
+> 
+> The data to be erased is poisoned with character 'X' (58 in Hex).
+> 
+> The last two patches 7/8 and 8/8 introduces eraseinfo section into
+> filtered compressed kdump and ELF kdump file. The compressed kdump file
+> now carries additional fields namely offset_eraseinfo and size_eraseinfo in
+> kdump sub header that can help crash to identify whether filtering is
+> been done. Similarly, ELF kdump file now contains new ELF note of type
+> NT_ERASEINFO, that can help crash to identify whether the filtering has been
+> done or not.
+
+And how this information is useful to crash? I mean why would crash care
+whether filtering has been done or not and if filtering has been done
+then do what?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
