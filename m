@@ -1,29 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+Received: from one.firstfloor.org ([213.235.205.2])
 	by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QPeKr-0002gx-DE
-	for kexec@lists.infradead.org; Thu, 26 May 2011 17:27:03 +0000
-Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
-	by e23smtp09.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4QHQZrr014441
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:26:35 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
-	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4QHQ1IL1384468
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:26:01 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4QHQYjF003477
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:26:35 +1000
-Date: Thu, 26 May 2011 22:56:18 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: [RFC Patch 6/6] Crash: Recognise slim coredumps and process new
-	elf-note sections
-Message-ID: <20110526172618.GB18295@in.ibm.com>
+	id 1QPf0Z-0004Lq-SL
+	for kexec@lists.infradead.org; Thu, 26 May 2011 18:10:08 +0000
+Date: Thu, 26 May 2011 20:09:31 +0200
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
+	generated crashes
+Message-ID: <20110526180931.GF4065@one.firstfloor.org>
 References: <20110526170722.GB23266@in.ibm.com>
-MIME-Version: 1.0
+	<20110526172305.GA18295@in.ibm.com>
+	<20110526174447.GC29496@redhat.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110526170722.GB23266@in.ibm.com>
-Reply-To: prasad@linux.vnet.ibm.com
+In-Reply-To: <20110526174447.GC29496@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,259 +26,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, crash-utility@redhat.com
-Cc: "Luck, Tony" <tony.luck@intel.com>, Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, kexec@lists.infradead.org, Wang Chao <wang.chao@cn.fujitsu.com>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>
 
+On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
+> On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
+> > 
+> > slimdump: Capture slimdump for fatal MCE generated crashes
+> > 
+> > System crashes resulting from fatal hardware errors (such as MCE) don't need
+> > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
+> > retains only essential information while discarding the old memory.
+> > 
+> 
+> Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
+> leave it to user space. 
 
-Crash: Recognise slim coredumps and process new elf-note sections
+I think it's a good default to not do a full dump on MCE.
+It's very unlikely to be useful for anything, and will just waste
+reboot time (aka nines).
 
-The Linux kernel will begin to support SlimDump for certain types of crashes
-and the 'crash' tool needs to recognise them. For these types of coredumps, it
-need not lookout for usual elf-structures and start gdb. Also process new
-elf-note sections that contain additional information about the crash.
+That said including the dmesg too may be a good idea.
 
-Signed-off-by: K.Prasad <prasad@linux.vnet.ibm.com>
----
- diskdump.c |   84 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- netdump.c  |    8 +++++
- x86.h      |   91 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 183 insertions(+)
-
-Index: crash-5.1.5.slim_kdump/x86.h
-===================================================================
---- /dev/null
-+++ crash-5.1.5.slim_kdump/x86.h
-@@ -0,0 +1,91 @@
-+/*
-+ * x86.h - x86 Architecture specific definitions
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-+ *
-+ * Copyright (C) IBM Corporation, 2011
-+ *
-+ * Author: K.Prasad <prasad@linux.vnet.ibm.com>
-+ */
-+
-+typedef unsigned long long u64;
-+typedef unsigned int u32;
-+typedef unsigned short u16;
-+typedef unsigned char u8;
-+
-+#define __u64 u64
-+#define __u32 u32
-+#define __u16 u16
-+#define __u8  u8
-+
-+/* Mask for finding the address mode in IA32_MCi_MISC[8:6] register */
-+#define MCI_MISC_ADDR_MODE	0X1C0
-+/* Number of bits to shift the IA32_MCi_MISC to read the address-mode bits */
-+#define MISC_ADDR_MODE_POS	6
-+
-+/* Address Modes in IA32_MCi_MISC[8:6] */
-+#define MCM_ADDR_SEGOFF  0      /* segment offset */
-+#define MCM_ADDR_LINEAR  1      /* linear address */
-+#define MCM_ADDR_PHYS    2      /* physical address */
-+#define MCM_ADDR_MEM     3      /* memory address */
-+#define MCM_ADDR_GENERIC 7      /* generic */
-+
-+#define MCI_STATUS_MISCV (1ULL<<59)  /* misc error reg. valid */
-+#define MCI_STATUS_ADDRV (1ULL<<58)  /* addr reg. valid */
-+
-+#define PAGE_SHIFT 12
-+
-+static const char *mce_addr_mode[] =
-+{
-+	"Segment offset",	/* MCM_ADDR_SEGOFF */
-+	"Linear address",	/* MCM_ADDR_LINEAR */
-+	"Physical address",	/* MCM_ADDR_PHYS */
-+	"Memory address",	/* MCM_ADDR_MEM */
-+	"",			/* reserved */
-+	"",			/* reserved */
-+	"",			/* reserved */
-+	"Generic"		/* MCM_ADDR_GENERIC */
-+};
-+
-+/*
-+ * kernel structure: Keep this in sync with the definition in
-+ * arch/x86/include/asm/mce.h of linux source code.
-+ *
-+ * Fields are zero when not available
-+ *
-+ */
-+struct mce {
-+	__u64 status;
-+	__u64 misc;
-+	__u64 addr;
-+	__u64 mcgstatus;
-+	__u64 ip;
-+	__u64 tsc;	/* cpu time stamp counter */
-+	__u64 time;	/* wall time_t when error was detected */
-+	__u8  cpuvendor;	/* cpu vendor as encoded in system.h */
-+	__u8  pad1;
-+	__u16 pad2;
-+	__u32 cpuid;	/* CPUID 1 EAX */
-+	__u8  cs;		/* code segment */
-+	__u8  bank;	/* machine check bank */
-+	__u8  cpu;	/* cpu number; obsolete; use extcpu now */
-+	__u8  finished;   /* entry is valid */
-+	__u32 extcpu;	/* linux cpu number that detected the error */
-+	__u32 socketid;	/* CPU socket ID */
-+	__u32 apicid;	/* CPU initial apic ID */
-+	__u64 mcgcap;	/* MCGCAP MSR: machine check capabilities of CPU */
-+	__u64 aux0;
-+	__u64 aux1;
-+};
-Index: crash-5.1.5.slim_kdump/netdump.c
-===================================================================
---- crash-5.1.5.slim_kdump.orig/netdump.c
-+++ crash-5.1.5.slim_kdump/netdump.c
-@@ -331,6 +331,10 @@ is_netdump(char *file, ulong source_quer
- 		}
-         	nd->notes32 = (Elf32_Phdr *)
- 		    &nd->elf_header[sizeof(Elf32_Ehdr)];
-+		if (machdep->process_elf_notes)
-+			machdep->process_elf_notes((char *)nd->elf32 +
-+							nd->notes32->p_offset,
-+							nd->notes32->p_filesz);
-         	nd->load32 = (Elf32_Phdr *)
- 		    &nd->elf_header[sizeof(Elf32_Ehdr)+sizeof(Elf32_Phdr)];
- 		if (DUMPFILE_FORMAT(nd->flags) == NETDUMP_ELF32)
-@@ -360,6 +364,10 @@ is_netdump(char *file, ulong source_quer
-                 }
-                 nd->notes64 = (Elf64_Phdr *)
-                     &nd->elf_header[sizeof(Elf64_Ehdr)];
-+		if (machdep->process_elf_notes)
-+			machdep->process_elf_notes((char *)nd->elf64 +
-+							nd->notes64->p_offset,
-+							nd->notes64->p_filesz);
-                 nd->load64 = (Elf64_Phdr *)
-                     &nd->elf_header[sizeof(Elf64_Ehdr)+sizeof(Elf64_Phdr)];
- 		if (DUMPFILE_FORMAT(nd->flags) == NETDUMP_ELF64)
-Index: crash-5.1.5.slim_kdump/diskdump.c
-===================================================================
---- crash-5.1.5.slim_kdump.orig/diskdump.c
-+++ crash-5.1.5.slim_kdump/diskdump.c
-@@ -231,6 +231,27 @@ open_dump_file(char *file)
- 	dd->dfd = fd;
- 	return TRUE;
- }
-+#if defined(X86_64) || defined(X86)
-+#include "x86.h"
-+
-+/*
-+ * Check if the address reported by the CPU is in a format we can parse.
-+ * It would be possible to add code for most other cases, but all would
-+ * be somewhat complicated (e.g. segment offset would require an instruction
-+ * parser). So only support physical addresses up to page granuality for now.
-+ *
-+ * Function derived from arch/x86/kernel/cpu/mcheck/mce.c in Linux source
-+ *
-+ */
-+static int mce_usable_address(struct mce *m)
-+{
-+	if (!(m->status & MCI_STATUS_MISCV) || !(m->status & MCI_STATUS_ADDRV))
-+		return 0;
-+	if ((m->misc & 0x3f) > PAGE_SHIFT)
-+		return 0;
-+	return 1;
-+}
-+#endif /* defined(X86_64) || defined(X86) */
+On the other hand I think the slim dump should be probably generalized
+and used for more situations. I could well imagine enabling it by
+default on various systems.
  
- void 
- x86_process_elf_notes(void *note_ptr, unsigned long size_note)
-@@ -239,10 +260,43 @@ x86_process_elf_notes(void *note_ptr, un
- 	Elf64_Nhdr *note64 = NULL;
- 	size_t tot, len = 0;
- 	int num = 0;
-+#if defined(X86_64) || defined(X86)
-+	struct mce *mce;
-+	ushort addr_mode;
-+#endif /* defined(X86_64) || defined(X86) */
- 
- 	for (tot = 0; tot < size_note; tot += len) {
- 		if (machine_type("X86_64")) {
- 			note64 = note_ptr + tot;
-+#ifdef X86_64
-+			/*
-+			 * If vmcore is generated due to fatal Machine Check
-+			 * Exception, we only have a 'slim' crashdump. Don't
-+			 * analyse further, inform the user about it and exit.
-+			 */
-+			if (note64->n_type == NT_MCE) {
-+				fprintf(fp, "\"System crashed due to a hardware"
-+					" memory error. No coredump"
-+					" available.\"\n");
-+
-+				/* Do we have a copy of 'struct mce'? */
-+				if (note64->n_descsz == 0)
-+					goto exit;
-+
-+				mce = (struct mce *)((char *)note64 +
-+					sizeof(Elf64_Nhdr) + note64->n_namesz);
-+				if (!mce_usable_address(mce))
-+					goto exit;
-+
-+				addr_mode = (mce->misc >> MISC_ADDR_MODE_POS) &
-+						MCI_MISC_ADDR_MODE;
-+				fprintf(fp, "Memory error occured at %llx "
-+					"(address type: %s\n)", mce->addr,
-+					mce_addr_mode[addr_mode]);
-+exit:
-+				clean_exit(0);
-+			}
-+#endif /* X86_64 */
- 
- 			if (note64->n_type == NT_PRSTATUS) {
- 				dd->nt_prstatus_percpu[num] = note64;
-@@ -255,6 +309,36 @@ x86_process_elf_notes(void *note_ptr, un
- 		} else if (machine_type("X86")) {
- 			note32 = note_ptr + tot;
- 
-+#ifdef X86
-+			/*
-+			 * If vmcore is generated due to fatal Machine Check
-+			 * Exception, we only have a 'slim' crashdump. Don't
-+			 * analyse further, inform the user about it and exit.
-+			 */
-+			if (note32->n_type == NT_MCE) {
-+				fprintf(fp, "\"System crashed due to a hardware"
-+					" memory error. No coredump"
-+					" available.\"\n");
-+
-+				/* Do we have a copy of 'struct mce'? */
-+				if (note32->n_descsz == 0)
-+					goto exit;
-+
-+				mce = (struct mce *)((char *)note32 +
-+					sizeof(Elf32_Nhdr) + note32->n_namesz);
-+				if (!mce_usable_address(mce))
-+					goto exit;
-+
-+				addr_mode = (mce->misc >> MISC_ADDR_MODE_POS) &
-+						MCI_MISC_ADDR_MODE;
-+				fprintf(fp, "Memory error occured at %llx "
-+					"(address type: %s\n)", mce->addr,
-+					mce_addr_mode[addr_mode]);
-+exit:
-+				clean_exit(0);
-+			}
-+#endif /* X86 */
-+
- 			if (note32->n_type == NT_PRSTATUS) {
- 				dd->nt_prstatus_percpu[num] = note32;
- 				num++;
+-Andi
+
 
 _______________________________________________
 kexec mailing list
