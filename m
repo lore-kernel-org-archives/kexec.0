@@ -1,27 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
-	by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QPe2e-00023Q-V5
-	for kexec@lists.infradead.org; Thu, 26 May 2011 17:08:14 +0000
-Received: from d23relay04.au.ibm.com (d23relay04.au.ibm.com [202.81.31.246])
-	by e23smtp05.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4QH1VGo029281
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:01:31 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4QH7APF1019910
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:07:10 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4QH7Z2Q028756
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:07:35 +1000
-Date: Thu, 26 May 2011 22:37:22 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: [RFC Patch 0/6] slimdump: Enable slimdump if crashing kernel memory
-	is not required
-Message-ID: <20110526170722.GB23266@in.ibm.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QPkDn-0006Nm-GP
+	for kexec@lists.infradead.org; Thu, 26 May 2011 23:44:08 +0000
+Date: Fri, 27 May 2011 08:44:01 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
+	generated crashes
+Message-ID: <20110526234401.GE2815@verge.net.au>
+References: <20110526170722.GB23266@in.ibm.com>
+	<20110526172305.GA18295@in.ibm.com>
+	<20110526174447.GC29496@redhat.com>
+	<20110526180931.GF4065@one.firstfloor.org>
+	<20110526182618.GD29496@redhat.com>
+	<20110526185838.GG4065@one.firstfloor.org>
+	<20110526191008.GF29496@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Reply-To: prasad@linux.vnet.ibm.com
+In-Reply-To: <20110526191008.GF29496@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,96 +30,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>
 
-Hi All,
-	Please find a patchset that implements 'slimdump' - a new type
-of coredump (captured through kdump) which will retain only essential
-debugging information but will discard old kernel memory (which is mostly
-irrelevant) in case of system crashes triggered through fatal hardware errors.
+On Thu, May 26, 2011 at 03:10:08PM -0400, Vivek Goyal wrote:
+> On Thu, May 26, 2011 at 08:58:38PM +0200, Andi Kleen wrote:
+> > > If we are just extracting and saving MCE registers from vmcore, then
+> > > reboot time does not increase. It increases only if user decides to
+> > > extract and save extra data from vmcore.
+> > 
+> > Hmm I was thinking of user space usually saving the dump first
+> > before analyzing it. But yes it could probably do some minimal
+> > analysis first.
+> 
+> In RHEL, now we filter out the dump by default until and unless user
+> decides to no filter the dump with the help of config options. 
+> 
+> So I think in this case we can just introduce an extra filtering
+> option in "makedumpfile" and ask it to save only MCE registers
+> if it notices that there is NT_MCE type of ELF note in vmcore.
+> 
+> I can very well imaging that extracting dmesg along with MCE registers
+> can be useful. If nothing else, it can give us useful information about
+> the system configuration.
+> 
+> Zeroing out all the other ELF headers in vmcore takes away the
+> capability to extract log buffers in case of MCE and I think
+> it probably is not the best idea.
+> 
 
-When a system crashes due to an unrecoverable memory error, kdump would
-ordinarily attempt to read/capture the crashing kernel's memory which has
-the following undesirable consequences:
-- The old kernel memory is irrelevant for debugging crashes initiated due
-  to hardware errors (such as physical memory corruption causing fatal
-  machine check exceptions - MCE).
-- The kdump capture kernel might experience a second MCE when attempting
-  to read the corrupt memory area having fatal results (and failure to
-  capture the coredump).
+FWIW, my initial thoughts are inline with Vivek's.
+I think that the bulk of this, if not all of it, can
+be done in user space. And that user space is the preferable
+location for such logic.
 
-'slimdump' is particularly useful in avoiding the above hazards. It is a
-light-weight dump and increases the reliability of the system by avoiding
-unsafe operations.
-
-In essence slimdump enables light-weight coredumps and increases the
-reliability of the system by avoiding unsafe operations.
-
-Summary of the patches
-----
-Patch 1, 2 - Patches from Andi Kleen's tree
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-mce-2.6.git which
-introduce an enhanced panic function - xpanic().
-
-Patch 3 - Introduces a new PANIC_MCE flag to signal the need for
-SlimDump for
-MCE initiated panic calls.
-
-Patch 4 - Append a new elf-note inside coredump containing MCE related
-registers
-
-Patch 5 - Create a SlimDump by discarding old kernel's memory
-
-Patch 6 - Patch for 'crash' tool
-(http://people.redhat.com/anderson/crash-5.1.5.tar.gz) to recognise the
-new
-elf-notes section.
-
-The patches have been tested from inside a VM and have been found to
-work fine. The user-space tool used for copying the coredump is 'cp'
-(makedumpfile testing will be done soon).
-
-Example
---------
-Normal vmcore
------------
-# ls -lh /home/prasadkr/vmcore.usual
--r-------- 1 root root 1.6G May 17 01:07 /home/prasadkr/vmcore.usual
-
-slimdump
------------
-# ls -lh /home/prasadkr/vmcore.SlimDump
--r-------- 1 root root 1.8K May 18 23:28 /home/prasadkr/vmcore.SlimDump
-# ./crash vmlinux vmcore.SlimDump
-
-crash 5.1.5
-Copyright (C) 2002-2011  Red Hat, Inc.
-Copyright (C) 2004, 2005, 2006  IBM Corporation
-Copyright (C) 1999-2006  Hewlett-Packard Co
-Copyright (C) 2005, 2006  Fujitsu Limited
-Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
-Copyright (C) 2005  NEC Corporation
-Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
-Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
-This program is free software, covered by the GNU General Public
-License,
-and you are welcome to change it and/or distribute copies of it under
-certain conditions.  Enter "help copying" to see the conditions.
-This program has absolutely no warranty.  Enter "help warranty" for
-details.
-
-"System crashed due to a hardware memory error. No coredump available."
-#
-#
-
-Thanks,
-K.Prasad
-_______________________________________________________
-ltcras mailing list ltcras@lists.linux.ibm.com
-To unsubscribe from the list, change your list options
-or if you have forgotten your list password visit:
-http://lists.linux.ibm.com/mailman/listinfo/ltcras
 
 _______________________________________________
 kexec mailing list
