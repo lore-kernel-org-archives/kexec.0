@@ -1,22 +1,18 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QPfyC-00064h-Vs
-	for kexec@lists.infradead.org; Thu, 26 May 2011 19:11:57 +0000
-Date: Thu, 26 May 2011 15:10:08 -0400
+	by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QPfY4-0005bH-Uh
+	for kexec@lists.infradead.org; Thu, 26 May 2011 18:44:46 +0000
+Date: Thu, 26 May 2011 14:43:50 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
-	generated crashes
-Message-ID: <20110526191008.GF29496@redhat.com>
+Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
+	MCE, capture related information
+Message-ID: <20110526184350.GE29496@redhat.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172305.GA18295@in.ibm.com>
-	<20110526174447.GC29496@redhat.com>
-	<20110526180931.GF4065@one.firstfloor.org>
-	<20110526182618.GD29496@redhat.com>
-	<20110526185838.GG4065@one.firstfloor.org>
+	<20110526171521.GD17988@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110526185838.GG4065@one.firstfloor.org>
+In-Reply-To: <20110526171521.GD17988@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,33 +24,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Thu, May 26, 2011 at 08:58:38PM +0200, Andi Kleen wrote:
-> > If we are just extracting and saving MCE registers from vmcore, then
-> > reboot time does not increase. It increases only if user decides to
-> > extract and save extra data from vmcore.
-> 
-> Hmm I was thinking of user space usually saving the dump first
-> before analyzing it. But yes it could probably do some minimal
-> analysis first.
+On Thu, May 26, 2011 at 10:45:21PM +0530, K.Prasad wrote:
 
-In RHEL, now we filter out the dump by default until and unless user
-decides to no filter the dump with the help of config options. 
+[..]
+> Index: linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> ===================================================================
+> --- linux-2.6.slim_kdump.orig/arch/x86/kernel/cpu/mcheck/mce.c
+> +++ linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> @@ -258,8 +258,7 @@ static void wait_for_panic(void)
+>  	local_irq_enable();
+>  	while (timeout-- > 0)
+>  		udelay(1);
+> -	xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, 0,
+> -		"Panicing machine check CPU died");
+> +	xpanic(PANIC_MCE, 0, NULL, 0, "Panicing machine check CPU died");
+>  }
+>  
+>  static void mce_panic(char *msg, struct mce *final, char *exp)
+> @@ -315,8 +314,8 @@ static void mce_panic(char *msg, struct
+>  	if (exp)
+>  		pr_emerg(HW_ERR "Machine check: %s\n", exp);
+>  	if (!fake_panic) {
+> -		xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, mce_panic_timeout,
+> -			msg);
+> +		xpanic(PANIC_MCE, mce_panic_timeout, final,
+> +			sizeof(struct mce), msg);
+>  	} else
+>  		pr_emerg(HW_ERR "Fake kernel panic: %s\n", msg);
+>  }
 
-So I think in this case we can just introduce an extra filtering
-option in "makedumpfile" and ask it to save only MCE registers
-if it notices that there is NT_MCE type of ELF note in vmcore.
-
-I can very well imaging that extracting dmesg along with MCE registers
-can be useful. If nothing else, it can give us useful information about
-the system configuration.
-
-Zeroing out all the other ELF headers in vmcore takes away the
-capability to extract log buffers in case of MCE and I think
-it probably is not the best idea.
+In previous patches you introduce PANIC_NO_KEXEC and PANIC_NO_BACKTRACE. 
+Now in this patch you got rid of those. Are there any other users left
+of PANIC_NO_BACKTRACE and PANIC_NO_EXEC? If not, then why to introduce
+these to begin with.
 
 Thanks
 Vivek
