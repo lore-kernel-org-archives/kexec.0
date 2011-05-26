@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QPfHH-0004xt-7x
-	for kexec@lists.infradead.org; Thu, 26 May 2011 18:27:24 +0000
-Date: Thu, 26 May 2011 14:26:18 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
-	generated crashes
-Message-ID: <20110526182618.GD29496@redhat.com>
+Received: from e23smtp08.au.ibm.com ([202.81.31.141])
+	by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QPeQA-0002sI-K5
+	for kexec@lists.infradead.org; Thu, 26 May 2011 17:32:32 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
+	by e23smtp08.au.ibm.com (8.14.4/8.13.1) with ESMTP id p4QHQvdZ002551
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:26:57 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p4QHW5gq729284
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:32:05 +1000
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p4QHW4Tm027803
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 03:32:05 +1000
+Date: Thu, 26 May 2011 23:01:56 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Subject: Re: [RFC Patch 0/6] slimdump: Enable slimdump if crashing kernel
+	memory is not required
+Message-ID: <20110526173156.GC18295@in.ibm.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172305.GA18295@in.ibm.com>
-	<20110526174447.GC29496@redhat.com>
-	<20110526180931.GF4065@one.firstfloor.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110526180931.GF4065@one.firstfloor.org>
+In-Reply-To: <20110526170722.GB23266@in.ibm.com>
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,49 +36,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, May 26, 2011 at 08:09:31PM +0200, Andi Kleen wrote:
-> On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
-> > On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
-> > > 
-> > > slimdump: Capture slimdump for fatal MCE generated crashes
-> > > 
-> > > System crashes resulting from fatal hardware errors (such as MCE) don't need
-> > > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
-> > > retains only essential information while discarding the old memory.
-> > > 
-> > 
-> > Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
-> > leave it to user space. 
-> 
-> I think it's a good default to not do a full dump on MCE.
-> It's very unlikely to be useful for anything, and will just waste
-> reboot time (aka nines).
+On Thu, May 26, 2011 at 10:37:22PM +0530, K.Prasad wrote:
+> Hi All,
 
-If we are just extracting and saving MCE registers from vmcore, then
-reboot time does not increase. It increases only if user decides to
-extract and save extra data from vmcore.
+A small correction related to patch description...
 
 > 
-> That said including the dmesg too may be a good idea.
+> Summary of the patches
+> ----
+> Patch 1, 2 - Patches from Andi Kleen's tree
+> git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-mce-2.6.git which
+> introduce an enhanced panic function - xpanic().
+> 
 
-dmesg is already part of vmcore and user space tools can easily find
-it. 
+Patch 3 - A small bugfix for patch 1,2
 
-I can easily imagine a default policy of a distro in user space where
-in case of MCE crash, we just extract dmesg and MCE registers (from vmcore
-notes section) reboot. This will be fast and will reduce the amount of code
-in kernel.
+Patch 4 - Introduces a new PANIC_MCE flag to signal the need for slimdump
+for MCE initiated panic calls. Appends a new elf-note inside coredump
+containing MCE related registers.
 
-IMHO, we should not introduce any additional notion of slimdump as such in
-kernel. A better thing would be to just read MCE registers and export to
-user space through ELF notes and then let user space automate the rest of
-it.
+Thanks,
+K.Prasad
 
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
