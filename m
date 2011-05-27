@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp04.in.ibm.com ([122.248.162.4])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QQ0Rt-0005MP-Au
-	for kexec@lists.infradead.org; Fri, 27 May 2011 17:03:46 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp04.in.ibm.com (8.14.4/8.13.1) with ESMTP id p4RH3eZk018003
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:40 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4RH3emo3748046
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:40 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4RH3dkr010682
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:39 +0530
-Date: Fri, 27 May 2011 22:33:31 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
-	MCE, capture related information
-Message-ID: <20110527170331.GD2384@in.ibm.com>
+Received: from out01.mta.xmission.com ([166.70.13.231])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QQ1Jm-0005ll-JU
+	for kexec@lists.infradead.org; Fri, 27 May 2011 17:59:27 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526171521.GD17988@in.ibm.com>
-	<20110526184350.GE29496@redhat.com>
+	<20110526171209.GA17988@in.ibm.com>
+Date: Fri, 27 May 2011 10:59:11 -0700
+In-Reply-To: <20110526171209.GA17988@in.ibm.com> (K. Prasad's message of "Thu, 
+	26 May 2011 22:42:09 +0530")
+Message-ID: <m1tycg9g9c.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110526184350.GE29496@redhat.com>
-Reply-To: prasad@linux.vnet.ibm.com
+Subject: Re: [Patch 1/6] XPANIC: Add extended panic interface
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,54 +24,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: prasad@linux.vnet.ibm.com
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, May 26, 2011 at 02:43:50PM -0400, Vivek Goyal wrote:
-> On Thu, May 26, 2011 at 10:45:21PM +0530, K.Prasad wrote:
-> 
-> [..]
-> > Index: linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
-> > ===================================================================
-> > --- linux-2.6.slim_kdump.orig/arch/x86/kernel/cpu/mcheck/mce.c
-> > +++ linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
-> > @@ -258,8 +258,7 @@ static void wait_for_panic(void)
-> >  	local_irq_enable();
-> >  	while (timeout-- > 0)
-> >  		udelay(1);
-> > -	xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, 0,
-> > -		"Panicing machine check CPU died");
-> > +	xpanic(PANIC_MCE, 0, NULL, 0, "Panicing machine check CPU died");
-> >  }
-> >  
-> >  static void mce_panic(char *msg, struct mce *final, char *exp)
-> > @@ -315,8 +314,8 @@ static void mce_panic(char *msg, struct
-> >  	if (exp)
-> >  		pr_emerg(HW_ERR "Machine check: %s\n", exp);
-> >  	if (!fake_panic) {
-> > -		xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, mce_panic_timeout,
-> > -			msg);
-> > +		xpanic(PANIC_MCE, mce_panic_timeout, final,
-> > +			sizeof(struct mce), msg);
-> >  	} else
-> >  		pr_emerg(HW_ERR "Fake kernel panic: %s\n", msg);
-> >  }
-> 
-> In previous patches you introduce PANIC_NO_KEXEC and PANIC_NO_BACKTRACE. 
-> Now in this patch you got rid of those. Are there any other users left
-> of PANIC_NO_BACKTRACE and PANIC_NO_EXEC? If not, then why to introduce
-> these to begin with.
+"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+
+> commit e668fa1aea7844ac4c7ea09030a2f3e647a4adb1
+> Author: Andi Kleen <ak@linux.intel.com>
+> Date:   Fri Nov 19 18:36:44 2010 +0100
 >
+>     XPANIC: Add extended panic interface
+>     
+>     One panic size doesn't fit all.
+>     
+>     Machine check has some special requirements on panic, like:
+>     - It wants to do a reboot timeout by default so that the machine
+>     check event can be logged to disk after warm reboot.
 
-The previous patch also converts panic to xpanic and is taken from
-Andi's
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-mce-2.6.git tree.
-The changes are kept as two separate patches to identify their origin.
+There is certainly not comment to that effect and I have not see a
+mechanism that does that.
 
-Thanks,
-K.Prasad
+>     - For memory errors it usually doesn't want to do crash dumps because
+>     that can lead to crash loops (dumping corrupted memory would
+>     lead to another machine check)
 
- 
+It usually doesn't, and it would not lead to a crash loop just a failure
+to capture the cause of the crash.
+
+>     - It doesn't want to do backtraces because machine checks
+>     are not a kernel bug.
+
+But it sure is nice to know where it happened anyway, so you can guess
+the damage.  This sounds like more of the Andi thing where he doesn't
+want to hear about memory errors, because it is not a software problem.
+
+That is definitely not sufficient reason to turn off backtraces.
+
+>     In a earlier patch this was done with various adhoc hacks,
+>     but it's cleaner to extend panic to a 'xpanic' that directly
+>     gets a flag and timeout argument.
+>     
+>     The only user right now will be x86 machine checks, but I consider
+>     it likely that other users will switch to this too.
+>     
+>     For example one obvious candidate would be the "no root
+>     found" panic which doesn't really deserve a backtrace.
+
+That does seem like a good fit for that case.  However it doesn't seem
+like a good fit for your case.
+
+>     I exported a vpanic() interface too as a global. That's not
+>     needed by the current user, but the interface has to exist
+>     internally anyways and I could see how other code would
+>     find a v* variant of panic useful.
+>     
+>     Originally based on a suggestion by H. Peter Anvin.
+>     Signed-off-by: Andi Kleen <ak@linux.intel.com>
+
+Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+
+This entire chunk of two patches appears to be complete non-sense.
+
+mce_panic_timeout is hard coded policy that userspace does not get
+to control, that overrides userspace policy.
+
+It looks to me like the right solution is just to delete the 
+mce_panic_timeout.
+
+As for the extra flags that you add the panic path.  They can
+only make the code more fragile.
+
+Eric
 
 _______________________________________________
 kexec mailing list
