@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QQ1Jm-0005ll-JU
-	for kexec@lists.infradead.org; Fri, 27 May 2011 17:59:27 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+	id 1QQ1KP-0005oO-H2
+	for kexec@lists.infradead.org; Fri, 27 May 2011 18:00:06 +0000
+Date: Fri, 27 May 2011 13:59:49 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
+	generated crashes
+Message-ID: <20110527175949.GG8053@redhat.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526171209.GA17988@in.ibm.com>
-Date: Fri, 27 May 2011 10:59:11 -0700
-In-Reply-To: <20110526171209.GA17988@in.ibm.com> (K. Prasad's message of "Thu, 
-	26 May 2011 22:42:09 +0530")
-Message-ID: <m1tycg9g9c.fsf@fess.ebiederm.org>
+	<20110526172305.GA18295@in.ibm.com>
+	<20110526174447.GC29496@redhat.com>
+	<20110527165736.GC2384@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [Patch 1/6] XPANIC: Add extended panic interface
+Content-Disposition: inline
+In-Reply-To: <20110527165736.GC2384@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,77 +27,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: prasad@linux.vnet.ibm.com
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+On Fri, May 27, 2011 at 10:27:36PM +0530, K.Prasad wrote:
+> On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
+> > On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
+> > > 
+> > > slimdump: Capture slimdump for fatal MCE generated crashes
+> > > 
+> > > System crashes resulting from fatal hardware errors (such as MCE) don't need
+> > > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
+> > > retains only essential information while discarding the old memory.
+> > > 
+> > 
+> > Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
+> > leave it to user space. 
+> > 
+> 
+> Our concern comes from the fact that it is unsafe for the OS to read
+> any part of the corrupt memory region, so the kernel does not have to make
+> that address space available for read/write.
 
-> commit e668fa1aea7844ac4c7ea09030a2f3e647a4adb1
-> Author: Andi Kleen <ak@linux.intel.com>
-> Date:   Fri Nov 19 18:36:44 2010 +0100
->
->     XPANIC: Add extended panic interface
->     
->     One panic size doesn't fit all.
->     
->     Machine check has some special requirements on panic, like:
->     - It wants to do a reboot timeout by default so that the machine
->     check event can be logged to disk after warm reboot.
+The very fact you are booting into second kernel you are reading lots
+of address space already. The assumption is that whole of the reserved
+region is fine otherwise kernel will not even boot. Then even in older
+kernel you are accessing memory used for saving the elf headers and
+mce registers.
 
-There is certainly not comment to that effect and I have not see a
-mechanism that does that.
+> 
+> > As Andi said, you anyway will require disabling MCE temporarily in second
+> > kernel. So that should allay the concern that we might run into second
+> > MCE while trying to read the vmcore.
+> > 
+> 
+> The processor manuals don't define the behaviour for a read operation
+> upon a corrupt memory location. So the consequences for a read after
+> disabling MCE is unknown (as I've mentioned here:
+> https://lkml.org/lkml/2011/5/27/258). 
+> 
 
->     - For memory errors it usually doesn't want to do crash dumps because
->     that can lead to crash loops (dumping corrupted memory would
->     lead to another machine check)
+First of all a user can simply have a configuration to extract MCE
+registers and your concern is addressed. Eric W. Biederman said that
+he had got bunch of MCE triggered dumps also and things were fine. I think
+we are over engineering this. In the first step lets just keep it simple
+and just export MCE registers as a note. If accessing rest of regions
+becomes a issue in real life, then we can have a look at this again.
 
-It usually doesn't, and it would not lead to a crash loop just a failure
-to capture the cause of the crash.
 
->     - It doesn't want to do backtraces because machine checks
->     are not a kernel bug.
+> > A user might want to extract just the dmesg buffers also after MCE from
+> > vmcore.
+> >
+> > What I am saying is that this sounds more like a policy. Don't enforce
+> > it in kernel. Probably give user MCE registers as part of ELF note of
+> > vmcore. Now leave it up to user what data he wants to extract from vmcore.
+> > Just the MCE registers or something more then that.
+> 
+> I'm unsure, at the moment, as to what it actually entails to extract
+> dmesg buffers from the old kernel's memory; but given that there exists
+> a corrupt memory region with unknown consequences for read operations
+> upon it, I doubt if it is a safe idea to allow user-space application to
+> navigate through the kernel data-structures to extract the dmesg.
+> 
+> Alternatively, we might leave MCE enabled for the kdump kernel and
+> modify the user-space application to turn resilient to SIGBUS signal. So
+> if it reads a corrupt memory region, it will receive a signal from
+> do_machine_check() upon which it can skip that particular address and/or
+> fill it with zeroes (or somesuch). We haven't gone through the
+> details....but just some loud thinking
 
-But it sure is nice to know where it happened anyway, so you can guess
-the damage.  This sounds like more of the Andi thing where he doesn't
-want to hear about memory errors, because it is not a software problem.
+Again, I think simplest would be to disable MCE while we are accessing
+previous kernel's memory and configure user space to either just extract
+MCE registers. If you are too paranoid, you can do it in two steps. First
+save MCE registes and make sure these are on disk and then go for
+extracting rest of the info like dmesg and in the process if you go down,
+anyway it was best effort thing.
 
-That is definitely not sufficient reason to turn off backtraces.
-
->     In a earlier patch this was done with various adhoc hacks,
->     but it's cleaner to extend panic to a 'xpanic' that directly
->     gets a flag and timeout argument.
->     
->     The only user right now will be x86 machine checks, but I consider
->     it likely that other users will switch to this too.
->     
->     For example one obvious candidate would be the "no root
->     found" panic which doesn't really deserve a backtrace.
-
-That does seem like a good fit for that case.  However it doesn't seem
-like a good fit for your case.
-
->     I exported a vpanic() interface too as a global. That's not
->     needed by the current user, but the interface has to exist
->     internally anyways and I could see how other code would
->     find a v* variant of panic useful.
->     
->     Originally based on a suggestion by H. Peter Anvin.
->     Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-This entire chunk of two patches appears to be complete non-sense.
-
-mce_panic_timeout is hard coded policy that userspace does not get
-to control, that overrides userspace policy.
-
-It looks to me like the right solution is just to delete the 
-mce_panic_timeout.
-
-As for the extra flags that you add the panic path.  They can
-only make the code more fragile.
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
