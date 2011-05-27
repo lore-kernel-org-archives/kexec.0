@@ -1,30 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([122.248.162.2])
+Received: from e28smtp04.in.ibm.com ([122.248.162.4])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QQ0MF-0005J0-7w
-	for kexec@lists.infradead.org; Fri, 27 May 2011 16:57:57 +0000
-Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
-	by e28smtp02.in.ibm.com (8.14.4/8.13.1) with ESMTP id p4RGvjWd009806
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:27:45 +0530
-Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
-	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p4RGvjHt4354052
-	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:27:45 +0530
-Received: from d28av02.in.ibm.com (loopback [127.0.0.1])
-	by d28av02.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p4RGvjVL000594
-	for <kexec@lists.infradead.org>; Sat, 28 May 2011 02:57:45 +1000
-Date: Fri, 27 May 2011 22:27:36 +0530
+	id 1QQ0Rt-0005MP-Au
+	for kexec@lists.infradead.org; Fri, 27 May 2011 17:03:46 +0000
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+	by e28smtp04.in.ibm.com (8.14.4/8.13.1) with ESMTP id p4RH3eZk018003
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:40 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p4RH3emo3748046
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:40 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p4RH3dkr010682
+	for <kexec@lists.infradead.org>; Fri, 27 May 2011 22:33:39 +0530
+Date: Fri, 27 May 2011 22:33:31 +0530
 From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
-	generated crashes
-Message-ID: <20110527165736.GC2384@in.ibm.com>
+Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
+	MCE, capture related information
+Message-ID: <20110527170331.GD2384@in.ibm.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172305.GA18295@in.ibm.com>
-	<20110526174447.GC29496@redhat.com>
+	<20110526171521.GD17988@in.ibm.com>
+	<20110526184350.GE29496@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110526174447.GC29496@redhat.com>
+In-Reply-To: <20110526184350.GE29496@redhat.com>
 Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -41,57 +41,51 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
 Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
-> On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
-> > 
-> > slimdump: Capture slimdump for fatal MCE generated crashes
-> > 
-> > System crashes resulting from fatal hardware errors (such as MCE) don't need
-> > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
-> > retains only essential information while discarding the old memory.
-> > 
+On Thu, May 26, 2011 at 02:43:50PM -0400, Vivek Goyal wrote:
+> On Thu, May 26, 2011 at 10:45:21PM +0530, K.Prasad wrote:
 > 
-> Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
-> leave it to user space. 
+> [..]
+> > Index: linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> > ===================================================================
+> > --- linux-2.6.slim_kdump.orig/arch/x86/kernel/cpu/mcheck/mce.c
+> > +++ linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> > @@ -258,8 +258,7 @@ static void wait_for_panic(void)
+> >  	local_irq_enable();
+> >  	while (timeout-- > 0)
+> >  		udelay(1);
+> > -	xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, 0,
+> > -		"Panicing machine check CPU died");
+> > +	xpanic(PANIC_MCE, 0, NULL, 0, "Panicing machine check CPU died");
+> >  }
+> >  
+> >  static void mce_panic(char *msg, struct mce *final, char *exp)
+> > @@ -315,8 +314,8 @@ static void mce_panic(char *msg, struct
+> >  	if (exp)
+> >  		pr_emerg(HW_ERR "Machine check: %s\n", exp);
+> >  	if (!fake_panic) {
+> > -		xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, mce_panic_timeout,
+> > -			msg);
+> > +		xpanic(PANIC_MCE, mce_panic_timeout, final,
+> > +			sizeof(struct mce), msg);
+> >  	} else
+> >  		pr_emerg(HW_ERR "Fake kernel panic: %s\n", msg);
+> >  }
 > 
-
-Our concern comes from the fact that it is unsafe for the OS to read
-any part of the corrupt memory region, so the kernel does not have to make
-that address space available for read/write.
-
-> As Andi said, you anyway will require disabling MCE temporarily in second
-> kernel. So that should allay the concern that we might run into second
-> MCE while trying to read the vmcore.
-> 
-
-The processor manuals don't define the behaviour for a read operation
-upon a corrupt memory location. So the consequences for a read after
-disabling MCE is unknown (as I've mentioned here:
-https://lkml.org/lkml/2011/5/27/258). 
-
-> A user might want to extract just the dmesg buffers also after MCE from
-> vmcore.
+> In previous patches you introduce PANIC_NO_KEXEC and PANIC_NO_BACKTRACE. 
+> Now in this patch you got rid of those. Are there any other users left
+> of PANIC_NO_BACKTRACE and PANIC_NO_EXEC? If not, then why to introduce
+> these to begin with.
 >
-> What I am saying is that this sounds more like a policy. Don't enforce
-> it in kernel. Probably give user MCE registers as part of ELF note of
-> vmcore. Now leave it up to user what data he wants to extract from vmcore.
-> Just the MCE registers or something more then that.
 
-I'm unsure, at the moment, as to what it actually entails to extract
-dmesg buffers from the old kernel's memory; but given that there exists
-a corrupt memory region with unknown consequences for read operations
-upon it, I doubt if it is a safe idea to allow user-space application to
-navigate through the kernel data-structures to extract the dmesg.
-
-Alternatively, we might leave MCE enabled for the kdump kernel and
-modify the user-space application to turn resilient to SIGBUS signal. So
-if it reads a corrupt memory region, it will receive a signal from
-do_machine_check() upon which it can skip that particular address and/or
-fill it with zeroes (or somesuch). We haven't gone through the
-details....but just some loud thinking
+The previous patch also converts panic to xpanic and is taken from
+Andi's
+git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-mce-2.6.git tree.
+The changes are kept as two separate patches to identify their origin.
 
 Thanks,
 K.Prasad
+
+ 
 
 _______________________________________________
 kexec mailing list
