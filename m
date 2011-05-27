@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from out02.mta.xmission.com ([166.70.13.232])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QQ1Xx-00061T-1c
-	for kexec@lists.infradead.org; Fri, 27 May 2011 18:14:05 +0000
+	id 1QQ1tB-0006E6-0e
+	for kexec@lists.infradead.org; Fri, 27 May 2011 18:36:04 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172305.GA18295@in.ibm.com>
-Date: Fri, 27 May 2011 11:14:00 -0700
-In-Reply-To: <20110526172305.GA18295@in.ibm.com> (K. Prasad's message of "Thu, 
-	26 May 2011 22:53:05 +0530")
-Message-ID: <m1fwo08107.fsf@fess.ebiederm.org>
+	<20110526172618.GB18295@in.ibm.com> <m11uzk80vx.fsf@fess.ebiederm.org>
+	<20110527182210.GH8053@redhat.com>
+Date: Fri, 27 May 2011 11:35:53 -0700
+In-Reply-To: <20110527182210.GH8053@redhat.com> (Vivek Goyal's message of
+	"Fri, 27 May 2011 14:22:10 -0400")
+Message-ID: <m1hb8g6lfa.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
-	generated crashes
+Subject: Re: [RFC Patch 6/6] Crash: Recognise slim coredumps and process new
+	elf-note sections
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +26,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: prasad@linux.vnet.ibm.com
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wang Chao <wang.chao@cn.fujitsu.com>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, prasad@linux.vnet.ibm.com, crash-utility@redhat.com
 
-"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+Vivek Goyal <vgoyal@redhat.com> writes:
 
-> slimdump: Capture slimdump for fatal MCE generated crashes
+> On Fri, May 27, 2011 at 11:16:34AM -0700, Eric W. Biederman wrote:
+>> "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+>> 
+>> > Crash: Recognise slim coredumps and process new elf-note sections
+>> >
+>> > The Linux kernel will begin to support SlimDump for certain types of crashes
+>> > and the 'crash' tool needs to recognise them. For these types of coredumps, it
+>> > need not lookout for usual elf-structures and start gdb. Also process new
+>> > elf-note sections that contain additional information about the crash.
+>> 
+>> I suppose patching crash make sense.
+>> 
+>> Unfortunately crash doesn't work on  99% of the  kernels I run so, so I
+>> stopped caring a while ago.
 >
-> System crashes resulting from fatal hardware errors (such as MCE) don't need
-> all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
-> retains only essential information while discarding the old memory.
+> Are these patched kernels? Otherwise Dave Anderson is pretty good about
+> keeping crash running across multiple kernels.
 
-Ugh.  You are changing the kernel to change userspace policy?
+Only slightly patched.  But they are definitely kernels I have built
+myself.  It might just be a logistics problem where if I want to use
+crash I need to upgrade it when I upgrade my kernels.
 
-And because of how you have previous populated this we won't get the
-notes to let us extract dmesg easily.
+I got frustrated a while ago trying to get something out of crash
+(and I'm afraid it shows), and I have just gone to extracting the
+dmesg.  Which gives me all of the information I generally have time
+to process.
 
-No thanks.  Let's change this in userspace instead.
-
-You are going to an awful lot of work to avoid a problem that doesn't
-happen to in practice.
-
-Patching makedumpfile to key in on an mce note would be more appropriate.
-
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Eric
 
 _______________________________________________
 kexec mailing list
