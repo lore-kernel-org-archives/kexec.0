@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QQ1aS-00063Y-V1
-	for kexec@lists.infradead.org; Fri, 27 May 2011 18:16:41 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+	id 1QQ1mp-0006BJ-3L
+	for kexec@lists.infradead.org; Fri, 27 May 2011 18:29:27 +0000
+Date: Fri, 27 May 2011 14:29:07 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
+	MCE, capture related information
+Message-ID: <20110527182907.GI8053@redhat.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172618.GB18295@in.ibm.com>
-Date: Fri, 27 May 2011 11:16:34 -0700
-In-Reply-To: <20110526172618.GB18295@in.ibm.com> (K. Prasad's message of "Thu, 
-	26 May 2011 22:56:18 +0530")
-Message-ID: <m11uzk80vx.fsf@fess.ebiederm.org>
+	<20110526171521.GD17988@in.ibm.com>
+	<20110526184350.GE29496@redhat.com>
+	<20110527170331.GD2384@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [RFC Patch 6/6] Crash: Recognise slim coredumps and process new
-	elf-note sections
+Content-Disposition: inline
+In-Reply-To: <20110527170331.GD2384@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +27,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: prasad@linux.vnet.ibm.com
-Cc: "Luck, Tony" <tony.luck@intel.com>, Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wang Chao <wang.chao@cn.fujitsu.com>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+On Fri, May 27, 2011 at 10:33:31PM +0530, K.Prasad wrote:
+> On Thu, May 26, 2011 at 02:43:50PM -0400, Vivek Goyal wrote:
+> > On Thu, May 26, 2011 at 10:45:21PM +0530, K.Prasad wrote:
+> > 
+> > [..]
+> > > Index: linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> > > ===================================================================
+> > > --- linux-2.6.slim_kdump.orig/arch/x86/kernel/cpu/mcheck/mce.c
+> > > +++ linux-2.6.slim_kdump/arch/x86/kernel/cpu/mcheck/mce.c
+> > > @@ -258,8 +258,7 @@ static void wait_for_panic(void)
+> > >  	local_irq_enable();
+> > >  	while (timeout-- > 0)
+> > >  		udelay(1);
+> > > -	xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, 0,
+> > > -		"Panicing machine check CPU died");
+> > > +	xpanic(PANIC_MCE, 0, NULL, 0, "Panicing machine check CPU died");
+> > >  }
+> > >  
+> > >  static void mce_panic(char *msg, struct mce *final, char *exp)
+> > > @@ -315,8 +314,8 @@ static void mce_panic(char *msg, struct
+> > >  	if (exp)
+> > >  		pr_emerg(HW_ERR "Machine check: %s\n", exp);
+> > >  	if (!fake_panic) {
+> > > -		xpanic(PANIC_NO_KEXEC|PANIC_NO_BACKTRACE, mce_panic_timeout,
+> > > -			msg);
+> > > +		xpanic(PANIC_MCE, mce_panic_timeout, final,
+> > > +			sizeof(struct mce), msg);
+> > >  	} else
+> > >  		pr_emerg(HW_ERR "Fake kernel panic: %s\n", msg);
+> > >  }
+> > 
+> > In previous patches you introduce PANIC_NO_KEXEC and PANIC_NO_BACKTRACE. 
+> > Now in this patch you got rid of those. Are there any other users left
+> > of PANIC_NO_BACKTRACE and PANIC_NO_EXEC? If not, then why to introduce
+> > these to begin with.
+> >
+> 
+> The previous patch also converts panic to xpanic and is taken from
+> Andi's
+> git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-mce-2.6.git tree.
+> The changes are kept as two separate patches to identify their origin.
 
-> Crash: Recognise slim coredumps and process new elf-note sections
->
-> The Linux kernel will begin to support SlimDump for certain types of crashes
-> and the 'crash' tool needs to recognise them. For these types of coredumps, it
-> need not lookout for usual elf-structures and start gdb. Also process new
-> elf-note sections that contain additional information about the crash.
+If you have to remove dead piece of code from original patch, I think
+you can always take original patch, modify it and give the credit to
+original author by explicitly mentioning it in your changelog.
 
-I suppose patching crash make sense.
-
-Unfortunately crash doesn't work on  99% of the  kernels I run so, so I
-stopped caring a while ago.
-
-Eric
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
