@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QRpQS-0000Rv-VH
-	for kexec@lists.infradead.org; Wed, 01 Jun 2011 17:41:49 +0000
-Date: Wed, 1 Jun 2011 13:41:34 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <292370127.12181.1306950094350.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <20110601172326.GA17449@redhat.com>
-Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
-	MCE, capture related information
+Received: from e4.ny.us.ibm.com ([32.97.182.144])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QS1UZ-0000c7-Bu
+	for kexec@lists.infradead.org; Thu, 02 Jun 2011 06:34:52 +0000
+Received: from d01relay03.pok.ibm.com (d01relay03.pok.ibm.com [9.56.227.235])
+	by e4.ny.us.ibm.com (8.14.4/8.13.1) with ESMTP id p526DYTH022090
+	for <kexec@lists.infradead.org>; Thu, 2 Jun 2011 02:13:34 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay03.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p526Ylbc104176
+	for <kexec@lists.infradead.org>; Thu, 2 Jun 2011 02:34:47 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p526YkZx006442
+	for <kexec@lists.infradead.org>; Thu, 2 Jun 2011 02:34:46 -0400
+Message-ID: <4DE72EFE.8080502@in.ibm.com>
+Date: Thu, 02 Jun 2011 12:04:38 +0530
+From: Suzuki Poulose <suzuki@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: [RFC][PATCH] Kexec support for PPC440x
+References: <4DE345B0.8020505@in.ibm.com> <4DE50617.7090509@linutronix.de>
+In-Reply-To: <4DE50617.7090509@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,71 +29,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, "Eric W. Biederman" <ebiederm@xmission.com>, prasad@linux.vnet.ibm.com
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Josh Boyer <jwboyer@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, linux ppc dev <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>
 
+On 05/31/11 20:45, Sebastian Andrzej Siewior wrote:
+>
+> Suzuki Poulose wrote:
+>> Index: powerpc/arch/powerpc/kernel/44x_kexec_mapping.S
+>> ===================================================================
+>> --- /dev/null
+>> +++ powerpc/arch/powerpc/kernel/44x_kexec_mapping.S
+> ....
+>
+>> + *
+>> + */
+>> + bl nxtins /* Find our address */
+>> +nxtins: mflr r5 /* Make it accessible */
+>
+> Please don't mix labels and instructions.
+OK.
+>
+>> + tlbsx r23,0,r5 /* Find entry we are in */
+>
+> using tabs instead of spaces would make it look nice. Please also separate the arguments of the instruction i.e.
+> tlbsx r23, 0, r5
 
+Sure.
+>
+>
+>> Index: powerpc/arch/powerpc/kernel/misc_32.S
+>> ===================================================================
+>> --- powerpc.orig/arch/powerpc/kernel/misc_32.S
+>> +++ powerpc/arch/powerpc/kernel/misc_32.S
+>> @@ -736,6 +736,28 @@ relocate_new_kernel:
+>> mr r5, r31
+>>
+>> li r0, 0
+>> +#elif defined(CONFIG_44x) && !defined(CONFIG_47x)
+>> +
+>> + mr r29, r3
+>> + mr r30, r4
+>> + mr r31, r5
+>> +
+>> +#include "44x_kexec_mapping.S"
+>
+> The way you setup the 1:1 mapping should be close to what you are doing on
+> kernel entry.Isn't it possible to include the file here and in the entry
+> code?
+I will make this change and resend the patch.
 
------ Original Message -----
-> On Wed, Jun 01, 2011 at 01:18:16PM -0400, Dave Anderson wrote:
-> > FWIW, unlike mcelog, it really doesn't have to be maintained in the crash
-> > utility. It's just another kernel data structure whose contents can be
-> > determined dynamically during runtime:
-> >
-> 
-> That's what I was wondering. Why can't we simple extract the contents
-> of this structure from /proc/vmcore and save it, instead of trying to
-> export it by appending additional elf notes to vmcore.
+Thanks
 
-Actually I take that back -- Prasad's patch looks at the ELF header
-contents and exits before the crash utility invokes the embedded gdb, 
-so the structure contents are unavailable at that time.  It doesn't even 
-use the vmlinux file.  
-
-Dave 
-
-> 
-> Thanks
-> Vivek
-> 
-> >   crash> struct mce
-> >   struct mce {
-> >       __u64 status;
-> >       __u64 misc;
-> >       __u64 addr;
-> >       __u64 mcgstatus;
-> >       __u64 ip;
-> >       __u64 tsc;
-> >       __u64 time;
-> >       __u8 cpuvendor;
-> >       __u8 inject_flags;
-> >       __u16 pad;
-> >       __u32 cpuid;
-> >       __u8 cs;
-> >       __u8 bank;
-> >       __u8 cpu;
-> >       __u8 finished;
-> >       __u32 extcpu;
-> >       __u32 socketid;
-> >       __u32 apicid;
-> >       __u64 mcgcap;
-> >   }
-> >   SIZE: 88
-> >   crash>
-> >
-> > Dave
-> >
-> > > If you think that this complicates the patch, I'll start with a
-> > > much
-> > > 'slimmer' version (!) of the slimdump and the improvements may be
-> > > contemplated iteratively.
-> > >
-> > > Thanks,
-> > > K.Prasad
+Suzuki
 
 _______________________________________________
 kexec mailing list
