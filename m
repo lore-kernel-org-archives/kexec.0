@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2001:470:1f0b:1c35:abcd:42:0:1])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QTVX5-0006ks-SW
-	for kexec@lists.infradead.org; Mon, 06 Jun 2011 08:51:37 +0000
-Message-ID: <4DEC950E.1020105@linutronix.de>
-Date: Mon, 06 Jun 2011 10:51:26 +0200
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Received: from mx0.aculab.com ([213.249.233.131])
+	by canuck.infradead.org with smtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QTVh9-0006q9-84
+	for kexec@lists.infradead.org; Mon, 06 Jun 2011 09:01:59 +0000
+Received: from mx0.aculab.com ([127.0.0.1])
+	by localhost (mx0.aculab.com [127.0.0.1]) (amavisd-new,
+	port 10024) with SMTP id 05801-02 for <kexec@lists.infradead.org>;
+	Mon,  6 Jun 2011 10:01:48 +0100 (BST)
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: Re: [RFC][PATCH] powerpc: Use the #address-cells information to parse
-	memory/reg
-References: <4DC923C4.6080707@in.ibm.com> <4DC92784.2040001@in.ibm.com>
-	<20110510134152.GB18537@in.ibm.com>
-	<4DCA285D.2080006@in.ibm.com> <4DE3396E.4090801@in.ibm.com>
-	<4DEC7F49.8060000@in.ibm.com>
+Subject: RE: [RFC][PATCH] powerpc: Use the #address-cells information to
+	parsememory/reg
+Date: Mon, 6 Jun 2011 10:00:22 +0100
+Message-ID: <AE90C24D6B3A694183C094C60CF0A2F6D8AD73@saturn3.aculab.com>
 In-Reply-To: <4DEC7F49.8060000@in.ibm.com>
+From: "David Laight" <David.Laight@ACULAB.COM>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,96 +23,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Suzuki Poulose <suzuki@in.ibm.com>
-Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Suzuki Poulose <suzuki@in.ibm.com>, Simon Horman <horms@verge.net.au>
+Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Suzuki Poulose wrote:
+> > Changed the add_usable_mem_property() to accept FILE* fp instead of
+int fd,
+> > as most of the other users of read_memory_region_limits() deals with
+FILE*.
+> >
+> > Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+> 
 > Could you please let me know your thoughts/comments about this patch ?
 
-I'm mostly fine with it.
+Is the change to use 'FILE *' actually progress?
+I'd have thought that the randomly aligned read/lseek system calls
+that this allows to happen are not desirable for anything that
+isn't a true file.
 
-Maaxim copied fs2dt.c from ppc64 to ppc. So I guess ppc64 has the same
-problem. ARM and MIPS is soon having DT support and kexec is probably also
-on their list so I would hate to see them to either copy the DT parsing
-file or having their own implementation.
+I'd also suggest that the sizeof's should be applied to the
+actual type of the variable being read/written, not arbitrarily
+'long' or 'int', and this probably ought to be some fixed size type.
 
-Maybe we should try to use libfdt for dt parsing. It has /proc import
-support so it should be fine for our needs. It is already in tree and used
-by ppc32 if a basic dtb is specified. I'm not sure if the /proc interface
-is part of dtc or libfdt.
+	David
 
-I'm not saying this has to be done now but maybe later before ARM and/or
-MIPS comes along needs something similar for their needs. If the libfdt is
-too complex for sucking in the dtb from /proc then maybe something else
-that generic and can be shared between booth ppc architectures and the
-other ones.
 
-> Thanks
-> Suzuki
-> 
->>
->> Index: kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.c
->> ===================================================================
->> --- kexec-tools-2.0.4.orig/kexec/arch/ppc/kexec-ppc.c
->> +++ kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.c
->> @@ -34,6 +35,92 @@ unsigned int rtas_base, rtas_size;
->> int max_memory_ranges;
->> const char *ramdisk;
->>
->> +/*
->> + * Reads the #address-cells and #size-cells on this platform.
->> + * This is used to parse the memory/reg info from the device-tree
->> + */
->> +int init_memory_region_info()
->> +{
->> + size_t res = 0;
->> + FILE *fp;
->> + char *file;
->> +
->> + file = "/proc/device-tree/#address-cells";
->> + fp = fopen(file, "r");
->> + if (!fp) {
->> + fprintf(stderr,"Unable to open %s\n", file);
->> + return -1;
->> + }
->> +
->> + res = fread(&dt_address_cells,sizeof(unsigned long),1,fp);
->> + if (res != 1) {
->> + fprintf(stderr,"Error reading %s\n", file);
->> + return -1;
->> + }
->> + fclose(fp);
->> + dt_address_cells *= sizeof(unsigned long);
-
-This should be sizeof(unsigned int). I know we on 32bit.
-
->> + file = "/proc/device-tree/#size-cells";
->> + fp = fopen(file, "r");
->> + if (!fp) {
->> + fprintf(stderr,"Unable to open %s\n", file);
->> + return -1;
->> + }
->> +
->> + res = fread(&dt_size_cells,sizeof(unsigned long),1,fp);
->> + if (res != 1) {
->> + fprintf(stderr,"Error reading %s\n", file);
->> + return -1;
->> + }
->> + fclose(fp);
->> + dt_size_cells *= sizeof(unsigned long);
-
-same here.
-
->> +
->> + return 0;
->> +}
->> +
-
-Sebastian
 
 _______________________________________________
 kexec mailing list
