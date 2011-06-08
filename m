@@ -1,32 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QUM7F-0001Nj-0I
-	for kexec@lists.infradead.org; Wed, 08 Jun 2011 17:00:26 +0000
+	id 1QUMN3-0001XV-4k
+	for kexec@lists.infradead.org; Wed, 08 Jun 2011 17:16:47 +0000
 Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp06.au.ibm.com (8.14.4/8.13.1) with ESMTP id p58Gxlvi029492
-	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 02:59:47 +1000
-Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id p58HGfNM025485
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:16:41 +1000
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
 	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p58H0JJL704738
-	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:00:19 +1000
-Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
-	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p58H0I3t022244
-	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:00:19 +1000
-Date: Wed, 8 Jun 2011 22:30:08 +0530
+	p58HGfrW655462
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:16:41 +1000
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p58HGf88020239
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:16:41 +1000
+Date: Wed, 8 Jun 2011 22:46:32 +0530
 From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
-	generated crashes
-Message-ID: <20110608170008.GA2851@in.ibm.com>
+Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
+	MCE, capture related information
+Message-ID: <20110608171632.GA11077@in.ibm.com>
 References: <20110526170722.GB23266@in.ibm.com>
-	<20110526172305.GA18295@in.ibm.com>
-	<20110526174447.GC29496@redhat.com>
-	<20110527165736.GC2384@in.ibm.com>
-	<20110527175949.GG8053@redhat.com>
+	<20110526171521.GD17988@in.ibm.com>
+	<m1fwo09g15.fsf@fess.ebiederm.org>
+	<20110531174043.GA2000@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110527175949.GG8053@redhat.com>
+In-Reply-To: <20110531174043.GA2000@in.ibm.com>
 Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -40,111 +39,227 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, May 27, 2011 at 01:59:49PM -0400, Vivek Goyal wrote:
-> On Fri, May 27, 2011 at 10:27:36PM +0530, K.Prasad wrote:
-> > On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
-> > > On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
-> > > > 
-> > > > slimdump: Capture slimdump for fatal MCE generated crashes
-> > > > 
-> > > > System crashes resulting from fatal hardware errors (such as MCE) don't need
-> > > > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
-> > > > retains only essential information while discarding the old memory.
-> > > > 
-> > > 
-> > > Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
-> > > leave it to user space. 
-> > > 
+On Tue, May 31, 2011 at 11:10:43PM +0530, K.Prasad wrote:
+> On Fri, May 27, 2011 at 11:04:06AM -0700, Eric W. Biederman wrote:
+> > "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
 > > 
-> > Our concern comes from the fact that it is unsafe for the OS to read
-> > any part of the corrupt memory region, so the kernel does not have to make
-> > that address space available for read/write.
-> 
-> The very fact you are booting into second kernel you are reading lots
-> of address space already. The assumption is that whole of the reserved
-> region is fine otherwise kernel will not even boot. Then even in older
-> kernel you are accessing memory used for saving the elf headers and
-> mce registers.
-
-The difference, IMHO, is that we avoid a deliberate access of the memory
-location which has previously experienced an unrecoverable memory error
-and upon which a read operation can cause fatal MCE.
-
-While older kernel's memory is used to save elf headers, it is not a
-location that is known to have a memory error.
-
-There could be a case where either a new memory error surfaces in the
-older kernel/inside the kdump kernel's memory region or a previously
-hw-poisoned memory is consumed by the new kernel, during which
-we suspect that the kdump kernel would reboot...but given the small time
-window during which it operates such a situation is going to be very
-rare.
-
-> > 
-> > > As Andi said, you anyway will require disabling MCE temporarily in second
-> > > kernel. So that should allay the concern that we might run into second
-> > > MCE while trying to read the vmcore.
-> > > 
-> > 
-> > The processor manuals don't define the behaviour for a read operation
-> > upon a corrupt memory location. So the consequences for a read after
-> > disabling MCE is unknown (as I've mentioned here:
-> > https://lkml.org/lkml/2011/5/27/258). 
-> > 
-> 
-> First of all a user can simply have a configuration to extract MCE
-> registers and your concern is addressed. Eric W. Biederman said that
-> he had got bunch of MCE triggered dumps also and things were fine. I think
-> we are over engineering this. In the first step lets just keep it simple
-> and just export MCE registers as a note. If accessing rest of regions
-> becomes a issue in real life, then we can have a look at this again.
-
-Again, this suggestion is based on the fact that the coredump from the
-first kernel is available...but the as stated before, capturing the
-coredump from first kernel involves a compulsory read operation over a
-memory location that is known to have an uncorrected error with the
-problems described above.
-
-> > > A user might want to extract just the dmesg buffers also after MCE from
-> > > vmcore.
+> > > PANIC_MCE: Introduce a new panic flag for fatal MCE, capture related information
 > > >
-> > > What I am saying is that this sounds more like a policy. Don't enforce
-> > > it in kernel. Probably give user MCE registers as part of ELF note of
-> > > vmcore. Now leave it up to user what data he wants to extract from vmcore.
-> > > Just the MCE registers or something more then that.
+> > > Fatal machine check exceptions (caused due to hardware memory errors) will now
+> > > result in a 'slim' coredump that captures vital information about the MCE. This
+> > > patch introduces a new panic flag, and new parameters to *panic functions
+> > > that can capture more information pertaining to the cause of crash.
+> > >
+> > > Enable a new elf-notes section to store additional information about the crash.
+> > > For MCE, enable a new notes section that captures relevant register status
+> > > (struct mce) to be later read during coredump analysis.
 > > 
-> > I'm unsure, at the moment, as to what it actually entails to extract
-> > dmesg buffers from the old kernel's memory; but given that there exists
-> > a corrupt memory region with unknown consequences for read operations
-> > upon it, I doubt if it is a safe idea to allow user-space application to
-> > navigate through the kernel data-structures to extract the dmesg.
-> > 
-> > Alternatively, we might leave MCE enabled for the kdump kernel and
-> > modify the user-space application to turn resilient to SIGBUS signal. So
-> > if it reads a corrupt memory region, it will receive a signal from
-> > do_machine_check() upon which it can skip that particular address and/or
-> > fill it with zeroes (or somesuch). We haven't gone through the
-> > details....but just some loud thinking
+> > There may be a reason to pass everything struct mce through 5 layers of
+> > code but right now it looks like it just makes everything uglier to no
+> > real purpose.
 > 
-> Again, I think simplest would be to disable MCE while we are accessing
-> previous kernel's memory and configure user space to either just extract
-> MCE registers. If you are too paranoid, you can do it in two steps. First
-> save MCE registes and make sure these are on disk and then go for
-> extracting rest of the info like dmesg and in the process if you go down,
-> anyway it was best effort thing.
->
+> We could have stopped with just a blank elf-note of type NT_MCE
+> indicating an MCE triggered panic, but dumping 'struct mce' in it will
+> help gather more useful information about the error - especially the
+> memory address that experienced unrecoverable error (stored in
+> mce->addr).
+> 
+> The patch 6/6 for the 'crash' tool enabled decoding of 'struct
+> mce' to show this information (although the sample log in patch 0/6)
+> didn't show these benefits because 'mce-inject' tool used to soft-inject
+> these errors doesn't populate all registers with valid contents.
+> 
+> The idea was that when mce->addr contains physical address is shown
+> while decoding coredump, the corresponding memory DIMM could be identified
+> for replacement/isolation.
+> 
+> Given that 'struct mce' isn't placed in a user-space visible file its
+> duplicate copies have to be maintained in 'crash' (like it is done in
+> 'mcelog' tool), and that's one disadvantage.
+> 
+> If you think that this complicates the patch, I'll start with a much
+> 'slimmer' version (!) of the slimdump and the improvements may be
+> contemplated iteratively.
 
-The problem here is that the effect of a read operation over a location
-with memory error (with MCEs disabled) is unknown. We are making
-attempts to characterise the behaviour in conjunction with the hardware
-folks and I will share any information that we learn in this regard.
+While there are reports that kdump works fine (like in your case) in
+capturing the coredump for a crash resulting from fatal MCE,
+unfortunately we don't have means to recreate such a behaviour due to
+the inability to inject memory errors in hardware to study further.
+
+So our fears arise due to the premise that reading a faulty memory
+location leads to undesirable consequences (whether MCE is disabled
+or not) and would like to modify the OS to avoid such an operation.
+
+While the ugliness of the patch (which I believe is due to
+non-separation of generic and arch-specific code) is something that can
+be addressed, I hope that the reasons for the patch are seen to be
+valid.
+
+Here's an attempt to make the slimdump patch more generic that can be
+used by any hardware generated crash to prevent a coredump from being
+captured (compile tested only).
+
+I'll post a more formal version of the patch upon hearing further
+comments.
 
 Thanks,
 K.Prasad
 
+
+Index: linux-2.6.orig/include/linux/elf.h
+===================================================================
+--- linux-2.6.orig.orig/include/linux/elf.h
++++ linux-2.6.orig/include/linux/elf.h
+@@ -381,6 +381,8 @@ typedef struct elf64_shdr {
+ #define NT_PRPSINFO	3
+ #define NT_TASKSTRUCT	4
+ #define NT_AUXV		6
++/* Note to indicate absence of coredump for crashes initiated due to hardware errors */
++#define NT_NOCOREDUMP	21
+ #define NT_PRXFPREG     0x46e62b7f      /* copied from gdb5.1/include/elf/common.h */
+ #define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
+ #define NT_PPC_SPE	0x101		/* PowerPC SPE/EVR registers */
+Index: linux-2.6.orig/kernel/kexec.c
+===================================================================
+--- linux-2.6.orig.orig/kernel/kexec.c
++++ linux-2.6.orig/kernel/kexec.c
+@@ -1379,7 +1379,7 @@ int __init parse_crashkernel(char 		 *cm
+ 	return 0;
+ }
+ 
+-
++__weak void arch_add_nocoredump_note(u32 *buf) {}
+ 
+ void crash_save_vmcoreinfo(void)
+ {
+@@ -1395,6 +1395,8 @@ void crash_save_vmcoreinfo(void)
+ 	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
+ 			      vmcoreinfo_size);
+ 
++	arch_add_nocoredump_note(buf);
++
+ 	final_note(buf);
+ }
+ 
+Index: linux-2.6.orig/arch/x86/kernel/cpu/mcheck/mce.c
+===================================================================
+--- linux-2.6.orig.orig/arch/x86/kernel/cpu/mcheck/mce.c
++++ linux-2.6.orig/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -241,6 +241,30 @@ static atomic_t mce_paniced;
+ static int fake_panic;
+ static atomic_t mce_fake_paniced;
+ 
++void arch_add_nocoredump_note(u32 *buf)
++{
++	struct elf_note note;
++	char *note_name = "PANIC_MCE";
++
++	/*
++	 * Prevent coredump from being captured if the panic was triggered due
++	 * to fatal Machine Check Exceptions (MCE).
++	 */
++	if (!mce_paniced)
++		return;
++
++	note.n_namesz = strlen(note_name) + 1;
++	/* We have no additional description */
++	note.n_descsz = 0;
++	note.n_type = NT_NOCOREDUMP;
++
++	memcpy(buf, &note, sizeof(note));
++        buf += (sizeof(note) + 3)/4;
++        memcpy(buf, note_name, note.n_namesz);
++        buf += (note.n_namesz + 3)/4;
++}
++
++
+ /* Panic in progress. Enable interrupts and wait for final IPI */
+ static void wait_for_panic(void)
+ {
+Index: linux-2.6.orig/fs/proc/vmcore.c
+===================================================================
+--- linux-2.6.orig.orig/fs/proc/vmcore.c
++++ linux-2.6.orig/fs/proc/vmcore.c
+@@ -529,6 +529,56 @@ static void __init set_vmcore_list_offse
+ 	}
+ }
+ 
++/*
++ * Check if the crash was due to a fatal Memory Check Exception
++ */
++static int has_nocoredump_note64(void)
++{
++	int i, j, len = 0, rc;
++	Elf64_Ehdr *ehdr_ptr;
++	Elf64_Phdr *phdr_ptr;
++	Elf64_Nhdr *nhdr_ptr;
++
++	ehdr_ptr = (Elf64_Ehdr *)elfcorebuf;
++	phdr_ptr = (Elf64_Phdr *)(elfcorebuf + sizeof(Elf64_Ehdr));
++
++	for (i = 0; i < ehdr_ptr->e_phnum; i++, phdr_ptr++) {
++		void *notes_section;
++		u64 offset, max_sz;
++		if (phdr_ptr->p_type != PT_NOTE)
++			continue;
++		max_sz = phdr_ptr->p_memsz;
++		offset = phdr_ptr->p_offset;
++		notes_section = kmalloc(max_sz, GFP_KERNEL);
++		if (!notes_section)
++			return -ENOMEM;
++		rc = read_from_oldmem(notes_section, max_sz, &offset, 0);
++		if (rc < 0) {
++			kfree(notes_section);
++			return rc;
++		}
++
++		for (j = 0; j < phdr_ptr->p_filesz; j += len) {
++			nhdr_ptr = notes_section + j;
++			if (nhdr_ptr->n_type == NT_NOCOREDUMP)
++			{
++				kfree(notes_section);
++				return 1;
++			}
++			/*
++			 * The elf-64 standard specifies 8-byte alignment while
++			 * append_elf_note function does only 4-byte roundup.
++			 * Hence this code also does a 4-byte roundup.
++			 */
++			len = sizeof(Elf64_Nhdr);
++			len = roundup(len + nhdr_ptr->n_namesz, 4);
++			len = roundup(len + nhdr_ptr->n_descsz, 4);
++		}
++		kfree(notes_section);
++	}
++	return 0;
++}
++
+ static int __init parse_crash_elf64_headers(void)
+ {
+ 	int rc=0;
+@@ -569,6 +619,19 @@ static int __init parse_crash_elf64_head
+ 		return rc;
+ 	}
+ 
++	phdr_ptr = (Elf64_Phdr *)(elfcorebuf + sizeof(Elf64_Ehdr));
++	if (has_nocoredump_note64() > 0) {
++		/*
++		 * If crash is due to hardware errors, elf-note of
++		 * type NT_NOCOREDUMP is present. If so, don't populate
++		 * sections other than elf-notes. Mark their sizes as zero.
++		 */
++		for (i = 0; i < ehdr.e_phnum; i++, phdr_ptr++) {
++			if (phdr_ptr->p_type != PT_NOTE)
++				phdr_ptr->p_memsz = phdr_ptr->p_filesz = 0;
++		}
++	}
++
+ 	/* Merge all PT_NOTE headers into one. */
+ 	rc = merge_note_headers_elf64(elfcorebuf, &elfcorebuf_sz, &vmcore_list);
+ 	if (rc) {
 
 _______________________________________________
 kexec mailing list
