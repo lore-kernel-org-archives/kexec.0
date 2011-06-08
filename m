@@ -1,26 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e35.co.us.ibm.com ([32.97.110.153])
+Received: from e23smtp06.au.ibm.com ([202.81.31.148])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QUCPx-0005SE-7W
-	for kexec@lists.infradead.org; Wed, 08 Jun 2011 06:39:07 +0000
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e35.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p586LKRa029766
-	for <kexec@lists.infradead.org>; Wed, 8 Jun 2011 00:21:20 -0600
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	p586d0Vv163546
-	for <kexec@lists.infradead.org>; Wed, 8 Jun 2011 00:39:00 -0600
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av03.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
-	id p580cxxb019306
-	for <kexec@lists.infradead.org>; Tue, 7 Jun 2011 18:38:59 -0600
-Message-ID: <4DEF18FF.6070206@in.ibm.com>
-Date: Wed, 08 Jun 2011 12:08:55 +0530
-From: Suzuki Poulose <suzuki@in.ibm.com>
+	id 1QUM7F-0001Nj-0I
+	for kexec@lists.infradead.org; Wed, 08 Jun 2011 17:00:26 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
+	by e23smtp06.au.ibm.com (8.14.4/8.13.1) with ESMTP id p58Gxlvi029492
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 02:59:47 +1000
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p58H0JJL704738
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:00:19 +1000
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p58H0I3t022244
+	for <kexec@lists.infradead.org>; Thu, 9 Jun 2011 03:00:19 +1000
+Date: Wed, 8 Jun 2011 22:30:08 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Subject: Re: [RFC Patch 5/6] slimdump: Capture slimdump for fatal MCE
+	generated crashes
+Message-ID: <20110608170008.GA2851@in.ibm.com>
+References: <20110526170722.GB23266@in.ibm.com>
+	<20110526172305.GA18295@in.ibm.com>
+	<20110526174447.GC29496@redhat.com>
+	<20110527165736.GC2384@in.ibm.com>
+	<20110527175949.GG8053@redhat.com>
 MIME-Version: 1.0
-Subject: [RFC][PATCH] kexec-tools: powerpc: Use the #address-cells information
-	to parsememory/reg - V2
+Content-Disposition: inline
+In-Reply-To: <20110527175949.GG8053@redhat.com>
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,410 +36,115 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, David Laight <David.Laight@ACULAB.COM>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi,
+On Fri, May 27, 2011 at 01:59:49PM -0400, Vivek Goyal wrote:
+> On Fri, May 27, 2011 at 10:27:36PM +0530, K.Prasad wrote:
+> > On Thu, May 26, 2011 at 01:44:47PM -0400, Vivek Goyal wrote:
+> > > On Thu, May 26, 2011 at 10:53:05PM +0530, K.Prasad wrote:
+> > > > 
+> > > > slimdump: Capture slimdump for fatal MCE generated crashes
+> > > > 
+> > > > System crashes resulting from fatal hardware errors (such as MCE) don't need
+> > > > all the contents from crashing-kernel's memory. Generate a new 'slimdump' that
+> > > > retains only essential information while discarding the old memory.
+> > > > 
+> > > 
+> > > Why to enforce zeroing out of rest of the vmcore data in kernel. Why not
+> > > leave it to user space. 
+> > > 
+> > 
+> > Our concern comes from the fact that it is unsafe for the OS to read
+> > any part of the corrupt memory region, so the kernel does not have to make
+> > that address space available for read/write.
+> 
+> The very fact you are booting into second kernel you are reading lots
+> of address space already. The assumption is that whole of the reserved
+> region is fine otherwise kernel will not even boot. Then even in older
+> kernel you are accessing memory used for saving the elf headers and
+> mce registers.
 
-This is version 2 of the patch
+The difference, IMHO, is that we avoid a deliberate access of the memory
+location which has previously experienced an unrecoverable memory error
+and upon which a read operation can cause fatal MCE.
 
-Changes from Version 1 :
-  : Changed the interface for read_memory_region_limits to use 'int fd'
-	instead of FILE*.
-  : Use sizeof(variable) for read(, instead of sizeof(type).
+While older kernel's memory is used to save elf headers, it is not a
+location that is known to have a memory error.
 
+There could be a case where either a new memory error surfaces in the
+older kernel/inside the kdump kernel's memory region or a previously
+hw-poisoned memory is consumed by the new kernel, during which
+we suspect that the kdump kernel would reboot...but given the small time
+window during which it operates such a situation is going to be very
+rare.
 
----
+> > 
+> > > As Andi said, you anyway will require disabling MCE temporarily in second
+> > > kernel. So that should allay the concern that we might run into second
+> > > MCE while trying to read the vmcore.
+> > > 
+> > 
+> > The processor manuals don't define the behaviour for a read operation
+> > upon a corrupt memory location. So the consequences for a read after
+> > disabling MCE is unknown (as I've mentioned here:
+> > https://lkml.org/lkml/2011/5/27/258). 
+> > 
+> 
+> First of all a user can simply have a configuration to extract MCE
+> registers and your concern is addressed. Eric W. Biederman said that
+> he had got bunch of MCE triggered dumps also and things were fine. I think
+> we are over engineering this. In the first step lets just keep it simple
+> and just export MCE registers as a note. If accessing rest of regions
+> becomes a issue in real life, then we can have a look at this again.
 
-Fix parsing of the memory region information from the device-tree.
+Again, this suggestion is based on the fact that the coredump from the
+first kernel is available...but the as stated before, capturing the
+coredump from first kernel involves a compulsory read operation over a
+memory location that is known to have an uncorrected error with the
+problems described above.
 
-The format of memory/reg is based on the #address-cells,#size-cells. Currently,
-the kexec-tools doesn't use the above values in parsing the memory/reg values.
-Hence the kexec cannot handle cases where #address-cells, #size-cells are
-different, (for e.g, PPC440X ).
+> > > A user might want to extract just the dmesg buffers also after MCE from
+> > > vmcore.
+> > >
+> > > What I am saying is that this sounds more like a policy. Don't enforce
+> > > it in kernel. Probably give user MCE registers as part of ELF note of
+> > > vmcore. Now leave it up to user what data he wants to extract from vmcore.
+> > > Just the MCE registers or something more then that.
+> > 
+> > I'm unsure, at the moment, as to what it actually entails to extract
+> > dmesg buffers from the old kernel's memory; but given that there exists
+> > a corrupt memory region with unknown consequences for read operations
+> > upon it, I doubt if it is a safe idea to allow user-space application to
+> > navigate through the kernel data-structures to extract the dmesg.
+> > 
+> > Alternatively, we might leave MCE enabled for the kdump kernel and
+> > modify the user-space application to turn resilient to SIGBUS signal. So
+> > if it reads a corrupt memory region, it will receive a signal from
+> > do_machine_check() upon which it can skip that particular address and/or
+> > fill it with zeroes (or somesuch). We haven't gone through the
+> > details....but just some loud thinking
+> 
+> Again, I think simplest would be to disable MCE while we are accessing
+> previous kernel's memory and configure user space to either just extract
+> MCE registers. If you are too paranoid, you can do it in two steps. First
+> save MCE registes and make sure these are on disk and then go for
+> extracting rest of the info like dmesg and in the process if you go down,
+> anyway it was best effort thing.
+>
 
-This patch introduces a read_memory_region_limits(), which parses the
-memory/reg contents based on the values of #address-cells and #size-cells.
+The problem here is that the effect of a read operation over a location
+with memory error (with MCEs disabled) is unknown. We are making
+attempts to characterise the behaviour in conjunction with the hardware
+folks and I will share any information that we learn in this regard.
 
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+Thanks,
+K.Prasad
 
----
-  kexec/arch/ppc/crashdump-powerpc.c |   33 +------
-  kexec/arch/ppc/fs2dt.c             |   14 ---
-  kexec/arch/ppc/kexec-ppc.c         |  158 ++++++++++++++++++++++++++-----------
-  kexec/arch/ppc/kexec-ppc.h         |    6 +
-  4 files changed, 129 insertions(+), 82 deletions(-)
-
-Index: kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.c
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/arch/ppc/kexec-ppc.c
-+++ kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.c
-@@ -16,6 +16,7 @@
-  #include <dirent.h>
-  #include <stdlib.h>
-  #include <sys/stat.h>
-+#include <fcntl.h>
-  #include <unistd.h>
-  
-  #include "../../kexec.h"
-@@ -26,6 +27,7 @@
-  
-  #include "config.h"
-  
-+unsigned long dt_address_cells = 0, dt_size_cells = 0;
-  uint64_t rmo_top;
-  unsigned long long crash_base = 0, crash_size = 0;
-  unsigned long long initrd_base = 0, initrd_size = 0;
-@@ -34,6 +36,98 @@ unsigned int rtas_base, rtas_size;
-  int max_memory_ranges;
-  const char *ramdisk;
-  
-+/*
-+ * Reads the #address-cells and #size-cells on this platform.
-+ * This is used to parse the memory/reg info from the device-tree
-+ */
-+int init_memory_region_info()
-+{
-+	size_t res = 0;
-+	int fd;
-+	char *file;
-+
-+	file = "/proc/device-tree/#address-cells";
-+	fd = open(file, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "Unable to open %s\n", file);
-+		return -1;
-+	}
-+
-+	res = read(fd, &dt_address_cells, sizeof(dt_address_cells));
-+	if (res != sizeof(dt_address_cells)) {
-+		fprintf(stderr, "Error reading %s\n", file);
-+		return -1;
-+	}
-+	close(fd);
-+
-+	file = "/proc/device-tree/#size-cells";
-+	fd = open(file, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "Unable to open %s\n", file);
-+		return -1;
-+	}
-+
-+	res = read(fd, &dt_size_cells, sizeof(dt_size_cells));
-+	if (res != sizeof(dt_size_cells)) {
-+		fprintf(stderr, "Error reading %s\n", file);
-+		return -1;
-+	}
-+	close(fd);
-+
-+	/* Convert the sizes into bytes */
-+	dt_size_cells *= sizeof(unsigned long);
-+	dt_address_cells *= sizeof(unsigned long);
-+
-+	return 0;
-+}
-+
-+#define MAXBYTES 128
-+/*
-+ * Reads the memory region info from the device-tree node pointed
-+ * by @fd and fills the *start, *end with the boundaries of the region
-+ */
-+int read_memory_region_limits(int fd, unsigned long long *start,
-+				unsigned long long *end)
-+{
-+	char buf[MAXBYTES];
-+	unsigned long *p;
-+	unsigned long nbytes = dt_address_cells + dt_size_cells;
-+
-+	if (lseek(fd, 0, SEEK_SET) == -1) {
-+		fprintf(stderr, "Error in file seek\n");
-+		return -1;
-+	}
-+	if (read(fd, buf, nbytes) != nbytes) {
-+		fprintf(stderr, "Error reading the memory region info\n");
-+		return -1;
-+	}
-+
-+	p = (unsigned long*)buf;
-+	if (dt_address_cells == sizeof(unsigned long)) {
-+		*start = p[0];
-+		p++;
-+	} else if (dt_address_cells == sizeof(unsigned long long)) {
-+		*start = ((unsigned long long *)p)[0];
-+		p = (unsigned long long *)p + 1;
-+	} else {
-+		fprintf(stderr, "Unsupported value for #address-cells : %ld\n",
-+					dt_address_cells);
-+		return -1;
-+	}
-+
-+	if (dt_size_cells == sizeof(unsigned long))
-+		*end = *start + p[0];
-+	else if (dt_size_cells == sizeof(unsigned long long))
-+		*end = *start + ((unsigned long long *)p)[0];
-+	else {
-+		fprintf(stderr, "Unsupported value for #size-cells : %ld\n",
-+					dt_size_cells);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
-  void arch_reuse_initrd(void)
-  {
-  	reuse_initrd = 1;
-@@ -182,9 +276,6 @@ static int sort_base_ranges(void)
-  	return 0;
-  }
-  
--
--#define MAXBYTES 128
--
-  static int realloc_memory_ranges(void)
-  {
-  	size_t memory_range_len;
-@@ -228,9 +319,8 @@ static int get_base_ranges(void)
-  	char fname[256];
-  	char buf[MAXBYTES];
-  	DIR *dir, *dmem;
--	FILE *file;
-  	struct dirent *dentry, *mentry;
--	int n;
-+	int n, fd;
-  
-  	if ((dir = opendir(device_tree)) == NULL) {
-  		perror(device_tree);
-@@ -248,54 +338,39 @@ static int get_base_ranges(void)
-  			return -1;
-  		}
-  		while ((mentry = readdir(dmem)) != NULL) {
-+			unsigned long long start, end;
-+
-  			if (strcmp(mentry->d_name, "reg"))
-  				continue;
-  			strcat(fname, "/reg");
--			if ((file = fopen(fname, "r")) == NULL) {
-+			if ((fd = open(fname, O_RDONLY)) < 0) {
-  				perror(fname);
-  				closedir(dmem);
-  				closedir(dir);
-  				return -1;
-  			}
--			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
--				perror(fname);
--				fclose(file);
-+			if (read_memory_region_limits(fd, &start, &end) != 0) {
-+				close(fd);
-  				closedir(dmem);
-  				closedir(dir);
-  				return -1;
-  			}
-  			if (local_memory_ranges >= max_memory_ranges) {
-  				if (realloc_memory_ranges() < 0){
--					fclose(file);
-+					close(fd);
-  					break;
-  				}
-  			}
-  
--			if (n == sizeof(uint32_t) * 2) {
--				base_memory_range[local_memory_ranges].start =
--					((uint32_t *)buf)[0];
--				base_memory_range[local_memory_ranges].end  =
--					base_memory_range[local_memory_ranges].start +
--					((uint32_t *)buf)[1];
--			}
--			else if (n == sizeof(uint64_t) * 2) {
--				base_memory_range[local_memory_ranges].start =
--                                        ((uint64_t *)buf)[0];
--                                base_memory_range[local_memory_ranges].end  =
--                                        base_memory_range[local_memory_ranges].start +
--                                        ((uint64_t *)buf)[1];
--			}
--			else {
--				fprintf(stderr, "Mem node has invalid size: %d\n", n);
--				return -1;
--			}
-+			base_memory_range[local_memory_ranges].start = start;
-+			base_memory_range[local_memory_ranges].end  = end;
-  			base_memory_range[local_memory_ranges].type = RANGE_RAM;
-  			local_memory_ranges++;
-  			dbgprintf("%016llx-%016llx : %x\n",
-  					base_memory_range[local_memory_ranges-1].start,
-  					base_memory_range[local_memory_ranges-1].end,
-  					base_memory_range[local_memory_ranges-1].type);
--			fclose(file);
-+			close(fd);
-  		}
-  		closedir(dmem);
-  	}
-@@ -572,29 +647,19 @@ static int get_devtree_details(unsigned
-  
-  		if (!strncmp(dentry->d_name, "memory@", 7) ||
-  				!strcmp(dentry->d_name, "memory")) {
-+			int fd;
-  			strcat(fname, "/reg");
--			if ((file = fopen(fname, "r")) == NULL) {
-+			if ((fd = open(fname, O_RDONLY)) < 0) {
-  				perror(fname);
-  				goto error_opencdir;
-  			}
--			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
--				perror(fname);
--				goto error_openfile;
--			}
--			if (n == sizeof(uint64_t)) {
--				rmo_base = ((uint32_t *)buf)[0];
--				rmo_top = rmo_base + ((uint32_t *)buf)[1];
--			} else if (n == 16) {
--				rmo_base = ((uint64_t *)buf)[0];
--				rmo_top = rmo_base + ((uint64_t *)buf)[1];
--			} else {
--				fprintf(stderr, "Mem node has invalid size: %d\n", n);
-+			if (read_memory_region_limits(fd, &rmo_base, &rmo_top) != 0)
-  				goto error_openfile;
--			}
-+
-  			if (rmo_top > 0x30000000UL)
-  				rmo_top = 0x30000000UL;
-  
--			fclose(file);
-+			close(fd);
-  			closedir(cdir);
-  		} /* memory */
-  
-@@ -778,6 +843,11 @@ int get_memory_ranges_dt(struct memory_r
-  int get_memory_ranges(struct memory_range **range, int *ranges,
-  					unsigned long kexec_flags)
-  {
-+	int res = 0;
-+
-+	res = init_memory_region_info();
-+	if (res != 0)
-+		return res;
-  #ifdef WITH_GAMECUBE
-  	return get_memory_ranges_gc(range, ranges, kexec_flags);
-  #else
-Index: kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.h
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/arch/ppc/kexec-ppc.h
-+++ kexec-tools-2.0.4/kexec/arch/ppc/kexec-ppc.h
-@@ -69,6 +69,12 @@ extern unsigned long long initrd_base, i
-  extern unsigned long long ramdisk_base, ramdisk_size;
-  extern unsigned char reuse_initrd;
-  extern const char *ramdisk;
-+
-+/* Method to parse the memory/reg nodes in device-tree */
-+extern unsigned long dt_address_cells, dt_size_cells;
-+extern int init_memory_region_info(void);
-+extern int read_memory_region_limits(int fd, unsigned long long *start,
-+					unsigned long long *end);
-  #define COMMAND_LINE_SIZE	512 /* from kernel */
-  /*fs2dt*/
-  void reserve(unsigned long long where, unsigned long long length);
-Index: kexec-tools-2.0.4/kexec/arch/ppc/crashdump-powerpc.c
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/arch/ppc/crashdump-powerpc.c
-+++ kexec-tools-2.0.4/kexec/arch/ppc/crashdump-powerpc.c
-@@ -81,7 +81,7 @@ static int get_crash_memory_ranges(struc
-  	char fname[256];
-  	char buf[MAXBYTES];
-  	DIR *dir, *dmem;
--	FILE *file;
-+	int fd;
-  	struct dirent *dentry, *mentry;
-  	int i, n, crash_rng_len = 0;
-  	unsigned long long start, end, cstart, cend;
-@@ -123,17 +123,16 @@ static int get_crash_memory_ranges(struc
-  			if (strcmp(mentry->d_name, "reg"))
-  				continue;
-  			strcat(fname, "/reg");
--			file = fopen(fname, "r");
--			if (!file) {
-+			fd = open(fname, O_RDONLY);
-+			if (fd < 0) {
-  				perror(fname);
-  				closedir(dmem);
-  				closedir(dir);
-  				goto err;
-  			}
--			n = fread(buf, 1, MAXBYTES, file);
--			if (n < 0) {
--				perror(fname);
--				fclose(file);
-+			n = read_memory_region_limits(fd, &start, &end);
-+			if (n != 0) {
-+				close(fd);
-  				closedir(dmem);
-  				closedir(dir);
-  				goto err;
-@@ -146,24 +145,6 @@ static int get_crash_memory_ranges(struc
-  				goto err;
-  			}
-  
--			/*
--			 * FIXME: This code fails on platforms that
--			 * have more than one memory range specified
--			 * in the device-tree's /memory/reg property.
--			 * or where the #address-cells and #size-cells
--			 * are not identical.
--			 *
--			 * We should interpret the /memory/reg property
--			 * based on the values of the #address-cells and
--			 * #size-cells properites.
--			 */
--			if (n == (sizeof(unsigned long) * 2)) {
--				start = ((unsigned long *)buf)[0];
--				end = start + ((unsigned long *)buf)[1];
--			} else {
--				start = ((unsigned long long *)buf)[0];
--				end = start + ((unsigned long long *)buf)[1];
--			}
-  			if (start == 0 && end >= (BACKUP_SRC_END + 1))
-  				start = BACKUP_SRC_END + 1;
-  
-@@ -212,7 +193,7 @@ static int get_crash_memory_ranges(struc
-  					= RANGE_RAM;
-  				memory_ranges++;
-  			}
--			fclose(file);
-+			close(fd);
-  		}
-  		closedir(dmem);
-  	}
-Index: kexec-tools-2.0.4/kexec/arch/ppc/fs2dt.c
-===================================================================
---- kexec-tools-2.0.4.orig/kexec/arch/ppc/fs2dt.c
-+++ kexec-tools-2.0.4/kexec/arch/ppc/fs2dt.c
-@@ -137,21 +137,11 @@ static void add_usable_mem_property(int
-  	if (strncmp(bname, "/memory@", 8) && strcmp(bname, "/memory"))
-  		return;
-  
--	if (len < 2 * sizeof(unsigned long))
--		die("unrecoverable error: not enough data for mem property\n");
--	len = 2 * sizeof(unsigned long);
--
-  	if (lseek(fd, 0, SEEK_SET) < 0)
-  		die("unrecoverable error: error seeking in \"%s\": %s\n",
-  		    pathname, strerror(errno));
--	if (read(fd, buf, len) != len)
--		die("unrecoverable error: error reading \"%s\": %s\n",
--		    pathname, strerror(errno));
--
--	if (~0ULL - buf[0] < buf[1])
--		die("unrecoverable error: mem property overflow\n");
--	base = buf[0];
--	end = base + buf[1];
-+	if (read_memory_region_limits(fd, &base, &end) != 0)
-+		die("unrecoverable error: error parsing memory/reg limits\n");
-  
-  	for (range = 0; range < usablemem_rgns.size; range++) {
-  		loc_base = usablemem_rgns.ranges[range].start;
 
 _______________________________________________
 kexec mailing list
