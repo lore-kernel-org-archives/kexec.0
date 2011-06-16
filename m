@@ -1,24 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.31.143])
+Received: from e28smtp02.in.ibm.com ([122.248.162.2])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QXA4h-0005W9-8o
-	for kexec@lists.infradead.org; Thu, 16 Jun 2011 10:45:26 +0000
-Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
-	by e23smtp01.au.ibm.com (8.14.4/8.13.1) with ESMTP id p5GAf0Is013483
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 20:41:00 +1000
-Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
-	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p5GAiGU71515734
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 20:44:16 +1000
-Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
-	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p5GAjHJ5024147
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 20:45:17 +1000
+	id 1QXAiQ-0005t6-Hc
+	for kexec@lists.infradead.org; Thu, 16 Jun 2011 11:26:29 +0000
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+	by e28smtp02.in.ibm.com (8.14.4/8.13.1) with ESMTP id p5GBQLia014269
+	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p5GBQLXl3645534
+	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p5GBQKPn027167
+	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
 From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 Subject: [PATCH v2] kexec-tools: powerpc: Use the #address-cells information
 	to parsememory/reg
-Date: Thu, 16 Jun 2011 16:15:13 +0530
-Message-ID: <20110616104441.8065.46187.stgit@suzukikp.in.ibm.com>
+Date: Thu, 16 Jun 2011 16:56:20 +0530
+Message-ID: <20110616112445.12515.72987.stgit@suzukikp.in.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,9 +32,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Simon Horman <horms@verge.net.au>
 Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, David Laight <David.Laight@ACULAB.COM>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Suzuki K. Poulose" <suzuki@in.ibm.com>
 
+
+The problem was with the mail client. Also, mistyped the "To" field in the previous
+one. Resending.
+
+ChangeLog from V1:
+	* Changed the interface for read_memory_region_limits to use 'int fd'
+	* Use sizeof(variable) for read(, instead of sizeof(type).
+
+---
 The format of memory/reg is based on the #address-cells,#size-cells. Currently,
 the kexec-tools doesn't use the above values in parsing the memory/reg values.
 Hence the kexec cannot handle cases where #address-cells, #size-cells are
