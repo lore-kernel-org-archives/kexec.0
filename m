@@ -1,34 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp04.in.ibm.com ([122.248.162.4])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QWfVW-0003TA-Td
-	for kexec@lists.infradead.org; Wed, 15 Jun 2011 02:07:04 +0000
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
-	by e28smtp04.in.ibm.com (8.14.4/8.13.1) with ESMTP id p5F26rol021801
-	for <kexec@lists.infradead.org>; Wed, 15 Jun 2011 07:36:53 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p5F26q1b3100842
-	for <kexec@lists.infradead.org>; Wed, 15 Jun 2011 07:36:52 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p5F26qgT016141
-	for <kexec@lists.infradead.org>; Wed, 15 Jun 2011 07:36:52 +0530
-Date: Wed, 15 Jun 2011 07:36:16 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: Re: [RFC Patch 4/6] PANIC_MCE: Introduce a new panic flag for fatal
-	MCE, capture related information
-Message-ID: <20110615020616.GA2070@in.ibm.com>
-References: <20110526170722.GB23266@in.ibm.com>
-	<20110526171521.GD17988@in.ibm.com>
-	<m1fwo09g15.fsf@fess.ebiederm.org>
-	<20110531174043.GA2000@in.ibm.com>
-	<20110608171632.GA11077@in.ibm.com>
-	<m162obt5pi.fsf@fess.ebiederm.org>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QX0Cz-0008NZ-HI
+	for kexec@lists.infradead.org; Thu, 16 Jun 2011 00:13:19 +0000
+Date: Thu, 16 Jun 2011 09:12:45 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC][PATCH] kexec-tools: powerpc: Use the #address-cells
+	information to parsememory/reg - V2
+Message-ID: <20110616001244.GJ28947@verge.net.au>
+References: <4DEF18FF.6070206@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <m162obt5pi.fsf@fess.ebiederm.org>
-Reply-To: prasad@linux.vnet.ibm.com
+In-Reply-To: <4DEF18FF.6070206@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,80 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>
+To: Suzuki Poulose <suzuki@in.ibm.com>
+Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, David Laight <David.Laight@ACULAB.COM>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Sun, Jun 12, 2011 at 08:44:25AM -0700, Eric W. Biederman wrote:
-> "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+On Wed, Jun 08, 2011 at 12:08:55PM +0530, Suzuki Poulose wrote:
+> Hi,
 > 
-> > On Tue, May 31, 2011 at 11:10:43PM +0530, K.Prasad wrote:
-> >> On Fri, May 27, 2011 at 11:04:06AM -0700, Eric W. Biederman wrote:
-> >> > "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
-> >> > 
-[snipped]
-> > So our fears arise due to the premise that reading a faulty memory
-> > location leads to undesirable consequences (whether MCE is disabled
-> > or not) and would like to modify the OS to avoid such an operation.
-> >
-> > While the ugliness of the patch (which I believe is due to
-> > non-separation of generic and arch-specific code) is something that can
-> > be addressed, I hope that the reasons for the patch are seen to be
-> > valid.
+> This is version 2 of the patch
 > 
-> Yes.  The objection really is to not exporting the information you need
-> to solve this in userspace and then fixing the one userspace tool that
-> uses this to work correctly.
+> Changes from Version 1 :
+>  : Changed the interface for read_memory_region_limits to use 'int fd'
+> 	instead of FILE*.
+>  : Use sizeof(variable) for read(, instead of sizeof(type).
 > 
-> > Here's an attempt to make the slimdump patch more generic that can be
-> > used by any hardware generated crash to prevent a coredump from being
-> > captured (compile tested only).
-> >
-> > I'll post a more formal version of the patch upon hearing further
-> > comments.
 > 
-> But this is not the way.  The kernel does not generate the core dump
-> it just gives the information needed for userspace to generate the core
-> dump.
+> ---
 > 
-> Giving a little more information to userspace and letting the program
-> that reads vmcore have the policy on what do is the preferred way to do
-> this.
+> Fix parsing of the memory region information from the device-tree.
 > 
-> You are asking for yet another way to filter crashdumps which is
-> entirely reasonable.  Patching out the ability in the kernel for the
-> rest of us to have our own policies of what to dump is unreasonable.
->
+> The format of memory/reg is based on the #address-cells,#size-cells. Currently,
+> the kexec-tools doesn't use the above values in parsing the memory/reg values.
+> Hence the kexec cannot handle cases where #address-cells, #size-cells are
+> different, (for e.g, PPC440X ).
+> 
+> This patch introduces a read_memory_region_limits(), which parses the
+> memory/reg contents based on the values of #address-cells and #size-cells.
+> 
+> Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
 
-I think I get the drift of your idea. So adding a new elf-note to
-indicate the cause of crash is fine...and continue to allow the kernel
-to provide a way to read old kernel memory irrespective of the crash.
+Hi,
 
-Instead, make the user-space tool (makedumpfile?) more intelligent to
-recognise the cause of crash as fatal MCE or any other hardware-error
-induced crash (using the new elf-note as a clue) and abstain from
-reading the contents of the old memory to create a full coredump. A
-different user with a different need might want to try out something
-adventurous (by reading the full coredump) but let not the kernel
-prevent it, which sounds fine. I'll get some patches ready to this
-effect.
-
-However, there's another part of the problem - wherein pages with
-uncorrectable memory errors which are detected during scrubbing, marked
-as 'hardware poisoned' (with PG_hwpoison flag) in order to be quarantined,
-may be read during creation of coredump initiated through usual kernel
-panics (software bug or otherwise).
-
-This will result in a fatal MCE for the kdump kernel and will cause a
-reboot of the system without any coredump (and possibly without any
-message in /var/log/messages). We're contemplating ways to avoid such a
-situation and the panic+crash_kexec+vmcore/makedumpfile code may
-require suitable changes to address this issue.
-
-Let us know your views on this.
-
-Thanks,
-K.Prasad
-
+this does not seem to apply to the master branch of
+git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
 _______________________________________________
 kexec mailing list
