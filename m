@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp02.in.ibm.com ([122.248.162.2])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QXAiQ-0005t6-Hc
-	for kexec@lists.infradead.org; Thu, 16 Jun 2011 11:26:29 +0000
-Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
-	by e28smtp02.in.ibm.com (8.14.4/8.13.1) with ESMTP id p5GBQLia014269
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p5GBQLXl3645534
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p5GBQKPn027167
-	for <kexec@lists.infradead.org>; Thu, 16 Jun 2011 16:56:21 +0530
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Subject: [PATCH v2] kexec-tools: powerpc: Use the #address-cells information
-	to parsememory/reg
-Date: Thu, 16 Jun 2011 16:56:20 +0530
-Message-ID: <20110616112445.12515.72987.stgit@suzukikp.in.ibm.com>
+	id 1QXENB-00018T-L5
+	for kexec@lists.infradead.org; Thu, 16 Jun 2011 15:20:47 +0000
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
+	enabling interrupt
+Date: Thu, 16 Jun 2011 11:19:30 -0400
 MIME-Version: 1.0
+In-Reply-To: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
+References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
+Message-Id: <ABCC2C38C9CAC4indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,401 +23,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, David Laight <David.Laight@ACULAB.COM>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Suzuki K. Poulose" <suzuki@in.ibm.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Ingo Molnar <mingo@elte.hu>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
+Just a reminder...
 
-The problem was with the mail client. Also, mistyped the "To" field in the previous
-one. Resending.
+Thanks for acks, but I'm still waiting for inclusion.
+I tested 3.0.0-rc3 and kdump still failed due to pending IPI
+from 1st kernel. Need this patch to fix it.
 
-ChangeLog from V1:
-	* Changed the interface for read_memory_region_limits to use 'int fd'
-	* Use sizeof(variable) for read(, instead of sizeof(type).
+Thanks,
+Takao Indoh
 
----
-The format of memory/reg is based on the #address-cells,#size-cells. Currently,
-the kexec-tools doesn't use the above values in parsing the memory/reg values.
-Hence the kexec cannot handle cases where #address-cells, #size-cells are
-different, (for e.g, PPC440X ).
+On Tue, 29 Mar 2011 12:35:04 -0400, Takao Indoh wrote:
 
-This patch introduces a read_memory_region_limits(), which parses the
-memory/reg contents based on the values of #address-cells and #size-cells.
-
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
----
-
- kexec/arch/ppc/crashdump-powerpc.c |   33 ++------
- kexec/arch/ppc/fs2dt.c             |   14 ---
- kexec/arch/ppc/kexec-ppc.c         |  158 ++++++++++++++++++++++++++----------
- kexec/arch/ppc/kexec-ppc.h         |    6 +
- 4 files changed, 129 insertions(+), 82 deletions(-)
-
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index 1dd6485..77a01e1 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -81,7 +81,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 	char fname[256];
- 	char buf[MAXBYTES];
- 	DIR *dir, *dmem;
--	FILE *file;
-+	int fd;
- 	struct dirent *dentry, *mentry;
- 	int i, n, crash_rng_len = 0;
- 	unsigned long long start, end, cstart, cend;
-@@ -123,17 +123,16 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 			if (strcmp(mentry->d_name, "reg"))
- 				continue;
- 			strcat(fname, "/reg");
--			file = fopen(fname, "r");
--			if (!file) {
-+			fd = open(fname, O_RDONLY);
-+			if (fd < 0) {
- 				perror(fname);
- 				closedir(dmem);
- 				closedir(dir);
- 				goto err;
- 			}
--			n = fread(buf, 1, MAXBYTES, file);
--			if (n < 0) {
--				perror(fname);
--				fclose(file);
-+			n = read_memory_region_limits(fd, &start, &end);
-+			if (n != 0) {
-+				close(fd);
- 				closedir(dmem);
- 				closedir(dir);
- 				goto err;
-@@ -146,24 +145,6 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 				goto err;
- 			}
- 
--			/*
--			 * FIXME: This code fails on platforms that
--			 * have more than one memory range specified
--			 * in the device-tree's /memory/reg property.
--			 * or where the #address-cells and #size-cells
--			 * are not identical.
--			 *
--			 * We should interpret the /memory/reg property
--			 * based on the values of the #address-cells and
--			 * #size-cells properites.
--			 */
--			if (n == (sizeof(unsigned long) * 2)) {
--				start = ((unsigned long *)buf)[0];
--				end = start + ((unsigned long *)buf)[1];
--			} else {
--				start = ((unsigned long long *)buf)[0];
--				end = start + ((unsigned long long *)buf)[1];
--			}
- 			if (start == 0 && end >= (BACKUP_SRC_END + 1))
- 				start = BACKUP_SRC_END + 1;
- 
-@@ -212,7 +193,7 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 					= RANGE_RAM;
- 				memory_ranges++;
- 			}
--			fclose(file);
-+			close(fd);
- 		}
- 		closedir(dmem);
- 	}
-diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
-index 238a3f2..733515a 100644
---- a/kexec/arch/ppc/fs2dt.c
-+++ b/kexec/arch/ppc/fs2dt.c
-@@ -137,21 +137,11 @@ static void add_usable_mem_property(int fd, int len)
- 	if (strncmp(bname, "/memory@", 8) && strcmp(bname, "/memory"))
- 		return;
- 
--	if (len < 2 * sizeof(unsigned long))
--		die("unrecoverable error: not enough data for mem property\n");
--	len = 2 * sizeof(unsigned long);
--
- 	if (lseek(fd, 0, SEEK_SET) < 0)
- 		die("unrecoverable error: error seeking in \"%s\": %s\n",
- 		    pathname, strerror(errno));
--	if (read(fd, buf, len) != len)
--		die("unrecoverable error: error reading \"%s\": %s\n",
--		    pathname, strerror(errno));
--
--	if (~0ULL - buf[0] < buf[1])
--		die("unrecoverable error: mem property overflow\n");
--	base = buf[0];
--	end = base + buf[1];
-+	if (read_memory_region_limits(fd, &base, &end) != 0)
-+		die("unrecoverable error: error parsing memory/reg limits\n");
- 
- 	for (range = 0; range < usablemem_rgns.size; range++) {
- 		loc_base = usablemem_rgns.ranges[range].start;
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index db00b96..4e3569f 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -16,6 +16,7 @@
- #include <dirent.h>
- #include <stdlib.h>
- #include <sys/stat.h>
-+#include <fcntl.h>
- #include <unistd.h>
- 
- #include "../../kexec.h"
-@@ -26,6 +27,7 @@
- 
- #include "config.h"
- 
-+unsigned long dt_address_cells = 0, dt_size_cells = 0;
- uint64_t rmo_top;
- unsigned long long crash_base = 0, crash_size = 0;
- unsigned long long initrd_base = 0, initrd_size = 0;
-@@ -34,6 +36,98 @@ unsigned int rtas_base, rtas_size;
- int max_memory_ranges;
- const char *ramdisk;
- 
-+/*
-+ * Reads the #address-cells and #size-cells on this platform.
-+ * This is used to parse the memory/reg info from the device-tree
-+ */
-+int init_memory_region_info()
-+{
-+	size_t res = 0;
-+	int fd;
-+	char *file;
-+
-+	file = "/proc/device-tree/#address-cells";
-+	fd = open(file, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "Unable to open %s\n", file);
-+		return -1;
-+	}
-+
-+	res = read(fd, &dt_address_cells, sizeof(dt_address_cells));
-+	if (res != sizeof(dt_address_cells)) {
-+		fprintf(stderr, "Error reading %s\n", file);
-+		return -1;
-+	}
-+	close(fd);
-+
-+	file = "/proc/device-tree/#size-cells";
-+	fd = open(file, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "Unable to open %s\n", file);
-+		return -1;
-+	}
-+
-+	res = read(fd, &dt_size_cells, sizeof(dt_size_cells));
-+	if (res != sizeof(dt_size_cells)) {
-+		fprintf(stderr, "Error reading %s\n", file);
-+		return -1;
-+	}
-+	close(fd);
-+
-+	/* Convert the sizes into bytes */
-+	dt_size_cells *= sizeof(unsigned long);
-+	dt_address_cells *= sizeof(unsigned long);
-+
-+	return 0;
-+}
-+
-+#define MAXBYTES 128
-+/*
-+ * Reads the memory region info from the device-tree node pointed
-+ * by @fd and fills the *start, *end with the boundaries of the region
-+ */
-+int read_memory_region_limits(int fd, unsigned long long *start,
-+				unsigned long long *end)
-+{
-+	char buf[MAXBYTES];
-+	unsigned long *p;
-+	unsigned long nbytes = dt_address_cells + dt_size_cells;
-+
-+	if (lseek(fd, 0, SEEK_SET) == -1) {
-+		fprintf(stderr, "Error in file seek\n");
-+		return -1;
-+	}
-+	if (read(fd, buf, nbytes) != nbytes) {
-+		fprintf(stderr, "Error reading the memory region info\n");
-+		return -1;
-+	}
-+
-+	p = (unsigned long*)buf;
-+	if (dt_address_cells == sizeof(unsigned long)) {
-+		*start = p[0];
-+		p++;
-+	} else if (dt_address_cells == sizeof(unsigned long long)) {
-+		*start = ((unsigned long long *)p)[0];
-+		p = (unsigned long long *)p + 1;
-+	} else {
-+		fprintf(stderr, "Unsupported value for #address-cells : %ld\n",
-+					dt_address_cells);
-+		return -1;
-+	}
-+
-+	if (dt_size_cells == sizeof(unsigned long))
-+		*end = *start + p[0];
-+	else if (dt_size_cells == sizeof(unsigned long long))
-+		*end = *start + ((unsigned long long *)p)[0];
-+	else {
-+		fprintf(stderr, "Unsupported value for #size-cells : %ld\n",
-+					dt_size_cells);
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
- void arch_reuse_initrd(void)
- {
- 	reuse_initrd = 1;
-@@ -182,9 +276,6 @@ static int sort_base_ranges(void)
- 	return 0;
- }
- 
--
--#define MAXBYTES 128
--
- static int realloc_memory_ranges(void)
- {
- 	size_t memory_range_len;
-@@ -228,9 +319,8 @@ static int get_base_ranges(void)
- 	char fname[256];
- 	char buf[MAXBYTES];
- 	DIR *dir, *dmem;
--	FILE *file;
- 	struct dirent *dentry, *mentry;
--	int n;
-+	int n, fd;
- 
- 	if ((dir = opendir(device_tree)) == NULL) {
- 		perror(device_tree);
-@@ -248,54 +338,39 @@ static int get_base_ranges(void)
- 			return -1;
- 		}
- 		while ((mentry = readdir(dmem)) != NULL) {
-+			unsigned long long start, end;
-+
- 			if (strcmp(mentry->d_name, "reg"))
- 				continue;
- 			strcat(fname, "/reg");
--			if ((file = fopen(fname, "r")) == NULL) {
-+			if ((fd = open(fname, O_RDONLY)) < 0) {
- 				perror(fname);
- 				closedir(dmem);
- 				closedir(dir);
- 				return -1;
- 			}
--			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
--				perror(fname);
--				fclose(file);
-+			if (read_memory_region_limits(fd, &start, &end) != 0) {
-+				close(fd);
- 				closedir(dmem);
- 				closedir(dir);
- 				return -1;
- 			}
- 			if (local_memory_ranges >= max_memory_ranges) {
- 				if (realloc_memory_ranges() < 0){
--					fclose(file);
-+					close(fd);
- 					break;
- 				}
- 			}
- 
--			if (n == sizeof(uint32_t) * 2) {
--				base_memory_range[local_memory_ranges].start =
--					((uint32_t *)buf)[0];
--				base_memory_range[local_memory_ranges].end  =
--					base_memory_range[local_memory_ranges].start +
--					((uint32_t *)buf)[1];
--			}
--			else if (n == sizeof(uint64_t) * 2) {
--				base_memory_range[local_memory_ranges].start =
--                                        ((uint64_t *)buf)[0];
--                                base_memory_range[local_memory_ranges].end  =
--                                        base_memory_range[local_memory_ranges].start +
--                                        ((uint64_t *)buf)[1];
--			}
--			else {
--				fprintf(stderr, "Mem node has invalid size: %d\n", n);
--				return -1;
--			}
-+			base_memory_range[local_memory_ranges].start = start;
-+			base_memory_range[local_memory_ranges].end  = end;
- 			base_memory_range[local_memory_ranges].type = RANGE_RAM;
- 			local_memory_ranges++;
- 			dbgprintf("%016llx-%016llx : %x\n",
- 					base_memory_range[local_memory_ranges-1].start,
- 					base_memory_range[local_memory_ranges-1].end,
- 					base_memory_range[local_memory_ranges-1].type);
--			fclose(file);
-+			close(fd);
- 		}
- 		closedir(dmem);
- 	}
-@@ -572,29 +647,19 @@ static int get_devtree_details(unsigned long kexec_flags)
- 
- 		if (!strncmp(dentry->d_name, "memory@", 7) ||
- 				!strcmp(dentry->d_name, "memory")) {
-+			int fd;
- 			strcat(fname, "/reg");
--			if ((file = fopen(fname, "r")) == NULL) {
-+			if ((fd = open(fname, O_RDONLY)) < 0) {
- 				perror(fname);
- 				goto error_opencdir;
- 			}
--			if ((n = fread(buf, 1, MAXBYTES, file)) < 0) {
--				perror(fname);
--				goto error_openfile;
--			}
--			if (n == sizeof(uint64_t)) {
--				rmo_base = ((uint32_t *)buf)[0];
--				rmo_top = rmo_base + ((uint32_t *)buf)[1];
--			} else if (n == 16) {
--				rmo_base = ((uint64_t *)buf)[0];
--				rmo_top = rmo_base + ((uint64_t *)buf)[1];
--			} else {
--				fprintf(stderr, "Mem node has invalid size: %d\n", n);
-+			if (read_memory_region_limits(fd, &rmo_base, &rmo_top) != 0)
- 				goto error_openfile;
--			}
-+
- 			if (rmo_top > 0x30000000UL)
- 				rmo_top = 0x30000000UL;
- 
--			fclose(file);
-+			close(fd);
- 			closedir(cdir);
- 		} /* memory */
- 
-@@ -778,6 +843,11 @@ int get_memory_ranges_dt(struct memory_range **range, int *ranges,
- int get_memory_ranges(struct memory_range **range, int *ranges,
- 					unsigned long kexec_flags)
- {
-+	int res = 0;
-+
-+	res = init_memory_region_info();
-+	if (res != 0)
-+		return res;
- #ifdef WITH_GAMECUBE
- 	return get_memory_ranges_gc(range, ranges, kexec_flags);
- #else
-diff --git a/kexec/arch/ppc/kexec-ppc.h b/kexec/arch/ppc/kexec-ppc.h
-index 7f96be8..68728c6 100644
---- a/kexec/arch/ppc/kexec-ppc.h
-+++ b/kexec/arch/ppc/kexec-ppc.h
-@@ -69,6 +69,12 @@ extern unsigned long long initrd_base, initrd_size;
- extern unsigned long long ramdisk_base, ramdisk_size;
- extern unsigned char reuse_initrd;
- extern const char *ramdisk;
-+
-+/* Method to parse the memory/reg nodes in device-tree */
-+extern unsigned long dt_address_cells, dt_size_cells;
-+extern int init_memory_region_info(void);
-+extern int read_memory_region_limits(int fd, unsigned long long *start,
-+					unsigned long long *end);
- #define COMMAND_LINE_SIZE	512 /* from kernel */
- /*fs2dt*/
- void reserve(unsigned long long where, unsigned long long length);
+>Hi all,
+>
+>This patch renames init_call_single_data() to call_function_init() and
+>calls it in start_kernel() so that call_single_queue can be initialized
+>before enabling interrupt.
+>
+>There is a problem that kdump(2nd kernel) sometimes hangs up due to
+>pending IPI from 1st kernel. Kernel panic occurs because IPI comes
+>before call_single_queue is initialized. The details are as follows.
+>(1) 2nd kernel boot up
+>(2) A pending IPI from 1st kernel comes when irqs are first enabled
+>    in start_kernel().
+>(3) Kernel tries to handle the interrupt, but call_single_queue is not
+>    initialized yet at this point. As a result, in the
+>    generic_smp_call_function_single_interrupt(), NULL pointer
+>    dereference occurs when list_replace_init() tries to access
+>    &q->list.next.
+>Therefore this patch changes the name of init_call_single_data() to
+>call_function_init() and calls it before local_irq_enable() in
+>start_kernel().
+>
+>v2:
+>- Rename init_call_single_data() to call_function_init() and calls it in
+>  start_kernel()
+>- Change insert position in start_kernel().
+>- Adjust for CONFIG_SMP/CONFIG_USE_GENERIC_SMP_HELPERS options
+>- Rebased to Linus's latest tree
+>
+>v1:
+>https://lkml.org/lkml/2011/3/25/317
+>- Divide init_call_single_data() into two functions,
+>   o init_call_single_data: initialize call_single_queue
+>   o init_hotplug_cfd: initialize hotplug_cfd_notifier
+>  And call init_call_single_data before local_irq_enable() in
+>  start_kernel().
+>
+>v0:
+>https://lkml.org/lkml/2011/3/23/417
+>- In generic_smp_call_function_single_interrupt(), check if
+>  call_single_queue was initialized or not, and just return if not
+>  initialized.
+>
+>Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+>---
+> include/linux/smp.h |    5 ++++-
+> init/main.c         |    1 +
+> kernel/smp.c        |    5 +----
+> 3 files changed, 6 insertions(+), 5 deletions(-)
+>
+>diff --git a/include/linux/smp.h b/include/linux/smp.h
+>index 74243c8..4fb3eac 100644
+>--- a/include/linux/smp.h
+>+++ b/include/linux/smp.h
+>@@ -85,12 +85,15 @@ int smp_call_function_any(const struct cpumask *mask,
+>  * Generic and arch helpers
+>  */
+> #ifdef CONFIG_USE_GENERIC_SMP_HELPERS
+>+void __init call_function_init(void);
+> void generic_smp_call_function_single_interrupt(void);
+> void generic_smp_call_function_interrupt(void);
+> void ipi_call_lock(void);
+> void ipi_call_unlock(void);
+> void ipi_call_lock_irq(void);
+> void ipi_call_unlock_irq(void);
+>+#else
+>+static inline void call_function_init(void) { }
+> #endif
+> 
+> /*
+>@@ -144,7 +147,7 @@ static inline void smp_send_reschedule(int cpu) { }
+> #define smp_prepare_boot_cpu()			do {} while (0)
+> #define smp_call_function_many(mask, func, info, wait) \
+> 			(up_smp_call_function(func, info))
+>-static inline void init_call_single_data(void) { }
+>+static inline void call_function_init(void) { }
+> 
+> static inline int
+> smp_call_function_any(const struct cpumask *mask, smp_call_func_t func,
+>diff --git a/init/main.c b/init/main.c
+>index 4a9479e..12821d1 100644
+>--- a/init/main.c
+>+++ b/init/main.c
+>@@ -539,6 +539,7 @@ asmlinkage void __init start_kernel(void)
+> 	timekeeping_init();
+> 	time_init();
+> 	profile_init();
+>+	call_function_init();
+> 	if (!irqs_disabled())
+> 		printk(KERN_CRIT "start_kernel(): bug: interrupts were "
+> 				 "enabled early\n");
+>diff --git a/kernel/smp.c b/kernel/smp.c
+>index 73a1951..fb67dfa 100644
+>--- a/kernel/smp.c
+>+++ b/kernel/smp.c
+>@@ -74,7 +74,7 @@ static struct notifier_block __cpuinitdata 
+>hotplug_cfd_notifier = {
+> 	.notifier_call		= hotplug_cfd,
+> };
+> 
+>-static int __cpuinit init_call_single_data(void)
+>+void __init call_function_init(void)
+> {
+> 	void *cpu = (void *)(long)smp_processor_id();
+> 	int i;
+>@@ -88,10 +88,7 @@ static int __cpuinit init_call_single_data(void)
+> 
+> 	hotplug_cfd(&hotplug_cfd_notifier, CPU_UP_PREPARE, cpu);
+> 	register_cpu_notifier(&hotplug_cfd_notifier);
+>-
+>-	return 0;
+> }
+>-early_initcall(init_call_single_data);
+> 
+> /*
+>  * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
 
 
 _______________________________________________
