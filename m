@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QXKcj-0007Kr-Ce
-	for kexec@lists.infradead.org; Thu, 16 Jun 2011 22:01:14 +0000
-Date: Fri, 17 Jun 2011 07:00:43 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] kexec-tools: powerpc: Use the #address-cells
-	information to parsememory/reg
-Message-ID: <20110616220043.GA2434@verge.net.au>
-References: <20110616104441.8065.46187.stgit@suzukikp.in.ibm.com>
+Received: from mx2.mail.elte.hu ([157.181.151.9])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QXUHo-0002kD-GF
+	for kexec@lists.infradead.org; Fri, 17 Jun 2011 08:20:17 +0000
+Date: Fri, 17 Jun 2011 10:19:11 +0200
+From: Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
+	enabling interrupt
+Message-ID: <20110617081911.GB893@elte.hu>
+References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
+	<ABCC2C38C9CAC4indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110616104441.8065.46187.stgit@suzukikp.in.ibm.com>
+In-Reply-To: <ABCC2C38C9CAC4indou.takao@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,19 +25,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, David Laight <David.Laight@ACULAB.COM>, linux ppc dev <linuxppc-dev@lists.ozlabs.org>
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Jun 16, 2011 at 04:15:13PM +0530, Suzuki K. Poulose wrote:
-> The format of memory/reg is based on the #address-cells,#size-cells. Currently,
-> the kexec-tools doesn't use the above values in parsing the memory/reg values.
-> Hence the kexec cannot handle cases where #address-cells, #size-cells are
-> different, (for e.g, PPC440X ).
+
+* Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
+
+> Just a reminder...
 > 
-> This patch introduces a read_memory_region_limits(), which parses the
-> memory/reg contents based on the values of #address-cells and #size-cells.
+> Thanks for acks, but I'm still waiting for inclusion.
+> I tested 3.0.0-rc3 and kdump still failed due to pending IPI
+> from 1st kernel. Need this patch to fix it.
 
-Thanks, applied.
+For any future patch that has a review discussion (like this one) 
+please collect Acks and resend the patch with the acks included once 
+the discussion results in a final patch, otherwise maintainers might 
+skip the patch as "still being reviewed".
+
+I've collected the acks here and started testing your patch.
+
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
