@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail-pz0-f43.google.com ([209.85.210.43])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QXai9-00071x-7F
-	for kexec@lists.infradead.org; Fri, 17 Jun 2011 15:11:55 +0000
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Subject: Re: [PATCH v2] generic-ipi: Initialize call_single_queue before
-	enabling interrupt
-Date: Fri, 17 Jun 2011 11:11:01 -0400
+	id 1QZ90P-0004Xm-Uh
+	for kexec@lists.infradead.org; Tue, 21 Jun 2011 22:01:10 +0000
+Received: by pzk1 with SMTP id 1so207562pzk.16
+	for <kexec@lists.infradead.org>; Tue, 21 Jun 2011 15:01:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20110617081911.GB893@elte.hu>
-References: <D6CBEE2F420741indou.takao@jp.fujitsu.com>
-	<ABCC2C38C9CAC4indou.takao@jp.fujitsu.com>
-	<20110617081911.GB893@elte.hu>
-Message-Id: <ACCC2D00C516DAindou.takao@jp.fujitsu.com>
+Date: Tue, 21 Jun 2011 15:01:05 -0700
+Message-ID: <BANLkTin7FZLkjqY1-Z_7DvQRgrFe3zYtwQ@mail.gmail.com>
+Subject: initramfs size & crashkernel reserved area
+From: Sujit V <sujit.linux@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +22,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@elte.hu>
-Cc: Jens Axboe <axboe@kernel.dk>, Peter Zijlstra <a.p.zijlstra@chello.nl>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Milton Miller <miltonm@bga.com>, WANG Cong <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
 
-On Fri, 17 Jun 2011 10:19:11 +0200, Ingo Molnar wrote:
+I am observing the following.
 
->
->* Takao Indoh <indou.takao@jp.fujitsu.com> wrote:
->
->> Just a reminder...
->> 
->> Thanks for acks, but I'm still waiting for inclusion.
->> I tested 3.0.0-rc3 and kdump still failed due to pending IPI
->> from 1st kernel. Need this patch to fix it.
->
->For any future patch that has a review discussion (like this one) 
->please collect Acks and resend the patch with the acks included once 
->the discussion results in a final patch, otherwise maintainers might 
->skip the patch as "still being reviewed".
->
->I've collected the acks here and started testing your patch.
+We are using linux 2.6.23 kernel
+crashkernel=128M@16M
 
-Ok, understood. Thanks for your advice.
+We also have few kernel modules in our code base.
 
-Thanks,
-Takao Indoh
+The kernel modules are gzip'ed in the cpio archive which is included
+in the .init.ramfs section of vmlinux
 
+When the size of the .init.ramfs section goes beyond certain limit
+then it corrupts the crash kernel reserved area.
 
->
->Thanks,
->
->	Ingo
+If the .init.ramfs size is 0x33d0f6 then things work ok.
+
+If the init.ramfs size is 0x4be430 then it corrupts the crashkernel area.
+
+Any pointers for further debugging?
 
 _______________________________________________
 kexec mailing list
