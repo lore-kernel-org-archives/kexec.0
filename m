@@ -1,15 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-pz0-f43.google.com ([209.85.210.43])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QZ90P-0004Xm-Uh
-	for kexec@lists.infradead.org; Tue, 21 Jun 2011 22:01:10 +0000
-Received: by pzk1 with SMTP id 1so207562pzk.16
-	for <kexec@lists.infradead.org>; Tue, 21 Jun 2011 15:01:05 -0700 (PDT)
-MIME-Version: 1.0
-Date: Tue, 21 Jun 2011 15:01:05 -0700
-Message-ID: <BANLkTin7FZLkjqY1-Z_7DvQRgrFe3zYtwQ@mail.gmail.com>
-Subject: initramfs size & crashkernel reserved area
-From: Sujit V <sujit.linux@gmail.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Date: Wed, 22 Jun 2011 12:44:45 +0900
+Message-Id: <20110622034445.1936.16176.sendpatchset@t400s>
+Subject: [PATCH] ARM: conditional ioremap() fix for copy_oldmem_page()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,30 +11,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+To: linux@arm.linux.org.uk
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, lethal@linux-sh.org, linux-arm-kernel@lists.infradead.org
 
-I am observing the following.
+From: Magnus Damm <damm@opensource.se>
 
-We are using linux 2.6.23 kernel
-crashkernel=128M@16M
+Update the copy_oldmem_page() function to ioremap() only
+when accessing memory that is outside the regular range
+of system memory that is managed by the kernel.
 
-We also have few kernel modules in our code base.
+Without this patch a warning is triggered in the ARM-specific
+ioremap implementation, see WARN_ON(pfn_valid()) in ioremap.c
 
-The kernel modules are gzip'ed in the cpio archive which is included
-in the .init.ramfs section of vmlinux
+The copy_oldmem_page() function is used by the secondary crash
+kernel to access memory using the /proc/vmcore code implemented
+in fs/proc/vmcore.c. To pass information from the first kernel
+to the secondary crash kernel a kernel command line option is
+used to point out where the elf core hdr is located.
 
-When the size of the .init.ramfs section goes beyond certain limit
-then it corrupts the crash kernel reserved area.
+The crash kernel is loaded through kexec-tools which also contains
+code that reserves memory for the elfcorehdr= option. This memory
+block is reserved _inside_ the main system memory of the secondary
+kernel. The /proc/vmcore code in the secondary kernel is however
+using copy_oldmem_page() to access both this elfcorehdr area and
+the rest of the memory used by the the first kernel.
 
-If the .init.ramfs size is 0x33d0f6 then things work ok.
+So the copy_oldmem_page() function is used to access data that
+may be located in system memory, or it may be outside. Always
+using ioremap will not work, so this patch makes it conditional
+based on pfn_valid().
 
-If the init.ramfs size is 0x4be430 then it corrupts the crashkernel area.
+For more details please look at the sh7372-based example here:
+http://permalink.gmane.org/gmane.linux.ports.sh.devel/11502
 
-Any pointers for further debugging?
+Signed-off-by: Magnus Damm <damm@opensource.se>
+---
+
+ arch/arm/kernel/crash_dump.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+--- 0001/arch/arm/kernel/crash_dump.c
++++ work/arch/arm/kernel/crash_dump.c	2011-06-18 20:59:49.000000000 +0900
+@@ -39,9 +39,13 @@ ssize_t copy_oldmem_page(unsigned long p
+ 	if (!csize)
+ 		return 0;
+ 
+-	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
+-	if (!vaddr)
+-		return -ENOMEM;
++	if (pfn_valid(pfn)) {
++		vaddr = phys_to_virt(pfn << PAGE_SHIFT);
++	} else {
++		vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
++		if (!vaddr)
++			return -ENOMEM;
++	}
+ 
+ 	if (userbuf) {
+ 		if (copy_to_user(buf, vaddr + offset, csize)) {
+@@ -52,6 +56,8 @@ ssize_t copy_oldmem_page(unsigned long p
+ 		memcpy(buf, vaddr + offset, csize);
+ 	}
+ 
+-	iounmap(vaddr);
++	if (!pfn_valid(pfn))
++		iounmap(vaddr);
++
+ 	return csize;
+ }
 
 _______________________________________________
 kexec mailing list
