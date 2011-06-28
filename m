@@ -1,12 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Date: Wed, 22 Jun 2011 18:55:32 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: conditional ioremap() fix for copy_oldmem_page()
-Message-ID: <20110622095525.GC9215@verge.net.au>
-References: <20110622034445.1936.16176.sendpatchset@t400s>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110622034445.1936.16176.sendpatchset@t400s>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QbSyX-0002M4-RL
+	for kexec@lists.infradead.org; Tue, 28 Jun 2011 07:44:51 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 5DE9F3EE0BC
+	for <kexec@lists.infradead.org>; Tue, 28 Jun 2011 16:44:41 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4838545DE59
+	for <kexec@lists.infradead.org>; Tue, 28 Jun 2011 16:44:41 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 3183F45DE54
+	for <kexec@lists.infradead.org>; Tue, 28 Jun 2011 16:44:41 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2044DE08002
+	for <kexec@lists.infradead.org>; Tue, 28 Jun 2011 16:44:41 +0900 (JST)
+Received: from m106.s.css.fujitsu.com (m106.s.css.fujitsu.com [10.240.81.146])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id DF0E11DB8049
+	for <kexec@lists.infradead.org>; Tue, 28 Jun 2011 16:44:40 +0900 (JST)
+Date: Tue, 28 Jun 2011 16:44:25 +0900 (   )
+Message-Id: <20110628.164425.39157342.d.hatayama@jp.fujitsu.com>
+Subject: [RFI] Support Fujitsu's sadump dump format
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,83 +35,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: kexec@lists.infradead.org, lethal@linux-sh.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+To: crash-utility@redhat.com, kexec@lists.infradead.org
 
-On Wed, Jun 22, 2011 at 12:44:45PM +0900, Magnus Damm wrote:
-> From: Magnus Damm <damm@opensource.se>
-> 
-> Update the copy_oldmem_page() function to ioremap() only
-> when accessing memory that is outside the regular range
-> of system memory that is managed by the kernel.
-> 
-> Without this patch a warning is triggered in the ARM-specific
-> ioremap implementation, see WARN_ON(pfn_valid()) in ioremap.c
-> 
-> The copy_oldmem_page() function is used by the secondary crash
-> kernel to access memory using the /proc/vmcore code implemented
-> in fs/proc/vmcore.c. To pass information from the first kernel
-> to the secondary crash kernel a kernel command line option is
-> used to point out where the elf core hdr is located.
-> 
-> The crash kernel is loaded through kexec-tools which also contains
-> code that reserves memory for the elfcorehdr= option. This memory
-> block is reserved _inside_ the main system memory of the secondary
-> kernel. The /proc/vmcore code in the secondary kernel is however
-> using copy_oldmem_page() to access both this elfcorehdr area and
-> the rest of the memory used by the the first kernel.
-> 
-> So the copy_oldmem_page() function is used to access data that
-> may be located in system memory, or it may be outside. Always
-> using ioremap will not work, so this patch makes it conditional
-> based on pfn_valid().
-> 
-> For more details please look at the sh7372-based example here:
-> http://permalink.gmane.org/gmane.linux.ports.sh.devel/11502
-> 
-> Signed-off-by: Magnus Damm <damm@opensource.se>
+Fujitsu has stand-alone dump mechanism based on firmware level
+functionality, which we call SADUMP, in short.
 
-Reviewed-by:  Simon Horman <horms@verge.net.au>
+We've maintained utility tools internally but now we're thinking that
+the best is crash utility and makedumpfile supports the sadump format
+for the viewpoint of both portability and maintainability.
 
-> ---
-> 
->  arch/arm/kernel/crash_dump.c |   14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> --- 0001/arch/arm/kernel/crash_dump.c
-> +++ work/arch/arm/kernel/crash_dump.c	2011-06-18 20:59:49.000000000 +0900
-> @@ -39,9 +39,13 @@ ssize_t copy_oldmem_page(unsigned long p
->  	if (!csize)
->  		return 0;
->  
-> -	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
-> -	if (!vaddr)
-> -		return -ENOMEM;
-> +	if (pfn_valid(pfn)) {
-> +		vaddr = phys_to_virt(pfn << PAGE_SHIFT);
-> +	} else {
-> +		vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
-> +		if (!vaddr)
-> +			return -ENOMEM;
-> +	}
->  
->  	if (userbuf) {
->  		if (copy_to_user(buf, vaddr + offset, csize)) {
-> @@ -52,6 +56,8 @@ ssize_t copy_oldmem_page(unsigned long p
->  		memcpy(buf, vaddr + offset, csize);
->  	}
->  
-> -	iounmap(vaddr);
-> +	if (!pfn_valid(pfn))
-> +		iounmap(vaddr);
-> +
->  	return csize;
->  }
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+We'll be of course responsible for its maintainance in a continuous
+manner. The sadump dump format is very similar to diskdump format and
+so kdump (compressed) format, so we estimate patch set would be a
+relatively small size.
+
+Could you tell me whether crash utility and makedumpfile can support
+the sadump format? If OK, we'll start to make patchset.
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
