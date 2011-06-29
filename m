@@ -1,31 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QblCe-0001xC-4E
-	for kexec@lists.infradead.org; Wed, 29 Jun 2011 03:12:37 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
-	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 88F3B3EE0B6
-	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 12:12:29 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
-	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6D93A45DE5E
-	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 12:12:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
-	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 48BF045DE5B
-	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 12:12:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 3C7941DB804E
-	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 12:12:29 +0900 (JST)
-Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 088BD1DB804D
-	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 12:12:29 +0900 (JST)
-Date: Wed, 29 Jun 2011 12:12:18 +0900 (   )
-Message-Id: <20110629.121218.488339383.d.hatayama@jp.fujitsu.com>
-Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <1035209833.226401.1309265862792.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-References: <20110628.164425.39157342.d.hatayama@jp.fujitsu.com>
-	<1035209833.226401.1309265862792.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-Mime-Version: 1.0
+	id 1QbnTf-0004Ac-Nl
+	for kexec@lists.infradead.org; Wed, 29 Jun 2011 05:38:20 +0000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
+	by e23smtp09.au.ibm.com (8.14.4/8.13.1) with ESMTP id p5T5cBGM020951
+	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 15:38:11 +1000
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p5T5aqhU1290350
+	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 15:36:52 +1000
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p5T5cAlV012604
+	for <kexec@lists.infradead.org>; Wed, 29 Jun 2011 15:38:11 +1000
+Message-ID: <4E0ABA3F.5040809@in.ibm.com>
+Date: Wed, 29 Jun 2011 11:08:07 +0530
+From: Suzuki Poulose <suzuki@in.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [RFC][PATCH] Kexec support for PPC440x
+References: <4DE345B0.8020505@in.ibm.com> <4DE50617.7090509@linutronix.de>
+	<4DE72EFE.8080502@in.ibm.com> <4DE8CA76.2060303@in.ibm.com>
+	<4DE8E746.2080100@linutronix.de>
+In-Reply-To: <4DE8E746.2080100@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,71 +31,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: crash-utility@redhat.com
-Cc: kexec@lists.infradead.org
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>
 
-From: Dave Anderson <anderson@redhat.com>
-Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
-Date: Tue, 28 Jun 2011 08:57:42 -0400 (EDT)
+On 06/03/11 19:23, Sebastian Andrzej Siewior wrote:
+> Suzuki Poulose wrote:
+>>>> The way you setup the 1:1 mapping should be close to what you are doing on
+>>>> kernel entry.Isn't it possible to include the file here and in the entry
+>>>> code?
+>>
+>>> I will make this change and resend the patch.
+>>
+>> I took a look at the way we do it at kernel entry. It looks more cleaner to leave
+>> it untouched. Especially, when we add the support for 47x in the future, the code
+>> will become more unreadable.
+>>
+>> What do you think ?
+>
+> So the entry code has one 256MiB mapping, you need 8 of those. Entry goes for TLB 63 and you need to be flexible and avoid TLB 63 :).
+> So after all you don't have that much in common with the entry code. If
+> you look at the FSL-book code then you will notice that I tried to share
+> some code.
+>
+> I don't understand why you don't flip the address space bit. On fsl we
+> setup the tmp mapping in the "other address" space so we don't have two
+> mappings for the same address. The entry code could be doing this with STS
+> bit, I'm not sure.
 
-> 
-> 
-> ----- Original Message -----
->> Fujitsu has stand-alone dump mechanism based on firmware level
->> functionality, which we call SADUMP, in short.
->> 
->> We've maintained utility tools internally but now we're thinking that
->> the best is crash utility and makedumpfile supports the sadump format
->> for the viewpoint of both portability and maintainability.
->> 
->> We'll be of course responsible for its maintainance in a continuous
->> manner. The sadump dump format is very similar to diskdump format and
->> so kdump (compressed) format, so we estimate patch set would be a
->> relatively small size.
->> 
->> Could you tell me whether crash utility and makedumpfile can support
->> the sadump format? If OK, we'll start to make patchset.
-> 
-> Sure, yes, the crash utility can always support another dumpfile format.
-> 
+I am not sure if I understood this correctly.
+Could you explain how could there be two mappings for the same address ?
+We are setting up 1:1 mapping for 0-2GiB and the only mapping that could exist
+(in other words, not invalidated) is PAGE_OFFSET mapping. Since PAGE_OFFSET < 2GiB
+we won't have multiple mappings. Or in other words we could limit KEXEC_*_MEMORY_LIMIT
+to PAGE_OFFSET to make sure the crossing doesn't occur.
 
-Thanks. It helps a lot.
+The kernel entry code sets up the mapping without a tmp mapping in 44x. i.e, it uses
+the mapping setup by the firmware/boot loader.
 
-> It's unclear to me how similar SADUMP is to diskdump/compressed-kdump.
-> Does your internal version patch diskdump.c, or do you maintain your
-> own "sadump.c"?  I ask because if your patchset is at all intrusive,
-> I'd prefer it be kept in its own file, primarily for maintainability,
-> but also because SADUMP is essentially a black-box to anybody outside
-> Fujitsu.
-
-What I meant when I used ``similar'' is both literally and
-logically. The format consists of diskdump header-like header, two
-kinds of bitmaps used for the same purpose as those in diskump format,
-and memory data. They can be handled in common with the existing data
-structure, diskdump_data, non-intrusively, so I hope they are placed
-in diskdump.c.
-
-On the other hand, there's a code to be placed at such specific
-area. sadump is triggered depending on kdump's progress and so
-register values to be contained in vmcore varies according to the
-progress: If crash_notes has been initialized when sadump is
-triggered, sadump packs the register values in crash_notes; if not
-yet, packs registers gathered by firmware. This is sadump specific
-processing, so I think putting it in specific sadump.c file is a
-natural and reasonable choise.
-
-Anyway, I have not made any patch set for this. I'll post a patch set
-when I complete.
-
-Again, thanks a lot for the positive answer.
-
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks
+Suzuki
 
 _______________________________________________
 kexec mailing list
