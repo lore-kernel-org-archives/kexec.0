@@ -1,31 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QcClj-0006Hv-Re
-	for kexec@lists.infradead.org; Thu, 30 Jun 2011 08:38:41 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 6B2053EE0BC
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2011 17:38:31 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
-	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 54DEF45DE5B
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2011 17:38:31 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
-	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 2A92445DE55
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2011 17:38:31 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1D2781DB804E
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2011 17:38:31 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
-	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id CE9221DB804F
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2011 17:38:30 +0900 (JST)
-Date: Thu, 30 Jun 2011 17:38:20 +0900 (   )
-Message-Id: <20110630.173820.246507825.d.hatayama@jp.fujitsu.com>
+Received: from mx3-phx2.redhat.com ([209.132.183.24])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QcHUC-0002XP-NX
+	for kexec@lists.infradead.org; Thu, 30 Jun 2011 13:40:53 +0000
+Date: Thu, 30 Jun 2011 09:40:49 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1238053244.265377.1309441249859.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <20110630.173820.246507825.d.hatayama@jp.fujitsu.com>
 Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20110630172448tachibana@mail.jp.nec.com>
-References: <20110630.162507.183023698.d.hatayama@jp.fujitsu.com>
-	<20110630172448tachibana@mail.jp.nec.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,89 +21,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: tachibana@mxm.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: "Discussion list for crash utility usage,
+	maintenance and development" <crash-utility@redhat.com>
+Cc: tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
 
-From: tachibana@mxm.nes.nec.co.jp
-Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
-Date: Thu, 30 Jun 2011 17:24:48 +0900
 
-> Hi Hatayama-san,
-> 
-> On 2011/06/30 16:25:07 +0900, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->> Hello Tachibana-san,
->> 
->> Thanks for your replying.
->> 
->> From: tachibana@mxm.nes.nec.co.jp
->> Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
->> Date: Thu, 30 Jun 2011 14:58:46 +0900
->> 
->> > Hi Hatayama-san,
->> > 
->> > On 2011/06/29 12:12:18 +0900, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->> >> From: Dave Anderson <anderson@redhat.com>
->> >> Subject: Re: [Crash-utility] [RFI] Support Fujitsu's sadump dump format
->> >> Date: Tue, 28 Jun 2011 08:57:42 -0400 (EDT)
->> >> 
->> >> > 
->> >> > 
->> >> > ----- Original Message -----
->> >> >> Fujitsu has stand-alone dump mechanism based on firmware level
->> >> >> functionality, which we call SADUMP, in short.
->> >> >> 
->> >> >> We've maintained utility tools internally but now we're thinking that
->> >> >> the best is crash utility and makedumpfile supports the sadump format
->> >> >> for the viewpoint of both portability and maintainability.
->> >> >> 
->> >> >> We'll be of course responsible for its maintainance in a continuous
->> >> >> manner. The sadump dump format is very similar to diskdump format and
->> >> >> so kdump (compressed) format, so we estimate patch set would be a
->> >> >> relatively small size.
->> >> >> 
->> >> >> Could you tell me whether crash utility and makedumpfile can support
->> >> >> the sadump format? If OK, we'll start to make patchset.
->> > 
->> > I think it's not bad to support sadump by makedumpfile. However I have 
->> > several questions.
->> > - Do you want to use makedumpfile to make an existing file that sadump has 
->> >   dumped small?
->> 
->> Of couse, it's one of the purposes. It's useful feature.
->> 
->> The first is to translate sadump format into the one crash utility can
->> recognize. makedumpfile is the standard tool to do it, and if
->> makdumpfile can support sadump format, I think it is the best.
->> 
->> > - It isn't possible to support the same form as kdump-compressed format 
->> >   now, is it?
->> 
->> I think it's technically possible but practically impossible. sadump is
->> a firmware and it is maintained by firmware team.
->> 
->> > - When the information that makedumpfile reads from a note of /proc/vmcore 
->> >   (or a header of kdump-compressed format) is added by an extension of 
->> >   makedumpfile, do you need to modify sadump?
->> 
->> Sorry, I've not investigated makedumpfile implementation enough yet.
->> 
->> But if I understand correctly, the current note information contained
->> in kdump-compressed format is NT_PRSTATUS and VMCOREINFO only, and for
->> them, sadump doesn't need to be modified. But it might need to be
->> modified if another kind of note is newly added.
-> 
-> Thank you for your explanation. I understood.
-> I will merge patches for sadump if you will post them.
-> 
 
-It helps us a lot. Thanks.
+----- Original Message -----
 
-I'll post a patch set after making it.
-Wait for a while, please.
+Now I am confused...
 
-Thanks.
-HATAYAMA, Daisuke
+You stated this earlier:
 
+> What I meant when I used ``similar'' is both literally and
+> logically. The format consists of diskdump header-like header, two
+> kinds of bitmaps used for the same purpose as those in diskump format,
+> and memory data. They can be handled in common with the existing data
+> structure, diskdump_data, non-intrusively, so I hope they are placed
+> in diskdump.c.
+
+which made it sound like the sadump dumpfile format is already similar
+to the compressed kdump format.
+
+But this makes it sound like the sadump native-format is unique:
+
+> >> The first is to translate sadump format into the one crash utility can
+> >> recognize. makedumpfile is the standard tool to do it, and if
+> >> makdumpfile can support sadump format, I think it is the best.
+> >>
+> >> > - It isn't possible to support the same form as kdump-compressed format
+> >> >   now, is it?
+> >>
+> >> I think it's technically possible but practically impossible.  sadump is
+> >> a firmware and it is maintained by firmware team.
+
+Is this how it would work?:
+
+ (1) kernel crashes
+ (2) sadump creates a native-format dumpfile 
+ (3) (patched) makedumpfile takes the native-format sadump dumpfile and
+     translates into a format that is similar to a compressed kdump
+ (4) (patched) crash utility reads the translated sadump dumpfile
+
+Or will the (patched) crash utility be able to read the sadump dumpfile
+in its native form if it is not pre-processed by makedumpfile?
+
+Dave
+     
 
 _______________________________________________
 kexec mailing list
