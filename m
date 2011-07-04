@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate7.uk.ibm.com ([194.196.100.167])
+Received: from mtagate2.uk.ibm.com ([194.196.100.162])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qdmem-0001dc-6h
-	for kexec@lists.infradead.org; Mon, 04 Jul 2011 17:10:01 +0000
+	id 1Qdmem-0001dd-3s
+	for kexec@lists.infradead.org; Mon, 04 Jul 2011 17:10:07 +0000
 Received: from d06nrmr1806.portsmouth.uk.ibm.com
 	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
-	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p64H9uea008157
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 17:09:56 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
-	[9.149.37.247])
+	by mtagate2.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p64H9vDl021862
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 17:09:57 GMT
+Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
+	[9.149.37.250])
 	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p64H9t2E2461928
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 18:09:55 +0100
-Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p64H9tAm021539
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 11:09:55 -0600
-Message-Id: <20110704170959.217980739@linux.vnet.ibm.com>
-Date: Mon, 04 Jul 2011 19:09:26 +0200
+	ESMTP id p64H9uih2404576
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 18:09:56 +0100
+Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p64H9uAV007722
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 11:09:56 -0600
+Message-Id: <20110704171000.123254263@linux.vnet.ibm.com>
+Date: Mon, 04 Jul 2011 19:09:31 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch 4/9] kdump: Initialize vmcoreinfo note at startup
+Subject: [patch 9/9] kexec-tools: Add s390 kdump support
 References: <20110704170922.976299676@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=04-s390-kdump-common-vmcoreinfo.patch
+Content-Disposition: inline; filename=kexec-tools-s390-kdump.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,60 +40,131 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, kexec@lists.infradead
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Currently the vmcoreinfo note is only initialized in case of kdump. On s390
-it is possible to create kernel dumps with other dump mechanisms than kdump
-(e.g. via hypervisor dump or stand-alone dump tools). For those dumps it
-would also be desirable to include the vmcoreinfo data. To accomplish this,
-with this patch the vmcoreinfo ELF note is always initialized, not only in
-case of a (kdump) crash.
+This patch adds kdump support for s390 to the kexec tool and enables the
+"--load-panic" option. When loading the kdump kernel and ramdisk we add the
+address of the crashkernel memory to the normal load address.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- kernel/kexec.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ kexec/arch/s390/kexec-image.c |   16 +++++++++++++---
+ kexec/arch/s390/kexec-s390.c  |   24 +++++++++++++++++++++---
+ 2 files changed, 34 insertions(+), 6 deletions(-)
 
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1388,24 +1388,23 @@ int __init parse_crashkernel(char 		 *cm
- }
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -18,6 +18,7 @@
+ #include <unistd.h>
+ #include <getopt.h>
+ #include "../../kexec.h"
++#include "../../kexec-syscall.h"
+ #include "kexec-s390.h"
+ #include <arch/options.h>
  
+@@ -32,6 +33,7 @@ image_s390_load(int argc, char **argv, c
+ 	int command_line_len;
+ 	off_t ramdisk_len;
+ 	unsigned int ramdisk_origin;
++	uint64_t crash_base, crash_end;
+ 	int opt;
  
--
--void crash_save_vmcoreinfo(void)
-+static void update_vmcoreinfo_note(void)
- {
--	u32 *buf;
-+	u32 *buf = (u32 *) vmcoreinfo_note;
+ 	static const struct option options[] =
+@@ -47,6 +49,7 @@ image_s390_load(int argc, char **argv, c
+ 	command_line = NULL;
+ 	ramdisk_len = 0;
+ 	ramdisk_origin = 0;
++	crash_base = 0;
  
- 	if (!vmcoreinfo_size)
- 		return;
--
--	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
--
--	buf = (u32 *)vmcoreinfo_note;
--
- 	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
- 			      vmcoreinfo_size);
--
- 	final_note(buf);
- }
+ 	while ((opt = getopt_long(argc,argv,short_options,options,0)) != -1) {
+ 		switch(opt) {
+@@ -71,10 +74,16 @@ image_s390_load(int argc, char **argv, c
+ 			return -1;
+ 		}
+ 	}
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		if (parse_iomem_single("Crash kernel\n", &crash_base,
++				       &crash_end))
++			return -1;
++	}
  
-+void crash_save_vmcoreinfo(void)
-+{
-+	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
-+	update_vmcoreinfo_note();
-+}
-+
- void vmcoreinfo_append_str(const char *fmt, ...)
- {
- 	va_list args;
-@@ -1491,6 +1490,7 @@ static int __init crash_save_vmcoreinfo_
- 	VMCOREINFO_NUMBER(PG_swapcache);
+ 	/* Add kernel segment */
+ 	add_segment(info, kernel_buf + IMAGE_READ_OFFSET,
+-		    kernel_size - IMAGE_READ_OFFSET, IMAGE_READ_OFFSET,
++		    kernel_size - IMAGE_READ_OFFSET,
++		    crash_base + IMAGE_READ_OFFSET,
+ 		    kernel_size - IMAGE_READ_OFFSET);
  
- 	arch_crash_save_vmcoreinfo();
-+	update_vmcoreinfo_note();
+ 	/* We do want to change the kernel image */
+@@ -88,7 +97,8 @@ image_s390_load(int argc, char **argv, c
+ 			return -1;
+ 		}
+ 		ramdisk_origin = RAMDISK_ORIGIN_ADDR;
+-		add_segment(info, rd_buffer, ramdisk_len, RAMDISK_ORIGIN_ADDR, ramdisk_len);
++		add_segment(info, rd_buffer, ramdisk_len,
++			    crash_base + RAMDISK_ORIGIN_ADDR, ramdisk_len);
+ 	}
+ 	
+ 	/* Register the ramdisk in the kernel. */
+@@ -111,7 +121,7 @@ image_s390_load(int argc, char **argv, c
+ 		memcpy(krnl_buffer + COMMAND_LINE_OFFS, command_line, strlen(command_line));
+ 	}
+ 
+-	info->entry = (void *) IMAGE_READ_OFFSET;
++	info->entry = (void *) crash_base + IMAGE_READ_OFFSET;
  
  	return 0;
+ }
+--- a/kexec/arch/s390/kexec-s390.c
++++ b/kexec/arch/s390/kexec-s390.c
+@@ -37,8 +37,9 @@ static struct memory_range memory_range[
+  */
+ 
+ int get_memory_ranges(struct memory_range **range, int *ranges,
+-		      unsigned long UNUSED(flags))
++		      unsigned long flags)
+ {
++	char crash_kernel[] = "Crash kernel\n";
+ 	char sys_ram[] = "System RAM\n";
+ 	const char *iomem = proc_iomem();
+ 	FILE *fp;
+@@ -62,7 +63,9 @@ int get_memory_ranges(struct memory_rang
+ 
+ 		sscanf(line,"%Lx-%Lx : %n", &start, &end, &cons);
+ 		str = line+cons;
+-		if(memcmp(str,sys_ram,strlen(sys_ram)) == 0) {
++		if((memcmp(str,sys_ram,strlen(sys_ram)) == 0) ||
++		   ((flags & KEXEC_ON_CRASH) &&
++		   memcmp(str,crash_kernel,strlen(crash_kernel)) == 0)) {
+ 			memory_range[current_range].start = start;
+ 			memory_range[current_range].end = end;
+ 			memory_range[current_range].type = RANGE_RAM;
+@@ -76,6 +79,18 @@ int get_memory_ranges(struct memory_rang
+ 	*range = memory_range;
+ 	*ranges = current_range;
+ 
++	if ((flags & KEXEC_ON_CRASH) && !(flags & KEXEC_PRESERVE_CONTEXT)) {
++		uint64_t start, end;
++
++		if (parse_iomem_single("Crash kernel\n", &start, &end)) {
++			fprintf(stderr, "parse_iomem_single failed.\n");
++			return -1;
++		}
++		if (start > mem_min)
++			mem_min = start;
++		if (end < mem_max)
++			mem_max = end;
++	}
+ 	return 0;
+ }
+ 
+@@ -112,5 +127,8 @@ void arch_update_purgatory(struct kexec_
+ 
+ int is_crashkernel_mem_reserved(void)
+ {
+-	return 0; /* kdump is not supported on this platform (yet) */
++	uint64_t start, end;
++
++	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
++		(start != end) : 0;
  }
 
 
