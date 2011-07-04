@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate7.uk.ibm.com ([194.196.100.167])
+Received: from mtagate6.uk.ibm.com ([194.196.100.166])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qdmem-0001da-6g
-	for kexec@lists.infradead.org; Mon, 04 Jul 2011 17:10:05 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p64H9uUS008162
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 17:09:56 GMT
+	id 1Qdmem-0001dg-He
+	for kexec@lists.infradead.org; Mon, 04 Jul 2011 17:10:06 +0000
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate6.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p64H9tlF018946
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 17:09:55 GMT
 Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
 	[9.149.37.212])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p64H9uon1818874
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 18:09:56 +0100
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p64H9tFo2502872
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 18:09:55 +0100
 Received: from d06av01.portsmouth.uk.ibm.com (loopback [127.0.0.1])
 	by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p64H9tgm002859
-	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 11:09:56 -0600
-Message-Id: <20110704170959.567602717@linux.vnet.ibm.com>
-Date: Mon, 04 Jul 2011 19:09:28 +0200
+	ESMTP id p64H9tsj002835
+	for <kexec@lists.infradead.org>; Mon, 4 Jul 2011 11:09:55 -0600
+Message-Id: <20110704170958.874632821@linux.vnet.ibm.com>
+Date: Mon, 04 Jul 2011 19:09:24 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch 6/9] kdump: Merge set_vmcore_list_offsets_elf_32/64()
+Subject: [patch 2/9] kdump: Add machine_kexec_finish()
 References: <20110704170922.976299676@linux.vnet.ibm.com>
-Content-Disposition: inline;
-	filename=06-s390-kdump-common-vmcore-merge-set_vmcore_list_offsets.patch
+Content-Disposition: inline; filename=02-s390-kdump-common-kexec_finish.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,80 +40,51 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, kexec@lists.infradead
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-The two functions set_vmcore_list_offsets_elf_32/64() are identical now
-for 32 and 64 bit. Therefore this patch merges them into one
-set_vmcore_list_offsets() function.
+On s390 we create checksums for the loaded kexec segments case of kdump.
+Therefore we need an additional callback at the end of the kexec_load()
+system call. This patch introduces machine_kexec_finish() with an empty
+implementation for all architectures that do not need the callback.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- fs/proc/vmcore.c |   28 ++++++----------------------
- 1 file changed, 6 insertions(+), 22 deletions(-)
+ include/linux/kexec.h |    1 +
+ kernel/kexec.c        |    8 ++++++++
+ 2 files changed, 9 insertions(+)
 
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -490,24 +490,8 @@ static int __init process_ptload_program
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -115,6 +115,7 @@ struct kimage {
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+ extern int machine_kexec_prepare(struct kimage *image);
++extern void machine_kexec_finish(struct kimage *image, int flags);
+ extern void machine_kexec_cleanup(struct kimage *image);
+ extern asmlinkage long sys_kexec_load(unsigned long entry,
+ 					unsigned long nr_segments,
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1017,6 +1017,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
+ 		kimage_terminate(image);
+ 	}
+ 	/* Install the new kernel, and  Uninstall the old */
++	machine_kexec_finish(image, flags);
+ 	image = xchg(dest_image, image);
+ 
+ out:
+@@ -1026,6 +1027,13 @@ out:
+ 	return result;
  }
  
- /* Sets offset fields of vmcore elements. */
--static void __init set_vmcore_list_offsets_elf64(char *elfptr,
--						struct list_head *vc_list)
--{
--	loff_t vmcore_off;
--	struct vmcore *m;
--
--	/* Skip Elf header and program headers. */
--	vmcore_off = elfcorebuf_sz;
--
--	list_for_each_entry(m, vc_list, list) {
--		m->offset = vmcore_off;
--		vmcore_off += m->size;
--	}
--}
--
--/* Sets offset fields of vmcore elements. */
--static void __init set_vmcore_list_offsets_elf32(char *elfptr,
--						struct list_head *vc_list)
-+static void __init set_vmcore_list_offsets(char *elfptr,
-+					   struct list_head *vc_list)
- {
- 	loff_t vmcore_off;
- 	struct vmcore *m;
-@@ -573,7 +557,7 @@ static int __init parse_crash_elf64_head
- 		kfree(elfcorebuf);
- 		return rc;
- 	}
--	set_vmcore_list_offsets_elf64(elfcorebuf, &vmcore_list);
-+	set_vmcore_list_offsets(elfcorebuf, &vmcore_list);
- 	return 0;
- }
- 
-@@ -629,7 +613,7 @@ static int __init parse_crash_elf32_head
- 		kfree(elfcorebuf);
- 		return rc;
- 	}
--	set_vmcore_list_offsets_elf32(elfcorebuf, &vmcore_list);
-+	set_vmcore_list_offsets(elfcorebuf, &vmcore_list);
- 	return 0;
- }
- 
-@@ -701,7 +685,7 @@ static int __init parse_crash_elf_header
- 							  &vmcore_list);
- 		if (rc)
- 			goto fail;
--		set_vmcore_list_offsets_elf64(elfcorebuf, &vmcore_list);
-+		set_vmcore_list_offsets(elfcorebuf, &vmcore_list);
- 		vmcore_size = get_vmcore_size_elf64(elfcorebuf);
- 	} else if (e_ident[EI_CLASS] == ELFCLASS32) {
- 		rc = process_ptload_program_headers_elf32(elfcorebuf,
-@@ -709,7 +693,7 @@ static int __init parse_crash_elf_header
- 							  &vmcore_list);
- 		if (rc)
- 			goto fail;
--		set_vmcore_list_offsets_elf32(elfcorebuf, &vmcore_list);
-+		set_vmcore_list_offsets(elfcorebuf, &vmcore_list);
- 		vmcore_size = get_vmcore_size_elf32(elfcorebuf);
- 	}
- 	return 0;
++/*
++ * provide an empty default implementation here -- architecture
++ * code may override this
++ */
++void __weak machine_kexec_finish(struct kimage *image, int flags)
++{}
++
+ #ifdef CONFIG_COMPAT
+ asmlinkage long compat_sys_kexec_load(unsigned long entry,
+ 				unsigned long nr_segments,
 
 
 _______________________________________________
