@@ -1,25 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([122.248.162.5])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QgZcJ-0002Ro-2T
-	for kexec@lists.infradead.org; Tue, 12 Jul 2011 09:51:00 +0000
-Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
-	by e28smtp05.in.ibm.com (8.14.4/8.13.1) with ESMTP id p6C9of7Y019775
-	for <kexec@lists.infradead.org>; Tue, 12 Jul 2011 15:20:41 +0530
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
-	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p6C9of0Q3915930
-	for <kexec@lists.infradead.org>; Tue, 12 Jul 2011 15:20:41 +0530
-Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
-	by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p6C9oeAK008583
-	for <kexec@lists.infradead.org>; Tue, 12 Jul 2011 19:50:41 +1000
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Subject: [PATCH] [v3] kexec-tools: ppc32: Fixup ThreadPointer for purgatory
-	code
-Date: Tue, 12 Jul 2011 15:20:40 +0530
-Message-ID: <20110712095029.18466.30735.stgit@suzukikp.in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QgdOJ-0007Kv-6V
+	for kexec@lists.infradead.org; Tue, 12 Jul 2011 13:52:48 +0000
+Date: Tue, 12 Jul 2011 09:52:41 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [patch 0/9] kdump: Patch series for s390 support
+Message-ID: <20110712135241.GD1293@redhat.com>
+References: <20110704170922.976299676@linux.vnet.ibm.com>
+	<20110705202615.GJ24348@redhat.com>
+	<1309944287.3937.39.camel@br98xy6r>
+	<20110707193321.GE28850@redhat.com>
+	<49979.1310234299@turing-police.cc.vt.edu>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <49979.1310234299@turing-police.cc.vt.edu>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,115 +27,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "Ryan S. Arnold" <rsa@us.ibm.com>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, kexec <kexec@lists.infradead.org>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, Paul Mackerras <paulus@samba.org>, linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Valdis.Kletnieks@vt.edu
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-PPC32 ELF ABI expects r2 to be loaded with Thread Pointer, which is 0x7000
-bytes past the end of TCB. Though the purgatory is single threaded, it uses
-TCB scratch space in vsnprintf(). This patch allocates a 1024byte TCB
-and populates the TP with the address accordingly.
+On Sat, Jul 09, 2011 at 01:58:19PM -0400, Valdis.Kletnieks@vt.edu wrote:
+> On Thu, 07 Jul 2011 15:33:21 EDT, Vivek Goyal said:
+> > On Wed, Jul 06, 2011 at 11:24:47AM +0200, Michael Holzheu wrote:
+> 
+> > > S390 stand-alone dump tools are independent mini operating systems that
+> > > are installed on disks or tapes. When a dump should be created, these
+> > > stand-alone dump tools are booted. All that they do is to write the dump
+> > > (current memory plus the CPU registers) to the disk/tape device.
+> > > 
+> > > The advantage compared to kdump is that since they are freshly loaded
+> > > into memory they can't be overwritten in memory.
+> > 
+> > > Another advantage is
+> > > that since it is different code, it is much less likely that the dump
+> > > tool will run into the same problem than the previously crashed kernel.
+> > 
+> > I think in practice this is not really a problem. If your kernel
+> > is not stable enough to even boot and copy a file, then most likely
+> > it has not even been deployed. The very fact that a kernel has been
+> > up and running verifies that it is a stable kernel for that machine
+> > and is capable of capturing the dump.
+> 
+> Vivek: I used to do VM/XA on S/390 boxes for a living, and that's *not* where
+> Michael is coming from.
+> 
+> What the standalone dump code does is take a system that may have the moral
+> equivalent of 256 separate PCI buses, several hundred disks all visible in
+> multipath configurations, dozens of other devices, and as long as you can find
+> *one* console and *one* tape/disk drive that works, you can capture a dump.
 
-Changes from V2: Avoid address overflow in TP allocation.
-Changes from V1: Fixed the addr calculation for uImage support.
+IIUC, capturing dump in virtualized environment is much more easy as
+software is not completely dead and hypervisor is still running. For
+example, qemu can easily capture the memory snapshot of the VM once it
+is hung reliably in all situations. Issue becomes mageability with filtering
+with various kernel versions and across operating systems inside VM. Hence
+kdump for linux is being deployed even in virtualized environment.
 
+I guess using stand alone dump tools is very similar to qemu dump in terms
+of reliability but lacks filtering capabilities and is limited to specific
+devices. That way qemu is much more powerful.
 
-Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
-Cc: Ryan S. Arnold <rsa@us.ibm.com>
----
+> 
+> More than once in my career, I got into a situation where the production system
+> would hang - and booting off another disk that contained an older copy with
+> maybe a few less patches would *also* hang.  VM/XA would simply *not run*.
+> Booting the standalone dump utility (which shared zero code with VM/XA, and did
+> *much* less initialization of I/O devices not needed for the actual dump) would
+> work just fine.  This would get me a dump that would show that we had a
+> (usually) hardware issue - either we were tripping over an errata that *no*
+> released version of VM/XA had a workaround for, or outright defective hardware.
 
- kexec/arch/ppc/kexec-elf-ppc.c     |   19 +++++++++++++++++++
- kexec/arch/ppc/kexec-uImage-ppc.c  |   17 +++++++++++++++++
- purgatory/arch/ppc/purgatory-ppc.c |    2 +-
- purgatory/arch/ppc/v2wrap_32.S     |    4 ++++
- 4 files changed, 41 insertions(+), 1 deletions(-)
+Can we not achieve almost equivalent of it by only loading very selective
+modules in second kernel?
 
-diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
-index f4443b4..ecbbbeb 100644
---- a/kexec/arch/ppc/kexec-elf-ppc.c
-+++ b/kexec/arch/ppc/kexec-elf-ppc.c
-@@ -414,6 +414,25 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
- 	elf_rel_set_symbol(&info->rhdr, "stack", &addr, sizeof(addr));
- #undef PUL_STACK_SIZE
- 
-+	/*
-+	 * Fixup ThreadPointer(r2) for purgatory.
-+	 * PPC32 ELF ABI expects : 
-+	 * ThreadPointer (TP) = TCB + 0x7000
-+	 * We manually allocate a TCB space and set the TP
-+	 * accordingly.
-+	 */
-+#define TCB_SIZE 1024
-+#define TCB_TP_OFFSET 0x7000	/* PPC32 ELF ABI */
-+
-+	addr = locate_hole(info, TCB_SIZE, 0, 0,
-+				((unsigned long)elf_max_addr(&ehdr) - TCB_TP_OFFSET),
-+				1);
-+	addr += TCB_SIZE + TCB_TP_OFFSET;
-+	elf_rel_set_symbol(&info->rhdr, "my_thread_ptr", &addr, sizeof(addr));
-+
-+#undef TCB_SIZE
-+#undef TCB_TP_OFFSET
-+
- 	addr = elf_rel_get_addr(&info->rhdr, "purgatory_start");
- 	info->entry = (void *)addr;
- #endif
-diff --git a/kexec/arch/ppc/kexec-uImage-ppc.c b/kexec/arch/ppc/kexec-uImage-ppc.c
-index 1d71374..216c82d 100644
---- a/kexec/arch/ppc/kexec-uImage-ppc.c
-+++ b/kexec/arch/ppc/kexec-uImage-ppc.c
-@@ -228,6 +228,23 @@ static int ppc_load_bare_bits(int argc, char **argv, const char *buf,
- 	/* No allocation past here in order not to overwrite the stack */
- #undef PUL_STACK_SIZE
- 
-+	/*
-+	 * Fixup ThreadPointer(r2) for purgatory.
-+	 * PPC32 ELF ABI expects : 
-+	 * ThreadPointer (TP) = TCB + 0x7000
-+	 * We manually allocate a TCB space and set the TP
-+	 * accordingly.
-+	 */
-+#define TCB_SIZE 	1024
-+#define TCB_TP_OFFSET 	0x7000	/* PPC32 ELF ABI */
-+	addr = locate_hole(info, TCB_SIZE, 0, 0,
-+				((unsigned long)-1 - TCB_TP_OFFSET),
-+				1);
-+	addr += TCB_SIZE + TCB_TP_OFFSET;
-+	elf_rel_set_symbol(&info->rhdr, "my_thread_ptr", &addr, sizeof(addr));
-+#undef TCB_TP_OFFSET
-+#undef TCB_SIZE
-+
- 	addr = elf_rel_get_addr(&info->rhdr, "purgatory_start");
- 	info->entry = (void *)addr;
- 
-diff --git a/purgatory/arch/ppc/purgatory-ppc.c b/purgatory/arch/ppc/purgatory-ppc.c
-index 349e750..3e6b354 100644
---- a/purgatory/arch/ppc/purgatory-ppc.c
-+++ b/purgatory/arch/ppc/purgatory-ppc.c
-@@ -26,7 +26,7 @@ unsigned int panic_kernel = 0;
- unsigned long backup_start = 0;
- unsigned long stack = 0;
- unsigned long dt_offset = 0;
--unsigned long my_toc = 0;
-+unsigned long my_thread_ptr = 0;
- unsigned long kernel = 0;
- 
- void setup_arch(void)
-diff --git a/purgatory/arch/ppc/v2wrap_32.S b/purgatory/arch/ppc/v2wrap_32.S
-index 8442d16..8b60677 100644
---- a/purgatory/arch/ppc/v2wrap_32.S
-+++ b/purgatory/arch/ppc/v2wrap_32.S
-@@ -56,6 +56,10 @@ master:
- 	mr      17,3            # save cpu id to r17
- 	mr      15,4            # save physical address in reg15
- 
-+	lis	6,my_thread_ptr@h
-+	ori	6,6,my_thread_ptr@l
-+	lwz	2,0(6)		# setup ThreadPointer(TP)
-+
- 	lis	6,stack@h
- 	ori	6,6,stack@l
- 	lwz     1,0(6)          #setup stack
+If not, one can always use qemu-kvm dump capability with kvm hypervisor if
+kdump does not work. It will be a manual operation though like s390 stand
+alone dump utility.
 
+So the point is that I am fine with stand alone dump utitliy capturing
+the dump. Just keep it as backup plan if kdump does not work. Also for
+early crashes kdump will not work and stand alone dump utility will be
+the primary plan to capture the dump.
+
+In above example, are you saying that your production kernel does not even
+boot now which used to boot in the past on same system (because of some
+bad hardware state?).
+
+> 
+> For the same efficiency reasons that Linux doesn't do a lot of checking for
+> "can never happen" cases, VM/XA doesn't check some things. So when busted
+> hardware would present logically impossible combinations of status bits (for
+> instance, "device still connected" but "I/O bus disconnected"), Bad Things
+> would happen.  Booting a tiny dump program that never even *tried* to look at
+> the bad bits posted by the miscreant hardware would allow you to get the info
+> you needed to debug it.
+
+Ok, may be. I am not saying that don't use stand alone dump utility for
+severe hardware issues. I am just saying that a closer integration with
+kexec infrastructure like other architecture will be better. We probably
+do not require any common code changes except a custom purgatory for
+s390 to IPL stand alone utilities.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
