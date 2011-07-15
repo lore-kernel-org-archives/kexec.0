@@ -1,25 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QhQI1-0001t4-Mc
-	for kexec@lists.infradead.org; Thu, 14 Jul 2011 18:05:34 +0000
-Date: Thu, 14 Jul 2011 14:05:28 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 0/9] kdump: Patch series for s390 support
-Message-ID: <20110714180528.GF6672@redhat.com>
-References: <1309944287.3937.39.camel@br98xy6r>
-	<20110707193321.GE28850@redhat.com>
-	<20110708110121.5acfc3c9@mschwide>
-	<20110711144255.GE30674@redhat.com>
-	<20110711175626.121dcc58@mschwide>
-	<20110713160239.GE4426@redhat.com>
-	<20110713184611.6dcb09b4@mschwide>
-	<20110713200004.GG4426@redhat.com>
-	<20110714091800.720da848@mschwide>
-	<20110714175532.GE6672@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110714175532.GE6672@redhat.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QhbhW-0001GB-TX
+	for kexec@lists.infradead.org; Fri, 15 Jul 2011 06:16:40 +0000
+Date: Fri, 15 Jul 2011 14:20:41 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 0/8] makedumpfile: makedumpfile enhancement to filter
+	out kernel data from vmcore
+Message-Id: <20110715142041.2a7aa858.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110527065621.GA26119@in.ibm.com>
+References: <20110524203542.GH3860@redhat.com>
+	<1621913139.202658.1306270052667.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+	<OF341326C7.0D81F89A-ONC125789B.002DB6ED-C125789B.002FC7A0@de.ibm.com>
+	<20110525195321.GD6724@redhat.com>
+	<OF05104FA0.A922963A-ONC125789C.003BDAA9-C125789C.003DD130@de.ibm.com>
+	<20110526133923.GA29496@redhat.com>
+	<20110527065621.GA26119@in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,40 +29,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
+To: mahesh@linux.vnet.ibm.com
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Reinhard Buendgen <BUENDGEN@de.ibm.com>
 
-On Thu, Jul 14, 2011 at 01:55:32PM -0400, Vivek Goyal wrote:
 
-[..]
-> > > So we first try to take purgatory path which does the checksum and is
-> > > consistent with other architectures. If that does not work in case
-> > > of hard hang, you always have the option of IPLing the stand alone tool
-> > > later manually.
+Hi Mahesh,
+
+(I'm back to makedumpfile devel for merging this patchset,
+ because Tachibana-san is busy.)
+
+Sorry for replying an old mail.
+
+On Fri, 27 May 2011 12:26:21 +0530
+Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+> On 2011-05-26 09:39:23 Thu, Vivek Goyal wrote:
+> > On Thu, May 26, 2011 at 01:15:14PM +0200, Reinhard Buendgen wrote:
+> > > Vivek,
+> > > 
+> > > I/O is not restricted to disk I/O (it may be network I/O, data sent to 
+> > > crtypto cards etc.) and it is not always direct, Device drivers may have 
+> > > buffers to which such data is copied. 
+> > > 
+> > > So it is more than just keys, and it may change over time.
+> > > I do not think hardwiring a filter in makedumpfile is a good idea because 
+> > > you would need a new makedumpfile release for every Distribution 
+> > > (release).
 > > 
-> > How are we suddenly on the purgatory path again? The code that gets
-> > control in case of a hard crash + IPL is the stand-alone dump tool,
-> > not the purgatory code.
+> > Ok, so we are worried about data being in slub/slab caches or driver's
+> > kmalloced buffers etc.
+> > 
+> > When do I need access to debuginfo files. I am assuming that makedumpfile
+> > reads them in first kernel sometime and stores relevant info in initramfs.
+> > Otherwise, it is not possible to get to it in second kernel after crash.
+> > 
 > 
-> I think that's the biggest contetion point. From the start of discussion
-> you have this hardcoded requirement that the moment panic() happens
-> you are jumping to some IPL code and that's what I am questioning. Why
-> can't you execute some more code after panic() (purgatory), before
-> you jump to IPL code (only if you have to). 
-> 
+> The current approach is to re-run the makedumpfile on the crash dump
+> (generated in the second kernel) when we are back into production kernel
+> (1st kernel).
 
-In your parlance of shutdown actions, I think it is equivalnet to saying
-that "kdump" is a shutdown action and that that means is that for specific
-trigger points we will execute "crash_kexec()" function which will try
-to capture the dump.
+IIUC, there are be 2 dumpfiles on customer site by the above approach.
+The one is with privacy/secret data, and another is without.
 
-In user space I think one can modify the kexec-tools infrastrucuture a
-bit so that one is able to define an entry point in case checksum of
-loaded segment failes. Once you are loding kdump kernel, you can define
-that entry point. (And this would be jump to IPL etc.).
+If correct, I like this approach because a customer can have two options
+when the crash utility cannot read a dumpfile without privacy/secret data
+on support site.
+
+First option:
+  For digging a problem, a customer sends a dumpfile with privacy/secret
+  data to support site.
+
+Second option:
+  For protecting privacy/secret data, a customer gives up digging a problem.
+
 
 Thanks
-Vivek
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
