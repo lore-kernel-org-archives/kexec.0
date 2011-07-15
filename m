@@ -1,29 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp03.in.ibm.com ([122.248.162.3])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QheVL-0003it-TT
-	for kexec@lists.infradead.org; Fri, 15 Jul 2011 09:16:18 +0000
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
-	by e28smtp03.in.ibm.com (8.14.4/8.13.1) with ESMTP id p6F9G3Ni024993
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 14:46:03 +0530
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
-	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p6F9G32K2093064
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 14:46:03 +0530
-Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
-	by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p6F9G2n8024464
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 19:16:03 +1000
-Date: Fri, 15 Jul 2011 14:46:02 +0530
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: Re: [UPDATED PATCH v2 8/8] makedumpfile: Add erase information in
-	ELF formatted dumpfile
-Message-ID: <20110715091602.GA719@in.ibm.com>
-References: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
-Reply-To: mahesh@linux.vnet.ibm.com
+	id 1Qhf2F-0004X6-Rb
+	for kexec@lists.infradead.org; Fri, 15 Jul 2011 09:50:17 +0000
+Date: Fri, 15 Jul 2011 18:35:41 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 2/8] makedumpfile: Apply relocation while loading
+	module debuginfo.
+Message-Id: <20110715183541.e9f5e604.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110517200052.12740.36169.stgit@mars.in.ibm.com>
+References: <20110517200052.12740.36169.stgit@mars.in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,262 +23,437 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-Hi,
 
-This is an updated patch that fixes a problem where empty ELF note gets
-populated when info->size_eraseinfo is zero. This updated patch now does
-not introduce new ELF note if info->size_eraseinfo == 0.
+Hi Mahesh,
 
-Thanks,
--Mahesh.
+On my machine (RHEL5 x86_64), I cannot compile makedumpfile with this patch.
+I guess that it is due to old elfutils of my machine, and I am trying this
+problem by newer elfutils.
 
-makedumpfile: Add erase information in ELF formatted dumpfile
+I'd like to get some hints, so can you tell me your environment ?
+RHEL6 x86_64 ?
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-This patch implements support for inclusion of erase information in ELF
-formatted dumpfile. This patch introduces a additional ELF Note section
-that contains erase information.
+Thanks
+Ken'ichi Ohmichi
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- makedumpfile.c |  126 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |   17 ++++++++
- 2 files changed, 142 insertions(+), 1 deletions(-)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 7ff94ac..f48953e 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -3352,6 +3352,9 @@ get_pt_note_info(off_t off_note, unsigned long sz_note)
- 				return FALSE;
- 			}
- 			info->p2m_mfn = p2m_mfn;
-+		} else if (n_type == NT_ERASE_INFO) {
-+			info->offset_eraseinfo = offset_desc;
-+			info->size_eraseinfo = size_desc;
- 		}
- 		offset += offset_next_note(note);
- 	}
-@@ -4647,6 +4650,15 @@ write_cache_bufsz(struct cache_data *cd)
- }
- 
- int
-+write_cache_zero(struct cache_data *cd, size_t size)
-+{
-+	memset(cd->buf + cd->buf_size, 0, size);
-+	cd->buf_size += size;
-+
-+	return write_cache_bufsz(cd);
-+}
-+
-+int
- read_buf_from_stdin(void *buf, int buf_size)
- {
- 	int read_size = 0, tmp_read_size = 0;
-@@ -5799,10 +5811,12 @@ write_elf_header(struct cache_data *cd_header)
- {
- 	int i, num_loads_dumpfile, phnum;
- 	off_t offset_note_memory, offset_note_dumpfile;
--	size_t size_note;
-+	size_t size_note, size_eraseinfo = 0;
- 	Elf64_Ehdr ehdr64;
- 	Elf32_Ehdr ehdr32;
- 	Elf64_Phdr note;
-+	char size_str[MAX_SIZE_STR_LEN];
-+	struct filter_info *fl_info = filter_info;
- 
- 	char *buf = NULL;
- 	const off_t failed = (off_t)-1;
-@@ -5855,6 +5869,36 @@ write_elf_header(struct cache_data *cd_header)
- 	}
- 
- 	/*
-+	 * Pre-calculate the required size to store eraseinfo in ELF note
-+	 * section so that we can add enough space in ELF notes section and
-+	 * adjust the PT_LOAD offset accordingly.
-+	 */
-+	while (fl_info) {
-+		struct erase_info *ei;
-+
-+		if (!fl_info->erase_info_idx)
-+			continue;
-+		ei = &erase_info[fl_info->erase_info_idx];
-+		if (fl_info->nullify)
-+			sprintf(size_str, "nullify\n");
-+		else
-+			sprintf(size_str, "%ld\n", fl_info->size);
-+
-+		size_eraseinfo += strlen("erase ") +
-+				strlen(ei->symbol_expr) + 1 +
-+				strlen(size_str);
-+		fl_info = fl_info->next;
-+	}
-+
-+	/*
-+	 * Store the size_eraseinfo for later use in write_elf_eraseinfo()
-+	 * function. This will overwrite the size fetched during
-+	 * get elf_info() function but we are ok with that.
-+	 */
-+	info->size_eraseinfo = size_eraseinfo;
-+	DEBUG_MSG("erase info size: %lu\n", info->size_eraseinfo);
-+
-+	/*
- 	 * Write a PT_NOTE header.
- 	 */
- 	if (!(phnum = get_phnum_memory()))
-@@ -5884,6 +5928,19 @@ write_elf_header(struct cache_data *cd_header)
- 	note.p_offset      = offset_note_dumpfile;
- 	size_note          = note.p_filesz;
- 
-+	/*
-+	 * Modify the note size in PT_NOTE header to accomodate eraseinfo data.
-+	 * Eraseinfo will be written later.
-+	 */
-+	if (info->size_eraseinfo) {
-+		if (info->flag_elf64_memory)
-+			note.p_filesz += sizeof(Elf64_Nhdr);
-+		else
-+			note.p_filesz += sizeof(Elf32_Nhdr);
-+		note.p_filesz += roundup(ERASEINFO_NOTE_NAME_BYTES, 4) +
-+					roundup(size_eraseinfo, 4);
-+	}
-+
- 	if (!write_elf_phdr(cd_header, &note))
- 		goto out;
- 
-@@ -5910,10 +5967,14 @@ write_elf_header(struct cache_data *cd_header)
- 	    size_note, info->name_dumpfile))
- 		goto out;
- 
-+	/* Set the size_note with new size. */
-+	size_note          = note.p_filesz;
-+
- 	/*
- 	 * Set an offset of PT_LOAD segment.
- 	 */
- 	info->offset_load_dumpfile = offset_note_dumpfile + size_note;
-+	info->offset_note_dumpfile = offset_note_dumpfile;
- 
- 	ret = TRUE;
- out:
-@@ -6728,6 +6789,67 @@ out:
- }
- 
- int
-+write_elf_eraseinfo(struct cache_data *cd_header)
-+{
-+	char note[MAX_SIZE_NHDR];
-+	char buf[ERASEINFO_NOTE_NAME_BYTES + 4];
-+	unsigned long note_header_size, size_eraseinfo;
-+
-+	if (!info->size_eraseinfo)
-+		return TRUE;
-+
-+	DEBUG_MSG("Writing erase info...\n");
-+
-+	/* calculate the eraseinfo ELF note offset */
-+	cd_header->offset = info->offset_note_dumpfile +
-+				roundup(info->size_note, 4);
-+
-+	/* Write eraseinfo ELF note header. */
-+	memset(note, 0, sizeof(note));
-+	if (info->flag_elf64_memory) {
-+		Elf64_Nhdr *nh = (Elf64_Nhdr *)note;
-+
-+		note_header_size = sizeof(Elf64_Nhdr);
-+		nh->n_namesz = ERASEINFO_NOTE_NAME_BYTES;
-+		nh->n_descsz = info->size_eraseinfo;
-+		nh->n_type = NT_ERASE_INFO;
-+	} else {
-+		Elf32_Nhdr *nh = (Elf32_Nhdr *)note;
-+
-+		note_header_size = sizeof(Elf32_Nhdr);
-+		nh->n_namesz = ERASEINFO_NOTE_NAME_BYTES;
-+		nh->n_descsz = info->size_eraseinfo;
-+		nh->n_type = NT_ERASE_INFO;
-+	}
-+	if (!write_cache(cd_header, note, note_header_size))
-+		return FALSE;
-+
-+	/* Write eraseinfo Note name */
-+	memset(buf, 0, sizeof(buf));
-+	memcpy(buf, ERASEINFO_NOTE_NAME, ERASEINFO_NOTE_NAME_BYTES);
-+	if (!write_cache(cd_header, buf,
-+				roundup(ERASEINFO_NOTE_NAME_BYTES, 4)))
-+		return FALSE;
-+
-+	info->offset_eraseinfo = cd_header->offset;
-+	if (!write_eraseinfo(cd_header, &size_eraseinfo))
-+		return FALSE;
-+
-+	/*
-+	 * The actual eraseinfo written may be less than pre-calculated size.
-+	 * Hence fill up the rest of size with zero's.
-+	 */
-+	if (size_eraseinfo < info->size_eraseinfo)
-+		write_cache_zero(cd_header,
-+				info->size_eraseinfo - size_eraseinfo);
-+
-+	DEBUG_MSG("offset_eraseinfo: %lx, size_eraseinfo: %ld\n",
-+			info->offset_eraseinfo, info->size_eraseinfo);
-+
-+	return TRUE;
-+}
-+
-+int
- write_kdump_eraseinfo(struct cache_data *cd_page)
- {
- 	off_t offset_eraseinfo;
-@@ -7581,6 +7703,8 @@ writeout_dumpfile(void)
- 			goto out;
- 		if (!write_elf_pages(&cd_header, &cd_page))
- 			goto out;
-+		if (!write_elf_eraseinfo(&cd_header))
-+			goto out;
- 	} else {
- 		if (!write_kdump_header())
- 			goto out;
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 2e4b902..662bc97 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -504,6 +504,22 @@ do { \
- #define MAX_SIZE_STR_LEN (21)
- 
- /*
-+ * ELF note section for erase information
-+ *
-+ * According to elf.h the unused values are 0x15(21) through 0xff. The value
-+ * range 0x1XX, 0x2XX and 0x3XX is been used for PPC, i386 and s390
-+ * respectively.
-+ *
-+ * Using 0xff to be on safer side so that any new Elf Note addition in elf.h
-+ * after 0x15 value would not clash.
-+ */
-+#ifndef NT_ERASE_INFO
-+#define NT_ERASE_INFO (0xff)	/* Contains erased information. */
-+#endif
-+#define ERASEINFO_NOTE_NAME		"ERASEINFO"
-+#define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
-+
-+/*
-  * The value of dependence on machine
-  */
- #define PAGE_OFFSET		(info->page_offset)
-@@ -977,6 +993,7 @@ struct DumpInfo {
- 	 * ELF NOTE section in dump memory image info:
- 	 */
- 	off_t			offset_note;
-+	off_t			offset_note_dumpfile;
- 	unsigned long		size_note;
- 
- 	/*
--- 
-Mahesh J Salgaonkar
+On Wed, 18 May 2011 01:31:01 +0530
+Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+>
+> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> 
+> So far makedumpfile implementation does not have to deal with module
+> debuginfo files. In order to support filtering of kernel module data,
+> it needs to read dwarf information from module debuginfo files. The linux
+> kernel module debuginfo are of ET_REL type and requires relocation to be
+> applied in order to get the dwarf information.
+> 
+> This patch uses dwfl_* API's to make the code relocation-aware while
+> loading module debuginfo files. It also uses dwfl_* API to search module
+> debuginfo files installed under default debuginfo path.
+> 
+> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> Signed-off-by: Prerna Saxena <prerna@linux.vnet.ibm.com>
+> ---
+> 
+>  makedumpfile.c |  261 +++++++++++++++++++++++++++++++++++++++++++++-----------
+>  makedumpfile.h |    7 ++
+>  2 files changed, 216 insertions(+), 52 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index f136eba..2274b18 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1372,6 +1372,146 @@ get_elf_info(void)
+>  	return TRUE;
+>  }
+>  
+> +static int
+> +process_module (Dwfl_Module *dwflmod,
+> +		void **userdata __attribute__ ((unused)),
+> +		const char *name __attribute__ ((unused)),
+> +		Dwarf_Addr base __attribute__ ((unused)),
+> +		void *arg)
+> +{
+> +	const char *fname, *mod_name, *debugfile;
+> +	Dwarf_Addr dwbias;
+> +
+> +	/* get a debug context descriptor.*/
+> +	dwarf_info.dwarfd = dwfl_module_getdwarf (dwflmod, &dwbias);
+> +	dwarf_info.elfd = dwarf_getelf(dwarf_info.dwarfd);
+> +
+> +	mod_name = dwfl_module_info(dwflmod, NULL, NULL, NULL, NULL, NULL,
+> +							&fname, &debugfile);
+> +
+> +	if (!strcmp(dwarf_info.module_name, mod_name) &&
+> +		!dwarf_info.name_debuginfo && debugfile) {
+> +		/*
+> +		 * Store the debuginfo filename. Next time we will
+> +		 * open debuginfo file direclty instead of searching
+> +		 * for it again.
+> +		 */
+> +		dwarf_info.name_debuginfo = strdup(debugfile);
+> +	}
+> +
+> +	return DWARF_CB_OK;
+> +}
+> +
+> +static int
+> +dwfl_report_module_p(const char *modname, const char *filename)
+> +{
+> +	if (filename && !strcmp(modname, dwarf_info.module_name))
+> +		return 1;
+> +	return 0;
+> +}
+> +
+> +static void
+> +clean_dwfl_info(void)
+> +{
+> +	if (dwarf_info.dwfl)
+> +		dwfl_end(dwarf_info.dwfl);
+> +
+> +	dwarf_info.dwfl = NULL;
+> +	dwarf_info.dwarfd = NULL;
+> +	dwarf_info.elfd = NULL;
+> +}
+> +
+> +/*
+> + * Intitialize the dwarf info.
+> + * Linux kernel module debuginfo are of ET_REL (relocatable) type. The old
+> + * implementation of get_debug_info() function that reads the debuginfo was
+> + * not relocation-aware and hence could not read the dwarf info properly
+> + * from module debuginfo.
+> + *
+> + * This function uses dwfl API's to apply relocation before reading the
+> + * dwarf information from module debuginfo.
+> + * On success, this function sets the dwarf_info.elfd and dwarf_info.dwarfd
+> + * after applying relocation to module debuginfo.
+> + */
+> +static int
+> +init_dwarf_info(void)
+> +{
+> +	Dwfl *dwfl = NULL;
+> +	int dwfl_fd = -1;
+> +	static char *debuginfo_path = DEFAULT_DEBUGINFO_PATH;
+> +	static const Dwfl_Callbacks callbacks = {
+> +		.section_address = dwfl_offline_section_address,
+> +		.find_debuginfo = dwfl_standard_find_debuginfo,
+> +		.debuginfo_path = &debuginfo_path,
+> +	};
+> +
+> +	dwarf_info.elfd = NULL;
+> +	dwarf_info.dwarfd = NULL;
+> +
+> +	if ((dwfl = dwfl_begin(&callbacks)) == NULL) {
+> +		ERRMSG("Can't create a handle for a new dwfl session.\n");
+> +		return FALSE;
+> +	}
+> +
+> +	if (dwarf_info.name_debuginfo) {
+> +		/* We have absolute path for debuginfo file, use it directly
+> +		 * instead of searching it through
+> +		 * dwfl_linux_kernel_report_offline() call.
+> +		 *
+> +		 * Open the debuginfo file if it is not already open.
+> +		 */
+> +		if (dwarf_info.fd_debuginfo < 0)
+> +			dwarf_info.fd_debuginfo =
+> +				open(dwarf_info.name_debuginfo, O_RDONLY);
+> +
+> +		dwfl_fd = dup(dwarf_info.fd_debuginfo);
+> +		if (dwfl_fd < 0) {
+> +			ERRMSG("Failed to get a duplicate handle for"
+> +				" debuginfo.\n");
+> +			goto err_out;
+> +		}
+> +	}
+> +	if (dwarf_info.fd_debuginfo > 0) {
+> +		if (dwfl_report_offline(dwfl, dwarf_info.module_name,
+> +				dwarf_info.name_debuginfo, dwfl_fd) == NULL) {
+> +			ERRMSG("Failed reading %s: %s\n",
+> +				dwarf_info.name_debuginfo, dwfl_errmsg (-1));
+> +			/* dwfl_fd is consumed on success, not on failure */
+> +			close(dwfl_fd);
+> +			goto err_out;
+> +		}
+> +	}
+> +	else if (dwfl_linux_kernel_report_offline(dwfl,
+> +						info->system_utsname.release,
+> +						&dwfl_report_module_p)) {
+> +		ERRMSG("Can't get Module debuginfo for module '%s'\n",
+> +					dwarf_info.module_name);
+> +		goto err_out;
+> +	}
+> +	dwfl_report_end(dwfl, NULL, NULL);
+> +
+> +	dwfl_getmodules(dwfl, &process_module, NULL, 0);
+> +
+> +	if (dwarf_info.elfd == NULL) {
+> +		ERRMSG("Can't get first elf header of %s.\n",
+> +		    dwarf_info.name_debuginfo);
+> +		goto err_out;
+> +	}
+> +
+> +	if (dwarf_info.dwarfd == NULL) {
+> +		ERRMSG("Can't get debug context descriptor for %s.\n",
+> +		    dwarf_info.name_debuginfo);
+> +		goto err_out;
+> +	}
+> +	dwarf_info.dwfl = dwfl;
+> +	return TRUE;
+> +err_out:
+> +	if (dwfl)
+> +		dwfl_end(dwfl);
+> +
+> +	return FALSE;
+> +}
+> +
+>  unsigned long long
+>  get_symbol_addr(char *symname)
+>  {
+> @@ -1383,18 +1523,12 @@ get_symbol_addr(char *symname)
+>  	Elf_Data *data = NULL;
+>  	Elf_Scn *scn = NULL;
+>  	char *sym_name = NULL;
+> -	const off_t failed = (off_t)-1;
+>  
+> -	if (lseek(dwarf_info.fd_debuginfo, 0, SEEK_SET) == failed) {
+> -		ERRMSG("Can't seek the kernel file(%s). %s\n",
+> -		    dwarf_info.name_debuginfo, strerror(errno));
+> -		return NOT_FOUND_SYMBOL;
+> -	}
+> -	if (!(elfd = elf_begin(dwarf_info.fd_debuginfo, ELF_C_READ, NULL))) {
+> -		ERRMSG("Can't get first elf header of %s.\n",
+> -		    dwarf_info.name_debuginfo);
+> -		return NOT_FOUND_SYMBOL;
+> -	}
+> +	if (!init_dwarf_info())
+> +		return 0;
+> +
+> +	elfd = dwarf_info.elfd;
+> +
+>  	while ((scn = elf_nextscn(elfd, scn)) != NULL) {
+>  		if (gelf_getshdr(scn, &shdr) == NULL) {
+>  			ERRMSG("Can't get section header.\n");
+> @@ -1431,8 +1565,7 @@ get_symbol_addr(char *symname)
+>  		}
+>  	}
+>  out:
+> -	if (elfd != NULL)
+> -		elf_end(elfd);
+> +	clean_dwfl_info();
+>  
+>  	return symbol;
+>  }
+> @@ -1449,18 +1582,12 @@ get_next_symbol_addr(char *symname)
+>  	Elf_Data *data = NULL;
+>  	Elf_Scn *scn = NULL;
+>  	char *sym_name = NULL;
+> -	const off_t failed = (off_t)-1;
+>  
+> -	if (lseek(dwarf_info.fd_debuginfo, 0, SEEK_SET) == failed) {
+> -		ERRMSG("Can't seek the kernel file(%s). %s\n",
+> -		    dwarf_info.name_debuginfo, strerror(errno));
+> -		return NOT_FOUND_SYMBOL;
+> -	}
+> -	if (!(elfd = elf_begin(dwarf_info.fd_debuginfo, ELF_C_READ, NULL))) {
+> -		ERRMSG("Can't get first elf header of %s.\n",
+> -		    dwarf_info.name_debuginfo);
+> -		return NOT_FOUND_SYMBOL;
+> -	}
+> +	if (!init_dwarf_info())
+> +		return 0;
+> +
+> +	elfd = dwarf_info.elfd;
+> +
+>  	while ((scn = elf_nextscn(elfd, scn)) != NULL) {
+>  		if (gelf_getshdr(scn, &shdr) == NULL) {
+>  			ERRMSG("Can't get section header.\n");
+> @@ -1522,8 +1649,7 @@ get_next_symbol_addr(char *symname)
+>  		}
+>  	}
+>  out:
+> -	if (elfd != NULL)
+> -		elf_end(elfd);
+> +	clean_dwfl_info();
+>  
+>  	return next_symbol;
+>  }
+> @@ -2034,24 +2160,15 @@ get_debug_info(void)
+>  	Elf_Scn *scn = NULL;
+>  	GElf_Shdr scnhdr_mem, *scnhdr = NULL;
+>  	Dwarf_Die cu_die;
+> -	const off_t failed = (off_t)-1;
+>  
+>  	int ret = FALSE;
+>  
+> -	if (lseek(dwarf_info.fd_debuginfo, 0, SEEK_SET) == failed) {
+> -		ERRMSG("Can't seek the kernel file(%s). %s\n",
+> -		    dwarf_info.name_debuginfo, strerror(errno));
+> -		return FALSE;
+> -	}
+> -	if (!(elfd = elf_begin(dwarf_info.fd_debuginfo, ELF_C_READ_MMAP, NULL))) {
+> -		ERRMSG("Can't get first elf header of %s.\n",
+> -		    dwarf_info.name_debuginfo);
+> +	if (!init_dwarf_info())
+>  		return FALSE;
+> -	}
+> -	if (!(dwarfd = dwarf_begin_elf(elfd, DWARF_C_READ, NULL))) {
+> -		ERRMSG("Can't create a handle for a new debug session.\n");
+> -		goto out;
+> -	}
+> +
+> +	elfd = dwarf_info.elfd;
+> +	dwarfd = dwarf_info.dwarfd;
+> +
+>  	if (elf_getshstrndx(elfd, &shstrndx) < 0) {
+>  		ERRMSG("Can't get the section index of the string table.\n");
+>  		goto out;
+> @@ -2088,10 +2205,7 @@ get_debug_info(void)
+>  	}
+>  	ret = TRUE;
+>  out:
+> -	if (dwarfd != NULL)
+> -		dwarf_end(dwarfd);
+> -	if (elfd != NULL)
+> -		elf_end(elfd);
+> +	clean_dwfl_info();
+>  
+>  	return ret;
+>  }
+> @@ -2448,14 +2562,58 @@ get_mem_type(void)
+>  	return ret;
+>  }
+>  
+> +/*
+> + * Set the dwarf_info with kernel/module debuginfo file information.
+> + */
+> +int
+> +set_dwarf_debuginfo(char *mod_name, char *name_debuginfo, int fd_debuginfo)
+> +{
+> +	if (!mod_name)
+> +		return FALSE;
+> +	if (dwarf_info.module_name && !strcmp(dwarf_info.module_name, mod_name))
+> +		return TRUE;
+> +
+> +	/* Switching to different module.
+> +	 *
+> +	 * Close the file descriptor if previous module is != kernel and
+> +	 * xen-syms. The reason is, vmlinux file will always be supplied
+> +	 * by user and code to open/close kernel debuginfo file already
+> +	 * in place. The module debuginfo files are opened only if '--config'
+> +	 * option is used. This helps not to break the existing functionlity
+> +	 * if called without '--config' option.
+> +	 */
+> +
+> +	if (dwarf_info.module_name
+> +			&& strcmp(dwarf_info.module_name, "vmlinux")
+> +			&& strcmp(dwarf_info.module_name, "xen-syms")) {
+> +		if (dwarf_info.fd_debuginfo > 0)
+> +			close(dwarf_info.fd_debuginfo);
+> +		if (dwarf_info.name_debuginfo)
+> +			free(dwarf_info.name_debuginfo);
+> +	}
+> +	dwarf_info.fd_debuginfo = fd_debuginfo;
+> +	dwarf_info.name_debuginfo = name_debuginfo;
+> +	dwarf_info.module_name = mod_name;
+> +
+> +	if (!strcmp(dwarf_info.module_name, "vmlinux") ||
+> +		!strcmp(dwarf_info.module_name, "xen-syms"))
+> +		return TRUE;
+> +
+> +	/* check to see whether module debuginfo is available */
+> +	if (!init_dwarf_info())
+> +		return FALSE;
+> +	else
+> +		clean_dwfl_info();
+> +	return TRUE;
+> +}
+> +
+>  int
+>  generate_vmcoreinfo(void)
+>  {
+>  	if (!set_page_size(sysconf(_SC_PAGE_SIZE)))
+>  		return FALSE;
+>  
+> -	dwarf_info.fd_debuginfo   = info->fd_vmlinux;
+> -	dwarf_info.name_debuginfo = info->name_vmlinux;
+> +	set_dwarf_debuginfo("vmlinux", info->name_vmlinux, info->fd_vmlinux);
+>  
+>  	if (!get_symbol_info())
+>  		return FALSE;
+> @@ -3888,8 +4046,8 @@ initial(void)
+>  	 * Get the debug information for analysis from the kernel file
+>  	 */
+>  	} else if (info->name_vmlinux) {
+> -		dwarf_info.fd_debuginfo   = info->fd_vmlinux;
+> -		dwarf_info.name_debuginfo = info->name_vmlinux;
+> +		set_dwarf_debuginfo("vmlinux", info->name_vmlinux,
+> +						info->fd_vmlinux);
+>  
+>  		if (!get_symbol_info())
+>  			return FALSE;
+> @@ -6552,8 +6710,7 @@ generate_vmcoreinfo_xen(void)
+>  		ERRMSG("Can't get the size of page.\n");
+>  		return FALSE;
+>  	}
+> -	dwarf_info.fd_debuginfo   = info->fd_xen_syms;
+> -	dwarf_info.name_debuginfo = info->name_xen_syms;
+> +	set_dwarf_debuginfo("xen-syms", info->name_xen_syms, info->fd_xen_syms);
+>  
+>  	if (!get_symbol_info_xen())
+>  		return FALSE;
+> @@ -6820,8 +6977,8 @@ initial_xen(void)
+>  	 * Get the debug information for analysis from the xen-syms file
+>  	 */
+>  	} else if (info->name_xen_syms) {
+> -		dwarf_info.fd_debuginfo   = info->fd_xen_syms;
+> -		dwarf_info.name_debuginfo = info->name_xen_syms;
+> +		set_dwarf_debuginfo("xen-syms", info->name_xen_syms,
+> +							info->fd_xen_syms);
+>  
+>  		if (!get_symbol_info_xen())
+>  			return FALSE;
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index e037f12..3fda754 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -27,6 +27,7 @@
+>  #include <sys/wait.h>
+>  #include <zlib.h>
+>  #include <elfutils/libdw.h>
+> +#include <elfutils/libdwfl.h>
+>  #include <libelf.h>
+>  #include <dwarf.h>
+>  #include <byteswap.h>
+> @@ -1177,6 +1178,8 @@ extern struct srcfile_table	srcfile_table;
+>  /*
+>   * Debugging information
+>   */
+> +#define DEFAULT_DEBUGINFO_PATH	"/usr/lib/debug"
+> +
+>  enum {
+>  	DWARF_INFO_GET_STRUCT_SIZE,
+>  	DWARF_INFO_GET_MEMBER_OFFSET,
+> @@ -1194,10 +1197,14 @@ struct dwarf_info {
+>  	unsigned int	cmd;		/* IN */
+>  	int	fd_debuginfo;		/* IN */
+>  	char	*name_debuginfo;	/* IN */
+> +	char	*module_name;		/* IN */
+>  	char	*struct_name;		/* IN */
+>  	char	*symbol_name;		/* IN */
+>  	char	*member_name;		/* IN */
+>  	char	*enum_name;		/* IN */
+> +	Elf	*elfd;			/* OUT */
+> +	Dwarf	*dwarfd;		/* OUT */
+> +	Dwfl	*dwfl;			/* OUT */
+>  	long	struct_size;		/* OUT */
+>  	long	member_offset;		/* OUT */
+>  	long	array_length;		/* OUT */
+> 
 
 _______________________________________________
 kexec mailing list
