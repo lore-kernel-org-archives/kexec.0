@@ -1,24 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from e28smtp03.in.ibm.com ([122.248.162.3])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QheI7-0003Vg-0a
-	for kexec@lists.infradead.org; Fri, 15 Jul 2011 09:02:36 +0000
-Date: Fri, 15 Jul 2011 16:38:07 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH v2 0/8] makedumpfile: makedumpfile enhancement to filter
-	out kernel data from vmcore
-Message-Id: <20110715163807.f303257c.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110715071029.GA27936@in.ibm.com>
-References: <20110524203542.GH3860@redhat.com>
-	<1621913139.202658.1306270052667.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-	<OF341326C7.0D81F89A-ONC125789B.002DB6ED-C125789B.002FC7A0@de.ibm.com>
-	<20110525195321.GD6724@redhat.com>
-	<OF05104FA0.A922963A-ONC125789C.003BDAA9-C125789C.003DD130@de.ibm.com>
-	<20110526133923.GA29496@redhat.com>
-	<20110527065621.GA26119@in.ibm.com>
-	<20110715142041.2a7aa858.oomichi@mxs.nes.nec.co.jp>
-	<20110715071029.GA27936@in.ibm.com>
-Mime-Version: 1.0
+	id 1QheVL-0003it-TT
+	for kexec@lists.infradead.org; Fri, 15 Jul 2011 09:16:18 +0000
+Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
+	by e28smtp03.in.ibm.com (8.14.4/8.13.1) with ESMTP id p6F9G3Ni024993
+	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 14:46:03 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p6F9G32K2093064
+	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 14:46:03 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+	by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p6F9G2n8024464
+	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 19:16:03 +1000
+Date: Fri, 15 Jul 2011 14:46:02 +0530
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Subject: Re: [UPDATED PATCH v2 8/8] makedumpfile: Add erase information in
+	ELF formatted dumpfile
+Message-ID: <20110715091602.GA719@in.ibm.com>
+References: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
+Reply-To: mahesh@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,55 +36,262 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: mahesh@linux.vnet.ibm.com
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Reinhard Buendgen <BUENDGEN@de.ibm.com>
+To: kexec@lists.infradead.org, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
+Hi,
 
-Hi Mahesh,
+This is an updated patch that fixes a problem where empty ELF note gets
+populated when info->size_eraseinfo is zero. This updated patch now does
+not introduce new ELF note if info->size_eraseinfo == 0.
 
-Thank you for quick response.
+Thanks,
+-Mahesh.
 
-On Fri, 15 Jul 2011 12:40:29 +0530
-Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> > > 
-> > > The current approach is to re-run the makedumpfile on the crash dump
-> > > (generated in the second kernel) when we are back into production kernel
-> > > (1st kernel).
-> > 
-> > IIUC, there are be 2 dumpfiles on customer site by the above approach.
-> > The one is with privacy/secret data, and another is without.
-> 
-> Correct.
-> 
-> > 
-> > If correct, I like this approach because a customer can have two options
-> > when the crash utility cannot read a dumpfile without privacy/secret data
-> > on support site.
-> 
-> The crash utility would just display a warning message early on during
-> invocation. Most of the time crash tool will be able to read/analyze the
-> dump unless someone scrubs out the data on which crash utility is dependant
-> on. And as I mentioned previously, this is intended just as a security filter
-> and not to be used as detrimental to crash's analysis of the dump.
+makedumpfile: Add erase information in ELF formatted dumpfile
 
-I see, this feature will not be a problem in most cases.
-However a customer can create unreadable dumpfile by using this feature,
-and current makedumpfile does not have such feature.
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-Of course unreadable dumpfile is due to wrong makedumpfile.conf,
-and I like this feature anyway because a customer has options.
+This patch implements support for inclusion of erase information in ELF
+formatted dumpfile. This patch introduces a additional ELF Note section
+that contains erase information.
 
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+---
+ makedumpfile.c |  126 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |   17 ++++++++
+ 2 files changed, 142 insertions(+), 1 deletions(-)
 
-Thanks
-Ken'ichi Ohmichi
-
-> > First option:
-> >   For digging a problem, a customer sends a dumpfile with privacy/secret
-> >   data to support site.
-> > 
-> > Second option:
-> >   For protecting privacy/secret data, a customer gives up digging a problem.
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 7ff94ac..f48953e 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3352,6 +3352,9 @@ get_pt_note_info(off_t off_note, unsigned long sz_note)
+ 				return FALSE;
+ 			}
+ 			info->p2m_mfn = p2m_mfn;
++		} else if (n_type == NT_ERASE_INFO) {
++			info->offset_eraseinfo = offset_desc;
++			info->size_eraseinfo = size_desc;
+ 		}
+ 		offset += offset_next_note(note);
+ 	}
+@@ -4647,6 +4650,15 @@ write_cache_bufsz(struct cache_data *cd)
+ }
+ 
+ int
++write_cache_zero(struct cache_data *cd, size_t size)
++{
++	memset(cd->buf + cd->buf_size, 0, size);
++	cd->buf_size += size;
++
++	return write_cache_bufsz(cd);
++}
++
++int
+ read_buf_from_stdin(void *buf, int buf_size)
+ {
+ 	int read_size = 0, tmp_read_size = 0;
+@@ -5799,10 +5811,12 @@ write_elf_header(struct cache_data *cd_header)
+ {
+ 	int i, num_loads_dumpfile, phnum;
+ 	off_t offset_note_memory, offset_note_dumpfile;
+-	size_t size_note;
++	size_t size_note, size_eraseinfo = 0;
+ 	Elf64_Ehdr ehdr64;
+ 	Elf32_Ehdr ehdr32;
+ 	Elf64_Phdr note;
++	char size_str[MAX_SIZE_STR_LEN];
++	struct filter_info *fl_info = filter_info;
+ 
+ 	char *buf = NULL;
+ 	const off_t failed = (off_t)-1;
+@@ -5855,6 +5869,36 @@ write_elf_header(struct cache_data *cd_header)
+ 	}
+ 
+ 	/*
++	 * Pre-calculate the required size to store eraseinfo in ELF note
++	 * section so that we can add enough space in ELF notes section and
++	 * adjust the PT_LOAD offset accordingly.
++	 */
++	while (fl_info) {
++		struct erase_info *ei;
++
++		if (!fl_info->erase_info_idx)
++			continue;
++		ei = &erase_info[fl_info->erase_info_idx];
++		if (fl_info->nullify)
++			sprintf(size_str, "nullify\n");
++		else
++			sprintf(size_str, "%ld\n", fl_info->size);
++
++		size_eraseinfo += strlen("erase ") +
++				strlen(ei->symbol_expr) + 1 +
++				strlen(size_str);
++		fl_info = fl_info->next;
++	}
++
++	/*
++	 * Store the size_eraseinfo for later use in write_elf_eraseinfo()
++	 * function. This will overwrite the size fetched during
++	 * get elf_info() function but we are ok with that.
++	 */
++	info->size_eraseinfo = size_eraseinfo;
++	DEBUG_MSG("erase info size: %lu\n", info->size_eraseinfo);
++
++	/*
+ 	 * Write a PT_NOTE header.
+ 	 */
+ 	if (!(phnum = get_phnum_memory()))
+@@ -5884,6 +5928,19 @@ write_elf_header(struct cache_data *cd_header)
+ 	note.p_offset      = offset_note_dumpfile;
+ 	size_note          = note.p_filesz;
+ 
++	/*
++	 * Modify the note size in PT_NOTE header to accomodate eraseinfo data.
++	 * Eraseinfo will be written later.
++	 */
++	if (info->size_eraseinfo) {
++		if (info->flag_elf64_memory)
++			note.p_filesz += sizeof(Elf64_Nhdr);
++		else
++			note.p_filesz += sizeof(Elf32_Nhdr);
++		note.p_filesz += roundup(ERASEINFO_NOTE_NAME_BYTES, 4) +
++					roundup(size_eraseinfo, 4);
++	}
++
+ 	if (!write_elf_phdr(cd_header, &note))
+ 		goto out;
+ 
+@@ -5910,10 +5967,14 @@ write_elf_header(struct cache_data *cd_header)
+ 	    size_note, info->name_dumpfile))
+ 		goto out;
+ 
++	/* Set the size_note with new size. */
++	size_note          = note.p_filesz;
++
+ 	/*
+ 	 * Set an offset of PT_LOAD segment.
+ 	 */
+ 	info->offset_load_dumpfile = offset_note_dumpfile + size_note;
++	info->offset_note_dumpfile = offset_note_dumpfile;
+ 
+ 	ret = TRUE;
+ out:
+@@ -6728,6 +6789,67 @@ out:
+ }
+ 
+ int
++write_elf_eraseinfo(struct cache_data *cd_header)
++{
++	char note[MAX_SIZE_NHDR];
++	char buf[ERASEINFO_NOTE_NAME_BYTES + 4];
++	unsigned long note_header_size, size_eraseinfo;
++
++	if (!info->size_eraseinfo)
++		return TRUE;
++
++	DEBUG_MSG("Writing erase info...\n");
++
++	/* calculate the eraseinfo ELF note offset */
++	cd_header->offset = info->offset_note_dumpfile +
++				roundup(info->size_note, 4);
++
++	/* Write eraseinfo ELF note header. */
++	memset(note, 0, sizeof(note));
++	if (info->flag_elf64_memory) {
++		Elf64_Nhdr *nh = (Elf64_Nhdr *)note;
++
++		note_header_size = sizeof(Elf64_Nhdr);
++		nh->n_namesz = ERASEINFO_NOTE_NAME_BYTES;
++		nh->n_descsz = info->size_eraseinfo;
++		nh->n_type = NT_ERASE_INFO;
++	} else {
++		Elf32_Nhdr *nh = (Elf32_Nhdr *)note;
++
++		note_header_size = sizeof(Elf32_Nhdr);
++		nh->n_namesz = ERASEINFO_NOTE_NAME_BYTES;
++		nh->n_descsz = info->size_eraseinfo;
++		nh->n_type = NT_ERASE_INFO;
++	}
++	if (!write_cache(cd_header, note, note_header_size))
++		return FALSE;
++
++	/* Write eraseinfo Note name */
++	memset(buf, 0, sizeof(buf));
++	memcpy(buf, ERASEINFO_NOTE_NAME, ERASEINFO_NOTE_NAME_BYTES);
++	if (!write_cache(cd_header, buf,
++				roundup(ERASEINFO_NOTE_NAME_BYTES, 4)))
++		return FALSE;
++
++	info->offset_eraseinfo = cd_header->offset;
++	if (!write_eraseinfo(cd_header, &size_eraseinfo))
++		return FALSE;
++
++	/*
++	 * The actual eraseinfo written may be less than pre-calculated size.
++	 * Hence fill up the rest of size with zero's.
++	 */
++	if (size_eraseinfo < info->size_eraseinfo)
++		write_cache_zero(cd_header,
++				info->size_eraseinfo - size_eraseinfo);
++
++	DEBUG_MSG("offset_eraseinfo: %lx, size_eraseinfo: %ld\n",
++			info->offset_eraseinfo, info->size_eraseinfo);
++
++	return TRUE;
++}
++
++int
+ write_kdump_eraseinfo(struct cache_data *cd_page)
+ {
+ 	off_t offset_eraseinfo;
+@@ -7581,6 +7703,8 @@ writeout_dumpfile(void)
+ 			goto out;
+ 		if (!write_elf_pages(&cd_header, &cd_page))
+ 			goto out;
++		if (!write_elf_eraseinfo(&cd_header))
++			goto out;
+ 	} else {
+ 		if (!write_kdump_header())
+ 			goto out;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 2e4b902..662bc97 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -504,6 +504,22 @@ do { \
+ #define MAX_SIZE_STR_LEN (21)
+ 
+ /*
++ * ELF note section for erase information
++ *
++ * According to elf.h the unused values are 0x15(21) through 0xff. The value
++ * range 0x1XX, 0x2XX and 0x3XX is been used for PPC, i386 and s390
++ * respectively.
++ *
++ * Using 0xff to be on safer side so that any new Elf Note addition in elf.h
++ * after 0x15 value would not clash.
++ */
++#ifndef NT_ERASE_INFO
++#define NT_ERASE_INFO (0xff)	/* Contains erased information. */
++#endif
++#define ERASEINFO_NOTE_NAME		"ERASEINFO"
++#define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
++
++/*
+  * The value of dependence on machine
+  */
+ #define PAGE_OFFSET		(info->page_offset)
+@@ -977,6 +993,7 @@ struct DumpInfo {
+ 	 * ELF NOTE section in dump memory image info:
+ 	 */
+ 	off_t			offset_note;
++	off_t			offset_note_dumpfile;
+ 	unsigned long		size_note;
+ 
+ 	/*
+-- 
+Mahesh J Salgaonkar
 
 _______________________________________________
 kexec mailing list
