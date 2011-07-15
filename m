@@ -1,34 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QhisX-00029v-Bu
-	for kexec@lists.infradead.org; Fri, 15 Jul 2011 13:56:30 +0000
-Received: from d06nrmr1307.portsmouth.uk.ibm.com
-	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6FDuNbq021898
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 13:56:23 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
-	[9.149.37.229])
-	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6FDuMHb2023570
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 14:56:22 +0100
-Received: from d06av05.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av05.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6FDuMhC017520
-	for <kexec@lists.infradead.org>; Fri, 15 Jul 2011 07:56:22 -0600
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QhjX6-0003zn-Rv
+	for kexec@lists.infradead.org; Fri, 15 Jul 2011 14:38:25 +0000
+Date: Fri, 15 Jul 2011 10:38:20 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [patch 0/9] kdump: Patch series for s390 support
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-In-Reply-To: <20110714175532.GE6672@redhat.com>
-References: <20110705202615.GJ24348@redhat.com>
-	<1309944287.3937.39.camel@br98xy6r> <20110707193321.GE28850@redhat.com>
-	<20110708110121.5acfc3c9@mschwide> <20110711144255.GE30674@redhat.com>
-	<20110711175626.121dcc58@mschwide> <20110713160239.GE4426@redhat.com>
-	<20110713184611.6dcb09b4@mschwide> <20110713200004.GG4426@redhat.com>
-	<20110714091800.720da848@mschwide> <20110714175532.GE6672@redhat.com>
-Date: Fri, 15 Jul 2011 15:56:21 +0200
-Message-ID: <1310738181.10789.16.camel@br98xy6r>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+Message-ID: <20110715143820.GG3428@redhat.com>
+References: <20110708110121.5acfc3c9@mschwide>
+	<20110711144255.GE30674@redhat.com>
+	<20110711175626.121dcc58@mschwide>
+	<20110713160239.GE4426@redhat.com>
+	<20110713184611.6dcb09b4@mschwide>
+	<20110713200004.GG4426@redhat.com>
+	<20110714091800.720da848@mschwide>
+	<20110714175532.GE6672@redhat.com>
+	<20110714180528.GF6672@redhat.com>
+	<1310739717.10789.31.camel@br98xy6r>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1310739717.10789.31.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,45 +32,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org
 
-Hello Vivec,
-
-On Thu, 2011-07-14 at 13:55 -0400, Vivek Goyal wrote:
-
-[snip]
-
-> > The first thing we want to do is to check if
-> > the purgatory is still fine, that is do a checksum. If we have the
-> > infrastructure in place to do one checksum then we can easily do the
-> > other checksums as well.
+On Fri, Jul 15, 2011 at 04:21:57PM +0200, Michael Holzheu wrote:
+> On Thu, 2011-07-14 at 14:05 -0400, Vivek Goyal wrote:
+> > On Thu, Jul 14, 2011 at 01:55:32PM -0400, Vivek Goyal wrote:
+> > 
+> > [..]
+> > > > > So we first try to take purgatory path which does the checksum and is
+> > > > > consistent with other architectures. If that does not work in case
+> > > > > of hard hang, you always have the option of IPLing the stand alone tool
+> > > > > later manually.
+> > > > 
+> > > > How are we suddenly on the purgatory path again? The code that gets
+> > > > control in case of a hard crash + IPL is the stand-alone dump tool,
+> > > > not the purgatory code.
+> > > 
+> > > I think that's the biggest contetion point. From the start of discussion
+> > > you have this hardcoded requirement that the moment panic() happens
+> > > you are jumping to some IPL code and that's what I am questioning. Why
+> > > can't you execute some more code after panic() (purgatory), before
+> > > you jump to IPL code (only if you have to). 
+> > > 
+> > 
+> > In your parlance of shutdown actions, I think it is equivalnet to saying
+> > that "kdump" is a shutdown action and that that means is that for specific
+> > trigger points we will execute "crash_kexec()" function which will try
+> > to capture the dump.
+> > 
+> > In user space I think one can modify the kexec-tools infrastrucuture a
+> > bit so that one is able to define an entry point in case checksum of
+> > loaded segment failes. Once you are loding kdump kernel, you can define
+> > that entry point. (And this would be jump to IPL etc.).
 > 
-> Some piece of code you have to assume is fine. Are you not already
-> assuming that IPL code you have in first 64K bytes is fine and no
-> body has overwritten it.
+> You mean to jump back into the crashed kernel code in case the kdump
+> checksum failed?
 
-We can assume that the IPL dump code is fine, because it is freshly
-loaded into memory. Only when the disk is somehow corrupted we have a
-problem.
+No. I meant jump to entry point so that one can IPL the dump tools. I
+am not sure how do initiate the IPL after panic. Similar thing needs
+to be done here. If it is as simple as jumping to some location in
+low memory, then purgatory should be able to do that. I think we
+shall have to figure out the details here.
 
-> Are you not assuming that hook in panic()
-> (I think you are calling it shutdown trigger) is fine so that it
-> can help you jump to right place.
+Basically I am saying that purgatory detected that kdump kernel is
+corrupted. In x86_64 we spin in inifinite loop as we don't have a
+backup plan. But s390 has a backup plan of being able to IPL dump
+tools.
 
-Yes, that is correct for automatic dump in case of panic(). The panic()
-path can fail.
+Or in first step we can keep it even simpler. We can spin in infinite
+loop and wait for either hypervisor watchdog to kick in for automatic
+IPL or wait for operator intervention. That would simplify it even
+further. 
 
-But there are two other options where really *no* code that was in
-memory, when the system crashed, is used for the dump process or
-verification of kdump:
-1) Manual IPL/boot of stand-alone dump by the operator via the virtual
-guest console
-2) Automatic IPL/boot of stand-alone dump by our z/VM hypervisor
-watchdog
+> 
+> In the meantime I was looking a bit more into the kexec code to find
+> out, what we would have to do, if we use the preallocated ELF header as
+> you want us to do. With our actual solution, we do not have to reserve
+> any special areas for the kdump kernel. Now we have to reserve the ELF
+> header. So what are the options?
 
-Michael
+ELF headers go into same memory area as kdump kenrel. Anyway you are
+doing to reserve memory for kdump kernel and ELF headers will go 
+right there.
 
+Once you swap the kernel I think ELF headers continue to remain in
+original location. Or may be you can move ELF headers too depending
+on what turns out to be easier.
+
+> 
+> The x86 implementation uses a kernel parameter "memmap=exactmap" to do
+> that.
+
+It tells second kernel to use a memory map defined on command line.
+Kexec-tools prepares this memory map with the help of memap= options. This
+is to limit the memory second kernel use to boot into so that it does not
+overwrite in any piece of memory used by first kernel.
+
+In your case I think you shall have to do little more so that second
+kernel also seems some of the lower memory areas so that later swapping
+of kernel can be done.
+
+> 
+> On ia64 - if I understood the code correctly - they seem to pass a kdump
+> segment "EFI_memmap" to the kdump kernel that contains information about
+> all loaded kexec segments. With this segment they can find out the size
+> of the ELF header segment in the kdump kernel and then do the memory
+> reservation at boot time. Is that correct?
+
+Sorry, I don't know the details of IA64. May be somebody else on the list
+can pitch in with some clarifications here.
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
