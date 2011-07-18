@@ -1,26 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp01.au.ibm.com ([202.81.31.143])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qif53-0001HY-RM
-	for kexec@lists.infradead.org; Mon, 18 Jul 2011 04:05:19 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp01.au.ibm.com (8.14.4/8.13.1) with ESMTP id p6I40aZo025769
-	for <kexec@lists.infradead.org>; Mon, 18 Jul 2011 14:00:36 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p6I454jJ983262
-	for <kexec@lists.infradead.org>; Mon, 18 Jul 2011 14:05:04 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p6I45235002936
-	for <kexec@lists.infradead.org>; Mon, 18 Jul 2011 14:05:03 +1000
-Message-ID: <4E23B0EB.2050301@in.ibm.com>
-Date: Mon, 18 Jul 2011 09:34:59 +0530
-From: Suzuki Poulose <suzuki@in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QimEk-0005ZX-HR
+	for kexec@lists.infradead.org; Mon, 18 Jul 2011 11:43:47 +0000
+Date: Mon, 18 Jul 2011 07:43:34 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC][PATCH] Replace a function call chain of
+	kmsg_dump(KMSG_DUMP_KEXEC) with static function calls
+Message-ID: <20110718114334.GA31986@redhat.com>
+References: <5C4C569E8A4B9B42A84A977CF070A35B2C17AAE59A@USINDEVS01.corp.hds.com>
+	<m14o2mjj5l.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] powerpc32: Kexec support for PPC440X chipsets
-References: <20110712064356.28567.48722.stgit@suzukikp.in.ibm.com>
-In-Reply-To: <20110712064356.28567.48722.stgit@suzukikp.in.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <m14o2mjj5l.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,59 +21,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Benjammin Herrenschmidt <benh@kernel.crashing.org>, Kumar Gala <galak@kernel.crashing.org>
-Cc: Michal Simek <monstr@monstr.eu>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, kexec <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Josh Boyer <jwboyer@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Paul Mackerras <paulus@samba.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Satoru Moriya <satoru.moriya@hds.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Seiji Aguchi <seiji.aguchi@hds.com>, Matthew Garrett <mjg@redhat.com>
 
-On 07/12/11 12:14, Suzuki K. Poulose wrote:
-> Changes from V1: Uses a tmp mapping in the other address space to setup
-> 		 the 1:1 mapping (suggested by Sebastian Andrzej Siewior).
->
-> Note: Should we do the same for kernel entry code for PPC44x ?
->
-> This patch adds kexec support for PPC440 based chipsets.This work is based
-> on the KEXEC patches for FSL BookE.
->
-> The FSL BookE patch and the code flow could be found at the link below:
->
-> 	http://patchwork.ozlabs.org/patch/49359/
->
-> Steps:
->
-> 1) Invalidate all the TLB entries except the one this code is run from
-> 2) Create a tmp mapping for our code in the other address space and jump to it
-> 3) Invalidate the entry we used
-> 4) Create a 1:1 mapping for 0-2GiB in blocks of 256M
-> 5) Jump to the new 1:1 mapping and invalidate the tmp mapping
->
-> I have tested this patches on Ebony, Sequoia boards and Virtex on QEMU.
-> It would be great if somebody could test this on the other boards.
+On Sat, Jul 16, 2011 at 09:16:06AM -0700, Eric W. Biederman wrote:
 
-Forgot to mention:
+[..]
+> Am I wrong in thinking that the core motivation behind this patch is
+> that our EFI support sucks and thus kdump on EFI does not work on some
+> platforms?
 
-You would need the current snapshot of kexec-tools, available at
+One of the arguments seems is that kdump might not work 100% of the
+time and saving kernel messages atleast gets some information out
+reliably.
 
-git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-The following commits(in the current tree) are needed for the support of ppc32.
-
-
-commit 13f6d71bdf9836b90ae4ec21209383f1a3c56b0f
-kexec-tools: ppc32: Fixup ThreadPointer for purgatory code
-
-commit 9ec3fac7e8840fb31891ba49a626c5dd33e09e86
-kexec-tools: powerpc: Use the #address-cells information to parsememory/reg
-
-commit 806ef8870539a6c74a2a98188d0207a038b16f77
-Fix memory errors on ppc
-
+I think being able to save dmesg to NVRAM, in general sounds good to
+me (if done in a relatively clean manner). Especially if we can get
+rid of code taking locks and code path executed after crash is not
+tool long and relatively easy to audit.
 
 Thanks
-
-Suzuki
+Vivek
 
 _______________________________________________
 kexec mailing list
