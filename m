@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-From: Seiji Aguchi <seiji.aguchi@hds.com>
-Date: Tue, 19 Jul 2011 15:18:15 -0400
-Subject: RE: [RFC][PATCH -mmotm 0/4] Improvement of pstore/kmsg_dump in
-	kexec/panic path
-Message-ID: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64EC@USINDEVS01.corp.hds.com>
-References: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64C2@USINDEVS01.corp.hds.com>
-	<20110719184759.GC7001@redhat.com>
-In-Reply-To: <20110719184759.GC7001@redhat.com>
-Content-Language: en-US
+Date: Tue, 19 Jul 2011 15:20:25 -0400
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [RFC][PATCH -mmotm 1/4] Add static function calls of pstore to
+	kexec path
+Message-ID: <20110719192025.GB3400@redhat.com>
+References: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64C3@USINDEVS01.corp.hds.com>
+	<20110719183506.GA23770@srcf.ucam.org>
+	<5C4C569E8A4B9B42A84A977CF070A35B2C199C64D6@USINDEVS01.corp.hds.com>
+	<20110719185411.GA3400@redhat.com>
+	<20110719190212.GA4844@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110719190212.GA4844@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,53 +20,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "dzickus@redhat.com" <dzickus@redhat.com>, Satoru Moriya <satoru.moriya@hds.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Eric W.
-	Biederman" <ebiederm@xmission.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Matthew Garrett <mjg@redhat.com>
+Cc: Satoru Moriya <satoru.moriya@hds.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Seiji Aguchi <seiji.aguchi@hds.com>, Matthew Garrett <mjg@redhat.com>
 
-SGksDQoNCj5XaHkgY2FuJ3Qgd2UgbG9nIHNvbWV0aGluZyBpbiB1c2VyDQo+c3BhY2Ugd2hlbiB1
-c2VyIGluaXRpYXRlcyBhIHJlYm9vdCwgbGV0IGl0IGdldCBsb2dnZWQgaW4gL3Zhci9sb2cvbWVz
-c2FnZXMNCj5hbmQgdGhlbiB1bW91bnQgdGhlIGZpbGUgcm9vdCBhbmQgZ28gYWhlYWQgd2l0aCBy
-ZWJvb3QuIFdoeSBkb2VzIGtlcm5lbA0KPm5lZWQgdG8gY2FwdHVyZSB0aGF0IGluZm8gaW4gTlZS
-QU0uDQoNClRoYW5rIHlvdSBmb3IgY29vcmRpbmF0aW5nIGRpc2N1c3Npb24uDQpJIHdpbGwgcmVw
-bHkgdG8geW91ciBxdWVzdGlvbi4NCg0KUmVnYXJkcywNCg0KU2VpamkNCg0KPi0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVml2ZWsgR295YWwgW21haWx0bzp2Z295YWxAcmVkaGF0
-LmNvbV0NCj5TZW50OiBUdWVzZGF5LCBKdWx5IDE5LCAyMDExIDI6NDggUE0NCj5UbzogU2Vpamkg
-QWd1Y2hpDQo+Q2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBFcmljIFcuIEJpZWRl
-cm1hbjsgS09TQUtJDQo+TW90b2hpcm87IEFtZXJpY28gV2FuZzsgTWF0dGhldyBHYXJyZXR0OyB0
-b255Lmx1Y2tAaW50ZWwuY29tOyBBbmRyZXcgTW9ydG9uOyBKYXJvZCBXaWxzb247IGhwYUB6eXRv
-ci5jb207DQo+ZHppY2t1c0ByZWRoYXQuY29tOyBkbGUtZGV2ZWxvcEBsaXN0cy5zb3VyY2Vmb3Jn
-ZS5uZXQ7IFNhdG9ydSBNb3JpeWENCj5TdWJqZWN0OiBSZTogW1JGQ11bUEFUQ0ggLW1tb3RtIDAv
-NF0gSW1wcm92ZW1lbnQgb2YgcHN0b3JlL2ttc2dfZHVtcCBpbiBrZXhlYy9wYW5pYyBwYXRoDQo+
-DQo+T24gVHVlLCBKdWwgMTksIDIwMTEgYXQgMDI6MjM6MjZQTSAtMDQwMCwgU2VpamkgQWd1Y2hp
-IHdyb3RlOg0KPj4gSGksDQo+Pg0KPj4gW1Vwc3RyZWFtIHN0YXR1c10NCj4+ICAgIERpc2N1c3Np
-b24gYWJvdXQga21zZ19kdW1wKCkgaW4ga2R1bXAgcGF0aDoNCj4+ICAgICAtIEVyaWMgYW5kIFZp
-dmVrIGFyZSB3b3JyaWVkIGFib3V0IHJlbGlhYmlsaXR5IG9mIGV4aXN0aW5nIGttc2dfZHVtcCgp
-Lg0KPj4gICAgIC0gRXNwZWNpYWxseSwgVml2ZWsgd291bGQgbGlrZSB0byByZW1vdmUgYSBSQ1Ug
-IGZ1bmN0aW9uIGNhbGwgY2hhaW4gaW4ga2R1bXAgcGF0aA0KPj4g44CA44CA44CAIHdoaWNoIGtl
-cm5lbCBtb2R1bGVzIGNhbiByZWdpc3RlciB0aGVpciBmdW5jdGlvbiBjYWxscyBmcmVlbHkuDQo+
-Pg0KPj4gICAgRGlzY3Vzc2lvbiBhYm91dCBwc3RvcmUgaW4gbm1pX2hhbmRlci4NCj4+ICAgICAt
-IERvbiBaaWNrdXMgZm91bmQgYW4gaXNzdWUgb2YgcHN0b3JlIGluIG5taV9oYW5kbGVyIGR1ZSB0
-byBpdHMgbXV0ZXhfbG9jay4NCj4NCj5Zb3UgZGlkIG5vdCBhbnN3ZXIgbXkgcXVlc3Rpb25zIGlu
-IHRoZSBsYXN0IHBvc3RpbmcgbWFpbCB0aHJlYWQgYW5kIGdvbmUNCj5haGVhZCB3aXRoIHRoZSBu
-ZXcgcG9zdGluZy4gSG93IGFyZSB3ZSBzdXBwb3NlZCB0byBkaXNjdXNzIHNvbWV0aGluZy4gVGhp
-cw0KPmhhcyBiZWVuIGEgcHJvYmxlbSBvbiB0aGlzIG1haWwgdGhyZWFkIHNpbmNlIHRoZSBiZWdp
-bm5laW5nLiBUaGVyZSBpcw0KPmxpdHRsZSBvcGVuIGRpc2N1c3Npb24uDQo+DQo+U28gaWYgeW91
-IHdhbnQgdG8gbWFrZSBhbnkgcHJvZ3Jlc3MgaW4gdGhpcyBkaXJlY3Rpb24sIHdoYXQgd2lsbCBo
-ZWxwDQo+aXMgb3BlbiBkaXNjdXNzaW9uLg0KPg0KPkxvY2tpbmcgaXMgZ29pbmcgdG8gYmUgYSBw
-cm9ibGVtLiBTbyBhdGxlYXN0IHdlIGNhbiByZW1vdmUga21zZ19kdW1wKCkNCj5pbmZyYXN0cnVj
-dHVyZSBmcm9tIHJlYm9vdCBwYXRoLiBXaHkgY2FuJ3Qgd2UgbG9nIHNvbWV0aGluZyBpbiB1c2Vy
-DQo+c3BhY2Ugd2hlbiB1c2VyIGluaXRpYXRlcyBhIHJlYm9vdCwgbGV0IGl0IGdldCBsb2dnZWQg
-aW4gL3Zhci9sb2cvbWVzc2FnZXMNCj5hbmQgdGhlbiB1bW91bnQgdGhlIGZpbGUgcm9vdCBhbmQg
-Z28gYWhlYWQgd2l0aCByZWJvb3QuIFdoeSBkb2VzIGtlcm5lbA0KPm5lZWQgdG8gY2FwdHVyZSB0
-aGF0IGluZm8gaW4gTlZSQU0uDQo+DQo+SWYgd2UgY2FuIGdldCByaWQgb2YgYWxsIHRoZSBsb2dn
-aW5nIHRoaW5nIG9uIHJlYm9vdCBwYXRoLCB0aGVuIGF0IGxlYXN0DQo+aXQgZG9lcyBub3QgbmVl
-ZCB0byBiZSBsb2NrIHByb3RlY3RlZCB3aXRoIGNyYXNoIHBhdGguDQo+DQo+VGhhbmtzDQo+Vml2
-ZWsNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Tue, Jul 19, 2011 at 03:02:12PM -0400, Vivek Goyal wrote:
+> > Another interesting question is do we need to log anything in the kdump
+> > path?  Isn't kdump generating the same info?  What added value do we get
+> > over kdump?
+> 
+> I had the same question. The argument is that kdump can fail and they
+> can not afford to not capture any info at all. So before kdump executes
+> they want to save some state to NVRAM.
+> 
+> I am wondering that saving this info to NVRAM, can it be done early in
+> second kernel? I guess we are not supposed to take any EFI services in
+> second kernel so it might not be possible.
+
+Actually the write to NVRAM wouldn't be so bad if ERST supported it.  It
+would just be an equvialent to a memcpy.  Currently it uses a complicated
+state machine to a persistent storage which complicates things.  As a
+result I get nervous if ERST firmware issues would block us from executing
+kdump.
+
+Cheers,
+Don
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
