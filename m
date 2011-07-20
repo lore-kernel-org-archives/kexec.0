@@ -1,18 +1,38 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Date: Tue, 19 Jul 2011 20:40:36 +0100
-From: Matthew Garrett <mjg@redhat.com>
-Subject: Re: [RFC][PATCH -mmotm 1/4] Add static function calls of pstore to
-	kexec path
-Message-ID: <20110719194036.GA25558@srcf.ucam.org>
-References: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64C3@USINDEVS01.corp.hds.com>
-	<20110719183506.GA23770@srcf.ucam.org>
-	<5C4C569E8A4B9B42A84A977CF070A35B2C199C64D6@USINDEVS01.corp.hds.com>
-	<20110719185213.GA24420@srcf.ucam.org>
-	<5C4C569E8A4B9B42A84A977CF070A35B2C199C64E5@USINDEVS01.corp.hds.com>
-	<20110719192754.GA25268@srcf.ucam.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110719192754.GA25268@srcf.ucam.org>
+Received: from mtagate1.uk.ibm.com ([194.196.100.161])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QjRhk-0006UN-Cl
+	for kexec@lists.infradead.org; Wed, 20 Jul 2011 08:00:29 +0000
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6K80EZs001216
+	for <kexec@lists.infradead.org>; Wed, 20 Jul 2011 08:00:14 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+	[9.149.37.212])
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6K80EN61814586
+	for <kexec@lists.infradead.org>; Wed, 20 Jul 2011 09:00:14 +0100
+Received: from d06av01.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6K80CTX017383
+	for <kexec@lists.infradead.org>; Wed, 20 Jul 2011 02:00:13 -0600
+Date: Wed, 20 Jul 2011 10:00:10 +0200
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [patch 0/9] kdump: Patch series for s390 support
+Message-ID: <20110720100010.048a2751@mschwide>
+In-Reply-To: <20110719150423.GA7001@redhat.com>
+References: <20110714180528.GF6672@redhat.com>
+	<1310739717.10789.31.camel@br98xy6r>
+	<20110715143820.GG3428@redhat.com>
+	<1310744603.10789.79.camel@br98xy6r>
+	<20110718123140.GB31986@redhat.com>
+	<1310997641.4427.10.camel@br98xy6r>
+	<20110718141943.GE31986@redhat.com>
+	<1311000253.4427.23.camel@br98xy6r>
+	<20110718152532.GF31986@redhat.com>
+	<1311012188.4427.58.camel@br98xy6r>
+	<20110719150423.GA7001@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +45,146 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Seiji Aguchi <seiji.aguchi@hds.com>
-Cc: "dzickus@redhat.com" <dzickus@redhat.com>, Satoru Moriya <satoru.moriya@hds.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-On Tue, Jul 19, 2011 at 08:27:54PM +0100, Matthew Garrett wrote:
-> On Tue, Jul 19, 2011 at 03:14:22PM -0400, Seiji Aguchi wrote:
+On Tue, 19 Jul 2011 11:04:23 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> On Mon, Jul 18, 2011 at 08:03:08PM +0200, Michael Holzheu wrote:
+> > Hello Vivek,
 > > 
-> > >And how does that handle the case where we're halfway through a pstore
-> > >access when the NMI arrives? ERST, at least, has a complex state
-> > >machine. You can't guarantee what starting one transaction without
-> > >completing one that was in process will do.
+> > On Mon, 2011-07-18 at 11:25 -0400, Vivek Goyal wrote:
+> > > On Mon, Jul 18, 2011 at 04:44:13PM +0200, Michael Holzheu wrote:
+> > > > On Mon, 2011-07-18 at 10:19 -0400, Vivek Goyal wrote:
+> > > > > - Make sure these headers are not overwritten by newly booted kernel.
+> > > > 
+> > > > And that was my question: What is the best way to do that. E.g. we could
+> > > > pass a 2nd kernel parameter "elfcorehdr_size", implement s390 boot
+> > > > parameter or implement the memmap kernel parameter.
+> > > 
+> > > You could do that but I think a more generic parameter will make more
+> > > sense.
+> > > 
+> > > - Either something along the lines of memmap=
+> > > - Or excludemem=x@y
+> > > - Or modify memory map in s390 specific bootloading protocol block etc.
 > > 
-> > As for ERST, write access is protected by raw_spin_trylock_irqsave(&erst_lock).
-> > Are there anything I'm missing?
+> > Ok, understood. Thanks for the information.
+> > 
+> > We still have discussions here, if we could somehow implement our
+> > original idea of triggering kdump by the stand-alone dump tools. Sorry
+> > for being so stubborn :-(
 > 
-> If there's already locking involved, what benefit does removing the lock 
-> in the pstore code give? You'll just hang when you hit the erst code 
-> instead of the pstore code.
+> What's the advantage of that. Why are we so stuborn about first passing
+> the control to dump tools after panic()?
 
-I'm sorry, you're right, this is a trylock so we won't hang in this 
-case. We should probably document that in the pstore documentation to 
-ensure that any future backends have the same behaviour.
+I wonder when you will finally get it: we are not talking about the simple
+case of a panic. Not all problems of the system will show up as a panic.
+We occasionally have systems that just stop dead in their tracks. And this
+is where an external dump trigger comes into play. For s390 that is the
+stand-alone dumper.
+
+> The case of purgatory corruption is no different then panic() code
+> and associated hook code corruption. 
+
+That is true. All the different pieces of code need to be verified with
+a checksum.
+
+> It is a corner case and even if it gets corrupted you have other
+> mechanisms to IPL dump tools and capture dump.
+
+It is definitely not a corner case. We use the stand-alone dumper as a
+trigger to either start kdump if the code for kdump has not been corrupted
+or as a fallback to do a full dump. The catch here is that we need a way to
+distinguish the two cases. And that is where the checksums come into play.
+See?
+
+> Why do you want to mix two mechanisms. What's the advantage of making
+> even dump tools complicated and make it aware of a kernel binary
+> object purgatory?
+
+We do that so we can use kdump in situations where the system just drops
+dead and does not go over panic.
+
+> To me the simple interface is that there is no coupling between dump
+> tools and kdump. If there is no coupling, then there is no need to
+> exchange any information and no need to make any assumption about
+> hard coded location where purgatory entry point, size and checksums
+> are stored.
+
+Without the coupling we would have to do a full dump in case of an
+unresponsive system. No fun if you have lots of main memory.
+
+> > 
+> > So here comes the modified suggestion:
+> > 
+> > As requested by you we can pre-allocate the ELF header and use purgatory
+> > as done on other architectures.
+> > 
+> > To allow the stand-alone dump tools as kdump triggers, we then only
+> > would have to provide an s390 specific way to tell the stand-alone dump
+> > tools:
+> > 1. Entry point address into purgatory
+> > 2. Address, size and checksum for purgatory
+> > 
+> > We could store address, size and checksum of the purgatory to a fixed
+> > offset in the kdump kernel image. This can be done in the kexec tools
+> > code.
+> 
+> I think this will require kernel changes also? Otherwise how would you
+> store variables in kernel address space.
+
+I would think that this would best be implemented in some arch backend
+function that is called on kexec_load.
+
+> Secondly, if the goal is to just be able to checksum purgatory also, then
+> it probably should be done in a generic mannner so that kernel could
+> checksum purgatory before jumping to it.
+
+You still seem to assume that the code that does the checksumming is
+included in the main kernel and gets executed with crash_kexec. This is
+incorrect in case of an external dump trigger. And before the stand-alone
+dumper branches to the purgatory code it better makes sure that it does
+not execute random numbers, otherwise we would get no dump at all.
+ 
+> > Then the dump tools only would need the crashkernel memory offset
+> > to find all information. Then dump tools will verify purgatory and
+> > afterwards jump to the purgatory code. Then purgatory verifies all kexec
+> > segments. For s390, if this check fails, we return to caller
+> > (stand-alone tools). If the check is ok, then purgatory code on s390
+> > saves all registers to the preallocated ELF notes and starts kdump.
+> 
+> So far I really don't think that there is any need of involving dump
+> tools here. By making it a requirement we are just making the design
+> complex with no gains.
+
+We think otherwise. The dump trigger via the stand-alone dump tool is
+a central requirement for us. And the design impact is minimal with the
+latest suggestion from Michael.
+
+> > 
+> > I think, this is all s390 specific and IMHO will not affect other
+> > architectures at all.
+> > 
+> > What you as kdump framework maintainer would have to accept with this
+> > solution is that it is allowed now to start kdump directly via purgatory
+> > without using code from the old kernel (e.g. crash_kexec). This has as
+> > implication that all things that the old kernel has to initialize for
+> > kdump has to be done before the system crashes. Currently this is only
+> > the initialization of vmcoreinfo.
+> 
+> when would you save vmcoreinfo? I guess I shall have to look at the
+> patches.
+
+That should be patch #4 from the series.
 
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
 
 _______________________________________________
 kexec mailing list
