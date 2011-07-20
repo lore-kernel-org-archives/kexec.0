@@ -1,25 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QjdJw-0001JK-79
-	for kexec@lists.infradead.org; Wed, 20 Jul 2011 20:24:40 +0000
-Date: Wed, 20 Jul 2011 16:24:29 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 0/9] kdump: Patch series for s390 support
-Message-ID: <20110720202429.GE10079@redhat.com>
-References: <20110715143820.GG3428@redhat.com>
-	<1310744603.10789.79.camel@br98xy6r>
-	<20110718123140.GB31986@redhat.com>
-	<1310997641.4427.10.camel@br98xy6r>
-	<20110718141943.GE31986@redhat.com>
-	<1311000253.4427.23.camel@br98xy6r>
-	<20110718152532.GF31986@redhat.com>
-	<1311012188.4427.58.camel@br98xy6r>
-	<20110719150423.GA7001@redhat.com>
-	<1311154115.3829.17.camel@br98xy6r>
+From: Seiji Aguchi <seiji.aguchi@hds.com>
+Date: Wed, 20 Jul 2011 18:34:13 -0400
+Subject: RE: [RFC][PATCH -mmotm 0/4] Improvement of pstore/kmsg_dump in
+	kexec/panic path
+Message-ID: <5C4C569E8A4B9B42A84A977CF070A35B2C199C6AAD@USINDEVS01.corp.hds.com>
+References: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64C2@USINDEVS01.corp.hds.com>
+	<20110719184759.GC7001@redhat.com>
+In-Reply-To: <20110719184759.GC7001@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1311154115.3829.17.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +17,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: "dzickus@redhat.com" <dzickus@redhat.com>, Satoru Moriya <satoru.moriya@hds.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Eric W.
+	Biederman" <ebiederm@xmission.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Matthew Garrett <mjg@redhat.com>
 
-On Wed, Jul 20, 2011 at 11:28:35AM +0200, Michael Holzheu wrote:
-
-[..]
-> > > What you as kdump framework maintainer would have to accept with this
-> > > solution is that it is allowed now to start kdump directly via purgatory
-> > > without using code from the old kernel (e.g. crash_kexec). This has as
-> > > implication that all things that the old kernel has to initialize for
-> > > kdump has to be done before the system crashes. Currently this is only
-> > > the initialization of vmcoreinfo.
-> > 
-> > when would you save vmcoreinfo? I guess I shall have to look at the
-> > patches.
-> 
-> patch #4: We have to save vmcoreinfo at startup time of the production
-> kernel.
-> 
-> Perhaps it would be best to send you a new patch series with our latest
-> proposal.
-
-This patch 4 looks reasonable. So you will prepare notes after boot and
-refresh it after adding CRASHTIME if crash_kexec() is executed.
-
-Vivek
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgVml2ZWssDQoNCj4gV2h5IGNhbid0IHdlIGxvZyBzb21ldGhpbmcgaW4gdXNlciBzcGFjZSB3
+aGVuIHVzZXIgaW5pdGlhdGVzIGEgcmVib290LA0KPiBXaHkgZG9lcyBrZXJuZWwgbmVlZCB0byBj
+YXB0dXJlIHRoYXQgaW5mbyBpbiBOVlJBTS4NCg0KIEFzIEkgZXhwbGFpbmVkIGluIGZvbGxvd2lu
+ZyB0aHJlYWQsIA0KIGN1c3RvbWVycyBzb21ldGltZXMgYXNrIHVzIHRvIGludmVzdGlnYXRlIHRo
+ZSByZWFzb24gd2h5IHN5c3RlbSByZWJvb3RzLg0KIA0KIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
+MDEwLzExLzE3LzI0OQ0KIA0KIFdlIGNhbiBzb2x2ZSBmb2xsb3dpbmcgc2NlbmFyaW8gYnkgbG9n
+Z2luZyBtZXNzYWdlcyBpbiBrZXJuZWwgc3BhY2UuDQoNCiAgLSBTeXNsb2dkIGlzIGtpbGxlZCBi
+eSBtaXN0YWtlLg0KICAgICh1c2VyIGtpbGxzIHN5c2xvZ2Qgd2l0aCBjb21tYW5kIG9yIG90aGVy
+IGFwcGxpY2F0aW9ucyBzZW5kIHNpZ25hbCkuDQogIC0gQW5kIHRoZW4sIHN5c3RlbSByZWJvb3Rz
+Lg0KDQogSWYgd2UgbG9nIG1lc3NhZ2VzIGluIHVzZXIgc3BhY2UsIHdlIGNhbid0IHNlZSBtZXNz
+YWdlcy4NCg0KU2VpamkNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVml2
+ZWsgR295YWwgW21haWx0bzp2Z295YWxAcmVkaGF0LmNvbV0NCj5TZW50OiBUdWVzZGF5LCBKdWx5
+IDE5LCAyMDExIDI6NDggUE0NCj5UbzogU2VpamkgQWd1Y2hpDQo+Q2M6IGtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW10ZEBsaXN0
+cy5pbmZyYWRlYWQub3JnOyBFcmljIFcuIEJpZWRlcm1hbjsgS09TQUtJDQo+TW90b2hpcm87IEFt
+ZXJpY28gV2FuZzsgTWF0dGhldyBHYXJyZXR0OyB0b255Lmx1Y2tAaW50ZWwuY29tOyBBbmRyZXcg
+TW9ydG9uOyBKYXJvZCBXaWxzb247IGhwYUB6eXRvci5jb207DQo+ZHppY2t1c0ByZWRoYXQuY29t
+OyBkbGUtZGV2ZWxvcEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQ7IFNhdG9ydSBNb3JpeWENCj5TdWJq
+ZWN0OiBSZTogW1JGQ11bUEFUQ0ggLW1tb3RtIDAvNF0gSW1wcm92ZW1lbnQgb2YgcHN0b3JlL2tt
+c2dfZHVtcCBpbiBrZXhlYy9wYW5pYyBwYXRoDQo+DQo+T24gVHVlLCBKdWwgMTksIDIwMTEgYXQg
+MDI6MjM6MjZQTSAtMDQwMCwgU2VpamkgQWd1Y2hpIHdyb3RlOg0KPj4gSGksDQo+Pg0KPj4gW1Vw
+c3RyZWFtIHN0YXR1c10NCj4+ICAgIERpc2N1c3Npb24gYWJvdXQga21zZ19kdW1wKCkgaW4ga2R1
+bXAgcGF0aDoNCj4+ICAgICAtIEVyaWMgYW5kIFZpdmVrIGFyZSB3b3JyaWVkIGFib3V0IHJlbGlh
+YmlsaXR5IG9mIGV4aXN0aW5nIGttc2dfZHVtcCgpLg0KPj4gICAgIC0gRXNwZWNpYWxseSwgVml2
+ZWsgd291bGQgbGlrZSB0byByZW1vdmUgYSBSQ1UgIGZ1bmN0aW9uIGNhbGwgY2hhaW4gaW4ga2R1
+bXAgcGF0aA0KPj4g44CA44CA44CAIHdoaWNoIGtlcm5lbCBtb2R1bGVzIGNhbiByZWdpc3RlciB0
+aGVpciBmdW5jdGlvbiBjYWxscyBmcmVlbHkuDQo+Pg0KPj4gICAgRGlzY3Vzc2lvbiBhYm91dCBw
+c3RvcmUgaW4gbm1pX2hhbmRlci4NCj4+ICAgICAtIERvbiBaaWNrdXMgZm91bmQgYW4gaXNzdWUg
+b2YgcHN0b3JlIGluIG5taV9oYW5kbGVyIGR1ZSB0byBpdHMgbXV0ZXhfbG9jay4NCj4NCj5Zb3Ug
+ZGlkIG5vdCBhbnN3ZXIgbXkgcXVlc3Rpb25zIGluIHRoZSBsYXN0IHBvc3RpbmcgbWFpbCB0aHJl
+YWQgYW5kIGdvbmUNCj5haGVhZCB3aXRoIHRoZSBuZXcgcG9zdGluZy4gSG93IGFyZSB3ZSBzdXBw
+b3NlZCB0byBkaXNjdXNzIHNvbWV0aGluZy4gVGhpcw0KPmhhcyBiZWVuIGEgcHJvYmxlbSBvbiB0
+aGlzIG1haWwgdGhyZWFkIHNpbmNlIHRoZSBiZWdpbm5laW5nLiBUaGVyZSBpcw0KPmxpdHRsZSBv
+cGVuIGRpc2N1c3Npb24uDQo+DQo+U28gaWYgeW91IHdhbnQgdG8gbWFrZSBhbnkgcHJvZ3Jlc3Mg
+aW4gdGhpcyBkaXJlY3Rpb24sIHdoYXQgd2lsbCBoZWxwDQo+aXMgb3BlbiBkaXNjdXNzaW9uLg0K
+Pg0KPkxvY2tpbmcgaXMgZ29pbmcgdG8gYmUgYSBwcm9ibGVtLiBTbyBhdGxlYXN0IHdlIGNhbiBy
+ZW1vdmUga21zZ19kdW1wKCkNCj5pbmZyYXN0cnVjdHVyZSBmcm9tIHJlYm9vdCBwYXRoLiBXaHkg
+Y2FuJ3Qgd2UgbG9nIHNvbWV0aGluZyBpbiB1c2VyDQo+c3BhY2Ugd2hlbiB1c2VyIGluaXRpYXRl
+cyBhIHJlYm9vdCwgbGV0IGl0IGdldCBsb2dnZWQgaW4gL3Zhci9sb2cvbWVzc2FnZXMNCj5hbmQg
+dGhlbiB1bW91bnQgdGhlIGZpbGUgcm9vdCBhbmQgZ28gYWhlYWQgd2l0aCByZWJvb3QuIFdoeSBk
+b2VzIGtlcm5lbA0KPm5lZWQgdG8gY2FwdHVyZSB0aGF0IGluZm8gaW4gTlZSQU0uDQo+DQo+SWYg
+d2UgY2FuIGdldCByaWQgb2YgYWxsIHRoZSBsb2dnaW5nIHRoaW5nIG9uIHJlYm9vdCBwYXRoLCB0
+aGVuIGF0IGxlYXN0DQo+aXQgZG9lcyBub3QgbmVlZCB0byBiZSBsb2NrIHByb3RlY3RlZCB3aXRo
+IGNyYXNoIHBhdGguDQo+DQo+VGhhbmtzDQo+Vml2ZWsNCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
