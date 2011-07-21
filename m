@@ -1,14 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-From: Seiji Aguchi <seiji.aguchi@hds.com>
-Date: Wed, 20 Jul 2011 18:34:13 -0400
-Subject: RE: [RFC][PATCH -mmotm 0/4] Improvement of pstore/kmsg_dump in
-	kexec/panic path
-Message-ID: <5C4C569E8A4B9B42A84A977CF070A35B2C199C6AAD@USINDEVS01.corp.hds.com>
-References: <5C4C569E8A4B9B42A84A977CF070A35B2C199C64C2@USINDEVS01.corp.hds.com>
-	<20110719184759.GC7001@redhat.com>
-In-Reply-To: <20110719184759.GC7001@redhat.com>
-Content-Language: en-US
-MIME-Version: 1.0
+Received: from mtagate5.uk.ibm.com ([194.196.100.165])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1Qjuhw-0005qp-7t
+	for kexec@lists.infradead.org; Thu, 21 Jul 2011 14:58:37 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate5.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6LEwJQh027126
+	for <kexec@lists.infradead.org>; Thu, 21 Jul 2011 14:58:19 GMT
+Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
+	[9.149.37.217])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6LEwJTL2412734
+	for <kexec@lists.infradead.org>; Thu, 21 Jul 2011 15:58:19 +0100
+Received: from d06av06.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av06.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6LEwJ4x019590
+	for <kexec@lists.infradead.org>; Thu, 21 Jul 2011 08:58:19 -0600
+Subject: Re: [patch 0/9] kdump: Patch series for s390 support
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+In-Reply-To: <20110720192509.GD10079@redhat.com>
+References: <20110714180528.GF6672@redhat.com>
+	<1310739717.10789.31.camel@br98xy6r>	<20110715143820.GG3428@redhat.com>
+	<1310744603.10789.79.camel@br98xy6r>	<20110718123140.GB31986@redhat.com>
+	<1310997641.4427.10.camel@br98xy6r>	<20110718141943.GE31986@redhat.com>
+	<1311000253.4427.23.camel@br98xy6r>	<20110718152532.GF31986@redhat.com>
+	<1311012188.4427.58.camel@br98xy6r> <20110720192509.GD10079@redhat.com>
+Date: Thu, 21 Jul 2011 16:58:18 +0200
+Message-ID: <1311260298.6160.43.camel@br98xy6r>
+Mime-Version: 1.0
+Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,58 +37,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Vivek Goyal <vgoyal@redhat.com>
-Cc: "dzickus@redhat.com" <dzickus@redhat.com>, Satoru Moriya <satoru.moriya@hds.com>, "dle-develop@lists.sourceforge.net" <dle-develop@lists.sourceforge.net>, "tony.luck@intel.com" <tony.luck@intel.com>, "hpa@zytor.com" <hpa@zytor.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Eric W.
-	Biederman" <ebiederm@xmission.com>, KOSAKI Motohiro <kosaki.motohiro@jp.fujitsu.com>, Jarod Wilson <jwilson@redhat.com>, Americo Wang <xiyou.wangcong@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Matthew Garrett <mjg@redhat.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org
 
-SGkgVml2ZWssDQoNCj4gV2h5IGNhbid0IHdlIGxvZyBzb21ldGhpbmcgaW4gdXNlciBzcGFjZSB3
-aGVuIHVzZXIgaW5pdGlhdGVzIGEgcmVib290LA0KPiBXaHkgZG9lcyBrZXJuZWwgbmVlZCB0byBj
-YXB0dXJlIHRoYXQgaW5mbyBpbiBOVlJBTS4NCg0KIEFzIEkgZXhwbGFpbmVkIGluIGZvbGxvd2lu
-ZyB0aHJlYWQsIA0KIGN1c3RvbWVycyBzb21ldGltZXMgYXNrIHVzIHRvIGludmVzdGlnYXRlIHRo
-ZSByZWFzb24gd2h5IHN5c3RlbSByZWJvb3RzLg0KIA0KIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
-MDEwLzExLzE3LzI0OQ0KIA0KIFdlIGNhbiBzb2x2ZSBmb2xsb3dpbmcgc2NlbmFyaW8gYnkgbG9n
-Z2luZyBtZXNzYWdlcyBpbiBrZXJuZWwgc3BhY2UuDQoNCiAgLSBTeXNsb2dkIGlzIGtpbGxlZCBi
-eSBtaXN0YWtlLg0KICAgICh1c2VyIGtpbGxzIHN5c2xvZ2Qgd2l0aCBjb21tYW5kIG9yIG90aGVy
-IGFwcGxpY2F0aW9ucyBzZW5kIHNpZ25hbCkuDQogIC0gQW5kIHRoZW4sIHN5c3RlbSByZWJvb3Rz
-Lg0KDQogSWYgd2UgbG9nIG1lc3NhZ2VzIGluIHVzZXIgc3BhY2UsIHdlIGNhbid0IHNlZSBtZXNz
-YWdlcy4NCg0KU2VpamkNCg0KPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogVml2
-ZWsgR295YWwgW21haWx0bzp2Z295YWxAcmVkaGF0LmNvbV0NCj5TZW50OiBUdWVzZGF5LCBKdWx5
-IDE5LCAyMDExIDI6NDggUE0NCj5UbzogU2VpamkgQWd1Y2hpDQo+Q2M6IGtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LW10ZEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBFcmljIFcuIEJpZWRlcm1hbjsgS09TQUtJDQo+TW90b2hpcm87IEFt
-ZXJpY28gV2FuZzsgTWF0dGhldyBHYXJyZXR0OyB0b255Lmx1Y2tAaW50ZWwuY29tOyBBbmRyZXcg
-TW9ydG9uOyBKYXJvZCBXaWxzb247IGhwYUB6eXRvci5jb207DQo+ZHppY2t1c0ByZWRoYXQuY29t
-OyBkbGUtZGV2ZWxvcEBsaXN0cy5zb3VyY2Vmb3JnZS5uZXQ7IFNhdG9ydSBNb3JpeWENCj5TdWJq
-ZWN0OiBSZTogW1JGQ11bUEFUQ0ggLW1tb3RtIDAvNF0gSW1wcm92ZW1lbnQgb2YgcHN0b3JlL2tt
-c2dfZHVtcCBpbiBrZXhlYy9wYW5pYyBwYXRoDQo+DQo+T24gVHVlLCBKdWwgMTksIDIwMTEgYXQg
-MDI6MjM6MjZQTSAtMDQwMCwgU2VpamkgQWd1Y2hpIHdyb3RlOg0KPj4gSGksDQo+Pg0KPj4gW1Vw
-c3RyZWFtIHN0YXR1c10NCj4+ICAgIERpc2N1c3Npb24gYWJvdXQga21zZ19kdW1wKCkgaW4ga2R1
-bXAgcGF0aDoNCj4+ICAgICAtIEVyaWMgYW5kIFZpdmVrIGFyZSB3b3JyaWVkIGFib3V0IHJlbGlh
-YmlsaXR5IG9mIGV4aXN0aW5nIGttc2dfZHVtcCgpLg0KPj4gICAgIC0gRXNwZWNpYWxseSwgVml2
-ZWsgd291bGQgbGlrZSB0byByZW1vdmUgYSBSQ1UgIGZ1bmN0aW9uIGNhbGwgY2hhaW4gaW4ga2R1
-bXAgcGF0aA0KPj4g44CA44CA44CAIHdoaWNoIGtlcm5lbCBtb2R1bGVzIGNhbiByZWdpc3RlciB0
-aGVpciBmdW5jdGlvbiBjYWxscyBmcmVlbHkuDQo+Pg0KPj4gICAgRGlzY3Vzc2lvbiBhYm91dCBw
-c3RvcmUgaW4gbm1pX2hhbmRlci4NCj4+ICAgICAtIERvbiBaaWNrdXMgZm91bmQgYW4gaXNzdWUg
-b2YgcHN0b3JlIGluIG5taV9oYW5kbGVyIGR1ZSB0byBpdHMgbXV0ZXhfbG9jay4NCj4NCj5Zb3Ug
-ZGlkIG5vdCBhbnN3ZXIgbXkgcXVlc3Rpb25zIGluIHRoZSBsYXN0IHBvc3RpbmcgbWFpbCB0aHJl
-YWQgYW5kIGdvbmUNCj5haGVhZCB3aXRoIHRoZSBuZXcgcG9zdGluZy4gSG93IGFyZSB3ZSBzdXBw
-b3NlZCB0byBkaXNjdXNzIHNvbWV0aGluZy4gVGhpcw0KPmhhcyBiZWVuIGEgcHJvYmxlbSBvbiB0
-aGlzIG1haWwgdGhyZWFkIHNpbmNlIHRoZSBiZWdpbm5laW5nLiBUaGVyZSBpcw0KPmxpdHRsZSBv
-cGVuIGRpc2N1c3Npb24uDQo+DQo+U28gaWYgeW91IHdhbnQgdG8gbWFrZSBhbnkgcHJvZ3Jlc3Mg
-aW4gdGhpcyBkaXJlY3Rpb24sIHdoYXQgd2lsbCBoZWxwDQo+aXMgb3BlbiBkaXNjdXNzaW9uLg0K
-Pg0KPkxvY2tpbmcgaXMgZ29pbmcgdG8gYmUgYSBwcm9ibGVtLiBTbyBhdGxlYXN0IHdlIGNhbiBy
-ZW1vdmUga21zZ19kdW1wKCkNCj5pbmZyYXN0cnVjdHVyZSBmcm9tIHJlYm9vdCBwYXRoLiBXaHkg
-Y2FuJ3Qgd2UgbG9nIHNvbWV0aGluZyBpbiB1c2VyDQo+c3BhY2Ugd2hlbiB1c2VyIGluaXRpYXRl
-cyBhIHJlYm9vdCwgbGV0IGl0IGdldCBsb2dnZWQgaW4gL3Zhci9sb2cvbWVzc2FnZXMNCj5hbmQg
-dGhlbiB1bW91bnQgdGhlIGZpbGUgcm9vdCBhbmQgZ28gYWhlYWQgd2l0aCByZWJvb3QuIFdoeSBk
-b2VzIGtlcm5lbA0KPm5lZWQgdG8gY2FwdHVyZSB0aGF0IGluZm8gaW4gTlZSQU0uDQo+DQo+SWYg
-d2UgY2FuIGdldCByaWQgb2YgYWxsIHRoZSBsb2dnaW5nIHRoaW5nIG9uIHJlYm9vdCBwYXRoLCB0
-aGVuIGF0IGxlYXN0DQo+aXQgZG9lcyBub3QgbmVlZCB0byBiZSBsb2NrIHByb3RlY3RlZCB3aXRo
-IGNyYXNoIHBhdGguDQo+DQo+VGhhbmtzDQo+Vml2ZWsNCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+Hello Vivek,
+
+On Wed, 2011-07-20 at 15:25 -0400, Vivek Goyal wrote:
+> On Mon, Jul 18, 2011 at 08:03:08PM +0200, Michael Holzheu wrote:
+
+[snip]
+
+> > What you as kdump framework maintainer would have to accept with this
+> > solution is that it is allowed now to start kdump directly via purgatory
+> > without using code from the old kernel (e.g. crash_kexec). This has as
+> > implication that all things that the old kernel has to initialize for
+> > kdump has to be done before the system crashes. Currently this is only
+> > the initialization of vmcoreinfo.
+> 
+> Hi Michael,
+> 
+> Instead of introdcuing a new entry point for second kernel, why not
+> jump to crash_kexec() from stand alone tools? That should be functionally
+> equivalent to what you described above without any need to pass the 
+> purgatory details to stand alone tools.
+
+That has the drawback that we still execute unchecked code from the
+crashed kernel. But ...
+
+... I discussed that with Martin and we had an idea how to deal with
+this problem. On s390 when an invalid opcode is executed or invalid
+parameters are used, we get a program check interrupt. When the
+crash_kexec() code path or data is corrupted, it is almost sure that we
+get a program check. The stand-alone dump tools could establish a
+program check interrupt handler that jumps back to the dump tools code
+and then create full-blown dump.
+
+So I think with this mechanism we could use an entry point (name it
+s390_kdump_entry) in the old kernel that calls crash_kexec().
+
+We would change the purgatory code that for s390 it returns to the
+caller, if the checksum test fails. This *requires* that
+s390_kdump_entry()->crash_kexec()->machine_kexec() is allowed to return.
+Currently this is the case.
+
+> Only thing which needs to be figured out is how to pass the address of
+> crash_kexec() to stand alone tools and set registers/parameters 
+> appropriately.
+
+We could do this s390 specific (e.g. using meminfo). In this case this
+would only be used for kernel/dump tools communication and not for
+kernel/kernel communication. So I hope this should not be a problem for
+you.
+
+Then the design would look like the following:
+* Define s390_kdump_entry in old kernel that calls crash_kexec()
+* Use preallocated ELF core header
+* s390_kdump_entry code path stores registers to ELF notes,  ...
+* ... and finally jumps to purgatory code
+* For s390 the purgatory code returns to caller in case of
+  checksum failure
+* dump tools call s390_kdump_entry with program check handler
+  for error handling
+
+I think, if we do it that way, we do not affect the current kdump
+framework at all.
+
+Is that acceptable for you? If yes, I would rework my patches
+accordingly.
+
+Michael
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
