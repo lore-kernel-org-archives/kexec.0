@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate4.uk.ibm.com ([194.196.100.164])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QkC6r-0002P1-JV
-	for kexec@lists.infradead.org; Fri, 22 Jul 2011 09:33:30 +0000
-Received: from d06nrmr1806.portsmouth.uk.ibm.com
-	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
-	by mtagate4.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6M9XCeN030320
-	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 09:33:12 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
-	[9.149.37.247])
-	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6M9XCK82699424
-	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 10:33:12 +0100
-Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6M9XBZY005363
-	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 03:33:12 -0600
+	id 1QkHcd-0006iQ-8u
+	for kexec@lists.infradead.org; Fri, 22 Jul 2011 15:26:40 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6MFQXTL021286
+	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 15:26:33 GMT
+Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
+	[9.149.37.249])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6MFQXCk2568416
+	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 16:26:33 +0100
+Received: from d06av08.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av08.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6MFQW6L001351
+	for <kexec@lists.infradead.org>; Fri, 22 Jul 2011 16:26:33 +0100
 Subject: Re: [patch 0/9] kdump: Patch series for s390 support
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-In-Reply-To: <20110721212257.GI12373@redhat.com>
-References: <20110715143820.GG3428@redhat.com>
+In-Reply-To: <20110718152532.GF31986@redhat.com>
+References: <20110714091800.720da848@mschwide>
+	<20110714175532.GE6672@redhat.com> <20110714180528.GF6672@redhat.com>
+	<1310739717.10789.31.camel@br98xy6r> <20110715143820.GG3428@redhat.com>
 	<1310744603.10789.79.camel@br98xy6r>
 	<20110718123140.GB31986@redhat.com>
 	<1310997641.4427.10.camel@br98xy6r> <20110718141943.GE31986@redhat.com>
 	<1311000253.4427.23.camel@br98xy6r> <20110718152532.GF31986@redhat.com>
-	<1311012188.4427.58.camel@br98xy6r> <20110720192509.GD10079@redhat.com>
-	<1311260298.6160.43.camel@br98xy6r> <20110721212257.GI12373@redhat.com>
-Date: Fri, 22 Jul 2011 11:33:11 +0200
-Message-ID: <1311327191.5772.51.camel@br98xy6r>
+Date: Fri, 22 Jul 2011 17:26:32 +0200
+Message-ID: <1311348392.5772.56.camel@br98xy6r>
 Mime-Version: 1.0
 Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
@@ -47,114 +47,23 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm
 
 Hello Vivek,
 
-On Thu, 2011-07-21 at 17:22 -0400, Vivek Goyal wrote:
-> On Thu, Jul 21, 2011 at 04:58:18PM +0200, Michael Holzheu wrote:
-> > We would change the purgatory code that for s390 it returns to the
-> > caller, if the checksum test fails. This *requires* that
-> > s390_kdump_entry()->crash_kexec()->machine_kexec() is allowed to return.
-> > Currently this is the case.
+Still thinking how we best get elfcorehdr size...
+
+On Mon, 2011-07-18 at 11:25 -0400, Vivek Goyal wrote:
+> On Mon, Jul 18, 2011 at 04:44:13PM +0200, Michael Holzheu wrote:
+> You could do that but I think a more generic parameter will make more
+> sense.
 > 
-> Can we directly jump to entry point of stand alone dump tools from purgaotry
-> if checksum fails? We should be able to set this entry point in user space
-> while loading kdump kernel.
+> - Either something along the lines of memmap=
+> - Or excludemem=x@y
+> - Or modify memory map in s390 specific bootloading protocol block etc.
 
-I described a new idea with forced program check below.
+Wouldn't it be most natural to pass the length along with the address of
+the ELF core header? What about extending the kernel elfcorehdr kernel
+parameter and adding optional size:
 
-> > > Only thing which needs to be figured out is how to pass the address of
-> > > crash_kexec() to stand alone tools and set registers/parameters 
-> > > appropriately.
-> > 
-> > We could do this s390 specific (e.g. using meminfo). In this case this
-> > would only be used for kernel/dump tools communication and not for
-> > kernel/kernel communication. So I hope this should not be a problem for
-> > you.
-> 
-> So you will be preparing a block/segment of data (called meminfo, though
-> this name does not make much sense anymore), and pass it to second kernel?
-> All done in user space and no first kernel involvement?
->
-> I am trying to remember the details that how do you tell second kernel
-> where this this data block is. I recall that last time you said something
-> about setting this in kernel in kexec-tools but I did not understand it.
+elfcorehdr=<addr>[KMG],<size>[KMG]
 
-Better you forget everything :-)
-
-We will establish a s390 specific mechanism that allows dump tools to
-find s390_kdump_entry and does not affect the kdump framework. Hopefully
-nothing you have to worry about.
-
-> > 
-> > Then the design would look like the following:
-> > * Define s390_kdump_entry in old kernel that calls crash_kexec()
-> > * Use preallocated ELF core header
-> > * s390_kdump_entry code path stores registers to ELF notes,  ...
-> 
-> crash_kexec() -> crash_setup_regs() already does that. We just need to
-> define an s390 specific crash_setup_regs().
-
-I looked at the code. x86 seems to store only registers for current CPU.
-Where are all other CPUs stored? ia64 has an empty implementation. Where
-are registers stored there?
-
-> 
-> > * ... and finally jumps to purgatory code
-> > * For s390 the purgatory code returns to caller in case of
-> >   checksum failure
-> > * dump tools call s390_kdump_entry with program check handler
-> >   for error handling
-> 
-> I thought that program check handler will call something else and not
-> s390_kdump_entry()? Because program check handler is supposed to hit
-> when any of the code we are executing is corrupted and we can not
-> jump to kdump tool any more. Otherwise we will be nesting.
-
-Looks like the sentence was misleading. What I wanted to say is:
-* First dump tools setup program check handler that jumps back to
-  dump tool in case kdump fails
-* Then dump tools call s390_dump_entry
-
-> > 
-> > I think, if we do it that way, we do not affect the current kdump
-> > framework at all.
-> 
-> Can you give some more details about various code flows and entry points.
-> Like panic() path, hard hang path. From your mail it sounds that even
-> with program check handler, after panic() you would like to jump to
-> stand alone tools first and then call s390_kdump_entry(). I think that
-> should not be required any more as you are not doing any checksumming
-> in dump tools anymore?
-
-Ok some code flows:
-
-Generally we have the flow:
-* crash_kexec -> machine_kexec -> purgatory -> kdump
-
-crash_kexec can be entered by e.g.:
-* panic -> kdump shutdown action -> crash_kexec
-* panic -> s390 dump shutdown action -> auto IPL dump tool -> s390_kdump_entry -> crash_kexec
-* hard hang -> manual IPL dump tool -> s390_kdump_entry -> crash_kexec
-
-Handling for corrupted kdump:
-
-New idea for returning to dump tools in case of program check:
-We could force a program check for s390, if purgatory checksum
-fails. Then we would automatically return to stand-alone dump
-tools.
-
-The flow would look like the following in this case:
-
-IPL dump tool -> s390_kdump_entry -> crash_kexec +--> purgatory -+->[checksum ok]---> kdump
-      ^                                          |               |
-      |                                          |        [checksum fail]
-      |                                          |               |
-      |                                          |     [forced program check]
-      +------[program check]---------------------+               |
-      |                                                          |
-      +----------------------------------------------------------+
-
-Then of course also the kernel code would have to install a special
-program check handler before calling purgatory.
-                         
 Michael
 
 
