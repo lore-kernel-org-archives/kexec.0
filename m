@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QlJbF-0004pG-09
-	for kexec@lists.infradead.org; Mon, 25 Jul 2011 11:45:29 +0000
-Date: Mon, 25 Jul 2011 20:45:21 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: powerpc: dt_reserve doesn't allocate enough
-	memory for large properties
-Message-ID: <20110725114521.GD7390@verge.net.au>
-References: <20110725173542.2abe960e@kryten>
+	id 1QlNcJ-0001RY-Ti
+	for kexec@lists.infradead.org; Mon, 25 Jul 2011 16:02:52 +0000
+Date: Mon, 25 Jul 2011 12:02:44 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [patch 0/9] kdump: Patch series for s390 support
+Message-ID: <20110725160244.GB11009@redhat.com>
+References: <20110718123140.GB31986@redhat.com>
+	<1310997641.4427.10.camel@br98xy6r>
+	<20110718141943.GE31986@redhat.com>
+	<1311000253.4427.23.camel@br98xy6r>
+	<20110718152532.GF31986@redhat.com>
+	<1311012188.4427.58.camel@br98xy6r>
+	<20110720192509.GD10079@redhat.com>
+	<1311260298.6160.43.camel@br98xy6r>
+	<20110721212257.GI12373@redhat.com>
+	<1311327191.5772.51.camel@br98xy6r>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110725173542.2abe960e@kryten>
+In-Reply-To: <1311327191.5772.51.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,22 +32,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Anton Blanchard <anton@samba.org>
-Cc: kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Martin Schwidefsky <schwidefsky@de.ibm.com>, kexec@lists.infradead.org
 
-On Mon, Jul 25, 2011 at 05:35:42PM +1000, Anton Blanchard wrote:
-> 
-> On a large ppc64 box I got the following error from kexec -l: 
-> 
-> unrecoverable error: could not read "/proc/device-tree/ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory": Bad address
-> 
-> dt_reserve was assuming a property was never larger than
-> INIT_TREE_WORDS (65536), but on this box ibm,dynamic-memory is
-> 119995 words.
-> 
-> Allocate INIT_TREE_WORDS or the number of words requested, whatever
+On Fri, Jul 22, 2011 at 11:33:11AM +0200, Michael Holzheu wrote:
 
-Thanks, applied.
+[..]
+> > > 
+> > > Then the design would look like the following:
+> > > * Define s390_kdump_entry in old kernel that calls crash_kexec()
+> > > * Use preallocated ELF core header
+> > > * s390_kdump_entry code path stores registers to ELF notes,  ...
+> > 
+> > crash_kexec() -> crash_setup_regs() already does that. We just need to
+> > define an s390 specific crash_setup_regs().
+> 
+> I looked at the code. x86 seems to store only registers for current CPU.
+> Where are all other CPUs stored? ia64 has an empty implementation. Where
+> are registers stored there?
+
+native_machine_crash_shutdown()
+	kdump_nmi_shootdown_cpus()
+		kdump_nmi_callback()
+			crash_save_cpu()
+
+Basically crashing cpu sends NMI to other cpus to stop them and with-in
+NMI handler it also saves per cpu state.
+
+> 
+> > 
+> > > * ... and finally jumps to purgatory code
+> > > * For s390 the purgatory code returns to caller in case of
+> > >   checksum failure
+> > > * dump tools call s390_kdump_entry with program check handler
+> > >   for error handling
+> > 
+> > I thought that program check handler will call something else and not
+> > s390_kdump_entry()? Because program check handler is supposed to hit
+> > when any of the code we are executing is corrupted and we can not
+> > jump to kdump tool any more. Otherwise we will be nesting.
+> 
+> Looks like the sentence was misleading. What I wanted to say is:
+> * First dump tools setup program check handler that jumps back to
+>   dump tool in case kdump fails
+> * Then dump tools call s390_dump_entry
+> 
+> > > 
+> > > I think, if we do it that way, we do not affect the current kdump
+> > > framework at all.
+> > 
+> > Can you give some more details about various code flows and entry points.
+> > Like panic() path, hard hang path. From your mail it sounds that even
+> > with program check handler, after panic() you would like to jump to
+> > stand alone tools first and then call s390_kdump_entry(). I think that
+> > should not be required any more as you are not doing any checksumming
+> > in dump tools anymore?
+> 
+> Ok some code flows:
+> 
+> Generally we have the flow:
+> * crash_kexec -> machine_kexec -> purgatory -> kdump
+> 
+> crash_kexec can be entered by e.g.:
+> * panic -> kdump shutdown action -> crash_kexec
+> * panic -> s390 dump shutdown action -> auto IPL dump tool -> s390_kdump_entry -> crash_kexec
+
+So after panic() You will still jump to dump tools? The only thing you
+need to do there is installing program check handler and could have been
+easily done in kernel too.
+
+> * hard hang -> manual IPL dump tool -> s390_kdump_entry -> crash_kexec
+
+This one makes sense as kernel is hard hung and dump tools need to
+force crash_kexec() now. It is more like x86 NMI handler.
+
+> 
+> Handling for corrupted kdump:
+> 
+> New idea for returning to dump tools in case of program check:
+> We could force a program check for s390, if purgatory checksum
+> fails. Then we would automatically return to stand-alone dump
+> tools.
+> 
+> The flow would look like the following in this case:
+> 
+> IPL dump tool -> s390_kdump_entry -> crash_kexec +--> purgatory -+->[checksum ok]---> kdump
+>       ^                                          |               |
+>       |                                          |        [checksum fail]
+>       |                                          |               |
+>       |                                          |     [forced program check]
+>       +------[program check]---------------------+               |
+>       |                                                          |
+>       +----------------------------------------------------------+
+> 
+> Then of course also the kernel code would have to install a special
+> program check handler before calling purgatory.
+
+If kernel code is going to install the program check handler before
+calling purgatory, then we don't need to jump to dump tools at all
+after panic()?
+
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
