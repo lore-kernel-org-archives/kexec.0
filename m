@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mtagate7.uk.ibm.com ([194.196.100.167])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qm3gm-0006Tb-05
-	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:24 +0000
-Received: from d06nrmr1307.portsmouth.uk.ibm.com
-	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
-	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCw9rj015102
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:09 GMT
-Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
-	[9.149.37.249])
-	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6RCw9si1794152
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
-Received: from d06av08.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av08.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6RCw8GV012181
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
-Message-Id: <20110727125808.172069159@linux.vnet.ibm.com>
-Date: Wed, 27 Jul 2011 14:55:09 +0200
+	id 1Qm3gm-0006U6-0B
+	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:26 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwD8U015154
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:13 GMT
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+	[9.149.37.252])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6RCwCLL2392260
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:12 +0100
+Received: from d06av11.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av11.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6RCw9si000570
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 06:58:12 -0600
+Message-Id: <20110727125808.974305666@linux.vnet.ibm.com>
+Date: Wed, 27 Jul 2011 14:55:14 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch v2 05/10] s390: Add PSW restart shutdown trigger
+Subject: [patch v2 10/10] kexec-tools: Add s390 kdump support
 References: <20110727125504.491183728@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=s390-kdump-arch-psw-restart.patch
+Content-Disposition: inline; filename=kexec-tools-s390-kdump.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,332 +40,552 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-With this patch a new S390 shutdown trigger "restart" is added. If under
-z/VM "systerm restart" is entered or under the HMC the "PSW restart" button
-is pressed, the PSW located at 0 (31 bit) or 0x1a0 (64 bit) bit is loaded.
-Now we execute do_restart() that processes the restart action that is
-defined under /sys/firmware/shutdown_actions/on_restart. Currently the
-following actions are possible: reipl (default), stop, vmcmd, dump, and
-dump_reipl.
+This patch adds kdump support for s390 to the kexec tool and enables the
+"--load-panic" option. When loading the kdump kernel and ramdisk we add the
+address of the crashkernel memory to the normal load address.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- arch/s390/include/asm/lowcore.h |   11 +++++++++--
- arch/s390/include/asm/system.h  |    1 +
- arch/s390/kernel/asm-offsets.c  |    1 +
- arch/s390/kernel/entry.S        |   28 ++++++++++++++++++++++++++++
- arch/s390/kernel/entry64.S      |   20 ++++++++++++++++++++
- arch/s390/kernel/ipl.c          |   39 ++++++++++++++++++++++++++++++++++++++-
- arch/s390/kernel/setup.c        |   24 +++++++++++++++++++++++-
- arch/s390/kernel/smp.c          |    8 ++++++++
- arch/s390/mm/maccess.c          |   16 ++++++++++++++++
- 9 files changed, 144 insertions(+), 4 deletions(-)
+ include/elf.h                        |    8 +++-
+ kexec/arch/s390/Makefile             |    1 
+ kexec/arch/s390/crashdump-s390.c     |   59 +++++++++++++++++++++++++++++++
+ kexec/arch/s390/kexec-elf-rel-s390.c |   66 ++++++++++++++++++++++++++++++-----
+ kexec/arch/s390/kexec-image.c        |   61 ++++++++++++++++++++++----------
+ kexec/arch/s390/kexec-s390.c         |   66 ++++++++++++++++++++++++-----------
+ kexec/arch/s390/kexec-s390.h         |    7 +++
+ purgatory/arch/s390/Makefile         |    4 +-
+ purgatory/arch/s390/console-s390.c   |   14 +++++++
+ purgatory/arch/s390/purgatory-s390.c |   17 +++++++++
+ purgatory/arch/s390/setup-s390.S     |   35 ++++++++++++++++++
+ 11 files changed, 290 insertions(+), 48 deletions(-)
 
---- a/arch/s390/include/asm/lowcore.h
-+++ b/arch/s390/include/asm/lowcore.h
-@@ -18,6 +18,7 @@ void system_call(void);
- void pgm_check_handler(void);
- void mcck_int_handler(void);
- void io_int_handler(void);
-+void psw_restart_int_handler(void);
- 
- #ifdef CONFIG_32BIT
- 
-@@ -150,7 +151,10 @@ struct _lowcore {
- 	 */
- 	__u32	ipib;				/* 0x0e00 */
- 	__u32	ipib_checksum;			/* 0x0e04 */
--	__u8	pad_0x0e08[0x0f00-0x0e08];	/* 0x0e08 */
-+
-+	/* 64 bit save area */
-+	__u64	save_area_64;			/* 0x0e08 */
-+	__u8	pad_0x0e10[0x0f00-0x0e10];	/* 0x0e10 */
- 
- 	/* Extended facility list */
- 	__u64	stfle_fac_list[32];		/* 0x0f00 */
-@@ -286,7 +290,10 @@ struct _lowcore {
- 	 */
- 	__u64	ipib;				/* 0x0e00 */
- 	__u32	ipib_checksum;			/* 0x0e08 */
--	__u8	pad_0x0e0c[0x0f00-0x0e0c];	/* 0x0e0c */
-+
-+	/* 64 bit save area */
-+	__u64	save_area_64;			/* 0x0e0c */
-+	__u8	pad_0x0e14[0x0f00-0x0e14];	/* 0x0e14 */
- 
- 	/* Extended facility list */
- 	__u64	stfle_fac_list[32];		/* 0x0f00 */
---- a/arch/s390/include/asm/system.h
-+++ b/arch/s390/include/asm/system.h
-@@ -113,6 +113,7 @@ extern void pfault_fini(void);
- 
- extern void cmma_init(void);
- extern int memcpy_real(void *, void *, size_t);
-+extern void copy_to_absolute_zero(void *dest, void *src, size_t count);
- 
- #define finish_arch_switch(prev) do {					     \
- 	set_fs(current->thread.mm_segment);				     \
---- a/arch/s390/kernel/asm-offsets.c
-+++ b/arch/s390/kernel/asm-offsets.c
-@@ -142,6 +142,7 @@ int main(void)
- 	DEFINE(__LC_FPREGS_SAVE_AREA, offsetof(struct _lowcore, floating_pt_save_area));
- 	DEFINE(__LC_GPREGS_SAVE_AREA, offsetof(struct _lowcore, gpregs_save_area));
- 	DEFINE(__LC_CREGS_SAVE_AREA, offsetof(struct _lowcore, cregs_save_area));
-+	DEFINE(__LC_SAVE_AREA_64, offsetof(struct _lowcore, save_area_64));
- #ifdef CONFIG_32BIT
- 	DEFINE(SAVE_AREA_BASE, offsetof(struct _lowcore, extended_save_area_addr));
- #else /* CONFIG_32BIT */
---- a/arch/s390/kernel/entry.S
-+++ b/arch/s390/kernel/entry.S
-@@ -849,6 +849,34 @@ restart_crash:
- restart_go:
- #endif
- 
-+#
-+# PSW restart interrupt handler
-+#
-+ENTRY(psw_restart_int_handler)
-+	st	%r15,__LC_SAVE_AREA_64(%r0)	# save r15
-+	basr	%r15,0
-+0:	l	%r15,.Lrestart_stack-0b(%r15)	# load restart stack
-+	l	%r15,0(%r15)
-+	ahi	%r15,-SP_SIZE			# make room for pt_regs
-+	stm	%r0,%r14,SP_R0(%r15)		# store gprs %r0-%r14 to stack
-+	mvc	SP_R15(4,%r15),__LC_SAVE_AREA_64(%r0)# store saved %r15 to stack
-+	mvc	SP_PSW(8,%r15),__LC_RST_OLD_PSW(%r0) # store restart old psw
-+	xc	__SF_BACKCHAIN(4,%r15),__SF_BACKCHAIN(%r15) # set backchain to 0
-+	basr	%r14,0
-+1:	l	%r14,.Ldo_restart-1b(%r14)
-+	basr	%r14,%r14
-+
-+	basr	%r14,0				# load disabled wait PSW if
-+2:	lpsw	restart_psw_crash-2b(%r14)	# do_restart returns
-+	.align 4
-+.Ldo_restart:
-+	.long	do_restart
-+.Lrestart_stack:
-+	.long	restart_stack
-+	.align 8
-+restart_psw_crash:
-+	.long	0x000a0000,0x00000000 + restart_psw_crash
-+
- 	.section .kprobes.text, "ax"
- 
- #ifdef CONFIG_CHECK_STACK
---- a/arch/s390/kernel/entry64.S
-+++ b/arch/s390/kernel/entry64.S
-@@ -865,6 +865,26 @@ restart_crash:
- restart_go:
- #endif
- 
-+#
-+# PSW restart interrupt handler
-+#
-+ENTRY(psw_restart_int_handler)
-+	stg	%r15,__LC_SAVE_AREA_64(%r0)	# save r15
-+	larl	%r15,restart_stack		# load restart stack
-+	lg	%r15,0(%r15)
-+	aghi	%r15,-SP_SIZE			# make room for pt_regs
-+	stmg	%r0,%r14,SP_R0(%r15)		# store gprs %r0-%r14 to stack
-+	mvc	SP_R15(8,%r15),__LC_SAVE_AREA_64(%r0)# store saved %r15 to stack
-+	mvc	SP_PSW(16,%r15),__LC_RST_OLD_PSW(%r0)# store restart old psw
-+	xc	__SF_BACKCHAIN(8,%r15),__SF_BACKCHAIN(%r15) # set backchain to 0
-+	brasl	%r14,do_restart
-+
-+	larl	%r14,restart_psw_crash		# load disabled wait PSW if
-+	lpswe	0(%r14)				# do_restart returns
-+	.align 8
-+restart_psw_crash:
-+	.quad	0x0002000080000000,0x0000000000000000 + restart_psw_crash
-+
- 	.section .kprobes.text, "ax"
- 
- #ifdef CONFIG_CHECK_STACK
---- a/arch/s390/kernel/ipl.c
-+++ b/arch/s390/kernel/ipl.c
-@@ -45,11 +45,13 @@
-  * - halt
-  * - power off
-  * - reipl
-+ * - restart
-  */
- #define ON_PANIC_STR		"on_panic"
- #define ON_HALT_STR		"on_halt"
- #define ON_POFF_STR		"on_poff"
- #define ON_REIPL_STR		"on_reboot"
-+#define ON_RESTART_STR		"on_restart"
- 
- struct shutdown_action;
- struct shutdown_trigger {
-@@ -1544,17 +1546,20 @@ static char vmcmd_on_reboot[128];
- static char vmcmd_on_panic[128];
- static char vmcmd_on_halt[128];
- static char vmcmd_on_poff[128];
-+static char vmcmd_on_restart[128];
- 
- DEFINE_IPL_ATTR_STR_RW(vmcmd, on_reboot, "%s\n", "%s\n", vmcmd_on_reboot);
- DEFINE_IPL_ATTR_STR_RW(vmcmd, on_panic, "%s\n", "%s\n", vmcmd_on_panic);
- DEFINE_IPL_ATTR_STR_RW(vmcmd, on_halt, "%s\n", "%s\n", vmcmd_on_halt);
- DEFINE_IPL_ATTR_STR_RW(vmcmd, on_poff, "%s\n", "%s\n", vmcmd_on_poff);
-+DEFINE_IPL_ATTR_STR_RW(vmcmd, on_restart, "%s\n", "%s\n", vmcmd_on_restart);
- 
- static struct attribute *vmcmd_attrs[] = {
- 	&sys_vmcmd_on_reboot_attr.attr,
- 	&sys_vmcmd_on_panic_attr.attr,
- 	&sys_vmcmd_on_halt_attr.attr,
- 	&sys_vmcmd_on_poff_attr.attr,
-+	&sys_vmcmd_on_restart_attr.attr,
- 	NULL,
- };
- 
-@@ -1576,6 +1581,8 @@ static void vmcmd_run(struct shutdown_tr
- 		cmd = vmcmd_on_halt;
- 	else if (strcmp(trigger->name, ON_POFF_STR) == 0)
- 		cmd = vmcmd_on_poff;
-+	else if (strcmp(trigger->name, ON_RESTART_STR) == 0)
-+		cmd = vmcmd_on_restart;
- 	else
- 		return;
- 
-@@ -1707,6 +1714,34 @@ static void do_panic(void)
- 	stop_run(&on_panic_trigger);
- }
- 
-+/* on restart */
-+
-+static struct shutdown_trigger on_restart_trigger = {ON_RESTART_STR,
-+	&reipl_action};
-+
-+static ssize_t on_restart_show(struct kobject *kobj,
-+			       struct kobj_attribute *attr, char *page)
-+{
-+	return sprintf(page, "%s\n", on_restart_trigger.action->name);
-+}
-+
-+static ssize_t on_restart_store(struct kobject *kobj,
-+				struct kobj_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	return set_trigger(buf, &on_restart_trigger, len);
-+}
-+
-+static struct kobj_attribute on_restart_attr =
-+	__ATTR(on_restart, 0644, on_restart_show, on_restart_store);
-+
-+void do_restart(void)
-+{
-+	smp_send_stop();
-+	on_restart_trigger.action->fn(&on_restart_trigger);
-+	stop_run(&on_restart_trigger);
-+}
-+
- /* on halt */
- 
- static struct shutdown_trigger on_halt_trigger = {ON_HALT_STR, &stop_action};
-@@ -1783,7 +1818,9 @@ static void __init shutdown_triggers_ini
- 	if (sysfs_create_file(&shutdown_actions_kset->kobj,
- 			      &on_poff_attr.attr))
- 		goto fail;
+--- a/include/elf.h
++++ b/include/elf.h
+@@ -2304,9 +2304,13 @@ typedef Elf32_Addr Elf32_Conflict;
+ #define R_390_TLS_DTPOFF	55	/* Offset in TLS block.	 */
+ #define R_390_TLS_TPOFF		56	/* Negated offset in static TLS
+ 					   block.  */
 -
-+	if (sysfs_create_file(&shutdown_actions_kset->kobj,
-+			      &on_restart_attr.attr))
-+		goto fail;
- 	return;
- fail:
- 	panic("shutdown_triggers_init failed\n");
---- a/arch/s390/kernel/setup.c
-+++ b/arch/s390/kernel/setup.c
-@@ -346,7 +346,7 @@ setup_lowcore(void)
- 	lc = __alloc_bootmem_low(LC_PAGES * PAGE_SIZE, LC_PAGES * PAGE_SIZE, 0);
- 	lc->restart_psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
- 	lc->restart_psw.addr =
--		PSW_ADDR_AMODE | (unsigned long) restart_int_handler;
-+		PSW_ADDR_AMODE | (unsigned long) psw_restart_int_handler;
- 	if (user_mode != HOME_SPACE_MODE)
- 		lc->restart_psw.mask |= PSW_ASC_HOME;
- 	lc->external_new_psw.mask = psw_kernel_bits;
-@@ -529,6 +529,27 @@ static void __init setup_memory_end(void
- 		memory_end = memory_size;
- }
++#define R_390_20		57	/* Direct 20 bit.  */
++#define R_390_GOT20		58	/* 20 bit GOT offset.  */
++#define R_390_GOTPLT20		59	/* 20 bit offset to jump slot.  */
++#define R_390_TLS_GOTIE20	60	/* 20 bit GOT offset for static TLS
++					   block offset.  */
+ /* Keep this the last entry.  */
+-#define R_390_NUM		57
++#define R_390_NUM		61
  
-+void *restart_stack __attribute__((__section__(".data")));
+ /* CRIS relocations.  */
+ #define R_CRIS_NONE		0
+--- a/kexec/arch/s390/Makefile
++++ b/kexec/arch/s390/Makefile
+@@ -4,6 +4,7 @@
+ s390_KEXEC_SRCS =  kexec/arch/s390/kexec-s390.c
+ s390_KEXEC_SRCS += kexec/arch/s390/kexec-image.c
+ s390_KEXEC_SRCS += kexec/arch/s390/kexec-elf-rel-s390.c
++s390_KEXEC_SRCS += kexec/arch/s390/crashdump-s390.c
+ 
+ dist += kexec/arch/s390/Makefile $(s390_KEXEC_SRCS)			\
+ 	kexec/arch/s390/kexec-s390.h					\
+--- /dev/null
++++ b/kexec/arch/s390/crashdump-s390.c
+@@ -0,0 +1,59 @@
++/*
++ * kexec/arch/s390/crashdump-s390.c
++ *
++ * Copyright IBM Corp. 2011
++ *
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++#define _GNU_SOURCE
++#include <stdio.h>
++#include <elf.h>
++#include <limits.h>
++#include "../../kexec.h"
++#include "../../kexec-syscall.h"
++#include "../../kexec/crashdump.h"
++#include "kexec-s390.h"
 +
 +/*
-+ * Setup new PSW and allocate stack for PSW restart interrupt
++ * Load additional segments for kdump kernel
 + */
-+static void __init setup_restart_psw(void)
++int load_crashdump_segments(struct kexec_info *info, unsigned long crash_base,
++			    unsigned long crash_end)
 +{
-+	psw_t psw;
++	unsigned long bufsz, elfcorehdr, elfcorehdr_size, addr, crash_size;
++	static struct memory_range crash_memory_range[MAX_MEMORY_RANGES];
++	struct crash_elf_info elf_info;
++	char str[COMMAND_LINESIZE];
++	int ranges;
++	void *tmp;
 +
-+	restart_stack = __alloc_bootmem(ASYNC_SIZE, ASYNC_SIZE, 0);
-+	restart_stack += ASYNC_SIZE;
++	crash_size = crash_end - crash_base + 1;
++	memset(&elf_info, 0, sizeof(elf_info));
 +
-+	/*
-+	 * Setup restart PSW for absolute zero lowcore. This is necesary
-+	 * if PSW restart is done on an offline CPU that has lowcore zero
-+	 */
-+	psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
-+	psw.addr = PSW_ADDR_AMODE | (unsigned long) psw_restart_int_handler;
-+	copy_to_absolute_zero(&S390_lowcore.restart_psw, &psw, sizeof(psw));
++	elf_info.data = ELFDATA2MSB;
++	elf_info.machine = EM_S390;
++	elf_info.class = ELFCLASS64;
++	elf_info.get_note_info = get_crash_notes_per_cpu;
++
++	if (get_memory_ranges_s390(crash_memory_range, &ranges, 0))
++		    return -1;
++
++	if (crash_create_elf64_headers(info, &elf_info, crash_memory_range,
++				       ranges, &tmp, &bufsz,
++				       ELF_CORE_HEADER_ALIGN))
++		return -1;
++
++	elfcorehdr = add_buffer(info, tmp, bufsz, bufsz, 1024,
++				crash_base, crash_end, -1);
++	elfcorehdr_size = bufsz;
++	elf_rel_build_load(info, &info->rhdr, (const char *) purgatory,
++			   purgatory_size, 0, ULONG_MAX, -1, 0);
++	addr = crash_base + 0x10010;
++	elf_rel_set_symbol(&info->rhdr, "kdump_psw_addr", &addr, sizeof(addr));
++	info->entry = (void *) elf_rel_get_addr(&info->rhdr, "purgatory_start");
++	snprintf(str, sizeof(str), " elfcorehdr=%ld@%ldK\n",
++		 elfcorehdr_size, elfcorehdr / 1024);
++	command_line_add(str);
++	return 0;
 +}
-+
- static void __init
- setup_memory(void)
+--- a/kexec/arch/s390/kexec-elf-rel-s390.c
++++ b/kexec/arch/s390/kexec-elf-rel-s390.c
+@@ -1,7 +1,7 @@
+ /*
+  * kexec/arch/s390/kexec-elf-rel-s390.c
+  *
+- * (C) Copyright IBM Corp. 2005
++ * Copyright IBM Corp. 2005,2011
+  *
+  * Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
+  *
+@@ -12,15 +12,65 @@
+ #include "../../kexec.h"
+ #include "../../kexec-elf.h"
+ 
+-int machine_verify_elf_rel(struct mem_ehdr *UNUSED(ehdr))
++int machine_verify_elf_rel(struct mem_ehdr *ehdr)
  {
-@@ -792,6 +813,7 @@ setup_arch(char **cmdline_p)
- 	setup_addressing_mode();
- 	setup_memory();
- 	setup_resources();
-+	setup_restart_psw();
- 	setup_lowcore();
- 
-         cpu_init();
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -470,6 +470,11 @@ int __cpuinit start_secondary(void *cpuv
- 	ipi_call_unlock();
- 	/* Switch on interrupts */
- 	local_irq_enable();
-+	__ctl_clear_bit(0, 28); /* Disable lowcore protection */
-+	S390_lowcore.restart_psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
-+	S390_lowcore.restart_psw.addr =
-+		PSW_ADDR_AMODE | (unsigned long) psw_restart_int_handler;
-+	__ctl_set_bit(0, 28); /* Enable lowcore protection */
- 	/* cpu_idle will call schedule for us */
- 	cpu_idle();
- 	return 0;
-@@ -507,6 +512,9 @@ static int __cpuinit smp_alloc_lowcore(i
- 	memset((char *)lowcore + 512, 0, sizeof(*lowcore) - 512);
- 	lowcore->async_stack = async_stack + ASYNC_SIZE;
- 	lowcore->panic_stack = panic_stack + PAGE_SIZE;
-+	lowcore->restart_psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
-+	lowcore->restart_psw.addr =
-+		PSW_ADDR_AMODE | (unsigned long) restart_int_handler;
- 
- #ifndef CONFIG_64BIT
- 	if (MACHINE_HAS_IEEE) {
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -85,3 +85,19 @@ int memcpy_real(void *dest, void *src, s
- 	arch_local_irq_restore(flags);
- 	return rc;
+-	return 0;
++	if (ehdr->ei_data != ELFDATA2MSB)
++		return 0;
++	if (ehdr->ei_class != ELFCLASS64)
++		return 0;
++	if (ehdr->e_machine != EM_S390)
++		return 0;
++	return 1;
  }
+ 
+-void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+-			   unsigned long UNUSED(r_type),
+-			   void *UNUSED(location),
+-			   unsigned long UNUSED(address),
+-			   unsigned long UNUSED(value))
++void machine_apply_elf_rel(struct mem_ehdr *ehdr,
++			   unsigned long r_type,
++			   void *loc,
++			   unsigned long address,
++			   unsigned long val)
+ {
++	switch (r_type) {
++	case R_390_8:		/* Direct 8 bit.   */
++	case R_390_12:		/* Direct 12 bit.  */
++	case R_390_16:		/* Direct 16 bit.  */
++	case R_390_20:		/* Direct 20 bit.  */
++	case R_390_32:		/* Direct 32 bit.  */
++	case R_390_64:		/* Direct 64 bit.  */
++		if (r_type == R_390_8)
++			*(unsigned char *) loc = val;
++		else if (r_type == R_390_12)
++			*(unsigned short *) loc = (val & 0xfff) |
++				(*(unsigned short *) loc & 0xf000);
++		else if (r_type == R_390_16)
++			*(unsigned short *) loc = val;
++		else if (r_type == R_390_20)
++			*(unsigned int *) loc =
++				(*(unsigned int *) loc & 0xf00000ff) |
++				(val & 0xfff) << 16 | (val & 0xff000) >> 4;
++		else if (r_type == R_390_32)
++			*(unsigned int *) loc = val;
++		else if (r_type == R_390_64)
++			*(unsigned long *) loc = val;
++		break;
++	case R_390_PC16:	/* PC relative 16 bit.  */
++	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
++	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
++	case R_390_PC32:	/* PC relative 32 bit.  */
++	case R_390_PC64:	/* PC relative 64 bit.	*/
++		val -= address;
++		if (r_type == R_390_PC16)
++			*(unsigned short *) loc = val;
++		else if (r_type == R_390_PC16DBL)
++			*(unsigned short *) loc = val >> 1;
++		else if (r_type == R_390_PC32DBL)
++			*(unsigned int *) loc = val >> 1;
++		else if (r_type == R_390_PC32)
++			*(unsigned int *) loc = val;
++		else if (r_type == R_390_PC64)
++			*(unsigned long *) loc = val;
++		break;
++	default:
++		die("Unknown rela relocation: 0x%lx 0x%lx\n", r_type, address);
++		break;
++	}
+ }
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -18,20 +18,34 @@
+ #include <unistd.h>
+ #include <getopt.h>
+ #include "../../kexec.h"
++#include "../../kexec-syscall.h"
++#include "../../kexec/crashdump.h"
+ #include "kexec-s390.h"
++#include "elf.h"
+ #include <arch/options.h>
+ 
++static char command_line[COMMAND_LINESIZE];
++
++int command_line_add(const char *str)
++{
++	if (strlen(command_line) + strlen(str) + 1 > COMMAND_LINESIZE) {
++		fprintf(stderr, "Command line too long.\n");
++		return -1;
++	}
++	strcat(command_line, str);
++	return 0;
++}
++
+ int
+ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 		off_t kernel_size, struct kexec_info *info)
+ {
+ 	void *krnl_buffer;
+ 	char *rd_buffer;
+-	const char *command_line;
+ 	const char *ramdisk;
+-	int command_line_len;
+ 	off_t ramdisk_len;
+ 	unsigned int ramdisk_origin;
++	uint64_t crash_base, crash_end;
+ 	int opt;
+ 
+ 	static const struct option options[] =
+@@ -44,9 +58,9 @@ image_s390_load(int argc, char **argv, c
+ 	static const char short_options[] = KEXEC_OPT_STR "";
+ 
+ 	ramdisk = NULL;
+-	command_line = NULL;
+ 	ramdisk_len = 0;
+ 	ramdisk_origin = 0;
++	crash_base = 0;
+ 
+ 	while ((opt = getopt_long(argc,argv,short_options,options,0)) != -1) {
+ 		switch(opt) {
+@@ -55,7 +69,8 @@ image_s390_load(int argc, char **argv, c
+ 			return -1;
+ 			break;
+ 		case OPT_APPEND:
+-			command_line = optarg;
++			if (command_line_add(optarg))
++				return -1;
+ 			break;
+ 		case OPT_RAMDISK:
+ 			ramdisk = optarg;
+@@ -63,18 +78,16 @@ image_s390_load(int argc, char **argv, c
+ 		}
+ 	}
+ 
+-	/* Process a given command_line: */
+-	if (command_line) {
+-		command_line_len = strlen(command_line) + 1; /* Remember the '\0' */
+-		if (command_line_len > COMMAND_LINESIZE) {
+-		        fprintf(stderr, "Command line too long.\n");
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		if (parse_iomem_single("Crash kernel\n", &crash_base,
++				       &crash_end))
+ 			return -1;
+-		}
+ 	}
+ 
+ 	/* Add kernel segment */
+ 	add_segment(info, kernel_buf + IMAGE_READ_OFFSET,
+-		    kernel_size - IMAGE_READ_OFFSET, IMAGE_READ_OFFSET,
++		    kernel_size - IMAGE_READ_OFFSET,
++		    crash_base + IMAGE_READ_OFFSET,
+ 		    kernel_size - IMAGE_READ_OFFSET);
+ 
+ 	/* We do want to change the kernel image */
+@@ -88,10 +101,18 @@ image_s390_load(int argc, char **argv, c
+ 			return -1;
+ 		}
+ 		ramdisk_origin = RAMDISK_ORIGIN_ADDR;
+-		add_segment(info, rd_buffer, ramdisk_len, RAMDISK_ORIGIN_ADDR, ramdisk_len);
++		add_segment(info, rd_buffer, ramdisk_len,
++			    crash_base + RAMDISK_ORIGIN_ADDR, ramdisk_len);
+ 	}
+ 	
+-	/* Register the ramdisk in the kernel. */
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		if (load_crashdump_segments(info, crash_base, crash_end))
++			return -1;
++	} else {
++		info->entry = (void *) IMAGE_READ_OFFSET;
++	}
++
++	/* Register the ramdisk and crashkernel memory in the kernel. */
+ 	{
+ 		unsigned long long *tmp;
+ 
+@@ -100,19 +121,23 @@ image_s390_load(int argc, char **argv, c
+ 
+ 		tmp = krnl_buffer + INITRD_SIZE_OFFS;
+ 		*tmp = (unsigned long long) ramdisk_len;
+-	}
+ 
++		if (info->kexec_flags & KEXEC_ON_CRASH) {
++			tmp = krnl_buffer + OLDMEM_BASE_OFFS;
++			*tmp = crash_base;
++
++			tmp = krnl_buffer + OLDMEM_SIZE_OFFS;
++			*tmp = crash_end - crash_base + 1;
++		}
++	}
+ 	/*
+ 	 * We will write a probably given command line.
+ 	 * First, erase the old area, then setup the new parameters:
+ 	 */
+-	if (command_line) {
++	if (strlen(command_line) != 0) {
+ 		memset(krnl_buffer + COMMAND_LINE_OFFS, 0, COMMAND_LINESIZE);
+ 		memcpy(krnl_buffer + COMMAND_LINE_OFFS, command_line, strlen(command_line));
+ 	}
+-
+-	info->entry = (void *) IMAGE_READ_OFFSET;
+-
+ 	return 0;
+ }
+ 
+--- a/kexec/arch/s390/kexec-s390.c
++++ b/kexec/arch/s390/kexec-s390.c
+@@ -1,9 +1,10 @@
+ /*
+  * kexec/arch/s390/kexec-s390.c
+  *
+- * (C) Copyright IBM Corp. 2005
++ * Copyright IBM Corp. 2005,2011
+  *
+  * Author(s): Rolf Adelsberger <adelsberger@de.ibm.com>
++ *            Michael Holzheu <holzheu@linux.vnet.ibm.com>
+  *
+  */
+ 
+@@ -19,26 +20,16 @@
+ #include "kexec-s390.h"
+ #include <arch/options.h>
+ 
+-#define MAX_MEMORY_RANGES 64
+ static struct memory_range memory_range[MAX_MEMORY_RANGES];
+ 
+ /*
+- * get_memory_ranges:
+- *  Return a list of memory ranges by parsing the file returned by
+- *  proc_iomem()
+- *
+- * INPUT:
+- *  - Pointer to an array of memory_range structures.
+- *  - Pointer to an integer with holds the number of memory ranges.
+- *
+- * RETURN:
+- *  - 0 on normal execution.
+- *  - (-1) if something went wrong.
++ * Get memory ranges of type "System RAM" from /proc/iomem. If with_crashk=1
++ * then also type "Crash kernel" is added.
+  */
+-
+-int get_memory_ranges(struct memory_range **range, int *ranges,
+-		      unsigned long UNUSED(flags))
++int get_memory_ranges_s390(struct memory_range memory_range[], int *ranges,
++			   int with_crashk)
+ {
++	char crash_kernel[] = "Crash kernel\n";
+ 	char sys_ram[] = "System RAM\n";
+ 	const char *iomem = proc_iomem();
+ 	FILE *fp;
+@@ -62,7 +53,9 @@ int get_memory_ranges(struct memory_rang
+ 
+ 		sscanf(line,"%Lx-%Lx : %n", &start, &end, &cons);
+ 		str = line+cons;
+-		if(memcmp(str,sys_ram,strlen(sys_ram)) == 0) {
++		if((memcmp(str,sys_ram,strlen(sys_ram)) == 0) ||
++		   (with_crashk &&
++		    memcmp(str,crash_kernel,strlen(crash_kernel)) == 0)) {
+ 			memory_range[current_range].start = start;
+ 			memory_range[current_range].end = end;
+ 			memory_range[current_range].type = RANGE_RAM;
+@@ -73,9 +66,41 @@ int get_memory_ranges(struct memory_rang
+ 		}
+ 	}
+ 	fclose(fp);
+-	*range = memory_range;
+ 	*ranges = current_range;
++	return 0;
++}
 +
 +/*
-+ * Copy memory to absolute zero
++ * get_memory_ranges:
++ *  Return a list of memory ranges by parsing the file returned by
++ *  proc_iomem()
++ *
++ * INPUT:
++ *  - Pointer to an array of memory_range structures.
++ *  - Pointer to an integer with holds the number of memory ranges.
++ *
++ * RETURN:
++ *  - 0 on normal execution.
++ *  - (-1) if something went wrong.
 + */
-+void copy_to_absolute_zero(void *dest, void *src, size_t count)
+ 
++int get_memory_ranges(struct memory_range **range, int *ranges,
++		      unsigned long flags)
 +{
-+	unsigned long cr0;
++	uint64_t start, end;
 +
-+	BUG_ON((unsigned long) dest + count >= sizeof(struct _lowcore));
-+	preempt_disable();
-+	__ctl_store(cr0, 0, 0);
-+	__ctl_clear_bit(0, 28); /* disable lowcore protection */
-+	memcpy_real(dest + store_prefix(), src, count);
-+	__ctl_load(cr0, 0, 0);
-+	preempt_enable();
++	if (get_memory_ranges_s390(memory_range, ranges,
++				   flags & KEXEC_ON_CRASH))
++	    	return -1;
++	*range = memory_range;
++	if ((flags & KEXEC_ON_CRASH) && !(flags & KEXEC_PRESERVE_CONTEXT)) {
++		if (parse_iomem_single("Crash kernel\n", &start, &end))
++			return -1;
++		if (start > mem_min)
++			mem_min = start;
++		if (end < mem_max)
++			mem_max = end;
++	}
+ 	return 0;
+ }
+ 
+@@ -112,5 +137,8 @@ void arch_update_purgatory(struct kexec_
+ 
+ int is_crashkernel_mem_reserved(void)
+ {
+-	return 0; /* kdump is not supported on this platform (yet) */
++	uint64_t start, end;
++
++	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
++		(start != end) : 0;
+ }
+--- a/kexec/arch/s390/kexec-s390.h
++++ b/kexec/arch/s390/kexec-s390.h
+@@ -15,11 +15,18 @@
+ #define RAMDISK_ORIGIN_ADDR   0x800000
+ #define INITRD_START_OFFS     0x408
+ #define INITRD_SIZE_OFFS      0x410
++#define OLDMEM_BASE_OFFS      0x418
++#define OLDMEM_SIZE_OFFS      0x420
+ #define COMMAND_LINE_OFFS     0x480
+ #define COMMAND_LINESIZE      896
++#define MAX_MEMORY_RANGES     64
+ 
+ extern int image_s390_load(int, char **, const char *, off_t, struct kexec_info *);
+ extern int image_s390_probe(const char *, off_t);
+ extern void image_s390_usage(void);
++extern int load_crashdump_segments(struct kexec_info *info, unsigned long crash_base, unsigned long crash_end);
++extern int get_memory_ranges_s390(struct memory_range range[], int *ranges,
++				  int with_crashk);
++extern int command_line_add(const char *str);
+ 
+ #endif /* KEXEC_IA64_H */
+--- a/purgatory/arch/s390/Makefile
++++ b/purgatory/arch/s390/Makefile
+@@ -2,7 +2,9 @@
+ # Purgatory s390
+ #
+ 
+-s390_PURGATORY_SRCS =
++s390_PURGATORY_SRCS += purgatory/arch/s390/console-s390.c
++s390_PURGATORY_SRCS += purgatory/arch/s390/setup-s390.S
++s390_PURGATORY_SRCS += purgatory/arch/s390/purgatory-s390.c
+ 
+ dist += purgatory/arch/s390/Makefile $(s390_PURGATORY_SRCS)
+ 
+--- /dev/null
++++ b/purgatory/arch/s390/console-s390.c
+@@ -0,0 +1,14 @@
++/*
++ * S390 console code (currently not implemented)
++ *
++ * Copyright IBM Corp. 2011
++ *
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++#include <purgatory.h>
++#include "unused.h"
++
++void putchar(int UNUSED(ch))
++{
 +}
+--- /dev/null
++++ b/purgatory/arch/s390/purgatory-s390.c
+@@ -0,0 +1,17 @@
++/*
++ * S390 purgatory
++ *
++ * Copyright IBM Corp. 2011
++ *
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++unsigned long kdump_psw_addr = 0;
++
++void setup_arch(void)
++{
++}
++
++void post_verification_setup_arch(void)
++{
++}
+--- /dev/null
++++ b/purgatory/arch/s390/setup-s390.S
+@@ -0,0 +1,35 @@
++/*
++ * Purgatory setup code
++ *
++ * Copyright IBM Corp. 2011
++ *
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++	.text
++	.globl purgatory_start
++	.balign 16
++purgatory_start:
++#ifdef __s390x__
++	larl	%r15,lstack
++	brasl	%r14,purgatory
++	larl    %r14,kdump_psw_addr
++	lg	%r4,0(%r14)
++	larl    %r14,kdump_psw
++	stg	%r4,8(%r14)
++	lpswe	0(%r14)
++
++	.section ".data"
++	.balign 16
++kdump_psw:
++	.quad 0x0000000180000000
++	.quad 0x0000000000000000
++
++	.bss
++	.balign 4096
++lstack:
++	.skip 4096
++lstack_end:
++#else
++0:	j	0
++#endif
 
 
 _______________________________________________
