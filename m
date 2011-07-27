@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate2.uk.ibm.com ([194.196.100.162])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qm3gk-0006Tc-QS
+	id 1Qm3gk-0006Ta-Of
 	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:19 +0000
-Received: from d06nrmr1806.portsmouth.uk.ibm.com
-	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
-	by mtagate2.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwAEC021768
+Received: from d06nrmr1707.portsmouth.uk.ibm.com
+	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwAcd025175
 	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:10 GMT
-Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
-	[9.149.37.216])
-	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6RCw9h82674942
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
-Received: from d06av04.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av04.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6RCw8Nu024123
+Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
+	[9.149.37.229])
+	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6RCwAIQ2171114
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:10 +0100
+Received: from d06av05.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av05.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6RCw9Ge001639
 	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 06:58:09 -0600
-Message-Id: <20110727125808.516079721@linux.vnet.ibm.com>
-Date: Wed, 27 Jul 2011 14:55:11 +0200
+Message-Id: <20110727125808.670392469@linux.vnet.ibm.com>
+Date: Wed, 27 Jul 2011 14:55:12 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch v2 07/10] s390: Use diagnose 308 for system reset
+Subject: [patch v2 08/10] s390: Add real memory access functions
 References: <20110727125504.491183728@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=s390-kdump-arch-diag308_reset.patch
+Content-Disposition: inline; filename=s390-kdump-arch-maccess.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,85 +40,139 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-The diagnose 308 call is the prefered method for clearing all ongoing I/O.
-Therefore if it is available we use it instead of doing a manual reset.
+Add access function for real memory needed by s390 kdump backend.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- arch/s390/include/asm/ipl.h |    1 +
- arch/s390/kernel/base.S     |   36 ++++++++++++++++++++++++++++++++++++
- arch/s390/kernel/ipl.c      |    6 ++++++
- 3 files changed, 43 insertions(+)
+ arch/s390/include/asm/system.h |    2 +
+ arch/s390/mm/maccess.c         |   57 +++++++++++++++++++++++++++++++++++++++++
+ drivers/s390/char/zcore.c      |   20 +-------------
+ 3 files changed, 61 insertions(+), 18 deletions(-)
 
---- a/arch/s390/include/asm/ipl.h
-+++ b/arch/s390/include/asm/ipl.h
-@@ -167,5 +167,6 @@ enum diag308_rc {
- };
+--- a/arch/s390/include/asm/system.h
++++ b/arch/s390/include/asm/system.h
+@@ -114,6 +114,8 @@ extern void pfault_fini(void);
+ extern void cmma_init(void);
+ extern int memcpy_real(void *, void *, size_t);
+ extern void copy_to_absolute_zero(void *dest, void *src, size_t count);
++extern int copy_to_user_real(void __user *dest, void *src, size_t count);
++extern int copy_from_user_real(void *dest, void __user *src, size_t count);
  
- extern int diag308(unsigned long subcode, void *addr);
-+extern void diag308_reset(void);
+ #define finish_arch_switch(prev) do {					     \
+ 	set_fs(current->thread.mm_segment);				     \
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -11,6 +11,7 @@
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/errno.h>
++#include <linux/gfp.h>
+ #include <asm/system.h>
  
- #endif /* _ASM_S390_IPL_H */
---- a/arch/s390/kernel/base.S
-+++ b/arch/s390/kernel/base.S
-@@ -76,6 +76,42 @@ s390_base_pgm_handler_fn:
- 	.quad	0
- 	.previous
- 
-+#
-+# Calls diag 308 subcode 1 and continues execution
-+#
-+# The following conditions must be ensured before calling this function:
-+# * Prefix register = 0
-+# * Lowcore protection is disabled
-+#
-+ENTRY(diag308_reset)
-+	larl	%r4,.Lctlregs		# Save control registers
-+	stctg	%c0,%c15,0(%r4)
-+	larl	%r4,.Lrestart_psw	# Setup restart PSW at absolute 0
-+	lghi	%r3,0
-+	lg	%r4,0(%r4)		# Save PSW
-+	sturg	%r4,%r3			# Use sturg, because of large pages
-+	lghi	%r1,1
-+	diag	%r1,%r1,0x308
-+.Lrestart_part2:
-+	lhi	%r0,0			# Load r0 with zero
-+	lhi	%r1,2			# Use mode 2 = ESAME (dump)
-+	sigp	%r1,%r0,0x12		# Switch to ESAME mode
-+	sam64				# Switch to 64 bit addressing mode
-+	larl	%r4,.Lctlregs		# Restore control registers
-+	lctlg	%c0,%c15,0(%r4)
-+	br	%r14
-+.align 16
-+.Lrestart_psw:
-+	.long	0x00080000,0x80000000 + .Lrestart_part2
-+
-+	.section .bss
-+.align 8
-+.Lctlregs:
-+	.rept	16
-+	.quad	0
-+	.endr
-+	.previous
-+
- #else /* CONFIG_64BIT */
- 
- ENTRY(s390_base_mcck_handler)
---- a/arch/s390/kernel/ipl.c
-+++ b/arch/s390/kernel/ipl.c
-@@ -1996,6 +1996,12 @@ static void do_reset_calls(void)
- {
- 	struct reset_call *reset;
- 
-+#ifdef CONFIG_64BIT
-+	if (diag308_set_works) {
-+		diag308_reset();
-+		return;
-+	}
-+#endif
- 	list_for_each_entry(reset, &rcall, list)
- 		reset->fn();
+ /*
+@@ -60,6 +61,9 @@ long probe_kernel_write(void *dst, const
+ 	return copied < 0 ? -EFAULT : 0;
  }
+ 
++/*
++ * Copy memory in real mode (kernel to kernel)
++ */
+ int memcpy_real(void *dest, void *src, size_t count)
+ {
+ 	register unsigned long _dest asm("2") = (unsigned long) dest;
+@@ -101,3 +105,56 @@ void copy_to_absolute_zero(void *dest, v
+ 	__ctl_load(cr0, 0, 0);
+ 	preempt_enable();
+ }
++
++/*
++ * Copy memory from kernel (real) to user (virtual)
++ */
++int copy_to_user_real(void __user *dest, void *src, size_t count)
++{
++	int offs = 0, size, rc;
++	char *buf;
++
++	buf = (char *) __get_free_page(GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++	rc = -EFAULT;
++	while (offs < count) {
++		size = min(PAGE_SIZE, count - offs);
++		if (memcpy_real(buf, src + offs, size))
++			goto out;
++		if (copy_to_user(dest + offs, buf, size))
++			goto out;
++		offs += size;
++	}
++	rc = 0;
++out:
++	free_page((unsigned long) buf);
++	return rc;
++}
++
++/*
++ * Copy memory from user (virtual) to kernel (real)
++ */
++int copy_from_user_real(void *dest, void __user *src, size_t count)
++{
++	int offs = 0, size, rc;
++	char *buf;
++
++	buf = (char *) __get_free_page(GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++	rc = -EFAULT;
++	while (offs < count) {
++		size = min(PAGE_SIZE, count - offs);
++		if (copy_from_user(buf, src + offs, size))
++			goto out;
++		if (memcpy_real(dest + offs, buf, size))
++			goto out;
++		offs += size;
++	}
++	rc = 0;
++out:
++	free_page((unsigned long) buf);
++	return rc;
++}
++
+--- a/drivers/s390/char/zcore.c
++++ b/drivers/s390/char/zcore.c
+@@ -142,22 +142,6 @@ static int memcpy_hsa_kernel(void *dest,
+ 	return memcpy_hsa(dest, src, count, TO_KERNEL);
+ }
+ 
+-static int memcpy_real_user(void __user *dest, unsigned long src, size_t count)
+-{
+-	static char buf[4096];
+-	int offs = 0, size;
+-
+-	while (offs < count) {
+-		size = min(sizeof(buf), count - offs);
+-		if (memcpy_real(buf, (void *) src + offs, size))
+-			return -EFAULT;
+-		if (copy_to_user(dest + offs, buf, size))
+-			return -EFAULT;
+-		offs += size;
+-	}
+-	return 0;
+-}
+-
+ static int __init init_cpu_info(enum arch_id arch)
+ {
+ 	struct save_area *sa;
+@@ -346,8 +330,8 @@ static ssize_t zcore_read(struct file *f
+ 
+ 	/* Copy from real mem */
+ 	size = count - mem_offs - hdr_count;
+-	rc = memcpy_real_user(buf + hdr_count + mem_offs, mem_start + mem_offs,
+-			      size);
++	rc = copy_to_user_real(buf + hdr_count + mem_offs,
++			       (void *) mem_start + mem_offs, size);
+ 	if (rc)
+ 		goto fail;
+ 
 
 
 _______________________________________________
