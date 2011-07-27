@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate7.uk.ibm.com ([194.196.100.167])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qm3gm-0006U6-0B
-	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:26 +0000
+	id 1Qm3gk-0006TZ-OZ
+	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:27 +0000
 Received: from d06nrmr1507.portsmouth.uk.ibm.com
 	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
-	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwD8U015154
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:13 GMT
-Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
-	[9.149.37.252])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwA6q025180
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:10 GMT
+Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
+	[9.149.37.249])
 	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6RCwCLL2392260
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:12 +0100
-Received: from d06av11.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av11.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6RCw9si000570
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 06:58:12 -0600
-Message-Id: <20110727125808.974305666@linux.vnet.ibm.com>
-Date: Wed, 27 Jul 2011 14:55:14 +0200
+	ESMTP id p6RCw9qL2420876
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
+Received: from d06av08.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av08.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6RCw9De012214
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
+Message-Id: <20110727125808.813608055@linux.vnet.ibm.com>
+Date: Wed, 27 Jul 2011 14:55:13 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch v2 10/10] kexec-tools: Add s390 kdump support
+Subject: [patch v2 09/10] s390: kdump backend code
 References: <20110727125504.491183728@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=kexec-tools-s390-kdump.patch
+Content-Disposition: inline; filename=s390-kdump-arch-backend.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,552 +40,1087 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-This patch adds kdump support for s390 to the kexec tool and enables the
-"--load-panic" option. When loading the kdump kernel and ramdisk we add the
-address of the crashkernel memory to the normal load address.
+This patch provides the architecture specific part of the s390 kdump
+support.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- include/elf.h                        |    8 +++-
- kexec/arch/s390/Makefile             |    1 
- kexec/arch/s390/crashdump-s390.c     |   59 +++++++++++++++++++++++++++++++
- kexec/arch/s390/kexec-elf-rel-s390.c |   66 ++++++++++++++++++++++++++++++-----
- kexec/arch/s390/kexec-image.c        |   61 ++++++++++++++++++++++----------
- kexec/arch/s390/kexec-s390.c         |   66 ++++++++++++++++++++++++-----------
- kexec/arch/s390/kexec-s390.h         |    7 +++
- purgatory/arch/s390/Makefile         |    4 +-
- purgatory/arch/s390/console-s390.c   |   14 +++++++
- purgatory/arch/s390/purgatory-s390.c |   17 +++++++++
- purgatory/arch/s390/setup-s390.S     |   35 ++++++++++++++++++
- 11 files changed, 290 insertions(+), 48 deletions(-)
+ arch/s390/Kconfig                |   10 +
+ arch/s390/include/asm/ipl.h      |    1 
+ arch/s390/include/asm/kexec.h    |    8 -
+ arch/s390/include/asm/sclp.h     |    1 
+ arch/s390/include/asm/setup.h    |    9 +
+ arch/s390/kernel/Makefile        |    1 
+ arch/s390/kernel/crash.c         |  206 ++++++++++++++++++++++++++++++++++++++-
+ arch/s390/kernel/crash_dump.c    |   39 +++++++
+ arch/s390/kernel/head.S          |   16 +++
+ arch/s390/kernel/head_kdump.S    |  116 +++++++++++++++++++++
+ arch/s390/kernel/ipl.c           |   48 ++++++++-
+ arch/s390/kernel/machine_kexec.c |   64 ++++++++++++
+ arch/s390/kernel/mem_detect.c    |   69 +++++++++++++
+ arch/s390/kernel/setup.c         |  188 +++++++++++++++++++++++++++++++++++
+ arch/s390/mm/vmem.c              |    3 
+ 15 files changed, 772 insertions(+), 7 deletions(-)
 
---- a/include/elf.h
-+++ b/include/elf.h
-@@ -2304,9 +2304,13 @@ typedef Elf32_Addr Elf32_Conflict;
- #define R_390_TLS_DTPOFF	55	/* Offset in TLS block.	 */
- #define R_390_TLS_TPOFF		56	/* Negated offset in static TLS
- 					   block.  */
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -567,6 +567,16 @@ config KEXEC
+ 	  current kernel, and to start another kernel.  It is like a reboot
+ 	  but is independent of hardware/microcode support.
+ 
++config CRASH_DUMP
++	bool "kernel crash dumps"
++	depends on 64BIT
++	help
++	  Generate crash dump after being started by kexec.
++	  Crash dump kernels are loaded in the main kernel with kexec-tools
++	  into a specially reserved region and then later executed after
++	  a crash by kdump/kexec.
++	  For more details see Documentation/kdump/kdump.txt
++
+ config ZFCPDUMP
+ 	def_bool n
+ 	prompt "zfcpdump support"
+--- a/arch/s390/include/asm/ipl.h
++++ b/arch/s390/include/asm/ipl.h
+@@ -168,5 +168,6 @@ enum diag308_rc {
+ 
+ extern int diag308(unsigned long subcode, void *addr);
+ extern void diag308_reset(void);
++extern void store_status(void);
+ 
+ #endif /* _ASM_S390_IPL_H */
+--- a/arch/s390/include/asm/kexec.h
++++ b/arch/s390/include/asm/kexec.h
+@@ -30,14 +30,14 @@
+ /* Not more than 2GB */
+ #define KEXEC_CONTROL_MEMORY_LIMIT (1UL<<31)
+ 
++/* Maximum address we can use for the crash control pages */
++#define KEXEC_CRASH_CONTROL_MEMORY_LIMIT (-1UL)
++
+ /* Allocate one page for the pdp and the second for the code */
+ #define KEXEC_CONTROL_PAGE_SIZE 4096
+ 
+ /* The native architecture */
+ #define KEXEC_ARCH KEXEC_ARCH_S390
+ 
+-/* Provide a dummy definition to avoid build failures. */
+-static inline void crash_setup_regs(struct pt_regs *newregs,
+-					struct pt_regs *oldregs) { }
 -
-+#define R_390_20		57	/* Direct 20 bit.  */
-+#define R_390_GOT20		58	/* 20 bit GOT offset.  */
-+#define R_390_GOTPLT20		59	/* 20 bit offset to jump slot.  */
-+#define R_390_TLS_GOTIE20	60	/* 20 bit GOT offset for static TLS
-+					   block offset.  */
- /* Keep this the last entry.  */
--#define R_390_NUM		57
-+#define R_390_NUM		61
++extern void crash_setup_regs(struct pt_regs *newregs, struct pt_regs *oldregs);
+ #endif /*_S390_KEXEC_H */
+--- a/arch/s390/include/asm/sclp.h
++++ b/arch/s390/include/asm/sclp.h
+@@ -55,4 +55,5 @@ int sclp_chp_deconfigure(struct chp_id c
+ int sclp_chp_read_info(struct sclp_chp_info *info);
+ void sclp_get_ipl_info(struct sclp_ipl_info *info);
  
- /* CRIS relocations.  */
- #define R_CRIS_NONE		0
---- a/kexec/arch/s390/Makefile
-+++ b/kexec/arch/s390/Makefile
-@@ -4,6 +4,7 @@
- s390_KEXEC_SRCS =  kexec/arch/s390/kexec-s390.c
- s390_KEXEC_SRCS += kexec/arch/s390/kexec-image.c
- s390_KEXEC_SRCS += kexec/arch/s390/kexec-elf-rel-s390.c
-+s390_KEXEC_SRCS += kexec/arch/s390/crashdump-s390.c
++void _sclp_print_early(const char *);
+ #endif /* _ASM_S390_SCLP_H */
+--- a/arch/s390/include/asm/setup.h
++++ b/arch/s390/include/asm/setup.h
+@@ -30,11 +30,15 @@
+ #define IPL_DEVICE        (*(unsigned long *)  (0x10400))
+ #define INITRD_START      (*(unsigned long *)  (0x10408))
+ #define INITRD_SIZE       (*(unsigned long *)  (0x10410))
++#define OLDMEM_BASE       (*(unsigned long *)  (0x10418))
++#define OLDMEM_SIZE       (*(unsigned long *)  (0x10420))
+ #endif /* __s390x__ */
+ #define COMMAND_LINE      ((char *)            (0x10480))
  
- dist += kexec/arch/s390/Makefile $(s390_KEXEC_SRCS)			\
- 	kexec/arch/s390/kexec-s390.h					\
---- /dev/null
-+++ b/kexec/arch/s390/crashdump-s390.c
-@@ -0,0 +1,59 @@
-+/*
-+ * kexec/arch/s390/crashdump-s390.c
-+ *
-+ * Copyright IBM Corp. 2011
-+ *
-+ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
-+ */
-+
-+#define _GNU_SOURCE
-+#include <stdio.h>
-+#include <elf.h>
-+#include <limits.h>
-+#include "../../kexec.h"
-+#include "../../kexec-syscall.h"
-+#include "../../kexec/crashdump.h"
-+#include "kexec-s390.h"
-+
-+/*
-+ * Load additional segments for kdump kernel
-+ */
-+int load_crashdump_segments(struct kexec_info *info, unsigned long crash_base,
-+			    unsigned long crash_end)
-+{
-+	unsigned long bufsz, elfcorehdr, elfcorehdr_size, addr, crash_size;
-+	static struct memory_range crash_memory_range[MAX_MEMORY_RANGES];
-+	struct crash_elf_info elf_info;
-+	char str[COMMAND_LINESIZE];
-+	int ranges;
-+	void *tmp;
-+
-+	crash_size = crash_end - crash_base + 1;
-+	memset(&elf_info, 0, sizeof(elf_info));
-+
-+	elf_info.data = ELFDATA2MSB;
-+	elf_info.machine = EM_S390;
-+	elf_info.class = ELFCLASS64;
-+	elf_info.get_note_info = get_crash_notes_per_cpu;
-+
-+	if (get_memory_ranges_s390(crash_memory_range, &ranges, 0))
-+		    return -1;
-+
-+	if (crash_create_elf64_headers(info, &elf_info, crash_memory_range,
-+				       ranges, &tmp, &bufsz,
-+				       ELF_CORE_HEADER_ALIGN))
-+		return -1;
-+
-+	elfcorehdr = add_buffer(info, tmp, bufsz, bufsz, 1024,
-+				crash_base, crash_end, -1);
-+	elfcorehdr_size = bufsz;
-+	elf_rel_build_load(info, &info->rhdr, (const char *) purgatory,
-+			   purgatory_size, 0, ULONG_MAX, -1, 0);
-+	addr = crash_base + 0x10010;
-+	elf_rel_set_symbol(&info->rhdr, "kdump_psw_addr", &addr, sizeof(addr));
-+	info->entry = (void *) elf_rel_get_addr(&info->rhdr, "purgatory_start");
-+	snprintf(str, sizeof(str), " elfcorehdr=%ld@%ldK\n",
-+		 elfcorehdr_size, elfcorehdr / 1024);
-+	command_line_add(str);
-+	return 0;
-+}
---- a/kexec/arch/s390/kexec-elf-rel-s390.c
-+++ b/kexec/arch/s390/kexec-elf-rel-s390.c
-@@ -1,7 +1,7 @@
+ #define CHUNK_READ_WRITE 0
+ #define CHUNK_READ_ONLY  1
++#define CHUNK_OLDMEM     4
++#define CHUNK_CRASHK     5
+ 
+ struct mem_chunk {
+ 	unsigned long addr;
+@@ -48,6 +52,8 @@ extern int memory_end_set;
+ extern unsigned long memory_end;
+ 
+ void detect_memory_layout(struct mem_chunk chunk[]);
++void create_mem_hole(struct mem_chunk memory_chunk[], unsigned long addr,
++		     unsigned long size, int type);
+ 
+ #define PRIMARY_SPACE_MODE	0
+ #define ACCESS_REGISTER_MODE	1
+@@ -106,6 +112,7 @@ extern unsigned int user_mode;
+ #endif /* __s390x__ */
+ 
+ #define ZFCPDUMP_HSA_SIZE	(32UL<<20)
++#define ZFCPDUMP_HSA_SIZE_MAX	(64UL<<20)
+ 
  /*
-  * kexec/arch/s390/kexec-elf-rel-s390.c
+  * Console mode. Override with conmode=
+@@ -138,6 +145,8 @@ extern char kernel_nss_name[];
+ #define IPL_DEVICE        0x10400
+ #define INITRD_START      0x10408
+ #define INITRD_SIZE       0x10410
++#define OLDMEM_BASE       0x10418
++#define OLDMEM_SIZE       0x10420
+ #endif /* __s390x__ */
+ #define COMMAND_LINE      0x10480
+ 
+--- a/arch/s390/kernel/Makefile
++++ b/arch/s390/kernel/Makefile
+@@ -48,6 +48,7 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= $(if $(
+ obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o
+ obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
+ obj-$(CONFIG_FTRACE_SYSCALLS)  += ftrace.o
++obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
+ 
+ # Kexec part
+ S390_KEXEC_OBJS := machine_kexec.o crash.o
+--- a/arch/s390/kernel/crash.c
++++ b/arch/s390/kernel/crash.c
+@@ -1,15 +1,217 @@
+ /*
+  * arch/s390/kernel/crash.c
   *
 - * (C) Copyright IBM Corp. 2005
 + * Copyright IBM Corp. 2005,2011
   *
   * Author(s): Heiko Carstens <heiko.carstens@de.ibm.com>
-  *
-@@ -12,15 +12,65 @@
- #include "../../kexec.h"
- #include "../../kexec-elf.h"
+- *
++ *            Michael Holzheu <holzheu@linux.vnet.ibm.com>
+  */
  
--int machine_verify_elf_rel(struct mem_ehdr *UNUSED(ehdr))
-+int machine_verify_elf_rel(struct mem_ehdr *ehdr)
- {
--	return 0;
-+	if (ehdr->ei_data != ELFDATA2MSB)
-+		return 0;
-+	if (ehdr->ei_class != ELFCLASS64)
-+		return 0;
-+	if (ehdr->e_machine != EM_S390)
-+		return 0;
-+	return 1;
- }
- 
--void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
--			   unsigned long UNUSED(r_type),
--			   void *UNUSED(location),
--			   unsigned long UNUSED(address),
--			   unsigned long UNUSED(value))
-+void machine_apply_elf_rel(struct mem_ehdr *ehdr,
-+			   unsigned long r_type,
-+			   void *loc,
-+			   unsigned long address,
-+			   unsigned long val)
- {
-+	switch (r_type) {
-+	case R_390_8:		/* Direct 8 bit.   */
-+	case R_390_12:		/* Direct 12 bit.  */
-+	case R_390_16:		/* Direct 16 bit.  */
-+	case R_390_20:		/* Direct 20 bit.  */
-+	case R_390_32:		/* Direct 32 bit.  */
-+	case R_390_64:		/* Direct 64 bit.  */
-+		if (r_type == R_390_8)
-+			*(unsigned char *) loc = val;
-+		else if (r_type == R_390_12)
-+			*(unsigned short *) loc = (val & 0xfff) |
-+				(*(unsigned short *) loc & 0xf000);
-+		else if (r_type == R_390_16)
-+			*(unsigned short *) loc = val;
-+		else if (r_type == R_390_20)
-+			*(unsigned int *) loc =
-+				(*(unsigned int *) loc & 0xf00000ff) |
-+				(val & 0xfff) << 16 | (val & 0xff000) >> 4;
-+		else if (r_type == R_390_32)
-+			*(unsigned int *) loc = val;
-+		else if (r_type == R_390_64)
-+			*(unsigned long *) loc = val;
-+		break;
-+	case R_390_PC16:	/* PC relative 16 bit.  */
-+	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
-+	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
-+	case R_390_PC32:	/* PC relative 32 bit.  */
-+	case R_390_PC64:	/* PC relative 64 bit.	*/
-+		val -= address;
-+		if (r_type == R_390_PC16)
-+			*(unsigned short *) loc = val;
-+		else if (r_type == R_390_PC16DBL)
-+			*(unsigned short *) loc = val >> 1;
-+		else if (r_type == R_390_PC32DBL)
-+			*(unsigned int *) loc = val >> 1;
-+		else if (r_type == R_390_PC32)
-+			*(unsigned int *) loc = val;
-+		else if (r_type == R_390_PC64)
-+			*(unsigned long *) loc = val;
-+		break;
-+	default:
-+		die("Unknown rela relocation: 0x%lx 0x%lx\n", r_type, address);
-+		break;
-+	}
- }
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -18,20 +18,34 @@
- #include <unistd.h>
- #include <getopt.h>
- #include "../../kexec.h"
-+#include "../../kexec-syscall.h"
-+#include "../../kexec/crashdump.h"
- #include "kexec-s390.h"
-+#include "elf.h"
- #include <arch/options.h>
- 
-+static char command_line[COMMAND_LINESIZE];
+ #include <linux/threads.h>
+ #include <linux/kexec.h>
+ #include <linux/reboot.h>
++#include <linux/elfcore.h>
++#include <asm/ipl.h>
 +
-+int command_line_add(const char *str)
++#ifdef CONFIG_CRASH_DUMP
++
++#define ROUNDUP(x, y) ((((x) + ((y) - 1)) / (y)) * (y))
++#define PTR_ADD(x, y) (((char *) (x)) + ((unsigned long) (y)))
++
++#ifndef NT_FPREGSET
++#define NT_FPREGSET 2
++#endif
++
++/*
++ * fpregset ELF Note
++ */
++struct nt_fpregset_64 {
++	u32	fpc;
++	u32	pad;
++	u64	fprs[16];
++} __packed;
++
++/*
++ * Initialize ELF note
++ */
++static void *nt_init(void *buf, Elf64_Word type, void *desc, int d_len,
++		     const char *name)
 +{
-+	if (strlen(command_line) + strlen(str) + 1 > COMMAND_LINESIZE) {
-+		fprintf(stderr, "Command line too long.\n");
-+		return -1;
++	Elf64_Nhdr *note;
++	u64 len;
++
++	note = (Elf64_Nhdr *)buf;
++	note->n_namesz = strlen(name) + 1;
++	note->n_descsz = d_len;
++	note->n_type = type;
++	len = sizeof(Elf64_Nhdr);
++
++	memcpy(buf + len, name, note->n_namesz);
++	len = ROUNDUP(len + note->n_namesz, 4);
++
++	memcpy(buf + len, desc, note->n_descsz);
++	len = ROUNDUP(len + note->n_descsz, 4);
++
++	return PTR_ADD(buf, len);
++}
++
++/*
++ * Initialize prstatus note
++ */
++static void *nt_prstatus(void *ptr, struct save_area *sa)
++{
++	struct elf_prstatus nt_prstatus;
++	static int cpu_nr = 1;
++
++	memset(&nt_prstatus, 0, sizeof(nt_prstatus));
++	memcpy(&nt_prstatus.pr_reg.gprs, sa->gp_regs, sizeof(sa->gp_regs));
++	memcpy(&nt_prstatus.pr_reg.psw, sa->psw, sizeof(sa->psw));
++	memcpy(&nt_prstatus.pr_reg.acrs, sa->acc_regs, sizeof(sa->acc_regs));
++	nt_prstatus.pr_pid = cpu_nr;
++	cpu_nr++;
++
++	return nt_init(ptr, NT_PRSTATUS, &nt_prstatus, sizeof(nt_prstatus),
++			 "CORE");
++}
++
++/*
++ * Initialize fpregset (floating point) note
++ */
++static void *nt_fpregset(void *ptr, struct save_area *sa)
++{
++	struct nt_fpregset_64 nt_fpregset;
++
++	memset(&nt_fpregset, 0, sizeof(nt_fpregset));
++	memcpy(&nt_fpregset.fpc, &sa->fp_ctrl_reg, sizeof(sa->fp_ctrl_reg));
++	memcpy(&nt_fpregset.fprs, &sa->fp_regs, sizeof(sa->fp_regs));
++
++	return nt_init(ptr, NT_FPREGSET, &nt_fpregset, sizeof(nt_fpregset),
++			 "CORE");
++}
++
++/*
++ * Initialize timer note
++ */
++static void *nt_s390_timer(void *ptr, struct save_area *sa)
++{
++	return nt_init(ptr, NT_S390_TIMER, &sa->timer, sizeof(sa->timer),
++			 KEXEC_CORE_NOTE_NAME);
++}
++
++/*
++ * Initialize TOD clock comparator note
++ */
++static void *nt_s390_tod_cmp(void *ptr, struct save_area *sa)
++{
++	return nt_init(ptr, NT_S390_TODCMP, &sa->clk_cmp,
++		       sizeof(sa->clk_cmp), KEXEC_CORE_NOTE_NAME);
++}
++
++/*
++ * Initialize TOD programmable register note
++ */
++static void *nt_s390_tod_preg(void *ptr, struct save_area *sa)
++{
++	return nt_init(ptr, NT_S390_TODPREG, &sa->tod_reg,
++		       sizeof(sa->tod_reg), KEXEC_CORE_NOTE_NAME);
++}
++
++/*
++ * Initialize control register note
++ */
++static void *nt_s390_ctrs(void *ptr, struct save_area *sa)
++{
++	return nt_init(ptr, NT_S390_CTRS, &sa->ctrl_regs,
++		       sizeof(sa->ctrl_regs), KEXEC_CORE_NOTE_NAME);
++}
++
++/*
++ * Initialize prefix register note
++ */
++static void *nt_s390_prefix(void *ptr, struct save_area *sa)
++{
++	return nt_init(ptr, NT_S390_PREFIX, &sa->pref_reg,
++			 sizeof(sa->pref_reg), KEXEC_CORE_NOTE_NAME);
++}
++
++/*
++ * Final empty node
++ */
++static void nt_final(void *ptr)
++{
++	memset(ptr, 0, sizeof(struct elf_note));
++}
++
++/*
++ * Add create ELF notes for CPU
++ */
++static void add_elf_notes(int cpu)
++{
++	struct save_area *sa = (void *) 4608;
++	void *ptr;
++
++	memcpy((void *) (4608UL + sa->pref_reg), sa, sizeof(*sa));
++	ptr = (u64 *) per_cpu_ptr(crash_notes, cpu);
++	ptr = nt_prstatus(ptr, sa);
++	ptr = nt_fpregset(ptr, sa);
++	ptr = nt_s390_timer(ptr, sa);
++	ptr = nt_s390_tod_cmp(ptr, sa);
++	ptr = nt_s390_tod_preg(ptr, sa);
++	ptr = nt_s390_ctrs(ptr, sa);
++	ptr = nt_s390_prefix(ptr, sa);
++	nt_final(ptr);
++}
++
++/*
++ * Store status of next available physical CPU
++ */
++static int store_status_next(int start_cpu, int this_cpu)
++{
++	struct save_area *sa = (void *) 4608;
++	int cpu, rc;
++
++	for (cpu = start_cpu; cpu < 65536; cpu++) {
++		if (cpu == this_cpu)
++			continue;
++		do {
++			rc = raw_sigp(cpu, sigp_stop_and_store_status);
++		} while (rc == sigp_busy);
++		if (rc != sigp_order_code_accepted)
++			continue;
++		if (sa->pref_reg)
++			return cpu;
 +	}
-+	strcat(command_line, str);
++	return -1;
++}
++
++#endif /* CONFIG_CRASH_DUMP */
++
++/*
++ * Initialize CPU ELF notes
++ *
++ * We expect that for current CPU a store status has been done
++ */
++void crash_setup_regs(struct pt_regs *newregs, struct pt_regs *oldregs)
++{
++#ifdef CONFIG_CRASH_DUMP
++	int cpu, this_cpu, phys_cpu = 0, first = 1;
++
++	this_cpu = stap();
++
++	for_each_online_cpu(cpu) {
++		if (first && S390_lowcore.prefixreg_save_area) {
++			add_elf_notes(cpu);
++			first = 0;
++			continue;
++		}
++		phys_cpu = store_status_next(phys_cpu, this_cpu);
++		if (phys_cpu == -1)
++			return;
++		add_elf_notes(cpu);
++		phys_cpu++;
++	}
++#endif
++}
+ 
+ void machine_crash_shutdown(struct pt_regs *regs)
+ {
+--- /dev/null
++++ b/arch/s390/kernel/crash_dump.c
+@@ -0,0 +1,39 @@
++/*
++ * S390 kdump implementation
++ *
++ * Copyright IBM Corp. 2011
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++#include <linux/crash_dump.h>
++#include <asm/lowcore.h>
++
++/*
++ * Copy one page from "oldmem"
++ *
++ * For the kdump reserved memory this functions performs a swap operation:
++ *  - [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE] is mapped to [0 - OLDMEM_SIZE].
++ *  - [0 - OLDMEM_SIZE] is mapped to [OLDMEM_BASE - OLDMEM_BASE + OLDMEM_SIZE]
++ */
++ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
++			 size_t csize, unsigned long offset, int userbuf)
++{
++	unsigned long src;
++	int rc;
++
++	if (!csize)
++		return 0;
++
++	src = (pfn << PAGE_SHIFT) + offset;
++	if (src < OLDMEM_SIZE)
++		src += OLDMEM_BASE;
++	else if (src > OLDMEM_BASE &&
++		 src < OLDMEM_BASE + OLDMEM_SIZE)
++		src -= OLDMEM_BASE;
++	if (userbuf)
++		rc = copy_to_user_real((void __user *) buf, (void *) src,
++				       csize);
++	else
++		rc = memcpy_real(buf, (void *) src, csize);
++	return rc < 0 ? rc : csize;
++}
+--- a/arch/s390/kernel/head.S
++++ b/arch/s390/kernel/head.S
+@@ -449,10 +449,22 @@ ENTRY(start)
+ #
+ 	.org	0x10000
+ ENTRY(startup)
++	j	.Lep_startup_normal
++	.org	0x10008
++	.ascii	"S390EP"
++	.byte	0x00,0x01
++#
++# kdump startup-code at 0x10010, running in 64 bit absolute addressing mode
++#
++	.org	0x10010
++ENTRY(startup_kdump)
++	j	.Lep_startup_kdump
++.Lep_startup_normal:
+ 	basr	%r13,0			# get base
+ .LPG0:
+ 	xc	0x200(256),0x200	# partially clear lowcore
+ 	xc	0x300(256),0x300
++	xc	0xe00(256),0xe00
+ 	stck	__LC_LAST_UPDATE_CLOCK
+ 	spt	5f-.LPG0(%r13)
+ 	mvc	__LC_LAST_UPDATE_TIMER(8),5f-.LPG0(%r13)
+@@ -534,6 +546,8 @@ ENTRY(startup)
+ 	.align	8
+ 5:	.long	0x7fffffff,0xffffffff
+ 
++#include "head_kdump.S"
++
+ #
+ # params at 10400 (setup.h)
+ #
+@@ -541,6 +555,8 @@ ENTRY(startup)
+ 	.long	0,0			# IPL_DEVICE
+ 	.long	0,0			# INITRD_START
+ 	.long	0,0			# INITRD_SIZE
++	.long	0,0			# OLDMEM_BASE
++	.long	0,0			# OLDMEM_SIZE
+ 
+ 	.org	COMMAND_LINE
+ 	.byte	"root=/dev/ram0 ro"
+--- /dev/null
++++ b/arch/s390/kernel/head_kdump.S
+@@ -0,0 +1,116 @@
++/*
++ * S390 kdump lowlevel functions (new kernel)
++ *
++ * Copyright IBM Corp. 2011
++ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ */
++
++#define DATAMOVER_ADDR	0x4000
++#define COPY_PAGE_ADDR	0x6000
++
++#ifdef CONFIG_CRASH_DUMP
++
++#
++# kdump entry (new kernel - not yet relocated)
++#
++# Note: This code has to be position independent
++#
++
++.align 2
++.Lep_startup_kdump:
++	basr	%r13,0
++.Lbase:
++	larl	%r2,.Lbase_addr			# Check, if we have been
++	lg	%r2,0(%r2)			# already relocated:
++	clgr	%r2,%r13			#
++	jne	.Lrelocate			# No : Start data mover
++	lghi	%r2,0				# Yes: Start kdump kernel
++	brasl	%r14,startup_kdump_relocated
++
++.Lrelocate:
++	larl	%r4,startup
++	lg	%r2,0x418(%r4)			# Get kdump base
++	lg	%r3,0x420(%r4)			# Get kdump size
++
++	larl	%r10,.Lcopy_start		# Source of data mover
++	lghi	%r8,DATAMOVER_ADDR		# Target of data mover
++	mvc	0(256,%r8),0(%r10)		# Copy data mover code
++
++	agr	%r8,%r2				# Copy data mover to
++	mvc	0(256,%r8),0(%r10)		# reserved mem
++
++	lghi	%r14,DATAMOVER_ADDR		# Jump to copied data mover
++	basr	%r14,%r14
++.Lbase_addr:
++	.quad	.Lbase
++
++#
++# kdump data mover code (runs at address DATAMOVER_ADDR)
++#
++# r2: kdump base address
++# r3: kdump size
++#
++.Lcopy_start:
++	basr	%r13,0				# Base
++0:
++	lgr	%r11,%r2			# Save kdump base address
++	lgr	%r12,%r2
++	agr	%r12,%r3			# Compute kdump end address
++
++	lghi	%r5,0
++	lghi	%r10,COPY_PAGE_ADDR		# Load copy page address
++1:
++	mvc	0(256,%r10),0(%r5)		# Copy old kernel to tmp
++	mvc	0(256,%r5),0(%r11)		# Copy new kernel to old
++	mvc	0(256,%r11),0(%r10)		# Copy tmp to new
++	aghi	%r11,256
++	aghi	%r5,256
++	clgr	%r11,%r12
++	jl	1b
++
++	lg	%r14,.Lstartup_kdump-0b(%r13)
++	basr	%r14,%r14			# Start relocated kernel
++.Lstartup_kdump:
++	.long	0x00000000,0x00000000 + startup_kdump_relocated
++.Lcopy_end:
++
++#
++# Startup of kdump (relocated new kernel)
++#
++.align 2
++startup_kdump_relocated:
++	basr	%r13,0
++0:
++	mvc	0(8,%r0),.Lrestart_psw-0b(%r13)	# Setup restart PSW
++	mvc	464(16,%r0),.Lpgm_psw-0b(%r13)	# Setup pgm check PSW
++	lhi	%r1,1				# Start new kernel
++	diag	%r1,%r1,0x308			# with diag 308
++
++.Lno_diag308:					# No diag 308
++	sam31					# Switch to 31 bit addr mode
++	sr	%r1,%r1				# Erase register r1
++	sr	%r2,%r2				# Erase register r2
++	sigp	%r1,%r2,0x12			# Switch to 31 bit arch mode
++	lpsw	0				# Start new kernel...
++.align	8
++.Lrestart_psw:
++	.long	0x00080000,0x80000000 + startup
++.Lpgm_psw:
++	.quad	0x0000000180000000,0x0000000000000000 + .Lno_diag308
++#else
++.align 2
++.Lep_startup_kdump:
++#ifdef CONFIG_64BIT
++	larl	%r13,startup_kdump_crash
++	lpswe	0(%r13)
++.align 8
++startup_kdump_crash:
++	.quad	0x0002000080000000,0x0000000000000000 + startup_kdump_crash
++#else
++	basr	%r13,0
++0:	lpsw	startup_kdump_crash-0b(%r13)
++.align 8
++startup_kdump_crash:
++	.long	0x000a0000,0x00000000 + startup_kdump_crash
++#endif /* CONFIG_64BIT */
++#endif /* CONFIG_CRASH_DUMP */
+--- a/arch/s390/kernel/ipl.c
++++ b/arch/s390/kernel/ipl.c
+@@ -16,6 +16,7 @@
+ #include <linux/ctype.h>
+ #include <linux/fs.h>
+ #include <linux/gfp.h>
++#include <linux/crash_dump.h>
+ #include <asm/ipl.h>
+ #include <asm/smp.h>
+ #include <asm/setup.h>
+@@ -26,6 +27,7 @@
+ #include <asm/sclp.h>
+ #include <asm/sigp.h>
+ #include <asm/checksum.h>
++#include <asm/lowcore.h>
+ 
+ #define IPL_PARM_BLOCK_VERSION 0
+ 
+@@ -68,6 +70,7 @@ struct shutdown_trigger {
+ #define SHUTDOWN_ACTION_VMCMD_STR	"vmcmd"
+ #define SHUTDOWN_ACTION_STOP_STR	"stop"
+ #define SHUTDOWN_ACTION_DUMP_REIPL_STR	"dump_reipl"
++#define SHUTDOWN_ACTION_KDUMP_STR	"kdump"
+ 
+ struct shutdown_action {
+ 	char *name;
+@@ -1628,11 +1631,42 @@ static void stop_run(struct shutdown_tri
+ static struct shutdown_action stop_action = {SHUTDOWN_ACTION_STOP_STR,
+ 					     stop_run, NULL};
+ 
++/*
++ * kdump shutdown action: Trigger kdump on shutdown.
++ */
++
++#ifdef CONFIG_CRASH_DUMP
++static int kdump_init(void)
++{
++	if (crashk_res.start == 0)
++		return -EOPNOTSUPP;
 +	return 0;
 +}
 +
- int
- image_s390_load(int argc, char **argv, const char *kernel_buf,
- 		off_t kernel_size, struct kexec_info *info)
++static void kdump_run(struct shutdown_trigger *trigger)
++{
++	pfault_fini();
++	s390_reset_system();
++	__arch_local_irq_stnsm(0xfb); /* disable DAT */
++	store_status();
++
++	crash_kexec(NULL);
++	disabled_wait((unsigned long) __builtin_return_address(0));
++}
++
++static struct shutdown_action kdump_action = {SHUTDOWN_ACTION_KDUMP_STR,
++					     kdump_run, kdump_init};
++#endif
++
+ /* action list */
+ 
+ static struct shutdown_action *shutdown_actions_list[] = {
+ 	&ipl_action, &reipl_action, &dump_reipl_action, &dump_action,
+-	&vmcmd_action, &stop_action};
++	&vmcmd_action, &stop_action,
++#ifdef CONFIG_CRASH_DUMP
++	&kdump_action
++#endif
++	};
+ #define SHUTDOWN_ACTIONS_COUNT (sizeof(shutdown_actions_list) / sizeof(void *))
+ 
+ /*
+@@ -1802,6 +1836,16 @@ void (*_machine_power_off)(void) = do_ma
+ 
+ static void __init shutdown_triggers_init(void)
  {
- 	void *krnl_buffer;
- 	char *rd_buffer;
--	const char *command_line;
- 	const char *ramdisk;
--	int command_line_len;
- 	off_t ramdisk_len;
- 	unsigned int ramdisk_origin;
-+	uint64_t crash_base, crash_end;
- 	int opt;
- 
- 	static const struct option options[] =
-@@ -44,9 +58,9 @@ image_s390_load(int argc, char **argv, c
- 	static const char short_options[] = KEXEC_OPT_STR "";
- 
- 	ramdisk = NULL;
--	command_line = NULL;
- 	ramdisk_len = 0;
- 	ramdisk_origin = 0;
-+	crash_base = 0;
- 
- 	while ((opt = getopt_long(argc,argv,short_options,options,0)) != -1) {
- 		switch(opt) {
-@@ -55,7 +69,8 @@ image_s390_load(int argc, char **argv, c
- 			return -1;
- 			break;
- 		case OPT_APPEND:
--			command_line = optarg;
-+			if (command_line_add(optarg))
-+				return -1;
- 			break;
- 		case OPT_RAMDISK:
- 			ramdisk = optarg;
-@@ -63,18 +78,16 @@ image_s390_load(int argc, char **argv, c
- 		}
- 	}
- 
--	/* Process a given command_line: */
--	if (command_line) {
--		command_line_len = strlen(command_line) + 1; /* Remember the '\0' */
--		if (command_line_len > COMMAND_LINESIZE) {
--		        fprintf(stderr, "Command line too long.\n");
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		if (parse_iomem_single("Crash kernel\n", &crash_base,
-+				       &crash_end))
- 			return -1;
--		}
- 	}
- 
- 	/* Add kernel segment */
- 	add_segment(info, kernel_buf + IMAGE_READ_OFFSET,
--		    kernel_size - IMAGE_READ_OFFSET, IMAGE_READ_OFFSET,
-+		    kernel_size - IMAGE_READ_OFFSET,
-+		    crash_base + IMAGE_READ_OFFSET,
- 		    kernel_size - IMAGE_READ_OFFSET);
- 
- 	/* We do want to change the kernel image */
-@@ -88,10 +101,18 @@ image_s390_load(int argc, char **argv, c
- 			return -1;
- 		}
- 		ramdisk_origin = RAMDISK_ORIGIN_ADDR;
--		add_segment(info, rd_buffer, ramdisk_len, RAMDISK_ORIGIN_ADDR, ramdisk_len);
-+		add_segment(info, rd_buffer, ramdisk_len,
-+			    crash_base + RAMDISK_ORIGIN_ADDR, ramdisk_len);
- 	}
- 	
--	/* Register the ramdisk in the kernel. */
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		if (load_crashdump_segments(info, crash_base, crash_end))
-+			return -1;
-+	} else {
-+		info->entry = (void *) IMAGE_READ_OFFSET;
++#ifdef CONFIG_CRASH_DUMP
++	/*
++	 * We set the kdump action for panic and restart, if crashkernel
++	 * memory is defined.
++	 */
++	if (crashk_res.start != 0) {
++		on_restart_trigger.action = &kdump_action;
++		on_panic_trigger.action = &kdump_action;
 +	}
++#endif
+ 	shutdown_actions_kset = kset_create_and_add("shutdown_actions", NULL,
+ 						    firmware_kobj);
+ 	if (!shutdown_actions_kset)
+@@ -2016,6 +2060,8 @@ void s390_reset_system(void)
+ 
+ 	/* Stack for interrupt/machine check handler */
+ 	lc->panic_stack = S390_lowcore.panic_stack;
++	/* CPU number */
++	lc->cpu_nr = S390_lowcore.cpu_nr;
+ 
+ 	/* Save prefix page address for dump case */
+ 	dump_prefix_page = (u32)(unsigned long) lc;
+--- a/arch/s390/kernel/machine_kexec.c
++++ b/arch/s390/kernel/machine_kexec.c
+@@ -21,12 +21,67 @@
+ #include <asm/smp.h>
+ #include <asm/reset.h>
+ #include <asm/ipl.h>
++#include <asm/cacheflush.h>
++#include <asm/asm-offsets.h>
++#include <asm/checksum.h>
++#include <asm/diag.h>
++#include <asm/sclp.h>
+ 
+ typedef void (*relocate_kernel_t)(kimage_entry_t *, unsigned long);
+ 
+ extern const unsigned char relocate_kernel[];
+ extern const unsigned long long relocate_kernel_len;
+ 
++#ifdef CONFIG_CRASH_DUMP
 +
-+	/* Register the ramdisk and crashkernel memory in the kernel. */
- 	{
- 		unsigned long long *tmp;
- 
-@@ -100,19 +121,23 @@ image_s390_load(int argc, char **argv, c
- 
- 		tmp = krnl_buffer + INITRD_SIZE_OFFS;
- 		*tmp = (unsigned long long) ramdisk_len;
--	}
- 
-+		if (info->kexec_flags & KEXEC_ON_CRASH) {
-+			tmp = krnl_buffer + OLDMEM_BASE_OFFS;
-+			*tmp = crash_base;
++/*
++ * S390 version: Currently we do not support freeing crashkernel memory
++ */
++void crash_free_reserved_phys_range(unsigned long begin, unsigned long end)
++{
++	return;
++}
 +
-+			tmp = krnl_buffer + OLDMEM_SIZE_OFFS;
-+			*tmp = crash_end - crash_base + 1;
++/*
++ * S390 version: Just do real copy of segment
++ */
++int kimage_load_crash_segment(struct kimage *image,
++			      struct kexec_segment *segment)
++{
++	return copy_from_user_real((void *) segment->mem, segment->buf,
++				   segment->bufsz);
++}
++
++/*
++ * Start kdump
++ */
++static void __machine_kdump(void *data)
++{
++	struct kimage *image = data;
++	psw_t kdump_psw;
++
++	kdump_psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
++	kdump_psw.addr = (unsigned long) image->start;
++	__load_psw(kdump_psw);
++}
++
++#endif
++
++/*
++ * Give back memory to hypervisor before new kdump is loaded
++ */
++static int machine_kexec_prepare_kdump(void)
++{
++#ifdef CONFIG_CRASH_DUMP
++	if (MACHINE_IS_VM)
++		diag10_range(PFN_DOWN(crashk_res.start),
++			     PFN_DOWN(crashk_res.end - crashk_res.start + 1));
++	return 0;
++#else
++	return -EINVAL;
++#endif
++}
++
+ int machine_kexec_prepare(struct kimage *image)
+ {
+ 	void *reboot_code_buffer;
+@@ -35,6 +90,9 @@ int machine_kexec_prepare(struct kimage
+ 	if (ipl_flags & IPL_NSS_VALID)
+ 		return -ENOSYS;
+ 
++	if (image->type == KEXEC_TYPE_CRASH)
++		return machine_kexec_prepare_kdump();
++
+ 	/* We don't support anything but the default image type for now. */
+ 	if (image->type != KEXEC_TYPE_DEFAULT)
+ 		return -EINVAL;
+@@ -72,6 +130,12 @@ static void __machine_kexec(void *data)
+ 
+ void machine_kexec(struct kimage *image)
+ {
++#ifdef CONFIG_CRASH_DUMP
++	if (image->type == KEXEC_TYPE_CRASH) {
++		_sclp_print_early("Starting kdump");
++		smp_switch_to_ipl_cpu(__machine_kdump, image);
++	}
++#endif
+ 	tracer_disable();
+ 	smp_send_stop();
+ 	smp_switch_to_ipl_cpu(__machine_kexec, image);
+--- a/arch/s390/kernel/mem_detect.c
++++ b/arch/s390/kernel/mem_detect.c
+@@ -62,3 +62,72 @@ void detect_memory_layout(struct mem_chu
+ 	arch_local_irq_restore(flags);
+ }
+ EXPORT_SYMBOL(detect_memory_layout);
++
++/*
++ * Create memory hole with given address, size, and type
++ */
++void create_mem_hole(struct mem_chunk chunks[], unsigned long addr,
++		     unsigned long size, int type)
++{
++	unsigned long start, end, new_size;
++	int i;
++
++	for (i = 0; i < MEMORY_CHUNKS; i++) {
++		if (chunks[i].size == 0)
++			continue;
++		if (addr + size < chunks[i].addr)
++			continue;
++		if (addr >= chunks[i].addr + chunks[i].size)
++			continue;
++		start = max(addr, chunks[i].addr);
++		end = min(addr + size, chunks[i].addr + chunks[i].size);
++		new_size = end - start;
++		if (new_size == 0)
++			continue;
++		if (start == chunks[i].addr &&
++		    end == chunks[i].addr + chunks[i].size) {
++			/* Remove chunk */
++			chunks[i].type = type;
++		} else if (start == chunks[i].addr) {
++			/* Make chunk smaller at start */
++			if (i >= MEMORY_CHUNKS - 1)
++				panic("Unable to create memory hole");
++			memmove(&chunks[i + 1], &chunks[i],
++				sizeof(struct mem_chunk) *
++				(MEMORY_CHUNKS - (i + 1)));
++			chunks[i + 1].addr = chunks[i].addr + new_size;
++			chunks[i + 1].size = chunks[i].size - new_size;
++			chunks[i].size = new_size;
++			chunks[i].type = type;
++			i += 1;
++		} else if (end == chunks[i].addr + chunks[i].size) {
++			/* Make chunk smaller at end */
++			if (i >= MEMORY_CHUNKS - 1)
++				panic("Unable to create memory hole");
++			memmove(&chunks[i + 1], &chunks[i],
++				sizeof(struct mem_chunk) *
++				(MEMORY_CHUNKS - (i + 1)));
++			chunks[i + 1].addr = start;
++			chunks[i + 1].size = new_size;
++			chunks[i + 1].type = type;
++			chunks[i].size -= new_size;
++			i += 1;
++		} else {
++			/* Create memory hole */
++			if (i >= MEMORY_CHUNKS - 2)
++				panic("Unable to create memory hole");
++			memmove(&chunks[i + 2], &chunks[i],
++				sizeof(struct mem_chunk) *
++				(MEMORY_CHUNKS - (i + 2)));
++			chunks[i + 1].addr = addr;
++			chunks[i + 1].size = size;
++			chunks[i + 1].type = type;
++			chunks[i + 2].addr = addr + size;
++			chunks[i + 2].size =
++				chunks[i].addr + chunks[i].size - (addr + size);
++			chunks[i + 2].type = chunks[i].type;
++			chunks[i].size = addr - chunks[i].addr;
++			i += 2;
 +		}
 +	}
- 	/*
- 	 * We will write a probably given command line.
- 	 * First, erase the old area, then setup the new parameters:
- 	 */
--	if (command_line) {
-+	if (strlen(command_line) != 0) {
- 		memset(krnl_buffer + COMMAND_LINE_OFFS, 0, COMMAND_LINESIZE);
- 		memcpy(krnl_buffer + COMMAND_LINE_OFFS, command_line, strlen(command_line));
- 	}
--
--	info->entry = (void *) IMAGE_READ_OFFSET;
--
- 	return 0;
++}
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -42,6 +42,9 @@
+ #include <linux/reboot.h>
+ #include <linux/topology.h>
+ #include <linux/ftrace.h>
++#include <linux/kexec.h>
++#include <linux/crash_dump.h>
++#include <linux/memory.h>
+ 
+ #include <asm/ipl.h>
+ #include <asm/uaccess.h>
+@@ -57,6 +60,7 @@
+ #include <asm/ebcdic.h>
+ #include <asm/compat.h>
+ #include <asm/kvm_virtio.h>
++#include <asm/diag.h>
+ 
+ long psw_kernel_bits	= (PSW_BASE_BITS | PSW_MASK_DAT | PSW_ASC_PRIMARY |
+ 			   PSW_MASK_MCHECK | PSW_DEFAULT_KEY);
+@@ -435,6 +439,9 @@ static void __init setup_resources(void)
+ 	for (i = 0; i < MEMORY_CHUNKS; i++) {
+ 		if (!memory_chunk[i].size)
+ 			continue;
++		if (memory_chunk[i].type == CHUNK_OLDMEM ||
++		    memory_chunk[i].type == CHUNK_CRASHK)
++			continue;
+ 		res = alloc_bootmem_low(sizeof(*res));
+ 		res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
+ 		switch (memory_chunk[i].type) {
+@@ -479,6 +486,7 @@ static void __init setup_memory_end(void
+ 	unsigned long max_mem;
+ 	int i;
+ 
++
+ #ifdef CONFIG_ZFCPDUMP
+ 	if (ipl_info.type == IPL_TYPE_FCP_DUMP) {
+ 		memory_end = ZFCPDUMP_HSA_SIZE;
+@@ -550,6 +558,171 @@ static void __init setup_restart_psw(voi
+ 	copy_to_absolute_zero(&S390_lowcore.restart_psw, &psw, sizeof(psw));
  }
  
---- a/kexec/arch/s390/kexec-s390.c
-+++ b/kexec/arch/s390/kexec-s390.c
-@@ -1,9 +1,10 @@
- /*
-  * kexec/arch/s390/kexec-s390.c
-  *
-- * (C) Copyright IBM Corp. 2005
-+ * Copyright IBM Corp. 2005,2011
-  *
-  * Author(s): Rolf Adelsberger <adelsberger@de.ibm.com>
-+ *            Michael Holzheu <holzheu@linux.vnet.ibm.com>
-  *
-  */
- 
-@@ -19,26 +20,16 @@
- #include "kexec-s390.h"
- #include <arch/options.h>
- 
--#define MAX_MEMORY_RANGES 64
- static struct memory_range memory_range[MAX_MEMORY_RANGES];
- 
- /*
-- * get_memory_ranges:
-- *  Return a list of memory ranges by parsing the file returned by
-- *  proc_iomem()
-- *
-- * INPUT:
-- *  - Pointer to an array of memory_range structures.
-- *  - Pointer to an integer with holds the number of memory ranges.
-- *
-- * RETURN:
-- *  - 0 on normal execution.
-- *  - (-1) if something went wrong.
-+ * Get memory ranges of type "System RAM" from /proc/iomem. If with_crashk=1
-+ * then also type "Crash kernel" is added.
-  */
--
--int get_memory_ranges(struct memory_range **range, int *ranges,
--		      unsigned long UNUSED(flags))
-+int get_memory_ranges_s390(struct memory_range memory_range[], int *ranges,
-+			   int with_crashk)
- {
-+	char crash_kernel[] = "Crash kernel\n";
- 	char sys_ram[] = "System RAM\n";
- 	const char *iomem = proc_iomem();
- 	FILE *fp;
-@@ -62,7 +53,9 @@ int get_memory_ranges(struct memory_rang
- 
- 		sscanf(line,"%Lx-%Lx : %n", &start, &end, &cons);
- 		str = line+cons;
--		if(memcmp(str,sys_ram,strlen(sys_ram)) == 0) {
-+		if((memcmp(str,sys_ram,strlen(sys_ram)) == 0) ||
-+		   (with_crashk &&
-+		    memcmp(str,crash_kernel,strlen(crash_kernel)) == 0)) {
- 			memory_range[current_range].start = start;
- 			memory_range[current_range].end = end;
- 			memory_range[current_range].type = RANGE_RAM;
-@@ -73,9 +66,41 @@ int get_memory_ranges(struct memory_rang
- 		}
- 	}
- 	fclose(fp);
--	*range = memory_range;
- 	*ranges = current_range;
++#ifdef CONFIG_CRASH_DUMP
++
++/*
++ * Find suitable location for crashkernel memory
++ */
++static unsigned long __init find_crash_base(unsigned long crash_size)
++{
++	unsigned long crash_base;
++	struct mem_chunk *chunk;
++	int i;
++
++	if (is_kdump_kernel() && (crash_size == OLDMEM_SIZE))
++		return OLDMEM_BASE;
++
++	for (i = MEMORY_CHUNKS - 1; i >= 0; i--) {
++		chunk = &memory_chunk[i];
++		if (chunk->size == 0)
++			continue;
++		if (chunk->type != CHUNK_READ_WRITE)
++			continue;
++		if (chunk->size < crash_size)
++			continue;
++		crash_base = max(chunk->addr, crash_size);
++		crash_base = max(crash_base, ZFCPDUMP_HSA_SIZE_MAX);
++		crash_base = max(crash_base, (unsigned long) INITRD_START +
++				 INITRD_SIZE);
++		crash_base = PAGE_ALIGN(crash_base);
++		if (crash_base >= chunk->addr + chunk->size)
++			continue;
++		if (chunk->addr + chunk->size - crash_base < crash_size)
++			continue;
++		crash_base = chunk->size - crash_size;
++		return crash_base;
++	}
 +	return 0;
 +}
 +
 +/*
-+ * get_memory_ranges:
-+ *  Return a list of memory ranges by parsing the file returned by
-+ *  proc_iomem()
-+ *
-+ * INPUT:
-+ *  - Pointer to an array of memory_range structures.
-+ *  - Pointer to an integer with holds the number of memory ranges.
-+ *
-+ * RETURN:
-+ *  - 0 on normal execution.
-+ *  - (-1) if something went wrong.
++ * Check if crash_base and crash_size is valid
 + */
- 
-+int get_memory_ranges(struct memory_range **range, int *ranges,
-+		      unsigned long flags)
++static int __init verify_crash_base(unsigned long crash_base,
++				    unsigned long crash_size)
 +{
-+	uint64_t start, end;
++	struct mem_chunk *chunk;
++	int i;
 +
-+	if (get_memory_ranges_s390(memory_range, ranges,
-+				   flags & KEXEC_ON_CRASH))
-+	    	return -1;
-+	*range = memory_range;
-+	if ((flags & KEXEC_ON_CRASH) && !(flags & KEXEC_PRESERVE_CONTEXT)) {
-+		if (parse_iomem_single("Crash kernel\n", &start, &end))
-+			return -1;
-+		if (start > mem_min)
-+			mem_min = start;
-+		if (end < mem_max)
-+			mem_max = end;
++	/*
++	 * Because we do the swap to zero, we must have at least 'crash_size'
++	 * bytes free space before crash_base
++	 */
++	if (crash_size > crash_base)
++		return -EINVAL;
++
++	/* First memory chunk must be at least crash_size */
++	if (memory_chunk[0].size < crash_size)
++		return -EINVAL;
++
++	/* Check if we fit into the respective memory chunk */
++	for (i = 0; i < MEMORY_CHUNKS; i++) {
++		chunk = &memory_chunk[i];
++		if (chunk->size == 0)
++			continue;
++		if (crash_base < chunk->addr)
++			continue;
++		if (crash_base >= chunk->addr + chunk->size)
++			continue;
++		/* we have found the memory chunk */
++		if (crash_base + crash_size > chunk->addr + chunk->size)
++			return -EINVAL;
++		return 0;
 +	}
- 	return 0;
- }
- 
-@@ -112,5 +137,8 @@ void arch_update_purgatory(struct kexec_
- 
- int is_crashkernel_mem_reserved(void)
- {
--	return 0; /* kdump is not supported on this platform (yet) */
-+	uint64_t start, end;
-+
-+	return parse_iomem_single("Crash kernel\n", &start, &end) == 0 ?
-+		(start != end) : 0;
- }
---- a/kexec/arch/s390/kexec-s390.h
-+++ b/kexec/arch/s390/kexec-s390.h
-@@ -15,11 +15,18 @@
- #define RAMDISK_ORIGIN_ADDR   0x800000
- #define INITRD_START_OFFS     0x408
- #define INITRD_SIZE_OFFS      0x410
-+#define OLDMEM_BASE_OFFS      0x418
-+#define OLDMEM_SIZE_OFFS      0x420
- #define COMMAND_LINE_OFFS     0x480
- #define COMMAND_LINESIZE      896
-+#define MAX_MEMORY_RANGES     64
- 
- extern int image_s390_load(int, char **, const char *, off_t, struct kexec_info *);
- extern int image_s390_probe(const char *, off_t);
- extern void image_s390_usage(void);
-+extern int load_crashdump_segments(struct kexec_info *info, unsigned long crash_base, unsigned long crash_end);
-+extern int get_memory_ranges_s390(struct memory_range range[], int *ranges,
-+				  int with_crashk);
-+extern int command_line_add(const char *str);
- 
- #endif /* KEXEC_IA64_H */
---- a/purgatory/arch/s390/Makefile
-+++ b/purgatory/arch/s390/Makefile
-@@ -2,7 +2,9 @@
- # Purgatory s390
- #
- 
--s390_PURGATORY_SRCS =
-+s390_PURGATORY_SRCS += purgatory/arch/s390/console-s390.c
-+s390_PURGATORY_SRCS += purgatory/arch/s390/setup-s390.S
-+s390_PURGATORY_SRCS += purgatory/arch/s390/purgatory-s390.c
- 
- dist += purgatory/arch/s390/Makefile $(s390_PURGATORY_SRCS)
- 
---- /dev/null
-+++ b/purgatory/arch/s390/console-s390.c
-@@ -0,0 +1,14 @@
-+/*
-+ * S390 console code (currently not implemented)
-+ *
-+ * Copyright IBM Corp. 2011
-+ *
-+ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
-+ */
-+
-+#include <purgatory.h>
-+#include "unused.h"
-+
-+void putchar(int UNUSED(ch))
-+{
-+}
---- /dev/null
-+++ b/purgatory/arch/s390/purgatory-s390.c
-@@ -0,0 +1,17 @@
-+/*
-+ * S390 purgatory
-+ *
-+ * Copyright IBM Corp. 2011
-+ *
-+ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
-+ */
-+
-+unsigned long kdump_psw_addr = 0;
-+
-+void setup_arch(void)
-+{
++	return -EINVAL;
 +}
 +
-+void post_verification_setup_arch(void)
-+{
-+}
---- /dev/null
-+++ b/purgatory/arch/s390/setup-s390.S
-@@ -0,0 +1,35 @@
 +/*
-+ * Purgatory setup code
-+ *
-+ * Copyright IBM Corp. 2011
-+ *
-+ * Author(s): Michael Holzheu <holzheu@linux.vnet.ibm.com>
++ * Reserve kdump memory by creating a memory hole in the mem_chunk array
 + */
++static void __init reserve_kdump_bootmem(unsigned long addr, unsigned long size,
++					 int type)
++{
++	create_mem_hole(memory_chunk, addr, size, type);
++}
 +
-+	.text
-+	.globl purgatory_start
-+	.balign 16
-+purgatory_start:
-+#ifdef __s390x__
-+	larl	%r15,lstack
-+	brasl	%r14,purgatory
-+	larl    %r14,kdump_psw_addr
-+	lg	%r4,0(%r14)
-+	larl    %r14,kdump_psw
-+	stg	%r4,8(%r14)
-+	lpswe	0(%r14)
++/*
++ * When kdump is enabled, we have to ensure that no memory from
++ * the area [0 - crashkernel memory size] is set offline
++ */
++static int kdump_mem_notifier(struct notifier_block *nb,
++			      unsigned long action, void *data)
++{
++	struct memory_notify *arg = data;
 +
-+	.section ".data"
-+	.balign 16
-+kdump_psw:
-+	.quad 0x0000000180000000
-+	.quad 0x0000000000000000
++	if (arg->start_pfn >= PFN_DOWN(crashk_res.end - crashk_res.start + 1))
++		return NOTIFY_OK;
++	return NOTIFY_BAD;
++}
 +
-+	.bss
-+	.balign 4096
-+lstack:
-+	.skip 4096
-+lstack_end:
-+#else
-+0:	j	0
++static struct notifier_block kdump_mem_nb = {
++	.notifier_call = kdump_mem_notifier,
++};
++
 +#endif
++
++/*
++ * Make sure that oldmem, where the dump is stored, is protected
++ */
++static void reserve_oldmem(void)
++{
++#ifdef CONFIG_CRASH_DUMP
++	if (!is_kdump_kernel())
++		return;
++
++	reserve_kdump_bootmem(OLDMEM_BASE, OLDMEM_SIZE, CHUNK_OLDMEM);
++	reserve_kdump_bootmem(OLDMEM_SIZE, memory_end - OLDMEM_SIZE,
++			      CHUNK_OLDMEM);
++	if (OLDMEM_BASE + OLDMEM_SIZE == real_memory_size)
++		saved_max_pfn = PFN_DOWN(OLDMEM_BASE) - 1;
++	else
++		saved_max_pfn = PFN_DOWN(real_memory_size) - 1;
++#endif
++}
++
++/*
++ * Reserve memory for kdump kernel to be loaded with kexec
++ */
++static void __init reserve_crashkernel(void)
++{
++#ifdef CONFIG_CRASH_DUMP
++	unsigned long long crash_base, crash_size;
++	int rc;
++
++	rc = parse_crashkernel(boot_command_line, memory_end, &crash_size,
++			       &crash_base);
++	if (rc || crash_size == 0)
++		return;
++	if (register_memory_notifier(&kdump_mem_nb))
++		return;
++	if (!crash_base)
++		crash_base = find_crash_base(crash_size);
++	if (!crash_base) {
++		pr_info("crashkernel reservation failed: %s\n",
++			"No suitable area found");
++		unregister_memory_notifier(&kdump_mem_nb);
++		return;
++	}
++	if (verify_crash_base(crash_base, crash_size)) {
++		pr_info("crashkernel reservation failed: %s\n",
++			"Invalid memory range specified");
++		unregister_memory_notifier(&kdump_mem_nb);
++		return;
++	}
++	if (!is_kdump_kernel() && MACHINE_IS_VM)
++		diag10_range(PFN_DOWN(crash_base), PFN_DOWN(crash_size));
++	crashk_res.start = crash_base;
++	crashk_res.end = crash_base + crash_size - 1;
++	insert_resource(&iomem_resource, &crashk_res);
++	reserve_kdump_bootmem(crashk_res.start,
++			      crashk_res.end - crashk_res.start + 1,
++			      CHUNK_CRASHK);
++	pr_info("Reserving %lluMB of memory at %lluMB "
++		"for crashkernel (System RAM: %luMB)\n",
++		crash_size >> 20, crash_base >> 20, memory_end >> 20);
++#endif
++}
++
+ static void __init
+ setup_memory(void)
+ {
+@@ -580,6 +753,14 @@ setup_memory(void)
+ 		if (PFN_PHYS(start_pfn) + bmap_size > INITRD_START) {
+ 			start = PFN_PHYS(start_pfn) + bmap_size + PAGE_SIZE;
+ 
++#ifdef CONFIG_CRASH_DUMP
++			if (is_kdump_kernel()) {
++				/* Move initrd behind kdump oldmem */
++				if (start + INITRD_SIZE > OLDMEM_BASE &&
++				    start < OLDMEM_BASE + OLDMEM_SIZE)
++					start = OLDMEM_BASE + OLDMEM_SIZE;
++			}
++#endif
+ 			if (start + INITRD_SIZE > memory_end) {
+ 				pr_err("initrd extends beyond end of "
+ 				       "memory (0x%08lx > 0x%08lx) "
+@@ -644,6 +825,11 @@ setup_memory(void)
+ 	reserve_bootmem(start_pfn << PAGE_SHIFT, bootmap_size,
+ 			BOOTMEM_DEFAULT);
+ 
++#ifdef CONFIG_CRASH_DUMP
++	if (is_kdump_kernel())
++		reserve_bootmem(elfcorehdr_addr - OLDMEM_BASE,
++				PAGE_ALIGN(elfcorehdr_size), BOOTMEM_DEFAULT);
++#endif
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	if (INITRD_START && INITRD_SIZE) {
+ 		if (INITRD_START + INITRD_SIZE <= memory_end) {
+@@ -811,6 +997,8 @@ setup_arch(char **cmdline_p)
+ 	setup_ipl();
+ 	setup_memory_end();
+ 	setup_addressing_mode();
++	reserve_oldmem();
++	reserve_crashkernel();
+ 	setup_memory();
+ 	setup_resources();
+ 	setup_restart_psw();
+--- a/arch/s390/mm/vmem.c
++++ b/arch/s390/mm/vmem.c
+@@ -335,6 +335,9 @@ void __init vmem_map_init(void)
+ 	ro_start = ((unsigned long)&_stext) & PAGE_MASK;
+ 	ro_end = PFN_ALIGN((unsigned long)&_eshared);
+ 	for (i = 0; i < MEMORY_CHUNKS && memory_chunk[i].size > 0; i++) {
++		if (memory_chunk[i].type == CHUNK_CRASHK ||
++		    memory_chunk[i].type == CHUNK_OLDMEM)
++			continue;
+ 		start = memory_chunk[i].addr;
+ 		end = memory_chunk[i].addr + memory_chunk[i].size;
+ 		if (start >= ro_end || end <= ro_start)
 
 
 _______________________________________________
