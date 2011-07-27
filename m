@@ -1,15 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qlz8z-000242-Vp
-	for kexec@lists.infradead.org; Wed, 27 Jul 2011 08:07:08 +0000
-Subject: Re: [PATCH]: fix makedumpfile cache page exclusion dump levels.
-In-reply-to: <CANaZ7Nx_GuBFkKw6O_gSqOGC0fVDX0MT959sSPyDTb1u+yFPhg@mail.gmail.com>
-References: <CANaZ7Nx_GuBFkKw6O_gSqOGC0fVDX0MT959sSPyDTb1u+yFPhg@mail.gmail.com>
-Message-Id: <20110727170416tachibana@mail.jp.nec.com>
-Mime-Version: 1.0
-From: tachibana@mxm.nes.nec.co.jp
-Date: Wed, 27 Jul 2011 17:04:16 +0900
+	id 1Qm3gk-0006TW-Os
+	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:16 +0000
+Received: from d06nrmr1806.portsmouth.uk.ibm.com
+	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCw816025144
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:08 GMT
+Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
+	[9.149.37.249])
+	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6RCw8k72461846
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:08 +0100
+Received: from d06av08.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av08.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6RCw7a9012160
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:08 +0100
+Message-Id: <20110727125807.529303146@linux.vnet.ibm.com>
+Date: Wed, 27 Jul 2011 14:55:05 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [patch v2 01/10] kdump: Add KEXEC_CRASH_CONTROL_MEMORY_LIMIT
+References: <20110727125504.491183728@linux.vnet.ibm.com>
+Content-Disposition: inline; filename=s390-kdump-common-control-limit.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,244 +30,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Thayumanavar S <thayumker@gmail.com>
-Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp
+To: vgoyal@redhat.com
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
 
-Hi Thayumanavar,
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-On 2011/07/25 22:55:35 +0530, Thayumanavar S <thayumker@gmail.com> wrote:
-> Looking at the code in depth the condition for exclusion of cache
-> private seem to exclude cache pages including private pages. The
-> levels cache page ( exclude private ) and cache private (cache page
-> with private) need to be mutually exclusive.The following patch fixes
-> this:
+On s390 there is a different KEXEC_CONTROL_MEMORY_LIMIT for the normal and
+the kdump kexec case. Therefore this patch introduces a new macro
+KEXEC_CRASH_CONTROL_MEMORY_LIMIT. This is set to
+KEXEC_CONTROL_MEMORY_LIMIT for all architectures that do not define
+KEXEC_CRASH_CONTROL_MEMORY_LIMIT.
 
-Thank you for the patches.
-Your idea is reasonable. But we made the dump level 4 (excluding cache 
-pages including private pages) for diskdump compatibility. And I worry about 
-influence of changing the meaning of the dump level.
-So I'd like to correct man data at the next version.
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ include/linux/kexec.h |    4 ++++
+ kernel/kexec.c        |    2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-Thanks
-tachibana
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -33,6 +33,10 @@
+ #error KEXEC_ARCH not defined
+ #endif
+ 
++#ifndef KEXEC_CRASH_CONTROL_MEMORY_LIMIT
++#define KEXEC_CRASH_CONTROL_MEMORY_LIMIT KEXEC_CONTROL_MEMORY_LIMIT
++#endif
++
+ #define KEXEC_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+ #define KEXEC_CORE_NOTE_NAME "CORE"
+ #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -498,7 +498,7 @@ static struct page *kimage_alloc_crash_c
+ 	while (hole_end <= crashk_res.end) {
+ 		unsigned long i;
+ 
+-		if (hole_end > KEXEC_CONTROL_MEMORY_LIMIT)
++		if (hole_end > KEXEC_CRASH_CONTROL_MEMORY_LIMIT)
+ 			break;
+ 		if (hole_end > crashk_res.end)
+ 			break;
 
-
-> 
-> Signed-off-by: thayumker@gmail.com
-> diff --git a/makedumpfile.8 b/makedumpfile.8
-> index b9a3bf0..dd7960b 100644
-> --- a/makedumpfile.8
-> +++ b/makedumpfile.8
-> @@ -138,32 +138,32 @@ by dump_level 11, makedumpfile retries it by
-> dump_level 31.
->       1 |  X   |      |       |      |
->       2 |      |  X   |       |      |
->       3 |  X   |  X   |       |      |
-> -     4 |      |  X   |  X    |      |
-> -     5 |  X   |  X   |  X    |      |
-> +     4 |      |      |  X    |      |
-> +     5 |  X   |      |  X    |      |
->       6 |      |  X   |  X    |      |
->       7 |  X   |  X   |  X    |      |
->       8 |      |      |       |  X   |
->       9 |  X   |      |       |  X   |
->      10 |      |  X   |       |  X   |
->      11 |  X   |  X   |       |  X   |
-> -    12 |      |  X   |  X    |  X   |
-> -    13 |  X   |  X   |  X    |  X   |
-> +    12 |      |      |  X    |  X   |
-> +    13 |  X   |      |  X    |  X   |
->      14 |      |  X   |  X    |  X   |
->      15 |  X   |  X   |  X    |  X   |
->      16 |      |      |       |      |  X
->      17 |  X   |      |       |      |  X
->      18 |      |  X   |       |      |  X
->      19 |  X   |  X   |       |      |  X
-> -    20 |      |  X   |  X    |      |  X
-> -    21 |  X   |  X   |  X    |      |  X
-> +    20 |      |      |  X    |      |  X
-> +    21 |  X   |      |  X    |      |  X
->      22 |      |  X   |  X    |      |  X
->      23 |  X   |  X   |  X    |      |  X
->      24 |      |      |       |  X   |  X
->      25 |  X   |      |       |  X   |  X
->      26 |      |  X   |       |  X   |  X
->      27 |  X   |  X   |       |  X   |  X
-> -    28 |      |  X   |  X    |  X   |  X
-> -    29 |  X   |  X   |  X    |  X   |  X
-> +    28 |      |      |  X    |  X   |  X
-> +    29 |  X   |      |  X    |  X   |  X
->      30 |      |  X   |  X    |  X   |  X
->      31 |  X   |  X   |  X    |  X   |  X
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 7d0c663..e117f31 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -5015,7 +5015,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->                  */
->                 else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
->                     && (isLRU(flags) || isSwapCache(flags))
-> -                   && !isAnon(mapping)) {
-> +                   && isPrivate(flags) && !isAnon(mapping)) {
->                         clear_bit_on_2nd_bitmap_for_kernel(pfn);
->                         pfn_cache_private++;
->                 }
-> 
-> 
-> or
-> Correct the makedumpfile man making it more explicit so that the
-> end-users can understand.The following patch fixes this:
-> --- a/makedumpfile.8
-> +++ b/makedumpfile.8
-> @@ -130,42 +130,43 @@ by dump_level 11, makedumpfile retries it by
-> dump_level 31.
->  .br
->  # makedumpfile \-d 11,31 \-x vmlinux /proc/vmcore dumpfile
-> 
-> -  dump | zero | cache|cache  | user | free
-> - level | page | page |private| data | page
-> +  dump | zero | cache page   |cache page    | user | free
-> + level | page | (exlude priv)|(include priv)| data | page
-> +       |      |
->  .br
->  \-\-\-\-\-\-\-+\-\-\-\-\-\-+\-\-\-\-\-\-+\-\-\-\-\-\-\-+\-\-\-\-\-\-+\-\-\-\-\-\-
-> -     0 |      |      |       |      |
-> -     1 |  X   |      |       |      |
-> -     2 |      |  X   |       |      |
-> -     3 |  X   |  X   |       |      |
-> -     4 |      |  X   |  X    |      |
-> -     5 |  X   |  X   |  X    |      |
-> -     6 |      |  X   |  X    |      |
-> -     7 |  X   |  X   |  X    |      |
-> -     8 |      |      |       |  X   |
-> -     9 |  X   |      |       |  X   |
-> -    10 |      |  X   |       |  X   |
-> -    11 |  X   |  X   |       |  X   |
-> -    12 |      |  X   |  X    |  X   |
-> -    13 |  X   |  X   |  X    |  X   |
-> -    14 |      |  X   |  X    |  X   |
-> -    15 |  X   |  X   |  X    |  X   |
-> -    16 |      |      |       |      |  X
-> -    17 |  X   |      |       |      |  X
-> -    18 |      |  X   |       |      |  X
-> -    19 |  X   |  X   |       |      |  X
-> -    20 |      |  X   |  X    |      |  X
-> -    21 |  X   |  X   |  X    |      |  X
-> -    22 |      |  X   |  X    |      |  X
-> -    23 |  X   |  X   |  X    |      |  X
-> -    24 |      |      |       |  X   |  X
-> -    25 |  X   |      |       |  X   |  X
-> -    26 |      |  X   |       |  X   |  X
-> -    27 |  X   |  X   |       |  X   |  X
-> -    28 |      |  X   |  X    |  X   |  X
-> -    29 |  X   |  X   |  X    |  X   |  X
-> -    30 |      |  X   |  X    |  X   |  X
-> -    31 |  X   |  X   |  X    |  X   |  X
-> +     0 |      |              |              |      |
-> +     1 |  X   |              |              |      |
-> +     2 |      |              |  X           |      |
-> +     3 |  X   |              |  X           |      |
-> +     4 |      |  X           |  X           |      |
-> +     5 |  X   |  X           |  X           |      |
-> +     6 |      |  X           |  X           |      |
-> +     7 |  X   |  X           |  X           |      |
-> +     8 |      |              |              |  X   |
-> +     9 |  X   |              |              |  X   |
-> +    10 |      |              |  X           |  X   |
-> +    11 |  X   |              |  X           |  X   |
-> +    12 |      |  X           |  X           |  X   |
-> +    13 |  X   |  X           |  X           |  X   |
-> +    14 |      |  X           |  X           |  X   |
-> +    15 |  X   |  X           |  X           |  X   |
-> +    16 |      |              |              |      |  X
-> +    17 |  X   |              |              |      |  X
-> +    18 |      |              |  X           |      |  X
-> +    19 |  X   |              |  X           |      |  X
-> +    20 |      |  X           |  X           |      |  X
-> +    21 |  X   |  X           |  X           |      |  X
-> +    22 |      |  X           |  X           |      |  X
-> +    23 |  X   |  X           |  X           |      |  X
-> +    24 |      |              |              |  X   |  X
-> +    25 |  X   |              |              |  X   |  X
-> +    26 |      |              |  X           |  X   |  X
-> +    27 |  X   |              |  X           |  X   |  X
-> +    28 |      |  X           |  X           |  X   |  X
-> +    29 |  X   |  X           |  X           |  X   |  X
-> +    30 |      |  X           |  X           |  X   |  X
-> +    31 |  X   |  X           |  X           |  X   |  X
-> 
-> 
->  .TP
-> 
-> 
-> On Sat, Jul 9, 2011 at 9:49 AM, Thayumanavar S <thayumker@gmail.com> wrote:
-> > I believe that makedumpfile man page which descirbe the dump file and
-> > corressponding page exclusion table appears to have incorrect
-> > inentries ( such as 5&7 having value,likewise 29&31) and not following
-> > the bitmask as mentioned in the code.
-> > Below code fixes this issue.
-> >
-> > Signed-off-by: thayumker@gmail.com
-> > diff --git a/makedumpfile.8 b/makedumpfile.8
-> > index b9a3bf0..dd7960b 100644
-> > --- a/makedumpfile.8
-> > +++ b/makedumpfile.8
-> > @@ -138,32 +138,32 @@ by dump_level 11, makedumpfile retries it by
-> > dump_level 31.
-> > 　 　 　1 | 　X 　 | 　 　 　| 　 　 　 | 　 　 　|
-> > 　 　 　2 | 　 　 　| 　X 　 | 　 　 　 | 　 　 　|
-> > 　 　 　3 | 　X 　 | 　X 　 | 　 　 　 | 　 　 　|
-> > - 　 　 4 | 　 　 　| 　X 　 | 　X 　 　| 　 　 　|
-> > - 　 　 5 | 　X 　 | 　X 　 | 　X 　 　| 　 　 　|
-> > + 　 　 4 | 　 　 　| 　 　 　| 　X 　 　| 　 　 　|
-> > + 　 　 5 | 　X 　 | 　 　 　| 　X 　 　| 　 　 　|
-> > 　 　 　6 | 　 　 　| 　X 　 | 　X 　 　| 　 　 　|
-> > 　 　 　7 | 　X 　 | 　X 　 | 　X 　 　| 　 　 　|
-> > 　 　 　8 | 　 　 　| 　 　 　| 　 　 　 | 　X 　 |
-> > 　 　 　9 | 　X 　 | 　 　 　| 　 　 　 | 　X 　 |
-> > 　 　 10 | 　 　 　| 　X 　 | 　 　 　 | 　X 　 |
-> > 　 　 11 | 　X 　 | 　X 　 | 　 　 　 | 　X 　 |
-> > - 　 　12 | 　 　 　| 　X 　 | 　X 　 　| 　X 　 |
-> > - 　 　13 | 　X 　 | 　X 　 | 　X 　 　| 　X 　 |
-> > + 　 　12 | 　 　 　| 　 　 　| 　X 　 　| 　X 　 |
-> > + 　 　13 | 　X 　 | 　 　 　| 　X 　 　| 　X 　 |
-> > 　 　 14 | 　 　 　| 　X 　 | 　X 　 　| 　X 　 |
-> > 　 　 15 | 　X 　 | 　X 　 | 　X 　 　| 　X 　 |
-> > 　 　 16 | 　 　 　| 　 　 　| 　 　 　 | 　 　 　| 　X
-> > 　 　 17 | 　X 　 | 　 　 　| 　 　 　 | 　 　 　| 　X
-> > 　 　 18 | 　 　 　| 　X 　 | 　 　 　 | 　 　 　| 　X
-> > 　 　 19 | 　X 　 | 　X 　 | 　 　 　 | 　 　 　| 　X
-> > - 　 　20 | 　 　 　| 　X 　 | 　X 　 　| 　 　 　| 　X
-> > - 　 　21 | 　X 　 | 　X 　 | 　X 　 　| 　 　 　| 　X
-> > + 　 　20 | 　 　 　| 　 　 　| 　X 　 　| 　 　 　| 　X
-> > + 　 　21 | 　X 　 | 　 　 　| 　X 　 　| 　 　 　| 　X
-> > 　 　 22 | 　 　 　| 　X 　 | 　X 　 　| 　 　 　| 　X
-> > 　 　 23 | 　X 　 | 　X 　 | 　X 　 　| 　 　 　| 　X
-> > 　 　 24 | 　 　 　| 　 　 　| 　 　 　 | 　X 　 | 　X
-> > 　 　 25 | 　X 　 | 　 　 　| 　 　 　 | 　X 　 | 　X
-> > 　 　 26 | 　 　 　| 　X 　 | 　 　 　 | 　X 　 | 　X
-> > 　 　 27 | 　X 　 | 　X 　 | 　 　 　 | 　X 　 | 　X
-> > - 　 　28 | 　 　 　| 　X 　 | 　X 　 　| 　X 　 | 　X
-> > - 　 　29 | 　X 　 | 　X 　 | 　X 　 　| 　X 　 | 　X
-> > + 　 　28 | 　 　 　| 　 　 　| 　X 　 　| 　X 　 | 　X
-> > + 　 　29 | 　X 　 | 　 　 　| 　X 　 　| 　X 　 | 　X
-> > 　 　 30 | 　 　 　| 　X 　 | 　X 　 　| 　X 　 | 　X
-> > 　 　 31 | 　X 　 | 　X 　 | 　X 　 　| 　X 　 | 　X
-> >
-> 
-
----------------------------------------------------------------------
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
 _______________________________________________
 kexec mailing list
