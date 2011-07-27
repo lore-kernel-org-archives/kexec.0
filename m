@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qm3gk-0006Ta-Of
-	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:19 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwAcd025175
+	id 1Qm3gk-0006TV-OS
+	for kexec@lists.infradead.org; Wed, 27 Jul 2011 12:58:20 +0000
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6RCwAXP025174
 	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 12:58:10 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
-	[9.149.37.229])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6RCwAIQ2171114
-	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:10 +0100
-Received: from d06av05.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av05.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6RCw9Ge001639
+Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
+	[9.149.37.252])
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p6RCw9Ni2285658
+	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 13:58:09 +0100
+Received: from d06av11.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av11.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p6RCw8ex000527
 	for <kexec@lists.infradead.org>; Wed, 27 Jul 2011 06:58:09 -0600
-Message-Id: <20110727125808.670392469@linux.vnet.ibm.com>
-Date: Wed, 27 Jul 2011 14:55:12 +0200
+Message-Id: <20110727125808.367205861@linux.vnet.ibm.com>
+Date: Wed, 27 Jul 2011 14:55:10 +0200
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch v2 08/10] s390: Add real memory access functions
+Subject: [patch v2 06/10] s390: Export store_status() function
 References: <20110727125504.491183728@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=s390-kdump-arch-maccess.patch
+Content-Disposition: inline; filename=s390-kdump-arch-store-status.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,139 +40,124 @@ Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm
 
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Add access function for real memory needed by s390 kdump backend.
+For kdump we need a store status function to save the registers for the
+current CPU. Therefore this patch exports a function "store_status()".
+In addition to that now also floating point registers are saved correctly.
 
 Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- arch/s390/include/asm/system.h |    2 +
- arch/s390/mm/maccess.c         |   57 +++++++++++++++++++++++++++++++++++++++++
- drivers/s390/char/zcore.c      |   20 +-------------
- 3 files changed, 61 insertions(+), 18 deletions(-)
+ arch/s390/kernel/reipl64.S |   80 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 60 insertions(+), 20 deletions(-)
 
---- a/arch/s390/include/asm/system.h
-+++ b/arch/s390/include/asm/system.h
-@@ -114,6 +114,8 @@ extern void pfault_fini(void);
- extern void cmma_init(void);
- extern int memcpy_real(void *, void *, size_t);
- extern void copy_to_absolute_zero(void *dest, void *src, size_t count);
-+extern int copy_to_user_real(void __user *dest, void *src, size_t count);
-+extern int copy_from_user_real(void *dest, void __user *src, size_t count);
- 
- #define finish_arch_switch(prev) do {					     \
- 	set_fs(current->thread.mm_segment);				     \
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/errno.h>
-+#include <linux/gfp.h>
- #include <asm/system.h>
- 
+--- a/arch/s390/kernel/reipl64.S
++++ b/arch/s390/kernel/reipl64.S
+@@ -1,5 +1,5 @@
  /*
-@@ -60,6 +61,9 @@ long probe_kernel_write(void *dst, const
- 	return copied < 0 ? -EFAULT : 0;
- }
+- *    Copyright IBM Corp 2000,2009
++ *    Copyright IBM Corp 2000,2011
+  *    Author(s): Holger Smolinski <Holger.Smolinski@de.ibm.com>,
+  *		 Denis Joseph Barrow,
+  */
+@@ -8,6 +8,64 @@
+ #include <asm/asm-offsets.h>
  
-+/*
-+ * Copy memory in real mode (kernel to kernel)
-+ */
- int memcpy_real(void *dest, void *src, size_t count)
- {
- 	register unsigned long _dest asm("2") = (unsigned long) dest;
-@@ -101,3 +105,56 @@ void copy_to_absolute_zero(void *dest, v
- 	__ctl_load(cr0, 0, 0);
- 	preempt_enable();
- }
+ #
++# store_status
++#
++# Prerequisites to run this function:
++# - Prefix register is set to zero
++# - Original prefix register is stored in "dump_prefix_page"
++# - Lowcore protection is off
++#
++ENTRY(store_status)
++	/* Save register one and load save area base */
++	stg	%r1,__LC_SAVE_AREA_64(%r0)
++	lghi	%r1,SAVE_AREA_BASE
++	/* General purpose registers */
++	stmg	%r0,%r15,__LC_GPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	lg	%r2,__LC_SAVE_AREA_64(%r0)
++	stg	%r2,__LC_GPREGS_SAVE_AREA-SAVE_AREA_BASE+8(%r1)
++	/* Control registers */
++	stctg	%c0,%c15,__LC_CREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	/* Access registers */
++	stam	%a0,%a15,__LC_AREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	/* Floating point registers */
++	std	%f0, 0x00 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f1, 0x08 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f2, 0x10 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f3, 0x18 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f4, 0x20 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f5, 0x28 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f6, 0x30 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f7, 0x38 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f8, 0x40 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f9, 0x48 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f10,0x50 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f11,0x58 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f12,0x60 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f13,0x68 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f14,0x70 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	std	%f15,0x78 + __LC_FPREGS_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	/* Floating point control register */
++	stfpc	__LC_FP_CREG_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	/* CPU timer */
++	stpt	__LC_CPU_TIMER_SAVE_AREA-SAVE_AREA_BASE(%r1)
++	/* Saved prefix register */
++	larl	%r2,dump_prefix_page
++	mvc	__LC_PREFIX_SAVE_AREA-SAVE_AREA_BASE(4,%r1),0(%r2)
++	/* Clock comparator - seven bytes */
++	larl	%r2,.Lclkcmp
++	stckc	0(%r2)
++	mvc	__LC_CLOCK_COMP_SAVE_AREA-SAVE_AREA_BASE + 1(7,%r1),1(%r2)
++	/* Program status word */
++	epsw	%r2,%r3
++	st	%r2,__LC_PSW_SAVE_AREA-SAVE_AREA_BASE + 0(%r1)
++	st	%r3,__LC_PSW_SAVE_AREA-SAVE_AREA_BASE + 4(%r1)
++	larl	%r2,store_status
++	stg	%r2,__LC_PSW_SAVE_AREA-SAVE_AREA_BASE + 8(%r1)
++	br	%r14
++.align	8
++.Lclkcmp:	.quad	0x0000000000000000
 +
-+/*
-+ * Copy memory from kernel (real) to user (virtual)
-+ */
-+int copy_to_user_real(void __user *dest, void *src, size_t count)
-+{
-+	int offs = 0, size, rc;
-+	char *buf;
-+
-+	buf = (char *) __get_free_page(GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+	rc = -EFAULT;
-+	while (offs < count) {
-+		size = min(PAGE_SIZE, count - offs);
-+		if (memcpy_real(buf, src + offs, size))
-+			goto out;
-+		if (copy_to_user(dest + offs, buf, size))
-+			goto out;
-+		offs += size;
-+	}
-+	rc = 0;
-+out:
-+	free_page((unsigned long) buf);
-+	return rc;
-+}
-+
-+/*
-+ * Copy memory from user (virtual) to kernel (real)
-+ */
-+int copy_from_user_real(void *dest, void __user *src, size_t count)
-+{
-+	int offs = 0, size, rc;
-+	char *buf;
-+
-+	buf = (char *) __get_free_page(GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+	rc = -EFAULT;
-+	while (offs < count) {
-+		size = min(PAGE_SIZE, count - offs);
-+		if (copy_from_user(buf, src + offs, size))
-+			goto out;
-+		if (memcpy_real(dest + offs, buf, size))
-+			goto out;
-+		offs += size;
-+	}
-+	rc = 0;
-+out:
-+	free_page((unsigned long) buf);
-+	return rc;
-+}
-+
---- a/drivers/s390/char/zcore.c
-+++ b/drivers/s390/char/zcore.c
-@@ -142,22 +142,6 @@ static int memcpy_hsa_kernel(void *dest,
- 	return memcpy_hsa(dest, src, count, TO_KERNEL);
- }
- 
--static int memcpy_real_user(void __user *dest, unsigned long src, size_t count)
--{
--	static char buf[4096];
--	int offs = 0, size;
++#
+ # do_reipl_asm
+ # Parameter: r2 = schid of reipl device
+ #
+@@ -15,22 +73,7 @@
+ ENTRY(do_reipl_asm)
+ 		basr	%r13,0
+ .Lpg0:		lpswe	.Lnewpsw-.Lpg0(%r13)
+-.Lpg1:		# do store status of all registers
 -
--	while (offs < count) {
--		size = min(sizeof(buf), count - offs);
--		if (memcpy_real(buf, (void *) src + offs, size))
--			return -EFAULT;
--		if (copy_to_user(dest + offs, buf, size))
--			return -EFAULT;
--		offs += size;
--	}
--	return 0;
--}
--
- static int __init init_cpu_info(enum arch_id arch)
- {
- 	struct save_area *sa;
-@@ -346,8 +330,8 @@ static ssize_t zcore_read(struct file *f
+-		stg	%r1,.Lregsave-.Lpg0(%r13)
+-		lghi	%r1,0x1000
+-		stmg	%r0,%r15,__LC_GPREGS_SAVE_AREA-0x1000(%r1)
+-		lg	%r0,.Lregsave-.Lpg0(%r13)
+-		stg	%r0,__LC_GPREGS_SAVE_AREA-0x1000+8(%r1)
+-		stctg	%c0,%c15,__LC_CREGS_SAVE_AREA-0x1000(%r1)
+-		stam	%a0,%a15,__LC_AREGS_SAVE_AREA-0x1000(%r1)
+-		lg	%r10,.Ldump_pfx-.Lpg0(%r13)
+-		mvc	__LC_PREFIX_SAVE_AREA-0x1000(4,%r1),0(%r10)
+-		stfpc	__LC_FP_CREG_SAVE_AREA-0x1000(%r1)
+-		stckc	.Lclkcmp-.Lpg0(%r13)
+-		mvc	__LC_CLOCK_COMP_SAVE_AREA-0x1000(7,%r1),.Lclkcmp-.Lpg0(%r13)
+-		stpt	__LC_CPU_TIMER_SAVE_AREA-0x1000(%r1)
+-		stg	%r13, __LC_PSW_SAVE_AREA-0x1000+8(%r1)
++.Lpg1:		brasl	%r14,store_status
  
- 	/* Copy from real mem */
- 	size = count - mem_offs - hdr_count;
--	rc = memcpy_real_user(buf + hdr_count + mem_offs, mem_start + mem_offs,
--			      size);
-+	rc = copy_to_user_real(buf + hdr_count + mem_offs,
-+			       (void *) mem_start + mem_offs, size);
- 	if (rc)
- 		goto fail;
- 
+ 		lctlg	%c6,%c6,.Lall-.Lpg0(%r13)
+ 		lgr	%r1,%r2
+@@ -67,10 +110,7 @@ ENTRY(do_reipl_asm)
+ 		st	%r14,.Ldispsw+12-.Lpg0(%r13)
+ 		lpswe	.Ldispsw-.Lpg0(%r13)
+ 		.align	8
+-.Lclkcmp:	.quad	0x0000000000000000
+ .Lall:		.quad	0x00000000ff000000
+-.Ldump_pfx:	.quad	dump_prefix_page
+-.Lregsave:	.quad	0x0000000000000000
+ 		.align	16
+ /*
+  * These addresses have to be 31 bit otherwise
 
 
 _______________________________________________
