@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QmhXz-0004VT-5Y
-	for kexec@lists.infradead.org; Fri, 29 Jul 2011 07:31:52 +0000
-Date: Fri, 29 Jul 2011 16:21:04 +0900
+	id 1QmhaP-0004WP-Dr
+	for kexec@lists.infradead.org; Fri, 29 Jul 2011 07:34:22 +0000
+Date: Fri, 29 Jul 2011 16:24:24 +0900
 From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
 Subject: Re: [PATCH v2 2/8] makedumpfile: Apply relocation while loading
 	module debuginfo.
-Message-Id: <20110729162104.5d611eb9.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <4E313C17.7050609@linux.vnet.ibm.com>
+Message-Id: <20110729162424.c3e05cc2.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <4E317C2F.3080507@linux.vnet.ibm.com>
 References: <20110517200052.12740.36169.stgit@mars.in.ibm.com>
 	<20110725171156.e4965f9f.oomichi@mxs.nes.nec.co.jp>
 	<4E2FABA8.5000401@linux.vnet.ibm.com>
 	<20110728181146.d91ee265.oomichi@mxs.nes.nec.co.jp>
-	<4E313C17.7050609@linux.vnet.ibm.com>
+	<4E317C2F.3080507@linux.vnet.ibm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,46 +33,24 @@ Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm
 
 Hi Mahesh,
 
-On Thu, 28 Jul 2011 16:08:15 +0530
+On Thu, 28 Jul 2011 20:41:43 +0530
 Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
 > > 
-> > If adding the searching method to the blow position and removing the code
-> > from init_dwarf_info(), I guess it makes the code simple.
+> > This feature's patches are very large, and I created a devel branch
+> > on sourceforge git tree for sharing the code with you.
 > > 
-> > @ process_config_file()
-> >  9402                         if (!set_dwarf_debuginfo(config->module_name,
-> >  9403                                                                 NULL, -1)) {
-> >  9404                                 ERRMSG("Skipping to next Module section\n");
-> >  9405                                 skip_section = 1;
-> >  9406                                 free_config(config);
-> >  9407                                 continue;
-> >  9408                         }
-> >  9409                         << HERE >> 
+> > http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=shortlog;h=refs/heads/filter-out-devel
+> > 
+> > I commited all of your patches and my cleanup patches.
+> > If you notice some problems or cleate some patches, please let me know them.
+> > 
 > 
-> This may not be the correct place to call search method. We may end up
-> calling search method multiple times for same kernel module. I think
-> moving the search method inside set_dwarf_debuginfo() routine at below
-> position is a better place:
-> 
-> @set_dwarf_debuginfo()
-> 	......
-> 	......
-> 	if (!strcmp(dwarf_info.module_name, "vmlinux") ||
->                 !strcmp(dwarf_info.module_name, "xen-syms"))
->                 return TRUE;
-> +	 << HERE >>
-> -        /* check to see whether module debuginfo is available */
-> -        if (!init_dwarf_info())
-> -                return FALSE;
-> -        else
-> -                clean_dwfl_info();
-> 	 return TRUE;
-> }
-> 
-> And then we can remove search routine from init_dwarf_info(). What do
-> you think?
+> I checked out the devel branch and verified that all patches looks fine.
+> I will take this branch as base and will work on moving search method to
+> set_dwarf_debuginfo() routine.
 
-I think the above change will be good, thanks in advance.
+Thank you for your review and tests.
+I pushed some additional cleanup patches.
 
 
 Thanks
