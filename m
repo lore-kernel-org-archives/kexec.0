@@ -1,28 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QmmML-0001tB-Ft
-	for kexec@lists.infradead.org; Fri, 29 Jul 2011 12:40:11 +0000
-Received: from d06nrmr1507.portsmouth.uk.ibm.com
-	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p6TCe58s014501
-	for <kexec@lists.infradead.org>; Fri, 29 Jul 2011 12:40:05 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
-	[9.149.37.247])
-	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p6TCe5152248712
-	for <kexec@lists.infradead.org>; Fri, 29 Jul 2011 13:40:05 +0100
-Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p6TCe4nw015810
-	for <kexec@lists.infradead.org>; Fri, 29 Jul 2011 06:40:05 -0600
-Message-Id: <20110729124000.650754716@linux.vnet.ibm.com>
-Date: Fri, 29 Jul 2011 14:39:46 +0200
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: [patch 2/3] s390: Add external kdump entry point for s390 stand-alone
-	dump tools
-References: <20110729123944.562622201@linux.vnet.ibm.com>
-Content-Disposition: inline; filename=s390-kdump-arch-backend-entry.patch
+	id 1Qni7M-0006ij-Ng
+	for kexec@lists.infradead.org; Mon, 01 Aug 2011 02:20:34 +0000
+Date: Mon, 1 Aug 2011 10:27:04 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 4/8] makedumpfile: Introduce routines to get type
+	name from debuginfo.
+Message-Id: <20110801102704.efc244ac.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110517200247.12740.45844.stgit@mars.in.ibm.com>
+References: <20110517200247.12740.45844.stgit@mars.in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,251 +19,185 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-On s390 we want to be able to trigger kdump via our stand-alone dump tools,
-if a valid kdump kernel has been pre-loaded. The mechanism works as follows:
-We establish a ABI defined kdump entry point in the old kernel at 0x10018 and
-a "kdump active" flag at 0xe18. The dump tools first verify 0xe18 in
-order to find out if kdump kernel has been loaded. If kdump is loaded
-they jump to 0x10008 which then triggers crash_kexec(). The dump tools
-establish a program check handler so that if crash_kexec() or purgatory
-is corrupted we return to the dump tools and create a full-blown stand-alone
-dump as backup mechanism.
+Hi Mahesh,
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- arch/s390/include/asm/kexec.h    |    1 
- arch/s390/include/asm/lowcore.h  |    4 +-
- arch/s390/kernel/entry64.S       |   16 ++++++++++
- arch/s390/kernel/head.S          |    8 ++++-
- arch/s390/kernel/head64.S        |    3 +
- arch/s390/kernel/head_kdump.S    |   13 ++++++++
- arch/s390/kernel/ipl.c           |    8 -----
- arch/s390/kernel/machine_kexec.c |   61 +++++++++++++++++++++++++++++++++++++++
- 8 files changed, 105 insertions(+), 9 deletions(-)
+A pointer size can been gotton by sizeof(void *), and pointer (virtual 
+address) can been defined as "unsigned long".
+I think we can make this patch simple. How about the attached patch ?
 
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -40,4 +40,5 @@
- #define KEXEC_ARCH KEXEC_ARCH_S390
+
+Thanks
+Ken'ichi Ohmichi
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3ad2bd5..6955f64 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -34,7 +34,6 @@ struct erase_info	*erase_info = NULL;
+ unsigned long		num_erase_info = 1; /* Node 0 is unused. */
  
- extern void crash_setup_regs(struct pt_regs *newregs, struct pt_regs *oldregs);
-+extern void s390_kdump_int(void);
- #endif /*_S390_KEXEC_H */
---- a/arch/s390/include/asm/lowcore.h
-+++ b/arch/s390/include/asm/lowcore.h
-@@ -165,6 +165,7 @@ struct _lowcore {
+ char filename_stdout[] = FILENAME_STDOUT;
+-long pointer_size;
+ char config_buf[BUFSIZE_FGETS];
  
- #define LC_ORDER 1
- #define LC_PAGES 2
-+#define LC_KDUMP_ACTIVE_FLAG 0x4b44554d50414354ULL
- 
- struct save_area {
- 	u64	fp_regs[16];
-@@ -295,7 +296,8 @@ struct _lowcore {
- 	/* 64 bit save area */
- 	__u64	save_area_64;			/* 0x0e0c */
- 	__u32	ipib_checksum_perm;		/* 0x0e14 */
--	__u8	pad_0x0e18[0x0f00-0x0e18];	/* 0x0e18 */
-+	__u64	kdump_active;			/* 0x0e18 */
-+	__u8	pad_0x0e20[0x0f00-0x0e20];	/* 0x0e20 */
- 
- 	/* Extended facility list */
- 	__u64	stfle_fac_list[32];		/* 0x0f00 */
---- a/arch/s390/kernel/entry64.S
-+++ b/arch/s390/kernel/entry64.S
-@@ -885,6 +885,22 @@ ENTRY(psw_restart_int_handler)
- restart_psw_crash:
- 	.quad	0x0002000080000000,0x0000000000000000 + restart_psw_crash
- 
-+#
-+# kdump external entry (can be called from stand-alone dump tools)
-+#
-+ENTRY(kdump_ext_handler)
-+	stg	%r15,__LC_SAVE_AREA_64(%r0)	# save r15
-+	larl	%r15,restart_stack		# load restart stack
-+	lg	%r15,0(%r15)
-+	aghi	%r15,-SP_SIZE			# make room for pt_regs
-+	stmg	%r0,%r14,SP_R0(%r15)		# store gprs %r0-%r14 to stack
-+	mvc	SP_R15(8,%r15),__LC_SAVE_AREA_64(%r0)# store saved %r15 to stack
-+	xc	__SF_BACKCHAIN(8,%r15),__SF_BACKCHAIN(%r15) # set backchain to 0
-+
-+	brasl	%r14,s390_kdump_ext
-+0:	j	0b+2				# Force program check
-+#endif
-+
- 	.section .kprobes.text, "ax"
- 
- #ifdef CONFIG_CHECK_STACK
---- a/arch/s390/kernel/head.S
-+++ b/arch/s390/kernel/head.S
-@@ -452,13 +452,19 @@ ENTRY(startup)
- 	j	.Lep_startup_normal
- 	.org	0x10008
- 	.ascii	"S390EP"
--	.byte	0x00,0x01
-+	.byte	0x00,0x02
- #
- # kdump startup-code at 0x10010, running in 64 bit absolute addressing mode
- #
- 	.org	0x10010
- ENTRY(startup_kdump)
- 	j	.Lep_startup_kdump
-+#
-+# External kdump startup-code at 0x10018
-+#
-+	.org	0x10018
-+ENTRY(startup_kdump_ext)
-+	j	.Lep_startup_kdump_ext
- .Lep_startup_normal:
- 	basr	%r13,0			# get base
- .LPG0:
---- a/arch/s390/kernel/head64.S
-+++ b/arch/s390/kernel/head64.S
-@@ -88,6 +88,9 @@ ENTRY(_ehead)
- ENTRY(_stext)
- 	basr	%r13,0			# get base
- .LPG3:
-+	larl	%r2,kdump_ext_handler		# Set kdump ext handler address
-+	larl	%r3,kdump_ext_handler_addr	# This is needed
-+	stg	%r2,0(%r3)			# because of bzImage
- # check control registers
- 	stctg	%c0,%c15,0(%r15)
- 	oi	6(%r15),0x40		# enable sigp emergency signal
---- a/arch/s390/kernel/head_kdump.S
-+++ b/arch/s390/kernel/head_kdump.S
-@@ -97,8 +97,21 @@ startup_kdump_relocated:
- 	.long	0x00080000,0x80000000 + startup
- .Lpgm_psw:
- 	.quad	0x0000000180000000,0x0000000000000000 + .Lno_diag308
-+
-+.align 2
-+.Lep_startup_kdump_ext:
-+	larl	%r14,kdump_ext_handler_addr
-+	lg	%r14,0(%r14)
-+	br	%r14
-+
-+ENTRY(kdump_ext_handler_addr)
-+	.quad	0xffffffffffffffff
- #else
- .align 2
-+.Lep_startup_kdump_ext:
-+	br	%r14
-+
-+.align 2
- .Lep_startup_kdump:
- #ifdef CONFIG_64BIT
- 	larl	%r13,startup_kdump_crash
---- a/arch/s390/kernel/ipl.c
-+++ b/arch/s390/kernel/ipl.c
-@@ -1651,13 +1651,7 @@ static int kdump_init(void)
- 
- static void kdump_run(struct shutdown_trigger *trigger)
+ /*
+@@ -2058,10 +2057,6 @@ get_debug_info(void)
+ 	 */
+ 	while (dwarf_nextcu(dwarfd, off, &next_off, &header_size,
+ 	    &abbrev_offset, &address_size, &offset_size) == 0) {
+-		if (dwarf_info.cmd == DWARF_INFO_GET_PTR_SIZE) {
+-			dwarf_info.struct_size = address_size;
+-			break;
+-		}
+ 		off += header_size;
+ 		if (dwarf_offdie(dwarfd, off, &cu_die) == NULL) {
+ 			ERRMSG("Can't get CU die.\n");
+@@ -2105,14 +2100,7 @@ get_structure_size(char *structname, int flag_typedef)
+ long
+ get_pointer_size()
  {
--	pfault_fini();
--	s390_reset_system();
--	__arch_local_irq_stnsm(0xfb); /* disable DAT */
--	store_status();
+-	dwarf_info.cmd = DWARF_INFO_GET_PTR_SIZE;
+-	/* reuse struct_size member to report pointer size */
+-	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
 -
--	crash_kexec(NULL);
--	disabled_wait((unsigned long) __builtin_return_address(0));
-+	s390_kdump_int();
- }
- 
- static struct shutdown_action kdump_action = {SHUTDOWN_ACTION_KDUMP_STR,
---- a/arch/s390/kernel/machine_kexec.c
-+++ b/arch/s390/kernel/machine_kexec.c
-@@ -53,6 +53,19 @@ int kimage_load_crash_segment(struct kim
+-	if (!get_debug_info())
+-		return FAILED_DWARFINFO;
+-
+-	return dwarf_info.struct_size;
++	return sizeof(void *);
  }
  
  /*
-+ * kdump program check handler
-+ */
-+static void kdump_pgm_handler(void)
-+{
-+	psw_t kdump_failed_psw;
-+
-+	kdump_failed_psw.mask = PSW_BASE_BITS | PSW_MASK_WAIT;
-+	kdump_failed_psw.addr = (unsigned long) kdump_pgm_handler;
-+	_sclp_print_early("kdump failed: Use stand-alone dump tool");
-+	__load_psw(kdump_failed_psw);
-+}
-+
-+/*
-  * Start kdump
-  */
- static void __machine_kdump(void *data)
-@@ -82,6 +95,40 @@ static int machine_kexec_prepare_kdump(v
- #endif
+@@ -2285,8 +2273,6 @@ get_symbol_info(void)
+ 	if (SYMBOL(node_memblk) != NOT_FOUND_SYMBOL)
+ 		SYMBOL_ARRAY_LENGTH_INIT(node_memblk, "node_memblk");
+ 
+-	pointer_size = get_pointer_size();
+-
+ 	return TRUE;
  }
  
-+/*
-+ * Externally triggered kdump: Emit program check if kdump is not loaded
-+ */
-+void s390_kdump_ext(void)
-+{
-+#ifdef CONFIG_CRASH_DUMP
-+	if (!kexec_crash_image)
-+		BUG();
-+	crash_kexec(NULL);
-+#else
-+	return;
-+#endif
-+}
-+
-+/*
-+ * Internally triggered kdump: Reset system and set PGM handler
-+ */
-+void s390_kdump_int(void)
-+{
-+	pfault_fini();
-+	s390_reset_system();
-+	__arch_local_irq_stnsm(0xfb); /* disable DAT */
-+	store_status();
-+	S390_lowcore.program_new_psw.mask = PSW_BASE_BITS | PSW_DEFAULT_KEY;
-+	S390_lowcore.program_new_psw.addr = PSW_ADDR_AMODE |
-+		(unsigned long) kdump_pgm_handler;
-+	if (!kexec_crash_image) {
-+		_sclp_print_early("kdump not loaded");
-+		BUG();
-+	}
-+	crash_kexec(NULL);
-+	BUG();
-+}
-+
- int machine_kexec_prepare(struct kimage *image)
- {
- 	void *reboot_code_buffer;
-@@ -109,6 +156,20 @@ void machine_kexec_cleanup(struct kimage
- {
+@@ -7782,7 +7768,7 @@ load_module_symbols(void)
+ 			 * situation we depend on pointer_size that is
+ 			 * extracted from vmlinux dwarf information.
+ 			 */
+-			if ((pointer_size * 8) == 64) {
++			if ((get_pointer_size() * 8) == 64) {
+ 				sym64 = (Elf64_Sym *) (symtab_mem
+ 						+ (nsym * sizeof(Elf64_Sym)));
+ 				sym_info[nsym].value =
+@@ -7863,8 +7849,8 @@ print_config_entry(struct config_entry *ce)
+ 		DEBUG_MSG("Type Name: %s, ", ce->type_name);
+ 		DEBUG_MSG("flag: %x, ", ce->flag);
+ 		DEBUG_MSG("Type flag: %lx, ", ce->type_flag);
+-		DEBUG_MSG("sym_addr: %llx, ", ce->sym_addr);
+-		DEBUG_MSG("addr: %llx, ", ce->addr);
++		DEBUG_MSG("sym_addr: %lx, ", ce->sym_addr);
++		DEBUG_MSG("addr: %lx, ", ce->addr);
+ 		DEBUG_MSG("offset: %lx, ", ce->offset);
+ 		DEBUG_MSG("size: %zd\n", ce->size);
+ 
+@@ -8399,29 +8385,16 @@ err_out:
+ 	return NULL;
  }
  
-+/*
-+ * Update kdump active flag for s390 stand-alone dump tools
-+ */
-+void machine_kexec_finish(struct kimage *image, int kexec_flags)
-+{
-+	u64 kdump_active;
-+
-+	if (!(kexec_flags & KEXEC_ON_CRASH))
-+		return;
-+	kdump_active = image ? LC_KDUMP_ACTIVE_FLAG : 0;
-+	copy_to_absolute_zero(&S390_lowcore.kdump_active, &kdump_active,
-+			      sizeof(kdump_active));
-+}
-+
- void machine_shutdown(void)
+-static unsigned long long
++static unsigned long
+ read_pointer_value(unsigned long long addr)
  {
+-	uint32_t val_32;
+-	uint64_t val_64;
++	unsigned long val;
+ 
+-	switch (pointer_size) {
+-	case 4:
+-		if (!readmem(VADDR, addr, &val_32, sizeof(val_32))) {
+-			ERRMSG("Can't read pointer value\n");
+-			return 0;
+-		}
+-		return (unsigned long long)val_32;
+-		break;
+-	case 8:
+-		if (!readmem(VADDR, addr, &val_64, sizeof(val_64))) {
+-			ERRMSG("Can't read pointer value\n");
+-			return 0;
+-		}
+-		return (unsigned long long)val_64;
+-		break;
++	if (!readmem(VADDR, addr, &val, sizeof(val))) {
++		ERRMSG("Can't read pointer value\n");
++		return 0;
+ 	}
+-	return 0;
++	return val;
  }
+ 
+ int
+@@ -8621,7 +8594,7 @@ get_config_symbol_addr(struct config_entry *ce,
+ 			unsigned long long base_addr,
+ 			char *base_struct_name)
+ {
+-	unsigned long long addr = 0;
++	unsigned long addr = 0;
+ 
+ 	if (!(ce->flag & ENTRY_RESOLVED)) {
+ 		if (!resolve_config_entry(ce, base_addr, base_struct_name))
+@@ -8646,7 +8619,7 @@ get_config_symbol_addr(struct config_entry *ce,
+ 				 */
+ 				while (ce->index < ce->array_length) {
+ 					addr = read_pointer_value(ce->addr +
+-						(ce->index * pointer_size));
++						(ce->index * get_pointer_size()));
+ 					ce->index++;
+ 					if (addr)
+ 						break;
+@@ -8728,7 +8701,7 @@ get_config_symbol_size(struct config_entry *ce,
+ 	else {
+ 		if (ce->type_flag & TYPE_ARRAY) {
+ 			if (ce->type_flag & TYPE_PTR)
+-				return ce->array_length * pointer_size;
++				return ce->array_length * get_pointer_size();
+ 			else
+ 				return ce->array_length * ce->size;
+ 		}
+@@ -8909,7 +8882,7 @@ update_filter_info(struct config_entry *filter_symbol,
+ 		return FALSE;
+ 
+ 	if (filter_symbol->nullify)
+-		size = pointer_size;
++		size = get_pointer_size();
+ 	else if (size_symbol) {
+ 		size = get_config_symbol_size(size_symbol, 0, NULL);
+ 		if (message_level & ML_PRINT_DEBUG_MSG)
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 8c69235..80816b6 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1218,7 +1218,6 @@ enum {
+ 	DWARF_INFO_CHECK_SYMBOL_ARRAY_TYPE,
+ 	DWARF_INFO_GET_SYMBOL_TYPE,
+ 	DWARF_INFO_GET_MEMBER_TYPE,
+-	DWARF_INFO_GET_PTR_SIZE,
+ };
+ 
+ struct dwarf_info {
+@@ -1284,7 +1283,7 @@ struct config_entry {
+ 	unsigned short		flag;
+ 	unsigned short		nullify;
+ 	unsigned long long	sym_addr;	/* Symbol address */
+-	unsigned long long	addr;		/* Symbol address or
++	unsigned long		addr;		/* Symbol address or
+ 						   value pointed by sym_addr */
+ 	unsigned long long	cmp_addr;	/* for LIST_ENTRY */
+ 	unsigned long		offset;
 
 
 _______________________________________________
