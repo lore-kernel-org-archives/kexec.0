@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qp5Fm-00055N-8C
-	for kexec@lists.infradead.org; Thu, 04 Aug 2011 21:14:55 +0000
-Date: Thu, 4 Aug 2011 17:14:32 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch v2 04/10] kdump: Trigger kdump via panic notifier chain
-	on s390
-Message-ID: <20110804211432.GE429@redhat.com>
-References: <20110727125504.491183728@linux.vnet.ibm.com>
-	<20110727125808.028895659@linux.vnet.ibm.com>
-	<20110801204114.GJ3805@redhat.com>
-	<1312274279.4881.18.camel@br98xy6r>
-	<20110802192147.GJ6399@redhat.com>
-	<1312365039.3783.36.camel@br98xy6r>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1312365039.3783.36.camel@br98xy6r>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1Qp92l-0007Km-OW
+	for kexec@lists.infradead.org; Fri, 05 Aug 2011 01:17:45 +0000
+Date: Fri, 5 Aug 2011 09:26:59 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 4/8] makedumpfile: Introduce routines to get type
+	name from debuginfo.
+Message-Id: <20110805092659.a8a60bea.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <4E3A3F8A.8090204@linux.vnet.ibm.com>
+References: <20110517200247.12740.45844.stgit@mars.in.ibm.com>
+	<20110801102704.efc244ac.oomichi@mxs.nes.nec.co.jp>
+	<4E3A3F8A.8090204@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,126 +25,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
+To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-On Wed, Aug 03, 2011 at 11:50:39AM +0200, Michael Holzheu wrote:
-> Hello Vivek,
+
+Hi Mahesh,
+
+Thank you for your review and test.
+
+On Thu, 04 Aug 2011 12:13:22 +0530
+Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
 > 
-> On Tue, 2011-08-02 at 15:21 -0400, Vivek Goyal wrote:
-> > > We have added the panic notifier in the past in order to be able to
-> > > configure the action that should be done in case of panic using our
-> > > shutdown actions infrastructure. We can configure the action using sysfs
-> > > and we are able to configure that a stand-alone dump should be started
-> > > as action for panic.
-> > > 
-> > > Now with the two stage dump approach we would like to keep the
-> > > possibility to trigger a stand-alone dump even if kdump is installed.
-> > > The stand-alone dumper will be started in case of a kernel panic and
-> > > then the procedure we discussed will happen: Jump into kdump and if
-> > > program check occurs do stand-alone dump as backup.
+> On 08/01/2011 06:57 AM, Ken'ichi Ohmichi wrote:
 > > 
-> > Frankly speaking this jumping to stand alone kernel by default is not
-> > making any sense to me. Once you have already determined from /sys that
-> > in case of crash a user has set the action to kdump, then we should
-> > simply call crash_kexec()
-> 
-> If the user has set the panic action to kdump, we jump directly to
-> crash_kexec(). This then works like on all other architectures.
-
-Ok, that's good to know that you will define panic action as kdump also
-and in that case we will not jump to dump tools and directly call
-crash_kexec()
-
-> 
-> Only if the user has specified panic action stand-alone dump, we do the
-> detour via the stand-alone dump tools.
-
-If a user decides to load kdump kernel to capture dump, then why does it
-still make sense to set panic action as "stand-alone dump tools". One
-could argue that user loaded kdump kernel but not necessarily wants
-that mechanism to use, in that case dump-tools does not have to jump
-to kdump kernel at all. 
-
-> 
-> > like other architectures and jump to stand
-> > alone kernel only if some piece of code is corrupted and that action
-> > failed.
+> > Hi Mahesh,
 > > 
-> > What's the point of jumping to stand alone kenrel in case of panic()
-> > and then re-enter it back to original kernel using crash_kexec(). Sound
-> > like a very odd design choice to me.
+> > A pointer size can been gotton by sizeof(void *), and pointer (virtual 
+> > address) can been defined as "unsigned long".
+> > I think we can make this patch simple. How about the attached patch ?
 > > 
-> > I am now I am repeating this question umpteen time simply because
-> > I never got a good answer except "we have to do it this way".
 > 
-> Sometimes communication is really hard and frustrating.
-> ... but at least we are still communicating.
+> Yup, the patch looks simpler and good.
 > 
-> Ok very last try:
+> > 
+> > Thanks
+> > Ken'ichi Ohmichi
+> > 
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index 3ad2bd5..6955f64 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -34,7 +34,6 @@ struct erase_info	*erase_info = NULL;
+> >  unsigned long		num_erase_info = 1; /* Node 0 is unused. */
+> > 
+> >  char filename_stdout[] = FILENAME_STDOUT;
+> > -long pointer_size;
+> >  char config_buf[BUFSIZE_FGETS];
+> > 
+> >  /*
+> > @@ -2058,10 +2057,6 @@ get_debug_info(void)
+> >  	 */
+> >  	while (dwarf_nextcu(dwarfd, off, &next_off, &header_size,
+> >  	    &abbrev_offset, &address_size, &offset_size) == 0) {
+> > -		if (dwarf_info.cmd == DWARF_INFO_GET_PTR_SIZE) {
+> > -			dwarf_info.struct_size = address_size;
+> > -			break;
+> > -		}
+> >  		off += header_size;
+> >  		if (dwarf_offdie(dwarfd, off, &cu_die) == NULL) {
+> >  			ERRMSG("Can't get CU die.\n");
 > 
-> * We can use the same mechanism for manual dump and automatic dump on
-> panic: IPL the stand-alone dump tools.
-
-So manual dump/intervention is only required if automatic dump failed?
-
-> kdump check and backup
-> stand-alone dump is implemented only in the stand-alone dump code.
-
-My argument is that why stand alone dump is trying to trigger kdump
-at all? Shouldn't it all be part of loading kdump kernel and user
-setting panic() action to kdump?
-
-The only valid argument to try to load kdump kernel from dump tools is
-the hard hang situation where we never made to panic(). Then either
-that hypervisor timer or manual intervention will come into picture
-and one might argue that we still will kdump a try.
-
-Fox x86 it is relatively easy as NMI detects hard hang in the context
-of first kernel and can easily call crash_kexec() without any additional
-information passing.
-
-So if it is about hard hang, i can still understand the need to jump
-to crash_kexec() from dump tools. I don't know if it is possible to 
-invoke crash_kexec() directly from hypervisor timer without ipling
-dump tools or not.
-
-> If we
-> would do it like you suggested, we would have to do it twice - in the
-> kernel and in the stand-alone dump tools:
-> - kernel: Try kdump and if kdump fails trigger standalone dump tool
-> - Stand-alone dump tool: Try kdump and if kdump fails do full dump
-
-Are we not already doing above two steps? You just mentioned that 
-if user specified "kdump" as panic() action, then you will call
-crash_kexec() directly. Will we not jump to dump tools if kdump
-fails?
-
-Also if user specified "dump-tools" as action, then your way of things
-anyway will try to execute kdump (if kernel is loaded) and if that fails
-then we come back to dump tools.
-
-So I think in current scheme of things, you already have both implemented.
+> [...]
 > 
-> * Still the panic action is configured via sysfs as the user is already
-> used to on s390.
-
-I asked the question above why it makes sense to configure panic action
-as dump tools if kdump kernel is loaded.
-
+> > @@ -7863,8 +7849,8 @@ print_config_entry(struct config_entry *ce)
+> >  		DEBUG_MSG("Type Name: %s, ", ce->type_name);
+> >  		DEBUG_MSG("flag: %x, ", ce->flag);
+> >  		DEBUG_MSG("Type flag: %lx, ", ce->type_flag);
+> > -		DEBUG_MSG("sym_addr: %llx, ", ce->sym_addr);
+> > -		DEBUG_MSG("addr: %llx, ", ce->addr);
+> > +		DEBUG_MSG("sym_addr: %lx, ", ce->sym_addr);
 > 
-> * It fits much better into our whole s390 infrastructure. Believe me, we
-> have discussed that here a long time. I think you do not have a full
-> overview here. Perhaps you just have to believe that.
+> Above change throws compilation warning. The sym_addr is unsigned long
+> long, %llx still holds good.
 
-That's what I am talking about. So many times the answer has been "We have
-to do it this way".
+Nice catch, I fixed the above.
 
-Sure I do not have full overview here but little explanation sometimes
-help in understanding things.
+
+> > +		DEBUG_MSG("addr: %lx, ", ce->addr);
+> >  		DEBUG_MSG("offset: %lx, ", ce->offset);
+> >  		DEBUG_MSG("size: %zd\n", ce->size);
+> > 
+> 
+> [...]
+> 
+> > @@ -1284,7 +1283,7 @@ struct config_entry {
+> >  	unsigned short		flag;
+> >  	unsigned short		nullify;
+> >  	unsigned long long	sym_addr;	/* Symbol address */
+> > -	unsigned long long	addr;		/* Symbol address or
+> > +	unsigned long		addr;		/* Symbol address or
+> >  						   value pointed by sym_addr */
+> >  	unsigned long long	cmp_addr;	/* for LIST_ENTRY */
+> >  	unsigned long		offset;
+> > 
+> 
+> I tested this patch and works fine.
+
+Thank you.
+I have merged this patch.
+
 
 Thanks
-Vivek
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
