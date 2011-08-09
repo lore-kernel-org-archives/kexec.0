@@ -1,34 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp07.in.ibm.com ([122.248.162.7])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QqqKA-0004tj-Th
-	for kexec@lists.infradead.org; Tue, 09 Aug 2011 17:42:45 +0000
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
-	by e28smtp07.in.ibm.com (8.14.4/8.13.1) with ESMTP id p79HgXtO014259
-	for <kexec@lists.infradead.org>; Tue, 9 Aug 2011 23:12:33 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p79HgW7k3354736
-	for <kexec@lists.infradead.org>; Tue, 9 Aug 2011 23:12:32 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p79HgV7O003109
-	for <kexec@lists.infradead.org>; Tue, 9 Aug 2011 23:12:32 +0530
-Date: Tue, 9 Aug 2011 23:12:30 +0530
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Subject: Re: [PATCH v2 2/8] makedumpfile: Apply relocation while loading
-	module debuginfo.
-Message-ID: <20110809174230.GA31038@in.ibm.com>
-References: <20110517200052.12740.36169.stgit@mars.in.ibm.com>
-	<20110725171156.e4965f9f.oomichi@mxs.nes.nec.co.jp>
-	<4E2FABA8.5000401@linux.vnet.ibm.com>
-	<20110728181146.d91ee265.oomichi@mxs.nes.nec.co.jp>
-	<4E313C17.7050609@linux.vnet.ibm.com>
-	<20110729162104.5d611eb9.oomichi@mxs.nes.nec.co.jp>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1Qqthy-0001C6-PG
+	for kexec@lists.infradead.org; Tue, 09 Aug 2011 21:19:31 +0000
+Date: Tue, 9 Aug 2011 17:19:23 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [patch v2 04/10] kdump: Trigger kdump via panic notifier chain
+	on s390
+Message-ID: <20110809211923.GJ6482@redhat.com>
+References: <20110727125504.491183728@linux.vnet.ibm.com>
+	<20110727125808.028895659@linux.vnet.ibm.com>
+	<20110801204114.GJ3805@redhat.com>
+	<1312274279.4881.18.camel@br98xy6r>
+	<20110802192147.GJ6399@redhat.com>
+	<1312365039.3783.36.camel@br98xy6r>
+	<20110804211432.GE429@redhat.com>
+	<1312825659.3537.62.camel@br98xy6r>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110729162104.5d611eb9.oomichi@mxs.nes.nec.co.jp>
-Reply-To: mahesh@linux.vnet.ibm.com
+In-Reply-To: <1312825659.3537.62.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -41,252 +31,126 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
 
-Hi Ken'ichi,
+On Mon, Aug 08, 2011 at 07:47:39PM +0200, Michael Holzheu wrote:
+> Hello Vivek,
+> 
+> On Thu, 2011-08-04 at 17:14 -0400, Vivek Goyal wrote:
+> > On Wed, Aug 03, 2011 at 11:50:39AM +0200, Michael Holzheu wrote:
+> 
+> [snip]
+>  
+> > > Only if the user has specified panic action stand-alone dump, we do the
+> > > detour via the stand-alone dump tools.
+> > 
+> > If a user decides to load kdump kernel to capture dump, then why does it
+> > still make sense to set panic action as "stand-alone dump tools". One
+> > could argue that user loaded kdump kernel but not necessarily wants
+> > that mechanism to use, in that case dump-tools does not have to jump
+> > to kdump kernel at all. 
+> 
+> The user on s390 can currently freely configure the panic action. If we
+> would always do kdump on panic, when kdump is active, we would have to
+> ensure in sysfs that the user can't change the setting any more.
+> Technically we could do that of course.
+> 
+> One use case we had in mind was that the s390 Linux administrator does
+> not have to learn new things when using kdump. kdump can be used as
+> extension of the already existing mechanism. Today users configure
+> stand-alone dump via sysfs. With kdump + trigger via dump tools they
+> could do it still the same way. And also for manual dump they just IPL
+> the dump tool as they are used to do it and if kdump is fine, kdump will
+> be triggered. Nothing new has to be learned.
+> 
+> If users only want to use kdump without stand-alone dump tools as on
+> other architectures also this is possible. Then the panic action will be
+> just kdump.
 
-On 2011-07-29 16:21:04 Fri, Ken'ichi Ohmichi wrote:
+IMHO, it makes sense to introduce a new trigger action "kdump" and let
+user configure that instead of masking everything behind dump tools.
+
+In fact, we don't have to even configure it. Like other architectures, 
+we can always call crash_kexec() upon panic() if there is a crash
+kernel loaded. That way, panic() path remains simple and there are
+no arch specific #ifdefs.
+
 > 
-> Hi Mahesh,
-> 
-> On Thu, 28 Jul 2011 16:08:15 +0530
-> Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
 > > > 
-> > > If adding the searching method to the blow position and removing the code
-> > > from init_dwarf_info(), I guess it makes the code simple.
+> > > > like other architectures and jump to stand
+> > > > alone kernel only if some piece of code is corrupted and that action
+> > > > failed.
+> > > > 
+> > > > What's the point of jumping to stand alone kenrel in case of panic()
+> > > > and then re-enter it back to original kernel using crash_kexec(). Sound
+> > > > like a very odd design choice to me.
+> > > > 
+> > > > I am now I am repeating this question umpteen time simply because
+> > > > I never got a good answer except "we have to do it this way".
 > > > 
-> > > @ process_config_file()
-> > >  9402                         if (!set_dwarf_debuginfo(config->module_name,
-> > >  9403                                                                 NULL, -1)) {
-> > >  9404                                 ERRMSG("Skipping to next Module section\n");
-> > >  9405                                 skip_section = 1;
-> > >  9406                                 free_config(config);
-> > >  9407                                 continue;
-> > >  9408                         }
-> > >  9409                         << HERE >> 
+> > > Sometimes communication is really hard and frustrating.
+> > > ... but at least we are still communicating.
+> > > 
+> > > Ok very last try:
+> > > 
+> > > * We can use the same mechanism for manual dump and automatic dump on
+> > > panic: IPL the stand-alone dump tools.
 > > 
-> > This may not be the correct place to call search method. We may end up
-> > calling search method multiple times for same kernel module. I think
-> > moving the search method inside set_dwarf_debuginfo() routine at below
-> > position is a better place:
-> > 
-> > @set_dwarf_debuginfo()
-> > 	......
-> > 	......
-> > 	if (!strcmp(dwarf_info.module_name, "vmlinux") ||
-> >                 !strcmp(dwarf_info.module_name, "xen-syms"))
-> >                 return TRUE;
-> > +	 << HERE >>
-> > -        /* check to see whether module debuginfo is available */
-> > -        if (!init_dwarf_info())
-> > -                return FALSE;
-> > -        else
-> > -                clean_dwfl_info();
-> > 	 return TRUE;
-> > }
-> > 
-> > And then we can remove search routine from init_dwarf_info(). What do
-> > you think?
+> > So manual dump/intervention is only required if automatic dump failed?
 > 
-> I think the above change will be good, thanks in advance.
+> Manual intervention is required only if panic code does not make it to
+> the "IPL stand-alone dump tools" code.
+> 
+> > 
+> > > kdump check and backup
+> > > stand-alone dump is implemented only in the stand-alone dump code.
+> > 
+> > My argument is that why stand alone dump is trying to trigger kdump
+> > at all? Shouldn't it all be part of loading kdump kernel and user
+> > setting panic() action to kdump?
+> 
+> To summarize: Our approach was to do it in the stand-alone dump tools
+> code for both the manual and the automatic on panic case:
+> 
+> panic ------+                                 +- valid -> kdump
+>             +-> IPL dump tools -> try kdump --+
+> hard hang --+                                 +- invalid -> stand-alone dump
+> 
+> Your suggestion looks like the following:
+> 
+> panic --> try kdump +-- valid ---> kdump
+>                     |
+>                     +-- invalid -> IPL dump tools --> stand-alone dump
+> 
+>                                             +- valid -> kdump
+> hard hang --> IPL dump tools -> try kdump --+ 
+>                                             +- invalid -> stand-alone dump
 
-Please find the inline patch below that separates the search method from
-init_dwarf_info() function. Please review it and let know your comments.
+I think thew whole notion of jumping from dump tools to kdump is not
+a very good design as it enforces us to pass additional state to dump
+tools and also the awkward notion of re-enter the crashed kernel
+(crash_kexec() being called from dump tools).
 
-Thanks,
--Mahesh.
-----------
+Is there a notion of NMI on s390. What's the x86 NMI equivalent on s390.
 
-makedumpfile: Move debuginfo search to set_dwarf_debuginfo() routine.
+> Is that what you are suggesting? We can do it that way, too. Then
+> we would not need the #ifdef CONFIG_S390 in panic().
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+How about keeping it simple in first round.
 
-Move the debuginfo search logic out of init_dwarf_info() function to make
-this function more simpler. Now we call search method in set_dwarf_debuginfo
-when switch to different module section.
+- Always use kdump for capturing dump is kdump kernel is loaded. If user
+  does not want to use kdump, don't load kdump kenrel.
 
-This patch also fixes a BUG where dwarf_info.module_name becomes a stale
-pointer after free_config() invocation. This patch now uses strdup() to get
-duplicate string and assigns it to dwarf_info.module_name.
+- Use NMI equivalent to handle the hard hang case. In case there is no
+  equivalent, how about keeping it simple in first go and always use
+  dump-tools to capture full dump and improve upon it in a later patchset.
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- makedumpfile.c |  126 ++++++++++++++++++++++++++++++++++++++------------------
- 1 files changed, 86 insertions(+), 40 deletions(-)
+  (This is no worse then today as today you don't have any filtering
+   mechanism).
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 35cbed9..fe8e8b0 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1186,7 +1186,60 @@ clean_dwfl_info(void)
- }
- 
- /*
-- * Intitialize the dwarf info.
-+ * Search module debuginfo.
-+ * This function searches for module debuginfo in default debuginfo path for
-+ * a given module in dwarf_info.module_name.
-+ *
-+ * On success, dwarf_info.name_debuginfo is set to absolute path of
-+ * module debuginfo.
-+ */
-+static int
-+search_module_debuginfo(void)
-+{
-+	Dwfl *dwfl = NULL;
-+	static char *debuginfo_path = DEFAULT_DEBUGINFO_PATH;
-+	static const Dwfl_Callbacks callbacks = {
-+		.section_address = dwfl_offline_section_address,
-+		.find_debuginfo = dwfl_standard_find_debuginfo,
-+		.debuginfo_path = &debuginfo_path,
-+	};
-+
-+	/*
-+	 * Check if We already have debuginfo file name with us. If yes,
-+	 * then we don't need to proceed with search method.
-+	 */
-+	if (dwarf_info.name_debuginfo)
-+		return TRUE;
-+
-+	if ((dwfl = dwfl_begin(&callbacks)) == NULL) {
-+		ERRMSG("Can't create a handle for a new dwfl session.\n");
-+		return FALSE;
-+	}
-+
-+	/* Search for module debuginfo file. */
-+	if (dwfl_linux_kernel_report_offline(dwfl,
-+						info->system_utsname.release,
-+						&dwfl_report_module_p)) {
-+		ERRMSG("Can't get Module debuginfo for module '%s'\n",
-+					dwarf_info.module_name);
-+		dwfl_end(dwfl);
-+		return FALSE;
-+	}
-+	dwfl_report_end(dwfl, NULL, NULL);
-+	dwfl_getmodules(dwfl, &process_module, NULL, 0);
-+
-+	dwfl_end(dwfl);
-+	clean_dwfl_info();
-+
-+	/* Return success if module debuginfo is found. */
-+	if (dwarf_info.name_debuginfo)
-+		return TRUE;
-+
-+	return FALSE;
-+}
-+
-+/*
-+ * Initialize the dwarf info.
-  * Linux kernel module debuginfo are of ET_REL (relocatable) type.
-  * This function uses dwfl API's to apply relocation before reading the
-  * dwarf information from module debuginfo.
-@@ -1198,51 +1251,45 @@ init_dwarf_info(void)
- {
- 	Dwfl *dwfl = NULL;
- 	int dwfl_fd = -1;
--	static char *debuginfo_path = DEFAULT_DEBUGINFO_PATH;
- 	static const Dwfl_Callbacks callbacks = {
- 		.section_address = dwfl_offline_section_address,
--		.find_debuginfo = dwfl_standard_find_debuginfo,
--		.debuginfo_path = &debuginfo_path,
- 	};
- 
- 	dwarf_info.elfd = NULL;
- 	dwarf_info.dwarfd = NULL;
- 
-+	 /*
-+	  * We already know the absolute path of debuginfo file. Fail if we
-+	  * still don't have one. Ideally we should never be in this situation.
-+	  */
-+	if (!dwarf_info.name_debuginfo) {
-+		ERRMSG("Can't find absolute path to debuginfo file.\n");
-+		return FALSE;
-+	}
-+
- 	if ((dwfl = dwfl_begin(&callbacks)) == NULL) {
- 		ERRMSG("Can't create a handle for a new dwfl session.\n");
- 		return FALSE;
- 	}
- 
--	if (dwarf_info.name_debuginfo) {
--		/* We have absolute path for debuginfo file, use it directly
--		 * instead of searching it through
--		 * dwfl_linux_kernel_report_offline() call.
--		 *
--		 * Open the debuginfo file if it is not already open.
--		 */
--		if (dwarf_info.fd_debuginfo < 0)
--			dwarf_info.fd_debuginfo =
--				open(dwarf_info.name_debuginfo, O_RDONLY);
--
--		dwfl_fd = dup(dwarf_info.fd_debuginfo);
--		if (dwfl_fd < 0) {
--			ERRMSG("Failed to get a duplicate handle for"
--				" debuginfo.\n");
--			goto err_out;
--		}
--		if (dwfl_report_offline(dwfl, dwarf_info.module_name,
--				dwarf_info.name_debuginfo, dwfl_fd) == NULL) {
--			ERRMSG("Failed reading %s: %s\n",
--				dwarf_info.name_debuginfo, dwfl_errmsg (-1));
--			/* dwfl_fd is consumed on success, not on failure */
--			close(dwfl_fd);
--			goto err_out;
--		}
--	} else if (dwfl_linux_kernel_report_offline(dwfl,
--						info->system_utsname.release,
--						&dwfl_report_module_p)) {
--		ERRMSG("Can't get Module debuginfo for module '%s'\n",
--					dwarf_info.module_name);
-+	/* Open the debuginfo file if it is not already open.  */
-+	if (dwarf_info.fd_debuginfo < 0)
-+		dwarf_info.fd_debuginfo =
-+			open(dwarf_info.name_debuginfo, O_RDONLY);
-+
-+	dwfl_fd = dup(dwarf_info.fd_debuginfo);
-+	if (dwfl_fd < 0) {
-+		ERRMSG("Failed to get a duplicate handle for"
-+			" debuginfo.\n");
-+		goto err_out;
-+	}
-+	/* Apply relocations. */
-+	if (dwfl_report_offline(dwfl, dwarf_info.module_name,
-+			dwarf_info.name_debuginfo, dwfl_fd) == NULL) {
-+		ERRMSG("Failed reading %s: %s\n",
-+			dwarf_info.name_debuginfo, dwfl_errmsg (-1));
-+		/* dwfl_fd is consumed on success, not on failure */
-+		close(dwfl_fd);
- 		goto err_out;
- 	}
- 	dwfl_report_end(dwfl, NULL, NULL);
-@@ -2522,20 +2569,19 @@ set_dwarf_debuginfo(char *mod_name, char *name_debuginfo, int fd_debuginfo)
- 		if (dwarf_info.name_debuginfo)
- 			free(dwarf_info.name_debuginfo);
- 	}
-+	if (dwarf_info.module_name)
-+		free(dwarf_info.module_name);
-+
- 	dwarf_info.fd_debuginfo = fd_debuginfo;
- 	dwarf_info.name_debuginfo = name_debuginfo;
--	dwarf_info.module_name = mod_name;
-+	dwarf_info.module_name = strdup(mod_name);
- 
- 	if (!strcmp(dwarf_info.module_name, "vmlinux") ||
- 		!strcmp(dwarf_info.module_name, "xen-syms"))
- 		return TRUE;
- 
- 	/* check to see whether module debuginfo is available */
--	if (!init_dwarf_info())
--		return FALSE;
--	else
--		clean_dwfl_info();
--	return TRUE;
-+	return search_module_debuginfo();
- }
- 
- int
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
