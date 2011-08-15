@@ -1,17 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QssFE-0005bj-IB
-	for kexec@lists.infradead.org; Mon, 15 Aug 2011 08:10:01 +0000
-Date: Mon, 15 Aug 2011 14:54:51 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [UPDATED PATCH v2 8/8] makedumpfile: Add erase information in
-	ELF formatted dumpfile
-Message-Id: <20110815145451.44f9d605.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110715091602.GA719@in.ibm.com>
-References: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
-	<20110715091602.GA719@in.ibm.com>
+	id 1Qsx9o-0000dP-Dw
+	for kexec@lists.infradead.org; Mon, 15 Aug 2011 13:24:45 +0000
+Received: from d06nrmr1707.portsmouth.uk.ibm.com
+	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7FDORjH002001
+	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 13:24:27 GMT
+Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
+	[9.149.37.250])
+	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p7FDORm12396302
+	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 14:24:27 +0100
+Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p7FDORUl000349
+	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 07:24:27 -0600
+Subject: [PATCH] makedumpfile: Support line mode terminals
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Date: Mon, 15 Aug 2011 15:24:26 +0200
+Message-ID: <1313414666.9445.3.camel@br98xy6r>
 Mime-Version: 1.0
+Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,67 +34,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: mahesh@linux.vnet.ibm.com
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Hi Mahesh,
+On S390 we have line mode terminals that do not have the ability to
+position the cursor. When using kdump the output of makedumpfile will be shown
+on such terminals. Currently the output looks very strange because the '\r'
+control character is ignored. It looks like the following:
 
-On Fri, 15 Jul 2011 14:46:02 +0530
-Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> @@ -4647,6 +4650,15 @@ write_cache_bufsz(struct cache_data *cd)
->  }
->  
->  int
-> +write_cache_zero(struct cache_data *cd, size_t size)
-> +{
-> +	memset(cd->buf + cd->buf_size, 0, size);
-> +	cd->buf_size += size;
-> +
-> +	return write_cache_bufsz(cd);
-> +}
+ Checking for memory holes          : [  0 %]  Checking for memory holes        
+  : [100 %]  Copying data                       : [ 33 %]  Copying data         
+              : [ 65 %]  Copying data                       : [ 96 %]  Copying d
+ata                       : [100 %]   
 
-if cd->buf_size is a little smaller than cd->cache_size and
-the argument "size" is bigger than info->page_size, the above
-a SIGSEGV happens at the above memset().
+For those line mode terminals the TERM environment variable is set to "dumb".
+With this patch makedumpfile checks the TERM variable and in case of "dumb"
+instead of using '\r' each progress message is printed into a separate line.
+The output will then look like the following:
 
-Previous write_cache_bufsze() call will avoid that :
+Checking for memory holes          : [  0 %]
+Checking for memory holes          : [100 %]
+Copying data                       : [ 11 %]
+Copying data                       : [ 44 %]
+Copying data                       : [ 75 %]
+Copying data                       : [100 %]
+
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 ---
- int
- write_cache_zero(struct cache_data *cd, size_t size)
- {
-+	if (!write_cache_bufsz(cd))
-+		return FALSE;
+ makedumpfile.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-	memset(cd->buf + cd->buf_size, 0, size);
-	cd->buf_size += size;
-
-	return write_cache_bufsz(cd);
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -29,6 +29,7 @@ struct DumpInfo		*info = NULL;
+ 
+ char filename_stdout[] = FILENAME_STDOUT;
+ int message_level;
++static int dumb_term;
+ 
+ /*
+  * Forward declarations
+@@ -5661,9 +5662,14 @@ print_progress(const char *msg, unsigned
+ 		progress = current * 100 / end;
+ 	} else
+ 		progress = 100;
+-
+-	PROGRESS_MSG("\r");
+-	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
++	if (dumb_term) {
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
++			     msg, progress);
++	} else {
++		PROGRESS_MSG("\r");
++		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
++			     msg, progress);
++	}
  }
----
+ 
+ unsigned long long
+@@ -7825,11 +7831,21 @@ static struct option longopts[] = {
+ 	{0, 0, 0, 0}
+ };
+ 
++static void setup_term(void)
++{
++	char *term_str = getenv("TERM");
++
++	if (term_str && strcmp(term_str, "dumb") == 0)
++		dumb_term = 1;
++}
++
+ int
+ main(int argc, char *argv[])
+ {
+ 	int i, opt, flag_debug = FALSE;
+ 
++	setup_term();
++
+ 	if ((info = calloc(1, sizeof(struct DumpInfo))) == NULL) {
+ 		ERRMSG("Can't allocate memory for the pagedesc cache. %s.\n",
+ 		    strerror(errno));
 
->  /*
-> + * ELF note section for erase information
-> + *
-> + * According to elf.h the unused values are 0x15(21) through 0xff. The value
-> + * range 0x1XX, 0x2XX and 0x3XX is been used for PPC, i386 and s390
-> + * respectively.
-> + *
-> + * Using 0xff to be on safer side so that any new Elf Note addition in elf.h
-> + * after 0x15 value would not clash.
-> + */
-> +#ifndef NT_ERASE_INFO
-> +#define NT_ERASE_INFO (0xff)	/* Contains erased information. */
-> +#endif
-> +#define ERASEINFO_NOTE_NAME		"ERASEINFO"
-> +#define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
 
-I feel NT_ERASE_INFO(0xff) is not safe and we can use ERASEINFO_NOTE_NAME
-instead.
-
-
-Thanks
-Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
