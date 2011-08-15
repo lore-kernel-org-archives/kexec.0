@@ -1,27 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qsx9o-0000dP-Dw
-	for kexec@lists.infradead.org; Mon, 15 Aug 2011 13:24:45 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7FDORjH002001
-	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 13:24:27 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
-	[9.149.37.250])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p7FDORm12396302
-	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 14:24:27 +0100
-Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p7FDORUl000349
-	for <kexec@lists.infradead.org>; Mon, 15 Aug 2011 07:24:27 -0600
-Subject: [PATCH] makedumpfile: Support line mode terminals
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Mon, 15 Aug 2011 15:24:26 +0200
-Message-ID: <1313414666.9445.3.camel@br98xy6r>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QsyLC-0003EA-3Y
+	for kexec@lists.infradead.org; Mon, 15 Aug 2011 14:40:35 +0000
+Date: Mon, 15 Aug 2011 10:40:30 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: kdump and SMP system kernel
+Message-ID: <20110815144030.GD10154@redhat.com>
+References: <9C7BACB01B839A499792154E76C9ADE555DE65CE87@MX19A.corp.emc.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <9C7BACB01B839A499792154E76C9ADE555DE65CE87@MX19A.corp.emc.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,90 +23,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: dmitry.krivenok@emc.com
+Cc: Kexec Mailing List <kexec@lists.infradead.org>
 
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On Mon, Aug 15, 2011 at 10:27:30AM -0400, dmitry.krivenok@emc.com wrote:
+> Hello Vivek and Maneesh,
+> I've read your document Documentation/kdump/kdump.txt and built system and dump-capture
+> kernels with the options mentioned there.
+> 
+> Then I booted the new system kernel and registered a "panic handler" using the following command
+> kexec -p /boot/linux-3.0.0-capture --initrd=/boot/initrd-3.0.0-capture --append="root=/dev/mapper/myvg-root 3 irqpoll maxcpus=1 reset_devices"
+> 
+> Finally, I simulated a panic using
+> echo c > /proc/sysrq-trigger
+> 
+> Unfortunately, the dump-capture kernel wasn't functional (it was booting very slowly, I saw lots of messages
+> like "ata2: lost interrupt", my keyboard didn't work at all and I couldn't access the system via the network).
+> 
+> I investigated this problem and tried lots of combinations of boot parameters for dump-capture kernel, but
+> nothing helped. Then I tried to tune boot parameters of system kernel and found that if I specify "maxcpus=1"
+> for system kernel, then dump-capture kernel always boots successfully and I have access to correct /proc/vmcore.
+> 
+> The problem is that I'm debugging a problem which only occurs on SMP kernel and I never see it on the kernel
+> booted with "maxcpus=1".
+> 
+> So I just want to clarify - is it possible to use kexec/kdump with SMP system kernel?
+> Is it intended to work at all?
+> 
+> Thanks in advance!
+> 
+> P.S.
+> I'm using Arch Linux with vanilla kernel 3.0.0 and kexec-tools 2.0.2-3 running in VM on VmWare ESX server.
 
-On S390 we have line mode terminals that do not have the ability to
-position the cursor. When using kdump the output of makedumpfile will be shown
-on such terminals. Currently the output looks very strange because the '\r'
-control character is ignored. It looks like the following:
+Yes it is supposed to work on SMP machines. maxcpus=1 in second kernel 
+will make sure that it brings up only the cpu we crashed on. You can
+also try using nr_cpus=1 on latest kernels.
 
- Checking for memory holes          : [  0 %]  Checking for memory holes        
-  : [100 %]  Copying data                       : [ 33 %]  Copying data         
-              : [ 65 %]  Copying data                       : [ 96 %]  Copying d
-ata                       : [100 %]   
+It sounds like an issue with disk driver initialization and could have
+something do to with hypervisor also. Not sure. Does it work on bare
+metal.
 
-For those line mode terminals the TERM environment variable is set to "dumb".
-With this patch makedumpfile checks the TERM variable and in case of "dumb"
-instead of using '\r' each progress message is printed into a separate line.
-The output will then look like the following:
-
-Checking for memory holes          : [  0 %]
-Checking for memory holes          : [100 %]
-Copying data                       : [ 11 %]
-Copying data                       : [ 44 %]
-Copying data                       : [ 75 %]
-Copying data                       : [100 %]
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- makedumpfile.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -29,6 +29,7 @@ struct DumpInfo		*info = NULL;
- 
- char filename_stdout[] = FILENAME_STDOUT;
- int message_level;
-+static int dumb_term;
- 
- /*
-  * Forward declarations
-@@ -5661,9 +5662,14 @@ print_progress(const char *msg, unsigned
- 		progress = current * 100 / end;
- 	} else
- 		progress = 100;
--
--	PROGRESS_MSG("\r");
--	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
-+	if (dumb_term) {
-+		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
-+			     msg, progress);
-+	} else {
-+		PROGRESS_MSG("\r");
-+		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
-+			     msg, progress);
-+	}
- }
- 
- unsigned long long
-@@ -7825,11 +7831,21 @@ static struct option longopts[] = {
- 	{0, 0, 0, 0}
- };
- 
-+static void setup_term(void)
-+{
-+	char *term_str = getenv("TERM");
-+
-+	if (term_str && strcmp(term_str, "dumb") == 0)
-+		dumb_term = 1;
-+}
-+
- int
- main(int argc, char *argv[])
- {
- 	int i, opt, flag_debug = FALSE;
- 
-+	setup_term();
-+
- 	if ((info = calloc(1, sizeof(struct DumpInfo))) == NULL) {
- 		ERRMSG("Can't allocate memory for the pagedesc cache. %s.\n",
- 		    strerror(errno));
+P.S. Maneesh is no more with IBM so above id is not valid. I am not sure
+what's new id. Some of these issues you can copy on kexec-tools mailing
+list. I am ccing the list now.
 
 
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
