@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QsyLC-0003EA-3Y
-	for kexec@lists.infradead.org; Mon, 15 Aug 2011 14:40:35 +0000
-Date: Mon, 15 Aug 2011 10:40:30 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kdump and SMP system kernel
-Message-ID: <20110815144030.GD10154@redhat.com>
+Received: from mexforward.lss.emc.com ([128.222.32.20])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QsyaX-0003Vr-73
+	for kexec@lists.infradead.org; Mon, 15 Aug 2011 14:56:26 +0000
+From: <dmitry.krivenok@emc.com>
+Date: Mon, 15 Aug 2011 10:56:17 -0400
+Subject: RE: kdump and SMP system kernel
+Message-ID: <9C7BACB01B839A499792154E76C9ADE555DE65CE99@MX19A.corp.emc.com>
 References: <9C7BACB01B839A499792154E76C9ADE555DE65CE87@MX19A.corp.emc.com>
+	<20110815144030.GD10154@redhat.com>
+In-Reply-To: <20110815144030.GD10154@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9C7BACB01B839A499792154E76C9ADE555DE65CE87@MX19A.corp.emc.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,8 +24,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dmitry.krivenok@emc.com
-Cc: Kexec Mailing List <kexec@lists.infradead.org>
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org
+
+I tried nr_cpus=1, but it didn't help.
+
+I haven't tried the test on bare metal, but I'm going to try it 
+on my laptop later today. I'll let you know if it works.
+
+Thanks,
+Dmitry
+
+-----Original Message-----
+From: Vivek Goyal [mailto:vgoyal@redhat.com] 
+Sent: Monday, August 15, 2011 6:41 PM
+To: Krivenok, Dmitry
+Cc: Kexec Mailing List
+Subject: Re: kdump and SMP system kernel
 
 On Mon, Aug 15, 2011 at 10:27:30AM -0400, dmitry.krivenok@emc.com wrote:
 > Hello Vivek and Maneesh,
@@ -70,6 +86,7 @@ list. I am ccing the list now.
 
 Thanks
 Vivek
+
 
 _______________________________________________
 kexec mailing list
