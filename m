@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([122.248.162.5])
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QtGh7-00020b-6W
-	for kexec@lists.infradead.org; Tue, 16 Aug 2011 10:16:28 +0000
-Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
-	by e28smtp05.in.ibm.com (8.14.4/8.13.1) with ESMTP id p7GAGAHK030008
-	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 15:46:10 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p7GAGAoe4055260
-	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 15:46:10 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p7GAG9lR007273
-	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 15:46:10 +0530
-Message-ID: <4E4A4369.1000008@linux.vnet.ibm.com>
-Date: Tue, 16 Aug 2011 15:46:09 +0530
+	id 1QtHi1-0002hx-3j
+	for kexec@lists.infradead.org; Tue, 16 Aug 2011 11:21:26 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
+	by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id p7GBLJkc011236
+	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 21:21:19 +1000
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p7GBLJdP1782006
+	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 21:21:19 +1000
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p7GBLIpj006422
+	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 21:21:19 +1000
+Message-ID: <4E4A52AC.2060407@linux.vnet.ibm.com>
+Date: Tue, 16 Aug 2011 16:51:16 +0530
 From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 7/8] makedumpfile: Add erased information in	compressed
-	kdump file
-References: <20110517200608.12740.68790.stgit@mars.in.ibm.com>
-	<20110816100035.e27d97c0.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20110816100035.e27d97c0.oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [UPDATED PATCH v2 8/8] makedumpfile: Add erase information in
+	ELF formatted dumpfile
+References: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
+	<20110715091602.GA719@in.ibm.com>
+	<20110815145451.44f9d605.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110815145451.44f9d605.oomichi@mxs.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,132 +37,73 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-Hi Ken'ichi,
-
-On 08/16/2011 06:30 AM, Ken'ichi Ohmichi wrote:
+On 08/15/2011 11:24 AM, Ken'ichi Ohmichi wrote:
 > 
 > Hi Mahesh,
 > 
-> On Wed, 18 May 2011 01:36:17 +0530
+> On Fri, 15 Jul 2011 14:46:02 +0530
 > Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
->> @@ -9452,6 +9747,7 @@ reassemble_kdump_pages(void)
->>  	struct cache_data cd_pd, cd_data;
->>  	struct timeval tv_start;
->>  	char *data = NULL;
->> +	unsigned long data_buf_size = info->page_size;
+>> @@ -4647,6 +4650,15 @@ write_cache_bufsz(struct cache_data *cd)
+>>  }
 >>  
->>  	initialize_2nd_bitmap(&bitmap2);
->>  
->> @@ -9465,7 +9761,7 @@ reassemble_kdump_pages(void)
->>  		free_cache_data(&cd_pd);
->>  		return FALSE;
->>  	}
->> -	if ((data = malloc(info->page_size)) == NULL) {
->> +	if ((data = malloc(data_buf_size)) == NULL) {
->>  		ERRMSG("Can't allcate memory for page data.\n");
->>  		free_cache_data(&cd_pd);
->>  		free_cache_data(&cd_data);
->> @@ -9570,6 +9866,49 @@ reassemble_kdump_pages(void)
->>  	if (!write_cache_bufsz(&cd_data))
->>  		goto out;
->>  
->> +	info->offset_eraseinfo = cd_data.offset;
->> +	/* Copy eraseinfo from split dumpfiles to o/p dumpfile */
->> +	for (i = 0; i < info->num_dumpfile; i++) {
->> +		if (!SPLITTING_SIZE_EI(i))
->> +			continue;
+>>  int
+>> +write_cache_zero(struct cache_data *cd, size_t size)
+>> +{
+>> +	memset(cd->buf + cd->buf_size, 0, size);
+>> +	cd->buf_size += size;
 >> +
->> +		if (SPLITTING_SIZE_EI(i) > data_buf_size) {
->> +			data_buf_size = SPLITTING_SIZE_EI(i);
->> +			if ((data = realloc(data, data_buf_size)) == NULL) {
->> +				ERRMSG("Can't allcate memory for eraseinfo"
->> +					" data.\n");
->> +				goto out;
->> +			}
->> +		}
->> +		if ((fd = open(SPLITTING_DUMPFILE(i), O_RDONLY)) < 0) {
->> +			ERRMSG("Can't open a file(%s). %s\n",
->> +			    SPLITTING_DUMPFILE(i), strerror(errno));
->> +			goto out;
->> +		}
->> +		if (lseek(fd, SPLITTING_OFFSET_EI(i), SEEK_SET) < 0) {
->> +			ERRMSG("Can't seek a file(%s). %s\n",
->> +			    SPLITTING_DUMPFILE(i), strerror(errno));
->> +			goto out;
->> +		}
->> +		if (read(fd, data, SPLITTING_SIZE_EI(i)) !=
->> +						SPLITTING_SIZE_EI(i)) {
->> +			ERRMSG("Can't read a file(%s). %s\n",
->> +			    SPLITTING_DUMPFILE(i), strerror(errno));
->> +			goto out;
->> +		}
->> +		if (!write_cache(&cd_data, data, SPLITTING_SIZE_EI(i)))
->> +			goto out;
->> +		info->size_eraseinfo += SPLITTING_SIZE_EI(i);
->> +
->> +		close(fd);
->> +		fd = 0;
->> +	}
->> +	if (!write_cache_bufsz(&cd_data))
->> +		goto out;
->> +
->> +	if (!update_sub_header())
->> +		goto out;
+>> +	return write_cache_bufsz(cd);
+>> +}
 > 
-> The above update_sub_header() breaks "--reassemble" option if a dumpfile
-> does not contain eraseinfo data :
+> if cd->buf_size is a little smaller than cd->cache_size and
+> the argument "size" is bigger than info->page_size, the above
+> a SIGSEGV happens at the above memset().
+> 
+> Previous write_cache_bufsze() call will avoid that :
+> ---
+>  int
+>  write_cache_zero(struct cache_data *cd, size_t size)
+>  {
+> +	if (!write_cache_bufsz(cd))
+> +		return FALSE;
+> 
+> 	memset(cd->buf + cd->buf_size, 0, size);
+> 	cd->buf_size += size;
+> 
+> 	return write_cache_bufsz(cd);
+>  }
+> ---
 
-My bad. Thanks for catching it.
+Nice catch. Agree.
+
+> 
+>>  /*
+>> + * ELF note section for erase information
+>> + *
+>> + * According to elf.h the unused values are 0x15(21) through 0xff. The value
+>> + * range 0x1XX, 0x2XX and 0x3XX is been used for PPC, i386 and s390
+>> + * respectively.
+>> + *
+>> + * Using 0xff to be on safer side so that any new Elf Note addition in elf.h
+>> + * after 0x15 value would not clash.
+>> + */
+>> +#ifndef NT_ERASE_INFO
+>> +#define NT_ERASE_INFO (0xff)	/* Contains erased information. */
+>> +#endif
+>> +#define ERASEINFO_NOTE_NAME		"ERASEINFO"
+>> +#define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
+> 
+> I feel NT_ERASE_INFO(0xff) is not safe and we can use ERASEINFO_NOTE_NAME
+> instead.
+
+Do you mean having n_type set to '0' and just using
+'ERASEINFO_NOTE_NAME' to identify the eraseinfo note? if Yes, then I
+think I am ok with that.
 
 Thanks,
 -Mahesh.
-
-> 
-> ---
-> # makedumpfile --split -d30 vmcore dump.1 dump.2
-> Copying data                       : [100 %]
-> Copying data                       : [100 %]
-> 
-> The dumpfiles are saved to dump.1, and dump.2.
-> 
-> makedumpfile Completed.
-> # makedumpfile --reassemble dump.1 dump.2 dump.3
-> Copying data                       : [100 %]
-> The dumpfile is saved to dump.3.
-> 
-> makedumpfile Completed.
-> # crash vmlinux dump.3
-> [..]
-> 
-> crash: page excluded: kernel virtual address: ffffffff8040b220  type: "cpu_possible_mask"
-> #
-> ---
-> 
-> The cause is that info->sub_header, which is written in update_sub_header(),
-> is filled with 0x0.
-> The following change fixes this problem:
-> 
-> ---
-> @@ -9378,6 +9680,7 @@ reassemble_kdump_header(void)
->                     info->name_dumpfile, strerror(errno));
->                 return FALSE;
->         }
-> +       memcpy(&info->sub_header, &kh, sizeof(kh));
-> 
->         /*
->          * Write dump bitmap to both a dumpfile and a bitmap file.
-> ---
-> 
-> Thanks
-> Ken'ichi Ohmichi
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
 
 _______________________________________________
 kexec mailing list
