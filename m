@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mexforward.lss.emc.com ([128.222.32.20])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QsyaX-0003Vr-73
-	for kexec@lists.infradead.org; Mon, 15 Aug 2011 14:56:26 +0000
-From: <dmitry.krivenok@emc.com>
-Date: Mon, 15 Aug 2011 10:56:17 -0400
-Subject: RE: kdump and SMP system kernel
-Message-ID: <9C7BACB01B839A499792154E76C9ADE555DE65CE99@MX19A.corp.emc.com>
-References: <9C7BACB01B839A499792154E76C9ADE555DE65CE87@MX19A.corp.emc.com>
-	<20110815144030.GD10154@redhat.com>
-In-Reply-To: <20110815144030.GD10154@redhat.com>
-Content-Language: en-US
-MIME-Version: 1.0
+	id 1Qt8FZ-0003PD-W9
+	for kexec@lists.infradead.org; Tue, 16 Aug 2011 01:15:27 +0000
+Date: Tue, 16 Aug 2011 10:00:35 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 7/8] makedumpfile: Add erased information in
+	compressed kdump file
+Message-Id: <20110816100035.e27d97c0.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110517200608.12740.68790.stgit@mars.in.ibm.com>
+References: <20110517200608.12740.68790.stgit@mars.in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,69 +23,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, V Srivatsa <vsrivatsa@in.ibm.com>
 
-I tried nr_cpus=1, but it didn't help.
 
-I haven't tried the test on bare metal, but I'm going to try it 
-on my laptop later today. I'll let you know if it works.
+Hi Mahesh,
 
-Thanks,
-Dmitry
+On Wed, 18 May 2011 01:36:17 +0530
+Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+> @@ -9452,6 +9747,7 @@ reassemble_kdump_pages(void)
+>  	struct cache_data cd_pd, cd_data;
+>  	struct timeval tv_start;
+>  	char *data = NULL;
+> +	unsigned long data_buf_size = info->page_size;
+>  
+>  	initialize_2nd_bitmap(&bitmap2);
+>  
+> @@ -9465,7 +9761,7 @@ reassemble_kdump_pages(void)
+>  		free_cache_data(&cd_pd);
+>  		return FALSE;
+>  	}
+> -	if ((data = malloc(info->page_size)) == NULL) {
+> +	if ((data = malloc(data_buf_size)) == NULL) {
+>  		ERRMSG("Can't allcate memory for page data.\n");
+>  		free_cache_data(&cd_pd);
+>  		free_cache_data(&cd_data);
+> @@ -9570,6 +9866,49 @@ reassemble_kdump_pages(void)
+>  	if (!write_cache_bufsz(&cd_data))
+>  		goto out;
+>  
+> +	info->offset_eraseinfo = cd_data.offset;
+> +	/* Copy eraseinfo from split dumpfiles to o/p dumpfile */
+> +	for (i = 0; i < info->num_dumpfile; i++) {
+> +		if (!SPLITTING_SIZE_EI(i))
+> +			continue;
+> +
+> +		if (SPLITTING_SIZE_EI(i) > data_buf_size) {
+> +			data_buf_size = SPLITTING_SIZE_EI(i);
+> +			if ((data = realloc(data, data_buf_size)) == NULL) {
+> +				ERRMSG("Can't allcate memory for eraseinfo"
+> +					" data.\n");
+> +				goto out;
+> +			}
+> +		}
+> +		if ((fd = open(SPLITTING_DUMPFILE(i), O_RDONLY)) < 0) {
+> +			ERRMSG("Can't open a file(%s). %s\n",
+> +			    SPLITTING_DUMPFILE(i), strerror(errno));
+> +			goto out;
+> +		}
+> +		if (lseek(fd, SPLITTING_OFFSET_EI(i), SEEK_SET) < 0) {
+> +			ERRMSG("Can't seek a file(%s). %s\n",
+> +			    SPLITTING_DUMPFILE(i), strerror(errno));
+> +			goto out;
+> +		}
+> +		if (read(fd, data, SPLITTING_SIZE_EI(i)) !=
+> +						SPLITTING_SIZE_EI(i)) {
+> +			ERRMSG("Can't read a file(%s). %s\n",
+> +			    SPLITTING_DUMPFILE(i), strerror(errno));
+> +			goto out;
+> +		}
+> +		if (!write_cache(&cd_data, data, SPLITTING_SIZE_EI(i)))
+> +			goto out;
+> +		info->size_eraseinfo += SPLITTING_SIZE_EI(i);
+> +
+> +		close(fd);
+> +		fd = 0;
+> +	}
+> +	if (!write_cache_bufsz(&cd_data))
+> +		goto out;
+> +
+> +	if (!update_sub_header())
+> +		goto out;
 
------Original Message-----
-From: Vivek Goyal [mailto:vgoyal@redhat.com] 
-Sent: Monday, August 15, 2011 6:41 PM
-To: Krivenok, Dmitry
-Cc: Kexec Mailing List
-Subject: Re: kdump and SMP system kernel
+The above update_sub_header() breaks "--reassemble" option if a dumpfile
+does not contain eraseinfo data :
 
-On Mon, Aug 15, 2011 at 10:27:30AM -0400, dmitry.krivenok@emc.com wrote:
-> Hello Vivek and Maneesh,
-> I've read your document Documentation/kdump/kdump.txt and built system and dump-capture
-> kernels with the options mentioned there.
-> 
-> Then I booted the new system kernel and registered a "panic handler" using the following command
-> kexec -p /boot/linux-3.0.0-capture --initrd=/boot/initrd-3.0.0-capture --append="root=/dev/mapper/myvg-root 3 irqpoll maxcpus=1 reset_devices"
-> 
-> Finally, I simulated a panic using
-> echo c > /proc/sysrq-trigger
-> 
-> Unfortunately, the dump-capture kernel wasn't functional (it was booting very slowly, I saw lots of messages
-> like "ata2: lost interrupt", my keyboard didn't work at all and I couldn't access the system via the network).
-> 
-> I investigated this problem and tried lots of combinations of boot parameters for dump-capture kernel, but
-> nothing helped. Then I tried to tune boot parameters of system kernel and found that if I specify "maxcpus=1"
-> for system kernel, then dump-capture kernel always boots successfully and I have access to correct /proc/vmcore.
-> 
-> The problem is that I'm debugging a problem which only occurs on SMP kernel and I never see it on the kernel
-> booted with "maxcpus=1".
-> 
-> So I just want to clarify - is it possible to use kexec/kdump with SMP system kernel?
-> Is it intended to work at all?
-> 
-> Thanks in advance!
-> 
-> P.S.
-> I'm using Arch Linux with vanilla kernel 3.0.0 and kexec-tools 2.0.2-3 running in VM on VmWare ESX server.
+---
+# makedumpfile --split -d30 vmcore dump.1 dump.2
+Copying data                       : [100 %]
+Copying data                       : [100 %]
 
-Yes it is supposed to work on SMP machines. maxcpus=1 in second kernel 
-will make sure that it brings up only the cpu we crashed on. You can
-also try using nr_cpus=1 on latest kernels.
+The dumpfiles are saved to dump.1, and dump.2.
 
-It sounds like an issue with disk driver initialization and could have
-something do to with hypervisor also. Not sure. Does it work on bare
-metal.
+makedumpfile Completed.
+# makedumpfile --reassemble dump.1 dump.2 dump.3
+Copying data                       : [100 %]
+The dumpfile is saved to dump.3.
 
-P.S. Maneesh is no more with IBM so above id is not valid. I am not sure
-what's new id. Some of these issues you can copy on kexec-tools mailing
-list. I am ccing the list now.
+makedumpfile Completed.
+# crash vmlinux dump.3
+[..]
 
+crash: page excluded: kernel virtual address: ffffffff8040b220  type: "cpu_possible_mask"
+#
+---
+
+The cause is that info->sub_header, which is written in update_sub_header(),
+is filled with 0x0.
+The following change fixes this problem:
+
+---
+@@ -9378,6 +9680,7 @@ reassemble_kdump_header(void)
+                    info->name_dumpfile, strerror(errno));
+                return FALSE;
+        }
++       memcpy(&info->sub_header, &kh, sizeof(kh));
+
+        /*
+         * Write dump bitmap to both a dumpfile and a bitmap file.
+---
 
 Thanks
-Vivek
-
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
