@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mail-gx0-f177.google.com ([209.85.161.177])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QtXXy-0004hY-RV
-	for kexec@lists.infradead.org; Wed, 17 Aug 2011 04:16:07 +0000
-Date: Wed, 17 Aug 2011 12:49:41 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [UPDATED PATCH v2 8/8] makedumpfile: Add erase information in
-	ELF formatted dumpfile
-Message-Id: <20110817124941.445ca9b7.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <4E4A52AC.2060407@linux.vnet.ibm.com>
-References: <20110517200715.12740.67863.stgit@mars.in.ibm.com>
-	<20110715091602.GA719@in.ibm.com>
-	<20110815145451.44f9d605.oomichi@mxs.nes.nec.co.jp>
-	<4E4A52AC.2060407@linux.vnet.ibm.com>
-Mime-Version: 1.0
+	id 1QtZVR-0006Q9-Bo
+	for kexec@lists.infradead.org; Wed, 17 Aug 2011 06:21:38 +0000
+Received: by gxk2 with SMTP id 2so568312gxk.36
+	for <kexec@lists.infradead.org>; Tue, 16 Aug 2011 23:21:34 -0700 (PDT)
+MIME-Version: 1.0
+Date: Wed, 17 Aug 2011 14:21:33 +0800
+Message-ID: <CALZhoSQ5dXghiq618_5D-uXnhc_8UU60xeouALARRiWDxmoBXA@mail.gmail.com>
+Subject: makedumpfile cross compile for ARM?
+From: Lei Wen <adrian.wenl@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +22,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Dave Anderson <anderson@redhat.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: kexec@lists.infradead.org
 
+Hi,
 
-Hi Mahesh,
+Does anyone know how to cross compile makedumpfile for the arm?
+I try to build out binary from qemu, but it works only under qemu env,
+while I copy it to the board, it run fail and report Segamatation
+fault.
 
-On Tue, 16 Aug 2011 16:51:16 +0530
-Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> >>  /*
-> >> + * ELF note section for erase information
-> >> + *
-> >> + * According to elf.h the unused values are 0x15(21) through 0xff. The value
-> >> + * range 0x1XX, 0x2XX and 0x3XX is been used for PPC, i386 and s390
-> >> + * respectively.
-> >> + *
-> >> + * Using 0xff to be on safer side so that any new Elf Note addition in elf.h
-> >> + * after 0x15 value would not clash.
-> >> + */
-> >> +#ifndef NT_ERASE_INFO
-> >> +#define NT_ERASE_INFO (0xff)	/* Contains erased information. */
-> >> +#endif
-> >> +#define ERASEINFO_NOTE_NAME		"ERASEINFO"
-> >> +#define ERASEINFO_NOTE_NAME_BYTES	(sizeof(ERASEINFO_NOTE_NAME))
-> > 
-> > I feel NT_ERASE_INFO(0xff) is not safe and we can use ERASEINFO_NOTE_NAME
-> > instead.
-> 
-> Do you mean having n_type set to '0' and just using
-> 'ERASEINFO_NOTE_NAME' to identify the eraseinfo note?
+So I want to have another try with cross compile, however it seems to
+me that makedumpfile doesn't support this from the look of its
+Makefile.
+Does anyone know any patch to fix this?
 
-Yes, that is I wanted to say. thanks.
-
-> if Yes, then I think I am ok with that.
-
-OK, I have merged the above change(commit: 8b8f13e6e84ad628a54bbe2d930aa15224ef5d92)
-into the filter-out-devel branch.
-
-
-Thanks
-Ken'ichi Ohmichi
+Thanks,
+Lei
 
 _______________________________________________
 kexec mailing list
