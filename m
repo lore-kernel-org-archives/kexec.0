@@ -1,15 +1,41 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QuDV0-0003QV-Ap
+	for kexec@lists.infradead.org; Fri, 19 Aug 2011 01:03:51 +0000
+Received: from joe.akashicho.tokyo.vergenet.net
+	(joe.akashicho.tokyo.vergenet.net
+	[IPv6:2001:470:f44f:403:1ec1:deff:fe98:754d])
+	by kirsty.vergenet.net (Postfix) with ESMTP id AE69F24062
+	for <kexec@lists.infradead.org>; Fri, 19 Aug 2011 11:03:44 +1000 (EST)
+Resent-Message-ID: <20110819010343.GA17659@verge.net.au>
+Resent-To: kexec@lists.infradead.org
+Received: from e38.co.us.ibm.com ([32.97.110.159])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QuDTD-0003PR-UV
-	for kexec@lists.infradead.org; Fri, 19 Aug 2011 01:02:01 +0000
-Date: Fri, 19 Aug 2011 09:31:09 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: Support line mode terminals
-Message-Id: <20110819093109.ed9252ed.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <1313414666.9445.3.camel@br98xy6r>
-References: <1313414666.9445.3.camel@br98xy6r>
-Mime-Version: 1.0
+	id 1QuAy3-0002eX-0C
+	for kexec@lists.infradead.org; Thu, 18 Aug 2011 22:21:39 +0000
+Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
+	[9.17.195.226])
+	by e38.co.us.ibm.com (8.14.4/8.13.1) with ESMTP id p7IEiHvo022633
+	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 08:44:17 -0600
+Received: from d03av06.boulder.ibm.com (d03av06.boulder.ibm.com [9.17.195.245])
+	by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p7IMLWBI146562
+	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 16:21:32 -0600
+Received: from d03av06.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av06.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP
+	id p7IMRFKq015005
+	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 16:27:15 -0600
+Received: from d27ml101.rchland.ibm.com (d27ml101.rchland.ibm.com
+	[9.10.229.40])
+	by d03av06.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
+	p7IMREth014995
+	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 16:27:14 -0600
+Subject: Bootloaders with early kdump support?
+Message-ID: <OF087F73E2.5ECF6BE5-ON862578F0.0079BA5A-862578F0.007AD1A0@us.ibm.com>
+From: Nathan D Miller <nathanm2@us.ibm.com>
+Date: Thu, 18 Aug 2011 17:21:30 -0500
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,113 +44,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0124340994=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: holzheu@linux.vnet.ibm.com
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+
+--===============0124340994==
+Content-type: multipart/alternative; 
+	Boundary="0__=09BBF263DFEA3CCA8f9e8a93df938690918c09BBF263DFEA3CCA"
+Content-Disposition: inline
+
+--0__=09BBF263DFEA3CCA8f9e8a93df938690918c09BBF263DFEA3CCA
+Content-type: text/plain; charset=US-ASCII
 
 
-Hi Michael,
+Greetings-
 
-On Mon, 15 Aug 2011 15:24:26 +0200
-Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
->
-> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> 
-> On S390 we have line mode terminals that do not have the ability to
-> position the cursor. When using kdump the output of makedumpfile will be shown
-> on such terminals. Currently the output looks very strange because the '\r'
-> control character is ignored. It looks like the following:
-> 
->  Checking for memory holes          : [  0 %]  Checking for memory holes        
->   : [100 %]  Copying data                       : [ 33 %]  Copying data         
->               : [ 65 %]  Copying data                       : [ 96 %]  Copying d
-> ata                       : [100 %]   
-> 
-> For those line mode terminals the TERM environment variable is set to "dumb".
-> With this patch makedumpfile checks the TERM variable and in case of "dumb"
-> instead of using '\r' each progress message is printed into a separate line.
-> The output will then look like the following:
-> 
-> Checking for memory holes          : [  0 %]
-> Checking for memory holes          : [100 %]
-> Copying data                       : [ 11 %]
-> Copying data                       : [ 44 %]
-> Copying data                       : [ 75 %]
-> Copying data                       : [100 %]
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Vivek made the following statement a few months ago:
 
-Thank you for the patch, and it has been merged to devel tree.
+> On a side note, few months back there were folks who were trying
+> to enhance bootloaders to be able to prepare basic environment so
+> that a kdump kernel can boot even in the event of early first
+> kernel boot.
 
-http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=commit;h=4b4e1625a5ebe37cb0991fe1628f19bca2b1502f
+Any idea which bootloaders?  Which folks?
 
-Acked-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+I'm curious how one would go about implementing such a thing.  What
+parameters would the bootloader need to supply to the kernel?
+
+Thanks,
+Nate
+--0__=09BBF263DFEA3CCA8f9e8a93df938690918c09BBF263DFEA3CCA
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+
+<html><body>
+<p><font size="2" face="sans-serif">Greetings-</font><br>
+<br>
+<font size="2" face="sans-serif">Vivek made the following statement a few months ago: </font><br>
+<br>
+<tt><font size="3">&gt; On a side note, few months back there were folks who were trying<br>
+&gt; to enhance bootloaders to be able to prepare basic environment so<br>
+&gt; that a kdump kernel can boot even in the event of early first<br>
+&gt; kernel boot.</font></tt><br>
+<br>
+<font size="2" face="sans-serif">Any idea which bootloaders? &nbsp;Which folks? </font><br>
+<br>
+<font size="2" face="sans-serif">I'm curious how one would go about implementing such a thing. &nbsp;What parameters would the bootloader need to supply to the kernel?</font><br>
+<br>
+<font size="2" face="sans-serif">Thanks, </font><br>
+<font size="2" face="sans-serif">Nate</font></body></html>
+--0__=09BBF263DFEA3CCA8f9e8a93df938690918c09BBF263DFEA3CCA--
 
 
-Thanks
-Ken'ichi Ohmichi
 
-> ---
->  makedumpfile.c |   22 +++++++++++++++++++---
->  1 file changed, 19 insertions(+), 3 deletions(-)
-> 
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -29,6 +29,7 @@ struct DumpInfo		*info = NULL;
->  
->  char filename_stdout[] = FILENAME_STDOUT;
->  int message_level;
-> +static int dumb_term;
->  
->  /*
->   * Forward declarations
-> @@ -5661,9 +5662,14 @@ print_progress(const char *msg, unsigned
->  		progress = current * 100 / end;
->  	} else
->  		progress = 100;
-> -
-> -	PROGRESS_MSG("\r");
-> -	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
-> +	if (dumb_term) {
-> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
-> +			     msg, progress);
-> +	} else {
-> +		PROGRESS_MSG("\r");
-> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
-> +			     msg, progress);
-> +	}
->  }
->  
->  unsigned long long
-> @@ -7825,11 +7831,21 @@ static struct option longopts[] = {
->  	{0, 0, 0, 0}
->  };
->  
-> +static void setup_term(void)
-> +{
-> +	char *term_str = getenv("TERM");
-> +
-> +	if (term_str && strcmp(term_str, "dumb") == 0)
-> +		dumb_term = 1;
-> +}
-> +
->  int
->  main(int argc, char *argv[])
->  {
->  	int i, opt, flag_debug = FALSE;
->  
-> +	setup_term();
-> +
->  	if ((info = calloc(1, sizeof(struct DumpInfo))) == NULL) {
->  		ERRMSG("Can't allocate memory for the pagedesc cache. %s.\n",
->  		    strerror(errno));
-> 
-> 
+
+--===============0124340994==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============0124340994==--
+
+
+
