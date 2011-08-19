@@ -1,17 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1QuQ0a-0000V6-Vn
-	for kexec@lists.infradead.org; Fri, 19 Aug 2011 14:25:18 +0000
-Date: Fri, 19 Aug 2011 10:25:02 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 2/2] kdump: Add size to elfcorehdr kernel parameter
-Message-ID: <20110819142502.GG18656@redhat.com>
-References: <20110819141857.052232873@linux.vnet.ibm.com>
-	<20110819141940.335341157@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110819141940.335341157@linux.vnet.ibm.com>
+Received: from mtagate1.uk.ibm.com ([194.196.100.161])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1QuQ4E-0000md-GX
+	for kexec@lists.infradead.org; Fri, 19 Aug 2011 14:29:04 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7JESuGS013085
+	for <kexec@lists.infradead.org>; Fri, 19 Aug 2011 14:28:56 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+	[9.149.37.212])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p7JESuFw2539716
+	for <kexec@lists.infradead.org>; Fri, 19 Aug 2011 15:28:56 +0100
+Received: from d06av01.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p7JESu12017059
+	for <kexec@lists.infradead.org>; Fri, 19 Aug 2011 08:28:56 -0600
+Date: Fri, 19 Aug 2011 16:28:54 +0200
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [patch v3 2/8] kdump: Make kimage_load_crash_segment() weak
+Message-ID: <20110819162854.64bd7201@mschwide>
+In-Reply-To: <20110819134836.GB18656@redhat.com>
+References: <20110812134849.748973593@linux.vnet.ibm.com>
+	<20110812134907.166585439@linux.vnet.ibm.com>
+	<20110818171541.GC15413@redhat.com>
+	<1313760472.3858.26.camel@br98xy6r>
+	<20110819134836.GB18656@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +39,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, akpm@linux-foundation.org, kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-On Fri, Aug 19, 2011 at 04:18:59PM +0200, Michael Holzheu wrote:
-> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> 
-> Currently only the address of the pre-allocated ELF header is passed with
-> the elfcorehdr= kernel parameter. In order to reserve memory for the header
-> in the 2nd kernel also the size is required. Current kdump architecture
-> backends use different methods to do that, e.g. x86 uses the memmap= kernel
-> parameter. On s390 there is no easy way to transfer this information.
-> Therefore the elfcorehdr kernel parameter is extended to also pass the size.
-> This now can also be used as standard mechanism by all future kdump
-> architecture backends.
-> 
-> The syntax of the kernel parameter is extended as follows:
-> 
-> elfcorehdr=[size[KMG]@]offset[KMG]
-> 
-> This change is backward compatible because elfcorehdr=size is still allowed.
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On Fri, 19 Aug 2011 09:48:36 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Looks good to me.
-
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
-
-Vivek
-
-> ---
->  Documentation/kernel-parameters.txt |    6 +++---
->  include/linux/crash_dump.h          |    1 +
->  kernel/crash_dump.c                 |   11 +++++++++++
->  3 files changed, 15 insertions(+), 3 deletions(-)
+> On Fri, Aug 19, 2011 at 03:27:52PM +0200, Michael Holzheu wrote:
+> > Hello Vivek,
+> > 
+> > On Thu, 2011-08-18 at 13:15 -0400, Vivek Goyal wrote:
+> > > On Fri, Aug 12, 2011 at 03:48:51PM +0200, Michael Holzheu wrote:
+> > > > From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > > > 
+> > > > On s390 we do not create page tables at all for the crashkernel memory.
+> > > > This requires a s390 specific version for kimage_load_crash_segment().
+> > > > Therefore this patch declares this function as "__weak". The s390 version is
+> > > > very simple. It just copies the kexec segment to real memory without using
+> > > > page tables:
+> > > > 
+> > > > int kimage_load_crash_segment(struct kimage *image,
+> > > >                               struct kexec_segment *segment)
+> > > > {
+> > > >         return copy_from_user_real((void *) segment->mem, segment->buf,
+> > > >                                    segment->bufsz);
+> > > > }
+> > > > 
+> > > > There are two main advantages of not creating page tables for the
+> > > > crashkernel memory:
+> > > > 
+> > > > a) It saves memory. We have scenarios in mind, where crashkernel
+> > > >    memory can be very large and saving page table space is important.
+> > > > b) We protect the crashkernel memory from being overwritten.
+> > > 
+> > > Michael,
+> > > 
+> > > Thinking more about it. Can't we provide a arch specific version of
+> > > kmap() and kunmap() so that we create temporary mappings to copy
+> > > the pages and then these are torn off.
+> > 
+> > Isn't kmap/kunmap() used for higmem? These functions are called from
+> > many different functions in the Linux kernel, not only for kdump. I
+> > would assume that creating and removing mappings with these functions is
+> > not what a caller would expect and probably would break the Linux kernel
+> > at many other places, no?
 > 
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -727,10 +727,10 @@ bytes respectively. Such letter suffixes
->  			See Documentation/block/as-iosched.txt and
->  			Documentation/block/deadline-iosched.txt for details.
->  
-> -	elfcorehdr=	[IA-64,PPC,SH,X86]
-> +	elfcorehdr=[size[KMG]@]offset[KMG] [IA64,PPC,SH,X86,S390]
->  			Specifies physical address of start of kernel core
-> -			image elf header. Generally kexec loader will
-> -			pass this option to capture kernel.
-> +			image elf header and optionally the size. Generally
-> +			kexec loader will pass this option to capture kernel.
->  			See Documentation/kdump/kdump.txt for details.
->  
->  	enable_mtrr_cleanup [X86]
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -10,6 +10,7 @@
->  #define ELFCORE_ADDR_ERR	(-2ULL)
->  
->  extern unsigned long long elfcorehdr_addr;
-> +extern unsigned long long elfcorehdr_size;
->  
->  extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
->  						unsigned long, int);
-> --- a/kernel/crash_dump.c
-> +++ b/kernel/crash_dump.c
-> @@ -20,8 +20,15 @@ unsigned long saved_max_pfn;
->  unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
->  
->  /*
-> + * stores the size of elf header of crash image
-> + */
-> +unsigned long long elfcorehdr_size;
-> +
-> +/*
->   * elfcorehdr= specifies the location of elf core header stored by the crashed
->   * kernel. This option will be passed by kexec loader to the capture kernel.
-> + *
-> + * Syntax: elfcorehdr=[size[KMG]@]offset[KMG]
->   */
->  static int __init setup_elfcorehdr(char *arg)
->  {
-> @@ -29,6 +36,10 @@ static int __init setup_elfcorehdr(char
->  	if (!arg)
->  		return -EINVAL;
->  	elfcorehdr_addr = memparse(arg, &end);
-> +	if (*end == '@') {
-> +		elfcorehdr_size = elfcorehdr_addr;
-> +		elfcorehdr_addr = memparse(end + 1, &end);
-> +	}
->  	return end > arg ? 0 : -EINVAL;
->  }
->  early_param("elfcorehdr", setup_elfcorehdr);
+> [CCing linux-mm]
+> 
+> Yes it is being used for highmem pages. If arch has not defined kmap()
+> then generic definition is just returning page_address(page), expecting
+> that page will be mapped.
+> 
+> I was wondering that what will be broken if arch decides to extend this
+> to create temporary mappings for pages which are not HIGHMEM but do
+> not have any mapping. (Like this special case of s390).
+> 
+> I guess memory management guys can give a better answer here. As a layman,
+> kmap() seems to be the way to get a kernel mapping for any page frame
+> and if one is not already there, then arch might create one on the fly,
+> like we do for HIGHMEM pages. So the question is can be extend this
+> to also cover pages which are not highmem but do not have any mappings
+> on s390.
+
+Imho it would be wrong to misuse kmap/kunmap to get around a minor problem
+with the memory for the crash kernel. These functions are used to provide
+accessibility to highmem pages in the kernel address space. The highmem
+area is "normal" memory with corresponding struct page elements (the
+functions do take a struct page * as argument after all). They are not
+usable to map arbitrary page frames.
+
+And we definitely don't want to make the memory management any slower by
+defining non-trivial kmap/kunmap functions.
+
+-- 
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
 
 _______________________________________________
 kexec mailing list
