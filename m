@@ -1,33 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qu6pq-0000bn-8a
-	for kexec@lists.infradead.org; Thu, 18 Aug 2011 17:56:55 +0000
-Received: from d06nrmr1507.portsmouth.uk.ibm.com
-	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7IHulp8002391
-	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 17:56:47 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
-	[9.149.37.213])
-	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p7IHulDM2555916
-	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 18:56:47 +0100
-Received: from d06av03.portsmouth.uk.ibm.com (localhost.localdomain
-	[127.0.0.1])
-	by d06av03.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p7IHuk4M016168
-	for <kexec@lists.infradead.org>; Thu, 18 Aug 2011 11:56:47 -0600
-Subject: Re: [patch v3 3/8] kdump: Add size to elfcorehdr kernel parameter
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-In-Reply-To: <20110818172815.GD15413@redhat.com>
-References: <20110812134849.748973593@linux.vnet.ibm.com>
-	<20110812134907.325789470@linux.vnet.ibm.com>
-	<20110817210554.GD14813@redhat.com> <1313657279.3528.6.camel@br98xy6r>
-	<20110818172815.GD15413@redhat.com>
-Date: Thu, 18 Aug 2011 19:56:46 +0200
-Message-ID: <1313690206.3528.32.camel@br98xy6r>
+	id 1QuDTD-0003PR-UV
+	for kexec@lists.infradead.org; Fri, 19 Aug 2011 01:02:01 +0000
+Date: Fri, 19 Aug 2011 09:31:09 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: Support line mode terminals
+Message-Id: <20110819093109.ed9252ed.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <1313414666.9445.3.camel@br98xy6r>
+References: <1313414666.9445.3.camel@br98xy6r>
 Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,88 +22,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
+To: holzheu@linux.vnet.ibm.com
+Cc: kexec@lists.infradead.org
 
-Hello Vivek,
 
-On Thu, 2011-08-18 at 13:28 -0400, Vivek Goyal wrote:
-> > The parameter is parsed in common code (kernel/crash_dump.c) in
-> > early_param("elfcorehdr", setup_elfcorehdr), as it is already currently
-> > the case.
-> > 
-> > We use address and size of the ELF core header to reserve the header
-> > memory in setup.c (see patch #8):
-> > 
-> > +#ifdef CONFIG_CRASH_DUMP
-> > +       if (is_kdump_kernel())
-> > +               reserve_bootmem(elfcorehdr_addr - OLDMEM_BASE,
-> > +                               PAGE_ALIGN(elfcorehdr_size), BOOTMEM_DEFAULT);
-> > +#endif
-> > 
-> > Does that answer your question?
+Hi Michael,
+
+On Mon, 15 Aug 2011 15:24:26 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+>
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 > 
-> Yes it does. Thanks.
+> On S390 we have line mode terminals that do not have the ability to
+> position the cursor. When using kdump the output of makedumpfile will be shown
+> on such terminals. Currently the output looks very strange because the '\r'
+> control character is ignored. It looks like the following:
 > 
-> It brings up few more questions about rest of the memory mangement.
+>  Checking for memory holes          : [  0 %]  Checking for memory holes        
+>   : [100 %]  Copying data                       : [ 33 %]  Copying data         
+>               : [ 65 %]  Copying data                       : [ 96 %]  Copying d
+> ata                       : [100 %]   
 > 
-> So kdump kernel is loaded in reserved area but does not run from there.
-> It reloads itself into lower memory areas and swaps the contents of
-> lower memory with reserved memory? If yes, how does it, kernel or
-> purgatory?
+> For those line mode terminals the TERM environment variable is set to "dumb".
+> With this patch makedumpfile checks the TERM variable and in case of "dumb"
+> instead of using '\r' each progress message is printed into a separate line.
+> The output will then look like the following:
+> 
+> Checking for memory holes          : [  0 %]
+> Checking for memory holes          : [100 %]
+> Copying data                       : [ 11 %]
+> Copying data                       : [ 44 %]
+> Copying data                       : [ 75 %]
+> Copying data                       : [100 %]
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-With the v3 patch series purgatory does that (see
-purgatory-s390.c/post_verification_setup_arch()):
+Thank you for the patch, and it has been merged to devel tree.
 
-> How does kernel come to know about how much memory is to be swapped
+http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=commit;h=4b4e1625a5ebe37cb0991fe1628f19bca2b1502f
 
-2nd kernel knows crash_base and crash_base because kexec tools told him
-that. We do it like registering the ramdisk. See kexec-image.c:
-
-+               if (info->kexec_flags & KEXEC_ON_CRASH) {
-+                       tmp = krnl_buffer + OLDMEM_BASE_OFFS;
-+                       *tmp = crash_base;
-+
-+                       tmp = krnl_buffer + OLDMEM_SIZE_OFFS;
-+                       *tmp = crash_end - crash_base + 1;
-+               }
-
-> and how do you bound the memory usage of second kernel so that it
-> does not try to use other memory which has not been swapped into
-> reserved area.
-
-See kernel patches setup.c:
-
-+/*
-+ * Make sure that oldmem, where the dump is stored, is protected
-+ */
-+static void reserve_oldmem(void)
-+{
-+#ifdef CONFIG_CRASH_DUMP
-+       if (!is_kdump_kernel())
-+               return;
-+
-+       reserve_kdump_bootmem(OLDMEM_BASE, OLDMEM_SIZE, CHUNK_OLDMEM);
-+       reserve_kdump_bootmem(OLDMEM_SIZE, memory_end - OLDMEM_SIZE,
-+                             CHUNK_OLDMEM);
-+       if (OLDMEM_BASE + OLDMEM_SIZE == real_memory_size)
-+               saved_max_pfn = PFN_DOWN(OLDMEM_BASE) - 1;
-+       else
-+               saved_max_pfn = PFN_DOWN(real_memory_size) - 1;
-+#endif
-+}
-
-Michael
+Acked-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
 
 
+Thanks
+Ken'ichi Ohmichi
 
-
-
-
-
-
-
-
+> ---
+>  makedumpfile.c |   22 +++++++++++++++++++---
+>  1 file changed, 19 insertions(+), 3 deletions(-)
+> 
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -29,6 +29,7 @@ struct DumpInfo		*info = NULL;
+>  
+>  char filename_stdout[] = FILENAME_STDOUT;
+>  int message_level;
+> +static int dumb_term;
+>  
+>  /*
+>   * Forward declarations
+> @@ -5661,9 +5662,14 @@ print_progress(const char *msg, unsigned
+>  		progress = current * 100 / end;
+>  	} else
+>  		progress = 100;
+> -
+> -	PROGRESS_MSG("\r");
+> -	PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ", msg, progress);
+> +	if (dumb_term) {
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%]\n",
+> +			     msg, progress);
+> +	} else {
+> +		PROGRESS_MSG("\r");
+> +		PROGRESS_MSG("%-" PROGRESS_MAXLEN "s: [%3d %%] ",
+> +			     msg, progress);
+> +	}
+>  }
+>  
+>  unsigned long long
+> @@ -7825,11 +7831,21 @@ static struct option longopts[] = {
+>  	{0, 0, 0, 0}
+>  };
+>  
+> +static void setup_term(void)
+> +{
+> +	char *term_str = getenv("TERM");
+> +
+> +	if (term_str && strcmp(term_str, "dumb") == 0)
+> +		dumb_term = 1;
+> +}
+> +
+>  int
+>  main(int argc, char *argv[])
+>  {
+>  	int i, opt, flag_debug = FALSE;
+>  
+> +	setup_term();
+> +
+>  	if ((info = calloc(1, sizeof(struct DumpInfo))) == NULL) {
+>  		ERRMSG("Can't allocate memory for the pagedesc cache. %s.\n",
+>  		    strerror(errno));
+> 
+> 
 
 _______________________________________________
 kexec mailing list
