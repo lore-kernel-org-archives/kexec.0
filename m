@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from router-fw.net-space.pl ([89.174.63.77])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qv8WX-0002Vz-M2
-	for kexec@lists.infradead.org; Sun, 21 Aug 2011 13:57:14 +0000
-Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
-	(dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
-	id S1592046Ab1HUNvj (ORCPT <rfc822;kexec@lists.infradead.org>);
-	Sun, 21 Aug 2011 15:51:39 +0200
-Date: Sun, 21 Aug 2011 15:51:39 +0200
-From: Daniel Kiper <dkiper@net-space.pl>
-Subject: [PATCH 1/4] xen: Take into account Xen control interface changes
-	since Xen Ver. 4.1
-Message-ID: <20110821135139.GB17323@router-fw-old.local.net-space.pl>
-Mime-Version: 1.0
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1QvGnx-0006S3-Oz
+	for kexec@lists.infradead.org; Sun, 21 Aug 2011 22:47:46 +0000
+Date: Mon, 22 Aug 2011 07:47:38 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/4] kexec-tools: Xen fixes and cleanups
+Message-ID: <20110821224737.GF2300@verge.net.au>
+References: <20110821135029.GA17323@router-fw-old.local.net-space.pl>
+MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20110821135029.GA17323@router-fw-old.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,57 +23,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: konrad.wilk@oracle.com, ian.campbell@citrix.com, vgoyal@redhat.com, horms@verge.net.au, olaf@aepfle.de, kexec@lists.infradead.org, xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org
+To: Daniel Kiper <dkiper@net-space.pl>
+Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, ian.campbell@citrix.com, konrad.wilk@oracle.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-xc_interface_open() receive three arguments instead of void and returns
-pointer to xc_interface type instead of int since Xen Ver. 4.1. Take into
-account that and allow kexec-tools compilation with all versions of Xen.
+On Sun, Aug 21, 2011 at 03:50:29PM +0200, Daniel Kiper wrote:
+> Hi,
+> 
+> I am sending some Xen specific fixes and cleanups for kexec-tools.
+> These patches applies to current kexec-tools git tree.
+> 
+> Full list of fixes and cleanups:
+>   - xen: Take into account Xen control interface changes since Xen Ver. 4.1,
+>   - kexec: Export compare_ranges() function from firmware_memmap.c module,
+>   - kexec/arch/i386: Rename fixup_memory_ranges_sysfs() to fixup_memory_ranges(),
+>   - kexec/arch/i386: Add get_memory_ranges_xen() function.
 
-Signed-off-by: Daniel Kiper <dkiper@net-space.pl>
----
- kexec/crashdump-xen.c |   15 ++++++++++++++-
- 1 files changed, 14 insertions(+), 1 deletions(-)
+Thanks Daniel,
 
-diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-index b347764..9dfabf8 100644
---- a/kexec/crashdump-xen.c
-+++ b/kexec/crashdump-xen.c
-@@ -126,19 +126,32 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
- {
- 	unsigned long machine = elf_info->machine;
- #ifdef HAVE_LIBXENCTRL
--	int xc, rc;
-+	int rc;
- 	xen_capabilities_info_t capabilities;
-+#ifdef XENCTRL_HAS_XC_INTERFACE
-+	xc_interface *xc;
-+#else
-+	int xc;
-+#endif
- 
- 	if (!xen_present())
- 		goto out;
- 
- 	memset(capabilities, '0', XEN_CAPABILITIES_INFO_LEN);
- 
-+#ifdef XENCTRL_HAS_XC_INTERFACE
-+	xc = xc_interface_open(NULL, NULL, 0);
-+	if ( !xc ) {
-+		fprintf(stderr, "failed to open xen control interface.\n");
-+		goto out;
-+	}
-+#else
- 	xc = xc_interface_open();
- 	if ( xc == -1 ) {
- 		fprintf(stderr, "failed to open xen control interface.\n");
- 		goto out;
- 	}
-+#endif
- 
- 	rc = xc_version(xc, XENVER_capabilities, &capabilities[0]);
- 	if ( rc == -1 ) {
--- 
-1.5.6.5
+all applied.
+
 
 _______________________________________________
 kexec mailing list
