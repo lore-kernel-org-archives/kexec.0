@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from router-fw.net-space.pl ([89.174.63.77])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1Qv8WZ-0002Vz-Q6
-	for kexec@lists.infradead.org; Sun, 21 Aug 2011 13:57:16 +0000
+	id 1Qv8WX-0002Vz-M2
+	for kexec@lists.infradead.org; Sun, 21 Aug 2011 13:57:14 +0000
 Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
 	(dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
-	id S1591920Ab1HUNyA (ORCPT <rfc822;kexec@lists.infradead.org>);
-	Sun, 21 Aug 2011 15:54:00 +0200
-Date: Sun, 21 Aug 2011 15:54:00 +0200
+	id S1592046Ab1HUNvj (ORCPT <rfc822;kexec@lists.infradead.org>);
+	Sun, 21 Aug 2011 15:51:39 +0200
+Date: Sun, 21 Aug 2011 15:51:39 +0200
 From: Daniel Kiper <dkiper@net-space.pl>
-Subject: [PATCH 3/4] kexec/arch/i386: Rename fixup_memory_ranges_sysfs() to
-	fixup_memory_ranges()
-Message-ID: <20110821135400.GD17323@router-fw-old.local.net-space.pl>
+Subject: [PATCH 1/4] xen: Take into account Xen control interface changes
+	since Xen Ver. 4.1
+Message-ID: <20110821135139.GB17323@router-fw-old.local.net-space.pl>
 Mime-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -28,46 +28,53 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: konrad.wilk@oracle.com, ian.campbell@citrix.com, vgoyal@redhat.com, horms@verge.net.au, olaf@aepfle.de, kexec@lists.infradead.org, xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org
 
-Rename fixup_memory_ranges_sysfs() to fixup_memory_ranges().
-It is generic function and it could be used to fixup memory
-ranges from other sources than sysfs (e.g. Xen).
+xc_interface_open() receive three arguments instead of void and returns
+pointer to xc_interface type instead of int since Xen Ver. 4.1. Take into
+account that and allow kexec-tools compilation with all versions of Xen.
 
 Signed-off-by: Daniel Kiper <dkiper@net-space.pl>
 ---
- kexec/arch/i386/kexec-x86-common.c |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+ kexec/crashdump-xen.c |   15 ++++++++++++++-
+ 1 files changed, 14 insertions(+), 1 deletions(-)
 
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index 474e680..8f59c6c 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -149,7 +149,7 @@ static void remove_range(struct memory_range *range, int nr_ranges, int index)
-  *
-  * @return 0 on success, any other value on failure.
-  */
--static int fixup_memory_ranges_sysfs(struct memory_range **range, int *ranges)
-+static int fixup_memory_ranges(struct memory_range **range, int *ranges)
+diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+index b347764..9dfabf8 100644
+--- a/kexec/crashdump-xen.c
++++ b/kexec/crashdump-xen.c
+@@ -126,19 +126,32 @@ unsigned long xen_architecture(struct crash_elf_info *elf_info)
  {
- 	int i;
- 	int j;
-@@ -162,7 +162,7 @@ again:
- 	for (i = 0; i < (nr_ranges-1); i++) {
- 		j = i+1;
- 		if (rp[i].start > rp[j].start) {
--			fprintf(stderr, "sysfs memory out of order!!\n");
-+			fprintf(stderr, "memory out of order!!\n");
- 			return 1;
- 		}
+ 	unsigned long machine = elf_info->machine;
+ #ifdef HAVE_LIBXENCTRL
+-	int xc, rc;
++	int rc;
+ 	xen_capabilities_info_t capabilities;
++#ifdef XENCTRL_HAS_XC_INTERFACE
++	xc_interface *xc;
++#else
++	int xc;
++#endif
  
-@@ -252,7 +252,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 	if (!efi_map_added() && !xen_present() && have_sys_firmware_memmap()) {
- 		ret = get_memory_ranges_sysfs(range, ranges);
- 		if (!ret)
--			ret = fixup_memory_ranges_sysfs(range, ranges);
-+			ret = fixup_memory_ranges(range, ranges);
- 	} else
- 		ret = get_memory_ranges_proc_iomem(range, ranges);
+ 	if (!xen_present())
+ 		goto out;
  
+ 	memset(capabilities, '0', XEN_CAPABILITIES_INFO_LEN);
+ 
++#ifdef XENCTRL_HAS_XC_INTERFACE
++	xc = xc_interface_open(NULL, NULL, 0);
++	if ( !xc ) {
++		fprintf(stderr, "failed to open xen control interface.\n");
++		goto out;
++	}
++#else
+ 	xc = xc_interface_open();
+ 	if ( xc == -1 ) {
+ 		fprintf(stderr, "failed to open xen control interface.\n");
+ 		goto out;
+ 	}
++#endif
+ 
+ 	rc = xc_version(xc, XENVER_capabilities, &capabilities[0]);
+ 	if ( rc == -1 ) {
 -- 
 1.5.6.5
 
