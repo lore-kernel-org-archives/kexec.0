@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1Quhkj-0000V4-5x
-	for kexec@lists.infradead.org; Sat, 20 Aug 2011 09:22:05 +0000
-Date: Sat, 20 Aug 2011 18:21:57 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [patch 0/2] s390: Patch series for s390 kdump support
-Message-ID: <20110820092157.GA24619@verge.net.au>
-References: <20110819130949.289522258@linux.vnet.ibm.com>
-MIME-Version: 1.0
+Received: from router-fw.net-space.pl ([89.174.63.77])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1Qv8WW-0002Vz-Oy
+	for kexec@lists.infradead.org; Sun, 21 Aug 2011 13:57:13 +0000
+Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
+	(dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
+	id S1592038Ab1HUNu3 (ORCPT <rfc822;kexec@lists.infradead.org>);
+	Sun, 21 Aug 2011 15:50:29 +0200
+Date: Sun, 21 Aug 2011 15:50:29 +0200
+From: Daniel Kiper <dkiper@net-space.pl>
+Subject: [PATCH 0/4] kexec-tools: Xen fixes and cleanups
+Message-ID: <20110821135029.GA17323@router-fw-old.local.net-space.pl>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20110819130949.289522258@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,19 +25,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, hbabu@us.ibm.com, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org, vgoyal@redhat.com
+To: konrad.wilk@oracle.com, ian.campbell@citrix.com, vgoyal@redhat.com, horms@verge.net.au, olaf@aepfle.de, kexec@lists.infradead.org, xen-devel@lists.xensource.com, linux-kernel@vger.kernel.org
 
-On Fri, Aug 19, 2011 at 03:09:49PM +0200, Michael Holzheu wrote:
-> Hello Simon,
-> 
-> The following two patches add s390 kdump support (64 bit only) to the
-> kexec-tools:
-> [0] Add s390 kdump support
-> [1] Allow to call verify_sha256_digest() from kernel
+Hi,
 
-Thanks, applied.
+I am sending some Xen specific fixes and cleanups for kexec-tools.
+These patches applies to current kexec-tools git tree.
 
+Full list of fixes and cleanups:
+  - xen: Take into account Xen control interface changes since Xen Ver. 4.1,
+  - kexec: Export compare_ranges() function from firmware_memmap.c module,
+  - kexec/arch/i386: Rename fixup_memory_ranges_sysfs() to fixup_memory_ranges(),
+  - kexec/arch/i386: Add get_memory_ranges_xen() function.
+
+Daniel
 
 _______________________________________________
 kexec mailing list
