@@ -1,16 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from andromeda.dapyr.net ([206.212.254.10])
+Received: from mtagate1.uk.ibm.com ([194.196.100.161])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QvLi0-0007Yd-R8
-	for kexec@lists.infradead.org; Mon, 22 Aug 2011 04:01:58 +0000
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH 4/4] kexec/arch/i386: Add get_memory_ranges_xen() function
-Date: Mon, 22 Aug 2011 00:01:24 -0400
-References: <20110821135459.GE17323@router-fw-old.local.net-space.pl>
-In-Reply-To: <20110821135459.GE17323@router-fw-old.local.net-space.pl>
-MIME-Version: 1.0
-Message-Id: <201108220001.24399.konrad.wilk@oracle.com>
-Reply-To: konrad.wilk@oracle.com
+	id 1QvO6S-0000BK-Nb
+	for kexec@lists.infradead.org; Mon, 22 Aug 2011 06:35:22 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7M6Z4gk017556
+	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 06:35:04 GMT
+Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
+	[9.149.37.213])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p7M6Z4pT2531364
+	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 07:35:04 +0100
+Received: from d06av03.portsmouth.uk.ibm.com (localhost.localdomain
+	[127.0.0.1])
+	by d06av03.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p7M6Z3ax004755
+	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 00:35:04 -0600
+Date: Mon, 22 Aug 2011 08:34:59 +0200
+From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [patch 0/2] kdump: Common code changes for s390 kdump support
+Message-ID: <20110822083459.2cc52fc8@mschwide>
+In-Reply-To: <20110819150353.bf58c7e0.akpm@linux-foundation.org>
+References: <20110819141857.052232873@linux.vnet.ibm.com>
+	<20110819150353.bf58c7e0.akpm@linux-foundation.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,107 +37,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Daniel Kiper <dkiper@net-space.pl>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, ian.campbell@citrix.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, vgoyal@redhat.com
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org, vgoyal@redhat.com
 
-> get_memory_ranges_sysfs() and get_memory_ranges_proc_iomem()
-> are unreliable under Xen. Proper machine memory map could be
-> obtained under Xen by calling __HYPERVISOR_memory_op hypercall
-> with XENMEM_machine_memory_map argument. get_memory_ranges_xen()
-> does that. It is implemented using ioctl() or libxenctrl interface.
-> This solution is compatible with 3.x and 4.x Xen versions.
+On Fri, 19 Aug 2011 15:03:53 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
+
+> On Fri, 19 Aug 2011 16:18:57 +0200
+> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
 > 
-> Signed-off-by: Daniel Kiper <dkiper@net-space.pl>
-> ---
->  configure.ac                       |    3 +
->  kexec/arch/i386/kexec-x86-common.c |  203 
-++++++++++++++++++++++++++++++++++--
->  2 files changed, 197 insertions(+), 9 deletions(-)
+> > I had a long discussion with Vivek Goyal on the s390 kdump support (thanks
+> > Vivek for all the time!). As a result of this, here are two common code
+> > patches that are required for the s390 port. Could you please integrate them
+> > upstream in the next merge window? The s390 specific part will be integrated
+> > by our s390 maintainer Martin Schwidefsky.
 > 
-> diff --git a/configure.ac b/configure.ac
-> index 172a52a..0d09bba 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -157,6 +157,9 @@ if test "$with_xen" = yes ; then
->  	AC_CHECK_HEADER(xenctrl.h,
->  		AC_CHECK_LIB(xenctrl, xc_version, ,
->  		AC_MSG_NOTICE([Xen support disabled])))
-> +	if test "$ac_cv_lib_xenctrl_xc_version" = yes ; then
-> +		AC_CHECK_FUNCS(xc_get_machine_memory_map)
-> +	fi
->  fi
->  
->  dnl ---Sanity checks
-> diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-
-common.c
-> index 8f59c6c..609d35d 100644
-> --- a/kexec/arch/i386/kexec-x86-common.c
-> +++ b/kexec/arch/i386/kexec-x86-common.c
-> @@ -17,6 +17,10 @@
->   * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
->   */
->  
-> +#define _XOPEN_SOURCE	600
-> +#define _BSD_SOURCE
-> +
-> +#include <fcntl.h>
->  #include <stddef.h>
->  #include <stdio.h>
->  #include <errno.h>
-> @@ -24,12 +28,29 @@
->  #include <string.h>
->  #include <limits.h>
->  #include <stdlib.h>
-> +#include <stdio.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/stat.h>
-> +#include <unistd.h>
->  #include "../../kexec.h"
->  #include "../../kexec-syscall.h"
->  #include "../../firmware_memmap.h"
->  #include "../../crashdump.h"
->  #include "kexec-x86.h"
->  
-> +#ifdef HAVE_LIBXENCTRL
-> +#ifdef HAVE_XC_GET_MACHINE_MEMORY_MAP
-> +#include <xenctrl.h>
-> +#else
-> +#define __XEN_TOOLS__	1
-> +#include <x86/x86-linux.h>
-> +#include <xen/xen.h>
-> +#include <xen/memory.h>
-> +#include <xen/sys/privcmd.h>
-> +#endif /* HAVE_XC_GET_MACHINE_MEMORY_MAP */
-> +#endif /* HAVE_LIBXENCTRL */
-> +
->  static struct memory_range memory_range[MAX_MEMORY_RANGES];
->  
->  /**
-> @@ -129,6 +150,172 @@ static int get_memory_ranges_sysfs(struct memory_range 
-**range, int *ranges)
->  	return 0;
->  }
->  
-> +#ifdef HAVE_LIBXENCTRL
-> +static unsigned e820_to_kexec_type(uint32_t type)
-> +{
-> +	switch (type) {
-> +		case E820_RAM:
-> +			return RANGE_RAM;
-> +		case E820_ACPI:
-> +			return RANGE_ACPI;
-> +		case E820_NVS:
-> +			return RANGE_ACPI_NVS;
-> +		case E820_RESERVED:
-
-For E820_UNUSABLE you want to do that too?
-
-> +		default:
-> +			return RANGE_RESERVED;
-
-Or should E820_UNUSABLE returne its own type of RANGE?
+> The patches look OK to me.  I suggest that they be carried in Martin's
+> tree, alongside the s390 kdump support.  That will somewhat simplify
+> things during the merge window, and will greatly simplify getting the
+> entire feature into linux-next.
 > 
+> You can put my acked-by's on them if you like.
+> 
+> > I will be on vacation for the next two weeks. Therefore if you have comments
+> > or questions, please contact also Martin Schwidefsky and Heiko Carstens.
+> 
+> I'll put the patches into my tree (and hence linux-next) now, because I
+> need the typing practice ;) I'll drop them again if/when they turn up
+> in linux-next's s390 tree.
+
+Ok, sounds reasonable to me. I'll take them via the s390 tree and add
+you acked-by. Thanks Andrew. 
+
+
+-- 
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
+
 
 _______________________________________________
 kexec mailing list
