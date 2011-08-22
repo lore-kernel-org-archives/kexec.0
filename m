@@ -1,30 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate1.uk.ibm.com ([194.196.100.161])
+Received: from mail-fx0-f49.google.com ([209.85.161.49])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QvO6S-0000BK-Nb
-	for kexec@lists.infradead.org; Mon, 22 Aug 2011 06:35:22 +0000
-Received: from d06nrmr1507.portsmouth.uk.ibm.com
-	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
-	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p7M6Z4gk017556
-	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 06:35:04 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
-	[9.149.37.213])
-	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p7M6Z4pT2531364
-	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 07:35:04 +0100
-Received: from d06av03.portsmouth.uk.ibm.com (localhost.localdomain
-	[127.0.0.1])
-	by d06av03.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p7M6Z3ax004755
-	for <kexec@lists.infradead.org>; Mon, 22 Aug 2011 00:35:04 -0600
-Date: Mon, 22 Aug 2011 08:34:59 +0200
-From: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [patch 0/2] kdump: Common code changes for s390 kdump support
-Message-ID: <20110822083459.2cc52fc8@mschwide>
-In-Reply-To: <20110819150353.bf58c7e0.akpm@linux-foundation.org>
-References: <20110819141857.052232873@linux.vnet.ibm.com>
-	<20110819150353.bf58c7e0.akpm@linux-foundation.org>
-Mime-Version: 1.0
+	id 1QvNwH-0008Re-C6
+	for kexec@lists.infradead.org; Mon, 22 Aug 2011 06:24:50 +0000
+Received: by fxd20 with SMTP id 20so4044605fxd.36
+	for <kexec@lists.infradead.org>; Sun, 21 Aug 2011 23:24:45 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20110821135139.GB17323@router-fw-old.local.net-space.pl>
+References: <20110821135139.GB17323@router-fw-old.local.net-space.pl>
+Date: Mon, 22 Aug 2011 12:09:45 +0545
+Message-ID: <CAJRmKy8=f+x6bU0XQOuqgVcX-u1oMvk-hdsWGsrgOj3H+sepxQ@mail.gmail.com>
+Subject: Re: [Xen-devel] [PATCH 1/4] xen: Take into account Xen control
+	interface changes since Xen Ver. 4.1
+From: Rajendra Bele <belerajendra753@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,51 +21,155 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1598587417=="
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, horms@verge.net.au, ebiederm@xmission.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org, vgoyal@redhat.com
+To: Daniel Kiper <dkiper@net-space.pl>
+Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, ian.campbell@citrix.com, konrad.wilk@oracle.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, vgoyal@redhat.com
 
-On Fri, 19 Aug 2011 15:03:53 -0700
-Andrew Morton <akpm@linux-foundation.org> wrote:
+--===============1598587417==
+Content-Type: multipart/alternative; boundary=0015174790baa295a804ab1222b2
 
-> On Fri, 19 Aug 2011 16:18:57 +0200
-> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> 
-> > I had a long discussion with Vivek Goyal on the s390 kdump support (thanks
-> > Vivek for all the time!). As a result of this, here are two common code
-> > patches that are required for the s390 port. Could you please integrate them
-> > upstream in the next merge window? The s390 specific part will be integrated
-> > by our s390 maintainer Martin Schwidefsky.
-> 
-> The patches look OK to me.  I suggest that they be carried in Martin's
-> tree, alongside the s390 kdump support.  That will somewhat simplify
-> things during the merge window, and will greatly simplify getting the
-> entire feature into linux-next.
-> 
-> You can put my acked-by's on them if you like.
-> 
-> > I will be on vacation for the next two weeks. Therefore if you have comments
-> > or questions, please contact also Martin Schwidefsky and Heiko Carstens.
-> 
-> I'll put the patches into my tree (and hence linux-next) now, because I
-> need the typing practice ;) I'll drop them again if/when they turn up
-> in linux-next's s390 tree.
+--0015174790baa295a804ab1222b2
+Content-Type: text/plain; charset=UTF-8
 
-Ok, sounds reasonable to me. I'll take them via the s390 tree and add
-you acked-by. Thanks Andrew. 
+Dear Friends,
+I am pursuing Ph.D. in virtualization,
+I want to study detail architecture and implementation of Xen
+As I wanted to start from scratch ,can you suggest some guidance or resource
+for it.
+Thanking you
+Rajendra Bele
+Pune,India
+
+On Sun, Aug 21, 2011 at 7:36 PM, Daniel Kiper <dkiper@net-space.pl> wrote:
+
+> xc_interface_open() receive three arguments instead of void and returns
+> pointer to xc_interface type instead of int since Xen Ver. 4.1. Take into
+> account that and allow kexec-tools compilation with all versions of Xen.
+>
+> Signed-off-by: Daniel Kiper <dkiper@net-space.pl>
+> ---
+>  kexec/crashdump-xen.c |   15 ++++++++++++++-
+>  1 files changed, 14 insertions(+), 1 deletions(-)
+>
+> diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
+> index b347764..9dfabf8 100644
+> --- a/kexec/crashdump-xen.c
+> +++ b/kexec/crashdump-xen.c
+> @@ -126,19 +126,32 @@ unsigned long xen_architecture(struct crash_elf_info
+> *elf_info)
+>  {
+>        unsigned long machine = elf_info->machine;
+>  #ifdef HAVE_LIBXENCTRL
+> -       int xc, rc;
+> +       int rc;
+>        xen_capabilities_info_t capabilities;
+> +#ifdef XENCTRL_HAS_XC_INTERFACE
+> +       xc_interface *xc;
+> +#else
+> +       int xc;
+> +#endif
+>
+>        if (!xen_present())
+>                goto out;
+>
+>        memset(capabilities, '0', XEN_CAPABILITIES_INFO_LEN);
+>
+> +#ifdef XENCTRL_HAS_XC_INTERFACE
+> +       xc = xc_interface_open(NULL, NULL, 0);
+> +       if ( !xc ) {
+> +               fprintf(stderr, "failed to open xen control interface.\n");
+> +               goto out;
+> +       }
+> +#else
+>        xc = xc_interface_open();
+>        if ( xc == -1 ) {
+>                fprintf(stderr, "failed to open xen control interface.\n");
+>                goto out;
+>        }
+> +#endif
+>
+>        rc = xc_version(xc, XENVER_capabilities, &capabilities[0]);
+>        if ( rc == -1 ) {
+> --
+> 1.5.6.5
+>
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xensource.com
+> http://lists.xensource.com/xen-devel
+>
+
+--0015174790baa295a804ab1222b2
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div>Dear Friends,<br>I am pursuing Ph.D. in virtualization,<br>I want to s=
+tudy detail architecture and implementation of Xen <br>As I wanted to start=
+ from scratch ,can you suggest some guidance or resource for it.<br>Thankin=
+g you</div>
+
+<div>Rajendra Bele</div>
+<div>Pune,India<br><br></div>
+<div class=3D"gmail_quote">On Sun, Aug 21, 2011 at 7:36 PM, Daniel Kiper <s=
+pan dir=3D"ltr">&lt;<a href=3D"mailto:dkiper@net-space.pl">dkiper@net-space=
+.pl</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
+px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">xc_interface_open() receive thre=
+e arguments instead of void and returns<br>pointer to xc_interface type ins=
+tead of int since Xen Ver. 4.1. Take into<br>
+account that and allow kexec-tools compilation with all versions of Xen.<br=
+><br>Signed-off-by: Daniel Kiper &lt;<a href=3D"mailto:dkiper@net-space.pl"=
+>dkiper@net-space.pl</a>&gt;<br>---<br>=C2=A0kexec/crashdump-xen.c | =C2=A0=
+ 15 ++++++++++++++-<br>
+=C2=A01 files changed, 14 insertions(+), 1 deletions(-)<br><br>diff --git a=
+/kexec/crashdump-xen.c b/kexec/crashdump-xen.c<br>index b347764..9dfabf8 10=
+0644<br>--- a/kexec/crashdump-xen.c<br>+++ b/kexec/crashdump-xen.c<br>@@ -1=
+26,19 +126,32 @@ unsigned long xen_architecture(struct crash_elf_info *elf_=
+info)<br>
+=C2=A0{<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0unsigned long machine =3D elf_info-&g=
+t;machine;<br>=C2=A0#ifdef HAVE_LIBXENCTRL<br>- =C2=A0 =C2=A0 =C2=A0 int xc=
+, rc;<br>+ =C2=A0 =C2=A0 =C2=A0 int rc;<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0xen_c=
+apabilities_info_t capabilities;<br>+#ifdef XENCTRL_HAS_XC_INTERFACE<br>+ =
+=C2=A0 =C2=A0 =C2=A0 xc_interface *xc;<br>
++#else<br>+ =C2=A0 =C2=A0 =C2=A0 int xc;<br>+#endif<br><br>=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0if (!xen_present())<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0goto out;<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0memset(capabil=
+ities, &#39;0&#39;, XEN_CAPABILITIES_INFO_LEN);<br><br>+#ifdef XENCTRL_HAS_=
+XC_INTERFACE<br>+ =C2=A0 =C2=A0 =C2=A0 xc =3D xc_interface_open(NULL, NULL,=
+ 0);<br>
++ =C2=A0 =C2=A0 =C2=A0 if ( !xc ) {<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 fprintf(stderr, &quot;failed to open xen control interface.\=
+n&quot;);<br>+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto out;<b=
+r>+ =C2=A0 =C2=A0 =C2=A0 }<br>+#else<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0xc =3D x=
+c_interface_open();<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0if ( xc =3D=3D -1 ) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0fprintf(stderr, &quo=
+t;failed to open xen control interface.\n&quot;);<br>=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto out;<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0}=
+<br>+#endif<br><br>=C2=A0 =C2=A0 =C2=A0 =C2=A0rc =3D xc_version(xc, XENVER_=
+capabilities, &amp;capabilities[0]);<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0if ( rc =
+=3D=3D -1 ) {<br>
+<font color=3D"#888888">--<br>1.5.6.5<br><br>______________________________=
+_________________<br>Xen-devel mailing list<br><a href=3D"mailto:Xen-devel@=
+lists.xensource.com">Xen-devel@lists.xensource.com</a><br><a href=3D"http:/=
+/lists.xensource.com/xen-devel" target=3D"_blank">http://lists.xensource.co=
+m/xen-devel</a><br>
+</font></blockquote></div><br>
+
+--0015174790baa295a804ab1222b2--
 
 
--- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
-
+--===============1598587417==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============1598587417==--
+
