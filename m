@@ -1,22 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from router-fw.net-space.pl ([89.174.63.77])
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1QvUVU-0006xB-2K
-	for kexec@lists.infradead.org; Mon, 22 Aug 2011 13:25:37 +0000
-Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
-	(dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
-	id S1590089Ab1HVNZZ (ORCPT <rfc822;kexec@lists.infradead.org>);
-	Mon, 22 Aug 2011 15:25:25 +0200
-Date: Mon, 22 Aug 2011 15:25:25 +0200
-From: Daniel Kiper <dkiper@net-space.pl>
-Subject: Re: [PATCH 1/4] xen: Take into account Xen control interface changes
-	since Xen Ver. 4.1
-Message-ID: <20110822132525.GB27902@router-fw-old.local.net-space.pl>
-References: <20110821135139.GB17323@router-fw-old.local.net-space.pl>
-	<201108212356.50589.konrad.wilk@oracle.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <201108212356.50589.konrad.wilk@oracle.com>
+	id 1QvkCf-0002Db-UT
+	for kexec@lists.infradead.org; Tue, 23 Aug 2011 06:11:17 +0000
+Received: from d23relay05.au.ibm.com (d23relay05.au.ibm.com [202.81.31.247])
+	by e23smtp05.au.ibm.com (8.14.4/8.13.1) with ESMTP id p7N647IA029782
+	for <kexec@lists.infradead.org>; Tue, 23 Aug 2011 16:04:07 +1000
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+	by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p7N69QL2716842
+	for <kexec@lists.infradead.org>; Tue, 23 Aug 2011 16:09:26 +1000
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p7N6AhNm023090
+	for <kexec@lists.infradead.org>; Tue, 23 Aug 2011 16:10:43 +1000
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Subject: [PATCH] kexec:ppc: Fix compilation failure
+Date: Tue, 23 Aug 2011 11:40:40 +0530
+Message-ID: <20110823061020.14928.83952.stgit@suzukikp.in.ibm.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,42 +31,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, ian.campbell@citrix.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, vgoyal@redhat.com, Daniel Kiper <dkiper@net-space.pl>
+To: Simon Horman <horms@verge.net.au>
+Cc: Suzuki Poulose <suzuki@in.ibm.com>, Josh Boyer <jwboyer@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Sun, Aug 21, 2011 at 11:56:50PM -0400, Konrad Rzeszutek Wilk wrote:
-> > xc_interface_open() receive three arguments instead of void and returns
-> > pointer to xc_interface type instead of int since Xen Ver. 4.1. Take into
-> > account that and allow kexec-tools compilation with all versions of Xen.
-> >
-> > Signed-off-by: Daniel Kiper <dkiper@net-space.pl>
-> > ---
-> >  kexec/crashdump-xen.c |   15 ++++++++++++++-
-> >  1 files changed, 14 insertions(+), 1 deletions(-)
-> >
-> > diff --git a/kexec/crashdump-xen.c b/kexec/crashdump-xen.c
-> > index b347764..9dfabf8 100644
-> > --- a/kexec/crashdump-xen.c
-> > +++ b/kexec/crashdump-xen.c
-> > @@ -126,19 +126,32 @@ unsigned long xen_architecture(struct crash_elf_info
-> *elf_info)
-> >  {
-> >  	unsigned long machine = elf_info->machine;
-> >  #ifdef HAVE_LIBXENCTRL
-> > -	int xc, rc;
-> > +	int rc;
-> >  	xen_capabilities_info_t capabilities;
-> > +#ifdef XENCTRL_HAS_XC_INTERFACE
-> > +	xc_interface *xc;
-> > +#else
-> > +	int xc;
-> > +#endif
->
-> Where is the #endif for HAVE_LIBXENCTRL?
+commit 1ea7cfd435aba0e095886db367e9616271f56c28 broke the ppc build as it removes
+the declaration for two variables in use by the elf_ppc_load(). This patch reverts
+the particular hunk.
 
-At the end of this function. It is not included in this patch.
+Signed-off-by: Suzuki K. Poulose <suzuki@in.ibm.com>
+Reported-by: Josh Boyer <jwboyer@gmail.com>
+---
 
-Daniel
+ kexec/arch/ppc/kexec-elf-ppc.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/kexec/arch/ppc/kexec-elf-ppc.c b/kexec/arch/ppc/kexec-elf-ppc.c
+index 39f1833..314eb1e 100644
+--- a/kexec/arch/ppc/kexec-elf-ppc.c
++++ b/kexec/arch/ppc/kexec-elf-ppc.c
+@@ -187,6 +187,8 @@ int elf_ppc_load(int argc, char **argv,	const char *buf, off_t len,
+ 	char *fixup_nodes[FIXUP_ENTRYS + 1];
+ 	int cur_fixup = 0;
+ 	int opt;
++	char *blob_buf = NULL;
++	off_t blob_size = 0;
+ 
+ 	command_line = NULL;
+ 	dtb = NULL;
+
 
 _______________________________________________
 kexec mailing list
