@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R0RmM-0007wa-Qx
-	for kexec@lists.infradead.org; Mon, 05 Sep 2011 05:31:31 +0000
-Date: Mon, 5 Sep 2011 14:30:52 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] [RFC] sh: kexec: Register crashk_res
-Message-ID: <20110905053051.GA13098@verge.net.au>
-References: <1314935232-1545-1-git-send-email-horms@verge.net.au>
-	<20110905032352.GA22142@linux-sh.org>
-	<20110905042547.GA22069@verge.net.au>
-	<20110905043627.GD22142@linux-sh.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110905043627.GD22142@linux-sh.org>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1R0SId-00080b-PI
+	for kexec@lists.infradead.org; Mon, 05 Sep 2011 06:04:52 +0000
+Date: Mon, 5 Sep 2011 14:35:18 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH] makedumpfile: omit those section has 0 size
+Message-Id: <20110905143518.f6543987.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <CALZhoSQyzXtG6CPQmAjRRcCc1mwhiJts5bvMB1KGZFdwN4xUvw@mail.gmail.com>
+References: <1315152159-15362-1-git-send-email-leiwen@marvell.com>
+	<20110905085627.149add04.oomichi@mxs.nes.nec.co.jp>
+	<CALZhoSQyzXtG6CPQmAjRRcCc1mwhiJts5bvMB1KGZFdwN4xUvw@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +24,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Paul Mundt <lethal@linux-sh.org>
-Cc: kexec@lists.infradead.org, linux-sh@vger.kernel.org
+To: Lei Wen <adrian.wenl@gmail.com>
+Cc: Lei Wen <leiwen@marvell.com>, kexec@lists.infradead.org
 
-On Mon, Sep 05, 2011 at 01:36:27PM +0900, Paul Mundt wrote:
-> On Mon, Sep 05, 2011 at 01:25:50PM +0900, Simon Horman wrote:
-> > On Mon, Sep 05, 2011 at 12:23:53PM +0900, Paul Mundt wrote:
-> > > On Fri, Sep 02, 2011 at 12:47:12PM +0900, Simon Horman wrote:
-> > > > Register crashk_res so that it can be used by kexec-tools
-> > > > via /proc/iomem.
-> > > > 
-> > > > On x86 the registration occurs using
-> > > > insert_resource(&iomem_resource, &crashk_res).
-> > > > However that approach seems to result in the boot hanging on SH.
-> > > > 
-> > > > Signed-off-by: Simon Horman <horms@verge.net.au>
-> > > 
-> > > x86 has a slightly more straightforward registration method. We end up
-> > > going through the same path for all memory ranges, which also
-> > > encapsulates the NUMA case. As such, we don't necessarily know which
-> > > range will contain the resource in question, so it's attempted on each
-> > > range addition, expecting the resource manager to work things out for us.
-> > > 
-> > > With the request_resource() in place you presumably see the crash kernel
-> > > resource where you expect it to in /proc/iomem?
-> > 
-> > Yes. With this patch in place the crash kernel resource
-> > shows up in /proc/iomem in a sensible way.
-> > 
-> > # cat /proc/iomem 
-> > 40000000-4effffff : System RAM
-> >  40001000-402dbfc7 : Kernel code
-> >  402dbfc8-403cd51f : Kernel data
-> >  40553000-40568c5b : Kernel bss
-> >  4d000000-4effffff : Crash kernel
-> > ...
+
+On Mon, 5 Sep 2011 09:15:04 +0800
+Lei Wen <adrian.wenl@gmail.com> wrote:
+> >
+> > The almost same patch has been merged into the devel git-tree,
+> > does the following patch fix the prblem you said ?
+> >
+> > http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=commit;h=63f720a7784debce82c8942970d5c0d8412f209f
+> >
 > 
-> Ok, I've queued it up with a slightly more verbose changelog. I'll send
-> it along for 3.1 so kexec-tools doesn't remain blocked.
+> Yes, that fix my issue.
 
-Thanks.
+Thank you for the check. I see.
+
+
+Thanks
+Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
