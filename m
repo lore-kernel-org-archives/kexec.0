@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R0hgK-0000ki-OP
-	for kexec@lists.infradead.org; Mon, 05 Sep 2011 22:30:21 +0000
-Date: Tue, 6 Sep 2011 07:29:40 +0900
+	id 1R0hqP-0000nr-MA
+	for kexec@lists.infradead.org; Mon, 05 Sep 2011 22:40:46 +0000
+Date: Tue, 6 Sep 2011 07:40:06 +0900
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: sh: Fixed command line management.
-Message-ID: <20110905222940.GA29637@verge.net.au>
-References: <1315234944-8230-1-git-send-email-angelo.castello@st.com>
+Subject: Re: [patch 0/2] s390: Patch series for s390 kdump support
+Message-ID: <20110905224006.GC29637@verge.net.au>
+References: <20110819130949.289522258@linux.vnet.ibm.com>
+	<20110820092157.GA24619@verge.net.au>
+	<1315216114.15703.5.camel@br98xy6r>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1315234944-8230-1-git-send-email-angelo.castello@st.com>
+In-Reply-To: <1315216114.15703.5.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +25,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Angelo CASTELLO <angelo.castello@st.com>
-Cc: kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, hbabu@us.ibm.com, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Mon, Sep 05, 2011 at 05:02:24PM +0200, Angelo CASTELLO wrote:
-> This fixes the command line management to be rightly used by
-> elf-sh and zImage-sh type formats. Basically, the issue was on use
-> of --append option for both set and append the STRING at the cmdline.
-> With this patch we correctly manage the cmdline by means of:
->   --append=STRING           Append STRING to the current kernel command line
->   --command-line=STRING     Set the kernel command line to STRING
-> Kexec by default gets and runs new kernel using the current
-> kernel command line. Running kexec -h you will see its default options.
+On Mon, Sep 05, 2011 at 11:48:34AM +0200, Michael Holzheu wrote:
+> Hello Simon,
+> 
+> On Sat, 2011-08-20 at 18:21 +0900, Simon Horman wrote:
+> > On Fri, Aug 19, 2011 at 03:09:49PM +0200, Michael Holzheu wrote:
+> > > Hello Simon,
+> > > 
+> > > The following two patches add s390 kdump support (64 bit only) to the
+> > > kexec-tools:
+> > > [0] Add s390 kdump support
+> > > [1] Allow to call verify_sha256_digest() from kernel
+> > 
+> > Thanks, applied.
+> 
+> I checked out kexec-tools git head. Everything worked as expected.
 
-Hi Angelo,
-
-I don't believe that the changes to the processing of command-line
-that you have made are consistent with the implementation on
-other architectures.
+Great. If you have any further patches to kexec-tools please let me know.
 
 _______________________________________________
 kexec mailing list
