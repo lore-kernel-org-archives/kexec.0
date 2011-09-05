@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-yx0-f177.google.com ([209.85.213.177])
+Received: from linux-sh.org ([111.68.239.195])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R0NmK-0006N4-Rp
-	for kexec@lists.infradead.org; Mon, 05 Sep 2011 01:15:13 +0000
-Received: by yxk8 with SMTP id 8so2150785yxk.36
-	for <kexec@lists.infradead.org>; Sun, 04 Sep 2011 18:15:05 -0700 (PDT)
-MIME-Version: 1.0
-In-Reply-To: <20110905085627.149add04.oomichi@mxs.nes.nec.co.jp>
-References: <1315152159-15362-1-git-send-email-leiwen@marvell.com>
-	<20110905085627.149add04.oomichi@mxs.nes.nec.co.jp>
-Date: Mon, 5 Sep 2011 09:15:04 +0800
-Message-ID: <CALZhoSQyzXtG6CPQmAjRRcCc1mwhiJts5bvMB1KGZFdwN4xUvw@mail.gmail.com>
-Subject: Re: [PATCH] makedumpfile: omit those section has 0 size
-From: Lei Wen <adrian.wenl@gmail.com>
+	id 1R0Pn2-00074u-P0
+	for kexec@lists.infradead.org; Mon, 05 Sep 2011 03:24:07 +0000
+Date: Mon, 5 Sep 2011 12:23:53 +0900
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [PATCH] [RFC] sh: kexec: Register crashk_res
+Message-ID: <20110905032352.GA22142@linux-sh.org>
+References: <1314935232-1545-1-git-send-email-horms@verge.net.au>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1314935232-1545-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,28 +23,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Lei Wen <leiwen@marvell.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-Hi Ken'ichi,
+On Fri, Sep 02, 2011 at 12:47:12PM +0900, Simon Horman wrote:
+> Register crashk_res so that it can be used by kexec-tools
+> via /proc/iomem.
+> 
+> On x86 the registration occurs using
+> insert_resource(&iomem_resource, &crashk_res).
+> However that approach seems to result in the boot hanging on SH.
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-On Mon, Sep 5, 2011 at 7:56 AM, Ken'ichi Ohmichi
-<oomichi@mxs.nes.nec.co.jp> wrote:
->
-> Hi Lei,
->
-> Thank you for the patch.
->
-> The almost same patch has been merged into the devel git-tree,
-> does the following patch fix the prblem you said ?
->
-> http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=commit;h=63f720a7784debce82c8942970d5c0d8412f209f
->
+x86 has a slightly more straightforward registration method. We end up
+going through the same path for all memory ranges, which also
+encapsulates the NUMA case. As such, we don't necessarily know which
+range will contain the resource in question, so it's attempted on each
+range addition, expecting the resource manager to work things out for us.
 
-Yes, that fix my issue.
-
-Thanks,
-Lei
+With the request_resource() in place you presumably see the crash kernel
+resource where you expect it to in /proc/iomem?
 
 _______________________________________________
 kexec mailing list
