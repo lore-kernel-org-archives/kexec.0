@@ -1,17 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mtagate1.uk.ibm.com ([194.196.100.161])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R0SId-00080b-PI
-	for kexec@lists.infradead.org; Mon, 05 Sep 2011 06:04:52 +0000
-Date: Mon, 5 Sep 2011 14:35:18 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: omit those section has 0 size
-Message-Id: <20110905143518.f6543987.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <CALZhoSQyzXtG6CPQmAjRRcCc1mwhiJts5bvMB1KGZFdwN4xUvw@mail.gmail.com>
-References: <1315152159-15362-1-git-send-email-leiwen@marvell.com>
-	<20110905085627.149add04.oomichi@mxs.nes.nec.co.jp>
-	<CALZhoSQyzXtG6CPQmAjRRcCc1mwhiJts5bvMB1KGZFdwN4xUvw@mail.gmail.com>
+	id 1R0VnR-0001C2-9c
+	for kexec@lists.infradead.org; Mon, 05 Sep 2011 09:48:54 +0000
+Received: from d06nrmr1507.portsmouth.uk.ibm.com
+	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
+	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p859mkox005357
+	for <kexec@lists.infradead.org>; Mon, 5 Sep 2011 09:48:46 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+	[9.149.37.228])
+	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p859mj6r2572430
+	for <kexec@lists.infradead.org>; Mon, 5 Sep 2011 10:48:46 +0100
+Received: from d06av02.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av02.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p859mZ7k010939
+	for <kexec@lists.infradead.org>; Mon, 5 Sep 2011 03:48:36 -0600
+Subject: Re: [patch 0/2] s390: Patch series for s390 kdump support
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+In-Reply-To: <20110820092157.GA24619@verge.net.au>
+References: <20110819130949.289522258@linux.vnet.ibm.com>
+	<20110820092157.GA24619@verge.net.au>
+Date: Mon, 05 Sep 2011 11:48:34 +0200
+Message-ID: <1315216114.15703.5.camel@br98xy6r>
 Mime-Version: 1.0
+Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +37,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lei Wen <adrian.wenl@gmail.com>
-Cc: Lei Wen <leiwen@marvell.com>, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: oomichi@mxs.nes.nec.co.jp, linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, hbabu@us.ibm.com, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org, vgoyal@redhat.com
 
+Hello Simon,
 
-On Mon, 5 Sep 2011 09:15:04 +0800
-Lei Wen <adrian.wenl@gmail.com> wrote:
-> >
-> > The almost same patch has been merged into the devel git-tree,
-> > does the following patch fix the prblem you said ?
-> >
-> > http://makedumpfile.git.sourceforge.net/git/gitweb.cgi?p=makedumpfile/makedumpfile;a=commit;h=63f720a7784debce82c8942970d5c0d8412f209f
-> >
+On Sat, 2011-08-20 at 18:21 +0900, Simon Horman wrote:
+> On Fri, Aug 19, 2011 at 03:09:49PM +0200, Michael Holzheu wrote:
+> > Hello Simon,
+> > 
+> > The following two patches add s390 kdump support (64 bit only) to the
+> > kexec-tools:
+> > [0] Add s390 kdump support
+> > [1] Allow to call verify_sha256_digest() from kernel
 > 
-> Yes, that fix my issue.
+> Thanks, applied.
 
-Thank you for the check. I see.
+I checked out kexec-tools git head. Everything worked as expected.
 
+Thanks!
 
-Thanks
-Ken'ichi Ohmichi
+Michael
+
 
 _______________________________________________
 kexec mailing list
