@@ -1,27 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from tyo200.gate.nec.co.jp ([202.32.8.215])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R1Fli-0005dS-BZ
-	for kexec@lists.infradead.org; Wed, 07 Sep 2011 10:54:11 +0000
-Received: from d06nrmr1507.portsmouth.uk.ibm.com
-	(d06nrmr1507.portsmouth.uk.ibm.com [9.149.38.233])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p878gtox009964
-	for <kexec@lists.infradead.org>; Wed, 7 Sep 2011 08:42:55 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
-	[9.149.37.250])
-	by d06nrmr1507.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p878gto52371612
-	for <kexec@lists.infradead.org>; Wed, 7 Sep 2011 09:42:55 +0100
-Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p878gpIm011658
-	for <kexec@lists.infradead.org>; Wed, 7 Sep 2011 02:42:51 -0600
-Subject: [PATCH] kexec-tools: Add --append option for s390
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Wed, 07 Sep 2011 10:42:50 +0200
-Message-ID: <1315384970.7763.5.camel@br98xy6r>
+	id 1R1FzK-0006zx-JI
+	for kexec@lists.infradead.org; Wed, 07 Sep 2011 11:08:15 +0000
+Received: from tyo201.gate.nec.co.jp ([10.7.69.201])
+	by tyo200.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id p87830xX027390
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <kexec@lists.infradead.org>; Wed, 7 Sep 2011 17:03:01 +0900 (JST)
+Date: Wed, 7 Sep 2011 15:59:48 +0900
+From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+Subject: Re: [PATCH v2 7/8] makedumpfile: Add erased information in
+	compressed kdump file
+Message-Id: <20110907155948.d6494440.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20110906154452.GA18186@in.ibm.com>
+References: <20110517200608.12740.68790.stgit@mars.in.ibm.com>
+	<20110819151659.6cfd324b.oomichi@mxs.nes.nec.co.jp>
+	<20110822115757.GA23157@in.ibm.com>
+	<20110906154452.GA18186@in.ibm.com>
 Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,57 +30,91 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: mahesh@linux.vnet.ibm.com
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Dave Anderson <anderson@redhat.com>
 
-Hello Simon,
 
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-All architectures define the "--append" option together with the
-"--command-line" option to specify kernel parameters. This option
-is also used by kdump init scripts. In order to be compatible this
-patch introduces the "--append" option also for s390. In addition
-to that the help text is adjusted so that it is now the same as on
-all other architectures.
+Hi Mahesh,
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kexec/arch/s390/include/arch/options.h |    1 +
- kexec/arch/s390/kexec-image.c          |    4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Thank you for the patch.
 
---- a/kexec/arch/s390/include/arch/options.h
-+++ b/kexec/arch/s390/include/arch/options.h
-@@ -30,6 +30,7 @@
- #define KEXEC_ALL_OPTIONS				\
- 	KEXEC_ARCH_OPTIONS				\
- 	{"command-line",     1, 0, OPT_APPEND},		\
-+	{"append",           1, 0, OPT_APPEND},		\
- 	{"initrd",	     1, 0, OPT_RAMDISK},
- 
- #define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -61,6 +61,7 @@ image_s390_load(int argc, char **argv, c
- 		{
- 			KEXEC_OPTIONS
- 			{"command-line",     1, 0, OPT_APPEND},
-+			{"append",           1, 0, OPT_APPEND},
- 			{"initrd",           1, 0, OPT_RAMDISK},
- 			{0,                  0, 0, 0},
- 		};
-@@ -160,7 +161,8 @@ image_s390_probe(const char *UNUSED(kern
- void
- image_s390_usage(void)
- {
--	printf("--command-line=STRING Pass a custom command line STRING to the kernel.\n"
-+	printf("--command-line=STRING Set the kernel command line to STRING.\n"
-+	       "--append=STRING       Set the kernel command line to STRING.\n"
- 	       "--initrd=FILENAME     Use the file FILENAME as a ramdisk.\n"
- 		);
- }
+On Tue, 6 Sep 2011 21:14:52 +0530
+Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+> 
+> makedumpfile: Use the same format as erase commands for eraseinfo data.
+> 
+> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+> 
+> The format of eraseinfo data differs from that of erase commands. This patch
+> makes sure eraseinfo data format is same as erase commands.
+> 
+> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
+Acked-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
+
+
+Thanks
+Ken'ichi Ohmichi
+
+> ---
+>  IMPLEMENTATION |    4 ++--
+>  makedumpfile.c |    4 ++--
+>  makedumpfile.h |    2 +-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/IMPLEMENTATION b/IMPLEMENTATION
+> index c11bd36..f0f3135 100644
+> --- a/IMPLEMENTATION
+> +++ b/IMPLEMENTATION
+> @@ -26,9 +26,9 @@
+>      |                        :                 |
+>      |         page data (pfn Z)                |
+>      +------------------------------------------+ offset_eraseinfo
+> -    | erase mystruct2.mystruct1.var 4          |
+> +    | erase mystruct2.mystruct1.var size 4     |
+>      | erase mystruct2.mystruct1.ptr nullify    |
+> -    | erase mystruct2.mystruct.array 100       |
+> +    | erase mystruct2.mystruct.array size 100  |
+>      +------------------------------------------+
+>  
+>  
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 1a88171..2c49bbe 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3949,7 +3949,7 @@ write_elf_header(struct cache_data *cd_header)
+>  		if (fl_info->nullify)
+>  			sprintf(size_str, "nullify\n");
+>  		else
+> -			sprintf(size_str, "%ld\n", fl_info->size);
+> +			sprintf(size_str, "size %ld\n", fl_info->size);
+>  
+>  		size_eraseinfo += strlen("erase ") +
+>  				strlen(ei->symbol_expr) + 1 +
+> @@ -4799,7 +4799,7 @@ write_eraseinfo(struct cache_data *cd_page, unsigned long *size_out)
+>  			continue;
+>  		for (j = 0; j < erase_info[i].num_sizes; j++) {
+>  			if (erase_info[i].sizes[j] > 0)
+> -				sprintf(size_str, "%ld\n",
+> +				sprintf(size_str, "size %ld\n",
+>  						erase_info[i].sizes[j]);
+>  			else if (erase_info[i].sizes[j] == -1)
+>  				sprintf(size_str, "nullify\n");
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 8b1bd4f..2741903 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -411,7 +411,7 @@ do { \
+>  
+>  #define SIZE_XEN_CRASH_INFO_V2	(sizeof(unsigned long) * 10)
+>  
+> -#define MAX_SIZE_STR_LEN (21)
+> +#define MAX_SIZE_STR_LEN (26)	/* strlen("size ") + 21 */
+>  
+>  /*
+>   * The value of dependence on machine
+> 
 
 
 _______________________________________________
