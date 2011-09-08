@@ -1,22 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from mtagate3.uk.ibm.com ([194.196.100.163])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R1SxF-0003PF-Gm
-	for kexec@lists.infradead.org; Thu, 08 Sep 2011 00:58:58 +0000
-Date: Thu, 8 Sep 2011 08:35:44 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: [PATCH v2 6/8] makedumpfile: Read and process 'for' command
-	from config file.
-Message-Id: <20110908083544.64d7f949.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <4E6751FE.5070605@linux.vnet.ibm.com>
-References: <20110517200514.12740.86690.stgit@mars.in.ibm.com>
-	<20110811170621.2f931dbe.oomichi@mxs.nes.nec.co.jp>
-	<20110830181642.GA21808@in.ibm.com>
-	<20110901170658.67f830df.oomichi@mxs.nes.nec.co.jp>
-	<20110905144033.GA26767@in.ibm.com>
-	<20110907154115.02b47998.oomichi@mxs.nes.nec.co.jp>
-	<4E6751FE.5070605@linux.vnet.ibm.com>
-Mime-Version: 1.0
+	id 1R1edA-0005Nj-Ol
+	for kexec@lists.infradead.org; Thu, 08 Sep 2011 13:27:01 +0000
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p88DQsET028015
+	for <kexec@lists.infradead.org>; Thu, 8 Sep 2011 13:26:54 GMT
+Received: from d06av10.portsmouth.uk.ibm.com (d06av10.portsmouth.uk.ibm.com
+	[9.149.37.251])
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p88DQrqJ2527408
+	for <kexec@lists.infradead.org>; Thu, 8 Sep 2011 14:26:53 +0100
+Received: from d06av10.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av10.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p88DQqmg006445
+	for <kexec@lists.infradead.org>; Thu, 8 Sep 2011 07:26:53 -0600
+Message-Id: <20110908132652.331918517@linux.vnet.ibm.com>
+Date: Thu, 08 Sep 2011 15:26:11 +0200
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Subject: [RFC][patch 2/2] s390: Add architecture code for unmapping
+	crashkernel memory
+References: <20110908132609.177038405@linux.vnet.ibm.com>
+Content-Disposition: inline; filename=s390-kdump-arch-crash_map_pages.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,116 +31,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Prerna Saxena <prerna@linux.vnet.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: vgoyal@redhat.com
+Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
 
+From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Hi Mahesh,
+This patch implements the crash_map_pages() function for s390.
+KEXEC_CRASH_MEM_ALIGN is set to HPAGE_SIZE, in order to support
+kernel mappings that use large pages.
 
-On Wed, 07 Sep 2011 16:44:06 +0530
-Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> >>>>
-> >>>> This patch fixes following BUGs:
-> >>>
-> >>> [..]
-> >>>
-> >>>> - The loop construct used for array of char* (pointer) silently fails and
-> >>>> does not filter the strings.
-> >>>
-> >>> Did the silent failure happen at the following code of list_entry_empty() ?
-> >>>
-> >>>    7373         addr = get_config_symbol_addr(le, 0, NULL);
-> >>>    7374         if (!addr)
-> >>>    7375                 return TRUE;
-> >>>
-> >>
-> >> Nope. It use to fail in resolve_list_entry()->resolve_config_entry()
-> >> and following hunk from the patch fixes it:
-> >>We dont allow no-array 
-> >> @@ -6866,7 +6882,7 @@ resolve_config_entry(struct config_entry *ce, unsigned long long base_addr,
-> >>  		 * If this is a struct or list_head data type then
-> >>  		 * create a leaf node entry with 'next' member.
-> >>  		 */
-> >> -		if ((ce->type_flag & TYPE_BASE)
-> >> +		if (((ce->type_flag & (TYPE_BASE | TYPE_ARRAY)) == TYPE_BASE)
-> >>  					&& (strcmp(ce->type_name, "void")))
-> >>  			return FALSE;
-> >>  
-> >> The old code use to check only TYPE_BASE flag ignoring TYPE_ARRAY flag.
-> > 
-> > Thank you for the explanation.
-> > I feel I see it.
-> > Is the below understanding right ?
-> > 
-> > At the part of earlier resolve_config_entry(), necessary information
-> > (sym_addr, type_name, and array_length) can be gotten in the case
-> > of pointer array.
-> 
-> Yes, including the size information for type of element (type_name) in
-> the LIST entry.
-> 
-> > However, the old resolve_config_entry() returned FALSE because of
-> > the check lack you said.
-> 
-> Yes. The old resolve_config_entry() use to return FALSE only for array
-> of base type elements (e.g. array of char, int, long etc.). However, it
-> was working well for array of structures (pointer/non-pointer).
-> 
-> The LIST entry can be of one of the following kind:
-> 1. Array of base types (pointer/non-pointer).
-> 2. Array of structures (pointer/non-pointer).
-> 3. Link list.
-> 4. list_head link list.
-> 
-> The old code was working for all of the above except (1).
+Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+---
+ arch/s390/include/asm/kexec.h    |    3 +++
+ arch/s390/kernel/machine_kexec.c |   15 +++++++++++++++
+ arch/s390/kernel/setup.c         |   10 ++++++----
+ 3 files changed, 24 insertions(+), 4 deletions(-)
 
-Thank you.
-I can see.
+--- a/arch/s390/include/asm/kexec.h
++++ b/arch/s390/include/asm/kexec.h
+@@ -36,6 +36,9 @@
+ /* Allocate one page for the pdp and the second for the code */
+ #define KEXEC_CONTROL_PAGE_SIZE 4096
+ 
++/* Alignment of crashkernel memory */
++#define KEXEC_CRASH_MEM_ALIGN HPAGE_SIZE
++
+ /* The native architecture */
+ #define KEXEC_ARCH KEXEC_ARCH_S390
+ 
+--- a/arch/s390/kernel/machine_kexec.c
++++ b/arch/s390/kernel/machine_kexec.c
+@@ -243,6 +243,21 @@ static void __machine_kdump(void *image)
+ #endif
+ 
+ /*
++ * Map or unmap crashkernel memory
++ */
++void crash_map_pages(int enable)
++{
++	unsigned long size = crashk_res.end - crashk_res.start + 1;
++
++	BUG_ON(crashk_res.start % KEXEC_CRASH_MEM_ALIGN ||
++	       size % KEXEC_CRASH_MEM_ALIGN);
++	if (enable)
++		vmem_add_mapping(crashk_res.start, size);
++	else
++		vmem_remove_mapping(crashk_res.start, size);
++}
++
++/*
+  * Give back memory to hypervisor before new kdump is loaded
+  */
+ static int machine_kexec_prepare_kdump(void)
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -446,6 +446,7 @@ static void __init setup_resources(void)
+ 		res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
+ 		switch (memory_chunk[i].type) {
+ 		case CHUNK_READ_WRITE:
++		case CHUNK_CRASHK:
+ 			res->name = "System RAM";
+ 			break;
+ 		case CHUNK_READ_ONLY:
+@@ -706,8 +707,8 @@ static void __init reserve_crashkernel(v
+ 			       &crash_base);
+ 	if (rc || crash_size == 0)
+ 		return;
+-	crash_base = PAGE_ALIGN(crash_base);
+-	crash_size = PAGE_ALIGN(crash_size);
++	crash_base = ALIGN(crash_base, KEXEC_CRASH_MEM_ALIGN);
++	crash_size = ALIGN(crash_size, KEXEC_CRASH_MEM_ALIGN);
+ 	if (register_memory_notifier(&kdump_mem_nb))
+ 		return;
+ 	if (!crash_base)
+@@ -727,7 +728,7 @@ static void __init reserve_crashkernel(v
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
+ 	insert_resource(&iomem_resource, &crashk_res);
+-	reserve_kdump_bootmem(crash_base, crash_size, CHUNK_READ_WRITE);
++	reserve_kdump_bootmem(crash_base, crash_size, CHUNK_CRASHK);
+ 	pr_info("Reserving %lluMB of memory at %lluMB "
+ 		"for crashkernel (System RAM: %luMB)\n",
+ 		crash_size >> 20, crash_base >> 20, memory_end >> 20);
+@@ -802,7 +803,8 @@ setup_memory(void)
+ 	for (i = 0; i < MEMORY_CHUNKS && memory_chunk[i].size > 0; i++) {
+ 		unsigned long start_chunk, end_chunk, pfn;
+ 
+-		if (memory_chunk[i].type != CHUNK_READ_WRITE)
++		if (memory_chunk[i].type != CHUNK_READ_WRITE &&
++		    memory_chunk[i].type != CHUNK_CRASHK)
+ 			continue;
+ 		start_chunk = PFN_DOWN(memory_chunk[i].addr);
+ 		end_chunk = start_chunk + PFN_DOWN(memory_chunk[i].size);
 
-
-> [PATCH] makedumpfile: Fix array traversal for array of structure and char type.
-> 
-> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> 
-> Introduce new function get_next_list_entry() that returns config entry
-> for each element in the LIST entry. This approach improves the handling
-> of LIST entry. With this change the function get_config_symbol_addr()
-> no longer required to handle LIST entry separately.
-> 
-> This patch fixes following BUGs:
-> 
-> - If the loop construct is used for array of structures (non-pointer), then
-> the array index value is not incremented resulting in an infinite loop. This
-> patch fixes this BUG.
-> - The loop construct used for array of char* (pointer) silently fails and
-> does not filter the strings.
-> - Corrected 2nd argument while calling get_structure_size().
-> - Fixed dwarf_info.c:get_data_array_length() to handle array of const data
-> type.
->   e.g.
-> 	<1><1a49df3>: Abbrev Number: 90 (DW_TAG_variable)
-> 	   <1a49df4>   DW_AT_name        : policycap_names
-> 	   <1a49df8>   DW_AT_decl_file   : 1
-> 	   <1a49df9>   DW_AT_decl_line   : 43
-> 	   <1a49dfa>   DW_AT_type        : <0x1a49e08>
-> 	<1><1a49e08>: Abbrev Number: 7 (DW_TAG_const_type)
-> 	   <1a49e09>   DW_AT_type        : <0x1a49de3>
-> 	<1><1a49de3>: Abbrev Number: 4 (DW_TAG_array_type)
-> 	   <1a49de4>   DW_AT_type        : <0x1a3b276>
-> 	   <1a49de8>   DW_AT_sibling     : <0x1a49df3>
-> 
-> 
-> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-
-Acked-by: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-
-
-Thanks
-Ken'ichi Ohmichi
 
 _______________________________________________
 kexec mailing list
