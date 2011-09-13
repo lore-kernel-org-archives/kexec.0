@@ -1,25 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R3HXd-0002S6-N3
-	for kexec@lists.infradead.org; Tue, 13 Sep 2011 01:12:03 +0000
-Received: from joe.akashicho.tokyo.vergenet.net
-	(joe.akashicho.tokyo.vergenet.net
-	[IPv6:2001:470:f44f:403:1ec1:deff:fe98:754d])
-	by kirsty.vergenet.net (Postfix) with ESMTP id 2C36D24051
-	for <kexec@lists.infradead.org>; Tue, 13 Sep 2011 11:11:56 +1000 (EST)
-Resent-Message-ID: <20110913011155.GB30077@verge.net.au>
-Resent-To: kexec@lists.infradead.org
-Received: from mail3.pillardata.com ([209.120.231.20])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R3Ak1-0005pt-6R
-	for kexec@lists.infradead.org; Mon, 12 Sep 2011 17:56:21 +0000
-From: Mark Maule <mmaule@pillardata.com>
-Date: Mon, 12 Sep 2011 10:50:33 -0700
-Subject: kexec question
-Message-ID: <5CF79356C7EEA740B82E33FCB2F93862FC2BFCE1C4@CAMBX01.trans.corp>
-Content-Language: en-US
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1R3R0K-0006zu-4F
+	for kexec@lists.infradead.org; Tue, 13 Sep 2011 11:18:17 +0000
+Received: from /spool/local by au.ibm.com with XMail ESMTP
+	for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+	Tue, 13 Sep 2011 12:14:32 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p8DBF7dl1048608
+	for <kexec@lists.infradead.org>; Tue, 13 Sep 2011 21:15:07 +1000
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p8DBGnEX026836
+	for <kexec@lists.infradead.org>; Tue, 13 Sep 2011 21:16:49 +1000
+Message-ID: <4E6F3B9D.7060305@linux.vnet.ibm.com>
+Date: Tue, 13 Sep 2011 16:46:45 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Subject: Re: makedumpfile: Add erased information in compressed kdump file
+	and ELF formatted dumpfile
+References: <682646784.634954.1315851890438.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <682646784.634954.1315851890438.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,149 +30,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0231569506=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "horms@verge.net.au" <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Dave Anderson <anderson@redhat.com>
+Cc: V Srivatsa <vsrivatsa@in.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Reinhard <BUENDGEN@de.ibm.com>
 
---===============0231569506==
-Content-Language: en-US
-Content-Type: multipart/alternative;
-	boundary="_000_5CF79356C7EEA740B82E33FCB2F93862FC2BFCE1C4CAMBX01transc_"
+On 09/12/2011 11:54 PM, Dave Anderson wrote:
+> 
+> Hi Mahesh,
+> 
+> Now that this feature is in makedumpfile-1.4.0, I presume that you
+> have crash utility "warning" patches underway?
 
---_000_5CF79356C7EEA740B82E33FCB2F93862FC2BFCE1C4CAMBX01transc_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Yup. I am working on it, will post the patches very soon.
 
-Resending - did not include the kexec list in my prior email:
+> 
+> Also, can you confirm that compressed or kdumps with (or without)
+> eraseinfo data can still be handled with no problem by the current
+> version of the crash utility?  I'm not talking about the ramifications
+> of whatever kernel data may have been erased, but whether the changes to
+> the dumpfile headers could cause a problem.  I'm presuming that the
+> compressed kdump eraseinfo data would be invisible to an older version
+> of crash, and that ELF kdump eraseinfo would just show up as an (unused)
+> ELF note -- but I just want to make sure. 
 
-I'm experimenting with kexec on x86_64.  I see ppc64 has the ability to reu=
-se the initrd, which is something I would be very interested in using for x=
-86_64.
+Yes. The changes to dumpfile header and addition of eraseinfo data/ELF
+note will not cause any problems with older crash version. With the
+current version of crash the ELF kdump eraseinfo note would show up as
+below:
 
-Is the reason it is not supported for x86_64 that no one has requested it, =
-or are there other technical reasons for this?
+Elf64_Nhdr:
+               n_namesz: 10 ("ERASEINFO")
+               n_descsz: 56
+                 n_type: 0 (?)
+                         2065736172650000 72616a5f64657263
+                         697320656d616e2e 650a36353220657a
+                         656e692065736172 736f746f72705f74
+                         303120657a697320
 
-thanks in advance
-Mark Maule
+Thanks,
+-Mahesh.
 
-
-
---_000_5CF79356C7EEA740B82E33FCB2F93862FC2BFCE1C4CAMBX01transc_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" xmlns:w=3D"urn:sc=
-hemas-microsoft-com:office:word" xmlns=3D"http://www.w3.org/TR/REC-html40">
-
-<head>
-<meta http-equiv=3DContent-Type content=3D"text/html; charset=3Dus-ascii">
-<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal;
-	font-family:Arial;
-	color:windowtext;}
-span.EmailStyle18
-	{mso-style-type:personal-reply;
-	font-family:Arial;
-	color:navy;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-
-</head>
-
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
-
-<div class=3DSection1>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span style=
-=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>Resending - did not include the kexec =
-list
-in my prior email:<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span style=
-=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'>I'm experimenting with kexec on x86_64.&nbsp; I see ppc6=
-4
-has the ability to reuse the initrd, which is something I would be very
-interested in using for x86_64.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'>Is the reason it is not supported for x86_64 that no one=
- has
-requested it, or are there other technical reasons for this?<o:p></o:p></sp=
-an></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'>thanks in advance<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'>Mark Maule<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span style=
-=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span style=3D'font-size:1=
-0.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
---_000_5CF79356C7EEA740B82E33FCB2F93862FC2BFCE1C4CAMBX01transc_--
-
-
-
---===============0231569506==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0231569506==--
-
-
