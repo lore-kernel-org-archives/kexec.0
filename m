@@ -1,27 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R3R0K-0006zu-4F
-	for kexec@lists.infradead.org; Tue, 13 Sep 2011 11:18:17 +0000
-Received: from /spool/local by au.ibm.com with XMail ESMTP
-	for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
-	Tue, 13 Sep 2011 12:14:32 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
-	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p8DBF7dl1048608
-	for <kexec@lists.infradead.org>; Tue, 13 Sep 2011 21:15:07 +1000
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
-	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p8DBGnEX026836
-	for <kexec@lists.infradead.org>; Tue, 13 Sep 2011 21:16:49 +1000
-Message-ID: <4E6F3B9D.7060305@linux.vnet.ibm.com>
-Date: Tue, 13 Sep 2011 16:46:45 +0530
-From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1R3Sld-0001ib-39
+	for kexec@lists.infradead.org; Tue, 13 Sep 2011 13:11:14 +0000
+Date: Tue, 13 Sep 2011 09:11:06 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC][patch 1/2] kdump: Add infrastructure for unmapping
+	crashkernel memory
+Message-ID: <20110913131106.GA29194@redhat.com>
+References: <20110908132609.177038405@linux.vnet.ibm.com>
+	<20110908132652.189920773@linux.vnet.ibm.com>
+	<20110909182325.GD15748@redhat.com>
+	<1315842902.3602.9.camel@br98xy6r>
 MIME-Version: 1.0
-Subject: Re: makedumpfile: Add erased information in compressed kdump file
-	and ELF formatted dumpfile
-References: <682646784.634954.1315851890438.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <682646784.634954.1315851890438.JavaMail.root@zmail05.collab.prod.int.phx2.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1315842902.3602.9.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,45 +27,176 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: V Srivatsa <vsrivatsa@in.ibm.com>, kexec@lists.infradead.org, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>, Reinhard <BUENDGEN@de.ibm.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
 
-On 09/12/2011 11:54 PM, Dave Anderson wrote:
+On Mon, Sep 12, 2011 at 05:55:02PM +0200, Michael Holzheu wrote:
+> Hello Vivek,
 > 
-> Hi Mahesh,
+> On Fri, 2011-09-09 at 14:23 -0400, Vivek Goyal wrote:
+> > On Thu, Sep 08, 2011 at 03:26:10PM +0200, Michael Holzheu wrote:
+> > > From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> > > 
+> > > This patch introduces a mechanism that allows architecture backends to
+> > > remove page tables for the crashkernel memory. This can protect the loaded
+> > > kdump kernel from being overwritten by broken kernel code.
+> > > A new function crash_map_pages() is added that can be implemented by
+> > > architecture code. This function has the following syntax:
+> > 
+> > I guess having separate functions for mapping and unmapping pages might
+> > look cleaner. Because we are not passing a page range, so specifying
+> > what pages we are talking about in function name might make it more
+> > clear.
+> > 
+> > crash_map_reserved_pages()
+> > crash_unmap_reserved_pages().
 > 
-> Now that this feature is in makedumpfile-1.4.0, I presume that you
-> have crash utility "warning" patches underway?
-
-Yup. I am working on it, will post the patches very soon.
-
+> Ok fine, no problem.
 > 
-> Also, can you confirm that compressed or kdumps with (or without)
-> eraseinfo data can still be handled with no problem by the current
-> version of the crash utility?  I'm not talking about the ramifications
-> of whatever kernel data may have been erased, but whether the changes to
-> the dumpfile headers could cause a problem.  I'm presuming that the
-> compressed kdump eraseinfo data would be invisible to an older version
-> of crash, and that ELF kdump eraseinfo would just show up as an (unused)
-> ELF note -- but I just want to make sure. 
+> > Secondly, what happens to the code which runs after crash (crash_kexec()).
+> > Current x86 code assumes that reserved region is mapped at the time of
+> > crash and does few things with control page there. 
+> 
+> For s390, purgatory code can run in real mode. No page tables are
+> required.
+> 
+> > So this generic approach is not valid atleast for x86, because it does
+> > not tackle the scenario about how to map reserved range again once 
+> > kernel crashes. It will only work if there is assumption that after
+> > a crash, we don't expect reserved range/pages to be mapped.
+> 
+> All architectures that support unmapping of crashkernel memory have to
+> deal with this problem somehow. Either remap the crashkernel memory in
+> machine_kexec() again or be able to run in real mode.
+> 
+> I adjusted that patch regarding your comment above. Will the following
+> patch be ok for you?
 
-Yes. The changes to dumpfile header and addition of eraseinfo data/ELF
-note will not cause any problems with older crash version. With the
-current version of crash the ELF kdump eraseinfo note would show up as
-below:
+I guess it is fine. Atleast conceptually it makes sense to unmap
+the reserved memory pages to avoid accidental corruption from some
+kernel code. It does not take care of some kind of DMA happening
+to this memory location though.
 
-Elf64_Nhdr:
-               n_namesz: 10 ("ERASEINFO")
-               n_descsz: 56
-                 n_type: 0 (?)
-                         2065736172650000 72616a5f64657263
-                         697320656d616e2e 650a36353220657a
-                         656e692065736172 736f746f72705f74
-                         303120657a697320
+I am not an memory management expert so not sure if this is best way
+to call unmap/map pages for some calls already exist which can do
+the job.
 
-Thanks,
--Mahesh.
+Anyway, this change is not visible to user and changes can be done
+later also without impacting anything else so it is a low risk change
+that way.
 
+So yes, please repost the series (as you need to change second patch
+also to reflect new function names). I will ack the first patch.
+
+Thanks
+Vivek 
+
+
+> ---
+> Subject: kdump: Add infrastructure for unmapping crashkernel memory
+> 
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> 
+> This patch introduces a mechanism that allows architecture backends to
+> remove page tables for the crashkernel memory. This can protect the loaded
+> kdump kernel from being overwritten by broken kernel code.  Two new
+> functions crash_map_reserved_pages() and crash_unmap_reserved_pages() are
+> added that can be implemented by architecture code.  The
+> crash_map_reserved_pages() function is called before and
+> crash_unmap_reserved_pages() after the crashkernel segments are loaded.  The
+> functions are also called in crash_shrink_memory() to create/remove page
+> tables when the crashkernel memory size is reduced.
+> 
+> To support architectures that have large pages this patch also introduces
+> a new define KEXEC_CRASH_MEM_ALIGN. The crashkernel start and size must 
+> always be aligned with KEXEC_CRASH_MEM_ALIGN.
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> ---
+>  include/linux/kexec.h |    6 ++++++
+>  kernel/kexec.c        |   21 +++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -37,6 +37,10 @@
+>  #define KEXEC_CRASH_CONTROL_MEMORY_LIMIT KEXEC_CONTROL_MEMORY_LIMIT
+>  #endif
+>  
+> +#ifndef KEXEC_CRASH_MEM_ALIGN
+> +#define KEXEC_CRASH_MEM_ALIGN PAGE_SIZE
+> +#endif
+> +
+>  #define KEXEC_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
+>  #define KEXEC_CORE_NOTE_NAME "CORE"
+>  #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
+> @@ -133,6 +137,8 @@ extern void crash_kexec(struct pt_regs *
+>  int kexec_should_crash(struct task_struct *);
+>  void crash_save_cpu(struct pt_regs *regs, int cpu);
+>  void crash_save_vmcoreinfo(void);
+> +void crash_map_reserved_pages(void);
+> +void crash_unmap_reserved_pages(void);
+>  void arch_crash_save_vmcoreinfo(void);
+>  void vmcoreinfo_append_str(const char *fmt, ...)
+>  	__attribute__ ((format (printf, 1, 2)));
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -999,6 +999,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
+>  			kimage_free(xchg(&kexec_crash_image, NULL));
+>  			result = kimage_crash_alloc(&image, entry,
+>  						     nr_segments, segments);
+> +			crash_map_reserved_pages();
+>  		}
+>  		if (result)
+>  			goto out;
+> @@ -1015,6 +1016,8 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
+>  				goto out;
+>  		}
+>  		kimage_terminate(image);
+> +		if (flags & KEXEC_ON_CRASH)
+> +			crash_unmap_reserved_pages();
+>  	}
+>  	/* Install the new kernel, and  Uninstall the old */
+>  	image = xchg(dest_image, image);
+> @@ -1026,6 +1029,18 @@ out:
+>  	return result;
+>  }
+>  
+> +/*
+> + * Add and remove page tables for crashkernel memory
+> + *
+> + * Provide an empty default implementation here -- architecture
+> + * code may override this
+> + */
+> +void __weak crash_map_reserved_pages(void)
+> +{}
+> +
+> +void __weak crash_unmap_reserved_pages(void)
+> +{}
+> +
+>  #ifdef CONFIG_COMPAT
+>  asmlinkage long compat_sys_kexec_load(unsigned long entry,
+>  				unsigned long nr_segments,
+> @@ -1134,14 +1149,16 @@ int crash_shrink_memory(unsigned long ne
+>  		goto unlock;
+>  	}
+>  
+> -	start = roundup(start, PAGE_SIZE);
+> -	end = roundup(start + new_size, PAGE_SIZE);
+> +	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
+> +	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
+>  
+> +	crash_map_reserved_pages();
+>  	crash_free_reserved_phys_range(end, crashk_res.end);
+>  
+>  	if ((start == end) && (crashk_res.parent != NULL))
+>  		release_resource(&crashk_res);
+>  	crashk_res.end = end - 1;
+> +	crash_unmap_reserved_pages();
+>  
+>  unlock:
+>  	mutex_unlock(&kexec_mutex);
+> 
 
 _______________________________________________
 kexec mailing list
