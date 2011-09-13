@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from va3ehsobe010.messaging.microsoft.com ([216.32.180.30]
-	helo=VA3EHSOBE010.bigfish.com)
+Received: from smtp-out.google.com ([74.125.121.67])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R3al4-0000hu-Mp
-	for kexec@lists.infradead.org; Tue, 13 Sep 2011 21:43:15 +0000
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-Subject: Re: vmcore_init() failure using uImage on fsl_booke
-Date: Tue, 13 Sep 2011 21:42:55 +0000
-Message-ID: <CAEsOVNcbaUH3nEay4qgWv9tU7oSqsBvkAN136m7DVQpqijXT3A@mail.gmail.com>
-References: <D58A856745AB5A47B1448181D1A8BBFA0F6195C855@EUSAACMS0701.eamcs.ericsson.se>
-In-Reply-To: <D58A856745AB5A47B1448181D1A8BBFA0F6195C855@EUSAACMS0701.eamcs.ericsson.se>
-Content-Language: en-US
-Content-ID: <AFB3469D42557C41ADFA07ADBAD60E20@freescale.net>
-MIME-Version: 1.0
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
+	id 1R3auK-0000kk-Vg
+	for kexec@lists.infradead.org; Tue, 13 Sep 2011 21:52:45 +0000
+Date: Tue, 13 Sep 2011 14:52:18 -0700
+From: Andrew Morton <akpm@google.com>
+Subject: Re: [patch v2 2/2] s390: Add architecture code for unmapping
+	crashkernel memory
+Message-Id: <20110913145218.659f9e21.akpm@google.com>
+In-Reply-To: <20110913132654.157278466@linux.vnet.ibm.com>
+References: <20110913132635.063397500@linux.vnet.ibm.com>
+	<20110913132654.157278466@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,73 +20,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dennis Flynn <dennis.flynn@ericsson.com>
-Cc: McClintock Matthew-B29882 <B29882@freescale.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Tue, Sep 13, 2011 at 4:33 PM, Dennis Flynn <dennis.flynn@ericsson.com> w=
-rote:
-> Reserved crash kernel memory: crashkernel=3D256M@512
+On Tue, 13 Sep 2011 15:26:37 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
 
-I assume this is 512M?
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> 
+> This patch implements the crash_map_pages() function for s390.
+> KEXEC_CRASH_MEM_ALIGN is set to HPAGE_SIZE, in order to support
+> kernel mappings that use large pages.
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> ---
+>  arch/s390/include/asm/kexec.h    |    3 +++
+>  arch/s390/kernel/machine_kexec.c |   31 +++++++++++++++++++++++++++++++
+>  arch/s390/kernel/setup.c         |   10 ++++++----
+>  3 files changed, 40 insertions(+), 4 deletions(-)
+> 
+> --- a/arch/s390/include/asm/kexec.h
+> +++ b/arch/s390/include/asm/kexec.h
+> @@ -36,6 +36,9 @@
+>  /* Allocate one page for the pdp and the second for the code */
+>  #define KEXEC_CONTROL_PAGE_SIZE 4096
+>  
+> +/* Alignment of crashkernel memory */
+> +#define KEXEC_CRASH_MEM_ALIGN HPAGE_SIZE
 
-> Reading 16 bytes from address 0x000000002086E000 within /dev/oldmem
-> 00 00 00 00 00 00 00 00
-> Warning: Core image elf header not found
-> Kdump: vmcore not initialized
->
-> Here's the crash kernel bootline showing the elfcorehdr argument passed t=
-o the crash kernel.
->
-> Kernel command line: irqpoll maxcpus=3D1 reset_devices boot_mode=3Dcrash =
-root=3D/dev/nfs =A0nfsroot=3D127.3.252.1:/var/export/hitchhiker-6kn/current=
-/rootfs =A0ip=3D127.3.10.1:127.3.252.1:127.3.252.1:255.255.0.0:hitchhiker-6=
-kn:eth0:off =A0rbn_net_dev=3Deth0 console=3DttyS0,115200 dump_type=3Dkernel=
- dump_server=3D0.0.0.0 dump_server_port=3D9999 hwether=3Dx board_name=3Dwol=
-f_lc slot_number=3D255 =A0elfcorehdr=3D532920K savemaxmem=3D2048M
->
-> To help me debug all of this I added some debug prints to the powerpc kex=
-ec code (default_machine_kexec()) so I could verify the kernel kimage and m=
-emory segment contents. See below.
->
-> Bye!
-> Calling reboot_code_buffer (vaddr:0xe086f000): page_list=3D0x00000004, re=
-boot_code_buffer_phys=3D0x2086f000, start=3D0x2fffa724
->
-> Dumping kimage @ 0xdfbdf800
-> =A0head: 0x00000004
-> =A0entry: 0xdfbdf800
-> =A0last_entry: 0xdfbdf800
-> =A0destination: 0x00000000
-> =A0start: 0x2fffa724
-> =A0control_code_page: 0xc0c97de0
-> =A0swap_page: 0x =A0(null)
-> =A0control_page: 0x2086ffff
-> =A0type: 0x00000001
-> =A0preserve_context: 0x00000000
-> nr_segments =3D 5
-> segment[0].buf =A0 =3D 48831008
-> segment[0].bufsz =3D 75d640
-> segment[0].mem =A0 =3D 0x20000000
-> segment[0].memsz =3D 85e000
-> segment[1].buf =A0 =3D 1007d988
-> segment[1].bufsz =3D 10000
-> segment[1].mem =A0 =3D 0x2085e000
-> segment[1].memsz =3D 10000
-> segment[2].buf =A0 =3D 1007d350
-> segment[2].bufsz =3D 400
-> segment[2].mem =A0 =3D 0x2086e000
-> segment[2].memsz =3D 1000
+Why not make this unconditional, for all architectures which support
+hugepages?  ie:
 
-It appears to have allocated a segment at this address. Can you try
-adding debug statements to exec to see the contents of this segment? I
-suspect kexec is loading nothing since it does not have an ELF header
-to load for the uImage case.
+#ifdef HPAGE_SIZE
+#define KEXEC_CRASH_MEM_ALIGN HPAGE_SIZE
+#else
+#define KEXEC_CRASH_MEM_ALIGN PAGE_SIZE
+#endif
 
--M
+in include/linux/kexec.h?
+
+IOW, what are the compromises here?
+
+Also, does s390 support CONFIG_HUGETLB_PAGE=n?  If so, does the use of
+HPAGE_SIZE still make sense?  Does it compile?
+
+
+>  /* The native architecture */
+>  #define KEXEC_ARCH KEXEC_ARCH_S390
+>  
+> --- a/arch/s390/kernel/machine_kexec.c
+> +++ b/arch/s390/kernel/machine_kexec.c
+> @@ -243,6 +243,37 @@ static void __machine_kdump(void *image)
+>  #endif
+>  
+>  /*
+> + * Map or unmap crashkernel memory
+> + */
+> +static void crash_map_pages(int enable)
+> +{
+> +	unsigned long size = crashk_res.end - crashk_res.start + 1;
+
+resource_size().
+
+> +	BUG_ON(crashk_res.start % KEXEC_CRASH_MEM_ALIGN ||
+> +	       size % KEXEC_CRASH_MEM_ALIGN);
+> +	if (enable)
+> +		vmem_add_mapping(crashk_res.start, size);
+> +	else
+> +		vmem_remove_mapping(crashk_res.start, size);
+> +}
+>
+> ...
+>
 
 _______________________________________________
 kexec mailing list
