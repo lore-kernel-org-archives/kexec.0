@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R3TEC-00033E-1r
-	for kexec@lists.infradead.org; Tue, 13 Sep 2011 13:40:45 +0000
-Date: Tue, 13 Sep 2011 09:40:35 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch v2 1/2] kdump: Add infrastructure for unmapping
-	crashkernel memory
-Message-ID: <20110913134035.GB29194@redhat.com>
-References: <20110913132635.063397500@linux.vnet.ibm.com>
-	<20110913132653.979044245@linux.vnet.ibm.com>
+Received: from ch1ehsobe004.messaging.microsoft.com ([216.32.181.184]
+	helo=ch1outboundpool.messaging.microsoft.com)
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1R3ZLB-0007IP-PO
+	for kexec@lists.infradead.org; Tue, 13 Sep 2011 20:12:22 +0000
+From: McClintock Matthew-B29882 <B29882@freescale.com>
+Subject: Re: Kexec on P1020 - "Can't add kernel to addr 0x00000000"
+Date: Tue, 13 Sep 2011 20:10:04 +0000
+Message-ID: <CAEsOVNd2+VKXNUYmTat7hhKA4w=01pq-ZAzt742=AMKLSLu5kQ@mail.gmail.com>
+References: <CAGWwFG=OWdnGMib_0RhTfKRcPd8A4P_nkm_EWYBqfuP-11b5VA@mail.gmail.com>
+In-Reply-To: <CAGWwFG=OWdnGMib_0RhTfKRcPd8A4P_nkm_EWYBqfuP-11b5VA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <4539AEF270C59A479944A226876E1AE7@freescale.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110913132653.979044245@linux.vnet.ibm.com>
+Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,123 +22,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, akpm@linux-foundation.org, kexec@lists.infradead.org
+To: john hagen <hjagen@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Sep 13, 2011 at 03:26:36PM +0200, Michael Holzheu wrote:
-> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> 
-> This patch introduces a mechanism that allows architecture backends to
-> remove page tables for the crashkernel memory. This can protect the loaded
-> kdump kernel from being overwritten by broken kernel code.  Two new
-> functions crash_map_reserved_pages() and crash_unmap_reserved_pages() are
-> added that can be implemented by architecture code.  The
-> crash_map_reserved_pages() function is called before and
-> crash_unmap_reserved_pages() after the crashkernel segments are loaded.  The
-> functions are also called in crash_shrink_memory() to create/remove page
-> tables when the crashkernel memory size is reduced.
-> 
-> To support architectures that have large pages this patch also introduces
-> a new define KEXEC_CRASH_MEM_ALIGN. The crashkernel start and size must 
-> always be aligned with KEXEC_CRASH_MEM_ALIGN.
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On Fri, Sep 9, 2011 at 9:36 AM, john hagen <hjagen@gmail.com> wrote:
+> Hello,
+>
+> I'm trying to make use of kexec on a couple of boards, a P1020rdb and
+> a custom P1011 board. My first attempts seem to report this "Can't add
+> kernel to addr 0x00000000". What is kexec trying to tell me? Looking
+> for a pointer here, thanks.
+>
+> JH
+>
+> [root@P1020RDB jlhagen]# cat /proc/cmdline
+> root=3D/dev/ram rw crashkernel=3D128M@32M console=3DttyS0,115200 ramdisk_=
+size=3D600000
+>
+> [root@P1020RDB jlhagen]# dmesg | grep -i reser
+> Reserving 128MB of memory at 32MB for crashkernel (System RAM: 512MB)
+>
+> [root@P1020RDB jlhagen]# ls -al /proc/device-tree/memory/
+> dr-xr-xr-x =A0 =A02 root =A0 =A0 root =A0 =A0 =A0 =A0 =A0 =A00 Jan =A01 0=
+0:11 .
+> dr-xr-xr-x =A0 10 root =A0 =A0 root =A0 =A0 =A0 =A0 =A0 =A00 Jan =A01 00:=
+11 ..
+> -r--r--r-- =A0 =A01 root =A0 =A0 root =A0 =A0 =A0 =A0 =A0 =A07 Jan =A01 0=
+0:11 device_type
+> -r--r--r-- =A0 =A01 root =A0 =A0 root =A0 =A0 =A0 =A0 =A0 =A07 Jan =A01 0=
+0:11 name
+> -r--r--r-- =A0 =A01 root =A0 =A0 root =A0 =A0 =A0 =A0 =A0 16 Jan =A01 00:=
+11 reg
+>
+> [root@P1020RDB jlhagen]# ./kexec -t uImage-ppc -l uImage-3.0.3
+> --dtb=3D./p1020rdb.dtb
+> kernel: 0x4802f008 kernel_size: 24bda4
+> Can't add kernel to addr 0x00000000 len 8182336
+> Cannot load uImage-3.0.3
 
-Looks reasonable conceptually. Hence...
+This seems wrong since if you are just kexec'ing it does not matter
+what the load address is. Something else is setting an overlapping
+region that is conflicting or there is an issue. Can you try with a
+vmlinuxx or recompile with DEBUG?
 
-Acked-by: Vivek Goyal <vgoyal@redhat.com>
+> [root@P1020RDB jlhagen]# ./kexec -p -t uImage-ppc uImage-3.0.3
+> kernel: 0x4802f008 kernel_size: 24bda4
+> Can't add kernel to addr 0x00000000 len 8182336
+> Cannot load uImage-3.0.3
 
-Thanks
-Vivek
+You uImage has a hard coded address of 0x0 for the kernel image. It's
+saying I can't load the kexec kernel here since it's not in your
+crashkernel memory region. Did you run a custom mkimage to modify the
+load/entry address of your kexec uImage for kdump?
 
-> ---
->  include/linux/kexec.h |    6 ++++++
->  kernel/kexec.c        |   21 +++++++++++++++++++--
->  2 files changed, 25 insertions(+), 2 deletions(-)
-> 
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -37,6 +37,10 @@
->  #define KEXEC_CRASH_CONTROL_MEMORY_LIMIT KEXEC_CONTROL_MEMORY_LIMIT
->  #endif
->  
-> +#ifndef KEXEC_CRASH_MEM_ALIGN
-> +#define KEXEC_CRASH_MEM_ALIGN PAGE_SIZE
-> +#endif
-> +
->  #define KEXEC_NOTE_HEAD_BYTES ALIGN(sizeof(struct elf_note), 4)
->  #define KEXEC_CORE_NOTE_NAME "CORE"
->  #define KEXEC_CORE_NOTE_NAME_BYTES ALIGN(sizeof(KEXEC_CORE_NOTE_NAME), 4)
-> @@ -133,6 +137,8 @@ extern void crash_kexec(struct pt_regs *
->  int kexec_should_crash(struct task_struct *);
->  void crash_save_cpu(struct pt_regs *regs, int cpu);
->  void crash_save_vmcoreinfo(void);
-> +void crash_map_reserved_pages(void);
-> +void crash_unmap_reserved_pages(void);
->  void arch_crash_save_vmcoreinfo(void);
->  void vmcoreinfo_append_str(const char *fmt, ...)
->  	__attribute__ ((format (printf, 1, 2)));
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -999,6 +999,7 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  			kimage_free(xchg(&kexec_crash_image, NULL));
->  			result = kimage_crash_alloc(&image, entry,
->  						     nr_segments, segments);
-> +			crash_map_reserved_pages();
->  		}
->  		if (result)
->  			goto out;
-> @@ -1015,6 +1016,8 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
->  				goto out;
->  		}
->  		kimage_terminate(image);
-> +		if (flags & KEXEC_ON_CRASH)
-> +			crash_unmap_reserved_pages();
->  	}
->  	/* Install the new kernel, and  Uninstall the old */
->  	image = xchg(dest_image, image);
-> @@ -1026,6 +1029,18 @@ out:
->  	return result;
->  }
->  
-> +/*
-> + * Add and remove page tables for crashkernel memory
-> + *
-> + * Provide an empty default implementation here -- architecture
-> + * code may override this
-> + */
-> +void __weak crash_map_reserved_pages(void)
-> +{}
-> +
-> +void __weak crash_unmap_reserved_pages(void)
-> +{}
-> +
->  #ifdef CONFIG_COMPAT
->  asmlinkage long compat_sys_kexec_load(unsigned long entry,
->  				unsigned long nr_segments,
-> @@ -1134,14 +1149,16 @@ int crash_shrink_memory(unsigned long ne
->  		goto unlock;
->  	}
->  
-> -	start = roundup(start, PAGE_SIZE);
-> -	end = roundup(start + new_size, PAGE_SIZE);
-> +	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
-> +	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
->  
-> +	crash_map_reserved_pages();
->  	crash_free_reserved_phys_range(end, crashk_res.end);
->  
->  	if ((start == end) && (crashk_res.parent != NULL))
->  		release_resource(&crashk_res);
->  	crashk_res.end = end - 1;
-> +	crash_unmap_reserved_pages();
->  
->  unlock:
->  	mutex_unlock(&kexec_mutex);
+-M
 
 _______________________________________________
 kexec mailing list
