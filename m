@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R49sX-0000jx-BS
+	id 1R49sX-0000jw-Bc
 	for kexec@lists.infradead.org; Thu, 15 Sep 2011 11:13:14 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [RFC] sh: Take into account the base of physical memory in
-	virt_to_phys()
-Date: Thu, 15 Sep 2011 20:12:59 +0900
-Message-Id: <1316085179-4207-1-git-send-email-horms@verge.net.au>
+Subject: [PATCH] sh: kexec: Add PHYSICAL_START
+Date: Thu, 15 Sep 2011 20:13:00 +0900
+Message-Id: <1316085180-4215-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,44 +20,150 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, linux-sh@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>
+To: Paul Mundt <lethal@linux-sh.org>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-Previously virt_to_phys() assumed that physical memory always started
-at address 0. This is not always the case.
+Add PHYSICAL_START kernel configuration parameter to set the address at
+which the kernel should be loaded.
 
-Tested on an sh7757lcr (32bit system) whose only System RAM region is
-40000000-4effffff
+It has been observed on an sh7757lcr that simply modifying MEMORY_START
+does not achieve this goal for 32bit sh. This is due to MEMORY_OFFSET in
+arch/sh/kernel/vmlinux.lds.S bot being based on MEMORY_START on such
+systems.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
- kexec/arch/sh/kexec-sh.c |   10 +++++++++-
- 1 files changed, 9 insertions(+), 1 deletions(-)
+ arch/sh/Kconfig              |   13 ++++++++++++-
+ arch/sh/boot/Makefile        |    6 ++++--
+ arch/sh/include/asm/page.h   |   10 ++++++++++
+ arch/sh/kernel/vmlinux.lds.S |    2 +-
+ arch/sh/mm/init.c            |    8 ++++----
+ 5 files changed, 31 insertions(+), 8 deletions(-)
 
-diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
-index 4b21ee8..b0381bb 100644
---- a/kexec/arch/sh/kexec-sh.c
-+++ b/kexec/arch/sh/kexec-sh.c
-@@ -188,10 +188,18 @@ void kexec_sh_setup_zero_page(char *zero_page_buf, size_t zero_page_size,
- unsigned long virt_to_phys(unsigned long addr)
- {
- 	unsigned long seg = addr & 0xe0000000;
-+	unsigned long long start, end;
-+	int ret;
-+
-+	/* Assume there is only one "System RAM" region */
-+	ret = parse_iomem_single("System RAM\n", &start, &end);
-+	if (ret)
-+		die("Could not parse System RAM region in /proc/iomem\n");
-+
- 	if (seg != 0x80000000 && seg != 0xc0000000)
- 		die("Virtual address %p is not in P1 or P2\n", (void *)addr);
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index ff9177c..bd8922c 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -649,7 +649,7 @@ config CRASH_DUMP
+ 	  a specially reserved region and then later executed after
+ 	  a crash by kdump/kexec. The crash dump kernel must be compiled
+ 	  to a memory address not used by the main kernel using
+-	  MEMORY_START.
++	  PHYSICAL_START.
  
--	return addr - seg;
-+	return addr - seg + start;
- }
+ 	  For more details see Documentation/kdump/kdump.txt
+ 
+@@ -660,6 +660,17 @@ config KEXEC_JUMP
+ 	  Jump between original kernel and kexeced kernel and invoke
+ 	  code via KEXEC
+ 
++config PHYSICAL_START
++	hex "Physical address where the kernel is loaded" if (EXPERT || CRASH_DUMP)
++	default MEMORY_START
++	---help---
++	  This gives the physical address where the kernel is loaded
++	  and is ordinarily the same as MEMORY_START.
++
++	  Different values are primarily used in the case of kexec on panic
++	  where the fail safe kernel needs to run at a different address
++	  than the panic-ed kernel.
++
+ config SECCOMP
+ 	bool "Enable seccomp to safely compute untrusted bytecode"
+ 	depends on PROC_FS
+diff --git a/arch/sh/boot/Makefile b/arch/sh/boot/Makefile
+index ba515d8..e4ea31a 100644
+--- a/arch/sh/boot/Makefile
++++ b/arch/sh/boot/Makefile
+@@ -19,6 +19,7 @@ CONFIG_MEMORY_START	?= 0x0c000000
+ CONFIG_BOOT_LINK_OFFSET	?= 0x00800000
+ CONFIG_ZERO_PAGE_OFFSET	?= 0x00001000
+ CONFIG_ENTRY_OFFSET	?= 0x00001000
++CONFIG_PHYSICAL_START	?= $(CONFIG_MEMORY_START)
+ 
+ suffix-y := bin
+ suffix-$(CONFIG_KERNEL_GZIP)	:= gz
+@@ -48,7 +49,7 @@ $(obj)/romimage/vmlinux: $(obj)/zImage FORCE
+ 	$(Q)$(MAKE) $(build)=$(obj)/romimage $@
+ 
+ KERNEL_MEMORY	:= $(shell /bin/bash -c 'printf "0x%08x" \
+-		     $$[$(CONFIG_MEMORY_START) & 0x1fffffff]')
++		     $$[$(CONFIG_PHYSICAL_START) & 0x1fffffff]')
+ 
+ KERNEL_LOAD	:= $(shell /bin/bash -c 'printf "0x%08x" \
+ 		     $$[$(CONFIG_PAGE_OFFSET)  + \
+@@ -114,4 +115,5 @@ $(obj)/uImage: $(obj)/uImage.$(suffix-y)
+ 	@echo '  Image $@ is ready'
+ 
+ export CONFIG_PAGE_OFFSET CONFIG_MEMORY_START CONFIG_BOOT_LINK_OFFSET \
+-       CONFIG_ZERO_PAGE_OFFSET CONFIG_ENTRY_OFFSET KERNEL_MEMORY suffix-y
++       CONFIG_PHYSICAL_START CONFIG_ZERO_PAGE_OFFSET CONFIG_ENTRY_OFFSET \
++       KERNEL_MEMORY suffix-y
+diff --git a/arch/sh/include/asm/page.h b/arch/sh/include/asm/page.h
+index 822d608..0dca9a5 100644
+--- a/arch/sh/include/asm/page.h
++++ b/arch/sh/include/asm/page.h
+@@ -113,6 +113,16 @@ typedef struct page *pgtable_t;
+ #define __MEMORY_SIZE		CONFIG_MEMORY_SIZE
  
  /*
++ * PHYSICAL_OFFSET is the offset in physical memory where the base
++ * of the kernel is loaded.
++ */
++#ifdef CONFIG_PHYSICAL_START
++#define PHYSICAL_OFFSET (CONFIG_PHYSICAL_START - __MEMORY_START)
++#else
++#define PHYSICAL_OFFSET 0
++#endif
++
++/*
+  * PAGE_OFFSET is the virtual address of the start of kernel address
+  * space.
+  */
+diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
+index 731c10c..c98905f 100644
+--- a/arch/sh/kernel/vmlinux.lds.S
++++ b/arch/sh/kernel/vmlinux.lds.S
+@@ -23,7 +23,7 @@ OUTPUT_ARCH(sh)
+ ENTRY(_start)
+ SECTIONS
+ {
+-	. = PAGE_OFFSET + MEMORY_OFFSET + CONFIG_ZERO_PAGE_OFFSET;
++	. = PAGE_OFFSET + MEMORY_OFFSET + PHYSICAL_OFFSET + CONFIG_ZERO_PAGE_OFFSET;
+ 
+ 	_text = .;		/* Text and read-only data */
+ 
+diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+index 58a93fb3..c9dbace 100644
+--- a/arch/sh/mm/init.c
++++ b/arch/sh/mm/init.c
+@@ -287,6 +287,8 @@ static void __init do_init_bootmem(void)
+ static void __init early_reserve_mem(void)
+ {
+ 	unsigned long start_pfn;
++	u32 zero_base = (u32)__MEMORY_START + (u32)PHYSICAL_OFFSET;
++	u32 start = zero_base + (u32)CONFIG_ZERO_PAGE_OFFSET;
+ 
+ 	/*
+ 	 * Partially used pages are not usable - thus
+@@ -300,15 +302,13 @@ static void __init early_reserve_mem(void)
+ 	 * this catches the (definitely buggy) case of us accidentally
+ 	 * initializing the bootmem allocator with an invalid RAM area.
+ 	 */
+-	memblock_reserve(__MEMORY_START + CONFIG_ZERO_PAGE_OFFSET,
+-		    (PFN_PHYS(start_pfn) + PAGE_SIZE - 1) -
+-		    (__MEMORY_START + CONFIG_ZERO_PAGE_OFFSET));
++	memblock_reserve(start, (PFN_PHYS(start_pfn) + PAGE_SIZE - 1) - start);
+ 
+ 	/*
+ 	 * Reserve physical pages below CONFIG_ZERO_PAGE_OFFSET.
+ 	 */
+ 	if (CONFIG_ZERO_PAGE_OFFSET != 0)
+-		memblock_reserve(__MEMORY_START, CONFIG_ZERO_PAGE_OFFSET);
++		memblock_reserve(zero_base, CONFIG_ZERO_PAGE_OFFSET);
+ 
+ 	/*
+ 	 * Handle additional early reservations
 -- 
 1.7.5.4
 
