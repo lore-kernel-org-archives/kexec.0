@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from mail-gy0-f177.google.com ([209.85.160.177])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R4Tfn-00048Y-1d
-	for kexec@lists.infradead.org; Fri, 16 Sep 2011 08:21:24 +0000
-Received: from d06nrmr1307.portsmouth.uk.ibm.com
-	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p8G8LIit012719
-	for <kexec@lists.infradead.org>; Fri, 16 Sep 2011 08:21:18 GMT
-Received: from d06av11.portsmouth.uk.ibm.com (d06av11.portsmouth.uk.ibm.com
-	[9.149.37.252])
-	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p8G8LIXO2527462
-	for <kexec@lists.infradead.org>; Fri, 16 Sep 2011 09:21:18 +0100
-Received: from d06av11.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av11.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p8G8LHMu031773
-	for <kexec@lists.infradead.org>; Fri, 16 Sep 2011 02:21:18 -0600
-Subject: Re: [patch 1/2] kdump: Initialize vmcoreinfo note at startup
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-In-Reply-To: <20110915184637.GF32658@redhat.com>
-References: <20110909102659.320220628@linux.vnet.ibm.com>
-	<20110909102732.497569031@linux.vnet.ibm.com>
-	<20110915184637.GF32658@redhat.com>
-Date: Fri, 16 Sep 2011 10:21:17 +0200
-Message-ID: <1316161277.3507.8.camel@br98xy6r>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+	id 1R4W8i-0006VU-UZ
+	for kexec@lists.infradead.org; Fri, 16 Sep 2011 10:59:25 +0000
+Received: by gyg13 with SMTP id 13so3180303gyg.36
+	for <kexec@lists.infradead.org>; Fri, 16 Sep 2011 03:59:22 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1316085179-4207-1-git-send-email-horms@verge.net.au>
+References: <1316085179-4207-1-git-send-email-horms@verge.net.au>
+Date: Fri, 16 Sep 2011 19:59:21 +0900
+Message-ID: <CANqRtoSa-Bk-QAdfzHQra8WTe93Qp=yMMm5Z81zYnHo7t158Bw@mail.gmail.com>
+Subject: Re: [RFC] sh: Take into account the base of physical memory in
+	virt_to_phys()
+From: Magnus Damm <magnus.damm@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,71 +21,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-Hello Vivek,
+On Thu, Sep 15, 2011 at 8:12 PM, Simon Horman <horms@verge.net.au> wrote:
+> Previously virt_to_phys() assumed that physical memory always started
+> at address 0. This is not always the case.
 
-On Thu, 2011-09-15 at 14:46 -0400, Vivek Goyal wrote:
-> On Fri, Sep 09, 2011 at 12:27:00PM +0200, Michael Holzheu wrote:
-> > From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> > 
-> > Currently the vmcoreinfo note is only initialized in case of kdump. On s390
-> > it is possible to create kernel dumps with other dump mechanisms than kdump
-> > (e.g. via hypervisor dump or stand-alone dump tools).
-> 
-> Both of these will be invoked through panic notifiers because kdump kernel
-> is not loaded?
+I think most boards have NOR Flash or ROM mapped at physical address 0.
 
-This is only one possibility. The other is that they are invoked
-manually or by hypervisor watchdog without any Linux kernel involvement.
+For more information please have a look at: arch/sh/boards/mach-ecovec24/se=
+tup.c
 
-> 
-> >For those dumps it
-> > would also be desirable to include the vmcoreinfo data.
-> 
-> Curious that how these two dump schemes make use vmcoreinfo data?
+> --- a/kexec/arch/sh/kexec-sh.c
+> +++ b/kexec/arch/sh/kexec-sh.c
+> @@ -188,10 +188,18 @@ void kexec_sh_setup_zero_page(char *zero_page_buf, =
+size_t zero_page_size,
+> =A0unsigned long virt_to_phys(unsigned long addr)
+> =A0{
+> =A0 =A0 =A0 =A0unsigned long seg =3D addr & 0xe0000000;
+> + =A0 =A0 =A0 unsigned long long start, end;
+> + =A0 =A0 =A0 int ret;
+> +
+> + =A0 =A0 =A0 /* Assume there is only one "System RAM" region */
+> + =A0 =A0 =A0 ret =3D parse_iomem_single("System RAM\n", &start, &end);
+> + =A0 =A0 =A0 if (ret)
+> + =A0 =A0 =A0 =A0 =A0 =A0 =A0 die("Could not parse System RAM region in /=
+proc/iomem\n");
+> +
+> =A0 =A0 =A0 =A0if (seg !=3D 0x80000000 && seg !=3D 0xc0000000)
+> =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0die("Virtual address %p is not in P1 or P2=
+\n", (void *)addr);
+>
+> - =A0 =A0 =A0 return addr - seg;
+> + =A0 =A0 =A0 return addr - seg + start;
+> =A0}
 
-We have a tool named zgetdump. With this tool it is possible to convert
-dump formats on the fly using fuse. E.g. you can mount a s390
-stand-alone dump as ELF dump. When this is done, the tool finds the
-vmcoreinfo in the stand-alone dump via our well known ABI defined
-address and it creates the respective VMCOREINFO ELF note in the output
-ELF dump. This then can be used e.g. by makedumpfile for dump filtering.
-No more need for a vmlinux file with debug information.
+This will most likely also change how 29-bit platforms translate their
+addresses, not sure if that's what you want to do.
 
-So this will look like the following:
+Thanks,
 
-# zgetdump --mount standalone.dump -f elf /mnt
-# ls /mnt
-# dump.elf
-# readelf -n /mnt/dump.elf
-# ...
-  VMCOREINFO		0x00000474	Unknown note type: (0x00000000)
-# makedumpfile -c -d 31 /mnt/dump.elf dump.kdump
-
-> 
-> > To accomplish this,
-> > with this patch the vmcoreinfo ELF note is always initialized, not only in
-> > case of a (kdump) crash. On s390 we will add an ABI defined pointer at
-> > a well known address to vmcoreinfo so that dump analysis tools are able to
-> > find this information.
-> 
-> Instead of this, why don't you initialize the notes in your arch specific
-> call. IOW, why don't you give a call to crash_save_vmcoreinfo() in stand
-> alone dump path to prepare the note and then continue with stand alone
-> dump.
-
-We can't do that because stand-alone and hypervisor dump can be
-triggered completely without Linux. So no Linux kernel function can/will
-be called.
-
-Michael
-
+/ magnus
 
 _______________________________________________
 kexec mailing list
