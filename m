@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R5iiI-0002MD-Q5
-	for kexec@lists.infradead.org; Mon, 19 Sep 2011 18:37:07 +0000
-Date: Mon, 19 Sep 2011 14:36:56 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [patch 1/2] kdump: Initialize vmcoreinfo note at startup
-Message-ID: <20110919183656.GC3373@redhat.com>
-References: <20110909102659.320220628@linux.vnet.ibm.com>
-	<20110909102732.497569031@linux.vnet.ibm.com>
-	<20110915184637.GF32658@redhat.com>
-	<1316161277.3507.8.camel@br98xy6r>
+Received: from p02c12o141.mxlogic.net ([208.65.145.74])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1R5k9f-0003tI-Qs
+	for kexec@lists.infradead.org; Mon, 19 Sep 2011 20:09:28 +0000
+From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
+Subject: kexec 2.0.2 MIPS
+Date: Mon, 19 Sep 2011 20:09:21 +0000
+Message-ID: <F9C551623D2CBB4C9488801D14F864C607150A@ex-mb1.corp.adtran.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1316161277.3507.8.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,70 +21,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "horms@verge.net.au" <horms@verge.net.au>
 
-On Fri, Sep 16, 2011 at 10:21:17AM +0200, Michael Holzheu wrote:
-> Hello Vivek,
-> 
-> On Thu, 2011-09-15 at 14:46 -0400, Vivek Goyal wrote:
-> > On Fri, Sep 09, 2011 at 12:27:00PM +0200, Michael Holzheu wrote:
-> > > From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> > > 
-> > > Currently the vmcoreinfo note is only initialized in case of kdump. On s390
-> > > it is possible to create kernel dumps with other dump mechanisms than kdump
-> > > (e.g. via hypervisor dump or stand-alone dump tools).
-> > 
-> > Both of these will be invoked through panic notifiers because kdump kernel
-> > is not loaded?
-> 
-> This is only one possibility. The other is that they are invoked
-> manually or by hypervisor watchdog without any Linux kernel involvement.
-> 
-> > 
-> > >For those dumps it
-> > > would also be desirable to include the vmcoreinfo data.
-> > 
-> > Curious that how these two dump schemes make use vmcoreinfo data?
-> 
-> We have a tool named zgetdump. With this tool it is possible to convert
-> dump formats on the fly using fuse. E.g. you can mount a s390
-> stand-alone dump as ELF dump. When this is done, the tool finds the
-> vmcoreinfo in the stand-alone dump via our well known ABI defined
-> address and it creates the respective VMCOREINFO ELF note in the output
-> ELF dump. This then can be used e.g. by makedumpfile for dump filtering.
-> No more need for a vmlinux file with debug information.
+Attempting to make kexec work for Mips32r2.  2.0.1 works, 2.0.2 doesn't.  Looking through the differences of the arch/mips folders I find that there is a reference to an extern simple_setup_start.  In 2.0.1 this appears to be referencing asm code from the file simple_setup_start.S, however, in 2.0.2 I cannot find the referenced location.
 
-Ok, so you basically need it so that makedumpfile can do filtering without
-debug info.
+Is this the reason that I cannot get a Linux kernel to boot using 2.0.2 using the same command line as the 2.0.1?
 
-Well, if zgetdump is doing everything and you are stashing away an arch
-specific pointer, I guss you could have saved pointer directly to
-vmcoreinfo_data and then zgetdump could have made an ELF note out of it
-for use of makedumpfile.
-
-But anyway, having kernel exported the note does not harm.
-
-> So this will look like the following:
-> 
-> # zgetdump --mount standalone.dump -f elf /mnt
-> # ls /mnt
-> # dump.elf
-> # readelf -n /mnt/dump.elf
-> # ...
->   VMCOREINFO		0x00000474	Unknown note type: (0x00000000)
-> # makedumpfile -c -d 31 /mnt/dump.elf dump.kdump
-
-If you can do this easily, then you really did not need kdump in kernel? 
-Just use stand alone dump to take dump and then do this to filter dump.
-
-But what happens to ELF headers which map kernel virtual address to
-physical addresses? kexec-tools prepares those. So in this case when
-you are capturing the dump, who prepares those? IOW, how does zgetdump
-creates a mapping between kernel virtual and physical addresses?
-
-Thanks
-Vivek
+Thanks in advance for any help you can provide,
+Andy Kennedy
 
 _______________________________________________
 kexec mailing list
