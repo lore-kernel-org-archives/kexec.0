@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+Received: from smtp-out.google.com ([74.125.121.67])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R6935-00074g-Gy
-	for kexec@lists.infradead.org; Tue, 20 Sep 2011 22:44:21 +0000
-Date: Tue, 20 Sep 2011 23:43:49 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH V2] ARM: kdump: copy kernel relocation code at the
-	kexec prepare stage
-Message-ID: <20110920224349.GC17169@n2100.arm.linux.org.uk>
-References: <1316151129-30491-1-git-send-email-leiwen@marvell.com>
-	<1316520043-14619-1-git-send-email-leiwen@marvell.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1316520043-14619-1-git-send-email-leiwen@marvell.com>
+	id 1R69Hh-0007Cl-0t
+	for kexec@lists.infradead.org; Tue, 20 Sep 2011 22:59:25 +0000
+Date: Tue, 20 Sep 2011 15:59:12 -0700
+From: Andrew Morton <akpm@google.com>
+Subject: Re: [patch 1/2] kdump: Initialize vmcoreinfo note at startup
+Message-Id: <20110920155912.d107fd49.akpm@google.com>
+In-Reply-To: <20110920143436.019045253@linux.vnet.ibm.com>
+References: <20110920143400.776127689@linux.vnet.ibm.com>
+	<20110920143436.019045253@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,21 +23,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lei Wen <leiwen@marvell.com>
-Cc: Yu Tang <ytang5@marvell.com>, Simon Horman <horms@verge.net.au>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chao Xie <cxie4@marvell.com>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Tue, Sep 20, 2011 at 08:00:43PM +0800, Lei Wen wrote:
-> This copy really don't need to do at the very second before the kernel
-> would crash.
+On Tue, 20 Sep 2011 16:34:01 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 > 
-> Signed-off-by: Lei Wen <leiwen@marvell.com>
-> Acked-by: Simon Horman <horms@verge.net.au>
-> ---
-> Changelog:
-> V2: move the flush_icache_range after the memcpy operation to ensure I/D cache
->     coherency for the relocation code
+> Currently the vmcoreinfo note is only initialized in case of kdump. On s390
+> it is possible to create kernel dumps with other dump mechanisms than kdump
+> (e.g. via hypervisor dump or stand-alone dump tools). For those dumps it
+> would also be desirable to include the vmcoreinfo data. To accomplish this,
+> with this patch the vmcoreinfo ELF note is always initialized, not only in
+> case of a (kdump) crash. On s390 we will add an ABI defined pointer at
+> a well known address to vmcoreinfo so that dump analysis tools are able to
+> find this information.
+> 
+> In particular on s390 we have a tool named zgetdump. With this tool it is
+> possible to convert dump formats on the fly using fuse. E.g. you can mount a
+> s390 stand-alone dump as ELF dump. When this is done, the tool finds the
+> vmcoreinfo in the stand-alone dump via the well known ABI defined address and
+> it creates the respective VMCOREINFO ELF note in the output ELF dump. This then
+> can be used e.g. by makedumpfile for dump filtering.  No more need for a
+> vmlinux file with debug information.
+> 
+> So this will look like the following:
+> $ zgetdump --mount standalone.dump -f elf /mnt
+> $ ls /mnt
+>   dump.elf
+> $ readelf -n /mnt/dump.elf
+> $ ...
+>   VMCOREINFO            0x00000474      Unknown note type: (0x00000000)
+> $ makedumpfile -c -d 31 /mnt/dump.elf dump.kdump
+> 
+> ...
+>
+> -void crash_save_vmcoreinfo(void)
+> +static void update_vmcoreinfo_note(void)
+>  {
+> -	u32 *buf;
+> +	u32 *buf = (u32 *) vmcoreinfo_note;
 
-Much better, thanks.
+The cast is unneeded?
+
+>  	if (!vmcoreinfo_size)
+>  		return;
+> -
+> -	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
+> -
+> -	buf = (u32 *)vmcoreinfo_note;
+
+As was the space you added after it ;)
+
+>  	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
+>  			      vmcoreinfo_size);
+> -
+>  	final_note(buf);
+>  }
+
 
 _______________________________________________
 kexec mailing list
