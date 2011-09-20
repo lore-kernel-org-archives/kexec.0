@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from [2002:4e20:1eda::1] (helo=caramon.arm.linux.org.uk)
+Received: from mail-ew0-f47.google.com ([209.85.215.47])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R5cqn-0000I3-6D
-	for kexec@lists.infradead.org; Mon, 19 Sep 2011 12:21:31 +0000
-Date: Mon, 19 Sep 2011 13:20:59 +0100
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ARM: kdump: copy kernel relocation code at the kexec
-	prepare stage
-Message-ID: <20110919122059.GQ16381@n2100.arm.linux.org.uk>
-References: <1316151129-30491-1-git-send-email-leiwen@marvell.com>
+	id 1R5sCn-0007S2-3Q
+	for kexec@lists.infradead.org; Tue, 20 Sep 2011 04:45:14 +0000
+Received: by ewy7 with SMTP id 7so32951ewy.20
+	for <kexec@lists.infradead.org>; Mon, 19 Sep 2011 21:45:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1316151129-30491-1-git-send-email-leiwen@marvell.com>
+In-Reply-To: <20110917081129.GB22218@verge.net.au>
+References: <1316085179-4207-1-git-send-email-horms@verge.net.au>
+	<CANqRtoSa-Bk-QAdfzHQra8WTe93Qp=yMMm5Z81zYnHo7t158Bw@mail.gmail.com>
+	<20110917081129.GB22218@verge.net.au>
+From: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Date: Tue, 20 Sep 2011 13:44:43 +0900
+Message-ID: <CABMQnVL0bd956U5GWuBcW9CEMY9v6hksGL-iH52_1uihcwnk2A@mail.gmail.com>
+Subject: Re: [RFC] sh: Take into account the base of physical memory in
+	virt_to_phys()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,74 +23,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Lei Wen <leiwen@marvell.com>
-Cc: Yu Tang <ytang5@marvell.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Chao Xie <chao.xie@marvell.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org
 
-On Thu, Sep 15, 2011 at 10:32:09PM -0700, Lei Wen wrote:
-> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-> index e59bbd4..f60fc90 100644
-> --- a/arch/arm/kernel/machine_kexec.c
-> +++ b/arch/arm/kernel/machine_kexec.c
-> @@ -32,6 +32,21 @@ static atomic_t waiting_for_crash_ipi;
->  
->  int machine_kexec_prepare(struct kimage *image)
->  {
-> +	unsigned long page_list;
-> +	void *reboot_code_buffer;
-> +	page_list = image->head & PAGE_MASK;
-> +
-> +	reboot_code_buffer = page_address(image->control_code_page);
-> +
-> +	/* Prepare parameters for reboot_code_buffer*/
-> +	kexec_start_address = image->start;
-> +	kexec_indirection_page = page_list;
-> +	kexec_mach_type = machine_arch_type;
-> +	kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
-> +
-> +	/* copy our kernel relocation code to the control code page */
-> +	memcpy(reboot_code_buffer,
-> +	       relocate_new_kernel, relocate_new_kernel_size);
->  	return 0;
->  }
->  
-> @@ -82,29 +97,14 @@ void (*kexec_reinit)(void);
->  
->  void machine_kexec(struct kimage *image)
->  {
-> -	unsigned long page_list;
->  	unsigned long reboot_code_buffer_phys;
->  	void *reboot_code_buffer;
->  
-> -
-> -	page_list = image->head & PAGE_MASK;
-> -
->  	/* we need both effective and real address here */
->  	reboot_code_buffer_phys =
->  	    page_to_pfn(image->control_code_page) << PAGE_SHIFT;
->  	reboot_code_buffer = page_address(image->control_code_page);
->  
-> -	/* Prepare parameters for reboot_code_buffer*/
-> -	kexec_start_address = image->start;
-> -	kexec_indirection_page = page_list;
-> -	kexec_mach_type = machine_arch_type;
-> -	kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
-> -
-> -	/* copy our kernel relocation code to the control code page */
-> -	memcpy(reboot_code_buffer,
-> -	       relocate_new_kernel, relocate_new_kernel_size);
-> -
-> -
->  	flush_icache_range((unsigned long) reboot_code_buffer,
->  			   (unsigned long) reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
+Hi, all.
 
-You should keep this flush with the memcpy - the two are intimately
-related - the flush is to ensure I/D cache coherency for the code
-which was copied into the page.  Splitting them into two different
-functions is asking for future bugs.
+I forgot to have sent the following patches to solve the same problem.
+  http://www.spinics.net/lists/linux-sh/msg05954.html
+
+I was going to add the mode which worked to proc/cpuinfo.
+Because the user did not know whether a kernel was 29bit or 32bit from
+the user space.
+
+Paul, do you think so?
+
+Best regards,
+  Nobuhiro
+
+2011/9/17 Simon Horman <horms@verge.net.au>:
+> On Fri, Sep 16, 2011 at 07:59:21PM +0900, Magnus Damm wrote:
+>> On Thu, Sep 15, 2011 at 8:12 PM, Simon Horman <horms@verge.net.au> wrote:
+>> > Previously virt_to_phys() assumed that physical memory always started
+>> > at address 0. This is not always the case.
+>>
+>> I think most boards have NOR Flash or ROM mapped at physical address 0.
+>>
+>> For more information please have a look at: arch/sh/boards/mach-ecovec24=
+/setup.c
+>>
+>> > --- a/kexec/arch/sh/kexec-sh.c
+>> > +++ b/kexec/arch/sh/kexec-sh.c
+>> > @@ -188,10 +188,18 @@ void kexec_sh_setup_zero_page(char *zero_page_bu=
+f, size_t zero_page_size,
+>> > =A0unsigned long virt_to_phys(unsigned long addr)
+>> > =A0{
+>> > =A0 =A0 =A0 =A0unsigned long seg =3D addr & 0xe0000000;
+>> > + =A0 =A0 =A0 unsigned long long start, end;
+>> > + =A0 =A0 =A0 int ret;
+>> > +
+>> > + =A0 =A0 =A0 /* Assume there is only one "System RAM" region */
+>> > + =A0 =A0 =A0 ret =3D parse_iomem_single("System RAM\n", &start, &end);
+>> > + =A0 =A0 =A0 if (ret)
+>> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 die("Could not parse System RAM region i=
+n /proc/iomem\n");
+>> > +
+>> > =A0 =A0 =A0 =A0if (seg !=3D 0x80000000 && seg !=3D 0xc0000000)
+>> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0die("Virtual address %p is not in P1 or=
+ P2\n", (void *)addr);
+>> >
+>> > - =A0 =A0 =A0 return addr - seg;
+>> > + =A0 =A0 =A0 return addr - seg + start;
+>> > =A0}
+>>
+>> This will most likely also change how 29-bit platforms translate their
+>> addresses, not sure if that's what you want to do.
+>
+> I am also unsure about the 29bit case. Do you have any thoughts on
+> what a good approach might look like?
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at =A0http://vger.kernel.org/majordomo-info.html
+>
+
+
+
+-- =
+
+Nobuhiro Iwamatsu
+=A0=A0 iwamatsu at {nigauri.org / debian.org}
+=A0=A0 GPG ID: 40AD1FA6
 
 _______________________________________________
 kexec mailing list
