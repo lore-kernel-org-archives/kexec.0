@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-From: Lei Wen <leiwen@marvell.com>
-Subject: [PATCH V2] ARM: kdump: copy kernel relocation code at the kexec
-	prepare stage
-Date: Tue, 20 Sep 2011 20:00:43 +0800
-Message-Id: <1316520043-14619-1-git-send-email-leiwen@marvell.com>
-In-Reply-To: <1316151129-30491-1-git-send-email-leiwen@marvell.com>
-References: <1316151129-30491-1-git-send-email-leiwen@marvell.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1R60Ey-0005oi-NB
+	for kexec@lists.infradead.org; Tue, 20 Sep 2011 13:20:01 +0000
+Date: Tue, 20 Sep 2011 09:19:52 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [patch 1/2] kdump: Initialize vmcoreinfo note at startup
+Message-ID: <20110920131952.GA28830@redhat.com>
+References: <20110909102659.320220628@linux.vnet.ibm.com>
+	<20110909102732.497569031@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20110909102732.497569031@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,90 +20,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Simon Horman <horms@verge.net.au>, Yu Tang <ytang5@marvell.com>, Chao Xie <cxie4@marvell.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: linux-s390@vger.kernel.org, mahesh@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, schwidefsky@de.ibm.com, kexec@lists.infradead.org
 
-This copy really don't need to do at the very second before the kernel
-would crash.
+On Fri, Sep 09, 2011 at 12:27:00PM +0200, Michael Holzheu wrote:
+> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> 
+> Currently the vmcoreinfo note is only initialized in case of kdump. On s390
+> it is possible to create kernel dumps with other dump mechanisms than kdump
+> (e.g. via hypervisor dump or stand-alone dump tools). For those dumps it
+> would also be desirable to include the vmcoreinfo data. To accomplish this,
+> with this patch the vmcoreinfo ELF note is always initialized, not only in
+> case of a (kdump) crash. On s390 we will add an ABI defined pointer at
+> a well known address to vmcoreinfo so that dump analysis tools are able to
+> find this information.
+> 
+> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
 
-Signed-off-by: Lei Wen <leiwen@marvell.com>
-Acked-by: Simon Horman <horms@verge.net.au>
----
-Changelog:
-V2: move the flush_icache_range after the memcpy operation to ensure I/D cache
-    coherency for the relocation code
+Looks good to me.
 
- arch/arm/kernel/machine_kexec.c |   35 ++++++++++++++++++-----------------
- 1 files changed, 18 insertions(+), 17 deletions(-)
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
-index e59bbd4..c1b4463 100644
---- a/arch/arm/kernel/machine_kexec.c
-+++ b/arch/arm/kernel/machine_kexec.c
-@@ -32,6 +32,24 @@ static atomic_t waiting_for_crash_ipi;
- 
- int machine_kexec_prepare(struct kimage *image)
- {
-+	unsigned long page_list;
-+	void *reboot_code_buffer;
-+	page_list = image->head & PAGE_MASK;
-+
-+	reboot_code_buffer = page_address(image->control_code_page);
-+
-+	/* Prepare parameters for reboot_code_buffer*/
-+	kexec_start_address = image->start;
-+	kexec_indirection_page = page_list;
-+	kexec_mach_type = machine_arch_type;
-+	kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
-+
-+	/* copy our kernel relocation code to the control code page */
-+	memcpy(reboot_code_buffer,
-+	       relocate_new_kernel, relocate_new_kernel_size);
-+
-+	flush_icache_range((unsigned long) reboot_code_buffer,
-+			   (unsigned long) reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
- 	return 0;
- }
- 
-@@ -82,31 +100,14 @@ void (*kexec_reinit)(void);
- 
- void machine_kexec(struct kimage *image)
- {
--	unsigned long page_list;
- 	unsigned long reboot_code_buffer_phys;
- 	void *reboot_code_buffer;
- 
--
--	page_list = image->head & PAGE_MASK;
--
- 	/* we need both effective and real address here */
- 	reboot_code_buffer_phys =
- 	    page_to_pfn(image->control_code_page) << PAGE_SHIFT;
- 	reboot_code_buffer = page_address(image->control_code_page);
- 
--	/* Prepare parameters for reboot_code_buffer*/
--	kexec_start_address = image->start;
--	kexec_indirection_page = page_list;
--	kexec_mach_type = machine_arch_type;
--	kexec_boot_atags = image->start - KEXEC_ARM_ZIMAGE_OFFSET + KEXEC_ARM_ATAGS_OFFSET;
--
--	/* copy our kernel relocation code to the control code page */
--	memcpy(reboot_code_buffer,
--	       relocate_new_kernel, relocate_new_kernel_size);
--
--
--	flush_icache_range((unsigned long) reboot_code_buffer,
--			   (unsigned long) reboot_code_buffer + KEXEC_CONTROL_PAGE_SIZE);
- 	printk(KERN_INFO "Bye!\n");
- 
- 	if (kexec_reinit)
--- 
-1.7.0.4
-
+> ---
+>  kernel/kexec.c |   18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1392,24 +1392,23 @@ int __init parse_crashkernel(char 		 *cm
+>  }
+>  
+>  
+> -
+> -void crash_save_vmcoreinfo(void)
+> +static void update_vmcoreinfo_note(void)
+>  {
+> -	u32 *buf;
+> +	u32 *buf = (u32 *) vmcoreinfo_note;
+>  
+>  	if (!vmcoreinfo_size)
+>  		return;
+> -
+> -	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
+> -
+> -	buf = (u32 *)vmcoreinfo_note;
+> -
+>  	buf = append_elf_note(buf, VMCOREINFO_NOTE_NAME, 0, vmcoreinfo_data,
+>  			      vmcoreinfo_size);
+> -
+>  	final_note(buf);
+>  }
+>  
+> +void crash_save_vmcoreinfo(void)
+> +{
+> +	vmcoreinfo_append_str("CRASHTIME=%ld", get_seconds());
+> +	update_vmcoreinfo_note();
+> +}
+> +
+>  void vmcoreinfo_append_str(const char *fmt, ...)
+>  {
+>  	va_list args;
+> @@ -1495,6 +1494,7 @@ static int __init crash_save_vmcoreinfo_
+>  	VMCOREINFO_NUMBER(PG_swapcache);
+>  
+>  	arch_crash_save_vmcoreinfo();
+> +	update_vmcoreinfo_note();
+>  
+>  	return 0;
+>  }
 
 _______________________________________________
 kexec mailing list
