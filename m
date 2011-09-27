@@ -1,27 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate2.uk.ibm.com ([194.196.100.162])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R8Avw-0000MQ-P8
-	for kexec@lists.infradead.org; Mon, 26 Sep 2011 13:09:21 +0000
-Received: from d06nrmr1806.portsmouth.uk.ibm.com
-	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
-	by mtagate2.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p8QD9Aws024653
-	for <kexec@lists.infradead.org>; Mon, 26 Sep 2011 13:09:10 GMT
-Received: from d06av08.portsmouth.uk.ibm.com (d06av08.portsmouth.uk.ibm.com
-	[9.149.37.249])
-	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p8QD99GV2355452
-	for <kexec@lists.infradead.org>; Mon, 26 Sep 2011 14:09:09 +0100
-Received: from d06av08.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av08.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p8QD99FX004034
-	for <kexec@lists.infradead.org>; Mon, 26 Sep 2011 14:09:09 +0100
-Subject: kexec: load-preserve-context option on s390
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Mon, 26 Sep 2011 15:09:09 +0200
-Message-ID: <1317042549.3157.9.camel@br98xy6r>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1R8cY6-00019n-4N
+	for kexec@lists.infradead.org; Tue, 27 Sep 2011 18:38:34 +0000
+Message-ID: <4E821824.7090900@sgi.com>
+Date: Tue, 27 Sep 2011 11:38:28 -0700
+From: Jay Lan <jlan@sgi.com>
+MIME-Version: 1.0
+Subject: rhel5.6 kdump initrd problem?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,26 +16,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, ying.huang@intel.com
+To: kexec@lists.infradead.org
 
-Hello Simon,
+Hi all,
 
-I think the --load-preserve-context and --load-jump-back-helper kexec
-options are not working on s390 because we do not support
-CONFIG_KEXEC_JUMP. I assume the same is true also on other
-architectures. Correct me, if I am wrong. Unfortunately I did not find
-much documentation for that feature.
+I have a system running 2.6.18-238.12.1.el5 kernel.
+The kexec version is kexec-tools-1.102pre-126.el5_6.6.
 
-Wouldn't it be better to print an error message when the options are
-used on those architectures?
+The kernel was booted OK. Then it ran /etc/init.d/kdump
+and a new kdump initrd image was created.
+A kernel crash was triggered. The kdump kernel was booted
+alright. However, it failed to boot when it tried to boot
+back the regular kernel (now with the kdump initrd image
+specified in the menu.lst.)
 
-Michael
+Has anyone else seen this problem?
 
+Thanks,
+Jay
 
 
 _______________________________________________
