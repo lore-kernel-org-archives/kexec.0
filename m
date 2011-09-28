@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R8v9J-0003FD-Kw
-	for kexec@lists.infradead.org; Wed, 28 Sep 2011 14:30:14 +0000
-Date: Wed, 28 Sep 2011 10:30:08 -0400
-From: Neil Horman <nhorman@redhat.com>
-Subject: Re: rhel5.6 kdump initrd problem?
-Message-ID: <20110928143008.GD15446@hmsreliant.think-freely.org>
-References: <4E821824.7090900@sgi.com>
- <20110928130842.GP5795@redhat.com>
+	id 1R91Br-0006pf-6j
+	for kexec@lists.infradead.org; Wed, 28 Sep 2011 20:57:17 +0000
+Message-ID: <4E838A1C.4010308@sgi.com>
+Date: Wed, 28 Sep 2011 13:57:00 -0700
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20110928130842.GP5795@redhat.com>
+Subject: Re: rhel5.6 kdump initrd problem?
+References: <4E821824.7090900@sgi.com> <20110928130842.GP5795@redhat.com>
+	<20110928143008.GD15446@hmsreliant.think-freely.org>
+In-Reply-To: <20110928143008.GD15446@hmsreliant.think-freely.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +19,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: Jay Lan <jlan@sgi.com>, kexec@lists.infradead.org
+To: Neil Horman <nhorman@redhat.com>
+Cc: Don Zickus <dzickus@redhat.com>, kexec@lists.infradead.org
 
-On Wed, Sep 28, 2011 at 09:08:42AM -0400, Don Zickus wrote:
-> On Tue, Sep 27, 2011 at 11:38:28AM -0700, Jay Lan wrote:
-> > Hi all,
-> > 
-> > I have a system running 2.6.18-238.12.1.el5 kernel.
-> > The kexec version is kexec-tools-1.102pre-126.el5_6.6.
-> > 
-> > The kernel was booted OK. Then it ran /etc/init.d/kdump
-> > and a new kdump initrd image was created.
-> > A kernel crash was triggered. The kdump kernel was booted
-> > alright. However, it failed to boot when it tried to boot
-> > back the regular kernel (now with the kdump initrd image
-> > specified in the menu.lst.)
-> 
-> Not sure why you would see the kdump initrd image in the menu.lst, it is
-> just a parameter sent to kexec.
-> 
-Its actually not even passed to kexec, we build the initrd using the output of
-uname -a, or override it manually with an option in /etc/sysconfig/kdump.  We
-don't ever mount the /boot partition, so /boot/grub/menu.lst shouldn't be
-accessible for re-writing.
+Thanks to all who replied.
 
-> You might have more success filing a Red Hat bz (bugzilla.redhat.com), as
-> the RHEL-5 kernel and kexec-tools are probably too old for discussion on
-> this list.
-> 
-Agreed, initramfs construction is a distro specific operation, the upstream
-project doesn't contain bits on how to do that.
-Neil
+Our problem was resolved. It was caused by two different
+configuration issues:
+1) As Don and Neil said, the kdump initrd img should not be
+     in the menu.lst. Not sure why it was there at first place.
+    So we changed the boot line to use the orignial initrd img.
+2) We had multiple lines of "ext3 LABEL=xxx" and it
+     guarantees at least one of them fail during mkdumprd
+     and kdump not started properly.
 
-> Cheers,
-> Don
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+All is fine now. Thanks to all who replied!
+
+Jay
+
+
+
+On 09/28/2011 07:30 AM, Neil Horman wrote:
+> On Wed, Sep 28, 2011 at 09:08:42AM -0400, Don Zickus wrote:
+>> On Tue, Sep 27, 2011 at 11:38:28AM -0700, Jay Lan wrote:
+>>> Hi all,
+>>>
+>>> I have a system running 2.6.18-238.12.1.el5 kernel.
+>>> The kexec version is kexec-tools-1.102pre-126.el5_6.6.
+>>>
+>>> The kernel was booted OK. Then it ran /etc/init.d/kdump
+>>> and a new kdump initrd image was created.
+>>> A kernel crash was triggered. The kdump kernel was booted
+>>> alright. However, it failed to boot when it tried to boot
+>>> back the regular kernel (now with the kdump initrd image
+>>> specified in the menu.lst.)
+>> Not sure why you would see the kdump initrd image in the menu.lst, it is
+>> just a parameter sent to kexec.
+>>
+> Its actually not even passed to kexec, we build the initrd using the output of
+> uname -a, or override it manually with an option in /etc/sysconfig/kdump.  We
+> don't ever mount the /boot partition, so /boot/grub/menu.lst shouldn't be
+> accessible for re-writing.
+>
+>> You might have more success filing a Red Hat bz (bugzilla.redhat.com), as
+>> the RHEL-5 kernel and kexec-tools are probably too old for discussion on
+>> this list.
+>>
+> Agreed, initramfs construction is a distro specific operation, the upstream
+> project doesn't contain bits on how to do that.
+> Neil
+>
+>> Cheers,
+>> Don
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+
 
 _______________________________________________
 kexec mailing list
