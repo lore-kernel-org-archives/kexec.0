@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R91Br-0006pf-6j
-	for kexec@lists.infradead.org; Wed, 28 Sep 2011 20:57:17 +0000
-Message-ID: <4E838A1C.4010308@sgi.com>
-Date: Wed, 28 Sep 2011 13:57:00 -0700
-From: Jay Lan <jlan@sgi.com>
+	id 1R93u9-0001VT-6R
+	for kexec@lists.infradead.org; Wed, 28 Sep 2011 23:51:09 +0000
+Date: Thu, 29 Sep 2011 08:51:02 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec: load-preserve-context option on s390
+Message-ID: <20110928235101.GB13684@verge.net.au>
+References: <1317042549.3157.9.camel@br98xy6r>
 MIME-Version: 1.0
-Subject: Re: rhel5.6 kdump initrd problem?
-References: <4E821824.7090900@sgi.com> <20110928130842.GP5795@redhat.com>
-	<20110928143008.GD15446@hmsreliant.think-freely.org>
-In-Reply-To: <20110928143008.GD15446@hmsreliant.think-freely.org>
+Content-Disposition: inline
+In-Reply-To: <1317042549.3157.9.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,68 +19,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Neil Horman <nhorman@redhat.com>
-Cc: Don Zickus <dzickus@redhat.com>, kexec@lists.infradead.org
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, ying.huang@intel.com
 
-Thanks to all who replied.
+On Mon, Sep 26, 2011 at 03:09:09PM +0200, Michael Holzheu wrote:
+> Hello Simon,
+> 
+> I think the --load-preserve-context and --load-jump-back-helper kexec
+> options are not working on s390 because we do not support
+> CONFIG_KEXEC_JUMP. I assume the same is true also on other
+> architectures. Correct me, if I am wrong. Unfortunately I did not find
+> much documentation for that feature.
+> 
+> Wouldn't it be better to print an error message when the options are
+> used on those architectures?
 
-Our problem was resolved. It was caused by two different
-configuration issues:
-1) As Don and Neil said, the kdump initrd img should not be
-     in the menu.lst. Not sure why it was there at first place.
-    So we changed the boot line to use the orignial initrd img.
-2) We had multiple lines of "ext3 LABEL=xxx" and it
-     guarantees at least one of them fail during mkdumprd
-     and kdump not started properly.
-
-All is fine now. Thanks to all who replied!
-
-Jay
-
-
-
-On 09/28/2011 07:30 AM, Neil Horman wrote:
-> On Wed, Sep 28, 2011 at 09:08:42AM -0400, Don Zickus wrote:
->> On Tue, Sep 27, 2011 at 11:38:28AM -0700, Jay Lan wrote:
->>> Hi all,
->>>
->>> I have a system running 2.6.18-238.12.1.el5 kernel.
->>> The kexec version is kexec-tools-1.102pre-126.el5_6.6.
->>>
->>> The kernel was booted OK. Then it ran /etc/init.d/kdump
->>> and a new kdump initrd image was created.
->>> A kernel crash was triggered. The kdump kernel was booted
->>> alright. However, it failed to boot when it tried to boot
->>> back the regular kernel (now with the kdump initrd image
->>> specified in the menu.lst.)
->> Not sure why you would see the kdump initrd image in the menu.lst, it is
->> just a parameter sent to kexec.
->>
-> Its actually not even passed to kexec, we build the initrd using the output of
-> uname -a, or override it manually with an option in /etc/sysconfig/kdump.  We
-> don't ever mount the /boot partition, so /boot/grub/menu.lst shouldn't be
-> accessible for re-writing.
->
->> You might have more success filing a Red Hat bz (bugzilla.redhat.com), as
->> the RHEL-5 kernel and kexec-tools are probably too old for discussion on
->> this list.
->>
-> Agreed, initramfs construction is a distro specific operation, the upstream
-> project doesn't contain bits on how to do that.
-> Neil
->
->> Cheers,
->> Don
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-
+Ideally it would be nice if kexec-tools could ask the kernel
+if KEXEC_JUMP is supported (or enabled?) or not rather than
+hardcoding this information into kexec-tools on a per-architecture basis.
 
 _______________________________________________
 kexec mailing list
