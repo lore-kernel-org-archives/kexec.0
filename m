@@ -1,31 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate2.uk.ibm.com ([194.196.100.162])
+Received: from p02c12o147.mxlogic.net ([208.65.145.80])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1R9Gox-0001va-GP
-	for kexec@lists.infradead.org; Thu, 29 Sep 2011 13:38:40 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate2.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p8TDcXRB018438
-	for <kexec@lists.infradead.org>; Thu, 29 Sep 2011 13:38:33 GMT
-Received: from d06av05.portsmouth.uk.ibm.com (d06av05.portsmouth.uk.ibm.com
-	[9.149.37.229])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p8TDcXQe2281626
-	for <kexec@lists.infradead.org>; Thu, 29 Sep 2011 14:38:33 +0100
-Received: from d06av05.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av05.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p8TDcWZV029699
-	for <kexec@lists.infradead.org>; Thu, 29 Sep 2011 07:38:32 -0600
-Subject: Re: kexec: load-preserve-context option on s390
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-In-Reply-To: <20110929133209.GA25760@redhat.com>
-References: <1317042549.3157.9.camel@br98xy6r>
-	<20110928235101.GB13684@verge.net.au>
-	<20110929133209.GA25760@redhat.com>
-Date: Thu, 29 Sep 2011 15:38:31 +0200
-Message-ID: <1317303511.3494.2.camel@br98xy6r>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+	id 1R9J1D-0004jt-AS
+	for kexec@lists.infradead.org; Thu, 29 Sep 2011 15:59:28 +0000
+From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
+Subject: RE: kexec 2.0.2 MIPS
+Date: Thu, 29 Sep 2011 15:59:18 +0000
+Message-ID: <F9C551623D2CBB4C9488801D14F864C6077ADD@ex-mb1.corp.adtran.com>
+References: <F9C551623D2CBB4C9488801D14F864C607154A@ex-mb1.corp.adtran.com>
+	<20110920085133.GE15087@verge.net.au>
+	<F9C551623D2CBB4C9488801D14F864C6072473@ex-mb1.corp.adtran.com>
+	<20110921112837.GF17108@verge.net.au>
+In-Reply-To: <20110921112837.GF17108@verge.net.au>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,55 +26,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ying.huang@intel.com
+To: Simon Horman <horms@verge.net.au>
+Cc: Maxim Uvarov <muvarov@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
 
-Hello Vivec,
+> $ git clone git://github.com/horms/kexec-tools.git
+> $ cd kexec-tools
+> $ git checkout 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17^
 
-On Thu, 2011-09-29 at 09:32 -0400, Vivek Goyal wrote:
-> On Thu, Sep 29, 2011 at 08:51:02AM +0900, Simon Horman wrote:
-> > On Mon, Sep 26, 2011 at 03:09:09PM +0200, Michael Holzheu wrote:
-> > > Hello Simon,
-> > > 
-> > > I think the --load-preserve-context and --load-jump-back-helper kexec
-> > > options are not working on s390 because we do not support
-> > > CONFIG_KEXEC_JUMP. I assume the same is true also on other
-> > > architectures. Correct me, if I am wrong. Unfortunately I did not find
-> > > much documentation for that feature.
-> > > 
-> > > Wouldn't it be better to print an error message when the options are
-> > > used on those architectures?
-> > 
-> > Ideally it would be nice if kexec-tools could ask the kernel
-> > if KEXEC_JUMP is supported (or enabled?) or not rather than
-> > hardcoding this information into kexec-tools on a per-architecture basis.
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: error: cannot find input file: `include/config.h.in'
+
+Just to make sure I did this correctly:
+
+# autoconf
+# CC=${CROSS_COMPILE}gcc LDFLAGS=-static ./configure
+<snip>
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: error: cannot find input file: `include/config.h.in'
+
 > 
-> Shouldn't kexec system call return error if KEXEC_JUMP is not supported
-> and user asked for it?
-
-I think currently not. I assume that we should check the
-KEXEC_PRESERVE_CONTEXT flag in the kexec_load system call.
-
-What about the following:
----
- kernel/kexec.c |    4 ++++
- 1 file changed, 4 insertions(+)
-
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -949,6 +949,10 @@ SYSCALL_DEFINE4(kexec_load, unsigned lon
- 	if (!capable(CAP_SYS_BOOT))
- 		return -EPERM;
- 
-+#ifndef CONFIG_KEXEC_JUMP
-+	if (flags & KEXEC_PRESERVE_CONTEXT)
-+		return -EOPNOTSUPP;
-+#endif
- 	/*
- 	 * Verify we have a legal set of flags
- 	 * This leaves us room for future extensions.
-
-
+> Build and see if it works. If so could you then try?
+> 
+> $ git checkout 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17
+> 
+> Build and see if it works. If it does not then
+> revision 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17 starts to smell
+> a lot like the cause of the problem you have observed.
+> 
+> 
+> Git Bisect
+> ----------
+> 
+> A git bisection works by doing a binary search over a set of
+> commits
+> in order to (hopefully) isolate which commit introduces a
+> regression.
+> 
+> To this, the git commands are something along these lines:
+> 
+> $ git clone git://github.com/horms/kexec-tools.git
+> $ cd kexec-tools
+> $ git checkout v2.0.1
+> 
+> Build and confirm that it does work
+> 
+> $ git checkout v2.0.2
+> 
+> Build and confirm that it does not work.
+> 
+> Now we actually start the bisect
+> 
+> $ git bisect start
+> $ git bisect bad v2.0.2
+> $ git bisect good v2.0.1
+> 
+> Git should now select a revision between v2.0.1 and v2.0.2
+> Test it and see if it works or not. If it does run
+> 
+> $ git bisect good
+> If not run
+> 
+> $ git bisect bad
+> 
+> Git will now select another revision for you to test...
+> 
+> 
+> 
 
 
 _______________________________________________
