@@ -1,25 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+Received: from e28smtp06.in.ibm.com ([122.248.162.6])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RAceC-0000Vm-Ed
-	for kexec@lists.infradead.org; Mon, 03 Oct 2011 07:09:10 +0000
-Received: from /spool/local by au.ibm.com with XMail ESMTP
-	for <kexec@lists.infradead.org> from <prasad@linux.vnet.ibm.com>;
-	Mon, 3 Oct 2011 08:04:45 +1000
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p9377fV02445392
-	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 18:07:41 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
-	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p9377eMJ030436
-	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 18:07:41 +1100
-Date: Mon, 3 Oct 2011 12:37:35 +0530
+	id 1RAd0h-0000im-Un
+	for kexec@lists.infradead.org; Mon, 03 Oct 2011 07:32:35 +0000
+Received: from d28relay03.in.ibm.com (d28relay03.in.ibm.com [9.184.220.60])
+	by e28smtp06.in.ibm.com (8.14.4/8.13.1) with ESMTP id p937W641014456
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 13:02:06 +0530
+Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
+	by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p937W5BV2027754
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 13:02:05 +0530
+Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
+	by d28av05.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p937W59c023796
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 18:32:05 +1100
+Date: Mon, 3 Oct 2011 13:02:03 +0530
 From: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Subject: [Patch 0/4] Slimdump framework using NT_NOCOREDUMP elf-note
-Message-ID: <20111003070735.GJ2223@in.ibm.com>
+Subject: [Patch 1/4][kernel][slimdump] Add new elf-note of type NT_NOCOREDUMP
+	to capture slimdump
+Message-ID: <20111003073203.GA22694@in.ibm.com>
+References: <20111003070735.GJ2223@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20111003070735.GJ2223@in.ibm.com>
 Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -36,142 +39,196 @@ Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, crash-utility@redhat.com, kexec@lists.infradead.org
 Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi All,
-	Please find a set of patches that introduce a 'slimdump'
-framework. Details as described below.
+There are certain types of crashes induced by faulty hardware in which
+capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
+dangerous).
 
-Problem
---------
-A system configured with kdump, captures the kernel memory
-for all types of crashes even when it doesn't make much sense to do so.
-For instance, system crashes triggered due to hardware errors don't need
-a complete dump of the memory for investigation.
+A case in point, is unrecoverable memory errors (resulting in fatal machine
+check exceptions) in which reading from the faulty memory location from the
+kexec'ed kernel will cause double fault and system reset (leaving no
+information for the user).
 
-In the case of crashes triggered by fatal machine check exceptions (MCE)
-due to unrecoverable memory errors, it is even dangerous to read the
-crashing kernel's memory. When the kexec kernel reads the crashing
-kernel's memory, it 'consumes' the data from the faulty memory location,
-potentially causing a recursion of faults.
+This patch introduces a framework called 'slimdump' enabled through a new
+elf-note NT_NOCOREDUMP. Any error whose cause cannot be attributed to a
+software error and cannot be detected by analysing the kernel memory may
+decide to add this elf-note to the vmcore and indicate the futility of
+such an exercise. Tools such as 'kexec', 'makedumpfile' and 'crash' are
+also modified in tandem to recognise this new elf-note and capture
+'slimdump'.
 
-This problem was previously discussed in the kernel community, with a
-proposal to leave out kernel memory regions from /proc/vmcore (refer:
-mail threads pertaining to
-http://article.gmane.org/gmane.linux.kernel/1148266). However there were
-suggestions against making this behaviour a kernel policy.
+The physical address and size of the NT_NOCOREDUMP are made available to the
+user-space through a "/sys/kernel/nt_nocoredump" sysfs file (just like other
+kexec related files).
 
-Solution
----------
-Since capturing of crashing kernel's memory for hardware error induced
-crashes isn't required or is dangerous, we introduce a mechanism to
-generate 'slimdump'.
+Signed-off-by: K.Prasad <prasad@linux.vnet.ibm.com>
+---
+ arch/x86/kernel/cpu/mcheck/mce.c |   28 ++++++++++++++++++++++++++++
+ include/linux/elf.h              |   18 ++++++++++++++++++
+ include/linux/kexec.h            |    1 +
+ kernel/kexec.c                   |   11 +++++++++++
+ kernel/ksysfs.c                  |   10 ++++++++++
+ 5 files changed, 68 insertions(+), 0 deletions(-)
 
-Basically, a new elf-note of type NT_NOCOREDUMP type is added by the
-kernel to the vmcore, which is recognised by all tools in the kdump chain
-to generate and save a 'slimdump' that contains only elf-headers and the
-elf-note section. The elf-note section may be used to add description
-about the cause of the error.
-
-The enclosed set of patches make changes to kernel, kexec, makedumpfile
-and crash tool to make them recognise the NT_NOCOREDUMP elf-note and
-generate a 'slimdump'. Also, fatal MCEs in the kernel is turned into a
-consumer of the slimdump mechanism to prevent collection of normal
-kdump.
-
-Alternatively, the user has an option (through suitable makedumpfile or
-kdump configuration options) to collect the complete vmcore or to
-extract the 'dmesg' from /proc/vmcore.
-
-Screen logs
--------------
-# mce-inject ~/mce/mce-test/cases/soft-inj/panic_ucr/data/srar_over
-[ 4934.748416] [Hardware Error]: CPU 0: Machine Check Exception: 6 Bank
-2: f580000000000000
-[ 4934.749079] [Hardware Error]: RIP 73:<000000001eadbabe> 
-[ 4934.749079] [Hardware Error]: TSC ef029a23417 ADDR 1234 
-[ 4934.749079] [Hardware Error]: PROCESSOR 0:663 TIME 1317149322 SOCKET
-0 APIC 0
-[ 4934.749079] [Hardware Error]: Run the above through 'mcelog --ascii'
-[ 4934.749079] [Hardware Error]: Machine check: Overflowed uncorrected
-[ 4934.749079] Kernel panic - not syncing: Fatal machine check on
-current CPU
-[ 4934.749079] Pid: 1379, comm: mce-inject Tainted: G   M
-3.1.0-rc4.slimdump+ #34
-[ 4934.749079] Call Trace:
-[ 4934.749079]  [<ffffffff81084922>] panic+0xbc/0x1cf
-[ 4934.749079]  [<ffffffff810858ff>] ? printk+0x6c/0x6e
-[ 4934.749079]  [<ffffffff8104c43b>] mce_panic+0x187/0x1a4
-[ 4934.749079]  [<ffffffff8104d525>] do_machine_check+0x5ec/0x6c3
-[ 4934.749079]  [<ffffffff8104e4e1>] raise_exception+0x5c/0x84
-[ 4934.749079]  [<ffffffff8104e5e9>] raise_local+0x5a/0xcc
-[ 4934.749079]  [<ffffffff8104e8ee>] mce_write+0x218/0x24e
-[ 4934.749079]  [<ffffffff8115abee>] vfs_write+0xb0/0x108
-[ 4934.749079]  [<ffffffff8115ad0a>] sys_write+0x4c/0x71
-[ 4934.749079]  [<ffffffff815bf12b>] system_call_fastpath+0x16/0x1b
-[    0.817861] kvm: no hardware support
-..............
-................
-.................
-# ls
-vmcore
-# ls -lh vmcore
--r-------- 1 root root 1.8G Sep 27 13:20 vmcore
-# ~/makedumpfile.slimdump/makedumpfile vmcore vmcore.makedumpfile.review
-The kernel version is not supported.
-The created dumpfile may be incomplete.
-Copying data                       : [100 %] 
-
-The dumpfile is saved to vmcore.makedumpfile.review.
-
-makedumpfile Completed.
-# ls -lh vmcore.makedumpfile.review
--rw------- 1 root root 3.9K Sep 28 01:40 vmcore.makedumpfile.review
-# eu-readelf -n
-vmcore.makedumpfile.review
-
-Note segment of 3592 bytes at offset 0x158:
-  Owner          Data size  Type
-  CORE                 336  PRSTATUS
-    info.si_signo: 0, info.si_code: 0, info.si_errno: 0, cursig: 0
-    sigpend: <>
-..........
-.............
-.........
-    NUMBER(PG_private)=11
-    NUMBER(PG_swapcache)=16
-    SYMBOL(phys_base)=ffffffff81a0e010
-    SYMBOL(init_level4_pgt)=ffffffff81a06000
-    SYMBOL(node_data)=ffffffff81b70b80
-    LENGTH(node_data)=512
-    CRASHTIME=1317621133
-
-  PANIC_MCE             49  <unknown>: 21
-# crash -S ~/linux-2.6.slimdump/System.map ~/linux-2.6.slimdump/vmlinux vmcore.makedumpfile.review
-
-crash 5.1.8
-Copyright (C) 2002-2011  Red Hat, Inc.
-Copyright (C) 2004, 2005, 2006  IBM Corporation
-Copyright (C) 1999-2006  Hewlett-Packard Co
-Copyright (C) 2005, 2006  Fujitsu Limited
-Copyright (C) 2006, 2007  VA Linux Systems Japan K.K.
-Copyright (C) 2005  NEC Corporation
-Copyright (C) 1999, 2002, 2007  Silicon Graphics, Inc.
-Copyright (C) 1999, 2000, 2001, 2002  Mission Critical Linux, Inc.
-This program is free software, covered by the GNU General Public
-License,
-and you are welcome to change it and/or distribute copies of it under
-certain conditions.  Enter "help copying" to see the conditions.
-This program has absolutely no warranty.  Enter "help warranty" for
-details.
+diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+index 08363b0..483b2fc 100644
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -238,6 +238,34 @@ static atomic_t mce_paniced;
+ static int fake_panic;
+ static atomic_t mce_fake_paniced;
  
-crash: overriding /boot/System.map with
-/home/prasadkr/linux-2.6.slimdump/System.map
-"System crashed due to a hardware memory error. No coredump available."
-Nocoredump Reason: PANIC_MCE
-crash: Elf64_Phdr pointer: 1c46170  ELF header end: 1c46130
-
--------
-Thanks,
-K.Prasad
++void arch_add_nocoredump_note(u32 *buf)
++{
++	struct elf_note note;
++	const char note_name[] = "PANIC_MCE";
++	const char desc_msg[] = "Crash induced due to a fatal machine "
++				"check error";
++
++	/*
++	 * Prevent coredump from being captured if the panic was triggered due
++	 * to a fatal Machine Check Exception (MCE).
++	 */
++	if ((atomic_read(&mce_paniced) == 0) ||
++		(strlen(desc_msg) >= NT_NOCOREDUMP_DESC_BYTES))
++		return;
++
++	note.n_namesz = strlen(note_name) + 1;
++	/* We have no additional description */
++	note.n_descsz = strlen(desc_msg) + 1;
++	note.n_type = NT_NOCOREDUMP;
++
++	memcpy(buf, &note, sizeof(note));
++	buf += (sizeof(note) + 3)/4;
++	memcpy(buf, note_name, note.n_namesz);
++	buf += (note.n_namesz + 3)/4;
++	memcpy(buf, desc_msg, note.n_descsz);
++	buf += (note.n_descsz + 3)/4;
++}
++
+ /* Panic in progress. Enable interrupts and wait for final IPI */
+ static void wait_for_panic(void)
+ {
+diff --git a/include/linux/elf.h b/include/linux/elf.h
+index 110821c..4be4746 100644
+--- a/include/linux/elf.h
++++ b/include/linux/elf.h
+@@ -381,6 +381,11 @@ typedef struct elf64_shdr {
+ #define NT_PRPSINFO	3
+ #define NT_TASKSTRUCT	4
+ #define NT_AUXV		6
++/*
++ * Note to indicate absence of coredump for crashes initiated due to hardware
++ * errors
++ */
++#define NT_NOCOREDUMP	21
+ #define NT_PRXFPREG     0x46e62b7f      /* copied from gdb5.1/include/elf/common.h */
+ #define NT_PPC_VMX	0x100		/* PowerPC Altivec/VMX registers */
+ #define NT_PPC_SPE	0x101		/* PowerPC SPE/EVR registers */
+@@ -435,6 +440,19 @@ extern Elf64_Dyn _DYNAMIC [];
+ 
+ #endif
+ 
++/* NT_NOCOREDUMP related definitions used while creating an elf-note */
++#define NT_NOCOREDUMP_HEAD_BYTES	ALIGN(sizeof(struct elf_note), 4)
++/*
++ * The creator of NT_NOCOREDUMP will define the name based on the reason for
++ * which dump is not captured. for e.g. "PANIC_MCE"
++ */
++#define NT_NOCOREDUMP_NAME_BYTES	50
++#define NT_NOCOREDUMP_DESC_BYTES	(1024)
++#define NT_NOCOREDUMP_NOTE_BYTES	(NT_NOCOREDUMP_HEAD_BYTES +	\
++					  NT_NOCOREDUMP_NAME_BYTES +	\
++					  NT_NOCOREDUMP_DESC_BYTES)
++extern u32 nt_nocoredump_note[(NT_NOCOREDUMP_NOTE_BYTES + 3)/4];
++
+ /* Optional callbacks to write extra ELF notes. */
+ #ifndef ARCH_HAVE_EXTRA_ELF_NOTES
+ static inline int elf_coredump_extra_notes_size(void) { return 0; }
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index c2478a3..84d9b1a 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -133,6 +133,7 @@ void arch_crash_save_vmcoreinfo(void);
+ void vmcoreinfo_append_str(const char *fmt, ...)
+ 	__attribute__ ((format (printf, 1, 2)));
+ unsigned long paddr_vmcoreinfo_note(void);
++unsigned long paddr_nocoredump_note(void);
+ 
+ #define VMCOREINFO_OSRELEASE(value) \
+ 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 296fbc8..d49456e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -50,6 +50,9 @@ u32 vmcoreinfo_note[VMCOREINFO_NOTE_SIZE/4];
+ size_t vmcoreinfo_size;
+ size_t vmcoreinfo_max_size = sizeof(vmcoreinfo_data);
+ 
++/* NT_NOCOREDUMP related definitions */
++u32 nt_nocoredump_note[(NT_NOCOREDUMP_NOTE_BYTES + 3)/4];
++
+ /* Location of the reserved area for the crash kernel */
+ struct resource crashk_res = {
+ 	.name  = "Crash kernel",
+@@ -1065,6 +1068,8 @@ asmlinkage long compat_sys_kexec_load(unsigned long entry,
+ }
+ #endif
+ 
++__weak void arch_add_nocoredump_note(u32 *buf) {}
++
+ void crash_kexec(struct pt_regs *regs)
+ {
+ 	/* Take the kexec_mutex here to prevent sys_kexec_load
+@@ -1083,6 +1088,7 @@ void crash_kexec(struct pt_regs *regs)
+ 
+ 			crash_setup_regs(&fixed_regs, regs);
+ 			crash_save_vmcoreinfo();
++			arch_add_nocoredump_note(nt_nocoredump_note);
+ 			machine_crash_shutdown(&fixed_regs);
+ 			machine_kexec(kexec_crash_image);
+ 		}
+@@ -1428,6 +1434,11 @@ unsigned long __attribute__ ((weak)) paddr_vmcoreinfo_note(void)
+ 	return __pa((unsigned long)(char *)&vmcoreinfo_note);
+ }
+ 
++unsigned long __attribute__ ((weak)) paddr_nocoredump_note(void)
++{
++	return __pa((unsigned long)(char *)&nt_nocoredump_note);
++}
++
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
+ 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+diff --git a/kernel/ksysfs.c b/kernel/ksysfs.c
+index 3b053c0..ef29ee6 100644
+--- a/kernel/ksysfs.c
++++ b/kernel/ksysfs.c
+@@ -130,6 +130,15 @@ static ssize_t vmcoreinfo_show(struct kobject *kobj,
+ }
+ KERNEL_ATTR_RO(vmcoreinfo);
+ 
++static ssize_t nt_nocoredump_show(struct kobject *kobj,
++			       struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%lx %x\n",
++		       paddr_nocoredump_note(),
++		       (unsigned int)NT_NOCOREDUMP_NOTE_BYTES);
++}
++KERNEL_ATTR_RO(nt_nocoredump);
++
+ #endif /* CONFIG_KEXEC */
+ 
+ /* whether file capabilities are enabled */
+@@ -180,6 +189,7 @@ static struct attribute * kernel_attrs[] = {
+ 	&kexec_crash_loaded_attr.attr,
+ 	&kexec_crash_size_attr.attr,
+ 	&vmcoreinfo_attr.attr,
++	&nt_nocoredump_attr.attr,
+ #endif
+ 	NULL
+ };
+-- 
+1.7.4.1
 
 
 _______________________________________________
