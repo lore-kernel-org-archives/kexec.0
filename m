@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RAfU7-0003sB-V1
-	for kexec@lists.infradead.org; Mon, 03 Oct 2011 10:11:00 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20111003070735.GJ2223@in.ibm.com>
-	<20111003073203.GA22694@in.ibm.com>
-Date: Mon, 03 Oct 2011 03:10:43 -0700
-In-Reply-To: <20111003073203.GA22694@in.ibm.com> (K. Prasad's message of "Mon, 
-	3 Oct 2011 13:02:03 +0530")
-Message-ID: <m162k64c7w.fsf@fess.ebiederm.org>
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RAfar-0003uY-7w
+	for kexec@lists.infradead.org; Mon, 03 Oct 2011 10:17:57 +0000
+Received: from /spool/local by au.ibm.com with XMail ESMTP
+	for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+	Mon, 3 Oct 2011 11:13:18 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+	by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p93AFLmt1941626
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 21:15:21 +1100
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+	by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p93AHUDb022304
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 21:17:30 +1100
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Subject: [PATCH] Series short description
+Date: Mon, 03 Oct 2011 15:47:28 +0530
+Message-ID: <20111003101723.30768.72889.stgit@suzukikp.in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
-	NT_NOCOREDUMP to capture slimdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,32 +31,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: prasad@linux.vnet.ibm.com
-Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+Cc: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, "M. Mohan Kumar" <mohan@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
 
-"K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+The following series implements...
 
-> There are certain types of crashes induced by faulty hardware in which
-> capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
-> dangerous).
->
-> A case in point, is unrecoverable memory errors (resulting in fatal machine
-> check exceptions) in which reading from the faulty memory location from the
-> kexec'ed kernel will cause double fault and system reset (leaving no
-> information for the user).
+---
 
-It does make plenty of sense, and I capture the all of the time.
-It totally doesn't make sense to do this in the kernel when we can
-filter this from userspace just fine.
+Suzuki K. Poulose (1):
+      kexec: powerpc: crash_dump: No backup region for PPC BookE
 
-Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
 
-I thought we already had this discussion.  Why is this silliness coming
-back?
+ configure.ac                       |    5 +++++
+ kexec/arch/ppc/crashdump-powerpc.c |    7 ++++++-
+ kexec/arch/ppc/crashdump-powerpc.h |    8 ++++++++
+ kexec/arch/ppc/kexec-ppc.c         |    5 +++++
+ purgatory/arch/ppc/purgatory-ppc.c |    2 ++
+ 5 files changed, 26 insertions(+), 1 deletions(-)
 
-I especially dislike the notion of hardcoding policy in the kernel like this.
+-- 
+Signature
 
-Eric
 
 _______________________________________________
 kexec mailing list
