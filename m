@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1R9fc5-0006Yg-0g
-	for kexec@lists.infradead.org; Fri, 30 Sep 2011 16:07:01 +0000
-Date: Fri, 30 Sep 2011 12:06:55 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kexec: load-preserve-context option on s390
-Message-ID: <20110930160655.GD25891@redhat.com>
-References: <1317042549.3157.9.camel@br98xy6r>
-	<20110928235101.GB13684@verge.net.au>
-	<20110929133209.GA25760@redhat.com>
-	<1317303511.3494.2.camel@br98xy6r>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1317303511.3494.2.camel@br98xy6r>
+	id 1RAWyS-000582-FJ
+	for kexec@lists.infradead.org; Mon, 03 Oct 2011 01:05:43 +0000
+From: Simon Horman <horms@verge.net.au>
+Subject: [PATCH v2] sh: Take into account the base of System RAM in
+	virt_to_phys()
+Date: Mon,  3 Oct 2011 10:05:18 +0900
+Message-Id: <1317603918-30762-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,48 +16,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ying.huang@intel.com
+To: kexec@lists.infradead.org, linux-sh@vger.kernel.org
+Cc: Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
 
-On Thu, Sep 29, 2011 at 03:38:31PM +0200, Michael Holzheu wrote:
-> Hello Vivec,
+Previously virt_to_phys() assumed that physical memory always started
+at address 0. This is not always the case.
 
-Right spelling is "Vivek" and not "Vivec" :-)
+Tested on an sh7757lcr (32bit system) whose only System RAM region is
+40000000-4effffff and an ecovec24 (29bit system).
 
-[..]
-> > Shouldn't kexec system call return error if KEXEC_JUMP is not supported
-> > and user asked for it?
-> 
-> I think currently not. I assume that we should check the
-> KEXEC_PRESERVE_CONTEXT flag in the kexec_load system call.
-> 
+Signed-off-by: Simon Horman <horms@verge.net.au>
 
-Shouldn't following existing code take care of this already?
+---
+ kexec/arch/sh/kexec-sh.c |   45 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 44 insertions(+), 1 deletions(-)
 
-        /*
-         * Verify we have a legal set of flags
-         * This leaves us room for future extensions.
-         */
-        if ((flags & KEXEC_FLAGS) != (flags & ~KEXEC_ARCH_MASK))
-                return -EINVAL;
+v2
+* Only use the base of System RAM as an offset into physical memory
+  if 32bit addressing is in use.
 
-In include/linux/kexec.h, we have following.
+diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+index 4b21ee8..94ebbc7 100644
+--- a/kexec/arch/sh/kexec-sh.c
++++ b/kexec/arch/sh/kexec-sh.c
+@@ -185,13 +185,56 @@ void kexec_sh_setup_zero_page(char *zero_page_buf, size_t zero_page_size,
+ 	}
+ }
+ 
++static int is_32bit(void)
++{
++	const char *cpuinfo = "/proc/cpuinfo";
++	char line[MAX_LINE], key[MAX_LINE], value[MAX_LINE];
++	FILE *fp;
++	int count;
++	int status = 0;
++
++	fp = fopen(cpuinfo, "r");
++	if (!fp)
++		die("Cannot open %s\n", cpuinfo);
++
++	while(fgets(line, sizeof(line), fp) != 0) {
++		count = sscanf(line, "%s : %s", key, value);
++		if (count != 2)
++			continue;
++		if (!strcmp(key, "address sizes")) {
++			if (!strcmp(value, "32 bits physical"))
++				status = 1;
++			break;
++		}
++	}
++
++	fclose(fp);
++
++	return status;
++}
++
+ unsigned long virt_to_phys(unsigned long addr)
+ {
+ 	unsigned long seg = addr & 0xe0000000;
++	unsigned long long start = 0;
++
+ 	if (seg != 0x80000000 && seg != 0xc0000000)
+ 		die("Virtual address %p is not in P1 or P2\n", (void *)addr);
+ 
+-	return addr - seg;
++	/* If 32bit addressing is used then the base of system RAM
++	 * is an offset into physical memory. */
++	if (is_32bit()) {
++		unsigned long long end;
++		int ret;
++
++		/* Assume there is only one "System RAM" region */
++		ret = parse_iomem_single("System RAM\n", &start, &end);
++		if (ret)
++			die("Could not parse System RAM region "
++			    "in /proc/iomem\n");
++	}
++
++	return addr - seg + start;
+ }
+ 
+ /*
+-- 
+1.7.5.4
 
-/* List of defined/legal kexec flags */
-#ifndef CONFIG_KEXEC_JUMP
-#define KEXEC_FLAGS    KEXEC_ON_CRASH
-#else
-#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
-#endif
-
-Not sure why it is not working.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
