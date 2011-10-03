@@ -1,24 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([122.248.162.5])
+Received: from e23smtp03.au.ibm.com ([202.81.31.145])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RAfcw-0003vB-8l
-	for kexec@lists.infradead.org; Mon, 03 Oct 2011 10:20:12 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp05.in.ibm.com (8.14.4/8.13.1) with ESMTP id p93AJTou029935
-	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 15:49:29 +0530
-Received: from d28av05.in.ibm.com (d28av05.in.ibm.com [9.184.220.67])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p93AIDd43928214
-	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 15:48:13 +0530
-Received: from d28av05.in.ibm.com (loopback [127.0.0.1])
-	by d28av05.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p93AICrk002458
-	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 21:18:13 +1100
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Subject: [PATCH] kexec: powerpc: crash_dump: No backup region for PPC BookE
-Date: Mon, 03 Oct 2011 15:48:12 +0530
-Message-ID: <20111003101746.30979.44424.stgit@suzukikp.in.ibm.com>
+	id 1RAhFR-0004wl-Pq
+	for kexec@lists.infradead.org; Mon, 03 Oct 2011 12:03:58 +0000
+Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
+	by e23smtp03.au.ibm.com (8.14.4/8.13.1) with ESMTP id p93BwAvY001702
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 22:58:10 +1100
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p93C3gNr2461744
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 23:03:42 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+	by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p93C3fB2025811
+	for <kexec@lists.infradead.org>; Mon, 3 Oct 2011 23:03:42 +1100
+Date: Mon, 3 Oct 2011 17:33:36 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
+	NT_NOCOREDUMP to capture slimdump
+Message-ID: <20111003120336.GK2223@in.ibm.com>
+References: <20111003070735.GJ2223@in.ibm.com>
+	<20111003073203.GA22694@in.ibm.com>
+	<m162k64c7w.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m162k64c7w.fsf@fess.ebiederm.org>
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,157 +38,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
-Cc: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, "M. Mohan Kumar" <mohan@in.ibm.com>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
 
-Disable backup regions for BookE in case of a CRASH Dump, as they can
-be run from anywhere.
+On Mon, Oct 03, 2011 at 03:10:43AM -0700, Eric W. Biederman wrote:
+> "K.Prasad" <prasad@linux.vnet.ibm.com> writes:
+> 
+> > There are certain types of crashes induced by faulty hardware in which
+> > capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
+> > dangerous).
+> >
+> > A case in point, is unrecoverable memory errors (resulting in fatal machine
+> > check exceptions) in which reading from the faulty memory location from the
+> > kexec'ed kernel will cause double fault and system reset (leaving no
+> > information for the user).
+> 
+> It does make plenty of sense, and I capture the all of the time.
+> It totally doesn't make sense to do this in the kernel when we can
+> filter this from userspace just fine.
+> 
 
-The patch introduces --with-booke option to support the BookE.
+It's interesting...according to Intel's Software Developer Manual
+(quoting from Volume 3A, Chapter 15), the MCIP bit in IA32_MCG_STATUS
+MSR behaves as described below.
 
-With the patch, we get :
+"MCIP (machine check in progress) flag, bit 2 Indicates (when set)
+that a machine-check exception was generated. Software can set or clear this
+flag. The occurrence of a second Machine-Check Event while MCIP is set will
+cause the processor to enter a shutdown state."
 
-## On a 256M machine:
+While in do_machine_check function, we enter the panic path (for
+unrecoverable errors) much before the IA32_MCG_STATUS MSR is reset and
+this is likely to dangerous.
 
-# busybox cat /proc/cmdline
-init=/bin/init console=ttyS0,16550 crashkernel=128M@100M
-# kexec -p root/vmlinux
-usable memory rgns size:1 base:6400000 size:8000000
-CRASH MEMORY RANGES
-0000000000000000-0000000006400000
-000000000e400000-0000000010000000
-Command line after adding elfcorehdr:  elfcorehdr=112380K
-Command line after adding elfcorehdr:  elfcorehdr=112380K savemaxmem=256M
+911 void do_machine_check(struct pt_regs *regs, long error_code)
+912 {
+.............
+................
+1055         if (no_way_out && tolerant < 3)
+1056                 mce_panic("Fatal machine check on current CPU", final, msg);
+.............
+................
+1073         mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+1074 out:
 
-Signed-off-by: Suzuki K. Poulose<suzuki@in.ibm.com>
----
+It'd be interesting to know the type of memory error (as classified by
+the processor) for which you're able to capture the memory dump.
+Maybe a dump of the various MCE status registers (and struct mce) would
+help us understand the behaviour on your system better.
 
- configure.ac                       |    5 +++++
- kexec/arch/ppc/crashdump-powerpc.c |    7 ++++++-
- kexec/arch/ppc/crashdump-powerpc.h |    8 ++++++++
- kexec/arch/ppc/kexec-ppc.c         |    5 +++++
- purgatory/arch/ppc/purgatory-ppc.c |    2 ++
- 5 files changed, 26 insertions(+), 1 deletions(-)
+> Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> 
+> I thought we already had this discussion.  Why is this silliness coming
+> back?
+> 
+> I especially dislike the notion of hardcoding policy in the kernel like this.
+> 
 
-diff --git a/configure.ac b/configure.ac
-index 0d09bba..7dd6028 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -85,6 +85,11 @@ AC_ARG_WITH([lzma], AC_HELP_STRING([--without-lzma],[disable lzma support]),
- AC_ARG_WITH([xen], AC_HELP_STRING([--without-xen],
- 	[disable extended xen support]), [ with_xen="$withval"], [ with_xen=yes ] )
- 
-+AC_ARG_WITH([booke],
-+		AC_HELP_STRING([--with-booke],[build for booke]),
-+		AC_DEFINE(CONFIG_BOOKE,1,
-+			[Define to build for BookE]))
-+
- dnl ---Programs
- dnl To specify a different compiler, just 'export CC=/path/to/compiler'
- 
-diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-index 243721a..7c9dbff 100644
---- a/kexec/arch/ppc/crashdump-powerpc.c
-+++ b/kexec/arch/ppc/crashdump-powerpc.c
-@@ -95,11 +95,13 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 	}
- 	memset(crash_memory_range, 0, crash_rng_len);
- 
-+#ifndef CONFIG_BOOKE
- 	/* create a separate program header for the backup region */
- 	crash_memory_range[0].start = BACKUP_SRC_START;
- 	crash_memory_range[0].end = BACKUP_SRC_END + 1;
- 	crash_memory_range[0].type = RANGE_RAM;
- 	memory_ranges++;
-+#endif
- 
- 	dir = opendir(device_tree);
- 	if (!dir) {
-@@ -143,9 +145,10 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
- 					" excedeed the max limit\n");
- 				goto err;
- 			}
--
-+#ifndef CONFIG_BOOKE
- 			if (start == 0 && end >= (BACKUP_SRC_END + 1))
- 				start = BACKUP_SRC_END + 1;
-+#endif
- 
- 			cstart = crash_base;
- 			cend = crash_base + crash_size;
-@@ -310,6 +313,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- 
- 	info->backup_src_start = BACKUP_SRC_START;
- 	info->backup_src_size = BACKUP_SRC_SIZE;
-+#ifndef CONFIG_BOOKE
- 	/* Create a backup region segment to store backup data*/
- 	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
- 	tmp = xmalloc(sz);
-@@ -317,6 +321,7 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- 	info->backup_start = add_buffer(info, tmp, sz, sz, align,
- 					0, max_addr, 1);
- 	reserve(info->backup_start, sz);
-+#endif
- 
- 	/* On powerpc memory ranges in device-tree is denoted as start
- 	 * and size rather than start and end, as is the case with
-diff --git a/kexec/arch/ppc/crashdump-powerpc.h b/kexec/arch/ppc/crashdump-powerpc.h
-index dc2772d..a377146 100644
---- a/kexec/arch/ppc/crashdump-powerpc.h
-+++ b/kexec/arch/ppc/crashdump-powerpc.h
-@@ -21,10 +21,18 @@ extern struct arch_options_t arch_options;
- #define __pa(x)		((unsigned long)(x)-PAGE_OFFSET)
- 
- #define COMMAND_LINE_SIZE	512 /* from kernel */
-+
-+#ifdef CONFIG_BOOKE
-+/* We don't need backup region in Book E */
-+#define BACKUP_SRC_START	0x0000
-+#define BACKUP_SRC_END		0x0000
-+#define BACKUP_SRC_SIZE		0x0000
-+#else
- /* Backup Region, First 64K of System RAM. */
- #define BACKUP_SRC_START	0x0000
- #define BACKUP_SRC_END		0xffff
- #define BACKUP_SRC_SIZE		(BACKUP_SRC_END - BACKUP_SRC_START + 1)
-+#endif
- 
- #define KDUMP_BACKUP_LIMIT	BACKUP_SRC_SIZE
- #define _ALIGN_UP(addr, size)	(((addr)+((size)-1))&(~((size)-1)))
-diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
-index 4e3569f..57852dc 100644
---- a/kexec/arch/ppc/kexec-ppc.c
-+++ b/kexec/arch/ppc/kexec-ppc.c
-@@ -502,9 +502,14 @@ static int get_devtree_details(unsigned long kexec_flags)
- 				if (crash_base + crash_size < mem_max)
- 					mem_max = crash_base + crash_size;
- 
-+#ifndef CONFIG_BOOKE
- 				add_usable_mem_rgns(0, crash_base + crash_size);
-+				/* Reserve the region (KDUMP_BACKUP_LIMIT,crash_base) */
- 				reserve(KDUMP_BACKUP_LIMIT,
- 						crash_base-KDUMP_BACKUP_LIMIT);
-+#else
-+				add_usable_mem_rgns(crash_base, crash_size);
-+#endif
- 			}
- 			/* reserve the initrd_start and end locations. */
- 			memset(fname, 0, sizeof(fname));
-diff --git a/purgatory/arch/ppc/purgatory-ppc.c b/purgatory/arch/ppc/purgatory-ppc.c
-index 3e6b354..3df3767 100644
---- a/purgatory/arch/ppc/purgatory-ppc.c
-+++ b/purgatory/arch/ppc/purgatory-ppc.c
-@@ -36,8 +36,10 @@ void setup_arch(void)
- 
- void post_verification_setup_arch(void)
- {
-+#ifndef CONFIG_BOOKE
- 	if (panic_kernel)
- 		crashdump_backup_memory();
-+#endif
- }
- 
- void crashdump_backup_memory(void)
+The last time this was discussed in the community, the kernel was hardcoded to
+prevent anybody from reading the kernel memory, while this time it is NOT.
+
+This kernel patch is different from the last time, in that it only adds an
+elf-note to denote a particular type of crash. However in the user-space, using
+'cp' for instance, the entire coredump can be read from /proc/vmcore. Similarly
+'makedumpfile' can be used to extract the dmesg from the crashed kernel and the
+new elf-note does not interfere with the same.
+
+Hope this addresses your concerns.
+
+Thanks,
+K.Prasad
 
 
 _______________________________________________
