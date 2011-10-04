@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RB6Ol-0003M4-CT
-	for kexec@lists.infradead.org; Tue, 04 Oct 2011 14:55:12 +0000
-Date: Tue, 4 Oct 2011 10:55:08 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kexec: load-preserve-context option on s390
-Message-ID: <20111004145508.GC28306@redhat.com>
-References: <1317042549.3157.9.camel@br98xy6r>
-	<20110928235101.GB13684@verge.net.au>
-	<20110929133209.GA25760@redhat.com>
-	<1317303511.3494.2.camel@br98xy6r>
-	<20110930160655.GD25891@redhat.com>
-	<1317737226.15474.16.camel@br98xy6r>
+Received: from mail.elliptictech.com ([209.217.122.41]
+	helo=mail.ellipticsemi.com)
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RB6Xv-0003Q1-Ti
+	for kexec@lists.infradead.org; Tue, 04 Oct 2011 15:04:40 +0000
+Date: Tue, 4 Oct 2011 11:04:17 -0400
+From: Nick Bowler <nbowler@elliptictech.com>
+Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
+	NT_NOCOREDUMP to capture slimdump
+Message-ID: <20111004150417.GA23604@elliptictech.com>
+References: <20111003070735.GJ2223@in.ibm.com>
+	<20111003073203.GA22694@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1317737226.15474.16.camel@br98xy6r>
+In-Reply-To: <20111003073203.GA22694@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,55 +26,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ying.huang@intel.com
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
 
-On Tue, Oct 04, 2011 at 04:07:06PM +0200, Michael Holzheu wrote:
+On 2011-10-03 13:02 +0530, K.Prasad wrote:
+> diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
+> index 08363b0..483b2fc 100644
+> --- a/arch/x86/kernel/cpu/mcheck/mce.c
+> +++ b/arch/x86/kernel/cpu/mcheck/mce.c
+> @@ -238,6 +238,34 @@ static atomic_t mce_paniced;
+>  static int fake_panic;
+>  static atomic_t mce_fake_paniced;
+>  
+> +void arch_add_nocoredump_note(u32 *buf)
+> +{
+> +	struct elf_note note;
+> +	const char note_name[] = "PANIC_MCE";
 
-[..]
-> > Not sure why it is not working.
-> 
-> Hmmm, actually it is working. I somehow must have overlooked that
-> before.
-> 
-> When I call kexec with --load-preserve-context - while not really
-> knowing what I am doing here - I get the following:
-> 
-> # kexec -p /boot/vmlinuz --load-preserve-context --mem-min=0x10000
-> --mem-max=0x100000000 
-> 
-> kexec_load failed: Invalid argument
-> entry       = 0x10000 flags = 160002
-> nr_segments = 2
-> segment[0].buf   = 0x3fffc989010
-> segment[0].bufsz = 330600
-> segment[0].mem   = 0x10000
-> segment[0].memsz = 331000
-> segment[1].buf   = (nil)
-> segment[1].bufsz = 0
-> segment[1].mem   = 0x341000
-> segment[1].memsz = 334be000
-> 
-> Perhaps a better error message could help here. But there are several
-> possible reasons for getting EINVAL from kexec_load(). So probably we
-> can't say "--load-preserve-context not supported by current kernel"
-> every time we get EINVAL from kexec_load().
-> 
-> Not sure what to do here. Perhaps we just leave it as it is.
+        static const ...
 
-I am also not sure what can we do here. There are many cases where -EINVAL
-can happen.
+> +	const char desc_msg[] = "Crash induced due to a fatal machine "
+> +				"check error";
 
-> 
-> BTW: Is there any good documentation on KEXEC_PRESERVE_CONTEXT?
+        likewise.
 
-I am not aware of any and really wished there was one
+Please don't break string literals onto multiple lines like this, since
+it prevents users from finding the string using "grep".
 
-Huang, is there any? Also is anybody using KEXEC_PRESERVE_CONTEXT? I have
-not encountered any users yet.
-
-Thanks
-Vivek
+Cheers,
+-- 
+Nick Bowler, Elliptic Technologies (http://www.elliptictech.com/)
 
 _______________________________________________
 kexec mailing list
