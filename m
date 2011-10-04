@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RB60n-00036Q-I0
-	for kexec@lists.infradead.org; Tue, 04 Oct 2011 14:30:26 +0000
-Date: Tue, 4 Oct 2011 10:30:12 -0400
+	id 1RB6Ol-0003M4-CT
+	for kexec@lists.infradead.org; Tue, 04 Oct 2011 14:55:12 +0000
+Date: Tue, 4 Oct 2011 10:55:08 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
-	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111004143012.GB28306@redhat.com>
-References: <20111003070735.GJ2223@in.ibm.com>
-	<20111003073203.GA22694@in.ibm.com>
+Subject: Re: kexec: load-preserve-context option on s390
+Message-ID: <20111004145508.GC28306@redhat.com>
+References: <1317042549.3157.9.camel@br98xy6r>
+	<20110928235101.GB13684@verge.net.au>
+	<20110929133209.GA25760@redhat.com>
+	<1317303511.3494.2.camel@br98xy6r>
+	<20110930160655.GD25891@redhat.com>
+	<1317737226.15474.16.camel@br98xy6r>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111003073203.GA22694@in.ibm.com>
+In-Reply-To: <1317737226.15474.16.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,70 +28,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, crash-utility@redhat.com
+To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, ying.huang@intel.com
 
-On Mon, Oct 03, 2011 at 01:02:03PM +0530, K.Prasad wrote:
-> There are certain types of crashes induced by faulty hardware in which
-> capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
-> dangerous).
+On Tue, Oct 04, 2011 at 04:07:06PM +0200, Michael Holzheu wrote:
+
+[..]
+> > Not sure why it is not working.
 > 
-> A case in point, is unrecoverable memory errors (resulting in fatal machine
-> check exceptions) in which reading from the faulty memory location from the
-> kexec'ed kernel will cause double fault and system reset (leaving no
-> information for the user).
+> Hmmm, actually it is working. I somehow must have overlooked that
+> before.
 > 
-> This patch introduces a framework called 'slimdump' enabled through a new
-> elf-note NT_NOCOREDUMP. Any error whose cause cannot be attributed to a
-> software error and cannot be detected by analysing the kernel memory may
-> decide to add this elf-note to the vmcore and indicate the futility of
-> such an exercise. Tools such as 'kexec', 'makedumpfile' and 'crash' are
-> also modified in tandem to recognise this new elf-note and capture
-> 'slimdump'.
+> When I call kexec with --load-preserve-context - while not really
+> knowing what I am doing here - I get the following:
 > 
-> The physical address and size of the NT_NOCOREDUMP are made available to the
-> user-space through a "/sys/kernel/nt_nocoredump" sysfs file (just like other
-> kexec related files).
+> # kexec -p /boot/vmlinuz --load-preserve-context --mem-min=0x10000
+> --mem-max=0x100000000 
+> 
+> kexec_load failed: Invalid argument
+> entry       = 0x10000 flags = 160002
+> nr_segments = 2
+> segment[0].buf   = 0x3fffc989010
+> segment[0].bufsz = 330600
+> segment[0].mem   = 0x10000
+> segment[0].memsz = 331000
+> segment[1].buf   = (nil)
+> segment[1].bufsz = 0
+> segment[1].mem   = 0x341000
+> segment[1].memsz = 334be000
+> 
+> Perhaps a better error message could help here. But there are several
+> possible reasons for getting EINVAL from kexec_load(). So probably we
+> can't say "--load-preserve-context not supported by current kernel"
+> every time we get EINVAL from kexec_load().
+> 
+> Not sure what to do here. Perhaps we just leave it as it is.
 
-Even if kernel has to signal to user space the reason for crash, why not
-add this info to existing vmcoreinfo note. Something like another filed.
-PANIC_MCE=1.
-
-Secondly, the note name NT_NOCOREDUMP itself sounds binding. Kernel can
-export the reason of panic and then it is up to user space what do they
-want to do with it.
-
-So to me,  
+I am also not sure what can we do here. There are many cases where -EINVAL
+can happen.
 
 > 
-> Signed-off-by: K.Prasad <prasad@linux.vnet.ibm.com>
-> ---
->  arch/x86/kernel/cpu/mcheck/mce.c |   28 ++++++++++++++++++++++++++++
->  include/linux/elf.h              |   18 ++++++++++++++++++
->  include/linux/kexec.h            |    1 +
->  kernel/kexec.c                   |   11 +++++++++++
->  kernel/ksysfs.c                  |   10 ++++++++++
->  5 files changed, 68 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/mcheck/mce.c b/arch/x86/kernel/cpu/mcheck/mce.c
-> index 08363b0..483b2fc 100644
-> --- a/arch/x86/kernel/cpu/mcheck/mce.c
-> +++ b/arch/x86/kernel/cpu/mcheck/mce.c
-> @@ -238,6 +238,34 @@ static atomic_t mce_paniced;
->  static int fake_panic;
->  static atomic_t mce_fake_paniced;
->  
-> +void arch_add_nocoredump_note(u32 *buf)
-> +{
-> +	struct elf_note note;
-> +	const char note_name[] = "PANIC_MCE";
-> +	const char desc_msg[] = "Crash induced due to a fatal machine "
-> +				"check error";
-> +
+> BTW: Is there any good documentation on KEXEC_PRESERVE_CONTEXT?
 
-Again, note_name and desc_msg seem to be only two exports. Frankly desc
-string seems pretty obivious and we should be able to ignore it. So just
-exporting PANIC_MCE=true or something like that in case of MCE. 
+I am not aware of any and really wished there was one
+
+Huang, is there any? Also is anybody using KEXEC_PRESERVE_CONTEXT? I have
+not encountered any users yet.
 
 Thanks
 Vivek
