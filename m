@@ -1,31 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e28smtp06.in.ibm.com ([122.248.162.6])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBLkv-0004uy-UP
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 07:19:10 +0000
-Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
-	by e28smtp06.in.ibm.com (8.14.4/8.13.1) with ESMTP id p957Il2n000851
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 12:48:47 +0530
-Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
-	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p957IkLj2674910
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 12:48:47 +0530
-Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
-	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p957Ikcf014670
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 12:48:46 +0530
-Date: Wed, 5 Oct 2011 12:48:44 +0530
-From: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Received: from cl-3117.ham-01.de.sixxs.net ([2001:6f8:900:c2c::2]
+	helo=mail.skyhub.de)
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RBLwl-0004yr-W7
+	for kexec@lists.infradead.org; Wed, 05 Oct 2011 07:31:21 +0000
+Date: Wed, 5 Oct 2011 09:31:11 +0200
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005071844.GB2235@in.ibm.com>
+Message-ID: <20111005073111.GA13478@liondog.tnic>
 References: <20111003070735.GJ2223@in.ibm.com>
 	<20111003073203.GA22694@in.ibm.com>
-	<20111004140437.GA28306@redhat.com>
+	<m162k64c7w.fsf@fess.ebiederm.org>
+	<20111003120336.GK2223@in.ibm.com>
+	<20111004063440.GB5723@liondog.tnic>
+	<20111005070728.GA2235@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111004140437.GA28306@redhat.com>
-Reply-To: prasad@linux.vnet.ibm.com
+In-Reply-To: <20111005070728.GA2235@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,36 +30,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Borislav Petkov <bp@alien8.de>, crash-utility@redhat.com
+To: "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
 
-On Tue, Oct 04, 2011 at 10:04:37AM -0400, Vivek Goyal wrote:
-> On Mon, Oct 03, 2011 at 01:02:03PM +0530, K.Prasad wrote:
-> > There are certain types of crashes induced by faulty hardware in which
-> > capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
-> > dangerous).
+On Wed, Oct 05, 2011 at 12:37:28PM +0530, K.Prasad wrote:
+> > Well, there are MCE types for which we need to panic but we don't
+> > necessarily corrupt memory. Your approach is to unconditionally avoid
+> > dumping core whenever we panic while you should look at the MCE
+> > signature and decide then whether to capture crashed kernel memory or
+> > not.
 > > 
-> > A case in point, is unrecoverable memory errors (resulting in fatal machine
-> > check exceptions) in which reading from the faulty memory location from the
-> > kexec'ed kernel will cause double fault and system reset (leaving no
-> > information for the user).
+> > For example, if the MCE signature says UC DRAM error, then you can
+> > be pretty sure that there is a landmine somewhere in the DRAM region
+> > mapping the crashed kernel. If it is, say, a UC when doing data fills
+> > from L2 to L1, that doesn't necessarily mean that DRAM is corrupted. But
+> > even in the first case, you can evaluate the MCi_ADDR reported with the
+> > UC DRAM error and simply skip that particular cacheline when dumping the
+> > core instead of not capturing anything at all.
+> > 
 > 
-> Prasad,
+> True. Like stated by me earlier, there could be two possible outcomes
+> from capturing memory dump in such cases - they're either dangerous or
+> doesn't make sense.
+
+Why, in the second example the only corruption is to the L2 cache so
+your memory image is intact. Why wouldn't you want to capture a memory
+dump then? It is business as usual in that case.
+
+> It is best to avoid a normal kdump in both cases,
+> although the elf-note doesn't distinguish between the two.
 > 
-> I am just trying to remember what was wrong with Andi's approach of
-> disable MCE while copying the dump?
->
+> NT_NOCOREDUMP, in my opinion, is just the first step towards introducing
+> a framework where different code paths that lead to panic() can
+> 'opt-out' from kdump by adding an elf-note.
+> 
+> We can modify this to add more fine-grained messages using different elf-note
+> types (or use the elf-note name under the NT_NOCOREDUMP type) to
+> indicate the cause/type of crash.
+> 
+> I'd like to hear further from you and the rest of the community to see if
+> there's a need felt for such a change.
 
-Hi Vivek,
-	The behaviour upon a read operation on an UC memory location is
-undefined and so we want to avoid it (previously discussed here:
-http://article.gmane.org/gmane.linux.kernel/1146799). When we disable
-MCE and copy the dump, we will invariably read the faulty memory
-location.
+I'd make this conditional on whether you have had memory corruption or
+not by evaluating MCE signatures and acting accordingly.
 
-Thanks,
-K.Prasad
- 
+> > Btw, the doublefault example you give above - is this something you
+> > experience on real hardware or just a theoretical thing?
+> >
+> 
+> Unfortunately, I still haven't been able to try injecting memory errors
+> and study the behaviour (trying to get access to machine with
+> appropriate firmware). I'll have a reply to this after some experiments
+> with memory error injection.
+
+Right, this might be much more helpful than theoretical discussions on
+what to do. :-)
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
 
 _______________________________________________
 kexec mailing list
