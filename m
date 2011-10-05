@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from cl-3117.ham-01.de.sixxs.net ([2001:6f8:900:c2c::2]
+	helo=mail.skyhub.de)
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBVHv-0004Qm-LZ
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 17:29:48 +0000
-Date: Wed, 5 Oct 2011 13:29:12 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+	id 1RBVVj-0004ff-1k
+	for kexec@lists.infradead.org; Wed, 05 Oct 2011 17:44:04 +0000
+Date: Wed, 5 Oct 2011 19:43:58 +0200
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005172912.GI30146@redhat.com>
+Message-ID: <20111005174358.GE18592@gere.osrc.amd.com>
 References: <20111003070735.GJ2223@in.ibm.com>
 	<20111003073203.GA22694@in.ibm.com>
 	<20111004143012.GB28306@redhat.com>
@@ -16,9 +17,10 @@ References: <20111003070735.GJ2223@in.ibm.com>
 	<987664A83D2D224EAE907B061CE93D5301EE62D58D@orsmsx505.amr.corp.intel.com>
 	<20111005171007.GF30146@redhat.com>
 	<20111005172036.GD18592@gere.osrc.amd.com>
+	<20111005172912.GI30146@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111005172036.GD18592@gere.osrc.amd.com>
+In-Reply-To: <20111005172912.GI30146@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,61 +33,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
+To: Vivek Goyal <vgoyal@redhat.com>
 Cc: "oomichi@mxs.nes.nec.co.jp" <oomichi@mxs.nes.nec.co.jp>, "Luck,
 	Tony" <tony.luck@intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tachibana@mxm.nes.nec.co.jp" <tachibana@mxm.nes.nec.co.jp>, Andi Kleen <andi@firstfloor.org>, "anderson@redhat.com" <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
 
-On Wed, Oct 05, 2011 at 07:20:37PM +0200, Borislav Petkov wrote:
-> On Wed, Oct 05, 2011 at 01:10:07PM -0400, Vivek Goyal wrote:
-> > On Wed, Oct 05, 2011 at 08:58:53AM -0700, Luck, Tony wrote:
-> > > > > The plan is to pass-down the list of poisoned memory pages to the second
-> > > > > kernel using an elf-note so that these pages are left untouched during
-> > > > > dump capture. I'm working on an implementation of the same and should
-> > > > > have patches soon.
-> > > >
-> > > > I would say let us first figure out what happens while reading a poisoned
-> > > > page and is this a problem before working on a solution.
-> > > 
-> > > If the page is poisoned because of a real uncorrectable error in memory
-> > > (reported as SRAO machine check today, or by SRAR real-soon-now). Then
-> > > accessing the page from the processor while taking a memory dump will
-> > > result in a machine check.
-> > > 
-> > > Note that a large memory system that had been running for a long time
-> > > may have built up a small stash of these land-mine pages - and we need
-> > > to worry about them even in the case where the panic is not machine
-> > > check related (in fact especially in this case ... we are in a case
-> > > where we actually do want the dump to diagnose the cause of the panic,
-> > > and we don't want to risk losing the crash dump because we aborted when
-> > > touching a page that the OS had safely avoided for days/weeks/months).
-> > > 
-> > > So passing a list of poisoned pages from the old kernel to the new kernel
-> > > is a good idea - and is independent of the cause of the crash (except that
-> > > in the fatal machine check case due to memory error the list is guaranteed
-> > > to be non-empty).
-> > 
-> > Whre is this poisoned page info stored? In struct page? If yes, then
-> > user space can walk through it and make sure not to touch poisoned pages.
-> > Anyway user space filtering utility "makedumpfile" walks through struct
-> > pages to filter out the pages. It should be able to filter out 
-> > poisoned pages unconditionally. So there should be no need for kernel
-> > to export a list of these pages.
-> 
-> Does this utility work on a vmcore dump? If so, Tony refers to the
-> creation of the vmcore itself from the memory used by the first kernel.
+On Wed, Oct 05, 2011 at 01:29:12PM -0400, Vivek Goyal wrote:
+> As long as you can get to your struct page arrays, one should be able
+> to filter out poisoned pages without saving the whole dump.
 
-No, this utitlity can directly work on /proc/vmcore where first kernel's
-image is still in memory and not on disk.
+Ok, this sounds good.
 
-> If there are poisoned pages, merely accessing that portion of DRAM
-> containing the poisoned data would cause further MCEs in the freshly
-> booted kernel so you won't be able to finish creating the dump.
+So, maybe the tool should be taught to always skip poisoned pages due to
+danger of follow-up MCEs and, when kexec has rebooted due to an MCE, to
+warn before doing a vmcore dump that the dump might not contain useful
+information or that the dumping itself could result in further MCEs and
+whether the user still wants to proceed.
 
-As long as you can get to your struct page arrays, one should be able
-to filter out poisoned pages without saving the whole dump.
+Or something to that effect.
 
-Thanks
-Vivek
+Thanks.
+
+-- 
+Regards/Gruss,
+Boris.
 
 _______________________________________________
 kexec mailing list
