@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from cl-3117.ham-01.de.sixxs.net ([2001:6f8:900:c2c::2]
-	helo=mail.skyhub.de)
+Received: from mx1.redhat.com ([209.132.183.28])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBUHd-0003bd-MU
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 16:25:26 +0000
-Date: Wed, 5 Oct 2011 18:25:20 +0200
-From: Borislav Petkov <bp@alien8.de>
+	id 1RBUzJ-0004F1-2c
+	for kexec@lists.infradead.org; Wed, 05 Oct 2011 17:10:34 +0000
+Date: Wed, 5 Oct 2011 13:10:07 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005162520.GC18592@gere.osrc.amd.com>
+Message-ID: <20111005171007.GF30146@redhat.com>
 References: <20111003070735.GJ2223@in.ibm.com>
 	<20111003073203.GA22694@in.ibm.com>
 	<20111004143012.GB28306@redhat.com>
@@ -31,7 +30,7 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "oomichi@mxs.nes.nec.co.jp" <oomichi@mxs.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tachibana@mxm.nes.nec.co.jp" <tachibana@mxm.nes.nec.co.jp>, Andi Kleen <andi@firstfloor.org>, "anderson@redhat.com" <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Borislav Petkov <bp@alien8.de>, "K.Prasad" <prasad@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
+Cc: "oomichi@mxs.nes.nec.co.jp" <oomichi@mxs.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tachibana@mxm.nes.nec.co.jp" <tachibana@mxm.nes.nec.co.jp>, Andi Kleen <andi@firstfloor.org>, "anderson@redhat.com" <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Borislav Petkov <bp@alien8.de>, "K.Prasad" <prasad@linux.vnet.ibm.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
 
 On Wed, Oct 05, 2011 at 08:58:53AM -0700, Luck, Tony wrote:
 > > > The plan is to pass-down the list of poisoned memory pages to the second
@@ -59,25 +58,16 @@ On Wed, Oct 05, 2011 at 08:58:53AM -0700, Luck, Tony wrote:
 > is a good idea - and is independent of the cause of the crash (except that
 > in the fatal machine check case due to memory error the list is guaranteed
 > to be non-empty).
-> 
-> Passing some crash signature data - so the new kernel/dump-tools can make
-> a choice whether to even try to take a full dump is also interesting (but
-> independent from the bad page list).
 
-Good point,
+Whre is this poisoned page info stored? In struct page? If yes, then
+user space can walk through it and make sure not to touch poisoned pages.
+Anyway user space filtering utility "makedumpfile" walks through struct
+pages to filter out the pages. It should be able to filter out 
+poisoned pages unconditionally. So there should be no need for kernel
+to export a list of these pages.
 
-this would probably advocate for the solution of disabling of detection
-of at least certain MCEs like DRAM UCs and then, even if you manage
-to dump core successfully, how can you be sure that the memory image
-doesn't contain some corrupted data? So yes, some sort of error
-and corresponding address collection is needed for later image
-"preparation".
-
-Hmm, this just got interesting.
-
--- 
-Regards/Gruss,
-Boris.
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
