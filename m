@@ -1,24 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from mga11.intel.com ([192.55.52.93])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBTmV-00025V-47
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 15:53:15 +0000
-Date: Wed, 5 Oct 2011 11:52:17 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
+	id 1RBTs3-0002Bf-9Y
+	for kexec@lists.infradead.org; Wed, 05 Oct 2011 15:58:59 +0000
+From: "Luck, Tony" <tony.luck@intel.com>
+Date: Wed, 5 Oct 2011 08:58:53 -0700
+Subject: RE: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005155217.GE30146@redhat.com>
+Message-ID: <987664A83D2D224EAE907B061CE93D5301EE62D58D@orsmsx505.amr.corp.intel.com>
 References: <20111003070735.GJ2223@in.ibm.com>
-	<20111003073203.GA22694@in.ibm.com>
-	<m162k64c7w.fsf@fess.ebiederm.org>
-	<20111003120336.GK2223@in.ibm.com>
-	<20111004063440.GB5723@liondog.tnic>
-	<20111005070728.GA2235@in.ibm.com>
-	<20111005073111.GA13478@liondog.tnic>
-	<20111005094727.GB7485@in.ibm.com>
+	<20111003073203.GA22694@in.ibm.com> <20111004143012.GB28306@redhat.com>
+	<20111005074116.GC2235@in.ibm.com> <20111005154011.GD30146@redhat.com>
+In-Reply-To: <20111005154011.GD30146@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20111005094727.GB7485@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,29 +26,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, anderson@redhat.com, crash-utility@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>
+Cc: "oomichi@mxs.nes.nec.co.jp" <oomichi@mxs.nes.nec.co.jp>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tachibana@mxm.nes.nec.co.jp" <tachibana@mxm.nes.nec.co.jp>, Andi Kleen <andi@firstfloor.org>, "anderson@redhat.com" <anderson@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Borislav Petkov <bp@alien8.de>, "crash-utility@redhat.com" <crash-utility@redhat.com>
 
-On Wed, Oct 05, 2011 at 03:17:27PM +0530, K.Prasad wrote:
+> > The plan is to pass-down the list of poisoned memory pages to the second
+> > kernel using an elf-note so that these pages are left untouched during
+> > dump capture. I'm working on an implementation of the same and should
+> > have patches soon.
+>
+> I would say let us first figure out what happens while reading a poisoned
+> page and is this a problem before working on a solution.
 
-[..]
-> Fine with me. I see that the various IA32_MCi_Status registers will hold
-> information about the error and use that to classify MCEs.
-> 
-> I think the best way to go about is to retain NT_NOCOREDUMP for non-DRAM
-> errors also, but use the note-name field in the elf-note and distinguish the
-> various types of errors...say, by using names such as "PANIC_MCE_DRAM",
-> "PANIC_MCE_CACHE", etc (similar to the error codes described in the Intel
-> manual). The upstream tools like 'makedumpfile' and 'crash' will have to
-> be taught to parse the elf-note name and act accordingly.
+If the page is poisoned because of a real uncorrectable error in memory
+(reported as SRAO machine check today, or by SRAR real-soon-now). Then
+accessing the page from the processor while taking a memory dump will
+result in a machine check.
 
-I am assuming that basic MCE error messages are available in kernel log. 
-Why can't user space simply scan the logs for MCE error and just save
-the log buffers in case of MCE. That way a user gets the MCE information
-while not trying to save the whole dump. And no need of an extra ELF note.
+Note that a large memory system that had been running for a long time
+may have built up a small stash of these land-mine pages - and we need
+to worry about them even in the case where the panic is not machine
+check related (in fact especially in this case ... we are in a case
+where we actually do want the dump to diagnose the cause of the panic,
+and we don't want to risk losing the crash dump because we aborted when
+touching a page that the OS had safely avoided for days/weeks/months).
 
-Thanks
-Vivek
+So passing a list of poisoned pages from the old kernel to the new kernel
+is a good idea - and is independent of the cause of the crash (except that
+in the fatal machine check case due to memory error the list is guaranteed
+to be non-empty).
+
+Passing some crash signature data - so the new kernel/dump-tools can make
+a choice whether to even try to take a full dump is also interesting (but
+independent from the bad page list).
+
+-Tony
 
 _______________________________________________
 kexec mailing list
