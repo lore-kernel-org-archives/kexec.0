@@ -1,32 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from e28smtp07.in.ibm.com ([122.248.162.7])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBNiS-0007CF-Fn
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 09:25:00 +0000
-Received: from d28relay05.in.ibm.com (d28relay05.in.ibm.com [9.184.220.62])
-	by e28smtp07.in.ibm.com (8.14.4/8.13.1) with ESMTP id p959Nrfr002527
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 14:53:53 +0530
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
-	by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p959Nqrq1085580
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 14:53:52 +0530
-Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
-	by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p959NqQl000651
-	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 20:23:52 +1100
-Date: Wed, 5 Oct 2011 14:53:50 +0530
+	id 1RBO5E-0007OG-IL
+	for kexec@lists.infradead.org; Wed, 05 Oct 2011 09:48:22 +0000
+Received: from d28relay01.in.ibm.com (d28relay01.in.ibm.com [9.184.220.58])
+	by e28smtp07.in.ibm.com (8.14.4/8.13.1) with ESMTP id p959lVY8020589
+	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 15:17:31 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+	by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p959lUvo1818666
+	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 15:17:31 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+	by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p959lThk010189
+	for <kexec@lists.infradead.org>; Wed, 5 Oct 2011 15:17:30 +0530
+Date: Wed, 5 Oct 2011 15:17:27 +0530
 From: "K.Prasad" <prasad@linux.vnet.ibm.com>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005092350.GA7485@in.ibm.com>
+Message-ID: <20111005094727.GB7485@in.ibm.com>
 References: <20111003070735.GJ2223@in.ibm.com>
 	<20111003073203.GA22694@in.ibm.com>
-	<20111004140437.GA28306@redhat.com>
-	<20111005071844.GB2235@in.ibm.com>
-	<20111005073313.GB13478@liondog.tnic>
+	<m162k64c7w.fsf@fess.ebiederm.org>
+	<20111003120336.GK2223@in.ibm.com>
+	<20111004063440.GB5723@liondog.tnic>
+	<20111005070728.GA2235@in.ibm.com>
+	<20111005073111.GA13478@liondog.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111005073313.GB13478@liondog.tnic>
+In-Reply-To: <20111005073111.GA13478@liondog.tnic>
 Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -40,55 +42,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>, Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org, crash-utility@redhat.com, kexec@lists.infradead.org, Andi Kleen <andi@firstfloor.org>, "Luck, Tony" <tony.luck@intel.com>, "Eric W. Biederman" <ebiederm@xmission.com>, anderson@redhat.com, tachibana@mxm.nes.nec.co.jp, oomichi@mxs.nes.nec.co.jp
+To: Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, crash-utility@redhat.com, kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>, Andi Kleen <andi@firstfloor.org>, "Luck, Tony" <tony.luck@intel.com>, anderson@redhat.com, tachibana@mxm.nes.nec.co.jp, oomichi@mxs.nes.nec.co.jp
 
-On Wed, Oct 05, 2011 at 09:33:13AM +0200, Borislav Petkov wrote:
-> On Wed, Oct 05, 2011 at 12:48:44PM +0530, K.Prasad wrote:
-> > On Tue, Oct 04, 2011 at 10:04:37AM -0400, Vivek Goyal wrote:
-> > > On Mon, Oct 03, 2011 at 01:02:03PM +0530, K.Prasad wrote:
-> > > > There are certain types of crashes induced by faulty hardware in which
-> > > > capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
-> > > > dangerous).
-> > > > 
-> > > > A case in point, is unrecoverable memory errors (resulting in fatal machine
-> > > > check exceptions) in which reading from the faulty memory location from the
-> > > > kexec'ed kernel will cause double fault and system reset (leaving no
-> > > > information for the user).
+On Wed, Oct 05, 2011 at 09:31:11AM +0200, Borislav Petkov wrote:
+> On Wed, Oct 05, 2011 at 12:37:28PM +0530, K.Prasad wrote:
+> > > Well, there are MCE types for which we need to panic but we don't
+> > > necessarily corrupt memory. Your approach is to unconditionally avoid
+> > > dumping core whenever we panic while you should look at the MCE
+> > > signature and decide then whether to capture crashed kernel memory or
+> > > not.
 > > > 
-> > > Prasad,
+> > > For example, if the MCE signature says UC DRAM error, then you can
+> > > be pretty sure that there is a landmine somewhere in the DRAM region
+> > > mapping the crashed kernel. If it is, say, a UC when doing data fills
+> > > from L2 to L1, that doesn't necessarily mean that DRAM is corrupted. But
+> > > even in the first case, you can evaluate the MCi_ADDR reported with the
+> > > UC DRAM error and simply skip that particular cacheline when dumping the
+> > > core instead of not capturing anything at all.
 > > > 
-> > > I am just trying to remember what was wrong with Andi's approach of
-> > > disable MCE while copying the dump?
-> > >
 > > 
-> > Hi Vivek,
-> > 	The behaviour upon a read operation on an UC memory location is
-> > undefined and so we want to avoid it (previously discussed here:
-> > http://article.gmane.org/gmane.linux.kernel/1146799). When we disable
-> > MCE and copy the dump, we will invariably read the faulty memory
-> > location.
+> > True. Like stated by me earlier, there could be two possible outcomes
+> > from capturing memory dump in such cases - they're either dangerous or
+> > doesn't make sense.
 > 
-> Right, from the message above:
+> Why, in the second example the only corruption is to the L2 cache so
+> your memory image is intact. Why wouldn't you want to capture a memory
+> dump then? It is business as usual in that case.
 > 
-> "- To disable MCE exceptions as done by the patches cited above. However
->   the result of a read operation on corrupted memory is unknown and the
->   system behaviour is undefined. We're unsure if this is a safe thing to
->   do."
+
+We don't want to capture memory dump when the machine crashes due to
+faulty cache, because the end-user derives no benefit by receiving a
+bulky vmcore and running crash analysis tools over them. Instead a
+'slimdump' that contains a meaningful message about the origin of crash
+(and which can be understood by his analysis tools) would be better, or
+so I thought.
+
+There are possibly several hardware errors which cause system crash and
+the kdump would capture full vmcore, although it doesn't make sense (I
+wouldn't have cared about the second example, you cited, if they did not
+generate MCE, but a different exception). In an ideal situation, each of
+these error paths would 'subscribe' to slimdump and add a meaningful
+message in the NT_NOCOREDUMP note instead of letting the user-space copy
+the old kernel memory.
+
+> > It is best to avoid a normal kdump in both cases,
+> > although the elf-note doesn't distinguish between the two.
+> > 
+> > NT_NOCOREDUMP, in my opinion, is just the first step towards introducing
+> > a framework where different code paths that lead to panic() can
+> > 'opt-out' from kdump by adding an elf-note.
+> > 
+> > We can modify this to add more fine-grained messages using different elf-note
+> > types (or use the elf-note name under the NT_NOCOREDUMP type) to
+> > indicate the cause/type of crash.
+> > 
+> > I'd like to hear further from you and the rest of the community to see if
+> > there's a need felt for such a change.
 > 
-> Can you elaborate more on that? Are we talking poisoned memory here or
-> undetected and uncorrectable memory errors?
+> I'd make this conditional on whether you have had memory corruption or
+> not by evaluating MCE signatures and acting accordingly.
 >
 
-It refers to uncorrected memory errors that are not consumed and the
-corresponding 'struct page's are marked PG_hwpoison. Typically the SRAO
-type errors that are handled in mm/memory-failure.c.
+Fine with me. I see that the various IA32_MCi_Status registers will hold
+information about the error and use that to classify MCEs.
 
-If MCE is enabled, during a kdump, we will deliberately trigger a read
-operation over the poisoned memory and make the UCE fatal. It is not
-clear what would happen if MCE is disabled in the above case.
+I think the best way to go about is to retain NT_NOCOREDUMP for non-DRAM
+errors also, but use the note-name field in the elf-note and distinguish the
+various types of errors...say, by using names such as "PANIC_MCE_DRAM",
+"PANIC_MCE_CACHE", etc (similar to the error codes described in the Intel
+manual). The upstream tools like 'makedumpfile' and 'crash' will have to
+be taught to parse the elf-note name and act accordingly.
 
-Thanks,
-K.Prasad
+Thanks for your comments and review.
+
+-- K.Prasad
 
 
 _______________________________________________
