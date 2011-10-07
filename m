@@ -1,18 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RBVuC-0004uB-DN
-	for kexec@lists.infradead.org; Wed, 05 Oct 2011 18:09:21 +0000
-Date: Wed, 5 Oct 2011 14:09:00 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
+Received: from e23smtp09.au.ibm.com ([202.81.31.142])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RCD3T-0001qX-4Z
+	for kexec@lists.infradead.org; Fri, 07 Oct 2011 16:13:48 +0000
+Received: from /spool/local by au.ibm.com with XMail ESMTP
+	for <kexec@lists.infradead.org> from <prasad@linux.vnet.ibm.com>;
+	Fri, 7 Oct 2011 17:09:04 +1000
+Received: from d23av04.au.ibm.com (d23av04.au.ibm.com [9.190.235.139])
+	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+	p97GDHtR1839130
+	for <kexec@lists.infradead.org>; Sat, 8 Oct 2011 03:13:17 +1100
+Received: from d23av04.au.ibm.com (loopback [127.0.0.1])
+	by d23av04.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+	p97GDG6o028813
+	for <kexec@lists.infradead.org>; Sat, 8 Oct 2011 03:13:17 +1100
+Date: Fri, 7 Oct 2011 21:42:19 +0530
+From: "K.Prasad" <prasad@linux.vnet.ibm.com>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111005180900.GJ30146@redhat.com>
-References: <20111005172912.GI30146@redhat.com>
-	<67cddd75-90d7-49b8-83ff-c677101b37b3@zmail05.collab.prod.int.phx2.redhat.com>
+Message-ID: <20111007161218.GA2297@in.ibm.com>
+References: <20111003070735.GJ2223@in.ibm.com>
+	<20111003073203.GA22694@in.ibm.com>
+	<20111004140437.GA28306@redhat.com>
+	<20111005071844.GB2235@in.ibm.com>
+	<20111005152537.GB30146@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <67cddd75-90d7-49b8-83ff-c677101b37b3@zmail05.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <20111005152537.GB30146@redhat.com>
+Reply-To: prasad@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,91 +40,52 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: oomichi@mxs.nes.nec.co.jp, Tony Luck <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "K.Prasad" <prasad@linux.vnet.ibm.com>, crash-utility@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, Valdis.Kletnieks@vt.edu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Borislav Petkov <bp@alien8.de>, crash-utility@redhat.com
 
-On Wed, Oct 05, 2011 at 02:00:09PM -0400, Dave Anderson wrote:
-> 
-> 
-> ----- Original Message -----
-> > On Wed, Oct 05, 2011 at 07:20:37PM +0200, Borislav Petkov wrote:
-> > > On Wed, Oct 05, 2011 at 01:10:07PM -0400, Vivek Goyal wrote:
-> > > > On Wed, Oct 05, 2011 at 08:58:53AM -0700, Luck, Tony wrote:
-> > > > > > > The plan is to pass-down the list of poisoned memory pages
-> > > > > > > to the second
-> > > > > > > kernel using an elf-note so that these pages are left
-> > > > > > > untouched during
-> > > > > > > dump capture. I'm working on an implementation of the same
-> > > > > > > and should
-> > > > > > > have patches soon.
-> > > > > >
-> > > > > > I would say let us first figure out what happens while
-> > > > > > reading a poisoned
-> > > > > > page and is this a problem before working on a solution.
-> > > > > 
-> > > > > If the page is poisoned because of a real uncorrectable error
-> > > > > in memory
-> > > > > (reported as SRAO machine check today, or by SRAR
-> > > > > real-soon-now). Then
-> > > > > accessing the page from the processor while taking a memory
-> > > > > dump will
-> > > > > result in a machine check.
-> > > > > 
-> > > > > Note that a large memory system that had been running for a
-> > > > > long time
-> > > > > may have built up a small stash of these land-mine pages - and
-> > > > > we need
-> > > > > to worry about them even in the case where the panic is not
-> > > > > machine
-> > > > > check related (in fact especially in this case ... we are in a
-> > > > > case
-> > > > > where we actually do want the dump to diagnose the cause of the
-> > > > > panic,
-> > > > > and we don't want to risk losing the crash dump because we
-> > > > > aborted when
-> > > > > touching a page that the OS had safely avoided for
-> > > > > days/weeks/months).
-> > > > > 
-> > > > > So passing a list of poisoned pages from the old kernel to the
-> > > > > new kernel
-> > > > > is a good idea - and is independent of the cause of the crash
-> > > > > (except that
-> > > > > in the fatal machine check case due to memory error the list is
-> > > > > guaranteed
-> > > > > to be non-empty).
+On Wed, Oct 05, 2011 at 11:25:37AM -0400, Vivek Goyal wrote:
+> On Wed, Oct 05, 2011 at 12:48:44PM +0530, K.Prasad wrote:
+> > On Tue, Oct 04, 2011 at 10:04:37AM -0400, Vivek Goyal wrote:
+> > > On Mon, Oct 03, 2011 at 01:02:03PM +0530, K.Prasad wrote:
+> > > > There are certain types of crashes induced by faulty hardware in which
+> > > > capturing crashing kernel's memory (through kdump) makes no sense (or sometimes
+> > > > dangerous).
 > > > > 
-> > > > Whre is this poisoned page info stored? In struct page? If yes, then
-> > > > user space can walk through it and make sure not to touch poisoned pages.
-> > > > Anyway user space filtering utility "makedumpfile" walks through struct
-> > > > pages to filter out the pages. It should be able to filter out
-> > > > poisoned pages unconditionally. So there should be no need for kernel
-> > > > to export a list of these pages.
+> > > > A case in point, is unrecoverable memory errors (resulting in fatal machine
+> > > > check exceptions) in which reading from the faulty memory location from the
+> > > > kexec'ed kernel will cause double fault and system reset (leaving no
+> > > > information for the user).
 > > > 
-> > > Does this utility work on a vmcore dump? If so, Tony refers to the
-> > > creation of the vmcore itself from the memory used by the first
-> > > kernel.
+> > > Prasad,
+> > > 
+> > > I am just trying to remember what was wrong with Andi's approach of
+> > > disable MCE while copying the dump?
+> > >
 > > 
-> > No, this utitlity can directly work on /proc/vmcore where first kernel's
-> > image is still in memory and not on disk.
-> > 
-> > > If there are poisoned pages, merely accessing that portion of DRAM
-> > > containing the poisoned data would cause further MCEs in the freshly
-> > > booted kernel so you won't be able to finish creating the dump.
-> > 
-> > As long as you can get to your struct page arrays, one should be able
-> > to filter out poisoned pages without saving the whole dump.
+> > Hi Vivek,
+> > 	The behaviour upon a read operation on an UC memory location is
+> > undefined and so we want to avoid it (previously discussed here:
+> > http://article.gmane.org/gmane.linux.kernel/1146799).
 > 
-> It's still going to require a minimal kernel change because the
-> PG_hwpoison flag's bit number differs depending upon the kernel
-> configuration, if it exists at all.  An additional vmcoreinfo item
-> probably...
+> > When we disable MCE and copy the dump, we will invariably read the faulty
+> > memory location.
 > 
+> And how that is worse then not capturing a dump at all? Anyway, you said
+> that in case of MCE vmcore is of no use and we don't want to capture it.
+>
 
-Yes, that kind of information we can export along with other info
-in vmcoreinfo.
+The problem, as pointed out by Borislav Petkov in a different mail, is that
+we might end up capturing a vmcore containing corrupted data when the
+same is not required for analysing the cause of the crash.
 
-Thanks
-Vivek
+Of course, all this is assuming that reading the faulty memory with MCE
+disabled is harmless. However, the effect of a read operation in this
+case is undefined.
+
+Thanks,
+K.Prasad
+ 
+
 
 _______________________________________________
 kexec mailing list
