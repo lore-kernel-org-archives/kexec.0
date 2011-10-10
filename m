@@ -1,21 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from dsl-67-204-24-19.acanac.net ([67.204.24.19]
-	helo=mail.ellipticsemi.com)
-	by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RCF1Z-0001ix-DM
-	for kexec@lists.infradead.org; Fri, 07 Oct 2011 18:19:58 +0000
-Date: Fri, 7 Oct 2011 14:19:06 -0400
-From: Nick Bowler <nbowler@elliptictech.com>
+Received: from cl-3117.ham-01.de.sixxs.net ([2001:6f8:900:c2c::2]
+	helo=mail.skyhub.de)
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RD9xT-0000Md-2W
+	for kexec@lists.infradead.org; Mon, 10 Oct 2011 07:07:31 +0000
+Date: Mon, 10 Oct 2011 09:07:25 +0200
+From: Borislav Petkov <bp@alien8.de>
 Subject: Re: [Patch 1/4][kernel][slimdump] Add new elf-note of type
 	NT_NOCOREDUMP to capture slimdump
-Message-ID: <20111007181906.GA13172@elliptictech.com>
+Message-ID: <20111010070725.GB11577@liondog.tnic>
 References: <20111003070735.GJ2223@in.ibm.com>
 	<20111003073203.GA22694@in.ibm.com>
-	<20111004150417.GA23604@elliptictech.com>
-	<20111007163600.GB2297@in.ibm.com>
+	<20111004140437.GA28306@redhat.com>
+	<20111005071844.GB2235@in.ibm.com>
+	<20111005152537.GB30146@redhat.com>
+	<20111007161218.GA2297@in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111007163600.GB2297@in.ibm.com>
+In-Reply-To: <20111007161218.GA2297@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,41 +31,32 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: "K.Prasad" <prasad@linux.vnet.ibm.com>
-Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
+Cc: oomichi@mxs.nes.nec.co.jp, "Luck, Tony" <tony.luck@intel.com>, Valdis.Kletnieks@vt.edu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tachibana@mxm.nes.nec.co.jp, Andi Kleen <andi@firstfloor.org>, anderson@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, crash-utility@redhat.com
 
-On 2011-10-07 22:06 +0530, K.Prasad wrote:
-> On Tue, Oct 04, 2011 at 11:04:17AM -0400, Nick Bowler wrote:
-> > On 2011-10-03 13:02 +0530, K.Prasad wrote:
-> > > +	const char note_name[] = "PANIC_MCE";
-> > 
-> >         static const ...
-> > 
-> > > +	const char desc_msg[] = "Crash induced due to a fatal machine "
-> > > +				"check error";
-> > 
-> >         likewise.
+On Fri, Oct 07, 2011 at 09:42:19PM +0530, K.Prasad wrote:
+> The problem, as pointed out by Borislav Petkov in a different mail, is that
+> we might end up capturing a vmcore containing corrupted data when the
+> same is not required for analysing the cause of the crash.
 > 
-> Not sure why you wanted them to be defined as static. These strings are
-> going to be copied into respective elf-note buffers just a few lines
-> below their definitions.
+> Of course, all this is assuming that reading the faulty memory with MCE
+> disabled is harmless. However, the effect of a read operation in this
+> case is undefined.
 
-It's possible that GCC's optimizer will do the right thing in either
-case and it won't matter at all.  I haven't tried compiling this patch
-so I've not looked at the compiler output.  But for the most part, using
-"static" will save the few bytes of code needed to copy these strings
-onto the stack (as well as the corresponding reduction in stack usage).
+Frankly, I don't think that it is undefined - you basically should be
+able to read DRAM albeit with the corrupted data in it. However, you
+probably best disable the whole DRAM error detection first by clearing
+a couple of bits in MC4_CTL_MASK (at least on AMD that should work, I
+dunno how Intel does that).
 
-> > Please don't break string literals onto multiple lines like this, since
-> > it prevents users from finding the string using "grep".
-> 
-> We could do so, hoping that checkpatch.pl doesn't complain if we crossed
-> the 80-column width :-)
+But, regardless, according to Vivek, the "makedumpfile" tool should be
+able to jump over poisoned pages and you don't need all the hoopla above
+at all, right?
 
-If it does, the error is in checkpatch.pl rather than your code. :)
+Thanks.
 
-Cheers,
 -- 
-Nick Bowler, Elliptic Technologies (http://www.elliptictech.com/)
+Regards/Gruss,
+    Boris.
 
 _______________________________________________
 kexec mailing list
