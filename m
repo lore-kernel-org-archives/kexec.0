@@ -1,26 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RDCY5-0003X4-Sf
-	for kexec@lists.infradead.org; Mon, 10 Oct 2011 09:53:31 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
-	by e23smtp05.au.ibm.com (8.14.4/8.13.1) with ESMTP id p9A9kS5L032417
-	for <kexec@lists.infradead.org>; Mon, 10 Oct 2011 20:46:28 +1100
-Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
-	by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
-	p9A9rMFh2404378
-	for <kexec@lists.infradead.org>; Mon, 10 Oct 2011 20:53:22 +1100
-Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
-	by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
-	p9A9rMu6027227
-	for <kexec@lists.infradead.org>; Mon, 10 Oct 2011 20:53:22 +1100
-Message-ID: <4E92C08F.4050908@in.ibm.com>
-Date: Mon, 10 Oct 2011 15:23:19 +0530
-From: Suzuki Poulose <suzuki@in.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: powerpc: crash_dump: No backup region for PPC BookE
-References: <20111003101746.30979.44424.stgit@suzukikp.in.ibm.com>
-In-Reply-To: <20111003101746.30979.44424.stgit@suzukikp.in.ibm.com>
+	id 1RDe1p-0003Ac-LI
+	for kexec@lists.infradead.org; Tue, 11 Oct 2011 15:14:03 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 05D3A3EE0B5
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:51 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+	by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id E28CC45DE7A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:50 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+	by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id CA3DE45DE68
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:50 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B98A51DB803A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:50 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 83DA71DB802C
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:50 +0900 (JST)
+Received: from ml14.css.fujitsu.com (ml14 [127.0.0.1])
+	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 5396B9F7279
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:50 +0900 (JST)
+Received: from localhost (unknown [10.124.102.140])
+	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 057539F726F
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:13:49 +0900 (JST)
+Date: Wed, 12 Oct 2011 00:13:38 +0900 (   )
+Message-Id: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
+Subject: [Patch 00/12] Support Fujitsu Stand Arone Dump Format
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,41 +37,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "M. Mohan Kumar" <mohan@in.ibm.com>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On 10/03/11 15:48, Suzuki K. Poulose wrote:
-> Disable backup regions for BookE in case of a CRASH Dump, as they can
-> be run from anywhere.
->
-> The patch introduces --with-booke option to support the BookE.
->
-> With the patch, we get :
->
-> ## On a 256M machine:
->
-> # busybox cat /proc/cmdline
-> init=/bin/init console=ttyS0,16550 crashkernel=128M@100M
-> # kexec -p root/vmlinux
-> usable memory rgns size:1 base:6400000 size:8000000
-> CRASH MEMORY RANGES
-> 0000000000000000-0000000006400000
-> 000000000e400000-0000000010000000
-> Command line after adding elfcorehdr:  elfcorehdr=112380K
-> Command line after adding elfcorehdr:  elfcorehdr=112380K savemaxmem=256M
->
-> Signed-off-by: Suzuki K. Poulose<suzuki@in.ibm.com>
-Simon,
+The following series implements Fujitsu stand-alone dump (sadump)
+format support for makedumpfile, converting sadump-related formats
+into kdump-compressed format.
 
-Could you please pick up the patch, if no one has any issues ?
+Based on makedumpfile version 1.4.0.
 
-Thanks
+Here is summary of the changes.
 
-Suzuki
+No debug information on sadump-related formats
+==============================================
+
+Unlike other dump mechanisms, VMCORE created by sadump has NO debug
+information including VMCOREINFO. So, -x VMLINUX is definitely
+necessary.
+
+Debug information gained from VMLINUX is used for:
+
+    1. creating VMCOREINFO dynamically, saved in resulting dumpfiles
+       in kdump-compressed format, and
+
+    2. gaining symbolic and type information necessary to refer to ELF
+       note information contained in VMCORE generated by kdump at
+       crash, and to estimate phys_base value.
+
+If no VMLINUX is specified, dumpfile with no VMCOREINFO and ELF note
+is generated on the current implementation.
+
+
+Command-line interface change
+=============================
+
+Introduce --diskset=VMCORE to pass multiple VMCOREs in a single
+commnad-line input.
+
+    makedumpfile [OPTION] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2 \
+    [--diskset=VMCORE3 ..] DUMPFILE
+
+
+Architectures
+=============
+
+X86 and X86_64.
+
+On the other unsupported architectures, sadump-related source files
+are never compiled and linked into makedumpfile executable.
+
+---
+
+HATAYAMA Daisuke (12):
+      Add description of sadump-related formats in manual page
+      Add description of sadump-related formts in usage information
+      Generate and save VMCOREINFO and ELF note information
+      Estimate phys_base based on linux_banner position
+      Implement readmem() interface on sadump-related formats
+      Initialize debug information for ELF note extraction
+      Initialize internal data according to sadump-related formats
+      Export helpers for bitmap table handling
+      Verify and read VMCORE(s) in sadump-related formats
+      Implement command-line processing
+      Extend DumpInfo structure
+      Add sadump module header file
+
+
+ Makefile       |    6 
+ elf_info.c     |    2 
+ makedumpfile.8 |   22 +
+ makedumpfile.c |  397 ++++++++++---
+ makedumpfile.h |  163 +++++
+ print_info.c   |   10 
+ sadump_info.c  | 1713 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ sadump_info.h  |  159 +++++
+ sadump_mod.h   |  186 ++++++
+ 9 files changed, 2578 insertions(+), 80 deletions(-)
+ create mode 100644 sadump_info.c
+ create mode 100644 sadump_info.h
+ create mode 100644 sadump_mod.h
+
+-- 
+Thanks,
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
