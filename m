@@ -1,32 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RDe4H-0003Eo-IY
-	for kexec@lists.infradead.org; Tue, 11 Oct 2011 15:16:34 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
-	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 3CA123EE0AE
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:31 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
-	by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 26CAE45DEB2
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:31 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
-	by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0D1DE45DE9E
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:31 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 014E51DB8037
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:31 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id BC2D41DB803C
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:30 +0900 (JST)
-Received: from m107.css.fujitsu.com (m107 [127.0.0.1])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 93BCB6A0006
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:30 +0900 (JST)
+	id 1RDe4Q-0003FQ-Q3
+	for kexec@lists.infradead.org; Tue, 11 Oct 2011 15:16:44 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 2AE943EE081
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:41 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+	by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1573C45DE7A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:41 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+	by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F3A9345DE6A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id E7C5D1DB803A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id AA0FC1DB802C
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
+Received: from ml14.css.fujitsu.com (ml14 [127.0.0.1])
+	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 7CA1A9F7277
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
 Received: from localhost (unknown [10.124.102.140])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 3B5E36A0003
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:30 +0900 (JST)
-Date: Wed, 12 Oct 2011 00:16:26 +0900 (   )
-Message-Id: <20111012.001626.424251427.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 05/12] Export helpers for bitmap table handling
+	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 2975F9F726F
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
+Date: Wed, 12 Oct 2011 00:16:35 +0900 (   )
+Message-Id: <20111012.001635.183027202.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 06/12] Initialize internal data according to sadump-related
+	formats
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 In-Reply-To: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
 References: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
@@ -45,90 +46,326 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-sadump-related formats and kdump-compressed format is similar in
-structure. In particular, both have exactly the same in bitmap. So
-reuse two helper functions, is_on() and is_dumpable(), in sadump
-module.
+Set page_size, nr_cpus and time stamp. Also, initialize bitmap table
+in the same way as initialize_bitmap_memory() for kdump-compressed
+format.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- makedumpfile.c |   22 ----------------------
- makedumpfile.h |   24 ++++++++++++++++++++++++
- 2 files changed, 24 insertions(+), 22 deletions(-)
+ makedumpfile.c |   28 +++++++++++
+ sadump_info.c  |  144 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ sadump_info.h  |   36 ++++++++++++++
+ sadump_mod.h   |    2 +
+ 4 files changed, 210 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 7057009..96faf60 100644
+index 96faf60..1686dff 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -2543,28 +2543,6 @@ clear_bit_on_2nd_bitmap_for_kernel(unsigned long long pfn)
- }
+@@ -119,6 +119,12 @@ get_max_mapnr(void)
+ 		info->max_mapnr = info->dh_memory->max_mapnr;
+ 		return TRUE;
+ 	}
++
++	if (info->flag_sadump) {
++		info->max_mapnr = sadump_get_max_mapnr();
++		return TRUE;
++	}
++
+ 	max_paddr = get_max_paddr();
+ 	info->max_mapnr = paddr_to_pfn(max_paddr);
  
- static inline int
--is_on(char *bitmap, int i)
--{
--	return bitmap[i>>3] & (1 << (i & 7));
--}
--
--static inline int
--is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
--{
--	off_t offset;
--	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
--		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
--		lseek(bitmap->fd, offset, SEEK_SET);
--		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
--		if (pfn == 0)
--			bitmap->no_block = 0;
--		else
--			bitmap->no_block = pfn/PFN_BUFBITMAP;
--	}
--	return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
--}
--
--static inline int
- is_in_segs(unsigned long long paddr)
- {
- 	if (info->flag_refiltering) {
-diff --git a/makedumpfile.h b/makedumpfile.h
-index dee0a68..17ec590 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -56,6 +56,8 @@ enum {
- 	FLATMEM
+@@ -2305,6 +2311,28 @@ initial(void)
+ 		if (!initialize_bitmap_memory())
+ 			return FALSE;
+ 
++	} else if (info->flag_sadump) {
++		int nr_cpus;
++
++		if (info->flag_elf_dumpfile) {
++			MSG("'-E' option is disable, ");
++			MSG("because %s is sadump %s format.\n",
++			    sadump_format_type_name(), info->name_memory);
++			return FALSE;
++		}
++
++		set_page_size(sadump_page_size());
++
++		if (!sadump_initialize_bitmap_memory())
++			return FALSE;
++
++		if (!sadump_get_nr_cpus(&nr_cpus))
++			return FALSE;
++
++		set_nr_cpus(nr_cpus);
++
++		(void) sadump_set_timestamp(&info->timestamp);
++
+ 	} else if (!get_phys_base())
+ 		return FALSE;
+ 
+diff --git a/sadump_info.c b/sadump_info.c
+index 2f66148..6b2b7bc 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -39,6 +39,7 @@ struct sadump_info {
+ 	unsigned long sub_hdr_offset;
+ 	uint32_t smram_cpu_state_size;
+ 	unsigned long data_offset;
++	unsigned long *block_table;
  };
  
-+int get_mem_type(void);
-+
- /*
-  * Page flags
-  *
-@@ -1244,4 +1246,26 @@ int get_xen_info_ia64(void);
- #define get_xen_info_arch(X) FALSE
- #endif	/* s390x */
+ static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
+@@ -505,6 +506,125 @@ error:
+ }
  
-+static inline int
-+is_on(char *bitmap, int i)
+ int
++sadump_initialize_bitmap_memory(void)
 +{
-+	return bitmap[i>>3] & (1 << (i & 7));
-+}
++	struct sadump_header *sh = si->sh_memory;
++	struct dump_bitmap *bmp;
++	unsigned long dumpable_bitmap_offset, dumpable_bitmap_len;
++	unsigned long section, max_section, pfn;
++	unsigned long *block_table;
 +
-+static inline int
-+is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
-+{
-+	off_t offset;
-+	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
-+		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
-+		lseek(bitmap->fd, offset, SEEK_SET);
-+		read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
-+		if (pfn == 0)
-+			bitmap->no_block = 0;
-+		else
-+			bitmap->no_block = pfn/PFN_BUFBITMAP;
++	dumpable_bitmap_offset =
++		si->sub_hdr_offset +
++		sh->block_size * (sh->sub_hdr_size + sh->bitmap_blocks);
++
++	dumpable_bitmap_len = sh->block_size * sh->dumpable_bitmap_blocks;
++
++	bmp = malloc(sizeof(struct dump_bitmap));
++	if (bmp == NULL) {
++		ERRMSG("Can't allocate memory for the memory-bitmap. %s\n",
++		       strerror(errno));
++		return FALSE;
 +	}
-+	return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
++	bmp->fd = info->fd_memory;
++	bmp->file_name = info->name_memory;
++	bmp->no_block = -1;
++	memset(bmp->buf, 0, BUFSIZE_BITMAP);
++	bmp->offset = dumpable_bitmap_offset;
++
++	max_section = divideup(sh->max_mapnr, SADUMP_PF_SECTION_NUM);
++
++	block_table = calloc(sizeof(unsigned long), max_section);
++	if (block_table == NULL) {
++		ERRMSG("Can't allocate memory for the block_table. %s\n",
++		       strerror(errno));
++		free(bmp);
++		return FALSE;
++	}
++
++	for (section = 0; section < max_section; ++section) {
++		if (section > 0)
++			block_table[section] = block_table[section-1];
++		for (pfn = section * SADUMP_PF_SECTION_NUM;
++		     pfn < (section + 1) * SADUMP_PF_SECTION_NUM;
++		     ++pfn)
++			if (is_dumpable(bmp, pfn))
++				block_table[section]++;
++	}
++
++	info->bitmap_memory = bmp;
++	si->block_table = block_table;
++
++	return TRUE;
 +}
 +
- #endif /* MAKEDUMPFILE_H */
++int
++sadump_get_nr_cpus(int *nr_cpus)
++{
++	unsigned long offset;
++	struct sadump_smram_cpu_state scs, zero;
++	uint32_t x_cpu;
++	int count;
++
++	memset(&zero, 0, sizeof(zero));
++
++	offset = si->sub_hdr_offset + sizeof(uint32_t) +
++		si->sh_memory->nr_cpus * sizeof(struct sadump_apic_state);
++
++	count = 0;
++	for (x_cpu = 0; x_cpu < si->sh_memory->nr_cpus; ++x_cpu) {
++		if (!read_device(&scs, sizeof(scs), &offset))
++			return FALSE;
++		if (memcmp(&scs, &zero, sizeof(scs)) != 0)
++			count++;
++	}
++
++	*nr_cpus = count;
++
++	DEBUG_MSG("sadump: nr_cpus: %d\n", *nr_cpus);
++
++	return TRUE;
++}
++
++int
++sadump_set_timestamp(struct timeval *ts)
++{
++	static struct tm t;
++	efi_time_t *e = &si->sph_memory->time_stamp;
++	time_t ti;
++
++	memset(&t, 0, sizeof(t));
++
++	t.tm_sec  = e->second;
++	t.tm_min  = e->minute;
++	t.tm_hour = e->hour;
++	t.tm_mday = e->day;
++	t.tm_mon  = e->month - 1;
++	t.tm_year = e->year - 1900;
++
++	if (e->timezone != EFI_UNSPECIFIED_TIMEZONE)
++		t.tm_hour += e->timezone;
++
++	else
++		DEBUG_MSG("sadump: timezone information is missing\n");
++
++	ti = mktime(&t);
++	if (ti == (time_t)-1)
++		return FALSE;
++
++	ts->tv_sec = ti;
++	ts->tv_usec = 0;
++
++	return TRUE;
++}
++
++unsigned long long
++sadump_get_max_mapnr(void)
++{
++	return si->sh_memory->max_mapnr;
++}
++
++int
+ sadump_add_diskset_info(char *name_memory)
+ {
+ 	si->num_disks++;
+@@ -523,12 +643,34 @@ sadump_add_diskset_info(char *name_memory)
+ 	return TRUE;
+ }
+ 
++long
++sadump_page_size(void)
++{
++	return si->sh_memory->block_size;
++}
++
+ char *
+ sadump_head_disk_name_memory(void)
+ {
+ 	return si->diskset_info[0].name_memory;
+ }
+ 
++char *
++sadump_format_type_name(void)
++{
++	switch (info->flag_sadump) {
++	case SADUMP_SINGLE_PARTITION:
++		return "single partition";
++	case SADUMP_DISKSET:
++		return "diskset";
++	case SADUMP_MEDIA_BACKUP:
++		return "media backup";
++	case SADUMP_UNKNOWN:
++		return "unknown";
++	}
++	return NULL;
++}
++
+ void
+ free_sadump_info(void)
+ {
+@@ -551,6 +693,8 @@ free_sadump_info(void)
+ 		}
+ 		free(si->diskset_info);
+ 	}
++	if (si->block_table)
++		free(si->block_table);
+ }
+ 
+ #endif /* defined(__x86__) && defined(__x86_64__) */
+diff --git a/sadump_info.h b/sadump_info.h
+index c54d29f..0a04141 100644
+--- a/sadump_info.h
++++ b/sadump_info.h
+@@ -25,8 +25,14 @@
+ #if defined(__x86__) || defined(__x86_64__)
+ 
+ int check_and_get_sadump_header_info(char *filename);
++int sadump_initialize_bitmap_memory(void);
++int sadump_get_nr_cpus(int *nr_cpus);
++int sadump_set_timestamp(struct timeval *ts);
++unsigned long long sadump_get_max_mapnr(void);
+ int sadump_add_diskset_info(char *name_memory);
++long sadump_page_size(void);
+ char *sadump_head_disk_name_memory(void);
++char *sadump_format_type_name(void);
+ void free_sadump_info(void);
+ 
+ static inline int sadump_is_supported_arch(void)
+@@ -45,17 +51,47 @@ static inline int check_and_get_sadump_header_info(char *filename)
+ 	return TRUE;
+ }
+ 
++static inline int sadump_initialize_bitmap_memory(void)
++{
++	return FALSE;
++}
++
++static inline int sadump_get_nr_cpus(int *nr_cpus)
++{
++	return 0;
++}
++
++static inline int sadump_set_timestamp(struct timeval *ts)
++{
++	return FALSE;
++}
++
++static inline unsigned long long sadump_get_max_mapnr(void)
++{
++	return 0;
++}
++
+ static inline int sadump_add_diskset_info(char *name_memory)
+ {
+ 	return TRUE;
+ }
+ 
++static inline long sadump_page_size(void)
++{
++	return 0;
++}
++
+ static inline char *
+ sadump_head_disk_name_memory(void)
+ {
+ 	return NULL;
+ }
+ 
++static inline char *sadump_format_type_name(void)
++{
++	return NULL;
++}
++
+ static inline void free_sadump_info(void)
+ {
+ 	return;
+diff --git a/sadump_mod.h b/sadump_mod.h
+index 3385123..efd059f 100644
+--- a/sadump_mod.h
++++ b/sadump_mod.h
+@@ -169,6 +169,8 @@ struct sadump_media_header {
+ 	char reserve[4044];	// reserve feild
+ };
+ 
++#define SADUMP_PF_SECTION_NUM 4096
++
+ #endif /* defined(__x86__) && defined(__x86_64__) */
+ 
+ /*
 -- 
 1.7.4.4
 
