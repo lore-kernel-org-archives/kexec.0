@@ -1,33 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RDe4Q-0003FQ-Q3
-	for kexec@lists.infradead.org; Tue, 11 Oct 2011 15:16:44 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 2AE943EE081
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:41 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
-	by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1573C45DE7A
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:41 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
-	by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F3A9345DE6A
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id E7C5D1DB803A
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
-	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id AA0FC1DB802C
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
-Received: from ml14.css.fujitsu.com (ml14 [127.0.0.1])
-	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 7CA1A9F7277
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
+	id 1RDe4d-0003GH-Db
+	for kexec@lists.infradead.org; Tue, 11 Oct 2011 15:16:57 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 551CE3EE0AE
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:53 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 371BA45DE55
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:53 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 203B545DE54
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:53 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 12E0A1DB8049
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:53 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id C16981DB8040
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:52 +0900 (JST)
+Received: from m105.css.fujitsu.com (m105 [127.0.0.1])
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 923459C800A
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:52 +0900 (JST)
 Received: from localhost (unknown [10.124.102.140])
-	by ml14.s.css.fujitsu.com (Postfix) with ESMTP id 2975F9F726F
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:40 +0900 (JST)
-Date: Wed, 12 Oct 2011 00:16:35 +0900 (   )
-Message-Id: <20111012.001635.183027202.d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 06/12] Initialize internal data according to sadump-related
-	formats
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 3639B9C8001
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 00:16:52 +0900 (JST)
+Date: Wed, 12 Oct 2011 00:16:46 +0900 (   )
+Message-Id: <20111012.001646.39159763.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 07/12] Initialize debug information for ELF note extraction
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 In-Reply-To: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
 References: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
@@ -46,326 +45,381 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Set page_size, nr_cpus and time stamp. Also, initialize bitmap table
-in the same way as initialize_bitmap_memory() for kdump-compressed
-format.
+Initialize symbol and type information for acessing VMCORE(s) data.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
- makedumpfile.c |   28 +++++++++++
- sadump_info.c  |  144 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- sadump_info.h  |   36 ++++++++++++++
- sadump_mod.h   |    2 +
- 4 files changed, 210 insertions(+), 0 deletions(-)
+ makedumpfile.c |  168 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ makedumpfile.h |  130 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 298 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 96faf60..1686dff 100644
+index 1686dff..4044bce 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -119,6 +119,12 @@ get_max_mapnr(void)
- 		info->max_mapnr = info->dh_memory->max_mapnr;
- 		return TRUE;
- 	}
+@@ -19,6 +19,7 @@
+ #include "elf_info.h"
+ #include "erase_info.h"
+ #include "sadump_info.h"
++#include <stddef.h>
+ #include <sys/time.h>
+ 
+ struct symbol_table	symbol_table;
+@@ -809,6 +810,19 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(log_end, "log_end");
+ 	SYMBOL_INIT(max_pfn, "max_pfn");
+ 	SYMBOL_INIT(modules, "modules");
++	SYMBOL_INIT(linux_banner, "linux_banner");
++	SYMBOL_INIT(bios_cpu_apicid, "bios_cpu_apicid");
++	SYMBOL_INIT(x86_bios_cpu_apicid, "x86_bios_cpu_apicid");
++	if (SYMBOL(x86_bios_cpu_apicid) == NOT_FOUND_SYMBOL)
++		SYMBOL_INIT(x86_bios_cpu_apicid,
++			    "per_cpu__x86_bios_cpu_apicid");
++	SYMBOL_INIT(x86_bios_cpu_apicid_early_ptr,
++		    "x86_bios_cpu_apicid_early_ptr");
++	SYMBOL_INIT(x86_bios_cpu_apicid_early_map,
++		    "x86_bios_cpu_apicid_early_map");
++	SYMBOL_INIT(crash_notes, "crash_notes");
++	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
++	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
+ 
+ 	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+ 		SYMBOL_ARRAY_TYPE_INIT(node_data, "node_data");
+@@ -818,6 +832,8 @@ get_symbol_info(void)
+ 		SYMBOL_ARRAY_LENGTH_INIT(mem_section, "mem_section");
+ 	if (SYMBOL(node_memblk) != NOT_FOUND_SYMBOL)
+ 		SYMBOL_ARRAY_LENGTH_INIT(node_memblk, "node_memblk");
++	if (SYMBOL(__per_cpu_offset) != NOT_FOUND_SYMBOL)
++		SYMBOL_ARRAY_LENGTH_INIT(__per_cpu_offset, "__per_cpu_offset");
+ 
+ 	return TRUE;
+ }
+@@ -934,6 +950,158 @@ get_structure_info(void)
+ 
+ 	TYPEDEF_SIZE_INIT(nodemask_t, "nodemask_t");
+ 
++	SIZE_INIT(percpu_data, "percpu_data");
 +
-+	if (info->flag_sadump) {
-+		info->max_mapnr = sadump_get_max_mapnr();
-+		return TRUE;
++	/*
++	 * Get offset of the elf_prstatus members.
++	 */
++	SIZE_INIT(elf_prstatus, "elf_prstatus");
++	OFFSET_INIT(elf_prstatus.pr_reg, "elf_prstatus", "pr_reg");
++
++	/*
++	 * Get offset of the user_regs_struct members.
++	 */
++	SIZE_INIT(user_regs_struct, "user_regs_struct");
++
++#ifdef __x86__
++	if (SIZE(user_regs_struct) != NOT_FOUND_STRUCTURE) {
++		OFFSET_INIT(user_regs_struct.bx, "user_regs_struct", "bx");
++		OFFSET_INIT(user_regs_struct.cx, "user_regs_struct", "cx");
++		OFFSET_INIT(user_regs_struct.dx, "user_regs_struct", "dx");
++		OFFSET_INIT(user_regs_struct.si, "user_regs_struct", "si");
++		OFFSET_INIT(user_regs_struct.di, "user_regs_struct", "di");
++		OFFSET_INIT(user_regs_struct.bp, "user_regs_struct", "bp");
++		OFFSET_INIT(user_regs_struct.ax, "user_regs_struct", "ax");
++		OFFSET_INIT(user_regs_struct.ds, "user_regs_struct", "ds");
++		OFFSET_INIT(user_regs_struct.es, "user_regs_struct", "es");
++		OFFSET_INIT(user_regs_struct.fs, "user_regs_struct", "fs");
++		OFFSET_INIT(user_regs_struct.gs, "user_regs_struct", "gs");
++		OFFSET_INIT(user_regs_struct.orig_ax, "user_regs_struct",
++			    "orig_ax");
++		OFFSET_INIT(user_regs_struct.ip, "user_regs_struct", "ip");
++		OFFSET_INIT(user_regs_struct.cs, "user_regs_struct", "cs");
++		OFFSET_INIT(user_regs_struct.flags, "user_regs_struct",
++			    "flags");
++		OFFSET_INIT(user_regs_struct.sp, "user_regs_struct", "sp");
++		OFFSET_INIT(user_regs_struct.ss, "user_regs_struct", "ss");
++
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.bx, "user_regs_struct", "ebx");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.cx, "user_regs_struct", "ecx");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.dx, "user_regs_struct", "edx");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.si, "user_regs_struct", "esi");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.di, "user_regs_struct", "edi");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.bp, "user_regs_struct", "ebp");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.ax, "user_regs_struct", "eax");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.orig_ax, "user_regs_struct", "orig_eax");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.ip, "user_regs_struct", "eip");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.flags, "user_regs_struct", "eflags");
++		if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
++			OFFSET_INIT(user_regs_struct.sp, "user_regs_struct", "esp");
++	} else {
++		/*
++		 * Note: Sometimes kernel debuginfo doesn't contain
++		 * user_regs_struct structure information. Instead, we
++		 * take offsets from actual datatype.
++		 */
++		OFFSET(user_regs_struct.bx) = offsetof(struct user_regs_struct, bx);
++		OFFSET(user_regs_struct.cx) = offsetof(struct user_regs_struct, cx);
++		OFFSET(user_regs_struct.dx) = offsetof(struct user_regs_struct, dx);
++		OFFSET(user_regs_struct.si) = offsetof(struct user_regs_struct, si);
++		OFFSET(user_regs_struct.di) = offsetof(struct user_regs_struct, di);
++		OFFSET(user_regs_struct.bp) = offsetof(struct user_regs_struct, bp);
++		OFFSET(user_regs_struct.ax) = offsetof(struct user_regs_struct, ax);
++		OFFSET(user_regs_struct.ds) = offsetof(struct user_regs_struct, ds);
++		OFFSET(user_regs_struct.es) = offsetof(struct user_regs_struct, es);
++		OFFSET(user_regs_struct.fs) = offsetof(struct user_regs_struct, fs);
++		OFFSET(user_regs_struct.gs) = offsetof(struct user_regs_struct, gs);
++		OFFSET(user_regs_struct.orig_ax) = offsetof(struct user_regs_struct, orig_ax);
++		OFFSET(user_regs_struct.ip) = offsetof(struct user_regs_struct, ip);
++		OFFSET(user_regs_struct.cs) = offsetof(struct user_regs_struct, cs);
++		OFFSET(user_regs_struct.flags) = offsetof(struct user_regs_struct, flags);
++		OFFSET(user_regs_struct.sp) = offsetof(struct user_regs_struct, sp);
++		OFFSET(user_regs_struct.ss) = offsetof(struct user_regs_struct, ss);
 +	}
++#endif /* __x86__ */
 +
- 	max_paddr = get_max_paddr();
- 	info->max_mapnr = paddr_to_pfn(max_paddr);
++#ifdef __x86_64__
++	if (SIZE(user_regs_struct) != NOT_FOUND_STRUCTURE) {
++		OFFSET_INIT(user_regs_struct.r15, "user_regs_struct", "r15");
++		OFFSET_INIT(user_regs_struct.r14, "user_regs_struct", "r14");
++		OFFSET_INIT(user_regs_struct.r13, "user_regs_struct", "r13");
++		OFFSET_INIT(user_regs_struct.r12, "user_regs_struct", "r12");
++		OFFSET_INIT(user_regs_struct.bp, "user_regs_struct", "bp");
++		OFFSET_INIT(user_regs_struct.bx, "user_regs_struct", "bx");
++		OFFSET_INIT(user_regs_struct.r11, "user_regs_struct", "r11");
++		OFFSET_INIT(user_regs_struct.r10, "user_regs_struct", "r10");
++		OFFSET_INIT(user_regs_struct.r9, "user_regs_struct", "r9");
++		OFFSET_INIT(user_regs_struct.r8, "user_regs_struct", "r8");
++		OFFSET_INIT(user_regs_struct.ax, "user_regs_struct", "ax");
++		OFFSET_INIT(user_regs_struct.cx, "user_regs_struct", "cx");
++		OFFSET_INIT(user_regs_struct.dx, "user_regs_struct", "dx");
++		OFFSET_INIT(user_regs_struct.si, "user_regs_struct", "si");
++		OFFSET_INIT(user_regs_struct.di, "user_regs_struct", "di");
++		OFFSET_INIT(user_regs_struct.orig_ax, "user_regs_struct",
++			    "orig_ax");
++		OFFSET_INIT(user_regs_struct.ip, "user_regs_struct", "ip");
++		OFFSET_INIT(user_regs_struct.cs, "user_regs_struct", "cs");
++		OFFSET_INIT(user_regs_struct.flags, "user_regs_struct",
++			    "flags");
++		OFFSET_INIT(user_regs_struct.sp, "user_regs_struct", "sp");
++		OFFSET_INIT(user_regs_struct.ss, "user_regs_struct", "ss");
++		OFFSET_INIT(user_regs_struct.fs_base, "user_regs_struct",
++			    "fs_base");
++		OFFSET_INIT(user_regs_struct.gs_base, "user_regs_struct",
++			    "gs_base");
++		OFFSET_INIT(user_regs_struct.ds, "user_regs_struct", "ds");
++		OFFSET_INIT(user_regs_struct.es, "user_regs_struct", "es");
++		OFFSET_INIT(user_regs_struct.fs, "user_regs_struct", "fs");
++		OFFSET_INIT(user_regs_struct.gs, "user_regs_struct", "gs");
++	} else {
++		/*
++		 * Note: Sometimes kernel debuginfo doesn't contain
++		 * user_regs_struct structure information. Instead, we
++		 * take offsets from actual datatype.
++		 */
++		OFFSET(user_regs_struct.r15) = offsetof(struct user_regs_struct, r15);
++		OFFSET(user_regs_struct.r14) = offsetof(struct user_regs_struct, r14);
++		OFFSET(user_regs_struct.r13) = offsetof(struct user_regs_struct, r13);
++		OFFSET(user_regs_struct.r12) = offsetof(struct user_regs_struct, r12);
++		OFFSET(user_regs_struct.bp) = offsetof(struct user_regs_struct, bp);
++		OFFSET(user_regs_struct.bx) = offsetof(struct user_regs_struct, bx);
++		OFFSET(user_regs_struct.r11) = offsetof(struct user_regs_struct, r11);
++		OFFSET(user_regs_struct.r10) = offsetof(struct user_regs_struct, r10);
++		OFFSET(user_regs_struct.r9) = offsetof(struct user_regs_struct, r9);
++		OFFSET(user_regs_struct.r8) = offsetof(struct user_regs_struct, r8);
++		OFFSET(user_regs_struct.ax) = offsetof(struct user_regs_struct, ax);
++		OFFSET(user_regs_struct.cx) = offsetof(struct user_regs_struct, cx);
++		OFFSET(user_regs_struct.dx) = offsetof(struct user_regs_struct, dx);
++		OFFSET(user_regs_struct.si) = offsetof(struct user_regs_struct, si);
++		OFFSET(user_regs_struct.di) = offsetof(struct user_regs_struct, di);
++		OFFSET(user_regs_struct.orig_ax) = offsetof(struct user_regs_struct, orig_ax);
++		OFFSET(user_regs_struct.ip) = offsetof(struct user_regs_struct, ip);
++		OFFSET(user_regs_struct.cs) = offsetof(struct user_regs_struct, cs);
++		OFFSET(user_regs_struct.flags) = offsetof(struct user_regs_struct, flags);
++		OFFSET(user_regs_struct.sp) = offsetof(struct user_regs_struct, sp);
++		OFFSET(user_regs_struct.ss) = offsetof(struct user_regs_struct, ss);
++		OFFSET(user_regs_struct.fs_base) = offsetof(struct user_regs_struct, fs_base);
++		OFFSET(user_regs_struct.gs_base) = offsetof(struct user_regs_struct, gs_base);
++		OFFSET(user_regs_struct.ds) = offsetof(struct user_regs_struct, ds);
++		OFFSET(user_regs_struct.es) = offsetof(struct user_regs_struct, es);
++		OFFSET(user_regs_struct.fs) = offsetof(struct user_regs_struct, fs);
++		OFFSET(user_regs_struct.gs) = offsetof(struct user_regs_struct, gs);
++	}
++#endif /* __x86_64__ */
++
+ 	return TRUE;
+ }
  
-@@ -2305,6 +2311,28 @@ initial(void)
- 		if (!initialize_bitmap_memory())
- 			return FALSE;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 17ec590..433bc49 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -983,6 +983,18 @@ struct symbol_table {
+ 	 */
  
-+	} else if (info->flag_sadump) {
-+		int nr_cpus;
+ 	unsigned long long	modules;
 +
-+		if (info->flag_elf_dumpfile) {
-+			MSG("'-E' option is disable, ");
-+			MSG("because %s is sadump %s format.\n",
-+			    sadump_format_type_name(), info->name_memory);
-+			return FALSE;
-+		}
-+
-+		set_page_size(sadump_page_size());
-+
-+		if (!sadump_initialize_bitmap_memory())
-+			return FALSE;
-+
-+		if (!sadump_get_nr_cpus(&nr_cpus))
-+			return FALSE;
-+
-+		set_nr_cpus(nr_cpus);
-+
-+		(void) sadump_set_timestamp(&info->timestamp);
-+
- 	} else if (!get_phys_base())
- 		return FALSE;
- 
-diff --git a/sadump_info.c b/sadump_info.c
-index 2f66148..6b2b7bc 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -39,6 +39,7 @@ struct sadump_info {
- 	unsigned long sub_hdr_offset;
- 	uint32_t smram_cpu_state_size;
- 	unsigned long data_offset;
-+	unsigned long *block_table;
++	/*
++	 * for sadump
++	 */
++	unsigned long long	linux_banner;
++	unsigned long long	bios_cpu_apicid;
++	unsigned long long	x86_bios_cpu_apicid;
++	unsigned long long	x86_bios_cpu_apicid_early_ptr;
++	unsigned long long	x86_bios_cpu_apicid_early_map;
++	unsigned long long	crash_notes;
++	unsigned long long	__per_cpu_offset;
++	unsigned long long	__per_cpu_load;
  };
  
- static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
-@@ -505,6 +506,125 @@ error:
- }
- 
- int
-+sadump_initialize_bitmap_memory(void)
-+{
-+	struct sadump_header *sh = si->sh_memory;
-+	struct dump_bitmap *bmp;
-+	unsigned long dumpable_bitmap_offset, dumpable_bitmap_len;
-+	unsigned long section, max_section, pfn;
-+	unsigned long *block_table;
+ struct size_table {
+@@ -1005,6 +1017,13 @@ struct size_table {
+ 	 * for loading module symbol data
+ 	 */
+ 	long	module;
 +
-+	dumpable_bitmap_offset =
-+		si->sub_hdr_offset +
-+		sh->block_size * (sh->sub_hdr_size + sh->bitmap_blocks);
-+
-+	dumpable_bitmap_len = sh->block_size * sh->dumpable_bitmap_blocks;
-+
-+	bmp = malloc(sizeof(struct dump_bitmap));
-+	if (bmp == NULL) {
-+		ERRMSG("Can't allocate memory for the memory-bitmap. %s\n",
-+		       strerror(errno));
-+		return FALSE;
-+	}
-+	bmp->fd = info->fd_memory;
-+	bmp->file_name = info->name_memory;
-+	bmp->no_block = -1;
-+	memset(bmp->buf, 0, BUFSIZE_BITMAP);
-+	bmp->offset = dumpable_bitmap_offset;
-+
-+	max_section = divideup(sh->max_mapnr, SADUMP_PF_SECTION_NUM);
-+
-+	block_table = calloc(sizeof(unsigned long), max_section);
-+	if (block_table == NULL) {
-+		ERRMSG("Can't allocate memory for the block_table. %s\n",
-+		       strerror(errno));
-+		free(bmp);
-+		return FALSE;
-+	}
-+
-+	for (section = 0; section < max_section; ++section) {
-+		if (section > 0)
-+			block_table[section] = block_table[section-1];
-+		for (pfn = section * SADUMP_PF_SECTION_NUM;
-+		     pfn < (section + 1) * SADUMP_PF_SECTION_NUM;
-+		     ++pfn)
-+			if (is_dumpable(bmp, pfn))
-+				block_table[section]++;
-+	}
-+
-+	info->bitmap_memory = bmp;
-+	si->block_table = block_table;
-+
-+	return TRUE;
-+}
-+
-+int
-+sadump_get_nr_cpus(int *nr_cpus)
-+{
-+	unsigned long offset;
-+	struct sadump_smram_cpu_state scs, zero;
-+	uint32_t x_cpu;
-+	int count;
-+
-+	memset(&zero, 0, sizeof(zero));
-+
-+	offset = si->sub_hdr_offset + sizeof(uint32_t) +
-+		si->sh_memory->nr_cpus * sizeof(struct sadump_apic_state);
-+
-+	count = 0;
-+	for (x_cpu = 0; x_cpu < si->sh_memory->nr_cpus; ++x_cpu) {
-+		if (!read_device(&scs, sizeof(scs), &offset))
-+			return FALSE;
-+		if (memcmp(&scs, &zero, sizeof(scs)) != 0)
-+			count++;
-+	}
-+
-+	*nr_cpus = count;
-+
-+	DEBUG_MSG("sadump: nr_cpus: %d\n", *nr_cpus);
-+
-+	return TRUE;
-+}
-+
-+int
-+sadump_set_timestamp(struct timeval *ts)
-+{
-+	static struct tm t;
-+	efi_time_t *e = &si->sph_memory->time_stamp;
-+	time_t ti;
-+
-+	memset(&t, 0, sizeof(t));
-+
-+	t.tm_sec  = e->second;
-+	t.tm_min  = e->minute;
-+	t.tm_hour = e->hour;
-+	t.tm_mday = e->day;
-+	t.tm_mon  = e->month - 1;
-+	t.tm_year = e->year - 1900;
-+
-+	if (e->timezone != EFI_UNSPECIFIED_TIMEZONE)
-+		t.tm_hour += e->timezone;
-+
-+	else
-+		DEBUG_MSG("sadump: timezone information is missing\n");
-+
-+	ti = mktime(&t);
-+	if (ti == (time_t)-1)
-+		return FALSE;
-+
-+	ts->tv_sec = ti;
-+	ts->tv_usec = 0;
-+
-+	return TRUE;
-+}
-+
-+unsigned long long
-+sadump_get_max_mapnr(void)
-+{
-+	return si->sh_memory->max_mapnr;
-+}
-+
-+int
- sadump_add_diskset_info(char *name_memory)
- {
- 	si->num_disks++;
-@@ -523,12 +643,34 @@ sadump_add_diskset_info(char *name_memory)
- 	return TRUE;
- }
- 
-+long
-+sadump_page_size(void)
-+{
-+	return si->sh_memory->block_size;
-+}
-+
- char *
- sadump_head_disk_name_memory(void)
- {
- 	return si->diskset_info[0].name_memory;
- }
- 
-+char *
-+sadump_format_type_name(void)
-+{
-+	switch (info->flag_sadump) {
-+	case SADUMP_SINGLE_PARTITION:
-+		return "single partition";
-+	case SADUMP_DISKSET:
-+		return "diskset";
-+	case SADUMP_MEDIA_BACKUP:
-+		return "media backup";
-+	case SADUMP_UNKNOWN:
-+		return "unknown";
-+	}
-+	return NULL;
-+}
-+
- void
- free_sadump_info(void)
- {
-@@ -551,6 +693,8 @@ free_sadump_info(void)
- 		}
- 		free(si->diskset_info);
- 	}
-+	if (si->block_table)
-+		free(si->block_table);
- }
- 
- #endif /* defined(__x86__) && defined(__x86_64__) */
-diff --git a/sadump_info.h b/sadump_info.h
-index c54d29f..0a04141 100644
---- a/sadump_info.h
-+++ b/sadump_info.h
-@@ -25,8 +25,14 @@
- #if defined(__x86__) || defined(__x86_64__)
- 
- int check_and_get_sadump_header_info(char *filename);
-+int sadump_initialize_bitmap_memory(void);
-+int sadump_get_nr_cpus(int *nr_cpus);
-+int sadump_set_timestamp(struct timeval *ts);
-+unsigned long long sadump_get_max_mapnr(void);
- int sadump_add_diskset_info(char *name_memory);
-+long sadump_page_size(void);
- char *sadump_head_disk_name_memory(void);
-+char *sadump_format_type_name(void);
- void free_sadump_info(void);
- 
- static inline int sadump_is_supported_arch(void)
-@@ -45,17 +51,47 @@ static inline int check_and_get_sadump_header_info(char *filename)
- 	return TRUE;
- }
- 
-+static inline int sadump_initialize_bitmap_memory(void)
-+{
-+	return FALSE;
-+}
-+
-+static inline int sadump_get_nr_cpus(int *nr_cpus)
-+{
-+	return 0;
-+}
-+
-+static inline int sadump_set_timestamp(struct timeval *ts)
-+{
-+	return FALSE;
-+}
-+
-+static inline unsigned long long sadump_get_max_mapnr(void)
-+{
-+	return 0;
-+}
-+
- static inline int sadump_add_diskset_info(char *name_memory)
- {
- 	return TRUE;
- }
- 
-+static inline long sadump_page_size(void)
-+{
-+	return 0;
-+}
-+
- static inline char *
- sadump_head_disk_name_memory(void)
- {
- 	return NULL;
- }
- 
-+static inline char *sadump_format_type_name(void)
-+{
-+	return NULL;
-+}
-+
- static inline void free_sadump_info(void)
- {
- 	return;
-diff --git a/sadump_mod.h b/sadump_mod.h
-index 3385123..efd059f 100644
---- a/sadump_mod.h
-+++ b/sadump_mod.h
-@@ -169,6 +169,8 @@ struct sadump_media_header {
- 	char reserve[4044];	// reserve feild
++	/*
++	 * for sadump
++	 */
++	long	percpu_data;
++	long	elf_prstatus;
++	long	user_regs_struct;
  };
  
-+#define SADUMP_PF_SECTION_NUM 4096
+ struct offset_table {
+@@ -1073,6 +1092,46 @@ struct offset_table {
+ 		long	symtab;
+ 		long	strtab;
+ 	} module;
 +
- #endif /* defined(__x86__) && defined(__x86_64__) */
++	/*
++	 * for loading elf_prstaus symbol data
++	 */
++	struct elf_prstatus_s {
++		long	pr_reg;
++	} elf_prstatus;
++
++	/*
++	 * for loading user_regs_struct symbol data
++	 */
++	struct user_regs_struct_s {
++		long	r15;
++		long	r14;
++		long	r13;
++		long	r12;
++		long	bp;
++		long	bx;
++		long	r11;
++		long	r10;
++		long	r9;
++		long	r8;
++		long	ax;
++		long	cx;
++		long	dx;
++		long	si;
++		long	di;
++		long	orig_ax;
++		long	ip;
++		long	cs;
++		long	flags;
++		long	sp;
++		long	ss;
++		long	fs_base;
++		long	gs_base;
++		long	ds;
++		long	es;
++		long	fs;
++		long	gs;
++	} user_regs_struct;
+ };
  
  /*
+@@ -1086,6 +1145,7 @@ struct array_table {
+ 	long	pgdat_list;
+ 	long	mem_section;
+ 	long	node_memblk;
++	long	__per_cpu_offset;
+ 
+ 	/*
+ 	 * Structure
+@@ -1268,4 +1328,74 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+ 	return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
+ }
+ 
++#ifdef __x86__
++
++struct user_regs_struct {
++	unsigned long bx;
++	unsigned long cx;
++	unsigned long dx;
++	unsigned long si;
++	unsigned long di;
++	unsigned long bp;
++	unsigned long ax;
++	unsigned long ds;
++	unsigned long es;
++	unsigned long fs;
++	unsigned long gs;
++	unsigned long orig_ax;
++	unsigned long ip;
++	unsigned long cs;
++	unsigned long flags;
++	unsigned long sp;
++	unsigned long ss;
++};
++
++struct elf_prstatus {
++	char pad1[72];
++	struct user_regs_struct pr_reg;
++	char pad2[4];
++};
++
++#endif
++
++#ifdef __x86_64__
++
++struct user_regs_struct {
++	unsigned long r15;
++	unsigned long r14;
++	unsigned long r13;
++	unsigned long r12;
++	unsigned long bp;
++	unsigned long bx;
++	unsigned long r11;
++	unsigned long r10;
++	unsigned long r9;
++	unsigned long r8;
++	unsigned long ax;
++	unsigned long cx;
++	unsigned long dx;
++	unsigned long si;
++	unsigned long di;
++	unsigned long orig_ax;
++	unsigned long ip;
++	unsigned long cs;
++	unsigned long flags;
++	unsigned long sp;
++	unsigned long ss;
++	unsigned long fs_base;
++	unsigned long gs_base;
++	unsigned long ds;
++	unsigned long es;
++	unsigned long fs;
++	unsigned long gs;
++};
++
++struct elf_prstatus {
++	char pad1[112];
++	struct user_regs_struct pr_reg;
++	char pad2[4];
++};
++
++#endif
++
+ #endif /* MAKEDUMPFILE_H */
 -- 
 1.7.4.4
 
