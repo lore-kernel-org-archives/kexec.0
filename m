@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail-gx0-f177.google.com ([209.85.161.177])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RDr1a-0002AR-0z
-	for kexec@lists.infradead.org; Wed, 12 Oct 2011 05:06:39 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 98EC83EE0BC
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 14:06:31 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7A2C045DF4C
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 14:06:31 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D90DE45DF4A
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 14:06:30 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id CA1A41DB803E
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 14:06:30 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8AABB1DB802F
-	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 14:06:30 +0900 (JST)
-Date: Wed, 12 Oct 2011 14:06:23 +0900 (   )
-Message-Id: <20111012.140623.104032293.d.hatayama@jp.fujitsu.com>
-Subject: Re: [Patch 00/12] Support Fujitsu Stand Arone Dump Format
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20111012113016tachibana@mail.jp.nec.com>
-References: <20111012.001338.193691420.d.hatayama@jp.fujitsu.com>
-	<20111012113016tachibana@mail.jp.nec.com>
-Mime-Version: 1.0
+	id 1RDu6y-0003pj-PQ
+	for kexec@lists.infradead.org; Wed, 12 Oct 2011 08:24:25 +0000
+Received: by ggnm2 with SMTP id m2so524515ggn.36
+	for <kexec@lists.infradead.org>; Wed, 12 Oct 2011 01:24:23 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <1317603918-30762-1-git-send-email-horms@verge.net.au>
+References: <1317603918-30762-1-git-send-email-horms@verge.net.au>
+Date: Wed, 12 Oct 2011 17:24:23 +0900
+Message-ID: <CANqRtoT1ik9x+s10K6dBy34pDv5+up9dCweVF5MOctWeB=gxAw@mail.gmail.com>
+Subject: Re: [PATCH v2] sh: Take into account the base of System RAM in
+	virt_to_phys()
+From: Magnus Damm <magnus.damm@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,124 +21,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: tachibana@mxm.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-Hello Tachibana san,
+On Mon, Oct 3, 2011 at 10:05 AM, Simon Horman <horms@verge.net.au> wrote:
+> Previously virt_to_phys() assumed that physical memory always started
+> at address 0. This is not always the case.
+>
+> Tested on an sh7757lcr (32bit system) whose only System RAM region is
+> 40000000-4effffff and an ecovec24 (29bit system).
+>
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+>
+> ---
+> =A0kexec/arch/sh/kexec-sh.c | =A0 45 ++++++++++++++++++++++++++++++++++++=
+++++++++-
+> =A01 files changed, 44 insertions(+), 1 deletions(-)
+>
+> v2
+> * Only use the base of System RAM as an offset into physical memory
+> =A0if 32bit addressing is in use.
 
-Sorry for the delayed patchs since the first CFI.
+This version looks much better, thanks!
 
-It's no problem on your plan. I'm waiting for your answer.
-
-Thanks.
-HATAYAMA, Daisuke
-
-From: tachibana@mxm.nes.nec.co.jp
-Subject: Re: [Patch 00/12] Support Fujitsu Stand Arone Dump Format
-Date: Wed, 12 Oct 2011 11:30:16 +0900
-
-> Hi HATAYAMA-san,
-> 
-> Thank you for the patches.  I'll read them.
-> However, I am busy now, so I'll answer in November.
-> 
-> 
-> Thanks,
-> tachibana
-> 
-> On 2011/10/12 00:13:38 +0900, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
->> The following series implements Fujitsu stand-alone dump (sadump)
->> format support for makedumpfile, converting sadump-related formats
->> into kdump-compressed format.
->> 
->> Based on makedumpfile version 1.4.0.
->> 
->> Here is summary of the changes.
->> 
->> No debug information on sadump-related formats
->> ==============================================
->> 
->> Unlike other dump mechanisms, VMCORE created by sadump has NO debug
->> information including VMCOREINFO. So, -x VMLINUX is definitely
->> necessary.
->> 
->> Debug information gained from VMLINUX is used for:
->> 
->>     1. creating VMCOREINFO dynamically, saved in resulting dumpfiles
->>        in kdump-compressed format, and
->> 
->>     2. gaining symbolic and type information necessary to refer to ELF
->>        note information contained in VMCORE generated by kdump at
->>        crash, and to estimate phys_base value.
->> 
->> If no VMLINUX is specified, dumpfile with no VMCOREINFO and ELF note
->> is generated on the current implementation.
->> 
->> 
->> Command-line interface change
->> =============================
->> 
->> Introduce --diskset=VMCORE to pass multiple VMCOREs in a single
->> commnad-line input.
->> 
->>     makedumpfile [OPTION] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2 \
->>     [--diskset=VMCORE3 ..] DUMPFILE
->> 
->> 
->> Architectures
->> =============
->> 
->> X86 and X86_64.
->> 
->> On the other unsupported architectures, sadump-related source files
->> are never compiled and linked into makedumpfile executable.
->> 
->> ---
->> 
->> HATAYAMA Daisuke (12):
->>       Add description of sadump-related formats in manual page
->>       Add description of sadump-related formts in usage information
->>       Generate and save VMCOREINFO and ELF note information
->>       Estimate phys_base based on linux_banner position
->>       Implement readmem() interface on sadump-related formats
->>       Initialize debug information for ELF note extraction
->>       Initialize internal data according to sadump-related formats
->>       Export helpers for bitmap table handling
->>       Verify and read VMCORE(s) in sadump-related formats
->>       Implement command-line processing
->>       Extend DumpInfo structure
->>       Add sadump module header file
->> 
->> 
->>  Makefile       |    6 
->>  elf_info.c     |    2 
->>  makedumpfile.8 |   22 +
->>  makedumpfile.c |  397 ++++++++++---
->>  makedumpfile.h |  163 +++++
->>  print_info.c   |   10 
->>  sadump_info.c  | 1713 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  sadump_info.h  |  159 +++++
->>  sadump_mod.h   |  186 ++++++
->>  9 files changed, 2578 insertions(+), 80 deletions(-)
->>  create mode 100644 sadump_info.c
->>  create mode 100644 sadump_info.h
->>  create mode 100644 sadump_mod.h
->> 
->> -- 
->> Thanks,
->> HATAYAMA, Daisuke
->> 
->> 
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+/ magnus
 
 _______________________________________________
 kexec mailing list
