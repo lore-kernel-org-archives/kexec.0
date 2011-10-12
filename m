@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RE7WE-00075g-MT
-	for kexec@lists.infradead.org; Wed, 12 Oct 2011 22:43:23 +0000
-Date: Thu, 13 Oct 2011 07:42:46 +0900
+	id 1RE812-0007Ok-QD
+	for kexec@lists.infradead.org; Wed, 12 Oct 2011 23:15:13 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] sh: Take into account the base of System RAM in
-	virt_to_phys()
-Message-ID: <20111012224238.GE16825@verge.net.au>
-References: <1317603918-30762-1-git-send-email-horms@verge.net.au>
-	<CANqRtoT1ik9x+s10K6dBy34pDv5+up9dCweVF5MOctWeB=gxAw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CANqRtoT1ik9x+s10K6dBy34pDv5+up9dCweVF5MOctWeB=gxAw@mail.gmail.com>
+Subject: [PATCH 1/2] sh: Correct logic errors in is_32bit()
+Date: Thu, 13 Oct 2011 07:44:40 +0900
+Message-Id: <1318459481-23527-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,28 +15,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Paul Mundt <lethal@linux-sh.org>, kexec@lists.infradead.org, linux-sh@vger.kernel.org
+To: kexec@lists.infradead.org, linux-sh@vger.kernel.org
+Cc: Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
 
-T24gV2VkLCBPY3QgMTIsIDIwMTEgYXQgMDU6MjQ6MjNQTSArMDkwMCwgTWFnbnVzIERhbW0gd3Jv
-dGU6Cj4gT24gTW9uLCBPY3QgMywgMjAxMSBhdCAxMDowNSBBTSwgU2ltb24gSG9ybWFuIDxob3Jt
-c0B2ZXJnZS5uZXQuYXU+IHdyb3RlOgo+ID4gUHJldmlvdXNseSB2aXJ0X3RvX3BoeXMoKSBhc3N1
-bWVkIHRoYXQgcGh5c2ljYWwgbWVtb3J5IGFsd2F5cyBzdGFydGVkCj4gPiBhdCBhZGRyZXNzIDAu
-IFRoaXMgaXMgbm90IGFsd2F5cyB0aGUgY2FzZS4KPiA+Cj4gPiBUZXN0ZWQgb24gYW4gc2g3NzU3
-bGNyICgzMmJpdCBzeXN0ZW0pIHdob3NlIG9ubHkgU3lzdGVtIFJBTSByZWdpb24gaXMKPiA+IDQw
-MDAwMDAwLTRlZmZmZmZmIGFuZCBhbiBlY292ZWMyNCAoMjliaXQgc3lzdGVtKS4KPiA+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4KPiA+Cj4gPiAt
-LS0KPiA+IMKga2V4ZWMvYXJjaC9zaC9rZXhlYy1zaC5jIHwgwqAgNDUgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKystCj4gPiDCoDEgZmlsZXMgY2hhbmdlZCwgNDQg
-aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkKPiA+Cj4gPiB2Mgo+ID4gKiBPbmx5IHVzZSB0
-aGUgYmFzZSBvZiBTeXN0ZW0gUkFNIGFzIGFuIG9mZnNldCBpbnRvIHBoeXNpY2FsIG1lbW9yeQo+
-ID4gwqBpZiAzMmJpdCBhZGRyZXNzaW5nIGlzIGluIHVzZS4KPiAKPiBUaGlzIHZlcnNpb24gbG9v
-a3MgbXVjaCBiZXR0ZXIsIHRoYW5rcyEKCkkgdGhvdWdodCBzbyB0b28uIEJ1dCBhZnRlciBwdXNo
-aW5nIGl0IEkgcmVhbGlzZWQgdGhlIHBhcnNpbmcgbG9naWMgaW4KaXNfMzJiaXQoKSBpcyBmbGF3
-ZWQuIEkgd2lsbCBzZW5kIGFuIHVwZGF0ZS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+This corrects logic errors so that is_32bit() can actually detect that it
+is running on a 32 bit system - something the original version I wrote
+failed at woefully.
+
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ kexec/arch/sh/kexec-sh.c |   20 +++++++++++---------
+ 1 files changed, 11 insertions(+), 9 deletions(-)
+
+diff --git a/kexec/arch/sh/kexec-sh.c b/kexec/arch/sh/kexec-sh.c
+index 94ebbc7..a397d08 100644
+--- a/kexec/arch/sh/kexec-sh.c
++++ b/kexec/arch/sh/kexec-sh.c
+@@ -188,9 +188,8 @@ void kexec_sh_setup_zero_page(char *zero_page_buf, size_t zero_page_size,
+ static int is_32bit(void)
+ {
+ 	const char *cpuinfo = "/proc/cpuinfo";
+-	char line[MAX_LINE], key[MAX_LINE], value[MAX_LINE];
++	char line[MAX_LINE];
+ 	FILE *fp;
+-	int count;
+ 	int status = 0;
+ 
+ 	fp = fopen(cpuinfo, "r");
+@@ -198,14 +197,17 @@ static int is_32bit(void)
+ 		die("Cannot open %s\n", cpuinfo);
+ 
+ 	while(fgets(line, sizeof(line), fp) != 0) {
+-		count = sscanf(line, "%s : %s", key, value);
+-		if (count != 2)
++		const char *key = "address sizes";
++		const char *value = " 32 bits physical";
++		char *p;
++		if (strncmp(line, key, strlen(key)))
+ 			continue;
+-		if (!strcmp(key, "address sizes")) {
+-			if (!strcmp(value, "32 bits physical"))
+-				status = 1;
+-			break;
+-		}
++		p = strchr(line + strlen(key), ':');
++		if (!p)
++			continue;
++		if (!strncmp(p + 1, value, strlen(value)))
++			status = 1;
++		break;
+ 	}
+ 
+ 	fclose(fp);
+-- 
+1.7.6.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
