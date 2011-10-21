@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Date: Fri, 21 Oct 2011 10:15:24 +0100
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: Possible regression in kexec on ARM ARMv6 and ARMv7 cores
-Message-ID: <20111021091524.GB30168@mudshark.cambridge.arm.com>
-References: <20111020042444.GA20260@verge.net.au>
-	<20111020070105.GA28548@mudshark.cambridge.arm.com>
-	<20111020080823.GA2716@verge.net.au>
-	<20111021083426.GA16088@verge.net.au>
-	<20111021084641.GA30168@mudshark.cambridge.arm.com>
-	<20111021085958.GC21850@verge.net.au>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RHEEV-0002ER-FU
+	for kexec@lists.infradead.org; Fri, 21 Oct 2011 12:29:56 +0000
+Date: Fri, 21 Oct 2011 20:31:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] intel-iommu:make identity_map default for crash dump
+Message-ID: <20111021123154.GA5821@darkstar.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111021085958.GC21850@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +21,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Dave Martin <dave.martin@linaro.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Frank Hofmann <frank.hofmann@tomtom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: kexec@lists.infradead.org, iommu@lists.linux-foundation.org, vgoyal@redhat.com, linux-kernel@vger.kernel.org, luyu@redhat.com
 
-On Fri, Oct 21, 2011 at 09:59:58AM +0100, Simon Horman wrote:
-> On Fri, Oct 21, 2011 at 09:46:41AM +0100, Will Deacon wrote:
-> > The more difficult case is when you want to offline the secondary CPUs into
-> > a pen and then boot them in the new kernel. I did get some of this working,
-> > but there are outstanding issues with whether the pen should be at a fixed
-> > location or not. If not, then we need a way to tell the new kernel where it
-> > is, which may involve updating the DT blob...
-> 
-> Is the implication that the (working) callback method does not
-> give the second kernel any secondary CPUs?
+kdump kernel sometimes will get DMAR faults which
+is caused by random in-flight dma from 1st kernel
 
-What the callback does it up to you. You just need to make sure that you can
-cope with the kernel disappearing later on, so you'll probably need some
-hardware mechanism for offlining a CPU (for example, placing it in SRAM
-or cutting the power).
+Here make the identity_mapping as default for this case
 
-Will
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ drivers/iommu/intel-iommu.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index c621c98..8ac3895 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -40,6 +40,7 @@
+ #include <linux/tboot.h>
+ #include <linux/dmi.h>
+ #include <linux/pci-ats.h>
++#include <linux/crash_dump.h>
+ #include <asm/cacheflush.h>
+ #include <asm/iommu.h>
+ 
+@@ -2481,7 +2482,7 @@ static int __init init_dmars(void)
+ 		}
+ 	}
+ 
+-	if (iommu_pass_through)
++	if (iommu_pass_through || is_kdump_kernel())
+ 		iommu_identity_mapping |= IDENTMAP_ALL;
+ 
+ #ifdef CONFIG_DMAR_BROKEN_GFX_WA
+-- 
+1.7.4.4
+
 
 _______________________________________________
 kexec mailing list
