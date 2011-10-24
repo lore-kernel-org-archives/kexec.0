@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RIOPP-0004zX-Nr
-	for kexec@lists.infradead.org; Mon, 24 Oct 2011 17:34:00 +0000
-Date: Mon, 24 Oct 2011 13:33:36 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kdump: crash_kexec()-smp_send_stop() race in panic
-Message-ID: <20111024173336.GB8044@redhat.com>
+Received: from usindpps04.hds.com ([207.126.252.17])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RIT1l-0006wl-00
+	for kexec@lists.infradead.org; Mon, 24 Oct 2011 22:29:54 +0000
+From: Seiji Aguchi <seiji.aguchi@hds.com>
+Date: Mon, 24 Oct 2011 18:24:14 -0400
+Subject: RE: kdump: crash_kexec()-smp_send_stop() race in panic
+Message-ID: <5C4C569E8A4B9B42A84A977CF070A35B2C57612A37@USINDEVS01.corp.hds.com>
 References: <1319468137.3615.16.camel@br98xy6r>
 	<m1ipneifqv.fsf@fess.ebiederm.org>
 	<CAM_iQpVktWsgOFCWoT47dQ1YdSTnnbTZAAKNYEEX=5wWzhHMzg@mail.gmail.com>
-	<m1aa8qfhdk.fsf@fess.ebiederm.org>
+	<m1aa8qfhdk.fsf@fess.ebiederm.org> <20111024173336.GB8044@redhat.com>
+In-Reply-To: <20111024173336.GB8044@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1aa8qfhdk.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,77 +22,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com, =?iso-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>, akpm@linux-foundation.org, holzheu@linux.vnet.ibm.com
+To: Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "schwidefsky@de.ibm.com" <schwidefsky@de.ibm.com>, =?iso-8859-1?Q?Am=E9rico_Wang?= <xiyou.wangcong@gmail.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "holzheu@linux.vnet.ibm.com" <holzheu@linux.vnet.ibm.com>
 
-On Mon, Oct 24, 2011 at 10:07:19AM -0700, Eric W. Biederman wrote:
-> Am=E9rico Wang <xiyou.wangcong@gmail.com> writes:
-> =
+Hi,
 
-> > On Mon, Oct 24, 2011 at 11:14 PM, Eric W. Biederman
-> > <ebiederm@xmission.com> wrote:
-> >> Michael Holzheu <holzheu@linux.vnet.ibm.com> writes:
-> >>
-> >>> Hello Vivek,
-> >>>
-> >>> In our tests we ran into the following scenario:
-> >>>
-> >>> Two CPUs have called panic at the same time. The first CPU called
-> >>> crash_kexec() and the second CPU called smp_send_stop() in panic()
-> >>> before crash_kexec() finished on the first CPU. So the second CPU
-> >>> stopped the first CPU and therefore kdump failed.
-> >>>
-> >>> 1st CPU:
-> >>> panic()->crash_kexec()->mutex_trylock(&kexec_mutex)-> do kdump
-> >>>
-> >>> 2nd CPU:
-> >>> panic()->crash_kexec()->kexec_mutex already held by 1st CPU
-> >>> =A0 =A0 =A0 =A0->smp_send_stop()-> stop CPU 1 (stop kdump)
-> >>>
-> >>> How should we fix this problem? One possibility could be to do
-> >>> smp_send_stop() before we call crash_kexec().
-> >>>
-> >>> What do you think?
-> >>
-> >> smp_send_stop is insufficiently reliable to be used before crash_kexec.
-> >>
-> >> My first reaction would be to test oops_in_progress and wait until
-> >> oops_in_progress =3D=3D 1 before calling smp_send_stop.
-> >>
-> >
-> > +1
-> >
-> > One of my colleague mentioned the same problem with me inside
-> > RH, given the fact that the race condition window is small, it would
-> > not be easy to reproduce this scenario.
-> =
+>> >>> 1st CPU:
+>> >>> panic()->crash_kexec()->mutex_trylock(&kexec_mutex)-> do kdump
+>> >>>
+>> >>> 2nd CPU:
+>> >>> panic()->crash_kexec()->kexec_mutex already held by 1st CPU
+>> >>>        ->smp_send_stop()-> stop CPU 1 (stop kdump)
+>> >>>
+>> >>> How should we fix this problem? One possibility could be to do
+>> >>> smp_send_stop() before we call crash_kexec().
 
-> As for reproducing it I have a hunch you could hack up something
-> horrible with smp_call_function and kprobes.
-> =
+http://lkml.org/lkml/2010/9/16/353
 
-> =
+I developed a patch solving this issue one year ago.
+(Just adding local_irq_disable in kexec path.)
 
-> On a little more reflection we can't wait until oops_in_progress goes
-> to 1 before calling smp_send_stop.  Because if crash_kexec is not
-> involved nothing we will never call smp_send_stop. =
+I hope this helps.
 
-> =
+Seiji
 
-> So my second thought is to introduce another atomic variable
-> panic_in_progress, visible only in panic.  The cpu that sets
-> increments panic_in_progress can call smp_send_stop.  The rest of
-> the cpus can just go into a busy wait.  That should stop nasty
-> fights about who is going to come out of smp_send_stop first.
-
-Introducing panic_on_oops atomic sounds good.
-
-Thanks
-Vivek
 
 _______________________________________________
 kexec mailing list
