@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJ95s-0004G0-4K
-	for kexec@lists.infradead.org; Wed, 26 Oct 2011 19:24:56 +0000
-Date: Wed, 26 Oct 2011 15:24:49 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: kdump: No udev events for memory hotplug?
-Message-ID: <20111026192449.GE355@redhat.com>
-References: <1319645292.3321.24.camel@br98xy6r>
+	id 1RJC0T-000583-VP
+	for kexec@lists.infradead.org; Wed, 26 Oct 2011 22:31:34 +0000
+Date: Thu, 27 Oct 2011 07:31:26 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kdump: A memory hotplug issue on s390
+Message-ID: <20111026223126.GA9754@verge.net.au>
+References: <1319563037.3056.30.camel@br98xy6r>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1319645292.3321.24.camel@br98xy6r>
+In-Reply-To: <1319563037.3056.30.camel@br98xy6r>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +24,27 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: heiko.carstens@de.ibm.com, Kay Sievers <kay.sievers@vrfy.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com
+Cc: kexec@lists.infradead.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, Oct 26, 2011 at 06:08:12PM +0200, Michael Holzheu wrote:
-> Hello Vivek and Eric,
+On Tue, Oct 25, 2011 at 07:17:17PM +0200, Michael Holzheu wrote:
+> Hello Simon and Vivek,
 > 
-> I noticed that on my system kernel 3.1 *no* udev events for memory
-> hotplug are generated. Same on my RHEL6.1.
+> For s390 we currently use /proc/iomem for defining the memory layout in
+> the kexec elfcore header. Unfortunately this is not correct, when using
+> memory hotplug. When a memory chunk is set offline (e.g. with "echo
+> offline > /sys/devices/system/memory/memoryX/state") this is not
+> reflected in /proc/iomem.
 > 
-> # udevadm monitor
-> # echo offline > /sys/devices/system/memory/memory4/state
-> 
-> -> No event
-> 
-> But we need the udev events in order to do a kdump reload for setting up
-> the ELF loads correctly.
-> 
-> In my /etc/udev/rules.d/98-kexec.rules there are rules for memory
-> hotplug:
-> 
-> SUBSYSTEM=="memory", ACTION=="add", PROGRAM="/etc/init.d/kdump restart"
-> SUBSYSTEM=="memory", ACTION=="remove", PROGRAM="/etc/init.d/kdump
-> restart"
-> 
-> Perhaps/probably I am missing something?
+> To fix this I could parse /sys/devices/system/memory and exclude each
+> memory chunk that in not online from the /proc/iomem info. Do you think
+> that this approach is fine or is there a better solution?
 
-I don't know. Sounds like a bug. I have never looked into it. CCing Kay,
-if he has any thoughts.
+Hi Michael,
 
-Are any events generated for memory add?
-
-Thanks
-Vivek
+that sounds like a reasonable approach to me.
+IIRC, kexec xen on ia64 makes use of an alternate iomem file,
+and this seems to be another example of /proc/iomem not being
+the right source of information.
 
 _______________________________________________
 kexec mailing list
