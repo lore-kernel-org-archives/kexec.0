@@ -1,25 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
-	by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJ4ZL-0006nr-2n
-	for kexec@lists.infradead.org; Wed, 26 Oct 2011 14:35:04 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p9QEYAh7003770
-	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 14:34:10 GMT
-Received: from d06av04.portsmouth.uk.ibm.com (d06av04.portsmouth.uk.ibm.com
-	[9.149.37.216])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p9QEYAVr2039984
-	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 15:34:10 +0100
-Received: from d06av04.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av04.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p9QEY9Ti020878
-	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 08:34:09 -0600
-Message-ID: <1319639649.3321.11.camel@br98xy6r>
-Subject: [PATCH] kdump: Fix crash_kexec - smp_send_stop race in panic
+Received: from mtagate1.uk.ibm.com ([194.196.100.161])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RJ61s-0003Ly-VA
+	for kexec@lists.infradead.org; Wed, 26 Oct 2011 16:08:37 +0000
+Received: from d06nrmr1307.portsmouth.uk.ibm.com
+	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
+	by mtagate1.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p9QG8DOD001578
+	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 16:08:13 GMT
+Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
+	[9.149.37.250])
+	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
+	ESMTP id p9QG8D4j2359352
+	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 17:08:13 +0100
+Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id p9QG8C5l006986
+	for <kexec@lists.infradead.org>; Wed, 26 Oct 2011 10:08:13 -0600
+Message-ID: <1319645292.3321.24.camel@br98xy6r>
+Subject: kdump: No udev events for memory hotplug?
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Wed, 26 Oct 2011 16:34:09 +0200
+Date: Wed, 26 Oct 2011 18:08:12 +0200
 Mime-Version: 1.0
 Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
@@ -34,61 +34,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: akpm@linux-foundation.org
-Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: schwidefsky@de.ibm.com, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, "Eric W. Biederman" <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Hello Andrew,
+Hello Vivek and Eric,
 
-After the discussion with Eric and Vivek the following patch
-seems to be a good solution to me. Could you accept this patch?
+I noticed that on my system kernel 3.1 *no* udev events for memory
+hotplug are generated. Same on my RHEL6.1.
 
-When two CPUs call panic at the same time there is a
-possible race condition that can stop kdump. The first
-CPU calls crash_kexec() and the second CPU calls
-smp_send_stop() in panic() before crash_kexec() finished
-on the first CPU. So the second CPU stops the first CPU
-and therefore kdump fails:
+# udevadm monitor
+# echo offline > /sys/devices/system/memory/memory4/state
 
-1st CPU:
-panic()->crash_kexec()->mutex_trylock(&kexec_mutex)-> do kdump
+-> No event
 
-2nd CPU:
-panic()->crash_kexec()->kexec_mutex already held by 1st CPU
-       ->smp_send_stop()-> stop 1st CPU (stop kdump)
+But we need the udev events in order to do a kdump reload for setting up
+the ELF loads correctly.
 
-This patch fixes the problem by introducing a spinlock in
-panic that allows only one CPU to process crash_kexec() and
-the subsequent panic code.
+In my /etc/udev/rules.d/98-kexec.rules there are rules for memory
+hotplug:
 
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kernel/panic.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+SUBSYSTEM=="memory", ACTION=="add", PROGRAM="/etc/init.d/kdump restart"
+SUBSYSTEM=="memory", ACTION=="remove", PROGRAM="/etc/init.d/kdump
+restart"
 
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -59,6 +59,7 @@ EXPORT_SYMBOL(panic_blink);
-  */
- NORET_TYPE void panic(const char * fmt, ...)
- {
-+	static DEFINE_SPINLOCK(panic_lock);
- 	static char buf[1024];
- 	va_list args;
- 	long i, i_next = 0;
-@@ -82,6 +83,13 @@ NORET_TYPE void panic(const char * fmt,
- #endif
- 
- 	/*
-+	 * Only one CPU is allowed to execute the panic code from here. For
-+	 * multiple parallel invocations of panic all other CPUs will wait on
-+	 * the panic_lock. They are stopped afterwards by smp_send_stop().
-+	 */
-+	spin_lock(&panic_lock);
-+
-+	/*
- 	 * If we have crashed and we have a crash kernel loaded let it handle
- 	 * everything else.
- 	 * Do we want to call this before we try to display a message?
+Perhaps/probably I am missing something?
+
+Michael
 
 
 
