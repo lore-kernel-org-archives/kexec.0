@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-gy0-f177.google.com ([209.85.160.177])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJPqk-0003RX-Nn
-	for kexec@lists.infradead.org; Thu, 27 Oct 2011 13:18:27 +0000
-Received: by gyd10 with SMTP id 10so2948213gyd.36
-	for <kexec@lists.infradead.org>; Thu, 27 Oct 2011 06:18:25 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RJTku-0005Rn-W2
+	for kexec@lists.infradead.org; Thu, 27 Oct 2011 17:28:43 +0000
+Date: Thu, 27 Oct 2011 13:28:22 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: kdump: A memory hotplug issue on s390
+Message-ID: <20111027172822.GI7491@redhat.com>
+References: <1319563037.3056.30.camel@br98xy6r>
+	<20111026223126.GA9754@verge.net.au>
 MIME-Version: 1.0
-In-Reply-To: <1319719533.23600.55.camel@nimitz>
-References: <1319645292.3321.24.camel@br98xy6r>
-	<20111026192449.GE355@redhat.com>
-	<20111027073058.GA2422@osiris.boeblingen.de.ibm.com>
-	<1319719533.23600.55.camel@nimitz>
-Date: Thu, 27 Oct 2011 21:18:24 +0800
-Message-ID: <CAM_iQpXxe_PTSh2LcFQOwBqjBeME1y0eZVn67Q7_GQB1RrNW1A@mail.gmail.com>
-Subject: Re: kdump: No udev events for memory hotplug?
-From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20111026223126.GA9754@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +20,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Dave Hansen <haveblue@us.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, Kay Sievers <kay.sievers@vrfy.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, kexec@lists.infradead.org
 
-T24gVGh1LCBPY3QgMjcsIDIwMTEgYXQgODo0NSBQTSwgRGF2ZSBIYW5zZW4gPGhhdmVibHVlQHVz
-LmlibS5jb20+IHdyb3RlOgo+IE9uIFRodSwgMjAxMS0xMC0yNyBhdCAwOTozMCArMDIwMCwgSGVp
-a28gQ2Fyc3RlbnMgd3JvdGU6Cj4+ID4gQXJlIGFueSBldmVudHMgZ2VuZXJhdGVkIGZvciBtZW1v
-cnkgYWRkPwo+Pgo+PiBMb29rcyBsaWtlIHVldmVudHMgYXJlIG9ubHkgZ2VuZXJldGVkIHdoZW4g
-bWVtb3J5IGdldHMgcmVnaXN0ZXJlZCBhbmQKPj4gdW5yZWdpc3RlcmVkLCBidXQgbm90IHdoZW4g
-d2hlbiBpdCBnZXRzIHNldCBvbmxpbmUgb3Igb2ZmbGluZS4KPj4gVG8gYWNoaWV2ZSB0aGF0IHlv
-dSB3b3VsZCBuZWVkIHRvIGFkZCBzaW1pbGFyIGNvZGUgdG8KPj4gc3RvcmVfbWVtX3N0YXRlKCkv
-bWVtb3J5X2Jsb2NrX2NoYW5nZV9zdGF0ZSgpIGluIGRyaXZlcnMvYmFzZS9tZW1vcnkuYwo+PiBs
-aWtlIHdlIGhhdmUgaXQgYWxyZWFkeSBpbiBzdG9yZV9vbmxpbmUoKSBpbiBkcml2ZXJzL2Jhc2Uv
-Y3B1LmMKPgo+IEluc3RlYWQgb2YgZG9pbmcgaXQgYXQgdGhhdCBsb3cgYSBsZXZlbCwgcGVyaGFw
-cyB3ZSBzaG91bGQgYmUgZ2VuZXJhdGluZwo+IGV2ZW50cyB3aGVuICd0b3RhbHJhbV9wYWdlcycg
-Y2hhbmdlcy4gwqBUaGF0IHdheSwgd2UnbGwgYWxzbyB0cmlnZ2VyCj4gZXZlbnRzIHdoZW4gdGhp
-bmdzIGxpa2UgYmFsbG9vbmluZyBoYXBwZW4uCj4KCkkgdGhpbmsgd2Ugc2hvdWxkIHNlcGFyYXRl
-IHRoZSBtZW1vcnkgaG90LXBsdWcgaXNzdWVzIGZyb20gYmFsbG9vbmluZyBpc3N1ZXMsCnNvIHBy
-b2JhYmx5IHdlIG5lZWQgYW5vdGhlciB1ZXZlbnQgZm9yIHRoaXMuLi4KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On Thu, Oct 27, 2011 at 07:31:26AM +0900, Simon Horman wrote:
+> On Tue, Oct 25, 2011 at 07:17:17PM +0200, Michael Holzheu wrote:
+> > Hello Simon and Vivek,
+> > 
+> > For s390 we currently use /proc/iomem for defining the memory layout in
+> > the kexec elfcore header. Unfortunately this is not correct, when using
+> > memory hotplug. When a memory chunk is set offline (e.g. with "echo
+> > offline > /sys/devices/system/memory/memoryX/state") this is not
+> > reflected in /proc/iomem.
+> > 
+> > To fix this I could parse /sys/devices/system/memory and exclude each
+> > memory chunk that in not online from the /proc/iomem info. Do you think
+> > that this approach is fine or is there a better solution?
+> 
+> Hi Michael,
+> 
+> that sounds like a reasonable approach to me.
+> IIRC, kexec xen on ia64 makes use of an alternate iomem file,
+> and this seems to be another example of /proc/iomem not being
+> the right source of information.
+
+Agree that it sounds reasonable. I have never used /sys/devices/memory/
+interface. So does it work realiably and how long has it been working
+reliably?
+
+Secondly we should do this only for kdump and not for kexec. If some
+memory is offlined, then we still want to use it in case of kexec.
+
+What's the meaning of various entries. I see lots of memory[1-n] entries
+in my system and under memory0/ dir I see following.
+
+[memory0]# grep ".*" *
+end_phys_index:00000000
+phys_device:0
+phys_index:00000000
+removable:0
+state:online
+
+What does it mean. Is memory0 representing a chunk of physical memory? If
+yes, then where does the segment start and where does it end. Everything
+seems to be zero.
+
+So is it representing chunk0 of memory. So both starting and end index
+are 0. But where is the chunk size mentioned?
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
