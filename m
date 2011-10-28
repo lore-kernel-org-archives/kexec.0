@@ -1,33 +1,35 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJj2t-0003Km-Gu
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:16 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A32373EE081
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:05 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8822B45DE54
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:05 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7371E45DE52
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:05 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F2C1E18001
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:05 +0900 (JST)
-Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 2BBE11DB8037
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:05 +0900 (JST)
-Received: from m105.css.fujitsu.com (m105 [127.0.0.1])
-	by m105.s.css.fujitsu.com (Postfix) with ESMTP id F371B7C8049
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:04 +0900 (JST)
+	id 1RJj2y-0003Lf-VH
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:22 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 96C563EE0BC
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:16 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+	by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 79A1245DE4E
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:16 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+	by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 61F8F45DD73
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:16 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4F14B1DB8038
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:16 +0900 (JST)
+Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 1B31AE08003
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:16 +0900 (JST)
+Received: from ml13.css.fujitsu.com (ml13 [127.0.0.1])
+	by ml13.s.css.fujitsu.com (Postfix) with ESMTP id E032AFD001F
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:15 +0900 (JST)
 Received: from localhost6.localdomain6 (unknown [10.124.63.45])
-	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 9D6BD7C8045
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:04 +0900 (JST)
+	by ml13.s.css.fujitsu.com (Postfix) with ESMTP id 9909AFD0019
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:15 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 00/14] Support Fujitsu Stand Alone Dump Format
-Date: Fri, 28 Oct 2011 18:48:04 +0900
-Message-ID: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 02/14] Extend DumpInfo structure
+Date: Fri, 28 Oct 2011 18:48:15 +0900
+Message-ID: <20111028094815.20940.49668.stgit@localhost6.localdomain6>
+In-Reply-To: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
+References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -43,95 +45,64 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Hello Tachibana-san,
+Two members, flag_sadump_diskset and flag_sadump, are
+introduced. flag_sadump_diskset is true if --diskset=VMCORE is
+specified one or more times. flag_sadump has the corresponding value
+of type enum sadump_format_type if VMCORE(s) is in sadump-related
+formats.
 
-Since there's certain time until Tachibana-san's review, I made some
-cleanups and bugfixes to the previous version. Could you review this
-instead to reduce the review time?
-
-==
-The following series implements Fujitsu stand-alone dump (sadump)
-format support for makedumpfile, converting sadump-related formats
-into kdump-compressed format.
-
-Based on makedumpfile version 1.4.0.
-
-Here is summary of the changes.
-
-No debug information on sadump-related formats
-==============================================
-
-Unlike other dump mechanisms, VMCORE created by sadump has NO debug
-information including VMCOREINFO. So, -x VMLINUX is definitely
-necessary.
-
-Debug information gained from VMLINUX is used for:
-
-    1. creating VMCOREINFO dynamically, saved in resulting dumpfiles
-       in kdump-compressed format, and
-
-    2. gaining symbolic and type information necessary to refer to ELF
-       note information contained in VMCORE generated by kdump at
-       crash, and to estimate phys_base value.
-
-If no VMLINUX is specified, dumpfile with no VMCOREINFO and ELF note
-is generated on the current implementation.
-
-
-Command-line interface change
-=============================
-
-Introduce --diskset=VMCORE to pass multiple VMCOREs in a single
-commnad-line input.
-
-    makedumpfile [OPTION] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2 \
-    [--diskset=VMCORE3 ..] DUMPFILE
-
-
-Architectures
-=============
-
-X86 and X86_64.
-
-On the other unsupported architectures, sadump-related source files
-are never compiled and linked into makedumpfile executable.
-
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
-HATAYAMA Daisuke (14):
-      Add description of sadump-related formats in manual page
-      Add description of sadump-related formts in usage information
-      Read kexec backup region
-      Procees CPUs based on online ones
-      Generate and save VMCOREINFO and ELF note information
-      Estimate phys_base based on linux_banner position
-      Implement readmem() interface on sadump-related formats
-      Initialize debug information for ELF note extraction
-      Initialize internal data according to sadump-related formats
-      Export helpers for bitmap table handling
-      Verify and read VMCORE(s) in sadump-related formats
-      Implement command-line processing
-      Extend DumpInfo structure
-      Add sadump module header file
+ makedumpfile.h |    7 +++++++
+ sadump_mod.h   |   10 ++++++++++
+ 2 files changed, 17 insertions(+), 0 deletions(-)
 
+diff --git a/makedumpfile.h b/makedumpfile.h
+index f0e5da8..dee0a68 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -34,6 +34,7 @@
+ #include "common.h"
+ #include "dwarf_info.h"
+ #include "diskdump_mod.h"
++#include "sadump_mod.h"
+ 
+ /*
+  * Result of command
+@@ -894,6 +895,12 @@ struct DumpInfo {
+ 	 */
+ 	unsigned long long split_start_pfn;  
+ 	unsigned long long split_end_pfn;  
++
++	/*
++	 * sadump info:
++	 */
++	int flag_sadump_diskset;
++	enum sadump_format_type flag_sadump;         /* sadump format type */
+ };
+ extern struct DumpInfo		*info;
+ 
+diff --git a/sadump_mod.h b/sadump_mod.h
+index 98f5dd1..3385123 100644
+--- a/sadump_mod.h
++++ b/sadump_mod.h
+@@ -171,4 +171,14 @@ struct sadump_media_header {
+ 
+ #endif /* defined(__x86__) && defined(__x86_64__) */
+ 
++/*
++ * Type of sadump related formats
++ */
++enum sadump_format_type {
++	SADUMP_UNKNOWN = 0,
++	SADUMP_SINGLE_PARTITION,
++	SADUMP_DISKSET,
++	SADUMP_MEDIA_BACKUP
++};
++
+ #endif /* _SADUMP_MOD_H */
 
- Makefile       |    6 
- elf_info.c     |    2 
- makedumpfile.8 |   22 +
- makedumpfile.c |  455 +++++++++++--
- makedumpfile.h |  207 ++++++
- print_info.c   |   10 
- sadump_info.c  | 1945 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- sadump_info.h  |  165 +++++
- sadump_mod.h   |  186 +++++
- 9 files changed, 2907 insertions(+), 91 deletions(-)
- create mode 100644 sadump_info.c
- create mode 100644 sadump_info.h
- create mode 100644 sadump_mod.h
-
--- 
-Thanks.
-HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
