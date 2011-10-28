@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJj31-0003MU-Kk
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:25 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 06B103EE0B5
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:22 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id E107F45DE4F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:21 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C8A3745DE4E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:21 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BC1271DB803B
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:21 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 7E0701DB802F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:21 +0900 (JST)
-Received: from m107.css.fujitsu.com (m107 [127.0.0.1])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 4F87A86001F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:21 +0900 (JST)
+	id 1RJj37-0003NO-1C
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:31 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 870A73EE081
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:27 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+	by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6874445DEA6
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:27 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+	by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4FC3A45DEAD
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:27 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4051D1DB8044
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:27 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
+	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id EC5FC1DB8040
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:26 +0900 (JST)
+Received: from m105.css.fujitsu.com (m105 [127.0.0.1])
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id B5CCB7C8049
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:26 +0900 (JST)
 Received: from localhost6.localdomain6 (unknown [10.124.63.45])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id EB75986000E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:20 +0900 (JST)
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 5542F7C8045
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:26 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 03/14] Implement command-line processing
-Date: Fri, 28 Oct 2011 18:48:20 +0900
-Message-ID: <20111028094820.20940.871.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 04/14] Verify and read VMCORE(s) in sadump-related formats
+Date: Fri, 28 Oct 2011 18:48:26 +0900
+Message-ID: <20111028094826.20940.62887.stgit@localhost6.localdomain6>
 In-Reply-To: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -45,278 +45,600 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Introduce new long option --diskset=VMCORE, which is used for
-specifying multiple VMCORE(s) generated on sadump diskset
-configuration. --diskset and --split options can be specified at the
-same time.
+Try to read VMCORE(s) as sadump-related formats: single partition,
+diskset or media backup and verify their header information. If the
+VMCORE(s) doesn't belong to each of them, the check continues to
+checking of ELF format.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- Makefile       |    6 ++--
- makedumpfile.c |   39 ++++++++++++++++++++++++----
- sadump_info.c  |   78 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- sadump_info.h  |   61 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 176 insertions(+), 8 deletions(-)
- create mode 100644 sadump_info.c
- create mode 100644 sadump_info.h
+ makedumpfile.c |   17 +-
+ sadump_info.c  |  480 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ sadump_info.h  |   10 +
+ 3 files changed, 500 insertions(+), 7 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index f7f22e5..9b3ee9f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -23,9 +23,9 @@ CFLAGS += -m64
- CFLAGS_ARCH += -m64
- endif
- 
--SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h
--SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c
--OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o
-+SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
-+SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c
-+OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
- OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o
- 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 7b7c266..8a3a3d3 100644
+index 8a3a3d3..7057009 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -18,6 +18,7 @@
- #include "dwarf_info.h"
- #include "elf_info.h"
- #include "erase_info.h"
-+#include "sadump_info.h"
- #include <sys/time.h>
+@@ -628,11 +628,16 @@ open_dump_memory(void)
+ 	if (status == TRUE) {
+ 		info->flag_refiltering = TRUE;
+ 		return get_kdump_compressed_header_info(info->name_memory);
+-	} else if (status == FALSE) {
+-		return TRUE;
+-	} else {
+-		return FALSE;
+ 	}
++
++	status = check_and_get_sadump_header_info(info->name_memory);
++	if (status == TRUE)
++		return TRUE;
++
++	if (status == ERROR)
++		return TRUE;
++
++	return FALSE;
+ }
  
- struct symbol_table	symbol_table;
-@@ -6500,20 +6501,34 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
- 	if (info->name_filterconfig && !info->name_vmlinux)
+ int
+@@ -3007,7 +3012,7 @@ dump_dmesg()
+ 	if (!open_files_for_creating_dumpfile())
  		return FALSE;
  
-+	if (info->flag_sadump_diskset && !sadump_is_supported_arch())
-+		return FALSE;
-+
- 	if ((argc == optind + 2) && !info->flag_flatten
--				 && !info->flag_split) {
-+				 && !info->flag_split
-+				 && !info->flag_sadump_diskset) {
- 		/*
- 		 * Parameters for creating the dumpfile from vmcore.
- 		 */
- 		info->name_memory   = argv[optind];
- 		info->name_dumpfile = argv[optind+1];
- 
--	} else if ((argc > optind + 2) && info->flag_split) {
-+	} else if (info->flag_split && (info->flag_sadump_diskset
-+					? (argc >= optind + 2)
-+					: (argc > optind + 2))) {
-+		int num_vmcore;
-+
- 		/*
- 		 * Parameters for creating multiple dumpfiles from vmcore.
- 		 */
--		info->num_dumpfile = argc - optind - 1;
--		info->name_memory  = argv[optind];
-+		if (info->flag_sadump_diskset) {
-+			num_vmcore = 0;
-+			info->name_memory = sadump_head_disk_name_memory();
-+		} else {
-+			num_vmcore = 1;
-+			info->name_memory = argv[optind];
-+		}
-+		info->num_dumpfile = argc - optind - num_vmcore;
- 
- 		if (info->flag_elf_dumpfile) {
- 			MSG("Options for splitting dumpfile cannot be used with Elf format.\n");
-@@ -6526,7 +6541,15 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
+-	if (!info->flag_refiltering) {
++	if (!info->flag_refiltering && !info->flag_sadump) {
+ 		if (!get_elf_info(info->fd_memory, info->name_memory))
  			return FALSE;
- 		}
- 		for (i = 0; i < info->num_dumpfile; i++)
--			SPLITTING_DUMPFILE(i) = argv[optind + 1 + i];
-+			SPLITTING_DUMPFILE(i) = argv[optind + num_vmcore + i];
-+
-+	} else if ((argc == optind + 1) && !info->flag_split
-+					&& info->flag_sadump_diskset) {
-+		info->name_dumpfile = argv[optind];
-+		info->name_memory = sadump_head_disk_name_memory();
-+
-+		DEBUG_MSG("name_dumpfile: %s\n", info->name_dumpfile);
-+		DEBUG_MSG("name_memory: %s\n", info->name_memory);
+ 	}
+@@ -5757,7 +5762,7 @@ create_dumpfile(void)
+ 	if (!open_files_for_creating_dumpfile())
+ 		return FALSE;
  
- 	} else if ((argc == optind + 1) && info->flag_flatten) {
- 		/*
-@@ -6594,6 +6617,7 @@ static struct option longopts[] = {
- 	{"dump-dmesg", no_argument, NULL, 'M'}, 
- 	{"config", required_argument, NULL, 'C'},
- 	{"help", no_argument, NULL, 'h'},
-+	{"diskset", required_argument, NULL, 'k'},
- 	{0, 0, 0, 0}
+-	if (!info->flag_refiltering) {
++	if (!info->flag_refiltering && !info->flag_sadump) {
+ 		if (!get_elf_info(info->fd_memory, info->name_memory))
+ 			return FALSE;
+ 	}
+diff --git a/sadump_info.c b/sadump_info.c
+index c94d233..2f66148 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -20,6 +20,7 @@
+ 
+ #include "makedumpfile.h"
+ #include "print_info.h"
++#include "sadump_mod.h"
+ 
+ struct sadump_diskset_info {
+ 	char *name_memory;
+@@ -40,10 +41,470 @@ struct sadump_info {
+ 	unsigned long data_offset;
  };
  
-@@ -6661,6 +6685,11 @@ main(int argc, char *argv[])
- 			info->flag_read_vmcoreinfo = 1;
- 			info->name_vmcoreinfo = optarg;
- 			break;
-+		case 'k':
-+			if (!sadump_add_diskset_info(optarg))
-+				goto out;
-+			info->flag_sadump_diskset = 1;
-+			break;
- 		case 'm':
- 			message_level = atoi(optarg);
- 			break;
-diff --git a/sadump_info.c b/sadump_info.c
-new file mode 100644
-index 0000000..c94d233
---- /dev/null
-+++ b/sadump_info.c
-@@ -0,0 +1,78 @@
-+/*
-+ * sadump_info.c
-+ *
-+ * Created by: HATAYAMA, Daisuke <d.hatayama@jp.fujitsu.com>
-+ *
-+ * Copyright (C) 2011  FUJITSU LIMITED
-+ * Copyright (C) 2011  NEC Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#if defined(__x86__) || defined(__x86_64__)
++static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
++static struct tm *efi_time_t_to_tm(const efi_time_t *e);
++static int verify_magic_number(uint32_t magicnum[DUMP_PART_HEADER_MAGICNUM_SIZE]);
++static int read_device(void *buf, size_t bytes, ulong *offset);
++static int read_device_diskset(struct sadump_diskset_info *sdi, void *buf,
++			       size_t bytes, ulong *offset);
++static int read_sadump_header(char *filename);
++static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sdi);
 +
-+#include "makedumpfile.h"
-+#include "print_info.h"
-+
-+struct sadump_diskset_info {
-+	char *name_memory;
-+	int fd_memory;
-+	struct sadump_part_header *sph_memory;
-+	unsigned long data_offset;
-+};
-+
-+struct sadump_info {
-+	struct sadump_part_header *sph_memory;
-+	struct sadump_header *sh_memory;
-+	struct sadump_disk_set_header *sdh_memory;
-+	struct sadump_media_header *smh_memory;
-+	struct sadump_diskset_info *diskset_info;
-+	int num_disks;
-+	unsigned long sub_hdr_offset;
-+	uint32_t smram_cpu_state_size;
-+	unsigned long data_offset;
-+};
-+
-+static struct sadump_info sadump_info = {};
-+static struct sadump_info *si = &sadump_info;
-+
-+int
-+sadump_add_diskset_info(char *name_memory)
+ static struct sadump_info sadump_info = {};
+ static struct sadump_info *si = &sadump_info;
+ 
+ int
++check_and_get_sadump_header_info(char *filename)
 +{
-+	si->num_disks++;
++	int i;
 +
-+	si->diskset_info =
-+		realloc(si->diskset_info,
-+			si->num_disks*sizeof(struct sadump_diskset_info));
-+	if (!si->diskset_info) {
-+		ERRMSG("Can't allocate memory for sadump_diskset_info. %s\n",
-+		       strerror(errno));
++	if (!read_sadump_header(filename))
++		return FALSE;
++
++	if (info->flag_sadump_diskset && info->flag_sadump == SADUMP_DISKSET) {
++
++		si->diskset_info[0].fd_memory = info->fd_memory;
++		si->diskset_info[0].sph_memory = si->sph_memory;
++		si->diskset_info[0].data_offset = si->data_offset;
++
++		for (i = 1; i < si->num_disks; ++i) {
++			struct sadump_diskset_info *sdi =
++				&si->diskset_info[i];
++
++			if ((sdi->fd_memory =
++			     open(sdi->name_memory, O_RDONLY)) < 0) {
++				ERRMSG("Can't open the dump diskset "
++				       "memory(%s). %s\n", sdi->name_memory,
++				       strerror(errno));
++				return FALSE;
++			}
++
++			if (!read_sadump_header_diskset(i, sdi))
++				return FALSE;
++		}
++	}
++
++	return TRUE;
++}
++
++static char *
++guid_to_str(efi_guid_t *guid, char *buf, size_t buflen)
++{
++	snprintf(buf, buflen,
++		 "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
++		 guid->data1, guid->data2, guid->data3,
++		 guid->data4[0], guid->data4[1], guid->data4[2],
++		 guid->data4[3], guid->data4[4], guid->data4[5],
++		 guid->data4[6], guid->data4[7]);
++
++	return buf;
++}
++
++static struct tm *
++efi_time_t_to_tm(const efi_time_t *e)
++{
++	static struct tm t;
++	time_t ti;
++
++	memset(&t, 0, sizeof(t));
++
++	t.tm_sec  = e->second;
++	t.tm_min  = e->minute;
++	t.tm_hour = e->hour;
++	t.tm_mday = e->day;
++	t.tm_mon  = e->month - 1;
++	t.tm_year = e->year - 1900;
++
++	if (e->timezone != EFI_UNSPECIFIED_TIMEZONE)
++		t.tm_hour += e->timezone;
++
++	else
++		DEBUG_MSG("sadump: timezone information is missing\n");
++
++	ti = mktime(&t);
++	if (ti == (time_t)-1)
++		return &t;
++
++	return localtime_r(&ti, &t);
++}
++
++static int
++verify_magic_number(uint32_t magicnum[DUMP_PART_HEADER_MAGICNUM_SIZE])
++{
++	int i;
++
++	for (i = 1; i < DUMP_PART_HEADER_MAGICNUM_SIZE; ++i)
++		if (magicnum[i] != (magicnum[i - 1] + 7) * 11)
++			return FALSE;
++
++	return TRUE;
++}
++
++static int
++read_device(void *buf, size_t bytes, ulong *offset)
++{
++	if (lseek(info->fd_memory, *offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek a file(%s). %s\n",
++		       info->name_memory, strerror(errno));
++		return FALSE;
++	}
++	if (read(info->fd_memory, buf, bytes) != bytes) {
++		ERRMSG("Can't read a file(%s). %s\n",
++		       info->name_memory, strerror(errno));
++		return FALSE;
++	}
++	*offset += bytes;
++	return TRUE;
++}
++
++static int
++read_device_diskset(struct sadump_diskset_info *sdi, void *buf,
++		    size_t bytes, unsigned long *offset)
++{
++	if (lseek(sdi->fd_memory, *offset, SEEK_SET) < 0) {
++		ERRMSG("Can't seek a file(%s). %s\n",
++		       sdi->name_memory, strerror(errno));
++		return FALSE;
++	}
++	if (read(sdi->fd_memory, buf, bytes) != bytes) {
++		ERRMSG("Can't read a file(%s). %s\n",
++		       sdi->name_memory, strerror(errno));
++		return FALSE;
++	}
++	*offset += bytes;
++	return TRUE;
++}
++
++static int
++read_sadump_header(char *filename)
++{
++	struct sadump_part_header *sph = NULL;
++	struct sadump_header *sh = NULL;
++	struct sadump_disk_set_header *sdh = NULL;
++	struct sadump_media_header *smh = NULL;
++	unsigned long offset = 0, sub_hdr_offset;
++	unsigned long block_size = SADUMP_DEFAULT_BLOCK_SIZE;
++	unsigned long bitmap_len, dumpable_bitmap_len;
++	enum sadump_format_type flag_sadump;
++	uint32_t smram_cpu_state_size = 0;
++	char guid[33];
++
++	if ((si->sph_memory = malloc(SADUMP_DEFAULT_BLOCK_SIZE)) == NULL) {
++		ERRMSG("Can't allocate memory for partition header buffer: "
++		       "%s\n", strerror(errno));
 +		return FALSE;
 +	}
 +
-+	si->diskset_info[si->num_disks - 1].name_memory = name_memory;
++	if ((si->sh_memory = malloc(SADUMP_DEFAULT_BLOCK_SIZE)) == NULL) {
++		ERRMSG("Can't allocate memory for dump header buffer: "
++		       "%s\n", strerror(errno));
++		return FALSE;
++	}
++
++	if ((si->sdh_memory = malloc(SADUMP_DEFAULT_BLOCK_SIZE)) == NULL) {
++		ERRMSG("Can't allocate memory for disk set header buffer: "
++		       "%s\n", strerror(errno));
++		return FALSE;
++	}
++
++	if ((si->smh_memory = malloc(SADUMP_DEFAULT_BLOCK_SIZE)) == NULL) {
++		ERRMSG("Can't allocate memory for media header buffer: "
++		       "%s\n", strerror(errno));
++		return FALSE;
++	}
++
++	sph = si->sph_memory;
++	sh = si->sh_memory;
++	sdh = si->sdh_memory;
++	smh = si->smh_memory;
++
++restart:
++	if (block_size < 0)
++		return FALSE;
++
++	if (!read_device(sph, block_size, &offset))
++		return ERROR;
++
++	if (sph->signature1 == SADUMP_SIGNATURE1 &&
++	    sph->signature2 == SADUMP_SIGNATURE2) {
++
++		if (sph->set_disk_set == 0) {
++
++			flag_sadump = SADUMP_SINGLE_PARTITION;
++
++			DEBUG_MSG("sadump: read dump device as single partition\n");
++
++		} else {
++
++			flag_sadump = SADUMP_DISKSET;
++
++			DEBUG_MSG("sadump: read dump device as diskset\n");
++
++		}
++
++	} else {
++
++		offset = 0;
++
++		if (!read_device(smh, block_size, &offset))
++			return ERROR;
++
++		if (!read_device(sph, block_size, &offset))
++			return ERROR;
++
++		if (sph->signature1 != SADUMP_SIGNATURE1 ||
++		    sph->signature2 != SADUMP_SIGNATURE2) {
++
++			DEBUG_MSG("sadump: does not have partition header\n");
++
++			flag_sadump = SADUMP_UNKNOWN;
++
++			DEBUG_MSG("sadump: read dump device as unknown format\n");
++
++			goto out;
++		}
++
++		flag_sadump = SADUMP_MEDIA_BACKUP;
++
++		DEBUG_MSG("sadump: read dump device as media backup format\n");
++
++	}
++
++	if (!verify_magic_number(sph->magicnum)) {
++		DEBUG_MSG("sadump: invalid magic number\n");
++		return FALSE;
++	}
++
++	if (flag_sadump == SADUMP_DISKSET) {
++		uint32_t header_blocks;
++		size_t header_size;
++
++		if (sph->set_disk_set != 1) {
++			DEBUG_MSG("sadump: id of this disk is %d\n",
++				  sph->set_disk_set);
++			return FALSE;
++		}
++
++		if (!read_device(&header_blocks, sizeof(uint32_t),
++					&offset))
++			return FALSE;
++
++		offset -= sizeof(uint32_t);
++		header_size = header_blocks * block_size;
++
++		if (header_size > block_size) {
++			sdh = realloc(sdh, header_size);
++			if (!sdh) {
++				ERRMSG("Can't allocate memory for disk "
++				       "set memory\n");
++				return FALSE;
++			}
++		}
++
++		if (!read_device(sdh, header_size, &offset))
++			return ERROR;
++
++		DEBUG_MSG("sadump: the diskset consists of %u disks\n",
++			  sdh->disk_num);
++
++	}
++
++	if (!read_device(sh, block_size, &offset))
++		return FALSE;
++
++	sub_hdr_offset = offset;
++
++	if (strncmp(sh->signature, SADUMP_SIGNATURE, 8) != 0) {
++		DEBUG_MSG("sadump: does not have dump header\n");
++		return FALSE;
++	}
++
++	if (flag_sadump == SADUMP_MEDIA_BACKUP) {
++
++		if (memcmp(&sph->sadump_id, &smh->sadump_id,
++			   sizeof(efi_guid_t)) != 0) {
++			DEBUG_MSG("sadump: system ID mismatch\n");
++			DEBUG_MSG("  partition header: %s\n",
++				  guid_to_str(&sph->sadump_id, guid,
++					      sizeof(guid)));
++			DEBUG_MSG("  media header: %s\n",
++				  guid_to_str(&smh->sadump_id, guid,
++					      sizeof(guid)));
++			return FALSE;
++		}
++
++		if (memcmp(&sph->disk_set_id, &smh->disk_set_id,
++			   sizeof(efi_guid_t)) != 0) {
++			DEBUG_MSG("sadump: disk set ID mismtch\n");
++			DEBUG_MSG("  partition header: %s\n",
++				  guid_to_str(&sph->disk_set_id, guid,
++					      sizeof(guid)));
++			DEBUG_MSG("  media header: %s\n",
++				  guid_to_str(&smh->disk_set_id, guid,
++					      sizeof(guid)));
++			return FALSE;
++		}
++
++		if (memcmp(&sph->time_stamp, &smh->time_stamp,
++			   sizeof(efi_time_t)) != 0) {
++			DEBUG_MSG("sadump: time stamp mismatch\n");
++			DEBUG_MSG("  partition header: %s",
++				  asctime(efi_time_t_to_tm(&sph->time_stamp)));
++			DEBUG_MSG("  media header: %s",
++				  asctime(efi_time_t_to_tm(&smh->time_stamp)));
++		}
++
++		if (smh->sequential_num != 1) {
++			DEBUG_MSG("sadump: first media file has sequential "
++				  "number %d\n", smh->sequential_num);
++			return FALSE;
++		}
++
++	}
++
++	if (sh->block_size != block_size) {
++		block_size = sh->block_size;
++		offset = 0;
++		goto restart;
++	}
++
++	if (sh->sub_hdr_size > 0) {
++		if (!read_device(&smram_cpu_state_size, sizeof(uint32_t),
++				 &offset)) {
++			DEBUG_MSG("sadump: cannot read SMRAM CPU STATE size\n");
++			return FALSE;
++		}
++		smram_cpu_state_size /= sh->nr_cpus;
++
++		offset -= sizeof(uint32_t);
++		offset += sh->sub_hdr_size * block_size;
++	}
++
++	if (!sh->bitmap_blocks) {
++		DEBUG_MSG("sadump: bitmap_blocks is zero\n");
++		return FALSE;
++	}
++
++	if (!sh->dumpable_bitmap_blocks) {
++		DEBUG_MSG("sadump: dumpable_bitmap_blocks is zero\n");
++		return FALSE;
++	}
++
++	bitmap_len = block_size * sh->bitmap_blocks;
++	dumpable_bitmap_len = block_size * sh->dumpable_bitmap_blocks;
++
++	si->sub_hdr_offset = sub_hdr_offset;
++	si->smram_cpu_state_size = smram_cpu_state_size;
++	si->data_offset = offset + bitmap_len + dumpable_bitmap_len;
++
++out:
++	switch (flag_sadump) {
++	case SADUMP_SINGLE_PARTITION:
++		DEBUG_MSG("sadump: single partition configuration\n");
++		break;
++	case SADUMP_DISKSET:
++		DEBUG_MSG("sadump: diskset configuration with %d disks\n",
++			  sdh->disk_num);
++		break;
++	case SADUMP_MEDIA_BACKUP:
++		DEBUG_MSG("sadump: media backup file\n");
++		break;
++	case SADUMP_UNKNOWN:
++		DEBUG_MSG("sadump: unknown format\n");
++		break;
++	}
++
++	info->flag_sadump = flag_sadump;
 +
 +	return TRUE;
 +}
 +
-+char *
-+sadump_head_disk_name_memory(void)
++static int
++read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sdi)
 +{
-+	return si->diskset_info[0].name_memory;
-+}
++	struct sadump_part_header *sph = NULL;
++	unsigned long offset = 0;
++	char guid[33];
 +
-+void
-+free_sadump_info(void)
-+{
-+	if (si->diskset_info)
-+		free(si->diskset_info);
-+}
++	if ((sph = malloc(si->sh_memory->block_size)) == NULL) {
++		ERRMSG("Can't allocate memory for partition header buffer. "
++		       "%s\n", strerror(errno));
++		goto error;
++	}
 +
-+#endif /* defined(__x86__) && defined(__x86_64__) */
-diff --git a/sadump_info.h b/sadump_info.h
-new file mode 100644
-index 0000000..863956d
---- /dev/null
-+++ b/sadump_info.h
-@@ -0,0 +1,61 @@
-+/*
-+ * sadump_info.h
-+ *
-+ * Created by: HATAYAMA, Daisuke <d.hatayama@jp.fujitsu.com>
-+ *
-+ * Copyright (C) 2011  FUJITSU LIMITED
-+ * Copyright (C) 2011  NEC Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++	if (!read_device_diskset(sdi, sph, si->sh_memory->block_size,
++				 &offset))
++		goto error;
 +
-+#ifndef _SADUMP_INFO_H
-+#define _SADUMP_INFO_H
++	if (sph->signature1 != SADUMP_SIGNATURE1 ||
++	    sph->signature2 != SADUMP_SIGNATURE2) {
++		DEBUG_MSG("sadump: does not have partition header\n");
++		free(sph);
++		goto error;
++	}
 +
-+#include "makedumpfile.h"
++	if (memcmp(&si->sph_memory->sadump_id, &sph->sadump_id,
++		   sizeof(efi_guid_t)) != 0) {
++		DEBUG_MSG("sadump: system ID mismatch\n");
++		DEBUG_MSG("  partition header on disk #1: %s\n",
++			  guid_to_str(&si->sph_memory->sadump_id, guid,
++				      sizeof(guid)));
++		DEBUG_MSG("  partition header on disk #%d: %s\n", diskid,
++			  guid_to_str(&sph->sadump_id, guid, sizeof(guid)));
++		goto error;
++	}
 +
-+#if defined(__x86__) || defined(__x86_64__)
++	if (memcmp(&si->sph_memory->disk_set_id, &sph->disk_set_id,
++		   sizeof(efi_guid_t)) != 0) {
++		DEBUG_MSG("sadump: disk set ID mismatch\n");
++		DEBUG_MSG("  partition header on disk #1: %s\n",
++			  guid_to_str(&si->sph_memory->disk_set_id, guid,
++				      sizeof(guid)));
++		DEBUG_MSG("  partition header on disk #%d: %s\n", diskid,
++			  guid_to_str(&sph->disk_set_id, guid, sizeof(guid)));
++		goto error;
++	}
 +
-+int sadump_add_diskset_info(char *name_memory);
-+char *sadump_head_disk_name_memory(void);
-+void free_sadump_info(void);
++	if (memcmp(&si->sdh_memory->vol_info[diskid-1].id, &sph->vol_id,
++		   sizeof(efi_guid_t)) != 0) {
++		DEBUG_MSG("sadump: volume ID mismatch\n");
++		DEBUG_MSG("  disk set header on disk #1: %s\n",
++			  guid_to_str(&si->sdh_memory->vol_info[diskid-1].id,
++				      guid, sizeof(guid)));
++		DEBUG_MSG("  partition header on disk #%d: %s\n",
++			  diskid+1,
++			  guid_to_str(&sph->vol_id, guid, sizeof(guid)));
++		goto error;
++	}
 +
-+static inline int sadump_is_supported_arch(void)
-+{
++	if (memcmp(&si->sph_memory->time_stamp, &sph->time_stamp,
++		   sizeof(efi_time_t)) != 0) {
++		DEBUG_MSG("sadump time stamp mismatch\n");
++		DEBUG_MSG("  partition header on disk #1: %s\n",
++			  asctime(efi_time_t_to_tm
++				  (&si->sph_memory->time_stamp)));
++		DEBUG_MSG("  partition header on disk #%d: %s\n",
++			  diskid, asctime(efi_time_t_to_tm(&sph->time_stamp)));
++	}
++
++	if (diskid+1 != sph->set_disk_set) {
++		DEBUG_MSG("sadump: wrong disk order; #%d expected but #%d given\n",
++			  diskid+1, sph->set_disk_set);
++		goto error;
++	}
++
++	sdi->sph_memory = sph;
++	sdi->data_offset = si->sh_memory->block_size;
++
 +	return TRUE;
-+}
 +
-+#else
++error:
++	free(sph);
 +
-+static inline int sadump_add_diskset_info(char *name_memory)
-+{
-+	return TRUE;
-+}
-+
-+static inline char *
-+sadump_head_disk_name_memory(void)
-+{
-+	return NULL;
-+}
-+
-+static inline void free_sadump_info(void)
-+{
-+	return;
-+}
-+
-+static inline int sadump_is_supported_arch(void)
-+{
 +	return FALSE;
 +}
 +
-+#endif
++int
+ sadump_add_diskset_info(char *name_memory)
+ {
+ 	si->num_disks++;
+@@ -71,8 +532,25 @@ sadump_head_disk_name_memory(void)
+ void
+ free_sadump_info(void)
+ {
+-	if (si->diskset_info)
++	if (si->sph_memory)
++		free(si->sph_memory);
++	if (si->sh_memory)
++		free(si->sh_memory);
++	if (si->sdh_memory)
++		free(si->sdh_memory);
++	if (si->smh_memory)
++		free(si->smh_memory);
++	if (si->diskset_info) {
++		int i;
 +
-+#endif /* _SADUMP_INFO_H */
++		for (i = 1; i < si->num_disks; ++i) {
++			if (si->diskset_info[i].fd_memory)
++				close(si->diskset_info[i].fd_memory);
++			if (si->diskset_info[i].sph_memory)
++				free(si->diskset_info[i].sph_memory);
++		}
+ 		free(si->diskset_info);
++	}
+ }
+ 
+ #endif /* defined(__x86__) && defined(__x86_64__) */
+diff --git a/sadump_info.h b/sadump_info.h
+index 863956d..c54d29f 100644
+--- a/sadump_info.h
++++ b/sadump_info.h
+@@ -24,6 +24,7 @@
+ 
+ #if defined(__x86__) || defined(__x86_64__)
+ 
++int check_and_get_sadump_header_info(char *filename);
+ int sadump_add_diskset_info(char *name_memory);
+ char *sadump_head_disk_name_memory(void);
+ void free_sadump_info(void);
+@@ -35,6 +36,15 @@ static inline int sadump_is_supported_arch(void)
+ 
+ #else
+ 
++static inline int check_and_get_sadump_header_info(char *filename)
++{
++	info->flag_sadump = SADUMP_UNKNOWN;
++
++	DEBUG_MSG("sadump: unsupported architecture\n");
++
++	return TRUE;
++}
++
+ static inline int sadump_add_diskset_info(char *name_memory)
+ {
+ 	return TRUE;
 
 
 _______________________________________________
