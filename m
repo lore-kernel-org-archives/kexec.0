@@ -1,33 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJj3d-0003RP-Dv
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:49:05 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
-	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id C126E3EE0AE
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:59 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
-	by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9FC4045DEA6
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:59 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
-	by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 89A7545DE9E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:59 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 749D11DB803B
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:59 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3127C1DB8038
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:59 +0900 (JST)
-Received: from m107.css.fujitsu.com (m107 [127.0.0.1])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id EE56486001E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:58 +0900 (JST)
+	id 1RJj3i-0003Ri-CG
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:49:08 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id DDFA03EE0AE
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C672145DE58
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id B151A45DE55
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A3FAE1DB8052
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
+Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 66A071DB8048
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
+Received: from ml13.css.fujitsu.com (ml13 [127.0.0.1])
+	by ml13.s.css.fujitsu.com (Postfix) with ESMTP id 439DAFD0019
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:04 +0900 (JST)
 Received: from localhost6.localdomain6 (unknown [10.124.63.45])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 8964586000E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:58 +0900 (JST)
+	by ml13.s.css.fujitsu.com (Postfix) with ESMTP id F08D6FD0010
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:03 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 10/14] Generate and save VMCOREINFO and ELF note information
-Date: Fri, 28 Oct 2011 18:48:58 +0900
-Message-ID: <20111028094858.20940.24950.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 11/14] Procees CPUs based on online ones
+Date: Fri, 28 Oct 2011 18:49:03 +0900
+Message-ID: <20111028094903.20940.82939.stgit@localhost6.localdomain6>
 In-Reply-To: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -45,1132 +45,301 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Retrieve VMCOREINFO from VMLINUX and ELF note information from
-VMCORE(s) and save them in generated DUMPFILE.
-
-ELF note information is NT_PRSTATUS only. If crash_notes is NULL,
-indicating kdump has not saved register values, save SMRAM CPU STATE
-values. If crash_notes is not NULL, indicating kdump has saved
-register values at crash, then save the register values in
-crash_notes.
+Assign the number of online cpus to nr_cpus member in diskset header,
+and create NR_PRSTATUS for each online cpu. This behaviour is sound
+with respect to kdump's and crash's on kdump-compressed format.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- elf_info.c     |    2 
- makedumpfile.c |  103 ++++---
- makedumpfile.h |    2 
- sadump_info.c  |  823 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- sadump_info.h  |   26 ++
- 5 files changed, 913 insertions(+), 43 deletions(-)
+ makedumpfile.c |   27 +++++++++++----
+ makedumpfile.h |    3 ++
+ sadump_info.c  |  100 +++++++++++++++++++++++++++++++++++++++++++++-----------
+ sadump_info.h  |    4 +-
+ 4 files changed, 106 insertions(+), 28 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index 114dd05..48f8510 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -760,7 +760,7 @@ get_nr_cpus(void)
- int
- has_pt_note(void)
- {
--	if (offset_pt_note_memory && size_pt_note_memory)
-+	if (offset_pt_note_memory || size_pt_note_memory)
- 		return TRUE;
- 	return FALSE;
- }
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 6e9dd83..750dcb6 100644
+index 750dcb6..44f6ee6 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -1221,40 +1221,9 @@ get_mem_type(void)
- 	return ret;
- }
+@@ -826,6 +826,9 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(crash_notes, "crash_notes");
+ 	SYMBOL_INIT(__per_cpu_load, "__per_cpu_load");
+ 	SYMBOL_INIT(__per_cpu_offset, "__per_cpu_offset");
++	SYMBOL_INIT(cpu_online_mask, "cpu_online_mask");
++	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL)
++		SYMBOL_INIT(cpu_online_mask, "cpu_online_map");
  
--int
--generate_vmcoreinfo(void)
-+void
-+write_vmcoreinfo_data(void)
- {
--	if (!set_page_size(sysconf(_SC_PAGE_SIZE)))
--		return FALSE;
--
--	set_dwarf_debuginfo("vmlinux", NULL,
--			    info->name_vmlinux, info->fd_vmlinux);
--
--	if (!get_symbol_info())
--		return FALSE;
--
--	if (!get_structure_info())
--		return FALSE;
--
--	if (!get_srcfile_info())
--		return FALSE;
--
--	if ((SYMBOL(system_utsname) == NOT_FOUND_SYMBOL)
--	    && (SYMBOL(init_uts_ns) == NOT_FOUND_SYMBOL)) {
--		ERRMSG("Can't get the symbol of system_utsname.\n");
--		return FALSE;
--	}
--	if (!get_str_osrelease_from_vmlinux())
--		return FALSE;
--
--	if (!(info->kernel_version = get_kernel_version(info->release)))
--		return FALSE;
--
--	if (get_mem_type() == NOT_FOUND_MEMTYPE) {
--		ERRMSG("Can't find the memory type.\n");
--		return FALSE;
--	}
--
+ 	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+ 		SYMBOL_ARRAY_TYPE_INIT(node_data, "node_data");
+@@ -962,6 +965,13 @@ get_structure_info(void)
+ 	OFFSET_INIT(elf_prstatus.pr_reg, "elf_prstatus", "pr_reg");
+ 
  	/*
- 	 * write 1st kernel's OSRELEASE
++	 * Get size of cpumask and cpumask_t.
++	 */
++	SIZE_INIT(cpumask, "cpumask");
++
++	TYPEDEF_SIZE_INIT(cpumask_t, "cpumask_t");
++
++	/*
+ 	 * Get offset of the user_regs_struct members.
  	 */
-@@ -1357,6 +1326,43 @@ generate_vmcoreinfo(void)
- 	 * write the source file of 1st kernel
- 	 */
- 	WRITE_SRCFILE("pud_t", pud_t);
-+}
-+
-+int
-+generate_vmcoreinfo(void)
-+{
-+	if (!set_page_size(sysconf(_SC_PAGE_SIZE)))
-+		return FALSE;
-+
-+	set_dwarf_debuginfo("vmlinux", NULL,
-+			    info->name_vmlinux, info->fd_vmlinux);
-+
-+	if (!get_symbol_info())
-+		return FALSE;
-+
-+	if (!get_structure_info())
-+		return FALSE;
-+
-+	if (!get_srcfile_info())
-+		return FALSE;
-+
-+	if ((SYMBOL(system_utsname) == NOT_FOUND_SYMBOL)
-+	    && (SYMBOL(init_uts_ns) == NOT_FOUND_SYMBOL)) {
-+		ERRMSG("Can't get the symbol of system_utsname.\n");
-+		return FALSE;
-+	}
-+	if (!get_str_osrelease_from_vmlinux())
-+		return FALSE;
-+
-+	if (!(info->kernel_version = get_kernel_version(info->release)))
-+		return FALSE;
-+
-+	if (get_mem_type() == NOT_FOUND_MEMTYPE) {
-+		ERRMSG("Can't find the memory type.\n");
-+		return FALSE;
-+	}
-+
-+	write_vmcoreinfo_data();
+ 	SIZE_INIT(user_regs_struct, "user_regs_struct");
+@@ -2489,8 +2499,6 @@ initial(void)
+ 			return FALSE;
  
- 	return TRUE;
- }
-@@ -2605,6 +2611,12 @@ out:
+ 	} else if (info->flag_sadump) {
+-		int nr_cpus;
+-
+ 		if (info->flag_elf_dumpfile) {
+ 			MSG("'-E' option is disable, ");
+ 			MSG("because %s is sadump %s format.\n",
+@@ -2503,11 +2511,6 @@ initial(void)
+ 		if (!sadump_initialize_bitmap_memory())
+ 			return FALSE;
  
- 		if (!get_mem_map())
+-		if (!sadump_get_nr_cpus(&nr_cpus))
+-			return FALSE;
+-
+-		set_nr_cpus(nr_cpus);
+-
+ 		(void) sadump_set_timestamp(&info->timestamp);
+ 
+ 		/*
+@@ -2600,6 +2603,16 @@ out:
+ 		if (!get_machdep_info())
  			return FALSE;
+ 
++		if (info->flag_sadump) {
++			int online_cpus;
 +
-+		if (!info->flag_dmesg && info->flag_sadump &&
-+		    sadump_check_debug_info() &&
-+		    !sadump_generate_elf_note_from_dumpfile())
-+			return FALSE;
++			online_cpus = sadump_num_online_cpus();
++			if (!online_cpus)
++				return FALSE;
 +
- 	} else {
- 		if (!get_mem_map_without_mm())
++			set_nr_cpus(online_cpus);
++		}
++
+ 		if (!check_release())
  			return FALSE;
-@@ -4236,16 +4248,23 @@ write_kdump_header(void)
- 			    strerror(errno));
- 			return FALSE;
- 		}
--		if (lseek(info->fd_memory, offset_note, SEEK_SET) < 0) {
--			ERRMSG("Can't seek the dump memory(%s). %s\n",
--			    info->name_memory, strerror(errno));
--			goto out;
--		}
--		if (read(info->fd_memory, buf, size_note) != size_note) {
--			ERRMSG("Can't read the dump memory(%s). %s\n",
--			    info->name_memory, strerror(errno));
--			goto out;
-+
-+		if (!info->flag_sadump) {
-+			if (lseek(info->fd_memory, offset_note, SEEK_SET) < 0) {
-+				ERRMSG("Can't seek the dump memory(%s). %s\n",
-+				       info->name_memory, strerror(errno));
-+				goto out;
-+			}
-+			if (read(info->fd_memory, buf, size_note) != size_note) {
-+				ERRMSG("Can't read the dump memory(%s). %s\n",
-+				       info->name_memory, strerror(errno));
-+				goto out;
-+			}
-+		} else {
-+			if (!sadump_read_elf_note(buf, size_note))
-+				goto out;
- 		}
-+
- 		if (!write_buffer(info->fd_dumpfile, kh.offset_note, buf,
- 		    kh.size_note, info->name_dumpfile))
- 			goto out;
+ 
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 433bc49..67a6b4f 100644
+index 67a6b4f..020d99c 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -1328,6 +1328,8 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
- 	return is_on(bitmap->buf, pfn%PFN_BUFBITMAP);
- }
+@@ -995,6 +995,7 @@ struct symbol_table {
+ 	unsigned long long	crash_notes;
+ 	unsigned long long	__per_cpu_offset;
+ 	unsigned long long	__per_cpu_load;
++	unsigned long long	cpu_online_mask;
+ };
  
-+void write_vmcoreinfo_data(void);
-+
- #ifdef __x86__
+ struct size_table {
+@@ -1024,6 +1025,8 @@ struct size_table {
+ 	long	percpu_data;
+ 	long	elf_prstatus;
+ 	long	user_regs_struct;
++	long	cpumask;
++	long	cpumask_t;
+ };
  
- struct user_regs_struct {
+ struct offset_table {
 diff --git a/sadump_info.c b/sadump_info.c
-index adca47b..0b9c524 100644
+index 0b9c524..2538da6 100644
 --- a/sadump_info.c
 +++ b/sadump_info.c
-@@ -19,15 +19,33 @@
- #if defined(__x86__) || defined(__x86_64__)
+@@ -46,6 +46,14 @@
+ 			  KEXEC_CORE_NOTE_NAME_BYTES +		       \
+ 			  KEXEC_CORE_NOTE_DESC_BYTES )
  
- #include "makedumpfile.h"
-+#include "elf_info.h"
- #include "print_info.h"
-+#include "elf_info.h"
- #include "sadump_mod.h"
- 
-+#ifdef __x86__
++#define for_each_online_cpu(cpu)					\
++	for (cpu = 0; cpu < BITPERBYTE * si->cpumask_size; ++cpu)	\
++		if (is_online_cpu(cpu))
 +
-+#define KEXEC_NOTE_HEAD_BYTES roundup(sizeof(Elf32_Nhdr), 4)
-+
-+#endif
-+
- #ifdef __x86_64__
- 
- #define MEGABYTES(x)	((x) * (1048576))
- 
-+#define KEXEC_NOTE_HEAD_BYTES roundup(sizeof(Elf64_Nhdr), 4)
-+
- #endif
- 
-+#define KEXEC_CORE_NOTE_NAME "CORE"
-+#define KEXEC_CORE_NOTE_NAME_BYTES roundup(sizeof(KEXEC_CORE_NOTE_NAME), 4)
-+#define KEXEC_CORE_NOTE_DESC_BYTES roundup(sizeof(struct elf_prstatus), 4)
-+
-+#define KEXEC_NOTE_BYTES ((KEXEC_NOTE_HEAD_BYTES * 2) +                \
-+			  KEXEC_CORE_NOTE_NAME_BYTES +		       \
-+			  KEXEC_CORE_NOTE_DESC_BYTES )
++enum {
++	BITPERWORD = BITPERBYTE * sizeof(unsigned long)
++};
 +
  struct sadump_diskset_info {
  	char *name_memory;
  	int fd_memory;
-@@ -46,6 +64,10 @@ struct sadump_info {
- 	uint32_t smram_cpu_state_size;
- 	unsigned long data_offset;
- 	unsigned long long *block_table;
-+	unsigned long *__per_cpu_offset;
-+	unsigned long __per_cpu_load;
-+	FILE *file_elf_note;
-+
+@@ -67,7 +75,8 @@ struct sadump_info {
+ 	unsigned long *__per_cpu_offset;
+ 	unsigned long __per_cpu_load;
+ 	FILE *file_elf_note;
+-
++	char *cpu_online_mask_buf;
++	size_t cpumask_size;
  };
  
  static char *guid_to_str(efi_guid_t *guid, char *buf, size_t buflen);
-@@ -59,6 +81,28 @@ static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sd
+@@ -81,6 +90,7 @@ static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sd
  static unsigned long long pfn_to_block(unsigned long long pfn);
  static int lookup_diskset(unsigned long long whole_offset, int *diskid,
  			  unsigned long long *disk_offset);
-+static int per_cpu_init(void);
-+static int get_data_from_elf_note_desc(const char *note_buf, uint32_t n_descsz,
-+				       char *name, uint32_t n_type, char **data);
-+static int alignfile(unsigned long *offset);
-+static int
-+write_elf_note_header(char *name, void *data, size_t descsz, uint32_t type,
-+		      unsigned long *offset, unsigned long *desc_offset);
-+static unsigned long legacy_per_cpu_ptr(unsigned long ptr, int cpu);
-+static unsigned long per_cpu_ptr(unsigned long ptr, int cpu);
-+static int get_prstatus_from_crash_notes(int cpu, char *prstatus_buf);
-+static int cpu_to_apicid(int cpu, int *apicid);
-+static int get_smram_cpu_state(int apicid, struct sadump_smram_cpu_state *smram);
-+static int copy_regs_from_prstatus(struct elf_prstatus *prstatus,
-+				   const char *prstatus_buf);
-+static int
-+copy_regs_from_smram_cpu_state(struct elf_prstatus *prstatus,
-+			       const struct sadump_smram_cpu_state *smram);
-+static void
-+debug_message_smram_cpu_state(int apicid, struct sadump_smram_cpu_state *s);
-+static void
-+debug_message_user_regs_struct(int cpu, struct elf_prstatus *prstatus);
-+static int get_registers(int cpu, struct elf_prstatus *prstatus);
- 
- static struct sadump_info sadump_info = {};
- static struct sadump_info *si = &sadump_info;
-@@ -136,6 +180,112 @@ sadump_copy_1st_bitmap_from_memory(void)
- 	return TRUE;
- }
- 
-+int
-+sadump_generate_vmcoreinfo_from_vmlinux(size_t *vmcoreinfo_size)
-+{
-+	size_t size;
-+
-+	if (!info->file_vmcoreinfo)
-+		return FALSE;
-+
-+	if ((SYMBOL(system_utsname) == NOT_FOUND_SYMBOL) &&
-+	    (SYMBOL(init_uts_ns) == NOT_FOUND_SYMBOL)) {
-+		ERRMSG("Can't get the symbol of system_utsname.\n");
-+		return FALSE;
-+	}
-+
-+	if (get_mem_type() == NOT_FOUND_MEMTYPE) {
-+		ERRMSG("Can't find the memory type.\n");
-+		return FALSE;
-+	}
-+
-+	strncpy(info->release, info->system_utsname.release,
-+		strlen(info->system_utsname.release) + 1);
-+
-+	write_vmcoreinfo_data();
-+
-+	size = ftell(info->file_vmcoreinfo);
-+
-+	*vmcoreinfo_size = size;
-+
-+	return TRUE;
-+}
-+
-+int
-+sadump_generate_elf_note_from_dumpfile(void)
-+{
-+	size_t size_vmcoreinfo, size_pt_note;
-+	int x_cpu;
-+	unsigned long offset, offset_vmcoreinfo;
-+	char *vmcoreinfo_buf = NULL;
-+	int retval = FALSE;
-+
-+	if (!per_cpu_init())
-+		return FALSE;
-+
-+	if (!(info->file_vmcoreinfo = tmpfile())) {
-+		ERRMSG("Can't create a temporary strings(%s).\n",
-+		       FILENAME_VMCOREINFO);
-+		return FALSE;
-+	}
-+	if (!sadump_generate_vmcoreinfo_from_vmlinux(&size_vmcoreinfo)) {
-+		ERRMSG("Can't generate vmcoreinfo data.\n");
-+		goto error;
-+	}
-+	if ((vmcoreinfo_buf = malloc(size_vmcoreinfo)) == NULL) {
-+		ERRMSG("Can't allocate vmcoreinfo buffer. %s\n",
-+		       strerror(errno));
-+		goto cleanup;
-+	}
-+	rewind(info->file_vmcoreinfo);
-+	if (fread(vmcoreinfo_buf, size_vmcoreinfo, 1,
-+		  info->file_vmcoreinfo) != 1) {
-+		ERRMSG("Can't read vmcoreinfo temporary file. %s\n",
-+		       strerror(errno));
-+		goto cleanup;
-+	}
-+
-+	if (!(si->file_elf_note = tmpfile())) {
-+		ERRMSG("Can't create a temporary elf_note file. %s\n",
-+		       strerror(errno));
-+		goto cleanup;
-+	}
-+	offset = 0;
-+	for (x_cpu = 0; x_cpu < get_nr_cpus(); ++x_cpu) {
-+		struct elf_prstatus prstatus;
-+
-+		memset(&prstatus, 0, sizeof(prstatus));
-+
-+		if (!get_registers(x_cpu, &prstatus))
-+			goto cleanup;
-+
-+		if (!write_elf_note_header("CORE", &prstatus, sizeof(prstatus),
-+					   NT_PRSTATUS, &offset, NULL))
-+			goto cleanup;
-+
-+	}
-+
-+	if (!write_elf_note_header("VMCOREINFO", vmcoreinfo_buf,
-+				   size_vmcoreinfo, 0, &offset,
-+				   &offset_vmcoreinfo))
-+		goto cleanup;
-+
-+	size_pt_note = ftell(si->file_elf_note);
-+	set_pt_note(0, size_pt_note);
-+	set_vmcoreinfo(offset_vmcoreinfo, size_vmcoreinfo);
-+
-+	retval = TRUE;
-+
-+cleanup:
-+	free(vmcoreinfo_buf);
-+	if (info->file_vmcoreinfo) {
-+		fclose(info->file_vmcoreinfo);
-+		info->file_vmcoreinfo = NULL;
-+	}
-+error:
-+	return retval;
-+}
-+
- static char *
- guid_to_str(efi_guid_t *guid, char *buf, size_t buflen)
- {
-@@ -767,6 +917,125 @@ error:
- 	return FALSE;
- }
- 
-+int
-+sadump_check_debug_info(void)
-+{
-+	if (SYMBOL(linux_banner) == NOT_FOUND_SYMBOL)
-+		return FALSE;
-+	if (SYMBOL(bios_cpu_apicid) == NOT_FOUND_SYMBOL &&
-+	    SYMBOL(x86_bios_cpu_apicid) == NOT_FOUND_SYMBOL)
-+		return FALSE;
-+	if (SYMBOL(x86_bios_cpu_apicid) != NOT_FOUND_SYMBOL &&
-+	    (SYMBOL(x86_bios_cpu_apicid_early_ptr) == NOT_FOUND_SYMBOL ||
-+	     SYMBOL(x86_bios_cpu_apicid_early_map) == NOT_FOUND_SYMBOL))
-+		return FALSE;
-+	if (SYMBOL(crash_notes) == NOT_FOUND_SYMBOL)
-+		return FALSE;
-+	if (SIZE(percpu_data) == NOT_FOUND_STRUCTURE &&
-+	    SYMBOL(__per_cpu_load) == NOT_FOUND_SYMBOL)
-+		return FALSE;
-+	if (SYMBOL(__per_cpu_load) != NOT_FOUND_SYMBOL &&
-+	    (SYMBOL(__per_cpu_offset) == NOT_FOUND_SYMBOL &&
-+	     ARRAY_LENGTH(__per_cpu_offset) == NOT_FOUND_STRUCTURE))
-+		return FALSE;
-+	if (SIZE(elf_prstatus) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(elf_prstatus.pr_reg) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+#ifdef __x86__
-+	if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.cx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.dx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.si) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.di) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.bp) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ax) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ds) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.es) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.fs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.gs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.orig_ax) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ip) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.cs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.flags) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.sp) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ss) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+#elif defined(__x86_64__)
-+	if (OFFSET(user_regs_struct.r15) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r14) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r13) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r12) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.bp) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.bx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r11) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r10) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r9) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.r8) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ax) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.cx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.dx) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.si) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.di) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.orig_ax) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ip) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.cs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.flags) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.sp) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ss) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.fs_base) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.gs_base) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.ds) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.es) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+	if (OFFSET(user_regs_struct.fs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+        if (OFFSET(user_regs_struct.gs) == NOT_FOUND_STRUCTURE)
-+		return FALSE;
-+#endif /* __x86_64__ */
-+	return TRUE;
-+}
-+
- static unsigned long long
- pfn_to_block(unsigned long long pfn)
- {
-@@ -816,6 +1085,539 @@ lookup_diskset(unsigned long long whole_offset, int *diskid,
- 	return TRUE;
- }
- 
-+static int
-+per_cpu_init(void)
-+{
-+	size_t __per_cpu_offset_size;
-+	int i;
-+
-+	if (SIZE(percpu_data) != NOT_FOUND_STRUCTURE)
-+		return TRUE;
-+
-+	__per_cpu_offset_size =
-+		ARRAY_LENGTH(__per_cpu_offset) * sizeof(unsigned long);
-+
-+	if (!(si->__per_cpu_offset = malloc(__per_cpu_offset_size))) {
-+		ERRMSG("Can't allocate __per_cpu_offset buffer.\n");
-+		return FALSE;
-+	}
-+
-+	if (!readmem(VADDR, SYMBOL(__per_cpu_offset), si->__per_cpu_offset,
-+		     __per_cpu_offset_size)) {
-+		ERRMSG("Can't read __per_cpu_offset memory.\n");
-+		return FALSE;
-+	}
-+
-+	if (!readmem(VADDR, SYMBOL(__per_cpu_load), &si->__per_cpu_load,
-+		     sizeof(unsigned long))) {
-+		ERRMSG("Can't read __per_cpu_load memory.\n");
-+		return FALSE;
-+	}
-+
-+	DEBUG_MSG("sadump: __per_cpu_load: %#lx\n", si->__per_cpu_load);
-+	DEBUG_MSG("sadump: __per_cpu_offset: LENGTH: %ld\n",
-+		  ARRAY_LENGTH(__per_cpu_offset));
-+
-+	for (i = 0; i < ARRAY_LENGTH(__per_cpu_offset); ++i) {
-+		DEBUG_MSG("sadump: __per_cpu_offset[%d]: %#lx\n", i,
-+			  si->__per_cpu_offset[i]);
-+	}
-+
-+	return TRUE;
-+}
-+
-+static int
-+get_data_from_elf_note_desc(const char *note_buf, uint32_t n_descsz,
-+			    char *name, uint32_t n_type, char **data)
-+{
-+	Elf32_Nhdr *note32;
-+	char *note_name;
-+
-+	note32 = (Elf32_Nhdr *)note_buf;
-+	note_name = (char *)(note32 + 1);
-+
-+	if (note32->n_type != n_type ||
-+	    note32->n_namesz != strlen(name) + 1 ||
-+	    note32->n_descsz != n_descsz ||
-+	    strncmp(note_name, name, note32->n_namesz))
-+		return FALSE;
-+
-+	*data = (char *)note_buf +
-+		roundup(sizeof(Elf32_Nhdr) + note32->n_namesz, 4);
-+
-+	return TRUE;
-+}
-+
-+static int
-+alignfile(unsigned long *offset)
-+{
-+	char nullbyte = '\0';
-+	unsigned int len;
-+
-+	len = roundup(*offset, 4) - *offset;
-+	if (fwrite(&nullbyte, 1, len, si->file_elf_note) != len) {
-+		ERRMSG("Can't write elf_note file. %s\n", strerror(errno));
-+		return FALSE;
-+	}
-+	*offset += len;
-+	return TRUE;
-+}
-+
-+static int
-+write_elf_note_header(char *name, void *data, size_t descsz, uint32_t type,
-+		      unsigned long *offset, unsigned long *desc_offset)
-+{
-+	Elf32_Nhdr nhdr;
-+
-+	nhdr.n_namesz = strlen(name) + 1;
-+	nhdr.n_descsz = descsz;
-+	nhdr.n_type = type;
-+
-+	if (fwrite(&nhdr, sizeof(nhdr), 1, si->file_elf_note) != 1) {
-+		ERRMSG("Can't write elf_note file. %s\n", strerror(errno));
-+		return FALSE;
-+	}
-+	*offset += sizeof(nhdr);
-+
-+	if (fwrite(name, nhdr.n_namesz, 1, si->file_elf_note) != 1) {
-+		ERRMSG("Can't write elf_note file. %s\n", strerror(errno));
-+		return FALSE;
-+	}
-+	*offset += nhdr.n_namesz;
-+	if (!alignfile(offset))
-+		return FALSE;
-+
-+	if (desc_offset)
-+		*desc_offset = *offset;
-+
-+	if (fwrite(data, nhdr.n_descsz, 1, si->file_elf_note) != 1) {
-+		ERRMSG("Can't write elf_note file. %s\n", strerror(errno));
-+		return FALSE;
-+	}
-+	*offset += nhdr.n_descsz;
-+	if (!alignfile(offset))
-+		return FALSE;
-+
-+	return TRUE;
-+}
-+
-+static unsigned long
-+legacy_per_cpu_ptr(unsigned long ptr, int cpu)
-+{
-+	unsigned long addr;
-+
-+	if (cpu < 0 || cpu >= get_nr_cpus())
-+		return 0UL;
-+
-+	if (!readmem(VADDR, ~ptr + cpu*sizeof(unsigned long), &addr,
-+		     sizeof(addr)))
-+		return 0UL;
-+
-+	return addr;
-+}
-+
-+static unsigned long
-+per_cpu_ptr(unsigned long ptr, int cpu)
-+{
-+	if (cpu < 0 || cpu >= get_nr_cpus())
-+		return 0UL;
-+
-+	if (si->__per_cpu_offset[cpu] == si->__per_cpu_load)
-+		return 0UL;
-+
-+	return ptr + si->__per_cpu_offset[cpu];
-+}
-+
-+static int
-+get_prstatus_from_crash_notes(int cpu, char *prstatus_buf)
-+{
-+	unsigned long crash_notes_vaddr, percpu_addr;
-+	char note_buf[KEXEC_NOTE_BYTES], zero_buf[KEXEC_NOTE_BYTES];
-+	char *prstatus_ptr;
-+
-+	if (cpu < 0 || get_nr_cpus() <= cpu)
-+		return FALSE;
-+
-+	if (SYMBOL(crash_notes) == NOT_FOUND_SYMBOL)
-+		return FALSE;
-+
-+	if (!readmem(VADDR, SYMBOL(crash_notes), &crash_notes_vaddr,
-+		     sizeof(crash_notes_vaddr)))
-+		return FALSE;
-+
-+	if (!crash_notes_vaddr) {
-+		DEBUG_MSG("sadump: crash_notes %d is NULL\n", cpu);
-+		return FALSE;
-+	}
-+
-+	memset(zero_buf, 0, KEXEC_NOTE_BYTES);
-+
-+	percpu_addr = SIZE(percpu_data) != NOT_FOUND_STRUCTURE
-+		? legacy_per_cpu_ptr(crash_notes_vaddr, cpu)
-+		: per_cpu_ptr(crash_notes_vaddr, cpu);
-+
-+	if (!readmem(VADDR, percpu_addr, note_buf, KEXEC_NOTE_BYTES))
-+		return FALSE;
-+
-+	if (memcmp(note_buf, zero_buf, KEXEC_NOTE_BYTES) == 0)
-+		return FALSE;
-+
-+	if (!get_data_from_elf_note_desc(note_buf, SIZE(elf_prstatus), "CORE",
-+					 NT_PRSTATUS, (void *)&prstatus_ptr))
-+		return FALSE;
-+
-+	memcpy(prstatus_buf, prstatus_ptr, SIZE(elf_prstatus));
-+
-+	return TRUE;
-+}
-+
-+static int
-+cpu_to_apicid(int cpu, int *apicid)
-+{
-+	if (SYMBOL(bios_cpu_apicid) != NOT_FOUND_SYMBOL) {
-+		uint8_t apicid_u8;
-+
-+		if (!readmem(VADDR, SYMBOL(bios_cpu_apicid)+cpu*sizeof(uint8_t),
-+			     &apicid_u8, sizeof(uint8_t)))
-+			return FALSE;
-+
-+		*apicid = (int)apicid_u8;
-+
-+		DEBUG_MSG("sadump: apicid %u for cpu %d from "
-+			  "bios_cpu_apicid\n", apicid_u8, cpu);
-+
-+	} else if (SYMBOL(x86_bios_cpu_apicid) != NOT_FOUND_SYMBOL) {
-+		uint16_t apicid_u16;
-+		unsigned long early_ptr, apicid_addr;
-+
-+		if (!readmem(VADDR, SYMBOL(x86_bios_cpu_apicid_early_ptr),
-+			     &early_ptr, sizeof(early_ptr)))
-+			return FALSE;
-+
-+		apicid_addr = early_ptr
-+			? SYMBOL(x86_bios_cpu_apicid_early_map)+cpu*sizeof(uint16_t)
-+			: per_cpu_ptr(SYMBOL(x86_bios_cpu_apicid), cpu);
-+
-+		if (!readmem(VADDR, apicid_addr, &apicid_u16, sizeof(uint16_t)))
-+			return FALSE;
-+
-+		*apicid = (int)apicid_u16;
-+
-+		DEBUG_MSG("sadump: apicid %u for cpu %d from "
-+			  "x86_bios_cpu_apicid\n", apicid_u16, cpu);
-+
-+	} else {
-+
-+		ERRMSG("sadump: no symbols for access to acpidid\n");
-+
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
-+static int
-+get_smram_cpu_state(int apicid, struct sadump_smram_cpu_state *smram)
-+{
-+	unsigned long offset;
-+
-+	if (!si->sub_hdr_offset || !si->smram_cpu_state_size ||
-+	    apicid >= si->sh_memory->nr_cpus)
-+		return FALSE;
-+
-+	offset = si->sub_hdr_offset + sizeof(uint32_t) +
-+		si->sh_memory->nr_cpus * sizeof(struct sadump_apic_state);
-+
-+	if (lseek(info->fd_memory, offset+apicid*si->smram_cpu_state_size,
-+		  SEEK_SET) < 0)
-+		DEBUG_MSG("sadump: cannot lseek smram cpu state in dump sub "
-+			  "header\n");
-+
-+	if (read(info->fd_memory, smram, si->smram_cpu_state_size) !=
-+	    si->smram_cpu_state_size)
-+		DEBUG_MSG("sadump: cannot read smram cpu state in dump sub "
-+			  "header\n");
-+
-+	return TRUE;
-+}
-+
-+#ifdef __x86__
-+
-+static int
-+copy_regs_from_prstatus(struct elf_prstatus *prstatus,
-+			const char *prstatus_buf)
-+{
-+	struct user_regs_struct *r = &prstatus->pr_reg;
-+	const char *pr_reg_buf = prstatus_buf + OFFSET(elf_prstatus.pr_reg);
-+
-+	r->bx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.bx));
-+	r->cx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.cx));
-+	r->dx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.dx));
-+	r->si = ULONG(pr_reg_buf + OFFSET(user_regs_struct.si));
-+	r->di = ULONG(pr_reg_buf + OFFSET(user_regs_struct.di));
-+	r->bp = ULONG(pr_reg_buf + OFFSET(user_regs_struct.bp));
-+	r->ax = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ax));
-+	r->ds = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ds));
-+	r->es = ULONG(pr_reg_buf + OFFSET(user_regs_struct.es));
-+	r->fs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.fs));
-+	r->gs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.gs));
-+	r->orig_ax = ULONG(pr_reg_buf + OFFSET(user_regs_struct.orig_ax));
-+	r->ip = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ip));
-+	r->cs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.cs));
-+	r->flags = ULONG(pr_reg_buf + OFFSET(user_regs_struct.flags));
-+	r->sp = ULONG(pr_reg_buf + OFFSET(user_regs_struct.sp));
-+	r->ss = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ss));
-+
-+	return TRUE;
-+}
-+
-+static int
-+copy_regs_from_smram_cpu_state(struct elf_prstatus *prstatus,
-+			       const struct sadump_smram_cpu_state *smram)
-+{
-+	struct user_regs_struct *regs = &prstatus->pr_reg;
-+
-+	regs->bx = smram->RbxLower;
-+	regs->cx = smram->RcxLower;
-+	regs->dx = smram->RdxLower;
-+	regs->si = smram->RsiLower;
-+	regs->di = smram->RdiLower;
-+	regs->bp = smram->RbpLower;
-+	regs->ax = smram->RaxLower;
-+	regs->ds = smram->Ds & 0xffff;
-+	regs->es = smram->Es & 0xffff;
-+	regs->fs = smram->Fs & 0xffff;
-+	regs->gs = smram->Gs & 0xffff;
-+	regs->orig_ax = smram->RaxLower;
-+	regs->ip = (uint32_t)smram->Rip;
-+	regs->cs = smram->Cs & 0xffff;
-+	regs->flags = (uint32_t)smram->Rflags;
-+	regs->sp = smram->RspLower;
-+	regs->ss = smram->Ss & 0xffff;
-+
-+	return TRUE;
-+}
-+
-+static void
-+debug_message_user_regs_struct(int cpu, struct elf_prstatus *prstatus)
-+{
-+	struct user_regs_struct *r = &prstatus->pr_reg;
-+
-+	DEBUG_MSG(
-+		"sadump: CPU: %d\n"
-+		"    BX: %08lx CX: %08lx DX: %08lx SI: %08lx\n"
-+		"    DI: %08lx BP: %08lx AX: %08lx ORIG_AX: %08lx\n"
-+		"    DS: %04lx ES: %04lx FS: %04lx GS: %04lx CS: %04lx SS: %04lx\n"
-+		"    IP: %08lx FLAGS: %04lx SP: %08lx\n",
-+		cpu,
-+		r->bx, r->cx, r->dx, r->si,
-+		r->di, r->bp, r->ax, r->orig_ax,
-+		r->ds, r->es, r->fs, r->gs, r->cs, r->ss,
-+		r->ip, r->flags, r->sp);
-+}
-+
-+#elif defined(__x86_64__)
-+
-+static int
-+copy_regs_from_prstatus(struct elf_prstatus *prstatus,
-+			const char *prstatus_buf)
-+{
-+	struct user_regs_struct *r = &prstatus->pr_reg;
-+	const char *pr_reg_buf = prstatus_buf + OFFSET(elf_prstatus.pr_reg);
-+
-+	r->r15 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r15));
-+	r->r14 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r14));
-+	r->r13 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r13));
-+	r->bp = ULONG(pr_reg_buf + OFFSET(user_regs_struct.bp));
-+	r->bx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.bx));
-+	r->r11 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r11));
-+	r->r10 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r10));
-+	r->r9 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r9));
-+	r->r8 = ULONG(pr_reg_buf + OFFSET(user_regs_struct.r8));
-+	r->ax = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ax));
-+	r->cx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.cx));
-+	r->dx = ULONG(pr_reg_buf + OFFSET(user_regs_struct.dx));
-+	r->si = ULONG(pr_reg_buf + OFFSET(user_regs_struct.si));
-+	r->di = ULONG(pr_reg_buf + OFFSET(user_regs_struct.di));
-+	r->orig_ax = ULONG(pr_reg_buf + OFFSET(user_regs_struct.orig_ax));
-+	r->ip = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ip));
-+	r->cs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.cs));
-+	r->flags = ULONG(pr_reg_buf + OFFSET(user_regs_struct.flags));
-+	r->sp = ULONG(pr_reg_buf + OFFSET(user_regs_struct.sp));
-+	r->ss = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ss));
-+	r->fs_base = ULONG(pr_reg_buf + OFFSET(user_regs_struct.fs_base));
-+	r->gs_base = ULONG(pr_reg_buf + OFFSET(user_regs_struct.gs_base));
-+	r->ds = ULONG(pr_reg_buf + OFFSET(user_regs_struct.ds));
-+	r->es = ULONG(pr_reg_buf + OFFSET(user_regs_struct.es));
-+	r->fs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.fs));
-+	r->gs = ULONG(pr_reg_buf + OFFSET(user_regs_struct.gs));
-+
-+	return TRUE;
-+}
-+
-+static int
-+copy_regs_from_smram_cpu_state(struct elf_prstatus *prstatus,
-+			       const struct sadump_smram_cpu_state *smram)
-+{
-+	struct user_regs_struct *regs = &prstatus->pr_reg;
-+
-+	regs->r15 = ((uint64_t)smram->R15Upper<<32)+smram->R15Lower;
-+	regs->r14 = ((uint64_t)smram->R14Upper<<32)+smram->R14Lower;
-+	regs->r13 = ((uint64_t)smram->R13Upper<<32)+smram->R13Lower;
-+	regs->r12 = ((uint64_t)smram->R12Upper<<32)+smram->R12Lower;
-+	regs->bp = ((uint64_t)smram->RbpUpper<<32)+smram->RbpLower;
-+	regs->bx = ((uint64_t)smram->RbxUpper<<32)+smram->RbxLower;
-+	regs->r11 = ((uint64_t)smram->R11Upper<<32)+smram->R11Lower;
-+	regs->r10 = ((uint64_t)smram->R10Upper<<32)+smram->R10Lower;
-+	regs->r9 = ((uint64_t)smram->R9Upper<<32)+smram->R9Lower;
-+	regs->r8 = ((uint64_t)smram->R8Upper<<32)+smram->R8Lower;
-+	regs->ax = ((uint64_t)smram->RaxUpper<<32)+smram->RaxLower;
-+	regs->cx = ((uint64_t)smram->RcxUpper<<32)+smram->RcxLower;
-+	regs->dx = ((uint64_t)smram->RdxUpper<<32)+smram->RdxLower;
-+	regs->si = ((uint64_t)smram->RsiUpper<<32)+smram->RsiLower;
-+	regs->di = ((uint64_t)smram->RdiUpper<<32)+smram->RdiLower;
-+	regs->orig_ax = ((uint64_t)smram->RaxUpper<<32)+smram->RaxLower;
-+	regs->ip = smram->Rip;
-+	regs->cs = smram->Cs;
-+	regs->flags = smram->Rflags;
-+	regs->sp = ((uint64_t)smram->RspUpper<<32)+smram->RspLower;
-+	regs->ss = smram->Ss;
-+	regs->fs_base = 0;
-+	regs->gs_base = 0;
-+	regs->ds = smram->Ds;
-+	regs->es = smram->Es;
-+	regs->fs = smram->Fs;
-+	regs->gs = smram->Gs;
-+
-+	return TRUE;
-+}
-+
-+static void
-+debug_message_user_regs_struct(int cpu, struct elf_prstatus *prstatus)
-+{
-+	struct user_regs_struct *r = &prstatus->pr_reg;
-+
-+	DEBUG_MSG(
-+		"sadump: CPU: %d\n"
-+		"    R15: %016llx R14: %016llx R13: %016llx\n"
-+		"    R12: %016llx RBP: %016llx RBX: %016llx\n"
-+		"    R11: %016llx R10: %016llx R9: %016llx\n"
-+		"    R8: %016llx RAX: %016llx RCX: %016llx\n"
-+		"    RDX: %016llx RSI: %016llx RDI: %016llx\n"
-+		"    ORIG_RAX: %016llx RIP: %016llx\n"
-+		"    CS: %04lx FLAGS: %08llx RSP: %016llx\n"
-+		"    SS: %04lx FS_BASE: %04lx GS_BASE: %04lx\n"
-+		"    DS: %04lx ES: %04lx FS: %04lx GS: %04lx\n",
-+		cpu,
-+		(unsigned long long)r->r15, (unsigned long long)r->r14,
-+		(unsigned long long)r->r13, (unsigned long long)r->r12,
-+		(unsigned long long)r->bp, (unsigned long long)r->bx,
-+		(unsigned long long)r->r11, (unsigned long long)r->r10,
-+		(unsigned long long)r->r9, (unsigned long long)r->r8,
-+		(unsigned long long)r->ax, (unsigned long long)r->cx,
-+		(unsigned long long)r->dx, (unsigned long long)r->si,
-+		(unsigned long long)r->di,
-+		(unsigned long long)r->orig_ax,
-+		(unsigned long long)r->ip, r->cs,
-+		(unsigned long long)r->flags, (unsigned long long)r->sp,
-+		r->ss, r->fs_base, r->gs_base, r->ds, r->es, r->fs,
-+		r->gs);
-+}
-+
-+#endif /* __x86_64__ */
-+
-+static void
-+debug_message_smram_cpu_state(int apicid, struct sadump_smram_cpu_state *s)
-+{
-+	DEBUG_MSG(
-+		"sadump: APIC ID: %d\n"
-+		"    RIP: %016llx RSP: %08x%08x RBP: %08x%08x\n"
-+		"    RAX: %08x%08x RBX: %08x%08x RCX: %08x%08x\n"
-+		"    RDX: %08x%08x RSI: %08x%08x RDI: %08x%08x\n"
-+		"    R08: %08x%08x R09: %08x%08x R10: %08x%08x\n"
-+		"    R11: %08x%08x R12: %08x%08x R13: %08x%08x\n"
-+		"    R14: %08x%08x R15: %08x%08x\n"
-+		"    SMM REV: %08x SMM BASE %08x\n"
-+		"    CS : %08x DS: %08x SS: %08x ES: %08x FS: %08x\n"
-+		"    GS : %08x\n"
-+		"    CR0: %016llx CR3: %016llx CR4: %08x\n"
-+		"    GDT: %08x%08x LDT: %08x%08x IDT: %08x%08x\n"
-+		"    GDTlim: %08x LDTlim: %08x IDTlim: %08x\n"
-+		"    LDTR: %08x TR: %08x RFLAGS: %016llx\n"
-+		"    EPTP: %016llx EPTP_SETTING: %08x\n"
-+		"    DR6: %016llx DR7: %016llx\n"
-+		"    Ia32Efer: %016llx\n"
-+		"    IoMemAddr: %08x%08x IoEip: %016llx\n"
-+		"    IoMisc: %08x LdtInfo: %08x\n"
-+		"    IoInstructionRestart: %04x AutoHaltRestart: %04x\n",
-+		apicid,
-+		(unsigned long long)s->Rip, s->RspUpper, s->RspLower, s->RbpUpper, s->RbpLower,
-+		s->RaxUpper, s->RaxLower, s->RbxUpper, s->RbxLower, s->RcxUpper, s->RcxLower,
-+		s->RdxUpper, s->RdxLower, s->RsiUpper, s->RsiLower, s->RdiUpper, s->RdiLower,
-+		s->R8Upper, s->R8Lower, s->R9Upper, s->R9Lower, s->R10Upper, s->R10Lower,
-+		s->R11Upper, s->R11Lower, s->R12Upper, s->R12Lower, s->R13Upper, s->R13Lower,
-+		s->R14Upper, s->R14Lower, s->R15Upper, s->R15Lower,
-+		s->SmmRevisionId, s->Smbase,
-+		s->Cs, s->Ds, s->Ss, s->Es, s->Fs, s->Gs,
-+		(unsigned long long)s->Cr0, (unsigned long long)s->Cr3, s->Cr4,
-+		s->GdtUpper, s->GdtLower, s->LdtUpper, s->LdtLower, s->IdtUpper, s->IdtLower,
-+		s->GdtLimit, s->LdtLimit, s->IdtLimit,
-+		s->Ldtr, s->Tr, (unsigned long long)s->Rflags,
-+		(unsigned long long)s->Eptp, s->EptpSetting,
-+		(unsigned long long)s->Dr6, (unsigned long long)s->Dr7,
-+		(unsigned long long)s->Ia32Efer,
-+		s->IoMemAddrUpper, s->IoMemAddrLower, (unsigned long long)s->IoEip,
-+		s->IoMisc, s->LdtInfo,
-+		s->IoInstructionRestart,
-+		s->AutoHaltRestart);
-+}
-+
-+static int
-+get_registers(int cpu, struct elf_prstatus *prstatus)
-+{
-+	struct sadump_smram_cpu_state smram;
-+	char *prstatus_buf = NULL;
-+	int retval = FALSE, apicid = 0;
-+
-+	if (!(prstatus_buf = malloc(SIZE(elf_prstatus)))) {
-+		ERRMSG("Can't allocate elf_prstatus buffer. %s\n",
-+		       strerror(errno));
-+		goto error;
-+	}
-+
-+	if (get_prstatus_from_crash_notes(cpu, prstatus_buf)) {
-+
-+		if (!copy_regs_from_prstatus(prstatus, prstatus_buf))
-+			goto cleanup;
-+
-+		DEBUG_MSG("sadump: cpu #%d registers from crash_notes\n", cpu);
-+
-+		debug_message_user_regs_struct(cpu, prstatus);
-+
-+	} else {
-+
-+		if (!cpu_to_apicid(cpu, &apicid))
-+			goto cleanup;
-+
-+		if (!get_smram_cpu_state(apicid, &smram))
-+			goto cleanup;
-+
-+		copy_regs_from_smram_cpu_state(prstatus, &smram);
-+
-+		DEBUG_MSG("sadump: cpu #%d registers from SMRAM\n", cpu);
-+
-+		debug_message_smram_cpu_state(apicid, &smram);
-+		debug_message_user_regs_struct(cpu, prstatus);
-+
-+	}
-+
-+	retval = TRUE;
-+cleanup:
-+	free(prstatus_buf);
-+error:
-+	return retval;
-+}
-+
- int
- sadump_add_diskset_info(char *name_memory)
- {
-@@ -835,6 +1637,23 @@ sadump_add_diskset_info(char *name_memory)
- 	return TRUE;
- }
- 
-+int
-+sadump_read_elf_note(char *buf, size_t size_note)
-+{
-+	if (!si->file_elf_note)
-+		return FALSE;
-+
-+	rewind(si->file_elf_note);
-+
-+	if (fread(buf, size_note, 1, si->file_elf_note) != 1) {
-+		ERRMSG("Can't read elf note file. %s\n",
-+		       strerror(errno));
-+		return FALSE;
-+	}
-+
-+	return TRUE;
-+}
-+
- long
- sadump_page_size(void)
- {
-@@ -885,8 +1704,12 @@ free_sadump_info(void)
- 		}
- 		free(si->diskset_info);
++static int cpu_online_mask_init(void);
+ static int per_cpu_init(void);
+ static int get_data_from_elf_note_desc(const char *note_buf, uint32_t n_descsz,
+ 				       char *name, uint32_t n_type, char **data);
+@@ -88,6 +98,7 @@ static int alignfile(unsigned long *offset);
+ static int
+ write_elf_note_header(char *name, void *data, size_t descsz, uint32_t type,
+ 		      unsigned long *offset, unsigned long *desc_offset);
++static int is_online_cpu(int cpu);
+ static unsigned long legacy_per_cpu_ptr(unsigned long ptr, int cpu);
+ static unsigned long per_cpu_ptr(unsigned long ptr, int cpu);
+ static int get_prstatus_from_crash_notes(int cpu, char *prstatus_buf);
+@@ -250,8 +261,10 @@ sadump_generate_elf_note_from_dumpfile(void)
+ 		       strerror(errno));
+ 		goto cleanup;
  	}
-+	if (si->__per_cpu_offset)
-+		free(si->__per_cpu_offset);
- 	if (si->block_table)
++	if (!cpu_online_mask_init())
++		goto cleanup;
+ 	offset = 0;
+-	for (x_cpu = 0; x_cpu < get_nr_cpus(); ++x_cpu) {
++	for_each_online_cpu(x_cpu) {
+ 		struct elf_prstatus prstatus;
+ 
+ 		memset(&prstatus, 0, sizeof(prstatus));
+@@ -756,35 +769,71 @@ sadump_initialize_bitmap_memory(void)
+ 	return TRUE;
+ }
+ 
+-int
+-sadump_get_nr_cpus(int *nr_cpus)
++static int
++cpu_online_mask_init(void)
+ {
+-	unsigned long offset;
+-	struct sadump_smram_cpu_state scs, zero;
+-	uint32_t x_cpu;
+-	int count;
++	ulong cpu_online_mask_addr;
+ 
+-	memset(&zero, 0, sizeof(zero));
++	if (si->cpu_online_mask_buf && si->cpumask_size)
++		return TRUE;
+ 
+-	offset = si->sub_hdr_offset + sizeof(uint32_t) +
+-		si->sh_memory->nr_cpus * sizeof(struct sadump_apic_state);
++	if (SYMBOL(cpu_online_mask) == NOT_FOUND_SYMBOL ||
++	    (SIZE(cpumask) == NOT_FOUND_STRUCTURE &&
++	     SIZE(cpumask_t) == NOT_FOUND_STRUCTURE))
++		return FALSE;
+ 
+-	count = 0;
+-	for (x_cpu = 0; x_cpu < si->sh_memory->nr_cpus; ++x_cpu) {
+-		if (!read_device(&scs, sizeof(scs), &offset))
+-			return FALSE;
+-		if (memcmp(&scs, &zero, sizeof(scs)) != 0)
+-			count++;
++	si->cpumask_size = SIZE(cpumask) == NOT_FOUND_STRUCTURE
++		? SIZE(cpumask_t)
++		: SIZE(cpumask);
++
++	if (!(si->cpu_online_mask_buf = calloc(1, si->cpumask_size))) {
++		ERRMSG("Can't allocate cpu_online_mask buffer. %s\n",
++		       strerror(errno));
++		return FALSE;
+ 	}
+ 
+-	*nr_cpus = count;
++	if (SIZE(cpumask) == NOT_FOUND_STRUCTURE)
++		cpu_online_mask_addr = SYMBOL(cpu_online_mask);
++
++	else {
++		if (!readmem(VADDR, SYMBOL(cpu_online_mask),
++			     &cpu_online_mask_addr, sizeof(unsigned long))) {
++			ERRMSG("Can't read cpu_online_mask pointer.\n");
++			return FALSE;
++		}
++
++	}
+ 
+-	DEBUG_MSG("sadump: nr_cpus: %d\n", *nr_cpus);
++	if (!readmem(VADDR, cpu_online_mask_addr, si->cpu_online_mask_buf,
++		     si->cpumask_size)) {
++		ERRMSG("Can't read cpu_online_mask memory.\n");
++		return FALSE;
++	}
+ 
+ 	return TRUE;
+ }
+ 
+ int
++sadump_num_online_cpus(void)
++{
++	int cpu, count = 0;
++
++	if (!cpu_online_mask_init())
++		return FALSE;
++
++	DEBUG_MSG("sadump: online cpus:");
++
++	for_each_online_cpu(cpu) {
++		count++;
++		DEBUG_MSG(" %d", cpu);
++	}
++
++	DEBUG_MSG("\nsadump: nr_cpus: %d\n", count);
++
++	return count;
++}
++
++int
+ sadump_set_timestamp(struct timeval *ts)
+ {
+ 	static struct tm t;
+@@ -1201,6 +1250,17 @@ write_elf_note_header(char *name, void *data, size_t descsz, uint32_t type,
+ 	return TRUE;
+ }
+ 
++static int
++is_online_cpu(int cpu)
++{
++	unsigned long mask;
++
++	mask = ULONG(si->cpu_online_mask_buf +
++		     (cpu / BITPERWORD) * sizeof(unsigned long));
++
++	return (mask & (1UL << (cpu % BITPERWORD))) ? TRUE : FALSE;
++}
++
+ static unsigned long
+ legacy_per_cpu_ptr(unsigned long ptr, int cpu)
+ {
+@@ -1710,6 +1770,8 @@ free_sadump_info(void)
  		free(si->block_table);
-+	if (si->file_elf_note)
-+		fclose(si->file_elf_note);
+ 	if (si->file_elf_note)
+ 		fclose(si->file_elf_note);
++	if (si->cpu_online_mask_buf)
++		free(si->cpu_online_mask_buf);
  }
  
  #endif /* defined(__x86__) && defined(__x86_64__) */
 diff --git a/sadump_info.h b/sadump_info.h
-index 401b769..c1f948f 100644
+index c1f948f..f90ea5a 100644
 --- a/sadump_info.h
 +++ b/sadump_info.h
-@@ -44,7 +44,12 @@ int sadump_get_nr_cpus(int *nr_cpus);
+@@ -40,7 +40,7 @@ static inline int sadump_virt_phys_base(void)
+ int check_and_get_sadump_header_info(char *filename);
+ int sadump_copy_1st_bitmap_from_memory(void);
+ int sadump_initialize_bitmap_memory(void);
+-int sadump_get_nr_cpus(int *nr_cpus);
++int sadump_num_online_cpus(void);
  int sadump_set_timestamp(struct timeval *ts);
  unsigned long long sadump_get_max_mapnr(void);
  int readpmem_sadump(unsigned long long paddr, void *bufptr, size_t size);
-+int sadump_check_debug_info(void);
-+int sadump_generate_vmcoreinfo_from_vmlinux(size_t *vmcoreinfo_size);
-+int sadump_generate_elf_note_from_dumpfile(void);
-+int sadump_copy_1st_bitmap_from_memory(void);
- int sadump_add_diskset_info(char *name_memory);
-+int sadump_read_elf_note(char *buf, size_t size_note);
- long sadump_page_size(void);
- char *sadump_head_disk_name_memory(void);
- char *sadump_format_type_name(void);
-@@ -97,11 +102,32 @@ static inline int readpmem_sadump(unsigned long long paddr,
+@@ -81,7 +81,7 @@ static inline int sadump_initialize_bitmap_memory(void)
  	return FALSE;
  }
  
-+static inline int sadump_check_debug_info(void)
-+{
-+	return FALSE;
-+}
-+
-+static inline int
-+sadump_generate_vmcoreinfo_from_vmlinux(size_t *vmcoreinfo_size)
-+{
-+	return FALSE;
-+}
-+
-+static inline int sadump_generate_elf_note_from_dumpfile(void)
-+{
-+	return FALSE;
-+}
-+
- static inline int sadump_add_diskset_info(char *name_memory)
- {
- 	return TRUE;
- }
- 
-+static inline int sadump_read_elf_note(char *buf, size_t size_note)
-+{
-+	return FALSE;
-+}
-+
- static inline long sadump_page_size(void)
+-static inline int sadump_get_nr_cpus(int *nr_cpus)
++static inline int sadump_num_online_cpus(void);
  {
  	return 0;
+ }
 
 
 _______________________________________________
