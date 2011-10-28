@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail2.vodafone.ie ([213.233.128.44])
-	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJXlD-0007ES-H4
-	for kexec@lists.infradead.org; Thu, 27 Oct 2011 21:45:16 +0000
-Message-ID: <4EA9D09E.800@draigBrady.com>
-Date: Thu, 27 Oct 2011 22:43:58 +0100
-From: =?ISO-8859-1?Q?P=E1draig_Brady?= <P@draigBrady.com>
-MIME-Version: 1.0
-Subject: Re: watchdogs and kdump
-References: <20111027203029.GR3452@redhat.com>
-In-Reply-To: <20111027203029.GR3452@redhat.com>
+Received: from linux-sh.org ([111.68.239.195])
+	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+	id 1RJfa0-0001W8-6Q
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 06:06:13 +0000
+Date: Fri, 28 Oct 2011 15:05:59 +0900
+From: Paul Mundt <lethal@linux-sh.org>
+Subject: Re: [PATCH] sh: kexec: Add PHYSICAL_START
+Message-ID: <20111028060559.GB32187@linux-sh.org>
+References: <1316085180-4215-1-git-send-email-horms@verge.net.au>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1316085180-4215-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,60 +19,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: kexec@lists.infradead.org, linux-watchdog@vger.kernel.org, vgoyal@redhat.com, amwang@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, linux-sh@vger.kernel.org
 
-On 10/27/2011 09:30 PM, Don Zickus wrote:
-> Hi,
-> =
+On Thu, Sep 15, 2011 at 08:13:00PM +0900, Simon Horman wrote:
+> Add PHYSICAL_START kernel configuration parameter to set the address at
+> which the kernel should be loaded.
+> 
+> It has been observed on an sh7757lcr that simply modifying MEMORY_START
+> does not achieve this goal for 32bit sh. This is due to MEMORY_OFFSET in
+> arch/sh/kernel/vmlinux.lds.S bot being based on MEMORY_START on such
+> systems.
+> 
+> Signed-off-by: Simon Horman <horms@verge.net.au>
 
-> I was assisting a customer the other day debugging a kdump[1] problem, wh=
-en we
-> noticed the real problem was the hardware watchdog was firing and
-> rebooting the box.
-> =
-
-> Of course, this can be inconvienant if the panic happens right before the
-> watchdog is supposed to be kicked, leading to a spontaneous reboot before
-> the second kernel finishes booting and loading the watchdog module.
-> =
-
-> I was trying to think of a way to solve this and thought, one way to
-> minimize the problem is to kick the watchdog before we jump into the kdump
-> kernel.  Another way is to disable the watchdog entirely, but that doesn't
-> work on all hardware I believe.
-> =
-
-> Anyway, I was posting on the watchdog mailing list to see if anyone had a=
-ny
-> ideas that might help.  And if my above idea to kick the watchdog before
-> jumping into the kdump kernel seems ok, then an api would need to be
-> developed.
-> =
-
-> I am willing to do any coding and testing necessary, but before I did, I
-> wanted help to get a direction to go in first.
-> =
-
-> Thoughts?
-
-Seems like the appropriate thing to do is to call all the
-reboot notifiers that each watchdog registers.
-Since one is not doingn a full SYS_RESTART (SYS_DOWN) though,
-i.e. not running through the BIOS code again,
-it might be worth having a different SYS_JUMP code in notifier.h
-that would allow you to kick rather than stop the watchdogs
-as the reboot notifiers generally do at the moment.
-I think it would be important not to stop the watchdog if possible,
-given the large amount of logic that's going to be executed
-after the jump.
-
-cheers,
-P=E1draig.
+No one seems to have complained about this, so I've applied it.
 
 _______________________________________________
 kexec mailing list
