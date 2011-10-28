@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from mail.linuxfoundation.org ([140.211.169.12])
 	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJv7T-0002Om-It
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 22:41:48 +0000
-Date: Fri, 28 Oct 2011 15:41:37 -0700
+	id 1RJvC3-0002Q6-PW
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 22:46:32 +0000
+Date: Fri, 28 Oct 2011 15:46:30 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH] kdump: Add udev events for memory online/offline
-Message-Id: <20111028154137.1aeb5a6c.akpm@linux-foundation.org>
+Message-Id: <20111028154630.77c7b96c.akpm@linux-foundation.org>
 In-Reply-To: <1319707965.2830.1.camel@br98xy6r>
 References: <1319645292.3321.24.camel@br98xy6r>
 	<20111026192449.GE355@redhat.com>
@@ -76,9 +76,14 @@ Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
 > +		if (ret == 0)
 > +			kobject_uevent(&dev->kobj, KOBJ_OFFLINE);
 > +	}
+>  	if (ret)
+>  		return ret;
+>  	return count;
 
-ot: what on earth is up with that min() thing which
-Dave-who-doesn't-know-about-min_t added to the strncmp() calls?
+I think a safer place from which to send the uevent is
+memory_block_change_state() or even memory_block_action().  Because if
+either of those functions later gets new callers, those callers might
+forget to send the uevent?
 
 
 _______________________________________________
