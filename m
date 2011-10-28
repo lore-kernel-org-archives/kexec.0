@@ -1,34 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJj3S-0003Pz-I0
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:52 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D07D83EE0AE
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id B5FF345DE4F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9FE5245DE4E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 9373DE08001
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
+	id 1RJj3Y-0003Qm-0F
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:48:57 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 3CCC23EE0AE
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:54 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+	by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 260D545DE4D
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:54 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+	by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 04E9A45DD73
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:54 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id E9E791DB803A
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:53 +0900 (JST)
 Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5765F1DB802F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
+	by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id A848A1DB802C
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:53 +0900 (JST)
 Received: from m107.css.fujitsu.com (m107 [127.0.0.1])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 2E8CF86001E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:48 +0900 (JST)
+	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 81B5386000E
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:53 +0900 (JST)
 Received: from localhost6.localdomain6 (unknown [10.124.63.45])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id CC7ED86000E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:47 +0900 (JST)
+	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 32A8D86001F
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:48:53 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 08/14] Implement readmem() interface on sadump-related
-	formats
-Date: Fri, 28 Oct 2011 18:48:47 +0900
-Message-ID: <20111028094847.20940.48793.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 09/14] Estimate phys_base based on linux_banner position
+Date: Fri, 28 Oct 2011 18:48:53 +0900
+Message-ID: <20111028094853.20940.37936.stgit@localhost6.localdomain6>
 In-Reply-To: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -46,261 +45,137 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Very similar to the ones in kdump-compressed format.
+sadump doesn't save phys_base, so we must estimate it in any way. Here
+we borrow the method in crash utility that we search a certain range
+of addresses for linux_banner symbol value.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- makedumpfile.c |    8 +++
- sadump_info.c  |  145 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- sadump_info.h  |   13 +++++
- 3 files changed, 165 insertions(+), 1 deletions(-)
+ makedumpfile.c |   12 ++++++++++++
+ sadump_info.c  |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+ sadump_info.h  |   13 +++++++++++++
+ 3 files changed, 72 insertions(+), 0 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 5ceb986..205d3de 100644
+index 205d3de..6e9dd83 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -346,6 +346,9 @@ readmem(int type_addr, unsigned long long addr, void *bufptr, size_t size)
- 	if (info->flag_refiltering)
- 		return readpmem_kdump_compressed(paddr, bufptr, read_size);
+@@ -2504,6 +2504,15 @@ initial(void)
  
-+	if (info->flag_sadump)
-+		return readpmem_sadump(paddr, bufptr, read_size);
+ 		(void) sadump_set_timestamp(&info->timestamp);
+ 
++		/*
++		 * NOTE: phys_base is never saved by sadump and so
++		 * must be computed in some way. We here choose the
++		 * way of looking at linux_banner. See
++		 * sadump_virt_phys_base(). The processing is
++		 * postponed until debug information becomes
++		 * available.
++		 */
 +
- 	if (!(offset = paddr_to_offset(paddr))) {
- 		ERRMSG("Can't convert a physical address(%llx) to offset.\n",
- 		    paddr);
-@@ -3436,6 +3439,9 @@ create_1st_bitmap(void)
- 	if (info->flag_refiltering)
- 		return copy_1st_bitmap_from_memory();
+ 	} else if (!get_phys_base())
+ 		return FALSE;
  
-+	if (info->flag_sadump)
-+		return sadump_copy_1st_bitmap_from_memory();
+@@ -2579,6 +2588,9 @@ out:
+ 		return FALSE;
+ 
+ 	if (debug_info) {
++		if (info->flag_sadump)
++			(void) sadump_virt_phys_base();
 +
- 	/*
- 	 * At first, clear all the bits on the 1st-bitmap.
- 	 */
-@@ -4535,7 +4541,7 @@ read_pfn(unsigned long long pfn, unsigned char *buf)
- 	size_t size1, size2;
- 
- 	paddr = pfn_to_paddr(pfn);
--	if (info->flag_refiltering) {
-+	if (info->flag_refiltering || info->flag_sadump) {
- 		if (!readmem(PADDR, paddr, buf, info->page_size)) {
- 			ERRMSG("Can't get the page data.\n");
+ 		if (!get_machdep_info())
  			return FALSE;
+ 
 diff --git a/sadump_info.c b/sadump_info.c
-index 2efeb63..abc81d9 100644
+index abc81d9..adca47b 100644
 --- a/sadump_info.c
 +++ b/sadump_info.c
-@@ -50,6 +50,9 @@ static int read_device_diskset(struct sadump_diskset_info *sdi, void *buf,
- 			       size_t bytes, ulong *offset);
- static int read_sadump_header(char *filename);
- static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sdi);
-+static unsigned long long pfn_to_block(unsigned long long pfn);
-+static int lookup_diskset(unsigned long long whole_offset, int *diskid,
-+			  unsigned long long *disk_offset);
+@@ -22,6 +22,12 @@
+ #include "print_info.h"
+ #include "sadump_mod.h"
  
- static struct sadump_info sadump_info = {};
- static struct sadump_info *si = &sadump_info;
-@@ -88,6 +91,45 @@ check_and_get_sadump_header_info(char *filename)
- 	return TRUE;
++#ifdef __x86_64__
++
++#define MEGABYTES(x)	((x) * (1048576))
++
++#endif
++
+ struct sadump_diskset_info {
+ 	char *name_memory;
+ 	int fd_memory;
+@@ -666,6 +672,47 @@ sadump_get_max_mapnr(void)
+ 	return si->sh_memory->max_mapnr;
  }
  
++#ifdef __x86_64__
++
 +int
-+sadump_copy_1st_bitmap_from_memory(void)
++sadump_virt_phys_base(void)
 +{
-+	struct sadump_header *sh = si->sh_memory;
-+	char buf[si->sh_memory->block_size];
-+	off_t offset_page;
-+	unsigned long bitmap_offset, bitmap_len;
++        char buf[BUFSIZE];
++        unsigned long phys, linux_banner_phys;
 +
-+	bitmap_offset =	si->sub_hdr_offset + sh->block_size*sh->sub_hdr_size;
-+	bitmap_len = sh->block_size * sh->bitmap_blocks;
-+
-+	if (lseek(info->fd_memory, bitmap_offset, SEEK_SET) < 0) {
-+		ERRMSG("Can't seek %s. %s\n",
-+		       info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+	if (lseek(info->bitmap1->fd, info->bitmap1->offset, SEEK_SET) < 0) {
-+		ERRMSG("Can't seek the bitmap(%s). %s\n",
-+		       info->bitmap1->file_name, strerror(errno));
-+		return FALSE;
-+	}
-+	offset_page = 0;
-+	while (offset_page < bitmap_len) {
-+		if (read(info->fd_memory, buf, sizeof(buf)) != sizeof(buf)) {
-+			ERRMSG("Can't read %s. %s\n",
-+			       info->name_memory, strerror(errno));
-+			return FALSE;
-+		}
-+		if (write(info->bitmap1->fd, buf, sizeof(buf)) != sizeof(buf)) {
-+			ERRMSG("Can't write the bitmap(%s). %s\n",
-+			       info->bitmap1->file_name, strerror(errno));
-+			return FALSE;
-+		}
-+		offset_page += sizeof(buf);
++	if (SYMBOL(linux_banner) == NOT_FOUND_SYMBOL) {
++		DEBUG_MSG("sadump: symbol linux_banner is not found\n");
++		goto failed;
 +	}
 +
-+	return TRUE;
++        linux_banner_phys = SYMBOL(linux_banner) - __START_KERNEL_map;
++
++        if (readmem(PADDR, linux_banner_phys + info->phys_base, buf,
++		    strlen("Linux version")) && STRNEQ(buf, "Linux version"))
++                return TRUE;
++
++        for (phys = (-MEGABYTES(16)); phys != MEGABYTES(16+1);
++             phys += MEGABYTES(1)) {
++                if (readmem(PADDR, linux_banner_phys + phys, buf,
++			    strlen("Linux version")) &&
++		    STRNEQ(buf, "Linux version")) {
++                        DEBUG_MSG("sadump: phys_base: %lx %s\n", phys,
++				  info->phys_base != phys ? "override" : "");
++                        info->phys_base = phys;
++                        return TRUE;
++                }
++        }
++
++failed:
++	info->phys_base = 0;
++
++	DEBUG_MSG("sadump: failed to calculate phys_base; default to 0\n");
++
++        return FALSE;
 +}
 +
- static char *
- guid_to_str(efi_guid_t *guid, char *buf, size_t buflen)
- {
-@@ -625,6 +667,109 @@ sadump_get_max_mapnr(void)
- }
- 
++#endif /* __x86_64__ */
++
  int
-+readpmem_sadump(unsigned long long paddr, void *bufptr, size_t size)
-+{
-+	unsigned long long pfn, block, whole_offset, perdisk_offset;
-+	ulong page_offset;
-+	char buf[info->page_size];
-+	int fd_memory;
-+
-+	pfn = paddr_to_pfn(paddr);
-+	page_offset = paddr % info->page_size;
-+
-+	if (pfn >= si->sh_memory->max_mapnr)
-+		goto error;
-+
-+	if (!is_dumpable(info->bitmap_memory, pfn)) {
-+		ERRMSG("pfn(%llx) is excluded from %s.\n", pfn,
-+		       info->name_memory);
-+		goto error;
-+	}
-+
-+	block = pfn_to_block(pfn);
-+	whole_offset = block * si->sh_memory->block_size;
-+
-+	if (info->flag_sadump == SADUMP_DISKSET) {
-+		int diskid;
-+
-+		if (!lookup_diskset(whole_offset, &diskid, &perdisk_offset))
-+			goto error;
-+
-+		fd_memory = si->diskset_info[diskid].fd_memory;
-+		perdisk_offset += si->diskset_info[diskid].data_offset;
-+
-+	} else {
-+		fd_memory = info->fd_memory;
-+		perdisk_offset = whole_offset + si->data_offset;
-+
-+	}
-+
-+	if (lseek(fd_memory, perdisk_offset, SEEK_SET) < 0)
-+		goto error;
-+
-+	if (read(fd_memory, buf, sizeof(buf)) != sizeof(buf))
-+		goto error;
-+
-+	memcpy(bufptr, buf + page_offset, size);
-+
-+	return size;
-+
-+error:
-+	DEBUG_MSG("type_addr: %d, addr:%llx, size:%zd\n", PADDR, paddr, size);
-+
-+	return FALSE;
-+}
-+
-+static unsigned long long
-+pfn_to_block(unsigned long long pfn)
-+{
-+	unsigned long long block, section, p;
-+
-+	section = pfn / SADUMP_PF_SECTION_NUM;
-+
-+	if (section)
-+		block = si->block_table[section - 1];
-+	else
-+		block = 0;
-+
-+	for (p = section * SADUMP_PF_SECTION_NUM; p < pfn; ++p)
-+		if (is_dumpable(info->bitmap_memory, p))
-+			block++;
-+
-+	return block;
-+}
-+
-+static int
-+lookup_diskset(unsigned long long whole_offset, int *diskid,
-+	       unsigned long long *disk_offset)
-+{
-+	unsigned long long offset = whole_offset;
-+	int i;
-+
-+	for (i = 0; i < si->num_disks; ++i) {
-+		struct sadump_diskset_info *sdi = &si->diskset_info[i];
-+		unsigned long long used_device_i, data_offset_i, ram_size;
-+
-+		used_device_i = sdi->sph_memory->used_device;
-+		data_offset_i = sdi->data_offset;
-+
-+		ram_size = used_device_i - data_offset_i;
-+
-+		if (offset < ram_size)
-+			break;
-+		offset -= ram_size;
-+	}
-+
-+	if (i == si->num_disks)
-+		return FALSE;
-+
-+	*diskid = i;
-+	*disk_offset = offset;
-+
-+	return TRUE;
-+}
-+
-+int
- sadump_add_diskset_info(char *name_memory)
+ readpmem_sadump(unsigned long long paddr, void *bufptr, size_t size)
  {
- 	si->num_disks++;
 diff --git a/sadump_info.h b/sadump_info.h
-index 0a04141..b6b9cdd 100644
+index b6b9cdd..401b769 100644
 --- a/sadump_info.h
 +++ b/sadump_info.h
-@@ -25,10 +25,12 @@
+@@ -22,6 +22,19 @@
+ 
+ #include "makedumpfile.h"
+ 
++#ifdef __x86_64__
++
++int sadump_virt_phys_base(void);
++
++#else
++
++static inline int sadump_virt_phys_base(void)
++{
++	return TRUE;
++}
++
++#endif
++
  #if defined(__x86__) || defined(__x86_64__)
  
  int check_and_get_sadump_header_info(char *filename);
-+int sadump_copy_1st_bitmap_from_memory(void);
- int sadump_initialize_bitmap_memory(void);
- int sadump_get_nr_cpus(int *nr_cpus);
- int sadump_set_timestamp(struct timeval *ts);
- unsigned long long sadump_get_max_mapnr(void);
-+int readpmem_sadump(unsigned long long paddr, void *bufptr, size_t size);
- int sadump_add_diskset_info(char *name_memory);
- long sadump_page_size(void);
- char *sadump_head_disk_name_memory(void);
-@@ -51,6 +53,11 @@ static inline int check_and_get_sadump_header_info(char *filename)
- 	return TRUE;
- }
- 
-+static inline int sadump_copy_1st_bitmap_from_memory(void)
-+{
-+	return FALSE;
-+}
-+
- static inline int sadump_initialize_bitmap_memory(void)
- {
- 	return FALSE;
-@@ -71,6 +78,12 @@ static inline unsigned long long sadump_get_max_mapnr(void)
- 	return 0;
- }
- 
-+static inline int readpmem_sadump(unsigned long long paddr,
-+				  void *bufptr, size_t size)
-+{
-+	return FALSE;
-+}
-+
- static inline int sadump_add_diskset_info(char *name_memory)
- {
- 	return TRUE;
 
 
 _______________________________________________
