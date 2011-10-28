@@ -1,34 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
 Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RJj3x-0003TM-L1
-	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:49:22 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
-	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 2549A3EE0B5
+	id 1RJj3y-0003TN-OV
+	for kexec@lists.infradead.org; Fri, 28 Oct 2011 09:49:23 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+	by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1C4443EE0B6
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:21 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+	by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 04C5E45DE55
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:21 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+	by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id E239645DE54
 	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:20 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
-	by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 72D8C45DE52
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:16 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
-	by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id F361C45DE51
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:15 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id E85FF1DB802F
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:15 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
-	by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id A3EE61DB803B
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:15 +0900 (JST)
-Received: from m107.css.fujitsu.com (m107 [127.0.0.1])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id 7320686000E
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:15 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id D42151DB8044
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:20 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
+	by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id A22C51DB8048
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:20 +0900 (JST)
+Received: from m105.css.fujitsu.com (m105 [127.0.0.1])
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 770D77C8049
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:20 +0900 (JST)
 Received: from localhost6.localdomain6 (unknown [10.124.63.45])
-	by m107.s.css.fujitsu.com (Postfix) with ESMTP id A23D486002A
-	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:14 +0900 (JST)
+	by m105.s.css.fujitsu.com (Postfix) with ESMTP id 2843F7C8045
+	for <kexec@lists.infradead.org>; Fri, 28 Oct 2011 18:49:20 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH v2 13/14] Add description of sadump-related formts in usage
-	information
-Date: Fri, 28 Oct 2011 18:49:14 +0900
-Message-ID: <20111028094914.20940.73678.stgit@localhost6.localdomain6>
+Subject: [PATCH v2 14/14] Add description of sadump-related formats in manual
+	page
+Date: Fri, 28 Oct 2011 18:49:20 +0900
+Message-ID: <20111028094919.20940.44203.stgit@localhost6.localdomain6>
 In-Reply-To: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -49,37 +49,56 @@ To: kexec@lists.infradead.org
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- print_info.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
+ makedumpfile.8 |   22 ++++++++++++++++++++++
+ 1 files changed, 22 insertions(+), 0 deletions(-)
 
-diff --git a/print_info.c b/print_info.c
-index 547976e..19a578b 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -69,6 +69,11 @@ print_usage(void)
- 	MSG("  # makedumpfile -g VMCOREINFO --xen-syms XEN-SYMS\n");
- 	MSG("\n");
- 	MSG("\n");
-+	MSG("  Creating DUMPFILE from multiple VMCOREs generated on sadump diskset configuration:\n");
-+	MSG("  # makedumpfile [-c] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
-+	MSG("    [--diskset=VMCORE3 ..] DUMPFILE\n");
-+	MSG("\n");
-+	MSG("\n");
- 	MSG("Available options:\n");
- 	MSG("  [-c]:\n");
- 	MSG("      Compress dump data by each page.\n");
-@@ -163,6 +168,11 @@ print_usage(void)
- 	MSG("      Exclude all the user domain pages from Xen kdump's VMCORE, and extract\n");
- 	MSG("      the part of Xen and domain-0.\n");
- 	MSG("\n");
-+	MSG("  [--diskset=VMCORE]:\n");
-+	MSG("      Specify multiple VMCOREs created on sadump diskset configuration the same\n");
-+	MSG("      number of times as the number of VMCOREs in increasing order from left to\n");
-+	MSG("      right.\n");
-+	MSG("\n");
- 	MSG("  [--message-level ML]:\n");
- 	MSG("      Specify the message types.\n");
- 	MSG("      Users can restrict output printed by specifying Message_Level (ML) with\n");
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 1da16b9..f7dfe04 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -20,6 +20,8 @@ makedumpfile \- make a small dumpfile of kdump
+ .br
+ \fBmakedumpfile\fR \-\-dump-dmesg [\-x \fIVMLINUX\fR|\-i \fIVMCOREINFO\fR] \fIVMCORE\fR \fILOGFILE\fR
+ .br
++\fBmakedumpfile\fR    [\fIOPTION\fR] \-x \fIVMLINUX\fR \-\-diskset=\fIVMCORE1\fR \-\-diskset=\fIVMCORE2\fR [\-\-diskset=\fIVMCORE3\fR ..] \fIDUMPFILE\fR
++.br
+ .B makedumpfile
+ \-h
+ .br
+@@ -104,6 +106,14 @@ one of dump_level 3 like the following:
+ # makedumpfile \-c \-d 3 /proc/vmcore dumpfile.1
+ .br
+ # makedumpfile \-c \-d 31 dumpfile.1 dumpfile.2
++.PP
++makedumpfile can read \fIVMCORE\fR(s) in three kinds of sadump
++formats: single partition format, diskset format and media backup
++format, and can convert each of them into kdump-compressed format with
++filtering and compression processing. Note that for \fIVMCORE\fR(s)
++created by sadump, you always need to pass \fIVMLINUX\fR with -x
++option. Also, to pass multiple \fIVMCORE\fRs created on diskset
++configuration, you need to use --diskset option.
+ 
+ .PP
+ .SH OPTIONS
+@@ -460,6 +470,18 @@ it is necessary to specfiy [\-x \fIVMLINUX\fR] or [\-i \fIVMCOREINFO\fR].
+ .br
+ 
+ .TP
++\fB\-\-diskset=VMCORE\fR
++Specify multiple \fIVMCORE\fRs created on sadump diskset configuration
++the same number of times as the number of \fIVMCORE\fRs in increasing
++order from left to right.  \fIVMCORE\fRs are assembled into a single
++\fIDUMPFILE.
++
++.br
++.B Example:
++.br
++# makedumpfile \-x vmlinux \-\-diskset=vmcore1 \-\-diskset=vmcore2 dumpfile
++
++.TP
+ \fB\-D\fR
+ Print debugging message.
+ 
 
 
 _______________________________________________
