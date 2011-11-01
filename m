@@ -1,33 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from gate.ebshome.net ([173.228.72.32])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RKroH-0003Bc-0l
-	for kexec@lists.infradead.org; Mon, 31 Oct 2011 13:21:54 +0000
-Received: from d06nrmr1707.portsmouth.uk.ibm.com
-	(d06nrmr1707.portsmouth.uk.ibm.com [9.149.39.225])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id p9VDLlut019972
-	for <kexec@lists.infradead.org>; Mon, 31 Oct 2011 13:21:47 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (d06av09.portsmouth.uk.ibm.com
-	[9.149.37.250])
-	by d06nrmr1707.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id p9VDLldO2404512
-	for <kexec@lists.infradead.org>; Mon, 31 Oct 2011 13:21:47 GMT
-Received: from d06av09.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av09.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id p9VDLlXm016037
-	for <kexec@lists.infradead.org>; Mon, 31 Oct 2011 07:21:47 -0600
-Message-ID: <1320067306.2796.34.camel@br98xy6r>
-Subject: [PATCH v2] kdump: Add udev events for memory online/offline
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Mon, 31 Oct 2011 14:21:46 +0100
-In-Reply-To: <20111028154630.77c7b96c.akpm@linux-foundation.org>
-References: <1319645292.3321.24.camel@br98xy6r>
-	<20111026192449.GE355@redhat.com>
-	<20111027073058.GA2422@osiris.boeblingen.de.ibm.com>
-	<1319707965.2830.1.camel@br98xy6r>
-	<20111028154630.77c7b96c.akpm@linux-foundation.org>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+	id 1RL71X-0003HG-R4
+	for kexec@lists.infradead.org; Tue, 01 Nov 2011 05:36:36 +0000
+Date: Mon, 31 Oct 2011 22:36:34 -0700
+From: Eugene Surovegin <ebs@ebshome.net>
+Subject: [PATCH] kexec: change phys_to_virt() to always use 'unsigned long
+	long'.
+Message-ID: <20111101053634.GA32297@gate.ebshome.net>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,82 +22,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>, Kay Sievers <kay.sievers@vrfy.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dave Hansen <haveblue@us.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-On Fri, 2011-10-28 at 15:46 -0700, Andrew Morton wrote:
-> On Thu, 27 Oct 2011 11:32:45 +0200
+This fixes physical address truncation by 32-bit binary preparing ELF
+headers for 64-bit crash kernel, e.g. 32-bit kexec-tools running on 
+x86_64..
 
-[snip]
-
-> I think a safer place from which to send the uevent is
-> memory_block_change_state() or even memory_block_action().  Because if
-> either of those functions later gets new callers, those callers might
-> forget to send the uevent?
-
-Ok fine. I put the code into memory_block_change_state(). This also has
-the advantage that we are serialized by "mem->state_mutex". Not sure if
-we need that, but for CPU hotplug the udev events are also serialized
-with a lock. See  "drivers/base/cpu.c" -> cpu_hotplug_driver_lock()
-
-Do you think the following patch is acceptable?
+Signed-off-by: Eugene Surovegin <ebs@ebshome.net>
 ---
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+ kexec/arch/arm/phys_to_virt.c |    4 ++--
+ kexec/crashdump.h             |    4 ++--
+ kexec/phys_to_virt.c          |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Currently no udev events for memory hotplug "online" and "offline" are
-generated:
-
-# udevadm monitor
-# echo offline > /sys/devices/system/memory/memory4/state
-==> No event
-
-When kdump is loaded, kexec detects the current memory configuration and
-stores it in the pre-allocated ELF core header. Therefore, for kdump it is
-necessary to reload the kdump kernel with kexec when the memory
-configuration changes (e.g. for online/offline hotplug memory).
-
-In order to do this automatically, udev rules should be used. This kernel
-patch adds udev events for "online" and "offline". Together with this kernel
-patch, the following udev rules for online/offline have to be added to
-"/etc/udev/rules.d/98-kexec.rules":
-
-SUBSYSTEM=="memory", ACTION=="online", PROGRAM="/etc/init.d/kdump restart"
-SUBSYSTEM=="memory", ACTION=="offline", PROGRAM="/etc/init.d/kdump restart"
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- drivers/base/memory.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
-
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -291,11 +291,22 @@ static int memory_block_change_state(str
+diff --git a/kexec/arch/arm/phys_to_virt.c b/kexec/arch/arm/phys_to_virt.c
+index bcced52..ed96cf3 100644
+--- a/kexec/arch/arm/phys_to_virt.c
++++ b/kexec/arch/arm/phys_to_virt.c
+@@ -13,8 +13,8 @@
+  * See also:
+  * http://lists.arm.linux.org.uk/lurker/message/20010723.185051.94ce743c.en.html
+  */
+-unsigned long
+-phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
++unsigned long long
++phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
+ {
+ 	return paddr + elf_info->page_offset - phys_offset;
+ }
+diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+index 0f7c2ea..dab5dc1 100644
+--- a/kexec/crashdump.h
++++ b/kexec/crashdump.h
+@@ -53,8 +53,8 @@ int crash_create_elf64_headers(struct kexec_info *info,
  
- 	ret = memory_block_action(mem->start_section_nr, to_state);
+ unsigned long crash_architecture(struct crash_elf_info *elf_info);
  
--	if (ret)
-+	if (ret) {
- 		mem->state = from_state_req;
--	else
--		mem->state = to_state;
-+		goto out;
-+	}
+-unsigned long phys_to_virt(struct crash_elf_info *elf_info,
+-			   unsigned long paddr);
++unsigned long long phys_to_virt(struct crash_elf_info *elf_info,
++				unsigned long long paddr);
  
-+	mem->state = to_state;
-+	switch (mem->state) {
-+	case MEM_OFFLINE:
-+		kobject_uevent(&mem->sysdev.kobj, KOBJ_OFFLINE);
-+		break;
-+	case MEM_ONLINE:
-+		kobject_uevent(&mem->sysdev.kobj, KOBJ_ONLINE);
-+		break;
-+	default:
-+		break;
-+	}
- out:
- 	mutex_unlock(&mem->state_mutex);
- 	return ret;
-
+ int xen_present(void);
+ unsigned long xen_architecture(struct crash_elf_info *elf_info);
+diff --git a/kexec/phys_to_virt.c b/kexec/phys_to_virt.c
+index 91b6d01..4d29631 100644
+--- a/kexec/phys_to_virt.c
++++ b/kexec/phys_to_virt.c
+@@ -9,8 +9,8 @@
+  * PAGE_OFFSET. Architectures that don't follow this convention should provide
+  * their own implementation.
+  */
+-unsigned long
+-phys_to_virt(struct crash_elf_info *elf_info, unsigned long paddr)
++unsigned long long
++phys_to_virt(struct crash_elf_info *elf_info, unsigned long long paddr)
+ {
+ 	return paddr + elf_info->page_offset;
+ }
+-- 
+1.7.3.4
 
 
 _______________________________________________
