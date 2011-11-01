@@ -1,30 +1,61 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RLAzH-0000t2-Ct
+	for kexec@lists.infradead.org; Tue, 01 Nov 2011 09:50:32 +0000
+Message-ID: <4EAFC15C.7010601@redhat.com>
+Date: Tue, 01 Nov 2011 17:52:28 +0800
+From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH retry] intel-iommu:make identity_map default for crash dump
+References: <20111101091939.GA8985@darkstar.nay.redhat.com>
+	<1320140052.2089.5.camel@shinybook.infradead.org>
+In-Reply-To: <1320140052.2089.5.camel@shinybook.infradead.org>
+List-Id: <kexec.lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/kexec/>
+List-Post: <mailto:kexec@lists.infradead.org>
+List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
+	<mailto:kexec-request@lists.infradead.org?subject=subscribe>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Subject: Your message to kexec awaits moderator approval
-From: kexec-bounces@lists.infradead.org
-Message-ID: <mailman.22274.1320140037.20023.kexec@lists.infradead.org>
-Date: Tue, 01 Nov 2011 05:33:57 -0400
-List-Id: <kexec.lists.infradead.org>
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: dwmw2@infradead.org
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: luyu@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, horms@verge.net.au, vgoyal@redhat.com
 
-Your mail to 'kexec' with the subject
+On 11/01/2011 05:34 PM, David Woodhouse wrote:
 
-    Re: [PATCH retry] intel-iommu:make identity_map default for crash
-dump
+> On Tue, 2011-11-01 at 17:19 +0800, Dave Young wrote:
+>> kdump kernel sometimes will get DMAR faults which
+>> is caused by random in-flight dma from 1st kernel
+>>
+>> Here make the identity_mapping as default for this case
+> 
+> So you want to *allow* the random in-flight DMA? And with an identity
+> mapping it's really going to random addresses, since it'll be
+> untranslated and won't even go to the physical addresses which it was
+> originally intended for?
+> 
+> This seems entirely broken to me.
+> 
+> If there is "random in-flight dma" from the first kernel, the correct
+> thing to do is *block* it. Which is what we do.
+> 
 
-Is being held until the list moderator can review it for approval.
 
-The reason it is being held:
+This patch works for me for several cases. For kdump It can be seen a
+workaround. But yes blocking the 1st kernel dma is ideal.
 
-    Message has a suspicious header
+Glad to hear that you are working on this.
 
-Either the message will get posted to the list, or you will receive
-notification of the moderator's decision.  If you would like to cancel
-this posting, please visit the following URL:
+-- 
+Thanks
+Dave
 
-    http://lists.infradead.org/mailman/confirm/kexec/8cf91a593ae72ac7ca564f9648dfcd089bc0551a
-
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
