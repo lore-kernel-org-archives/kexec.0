@@ -1,26 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate3.uk.ibm.com ([194.196.100.163])
+Received: from mtagate7.uk.ibm.com ([194.196.100.167])
 	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RLXeS-0005Ny-Hy
-	for kexec@lists.infradead.org; Wed, 02 Nov 2011 10:02:33 +0000
+	id 1RLXfy-0005PM-86
+	for kexec@lists.infradead.org; Wed, 02 Nov 2011 10:04:07 +0000
 Received: from d06nrmr1806.portsmouth.uk.ibm.com
 	(d06nrmr1806.portsmouth.uk.ibm.com [9.149.39.193])
-	by mtagate3.uk.ibm.com (8.13.1/8.13.1) with ESMTP id pA2A2PX9029184
-	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 10:02:25 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (d06av03.portsmouth.uk.ibm.com
-	[9.149.37.213])
+	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id pA2A41H4007073
+	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 10:04:01 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (d06av01.portsmouth.uk.ibm.com
+	[9.149.37.212])
 	by d06nrmr1806.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id pA2A2OId2621492
-	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 10:02:24 GMT
-Received: from d06av03.portsmouth.uk.ibm.com (localhost.localdomain
-	[127.0.0.1])
-	by d06av03.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id pA2A2NWv020738
-	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 04:02:24 -0600
-Message-ID: <1320228143.2776.12.camel@br98xy6r>
-Subject: [PATCH] kdump: Add missing RAM resource in crash_shrink_memory()
+	ESMTP id pA2A404k2609316
+	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 10:04:01 GMT
+Received: from d06av01.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av01.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
+	ESMTP id pA2A3xVr029620
+	for <kexec@lists.infradead.org>; Wed, 2 Nov 2011 04:04:00 -0600
+Message-ID: <1320228239.2776.14.camel@br98xy6r>
+Subject: Re: [PATCH v2] kdump: Fix crash_kexec - smp_send_stop race in panic
 From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Wed, 02 Nov 2011 11:02:23 +0100
+Date: Wed, 02 Nov 2011 11:03:59 +0100
+In-Reply-To: <20111101200420.GN17705@redhat.com>
+References: <1319639649.3321.11.camel@br98xy6r>
+	<20111028161143.e5ebf617.akpm@linux-foundation.org>
+	<1320055036.2796.8.camel@br98xy6r>
+	<20111031033948.a0edb7f3.akpm@linux-foundation.org>
+	<1320064459.2796.26.camel@br98xy6r> <20111101200420.GN17705@redhat.com>
 Mime-Version: 1.0
 Reply-To: holzheu@linux.vnet.ibm.com
 List-Id: <kexec.lists.infradead.org>
@@ -35,92 +40,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: Don Zickus <dzickus@redhat.com>
+Cc: linux-arch@vger.kernel.org, heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On Tue, 2011-11-01 at 16:04 -0400, Don Zickus wrote:
+> On Mon, Oct 31, 2011 at 01:34:19PM +0100, Michael Holzheu wrote:
+> > Hello Andrew, hello linux-arch,
+> > 
+> > > Well OK.  Maybe some architectures do have this problem - who would
+> > > notice?  If that is the case, we just made the failure cases much more
+> > > common.  Could you check, please?
+> > 
+> > @linux-arch: 
+> > 
+> > This patch introduces a spinlock to prevent parallel execution of the
+> > panic code. Andrew pointed out that this might be a problem for
+> > architectures that can't do smp_send_stop() on remote CPUs that have
+> > interrupts disabled. When irq-disabled CPUs execute panic() in parallel,
+> > we then would have looping CPUs.
+> 
+> x86 has such problem and I posted a patch recently to fix it
+> 
+> https://lkml.org/lkml/2011/10/13/426
 
-When shrinking crashkernel memory using /sys/kernel/kexec_crash_size for
-the newly added memory no RAM resource is created at the moment.
+Ok good, so with this patch x86 has no problem with the panic spinlock.
+Anybody else?
 
-Example:
+Instead of introducing the panic lock, as an alternative we could move
+smp_send_stop() to the beginning of panic(). Eric told me that the
+function is currently "insufficiently reliable" for that, but perhaps we
+could make it more reliable.
 
-$ cat /proc/iomem
-00000000-bfffffff : System RAM
-  00000000-005b7ac3 : Kernel code
-  005b7ac4-009743bf : Kernel data
-  009bb000-00a85c33 : Kernel bss
-c0000000-cfffffff : Crash kernel
-d0000000-ffffffff : System RAM
+Michael
 
-$ echo 0 > /sys/kernel/kexec_crash_size
-$ cat /proc/iomem
-00000000-bfffffff : System RAM
-  00000000-005b7ac3 : Kernel code
-  005b7ac4-009743bf : Kernel data
-  009bb000-00a85c33 : Kernel bss
-                                 <<-- here is System RAM missing
-d0000000-ffffffff : System RAM
-
-One result of this bug is that the memory chunk can never be set offline
-using memory hotplug. With this patch I insert a new "System RAM" resource
-for the released memory. Then the upper example looks like the following:
-
-$ echo 0 > /sys/kernel/kexec_crash_size
-$ cat /proc/iomem
-00000000-bfffffff : System RAM
-  00000000-005b7ac3 : Kernel code
-  005b7ac4-009743bf : Kernel data
-  009bb000-00a85c33 : Kernel bss
-c0000000-cfffffff : System RAM   <<-- new rescoure
-d0000000-ffffffff : System RAM
-
-And now I can set chunk c0000000-cfffffff offline.
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kernel/kexec.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -1132,6 +1132,7 @@ int crash_shrink_memory(unsigned long ne
- {
- 	int ret = 0;
- 	unsigned long start, end;
-+	struct resource *ram_res;
- 
- 	mutex_lock(&kexec_mutex);
- 
-@@ -1149,6 +1150,12 @@ int crash_shrink_memory(unsigned long ne
- 		goto unlock;
- 	}
- 
-+	ram_res = kzalloc(sizeof(*ram_res), GFP_KERNEL);
-+	if (!ram_res) {
-+		ret = -ENOMEM;
-+		goto unlock;
-+	}
-+
- 	start = roundup(start, KEXEC_CRASH_MEM_ALIGN);
- 	end = roundup(start + new_size, KEXEC_CRASH_MEM_ALIGN);
- 
-@@ -1157,7 +1164,15 @@ int crash_shrink_memory(unsigned long ne
- 
- 	if ((start == end) && (crashk_res.parent != NULL))
- 		release_resource(&crashk_res);
-+
-+	ram_res->start = end;
-+	ram_res->end = crashk_res.end;
-+	ram_res->flags = IORESOURCE_BUSY | IORESOURCE_MEM;
-+	ram_res->name = "System RAM";
-+
- 	crashk_res.end = end - 1;
-+
-+	insert_resource(&iomem_resource, ram_res);
- 	crash_unmap_reserved_pages();
- 
- unlock:
 
 
 
