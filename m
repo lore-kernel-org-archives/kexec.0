@@ -1,32 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mtagate7.uk.ibm.com ([194.196.100.167])
-	by canuck.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
-	id 1RLuCt-0005mF-Ht
-	for kexec@lists.infradead.org; Thu, 03 Nov 2011 10:07:38 +0000
-Received: from d06nrmr1307.portsmouth.uk.ibm.com
-	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
-	by mtagate7.uk.ibm.com (8.13.1/8.13.1) with ESMTP id pA3A7QGZ014200
-	for <kexec@lists.infradead.org>; Thu, 3 Nov 2011 10:07:26 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
-	[9.149.37.228])
-	by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with
-	ESMTP id pA3A7Q892080772
-	for <kexec@lists.infradead.org>; Thu, 3 Nov 2011 10:07:26 GMT
-Received: from d06av02.portsmouth.uk.ibm.com (loopback [127.0.0.1])
-	by d06av02.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with
-	ESMTP id pA3A7PZM019570
-	for <kexec@lists.infradead.org>; Thu, 3 Nov 2011 04:07:25 -0600
-Message-ID: <1320314844.2989.6.camel@br98xy6r>
-Subject: Re: [PATCH] kdump: Fix crash_kexec - smp_send_stop race in panic
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Thu, 03 Nov 2011 11:07:24 +0100
-In-Reply-To: <20111031033948.a0edb7f3.akpm@linux-foundation.org>
-References: <1319639649.3321.11.camel@br98xy6r>
-	<20111028161143.e5ebf617.akpm@linux-foundation.org>
-	<1320055036.2796.8.camel@br98xy6r>
-	<20111031033948.a0edb7f3.akpm@linux-foundation.org>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+Received: from mx1.redhat.com ([209.132.183.28])
+	by canuck.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+	id 1RMDo3-0005vA-TI
+	for kexec@lists.infradead.org; Fri, 04 Nov 2011 07:03:17 +0000
+Received: from int-mx09.intmail.prod.int.phx2.redhat.com
+	(int-mx09.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+	by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pA473C2W001233
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+	for <kexec@lists.infradead.org>; Fri, 4 Nov 2011 03:03:13 -0400
+Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
+	by int-mx09.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP
+	id pA473Cl7015819
+	for <kexec@lists.infradead.org>; Fri, 4 Nov 2011 03:03:12 -0400
+Received: from [10.66.12.111] (wlan-5-111.nay.redhat.com [10.66.12.111] (may
+	be forged))
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id pA473APL024542
+	for <kexec@lists.infradead.org>; Fri, 4 Nov 2011 03:03:11 -0400
+Message-ID: <4EB38EB1.5070904@redhat.com>
+Date: Fri, 04 Nov 2011 15:05:21 +0800
+From: Dave Young <dyoung@redhat.com>
+MIME-Version: 1.0
+Subject: ppc64 kexec -p failed
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
 	<mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,111 +33,226 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Don Zickus <dzickus@redhat.com>, linux-arch@vger.kernel.org, "Luck,
-	Tony" <tony.luck@intel.com>, heiko.carstens@de.ibm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-Hello Andrew,
+Hi,
 
-On Mon, 2011-10-31 at 03:39 -0700, Andrew Morton wrote:
-> On Mon, 31 Oct 2011 10:57:16 +0100 Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> 
-> > > Should this be done earlier in the function?  As it stands we'll have
-> > > multiple CPUs scribbling on buf[] at the same time and all trying to
-> > > print the same thing at the same time, dumping their stacks, etc. 
-> > > Perhaps it would be better to single-thread all that stuff
-> > 
-> > My fist patch took the spinlock at the beginning of panic(). But then
-> > Eric asked, if it wouldn't be better to get both panic printk's and I
-> > agreed.
-> 
-> Hm, why?  It will make a big mess.
-> 
-> > > Also...  this patch affects all CPU architectures, all configs, etc. 
-> > > So we're expecting that every architecture's smp_send_stop() is able to
-> > > stop a CPU which is spinning in spin_lock(), possibly with local
-> > > interrupts disabled.  Will this work?
-> > 
-> > At least on s390 it will work. If there are architectures that can't
-> > stop disabled CPUs then this problem is already there without this
-> > patch.
-> > 
-> > Example:
-> > 
-> > 1. 1st CPU gets lock X and panics
-> > 2. 2nd CPU is disabled and gets lock X
-> 
-> (irq-disabled)
-> 
-> > 3. 1st CPU calls smp_send_stop()
-> >    -> 2nd CPU loops disabled and can't be stopped
-> 
-> Well OK.  Maybe some architectures do have this problem - who would
-> notice?  If that is the case, we just made the failure cases much more
-> common.
+When use crashkernel=128M@256M at a ppc64 machine, kexec -p vmlinuz
+failed with:
+Could not find a free area of memory of faa448 bytes...
+Could not find a free area of memory of 142721d bytes...
 
-Ok, next idea: What, if the CPUs wait irq-enabled in panic until they
-get stopped by smp_send_stop()?
+Is this a know issue or Is there limitation of the crashkernel base addr?
 
-See patch below:
----
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Subject: kdump: fix crash_kexec()/smp_send_stop() race in panic
+Detail info as below (define DEBUG when building):
 
-When two CPUs call panic at the same time there is a possible race
-condition that can stop kdump.  The first CPU calls crash_kexec() and the
-second CPU calls smp_send_stop() in panic() before crash_kexec() finished
-on the first CPU.  So the second CPU stops the first CPU and therefore
-kdump fails:
+0000000008000000-000000000c000000 : 0
+000000000c000000-0000000010000000 : 0
+0000000010000000-0000000014000000 : 0
+0000000014000000-0000000018000000 : 0
+0000000018000000-000000001c000000 : 0
+000000001c000000-0000000020000000 : 0
+0000000020000000-0000000024000000 : 0
+0000000024000000-0000000028000000 : 0
+0000000028000000-000000002c000000 : 0
+000000002c000000-0000000030000000 : 0
+0000000030000000-0000000034000000 : 0
+0000000034000000-0000000038000000 : 0
+0000000038000000-000000003c000000 : 0
+000000003c000000-0000000040000000 : 0
+0000000040000000-0000000044000000 : 0
+0000000044000000-0000000048000000 : 0
+0000000048000000-000000004c000000 : 0
+000000004c000000-0000000050000000 : 0
+0000000050000000-0000000054000000 : 0
+0000000054000000-0000000058000000 : 0
+0000000058000000-000000005c000000 : 0
+000000005c000000-0000000060000000 : 0
+0000000060000000-0000000064000000 : 0
+0000000064000000-0000000068000000 : 0
+0000000068000000-000000006c000000 : 0
+000000006c000000-0000000070000000 : 0
+0000000070000000-0000000074000000 : 0
+0000000074000000-0000000078000000 : 0
+0000000078000000-000000007c000000 : 0
+000000007c000000-0000000080000000 : 0
+0000000080000000-0000000084000000 : 0
+0000000084000000-0000000088000000 : 0
+0000000088000000-000000008c000000 : 0
+000000008c000000-0000000090000000 : 0
+0000000090000000-0000000094000000 : 0
+0000000094000000-0000000098000000 : 0
+0000000098000000-000000009c000000 : 0
+000000009c000000-00000000a0000000 : 0
+00000000a0000000-00000000a4000000 : 0
+00000000a4000000-00000000a8000000 : 0
+00000000a8000000-00000000ac000000 : 0
+00000000ac000000-00000000b0000000 : 0
+00000000b0000000-00000000b4000000 : 0
+00000000b4000000-00000000b8000000 : 0
+00000000b8000000-00000000bc000000 : 0
+00000000bc000000-00000000c0000000 : 0
+00000000c0000000-00000000c4000000 : 0
+00000000c4000000-00000000c8000000 : 0
+00000000c8000000-00000000cc000000 : 0
+00000000cc000000-00000000d0000000 : 0
+00000000d0000000-00000000d4000000 : 0
+00000000d4000000-00000000d8000000 : 0
+00000000d8000000-00000000dc000000 : 0
+00000000dc000000-00000000e0000000 : 0
+00000000e0000000-00000000e4000000 : 0
+00000000e4000000-00000000e8000000 : 0
+00000000e8000000-00000000ec000000 : 0
+00000000ec000000-00000000f0000000 : 0
+00000000f0000000-00000000f4000000 : 0
+00000000f4000000-00000000f8000000 : 0
+00000000f8000000-00000000fc000000 : 0
+00000000fc000000-0000000100000000 : 0
+0000000100000000-0000000104000000 : 0
+0000000104000000-0000000108000000 : 0
+0000000108000000-000000010c000000 : 0
+000000010c000000-0000000110000000 : 0
+0000000110000000-0000000114000000 : 0
+0000000114000000-0000000118000000 : 0
+0000000118000000-000000011c000000 : 0
+000000011c000000-0000000120000000 : 0
+0000000120000000-0000000124000000 : 0
+0000000124000000-0000000128000000 : 0
+0000000128000000-000000012c000000 : 0
+000000012c000000-0000000130000000 : 0
+0000000130000000-0000000134000000 : 0
+0000000134000000-0000000138000000 : 0
+0000000138000000-000000013c000000 : 0
+000000013c000000-0000000140000000 : 0
+0000000140000000-0000000144000000 : 0
+0000000144000000-0000000148000000 : 0
+0000000148000000-000000014c000000 : 0
+000000014c000000-0000000150000000 : 0
+0000000150000000-0000000154000000 : 0
+0000000154000000-0000000158000000 : 0
+0000000158000000-000000015c000000 : 0
+000000015c000000-0000000160000000 : 0
+0000000160000000-0000000164000000 : 0
+0000000164000000-0000000168000000 : 0
+0000000168000000-000000016c000000 : 0
+000000016c000000-0000000170000000 : 0
+0000000170000000-0000000174000000 : 0
+0000000174000000-0000000178000000 : 0
+0000000178000000-000000017c000000 : 0
+000000017c000000-0000000180000000 : 0
+0000000000000000-0000000008000000 : 0
+get base memory ranges:95
+usable memory rgns size:1 base:74d0000 size:b30000
+exclude_range sorted exclude_range[0] start:0, end:1430000
+exclude_range sorted exclude_range[1] start:74d0000, end:8000000
+setup_memory_ranges memory_range[0] start:1430001, end:74cffff
+get memory ranges:1
+Warning: append= option is not passed. Using the first kernel root partition
+0000000008000000-000000000c000000 : 0
+000000000c000000-0000000010000000 : 0
+0000000010000000-0000000014000000 : 0
+0000000014000000-0000000018000000 : 0
+0000000018000000-000000001c000000 : 0
+000000001c000000-0000000020000000 : 0
+0000000020000000-0000000024000000 : 0
+0000000024000000-0000000028000000 : 0
+0000000028000000-000000002c000000 : 0
+000000002c000000-0000000030000000 : 0
+0000000030000000-0000000034000000 : 0
+0000000034000000-0000000038000000 : 0
+0000000038000000-000000003c000000 : 0
+000000003c000000-0000000040000000 : 0
+0000000040000000-0000000044000000 : 0
+0000000044000000-0000000048000000 : 0
+0000000048000000-000000004c000000 : 0
+000000004c000000-0000000050000000 : 0
+0000000050000000-0000000054000000 : 0
+0000000054000000-0000000058000000 : 0
+0000000058000000-000000005c000000 : 0
+000000005c000000-0000000060000000 : 0
+0000000060000000-0000000064000000 : 0
+0000000064000000-0000000068000000 : 0
+0000000068000000-000000006c000000 : 0
+000000006c000000-0000000070000000 : 0
+0000000070000000-0000000074000000 : 0
+0000000074000000-0000000078000000 : 0
+0000000078000000-000000007c000000 : 0
+000000007c000000-0000000080000000 : 0
+0000000080000000-0000000084000000 : 0
+0000000084000000-0000000088000000 : 0
+0000000088000000-000000008c000000 : 0
+000000008c000000-0000000090000000 : 0
+0000000090000000-0000000094000000 : 0
+0000000094000000-0000000098000000 : 0
+0000000098000000-000000009c000000 : 0
+000000009c000000-00000000a0000000 : 0
+00000000a0000000-00000000a4000000 : 0
+00000000a4000000-00000000a8000000 : 0
+00000000a8000000-00000000ac000000 : 0
+00000000ac000000-00000000b0000000 : 0
+00000000b0000000-00000000b4000000 : 0
+00000000b4000000-00000000b8000000 : 0
+00000000b8000000-00000000bc000000 : 0
+00000000bc000000-00000000c0000000 : 0
+00000000c0000000-00000000c4000000 : 0
+00000000c4000000-00000000c8000000 : 0
+00000000c8000000-00000000cc000000 : 0
+00000000cc000000-00000000d0000000 : 0
+00000000d0000000-00000000d4000000 : 0
+00000000d4000000-00000000d8000000 : 0
+00000000d8000000-00000000dc000000 : 0
+00000000dc000000-00000000e0000000 : 0
+00000000e0000000-00000000e4000000 : 0
+00000000e4000000-00000000e8000000 : 0
+00000000e8000000-00000000ec000000 : 0
+00000000ec000000-00000000f0000000 : 0
+00000000f0000000-00000000f4000000 : 0
+00000000f4000000-00000000f8000000 : 0
+00000000f8000000-00000000fc000000 : 0
+00000000fc000000-0000000100000000 : 0
+0000000100000000-0000000104000000 : 0
+0000000104000000-0000000108000000 : 0
+0000000108000000-000000010c000000 : 0
+000000010c000000-0000000110000000 : 0
+0000000110000000-0000000114000000 : 0
+0000000114000000-0000000118000000 : 0
+0000000118000000-000000011c000000 : 0
+000000011c000000-0000000120000000 : 0
+0000000120000000-0000000124000000 : 0
+0000000124000000-0000000128000000 : 0
+0000000128000000-000000012c000000 : 0
+000000012c000000-0000000130000000 : 0
+0000000130000000-0000000134000000 : 0
+0000000134000000-0000000138000000 : 0
+0000000138000000-000000013c000000 : 0
+000000013c000000-0000000140000000 : 0
+0000000140000000-0000000144000000 : 0
+0000000144000000-0000000148000000 : 0
+0000000148000000-000000014c000000 : 0
+000000014c000000-0000000150000000 : 0
+0000000150000000-0000000154000000 : 0
+0000000154000000-0000000158000000 : 0
+0000000158000000-000000015c000000 : 0
+000000015c000000-0000000160000000 : 0
+0000000160000000-0000000164000000 : 0
+0000000164000000-0000000168000000 : 0
+0000000168000000-000000016c000000 : 0
+000000016c000000-0000000170000000 : 0
+0000000170000000-0000000174000000 : 0
+0000000174000000-0000000178000000 : 0
+0000000178000000-000000017c000000 : 0
+000000017c000000-0000000180000000 : 0
+0000000000000000-0000000008000000 : 0
+get base memory ranges:96
+exclude_range sorted exclude_range[0] start:0, end:1430000
+exclude_range sorted exclude_range[1] start:74d0000, end:8000000
+setup_memory_ranges memory_range[0] start:1430001, end:74cffff
+Could not find a free area of memory of faa448 bytes...
+Could not find a free area of memory of 142721d bytes...
 
-1st CPU:
-panic()->crash_kexec()->mutex_trylock(&kexec_mutex)-> do kdump
-
-2nd CPU:
-panic()->crash_kexec()->kexec_mutex already held by 1st CPU
-       ->smp_send_stop()-> stop 1st CPU (stop kdump)
-
-This patch fixes the problem by introducing a spinlock in panic that
-allows only one CPU to process crash_kexec() and the subsequent panic
-code.
-
-Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
----
- kernel/panic.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -59,6 +59,7 @@ EXPORT_SYMBOL(panic_blink);
-  */
- NORET_TYPE void panic(const char * fmt, ...)
- {
-+	static DEFINE_SPINLOCK(panic_lock);
- 	static char buf[1024];
- 	va_list args;
- 	long i, i_next = 0;
-@@ -68,8 +69,16 @@ NORET_TYPE void panic(const char * fmt,
- 	 * It's possible to come here directly from a panic-assertion and
- 	 * not have preempt disabled. Some functions called from here want
- 	 * preempt to be disabled. No point enabling it later though...
-+	 *
-+	 * Only one CPU is allowed to execute the panic code from here. For
-+	 * multiple parallel invocations of panic, all other CPUs will wait
-+	 * until they are stopped by the 1st CPU with smp_send_stop().
- 	 */
--	preempt_disable();
-+	if (!spin_trylock(&panic_lock)) {
-+		local_irq_enable();
-+		while (1)
-+			cpu_relax();
-+	}
- 
- 	console_verbose();
- 	bust_spinlocks(1);
-
-
-
-
+-- 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
