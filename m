@@ -1,27 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RNeAT-0001W4-06
- for kexec@lists.infradead.org; Tue, 08 Nov 2011 05:24:18 +0000
-Received: from int-mx10.intmail.prod.int.phx2.redhat.com
- (int-mx10.intmail.prod.int.phx2.redhat.com [10.5.11.23])
- by mx1.redhat.com (8.14.4/8.14.4) with ESMTP id pA85OFxq014647
- (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 00:24:15 -0500
-Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
- by int-mx10.intmail.prod.int.phx2.redhat.com (8.14.4/8.14.4) with ESMTP id
- pA85OE4P019319
- for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 00:24:15 -0500
-Received: from darkstar.nay.redhat.com (wlan-5-111.nay.redhat.com
- [10.66.12.111] (may be forged))
- by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id pA85OCpF016785
- for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 00:24:13 -0500
-Date: Tue, 8 Nov 2011 13:26:23 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] remove unnecessary check code for hole_align
-Message-ID: <20111108052623.GA22922@darkstar.nay.redhat.com>
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RNea9-0002kX-NH
+ for kexec@lists.infradead.org; Tue, 08 Nov 2011 05:50:51 +0000
+Received: from /spool/local
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 8 Nov 2011 05:48:53 +1000
+Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ pA85oab21810672
+ for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 16:50:36 +1100
+Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
+ by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ pA85oZND006864
+ for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 16:50:35 +1100
+Received: from mars.in.ibm.com ([9.124.35.152])
+ by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVin) with ESMTP id
+ pA85oXf4006807
+ for <kexec@lists.infradead.org>; Tue, 8 Nov 2011 16:50:34 +1100
+Message-ID: <4EB8C329.1010509@linux.vnet.ibm.com>
+Date: Tue, 08 Nov 2011 11:20:33 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: ppc64 kexec -p failed
+References: <4EB38EB1.5070904@redhat.com>
+In-Reply-To: <4EB38EB1.5070904@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,29 +41,33 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-hole_align == 0 check is not neccesary, because it will be set to
-pagesize if it's zero. Just remove it here.
+On 11/04/2011 12:35 PM, Dave Young wrote:
+> Hi,
+> 
+> When use crashkernel=128M@256M at a ppc64 machine, kexec -p vmlinuz
+> failed with:
+> Could not find a free area of memory of faa448 bytes...
+> Could not find a free area of memory of 142721d bytes...
+> 
+> Is this a know issue or Is there limitation of the crashkernel base addr?
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/kexec.c |    4 ----
- 1 file changed, 4 deletions(-)
+On Power, crashkernel base addr must fall inside RMO region. The is
+because ppc64 kernel needs some of its memory in the RMO region. The
+memory ranges below shows that the system has RMO region of size 128M,
+Hence crashkernel base addr @64M should work just fine.
 
-Index: kexec-tools/kexec/kexec.c
-===================================================================
---- kexec-tools.orig/kexec/kexec.c
-+++ kexec-tools/kexec/kexec.c
-@@ -203,10 +203,6 @@ unsigned long locate_hole(struct kexec_i
- 	/* Set an intial invalid value for the hole base */
- 	hole_base = ULONG_MAX;
- 
--	/* Ensure I have a sane alignment value */
--	if (hole_align == 0) {
--		hole_align = 1;
--	}
- 	/* Align everything to at least a page size boundary */
- 	if (hole_align < (unsigned long)getpagesize()) {
- 		hole_align = getpagesize();
+> 
+> Detail info as below (define DEBUG when building):
+> 
+...
+...
+> 0000000000000000-0000000008000000 : 0
+...
+...
+
+Thanks,
+-Mahesh.
+
 
 _______________________________________________
 kexec mailing list
