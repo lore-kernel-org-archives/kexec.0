@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RNwV5-0008H0-PZ
- for kexec@lists.infradead.org; Wed, 09 Nov 2011 00:58:48 +0000
-Date: Wed, 9 Nov 2011 09:58:41 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] remove unnecessary check code for hole_align
-Message-ID: <20111109005841.GA380@verge.net.au>
-References: <20111108052623.GA22922@darkstar.nay.redhat.com>
- <20111108072205.GA26841@verge.net.au>
+ id 1RO2BN-0004Md-Ch
+ for kexec@lists.infradead.org; Wed, 09 Nov 2011 07:02:50 +0000
+Date: Wed, 9 Nov 2011 15:04:52 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] kdump: kill redundant code
+Message-ID: <20111109070452.GA25768@darkstar.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111108072205.GA26841@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org
+To: ebiederm@xmission.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, Nov 08, 2011 at 04:22:08PM +0900, Simon Horman wrote:
-> On Tue, Nov 08, 2011 at 01:26:23PM +0800, Dave Young wrote:
-> > hole_align == 0 check is not neccesary, because it will be set to
-> > pagesize if it's zero. Just remove it here.
-> > 
-> 
-> Hi Dave,
-> 
-> it looks like the if condition can never be true due
-> to hole_base being set to a non-zero value on the
-> previous line.
-> 
-> Which is a long way of saying, I like your patch.
+in while loop below, hole_end > crashk_res.end is impossible:
+while (hole_end <= crashk_res.end) {
+	[snip]
+}
+Killing the check code here
 
-Hi Dave,
+Signed-off-by: Dave Young <dyoung@redhat.com>
+---
+ kernel/kexec.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-I have applied your patch to my kexec-tools tree on github.
+--- linux-2.6.orig/kernel/kexec.c	2011-11-01 13:06:20.000000000 +0800
++++ linux-2.6/kernel/kexec.c	2011-11-09 14:57:17.487022644 +0800
+@@ -500,8 +500,6 @@ static struct page *kimage_alloc_crash_c
+ 
+ 		if (hole_end > KEXEC_CRASH_CONTROL_MEMORY_LIMIT)
+ 			break;
+-		if (hole_end > crashk_res.end)
+-			break;
+ 		/* See if I overlap any of the segments */
+ 		for (i = 0; i < image->nr_segments; i++) {
+ 			unsigned long mstart, mend;
 
 _______________________________________________
 kexec mailing list
