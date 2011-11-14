@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from lo.gmane.org ([80.91.229.12])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RPsBC-0005KG-FX
- for kexec@lists.infradead.org; Mon, 14 Nov 2011 08:46:15 +0000
-Date: Mon, 14 Nov 2011 17:46:10 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] kexec-tools: powerpc: Fix 64bit optimize for size
- (gcc -Os) build
-Message-ID: <20111114084610.GB8750@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20111114185433.0297c2c8@kryten> <20111114185622.79fe0a18@kryten>
- <20111114185329.19ddc2b4@kryten>
+ id 1RPwl9-0001qI-9W
+ for kexec@lists.infradead.org; Mon, 14 Nov 2011 13:39:40 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+ (envelope-from <glkk-kexec@m.gmane.org>) id 1RPwl2-0007K0-G8
+ for kexec@lists.infradead.org; Mon, 14 Nov 2011 14:39:32 +0100
+Received: from 180.129.196.69 ([180.129.196.69])
+ by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+ id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Mon, 14 Nov 2011 14:39:32 +0100
+Received: from xiyou.wangcong by 180.129.196.69 with local (Gmexim 0.1
+ (Debian)) id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Mon, 14 Nov 2011 14:39:32 +0100
+From: WANG Cong <xiyou.wangcong@gmail.com>
+Subject: Re: Crash during vmcore_init
+Date: Mon, 14 Nov 2011 13:39:17 +0000 (UTC)
+Message-ID: <j9r5m5$b18$1@dough.gmane.org>
+References: <1318376345.2050.20.camel@boudreau>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,39 +31,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Anton Blanchard <anton@samba.org>
-Cc: Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, Matt Evans <matt@ozlabs.org>, amodra@gmail.com
+To: kexec@lists.infradead.org
 
-On Mon, Nov 14, 2011 at 06:53:29PM +1100, Anton Blanchard wrote:
-> 
-> commit 46b2d0b8a719 (kexec/powerpc fix optimization for size (gcc -Os)
-> build) added out of line GPR save/restore handlers for 32bit -Os
-> builds. This patch adds the handlers for 64bit builds.
-> 
-> Signed-off-by: Anton Blanchard <anton@samba.org>
+On Tue, 11 Oct 2011 16:39:05 -0700, Tim Hartrick wrote:
 
-On Mon, Nov 14, 2011 at 06:56:22PM +1100, Anton Blanchard wrote:
+> Kexec,
 > 
-> Some cleanup of the relocation code:
+> I have been experiencing the crash below on Ubuntu 10.04 running
+> 2.6.32-34-server and 2.6.38-8-server as the crashkernel on X86_64. The
+> tools are:
 > 
-> - Whitespace changes
-> - Use braces to add clarity to nested for/if loop.
-> - Order ADDR16 relocations
-> - No need for to return from a void function.
+> kexec-tools	1:2.0.2-1ubuntu3
+> makedumpfile	1.3.7-2
+> kdump-tools	1.3.7-2
 > 
-> Signed-off-by: Anton Blanchard <anton@samba.org>
+> I would be interested to know if this is a known problem and if so
+> whether or not there is a patch in the pipeline to correct the problem.
+> 
+> I will be happy to provide any other details that are required including
+> debug builds if necessary.
+....
+> 
+> [    1.322100] ioremap: invalid physical address db74000000000000 [   
+> 1.327919] ------------[ cut here ]------------ [    1.332530] WARNING:
+> at /build/buildd/linux-2.6.32/arch/x86/mm/ioremap.c:120 __ioremap_caller
+> +0x360/0x3d0()
 
-On Mon, Nov 14, 2011 at 06:54:33PM +1100, Anton Blanchard wrote:
-> 
-> Add all the TOC16 relocations. These were hit when building kexec
-> with a recent toolchain.
-> 
-> Signed-off-by: Anton Blanchard <anton@samba.org>
+This probably means that kexec-tools passed some incorrect
+kernel parameter to the second kernel.
 
+So, what is the cmdline of your second kernel? And what is your
+/proc/iomem of your first kernel?
 
-Thanks Anton,
-
-I have applied all three patches.
+Cheers.
 
 
 _______________________________________________
