@@ -1,27 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp09.in.ibm.com ([122.248.162.9])
+Received: from mail-ww0-f41.google.com ([74.125.82.41])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQKva-00051p-6T
- for kexec@lists.infradead.org; Tue, 15 Nov 2011 15:28:04 +0000
-Received: from /spool/local by e28smtp09.in.ibm.com with XMail ESMTP
- for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
- Tue, 15 Nov 2011 20:50:30 +0530
-Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
- by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- pAFFEALH2138184
- for <kexec@lists.infradead.org>; Tue, 15 Nov 2011 20:44:11 +0530
-Received: from d28av02.in.ibm.com (loopback [127.0.0.1])
- by d28av02.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- pAFFE53e027326
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 02:14:06 +1100
-Subject: [RFC PATCH v5 5/9] fadump: Convert firmware-assisted cpu state dump
- data into elf notes.
-From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Tue, 15 Nov 2011 20:44:03 +0530
-Message-ID: <20111115151403.16533.73891.stgit@mars.in.ibm.com>
-In-Reply-To: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
-References: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
-MIME-Version: 1.0
+ id 1RQRYn-00083O-7L
+ for kexec@lists.infradead.org; Tue, 15 Nov 2011 22:33:01 +0000
+Received: by wwf25 with SMTP id 25so6998161wwf.0
+ for <kexec@lists.infradead.org>; Tue, 15 Nov 2011 14:32:54 -0800 (PST)
+Subject: Re: Crash during vmcore_init
+From: Tim Hartrick <tim@edgecast.com>
+In-Reply-To: <4EC21F67.10905@redhat.com>
+References: <1318376345.2050.20.camel@boudreau>
+ <j9r5m5$b18$1@dough.gmane.org> <1321296650.2066.17.camel@boudreau>
+ <4EC21F67.10905@redhat.com>
+Date: Tue, 15 Nov 2011 14:32:51 -0800
+Message-ID: <1321396371.4198.5.camel@boudreau>
+Mime-Version: 1.0
+Reply-To: tim@edgecast.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,542 +27,292 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev <linuxppc-dev@ozlabs.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Anton Blanchard <anton@samba.org>, Amerigo Wang <amwang@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Milton Miller <miltonm@bga.com>, Haren Myneni <hbabu@us.ibm.com>, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Ananth Narayan <ananth@in.ibm.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: tj@kernel.org, WANG Cong <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-When registered for firmware assisted dump on powerpc, firmware preserves
-the registers for the active CPUs during a system crash. This patch reads
-the cpu register data stored in Firmware-assisted dump format (except for
-crashing cpu) and converts it into elf notes and updates the PT_NOTE program
-header accordingly. The exact register state for crashing cpu is saved to
-fadump crash info structure in scratch area during crash_fadump() and read
-during second kernel boot.
+Dave,
 
-Change in v5:
-- Added 'fadump_' prefix to all static function defined.
+I tested with
 
-Change in v4:
-- Fixes a issue where memblock_free() is invoked from build_cpu_notes()
-  function during error_out path. Invoke cpu_notes_buf_free() in error_out
-  path instead of memblock_free().
+linux-image-3.1.1-030101-generic_3.1.1-030101.201111111651_amd64.deb
 
-Change in v2:
-- Moved the crash_fadump() invocation from generic code to panic notifier.
-- Introduced cpu_notes_buf_alloc() function to allocate cpu notes buffer
-  using get_free_pages(). The reason is, with the use of subsys_initcall
-  the setup_fadump() is now called after mem_init(). Hence use of
-  get_free_pages() to allocate memory is more approriate then using
-  memblock_alloc().
+which, as far as I know, is the Ubuntu build of the latest stable.
+Below are the results.
 
-Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
----
- arch/powerpc/include/asm/fadump.h  |   44 +++++
- arch/powerpc/kernel/fadump.c       |  314 ++++++++++++++++++++++++++++++++++++
- arch/powerpc/kernel/setup-common.c |    6 +
- arch/powerpc/kernel/traps.c        |    3 
- 4 files changed, 365 insertions(+), 2 deletions(-)
+[    1.427457] ioremap: invalid physical address 5800000000000
+[    1.433017] ------------[ cut here ]------------
+[    1.437632] WARNING: at /home/apw/COD/linux/arch/x86/mm/ioremap.c:83
+__ioremap_caller+0x35e/0x3a0()
+[    1.446656] Hardware name: PowerEdge R710
+[    1.450655] Modules linked in:
+[    1.453712] Pid: 1, comm: swapper Not tainted 3.1.1-030101-generic
+#201111111651
+[    1.461092] Call Trace:
+[    1.463539]  [<ffffffff81065aef>] warn_slowpath_common+0x7f/0xc0
+[    1.469532]  [<ffffffff81065b4a>] warn_slowpath_null+0x1a/0x20
+[    1.475352]  [<ffffffff810412be>] __ioremap_caller+0x35e/0x3a0
+[    1.481176]  [<ffffffff8103852e>] ? copy_oldmem_page+0x4e/0xc0
+[    1.486995]  [<ffffffff81041334>] ioremap_cache+0x14/0x20
+[    1.492380]  [<ffffffff8103852e>] copy_oldmem_page+0x4e/0xc0
+[    1.498031]  [<ffffffff811dc7b1>] read_from_oldmem+0xb1/0xf0
+[    1.503682]  [<ffffffff8115e4ec>] ? __kmalloc+0x5c/0x160
+[    1.508984]  [<ffffffff81cfef55>] T.635+0x6e/0x211
+[    1.513767]  [<ffffffff811dc7b1>] ? read_from_oldmem+0xb1/0xf0
+[    1.519588]  [<ffffffff8115e4ec>] ? __kmalloc+0x5c/0x160
+[    1.524887]  [<ffffffff81cff20b>] parse_crash_elf64_headers
++0x113/0x212
+[    1.531489]  [<ffffffff81cff82f>] ? parse_crash_elf_headers
++0x122/0x122
+[    1.538088]  [<ffffffff81cff78b>] parse_crash_elf_headers+0x7e/0x122
+[    1.544427]  [<ffffffff81cff850>] vmcore_init+0x21/0x75
+[    1.549645]  [<ffffffff81002043>] do_one_initcall+0x43/0x190
+[    1.555293]  [<ffffffff81cd8680>] kernel_init+0xcd/0x151
+[    1.560596]  [<ffffffff81608af4>] kernel_thread_helper+0x4/0x10
+[    1.566504]  [<ffffffff81cd85b3>] ? parse_early_options+0x20/0x20
+[    1.572584]  [<ffffffff81608af0>] ? gs_change+0x13/0x13
+[    1.577802] ---[ end trace a22d306b065d4a66 ]---
 
-diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
-index c022d5c..72908e3 100644
---- a/arch/powerpc/include/asm/fadump.h
-+++ b/arch/powerpc/include/asm/fadump.h
-@@ -63,6 +63,18 @@
- /* Dump status flag */
- #define FADUMP_ERROR_FLAG	0x2000
- 
-+#define FADUMP_CPU_ID_MASK	((1UL << 32) - 1)
-+
-+#define CPU_UNKNOWN		(~((u32)0))
-+
-+/* Utility macros */
-+#define SKIP_TO_NEXT_CPU(reg_entry)			\
-+({							\
-+	while (reg_entry->reg_id != REG_ID("CPUEND"))	\
-+		reg_entry++;				\
-+	reg_entry++;					\
-+})
-+
- /* Kernel Dump section info */
- struct fadump_section {
- 	u32	request_flag;
-@@ -117,6 +129,9 @@ struct fw_dump {
- 	unsigned long	reserve_bootvar;
- 
- 	unsigned long	fadumphdr_addr;
-+	unsigned long	cpu_notes_buf;
-+	unsigned long	cpu_notes_buf_size;
-+
- 	int		ibm_configure_kernel_dump;
- 
- 	unsigned long	fadump_enabled:1;
-@@ -141,13 +156,40 @@ static inline u64 str_to_u64(const char *str)
- 	return val;
- }
- #define STR_TO_HEX(x)	str_to_u64(x)
-+#define REG_ID(x)	str_to_u64(x)
- 
- #define FADUMP_CRASH_INFO_MAGIC		STR_TO_HEX("FADMPINF")
-+#define REGSAVE_AREA_MAGIC		STR_TO_HEX("REGSAVE")
-+
-+/* The firmware-assisted dump format.
-+ *
-+ * The register save area is an area in the partition's memory used to preserve
-+ * the register contents (CPU state data) for the active CPUs during a firmware
-+ * assisted dump. The dump format contains register save area header followed
-+ * by register entries. Each list of registers for a CPU starts with
-+ * "CPUSTRT" and ends with "CPUEND".
-+ */
-+
-+/* Register save area header. */
-+struct fadump_reg_save_area_header {
-+	u64		magic_number;
-+	u32		version;
-+	u32		num_cpu_offset;
-+};
-+
-+/* Register entry. */
-+struct fadump_reg_entry {
-+	u64		reg_id;
-+	u64		reg_value;
-+};
- 
- /* fadump crash info structure */
- struct fadump_crash_info_header {
- 	u64		magic_number;
- 	u64		elfcorehdr_addr;
-+	u32		crashing_cpu;
-+	struct pt_regs	regs;
-+	struct cpumask	cpu_online_mask;
- };
- 
- /* Crash memory ranges */
-@@ -163,7 +205,9 @@ extern int early_init_dt_scan_fw_dump(unsigned long node,
- extern int fadump_reserve_mem(void);
- extern int setup_fadump(void);
- extern int is_fadump_active(void);
-+extern void crash_fadump(struct pt_regs *, const char *);
- #else	/* CONFIG_FA_DUMP */
- static inline int is_fadump_active(void) { return 0; }
-+static inline void crash_fadump(struct pt_regs *regs, const char *str) { }
- #endif
- #endif
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 082f85a..1879ddf 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -244,6 +244,7 @@ static unsigned long get_fadump_area_size(void)
- 	size += fw_dump.boot_memory_size;
- 	size += sizeof(struct fadump_crash_info_header);
- 	size += sizeof(struct elfhdr); /* ELF core header.*/
-+	size += sizeof(struct elf_phdr); /* place holder for cpu notes */
- 	/* Program headers for crash memory regions. */
- 	size += sizeof(struct elf_phdr) * (memblock_num_regions(memory) + 2);
- 
-@@ -397,6 +398,285 @@ static void register_fw_dump(struct fadump_mem_struct *fdm)
- 	}
- }
- 
-+void crash_fadump(struct pt_regs *regs, const char *str)
-+{
-+	struct fadump_crash_info_header *fdh = NULL;
-+
-+	if (!fw_dump.dump_registered || !fw_dump.fadumphdr_addr)
-+		return;
-+
-+	fdh = __va(fw_dump.fadumphdr_addr);
-+	crashing_cpu = smp_processor_id();
-+	fdh->crashing_cpu = crashing_cpu;
-+	crash_save_vmcoreinfo();
-+
-+	if (regs)
-+		fdh->regs = *regs;
-+	else
-+		ppc_save_regs(&fdh->regs);
-+
-+	fdh->cpu_online_mask = *cpu_online_mask;
-+
-+	/* Call ibm,os-term rtas call to trigger firmware assisted dump */
-+	rtas_os_term((char *)str);
-+}
-+
-+#define GPR_MASK	0xffffff0000000000
-+static inline int fadump_gpr_index(u64 id)
-+{
-+	int i = -1;
-+	char str[3];
-+
-+	if ((id & GPR_MASK) == REG_ID("GPR")) {
-+		/* get the digits at the end */
-+		id &= ~GPR_MASK;
-+		id >>= 24;
-+		str[2] = '\0';
-+		str[1] = id & 0xff;
-+		str[0] = (id >> 8) & 0xff;
-+		sscanf(str, "%d", &i);
-+		if (i > 31)
-+			i = -1;
-+	}
-+	return i;
-+}
-+
-+static inline void fadump_set_regval(struct pt_regs *regs, u64 reg_id,
-+								u64 reg_val)
-+{
-+	int i;
-+
-+	i = fadump_gpr_index(reg_id);
-+	if (i >= 0)
-+		regs->gpr[i] = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("NIA"))
-+		regs->nip = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("MSR"))
-+		regs->msr = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("CTR"))
-+		regs->ctr = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("LR"))
-+		regs->link = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("XER"))
-+		regs->xer = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("CR"))
-+		regs->ccr = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("DAR"))
-+		regs->dar = (unsigned long)reg_val;
-+	else if (reg_id == REG_ID("DSISR"))
-+		regs->dsisr = (unsigned long)reg_val;
-+}
-+
-+static struct fadump_reg_entry*
-+fadump_read_registers(struct fadump_reg_entry *reg_entry, struct pt_regs *regs)
-+{
-+	memset(regs, 0, sizeof(struct pt_regs));
-+
-+	while (reg_entry->reg_id != REG_ID("CPUEND")) {
-+		fadump_set_regval(regs, reg_entry->reg_id,
-+					reg_entry->reg_value);
-+		reg_entry++;
-+	}
-+	reg_entry++;
-+	return reg_entry;
-+}
-+
-+static u32 *fadump_append_elf_note(u32 *buf, char *name, unsigned type,
-+						void *data, size_t data_len)
-+{
-+	struct elf_note note;
-+
-+	note.n_namesz = strlen(name) + 1;
-+	note.n_descsz = data_len;
-+	note.n_type   = type;
-+	memcpy(buf, &note, sizeof(note));
-+	buf += (sizeof(note) + 3)/4;
-+	memcpy(buf, name, note.n_namesz);
-+	buf += (note.n_namesz + 3)/4;
-+	memcpy(buf, data, note.n_descsz);
-+	buf += (note.n_descsz + 3)/4;
-+
-+	return buf;
-+}
-+
-+static void fadump_final_note(u32 *buf)
-+{
-+	struct elf_note note;
-+
-+	note.n_namesz = 0;
-+	note.n_descsz = 0;
-+	note.n_type   = 0;
-+	memcpy(buf, &note, sizeof(note));
-+}
-+
-+static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
-+{
-+	struct elf_prstatus prstatus;
-+
-+	memset(&prstatus, 0, sizeof(prstatus));
-+	/*
-+	 * FIXME: How do i get PID? Do I really need it?
-+	 * prstatus.pr_pid = ????
-+	 */
-+	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
-+	buf = fadump_append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
-+				&prstatus, sizeof(prstatus));
-+	return buf;
-+}
-+
-+static void fadump_update_elfcore_header(char *bufp)
-+{
-+	struct elfhdr *elf;
-+	struct elf_phdr *phdr;
-+
-+	elf = (struct elfhdr *)bufp;
-+	bufp += sizeof(struct elfhdr);
-+
-+	/* First note is a place holder for cpu notes info. */
-+	phdr = (struct elf_phdr *)bufp;
-+
-+	if (phdr->p_type == PT_NOTE) {
-+		phdr->p_paddr = fw_dump.cpu_notes_buf;
-+		phdr->p_offset	= phdr->p_paddr;
-+		phdr->p_filesz	= fw_dump.cpu_notes_buf_size;
-+		phdr->p_memsz = fw_dump.cpu_notes_buf_size;
-+	}
-+	return;
-+}
-+
-+static void *fadump_cpu_notes_buf_alloc(unsigned long size)
-+{
-+	void *vaddr;
-+	struct page *page;
-+	unsigned long order, count, i;
-+
-+	order = get_order(size);
-+	vaddr = (void *)__get_free_pages(GFP_KERNEL|__GFP_ZERO, order);
-+	if (!vaddr)
-+		return NULL;
-+
-+	count = 1 << order;
-+	page = virt_to_page(vaddr);
-+	for (i = 0; i < count; i++)
-+		SetPageReserved(page + i);
-+	return vaddr;
-+}
-+
-+static void fadump_cpu_notes_buf_free(unsigned long vaddr, unsigned long size)
-+{
-+	struct page *page;
-+	unsigned long order, count, i;
-+
-+	order = get_order(size);
-+	count = 1 << order;
-+	page = virt_to_page(vaddr);
-+	for (i = 0; i < count; i++)
-+		ClearPageReserved(page + i);
-+	__free_pages(page, order);
-+}
-+
-+/*
-+ * Read CPU state dump data and convert it into ELF notes.
-+ * The CPU dump starts with magic number "REGSAVE". NumCpusOffset should be
-+ * used to access the data to allow for additional fields to be added without
-+ * affecting compatibility. Each list of registers for a CPU starts with
-+ * "CPUSTRT" and ends with "CPUEND". Each register entry is of 16 bytes,
-+ * 8 Byte ASCII identifier and 8 Byte register value. The register entry
-+ * with identifier "CPUSTRT" and "CPUEND" contains 4 byte cpu id as part
-+ * of register value. For more details refer to PAPR document.
-+ *
-+ * Only for the crashing cpu we ignore the CPU dump data and get exact
-+ * state from fadump crash info structure populated by first kernel at the
-+ * time of crash.
-+ */
-+static int __init fadump_build_cpu_notes(const struct fadump_mem_struct *fdm)
-+{
-+	struct fadump_reg_save_area_header *reg_header;
-+	struct fadump_reg_entry *reg_entry;
-+	struct fadump_crash_info_header *fdh = NULL;
-+	void *vaddr;
-+	unsigned long addr;
-+	u32 num_cpus, *note_buf;
-+	struct pt_regs regs;
-+	int i, rc = 0, cpu = 0;
-+
-+	if (!fdm->cpu_state_data.bytes_dumped)
-+		return -EINVAL;
-+
-+	addr = fdm->cpu_state_data.destination_address;
-+	vaddr = __va(addr);
-+
-+	reg_header = vaddr;
-+	if (reg_header->magic_number != REGSAVE_AREA_MAGIC) {
-+		printk(KERN_ERR "Unable to read register save area.\n");
-+		return -ENOENT;
-+	}
-+	pr_debug("--------CPU State Data------------\n");
-+	pr_debug("Magic Number: %llx\n", reg_header->magic_number);
-+	pr_debug("NumCpuOffset: %x\n", reg_header->num_cpu_offset);
-+
-+	vaddr += reg_header->num_cpu_offset;
-+	num_cpus = *((u32 *)(vaddr));
-+	pr_debug("NumCpus     : %u\n", num_cpus);
-+	vaddr += sizeof(u32);
-+	reg_entry = (struct fadump_reg_entry *)vaddr;
-+
-+	/* Allocate buffer to hold cpu crash notes. */
-+	fw_dump.cpu_notes_buf_size = num_cpus * sizeof(note_buf_t);
-+	fw_dump.cpu_notes_buf_size = PAGE_ALIGN(fw_dump.cpu_notes_buf_size);
-+	note_buf = fadump_cpu_notes_buf_alloc(fw_dump.cpu_notes_buf_size);
-+	if (!note_buf) {
-+		printk(KERN_ERR "Failed to allocate 0x%lx bytes for "
-+			"cpu notes buffer\n", fw_dump.cpu_notes_buf_size);
-+		return -ENOMEM;
-+	}
-+	fw_dump.cpu_notes_buf = __pa(note_buf);
-+
-+	pr_debug("Allocated buffer for cpu notes of size %ld at %p\n",
-+			(num_cpus * sizeof(note_buf_t)), note_buf);
-+
-+	if (fw_dump.fadumphdr_addr)
-+		fdh = __va(fw_dump.fadumphdr_addr);
-+
-+	for (i = 0; i < num_cpus; i++) {
-+		if (reg_entry->reg_id != REG_ID("CPUSTRT")) {
-+			printk(KERN_ERR "Unable to read CPU state data\n");
-+			rc = -ENOENT;
-+			goto error_out;
-+		}
-+		/* Lower 4 bytes of reg_value contains logical cpu id */
-+		cpu = reg_entry->reg_value & FADUMP_CPU_ID_MASK;
-+		if (!cpumask_test_cpu(cpu, &fdh->cpu_online_mask)) {
-+			SKIP_TO_NEXT_CPU(reg_entry);
-+			continue;
-+		}
-+		pr_debug("Reading register data for cpu %d...\n", cpu);
-+		if (fdh && fdh->crashing_cpu == cpu) {
-+			regs = fdh->regs;
-+			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
-+			SKIP_TO_NEXT_CPU(reg_entry);
-+		} else {
-+			reg_entry++;
-+			reg_entry = fadump_read_registers(reg_entry, &regs);
-+			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
-+		}
-+	}
-+	fadump_final_note(note_buf);
-+
-+	pr_debug("Updating elfcore header (%llx) with cpu notes\n",
-+							fdh->elfcorehdr_addr);
-+	fadump_update_elfcore_header((char *)__va(fdh->elfcorehdr_addr));
-+	return 0;
-+
-+error_out:
-+	fadump_cpu_notes_buf_free((unsigned long)__va(fw_dump.cpu_notes_buf),
-+					fw_dump.cpu_notes_buf_size);
-+	fw_dump.cpu_notes_buf = 0;
-+	fw_dump.cpu_notes_buf_size = 0;
-+	return rc;
-+
-+}
-+
- /*
-  * Validate and process the dump data stored by firmware before exporting
-  * it through '/proc/vmcore'.
-@@ -404,18 +684,21 @@ static void register_fw_dump(struct fadump_mem_struct *fdm)
- static int __init process_fadump(const struct fadump_mem_struct *fdm_active)
- {
- 	struct fadump_crash_info_header *fdh;
-+	int rc = 0;
- 
- 	if (!fdm_active || !fw_dump.fadumphdr_addr)
- 		return -EINVAL;
- 
- 	/* Check if the dump data is valid. */
- 	if ((fdm_active->header.dump_status_flag == FADUMP_ERROR_FLAG) ||
-+			(fdm_active->cpu_state_data.error_flags != 0) ||
- 			(fdm_active->rmr_region.error_flags != 0)) {
- 		printk(KERN_ERR "Dump taken by platform is not valid\n");
- 		return -EINVAL;
- 	}
--	if (fdm_active->rmr_region.bytes_dumped !=
--			fdm_active->rmr_region.source_len) {
-+	if ((fdm_active->rmr_region.bytes_dumped !=
-+			fdm_active->rmr_region.source_len) ||
-+			!fdm_active->cpu_state_data.bytes_dumped) {
- 		printk(KERN_ERR "Dump taken by platform is incomplete\n");
- 		return -EINVAL;
- 	}
-@@ -427,6 +710,10 @@ static int __init process_fadump(const struct fadump_mem_struct *fdm_active)
- 		return -EINVAL;
- 	}
- 
-+	rc = fadump_build_cpu_notes(fdm_active);
-+	if (rc)
-+		return rc;
-+
- 	/*
- 	 * We are done validating dump info and elfcore header is now ready
- 	 * to be exported. set elfcorehdr_addr so that vmcore module will
-@@ -541,6 +828,27 @@ static int fadump_create_elfcore_headers(char *bufp)
- 	elf = (struct elfhdr *)bufp;
- 	bufp += sizeof(struct elfhdr);
- 
-+	/*
-+	 * setup ELF PT_NOTE, place holder for cpu notes info. The notes info
-+	 * will be populated during second kernel boot after crash. Hence
-+	 * this PT_NOTE will always be the first elf note.
-+	 *
-+	 * NOTE: Any new ELF note addition should be placed after this note.
-+	 */
-+	phdr = (struct elf_phdr *)bufp;
-+	bufp += sizeof(struct elf_phdr);
-+	phdr->p_type = PT_NOTE;
-+	phdr->p_flags = 0;
-+	phdr->p_vaddr = 0;
-+	phdr->p_align = 0;
-+
-+	phdr->p_offset = 0;
-+	phdr->p_paddr = 0;
-+	phdr->p_filesz = 0;
-+	phdr->p_memsz = 0;
-+
-+	(elf->e_phnum)++;
-+
- 	/* setup PT_LOAD sections. */
- 
- 	for (i = 0; i < crash_mem_ranges; i++) {
-@@ -592,6 +900,8 @@ static unsigned long init_fadump_header(unsigned long addr)
- 	memset(fdh, 0, sizeof(struct fadump_crash_info_header));
- 	fdh->magic_number = FADUMP_CRASH_INFO_MAGIC;
- 	fdh->elfcorehdr_addr = addr;
-+	/* We will set the crashing cpu id in crash_fadump() during crash. */
-+	fdh->crashing_cpu = CPU_UNKNOWN;
- 
- 	return addr;
- }
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index b1d738d..87d2465 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -61,6 +61,7 @@
- #include <asm/xmon.h>
- #include <asm/cputhreads.h>
- #include <mm/mmu_decl.h>
-+#include <asm/fadump.h>
- 
- #include "setup.h"
- 
-@@ -639,6 +640,11 @@ EXPORT_SYMBOL(check_legacy_ioport);
- static int ppc_panic_event(struct notifier_block *this,
-                              unsigned long event, void *ptr)
- {
-+	/*
-+	 * If firmware-assisted dump has been registered then trigger
-+	 * firmware-assisted dump and let firmware handle everything else.
-+	 */
-+	crash_fadump(NULL, ptr);
- 	ppc_md.panic(ptr);  /* May not return */
- 	return NOTIFY_DONE;
- }
-diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-index f19d977..c2ba6ed 100644
---- a/arch/powerpc/kernel/traps.c
-+++ b/arch/powerpc/kernel/traps.c
-@@ -57,6 +57,7 @@
- #include <asm/kexec.h>
- #include <asm/ppc-opcode.h>
- #include <asm/rio.h>
-+#include <asm/fadump.h>
- 
- #if defined(CONFIG_DEBUGGER) || defined(CONFIG_KEXEC)
- int (*__debugger)(struct pt_regs *regs) __read_mostly;
-@@ -160,6 +161,8 @@ int die(const char *str, struct pt_regs *regs, long err)
- 	add_taint(TAINT_DIE);
- 	raw_spin_unlock_irqrestore(&die.lock, flags);
- 
-+	crash_fadump(regs, str);
-+
- 	if (kexec_should_crash(current) ||
- 		kexec_sr_activated(smp_processor_id()))
- 		crash_kexec(regs);
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-3.1.1-030101-generic
+root=UUID=ea7a5a27-d58f-469f-a19c-3e65b69587f6 ro console=ttyS0,115200n8
+irqpoll maxcpus=1 nousb memmap=exactmap memmap=640K@0K
+memmap=489836K@33408K elfcorehdr=523244K memmap=252K#2087484K
+
+00000000-0000ffff : reserved
+00010000-0009ffff : System RAM
+000a0000-000bffff : PCI Bus 0000:00
+000c0000-000c7fff : Video ROM
+000c8000-000cdbff : Adapter ROM
+000ce000-000cefff : Adapter ROM
+000cf000-000d15ff : Adapter ROM
+000f0000-000fffff : System ROM
+00100000-7f678fff : System RAM
+  01000000-0160b9e3 : Kernel code
+  0160b9e4-01cc2dff : Kernel data
+  01dc1000-01f14fff : Kernel bss
+  02000000-1fefffff : Crash kernel
+7f679000-7f68efff : reserved
+  7f679000-7f679003 : APEI ERST
+  7f67900c-7f679016 : APEI ERST
+  7f679060-7f67906b : APEI ERST
+  7f68d000-7f68efff : APEI ERST
+7f68f000-7f6cdfff : ACPI Tables
+7f6ce000-7fffffff : reserved
+80000000-fdffffff : PCI Bus 0000:00
+  d5800000-d5ffffff : PCI Bus 0000:08
+    d5800000-d5ffffff : 0000:08:03.0
+  d6000000-d9ffffff : PCI Bus 0000:01
+    d6000000-d7ffffff : 0000:01:00.0
+      d6000000-d7ffffff : bnx2
+    d8000000-d9ffffff : 0000:01:00.1
+      d8000000-d9ffffff : bnx2
+  da000000-ddffffff : PCI Bus 0000:02
+    da000000-dbffffff : 0000:02:00.0
+      da000000-dbffffff : bnx2
+    dc000000-ddffffff : 0000:02:00.1
+      dc000000-ddffffff : bnx2
+  de000000-deffffff : PCI Bus 0000:08
+    de000000-de00ffff : 0000:08:03.0
+    de7fc000-de7fffff : 0000:08:03.0
+    de800000-deffffff : 0000:08:03.0
+  df0ff800-df0ffbff : 0000:00:1a.7
+    df0ff800-df0ffbff : ehci_hcd
+  df0ffc00-df0fffff : 0000:00:1d.7
+    df0ffc00-df0fffff : ehci_hcd
+  df100000-df2fffff : PCI Bus 0000:03
+    df100000-df1fffff : 0000:03:00.0
+    df2ec000-df2effff : 0000:03:00.0
+      df2ec000-df2effff : mpt
+    df2f0000-df2fffff : 0000:03:00.0
+      df2f0000-df2fffff : mpt
+  e0000000-efffffff : PCI MMCONFIG 0000 [bus 00-ff]
+    e0000000-efffffff : reserved
+      e0000000-efffffff : pnp 00:09
+fe000000-ffffffff : reserved
+  fec00000-fec003ff : IOAPIC 0
+  fec80000-fec803ff : IOAPIC 1
+  fed00000-fed003ff : HPET 0
+  fed40000-fed44fff : PCI Bus 0000:00
+  fed90000-fed91fff : pnp 00:0b
+  fee00000-fee00fff : Local APIC
+100000000-c7fffffff : System RAM
+
+
+
+On Tue, 2011-11-15 at 16:14 +0800, Dave Young wrote:
+> On 11/15/2011 02:50 AM, Tim Hartrick wrote:
+> 
+> > 
+> > Wang,
+> > 
+> > Thanks for taking the time to look at this.
+> > 
+> > 
+> > Here is the result from a 2.6.38 kernel used as base kernel and
+> > crashkernel:
+> > 
+> > [    1.314762] WARNING:
+> > at /build/buildd/linux-2.6.38/arch/x86/mm/ioremap.c:83 __ioremap_caller
+> > +0x350/0x3d0()
+> > [    1.324394] Hardware name: PowerEdge R710
+> > [    1.328390] Modules linked in:
+> > [    1.331443] Pid: 1, comm: swapper Not tainted 2.6.38-8-server
+> > #42-Ubuntu
+> > [    1.338128] Call Trace:
+> > [    1.340572]  [<ffffffff81065d1f>] ? warn_slowpath_common+0x7f/0xc0
+> > [    1.346741]  [<ffffffff81065d7a>] ? warn_slowpath_null+0x1a/0x20
+> > [    1.352729]  [<ffffffff81040eb0>] ? __ioremap_caller+0x350/0x3d0
+> > [    1.358726]  [<ffffffff810d8575>] ? call_rcu_sched+0x15/0x20
+> > [    1.364375]  [<ffffffff8103452e>] ? copy_oldmem_page+0x4e/0xc0
+> > [    1.370194]  [<ffffffff8113c39e>] ? __purge_vmap_area_lazy+0xfe/0x1f0
+> > [    1.376622]  [<ffffffff81040f64>] ? ioremap_cache+0x14/0x20
+> > [    1.382176]  [<ffffffff8103452e>] ? copy_oldmem_page+0x4e/0xc0
+> > [    1.388002]  [<ffffffff811cad0a>] ? read_from_oldmem+0x7a/0xb0
+> > [    1.393827]  [<ffffffff81b099a0>] ? merge_note_headers_elf64.clone.3
+> > +0x6c/0x214
+> > [    1.401115]  [<ffffffff8103456a>] ? copy_oldmem_page+0x8a/0xc0
+> > [    1.406936]  [<ffffffff811cad0a>] ? read_from_oldmem+0x7a/0xb0
+> > [    1.412752]  [<ffffffff81b09e79>] ? vmcore_init+0x0/0x73
+> > [    1.418051]  [<ffffffff81b09c52>] ? parse_crash_elf64_headers
+> > +0x10a/0x211
+> > [    1.424825]  [<ffffffff8103456a>] ? copy_oldmem_page+0x8a/0xc0
+> > [    1.430640]  [<ffffffff81b09e79>] ? vmcore_init+0x0/0x73
+> > [    1.435940]  [<ffffffff81b09dd4>] ? parse_crash_elf_headers
+> > +0x7b/0x120
+> > [    1.442450]  [<ffffffff81b09e9c>] ? vmcore_init+0x23/0x73
+> > [    1.447839]  [<ffffffff81002175>] ? do_one_initcall+0x45/0x190
+> > [    1.453661]  [<ffffffff81ae1dff>] ? kernel_init+0x169/0x1f3
+> > [    1.459218]  [<ffffffff8100cde4>] ? kernel_thread_helper+0x4/0x10
+> > [    1.465298]  [<ffffffff81ae1c96>] ? kernel_init+0x0/0x1f3
+> > [    1.470680]  [<ffffffff8100cde0>] ? kernel_thread_helper+0x0/0x10
+> > 
+> > The command line for the crashkernel:
+> > 
+> > [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-2.6.38-8-server
+> > root=UUID=ea7a5a27-d58f-469f-a19c-3e65b69587f6 ro console=ttyS0,115200n8
+> > irqpoll maxcpus=1 nousb memmap=exactmap memmap=640K@0K
+> > memmap=261484K@623232K elfcorehdr=884716K memmap=252K#2087484K
+> > 
+> > The contents of /proc/iomem while running the base kernel:
+> > 
+> > 00000000-0000ffff : reserved
+> > 00010000-0009ffff : System RAM
+> > 000a0000-000bffff : PCI Bus 0000:00
+> > 00100000-7f678fff : System RAM
+> >   01000000-015e1d6c : Kernel code
+> >   015e1d6d-01aca17f : Kernel data
+> >   01bae000-01d03fff : Kernel bss
+> >   26000000-35ffffff : Crash kernel
+> > 7f679000-7f68efff : reserved
+> >   7f679000-7f679003 : APEI ERST
+> >   7f67900c-7f679016 : APEI ERST
+> >   7f679060-7f67906b : APEI ERST
+> >   7f68d000-7f68efff : APEI ERST
+> > 7f68f000-7f6cdfff : ACPI Tables
+> > 7f6ce000-7fffffff : reserved
+> > 80000000-fdffffff : PCI Bus 0000:00
+> >   d5800000-d5ffffff : PCI Bus 0000:08
+> >     d5800000-d5ffffff : 0000:08:03.0
+> >   d6000000-d9ffffff : PCI Bus 0000:01
+> >     d6000000-d7ffffff : 0000:01:00.0
+> >       d6000000-d7ffffff : bnx2
+> >     d8000000-d9ffffff : 0000:01:00.1
+> >       d8000000-d9ffffff : bnx2
+> >   da000000-ddffffff : PCI Bus 0000:02
+> >     da000000-dbffffff : 0000:02:00.0
+> >       da000000-dbffffff : bnx2
+> >     dc000000-ddffffff : 0000:02:00.1
+> >       dc000000-ddffffff : bnx2
+> >   de000000-deffffff : PCI Bus 0000:08
+> >     de000000-de00ffff : 0000:08:03.0
+> >     de7fc000-de7fffff : 0000:08:03.0
+> >     de800000-deffffff : 0000:08:03.0
+> >   df0ff800-df0ffbff : 0000:00:1a.7
+> >     df0ff800-df0ffbff : ehci_hcd
+> >   df0ffc00-df0fffff : 0000:00:1d.7
+> >     df0ffc00-df0fffff : ehci_hcd
+> >   df100000-df2fffff : PCI Bus 0000:03
+> >     df100000-df1fffff : 0000:03:00.0
+> >     df2ec000-df2effff : 0000:03:00.0
+> >       df2ec000-df2effff : mpt
+> >     df2f0000-df2fffff : 0000:03:00.0
+> >       df2f0000-df2fffff : mpt
+> >   e0000000-efffffff : PCI MMCONFIG 0000 [bus 00-ff]
+> >     e0000000-efffffff : reserved
+> >       e0000000-efffffff : pnp 00:09
+> > fe000000-ffffffff : reserved
+> >   fec00000-fec003ff : IOAPIC 0
+> >   fec80000-fec803ff : IOAPIC 1
+> >   fed00000-fed003ff : HPET 0
+> >   fed40000-fed44fff : PCI Bus 0000:00
+> >   fed90000-fed91fff : pnp 00:0b
+> >   fee00000-fee00fff : Local APIC
+> > 100000000-c7fffffff : System RAM
+> > 
+> > 
+> > tim
+> > 
+> > 
+> > 
+> > On Mon, 2011-11-14 at 13:39 +0000, WANG Cong wrote:
+> >> On Tue, 11 Oct 2011 16:39:05 -0700, Tim Hartrick wrote:
+> >>
+> >>> Kexec,
+> >>>
+> >>> I have been experiencing the crash below on Ubuntu 10.04 running
+> >>> 2.6.32-34-server and 2.6.38-8-server as the crashkernel on X86_64. The
+> >>> tools are:
+> >>>
+> >>> kexec-tools	1:2.0.2-1ubuntu3
+> >>> makedumpfile	1.3.7-2
+> >>> kdump-tools	1.3.7-2
+> >>>
+> >>> I would be interested to know if this is a known problem and if so
+> >>> whether or not there is a patch in the pipeline to correct the problem.
+> >>>
+> >>> I will be happy to provide any other details that are required including
+> >>> debug builds if necessary.
+> >> ....
+> >>>
+> >>> [    1.322100] ioremap: invalid physical address db74000000000000 [  
+> 
+> 
+> Searching db74000000000000 got several similar cases of this, all are
+> about per cpu invalid crash_notes address, is this one more?
+> 
+> OTOH, Can you test latest mainline kernel?
+> 
+> ccing lkml and Tejun Heo
+> 
+>  
+> >>> 1.327919] ------------[ cut here ]------------ [    1.332530] WARNING:
+> >>> at /build/buildd/linux-2.6.32/arch/x86/mm/ioremap.c:120 __ioremap_caller
+> >>> +0x360/0x3d0()
+> >>
+> >> This probably means that kexec-tools passed some incorrect
+> >> kernel parameter to the second kernel.
+> >>
+> >> So, what is the cmdline of your second kernel? And what is your
+> >> /proc/iomem of your first kernel?
+> >>
+> >> Cheers.
+> >>
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+> 
+
 
 
 _______________________________________________
