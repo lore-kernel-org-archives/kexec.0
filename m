@@ -1,23 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+Received: from e28smtp09.in.ibm.com ([122.248.162.9])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQKpg-0004vT-Nj
- for kexec@lists.infradead.org; Tue, 15 Nov 2011 15:21:58 +0000
-Received: from d23relay03.au.ibm.com (d23relay03.au.ibm.com [202.81.31.245])
- by e23smtp07.au.ibm.com (8.14.4/8.13.1) with ESMTP id pAFFDTew019179
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 02:13:29 +1100
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- pAFFDTWn4661490
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 02:13:29 +1100
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- pAFFDT73010212
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 02:13:29 +1100
-Subject: [RFC PATCH v5 0/9] fadump: Firmware-assisted dump support for Powerpc.
+ id 1RQKva-00051p-6T
+ for kexec@lists.infradead.org; Tue, 15 Nov 2011 15:28:04 +0000
+Received: from /spool/local by e28smtp09.in.ibm.com with XMail ESMTP
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 15 Nov 2011 20:50:30 +0530
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ pAFFEALH2138184
+ for <kexec@lists.infradead.org>; Tue, 15 Nov 2011 20:44:11 +0530
+Received: from d28av02.in.ibm.com (loopback [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ pAFFE53e027326
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 02:14:06 +1100
+Subject: [RFC PATCH v5 5/9] fadump: Convert firmware-assisted cpu state dump
+ data into elf notes.
 From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Date: Tue, 15 Nov 2011 20:43:24 +0530
-Message-ID: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
+Date: Tue, 15 Nov 2011 20:44:03 +0530
+Message-ID: <20111115151403.16533.73891.stgit@mars.in.ibm.com>
+In-Reply-To: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
+References: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -34,129 +37,540 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linuxppc-dev <linuxppc-dev@ozlabs.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Anton Blanchard <anton@samba.org>, Amerigo Wang <amwang@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Milton Miller <miltonm@bga.com>, Haren Myneni <hbabu@us.ibm.com>, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Ananth Narayan <ananth@in.ibm.com>
 
-Hi All,
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-Please find the version 5 of the patchset that implements firmware-assisted
-dump mechanism to capture kernel crash dump for Powerpc architecture. The
-firmware-assisted dump is a robust mechanism to get reliable kernel crash
-dump with assistance from firmware. This approach does not use kexec, instead
-firmware assists in booting the kdump kernel while preserving memory contents.
+When registered for firmware assisted dump on powerpc, firmware preserves
+the registers for the active CPUs during a system crash. This patch reads
+the cpu register data stored in Firmware-assisted dump format (except for
+crashing cpu) and converts it into elf notes and updates the PT_NOTE program
+header accordingly. The exact register state for crashing cpu is saved to
+fadump crash info structure in scratch area during crash_fadump() and read
+during second kernel boot.
 
 Change in v5:
--------------
-- Added 'fadump_' prefix to all static functions defined.
+- Added 'fadump_' prefix to all static function defined.
 
-patch 02/10:
-- Merged patch 10/10 which introduces a config option CONFIG_FA_DUMP
-  for firmware assisted dump feature on Powerpc (ppc64) architecture.
-- Increased MIN_BOOT_MEM by 64M to avoid OOM issue during network
-  dump capture. When kdump infrastructure is configured to save vmcore
-  over network, we run into OOM issue while loading modules related to
-  network setup.
-
-Changes in v4:
---------------
-patch 04/10:
-- Move the init_elfcore_header() function and 'memblock_num_regions' macro
- from generic code to power specific code as these are used only by
- firmware assisted dump implementation which is power specific feature.
-
-patch 05/10:
+Change in v4:
 - Fixes a issue where memblock_free() is invoked from build_cpu_notes()
   function during error_out path. Invoke cpu_notes_buf_free() in error_out
   path instead of memblock_free().
 
-Changes in v3:
--------------
-- Re-factored the implementation to work with kdump service start/stop.
-  Introduce fadump_registered sysfs control file which will be used by
-  kdump init scripts to start/stop firmware assisted dump. echo 1 to
-  /sys/kernel/fadump_registered file for fadump registration and
-  echo 0 to /sys/kernel/fadump_registered file for fadump un-registration.
-- Introduced the locking mechanism to handle simultaneous writes to
-  sysfs control files fadump_registered and fadump_release_mem
-
-  Affected patches are: 01/10, 03/10, 08/10.
-
-Changes in v2:
--------------
-patch 01/10:
-- Modified the documentation to reflect the change of fadump_region
-  file under debugfs filesystem.
-
-patch 02/10:
-- Modified to use standard pr_debug() macro.
-- Modified early_init_dt_scan_fw_dump() to get the size of
-  "ibm,configure-kernel-dump-sizes" property and use it to iterate through
-  an array of dump sections.
-- Introduced boot option 'fadump_reserve_mem=' to let user specify the
-  fadump boot memory to be reserved.
-
-patch 03/10:
-- Removed few debug print statements.
-- Moved the setup_fadump() call from setup_system() and now calling it
-  subsys_initcall.
-- Moved fadump_region attribute under debugfs.
-- Clear the TCE entries if firmware assisted dump is active.
-
-patch 05/10:
+Change in v2:
 - Moved the crash_fadump() invocation from generic code to panic notifier.
 - Introduced cpu_notes_buf_alloc() function to allocate cpu notes buffer
-  using get_free_pages().
+  using get_free_pages(). The reason is, with the use of subsys_initcall
+  the setup_fadump() is now called after mem_init(). Hence use of
+  get_free_pages() to allocate memory is more approriate then using
+  memblock_alloc().
 
-patch 08/10:
-- Introduced cpu_notes_buf_free() function to free memory allocated for
-  cpu notes buffer.
-
-The most of the code implementation has been adapted from phyp assisted dump
-implementation written by Linas Vepstas and Manish Ahuja.
-
-The first patch is a documentation that talks about firmware-assisted dump
-mechanism, implementation details and TODO list.
-
-I have tested the patches on following system configuration:
-1. LPAR on Power6 with 4GB RAM and 8 CPUs
-2. LPAR on Power7 with 2GB RAM and 20 CPUs
-3. LPAR on Power7 with 1TB RAM and 896 CPUs
-
-These patches cleanly apply on commit c3b92c878 in linux-2.6 git tree.
-
-Please review the patchset and let me know your comments.
-
-Thanks,
--Mahesh.
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 ---
+ arch/powerpc/include/asm/fadump.h  |   44 +++++
+ arch/powerpc/kernel/fadump.c       |  314 ++++++++++++++++++++++++++++++++++++
+ arch/powerpc/kernel/setup-common.c |    6 +
+ arch/powerpc/kernel/traps.c        |    3 
+ 4 files changed, 365 insertions(+), 2 deletions(-)
 
-Mahesh Salgaonkar (9):
-      fadump: Add documentation for firmware-assisted dump.
-      fadump: Reserve the memory for firmware assisted dump.
-      fadump: Register for firmware assisted dump.
-      fadump: Initialize elfcore header and add PT_LOAD program headers.
-      fadump: Convert firmware-assisted cpu state dump data into elf notes.
-      fadump: Add PT_NOTE program header for vmcoreinfo
-      fadump: Introduce cleanup routine to invalidate /proc/vmcore.
-      fadump: Invalidate registration and release reserved memory for general use.
-      fadump: Invalidate the fadump registration during machine shutdown.
+diff --git a/arch/powerpc/include/asm/fadump.h b/arch/powerpc/include/asm/fadump.h
+index c022d5c..72908e3 100644
+--- a/arch/powerpc/include/asm/fadump.h
++++ b/arch/powerpc/include/asm/fadump.h
+@@ -63,6 +63,18 @@
+ /* Dump status flag */
+ #define FADUMP_ERROR_FLAG	0x2000
+ 
++#define FADUMP_CPU_ID_MASK	((1UL << 32) - 1)
++
++#define CPU_UNKNOWN		(~((u32)0))
++
++/* Utility macros */
++#define SKIP_TO_NEXT_CPU(reg_entry)			\
++({							\
++	while (reg_entry->reg_id != REG_ID("CPUEND"))	\
++		reg_entry++;				\
++	reg_entry++;					\
++})
++
+ /* Kernel Dump section info */
+ struct fadump_section {
+ 	u32	request_flag;
+@@ -117,6 +129,9 @@ struct fw_dump {
+ 	unsigned long	reserve_bootvar;
+ 
+ 	unsigned long	fadumphdr_addr;
++	unsigned long	cpu_notes_buf;
++	unsigned long	cpu_notes_buf_size;
++
+ 	int		ibm_configure_kernel_dump;
+ 
+ 	unsigned long	fadump_enabled:1;
+@@ -141,13 +156,40 @@ static inline u64 str_to_u64(const char *str)
+ 	return val;
+ }
+ #define STR_TO_HEX(x)	str_to_u64(x)
++#define REG_ID(x)	str_to_u64(x)
+ 
+ #define FADUMP_CRASH_INFO_MAGIC		STR_TO_HEX("FADMPINF")
++#define REGSAVE_AREA_MAGIC		STR_TO_HEX("REGSAVE")
++
++/* The firmware-assisted dump format.
++ *
++ * The register save area is an area in the partition's memory used to preserve
++ * the register contents (CPU state data) for the active CPUs during a firmware
++ * assisted dump. The dump format contains register save area header followed
++ * by register entries. Each list of registers for a CPU starts with
++ * "CPUSTRT" and ends with "CPUEND".
++ */
++
++/* Register save area header. */
++struct fadump_reg_save_area_header {
++	u64		magic_number;
++	u32		version;
++	u32		num_cpu_offset;
++};
++
++/* Register entry. */
++struct fadump_reg_entry {
++	u64		reg_id;
++	u64		reg_value;
++};
+ 
+ /* fadump crash info structure */
+ struct fadump_crash_info_header {
+ 	u64		magic_number;
+ 	u64		elfcorehdr_addr;
++	u32		crashing_cpu;
++	struct pt_regs	regs;
++	struct cpumask	cpu_online_mask;
+ };
+ 
+ /* Crash memory ranges */
+@@ -163,7 +205,9 @@ extern int early_init_dt_scan_fw_dump(unsigned long node,
+ extern int fadump_reserve_mem(void);
+ extern int setup_fadump(void);
+ extern int is_fadump_active(void);
++extern void crash_fadump(struct pt_regs *, const char *);
+ #else	/* CONFIG_FA_DUMP */
+ static inline int is_fadump_active(void) { return 0; }
++static inline void crash_fadump(struct pt_regs *regs, const char *str) { }
+ #endif
+ #endif
+diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
+index 082f85a..1879ddf 100644
+--- a/arch/powerpc/kernel/fadump.c
++++ b/arch/powerpc/kernel/fadump.c
+@@ -244,6 +244,7 @@ static unsigned long get_fadump_area_size(void)
+ 	size += fw_dump.boot_memory_size;
+ 	size += sizeof(struct fadump_crash_info_header);
+ 	size += sizeof(struct elfhdr); /* ELF core header.*/
++	size += sizeof(struct elf_phdr); /* place holder for cpu notes */
+ 	/* Program headers for crash memory regions. */
+ 	size += sizeof(struct elf_phdr) * (memblock_num_regions(memory) + 2);
+ 
+@@ -397,6 +398,285 @@ static void register_fw_dump(struct fadump_mem_struct *fdm)
+ 	}
+ }
+ 
++void crash_fadump(struct pt_regs *regs, const char *str)
++{
++	struct fadump_crash_info_header *fdh = NULL;
++
++	if (!fw_dump.dump_registered || !fw_dump.fadumphdr_addr)
++		return;
++
++	fdh = __va(fw_dump.fadumphdr_addr);
++	crashing_cpu = smp_processor_id();
++	fdh->crashing_cpu = crashing_cpu;
++	crash_save_vmcoreinfo();
++
++	if (regs)
++		fdh->regs = *regs;
++	else
++		ppc_save_regs(&fdh->regs);
++
++	fdh->cpu_online_mask = *cpu_online_mask;
++
++	/* Call ibm,os-term rtas call to trigger firmware assisted dump */
++	rtas_os_term((char *)str);
++}
++
++#define GPR_MASK	0xffffff0000000000
++static inline int fadump_gpr_index(u64 id)
++{
++	int i = -1;
++	char str[3];
++
++	if ((id & GPR_MASK) == REG_ID("GPR")) {
++		/* get the digits at the end */
++		id &= ~GPR_MASK;
++		id >>= 24;
++		str[2] = '\0';
++		str[1] = id & 0xff;
++		str[0] = (id >> 8) & 0xff;
++		sscanf(str, "%d", &i);
++		if (i > 31)
++			i = -1;
++	}
++	return i;
++}
++
++static inline void fadump_set_regval(struct pt_regs *regs, u64 reg_id,
++								u64 reg_val)
++{
++	int i;
++
++	i = fadump_gpr_index(reg_id);
++	if (i >= 0)
++		regs->gpr[i] = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("NIA"))
++		regs->nip = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("MSR"))
++		regs->msr = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("CTR"))
++		regs->ctr = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("LR"))
++		regs->link = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("XER"))
++		regs->xer = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("CR"))
++		regs->ccr = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("DAR"))
++		regs->dar = (unsigned long)reg_val;
++	else if (reg_id == REG_ID("DSISR"))
++		regs->dsisr = (unsigned long)reg_val;
++}
++
++static struct fadump_reg_entry*
++fadump_read_registers(struct fadump_reg_entry *reg_entry, struct pt_regs *regs)
++{
++	memset(regs, 0, sizeof(struct pt_regs));
++
++	while (reg_entry->reg_id != REG_ID("CPUEND")) {
++		fadump_set_regval(regs, reg_entry->reg_id,
++					reg_entry->reg_value);
++		reg_entry++;
++	}
++	reg_entry++;
++	return reg_entry;
++}
++
++static u32 *fadump_append_elf_note(u32 *buf, char *name, unsigned type,
++						void *data, size_t data_len)
++{
++	struct elf_note note;
++
++	note.n_namesz = strlen(name) + 1;
++	note.n_descsz = data_len;
++	note.n_type   = type;
++	memcpy(buf, &note, sizeof(note));
++	buf += (sizeof(note) + 3)/4;
++	memcpy(buf, name, note.n_namesz);
++	buf += (note.n_namesz + 3)/4;
++	memcpy(buf, data, note.n_descsz);
++	buf += (note.n_descsz + 3)/4;
++
++	return buf;
++}
++
++static void fadump_final_note(u32 *buf)
++{
++	struct elf_note note;
++
++	note.n_namesz = 0;
++	note.n_descsz = 0;
++	note.n_type   = 0;
++	memcpy(buf, &note, sizeof(note));
++}
++
++static u32 *fadump_regs_to_elf_notes(u32 *buf, struct pt_regs *regs)
++{
++	struct elf_prstatus prstatus;
++
++	memset(&prstatus, 0, sizeof(prstatus));
++	/*
++	 * FIXME: How do i get PID? Do I really need it?
++	 * prstatus.pr_pid = ????
++	 */
++	elf_core_copy_kernel_regs(&prstatus.pr_reg, regs);
++	buf = fadump_append_elf_note(buf, KEXEC_CORE_NOTE_NAME, NT_PRSTATUS,
++				&prstatus, sizeof(prstatus));
++	return buf;
++}
++
++static void fadump_update_elfcore_header(char *bufp)
++{
++	struct elfhdr *elf;
++	struct elf_phdr *phdr;
++
++	elf = (struct elfhdr *)bufp;
++	bufp += sizeof(struct elfhdr);
++
++	/* First note is a place holder for cpu notes info. */
++	phdr = (struct elf_phdr *)bufp;
++
++	if (phdr->p_type == PT_NOTE) {
++		phdr->p_paddr = fw_dump.cpu_notes_buf;
++		phdr->p_offset	= phdr->p_paddr;
++		phdr->p_filesz	= fw_dump.cpu_notes_buf_size;
++		phdr->p_memsz = fw_dump.cpu_notes_buf_size;
++	}
++	return;
++}
++
++static void *fadump_cpu_notes_buf_alloc(unsigned long size)
++{
++	void *vaddr;
++	struct page *page;
++	unsigned long order, count, i;
++
++	order = get_order(size);
++	vaddr = (void *)__get_free_pages(GFP_KERNEL|__GFP_ZERO, order);
++	if (!vaddr)
++		return NULL;
++
++	count = 1 << order;
++	page = virt_to_page(vaddr);
++	for (i = 0; i < count; i++)
++		SetPageReserved(page + i);
++	return vaddr;
++}
++
++static void fadump_cpu_notes_buf_free(unsigned long vaddr, unsigned long size)
++{
++	struct page *page;
++	unsigned long order, count, i;
++
++	order = get_order(size);
++	count = 1 << order;
++	page = virt_to_page(vaddr);
++	for (i = 0; i < count; i++)
++		ClearPageReserved(page + i);
++	__free_pages(page, order);
++}
++
++/*
++ * Read CPU state dump data and convert it into ELF notes.
++ * The CPU dump starts with magic number "REGSAVE". NumCpusOffset should be
++ * used to access the data to allow for additional fields to be added without
++ * affecting compatibility. Each list of registers for a CPU starts with
++ * "CPUSTRT" and ends with "CPUEND". Each register entry is of 16 bytes,
++ * 8 Byte ASCII identifier and 8 Byte register value. The register entry
++ * with identifier "CPUSTRT" and "CPUEND" contains 4 byte cpu id as part
++ * of register value. For more details refer to PAPR document.
++ *
++ * Only for the crashing cpu we ignore the CPU dump data and get exact
++ * state from fadump crash info structure populated by first kernel at the
++ * time of crash.
++ */
++static int __init fadump_build_cpu_notes(const struct fadump_mem_struct *fdm)
++{
++	struct fadump_reg_save_area_header *reg_header;
++	struct fadump_reg_entry *reg_entry;
++	struct fadump_crash_info_header *fdh = NULL;
++	void *vaddr;
++	unsigned long addr;
++	u32 num_cpus, *note_buf;
++	struct pt_regs regs;
++	int i, rc = 0, cpu = 0;
++
++	if (!fdm->cpu_state_data.bytes_dumped)
++		return -EINVAL;
++
++	addr = fdm->cpu_state_data.destination_address;
++	vaddr = __va(addr);
++
++	reg_header = vaddr;
++	if (reg_header->magic_number != REGSAVE_AREA_MAGIC) {
++		printk(KERN_ERR "Unable to read register save area.\n");
++		return -ENOENT;
++	}
++	pr_debug("--------CPU State Data------------\n");
++	pr_debug("Magic Number: %llx\n", reg_header->magic_number);
++	pr_debug("NumCpuOffset: %x\n", reg_header->num_cpu_offset);
++
++	vaddr += reg_header->num_cpu_offset;
++	num_cpus = *((u32 *)(vaddr));
++	pr_debug("NumCpus     : %u\n", num_cpus);
++	vaddr += sizeof(u32);
++	reg_entry = (struct fadump_reg_entry *)vaddr;
++
++	/* Allocate buffer to hold cpu crash notes. */
++	fw_dump.cpu_notes_buf_size = num_cpus * sizeof(note_buf_t);
++	fw_dump.cpu_notes_buf_size = PAGE_ALIGN(fw_dump.cpu_notes_buf_size);
++	note_buf = fadump_cpu_notes_buf_alloc(fw_dump.cpu_notes_buf_size);
++	if (!note_buf) {
++		printk(KERN_ERR "Failed to allocate 0x%lx bytes for "
++			"cpu notes buffer\n", fw_dump.cpu_notes_buf_size);
++		return -ENOMEM;
++	}
++	fw_dump.cpu_notes_buf = __pa(note_buf);
++
++	pr_debug("Allocated buffer for cpu notes of size %ld at %p\n",
++			(num_cpus * sizeof(note_buf_t)), note_buf);
++
++	if (fw_dump.fadumphdr_addr)
++		fdh = __va(fw_dump.fadumphdr_addr);
++
++	for (i = 0; i < num_cpus; i++) {
++		if (reg_entry->reg_id != REG_ID("CPUSTRT")) {
++			printk(KERN_ERR "Unable to read CPU state data\n");
++			rc = -ENOENT;
++			goto error_out;
++		}
++		/* Lower 4 bytes of reg_value contains logical cpu id */
++		cpu = reg_entry->reg_value & FADUMP_CPU_ID_MASK;
++		if (!cpumask_test_cpu(cpu, &fdh->cpu_online_mask)) {
++			SKIP_TO_NEXT_CPU(reg_entry);
++			continue;
++		}
++		pr_debug("Reading register data for cpu %d...\n", cpu);
++		if (fdh && fdh->crashing_cpu == cpu) {
++			regs = fdh->regs;
++			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
++			SKIP_TO_NEXT_CPU(reg_entry);
++		} else {
++			reg_entry++;
++			reg_entry = fadump_read_registers(reg_entry, &regs);
++			note_buf = fadump_regs_to_elf_notes(note_buf, &regs);
++		}
++	}
++	fadump_final_note(note_buf);
++
++	pr_debug("Updating elfcore header (%llx) with cpu notes\n",
++							fdh->elfcorehdr_addr);
++	fadump_update_elfcore_header((char *)__va(fdh->elfcorehdr_addr));
++	return 0;
++
++error_out:
++	fadump_cpu_notes_buf_free((unsigned long)__va(fw_dump.cpu_notes_buf),
++					fw_dump.cpu_notes_buf_size);
++	fw_dump.cpu_notes_buf = 0;
++	fw_dump.cpu_notes_buf_size = 0;
++	return rc;
++
++}
++
+ /*
+  * Validate and process the dump data stored by firmware before exporting
+  * it through '/proc/vmcore'.
+@@ -404,18 +684,21 @@ static void register_fw_dump(struct fadump_mem_struct *fdm)
+ static int __init process_fadump(const struct fadump_mem_struct *fdm_active)
+ {
+ 	struct fadump_crash_info_header *fdh;
++	int rc = 0;
+ 
+ 	if (!fdm_active || !fw_dump.fadumphdr_addr)
+ 		return -EINVAL;
+ 
+ 	/* Check if the dump data is valid. */
+ 	if ((fdm_active->header.dump_status_flag == FADUMP_ERROR_FLAG) ||
++			(fdm_active->cpu_state_data.error_flags != 0) ||
+ 			(fdm_active->rmr_region.error_flags != 0)) {
+ 		printk(KERN_ERR "Dump taken by platform is not valid\n");
+ 		return -EINVAL;
+ 	}
+-	if (fdm_active->rmr_region.bytes_dumped !=
+-			fdm_active->rmr_region.source_len) {
++	if ((fdm_active->rmr_region.bytes_dumped !=
++			fdm_active->rmr_region.source_len) ||
++			!fdm_active->cpu_state_data.bytes_dumped) {
+ 		printk(KERN_ERR "Dump taken by platform is incomplete\n");
+ 		return -EINVAL;
+ 	}
+@@ -427,6 +710,10 @@ static int __init process_fadump(const struct fadump_mem_struct *fdm_active)
+ 		return -EINVAL;
+ 	}
+ 
++	rc = fadump_build_cpu_notes(fdm_active);
++	if (rc)
++		return rc;
++
+ 	/*
+ 	 * We are done validating dump info and elfcore header is now ready
+ 	 * to be exported. set elfcorehdr_addr so that vmcore module will
+@@ -541,6 +828,27 @@ static int fadump_create_elfcore_headers(char *bufp)
+ 	elf = (struct elfhdr *)bufp;
+ 	bufp += sizeof(struct elfhdr);
+ 
++	/*
++	 * setup ELF PT_NOTE, place holder for cpu notes info. The notes info
++	 * will be populated during second kernel boot after crash. Hence
++	 * this PT_NOTE will always be the first elf note.
++	 *
++	 * NOTE: Any new ELF note addition should be placed after this note.
++	 */
++	phdr = (struct elf_phdr *)bufp;
++	bufp += sizeof(struct elf_phdr);
++	phdr->p_type = PT_NOTE;
++	phdr->p_flags = 0;
++	phdr->p_vaddr = 0;
++	phdr->p_align = 0;
++
++	phdr->p_offset = 0;
++	phdr->p_paddr = 0;
++	phdr->p_filesz = 0;
++	phdr->p_memsz = 0;
++
++	(elf->e_phnum)++;
++
+ 	/* setup PT_LOAD sections. */
+ 
+ 	for (i = 0; i < crash_mem_ranges; i++) {
+@@ -592,6 +900,8 @@ static unsigned long init_fadump_header(unsigned long addr)
+ 	memset(fdh, 0, sizeof(struct fadump_crash_info_header));
+ 	fdh->magic_number = FADUMP_CRASH_INFO_MAGIC;
+ 	fdh->elfcorehdr_addr = addr;
++	/* We will set the crashing cpu id in crash_fadump() during crash. */
++	fdh->crashing_cpu = CPU_UNKNOWN;
+ 
+ 	return addr;
+ }
+diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
+index b1d738d..87d2465 100644
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -61,6 +61,7 @@
+ #include <asm/xmon.h>
+ #include <asm/cputhreads.h>
+ #include <mm/mmu_decl.h>
++#include <asm/fadump.h>
+ 
+ #include "setup.h"
+ 
+@@ -639,6 +640,11 @@ EXPORT_SYMBOL(check_legacy_ioport);
+ static int ppc_panic_event(struct notifier_block *this,
+                              unsigned long event, void *ptr)
+ {
++	/*
++	 * If firmware-assisted dump has been registered then trigger
++	 * firmware-assisted dump and let firmware handle everything else.
++	 */
++	crash_fadump(NULL, ptr);
+ 	ppc_md.panic(ptr);  /* May not return */
+ 	return NOTIFY_DONE;
+ }
+diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
+index f19d977..c2ba6ed 100644
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -57,6 +57,7 @@
+ #include <asm/kexec.h>
+ #include <asm/ppc-opcode.h>
+ #include <asm/rio.h>
++#include <asm/fadump.h>
+ 
+ #if defined(CONFIG_DEBUGGER) || defined(CONFIG_KEXEC)
+ int (*__debugger)(struct pt_regs *regs) __read_mostly;
+@@ -160,6 +161,8 @@ int die(const char *str, struct pt_regs *regs, long err)
+ 	add_taint(TAINT_DIE);
+ 	raw_spin_unlock_irqrestore(&die.lock, flags);
+ 
++	crash_fadump(regs, str);
++
+ 	if (kexec_should_crash(current) ||
+ 		kexec_sr_activated(smp_processor_id()))
+ 		crash_kexec(regs);
 
-
- Documentation/powerpc/firmware-assisted-dump.txt |  243 ++++
- arch/powerpc/Kconfig                             |   13 
- arch/powerpc/include/asm/fadump.h                |  216 ++++
- arch/powerpc/kernel/Makefile                     |    1 
- arch/powerpc/kernel/fadump.c                     | 1316 ++++++++++++++++++++++
- arch/powerpc/kernel/iommu.c                      |    8 
- arch/powerpc/kernel/prom.c                       |   15 
- arch/powerpc/kernel/setup-common.c               |   14 
- arch/powerpc/kernel/traps.c                      |    3 
- arch/powerpc/mm/hash_utils_64.c                  |   11 
- fs/proc/vmcore.c                                 |   23 
- 11 files changed, 1861 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/powerpc/firmware-assisted-dump.txt
- create mode 100644 arch/powerpc/include/asm/fadump.h
- create mode 100644 arch/powerpc/kernel/fadump.c
-
--- 
-Signature
 
 _______________________________________________
 kexec mailing list
