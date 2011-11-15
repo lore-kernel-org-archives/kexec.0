@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-iy0-f177.google.com ([209.85.210.177])
+Received: from mail-yw0-f49.google.com ([209.85.213.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQJOm-0000Qh-8N
- for kexec@lists.infradead.org; Tue, 15 Nov 2011 13:50:05 +0000
-Received: by iapp10 with SMTP id p10so10567392iap.36
- for <kexec@lists.infradead.org>; Tue, 15 Nov 2011 05:50:03 -0800 (PST)
+ id 1RQJlV-0001Af-QB
+ for kexec@lists.infradead.org; Tue, 15 Nov 2011 14:13:38 +0000
+Received: by ywp31 with SMTP id 31so6473979ywp.36
+ for <kexec@lists.infradead.org>; Tue, 15 Nov 2011 06:13:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpUCE5fB0KGcmmXkpqVnasqpx0cSt01qhXO1CNVRJcSWeA@mail.gmail.com>
+In-Reply-To: <1321296650.2066.17.camel@boudreau>
 References: <1318376345.2050.20.camel@boudreau> <j9r5m5$b18$1@dough.gmane.org>
- <1321296650.2066.17.camel@boudreau> <4EC21F67.10905@redhat.com>
- <CAM_iQpUCE5fB0KGcmmXkpqVnasqpx0cSt01qhXO1CNVRJcSWeA@mail.gmail.com>
-Date: Tue, 15 Nov 2011 21:50:03 +0800
-Message-ID: <CAM_iQpWMGOKkDFWO-dw6GZ5B0knQ2yn3rHD0RvReK-2_NDjS-A@mail.gmail.com>
+ <1321296650.2066.17.camel@boudreau>
+Date: Tue, 15 Nov 2011 22:13:32 +0800
+Message-ID: <CAM_iQpVJnGK6UkqS3R7xJiuHfVaeYF=j9wTBh7xOvFF3R0RYXA@mail.gmail.com>
 Subject: Re: Crash during vmcore_init
 From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,13 +25,25 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: tj@kernel.org, kexec@lists.infradead.org, tim@edgecast.com, linux-kernel@vger.kernel.org
+To: tim@edgecast.com
+Cc: kexec@lists.infradead.org
 
-T24gVHVlLCBOb3YgMTUsIDIwMTEgYXQgOTo0NyBQTSwgQW3DqXJpY28gV2FuZyA8eGl5b3Uud2Fu
-Z2NvbmdAZ21haWwuY29tPiB3cm90ZToKPgo+IEkgYmV0IFRpbSBpcyB1c2luZyBpMzg2IG1hY2hp
-bmUsIGFuZCBvbiBpMzg2IHdlIGhhdmUsCj4KPiBrZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4
-Ni5jCj4KCkVyLCBpdCBpcyB4ODZfNjQuLi4gYnV0IHRoZXkgc2hhcmUgdGhlIHNhbWUgc291cmNl
-IGZpbGUuLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+SGksCgpPbiBUdWUsIE5vdiAxNSwgMjAxMSBhdCAyOjUwIEFNLCBUaW0gSGFydHJpY2sgPHRpbUBl
+ZGdlY2FzdC5jb20+IHdyb3RlOgo+Cj4gVGhlIGNvbW1hbmQgbGluZSBmb3IgdGhlIGNyYXNoa2Vy
+bmVsOgo+Cj4gWyDCoCDCoDAuMDAwMDAwXSBDb21tYW5kIGxpbmU6IEJPT1RfSU1BR0U9L3ZtbGlu
+dXotMi42LjM4LTgtc2VydmVyCj4gcm9vdD1VVUlEPWVhN2E1YTI3LWQ1OGYtNDY5Zi1hMTljLTNl
+NjViNjk1ODdmNiBybyBjb25zb2xlPXR0eVMwLDExNTIwMG44Cj4gaXJxcG9sbCBtYXhjcHVzPTEg
+bm91c2IgbWVtbWFwPWV4YWN0bWFwIG1lbW1hcD02NDBLQDBLCj4gbWVtbWFwPTI2MTQ4NEtANjIz
+MjMySyBlbGZjb3JlaGRyPTg4NDcxNksgbWVtbWFwPTI1MksjMjA4NzQ4NEsKPgoKSG1tLCAibWVt
+bWFwPTI2MTQ4NEtANjIzMjMySyIgd2hpY2ggaXMgMjYwYTAwMDB+MzVmZmIwMDAKCml0IGlzIHJp
+Z2h0IGluIHRoZSByYW5nZSBvZiB5b3VyIGNyYXNoIGtlcm5lbCwgd2hpY2ggaXMKCj4gwqAyNjAw
+MDAwMC0zNWZmZmZmZiA6IENyYXNoIGtlcm5lbAoKMzVmZmIwMDAgaXMgdGhlIGVsZmNvcmVoZHIg
+YWRkcmVzcywgcmlnaHQgYXQgdGhlIGVuZCBvZiB0aGUgcmVzZXJ2ZWQgbWVtb3J5LgoKbWVtbWFw
+PTI1MksjMjA4NzQ4NEsgd2hpY2ggaXMKCj4gN2Y2OGYwMDAtN2Y2Y2RmZmYgOiBBQ1BJIFRhYmxl
+cwoKbG9va3MgZmluZSB0b28uLi4KCkkgZ3Vlc3MgaXQgaXMgcHJvYmFibHkgdGhlIGVsZmNvcmVo
+ZHIgaXMgY29uc3RydWN0ZWQgaW5jb3JyZWN0bHkgYnkgL3NiaW4va2V4ZWMsCmlmIHlvdSBoYXZl
+IGEgY2hhbmNlIHRvIHJlY29tcGlsZSB0aGUgbGF0ZXN0IGtleGVjLXRvb2xzLCBwbGVhc2UgZW5h
+YmxlIC1EREVCVUcKdG8gZ2V0IGRpYWdub3NpcyBpbmZvcm1hdGlvbi4KClRoYW5rcy4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
