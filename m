@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-iy0-f177.google.com ([209.85.210.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQetn-0007QE-Ax
- for kexec@lists.infradead.org; Wed, 16 Nov 2011 12:47:32 +0000
-Received: by iapp10 with SMTP id p10so569528iap.36
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 04:47:29 -0800 (PST)
+Received: from eu1sys200aog117.obsmtp.com ([207.126.144.143])
+ by merlin.infradead.org with smtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RQfDt-0008QV-Sw
+ for kexec@lists.infradead.org; Wed, 16 Nov 2011 13:08:19 +0000
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+ by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 316E23BC
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 13:08:08 +0000 (GMT)
+Received: from mail7.sgp.st.com (mail7.sgp.st.com [164.129.223.81])
+ by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CD1DA4F9D
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 13:08:07 +0000 (GMT)
+From: Angelo CASTELLO <angelo.castello@st.com>
+Subject: problem on uImage-sh support.
+Date: Wed, 16 Nov 2011 14:07:45 +0100
+Message-ID: <001201cca460$c8425db0$58c71910$@castello@st.com>
 MIME-Version: 1.0
-In-Reply-To: <1321397853.4198.21.camel@boudreau>
-References: <1318376345.2050.20.camel@boudreau> <j9r5m5$b18$1@dough.gmane.org>
- <1321296650.2066.17.camel@boudreau>
- <CAM_iQpVJnGK6UkqS3R7xJiuHfVaeYF=j9wTBh7xOvFF3R0RYXA@mail.gmail.com>
- <1321397853.4198.21.camel@boudreau>
-Date: Wed, 16 Nov 2011 20:47:29 +0800
-Message-ID: <CAM_iQpUQ_3B1x+1DTuZ47DBcPbQ89cVWAqjPcR13zaNnimfQ8g@mail.gmail.com>
-Subject: Re: Crash during vmcore_init
-From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
+Content-Language: en-us
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,58 +23,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tim@edgecast.com
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: 'Angelo CASTELLO' <angelo.castello@st.com>
 
-T24gV2VkLCBOb3YgMTYsIDIwMTEgYXQgNjo1NyBBTSwgVGltIEhhcnRyaWNrIDx0aW1AZWRnZWNh
-c3QuY29tPiB3cm90ZToKPgo+IEFtZXJpY28sCj4KPiBJIGRvd25sb2FkZWQgdGhlIHNvdXJjZSBm
-b3Iga2V4ZWMtdG9vbHMgMToyLjAuMi0xdWJ1bnR1MyBhbmQgcmVidWlsdCBpdAo+IHdpdGggLURE
-RUJVRyBhbmQgaW5zdGFsbGVkLiDCoEJlbG93IGFyZSB0aGUgcmVzdWx0cyB1c2luZyB0aGUKPiAy
-LjYuMzgtOC1zZXJ2ZXIgVWJ1bnR1IGtlcm5lbCBhcyBiYXNlIGFuZCBjcmFzaGtlcm5lbC4gwqBO
-b3RlIHRoYXQgdGhlCj4gY3Jhc2hrZXJuZWwgc2l6ZSBoYXMgYmVlbiBpbmNyZWFzZWQgdG8gNDc5
-TS4KCgpUaGFua3MgZm9yIHRlc3RpbmchCgo+Cj4gV2hpbGUgSSBoYXZlIHRoZSBsaXN0J3MgYXR0
-ZW50aW9uLCBJIHdvdWxkIGxpa2UgdG8gbWVudGlvbiBhbm90aGVyCj4gcHJvYmxlbSBpbiB0aGlz
-IGFyZWEuIMKgVGhlIDIuNi4zOC04LXNlcnZlciBrZXJuZWwgY2Fubm90IGNyZWF0ZSBhCj4gY3Jh
-c2hrZXJuZWwgYXJlYSBncmVhdGVyIHRoYW4gNDc5TSBpbiBzaXplIChlLmcuIGNyYXNoa2VybmVs
-PTQ4ME0pLiDCoElmCj4gdGhlIGNyYXNoa2VybmVsIGlzIHJlbG9jYXRlZCAoZS5nLiBjcmFzaGtl
-cm5lbD00ODBNQDhHKSwgdGhlbiB0aGUga2VybmVsCj4gd2lsbCBjcmVhdGUgdGhlIGFyZWEgYnV0
-IGtleGVjICgxOjIuMC4xLTF1YnVudHUzKSBmYWlscyB3aGlsZSBhdHRlbXB0aW5nCj4gdG8gbG9h
-ZCBjcmFzaGtlcm5lbCBpbnRvIHRoZSByZXNlcnZlZCBhcmVhLgoKCkkgYW0gYWZyYWlkIGtleGVj
-IGNhbid0IGxvYWQgdGhlIGtlcm5lbCB0byBtZW1vcnkgYWJvdmUgNEcuCgo+Cj4gVGhpcyBpcyBh
-IGZhdGFsIHByb2JsZW0gc2luY2UgdGhlIDIuNi4zOC04LXNlcnZlciBrZXJuZWwgcnVubmluZyBh
-cwo+IGNyYXNoa2VybmVsIHJlcXVpcmVzIG1vcmUgdGhhbiA0NzlNIG9mIGNyYXNoa2VybmVsIGFy
-ZWEgdG8gc3VjY2Vzc2Z1bGx5Cj4gdGFrZSBhIGR1bXAgb24gb3VyIHN5c3RlbXMuIMKgSSB3aWxs
-IGJlIGhhcHB5IHRvIHByb3ZpZGUgYWRkaXRpb25hbAo+IGluZm9ybWF0aW9uIGFib3V0IHRoaXMg
-b25lIGFzIHdlbGwuCgpXZWxsLCB0aGlzIGlzIG5vdCBrZXJuZWwgcHJvYmxlbSwgaXQgaXMgYSBw
-cm9ibGVtIG9mIHlvdXIga2R1bXAgdG9vbApvbiBVYnVudHUsIHRoZSBpbml0cmQgb2YgdGhlIHNl
-Y29uZCBrZXJuZWwgc2hvdWxkIGRvIGFzIG1pbmltdW0gdGhpbmdzCmFzIHBvc3NpYmxlLgoKCj4g
-RWxmIGhlYWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRiNzQwMDAwMDAwMDAwMDAgcF9w
-YWRkciA9IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgwIHBfZmlsZXN6ID0gMHg0MDAg
-cF9tZW1zeiA9IDB4NDAwCj4gRWxmIGhlYWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRi
-NzQwMDAwMDAwMDAwMDAgcF9wYWRkciA9IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgw
-IHBfZmlsZXN6ID0gMHg0MDAgcF9tZW1zeiA9IDB4NDAwCj4gRWxmIGhlYWRlcjogcF90eXBlID0g
-NCwgcF9vZmZzZXQgPSAweGRiNzQwMDAwMDAwMDAwMDAgcF9wYWRkciA9IDB4ZGI3NDAwMDAwMDAw
-MDAwMCBwX3ZhZGRyID0gMHgwIHBfZmlsZXN6ID0gMHg0MDAgcF9tZW1zeiA9IDB4NDAwCj4gRWxm
-IGhlYWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRiNzQwMDAwMDAwMDAwMDAgcF9wYWRk
-ciA9IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgwIHBfZmlsZXN6ID0gMHg0MDAgcF9t
-ZW1zeiA9IDB4NDAwCj4gRWxmIGhlYWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRiNzQw
-MDAwMDAwMDAwMDAgcF9wYWRkciA9IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgwIHBf
-ZmlsZXN6ID0gMHg0MDAgcF9tZW1zeiA9IDB4NDAwCj4gRWxmIGhlYWRlcjogcF90eXBlID0gNCwg
-cF9vZmZzZXQgPSAweGRiNzQwMDAwMDAwMDAwMDAgcF9wYWRkciA9IDB4ZGI3NDAwMDAwMDAwMDAw
-MCBwX3ZhZGRyID0gMHgwIHBfZmlsZXN6ID0gMHg0MDAgcF9tZW1zeiA9IDB4NDAwCj4gRWxmIGhl
-YWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRiNzQwMDAwMDAwMDAwMDAgcF9wYWRkciA9
-IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgwIHBfZmlsZXN6ID0gMHg0MDAgcF9tZW1z
-eiA9IDB4NDAwCj4gRWxmIGhlYWRlcjogcF90eXBlID0gNCwgcF9vZmZzZXQgPSAweGRiNzQwMDAw
-MDAwMDAwMDAgcF9wYWRkciA9IDB4ZGI3NDAwMDAwMDAwMDAwMCBwX3ZhZGRyID0gMHgwIHBfZmls
-ZXN6ID0gMHg0MDAgcF9tZW1zeiA9IDB4NDAwCgpZb3UgaGF2ZSA4IGNwdXMsIGJ1dCBpdCBpcyBz
-dHJhbmdlIHRoYXQgdGhlc2UgUFRfTk9URSBwcm9ncmFtIGhlYWRlcnMKYXJlIGFsbCBzYW1lLi4u
-CgpTbywgY2FuIHlvdSBzaG93IHVzIHRoZSBvdXRwdXQgb2YgdGhlIGZvbGxvd2luZyBjb21tYW5k
-cyBvbiB5b3VyIG1hY2hpbmU/CgojaGV4ZHVtcCAtQyAvc3lzL2tlcm5lbC9jcmFzaF9ub3Rlcwoj
-Zm9yIGkgaW4gL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1Ki9jcmFzaF9ub3RlczsgZG8gaGV4
-ZHVtcCAtQyAkaTsgZG9uZQoKVGhhbmtzLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi all,
+I tried to use the uImage-sh support but unfortunately it doesn't work.
+I think to have found where is the fault that i want
+discuss with all SH users.
+The actual kexec code is expecting to have the kernel uImage as
+uImage_header + zImage
+but the actual build produces
+uImage_header + vmlinux.bin.gz
+So, the uImage_sh_load routine doesn't match with the input file.
+
+Is there someone have met this problem ?
+
+I rewritten the above mentioned routine using the generic uImage_gz_load and
+all is working fine. 
+Before the submit the patch your feedback is welcome.
+Regards,
+Angelo
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
