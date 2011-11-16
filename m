@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RQhlT-0000sO-R7
- for kexec@lists.infradead.org; Wed, 16 Nov 2011 15:51:14 +0000
-Date: Wed, 16 Nov 2011 10:51:03 -0500
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: kexec-tools git tree is tagged incorrectly?
-Message-ID: <20111116155103.GG8685@redhat.com>
-References: <CAM_iQpW8J7hybZVVLK9rtoMrWbU4AS82ob0iNdbAMCxv8hpC-A@mail.gmail.com>
- <20111116011221.GA6216@verge.net.au>
- <CAM_iQpUVQ9tUcX7Bmc-E-bfxnODGK05KV=vcxHE9E34XS5QmNw@mail.gmail.com>
- <20111116023503.GA4468@verge.net.au>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20111116023503.GA4468@verge.net.au>
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RQhmD-0000tk-Og
+ for kexec@lists.infradead.org; Wed, 16 Nov 2011 15:51:54 +0000
+Received: by iapp10 with SMTP id p10so859313iap.36
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 07:51:53 -0800 (PST)
+Subject: Re: Crash during vmcore_init
+From: Tim Hartrick <tim@edgecast.com>
+In-Reply-To: <CAM_iQpUQ_3B1x+1DTuZ47DBcPbQ89cVWAqjPcR13zaNnimfQ8g@mail.gmail.com>
+References: <1318376345.2050.20.camel@boudreau>
+ <j9r5m5$b18$1@dough.gmane.org> <1321296650.2066.17.camel@boudreau>
+ <CAM_iQpVJnGK6UkqS3R7xJiuHfVaeYF=j9wTBh7xOvFF3R0RYXA@mail.gmail.com>
+ <1321397853.4198.21.camel@boudreau>
+ <CAM_iQpUQ_3B1x+1DTuZ47DBcPbQ89cVWAqjPcR13zaNnimfQ8g@mail.gmail.com>
+Date: Wed, 16 Nov 2011 07:52:00 -0800
+Message-ID: <1321458720.4198.26.camel@boudreau>
+Mime-Version: 1.0
+Reply-To: tim@edgecast.com
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +25,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: =?iso-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org
+To: =?ISO-8859-1?Q?Am=E9rico?= Wang <xiyou.wangcong@gmail.com>
+Cc: kexec@lists.infradead.org
 
-On Wed, Nov 16, 2011 at 11:35:03AM +0900, Simon Horman wrote:
-> On Wed, Nov 16, 2011 at 10:04:06AM +0800, Am=E9rico Wang wrote:
-> > On Wed, Nov 16, 2011 at 9:12 AM, Simon Horman <horms@verge.net.au> wrot=
-e:
-> > >
-> > > Hi Am=E9rico,
-> > >
-> > > I'm not sure that I understand your question, but
-> > > 920f4ededd9627add3ca1cdea965d204f2ca43a7 is the HEAD of the master
-> > > (development) branch. =A0And unless I am mistaken, it is a descendent=
- of v2.0.2.
-> > >
-> > =
-
-> > Yeah, so `git describe HEAD` should show v2.0.2-BLAHBLAH, not
-> > v1.101-618-g920f4ed, right?
-> =
-
-> Yes, I think so. I'm rather unsure why it isn't.
-> However, the following does seem to give a result more in line with
-> expectations.
-
-Are you creating annotated tags or lightweight tags?  That might be the
-difference.
-
-Cheers,
-Don
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CkFtZXJpY28sCgpPbiBXZWQsIDIwMTEtMTEtMTYgYXQgMjA6NDcgKzA4MDAsIEFtw6lyaWNvIFdh
+bmcgd3JvdGU6Cj4gCj4gU28sIGNhbiB5b3Ugc2hvdyB1cyB0aGUgb3V0cHV0IG9mIHRoZSBmb2xs
+b3dpbmcgY29tbWFuZHMgb24geW91ciBtYWNoaW5lPwo+IAo+ICNoZXhkdW1wIC1DIC9zeXMva2Vy
+bmVsL2NyYXNoX25vdGVzCj4gI2ZvciBpIGluIC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdSov
+Y3Jhc2hfbm90ZXM7IGRvIGhleGR1bXAgLUMgJGk7IGRvbmUKPiAKPiBUaGFua3MuCgpTZWUgYmVs
+b3cgZm9yIDIuNi4zOC04LXNlcnZlci4KCgp0aW0KCgojIGhleGR1bXAgLUMgL3N5cy9rZXJuZWwv
+Y3Jhc2hfbm90ZXMKaGV4ZHVtcDogL3N5cy9rZXJuZWwvY3Jhc2hfbm90ZXM6IE5vIHN1Y2ggZmls
+ZSBvciBkaXJlY3RvcnkKIyBmb3IgaSBpbiAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHVbMC05
+XSovY3Jhc2hfbm90ZXM7IGRvIGhleGR1bXAgLUMgJGk7IGRvbmUKMDAwMDAwMDAgIDY0IDYyIDM3
+IDM0IDMwIDMwIDMwIDMwICAzMCAzMCAzMCAzMCAzMCAzMCAzMCAzMCAgfGRiNzQwMDAwMDAwMDAw
+MDB8CjAwMDAwMDEwICAwYSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwufAowMDAwMDAxMQowMDAwMDAwMCAgNjQgNjIgMzcgMzQgMzAgMzAgMzAgMzAgIDMw
+IDMwIDMwIDMwIDMwIDMwIDMwIDMwICB8ZGI3NDAwMDAwMDAwMDAwMHwKMDAwMDAwMTAgIDBhICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfC58CjAwMDAwMDEx
+CjAwMDAwMDAwICA2NCA2MiAzNyAzNCAzMCAzMCAzMCAzMCAgMzAgMzAgMzAgMzAgMzAgMzAgMzAg
+MzAgIHxkYjc0MDAwMDAwMDAwMDAwfAowMDAwMDAxMCAgMGEgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8LnwKMDAwMDAwMTEKMDAwMDAwMDAgIDY0IDYyIDM3
+IDM0IDMwIDMwIDMwIDMwICAzMCAzMCAzMCAzMCAzMCAzMCAzMCAzMCAgfGRiNzQwMDAwMDAwMDAw
+MDB8CjAwMDAwMDEwICAwYSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwufAowMDAwMDAxMQowMDAwMDAwMCAgNjQgNjIgMzcgMzQgMzAgMzAgMzAgMzAgIDMw
+IDMwIDMwIDMwIDMwIDMwIDMwIDMwICB8ZGI3NDAwMDAwMDAwMDAwMHwKMDAwMDAwMTAgIDBhICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfC58CjAwMDAwMDEx
+CjAwMDAwMDAwICA2NCA2MiAzNyAzNCAzMCAzMCAzMCAzMCAgMzAgMzAgMzAgMzAgMzAgMzAgMzAg
+MzAgIHxkYjc0MDAwMDAwMDAwMDAwfAowMDAwMDAxMCAgMGEgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8LnwKMDAwMDAwMTEKMDAwMDAwMDAgIDY0IDYyIDM3
+IDM0IDMwIDMwIDMwIDMwICAzMCAzMCAzMCAzMCAzMCAzMCAzMCAzMCAgfGRiNzQwMDAwMDAwMDAw
+MDB8CjAwMDAwMDEwICAwYSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwufAowMDAwMDAxMQowMDAwMDAwMCAgNjQgNjIgMzcgMzQgMzAgMzAgMzAgMzAgIDMw
+IDMwIDMwIDMwIDMwIDMwIDMwIDMwICB8ZGI3NDAwMDAwMDAwMDAwMHwKMDAwMDAwMTAgIDBhICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfC58CjAwMDAwMDEx
+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
