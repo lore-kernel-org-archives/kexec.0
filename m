@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yw0-f49.google.com ([209.85.213.49])
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQfaZ-00023W-HL
- for kexec@lists.infradead.org; Wed, 16 Nov 2011 13:31:44 +0000
-Received: by ywp31 with SMTP id 31so8009641ywp.36
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 05:31:42 -0800 (PST)
+ id 1RQhNC-0005Hj-G1
+ for kexec@lists.infradead.org; Wed, 16 Nov 2011 15:26:03 +0000
+Received: by iapp10 with SMTP id p10so821536iap.36
+ for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 07:26:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAMMEr5m9yn7s-DoCvuRtHeJL9JEuhWWjpUS-r=cuyV4pYyOZAg@mail.gmail.com>
-References: <1318376345.2050.20.camel@boudreau> <j9r5m5$b18$1@dough.gmane.org>
- <1321296650.2066.17.camel@boudreau>
- <CAM_iQpVJnGK6UkqS3R7xJiuHfVaeYF=j9wTBh7xOvFF3R0RYXA@mail.gmail.com>
- <1321397853.4198.21.camel@boudreau>
- <CAM_iQpUQ_3B1x+1DTuZ47DBcPbQ89cVWAqjPcR13zaNnimfQ8g@mail.gmail.com>
- <CAMMEr5m9yn7s-DoCvuRtHeJL9JEuhWWjpUS-r=cuyV4pYyOZAg@mail.gmail.com>
-Date: Wed, 16 Nov 2011 21:31:41 +0800
-Message-ID: <CAM_iQpX+8xwDYjz=fySg9d-DF-9ezgpcvqUeQsSieVVzTG-16w@mail.gmail.com>
-Subject: Re: Crash during vmcore_init
+In-Reply-To: <20111116023503.GA4468@verge.net.au>
+References: <CAM_iQpW8J7hybZVVLK9rtoMrWbU4AS82ob0iNdbAMCxv8hpC-A@mail.gmail.com>
+ <20111116011221.GA6216@verge.net.au>
+ <CAM_iQpUVQ9tUcX7Bmc-E-bfxnODGK05KV=vcxHE9E34XS5QmNw@mail.gmail.com>
+ <20111116023503.GA4468@verge.net.au>
+Date: Wed, 16 Nov 2011 23:26:01 +0800
+Message-ID: <CAM_iQpV_SgFOZMkrreBGV0+_pAGRGcMO31b_gFPNYd6-dM-kEQ@mail.gmail.com>
+Subject: Re: kexec-tools git tree is tagged incorrectly?
 From: =?UTF-8?Q?Am=C3=A9rico_Wang?= <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -29,20 +27,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tim Hartrick <tim@edgecast.com>
+To: Simon Horman <horms@verge.net.au>
 Cc: kexec@lists.infradead.org
 
-T24gV2VkLCBOb3YgMTYsIDIwMTEgYXQgOToxOSBQTSwgVGltIEhhcnRyaWNrIDx0aW1AZWRnZWNh
-c3QuY29tPiB3cm90ZToKPiBBbWVyaWNhLAo+Cj4gVG8gY2xhcmlmeSwgY3Jhc2hrZXJuZWw9NDgw
-QDJHIG9yIEAxRyBkb2VzbiJ0IHdvcmsgZWl0aGVyLsKgIEZ1cnRoZXIsIGZvcgo+IG9sZGVyIGtl
-cm5lbHMgKDIuNi4zMikgaXQgd2FzIHBvc3NpYmxlIHRvIGNyZWF0ZSBjcmFzaGtlcm5lbCBhcmVh
-cyBsYXJnZXIKPiB0aGFuIDQ4ME0gKGNyYXNoa2VybmVsPTUxMk0pLsKgIFN0YXJ0aW5nIHNvbWV3
-aGVyZSBhcm91bmQgMi42LjM2LCB0aGlzCj4gc3RvcHBlZCB3b3JraW5nLsKgIEFyZSB5b3Ugc2F5
-aW5nIHRoaXMgd2FzIGFuIGludGVudGlvbmFsIGNoYW5nZT8KPgoKTm8sIEkgYW0gbm90IHNheWlu
-ZyB0aGlzLgoKRGVwZW5kcyBvbiB5b3VyIG1hY2hpbmUsIGRpZmZlcmVudCB2ZXJzaW9ucyBvZiBr
-ZXJuZWwgbWF5IGRldGVjdApkaWZmZXJlbnQgbWVtb3J5IHJhbmdlcywgc28sIHlvdSBuZWVkIHRv
-IGNvbXBhcmUgdGhlIG91dHB1dApvZiAvcHJvYy9pb21lbSwgb3IgQklPUyBwcm92aWRlZCBSQU0g
-bWFwIChpbiBkbWVzZyksIG9uIGRpZmZlcmVudAp2ZXJzaW9uIGtlcm5lbHMsIHRvIGtub3cgd2h5
-IHRoYXQgaGFwcGVuZWQuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+T24gV2VkLCBOb3YgMTYsIDIwMTEgYXQgMTA6MzUgQU0sIFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVy
+Z2UubmV0LmF1PiB3cm90ZToKPiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCAxMDowNDowNkFNICsw
+ODAwLCBBbcOpcmljbyBXYW5nIHdyb3RlOgo+PiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCA5OjEy
+IEFNLCBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gd3JvdGU6Cj4+ID4KPj4gPiBI
+aSBBbcOpcmljbywKPj4gPgo+PiA+IEknbSBub3Qgc3VyZSB0aGF0IEkgdW5kZXJzdGFuZCB5b3Vy
+IHF1ZXN0aW9uLCBidXQKPj4gPiA5MjBmNGVkZWRkOTYyN2FkZDNjYTFjZGVhOTY1ZDIwNGYyY2E0
+M2E3IGlzIHRoZSBIRUFEIG9mIHRoZSBtYXN0ZXIKPj4gPiAoZGV2ZWxvcG1lbnQpIGJyYW5jaC4g
+wqBBbmQgdW5sZXNzIEkgYW0gbWlzdGFrZW4sIGl0IGlzIGEgZGVzY2VuZGVudCBvZiB2Mi4wLjIu
+Cj4+ID4KPj4KPj4gWWVhaCwgc28gYGdpdCBkZXNjcmliZSBIRUFEYCBzaG91bGQgc2hvdyB2Mi4w
+LjItQkxBSEJMQUgsIG5vdAo+PiB2MS4xMDEtNjE4LWc5MjBmNGVkLCByaWdodD8KPgo+IFllcywg
+SSB0aGluayBzby4gSSdtIHJhdGhlciB1bnN1cmUgd2h5IGl0IGlzbid0Lgo+IEhvd2V2ZXIsIHRo
+ZSBmb2xsb3dpbmcgZG9lcyBzZWVtIHRvIGdpdmUgYSByZXN1bHQgbW9yZSBpbiBsaW5lIHdpdGgK
+PiBleHBlY3RhdGlvbnMuCj4KPiAkIGdpdCBkZXNjcmliZSAtLXRhZ3MgSEVBRAo+IHYyLjAuMi05
+NC1nOTIwZjRlZAo+CgpGb3IgbGludXgga2VybmVsLCB0aGV5IGFyZSB0aGUgc2FtZS4uLgoKW3dh
+bmdjb25nQGNyMF1+L2xpbnV4LTIuNiUgZ2l0IGRlc2NyaWJlIC0tdGFnCnYzLjItcmMxLTMwNi1n
+N2Y4MDg1MApbd2FuZ2NvbmdAY3IwXX4vbGludXgtMi42JSBnaXQgZGVzY3JpYmUKdjMuMi1yYzEt
+MzA2LWc3ZjgwODUwCgpJIGFtIHdvbmRlcmluZyB3aHkgaXQgaXMgZGlmZmVyZW50IGZvciBrZXhl
+Yy10b29scy4uLgoKVGhhbmtzLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
