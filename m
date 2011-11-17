@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-fx0-f49.google.com ([209.85.161.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RQfnG-0002bB-Ne
- for kexec@lists.infradead.org; Wed, 16 Nov 2011 13:44:51 +0000
-Received: by faar25 with SMTP id r25so1882549faa.36
- for <kexec@lists.infradead.org>; Wed, 16 Nov 2011 05:44:49 -0800 (PST)
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RRBEi-0005l6-8w
+ for kexec@lists.infradead.org; Thu, 17 Nov 2011 23:19:17 +0000
+Date: Fri, 18 Nov 2011 08:19:10 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: kexec-tools git tree is tagged incorrectly?
+Message-ID: <20111117231909.GF10187@verge.net.au>
+References: <CAM_iQpW8J7hybZVVLK9rtoMrWbU4AS82ob0iNdbAMCxv8hpC-A@mail.gmail.com>
+ <20111116011221.GA6216@verge.net.au>
+ <CAM_iQpUVQ9tUcX7Bmc-E-bfxnODGK05KV=vcxHE9E34XS5QmNw@mail.gmail.com>
+ <20111116023503.GA4468@verge.net.au>
+ <20111116155103.GG8685@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM_iQpX+8xwDYjz=fySg9d-DF-9ezgpcvqUeQsSieVVzTG-16w@mail.gmail.com>
-References: <1318376345.2050.20.camel@boudreau> <j9r5m5$b18$1@dough.gmane.org>
- <1321296650.2066.17.camel@boudreau>
- <CAM_iQpVJnGK6UkqS3R7xJiuHfVaeYF=j9wTBh7xOvFF3R0RYXA@mail.gmail.com>
- <1321397853.4198.21.camel@boudreau>
- <CAM_iQpUQ_3B1x+1DTuZ47DBcPbQ89cVWAqjPcR13zaNnimfQ8g@mail.gmail.com>
- <CAMMEr5m9yn7s-DoCvuRtHeJL9JEuhWWjpUS-r=cuyV4pYyOZAg@mail.gmail.com>
- <CAM_iQpX+8xwDYjz=fySg9d-DF-9ezgpcvqUeQsSieVVzTG-16w@mail.gmail.com>
-Date: Wed, 16 Nov 2011 08:44:48 -0500
-Message-ID: <CAMMEr5nHiNgZon=0qsPVEf-OCh_yAAvvrhox+=r9xhuUaFK9iw@mail.gmail.com>
-Subject: Re: Crash during vmcore_init
-From: Tim Hartrick <tim@edgecast.com>
+Content-Disposition: inline
+In-Reply-To: <20111116155103.GG8685@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,92 +23,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============0700090340334833554=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?ISO-8859-1?Q?Am=E9rico_Wang?= <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Don Zickus <dzickus@redhat.com>
+Cc: =?utf-8?Q?Am=C3=A9rico?= Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org
 
---===============0700090340334833554==
-Content-Type: multipart/alternative; boundary=f46d0444e945ba91d504b1da4e9f
-
---f46d0444e945ba91d504b1da4e9f
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Am=E9rico,
-
-Ok, when I get to work, I will post the maps for 2.6.32 and 2.6.38 for
-comparison.
-
-tim
-On Nov 16, 2011 5:31 AM, "Am=E9rico Wang" <xiyou.wangcong@gmail.com> wrote:
-
-> On Wed, Nov 16, 2011 at 9:19 PM, Tim Hartrick <tim@edgecast.com> wrote:
-> > America,
-> >
-> > To clarify, crashkernel=3D480@2G or @1G doesn"t work either.  Further, =
-for
-> > older kernels (2.6.32) it was possible to create crashkernel areas larg=
-er
-> > than 480M (crashkernel=3D512M).  Starting somewhere around 2.6.36, this
-> > stopped working.  Are you saying this was an intentional change?
-> >
->
-> No, I am not saying this.
->
-> Depends on your machine, different versions of kernel may detect
-> different memory ranges, so, you need to compare the output
-> of /proc/iomem, or BIOS provided RAM map (in dmesg), on different
-> version kernels, to know why that happened.
->
-
---f46d0444e945ba91d504b1da4e9f
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<p>Am=E9rico,</p>
-<p>Ok, when I get to work, I will post the maps for 2.6.32 and 2.6.38 for c=
-omparison.<br></p>
-<p>tim</p>
-<div class=3D"gmail_quote">On Nov 16, 2011 5:31 AM, &quot;Am=E9rico Wang&qu=
-ot; &lt;<a href=3D"mailto:xiyou.wangcong@gmail.com">xiyou.wangcong@gmail.co=
-m</a>&gt; wrote:<br type=3D"attribution"><blockquote class=3D"gmail_quote" =
-style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-On Wed, Nov 16, 2011 at 9:19 PM, Tim Hartrick &lt;<a href=3D"mailto:tim@edg=
-ecast.com">tim@edgecast.com</a>&gt; wrote:<br>
-&gt; America,<br>
-&gt;<br>
-&gt; To clarify, crashkernel=3D480@2G or @1G doesn&quot;t work either.=A0 F=
-urther, for<br>
-&gt; older kernels (2.6.32) it was possible to create crashkernel areas lar=
-ger<br>
-&gt; than 480M (crashkernel=3D512M).=A0 Starting somewhere around 2.6.36, t=
-his<br>
-&gt; stopped working.=A0 Are you saying this was an intentional change?<br>
-&gt;<br>
-<br>
-No, I am not saying this.<br>
-<br>
-Depends on your machine, different versions of kernel may detect<br>
-different memory ranges, so, you need to compare the output<br>
-of /proc/iomem, or BIOS provided RAM map (in dmesg), on different<br>
-version kernels, to know why that happened.<br>
-</blockquote></div>
-
---f46d0444e945ba91d504b1da4e9f--
-
-
---===============0700090340334833554==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============0700090340334833554==--
-
+T24gV2VkLCBOb3YgMTYsIDIwMTEgYXQgMTA6NTE6MDNBTSAtMDUwMCwgRG9uIFppY2t1cyB3cm90
+ZToKPiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCAxMTozNTowM0FNICswOTAwLCBTaW1vbiBIb3Jt
+YW4gd3JvdGU6Cj4gPiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCAxMDowNDowNkFNICswODAwLCBB
+bcOpcmljbyBXYW5nIHdyb3RlOgo+ID4gPiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCA5OjEyIEFN
+LCBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT4gd3JvdGU6Cj4gPiA+ID4KPiA+ID4g
+PiBIaSBBbcOpcmljbywKPiA+ID4gPgo+ID4gPiA+IEknbSBub3Qgc3VyZSB0aGF0IEkgdW5kZXJz
+dGFuZCB5b3VyIHF1ZXN0aW9uLCBidXQKPiA+ID4gPiA5MjBmNGVkZWRkOTYyN2FkZDNjYTFjZGVh
+OTY1ZDIwNGYyY2E0M2E3IGlzIHRoZSBIRUFEIG9mIHRoZSBtYXN0ZXIKPiA+ID4gPiAoZGV2ZWxv
+cG1lbnQpIGJyYW5jaC4gwqBBbmQgdW5sZXNzIEkgYW0gbWlzdGFrZW4sIGl0IGlzIGEgZGVzY2Vu
+ZGVudCBvZiB2Mi4wLjIuCj4gPiA+ID4KPiA+ID4gCj4gPiA+IFllYWgsIHNvIGBnaXQgZGVzY3Jp
+YmUgSEVBRGAgc2hvdWxkIHNob3cgdjIuMC4yLUJMQUhCTEFILCBub3QKPiA+ID4gdjEuMTAxLTYx
+OC1nOTIwZjRlZCwgcmlnaHQ/Cj4gPiAKPiA+IFllcywgSSB0aGluayBzby4gSSdtIHJhdGhlciB1
+bnN1cmUgd2h5IGl0IGlzbid0Lgo+ID4gSG93ZXZlciwgdGhlIGZvbGxvd2luZyBkb2VzIHNlZW0g
+dG8gZ2l2ZSBhIHJlc3VsdCBtb3JlIGluIGxpbmUgd2l0aAo+ID4gZXhwZWN0YXRpb25zLgo+IAo+
+IEFyZSB5b3UgY3JlYXRpbmcgYW5ub3RhdGVkIHRhZ3Mgb3IgbGlnaHR3ZWlnaHQgdGFncz8gIFRo
+YXQgbWlnaHQgYmUgdGhlCj4gZGlmZmVyZW5jZS4KCkkgYmVsaWV2ZSBJIGFtIGNyZWF0aW5nIGxp
+Z2h0d2VpZ2h0IHRhZ3MsCkkgZ3Vlc3MgdGhhdCBpcyB0aGUgY2F1c2Ugb2YgdGhlIGRpZmZlcmVu
+Y2UuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
