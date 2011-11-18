@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RRK0x-0002Os-Ql
- for kexec@lists.infradead.org; Fri, 18 Nov 2011 08:41:41 +0000
-Message-ID: <4EC61AB6.4090808@redhat.com>
-Date: Fri, 18 Nov 2011 16:43:34 +0800
+ id 1RRK2c-0002TE-7Q
+ for kexec@lists.infradead.org; Fri, 18 Nov 2011 08:43:22 +0000
+Message-ID: <4EC61B2A.7010000@redhat.com>
+Date: Fri, 18 Nov 2011 16:45:30 +0800
 From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
 Subject: Re: Crash during vmcore_init
@@ -17,7 +17,8 @@ References: <1318376345.2050.20.camel@boudreau>
  <4EC491B3.705@redhat.com>	
  <CAMMEr5k_ynqg5-7Looar2DxXTGZcMqi5Lo+jtETn9awO_bsaGg@mail.gmail.com>	
  <4EC4B60C.3030706@redhat.com> <1321548033.12208.12.camel@boudreau>
-In-Reply-To: <1321548033.12208.12.camel@boudreau>
+ <4EC61AB6.4090808@redhat.com>
+In-Reply-To: <4EC61AB6.4090808@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,152 +34,162 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: tim@edgecast.com
 Cc: Tejun Heo <tj@kernel.org>, WANG Cong <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 11/18/2011 12:40 AM, Tim Hartrick wrote:
+On 11/18/2011 04:43 PM, Dave Young wrote:
 
+> On 11/18/2011 12:40 AM, Tim Hartrick wrote:
 > 
-> Dave, Tejun, Americo,
+>>
+>> Dave, Tejun, Americo,
+>>
+>> Attached find three configs:
+>>
+>> Ubuntu 2.6.32-21-server - works
+>> Ubuntu 2.6.38-8-server - fails
+>> Ubuntu 3.3.1-030101-generic (stable) - fails
 > 
-> Attached find three configs:
 > 
-> Ubuntu 2.6.32-21-server - works
-> Ubuntu 2.6.38-8-server - fails
-> Ubuntu 3.3.1-030101-generic (stable) - fails
-
-
-Thanks, Tim
-
+> Thanks, Tim
 > 
-> On Thu, 2011-11-17 at 15:21 +0800, Dave Young wrote:
->> On 11/17/2011 01:22 PM, Tim Hartrick wrote:
 >>
->>> Tejun, Dave,
+>> On Thu, 2011-11-17 at 15:21 +0800, Dave Young wrote:
+>>> On 11/17/2011 01:22 PM, Tim Hartrick wrote:
 >>>
->>> I will be happy to answer any questions about our environment or test
->>> debug or other patches.  Just tell me what you need.
+>>>> Tejun, Dave,
+>>>>
+>>>> I will be happy to answer any questions about our environment or test
+>>>> debug or other patches.  Just tell me what you need.
+>>>
+>>>
+>>> Thank you. Can you share your kernel config?
+>>>
+>>>>
+>>>> tim
+>>>>
+>>>> On Nov 16, 2011 8:44 PM, "Dave Young" <dyoung@redhat.com
+>>>> <mailto:dyoung@redhat.com>> wrote:
+>>>>
+>>>>     On 11/17/2011 12:34 PM, Tejun Heo wrote:
+>>>>
+>>>>     > Hello,
+>>>>     >
+>>>>     > On Wed, Nov 16, 2011 at 7:30 PM, Dave Young <dyoung@redhat.com
+>>>>     <mailto:dyoung@redhat.com>> wrote:
+>>>>     >> This addr is converted to an invalid phys address,
+>>>>     >
+>>>>     > I'm a bit lost on the context here. Who's calling
+>>>>     per_cpu_ptr_to_phys()?
+>>>>
+>>>>
+>>>>     It's drivers/base/cpu.c : show_crash_notes()
+>>>>
+>>>>     >
+>>>>     >> looking the code below:
+>>>>     >>       if (in_first_chunk) {
+>>>>     >>                if (!is_vmalloc_addr(addr))
+>>>>     >>                        return __pa(addr);
+>>>>     >>                else
+>>>>     >>                        return page_to_phys(vmalloc_to_page(addr));
+>>>>     >>        } else
+>>>>     >>                return page_to_phys(pcpu_addr_to_page(addr));
+>>>>     >>
+>>>>     >> I dont understand per cpu allocation well, if addr is not in
+>>>>     first chunk
+>>>>     >> then it should be in vmalloc area?
+>>>>     >
+>>>>     > Yes, it is. First chunk can be embedded in the kernel linear address
+>>>>     > space but from the second one, it's always set up from the top of the
+>>>>     > vmalloc area with the same offset layout as the first chunk.
+>>>>
+>>>>
+>>>>     in this case ffff880667c19ad0 fall out of vmalloc area and it's not in
+>>>>     first chunk also.
+> 
+> 
+> Tejun,
+> 
+> With config provided by Tim, I can reproduce this problem on a dell
+> machine. I did some debug about this, found that fisrt_start <
+> first_end, 
+
+
+typo, I mean first_start > first_end
+
+so there's no chance to check in for_each_possible_cpu(cpu)
+> 
+> why is the first_start/first_end wrong? pcpu_unit_offsets[] is not
+> ordered? any idea?
+> 
+> I see below hack make the bug gone, it confirmed the addr is indeed in
+> first chunk.
+> 
+> diff --git a/mm/percpu.c b/mm/percpu.c
+> index bf80e55..8f6eb58 100644
+> --- a/mm/percpu.c
+> +++ b/mm/percpu.c
+> @@ -984,26 +984,14 @@ phys_addr_t per_cpu_ptr_to_phys(void *addr)
+>  {
+>  	void __percpu *base = __addr_to_pcpu_ptr(pcpu_base_addr);
+>  	bool in_first_chunk = false;
+> -	unsigned long first_start, first_end;
+>  	unsigned int cpu;
+> 
+> -	/*
+> -	 * The following test on first_start/end isn't strictly
+> -	 * necessary but will speed up lookups of addresses which
+> -	 * aren't in the first chunk.
+> -	 */
+> -	first_start = pcpu_chunk_addr(pcpu_first_chunk, pcpu_first_unit_cpu, 0);
+> -	first_end = pcpu_chunk_addr(pcpu_first_chunk, pcpu_last_unit_cpu,
+> -				    pcpu_unit_pages);
+> -	if ((unsigned long)addr >= first_start &&
+> -	    (unsigned long)addr < first_end) {
+> -		for_each_possible_cpu(cpu) {
+> -			void *start = per_cpu_ptr(base, cpu);
+> -
+> -			if (addr >= start && addr < start + pcpu_unit_size) {
+> -				in_first_chunk = true;
+> -				break;
+> -			}
+> +	for_each_possible_cpu(cpu) {
+> +		void *start = per_cpu_ptr(base, cpu);
+> +
+> +		if (addr >= start && addr < start + pcpu_unit_size) {
+> +			in_first_chunk = true;
+> +			break;
+>  		}
+>  	}
+> 
+>>>>
+>>>>     >
+>>>>     >> Tejun, do you have any idea about this?
+>>>>     >
+>>>>     > Can you please tell me how to reproduce the problem? I'll try to find
+>>>>     > out what's going on.
+>>>>
+>>>>
+>>>>     make sure kernel support CRASH DUMP, then cat
+>>>>     /sys/devices/system/cpu/cpu[x]/crash_notes
+>>>>
+>>>>     Tim Hartrick <tim@edgecast.com <mailto:tim@edgecast.com>> reported
+>>>>     the problem when test kdump.
+>>>>     But I can not reproduce this. I think tim can help to test
+>>>>
+>>>>     >
+>>>>     > Thanks.
+>>>>     >
+>>>>
+>>>>
+>>>>
+>>>>     --
+>>>>     Thanks
+>>>>     Dave
+>>>>
+>>>
+>>>
+>>>
 >>
->>
->> Thank you. Can you share your kernel config?
->>
->>>
->>> tim
->>>
->>> On Nov 16, 2011 8:44 PM, "Dave Young" <dyoung@redhat.com
->>> <mailto:dyoung@redhat.com>> wrote:
->>>
->>>     On 11/17/2011 12:34 PM, Tejun Heo wrote:
->>>
->>>     > Hello,
->>>     >
->>>     > On Wed, Nov 16, 2011 at 7:30 PM, Dave Young <dyoung@redhat.com
->>>     <mailto:dyoung@redhat.com>> wrote:
->>>     >> This addr is converted to an invalid phys address,
->>>     >
->>>     > I'm a bit lost on the context here. Who's calling
->>>     per_cpu_ptr_to_phys()?
->>>
->>>
->>>     It's drivers/base/cpu.c : show_crash_notes()
->>>
->>>     >
->>>     >> looking the code below:
->>>     >>       if (in_first_chunk) {
->>>     >>                if (!is_vmalloc_addr(addr))
->>>     >>                        return __pa(addr);
->>>     >>                else
->>>     >>                        return page_to_phys(vmalloc_to_page(addr));
->>>     >>        } else
->>>     >>                return page_to_phys(pcpu_addr_to_page(addr));
->>>     >>
->>>     >> I dont understand per cpu allocation well, if addr is not in
->>>     first chunk
->>>     >> then it should be in vmalloc area?
->>>     >
->>>     > Yes, it is. First chunk can be embedded in the kernel linear address
->>>     > space but from the second one, it's always set up from the top of the
->>>     > vmalloc area with the same offset layout as the first chunk.
->>>
->>>
->>>     in this case ffff880667c19ad0 fall out of vmalloc area and it's not in
->>>     first chunk also.
-
-
-Tejun,
-
-With config provided by Tim, I can reproduce this problem on a dell
-machine. I did some debug about this, found that fisrt_start <
-first_end, so there's no chance to check in for_each_possible_cpu(cpu)
-
-why is the first_start/first_end wrong? pcpu_unit_offsets[] is not
-ordered? any idea?
-
-I see below hack make the bug gone, it confirmed the addr is indeed in
-first chunk.
-
-diff --git a/mm/percpu.c b/mm/percpu.c
-index bf80e55..8f6eb58 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -984,26 +984,14 @@ phys_addr_t per_cpu_ptr_to_phys(void *addr)
- {
- 	void __percpu *base = __addr_to_pcpu_ptr(pcpu_base_addr);
- 	bool in_first_chunk = false;
--	unsigned long first_start, first_end;
- 	unsigned int cpu;
-
--	/*
--	 * The following test on first_start/end isn't strictly
--	 * necessary but will speed up lookups of addresses which
--	 * aren't in the first chunk.
--	 */
--	first_start = pcpu_chunk_addr(pcpu_first_chunk, pcpu_first_unit_cpu, 0);
--	first_end = pcpu_chunk_addr(pcpu_first_chunk, pcpu_last_unit_cpu,
--				    pcpu_unit_pages);
--	if ((unsigned long)addr >= first_start &&
--	    (unsigned long)addr < first_end) {
--		for_each_possible_cpu(cpu) {
--			void *start = per_cpu_ptr(base, cpu);
--
--			if (addr >= start && addr < start + pcpu_unit_size) {
--				in_first_chunk = true;
--				break;
--			}
-+	for_each_possible_cpu(cpu) {
-+		void *start = per_cpu_ptr(base, cpu);
-+
-+		if (addr >= start && addr < start + pcpu_unit_size) {
-+			in_first_chunk = true;
-+			break;
- 		}
- 	}
-
->>>
->>>     >
->>>     >> Tejun, do you have any idea about this?
->>>     >
->>>     > Can you please tell me how to reproduce the problem? I'll try to find
->>>     > out what's going on.
->>>
->>>
->>>     make sure kernel support CRASH DUMP, then cat
->>>     /sys/devices/system/cpu/cpu[x]/crash_notes
->>>
->>>     Tim Hartrick <tim@edgecast.com <mailto:tim@edgecast.com>> reported
->>>     the problem when test kdump.
->>>     But I can not reproduce this. I think tim can help to test
->>>
->>>     >
->>>     > Thanks.
->>>     >
->>>
->>>
->>>
->>>     --
->>>     Thanks
->>>     Dave
->>>
->>
->>
->>
+> 
+> 
 > 
 
 
