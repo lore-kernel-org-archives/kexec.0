@@ -1,14 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RRF3A-0003od-AI
- for kexec@lists.infradead.org; Fri, 18 Nov 2011 03:23:38 +0000
-Date: Fri, 18 Nov 2011 12:14:58 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RRIG8-0004Bo-CI
+ for kexec@lists.infradead.org; Fri, 18 Nov 2011 06:49:14 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id AF7313EE0AE
+ for <kexec@lists.infradead.org>; Fri, 18 Nov 2011 15:49:06 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 84AEE45DE55
+ for <kexec@lists.infradead.org>; Fri, 18 Nov 2011 15:49:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5C95D45DE54
+ for <kexec@lists.infradead.org>; Fri, 18 Nov 2011 15:49:06 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 505BC1DB804E
+ for <kexec@lists.infradead.org>; Fri, 18 Nov 2011 15:49:06 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1CE4B1DB8048
+ for <kexec@lists.infradead.org>; Fri, 18 Nov 2011 15:49:06 +0900 (JST)
+Date: Fri, 18 Nov 2011 15:48:53 +0900 (   )
+Message-Id: <20111118.154853.246506690.d.hatayama@jp.fujitsu.com>
 Subject: Re: [RFC] makedumpfile, crash: LZO compression support
-Message-Id: <20111118121458.5c007bda.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <20111117211946.3e27b840.d.hatayama@jp.fujitsu.com>
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20111118121458.5c007bda.kumagai-atsushi@mxc.nes.nec.co.jp>
 References: <20111117211946.3e27b840.d.hatayama@jp.fujitsu.com>
+ <20111118121458.5c007bda.kumagai-atsushi@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,86 +38,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: crash-utility@redhat.com, kexec@lists.infradead.org
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-Hello Hatayama-san,
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC] makedumpfile, crash: LZO compression support
+Date: Fri, 18 Nov 2011 12:14:58 +0900
 
-Thank you for your work.
-
-> Performance Comparison:
+> Hello Hatayama-san,
 > 
->   Sample Data
+> Thank you for your work.
 > 
->     Ideally, I must have measured the performance for many enough
->     vmcores generated from machines that was actually running, but now
->     I don't have enough sample vmcores, I couldn't do so. So this
->     comparison doesn't answer question on I/O time improvement. This
->     is TODO for now.
+>> Performance Comparison:
+>> 
+>>   Sample Data
+>> 
+>>     Ideally, I must have measured the performance for many enough
+>>     vmcores generated from machines that was actually running, but now
+>>     I don't have enough sample vmcores, I couldn't do so. So this
+>>     comparison doesn't answer question on I/O time improvement. This
+>>     is TODO for now.
+> 
+> I'll measure the performance for actual vmcores by makedumpfile.
+> Please wait for a while.
 
-I'll measure the performance for actual vmcores by makedumpfile.
-Please wait for a while.
+That's very helpful. Thanks in advance.
+
+But of course I'm also still looking for alternative way.
 
 Thanks.
-KUMAGAI, Atsushi
+HATAYAMA, Daisuke
 
-> 
->     Instead, I choosed worst and best cases regarding compression
->     ratio and speed only. Specifically, the former is /dev/urandom and
->     the latter is /dev/zero.
-> 
->     I get the sample data of 10MB, 100MB and 1GB by doing like this:
-> 
->       $ dd bs=4096 count=$((1024*1024*1024/4096)) if=/dev/urandom of=urandom.1GB
-> 
->   How to measure
-> 
->     Then I performed compression for each block, 4096 bytes, and
->     measured total compression time and output size. See attached
->     mycompress.c.
-> 
->   Result
-> 
->     See attached file result.txt.
-> 
->   Discussion
-> 
->     For both kinds of data, lzo's compression was considerably quicker
->     than zlib's. Compression ratio is about 37% for urandom data, and
->     about 8.5% for zero data. Actual situation of physical memory
->     would be in between the two cases, and so I guess average
->     compression time ratio is between 37% and 8.5%.
-> 
->     Although beyond the topic of this patch set, we can estimate worst
->     compression time on more data size since compression is performed
->     block size wise and the compression time increases
->     linearly. Estimated worst time on 2TB memory is about 15 hours for
->     lzo and about 40 hours for zlib. In this case, compressed data
->     size is larger than the original, so they are really not used,
->     compression time is fully meaningless. I think compression must be
->     done in parallel, and I'll post such patch later.
-> 
-> Diffstat
-> 
->   * makedumpfile
-> 
->  diskdump_mod.h |    3 +-
->  makedumpfile.c |   98 +++++++++++++++++++++++++++++++++++++++++++++++++------
->  makedumpfile.h |   12 +++++++
->  3 files changed, 101 insertions(+), 12 deletions(-)
-> 
->   * crash
-> 
->  defs.h     |    1 +
->  diskdump.c |   20 +++++++++++++++++++-
->  diskdump.h |    3 ++-
->  3 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> TODO
-> 
->   * evaluation including I/O time using actual vmcores
-> 
-> Thanks.
-> HATAYAMA, Daisuke
 
 _______________________________________________
 kexec mailing list
