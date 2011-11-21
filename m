@@ -1,22 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RSIvF-00029H-4N
- for kexec@lists.infradead.org; Mon, 21 Nov 2011 01:43:50 +0000
-Message-ID: <4EC9AD4F.3050404@redhat.com>
-Date: Mon, 21 Nov 2011 09:45:51 +0800
-From: Dave Young <dyoung@redhat.com>
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RSOXP-0002of-Qf
+ for kexec@lists.infradead.org; Mon, 21 Nov 2011 07:43:36 +0000
+Received: by iapp10 with SMTP id p10so8897959iap.36
+ for <kexec@lists.infradead.org>; Sun, 20 Nov 2011 23:43:34 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [PATCH] percpu: fix chunk range calculation
-References: <4EC31E55.6040809@redhat.com> <1321467647.2137.4.camel@boudreau>
- <4EC47FCA.5090908@redhat.com>
- <CAOS58YMOuJrvGxE1VxsU=ZPTLgY60HDJoLFjTowx9ZApUQ3tTw@mail.gmail.com>
- <4EC491B3.705@redhat.com>
- <CAMMEr5k_ynqg5-7Looar2DxXTGZcMqi5Lo+jtETn9awO_bsaGg@mail.gmail.com>
- <4EC4B60C.3030706@redhat.com> <1321548033.12208.12.camel@boudreau>
- <4EC61AB6.4090808@redhat.com> <4EC61B2A.7010000@redhat.com>
- <20111118185535.GA27152@google.com>
-In-Reply-To: <20111118185535.GA27152@google.com>
+In-Reply-To: <20111118021155.GM14082@verge.net.au>
+References: <1321448966-25163-1-git-send-email-xiyou.wangcong@gmail.com>
+ <20111118021155.GM14082@verge.net.au>
+Date: Mon, 21 Nov 2011 15:43:34 +0800
+Message-ID: <CAM_iQpUFSHrEy9z902iMucEN5EisxdjO=QYtJGkF=f1m6qnAKg@mail.gmail.com>
+Subject: Re: [Patch] kexec: fix several issues in get_crash_notes()
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: multipart/mixed; boundary=0015176f03b009b58704b239d8fe
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,210 +22,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tejun Heo <tj@kernel.org>
-Cc: WANG Cong <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, tim@edgecast.com, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-On 11/19/2011 02:55 AM, Tejun Heo wrote:
+--0015176f03b009b58704b239d8fe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> Percpu allocator recorded the cpus which map to the first and last
-> units in pcpu_first/last_unit_cpu respectively and used them to
-> determine the address range of a chunk - e.g. it assumed that the
-> first unit has the lowest address in a chunk while the last unit has
-> the highest address.
-> 
-> This simply isn't true.  Groups in a chunk can have arbitrary positive
-> or negative offsets from the previous one and there is no guarantee
-> that the first unit occupies the lowest offset while the last one the
-> highest.
-> 
-> Fix it by actually comparing unit offsets to determine cpus occupying
-> the lowest and highest offsets.  Also, rename pcu_first/last_unit_cpu
-> to pcpu_low/high_unit_cpu to avoid confusion.
-> 
-> The chunk address range is used to flush cache on vmalloc area
-> map/unmap and decide whether a given address is in the first chunk by
-> per_cpu_ptr_to_phys() and the bug was discovered by invalid
-> per_cpu_ptr_to_phys() translation for crash_note.
-> 
-> Kudos to Dave Young for tracking down the problem.
+On Fri, Nov 18, 2011 at 10:11 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, Nov 16, 2011 at 09:09:26PM +0800, WANG Cong wrote:
+>> a) We don't need 'crash_notes' array at all, save some bytes on stack.
+>> b) We forgot to fclose 'fp' before return.
+>>
+>> Signed-off-by: WANG Cong <xiyou.wangcong@gmail.com>
+>>
+>> ---
+>> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump=
+-x86.c
+>> index 98cda72..333f6ba 100644
+>> --- a/kexec/arch/i386/crashdump-x86.c
+>> +++ b/kexec/arch/i386/crashdump-x86.c
+>> @@ -589,20 +589,18 @@ static int cmdline_add_elfcorehdr(char *cmdline, u=
+nsigned long addr)
+>> =C2=A0 */
+>> =C2=A0static int get_crash_notes(int cpu, uint64_t *addr, uint64_t *len)
+>> =C2=A0{
+>> - =C2=A0 =C2=A0 char crash_notes[PATH_MAX];
+>
+> I wonder if the following might reduce memory usage:
+>
+> =C2=A0 =C2=A0 =C2=A0 =C2=A0const char *crash_notes =3D "/sys/kernel/crash=
+_notes";
 
+Yeah, sure. Below is the new patch.
+-------------------->
 
-Tejun, thanks
+a) We don't need 'crash_notes' array at all, save some bytes on stack.
+b) We forgot to fclose 'fp' before return.
 
-Now that if addr is not in first trunk it must be in vmalloc area, below
-logic should be right:
-	if (in_first_chunk) {
-		if (!is_vmalloc_addr(addr))
-			return __pa(addr);
-		else
-			return page_to_phys(vmalloc_to_page(addr));
-	} else
-		if (!is_vmalloc_addr(addr)) /* not possible */
-			return __pa(addr);
-		else
-			return page_to_phys(pcpu_addr_to_page(addr));
+Signed-off-by: WANG Cong <xiyou.wangcong@gmail.com>
+---
 
-So how about just simply remove in first chunk checking to simplify the
-code as followging:
+--0015176f03b009b58704b239d8fe
+Content-Type: text/x-patch; charset=US-ASCII; name="kexec-tools-fix-get_crash_notes.diff"
+Content-Disposition: attachment; 
+	filename="kexec-tools-fix-get_crash_notes.diff"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_gv965dtg0
 
-phys_addr_t per_cpu_ptr_to_phys(void *addr)
-{
-	if (!is_vmalloc_addr(addr))
-		return __pa(addr);
-	else
-		return page_to_phys(pcpu_addr_to_page(addr));
-}
-
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: WANG Cong <xiyou.wangcong@gmail.com>
-> Reported-by: Dave Young <dyoung@redhat.com>
-> LKML-Reference: <4EC21F67.10905@redhat.com>
-> Cc: stable @kernel.org
-> ---
-> Heh, that's a stupid bug.  Can you please verify this fixes the
-> problem?
-
-
-I can confirm that the per cpu translation works with this patch, but I
-have not managed to finished kdump test because kexec tools refuse
- to load the crash kernel. I need more debugging on kexec tools.
-
-Tim, could you help to test if this patch works for your kdump case?
-
-> 
-> Thank you very much.
-> 
->  mm/percpu-vm.c |   12 ++++++------
->  mm/percpu.c    |   34 ++++++++++++++++++++--------------
->  2 files changed, 26 insertions(+), 20 deletions(-)
-> 
-> diff --git a/mm/percpu-vm.c b/mm/percpu-vm.c
-> index ea53496..bfad724 100644
-> --- a/mm/percpu-vm.c
-> +++ b/mm/percpu-vm.c
-> @@ -143,8 +143,8 @@ static void pcpu_pre_unmap_flush(struct pcpu_chunk *chunk,
->  				 int page_start, int page_end)
->  {
->  	flush_cache_vunmap(
-> -		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
-> -		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
-> +		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
-> +		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
->  }
->  
->  static void __pcpu_unmap_pages(unsigned long addr, int nr_pages)
-> @@ -206,8 +206,8 @@ static void pcpu_post_unmap_tlb_flush(struct pcpu_chunk *chunk,
->  				      int page_start, int page_end)
->  {
->  	flush_tlb_kernel_range(
-> -		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
-> -		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
-> +		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
-> +		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
->  }
->  
->  static int __pcpu_map_pages(unsigned long addr, struct page **pages,
-> @@ -284,8 +284,8 @@ static void pcpu_post_map_flush(struct pcpu_chunk *chunk,
->  				int page_start, int page_end)
->  {
->  	flush_cache_vmap(
-> -		pcpu_chunk_addr(chunk, pcpu_first_unit_cpu, page_start),
-> -		pcpu_chunk_addr(chunk, pcpu_last_unit_cpu, page_end));
-> +		pcpu_chunk_addr(chunk, pcpu_low_unit_cpu, page_start),
-> +		pcpu_chunk_addr(chunk, pcpu_high_unit_cpu, page_end));
->  }
->  
->  /**
-> diff --git a/mm/percpu.c b/mm/percpu.c
-> index bf80e55..93b5a7c 100644
-> --- a/mm/percpu.c
-> +++ b/mm/percpu.c
-> @@ -116,9 +116,9 @@ static int pcpu_atom_size __read_mostly;
->  static int pcpu_nr_slots __read_mostly;
->  static size_t pcpu_chunk_struct_size __read_mostly;
->  
-> -/* cpus with the lowest and highest unit numbers */
-> -static unsigned int pcpu_first_unit_cpu __read_mostly;
-> -static unsigned int pcpu_last_unit_cpu __read_mostly;
-> +/* cpus with the lowest and highest unit addresses */
-> +static unsigned int pcpu_low_unit_cpu __read_mostly;
-> +static unsigned int pcpu_high_unit_cpu __read_mostly;
->  
->  /* the address of the first chunk which starts with the kernel static area */
->  void *pcpu_base_addr __read_mostly;
-> @@ -984,19 +984,19 @@ phys_addr_t per_cpu_ptr_to_phys(void *addr)
->  {
->  	void __percpu *base = __addr_to_pcpu_ptr(pcpu_base_addr);
->  	bool in_first_chunk = false;
-> -	unsigned long first_start, first_end;
-> +	unsigned long first_low, first_high;
->  	unsigned int cpu;
->  
->  	/*
-> -	 * The following test on first_start/end isn't strictly
-> +	 * The following test on unit_low/high isn't strictly
->  	 * necessary but will speed up lookups of addresses which
->  	 * aren't in the first chunk.
->  	 */
-> -	first_start = pcpu_chunk_addr(pcpu_first_chunk, pcpu_first_unit_cpu, 0);
-> -	first_end = pcpu_chunk_addr(pcpu_first_chunk, pcpu_last_unit_cpu,
-> -				    pcpu_unit_pages);
-> -	if ((unsigned long)addr >= first_start &&
-> -	    (unsigned long)addr < first_end) {
-> +	first_low = pcpu_chunk_addr(pcpu_first_chunk, pcpu_low_unit_cpu, 0);
-> +	first_high = pcpu_chunk_addr(pcpu_first_chunk, pcpu_high_unit_cpu,
-> +				     pcpu_unit_pages);
-> +	if ((unsigned long)addr >= first_low &&
-> +	    (unsigned long)addr < first_high) {
->  		for_each_possible_cpu(cpu) {
->  			void *start = per_cpu_ptr(base, cpu);
->  
-> @@ -1233,7 +1233,9 @@ int __init pcpu_setup_first_chunk(const struct pcpu_alloc_info *ai,
->  
->  	for (cpu = 0; cpu < nr_cpu_ids; cpu++)
->  		unit_map[cpu] = UINT_MAX;
-> -	pcpu_first_unit_cpu = NR_CPUS;
-> +
-> +	pcpu_low_unit_cpu = NR_CPUS;
-> +	pcpu_high_unit_cpu = NR_CPUS;
->  
->  	for (group = 0, unit = 0; group < ai->nr_groups; group++, unit += i) {
->  		const struct pcpu_group_info *gi = &ai->groups[group];
-> @@ -1253,9 +1255,13 @@ int __init pcpu_setup_first_chunk(const struct pcpu_alloc_info *ai,
->  			unit_map[cpu] = unit + i;
->  			unit_off[cpu] = gi->base_offset + i * ai->unit_size;
->  
-> -			if (pcpu_first_unit_cpu == NR_CPUS)
-> -				pcpu_first_unit_cpu = cpu;
-> -			pcpu_last_unit_cpu = cpu;
-> +			/* determine low/high unit_cpu */
-> +			if (pcpu_low_unit_cpu == NR_CPUS ||
-> +			    unit_off[cpu] < unit_off[pcpu_low_unit_cpu])
-> +				pcpu_low_unit_cpu = cpu;
-> +			if (pcpu_high_unit_cpu == NR_CPUS ||
-> +			    unit_off[cpu] > unit_off[pcpu_high_unit_cpu])
-> +				pcpu_high_unit_cpu = cpu;
->  		}
->  	}
->  	pcpu_nr_units = unit;
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
-
--- 
-Thanks
-Dave
+ZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMgYi9rZXhlYy9hcmNo
+L2kzODYvY3Jhc2hkdW1wLXg4Ni5jCmluZGV4IDk4Y2RhNzIuLjQzNjc5N2EgMTAwNjQ0Ci0tLSBh
+L2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKKysrIGIva2V4ZWMvYXJjaC9pMzg2L2Ny
+YXNoZHVtcC14ODYuYwpAQCAtNTg5LDEzICs1ODksMTIgQEAgc3RhdGljIGludCBjbWRsaW5lX2Fk
+ZF9lbGZjb3JlaGRyKGNoYXIgKmNtZGxpbmUsIHVuc2lnbmVkIGxvbmcgYWRkcikKICAqLwogc3Rh
+dGljIGludCBnZXRfY3Jhc2hfbm90ZXMoaW50IGNwdSwgdWludDY0X3QgKmFkZHIsIHVpbnQ2NF90
+ICpsZW4pCiB7Ci0JY2hhciBjcmFzaF9ub3Rlc1tQQVRIX01BWF07CisJY29uc3QgY2hhciAqY3Jh
+c2hfbm90ZXMgPSAiL3N5cy9rZXJuZWwvY3Jhc2hfbm90ZXMiOwogCWNoYXIgbGluZVtNQVhfTElO
+RV07CiAJRklMRSAqZnA7CiAJdW5zaWduZWQgbG9uZyB2YWRkcjsKIAlpbnQgY291bnQ7CiAKLQlz
+cHJpbnRmKGNyYXNoX25vdGVzLCAiL3N5cy9rZXJuZWwvY3Jhc2hfbm90ZXMiKTsKIAlmcCA9IGZv
+cGVuKGNyYXNoX25vdGVzLCAiciIpOwogCWlmIChmcCkgewogCQlpZiAoZmdldHMobGluZSwgc2l6
+ZW9mKGxpbmUpLCBmcCkgIT0gMCkgewpAQCAtNjEwLDYgKzYwOSw3IEBAIHN0YXRpYyBpbnQgZ2V0
+X2NyYXNoX25vdGVzKGludCBjcHUsIHVpbnQ2NF90ICphZGRyLCB1aW50NjRfdCAqbGVuKQogI2lm
+ZGVmIERFQlVHCiAJCXByaW50ZigiY3Jhc2hfbm90ZXMgYWRkciA9ICVMeFxuIiwgKmFkZHIpOwog
+I2VuZGlmCisJCWZjbG9zZShmcCk7CiAJCXJldHVybiAwOwogCX0gZWxzZQogCQlyZXR1cm4gZ2V0
+X2NyYXNoX25vdGVzX3Blcl9jcHUoY3B1LCBhZGRyLCBsZW4pOwo=
+--0015176f03b009b58704b239d8fe
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--0015176f03b009b58704b239d8fe--
+
