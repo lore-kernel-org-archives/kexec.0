@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RSPcs-0005gL-AU
- for kexec@lists.infradead.org; Mon, 21 Nov 2011 08:53:18 +0000
-Date: Mon, 21 Nov 2011 17:53:15 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [Patch] fix rpm build errors
-Message-ID: <20111121085314.GD6187@verge.net.au>
-References: <1321863964-12184-1-git-send-email-xiyou.wangcong@gmail.com>
+ id 1RSSax-0006KQ-GX
+ for kexec@lists.infradead.org; Mon, 21 Nov 2011 12:03:32 +0000
+Message-ID: <4ECA3DFF.4040900@redhat.com>
+Date: Mon, 21 Nov 2011 20:03:11 +0800
+From: Cong Wang <amwang@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1321863964-12184-1-git-send-email-xiyou.wangcong@gmail.com>
+Subject: Re: [RFC PATCH v5 0/9] fadump: Firmware-assisted dump support for
+ Powerpc.
+References: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
+In-Reply-To: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,20 +19,16 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Ananth Narayan <ananth@in.ibm.com>, Haren Myneni <hbabu@us.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Milton Miller <miltonm@bga.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Anton Blanchard <anton@samba.org>
 
-On Mon, Nov 21, 2011 at 04:26:04PM +0800, Cong Wang wrote:
-> a) rpmbuild doesn't like '-' in version, replace it with '.'.
-> b) update the files installed in kexec-tools.spec
-> 
-> Signed-off-by: WANG Cong <xiyou.wangcong@gmail.com>
+Vivek, could you please review this patchset?
 
-Thanks, applied.
+Thanks.
 
 _______________________________________________
 kexec mailing list
