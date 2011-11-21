@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ey0-f177.google.com ([209.85.215.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RSPDQ-0004q2-SQ
- for kexec@lists.infradead.org; Mon, 21 Nov 2011 08:27:05 +0000
-Received: by eye3 with SMTP id 3so6054795eye.36
- for <kexec@lists.infradead.org>; Mon, 21 Nov 2011 00:26:58 -0800 (PST)
-From: Cong Wang <xiyou.wangcong@gmail.com>
-Subject: [Patch] fix rpm build errors
-Date: Mon, 21 Nov 2011 16:26:04 +0800
-Message-Id: <1321863964-12184-1-git-send-email-xiyou.wangcong@gmail.com>
+Received: from kirsty.vergenet.net ([2406:a000:f000:9500::1])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RSPai-0005QJ-Jp
+ for kexec@lists.infradead.org; Mon, 21 Nov 2011 08:51:09 +0000
+Date: Mon, 21 Nov 2011 17:50:58 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [Patch] kexec: fix several issues in get_crash_notes()
+Message-ID: <20111121085057.GB6187@verge.net.au>
+References: <1321448966-25163-1-git-send-email-xiyou.wangcong@gmail.com>
+ <20111118021155.GM14082@verge.net.au>
+ <CAM_iQpUFSHrEy9z902iMucEN5EisxdjO=QYtJGkF=f1m6qnAKg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpUFSHrEy9z902iMucEN5EisxdjO=QYtJGkF=f1m6qnAKg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,55 +21,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: WANG Cong <xiyou.wangcong@gmail.com>, horms@verge.net.au
+To: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: kexec@lists.infradead.org
 
-a) rpmbuild doesn't like '-' in version, replace it with '.'.
-b) update the files installed in kexec-tools.spec
-
-Signed-off-by: WANG Cong <xiyou.wangcong@gmail.com>
-
----
-diff --git a/configure.ac b/configure.ac
-index 7dd6028..4388bb9 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -4,7 +4,7 @@ dnl
- dnl 
- 
- dnl ---Required
--AC_INIT(kexec-tools, 2.0.2-git)
-+AC_INIT(kexec-tools, 2.0.2.git)
- AC_CONFIG_AUX_DIR(./config)
- AC_CONFIG_HEADERS([include/config.h])
- AC_LANG(C)
-diff --git a/kexec-tools.spec.in b/kexec-tools.spec.in
-index 0f0ff07..8871f28 100644
---- a/kexec-tools.spec.in
-+++ b/kexec-tools.spec.in
-@@ -31,11 +31,13 @@ make install DESTDIR=${RPM_BUILD_ROOT}
- %defattr(-,root,root)
- %{_sbindir}/kexec
- %{_sbindir}/kdump
--%{_libdir}/%{name}/kexec_test
-+%{_sbindir}/vmcore-dmesg
- %doc News
- %doc COPYING
- %doc TODO
--#%{_mandir}/man8/kexec.8.gz
-+%{_mandir}/man8/kexec.8.gz
-+%{_mandir}/man8/kdump.8.gz
-+%{_mandir}/man8/vmcore-dmesg.8.gz
- 
- %changelog
- * Tue Dec 16 2004 Eric Biederman <ebiederman@lnxi.com>
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBOb3YgMjEsIDIwMTEgYXQgMDM6NDM6MzRQTSArMDgwMCwgQ29uZyBXYW5nIHdyb3Rl
+Ogo+IE9uIEZyaSwgTm92IDE4LCAyMDExIGF0IDEwOjExIEFNLCBTaW1vbiBIb3JtYW4gPGhvcm1z
+QHZlcmdlLm5ldC5hdT4gd3JvdGU6Cj4gPiBPbiBXZWQsIE5vdiAxNiwgMjAxMSBhdCAwOTowOToy
+NlBNICswODAwLCBXQU5HIENvbmcgd3JvdGU6Cj4gPj4gYSkgV2UgZG9uJ3QgbmVlZCAnY3Jhc2hf
+bm90ZXMnIGFycmF5IGF0IGFsbCwgc2F2ZSBzb21lIGJ5dGVzIG9uIHN0YWNrLgo+ID4+IGIpIFdl
+IGZvcmdvdCB0byBmY2xvc2UgJ2ZwJyBiZWZvcmUgcmV0dXJuLgo+ID4+Cj4gPj4gU2lnbmVkLW9m
+Zi1ieTogV0FORyBDb25nIDx4aXlvdS53YW5nY29uZ0BnbWFpbC5jb20+Cj4gPj4KPiA+PiAtLS0K
+PiA+PiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYyBiL2tleGVj
+L2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPiA+PiBpbmRleCA5OGNkYTcyLi4zMzNmNmJhIDEw
+MDY0NAo+ID4+IC0tLSBhL2tleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmMKPiA+PiArKysg
+Yi9rZXhlYy9hcmNoL2kzODYvY3Jhc2hkdW1wLXg4Ni5jCj4gPj4gQEAgLTU4OSwyMCArNTg5LDE4
+IEBAIHN0YXRpYyBpbnQgY21kbGluZV9hZGRfZWxmY29yZWhkcihjaGFyICpjbWRsaW5lLCB1bnNp
+Z25lZCBsb25nIGFkZHIpCj4gPj4gwqAgKi8KPiA+PiDCoHN0YXRpYyBpbnQgZ2V0X2NyYXNoX25v
+dGVzKGludCBjcHUsIHVpbnQ2NF90ICphZGRyLCB1aW50NjRfdCAqbGVuKQo+ID4+IMKgewo+ID4+
+IC0gwqAgwqAgY2hhciBjcmFzaF9ub3Rlc1tQQVRIX01BWF07Cj4gPgo+ID4gSSB3b25kZXIgaWYg
+dGhlIGZvbGxvd2luZyBtaWdodCByZWR1Y2UgbWVtb3J5IHVzYWdlOgo+ID4KPiA+IMKgIMKgIMKg
+IMKgY29uc3QgY2hhciAqY3Jhc2hfbm90ZXMgPSAiL3N5cy9rZXJuZWwvY3Jhc2hfbm90ZXMiOwo+
+IAo+IFllYWgsIHN1cmUuIEJlbG93IGlzIHRoZSBuZXcgcGF0Y2guCj4gLS0tLS0tLS0tLS0tLS0t
+LS0tLS0+Cj4gCj4gYSkgV2UgZG9uJ3QgbmVlZCAnY3Jhc2hfbm90ZXMnIGFycmF5IGF0IGFsbCwg
+c2F2ZSBzb21lIGJ5dGVzIG9uIHN0YWNrLgo+IGIpIFdlIGZvcmdvdCB0byBmY2xvc2UgJ2ZwJyBi
+ZWZvcmUgcmV0dXJuLgoKVGhhbmtzLCBhcHBsaWVkLgoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
