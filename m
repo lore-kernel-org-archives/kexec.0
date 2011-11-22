@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RSlgz-0000GQ-GV
- for kexec@lists.infradead.org; Tue, 22 Nov 2011 08:27:05 +0000
-Message-ID: <4ECB5D53.5000308@redhat.com>
-Date: Tue, 22 Nov 2011 16:29:07 +0800
-From: Dave Young <dyoung@redhat.com>
-MIME-Version: 1.0
+Received: from mail-yw0-f49.google.com ([209.85.213.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RSn9R-0008Qg-HT
+ for kexec@lists.infradead.org; Tue, 22 Nov 2011 10:00:34 +0000
+Received: by ywa12 with SMTP id 12so114762ywa.36
+ for <kexec@lists.infradead.org>; Tue, 22 Nov 2011 02:00:28 -0800 (PST)
+Date: Tue, 22 Nov 2011 02:00:24 -0800 (PST)
+From: David Rientjes <rientjes@google.com>
 Subject: Re: BUG:  zonelist->_zonerefs == 0x1c08
-References: <4ECB5C80.8080609@redhat.com>
 In-Reply-To: <4ECB5C80.8080609@redhat.com>
+Message-ID: <alpine.DEB.2.00.1111220140470.4306@chino.kir.corp.google.com>
+References: <4ECB5C80.8080609@redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,13 +24,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, kexec@lists.infradead.org, Tim Hartrick <tim@edgecast.com>
+To: Dave Young <dyoung@redhat.com>, Jens Axboe <axboe@kernel.dk>, Vivek Goyal <vgoyal@redhat.com>
+Cc: linux-mm@kvack.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 11/22/2011 04:25 PM, Dave Young wrote:
+On Tue, 22 Nov 2011, Dave Young wrote:
 
-> 
-> 
 > [    0.000000] Linux version 3.2.0-rc2+ (dave@darkstar) (gcc version
 > 4.5.2 (GCC) ) #256 SMP
 > [    0.000000] Command line: ro root=/dev/mapper/vg_dellper71001-lv_root
@@ -115,6 +115,37 @@ On 11/22/2011 04:25 PM, Dave Young wrote:
 > [    0.000000] SRAT: Node 0 PXM 1 330000000-630000000
 > [    0.000000] Initmem setup node 1 0000000000000000-000000000affb000
 > [    0.000000]   NODE_DATA [000000000aff6000 - 000000000affafff]
+
+blk_throtl_init() is trying to allocate on a specific node and it appears 
+like its zonelists were never built successfully.  I'd guess it's trying 
+to allocate on node 0 since it's not onlined above, probably because this 
+is the crashkernel.  Your SRAT maps two different nodes but it's only 
+onlining node 1 and not node 0.
+
+The problem is that blk_alloc_queue_node() allocs the requeue_queue with 
+__GFP_ZERO, which zeros it and never initialized the node field so it 
+remains zero.  blk_throtl_init() then calls kzalloc_node() on node 0 which 
+doesn't have initialized zonelists.
+
+Maybe try this?
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index ea70e6c..99c1881 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -467,6 +467,7 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+ 	q->backing_dev_info.state = 0;
+ 	q->backing_dev_info.capabilities = BDI_CAP_MAP_COPY;
+ 	q->backing_dev_info.name = "block";
++	q->node = node_id;
+ 
+ 	err = bdi_init(&q->backing_dev_info);
+ 	if (err) {
+
+We might be able to remove this initialization in 
+blk_init_allocated_queue_node() as a cleanup after this, I don't know.  
+Cc'ing the interested parties.
+
 > [    0.000000] Zone PFN ranges:
 > [    0.000000]   DMA      0x00000010 -> 0x00001000
 > [    0.000000]   DMA32    0x00001000 -> 0x00100000
@@ -510,18 +541,6 @@ On 11/22/2011 04:25 PM, Dave Young wrote:
 > [    1.742461]  RSP <ffff88000a4cfb60>
 > [    1.745933] CR2: 0000000000001c08
 > [    1.749246] ---[ end trace cb2538e743a4de7c ]---
-> 
-
-
-Press send button too quick, forgot to add some backgroud of this:
-
-It happens when crashdump kernel startup after echo c >/proc/sysrq-trigger
-
-Any idea from mm people?
-
--- 
-Thanks
-Dave
 
 _______________________________________________
 kexec mailing list
