@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vw0-f49.google.com ([209.85.212.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RSt4C-0000Zj-VL
- for kexec@lists.infradead.org; Tue, 22 Nov 2011 16:19:30 +0000
-Received: by vbbfs19 with SMTP id fs19so414317vbb.36
- for <kexec@lists.infradead.org>; Tue, 22 Nov 2011 08:19:27 -0800 (PST)
-Date: Tue, 22 Nov 2011 08:19:22 -0800
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] percpu: fix chunk range calculation
-Message-ID: <20111122161922.GC3250@google.com>
-References: <CAOS58YMOuJrvGxE1VxsU=ZPTLgY60HDJoLFjTowx9ZApUQ3tTw@mail.gmail.com>
- <4EC491B3.705@redhat.com>
- <CAMMEr5k_ynqg5-7Looar2DxXTGZcMqi5Lo+jtETn9awO_bsaGg@mail.gmail.com>
- <4EC4B60C.3030706@redhat.com> <1321548033.12208.12.camel@boudreau>
- <4EC61AB6.4090808@redhat.com> <4EC61B2A.7010000@redhat.com>
- <20111118185535.GA27152@google.com>
- <20111121211050.GK25776@google.com> <4ECB0D7C.1020700@redhat.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RSxl8-0006Pg-Mq
+ for kexec@lists.infradead.org; Tue, 22 Nov 2011 21:20:10 +0000
+Date: Tue, 22 Nov 2011 16:19:58 -0500
+From: Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH] block: initialize request_queue's numa node during allocation
+Message-ID: <20111122211954.GA17120@redhat.com>
+References: <4ECB5C80.8080609@redhat.com>
+ <alpine.DEB.2.00.1111220140470.4306@chino.kir.corp.google.com>
+ <20111122152739.GA5663@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4ECB0D7C.1020700@redhat.com>
+In-Reply-To: <20111122152739.GA5663@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,16 +25,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: WANG Cong <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, tim@edgecast.com, linux-kernel@vger.kernel.org
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Jens Axboe <axboe@kernel.dk>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, David Rientjes <rientjes@google.com>, Dave Young <dyoung@redhat.com>
 
-On Tue, Nov 22, 2011 at 10:48:28AM +0800, Dave Young wrote:
-> Tested-by: Dave Young <dyoung@redhat.com>
+On Tue, Nov 22 2011 at 10:27am -0500,
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Thanks.  Applied to percpu/for-3.2-fixes with Tested-by added.
+> On Tue, Nov 22, 2011 at 02:00:24AM -0800, David Rientjes wrote:
+...
+> > 
+> > blk_throtl_init() is trying to allocate on a specific node and it appears 
+> > like its zonelists were never built successfully.  I'd guess it's trying 
+> > to allocate on node 0 since it's not onlined above, probably because this 
+> > is the crashkernel.  Your SRAT maps two different nodes but it's only 
+> > onlining node 1 and not node 0.
+> > 
+> > The problem is that blk_alloc_queue_node() allocs the requeue_queue with 
+> > __GFP_ZERO, which zeros it and never initialized the node field so it 
+> > remains zero.  blk_throtl_init() then calls kzalloc_node() on node 0 which 
+> > doesn't have initialized zonelists.
+> > 
+> > Maybe try this?
+> > 
+> > diff --git a/block/blk-core.c b/block/blk-core.c
+> > index ea70e6c..99c1881 100644
+> > --- a/block/blk-core.c
+> > +++ b/block/blk-core.c
+> > @@ -467,6 +467,7 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+> >  	q->backing_dev_info.state = 0;
+> >  	q->backing_dev_info.capabilities = BDI_CAP_MAP_COPY;
+> >  	q->backing_dev_info.name = "block";
+> > +	q->node = node_id;
+> >  
+> 
+> Storing q->node info at queue allocation time makes sense to me. In fact
+> it might make sense to clean it up from blk_init_allocated_queue_node
+> and assume that passed queue has queue->node set at the allocation time.
+>
+> CCing Mike Snitzer who introduced blk_init_allocated_queue_node(). Mike
+> what do you think. I am not sure it makes sense to pass in nodeid, both
+> at queue allocation and queue initialization time. To me, it should make
+> more sense to allocate the queue at one node and that becomes the default
+> node for reset of the initialization.
 
--- 
-tejun
+Yeah, that makes sense to me too:
+
+From: Mike Snitzer <snitzer@redhat.com>
+Subject: block: initialize request_queue's numa node during allocation
+
+Set request_queue's node in blk_alloc_queue_node() rather than
+blk_init_allocated_queue_node().  This avoids blk_throtl_init() using
+q->node before it is initialized.
+
+Rename blk_init_allocated_queue_node() to blk_init_allocated_queue().
+
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+---
+ block/blk-core.c       |   14 +++-----------
+ include/linux/blkdev.h |    3 ---
+ 2 files changed, 3 insertions(+), 14 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index ea70e6c..20d69f6 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -467,6 +467,7 @@ struct request_queue *blk_alloc_queue_node(gfp_t gfp_mask, int node_id)
+ 	q->backing_dev_info.state = 0;
+ 	q->backing_dev_info.capabilities = BDI_CAP_MAP_COPY;
+ 	q->backing_dev_info.name = "block";
++	q->node = node_id;
+ 
+ 	err = bdi_init(&q->backing_dev_info);
+ 	if (err) {
+@@ -551,7 +552,7 @@ blk_init_queue_node(request_fn_proc *rfn, spinlock_t *lock, int node_id)
+ 	if (!uninit_q)
+ 		return NULL;
+ 
+-	q = blk_init_allocated_queue_node(uninit_q, rfn, lock, node_id);
++	q = blk_init_allocated_queue(uninit_q, rfn, lock);
+ 	if (!q)
+ 		blk_cleanup_queue(uninit_q);
+ 
+@@ -563,18 +564,9 @@ struct request_queue *
+ blk_init_allocated_queue(struct request_queue *q, request_fn_proc *rfn,
+ 			 spinlock_t *lock)
+ {
+-	return blk_init_allocated_queue_node(q, rfn, lock, -1);
+-}
+-EXPORT_SYMBOL(blk_init_allocated_queue);
+-
+-struct request_queue *
+-blk_init_allocated_queue_node(struct request_queue *q, request_fn_proc *rfn,
+-			      spinlock_t *lock, int node_id)
+-{
+ 	if (!q)
+ 		return NULL;
+ 
+-	q->node = node_id;
+ 	if (blk_init_free_list(q))
+ 		return NULL;
+ 
+@@ -604,7 +596,7 @@ blk_init_allocated_queue_node(struct request_queue *q, request_fn_proc *rfn,
+ 
+ 	return NULL;
+ }
+-EXPORT_SYMBOL(blk_init_allocated_queue_node);
++EXPORT_SYMBOL(blk_init_allocated_queue);
+ 
+ int blk_get_queue(struct request_queue *q)
+ {
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index c7a6d3b..94acd81 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -805,9 +805,6 @@ extern void blk_unprep_request(struct request *);
+  */
+ extern struct request_queue *blk_init_queue_node(request_fn_proc *rfn,
+ 					spinlock_t *lock, int node_id);
+-extern struct request_queue *blk_init_allocated_queue_node(struct request_queue *,
+-							   request_fn_proc *,
+-							   spinlock_t *, int node_id);
+ extern struct request_queue *blk_init_queue(request_fn_proc *, spinlock_t *);
+ extern struct request_queue *blk_init_allocated_queue(struct request_queue *,
+ 						      request_fn_proc *, spinlock_t *);
 
 _______________________________________________
 kexec mailing list
