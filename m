@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RSyQ4-0000h0-Mn
- for kexec@lists.infradead.org; Tue, 22 Nov 2011 22:02:26 +0000
-Date: Tue, 22 Nov 2011 17:02:18 -0500
+ id 1RSyak-0000pk-Ns
+ for kexec@lists.infradead.org; Tue, 22 Nov 2011 22:13:27 +0000
+Date: Tue, 22 Nov 2011 17:13:21 -0500
 From: Mike Snitzer <snitzer@redhat.com>
 Subject: Re: block: initialize request_queue's numa node during allocation
-Message-ID: <20111122220218.GA17543@redhat.com>
+Message-ID: <20111122221320.GB17543@redhat.com>
 References: <4ECB5C80.8080609@redhat.com>
  <alpine.DEB.2.00.1111220140470.4306@chino.kir.corp.google.com>
  <20111122152739.GA5663@redhat.com>
@@ -33,34 +33,10 @@ Cc: Jens Axboe <axboe@kernel.dk>, kexec@lists.infradead.org, linux-kernel@vger.k
 On Tue, Nov 22 2011 at  4:45pm -0500,
 David Rientjes <rientjes@google.com> wrote:
 
-> On Tue, 22 Nov 2011, Mike Snitzer wrote:
-> 
-> > From: Mike Snitzer <snitzer@redhat.com>
-> > Subject: block: initialize request_queue's numa node during allocation
-> > 
-> > Set request_queue's node in blk_alloc_queue_node() rather than
-> > blk_init_allocated_queue_node().  This avoids blk_throtl_init() using
-> > q->node before it is initialized.
-> > 
-> > Rename blk_init_allocated_queue_node() to blk_init_allocated_queue().
-> > 
-> > Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-> 
-> When I debug an issue and suggest a patch to fix it in addition to 
-> suggesting the possible cleanup for blk_init_allocated_queue_node(), I 
-> don't expect that you'll just take it and claim it as your own, sheesh.
+> Also, your changelog is inadequate since it doesn't convey that his should 
+> be merged for 3.2 because it fixes an oops when there is no node 0!
 
-Sorry I pissed you off.  But I'm not that hard up for credit.  I was
-just looking to make sure proper _code_ changes occurred ;)  I didn't
-take enough time to fully appreciate the long road you've travelled on
-this.
-
-Jens, I'll defer to David to post a proper patch header.  David please
-claim the patch and its contents as your own in v2.  But feel free to
-add my Signed-off-by.
-
-Thanks,
-Mike
+Also, this isn't new to 3.2, v2 should Cc: stable@kernel.org
 
 _______________________________________________
 kexec mailing list
