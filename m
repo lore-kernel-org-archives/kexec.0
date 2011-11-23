@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RT5jj-0007DM-F9
- for kexec@lists.infradead.org; Wed, 23 Nov 2011 05:51:13 +0000
-Received: from tang.cn.fujitsu.com (tang.cn.fujitsu.com [10.167.250.3])
- by song.cn.fujitsu.com (Postfix) with ESMTP id DA1B2170129
- for <kexec@lists.infradead.org>; Wed, 23 Nov 2011 13:50:46 +0800 (CST)
-Received: from mailserver.fnst.cn.fujitsu.com (tang.cn.fujitsu.com [127.0.0.1])
- by tang.cn.fujitsu.com (8.14.3/8.13.1) with ESMTP id pAN5oj2Q026250
- for <kexec@lists.infradead.org>; Wed, 23 Nov 2011 13:50:46 +0800
-Message-ID: <4ECC8A6F.3040606@cn.fujitsu.com>
-Date: Wed, 23 Nov 2011 13:53:51 +0800
-From: Wen Congyang <wency@cn.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RT8Qf-0004we-Gc
+ for kexec@lists.infradead.org; Wed, 23 Nov 2011 08:43:43 +0000
+Date: Wed, 23 Nov 2011 16:45:43 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] percpu: add comment to per_cpu_ptr_to_phys
+Message-ID: <20111123084543.GA2923@darkstar.nay.redhat.com>
 MIME-Version: 1.0
-Subject: [PATCH] makedumpfile: fix off-by-one bug in page_to_pfn()
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +21,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: tj@kernel.org, xiyou.wangcong@gmail.com, kexec@lists.infradead.org, tim@edgecast.com, linux-kernel@vger.kernel.org
 
-The pfn region in a mmd is [mmd->pfn_start, mmd->pfn_end).
-So the max index should be mmd->pfn_end - mmd->pfn_start -1.
-If index >=(not >) mmd->pfn_end - mmd->pfn_start, we should check
-the next mmd.
+add comments about current per_cpu_ptr_to_phys implementation
+to explain why the logic is more complicated than necessary.
 
-Signed-off-by: Wen Congyang <wency@cn.fujitsu.com>
-
+Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- makedumpfile.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+ mm/percpu.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 7b7c266..db8e53f 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2879,7 +2879,7 @@ page_to_pfn(unsigned long page)
- 		if (page < mmd->mem_map)
- 			continue;
- 		index = (page - mmd->mem_map) / SIZE(page);
--		if (index > mmd->pfn_end - mmd->pfn_start)
-+		if (index >= mmd->pfn_end - mmd->pfn_start)
- 			continue;
- 		pfn = mmd->pfn_start + index;
- 		break;
--- 
-1.7.1
+--- linux-2.6.orig/mm/percpu.c	2011-11-22 10:18:46.000000000 +0800
++++ linux-2.6/mm/percpu.c	2011-11-23 16:27:01.667562973 +0800
+@@ -988,6 +988,19 @@ phys_addr_t per_cpu_ptr_to_phys(void *ad
+ 	unsigned int cpu;
+ 
+ 	/*
++	 * percpu allocator has special setup for the first chunk,
++	 * which currently supports either embedding in linear address space
++	 * or vmalloc mapping, and, from the second one, the backing
++	 * allocator (currently either vm or km) provides translation.
++	 *
++	 * The addr can be tranlated simply without checking if it falls
++	 * into the first chunk. But the current code reflects better
++	 * how percpu allocator actually works, and the verification can
++	 * discover both bugs in percpu allocator itself and
++	 * per_cpu_ptr_to_phys() callers. So we keep current code.
++	 */
++
++	/*
+ 	 * The following test on first_start/end isn't strictly
+ 	 * necessary but will speed up lookups of addresses which
+ 	 * aren't in the first chunk.
 
 _______________________________________________
 kexec mailing list
