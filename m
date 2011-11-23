@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RT8Qf-0004we-Gc
- for kexec@lists.infradead.org; Wed, 23 Nov 2011 08:43:43 +0000
-Date: Wed, 23 Nov 2011 16:45:43 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] percpu: add comment to per_cpu_ptr_to_phys
-Message-ID: <20111123084543.GA2923@darkstar.nay.redhat.com>
+Message-ID: <4ECCC407.3040700@kernel.dk>
+Date: Wed, 23 Nov 2011 10:59:35 +0100
+From: Jens Axboe <axboe@kernel.dk>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [patch v2 for-3.2] block: initialize request_queue's numa node
+ during allocation
+References: <4ECB5C80.8080609@redhat.com>
+ <alpine.DEB.2.00.1111220140470.4306@chino.kir.corp.google.com>
+ <20111122152739.GA5663@redhat.com> <20111122211954.GA17120@redhat.com>
+ <alpine.DEB.2.00.1111221342320.2621@chino.kir.corp.google.com>
+ <20111122220218.GA17543@redhat.com>
+ <alpine.DEB.2.00.1111221703590.18644@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.00.1111221703590.18644@chino.kir.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,38 +24,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tj@kernel.org, xiyou.wangcong@gmail.com, kexec@lists.infradead.org, tim@edgecast.com, linux-kernel@vger.kernel.org
+To: David Rientjes <rientjes@google.com>
+Cc: Mike Snitzer <snitzer@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-add comments about current per_cpu_ptr_to_phys implementation
-to explain why the logic is more complicated than necessary.
+On 2011-11-23 02:14, David Rientjes wrote:
+> From: Mike Snitzer <snitzer@redhat.com>
+> 
+> struct request_queue is allocated with __GFP_ZERO so its "node" field is 
+> zero before initialization.  This causes an oops if node 0 is offline in 
+> the page allocator because its zonelists are not initialized.  From Dave 
+> Young's dmesg:
+> 
+> 	SRAT: Node 1 PXM 2 0-d0000000
+> 	SRAT: Node 1 PXM 2 100000000-330000000
+> 	SRAT: Node 0 PXM 1 330000000-630000000
+> 	Initmem setup node 1 0000000000000000-000000000affb000
+> 	...
+> 	Built 1 zonelists in Node order, mobility grouping on.
+> 	...
+> 	BUG: unable to handle kernel paging request at 0000000000001c08
+> 	IP: [<ffffffff8111c355>] __alloc_pages_nodemask+0xb5/0x870
+> 
+> and __alloc_pages_nodemask+0xb5 translates to a NULL pointer on 
+> zonelist->_zonerefs.
+> 
+> The fix is to initialize q->node at the time of allocation so the correct 
+> node is passed to the slab allocator later.
+> 
+> Since blk_init_allocated_queue_node() is no longer needed, merge it with 
+> blk_init_allocated_queue().
 
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- mm/percpu.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Thanks, queued for current release.
 
---- linux-2.6.orig/mm/percpu.c	2011-11-22 10:18:46.000000000 +0800
-+++ linux-2.6/mm/percpu.c	2011-11-23 16:27:01.667562973 +0800
-@@ -988,6 +988,19 @@ phys_addr_t per_cpu_ptr_to_phys(void *ad
- 	unsigned int cpu;
- 
- 	/*
-+	 * percpu allocator has special setup for the first chunk,
-+	 * which currently supports either embedding in linear address space
-+	 * or vmalloc mapping, and, from the second one, the backing
-+	 * allocator (currently either vm or km) provides translation.
-+	 *
-+	 * The addr can be tranlated simply without checking if it falls
-+	 * into the first chunk. But the current code reflects better
-+	 * how percpu allocator actually works, and the verification can
-+	 * discover both bugs in percpu allocator itself and
-+	 * per_cpu_ptr_to_phys() callers. So we keep current code.
-+	 */
-+
-+	/*
- 	 * The following test on first_start/end isn't strictly
- 	 * necessary but will speed up lookups of addresses which
- 	 * aren't in the first chunk.
+-- 
+Jens Axboe
+
 
 _______________________________________________
 kexec mailing list
