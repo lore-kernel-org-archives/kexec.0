@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RTSic-0007X9-5V
- for kexec@lists.infradead.org; Thu, 24 Nov 2011 06:23:37 +0000
-Date: Thu, 24 Nov 2011 14:20:51 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: fix off-by-one bug in page_to_pfn()
-Message-Id: <20111124142051.8b5df388.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <4ECC8A6F.3040606@cn.fujitsu.com>
-References: <4ECC8A6F.3040606@cn.fujitsu.com>
-Mime-Version: 1.0
+Received: from ozlabs.org ([2402:b800:7003:1:1::1])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RTiK3-0002X5-Dm
+ for kexec@lists.infradead.org; Thu, 24 Nov 2011 23:03:16 +0000
+Date: Fri, 25 Nov 2011 09:34:10 +1100
+From: Paul Mackerras <paulus@samba.org>
+Subject: Re: [RFC PATCH v5 1/9] fadump: Add documentation for
+ firmware-assisted dump.
+Message-ID: <20111124223410.GB19828@bloggs.ozlabs.ibm.com>
+References: <20111115151145.16533.16384.stgit@mars.in.ibm.com>
+ <20111115151334.16533.5790.stgit@mars.in.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20111115151334.16533.5790.stgit@mars.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +25,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: wency@cn.fujitsu.com
-Cc: tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
+To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Cc: Amerigo Wang <amwang@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kexec-ml <kexec@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Milton Miller <miltonm@bga.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, Anton Blanchard <anton@samba.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi Wen,
-
-Thank you for the patch. 
-I will check it.
-
-Thanks
-Kumagai
-
-
-On Wed, 23 Nov 2011 13:53:51 +0800
-Wen Congyang <wency@cn.fujitsu.com> wrote:
-
-> The pfn region in a mmd is [mmd->pfn_start, mmd->pfn_end).
-> So the max index should be mmd->pfn_end - mmd->pfn_start -1.
-> If index >=(not >) mmd->pfn_end - mmd->pfn_start, we should check
-> the next mmd.
+On Tue, Nov 15, 2011 at 08:43:34PM +0530, Mahesh J Salgaonkar wrote:
+> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 > 
-> Signed-off-by: Wen Congyang <wency@cn.fujitsu.com>
+> Documentation for firmware-assisted dump. This document is based on the
+> original documentation written for phyp assisted dump by Linas Vepstas
+> and Manish Ahuja, with few changes to reflect the current implementation.
 > 
-> ---
->  makedumpfile.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+> Change in v3:
+> - Modified the documentation to reflect introdunction of fadump_registered
+>   sysfs file and few minor changes.
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 7b7c266..db8e53f 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -2879,7 +2879,7 @@ page_to_pfn(unsigned long page)
->  		if (page < mmd->mem_map)
->  			continue;
->  		index = (page - mmd->mem_map) / SIZE(page);
-> -		if (index > mmd->pfn_end - mmd->pfn_start)
-> +		if (index >= mmd->pfn_end - mmd->pfn_start)
->  			continue;
->  		pfn = mmd->pfn_start + index;
->  		break;
-> -- 
-> 1.7.1
+> Change in v2:
+> - Modified the documentation to reflect the change of fadump_region
+>   file under debugfs filesystem.
+
+In general we don't want the changes between successive versions in
+the patch description; this information should go below the "---"
+line.  The patch description should describe how the patch is now and
+give any information that will be useful to someone looking at the
+resulting git commit later on, but it doesn't need to tell us about
+previous versions of the patch that will never appear in the git
+history.
+
+> +-- Once the dump is copied out, the memory that held the dump
+> +   is immediately available to the running kernel. A further
+> +   reboot isn't required.
+
+I have a general worry about the system making allocations that are
+intended to be node-local while it is running with restricted memory
+(i.e. after the crash and reboot and before the dump has been written
+out and the dump memory freed).  Those allocations will probably all
+come from one node and thus won't necessarily be on the desired node.
+So, for very large systems with significant NUMA characteristics, it
+may be desirable (though not required) to reboot after taking the
+dump.
+
+What happens about the NUMA information in the kernel -- all the
+memory sections, etc.?  Do they get set up as normal even though the
+second kernel is booting with only a small amount of memory initially?
+
+> + /sys/kernel/debug/powerpc/fadump_region
+> +
+> +    This file shows the reserved memory regions if fadump is
+> +    enabled otherwise this file is empty. The output format
+> +    is:
+> +    <region>: [<start>-<end>] <reserved-size> bytes, Dumped: <dump-size>
+> +
+> +    e.g.
+> +    Contents when fadump is registered during first kernel
+> +
+> +    # cat /sys/kernel/debug/powerpc/fadump_region
+> +    CPU : [0x0000006ffb0000-0x0000006fff001f] 0x40020 bytes, Dumped: 0x0
+> +    HPTE: [0x0000006fff0020-0x0000006fff101f] 0x1000 bytes, Dumped: 0x0
+> +    DUMP: [0x0000006fff1020-0x0000007fff101f] 0x10000000 bytes, Dumped: 0x0
+
+How come the HPTE region is only 0x1000 (4k) bytes?  The hashed page
+table (HPT) will be much bigger than this.  Is this our way of telling
+the hypervisor that we don't care about the HPT?  If so, is it
+possible to make this region 0 bytes instead of 0x1000?
+
+Paul.
 
 _______________________________________________
 kexec mailing list
