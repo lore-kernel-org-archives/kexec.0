@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2402:b800:7003:1:1::1])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RUzj8-0006OO-Q9
- for kexec@lists.infradead.org; Mon, 28 Nov 2011 11:50:27 +0000
-Date: Mon, 28 Nov 2011 22:49:49 +1100
-From: Anton Blanchard <anton@samba.org>
-Subject: Re: [PATCH 1/3] kexec-tools: powerpc: Fix 64bit optimize for size
- (gcc -Os) build
-Message-ID: <20111128224949.6b81f8f1@kryten>
-In-Reply-To: <20111117234829.GA14082@verge.net.au>
-References: <20111114185329.19ddc2b4@kryten>
- <20111114221402.GJ14325@bubble.grove.modra.org>
- <20111115092406.31df5f9e@kryten>
- <20111114223036.GK14325@bubble.grove.modra.org>
- <20111117234829.GA14082@verge.net.au>
-Mime-Version: 1.0
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RV9ei-000820-Jx
+ for kexec@lists.infradead.org; Mon, 28 Nov 2011 22:26:34 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20111125081959.GA2505@darkstar.nay.redhat.com>
+Date: Mon, 28 Nov 2011 14:27:02 -0800
+In-Reply-To: <20111125081959.GA2505@darkstar.nay.redhat.com> (Dave Young's
+ message of "Fri, 25 Nov 2011 16:19:59 +0800")
+Message-ID: <m1aa7fq3wp.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH] kexec: do not call kmsg_dump in crashdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,22 +23,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, Matt Evans <matt@ozlabs.org>, Alan Modra <amodra@gmail.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
+Dave Young <dyoung@redhat.com> writes:
 
-Hi Horms,
+> mtd/ram oops dumper will make more functions envolved. In case crash kexec, 
+> we should avoid kmsg dumper to ensure crashdump success.
+>
+> kill kmsg_dump callback while crash dumping 
 
-> Hi Alan, Hi Anton, Hi all,
-> 
-> I am wondering if you are comfortable with me (finally) releasing
-> a new version of kexec-tools with this series of patches applied.
+Agreed.
 
-Sorry for taking a while to get back to you. I haven't found any more
-bugs on the ppc64 side, so I'm definitely comfortable (from a ppc64
-perspective).
+There is a similar?  Or possibly the same patch already queued in
+Andrews tree.
 
-Anton
+Eric
+
+>
+> Signed-off-by: Dave Young <dyoung@redhat.com>
+> ---
+>  kernel/kexec.c |    2 --
+>  1 file changed, 2 deletions(-)
+>
+> --- linux-2.6.orig/kernel/kexec.c	2011-11-18 16:34:18.000000000 +0800
+> +++ linux-2.6/kernel/kexec.c	2011-11-24 16:05:08.138660500 +0800
+> @@ -1094,8 +1094,6 @@ void crash_kexec(struct pt_regs *regs)
+>  		if (kexec_crash_image) {
+>  			struct pt_regs fixed_regs;
+>  
+> -			kmsg_dump(KMSG_DUMP_KEXEC);
+> -
+>  			crash_setup_regs(&fixed_regs, regs);
+>  			crash_save_vmcoreinfo();
+>  			machine_crash_shutdown(&fixed_regs);
 
 _______________________________________________
 kexec mailing list
