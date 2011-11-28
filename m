@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from joe.mail.tiscali.it ([213.205.33.54])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RUyzz-0002mM-7l
- for kexec@lists.infradead.org; Mon, 28 Nov 2011 11:03:48 +0000
-Received: from [192.168.253.1] (217.133.72.11) by joe.mail.tiscali.it (8.5.142)
- id 4EA9378A01721F09 for kexec@lists.infradead.org;
- Mon, 28 Nov 2011 12:03:43 +0100
-Message-ID: <4ED36A8D.7060005@colibre.it>
-Date: Mon, 28 Nov 2011 12:03:41 +0100
-From: Francesco Chiechi <francesco.chiechi@colibre.it>
-MIME-Version: 1.0
-Subject: kexec on imx35?
+Received: from ozlabs.org ([2402:b800:7003:1:1::1])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RUzj8-0006OO-Q9
+ for kexec@lists.infradead.org; Mon, 28 Nov 2011 11:50:27 +0000
+Date: Mon, 28 Nov 2011 22:49:49 +1100
+From: Anton Blanchard <anton@samba.org>
+Subject: Re: [PATCH 1/3] kexec-tools: powerpc: Fix 64bit optimize for size
+ (gcc -Os) build
+Message-ID: <20111128224949.6b81f8f1@kryten>
+In-Reply-To: <20111117234829.GA14082@verge.net.au>
+References: <20111114185329.19ddc2b4@kryten>
+ <20111114221402.GJ14325@bubble.grove.modra.org>
+ <20111115092406.31df5f9e@kryten>
+ <20111114223036.GK14325@bubble.grove.modra.org>
+ <20111117234829.GA14082@verge.net.au>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +27,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Michael Neuling <mikey@neuling.org>, kexec@lists.infradead.org, Milton Miller <miltonm@bga.com>, Matt Evans <matt@ozlabs.org>, Alan Modra <amodra@gmail.com>
 
-hello,
 
-has anybody succeeded in getting kexec to work on imx35?
+Hi Horms,
 
-I am trying with a very minimal configuration, just a serial console and
-an initramfs including kexec binary and the kernel to load
+> Hi Alan, Hi Anton, Hi all,
+> 
+> I am wondering if you are comfortable with me (finally) releasing
+> a new version of kexec-tools with this series of patches applied.
 
-I have some problems and I would like to know if there are bugs that
-prevent kexec to work on this machine
+Sorry for taking a while to get back to you. I haven't found any more
+bugs on the ppc64 side, so I'm definitely comfortable (from a ppc64
+perspective).
 
-thank you all
-
-Francesco
+Anton
 
 _______________________________________________
 kexec mailing list
