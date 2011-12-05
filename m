@@ -1,30 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp05.in.ibm.com ([122.248.162.5])
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RXcY5-0003nr-16
- for kexec@lists.infradead.org; Mon, 05 Dec 2011 17:41:54 +0000
-Received: from /spool/local
- by e28smtp05.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <srivatsa.bhat@linux.vnet.ibm.com>;
- Mon, 5 Dec 2011 23:11:50 +0530
-Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
- by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- pB5HfhNP4481046
- for <kexec@lists.infradead.org>; Mon, 5 Dec 2011 23:11:43 +0530
-Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
- by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- pB5HfgdR024091
- for <kexec@lists.infradead.org>; Tue, 6 Dec 2011 04:41:43 +1100
-Message-ID: <4EDD0254.10408@linux.vnet.ibm.com>
-Date: Mon, 05 Dec 2011 23:11:40 +0530
-From: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] PM / Sleep: Make [un]lock_system_sleep() generic
+ id 1RXcaE-0005kT-8D
+ for kexec@lists.infradead.org; Mon, 05 Dec 2011 17:44:08 +0000
+Received: by iaby26 with SMTP id y26so2008976iab.36
+ for <kexec@lists.infradead.org>; Mon, 05 Dec 2011 09:44:05 -0800 (PST)
+Date: Mon, 5 Dec 2011 09:43:49 -0800
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 3/3] PM / Docs: Recommend the use of
+ [un]lock_system_sleep() over mutex_[un]lock(&pm_mutex)
+Message-ID: <20111205174349.GG627@google.com>
 References: <20111204200208.25620.515.stgit@srivatsabhat.in.ibm.com>
- <20111205171443.GB627@google.com> <4EDCFE9F.9050605@linux.vnet.ibm.com>
- <20111205173057.GE627@google.com>
-In-Reply-To: <20111205173057.GE627@google.com>
+ <20111204200332.25620.53610.stgit@srivatsabhat.in.ibm.com>
+ <20111205171508.GC627@google.com>
+ <4EDD019E.9010009@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4EDD019E.9010009@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -37,32 +29,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tejun Heo <tj@kernel.org>
-Cc: len.brown@intel.com, linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>, rjw@sisk.pl, rdunlap@xenotime.net, ebiederm@xmission.com, pavel@ucw.cz
+To: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
+Cc: len.brown@intel.com, linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, rdunlap@xenotime.net, ebiederm@xmission.com, pavel@ucw.cz
 
-On 12/05/2011 11:00 PM, Tejun Heo wrote:
+Hello,
 
-> (cc'ing Oleg)
-> 
-> On Mon, Dec 05, 2011 at 10:55:51PM +0530, Srivatsa S. Bhat wrote:
->> I wanted these APIs to be generic, not restricted to work only for userspace
->> processes. Both freezer_do_not_count() and freezer_count() are effective only
->> when current->mm is non-NULL (ie., only for userspace ones).
->> I think I have documented this in the patch which added these things to the
->> 2 APIs. See commit 6a76b7a in linux-pm/linux-next.
-> 
-> I see.  Oleg was curious about the ->mm condition too and IIRC there's
-> no reason for that restriction.  Maybe removing that in another patch
-> and using the count functions is better?
-> 
+On Mon, Dec 05, 2011 at 11:08:38PM +0530, Srivatsa S. Bhat wrote:
+> Sorry, I didn't get what you meant here. Are you talking about what
+> needs to be added/changed in the documentation or, are you referring
+> to the code itself and are saying that we must make these APIs
+> internal to the PM alone?
 
+Ooh, sorry about not being clear.  I meant pm_mutex itself.  There's
+no reason to expose that outside of pm, right?  And in the
+documentation, we can just require use of the APIs instead of pm_mutex
+itself.
 
-Oh well, then yes, that sounds like a better idea. Will send patches for
-that. Thank you.
+Thank you.
 
-Regards,
-Srivatsa S. Bhat
-
+-- 
+tejun
 
 _______________________________________________
 kexec mailing list
