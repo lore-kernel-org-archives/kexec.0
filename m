@@ -1,29 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e23smtp02.au.ibm.com ([202.81.31.144])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RY0dC-00034C-1B
- for kexec@lists.infradead.org; Tue, 06 Dec 2011 19:24:46 +0000
-Received: from /spool/local
- by e23smtp02.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <srivatsa.bhat@linux.vnet.ibm.com>;
- Tue, 6 Dec 2011 19:10:44 +1000
-Received: from d23av03.au.ibm.com (d23av03.au.ibm.com [9.190.234.97])
- by d23relay04.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- pB6JL5sq1761512
- for <kexec@lists.infradead.org>; Wed, 7 Dec 2011 06:21:05 +1100
-Received: from d23av03.au.ibm.com (loopback [127.0.0.1])
- by d23av03.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- pB6JOelx016511
- for <kexec@lists.infradead.org>; Wed, 7 Dec 2011 06:24:40 +1100
-From: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
-Subject: [PATCH v2 3/3] PM / Docs: Recommend the use of
- [un]lock_system_sleep() over mutex_[un]lock(&pm_mutex)
-Date: Wed, 07 Dec 2011 00:54:35 +0530
-Message-ID: <20111206192413.25854.963.stgit@srivatsabhat.in.ibm.com>
-In-Reply-To: <20111206192000.25854.53769.stgit@srivatsabhat.in.ibm.com>
+Received: from ogre.sisk.pl ([217.79.144.158])
+ by bombadil.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RY3ZN-0005xK-Lv
+ for kexec@lists.infradead.org; Tue, 06 Dec 2011 22:33:02 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH v2 1/3] PM / Sleep: Make [un]lock_system_sleep() generic
+Date: Tue, 6 Dec 2011 23:35:53 +0100
 References: <20111206192000.25854.53769.stgit@srivatsabhat.in.ibm.com>
+In-Reply-To: <20111206192000.25854.53769.stgit@srivatsabhat.in.ibm.com>
 MIME-Version: 1.0
+Message-Id: <201112062335.53670.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,52 +22,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: rjw@sisk.pl
+To: "Srivatsa S. Bhat" <srivatsa.bhat@linux.vnet.ibm.com>
 Cc: len.brown@intel.com, linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, oleg@redhat.com, rdunlap@xenotime.net, ebiederm@xmission.com, pavel@ucw.cz, tj@kernel.org
 
-Update the documentation to explain the perils of directly using
-mutex_[un]lock(&pm_mutex) and recommend the usage of the safe
-APIs [un]lock_system_sleep() instead.
+On Tuesday, December 06, 2011, Srivatsa S. Bhat wrote:
+> The [un]lock_system_sleep() APIs were originally introduced to mutually
+> exclude memory hotplug and hibernation.
+> 
+> Directly using mutex_lock(&pm_mutex) to achieve mutual exclusion with
+> suspend or hibernation code can lead to freezing failures. However, the
+> APIs [un]lock_system_sleep() can be safely used to achieve the same,
+> without causing freezing failures.
+> 
+> So, since it would be beneficial to modify all the existing users of
+> mutex_lock(&pm_mutex) (in all parts of the kernel), so that they use these
+> safe APIs intead, make these APIs generic by removing the restriction that
+> they work only when CONFIG_HIBERNATE_CALLBACKS is set. Moreover, that
+> restriction didn't buy us anything anyway.
+> 
+> v2: Rebased on top of the patchset posted at:
+>     https://lkml.org/lkml/2011/12/6/334
+> 
+> Suggested-by: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
 
-Signed-off-by: Srivatsa S. Bhat <srivatsa.bhat@linux.vnet.ibm.com>
----
+All patches in this series applied to linux-pm/linux-next.
 
- Documentation/power/freezing-of-tasks.txt |   25 +++++++++++++++++++++++++
- 1 files changed, 25 insertions(+), 0 deletions(-)
+Thanks,
+Rafael
 
-diff --git a/Documentation/power/freezing-of-tasks.txt b/Documentation/power/freezing-of-tasks.txt
-index 3ab9fbd..6ccb68f 100644
---- a/Documentation/power/freezing-of-tasks.txt
-+++ b/Documentation/power/freezing-of-tasks.txt
-@@ -176,3 +176,28 @@ tasks, since it generally exists anyway.
- A driver must have all firmwares it may need in RAM before suspend() is called.
- If keeping them is not practical, for example due to their size, they must be
- requested early enough using the suspend notifier API described in notifiers.txt.
-+
-+VI. Are there any precautions to be taken to prevent freezing failures?
-+
-+Yes, there are.
-+
-+First of all, grabbing the 'pm_mutex' lock to mutually exclude a piece of code
-+from system-wide sleep such as suspend/hibernation is not encouraged.
-+If possible, that piece of code must instead hook onto the suspend/hibernation
-+notifiers to achieve mutual exclusion. Look at the CPU-Hotplug code
-+(kernel/cpu.c) for an example.
-+
-+However, if that is not feasible, and grabbing 'pm_mutex' is deemed necessary,
-+it is strongly discouraged to directly call mutex_[un]lock(&pm_mutex) since
-+that could lead to freezing failures, because if the suspend/hibernate code
-+successfully acquired the 'pm_mutex' lock, and hence that other entity failed
-+to acquire the lock, then that task would get blocked in TASK_UNINTERRUPTIBLE
-+state. As a consequence, the freezer would not be able to freeze that task,
-+leading to freezing failure.
-+
-+However, the [un]lock_system_sleep() APIs are safe to use in this scenario,
-+since they ask the freezer to skip freezing this task, since it is anyway
-+"frozen enough" as it is blocked on 'pm_mutex', which will be released
-+only after the entire suspend/hibernation sequence is complete.
-+So, to summarize, use [un]lock_system_sleep() instead of directly using
-+mutex_[un]lock(&pm_mutex). That would prevent freezing failures.
+
+> ---
+> 
+>  include/linux/suspend.h |   36 ++++++++++++++++--------------------
+>  1 files changed, 16 insertions(+), 20 deletions(-)
+> 
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 906d62c..95040cc 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -332,6 +332,8 @@ static inline bool system_entering_hibernation(void) { return false; }
+>  #define PM_RESTORE_PREPARE	0x0005 /* Going to restore a saved image */
+>  #define PM_POST_RESTORE		0x0006 /* Restore failed */
+>  
+> +extern struct mutex pm_mutex;
+> +
+>  #ifdef CONFIG_PM_SLEEP
+>  void save_processor_state(void);
+>  void restore_processor_state(void);
+> @@ -352,6 +354,19 @@ extern bool events_check_enabled;
+>  extern bool pm_wakeup_pending(void);
+>  extern bool pm_get_wakeup_count(unsigned int *count);
+>  extern bool pm_save_wakeup_count(unsigned int count);
+> +
+> +static inline void lock_system_sleep(void)
+> +{
+> +	freezer_do_not_count();
+> +	mutex_lock(&pm_mutex);
+> +}
+> +
+> +static inline void unlock_system_sleep(void)
+> +{
+> +	mutex_unlock(&pm_mutex);
+> +	freezer_count();
+> +}
+> +
+>  #else /* !CONFIG_PM_SLEEP */
+>  
+>  static inline int register_pm_notifier(struct notifier_block *nb)
+> @@ -367,30 +382,11 @@ static inline int unregister_pm_notifier(struct notifier_block *nb)
+>  #define pm_notifier(fn, pri)	do { (void)(fn); } while (0)
+>  
+>  static inline bool pm_wakeup_pending(void) { return false; }
+> -#endif /* !CONFIG_PM_SLEEP */
+> -
+> -extern struct mutex pm_mutex;
+>  
+> -#ifndef CONFIG_HIBERNATE_CALLBACKS
+>  static inline void lock_system_sleep(void) {}
+>  static inline void unlock_system_sleep(void) {}
+>  
+> -#else
+> -
+> -/* Let some subsystems like memory hotadd exclude hibernation */
+> -
+> -static inline void lock_system_sleep(void)
+> -{
+> -	freezer_do_not_count();
+> -	mutex_lock(&pm_mutex);
+> -}
+> -
+> -static inline void unlock_system_sleep(void)
+> -{
+> -	mutex_unlock(&pm_mutex);
+> -	freezer_count();
+> -}
+> -#endif
+> +#endif /* !CONFIG_PM_SLEEP */
+>  
+>  #ifdef CONFIG_ARCH_SAVE_PAGE_KEYS
+>  /*
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
 
 
 _______________________________________________
