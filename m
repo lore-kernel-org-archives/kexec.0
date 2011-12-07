@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx4-phx2.redhat.com ([209.132.183.25])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RYI28-00013B-Jx
- for kexec@lists.infradead.org; Wed, 07 Dec 2011 13:59:42 +0000
-Date: Wed, 07 Dec 2011 08:59:35 -0500 (EST)
+ id 1RYLLp-00054U-Gh
+ for kexec@lists.infradead.org; Wed, 07 Dec 2011 17:32:15 +0000
+Date: Wed, 07 Dec 2011 12:32:10 -0500 (EST)
 From: Dave Anderson <anderson@redhat.com>
 Subject: Re: [Crash-utility] [RFC] makedumpfile, crash: LZO compression support
-Message-ID: <0d1c78c5-fb53-4747-9038-6f3700c064f6@zmail15.collab.prod.int.phx2.redhat.com>
-In-Reply-To: <20111207.100342.59655738.d.hatayama@jp.fujitsu.com>
+Message-ID: <46c499bc-10b0-46ac-9cc8-9a83bde973b2@zmail15.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <20111207171833.7c84c0a1.kumagai-atsushi@mxc.nes.nec.co.jp>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,44 +23,41 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Discussion list for crash utility usage,
  maintenance and development" <crash-utility@redhat.com>
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+Cc: d hatayama <d.hatayama@jp.fujitsu.com>, kexec@lists.infradead.org
 
 
 
 ----- Original Message -----
-> Hello Kumagai-san,
+> Hello Hatayama-san,
 > 
-> Thanks for the evaluation.
+> > How about the patch adding compression/IO time report?
+> > I intended it only for the presentation of this RFC.
 > 
-> So I'll re-post the patch soon removing RFC prefix in header. But
-> there is a remaining fix for checking command-line parameters relevant
-> to addition of the 'l' option.
+> I think the above patch was posted only for this discussion,
+> and I won't merge it into the makedumpfile.
 > 
-> How about the patch adding compression/IO time report?
-> I intended it only for the presentation of this RFC.
 > 
-> I'll post the corresponding patch in crash's side after crash 6.0.2 is
-> released, waiting for new configuration editing feature as Dave has
-> explained.
+> > I'll post the corresponding patch in crash's side after crash 6.0.2 is
+> > released, waiting for new configuration editing feature as Dave has explained.
+> 
+> If the Crash supports LZO compression, I'll merge the feature into
+> the makedumpfile.
 
-FYI, it's already in 6.0.1:
+I suppose it's a chicken-and-egg situation, but despite the recent
+addition of the extra-library build feature added to the crash
+utility, I wasn't planning to accept LZO compression support until
+it was first supported in makedumpfile.  And even with crash support,
+it would still require a hand-rebuild of the crash utility sources.
 
-       - Allow the user to append data to the CFLAGS and LDFLAGS variables in 
-         the top-level Makefile.  The extra data should be put in files named
-         "CFLAGS.extra" and "LDFLAGS.extra" in the top-level directory; if
-         either or both files exist, the extra data within them will be 
-         appended to the relevant variable.  Typically the LDFLAGS.extra file
-         will contain "-l<library>" strings, and the CFLAGS.extra file will
-         contain "-D<value>" strings.  This will allow the crash utility to
-         be built with optional libraries, and the code that references them
-         to be encapsulated with associated "#ifdef <value>" sections.  The
-         extra CFLAGS data will also be passed to extension modules that are 
-         built within the local "crash-<version>/extensions" subdirectory.
-         (anderson@redhat.com)
+If this is merged into makedumpfile and crash, will Fujitsu's next
+step will be to try to make it non-optional?  I'm still not convinced
+it's worth forcing the pre-installation of the additional packages
+and library by default.  
 
+Dave
+ 
 > Thanks.
-> HATAYAMA, Daisuke
-
+> KUMAGAI, Atsushi
 
 _______________________________________________
 kexec mailing list
