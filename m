@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by bombadil.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RaGJf-00059S-Oo
- for kexec@lists.infradead.org; Tue, 13 Dec 2011 00:33:57 +0000
-Message-ID: <4EE69DF7.5070505@cn.fujitsu.com>
-Date: Tue, 13 Dec 2011 08:36:07 +0800
-From: Wen Congyang <wency@cn.fujitsu.com>
+Received: from e23smtp06.au.ibm.com ([202.81.31.148])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RaLpm-0002XK-JN
+ for kexec@lists.infradead.org; Tue, 13 Dec 2011 06:27:28 +0000
+Received: from /spool/local
+ by e23smtp06.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 13 Dec 2011 06:14:56 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ pBD6Gw2p4853914
+ for <kexec@lists.infradead.org>; Tue, 13 Dec 2011 17:16:58 +1100
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ pBD6GvKV030108
+ for <kexec@lists.infradead.org>; Tue, 13 Dec 2011 17:16:58 +1100
+Subject: [PATCH] makedumpfile: s390x: Obtain the vmalloc_start value from
+ high_memory for s390x arch.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Tue, 13 Dec 2011 11:46:55 +0530
+Message-ID: <20111213061616.23145.88262.stgit@mars.in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] makedumpfile: fix off-by-one bug in page_to_pfn()
-References: <4EE5C82F.1000404@cn.fujitsu.com>
- <20111213092110tachibana@mail.jp.nec.com>
-In-Reply-To: <20111213092110tachibana@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,89 +34,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tachibana@mxm.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, Ananth Narayan <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-At 12/13/2011 08:21 AM, tachibana@mxm.nes.nec.co.jp Write:
-> Hi Wen,
-> 
-> On 2011/12/12 17:23:59 +0800, Wen Congyang <wency@cn.fujitsu.com> wrote:
->> At 11/24/2011 01:20 PM, Atsushi Kumagai Write:
->>> Hi Wen,
->>>
->>> Thank you for the patch. 
->>> I will check it.
->>
->> Hi, kumagai
->>
->> do you have any comment for this patch?
-> 
-> Sorry for late reply.
-> I will merge your fix to the next makedumpfile. By the way, did you 
-> detect this problem only by source program? Or by result of makedumpfile?
-> If there is no problem, please let me know it.
+From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
 
-By result of makedumpfile. I find some pages are still in vmcore.
+Currently the vmalloc_start address for s390x is obtained by using
+vmlist.addr symbol, which is not correct. The correct vmalloc_start address
+can be obtained using 'high_memory' symbol. Even crash utility is depend
+on high_memory symbol to get vmalloc_start address for s390x arch.
 
-Thanks
-Wen Congyang
+Without this patch makedumpfile fails to translate some virtual addresses to
+to physical addresses on s390x.
 
-> 
-> Thanks
-> tachibana
-> 
-> 
->>
->> Thanks
->> Wen Congyang
->>
->>>
->>> Thanks
->>> Kumagai
->>>
->>>
->>> On Wed, 23 Nov 2011 13:53:51 +0800
->>> Wen Congyang <wency@cn.fujitsu.com> wrote:
->>>
->>>> The pfn region in a mmd is [mmd->pfn_start, mmd->pfn_end).
->>>> So the max index should be mmd->pfn_end - mmd->pfn_start -1.
->>>> If index >=(not >) mmd->pfn_end - mmd->pfn_start, we should check
->>>> the next mmd.
->>>>
->>>> Signed-off-by: Wen Congyang <wency@cn.fujitsu.com>
->>>>
->>>> ---
->>>>  makedumpfile.c |    2 +-
->>>>  1 files changed, 1 insertions(+), 1 deletions(-)
->>>>
->>>> diff --git a/makedumpfile.c b/makedumpfile.c
->>>> index 7b7c266..db8e53f 100644
->>>> --- a/makedumpfile.c
->>>> +++ b/makedumpfile.c
->>>> @@ -2879,7 +2879,7 @@ page_to_pfn(unsigned long page)
->>>>  		if (page < mmd->mem_map)
->>>>  			continue;
->>>>  		index = (page - mmd->mem_map) / SIZE(page);
->>>> -		if (index > mmd->pfn_end - mmd->pfn_start)
->>>> +		if (index >= mmd->pfn_end - mmd->pfn_start)
->>>>  			continue;
->>>>  		pfn = mmd->pfn_start + index;
->>>>  		break;
->>>> -- 
->>>> 1.7.1
->>>
->>> _______________________________________________
->>> kexec mailing list
->>> kexec@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/kexec
->>>
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+[root@h4245043 makedumpfile]# ./makedumpfile -d 16 -x /root/dump.makedumpfile_problem/vmlinux /root/dump.makedumpfile_problem/vmcore /tmp/out.dump
+The kernel version is not supported.
+The created dumpfile may be incomplete.
+Checking for memory holes          : [100 %] readmem: Can't convert a physical address(3d2805c1830) to offset.
+readmem: type_addr: 0, addr:3d2805c1830, size:8
+reset_bitmap_of_free_pages: Can't get prev list_head.
+
+makedumpfile Failed.
+[root@h4245043 makedumpfile]#
+
+Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
+---
+ arch/s390x.c   |   19 ++++++-------------
+ makedumpfile.c |    3 +++
+ makedumpfile.h |    5 +++++
+ 3 files changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/arch/s390x.c b/arch/s390x.c
+index e7d7603..9237eaa 100644
+--- a/arch/s390x.c
++++ b/arch/s390x.c
+@@ -62,7 +62,7 @@
+ int
+ get_machdep_info_s390x(void)
+ {
+-	unsigned long vmlist, vmalloc_start;
++	unsigned long vmalloc_start;
+ 	char *term_str = getenv("TERM");
+ 
+ 	if (term_str && strcmp(term_str, "dumb") == 0)
+@@ -81,19 +81,13 @@ get_machdep_info_s390x(void)
+ 	DEBUG_MSG("kernel_start : %lx\n", info->kernel_start);
+ 
+ 	/*
+-	 * For the compatibility, makedumpfile should run without the symbol
+-	 * vmlist and the offset of vm_struct.addr if they are not necessary.
++	 * Obtain the vmalloc_start address from high_memory symbol.
+ 	 */
+-	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
+-	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
++	if (SYMBOL(high_memory) == NOT_FOUND_SYMBOL) {
+ 		return TRUE;
+ 	}
+-	if (!readmem(VADDR, SYMBOL(vmlist), &vmlist, sizeof(vmlist))) {
+-		ERRMSG("Can't get vmlist.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR, vmlist + OFFSET(vm_struct.addr), &vmalloc_start,
+-	    sizeof(vmalloc_start))) {
++	if (!readmem(VADDR, SYMBOL(high_memory), &vmalloc_start,
++			sizeof(vmalloc_start))) {
+ 		ERRMSG("Can't get vmalloc_start.\n");
+ 		return FALSE;
+ 	}
+@@ -265,8 +259,7 @@ vaddr_to_paddr_s390x(unsigned long vaddr)
+ 	if (paddr != NOT_PADDR)
+ 		return paddr;
+ 
+-	if ((SYMBOL(vmlist) == NOT_FOUND_SYMBOL)
+-	    || (OFFSET(vm_struct.addr) == NOT_FOUND_STRUCTURE)) {
++	if (SYMBOL(high_memory) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get necessary information for vmalloc "
+ 			"translation.\n");
+ 		return NOT_PADDR;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 7b7c266..67f1a10 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -797,6 +797,7 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(log_end, "log_end");
+ 	SYMBOL_INIT(max_pfn, "max_pfn");
+ 	SYMBOL_INIT(modules, "modules");
++	SYMBOL_INIT(high_memory, "high_memory");
+ 
+ 	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+ 		SYMBOL_ARRAY_TYPE_INIT(node_data, "node_data");
+@@ -1108,6 +1109,7 @@ generate_vmcoreinfo(void)
+ 	WRITE_SYMBOL("log_buf_len", log_buf_len);
+ 	WRITE_SYMBOL("log_end", log_end);
+ 	WRITE_SYMBOL("max_pfn", max_pfn);
++	WRITE_SYMBOL("high_memory", high_memory);
+ 
+ 	/*
+ 	 * write the structure size of 1st kernel
+@@ -1366,6 +1368,7 @@ read_vmcoreinfo(void)
+ 	READ_SYMBOL("log_buf_len", log_buf_len);
+ 	READ_SYMBOL("log_end", log_end);
+ 	READ_SYMBOL("max_pfn", max_pfn);
++	READ_SYMBOL("high_memory", high_memory);
+ 
+ 	READ_STRUCTURE_SIZE("page", page);
+ 	READ_STRUCTURE_SIZE("mem_section", mem_section);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index f0e5da8..b3de521 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -974,6 +974,11 @@ struct symbol_table {
+ 	 */
+ 
+ 	unsigned long long	modules;
++
++	/*
++	 * vmalloc_start address on s390x arch
++	 */
++	unsigned long long	high_memory;
+ };
+ 
+ struct size_table {
 
 
 _______________________________________________
