@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from p02c12o149.mxlogic.net ([208.65.145.82])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RbQKu-0006q3-7M
- for kexec@lists.infradead.org; Fri, 16 Dec 2011 05:28:01 +0000
-From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
-Subject: RE: kexec 2.0.2 MIPS
-Date: Fri, 16 Dec 2011 05:27:31 +0000
-Message-ID: <F9C551623D2CBB4C9488801D14F864C60E2D98@ex-mb1.corp.adtran.com>
-References: <F9C551623D2CBB4C9488801D14F864C607154A@ex-mb1.corp.adtran.com>
- <20110920085133.GE15087@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C6072473@ex-mb1.corp.adtran.com>
- <20110921112837.GF17108@verge.net.au> 
-Content-Language: en-US
-MIME-Version: 1.0
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RcuxH-0005eN-9v
+ for kexec@lists.infradead.org; Tue, 20 Dec 2011 08:21:50 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id pBK8LQsl004208
+ for <kexec@lists.infradead.org>; Tue, 20 Dec 2011 17:21:26 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id pBK8LQJ29458 for kexec@lists.infradead.org;
+ Tue, 20 Dec 2011 17:21:26 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id pBK8LQqu003869
+ for <kexec@lists.infradead.org>; Tue, 20 Dec 2011 17:21:26 +0900 (JST)
+Date: Tue, 20 Dec 2011 17:18:12 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 10/14] Generate and save VMCOREINFO and ELF note
+ information
+Message-Id: <20111220171812.874961f9.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20111028094858.20940.24950.stgit@localhost6.localdomain6>
+References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
+ <20111028094858.20940.24950.stgit@localhost6.localdomain6>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,188 +34,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Maxim Uvarov <muvarov@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
+To: kexec@lists.infradead.org
 
-Simon/All,
+Hi Hatayama-san,
 
-After two months, I'm back working on this again.  After 3 hours
-tonight, I have the final result of what you told me to do.  Looks like,
-based on the comment:
+> [snipped]
+>
+> diff --git a/elf_info.c b/elf_info.c
+> index 114dd05..48f8510 100644
+> --- a/elf_info.c
+> +++ b/elf_info.c
+> @@ -760,7 +760,7 @@ get_nr_cpus(void)
+>  int
+>  has_pt_note(void)
+>  {
+> -	if (offset_pt_note_memory && size_pt_note_memory)
+> +	if (offset_pt_note_memory || size_pt_note_memory)
+>  		return TRUE;
+>  	return FALSE;
+>  }
 
-    - remove kexec/arch/mips/mips-setup-simple.S which prepares cmdline for
-      new kernel, it is better to move this work to kernel code. BTW this code was
-      compilable only on o32 because of t4 is not defined on 64-64 or n32 MIPS ABIs.
+I have a question.
+In what kind of case is only one of the offset or the size set to 0 in PT_NOTE?
 
-The problem is that my 2.6.36.2 apparently doesn't have whatever Maxim
-is talking about.  Therefore, the newer versions must not be backwards
-compatible.  Perhaps this is okay with you guys.  If so, I'll just make
-sure to include a patch to BuildRoot that clearly states that the v2.0.1
-is the only version that works with *some* versions of MIPS.  If you
-guys were expecting this to be backwards compatible, I'll gladly work
-with you to test whatever you need checked out.  Just let me know.
-
-There are build errors that I would like (if it hasn't already) to
-be fixed
-1) in purgatory/Makefile, Near line 71
-
-$(PURGATORY): LDFLAGS=$($(ARCH)_PURGATORY_EXTRA_CFLAGS)\
-                        --no-undefined -nostartfiles -nostdlib -nodefaultlibs \
-                        -e purgatory_start -r
+Thanks.
+Atsushi Kumagai
 
 
-The newer gcc's don't like --no-undefined.  I think a fix is
--Wl,--no-undefined.
+On Fri, 28 Oct 2011 18:48:58 +0900
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-2) In the newer version of the kexec/arch/mips/Makefile, there is
-a -Werror in the CFLAGS.  This causes the build to fail if using a
-newer version of gcc, as many more warnings are available.
-
-Now, here is the result of the bisect:
-
-root@akennedy_lin:~/src/kexec/kexec-tools# git bisect good
-6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17 is the first bad commit
-commit 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17
-Author: Maxim Uvarov <muvarov@gmail.com>
-Date:   Wed Mar 3 14:05:53 2010 +0300
-
-    some kexec MIPS improvements
-    
-    -  using simple   mips* ) in configure.ac to make it compilable on mips2
-       and mips64
-    - remove kexec/arch/mips/mips-setup-simple.S which prepares cmdline for
-      new kernel, it is better to move this work to kernel code. BTW this code was
-      compilable only on o32 because of t4 is not defined on 64-64 or n32 MIPS ABIs.
-    - simple put cmdline as string, kernel code should catch cmdline like this
-    
-    int board_kexec_prepare(struct kimage *image)
-    {
-        int i;
-        char *bootloader = "kexec";
-        board_boot_desc_ptr->argc = 0;
-        for(i=0;i<image->nr_segments;i++)
-        {
-            printk("segment %d
-            if (!strncmp(bootloader, (char*)image->segment[i].buf,
-                    strlen(bootloader)))
-            {
-                /*
-                 * convert command line string to array
-                 * of parameters (as bootloader does).
-                 */
-                int argc = 0, offt;
-                char *str = (char *)image->segment[i].buf;
-                char *ptr = strchr(str, ' ');
-                while (ptr && (ARGV_MAX_ARGS > argc)) {
-                    *ptr = '\0';
-                    if (ptr[1] != ' ') {
-                        offt = (int)(ptr - str + 1);
-                        boot_desc_ptr->argv[argc] =
-                            image->segment[i].mem + offt;
-                        argc++;
-                    }
-                    ptr = strchr(ptr + 1, ' ');
-                }
-                boot_desc_ptr->argc = argc;
-                break;
-            }
-        }
-       Keep it as string make code simple and more readable.
-    
-    - add crashdump support
-    - do not redefine syscalls numbers if they defined in system
-      remove fixups for /proc/iomem. If your board provides wrong /proc/iomem please
-      fix kernel, or at least you local version of kexec. No need to support it in
-      main line. At least add option --fake-iomem
-    - some minor fixes
-    
-    Signed-off-by: Maxim Uvarov <muvarov@gmail.com>
-    Signed-off-by: Simon Horman <horms@verge.net.au>
-
-:100644 100644 a911f8ad03c5321faeba93069924fa79aceeba9c 88d2e0bb2479ecd956d0ec31c571d2472fef7721 M      configure.ac
-:040000 040000 4dcef15024daa7ccc62bd6983e127cb87f036c5d 69204c980286b2e08308d4a10eb2bf2775d9d962 M      kexec
-
-Andy
-
-> -----Original Message-----
-> From: ANDY KENNEDY
-> Sent: Thursday, September 29, 2011 1:07 PM
-> To: 'Simon Horman'
-> Cc: kexec@lists.infradead.org; Matt Evans; Maxim Uvarov
-> Subject: RE: kexec 2.0.2 MIPS
+> Retrieve VMCOREINFO from VMLINUX and ELF note information from
+> VMCORE(s) and save them in generated DUMPFILE.
 > 
-> > My bad, yes the idea is to check between 2.0.1 and 2.0.2.
-> > I will explain git bisect further down. However, it looking at
-> the
-> > logs
-> > it strikes me that there was only one significant MIPS change
-> > between
-> > 2.0.1 and 2.0.2. So that seems like a likely culprit.
-> >
-> > Could you try the following?
-> >
-> > $ git clone git://github.com/horms/kexec-tools.git
-> > $ cd kexec-tools
-> > $ git checkout 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17^
+> ELF note information is NT_PRSTATUS only. If crash_notes is NULL,
+> indicating kdump has not saved register values, save SMRAM CPU STATE
+> values. If crash_notes is not NULL, indicating kdump has saved
+> register values at crash, then save the register values in
+> crash_notes.
 > 
-> Works.
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+> ---
 > 
-> >
-> > Build and see if it works. If so could you then try?
-> >
-> > $ git checkout 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17
+>  elf_info.c     |    2 
+>  makedumpfile.c |  103 ++++---
+>  makedumpfile.h |    2 
+>  sadump_info.c  |  823 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  sadump_info.h  |   26 ++
+>  5 files changed, 913 insertions(+), 43 deletions(-)
+>
+> [snipped]
 > 
-> Works.
-> 
-> >
-> > Build and see if it works. If it does not then
-> > revision 6adc05c6e3fdbc8b9f5d915af78ca05d0a09cb17 starts to smell
-> > a lot like the cause of the problem you have observed.
-> >
-> >
-> > Git Bisect
-> > ----------
-> >
-> > A git bisection works by doing a binary search over a set of
-> > commits
-> > in order to (hopefully) isolate which commit introduces a
-> > regression.
-> >
-> > To this, the git commands are something along these lines:
-> >
-> > $ git clone git://github.com/horms/kexec-tools.git
-> > $ cd kexec-tools
-> > $ git checkout v2.0.1
-> 
-> root@akennedy_lin:~/src/kexec/kexec-tools# git checkout v2.0.1
-> error: pathspec 'v2.0.1' did not match any file(s) known to git.
-> (yes, I run as root.  Have since 1994, so, please no holy wars.)
-> 
-> >
-> > Build and confirm that it does work
-> >
-> > $ git checkout v2.0.2
-> >
-> > Build and confirm that it does not work.
-> >
-> > Now we actually start the bisect
-> >
-> > $ git bisect start
-> > $ git bisect bad v2.0.2
-> > $ git bisect good v2.0.1
-> >
-> > Git should now select a revision between v2.0.1 and v2.0.2
-> > Test it and see if it works or not. If it does run
-> >
-> > $ git bisect good
-> > If not run
-> >
-> > $ git bisect bad
-> >
-> > Git will now select another revision for you to test...
-> 
-> I have some time right now to test, so, when you can get
-> back to me I'll be able to continue.
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
