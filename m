@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RdFQq-0001bs-Lo
- for kexec@lists.infradead.org; Wed, 21 Dec 2011 06:13:44 +0000
-Subject: Re: [PATCH] makedumpfile: s390x: Auto-detect the correct
- MAX_PHYSMEM_BITSused in vmcore being analyzed.
-In-reply-to: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
-Message-Id: <20111221151141tachibana@mail.jp.nec.com>
-References: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RdHW4-0000sN-KE
+ for kexec@lists.infradead.org; Wed, 21 Dec 2011 08:27:14 +0000
+Date: Wed, 21 Dec 2011 17:22:30 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v2 10/14] Generate and save VMCOREINFO and ELF note
+ information
+Message-Id: <20111221172230.7c4bda3c.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20111220.183158.52163975.d.hatayama@jp.fujitsu.com>
+References: <20111028094454.20940.1209.stgit@localhost6.localdomain6>
+ <20111028094858.20940.24950.stgit@localhost6.localdomain6>
+ <20111220171812.874961f9.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20111220.183158.52163975.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
-From: tachibana@mxm.nes.nec.co.jp
-Date: Wed, 21 Dec 2011 15:11:41 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,110 +26,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-Hi Mahesh,
+Hi Hatayama-san,
 
-Thank you for the patch.
-I will review it.
-However I have never dumped 1 terabyte or more data using makedumpfile.
-Has anyone ever dumped it successfully?
+> > I have a question.
+> > In what kind of case is only one of the offset or the size set to 0 in PT_NOTE?
+> > 
+> 
+> Thanks for your reviewing.
+> 
+> On sadump processing, offset_pt_note_memory represents file offset to
+> a temporary file created specifically for writing PT_NOTE section. So
+> offset_pt_note_memory is always 0. Its file pointer is set to struct
+> sadump_info::file_elf_note. Please look at the end of
+> sadump_generate_elf_note_from_dumpfile().
+> 
+> On the other hand, on both ELF and kdump-compressed format, PT_NOTE
+> section is always located in the middle of the vmcores. On either
+> formats, there's always another header before the PT_NOTE section: on
+> ELF, ELF header, and on kdump-compressed format, at least. So
+> offset_pt_note_memory is always strictly greater than 0 on these
+> formats.
+> 
+> If condition of has_pt_note() is not weakened in such a way,
+> has_pt_note() amounts to always false and execution in
+> write_kdump_header() always passes through writing oepration for
+> PT_NOTE section.
+
+
+Thank you for your explanation. I understand.
+However
+	if (offset_pt_note_memory || size_pt_note_memory)
+seems to allow the offset != 0 and the size == 0.
+Is the following fixing right?
+I would like to fix has_pt_note() like this.
+How about this?
+
+-	if (offset_pt_note_memory && size_pt_note_memory)
++       if (info->flag_sadump) {
++		if (size_pt_note_memory)
++			return TRUE;
++	} else if (offset_pt_note_memory && size_pt_note_memory)
+			return TRUE;
 
 Thanks.
-tachibana
-
-On 2011/12/20 16:06:01 +0530, Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
-> Hi Tachibana,
-> 
-> As part of the s390 patch to add support for > 4TB system memory (present in
-> linux-next tree), the newer s390 kernel will bump the MAX_PHYSMEM_BITS from
-> 42 to 46. Once that patch makes into umpstream kernel, this change will need
-> to go into makedumpfile.  For now, I am posting this patch for a review.
-> 
-> Reference: http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=8980036860565a6d2a4f95bb097927e832
-fa3d1a
-> 
-> Thanks,
-> -Mahesh.
-> 
-> 
-> From: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> 
-> So far s390x kernel was using 42 bits for MAX_PHYSMEM_BITS that use to
-> support maximum of 4TB of memory. In order to support bigger systems,
-> the newer s390x kernel will now use 46 bits for MAX_PHYSMEM_BITS to support
-> maximum of 64TB of memory.
-> 
-> This patch auto-detects the correct value to use for MAX_PHYSMEM_BITS by
-> examining the mem_section array size from the vmcore being analyzed.
-> 
-> Signed-off-by: Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
-> ---
->  arch/s390x.c   |   27 ++++++++++++++++++++++++++-
->  makedumpfile.h |    3 ++-
->  2 files changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/s390x.c b/arch/s390x.c
-> index 9237eaa..c73220a 100644
-> --- a/arch/s390x.c
-> +++ b/arch/s390x.c
-> @@ -60,6 +60,28 @@
->  #define pte_offset(x)		(pte_index(x) * sizeof(unsigned long))
->  
->  int
-> +set_s390x_max_physmem_bits(void)
-> +{
-> +	long array_len = ARRAY_LENGTH(mem_section);
-> +	/*
-> +	 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
-> +	 * newer kernels uses 46 bits.
-> +	 */
-> +
-> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_OLD;
-> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +		return TRUE;
-> +
-> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_NEW;
-> +	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +		return TRUE;
-> +
-> +	return FALSE;
-> +}
-> +
-> +int
->  get_machdep_info_s390x(void)
->  {
->  	unsigned long vmalloc_start;
-> @@ -70,7 +92,10 @@ get_machdep_info_s390x(void)
->  		flag_ignore_r_char = 1;
->  
->  	info->section_size_bits = _SECTION_SIZE_BITS;
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +	if (!set_s390x_max_physmem_bits()) {
-> +		ERRMSG("Can't detect max_physmem_bits.\n");
-> +		return FALSE;
-> +	}
->  	info->page_offset = __PAGE_OFFSET;
->  
->  	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index b3de521..a95d132 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -531,7 +531,8 @@ do { \
->  #define KERNELBASE		(0)
->  #define KVBASE			KERNELBASE
->  #define _SECTION_SIZE_BITS	(28)
-> -#define _MAX_PHYSMEM_BITS	(42)
-> +#define _MAX_PHYSMEM_BITS_OLD	(42)
-> +#define _MAX_PHYSMEM_BITS_NEW	(46)
->  
->  /* Bits in the segment/region table address-space-control-element */
->  #define _ASCE_TYPE_MASK		0x0c
-> 
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
