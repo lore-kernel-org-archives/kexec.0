@@ -1,33 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from e23smtp01.au.ibm.com ([202.81.31.143])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RdHif-0000d1-0y
- for kexec@lists.infradead.org; Wed, 21 Dec 2011 08:40:14 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 4366E3EE0B5
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 17:40:08 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 17A5945DEEE
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 17:40:08 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id EE6A945DEDA
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 17:40:07 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 04D321DB8040
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 17:40:07 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9EED71DB8043
- for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 17:40:06 +0900 (JST)
-Date: Wed, 21 Dec 2011 17:39:59 +0900 (   )
-Message-Id: <20111221.173959.28788466.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v2 10/14] Generate and save VMCOREINFO and ELF note
- information
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20111221172230.7c4bda3c.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20111220171812.874961f9.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20111220.183158.52163975.d.hatayama@jp.fujitsu.com>
- <20111221172230.7c4bda3c.kumagai-atsushi@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+ id 1RdJ6C-0007c9-BU
+ for kexec@lists.infradead.org; Wed, 21 Dec 2011 10:08:37 +0000
+Received: from /spool/local
+ by e23smtp01.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Wed, 21 Dec 2011 10:03:49 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ pBLA8TOP5079160
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 21:08:29 +1100
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ pBLA8Spn012860
+ for <kexec@lists.infradead.org>; Wed, 21 Dec 2011 21:08:29 +1100
+Message-ID: <4EF1B019.3030201@linux.vnet.ibm.com>
+Date: Wed, 21 Dec 2011 15:38:25 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] makedumpfile: s390x: Auto-detect the correct
+ MAX_PHYSMEM_BITSused in vmcore being analyzed.
+References: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
+ <20111221151141tachibana@mail.jp.nec.com>
+In-Reply-To: <20111221151141tachibana@mail.jp.nec.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,60 +37,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: tachibana@mxm.nes.nec.co.jp
+Cc: Michael Holzheu <holzheu@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v2 10/14] Generate and save VMCOREINFO and ELF note information
-Date: Wed, 21 Dec 2011 17:22:30 +0900
-
-> Hi Hatayama-san,
+On 12/21/2011 11:41 AM, tachibana@mxm.nes.nec.co.jp wrote:
+> Hi Mahesh,
 > 
->> > I have a question.
->> > In what kind of case is only one of the offset or the size set to 0 in PT_NOTE?
->> > 
->> 
->> Thanks for your reviewing.
->> 
->> On sadump processing, offset_pt_note_memory represents file offset to
->> a temporary file created specifically for writing PT_NOTE section. So
->> offset_pt_note_memory is always 0. Its file pointer is set to struct
->> sadump_info::file_elf_note. Please look at the end of
->> sadump_generate_elf_note_from_dumpfile().
->> 
->> On the other hand, on both ELF and kdump-compressed format, PT_NOTE
->> section is always located in the middle of the vmcores. On either
->> formats, there's always another header before the PT_NOTE section: on
->> ELF, ELF header, and on kdump-compressed format, at least. So
->> offset_pt_note_memory is always strictly greater than 0 on these
->> formats.
->> 
->> If condition of has_pt_note() is not weakened in such a way,
->> has_pt_note() amounts to always false and execution in
->> write_kdump_header() always passes through writing oepration for
->> PT_NOTE section.
-> 
-> 
-> Thank you for your explanation. I understand.
-> However
-> 	if (offset_pt_note_memory || size_pt_note_memory)
-> seems to allow the offset != 0 and the size == 0.
-> Is the following fixing right?
-> I would like to fix has_pt_note() like this.
-> How about this?
-> 
-> -	if (offset_pt_note_memory && size_pt_note_memory)
-> +       if (info->flag_sadump) {
-> +		if (size_pt_note_memory)
-> +			return TRUE;
-> +	} else if (offset_pt_note_memory && size_pt_note_memory)
-> 			return TRUE;
+> Thank you for the patch.
+> I will review it.
+> However I have never dumped 1 terabyte or more data using makedumpfile.
+> Has anyone ever dumped it successfully?
 > 
 
-I agree. It looks better.
+I have seen makedumpfile successfully compressing vmcore generated on
+system with 1TB memory.
 
-Thanks.
-HATAYAMA, Daisuke
+Thanks,
+-Mahesh.
 
 
 _______________________________________________
