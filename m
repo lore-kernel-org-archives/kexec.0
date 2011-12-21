@@ -1,31 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp12.uk.ibm.com ([195.75.94.108])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RczdX-0002Md-MJ
- for kexec@lists.infradead.org; Tue, 20 Dec 2011 13:21:44 +0000
-Received: from /spool/local
- by e06smtp12.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Tue, 20 Dec 2011 13:21:34 -0000
-Received: from d06av12.portsmouth.uk.ibm.com (d06av12.portsmouth.uk.ibm.com
- [9.149.37.247])
- by d06nrmr1307.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- pBKDLWJB2437270
- for <kexec@lists.infradead.org>; Tue, 20 Dec 2011 13:21:32 GMT
-Received: from d06av12.portsmouth.uk.ibm.com (loopback [127.0.0.1])
- by d06av12.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- pBKDLVXv016329
- for <kexec@lists.infradead.org>; Tue, 20 Dec 2011 06:21:31 -0700
-Message-ID: <1324387291.22248.4.camel@br98xy6r>
+ id 1RdFQq-0001bs-Lo
+ for kexec@lists.infradead.org; Wed, 21 Dec 2011 06:13:44 +0000
 Subject: Re: [PATCH] makedumpfile: s390x: Auto-detect the correct
- MAX_PHYSMEM_BITS used in vmcore being analyzed.
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Tue, 20 Dec 2011 14:21:31 +0100
-In-Reply-To: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
+ MAX_PHYSMEM_BITSused in vmcore being analyzed.
+In-reply-to: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
+Message-Id: <20111221151141tachibana@mail.jp.nec.com>
 References: <20111220101459.26622.49407.stgit@mars.in.ibm.com>
 Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+From: tachibana@mxm.nes.nec.co.jp
+Date: Wed, 21 Dec 2011 15:11:41 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,19 +24,19 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
+Cc: Tachibana-san <tachibana@mxm.nes.nec.co.jp>, Michael Holzheu <holzheu@linux.vnet.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Ananth Narayan <ananth@in.ibm.com>, Reinhard <BUENDGEN@de.ibm.com>
 
-Hello,
+Hi Mahesh,
 
-The s390 kernel patch is queued for the next merge window therefore will
-go upstream. My recommendation is to include the makedumpfile patch
-already now if it passes the review.
+Thank you for the patch.
+I will review it.
+However I have never dumped 1 terabyte or more data using makedumpfile.
+Has anyone ever dumped it successfully?
 
-Best Regards
+Thanks.
+tachibana
 
-Michael
-
-On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
+On 2011/12/20 16:06:01 +0530, Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
 > Hi Tachibana,
 > 
 > As part of the s390 patch to add support for > 4TB system memory (present in
@@ -59,7 +44,8 @@ On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
 > 42 to 46. Once that patch makes into umpstream kernel, this change will need
 > to go into makedumpfile.  For now, I am posting this patch for a review.
 > 
-> Reference: http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=8980036860565a6d2a4f95bb097927e832fa3d1a
+> Reference: http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=8980036860565a6d2a4f95bb097927e832
+fa3d1a
 > 
 > Thanks,
 > -Mahesh.
@@ -87,7 +73,7 @@ On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
 > +++ b/arch/s390x.c
 > @@ -60,6 +60,28 @@
 >  #define pte_offset(x)		(pte_index(x) * sizeof(unsigned long))
-> 
+>  
 >  int
 > +set_s390x_max_physmem_bits(void)
 > +{
@@ -116,7 +102,7 @@ On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
 >  	unsigned long vmalloc_start;
 > @@ -70,7 +92,10 @@ get_machdep_info_s390x(void)
 >  		flag_ignore_r_char = 1;
-> 
+>  
 >  	info->section_size_bits = _SECTION_SIZE_BITS;
 > -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
 > +	if (!set_s390x_max_physmem_bits()) {
@@ -124,7 +110,7 @@ On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
 > +		return FALSE;
 > +	}
 >  	info->page_offset = __PAGE_OFFSET;
-> 
+>  
 >  	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
 > diff --git a/makedumpfile.h b/makedumpfile.h
 > index b3de521..a95d132 100644
@@ -137,12 +123,10 @@ On Tue, 2011-12-20 at 16:06 +0530, Mahesh J Salgaonkar wrote:
 > -#define _MAX_PHYSMEM_BITS	(42)
 > +#define _MAX_PHYSMEM_BITS_OLD	(42)
 > +#define _MAX_PHYSMEM_BITS_NEW	(46)
-> 
+>  
 >  /* Bits in the segment/region table address-space-control-element */
 >  #define _ASCE_TYPE_MASK		0x0c
 > 
-
-
 
 _______________________________________________
 kexec mailing list
