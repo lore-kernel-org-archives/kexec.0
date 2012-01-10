@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from na3sys010aog114.obsmtp.com ([74.125.245.96])
- by merlin.infradead.org with smtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RkPQ1-0001Gn-SP
- for kexec@lists.infradead.org; Tue, 10 Jan 2012 00:18:26 +0000
-Received: by mail-qy0-f177.google.com with SMTP id c1so3076642qcs.8
- for <kexec@lists.infradead.org>; Mon, 09 Jan 2012 16:18:22 -0800 (PST)
-Message-ID: <4F0B83CC.6010007@plexxi.com>
-Date: Mon, 09 Jan 2012 19:18:20 -0500
-From: Joe Lorenz <joe.lorenz@plexxi.com>
+Received: from mail-tul01m020-f199.google.com ([209.85.214.199])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RkdOc-000648-TJ
+ for kexec@lists.infradead.org; Tue, 10 Jan 2012 15:13:57 +0000
+Received: by obcwp18 with SMTP id wp18so13376032obc.6
+ for <kexec@lists.infradead.org>; Tue, 10 Jan 2012 07:13:53 -0800 (PST)
 MIME-Version: 1.0
-Subject: kexec x86_64 - Unhandled rela relocation: R_X86_64_PLT32
+Message-ID: <14dae93408c58da48504b62df6f3@google.com>
+Date: Tue, 10 Jan 2012 15:13:53 +0000
+Subject: Permission Request for 'Kexec...'
+From: Jennifer Indurayne <mail@ck.org.ua>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,54 +18,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"; DelSp="yes"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Help needed, please:
+Hello,
 
-Sandy Bridge.
-2.6.27.21 kernel
-x86_64 toolchain built from crosstools-ng.
-Using relocatable bzImage as first kernel as well as crash kernel.
+I've known you website for ages, strictly speaking from year 2010. I found  =
 
-# cat /proc/cmdline
-rw root=/dev/sda3 rootwait console=ttyS0,38400 crashkernel=128M@16M
+interesting your publication "Kexec" which I googled on  =
 
-# kexec -l /boot/bzImage --reuse-cmdline
-Unhandled rela relocation: R_X86_64_PLT32
+http://horms.net/projects/kexec/#presentation ! I'd love to use it in a  =
 
-Why??
+project I'm involved with called "Geek Science", so I'm seeking your  =
 
+permission for translation to Basque language. "Geek Science" is a  =
 
-I fooled around in kexec-elf-rel-x86_64.c and noticed there's no case for that 
-r_type, so I added it as a fall-through to one of the existing ones. Then I got 
-this:
+freemium-model non-English language orientated startup with collection of  =
 
-# kexec -l /boot/bzImage --reuse-cmdline
-Unhandled rela relocation: R_X86_64_GOTPCREL
+scientific articles, personal notes etc. in several languages that is  =
 
-Strange.
-So I added that to the fallthrough, and then suddenly it seemed as if the crash 
-kernel was getting loaded OK (no error messages anymore).
+collaboratively edited by volunteers from around the world since 1999.  =
 
-But then I tried:
+Young and old, students and professors - even your neighbor could be a  =
 
-# kexec -l /boot/bzImage --reuse-cmdline
-# kexec -e
-[  952.817842] md: stopping all md devices.
-[  953.818808] sd 0:0:0:0: [sda] Synchronizing SCSI cache
-[  953.961590] igb 0000:02:00.0: PME# enabled
-[  953.962395] igb 0000:02:00.0: PME# enabled
-[  953.976468] Starting new kernel
+volunteer member.
 
-After several seconds pause, it ended up back at GRUB, which I didn't expect.
+If you agree, we will credit you for your work in the resulting  =
 
-Any help would be most appreciated - thanks.
+translation's references by stating that it was based on your work and is  =
 
+used with your permission, and by mentioning the name of my project "Geek  =
 
+Science" back to:
+http://horms.net/projects/kexec/#presentation
+
+Thank you for your time and patience.
+I look forward to your response next week.
+
+---
+Best wishes for 2012,
+Jennifer Indurayne
+San Sebasti=E1n, Spain
+(GMT +2)
+Translation for Education FAQ - http://goo.gl/uE2RH
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
