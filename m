@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Rl53I-0004vQ-Pk
- for kexec@lists.infradead.org; Wed, 11 Jan 2012 20:45:45 +0000
-Date: Thu, 12 Jan 2012 05:45:39 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kdump: Define KEXEC_NOTE_BYTES arch specific for s390x
-Message-ID: <20120111204539.GB23752@verge.net.au>
-References: <1326281412.2819.3.camel@br98xy6r>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1326281412.2819.3.camel@br98xy6r>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RlG1P-00035o-NS
+ for kexec@lists.infradead.org; Thu, 12 Jan 2012 08:28:35 +0000
+Date: Thu, 12 Jan 2012 17:16:06 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [Crash-utility] x86 remap allocator in kernel 3.0
+Message-Id: <20120112171606.c8959bfb.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <201201101914.33226.ptesarik@suse.cz>
+References: <201201101914.33226.ptesarik@suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,24 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, heiko.carstens@de.ibm.com, linux-kernel@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, schwidefsky@de.ibm.com, akpm@linux-foundation.org, Vivek Goyal <vgoyal@redhat.com>
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-On Wed, Jan 11, 2012 at 12:30:12PM +0100, Michael Holzheu wrote:
-> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+Hello Petr,
+
+On Tue, 10 Jan 2012 19:14:32 +0100
+Petr Tesarik <ptesarik@suse.cz> wrote:
+
+> Ken'ichi Ohmichi, please note that makedumpfile is also affected by this 
+> deficiency. On my test system, it will fail to produce any output if I set 
+> dump level to anything greater than zero:
 > 
-> kdump only allocates memory for the prstatus ELF note. For s390x,
-> besides of prstatus multiple ELF notes for various different register
-> types are stored. Therefore the currently allocated memory is not
-> sufficient. With this patch the KEXEC_NOTE_BYTES macro can be
-> defined by architecture code and for s390x it is set to the correct
-> size now.
+> makedumpfile -c -d 31 -x vmlinux-3.0.13-0.5-pae.debug vmcore kdump.31
+> readmem: Can't convert a physical address(34a012b4) to offset.
+> readmem: type_addr: 0, addr:f4a012b4, size:4
+> get_mm_discontigmem: Can't get node_start_pfn.
 > 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+> makedumpfile Failed.
+> 
+> However, fixing this for makedumpfile is harder, and it will most likely 
+> require a few more lines in VMCOREINFO, because debug symbols may not be 
+> available at dump time, and I can't see any alternative method to locate the 
+> remapped regions.
 
-This seems reasonable to me.
+Thank you for your indication.
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+Could you send me your kernel configuration so that I can reproduce the issue ?
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
