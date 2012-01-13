@@ -1,15 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RlYQ0-0006hj-UZ
- for kexec@lists.infradead.org; Fri, 13 Jan 2012 04:07:11 +0000
-Subject: Re: [Crash-utility] x86 remap allocator in kernel 3.0
-In-reply-to: <201201121140.09221.ptesarik@suse.cz>
-References: <201201121140.09221.ptesarik@suse.cz>
-Message-Id: <20120113122250tachibana@mail.jp.nec.com>
-Mime-Version: 1.0
-From: tachibana@mxm.nes.nec.co.jp
-Date: Fri, 13 Jan 2012 12:22:50 +0900
+Received: from e28smtp08.in.ibm.com ([122.248.162.8])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rlb5T-0005jo-Uu
+ for kexec@lists.infradead.org; Fri, 13 Jan 2012 06:58:09 +0000
+Received: from /spool/local
+ by e28smtp08.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Fri, 13 Jan 2012 12:27:56 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+ by d28relay01.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q0D6vpDM3428352
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2012 12:27:51 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+ by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q0D6voht018868
+ for <kexec@lists.infradead.org>; Fri, 13 Jan 2012 17:57:50 +1100
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Subject: [PATCH][makedumpfile] Fix compilation error in sadump_info.h
+Date: Fri, 13 Jan 2012 12:27:50 +0530
+Message-ID: <20120113065726.13214.80477.stgit@suzukikp.in.ibm.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,71 +29,25 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: kexec@lists.infradead.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, crash-utility@redhat.com
+To: Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-Hi Petr,
-
-On 2012/01/12 11:40:08 +0100, Petr Tesarik <ptesarik@suse.cz> wrote:
-> Dne ?t 12. ledna 2012 09:16:06 Atsushi Kumagai napsal(a):
-> > Hello Petr,
-> > 
-> > On Tue, 10 Jan 2012 19:14:32 +0100
-> > 
-> > Petr Tesarik <ptesarik@suse.cz> wrote:
-> > > Ken'ichi Ohmichi, please note that makedumpfile is also affected by this
-> > > deficiency. On my test system, it will fail to produce any output if I
-> > > set dump level to anything greater than zero:
-> > > 
-> > > makedumpfile -c -d 31 -x vmlinux-3.0.13-0.5-pae.debug vmcore kdump.31
-> > > readmem: Can't convert a physical address(34a012b4) to offset.
-> > > readmem: type_addr: 0, addr:f4a012b4, size:4
-> > > get_mm_discontigmem: Can't get node_start_pfn.
-> > > 
-> > > makedumpfile Failed.
-> > > 
-> > > However, fixing this for makedumpfile is harder, and it will most likely
-> > > require a few more lines in VMCOREINFO, because debug symbols may not be
-> > > available at dump time, and I can't see any alternative method to locate
-> > > the remapped regions.
-> > 
-> > Thank you for your indication.
-> > 
-> > Could you send me your kernel configuration so that I can reproduce the
-> > issue ?
-> 
-> Attached. The most important settings are:
-> 
-> CONFIG_X86_32=y
-> CONFIG_DISCONTIGMEM_MANUAL=y
-> 
-> This also depends on CONFIG_NUMA=y
-> 
-> FYI my test system runs 3.0.15 (because that's used for SLES11 SP2), but the 
-> same issue also exists in any later version.
-> 
-> Petr Tesarik
-> SUSE Linux
-
-Thank you for the config. I will fix makedumpfile. However it will take time 
-to solve various issues because I've never run makedumpfile on 3.0.X.
-
-Thanks.
-tachibana
-
----------------------------------------------------------------------
-
-> --
-> Crash-utility mailing list
-> Crash-utility@redhat.com
-> https://www.redhat.com/mailman/listinfo/crash-utility
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+V2hpbGUgY29tcGlsaW5nIHRoZSBtYWtlZHVtcGZpbGUtMS40LjEgSSBnb3QgdGhlIGZvbGxvd2lu
+ZyBlcnJvciA6CgpJbiBmaWxlIGluY2x1ZGVkIGZyb20gbWFrZWR1bXBmaWxlLmM6MjE6CnNhZHVt
+cF9pbmZvLmg6ODY6IGVycm9yOiBleHBlY3RlZCBpZGVudGlmaWVyIG9yIOKAmCjigJkgYmVmb3Jl
+IOKAmHvigJkgdG9rZW4KCgpUaGlzIHBhdGNoIGZpeGVzIHRoZSBjb21waWxhdGlvbiBlcnJvciBp
+biBzYWR1bXBfaW5mby5oCgpTaWduZWQtb2ZmLWJ5OiBTdXp1a2kgSy4gUG91bG9zZSA8c3V6dWtp
+QGluLmlibS5jb20+Ci0tLQoKIHNhZHVtcF9pbmZvLmggfCAgICAyICstCiAxIGZpbGVzIGNoYW5n
+ZWQsIDEgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9zYWR1bXBf
+aW5mby5oIGIvc2FkdW1wX2luZm8uaAppbmRleCAxZjc0ZWU1Li5jNDgyNGJlIDEwMDY0NAotLS0g
+YS9zYWR1bXBfaW5mby5oCisrKyBiL3NhZHVtcF9pbmZvLmgKQEAgLTgyLDcgKzgyLDcgQEAgc3Rh
+dGljIGlubGluZSBpbnQgc2FkdW1wX2luaXRpYWxpemVfYml0bWFwX21lbW9yeSh2b2lkKQogCXJl
+dHVybiBGQUxTRTsKIH0KIAotc3RhdGljIGlubGluZSBpbnQgc2FkdW1wX251bV9vbmxpbmVfY3B1
+cyh2b2lkKTsKK3N0YXRpYyBpbmxpbmUgaW50IHNhZHVtcF9udW1fb25saW5lX2NwdXModm9pZCkK
+IHsKIAlyZXR1cm4gMDsKIH0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
