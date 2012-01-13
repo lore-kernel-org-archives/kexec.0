@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RlX1H-000686-Sj
- for kexec@lists.infradead.org; Fri, 13 Jan 2012 02:37:35 +0000
-Subject: Re: [PATCH] makedumpfile: Compile fix
-In-reply-to: <1326381154.2729.1.camel@br98xy6r>
-References: <1326381154.2729.1.camel@br98xy6r>
-Message-Id: <20120113112727tachibana@mail.jp.nec.com>
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RlYQ0-0006hj-UZ
+ for kexec@lists.infradead.org; Fri, 13 Jan 2012 04:07:11 +0000
+Subject: Re: [Crash-utility] x86 remap allocator in kernel 3.0
+In-reply-to: <201201121140.09221.ptesarik@suse.cz>
+References: <201201121140.09221.ptesarik@suse.cz>
+Message-Id: <20120113122250tachibana@mail.jp.nec.com>
 Mime-Version: 1.0
 From: tachibana@mxm.nes.nec.co.jp
-Date: Fri, 13 Jan 2012 11:27:27 +0900
+Date: Fri, 13 Jan 2012 12:22:50 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +22,65 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: holzheu@linux.vnet.ibm.com
-Cc: kexec@lists.infradead.org
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec@lists.infradead.org, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, crash-utility@redhat.com
 
-Hi Michael,
+Hi Petr,
 
-On 2012/01/12 16:12:34 +0100, Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
+On 2012/01/12 11:40:08 +0100, Petr Tesarik <ptesarik@suse.cz> wrote:
+> Dne ?t 12. ledna 2012 09:16:06 Atsushi Kumagai napsal(a):
+> > Hello Petr,
+> > 
+> > On Tue, 10 Jan 2012 19:14:32 +0100
+> > 
+> > Petr Tesarik <ptesarik@suse.cz> wrote:
+> > > Ken'ichi Ohmichi, please note that makedumpfile is also affected by this
+> > > deficiency. On my test system, it will fail to produce any output if I
+> > > set dump level to anything greater than zero:
+> > > 
+> > > makedumpfile -c -d 31 -x vmlinux-3.0.13-0.5-pae.debug vmcore kdump.31
+> > > readmem: Can't convert a physical address(34a012b4) to offset.
+> > > readmem: type_addr: 0, addr:f4a012b4, size:4
+> > > get_mm_discontigmem: Can't get node_start_pfn.
+> > > 
+> > > makedumpfile Failed.
+> > > 
+> > > However, fixing this for makedumpfile is harder, and it will most likely
+> > > require a few more lines in VMCOREINFO, because debug symbols may not be
+> > > available at dump time, and I can't see any alternative method to locate
+> > > the remapped regions.
+> > 
+> > Thank you for your indication.
+> > 
+> > Could you send me your kernel configuration so that I can reproduce the
+> > issue ?
 > 
-> When compiling makedumpfile git head or 1.4.1 on s390x, I get the following
-> gcc error:
+> Attached. The most important settings are:
+> 
+> CONFIG_X86_32=y
+> CONFIG_DISCONTIGMEM_MANUAL=y
+> 
+> This also depends on CONFIG_NUMA=y
+> 
+> FYI my test system runs 3.0.15 (because that's used for SLES11 SP2), but the 
+> same issue also exists in any later version.
+> 
+> Petr Tesarik
+> SUSE Linux
 
-Thank you for the fix and sorry for our insufficient tests.
-We will release a fixed version next week.
+Thank you for the config. I will fix makedumpfile. However it will take time 
+to solve various issues because I've never run makedumpfile on 3.0.X.
 
 Thanks.
 tachibana
 
+---------------------------------------------------------------------
 
+> --
+> Crash-utility mailing list
+> Crash-utility@redhat.com
+> https://www.redhat.com/mailman/listinfo/crash-utility
 > 
->  # gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
->  -D_LARGEFILE64_SOURCE -DVERSION='"1.4.1"' -DRELEASE_DATE='"6 January 2012"'
->  -D__s390__  print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
->  arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o -o
->  makedumpfile makedumpfile.c -static -ldw -lbz2 -lebl -ldl -lelf -lz
->  In file included from makedumpfile.c:21:0:
->  sadump_info.h:86:1: error: expected identifier or '(' before '{' token
->  sadump_info.h:85:19: warning: 'sadump_num_online_cpus' used but never defined
-> 
-> The attached patch fixes this problem.
-> 
-> Signed-off-by: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-> ---
->  sadump_info.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- a/sadump_info.h
-> +++ b/sadump_info.h
-> @@ -82,7 +82,7 @@ static inline int sadump_initialize_bitm
->  	return FALSE;
->  }
->  
-> -static inline int sadump_num_online_cpus(void);
-> +static inline int sadump_num_online_cpus(void)
->  {
->  	return 0;
->  }
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
