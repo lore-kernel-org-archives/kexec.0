@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gx0-f177.google.com ([209.85.161.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RnVpK-0004pv-S5
- for kexec@lists.infradead.org; Wed, 18 Jan 2012 13:45:23 +0000
-Received: by ggnl1 with SMTP id l1so4404775ggn.36
- for <kexec@lists.infradead.org>; Wed, 18 Jan 2012 05:45:21 -0800 (PST)
-Message-ID: <4F16CCE5.1060500@gmail.com>
-Date: Wed, 18 Jan 2012 21:45:09 +0800
-From: Cong Wang <xiyou.wangcong@gmail.com>
+Received: from relay2.sgi.com ([192.48.179.30] helo=relay.sgi.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rnhxp-0000xE-Pd
+ for kexec@lists.infradead.org; Thu, 19 Jan 2012 02:42:58 +0000
+Message-ID: <4F17832E.9080102@sgi.com>
+Date: Wed, 18 Jan 2012 18:42:54 -0800
+From: Jay Lan <jlan@sgi.com>
 MIME-Version: 1.0
-Subject: Re: makedumpfile can't build on Fedora 16
-References: <4F15A377.3090302@gmail.com> <4F1613CC.9040405@cn.fujitsu.com>
- <20120118094055.239c362d.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20120118094055.239c362d.oomichi@mxs.nes.nec.co.jp>
+Subject: kdump kernel tried to load modules not included in the kdump initrd?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +16,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org, Wen Congyang <wency@cn.fujitsu.com>
+To: kexec@lists.infradead.org
 
-On 01/18/2012 08:40 AM, Ken'ichi Ohmichi wrote:
-> 
-> Hi,
-> 
-> On Wed, 18 Jan 2012 08:35:24 +0800
-> Wen Congyang<wency@cn.fujitsu.com>  wrote:
->> At 01/18/2012 12:36 AM, Cong Wang Wrote:
->>> Hello, Atsushi,
->>>
->>> I can't build the latest makedumpfile on Fedora 16,
->>>
->>> [wangcong@cr0]~/makedumpfile% make
->>> ...
->>> gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
->>> -D_LARGEFILE64_SOURCE -DVERSION='"1.4.1"' -DRELEASE_DATE='"6 January
->>> 2012"' -D__x86_64__  print_info.o dwarf_info.o elf_info.o erase_info.o
->>> sadump_info.o arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o
->>> arch/ppc64.o arch/s390x.o -o makedumpfile makedumpfile.c -static -ldw
->>> -lbz2 -lebl -ldl -lelf -lz
->>
->> The parameter has -static, so you need libc.a, libdw.a and ...
->> Or you can remove -static, but you should ensure that there are these
->> dynamic librarys in the second os.
-> 
-> That's right.
-> It has been written in README file of makedumpfile:
+Hi,
 
-Hey,
+I have a 2.6.32-131.6.1.el6 kernel, and kexec-tools-2.0.0-145.el6.x86_64
+rpm on a cent6 machine.
 
-This means we have to patch the source code by ourselves, why not
-improve it? Something like below?
+When i forced a kdump by 'echo c > /proc/sysrq-trigger',
+the kdump kernel panicked during the boot. Surprisingly,
+it tried to load lustre modules that should not be part of
+the initrd and panicked!
 
-diff --git a/Makefile b/Makefile
-index 9afbe1c..1361700 100644
---- a/Makefile
-+++ b/Makefile
-@@ -28,6 +28,11 @@ SRC_PART = print_info.c dwarf_info.c elf_info.c
-erase_info.c sadump_info.c
- OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c
-arch/s390x.c
- OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o
-arch/s390x.o
-+LIBS := $(shell if $(CC) -static -ldw -lbz2 -lebl -ldl -lelf -lz
->&/dev/null; then \
-+       echo "-static -ldw -lbz2 -lebl -ldl -lelf -lz"; \
-+       else \
-+       echo "-ldw -lbz2 -lebl -ldl -lelf -lz"; \
-+       fi)
+The syslog showed the --initrd specified a kdump.img
+when kdump was started. I dumped out the kdump.img
+and verified that no lustre module was included in the
+initrd image.
 
- all: makedumpfile
+So, how this have happened?
 
-@@ -38,7 +43,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
-        $(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c)
+Thanks,
+Jay
 
- makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
--       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $<
--static -ldw -lbz2 -lebl -ldl -lelf -lz
-+       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
-        echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\"
-\"Linux System Administrator\'s Manual\" > temp.8
-        grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
-        mv temp.8 makedumpfile.8
 
 _______________________________________________
 kexec mailing list
