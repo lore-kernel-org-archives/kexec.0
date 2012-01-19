@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RnmxH-0003N8-MC
- for kexec@lists.infradead.org; Thu, 19 Jan 2012 08:02:47 +0000
-Date: Thu, 19 Jan 2012 16:58:16 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: makedumpfile can't build on Fedora 16
-Message-Id: <20120119165816.125f11b0.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <4F16CCE5.1060500@gmail.com>
-References: <4F15A377.3090302@gmail.com> <4F1613CC.9040405@cn.fujitsu.com>
- <20120118094055.239c362d.oomichi@mxs.nes.nec.co.jp>
- <4F16CCE5.1060500@gmail.com>
+Received: from lo.gmane.org ([80.91.229.12])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rnr4Z-0003yZ-Gr
+ for kexec@lists.infradead.org; Thu, 19 Jan 2012 12:26:32 +0000
+Received: from list by lo.gmane.org with local (Exim 4.69)
+ (envelope-from <glkk-kexec@m.gmane.org>) id 1Rnr4R-0000Fx-7V
+ for kexec@lists.infradead.org; Thu, 19 Jan 2012 13:26:23 +0100
+Received: from 180.129.255.200 ([180.129.255.200])
+ by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+ id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Thu, 19 Jan 2012 13:26:23 +0100
+Received: from xiyou.wangcong by 180.129.255.200 with local (Gmexim 0.1
+ (Debian)) id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Thu, 19 Jan 2012 13:26:23 +0100
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: kdump kernel tried to load modules not included in the kdump
+ initrd?
+Date: Thu, 19 Jan 2012 12:26:06 +0000 (UTC)
+Message-ID: <jf924s$rn1$1@dough.gmane.org>
+References: <4F17CA71.6040405@gmail.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,76 +32,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org, Wen Congyang <wency@cn.fujitsu.com>
+To: kexec@lists.infradead.org
+
+On Thu, 19 Jan 2012 at 07:46 GMT, Jay Lan <jay.zen.lan@gmail.com> wrote:
+> Hi,
+>
+
+Hi, Jay,
+
+This mailing list is not proper for reporting problems of distro's
+mkdumprd, please file a bug in bugzilla of centos.
+
+> I have a 2.6.32-131.6.1.el6 kernel, and kexec-tools-2.0.0-145.el6.x86_64
+> rpm on a cent6 machine.
+>
+> When i forced a kdump by 'echo c > /proc/sysrq-trigger',
+> the kdump kernel panicked during the boot. Surprisingly,
+> it tried to load lustre modules that should not be part of
+> the initrd and panicked!
+>
+> The syslog showed the --initrd specified a kdump.img
+> when kdump was started. I dumped out the kdump.img
+> (with zcat) and verified that no lustre module was included
+> in the initrd image.
+
+lsinitrd can do that too.
+
+>
+> So, how did this have happened?
+>
+
+Odd, el6 mkdumprd picks all modules listed by lsmod in your *first
+kernel*, so it is not surprised mkdumprd picks it. But if it is not
+picked into kdump initrd, it is almost impossible that it will be
+loaded in the second kernel.
 
 
-Hi,
-
-On Wed, 18 Jan 2012 21:45:09 +0800
-Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> >>> ...
-> >>> gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-> >>> -D_LARGEFILE64_SOURCE -DVERSION='"1.4.1"' -DRELEASE_DATE='"6 January
-> >>> 2012"' -D__x86_64__  print_info.o dwarf_info.o elf_info.o erase_info.o
-> >>> sadump_info.o arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o
-> >>> arch/ppc64.o arch/s390x.o -o makedumpfile makedumpfile.c -static -ldw
-> >>> -lbz2 -lebl -ldl -lelf -lz
-> >>
-> >> The parameter has -static, so you need libc.a, libdw.a and ...
-> >> Or you can remove -static, but you should ensure that there are these
-> >> dynamic librarys in the second os.
-> > 
-> > That's right.
-> > It has been written in README file of makedumpfile:
-> 
-> Hey,
-> 
-> This means we have to patch the source code by ourselves, why not
-> improve it? Something like below?
-
-I guess someone will send "makedumpfile can't run on ..." even if
-your patch is merged, because these dynamic libraries should be
-included in the second os and it is easy to forget that.
-The compiling error is an easy way to notice it, I feel.
-What do you think, Kumagai-san ?
-
-
-Thanks
-Ken'ichi Ohmichi
-
----
-> diff --git a/Makefile b/Makefile
-> index 9afbe1c..1361700 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -28,6 +28,11 @@ SRC_PART = print_info.c dwarf_info.c elf_info.c
-> erase_info.c sadump_info.c
->  OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
->  SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c
-> arch/s390x.c
->  OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o
-> arch/s390x.o
-> +LIBS := $(shell if $(CC) -static -ldw -lbz2 -lebl -ldl -lelf -lz
-> >&/dev/null; then \
-> +       echo "-static -ldw -lbz2 -lebl -ldl -lelf -lz"; \
-> +       else \
-> +       echo "-ldw -lbz2 -lebl -ldl -lelf -lz"; \
-> +       fi)
-> 
->  all: makedumpfile
-> 
-> @@ -38,7 +43,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
->         $(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c)
-> 
->  makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
-> -       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $<
-> -static -ldw -lbz2 -lebl -ldl -lelf -lz
-> +       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
->         echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\"
-> \"Linux System Administrator\'s Manual\" > temp.8
->         grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
->         mv temp.8 makedumpfile.8
 
 _______________________________________________
 kexec mailing list
