@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RniLP-0002pn-8w
- for kexec@lists.infradead.org; Thu, 19 Jan 2012 03:07:21 +0000
-Date: Thu, 19 Jan 2012 11:58:52 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v1 0/3][makedumpfile]Add support for  PPC32
-Message-Id: <20120119115852.588bf8bb.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <20120118100510.29422.93587.stgit@suzukikp.in.ibm.com>
-References: <20120118100510.29422.93587.stgit@suzukikp.in.ibm.com>
-Mime-Version: 1.0
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rnmi1-0002F4-Rb
+ for kexec@lists.infradead.org; Thu, 19 Jan 2012 07:46:58 +0000
+Received: by iagw33 with SMTP id w33so1996008iag.36
+ for <kexec@lists.infradead.org>; Wed, 18 Jan 2012 23:46:56 -0800 (PST)
+Message-ID: <4F17CA71.6040405@gmail.com>
+Date: Wed, 18 Jan 2012 23:46:57 -0800
+From: Jay Lan <jay.zen.lan@gmail.com>
+MIME-Version: 1.0
+Subject: kdump kernel tried to load modules not included in the kdump initrd?
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,47 +18,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: suzuki@in.ibm.com
-Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Suzuki,
+Hi,
 
-On Wed, 18 Jan 2012 15:37:49 +0530
-"Suzuki K. Poulose" <suzuki@in.ibm.com> wrote:
+I have a 2.6.32-131.6.1.el6 kernel, and kexec-tools-2.0.0-145.el6.x86_64
+rpm on a cent6 machine.
 
-> The following series implements makedumpfile support for PPC32.
-> 
-> The implementation is heavily based on PPC64. This also introduces
-> cross build support which is required for Embedded PPC Boards.
-> 
-> ---
-> 
-> Suzuki K. Poulose (3):
->       [makedumpfile] Add support for PPC32
->       [ppc64] Rename the __powerpc__ macro to __powerpc64__ for PPC64
->       [makedumpfile] Support building for cross build
-> 
-> 
->  Makefile       |   26 ++++++++++++--
->  README         |    5 +++
->  arch/ppc.c     |  101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  makedumpfile.c |    4 +-
->  makedumpfile.h |   28 +++++++++++++---
->  5 files changed, 153 insertions(+), 11 deletions(-)
->  create mode 100644 arch/ppc.c
-> 
-> -- 
-> Suzuki Poulose
+When i forced a kdump by 'echo c > /proc/sysrq-trigger',
+the kdump kernel panicked during the boot. Surprisingly,
+it tried to load lustre modules that should not be part of
+the initrd and panicked!
 
-Thank you for your patches.
-I will review them.
+The syslog showed the --initrd specified a kdump.img
+when kdump was started. I dumped out the kdump.img
+(with zcat) and verified that no lustre module was included
+in the initrd image.
 
-Thanks
-Atsushi Kumagai
+So, how did this have happened?
+
+Thanks,
+Jay
 
 _______________________________________________
 kexec mailing list
