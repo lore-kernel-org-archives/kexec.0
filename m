@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RoBYl-0004YH-Kq
- for kexec@lists.infradead.org; Fri, 20 Jan 2012 10:19:08 +0000
-Date: Fri, 20 Jan 2012 16:35:05 +0900
-From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
-Subject: Re: makedumpfile can't build on Fedora 16
-Message-Id: <20120120163505.7ca68741.oomichi@mxs.nes.nec.co.jp>
-In-Reply-To: <20120120160322.d5dbd362.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <4F15A377.3090302@gmail.com> <4F1613CC.9040405@cn.fujitsu.com>
- <20120118094055.239c362d.oomichi@mxs.nes.nec.co.jp>
- <4F16CCE5.1060500@gmail.com>
- <20120119165816.125f11b0.oomichi@mxs.nes.nec.co.jp>
- <20120120160322.d5dbd362.kumagai-atsushi@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mail.inmage.com ([67.207.115.103])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RofZq-0004Uu-2d
+ for kexec@lists.infradead.org; Sat, 21 Jan 2012 18:22:11 +0000
+From: Prashant Dinkar Kharche <pkharche@inmage.com>
+Date: Sat, 21 Jan 2012 10:21:17 -0800
+Subject: kdump not working Intel S5520UR motherboards with Xeon processor
+Message-ID: <7967B71B602AF546971AB6303361B1A561AC86E1E8@mbe.inside.abhaisystems.com>
+References: <20111027203029.GR3452@redhat.com> <4EA9D09E.800@draigBrady.com>
+In-Reply-To: <4EA9D09E.800@draigBrady.com>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,116 +23,105 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: xiyou.wangcong@gmail.com, kexec@lists.infradead.org, wency@cn.fujitsu.com
-
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 Hi,
 
-On Fri, 20 Jan 2012 16:03:22 +0900
-Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-> > 
-> > On Wed, 18 Jan 2012 21:45:09 +0800
-> > Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> > > >>> ...
-> > > >>> gcc -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-> > > >>> -D_LARGEFILE64_SOURCE -DVERSION='"1.4.1"' -DRELEASE_DATE='"6 January
-> > > >>> 2012"' -D__x86_64__  print_info.o dwarf_info.o elf_info.o erase_info.o
-> > > >>> sadump_info.o arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o
-> > > >>> arch/ppc64.o arch/s390x.o -o makedumpfile makedumpfile.c -static -ldw
-> > > >>> -lbz2 -lebl -ldl -lelf -lz
-> > > >>
-> > > >> The parameter has -static, so you need libc.a, libdw.a and ...
-> > > >> Or you can remove -static, but you should ensure that there are these
-> > > >> dynamic librarys in the second os.
-> > > > 
-> > > > That's right.
-> > > > It has been written in README file of makedumpfile:
-> > > 
-> > > Hey,
-> > > 
-> > > This means we have to patch the source code by ourselves, why not
-> > > improve it? Something like below?
-> > 
-> > I guess someone will send "makedumpfile can't run on ..." even if
-> > your patch is merged, because these dynamic libraries should be
-> > included in the second os and it is easy to forget that.
-> > The compiling error is an easy way to notice it, I feel.
-> > What do you think, Kumagai-san ?
-> > 
-> > 
-> > Thanks
-> > Ken'ichi Ohmichi
-> 
-> Thank you for your explanation, Ohmichi-san, I agree with you.
-> 
-> I think that makedumpfile should be compiled with -static option,
-> because it must be executable in many environment as possible, e.g. even if
-> there are no dynamic libraries in 2nd kernel environment. (as written in README)
-> 
-> But I've got some requests to build it using dynamic libraries,
-> so I will change the Makefile as attached patch. 
->  
-> If you want to build makedumpfile using dynamic libraries,
-> you need "LINKTYPE=dynamic"(see below).
+I have been trying to get kdump working on Intel S5520 chipset with Xeon processor on RHEL 5 update 5  or update 6, but it appears that when I trigger a crash dump, system reboots abruptly right after loading the kdump kernel. Key observation during this experiment was that when I turn off acpi interrupt handling (acpi=off), crash has worked on RHEL 5 update 5. I have captured output of lspci and cpuinfo  below for reference.
 
-I like it. good idea :-)
+Whereas, on RHEL 6 kdump works fine on this hardware. Could someone please help me identify the patches for RHEL 5 update 5 kernel that might be required for this issue?
 
+00:00.0 Host bridge: Intel Corporation 5520 I/O Hub to ESI Port (rev 22)
+00:01.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 1 (rev 22)
+00:03.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 3 (rev 22)
+00:05.0 PCI bridge: Intel Corporation 5520/X58 I/O Hub PCI Express Root Port 5 (rev 22)
+00:07.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 7 (rev 22)
+00:09.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 9 (rev 22)
+00:0a.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 10 (rev 22)
+00:10.0 PIC: Intel Corporation 5520/5500/X58 Physical and Link Layer Registers Port 0 (rev 22)
+00:10.1 PIC: Intel Corporation 5520/5500/X58 Routing and Protocol Layer Registers Port 0 (rev 22)
+00:11.0 PIC: Intel Corporation 5520/5500 Physical and Link Layer Registers Port 1 (rev 22)
+00:11.1 PIC: Intel Corporation 5520/5500 Routing & Protocol Layer Register Port 1 (rev 22)
+00:13.0 PIC: Intel Corporation 5520/5500/X58 I/O Hub I/OxAPIC Interrupt Controller (rev 22)
+00:14.0 PIC: Intel Corporation 5520/5500/X58 I/O Hub System Management Registers (rev 22)
+00:14.1 PIC: Intel Corporation 5520/5500/X58 I/O Hub GPIO and Scratch Pad Registers (rev 22)
+00:14.2 PIC: Intel Corporation 5520/5500/X58 I/O Hub Control Status and RAS Registers (rev 22)
+00:14.3 PIC: Intel Corporation 5520/5500/X58 I/O Hub Throttle Registers (rev 22)
+00:15.0 PIC: Intel Corporation 5520/5500/X58 Trusted Execution Technology Registers (rev 22)
+00:16.0 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.1 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.2 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.3 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.4 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.5 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.6 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:16.7 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
+00:1a.0 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #4
+00:1a.1 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #5
+00:1a.2 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #6
+00:1a.7 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB2 EHCI Controller #2
+00:1c.0 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 1
+00:1c.4 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 5
+00:1c.5 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 6
+00:1d.0 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #1
+00:1d.1 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #2
+00:1d.2 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #3
+00:1d.7 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB2 EHCI Controller #1
+00:1e.0 PCI bridge: Intel Corporation 82801 PCI Bridge (rev 90)
+00:1f.0 ISA bridge: Intel Corporation 82801JIR (ICH10R) LPC Interface Controller
+00:1f.2 IDE interface: Intel Corporation 82801JI (ICH10 Family) 4 port SATA IDE Controller #1
+00:1f.3 SMBus: Intel Corporation 82801JI (ICH10 Family) SMBus Controller
+00:1f.5 IDE interface: Intel Corporation 82801JI (ICH10 Family) 2 port SATA IDE Controller #2
+01:00.0 Ethernet controller: Intel Corporation 82575EB Gigabit Network Connection (rev 02)
+01:00.1 Ethernet controller: Intel Corporation 82575EB Gigabit Network Connection (rev 02)
+03:00.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+04:02.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+04:04.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+05:00.0 PCI bridge: NEC Corporation Unknown device 014f (rev 02)
+06:00.0 PCI bridge: NEC Corporation Unknown device 0150 (rev 02)
+06:01.0 PCI bridge: NEC Corporation Unknown device 0151 (rev 02)
+06:02.0 PCI bridge: NEC Corporation Unknown device 0152 (rev 02)
+07:00.0 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
+07:00.1 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
+08:00.0 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
+08:00.1 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
+0b:00.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+0c:02.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+0c:04.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
+0e:00.0 Ethernet controller: Intel Corporation 82571EB Gigabit Ethernet Controller (rev 06)
+0e:00.1 Ethernet controller: Intel Corporation 82571EB Gigabit Ethernet Controller (rev 06)
+0f:00.0 SCSI storage controller: LSI Logic / Symbios Logic SAS1064ET PCI-Express Fusion-MPT SAS (rev 08)
+12:00.0 VGA compatible controller: Matrox Graphics, Inc. MGA G200e [Pilot] ServerEngines (SEP1) (rev 02)
 
-Thanks
-Ken'ichi Ohmichi
+Total 16 cores on CPU --
+processor       : 15
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 26
+model name      : Intel(R) Xeon(R) CPU           E5540  @ 2.53GHz
+stepping        : 5
+cpu MHz         : 2527.364
+cache size      : 8192 KB
+physical id     : 1
+siblings        : 8
+core id         : 3
+cpu cores       : 4
+apicid          : 23
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 11
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm syscall nx rdtscp lm constant_tsc ida nonstop_tsc pni monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr sse4_1 sse4_2 popcnt lahf_lm
+bogomips        : 5054.56
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 40 bits physical, 48 bits virtual
+power management: [8]
 
-> How to build:
->   a) linking static libraries (default)
->     $ make
->     ...
->     $ ldd makedumpfile
->         not a dynamic executable
->   
->   b) linking dynamic libraries
->     $ make LINKTYPE=dynamic
->     ...
->     $ ldd makedumpfile
->         libdw.so.1 => /usr/lib64/libdw.so.1 (0x0000003ca2800000)
->         libbz2.so.1 => /usr/lib64/libbz2.so.1 (0x000000394b200000)
->         libdl.so.2 => /lib64/libdl.so.2 (0x00000031a5a00000)
->         libelf.so.1 => /usr/lib64/libelf.so.1 (0x0000003ca2400000)
->         libz.so.1 => /usr/lib64/libz.so.1 (0x00000031a6200000)
->         libc.so.6 => /lib64/libc.so.6 (0x00000031a5200000)
->         /lib64/ld-linux-x86-64.so.2 (0x00000031a4e00000)
-> 
-> What do you think, Cong?
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> 
-> diff --git a/Makefile b/Makefile
-> index 9afbe1c..b14f09c 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -29,6 +29,12 @@ OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
->  SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
->  OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o
-> 
-> +ifeq ($(LINKTYPE), dynamic)
-> +LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
-> +else
-> +LIBS = -static -ldw -lbz2 -lebl -ldl -lelf -lz
-> +endif
-> +
->  all: makedumpfile
-> 
->  $(OBJ_PART): $(SRC_PART)
-> @@ -38,7 +44,7 @@ $(OBJ_ARCH): $(SRC_ARCH)
->         $(CC) $(CFLAGS_ARCH) -c -o ./$@ ./$(@:.o=.c)
-> 
->  makedumpfile: $(SRC) $(OBJ_PART) $(OBJ_ARCH)
-> -       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< -static -ldw -lbz2 -lebl -ldl -lelf -lz
-> +       $(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -o $@ $< $(LIBS)
->         echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
->         grep -v "^.TH MAKEDUMPFILE 8" makedumpfile.8 >> temp.8
->         mv temp.8 makedumpfile.8
+Thanking you in anticipation.
+
+Regards,
+Prashant
 
 _______________________________________________
 kexec mailing list
