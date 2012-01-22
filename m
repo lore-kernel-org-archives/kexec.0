@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.inmage.com ([67.207.115.103])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RofZq-0004Uu-2d
- for kexec@lists.infradead.org; Sat, 21 Jan 2012 18:22:11 +0000
-From: Prashant Dinkar Kharche <pkharche@inmage.com>
-Date: Sat, 21 Jan 2012 10:21:17 -0800
-Subject: kdump not working Intel S5520UR motherboards with Xeon processor
-Message-ID: <7967B71B602AF546971AB6303361B1A561AC86E1E8@mbe.inside.abhaisystems.com>
-References: <20111027203029.GR3452@redhat.com> <4EA9D09E.800@draigBrady.com>
-In-Reply-To: <4EA9D09E.800@draigBrady.com>
-Content-Language: en-US
-MIME-Version: 1.0
+Received: from mail-qy0-f177.google.com ([209.85.216.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RoohU-0003uA-8y
+ for kexec@lists.infradead.org; Sun, 22 Jan 2012 04:06:41 +0000
+Received: by qcso7 with SMTP id o7so1064471qcs.36
+ for <kexec@lists.infradead.org>; Sat, 21 Jan 2012 20:06:38 -0800 (PST)
+Message-ID: <1327212367.32115.4.camel@lappy>
+Subject: BUG: unable to handle kernel paging request at ffffc7ff81000398
+ (sys_kexec_load)
+From: Sasha Levin <levinsasha928@gmail.com>
+Date: Sun, 22 Jan 2012 01:06:07 -0500
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,105 +23,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: ebiederm@xmission.com, Dave Jones <davej@redhat.com>
+Cc: kexec@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>
 
-Hi,
+Hi All,
 
-I have been trying to get kdump working on Intel S5520 chipset with Xeon processor on RHEL 5 update 5  or update 6, but it appears that when I trigger a crash dump, system reboots abruptly right after loading the kdump kernel. Key observation during this experiment was that when I turn off acpi interrupt handling (acpi=off), crash has worked on RHEL 5 update 5. I have captured output of lspci and cpuinfo  below for reference.
+I got the following BUG() while running trinity within KVM tool.
 
-Whereas, on RHEL 6 kdump works fine on this hardware. Could someone please help me identify the patches for RHEL 5 update 5 kernel that might be required for this issue?
+It looks like the result of a kexec_load(), but I couldn't find any mention of it in the logs - which is strange since logs are supposed to be flushed before actual syscall runs.
 
-00:00.0 Host bridge: Intel Corporation 5520 I/O Hub to ESI Port (rev 22)
-00:01.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 1 (rev 22)
-00:03.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 3 (rev 22)
-00:05.0 PCI bridge: Intel Corporation 5520/X58 I/O Hub PCI Express Root Port 5 (rev 22)
-00:07.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 7 (rev 22)
-00:09.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 9 (rev 22)
-00:0a.0 PCI bridge: Intel Corporation 5520/5500/X58 I/O Hub PCI Express Root Port 10 (rev 22)
-00:10.0 PIC: Intel Corporation 5520/5500/X58 Physical and Link Layer Registers Port 0 (rev 22)
-00:10.1 PIC: Intel Corporation 5520/5500/X58 Routing and Protocol Layer Registers Port 0 (rev 22)
-00:11.0 PIC: Intel Corporation 5520/5500 Physical and Link Layer Registers Port 1 (rev 22)
-00:11.1 PIC: Intel Corporation 5520/5500 Routing & Protocol Layer Register Port 1 (rev 22)
-00:13.0 PIC: Intel Corporation 5520/5500/X58 I/O Hub I/OxAPIC Interrupt Controller (rev 22)
-00:14.0 PIC: Intel Corporation 5520/5500/X58 I/O Hub System Management Registers (rev 22)
-00:14.1 PIC: Intel Corporation 5520/5500/X58 I/O Hub GPIO and Scratch Pad Registers (rev 22)
-00:14.2 PIC: Intel Corporation 5520/5500/X58 I/O Hub Control Status and RAS Registers (rev 22)
-00:14.3 PIC: Intel Corporation 5520/5500/X58 I/O Hub Throttle Registers (rev 22)
-00:15.0 PIC: Intel Corporation 5520/5500/X58 Trusted Execution Technology Registers (rev 22)
-00:16.0 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.1 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.2 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.3 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.4 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.5 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.6 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:16.7 System peripheral: Intel Corporation 5520/5500/X58 Chipset QuickData Technology Device (rev 22)
-00:1a.0 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #4
-00:1a.1 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #5
-00:1a.2 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #6
-00:1a.7 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB2 EHCI Controller #2
-00:1c.0 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 1
-00:1c.4 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 5
-00:1c.5 PCI bridge: Intel Corporation 82801JI (ICH10 Family) PCI Express Root Port 6
-00:1d.0 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #1
-00:1d.1 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #2
-00:1d.2 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB UHCI Controller #3
-00:1d.7 USB Controller: Intel Corporation 82801JI (ICH10 Family) USB2 EHCI Controller #1
-00:1e.0 PCI bridge: Intel Corporation 82801 PCI Bridge (rev 90)
-00:1f.0 ISA bridge: Intel Corporation 82801JIR (ICH10R) LPC Interface Controller
-00:1f.2 IDE interface: Intel Corporation 82801JI (ICH10 Family) 4 port SATA IDE Controller #1
-00:1f.3 SMBus: Intel Corporation 82801JI (ICH10 Family) SMBus Controller
-00:1f.5 IDE interface: Intel Corporation 82801JI (ICH10 Family) 2 port SATA IDE Controller #2
-01:00.0 Ethernet controller: Intel Corporation 82575EB Gigabit Network Connection (rev 02)
-01:00.1 Ethernet controller: Intel Corporation 82575EB Gigabit Network Connection (rev 02)
-03:00.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-04:02.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-04:04.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-05:00.0 PCI bridge: NEC Corporation Unknown device 014f (rev 02)
-06:00.0 PCI bridge: NEC Corporation Unknown device 0150 (rev 02)
-06:01.0 PCI bridge: NEC Corporation Unknown device 0151 (rev 02)
-06:02.0 PCI bridge: NEC Corporation Unknown device 0152 (rev 02)
-07:00.0 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
-07:00.1 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
-08:00.0 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
-08:00.1 Fibre Channel: QLogic Corp. ISP2432-based 4Gb Fibre Channel to PCI Express HBA (rev 03)
-0b:00.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-0c:02.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-0c:04.0 PCI bridge: Integrated Device Technology, Inc. PES24T3G2 PCI Express Gen2 Switch (rev 02)
-0e:00.0 Ethernet controller: Intel Corporation 82571EB Gigabit Ethernet Controller (rev 06)
-0e:00.1 Ethernet controller: Intel Corporation 82571EB Gigabit Ethernet Controller (rev 06)
-0f:00.0 SCSI storage controller: LSI Logic / Symbios Logic SAS1064ET PCI-Express Fusion-MPT SAS (rev 08)
-12:00.0 VGA compatible controller: Matrox Graphics, Inc. MGA G200e [Pilot] ServerEngines (SEP1) (rev 02)
+[ 3515.829231] BUG: unable to handle kernel paging request at ffffc7ff81000398
+[ 3515.830041] IP: [<ffffffff81077281>] native_set_pte+0x1/0x10
+[ 3515.830041] PGD 0 
+[ 3515.830041] Oops: 0002 [#1] PREEMPT SMP 
+[ 3515.830041] CPU 0 
+[ 3515.830041] Pid: 17125, comm: trinity Not tainted 3.2.0-next-20120119-sasha-00001-gfaa12a9-dirty #129  
+[ 3515.830041] RIP: 0010:[<ffffffff81077281>]  [<ffffffff81077281>] native_set_pte+0x1/0x10
+[ 3515.830041] RSP: 0018:ffff8800066a7e48  EFLAGS: 00010282
+[ 3515.830041] RAX: 00003ffffffff000 RBX: ffff880005deb040 RCX: 00003ffffffff000
+[ 3515.830041] RDX: 00003fff81000000 RSI: 0000000006657163 RDI: ffffc7ff81000398
+[ 3515.830041] RBP: ffff8800066a7ed8 R08: ffffea0000199de0 R09: ffff88000ff15140
+[ 3515.830041] R10: 0000000005deb000 R11: 0000000000000001 R12: 0000000000000398
+[ 3515.830041] R13: 0000000006657000 R14: 0000008000000000 R15: 0001000000000000
+[ 3515.830041] FS:  00007fc64b475700(0000) GS:ffff880013a00000(0000) knlGS:0000000000000000
+[ 3515.830041] CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
+[ 3515.830041] CR2: ffffc7ff81000398 CR3: 0000000006749000 CR4: 00000000000406f0
+[ 3515.830041] DR0: ffffffff810aaee0 DR1: 0000000000000000 DR2: 0000000000000000
+[ 3515.830041] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000600
+[ 3515.830041] Process trinity (pid: 17125, threadinfo ffff8800066a6000, task ffff880005f90000)
+[ 3515.830041] Stack:
+[ 3515.830041]  ffff8800066a7ed8 ffffffff81071d06 ffff8800066a7e78 ffff88000ff15000
+[ 3515.830041]  ffff88000b149000 ffff880006656000 ffff880006656008 0000008000000000
+[ 3515.830041]  0000008000000000 0000000014000000 ffff88000ff15000 ffff88000b149008
+[ 3515.830041] Call Trace:
+[ 3515.830041]  [<ffffffff81071d06>] ? machine_kexec_prepare+0x636/0x820
+[ 3515.830041]  [<ffffffff8111bb68>] ? sys_kexec_load+0x98/0x590
+[ 3515.830041]  [<ffffffff8111bbd2>] sys_kexec_load+0x102/0x590
+[ 3515.830041]  [<ffffffff82583d5d>] ? retint_swapgs+0x13/0x1b
+[ 3515.830041]  [<ffffffff8183c29e>] ? trace_hardirqs_on_thunk+0x3a/0x3f
+[ 3515.830041]  [<ffffffff82584639>] system_call_fastpath+0x16/0x1b
+[ 3515.830041]  [<ffffffff81001001>] ? hypercall_page+0x1/0x1000
+[ 3515.830041] Code: 66 2e 0f 1f 84 00 00 00 00 00 55 48 8b 46 18 48 89 e5 48 89 47 04 c9 c3 66 90 55 48 89 e5 0f 01 f8 c9 c3 0f 1f 80 00 00 00 00 55 <48> 89 37 48 89 e5 c9 c3 0f 1f 80 00 00 00 00 55 48 89 37 48 89 
+[ 3515.830041] RIP  [<ffffffff81077281>] native_set_pte+0x1/0x10
+[ 3515.830041]  RSP <ffff8800066a7e48>
+[ 3515.830041] CR2: ffffc7ff81000398
+[ 3515.830041] ---[ end trace 9813cf5a73b6d8b6 ]---
+[ 3515.830041] BUG: sleeping function called from invalid context at kernel/rwsem.c:21
+[ 3515.830041] in_atomic(): 0, irqs_disabled(): 1, pid: 17125, name: trinity
+[ 3515.830041] INFO: lockdep is turned off.
+[ 3515.830041] irq event stamp: 668
+[ 3515.830041] hardirqs last  enabled at (667): [<ffffffff8116fb35>] get_page_from_freelist+0x465/0x8d0
+[ 3515.830041] hardirqs last disabled at (668): [<ffffffff82584266>] error_sti+0x5/0x6
+[ 3515.830041] softirqs last  enabled at (664): [<ffffffff810b3243>] __do_softirq+0x133/0x180
+[ 3515.830041] softirqs last disabled at (641): [<ffffffff82585b6c>] call_softirq+0x1c/0x30
+[ 3515.830041] Pid: 17125, comm: trinity Tainted: G      D      3.2.0-next-20120119-sasha-00001-gfaa12a9-dirty #129
+[ 3515.830041] Call Trace:
+[ 3515.830041]  [<ffffffff81109fc0>] ? print_irqtrace_events+0xd0/0xe0
+[ 3515.830041]  [<ffffffff810e1e29>] __might_sleep+0x149/0x200
+[ 3515.830041]  [<ffffffff82580ef5>] down_read+0x25/0x90
+[ 3515.830041]  [<ffffffff810bfd6f>] exit_signals+0x1f/0x140
+[ 3515.830041]  [<ffffffff810b0a8d>] do_exit+0xbd/0x950
+[ 3515.830041]  [<ffffffff810ad8f7>] ? kmsg_dump+0x87/0x250
+[ 3515.830041]  [<ffffffff8257f9dd>] ? printk+0x63/0x65
+[ 3515.830041]  [<ffffffff8104eda2>] oops_end+0xc2/0x110
+[ 3515.830041]  [<ffffffff8107cb92>] no_context+0x122/0x2e0
+[ 3515.830041]  [<ffffffff8107ce7d>] __bad_area_nosemaphore+0x12d/0x230
+[ 3515.830041]  [<ffffffff8107cf8e>] bad_area_nosemaphore+0xe/0x10
+[ 3515.830041]  [<ffffffff8107dc0f>] do_page_fault+0x41f/0x4d0
+[ 3515.830041]  [<ffffffff8117081e>] ? __alloc_pages_nodemask+0x14e/0x910
+[ 3515.830041]  [<ffffffff81076d11>] do_async_page_fault+0x31/0x90
+[ 3515.830041]  [<ffffffff82584055>] async_page_fault+0x25/0x30
+[ 3515.830041]  [<ffffffff81077281>] ? native_set_pte+0x1/0x10
+[ 3515.830041]  [<ffffffff81071d06>] ? machine_kexec_prepare+0x636/0x820
+[ 3515.830041]  [<ffffffff8111bb68>] ? sys_kexec_load+0x98/0x590
+[ 3515.830041]  [<ffffffff8111bbd2>] sys_kexec_load+0x102/0x590
+[ 3515.830041]  [<ffffffff82583d5d>] ? retint_swapgs+0x13/0x1b
+[ 3515.830041]  [<ffffffff8183c29e>] ? trace_hardirqs_on_thunk+0x3a/0x3f
+[ 3515.830041]  [<ffffffff82584639>] system_call_fastpath+0x16/0x1b
+[ 3515.830041]  [<ffffffff81001001>] ? hypercall_page+0x1/0x1000
 
-Total 16 cores on CPU --
-processor       : 15
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 26
-model name      : Intel(R) Xeon(R) CPU           E5540  @ 2.53GHz
-stepping        : 5
-cpu MHz         : 2527.364
-cache size      : 8192 KB
-physical id     : 1
-siblings        : 8
-core id         : 3
-cpu cores       : 4
-apicid          : 23
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 11
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm syscall nx rdtscp lm constant_tsc ida nonstop_tsc pni monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr sse4_1 sse4_2 popcnt lahf_lm
-bogomips        : 5054.56
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 40 bits physical, 48 bits virtual
-power management: [8]
+-- 
 
-Thanking you in anticipation.
+Sasha.
 
-Regards,
-Prashant
 
 _______________________________________________
 kexec mailing list
