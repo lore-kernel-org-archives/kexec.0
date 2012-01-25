@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RpwnE-0006hl-AZ
- for kexec@lists.infradead.org; Wed, 25 Jan 2012 06:57:17 +0000
-Date: Wed, 25 Jan 2012 15:57:08 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: kexec 2.0.2 MIPS
-Message-ID: <20120125065708.GB18345@verge.net.au>
-References: <F9C551623D2CBB4C9488801D14F864C607154A@ex-mb1.corp.adtran.com>
- <20110920085133.GE15087@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C6072473@ex-mb1.corp.adtran.com>
- <20110921112837.GF17108@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C60E2D98@ex-mb1.corp.adtran.com>
- <20120125023929.GK11038@verge.net.au>
- <CAJGZr0LShFy2rcPi4+ywDuavovxRH5jNJuRtQb3PGGzt1mfy_Q@mail.gmail.com>
+Received: from mail-pw0-f49.google.com ([209.85.160.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rq0Qh-0005ke-4m
+ for kexec@lists.infradead.org; Wed, 25 Jan 2012 10:50:15 +0000
+Received: by pbdx9 with SMTP id x9so1918740pbd.36
+ for <kexec@lists.infradead.org>; Wed, 25 Jan 2012 02:50:13 -0800 (PST)
+Message-ID: <4F1FDE5F.5080403@gmail.com>
+Date: Wed, 25 Jan 2012 18:50:07 +0800
+From: Cong Wang <xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAJGZr0LShFy2rcPi4+ywDuavovxRH5jNJuRtQb3PGGzt1mfy_Q@mail.gmail.com>
+Subject: Makedumpfile 1.4.2 release
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,52 +18,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Maxim Uvarov <muvarov@gmail.com>
-Cc: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-T24gVHVlLCBKYW4gMjQsIDIwMTIgYXQgMTA6MzU6NDJQTSAtMDgwMCwgTWF4aW0gVXZhcm92IHdy
-b3RlOgo+IDIwMTIvMS8yNCBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT46Cj4gPiBI
-aSwKPiA+Cj4gPiBzb3JyeSBmb3IgdGhlIGV4dGVuc2l2ZSBkZWxheSBpbiByZXNwb25kaW5nIHRv
-IHRoaXMuCj4gPiBJIGFtIG5vdyBiYWNrIGZyb20gQ2hyaXN0bWFzLCBOZXcgWWVhciwgaG9saWRh
-eXMgYW5kCj4gPiBhdHRlbmRpbmcgTENBIDIwMTIuCj4gPgo+ID4gT24gRnJpLCBEZWMgMTYsIDIw
-MTEgYXQgMDU6Mjc6MzFBTSArMDAwMCwgQU5EWSBLRU5ORURZIHdyb3RlOgo+ID4+IFNpbW9uL0Fs
-bCwKPiA+Pgo+ID4+IEFmdGVyIHR3byBtb250aHMsIEknbSBiYWNrIHdvcmtpbmcgb24gdGhpcyBh
-Z2Fpbi4gwqBBZnRlciAzIGhvdXJzCj4gPj4gdG9uaWdodCwgSSBoYXZlIHRoZSBmaW5hbCByZXN1
-bHQgb2Ygd2hhdCB5b3UgdG9sZCBtZSB0byBkby4gwqBMb29rcyBsaWtlLAo+ID4+IGJhc2VkIG9u
-IHRoZSBjb21tZW50Ogo+ID4+Cj4gPj4gwqAgwqAgLSByZW1vdmUga2V4ZWMvYXJjaC9taXBzL21p
-cHMtc2V0dXAtc2ltcGxlLlMgd2hpY2ggcHJlcGFyZXMgY21kbGluZSBmb3IKPiA+PiDCoCDCoCDC
-oCBuZXcga2VybmVsLCBpdCBpcyBiZXR0ZXIgdG8gbW92ZSB0aGlzIHdvcmsgdG8ga2VybmVsIGNv
-ZGUuIEJUVyB0aGlzIGNvZGUgd2FzCj4gPj4gwqAgwqAgwqAgY29tcGlsYWJsZSBvbmx5IG9uIG8z
-MiBiZWNhdXNlIG9mIHQ0IGlzIG5vdCBkZWZpbmVkIG9uIDY0LTY0IG9yIG4zMiBNSVBTIEFCSXMu
-Cj4gPj4KPiA+PiBUaGUgcHJvYmxlbSBpcyB0aGF0IG15IDIuNi4zNi4yIGFwcGFyZW50bHkgZG9l
-c24ndCBoYXZlIHdoYXRldmVyIE1heGltCj4gPj4gaXMgdGFsa2luZyBhYm91dC4gwqBUaGVyZWZv
-cmUsIHRoZSBuZXdlciB2ZXJzaW9ucyBtdXN0IG5vdCBiZSBiYWNrd2FyZHMKPiA+PiBjb21wYXRp
-YmxlLiDCoFBlcmhhcHMgdGhpcyBpcyBva2F5IHdpdGggeW91IGd1eXMuIMKgSWYgc28sIEknbGwg
-anVzdCBtYWtlCj4gPj4gc3VyZSB0byBpbmNsdWRlIGEgcGF0Y2ggdG8gQnVpbGRSb290IHRoYXQg
-Y2xlYXJseSBzdGF0ZXMgdGhhdCB0aGUgdjIuMC4xCj4gPj4gaXMgdGhlIG9ubHkgdmVyc2lvbiB0
-aGF0IHdvcmtzIHdpdGggKnNvbWUqIHZlcnNpb25zIG9mIE1JUFMuIMKgSWYgeW91Cj4gPj4gZ3V5
-cyB3ZXJlIGV4cGVjdGluZyB0aGlzIHRvIGJlIGJhY2t3YXJkcyBjb21wYXRpYmxlLCBJJ2xsIGds
-YWRseSB3b3JrCj4gPj4gd2l0aCB5b3UgdG8gdGVzdCB3aGF0ZXZlciB5b3UgbmVlZCBjaGVja2Vk
-IG91dC4gwqBKdXN0IGxldCBtZSBrbm93Lgo+ID4KPiA+IEl0IGlzIG5vdCBhcHBhcmVudCB0byBt
-ZSB0aGF0IHRoZSBrZXJuZWwgY29kZSBNYXhpbSBtYWtlcyBtZW50aW9uIG9mCj4gPiBleGlzdHMg
-aW4gYW55IHJlbGVhc2VkIGtlcm5lbC4gSSB0aGluayB0aGF0IHRoZSBiZXN0IG9wdGlvbiBhdCB0
-aGlzCj4gPiBzdGFnZSB3b3VsZCBiZSB0byByZXZlcnQgdGhhdCBwb3J0aW9uIG9mIGhpcyBjaGFu
-Z2UuCj4gPgo+ID4gTWF4aW0sIGRvIHlvdSBoYXZlIGFueSB0aG91Z2h0cyBvbiB0aGlzPwo+ID4K
-PiAKPiBZZXMsIGtlcm5lbCBwYXRjaGVzIHdlcmUgbm90IGFjY2VwdGVkIGFuZCBsb29rcyBsaWtl
-IHN0dWNrIGxpbnV4LW1pcHNACj4gcXVldWUgZm9yZXZlci4KPiBSZXZlcnRpbmcgdGhpcyBwYXRj
-aGVzIGl0IG9rIGZvciBtZSBlc3BlY2lhbGx5IGlmIHNvbWVib2R5IGdvaW5nIHRvCj4gd29yayBv
-biB0aGVtLiBBcyBJIHJlbWVtYmVyCj4gdGhlIHdhcyBwcm9ibGVtIHdpdGggc3VwcG9ydGluZyBh
-bGwgbWlwcyBBQklzIChvMzIsIG4zMiwgMzItNjQpLiBJdCdzCj4gbW9zdGx5IHJlbGF0ZWQgdG8g
-YXNtIHB1cmdhdG9yeQo+IGNvZGUuIEl0IHdpbGwgYmUgbmljZSBpZiBzb21lYm9keSBjYW4gc3lu
-Y2hyb25pemUga2VybmVsIGFuZCB1c2VyIGxhbmQKPiBwYXJ0cyBhbmQgbWFrZSBtaXBzIGtleGVj
-IGNvZGUKPiBib2FyZCBpbmRlcGVuZGVudC4gSSB0aGluayBhdCB0aGlzIHRpbWUgaXQgc2hvdWxk
-IGJlIG11Y2ggZWFzeSBzaW5jZQo+IG1pcHMgc3VwcG9ydHMgZGV2aWNlIHRyZWUuCgpUaGFua3Mg
-TWF4aW0uCgpBbmR5IGNhbiB5b3UgcHJlcGFyZSBhIHBhdGNoIHRvIHJldmVydCB0aGUgcHJvYmxl
-bWF0aWMgcG9ydGlvbgpvZiB0aGUgY2hhbmdlPwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+Hello, Kumagai-san,
+
+I saw you released 1.4.2:
+
+commit 7ccf93312266eb4b2e4f9ac701875eb926a861f3
+Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Date:   Mon Jan 23 10:44:07 2012 +0900
+
+     [v1.4.2] Update version
+
+     This patch updates makedumpfile to version 1.4.2.
+
+     Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+
+
+but forgot to push it to sourceforge.net? I saw:
+
+Looking for the latest version? Download makedumpfile-1.4.1.tar.gz 
+(114.9 kB)
+
+
+Thanks.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
