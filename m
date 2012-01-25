@@ -1,17 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pw0-f49.google.com ([209.85.160.49])
+Received: from p02c11o143.mxlogic.net ([208.65.144.76])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Rq0Ub-00067k-B0
- for kexec@lists.infradead.org; Wed, 25 Jan 2012 10:54:17 +0000
-Received: by pbdx9 with SMTP id x9so1921480pbd.36
- for <kexec@lists.infradead.org>; Wed, 25 Jan 2012 02:54:15 -0800 (PST)
-Message-ID: <4F1FDF52.8050301@gmail.com>
-Date: Wed, 25 Jan 2012 18:54:10 +0800
-From: Cong Wang <xiyou.wangcong@gmail.com>
+ id 1Rq3j1-0004Tp-Q9
+ for kexec@lists.infradead.org; Wed, 25 Jan 2012 14:21:25 +0000
+From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
+Subject: RE: kexec 2.0.2 MIPS
+Date: Wed, 25 Jan 2012 14:21:15 +0000
+Message-ID: <F9C551623D2CBB4C9488801D14F864C60F8F15@ex-mb1.corp.adtran.com>
+References: <F9C551623D2CBB4C9488801D14F864C607154A@ex-mb1.corp.adtran.com>
+ <20110920085133.GE15087@verge.net.au>
+ <F9C551623D2CBB4C9488801D14F864C6072473@ex-mb1.corp.adtran.com>
+ <20110921112837.GF17108@verge.net.au>
+ <F9C551623D2CBB4C9488801D14F864C60E2D98@ex-mb1.corp.adtran.com>
+ <20120125023929.GK11038@verge.net.au>
+ <CAJGZr0LShFy2rcPi4+ywDuavovxRH5jNJuRtQb3PGGzt1mfy_Q@mail.gmail.com>
+ <20120125065708.GB18345@verge.net.au>
+In-Reply-To: <20120125065708.GB18345@verge.net.au>
+Content-Language: en-US
 MIME-Version: 1.0
-Subject: Re: Makedumpfile 1.4.2 release
-References: <4F1FDE5F.5080403@gmail.com>
-In-Reply-To: <4F1FDE5F.5080403@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +26,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Maxim Uvarov <muvarov@gmail.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
 
-On 01/25/2012 06:50 PM, Cong Wang wrote:
-> Hello, Kumagai-san,
->
-> I saw you released 1.4.2:
->
-
-By the way, the latest kernel supported by makedumpfile 1.4.2 is still
-2.6.36.
-
-makedumpfile.h
-383:#define LATEST_VERSION		KERNEL_VERSION(2, 6, 36)/* linux-2.6.36 */
-
-The latest stable kernel is already 3.2.1. :) So, what prevents 
-makedumpfile supporting newer kernels?
-
-Thanks.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2ltb24gSG9ybWFuIFtt
+YWlsdG86aG9ybXNAdmVyZ2UubmV0LmF1XQ0KPiBTZW50OiBXZWRuZXNkYXksIEphbnVhcnkgMjUs
+IDIwMTIgMTI6NTcgQU0NCj4gVG86IE1heGltIFV2YXJvdg0KPiBDYzogQU5EWSBLRU5ORURZOyBr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnOyBNYXR0IEV2YW5zDQo+IFN1YmplY3Q6IFJlOiBrZXhl
+YyAyLjAuMiBNSVBTDQo+IA0KPiBPbiBUdWUsIEphbiAyNCwgMjAxMiBhdCAxMDozNTo0MlBNIC0w
+ODAwLCBNYXhpbSBVdmFyb3Ygd3JvdGU6DQo+ID4gMjAxMi8xLzI0IFNpbW9uIEhvcm1hbiA8aG9y
+bXNAdmVyZ2UubmV0LmF1PjoNCj4gPiA+IEhpLA0KPiA+ID4NCj4gPiA+IHNvcnJ5IGZvciB0aGUg
+ZXh0ZW5zaXZlIGRlbGF5IGluIHJlc3BvbmRpbmcgdG8gdGhpcy4NCj4gPiA+IEkgYW0gbm93IGJh
+Y2sgZnJvbSBDaHJpc3RtYXMsIE5ldyBZZWFyLCBob2xpZGF5cyBhbmQNCj4gPiA+IGF0dGVuZGlu
+ZyBMQ0EgMjAxMi4NCj4gPiA+DQo+ID4gPiBPbiBGcmksIERlYyAxNiwgMjAxMSBhdCAwNToyNzoz
+MUFNICswMDAwLCBBTkRZIEtFTk5FRFkgd3JvdGU6DQo+ID4gPj4gU2ltb24vQWxsLA0KPiA+ID4+
+DQo+ID4gPj4gQWZ0ZXIgdHdvIG1vbnRocywgSSdtIGJhY2sgd29ya2luZyBvbiB0aGlzIGFnYWlu
+LiDCoEFmdGVyIDMgaG91cnMNCj4gPiA+PiB0b25pZ2h0LCBJIGhhdmUgdGhlIGZpbmFsIHJlc3Vs
+dCBvZiB3aGF0IHlvdSB0b2xkIG1lIHRvIGRvLiDCoExvb2tzIGxpa2UsDQo+ID4gPj4gYmFzZWQg
+b24gdGhlIGNvbW1lbnQ6DQo+ID4gPj4NCj4gPiA+PiDCoCDCoCAtIHJlbW92ZSBrZXhlYy9hcmNo
+L21pcHMvbWlwcy1zZXR1cC1zaW1wbGUuUyB3aGljaCBwcmVwYXJlcyBjbWRsaW5lIGZvcg0KPiA+
+ID4+IMKgIMKgIMKgIG5ldyBrZXJuZWwsIGl0IGlzIGJldHRlciB0byBtb3ZlIHRoaXMgd29yayB0
+byBrZXJuZWwgY29kZS4gQlRXIHRoaXMgY29kZSB3YXMNCj4gPiA+PiDCoCDCoCDCoCBjb21waWxh
+YmxlIG9ubHkgb24gbzMyIGJlY2F1c2Ugb2YgdDQgaXMgbm90IGRlZmluZWQgb24gNjQtNjQgb3Ig
+bjMyIE1JUFMgQUJJcy4NCj4gPiA+Pg0KPiA+ID4+IFRoZSBwcm9ibGVtIGlzIHRoYXQgbXkgMi42
+LjM2LjIgYXBwYXJlbnRseSBkb2Vzbid0IGhhdmUgd2hhdGV2ZXIgTWF4aW0NCj4gPiA+PiBpcyB0
+YWxraW5nIGFib3V0LiDCoFRoZXJlZm9yZSwgdGhlIG5ld2VyIHZlcnNpb25zIG11c3Qgbm90IGJl
+IGJhY2t3YXJkcw0KPiA+ID4+IGNvbXBhdGlibGUuIMKgUGVyaGFwcyB0aGlzIGlzIG9rYXkgd2l0
+aCB5b3UgZ3V5cy4gwqBJZiBzbywgSSdsbCBqdXN0IG1ha2UNCj4gPiA+PiBzdXJlIHRvIGluY2x1
+ZGUgYSBwYXRjaCB0byBCdWlsZFJvb3QgdGhhdCBjbGVhcmx5IHN0YXRlcyB0aGF0IHRoZSB2Mi4w
+LjENCj4gPiA+PiBpcyB0aGUgb25seSB2ZXJzaW9uIHRoYXQgd29ya3Mgd2l0aCAqc29tZSogdmVy
+c2lvbnMgb2YgTUlQUy4gwqBJZiB5b3UNCj4gPiA+PiBndXlzIHdlcmUgZXhwZWN0aW5nIHRoaXMg
+dG8gYmUgYmFja3dhcmRzIGNvbXBhdGlibGUsIEknbGwgZ2xhZGx5IHdvcmsNCj4gPiA+PiB3aXRo
+IHlvdSB0byB0ZXN0IHdoYXRldmVyIHlvdSBuZWVkIGNoZWNrZWQgb3V0LiDCoEp1c3QgbGV0IG1l
+IGtub3cuDQo+ID4gPg0KPiA+ID4gSXQgaXMgbm90IGFwcGFyZW50IHRvIG1lIHRoYXQgdGhlIGtl
+cm5lbCBjb2RlIE1heGltIG1ha2VzIG1lbnRpb24gb2YNCj4gPiA+IGV4aXN0cyBpbiBhbnkgcmVs
+ZWFzZWQga2VybmVsLiBJIHRoaW5rIHRoYXQgdGhlIGJlc3Qgb3B0aW9uIGF0IHRoaXMNCj4gPiA+
+IHN0YWdlIHdvdWxkIGJlIHRvIHJldmVydCB0aGF0IHBvcnRpb24gb2YgaGlzIGNoYW5nZS4NCj4g
+PiA+DQo+ID4gPiBNYXhpbSwgZG8geW91IGhhdmUgYW55IHRob3VnaHRzIG9uIHRoaXM/DQo+ID4g
+Pg0KPiA+DQo+ID4gWWVzLCBrZXJuZWwgcGF0Y2hlcyB3ZXJlIG5vdCBhY2NlcHRlZCBhbmQgbG9v
+a3MgbGlrZSBzdHVjayBsaW51eC1taXBzQA0KPiA+IHF1ZXVlIGZvcmV2ZXIuDQo+ID4gUmV2ZXJ0
+aW5nIHRoaXMgcGF0Y2hlcyBpdCBvayBmb3IgbWUgZXNwZWNpYWxseSBpZiBzb21lYm9keSBnb2lu
+ZyB0bw0KPiA+IHdvcmsgb24gdGhlbS4gQXMgSSByZW1lbWJlcg0KPiA+IHRoZSB3YXMgcHJvYmxl
+bSB3aXRoIHN1cHBvcnRpbmcgYWxsIG1pcHMgQUJJcyAobzMyLCBuMzIsIDMyLTY0KS4gSXQncw0K
+PiA+IG1vc3RseSByZWxhdGVkIHRvIGFzbSBwdXJnYXRvcnkNCj4gPiBjb2RlLiBJdCB3aWxsIGJl
+IG5pY2UgaWYgc29tZWJvZHkgY2FuIHN5bmNocm9uaXplIGtlcm5lbCBhbmQgdXNlciBsYW5kDQo+
+ID4gcGFydHMgYW5kIG1ha2UgbWlwcyBrZXhlYyBjb2RlDQo+ID4gYm9hcmQgaW5kZXBlbmRlbnQu
+IEkgdGhpbmsgYXQgdGhpcyB0aW1lIGl0IHNob3VsZCBiZSBtdWNoIGVhc3kgc2luY2UNCj4gPiBt
+aXBzIHN1cHBvcnRzIGRldmljZSB0cmVlLg0KPiANCj4gVGhhbmtzIE1heGltLg0KPiANCj4gQW5k
+eSBjYW4geW91IHByZXBhcmUgYSBwYXRjaCB0byByZXZlcnQgdGhlIHByb2JsZW1hdGljIHBvcnRp
+b24NCj4gb2YgdGhlIGNoYW5nZT8NCg0KSSdsbCBkbyBteSBiZXN0LiAgSSBkb27igJl0IGtub3cg
+d2hlbiBJJ2xsIGJlIGFibGUgdG8gZ2V0IHRvIGl0LCBnaXZlbg0KdGhhdCBJJ3ZlIGhhZCBzY29w
+ZSBjaGFuZ2Ugb24gbXkgcHJvamVjdCAzIHRpbWVzIGluIHRoZSBsYXN0IHdlZWsuDQoNCkFuZHkN
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
