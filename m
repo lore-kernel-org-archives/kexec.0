@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-pw0-f49.google.com ([209.85.160.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Rq0Qh-0005ke-4m
- for kexec@lists.infradead.org; Wed, 25 Jan 2012 10:50:15 +0000
-Received: by pbdx9 with SMTP id x9so1918740pbd.36
- for <kexec@lists.infradead.org>; Wed, 25 Jan 2012 02:50:13 -0800 (PST)
-Message-ID: <4F1FDE5F.5080403@gmail.com>
-Date: Wed, 25 Jan 2012 18:50:07 +0800
+ id 1Rq0Ub-00067k-B0
+ for kexec@lists.infradead.org; Wed, 25 Jan 2012 10:54:17 +0000
+Received: by pbdx9 with SMTP id x9so1921480pbd.36
+ for <kexec@lists.infradead.org>; Wed, 25 Jan 2012 02:54:15 -0800 (PST)
+Message-ID: <4F1FDF52.8050301@gmail.com>
+Date: Wed, 25 Jan 2012 18:54:10 +0800
 From: Cong Wang <xiyou.wangcong@gmail.com>
 MIME-Version: 1.0
-Subject: Makedumpfile 1.4.2 release
+Subject: Re: Makedumpfile 1.4.2 release
+References: <4F1FDE5F.5080403@gmail.com>
+In-Reply-To: <4F1FDE5F.5080403@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,26 +27,20 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Cc: kexec@lists.infradead.org
 
-Hello, Kumagai-san,
+On 01/25/2012 06:50 PM, Cong Wang wrote:
+> Hello, Kumagai-san,
+>
+> I saw you released 1.4.2:
+>
 
-I saw you released 1.4.2:
+By the way, the latest kernel supported by makedumpfile 1.4.2 is still
+2.6.36.
 
-commit 7ccf93312266eb4b2e4f9ac701875eb926a861f3
-Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date:   Mon Jan 23 10:44:07 2012 +0900
+makedumpfile.h
+383:#define LATEST_VERSION		KERNEL_VERSION(2, 6, 36)/* linux-2.6.36 */
 
-     [v1.4.2] Update version
-
-     This patch updates makedumpfile to version 1.4.2.
-
-     Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-
-
-but forgot to push it to sourceforge.net? I saw:
-
-Looking for the latest version? Download makedumpfile-1.4.1.tar.gz 
-(114.9 kB)
-
+The latest stable kernel is already 3.2.1. :) So, what prevents 
+makedumpfile supporting newer kernels?
 
 Thanks.
 
