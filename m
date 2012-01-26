@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from p02c12o144.mxlogic.net ([208.65.145.77])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Rq80D-0001PE-Tl
- for kexec@lists.infradead.org; Wed, 25 Jan 2012 18:55:27 +0000
-From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
-Subject: RE: kexec 2.0.2 MIPS
-Date: Wed, 25 Jan 2012 18:54:47 +0000
-Message-ID: <F9C551623D2CBB4C9488801D14F864C60F91DB@ex-mb1.corp.adtran.com>
-References: <F9C551623D2CBB4C9488801D14F864C607154A@ex-mb1.corp.adtran.com>
- <20110920085133.GE15087@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C6072473@ex-mb1.corp.adtran.com>
- <20110921112837.GF17108@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C60E2D98@ex-mb1.corp.adtran.com>
- <20120125023929.GK11038@verge.net.au>
- <CAJGZr0LShFy2rcPi4+ywDuavovxRH5jNJuRtQb3PGGzt1mfy_Q@mail.gmail.com>
- <20120125065708.GB18345@verge.net.au>
- <F9C551623D2CBB4C9488801D14F864C60F8F15@ex-mb1.corp.adtran.com>
-In-Reply-To: <F9C551623D2CBB4C9488801D14F864C60F8F15@ex-mb1.corp.adtran.com>
-Content-Language: en-US
-MIME-Version: 1.0
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RqDv7-0006pw-2X
+ for kexec@lists.infradead.org; Thu, 26 Jan 2012 01:14:35 +0000
+Date: Thu, 26 Jan 2012 10:09:25 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: Makedumpfile 1.4.2 release
+Message-Id: <20120126100925.febb6a24.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <4F1FDE5F.5080403@gmail.com>
+References: <4F1FDE5F.5080403@gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,71 +18,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>, Simon Horman <horms@verge.net.au>, Maxim Uvarov <muvarov@gmail.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Matt Evans <matt@ozlabs.org>
+To: xiyou.wangcong@gmail.com
+Cc: kexec@lists.infradead.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBrZXhlYy1ib3VuY2VzQGxpc3Rz
-LmluZnJhZGVhZC5vcmcgW21haWx0bzprZXhlYy1ib3VuY2VzQGxpc3RzLmluZnJhZGVhZC5vcmdd
-IE9uIEJlaGFsZiBPZiBBTkRZDQo+IEtFTk5FRFkNCj4gU2VudDogV2VkbmVzZGF5LCBKYW51YXJ5
-IDI1LCAyMDEyIDg6MjEgQU0NCj4gVG86IFNpbW9uIEhvcm1hbjsgTWF4aW0gVXZhcm92DQo+IENj
-OiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnOyBNYXR0IEV2YW5zDQo+IFN1YmplY3Q6IFJFOiBr
-ZXhlYyAyLjAuMiBNSVBTDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9t
-OiBTaW1vbiBIb3JtYW4gW21haWx0bzpob3Jtc0B2ZXJnZS5uZXQuYXVdDQo+ID4gU2VudDogV2Vk
-bmVzZGF5LCBKYW51YXJ5IDI1LCAyMDEyIDEyOjU3IEFNDQo+ID4gVG86IE1heGltIFV2YXJvdg0K
-PiA+IENjOiBBTkRZIEtFTk5FRFk7IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmc7IE1hdHQgRXZh
-bnMNCj4gPiBTdWJqZWN0OiBSZToga2V4ZWMgMi4wLjIgTUlQUw0KPiA+DQo+ID4gT24gVHVlLCBK
-YW4gMjQsIDIwMTIgYXQgMTA6MzU6NDJQTSAtMDgwMCwgTWF4aW0gVXZhcm92IHdyb3RlOg0KPiA+
-ID4gMjAxMi8xLzI0IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjoNCj4gPiA+ID4g
-SGksDQo+ID4gPiA+DQo+ID4gPiA+IHNvcnJ5IGZvciB0aGUgZXh0ZW5zaXZlIGRlbGF5IGluIHJl
-c3BvbmRpbmcgdG8gdGhpcy4NCj4gPiA+ID4gSSBhbSBub3cgYmFjayBmcm9tIENocmlzdG1hcywg
-TmV3IFllYXIsIGhvbGlkYXlzIGFuZA0KPiA+ID4gPiBhdHRlbmRpbmcgTENBIDIwMTIuDQo+ID4g
-PiA+DQo+ID4gPiA+IE9uIEZyaSwgRGVjIDE2LCAyMDExIGF0IDA1OjI3OjMxQU0gKzAwMDAsIEFO
-RFkgS0VOTkVEWSB3cm90ZToNCj4gPiA+ID4+IFNpbW9uL0FsbCwNCj4gPiA+ID4+DQo+ID4gPiA+
-PiBBZnRlciB0d28gbW9udGhzLCBJJ20gYmFjayB3b3JraW5nIG9uIHRoaXMgYWdhaW4uIMKgQWZ0
-ZXIgMyBob3Vycw0KPiA+ID4gPj4gdG9uaWdodCwgSSBoYXZlIHRoZSBmaW5hbCByZXN1bHQgb2Yg
-d2hhdCB5b3UgdG9sZCBtZSB0byBkby4gwqBMb29rcyBsaWtlLA0KPiA+ID4gPj4gYmFzZWQgb24g
-dGhlIGNvbW1lbnQ6DQo+ID4gPiA+Pg0KPiA+ID4gPj4gwqAgwqAgLSByZW1vdmUga2V4ZWMvYXJj
-aC9taXBzL21pcHMtc2V0dXAtc2ltcGxlLlMgd2hpY2ggcHJlcGFyZXMgY21kbGluZSBmb3INCj4g
-PiA+ID4+IMKgIMKgIMKgIG5ldyBrZXJuZWwsIGl0IGlzIGJldHRlciB0byBtb3ZlIHRoaXMgd29y
-ayB0byBrZXJuZWwgY29kZS4gQlRXIHRoaXMgY29kZSB3YXMNCj4gPiA+ID4+IMKgIMKgIMKgIGNv
-bXBpbGFibGUgb25seSBvbiBvMzIgYmVjYXVzZSBvZiB0NCBpcyBub3QgZGVmaW5lZCBvbiA2NC02
-NCBvciBuMzIgTUlQUyBBQklzLg0KPiA+ID4gPj4NCj4gPiA+ID4+IFRoZSBwcm9ibGVtIGlzIHRo
-YXQgbXkgMi42LjM2LjIgYXBwYXJlbnRseSBkb2Vzbid0IGhhdmUgd2hhdGV2ZXIgTWF4aW0NCj4g
-PiA+ID4+IGlzIHRhbGtpbmcgYWJvdXQuIMKgVGhlcmVmb3JlLCB0aGUgbmV3ZXIgdmVyc2lvbnMg
-bXVzdCBub3QgYmUgYmFja3dhcmRzDQo+ID4gPiA+PiBjb21wYXRpYmxlLiDCoFBlcmhhcHMgdGhp
-cyBpcyBva2F5IHdpdGggeW91IGd1eXMuIMKgSWYgc28sIEknbGwganVzdCBtYWtlDQo+ID4gPiA+
-PiBzdXJlIHRvIGluY2x1ZGUgYSBwYXRjaCB0byBCdWlsZFJvb3QgdGhhdCBjbGVhcmx5IHN0YXRl
-cyB0aGF0IHRoZSB2Mi4wLjENCj4gPiA+ID4+IGlzIHRoZSBvbmx5IHZlcnNpb24gdGhhdCB3b3Jr
-cyB3aXRoICpzb21lKiB2ZXJzaW9ucyBvZiBNSVBTLiDCoElmIHlvdQ0KPiA+ID4gPj4gZ3V5cyB3
-ZXJlIGV4cGVjdGluZyB0aGlzIHRvIGJlIGJhY2t3YXJkcyBjb21wYXRpYmxlLCBJJ2xsIGdsYWRs
-eSB3b3JrDQo+ID4gPiA+PiB3aXRoIHlvdSB0byB0ZXN0IHdoYXRldmVyIHlvdSBuZWVkIGNoZWNr
-ZWQgb3V0LiDCoEp1c3QgbGV0IG1lIGtub3cuDQo+ID4gPiA+DQo+ID4gPiA+IEl0IGlzIG5vdCBh
-cHBhcmVudCB0byBtZSB0aGF0IHRoZSBrZXJuZWwgY29kZSBNYXhpbSBtYWtlcyBtZW50aW9uIG9m
-DQo+ID4gPiA+IGV4aXN0cyBpbiBhbnkgcmVsZWFzZWQga2VybmVsLiBJIHRoaW5rIHRoYXQgdGhl
-IGJlc3Qgb3B0aW9uIGF0IHRoaXMNCj4gPiA+ID4gc3RhZ2Ugd291bGQgYmUgdG8gcmV2ZXJ0IHRo
-YXQgcG9ydGlvbiBvZiBoaXMgY2hhbmdlLg0KPiA+ID4gPg0KPiA+ID4gPiBNYXhpbSwgZG8geW91
-IGhhdmUgYW55IHRob3VnaHRzIG9uIHRoaXM/DQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gWWVzLCBr
-ZXJuZWwgcGF0Y2hlcyB3ZXJlIG5vdCBhY2NlcHRlZCBhbmQgbG9va3MgbGlrZSBzdHVjayBsaW51
-eC1taXBzQA0KPiA+ID4gcXVldWUgZm9yZXZlci4NCj4gPiA+IFJldmVydGluZyB0aGlzIHBhdGNo
-ZXMgaXQgb2sgZm9yIG1lIGVzcGVjaWFsbHkgaWYgc29tZWJvZHkgZ29pbmcgdG8NCj4gPiA+IHdv
-cmsgb24gdGhlbS4gQXMgSSByZW1lbWJlcg0KPiA+ID4gdGhlIHdhcyBwcm9ibGVtIHdpdGggc3Vw
-cG9ydGluZyBhbGwgbWlwcyBBQklzIChvMzIsIG4zMiwgMzItNjQpLiBJdCdzDQo+ID4gPiBtb3N0
-bHkgcmVsYXRlZCB0byBhc20gcHVyZ2F0b3J5DQo+ID4gPiBjb2RlLiBJdCB3aWxsIGJlIG5pY2Ug
-aWYgc29tZWJvZHkgY2FuIHN5bmNocm9uaXplIGtlcm5lbCBhbmQgdXNlciBsYW5kDQo+ID4gPiBw
-YXJ0cyBhbmQgbWFrZSBtaXBzIGtleGVjIGNvZGUNCj4gPiA+IGJvYXJkIGluZGVwZW5kZW50LiBJ
-IHRoaW5rIGF0IHRoaXMgdGltZSBpdCBzaG91bGQgYmUgbXVjaCBlYXN5IHNpbmNlDQo+ID4gPiBt
-aXBzIHN1cHBvcnRzIGRldmljZSB0cmVlLg0KPiA+DQo+ID4gVGhhbmtzIE1heGltLg0KPiA+DQo+
-ID4gQW5keSBjYW4geW91IHByZXBhcmUgYSBwYXRjaCB0byByZXZlcnQgdGhlIHByb2JsZW1hdGlj
-IHBvcnRpb24NCj4gPiBvZiB0aGUgY2hhbmdlPw0KPiANCj4gSSdsbCBkbyBteSBiZXN0LiAgSSBk
-b27igJl0IGtub3cgd2hlbiBJJ2xsIGJlIGFibGUgdG8gZ2V0IHRvIGl0LCBnaXZlbg0KPiB0aGF0
-IEkndmUgaGFkIHNjb3BlIGNoYW5nZSBvbiBteSBwcm9qZWN0IDMgdGltZXMgaW4gdGhlIGxhc3Qg
-d2Vlay4NCg0KV2hhdCBhIHdvcmxkLiAgVG9kYXkgSSB3YXMgdG9sZCAiTmV2ZXIgbWluZCIgb24g
-dGhhdCBzY29wZQ0KY2hhbmdlIGZyb20geWVzdGVyZGF5Lg0KDQpJJ2xsIHRyeSB0byBnZXQgdG8g
-aXQgdGhpcyB3ZWVrIG9yIG5leHQgOykuDQoNCkFuZHkNCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+Hello Cong,
+
+sourceforge.net had a problem yesterday and I couldn't upload 
+the newest version. Please refer to the ticket below.
+
+http://sourceforge.net/apps/trac/sourceforge/ticket/23920
+
+The newest version is already uploaded now and I will 
+announce the release of v1.4.2 soon.
+
+Thanks
+Atsushi Kumagai
+
+On Wed, 25 Jan 2012 18:50:07 +0800
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
+
+> Hello, Kumagai-san,
+> 
+> I saw you released 1.4.2:
+> 
+> commit 7ccf93312266eb4b2e4f9ac701875eb926a861f3
+> Author: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Date:   Mon Jan 23 10:44:07 2012 +0900
+> 
+>      [v1.4.2] Update version
+> 
+>      This patch updates makedumpfile to version 1.4.2.
+> 
+>      Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> 
+> 
+> but forgot to push it to sourceforge.net? I saw:
+> 
+> Looking for the latest version? Download makedumpfile-1.4.1.tar.gz 
+> (114.9 kB)
+> 
+> 
+> Thanks.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
