@@ -1,12 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RsLCt-000064-ER
- for kexec@lists.infradead.org; Tue, 31 Jan 2012 21:25:40 +0000
-From: Don Zickus <dzickus@redhat.com>
-Subject: [PATCH] x86, kdump, ioapic: Fix kdump race with migrating irq
-Date: Tue, 31 Jan 2012 16:25:14 -0500
-Message-Id: <1328045114-4489-1-git-send-email-dzickus@redhat.com>
+ id 1RsLO9-0000fb-Mu
+ for kexec@lists.infradead.org; Tue, 31 Jan 2012 21:37:19 +0000
+Date: Tue, 31 Jan 2012 16:37:13 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH] x86, kdump, ioapic: Fix kdump race with migrating irq
+Message-ID: <20120131213713.GC4378@redhat.com>
+References: <1328045114-4489-1-git-send-email-dzickus@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1328045114-4489-1-git-send-email-dzickus@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,156 +19,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org
-Cc: Don Zickus <dzickus@redhat.com>, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, vgoyal@redhat.com, ebiederm@xmission.com
+To: Don Zickus <dzickus@redhat.com>
+Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, ebiederm@xmission.com
 
-A customer of ours noticed when their machine crashed, kdump did not
-work but hung instead.  Using their firmware dumping solution they
-grabbed a vmcore and decoded the stacks on the cpus.  What they
-noticed seemed to be a rare deadlock with the ioapic_lock.
+On Tue, Jan 31, 2012 at 04:25:14PM -0500, Don Zickus wrote:
+> A customer of ours noticed when their machine crashed, kdump did not
+> work but hung instead.  Using their firmware dumping solution they
+> grabbed a vmcore and decoded the stacks on the cpus.  What they
+> noticed seemed to be a rare deadlock with the ioapic_lock.
+> 
+>  CPU4:
+>  machine_crash_shutdown
+>  -> machine_ops.crash_shutdown
+>     -> native_machine_crash_shutdown
+>        -> kdump_nmi_shootdown_cpus ------> Send NMI to other CPUs
+>        -> disable_IO_APIC
+>           -> clear_IO_APIC
+>              -> clear_IO_APIC_pin
+>                 -> ioapic_read_entry
+>                    -> spin_lock_irqsave(&ioapic_lock, flags)
+>                    ---Infinite loop here---
+> 
+>  CPU0:
+>  do_IRQ
+>  -> handle_irq
+>     -> handle_edge_irq
+>         -> ack_apic_edge
+>            -> move_native_irq
+>                -> mask_IO_APIC_irq
+>                   -> mask_IO_APIC_irq_desc
+>                      -> spin_lock_irqsave(&ioapic_lock, flags)
+>                      ---Receive NMI here after getting spinlock---
+>                         -> nmi
+>                            -> do_nmi
+>                               -> crash_nmi_callback
+>                               ---Infinite loop here---
+> 
+> The problem is that although kdump tries to shutdown minimal hardware,
+> it still needs to disable the IO APIC.  This requires spinlocks which
+> may be held by another cpu.  This other cpu is being held infinitely in
+> an NMI context by kdump in order to serialize the crashing path.  Instant
+> deadlock.
+> 
+> I attempted to resolve this by busting the spinlock in the kdump case only.
+> My justification was that kdump has already stopped the other cpus and it
+> is only clearing the io apic which shouldn't cause harm when overwriting
+> what the other cpu was doing.
+> 
+> I tested this by loading a dummy module that grabs the ioapic_lock and then
+> on another cpu, run 'echo c > /proc/sysrq-trigger'.  The deadlock was detected
+> and fixed with the patch below.
+> 
+> Signed-off-by: Don Zickus <dzickus@redhat.com>
 
- CPU4:
- machine_crash_shutdown
- -> machine_ops.crash_shutdown
-    -> native_machine_crash_shutdown
-       -> kdump_nmi_shootdown_cpus ------> Send NMI to other CPUs
-       -> disable_IO_APIC
-          -> clear_IO_APIC
-             -> clear_IO_APIC_pin
-                -> ioapic_read_entry
-                   -> spin_lock_irqsave(&ioapic_lock, flags)
-                   ---Infinite loop here---
+Sounds reasonable to me. 
 
- CPU0:
- do_IRQ
- -> handle_irq
-    -> handle_edge_irq
-        -> ack_apic_edge
-           -> move_native_irq
-               -> mask_IO_APIC_irq
-                  -> mask_IO_APIC_irq_desc
-                     -> spin_lock_irqsave(&ioapic_lock, flags)
-                     ---Receive NMI here after getting spinlock---
-                        -> nmi
-                           -> do_nmi
-                              -> crash_nmi_callback
-                              ---Infinite loop here---
+Acked-by: Vivek Goyal <vgoyal@redhat.com>
 
-The problem is that although kdump tries to shutdown minimal hardware,
-it still needs to disable the IO APIC.  This requires spinlocks which
-may be held by another cpu.  This other cpu is being held infinitely in
-an NMI context by kdump in order to serialize the crashing path.  Instant
-deadlock.
-
-I attempted to resolve this by busting the spinlock in the kdump case only.
-My justification was that kdump has already stopped the other cpus and it
-is only clearing the io apic which shouldn't cause harm when overwriting
-what the other cpu was doing.
-
-I tested this by loading a dummy module that grabs the ioapic_lock and then
-on another cpu, run 'echo c > /proc/sysrq-trigger'.  The deadlock was detected
-and fixed with the patch below.
-
-Signed-off-by: Don Zickus <dzickus@redhat.com>
----
- arch/x86/kernel/apic/io_apic.c     |   18 +++++++++++++++++-
- arch/x86/kernel/crash.c            |    2 +-
- arch/x86/kernel/machine_kexec_32.c |    2 +-
- arch/x86/kernel/machine_kexec_64.c |    2 +-
- arch/x86/kernel/reboot.c           |    2 +-
- 5 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index fb07275..5fe4423 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -1991,9 +1991,25 @@ void __init enable_IO_APIC(void)
- /*
-  * Not an __init, needed by the reboot code
-  */
--void disable_IO_APIC(void)
-+void disable_IO_APIC(int force)
- {
- 	/*
-+	 * Use force to bust the io_apic spinlock
-+	 *
-+	 * There is a case where kdump can race with irq
-+	 * migration such that kdump will inject an NMI
-+	 * while another cpu holds the ioapic_lock to
-+	 * migrate the irq.  This would cause a deadlock.
-+	 *
-+	 * Because kdump stops all the cpus, we can safely
-+	 * bust the spinlock as we are just clearing the
-+	 * io apic anyway.
-+	 */
-+	if (force && spin_is_locked(&ioapic_lock))
-+		/* only one cpu should be running now */
-+		spin_lock_init(&ioapic_lock);
-+
-+	/*
- 	 * Clear the IO-APIC before rebooting:
- 	 */
- 	clear_IO_APIC();
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..c8383b0 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -97,7 +97,7 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 
- 	lapic_shutdown();
- #if defined(CONFIG_X86_IO_APIC)
--	disable_IO_APIC();
-+	disable_IO_APIC(1);
- #endif
- #ifdef CONFIG_HPET_TIMER
- 	hpet_disable();
-diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kexec_32.c
-index a3fa43b..3c60005 100644
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -212,7 +212,7 @@ void machine_kexec(struct kimage *image)
- 		 * one form or other. kexec jump path also need
- 		 * one.
- 		 */
--		disable_IO_APIC();
-+		disable_IO_APIC(0);
- #endif
- 	}
- 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index b3ea9db..ed94a6a 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -295,7 +295,7 @@ void machine_kexec(struct kimage *image)
- 		 * one form or other. kexec jump path also need
- 		 * one.
- 		 */
--		disable_IO_APIC();
-+		disable_IO_APIC(0);
- #endif
- 	}
- 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 37a458b..766795c 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -652,7 +652,7 @@ void native_machine_shutdown(void)
- 	lapic_shutdown();
- 
- #ifdef CONFIG_X86_IO_APIC
--	disable_IO_APIC();
-+	disable_IO_APIC(0);
- #endif
- 
- #ifdef CONFIG_HPET_TIMER
--- 
-1.7.7.5
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
