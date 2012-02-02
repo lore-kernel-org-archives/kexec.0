@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RslWb-0007JL-57
- for kexec@lists.infradead.org; Thu, 02 Feb 2012 01:31:46 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+ id 1Rsyf8-0005X5-AX
+ for kexec@lists.infradead.org; Thu, 02 Feb 2012 15:33:27 +0000
+Date: Thu, 2 Feb 2012 10:33:20 -0500
+From: Don Zickus <dzickus@redhat.com>
 Subject: Re: [PATCH] x86, kdump, ioapic: Fix kdump race with migrating irq
+Message-ID: <20120202153320.GM5650@redhat.com>
 References: <1328045114-4489-1-git-send-email-dzickus@redhat.com>
- <m1ipjr4jaa.fsf@fess.ebiederm.org> <20120131222751.GE5650@redhat.com>
- <m1vcnr33c8.fsf@fess.ebiederm.org> <20120201230414.GL5650@redhat.com>
-Date: Wed, 01 Feb 2012 17:34:01 -0800
-In-Reply-To: <20120201230414.GL5650@redhat.com> (Don Zickus's message of "Wed, 
- 1 Feb 2012 18:04:14 -0500")
-Message-ID: <m1ehuevx12.fsf@fess.ebiederm.org>
+ <m1ipjr4jaa.fsf@fess.ebiederm.org>
+ <20120131222751.GE5650@redhat.com>
+ <m1vcnr33c8.fsf@fess.ebiederm.org>
+ <20120201230414.GL5650@redhat.com>
+ <m1ehuevx12.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1ehuevx12.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,84 +28,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, vgoyal@redhat.com
 
-Don Zickus <dzickus@redhat.com> writes:
+On Wed, Feb 01, 2012 at 05:34:01PM -0800, Eric W. Biederman wrote:
+> > Talking to folks here and trying to read the code it seems like the PIT
+> > stuff is delayed until after the IOAPIC is configured using Fast TSC
+> > calibration as a mechanism to work around the PIT??
+> >
+> > I attached the output of the Pentium4 when kdumping.  Not sure what to
+> > really look for to verify the PIC is being skipped.  Perhaps you know?
+> 
+> The important part is the kexec on panic works without shutting down
+> the ioapic.  There should be no corner case issues it should either
+> work it should fail.
+> 
+> The problem used to be that we always would initialize the PIT interrupt
+> in the 8259 interrupt controller before we would initialize the ioapics
+> and that would kill the boot.
+> 
+> If I have read your testing correctly you are apparently booting in the
+> kexec on panic case.  That seems to be successful to me.  So we should
+> be able to just remove the ioapic shutdown code from
+> machine_crash_shutdown as it is no longer needed.
+> 
+> Thank you for being careful and testing on a number of different
+> platforms. 
 
-> On Tue, Jan 31, 2012 at 02:38:15PM -0800, Eric W. Biederman wrote:
->> Don Zickus <dzickus@redhat.com> writes:
->> 
->> > On Tue, Jan 31, 2012 at 02:08:29PM -0800, Eric W. Biederman wrote:
->> >> > The problem is that although kdump tries to shutdown minimal hardware,
->> >> > it still needs to disable the IO APIC.  This requires spinlocks which
->> >> > may be held by another cpu.  This other cpu is being held infinitely in
->> >> > an NMI context by kdump in order to serialize the crashing path.  Instant
->> >> > deadlock.
->> >> 
->> >> Can you test to see if kexec on panic still needs to disable the IO
->> >> APIC.  Last I looked we were close if not all of the way there to not
->> >> needing to boot the kernel in pic mode?
->> >
->> > Ok, so you just blindly remove disable_IO_APIC from
->> > native_machine_crash_shutdown and re-run some panic tests on various
->> > machines?  What about the disable_IO_APIC path in native_machine_shutdown?
->> >
->> 
->> Yes.  Just native_machine_crash_shutdown.
->> 
->> native_machine_shutdown is the case when all is good and we attempt to
->> put the hardware back the way we found it.
->
-> Ok.
->
->> 
->> Any normal x86 machine that the kernel runs in ioapic mode should be
->> enough to get a first approximation.
->> 
->> > Also, where could I look to see if that work was done?  Is that in the
->> > ioapic setup code?
->> 
->> The primary question is do we call the ioapic setup code without calling
->> the pic setup code first.  On some embedded x86 platforms we certainly
->> do.  I don't know if that code has been generalized.
->> 
->> Historically the problem is that we started the pit timer in pic mode
->> and used that to calibrate the delay loop.
->> 
->> So what we are looking to verify is that the linux kernel boot skip
->> pic mode entirely.
->
-> It seems to boot fine on an Ivy Bridge machine and a single cpu Pentium4.
-> I will try and athlon3 and a nehalem tomorrow.
->
-> Talking to folks here and trying to read the code it seems like the PIT
-> stuff is delayed until after the IOAPIC is configured using Fast TSC
-> calibration as a mechanism to work around the PIT??
->
-> I attached the output of the Pentium4 when kdumping.  Not sure what to
-> really look for to verify the PIC is being skipped.  Perhaps you know?
+No problem.  I was actually trying to find machines that did not have
+ioapics to make sure they still worked (it's hard!).
 
-The important part is the kexec on panic works without shutting down
-the ioapic.  There should be no corner case issues it should either
-work it should fail.
+So if I test on a couple more machines (hopefully one without an ioapic),
+can I get your ack?  Or is there something else you would like me to do to
+verify things are working correctly?
 
-The problem used to be that we always would initialize the PIT interrupt
-in the 8259 interrupt controller before we would initialize the ioapics
-and that would kill the boot.
+I will also need your help writing the changelog such that people
+understand why removing that line is safe now.
 
-If I have read your testing correctly you are apparently booting in the
-kexec on panic case.  That seems to be successful to me.  So we should
-be able to just remove the ioapic shutdown code from
-machine_crash_shutdown as it is no longer needed.
+> 
+> The only case I can think that won't work without ioapic disables
+> is using a crash kernel that doesn't emable the ioapics.
 
-Thank you for being careful and testing on a number of different
-platforms. 
+Ok.  I can see that.  Would you agree that scenario is not a very sane
+case? :-) Does not using the ioapic really save you anything?
 
-The only case I can think that won't work without ioapic disables
-is using a crash kernel that doesn't emable the ioapics.
+Otherwise the alternative is to use my original patch.
 
-Eric
+Thanks for the help.
+
+Cheers,
+Don
+
+> 
+> Eric
 
 _______________________________________________
 kexec mailing list
