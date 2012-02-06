@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Rt5yh-0001Bh-GP
- for kexec@lists.infradead.org; Thu, 02 Feb 2012 23:22:09 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
-References: <1328206323-25580-1-git-send-email-dzickus@redhat.com>
-Date: Thu, 02 Feb 2012 15:24:46 -0800
-In-Reply-To: <1328206323-25580-1-git-send-email-dzickus@redhat.com> (Don
- Zickus's message of "Thu, 2 Feb 2012 13:12:03 -0500")
-Message-ID: <m1r4ycsts1.fsf@fess.ebiederm.org>
+Received: from e28smtp04.in.ibm.com ([122.248.162.4])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RuKXu-0000DN-Vj
+ for kexec@lists.infradead.org; Mon, 06 Feb 2012 09:07:36 +0000
+Received: from /spool/local
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Mon, 6 Feb 2012 14:37:25 +0530
+Received: from d28av02.in.ibm.com (d28av02.in.ibm.com [9.184.220.64])
+ by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q1697Hgo3678248
+ for <kexec@lists.infradead.org>; Mon, 6 Feb 2012 14:37:18 +0530
+Received: from d28av02.in.ibm.com (loopback [127.0.0.1])
+ by d28av02.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q1697H44027432
+ for <kexec@lists.infradead.org>; Mon, 6 Feb 2012 20:07:17 +1100
+Message-ID: <4F2F9843.9000108@in.ibm.com>
+Date: Mon, 06 Feb 2012 14:37:15 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v1 0/3][makedumpfile]Add support for  PPC32
+References: <20120118100510.29422.93587.stgit@suzukikp.in.ibm.com>
+ <20120119115852.588bf8bb.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120119115852.588bf8bb.kumagai-atsushi@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,110 +32,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp
 
-Don Zickus <dzickus@redhat.com> writes:
+On 01/19/2012 08:28 AM, Atsushi Kumagai wrote:
 
-> A customer of ours noticed when their machine crashed, kdump did not
-> work but hung instead.  Using their firmware dumping solution they
-> grabbed a vmcore and decoded the stacks on the cpus.  What they
-> noticed seemed to be a rare deadlock with the ioapic_lock.
->
->  CPU4:
->  machine_crash_shutdown
->  -> machine_ops.crash_shutdown
->     -> native_machine_crash_shutdown
->        -> kdump_nmi_shootdown_cpus ------> Send NMI to other CPUs
->        -> disable_IO_APIC
->           -> clear_IO_APIC
->              -> clear_IO_APIC_pin
->                 -> ioapic_read_entry
->                    -> spin_lock_irqsave(&ioapic_lock, flags)
->                    ---Infinite loop here---
->
->  CPU0:
->  do_IRQ
->  -> handle_irq
->     -> handle_edge_irq
->         -> ack_apic_edge
->            -> move_native_irq
->                -> mask_IO_APIC_irq
->                   -> mask_IO_APIC_irq_desc
->                      -> spin_lock_irqsave(&ioapic_lock, flags)
->                      ---Receive NMI here after getting spinlock---
->                         -> nmi
->                            -> do_nmi
->                               -> crash_nmi_callback
->                               ---Infinite loop here---
->
-> The problem is that although kdump tries to shutdown minimal hardware,
-> it still needs to disable the IO APIC.  This requires spinlocks which
-> may be held by another cpu.  This other cpu is being held infinitely in
-> an NMI context by kdump in order to serialize the crashing path.  Instant
-> deadlock.
->
-> Eric, brought up a point that because the boot code was restructured we may
-> not need to disable the io apic any more in the crash path.  The original
-> concern that led to the development of disable_IO_APIC, was that the TSC
-> calibration on boot up relied on the PIT timer for reference.  Access
-> to the PIT required 8259 interrupts to be working.  This wouldn't work
-> if the ioapic needed to be configured.  So on panic path, the ioapic was
-> reconfigured to use virtual wire mode to allow the 8259 to passthrough.
+Atsushi-San,
 
-A small clarification originally it was the jiffies calibration that
-would fail if we could cause the PIT to generate interrupts through the
-8259.  The boot would then hang at calibrating jiffies.
-
-> Those concerns don't hold true now, thanks to the fast TSC calibration code
-> not needing the PIT.  As a result, we can remove this call and simplify the
-> locking needed in the panic path.
+> Hi Suzuki,
 >
-> I tested kdump on an Ivy Bridge platform, a Pentium4 and an old athlon that
-> did not have an ioapic.  All three were successful.
+> On Wed, 18 Jan 2012 15:37:49 +0530
+> "Suzuki K. Poulose"<suzuki@in.ibm.com>  wrote:
 >
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Don Zickus <dzickus@redhat.com>
+>> The following series implements makedumpfile support for PPC32.
+>>
+>> The implementation is heavily based on PPC64. This also introduces
+>> cross build support which is required for Embedded PPC Boards.
+>>
+>> ---
+>>
+>> Suzuki K. Poulose (3):
+>>        [makedumpfile] Add support for PPC32
+>>        [ppc64] Rename the __powerpc__ macro to __powerpc64__ for PPC64
+>>        [makedumpfile] Support building for cross build
+>>
+>>
+>>   Makefile       |   26 ++++++++++++--
+>>   README         |    5 +++
+>>   arch/ppc.c     |  101 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>   makedumpfile.c |    4 +-
+>>   makedumpfile.h |   28 +++++++++++++---
+>>   5 files changed, 153 insertions(+), 11 deletions(-)
+>>   create mode 100644 arch/ppc.c
+>>
+>> --
+>> Suzuki Poulose
+
+
 >
-> ---
-> I will probably need some help with my explaination as to why this line is not
-> needed.  Any input is appreciated!
+> Thank you for your patches.
+> I will review them.
 
-Can you test and verify that we also do not need the lapic_shutdown()
-call and the disable_local_APIC call on the other processors.  The same
-reasoning that supports us not needing to disable the IO_APIC also
-supports us not needing to disable local apic.
+Did you get a chance to review my patches ?
 
-Removing disable_IO_APIC in and of itself and then booting isn't quite
-sufficient as a practical test to prove this code always works.
-Sometimes the IOAPIC was not hooked up to interesting interrupt sources
-like the 8259.
+Suzuki
 
-Eric
-
-> ---
->  arch/x86/kernel/crash.c |    3 ---
->  1 files changed, 0 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 13ad899..b053cf9 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -96,9 +96,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->  	cpu_emergency_svm_disable();
->  
->  	lapic_shutdown();
-> -#if defined(CONFIG_X86_IO_APIC)
-> -	disable_IO_APIC();
-> -#endif
->  #ifdef CONFIG_HPET_TIMER
->  	hpet_disable();
->  #endif
 
 _______________________________________________
 kexec mailing list
