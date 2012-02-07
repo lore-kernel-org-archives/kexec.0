@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Rue8L-0002i2-H9
- for kexec@lists.infradead.org; Tue, 07 Feb 2012 06:02:32 +0000
-Date: Tue, 7 Feb 2012 14:58:39 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH v1 0/3][makedumpfile]Add support for  PPC32
-Message-Id: <20120207145839.f7e9fcfd.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <4F2F9843.9000108@in.ibm.com>
-References: <20120118100510.29422.93587.stgit@suzukikp.in.ibm.com>
- <20120119115852.588bf8bb.kumagai-atsushi@mxc.nes.nec.co.jp>
- <4F2F9843.9000108@in.ibm.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RutEQ-0005Bf-A1
+ for kexec@lists.infradead.org; Tue, 07 Feb 2012 22:09:47 +0000
+Date: Tue, 7 Feb 2012 16:57:41 -0500
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
+Message-ID: <20120207215741.GD5650@redhat.com>
+References: <1328206323-25580-1-git-send-email-dzickus@redhat.com>
+ <m1r4ycsts1.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1r4ycsts1.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,40 +24,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: suzuki@in.ibm.com
-Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Suzuki,
-
-On Mon, 06 Feb 2012 14:37:15 +0530
-"Suzuki K. Poulose" <suzuki@in.ibm.com> wrote:
-
-> On 01/19/2012 08:28 AM, Atsushi Kumagai wrote:
+On Thu, Feb 02, 2012 at 03:24:46PM -0800, Eric W. Biederman wrote:
+> > Eric, brought up a point that because the boot code was restructured we may
+> > not need to disable the io apic any more in the crash path.  The original
+> > concern that led to the development of disable_IO_APIC, was that the TSC
+> > calibration on boot up relied on the PIT timer for reference.  Access
+> > to the PIT required 8259 interrupts to be working.  This wouldn't work
+> > if the ioapic needed to be configured.  So on panic path, the ioapic was
+> > reconfigured to use virtual wire mode to allow the 8259 to passthrough.
 > 
+> A small clarification originally it was the jiffies calibration that
+> would fail if we could cause the PIT to generate interrupts through the
+> 8259.  The boot would then hang at calibrating jiffies.
+
+Ok.  Thanks!
+
+> 
+> > Those concerns don't hold true now, thanks to the fast TSC calibration code
+> > not needing the PIT.  As a result, we can remove this call and simplify the
+> > locking needed in the panic path.
 > >
-> > Thank you for your patches.
-> > I will review them.
+> > I tested kdump on an Ivy Bridge platform, a Pentium4 and an old athlon that
+> > did not have an ioapic.  All three were successful.
+> >
+> > Cc: Eric W. Biederman <ebiederm@xmission.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Signed-off-by: Don Zickus <dzickus@redhat.com>
+> >
+> > ---
+> > I will probably need some help with my explaination as to why this line is not
+> > needed.  Any input is appreciated!
 > 
-> Did you get a chance to review my patches ?
+> Can you test and verify that we also do not need the lapic_shutdown()
+> call and the disable_local_APIC call on the other processors.  The same
+> reasoning that supports us not needing to disable the IO_APIC also
+> supports us not needing to disable local apic.
+
+I did that and it seemed to work on my Ivy Bridge and core2 quad systems.
+
 > 
-> Suzuki
- 
-I'm reviewing your patches now, and I will inform you
-of the result in the course of this week.
+> Removing disable_IO_APIC in and of itself and then booting isn't quite
+> sufficient as a practical test to prove this code always works.
+> Sometimes the IOAPIC was not hooked up to interesting interrupt sources
+> like the 8259.
 
-Additionally, the followings are scheduled for v1.4.3.
+So what systems should I look for to test?
 
- - Add support for PPC32
- - Fix VtoP method for x86 remap allocator
- - Fix segmentation fault for -x/--split options
- - Support newer kernels
-
-v1.4.3 will be released before the end of this month
-if all steps go smoothly.
-
-
-Thanks
-Atsushi Kumagai
+Cheers,
+Don
 
 _______________________________________________
 kexec mailing list
