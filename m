@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RvGNK-00032y-DH
- for kexec@lists.infradead.org; Wed, 08 Feb 2012 22:52:31 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
-References: <1328206323-25580-1-git-send-email-dzickus@redhat.com>
- <m1r4ycsts1.fsf@fess.ebiederm.org> <20120207215741.GD5650@redhat.com>
- <20120207221924.GH6346@redhat.com> <m1r4y6i5cw.fsf@fess.ebiederm.org>
- <20120208201145.GX5650@redhat.com>
-Date: Wed, 08 Feb 2012 14:55:14 -0800
-In-Reply-To: <20120208201145.GX5650@redhat.com> (Don Zickus's message of "Wed, 
- 8 Feb 2012 15:11:45 -0500")
-Message-ID: <m1sjilc4vh.fsf@fess.ebiederm.org>
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RvN6D-0007YE-Lm
+ for kexec@lists.infradead.org; Thu, 09 Feb 2012 06:03:18 +0000
+Received: by iafj26 with SMTP id j26so2350497iaf.36
+ for <kexec@lists.infradead.org>; Wed, 08 Feb 2012 22:03:14 -0800 (PST)
 MIME-Version: 1.0
+Date: Thu, 9 Feb 2012 11:33:14 +0530
+Message-ID: <CANBXnM=7eJVwCOoA-AoNPPf0A8OWyeQ=tG-W6ZiONG3WOb+EoQ@mail.gmail.com>
+Subject: kdump / Kexec not working
+From: Adil Mujeeb <mujeeb.adil@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,59 +22,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
+To: kexec@lists.infradead.org
 
-Don Zickus <dzickus@redhat.com> writes:
+Hi List,
 
-> On Tue, Feb 07, 2012 at 03:35:59PM -0800, Eric W. Biederman wrote:
->> Vivek Goyal <vgoyal@redhat.com> writes:
->> 
->> > On Tue, Feb 07, 2012 at 04:57:41PM -0500, Don Zickus wrote:
->> >> On Thu, Feb 02, 2012 at 03:24:46PM -0800, Eric W. Biederman wrote:
->> >> > > Eric, brought up a point that because the boot code was restructured we may
->> >> > > not need to disable the io apic any more in the crash path.  The original
->> >> > > concern that led to the development of disable_IO_APIC, was that the TSC
->> >> > > calibration on boot up relied on the PIT timer for reference.  Access
->> >> > > to the PIT required 8259 interrupts to be working.  This wouldn't work
->> >> > > if the ioapic needed to be configured.  So on panic path, the ioapic was
->> >> > > reconfigured to use virtual wire mode to allow the 8259 to passthrough.
->> >> > 
->> >> > A small clarification originally it was the jiffies calibration that
->> >> > would fail if we could cause the PIT to generate interrupts through the
->> >> > 8259.  The boot would then hang at calibrating jiffies.
->> >> 
->> >> Ok.  Thanks!
->> >
->> > So now what has changed? Do we setup LAPIC and IOAPIC early enough to
->> > receive PIT interrupts in regular mode (non-virtual wire mode) or
->> > something else?
->> 
->> Yes.  Part of the Moorstown work required that this be done because
->> moorsetown did not support legacy mode.  Last I looked the code hadn't
->> been generalized beyond Moorsetown but empirically it works now.
->> 
->> Don as to what to test the only case I can think of that might be spooky
->> is a screaming interrupt during the handover.  You might want to try
->> playing with lkcdtm to try some of the more exotic crash scenarios.  But
->> all I expect further testing might reveal are places where we are not
->> as robust in initializing the hardware as we might be.  Things that
->> might have been papered over by the ioapic shutdown.
->
-> I ran lkdtm by panic'ing in the interrupt handle thus leaving device
-> interrupt un-ack'd and the apic might have been un-ack'd too (jprobes
-> hooked in at do_IRQ).  3 out 3 times the second kernel came up on my core2
-> quad.
+I am new to crash / kdump tool and facing some problem as mentioned below.
 
-That sounds like more than enough basic testing for me.  Document your
-testing in a patch description and let's get the unnecessary local apic
-and ioapic stomping removed from the kexec on panic path.
+I have SLES11 based system. I am building kernel source (SLES11 based
+2.6.32 version) and added my
+modules (for study purpose) in it. Building, installing and booting
+with this kernel is successful. I have enabled the options for kdump
+as mentioned below:
 
-There were bugs.  We deleted the code that had them.  The bugs are gone
-and there are no new problems goes over very well in my book.
+Enable Kexec system call:
+CONFIG_KEXEC=y
 
-Eric
+Enable kernel crash dumps:
+CONFIG_CRASH_DUMP=y
 
+Optional: Disable Symmetric Multi-Processing (SMP) support
+CONFIG_SMP=y
+
+Enable sysfs file system support:
+CONFIG_SYSFS=y
+
+Enable /proc/vmcore support:
+CONFIG_PROC_VMCORE=y
+
+Configure the kernel with debug info:
+CONFIG_DEBUG_INFO=y
+
+Configure the start section for reserved RAM for the crash kernel:
+CONFIG_PHYSICAL_START=0x200000             (2MB)
+
+Configure kdump kernel so it can be identified:
+CONFIG_LOCALVERSION="-crash"
+
+
+Kdump configuration /etc/sysconfig/kdump:
+KDUMP_KERNELVER=""
+
+KDUMP_COMMANDLINE=""
+
+KDUMP_COMMANDLINE_APPEND="maxcpus=1 "
+
+KEXEC_OPTIONS=""
+
+KDUMP_IMMEDIATE_REBOOT="yes"
+
+KDUMP_TRANSFER=""
+
+KDUMP_SAVEDIR="file:///var/crash"
+
+KDUMP_KEEP_OLD_DUMPS="5"
+
+KDUMP_FREE_DISK_SIZE="64"
+
+KDUMP_VERBOSE="3"
+
+KDUMP_DUMPLEVEL="0"
+
+KDUMP_DUMPFORMAT="compressed"
+
+There is no option KDUMP_DUMPDEV option
+There is no option KDUMP_RUNLEVEL
+
+I booted successfully with this kernel and tried to crash it by
+kernel module. The system freezes and did not reboot as I expected the
+kexec and kdump to do it. After rebooting manually there is no dump
+file generated.
+
+What could be the issue here?
+
+Another observation is boot.kdump seems to on but manually start
+giving me error:
+
+linux:/home/adil # chkconfig boot.kdump
+boot.kdump  on
+linux:/home/adil #
+
+hltncra110731:/home/adil # /etc/init.d/boot.kdump status
+kdump kernel not loaded
+
+                                                    dead
+hltncra110731:/home/adil # /etc/init.d/boot.kdump start
+Loading kdump
+Can't find kernel text map area from kcore
+Cannot load /boot/vmlinuz-2.6.32.12-crash
+
+                                                    failed
+hltncra110731:/home/adil #
+
+Please help how to correctly setup and use crash on my machine.
+
+Thank you,
+Adil
 
 _______________________________________________
 kexec mailing list
