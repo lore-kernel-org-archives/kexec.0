@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-iy0-f177.google.com ([209.85.210.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RvN6D-0007YE-Lm
- for kexec@lists.infradead.org; Thu, 09 Feb 2012 06:03:18 +0000
-Received: by iafj26 with SMTP id j26so2350497iaf.36
- for <kexec@lists.infradead.org>; Wed, 08 Feb 2012 22:03:14 -0800 (PST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RvVJ1-0004He-3p
+ for kexec@lists.infradead.org; Thu, 09 Feb 2012 14:49:04 +0000
+Date: Thu, 9 Feb 2012 09:48:57 -0500
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
+Message-ID: <20120209144857.GC5650@redhat.com>
+References: <1328206323-25580-1-git-send-email-dzickus@redhat.com>
+ <m1r4ycsts1.fsf@fess.ebiederm.org>
+ <20120207215741.GD5650@redhat.com>
+ <20120207221924.GH6346@redhat.com>
+ <m1r4y6i5cw.fsf@fess.ebiederm.org>
+ <20120208201145.GX5650@redhat.com>
+ <m1sjilc4vh.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Date: Thu, 9 Feb 2012 11:33:14 +0530
-Message-ID: <CANBXnM=7eJVwCOoA-AoNPPf0A8OWyeQ=tG-W6ZiONG3WOb+EoQ@mail.gmail.com>
-Subject: kdump / Kexec not working
-From: Adil Mujeeb <mujeeb.adil@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <m1sjilc4vh.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,101 +29,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi List,
+On Wed, Feb 08, 2012 at 02:55:14PM -0800, Eric W. Biederman wrote:
+> > I ran lkdtm by panic'ing in the interrupt handle thus leaving device
+> > interrupt un-ack'd and the apic might have been un-ack'd too (jprobes
+> > hooked in at do_IRQ).  3 out 3 times the second kernel came up on my core2
+> > quad.
+> 
+> That sounds like more than enough basic testing for me.  Document your
+> testing in a patch description and let's get the unnecessary local apic
+> and ioapic stomping removed from the kexec on panic path.
+> 
+> There were bugs.  We deleted the code that had them.  The bugs are gone
+> and there are no new problems goes over very well in my book.
 
-I am new to crash / kdump tool and facing some problem as mentioned below.
+Great.  Thanks.  I'll put together the patch.
 
-I have SLES11 based system. I am building kernel source (SLES11 based
-2.6.32 version) and added my
-modules (for study purpose) in it. Building, installing and booting
-with this kernel is successful. I have enabled the options for kdump
-as mentioned below:
-
-Enable Kexec system call:
-CONFIG_KEXEC=y
-
-Enable kernel crash dumps:
-CONFIG_CRASH_DUMP=y
-
-Optional: Disable Symmetric Multi-Processing (SMP) support
-CONFIG_SMP=y
-
-Enable sysfs file system support:
-CONFIG_SYSFS=y
-
-Enable /proc/vmcore support:
-CONFIG_PROC_VMCORE=y
-
-Configure the kernel with debug info:
-CONFIG_DEBUG_INFO=y
-
-Configure the start section for reserved RAM for the crash kernel:
-CONFIG_PHYSICAL_START=0x200000             (2MB)
-
-Configure kdump kernel so it can be identified:
-CONFIG_LOCALVERSION="-crash"
-
-
-Kdump configuration /etc/sysconfig/kdump:
-KDUMP_KERNELVER=""
-
-KDUMP_COMMANDLINE=""
-
-KDUMP_COMMANDLINE_APPEND="maxcpus=1 "
-
-KEXEC_OPTIONS=""
-
-KDUMP_IMMEDIATE_REBOOT="yes"
-
-KDUMP_TRANSFER=""
-
-KDUMP_SAVEDIR="file:///var/crash"
-
-KDUMP_KEEP_OLD_DUMPS="5"
-
-KDUMP_FREE_DISK_SIZE="64"
-
-KDUMP_VERBOSE="3"
-
-KDUMP_DUMPLEVEL="0"
-
-KDUMP_DUMPFORMAT="compressed"
-
-There is no option KDUMP_DUMPDEV option
-There is no option KDUMP_RUNLEVEL
-
-I booted successfully with this kernel and tried to crash it by
-kernel module. The system freezes and did not reboot as I expected the
-kexec and kdump to do it. After rebooting manually there is no dump
-file generated.
-
-What could be the issue here?
-
-Another observation is boot.kdump seems to on but manually start
-giving me error:
-
-linux:/home/adil # chkconfig boot.kdump
-boot.kdump  on
-linux:/home/adil #
-
-hltncra110731:/home/adil # /etc/init.d/boot.kdump status
-kdump kernel not loaded
-
-                                                    dead
-hltncra110731:/home/adil # /etc/init.d/boot.kdump start
-Loading kdump
-Can't find kernel text map area from kcore
-Cannot load /boot/vmlinuz-2.6.32.12-crash
-
-                                                    failed
-hltncra110731:/home/adil #
-
-Please help how to correctly setup and use crash on my machine.
-
-Thank you,
-Adil
+Cheers,
+Don
 
 _______________________________________________
 kexec mailing list
