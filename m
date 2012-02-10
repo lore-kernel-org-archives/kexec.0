@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Rvdhv-0002vq-44
- for kexec@lists.infradead.org; Thu, 09 Feb 2012 23:47:20 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH v2] x86,
- kdump: No need to disable ioapic/lapic in crash path
-References: <1328824421-11068-1-git-send-email-dzickus@redhat.com>
-Date: Thu, 09 Feb 2012 15:49:43 -0800
-In-Reply-To: <1328824421-11068-1-git-send-email-dzickus@redhat.com> (Don
- Zickus's message of "Thu, 9 Feb 2012 16:53:41 -0500")
-Message-ID: <m1k43v5zzc.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RvnvJ-0001Jw-Oq
+ for kexec@lists.infradead.org; Fri, 10 Feb 2012 10:41:53 +0000
+Date: Fri, 10 Feb 2012 18:44:29 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH v1 2/3][makedumpfile][ppc64] Rename the __powerpc__
+ macro to __powerpc64__ for PPC64
+Message-Id: <20120210184429.534aa570.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120118100921.29422.90156.stgit@suzukikp.in.ibm.com>
+References: <20120118100510.29422.93587.stgit@suzukikp.in.ibm.com>
+ <20120118100921.29422.90156.stgit@suzukikp.in.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,50 +24,136 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: x86@kernel.org, kexec-list <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: suzuki@in.ibm.com
+Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, usui@mxm.nes.nec.co.jp
 
+Hi, Suzuki
 
-The code and the testing look good, and it has long been desirable to
-get rid of this code and reduce the complexity of the kexec on panic
-path.
+On Wed, 18 Jan 2012 15:39:44 +0530
+"Suzuki K. Poulose" <suzuki@in.ibm.com> wrote:
 
-Ingo, Peter, Thomas if one of you could pick this up that would be
-wonderful.
-
-
-Don Zickus <dzickus@redhat.com> writes:
-
-> A customer of ours noticed when their machine crashed, kdump did not
-> work but hung instead.  Using their firmware dumping solution they
-> grabbed a vmcore and decoded the stacks on the cpus.  What they
-> noticed seemed to be a rare deadlock with the ioapic_lock.
-
-
-
-[snip]
-> I tested kdump on an Ivy Bridge platform, a Pentium4 and an old athlon that
-> did not have an ioapic.  All three were successful.
->
-> I also tested using lkdtm that would use jprobes to panic the system when
-> entering do_IRQ.  The idea was to see how the system reacted with an
-> interrupt pending in the second kernel.  My core2 quad successfully kdump'd
-> 3 times in a row with no issues.
->
-> v2: removed the disable lapic code too
->
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Don Zickus <dzickus@redhat.com>
-Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
+> Makedumpfile uses __powerpc__ as the value of ARCH to control the PPC64
+> specfic definitions. Rename this to __powerpc64__ for a better readability
+> of the code as the support for ppc32 will be introduced in the later series.
+> We could use __powerpc32__ for PPC32.
+> 
+> Signed-off-by: Suzuki Poulose <suzuki@in.ibm.com>
 > ---
->  arch/x86/kernel/crash.c |    8 --------
->  1 files changed, 0 insertions(+), 8 deletions(-)
+> 
+>  Makefile       |    5 +++--
+>  makedumpfile.c |    2 +-
+>  makedumpfile.h |   10 +++++-----
+>  3 files changed, 9 insertions(+), 8 deletions(-)
 
-[snip]
+I will make small changes to your patch:
 
-Eric
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -18,7 +18,7 @@
+  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+
+-#ifdef __powerpc__
++#ifdef __powerpc64__
+
+ #include "../print_info.h"
+ #include "../elf_info.h"
+@@ -93,4 +93,4 @@ vaddr_to_paddr_ppc64(unsigned long vaddr)
+        return NOT_PADDR;
+ }
+
+-#endif /* powerpc */
++#endif /* powerpc64 */
+
+
+The other parts looks good.
+I will merge this patch to makedumpfile-1.4.3.
+
+Thanks
+Atsushi Kumagai
+
+
+> diff --git a/Makefile b/Makefile
+> index 174a0d9..04e267f 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -24,11 +24,12 @@ endif
+>  ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
+>  			       -e s/arm.*/arm/ -e s/sa110/arm/ \
+>  			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
+> -			       -e s/ppc64/powerpc/ )
+> +			       -e s/ppc64/powerpc64/ )
+> +
+>  CFLAGS += -D__$(ARCH)__
+>  CFLAGS_ARCH += -D__$(ARCH)__
+>  
+> -ifeq ($(ARCH), powerpc)
+> +ifeq ($(ARCH), powerpc64)
+>  CFLAGS += -m64
+>  CFLAGS_ARCH += -m64
+>  endif
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index c51fda3..101f8b5 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5691,7 +5691,7 @@ initial_xen(void)
+>  	off_t offset;
+>  	unsigned long size;
+>  
+> -#ifdef __powerpc__
+> +#ifdef __powerpc64__
+>  	MSG("\n");
+>  	MSG("ppc64 xen is not supported.\n");
+>  	return FALSE;
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 4b4a58b..efa325f 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -521,7 +521,7 @@ do { \
+>  
+>  #endif /* x86_64 */
+>  
+> -#ifdef __powerpc__
+> +#ifdef __powerpc64__
+>  #define __PAGE_OFFSET		(0xc000000000000000)
+>  #define KERNELBASE		PAGE_OFFSET
+>  #define VMALLOCBASE     	(0xD000000000000000)
+> @@ -658,14 +658,14 @@ unsigned long long vaddr_to_paddr_x86_64(unsigned long vaddr);
+>  #define vaddr_to_paddr(X)	vaddr_to_paddr_x86_64(X)
+>  #endif /* x86_64 */
+>  
+> -#ifdef __powerpc__ /* powerpc */
+> +#ifdef __powerpc64__ /* powerpc64 */
+>  int get_machdep_info_ppc64(void);
+>  unsigned long long vaddr_to_paddr_ppc64(unsigned long vaddr);
+>  #define get_phys_base()		TRUE
+>  #define get_machdep_info()	get_machdep_info_ppc64()
+>  #define get_versiondep_info()	TRUE
+>  #define vaddr_to_paddr(X)	vaddr_to_paddr_ppc64(X)
+> -#endif          /* powerpc */
+> +#endif          /* powerpc64 */
+>  
+>  #ifdef __s390x__ /* s390x */
+>  int get_machdep_info_s390x(void);
+> @@ -1332,10 +1332,10 @@ int get_xen_info_ia64(void);
+>  
+>  #endif	/* __ia64 */
+>  
+> -#ifdef __powerpc__ /* powerpc */
+> +#ifdef __powerpc64__ /* powerpc64 */
+>  #define kvtop_xen(X)	FALSE
+>  #define get_xen_info_arch(X) FALSE
+> -#endif	/* powerpc */
+> +#endif	/* powerpc64 */
+>  
+>  #ifdef __s390x__ /* s390x */
+>  #define kvtop_xen(X)	FALSE
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
