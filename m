@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RwPq0-0000F5-1q
- for kexec@lists.infradead.org; Sun, 12 Feb 2012 03:10:53 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
+Received: from mail-yw0-f49.google.com ([209.85.213.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RwQsi-0000uq-UI
+ for kexec@lists.infradead.org; Sun, 12 Feb 2012 04:17:45 +0000
+Received: by yhjj56 with SMTP id j56so2198904yhj.36
+ for <kexec@lists.infradead.org>; Sat, 11 Feb 2012 20:17:43 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <m1ipjc3fsk.fsf@fess.ebiederm.org>
 References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
  <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
-Date: Sat, 11 Feb 2012 19:13:15 -0800
-In-Reply-To: <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
- (Yinghai Lu's message of "Sat, 11 Feb 2012 17:04:15 -0800")
-Message-ID: <m1ipjc3fsk.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+ <m1ipjc3fsk.fsf@fess.ebiederm.org>
+Date: Sat, 11 Feb 2012 20:17:43 -0800
+Message-ID: <CAE9FiQVLnyRB+pAqi22C5mCbHOOVKxsBhQKaB6P0p9f2LBL8bA@mail.gmail.com>
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,85 +23,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: dzickus@redhat.com, linux-tip-commits@vger.kernel.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-WWluZ2hhaSBMdSA8eWluZ2hhaUBrZXJuZWwub3JnPiB3cml0ZXM6Cgo+IE9uIFNhdCwgRmViIDEx
-LCAyMDEyIGF0IDM6MDkgUE0sIHRpcC1ib3QgZm9yIERvbiBaaWNrdXMKPiA8ZHppY2t1c0ByZWRo
-YXQuY29tPiB3cm90ZToKPj4gQ29tbWl0LUlEOiDCoGQ5YmM5YmU4OTYyOTQ0NTc1ODY3MDIyMDc4
-NzY4M2UzN2M5M2Y2YzEKPj4gR2l0d2ViOiDCoCDCoCBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvdGlw
-L2Q5YmM5YmU4OTYyOTQ0NTc1ODY3MDIyMDc4NzY4M2UzN2M5M2Y2YzEKPj4gQXV0aG9yOiDCoCDC
-oCBEb24gWmlja3VzIDxkemlja3VzQHJlZGhhdC5jb20+Cj4+IEF1dGhvckRhdGU6IFRodSwgOSBG
-ZWIgMjAxMiAxNjo1Mzo0MSAtMDUwMAo+PiBDb21taXR0ZXI6IMKgSW5nbyBNb2xuYXIgPG1pbmdv
-QGVsdGUuaHU+Cj4+IENvbW1pdERhdGU6IFNhdCwgMTEgRmViIDIwMTIgMTU6Mzg6NTMgKzAxMDAK
-Pj4KPj4geDg2L2tkdW1wOiBObyBuZWVkIHRvIGRpc2FibGUgaW9hcGljL2xhcGljIGluIGNyYXNo
-IHBhdGgKPj4KPj4gQSBjdXN0b21lciBvZiBvdXJzIG5vdGljZWQgd2hlbiB0aGVpciBtYWNoaW5l
-IGNyYXNoZWQsIGtkdW1wIGRpZAo+PiBub3Qgd29yayBidXQgaHVuZyBpbnN0ZWFkLiDCoFVzaW5n
-IHRoZWlyIGZpcm13YXJlIGR1bXBpbmcKPj4gc29sdXRpb24gdGhleSBncmFiYmVkIGEgdm1jb3Jl
-IGFuZCBkZWNvZGVkIHRoZSBzdGFja3Mgb24gdGhlCj4+IGNwdXMuIMKgV2hhdCB0aGV5IG5vdGlj
-ZWQgc2VlbWVkIHRvIGJlIGEgcmFyZSBkZWFkbG9jayB3aXRoIHRoZQo+PiBpb2FwaWNfbG9jay4K
-Pj4KPj4gwqBDUFU0Ogo+PiDCoG1hY2hpbmVfY3Jhc2hfc2h1dGRvd24KPj4gwqAtPiBtYWNoaW5l
-X29wcy5jcmFzaF9zaHV0ZG93bgo+PiDCoCDCoC0+IG5hdGl2ZV9tYWNoaW5lX2NyYXNoX3NodXRk
-b3duCj4+IMKgIMKgIMKgIC0+IGtkdW1wX25taV9zaG9vdGRvd25fY3B1cyAtLS0tLS0+IFNlbmQg
-Tk1JIHRvIG90aGVyIENQVXMKPj4gwqAgwqAgwqAgLT4gZGlzYWJsZV9JT19BUElDCj4+IMKgIMKg
-IMKgIMKgIMKgLT4gY2xlYXJfSU9fQVBJQwo+PiDCoCDCoCDCoCDCoCDCoCDCoCAtPiBjbGVhcl9J
-T19BUElDX3Bpbgo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoC0+IGlvYXBpY19yZWFkX2VudHJ5
-Cj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC0+IHNwaW5fbG9ja19pcnFzYXZlKCZpb2Fw
-aWNfbG9jaywgZmxhZ3MpCj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC0tLUluZmluaXRl
-IGxvb3AgaGVyZS0tLQo+Pgo+PiDCoENQVTA6Cj4+IMKgZG9fSVJRCj4+IMKgLT4gaGFuZGxlX2ly
-cQo+PiDCoCDCoC0+IGhhbmRsZV9lZGdlX2lycQo+PiDCoCDCoCDCoCDCoC0+IGFja19hcGljX2Vk
-Z2UKPj4gwqAgwqAgwqAgwqAgwqAgLT4gbW92ZV9uYXRpdmVfaXJxCj4+IMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIC0+IG1hc2tfSU9fQVBJQ19pcnEKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAt
-PiBtYXNrX0lPX0FQSUNfaXJxX2Rlc2MKPj4gwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-LT4gc3Bpbl9sb2NrX2lycXNhdmUoJmlvYXBpY19sb2NrLCBmbGFncykKPj4gwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgLS0tUmVjZWl2ZSBOTUkgaGVyZSBhZnRlciBnZXR0aW5nIHNwaW5s
-b2NrLS0tCj4+IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgLT4gbm1pCj4+IMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIC0+IGRvX25taQo+PiDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoC0+IGNyYXNoX25taV9jYWxsYmFj
-awo+PiDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoC0tLUluZmlu
-aXRlIGxvb3AgaGVyZS0tLQo+Pgo+PiBUaGUgcHJvYmxlbSBpcyB0aGF0IGFsdGhvdWdoIGtkdW1w
-IHRyaWVzIHRvIHNodXRkb3duIG1pbmltYWwKPj4gaGFyZHdhcmUsIGl0IHN0aWxsIG5lZWRzIHRv
-IGRpc2FibGUgdGhlIElPIEFQSUMuIMKgVGhpcyByZXF1aXJlcwo+PiBzcGlubG9ja3Mgd2hpY2gg
-bWF5IGJlIGhlbGQgYnkgYW5vdGhlciBjcHUuIMKgVGhpcyBvdGhlciBjcHUgaXMKPj4gYmVpbmcg
-aGVsZCBpbmZpbml0ZWx5IGluIGFuIE5NSSBjb250ZXh0IGJ5IGtkdW1wIGluIG9yZGVyIHRvCj4+
-IHNlcmlhbGl6ZSB0aGUgY3Jhc2hpbmcgcGF0aC4gwqBJbnN0YW50IGRlYWRsb2NrLgo+Pgo+PiBF
-cmljIGJyb3VnaHQgdXAgYSBwb2ludCB0aGF0IGJlY2F1c2UgdGhlIGJvb3QgY29kZSB3YXMKPj4g
-cmVzdHJ1Y3R1cmVkIHdlIG1heSBub3QgbmVlZCB0byBkaXNhYmxlIHRoZSBpbyBhcGljIGFueSBt
-b3JlIGluCj4+IHRoZSBjcmFzaCBwYXRoLiDCoFRoZSBvcmlnaW5hbCBjb25jZXJuIHRoYXQgbGVk
-IHRvIHRoZQo+PiBkZXZlbG9wbWVudCBvZiBkaXNhYmxlX0lPX0FQSUMsIHdhcyB0aGF0IHRoZSBq
-aWZmaWVzIGNhbGlicmF0aW9uCj4+IG9uIGJvb3QgdXAgcmVsaWVkIG9uIHRoZSBQSVQgdGltZXIg
-Zm9yIHJlZmVyZW5jZS4gwqBBY2Nlc3MgdG8gdGhlCj4+IFBJVCByZXF1aXJlZCA4MjU5IGludGVy
-cnVwdHMgdG8gYmUgd29ya2luZy4gwqBUaGlzIHdvdWxkbid0IHdvcmsKPj4gaWYgdGhlIGlvYXBp
-YyBuZWVkZWQgdG8gYmUgY29uZmlndXJlZC4gwqBTbyBvbiBwYW5pYyBwYXRoLCB0aGUKPj4gaW9h
-cGljIHdhcyByZWNvbmZpZ3VyZWQgdG8gdXNlIHZpcnR1YWwgd2lyZSBtb2RlIHRvIGFsbG93IHRo
-ZSA4MjU5IHRvIHBhc3N0aHJvdWdoLgo+Pgo+PiBUaG9zZSBjb25jZXJucyBkb24ndCBob2xkIHRy
-dWUgbm93LCB0aGFua3MgdG8gdGhlIGppZmZpZXMKPj4gY2FsaWJyYXRpb24gY29kZSBub3QgbmVl
-ZGluZyB0aGUgUElULiDCoEFzIGEgcmVzdWx0LCB3ZSBjYW4KPj4gcmVtb3ZlIHRoaXMgY2FsbCBh
-bmQgc2ltcGxpZnkgdGhlIGxvY2tpbmcgbmVlZGVkIGluIHRoZSBwYW5pYwo+PiBwYXRoLgo+Pgo+
-PiBUaGUgc2FtZSB3b3JrIGFsbG93ZWQgdXMgdG8gcmVtb3ZlIHRoZSBuZWVkIHRvIGRpc2FibGUg
-dGhlIGxvY2FsCj4+IGFwaWMgb24gc2h1dGRvd24gdG9vLiDCoFRoaXMgc2hvdWxkIGFsbG93IHVz
-IHRvIGp1bXAgdG8gdGhlCj4+IHNlY29uZCBhIGxpdHRsZSBmYXN0ZXIuCj4+Cj4+IEkgdGVzdGVk
-IGtkdW1wIG9uIGFuIEl2eSBCcmlkZ2UgcGxhdGZvcm0sIGEgUGVudGl1bTQgYW5kIGFuIG9sZAo+
-PiBhdGhsb24gdGhhdCBkaWQgbm90IGhhdmUgYW4gaW9hcGljLiDCoEFsbCB0aHJlZSB3ZXJlIHN1
-Y2Nlc3NmdWwuCj4+Cj4+IEkgYWxzbyB0ZXN0ZWQgdXNpbmcgbGtkdG0gdGhhdCB3b3VsZCB1c2Ug
-anByb2JlcyB0byBwYW5pYyB0aGUKPj4gc3lzdGVtIHdoZW4gZW50ZXJpbmcgZG9fSVJRLiDCoFRo
-ZSBpZGVhIHdhcyB0byBzZWUgaG93IHRoZSBzeXN0ZW0KPj4gcmVhY3RlZCB3aXRoIGFuIGludGVy
-cnVwdCBwZW5kaW5nIGluIHRoZSBzZWNvbmQga2VybmVsLiDCoE15Cj4+IGNvcmUyIHF1YWQgc3Vj
-Y2Vzc2Z1bGx5IGtkdW1wJ2QgMyB0aW1lcyBpbiBhIHJvdyB3aXRoIG5vIGlzc3Vlcy4KPj4KPj4g
-djI6IHJlbW92ZWQgdGhlIGRpc2FibGUgbGFwaWMgY29kZSB0b28KPgo+IHdpdGggdGhpcyBjb21t
-aXQsIGtkdW1wIGlzIG5vdCB3b3JraW5nIGFueW1vcmUgb24gbXkgc2V0dXBzIHdpdGgKPiBOZWhh
-bGVtLCBXZXN0bWVyZSwgc2FuZGJyaWRnZS4KPiB0aGVzZSBzZXR1cCBhbGwgaGF2ZSBWVC1kIGVu
-YWJsZWQuCj4KPgo+IEFmdGVyIHJldmVydGluZyB0aGlzIGNvbW1pdCwga2R1bXAgaXMgd29ya2lu
-ZyBhZ2Fpbi4KPgo+IFNvIGFzc3VtZSB5b3UgbmVlZCB0byBkcm9wIHRoaXMgcGF0Y2guCgpJdCBz
-b3VuZHMgbGlrZSB0aGVyZSBpcyBhIGJ1ZyBpbiBpb2FwaWMgaW5pdGlhbGl6YXRpb24gaW4gdGhl
-IGNvbnRleHQgb2YKVlQtZC4gIFdoZXJlIGRvIHlvdSBmYWlsPwoKSXQgd291bGQgYmUgbXVjaCBi
-ZXR0ZXIgdG8gZGVidWcgdGhpcyB0aGFuIHRvIGJsaW5kbHkgcmV2ZXJ0IHRoaXMgcGF0Y2gsCmFz
-IHRoaXMgY2hhbmdlIGhhcyB0aGUgcG90ZW50aWFsIHRvIHNpZ25pZmljYW50bHkgaW5jcmVhc2Ug
-dGhlCnJlbGlhYmlsaXR5IG9mIHRoZSBrZHVtcCBwYXRoLgoKRXJpYwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+On Sat, Feb 11, 2012 at 7:13 PM, Eric W. Biederman
+<ebiederm@xmission.com> wrote:
+> Yinghai Lu <yinghai@kernel.org> writes:
+>> After reverting this commit, kdump is working again.
+>>
+>> So assume you need to drop this patch.
+>
+> It sounds like there is a bug in ioapic initialization in the context of
+> VT-d. =A0Where do you fail?
+>
+before get debug print out from second kernel, the system get reset.
+
+Yinghai
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
