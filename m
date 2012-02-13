@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yx0-f177.google.com ([209.85.213.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Rx0RV-000652-W6
- for kexec@lists.infradead.org; Mon, 13 Feb 2012 18:16:02 +0000
-Received: by yenm4 with SMTP id m4so2763791yen.36
- for <kexec@lists.infradead.org>; Mon, 13 Feb 2012 10:16:00 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <CAE9FiQVj12UCGbOe4wZfx-L8tdab-1si-RA=vBnNeZ7cUNqyyg@mail.gmail.com>
-References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
- <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
- <m1ipjc3fsk.fsf@fess.ebiederm.org>
- <CAE9FiQVLnyRB+pAqi22C5mCbHOOVKxsBhQKaB6P0p9f2LBL8bA@mail.gmail.com>
- <m1zkcmyjyd.fsf@fess.ebiederm.org>
- <CAE9FiQVj12UCGbOe4wZfx-L8tdab-1si-RA=vBnNeZ7cUNqyyg@mail.gmail.com>
-Date: Mon, 13 Feb 2012 10:16:00 -0800
-Message-ID: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rx497-0001H6-G1
+ for kexec@lists.infradead.org; Mon, 13 Feb 2012 22:13:18 +0000
+Date: Mon, 13 Feb 2012 17:12:58 -0500
+From: Don Zickus <dzickus@redhat.com>
 Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
  crash path
-From: Yinghai Lu <yinghai@kernel.org>
+Message-ID: <20120213221258.GP9751@redhat.com>
+References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
+ <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
+ <20120213152808.GD9751@redhat.com>
+ <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,22 +27,35 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: dzickus@redhat.com, linux-tip-commits@vger.kernel.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: linux-tip-commits@vger.kernel.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-On Mon, Feb 13, 2012 at 8:51 AM, Yinghai Lu <yinghai@kernel.org> wrote:
->> So I suspect we have a bug in our apic initialization somewhere, but
->> apic initialization should happen after printk are enabled. =A0Or at lea=
-st
->> after early printks so the reset YH is reporting doesn't make much sense.
->
-> will try Don's first version patch that only removing disable_IO_APIC.
+On Mon, Feb 13, 2012 at 08:52:19AM -0800, Yinghai Lu wrote:
+> On Mon, Feb 13, 2012 at 7:28 AM, Don Zickus <dzickus@redhat.com> wrote:
+> > On Sat, Feb 11, 2012 at 05:04:15PM -0800, Yinghai Lu wrote:
+> >> >
+> >> > v2: removed the disable lapic code too
+> >>
+> >> with this commit, kdump is not working anymore on my setups with
+> >> Nehalem, Westmere, sandbridge.
+> >> these setup all have VT-d enabled.
+> >
+> > Hi Yinghai,
+> >
+> > Thanks for the report. =A0Can you attach the .config you were using and=
+ what
+> > vendor you were using for Nehalem, Westmere and Sandybridge. =A0I'll tr=
+y to
+> > reproduce it in my lab.
+> =
 
-first version patch (only removing disable_IO_APIC) is working.
+> Sure, please check attached one
 
-Thanks
+Looks like I can reproduce the hang with my original patch and things work
+when we stick the disable_local_APIC() back in there.  I'll keep poking.
 
-Yinghai
+Cheers,
+Don
 
 _______________________________________________
 kexec mailing list
