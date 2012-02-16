@@ -1,27 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e28smtp09.in.ibm.com ([122.248.162.9])
+Received: from e28smtp04.in.ibm.com ([122.248.162.4])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RxsAc-0001Jz-Qg
- for kexec@lists.infradead.org; Thu, 16 Feb 2012 03:38:11 +0000
+ id 1RxzIu-0006As-EU
+ for kexec@lists.infradead.org; Thu, 16 Feb 2012 11:15:14 +0000
 Received: from /spool/local
- by e28smtp09.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
- for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
- Thu, 16 Feb 2012 09:08:04 +0530
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Thu, 16 Feb 2012 16:45:07 +0530
 Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
- by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q1G3bLje3707026
- for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 09:07:21 +0530
+ by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q1GBExSs3575936
+ for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 16:44:59 +0530
 Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
  by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q1G3bL4J009137
- for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 09:07:21 +0530
-From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Subject: [PATCH v1 4/4] [makedumpfile][ppc] PPC44x page translation definitions
-Date: Thu, 16 Feb 2012 09:07:07 +0530
-Message-ID: <20120216033656.7972.19596.stgit@suzukikp>
-In-Reply-To: <20120216033411.7972.77705.stgit@suzukikp>
-References: <20120216033411.7972.77705.stgit@suzukikp>
+ q1GBExlW012443
+ for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 16:44:59 +0530
+Subject: [RFC PATCH v7 00/10] fadump: Firmware-assisted dump support for
+ Powerpc.
+From: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
+Date: Thu, 16 Feb 2012 16:44:06 +0530
+Message-ID: <20120216111050.4733.38034.stgit@mars>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -35,66 +34,173 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: linuxppc-dev <linuxppc-dev@ozlabs.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Anton Blanchard <anton@samba.org>, Amerigo Wang <amwang@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Milton Miller <miltonm@bga.com>, Haren Myneni <hbabu@us.ibm.com>, Randy Dunlap <rdunlap@xenotime.net>, Paul Mackerras <paulus@samba.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Ananth Narayan <ananth@in.ibm.com>
 
-This patch defines the translation bits for PPC44x.
+Hi All,
+
+Please find the version 7 of the patchset that implements firmware-assisted
+dump mechanism to capture kernel crash dump for Powerpc architecture.
+Firmware-assisted dump is a robust mechanism to get reliable kernel crash
+dump with the assistance of firmware. This approach does not use kexec,
+instead firmware assists in booting the kdump kernel while preserving memory
+contents.
+
+- Firmware assisted dump (fadump) infrastructure is intended to replace
+  the existing phyp assisted dump.
+- Fadump uses the same firmware interfaces and memory reservation model
+  as phyp assisted dump.
+- Unlike phyp dump, fadump exports the memory dump through /proc/vmcore
+  in the ELF format in the same way as kdump. This helps us reuse the
+  kdump infrastructure for dump capture and filtering.
+- Unlike phyp dump, userspace tool does not need to refer any sysfs
+  interface while reading /proc/vmcore.
+- Unlike phyp dump, fadump allows user to release all the memory reserved
+  for dump, with a single operation of echo 1 > /sys/kernel/fadump_release_mem.
+- Once enabled through kernel boot parameter, fadump can be
+  started/stopped through /sys/kernel/fadump_registered interface and
+  can be easily integrated with kdump service start/stop init scripts.
+- Once the dump is copied out, the memory that held the dump is
+  immediately available to the running kernel. And therefore, unlike
+  kdump, fadump doesn't need a 2nd reboot to get back the system to
+  the production configuration.
+
+Fadump reuses much of the code written by Manish Ahuja and Linas Vepstas
+for the phyp assisted dump.
+
+I have tested the patches on following system configuration:
+1. LPAR on Power6 with 4GB RAM and 8 CPUs
+2. LPAR on Power7 with 2GB RAM and 20 CPUs
+3. LPAR on Power7 with 1TB RAM and 896 CPUs
+
+Please review the patchset and let me know your comments.
 
 
-Signed-off-by : Suzuki K. Poulose <suzuki@in.ibm.com>
+ChangeLog:
+
+Change in v7:
+-------------
+- Updated the documentation explaining the enhancement in fadump over old
+  phyp dump.
+- Re-based patches to commit d65b4e98d7 (v3.3-rc3)
+
+Change in v6:
+-------------
+- Use of_read_number and of_read_ulong while reading the dump sizes
+  from rtas node ibm,configure-kernel-kdump-sizes and few minor changes.
+- Kernel command line option 'fadump' now uses on/off values to
+  enable/disable fadump.
+- Added the last patch in this series 10/10 to remove phyp dump code.
+
+Change in v5:
+-------------
+- Added 'fadump_' prefix to all static functions defined.
+
+patch 02/10:
+- Merged patch 10/10 which introduces a config option CONFIG_FA_DUMP
+  for firmware assisted dump feature on Powerpc (ppc64) architecture.
+- Increased MIN_BOOT_MEM by 64M to avoid OOM issue during network
+  dump capture. When kdump infrastructure is configured to save vmcore
+  over network, we run into OOM issue while loading modules related to
+  network setup.
+
+Changes in v4:
+--------------
+patch 04/10:
+- Move the init_elfcore_header() function and 'memblock_num_regions' macro
+ from generic code to power specific code as these are used only by
+ firmware assisted dump implementation which is power specific feature.
+
+patch 05/10:
+- Fixes a issue where memblock_free() is invoked from build_cpu_notes()
+  function during error_out path. Invoke cpu_notes_buf_free() in error_out
+  path instead of memblock_free().
+
+Changes in v3:
+-------------
+- Re-factored the implementation to work with kdump service start/stop.
+  Introduce fadump_registered sysfs control file which will be used by
+  kdump init scripts to start/stop firmware assisted dump. echo 1 to
+  /sys/kernel/fadump_registered file for fadump registration and
+  echo 0 to /sys/kernel/fadump_registered file for fadump un-registration.
+- Introduced the locking mechanism to handle simultaneous writes to
+  sysfs control files fadump_registered and fadump_release_mem
+
+  Affected patches are: 01/10, 03/10, 08/10.
+
+Changes in v2:
+-------------
+patch 01/10:
+- Modified the documentation to reflect the change of fadump_region
+  file under debugfs filesystem.
+
+patch 02/10:
+- Modified to use standard pr_debug() macro.
+- Modified early_init_dt_scan_fw_dump() to get the size of
+  "ibm,configure-kernel-dump-sizes" property and use it to iterate through
+  an array of dump sections.
+- Introduced boot option 'fadump_reserve_mem=' to let user specify the
+  fadump boot memory to be reserved.
+
+patch 03/10:
+- Removed few debug print statements.
+- Moved the setup_fadump() call from setup_system() and now calling it
+  subsys_initcall.
+- Moved fadump_region attribute under debugfs.
+- Clear the TCE entries if firmware assisted dump is active.
+
+patch 05/10:
+- Moved the crash_fadump() invocation from generic code to panic notifier.
+- Introduced cpu_notes_buf_alloc() function to allocate cpu notes buffer
+  using get_free_pages().
+
+patch 08/10:
+- Introduced cpu_notes_buf_free() function to free memory allocated for
+  cpu notes buffer.
+
+Thanks,
+-Mahesh.
+
 ---
 
- arch/ppc.c     |   15 +++++++++++++++
- makedumpfile.h |    4 ++++
- 2 files changed, 19 insertions(+), 0 deletions(-)
+Mahesh Salgaonkar (10):
+      fadump: Add documentation for firmware-assisted dump.
+      fadump: Reserve the memory for firmware assisted dump.
+      fadump: Register for firmware assisted dump.
+      fadump: Initialize elfcore header and add PT_LOAD program headers.
+      fadump: Convert firmware-assisted cpu state dump data into elf notes.
+      fadump: Add PT_NOTE program header for vmcoreinfo
+      fadump: Introduce cleanup routine to invalidate /proc/vmcore.
+      fadump: Invalidate registration and release reserved memory for general use.
+      fadump: Invalidate the fadump registration during machine shutdown.
+      fadump: Remove the phyp assisted dump code.
 
-diff --git a/arch/ppc.c b/arch/ppc.c
-index 0ad2cf4..b63a617 100644
---- a/arch/ppc.c
-+++ b/arch/ppc.c
-@@ -37,12 +37,27 @@ struct platform {
- typedef int (*probe_func_t)(char *, struct platform *);
- 
- static int probe_default_platform(char *, struct platform*);
-+static int probe_ppc44x_platform(char *, struct platform*);
- 
- probe_func_t probe_platforms[] = {
-+	probe_ppc44x_platform,
- 	probe_default_platform,		/* This should be at the end of the list */
- 	NULL
- };
- 
-+static int probe_ppc44x_platform(char *s, struct platform *p)
-+{
-+	if (!strncmp(s, "ppc440", 6) || strcmp(s, "ppc470")) {
-+		p->name = strdup(s);
-+		p->pgdir_shift = PPC44x_PGDIR_SHIFT;
-+		p->ptrs_per_pte = PPC44x_PTRS_PER_PTE;
-+		p->pte_size = PPC44x_PTE_SIZE;
-+
-+		return TRUE;
-+	}
-+	return FALSE;
-+}
-+	
- static int probe_default_platform(char *s, struct platform *p)
- {
- 	/* Accept as the default platform */
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 3a5152c..430202b 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -543,6 +543,10 @@ do { \
- #define DEFAULT_PTRS_PER_PTE	(1024)
- #define DEFAULT_PTE_SIZE	(sizeof(unsigned long))
- 
-+#define PPC44x_PGDIR_SHIFT	(21)
-+#define PPC44x_PTRS_PER_PTE	(512)
-+#define PPC44x_PTE_SIZE 	(sizeof(unsigned long long))
-+
- #define PGDIR_SHIFT		(base_platform.pgdir_shift)
- #define PTRS_PER_PTE		(base_platform.ptrs_per_pte)
- #define PTE_SIZE		(base_platform.pte_size)
+
+ Documentation/powerpc/firmware-assisted-dump.txt |  270 +++++
+ Documentation/powerpc/phyp-assisted-dump.txt     |  127 --
+ arch/powerpc/Kconfig                             |   17 
+ arch/powerpc/include/asm/fadump.h                |  218 ++++
+ arch/powerpc/include/asm/phyp_dump.h             |   47 -
+ arch/powerpc/kernel/Makefile                     |    1 
+ arch/powerpc/kernel/fadump.c                     | 1312 ++++++++++++++++++++++
+ arch/powerpc/kernel/iommu.c                      |    8 
+ arch/powerpc/kernel/prom.c                       |   98 --
+ arch/powerpc/kernel/setup-common.c               |   14 
+ arch/powerpc/kernel/traps.c                      |    3 
+ arch/powerpc/mm/hash_utils_64.c                  |   11 
+ arch/powerpc/platforms/pseries/Makefile          |    1 
+ arch/powerpc/platforms/pseries/phyp_dump.c       |  513 ---------
+ fs/proc/vmcore.c                                 |   23 
+ 15 files changed, 1881 insertions(+), 782 deletions(-)
+ create mode 100644 Documentation/powerpc/firmware-assisted-dump.txt
+ delete mode 100644 Documentation/powerpc/phyp-assisted-dump.txt
+ create mode 100644 arch/powerpc/include/asm/fadump.h
+ delete mode 100644 arch/powerpc/include/asm/phyp_dump.h
+ create mode 100644 arch/powerpc/kernel/fadump.c
+ delete mode 100644 arch/powerpc/platforms/pseries/phyp_dump.c
+
+-- 
+-Mahesh
 
 
 _______________________________________________
