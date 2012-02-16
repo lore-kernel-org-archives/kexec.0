@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RxrTl-0007VI-SJ
- for kexec@lists.infradead.org; Thu, 16 Feb 2012 02:53:55 +0000
-Date: Wed, 15 Feb 2012 21:53:31 -0500
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
-Message-ID: <20120216025331.GT9751@redhat.com>
-References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
- <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
- <20120213152808.GD9751@redhat.com>
- <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
+Received: from e28smtp03.in.ibm.com ([122.248.162.3])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Rxs8i-000160-1v
+ for kexec@lists.infradead.org; Thu, 16 Feb 2012 03:36:13 +0000
+Received: from /spool/local
+ by e28smtp03.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Thu, 16 Feb 2012 09:06:03 +0530
+Received: from d28av04.in.ibm.com (d28av04.in.ibm.com [9.184.220.66])
+ by d28relay05.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q1G3ZWUM4501508
+ for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 09:05:33 +0530
+Received: from d28av04.in.ibm.com (loopback [127.0.0.1])
+ by d28av04.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q1G3ZWmY029601
+ for <kexec@lists.infradead.org>; Thu, 16 Feb 2012 14:35:32 +1100
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+Subject: [PATCH v1 0/4][makedumpfile] vmalloc translation support for PPC32
+Date: Thu, 16 Feb 2012 09:05:17 +0530
+Message-ID: <20120216033411.7972.77705.stgit@suzukikp>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,44 +29,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: linux-tip-commits@vger.kernel.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-On Mon, Feb 13, 2012 at 08:52:19AM -0800, Yinghai Lu wrote:
-> On Mon, Feb 13, 2012 at 7:28 AM, Don Zickus <dzickus@redhat.com> wrote:
-> > On Sat, Feb 11, 2012 at 05:04:15PM -0800, Yinghai Lu wrote:
-> >> >
-> >> > v2: removed the disable lapic code too
-> >>
-> >> with this commit, kdump is not working anymore on my setups with
-> >> Nehalem, Westmere, sandbridge.
-> >> these setup all have VT-d enabled.
-> >
-> > Hi Yinghai,
-> >
-> > Thanks for the report. =A0Can you attach the .config you were using and=
- what
-> > vendor you were using for Nehalem, Westmere and Sandybridge. =A0I'll tr=
-y to
-> > reproduce it in my lab.
-> =
+The series introduces an infrastructure to define platform specific
+bits for page translation for PPC and PPC44x support for vmalloc
+translation.
 
-> Sure, please check attached one
+This is similar to what we have implemented for Crash-utility.
 
-For some reason using gzip instead of xz makes things work for me with
-your config.
+The patches are based makedumpfile-1.4.2 + PPC32 support patches
+which is queued in for 1.4.3.
 
-CONFIG_KERNEL_GZIP=3Dy
-CONFIG_KERNEL_XZ=3Dn
+---
 
-Do you see the same thing?
+Suzuki K. Poulose (4):
+      [makedumpfile][ppc] PPC44x page translation definitions
+      [makedumpfile][ppc] Define platform descriptors for page translation
+      [makedumpfile][ppc] Generic vmalloc translation support
+      [makedumpfile] Add read_string routine
 
-Cheers,
-Don
+
+ arch/ppc.c     |  108 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ makedumpfile.c |   14 +++++++
+ makedumpfile.h |   21 +++++++++++
+ 3 files changed, 139 insertions(+), 4 deletions(-)
+
+-- 
+Suzuki Poulose
+
 
 _______________________________________________
 kexec mailing list
