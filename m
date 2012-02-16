@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2402:b800:7003:1:1::1])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RxWO5-000761-Tg
- for kexec@lists.infradead.org; Wed, 15 Feb 2012 04:22:38 +0000
-Date: Wed, 15 Feb 2012 15:16:09 +1100
-From: Paul Mackerras <paulus@samba.org>
-Subject: Re: [RFC PATCH v6 00/10] fadump: Firmware-assisted dump support for
- Powerpc.
-Message-ID: <20120215041608.GA15258@bloggs.ozlabs.ibm.com>
-References: <20111210064301.10195.3344.stgit@mars.in.ibm.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RxrTl-0007VI-SJ
+ for kexec@lists.infradead.org; Thu, 16 Feb 2012 02:53:55 +0000
+Date: Wed, 15 Feb 2012 21:53:31 -0500
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
+Message-ID: <20120216025331.GT9751@redhat.com>
+References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
+ <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
+ <20120213152808.GD9751@redhat.com>
+ <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20111210064301.10195.3344.stgit@mars.in.ibm.com>
+In-Reply-To: <CAE9FiQXX7BXKuVHZ9NRCEmeTnPj4zVJL5gf5eSp6b+4e3jN3EA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,38 +23,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
-Cc: Amerigo Wang <amwang@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kexec-ml <kexec@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Milton Miller <miltonm@bga.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, Anton Blanchard <anton@samba.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Yinghai Lu <yinghai@kernel.org>
+Cc: linux-tip-commits@vger.kernel.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-On Sat, Dec 10, 2011 at 12:19:59PM +0530, Mahesh J Salgaonkar wrote:
+On Mon, Feb 13, 2012 at 08:52:19AM -0800, Yinghai Lu wrote:
+> On Mon, Feb 13, 2012 at 7:28 AM, Don Zickus <dzickus@redhat.com> wrote:
+> > On Sat, Feb 11, 2012 at 05:04:15PM -0800, Yinghai Lu wrote:
+> >> >
+> >> > v2: removed the disable lapic code too
+> >>
+> >> with this commit, kdump is not working anymore on my setups with
+> >> Nehalem, Westmere, sandbridge.
+> >> these setup all have VT-d enabled.
+> >
+> > Hi Yinghai,
+> >
+> > Thanks for the report. =A0Can you attach the .config you were using and=
+ what
+> > vendor you were using for Nehalem, Westmere and Sandybridge. =A0I'll tr=
+y to
+> > reproduce it in my lab.
+> =
 
-> The most of the code implementation has been adapted from phyp assisted dump
-> implementation written by Linas Vepstas and Manish Ahuja.
+> Sure, please check attached one
 
-When you repost the series, please be explicit about what the
-relationship between the new fadump facility and the old phyp-dump
-is, both in the documentation you're adding and in the patch
-descriptions.
+For some reason using gzip instead of xz makes things work for me with
+your config.
 
-I gather that fadump uses the same firmware interfaces as phyp-dump,
-and can be characterised as a rewrite of phyp-dump.  It would be good
-if you would explicitly mention:
+CONFIG_KERNEL_GZIP=3Dy
+CONFIG_KERNEL_XZ=3Dn
 
-- What advantages fadump has over phyp-dump
-- Whether there are any capabilities that phyp-dump does that fadump
-  doesn't
-- What is different between fadump and phyp-dump in the interface to
-  usermode code
-- Any user-visible differences between how fadump operates compared to
-  phyp-dump.  For example, will users see a difference in how much
-  memory is available to the kernel?
+Do you see the same thing?
 
-Paul.
-
+Cheers,
+Don
 
 _______________________________________________
 kexec mailing list
