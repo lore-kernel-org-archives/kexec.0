@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gate.crashing.org ([63.228.1.57])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RyJM4-0000Zt-3v
- for kexec@lists.infradead.org; Fri, 17 Feb 2012 08:39:49 +0000
-Message-ID: <1329467969.2892.58.camel@pasglop>
-Subject: Re: [PATCH v1 0/4][makedumpfile] vmalloc translation support for PPC32
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Date: Fri, 17 Feb 2012 19:39:29 +1100
-In-Reply-To: <4F3DEBCF.8000201@in.ibm.com>
-References: <20120216033411.7972.77705.stgit@suzukikp>
- <20120217093220.0c2993a1.kumagai-atsushi@mxc.nes.nec.co.jp>
- <4F3DEBCF.8000201@in.ibm.com>
-Mime-Version: 1.0
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RyN4k-0007IZ-1D
+ for kexec@lists.infradead.org; Fri, 17 Feb 2012 12:38:14 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
+References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
+ <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
+ <m1ipjc3fsk.fsf@fess.ebiederm.org>
+ <CAE9FiQVLnyRB+pAqi22C5mCbHOOVKxsBhQKaB6P0p9f2LBL8bA@mail.gmail.com>
+ <m1zkcmyjyd.fsf@fess.ebiederm.org>
+ <CAE9FiQVj12UCGbOe4wZfx-L8tdab-1si-RA=vBnNeZ7cUNqyyg@mail.gmail.com>
+ <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
+ <20120216172735.GX9751@redhat.com>
+ <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
+ <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
+Date: Fri, 17 Feb 2012 04:41:01 -0800
+In-Reply-To: <m1y5s2ku36.fsf@fess.ebiederm.org> (Eric W. Biederman's message
+ of "Thu, 16 Feb 2012 19:38:21 -0800")
+Message-ID: <m1fwe9bpk2.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,34 +29,87 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, kexec@lists.infradead.org
+To: Don Zickus <dzickus@redhat.com>
+Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-On Fri, 2012-02-17 at 11:25 +0530, Suzuki K. Poulose wrote:
-> > Could you tell me what kind of data is stored in vmalloc region in
-> PPC ?
-> > I want to estimate importance of your patches for makedumpfile.
-> I know at least the modules are loaded in the vmalloc'd region. I have
-> Cc'ed linux-ppc dev. We should be able to get enough info from the
-> experts here.
-> 
-> Josh / Kumar / Others,
-> 
-> Could you please let us know your thoughts ?
-
-Modules, driver IO mappings, etc... I can see that being useful for
-crashdumps.
-
-Cheers,
-Ben.
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+ZWJpZWRlcm1AeG1pc3Npb24uY29tIChFcmljIFcuIEJpZWRlcm1hbikgd3JpdGVzOgoKPiBEb24g
+Wmlja3VzIDxkemlja3VzQHJlZGhhdC5jb20+IHdyaXRlczoKPgo+PiBPbiBUaHUsIEZlYiAxNiwg
+MjAxMiBhdCAwMTo1MzoyOVBNIC0wODAwLCBZaW5naGFpIEx1IHdyb3RlOgo+Pj4gT24gVGh1LCBG
+ZWIgMTYsIDIwMTIgYXQgOToyNyBBTSwgRG9uIFppY2t1cyA8ZHppY2t1c0ByZWRoYXQuY29tPiB3
+cm90ZToKPj4+IAo+Pj4gPiBTbyBJIHRoaW5rIEkgZmlndXJlZCBpdCBvdXQuIMKgSSB3ZW50IHRo
+cm91Z2ggYW5kIGNvbW1lbnRlZCBvdXQgY29kZSBpbgo+Pj4gPiBkaXNhYmxlX2xvY2FsX0FQSUMg
+dW50aWwgSSBuYXJyb3dlZCBpdCBkb3duIHRvIHRoZSBwaWVjZSBvZiBjb2RlIHRoYXQKPj4+ID4g
+bmVlZHMgdG8gYmUgZGlzYWJsZWQgZm9yIGl0IHRvIHdvcmsuCj4+PiA+Cj4+PiA+IFN1cnByaXNl
+LCBzdXJwcmlzZS4uLiBpdHMgTFZUUEMgb3IgcGVyZiEgOi0pIMKgQWN0dWFsbHkgaXQgaXMgdGhl
+Cj4+PiA+IG5taV93YXRjaGRvZyB3aGljaCB1c2VzIHBlcmYuIMKgTXkgdGhlb3J5IGlzIE5NSXMg
+YXJlIG5vdCBkaXNhYmxlZCBhbmQgb25lCj4+PiA+IGlzIGdlbmVyYXRlZCBieSB0aGUgbG9jYWwg
+YXBpYyBkdXJpbmcgZGVjb21wcmVzc2lvbiAoanVzdCBiYWQgdGltaW5nKSBhbmQKPj4+ID4gKnNw
+bGF0Ki4KPj4+ID4KPj4+ID4gWWluZ2hhaSwgeW91IGNhbiBwcm9iYWJseSBwcm92ZSB0aGlzIGJ5
+Cj4+PiA+Cj4+PiA+IGVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nCj4+PiA+
+Cj4+PiA+IHRoZW4gZG8geW91ciBrZHVtcCBjcmFzaCB0ZXN0Lgo+Pj4gCj4+PiB5ZXMuICB0aGF0
+IHdpbGwgbWFrZSBrZHVtcCBjcmFzaCB3b3JraW5nLgo+Pgo+PiBDb29sLiAgVGhhbmtzLgo+Pgo+
+PiBFcmljLAo+Pgo+PiBKdXN0IGxldCBtZSBrbm93IGhvdyB5b3Ugd2FudCB0byBoYW5kbGUgZGlz
+YWJsaW5nIE5NSXMgaW4gdGhlIGtleGVjIGluCj4+IHBhbmljIHNodXRkb3duIGNhc2UuCj4KPiBJ
+bnRlcmVzdGluZy4gIEFwcGFyZW50bHkgd2UgaGF2ZSBiZWVuIGF2b2lkaW5nIHRoaXMgcHJvYmxl
+bSBieSBhY2NpZGVudC4KPgo+IFRoYW5rcyBmb3IgaHVudGluZyB0aGlzIGRvd24uCj4KPiBUaGUg
+b3B0aW9ucyBJIGNhbiBzZWUgYXJlOgo+IC0gRW5zdXJlIHdlIGNhbiBoYW5kbGUgYW5kIGlnbm9y
+ZSBleGNlcHRpb25zIGxpa2UgdGhpcy4KPiAtIEFsd2F5cyBzaHV0b2ZmIHRoZSBsYXBpYyBhbmQg
+aW9hcGljIGVudHJpZXMgdGhhdCBjYW4gZ2VuZXJhdGUgdGhpcy4KPgo+IFRoZSBnb29kIG5ld3Mg
+aXMgdGhhdCBib3RoIHNvbHV0aW9ucyBzaG91bGQgYmUgbG9jayBmcmVlLgo+Cj4gVGhlIGN1cnJl
+bnQga2VybmVsIGJvb3QgY29kZSByZWxpZXMgb24gdGhlIGFzc3VtcHRpb24gdGhhdCBhbGwKPiBp
+bnRlcnJ1cHRzIGNhbiBiZSBkaXNhYmxlZC4gIEluIHRoaXMgY2FzZSB3aXRoIG5taSdzIHRoYXQg
+aXMgY2xlYXJseSBub3QKPiB0aGUgY2FzZS4KPgo+IFRoZSBtb3N0IHJvYnVzdCBzb2x1dGlvbiBh
+bmQgd2hhdCB3ZSB3YW50IHRvIGRvIGxvbmcgdGVybSBpcyB0bwo+IGluc3RhbGwgYW4gaWR0IHRo
+YXQgd2lsbCBzaW1wbHkgaWdub3JlIGFsbCBpbnRlcnJ1cHRzIHVudGlsIHRoZQo+IGlkdCBpcyBy
+ZXBsYWNlZC4gIFNpbmNlIHJlYWxseSBhbGwgd2UgbmVlZCB0byBkZWFsIHdpdGggaXMgdGhlIE5N
+SQo+IHZlY3Rvciwgd2hpY2ggaXMgdmVjdG9yICMyLCB3ZSBjYW4gaGF2ZSBhIHZlcnkgc21hbGwg
+aW50ZXJydXB0Cj4gZGVzY3JpcHRvciB0YWJsZS4KPgo+IFVuZm9ydHVuYXRlbHkgd2UgZ28gdGhy
+b3VnaCBzb21lIGNwdSBtb2RlIHN3aXRjaGVzIGluIC9zYmluL2tleGVjLAo+IGFsbG93aW5nIHVz
+IHRvIGVudGVyIHRoZSBrZXJuZWxzIDMyYml0IGVudHJ5IHBvaW50IGJlZm9yZSB3ZQo+IHJ1biB0
+aGUgZGVjb21wcmVzc2VyLCBzbyBhdCBmaXJzdCBnbGFuY2UgYm90aCAvc2Jpbi9rZXhlYyBhbmQg
+dGhlCj4ga2VybmVsIG5lZWQgdG8gYmUgZml4ZWQgaW4gYSBjb29yZGluYXRlZCBmYXNoaW9uLgo+
+Cj4gVGhlcmUgYXJlIHR3byB3YXMgSSBjYW4gc2VlIG9mIHJlbW92aW5nIHRoZSBuZWVkIGZvciBh
+biBleGFjdGx5Cj4gY29vcmRpbmF0ZWQgcmVsZWFzZS4KPiAtIERvY3VtZW50IHRoYXQgYW4gb2xk
+IC9zYmluL2tleGVjIHVzZXJzcGFjZSByZXF1aXJlcyB5b3Ugbm90IHRvCj4gICB1c2UgdGhlIG5t
+aSB3YXRjaGRvZyB3aXRoIG1vZGVybiBrZXJuZWxzLgo+IC0gRm9yIGEgc2hvcnQgd2hpbGUgc2lt
+cGx5IHJldGFpbiBjb2RlIHRoYXQgc3RvbXBzIHRoZSBubWkgd2F0Y2hkb2cuCj4gICAoQnV0IHN0
+aWxsIGxlYXZlcyB1cyBvcGVuIHRvIG90aGVyIGtpbmRzIG9mIG5taSdzKS4KPgo+IEdyci4gIExv
+b2tpbmcgYSBsaXR0bGUgbW9yZSBjbG9zZWx5LCBhbGwgdGhyb3VnaG91dCB0aGUgbGludXgga2Vy
+bmVsJ3MKPiBib290IHRoZXJlIGlzIHRoZSBhc3N1bXB0aW9uIHRoYXQgYW55IGludGVycnVwdCBk
+dXJpbmcgYm9vdCBpcyBhIGZhaWx1cmUKPiBvZiBzb21lIGtpbmQsIGFuZCBleGNlcHQgZm9yIGFu
+IGVycmFudCBubWkgd2F0Y2hkb2cgdGhhdCBpcyBhIHRydWUKPiBhc3N1bXB0aW9uLgo+Cj4gRG9u
+IEkgZ3Vlc3MgSSByZWFsbHkgaGF2ZSB0byByZWNvbW1lbmQgZGlzYWJsaW5nIHRoZSBubWkgd2F0
+Y2hkb2cgaW4gdGhlCj4ga2V4ZWMgb24gcGFuaWMgcGF0aCBpZiB3ZSBjYW4gZG8gc28gYXQgYWxs
+IHJlYXNvbmFibHkuIAo+Cj4gSSBsaWtlIHRoZSBpZGVhIG9mIGlnbm9yaW5nIG5taXMgZHVyaW5n
+IGJvb3QgYnV0IHRoYXQgc2VlbXMgdG8gYmUgYQo+IHNsaWdodGx5IGxhcmdlciBwcm9qZWN0IGFu
+ZCB3aXRoIGxpdHRsZSBwcmFjdGljYWwgaW1wcm92ZW1lbnQgaW4ga2V4ZWMKPiBvbiBwYW5pYyBx
+dWFsaXR5LiAgT3RoZXIgdGhhbiBnZXR0aW5nIHdoYXQgc2hvdWxkIGJlIG9uZSBvciB0d28KPiBp
+L28gd3JpdGVzIG91dCBvZiB0aGUga2V4ZWMgb24gcGFuaWMgcGF0aC4KCkhtbS4KClRoaW5raW5n
+IGFib3V0IGl0IGEgbGl0dGxlIG1vcmUuICBUaGUga2VybmVsJ3MgYm9vdCBwYXRoIGlzIGluY29u
+c2lzdGVudAp3aXRoIHRoZSByZXN0IG9mIHRoZSBrZXJuZWwncyBubWkgaGFuZGxpbmcuICBGb3Ig
+YW55dGhpbmcgZXhjZXB0aW9uCmV4Y2VwdCBhbiBubWkgc3RvcHBpbmcgYW5kIGdpdmluZyB1cCBp
+cyBmaW5lLiAgRm9yIGFuIG5taSBpdCBpcyB2ZXJ5CnJhcmUgZm9yIGFuIE5NSSB0byBzaWduYWwg
+YSB0cnVseSBuYXN0eSBmYWlsdXJlICh1c3VhbGx5IGl0IGp1c3QgbWVhbnMKc29tZW9uZSBzYXcg
+YSBiaXRmbGlwIHNvbWV3aGVyZSksIGFuZCB3ZSBjYW4gYWxtb3N0IGFsd2F5cyBjb250aW51ZQp3
+aXRob3V0IHByb2JsZW0uCgpJIHRoaW5rIGluIHByYWN0aWNlIHdlIHJlYWxseSBzaG91bGQgbWFr
+ZSBvdXIgYm9vdCBwYXRoIGNvbnNpc3RlbnQgd2l0aAp0aGUgcmVzdCBvZiB0aGUga2VybmVsIGFu
+ZCBpZ25vcmUvbG9nL3JlcG9ydCBubWlzIGJ1dCBub3QgZmFpbCBvbiB0aGVtLgpUcmlwbGUgZmF1
+bHRpbmcgKHRyaWdnZXIgYSBjcHUgcmVzZXQpIGFzIHdlIGRvIHRvZGF5IGp1c3Qgc2VlbXMgbGlr
+ZSBhCnJlY2lwZSBmb3IgZGVlcCBhbmQgY29uZnVzaW5nIG15c3RlcnksIGFuZCBub3QgYmVpbmcg
+aGVscGZ1bCB0byB0aGUKdXNlci4KCk15IHByZWZlcnJlZCBmaXggd291bGQgYmUgdG8gZml4IHRo
+ZSBib290IHBhdGggYW5kIC9zYmluL2tleGVjIHRvIGlnbm9yZQphbmQgcmVwb3J0IG5taXMgYXMg
+d2UgYm9vdCwgYXMgdGhhdCBpcyByZWFsbHkgd2hhdCB3ZSB3YW50IGxvbmcgdGVybSBhbmQKaXQg
+Z2l2ZXMgdXMgdGhlIG1vc3Qgcm9idXN0IHNvbHV0aW9uLgoKVGhlIGZpeCB3aXRoIGEgZ3VhcmFu
+dGVlIG9mIG5vIG1vcmUgc2NvcGUgY3JlZXAgaXMgdG8ganVzdCBkaXNhYmxlIHRoZQpubWkgd2F0
+Y2hkb2cgb24gdGhlIGtleGVjIG9uIHBhbmljIHBhdGguCgpEb24gaWYgeW91IGhhdmUgdGltZSBw
+bGVhc2UgZmlndXJlIG91dCBpcyBuZWVkZWQgdG8gaWdub3JlIG5taSdzIGFuZApwb3NzaWJsZSBy
+ZWNvcmQgYW5kL29yIHJlcG9ydCB0aGVtIHdoaWxlIHdlIGJvb3QsIG90aGVyd2lzZSBwbGVhc2Ug
+Y29vawp1cCBhIHBhdGNoIHRoYXQganVzdCBkaXNhYmxlcyB0aGUgbm1pIHdhdGNoZG9nIHdoZXJl
+dmVyIHdlIGFyZSBzZW5kaW5nCml0IGZyb20gKHRoZSBsb2NhbCBhcGljIG9yIHRoZSBpb2FwaWMp
+LgoKRXJpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
