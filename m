@@ -1,11 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RyN4k-0007IZ-1D
- for kexec@lists.infradead.org; Fri, 17 Feb 2012 12:38:14 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
+Received: from mail-yx0-f177.google.com ([209.85.213.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RyQ3i-0007Ll-Px
+ for kexec@lists.infradead.org; Fri, 17 Feb 2012 15:49:23 +0000
+Received: by yenm4 with SMTP id m4so2072226yen.36
+ for <kexec@lists.infradead.org>; Fri, 17 Feb 2012 07:49:16 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <m1fwe9bpk2.fsf@fess.ebiederm.org>
 References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
  <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
  <m1ipjc3fsk.fsf@fess.ebiederm.org>
@@ -15,12 +16,14 @@ References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
  <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
  <20120216172735.GX9751@redhat.com>
  <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
-Date: Fri, 17 Feb 2012 04:41:01 -0800
-In-Reply-To: <m1y5s2ku36.fsf@fess.ebiederm.org> (Eric W. Biederman's message
- of "Thu, 16 Feb 2012 19:38:21 -0800")
-Message-ID: <m1fwe9bpk2.fsf@fess.ebiederm.org>
-MIME-Version: 1.0
+ <20120216215603.GH9751@redhat.com>
+ <m1y5s2ku36.fsf@fess.ebiederm.org>
+ <m1fwe9bpk2.fsf@fess.ebiederm.org>
+Date: Sat, 18 Feb 2012 00:49:16 +0900
+Message-ID: <CABOkKT21zhyMwMmbR9WTipk5e=y_qMZ8ByG=njatjKbFLZW+xQ@mail.gmail.com>
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
+From: HATAYAMA Daisuke <d.hatayama@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,87 +32,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Don Zickus <dzickus@redhat.com>, linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "d.hatayama" <d.hatayama@jp.fujitsu.com>, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-ZWJpZWRlcm1AeG1pc3Npb24uY29tIChFcmljIFcuIEJpZWRlcm1hbikgd3JpdGVzOgoKPiBEb24g
-Wmlja3VzIDxkemlja3VzQHJlZGhhdC5jb20+IHdyaXRlczoKPgo+PiBPbiBUaHUsIEZlYiAxNiwg
-MjAxMiBhdCAwMTo1MzoyOVBNIC0wODAwLCBZaW5naGFpIEx1IHdyb3RlOgo+Pj4gT24gVGh1LCBG
-ZWIgMTYsIDIwMTIgYXQgOToyNyBBTSwgRG9uIFppY2t1cyA8ZHppY2t1c0ByZWRoYXQuY29tPiB3
-cm90ZToKPj4+IAo+Pj4gPiBTbyBJIHRoaW5rIEkgZmlndXJlZCBpdCBvdXQuIMKgSSB3ZW50IHRo
-cm91Z2ggYW5kIGNvbW1lbnRlZCBvdXQgY29kZSBpbgo+Pj4gPiBkaXNhYmxlX2xvY2FsX0FQSUMg
-dW50aWwgSSBuYXJyb3dlZCBpdCBkb3duIHRvIHRoZSBwaWVjZSBvZiBjb2RlIHRoYXQKPj4+ID4g
-bmVlZHMgdG8gYmUgZGlzYWJsZWQgZm9yIGl0IHRvIHdvcmsuCj4+PiA+Cj4+PiA+IFN1cnByaXNl
-LCBzdXJwcmlzZS4uLiBpdHMgTFZUUEMgb3IgcGVyZiEgOi0pIMKgQWN0dWFsbHkgaXQgaXMgdGhl
-Cj4+PiA+IG5taV93YXRjaGRvZyB3aGljaCB1c2VzIHBlcmYuIMKgTXkgdGhlb3J5IGlzIE5NSXMg
-YXJlIG5vdCBkaXNhYmxlZCBhbmQgb25lCj4+PiA+IGlzIGdlbmVyYXRlZCBieSB0aGUgbG9jYWwg
-YXBpYyBkdXJpbmcgZGVjb21wcmVzc2lvbiAoanVzdCBiYWQgdGltaW5nKSBhbmQKPj4+ID4gKnNw
-bGF0Ki4KPj4+ID4KPj4+ID4gWWluZ2hhaSwgeW91IGNhbiBwcm9iYWJseSBwcm92ZSB0aGlzIGJ5
-Cj4+PiA+Cj4+PiA+IGVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nCj4+PiA+
-Cj4+PiA+IHRoZW4gZG8geW91ciBrZHVtcCBjcmFzaCB0ZXN0Lgo+Pj4gCj4+PiB5ZXMuICB0aGF0
-IHdpbGwgbWFrZSBrZHVtcCBjcmFzaCB3b3JraW5nLgo+Pgo+PiBDb29sLiAgVGhhbmtzLgo+Pgo+
-PiBFcmljLAo+Pgo+PiBKdXN0IGxldCBtZSBrbm93IGhvdyB5b3Ugd2FudCB0byBoYW5kbGUgZGlz
-YWJsaW5nIE5NSXMgaW4gdGhlIGtleGVjIGluCj4+IHBhbmljIHNodXRkb3duIGNhc2UuCj4KPiBJ
-bnRlcmVzdGluZy4gIEFwcGFyZW50bHkgd2UgaGF2ZSBiZWVuIGF2b2lkaW5nIHRoaXMgcHJvYmxl
-bSBieSBhY2NpZGVudC4KPgo+IFRoYW5rcyBmb3IgaHVudGluZyB0aGlzIGRvd24uCj4KPiBUaGUg
-b3B0aW9ucyBJIGNhbiBzZWUgYXJlOgo+IC0gRW5zdXJlIHdlIGNhbiBoYW5kbGUgYW5kIGlnbm9y
-ZSBleGNlcHRpb25zIGxpa2UgdGhpcy4KPiAtIEFsd2F5cyBzaHV0b2ZmIHRoZSBsYXBpYyBhbmQg
-aW9hcGljIGVudHJpZXMgdGhhdCBjYW4gZ2VuZXJhdGUgdGhpcy4KPgo+IFRoZSBnb29kIG5ld3Mg
-aXMgdGhhdCBib3RoIHNvbHV0aW9ucyBzaG91bGQgYmUgbG9jayBmcmVlLgo+Cj4gVGhlIGN1cnJl
-bnQga2VybmVsIGJvb3QgY29kZSByZWxpZXMgb24gdGhlIGFzc3VtcHRpb24gdGhhdCBhbGwKPiBp
-bnRlcnJ1cHRzIGNhbiBiZSBkaXNhYmxlZC4gIEluIHRoaXMgY2FzZSB3aXRoIG5taSdzIHRoYXQg
-aXMgY2xlYXJseSBub3QKPiB0aGUgY2FzZS4KPgo+IFRoZSBtb3N0IHJvYnVzdCBzb2x1dGlvbiBh
-bmQgd2hhdCB3ZSB3YW50IHRvIGRvIGxvbmcgdGVybSBpcyB0bwo+IGluc3RhbGwgYW4gaWR0IHRo
-YXQgd2lsbCBzaW1wbHkgaWdub3JlIGFsbCBpbnRlcnJ1cHRzIHVudGlsIHRoZQo+IGlkdCBpcyBy
-ZXBsYWNlZC4gIFNpbmNlIHJlYWxseSBhbGwgd2UgbmVlZCB0byBkZWFsIHdpdGggaXMgdGhlIE5N
-SQo+IHZlY3Rvciwgd2hpY2ggaXMgdmVjdG9yICMyLCB3ZSBjYW4gaGF2ZSBhIHZlcnkgc21hbGwg
-aW50ZXJydXB0Cj4gZGVzY3JpcHRvciB0YWJsZS4KPgo+IFVuZm9ydHVuYXRlbHkgd2UgZ28gdGhy
-b3VnaCBzb21lIGNwdSBtb2RlIHN3aXRjaGVzIGluIC9zYmluL2tleGVjLAo+IGFsbG93aW5nIHVz
-IHRvIGVudGVyIHRoZSBrZXJuZWxzIDMyYml0IGVudHJ5IHBvaW50IGJlZm9yZSB3ZQo+IHJ1biB0
-aGUgZGVjb21wcmVzc2VyLCBzbyBhdCBmaXJzdCBnbGFuY2UgYm90aCAvc2Jpbi9rZXhlYyBhbmQg
-dGhlCj4ga2VybmVsIG5lZWQgdG8gYmUgZml4ZWQgaW4gYSBjb29yZGluYXRlZCBmYXNoaW9uLgo+
-Cj4gVGhlcmUgYXJlIHR3byB3YXMgSSBjYW4gc2VlIG9mIHJlbW92aW5nIHRoZSBuZWVkIGZvciBh
-biBleGFjdGx5Cj4gY29vcmRpbmF0ZWQgcmVsZWFzZS4KPiAtIERvY3VtZW50IHRoYXQgYW4gb2xk
-IC9zYmluL2tleGVjIHVzZXJzcGFjZSByZXF1aXJlcyB5b3Ugbm90IHRvCj4gICB1c2UgdGhlIG5t
-aSB3YXRjaGRvZyB3aXRoIG1vZGVybiBrZXJuZWxzLgo+IC0gRm9yIGEgc2hvcnQgd2hpbGUgc2lt
-cGx5IHJldGFpbiBjb2RlIHRoYXQgc3RvbXBzIHRoZSBubWkgd2F0Y2hkb2cuCj4gICAoQnV0IHN0
-aWxsIGxlYXZlcyB1cyBvcGVuIHRvIG90aGVyIGtpbmRzIG9mIG5taSdzKS4KPgo+IEdyci4gIExv
-b2tpbmcgYSBsaXR0bGUgbW9yZSBjbG9zZWx5LCBhbGwgdGhyb3VnaG91dCB0aGUgbGludXgga2Vy
-bmVsJ3MKPiBib290IHRoZXJlIGlzIHRoZSBhc3N1bXB0aW9uIHRoYXQgYW55IGludGVycnVwdCBk
-dXJpbmcgYm9vdCBpcyBhIGZhaWx1cmUKPiBvZiBzb21lIGtpbmQsIGFuZCBleGNlcHQgZm9yIGFu
-IGVycmFudCBubWkgd2F0Y2hkb2cgdGhhdCBpcyBhIHRydWUKPiBhc3N1bXB0aW9uLgo+Cj4gRG9u
-IEkgZ3Vlc3MgSSByZWFsbHkgaGF2ZSB0byByZWNvbW1lbmQgZGlzYWJsaW5nIHRoZSBubWkgd2F0
-Y2hkb2cgaW4gdGhlCj4ga2V4ZWMgb24gcGFuaWMgcGF0aCBpZiB3ZSBjYW4gZG8gc28gYXQgYWxs
-IHJlYXNvbmFibHkuIAo+Cj4gSSBsaWtlIHRoZSBpZGVhIG9mIGlnbm9yaW5nIG5taXMgZHVyaW5n
-IGJvb3QgYnV0IHRoYXQgc2VlbXMgdG8gYmUgYQo+IHNsaWdodGx5IGxhcmdlciBwcm9qZWN0IGFu
-ZCB3aXRoIGxpdHRsZSBwcmFjdGljYWwgaW1wcm92ZW1lbnQgaW4ga2V4ZWMKPiBvbiBwYW5pYyBx
-dWFsaXR5LiAgT3RoZXIgdGhhbiBnZXR0aW5nIHdoYXQgc2hvdWxkIGJlIG9uZSBvciB0d28KPiBp
-L28gd3JpdGVzIG91dCBvZiB0aGUga2V4ZWMgb24gcGFuaWMgcGF0aC4KCkhtbS4KClRoaW5raW5n
-IGFib3V0IGl0IGEgbGl0dGxlIG1vcmUuICBUaGUga2VybmVsJ3MgYm9vdCBwYXRoIGlzIGluY29u
-c2lzdGVudAp3aXRoIHRoZSByZXN0IG9mIHRoZSBrZXJuZWwncyBubWkgaGFuZGxpbmcuICBGb3Ig
-YW55dGhpbmcgZXhjZXB0aW9uCmV4Y2VwdCBhbiBubWkgc3RvcHBpbmcgYW5kIGdpdmluZyB1cCBp
-cyBmaW5lLiAgRm9yIGFuIG5taSBpdCBpcyB2ZXJ5CnJhcmUgZm9yIGFuIE5NSSB0byBzaWduYWwg
-YSB0cnVseSBuYXN0eSBmYWlsdXJlICh1c3VhbGx5IGl0IGp1c3QgbWVhbnMKc29tZW9uZSBzYXcg
-YSBiaXRmbGlwIHNvbWV3aGVyZSksIGFuZCB3ZSBjYW4gYWxtb3N0IGFsd2F5cyBjb250aW51ZQp3
-aXRob3V0IHByb2JsZW0uCgpJIHRoaW5rIGluIHByYWN0aWNlIHdlIHJlYWxseSBzaG91bGQgbWFr
-ZSBvdXIgYm9vdCBwYXRoIGNvbnNpc3RlbnQgd2l0aAp0aGUgcmVzdCBvZiB0aGUga2VybmVsIGFu
-ZCBpZ25vcmUvbG9nL3JlcG9ydCBubWlzIGJ1dCBub3QgZmFpbCBvbiB0aGVtLgpUcmlwbGUgZmF1
-bHRpbmcgKHRyaWdnZXIgYSBjcHUgcmVzZXQpIGFzIHdlIGRvIHRvZGF5IGp1c3Qgc2VlbXMgbGlr
-ZSBhCnJlY2lwZSBmb3IgZGVlcCBhbmQgY29uZnVzaW5nIG15c3RlcnksIGFuZCBub3QgYmVpbmcg
-aGVscGZ1bCB0byB0aGUKdXNlci4KCk15IHByZWZlcnJlZCBmaXggd291bGQgYmUgdG8gZml4IHRo
-ZSBib290IHBhdGggYW5kIC9zYmluL2tleGVjIHRvIGlnbm9yZQphbmQgcmVwb3J0IG5taXMgYXMg
-d2UgYm9vdCwgYXMgdGhhdCBpcyByZWFsbHkgd2hhdCB3ZSB3YW50IGxvbmcgdGVybSBhbmQKaXQg
-Z2l2ZXMgdXMgdGhlIG1vc3Qgcm9idXN0IHNvbHV0aW9uLgoKVGhlIGZpeCB3aXRoIGEgZ3VhcmFu
-dGVlIG9mIG5vIG1vcmUgc2NvcGUgY3JlZXAgaXMgdG8ganVzdCBkaXNhYmxlIHRoZQpubWkgd2F0
-Y2hkb2cgb24gdGhlIGtleGVjIG9uIHBhbmljIHBhdGguCgpEb24gaWYgeW91IGhhdmUgdGltZSBw
-bGVhc2UgZmlndXJlIG91dCBpcyBuZWVkZWQgdG8gaWdub3JlIG5taSdzIGFuZApwb3NzaWJsZSBy
-ZWNvcmQgYW5kL29yIHJlcG9ydCB0aGVtIHdoaWxlIHdlIGJvb3QsIG90aGVyd2lzZSBwbGVhc2Ug
-Y29vawp1cCBhIHBhdGNoIHRoYXQganVzdCBkaXNhYmxlcyB0aGUgbm1pIHdhdGNoZG9nIHdoZXJl
-dmVyIHdlIGFyZSBzZW5kaW5nCml0IGZyb20gKHRoZSBsb2NhbCBhcGljIG9yIHRoZSBpb2FwaWMp
-LgoKRXJpYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+2012/2/17 Eric W. Biederman <ebiederm@xmission.com>:
+> ebiederm@xmission.com (Eric W. Biederman) writes:
+>
+>> Don Zickus <dzickus@redhat.com> writes:
+>>
+>>> On Thu, Feb 16, 2012 at 01:53:29PM -0800, Yinghai Lu wrote:
+>>>> On Thu, Feb 16, 2012 at 9:27 AM, Don Zickus <dzickus@redhat.com> wrote:
+>>>>
+>>>> > So I think I figured it out. =A0I went through and commented out cod=
+e in
+>>>> > disable_local_APIC until I narrowed it down to the piece of code that
+>>>> > needs to be disabled for it to work.
+>>>> >
+>>>> > Surprise, surprise... its LVTPC or perf! :-) =A0Actually it is the
+>>>> > nmi_watchdog which uses perf. =A0My theory is NMIs are not disabled =
+and one
+>>>> > is generated by the local apic during decompression (just bad timing=
+) and
+>>>> > *splat*.
+>>>> >
+>>>> > Yinghai, you can probably prove this by
+>>>> >
+>>>> > echo 0 > /proc/sys/kernel/nmi_watchdog
+>>>> >
+>>>> > then do your kdump crash test.
+>>>>
+>>>> yes. =A0that will make kdump crash working.
+>>>
+>>> Cool. =A0Thanks.
+>>>
+>>> Eric,
+>>>
+>>> Just let me know how you want to handle disabling NMIs in the kexec in
+>>> panic shutdown case.
+>>
+>> Interesting. =A0Apparently we have been avoiding this problem by acciden=
+t.
+>>
+>> Thanks for hunting this down.
+>>
+>> The options I can see are:
+>> - Ensure we can handle and ignore exceptions like this.
+>> - Always shutoff the lapic and ioapic entries that can generate this.
+>>
+>> The good news is that both solutions should be lock free.
+>>
+>> The current kernel boot code relies on the assumption that all
+>> interrupts can be disabled. =A0In this case with nmi's that is clearly n=
+ot
+>> the case.
+>>
+>> The most robust solution and what we want to do long term is to
+>> install an idt that will simply ignore all interrupts until the
+>> idt is replaced. =A0Since really all we need to deal with is the NMI
+>> vector, which is vector #2, we can have a very small interrupt
+>> descriptor table.
+>>
+>> Unfortunately we go through some cpu mode switches in /sbin/kexec,
+>> allowing us to enter the kernels 32bit entry point before we
+>> run the decompresser, so at first glance both /sbin/kexec and the
+>> kernel need to be fixed in a coordinated fashion.
+>>
+>> There are two was I can see of removing the need for an exactly
+>> coordinated release.
+>> - Document that an old /sbin/kexec userspace requires you not to
+>> =A0 use the nmi watchdog with modern kernels.
+>> - For a short while simply retain code that stomps the nmi watchdog.
+>> =A0 (But still leaves us open to other kinds of nmi's).
+>>
+>> Grr. =A0Looking a little more closely, all throughout the linux kernel's
+>> boot there is the assumption that any interrupt during boot is a failure
+>> of some kind, and except for an errant nmi watchdog that is a true
+>> assumption.
+>>
+>> Don I guess I really have to recommend disabling the nmi watchdog in the
+>> kexec on panic path if we can do so at all reasonably.
+>>
+>> I like the idea of ignoring nmis during boot but that seems to be a
+>> slightly larger project and with little practical improvement in kexec
+>> on panic quality. =A0Other than getting what should be one or two
+>> i/o writes out of the kexec on panic path.
+>
+> Hmm.
+>
+> Thinking about it a little more. =A0The kernel's boot path is inconsistent
+> with the rest of the kernel's nmi handling. =A0For anything exception
+> except an nmi stopping and giving up is fine. =A0For an nmi it is very
+> rare for an NMI to signal a truly nasty failure (usually it just means
+> someone saw a bitflip somewhere), and we can almost always continue
+> without problem.
+>
+> I think in practice we really should make our boot path consistent with
+> the rest of the kernel and ignore/log/report nmis but not fail on them.
+> Triple faulting (trigger a cpu reset) as we do today just seems like a
+> recipe for deep and confusing mystery, and not being helpful to the
+> user.
+>
+> My preferred fix would be to fix the boot path and /sbin/kexec to ignore
+> and report nmis as we boot, as that is really what we want long term and
+> it gives us the most robust solution.
+>
+> The fix with a guarantee of no more scope creep is to just disable the
+> nmi watchdog on the kexec on panic path.
+>
+> Don if you have time please figure out is needed to ignore nmi's and
+> possible record and/or report them while we boot, otherwise please cook
+> up a patch that just disables the nmi watchdog wherever we are sending
+> it from (the local apic or the ioapic).
+>
+> Eric
+
+A few days ago I investigted the case where system is reseted due to
+triple fault caused by the NMI after idt is disabled in
+machine_kexec. I didn't see the reset when trigering the kdump with
+NMI since the NMI is masked until next iret instruction executed as
+described in 6.7.2. Handling Multiple NMIs of Intel Manual Vol.3A.
+The NMI mask remains untill the first iret execution on the 2nd
+kernel: just the return path of the first kernel_thread invocation for
+init process. The exact path is:
+
+  switch_to
+  -> ret_from_fork
+     -> int_ret_from_sys_call
+        -> retint_restore_args
+           -> irq_return
+
+At that phase idt is already set up and kdump works.
+
+From the discussion I interpret kdump doesn't assume this behaviour,
+right?
+
+BTW, does anyone know the detail of the NMI mask? I couldn't figure
+out about it from the Intel spec more than ``certain hardware
+conditions''... I expect those who look at here are x86 NMI experts.
+
+Thanks.
+HATAYAMA, Daisuke
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
