@@ -1,26 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1RyEc7-0003yL-N5
- for kexec@lists.infradead.org; Fri, 17 Feb 2012 03:36:05 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
-References: <tip-d9bc9be89629445758670220787683e37c93f6c1@git.kernel.org>
- <CAE9FiQWRjvu_uNcx_bJXYHeg4D4k6YzHHmSudsq7EyubLi7+nw@mail.gmail.com>
- <m1ipjc3fsk.fsf@fess.ebiederm.org>
- <CAE9FiQVLnyRB+pAqi22C5mCbHOOVKxsBhQKaB6P0p9f2LBL8bA@mail.gmail.com>
- <m1zkcmyjyd.fsf@fess.ebiederm.org>
- <CAE9FiQVj12UCGbOe4wZfx-L8tdab-1si-RA=vBnNeZ7cUNqyyg@mail.gmail.com>
- <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
- <20120216172735.GX9751@redhat.com>
- <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com>
-Date: Thu, 16 Feb 2012 19:38:21 -0800
-In-Reply-To: <20120216215603.GH9751@redhat.com> (Don Zickus's message of "Thu, 
- 16 Feb 2012 16:56:03 -0500")
-Message-ID: <m1y5s2ku36.fsf@fess.ebiederm.org>
+Received: from e28smtp06.in.ibm.com ([122.248.162.6])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1RyGnE-0005NV-K0
+ for kexec@lists.infradead.org; Fri, 17 Feb 2012 05:55:41 +0000
+Received: from /spool/local
+ by e28smtp06.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Fri, 17 Feb 2012 11:25:35 +0530
+Received: from d28av03.in.ibm.com (d28av03.in.ibm.com [9.184.220.65])
+ by d28relay03.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q1H5tVJZ3137650
+ for <kexec@lists.infradead.org>; Fri, 17 Feb 2012 11:25:31 +0530
+Received: from d28av03.in.ibm.com (loopback [127.0.0.1])
+ by d28av03.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q1H5tUTg000409
+ for <kexec@lists.infradead.org>; Fri, 17 Feb 2012 16:55:30 +1100
+Message-ID: <4F3DEBCF.8000201@in.ibm.com>
+Date: Fri, 17 Feb 2012 11:25:27 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v1 0/4][makedumpfile] vmalloc translation support for PPC32
+References: <20120216033411.7972.77705.stgit@suzukikp>
+ <20120217093220.0c2993a1.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120217093220.0c2993a1.kumagai-atsushi@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,63 +32,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: linux ppc dev <linuxppc-dev@lists.ozlabs.org>, Josh Boyer <jwboyer@gmail.com>, kexec@lists.infradead.org, Kumar Gala <galak@kernel.crashing.org>
 
-RG9uIFppY2t1cyA8ZHppY2t1c0ByZWRoYXQuY29tPiB3cml0ZXM6Cgo+IE9uIFRodSwgRmViIDE2
-LCAyMDEyIGF0IDAxOjUzOjI5UE0gLTA4MDAsIFlpbmdoYWkgTHUgd3JvdGU6Cj4+IE9uIFRodSwg
-RmViIDE2LCAyMDEyIGF0IDk6MjcgQU0sIERvbiBaaWNrdXMgPGR6aWNrdXNAcmVkaGF0LmNvbT4g
-d3JvdGU6Cj4+IAo+PiA+IFNvIEkgdGhpbmsgSSBmaWd1cmVkIGl0IG91dC4gwqBJIHdlbnQgdGhy
-b3VnaCBhbmQgY29tbWVudGVkIG91dCBjb2RlIGluCj4+ID4gZGlzYWJsZV9sb2NhbF9BUElDIHVu
-dGlsIEkgbmFycm93ZWQgaXQgZG93biB0byB0aGUgcGllY2Ugb2YgY29kZSB0aGF0Cj4+ID4gbmVl
-ZHMgdG8gYmUgZGlzYWJsZWQgZm9yIGl0IHRvIHdvcmsuCj4+ID4KPj4gPiBTdXJwcmlzZSwgc3Vy
-cHJpc2UuLi4gaXRzIExWVFBDIG9yIHBlcmYhIDotKSDCoEFjdHVhbGx5IGl0IGlzIHRoZQo+PiA+
-IG5taV93YXRjaGRvZyB3aGljaCB1c2VzIHBlcmYuIMKgTXkgdGhlb3J5IGlzIE5NSXMgYXJlIG5v
-dCBkaXNhYmxlZCBhbmQgb25lCj4+ID4gaXMgZ2VuZXJhdGVkIGJ5IHRoZSBsb2NhbCBhcGljIGR1
-cmluZyBkZWNvbXByZXNzaW9uIChqdXN0IGJhZCB0aW1pbmcpIGFuZAo+PiA+ICpzcGxhdCouCj4+
-ID4KPj4gPiBZaW5naGFpLCB5b3UgY2FuIHByb2JhYmx5IHByb3ZlIHRoaXMgYnkKPj4gPgo+PiA+
-IGVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvbm1pX3dhdGNoZG9nCj4+ID4KPj4gPiB0aGVuIGRv
-IHlvdXIga2R1bXAgY3Jhc2ggdGVzdC4KPj4gCj4+IHllcy4gIHRoYXQgd2lsbCBtYWtlIGtkdW1w
-IGNyYXNoIHdvcmtpbmcuCj4KPiBDb29sLiAgVGhhbmtzLgo+Cj4gRXJpYywKPgo+IEp1c3QgbGV0
-IG1lIGtub3cgaG93IHlvdSB3YW50IHRvIGhhbmRsZSBkaXNhYmxpbmcgTk1JcyBpbiB0aGUga2V4
-ZWMgaW4KPiBwYW5pYyBzaHV0ZG93biBjYXNlLgoKSW50ZXJlc3RpbmcuICBBcHBhcmVudGx5IHdl
-IGhhdmUgYmVlbiBhdm9pZGluZyB0aGlzIHByb2JsZW0gYnkgYWNjaWRlbnQuCgpUaGFua3MgZm9y
-IGh1bnRpbmcgdGhpcyBkb3duLgoKVGhlIG9wdGlvbnMgSSBjYW4gc2VlIGFyZToKLSBFbnN1cmUg
-d2UgY2FuIGhhbmRsZSBhbmQgaWdub3JlIGV4Y2VwdGlvbnMgbGlrZSB0aGlzLgotIEFsd2F5cyBz
-aHV0b2ZmIHRoZSBsYXBpYyBhbmQgaW9hcGljIGVudHJpZXMgdGhhdCBjYW4gZ2VuZXJhdGUgdGhp
-cy4KClRoZSBnb29kIG5ld3MgaXMgdGhhdCBib3RoIHNvbHV0aW9ucyBzaG91bGQgYmUgbG9jayBm
-cmVlLgoKVGhlIGN1cnJlbnQga2VybmVsIGJvb3QgY29kZSByZWxpZXMgb24gdGhlIGFzc3VtcHRp
-b24gdGhhdCBhbGwKaW50ZXJydXB0cyBjYW4gYmUgZGlzYWJsZWQuICBJbiB0aGlzIGNhc2Ugd2l0
-aCBubWkncyB0aGF0IGlzIGNsZWFybHkgbm90CnRoZSBjYXNlLgoKVGhlIG1vc3Qgcm9idXN0IHNv
-bHV0aW9uIGFuZCB3aGF0IHdlIHdhbnQgdG8gZG8gbG9uZyB0ZXJtIGlzIHRvCmluc3RhbGwgYW4g
-aWR0IHRoYXQgd2lsbCBzaW1wbHkgaWdub3JlIGFsbCBpbnRlcnJ1cHRzIHVudGlsIHRoZQppZHQg
-aXMgcmVwbGFjZWQuICBTaW5jZSByZWFsbHkgYWxsIHdlIG5lZWQgdG8gZGVhbCB3aXRoIGlzIHRo
-ZSBOTUkKdmVjdG9yLCB3aGljaCBpcyB2ZWN0b3IgIzIsIHdlIGNhbiBoYXZlIGEgdmVyeSBzbWFs
-bCBpbnRlcnJ1cHQKZGVzY3JpcHRvciB0YWJsZS4KClVuZm9ydHVuYXRlbHkgd2UgZ28gdGhyb3Vn
-aCBzb21lIGNwdSBtb2RlIHN3aXRjaGVzIGluIC9zYmluL2tleGVjLAphbGxvd2luZyB1cyB0byBl
-bnRlciB0aGUga2VybmVscyAzMmJpdCBlbnRyeSBwb2ludCBiZWZvcmUgd2UKcnVuIHRoZSBkZWNv
-bXByZXNzZXIsIHNvIGF0IGZpcnN0IGdsYW5jZSBib3RoIC9zYmluL2tleGVjIGFuZCB0aGUKa2Vy
-bmVsIG5lZWQgdG8gYmUgZml4ZWQgaW4gYSBjb29yZGluYXRlZCBmYXNoaW9uLgoKVGhlcmUgYXJl
-IHR3byB3YXMgSSBjYW4gc2VlIG9mIHJlbW92aW5nIHRoZSBuZWVkIGZvciBhbiBleGFjdGx5CmNv
-b3JkaW5hdGVkIHJlbGVhc2UuCi0gRG9jdW1lbnQgdGhhdCBhbiBvbGQgL3NiaW4va2V4ZWMgdXNl
-cnNwYWNlIHJlcXVpcmVzIHlvdSBub3QgdG8KICB1c2UgdGhlIG5taSB3YXRjaGRvZyB3aXRoIG1v
-ZGVybiBrZXJuZWxzLgotIEZvciBhIHNob3J0IHdoaWxlIHNpbXBseSByZXRhaW4gY29kZSB0aGF0
-IHN0b21wcyB0aGUgbm1pIHdhdGNoZG9nLgogIChCdXQgc3RpbGwgbGVhdmVzIHVzIG9wZW4gdG8g
-b3RoZXIga2luZHMgb2Ygbm1pJ3MpLgoKR3JyLiAgTG9va2luZyBhIGxpdHRsZSBtb3JlIGNsb3Nl
-bHksIGFsbCB0aHJvdWdob3V0IHRoZSBsaW51eCBrZXJuZWwncwpib290IHRoZXJlIGlzIHRoZSBh
-c3N1bXB0aW9uIHRoYXQgYW55IGludGVycnVwdCBkdXJpbmcgYm9vdCBpcyBhIGZhaWx1cmUKb2Yg
-c29tZSBraW5kLCBhbmQgZXhjZXB0IGZvciBhbiBlcnJhbnQgbm1pIHdhdGNoZG9nIHRoYXQgaXMg
-YSB0cnVlCmFzc3VtcHRpb24uCgpEb24gSSBndWVzcyBJIHJlYWxseSBoYXZlIHRvIHJlY29tbWVu
-ZCBkaXNhYmxpbmcgdGhlIG5taSB3YXRjaGRvZyBpbiB0aGUKa2V4ZWMgb24gcGFuaWMgcGF0aCBp
-ZiB3ZSBjYW4gZG8gc28gYXQgYWxsIHJlYXNvbmFibHkuIAoKSSBsaWtlIHRoZSBpZGVhIG9mIGln
-bm9yaW5nIG5taXMgZHVyaW5nIGJvb3QgYnV0IHRoYXQgc2VlbXMgdG8gYmUgYQpzbGlnaHRseSBs
-YXJnZXIgcHJvamVjdCBhbmQgd2l0aCBsaXR0bGUgcHJhY3RpY2FsIGltcHJvdmVtZW50IGluIGtl
-eGVjCm9uIHBhbmljIHF1YWxpdHkuICBPdGhlciB0aGFuIGdldHRpbmcgd2hhdCBzaG91bGQgYmUg
-b25lIG9yIHR3bwppL28gd3JpdGVzIG91dCBvZiB0aGUga2V4ZWMgb24gcGFuaWMgcGF0aC4KCkVy
-aWMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
-YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 02/17/2012 06:02 AM, Atsushi Kumagai wrote:
+> Hi, Suzuki
+>
+> On Thu, 16 Feb 2012 09:05:17 +0530
+> "Suzuki K. Poulose"<suzuki@in.ibm.com>  wrote:
+>
+>> The series introduces an infrastructure to define platform specific
+>> bits for page translation for PPC and PPC44x support for vmalloc
+>> translation.
+>>
+>> This is similar to what we have implemented for Crash-utility.
+>>
+>> The patches are based makedumpfile-1.4.2 + PPC32 support patches
+>> which is queued in for 1.4.3.
+>>
+>> ---
+>>
+>> Suzuki K. Poulose (4):
+>>        [makedumpfile][ppc] PPC44x page translation definitions
+>>        [makedumpfile][ppc] Define platform descriptors for page translation
+>>        [makedumpfile][ppc] Generic vmalloc translation support
+>>        [makedumpfile] Add read_string routine
+>>
+>>
+>>   arch/ppc.c     |  108 ++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+>>   makedumpfile.c |   14 +++++++
+>>   makedumpfile.h |   21 +++++++++++
+>>   3 files changed, 139 insertions(+), 4 deletions(-)
+>>
+>> --
+>> Suzuki Poulose
+>
+> Could you tell me what kind of data is stored in vmalloc region in PPC ?
+> I want to estimate importance of your patches for makedumpfile.
+I know at least the modules are loaded in the vmalloc'd region. I have
+Cc'ed linux-ppc dev. We should be able to get enough info from the experts here.
+
+Josh / Kumar / Others,
+
+Could you please let us know your thoughts ?
+
+Thanks
+
+Suzuki
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
