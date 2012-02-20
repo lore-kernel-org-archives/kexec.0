@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RzHUh-0005s9-Db
- for kexec@lists.infradead.org; Mon, 20 Feb 2012 00:52:45 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id BD8943EE0C8
- for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 09:52:37 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id A418745DE4E
- for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 09:52:37 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8C08C45DE4D
- for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 09:52:37 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7B2D71DB803A
- for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 09:52:37 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 345BE1DB802C
- for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 09:52:37 +0900 (JST)
-Date: Mon, 20 Feb 2012 09:52:22 +0900 (   )
-Message-Id: <20120220.095222.59660243.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH][makedumpfile] Fix compilation error in sadump_info.h
+ id 1RzIqj-0008AH-F2
+ for kexec@lists.infradead.org; Mon, 20 Feb 2012 02:19:35 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 220E33EE0C0
+ for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 11:19:30 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0AE1645DEA6
+ for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 11:19:30 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E060B45DE7E
+ for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 11:19:29 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D4EDE1DB803B
+ for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 11:19:29 +0900 (JST)
+Received: from m105.s.css.fujitsu.com (m105.s.css.fujitsu.com [10.240.81.145])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 851931DB8038
+ for <kexec@lists.infradead.org>; Mon, 20 Feb 2012 11:19:29 +0900 (JST)
+Date: Mon, 20 Feb 2012 11:19:15 +0900 (   )
+Message-Id: <20120220.111915.28783507.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH][makedumpfile] sadump: check if given cpu is online in
+ per-cpu related helper functions
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120113065726.13214.80477.stgit@suzukikp.in.ibm.com>
-References: <20120113065726.13214.80477.stgit@suzukikp.in.ibm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,34 +32,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso8859-7"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: suzuki@in.ibm.com
-Cc: kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, nishimura@mxp.nes.nec.co.jp
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-RnJvbTogIlN1enVraSBLLiBQb3Vsb3NlIiA8c3V6dWtpQGluLmlibS5jb20+DQpTdWJqZWN0OiBb
-UEFUQ0hdW21ha2VkdW1wZmlsZV0gRml4IGNvbXBpbGF0aW9uIGVycm9yIGluIHNhZHVtcF9pbmZv
-LmgNCkRhdGU6IEZyaSwgMTMgSmFuIDIwMTIgMTI6Mjc6NTAgKzA1MzANCg0KPiBXaGlsZSBjb21w
-aWxpbmcgdGhlIG1ha2VkdW1wZmlsZS0xLjQuMSBJIGdvdCB0aGUgZm9sbG93aW5nIGVycm9yIDoN
-Cj4gDQo+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBtYWtlZHVtcGZpbGUuYzoyMToNCj4gc2FkdW1w
-X2luZm8uaDo4NjogZXJyb3I6IGV4cGVjdGVkIGlkZW50aWZpZXIgb3IgoSiiIGJlZm9yZSChe6Ig
-dG9rZW4NCj4gDQo+IA0KPiBUaGlzIHBhdGNoIGZpeGVzIHRoZSBjb21waWxhdGlvbiBlcnJvciBp
-biBzYWR1bXBfaW5mby5oDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTdXp1a2kgSy4gUG91bG9zZSA8
-c3V6dWtpQGluLmlibS5jb20+DQoNCk9oLCBJIGRpZG4ndCBub3RpY2UgdGhpcyBjb21taXQuLi4g
-VGhhbmtzIGZvciBmaXhpbmcuDQoNClRoYW5rcy4NCkhBVEFZQU1BLCBEYWlzdWtlDQoNCj4gLS0t
-DQo+IA0KPiAgc2FkdW1wX2luZm8uaCB8ICAgIDIgKy0NCj4gIDEgZmlsZXMgY2hhbmdlZCwgMSBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3NhZHVtcF9p
-bmZvLmggYi9zYWR1bXBfaW5mby5oDQo+IGluZGV4IDFmNzRlZTUuLmM0ODI0YmUgMTAwNjQ0DQo+
-IC0tLSBhL3NhZHVtcF9pbmZvLmgNCj4gKysrIGIvc2FkdW1wX2luZm8uaA0KPiBAQCAtODIsNyAr
-ODIsNyBAQCBzdGF0aWMgaW5saW5lIGludCBzYWR1bXBfaW5pdGlhbGl6ZV9iaXRtYXBfbWVtb3J5
-KHZvaWQpDQo+ICAJcmV0dXJuIEZBTFNFOw0KPiAgfQ0KPiAgDQo+IC1zdGF0aWMgaW5saW5lIGlu
-dCBzYWR1bXBfbnVtX29ubGluZV9jcHVzKHZvaWQpOw0KPiArc3RhdGljIGlubGluZSBpbnQgc2Fk
-dW1wX251bV9vbmxpbmVfY3B1cyh2b2lkKQ0KPiAgew0KPiAgCXJldHVybiAwOw0KPiAgfQ0KPiAN
-Cj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+
-IGtleGVjIG1haWxpbmcgbGlzdA0KPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMNCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+Per-cpu helper functions sanity check given cpu ids if they are
+not-minus and less than the maximal but it should have checked if they
+are online. By this mistake, one cannot see generated vmcore correctly
+if sadump collects vmcore when some cpus are offline e.g. using cpu
+hotplug or panic and so all the cpus except for a unique CPU halting.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+ sadump_info.c |   18 ++++++++++++++----
+ 1 files changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/sadump_info.c b/sadump_info.c
+index dce0841..69763be 100644
+--- a/sadump_info.c
++++ b/sadump_info.c
+@@ -46,7 +46,7 @@
+ 			  KEXEC_CORE_NOTE_DESC_BYTES )
+ 
+ #define for_each_online_cpu(cpu)					\
+-	for (cpu = 0; cpu < BITPERBYTE * si->cpumask_size; ++cpu)	\
++	for (cpu = 0; cpu < max_mask_cpu(); ++cpu)	\
+ 		if (is_online_cpu(cpu))
+ 
+ enum {
+@@ -95,6 +95,7 @@ static int read_sadump_header_diskset(int diskid, struct sadump_diskset_info *sd
+ static unsigned long long pfn_to_block(unsigned long long pfn);
+ static int lookup_diskset(unsigned long long whole_offset, int *diskid,
+ 			  unsigned long long *disk_offset);
++static int max_mask_cpu(void);
+ static int cpu_online_mask_init(void);
+ static int per_cpu_init(void);
+ static int get_data_from_elf_note_desc(const char *note_buf, uint32_t n_descsz,
+@@ -799,6 +800,12 @@ sadump_initialize_bitmap_memory(void)
+ }
+ 
+ static int
++max_mask_cpu(void)
++{
++	return BITPERBYTE * si->cpumask_size;
++}
++
++static int
+ cpu_online_mask_init(void)
+ {
+ 	ulong cpu_online_mask_addr;
+@@ -1289,6 +1296,9 @@ is_online_cpu(int cpu)
+ {
+ 	unsigned long mask;
+ 
++	if (cpu < 0 || cpu >= max_mask_cpu())
++		return FALSE;
++
+ 	mask = ULONG(si->cpu_online_mask_buf +
+ 		     (cpu / BITPERWORD) * sizeof(unsigned long));
+ 
+@@ -1300,7 +1310,7 @@ legacy_per_cpu_ptr(unsigned long ptr, int cpu)
+ {
+ 	unsigned long addr;
+ 
+-	if (cpu < 0 || cpu >= get_nr_cpus())
++	if (!is_online_cpu(cpu))
+ 		return 0UL;
+ 
+ 	if (!readmem(VADDR, ~ptr + cpu*sizeof(unsigned long), &addr,
+@@ -1313,7 +1323,7 @@ legacy_per_cpu_ptr(unsigned long ptr, int cpu)
+ static unsigned long
+ per_cpu_ptr(unsigned long ptr, int cpu)
+ {
+-	if (cpu < 0 || cpu >= get_nr_cpus())
++	if (!is_online_cpu(cpu))
+ 		return 0UL;
+ 
+ 	if (si->__per_cpu_offset[cpu] == si->__per_cpu_load)
+@@ -1329,7 +1339,7 @@ get_prstatus_from_crash_notes(int cpu, char *prstatus_buf)
+ 	char note_buf[KEXEC_NOTE_BYTES], zero_buf[KEXEC_NOTE_BYTES];
+ 	char *prstatus_ptr;
+ 
+-	if (cpu < 0 || get_nr_cpus() <= cpu)
++	if (!is_online_cpu(cpu))
+ 		return FALSE;
+ 
+ 	if (SYMBOL(crash_notes) == NOT_FOUND_SYMBOL)
+-- 
+1.7.4.4
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
