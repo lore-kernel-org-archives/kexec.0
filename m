@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from ozlabs.org ([2402:b800:7003:1:1::1])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RzGjK-00035x-GU
+ id 1RzGjK-00035w-Fx
  for kexec@lists.infradead.org; Mon, 20 Feb 2012 00:03:48 +0000
-Date: Mon, 20 Feb 2012 10:47:51 +1100
+Date: Mon, 20 Feb 2012 11:02:51 +1100
 From: Paul Mackerras <paulus@samba.org>
-Subject: Re: [RFC PATCH v7 00/10] fadump: Firmware-assisted dump support for
- Powerpc.
-Message-ID: <20120219234751.GA10186@bloggs.ozlabs.ibm.com>
+Subject: Re: [RFC PATCH v7 03/10] fadump: Register for firmware assisted dump.
+Message-ID: <20120220000250.GB10186@bloggs.ozlabs.ibm.com>
 References: <20120216111050.4733.38034.stgit@mars>
+ <20120216111429.4733.24480.stgit@mars>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120216111050.4733.38034.stgit@mars>
+In-Reply-To: <20120216111429.4733.24480.stgit@mars>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,22 +27,40 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>
 Cc: Anton Blanchard <anton@samba.org>, Amerigo Wang <amwang@redhat.com>, Haren Myneni <hbabu@us.ibm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Kexec-ml <kexec@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Milton Miller <miltonm@bga.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Randy Dunlap <rdunlap@xenotime.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>, Ananth Narayan <ananth@in.ibm.com>
 
-On Thu, Feb 16, 2012 at 04:44:06PM +0530, Mahesh J Salgaonkar wrote:
+On Thu, Feb 16, 2012 at 04:44:30PM +0530, Mahesh J Salgaonkar wrote:
 
-> Please find the version 7 of the patchset that implements firmware-assisted
-> dump mechanism to capture kernel crash dump for Powerpc architecture.
-> Firmware-assisted dump is a robust mechanism to get reliable kernel crash
-> dump with the assistance of firmware. This approach does not use kexec,
-> instead firmware assists in booting the kdump kernel while preserving memory
-> contents.
+> +/*
+> + * Prepare for firmware-assisted dump.
+> + */
+> +int __init setup_fadump(void)
+> +{
+> +	if (!fw_dump.fadump_supported) {
+> +		printk(KERN_ERR "Firmware-assisted dump is not supported on"
+> +			" this hardware\n");
+> +		return 0;
+> +	}
+> +
+> +	fadump_show_config();
+> +	/* Initialize the kernel dump memory structure for FAD registration. */
+> +	if (fw_dump.reserve_dump_area_size)
+> +		init_fadump_mem_struct(&fdm, fw_dump.reserve_dump_area_start);
+> +	fadump_init_files();
+> +
+> +	return 1;
+> +}
+> +subsys_initcall(setup_fadump);
 
-For the series:
+If I have read the code correctly, we are going to get this printk on
+non-pSeries machines or on older pSeries machines, even if the user
+has not put the fadump=on option on the kernel command line.  The
+printk will be annoying since there is no actual error condition.  It
+seems to me that the condition for the printk should include
+fw_dump.fadump_enabled.  In other words you should probably add
 
-Reviewed-by: Paul Mackerras <paulus@samba.org>
+	if (!fw_dump.fadump_enabled)
+		return 0;
 
-I think it's pretty much good enough to go in now.  I have one relatively
-minor comment about a printk which could be addressed if you decide to
-do another version of the series.
+at the beginning of the function.
 
 Paul.
 
