@@ -1,31 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1RzkfV-00076F-75
- for kexec@lists.infradead.org; Tue, 21 Feb 2012 08:01:53 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 218B33EE0B6
- for <kexec@lists.infradead.org>; Tue, 21 Feb 2012 17:01:43 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 0999245DE4D
- for <kexec@lists.infradead.org>; Tue, 21 Feb 2012 17:01:43 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id E574D45DD78
- for <kexec@lists.infradead.org>; Tue, 21 Feb 2012 17:01:42 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id D8EA21DB8038
- for <kexec@lists.infradead.org>; Tue, 21 Feb 2012 17:01:42 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 94EEC1DB802C
- for <kexec@lists.infradead.org>; Tue, 21 Feb 2012 17:01:42 +0900 (JST)
-Date: Tue, 21 Feb 2012 17:01:25 +0900 (   )
-Message-Id: <20120221.170125.347143815.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH makedumpfile 0/2] LZO Compression Support
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120221165041.5ebd8a15.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120220090528.30966.59163.stgit@localhost6.localdomain6>
- <20120221165041.5ebd8a15.kumagai-atsushi@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1RzqGH-0003u4-QC
+ for kexec@lists.infradead.org; Tue, 21 Feb 2012 14:00:12 +0000
+Date: Tue, 21 Feb 2012 08:59:34 -0500
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
+Message-ID: <20120221135934.GF26998@redhat.com>
+References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
+ <20120216172735.GX9751@redhat.com>
+ <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
+ <20120216215603.GH9751@redhat.com>
+ <m1y5s2ku36.fsf@fess.ebiederm.org>
+ <m1fwe9bpk2.fsf@fess.ebiederm.org>
+ <20120217195430.GO9751@redhat.com>
+ <m1y5s07rn3.fsf@fess.ebiederm.org>
+ <20120220151419.GU9751@redhat.com>
+ <m1obss39a4.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m1obss39a4.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,83 +33,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-Hello Kumagai-san,
+On Tue, Feb 21, 2012 at 12:01:07AM -0800, Eric W. Biederman wrote:
+> Don Zickus <dzickus@redhat.com> writes:
+> 
+> 2> On Fri, Feb 17, 2012 at 07:21:52PM -0800, Eric W. Biederman wrote:
+> >> Don Zickus <dzickus@redhat.com> writes:
+> >> 
+> >> > On Fri, Feb 17, 2012 at 04:41:01AM -0800, Eric W. Biederman wrote:
+> >> >> 
+> >> >> The fix with a guarantee of no more scope creep is to just disable the
+> >> >> nmi watchdog on the kexec on panic path.
+> >> >> 
+> >> >> Don if you have time please figure out is needed to ignore nmi's and
+> >> >> possible record and/or report them while we boot, otherwise please cook
+> >> >> up a patch that just disables the nmi watchdog wherever we are sending
+> >> >> it from (the local apic or the ioapic).
+> >> >
+> >> > Can I keep things even simpler?  The original problem was the deadlock
+> >> > with the ioapic lock.  We fixed that by removing the call to
+> >> > disable_IO_APIC().  Can we just leave the disable_local_APIC calls in
+> >> > there for now?  Is there any real harm?
+> >> 
+> >> > All this rewrite is going to take time which will delay fixing a current
+> >> > problem with kexec on panic, the ioapic deadlock.
+> >> 
+> >> Hmm.
+> >> 
+> >> My apologies I just realized that we can not disable the nmi watchdog
+> >> safely in all cases.  To avoid the deadlock we fundamentally can not
+> >> write to the io_apic, because the locks are the io_apic write path.
+> >> The nmi watchdog can be sourced from either the local apics or the
+> >> io_apics.  To disable the nmi_watchdog we need at least potentially
+> >> to write io_apic.
+> >
+> > I am curious where you see the nmi watchdog being sourced from the ioapic?
+> > I thought I removed that code 3 or 4 releases ago.
+> 
+> In my memory, and in references to the code in comments in various apic
+> related code.  I couldn't figure out what the current code was doing and
+> assumed the implementation was equivalent.  It does look like you
+> removed the code that used the io_apic.  I still haven't figured
+> out just how the new implementation works yet.
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH makedumpfile 0/2] LZO Compression Support
-Date: Tue, 21 Feb 2012 16:50:41 +0900
+It is just a client of perf now.  Perf controls the local apic accesses.
+A lot simpler now.
 
-> Hello Hatayama-san,
 > 
-> On Mon, 20 Feb 2012 18:10:00 +0900
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> 
->> The following series implements LZO compression support to
->> makedumpfile. LZO is as good as in size but by far better in speed
->> than ZLIB, readucing down time during generation of crash dump and
->> refiltering.
->> 
->> The RFC discussion:
->> 
->>   http://lists.infradead.org/pipermail/kexec/2011-November/005783.html
->>   http://lists.infradead.org/pipermail/kexec/2011-December/005868.html
->> 
->> How to build:
->> 
->>   1. Get lzo libraries: lzo, lzo-devel and lzo-minilzo from either of
->>   the following:
->> 
->>     1) Original author's website:
->>        http://www.oberhumer.com/opensource/lzo/
->> 
->>     2) yum framework on fedora. Older releases don't have the packages.
->> 
->>   2. Apply the patch set to makedumpfile v1.4.2.
->> 
->>   3. Do make.
->> 
->> How to use:
->> 
->>   Introduce new -l option. If a user specify this, makedumpfile
->>   generates dumpfile compressed by pages with lzo compression.
->> 
->>   Example)
->>   $ makedumpfile -l vmcore dumpfile
->> 
->> Performance evaluation:
->> 
->>   - Kumagai-san's evaluation simulating actually working servers:
->>     http://lists.infradead.org/pipermail/kexec/2011-December/005868.html
->> 
->>   - My evaluation focusing on the worst cases:
->>     http://lists.infradead.org/pipermail/kexec/2011-November/005783.html
->> 
->> LZO Support for crash:
->> 
->>   I'll post LZO support patch for crash after makedumpfile merges
->>   these patches.
-> 
-> Thank you for your patches.
-> 
-> I'll review and merge them into v1.4.4 with making LZO support optional.
-> I'll post the patch to make it optional after v1.4.3 is released.
-> 
-> Please wait for a while.
-> 
-> Thanks
-> Atsushi Kumagai
-> 
+> So maybe in the short term we can safely just stomp the timer that
+> triggers the nmi watchdog in the local apic.  Over the long term that
+> feels like it is just asking for trouble.
 
-Thanks. But I'm OK if I'll repost the patch after you have decided how
-you change Makefile to support optional building. Or is it more
-effective for you to do them by yourself at the same time?
+I can understand that.
 
-Thanks.
-HATAYAMA, Daisuke
+> 
+> I wonder if the reason that we have an hpet stomp in that code is
+> for a similar reason.  Did we ever source nmi's from the hpet timer?
+> 
+> >> So it appears to me that the only reasonable and robust thing we can
+> >> do is to ignore nmis in the kexec on panic path.
+> >> 
+> >> So it looks to me that the only path forward at this point is to fix
+> >> the other bug where an unexpected nmi will kill the kexec on panic boot.
+> >> 
+> >> I just took a look at the code in /sbin/kexec and that code does not in
+> >> fact change the idt except when we switch to 16bit mode, which we
+> >> definitely do not do in the kexec on panic case.  So it appears that we
+> >> don't need to coordinate an /sbin/kexec release with a kernel release to
+> >> ignore nmis.
+> >> 
+> >> In fact it looks like we only need to fix the interrupt descriptors
+> >> loaded in machine_kexec_64.c and head64.c to ignore nmis.
+> >> 
+> >> At which point we will have fixed two bugs and have a much more reliable
+> >> kexec on panic implementation.
+> >
+> > Ok.  I'll talk with Vivek about how the can be implemented.
+> 
+> Thanks.  It really doesn't look very hard.  Just a tiny idt with
+> an nmi entry that says iret.
 
+It probably is, except I never hacked on idt code before and my assembly
+isn't that good.  I have been trying to find examples to copy from to give
+it a try.  So far I was using early_idt_handlers with early_printk to see
+if I could capture some printk messages while jumping from the first
+kernel to the second kernel (when the other early_idt_handlers would kick
+in for the second kernel).
+
+Tips?  Better examples?
+
+Cheers,
+Don
 
 _______________________________________________
 kexec mailing list
