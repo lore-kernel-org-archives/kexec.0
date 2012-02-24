@@ -1,18 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1S0lUo-0002G9-JI
- for kexec@lists.infradead.org; Fri, 24 Feb 2012 03:07:02 +0000
-Date: Fri, 24 Feb 2012 12:05:05 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] Fix segmentation fault for makedumpfile -x/--split
-Message-Id: <20120224120505.a747b51d.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <4F461828.8020601@linux.vnet.ibm.com>
-References: <20120131102456.17966.37854.stgit@aruna-ThinkPad-T420>
- <20120201131518.7764c710.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120223183505.2ab30cfd.kumagai-atsushi@mxc.nes.nec.co.jp>
- <4F461828.8020601@linux.vnet.ibm.com>
-Mime-Version: 1.0
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1S0wKM-0002yF-8N
+ for kexec@lists.infradead.org; Fri, 24 Feb 2012 14:40:55 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: [PATCH] kexec: crash: don't save swapper_pg_dir for !CONFIG_MMU
+ configurations
+Date: Fri, 24 Feb 2012 14:40:47 +0000
+Message-Id: <1330094447-11900-1-git-send-email-will.deacon@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,35 +16,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: arunabal@linux.vnet.ibm.com
-Cc: tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Will Deacon <will.deacon@arm.com>
 
-Hello Aruna,
+nommu platforms don't have very interesting swapper_pg_dir pointers and
+usually just #define them to NULL, meaning that we can't include them in
+the vmcoreinfo on the kexec crash path.
 
-On Thu, 23 Feb 2012 16:12:48 +0530
-Aruna Balakrishnaiah <arunabal@linux.vnet.ibm.com> wrote:
+This patch only saves the swapper_pg_dir if we have an MMU.
 
-> > I'm reviewing your patch and it looks good.
-> >
-> > However, I can't guess that the segmentation fault caused
-> > by --split option because --split option doesn't require an argument.
-> >
-> > Would you tell me the case that you thought.
-> This is the case,
-> 
-> makedumpfile --split -x /boot/vmlinuz vmcore vm1 vm2
-> 
-> when used compressed vmlinux with -x.
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+---
+ kernel/kexec.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-Thank you for your reply, I understand.
-I merged your patch into makedumpfile-1.4.3.
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 7b08867..cb5d13c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1462,7 +1462,9 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 
+ 	VMCOREINFO_SYMBOL(init_uts_ns);
+ 	VMCOREINFO_SYMBOL(node_online_map);
++#ifdef CONFIG_MMU
+ 	VMCOREINFO_SYMBOL(swapper_pg_dir);
++#endif
+ 	VMCOREINFO_SYMBOL(_stext);
+ 	VMCOREINFO_SYMBOL(vmlist);
+ 
+-- 
+1.7.4.1
 
-Thanks
-Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
