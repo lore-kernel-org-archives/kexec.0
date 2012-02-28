@@ -1,14 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from p02c12o144.mxlogic.net ([208.65.145.77])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1S2HPm-0004EQ-B1
- for kexec@lists.infradead.org; Tue, 28 Feb 2012 07:24:03 +0000
-From: ANDY KENNEDY <ANDY.KENNEDY@adtran.com>
-Subject: Debugging on MIPS.
-Date: Tue, 28 Feb 2012 07:24:23 +0000
-Message-ID: <F9C551623D2CBB4C9488801D14F864C610AA6F@ex-mb1.corp.adtran.com>
-Content-Language: en-US
+Received: from cam-admin0.cambridge.arm.com ([217.140.96.50])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1S2JYP-0000HZ-KS
+ for kexec@lists.infradead.org; Tue, 28 Feb 2012 09:41:07 +0000
+Date: Tue, 28 Feb 2012 09:40:57 +0000
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] kexec: crash: don't save swapper_pg_dir for !CONFIG_MMU
+ configurations
+Message-ID: <20120228094057.GC25625@mudshark.cambridge.arm.com>
+References: <20120226225842.GA23028@mudshark.cambridge.arm.com>
+ <20120227003727.GA30831@verge.net.au>
+ <20120227193054.GB24605@mudshark.cambridge.arm.com>
+ <20120227235235.GE24159@verge.net.au>
+ <20120227155643.cafb1c6d.akpm@linux-foundation.org>
+ <20120228001928.GB11325@verge.net.au>
+ <20120227162631.55cf014e.akpm@linux-foundation.org>
+ <20120228005130.GE11325@verge.net.au>
+ <20120227172555.46bffedf.akpm@linux-foundation.org>
+ <20120228013526.GA7913@verge.net.au>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20120228013526.GA7913@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,65 +33,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-I got *I hope* the tip from @ ~midnight US Central time:
+Hi Simon, Andrew,
 
-git clone git://github.com/horms/kexec-tools.git
+Sorry for re-joining the thread late, I was sleeping :)
 
-My issue (in case you have forgotten -- it has been a few months) is
-that since version 2.0.1 (a couple steps after that), I cannot use
-kexec on my MIPS core with 2.6.36.1.  I get nothing.  I've done a bit of
-poking around and I can make the kernel boot, however, command line
-parameters are missing.
+On Tue, Feb 28, 2012 at 01:35:27AM +0000, Simon Horman wrote:
+> On Mon, Feb 27, 2012 at 05:25:55PM -0800, Andrew Morton wrote:
+> > swapper_pg_dir is normally an array.  But on nommu it is a pointer. 
+> > VMCOREINFO_SYMBOL() wants to take its address (unnecessary on an array)
+> > and this blows up when fed a pointer.
 
-Comparing 2.0.1 with the tip and looking at kexec_load (via adding in
-printf's just before the syscall), I see that entry = 0x0,
-nr_segments = 2, (didn't print the segments), and the flags = 0x0.
+Yup. It's a fairly dull pointer at that, which is why I chose to remove it in
+the nommu case.
 
-Running the same command with the tip, I get:
+> > Still, you didn't answer my question!  What effect will the absence of
+> > SYMBOL(swapper_pg_dir)= have upon downstream tools?  If "none" then
+> > sure, let's remove it.  If "explosion" then we should emit a dummy
+> > SYMBOL(swapper_pg_dir)=0 if CONFIG_NOMMU.
+> 
+> My thought was that the tools wouldn't be used in the CONFIG_NOMMU case (yet).
+> But I take your point and I think the answer is that the fallout is unknown.
+> Emitting a dummy value as you suggest seems reasonable.
 
-entry = 0x1042d0, nr_segments = 2, flags = 0x00080000.
+The reason I didn't choose a dummy value to start with is because there are
+plenty of other fields in the dump that are predicated on build-time CONFIG
+options. Admittedly, some of these appear to be tagged with length
+information, but consider these guys:
 
-Interestingly, my bootloader determines that the entry point of this
-kernel is 0x104290, but sets this address as a virtual.  So, following
-that lead, just before the syscall:
-
-entry += 0x80000000;
-
-Boom, the kernel boots.  I get a kernel panic, however, since it cannot
-find my RFS.
-
-Further annoyances are that I changed the #if 0 to 1 around the
-following code:
-
-#if 0
-        fprintf(stdout, "kexec_load: entry = %p flags = %lx\n", 
-                info.entry, info.kexec_flags);
-        print_segments(stdout, &info);
+#ifndef CONFIG_NEED_MULTIPLE_NODES
+        VMCOREINFO_SYMBOL(mem_map);
+        VMCOREINFO_SYMBOL(contig_page_data);
 #endif
 
-Which would have given me all sorts of cool stuff.  Problem is that it
-will only output:
+Since the VMCOREINFO_SYMBOL macro stringifies the identifier, I guess userspace
+has to treat the whole thing as a map, meaning that we *can* safely remove
+elements from it.
 
-kexec_load: entry = 0x1042d0 flags = 80000
-nr_segments = 2 
-segment[0].buf   = 0x2b1a6008 
-segment[0].bufsz = 377b5c 
-segment[0].mem   = 0x100000 
-segment[0].m
+So that's my speculation. Maybe somebody on the kexec list can confirm?
 
-Even more curious is that after the call to my_load, I can printf()
-exactly 16 chars before we lock hard.
+Cheers,
 
-Testing this information a bit further on the system, I see that at the
-top of my_load, before the memset, I can printf() about 1500 chars
-before the lockup.
-
-Something is probing destructively.  Any ideas where I should look?
-
-Thanks,
-Andy
+Will
 
 _______________________________________________
 kexec mailing list
