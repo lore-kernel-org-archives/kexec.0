@@ -1,26 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S2YPl-0005Tc-Qz
- for kexec@lists.infradead.org; Wed, 29 Feb 2012 01:33:10 +0000
-Date: Wed, 29 Feb 2012 10:32:57 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec: crash: don't save swapper_pg_dir for !CONFIG_MMU
- configurations
-Message-ID: <20120229013257.GG6013@verge.net.au>
-References: <20120227193054.GB24605@mudshark.cambridge.arm.com>
- <20120227235235.GE24159@verge.net.au>
- <20120227155643.cafb1c6d.akpm@linux-foundation.org>
- <20120228001928.GB11325@verge.net.au>
- <20120227162631.55cf014e.akpm@linux-foundation.org>
- <20120228005130.GE11325@verge.net.au>
- <20120227172555.46bffedf.akpm@linux-foundation.org>
- <20120228013526.GA7913@verge.net.au>
- <20120228094057.GC25625@mudshark.cambridge.arm.com>
- <20120228124554.73b4f051.akpm@linux-foundation.org>
+Received: from mail-yw0-f73.google.com ([209.85.213.73])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1S2nDd-0006lm-V7
+ for kexec@lists.infradead.org; Wed, 29 Feb 2012 17:21:39 +0000
+Received: by yhpp61 with SMTP id p61so579593yhp.0
+ for <kexec@lists.infradead.org>; Wed, 29 Feb 2012 09:21:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120228124554.73b4f051.akpm@linux-foundation.org>
+From: Eugene Surovegin <surovegin@google.com>
+Subject: [PATCH] kdump: force page alignment for per-CPU crash notes.
+Date: Wed, 29 Feb 2012 09:21:23 -0800
+Message-Id: <1330536083-13098-1-git-send-email-surovegin@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,46 +22,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Will Deacon <will.deacon@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: Eugene Surovegin <surovegin@google.com>, kexec-list <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Tue, Feb 28, 2012 at 12:45:54PM -0800, Andrew Morton wrote:
-> On Tue, 28 Feb 2012 09:40:57 +0000
-> Will Deacon <will.deacon@arm.com> wrote:
-> 
-> > > > Still, you didn't answer my question!  What effect will the absence of
-> > > > SYMBOL(swapper_pg_dir)= have upon downstream tools?  If "none" then
-> > > > sure, let's remove it.  If "explosion" then we should emit a dummy
-> > > > SYMBOL(swapper_pg_dir)=0 if CONFIG_NOMMU.
-> > > 
-> > > My thought was that the tools wouldn't be used in the CONFIG_NOMMU case (yet).
-> > > But I take your point and I think the answer is that the fallout is unknown.
-> > > Emitting a dummy value as you suggest seems reasonable.
-> > 
-> > The reason I didn't choose a dummy value to start with is because there are
-> > plenty of other fields in the dump that are predicated on build-time CONFIG
-> > options. Admittedly, some of these appear to be tagged with length
-> > information, but consider these guys:
-> > 
-> > #ifndef CONFIG_NEED_MULTIPLE_NODES
-> >         VMCOREINFO_SYMBOL(mem_map);
-> >         VMCOREINFO_SYMBOL(contig_page_data);
-> > #endif
-> > 
-> > Since the VMCOREINFO_SYMBOL macro stringifies the identifier, I guess userspace
-> > has to treat the whole thing as a map, meaning that we *can* safely remove
-> > elements from it.
-> > 
-> > So that's my speculation. Maybe somebody on the kexec list can confirm?
-> 
-> Yeah, I do think the chance of breaking anything here is small, and in
-> the unlikely event that something *does* break then a) it deserved to
-> break ;) and b) the user of that app will be a developer who can
-> unbreak it.
-> 
-> Let's run with the patch as-is.
+Per-CPU allocations are not guaranteed to be physically contiguous.
+However, kdump kernel and user-space code assumes that per-CPU
+memory, used for saving CPU registers on crash, is.
+This can cause corrupted /proc/vmcore in some cases - the main
+symptom being huge ELF note section.
 
-Fine by me :)
+Force page alignment for note_buf_t to ensure that this assumption holds.
+
+Signed-off-by: Eugene Surovegin <surovegin@google.com>
+CC: Eric Biederman <ebiederm@xmission.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: kexec-list <kexec@lists.infradead.org>
+---
+ kernel/kexec.c |    9 +++++++--
+ 1 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 7b08867..e641b5c 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -1232,8 +1232,13 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+ 
+ static int __init crash_notes_memory_init(void)
+ {
+-	/* Allocate memory for saving cpu registers. */
+-	crash_notes = alloc_percpu(note_buf_t);
++	/* Allocate memory for saving cpu registers.
++	 * Force page alignment to avoid crossing physical page boundary -
++	 * kexec-tools and kernel /proc/vmcore handler assume these per-CPU
++	 * chunks are physically contiguous.
++	 */
++	crash_notes = (note_buf_t __percpu *)__alloc_percpu(sizeof(note_buf_t),
++							    PAGE_SIZE);
+ 	if (!crash_notes) {
+ 		printk("Kexec: Memory allocation for saving cpu register"
+ 		" states failed\n");
+-- 
+1.7.9.1
+
 
 _______________________________________________
 kexec mailing list
