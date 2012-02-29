@@ -1,12 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from out01.mta.xmission.com ([166.70.13.231])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S2ppn-000441-LD
- for kexec@lists.infradead.org; Wed, 29 Feb 2012 20:09:13 +0000
-From: Don Zickus <dzickus@redhat.com>
-Subject: [PATCH] x86, kdump: No need to disable ioapic in crash path
-Date: Wed, 29 Feb 2012 15:08:49 -0500
-Message-Id: <1330546129-4812-1-git-send-email-dzickus@redhat.com>
+ id 1S2slJ-0003qt-7f
+ for kexec@lists.infradead.org; Wed, 29 Feb 2012 23:16:46 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
+ <20120216172735.GX9751@redhat.com>
+ <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
+ <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
+ <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
+ <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
+ <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
+Date: Wed, 29 Feb 2012 15:19:11 -0800
+In-Reply-To: <20120221135934.GF26998@redhat.com> (Don Zickus's message of
+ "Tue, 21 Feb 2012 08:59:34 -0500")
+Message-ID: <m1ipip6xe8.fsf@fess.ebiederm.org>
+MIME-Version: 1.0
+Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
+ crash path
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,127 +26,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org
-Cc: Don Zickus <dzickus@redhat.com>, kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Don Zickus <dzickus@redhat.com>
+Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
 
-A customer of ours noticed when their machine crashed, kdump did not
-work but hung instead.  Using their firmware dumping solution they
-grabbed a vmcore and decoded the stacks on the cpus.  What they
-noticed seemed to be a rare deadlock with the ioapic_lock.
+Don Zickus <dzickus@redhat.com> writes:
 
- CPU4:
- machine_crash_shutdown
- -> machine_ops.crash_shutdown
-    -> native_machine_crash_shutdown
-       -> kdump_nmi_shootdown_cpus ------> Send NMI to other CPUs
-       -> disable_IO_APIC
-          -> clear_IO_APIC
-             -> clear_IO_APIC_pin
-                -> ioapic_read_entry
-                   -> spin_lock_irqsave(&ioapic_lock, flags)
-                   ---Infinite loop here---
+> On Tue, Feb 21, 2012 at 12:01:07AM -0800, Eric W. Biederman wrote:
+>> Don Zickus <dzickus@redhat.com> writes:
+>> 
+>> 2> On Fri, Feb 17, 2012 at 07:21:52PM -0800, Eric W. Biederman wrote:
+>> >> Don Zickus <dzickus@redhat.com> writes:
+>> >> 
+>> >> > On Fri, Feb 17, 2012 at 04:41:01AM -0800, Eric W. Biederman wrote:
+>> >> >> 
+>> >> >> The fix with a guarantee of no more scope creep is to just disable the
+>> >> >> nmi watchdog on the kexec on panic path.
+>> >> >> 
+>> >> >> Don if you have time please figure out is needed to ignore nmi's and
+>> >> >> possible record and/or report them while we boot, otherwise please cook
+>> >> >> up a patch that just disables the nmi watchdog wherever we are sending
+>> >> >> it from (the local apic or the ioapic).
+>> >> >
+>> >> > Can I keep things even simpler?  The original problem was the deadlock
+>> >> > with the ioapic lock.  We fixed that by removing the call to
+>> >> > disable_IO_APIC().  Can we just leave the disable_local_APIC calls in
+>> >> > there for now?  Is there any real harm?
+>> >> 
+>> >> > All this rewrite is going to take time which will delay fixing a current
+>> >> > problem with kexec on panic, the ioapic deadlock.
+>> >> 
+>> >> Hmm.
+>> >> 
+>> >> My apologies I just realized that we can not disable the nmi watchdog
+>> >> safely in all cases.  To avoid the deadlock we fundamentally can not
+>> >> write to the io_apic, because the locks are the io_apic write path.
+>> >> The nmi watchdog can be sourced from either the local apics or the
+>> >> io_apics.  To disable the nmi_watchdog we need at least potentially
+>> >> to write io_apic.
+>> >
+>> > I am curious where you see the nmi watchdog being sourced from the ioapic?
+>> > I thought I removed that code 3 or 4 releases ago.
+>> 
+>> In my memory, and in references to the code in comments in various apic
+>> related code.  I couldn't figure out what the current code was doing and
+>> assumed the implementation was equivalent.  It does look like you
+>> removed the code that used the io_apic.  I still haven't figured
+>> out just how the new implementation works yet.
+>
+> It is just a client of perf now.  Perf controls the local apic accesses.
+> A lot simpler now.
+>
+>> 
+>> So maybe in the short term we can safely just stomp the timer that
+>> triggers the nmi watchdog in the local apic.  Over the long term that
+>> feels like it is just asking for trouble.
+>
+> I can understand that.
+>
+>> 
+>> I wonder if the reason that we have an hpet stomp in that code is
+>> for a similar reason.  Did we ever source nmi's from the hpet timer?
+>> 
+>> >> So it appears to me that the only reasonable and robust thing we can
+>> >> do is to ignore nmis in the kexec on panic path.
+>> >> 
+>> >> So it looks to me that the only path forward at this point is to fix
+>> >> the other bug where an unexpected nmi will kill the kexec on panic boot.
+>> >> 
+>> >> I just took a look at the code in /sbin/kexec and that code does not in
+>> >> fact change the idt except when we switch to 16bit mode, which we
+>> >> definitely do not do in the kexec on panic case.  So it appears that we
+>> >> don't need to coordinate an /sbin/kexec release with a kernel release to
+>> >> ignore nmis.
+>> >> 
+>> >> In fact it looks like we only need to fix the interrupt descriptors
+>> >> loaded in machine_kexec_64.c and head64.c to ignore nmis.
+>> >> 
+>> >> At which point we will have fixed two bugs and have a much more reliable
+>> >> kexec on panic implementation.
+>> >
+>> > Ok.  I'll talk with Vivek about how the can be implemented.
+>> 
+>> Thanks.  It really doesn't look very hard.  Just a tiny idt with
+>> an nmi entry that says iret.
+>
+> It probably is, except I never hacked on idt code before and my assembly
+> isn't that good.  I have been trying to find examples to copy from to give
+> it a try.  So far I was using early_idt_handlers with early_printk to see
+> if I could capture some printk messages while jumping from the first
+> kernel to the second kernel (when the other early_idt_handlers would kick
+> in for the second kernel).
+>
+> Tips?  Better examples?
 
- CPU0:
- do_IRQ
- -> handle_irq
-    -> handle_edge_irq
-        -> ack_apic_edge
-           -> move_native_irq
-               -> mask_IO_APIC_irq
-                  -> mask_IO_APIC_irq_desc
-                     -> spin_lock_irqsave(&ioapic_lock, flags)
-                     ---Receive NMI here after getting spinlock---
-                        -> nmi
-                           -> do_nmi
-                              -> crash_nmi_callback
-                              ---Infinite loop here---
+That is a particularly good example.  When I took a quick look earlier
+that is the first place we reload the idt in the kernel boot so that is
+one of two places that needs to be modified.
 
-The problem is that although kdump tries to shutdown minimal hardware,
-it still needs to disable the IO APIC.  This requires spinlocks which
-may be held by another cpu.  This other cpu is being held infinitely in
-an NMI context by kdump in order to serialize the crashing path.  Instant
-deadlock.
+The other place in the reboot code page (which will be a little tricky
+because of it's relocatability) needs to have code that roughly says:
 
-Eric, brought up a point that because the boot code was restructured we may
-not need to disable the io apic any more in the crash path.  The original
-concern that led to the development of disable_IO_APIC, was that the jiffies
-calibration on boot up relied on the PIT timer for reference.  Access
-to the PIT required 8259 interrupts to be working.  This wouldn't work
-if the ioapic needed to be configured.  So on panic path, the ioapic was
-reconfigured to use virtual wire mode to allow the 8259 to passthrough.
+kexec_nmi_handler:
+        ; Does this vector get any other kind of parameters and saved
+        ; registers that we need to restore?
+        ; Different types of exceptions handlers have different rules
+        ; that I don't remember off the top of my head. call gates, trap
+ 	; gates, etc.
+	iret
 
-Those concerns don't hold true now, thanks to the jiffies calibration code
-not needing the PIT.  As a result, we can remove this call and simplify the
-locking needed in the panic path.
+kexec_idt:
+	.long 0, 0				; IDT entry 0
+	.long 0, 0				; IDT entry 1
+	.long something, kexec_nmi_handler 	; IDT entry 2 NMI's
 
-I tested kdump on an Ivy Bridge platform, a Pentium4 and an old athlon that
-did not have an ioapic.  All three were successful.
+You can write to the kexec_idt from C code and for the nmi handler you
+just need to make certain all is good.
 
-I also tested using lkdtm that would use jprobes to panic the system when
-entering do_IRQ.  The idea was to see how the system reacted with an
-interrupt pending in the second kernel.  My core2 quad successfully kdump'd
-3 times in a row with no issues.
+The code has to be tested and the proper Intel CPU manual should
+probably be consulted to make certain you dot your eyes and cross your
+t's but we really don't need much code to change on this path.
 
-v2: removed the disable lapic code too
-v3: re-add disabling of lapic code
+Eric
 
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Signed-off-by: Don Zickus <dzickus@redhat.com>
----
-
-There are really two problems here.  One is the deadlock of the ioapic_lock
-that I describe above.  Removing the code to disable the ioapic seems to
-resolve that.
-
-The second issue is handling non-IRQ exceptions like NMIs.  Eric asked me
-to include removing the disable lapic code too.  However, because the nmi
-watchdog is stil active and kexec zeros out the idt before it jumps to
-purgatory, an NMI that comes in during the transition between the first
-kernel and second kernel will see an empty idt and reset the cpu.
-
-Leaving the code to disable the lapic in, turns off perf and blocks those NMIs
-from happening (though an external NMI would still be an issue but that is no
-different than right now).
-
-I tried playing with a stub idt and leaving it in place through the transition
-to the second kernel, but I can't quite get it to work correctly.  Spinning in the
-first kernel before the purgatory jump catches the idt properly.  Spinning in
-purgatory before the second kernel jump doesn't.  I even disabled the zero'ing
-out of the idt in the purgatory code.
-
-I would like to get resolution on the ioapic deadlock to fix a customer issue
-while working the idt and NMI thing on the side, hence the split of this
-patchset.
-
-Hopefully, people recognize there are two issues here and that this patch
-resolves the first one and the second one needs more debugging and time.
----
- arch/x86/kernel/crash.c |    3 ---
- 1 files changed, 0 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..b053cf9 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -96,9 +96,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 	cpu_emergency_svm_disable();
- 
- 	lapic_shutdown();
--#if defined(CONFIG_X86_IO_APIC)
--	disable_IO_APIC();
--#endif
- #ifdef CONFIG_HPET_TIMER
- 	hpet_disable();
- #endif
--- 
-1.7.7.6
-
+p.s. Apologies for the delay I overlooked this message earlier.
 
 _______________________________________________
 kexec mailing list
