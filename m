@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S2slJ-0003qt-7f
- for kexec@lists.infradead.org; Wed, 29 Feb 2012 23:16:46 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
- <20120216172735.GX9751@redhat.com>
- <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
- <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
- <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
- <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
-Date: Wed, 29 Feb 2012 15:19:11 -0800
-In-Reply-To: <20120221135934.GF26998@redhat.com> (Don Zickus's message of
- "Tue, 21 Feb 2012 08:59:34 -0500")
-Message-ID: <m1ipip6xe8.fsf@fess.ebiederm.org>
+ id 1S2uez-0006nr-N0
+ for kexec@lists.infradead.org; Thu, 01 Mar 2012 01:18:23 +0000
+Date: Thu, 1 Mar 2012 10:18:11 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kdump: force page alignment for per-CPU crash notes.
+Message-ID: <20120301011811.GC16483@verge.net.au>
+References: <1330536083-13098-1-git-send-email-surovegin@google.com>
 MIME-Version: 1.0
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
+Content-Disposition: inline
+In-Reply-To: <1330536083-13098-1-git-send-email-surovegin@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,129 +23,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, torvalds@linux-foundation.org, tglx@linutronix.de, vgoyal@redhat.com
+To: Eugene Surovegin <surovegin@google.com>
+Cc: kexec-list <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-Don Zickus <dzickus@redhat.com> writes:
+On Wed, Feb 29, 2012 at 09:21:23AM -0800, Eugene Surovegin wrote:
+> Per-CPU allocations are not guaranteed to be physically contiguous.
+> However, kdump kernel and user-space code assumes that per-CPU
+> memory, used for saving CPU registers on crash, is.
+> This can cause corrupted /proc/vmcore in some cases - the main
+> symptom being huge ELF note section.
+> 
+> Force page alignment for note_buf_t to ensure that this assumption holds.
 
-> On Tue, Feb 21, 2012 at 12:01:07AM -0800, Eric W. Biederman wrote:
->> Don Zickus <dzickus@redhat.com> writes:
->> 
->> 2> On Fri, Feb 17, 2012 at 07:21:52PM -0800, Eric W. Biederman wrote:
->> >> Don Zickus <dzickus@redhat.com> writes:
->> >> 
->> >> > On Fri, Feb 17, 2012 at 04:41:01AM -0800, Eric W. Biederman wrote:
->> >> >> 
->> >> >> The fix with a guarantee of no more scope creep is to just disable the
->> >> >> nmi watchdog on the kexec on panic path.
->> >> >> 
->> >> >> Don if you have time please figure out is needed to ignore nmi's and
->> >> >> possible record and/or report them while we boot, otherwise please cook
->> >> >> up a patch that just disables the nmi watchdog wherever we are sending
->> >> >> it from (the local apic or the ioapic).
->> >> >
->> >> > Can I keep things even simpler?  The original problem was the deadlock
->> >> > with the ioapic lock.  We fixed that by removing the call to
->> >> > disable_IO_APIC().  Can we just leave the disable_local_APIC calls in
->> >> > there for now?  Is there any real harm?
->> >> 
->> >> > All this rewrite is going to take time which will delay fixing a current
->> >> > problem with kexec on panic, the ioapic deadlock.
->> >> 
->> >> Hmm.
->> >> 
->> >> My apologies I just realized that we can not disable the nmi watchdog
->> >> safely in all cases.  To avoid the deadlock we fundamentally can not
->> >> write to the io_apic, because the locks are the io_apic write path.
->> >> The nmi watchdog can be sourced from either the local apics or the
->> >> io_apics.  To disable the nmi_watchdog we need at least potentially
->> >> to write io_apic.
->> >
->> > I am curious where you see the nmi watchdog being sourced from the ioapic?
->> > I thought I removed that code 3 or 4 releases ago.
->> 
->> In my memory, and in references to the code in comments in various apic
->> related code.  I couldn't figure out what the current code was doing and
->> assumed the implementation was equivalent.  It does look like you
->> removed the code that used the io_apic.  I still haven't figured
->> out just how the new implementation works yet.
->
-> It is just a client of perf now.  Perf controls the local apic accesses.
-> A lot simpler now.
->
->> 
->> So maybe in the short term we can safely just stomp the timer that
->> triggers the nmi watchdog in the local apic.  Over the long term that
->> feels like it is just asking for trouble.
->
-> I can understand that.
->
->> 
->> I wonder if the reason that we have an hpet stomp in that code is
->> for a similar reason.  Did we ever source nmi's from the hpet timer?
->> 
->> >> So it appears to me that the only reasonable and robust thing we can
->> >> do is to ignore nmis in the kexec on panic path.
->> >> 
->> >> So it looks to me that the only path forward at this point is to fix
->> >> the other bug where an unexpected nmi will kill the kexec on panic boot.
->> >> 
->> >> I just took a look at the code in /sbin/kexec and that code does not in
->> >> fact change the idt except when we switch to 16bit mode, which we
->> >> definitely do not do in the kexec on panic case.  So it appears that we
->> >> don't need to coordinate an /sbin/kexec release with a kernel release to
->> >> ignore nmis.
->> >> 
->> >> In fact it looks like we only need to fix the interrupt descriptors
->> >> loaded in machine_kexec_64.c and head64.c to ignore nmis.
->> >> 
->> >> At which point we will have fixed two bugs and have a much more reliable
->> >> kexec on panic implementation.
->> >
->> > Ok.  I'll talk with Vivek about how the can be implemented.
->> 
->> Thanks.  It really doesn't look very hard.  Just a tiny idt with
->> an nmi entry that says iret.
->
-> It probably is, except I never hacked on idt code before and my assembly
-> isn't that good.  I have been trying to find examples to copy from to give
-> it a try.  So far I was using early_idt_handlers with early_printk to see
-> if I could capture some printk messages while jumping from the first
-> kernel to the second kernel (when the other early_idt_handlers would kick
-> in for the second kernel).
->
-> Tips?  Better examples?
+Ouch. I'm surprised there is an allocation on crash, perhaps
+it could at least be done earlier? And am I right in thinking
+that this change increases the likely hood that the allocation
+could fail?
 
-That is a particularly good example.  When I took a quick look earlier
-that is the first place we reload the idt in the kernel boot so that is
-one of two places that needs to be modified.
-
-The other place in the reboot code page (which will be a little tricky
-because of it's relocatability) needs to have code that roughly says:
-
-kexec_nmi_handler:
-        ; Does this vector get any other kind of parameters and saved
-        ; registers that we need to restore?
-        ; Different types of exceptions handlers have different rules
-        ; that I don't remember off the top of my head. call gates, trap
- 	; gates, etc.
-	iret
-
-kexec_idt:
-	.long 0, 0				; IDT entry 0
-	.long 0, 0				; IDT entry 1
-	.long something, kexec_nmi_handler 	; IDT entry 2 NMI's
-
-You can write to the kexec_idt from C code and for the nmi handler you
-just need to make certain all is good.
-
-The code has to be tested and the proper Intel CPU manual should
-probably be consulted to make certain you dot your eyes and cross your
-t's but we really don't need much code to change on this path.
-
-Eric
-
-p.s. Apologies for the delay I overlooked this message earlier.
+> 
+> Signed-off-by: Eugene Surovegin <surovegin@google.com>
+> CC: Eric Biederman <ebiederm@xmission.com>
+> CC: Vivek Goyal <vgoyal@redhat.com>
+> CC: kexec-list <kexec@lists.infradead.org>
+> ---
+>  kernel/kexec.c |    9 +++++++--
+>  1 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 7b08867..e641b5c 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1232,8 +1232,13 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  
+>  static int __init crash_notes_memory_init(void)
+>  {
+> -	/* Allocate memory for saving cpu registers. */
+> -	crash_notes = alloc_percpu(note_buf_t);
+> +	/* Allocate memory for saving cpu registers.
+> +	 * Force page alignment to avoid crossing physical page boundary -
+> +	 * kexec-tools and kernel /proc/vmcore handler assume these per-CPU
+> +	 * chunks are physically contiguous.
+> +	 */
+> +	crash_notes = (note_buf_t __percpu *)__alloc_percpu(sizeof(note_buf_t),
+> +							    PAGE_SIZE);
+>  	if (!crash_notes) {
+>  		printk("Kexec: Memory allocation for saving cpu register"
+>  		" states failed\n");
+> -- 
+> 1.7.9.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
