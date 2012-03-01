@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S2w97-0000jS-T0
- for kexec@lists.infradead.org; Thu, 01 Mar 2012 02:53:34 +0000
-Date: Thu, 1 Mar 2012 11:53:29 +0900
-From: Simon Horman <horms@verge.net.au>
+ id 1S37dq-0002AV-3J
+ for kexec@lists.infradead.org; Thu, 01 Mar 2012 15:10:03 +0000
+Date: Thu, 1 Mar 2012 10:09:57 -0500
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] kdump: force page alignment for per-CPU crash notes.
-Message-ID: <20120301025328.GF10053@verge.net.au>
+Message-ID: <20120301150957.GA13533@redhat.com>
 References: <1330536083-13098-1-git-send-email-surovegin@google.com>
- <20120301011811.GC16483@verge.net.au>
- <CANrfoUXd4L2bjBO+L8ZBCkc1dfnZahn39sB25zsrUMqGA5zY5A@mail.gmail.com>
- <20120301013200.GF16483@verge.net.au>
- <CANrfoUVTSh6jWckz2jt9+X6E6FSPL5OwqWNrcXchbo1BwkCLgw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CANrfoUVTSh6jWckz2jt9+X6E6FSPL5OwqWNrcXchbo1BwkCLgw@mail.gmail.com>
+In-Reply-To: <1330536083-13098-1-git-send-email-surovegin@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,44 +24,82 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eugene Surovegin <surovegin@google.com>
-Cc: kexec-list <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: kexec-list <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>
 
-On Wed, Feb 29, 2012 at 05:39:55PM -0800, Eugene Surovegin wrote:
-> On Wed, Feb 29, 2012 at 5:32 PM, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Feb 29, 2012 at 05:23:10PM -0800, Eugene Surovegin wrote:
-> >> On Wed, Feb 29, 2012 at 5:18 PM, Simon Horman <horms@verge.net.au> wrote:
-> >>
-> >> > On Wed, Feb 29, 2012 at 09:21:23AM -0800, Eugene Surovegin wrote:
-> >> > > Per-CPU allocations are not guaranteed to be physically contiguous.
-> >> > > However, kdump kernel and user-space code assumes that per-CPU
-> >> > > memory, used for saving CPU registers on crash, is.
-> >> > > This can cause corrupted /proc/vmcore in some cases - the main
-> >> > > symptom being huge ELF note section.
-> >> > >
-> >> > > Force page alignment for note_buf_t to ensure that this assumption holds.
-> >> >
-> >> > Ouch. I'm surprised there is an allocation on crash, perhaps
-> >> > it could at least be done earlier? And am I right in thinking
-> >> > that this change increases the likely hood that the allocation
-> >> > could fail?
-> >> >
-> >>
-> >> I'm not following. This allocation is done on start-up, not on crash.
-> >> If you cannot allocate this much memory on system boot, I'm not sure what
-> >> else you can do on this system....
-> >
-> > Sorry, my eyes deceived me. You are correct and I agree.
-> >
-> > Is it the case that note_buf_t is never larger than PAGE_SIZE?
-> > If so I your patch looks good to me.
+On Wed, Feb 29, 2012 at 09:21:23AM -0800, Eugene Surovegin wrote:
+> Per-CPU allocations are not guaranteed to be physically contiguous.
+> However, kdump kernel and user-space code assumes that per-CPU
+> memory, used for saving CPU registers on crash, is.
+> This can cause corrupted /proc/vmcore in some cases - the main
+> symptom being huge ELF note section.
 > 
-> Currently, maximum note size is hardcoded in kexec-tools to 1024
-> (MAX_NOTE_BYTES).
-> Usually it's way less. IIRC on x86_64 it's 336 bytes.
+> Force page alignment for note_buf_t to ensure that this assumption holds.
+> 
 
-Ok, understood.
+Hi Eugene,
 
-Reviewed-by: Simon Horman <horms@verge.net.au>
+Where do we make assumption that crash_notes address is page aligned?
+
+In first kernel we save notes using virtual addresses as returned by
+per_cpu_ptr(). So first kernel should be fine (crash_save_cpu()).
+
+In second kernel, fs/proc/vmcore.c code does not seem to be assuming 
+that notes are stored as page aligned address.
+
+merge_note_headers_elf64()
+  read_from_oldmem()
+       offset = (unsigned long)(*ppos % PAGE_SIZE);
+        pfn = (unsigned long)(*ppos / PAGE_SIZE);
+
+We see to calculate pfn and offset inside the page. Map the pfn and then
+access offset.
+
+So as long as whole of the note section is stored on a single physical
+page it is not a problem.
+
+Are you referring to the fact that note could be stored on two different
+physical pages and then kexec-tools does not know about the physical
+address of second page, hence second kernel does not know about it
+and we never read that data. That sounds like a problem.
+
+So it make sense to force the page size alignment and if notes ever
+grow beyond 1 page, we need to come up with more complex ways of
+communicating more than 1 physical address to second kernel.
+
+Thanks
+Vivek
+
+
+> Signed-off-by: Eugene Surovegin <surovegin@google.com>
+> CC: Eric Biederman <ebiederm@xmission.com>
+> CC: Vivek Goyal <vgoyal@redhat.com>
+> CC: kexec-list <kexec@lists.infradead.org>
+> ---
+>  kernel/kexec.c |    9 +++++++--
+>  1 files changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index 7b08867..e641b5c 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -1232,8 +1232,13 @@ void crash_save_cpu(struct pt_regs *regs, int cpu)
+>  
+>  static int __init crash_notes_memory_init(void)
+>  {
+> -	/* Allocate memory for saving cpu registers. */
+> -	crash_notes = alloc_percpu(note_buf_t);
+> +	/* Allocate memory for saving cpu registers.
+> +	 * Force page alignment to avoid crossing physical page boundary -
+> +	 * kexec-tools and kernel /proc/vmcore handler assume these per-CPU
+> +	 * chunks are physically contiguous.
+> +	 */
+> +	crash_notes = (note_buf_t __percpu *)__alloc_percpu(sizeof(note_buf_t),
+> +							    PAGE_SIZE);
+>  	if (!crash_notes) {
+>  		printk("Kexec: Memory allocation for saving cpu register"
+>  		" states failed\n");
+> -- 
+> 1.7.9.1
 
 _______________________________________________
 kexec mailing list
