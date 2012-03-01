@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qy0-f177.google.com ([209.85.216.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1S2v0M-0007iq-Lc
- for kexec@lists.infradead.org; Thu, 01 Mar 2012 01:40:27 +0000
-Received: by qcsu28 with SMTP id u28so29909qcs.36
- for <kexec@lists.infradead.org>; Wed, 29 Feb 2012 17:40:25 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <20120301013200.GF16483@verge.net.au>
-References: <1330536083-13098-1-git-send-email-surovegin@google.com>
- <20120301011811.GC16483@verge.net.au>
- <CANrfoUXd4L2bjBO+L8ZBCkc1dfnZahn39sB25zsrUMqGA5zY5A@mail.gmail.com>
- <20120301013200.GF16483@verge.net.au>
-From: Eugene Surovegin <surovegin@google.com>
-Date: Wed, 29 Feb 2012 17:39:55 -0800
-Message-ID: <CANrfoUVTSh6jWckz2jt9+X6E6FSPL5OwqWNrcXchbo1BwkCLgw@mail.gmail.com>
-Subject: Re: [PATCH] kdump: force page alignment for per-CPU crash notes.
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1S2v3H-0004Kf-Ij
+ for kexec@lists.infradead.org; Thu, 01 Mar 2012 01:43:29 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q211h7PQ011463
+ for <kexec@lists.infradead.org>; Thu, 1 Mar 2012 10:43:07 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id q211h7j22028 for kexec@lists.infradead.org;
+ Thu, 1 Mar 2012 10:43:07 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q211h6Ia005128
+ for <kexec@lists.infradead.org>; Thu, 1 Mar 2012 10:43:06 +0900 (JST)
+Date: Thu, 1 Mar 2012 10:40:49 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: makedumpfile-1.4.3: Support for PPC32 architecture.
+Message-Id: <20120301104049.01ce685f.kumagai-atsushi@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,43 +30,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec-list <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+To: kexec@lists.infradead.org
 
-On Wed, Feb 29, 2012 at 5:32 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Feb 29, 2012 at 05:23:10PM -0800, Eugene Surovegin wrote:
->> On Wed, Feb 29, 2012 at 5:18 PM, Simon Horman <horms@verge.net.au> wrote:
->>
->> > On Wed, Feb 29, 2012 at 09:21:23AM -0800, Eugene Surovegin wrote:
->> > > Per-CPU allocations are not guaranteed to be physically contiguous.
->> > > However, kdump kernel and user-space code assumes that per-CPU
->> > > memory, used for saving CPU registers on crash, is.
->> > > This can cause corrupted /proc/vmcore in some cases - the main
->> > > symptom being huge ELF note section.
->> > >
->> > > Force page alignment for note_buf_t to ensure that this assumption holds.
->> >
->> > Ouch. I'm surprised there is an allocation on crash, perhaps
->> > it could at least be done earlier? And am I right in thinking
->> > that this change increases the likely hood that the allocation
->> > could fail?
->> >
->>
->> I'm not following. This allocation is done on start-up, not on crash.
->> If you cannot allocate this much memory on system boot, I'm not sure what
->> else you can do on this system....
->
-> Sorry, my eyes deceived me. You are correct and I agree.
->
-> Is it the case that note_buf_t is never larger than PAGE_SIZE?
-> If so I your patch looks good to me.
+Hi,
 
-Currently, maximum note size is hardcoded in kexec-tools to 1024
-(MAX_NOTE_BYTES).
-Usually it's way less. IIRC on x86_64 it's 336 bytes.
+makedumpfile version 1.4.3 is released.
+Your comments/patches are welcome.
 
---
-Eugene
+Suzuki implemented "Support for PPC32" feature. Thanks, Suzuki.
+
+
+Changelog:
+o New feature
+   Commits related to "Support for PPC32"
+    - [PATCH v1 1/3] Support for cross building. (by Suzuki K. Poulose) 96f24dc
+    - [PATCH v1 2/3][ppc64] Rename the __powerpc__ macro to __powerpc64__ for PPC64. (by Suzuki K. Poulose) 3d8b733
+    - [PATCH v1 3/3] Add support for PPC32. (by Suzuki K. Poulose) 9cfcdae
+   Other commit
+    - [PATCH] Support newer kernels. (by Atsushi Kumagai) 029ebaf
+
+o Bugfix
+    - [PATCH] Fix segmentation fault for makedumpfile -x/--split. (by Aruna Balakrishnaiah) 8bc7d44
+    - [PATCH] Fix VtoP method for x86 remap allocator. (by Petr Tesarik) 3812217
+
+o TODO
+    - Send the patch to the LKML to store some symbols in VMCOREINFO.
+      (VtoP method for x86 remap allocator needs some symbols that
+       relate to remap allocator.)
+    - Support newer kernels (Especially DISCONTIGMEM).
+
+
+Explanation of makedumpfile:
+  To shorten the size of the dumpfile and the time of creating the
+  dumpfile, makedumpfile copies only the necessary pages for analysis
+  to the dumpfile from /proc/vmcore. You can specify the kind of
+  unnecessary pages with dump_level. If you want to shorten the size
+  further, enable the compression of the page data.
+
+Download:
+  You can download the latest makedumpfile from the following URL.
+  Details of the change are written on the git page of the following site.
+  https://sourceforge.net/projects/makedumpfile/
+
+Method of installation:
+  You can compile the makedumpfile command as follows;
+  1. "tar -zxvf makedumpfile-x.y.z.tar.gz"
+  2. "cd makedumpfile-x.y.z"
+  3. "make; make install"
+
+Usage:
+  makedumpfile [-c] [-E] [-d dump_level] [-x vmlinux] dump_mem dump_file
+
+Example:
+  If you want to exclude pages filled by zero, cache pages, user pages
+  and free pages and to enable compression, please execute the following
+  command.
+
+  # makedumpfile -c -d 31 -x vmlinux /proc/vmcore dumpfile
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
