@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
  by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S5EW9-0003Zg-4y
- for kexec@lists.infradead.org; Wed, 07 Mar 2012 10:54:50 +0000
-Message-ID: <4F573E74.5040504@oss.ntt.co.jp>
-Date: Wed, 07 Mar 2012 19:54:44 +0900
+ id 1S5EY9-0003bM-AC
+ for kexec@lists.infradead.org; Wed, 07 Mar 2012 10:56:54 +0000
+Message-ID: <4F573EF0.1080501@oss.ntt.co.jp>
+Date: Wed, 07 Mar 2012 19:56:48 +0900
 From: =?ISO-8859-1?Q?Fernando_Luis_V=E1zquez_Cao?=
  <fernando@oss.ntt.co.jp>
 MIME-Version: 1.0
-Subject: [PATCH 1/2] boot: ignore early NMIs
+Subject: [PATCH 2/2] boot: add early NMI counter
 References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
  <20120216172735.GX9751@redhat.com>
  <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
@@ -17,8 +17,9 @@ References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
  <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
  <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
  <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
-In-Reply-To: <4F573E1C.2060909@oss.ntt.co.jp>
-Content-Type: multipart/mixed; boundary="------------000801010101070406040206"
+ <4F573E74.5040504@oss.ntt.co.jp>
+In-Reply-To: <4F573E74.5040504@oss.ntt.co.jp>
+Content-Type: multipart/mixed; boundary="------------000002060200070305050706"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,119 +34,78 @@ To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Don Zickus <dzickus@redhat.com>, linux-tip-commits@vger.kernel.org, torvalds@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com, mingo@elte.hu, Yinghai Lu <yinghai@kernel.org>, akpm@linux-foundation.org, vgoyal@redhat.com
 
 This is a multi-part message in MIME format.
---------------000801010101070406040206
+--------------000002060200070305050706
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
---------------000801010101070406040206
+--------------000002060200070305050706
 Content-Type: text/x-patch;
- name="ignore-early-nmis.patch"
+ name="add-early-nmi-counter.patch"
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
- filename="ignore-early-nmis.patch"
+ filename="add-early-nmi-counter.patch"
 
-Subject: [PATCH] boot: ignore early NMIs
+Subject: [PATCH] boot: add early NMI counter
 
 From: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
 
-NMIs very early in the boot process are rarely critical (usually
-it just means that there was a spurious bit flip somewhere in the
-hardware, or that this is a kdump kernel and we received an NMI
-generated in the previous context), so the current behavior of
-halting the system when one occurs is probably a bit over the top.
+We currently ignore early NMIs but it would be nice to be able to
+know whether they actually occurred.
 
-This patch changes the early IDT so that NMIs are ignored and the
-kernel can, hopefully, continue executing other code. Harsher
-measures (panic, etc) are defered to the final NMI handler, which
-can actually make an informed decision.
-
-This issue presented itself in our environment as seemingly
-random hangs in kdump.
+This patch adds an early NMI counter and exports it trough
+/proc/interrupts with the name of ENM (Early NMI).
 
 Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
 ---
 
-diff -urNp linux-3.3-rc6-orig/arch/x86/kernel/head64.c linux-3.3-rc6/arch/x86/kernel/head64.c
---- linux-3.3-rc6-orig/arch/x86/kernel/head64.c	2012-03-07 15:49:01.834241787 +0900
-+++ linux-3.3-rc6/arch/x86/kernel/head64.c	2012-03-07 18:39:03.173732875 +0900
-@@ -71,7 +71,7 @@ void __init x86_64_start_kernel(char * r
- 				(__START_KERNEL & PGDIR_MASK)));
- 	BUILD_BUG_ON(__fix_to_virt(__end_of_fixed_addresses) <= MODULES_END);
- 
--	/* clear bss before set_intr_gate with early_idt_handler */
-+	/* clear bss before set_intr_gate with early_idt_handlers */
- 	clear_bss();
- 
- 	/* Make NULL pointers segfault */
-@@ -79,13 +79,8 @@ void __init x86_64_start_kernel(char * r
- 
- 	max_pfn_mapped = KERNEL_IMAGE_SIZE >> PAGE_SHIFT;
- 
--	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
--#ifdef CONFIG_EARLY_PRINTK
-+	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++)
- 		set_intr_gate(i, &early_idt_handlers[i]);
--#else
--		set_intr_gate(i, early_idt_handler);
--#endif
--	}
- 	load_idt((const struct desc_ptr *)&idt_descr);
- 
- 	if (console_loglevel == 10)
+diff -urNp linux-3.3-rc6-orig/arch/x86/include/asm/processor.h linux-3.3-rc6/arch/x86/include/asm/processor.h
+--- linux-3.3-rc6-orig/arch/x86/include/asm/processor.h	2012-03-07 15:49:01.826241682 +0900
++++ linux-3.3-rc6/arch/x86/include/asm/processor.h	2012-03-07 18:52:27.668054122 +0900
+@@ -402,6 +402,7 @@ DECLARE_PER_CPU(char *, irq_stack_ptr);
+ DECLARE_PER_CPU(unsigned int, irq_count);
+ extern unsigned long kernel_eflags;
+ extern asmlinkage void ignore_sysret(void);
++extern unsigned int early_nmi_count;
+ #else	/* X86_64 */
+ #ifdef CONFIG_CC_STACKPROTECTOR
+ /*
 diff -urNp linux-3.3-rc6-orig/arch/x86/kernel/head_64.S linux-3.3-rc6/arch/x86/kernel/head_64.S
---- linux-3.3-rc6-orig/arch/x86/kernel/head_64.S	2012-03-07 15:49:01.838241839 +0900
-+++ linux-3.3-rc6/arch/x86/kernel/head_64.S	2012-03-07 18:41:21.811516876 +0900
-@@ -270,18 +270,29 @@ bad_address:
- 	jmp bad_address
- 
- 	.section ".init.text","ax"
--#ifdef CONFIG_EARLY_PRINTK
- 	.globl early_idt_handlers
- early_idt_handlers:
--	i = 0
-+	vector = 0
- 	.rept NUM_EXCEPTION_VECTORS
--	movl $i, %esi
--	jmp early_idt_handler
--	i = i + 1
-+	/*
-+	 * NMIs (vector 2) this early in the boot process are rarely critical
-+	 * (usually it just means that there was a spurious bit flip somewhere
-+	 * in the hardware, or that this is a kdump kernel and we received an
-+	 * NMI generated in the previous context), so we ignore them here and
-+	 * try to continue (see early_nmi_handler implementation below).
-+	 * Harsher measures (panic, etc) are defered to the final NMI handler,
-+	 * which can actually make an informed decision.
-+	 */
-+	.if vector == 2
-+	jmp early_nmi_handler
-+	.else
-+	movl $vector, %esi
-+	jmp early_exception_handler
-+	.endif
-+	vector = vector + 1
- 	.endr
--#endif
- 
--ENTRY(early_idt_handler)
-+early_exception_handler:
- #ifdef CONFIG_EARLY_PRINTK
- 	cmpl $2,early_recursion_flag(%rip)
- 	jz  1f
-@@ -315,6 +326,9 @@ ENTRY(early_idt_handler)
- 1:	hlt
+--- linux-3.3-rc6-orig/arch/x86/kernel/head_64.S	2012-03-07 18:51:17.583160114 +0900
++++ linux-3.3-rc6/arch/x86/kernel/head_64.S	2012-03-07 18:54:37.205699422 +0900
+@@ -327,6 +327,7 @@ early_exception_handler:
  	jmp 1b
  
-+early_nmi_handler:
-+	iretq
-+
+ early_nmi_handler:
++	incl early_nmi_count(%rip) # exported as ENM in /proc/interrupts
+ 	iretq
+ 
  #ifdef CONFIG_EARLY_PRINTK
- early_recursion_flag:
- 	.long 0
+@@ -340,6 +341,10 @@ early_idt_ripmsg:
+ #endif /* CONFIG_EARLY_PRINTK */
+ 	.previous
+ 
++	.globl early_nmi_count
++early_nmi_count:
++	.long 0
++
+ #define NEXT_PAGE(name) \
+ 	.balign	PAGE_SIZE; \
+ ENTRY(name)
+diff -urNp linux-3.3-rc6-orig/arch/x86/kernel/irq.c linux-3.3-rc6/arch/x86/kernel/irq.c
+--- linux-3.3-rc6-orig/arch/x86/kernel/irq.c	2012-03-07 15:49:01.838241839 +0900
++++ linux-3.3-rc6/arch/x86/kernel/irq.c	2012-03-07 18:55:14.078179448 +0900
+@@ -125,6 +125,7 @@ int arch_show_interrupts(struct seq_file
+ #if defined(CONFIG_X86_IO_APIC)
+ 	seq_printf(p, "%*s: %10u\n", prec, "MIS", atomic_read(&irq_mis_count));
+ #endif
++	seq_printf(p, "%*s: %10u\n", prec, "ENM", early_nmi_count);
+ 	return 0;
+ }
+ 
 
---------------000801010101070406040206
+--------------000002060200070305050706
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -156,5 +116,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---------------000801010101070406040206--
+--------------000002060200070305050706--
 
