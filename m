@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
  by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S5EVO-0003Y3-J9
- for kexec@lists.infradead.org; Wed, 07 Mar 2012 10:54:05 +0000
-Message-ID: <4F573E1C.2060909@oss.ntt.co.jp>
-Date: Wed, 07 Mar 2012 19:53:16 +0900
+ id 1S5EW9-0003Zg-4y
+ for kexec@lists.infradead.org; Wed, 07 Mar 2012 10:54:50 +0000
+Message-ID: <4F573E74.5040504@oss.ntt.co.jp>
+Date: Wed, 07 Mar 2012 19:54:44 +0900
 From: =?ISO-8859-1?Q?Fernando_Luis_V=E1zquez_Cao?=
  <fernando@oss.ntt.co.jp>
 MIME-Version: 1.0
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
+Subject: [PATCH 1/2] boot: ignore early NMIs
 References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
  <20120216172735.GX9751@redhat.com>
  <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
@@ -17,8 +16,9 @@ References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
  <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
  <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
  <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
- <m1ipip6xe8.fsf@fess.ebiederm.org>
-In-Reply-To: <m1ipip6xe8.fsf@fess.ebiederm.org>
+ <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
+In-Reply-To: <4F573E1C.2060909@oss.ntt.co.jp>
+Content-Type: multipart/mixed; boundary="------------000801010101070406040206"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,44 +27,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: Don Zickus <dzickus@redhat.com>, linux-tip-commits@vger.kernel.org, torvalds@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com, mingo@elte.hu, Yinghai Lu <yinghai@kernel.org>, akpm@linux-foundation.org, vgoyal@redhat.com
 
-On 03/01/2012 08:19 AM, Eric W. Biederman wrote:
+This is a multi-part message in MIME format.
+--------------000801010101070406040206
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> Don Zickus<dzickus@redhat.com>  writes:
->> It probably is, except I never hacked on idt code before and my assembly
->> isn't that good.  I have been trying to find examples to copy from to give
->> it a try.  So far I was using early_idt_handlers with early_printk to see
->> if I could capture some printk messages while jumping from the first
->> kernel to the second kernel (when the other early_idt_handlers would kick
->> in for the second kernel).
->>
->> Tips?  Better examples?
-> That is a particularly good example.  When I took a quick look earlier
-> that is the first place we reload the idt in the kernel boot so that is
-> one of two places that needs to be modified.
 
-Hi Eric, Don
 
-Sorry for chiming in so late.
+--------------000801010101070406040206
+Content-Type: text/x-patch;
+ name="ignore-early-nmis.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="ignore-early-nmis.patch"
 
-We run into the same NMI problems and wrote some patches that tackle
-the kernel boot side of things. They have been extensively tested using
-qemu-kvm and things seem to be working as expected (after receiving an
-early NMI the kernel continues without problem; after the iret there is no
-stack corruption or register corruption).
+Subject: [PATCH] boot: ignore early NMIs
 
-I will be replying to this email with the patches.
+From: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
 
-Thanks,
-Fernando
+NMIs very early in the boot process are rarely critical (usually
+it just means that there was a spurious bit flip somewhere in the
+hardware, or that this is a kdump kernel and we received an NMI
+generated in the previous context), so the current behavior of
+halting the system when one occurs is probably a bit over the top.
+
+This patch changes the early IDT so that NMIs are ignored and the
+kernel can, hopefully, continue executing other code. Harsher
+measures (panic, etc) are defered to the final NMI handler, which
+can actually make an informed decision.
+
+This issue presented itself in our environment as seemingly
+random hangs in kdump.
+
+Signed-off-by: Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
+---
+
+diff -urNp linux-3.3-rc6-orig/arch/x86/kernel/head64.c linux-3.3-rc6/arch/x86/kernel/head64.c
+--- linux-3.3-rc6-orig/arch/x86/kernel/head64.c	2012-03-07 15:49:01.834241787 +0900
++++ linux-3.3-rc6/arch/x86/kernel/head64.c	2012-03-07 18:39:03.173732875 +0900
+@@ -71,7 +71,7 @@ void __init x86_64_start_kernel(char * r
+ 				(__START_KERNEL & PGDIR_MASK)));
+ 	BUILD_BUG_ON(__fix_to_virt(__end_of_fixed_addresses) <= MODULES_END);
+ 
+-	/* clear bss before set_intr_gate with early_idt_handler */
++	/* clear bss before set_intr_gate with early_idt_handlers */
+ 	clear_bss();
+ 
+ 	/* Make NULL pointers segfault */
+@@ -79,13 +79,8 @@ void __init x86_64_start_kernel(char * r
+ 
+ 	max_pfn_mapped = KERNEL_IMAGE_SIZE >> PAGE_SHIFT;
+ 
+-	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
+-#ifdef CONFIG_EARLY_PRINTK
++	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++)
+ 		set_intr_gate(i, &early_idt_handlers[i]);
+-#else
+-		set_intr_gate(i, early_idt_handler);
+-#endif
+-	}
+ 	load_idt((const struct desc_ptr *)&idt_descr);
+ 
+ 	if (console_loglevel == 10)
+diff -urNp linux-3.3-rc6-orig/arch/x86/kernel/head_64.S linux-3.3-rc6/arch/x86/kernel/head_64.S
+--- linux-3.3-rc6-orig/arch/x86/kernel/head_64.S	2012-03-07 15:49:01.838241839 +0900
++++ linux-3.3-rc6/arch/x86/kernel/head_64.S	2012-03-07 18:41:21.811516876 +0900
+@@ -270,18 +270,29 @@ bad_address:
+ 	jmp bad_address
+ 
+ 	.section ".init.text","ax"
+-#ifdef CONFIG_EARLY_PRINTK
+ 	.globl early_idt_handlers
+ early_idt_handlers:
+-	i = 0
++	vector = 0
+ 	.rept NUM_EXCEPTION_VECTORS
+-	movl $i, %esi
+-	jmp early_idt_handler
+-	i = i + 1
++	/*
++	 * NMIs (vector 2) this early in the boot process are rarely critical
++	 * (usually it just means that there was a spurious bit flip somewhere
++	 * in the hardware, or that this is a kdump kernel and we received an
++	 * NMI generated in the previous context), so we ignore them here and
++	 * try to continue (see early_nmi_handler implementation below).
++	 * Harsher measures (panic, etc) are defered to the final NMI handler,
++	 * which can actually make an informed decision.
++	 */
++	.if vector == 2
++	jmp early_nmi_handler
++	.else
++	movl $vector, %esi
++	jmp early_exception_handler
++	.endif
++	vector = vector + 1
+ 	.endr
+-#endif
+ 
+-ENTRY(early_idt_handler)
++early_exception_handler:
+ #ifdef CONFIG_EARLY_PRINTK
+ 	cmpl $2,early_recursion_flag(%rip)
+ 	jz  1f
+@@ -315,6 +326,9 @@ ENTRY(early_idt_handler)
+ 1:	hlt
+ 	jmp 1b
+ 
++early_nmi_handler:
++	iretq
++
+ #ifdef CONFIG_EARLY_PRINTK
+ early_recursion_flag:
+ 	.long 0
+
+--------------000801010101070406040206
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------000801010101070406040206--
+
