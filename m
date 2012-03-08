@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
- by bombadil.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S5WOv-0007Xc-9W
- for kexec@lists.infradead.org; Thu, 08 Mar 2012 06:00:34 +0000
-Message-ID: <4F584AFC.9070300@oss.ntt.co.jp>
-Date: Thu, 08 Mar 2012 15:00:28 +0900
-From: =?UTF-8?B?RmVybmFuZG8gTHVpcyBWw6F6cXVleiBDYW8=?= <fernando@oss.ntt.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] boot: add early NMI counter
-References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
- <20120216172735.GX9751@redhat.com>
- <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
- <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
- <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
- <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
- <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
- <4F573E74.5040504@oss.ntt.co.jp> <4F573EF0.1080501@oss.ntt.co.jp>
- <m1399j1ysk.fsf@fess.ebiederm.org>
-In-Reply-To: <m1399j1ysk.fsf@fess.ebiederm.org>
+Received: from mail-iy0-f177.google.com ([209.85.210.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1S5X17-0001RU-2h
+ for kexec@lists.infradead.org; Thu, 08 Mar 2012 06:40:02 +0000
+Received: by mail-iy0-f177.google.com with SMTP id y10so310005iak.36
+ for <kexec@lists.infradead.org>; Wed, 07 Mar 2012 22:40:00 -0800 (PST)
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH 2/5] ppc: move DEBUG code to --debug
+Date: Thu,  8 Mar 2012 14:39:39 +0800
+Message-Id: <1331188782-10912-2-git-send-email-xiyou.wangcong@gmail.com>
+In-Reply-To: <1331188782-10912-1-git-send-email-xiyou.wangcong@gmail.com>
+References: <1331188782-10912-1-git-send-email-xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,31 +19,379 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Don Zickus <dzickus@redhat.com>, akpm@linux-foundation.org, linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, tglx@linutronix.de, torvalds@linux-foundation.org, mingo@elte.hu, vgoyal@redhat.com
+To: kexec@lists.infradead.org
+Cc: Cong Wang <xiyou.wangcong@gmail.com>, Simon Horman <horms@verge.net.au>
 
-T24gMDMvMDgvMjAxMiAwMTo1MCBQTSwgRXJpYyBXLiBCaWVkZXJtYW4gd3JvdGU6Cj4gRmVybmFu
-ZG8gTHVpcyBWw6F6cXVleiBDYW88ZmVybmFuZG9Ab3NzLm50dC5jby5qcD4gIHdyaXRlczoKPgo+
-PiBTdWJqZWN0OiBbUEFUQ0hdIGJvb3Q6IGFkZCBlYXJseSBOTUkgY291bnRlcgo+Pgo+PiBGcm9t
-OiBGZXJuYW5kbyBMdWlzIFZhenF1ZXogQ2FvPGZlcm5hbmRvQG9zcy5udHQuY28uanA+Cj4+Cj4+
-IFdlIGN1cnJlbnRseSBpZ25vcmUgZWFybHkgTk1JcyBidXQgaXQgd291bGQgYmUgbmljZSB0byBi
-ZSBhYmxlIHRvCj4+IGtub3cgd2hldGhlciB0aGV5IGFjdHVhbGx5IG9jY3VycmVkLgo+Pgo+PiBU
-aGlzIHBhdGNoIGFkZHMgYW4gZWFybHkgTk1JIGNvdW50ZXIgYW5kIGV4cG9ydHMgaXQgdHJvdWdo
-Cj4+IC9wcm9jL2ludGVycnVwdHMgd2l0aCB0aGUgbmFtZSBvZiBFTk0gKEVhcmx5IE5NSSkuCj4g
-Rm9yIGEgdXNlcnNwYWNlIGludGVyZmFjZSBJIHN1c3BlY3Qgd2UganVzdCB3YW50IHRvIGR1bXAg
-dGhlIGNvdW50Cj4gaW50byB0aGUgTk1JIGNvdW50ZXIuCj4KPiBJdCBwcm9iYWJseSBtYWtlcyBz
-ZW5zZSB0byBoYXZlIGEgc2VwYXJhdGUgdmFyaWFibGUgaW4gZWFybHkgYm9vdCBsaWtlCj4geW91
-IGRvLCBidXQgdGhlbiBhYm91dCB0aGUgdGltZSB3ZSBzZXR1cCB0aGUgbm9ybWFsIE5NSSBoYW5k
-bGVyIG1vdmUgdGhlCj4gTk1JIGNvdW50IG92ZXIgYW5kIHBvc3NpYmx5IGRvIHNvbWV0aGluZyBs
-aWtlIHJlYm9vdCBpZiB0aGF0IGlzIG91cgo+IHBvbGljeS4KCkkgYW0gZmluZSB3aXRoIGVpdGhl
-ciBhcHByb2FjaC4gSSBndWVzcyB0aGF0IGlzIHRoZSB4ODYgbWFpbnRhaW5lcnMnCmNhbGwuIElu
-Z28sIFRob21hcywgUGV0ZXIsIHdoYXQgZG8geW91IHRoaW5rPyBTaG91bGQgSSBhZGQgYSBuZXcK
-ZW50cnkgdG8gL3Byb2MvaW50ZXJydXB0cyBvciBtb3ZlIG92ZXIgdGhlIGVhcmx5IE5NSSBjb3Vu
-dCB0byB0aGUKZXhpc3RpbmcgcGVyLWNwdSBOTUkgY291bnRlcj8KClRoYW5rcywKRmVybmFuZG8K
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Like patch 1/5, this one moves code under #if DEBUG to --debug
+on ppc arch.
+
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+---
+ kexec/arch/ppc/crashdump-powerpc.c |   18 ++++++++----------
+ kexec/arch/ppc/fixup_dtb.c         |   25 +++++++++++--------------
+ kexec/arch/ppc/fs2dt.c             |    6 +++---
+ kexec/arch/ppc/kexec-ppc.c         |   17 ++++++++---------
+ kexec/arch/ppc/libfdt-wrapper.c    |    4 ++--
+ kexec/arch/ppc64/crashdump-ppc64.c |   16 ++++++----------
+ kexec/arch/ppc64/kexec-elf-ppc64.c |   23 +++++++++++------------
+ kexec/arch/ppc64/kexec-ppc64.c     |    9 +++------
+ 8 files changed, 52 insertions(+), 66 deletions(-)
+
+diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
+index 7c9dbff..1bef69b 100644
+--- a/kexec/arch/ppc/crashdump-powerpc.c
++++ b/kexec/arch/ppc/crashdump-powerpc.c
+@@ -226,15 +226,15 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ 
+ 	*range = crash_memory_range;
+ 	*ranges = memory_ranges;
+-#if DEBUG
++
+ 	int j;
+-	printf("CRASH MEMORY RANGES\n");
++	dbgprintf("CRASH MEMORY RANGES\n");
+ 	for (j = 0; j < *ranges; j++) {
+ 		start = crash_memory_range[j].start;
+ 		end = crash_memory_range[j].end;
+-		fprintf(stderr, "%016Lx-%016Lx\n", start, end);
++		dbgprintf("%016Lx-%016Lx\n", start, end);
+ 	}
+-#endif
++
+ 	return 0;
+ 
+ err:
+@@ -289,9 +289,9 @@ static int add_cmdline_param(char *cmdline, unsigned long long addr,
+ 	if (cmdlen > (COMMAND_LINE_SIZE - 1))
+ 		die("Command line overflow\n");
+ 	strcat(cmdline, str);
+-#if DEBUG
+-	fprintf(stderr, "Command line after adding elfcorehdr: %s\n", cmdline);
+-#endif
++
++	dbgprintf("Command line after adding elfcorehdr: %s\n", cmdline);
++
+ 	return 0;
+ }
+ 
+@@ -403,10 +403,8 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
+ 	usablemem_rgns.ranges[usablemem_rgns.size].start = base;
+ 	usablemem_rgns.ranges[usablemem_rgns.size++].end = end;
+ 
+-#ifdef DEBUG
+-	fprintf(stderr, "usable memory rgns size:%u base:%llx size:%llx\n",
++	dbgprintf("usable memory rgns size:%u base:%llx size:%llx\n",
+ 		usablemem_rgns.size, base, size);
+-#endif
+ }
+ 
+ int is_crashkernel_mem_reserved(void)
+diff --git a/kexec/arch/ppc/fixup_dtb.c b/kexec/arch/ppc/fixup_dtb.c
+index 189e0c7..e5f2717 100644
+--- a/kexec/arch/ppc/fixup_dtb.c
++++ b/kexec/arch/ppc/fixup_dtb.c
+@@ -17,25 +17,26 @@
+ 
+ const char proc_dts[] = "/proc/device-tree";
+ 
+-#ifdef DEBUG
+ static void print_fdt_reserve_regions(void)
+ {
+ 	int i, num;
+ 
++	if (!kexec_debug)
++		return;
+ 	/* Print out a summary of the final reserve regions */
+ 	num =  fdt_num_mem_rsv(blob_buf);
+-	printf ("reserve regions: %d\n", num);
++	dbgprintf ("reserve regions: %d\n", num);
+ 	for (i = 0; i < num; i++) {
+ 		uint64_t offset, size;
+ 
+ 		if (fdt_get_mem_rsv(blob_buf, i, &offset, &size) == 0) {
+-			printf("%d: offset: %llx, size: %llx\n", i, offset, size);
++			dbgprintf("%d: offset: %llx, size: %llx\n", i, offset, size);
+ 		} else {
+-			printf("Error retreiving reserved region\n");
++			dbgprintf("Error retreiving reserved region\n");
+ 		}
+ 	}
+ }
+-#endif
++
+ 
+ static void fixup_nodes(char *nodes[])
+ {
+@@ -203,9 +204,7 @@ static void fixup_reserve_regions(struct kexec_info *info, char *blob_buf)
+ 
+ out:	;
+ 
+-#ifdef DEBUG
+ 	print_fdt_reserve_regions();
+-#endif
+ }
+ 
+ static void fixup_memory(struct kexec_info *info, char *blob_buf)
+@@ -369,23 +368,23 @@ char *fixup_dtb_init(struct kexec_info *info, char *blob_buf, off_t *blob_size,
+ 	return blob_buf;
+ }
+ 
+-#ifdef DEBUG
+ static void save_fixed_up_dtb(char *blob_buf, off_t blob_size)
+ {
+ 	FILE *fp;
+ 
++	if (!kexec_debug)
++		return;
+ 	fp = fopen("debug.dtb", "w");
+ 	if (fp) {
+ 		if ( blob_size == fwrite(blob_buf, sizeof(char), blob_size, fp)) {
+-			printf("debug.dtb written\n");
++			dbgprintf("debug.dtb written\n");
+ 		} else {
+-			printf("Unable to write debug.dtb\n");
++			dbgprintf("Unable to write debug.dtb\n");
+ 		}
+ 	} else {
+-		printf("Unable to dump flat device tree to debug.dtb\n");
++		dbgprintf("Unable to dump flat device tree to debug.dtb\n");
+ 	}
+ }
+-#endif
+ 
+ char *fixup_dtb_finalize(struct kexec_info *info, char *blob_buf, off_t *blob_size,
+ 			char *nodes[], char *cmdline)
+@@ -400,9 +399,7 @@ char *fixup_dtb_finalize(struct kexec_info *info, char *blob_buf, off_t *blob_si
+ 	blob_buf = (char *)dt_ops.finalize();
+ 	*blob_size = fdt_totalsize(blob_buf);
+ 
+-#ifdef DEBUG
+ 	save_fixed_up_dtb(blob_buf, *blob_size);
+-#endif
+ 
+ 	return blob_buf;
+ }
+diff --git a/kexec/arch/ppc/fs2dt.c b/kexec/arch/ppc/fs2dt.c
+index 733515a..cdae69e 100644
+--- a/kexec/arch/ppc/fs2dt.c
++++ b/kexec/arch/ppc/fs2dt.c
+@@ -273,9 +273,9 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+ 			memcpy(dt, local_cmdline, cmd_len);
+ 			len = cmd_len;
+ 			*dt_len = cmd_len;
+-#if	DEBUG
+-			fprintf(stderr, "Modified cmdline:%s\n", local_cmdline);
+-#endif
++
++			dbgprintf("Modified cmdline:%s\n", local_cmdline);
++
+ 		}
+ 
+ 		dt += (len + 3)/4;
+diff --git a/kexec/arch/ppc/kexec-ppc.c b/kexec/arch/ppc/kexec-ppc.c
+index 57852dc..6075477 100644
+--- a/kexec/arch/ppc/kexec-ppc.c
++++ b/kexec/arch/ppc/kexec-ppc.c
+@@ -378,9 +378,9 @@ static int get_base_ranges(void)
+ 	nr_memory_ranges = local_memory_ranges;
+ 	sort_base_ranges();
+ 	memory_max = base_memory_range[nr_memory_ranges - 1].end;
+-#ifdef DEBUG
+-	fprintf(stderr, "get base memory ranges:%d\n", nr_memory_ranges);
+-#endif
++
++	dbgprintf("get base memory ranges:%d\n", nr_memory_ranges);
++
+ 	return 0;
+ }
+ 
+@@ -716,13 +716,13 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 
+ 	sort_ranges();
+ 
+-#ifdef DEBUG
++
+ 	int k;
+ 	for (k = 0; k < i; k++)
+-		fprintf(stderr, "exclude_range sorted exclude_range[%d] "
++		dbgprintf("exclude_range sorted exclude_range[%d] "
+ 			"start:%llx, end:%llx\n", k, exclude_range[k].start,
+ 			exclude_range[k].end);
+-#endif
++
+ 	return 0;
+ 
+ error_openfile:
+@@ -812,13 +812,12 @@ static int setup_memory_ranges(unsigned long kexec_flags)
+ 	} else
+ 		nr_memory_ranges = j;
+ 
+-#ifdef DEBUG
++
+ 	int k;
+ 	for (k = 0; k < j; k++)
+-		fprintf(stderr, "setup_memory_ranges memory_range[%d] "
++		dbgprintf("setup_memory_ranges memory_range[%d] "
+ 				"start:%llx, end:%llx\n", k, memory_range[k].start,
+ 				memory_range[k].end);
+-#endif
+ 	return 0;
+ 
+ out:
+diff --git a/kexec/arch/ppc/libfdt-wrapper.c b/kexec/arch/ppc/libfdt-wrapper.c
+index f56ccc0..5fbd3a8 100644
+--- a/kexec/arch/ppc/libfdt-wrapper.c
++++ b/kexec/arch/ppc/libfdt-wrapper.c
+@@ -27,15 +27,15 @@
+ #include <page.h>
+ #include <libfdt.h>
+ #include "ops.h"
++#include "../../kexec.h"
+ 
+-#define DEBUG	0
+ #define BAD_ERROR(err)	(((err) < 0) \
+ 			 && ((err) != -FDT_ERR_NOTFOUND) \
+ 			 && ((err) != -FDT_ERR_EXISTS))
+ 
+ #define check_err(err) \
+ 	({ \
+-		if (BAD_ERROR(err) || ((err < 0) && DEBUG)) \
++		if (BAD_ERROR(err) || ((err < 0) && kexec_debug)) \
+ 			printf("%s():%d  %s\n\r", __func__, __LINE__, \
+ 			       fdt_strerror(err)); \
+ 		if (BAD_ERROR(err)) \
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index d52b438..5805cdb 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -304,15 +304,15 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges)
+ 
+ 	*range = crash_memory_range;
+ 	*ranges = memory_ranges;
+-#if DEBUG
++
+ 	int j;
+-	printf("CRASH MEMORY RANGES\n");
++	dbgprintf("CRASH MEMORY RANGES\n");
+ 	for(j = 0; j < *ranges; j++) {
+ 		start = crash_memory_range[j].start;
+ 		end = crash_memory_range[j].end;
+-		fprintf(stderr, "%016Lx-%016Lx\n", start, end);
++		dbgprintf("%016Lx-%016Lx\n", start, end);
+ 	}
+-#endif
++
+ 	return 0;
+ 
+ err:
+@@ -367,9 +367,7 @@ static int add_cmdline_param(char *cmdline, uint64_t addr, char *cmdstr,
+ 	if (cmdlen > (COMMAND_LINE_SIZE - 1))
+ 		die("Command line overflow\n");
+ 	strcat(cmdline, str);
+-#if DEBUG
+-	fprintf(stderr, "Command line after adding elfcorehdr: %s\n", cmdline);
+-#endif
++	dbgprintf("Command line after adding elfcorehdr: %s\n", cmdline);
+ 	return 0;
+ }
+ 
+@@ -478,10 +476,8 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
+ 	usablemem_rgns.ranges[usablemem_rgns.size].start = base;
+ 	usablemem_rgns.ranges[usablemem_rgns.size++].end = end;
+ 
+-#ifdef DEBUG
+-	fprintf(stderr, "usable memory rgns size:%u base:%llx size:%llx\n",
++	dbgprintf("usable memory rgns size:%u base:%llx size:%llx\n",
+ 		usablemem_rgns.size, base, size);
+-#endif
+ }
+ 
+ int is_crashkernel_mem_reserved(void)
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index abd83dd..f68f2bc 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -294,7 +294,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 
+ 	/* Set debug */
+ 	elf_rel_set_symbol(&info->rhdr, "debug", &my_debug, sizeof(my_debug));
+-#ifdef DEBUG
++
+ 	my_kernel = 0;
+ 	my_dt_offset = 0;
+ 	my_panic_kernel = 0;
+@@ -318,19 +318,18 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 				sizeof(toc_addr));
+ 	elf_rel_get_symbol(&info->rhdr, "debug", &my_debug, sizeof(my_debug));
+ 
+-	fprintf(stderr, "info->entry is %p\n", info->entry);
+-	fprintf(stderr, "kernel is %llx\n", (unsigned long long)my_kernel);
+-	fprintf(stderr, "dt_offset is %llx\n",
++	dbgprintf("info->entry is %p\n", info->entry);
++	dbgprintf("kernel is %llx\n", (unsigned long long)my_kernel);
++	dbgprintf("dt_offset is %llx\n",
+ 		(unsigned long long)my_dt_offset);
+-	fprintf(stderr, "run_at_load flag is %x\n", my_run_at_load);
+-	fprintf(stderr, "panic_kernel is %x\n", my_panic_kernel);
+-	fprintf(stderr, "backup_start is %llx\n",
++	dbgprintf("run_at_load flag is %x\n", my_run_at_load);
++	dbgprintf("panic_kernel is %x\n", my_panic_kernel);
++	dbgprintf("backup_start is %llx\n",
+ 		(unsigned long long)my_backup_start);
+-	fprintf(stderr, "stack is %llx\n", (unsigned long long)my_stack);
+-	fprintf(stderr, "toc_addr is %llx\n", (unsigned long long)toc_addr);
+-	fprintf(stderr, "purgatory size is %zu\n", purgatory_size);
+-	fprintf(stderr, "debug is %d\n", my_debug);
+-#endif
++	dbgprintf("stack is %llx\n", (unsigned long long)my_stack);
++	dbgprintf("toc_addr is %llx\n", (unsigned long long)toc_addr);
++	dbgprintf("purgatory size is %zu\n", purgatory_size);
++	dbgprintf("debug is %d\n", my_debug);
+ 
+ 	for (i = 0; i < info->nr_segments; i++)
+ 		fprintf(stderr, "segment[%d].mem:%p memsz:%zu\n", i,
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 48ea421..2f12907 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -594,13 +594,12 @@ static int get_devtree_details(unsigned long kexec_flags)
+ 
+ 	sort_ranges();
+ 
+-#ifdef DEBUG
+ 	int k;
+ 	for (k = 0; k < i; k++)
+-		fprintf(stderr, "exclude_range sorted exclude_range[%d] "
++		dbgprintf("exclude_range sorted exclude_range[%d] "
+ 			"start:%llx, end:%llx\n", k, exclude_range[k].start,
+ 			exclude_range[k].end);
+-#endif
++
+ 	return 0;
+ 
+ error_openfile:
+@@ -687,13 +686,11 @@ int setup_memory_ranges(unsigned long kexec_flags)
+ 	}
+ 	nr_memory_ranges = j;
+ 
+-#ifdef DEBUG
+ 	int k;
+ 	for (k = 0; k < j; k++)
+-		fprintf(stderr, "setup_memory_ranges memory_range[%d] "
++		dbgprintf("setup_memory_ranges memory_range[%d] "
+ 			"start:%llx, end:%llx\n", k, memory_range[k].start,
+ 			memory_range[k].end);
+-#endif
+ 	return 0;
+ 
+ out:
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
