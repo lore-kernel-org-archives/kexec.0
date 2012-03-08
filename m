@@ -1,23 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
- by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S5SAJ-0003Cu-5U
- for kexec@lists.infradead.org; Thu, 08 Mar 2012 01:29:13 +0000
-Message-ID: <4F580B5F.5070304@oss.ntt.co.jp>
-Date: Thu, 08 Mar 2012 10:29:03 +0900
-From: =?ISO-8859-1?Q?Fernando_Luis_V=E1zquez_Cao?=
- <fernando@oss.ntt.co.jp>
+Received: from out03.mta.xmission.com ([166.70.13.233])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1S5V7U-0004En-R1
+ for kexec@lists.infradead.org; Thu, 08 Mar 2012 04:38:30 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
+ <20120216172735.GX9751@redhat.com>
+ <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
+ <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
+ <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
+ <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
+ <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
+ <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
+ <4F573E74.5040504@oss.ntt.co.jp>
+Date: Wed, 07 Mar 2012 20:41:05 -0800
+In-Reply-To: <4F573E74.5040504@oss.ntt.co.jp> ("Fernando Luis =?utf-8?Q?V?=
+ =?utf-8?Q?=C3=A1zquez?= Cao"'s
+ message of "Wed, 07 Mar 2012 19:54:44 +0900")
+Message-ID: <m1eht31z8e.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [tip:x86/debug] x86/kdump: No need to disable ioapic/ lapic in
- crash path
-References: <20120216215603.GH9751@redhat.com>
- <m1y5s2ku36.fsf@fess.ebiederm.org> <m1fwe9bpk2.fsf@fess.ebiederm.org>
- <20120217195430.GO9751@redhat.com> <m1y5s07rn3.fsf@fess.ebiederm.org>
- <20120220151419.GU9751@redhat.com> <m1obss39a4.fsf@fess.ebiederm.org>
- <20120221135934.GF26998@redhat.com> <m1ipip6xe8.fsf@fess.ebiederm.org>
- <4F573E1C.2060909@oss.ntt.co.jp> <20120307155018.GA13430@redhat.com>
- <CAE9FiQXLMzVLH7MW2OXFCpBU+5RRN-EnshGYhkj_3sO36c1Mkg@mail.gmail.com>
-In-Reply-To: <CAE9FiQXLMzVLH7MW2OXFCpBU+5RRN-EnshGYhkj_3sO36c1Mkg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] boot: ignore early NMIs
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,47 +28,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: Don Zickus <dzickus@redhat.com>, akpm@linux-foundation.org, linux-tip-commits@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, hpa@zytor.com, tglx@linutronix.de, torvalds@linux-foundation.org, mingo@elte.hu, Vivek Goyal <vgoyal@redhat.com>
+To: Fernando Luis =?utf-8?Q?V=C3=A1zquez?= Cao <fernando@oss.ntt.co.jp>
+Cc: Don Zickus <dzickus@redhat.com>, linux-tip-commits@vger.kernel.org, torvalds@linux-foundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, tglx@linutronix.de, hpa@zytor.com, mingo@elte.hu, Yinghai Lu <yinghai@kernel.org>, akpm@linux-foundation.org, vgoyal@redhat.com
 
-On 03/08/2012 03:27 AM, Yinghai Lu wrote:
-
-> 2012/3/7 Vivek Goyal<vgoyal@redhat.com>:
->> On Wed, Mar 07, 2012 at 07:53:16PM +0900, Fernando Luis V=E1zquez Cao wr=
-ote:
->>> We run into the same NMI problems and wrote some patches that tackle
->>> the kernel boot side of things. They have been extensively tested using
->>> qemu-kvm and things seem to be working as expected (after receiving an
->>> early NMI the kernel continues without problem; after the iret there is=
- no
->>> stack corruption or register corruption).
->> What happens if NMI happens while we are still in purgatory code?
-The system triple faults. As Eric said we need to fix both the reboot path
-to kdump and kdump kernel's boot code. The two patches I sent address the
-later. I sent these first because I had time to test them properly, fix a
-real issue and can be applied independently.
-
-
-
-> yes, you are right. that is too late to set that in arch/x86/kernel/head6=
-4.c
-Of course, the reboot path needs to be fixed too. Now that I solved some
-problems I was having with my qemu-kvm test environment (NMIs injected
-through the qemu monitor only get devivered to the BSP, etc), I will make
-sure that the code I wrote for it works as expected.
-
-In the meantime, I would appreciate it if you could review/ack yesterday's
-patches.
-
-Thanks,
-Fernando
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RmVybmFuZG8gTHVpcyBWw6F6cXVleiBDYW8gPGZlcm5hbmRvQG9zcy5udHQuY28uanA+IHdyaXRl
+czoKCj4gU3ViamVjdDogW1BBVENIXSBib290OiBpZ25vcmUgZWFybHkgTk1Jcwo+Cj4gRnJvbTog
+RmVybmFuZG8gTHVpcyBWYXpxdWV6IENhbyA8ZmVybmFuZG9Ab3NzLm50dC5jby5qcD4KPgo+IE5N
+SXMgdmVyeSBlYXJseSBpbiB0aGUgYm9vdCBwcm9jZXNzIGFyZSByYXJlbHkgY3JpdGljYWwgKHVz
+dWFsbHkKPiBpdCBqdXN0IG1lYW5zIHRoYXQgdGhlcmUgd2FzIGEgc3B1cmlvdXMgYml0IGZsaXAg
+c29tZXdoZXJlIGluIHRoZQo+IGhhcmR3YXJlLCBvciB0aGF0IHRoaXMgaXMgYSBrZHVtcCBrZXJu
+ZWwgYW5kIHdlIHJlY2VpdmVkIGFuIE5NSQo+IGdlbmVyYXRlZCBpbiB0aGUgcHJldmlvdXMgY29u
+dGV4dCksIHNvIHRoZSBjdXJyZW50IGJlaGF2aW9yIG9mCj4gaGFsdGluZyB0aGUgc3lzdGVtIHdo
+ZW4gb25lIG9jY3VycyBpcyBwcm9iYWJseSBhIGJpdCBvdmVyIHRoZSB0b3AuCj4KPiBUaGlzIHBh
+dGNoIGNoYW5nZXMgdGhlIGVhcmx5IElEVCBzbyB0aGF0IE5NSXMgYXJlIGlnbm9yZWQgYW5kIHRo
+ZQo+IGtlcm5lbCBjYW4sIGhvcGVmdWxseSwgY29udGludWUgZXhlY3V0aW5nIG90aGVyIGNvZGUu
+IEhhcnNoZXIKPiBtZWFzdXJlcyAocGFuaWMsIGV0YykgYXJlIGRlZmVyZWQgdG8gdGhlIGZpbmFs
+IE5NSSBoYW5kbGVyLCB3aGljaAo+IGNhbiBhY3R1YWxseSBtYWtlIGFuIGluZm9ybWVkIGRlY2lz
+aW9uLgo+Cj4gVGhpcyBpc3N1ZSBwcmVzZW50ZWQgaXRzZWxmIGluIG91ciBlbnZpcm9ubWVudCBh
+cyBzZWVtaW5nbHkKPiByYW5kb20gaGFuZ3MgaW4ga2R1bXAuCj4KPiBTaWduZWQtb2ZmLWJ5OiBG
+ZXJuYW5kbyBMdWlzIFZhenF1ZXogQ2FvIDxmZXJuYW5kb0Bvc3MubnR0LmNvLmpwPgo+IC0tLQo+
+Cj4gZGlmZiAtdXJOcCBsaW51eC0zLjMtcmM2LW9yaWcvYXJjaC94ODYva2VybmVsL2hlYWQ2NC5j
+IGxpbnV4LTMuMy1yYzYvYXJjaC94ODYva2VybmVsL2hlYWQ2NC5jCj4gLS0tIGxpbnV4LTMuMy1y
+YzYtb3JpZy9hcmNoL3g4Ni9rZXJuZWwvaGVhZDY0LmMJMjAxMi0wMy0wNyAxNTo0OTowMS44MzQy
+NDE3ODcgKzA5MDAKPiArKysgbGludXgtMy4zLXJjNi9hcmNoL3g4Ni9rZXJuZWwvaGVhZDY0LmMJ
+MjAxMi0wMy0wNyAxODozOTowMy4xNzM3MzI4NzUgKzA5MDAKPiBAQCAtNzEsNyArNzEsNyBAQCB2
+b2lkIF9faW5pdCB4ODZfNjRfc3RhcnRfa2VybmVsKGNoYXIgKiByCj4gIAkJCQkoX19TVEFSVF9L
+RVJORUwgJiBQR0RJUl9NQVNLKSkpOwo+ICAJQlVJTERfQlVHX09OKF9fZml4X3RvX3ZpcnQoX19l
+bmRfb2ZfZml4ZWRfYWRkcmVzc2VzKSA8PSBNT0RVTEVTX0VORCk7Cj4gIAo+IC0JLyogY2xlYXIg
+YnNzIGJlZm9yZSBzZXRfaW50cl9nYXRlIHdpdGggZWFybHlfaWR0X2hhbmRsZXIgKi8KPiArCS8q
+IGNsZWFyIGJzcyBiZWZvcmUgc2V0X2ludHJfZ2F0ZSB3aXRoIGVhcmx5X2lkdF9oYW5kbGVycyAq
+Lwo+ICAJY2xlYXJfYnNzKCk7Cj4gIAo+ICAJLyogTWFrZSBOVUxMIHBvaW50ZXJzIHNlZ2ZhdWx0
+ICovCj4gQEAgLTc5LDEzICs3OSw4IEBAIHZvaWQgX19pbml0IHg4Nl82NF9zdGFydF9rZXJuZWwo
+Y2hhciAqIHIKPiAgCj4gIAltYXhfcGZuX21hcHBlZCA9IEtFUk5FTF9JTUFHRV9TSVpFID4+IFBB
+R0VfU0hJRlQ7Cj4gIAo+IC0JZm9yIChpID0gMDsgaSA8IE5VTV9FWENFUFRJT05fVkVDVE9SUzsg
+aSsrKSB7Cj4gLSNpZmRlZiBDT05GSUdfRUFSTFlfUFJJTlRLCj4gKwlmb3IgKGkgPSAwOyBpIDwg
+TlVNX0VYQ0VQVElPTl9WRUNUT1JTOyBpKyspCj4gIAkJc2V0X2ludHJfZ2F0ZShpLCAmZWFybHlf
+aWR0X2hhbmRsZXJzW2ldKTsKPiAtI2Vsc2UKPiAtCQlzZXRfaW50cl9nYXRlKGksIGVhcmx5X2lk
+dF9oYW5kbGVyKTsKPiAtI2VuZGlmCj4gLQl9Cj4gIAlsb2FkX2lkdCgoY29uc3Qgc3RydWN0IGRl
+c2NfcHRyICopJmlkdF9kZXNjcik7Cj4gIAo+ICAJaWYgKGNvbnNvbGVfbG9nbGV2ZWwgPT0gMTAp
+Cj4gZGlmZiAtdXJOcCBsaW51eC0zLjMtcmM2LW9yaWcvYXJjaC94ODYva2VybmVsL2hlYWRfNjQu
+UyBsaW51eC0zLjMtcmM2L2FyY2gveDg2L2tlcm5lbC9oZWFkXzY0LlMKPiAtLS0gbGludXgtMy4z
+LXJjNi1vcmlnL2FyY2gveDg2L2tlcm5lbC9oZWFkXzY0LlMJMjAxMi0wMy0wNyAxNTo0OTowMS44
+MzgyNDE4MzkgKzA5MDAKPiArKysgbGludXgtMy4zLXJjNi9hcmNoL3g4Ni9rZXJuZWwvaGVhZF82
+NC5TCTIwMTItMDMtMDcgMTg6NDE6MjEuODExNTE2ODc2ICswOTAwCj4gQEAgLTI3MCwxOCArMjcw
+LDI5IEBAIGJhZF9hZGRyZXNzOgo+ICAJam1wIGJhZF9hZGRyZXNzCj4gIAo+ICAJLnNlY3Rpb24g
+Ii5pbml0LnRleHQiLCJheCIKPiAtI2lmZGVmIENPTkZJR19FQVJMWV9QUklOVEsKPiAgCS5nbG9i
+bCBlYXJseV9pZHRfaGFuZGxlcnMKPiAgZWFybHlfaWR0X2hhbmRsZXJzOgo+IC0JaSA9IDAKPiAr
+CXZlY3RvciA9IDAKPiAgCS5yZXB0IE5VTV9FWENFUFRJT05fVkVDVE9SUwo+IC0JbW92bCAkaSwg
+JWVzaQo+IC0Jam1wIGVhcmx5X2lkdF9oYW5kbGVyCj4gLQlpID0gaSArIDEKPiArCS8qCj4gKwkg
+KiBOTUlzICh2ZWN0b3IgMikgdGhpcyBlYXJseSBpbiB0aGUgYm9vdCBwcm9jZXNzIGFyZSByYXJl
+bHkgY3JpdGljYWwKPiArCSAqICh1c3VhbGx5IGl0IGp1c3QgbWVhbnMgdGhhdCB0aGVyZSB3YXMg
+YSBzcHVyaW91cyBiaXQgZmxpcCBzb21ld2hlcmUKPiArCSAqIGluIHRoZSBoYXJkd2FyZSwgb3Ig
+dGhhdCB0aGlzIGlzIGEga2R1bXAga2VybmVsIGFuZCB3ZSByZWNlaXZlZCBhbgo+ICsJICogTk1J
+IGdlbmVyYXRlZCBpbiB0aGUgcHJldmlvdXMgY29udGV4dCksIHNvIHdlIGlnbm9yZSB0aGVtIGhl
+cmUgYW5kCj4gKwkgKiB0cnkgdG8gY29udGludWUgKHNlZSBlYXJseV9ubWlfaGFuZGxlciBpbXBs
+ZW1lbnRhdGlvbiBiZWxvdykuCj4gKwkgKiBIYXJzaGVyIG1lYXN1cmVzIChwYW5pYywgZXRjKSBh
+cmUgZGVmZXJlZCB0byB0aGUgZmluYWwgTk1JIGhhbmRsZXIsCj4gKwkgKiB3aGljaCBjYW4gYWN0
+dWFsbHkgbWFrZSBhbiBpbmZvcm1lZCBkZWNpc2lvbi4KPiArCSAqLwo+ICsJLmlmIHZlY3RvciA9
+PSAyCj4gKwlqbXAgZWFybHlfbm1pX2hhbmRsZXIKCklzIGp1c3QgYSBqdW1wIGFuZCBub3QgYSBt
+b3ZlIGZvbGxvd2VkIGJ5IGEganVtcCBzdGlsbCAxMCBieXRlcz8KSSBoYXRlIHRvIHNheSBpdCBi
+dXQgSSB0aGluayB0aGlzIGZhaWxzIG1pc2VyYWJseSBmb3IgYW55IGV4Y2VwdGlvbgphZnRlciBh
+IG5taS4KCkkgZXhwZWN0IHRoZSBzaW1wbGVzdCBzb2x1dGlvbiBpcyB0byBtb2RpZnkgZWFybHlf
+aWR0X2hhbmRsZXIgdG8gdGVzdApmb3IgdmVjdG9yID09IDIuCgpEb2luZyBzb21ldGhpbmcgbGVz
+cyBicml0dGxlIHRoYW46Cj4gZXh0ZXJuIGNvbnN0IGNoYXIgZWFybHlfaWR0X2hhbmRsZXJzW05V
+TV9FWENFUFRJT05fVkVDVE9SU11bMTBdOwppbiBzZWdtZW50LmggbWlnaHQgYmUgYSBnb29kIGlk
+ZWEgYXMgd2VsbC4KCkVyaWMKCj4gKwkuZWxzZQo+ICsJbW92bCAkdmVjdG9yLCAlZXNpCj4gKwlq
+bXAgZWFybHlfZXhjZXB0aW9uX2hhbmRsZXIKPiArCS5lbmRpZgo+ICsJdmVjdG9yID0gdmVjdG9y
+ICsgMQo+ICAJLmVuZHIKPiAtI2VuZGlmCj4gIAo+IC1FTlRSWShlYXJseV9pZHRfaGFuZGxlcikK
+PiArZWFybHlfZXhjZXB0aW9uX2hhbmRsZXI6Cj4gICNpZmRlZiBDT05GSUdfRUFSTFlfUFJJTlRL
+Cj4gIAljbXBsICQyLGVhcmx5X3JlY3Vyc2lvbl9mbGFnKCVyaXApCj4gIAlqeiAgMWYKPiBAQCAt
+MzE1LDYgKzMyNiw5IEBAIEVOVFJZKGVhcmx5X2lkdF9oYW5kbGVyKQo+ICAxOglobHQKPiAgCWpt
+cCAxYgo+ICAKPiArZWFybHlfbm1pX2hhbmRsZXI6Cj4gKwlpcmV0cQo+ICsKPiAgI2lmZGVmIENP
+TkZJR19FQVJMWV9QUklOVEsKPiAgZWFybHlfcmVjdXJzaW9uX2ZsYWc6Cj4gIAkubG9uZyAwCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
