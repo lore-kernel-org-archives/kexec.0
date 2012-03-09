@@ -1,24 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
- by bombadil.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S5wAx-0001AW-Fg
- for kexec@lists.infradead.org; Fri, 09 Mar 2012 09:31:53 +0000
-Message-ID: <4F59CDE5.8010400@oss.ntt.co.jp>
-Date: Fri, 09 Mar 2012 18:31:17 +0900
-From: =?UTF-8?B?RmVybmFuZG8gTHVpcyBWw6F6cXVleiBDYW8=?= <fernando@oss.ntt.co.jp>
-MIME-Version: 1.0
-Subject: Re: [PATCH 1/2] boot: ignore early NMIs
-References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
- <20120216172735.GX9751@redhat.com>
- <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
- <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
- <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
- <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
- <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
- <4F573E74.5040504@oss.ntt.co.jp> <m1eht31z8e.fsf@fess.ebiederm.org>
- <4F58495B.5080308@oss.ntt.co.jp> <m1r4x3yrsv.fsf@fess.ebiederm.org>
-In-Reply-To: <m1r4x3yrsv.fsf@fess.ebiederm.org>
+Received: from plane.gmane.org ([80.91.229.3])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1S5uV4-0000Ux-8L
+ for kexec@lists.infradead.org; Fri, 09 Mar 2012 07:44:31 +0000
+Received: from list by plane.gmane.org with local (Exim 4.69)
+ (envelope-from <glkk-kexec@m.gmane.org>) id 1S5uUt-0006Yt-MR
+ for kexec@lists.infradead.org; Fri, 09 Mar 2012 08:44:19 +0100
+Received: from 180.129.255.93 ([180.129.255.93])
+ by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+ id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Fri, 09 Mar 2012 08:44:19 +0100
+Received: from xiyou.wangcong by 180.129.255.93 with local (Gmexim 0.1
+ (Debian)) id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Fri, 09 Mar 2012 08:44:19 +0100
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: kexec-tools-2.0.2 prints unnecessary message on stderr when
+ loaded in VESA framebuffer
+Date: Fri, 9 Mar 2012 07:44:10 +0000 (UTC)
+Message-ID: <jjccc9$8ad$1@dough.gmane.org>
+References: <CAHsXYDC2=ZUQH_22jH+XV5Z7P6uebkby5gvKjfiN2Mu0o9_aWw@mail.gmail.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,33 +28,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Don Zickus <dzickus@redhat.com>, linux-tip-commits@vger.kernel.org, torvalds@linux-foundation.org, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, akpm@linux-foundation.org, Yinghai Lu <yinghai@kernel.org>, tglx@linutronix.de, vgoyal@redhat.com
+To: kexec@lists.infradead.org
 
-On 03/09/2012 01:35 AM, Eric W. Biederman wrote:
-
-> I am fine with your approach.  I suggest a big fat comment mentioning
-> the 10 byte requirement and the register requirement.
+On Thu, 08 Mar 2012 at 17:29 GMT, Maxim Kammerer <mk@dee.su> wrote:
+> Hi,
 >
-> Neither one is locally obvious which makes it easy to goof when
-> modifying the code.
-Done.
+> In kexec/arch/i386/x86-linux-setup.c:setup_linux_vesafb():
+>
+>     fprintf(stderr, "%s: %dx%dx%d @ %lx +%x\n", __FUNCTION__,
+>         var.xres, var.yres, var.bits_per_pixel,
+>         fix.smem_start, fix.smem_len);
+>
+> This message is pretty annoying (especially if kexec is loaded several
+> times with different parameters during startup/shutdown). Looking in
+> that source file, that's the only fprintf which is not an error. Is it
+> really necessary?
+>
 
-
-
->>> Doing something less brittle than:
->>>> extern const char early_idt_handlers[NUM_EXCEPTION_VECTORS][10];
->>> in segment.h might be a good idea as well.
-Tackled that one too.
-
-I will be replying to this email with the updated patches.
-
-Thanks,
-Fernando
+This should be just a debugging message, and should not be printed
+unless debugging is enabled, so s/fprintf/dbgprintf/...
 
 
 _______________________________________________
