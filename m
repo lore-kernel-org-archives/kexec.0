@@ -1,25 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from serv2.oss.ntt.co.jp ([222.151.198.100])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S6y3Y-00016X-Ps
- for kexec@lists.infradead.org; Mon, 12 Mar 2012 05:44:31 +0000
-Message-ID: <4F5D8D0E.8060702@oss.ntt.co.jp>
-Date: Mon, 12 Mar 2012 14:43:42 +0900
-From: =?UTF-8?B?RmVybmFuZG8gTHVpcyBWw6F6cXVleiBDYW8=?= <fernando@oss.ntt.co.jp>
+ id 1S7ASs-0008H7-9Z
+ for kexec@lists.infradead.org; Mon, 12 Mar 2012 18:59:29 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <m1ipip6xe8.fsf@fess.ebiederm.org>
+ <4F573E1C.2060909@oss.ntt.co.jp> <4F573E74.5040504@oss.ntt.co.jp>
+ <m1eht31z8e.fsf@fess.ebiederm.org> <4F58495B.5080308@oss.ntt.co.jp>
+ <m1r4x3yrsv.fsf@fess.ebiederm.org> <4F5A6D87.4050809@zytor.com>
+ <4F5D8D0E.8060702@oss.ntt.co.jp> <4F5D8E63.60606@zytor.com>
+ <4F5D943C.5020403@oss.ntt.co.jp> <20120312133619.GB17288@redhat.com>
+Date: Mon, 12 Mar 2012 12:02:06 -0700
+In-Reply-To: <20120312133619.GB17288@redhat.com> (Vivek Goyal's message of
+ "Mon, 12 Mar 2012 09:36:19 -0400")
+Message-ID: <m1ipi9prrl.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
 Subject: Re: [PATCH 1/2] boot: ignore early NMIs
-References: <CAE9FiQVPnO8-tuPoio0Wxv=8rjdm2tJbBk3+3ystueyYtZn9BA@mail.gmail.com>
- <20120216172735.GX9751@redhat.com>
- <CAE9FiQVhbAM9vjx-uFcuc0ndsUp0aez9_TsQHStje5G5iwYbag@mail.gmail.com>
- <20120216215603.GH9751@redhat.com> <m1y5s2ku36.fsf@fess.ebiederm.org>
- <m1fwe9bpk2.fsf@fess.ebiederm.org> <20120217195430.GO9751@redhat.com>
- <m1y5s07rn3.fsf@fess.ebiederm.org> <20120220151419.GU9751@redhat.com>
- <m1obss39a4.fsf@fess.ebiederm.org> <20120221135934.GF26998@redhat.com>
- <m1ipip6xe8.fsf@fess.ebiederm.org> <4F573E1C.2060909@oss.ntt.co.jp>
- <4F573E74.5040504@oss.ntt.co.jp> <m1eht31z8e.fsf@fess.ebiederm.org>
- <4F58495B.5080308@oss.ntt.co.jp> <m1r4x3yrsv.fsf@fess.ebiederm.org>
- <4F5A6D87.4050809@zytor.com>
-In-Reply-To: <4F5A6D87.4050809@zytor.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,53 +24,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Don Zickus <dzickus@redhat.com>, akpm@linux-foundation.org, linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, tglx@linutronix.de, torvalds@linux-foundation.org, mingo@elte.hu, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Don Zickus <dzickus@redhat.com>, akpm@linux-foundation.org, linux-tip-commits@vger.kernel.org, Yinghai Lu <yinghai@kernel.org>, Fernando Luis =?utf-8?Q?V=C3=A1zquez?= Cao <fernando@oss.ntt.co.jp>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "H. Peter Anvin" <hpa@zytor.com>, tglx@linutronix.de, torvalds@linux-foundation.org, mingo@elte.hu
 
-On 03/10/2012 05:52 AM, H. Peter Anvin wrote:
-
-> Is there a reason to not just simply block these NMIs during the kexec
-> sequence?
-Ok, some background:
-
-In the reboot path to the kdump kernel we disable local interrupts
-and the APICs in native_machine_crash_shutdown() and reset the IDT
-in machine_kexec(), which leaves an in valid IDT installed.
-
-However, disabling the I/O APIC involves taking a lock, which in
-the event of a crash can is racy and can lead to a deadlock. To
-solve this issue Don wrote a patch that left the I/O APICs and
-the LAPIC of the crashing CPU untouched in the kdump reboot path,
-but this seemed to cause mysterious reboots in some systems.
-It turned out that an NMI coming from the perf based hardlockup
-detector was causing the system to triple fault. If a NMI happens
-to arrive in the window between the invalidation of the IDT in
-machine_kexec() and the configuration of the final IDT we will be
-in big trouble. In particular, the system will either triple fault
-or halt, depending on whether the NMI arrived before or after
-installing the early IDT.
-
-To tackle this issue we can either stop the hardlockup detector
-or disable the LAPIC (the NMIs needed by x86's hardlockup detector
-are generated using performance counters in the LAPIC), leaving
-the I/O APICs untouched. The second is simpler and I think it
-is the approach Don took to fix this issue in RHEL kernels.
-
-Unfortunately, this is not enough, we are still exposed to external
-NMIs not routed through the LAPIC. In other words, we have to make
-sure that we always have and IDT that is able to handle NMIs without
-seemingly random reboots and lockups. To achieve this goal we need
-to fix machine_kexec() and the early IDT handlers. The current patch
-set takes care of the latter.
-
-- Fernando
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Vml2ZWsgR295YWwgPHZnb3lhbEByZWRoYXQuY29tPiB3cml0ZXM6Cgo+IE9uIE1vbiwgTWFyIDEy
+LCAyMDEyIGF0IDAzOjE0OjIwUE0gKzA5MDAsIEZlcm5hbmRvIEx1aXMgVsOhenF1ZXogQ2FvIHdy
+b3RlOgo+Cj4gWy4uXQo+PiBUaGUgdGhpbmcgaXMgdGhhdCB3ZSB3YW50IHRvIGF2b2lkIHBsYXlp
+bmcgd2l0aCBoYXJkd2FyZSBpbiB0aGUga2R1bXAKPj4gcmVib290IHBhdGNoIHdoZW4gd2UgY2Fu
+IGF2b2lkIGl0LCB0aGUgcHJlbWlzZSBiZWluZyB0aGF0IGl0IGNhbm5vdAo+PiBiZSBhY2Nlc3Nl
+ZCB3aXRob3V0IHJpc2tpbmcgYSBsb2NrdXAgb3Igd29yc2UgKGFzIHRoZSBkZWFkbG9jayBhY2Nl
+c3NpbmcKPj4gdGhlIEkvTyBBUElDIHNob3dlZCkuCj4KPiBJIHRoaW5rIHRoZXJlIG5lZWRzIHRv
+IGJlIGEgbGltaXQgdG8gYmVpbmcgcGFyYW5vaWQuIE9uIG9uZSBoYW5kIHBlb3BsZQo+IHdhbnQg
+dG8gcnVuIHBhbmljIG5vdGlmaWVycywgYWxsIHRoZSBrbXNnX2R1bXAoKSBob29rcyBpbiBwYW5p
+YyBwYXRoLCBhbmQKPiBvbiB0aGUgb3RoZXIgaGFuZCB3ZSBhcmUgYWZyYWlkIG9mIGV2ZW4gZGlz
+YWJsaW5nIExBUElDLgoKQW5kIHRoZSBrbXNnX2R1bXAgY29kZSBhbmQgdGhlIHBhbmljIG5vdGlm
+aWVycyBhcmVuJ3QgYmVpbmcgcnVuLiAgSGF2aW5nCnNlZW4gc29tZSBvZiB0aGVpciBmYWlsdXJl
+IG1vZGVzIGJlaW5nIHBhdGNoZWQgdXAgcmVjZW50bHkgKEFkZGluZyBhbmQKcmVtb3Zpbmcgc3lz
+ZnMgZmlsZXMhISEhKSBJJ20gdmVyeSBjb21mb3J0YWJsZSB3aXRoIHRoZSBsZXZlbCBvZgpwYXJh
+bm9pYS4KCkl0IGhhcyBiZWVuIHByb3ZlbiB0aW1lIGFuZCB0aW1lIGFnYWluIHRoYXQgdGhlIG1v
+cmUgeW91IGRvIGluIHRoZQpmYWlsaW5nIGtlcm5lbCB0aGF0IHRoZSBncmVhdGVyIHlvdXIgbGlr
+ZWx5LWhvb2Qgb2Ygbm90IGdldHRpbmcgeW91cgpmYWlsdXJlIGluZm9ybWF0aW9uIG91dC4KCj4g
+SSBwZXJzb25hbGx5IHRoaW5rIHRoYXQgZGlzYWJsaW5nIExBUElDIGlzIHJlYXNvbmFibHkgcHJh
+Y3RpY2FsIHNvbHV0aW9uCj4gdG8gdGhlIHByb2JsZW0gdW50aWwgYW5kIHVubGVzcyBzb21lYm9k
+eSBzaG93cyB0aGF0IGl0IGRlYWRsb2Nrcwo+IGVhc2lseS4KCkRpc2FibGluZyBOTUkgZ2VuZXJh
+dGlvbiBpbiB0aGUgTEFQSUMgaXMgZmluZSwgYW5kIGZvciB0aGUgc2hvcnQgdGVybQpJIGRvbid0
+IGV2ZW4gaGF2ZSBhIHByb2JsZW0gd2l0aCBkaXNhYmxpbmcgdGhlIGVudGlyZSBMQVBJQyBhcyBh
+bGwgb2YKb3VyIHBsYXRmb3JtcyBzZWVtIHRvIGhhdmUgY29kZSBmb3IgY29tcGxldGVseSByZXBy
+b2dyYW1taW5nIGl0LgoKQXQgdGhlIHNhbWUgdGltZSB0aGVyZSBoYXZlIGJlZW4gY2FzZXMgbGlr
+ZSB0aGUgaTgyNTkgcm91dGVkIHRocm91Z2gKdGhlIEV4dEludCBwaW4gb2YgdGhlIGxhcGNpIHRo
+YXQgd2UgaGF2ZW4ndCBiZWVuIGdpdmVuIHByb2dyYW1taW5nCmluZm9ybWF0aW9uIGFib3V0IGFu
+ZCB0aGF0IGlmIHdlIHdhbnQgdG8gd29yayB3ZSBzaG91bGQgYXZvaWQgdG91Y2hpbmcuCgpGdXJ0
+aGVybW9yZSB3ZSBoYXZlIHR3byByZXBvcnRlZCBjYXNlcyBvZiBwZW9wbGUgZXhwZXJpZW5jaW5n
+IHJlYWwgTk1JcwpvbiB0aGUga2R1bXAgcGF0aC4gIFNvIHdlIGhhdmUgdG8gYXNzdW1lIHRoZSBw
+cmVzZW5jZSBvZiB0aGUgQ01PUyBubWkKZGlzYWJsZSBhcyB3ZWxsIGlmIHdlIGFyZSBnb2luZyB0
+byB1bmVxdWl2b2NhbGx5IGRpc2FibGUgTk1Jcy4KCkdpdmVuIHRoZSB2YXJpZXR5IG9mIHg4NiBo
+YXJkd2FyZSB0b2RheSBhbmQgdGhlIGdyb3dpbmcgdmFyaWV0eSBvZiB4ODYKaGFyZHdhcmUgdG9t
+b3Jyb3cgd2UgYXJlIGdvaW5nIHRvIGJlIGZpeGluZyB0aGlzIHVudGlsIHdlIGNhbiBhY3R1YWxs
+eQpoYW5kbGUgdGhlIE5NSXMuICBIYXJkd2FyZSBkZXNpZ25lcnMgYXJlIHVuZm9ydHVuYXRlbHkg
+Y3JlYXRpdmUgZW5vdWdoCnRoYXQgd2UgYXJlbid0IGdvaW5nIHRvIHRoaW5rIG9mIGV2ZXJ5dGhp
+bmcuICBHaXZlbiB0aGF0IGl0IGlzIGhhcyB0YWtlbgp1cyBhbG1vc3QgYSBkZWNhZGUgdG8gcmVh
+bGl6ZSB0aGF0IHRoZXJlIGFjdHVhbGx5IGlzIGEgcmVhbCB3b3JsZApwcm9ibGVtICBJJ20gbm90
+IHRvbyBrZWVuIG9uIGEgc29sdXRpb24gdGhhdCBpcyBqdXN0IGdvb2QgZW5vdWdoIHRvCmZpeCBh
+IHNtYWxsIHByb2JsZW0uCgpJIHdvdWxkIGxvdmUgaXQgaWYgeDg2IGhhZCBhbiBhcmNoaXRlY3R1
+cmFsIE5NSSBvZmYgc3dpdGNoIGJ1dCB3aXRoCkludGVsIHB1c2hpbmcgRUZJIGFuZCB0aGUgcmVt
+b3ZhbCBvZiB0aGUgY21vcyBjbG9jayB4ODYgbm8gbG9uZ2VyCmhhcyBhbiBhbHdheXMgYXZhaWxh
+YmxlIE5NSSBvZmYgc3dpdGNoLgoKRnVydGhlcm1vcmUgaGFuZGxpbmcgb2YgTk1JIGlzIG5vdCBo
+YXJkIGl0IGlzIGp1c3QgYSBsaXR0bGUgdHJpY2t5LAp0byB0ZXN0LgoKRXJpYwoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
