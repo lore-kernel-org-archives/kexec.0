@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1S7WOJ-0005Je-Gl
- for kexec@lists.infradead.org; Tue, 13 Mar 2012 18:24:12 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1329989047-20378-1-git-send-email-zhenzhong.duan@oracle.com>
- <4F5EBAA7.50709@oracle.com>
-Date: Tue, 13 Mar 2012 11:27:30 -0700
-In-Reply-To: <4F5EBAA7.50709@oracle.com> (DuanZhenzhong's message of "Tue, 13
- Mar 2012 11:10:31 +0800")
-Message-ID: <m1r4wwe4q5.fsf@fess.ebiederm.org>
+ id 1S7ynJ-0007HM-22
+ for kexec@lists.infradead.org; Thu, 15 Mar 2012 00:43:54 +0000
+Date: Thu, 15 Mar 2012 09:43:45 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/2] boot: ignore early NMIs
+Message-ID: <20120315004344.GA16806@verge.net.au>
+References: <4F5A6D87.4050809@zytor.com> <4F5D8D0E.8060702@oss.ntt.co.jp>
+ <4F5D8E63.60606@zytor.com> <4F5D943C.5020403@oss.ntt.co.jp>
+ <4F5E431D.8010305@zytor.com> <m1zkblmvw7.fsf@fess.ebiederm.org>
+ <4F5E56EB.1090807@zytor.com> <4F5E59AC.7090708@zytor.com>
+ <4F5EACE5.8080202@oss.ntt.co.jp>
+ <20120313133350.GS24378@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: add further check to crashkernel
+Content-Disposition: inline
+In-Reply-To: <20120313133350.GS24378@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,50 +24,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: DuanZhenzhong <zhenzhong.duan@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Don Zickus <dzickus@redhat.com>
+Cc: linux-tip-commits@vger.kernel.org, torvalds@linux-foundation.org, Fernando Luis =?utf-8?Q?V=C3=A1zquez?= Cao <fernando@oss.ntt.co.jp>, mingo@elte.hu, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, akpm@linux-foundation.org, Yinghai Lu <yinghai@kernel.org>, tglx@linutronix.de, vgoyal@redhat.com
 
-DuanZhenzhong <zhenzhong.duan@oracle.com> writes:
-
-> From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
->
-> When add crashkernel=2M-256M, kernel don't give any warning.
-> This is misleading sometimes.
-
-That seems reasonable.
-
-Andrew do you want to carry this one.  I don't have a good tree to stash
-this in.
-
-Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-> ---
-> kernel/kexec.c |    4 ++++
-> 1 files changed, 4 insertions(+), 0 deletions(-)
->
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 7b08867..0a6d147 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -1359,6 +1359,10 @@ static int __init parse_crashkernel_simple(char 		*cmdline,
->
-> 	if (*cur == '@')
-> 		*crash_base = memparse(cur+1, &cur);
-> +	else if (*cur != ' ' && *cur != '\0') {
-> +		pr_warning("crashkernel: unrecognized char\n");
-> +		return -EINVAL;
-> +	}
->
-> 	return 0;
-> }
-> -- 1.7.3
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBNYXIgMTMsIDIwMTIgYXQgMDk6MzM6NTBBTSAtMDQwMCwgRG9uIFppY2t1cyB3cm90
+ZToKPiBPbiBUdWUsIE1hciAxMywgMjAxMiBhdCAxMToxMTo0OUFNICswOTAwLCBGZXJuYW5kbyBM
+dWlzIFbDoXpxdWV6IENhbyB3cm90ZToKPiA+IE9uIDAzLzEzLzIwMTIgMDU6MTYgQU0sIEguIFBl
+dGVyIEFudmluIHdyb3RlOgo+ID4gPk9uIDAzLzEyLzIwMTIgMDE6MDQgUE0sIEguIFBldGVyIEFu
+dmluIHdyb3RlOgo+ID4gPj5PbiAwMy8xMi8yMDEyIDAxOjAxIFBNLCBFcmljIFcuIEJpZWRlcm1h
+biB3cm90ZToKPiA+ID4+PlRoZSBiYXNpYyBwcm9ibGVtIGlzIHdoaWNoIHNvdXJjZSBkbyB3ZSBi
+bG9jayB0aGlzIGF0PyAgSG93IG1hbnkKPiA+ID4+PnNvdXJjZXMgYXJlIHRoZWlyPyAgQW5kIGFy
+Y2hpdGVjdHVyYWxseSBsYXN0IEkgbG9va2VkIHg4NiBubyBsb25nZXIKPiA+ID4+PmhhcyBhIE5N
+SSBkaXNhYmxlIEVGSSBhbmQgc2ltaWxhciBzeXN0ZW1zIHdhbnQgdG8gZ2V0IGF3YXkgd2l0aG91
+dAo+ID4gPj4+YSBDTU9TIGxlZ2FjeSBjbG9jayBiZWNhdXNlIGRlc2lnbmVycyBzbyBvZnRlbiBn
+ZXQgdGhlbSB3cm9uZy4KPiA+ID4+Pgo+ID4gPj5PbiBhbGwgcHJvY2Vzc29ycyB3aGljaCBoYXZl
+IGFuIExBUElDIHlvdSBjYW4gYmxvY2sgYWxsIE5NSSBzb3VyY2VzIGF0Cj4gPiA+PnRoZSBMQVBJ
+Qy4gIEkgdGhpbmsgaXQncyBzYWZlIHRvIGFzc3VtZSB0aGF0IGlmIHlvdSBkb24ndCBoYXZlIGFu
+IExBUElDCj4gPiA+Pi0tIGFuIGFuY2llbnQgc3lzdGVtIGJ5IG5vdyAtLSB5b3UgaGF2ZSBwb3J0
+IDcwaC4KPiA+ID4+Cj4gPiA+T25lIHRoaW5nOiAqZGlzYWJsaW5nKiB0aGUgTEFQSUMgd2lsbCBh
+bGxvdyBleHRlcm5hbCBOTUlzIGNvbWluZyBpbiBvbgo+ID4gPkxJTlQxIHRocm91Z2gsIHNpbmNl
+IHRoZSBMQVBJQyBpbiB0aGUgZGlzYWJsZWQgc3RhdGUgdHJpZXMgdG8gbWltaWMgdGhlCj4gPiA+
+bm8tTEFQSUMgY29uZmlndXJhdGlvbi4gIFNvIEkgZG9uJ3QgdGhpbmsgeW91IHdhbnQgdG8gZGlz
+YWJsZSBMQVBJQyBhcwo+ID4gPm11Y2ggYXMgZGlzYWJsZSB0aGUgaW50ZXJydXB0IHZlY3RvcnMg
+d2l0aGluLgo+ID4gCj4gPiBEb2VzIHRoaXMgc291bmQgbGlrZSBhIHBsYW4gdG8gZ2V0IHRoZSBi
+YWxsIHJvbGxpbmc/Ogo+ID4gCj4gPiAxLi0gTWVyZ2UgRG9uJ3MgcGF0Y2ggdG8gZGlzYWJsZSB0
+aGUgTEFQSUMgaW4ga2R1bXAgcmVib290IHBhdGggKHRoaXMKPiA+ICAgZml4ZXMgYSByZWFsIGlz
+c3VlIHNlZW4gaW4gdGhlIGZpZWxkLCBpcyBhIG5ldCB3aW4gYW5kIGNlcnRhaW5seSBub3QgYQo+
+ID4gICByZWdyZXNzaW9uIC0gaW5kZWVkIGl0IG1ha2VzIHRoZSBjb2RlIHNpbXBsZXIgYmVjYXVz
+ZSB0aGUgSS9PCj4gPiAgIEFQSUNzIGFyZSBsZWZ0IHVudG91Y2hlZCkuCj4gCj4gSSB0aGluayB5
+b3UgbWVhbiBteSBwYXRjaCB0byBzdG9wIGRpc2FibGluZyB0aGUgSS9PIEFQSUMuICBUaGF0IHBh
+dGNoCj4gaGFzbid0IHNlZW4gYW55IG5ldyBpc3N1ZXMuICBJdCB3YXMgdGhlIHBpZWNlIHRoYXQg
+c3RvcHBlZCBkaXNhYmxpbmcgdGhlCj4gTEFQSUMgdGhhdCBvcGVuZWQgdGhlIGRvb3JzIGZvciBO
+TUlzIHRvIGZhdWx0IHRoZSBzeXN0ZW0uCj4gCj4gPiAKPiA+IDIuLSBNZXJnZSBteSBwYXRjaCBz
+ZXQgdG8gaWdub3JlIGVhcmx5IE5NSXMgKHRoaXMgYnJpbmdzIHRoZSBiZWhhdmlvcgo+ID4gICBv
+ZiB0aGUgYm9vdCBjb2RlIGluIGxpbmUgd2l0aCB3aGF0IHdlIGRvIGluIHRoZSByZXN0IG9mIHRo
+ZSBrZXJuZWwKPiA+ICAgYSB3ZSBjYW4gYXZvaWQgc2l0dWF0aW9ucyB3ZXJlIGEgc3B1cmlvdXMg
+Tk1JIGNhdXNlcyB0aGUga2VybmVsCj4gPiAgIHRvIGhhbHQpLiBUaGUgZWFybHkgTk1JIGhhbmRs
+ZXIgaXMgdGVtcG9yYXJ5IGFuZCB0aGUgZmluYWwgTk1JCj4gPiAgIGhhbmRsZXIgaW5zdGFsbGVk
+IHNob3J0bHkgYWZ0ZXJ3YXJkcyB3aWxsIHRha2UgY2FyZSBvZiBzdWJzZXF1ZW50Cj4gPiAgIE5N
+SXMuCj4gPiAKPiA+IDMuLSBNYWtlIHN1cmUgdGhhdCBzcHVyaW91cyBOTUlzIChpLmUuIE5NSXMg
+dGhhdCBmb3Igd2hhdGV2ZXIgcmVhc29uCj4gPiAgIGNvdWxkIG5vdCBiZSBzdG9wcGVkIGF0IHRo
+ZSBzb3VyY2UpIHJlY2VpdmVkIGR1cmluZyB0aGUgcmVib290Cj4gPiAgIHBhdGggdG8gdGhlIGtk
+dW1wIGtlcm5lbCBkbyBub3QgY2F1c2UgYSB0cmlwbGUgZmF1bHQgb3IgYSBzeXN0ZW0KPiA+ICAg
+bG9ja3VwLiBUaGlzIGlzIHVuZGVyIHRlc3RpbmcuCj4gCj4gVGhpcyB3aWxsIHJlcXVpcmUgY2hh
+bmdlcyBpbiBrZXhlYy10b29scyBhcyB0aGUgcHVyZ2F0b3J5IGNvZGUgemFwcyB0aGUKPiBHRFQg
+SSBiZWxpZXZlLiAgVGhpcyBpcyBnb2luZyB0byBtYWtlIGEgJ2NvbXBsZXRlIHNvbHV0aW9uJyBk
+ZXBlbmRlbnQgb24KPiBhIHZlcnNpb24gb2Yga2V4ZWMtdG9vbHMuICBOb3Qgc3VyZSB3aGF0IHdl
+IHdhbnQgdG8gZG8gdGhlcmUuCgpPdWNoLiBJIGd1ZXNzIHRoYXQgaW4gdGhlIGV2ZW50IHRoYXQg
+cHVyZ2F0b3J5IG5lZWRzIHRvIGJlIG1vZGlmaWVkCnNvbWUgYmFja3dhcmRzLWNvbXBhdGliaWxp
+dHkgd2lsbCBuZWVkIHRvIGJlIHByb3ZpZGVkLCBwb3NzaWJseQpieSBhbGxvd2luZyBwdXJnYXRv
+cnkgdG8gc3dpdGNoIGJldHdlZW4gdHdvIGJlaGF2aW91cnMgYmFzZWQgb24KZS5nLiBhIGNvbW1h
+bmQgbGluZSBwYXJhbWV0ZXIuCgo+ID4gNC4tIElkZW50aWZ5IGFsbCB0aGUgTk1JIHNvdXJjZXMg
+YW5kIGtlZXAgdGhlbSBmcm9tIHJlYWNoaW5nIHRoZSBDUFUKPiA+ICAgd2hlbiBpdCBjYW4gYmUg
+ZG9uZSBpbiBhIHJhY2UtZnJlZSB3YXkuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
