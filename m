@@ -1,32 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e9.ny.us.ibm.com ([32.97.182.139])
+Received: from mail-gx0-f177.google.com ([209.85.161.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SAlmh-00053t-Py
- for kexec@lists.infradead.org; Thu, 22 Mar 2012 17:26:49 +0000
-Received: from /spool/local
- by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Thu, 22 Mar 2012 13:26:41 -0400
-Received: from d01relay05.pok.ibm.com (d01relay05.pok.ibm.com [9.56.227.237])
- by d01dlp01.pok.ibm.com (Postfix) with ESMTP id B7A0038C8069
- for <kexec@lists.infradead.org>; Thu, 22 Mar 2012 13:26:37 -0400 (EDT)
-Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
- by d01relay05.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q2MHQZH9247584
- for <kexec@lists.infradead.org>; Thu, 22 Mar 2012 13:26:35 -0400
-Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
- by d01av03.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q2MHQYSq023348
- for <kexec@lists.infradead.org>; Thu, 22 Mar 2012 14:26:34 -0300
-Message-ID: <4F6B60C6.7060707@linux.vnet.ibm.com>
-Date: Thu, 22 Mar 2012 22:56:30 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+ id 1SAnU5-0008D2-71
+ for kexec@lists.infradead.org; Thu, 22 Mar 2012 19:15:42 +0000
+Received: by ggnk1 with SMTP id k1so2395033ggn.36
+ for <kexec@lists.infradead.org>; Thu, 22 Mar 2012 12:15:37 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: Fwd: Re: makedumpfile security key enhancement using SIAL
-References: <4F6870DD.6060102@linux.vnet.ibm.com>
- <20120321154328.4bbcff7d.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <20120321154328.4bbcff7d.kumagai-atsushi@mxc.nes.nec.co.jp>
+From: Marti Raudsepp <marti@juffo.org>
+Date: Thu, 22 Mar 2012 21:14:56 +0200
+Message-ID: <CABRT9RAB--szWwmYO9_JyjXRP-9YYgkG-TsAg8jS=birUF2e=w@mail.gmail.com>
+Subject: Doing kexec reboot right in systemd
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,122 +18,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, lucchouina@yahoo.com, anderson@redhat.com
+To: kexec list <kexec@lists.infradead.org>
+Cc: Simon Horman <horms@verge.net.au>, systemd-devel <systemd-devel@lists.freedesktop.org>, Lennart Poettering <lennart@poettering.net>
 
-On Wednesday 21 March 2012 12:13 PM, Atsushi Kumagai wrote:
-> Hello Aravinda,
->
-> I have two questions, could you answer me ?
->
-> First, what problems do you have about the current format of makedumpfile.conf ?
+Hi list,
 
-Even though makedumpfile.conf is capable of filtering out data from the
-vmocore, it is not possible to specify and erase complex
-data-structures. For example it is not possible to traverse a nested
-list or a tree and then erase a particular node based on some
-conditions. Extending makedumpfile.conf to support these would require
-implementing a lot of language constructs. But we can reuse SIAL
-instead of extending makedumpfile.conf.
+I was recently pondering how systemd could use kexec "properly", in a
+reasonably general way, to make reboots faster. I exchanged an email
+with Poettering on the systemd list and he suggested me to ask here.
 
-> Second, what benefits do you expect from using SIAL ? I can't imagine
-> specific benefits with using SIAL now.
+My current proposal:
+1. Include a template 'kexec-load.service' with kexec-tools, which
+distros/users could customize to load the right kernel and initrd via
+/sbin/kexec
 
-SIAL can be used as a language construct to specify rules/commands to
-erase data in the image file. The makedumpfile would interpret the
-rules/commands provided by SIAL macros with the help of SIAL library
-and would suitably erase the required data in the dump file. As SIAL
-provides a lot of language constructs like conditional statements,
-logical and arithmetic operators, nested loops, functions etc, it would
-be possible to traverse nested lists and trees and conditionally erase
-data in the dump file, enabling users to literally erase any data in
-the dump file.
+2. If the user does 'systemctl enable kexec-load.service', then this
+service would trigger before every reboot. Loading the kernel any
+earlier would waste memory (5+14 MB on Ubuntu Server). Also a common
+reason for rebooting is to boot into a newly-installed kernel. Loading
+it any earlier would boot you into an older kernel.
 
->
-> By the way, could you add kexec-ML to CC field from next time ?
+3. During a reboot, after systemd has finished shutting down, it
+detects via /sys/kernel/kexec_loaded whether the kexec kernel is
+loaded. If 1, it performs a 'kexec -e'. If not, it does a normal
+reboot.
 
-Included.
+----
 
->
->    kexec mailing list:
->      kexec@lists.infradead.org
->      http://lists.infradead.org/mailman/listinfo/kexec
->
->
-> Thanks
-> Atsushi Kumagai
->
->
-> On Tue, 20 Mar 2012 17:28:21 +0530
-> Aravinda Prasad<aravinda@linux.vnet.ibm.com>  wrote:
->
->> Hi Luc,
->>
->> We are looking for utilising SIAL as a language construct for the
->> makedumpfile kernel data filtering from vmcore feature. The details of
->> which are in the mail forward.
->>
->> The proposed enhancement will require libsial.a and as SIAL is not
->> currently built/shipped, we are looking for possibilities on how
->> libsial.a can be made available to makedumpfile. Please let us know your
->> opinion on the same.
->>
->> Regards,
->> Aravinda
->>
->>
->> -------- Original Message --------
->> Subject: Re: makedumpfile security key enhancement using SIAL
->> Date: Tue, 13 Mar 2012 10:27:43 -0400 (EDT)
->> From: Dave Anderson<anderson@redhat.com>
->> To: Aravinda Prasad<aravinda@linux.vnet.ibm.com>
->> CC: Atsushi Kumagai<kumagai-atsushi@mxc.nes.nec.co.jp>,         Masaki
->> Tachibana<tachibana@mxm.nes.nec.co.jp>,        Ananth N
->> Mavinakayanahalli<ananth@in.ibm.com>,        Mahesh J Salgaonkar
->> <mahesh@linux.vnet.ibm.com>
->>
->>
->>
->> ----- Original Message -----
->>> Hi Dave,
->>>
->>> Last year, we worked on the makedumpfile security key filtering where we
->>> added support to filter out kernel data from vmcore. This year, we are
->>> working on enhancing the framework to provide more flexibility for the
->>> customers to specify rules to traverse and filter out kernel data - for
->>> which we are planning to use SIAL.
->>>
->>> We are looking into using SIAL as language construct to specify
->>> rules/commands to erase data in the image file. The makedumpfile would
->>> interpret the rules provided in SIAL macro using SIAL library (which
->>> could be dynamically loaded) and erase out suitable data in the vmcore.
->>> We are planning to reuse SIAL as it provides a C language like
->>> construct, which is flexible and powerful enough to specify rules to
->>> erase data in vmcore.
->>>
->>> As SIAL is not built and shipped along with crash, we are looking for
->>> possibilities on how SIAL can be leveraged by makedumpfile and would
->>> like to know your opinion.
->>
->> Sorry but I cannot give you any help with SIAL.  Luc Chouinard is the
->> maintainer of the SIAL extension module adaptation for the crash utility,
->> and he can answer your questions w/respect to adapting it for makedumpfile.
->> And ultimately, that's a question for the makedumpfile maintainers.
->>
->> Dave
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+Lennart commented on #2 that kexec might have problems finding
+contiguous memory to load the kernel into, this late in the lifecycle.
+Do you think this is a deal-breaker for such a feature? If it's rare
+enough, then it might not be a problem -- we can always fall back to a
+normal reboot.
+
+I'm also assuming that "kexec --load" will fail atomically -- that it
+won't try to boot a half-loaded kernel, or boot a kernel whose initrd
+failed to load.
+
+Also, #3 doesn't yet work that way in systemd (currently it detects
+before shutdown) and Poettering hasn't agreed yet.
+
+Does this proposal seem sane to kexec folks? Did I miss anything?
+
+----
+
+Here are my and Poettering's initial thoughts on this matter:
+http://lists.freedesktop.org/archives/systemd-devel/2012-March/004760.html
+http://lists.freedesktop.org/archives/systemd-devel/2012-March/004764.html
+
+PS: I hope I haven't broken any rules by cross-posting this. This
+question seems relevant to both projects.
+
 Regards,
-Aravinda
-
+Marti
 
 _______________________________________________
 kexec mailing list
