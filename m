@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SAzpK-0006wn-2c
- for kexec@lists.infradead.org; Fri, 23 Mar 2012 08:26:30 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 7E5A73EE0C0
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 64EF245DE4E
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4FA6745DD78
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 421CD1DB803C
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id ED10B1DB802C
- for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:19 +0900 (JST)
-Date: Fri, 23 Mar 2012 17:26:08 +0900 (   )
-Message-Id: <20120323.172608.488340508.d.hatayama@jp.fujitsu.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SAz2y-0003IV-PN
+ for kexec@lists.infradead.org; Fri, 23 Mar 2012 07:36:34 +0000
+Date: Fri, 23 Mar 2012 16:33:03 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
+Message-Id: <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120223012940.5041.61104.stgit@localhost6.localdomain6>
 References: <20120223012940.5041.61104.stgit@localhost6.localdomain6>
- <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,57 +20,339 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
+To: d.hatayama@jp.fujitsu.com
 Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-Hello Kumagai-san,
+This is a multi-part message in MIME format.
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
-Date: Fri, 23 Mar 2012 16:33:03 +0900
+--Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> On Thu, 23 Feb 2012 10:33:54 +0900
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
-> 
->> The following series implements LZO compression support to
->> makedumpfile. LZO is as good as in size but by far better in speed
->> than ZLIB, readucing down time during generation of crash dump and
->> refiltering.
-> 
-> Sorry for late reply.
-> 
-> [PATCH v2 4/4] allows to use -l option even without USELZO but 
-> lzo compression doesn't work without USELZO.
-> I think that warning messages should be displayed when -l option is
-> used on makedumpfile built without USELZO.
-> 
-> So I made v3 patches attached to this mail.
-> ([PATCH v2 1/4] and [PATCH v2 2/4] look good and I didn't change them.)
-> 
->   v2 => v3:
-> 
->      - Add warning messages for invalid -l option.
->      - Show LZO support status with help messages.
->      - Add description of USELZO in README and man page.
->      - (and I will do some cleanups.)
-> 
-> What do you think, Hatayama-san ?
+Hello Hatayama-san,
 
-Thanks. I think the warning message very helpful for users.
+On Thu, 23 Feb 2012 10:33:54 +0900
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-BTW, I have a question about future build option of LZO library. You
-said previously you're going to introduce autotools. Then, do you
-consider default enable if LZO library is present on the environment?
+> The following series implements LZO compression support to
+> makedumpfile. LZO is as good as in size but by far better in speed
+> than ZLIB, readucing down time during generation of crash dump and
+> refiltering.
 
-Thanks.
-HATAYAMA, Daisuke
+Sorry for late reply.
 
+[PATCH v2 4/4] allows to use -l option even without USELZO but 
+lzo compression doesn't work without USELZO.
+I think that warning messages should be displayed when -l option is
+used on makedumpfile built without USELZO.
+
+So I made v3 patches attached to this mail.
+([PATCH v2 1/4] and [PATCH v2 2/4] look good and I didn't change them.)
+
+  v2 => v3:
+
+     - Add warning messages for invalid -l option.
+     - Show LZO support status with help messages.
+     - Add description of USELZO in README and man page.
+     - (and I will do some cleanups.)
+
+What do you think, Hatayama-san ?
+
+
+Thanks
+Atsushi Kumagai
+
+
+> The RFC discussion was made here:
+> 
+>   http://lists.infradead.org/pipermail/kexec/2011-November/005783.html
+>   http://lists.infradead.org/pipermail/kexec/2011-December/005868.html
+> 
+> How to build:
+> 
+>   1. Get lzo libraries: lzo, lzo-devel and lzo-minilzo from either of
+>   the following:
+> 
+>     1) Original author's website:
+>        http://www.oberhumer.com/opensource/lzo/
+> 
+>     2) yum framework on fedora. Older releases don't have the packages.
+> 
+>   2. Apply the patch set to makedumpfile v1.4.2.
+> 
+>   3. Do make as follows:
+> 
+>     $ make USELZO=on
+> 
+>     Note: In default, no LZO compression support is included.
+> 
+> How to use:
+> 
+>   Introduce new -l option. If a user specify this, makedumpfile
+>   generates dumpfile compressed by pages with lzo compression.
+> 
+>   Example)
+>   $ makedumpfile -l vmcore dumpfile
+> 
+> Performance evaluation:
+> 
+>   - Kumagai-san's evaluation simulating working servers:
+>     http://lists.infradead.org/pipermail/kexec/2011-December/005868.html
+> 
+>   - My evaluation focusing on the worst cases:
+>     http://lists.infradead.org/pipermail/kexec/2011-November/005783.html
+> 
+> LZO Support for crash:
+> 
+>   I'll post LZO support patch for crash after makedumpfile merges
+>   these patches.
+> 
+> Changelog:
+> 
+>   v1 => v2:
+> 
+>     - Add build condition for LZO support. Enable LZO support if
+>       specifying USELZO=on to make command.
+> 
+>     - Avoid LONG_MAX/ULONG_MAX redefinitions.
+> 
+> ---
+> 
+> HATAYAMA Daisuke (4):
+>       Add build condition for LZO support
+>       Add help and manual messages about LZO compression support
+>       Avoid LONG_MAX/ULONG_MAX redefinitions
+>       Add LZO Support
+> 
+> 
+>  Makefile       |    5 ++++
+>  common.h       |    4 +++
+>  diskdump_mod.h |    3 ++-
+>  makedumpfile.8 |    6 +++--
+>  makedumpfile.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++++------
+>  makedumpfile.h |    4 +++
+>  print_info.c   |   16 +++++++------
+>  7 files changed, 86 insertions(+), 19 deletions(-)
+> 
+> -- 
+> HATAYAMA Daisuke
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+--Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9
+Content-Type: application/octet-stream;
+ name="0001-PATCH-v3-3-4-Add-help-and-manual-messages-about-LZO-.patch"
+Content-Disposition: attachment;
+ filename="0001-PATCH-v3-3-4-Add-help-and-manual-messages-about-LZO-.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSBlM2NiMDg0ZjMxNmNkYTg3ODEwZDEyODliNTdmZDVkODI0MGFiYjZjIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0
+c3UuY29tPgpEYXRlOiBGcmksIDIzIE1hciAyMDEyIDEwOjI3OjM1ICswOTAwClN1YmplY3Q6IFtQ
+QVRDSCAxLzJdIFtQQVRDSCB2MyAzLzRdIEFkZCBoZWxwIGFuZCBtYW51YWwgbWVzc2FnZXMgYWJv
+dXQgTFpPCiBjb21wcmVzc2lvbiBzdXBwb3J0LgoKU2lnbmVkLW9mZi1ieTogSEFUQVlBTUEgRGFp
+c3VrZSA8ZC5oYXRheWFtYUBqcC5mdWppdHN1LmNvbT4KU2lnbmVkLW9mZi1ieTogQXRzdXNoaSBL
+dW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlAbXhjLm5lcy5uZWMuY28uanA+Ci0tLQogbWFrZWR1bXBm
+aWxlLjggfCAgICA4ICsrKystLS0tCiBwcmludF9pbmZvLmMgICB8ICAgMjEgKysrKysrKysrKysr
+LS0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9u
+cygtKQoKZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS44IGIvbWFrZWR1bXBmaWxlLjgKaW5kZXgg
+ZGIwNzA1Yy4uNDJlMzZiNiAxMDA2NDQKLS0tIGEvbWFrZWR1bXBmaWxlLjgKKysrIGIvbWFrZWR1
+bXBmaWxlLjgKQEAgLTEyMSw4ICsxMjEsOCBAQCBjb25maWd1cmF0aW9uLCB5b3UgbmVlZCB0byB1
+c2UgLS1kaXNrc2V0IG9wdGlvbi4KIC5TSCBPUFRJT05TCiAKIC5UUAotXGZCXC1jXGZSCi1Db21w
+cmVzcyBkdW1wIGRhdGEgYnkgZWFjaCBwYWdlLgorXGZCXC1jLFwtbFxmUgorQ29tcHJlc3MgZHVt
+cCBkYXRhIGJ5IGVhY2ggcGFnZSB1c2luZyB6bGliIGZvciAtYyBvcHRpb24gb3IgbHpvIGZvciAt
+bCBvcHRpb24uCiAuYnIKIEEgdXNlciBjYW5ub3Qgc3BlY2lmeSB0aGlzIG9wdGlvbiB3aXRoIFwt
+RSBvcHRpb24sIGJlY2F1c2UgdGhlIEVMRiBmb3JtYXQgZG9lcwogbm90IHN1cHBvcnQgY29tcHJl
+c3NlZCBkYXRhLgpAQCAtMTk2LDcgKzE5Niw3IEBAIGJ5IGR1bXBfbGV2ZWwgMTEsIG1ha2VkdW1w
+ZmlsZSByZXRyaWVzIGl0IGJ5IGR1bXBfbGV2ZWwgMzEuCiBcZkJcLUVcZlIKIENyZWF0ZSBcZklE
+VU1QRklMRVxmUiBpbiB0aGUgRUxGIGZvcm1hdC4KIC5icgotVGhpcyBvcHRpb24gY2Fubm90IGJl
+IHNwZWNpZmllZCB3aXRoIFwtYyBvcHRpb24sIGJlY2F1c2UgdGhlIEVMRiBmb3JtYXQgZG9lcyBu
+b3QKK1RoaXMgb3B0aW9uIGNhbm5vdCBiZSBzcGVjaWZpZWQgd2l0aCBlaXRoZXIgb2YgXC1jIG9w
+dGlvbiBvciBcLWwgb3B0aW9uLCBiZWNhdXNlIHRoZSBFTEYgZm9ybWF0IGRvZXMgbm90CiBzdXBw
+b3J0IGNvbXByZXNzZWQgZGF0YS4KIC5icgogLkIgRXhhbXBsZToKQEAgLTQ5MSw3ICs0OTEsNyBA
+QCBQcmludCBkZWJ1Z2dpbmcgbWVzc2FnZS4KIAogLlRQCiBcZkJcLWhcZlIKLVNob3cgaGVscCBt
+ZXNzYWdlLgorU2hvdyBoZWxwIG1lc3NhZ2UgYW5kIExaTyBzdXBwb3J0IHN0YXR1cyAoZW5hYmxl
+ZC9kaXNhYmxlZCkuCiAKIC5UUAogXGZCXC12XGZSCmRpZmYgLS1naXQgYS9wcmludF9pbmZvLmMg
+Yi9wcmludF9pbmZvLmMKaW5kZXggMzE0NjBiNy4uNTgwNzQxYSAxMDA2NDQKLS0tIGEvcHJpbnRf
+aW5mby5jCisrKyBiL3ByaW50X2luZm8uYwpAQCAtMzMsMTcgKzMzLDIwIEBAIHZvaWQKIHByaW50
+X3VzYWdlKHZvaWQpCiB7CiAJTVNHKCJcbiIpOworCU1TRygiTFpPIHN1cHBvcnQ6XG4iKTsKKwlN
+U0coIiAgZW5hYmxlZFxuIik7CisJTVNHKCJcbiIpOwogCU1TRygiVXNhZ2U6XG4iKTsKIAlNU0co
+IiAgQ3JlYXRpbmcgRFVNUEZJTEU6XG4iKTsKLQlNU0coIiAgIyBtYWtlZHVtcGZpbGUgICAgWy1j
+fC1FXSBbLWQgRExdIFsteCBWTUxJTlVYfC1pIFZNQ09SRUlORk9dIFZNQ09SRSBEVU1QRklMRVxu
+Iik7CisJTVNHKCIgICMgbWFrZWR1bXBmaWxlICAgIFstY3wtbHwtRV0gWy1kIERMXSBbLXggVk1M
+SU5VWHwtaSBWTUNPUkVJTkZPXSBWTUNPUkUgRFVNUEZJTEVcbiIpOwogCU1TRygiXG4iKTsKIAlN
+U0coIiAgQ3JlYXRpbmcgRFVNUEZJTEUgd2l0aCBmaWx0ZXJlZCBrZXJuZWwgZGF0YSBzcGVjaWZp
+ZWQgdGhyb3VnaCBmaWx0ZXIgY29uZmlnXG4iKTsKIAlNU0coIiAgZmlsZTpcbiIpOwotCU1TRygi
+ICAjIG1ha2VkdW1wZmlsZSAgICBbLWN8LUVdIFstZCBETF0gLXggVk1MSU5VWCAtLWNvbmZpZyBG
+SUxURVJDT05GSUdGSUxFIFZNQ09SRVxuIik7CisJTVNHKCIgICMgbWFrZWR1bXBmaWxlICAgIFst
+Y3wtbHwtRV0gWy1kIERMXSAteCBWTUxJTlVYIC0tY29uZmlnIEZJTFRFUkNPTkZJR0ZJTEUgVk1D
+T1JFXG4iKTsKIAlNU0coIiAgICBEVU1QRklMRVxuIik7CiAJTVNHKCJcbiIpOwogCU1TRygiICBP
+dXRwdXR0aW5nIHRoZSBkdW1wIGRhdGEgaW4gdGhlIGZsYXR0ZW5lZCBmb3JtYXQgdG8gdGhlIHN0
+YW5kYXJkIG91dHB1dDpcbiIpOwotCU1TRygiICAjIG1ha2VkdW1wZmlsZSAtRiBbLWN8LUVdIFst
+ZCBETF0gWy14IFZNTElOVVh8LWkgVk1DT1JFSU5GT10gVk1DT1JFXG4iKTsKKwlNU0coIiAgIyBt
+YWtlZHVtcGZpbGUgLUYgWy1jfC1sfC1FXSBbLWQgRExdIFsteCBWTUxJTlVYfC1pIFZNQ09SRUlO
+Rk9dIFZNQ09SRVxuIik7CiAJTVNHKCJcbiIpOwogCU1TRygiICBSZWFycmFuZ2luZyB0aGUgZHVt
+cCBkYXRhIGluIHRoZSBmbGF0dGVuZWQgZm9ybWF0IHRvIGEgcmVhZGFibGUgRFVNUEZJTEU6XG4i
+KTsKIAlNU0coIiAgIyBtYWtlZHVtcGZpbGUgLVIgRFVNUEZJTEVcbiIpOwpAQCAtNzAsMTQgKzcz
+LDE0IEBAIHByaW50X3VzYWdlKHZvaWQpCiAJTVNHKCJcbiIpOwogCU1TRygiXG4iKTsKIAlNU0co
+IiAgQ3JlYXRpbmcgRFVNUEZJTEUgZnJvbSBtdWx0aXBsZSBWTUNPUkVzIGdlbmVyYXRlZCBvbiBz
+YWR1bXAgZGlza3NldCBjb25maWd1cmF0aW9uOlxuIik7Ci0JTVNHKCIgICMgbWFrZWR1bXBmaWxl
+IFstY10gWy1kIERMXSAteCBWTUxJTlVYIC0tZGlza3NldD1WTUNPUkUxIC0tZGlza3NldD1WTUNP
+UkUyXG4iKTsKKwlNU0coIiAgIyBtYWtlZHVtcGZpbGUgWy1jfC1sXSBbLWQgRExdIC14IFZNTElO
+VVggLS1kaXNrc2V0PVZNQ09SRTEgLS1kaXNrc2V0PVZNQ09SRTJcbiIpOwogCU1TRygiICAgIFst
+LWRpc2tzZXQ9Vk1DT1JFMyAuLl0gRFVNUEZJTEVcbiIpOwogCU1TRygiXG4iKTsKIAlNU0coIlxu
+Iik7CiAJTVNHKCJBdmFpbGFibGUgb3B0aW9uczpcbiIpOwotCU1TRygiICBbLWNdOlxuIik7Ci0J
+TVNHKCIgICAgICBDb21wcmVzcyBkdW1wIGRhdGEgYnkgZWFjaCBwYWdlLlxuIik7Ci0JTVNHKCIg
+ICAgICBBIHVzZXIgY2Fubm90IHNwZWNpZnkgdGhpcyBvcHRpb24gd2l0aCAtRSBvcHRpb24sIGJl
+Y2F1c2UgdGhlIEVMRiBmb3JtYXRcbiIpOworCU1TRygiICBbLWN8LWxdOlxuIik7CisJTVNHKCIg
+ICAgICBDb21wcmVzcyBkdW1wIGRhdGEgYnkgZWFjaCBwYWdlIHVzaW5nIHpsaWIgZm9yIC1jIG9w
+dGlvbiBhbmQgbHpvIGZvciAtbCBvcHRpb24uXG4iKTsKKwlNU0coIiAgICAgIEEgdXNlciBjYW5u
+b3Qgc3BlY2lmeSBlaXRoZXIgb2YgdGhlc2Ugb3B0aW9ucyB3aXRoIC1FIG9wdGlvbiwgYmVjYXVz
+ZSB0aGUgRUxGIGZvcm1hdFxuIik7CiAJTVNHKCIgICAgICBkb2VzIG5vdCBzdXBwb3J0IGNvbXBy
+ZXNzZWQgZGF0YS5cbiIpOwogCU1TRygiICAgICAgVEhJUyBJUyBPTkxZIEZPUiBUSEUgQ1JBU0gg
+VVRJTElUWS5cbiIpOwogCU1TRygiXG4iKTsKQEAgLTEwMyw3ICsxMDYsNyBAQCBwcmludF91c2Fn
+ZSh2b2lkKQogCU1TRygiXG4iKTsKIAlNU0coIiAgWy1FXTpcbiIpOwogCU1TRygiICAgICAgQ3Jl
+YXRlIERVTVBGSUxFIGluIHRoZSBFTEYgZm9ybWF0LlxuIik7Ci0JTVNHKCIgICAgICBUaGlzIG9w
+dGlvbiBjYW5ub3QgYmUgc3BlY2lmaWVkIHdpdGggLWMgb3B0aW9uLCBiZWNhdXNlIHRoZSBFTEZc
+biIpOworCU1TRygiICAgICAgVGhpcyBvcHRpb24gY2Fubm90IGJlIHNwZWNpZmllZCB3aXRoIGVp
+dGhlciBvZiAtYyBvcHRpb24gb3IgLWwgb3B0aW9uLCBiZWNhdXNlIHRoZSBFTEZcbiIpOwogCU1T
+RygiICAgICAgZm9ybWF0IGRvZXMgbm90IHN1cHBvcnQgY29tcHJlc3NlZCBkYXRhLlxuIik7CiAJ
+TVNHKCJcbiIpOwogCU1TRygiICBbLXggVk1MSU5VWF06XG4iKTsKQEAgLTIxNCw3ICsyMTcsNyBA
+QCBwcmludF91c2FnZSh2b2lkKQogCU1TRygiICAgICAgT3ZlcndyaXRlIERVTVBGSUxFIGV2ZW4g
+aWYgaXQgYWxyZWFkeSBleGlzdHMuXG4iKTsKIAlNU0coIlxuIik7CiAJTVNHKCIgIFstaF06XG4i
+KTsKLQlNU0coIiAgICAgIFNob3cgaGVscCBtZXNzYWdlLlxuIik7CisJTVNHKCIgICAgICBTaG93
+IGhlbHAgbWVzc2FnZSBhbmQgTFpPIHN1cHBvcnQgc3RhdHVzIChlbmFibGVkL2Rpc2FibGVkKS5c
+biIpOwogCU1TRygiXG4iKTsKIAlNU0coIiAgWy1iIDxvcmRlcj5dXG4iKTsKIAlNU0coIiAgICAg
+IFNwZWNpZnkgdGhlIGNhY2hlIDJeb3JkZXIgcGFnZXMgaW4gcmFtIHdoZW4gZ2VuZXJhdGluZyB2
+bWNvcmUgaW5mb1xuIik7Ci0tIAoxLjcuOS4yCgo=
+
+--Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9
+Content-Type: application/octet-stream;
+ name="0002-PATCH-v3-4-4-Add-build-condition-for-LZO-support.patch"
+Content-Disposition: attachment;
+ filename="0002-PATCH-v3-4-4-Add-build-condition-for-LZO-support.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSAxNDMwOGY1YTc4ODExMDRlM2FjZjhiZmEyMGIxNDFlZGRlMjI5NjVlIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0
+c3UuY29tPgpEYXRlOiBGcmksIDIzIE1hciAyMDEyIDEwOjIzOjA0ICswOTAwClN1YmplY3Q6IFtQ
+QVRDSCAyLzJdIFtQQVRDSCB2MyA0LzRdIEFkZCBidWlsZCBjb25kaXRpb24gZm9yIExaTyBzdXBw
+b3J0LgoKVG8gZW5hYmxlIGx6byBjb21wcmVzc2lvbiBzdXBwb3J0LCBidWlsZCBtYWtlZHVtcGZp
+bGUgYXM6CgogICQgbWFrZSBVU0VMWk89b24KClRvIGRpc2FibGUsIGFzOgoKICAkIG1ha2UKCklu
+IGRlZmF1bHQsIGx6byBjb21wcmVzc2lvbiBzdXBwb3J0IGlzIGRpc2FibGVkLgoKU2lnbmVkLW9m
+Zi1ieTogSEFUQVlBTUEgRGFpc3VrZSA8ZC5oYXRheWFtYUBqcC5mdWppdHN1LmNvbT4KU2lnbmVk
+LW9mZi1ieTogQXRzdXNoaSBLdW1hZ2FpIDxrdW1hZ2FpLWF0c3VzaGlAbXhjLm5lcy5uZWMuY28u
+anA+Ci0tLQogTWFrZWZpbGUgICAgICAgfCAgICA1ICsrKysrCiBSRUFETUUgICAgICAgICB8ICAg
+IDMgKysrCiBtYWtlZHVtcGZpbGUuOCB8ICAgIDEgKwogbWFrZWR1bXBmaWxlLmMgfCAgIDI0ICsr
+KysrKysrKysrKysrKysrKysrKystLQogbWFrZWR1bXBmaWxlLmggfCAgICAyICsrCiBwcmludF9p
+bmZvLmMgICB8ICAgIDQgKysrKwogNiBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspLCAy
+IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUKaW5kZXggYTA2
+YjJkYi4uMjhjODgxYSAxMDA2NDQKLS0tIGEvTWFrZWZpbGUKKysrIGIvTWFrZWZpbGUKQEAgLTUw
+LDYgKzUwLDExIEBAIGlmbmVxICgkKExJTktUWVBFKSwgZHluYW1pYykKIExJQlMgOj0gLXN0YXRp
+YyAkKExJQlMpCiBlbmRpZgogCitpZmVxICgkKFVTRUxaTyksIG9uKQorTElCUyA6PSAtbGx6bzIg
+JChMSUJTKQorQ0ZMQUdTICs9IC1EVVNFTFpPCitlbmRpZgorCiBhbGw6IG1ha2VkdW1wZmlsZQog
+CiAkKE9CSl9QQVJUKTogJChTUkNfUEFSVCkKZGlmZiAtLWdpdCBhL1JFQURNRSBiL1JFQURNRQpp
+bmRleCA2MmJhNDEzLi5jMzEzYTc4IDEwMDY0NAotLS0gYS9SRUFETUUKKysrIGIvUkVBRE1FCkBA
+IC00Miw2ICs0Miw5IEBACiAgICAgd2hlcmUgPGFyY2g+IGlzIHRoZSAndW5hbWUgLW0nIG9mIHRo
+ZSB0YXJnZXQgYXJjaGl0ZWN0dXJlLiAKICAgICBUaGUgdXNlciBoYXMgdG8gc2V0IHRoZSBlbnZp
+cm9ubWVudCB2YXJpYWJsZSBDQyB0byBhcHByb3ByaWF0ZQogICAgIGNvbXBpbGVyIGZvciB0aGUg
+dGFyZ2V0IGFyY2hpdGVjdHVyZS4KKyAgNi5CdWlsZCB3aXRoIGx6byBzdXBwb3J0OgorICAgICMg
+bWFrZSBVU0VMWk89b24gOyBtYWtlIGluc3RhbGwKKyAgICBUaGUgdXNlciBoYXMgdG8gcHJlcGFy
+ZSBsem8gbGlicmFyeS4KIAogKiBTVVBQT1JURUQgS0VSTkVMUwogICBUaGlzIG1ha2VkdW1wZmls
+ZSBzdXBwb3J0cyB0aGUgZm9sbG93aW5nIGtlcm5lbHMuCmRpZmYgLS1naXQgYS9tYWtlZHVtcGZp
+bGUuOCBiL21ha2VkdW1wZmlsZS44CmluZGV4IDQyZTM2YjYuLjdjZTA0ZWQgMTAwNjQ0Ci0tLSBh
+L21ha2VkdW1wZmlsZS44CisrKyBiL21ha2VkdW1wZmlsZS44CkBAIC0xMjMsNiArMTIzLDcgQEAg
+Y29uZmlndXJhdGlvbiwgeW91IG5lZWQgdG8gdXNlIC0tZGlza3NldCBvcHRpb24uCiAuVFAKIFxm
+QlwtYyxcLWxcZlIKIENvbXByZXNzIGR1bXAgZGF0YSBieSBlYWNoIHBhZ2UgdXNpbmcgemxpYiBm
+b3IgLWMgb3B0aW9uIG9yIGx6byBmb3IgLWwgb3B0aW9uLgorKC1sIG9wdGlvbiBuZWVkcyBVU0VM
+Wk89b24gd2hlbiBidWlsZGluZy4pCiAuYnIKIEEgdXNlciBjYW5ub3Qgc3BlY2lmeSB0aGlzIG9w
+dGlvbiB3aXRoIFwtRSBvcHRpb24sIGJlY2F1c2UgdGhlIEVMRiBmb3JtYXQgZG9lcwogbm90IHN1
+cHBvcnQgY29tcHJlc3NlZCBkYXRhLgpkaWZmIC0tZ2l0IGEvbWFrZWR1bXBmaWxlLmMgYi9tYWtl
+ZHVtcGZpbGUuYwppbmRleCBhN2ZlYzUyLi4xMzQyYjI1IDEwMDY0NAotLS0gYS9tYWtlZHVtcGZp
+bGUuYworKysgYi9tYWtlZHVtcGZpbGUuYwpAQCAtMjY2LDYgKzI2Niw3IEBAIHJlYWRwbWVtX2tk
+dW1wX2NvbXByZXNzZWQodW5zaWduZWQgbG9uZyBsb25nIHBhZGRyLCB2b2lkICpidWZwdHIsIHNp
+emVfdCBzaXplKQogCQkJZ290byBlcnJvcjsKIAkJfQogCQltZW1jcHkoYnVmcHRyLCBidWYyICsg
+cGFnZV9vZmZzZXQsIHNpemUpOworI2lmZGVmIFVTRUxaTwogCX0gZWxzZSBpZiAoaW5mby0+Zmxh
+Z19sem9fc3VwcG9ydAogCQkgICAmJiAocGQuZmxhZ3MgJiBEVU1QX0RIX0NPTVBSRVNTRURfTFpP
+KSkgewogCQlyZXRsZW4gPSBpbmZvLT5wYWdlX3NpemU7CkBAIC0yNzcsNiArMjc4LDcgQEAgcmVh
+ZHBtZW1fa2R1bXBfY29tcHJlc3NlZCh1bnNpZ25lZCBsb25nIGxvbmcgcGFkZHIsIHZvaWQgKmJ1
+ZnB0ciwgc2l6ZV90IHNpemUpCiAJCQlnb3RvIGVycm9yOwogCQl9CiAJCW1lbWNweShidWZwdHIs
+IGJ1ZjIgKyBwYWdlX29mZnNldCwgc2l6ZSk7CisjZW5kaWYKIAl9IGVsc2UKIAkJbWVtY3B5KGJ1
+ZnB0ciwgYnVmICsgcGFnZV9vZmZzZXQsIHNpemUpOwogCkBAIC0yNTI1LDggKzI1MjcsMTYgQEAg
+aW5pdGlhbCh2b2lkKQogCXVuc2lnbmVkIGxvbmcgc2l6ZTsKIAlpbnQgZGVidWdfaW5mbyA9IEZB
+TFNFOwogCisjaWZkZWYgVVNFTFpPCiAJaWYgKGx6b19pbml0KCkgPT0gTFpPX0VfT0spCiAJCWlu
+Zm8tPmZsYWdfbHpvX3N1cHBvcnQgPSBUUlVFOworI2Vsc2UKKwlpZiAoaW5mby0+ZmxhZ19jb21w
+cmVzcyA9PSBEVU1QX0RIX0NPTVBSRVNTRURfTFpPKSB7CisJCU1TRygiJy1sJyBvcHRpb24gaXMg
+ZGlzYWJsZWQsICIpOworCQlNU0coImJlY2F1c2UgdGhpcyBiaW5hcnkgZG9lc24ndCBzdXBwb3J0
+IGx6byBjb21wcmVzc2lvbi5cbiIpOworCQlNU0coIlRyeSBgbWFrZSBVU0VMWk89b25gIHdoZW4g
+YnVpbGRpbmcuXG4iKTsKKwl9CisjZW5kaWYKIAogCWlmICghaXNfeGVuX21lbW9yeSgpICYmIGlu
+Zm8tPmZsYWdfZXhjbHVkZV94ZW5fZG9tKSB7CiAJCU1TRygiJy1YJyBvcHRpb24gaXMgZGlzYWJs
+ZSwiKTsKQEAgLTQ2OTUsMTEgKzQ3MDUsMTAgQEAgd3JpdGVfa2R1bXBfcGFnZXMoc3RydWN0IGNh
+Y2hlX2RhdGEgKmNkX2hlYWRlciwgc3RydWN0IGNhY2hlX2RhdGEgKmNkX3BhZ2UpCiAJb2ZmX3Qg
+b2Zmc2V0X2RhdGEgPSAwOwogCXN0cnVjdCBkaXNrX2R1bXBfaGVhZGVyICpkaCA9IGluZm8tPmR1
+bXBfaGVhZGVyOwogCXVuc2lnbmVkIGNoYXIgYnVmW2luZm8tPnBhZ2Vfc2l6ZV0sICpidWZfb3V0
+ID0gTlVMTDsKLQl1bnNpZ25lZCBsb25nIGxlbl9idWZfb3V0LCBsZW5fYnVmX291dF96bGliLCBs
+ZW5fYnVmX291dF9sem87CisJdW5zaWduZWQgbG9uZyBsZW5fYnVmX291dDsKIAlzdHJ1Y3QgZHVt
+cF9iaXRtYXAgYml0bWFwMjsKIAlzdHJ1Y3QgdGltZXZhbCB0dl9zdGFydDsKIAljb25zdCBvZmZf
+dCBmYWlsZWQgPSAob2ZmX3QpLTE7Ci0JbHpvX2J5dGVwIHdya21lbSA9IE5VTEw7CiAKIAlpbnQg
+cmV0ID0gRkFMU0U7CiAKQEAgLTQ3MDgsNiArNDcxNywxMCBAQCB3cml0ZV9rZHVtcF9wYWdlcyhz
+dHJ1Y3QgY2FjaGVfZGF0YSAqY2RfaGVhZGVyLCBzdHJ1Y3QgY2FjaGVfZGF0YSAqY2RfcGFnZSkK
+IAogCWluaXRpYWxpemVfMm5kX2JpdG1hcCgmYml0bWFwMik7CiAKKyNpZmRlZiBVU0VMWk8KKwl1
+bnNpZ25lZCBsb25nIGxlbl9idWZfb3V0X3psaWIsIGxlbl9idWZfb3V0X2x6bzsKKwlsem9fYnl0
+ZXAgd3JrbWVtOworCiAJaWYgKCh3cmttZW0gPSBtYWxsb2MoTFpPMVhfMV9NRU1fQ09NUFJFU1Mp
+KSA9PSBOVUxMKSB7CiAJCUVSUk1TRygiQ2FuJ3QgYWxsb2NhdGUgbWVtb3J5IGZvciB0aGUgd29y
+a2luZyBtZW1vcnkuICVzXG4iLAogCQkgICAgICAgc3RyZXJyb3IoZXJybm8pKTsKQEAgLTQ3MTcs
+NiArNDczMCw5IEBAIHdyaXRlX2tkdW1wX3BhZ2VzKHN0cnVjdCBjYWNoZV9kYXRhICpjZF9oZWFk
+ZXIsIHN0cnVjdCBjYWNoZV9kYXRhICpjZF9wYWdlKQogCWxlbl9idWZfb3V0X3psaWIgPSBjb21w
+cmVzc0JvdW5kKGluZm8tPnBhZ2Vfc2l6ZSk7CiAJbGVuX2J1Zl9vdXRfbHpvID0gaW5mby0+cGFn
+ZV9zaXplICsgaW5mby0+cGFnZV9zaXplIC8gMTYgKyA2NCArIDM7CiAJbGVuX2J1Zl9vdXQgPSBN
+QVgobGVuX2J1Zl9vdXRfemxpYiwgbGVuX2J1Zl9vdXRfbHpvKTsKKyNlbHNlCisJbGVuX2J1Zl9v
+dXQgPSBjb21wcmVzc0JvdW5kKGluZm8tPnBhZ2Vfc2l6ZSk7CisjZW5kaWYKIAogCWlmICgoYnVm
+X291dCA9IG1hbGxvYyhsZW5fYnVmX291dCkpID09IE5VTEwpIHsKIAkJRVJSTVNHKCJDYW4ndCBh
+bGxvY2F0ZSBtZW1vcnkgZm9yIHRoZSBjb21wcmVzc2lvbiBidWZmZXIuICVzXG4iLApAQCAtNDgw
+Nyw2ICs0ODIzLDcgQEAgd3JpdGVfa2R1bXBfcGFnZXMoc3RydWN0IGNhY2hlX2RhdGEgKmNkX2hl
+YWRlciwgc3RydWN0IGNhY2hlX2RhdGEgKmNkX3BhZ2UpCiAJCQlwZC5mbGFncyA9IERVTVBfREhf
+Q09NUFJFU1NFRF9aTElCOwogCQkJcGQuc2l6ZSAgPSBzaXplX291dDsKIAkJCW1lbWNweShidWYs
+IGJ1Zl9vdXQsIHBkLnNpemUpOworI2lmZGVmIFVTRUxaTwogCQl9IGVsc2UgaWYgKGluZm8tPmZs
+YWdfbHpvX3N1cHBvcnQKIAkJCSAgICYmIChpbmZvLT5mbGFnX2NvbXByZXNzICYgRFVNUF9ESF9D
+T01QUkVTU0VEX0xaTykKIAkJCSAgICYmICgoc2l6ZV9vdXQgPSBpbmZvLT5wYWdlX3NpemUpLApA
+QCAtNDgxNiw2ICs0ODMzLDcgQEAgd3JpdGVfa2R1bXBfcGFnZXMoc3RydWN0IGNhY2hlX2RhdGEg
+KmNkX2hlYWRlciwgc3RydWN0IGNhY2hlX2RhdGEgKmNkX3BhZ2UpCiAJCQlwZC5mbGFncyA9IERV
+TVBfREhfQ09NUFJFU1NFRF9MWk87CiAJCQlwZC5zaXplICA9IHNpemVfb3V0OwogCQkJbWVtY3B5
+KGJ1ZiwgYnVmX291dCwgcGQuc2l6ZSk7CisjZW5kaWYKIAkJfSBlbHNlIHsKIAkJCXBkLmZsYWdz
+ID0gMDsKIAkJCXBkLnNpemUgID0gaW5mby0+cGFnZV9zaXplOwpAQCAtNDg1Niw4ICs0ODc0LDEw
+IEBAIHdyaXRlX2tkdW1wX3BhZ2VzKHN0cnVjdCBjYWNoZV9kYXRhICpjZF9oZWFkZXIsIHN0cnVj
+dCBjYWNoZV9kYXRhICpjZF9wYWdlKQogb3V0OgogCWlmIChidWZfb3V0ICE9IE5VTEwpCiAJCWZy
+ZWUoYnVmX291dCk7CisjaWZkZWYgVVNFTFpPCiAJaWYgKHdya21lbSAhPSBOVUxMKQogCQlmcmVl
+KHdya21lbSk7CisjZW5kaWYKIAogCXJldHVybiByZXQ7CiB9CmRpZmYgLS1naXQgYS9tYWtlZHVt
+cGZpbGUuaCBiL21ha2VkdW1wZmlsZS5oCmluZGV4IDBhNmY4YmIuLjU5MmYxMjIgMTAwNjQ0Ci0t
+LSBhL21ha2VkdW1wZmlsZS5oCisrKyBiL21ha2VkdW1wZmlsZS5oCkBAIC0zMSw3ICszMSw5IEBA
+CiAjaW5jbHVkZSA8bGliZWxmLmg+CiAjaW5jbHVkZSA8Ynl0ZXN3YXAuaD4KICNpbmNsdWRlIDxn
+ZXRvcHQuaD4KKyNpZmRlZiBVU0VMWk8KICNpbmNsdWRlIDxsem8vbHpvMXguaD4KKyNlbmRpZgog
+I2luY2x1ZGUgImNvbW1vbi5oIgogI2luY2x1ZGUgImR3YXJmX2luZm8uaCIKICNpbmNsdWRlICJk
+aXNrZHVtcF9tb2QuaCIKZGlmZiAtLWdpdCBhL3ByaW50X2luZm8uYyBiL3ByaW50X2luZm8uYwpp
+bmRleCA1ODA3NDFhLi4zYzkxNTFkIDEwMDY0NAotLS0gYS9wcmludF9pbmZvLmMKKysrIGIvcHJp
+bnRfaW5mby5jCkBAIC0zNCw3ICszNCwxMSBAQCBwcmludF91c2FnZSh2b2lkKQogewogCU1TRygi
+XG4iKTsKIAlNU0coIkxaTyBzdXBwb3J0OlxuIik7CisjaWZkZWYgVVNFTFpPCiAJTVNHKCIgIGVu
+YWJsZWRcbiIpOworI2Vsc2UKKwlNU0coIiAgZGlzYWJsZWQgKCctbCcgb3B0aW9uIHdpbGwgYmUg
+aWdub3JlZC4pXG4iKTsKKyNlbmRpZgogCU1TRygiXG4iKTsKIAlNU0coIlVzYWdlOlxuIik7CiAJ
+TVNHKCIgIENyZWF0aW5nIERVTVBGSUxFOlxuIik7Ci0tIAoxLjcuOS4yCgo=
+
+--Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--Multipart=_Fri__23_Mar_2012_16_33_03_+0900_mOH2=+WOIk+HMiH9--
+
