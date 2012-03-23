@@ -1,16 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SAqcr-00053A-Jv
- for kexec@lists.infradead.org; Thu, 22 Mar 2012 22:36:58 +0000
-Date: Fri, 23 Mar 2012 07:36:46 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Doing kexec reboot right in systemd
-Message-ID: <20120322223646.GC26794@verge.net.au>
-References: <CABRT9RAB--szWwmYO9_JyjXRP-9YYgkG-TsAg8jS=birUF2e=w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CABRT9RAB--szWwmYO9_JyjXRP-9YYgkG-TsAg8jS=birUF2e=w@mail.gmail.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SAzpK-0006wn-2c
+ for kexec@lists.infradead.org; Fri, 23 Mar 2012 08:26:30 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 7E5A73EE0C0
+ for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 64EF245DE4E
+ for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4FA6745DD78
+ for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 421CD1DB803C
+ for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:20 +0900 (JST)
+Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id ED10B1DB802C
+ for <kexec@lists.infradead.org>; Fri, 23 Mar 2012 17:26:19 +0900 (JST)
+Date: Fri, 23 Mar 2012 17:26:08 +0900 (   )
+Message-Id: <20120323.172608.488340508.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120223012940.5041.61104.stgit@localhost6.localdomain6>
+ <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,69 +38,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marti Raudsepp <marti@juffo.org>
-Cc: systemd-devel <systemd-devel@lists.freedesktop.org>, kexec list <kexec@lists.infradead.org>, Lennart Poettering <lennart@poettering.net>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-On Thu, Mar 22, 2012 at 09:14:56PM +0200, Marti Raudsepp wrote:
-> Hi list,
+Hello Kumagai-san,
 
-Hi Marti,
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
+Date: Fri, 23 Mar 2012 16:33:03 +0900
 
-> I was recently pondering how systemd could use kexec "properly", in a
-> reasonably general way, to make reboots faster. I exchanged an email
-> with Poettering on the systemd list and he suggested me to ask here.
+> On Thu, 23 Feb 2012 10:33:54 +0900
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 > 
-> My current proposal:
-> 1. Include a template 'kexec-load.service' with kexec-tools, which
-> distros/users could customize to load the right kernel and initrd via
-> /sbin/kexec
+>> The following series implements LZO compression support to
+>> makedumpfile. LZO is as good as in size but by far better in speed
+>> than ZLIB, readucing down time during generation of crash dump and
+>> refiltering.
 > 
-> 2. If the user does 'systemctl enable kexec-load.service', then this
-> service would trigger before every reboot. Loading the kernel any
-> earlier would waste memory (5+14 MB on Ubuntu Server). Also a common
-> reason for rebooting is to boot into a newly-installed kernel. Loading
-> it any earlier would boot you into an older kernel.
+> Sorry for late reply.
 > 
-> 3. During a reboot, after systemd has finished shutting down, it
-> detects via /sys/kernel/kexec_loaded whether the kexec kernel is
-> loaded. If 1, it performs a 'kexec -e'. If not, it does a normal
-> reboot.
+> [PATCH v2 4/4] allows to use -l option even without USELZO but 
+> lzo compression doesn't work without USELZO.
+> I think that warning messages should be displayed when -l option is
+> used on makedumpfile built without USELZO.
 > 
-> ----
+> So I made v3 patches attached to this mail.
+> ([PATCH v2 1/4] and [PATCH v2 2/4] look good and I didn't change them.)
 > 
-> Lennart commented on #2 that kexec might have problems finding
-> contiguous memory to load the kernel into, this late in the lifecycle.
-> Do you think this is a deal-breaker for such a feature? If it's rare
-> enough, then it might not be a problem -- we can always fall back to a
-> normal reboot.
-
-In general kexec doesn't store the kernel in contiguous memory at load-time.
-Rather, when kexec -e is called the kernel is copped from (most likely)
-discontiguous pages) into its destination location.
-
-> I'm also assuming that "kexec --load" will fail atomically -- that it
-> won't try to boot a half-loaded kernel, or boot a kernel whose initrd
-> failed to load.
-
-Yes, that is correct.
-
-However, I speculate that there is a greater chance of the boot of a
-kexeced kernel failing than the same kernel booting by more conventional
-means on the same hardware. Primarily because there are most likely
-shutdown/boot paths, especially in drivers, that have not been well
-exercised.
-
-So while it may work well on some hardware, perhaps even most hardware, I
-suspect there are cases where it will fail.  I guess that is where
-systemctl enable/disable kexec-load.service comes into play.
-
-> Also, #3 doesn't yet work that way in systemd (currently it detects
-> before shutdown) and Poettering hasn't agreed yet.
+>   v2 => v3:
 > 
-> Does this proposal seem sane to kexec folks? Did I miss anything?
+>      - Add warning messages for invalid -l option.
+>      - Show LZO support status with help messages.
+>      - Add description of USELZO in README and man page.
+>      - (and I will do some cleanups.)
+> 
+> What do you think, Hatayama-san ?
 
-If it is desirable to use kexec as a reboot mechanism then
-from a kexec point of view I think your proposal makes sense.
+Thanks. I think the warning message very helpful for users.
+
+BTW, I have a question about future build option of LZO library. You
+said previously you're going to introduce autotools. Then, do you
+consider default enable if LZO library is present on the environment?
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
