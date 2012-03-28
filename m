@@ -1,30 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e38.co.us.ibm.com ([32.97.110.159])
+Received: from g6t0184.atlanta.hp.com ([15.193.32.61])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SCwG1-0001gx-DO
- for kexec@lists.infradead.org; Wed, 28 Mar 2012 17:02:02 +0000
-Received: from /spool/local
- by e38.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Wed, 28 Mar 2012 11:01:52 -0600
-Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
- [9.17.195.226])
- by d03dlp03.boulder.ibm.com (Postfix) with ESMTP id 1410119D8050
- for <kexec@lists.infradead.org>; Wed, 28 Mar 2012 11:01:18 -0600 (MDT)
-Received: from d03av06.boulder.ibm.com (d03av06.boulder.ibm.com [9.17.195.245])
- by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q2SH19OD017498
- for <kexec@lists.infradead.org>; Wed, 28 Mar 2012 11:01:18 -0600
-Received: from d03av06.boulder.ibm.com (loopback [127.0.0.1])
- by d03av06.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q2SH1SRU017351
- for <kexec@lists.infradead.org>; Wed, 28 Mar 2012 11:01:29 -0600
-Message-ID: <4F7343CB.2070108@linux.vnet.ibm.com>
-Date: Wed, 28 Mar 2012 22:30:59 +0530
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+ id 1SCyGC-000103-E1
+ for kexec@lists.infradead.org; Wed, 28 Mar 2012 19:10:24 +0000
+Date: Wed, 28 Mar 2012 13:09:02 -0600
+From: Khalid Aziz <khalid@hp.com>
+Subject: Add a descriptive error message for kexec load failure
+Message-ID: <20120328190902.GA7651@hp.com>
 MIME-Version: 1.0
-Subject: Fwd: RE: Fwd: Re: makedumpfile security key enhancement using SIAL
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,119 +17,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Luc Chouinard <LChouinard@s2sys.com>
-Cc: Ananth N Mavinakayanahalli <ananth@in.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.vnet.ibm.com>, kexec@lists.infradead.org, Masaki Tachibana <tachibana@mxm.nes.nec.co.jp>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, David Anderson <anderson@redhat.com>
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-Thanks Luc. We will let you know if in case we need any info/help.
+kexec-tools package for debian includes a patch that adds a more 
+descriptive error message when someone tries to laod a crash kernel 
+and didn't remember to boot up with crashkernel= parameter. This 
+patch would be of general interest. This patch was originally written 
+by Alastair McKinstry.
 
-I am also forwarding this mail to kexec mailing list.
+Please apply.
 
-Regards,
-Aravinda
+Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
+---
+ kexec/arch/i386/crashdump-x86.c |   10 ++++++----
+ kexec/kexec.c                   |   18 ++++++++++++++----
+ kexec/kexec.h                   |    6 ++++++
+ 3 files changed, 26 insertions(+), 8 deletions(-)
+
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index 590c883..2af090c 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -776,7 +776,9 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	memset(memmap_p, 0, sz);
+ 	add_memmap(memmap_p, info->backup_src_start, info->backup_src_size);
+ 	sz = crash_reserved_mem.end - crash_reserved_mem.start +1;
+-	add_memmap(memmap_p, crash_reserved_mem.start, sz);
++	if (add_memmap(memmap_p, crash_reserved_mem.start, sz) < 0) {
++		return ENOCRASHKERNEL;
++	}
+ 
+ 	/* Create a backup region segment to store backup data*/
+ 	if (!(info->kexec_flags & KEXEC_PRESERVE_CONTEXT)) {
+@@ -788,7 +790,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 		dbgprintf("Created backup segment at 0x%lx\n",
+ 			  info->backup_start);
+ 		if (delete_memmap(memmap_p, info->backup_start, sz) < 0)
+-			return -1;
++			return EFAILED;
+ 	}
+ 
+ 	/* Create elf header segment and store crash image data. */
+@@ -797,14 +799,14 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 					       crash_memory_range, nr_ranges,
+ 					       &tmp, &bufsz,
+ 					       ELF_CORE_HEADER_ALIGN) < 0)
+-			return -1;
++			return EFAILED;
+ 	}
+ 	else {
+ 		if (crash_create_elf32_headers(info, &elf_info,
+ 					       crash_memory_range, nr_ranges,
+ 					       &tmp, &bufsz,
+ 					       ELF_CORE_HEADER_ALIGN) < 0)
+-			return -1;
++			return EFAILED;
+ 	}
+ 	/* the size of the elf headers allocated is returned in 'bufsz' */
+ 
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 19133fa..84dab70 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -718,10 +718,20 @@ static int my_load(const char *type, int fileind, int argc, char **argv,
+ 	}
+ 	info.kexec_flags |= native_arch;
+ 
+-	if (file_type[i].load(argc, argv, kernel_buf,
+-			      kernel_size, &info) < 0) {
+-		fprintf(stderr, "Cannot load %s\n", kernel);
+-		return -1;
++	result = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
++	if (result < 0) {
++		switch (result) {
++		case ENOCRASHKERNEL:
++			fprintf(stderr,
++				"No crash kernel segment found in /proc/iomem\n"
++				"Please check the crashkernel= boot parameter.\n");
++			break;
++		case EFAILED:
++		default:
++			fprintf(stderr, "Cannot load %s\n", kernel);
++			break;
++		}
++		return result;
+ 	}
+ 	/* If we are not in native mode setup an appropriate trampoline */
+ 	if (arch_compat_trampoline(&info) < 0) {
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index dfd3630..279dfdf 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -57,6 +57,12 @@
+ #error unknwon BYTE_ORDER
+ #endif
+ 
++/*
++ * Document some of the reasons why crashdump may fail, so we can give
++ * better error messages
++ */
++#define EFAILED		-1	/* default error code */
++#define ENOCRASHKERNEL	-2	/* no memory reserved for crashkernel */
+ 
+ /*
+  * This function doesn't actually exist.  The idea is that when someone
+-- 
+1.7.8.3
 
 
--------- Original Message --------
-Subject: RE: Fwd: Re: makedumpfile security key enhancement using SIAL
-Date: Wed, 28 Mar 2012 07:07:49 -0400
-From: Luc Chouinard <LChouinard@s2sys.com>
-To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-
-  Libsial is meant to be a pluggable entity and as such should not 
-require other pieces to be there ( crash or gdb).
-I want to create project and associated git for the library soon. For 
-now you can extract libsial from the crash tar ball and manage any 
-modifications using a simple patch mechanism. When the git is available, 
-we can merge any fixes or enhancements you created for support of 
-makedumpfile.
-
-Makedumpfile and crash would then feed off of specific branches/versions 
-of the git repository.
-If you have any suggestions or want to help in setting up a public git / 
-project page for sial, please let me know.
-
-
-    -Luc
-
-> -----Original Message-----
-> From: Aravinda Prasad [mailto:aravinda@linux.vnet.ibm.com]
-> Sent: Wednesday, March 28, 2012 1:31 AM
-> To: Luc Chouinard
-> Subject: Fwd: Fwd: Re: makedumpfile security key enhancement using SIAL
->
-> Forwarding to your s2sys email ID. Details in mail forward.
->
-> Regards,
-> Aravinda
->
->
-> -------- Original Message --------
-> Subject: Fwd: Re: makedumpfile security key enhancement using SIAL
-> Date: Tue, 20 Mar 2012 17:28:21 +0530
-> From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-> To: Luc Chouinard <lucchouina@yahoo.com>
-> CC: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>,  Masaki Tachibana
-> <tachibana@mxm.nes.nec.co.jp>, Mahesh J Salgaonkar
-> <mahesh@linux.vnet.ibm.com>,  Ananth N Mavinakayanahalli
-> <ananth@in.ibm.com>, Dave Anderson <anderson@redhat.com>
->
-> Hi Luc,
->
-> We are looking for utilising SIAL as a language construct for the makedumpfile
-> kernel data filtering from vmcore feature. The details of which are in the mail
-> forward.
->
-> The proposed enhancement will require libsial.a and as SIAL is not currently
-> built/shipped, we are looking for possibilities on how libsial.a can be made
-> available to makedumpfile. Please let us know your opinion on the same.
->
-> Regards,
-> Aravinda
->
->
-> -------- Original Message --------
-> Subject: Re: makedumpfile security key enhancement using SIAL
-> Date: Tue, 13 Mar 2012 10:27:43 -0400 (EDT)
-> From: Dave Anderson <anderson@redhat.com>
-> To: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-> CC: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>,         Masaki
-> Tachibana <tachibana@mxm.nes.nec.co.jp>,        Ananth N
-> Mavinakayanahalli <ananth@in.ibm.com>,        Mahesh J Salgaonkar
-> <mahesh@linux.vnet.ibm.com>
->
->
->
-> ----- Original Message -----
-> > Hi Dave,
-> >
-> > Last year, we worked on the makedumpfile security key filtering where
-> > we added support to filter out kernel data from vmcore. This year, we
-> > are working on enhancing the framework to provide more flexibility for
-> > the customers to specify rules to traverse and filter out kernel data
-> > - for which we are planning to use SIAL.
-> >
-> > We are looking into using SIAL as language construct to specify
-> > rules/commands to erase data in the image file. The makedumpfile would
-> > interpret the rules provided in SIAL macro using SIAL library (which
-> > could be dynamically loaded) and erase out suitable data in the vmcore.
-> > We are planning to reuse SIAL as it provides a C language like
-> > construct, which is flexible and powerful enough to specify rules to
-> > erase data in vmcore.
-> >
-> > As SIAL is not built and shipped along with crash, we are looking for
-> > possibilities on how SIAL can be leveraged by makedumpfile and would
-> > like to know your opinion.
->
-> Sorry but I cannot give you any help with SIAL.  Luc Chouinard is the maintainer
-> of the SIAL extension module adaptation for the crash utility, and he can answer
-> your questions w/respect to adapting it for makedumpfile.
-> And ultimately, that's a question for the makedumpfile maintainers.
->
-> Dave
-
+====================================================================
+Khalid Aziz                                         Unix Systems Lab
+(970)898-9214                                        Hewlett-Packard
+khalid.aziz@hp.com                                  Fort Collins, CO
 
 _______________________________________________
 kexec mailing list
