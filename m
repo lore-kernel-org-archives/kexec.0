@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SCffv-0000Hp-Nf
- for kexec@lists.infradead.org; Tue, 27 Mar 2012 23:19:41 +0000
-Date: Wed, 28 Mar 2012 08:19:29 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: Doing kexec reboot right in systemd
-Message-ID: <20120327231929.GA2697@verge.net.au>
-References: <CABRT9RAB--szWwmYO9_JyjXRP-9YYgkG-TsAg8jS=birUF2e=w@mail.gmail.com>
- <20120322223646.GC26794@verge.net.au>
- <20120326180729.GB5398@tango.0pointer.de>
- <CABRT9RBa-x661VxvvinD6BPdFc0sharst-h9mgz0kht6aQr76Q@mail.gmail.com>
- <20120327100132.GA15921@tango.0pointer.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120327100132.GA15921@tango.0pointer.de>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SClKu-0000FR-Fn
+ for kexec@lists.infradead.org; Wed, 28 Mar 2012 05:22:23 +0000
+Date: Wed, 28 Mar 2012 14:18:09 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
+Message-Id: <20120328141809.fac2af86.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120323.172608.488340508.d.hatayama@jp.fujitsu.com>
+References: <20120223012940.5041.61104.stgit@localhost6.localdomain6>
+ <20120323163303.dee3795c.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120323.172608.488340508.d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,40 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lennart Poettering <lennart@poettering.net>
-Cc: kexec list <kexec@lists.infradead.org>, Marti Raudsepp <marti@juffo.org>, systemd-devel <systemd-devel@lists.freedesktop.org>
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-On Tue, Mar 27, 2012 at 12:01:36PM +0200, Lennart Poettering wrote:
-> On Mon, 26.03.12 21:25, Marti Raudsepp (marti@juffo.org) wrote:
-> 
-> > 
-> > On Mon, Mar 26, 2012 at 21:07, Lennart Poettering
-> > <lennart@poettering.net> wrote:
-> > > Marti, sorry for changing my mind on this: would be great if you could
-> > > prep a patch for this for systemd itself.
-> > 
-> > D'oh, I already prepared a patch for kexec, although I haven't sent it
-> > out yet.
-> 
-> OK, I am fine with either.
+Hello Hatayama-san,
 
-FWIW, I think systemd is a better place for this change.
+On Fri, 23 Mar 2012 17:26:08 +0900 (   )
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+ 
+> BTW, I have a question about future build option of LZO library. You
+> said previously you're going to introduce autotools. Then, do you
+> consider default enable if LZO library is present on the environment?
 
-> > > Hmm, so since this would then belong in the shutdown path of systemd,
-> > > and only be added for the kexec shutdown path I actually think it would
-> > > make more sense to add this into systemd itself instead of kexec-tools,
-> > > to ensure the right ordering.
-> > 
-> > Um, why is including in systemd necessary for guaranteeing order?
-> 
-> It isn't, but it's easier to keep early boot and late shutdown stuff in
-> systemd.
-> 
-> Lennart
-> 
-> -- 
-> Lennart Poettering - Red Hat, Inc.
-> 
+I'm afraid I decide not to introduce autotools for the following reasons.
+
+First, because autotools cannot know whether LZO library is prepared in
+2nd kernel environment, it cannot decide whether it should link LZO library
+dynamically even if LINKTYPE=dynamic is specified.
+
+Second, if autotools behaves differently depending on LINKTYPE, it is difficult
+for users to understand.
+
+So, I think that current method is simpler and better than autotools.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
