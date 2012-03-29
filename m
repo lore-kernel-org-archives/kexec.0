@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SDF2T-0006pg-0R
- for kexec@lists.infradead.org; Thu, 29 Mar 2012 13:05:18 +0000
-Date: Thu, 29 Mar 2012 09:05:14 -0400
+ id 1SDFM9-0006uf-Uj
+ for kexec@lists.infradead.org; Thu, 29 Mar 2012 13:25:39 +0000
+Date: Thu, 29 Mar 2012 09:25:33 -0400
 From: Don Zickus <dzickus@redhat.com>
 Subject: Re: makedumpfile memory usage grows with system memory size
-Message-ID: <20120329130514.GK18218@redhat.com>
+Message-ID: <20120329132533.GM18218@redhat.com>
 References: <20120328212204.GI18218@redhat.com>
  <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <20120329.215646.28793982.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+In-Reply-To: <20120329.215646.28793982.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,59 +25,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hi Ken'ichi-san,
+Hello Daisuke,
 
-On Thu, Mar 29, 2012 at 05:09:18PM +0900, Ken'ichi Ohmichi wrote:
+On Thu, Mar 29, 2012 at 09:56:46PM +0900, HATAYAMA Daisuke wrote:
+> Hello Don,
 > 
-> Hi Don-san,
+> I'm missing your mail somehow so replying Oomichi-san's mail...
 > 
-> On Wed, 28 Mar 2012 17:22:04 -0400
-> Don Zickus <dzickus@redhat.com> wrote:
+> From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+> Subject: Re: makedumpfile memory usage grows with system memory size
+> Date: Thu, 29 Mar 2012 17:09:18 +0900
+> 
 > > 
-> > I was talking to Vivek about kdump memory requirements and he mentioned
-> > that they vary based on how much system memory is used.
-> > 
-> > I was interested in knowing why that was and again he mentioned that
-> > makedumpfile needed lots of memory if it was running on a large machine
-> > (for example 1TB of system memory).
-> > 
-> > Looking through the makedumpfile README and using what Vivek remembered of
-> > makedumpfile, we gathered that as the number of pages grows, the more
-> > makedumpfile has to temporarily store the information in memory.  The
-> > possible reason was to calculate the size of the file before it was copied
-> > to its final destination?
+> > On Wed, 28 Mar 2012 17:22:04 -0400
+> > Don Zickus <dzickus@redhat.com> wrote:
 > 
-> makedumpfile uses the system memory of 2nd-kernel for a bitmap if RHEL.
-> The bitmap represents each page of 1st-kernel is excluded or not.
-> So the bitmap size depends on 1st-kernel's system memory.
+> >> I was curious if that was true and if it was, would it be possible to only
+> >> process memory in chunks instead of all at once.
+> >> 
+> >> The idea is that a machine with 4Gigs of memory should consume the same
+> >> the amount of kdump runtime memory as a 1TB memory system.
+> >> 
+> >> Just trying to research ways to keep the memory requirements consistent
+> >> across all memory ranges.
 > 
-> makedumpfile creates a file /tmp/kdump_bitmapXXXXXX as the bitmap,
-> and the file is created on 2nd-kernel's memory if RHEL, because
-> RHEL does not mount a root filesystem when 2nd-kernel is running.
+> I think this is possible in constant memory space by creating bitmaps
+> and writing pages in a certain amount of memory. That is, if choosing
+> 4GB, do [0, 4GB) space processing, [4GB, 8GB) space processing, [8GB,
+> 12GB) ... in order. The key is to restrict the target memory range of
+> filtering.
 
-Ok.
+Yes, that was what I was thinking.  I am glad to hear that is possible.
+Is there some place in the code that I can help try out that idea?  I
+would also be curious if there is a 'time' impact on how long it takes to
+process this (for example, would it add a couple of milliseconds overhead
+or seconds overhead).
 
-> 
-> 
-> > I was curious if that was true and if it was, would it be possible to only
-> > process memory in chunks instead of all at once.
-> > 
-> > The idea is that a machine with 4Gigs of memory should consume the same
-> > the amount of kdump runtime memory as a 1TB memory system.
-> > 
-> > Just trying to research ways to keep the memory requirements consistent
-> > across all memory ranges.
-> 
-> I think the above purpose is good, and I don't have any idea for reducing
-> the bitmap size. And now I am out of makedumpfile development.
-> Kumagai-san is the makedumpfile maintainer now, and he will help you.
-
-Thanks for the feedback, I'll wait for Kumagai-san's response then.
-
-Cheers,
+Thanks,
 Don
 
 _______________________________________________
