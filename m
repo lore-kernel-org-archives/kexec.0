@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SDHnz-00060G-22
- for kexec@lists.infradead.org; Thu, 29 Mar 2012 16:02:32 +0000
-Date: Thu, 29 Mar 2012 12:02:27 -0400
-From: Don Zickus <dzickus@redhat.com>
-Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
-Message-ID: <20120329160227.GP3857@redhat.com>
-References: <1330546129-4812-1-git-send-email-dzickus@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1330546129-4812-1-git-send-email-dzickus@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SDQ4T-0006Xc-B5
+ for kexec@lists.infradead.org; Fri, 30 Mar 2012 00:52:07 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 4C9D93EE0BB
+ for <kexec@lists.infradead.org>; Fri, 30 Mar 2012 09:52:00 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id B97832AEA86
+ for <kexec@lists.infradead.org>; Fri, 30 Mar 2012 09:51:58 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 97A5D1EF083
+ for <kexec@lists.infradead.org>; Fri, 30 Mar 2012 09:51:58 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8A93DE08001
+ for <kexec@lists.infradead.org>; Fri, 30 Mar 2012 09:51:58 +0900 (JST)
+Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 35399E08004
+ for <kexec@lists.infradead.org>; Fri, 30 Mar 2012 09:51:58 +0900 (JST)
+Date: Fri, 30 Mar 2012 09:51:43 +0900 (   )
+Message-Id: <20120330.095143.347147805.d.hatayama@jp.fujitsu.com>
+Subject: Re: makedumpfile memory usage grows with system memory size
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120329132533.GM18218@redhat.com>
+References: <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <20120329.215646.28793982.d.hatayama@jp.fujitsu.com>
+ <20120329132533.GM18218@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,129 +39,134 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org
-Cc: kexec-list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: dzickus@redhat.com
+Cc: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Wed, Feb 29, 2012 at 03:08:49PM -0500, Don Zickus wrote:
-> A customer of ours noticed when their machine crashed, kdump did not
-> work but hung instead.  Using their firmware dumping solution they
-> grabbed a vmcore and decoded the stacks on the cpus.  What they
-> noticed seemed to be a rare deadlock with the ioapic_lock.
+From: Don Zickus <dzickus@redhat.com>
+Subject: Re: makedumpfile memory usage grows with system memory size
+Date: Thu, 29 Mar 2012 09:25:33 -0400
 
-Any feedback?
+> On Thu, Mar 29, 2012 at 09:56:46PM +0900, HATAYAMA Daisuke wrote:
 
-Cheers,
-Don
+>> From: "Ken'ichi Ohmichi" <oomichi@mxs.nes.nec.co.jp>
+>> Subject: Re: makedumpfile memory usage grows with system memory size
+>> Date: Thu, 29 Mar 2012 17:09:18 +0900
 
-> 
->  CPU4:
->  machine_crash_shutdown
->  -> machine_ops.crash_shutdown
->     -> native_machine_crash_shutdown
->        -> kdump_nmi_shootdown_cpus ------> Send NMI to other CPUs
->        -> disable_IO_APIC
->           -> clear_IO_APIC
->              -> clear_IO_APIC_pin
->                 -> ioapic_read_entry
->                    -> spin_lock_irqsave(&ioapic_lock, flags)
->                    ---Infinite loop here---
-> 
->  CPU0:
->  do_IRQ
->  -> handle_irq
->     -> handle_edge_irq
->         -> ack_apic_edge
->            -> move_native_irq
->                -> mask_IO_APIC_irq
->                   -> mask_IO_APIC_irq_desc
->                      -> spin_lock_irqsave(&ioapic_lock, flags)
->                      ---Receive NMI here after getting spinlock---
->                         -> nmi
->                            -> do_nmi
->                               -> crash_nmi_callback
->                               ---Infinite loop here---
-> 
-> The problem is that although kdump tries to shutdown minimal hardware,
-> it still needs to disable the IO APIC.  This requires spinlocks which
-> may be held by another cpu.  This other cpu is being held infinitely in
-> an NMI context by kdump in order to serialize the crashing path.  Instant
-> deadlock.
-> 
-> Eric, brought up a point that because the boot code was restructured we may
-> not need to disable the io apic any more in the crash path.  The original
-> concern that led to the development of disable_IO_APIC, was that the jiffies
-> calibration on boot up relied on the PIT timer for reference.  Access
-> to the PIT required 8259 interrupts to be working.  This wouldn't work
-> if the ioapic needed to be configured.  So on panic path, the ioapic was
-> reconfigured to use virtual wire mode to allow the 8259 to passthrough.
-> 
-> Those concerns don't hold true now, thanks to the jiffies calibration code
-> not needing the PIT.  As a result, we can remove this call and simplify the
-> locking needed in the panic path.
-> 
-> I tested kdump on an Ivy Bridge platform, a Pentium4 and an old athlon that
-> did not have an ioapic.  All three were successful.
-> 
-> I also tested using lkdtm that would use jprobes to panic the system when
-> entering do_IRQ.  The idea was to see how the system reacted with an
-> interrupt pending in the second kernel.  My core2 quad successfully kdump'd
-> 3 times in a row with no issues.
-> 
-> v2: removed the disable lapic code too
-> v3: re-add disabling of lapic code
-> 
-> Cc: Eric W. Biederman <ebiederm@xmission.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Signed-off-by: Don Zickus <dzickus@redhat.com>
-> ---
-> 
-> There are really two problems here.  One is the deadlock of the ioapic_lock
-> that I describe above.  Removing the code to disable the ioapic seems to
-> resolve that.
-> 
-> The second issue is handling non-IRQ exceptions like NMIs.  Eric asked me
-> to include removing the disable lapic code too.  However, because the nmi
-> watchdog is stil active and kexec zeros out the idt before it jumps to
-> purgatory, an NMI that comes in during the transition between the first
-> kernel and second kernel will see an empty idt and reset the cpu.
-> 
-> Leaving the code to disable the lapic in, turns off perf and blocks those NMIs
-> from happening (though an external NMI would still be an issue but that is no
-> different than right now).
-> 
-> I tried playing with a stub idt and leaving it in place through the transition
-> to the second kernel, but I can't quite get it to work correctly.  Spinning in the
-> first kernel before the purgatory jump catches the idt properly.  Spinning in
-> purgatory before the second kernel jump doesn't.  I even disabled the zero'ing
-> out of the idt in the purgatory code.
-> 
-> I would like to get resolution on the ioapic deadlock to fix a customer issue
-> while working the idt and NMI thing on the side, hence the split of this
-> patchset.
-> 
-> Hopefully, people recognize there are two issues here and that this patch
-> resolves the first one and the second one needs more debugging and time.
-> ---
->  arch/x86/kernel/crash.c |    3 ---
->  1 files changed, 0 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 13ad899..b053cf9 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -96,9 +96,6 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
->  	cpu_emergency_svm_disable();
->  
->  	lapic_shutdown();
-> -#if defined(CONFIG_X86_IO_APIC)
-> -	disable_IO_APIC();
-> -#endif
->  #ifdef CONFIG_HPET_TIMER
->  	hpet_disable();
->  #endif
-> -- 
-> 1.7.7.6
-> 
+>> > On Wed, 28 Mar 2012 17:22:04 -0400
+>> > Don Zickus <dzickus@redhat.com> wrote:
+
+>> >> I was curious if that was true and if it was, would it be possible to only
+>> >> process memory in chunks instead of all at once.
+>> >> 
+>> >> The idea is that a machine with 4Gigs of memory should consume the same
+>> >> the amount of kdump runtime memory as a 1TB memory system.
+>> >> 
+>> >> Just trying to research ways to keep the memory requirements consistent
+>> >> across all memory ranges.
+
+>> I think this is possible in constant memory space by creating bitmaps
+>> and writing pages in a certain amount of memory. That is, if choosing
+>> 4GB, do [0, 4GB) space processing, [4GB, 8GB) space processing, [8GB,
+>> 12GB) ... in order. The key is to restrict the target memory range of
+>> filtering.
+
+> Yes, that was what I was thinking.  I am glad to hear that is possible.
+> Is there some place in the code that I can help try out that idea?  I
+> would also be curious if there is a 'time' impact on how long it takes to
+> process this (for example, would it add a couple of milliseconds overhead
+> or seconds overhead).
+
+The part related is the path in create_dumpfile():
+
+        if (!create_dump_bitmap())
+                return FALSE;
+
+        if (info->flag_split) {
+                if ((status = writeout_multiple_dumpfiles()) == FALSE)
+                        return FALSE;
+        } else {
+                if ((status = writeout_dumpfile()) == FALSE)
+                        return FALSE;
+        }
+
+Now this part tries to do the task for a whole memory. So first this
+needs to be generalized so that it does processing per range of
+memory. If doing the processing three cycles, it would be as follows
+pictorically in kdump-compressed format.
+                                                
+    +------------------------------------------+
+    |    main header (struct disk_dump_header) |
+    |------------------------------------------+
+    |    sub header (struct kdump_sub_header)  |
+    |------------------------------------------+
+    |                                          | <-- 1st cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |            1st-bitmap                    | <-- 2nd cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |                                          | <-- 3rd cycle
+    |------------------------------------------+
+    |                                          | <-- 1st cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |            2nd-bitmap                    | <-- 2nd cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |                                          | <-- 3rd cycle
+    |------------------------------------------+
+    |                                          | <-- 1st cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |            page header                   | <-- 2nd cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |                                          | <-- 3rd cycle
+    |------------------------------------------|
+    |                                          |
+    |            page data                     | <-- 1st cycle
+    |                                          |
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |            page data                     | <-- 2nd cycle
+      -  -  -  -  -  -  -  -  -  -  -  -  -  -
+    |                                          |
+    |                                          |
+    |            page data                     | <-- 3rd cycle
+    |                                          |
+    |                                          |
+    +------------------------------------------+
+
+where the portions except for page data are in fixed length; so I
+wrote only page data differently.
+
+For the processing of writing pages per range of memory, it's useful
+to reuse the code for --split's splitting features that split a single
+dumpfile into a multiple dumpfiles, which has prepared data strucutre
+to have start and end page frame numbers of the corresponding dumped
+memory. For example, see part below in write_kdump_pages().
+
+        if (info->flag_split) {
+                start_pfn = info->split_start_pfn;
+                end_pfn   = info->split_end_pfn;
+        }
+        else {
+                start_pfn = 0;
+                end_pfn   = info->max_mapnr;
+        }
+
+        for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+
+For the processing of creating and referencing bitmaps per range of
+memory, there's no functions that do that. The ones for a whole memory
+only: create_bitmap() and is_dumpable(). Also, creating bitmap depends
+on source dumpfile format. Trying with ELF to kdump-compressed format
+case first seems most handy; or if usecase is on the 2nd kernel only,
+this case is enough?)
+
+For performance impact, I don't know that exactly. But I guess
+iterating filtering processing is most significant. I don't know exact
+data structure for each kind of memory, but if there's the ones
+needing linear order to look up the data for a given page frame
+number, there would be necessary to add some special handling not to
+reduce performance.
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
