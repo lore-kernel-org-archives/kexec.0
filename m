@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SDS82-0001MO-I9
- for kexec@lists.infradead.org; Fri, 30 Mar 2012 03:03:57 +0000
-Date: Fri, 30 Mar 2012 12:02:00 +0900
+ id 1SDYOR-0007G8-1y
+ for kexec@lists.infradead.org; Fri, 30 Mar 2012 09:45:17 +0000
+Date: Fri, 30 Mar 2012 18:43:34 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: Fwd: Re: makedumpfile security key enhancement using SIAL
-Message-Id: <20120330120200.04bcde45.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <4F6B60C6.7060707@linux.vnet.ibm.com>
-References: <4F6870DD.6060102@linux.vnet.ibm.com>
- <20120321154328.4bbcff7d.kumagai-atsushi@mxc.nes.nec.co.jp>
- <4F6B60C6.7060707@linux.vnet.ibm.com>
+Subject: Re: makedumpfile memory usage grows with system memory size
+Message-Id: <20120330184334.bb285f91.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120329130514.GK18218@redhat.com>
+References: <20120328212204.GI18218@redhat.com>
+ <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <20120329130514.GK18218@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,48 +24,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: aravinda@linux.vnet.ibm.com
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, kexec@lists.infradead.org, tachibana@mxm.nes.nec.co.jp, lucchouina@yahoo.com, anderson@redhat.com
+To: dzickus@redhat.com
+Cc: oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hello Aravinda,
+Hello Don,
+ 
+> > On Thu, 29 Mar 2012 09:05:14 -0400
+> > Don Zickus <dzickus@redhat.com> wrote:
+> > 
+> > > Hi Ken'ichi-san,
+> > > 
+> > > On Thu, Mar 29, 2012 at 05:09:18PM +0900, Ken'ichi Ohmichi wrote:
+> > > > 
+> > > > Hi Don-san,
+> > > > 
+> > > > On Wed, 28 Mar 2012 17:22:04 -0400
+> > > > Don Zickus <dzickus@redhat.com> wrote:
+> > > > > 
+> > > > > I was talking to Vivek about kdump memory requirements and he mentioned
+> > > > > that they vary based on how much system memory is used.
+> > > > > 
+> > > > > I was interested in knowing why that was and again he mentioned that
+> > > > > makedumpfile needed lots of memory if it was running on a large machine
+> > > > > (for example 1TB of system memory).
+> > > > > 
+> > > > > Looking through the makedumpfile README and using what Vivek remembered of
+> > > > > makedumpfile, we gathered that as the number of pages grows, the more
+> > > > > makedumpfile has to temporarily store the information in memory.  The
+> > > > > possible reason was to calculate the size of the file before it was copied
+> > > > > to its final destination?
+> > > > 
+> > > > makedumpfile uses the system memory of 2nd-kernel for a bitmap if RHEL.
+> > > > The bitmap represents each page of 1st-kernel is excluded or not.
+> > > > So the bitmap size depends on 1st-kernel's system memory.
+> > > > 
+> > > > makedumpfile creates a file /tmp/kdump_bitmapXXXXXX as the bitmap,
+> > > > and the file is created on 2nd-kernel's memory if RHEL, because
+> > > > RHEL does not mount a root filesystem when 2nd-kernel is running.
+> > > 
+> > > Ok.
 
-On Thu, 22 Mar 2012 22:56:30 +0530
-Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
+Does setting TMPDIR solve your problem ? Please refer to the man page.
 
-> On Wednesday 21 March 2012 12:13 PM, Atsushi Kumagai wrote:
-> > Hello Aravinda,
-> >
-> > I have two questions, could you answer me ?
-> >
-> > First, what problems do you have about the current format of makedumpfile.conf ?
-> 
-> Even though makedumpfile.conf is capable of filtering out data from the
-> vmocore, it is not possible to specify and erase complex
-> data-structures. For example it is not possible to traverse a nested
-> list or a tree and then erase a particular node based on some
-> conditions. Extending makedumpfile.conf to support these would require
-> implementing a lot of language constructs. But we can reuse SIAL
-> instead of extending makedumpfile.conf.
-> 
-> > Second, what benefits do you expect from using SIAL ? I can't imagine
-> > specific benefits with using SIAL now.
-> 
-> SIAL can be used as a language construct to specify rules/commands to
-> erase data in the image file. The makedumpfile would interpret the
-> rules/commands provided by SIAL macros with the help of SIAL library
-> and would suitably erase the required data in the dump file. As SIAL
-> provides a lot of language constructs like conditional statements,
-> logical and arithmetic operators, nested loops, functions etc, it would
-> be possible to traverse nested lists and trees and conditionally erase
-> data in the dump file, enabling users to literally erase any data in
-> the dump file.
 
-Thank you for your explanation.
-It seems good to specify rules with SIAL.
+    ENVIRONMENT VARIABLES
+           TMPDIR  This  environment  variable  is  for  a temporary memory bitmap
+                   file.  If your machine has a lots of memory and you  use  tmpfs
+                   on  /tmp,  makedumpfile can fail for a little memory in the 2nd
+                   kernel because makedumpfile makes a very large temporary memory
+                   bitmap  file in this case. To avoid this failure, you can set a
+                   TMPDIR environment variable. If you do not set a  TMPDIR  envi-
+                   ronment variable, makedumpfile uses /tmp directory for a tempo-
+                   rary bitmap file as a default.
 
-If makedumpfile uses SIAL library, I will discard the current format of 
-makedumpfile.conf to reduce the size of source code.
-What do you think about it ?
+
+On the other hand, I'm considering the enhancement suggested by Hatayama-san now.
 
 
 Thanks
