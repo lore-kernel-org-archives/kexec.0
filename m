@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SEbE2-0004cV-Aa
- for kexec@lists.infradead.org; Mon, 02 Apr 2012 06:58:53 +0000
+ id 1SEc17-0005IP-B5
+ for kexec@lists.infradead.org; Mon, 02 Apr 2012 07:49:35 +0000
+Date: Mon, 2 Apr 2012 16:46:51 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: makedumpfile memory usage grows with system memory size
-Message-Id: <20120402155353tachibana@mail.jp.nec.com>
+Message-Id: <20120402164651.6c2b1ae7.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120330.095143.347147805.d.hatayama@jp.fujitsu.com>
+References: <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <20120329.215646.28793982.d.hatayama@jp.fujitsu.com>
+ <20120329132533.GM18218@redhat.com>
+ <20120330.095143.347147805.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
-From: tachibana@mxm.nes.nec.co.jp
-Date: Mon, 2 Apr 2012 15:53:53 +0900
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,53 +25,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: kexec@lists.infradead.org
+To: d.hatayama@jp.fujitsu.com
+Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-Hi Don,
+Hello Hatayama-san,
 
-On 2012/03/30 09:19:16 -0400, Don Zickus <dzickus@redhat.com> wrote:
-> On Fri, Mar 30, 2012 at 06:43:34PM +0900, Atsushi Kumagai wrote:
-> > Hello Don,
-> > Does setting TMPDIR solve your problem ? Please refer to the man page.
-> > 
-> > 
-> >     ENVIRONMENT VARIABLES
-> >            TMPDIR  This  environment  variable  is  for  a temporary memory bitmap
-> >                    file.  If your machine has a lots of memory and you  use  tmpfs
-> >                    on  /tmp,  makedumpfile can fail for a little memory in the 2nd
-> >                    kernel because makedumpfile makes a very large temporary memory
-> >                    bitmap  file in this case. To avoid this failure, you can set a
-> >                    TMPDIR environment variable. If you do not set a  TMPDIR  envi-
-> >                    ronment variable, makedumpfile uses /tmp directory for a tempo-
-> >                    rary bitmap file as a default.
+On Fri, 30 Mar 2012 09:51:43 +0900 (   )
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+ 
+> For the processing of writing pages per range of memory, it's useful
+> to reuse the code for --split's splitting features that split a single
+> dumpfile into a multiple dumpfiles, which has prepared data strucutre
+> to have start and end page frame numbers of the corresponding dumped
+> memory. For example, see part below in write_kdump_pages().
 > 
-> I do not think it will because we run the second kernel inside the
-> initramfs and do not mount any extra disks.  So the only location available
-> for the temporary memory bitmap would be memory either tmpfs or something
-> else.  Regardless the file ends up in memory.
+>         if (info->flag_split) {
+>                 start_pfn = info->split_start_pfn;
+>                 end_pfn   = info->split_end_pfn;
+>         }
+>         else {
+>                 start_pfn = 0;
+>                 end_pfn   = info->max_mapnr;
+>         }
+> 
+>         for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+> 
+> For the processing of creating and referencing bitmaps per range of
+> memory, there's no functions that do that. The ones for a whole memory
+> only: create_bitmap() and is_dumpable(). Also, creating bitmap depends
+> on source dumpfile format. Trying with ELF to kdump-compressed format
+> case first seems most handy; or if usecase is on the 2nd kernel only,
+> this case is enough?)
+> 
+> For performance impact, I don't know that exactly. But I guess
+> iterating filtering processing is most significant. I don't know exact
+> data structure for each kind of memory, but if there's the ones
+> needing linear order to look up the data for a given page frame
+> number, there would be necessary to add some special handling not to
+> reduce performance.
 
-If a file system for a dump file is on the local system, it is effective that
-we specify a directory as TMPDIR in the same file system, isn't it?
+Thank you for your idea.
+
+I think this is an important issue and I have no idea except iterating
+filtering processes for each memory range.
+
+But as you said, we should consider the issue related to performance.
+For example, makedumpfile must parse free_list repeatedly to distinguish
+whether each pfn is a free page or not, because each range may be inside
+the same zone. It will be overhead.
 
 
 Thanks
-tachibana
-
-> 
-> > 
-> > 
-> > On the other hand, I'm considering the enhancement suggested by Hatayama-san now.
-> 
-> His idea looks interesting if it works.  Thanks.
-> 
-> Cheers,
-> Don
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
