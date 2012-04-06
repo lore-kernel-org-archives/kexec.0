@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SG4Fm-0008W3-Nq
- for kexec@lists.infradead.org; Fri, 06 Apr 2012 08:10:45 +0000
-Date: Fri, 6 Apr 2012 17:09:11 +0900
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SG527-0007f8-LD
+ for kexec@lists.infradead.org; Fri, 06 Apr 2012 09:00:44 +0000
+Date: Fri, 6 Apr 2012 17:59:24 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: makedumpfile memory usage grows with system memory size
-Message-Id: <20120406170911.093369b0.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <1333386933.9539.8.camel@br98xy6r>
-References: <20120328212204.GI18218@redhat.com>
- <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
- <1333386933.9539.8.camel@br98xy6r>
+Message-Id: <20120406175924.007450fe.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120406.101212.193682065.d.hatayama@jp.fujitsu.com>
+References: <20120402164651.6c2b1ae7.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120405.155211.347142878.d.hatayama@jp.fujitsu.com>
+ <20120405143439.GA23999@redhat.com>
+ <20120406.101212.193682065.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,34 +25,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: holzheu@linux.vnet.ibm.com
-Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
+To: d.hatayama@jp.fujitsu.com
+Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org, vgoyal@redhat.com
 
-Hello Michael,
+Hello Hatayama-san,
 
-On Mon, 02 Apr 2012 19:15:33 +0200
-Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+On Fri, 06 Apr 2012 10:12:12 +0900 (   )
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-> Hello Ken'ichi,
+> Thanks. To be honest, I have just beginning with reading around here
+> and known PG_buddy just now. I have small checked this fact on 2.6.18
+> with the patch in the bottom of this mail and free pages found from
+> free_list and by PG_buddy check are coincide.
 > 
-> On Thu, 2012-03-29 at 17:09 +0900, Ken'ichi Ohmichi wrote:
-> > On Wed, 28 Mar 2012 17:22:04 -0400
-> > makedumpfile uses the system memory of 2nd-kernel for a bitmap if RHEL.
-> > The bitmap represents each page of 1st-kernel is excluded or not.
-> > So the bitmap size depends on 1st-kernel's system memory.
+> As Vivek says, more recent kernel has change around PG_buddy and the
+> patch says we should check _mapcount; I have yet to check this.
 > 
-> Does this mean that makedumpfile's memory demand linearly grows with 1
-> bit per page of 1-st kernel's memory?
+> Author: Andrea Arcangeli <aarcange@redhat.com>
+> Date:   Thu Jan 13 15:47:00 2011 -0800
+> 
+>      thp: remove PG_buddy
+> 
+>     PG_buddy can be converted to _mapcount == -2.  So the PG_compound_lock can
+>     be added to page->flags without overflowing (because of the sparse section
+>     bits increasing) with CONFIG_X86_PAE=y and CONFIG_X86_PAT=y.  This also
+>     has to move the memory hotplug code from _mapcount to lru.next to avoid
+>     any risk of clashes.  We can't use lru.next for PG_buddy removal, but
+>     memory hotplug can use lru.next even more easily than the mapcount
+>     instead.
+> 
+>     Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+>     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+>     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> $ git describe 5f24ce5fd34c3ca1b3d10d30da754732da64d5c0
+> v2.6.37-7012-g5f24ce5
+> 
+> So now we can walk on the memmap array also for free pages like other
+> kinds of memory. The question I have now is why the current
+> implementation was chosen. Is there any difference between two ways?
 
-Yes, you are right. (Precisely, 2 bit per page.)
+We just referred to the implementation of disk_dump.
 
-> Is that the exact factor, if /tmp is in memory? Or is there any other
-> memory allocation that is not constant regarding the 1-st kernel memory
-> size?
-
-bitmap file is main cause of memory consuming if 2nd kernel uses initramfs
-only. There are other parts where the size of allocated memory varies based
-on 1-st kernel memory size, but they don't have big influence.
+Now, I'm checking the validity of using _count field to figure out free pages.
+I would like to use _count rather than PG_buddy because I would like to avoid
+changing behavior based on versions as long as possible.
 
 
 Thanks
