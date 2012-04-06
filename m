@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SFyoz-0003xm-NK
- for kexec@lists.infradead.org; Fri, 06 Apr 2012 02:22:42 +0000
-Date: Fri, 6 Apr 2012 11:22:37 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/5] Add generic debug option
-Message-ID: <20120406022237.GD27120@verge.net.au>
-References: <1331188782-10912-1-git-send-email-xiyou.wangcong@gmail.com>
- <20120313002116.GB24671@verge.net.au> <4F5EB7E0.8040701@gmail.com>
- <20120315064818.GC3449@verge.net.au> <4F68864D.9060008@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4F68864D.9060008@gmail.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SG4Fm-0008W3-Nq
+ for kexec@lists.infradead.org; Fri, 06 Apr 2012 08:10:45 +0000
+Date: Fri, 6 Apr 2012 17:09:11 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: makedumpfile memory usage grows with system memory size
+Message-Id: <20120406170911.093369b0.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <1333386933.9539.8.camel@br98xy6r>
+References: <20120328212204.GI18218@redhat.com>
+ <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <1333386933.9539.8.camel@br98xy6r>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: kexec@lists.infradead.org
+To: holzheu@linux.vnet.ibm.com
+Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-On Tue, Mar 20, 2012 at 09:29:49PM +0800, Cong Wang wrote:
-> On 03/15/2012 02:48 PM, Simon Horman wrote:
-> >On Tue, Mar 13, 2012 at 10:58:40AM +0800, Cong Wang wrote:
-> >>On 03/13/2012 08:21 AM, Simon Horman wrote:
-> >>>On Thu, Mar 08, 2012 at 02:39:38PM +0800, Cong Wang wrote:
-> >>>>Currently the debugging code is under #ifdef DEBUG, which
-> >>>>means when we want to debug, we have to re-compile the source
-> >>>>code with -DDEBUG. This is not convenient, we want to have
-> >>>>a generic --debug option so that we can enable debugging code
-> >>>>without re-compiling.
-> >>>>
-> >>>>This patch moves the arch-specific --debug to generic place
-> >>>>and moves code under #ifdef DEBUG to --debug on x86.
-> >>>>
-> >>>>BTW, the size of kexec binary increases very little after this patch.
-> >>>
-> >>>Hi Cong,
-> >>>
-> >>>In general I am happy with making kexec easier to use.  However, it would
-> >>>be nice not to make kexec-tools even bigger than it already is. Its size
-> >>>already seems to be an issue for some people on ARM at least.  Do you
-> >>>have some feeling for the change in binary size on architectures other than
-> >>>i386?
-> >>>
-> >>
-> >>Hi,
-> >>
-> >>I only tested the patches on x86 and ppc.
-> >>
-> >>Sorry I don't have a chance to test it on ARM, on ARM it just adds a
-> >>small function dump_memory_ranges(), if this would be a problem,
-> >>feel free to drop patch 3/5. :)
-> >
-> >Hi,
-> >
-> >As per my post to the ppc patch, it did not seem to compile for me.
-> 
-> I did compiling and run tests on ppc64 if you mean ppc32 by "ppc".
-> 
-> >I will push the remaining patches. For reference before and after
-> >sizes for the non-ppc architectures are as follows.
-> >
-> 
-> Ok, I will re-send the ppc patch soon. Thank you!
+Hello Michael,
 
-Sorry, I missed this. But yes, I think it was 32bit ppc where
-I saw the problem.
+On Mon, 02 Apr 2012 19:15:33 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+
+> Hello Ken'ichi,
+> 
+> On Thu, 2012-03-29 at 17:09 +0900, Ken'ichi Ohmichi wrote:
+> > On Wed, 28 Mar 2012 17:22:04 -0400
+> > makedumpfile uses the system memory of 2nd-kernel for a bitmap if RHEL.
+> > The bitmap represents each page of 1st-kernel is excluded or not.
+> > So the bitmap size depends on 1st-kernel's system memory.
+> 
+> Does this mean that makedumpfile's memory demand linearly grows with 1
+> bit per page of 1-st kernel's memory?
+
+Yes, you are right. (Precisely, 2 bit per page.)
+
+> Is that the exact factor, if /tmp is in memory? Or is there any other
+> memory allocation that is not constant regarding the 1-st kernel memory
+> size?
+
+bitmap file is main cause of memory consuming if 2nd kernel uses initramfs
+only. There are other parts where the size of allocated memory varies based
+on 1-st kernel memory size, but they don't have big influence.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
