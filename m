@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SHaYN-0008Cj-Ss
- for kexec@lists.infradead.org; Tue, 10 Apr 2012 12:52:13 +0000
-Date: Tue, 10 Apr 2012 08:52:05 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: makedumpfile memory usage grows with system memory size
-Message-ID: <20120410125205.GA21801@redhat.com>
-References: <20120406175924.007450fe.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120406.182940.310075868.d.hatayama@jp.fujitsu.com>
- <20120409185728.GH1645@redhat.com>
- <20120410.085824.193685565.d.hatayama@jp.fujitsu.com>
+ id 1SHmiO-0001gQ-Q8
+ for kexec@lists.infradead.org; Wed, 11 Apr 2012 01:51:21 +0000
+Message-ID: <4F84E0DF.8040206@cn.fujitsu.com>
+Date: Wed, 11 Apr 2012 09:39:43 +0800
+From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120410.085824.193685565.d.hatayama@jp.fujitsu.com>
+Subject: [PATCH 0/4] Export offsets of VMCS fields as note information for
+ kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,46 +21,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org
+To: avi@redhat.com, mtosatti@redhat.com
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, joerg.roedel@amd.com, gregkh@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com
 
-On Tue, Apr 10, 2012 at 08:58:24AM +0900, HATAYAMA Daisuke wrote:
-> From: Vivek Goyal <vgoyal@redhat.com>
-> Subject: Re: makedumpfile memory usage grows with system memory size
-> Date: Mon, 9 Apr 2012 14:57:28 -0400
-> 
-> > On Fri, Apr 06, 2012 at 06:29:40PM +0900, HATAYAMA Daisuke wrote:
-> > 
-> > [..]
-> >> I agree. On the other hand, there is one more thing to consider. The
-> >> value of order is in private member of the page descripter. Now
-> >> there's no information for private member in VMCOREINFO. If we choose
-> >> this method and delete the current one, it's necessary to prepare
-> >> vmlinux file for old kernels.
-> > 
-> > What information do you need to access "private" member of "struct page".
-> > offset? Can't we extend VMCOREINFO to export this info too?
-> > 
-> 
-> Yes, I mean offset of private member in page structure. The member
-> contains order of the buddy. Extending VMCOREINFO is easy, but we
-> cannot do that for old kernels, for which vmlinux is needed
-> separately.
-> 
-> This might be the same as what Kumagai-san says he doesn' want to
-> change behaviour on kernel versions.
+This patch set exports offsets of VMCS fields as note information for
+kdump. We call it VMCSINFO. The purpose of VMCSINFO is to retrieve
+runtime state of guest machine image, such as registers, in host
+machine's crash dump as VMCS format. The problem is that VMCS
+internal is hidden by Intel in its specification. So, we reverse
+engineering it in the way implemented in this patch set. Please note
+that this processing never affects any existing kvm logic. The
+VMCSINFO is exported via sysfs to kexec-tools just like VMCOREINFO.
 
-We can retain both the mechanisms. For newer kernels which export
-page->private offset, we can walk through memmap array and prepare a
-chunk of bitmap and discard it. For older kernels we can continue to walk
-through free pages list and prepare big bitmap in userspace.
+Here is an example:
+Processor: Intel(R) Core(TM)2 Duo CPU     E7500  @ 2.93GHz
 
-It is desirable to keep mechanism same across kernel versions, but
-change is unavoidable as things evolve in newer kernels. So at max
-we can provide backward compatibility with old kernels.
+$cat /sys/kernel/vmcsinfo
+1cba8c0 2000
 
-Thanks
-Vivek
+crash> rd -p 1cba8c0 1000
+         1cba8c0:  0000127b00000009 53434d5600000000   ....{.......VMCS
+         1cba8d0:  000000004f464e49 4e4f495349564552   INFO....REVISION
+         1cba8e0:  49460a643d44495f 5f4e495028444c45   _ID=d.FIELD(PIN_
+         1cba8f0:  4d565f4445534142 4f435f434558455f   BASED_VM_EXEC_CO
+         1cba900:  303d294c4f52544e 0a30383130343831   NTROL)=01840180.
+         1cba910:  504328444c454946 5f44455341425f55   FIELD(CPU_BASED_
+         1cba920:  5f434558455f4d56 294c4f52544e4f43   VM_EXEC_CONTROL)
+         1cba930:  393130343931303d 28444c4549460a30   =01940190.FIELD(
+         1cba940:  5241444e4f434553 4558455f4d565f59   SECONDARY_VM_EXE
+         1cba950:  4f52544e4f435f43 30346566303d294c   C_CONTROL)=0fe40
+         1cba960:  4c4549460a306566 4958455f4d562844   fe0.FIELD(VM_EXI
+         1cba970:  4f52544e4f435f54 346531303d29534c   T_CONTROLS)=01e4
+         1cba980:  4549460a30653130 4e455f4d5628444c   01e0.FIELD(VM_EN
+         1cba990:  544e4f435f595254 33303d29534c4f52   TRY_CONTROLS)=03
+         1cba9a0:  460a303133303431 45554728444c4549   140310.FIELD(GUE
+         1cba9b0:  45535f53455f5453 3d29524f5443454c   ST_ES_SELECTOR)=
+         1cba9c0:  4549460a30303530 545345554728444c   0500.FIELD(GUEST
+         1cba9d0:  454c45535f53435f 35303d29524f5443   _CS_SELECTOR)=05
+         ......
+
+TODO:
+  1. In kexec-tools, get VMCSINFO via sysfs and dump it as note information
+     into vmcore.
+  2. Dump VMCS region of each guest vcpu and VMCSINFO into qemu-process
+     core file. To do this, we will modify kernel core dumper, gdb gcore
+     and crash gcore.
+  3. Dump guest image from the qemu-process core file into a vmcore.
+
+zhangyanfei (4):
+  x86: Add helper variables and functions to hold VMCSINFO
+  KVM: VMX: Add functions to fill VMCSINFO
+  ksysfs: export VMCSINFO via sysfs
+  kexec: Add crash_save_vmcsinfo to update VMCSINFO
+
+ arch/x86/include/asm/vmcsinfo.h |   42 +++++
+ arch/x86/kernel/Makefile        |    2 +
+ arch/x86/kernel/vmcsinfo.c      |   70 ++++++++
+ arch/x86/kvm/vmx.c              |  350 +++++++++++++++++++++++++++++++++++++++
+ include/linux/kexec.h           |    1 +
+ kernel/kexec.c                  |   14 ++
+ kernel/ksysfs.c                 |   19 ++
+ 7 files changed, 498 insertions(+), 0 deletions(-)
+ create mode 100644 arch/x86/include/asm/vmcsinfo.h
+ create mode 100644 arch/x86/kernel/vmcsinfo.c
 
 _______________________________________________
 kexec mailing list
