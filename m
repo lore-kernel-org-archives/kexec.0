@@ -1,33 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e06smtp14.uk.ibm.com ([195.75.94.110])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SHsXK-0001lY-LA
- for kexec@lists.infradead.org; Wed, 11 Apr 2012 08:04:19 +0000
-Received: from /spool/local
- by e06smtp14.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <holzheu@linux.vnet.ibm.com>;
- Wed, 11 Apr 2012 09:04:08 +0100
-Received: from d06av06.portsmouth.uk.ibm.com (d06av06.portsmouth.uk.ibm.com
- [9.149.37.217])
- by d06nrmr1407.portsmouth.uk.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q3B844wL1097748
- for <kexec@lists.infradead.org>; Wed, 11 Apr 2012 09:04:04 +0100
-Received: from d06av06.portsmouth.uk.ibm.com (loopback [127.0.0.1])
- by d06av06.portsmouth.uk.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q3B8445j020368
- for <kexec@lists.infradead.org>; Wed, 11 Apr 2012 02:04:04 -0600
-Message-ID: <1334131443.2711.10.camel@br98xy6r>
-Subject: Re: makedumpfile memory usage grows with system memory size
-From: Michael Holzheu <holzheu@linux.vnet.ibm.com>
-Date: Wed, 11 Apr 2012 10:04:03 +0200
-In-Reply-To: <20120406170911.093369b0.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120328212204.GI18218@redhat.com>
- <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
- <1333386933.9539.8.camel@br98xy6r>
- <20120406170911.093369b0.kumagai-atsushi@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
-Reply-To: holzheu@linux.vnet.ibm.com
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SHtE5-0006bu-8f
+ for kexec@lists.infradead.org; Wed, 11 Apr 2012 08:48:30 +0000
+Message-ID: <4F85454E.6020201@redhat.com>
+Date: Wed, 11 Apr 2012 11:48:14 +0300
+From: Avi Kivity <avi@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 2/4] KVM: VMX: Add functions to fill VMCSINFO
+References: <4F84E0DF.8040206@cn.fujitsu.com> <4F84E365.10201@cn.fujitsu.com>
+In-Reply-To: <4F84E365.10201@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,55 +22,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, gregkh@suse.de, kvm@vger.kernel.org, joerg.roedel@amd.com, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com
 
-Hello Kumagai,
+On 04/11/2012 04:50 AM, zhangyanfei wrote:
+> This patch is to implement the feature that at initialization of
+> kvm_intel module, fills VMCSINFO with a VMCS revision identifier,
+> and encoded offsets of VMCS fields. The reason why we put the
+> VMCSINFO processing at the initialization of kvm_intel module
+> is that it's dangerous to rob VMX resources while kvm module is
+> loaded.
 
-On Fri, 2012-04-06 at 17:09 +0900, Atsushi Kumagai wrote:
-> Hello Michael,
-> 
-> On Mon, 02 Apr 2012 19:15:33 +0200
-> Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
-> 
-> > Hello Ken'ichi,
-> > 
-> > On Thu, 2012-03-29 at 17:09 +0900, Ken'ichi Ohmichi wrote:
-> > > On Wed, 28 Mar 2012 17:22:04 -0400
-> > > makedumpfile uses the system memory of 2nd-kernel for a bitmap if RHEL.
-> > > The bitmap represents each page of 1st-kernel is excluded or not.
-> > > So the bitmap size depends on 1st-kernel's system memory.
-> > 
-> > Does this mean that makedumpfile's memory demand linearly grows with 1
-> > bit per page of 1-st kernel's memory?
-> 
-> Yes, you are right. (Precisely, 2 bit per page.)
-> 
-> > Is that the exact factor, if /tmp is in memory? Or is there any other
-> > memory allocation that is not constant regarding the 1-st kernel memory
-> > size?
-> 
-> bitmap file is main cause of memory consuming if 2nd kernel uses initramfs
-> only. There are other parts where the size of allocated memory varies based
-> on 1-st kernel memory size, but they don't have big influence.
+Maybe it should be done by a separate module.
 
-Thanks for the explanation. 
+> +
+> +	kvm_cpu_vmxon(__pa(per_cpu(vmxarea, raw_smp_processor_id())));
+> +	vmcs_load(vmcs);
 
-I ask because I want to exactly calculate the required size for the
-crashkernel parameter. On s390 the kdump kernel memory consumption is
-fix and not dependent on the 1st kernel memory size. So based on your
-explanation I, will use:
+Should do this after writing into the vmcs directly (vmcs_load() may
+cache some information for vmcs_read()).
 
-crashkernel=<base size> + <variable size>
+> +
+> +	VMCSINFO_REVISION_ID(vmcs->revision_id);
+> +
+> +	/*
+> +	 * Write encoded offsets into VMCS data for later vmcs_read.
+> +	 */
+> +	for (offset = FIELD_START; offset < vmcs_config.size;
+> +	     offset += sizeof(u16))
+> +		*(u16 *)((char *)vmcs + offset) = ENCODING_OFFSET(offset);
 
-where
+This assumes vmcs field contents use the same encoding as
+vmread/vmwrite.  I guess it's a reasonable assumption.
 
-<variable size> = <pages of 1st kernel> * (2 + x) / 8
 
-where "x" is the variable makedumpfile memory allocation that is on top
-of the bitmap allocation. What would be a good value for "x"?
-
-Michael
+-- 
+error compiling committee.c: too many arguments to function
 
 
 _______________________________________________
