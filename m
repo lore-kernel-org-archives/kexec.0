@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SIEkn-0001jW-4Q
- for kexec@lists.infradead.org; Thu, 12 Apr 2012 07:47:42 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 385583EE0B6
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:47:34 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0222145DE9E
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:47:34 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id D3DB245DEB2
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:47:33 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id C74441DB803C
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:47:33 +0900 (JST)
-Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 70CD91DB8042
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:47:33 +0900 (JST)
-Date: Thu, 12 Apr 2012 16:47:14 +0900 (JST)
-Message-Id: <20120412.164714.39159547.d.hatayama@jp.fujitsu.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SIFl8-0006hA-9K
+ for kexec@lists.infradead.org; Thu, 12 Apr 2012 08:52:09 +0000
+Date: Thu, 12 Apr 2012 17:49:32 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: makedumpfile memory usage grows with system memory size
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120412124040.bad03498.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120410.085824.193685565.d.hatayama@jp.fujitsu.com>
- <20120410125205.GA21801@redhat.com>
- <20120412124040.bad03498.kumagai-atsushi@mxc.nes.nec.co.jp>
+Message-Id: <20120412174932.f78f2af8.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <1334131443.2711.10.camel@br98xy6r>
+References: <20120328212204.GI18218@redhat.com>
+ <20120329170918.4223e816.oomichi@mxs.nes.nec.co.jp>
+ <1333386933.9539.8.camel@br98xy6r>
+ <20120406170911.093369b0.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <1334131443.2711.10.camel@br98xy6r>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,78 +26,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org, vgoyal@redhat.com
+To: holzheu@linux.vnet.ibm.com
+Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, kexec@lists.infradead.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile memory usage grows with system memory size
-Date: Thu, 12 Apr 2012 12:40:40 +0900
+Hello Michael,
 
-> Hello,
+On Wed, 11 Apr 2012 10:04:03 +0200
+Michael Holzheu <holzheu@linux.vnet.ibm.com> wrote:
+
+> > bitmap file is main cause of memory consuming if 2nd kernel uses initramfs
+> > only. There are other parts where the size of allocated memory varies based
+> > on 1-st kernel memory size, but they don't have big influence.
 > 
-> On Tue, 10 Apr 2012 08:52:05 -0400
-> Vivek Goyal <vgoyal@redhat.com> wrote:
+> Thanks for the explanation. 
 > 
->> On Tue, Apr 10, 2012 at 08:58:24AM +0900, HATAYAMA Daisuke wrote:
->> > From: Vivek Goyal <vgoyal@redhat.com>
->> > Subject: Re: makedumpfile memory usage grows with system memory size
->> > Date: Mon, 9 Apr 2012 14:57:28 -0400
->> > 
->> > > On Fri, Apr 06, 2012 at 06:29:40PM +0900, HATAYAMA Daisuke wrote:
->> > > 
->> > > [..]
->> > >> I agree. On the other hand, there is one more thing to consider. The
->> > >> value of order is in private member of the page descripter. Now
->> > >> there's no information for private member in VMCOREINFO. If we choose
->> > >> this method and delete the current one, it's necessary to prepare
->> > >> vmlinux file for old kernels.
->> > > 
->> > > What information do you need to access "private" member of "struct page".
->> > > offset? Can't we extend VMCOREINFO to export this info too?
->> > > 
->> > 
->> > Yes, I mean offset of private member in page structure. The member
->> > contains order of the buddy. Extending VMCOREINFO is easy, but we
->> > cannot do that for old kernels, for which vmlinux is needed
->> > separately.
->> > 
->> > This might be the same as what Kumagai-san says he doesn' want to
->> > change behaviour on kernel versions.
->> 
->> We can retain both the mechanisms. For newer kernels which export
->> page->private offset, we can walk through memmap array and prepare a
->> chunk of bitmap and discard it. For older kernels we can continue to walk
->> through free pages list and prepare big bitmap in userspace.
->> 
->> It is desirable to keep mechanism same across kernel versions, but
->> change is unavoidable as things evolve in newer kernels. So at max
->> we can provide backward compatibility with old kernels.
+> I ask because I want to exactly calculate the required size for the
+> crashkernel parameter. On s390 the kdump kernel memory consumption is
+> fix and not dependent on the 1st kernel memory size. So based on your
+> explanation I, will use:
 > 
-> I said I want to avoid changing behavior based on kernel versions, 
-> but it seems difficult as Vivek said. So, I will accept the changing
-> if it is necessary.
+> crashkernel=<base size> + <variable size>
 > 
-> Now, I will make two prototypes to consider the method to figure out
-> free pages.
+> where
 > 
->   - a prototype based on _count
->   - a prototype based on PG_buddy (or _mapcount)
->   
-> If prototypes work fine, then we can select the method.
+> <variable size> = <pages of 1st kernel> * (2 + x) / 8
+> 
+> where "x" is the variable makedumpfile memory allocation that is on top
+> of the bitmap allocation. What would be a good value for "x"?
 
-I think the first one would work well and it's more accurate in
-meaning of free page.
+I'm sorry that I don't have the exact number, but even the second biggest
+memory allocation would require under 1/100 of the bitmap size, so, I think
+0.01 is usually enough for "x".
 
-Although this might be not problematic in practice, new method that
-walks on page tables can lead to different result from the previous
-one that looks up free_list: looking at __free_pages(), it first
-decreases page->_count and then add the page to free_list, and looking
-at __alloc_pages(), it first retrieves a page from free_list and then
-set page->_count to 1.
-
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
