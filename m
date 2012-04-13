@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f43.google.com ([209.85.210.43])
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SIT0l-0006eN-GE
- for kexec@lists.infradead.org; Thu, 12 Apr 2012 23:01:08 +0000
-Received: by dadn15 with SMTP id n15so3765724dad.16
- for <kexec@lists.infradead.org>; Thu, 12 Apr 2012 16:01:03 -0700 (PDT)
-Date: Thu, 12 Apr 2012 16:00:58 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 3/4] ksysfs: export VMCSINFO via sysfs
-Message-ID: <20120412230058.GA23292@kroah.com>
-References: <4F84E0DF.8040206@cn.fujitsu.com> <4F84E50E.2090008@cn.fujitsu.com>
+ id 1SIcsh-0005w4-8p
+ for kexec@lists.infradead.org; Fri, 13 Apr 2012 09:33:27 +0000
+Received: from /spool/local
+ by e5.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hanpt@linux.vnet.ibm.com>;
+ Fri, 13 Apr 2012 05:33:20 -0400
+Received: from d01relay07.pok.ibm.com (d01relay07.pok.ibm.com [9.56.227.147])
+ by d01dlp02.pok.ibm.com (Postfix) with ESMTP id 4E6A36E804B
+ for <kexec@lists.infradead.org>; Fri, 13 Apr 2012 05:32:45 -0400 (EDT)
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+ by d01relay07.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q3D9Wi7W3002516
+ for <kexec@lists.infradead.org>; Fri, 13 Apr 2012 05:32:44 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+ by d01av04.pok.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q3D9WiRh004711
+ for <kexec@lists.infradead.org>; Fri, 13 Apr 2012 05:32:44 -0400
+Date: Fri, 13 Apr 2012 17:32:42 +0800
+From: Han Pingtian <hanpt@linux.vnet.ibm.com>
+Subject: [PATCH] Add more debug infos when usable memory range changing
+Message-ID: <20120413093242.GA17904@localhost.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4F84E50E.2090008@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,28 +37,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, gregkh@suse.de, kvm@vger.kernel.org, joerg.roedel@amd.com, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, avi@redhat.com, ebiederm@xmission.com
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Wed, Apr 11, 2012 at 09:57:34AM +0800, zhangyanfei wrote:
-> This patch creates sysfs file to export where VMCSINFO is allocated,
-> as below:
->         $ cat /sys/kernel/vmcsinfo
->         1cb88a0 2000
-> number on the left-hand side is the physical address of VMCSINFO,
-> while the one on the right-hand side is the max size of VMCSINFO.
+In the past, we did neglected some usable memory range
+changing infos. With those deubg code added, we can now
+catch them.
+---
+ kexec/arch/ppc64/crashdump-ppc64.c |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
-Ick, why do you have 2 values in one sysfs file, that's not nice, or
-good.
+diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+index d52b438..b5ec2c8 100644
+--- a/kexec/arch/ppc64/crashdump-ppc64.c
++++ b/kexec/arch/ppc64/crashdump-ppc64.c
+@@ -465,12 +465,24 @@ void add_usable_mem_rgns(unsigned long long base, unsigned long long size)
+ 			if (base < ustart && end > uend) {
+ 				usablemem_rgns.ranges[i].start = base;
+ 				usablemem_rgns.ranges[i].end = end;
++#ifdef DEBUG
++				fprintf(stderr, "usable memory rgn %u: new base:%llx new size:%llx\n",
++					i, base, size);
++#endif
+ 				return;
+ 			} else if (base < ustart) {
+ 				usablemem_rgns.ranges[i].start = base;
++#ifdef DEBUG
++				fprintf(stderr, "usable memory rgn %u: new base:%llx new size:%llx",
++					i, base, usablemem_rgns.ranges[i].end - base);
++#endif
+ 				return;
+ 			} else if (end > uend){
+ 				usablemem_rgns.ranges[i].end = end;
++#ifdef DEBUG
++				fprintf(stderr, "usable memory rgn %u: new end:%llx, new size:%llx",
++					i, end, end - usablemem_rgns.ranges[i].start);
++#endif
+ 				return;
+ 			}
+ 		}
+-- 
+1.7.7.6
 
-What's wrong with 2 different files?
-
-Also, any new sysfs file you add needs to also have a Documentation/ABI
-entry added as well.
-
-But we can't accept this as-is, sorry, please split it up into 2 files.
-
-greg k-h
 
 _______________________________________________
 kexec mailing list
