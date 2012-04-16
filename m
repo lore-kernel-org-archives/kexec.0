@@ -1,27 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SJbZW-0002KS-6Q
- for kexec@lists.infradead.org; Mon, 16 Apr 2012 02:21:43 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A12BF3EE0B6
- for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:40 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 87B3A45DE52
- for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:40 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 658DE45DE50
- for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:40 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 570DA1DB803F
- for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:40 +0900 (JST)
-Received: from ml13.s.css.fujitsu.com (ml13.s.css.fujitsu.com [10.240.81.133])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id EDB1A1DB803C
- for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:39 +0900 (JST)
+ id 1SJbZV-0002KJ-6f
+ for kexec@lists.infradead.org; Mon, 16 Apr 2012 02:21:42 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B7E2B3EE0C0
+ for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:36 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6093145DE5C
+ for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:35 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1D85545DE56
+ for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:35 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 06C071DB8052
+ for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:35 +0900 (JST)
+Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9BDA31DB804E
+ for <kexec@lists.infradead.org>; Mon, 16 Apr 2012 11:21:34 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 2/2] Enter 2nd kernel with BSP
-Date: Mon, 16 Apr 2012 11:21:39 +0900
-Message-ID: <20120416022139.9303.56284.stgit@localhost6.localdomain6>
+Subject: [PATCH 1/2] Introduce crash ipi helpers to wait for APs to stop
+Date: Mon, 16 Apr 2012 11:21:33 +0900
+Message-ID: <20120416022133.9303.41287.stgit@localhost6.localdomain6>
 In-Reply-To: <20120416021951.9303.58568.stgit@localhost6.localdomain6>
 References: <20120416021951.9303.58568.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -39,104 +39,128 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ebiederm@xmission.com, vgoyal@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp
 
-Split logic into BSP's and AP's: BSP waits for AP halting.
+Introduce crash ipi helpers to use them from BSP and AP sides in
+common.
 
-Don't remove variable crashing_cpu for debugging use; useful for
-determining one what CPU crash happens.
+There's no logical change in this patch.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- arch/x86/kernel/crash.c  |   15 ++++++++++++++-
- arch/x86/kernel/reboot.c |   16 ++++++----------
- 2 files changed, 20 insertions(+), 11 deletions(-)
+ arch/x86/include/asm/reboot.h |    4 +++
+ arch/x86/kernel/reboot.c      |   53 ++++++++++++++++++++++++++++++++---------
+ 2 files changed, 45 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 13ad899..c5c19fa 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -83,9 +83,14 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- 	 * In practice this means shooting down the other cpus in
- 	 * an SMP system.
- 	 */
-+
-+	int cpu;
-+
- 	/* The kernel is broken so disable interrupts */
- 	local_irq_disable();
+diff --git a/arch/x86/include/asm/reboot.h b/arch/x86/include/asm/reboot.h
+index 92f29706..2f8e9e7 100644
+--- a/arch/x86/include/asm/reboot.h
++++ b/arch/x86/include/asm/reboot.h
+@@ -26,4 +26,8 @@ void machine_real_restart(unsigned int type);
+ typedef void (*nmi_shootdown_cb)(int, struct pt_regs*);
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback);
  
-+	crash_ipi_init();
++void crash_ipi_init(void);
++void crash_ipi_dec_and_halt(void);
++void crash_ipi_wait_for_APs(void);
 +
- 	kdump_nmi_shootdown_cpus();
- 
- 	/* Booting kdump kernel with VMX or SVM enabled won't work,
-@@ -102,5 +107,13 @@ void native_machine_crash_shutdown(struct pt_regs *regs)
- #ifdef CONFIG_HPET_TIMER
- 	hpet_disable();
- #endif
--	crash_save_cpu(regs, safe_smp_processor_id());
-+	cpu = safe_smp_processor_id();
-+	crash_save_cpu(regs, cpu);
-+
-+	if (cpu_physical_id(cpu) == boot_cpu_physical_apicid) {
-+		crash_ipi_wait_for_APs();
-+		return;
-+	}
-+
-+	crash_ipi_dec_and_halt();
- }
+ #endif /* _ASM_X86_REBOOT_H */
 diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 6dd77a8..90354f9 100644
+index d840e69..6dd77a8 100644
 --- a/arch/x86/kernel/reboot.c
 +++ b/arch/x86/kernel/reboot.c
-@@ -7,6 +7,7 @@
- #include <linux/sched.h>
- #include <linux/tboot.h>
- #include <linux/delay.h>
-+#include <linux/kexec.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -800,16 +801,15 @@ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+@@ -769,6 +769,31 @@ static nmi_shootdown_cb shootdown_callback;
  
- 	cpu = raw_smp_processor_id();
+ static atomic_t waiting_for_crash_ipi;
  
--	/* Don't do anything if this handler is invoked on crashing cpu.
--	 * Otherwise, system will completely hang. Crashing cpu can get
--	 * an NMI if system was initially booted with nmi_watchdog parameter.
--	 */
--	if (cpu == crashing_cpu)
--		return NMI_HANDLED;
- 	local_irq_disable();
++void crash_ipi_init(void)
++{
++	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
++}
++
++void crash_ipi_dec_and_halt(void)
++{
++	atomic_dec(&waiting_for_crash_ipi);
++	/* Assume hlt works */
++	halt();
++	for (;;)
++		cpu_relax();
++}
++
++void crash_ipi_wait_for_APs(void)
++{
++	unsigned long msecs;
++
++	msecs = 1000; /* Wait at most a second for the other cpus to stop */
++	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
++		mdelay(1);
++		msecs--;
++	}
++}
++
+ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
+ {
+ 	int cpu;
+@@ -785,11 +810,7 @@ static int crash_nmi_callback(unsigned int val, struct pt_regs *regs)
  
  	shootdown_callback(cpu, regs);
  
-+	if (cpu_physical_id(cpu) == boot_cpu_physical_apicid) {
-+		crash_ipi_wait_for_APs();
-+		machine_kexec(kexec_crash_image);
-+	}
-+
- 	crash_ipi_dec_and_halt();
+-	atomic_dec(&waiting_for_crash_ipi);
+-	/* Assume hlt works */
+-	halt();
+-	for (;;)
+-		cpu_relax();
++	crash_ipi_dec_and_halt();
  
  	return NMI_HANDLED;
-@@ -835,8 +835,6 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ }
+@@ -807,7 +828,6 @@ static void smp_send_nmi_allbutself(void)
+  */
+ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ {
+-	unsigned long msecs;
+ 	local_irq_disable();
+ 
+ 	/* Make a note of crashing cpu. Will be used in NMI callback.*/
+@@ -815,7 +835,8 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  
  	shootdown_callback = callback;
  
--	crash_ipi_init();
--
+-	atomic_set(&waiting_for_crash_ipi, num_online_cpus() - 1);
++	crash_ipi_init();
++
  	/* Would it be better to replace the trap vector here? */
  	if (register_nmi_handler(NMI_LOCAL, crash_nmi_callback,
  				 NMI_FLAG_FIRST, "crash"))
-@@ -848,8 +846,6 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+@@ -827,11 +848,7 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
  
  	smp_send_nmi_allbutself();
  
--	crash_ipi_wait_for_APs();
--
+-	msecs = 1000; /* Wait at most a second for the other cpus to stop */
+-	while ((atomic_read(&waiting_for_crash_ipi) > 0) && msecs) {
+-		mdelay(1);
+-		msecs--;
+-	}
++	crash_ipi_wait_for_APs();
+ 
  	/* Leave the nmi callback set */
  }
- #else /* !CONFIG_SMP */
+@@ -840,4 +857,16 @@ void nmi_shootdown_cpus(nmi_shootdown_cb callback)
+ {
+ 	/* No other CPUs to shoot down */
+ }
++
++void crash_ipi_init(void)
++{
++}
++
++void crash_ipi_dec_and_halt(void)
++{
++}
++
++void crash_ipi_wait_for_APs(void)
++{
++}
+ #endif
 
 
 _______________________________________________
