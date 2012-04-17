@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SK7ck-0001G3-LA
- for kexec@lists.infradead.org; Tue, 17 Apr 2012 12:35:12 +0000
-Message-ID: <4F8D530C.3050908@cn.fujitsu.com>
-Date: Tue, 17 Apr 2012 19:25:00 +0800
-From: Wen Congyang <wency@cn.fujitsu.com>
+ id 1SK85M-00055X-Vt
+ for kexec@lists.infradead.org; Tue, 17 Apr 2012 13:04:46 +0000
+Message-ID: <4F8D6A61.9030209@redhat.com>
+Date: Tue, 17 Apr 2012 16:04:33 +0300
+From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/4] Export offsets of VMCS fields as note information
  for kdump
 References: <4F84E0DF.8040206@cn.fujitsu.com> <4F8D1F46.3090901@redhat.com>
  <4F8D4B4C.8070705@cn.fujitsu.com> <4F8D4D1C.4010400@redhat.com>
-In-Reply-To: <4F8D4D1C.4010400@redhat.com>
+ <4F8D530C.3050908@cn.fujitsu.com>
+In-Reply-To: <4F8D530C.3050908@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,92 +21,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
+To: Wen Congyang <wency@cn.fujitsu.com>
 Cc: dzickus@redhat.com, luto@mit.edu, gregkh@suse.de, kvm@vger.kernel.org, joerg.roedel@amd.com, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, zhangyanfei <zhangyanfei@cn.fujitsu.com>, ebiederm@xmission.com, ludwig.nussel@suse.de
 
-QXQgMDQvMTcvMjAxMiAwNjo1OSBQTSwgQXZpIEtpdml0eSBXcm90ZToKPiBPbiAwNC8xNy8yMDEy
-IDAxOjUxIFBNLCB6aGFuZ3lhbmZlaSB3cm90ZToKPj4g5LqOIDIwMTLlubQwNOaciDE35pelIDE1
-OjQ0LCBBdmkgS2l2aXR5IOWGmemBkzoKPj4+IE9uIDA0LzExLzIwMTIgMDQ6MzkgQU0sIHpoYW5n
-eWFuZmVpIHdyb3RlOgo+Pj4+IFRoaXMgcGF0Y2ggc2V0IGV4cG9ydHMgb2Zmc2V0cyBvZiBWTUNT
-IGZpZWxkcyBhcyBub3RlIGluZm9ybWF0aW9uIGZvcgo+Pj4+IGtkdW1wLiBXZSBjYWxsIGl0IFZN
-Q1NJTkZPLiBUaGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+Pj4+IHJ1bnRp
-bWUgc3RhdGUgb2YgZ3Vlc3QgbWFjaGluZSBpbWFnZSwgc3VjaCBhcyByZWdpc3RlcnMsIGluIGhv
-c3QKPj4+PiBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCBhcyBWTUNTIGZvcm1hdC4gVGhlIHByb2JsZW0g
-aXMgdGhhdCBWTUNTCj4+Pj4gaW50ZXJuYWwgaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0cyBzcGVj
-aWZpY2F0aW9uLiBTbywgd2UgcmV2ZXJzZQo+Pj4+IGVuZ2luZWVyaW5nIGl0IGluIHRoZSB3YXkg
-aW1wbGVtZW50ZWQgaW4gdGhpcyBwYXRjaCBzZXQuIFBsZWFzZSBub3RlCj4+Pj4gdGhhdCB0aGlz
-IHByb2Nlc3NpbmcgbmV2ZXIgYWZmZWN0cyBhbnkgZXhpc3Rpbmcga3ZtIGxvZ2ljLiBUaGUKPj4+
-PiBWTUNTSU5GTyBpcyBleHBvcnRlZCB2aWEgc3lzZnMgdG8ga2V4ZWMtdG9vbHMganVzdCBsaWtl
-IFZNQ09SRUlORk8uCj4+Pj4KPj4+PiBIZXJlIGlzIGFuIGV4YW1wbGU6Cj4+Pj4gUHJvY2Vzc29y
-OiBJbnRlbChSKSBDb3JlKFRNKTIgRHVvIENQVSAgICAgRTc1MDAgIEAgMi45M0dIego+Pj4+Cj4+
-Pj4gJGNhdCAvc3lzL2tlcm5lbC92bWNzaW5mbwo+Pj4+IDFjYmE4YzAgMjAwMAo+Pj4+Cj4+Pj4g
-Y3Jhc2g+IHJkIC1wIDFjYmE4YzAgMTAwMAo+Pj4+ICAgICAgICAgIDFjYmE4YzA6ICAwMDAwMTI3
-YjAwMDAwMDA5IDUzNDM0ZDU2MDAwMDAwMDAgICAuLi4uey4uLi4uLi5WTUNTCj4+Pj4gICAgICAg
-ICAgMWNiYThkMDogIDAwMDAwMDAwNGY0NjRlNDkgNGU0ZjQ5NTM0OTU2NDU1MiAgIElORk8uLi4u
-UkVWSVNJT04KPj4+PiAgICAgICAgICAxY2JhOGUwOiAgNDk0NjBhNjQzZDQ0NDk1ZiA1ZjRlNDk1
-MDI4NDQ0YzQ1ICAgX0lEPWQuRklFTEQoUElOXwo+Pj4+ICAgICAgICAgIDFjYmE4ZjA6ICA0ZDU2
-NWY0NDQ1NTM0MTQyIDRmNDM1ZjQzNDU1ODQ1NWYgICBCQVNFRF9WTV9FWEVDX0NPCj4+Pj4gICAg
-ICAgICAgMWNiYTkwMDogIDMwM2QyOTRjNGY1MjU0NGUgMGEzMDM4MzEzMDM0MzgzMSAgIE5UUk9M
-KT0wMTg0MDE4MC4KPj4+PiAgICAgICAgICAxY2JhOTEwOiAgNTA0MzI4NDQ0YzQ1NDk0NiA1ZjQ0
-NDU1MzQxNDI1ZjU1ICAgRklFTEQoQ1BVX0JBU0VEXwo+Pj4+ICAgICAgICAgIDFjYmE5MjA6ICA1
-ZjQzNDU1ODQ1NWY0ZDU2IDI5NGM0ZjUyNTQ0ZTRmNDMgICBWTV9FWEVDX0NPTlRST0wpCj4+Pj4g
-ICAgICAgICAgMWNiYTkzMDogIDM5MzEzMDM0MzkzMTMwM2QgMjg0NDRjNDU0OTQ2MGEzMCAgID0w
-MTk0MDE5MC5GSUVMRCgKPj4+PiAgICAgICAgICAxY2JhOTQwOiAgNTI0MTQ0NGU0ZjQzNDU1MyA0
-NTU4NDU1ZjRkNTY1ZjU5ICAgU0VDT05EQVJZX1ZNX0VYRQo+Pj4+ICAgICAgICAgIDFjYmE5NTA6
-ICA0ZjUyNTQ0ZTRmNDM1ZjQzIDMwMzQ2NTY2MzAzZDI5NGMgICBDX0NPTlRST0wpPTBmZTQwCj4+
-Pj4gICAgICAgICAgMWNiYTk2MDogIDRjNDU0OTQ2MGEzMDY1NjYgNDk1ODQ1NWY0ZDU2Mjg0NCAg
-IGZlMC5GSUVMRChWTV9FWEkKPj4+PiAgICAgICAgICAxY2JhOTcwOiAgNGY1MjU0NGU0ZjQzNWY1
-NCAzNDY1MzEzMDNkMjk1MzRjICAgVF9DT05UUk9MUyk9MDFlNAo+Pj4+ICAgICAgICAgIDFjYmE5
-ODA6ICA0NTQ5NDYwYTMwNjUzMTMwIDRlNDU1ZjRkNTYyODQ0NGMgICAwMWUwLkZJRUxEKFZNX0VO
-Cj4+Pj4gICAgICAgICAgMWNiYTk5MDogIDU0NGU0ZjQzNWY1OTUyNTQgMzMzMDNkMjk1MzRjNGY1
-MiAgIFRSWV9DT05UUk9MUyk9MDMKPj4+PiAgICAgICAgICAxY2JhOWEwOiAgNDYwYTMwMzEzMzMw
-MzQzMSA0NTU1NDcyODQ0NGM0NTQ5ICAgMTQwMzEwLkZJRUxEKEdVRQo+Pj4+ICAgICAgICAgIDFj
-YmE5YjA6ICA0NTUzNWY1MzQ1NWY1NDUzIDNkMjk1MjRmNTQ0MzQ1NGMgICBTVF9FU19TRUxFQ1RP
-Uik9Cj4+Pj4gICAgICAgICAgMWNiYTljMDogIDQ1NDk0NjBhMzAzMDM1MzAgNTQ1MzQ1NTU0NzI4
-NDQ0YyAgIDA1MDAuRklFTEQoR1VFU1QKPj4+PiAgICAgICAgICAxY2JhOWQwOiAgNDU0YzQ1NTM1
-ZjUzNDM1ZiAzNTMwM2QyOTUyNGY1NDQzICAgX0NTX1NFTEVDVE9SKT0wNQo+Pj4+ICAgICAgICAg
-IC4uLi4uLgo+Pj4+Cj4+Pj4gVE9ETzoKPj4+PiAgIDEuIEluIGtleGVjLXRvb2xzLCBnZXQgVk1D
-U0lORk8gdmlhIHN5c2ZzIGFuZCBkdW1wIGl0IGFzIG5vdGUgaW5mb3JtYXRpb24KPj4+PiAgICAg
-IGludG8gdm1jb3JlLgo+Pj4+ICAgMi4gRHVtcCBWTUNTIHJlZ2lvbiBvZiBlYWNoIGd1ZXN0IHZj
-cHUgYW5kIFZNQ1NJTkZPIGludG8gcWVtdS1wcm9jZXNzCj4+Pj4gICAgICBjb3JlIGZpbGUuIFRv
-IGRvIHRoaXMsIHdlIHdpbGwgbW9kaWZ5IGtlcm5lbCBjb3JlIGR1bXBlciwgZ2RiIGdjb3JlCj4+
-Pj4gICAgICBhbmQgY3Jhc2ggZ2NvcmUuCj4+Pj4gICAzLiBEdW1wIGd1ZXN0IGltYWdlIGZyb20g
-dGhlIHFlbXUtcHJvY2VzcyBjb3JlIGZpbGUgaW50byBhIHZtY29yZS4KPj4+Pgo+Pj4KPj4+IFRh
-a2luZyBhIHN0ZXAgYmFjaywgY2FuIHlvdSBkZXNjcmliZSB0aGUgcHJvYmxlbSBzY2VuYXJpbyB5
-b3UncmUgZml4aW5nCj4+PiBoZXJlPwo+Pj4KPj4gQ29uc2lkZXJpbmcgdHdvIHNjZW5hcmlvcyBi
-ZWxvdzoKPj4gMS4gSG9zdCBwYW5pY3MsIGd1ZXN0cyBydW5uaW5nIG9uIHRoYXQgaG9zdCB3aWxs
-IGFsc28gYmUgZHVtcGVkIGludG8KPj4gICAgaG9zdCdzIHZtY29yZS4KPj4gMi4gUWVtdSBwcm9j
-ZXNzIGlzIGNvcmUgZHVtcGVkIChieSBnZGIgZ2NvcmUgb3Iga2VybmVsIGNvcmUgZHVtcGVyKSwg
-YW5kCj4+ICAgIGl0cyBjb3Jlc3BvbmRpbmcgZ3Vlc3Qgd2lsbCBiZSBpbmNsdWRlZCBpbiB0aGUg
-Y29yZSBmaWxlLgo+Pgo+PiBXZSB3YW50IHRvIGNyZWF0ZSB0aGUgZ3Vlc3QgbWFjaGluZSdzIGNy
-YXNoIGR1bXAgZnJvbSBob3N0IG1hY2hpbmUncyB2bWNvcmUKPj4gb3IgcWVtdSBwcm9jZXNzJ3Mg
-Y29yZSBmaWxlLiBVbmZvcnR1bmF0ZWx5LCB3ZSBjYW5ub3QgZ2V0IHRoZSBndWVzdCdzIHJlZ2lz
-dGVycwo+PiB2YWx1ZXMgaW4gYm90aCBzY2VuYXJpb3MuCj4+Cj4+IEZvciBzY2VuYXJpbyAxLCBz
-b21lIGtleSByZWdpc3RlcnMgKENSMCwgQ1IzLi4uKSBvZiB0aGUgZ3Vlc3QgbWFjaGluZSBhcmUg
-c3RvcmVkCj4+IGluIFZNQ1MgcmVnaW9uLiBCdXQgVk1DUyBpbnRlcm5hbCBpcyBoaWRkZW4gYnkg
-SW50ZWwgc3BlY2lmaWNhdGlvbi4gU28gdGhpcwo+PiBwYXRjaCBzZXQgYWltcyB0byBnZXQgb2Zm
-c2V0cyBvZiBmaWVsZHMgaW4gVk1DUyByZWdpb24gYW5kIGV4cG9ydCBpdCBhcyBub3RlCj4+IGlu
-Zm9ybWF0aW9uIGZvciBrZHVtcC4gCj4gCj4gT2theS4gIERvIHlvdSBleHBlY3QgaXQgdG8gaGVs
-cCBpbiBkZWJ1Z2dpbmcgdGhlIGNyYXNoPyAgRGlkIHlvdSBoYXZlCj4gY2FzZXMgd2hlcmUgaXQg
-d291bGQgaGVscD8KPiAKPj4KPj4gRm9yIHNjZW5hcmlvIDIsIHdlIGFsc28gd2FudCB0aGUgZ3Vl
-c3QncyByZWdpc3RlcnMgdmFsdWVzIHRvIGJlIGR1bXBlZCBpbnRvCj4+IHFlbXUgcHJvY2Vzcydz
-IGNvcmUgZmlsZSB3aGVuIHFlbXUgcHJvY2VzcyBjcmFzaGVzLiBUaGlzIGlzIHRoZSB0YXNrIG9m
-IFRPRE8tbGlzdCAyLgo+IAo+IFdoeT8gIElmIHFlbXUgY3Jhc2hlZCBpdCBpcyBiZWNhdXNlIG9m
-IGFuIGludGVybmFsIHFlbXUgZmF1bHQuICBJZiBhbnkKPiBndWVzdCByZWdpc3RlcnMgd2VyZSBp
-bnZvbHZlZCwgdGhleSB3b3VsZCBoYXZlIGJlZW4gZGVjb2RlZCBieSBxZW11Cj4gcHJldmlvdXNs
-eSBhbmQgd291bGQgYmUgcHJlc2VudCBpbiB0aGUgc3RhY2sgdHJhY2UgKGZvciBleGFtcGxlIG1t
-aW8KPiBhZGRyZXNzL2RhdGEpLgoKSG1tLCBJSVJDLCBpZiBxZW11IG1lZXRzIHNvbWUgY3JpdGlj
-YWwgZXJyb3IsIGl0IHdpbGwgY2FsbCBhYm9ydCgpIG9yIGFzc2VydCgpLgpUaGUgZ3Vlc3QgcmVn
-aXN0ZXJzIGFyZSBzdG9yZWQgaW4gdGhlIGtlcm5lbCwgYW5kIHFlbXUgZG9lcyBub3QgY2FsbApj
-cHVfc3luY2hyb25pemVfc3RhdGUoKSB0byBnZXQgZ3Vlc3QgcmVnaXN0ZXIuIFNvIEkgZG9ub3Qg
-dW5kZXJzdGFuZAp3aHkgdGhlIHJlZ2lzdGVycyB3b3VibGQgYmUgcHJlc2VudCBpbnQgdGhlIHN0
-YWNrIHRyYWNlLi4uCgpUaGFua3MKV2VuIENvbmd5YW5nCgo+IAo+PiBJcyB0aGlzIHdoYXQgeW91
-IHdhbnQ/Cj4+Cj4gCj4gWWVzLiAgSSdtIHRyeWluZyB0byB1bmRlcnN0YW5kIGlmIHRoZSBmZWF0
-dXJlIHdvdWxkIGJlIHVzZWZ1bCBpbiByZWFsIGxpZmUuCj4gCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9rZXhlYwo=
+On 04/17/2012 02:25 PM, Wen Congyang wrote:
+> > 
+> >>
+> >> For scenario 2, we also want the guest's registers values to be dumped into
+> >> qemu process's core file when qemu process crashes. This is the task of TODO-list 2.
+> > 
+> > Why?  If qemu crashed it is because of an internal qemu fault.  If any
+> > guest registers were involved, they would have been decoded by qemu
+> > previously and would be present in the stack trace (for example mmio
+> > address/data).
+>
+> Hmm, IIRC, if qemu meets some critical error, it will call abort() or assert().
+> The guest registers are stored in the kernel, and qemu does not call
+> cpu_synchronize_state() to get guest register. So I donot understand
+> why the registers woubld be present int the stack trace...
+
+There are two cases.  One case is where the problem was not caused
+directly by guest action, for example a segmentation fault in the block
+layer or the VNC server.  In this case the guest registers are immaterial.
+
+The other case is where the problem was directly caused by guest action,
+for example an mmio write to a device register triggered an error. In
+this case kvm emulates the mmio instruction and returns KVM_EXIT_MMIO;
+it can be seen in the kvm_run page.  The address/data pair is propagated
+by the qemu memory core all the way to the device callback.  So the
+instruction and register contents are unneeded for debugging the crash.
+
+Is there a scenario where the guest registers help towards debugging a
+qemu crash?
+
+-- 
+error compiling committee.c: too many arguments to function
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
