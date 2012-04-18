@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SKPZT-00079b-4G
- for kexec@lists.infradead.org; Wed, 18 Apr 2012 07:45:00 +0000
-Message-ID: <4F8E6DA5.8030503@cn.fujitsu.com>
-Date: Wed, 18 Apr 2012 15:30:45 +0800
-From: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+ id 1SKQCP-0003Cz-RE
+ for kexec@lists.infradead.org; Wed, 18 Apr 2012 08:25:15 +0000
+Message-ID: <4F8E7A5B.5030904@redhat.com>
+Date: Wed, 18 Apr 2012 11:24:59 +0300
+From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH 0/4] Export offsets of VMCS fields as note information
  for kdump
 References: <4F84E0DF.8040206@cn.fujitsu.com> <4F8D1F46.3090901@redhat.com>
  <4F8D4B4C.8070705@cn.fujitsu.com> <4F8D4D1C.4010400@redhat.com>
-In-Reply-To: <4F8D4D1C.4010400@redhat.com>
+ <4F8E6DA5.8030503@cn.fujitsu.com>
+In-Reply-To: <4F8E6DA5.8030503@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,83 +21,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 Cc: dzickus@redhat.com, luto@mit.edu, gregkh@suse.de, kvm@vger.kernel.org, joerg.roedel@amd.com, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com
 
-5LqOIDIwMTLlubQwNOaciDE35pelIDE4OjU5LCBBdmkgS2l2aXR5IOWGmemBkzoKPiBPbiAwNC8x
-Ny8yMDEyIDAxOjUxIFBNLCB6aGFuZ3lhbmZlaSB3cm90ZToKPj4g5LqOIDIwMTLlubQwNOaciDE3
-5pelIDE1OjQ0LCBBdmkgS2l2aXR5IOWGmemBkzoKPj4+IE9uIDA0LzExLzIwMTIgMDQ6MzkgQU0s
-IHpoYW5neWFuZmVpIHdyb3RlOgo+Pj4+IFRoaXMgcGF0Y2ggc2V0IGV4cG9ydHMgb2Zmc2V0cyBv
-ZiBWTUNTIGZpZWxkcyBhcyBub3RlIGluZm9ybWF0aW9uIGZvcgo+Pj4+IGtkdW1wLiBXZSBjYWxs
-IGl0IFZNQ1NJTkZPLiBUaGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+Pj4+
-IHJ1bnRpbWUgc3RhdGUgb2YgZ3Vlc3QgbWFjaGluZSBpbWFnZSwgc3VjaCBhcyByZWdpc3RlcnMs
-IGluIGhvc3QKPj4+PiBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCBhcyBWTUNTIGZvcm1hdC4gVGhlIHBy
-b2JsZW0gaXMgdGhhdCBWTUNTCj4+Pj4gaW50ZXJuYWwgaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0
-cyBzcGVjaWZpY2F0aW9uLiBTbywgd2UgcmV2ZXJzZQo+Pj4+IGVuZ2luZWVyaW5nIGl0IGluIHRo
-ZSB3YXkgaW1wbGVtZW50ZWQgaW4gdGhpcyBwYXRjaCBzZXQuIFBsZWFzZSBub3RlCj4+Pj4gdGhh
-dCB0aGlzIHByb2Nlc3NpbmcgbmV2ZXIgYWZmZWN0cyBhbnkgZXhpc3Rpbmcga3ZtIGxvZ2ljLiBU
-aGUKPj4+PiBWTUNTSU5GTyBpcyBleHBvcnRlZCB2aWEgc3lzZnMgdG8ga2V4ZWMtdG9vbHMganVz
-dCBsaWtlIFZNQ09SRUlORk8uCj4+Pj4KPj4+PiBIZXJlIGlzIGFuIGV4YW1wbGU6Cj4+Pj4gUHJv
-Y2Vzc29yOiBJbnRlbChSKSBDb3JlKFRNKTIgRHVvIENQVSAgICAgRTc1MDAgIEAgMi45M0dIego+
-Pj4+Cj4+Pj4gJGNhdCAvc3lzL2tlcm5lbC92bWNzaW5mbwo+Pj4+IDFjYmE4YzAgMjAwMAo+Pj4+
-Cj4+Pj4gY3Jhc2g+IHJkIC1wIDFjYmE4YzAgMTAwMAo+Pj4+ICAgICAgICAgIDFjYmE4YzA6ICAw
-MDAwMTI3YjAwMDAwMDA5IDUzNDM0ZDU2MDAwMDAwMDAgICAuLi4uey4uLi4uLi5WTUNTCj4+Pj4g
-ICAgICAgICAgMWNiYThkMDogIDAwMDAwMDAwNGY0NjRlNDkgNGU0ZjQ5NTM0OTU2NDU1MiAgIElO
-Rk8uLi4uUkVWSVNJT04KPj4+PiAgICAgICAgICAxY2JhOGUwOiAgNDk0NjBhNjQzZDQ0NDk1ZiA1
-ZjRlNDk1MDI4NDQ0YzQ1ICAgX0lEPWQuRklFTEQoUElOXwo+Pj4+ICAgICAgICAgIDFjYmE4ZjA6
-ICA0ZDU2NWY0NDQ1NTM0MTQyIDRmNDM1ZjQzNDU1ODQ1NWYgICBCQVNFRF9WTV9FWEVDX0NPCj4+
-Pj4gICAgICAgICAgMWNiYTkwMDogIDMwM2QyOTRjNGY1MjU0NGUgMGEzMDM4MzEzMDM0MzgzMSAg
-IE5UUk9MKT0wMTg0MDE4MC4KPj4+PiAgICAgICAgICAxY2JhOTEwOiAgNTA0MzI4NDQ0YzQ1NDk0
-NiA1ZjQ0NDU1MzQxNDI1ZjU1ICAgRklFTEQoQ1BVX0JBU0VEXwo+Pj4+ICAgICAgICAgIDFjYmE5
-MjA6ICA1ZjQzNDU1ODQ1NWY0ZDU2IDI5NGM0ZjUyNTQ0ZTRmNDMgICBWTV9FWEVDX0NPTlRST0wp
-Cj4+Pj4gICAgICAgICAgMWNiYTkzMDogIDM5MzEzMDM0MzkzMTMwM2QgMjg0NDRjNDU0OTQ2MGEz
-MCAgID0wMTk0MDE5MC5GSUVMRCgKPj4+PiAgICAgICAgICAxY2JhOTQwOiAgNTI0MTQ0NGU0ZjQz
-NDU1MyA0NTU4NDU1ZjRkNTY1ZjU5ICAgU0VDT05EQVJZX1ZNX0VYRQo+Pj4+ICAgICAgICAgIDFj
-YmE5NTA6ICA0ZjUyNTQ0ZTRmNDM1ZjQzIDMwMzQ2NTY2MzAzZDI5NGMgICBDX0NPTlRST0wpPTBm
-ZTQwCj4+Pj4gICAgICAgICAgMWNiYTk2MDogIDRjNDU0OTQ2MGEzMDY1NjYgNDk1ODQ1NWY0ZDU2
-Mjg0NCAgIGZlMC5GSUVMRChWTV9FWEkKPj4+PiAgICAgICAgICAxY2JhOTcwOiAgNGY1MjU0NGU0
-ZjQzNWY1NCAzNDY1MzEzMDNkMjk1MzRjICAgVF9DT05UUk9MUyk9MDFlNAo+Pj4+ICAgICAgICAg
-IDFjYmE5ODA6ICA0NTQ5NDYwYTMwNjUzMTMwIDRlNDU1ZjRkNTYyODQ0NGMgICAwMWUwLkZJRUxE
-KFZNX0VOCj4+Pj4gICAgICAgICAgMWNiYTk5MDogIDU0NGU0ZjQzNWY1OTUyNTQgMzMzMDNkMjk1
-MzRjNGY1MiAgIFRSWV9DT05UUk9MUyk9MDMKPj4+PiAgICAgICAgICAxY2JhOWEwOiAgNDYwYTMw
-MzEzMzMwMzQzMSA0NTU1NDcyODQ0NGM0NTQ5ICAgMTQwMzEwLkZJRUxEKEdVRQo+Pj4+ICAgICAg
-ICAgIDFjYmE5YjA6ICA0NTUzNWY1MzQ1NWY1NDUzIDNkMjk1MjRmNTQ0MzQ1NGMgICBTVF9FU19T
-RUxFQ1RPUik9Cj4+Pj4gICAgICAgICAgMWNiYTljMDogIDQ1NDk0NjBhMzAzMDM1MzAgNTQ1MzQ1
-NTU0NzI4NDQ0YyAgIDA1MDAuRklFTEQoR1VFU1QKPj4+PiAgICAgICAgICAxY2JhOWQwOiAgNDU0
-YzQ1NTM1ZjUzNDM1ZiAzNTMwM2QyOTUyNGY1NDQzICAgX0NTX1NFTEVDVE9SKT0wNQo+Pj4+ICAg
-ICAgICAgIC4uLi4uLgo+Pj4+Cj4+Pj4gVE9ETzoKPj4+PiAgIDEuIEluIGtleGVjLXRvb2xzLCBn
-ZXQgVk1DU0lORk8gdmlhIHN5c2ZzIGFuZCBkdW1wIGl0IGFzIG5vdGUgaW5mb3JtYXRpb24KPj4+
-PiAgICAgIGludG8gdm1jb3JlLgo+Pj4+ICAgMi4gRHVtcCBWTUNTIHJlZ2lvbiBvZiBlYWNoIGd1
-ZXN0IHZjcHUgYW5kIFZNQ1NJTkZPIGludG8gcWVtdS1wcm9jZXNzCj4+Pj4gICAgICBjb3JlIGZp
-bGUuIFRvIGRvIHRoaXMsIHdlIHdpbGwgbW9kaWZ5IGtlcm5lbCBjb3JlIGR1bXBlciwgZ2RiIGdj
-b3JlCj4+Pj4gICAgICBhbmQgY3Jhc2ggZ2NvcmUuCj4+Pj4gICAzLiBEdW1wIGd1ZXN0IGltYWdl
-IGZyb20gdGhlIHFlbXUtcHJvY2VzcyBjb3JlIGZpbGUgaW50byBhIHZtY29yZS4KPj4+Pgo+Pj4K
-Pj4+IFRha2luZyBhIHN0ZXAgYmFjaywgY2FuIHlvdSBkZXNjcmliZSB0aGUgcHJvYmxlbSBzY2Vu
-YXJpbyB5b3UncmUgZml4aW5nCj4+PiBoZXJlPwo+Pj4KPj4gQ29uc2lkZXJpbmcgdHdvIHNjZW5h
-cmlvcyBiZWxvdzoKPj4gMS4gSG9zdCBwYW5pY3MsIGd1ZXN0cyBydW5uaW5nIG9uIHRoYXQgaG9z
-dCB3aWxsIGFsc28gYmUgZHVtcGVkIGludG8KPj4gICAgaG9zdCdzIHZtY29yZS4KPj4gMi4gUWVt
-dSBwcm9jZXNzIGlzIGNvcmUgZHVtcGVkIChieSBnZGIgZ2NvcmUgb3Iga2VybmVsIGNvcmUgZHVt
-cGVyKSwgYW5kCj4+ICAgIGl0cyBjb3Jlc3BvbmRpbmcgZ3Vlc3Qgd2lsbCBiZSBpbmNsdWRlZCBp
-biB0aGUgY29yZSBmaWxlLgo+Pgo+PiBXZSB3YW50IHRvIGNyZWF0ZSB0aGUgZ3Vlc3QgbWFjaGlu
-ZSdzIGNyYXNoIGR1bXAgZnJvbSBob3N0IG1hY2hpbmUncyB2bWNvcmUKPj4gb3IgcWVtdSBwcm9j
-ZXNzJ3MgY29yZSBmaWxlLiBVbmZvcnR1bmF0ZWx5LCB3ZSBjYW5ub3QgZ2V0IHRoZSBndWVzdCdz
-IHJlZ2lzdGVycwo+PiB2YWx1ZXMgaW4gYm90aCBzY2VuYXJpb3MuCj4+Cj4+IEZvciBzY2VuYXJp
-byAxLCBzb21lIGtleSByZWdpc3RlcnMgKENSMCwgQ1IzLi4uKSBvZiB0aGUgZ3Vlc3QgbWFjaGlu
-ZSBhcmUgc3RvcmVkCj4+IGluIFZNQ1MgcmVnaW9uLiBCdXQgVk1DUyBpbnRlcm5hbCBpcyBoaWRk
-ZW4gYnkgSW50ZWwgc3BlY2lmaWNhdGlvbi4gU28gdGhpcwo+PiBwYXRjaCBzZXQgYWltcyB0byBn
-ZXQgb2Zmc2V0cyBvZiBmaWVsZHMgaW4gVk1DUyByZWdpb24gYW5kIGV4cG9ydCBpdCBhcyBub3Rl
-Cj4+IGluZm9ybWF0aW9uIGZvciBrZHVtcC4gCj4gCj4gT2theS4gIERvIHlvdSBleHBlY3QgaXQg
-dG8gaGVscCBpbiBkZWJ1Z2dpbmcgdGhlIGNyYXNoPyAgRGlkIHlvdSBoYXZlCj4gY2FzZXMgd2hl
-cmUgaXQgd291bGQgaGVscD8KPiAKClllcywgSSBkbyBleHBlY3QgaXQgdG8gaGVscCBpbiBkZWJ1
-Z2dpbmcgdGhlIGNyYXNoLgpMb29raW5nIGludG8gaG9zdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCwg
-aWYgd2UgZmlndXJlIG91dCB0aGUgZmFjdCB0aGF0IHRoZSBjcmFzaApoYWQgaGFwcGVuZCB3aGVu
-IHNvbWUgaG9zdCdzIHJlc291cmNlIHdhcyByZXF1ZXN0ZWQgYW5kIHVzZWQgYnkgc29tZSBndXNl
-dCBtYWNoaW5lLgpUaGVuLCB3ZSBzdXJlbHkgd2FudCB0byBsb29rIGludG8gdGhlIHNpdHVhdGlv
-biBmcm9tIGd1ZXN0IG1hY2hpbmUncyB2aWV3LgoKVGhhbmtzClpoYW5nIFlhbmZlaQoKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 04/18/2012 10:30 AM, zhangyanfei wrote:
+> > 
+> > Okay.  Do you expect it to help in debugging the crash?  Did you have
+> > cases where it would help?
+> > 
+>
+> Yes, I do expect it to help in debugging the crash.
+> Looking into host machine's crash dump, if we figure out the fact that the crash
+> had happend when some host's resource was requested and used by some guset machine.
+> Then, we surely want to look into the situation from guest machine's view.
+>
+>
+
+What type of resource?  Can you give an example?
+
+-- 
+error compiling committee.c: too many arguments to function
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
