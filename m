@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g1t0027.austin.hp.com ([15.216.28.34])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SLGsr-0002li-09
- for kexec@lists.infradead.org; Fri, 20 Apr 2012 16:40:33 +0000
-Date: Fri, 20 Apr 2012 10:39:14 -0600
-From: Khalid Aziz <khalid.aziz@hp.com>
-Subject: [PATCH] Correct section number for shutdown and clarify what -e
- does in manpage
-Message-ID: <20120420163914.GA27026@hp.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SLtZD-000447-N6
+ for kexec@lists.infradead.org; Sun, 22 Apr 2012 09:58:53 +0000
+Message-ID: <4F93D64B.50803@redhat.com>
+Date: Sun, 22 Apr 2012 12:58:35 +0300
+From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH 0/4] Export offsets of VMCS fields as note information
+ for kdump
+References: <4F8FF7AC.1060309@redhat.com>
+ <20120419.210119.246504497.d.hatayama@jp.fujitsu.com>
+ <4F900020.5010702@redhat.com>
+ <20120420.191133.488341439.d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120420.191133.488341439.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +26,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, mtosatti@redhat.com, kvm@vger.kernel.org, joerg.roedel@amd.com, gregkh@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, zhangyanfei@cn.fujitsu.com, ebiederm@xmission.com, ludwig.nussel@suse.de
 
-Another patch that I have been carrying in debian kexec-tools package. 
-It corrects the section number for shutdown in the man page. This
-patch also adds little more descriptive note for the -e option to
-clarify that this does not do an orderly shutdown.
+On 04/20/2012 01:11 PM, HATAYAMA Daisuke wrote:
+> From: Avi Kivity <avi@redhat.com>
+> Subject: Re: [PATCH 0/4] Export offsets of VMCS fields as note information for kdump
+> Date: Thu, 19 Apr 2012 15:08:00 +0300
+>
+> > On 04/19/2012 03:01 PM, HATAYAMA Daisuke wrote:
+> >> >> It would be not helpful for the qemu crash case you are concerned
+> >> >> about. We want to use the guest state data to look into guest
+> >> >> machine's image in the crasshed qemu.
+> >> > 
+> >> > Why?
+> >> > 
+> >>
+> >> It seems natural to check the situation from guest machine's side when
+> >> qemu crashs. Suppose a service is running on the guest machine, and
+> >> then the qemu crash. Then, we may need to know the details of the
+> >> progress of the service if it's important. What has been successfully
+> >> done, and what has not yet.
+> > 
+> > How can a service on the guest be related to a qemu crash?  And how
+> > would guest registers help?
+>
+> I don't mean the service is related to qemu's crash. When qemu
+> crashes, then the guest machine also crashes (although it doesn't
+> notice anything). What I'm interested in here is guest machine side,
+> not qemu side. I want to debug guest machine, not qemu.
 
-Please apply.
+There is no bug in the guest, so why debug it?
 
-Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
----
- kexec/kexec.8 |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+It's similar to pulling out the power from a server and wanting to
+inspect the registers and memory at the time the cpu died.  Even if it's
+possible, you don't gain any information from it.
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index da03c40..aff674c 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -71,7 +71,7 @@ It's also possible to invoke
- .B kexec
- without an option parameter. In that case, kexec loads the specified
- kernel and then invokes
--.BR shutdown (1).
-+.BR shutdown (8).
- If the shutdown scripts of your Linux distribution support
- kexec-based rebooting, they then call
- .B kexec
-@@ -105,13 +105,13 @@ command:
- .SH OPTIONS
- .TP
- .B \-e\ (\-\-exec)
--Run the currently loaded kernel.
-+Run the currently loaded kernel. Note that it will reboot into the loaded kernel without calling shutdown(8).
- .TP
- .B \-f\ (\-\-force)
- Force an immediate
- .B kexec
- call, do not call
--.BR shutdown (1)
-+.BR shutdown (8)
- (contrary to the default action without any option parameter). This option
- performs the same actions like executing
- .IR -l
+> > 
+> > You can extract the list of running processes from a qemu crash dump
+> > without looking at guest registers.  And most vcpus are running
+> > asynchronously to qemu, so their register contents is irrelevant (if a
+> > vcpu is running synchronously with qemu - it just exited to qemu and is
+> > waiting for a response - then you'd see the details in qemu's call stack).
+> > 
+>
+> Just as you say, we can refer to guest machine's memory without guest
+> registers.
+>
+> The definitely necessary data in vmcs are RSP and RIP, which are not
+> saved in anywhare of kvm module. The two registers are needed for back
+> tracing to determine what processsing is being done on the guest
+> machine at qemu crash.
+
+What I don't understand is why you are interested in the guest machine
+at all, if it was qemu that crashed.
+
+> There are other useful data in vmcs, but even if we don't have them,
+> we can do what we want to do in exchange of usability.
+>
+> For example, we want IA32_EFER.LMA to determine whether guest machine
+> is in 32-bit or 64-bit mode. But there are only two modes, we can
+> perhaps try these in order in an ad-hoc way.
+>
+> Other control registers are also useful, but they are not so important
+> than definitely needed.
+>
+
+If this is your interest, then the data should be encoded in a vendor
+agnostic way.  That is, not as lists of vmcs fields, but instead guest
+registers.  This can be implemented for both vmx and svm.
+
+However this is secondary to the question of why we need to do this at all.
+
 -- 
-1.7.8.3
+error compiling committee.c: too many arguments to function
 
--- 
-
-====================================================================
-Khalid Aziz                                         Unix Systems Lab
-(970)898-9214                                        Hewlett-Packard
-khalid.aziz@hp.com                                  Fort Collins, CO
 
 _______________________________________________
 kexec mailing list
