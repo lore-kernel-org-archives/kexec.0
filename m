@@ -1,23 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SNAMM-0000xU-UR
- for kexec@lists.infradead.org; Wed, 25 Apr 2012 22:06:52 +0000
-Date: Wed, 25 Apr 2012 18:06:27 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: In place kexec
-Message-ID: <20120425220627.GA18972@redhat.com>
-References: <20100729191654.GB28704@redhat.com>
- <m1lj8uvzgy.fsf@fess.ebiederm.org>
- <20100729125535.85dfd7da.randy.dunlap@oracle.com>
- <4C524934.5070806@zytor.com> <m1d3u5ins8.fsf@fess.ebiederm.org>
- <1280508817.28006.0.camel@macbook.infradead.org>
- <4C533922.10901@zytor.com> <1280524696.30160.34.camel@localhost>
- <1280526298.30160.39.camel@localhost>
- <20120425211512.GA8583@ldl.usa.hp.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120425211512.GA8583@ldl.usa.hp.com>
+Received: from g4t0015.houston.hp.com ([15.201.24.18])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SNTSr-00062r-9z
+ for kexec@lists.infradead.org; Thu, 26 Apr 2012 18:30:50 +0000
+Received: from g4t0009.houston.hp.com (g4t0009.houston.hp.com [16.234.32.26])
+ by g4t0015.houston.hp.com (Postfix) with ESMTP id C667586D0
+ for <kexec@lists.infradead.org>; Thu, 26 Apr 2012 18:30:42 +0000 (UTC)
+Received: from ldl (ldl.usa.hp.com [16.125.112.222])
+ by g4t0009.houston.hp.com (Postfix) with ESMTP id AFDBBC401
+ for <kexec@lists.infradead.org>; Thu, 26 Apr 2012 18:30:42 +0000 (UTC)
+Received: from localhost (ldl.fc.hp.com [127.0.0.1])
+ by ldl (Postfix) with ESMTP id 83DD11A7E0DE
+ for <kexec@lists.infradead.org>; Thu, 26 Apr 2012 12:30:42 -0600 (MDT)
+Received: from ldl ([127.0.0.1])
+ by localhost (ldl.fc.hp.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id zeJsy6nxxSNR for <kexec@lists.infradead.org>;
+ Thu, 26 Apr 2012 12:30:42 -0600 (MDT)
+Received: from [16.71.9.99] (lyra.americas.hpqcorp.net [16.71.9.99])
+ by ldl (Postfix) with ESMTP id 658131A7E0DD
+ for <kexec@lists.infradead.org>; Thu, 26 Apr 2012 12:30:42 -0600 (MDT)
+Subject: [RFC PATCH V2]  Disable Bus Master bit on PCI device shutdown
+From: Khalid Aziz <khalid.aziz@hp.com>
+Date: Thu, 26 Apr 2012 12:30:42 -0600
+Message-ID: <1335465042.13081.22.camel@lyra>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,20 +36,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Khalid Aziz <khalid.aziz@hp.com>
-Cc: Randy Dunlap <randy.dunlap@oracle.com>, Neil Horman <nhorman@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, "linux-driver@qlogic.com" <linux-driver@qlogic.com>, David Woodhouse <dwmw2@infradead.org>, Andrew Vasquez <andrew.vasquez@qlogic.com>
+To: kexec@lists.infradead.org
 
-On Wed, Apr 25, 2012 at 03:15:12PM -0600, Khalid Aziz wrote:
+Eric suggested I disable bus master bit in PCI susbsystem instead
+and that makes perfect sense. So here is take 2 on this patch. Please
+review and let me know if I missed anything.
 
-[..]
-> I would appreciate if others could test it and give a thumbs up or thumbs 
-> down before I send it to LKML.
 
-Kexec still seems to work on my x86_64 box with this patch applied. So
-from testing point of view thumbs up.
+Subject: [PATCH] Disable Bus Master bit on the device in
+ pci_device_shutdown() to ensure PCI devices do not continue
+ to DMA data after shutdown. This can cause memory
+ corruption in case of a kexec where the current kernel
+ shuts down and transfers control to a new kernel while a
+ PCI device continues to DMA to memory that does not belong
+ to it any more in the new kernel.
 
-Thanks
-Vivek
+
+Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
+---
+ drivers/pci/pci-driver.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 6b54b23..9db5940 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -420,6 +420,12 @@ static void pci_device_shutdown(struct device *dev)
+ 	pci_msi_shutdown(pci_dev);
+ 	pci_msix_shutdown(pci_dev);
+ 
++	/* 
++	 * Turn off Bus Master bit on the device to tell it to not
++	 * continue to do DMA
++	 */
++	pci_disable_device(pci_dev);
++
+ 	/*
+ 	 * Devices may be enabled to wake up by runtime PM, but they need not
+ 	 * be supposed to wake up the system from its "power off" state (e.g.
+-- 
+1.7.8.3
+
+
+-- 
+Khalid
+
 
 _______________________________________________
 kexec mailing list
