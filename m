@@ -1,21 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SPg6U-0006T2-3t
- for kexec@lists.infradead.org; Wed, 02 May 2012 20:24:50 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1330546129-4812-1-git-send-email-dzickus@redhat.com>
- <20120315202652.GA13930@redhat.com>
- <5C4C569E8A4B9B42A84A977CF070A35B2E31C6F859@USINDEVS01.corp.hds.com>
- <20120430205354.GA32472@redhat.com>
- <5C4C569E8A4B9B42A84A977CF070A35B2E4D461583@USINDEVS01.corp.hds.com>
- <87vckemkyt.fsf@xmission.com> <20120502195919.GU32472@redhat.com>
-Date: Wed, 02 May 2012 13:24:35 -0700
-In-Reply-To: <20120502195919.GU32472@redhat.com> (Don Zickus's message of
- "Wed, 2 May 2012 15:59:19 -0400")
-Message-ID: <8762cel4ak.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH] x86, kdump: No need to disable ioapic in crash path
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SSHP4-0000Rw-KI
+ for kexec@lists.infradead.org; Thu, 10 May 2012 00:38:48 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id DB1DD3EE081
+ for <kexec@lists.infradead.org>; Thu, 10 May 2012 09:38:40 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id BD0FE45DE5A
+ for <kexec@lists.infradead.org>; Thu, 10 May 2012 09:38:40 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id A6A2E45DE55
+ for <kexec@lists.infradead.org>; Thu, 10 May 2012 09:38:40 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 974531DB8049
+ for <kexec@lists.infradead.org>; Thu, 10 May 2012 09:38:40 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 526051DB8040
+ for <kexec@lists.infradead.org>; Thu, 10 May 2012 09:38:40 +0900 (JST)
+Date: Thu, 10 May 2012 09:38:29 +0900 (JST)
+Message-Id: <20120510.093829.347152059.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120223171646.18e3dd30.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120223012940.5041.61104.stgit@localhost6.localdomain6>
+ <20120223171646.18e3dd30.kumagai-atsushi@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,107 +38,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Don Zickus <dzickus@redhat.com>
-Cc: Seiji Aguchi <seiji.aguchi@hds.com>, kexec-list <kexec@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, LKML <linux-kernel@vger.kernel.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 
-Don Zickus <dzickus@redhat.com> writes:
+Helllo Kumagai-san,
 
-> On Wed, May 02, 2012 at 12:39:06PM -0700, Eric W. Biederman wrote:
->> Seiji Aguchi <seiji.aguchi@hds.com> writes:
->> 
->> >> Perhaps calling setup_IO_APIC before setup_local_APIC would be a better fix?
->> >
->> > I checked Intel develper's manual and there is no restriction about the order of enabling IO_APIC/local_APIC.
->> > So, it may work.
->> >
->> > But, I don't understand why we have to change the stable boot-up code.
->> 
->> Because the boot-up code is buggy.  We need to get a better handle on
->> how it is buggy but apparently an interrupt coming in at the wrong
->> moment while booting with interrupts on the interrupt flag on the cpus
->> disalbed puts us in a state where we fail to boot.
->> 
->> We should be able to boot with apics enabled, and we almost can
->> emperically there are a few bugs.
->> 
->> The kdump path is particularly good at finding bugs.
->> 
->> > If kdump disables both local_apic and IO_APIC in proper way in 1st kernel,  2nd kernel works without any change.
->> 
->> We can not guarnatee disabling the local apics in the first kernel.
->> 
->> Ultimately the less we do in the first kernel the more reliable kdump is
->> going to be.  Disabling the apics has been a long standing bug work
->> around.
->> 
->> At worst we may have been a smidge premature in using assuming the
->> kernel can boot with the apics enabled but it I would hope we can
->> track down and fix the boot up code.
->> 
->> Probably what we want to do is not to disable the I/O apics but
->> to program the I/O apics before we enable the local apic so that
->> we have control of the in-comming interrupts.  But I haven't
->> looked at this in nearly enough detail to even guess what needs
->> to happen.
->
-> Hi Eric,
->
-> Thanks for the info.  I have don't have a problem with what you say above,
-> I think that is a noble effort worth pursuing.  From a high level
-> perspective, I am trying to understand how that is supposed to be
-> acheived.  Getting the code to match the theory is probably easier to do
-> than throw random patches/hacks at various kdump problems as they
-> arise.
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH makedumpfile v2 0/4] LZO Compression Support
+Date: Thu, 23 Feb 2012 17:16:46 +0900
 
-The very basic theory is:
+> Thank you for your work.
+> I will review your patches for v1.4.4.
 
---- Prepare to handle a crash (load kdump kernel etc)
+Could you tell me when you plan to release version 1.4.4? Not
+necessarily exact date, rough schedule is enough. I need to post the
+corresponding patch to the crash utility's side after LZO feature is
+merged into makedumpfile.
 
-panic.
-locally disable interrupts
-do things that can only be done in the panicing kernel
-jump to purgatory
-
-It is pretty clear from Peter Anvin's comments that we can perform a
-generic nmi disable in the panicing kernel just by disabling nmi's
-handling in the local apic.  We need to confirm that but it sounds
-like a single write.
-
-We shoot down other cpus in a best effort in the crashing kernel because
-that is the only way we can possibly get their cpu registers.
-
-> (this leaves apics and virt stuff untouched?)
-
-We have to disable virt stuff because you can't change cpu modes with
-virt stuff enabled (trying causes faults).  But disabling the virt stuff
-is just a register write.
-
-> 2nd kernel:
->
-> normal early boot stuff
-> setup memory
-> setup scheduler
-> ...
-> program ioapic/lapic??
->    #currently this is down _after_ boot cpu interrupts are enabled
->    #which seem problematic if you have leftover screaming interrupts
->    #probably a reason for this like timers or something
-
-Yes, we need to figure out how to deal with screaming interrupts in
-this stage.  I have not long ago disabled msi interrupts at pci bus
-scan time for a similar reason.  The msi interrupts I encountered were
-not technically screaming but I did encounter one that was firing ever
-couple of microseconds which is effectively the same as screaming.
-
-Basically I don't particularly care how we do this so long as the
-screamming or rapid fire interrupts don't stop the boot.
-
-> enable boot cpu interrupts
-> setup boot cpu
-> setup other cpus
-> ....
-
-Eric
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
