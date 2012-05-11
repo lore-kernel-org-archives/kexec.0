@@ -1,20 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SSeYf-0004J7-NS
- for kexec@lists.infradead.org; Fri, 11 May 2012 01:22:17 +0000
-Date: Fri, 11 May 2012 10:19:52 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile memory usage grows with system memory size
-Message-Id: <20120511101952.7530db09.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <20120427125214.GF28185@redhat.com>
-References: <20120410.085824.193685565.d.hatayama@jp.fujitsu.com>
- <20120410125205.GA21801@redhat.com>
- <20120412124040.bad03498.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120412.164714.39159547.d.hatayama@jp.fujitsu.com>
- <20120427164649.9932a33f.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120427125214.GF28185@redhat.com>
-Mime-Version: 1.0
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SSgBh-0001Xk-S2
+ for kexec@lists.infradead.org; Fri, 11 May 2012 03:06:40 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 260A33EE0BD
+ for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:32 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0AB8345DEA6
+ for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:32 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E7CCB45DE9E
+ for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id DAF7E1DB803F
+ for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
+Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 87E4A1DB803B
+ for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
+Message-ID: <4FAC8227.8010605@jp.fujitsu.com>
+Date: Fri, 11 May 2012 12:06:15 +0900
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+MIME-Version: 1.0
+Subject: [PATCH] crash: Add LZO Compression Support
+Content-Type: multipart/mixed; boundary="------------000701040001030701060203"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,112 +32,154 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: dzickus@redhat.com, oomichi@mxs.nes.nec.co.jp, d.hatayama@jp.fujitsu.com, vgoyal@redhat.com
+To: anderson@redhat.com
+Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, crash-utility@redhat.com
 
-Hello, 
-
-On Fri, 27 Apr 2012 08:52:14 -0400
-Don Zickus <dzickus@redhat.com> wrote:
-
-[..]
-> > I tested the prototype based on _count and the other based on _mapcount.
-> > So, the former didn't work as expected while the latter worked fine.
-> > (The former excluded some used pages as free pages.)
-> > 
-> > As a next step, I measured performance of the prototype based on _mapcount,
-> > please see below.
-> 
-> Thanks for this work.  I assume this work just switches the free page
-> referencing and does not attempt to try and cut down on the memory usage
-> (I guess that would be the next step if using mapcount is acceptable)?
-
-Thank you for your reply, Don, Vivek.
-
-As Don said, I tried to change the method to exclude free pages and
-planed to resolve the memory consumption issue after it, because
-parsing free list repeatedly may cause a performance issue.
-
-However, I'm thinking that to fix the size of memory consumption is more
-important than to resolve a performance issue for large system.
-
-So I'm afraid that I would like to change the plan as:
-
-  1. Implement "iterating filtering processing" to fix the size of memory
-     consumption. At this stage, makedumpfile will parse free list repeatedly
-     even though it may cause a performance issue.
-     
-  2. Take care of the performance issue after the 1st step.
+This is a multi-part message in MIME format.
+--------------000701040001030701060203
+Content-Type: multipart/alternative;
+ boundary="------------080105040704050504010101"
 
 
-Thanks
-Atsushi Kumagai
+--------------080105040704050504010101
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-> 
-> > 
-> > 
-> > Performance Comparison:
-> > 
-> >   Explanation:
-> >     - The new method supports 2.6.39 and later, and it needs vmlinux.
-> > 
-> >     - Now, the prototype doesn't support PG_buddy because the value of PG_buddy
-> >       is different depending on kernel configuration and it isn't stored into 
-> >       VMCOREINFO. However, I'll extend get_length_of_free_pages() for PG_buddy 
-> >       when the value of PG_buddy is stored into VMCOREINFO.
-> > 
-> >     - The prototype has dump_level "32" to use new method, but I don't think
-> >       to extend dump_level for official version.
-> > 
-> >   How to measure:
-> >     I measured execution times with vmcore of 5GB in below cases with 
-> >     attached patches.
-> > 
-> >       - dump_level 16: exclude only free pages with the current method
-> >       - dump_level 31: exclude all excludable pages with the current method
-> >       - dump_level 32: exclude only free pages with the new method
-> >       - dump_level 47: exclude all excludable pages with the new method
-> > 
-> >   Result:
-> >      ------------------------------------------------------------------------
-> >      dump_level	     size [Bytes]    total time	   d_all_time     d_new_time	
-> >      ------------------------------------------------------------------------
-> >      	16		431864384	28.6s	     4.19s	      0s
-> >      	31		111808568	14.5s	      0.9s	      0s
-> >      	32		431864384	41.2s	     16.8s	   0.05s
-> >      	47		111808568	31.5s	     16.6s	   0.05s
-> >      ------------------------------------------------------------------------
-> > 
-> >   Discussion:
-> >     I think the new method can be used instead of the current method in many cases.
-> >     (However, the result of dump_level 31 looks too fast, I'm researching why
-> >     the case can execute so fast.)
-> > 
-> >     I would like to get your opinion.
-> 
-> I am curious.  Looking through your patches, it seems d_all_time's
-> increase in time should be from the new method because the if-statement is
-> setup to only accept the new method.  Therefore I was expecting d_new_time
-> for the new method when added to d_all_time for the current method would
-> come close to d_all_time for the new method.  IOW I would have expected
-> the extra 10-12 seconds from the new method to be found in d_new_time.
-> 
-> However, I do not see that.  d_new_time hardly increases at all.  So what
-> is accounting for the increase in d_all_time for the new method?
-> 
-> Thanks,
-> Don
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Hello Dave,
+
+This is LZO patch for crash utility. makedumpfile will support LZO
+compression in version 1.4.4, and it will be released this or next
+month.
+
+LZO patch for makedumpfile is here:
+
+[PATCH makedumpfile 0/2] LZO Compression Support
+http://lists.infradead.org/pipermail/kexec/2012-February/006075.html
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+--------------080105040704050504010101
+Content-Type: text/html; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=ISO-2022-JP">
+  </head>
+  <body bgcolor="#000000" text="#FFFFFF">
+    Hello Dave,<br>
+    <br>
+    This is LZO patch for crash utility. makedumpfile will support LZO<br>
+    compression in version 1.4.4, and it will be released this or next<br>
+    month.<br>
+    <br>
+    LZO patch for makedumpfile is here:<br>
+    <br>
+    [PATCH makedumpfile 0/2] LZO Compression Support<br>
+    <a class="moz-txt-link-freetext" href="http://lists.infradead.org/pipermail/kexec/2012-February/006075.html">http://lists.infradead.org/pipermail/kexec/2012-February/006075.html</a><br>
+    <br>
+    Thanks.<br>
+    HATAYAMA, Daisuke<br>
+    <br>
+  </body>
+</html>
+
+--------------080105040704050504010101--
+
+--------------000701040001030701060203
+Content-Type: text/plain; charset=Shift_JIS;
+ name="0001-crash-Add-LZO-Compression-Support.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="0001-crash-Add-LZO-Compression-Support.patch"
+
+RnJvbSBlMjE2MjUzZjU5ODUxOTVmYzZlYmM0MDk2MWI2Zjc1ZDU4MTIxZDA3IE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpw
+LmZ1aml0c3UuY29tPgpEYXRlOiBGcmksIDExIE1heSAyMDEyIDExOjM4OjAzICswOTAwClN1
+YmplY3Q6IFtQQVRDSF0gY3Jhc2g6IEFkZCBMWk8gQ29tcHJlc3Npb24gU3VwcG9ydAoKTFpP
+IGlzIGFzIGdvb2QgYXMgaW4gc2l6ZSBidXQgYnkgZmFyIGJldHRlciBpbiBzcGVlZCB0aGFu
+IFpMSUIuIFRoaXMKY2FuIHJlZHVjZSB0aGUgdGltZSByZXF1aXJlZCBmb3IgZ2VuZXJhdGlv
+biBvZiBjcmFzaCBkdW1wIGFuZApyZWZpbHRlcmluZzsgTFpPIGlzIGV2ZW4gYmV0dGVyIGlu
+IGRlY29tcHJlc3Npb24gc3BlZWQsIGJ1dCBpdCBtaWdodApiZSBkaWZmaWN1bHQgZm9yIGNy
+YXNoIHVzZXJzIHRvIGJlIGF3YXJlIG9mIHRoaXMgaW1wcm92ZW1lbnQuCgpUaGlzIHBhdGNo
+IGFsbG93cyBjcmFzaCB1dGlsaXR5IHRvIHJlYWQgZHVtcGZpbGVzIGNvbXByZXNzZWQgYnkg
+TFpPCnVzaW5nIG1ha2VkdW1wZmlsZSB2ZXJzaW9uIDEuNC40IG9yIGxhdGVyLgoKVGhpcyBm
+ZWF0dXJlIGlzIGRpc2FibGVkIGF0IGRlZmF1bHQuIFRvIGVuYWJsZSB0aGlzIGZlYXR1cmUs
+IGJ1aWxkCmNyYXNoIHV0aWxpdHkgaW4gdGhlIGZvbGxvd2luZyB3YXk6CgogIDEpIEluc3Rh
+bGwgTFpPIGxpYnJhcmllcyBieSB1c2luZyBwYWNrYWdlIG1hbmFnZXIgb3IgYnkgZGlyZWN0
+bHkKICBkb3dubG9hZGluZyBsaWJyYXJpZXMgZnJvbSBhdXRob3IncyB3ZWJzaXRlLiBUaGUg
+cGFja2FnZXMgcmVxdWlyZWQKICBhcmU6CgogICAgIC0gbHpvCiAgICAgLSBsem8tbWluaWx6
+bwogICAgIC0gbHpvLWRldmVsCgogIFRoZSBhdXRob3IncyB3ZWJzaXRlIGlzOiBodHRwOi8v
+d3d3Lm9iZXJodW1lci5jb20vb3BlbnNvdXJjZS9sem8vLgoKICAyKSBDcmVhdGUgQ0ZMQUdT
+LmV4dHJhIGZpbGUgYW5kIExERkxBR1MuZXh0cmEgZmlsZSBpbiB0b3AgZGlyZWN0b3J5CiAg
+d2hlcmUgc291cmNlIGNvZGUgb2YgY3Jhc2ggdXRpbGl0eSBpcyBleHBhbmRlZC4gVGhlbiwg
+d3JpdGUgLURMWk8gaW4KICBDRkxBR1MuZXh0cmEgZmlsZSBhbmQgLWxsem8yIGluIExERkxB
+R1MuZXh0cmEgZmlsZS4KCiAgMykgRG8gbWFrZSBhcyBhbHdheXMuCgpTaWduZWQtb2ZmLWJ5
+OiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0c3UuY29tPgotLS0KIGRl
+ZnMuaCAgICAgfCAgICAzICsrKwogZGlza2R1bXAuYyB8ICAgMzAgKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystCiBkaXNrZHVtcC5oIHwgICAgMyArKy0KIDMgZmlsZXMgY2hhbmdl
+ZCwgMzQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kZWZz
+LmggYi9kZWZzLmgKaW5kZXggNzdhNjIzZC4uMTcxYzViMSAxMDA3NTUKLS0tIGEvZGVmcy5o
+CisrKyBiL2RlZnMuaApAQCAtNDgsNiArNDgsOSBAQAogI2luY2x1ZGUgPHN5cy90aW1lLmg+
+CiAjaW5jbHVkZSA8ZXhlY2luZm8uaD4gLyogYmFja3RyYWNlKCkgKi8KICNpbmNsdWRlIDxy
+ZWdleC5oPgorI2lmZGVmIExaTworI2luY2x1ZGUgPGx6by9sem8xeC5oPgorI2VuZGlmCiAK
+ICNpZm5kZWYgQVRUUklCVVRFX1VOVVNFRAogI2RlZmluZSBBVFRSSUJVVEVfVU5VU0VEIF9f
+YXR0cmlidXRlX18gKChfX3VudXNlZF9fKSkKZGlmZiAtLWdpdCBhL2Rpc2tkdW1wLmMgYi9k
+aXNrZHVtcC5jCmluZGV4IGQ5NGJjNDkuLjI0ZTIxMmEgMTAwNjQ0Ci0tLSBhL2Rpc2tkdW1w
+LmMKKysrIGIvZGlza2R1bXAuYwpAQCAtNjYsNiArNjYsNyBAQCBzdHJ1Y3QgZGlza2R1bXBf
+ZGF0YSB7CiAJdWxvbmcJY2FjaGVkX3JlYWRzOwogCXVsb25nICAqdmFsaWRfcGFnZXM7CiAJ
+dWxvbmcgICBhY2Nlc3NlczsKKwlpbnQJbHpvX3N1cHBvcnRlZDsKIH07CiAKIHN0YXRpYyBz
+dHJ1Y3QgZGlza2R1bXBfZGF0YSBkaXNrZHVtcF9kYXRhID0geyAwIH07CkBAIC02NzMsNiAr
+Njc0LDExIEBAIGlzX2Rpc2tkdW1wKGNoYXIgKmZpbGUpCiAJaWYgKHBjLT5mbGFnczIgJiBH
+RVRfT1NSRUxFQVNFKSAKIAkJZGlza2R1bXBfZ2V0X29zcmVsZWFzZSgpOwogCisjaWZkZWYg
+TFpPCisJaWYgKGx6b19pbml0KCkgPT0gTFpPX0VfT0spCisJCWRkLT5sem9fc3VwcG9ydGVk
+ID0gVFJVRTsKKyNlbmRpZgorCiAJcmV0dXJuIFRSVUU7CiB9CiAKQEAgLTgyNyw3ICs4MzMs
+NyBAQCBjYWNoZV9wYWdlKHBoeXNhZGRyX3QgcGFkZHIpCiAJCQlyZXR1cm4gUkVBRF9FUlJP
+UjsKIAl9CiAKLQlpZiAocGQuZmxhZ3MgJiBEVU1QX0RIX0NPTVBSRVNTRUQpIHsKKwlpZiAo
+cGQuZmxhZ3MgJiBEVU1QX0RIX0NPTVBSRVNTRURfWkxJQikgewogCQlyZXRsZW4gPSBibG9j
+a19zaXplOwogCQlyZXQgPSB1bmNvbXByZXNzKCh1bnNpZ25lZCBjaGFyICopZGQtPnBhZ2Vf
+Y2FjaGVfaGRyW2ldLnBnX2J1ZnB0ciwKIAkJICAgICAgICAgICAgICAgICAmcmV0bGVuLApA
+QCAtODM5LDYgKzg0NSwyOCBAQCBjYWNoZV9wYWdlKHBoeXNhZGRyX3QgcGFkZHIpCiAJCQkJ
+cmV0KTsKIAkJCXJldHVybiBSRUFEX0VSUk9SOwogCQl9CisJfSBlbHNlIGlmIChwZC5mbGFn
+cyAmIERVTVBfREhfQ09NUFJFU1NFRF9MWk8pIHsKKworCQlpZiAoIWRkLT5sem9fc3VwcG9y
+dGVkKSB7CisJCQllcnJvcihJTkZPLCAiJXM6IHVuY29tcHJlc3MgZmFpbGVkOiBubyBsem8g
+Y29tcHJlc3Npb24gc3VwcG9ydFxuIiwKKwkJCSAgICAgIERJU0tEVU1QX1ZBTElEKCkgPyAi
+ZGlza2R1bXAiIDogImNvbXByZXNzZWQga2R1bXAiKTsKKwkJCXJldHVybiBSRUFEX0VSUk9S
+OworCQl9CisKKyNpZmRlZiBMWk8KKwkJcmV0bGVuID0gYmxvY2tfc2l6ZTsKKwkJcmV0ID0g
+bHpvMXhfZGVjb21wcmVzc19zYWZlKCh1bnNpZ25lZCBjaGFyICopZGQtPmNvbXByZXNzZWRf
+cGFnZSwKKwkJCQkJICAgIHBkLnNpemUsCisJCQkJCSAgICAodW5zaWduZWQgY2hhciAqKWRk
+LT5wYWdlX2NhY2hlX2hkcltpXS5wZ19idWZwdHIsCisJCQkJCSAgICAmcmV0bGVuLAorCQkJ
+CQkgICAgTFpPMVhfTUVNX0RFQ09NUFJFU1MpOworCQlpZiAoKHJldCAhPSBMWk9fRV9PSykg
+fHwgKHJldGxlbiAhPSBibG9ja19zaXplKSkgeworCQkJZXJyb3IoSU5GTywgIiVzOiB1bmNv
+bXByZXNzIGZhaWxlZDogJWRcbiIsIAorCQkJCURJU0tEVU1QX1ZBTElEKCkgPyAiZGlza2R1
+bXAiIDogImNvbXByZXNzZWQga2R1bXAiLAorCQkJCXJldCk7CisJCQlyZXR1cm4gUkVBRF9F
+UlJPUjsKKwkJfQorI2VuZGlmCiAJfSBlbHNlCiAJCW1lbWNweShkZC0+cGFnZV9jYWNoZV9o
+ZHJbaV0ucGdfYnVmcHRyLAogCQkgICAgICAgZGQtPmNvbXByZXNzZWRfcGFnZSwgYmxvY2tf
+c2l6ZSk7CmRpZmYgLS1naXQgYS9kaXNrZHVtcC5oIGIvZGlza2R1bXAuaAppbmRleCBjN2Nj
+NGZjLi5iZDk5ZmJkIDEwMDY0NAotLS0gYS9kaXNrZHVtcC5oCisrKyBiL2Rpc2tkdW1wLmgK
+QEAgLTcyLDcgKzcyLDggQEAgc3RydWN0IGtkdW1wX3N1Yl9oZWFkZXIgewogfTsKIAogLyog
+cGFnZSBmbGFncyAqLwotI2RlZmluZSBEVU1QX0RIX0NPTVBSRVNTRUQJMHgxCS8qIHBhZ2Ug
+aXMgY29tcHJlc3NlZCAgICAgICAgICAgICAgICovCisjZGVmaW5lIERVTVBfREhfQ09NUFJF
+U1NFRF9aTElCCTB4MQkvKiBwYWdlIGlzIGNvbXByZXNzZWQgd2l0aCB6bGliICovCisjZGVm
+aW5lIERVTVBfREhfQ09NUFJFU1NFRF9MWk8JMHgyCS8qIHBhZ2UgaXMgY29tcHJlc3NlZCB3
+aXRoIGx6byAqLwogCiAvKiBkZXNjcmlwdG9yIG9mIGVhY2ggcGFnZSBmb3Igdm1jb3JlICov
+CiB0eXBlZGVmIHN0cnVjdCBwYWdlX2Rlc2MgewotLSAKMS43LjQuNAoK
+--------------000701040001030701060203
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
+
+--------------000701040001030701060203--
+
+
