@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SSgBh-0001Xk-S2
- for kexec@lists.infradead.org; Fri, 11 May 2012 03:06:40 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 260A33EE0BD
- for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:32 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0AB8345DEA6
- for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:32 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id E7CCB45DE9E
- for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id DAF7E1DB803F
- for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
-Received: from m107.s.css.fujitsu.com (m107.s.css.fujitsu.com [10.240.81.147])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 87E4A1DB803B
- for <kexec@lists.infradead.org>; Fri, 11 May 2012 12:06:31 +0900 (JST)
-Message-ID: <4FAC8227.8010605@jp.fujitsu.com>
-Date: Fri, 11 May 2012 12:06:15 +0900
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH] crash: Add LZO Compression Support
-Content-Type: multipart/mixed; boundary="------------000701040001030701060203"
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SShsO-0005Ff-W4
+ for kexec@lists.infradead.org; Fri, 11 May 2012 04:54:51 +0000
+Date: Fri, 11 May 2012 13:52:44 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: makedumpfile availability for x86 3.2 kernels
+Message-Id: <20120511135244.e8c5b8c6.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <4FAB7035.2080207@canonical.com>
+References: <4F99AFB3.3070803@canonical.com>
+ <20120427132448.d7854fd6.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <4F9ABA53.2060709@canonical.com> <4FAB7035.2080207@canonical.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,154 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: anderson@redhat.com
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, crash-utility@redhat.com
+To: louis.bouchard@canonical.com
+Cc: kexec@lists.infradead.org
 
-This is a multi-part message in MIME format.
---------------000701040001030701060203
-Content-Type: multipart/alternative;
- boundary="------------080105040704050504010101"
-
-
---------------080105040704050504010101
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-Hello Dave,
-
-This is LZO patch for crash utility. makedumpfile will support LZO
-compression in version 1.4.4, and it will be released this or next
-month.
-
-LZO patch for makedumpfile is here:
-
-[PATCH makedumpfile 0/2] LZO Compression Support
-http://lists.infradead.org/pipermail/kexec/2012-February/006075.html
-
-Thanks.
-HATAYAMA, Daisuke
-
-
---------------080105040704050504010101
-Content-Type: text/html; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=ISO-2022-JP">
-  </head>
-  <body bgcolor="#000000" text="#FFFFFF">
-    Hello Dave,<br>
-    <br>
-    This is LZO patch for crash utility. makedumpfile will support LZO<br>
-    compression in version 1.4.4, and it will be released this or next<br>
-    month.<br>
-    <br>
-    LZO patch for makedumpfile is here:<br>
-    <br>
-    [PATCH makedumpfile 0/2] LZO Compression Support<br>
-    <a class="moz-txt-link-freetext" href="http://lists.infradead.org/pipermail/kexec/2012-February/006075.html">http://lists.infradead.org/pipermail/kexec/2012-February/006075.html</a><br>
-    <br>
-    Thanks.<br>
-    HATAYAMA, Daisuke<br>
-    <br>
-  </body>
-</html>
-
---------------080105040704050504010101--
-
---------------000701040001030701060203
-Content-Type: text/plain; charset=Shift_JIS;
- name="0001-crash-Add-LZO-Compression-Support.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="0001-crash-Add-LZO-Compression-Support.patch"
-
-RnJvbSBlMjE2MjUzZjU5ODUxOTVmYzZlYmM0MDk2MWI2Zjc1ZDU4MTIxZDA3IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpw
-LmZ1aml0c3UuY29tPgpEYXRlOiBGcmksIDExIE1heSAyMDEyIDExOjM4OjAzICswOTAwClN1
-YmplY3Q6IFtQQVRDSF0gY3Jhc2g6IEFkZCBMWk8gQ29tcHJlc3Npb24gU3VwcG9ydAoKTFpP
-IGlzIGFzIGdvb2QgYXMgaW4gc2l6ZSBidXQgYnkgZmFyIGJldHRlciBpbiBzcGVlZCB0aGFu
-IFpMSUIuIFRoaXMKY2FuIHJlZHVjZSB0aGUgdGltZSByZXF1aXJlZCBmb3IgZ2VuZXJhdGlv
-biBvZiBjcmFzaCBkdW1wIGFuZApyZWZpbHRlcmluZzsgTFpPIGlzIGV2ZW4gYmV0dGVyIGlu
-IGRlY29tcHJlc3Npb24gc3BlZWQsIGJ1dCBpdCBtaWdodApiZSBkaWZmaWN1bHQgZm9yIGNy
-YXNoIHVzZXJzIHRvIGJlIGF3YXJlIG9mIHRoaXMgaW1wcm92ZW1lbnQuCgpUaGlzIHBhdGNo
-IGFsbG93cyBjcmFzaCB1dGlsaXR5IHRvIHJlYWQgZHVtcGZpbGVzIGNvbXByZXNzZWQgYnkg
-TFpPCnVzaW5nIG1ha2VkdW1wZmlsZSB2ZXJzaW9uIDEuNC40IG9yIGxhdGVyLgoKVGhpcyBm
-ZWF0dXJlIGlzIGRpc2FibGVkIGF0IGRlZmF1bHQuIFRvIGVuYWJsZSB0aGlzIGZlYXR1cmUs
-IGJ1aWxkCmNyYXNoIHV0aWxpdHkgaW4gdGhlIGZvbGxvd2luZyB3YXk6CgogIDEpIEluc3Rh
-bGwgTFpPIGxpYnJhcmllcyBieSB1c2luZyBwYWNrYWdlIG1hbmFnZXIgb3IgYnkgZGlyZWN0
-bHkKICBkb3dubG9hZGluZyBsaWJyYXJpZXMgZnJvbSBhdXRob3IncyB3ZWJzaXRlLiBUaGUg
-cGFja2FnZXMgcmVxdWlyZWQKICBhcmU6CgogICAgIC0gbHpvCiAgICAgLSBsem8tbWluaWx6
-bwogICAgIC0gbHpvLWRldmVsCgogIFRoZSBhdXRob3IncyB3ZWJzaXRlIGlzOiBodHRwOi8v
-d3d3Lm9iZXJodW1lci5jb20vb3BlbnNvdXJjZS9sem8vLgoKICAyKSBDcmVhdGUgQ0ZMQUdT
-LmV4dHJhIGZpbGUgYW5kIExERkxBR1MuZXh0cmEgZmlsZSBpbiB0b3AgZGlyZWN0b3J5CiAg
-d2hlcmUgc291cmNlIGNvZGUgb2YgY3Jhc2ggdXRpbGl0eSBpcyBleHBhbmRlZC4gVGhlbiwg
-d3JpdGUgLURMWk8gaW4KICBDRkxBR1MuZXh0cmEgZmlsZSBhbmQgLWxsem8yIGluIExERkxB
-R1MuZXh0cmEgZmlsZS4KCiAgMykgRG8gbWFrZSBhcyBhbHdheXMuCgpTaWduZWQtb2ZmLWJ5
-OiBIQVRBWUFNQSBEYWlzdWtlIDxkLmhhdGF5YW1hQGpwLmZ1aml0c3UuY29tPgotLS0KIGRl
-ZnMuaCAgICAgfCAgICAzICsrKwogZGlza2R1bXAuYyB8ICAgMzAgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystCiBkaXNrZHVtcC5oIHwgICAgMyArKy0KIDMgZmlsZXMgY2hhbmdl
-ZCwgMzQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kZWZz
-LmggYi9kZWZzLmgKaW5kZXggNzdhNjIzZC4uMTcxYzViMSAxMDA3NTUKLS0tIGEvZGVmcy5o
-CisrKyBiL2RlZnMuaApAQCAtNDgsNiArNDgsOSBAQAogI2luY2x1ZGUgPHN5cy90aW1lLmg+
-CiAjaW5jbHVkZSA8ZXhlY2luZm8uaD4gLyogYmFja3RyYWNlKCkgKi8KICNpbmNsdWRlIDxy
-ZWdleC5oPgorI2lmZGVmIExaTworI2luY2x1ZGUgPGx6by9sem8xeC5oPgorI2VuZGlmCiAK
-ICNpZm5kZWYgQVRUUklCVVRFX1VOVVNFRAogI2RlZmluZSBBVFRSSUJVVEVfVU5VU0VEIF9f
-YXR0cmlidXRlX18gKChfX3VudXNlZF9fKSkKZGlmZiAtLWdpdCBhL2Rpc2tkdW1wLmMgYi9k
-aXNrZHVtcC5jCmluZGV4IGQ5NGJjNDkuLjI0ZTIxMmEgMTAwNjQ0Ci0tLSBhL2Rpc2tkdW1w
-LmMKKysrIGIvZGlza2R1bXAuYwpAQCAtNjYsNiArNjYsNyBAQCBzdHJ1Y3QgZGlza2R1bXBf
-ZGF0YSB7CiAJdWxvbmcJY2FjaGVkX3JlYWRzOwogCXVsb25nICAqdmFsaWRfcGFnZXM7CiAJ
-dWxvbmcgICBhY2Nlc3NlczsKKwlpbnQJbHpvX3N1cHBvcnRlZDsKIH07CiAKIHN0YXRpYyBz
-dHJ1Y3QgZGlza2R1bXBfZGF0YSBkaXNrZHVtcF9kYXRhID0geyAwIH07CkBAIC02NzMsNiAr
-Njc0LDExIEBAIGlzX2Rpc2tkdW1wKGNoYXIgKmZpbGUpCiAJaWYgKHBjLT5mbGFnczIgJiBH
-RVRfT1NSRUxFQVNFKSAKIAkJZGlza2R1bXBfZ2V0X29zcmVsZWFzZSgpOwogCisjaWZkZWYg
-TFpPCisJaWYgKGx6b19pbml0KCkgPT0gTFpPX0VfT0spCisJCWRkLT5sem9fc3VwcG9ydGVk
-ID0gVFJVRTsKKyNlbmRpZgorCiAJcmV0dXJuIFRSVUU7CiB9CiAKQEAgLTgyNyw3ICs4MzMs
-NyBAQCBjYWNoZV9wYWdlKHBoeXNhZGRyX3QgcGFkZHIpCiAJCQlyZXR1cm4gUkVBRF9FUlJP
-UjsKIAl9CiAKLQlpZiAocGQuZmxhZ3MgJiBEVU1QX0RIX0NPTVBSRVNTRUQpIHsKKwlpZiAo
-cGQuZmxhZ3MgJiBEVU1QX0RIX0NPTVBSRVNTRURfWkxJQikgewogCQlyZXRsZW4gPSBibG9j
-a19zaXplOwogCQlyZXQgPSB1bmNvbXByZXNzKCh1bnNpZ25lZCBjaGFyICopZGQtPnBhZ2Vf
-Y2FjaGVfaGRyW2ldLnBnX2J1ZnB0ciwKIAkJICAgICAgICAgICAgICAgICAmcmV0bGVuLApA
-QCAtODM5LDYgKzg0NSwyOCBAQCBjYWNoZV9wYWdlKHBoeXNhZGRyX3QgcGFkZHIpCiAJCQkJ
-cmV0KTsKIAkJCXJldHVybiBSRUFEX0VSUk9SOwogCQl9CisJfSBlbHNlIGlmIChwZC5mbGFn
-cyAmIERVTVBfREhfQ09NUFJFU1NFRF9MWk8pIHsKKworCQlpZiAoIWRkLT5sem9fc3VwcG9y
-dGVkKSB7CisJCQllcnJvcihJTkZPLCAiJXM6IHVuY29tcHJlc3MgZmFpbGVkOiBubyBsem8g
-Y29tcHJlc3Npb24gc3VwcG9ydFxuIiwKKwkJCSAgICAgIERJU0tEVU1QX1ZBTElEKCkgPyAi
-ZGlza2R1bXAiIDogImNvbXByZXNzZWQga2R1bXAiKTsKKwkJCXJldHVybiBSRUFEX0VSUk9S
-OworCQl9CisKKyNpZmRlZiBMWk8KKwkJcmV0bGVuID0gYmxvY2tfc2l6ZTsKKwkJcmV0ID0g
-bHpvMXhfZGVjb21wcmVzc19zYWZlKCh1bnNpZ25lZCBjaGFyICopZGQtPmNvbXByZXNzZWRf
-cGFnZSwKKwkJCQkJICAgIHBkLnNpemUsCisJCQkJCSAgICAodW5zaWduZWQgY2hhciAqKWRk
-LT5wYWdlX2NhY2hlX2hkcltpXS5wZ19idWZwdHIsCisJCQkJCSAgICAmcmV0bGVuLAorCQkJ
-CQkgICAgTFpPMVhfTUVNX0RFQ09NUFJFU1MpOworCQlpZiAoKHJldCAhPSBMWk9fRV9PSykg
-fHwgKHJldGxlbiAhPSBibG9ja19zaXplKSkgeworCQkJZXJyb3IoSU5GTywgIiVzOiB1bmNv
-bXByZXNzIGZhaWxlZDogJWRcbiIsIAorCQkJCURJU0tEVU1QX1ZBTElEKCkgPyAiZGlza2R1
-bXAiIDogImNvbXByZXNzZWQga2R1bXAiLAorCQkJCXJldCk7CisJCQlyZXR1cm4gUkVBRF9F
-UlJPUjsKKwkJfQorI2VuZGlmCiAJfSBlbHNlCiAJCW1lbWNweShkZC0+cGFnZV9jYWNoZV9o
-ZHJbaV0ucGdfYnVmcHRyLAogCQkgICAgICAgZGQtPmNvbXByZXNzZWRfcGFnZSwgYmxvY2tf
-c2l6ZSk7CmRpZmYgLS1naXQgYS9kaXNrZHVtcC5oIGIvZGlza2R1bXAuaAppbmRleCBjN2Nj
-NGZjLi5iZDk5ZmJkIDEwMDY0NAotLS0gYS9kaXNrZHVtcC5oCisrKyBiL2Rpc2tkdW1wLmgK
-QEAgLTcyLDcgKzcyLDggQEAgc3RydWN0IGtkdW1wX3N1Yl9oZWFkZXIgewogfTsKIAogLyog
-cGFnZSBmbGFncyAqLwotI2RlZmluZSBEVU1QX0RIX0NPTVBSRVNTRUQJMHgxCS8qIHBhZ2Ug
-aXMgY29tcHJlc3NlZCAgICAgICAgICAgICAgICovCisjZGVmaW5lIERVTVBfREhfQ09NUFJF
-U1NFRF9aTElCCTB4MQkvKiBwYWdlIGlzIGNvbXByZXNzZWQgd2l0aCB6bGliICovCisjZGVm
-aW5lIERVTVBfREhfQ09NUFJFU1NFRF9MWk8JMHgyCS8qIHBhZ2UgaXMgY29tcHJlc3NlZCB3
-aXRoIGx6byAqLwogCiAvKiBkZXNjcmlwdG9yIG9mIGVhY2ggcGFnZSBmb3Igdm1jb3JlICov
-CiB0eXBlZGVmIHN0cnVjdCBwYWdlX2Rlc2MgewotLSAKMS43LjQuNAoK
---------------000701040001030701060203
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---------------000701040001030701060203--
-
-
+SGVsbG8gTG91aXMsCgpPbiBUaHUsIDEwIE1heSAyMDEyIDA5OjM3OjI1ICswMjAwCkJvdWNoYXJk
+IExvdWlzIDxsb3Vpcy5ib3VjaGFyZEBjYW5vbmljYWwuY29tPiB3cm90ZToKCj4gSGVsbG8gS3Vt
+YWdhaS1zYW4sCj4gCj4gTGUgMjcvMDQvMjAxMiAxNzoyNSwgQm91Y2hhcmQgTG91aXMgYSDDqWNy
+aXQgOgo+ID4gCj4gPiBJJ3ZlIGxvY2F0ZWQgd2hlcmUgbWFrZWR1bXBmaWxlIGlzIGJlaW5nIHVz
+ZWQgaW4gb3VyIGJ1aWxkIHByb2Nlc3MgYW5kCj4gPiBJJ2xsIGRvIG15IGJlc3QgdG8gdGVzdCBp
+dCBBLlMuQS5QLgo+ID4gCj4gPiBJJ3ZlIGFsc28gZmlsZWQgYSBidWcgYWdhaW5zdCBpdCwgc28g
+eW91IGNhbiBmb2xsb3cgaXRzIGV2b2x1dGlvbiBoZXJlIDoKPiA+IAo+ID4gaHR0cHM6Ly9idWdz
+LmxhdW5jaHBhZC5uZXQvdWJ1bnR1Lytzb3VyY2UvbGludXgvK2J1Zy85ODg1MTIKPiA+IAo+ID4g
+S2luZCByZWdhcmRzLAo+ID4gCj4gPiAuLi5Mb3Vpcwo+ID4gCj4gCj4gSSBqdXN0IG5vdGljZWQg
+aW4gYW5vdGhlciB0aHJlYWQgKExaTyBDb21wcmVzc2lvbiBzdXBwb3J0KSB0aGF0IHlvdQo+IG1l
+bnRpb25lZCBhbiB1cGNvbWluIDEuNC40IHZlcnNpb24gc29vbi4gRG8geW91IHBsYW4gdG8gaW5j
+bHVkZSBzdXBwb3J0Cj4gZm9yIHRoZSAzLjIga2VybmVscyB3aGljaCBhcmUgbm90IHlldCBzdXBw
+b3J0ZWQgPwoKVGhlIHRlc3Qgb2YgdjEuNC40IGFsc28gdGFyZ2V0cyAzLjIga2VybmVsLiBJZiBp
+dCBpcyBkb25lIHdpdGggZ29vZCByZXN1bHRzLCAKSSB3aWxsIGluY2x1ZGUgMy4yIGtlcm5lbCBp
+biBzdXBwb3J0ZWQgdmVyc2lvbnMuCgoKVGhhbmtzCkF0c3VzaGkgS3VtYWdhaS4KCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
