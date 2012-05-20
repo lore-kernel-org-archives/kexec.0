@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SVDPo-0006H7-O3
- for kexec@lists.infradead.org; Fri, 18 May 2012 02:59:41 +0000
-Date: Fri, 18 May 2012 11:59:32 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [v2 PATCH] ppc: move DEBUG code to --debug
-Message-ID: <20120518025931.GB26916@verge.net.au>
-References: <1336977296-30314-1-git-send-email-amwang@redhat.com>
+Received: from mail-ob0-f177.google.com ([209.85.214.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SVtgH-0003UH-Br
+ for kexec@lists.infradead.org; Sun, 20 May 2012 00:07:30 +0000
+Received: by obqv19 with SMTP id v19so7690225obq.36
+ for <kexec@lists.infradead.org>; Sat, 19 May 2012 17:07:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1336977296-30314-1-git-send-email-amwang@redhat.com>
+From: Baruch Even <baruch@ev-en.org>
+Date: Sun, 20 May 2012 03:00:05 +0300
+Message-ID: <CAC9+anKZv5=nQhW9MWjPiWaH3hvoqgRc__XNOP+tG50Qjc7NzA@mail.gmail.com>
+Subject: [PATCH] Use HOSTCC for build utilities
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +22,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Cong Wang <amwang@redhat.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Mon, May 14, 2012 at 02:34:56PM +0800, Cong Wang wrote:
-> From: Cong Wang <xiyou.wangcong@gmail.com>
-> 
-> 
-> From: Cong Wang <xiyou.wangcong@gmail.com>
-> V2: Fix a compile error
-> 
-> Like commit 28d4ab53280853d2aeefdfb7c369331e89ab9ac2
-> ("Add generic debug option"), this one moves code
-> under #if DEBUG to --debug on ppc arch.
-> 
-> Sorry that I still can't find a ppc32 machine to test this.
+Subject: [PATCH] Use HOSTCC for build utilities
 
-Thank, I don't have any ppc32 (or 64) hardware to test on,
-but I did use a cross-compiler to check that it builds.
+bin-to-hex is used during the build and needs to be compiled with the host
+compiler to be able to run during the build.
 
-> Cc: Simon Horman <horms@verge.net.au>
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Baruch Even <baruch@ev-en.org>
+---
+ util/Makefile |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Applied
+diff --git a/util/Makefile b/util/Makefile
+index 948ee63..82c7407 100644
+--- a/util/Makefile
++++ b/util/Makefile
+@@ -4,8 +4,8 @@ $(BIN_TO_HEX): $(srcdir)/util/bin-to-hex.c
+ 	@$(MKDIR) -p $(@D)
+ 	$(LINK.o) $(CFLAGS) -o $@ $^
+
+-$(BIN_TO_HEX): CC=$(BUILD_CC)
+-$(BIN_TO_HEX): CFLAGS=$(BUILD_CFLAGS)
++$(BIN_TO_HEX): CC=$(HOSTCC)
++$(BIN_TO_HEX): CFLAGS=$(HOST_CFLAGS)
+ $(BIN_TO_HEX): LDFLAGS=
+
+ dist += util/Makefile util/bin-to-hex.c
+-- 
+1.7.10
 
 _______________________________________________
 kexec mailing list
