@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SWABC-0006DK-Ua
- for kexec@lists.infradead.org; Sun, 20 May 2012 17:44:32 +0000
-Message-ID: <4FB92D5A.3060507@redhat.com>
-Date: Sun, 20 May 2012 20:43:54 +0300
-From: Avi Kivity <avi@redhat.com>
+ id 1SWIRN-0003Br-TW
+ for kexec@lists.infradead.org; Mon, 21 May 2012 02:33:47 +0000
+Message-ID: <4FB9A92D.7050108@cn.fujitsu.com>
+Date: Mon, 21 May 2012 10:32:13 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
  for kdump
-References: <4FB35C48.30708@cn.fujitsu.com>
-In-Reply-To: <4FB35C48.30708@cn.fujitsu.com>
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
+In-Reply-To: <4FB92D5A.3060507@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,74 +19,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+To: Avi Kivity <avi@redhat.com>
 Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-On 05/16/2012 10:50 AM, zhangyanfei wrote:
-> This patch set exports offsets of VMCS fields as note information for
-> kdump. We call it VMCSINFO. The purpose of VMCSINFO is to retrieve
-> runtime state of guest machine image, such as registers, in host
-> machine's crash dump as VMCS format. The problem is that VMCS internal
-> is hidden by Intel in its specification. So, we slove this problem
-> by reverse engineering implemented in this patch set. The VMCSINFO
-> is exported via sysfs to kexec-tools just like VMCOREINFO.
->
-> Here are two usercases for two features that we want.
->
-> 1) Create guest machine's crash dumpfile from host machine's crash dumpfile
->
-> In general, we want to use this feature on failure analysis for the system
-> where the processing depends on the communication between host and guest
-> machines to look into the system from both machines's viewpoints.
->
-> As a concrete situation, consider where there's heartbeat monitoring
-> feature on the guest machine's side, where we need to determine in
-> which machine side the cause of heartbeat stop lies. In our actual
-> experiments, we encountered such situation and we found the cause of
-> the bug was in host's process schedular so guest machine's vcpu stopped
-> for a long time and then led to heartbeat stop.
->
-> The module that judges heartbeat stop is on guest machine, so we need
-> to debug guest machine's data. But if the cause lies in host machine
-> side, we need to look into host machine's crash dump.
-
-Do you mean, that a heartbeat failure in the guest lead to host panic?
-
-My expectation is that a problem in the guest will cause the guest to
-panic and perhaps produce a dump; the host will remain up.
-
-> Without this feature, we first create guest machine's dump and then
-> create host mahine's, but there's only a short time between two
-> processings, during which it's unlikely that buggy situation remains.
->
-> So, we think the feature is useful to debug both guest machine's and
-> host machine's sides at the same time, and expect we can make failure
-> analysis efficiently.
->
-> Of course, we believe this feature is commonly useful on the situation
-> where guest machine doesn't work well due to something of host machine's.
->
-> 2) Get offsets of VMCS information on the CPU running on the host machine
->
-> If kdump doesn't work well, then it means we cannot use kvm API to get
-> register values of guest machine and they are still left on its vmcs
-> region. In the case, we use crash dump mechanism running outside of
-> linux kernel, such as sadump, a firmware-based crash dump. Then VMCS
-> information is then necessary.
-
-Shouldn't sadump then expose the VMCS offsets? Perhaps bundling them
-into its dump file?
-
-
--- 
-error compiling committee.c: too many arguments to function
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+09ogMjAxMsTqMDXUwjIxyNUgMDE6NDMsIEF2aSBLaXZpdHkg0LS1wDoKPiBPbiAwNS8xNi8yMDEy
+IDEwOjUwIEFNLCB6aGFuZ3lhbmZlaSB3cm90ZToKPj4gVGhpcyBwYXRjaCBzZXQgZXhwb3J0cyBv
+ZmZzZXRzIG9mIFZNQ1MgZmllbGRzIGFzIG5vdGUgaW5mb3JtYXRpb24gZm9yCj4+IGtkdW1wLiBX
+ZSBjYWxsIGl0IFZNQ1NJTkZPLiBUaGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2
+ZQo+PiBydW50aW1lIHN0YXRlIG9mIGd1ZXN0IG1hY2hpbmUgaW1hZ2UsIHN1Y2ggYXMgcmVnaXN0
+ZXJzLCBpbiBob3N0Cj4+IG1hY2hpbmUncyBjcmFzaCBkdW1wIGFzIFZNQ1MgZm9ybWF0LiBUaGUg
+cHJvYmxlbSBpcyB0aGF0IFZNQ1MgaW50ZXJuYWwKPj4gaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0
+cyBzcGVjaWZpY2F0aW9uLiBTbywgd2Ugc2xvdmUgdGhpcyBwcm9ibGVtCj4+IGJ5IHJldmVyc2Ug
+ZW5naW5lZXJpbmcgaW1wbGVtZW50ZWQgaW4gdGhpcyBwYXRjaCBzZXQuIFRoZSBWTUNTSU5GTwo+
+PiBpcyBleHBvcnRlZCB2aWEgc3lzZnMgdG8ga2V4ZWMtdG9vbHMganVzdCBsaWtlIFZNQ09SRUlO
+Rk8uCj4+Cj4+IEhlcmUgYXJlIHR3byB1c2VyY2FzZXMgZm9yIHR3byBmZWF0dXJlcyB0aGF0IHdl
+IHdhbnQuCj4+Cj4+IDEpIENyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcGZpbGUgZnJv
+bSBob3N0IG1hY2hpbmUncyBjcmFzaCBkdW1wZmlsZQo+Pgo+PiBJbiBnZW5lcmFsLCB3ZSB3YW50
+IHRvIHVzZSB0aGlzIGZlYXR1cmUgb24gZmFpbHVyZSBhbmFseXNpcyBmb3IgdGhlIHN5c3RlbQo+
+PiB3aGVyZSB0aGUgcHJvY2Vzc2luZyBkZXBlbmRzIG9uIHRoZSBjb21tdW5pY2F0aW9uIGJldHdl
+ZW4gaG9zdCBhbmQgZ3Vlc3QKPj4gbWFjaGluZXMgdG8gbG9vayBpbnRvIHRoZSBzeXN0ZW0gZnJv
+bSBib3RoIG1hY2hpbmVzJ3Mgdmlld3BvaW50cy4KPj4KPj4gQXMgYSBjb25jcmV0ZSBzaXR1YXRp
+b24sIGNvbnNpZGVyIHdoZXJlIHRoZXJlJ3MgaGVhcnRiZWF0IG1vbml0b3JpbmcKPj4gZmVhdHVy
+ZSBvbiB0aGUgZ3Vlc3QgbWFjaGluZSdzIHNpZGUsIHdoZXJlIHdlIG5lZWQgdG8gZGV0ZXJtaW5l
+IGluCj4+IHdoaWNoIG1hY2hpbmUgc2lkZSB0aGUgY2F1c2Ugb2YgaGVhcnRiZWF0IHN0b3AgbGll
+cy4gSW4gb3VyIGFjdHVhbAo+PiBleHBlcmltZW50cywgd2UgZW5jb3VudGVyZWQgc3VjaCBzaXR1
+YXRpb24gYW5kIHdlIGZvdW5kIHRoZSBjYXVzZSBvZgo+PiB0aGUgYnVnIHdhcyBpbiBob3N0J3Mg
+cHJvY2VzcyBzY2hlZHVsYXIgc28gZ3Vlc3QgbWFjaGluZSdzIHZjcHUgc3RvcHBlZAo+PiBmb3Ig
+YSBsb25nIHRpbWUgYW5kIHRoZW4gbGVkIHRvIGhlYXJ0YmVhdCBzdG9wLgo+Pgo+PiBUaGUgbW9k
+dWxlIHRoYXQganVkZ2VzIGhlYXJ0YmVhdCBzdG9wIGlzIG9uIGd1ZXN0IG1hY2hpbmUsIHNvIHdl
+IG5lZWQKPj4gdG8gZGVidWcgZ3Vlc3QgbWFjaGluZSdzIGRhdGEuIEJ1dCBpZiB0aGUgY2F1c2Ug
+bGllcyBpbiBob3N0IG1hY2hpbmUKPj4gc2lkZSwgd2UgbmVlZCB0byBsb29rIGludG8gaG9zdCBt
+YWNoaW5lJ3MgY3Jhc2ggZHVtcC4KPiAKPiBEbyB5b3UgbWVhbiwgdGhhdCBhIGhlYXJ0YmVhdCBm
+YWlsdXJlIGluIHRoZSBndWVzdCBsZWFkIHRvIGhvc3QgcGFuaWM/Cj4gCj4gTXkgZXhwZWN0YXRp
+b24gaXMgdGhhdCBhIHByb2JsZW0gaW4gdGhlIGd1ZXN0IHdpbGwgY2F1c2UgdGhlIGd1ZXN0IHRv
+Cj4gcGFuaWMgYW5kIHBlcmhhcHMgcHJvZHVjZSBhIGR1bXA7IHRoZSBob3N0IHdpbGwgcmVtYWlu
+IHVwLgo+IAoKVGhlIHBvaW50IGlzIHRoYXQgYmVmb3JlIG91ciBpbnZlc3RpZ2F0aW9uLCB3ZSBk
+aWRuJ3Qga25vdyB3aGljaCBzaWRlIApsZWFkcyB0byB0aGlzIGJ1Z2d5IHNpdHVhdGlvbi4gTWF5
+YmUgYSBidWcgaW4gaG9zdCBtYWNoaW5lIG9yIHRoZSBndWVzdAptYWNoaW5lIGl0c2VsZiBjYXVz
+ZXMgYSBoZWFydGJlYXQgZmFpbHVyZS4KClNvIHdlIHdhbnQgdG8gZ2V0IGJvdGggaG9zdCBtYWNo
+aW5lJ3MgY3Jhc2ggZHVtcCBhbmQgZ3Vlc3QgbWFjaGluZSdzCmNyYXNoIGR1bXAgKmF0IHRoZSBz
+YW1lIHRpbWUqLiBUaGVuIHdlIGNvdWxkIHVzZSB1c2Vyc3BhY2UgdG9vbHMgdG8KZ2V0IGd1ZXN0
+IG1hY2hpbmUgY3Jhc2ggZHVtcCBmcm9tIGhvc3QgbWFjaGluZSdzIGFuZCBhbmFseXNlIHRoZW0K
+c2VwYXJhdGVseSB0byBmaW5kIHdoaWNoIHNpZGUgY2F1c2VzIHRoZSBwcm9ibGVtLgoKPj4gV2l0
+aG91dCB0aGlzIGZlYXR1cmUsIHdlIGZpcnN0IGNyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgZHVtcCBh
+bmQgdGhlbgo+PiBjcmVhdGUgaG9zdCBtYWhpbmUncywgYnV0IHRoZXJlJ3Mgb25seSBhIHNob3J0
+IHRpbWUgYmV0d2VlbiB0d28KPj4gcHJvY2Vzc2luZ3MsIGR1cmluZyB3aGljaCBpdCdzIHVubGlr
+ZWx5IHRoYXQgYnVnZ3kgc2l0dWF0aW9uIHJlbWFpbnMuCj4+Cj4+IFNvLCB3ZSB0aGluayB0aGUg
+ZmVhdHVyZSBpcyB1c2VmdWwgdG8gZGVidWcgYm90aCBndWVzdCBtYWNoaW5lJ3MgYW5kCj4+IGhv
+c3QgbWFjaGluZSdzIHNpZGVzIGF0IHRoZSBzYW1lIHRpbWUsIGFuZCBleHBlY3Qgd2UgY2FuIG1h
+a2UgZmFpbHVyZQo+PiBhbmFseXNpcyBlZmZpY2llbnRseS4KPj4KPj4gT2YgY291cnNlLCB3ZSBi
+ZWxpZXZlIHRoaXMgZmVhdHVyZSBpcyBjb21tb25seSB1c2VmdWwgb24gdGhlIHNpdHVhdGlvbgo+
+PiB3aGVyZSBndWVzdCBtYWNoaW5lIGRvZXNuJ3Qgd29yayB3ZWxsIGR1ZSB0byBzb21ldGhpbmcg
+b2YgaG9zdCBtYWNoaW5lJ3MuCj4+Cj4+IDIpIEdldCBvZmZzZXRzIG9mIFZNQ1MgaW5mb3JtYXRp
+b24gb24gdGhlIENQVSBydW5uaW5nIG9uIHRoZSBob3N0IG1hY2hpbmUKPj4KPj4gSWYga2R1bXAg
+ZG9lc24ndCB3b3JrIHdlbGwsIHRoZW4gaXQgbWVhbnMgd2UgY2Fubm90IHVzZSBrdm0gQVBJIHRv
+IGdldAo+PiByZWdpc3RlciB2YWx1ZXMgb2YgZ3Vlc3QgbWFjaGluZSBhbmQgdGhleSBhcmUgc3Rp
+bGwgbGVmdCBvbiBpdHMgdm1jcwo+PiByZWdpb24uIEluIHRoZSBjYXNlLCB3ZSB1c2UgY3Jhc2gg
+ZHVtcCBtZWNoYW5pc20gcnVubmluZyBvdXRzaWRlIG9mCj4+IGxpbnV4IGtlcm5lbCwgc3VjaCBh
+cyBzYWR1bXAsIGEgZmlybXdhcmUtYmFzZWQgY3Jhc2ggZHVtcC4gVGhlbiBWTUNTCj4+IGluZm9y
+bWF0aW9uIGlzIHRoZW4gbmVjZXNzYXJ5Lgo+IAo+IFNob3VsZG4ndCBzYWR1bXAgdGhlbiBleHBv
+c2UgdGhlIFZNQ1Mgb2Zmc2V0cz8gUGVyaGFwcyBidW5kbGluZyB0aGVtCj4gaW50byBpdHMgZHVt
+cCBmaWxlPwo+IAoKRmlybXdhcmUtYmFzZWQgY3Jhc2ggZHVtcCBkb2Vzbid0IGNvbmNlcm4gdGhl
+IG9zIHJ1bm5pbmcgb24gdGhlIG1hY2hpbmUuClNvIGl0IHdpbGwgbm90IGRvIGFueSBvcyBoYW5k
+bGluZyB3aGVuIG1hY2hpbmUgY3Jhc2hlcy4KClRoYW5rcwpaaGFuZyBZYW5mZWkKCiAKCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
+IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
