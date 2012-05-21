@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SWP2N-0002Za-Iw
- for kexec@lists.infradead.org; Mon, 21 May 2012 09:36:25 +0000
-Message-ID: <4FBA0C8A.2050003@redhat.com>
-Date: Mon, 21 May 2012 12:36:10 +0300
-From: Avi Kivity <avi@redhat.com>
+Received: from mail-vb0-f49.google.com ([209.85.212.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SWXoj-0001yp-9l
+ for kexec@lists.infradead.org; Mon, 21 May 2012 18:58:53 +0000
+Received: by vbbfo1 with SMTP id fo1so4698458vbb.36
+ for <kexec@lists.infradead.org>; Mon, 21 May 2012 11:58:51 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <4FB35C48.30708@cn.fujitsu.com>
+References: <4FB35C48.30708@cn.fujitsu.com>
+Date: Mon, 21 May 2012 11:58:51 -0700
+Message-ID: <CAG7+5M2nc3qPAS-GvX=YoVKqwdwSGdesoBQ6nsksHp2LFfzYcQ@mail.gmail.com>
 Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
  for kdump
-References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
- <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
- <4FBA05F6.8070804@cn.fujitsu.com>
-In-Reply-To: <4FBA05F6.8070804@cn.fujitsu.com>
+From: Eric Northup <digitaleric@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,103 +21,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, ebiederm@xmission.com
 
-T24gMDUvMjEvMjAxMiAxMjowOCBQTSwgWWFuZmVpIFpoYW5nIHdyb3RlOgo+INPaIDIwMTLE6jA1
-1MIyMcjVIDE2OjM0LCBBdmkgS2l2aXR5INC0tcA6Cj4gPiBPbiAwNS8yMS8yMDEyIDA1OjMyIEFN
-LCBZYW5mZWkgWmhhbmcgd3JvdGU6Cj4gPj4g09ogMjAxMsTqMDXUwjIxyNUgMDE6NDMsIEF2aSBL
-aXZpdHkg0LS1wDoKPiA+Pj4gT24gMDUvMTYvMjAxMiAxMDo1MCBBTSwgemhhbmd5YW5mZWkgd3Jv
-dGU6Cj4gPj4+PiBUaGlzIHBhdGNoIHNldCBleHBvcnRzIG9mZnNldHMgb2YgVk1DUyBmaWVsZHMg
-YXMgbm90ZSBpbmZvcm1hdGlvbiBmb3IKPiA+Pj4+IGtkdW1wLiBXZSBjYWxsIGl0IFZNQ1NJTkZP
-LiBUaGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+ID4+Pj4gcnVudGltZSBz
-dGF0ZSBvZiBndWVzdCBtYWNoaW5lIGltYWdlLCBzdWNoIGFzIHJlZ2lzdGVycywgaW4gaG9zdAo+
-ID4+Pj4gbWFjaGluZSdzIGNyYXNoIGR1bXAgYXMgVk1DUyBmb3JtYXQuIFRoZSBwcm9ibGVtIGlz
-IHRoYXQgVk1DUyBpbnRlcm5hbAo+ID4+Pj4gaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0cyBzcGVj
-aWZpY2F0aW9uLiBTbywgd2Ugc2xvdmUgdGhpcyBwcm9ibGVtCj4gPj4+PiBieSByZXZlcnNlIGVu
-Z2luZWVyaW5nIGltcGxlbWVudGVkIGluIHRoaXMgcGF0Y2ggc2V0LiBUaGUgVk1DU0lORk8KPiA+
-Pj4+IGlzIGV4cG9ydGVkIHZpYSBzeXNmcyB0byBrZXhlYy10b29scyBqdXN0IGxpa2UgVk1DT1JF
-SU5GTy4KPiA+Pj4+Cj4gPj4+PiBIZXJlIGFyZSB0d28gdXNlcmNhc2VzIGZvciB0d28gZmVhdHVy
-ZXMgdGhhdCB3ZSB3YW50Lgo+ID4+Pj4KPiA+Pj4+IDEpIENyZWF0ZSBndWVzdCBtYWNoaW5lJ3Mg
-Y3Jhc2ggZHVtcGZpbGUgZnJvbSBob3N0IG1hY2hpbmUncyBjcmFzaCBkdW1wZmlsZQo+ID4+Pj4K
-PiA+Pj4+IEluIGdlbmVyYWwsIHdlIHdhbnQgdG8gdXNlIHRoaXMgZmVhdHVyZSBvbiBmYWlsdXJl
-IGFuYWx5c2lzIGZvciB0aGUgc3lzdGVtCj4gPj4+PiB3aGVyZSB0aGUgcHJvY2Vzc2luZyBkZXBl
-bmRzIG9uIHRoZSBjb21tdW5pY2F0aW9uIGJldHdlZW4gaG9zdCBhbmQgZ3Vlc3QKPiA+Pj4+IG1h
-Y2hpbmVzIHRvIGxvb2sgaW50byB0aGUgc3lzdGVtIGZyb20gYm90aCBtYWNoaW5lcydzIHZpZXdw
-b2ludHMuCj4gPj4+Pgo+ID4+Pj4gQXMgYSBjb25jcmV0ZSBzaXR1YXRpb24sIGNvbnNpZGVyIHdo
-ZXJlIHRoZXJlJ3MgaGVhcnRiZWF0IG1vbml0b3JpbmcKPiA+Pj4+IGZlYXR1cmUgb24gdGhlIGd1
-ZXN0IG1hY2hpbmUncyBzaWRlLCB3aGVyZSB3ZSBuZWVkIHRvIGRldGVybWluZSBpbgo+ID4+Pj4g
-d2hpY2ggbWFjaGluZSBzaWRlIHRoZSBjYXVzZSBvZiBoZWFydGJlYXQgc3RvcCBsaWVzLiBJbiBv
-dXIgYWN0dWFsCj4gPj4+PiBleHBlcmltZW50cywgd2UgZW5jb3VudGVyZWQgc3VjaCBzaXR1YXRp
-b24gYW5kIHdlIGZvdW5kIHRoZSBjYXVzZSBvZgo+ID4+Pj4gdGhlIGJ1ZyB3YXMgaW4gaG9zdCdz
-IHByb2Nlc3Mgc2NoZWR1bGFyIHNvIGd1ZXN0IG1hY2hpbmUncyB2Y3B1IHN0b3BwZWQKPiA+Pj4+
-IGZvciBhIGxvbmcgdGltZSBhbmQgdGhlbiBsZWQgdG8gaGVhcnRiZWF0IHN0b3AuCj4gPj4+Pgo+
-ID4+Pj4gVGhlIG1vZHVsZSB0aGF0IGp1ZGdlcyBoZWFydGJlYXQgc3RvcCBpcyBvbiBndWVzdCBt
-YWNoaW5lLCBzbyB3ZSBuZWVkCj4gPj4+PiB0byBkZWJ1ZyBndWVzdCBtYWNoaW5lJ3MgZGF0YS4g
-QnV0IGlmIHRoZSBjYXVzZSBsaWVzIGluIGhvc3QgbWFjaGluZQo+ID4+Pj4gc2lkZSwgd2UgbmVl
-ZCB0byBsb29rIGludG8gaG9zdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcC4KPiA+Pj4KPiA+Pj4gRG8g
-eW91IG1lYW4sIHRoYXQgYSBoZWFydGJlYXQgZmFpbHVyZSBpbiB0aGUgZ3Vlc3QgbGVhZCB0byBo
-b3N0IHBhbmljPwo+ID4+Pgo+ID4+PiBNeSBleHBlY3RhdGlvbiBpcyB0aGF0IGEgcHJvYmxlbSBp
-biB0aGUgZ3Vlc3Qgd2lsbCBjYXVzZSB0aGUgZ3Vlc3QgdG8KPiA+Pj4gcGFuaWMgYW5kIHBlcmhh
-cHMgcHJvZHVjZSBhIGR1bXA7IHRoZSBob3N0IHdpbGwgcmVtYWluIHVwLgo+ID4+Pgo+ID4+Cj4g
-Pj4gVGhlIHBvaW50IGlzIHRoYXQgYmVmb3JlIG91ciBpbnZlc3RpZ2F0aW9uLCB3ZSBkaWRuJ3Qg
-a25vdyB3aGljaCBzaWRlIAo+ID4+IGxlYWRzIHRvIHRoaXMgYnVnZ3kgc2l0dWF0aW9uLiBNYXli
-ZSBhIGJ1ZyBpbiBob3N0IG1hY2hpbmUgb3IgdGhlIGd1ZXN0Cj4gPj4gbWFjaGluZSBpdHNlbGYg
-Y2F1c2VzIGEgaGVhcnRiZWF0IGZhaWx1cmUuCj4gPiAKPiA+IEhvdyBjYW4gYSBndWVzdCBidWcg
-Y2F1c2UgYSBob3N0IHBhbmljPwo+ID4gCj4gPj4gU28gd2Ugd2FudCB0byBnZXQgYm90aCBob3N0
-IG1hY2hpbmUncyBjcmFzaCBkdW1wIGFuZCBndWVzdCBtYWNoaW5lJ3MKPiA+PiBjcmFzaCBkdW1w
-ICphdCB0aGUgc2FtZSB0aW1lKi4gVGhlbiB3ZSBjb3VsZCB1c2UgdXNlcnNwYWNlIHRvb2xzIHRv
-Cj4gPj4gZ2V0IGd1ZXN0IG1hY2hpbmUgY3Jhc2ggZHVtcCBmcm9tIGhvc3QgbWFjaGluZSdzIGFu
-ZCBhbmFseXNlIHRoZW0KPiA+PiBzZXBhcmF0ZWx5IHRvIGZpbmQgd2hpY2ggc2lkZSBjYXVzZXMg
-dGhlIHByb2JsZW0uCj4gPj4KPiA+IAo+ID4gSWYgdGhlIGd1ZXN0IGNhdXNlZCB0aGUgcHJvYmxl
-bSwgdGhlcmUgd291bGQgYmUgbm8gcGFuaWM7IHRoZXJlZm9yZQo+ID4gdGhlcmUgd2FzIGEgaG9z
-dCBidWcuCj4gPiAKPgo+IFllcywgYSBndWVzdCBidWcgY2Fubm90IGNhdXNlIGEgaG9zdCBwYW5p
-Yy4gV2hlbiBoZWFydGJlYXQgc3RvcHMgaW4gZ3Vlc3QKPiBtYWNoaW5lLCB3ZSBjb3VsZCB0cmln
-Z2VyIHRoZSBob3N0IGR1bXAgbWVjaGFuaXNtIHRvIHdvcmsuIFRoaXMgaXMgYmVjYXVzZQo+IHdl
-IHdhbnQgdG8gZ2V0IHRoZSBzdGF0dXMgb2YgYm90aCBob3N0IGFuZCBndWVzdCBtYWNoaW5lIGF0
-IHRoZSBzYW1lIHRpbWUKPiB3aGVuIGhlYXJ0YmVhdCBzdG9wcyBpbiBndWVzdCBtYWNoaW5lLiBU
-aGVuIHdlIGNhbiBsb29rIGZvciBidWcgcmVhc29ucwo+IGZyb20gYm90aCBob3N0IG1hY2hpbmUn
-cyBhbmQgZ3Vlc3QgbWFjaGluZSdzIHZpZXdzLgoKVGhhdCBzb3VuZHMgbGlrZSBhIGJhZCBpZGVh
-LiBDYW4geW91IGV4cGxhaW4gaW4gd2hhdCBzaXR1YXRpb24gaXQgbWFrZXMKc2Vuc2UgZm9yIGEg
-Z3Vlc3QgdG8gc3RvcCB0aGUgaG9zdCAoYW5kIGFsbCBvdGhlciBndWVzdHMgcnVubmluZyBvbiBp
-dCkKcmF0aGVyIHRoYW4ganVzdCByZXN0YXJ0aW5nIHRoZSBmYWlsZWQgc2VydmljZXMgKG9uIHRo
-ZSBob3N0IG9yIG90aGVyCmd1ZXN0cyk/Cgo+ID4+Pj4gV2l0aG91dCB0aGlzIGZlYXR1cmUsIHdl
-IGZpcnN0IGNyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgZHVtcCBhbmQgdGhlbgo+ID4+Pj4gY3JlYXRl
-IGhvc3QgbWFoaW5lJ3MsIGJ1dCB0aGVyZSdzIG9ubHkgYSBzaG9ydCB0aW1lIGJldHdlZW4gdHdv
-Cj4gPj4+PiBwcm9jZXNzaW5ncywgZHVyaW5nIHdoaWNoIGl0J3MgdW5saWtlbHkgdGhhdCBidWdn
-eSBzaXR1YXRpb24gcmVtYWlucy4KPiA+Pj4+Cj4gPj4+PiBTbywgd2UgdGhpbmsgdGhlIGZlYXR1
-cmUgaXMgdXNlZnVsIHRvIGRlYnVnIGJvdGggZ3Vlc3QgbWFjaGluZSdzIGFuZAo+ID4+Pj4gaG9z
-dCBtYWNoaW5lJ3Mgc2lkZXMgYXQgdGhlIHNhbWUgdGltZSwgYW5kIGV4cGVjdCB3ZSBjYW4gbWFr
-ZSBmYWlsdXJlCj4gPj4+PiBhbmFseXNpcyBlZmZpY2llbnRseS4KPiA+Pj4+Cj4gPj4+PiBPZiBj
-b3Vyc2UsIHdlIGJlbGlldmUgdGhpcyBmZWF0dXJlIGlzIGNvbW1vbmx5IHVzZWZ1bCBvbiB0aGUg
-c2l0dWF0aW9uCj4gPj4+PiB3aGVyZSBndWVzdCBtYWNoaW5lIGRvZXNuJ3Qgd29yayB3ZWxsIGR1
-ZSB0byBzb21ldGhpbmcgb2YgaG9zdCBtYWNoaW5lJ3MuCj4gPj4+Pgo+ID4+Pj4gMikgR2V0IG9m
-ZnNldHMgb2YgVk1DUyBpbmZvcm1hdGlvbiBvbiB0aGUgQ1BVIHJ1bm5pbmcgb24gdGhlIGhvc3Qg
-bWFjaGluZQo+ID4+Pj4KPiA+Pj4+IElmIGtkdW1wIGRvZXNuJ3Qgd29yayB3ZWxsLCB0aGVuIGl0
-IG1lYW5zIHdlIGNhbm5vdCB1c2Uga3ZtIEFQSSB0byBnZXQKPiA+Pj4+IHJlZ2lzdGVyIHZhbHVl
-cyBvZiBndWVzdCBtYWNoaW5lIGFuZCB0aGV5IGFyZSBzdGlsbCBsZWZ0IG9uIGl0cyB2bWNzCj4g
-Pj4+PiByZWdpb24uIEluIHRoZSBjYXNlLCB3ZSB1c2UgY3Jhc2ggZHVtcCBtZWNoYW5pc20gcnVu
-bmluZyBvdXRzaWRlIG9mCj4gPj4+PiBsaW51eCBrZXJuZWwsIHN1Y2ggYXMgc2FkdW1wLCBhIGZp
-cm13YXJlLWJhc2VkIGNyYXNoIGR1bXAuIFRoZW4gVk1DUwo+ID4+Pj4gaW5mb3JtYXRpb24gaXMg
-dGhlbiBuZWNlc3NhcnkuCj4gPj4+Cj4gPj4+IFNob3VsZG4ndCBzYWR1bXAgdGhlbiBleHBvc2Ug
-dGhlIFZNQ1Mgb2Zmc2V0cz8gUGVyaGFwcyBidW5kbGluZyB0aGVtCj4gPj4+IGludG8gaXRzIGR1
-bXAgZmlsZT8KPiA+Pj4KPiA+Pgo+ID4+IEZpcm13YXJlLWJhc2VkIGNyYXNoIGR1bXAgZG9lc24n
-dCBjb25jZXJuIHRoZSBvcyBydW5uaW5nIG9uIHRoZSBtYWNoaW5lLgo+ID4+IFNvIGl0IHdpbGwg
-bm90IGRvIGFueSBvcyBoYW5kbGluZyB3aGVuIG1hY2hpbmUgY3Jhc2hlcy4KPiA+IAo+ID4gU2Vl
-bXMgdG8gbWUgdGhlIFZNQ1Mgb2Zmc2V0cyBhcmUgT1MgaW5kZXBlbmRlbnQuCj4gPiAKPiBIbW0s
-IHlvdSBtZWFuIHdlIGNvdWxkIGdldCBWTUNTIG9mZnNldHMgaW4gc2FkdW1wIGl0c2VsZj8KPiBC
-dXQgSSB0aGluayBpZiB3ZSBqdXN0IGV4cG9ydCBWTUNTIG9mZnNldHMgaW4ga2VybmVsLCB3ZSBj
-b3VsZCB1c2UgdGhlIGN1cnJlbnQKPiBleGlzdGluZyBkdW1wIHRvb2xzIHdpdGggbm8gb3IganVz
-dCB2ZXJ5IHRpbnkgY2hhbmdlLiBJIHRoaW5rIHRoaXMgY291bGQgYmUKPiBhIG1vcmUgZ2VuZXJh
-bCBtZWNoYW5pc20gdGhhbiBtYWtpbmcgY2hhbmdlcyBpbiBhbGwga2luZHMgb2YgZHVtcCB0b29s
-cy4KClRoZSBzYWR1bXAgdG9vbCBnZW5lcmF0ZXMgYSBjb3JlIGZpbGUgd2l0aCB0aGUgT1MgaW1h
-Z2UsIHJpZ2h0PyBDYW4gaXQKbm90IGF0dGFjaCB0aGUgb2Zmc2V0cyB0byBhIG5vdGUsIGp1c3Qg
-bGlrZSB5b3UgcHJvcG9zZSBmb3Iga2R1bXA/CgotLSAKZXJyb3IgY29tcGlsaW5nIGNvbW1pdHRl
-ZS5jOiB0b28gbWFueSBhcmd1bWVudHMgdG8gZnVuY3Rpb24KCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2tleGVjCg==
+On Wed, May 16, 2012 at 12:50 AM, zhangyanfei
+<zhangyanfei@cn.fujitsu.com> wrote:
+>
+> This patch set exports offsets of VMCS fields as note information for
+> kdump. We call it VMCSINFO. The purpose of VMCSINFO is to retrieve
+> runtime state of guest machine image, such as registers, in host
+> machine's crash dump as VMCS format. The problem is that VMCS internal
+> is hidden by Intel in its specification. So, we slove this problem
+> by reverse engineering implemented in this patch set. The VMCSINFO
+> is exported via sysfs to kexec-tools just like VMCOREINFO.
+
+Perhaps I'm wrong, but this solution seems much, much more dynamic
+than it needs to be.
+
+The VMCS offsets aren't going to change between different boots on the
+same CPU, unless perhaps the microcode has been updated.
+
+So you can have the VMCS offset dumping be a manually-loaded module.
+Build a database mapping from (CPUID, microcode revision) -> (VMCSINFO).
+There's no need for anything beyond the (CPUID, microcode revision) to
+be put in the kdump, since your offline processing of a kdump can then
+look up the rest.
+
+It means you don't have to interact with the vmx module at all, and
+no extra modules or code have to be loaded on the millions of Linux
+machines that won't need the functionality.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
