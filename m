@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-vb0-f49.google.com ([209.85.212.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SWXoj-0001yp-9l
- for kexec@lists.infradead.org; Mon, 21 May 2012 18:58:53 +0000
-Received: by vbbfo1 with SMTP id fo1so4698458vbb.36
- for <kexec@lists.infradead.org>; Mon, 21 May 2012 11:58:51 -0700 (PDT)
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SWgGf-0008S7-DJ
+ for kexec@lists.infradead.org; Tue, 22 May 2012 04:00:18 +0000
+Message-ID: <4FBB0DB7.3040909@cn.fujitsu.com>
+Date: Tue, 22 May 2012 11:53:27 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-In-Reply-To: <4FB35C48.30708@cn.fujitsu.com>
-References: <4FB35C48.30708@cn.fujitsu.com>
-Date: Mon, 21 May 2012 11:58:51 -0700
-Message-ID: <CAG7+5M2nc3qPAS-GvX=YoVKqwdwSGdesoBQ6nsksHp2LFfzYcQ@mail.gmail.com>
 Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
  for kdump
-From: Eric Northup <digitaleric@google.com>
+References: <4FB35C48.30708@cn.fujitsu.com>
+ <CAG7+5M2nc3qPAS-GvX=YoVKqwdwSGdesoBQ6nsksHp2LFfzYcQ@mail.gmail.com>
+In-Reply-To: <CAG7+5M2nc3qPAS-GvX=YoVKqwdwSGdesoBQ6nsksHp2LFfzYcQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,41 +20,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+To: Eric Northup <digitaleric@google.com>
 Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, ebiederm@xmission.com
 
-On Wed, May 16, 2012 at 12:50 AM, zhangyanfei
-<zhangyanfei@cn.fujitsu.com> wrote:
->
-> This patch set exports offsets of VMCS fields as note information for
-> kdump. We call it VMCSINFO. The purpose of VMCSINFO is to retrieve
-> runtime state of guest machine image, such as registers, in host
-> machine's crash dump as VMCS format. The problem is that VMCS internal
-> is hidden by Intel in its specification. So, we slove this problem
-> by reverse engineering implemented in this patch set. The VMCSINFO
-> is exported via sysfs to kexec-tools just like VMCOREINFO.
-
-Perhaps I'm wrong, but this solution seems much, much more dynamic
-than it needs to be.
-
-The VMCS offsets aren't going to change between different boots on the
-same CPU, unless perhaps the microcode has been updated.
-
-So you can have the VMCS offset dumping be a manually-loaded module.
-Build a database mapping from (CPUID, microcode revision) -> (VMCSINFO).
-There's no need for anything beyond the (CPUID, microcode revision) to
-be put in the kdump, since your offline processing of a kdump can then
-look up the rest.
-
-It means you don't have to interact with the vmx module at all, and
-no extra modules or code have to be loaded on the millions of Linux
-machines that won't need the functionality.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQwNeaciDIy5pelIDAyOjU4LCBFcmljIE5vcnRodXAg5YaZ6YGTOgo+IE9uIFdl
+ZCwgTWF5IDE2LCAyMDEyIGF0IDEyOjUwIEFNLCB6aGFuZ3lhbmZlaQo+IDx6aGFuZ3lhbmZlaUBj
+bi5mdWppdHN1LmNvbT4gd3JvdGU6Cj4+Cj4+IFRoaXMgcGF0Y2ggc2V0IGV4cG9ydHMgb2Zmc2V0
+cyBvZiBWTUNTIGZpZWxkcyBhcyBub3RlIGluZm9ybWF0aW9uIGZvcgo+PiBrZHVtcC4gV2UgY2Fs
+bCBpdCBWTUNTSU5GTy4gVGhlIHB1cnBvc2Ugb2YgVk1DU0lORk8gaXMgdG8gcmV0cmlldmUKPj4g
+cnVudGltZSBzdGF0ZSBvZiBndWVzdCBtYWNoaW5lIGltYWdlLCBzdWNoIGFzIHJlZ2lzdGVycywg
+aW4gaG9zdAo+PiBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCBhcyBWTUNTIGZvcm1hdC4gVGhlIHByb2Js
+ZW0gaXMgdGhhdCBWTUNTIGludGVybmFsCj4+IGlzIGhpZGRlbiBieSBJbnRlbCBpbiBpdHMgc3Bl
+Y2lmaWNhdGlvbi4gU28sIHdlIHNsb3ZlIHRoaXMgcHJvYmxlbQo+PiBieSByZXZlcnNlIGVuZ2lu
+ZWVyaW5nIGltcGxlbWVudGVkIGluIHRoaXMgcGF0Y2ggc2V0LiBUaGUgVk1DU0lORk8KPj4gaXMg
+ZXhwb3J0ZWQgdmlhIHN5c2ZzIHRvIGtleGVjLXRvb2xzIGp1c3QgbGlrZSBWTUNPUkVJTkZPLgo+
+IAo+IFBlcmhhcHMgSSdtIHdyb25nLCBidXQgdGhpcyBzb2x1dGlvbiBzZWVtcyBtdWNoLCBtdWNo
+IG1vcmUgZHluYW1pYwo+IHRoYW4gaXQgbmVlZHMgdG8gYmUuCj4gCj4gVGhlIFZNQ1Mgb2Zmc2V0
+cyBhcmVuJ3QgZ29pbmcgdG8gY2hhbmdlIGJldHdlZW4gZGlmZmVyZW50IGJvb3RzIG9uIHRoZQo+
+IHNhbWUgQ1BVLCB1bmxlc3MgcGVyaGFwcyB0aGUgbWljcm9jb2RlIGhhcyBiZWVuIHVwZGF0ZWQu
+Cj4gCj4gU28geW91IGNhbiBoYXZlIHRoZSBWTUNTIG9mZnNldCBkdW1waW5nIGJlIGEgbWFudWFs
+bHktbG9hZGVkIG1vZHVsZS4KPiBCdWlsZCBhIGRhdGFiYXNlIG1hcHBpbmcgZnJvbSAoQ1BVSUQs
+IG1pY3JvY29kZSByZXZpc2lvbikgLT4gKFZNQ1NJTkZPKS4KPiBUaGVyZSdzIG5vIG5lZWQgZm9y
+IGFueXRoaW5nIGJleW9uZCB0aGUgKENQVUlELCBtaWNyb2NvZGUgcmV2aXNpb24pIHRvCj4gYmUg
+cHV0IGluIHRoZSBrZHVtcCwgc2luY2UgeW91ciBvZmZsaW5lIHByb2Nlc3Npbmcgb2YgYSBrZHVt
+cCBjYW4gdGhlbgo+IGxvb2sgdXAgdGhlIHJlc3QuCj4gCj4gSXQgbWVhbnMgeW91IGRvbid0IGhh
+dmUgdG8gaW50ZXJhY3Qgd2l0aCB0aGUgdm14IG1vZHVsZSBhdCBhbGwsIGFuZAo+IG5vIGV4dHJh
+IG1vZHVsZXMgb3IgY29kZSBoYXZlIHRvIGJlIGxvYWRlZCBvbiB0aGUgbWlsbGlvbnMgb2YgTGlu
+dXgKPiBtYWNoaW5lcyB0aGF0IHdvbid0IG5lZWQgdGhlIGZ1bmN0aW9uYWxpdHkuCj4gCgpXZSBo
+YXZlIGNvbnNpZGVyZWQgdGhpcyB3YXksIGJ1dCB0aGVyZSBhcmUgdHdvIGlzc3VlczoKMSkgdm14
+IHJlc291cmNlIGlzIHVuaXF1ZSBmb3IgYSBzaW5nbGUgY3B1LCBhbmQgaXQncyByaXNreSB0byBn
+cmFiIGl0IGZvcmNpYmx5Cm9uIHRoZSBlbnZpcm9ubWVudCB3aGVyZSBrdm0gbW9kdWxlIGlzIHVz
+ZWQsIGluIHBhcnRpY3VsYXIgb24gY3VzdG9tZXIncyBlbnZpcm9ubWVudC4KVG8gZG8gdGhpcyBz
+YWZlbHksIGt2bSBzdXBwb3J0IGlzIG5lZWRlZC4KCjIpIEl0IGhpZ2hseSBjb3N0cyB0byBwcmVw
+YXJlIGVhY2ggY3B1IHRvIGVhY2ggY3VzdG9tZXIgZW52aXJvbm1lbnQgdG8gY29sbGVjdAp2bWNz
+aW5mby4gQWZ0ZXIgYWxsLCB0aGVyZSBhcmUgdmFyaW91cyBlbnZpcm9ubWVudHMgb24gb3VyIGN1
+c3RvbWVyJ3MuCgpPdXIgcGF0Y2ggcHJvdmlkZXMgYSBtb2R1bGUsIHNvIHRob3NlIHdobyBkb2Vz
+bid0IHdhbnQgdGhpcyBmZWF0dXJlIGNhbiBqdXN0CnN0b3AgaXQgYmVpbmcgYXV0by1sb2FkZWQg
+d2hlbiBzeXN0ZW0gc3RhcnRzIHVwLgoKVGhhbmtzClpoYW5nIFlhbmZlaQoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
