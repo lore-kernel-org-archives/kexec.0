@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ch1ehsobe002.messaging.microsoft.com ([216.32.181.182]
- helo=ch1outboundpool.messaging.microsoft.com)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SWr6h-00027E-9X
- for kexec@lists.infradead.org; Tue, 22 May 2012 15:34:43 +0000
-From: McClintock Matthew-B29882 <B29882@freescale.com>
-Subject: Re: Handling spin table in kdump
-Date: Tue, 22 May 2012 15:34:35 +0000
-Message-ID: <CAEsOVNeg2aogCwCy-v3ez4cC4VPF79A4PWRaO2ohDj_ypqCWmg@mail.gmail.com>
-References: <4FBB89A2.90709@in.ibm.com>
-In-Reply-To: <4FBB89A2.90709@in.ibm.com>
-Content-Language: en-US
-Content-ID: <86E0ECB9D5F97B45B501809978949237@mgd.freescale.com>
-MIME-Version: 1.0
-Reply-To: McClintock Matthew-B29882 <B29882@freescale.com>
+Received: from vostochny.stro.at ([78.47.22.85])
+ by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SWrnI-0001Qz-G7
+ for kexec@lists.infradead.org; Tue, 22 May 2012 16:18:46 +0000
+From: maximilian attems <max@stro.at>
+Subject: [PATCH] kexec: simply pass LINUX_REBOOT_CMD_KEXEC to reboot
+Date: Tue, 22 May 2012 18:09:58 +0200
+Message-Id: <1337702998-15080-1-git-send-email-max@stro.at>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,97 +15,90 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: maximilian attems <max@stro.at>, klibc@zytor.com, kexec@lists.infradead.org
 
-On Tue, May 22, 2012 at 7:42 AM, Suzuki K. Poulose <suzuki@in.ibm.com> wrot=
-e:
-> Hi
->
-> I came across the following issue while testing Kdump on an SMP
-> board(Currituck) running a non-SMP kernel. Even though the kernel is UP,
-> the device-tree has the nodes for second CPU and the related details.
->
->
-> The kexec tool adds the spin table area as a reserved section in the devi=
-ce
-> tree for the dump capture kernel. This value is read from the
-> 'cpu-release-addr'.
->
-> But now, if the spin table is not located within the 'Reserved region' for
-> the crash kernel, the dump capture kernel would fail to boot, hitting a B=
-UG
-> in mm/bootmem.c as in [1].
->
-> This is because we try to reserve a region which is not available to the
-> kernel.
->
-> So I am wondering how is this handled really on an SMP board (Fsl_bookE).
->
-> There are two possible solutions :
-> 1) Do not reserve the regions for the spin-table, as we will use
-> only the crashing CPU in the second kernel(maxcpus=3D1).
->
->
-> 2) Add the spin-table region to the available memory regions passed
-> to the kernel by kexec-tools.
->
-> I have tested (1) and it works fine for me. Yet to test (2).
->
->
-> Thoughts ?
+While trying to port kexec cleanly to klibc,
+came across this syscall usage for reboot(2).
+Calling reboot directly simplifies the code.
 
-I would think option 1 is acceptable. The crash kernel will never
-attempt to use the memory outside of the crash kernel region therefore
-it does not need to be reserved.
+Signed-off-by: maximilian attems <max@stro.at>
+---
+ kexec/kexec-syscall.h |   20 --------------------
+ kexec/kexec.c         |    4 +++-
+ 2 files changed, 3 insertions(+), 21 deletions(-)
 
-However, I thought we were able to boot SMP into the crash kernel on
-our parts... not sure how that effects things (although the maxcpus=3D1
-here is a perfectly acceptable and safer thing to do anyways)
+The next TODO item is to add proper syscall kexec_load() to glibc.
+Funnily here klibc has an head start! -maks
 
--M
+diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
+index f4df45c..415fbd7 100644
+--- a/kexec/kexec-syscall.h
++++ b/kexec/kexec-syscall.h
+@@ -5,22 +5,6 @@
+ #include <sys/syscall.h>
+ #include <unistd.h>
+ 
+-#define	LINUX_REBOOT_MAGIC1	0xfee1dead
+-#define	LINUX_REBOOT_MAGIC2	672274793
+-#define	LINUX_REBOOT_MAGIC2A	85072278
+-#define	LINUX_REBOOT_MAGIC2B	369367448
+-
+-#define	LINUX_REBOOT_CMD_RESTART	0x01234567
+-#define	LINUX_REBOOT_CMD_HALT		0xCDEF0123
+-#define	LINUX_REBOOT_CMD_CAD_ON		0x89ABCDEF
+-#define	LINUX_REBOOT_CMD_CAD_OFF	0x00000000
+-#define	LINUX_REBOOT_CMD_POWER_OFF	0x4321FEDC
+-#define	LINUX_REBOOT_CMD_RESTART2	0xA1B2C3D4
+-#define LINUX_REBOOT_CMD_EXEC_KERNEL    0x18273645
+-#define LINUX_REBOOT_CMD_KEXEC_OLD	0x81726354
+-#define LINUX_REBOOT_CMD_KEXEC_OLD2	0x18263645
+-#define LINUX_REBOOT_CMD_KEXEC		0x45584543
+-
+ #ifndef __NR_kexec_load
+ #ifdef __i386__
+ #define __NR_kexec_load		283
+@@ -70,10 +54,6 @@ static inline long kexec_load(void *entry, unsigned long nr_segments,
+ 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
+ }
+ 
+-static inline long kexec_reboot(void)
+-{
+-	return (long) syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC, 0);
+-}
+ 
+ 
+ #define KEXEC_ON_CRASH		0x00000001
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index d2d05a8..ee23b5e 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -28,6 +28,8 @@
+ #include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
++#include <sys/reboot.h>
++#include <linux/reboot.h>
+ #include <unistd.h>
+ #include <fcntl.h>
+ #ifndef _O_BINARY
+@@ -822,7 +824,7 @@ static int my_shutdown(void)
+  */
+ static int my_exec(void)
+ {
+-	kexec_reboot();
++	reboot(LINUX_REBOOT_CMD_KEXEC);
+ 	/* I have failed if I make it here */
+ 	fprintf(stderr, "kexec failed: %s\n", 
+ 		strerror(errno));
+-- 
+1.7.10
 
-
->
->
-> Thanks
-> Suzuki
->
->
->
-> [1] Kernel Bug
-> ----------------
->
->
-> Linux version 3.3.0-rc5 (root@suzukikp.in.ibm.com) (gcc version 4.3.4
-> [gcc-4_3-branch revision 152973] (GCC) ) #12 Tue May 22 18:03:01 IST2
-> Found legacy serial port 0 for /plb/opb/serial@10000000
-> =A0mem=3D20010000000, taddr=3D20010000000, irq=3D0, clk=3D1851851, speed=
-=3D115200
-> ------------[ cut here ]------------
-> kernel BUG at mm/bootmem.c:351!
-> Vector: 700 (Program Check) at [c8a61e90]
-> =A0 =A0pc: c847f91c: mark_bootmem+0xa0/0x14c
-> =A0 =A0lr: c8472670: do_init_bootmem+0x1ac/0x218
-> =A0 =A0sp: c8a61f40
-> =A0 msr: 21000
-> =A0current =3D 0xc8a4a500
-> =A0 =A0pid =A0 =3D 0, comm =3D swapper
-> kernel BUG at mm/bootmem.c:351!
-> enter ? for help
-> [c8a61f70] c8472670 do_init_bootmem+0x1ac/0x218
-> [c8a61f90] c847025c setup_arch+0x1bc/0x234
-> [c8a61fb0] c846b62c start_kernel+0x98/0x358
-> [c8a61ff0] c80000b4 _start+0xb4/0xf8
->
-> _______________________________________________
-> Linuxppc-dev mailing list
-> Linuxppc-dev@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/linuxppc-dev
 
 _______________________________________________
 kexec mailing list
