@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SWgGh-0008S7-Ju
- for kexec@lists.infradead.org; Tue, 22 May 2012 04:00:20 +0000
-Message-ID: <4FBB0ACA.2040907@cn.fujitsu.com>
-Date: Tue, 22 May 2012 11:40:58 +0800
-From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Received: from e23smtp05.au.ibm.com ([202.81.31.147])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SWpH5-0005UA-Tz
+ for kexec@lists.infradead.org; Tue, 22 May 2012 13:37:21 +0000
+Received: from /spool/local
+ by e23smtp05.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Tue, 22 May 2012 12:37:19 +1000
+Received: from d23av01.au.ibm.com (d23av01.au.ibm.com [9.190.234.96])
+ by d23relay05.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q4MCZNAE9109544
+ for <kexec@lists.infradead.org>; Tue, 22 May 2012 22:35:23 +1000
+Received: from d23av01.au.ibm.com (loopback [127.0.0.1])
+ by d23av01.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q4MCgOND003976
+ for <kexec@lists.infradead.org>; Tue, 22 May 2012 22:42:25 +1000
+Message-ID: <4FBB89A2.90709@in.ibm.com>
+Date: Tue, 22 May 2012 18:12:10 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
- for kdump
-References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
- <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
- <4FBA05F6.8070804@cn.fujitsu.com> <4FBA0C8A.2050003@redhat.com>
-In-Reply-To: <4FBA0C8A.2050003@redhat.com>
+Subject: Handling spin table in kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,108 +29,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: Matthew McClintock <msm@freescale.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-09ogMjAxMsTqMDXUwjIxyNUgMTc6MzYsIEF2aSBLaXZpdHkg0LS1wDoKPiBPbiAwNS8yMS8yMDEy
-IDEyOjA4IFBNLCBZYW5mZWkgWmhhbmcgd3JvdGU6Cj4+INPaIDIwMTLE6jA11MIyMcjVIDE2OjM0
-LCBBdmkgS2l2aXR5INC0tcA6Cj4+PiBPbiAwNS8yMS8yMDEyIDA1OjMyIEFNLCBZYW5mZWkgWmhh
-bmcgd3JvdGU6Cj4+Pj4g09ogMjAxMsTqMDXUwjIxyNUgMDE6NDMsIEF2aSBLaXZpdHkg0LS1wDoK
-Pj4+Pj4gT24gMDUvMTYvMjAxMiAxMDo1MCBBTSwgemhhbmd5YW5mZWkgd3JvdGU6Cj4+Pj4+PiBU
-aGlzIHBhdGNoIHNldCBleHBvcnRzIG9mZnNldHMgb2YgVk1DUyBmaWVsZHMgYXMgbm90ZSBpbmZv
-cm1hdGlvbiBmb3IKPj4+Pj4+IGtkdW1wLiBXZSBjYWxsIGl0IFZNQ1NJTkZPLiBUaGUgcHVycG9z
-ZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+Pj4+Pj4gcnVudGltZSBzdGF0ZSBvZiBndWVz
-dCBtYWNoaW5lIGltYWdlLCBzdWNoIGFzIHJlZ2lzdGVycywgaW4gaG9zdAo+Pj4+Pj4gbWFjaGlu
-ZSdzIGNyYXNoIGR1bXAgYXMgVk1DUyBmb3JtYXQuIFRoZSBwcm9ibGVtIGlzIHRoYXQgVk1DUyBp
-bnRlcm5hbAo+Pj4+Pj4gaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0cyBzcGVjaWZpY2F0aW9uLiBT
-bywgd2Ugc2xvdmUgdGhpcyBwcm9ibGVtCj4+Pj4+PiBieSByZXZlcnNlIGVuZ2luZWVyaW5nIGlt
-cGxlbWVudGVkIGluIHRoaXMgcGF0Y2ggc2V0LiBUaGUgVk1DU0lORk8KPj4+Pj4+IGlzIGV4cG9y
-dGVkIHZpYSBzeXNmcyB0byBrZXhlYy10b29scyBqdXN0IGxpa2UgVk1DT1JFSU5GTy4KPj4+Pj4+
-Cj4+Pj4+PiBIZXJlIGFyZSB0d28gdXNlcmNhc2VzIGZvciB0d28gZmVhdHVyZXMgdGhhdCB3ZSB3
-YW50Lgo+Pj4+Pj4KPj4+Pj4+IDEpIENyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcGZp
-bGUgZnJvbSBob3N0IG1hY2hpbmUncyBjcmFzaCBkdW1wZmlsZQo+Pj4+Pj4KPj4+Pj4+IEluIGdl
-bmVyYWwsIHdlIHdhbnQgdG8gdXNlIHRoaXMgZmVhdHVyZSBvbiBmYWlsdXJlIGFuYWx5c2lzIGZv
-ciB0aGUgc3lzdGVtCj4+Pj4+PiB3aGVyZSB0aGUgcHJvY2Vzc2luZyBkZXBlbmRzIG9uIHRoZSBj
-b21tdW5pY2F0aW9uIGJldHdlZW4gaG9zdCBhbmQgZ3Vlc3QKPj4+Pj4+IG1hY2hpbmVzIHRvIGxv
-b2sgaW50byB0aGUgc3lzdGVtIGZyb20gYm90aCBtYWNoaW5lcydzIHZpZXdwb2ludHMuCj4+Pj4+
-Pgo+Pj4+Pj4gQXMgYSBjb25jcmV0ZSBzaXR1YXRpb24sIGNvbnNpZGVyIHdoZXJlIHRoZXJlJ3Mg
-aGVhcnRiZWF0IG1vbml0b3JpbmcKPj4+Pj4+IGZlYXR1cmUgb24gdGhlIGd1ZXN0IG1hY2hpbmUn
-cyBzaWRlLCB3aGVyZSB3ZSBuZWVkIHRvIGRldGVybWluZSBpbgo+Pj4+Pj4gd2hpY2ggbWFjaGlu
-ZSBzaWRlIHRoZSBjYXVzZSBvZiBoZWFydGJlYXQgc3RvcCBsaWVzLiBJbiBvdXIgYWN0dWFsCj4+
-Pj4+PiBleHBlcmltZW50cywgd2UgZW5jb3VudGVyZWQgc3VjaCBzaXR1YXRpb24gYW5kIHdlIGZv
-dW5kIHRoZSBjYXVzZSBvZgo+Pj4+Pj4gdGhlIGJ1ZyB3YXMgaW4gaG9zdCdzIHByb2Nlc3Mgc2No
-ZWR1bGFyIHNvIGd1ZXN0IG1hY2hpbmUncyB2Y3B1IHN0b3BwZWQKPj4+Pj4+IGZvciBhIGxvbmcg
-dGltZSBhbmQgdGhlbiBsZWQgdG8gaGVhcnRiZWF0IHN0b3AuCj4+Pj4+Pgo+Pj4+Pj4gVGhlIG1v
-ZHVsZSB0aGF0IGp1ZGdlcyBoZWFydGJlYXQgc3RvcCBpcyBvbiBndWVzdCBtYWNoaW5lLCBzbyB3
-ZSBuZWVkCj4+Pj4+PiB0byBkZWJ1ZyBndWVzdCBtYWNoaW5lJ3MgZGF0YS4gQnV0IGlmIHRoZSBj
-YXVzZSBsaWVzIGluIGhvc3QgbWFjaGluZQo+Pj4+Pj4gc2lkZSwgd2UgbmVlZCB0byBsb29rIGlu
-dG8gaG9zdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcC4KPj4+Pj4KPj4+Pj4gRG8geW91IG1lYW4sIHRo
-YXQgYSBoZWFydGJlYXQgZmFpbHVyZSBpbiB0aGUgZ3Vlc3QgbGVhZCB0byBob3N0IHBhbmljPwo+
-Pj4+Pgo+Pj4+PiBNeSBleHBlY3RhdGlvbiBpcyB0aGF0IGEgcHJvYmxlbSBpbiB0aGUgZ3Vlc3Qg
-d2lsbCBjYXVzZSB0aGUgZ3Vlc3QgdG8KPj4+Pj4gcGFuaWMgYW5kIHBlcmhhcHMgcHJvZHVjZSBh
-IGR1bXA7IHRoZSBob3N0IHdpbGwgcmVtYWluIHVwLgo+Pj4+Pgo+Pj4+Cj4+Pj4gVGhlIHBvaW50
-IGlzIHRoYXQgYmVmb3JlIG91ciBpbnZlc3RpZ2F0aW9uLCB3ZSBkaWRuJ3Qga25vdyB3aGljaCBz
-aWRlIAo+Pj4+IGxlYWRzIHRvIHRoaXMgYnVnZ3kgc2l0dWF0aW9uLiBNYXliZSBhIGJ1ZyBpbiBo
-b3N0IG1hY2hpbmUgb3IgdGhlIGd1ZXN0Cj4+Pj4gbWFjaGluZSBpdHNlbGYgY2F1c2VzIGEgaGVh
-cnRiZWF0IGZhaWx1cmUuCj4+Pgo+Pj4gSG93IGNhbiBhIGd1ZXN0IGJ1ZyBjYXVzZSBhIGhvc3Qg
-cGFuaWM/Cj4+Pgo+Pj4+IFNvIHdlIHdhbnQgdG8gZ2V0IGJvdGggaG9zdCBtYWNoaW5lJ3MgY3Jh
-c2ggZHVtcCBhbmQgZ3Vlc3QgbWFjaGluZSdzCj4+Pj4gY3Jhc2ggZHVtcCAqYXQgdGhlIHNhbWUg
-dGltZSouIFRoZW4gd2UgY291bGQgdXNlIHVzZXJzcGFjZSB0b29scyB0bwo+Pj4+IGdldCBndWVz
-dCBtYWNoaW5lIGNyYXNoIGR1bXAgZnJvbSBob3N0IG1hY2hpbmUncyBhbmQgYW5hbHlzZSB0aGVt
-Cj4+Pj4gc2VwYXJhdGVseSB0byBmaW5kIHdoaWNoIHNpZGUgY2F1c2VzIHRoZSBwcm9ibGVtLgo+
-Pj4+Cj4+Pgo+Pj4gSWYgdGhlIGd1ZXN0IGNhdXNlZCB0aGUgcHJvYmxlbSwgdGhlcmUgd291bGQg
-YmUgbm8gcGFuaWM7IHRoZXJlZm9yZQo+Pj4gdGhlcmUgd2FzIGEgaG9zdCBidWcuCj4+Pgo+Pgo+
-PiBZZXMsIGEgZ3Vlc3QgYnVnIGNhbm5vdCBjYXVzZSBhIGhvc3QgcGFuaWMuIFdoZW4gaGVhcnRi
-ZWF0IHN0b3BzIGluIGd1ZXN0Cj4+IG1hY2hpbmUsIHdlIGNvdWxkIHRyaWdnZXIgdGhlIGhvc3Qg
-ZHVtcCBtZWNoYW5pc20gdG8gd29yay4gVGhpcyBpcyBiZWNhdXNlCj4+IHdlIHdhbnQgdG8gZ2V0
-IHRoZSBzdGF0dXMgb2YgYm90aCBob3N0IGFuZCBndWVzdCBtYWNoaW5lIGF0IHRoZSBzYW1lIHRp
-bWUKPj4gd2hlbiBoZWFydGJlYXQgc3RvcHMgaW4gZ3Vlc3QgbWFjaGluZS4gVGhlbiB3ZSBjYW4g
-bG9vayBmb3IgYnVnIHJlYXNvbnMKPj4gZnJvbSBib3RoIGhvc3QgbWFjaGluZSdzIGFuZCBndWVz
-dCBtYWNoaW5lJ3Mgdmlld3MuCj4gCj4gVGhhdCBzb3VuZHMgbGlrZSBhIGJhZCBpZGVhLiBDYW4g
-eW91IGV4cGxhaW4gaW4gd2hhdCBzaXR1YXRpb24gaXQgbWFrZXMKPiBzZW5zZSBmb3IgYSBndWVz
-dCB0byBzdG9wIHRoZSBob3N0IChhbmQgYWxsIG90aGVyIGd1ZXN0cyBydW5uaW5nIG9uIGl0KQo+
-IHJhdGhlciB0aGFuIGp1c3QgcmVzdGFydGluZyB0aGUgZmFpbGVkIHNlcnZpY2VzIChvbiB0aGUg
-aG9zdCBvciBvdGhlcgo+IGd1ZXN0cyk/Cj4gCgpXZSBuZXZlciBkbyB0aGlzIG9uIGN1c3RvbWVy
-J3MgZW52aXJvbm1lbnQgd2hpY2ggbWF5YmUgYSBob3N0IHdpdGggbWFueSBndWVzdHMKcnVubmlu
-ZyBvbiBpdC4gV2UgZG8gdGhpcyBvbiBhbm90aGVyIGVudmlyb25tZW50IHRvIHJlcHJvZHVjZSB0
-aGUgYnVnZ3kKc2l0dWF0aW9uOyBvciB3ZSBkbyB0aGlzIGluIHRlc3RpbmcgcGhhc2Ugb24gZGV2
-ZWxvcG1lbnQgZW52aXJvbm1lbnQgdG93YXJkcwpwcm9kdWN0aW9uIG9uZSBvbiB0aGUgY3VzdG9t
-ZXIncyBzaXRlLgoKPj4+Pj4+IFdpdGhvdXQgdGhpcyBmZWF0dXJlLCB3ZSBmaXJzdCBjcmVhdGUg
-Z3Vlc3QgbWFjaGluZSdzIGR1bXAgYW5kIHRoZW4KPj4+Pj4+IGNyZWF0ZSBob3N0IG1haGluZSdz
-LCBidXQgdGhlcmUncyBvbmx5IGEgc2hvcnQgdGltZSBiZXR3ZWVuIHR3bwo+Pj4+Pj4gcHJvY2Vz
-c2luZ3MsIGR1cmluZyB3aGljaCBpdCdzIHVubGlrZWx5IHRoYXQgYnVnZ3kgc2l0dWF0aW9uIHJl
-bWFpbnMuCj4+Pj4+Pgo+Pj4+Pj4gU28sIHdlIHRoaW5rIHRoZSBmZWF0dXJlIGlzIHVzZWZ1bCB0
-byBkZWJ1ZyBib3RoIGd1ZXN0IG1hY2hpbmUncyBhbmQKPj4+Pj4+IGhvc3QgbWFjaGluZSdzIHNp
-ZGVzIGF0IHRoZSBzYW1lIHRpbWUsIGFuZCBleHBlY3Qgd2UgY2FuIG1ha2UgZmFpbHVyZQo+Pj4+
-Pj4gYW5hbHlzaXMgZWZmaWNpZW50bHkuCj4+Pj4+Pgo+Pj4+Pj4gT2YgY291cnNlLCB3ZSBiZWxp
-ZXZlIHRoaXMgZmVhdHVyZSBpcyBjb21tb25seSB1c2VmdWwgb24gdGhlIHNpdHVhdGlvbgo+Pj4+
-Pj4gd2hlcmUgZ3Vlc3QgbWFjaGluZSBkb2Vzbid0IHdvcmsgd2VsbCBkdWUgdG8gc29tZXRoaW5n
-IG9mIGhvc3QgbWFjaGluZSdzLgo+Pj4+Pj4KPj4+Pj4+IDIpIEdldCBvZmZzZXRzIG9mIFZNQ1Mg
-aW5mb3JtYXRpb24gb24gdGhlIENQVSBydW5uaW5nIG9uIHRoZSBob3N0IG1hY2hpbmUKPj4+Pj4+
-Cj4+Pj4+PiBJZiBrZHVtcCBkb2Vzbid0IHdvcmsgd2VsbCwgdGhlbiBpdCBtZWFucyB3ZSBjYW5u
-b3QgdXNlIGt2bSBBUEkgdG8gZ2V0Cj4+Pj4+PiByZWdpc3RlciB2YWx1ZXMgb2YgZ3Vlc3QgbWFj
-aGluZSBhbmQgdGhleSBhcmUgc3RpbGwgbGVmdCBvbiBpdHMgdm1jcwo+Pj4+Pj4gcmVnaW9uLiBJ
-biB0aGUgY2FzZSwgd2UgdXNlIGNyYXNoIGR1bXAgbWVjaGFuaXNtIHJ1bm5pbmcgb3V0c2lkZSBv
-Zgo+Pj4+Pj4gbGludXgga2VybmVsLCBzdWNoIGFzIHNhZHVtcCwgYSBmaXJtd2FyZS1iYXNlZCBj
-cmFzaCBkdW1wLiBUaGVuIFZNQ1MKPj4+Pj4+IGluZm9ybWF0aW9uIGlzIHRoZW4gbmVjZXNzYXJ5
-Lgo+Pj4+Pgo+Pj4+PiBTaG91bGRuJ3Qgc2FkdW1wIHRoZW4gZXhwb3NlIHRoZSBWTUNTIG9mZnNl
-dHM/IFBlcmhhcHMgYnVuZGxpbmcgdGhlbQo+Pj4+PiBpbnRvIGl0cyBkdW1wIGZpbGU/Cj4+Pj4+
-Cj4+Pj4KPj4+PiBGaXJtd2FyZS1iYXNlZCBjcmFzaCBkdW1wIGRvZXNuJ3QgY29uY2VybiB0aGUg
-b3MgcnVubmluZyBvbiB0aGUgbWFjaGluZS4KPj4+PiBTbyBpdCB3aWxsIG5vdCBkbyBhbnkgb3Mg
-aGFuZGxpbmcgd2hlbiBtYWNoaW5lIGNyYXNoZXMuCj4+Pgo+Pj4gU2VlbXMgdG8gbWUgdGhlIFZN
-Q1Mgb2Zmc2V0cyBhcmUgT1MgaW5kZXBlbmRlbnQuCj4+Pgo+PiBIbW0sIHlvdSBtZWFuIHdlIGNv
-dWxkIGdldCBWTUNTIG9mZnNldHMgaW4gc2FkdW1wIGl0c2VsZj8KPj4gQnV0IEkgdGhpbmsgaWYg
-d2UganVzdCBleHBvcnQgVk1DUyBvZmZzZXRzIGluIGtlcm5lbCwgd2UgY291bGQgdXNlIHRoZSBj
-dXJyZW50Cj4+IGV4aXN0aW5nIGR1bXAgdG9vbHMgd2l0aCBubyBvciBqdXN0IHZlcnkgdGlueSBj
-aGFuZ2UuIEkgdGhpbmsgdGhpcyBjb3VsZCBiZQo+PiBhIG1vcmUgZ2VuZXJhbCBtZWNoYW5pc20g
-dGhhbiBtYWtpbmcgY2hhbmdlcyBpbiBhbGwga2luZHMgb2YgZHVtcCB0b29scy4KPiAKPiBUaGUg
-c2FkdW1wIHRvb2wgZ2VuZXJhdGVzIGEgY29yZSBmaWxlIHdpdGggdGhlIE9TIGltYWdlLCByaWdo
-dD8gQ2FuIGl0Cj4gbm90IGF0dGFjaCB0aGUgb2Zmc2V0cyB0byBhIG5vdGUsIGp1c3QgbGlrZSB5
-b3UgcHJvcG9zZSBmb3Iga2R1bXA/Cj4gCgpCb3RoIGFyZSByaWdodC4KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+Hi
+
+I came across the following issue while testing Kdump on an SMP 
+board(Currituck) running a non-SMP kernel. Even though the kernel is UP,
+the device-tree has the nodes for second CPU and the related details.
+
+
+The kexec tool adds the spin table area as a reserved section in the 
+device tree for the dump capture kernel. This value is read from the 
+'cpu-release-addr'.
+
+But now, if the spin table is not located within the 'Reserved region' 
+for the crash kernel, the dump capture kernel would fail to boot, 
+hitting a BUG in mm/bootmem.c as in [1].
+
+This is because we try to reserve a region which is not available to the 
+kernel.
+
+So I am wondering how is this handled really on an SMP board (Fsl_bookE).
+
+There are two possible solutions :
+1) Do not reserve the regions for the spin-table, as we will use
+only the crashing CPU in the second kernel(maxcpus=1).
+
+
+2) Add the spin-table region to the available memory regions passed
+to the kernel by kexec-tools.
+
+I have tested (1) and it works fine for me. Yet to test (2).
+
+
+Thoughts ?
+
+
+Thanks
+Suzuki
+
+
+
+[1] Kernel Bug
+----------------
+
+
+Linux version 3.3.0-rc5 (root@suzukikp.in.ibm.com) (gcc version 4.3.4 
+[gcc-4_3-branch revision 152973] (GCC) ) #12 Tue May 22 18:03:01 IST2
+Found legacy serial port 0 for /plb/opb/serial@10000000
+   mem=20010000000, taddr=20010000000, irq=0, clk=1851851, speed=115200
+------------[ cut here ]------------
+kernel BUG at mm/bootmem.c:351!
+Vector: 700 (Program Check) at [c8a61e90]
+     pc: c847f91c: mark_bootmem+0xa0/0x14c
+     lr: c8472670: do_init_bootmem+0x1ac/0x218
+     sp: c8a61f40
+    msr: 21000
+   current = 0xc8a4a500
+     pid   = 0, comm = swapper
+kernel BUG at mm/bootmem.c:351!
+enter ? for help
+[c8a61f70] c8472670 do_init_bootmem+0x1ac/0x218
+[c8a61f90] c847025c setup_arch+0x1bc/0x234
+[c8a61fb0] c846b62c start_kernel+0x98/0x358
+[c8a61ff0] c80000b4 _start+0xb4/0xf8
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
