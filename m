@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from vostochny.stro.at ([78.47.22.85])
  by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SWrnI-0001Qz-G7
- for kexec@lists.infradead.org; Tue, 22 May 2012 16:18:46 +0000
+ id 1SWsRn-0002HT-Kj
+ for kexec@lists.infradead.org; Tue, 22 May 2012 17:00:37 +0000
 From: maximilian attems <max@stro.at>
-Subject: [PATCH] kexec: simply pass LINUX_REBOOT_CMD_KEXEC to reboot
-Date: Tue, 22 May 2012 18:09:58 +0200
-Message-Id: <1337702998-15080-1-git-send-email-max@stro.at>
+Subject: [PATCH v2] kexec: simply pass LINUX_REBOOT_CMD_KEXEC to reboot
+Date: Tue, 22 May 2012 18:59:47 +0200
+Message-Id: <1337705987-16541-1-git-send-email-max@stro.at>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,18 +29,21 @@ Calling reboot directly simplifies the code.
 
 Signed-off-by: maximilian attems <max@stro.at>
 ---
- kexec/kexec-syscall.h |   20 --------------------
- kexec/kexec.c         |    4 +++-
- 2 files changed, 3 insertions(+), 21 deletions(-)
+ kexec/kexec-syscall.h |   18 ------------------
+ kexec/kexec.c         |    3 ++-
+ 2 files changed, 2 insertions(+), 19 deletions(-)
+
+v2: keep LINUX_REBOOT_CMD_KEXEC defines, thus no need of <linux/reboot.h>.
+    (The packagers don't like linux header deps..)
 
 The next TODO item is to add proper syscall kexec_load() to glibc.
 Funnily here klibc has an head start! -maks
 
 diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index f4df45c..415fbd7 100644
+index f4df45c..b56cb00 100644
 --- a/kexec/kexec-syscall.h
 +++ b/kexec/kexec-syscall.h
-@@ -5,22 +5,6 @@
+@@ -5,18 +5,6 @@
  #include <sys/syscall.h>
  #include <unistd.h>
  
@@ -56,14 +59,10 @@ index f4df45c..415fbd7 100644
 -#define	LINUX_REBOOT_CMD_POWER_OFF	0x4321FEDC
 -#define	LINUX_REBOOT_CMD_RESTART2	0xA1B2C3D4
 -#define LINUX_REBOOT_CMD_EXEC_KERNEL    0x18273645
--#define LINUX_REBOOT_CMD_KEXEC_OLD	0x81726354
--#define LINUX_REBOOT_CMD_KEXEC_OLD2	0x18263645
--#define LINUX_REBOOT_CMD_KEXEC		0x45584543
--
- #ifndef __NR_kexec_load
- #ifdef __i386__
- #define __NR_kexec_load		283
-@@ -70,10 +54,6 @@ static inline long kexec_load(void *entry, unsigned long nr_segments,
+ #define LINUX_REBOOT_CMD_KEXEC_OLD	0x81726354
+ #define LINUX_REBOOT_CMD_KEXEC_OLD2	0x18263645
+ #define LINUX_REBOOT_CMD_KEXEC		0x45584543
+@@ -70,12 +58,6 @@ static inline long kexec_load(void *entry, unsigned long nr_segments,
  	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
  }
  
@@ -71,23 +70,24 @@ index f4df45c..415fbd7 100644
 -{
 -	return (long) syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC, 0);
 -}
- 
- 
+-
+-
  #define KEXEC_ON_CRASH		0x00000001
+ #define KEXEC_PRESERVE_CONTEXT	0x00000002
+ #define KEXEC_ARCH_MASK		0xffff0000
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index d2d05a8..ee23b5e 100644
+index d2d05a8..3572c5b 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -28,6 +28,8 @@
+@@ -28,6 +28,7 @@
  #include <limits.h>
  #include <sys/types.h>
  #include <sys/stat.h>
 +#include <sys/reboot.h>
-+#include <linux/reboot.h>
  #include <unistd.h>
  #include <fcntl.h>
  #ifndef _O_BINARY
-@@ -822,7 +824,7 @@ static int my_shutdown(void)
+@@ -822,7 +823,7 @@ static int my_shutdown(void)
   */
  static int my_exec(void)
  {
