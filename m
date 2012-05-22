@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from vostochny.stro.at ([78.47.22.85])
- by casper.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SWsRn-0002HT-Kj
- for kexec@lists.infradead.org; Tue, 22 May 2012 17:00:37 +0000
-From: maximilian attems <max@stro.at>
-Subject: [PATCH v2] kexec: simply pass LINUX_REBOOT_CMD_KEXEC to reboot
-Date: Tue, 22 May 2012 18:59:47 +0200
-Message-Id: <1337705987-16541-1-git-send-email-max@stro.at>
+Received: from mail-vc0-f177.google.com ([209.85.220.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SWw5Y-0006ch-7v
+ for kexec@lists.infradead.org; Tue, 22 May 2012 20:53:53 +0000
+Received: by vcbf13 with SMTP id f13so745120vcb.36
+ for <kexec@lists.infradead.org>; Tue, 22 May 2012 13:53:48 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <4FBB0DB7.3040909@cn.fujitsu.com>
+References: <4FB35C48.30708@cn.fujitsu.com>
+ <CAG7+5M2nc3qPAS-GvX=YoVKqwdwSGdesoBQ6nsksHp2LFfzYcQ@mail.gmail.com>
+ <4FBB0DB7.3040909@cn.fujitsu.com>
+Date: Tue, 22 May 2012 13:53:47 -0700
+Message-ID: <CAG7+5M3UZBevahU2T0+kESs4kn2Sbbg2fs_itKpVQ_Z8c9od3g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
+ for kdump
+From: Eric Northup <digitaleric@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,92 +23,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: maximilian attems <max@stro.at>, klibc@zytor.com, kexec@lists.infradead.org
+To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, ebiederm@xmission.com
 
-While trying to port kexec cleanly to klibc,
-came across this syscall usage for reboot(2).
-Calling reboot directly simplifies the code.
-
-Signed-off-by: maximilian attems <max@stro.at>
----
- kexec/kexec-syscall.h |   18 ------------------
- kexec/kexec.c         |    3 ++-
- 2 files changed, 2 insertions(+), 19 deletions(-)
-
-v2: keep LINUX_REBOOT_CMD_KEXEC defines, thus no need of <linux/reboot.h>.
-    (The packagers don't like linux header deps..)
-
-The next TODO item is to add proper syscall kexec_load() to glibc.
-Funnily here klibc has an head start! -maks
-
-diff --git a/kexec/kexec-syscall.h b/kexec/kexec-syscall.h
-index f4df45c..b56cb00 100644
---- a/kexec/kexec-syscall.h
-+++ b/kexec/kexec-syscall.h
-@@ -5,18 +5,6 @@
- #include <sys/syscall.h>
- #include <unistd.h>
- 
--#define	LINUX_REBOOT_MAGIC1	0xfee1dead
--#define	LINUX_REBOOT_MAGIC2	672274793
--#define	LINUX_REBOOT_MAGIC2A	85072278
--#define	LINUX_REBOOT_MAGIC2B	369367448
--
--#define	LINUX_REBOOT_CMD_RESTART	0x01234567
--#define	LINUX_REBOOT_CMD_HALT		0xCDEF0123
--#define	LINUX_REBOOT_CMD_CAD_ON		0x89ABCDEF
--#define	LINUX_REBOOT_CMD_CAD_OFF	0x00000000
--#define	LINUX_REBOOT_CMD_POWER_OFF	0x4321FEDC
--#define	LINUX_REBOOT_CMD_RESTART2	0xA1B2C3D4
--#define LINUX_REBOOT_CMD_EXEC_KERNEL    0x18273645
- #define LINUX_REBOOT_CMD_KEXEC_OLD	0x81726354
- #define LINUX_REBOOT_CMD_KEXEC_OLD2	0x18263645
- #define LINUX_REBOOT_CMD_KEXEC		0x45584543
-@@ -70,12 +58,6 @@ static inline long kexec_load(void *entry, unsigned long nr_segments,
- 	return (long) syscall(__NR_kexec_load, entry, nr_segments, segments, flags);
- }
- 
--static inline long kexec_reboot(void)
--{
--	return (long) syscall(__NR_reboot, LINUX_REBOOT_MAGIC1, LINUX_REBOOT_MAGIC2, LINUX_REBOOT_CMD_KEXEC, 0);
--}
--
--
- #define KEXEC_ON_CRASH		0x00000001
- #define KEXEC_PRESERVE_CONTEXT	0x00000002
- #define KEXEC_ARCH_MASK		0xffff0000
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index d2d05a8..3572c5b 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -28,6 +28,7 @@
- #include <limits.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#include <sys/reboot.h>
- #include <unistd.h>
- #include <fcntl.h>
- #ifndef _O_BINARY
-@@ -822,7 +823,7 @@ static int my_shutdown(void)
-  */
- static int my_exec(void)
- {
--	kexec_reboot();
-+	reboot(LINUX_REBOOT_CMD_KEXEC);
- 	/* I have failed if I make it here */
- 	fprintf(stderr, "kexec failed: %s\n", 
- 		strerror(errno));
--- 
-1.7.10
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBNYXkgMjEsIDIwMTIgYXQgODo1MyBQTSwgWWFuZmVpIFpoYW5nCjx6aGFuZ3lhbmZl
+aUBjbi5mdWppdHN1LmNvbT4gd3JvdGU6Cj4g09ogMjAxMsTqMDXUwjIyyNUgMDI6NTgsIEVyaWMg
+Tm9ydGh1cCDQtLXAOgpbLi4uXQo+PiBTbyB5b3UgY2FuIGhhdmUgdGhlIFZNQ1Mgb2Zmc2V0IGR1
+bXBpbmcgYmUgYSBtYW51YWxseS1sb2FkZWQgbW9kdWxlLgo+PiBCdWlsZCBhIGRhdGFiYXNlIG1h
+cHBpbmcgZnJvbSAoQ1BVSUQsIG1pY3JvY29kZSByZXZpc2lvbikgLT4gKFZNQ1NJTkZPKS4KPj4g
+VGhlcmUncyBubyBuZWVkIGZvciBhbnl0aGluZyBiZXlvbmQgdGhlIChDUFVJRCwgbWljcm9jb2Rl
+IHJldmlzaW9uKSB0bwo+PiBiZSBwdXQgaW4gdGhlIGtkdW1wLCBzaW5jZSB5b3VyIG9mZmxpbmUg
+cHJvY2Vzc2luZyBvZiBhIGtkdW1wIGNhbiB0aGVuCj4+IGxvb2sgdXAgdGhlIHJlc3QuClsuLi5d
+Cj4KPiBXZSBoYXZlIGNvbnNpZGVyZWQgdGhpcyB3YXksIGJ1dCB0aGVyZSBhcmUgdHdvIGlzc3Vl
+czoKPiAxKSB2bXggcmVzb3VyY2UgaXMgdW5pcXVlIGZvciBhIHNpbmdsZSBjcHUsIGFuZCBpdCdz
+IHJpc2t5IHRvIGdyYWIgaXQgZm9yY2libHkKPiBvbiB0aGUgZW52aXJvbm1lbnQgd2hlcmUga3Zt
+IG1vZHVsZSBpcyB1c2VkLCBpbiBwYXJ0aWN1bGFyIG9uIGN1c3RvbWVyJ3MgZW52aXJvbm1lbnQu
+Cj4gVG8gZG8gdGhpcyBzYWZlbHksIGt2bSBzdXBwb3J0IGlzIG5lZWRlZC4KCkl0J3Mgbm90IHJp
+c2t5OiB5b3UganVzdCBoYXZlIHRvIG1ha2Ugc3VyZSB0aGF0IG5vIG9uZSBlbHNlIGlzIGdvaW5n
+CnRvIHVzZSB0aGUgVk1DUyBvbiB5b3VyIENQVSB3aGlsZSB5b3UncmUgcnVubmluZy4gIFlvdSBj
+YW4gZGlzYWJsZQpwcmVlbXB0aW9uIGFuZCB0aGVuIHNhdmUgdGhlIG9sZCBWTUNTIHBvaW50ZXIg
+ZnJvbSB0aGUgQ1BVIChzZWUgdGhlClZNUFRSU1QgaW5zdHJ1Y3Rpb25zKS4gIExvYWQgeW91ciB0
+ZW1wb3JhcnkgVk1DUyBwb2ludGVyLCBkaXNjb3Zlcgp0aGUgZmllbGRzLCB0aGVuIHJlc3RvcmUg
+dGhlIG9yaWdpbmFsIFZNQ1MgcG9pbnRlci4gIFRoZW4gcmUtZW5hYmxlCnByZWVtcHRpb24gYW5k
+IHlvdSdyZSBkb25lLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
