@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SXLxp-0003zi-UG
- for kexec@lists.infradead.org; Thu, 24 May 2012 00:31:38 +0000
-Date: Thu, 24 May 2012 09:31:29 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [v2 PATCH] ppc: move DEBUG code to --debug
-Message-ID: <20120524003128.GB3986@verge.net.au>
+Received: from mail-pz0-f49.google.com ([209.85.210.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SXN5g-000597-32
+ for kexec@lists.infradead.org; Thu, 24 May 2012 01:43:48 +0000
+Received: by dadm1 with SMTP id m1so11878577dad.36
+ for <kexec@lists.infradead.org>; Wed, 23 May 2012 18:43:46 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20120524003128.GB3986@verge.net.au>
 References: <1336977296-30314-1-git-send-email-amwang@redhat.com>
  <20120518025931.GB26916@verge.net.au> <4FBCDD04.8070104@in.ibm.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4FBCDD04.8070104@in.ibm.com>
+ <20120524003128.GB3986@verge.net.au>
+Date: Thu, 24 May 2012 09:43:46 +0800
+Message-ID: <CAM_iQpWvXmazde9hP-OOje13S=NErMUtrK5EC_k9pS-PykfDkg@mail.gmail.com>
+Subject: Re: [v2 PATCH] ppc: move DEBUG code to --debug
+From: Cong Wang <xiyou.wangcong@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,33 +26,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Suzuki K. Poulose" <suzuki@in.ibm.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>, kexec@lists.infradead.org, Cong Wang <amwang@redhat.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, "Suzuki K. Poulose" <suzuki@in.ibm.com>, Cong Wang <amwang@redhat.com>
 
-On Wed, May 23, 2012 at 06:20:12PM +0530, Suzuki K. Poulose wrote:
-> On 05/18/2012 08:29 AM, Simon Horman wrote:
-> >On Mon, May 14, 2012 at 02:34:56PM +0800, Cong Wang wrote:
-> >>From: Cong Wang<xiyou.wangcong@gmail.com>
-> >>
-> >>
-> >>From: Cong Wang<xiyou.wangcong@gmail.com>
-> >>V2: Fix a compile error
-> >>
-> >>Like commit 28d4ab53280853d2aeefdfb7c369331e89ab9ac2
-> >>("Add generic debug option"), this one moves code
-> >>under #if DEBUG to --debug on ppc arch.
-> >>
-> >>Sorry that I still can't find a ppc32 machine to test this.
-> >
-> >Thank, I don't have any ppc32 (or 64) hardware to test on,
-> >but I did use a cross-compiler to check that it builds.
-> >
-> >>Cc: Simon Horman<horms@verge.net.au>
-> >>Signed-off-by: Cong Wang<xiyou.wangcong@gmail.com>
-> 
-> It builds and works fine for me on PPC32. Sample output below.
+On Thu, May 24, 2012 at 8:31 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Wed, May 23, 2012 at 06:20:12PM +0530, Suzuki K. Poulose wrote:
+>> It builds and works fine for me on PPC32. Sample output below.
+>
+> Thanks!
 
-Thanks!
+Thanks to both of you! :)
 
 _______________________________________________
 kexec mailing list
