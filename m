@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailhub5.stratus.com ([134.111.1.18])
- by bombadil.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SXbob-0001xj-60
- for kexec@lists.infradead.org; Thu, 24 May 2012 17:27:09 +0000
-Message-ID: <4FBE6F5B.2070503@stratus.com>
-Date: Thu, 24 May 2012 13:26:51 -0400
-From: Dmitry Trikoz <Dmitry.Trikoz@stratus.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SYsV4-0008J2-Bk
+ for kexec@lists.infradead.org; Mon, 28 May 2012 05:28:16 +0000
+Message-ID: <4FC30C40.80500@cn.fujitsu.com>
+Date: Mon, 28 May 2012 13:25:20 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Kexec corrupts command line in x86-linux-setup.c setup_edd_info()
+Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
+ for kdump
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
+ <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
+ <4FBA05F6.8070804@cn.fujitsu.com> <4FBA0C8A.2050003@redhat.com>
+ <4FBB0ACA.2040907@cn.fujitsu.com>
+In-Reply-To: <4FBB0ACA.2040907@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,73 +22,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
+To: Avi Kivity <avi@redhat.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-Hi,
-I've been chasing strange problem with kdump kernel. It was crashing on 
-boot without any messages to the console.
-Finally I found that kdump kernel command line was corrupt.
-Digging down I found the problem in  setup_edd_info() and 
-add_edd_entry(). It doesn't check for array size of
-real_mode->eddbuf[] and real_mode->edd_mbr_sig_buffer[]
-So when it overruns eddbuf[] it corrupts command_line that follows it.
-
-Here is the fix:
-
---- a/kexec-tools/kexec/arch/i386/x86-linux-setup.c
-+++ b/kexec-tools/kexec/arch/i386/x86-linux-setup.c
-@@ -275,9 +275,9 @@ static int add_edd_entry(struct 
-x86_linux_param_header *real_mode,
-                                 "must not be NULL", __FUNCTION__);
-                 return -1;
-         }
--
--       edd_info = &real_mode->eddbuf[*current_edd];
--       memset(edd_info, 0, sizeof(struct edd_info));
-+       if (*current_mbr >= EDD_MBR_SIG_MAX) {
-+               return 0;
-+       }
-
-         /* extract the device number */
-         if (sscanf(basename(sysfs_name), "int13_dev%hhx", &devnum) != 1) {
-@@ -293,12 +293,21 @@ static int add_edd_entry(struct 
-x86_linux_param_header *real_mode,
-                 dbgprintf("EDD Device 0x%x: mbr_sig=0x%x\n", devnum, 
-mbr_sig);
-         }
-
-+       if (*current_edd >= EDDMAXNR) {
-+               return 0;
-+       }
-+
-+       edd_info = &real_mode->eddbuf[*current_edd];
-+       memset(edd_info, 0, sizeof(struct edd_info));
-+
-         /* set the device number */
-         edd_info->device = devnum;
-
-         /* set the version */
--       if (file_scanf(sysfs_name, "version", "0x%hhx", &version) != 1)
-+       if (file_scanf(sysfs_name, "version", "0x%hhx", &version) != 1) {
-+               fprintf(stderr, "sysfs_name %s version file error\n", 
-sysfs_name);
-                 return -1;
-+       }
-
-         edd_info->version = version;
-
-Sincerely,
-
-Dmitry Trikoz
-
-dmitry.trikoz@stratus.com
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQXZpLAoK09ogMjAxMsTqMDXUwjIyyNUgMTE6NDAsIFlhbmZlaSBaaGFuZyDQtLXAOgo+
+INPaIDIwMTLE6jA11MIyMcjVIDE3OjM2LCBBdmkgS2l2aXR5INC0tcA6Cj4+IE9uIDA1LzIxLzIw
+MTIgMTI6MDggUE0sIFlhbmZlaSBaaGFuZyB3cm90ZToKPj4+INPaIDIwMTLE6jA11MIyMcjVIDE2
+OjM0LCBBdmkgS2l2aXR5INC0tcA6Cj4+Pj4gT24gMDUvMjEvMjAxMiAwNTozMiBBTSwgWWFuZmVp
+IFpoYW5nIHdyb3RlOgo+Pj4+PiDT2iAyMDEyxOowNdTCMjHI1SAwMTo0MywgQXZpIEtpdml0eSDQ
+tLXAOgo+Pj4+Pj4gT24gMDUvMTYvMjAxMiAxMDo1MCBBTSwgemhhbmd5YW5mZWkgd3JvdGU6Cj4+
+Pj4+Pj4gVGhpcyBwYXRjaCBzZXQgZXhwb3J0cyBvZmZzZXRzIG9mIFZNQ1MgZmllbGRzIGFzIG5v
+dGUgaW5mb3JtYXRpb24gZm9yCj4+Pj4+Pj4ga2R1bXAuIFdlIGNhbGwgaXQgVk1DU0lORk8uIFRo
+ZSBwdXJwb3NlIG9mIFZNQ1NJTkZPIGlzIHRvIHJldHJpZXZlCj4+Pj4+Pj4gcnVudGltZSBzdGF0
+ZSBvZiBndWVzdCBtYWNoaW5lIGltYWdlLCBzdWNoIGFzIHJlZ2lzdGVycywgaW4gaG9zdAo+Pj4+
+Pj4+IG1hY2hpbmUncyBjcmFzaCBkdW1wIGFzIFZNQ1MgZm9ybWF0LiBUaGUgcHJvYmxlbSBpcyB0
+aGF0IFZNQ1MgaW50ZXJuYWwKPj4+Pj4+PiBpcyBoaWRkZW4gYnkgSW50ZWwgaW4gaXRzIHNwZWNp
+ZmljYXRpb24uIFNvLCB3ZSBzbG92ZSB0aGlzIHByb2JsZW0KPj4+Pj4+PiBieSByZXZlcnNlIGVu
+Z2luZWVyaW5nIGltcGxlbWVudGVkIGluIHRoaXMgcGF0Y2ggc2V0LiBUaGUgVk1DU0lORk8KPj4+
+Pj4+PiBpcyBleHBvcnRlZCB2aWEgc3lzZnMgdG8ga2V4ZWMtdG9vbHMganVzdCBsaWtlIFZNQ09S
+RUlORk8uCj4+Pj4+Pj4KPj4+Pj4+PiBIZXJlIGFyZSB0d28gdXNlcmNhc2VzIGZvciB0d28gZmVh
+dHVyZXMgdGhhdCB3ZSB3YW50Lgo+Pj4+Pj4+Cj4+Pj4+Pj4gMSkgQ3JlYXRlIGd1ZXN0IG1hY2hp
+bmUncyBjcmFzaCBkdW1wZmlsZSBmcm9tIGhvc3QgbWFjaGluZSdzIGNyYXNoIGR1bXBmaWxlCj4+
+Pj4+Pj4KPj4+Pj4+PiBJbiBnZW5lcmFsLCB3ZSB3YW50IHRvIHVzZSB0aGlzIGZlYXR1cmUgb24g
+ZmFpbHVyZSBhbmFseXNpcyBmb3IgdGhlIHN5c3RlbQo+Pj4+Pj4+IHdoZXJlIHRoZSBwcm9jZXNz
+aW5nIGRlcGVuZHMgb24gdGhlIGNvbW11bmljYXRpb24gYmV0d2VlbiBob3N0IGFuZCBndWVzdAo+
+Pj4+Pj4+IG1hY2hpbmVzIHRvIGxvb2sgaW50byB0aGUgc3lzdGVtIGZyb20gYm90aCBtYWNoaW5l
+cydzIHZpZXdwb2ludHMuCj4+Pj4+Pj4KPj4+Pj4+PiBBcyBhIGNvbmNyZXRlIHNpdHVhdGlvbiwg
+Y29uc2lkZXIgd2hlcmUgdGhlcmUncyBoZWFydGJlYXQgbW9uaXRvcmluZwo+Pj4+Pj4+IGZlYXR1
+cmUgb24gdGhlIGd1ZXN0IG1hY2hpbmUncyBzaWRlLCB3aGVyZSB3ZSBuZWVkIHRvIGRldGVybWlu
+ZSBpbgo+Pj4+Pj4+IHdoaWNoIG1hY2hpbmUgc2lkZSB0aGUgY2F1c2Ugb2YgaGVhcnRiZWF0IHN0
+b3AgbGllcy4gSW4gb3VyIGFjdHVhbAo+Pj4+Pj4+IGV4cGVyaW1lbnRzLCB3ZSBlbmNvdW50ZXJl
+ZCBzdWNoIHNpdHVhdGlvbiBhbmQgd2UgZm91bmQgdGhlIGNhdXNlIG9mCj4+Pj4+Pj4gdGhlIGJ1
+ZyB3YXMgaW4gaG9zdCdzIHByb2Nlc3Mgc2NoZWR1bGFyIHNvIGd1ZXN0IG1hY2hpbmUncyB2Y3B1
+IHN0b3BwZWQKPj4+Pj4+PiBmb3IgYSBsb25nIHRpbWUgYW5kIHRoZW4gbGVkIHRvIGhlYXJ0YmVh
+dCBzdG9wLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVGhlIG1vZHVsZSB0aGF0IGp1ZGdlcyBoZWFydGJlYXQg
+c3RvcCBpcyBvbiBndWVzdCBtYWNoaW5lLCBzbyB3ZSBuZWVkCj4+Pj4+Pj4gdG8gZGVidWcgZ3Vl
+c3QgbWFjaGluZSdzIGRhdGEuIEJ1dCBpZiB0aGUgY2F1c2UgbGllcyBpbiBob3N0IG1hY2hpbmUK
+Pj4+Pj4+PiBzaWRlLCB3ZSBuZWVkIHRvIGxvb2sgaW50byBob3N0IG1hY2hpbmUncyBjcmFzaCBk
+dW1wLgo+Pj4+Pj4KPj4+Pj4+IERvIHlvdSBtZWFuLCB0aGF0IGEgaGVhcnRiZWF0IGZhaWx1cmUg
+aW4gdGhlIGd1ZXN0IGxlYWQgdG8gaG9zdCBwYW5pYz8KPj4+Pj4+Cj4+Pj4+PiBNeSBleHBlY3Rh
+dGlvbiBpcyB0aGF0IGEgcHJvYmxlbSBpbiB0aGUgZ3Vlc3Qgd2lsbCBjYXVzZSB0aGUgZ3Vlc3Qg
+dG8KPj4+Pj4+IHBhbmljIGFuZCBwZXJoYXBzIHByb2R1Y2UgYSBkdW1wOyB0aGUgaG9zdCB3aWxs
+IHJlbWFpbiB1cC4KPj4+Pj4+Cj4+Pj4+Cj4+Pj4+IFRoZSBwb2ludCBpcyB0aGF0IGJlZm9yZSBv
+dXIgaW52ZXN0aWdhdGlvbiwgd2UgZGlkbid0IGtub3cgd2hpY2ggc2lkZSAKPj4+Pj4gbGVhZHMg
+dG8gdGhpcyBidWdneSBzaXR1YXRpb24uIE1heWJlIGEgYnVnIGluIGhvc3QgbWFjaGluZSBvciB0
+aGUgZ3Vlc3QKPj4+Pj4gbWFjaGluZSBpdHNlbGYgY2F1c2VzIGEgaGVhcnRiZWF0IGZhaWx1cmUu
+Cj4+Pj4KPj4+PiBIb3cgY2FuIGEgZ3Vlc3QgYnVnIGNhdXNlIGEgaG9zdCBwYW5pYz8KPj4+Pgo+
+Pj4+PiBTbyB3ZSB3YW50IHRvIGdldCBib3RoIGhvc3QgbWFjaGluZSdzIGNyYXNoIGR1bXAgYW5k
+IGd1ZXN0IG1hY2hpbmUncwo+Pj4+PiBjcmFzaCBkdW1wICphdCB0aGUgc2FtZSB0aW1lKi4gVGhl
+biB3ZSBjb3VsZCB1c2UgdXNlcnNwYWNlIHRvb2xzIHRvCj4+Pj4+IGdldCBndWVzdCBtYWNoaW5l
+IGNyYXNoIGR1bXAgZnJvbSBob3N0IG1hY2hpbmUncyBhbmQgYW5hbHlzZSB0aGVtCj4+Pj4+IHNl
+cGFyYXRlbHkgdG8gZmluZCB3aGljaCBzaWRlIGNhdXNlcyB0aGUgcHJvYmxlbS4KPj4+Pj4KPj4+
+Pgo+Pj4+IElmIHRoZSBndWVzdCBjYXVzZWQgdGhlIHByb2JsZW0sIHRoZXJlIHdvdWxkIGJlIG5v
+IHBhbmljOyB0aGVyZWZvcmUKPj4+PiB0aGVyZSB3YXMgYSBob3N0IGJ1Zy4KPj4+Pgo+Pj4KPj4+
+IFllcywgYSBndWVzdCBidWcgY2Fubm90IGNhdXNlIGEgaG9zdCBwYW5pYy4gV2hlbiBoZWFydGJl
+YXQgc3RvcHMgaW4gZ3Vlc3QKPj4+IG1hY2hpbmUsIHdlIGNvdWxkIHRyaWdnZXIgdGhlIGhvc3Qg
+ZHVtcCBtZWNoYW5pc20gdG8gd29yay4gVGhpcyBpcyBiZWNhdXNlCj4+PiB3ZSB3YW50IHRvIGdl
+dCB0aGUgc3RhdHVzIG9mIGJvdGggaG9zdCBhbmQgZ3Vlc3QgbWFjaGluZSBhdCB0aGUgc2FtZSB0
+aW1lCj4+PiB3aGVuIGhlYXJ0YmVhdCBzdG9wcyBpbiBndWVzdCBtYWNoaW5lLiBUaGVuIHdlIGNh
+biBsb29rIGZvciBidWcgcmVhc29ucwo+Pj4gZnJvbSBib3RoIGhvc3QgbWFjaGluZSdzIGFuZCBn
+dWVzdCBtYWNoaW5lJ3Mgdmlld3MuCj4+Cj4+IFRoYXQgc291bmRzIGxpa2UgYSBiYWQgaWRlYS4g
+Q2FuIHlvdSBleHBsYWluIGluIHdoYXQgc2l0dWF0aW9uIGl0IG1ha2VzCj4+IHNlbnNlIGZvciBh
+IGd1ZXN0IHRvIHN0b3AgdGhlIGhvc3QgKGFuZCBhbGwgb3RoZXIgZ3Vlc3RzIHJ1bm5pbmcgb24g
+aXQpCj4+IHJhdGhlciB0aGFuIGp1c3QgcmVzdGFydGluZyB0aGUgZmFpbGVkIHNlcnZpY2VzIChv
+biB0aGUgaG9zdCBvciBvdGhlcgo+PiBndWVzdHMpPwo+Pgo+IAo+IFdlIG5ldmVyIGRvIHRoaXMg
+b24gY3VzdG9tZXIncyBlbnZpcm9ubWVudCB3aGljaCBtYXliZSBhIGhvc3Qgd2l0aCBtYW55IGd1
+ZXN0cwo+IHJ1bm5pbmcgb24gaXQuIFdlIGRvIHRoaXMgb24gYW5vdGhlciBlbnZpcm9ubWVudCB0
+byByZXByb2R1Y2UgdGhlIGJ1Z2d5Cj4gc2l0dWF0aW9uOyBvciB3ZSBkbyB0aGlzIGluIHRlc3Rp
+bmcgcGhhc2Ugb24gZGV2ZWxvcG1lbnQgZW52aXJvbm1lbnQgdG93YXJkcwo+IHByb2R1Y3Rpb24g
+b25lIG9uIHRoZSBjdXN0b21lcidzIHNpdGUuCj4gCj4+Pj4+Pj4gV2l0aG91dCB0aGlzIGZlYXR1
+cmUsIHdlIGZpcnN0IGNyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgZHVtcCBhbmQgdGhlbgo+Pj4+Pj4+
+IGNyZWF0ZSBob3N0IG1haGluZSdzLCBidXQgdGhlcmUncyBvbmx5IGEgc2hvcnQgdGltZSBiZXR3
+ZWVuIHR3bwo+Pj4+Pj4+IHByb2Nlc3NpbmdzLCBkdXJpbmcgd2hpY2ggaXQncyB1bmxpa2VseSB0
+aGF0IGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLgo+Pj4+Pj4+Cj4+Pj4+Pj4gU28sIHdlIHRoaW5r
+IHRoZSBmZWF0dXJlIGlzIHVzZWZ1bCB0byBkZWJ1ZyBib3RoIGd1ZXN0IG1hY2hpbmUncyBhbmQK
+Pj4+Pj4+PiBob3N0IG1hY2hpbmUncyBzaWRlcyBhdCB0aGUgc2FtZSB0aW1lLCBhbmQgZXhwZWN0
+IHdlIGNhbiBtYWtlIGZhaWx1cmUKPj4+Pj4+PiBhbmFseXNpcyBlZmZpY2llbnRseS4KPj4+Pj4+
+Pgo+Pj4+Pj4+IE9mIGNvdXJzZSwgd2UgYmVsaWV2ZSB0aGlzIGZlYXR1cmUgaXMgY29tbW9ubHkg
+dXNlZnVsIG9uIHRoZSBzaXR1YXRpb24KPj4+Pj4+PiB3aGVyZSBndWVzdCBtYWNoaW5lIGRvZXNu
+J3Qgd29yayB3ZWxsIGR1ZSB0byBzb21ldGhpbmcgb2YgaG9zdCBtYWNoaW5lJ3MuCj4+Pj4+Pj4K
+Pj4+Pj4+PiAyKSBHZXQgb2Zmc2V0cyBvZiBWTUNTIGluZm9ybWF0aW9uIG9uIHRoZSBDUFUgcnVu
+bmluZyBvbiB0aGUgaG9zdCBtYWNoaW5lCj4+Pj4+Pj4KPj4+Pj4+PiBJZiBrZHVtcCBkb2Vzbid0
+IHdvcmsgd2VsbCwgdGhlbiBpdCBtZWFucyB3ZSBjYW5ub3QgdXNlIGt2bSBBUEkgdG8gZ2V0Cj4+
+Pj4+Pj4gcmVnaXN0ZXIgdmFsdWVzIG9mIGd1ZXN0IG1hY2hpbmUgYW5kIHRoZXkgYXJlIHN0aWxs
+IGxlZnQgb24gaXRzIHZtY3MKPj4+Pj4+PiByZWdpb24uIEluIHRoZSBjYXNlLCB3ZSB1c2UgY3Jh
+c2ggZHVtcCBtZWNoYW5pc20gcnVubmluZyBvdXRzaWRlIG9mCj4+Pj4+Pj4gbGludXgga2VybmVs
+LCBzdWNoIGFzIHNhZHVtcCwgYSBmaXJtd2FyZS1iYXNlZCBjcmFzaCBkdW1wLiBUaGVuIFZNQ1MK
+Pj4+Pj4+PiBpbmZvcm1hdGlvbiBpcyB0aGVuIG5lY2Vzc2FyeS4KPj4+Pj4+Cj4+Pj4+PiBTaG91
+bGRuJ3Qgc2FkdW1wIHRoZW4gZXhwb3NlIHRoZSBWTUNTIG9mZnNldHM/IFBlcmhhcHMgYnVuZGxp
+bmcgdGhlbQo+Pj4+Pj4gaW50byBpdHMgZHVtcCBmaWxlPwo+Pj4+Pj4KPj4+Pj4KPj4+Pj4gRmly
+bXdhcmUtYmFzZWQgY3Jhc2ggZHVtcCBkb2Vzbid0IGNvbmNlcm4gdGhlIG9zIHJ1bm5pbmcgb24g
+dGhlIG1hY2hpbmUuCj4+Pj4+IFNvIGl0IHdpbGwgbm90IGRvIGFueSBvcyBoYW5kbGluZyB3aGVu
+IG1hY2hpbmUgY3Jhc2hlcy4KPj4+Pgo+Pj4+IFNlZW1zIHRvIG1lIHRoZSBWTUNTIG9mZnNldHMg
+YXJlIE9TIGluZGVwZW5kZW50Lgo+Pj4+Cj4+PiBIbW0sIHlvdSBtZWFuIHdlIGNvdWxkIGdldCBW
+TUNTIG9mZnNldHMgaW4gc2FkdW1wIGl0c2VsZj8KPj4+IEJ1dCBJIHRoaW5rIGlmIHdlIGp1c3Qg
+ZXhwb3J0IFZNQ1Mgb2Zmc2V0cyBpbiBrZXJuZWwsIHdlIGNvdWxkIHVzZSB0aGUgY3VycmVudAo+
+Pj4gZXhpc3RpbmcgZHVtcCB0b29scyB3aXRoIG5vIG9yIGp1c3QgdmVyeSB0aW55IGNoYW5nZS4g
+SSB0aGluayB0aGlzIGNvdWxkIGJlCj4+PiBhIG1vcmUgZ2VuZXJhbCBtZWNoYW5pc20gdGhhbiBt
+YWtpbmcgY2hhbmdlcyBpbiBhbGwga2luZHMgb2YgZHVtcCB0b29scy4KPj4KPj4gVGhlIHNhZHVt
+cCB0b29sIGdlbmVyYXRlcyBhIGNvcmUgZmlsZSB3aXRoIHRoZSBPUyBpbWFnZSwgcmlnaHQ/IENh
+biBpdAo+PiBub3QgYXR0YWNoIHRoZSBvZmZzZXRzIHRvIGEgbm90ZSwganVzdCBsaWtlIHlvdSBw
+cm9wb3NlIGZvciBrZHVtcD8KPj4KPiAKPiBCb3RoIGFyZSByaWdodC4KCgpEb3UgeW91IGhhdmUg
+YW55IGNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2ggc2V0PwoKVGhhbmtzClpoYW5nIFlhbmZlaQoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
