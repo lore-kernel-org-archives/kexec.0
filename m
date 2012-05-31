@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sa0qQ-0003tc-7U
- for kexec@lists.infradead.org; Thu, 31 May 2012 08:34:59 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q4V8Ypii001990
- for <kexec@lists.infradead.org>; Thu, 31 May 2012 17:34:51 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id q4V8YpA02058 for kexec@lists.infradead.org;
- Thu, 31 May 2012 17:34:51 +0900 (JST)
-Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q4V8YpgN009945
- for <kexec@lists.infradead.org>; Thu, 31 May 2012 17:34:51 +0900 (JST)
-Date: Thu, 31 May 2012 17:33:07 +0900
-From: Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
-Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
-Message-Id: <20120531173307.0ab11595.nishimura@mxp.nes.nec.co.jp>
-In-Reply-To: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Sa2vX-0001XY-RT
+ for kexec@lists.infradead.org; Thu, 31 May 2012 10:48:24 +0000
+Message-ID: <4FC74C74.3040302@canonical.com>
+Date: Thu, 31 May 2012 12:48:20 +0200
+From: Bouchard Louis <louis.bouchard@canonical.com>
+MIME-Version: 1.0
+Subject: Re: makedumpfile-1.4.4: Support for LZO compression.
+References: <20120530131644.9548f784.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120530131644.9548f784.kumagai-atsushi@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,97 +18,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org, Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-From the POV of adding partial bitmaps, I think it would be better to include
-following hunks in [3/4] into [2/4].
+Hello Kumagai-san,
 
-> @@ -3954,6 +4019,39 @@ prepare_bitmap_buffer(void)
->  	return TRUE;
->  }
->  
-> +int
-> +prepare_bitmap_buffer_cyclic(void)
-> +{
-> +	unsigned long tmp;
-> +
-> +	/*
-> +	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
-> +	 * The crash utility requires both of them to be aligned to block_size
-> +	 * boundary.
-> +	 */
-> +	tmp = divideup(divideup(info->max_mapnr, BITPERBYTE), info->page_size);
-> +	info->len_bitmap = tmp*info->page_size*2;
-> +
-> +
-> +	/*
-> +	 * Prepare bitmap buffers for creating dump bitmap.
-> +	 */
-> +	if ((info->partial_bitmap1 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
-> +		ERRMSG("Can't allocate memory for the 1st-bitmap. %s\n",
-> +		       strerror(errno));
-> +		return FALSE;
-> +	}
-> +	if ((info->partial_bitmap2 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
-> +		ERRMSG("Can't allocate memory for the 2nd-bitmap. %s\n",
-> +		       strerror(errno));
-> +		return FALSE;
-> +	}
-> +	initialize_bitmap_cyclic(info->partial_bitmap1);
-> +	initialize_bitmap_cyclic(info->partial_bitmap2);
-> +
-> +	return TRUE;
-> +}
-> +
->  void
->  free_bitmap_buffer(void)
->  {
-> @@ -3974,14 +4072,17 @@ create_dump_bitmap(void)
->  {
->  	int ret = FALSE;
->  
-> -	if (!prepare_bitmap_buffer())
-> -		goto out;
-> -
-> -	if (!create_1st_bitmap())
-> -		goto out;
-> -
-> -	if (!create_2nd_bitmap())
-> -		goto out;
-> +	if (info->flag_cyclic) {
-> +		if (!prepare_bitmap_buffer_cyclic())
-> +			goto out;
-> +	} else {
-> +		if (!prepare_bitmap_buffer())
-> +			goto out;
-> +		if (!create_1st_bitmap())
-> +			goto out;
-> +		if (!create_2nd_bitmap())
-> +			goto out;
-> +	}
->  
->  	ret = TRUE;
->  out:
+Le 30/05/2012 06:16, Atsushi Kumagai a =E9crit :
+> Hi,
+> =
+
+> makedumpfile version 1.4.4 is released.
+> Your comments/patches are welcome.
+> =
+
 ...
-> @@ -7242,6 +7364,10 @@ out:
->  			free(info->splitting_info);
->  		if (info->p2m_mfn_frame_list != NULL)
->  			free(info->p2m_mfn_frame_list);
-> +		if (info->partial_bitmap1 != NULL)
-> +			free(info->partial_bitmap1);
-> +		if (info->partial_bitmap2 != NULL)
-> +			free(info->partial_bitmap2);
->  		free(info);
->  	}
->  	free_elf_info();
+> =
 
-Thanks,
-Daisuke Nishimura.
+> Changelog:
+...
+>    Other commit
+>     - [PATCH] Support newer kernels. (by Atsushi Kumagai) 4f39edb
+> =
+
+
+I have been eagerly waiting for this release in order to address an
+ongoing bug we have on ubuntu 12.04 Precise Pangolin where makedumpfile
+fails to generate the vmcoreinfo file :
+
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/988512
+
+My current test on the latest Ubuntu Precise kernel (3.2.0-24.39) show
+that we still have the same issue :
+
+> # /crashdata/tmp/usr/bin/makedumpfile -g /crashdata/kernel/linux-3.2.0/de=
+bian/linux-image-3.2.0-24-generic/boot/vmcoreinfo-3.2.0-24-generic -x /cras=
+hdata/kernel/linux-3.2.0/debian/build/build-generic/vmlinux
+> generate_vmcoreinfo: Can't find the memory type.
+> =
+
+> makedumpfile Failed.
+
+There seems to be some issue in get_mem_type() that I will try to debug
+further. Please let me know if you have something specific that you want
+me to test and/or try as I have everything needed.
+
+Kind regards,
+
+...Louis
+
+
+-- =
+
+Louis Bouchard
+Backline Support Analyst
+Canonical Ltd
+Ubuntu support: http://landscape.canonical.com
 
 _______________________________________________
 kexec mailing list
