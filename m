@@ -1,29 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SbNqM-0001ru-De
- for kexec@lists.infradead.org; Mon, 04 Jun 2012 03:20:36 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A48553EE081
- for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8D4ED45DE50
- for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 74F8445DD78
- for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 68B321DB803C
- for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
-Received: from m025.s.css.fujitsu.com (m025.s.css.fujitsu.com [10.0.81.65])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 202EE1DB8038
- for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
-Date: Mon, 04 Jun 2012 12:19:57 +0900 (JST)
-Message-Id: <20120604.121957.454958033.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+ id 1SbP7l-0002iB-9J
+ for kexec@lists.infradead.org; Mon, 04 Jun 2012 04:42:38 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 093CE3EE0B5
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 13:42:33 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id E603545DE4D
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 13:42:32 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id C966B45DE51
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 13:42:32 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BC0711DB803B
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 13:42:32 +0900 (JST)
+Received: from m020.s.css.fujitsu.com (m020.s.css.fujitsu.com [10.0.81.60])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 717951DB803E
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 13:42:32 +0900 (JST)
+Date: Mon, 04 Jun 2012 13:42:12 +0900 (JST)
+Message-Id: <20120604.134212.319008231.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH 4/4] makedumpfile: Add main routine of cyclic
+ processing.
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120531135654.a26dd3fe.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120531135654.a26dd3fe.kumagai-atsushi@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -41,22 +42,20 @@ To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
-Date: Thu, 31 May 2012 14:01:03 +0900
+Subject: [RFC PATCH 4/4] makedumpfile: Add main routine of cyclic processing.
+Date: Thu, 31 May 2012 13:56:54 +0900
 
->  /*
-> + * For cyclic
-> + */
-> +#define BUFSIZE_CYCLIC	        (8192)
-> +#define PFN_CYCLIC		(BUFSIZE_CYCLIC * BITPERBYTE)
-> +
-> +
-> +/*
->   * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
+> +	/*
+> +	 * Write pages and bitmap cyclically.
+> +	 */
+> +	for (info->split_start_pfn = 0, info->split_end_pfn = PFN_CYCLIC;
+> +	     info->split_end_pfn <= info->max_mapnr;
+> +	     info->split_start_pfn += PFN_CYCLIC, info->split_end_pfn += PFN_CYCLIC) {
 
-How did you choose this buffer size? Best performance? I think the
-performacne varies according to this buffer size, and to evaluate it,
-it's useful to be able to specify the size through command-line.
+The cyclic processing is orthogonal to the splitting feature. The
+feature of splitting a single vmcore into multiple dumpfiles is an
+important feature on large system to reduce dump generation time. They
+should exist together.
 
 Thanks.
 HATAYAMA, Daisuke
