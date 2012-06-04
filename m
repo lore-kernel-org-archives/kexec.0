@@ -1,16 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qc0-f177.google.com ([209.85.216.177])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SaUEi-0007kb-RT
- for kexec@lists.infradead.org; Fri, 01 Jun 2012 15:58:01 +0000
-Received: by qcsu28 with SMTP id u28so1386117qcs.36
- for <kexec@lists.infradead.org>; Fri, 01 Jun 2012 08:57:58 -0700 (PDT)
-Date: Fri, 1 Jun 2012 10:59:32 -0500
-From: Eric Biggers <ebiggers3@gmail.com>
-Subject: [PATCH] Load bzImages smaller than 32 KiB
-Message-ID: <20120601155931.GB17616@zzz>
-MIME-Version: 1.0
-Content-Disposition: inline
+ id 1SbNqM-0001ru-De
+ for kexec@lists.infradead.org; Mon, 04 Jun 2012 03:20:36 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A48553EE081
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8D4ED45DE50
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 74F8445DD78
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 68B321DB803C
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
+Received: from m025.s.css.fujitsu.com (m025.s.css.fujitsu.com [10.0.81.65])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 202EE1DB8038
+ for <kexec@lists.infradead.org>; Mon,  4 Jun 2012 12:20:26 +0900 (JST)
+Date: Mon, 04 Jun 2012 12:19:57 +0900 (JST)
+Message-Id: <20120604.121957.454958033.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,66 +37,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-Allow bzImages smaller than 32KiB to be kexec'ed.
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+Date: Thu, 31 May 2012 14:01:03 +0900
 
-The current code will fail to load a bzImage smaller than 32768 bytes (sizeof
-struct x86_linux_header), but the 'memdisk' program that comes with syslinux is
-only about 26 KiB.  This patch changes the minimum size to 1024 bytes (2
-sectors), which appears to be the limit that syslinux enforces.
+>  /*
+> + * For cyclic
+> + */
+> +#define BUFSIZE_CYCLIC	        (8192)
+> +#define PFN_CYCLIC		(BUFSIZE_CYCLIC * BITPERBYTE)
+> +
+> +
+> +/*
+>   * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
 
-Removed the "tail" field of struct x86_linux_header because it doesn't seem to
-actually be used (is there a reason for it?).
+How did you choose this buffer size? Best performance? I think the
+performacne varies according to this buffer size, and to evaluate it,
+it's useful to be able to specify the size through command-line.
 
-Also, note that bzImage_probe() was incorrectly using `sizeof (header)', even
-though header is a pointer.
+Thanks.
+HATAYAMA, Daisuke
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 59d35c9..2ebcc3a 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -233,7 +233,6 @@ struct x86_linux_header {
- 	uint32_t high_base;			/* 0x24C */
- 	uint32_t high_memsz;			/* 0x250 */
- 	uint32_t high_filesz;			/* 0x254 */
--	uint32_t tail[32*1024 - 0x258];		/* 0x258 */
- #else
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
-@@ -241,7 +240,6 @@ struct x86_linux_header {
- 	uint32_t cmdline_size;                  /* 0x238 */
- 	uint32_t hardware_subarch;              /* 0x23C */
- 	uint64_t hardware_subarch_data;         /* 0x240 */
--	uint8_t  tail[32*1024 - 0x248];		/* 0x248 */
- #endif
- } PACKED;
- 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 54c4427..6998587 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -44,7 +44,10 @@ static const int probe_debug = 0;
- int bzImage_probe(const char *buf, off_t len)
- {
- 	const struct x86_linux_header *header;
--	if ((uintmax_t)len < (uintmax_t)sizeof(header)) {
-+	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
-+		if (probe_debug) {
-+			fprintf(stderr, "File is too short to be a bzImage!\n");
-+		}
- 		return -1;
- 	}
- 	header = (const struct x86_linux_header *)buf;
-@@ -118,7 +121,7 @@ int do_bzImage_load(struct kexec_info *info,
- 	/*
- 	 * Find out about the file I am about to load.
- 	 */
--	if ((uintmax_t)kernel_len < (uintmax_t)sizeof(setup_header)) {
-+	if ((uintmax_t)kernel_len < (uintmax_t)(2 * 512)) {
- 		return -1;
- 	}
- 	memcpy(&setup_header, kernel, sizeof(setup_header));
 
 _______________________________________________
 kexec mailing list
