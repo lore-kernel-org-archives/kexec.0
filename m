@@ -1,15 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sblrn-0004Bc-JZ
- for kexec@lists.infradead.org; Tue, 05 Jun 2012 04:59:42 +0000
-Date: Tue, 5 Jun 2012 13:57:10 +0900
+ id 1SblsY-0004Cu-HV
+ for kexec@lists.infradead.org; Tue, 05 Jun 2012 05:00:28 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.197])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5550Hk8002850
+ for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 14:00:17 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id q5550HO11610 for kexec@lists.infradead.org;
+ Tue, 5 Jun 2012 14:00:17 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5550H7h019944
+ for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 14:00:17 +0900 (JST)
+Date: Tue, 5 Jun 2012 13:57:40 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: makedumpfile-1.4.4: Support for LZO compression.
-Message-Id: <20120605135710.3c968b79.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <4FC75961.4070709@canonical.com>
-References: <20120530131644.9548f784.kumagai-atsushi@mxc.nes.nec.co.jp>
- <4FC74C74.3040302@canonical.com> <4FC75961.4070709@canonical.com>
+Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+Message-Id: <20120605135740.d1e4c41f.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120531173307.0ab11595.nishimura@mxp.nes.nec.co.jp>
+References: <20120531140103.264cc0c4.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120531173307.0ab11595.nishimura@mxp.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,46 +29,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: louis.bouchard@canonical.com
+To: nishimura@mxp.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-SGVsbG8gTG91aXMsCgpPbiBUaHUsIDMxIE1heSAyMDEyIDEzOjQzOjI5ICswMjAwCkJvdWNoYXJk
-IExvdWlzIDxsb3Vpcy5ib3VjaGFyZEBjYW5vbmljYWwuY29tPiB3cm90ZToKCj4gSGVsbG8gS3Vt
-YWdhaS1zYW4sCj4gCj4gTGUgMzEvMDUvMjAxMiAxMjo0OCwgQm91Y2hhcmQgTG91aXMgYSDDqWNy
-aXQgOgo+ID4gCj4gPiBUaGVyZSBzZWVtcyB0byBiZSBzb21lIGlzc3VlIGluIGdldF9tZW1fdHlw
-ZSgpIHRoYXQgSSB3aWxsIHRyeSB0byBkZWJ1Zwo+ID4gZnVydGhlci4gUGxlYXNlIGxldCBtZSBr
-bm93IGlmIHlvdSBoYXZlIHNvbWV0aGluZyBzcGVjaWZpYyB0aGF0IHlvdSB3YW50Cj4gPiBtZSB0
-byB0ZXN0IGFuZC9vciB0cnkgYXMgSSBoYXZlIGV2ZXJ5dGhpbmcgbmVlZGVkLgo+ID4gCj4gPiBL
-aW5kIHJlZ2FyZHMsCj4gPiAKPiA+IC4uLkxvdWlzCj4gPiAKPiA+IAo+IAo+IEhlcmUgaXMgc29t
-ZSBtb3JlIGRldGFpbHMgYWJvdXQgdGhlIGlzc3VlLiBJIGhhdmUgcmVjb21waWxlZAo+IG1ha2Vk
-dW1wZmlsZSB3aXRoIHN5bWJvbHMgaW4gb3JkZXIgdG8gZGVidWcgdGhlIGlzc3VlLiBUaGUgZm9s
-bG93aW5nCj4gY29kZSBzZWVtcyB0byBiZSBpbnRlcmVzdGluZyA6Cj4gCj4gZ2V0X21lbV90eXBl
-KHZvaWQpCj4gewo+IAlpbnQgcmV0Owo+IAo+IAlpZiAoKFNJWkUocGFnZSkgPT0gTk9UX0ZPVU5E
-X1NUUlVDVFVSRSkKPiAJICAgIHx8IChPRkZTRVQocGFnZS5mbGFncykgPT0gTk9UX0ZPVU5EX1NU
-UlVDVFVSRSkKPiAJICAgIHx8IChPRkZTRVQocGFnZS5fY291bnQpID09IE5PVF9GT1VORF9TVFJV
-Q1RVUkUpCj4gCSAgICB8fCAoT0ZGU0VUKHBhZ2UubWFwcGluZykgPT0gTk9UX0ZPVU5EX1NUUlVD
-VFVSRSkpIHsKPiAJCXJldCA9IE5PVF9GT1VORF9NRU1UWVBFOwo+IAo+IChnZGIpIHAgc2l6ZV90
-YWJsZS5wYWdlCj4gJDEgPSA2NAo+IChnZGIpIHAgb2Zmc2V0X3RhYmxlLnBhZ2UKPiAkMiA9IHtm
-bGFncyA9IDAsIF9jb3VudCA9IC0xLCBtYXBwaW5nID0gOCwgbHJ1ID0gLTF9Cj4gCj4gU28gb2Zm
-c2V0X3RhYmxlLnBhZ2UuX2NvdW50ID0gLTEsIHdoaWNoIHRyaWdnZXJzIHRoZSBOT1RfRk9VTkRf
-TUVNVFlQRS4KPiAKPiBJIGFtIG5vdCBmYW1pbGlhciBlbm91Z2ggd2l0aCB0aGlzIHRvIGNvbmNs
-dWRlLCBidXQgeW91IG1pZ2h0IGhhdmUgYW4KPiBpZGVhLiBJIGNhbiBoYXZlIHRoZSB2bWxpbnV4
-IGZpbGUgbWFkZSBhdmFpbGFibGUgdG8geW91IGlmIHlvdSB3YW50Lgo+IAo+IEZvciBpbmZvcm1h
-dGlvbiwgSSBhbSBhbHNvIHdvcmtpbmcgd2l0aCBKb2huIFdyaWdodCB3aG8gaXMgdGhlIGRlYmlh
-bgo+IHBhY2thZ2UgbWFpbnRhaW5lciB0byBhc3Npc3QgaGltIGluIHBhY2thZ2luZyBtYWtlZHVt
-cGZpbGUgZm9yIERlYmlhbgo+IGFuZCBVYnVudHUuCgpJJ20gc29ycnksIGl0IHNlZW1zIGEgYnVn
-IHJlbGF0ZWQgdG8ga2VybmVsIDMuMSBvciBsYXRlci4KRXZlbiBjdXJyZW50IG1ha2VkdW1wZmls
-ZSBjYW4ndCBnZXQgdGhlIG9mZnNldCBvZiBwYWdlLl9jb3VudCBhbmQgcGFnZS5scnUgCmZyb20g
-dm1saW51eC4KClRoYW5rIHlvdSBmb3IgeW91ciByZXBvcnQuIEkgd2lsbCBmaXggdGhpcyBidWcu
-CgpCVFcsIGRvIHlvdSBuZWVkIHZtY29yZWluZm8gZmlsZSA/IElmIHlvdXIgcHVycG9zZSBpcyBv
-bmx5IHRvIGdlbmVyYXRlIGR1bXBmaWxlLAp5b3UgY2FuIGV4ZWN1dGUgbWFrZWR1bXBmaWxlIHdp
-dGhvdXQgLWcgb3B0aW9uLgpCZWNhdXNlIHRoZSB2bWNvcmUgZ2VuZXJhdGVkIGJ5IGtlcm5lbCAy
-LjYuMjQgb3IgbGF0ZXIgaW5jbHVkZSB0aGUgZGVidWcKaW5mb3JtYXRpb24gd2hpY2ggbWFrZWR1
-bXBmaWxlIG5lZWQuCgpFeGFtcGxlOgoKICQgbWFrZWR1bXBmaWxlIHZtY29yZSBkdW1wZmlsZQoK
-ClRoYW5rcwpBdHN1c2hpIEt1bWFnYWkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello Nishimura-san,
+
+On Thu, 31 May 2012 17:33:07 +0900
+Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp> wrote:
+
+> From the POV of adding partial bitmaps, I think it would be better to include
+> following hunks in [3/4] into [2/4].
+
+The functions below are just initializer for partial bitmaps, so it may be better
+to include them in [2/4] as you said. Thank you for your advice.
+
+
+Thanks
+Atsushi Kumagai
+
+> > @@ -3954,6 +4019,39 @@ prepare_bitmap_buffer(void)
+> >  	return TRUE;
+> >  }
+> >  
+> > +int
+> > +prepare_bitmap_buffer_cyclic(void)
+> > +{
+> > +	unsigned long tmp;
+> > +
+> > +	/*
+> > +	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
+> > +	 * The crash utility requires both of them to be aligned to block_size
+> > +	 * boundary.
+> > +	 */
+> > +	tmp = divideup(divideup(info->max_mapnr, BITPERBYTE), info->page_size);
+> > +	info->len_bitmap = tmp*info->page_size*2;
+> > +
+> > +
+> > +	/*
+> > +	 * Prepare bitmap buffers for creating dump bitmap.
+> > +	 */
+> > +	if ((info->partial_bitmap1 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
+> > +		ERRMSG("Can't allocate memory for the 1st-bitmap. %s\n",
+> > +		       strerror(errno));
+> > +		return FALSE;
+> > +	}
+> > +	if ((info->partial_bitmap2 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
+> > +		ERRMSG("Can't allocate memory for the 2nd-bitmap. %s\n",
+> > +		       strerror(errno));
+> > +		return FALSE;
+> > +	}
+> > +	initialize_bitmap_cyclic(info->partial_bitmap1);
+> > +	initialize_bitmap_cyclic(info->partial_bitmap2);
+> > +
+> > +	return TRUE;
+> > +}
+> > +
+> >  void
+> >  free_bitmap_buffer(void)
+> >  {
+> > @@ -3974,14 +4072,17 @@ create_dump_bitmap(void)
+> >  {
+> >  	int ret = FALSE;
+> >  
+> > -	if (!prepare_bitmap_buffer())
+> > -		goto out;
+> > -
+> > -	if (!create_1st_bitmap())
+> > -		goto out;
+> > -
+> > -	if (!create_2nd_bitmap())
+> > -		goto out;
+> > +	if (info->flag_cyclic) {
+> > +		if (!prepare_bitmap_buffer_cyclic())
+> > +			goto out;
+> > +	} else {
+> > +		if (!prepare_bitmap_buffer())
+> > +			goto out;
+> > +		if (!create_1st_bitmap())
+> > +			goto out;
+> > +		if (!create_2nd_bitmap())
+> > +			goto out;
+> > +	}
+> >  
+> >  	ret = TRUE;
+> >  out:
+> ...
+> > @@ -7242,6 +7364,10 @@ out:
+> >  			free(info->splitting_info);
+> >  		if (info->p2m_mfn_frame_list != NULL)
+> >  			free(info->p2m_mfn_frame_list);
+> > +		if (info->partial_bitmap1 != NULL)
+> > +			free(info->partial_bitmap1);
+> > +		if (info->partial_bitmap2 != NULL)
+> > +			free(info->partial_bitmap2);
+> >  		free(info);
+> >  	}
+> >  	free_elf_info();
+> 
+> Thanks,
+> Daisuke Nishimura.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
