@@ -1,26 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SbhYG-0004gn-7t
- for kexec@lists.infradead.org; Tue, 05 Jun 2012 00:23:14 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q550N1XL005599
- for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 09:23:01 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
- (8.11.7/3.7W-MAILGATE-NEC)
- id q550N1n09783 for kexec@lists.infradead.org;
- Tue, 5 Jun 2012 09:23:01 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q550N0ml021349
- for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 09:23:00 +0900 (JST)
-Date: Tue, 5 Jun 2012 09:20:52 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [RFC PATCH 1/4] makedumpfile: Add flag to enable cyclic
- processing.
-Message-Id: <20120605092052.068977aa.kumagai-atsushi@mxc.nes.nec.co.jp>
-In-Reply-To: <20120531173254.015afde9.nishimura@mxp.nes.nec.co.jp>
-References: <20120531135451.4ae2a0aa.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120531173254.015afde9.nishimura@mxp.nes.nec.co.jp>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SbiJT-0003ad-JT
+ for kexec@lists.infradead.org; Tue, 05 Jun 2012 01:12:01 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 66A303EE0C0
+ for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 463A845DEB2
+ for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 04A6C45DEAD
+ for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E34AD1DB8043
+ for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:52 +0900 (JST)
+Received: from m025.s.css.fujitsu.com (m025.s.css.fujitsu.com [10.0.81.65])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9CB761DB8042
+ for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:52 +0900 (JST)
+Date: Tue, 05 Jun 2012 10:10:46 +0900 (JST)
+Message-Id: <20120605.101046.99023349.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH 0/4] makedumpfile: cyclic processing to keep memory
+ consumption.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <CAJGZr0L2OTA_Qv9hqXLGhK-Hs++ev+xHLZ9-OK8HbhON-CbSAQ@mail.gmail.com>
+References: <CAJGZr0LSC3GKKTSDm9zH4YiY3V3B27O1t0v7YQWNho_Q+s3msw@mail.gmail.com>
+ <20120604165449.e7236889.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <CAJGZr0L2OTA_Qv9hqXLGhK-Hs++ev+xHLZ9-OK8HbhON-CbSAQ@mail.gmail.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -34,89 +40,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: nishimura@mxp.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: muvarov@gmail.com
+Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
 
-Hello Nishimura-san,
+From: Maxim Uvarov <muvarov@gmail.com>
+Subject: Re: [RFC PATCH 0/4] makedumpfile: cyclic processing to keep memory consumption.
+Date: Mon, 4 Jun 2012 12:29:07 +0400
 
-On Thu, 31 May 2012 17:32:54 +0900
-Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp> wrote:
-
-> Hi,
+> 2012/6/4 Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 > 
-> I have two minor comments.
-> 
-> On Thu, 31 May 2012 13:54:51 +0900
-> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
-> 
-> > Introduce -K option to enable cyclic processing. If -K option is specified,
-> > then makedumpfile works cyclically and the memory usage will be constant.
-> > 
-> > Usage:
-> >       # makedumpfile -K /proc/vmcore dumpfile
-> > 
-> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> > ---
-> >  makedumpfile.c |    5 ++++-
-> >  makedumpfile.h |    1 +
-> >  2 files changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index d024e95..3e5f906 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -6968,7 +6968,7 @@ main(int argc, char *argv[])
-> >  
-> >  	info->block_order = DEFAULT_ORDER;
-> >  	message_level = DEFAULT_MSG_LEVEL;
-> > -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMRrsvXx:", longopts,
-> > +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:KlMRrsvXx:", longopts,
-> 
-> Will you add a long option like "--cyclic" ?
+>> Hello Maxim,
+>>
+>> On Thu, 31 May 2012 10:50:39 +0400
+>> Maxim Uvarov <muvarov@gmail.com> wrote:
+>>
 
-That's a good idea, I will choose it.
-
+>>
+>> After received your mail, I measured executing time with the patch below.
+>> The result below was measured in 5GB memory machine.
+>>
+>> Result:
+>>  a. makedumpfile -Kcd31
+>>    excluding time:   6.55 [sec]
+>>    writing time:     5.89 [sec]
+>>
+>>  b. makedumpfile -cd31
+>>    excluding time:   0.21 [sec]
+>>    writing time:     5.82 [sec]
+>>
+>> I don't think this result is good, the prototype has some points to be
+>> improved for performance.
+>> (e.g. buffer size, the way to exclude free pages, etc...)
+>>
+>> However, I think getting a bit of speed down can't be helped to keep
+>> memory consumption.
+>>
+>>
+> I'm asking because I have machines with several TBs of ram. And filtering
+> and saving data from vmcore takes long time. (more then 30 minutes). I
+> wonder if somebody already work on performance. Probably we can do SMP
+> optimizations.
 > 
-> >  	    NULL)) != -1) {
-> >  		switch (opt) {
-> >  		case 'b':
-> > @@ -7017,6 +7017,9 @@ main(int argc, char *argv[])
-> >  				goto out;
-> >  			info->flag_sadump_diskset = 1;
-> >  			break;
-> > +		case 'K':
-> > +			info->flag_cyclic = TRUE;
-> > +			break;
-> >  		case 'l':
-> >  			info->flag_compress = DUMP_DH_COMPRESSED_LZO;
-> >  			break;
-> > diff --git a/makedumpfile.h b/makedumpfile.h
-> > index 6f5489d..c588e43 100644
-> > --- a/makedumpfile.h
-> > +++ b/makedumpfile.h
-> > @@ -801,6 +801,7 @@ struct DumpInfo {
-> >  	int		flag_rearrange;      /* flag of creating dumpfile from
-> >  						flattened format */
-> >  	int		flag_split;	     /* splitting vmcore */
-> > +	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
-> >  	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
-> >  	int		flag_refiltering;    /* refilter from kdump-compressed file */
-> >  	int		flag_force;	     /* overwrite existing stuff */
-> > -- 
-> > 1.7.9.2
-> > 
-> 
-> You need to update makedumpfile.8 too.
+> Maxim.
 
-Thank you for your notice, I will remember to update it.
+Hello Maxim,
 
+I'm now benchmarking for three kinds of pralell compressions: no
+compression, lzo and snappy. I'll post its result after completing it,
+by Friday? if possible.
 
-Thanks
-Atsushi Kumagai
+Also I'll soon post a patch for filtering free pages in constant time
+based on mem_map, just a small extension of the patch Kumagai-san
+posted previously, by which filtering score for -Kcd31 above would be
+improved so much; it now repeats tracing free_list (memory size /
+cyclic_size) times.
 
-> 
-> Thanks,
-> Daisuke Nishimura.
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
