@@ -1,16 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SbgUP-0001xz-Hh
- for kexec@lists.infradead.org; Mon, 04 Jun 2012 23:15:10 +0000
-Date: Tue, 5 Jun 2012 08:14:59 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Load bzImages smaller than 32 KiB
-Message-ID: <20120604231459.GO28747@verge.net.au>
-References: <20120601155931.GB17616@zzz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120601155931.GB17616@zzz>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SbhYG-0004gn-7t
+ for kexec@lists.infradead.org; Tue, 05 Jun 2012 00:23:14 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.193])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q550N1XL005599
+ for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 09:23:01 +0900 (JST)
+Received: (from root@localhost) by mailgate3.nec.co.jp
+ (8.11.7/3.7W-MAILGATE-NEC)
+ id q550N1n09783 for kexec@lists.infradead.org;
+ Tue, 5 Jun 2012 09:23:01 +0900 (JST)
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q550N0ml021349
+ for <kexec@lists.infradead.org>; Tue, 5 Jun 2012 09:23:00 +0900 (JST)
+Date: Tue, 5 Jun 2012 09:20:52 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH 1/4] makedumpfile: Add flag to enable cyclic
+ processing.
+Message-Id: <20120605092052.068977aa.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120531173254.015afde9.nishimura@mxp.nes.nec.co.jp>
+References: <20120531135451.4ae2a0aa.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120531173254.015afde9.nishimura@mxp.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,81 +34,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biggers <ebiggers3@gmail.com>
+To: nishimura@mxp.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-On Fri, Jun 01, 2012 at 10:59:32AM -0500, Eric Biggers wrote:
-> Allow bzImages smaller than 32KiB to be kexec'ed.
-> 
-> The current code will fail to load a bzImage smaller than 32768 bytes (sizeof
-> struct x86_linux_header), but the 'memdisk' program that comes with syslinux is
-> only about 26 KiB.  This patch changes the minimum size to 1024 bytes (2
-> sectors), which appears to be the limit that syslinux enforces.
-> 
-> Removed the "tail" field of struct x86_linux_header because it doesn't seem to
-> actually be used (is there a reason for it?).
-> 
-> Also, note that bzImage_probe() was incorrectly using `sizeof (header)', even
-> though header is a pointer.
+Hello Nishimura-san,
 
-Hi Eric,
+On Thu, 31 May 2012 17:32:54 +0900
+Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp> wrote:
 
-could you please supply a signed-off-by line so I can apply this patch?
+> Hi,
+> 
+> I have two minor comments.
+> 
+> On Thu, 31 May 2012 13:54:51 +0900
+> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> 
+> > Introduce -K option to enable cyclic processing. If -K option is specified,
+> > then makedumpfile works cyclically and the memory usage will be constant.
+> > 
+> > Usage:
+> >       # makedumpfile -K /proc/vmcore dumpfile
+> > 
+> > Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> > ---
+> >  makedumpfile.c |    5 ++++-
+> >  makedumpfile.h |    1 +
+> >  2 files changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/makedumpfile.c b/makedumpfile.c
+> > index d024e95..3e5f906 100644
+> > --- a/makedumpfile.c
+> > +++ b/makedumpfile.c
+> > @@ -6968,7 +6968,7 @@ main(int argc, char *argv[])
+> >  
+> >  	info->block_order = DEFAULT_ORDER;
+> >  	message_level = DEFAULT_MSG_LEVEL;
+> > -	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMRrsvXx:", longopts,
+> > +	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:KlMRrsvXx:", longopts,
+> 
+> Will you add a long option like "--cyclic" ?
 
-Thanks.
+That's a good idea, I will choose it.
 
 > 
-> diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-> index 59d35c9..2ebcc3a 100644
-> --- a/include/x86/x86-linux.h
-> +++ b/include/x86/x86-linux.h
-> @@ -233,7 +233,6 @@ struct x86_linux_header {
->  	uint32_t high_base;			/* 0x24C */
->  	uint32_t high_memsz;			/* 0x250 */
->  	uint32_t high_filesz;			/* 0x254 */
-> -	uint32_t tail[32*1024 - 0x258];		/* 0x258 */
->  #else
->  	uint32_t kernel_alignment;		/* 0x230 */
->  	uint8_t  relocatable_kernel;		/* 0x234 */
-> @@ -241,7 +240,6 @@ struct x86_linux_header {
->  	uint32_t cmdline_size;                  /* 0x238 */
->  	uint32_t hardware_subarch;              /* 0x23C */
->  	uint64_t hardware_subarch_data;         /* 0x240 */
-> -	uint8_t  tail[32*1024 - 0x248];		/* 0x248 */
->  #endif
->  } PACKED;
->  
-> diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-> index 54c4427..6998587 100644
-> --- a/kexec/arch/i386/kexec-bzImage.c
-> +++ b/kexec/arch/i386/kexec-bzImage.c
-> @@ -44,7 +44,10 @@ static const int probe_debug = 0;
->  int bzImage_probe(const char *buf, off_t len)
->  {
->  	const struct x86_linux_header *header;
-> -	if ((uintmax_t)len < (uintmax_t)sizeof(header)) {
-> +	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
-> +		if (probe_debug) {
-> +			fprintf(stderr, "File is too short to be a bzImage!\n");
-> +		}
->  		return -1;
->  	}
->  	header = (const struct x86_linux_header *)buf;
-> @@ -118,7 +121,7 @@ int do_bzImage_load(struct kexec_info *info,
->  	/*
->  	 * Find out about the file I am about to load.
->  	 */
-> -	if ((uintmax_t)kernel_len < (uintmax_t)sizeof(setup_header)) {
-> +	if ((uintmax_t)kernel_len < (uintmax_t)(2 * 512)) {
->  		return -1;
->  	}
->  	memcpy(&setup_header, kernel, sizeof(setup_header));
+> >  	    NULL)) != -1) {
+> >  		switch (opt) {
+> >  		case 'b':
+> > @@ -7017,6 +7017,9 @@ main(int argc, char *argv[])
+> >  				goto out;
+> >  			info->flag_sadump_diskset = 1;
+> >  			break;
+> > +		case 'K':
+> > +			info->flag_cyclic = TRUE;
+> > +			break;
+> >  		case 'l':
+> >  			info->flag_compress = DUMP_DH_COMPRESSED_LZO;
+> >  			break;
+> > diff --git a/makedumpfile.h b/makedumpfile.h
+> > index 6f5489d..c588e43 100644
+> > --- a/makedumpfile.h
+> > +++ b/makedumpfile.h
+> > @@ -801,6 +801,7 @@ struct DumpInfo {
+> >  	int		flag_rearrange;      /* flag of creating dumpfile from
+> >  						flattened format */
+> >  	int		flag_split;	     /* splitting vmcore */
+> > +	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
+> >  	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
+> >  	int		flag_refiltering;    /* refilter from kdump-compressed file */
+> >  	int		flag_force;	     /* overwrite existing stuff */
+> > -- 
+> > 1.7.9.2
+> > 
 > 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> You need to update makedumpfile.8 too.
+
+Thank you for your notice, I will remember to update it.
+
+
+Thanks
+Atsushi Kumagai
+
 > 
+> Thanks,
+> Daisuke Nishimura.
 
 _______________________________________________
 kexec mailing list
