@@ -1,32 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SbiJT-0003ad-JT
- for kexec@lists.infradead.org; Tue, 05 Jun 2012 01:12:01 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 66A303EE0C0
- for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 463A845DEB2
- for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 04A6C45DEAD
- for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:53 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id E34AD1DB8043
- for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:52 +0900 (JST)
-Received: from m025.s.css.fujitsu.com (m025.s.css.fujitsu.com [10.0.81.65])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 9CB761DB8042
- for <kexec@lists.infradead.org>; Tue,  5 Jun 2012 10:11:52 +0900 (JST)
-Date: Tue, 05 Jun 2012 10:10:46 +0900 (JST)
-Message-Id: <20120605.101046.99023349.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH 0/4] makedumpfile: cyclic processing to keep memory
- consumption.
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <CAJGZr0L2OTA_Qv9hqXLGhK-Hs++ev+xHLZ9-OK8HbhON-CbSAQ@mail.gmail.com>
-References: <CAJGZr0LSC3GKKTSDm9zH4YiY3V3B27O1t0v7YQWNho_Q+s3msw@mail.gmail.com>
- <20120604165449.e7236889.kumagai-atsushi@mxc.nes.nec.co.jp>
- <CAJGZr0L2OTA_Qv9hqXLGhK-Hs++ev+xHLZ9-OK8HbhON-CbSAQ@mail.gmail.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Sblrn-0004Bc-JZ
+ for kexec@lists.infradead.org; Tue, 05 Jun 2012 04:59:42 +0000
+Date: Tue, 5 Jun 2012 13:57:10 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: makedumpfile-1.4.4: Support for LZO compression.
+Message-Id: <20120605135710.3c968b79.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <4FC75961.4070709@canonical.com>
+References: <20120530131644.9548f784.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <4FC74C74.3040302@canonical.com> <4FC75961.4070709@canonical.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -36,70 +19,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: muvarov@gmail.com
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: louis.bouchard@canonical.com
+Cc: kexec@lists.infradead.org
 
-From: Maxim Uvarov <muvarov@gmail.com>
-Subject: Re: [RFC PATCH 0/4] makedumpfile: cyclic processing to keep memory consumption.
-Date: Mon, 4 Jun 2012 12:29:07 +0400
-
-> 2012/6/4 Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-> 
->> Hello Maxim,
->>
->> On Thu, 31 May 2012 10:50:39 +0400
->> Maxim Uvarov <muvarov@gmail.com> wrote:
->>
-
->>
->> After received your mail, I measured executing time with the patch below.
->> The result below was measured in 5GB memory machine.
->>
->> Result:
->>  a. makedumpfile -Kcd31
->>    excluding time:   6.55 [sec]
->>    writing time:     5.89 [sec]
->>
->>  b. makedumpfile -cd31
->>    excluding time:   0.21 [sec]
->>    writing time:     5.82 [sec]
->>
->> I don't think this result is good, the prototype has some points to be
->> improved for performance.
->> (e.g. buffer size, the way to exclude free pages, etc...)
->>
->> However, I think getting a bit of speed down can't be helped to keep
->> memory consumption.
->>
->>
-> I'm asking because I have machines with several TBs of ram. And filtering
-> and saving data from vmcore takes long time. (more then 30 minutes). I
-> wonder if somebody already work on performance. Probably we can do SMP
-> optimizations.
-> 
-> Maxim.
-
-Hello Maxim,
-
-I'm now benchmarking for three kinds of pralell compressions: no
-compression, lzo and snappy. I'll post its result after completing it,
-by Friday? if possible.
-
-Also I'll soon post a patch for filtering free pages in constant time
-based on mem_map, just a small extension of the patch Kumagai-san
-posted previously, by which filtering score for -Kcd31 above would be
-improved so much; it now repeats tracing free_list (memory size /
-cyclic_size) times.
-
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gTG91aXMsCgpPbiBUaHUsIDMxIE1heSAyMDEyIDEzOjQzOjI5ICswMjAwCkJvdWNoYXJk
+IExvdWlzIDxsb3Vpcy5ib3VjaGFyZEBjYW5vbmljYWwuY29tPiB3cm90ZToKCj4gSGVsbG8gS3Vt
+YWdhaS1zYW4sCj4gCj4gTGUgMzEvMDUvMjAxMiAxMjo0OCwgQm91Y2hhcmQgTG91aXMgYSDDqWNy
+aXQgOgo+ID4gCj4gPiBUaGVyZSBzZWVtcyB0byBiZSBzb21lIGlzc3VlIGluIGdldF9tZW1fdHlw
+ZSgpIHRoYXQgSSB3aWxsIHRyeSB0byBkZWJ1Zwo+ID4gZnVydGhlci4gUGxlYXNlIGxldCBtZSBr
+bm93IGlmIHlvdSBoYXZlIHNvbWV0aGluZyBzcGVjaWZpYyB0aGF0IHlvdSB3YW50Cj4gPiBtZSB0
+byB0ZXN0IGFuZC9vciB0cnkgYXMgSSBoYXZlIGV2ZXJ5dGhpbmcgbmVlZGVkLgo+ID4gCj4gPiBL
+aW5kIHJlZ2FyZHMsCj4gPiAKPiA+IC4uLkxvdWlzCj4gPiAKPiA+IAo+IAo+IEhlcmUgaXMgc29t
+ZSBtb3JlIGRldGFpbHMgYWJvdXQgdGhlIGlzc3VlLiBJIGhhdmUgcmVjb21waWxlZAo+IG1ha2Vk
+dW1wZmlsZSB3aXRoIHN5bWJvbHMgaW4gb3JkZXIgdG8gZGVidWcgdGhlIGlzc3VlLiBUaGUgZm9s
+bG93aW5nCj4gY29kZSBzZWVtcyB0byBiZSBpbnRlcmVzdGluZyA6Cj4gCj4gZ2V0X21lbV90eXBl
+KHZvaWQpCj4gewo+IAlpbnQgcmV0Owo+IAo+IAlpZiAoKFNJWkUocGFnZSkgPT0gTk9UX0ZPVU5E
+X1NUUlVDVFVSRSkKPiAJICAgIHx8IChPRkZTRVQocGFnZS5mbGFncykgPT0gTk9UX0ZPVU5EX1NU
+UlVDVFVSRSkKPiAJICAgIHx8IChPRkZTRVQocGFnZS5fY291bnQpID09IE5PVF9GT1VORF9TVFJV
+Q1RVUkUpCj4gCSAgICB8fCAoT0ZGU0VUKHBhZ2UubWFwcGluZykgPT0gTk9UX0ZPVU5EX1NUUlVD
+VFVSRSkpIHsKPiAJCXJldCA9IE5PVF9GT1VORF9NRU1UWVBFOwo+IAo+IChnZGIpIHAgc2l6ZV90
+YWJsZS5wYWdlCj4gJDEgPSA2NAo+IChnZGIpIHAgb2Zmc2V0X3RhYmxlLnBhZ2UKPiAkMiA9IHtm
+bGFncyA9IDAsIF9jb3VudCA9IC0xLCBtYXBwaW5nID0gOCwgbHJ1ID0gLTF9Cj4gCj4gU28gb2Zm
+c2V0X3RhYmxlLnBhZ2UuX2NvdW50ID0gLTEsIHdoaWNoIHRyaWdnZXJzIHRoZSBOT1RfRk9VTkRf
+TUVNVFlQRS4KPiAKPiBJIGFtIG5vdCBmYW1pbGlhciBlbm91Z2ggd2l0aCB0aGlzIHRvIGNvbmNs
+dWRlLCBidXQgeW91IG1pZ2h0IGhhdmUgYW4KPiBpZGVhLiBJIGNhbiBoYXZlIHRoZSB2bWxpbnV4
+IGZpbGUgbWFkZSBhdmFpbGFibGUgdG8geW91IGlmIHlvdSB3YW50Lgo+IAo+IEZvciBpbmZvcm1h
+dGlvbiwgSSBhbSBhbHNvIHdvcmtpbmcgd2l0aCBKb2huIFdyaWdodCB3aG8gaXMgdGhlIGRlYmlh
+bgo+IHBhY2thZ2UgbWFpbnRhaW5lciB0byBhc3Npc3QgaGltIGluIHBhY2thZ2luZyBtYWtlZHVt
+cGZpbGUgZm9yIERlYmlhbgo+IGFuZCBVYnVudHUuCgpJJ20gc29ycnksIGl0IHNlZW1zIGEgYnVn
+IHJlbGF0ZWQgdG8ga2VybmVsIDMuMSBvciBsYXRlci4KRXZlbiBjdXJyZW50IG1ha2VkdW1wZmls
+ZSBjYW4ndCBnZXQgdGhlIG9mZnNldCBvZiBwYWdlLl9jb3VudCBhbmQgcGFnZS5scnUgCmZyb20g
+dm1saW51eC4KClRoYW5rIHlvdSBmb3IgeW91ciByZXBvcnQuIEkgd2lsbCBmaXggdGhpcyBidWcu
+CgpCVFcsIGRvIHlvdSBuZWVkIHZtY29yZWluZm8gZmlsZSA/IElmIHlvdXIgcHVycG9zZSBpcyBv
+bmx5IHRvIGdlbmVyYXRlIGR1bXBmaWxlLAp5b3UgY2FuIGV4ZWN1dGUgbWFrZWR1bXBmaWxlIHdp
+dGhvdXQgLWcgb3B0aW9uLgpCZWNhdXNlIHRoZSB2bWNvcmUgZ2VuZXJhdGVkIGJ5IGtlcm5lbCAy
+LjYuMjQgb3IgbGF0ZXIgaW5jbHVkZSB0aGUgZGVidWcKaW5mb3JtYXRpb24gd2hpY2ggbWFrZWR1
+bXBmaWxlIG5lZWQuCgpFeGFtcGxlOgoKICQgbWFrZWR1bXBmaWxlIHZtY29yZSBkdW1wZmlsZQoK
+ClRoYW5rcwpBdHN1c2hpIEt1bWFnYWkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
