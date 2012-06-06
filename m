@@ -1,29 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e32.co.us.ibm.com ([32.97.110.150])
+Received: from e5.ny.us.ibm.com ([32.97.182.145])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1ScD7D-0005dB-Ik
- for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:05:24 +0000
+ id 1ScD7b-0005ge-Es
+ for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:05:48 +0000
 Received: from /spool/local
- by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e5.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Wed, 6 Jun 2012 04:05:20 -0600
-Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
- [9.17.195.228])
- by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id 7A22C3E40049
- for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 10:04:55 +0000 (WET)
-Received: from d03av06.boulder.ibm.com (d03av06.boulder.ibm.com [9.17.195.245])
- by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q56A4r6P176644
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:04:54 -0600
-Received: from d03av06.boulder.ibm.com (loopback [127.0.0.1])
- by d03av06.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q56A5h49012598
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:05:43 -0600
-Subject: [PATCH 1/7] Initialize and setup eppic
+ Wed, 6 Jun 2012 06:05:45 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+ by d01dlp01.pok.ibm.com (Postfix) with ESMTP id 0A3E038C8052
+ for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 06:05:19 -0400 (EDT)
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+ by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q56A5Iom181824
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 06:05:18 -0400
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av04.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q56A5HMW014171
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:05:17 -0600
+Subject: [PATCH 2/7] makedumpfile and eppic interface layer
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Wed, 06 Jun 2012 15:34:48 +0530
-Message-ID: <20120606100448.12534.22340.stgit@aravinda>
+Date: Wed, 06 Jun 2012 15:35:13 +0530
+Message-ID: <20120606100513.12534.63844.stgit@aravinda>
 In-Reply-To: <20120606095709.12534.63967.stgit@aravinda>
 References: <20120606095709.12534.63967.stgit@aravinda>
 MIME-Version: 1.0
@@ -42,170 +41,174 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
 
-This patch contains routines which initialize eppic and register call
-back function which will be called whenever a new eppic macro is loaded
-using eppic_load() API. The registered call back function executes the
-eppic macro as soon as it is loaded.
+This patch extends the makedumpfile functionality to include eppic
+language support. The patch initializes eppic and then loads and
+executes the specified eppic macros.
 
-The -ltinfo is included in LIBS in the Makefile, because eppic
-currently calls few functions in libtinfo and the compiler complains
-about it, if not included. I think the paths where libeppic calls
-libtinfo functions are not exercised by makedumpfile.
+This patch also includes "--eppic" option to makedumpfile command to
+specify the eppic macro or the directory containing eppic macros. The
+specified eppic macro will be executed to scrub the data in the
+dumpfile. In case of a directory, all the eppic macros inside the
+directory will be executed for scrubbing the data.
 
-Including -ltinfo will increase the size of makedumpfile static
-version
-
-TODO:
-	- Check out a way to get rid of -ltinfo
+TODO
+	- Support specifying eppic macros in the makedumpfile.conf file.
+	  A new command should be added to makedumpfile.conf to identify
+	  an eppic macro. This command could be used in any section of
+	  the makedumpfile.conf, where the section name indicates the kernel
+	  module name. makedumpfile will only search for symbols encountered
+	  by eppic macro only in the specified module. Because, searching
+	  these symbols in all the modules will cause huge performance
+	  overhead.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- Makefile          |    6 ++--
- extension_eppic.c |   84 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- extension_eppic.h |   23 +++++++++++++++
- 3 files changed, 110 insertions(+), 3 deletions(-)
- create mode 100644 extension_eppic.c
- create mode 100644 extension_eppic.h
+ erase_info.c      |   40 ++++++++++++++++++++++++++++++++++++++--
+ erase_info.h      |    2 ++
+ extension_eppic.h |    3 +++
+ makedumpfile.c    |    7 ++++++-
+ makedumpfile.h    |    6 ++++++
+ 5 files changed, 55 insertions(+), 3 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 7337c58..bdfdbab 100644
---- a/Makefile
-+++ b/Makefile
-@@ -40,12 +40,12 @@ CFLAGS_ARCH += -m32
- endif
+diff --git a/erase_info.c b/erase_info.c
+index e2e6a52..d301f20 100644
+--- a/erase_info.c
++++ b/erase_info.c
+@@ -1811,6 +1811,32 @@ process_config_file(const char *name_config)
+ 	return TRUE;
+ }
  
- SRC	= makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
--SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c
--OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o
-+SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c extension_eppic.c
-+OBJ_PART = print_info.o dwarf_info.o elf_info.o erase_info.o sadump_info.o extension_eppic.o
- SRC_ARCH = arch/arm.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c
- OBJ_ARCH = arch/arm.o arch/x86.o arch/x86_64.o arch/ia64.o arch/ppc64.o arch/s390x.o arch/ppc.o
- 
--LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
-+LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz -leppic -ltinfo
- ifneq ($(LINKTYPE), dynamic)
- LIBS := -static $(LIBS)
- endif
-diff --git a/extension_eppic.c b/extension_eppic.c
-new file mode 100644
-index 0000000..f6c7ff1
---- /dev/null
-+++ b/extension_eppic.c
-@@ -0,0 +1,84 @@
-+/*
-+ * extension_eppic.c
-+ *
-+ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-+ *
-+ * Copyright (C) 2012  IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <stdio.h>
-+#include <string.h>
-+#include <sys/types.h>
-+#include <fcntl.h>
 +
++/* Process the eppic macro using eppic library */
++static int
++process_eppic_file(char *name_config)
++{
++	int ret = 0;
++
++	/* Initialize eppic*/
++	ret = eppic_init();
++	if (ret) {
++		ERRMSG("Eppic initialization failed\n");
++		return FALSE;
++	}
++
++	/* TODO
++	 * Support specifying eppic macros in makedumpfile.conf file
++	 */
++
++	/* Load/compile and execute the eppic macro */
++	eppic_load(name_config);
++
++	eppic_unload(name_config);
++
++	return TRUE;
++}
++
+ static void
+ split_filter_info(struct filter_info *prev, unsigned long long next_paddr,
+ 						size_t size)
+@@ -1904,7 +1930,7 @@ extract_filter_info(unsigned long long start_paddr,
+ int
+ gather_filter_info(void)
+ {
+-	int ret;
++	int ret = TRUE;
+ 
+ 	/*
+ 	 * Before processing filter config file, load the symbol data of
+@@ -1915,7 +1941,17 @@ gather_filter_info(void)
+ 	if (!load_module_symbols())
+ 		return FALSE;
+ 
+-	ret = process_config_file(info->name_filterconfig);
++	/*
++	 * This patch supports specifying both makedumpfile.conf and
++	 * eppic macro at the same time. Whether to retain or discard the
++	 * functionality provided by makedumpfile.conf is open for
++	 * discussion
++	 */
++	if (info->name_filterconfig)
++		ret = process_config_file(info->name_filterconfig);
++
++	if (info->name_eppic_config)
++		ret &= process_eppic_file(info->name_eppic_config);
+ 
+ 	/*
+ 	 * Remove modules symbol information, we dont need now.
+diff --git a/erase_info.h b/erase_info.h
+index 636fcfa..2dc8b88 100644
+--- a/erase_info.h
++++ b/erase_info.h
+@@ -19,6 +19,8 @@
+ #ifndef _ERASE_INFO_H
+ #define _ERASE_INFO_H
+ 
 +#include "extension_eppic.h"
 +
-+/*
-+ * Most of the functions included in this file performs similar
-+ * functionality as in the applications/crash/eppic.c file part of
-+ * eppic, but uses DWARF instead of gdb. Few of the functions are
-+ * reused directly which are acknowledged in the comment before the
-+ * function.
-+ */
-+
-+/*
-+ * This is the call back function called when a new eppic macro is
-+ * loaded. This will execute the loaded eppic macro.
-+ *
-+ * "fname" is considered as the entry point of an eppic macro only if
-+ * the following functions are defined:
-+ *
-+ *  fname_help()
-+ *  fname_usage()
-+ *
-+ * These functions have no relevance in makedumpfile context as
-+ * makedumpfile automatically executes the eppic macro by calling the
-+ * entry point and user will not have any option to execute the usage
-+ * or help functions. However they are required to identify the entry
-+ * points in the eppic macro.
-+ */
-+void
-+reg_callback(char *name, int load)
-+{
-+	char fname[MAX_SYMNAMELEN];
-+
-+	/* Nothing to process for unload request */
-+	if (!load)
-+		return;
-+
-+	snprintf(fname, sizeof(fname), "%s_help", name);
-+	if (eppic_chkfname(fname, 0)) {
-+		snprintf(fname, sizeof(fname), "%s_usage", name);
-+		if(eppic_chkfname(fname, 0))
-+			eppic_cmd(name, NULL, 0);
-+	}
-+	return;
-+}
-+
-+
-+/* Initialize eppic */
-+int
-+eppic_init()
-+{
-+	if (eppic_open() >= 0) {
-+
-+		/* Register call back functions */
-+		eppic_apiset(NULL, 3, sizeof(long), 0);
-+
-+		/* set the new function callback */
-+		eppic_setcallback(reg_callback);
-+
-+		return 0;
-+	}
-+	return 1;
-+}
-+
+ #define MAX_SIZE_STR_LEN (26)
+ 
+ /*
 diff --git a/extension_eppic.h b/extension_eppic.h
-new file mode 100644
-index 0000000..ca74ce4
---- /dev/null
+index ca74ce4..67efd11 100644
+--- a/extension_eppic.h
 +++ b/extension_eppic.h
-@@ -0,0 +1,23 @@
-+/*
-+ * extension_eppic.h
-+ *
-+ * Created by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-+ *
-+ * Copyright (C) 2012  IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef _EXTENSION_EPPIC_H
-+#define _EXTENSION_EPPIC_H
+@@ -20,4 +20,7 @@
+ 
+ #include "eppic_api.h"
+ 
++int eppic_init(void);    /* Eppic initialize */
 +
-+#include "eppic_api.h"
+ #endif /* _EXTENSION_EPPIC_H */
 +
-+#endif /* _EXTENSION_EPPIC_H */
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d024e95..7c73136 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6111,7 +6111,8 @@ retry:
+ 		}
+ 	}
+ 
+-	if (info->name_filterconfig && !gather_filter_info())
++	if ((info->name_filterconfig || info->name_eppic_config)
++			&& !gather_filter_info())
+ 		return FALSE;
+ 
+ 	if (!create_dump_bitmap())
+@@ -6945,6 +6946,7 @@ static struct option longopts[] = {
+ 	{"config", required_argument, NULL, 'C'},
+ 	{"help", no_argument, NULL, 'h'},
+ 	{"diskset", required_argument, NULL, 'k'},
++	{"eppic", required_argument, NULL, 'S'},
+ 	{0, 0, 0, 0}
+ };
+ 
+@@ -7035,6 +7037,9 @@ main(int argc, char *argv[])
+ 		case 's':
+ 			info->flag_split = 1;
+ 			break;
++		case 'S':
++			info->name_eppic_config = optarg;
++			break;
+ 		case 'r':
+ 			info->flag_reassemble = 1;
+ 			break;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 6f5489d..51f4363 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -830,6 +830,12 @@ struct DumpInfo {
+ 	FILE		*file_filterconfig;
+ 
+ 	/*
++	 * Filter config file containing eppic language filtering rules to filter
++	 * out kernel data from vmcore
++	 */
++	char		*name_eppic_config;
++
++	/*
+ 	 * diskdimp info:
+ 	 */
+ 	int		block_order;
 
 
 _______________________________________________
