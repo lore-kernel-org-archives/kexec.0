@@ -1,29 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e33.co.us.ibm.com ([32.97.110.151])
+Received: from e31.co.us.ibm.com ([32.97.110.149])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1ScD7r-0005jW-CC
- for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:06:04 +0000
+ id 1ScD88-0005nY-Lo
+ for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:06:21 +0000
 Received: from /spool/local
- by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
  Violators will be prosecuted
  for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Wed, 6 Jun 2012 04:06:01 -0600
-Received: from d03relay05.boulder.ibm.com (d03relay05.boulder.ibm.com
- [9.17.195.107])
- by d03dlp01.boulder.ibm.com (Postfix) with ESMTP id 4F6611FF0024
- for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 10:05:51 +0000 (WET)
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
- by d03relay05.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q56A5gYm033128
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:05:46 -0600
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
- by d03av03.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q56A5fRv008897
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:05:42 -0600
-Subject: [PATCH 3/7] Eppic call back functions to query a dump image
+ Wed, 6 Jun 2012 04:06:19 -0600
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+ [9.17.195.227])
+ by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id 30A413E40054
+ for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 10:06:15 +0000 (WET)
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+ by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q56A6Dtc187682
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:06:14 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av01.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q56A6AJT009116
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:06:10 -0600
+Subject: [PATCH 4/7] Implement apigetctype call back function
 From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Wed, 06 Jun 2012 15:35:37 +0530
-Message-ID: <20120606100537.12534.61261.stgit@aravinda>
+Date: Wed, 06 Jun 2012 15:36:02 +0530
+Message-ID: <20120606100602.12534.69749.stgit@aravinda>
 In-Reply-To: <20120606095709.12534.63967.stgit@aravinda>
 References: <20120606095709.12534.63967.stgit@aravinda>
 MIME-Version: 1.0
@@ -42,233 +42,204 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
 
-This patch implements a series of apigetuint* call back functions
-which are used to access data from the dump image. Eppic uses these
-call back functions to fetch the actual value of the global variables.
-
-This patch also adds other call back functions as a place holder which
-will be implemented in later patches. This is mainly to avoid
-compilation error while registering the call back functions using
-eppic_apiset() function.
+libeppic will call apigetctype call back function whenever it
+encounters a token in the eppic macro. The call back function will use
+DWARF to query information related to the requested token and will
+pass it back to eppic using libeppic API calls. If the token does not
+exist, then apigetctype call returns 0.
 
 Signed-off-by: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
 ---
- extension_eppic.c |  128 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- extension_eppic.h |   50 ++++++++++++++++++++-
- 2 files changed, 176 insertions(+), 2 deletions(-)
+ dwarf_info.c      |   83 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dwarf_info.h      |    9 ++++++
+ extension_eppic.c |   25 +++++++++++++++-
+ 3 files changed, 116 insertions(+), 1 deletions(-)
 
-diff --git a/extension_eppic.c b/extension_eppic.c
-index f6c7ff1..2c01fdf 100644
---- a/extension_eppic.c
-+++ b/extension_eppic.c
-@@ -20,6 +20,7 @@
- #include <sys/types.h>
- #include <fcntl.h>
+diff --git a/dwarf_info.c b/dwarf_info.c
+index 1429858..32170ad 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -51,6 +51,7 @@ struct dwarf_info {
+ 	long	enum_number;		/* OUT */
+ 	unsigned char	type_flag;	/* OUT */
+ 	char	src_name[LEN_SRCFILE];	/* OUT */
++	Dwarf_Off die_offset;		/* OUT */
+ };
+ static struct dwarf_info	dwarf_info;
  
-+#include "makedumpfile.h"
- #include "extension_eppic.h"
- 
- /*
-@@ -64,6 +65,131 @@ reg_callback(char *name, int load)
- 	return;
+@@ -103,6 +104,22 @@ is_search_typedef(int cmd)
  }
  
-+/*
-+ * Call back functions for eppic to query the dump image
+ static int
++is_search_domain(int cmd)
++{
++	if ((cmd == DWARF_INFO_GET_DOMAIN_STRUCT)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_TYPEDEF)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_ARRAY)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_UNION)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_ENUM)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_REF)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_STRING)
++		|| (cmd == DWARF_INFO_GET_DOMAIN_BASE))
++		return TRUE;
++	else
++		return FALSE;
++}
++
++static int
+ process_module (Dwfl_Module *dwflmod,
+ 		void **userdata __attribute__ ((unused)),
+ 		const char *name __attribute__ ((unused)),
+@@ -774,6 +791,48 @@ search_symbol(Dwarf_Die *die, int *found)
+ }
+ 
+ static void
++search_domain(Dwarf_Die *die, int *found)
++{
++	int tag;
++	const char *name;
++	short flag = 0;
++
++	do {
++		tag  = dwarf_tag(die);
++		name = dwarf_diename(die);
++
++		if ((!name) || strcmp(name, dwarf_info.symbol_name))
++			continue;
++
++		switch (dwarf_info.cmd) {
++			case DWARF_INFO_GET_DOMAIN_STRUCT:
++				if (tag == DW_TAG_structure_type)
++					flag = 1;
++				break;
++			case DWARF_INFO_GET_DOMAIN_TYPEDEF:
++				if (tag == DW_TAG_typedef)
++					flag = 1;
++				break;
++			/* TODO
++			 * Implement functionality for the rest of the domains
++			 */
++		}
++
++		if(!flag)
++			continue;
++
++		dwarf_info.struct_size = dwarf_bytesize(die);
++
++		if (dwarf_info.struct_size > 0) {
++			if(found)
++				*found = TRUE;
++			dwarf_info.die_offset = dwarf_dieoffset(die);
++			break;
++		}
++	} while (!dwarf_siblingof(die, die));
++}
++
++static void
+ search_die_tree(Dwarf_Die *die, int *found)
+ {
+ 	Dwarf_Die child;
+@@ -798,6 +857,9 @@ search_die_tree(Dwarf_Die *die, int *found)
+ 
+ 	else if (is_search_typedef(dwarf_info.cmd))
+ 		search_typedef(die, found);
++
++	else if (is_search_domain(dwarf_info.cmd))
++		search_domain(die, found);
+ }
+ 
+ static int
+@@ -1183,6 +1245,27 @@ get_source_filename(char *structname, char *src_name, int cmd)
+ }
+ 
+ /*
++ * Get the domain information of the symbol
 + */
-+
-+static int
-+apigetmem(ull iaddr, void *p, int nbytes)
++long
++get_domain(char *symname, int cmd, unsigned long long *die)
 +{
-+	return readmem(VADDR, iaddr, p, nbytes);
-+}
++	dwarf_info.cmd         = cmd;
++	dwarf_info.symbol_name = symname;
++	dwarf_info.type_name   = NULL;
++	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
++	dwarf_info.die_offset  = 0;
 +
-+static int
-+apiputmem(ull iaddr, void *p, int nbytes)
-+{
-+	return 1;
-+}
-+
-+static char *
-+apimember(char *mname, ull pidx, type_t *tm,
-+		member_t *m, ull *lidx)
-+{
-+	return 0;
-+}
-+
-+static int
-+apigetctype(int ctype, char *name, type_t *tout)
-+{
-+	return 0;
-+}
-+
-+static char *
-+apigetrtype(ull idx, type_t *t)
-+{
-+	return "";
-+}
-+
-+static int
-+apialignment(ull idx)
-+{
-+	return 0;
-+}
-+
-+int
-+apigetval(char *name, ull *val, VALUE_S *value)
-+{
-+	ull ptr = 0;
-+
-+	ptr = get_symbol_addr(name);
-+	if (!ptr)
++	if (!get_debug_info())
 +		return 0;
 +
-+	*val = ptr;
-+	return 1;
++	if(die)
++		*die = (unsigned long long) dwarf_info.die_offset;
++
++	return dwarf_info.struct_size;
 +}
 +
-+static enum_t *
-+apigetenum(char *name)
-+{
-+	return 0;
-+}
-+
-+static def_t *
-+apigetdefs(void)
-+{
-+	return 0;
-+}
-+
-+static uint8_t
-+apigetuint8(void *ptr)
-+{
-+	uint8_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof val))
-+		return (uint8_t) -1;
-+	return val;
-+}
-+
-+static uint16_t
-+apigetuint16(void *ptr)
-+{
-+	uint16_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof val))
-+		return (uint16_t) -1;
-+	return val;
-+}
-+
-+static uint32_t
-+apigetuint32(void *ptr)
-+{
-+	uint32_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof val))
-+		return (uint32_t) -1;
-+	return val;
-+}
-+
-+static uint64_t
-+apigetuint64(void *ptr)
-+{
-+	uint64_t val;
-+	if (!readmem(VADDR, (unsigned long)ptr, (char *)&val, sizeof val))
-+		return (uint64_t) -1;
-+	return val;
-+}
-+
-+static char *
-+apifindsym(char *p)
-+{
-+	return NULL;
-+}
-+
-+apiops icops = {
-+	apigetmem,
-+	apiputmem,
-+	apimember,
-+	apigetctype,
-+	apigetrtype,
-+	apialignment,
-+	apigetval,
-+	apigetenum,
-+	apigetdefs,
-+	apigetuint8,
-+	apigetuint16,
-+	apigetuint32,
-+	apigetuint64,
-+	apifindsym
-+};
-+
- 
- /* Initialize eppic */
- int
-@@ -72,7 +198,7 @@ eppic_init()
- 	if (eppic_open() >= 0) {
- 
- 		/* Register call back functions */
--		eppic_apiset(NULL, 3, sizeof(long), 0);
-+		eppic_apiset(&icops, 3, sizeof(long), 0);
- 
- 		/* set the new function callback */
- 		eppic_setcallback(reg_callback);
-diff --git a/extension_eppic.h b/extension_eppic.h
-index 67efd11..45f4028 100644
---- a/extension_eppic.h
-+++ b/extension_eppic.h
-@@ -22,5 +22,53 @@
- 
- int eppic_init(void);    /* Eppic initialize */
- 
--#endif /* _EXTENSION_EPPIC_H */
 +/*
-+ * MEMBER_S, ENUM_S, DEF_S and TYPE_S are extracts from eppic header
-+ * file eppic.h. The reason for not including the eppic.h header file
-+ * in this file is because, lot of things in eppic.h are not required
-+ * for makedumpfile extension.
-+ */
-+
-+/* member information */
-+typedef MEMBER_S {
-+
-+	char *name;
-+	int offset; /* offset from top of structure */
-+	int size;   /* size in bytes of the member or of the bit array */
-+	int fbit;   /* fist bit (-1) is not a bit field */
-+	int nbits;  /* number of bits for this member */
-+	int value;  /* for a enum member, the corresponding value_t */
-+
-+} member_t;
-+
-+/* list to hold enum constant information */
-+typedef ENUM_S {
+  * Set the dwarf_info with kernel/module debuginfo file information.
+  */
+ int
+diff --git a/dwarf_info.h b/dwarf_info.h
+index 1e07484..1f0d896 100644
+--- a/dwarf_info.h
++++ b/dwarf_info.h
+@@ -47,6 +47,14 @@ enum {
+ 	DWARF_INFO_CHECK_SYMBOL_ARRAY_TYPE,
+ 	DWARF_INFO_GET_SYMBOL_TYPE,
+ 	DWARF_INFO_GET_MEMBER_TYPE,
++	DWARF_INFO_GET_DOMAIN_STRUCT,
++	DWARF_INFO_GET_DOMAIN_TYPEDEF,
++	DWARF_INFO_GET_DOMAIN_ARRAY,
++	DWARF_INFO_GET_DOMAIN_UNION,
++	DWARF_INFO_GET_DOMAIN_ENUM,
++	DWARF_INFO_GET_DOMAIN_REF,
++	DWARF_INFO_GET_DOMAIN_STRING,
++	DWARF_INFO_GET_DOMAIN_BASE,
+ };
  
-+	struct enum_s *next;
-+	char *name;
-+	int value;
+ char *get_dwarf_module_name(void);
+@@ -61,6 +69,7 @@ char *get_member_type_name(char *structname, char *membername, int cmd, long *si
+ long get_array_length(char *name01, char *name02, unsigned int cmd);
+ long get_enum_number(char *enum_name);
+ int get_source_filename(char *structname, char *src_name, int cmd);
++long get_domain(char *symname, int cmd, unsigned long long *die);
+ int set_dwarf_debuginfo(char *mod_name, char *os_release, char *name_debuginfo, int fd_debuginfo);
+ 
+ #endif  /* DWARF_INFO_H */
+diff --git a/extension_eppic.c b/extension_eppic.c
+index 2c01fdf..fb6eecb 100644
+--- a/extension_eppic.c
++++ b/extension_eppic.c
+@@ -91,7 +91,30 @@ apimember(char *mname, ull pidx, type_t *tm,
+ static int
+ apigetctype(int ctype, char *name, type_t *tout)
+ {
+-	return 0;
++	long size = 0;
++	unsigned long long die = 0;
 +
-+} enum_t;
++	switch (ctype) {
++		case V_TYPEDEF:
++			size = get_domain(name, DWARF_INFO_GET_DOMAIN_TYPEDEF, &die);
++			break;
++		case V_STRUCT:
++			size = get_domain(name, DWARF_INFO_GET_DOMAIN_STRUCT, &die);
++			break;
++		/* TODO
++		 * Implement for all the domains
++		 */
++	}
 +
-+/* list of macro symbols and there corresponding value_ts */
-+typedef DEF_S {
-+	struct def_s * next;
-+	char *name;
-+	char *val;
++	if (size <= 0 || !die)
++		return 0;
 +
-+} def_t;
-+
-+
-+typedef TYPE_S {
-+	int type;   /* type_t of type_t */
-+	ull idx;    /* index to basetype_t or ctype_t */
-+	int size;   /* size of this item */
-+	/* ... next fields are use internally */
-+	int typattr;    /* base type_t qualifiers */
-+	int ref;    /* level of reference */
-+	int fct;        /* 1 if function pointer */
-+	int *idxlst;    /* points to list of indexes if array */
-+	ull rtype;  /* type_t a reference refers too */
-+} type_t;
-+
-+#endif /* _EXTENSION_EPPIC_H */
++	/* populate */
++	eppic_type_settype(tout, ctype);
++	eppic_type_setsize(tout, size);
++	eppic_type_setidx(tout, (ull)(unsigned long)die);
++	eppic_pushref(tout, 0);
++	return 1;
+ }
+ 
+ static char *
 
 
 _______________________________________________
