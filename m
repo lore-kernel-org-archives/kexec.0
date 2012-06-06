@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
+Received: from e9.ny.us.ibm.com ([32.97.182.139])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sc3SB-00023l-8e
- for kexec@lists.infradead.org; Tue, 05 Jun 2012 23:46:23 +0000
-Received: by pbbrq13 with SMTP id rq13so8798276pbb.36
- for <kexec@lists.infradead.org>; Tue, 05 Jun 2012 16:46:18 -0700 (PDT)
-Date: Tue, 5 Jun 2012 19:46:07 -0400
-From: Eric Biggers <ebiggers3@gmail.com>
-Subject: Re: [PATCH] Load bzImages smaller than 32 KiB
-Message-ID: <20120605234605.GA28884@zzz>
-References: <20120601155931.GB17616@zzz> <20120604231459.GO28747@verge.net.au>
+ id 1ScD6Q-0005Tr-EU
+ for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:04:35 +0000
+Received: from /spool/local
+ by e9.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
+ Wed, 6 Jun 2012 06:04:32 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+ by d01dlp02.pok.ibm.com (Postfix) with ESMTP id EC7516E8049
+ for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 06:04:28 -0400 (EDT)
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+ by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q56A4S7Y181980
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 06:04:28 -0400
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q56A4RS6004704
+ for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:04:28 -0600
+Subject: [PATCH 0/7] makedumpfile security key filtering with eppic
+From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+Date: Wed, 06 Jun 2012 15:34:23 +0530
+Message-ID: <20120606095709.12534.63967.stgit@aravinda>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120604231459.GO28747@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,69 +36,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
 
-Allow bzImages smaller than 32KiB to be kexec'ed.
+makedumpfile security key filtering enhancement - Add Eppic language
+support (formerly known as SIAL) to specify rules to scrub data in a
+dumpfile. Eppic was previously part of crash source code repository.
 
-The current code will fail to load a bzImage smaller than 32768 bytes (sizeof
-struct x86_linux_header), but the 'memdisk' program that comes with syslinux is
-only about 26 KiB.  This patch changes the minimum size to 1024 bytes (2
-sectors), which appears to be the limit that syslinux enforces.
+The following series of patches enhance the makedumpfile to provide
+a more powerful way to specify rules and commands to traverse and
+erase complex data structures in a dump file by integrating Embeddable
+Pre-Processor and Interpreter for C (eppic).
 
-Removed the "tail" field of struct x86_linux_header because it doesn't seem to
-actually be used (is there a reason for it?).
+Eppic is an interpreter that facilitates access to the symbol and type
+information stored in an executable image or a dump file. Eppic defines
+a language semantic which is similar to C. Eppic macros can be used to
+specify rules/commands to erase data in an image file. makedumpfile
+will interpret the rules/commands provided by eppic macros with the
+help of eppic library and will suitably erase the required data in a
+dump file. Eppic provides a lot of language constructs like conditional
+statements, logical and arithmetic operators, nested loops, functions,
+etc., to traverse nested lists and trees and conditionally erase data
+in the dump file, enabling users to literally erase any data in the
+dump file which is accessible through global symbols.
 
-Also, note that bzImage_probe() was incorrectly using `sizeof (header)', even
-though header is a pointer.
+The series of patches integrates eppic with makdumpfile. These patches
+require eppic library libeppic.a and eppic_api.h header file. The
+libeppic.a library can be built from the eppic source code available
+at the following URL:
 
-Signed-off-by: Eric Biggers <ebiggers3@gmail.com>
+http://code.google.com/p/eppic/
 
-diff --git a/include/x86/x86-linux.h b/include/x86/x86-linux.h
-index 59d35c9..2ebcc3a 100644
---- a/include/x86/x86-linux.h
-+++ b/include/x86/x86-linux.h
-@@ -233,7 +233,6 @@ struct x86_linux_header {
- 	uint32_t high_base;			/* 0x24C */
- 	uint32_t high_memsz;			/* 0x250 */
- 	uint32_t high_filesz;			/* 0x254 */
--	uint32_t tail[32*1024 - 0x258];		/* 0x258 */
- #else
- 	uint32_t kernel_alignment;		/* 0x230 */
- 	uint8_t  relocatable_kernel;		/* 0x234 */
-@@ -241,7 +240,6 @@ struct x86_linux_header {
- 	uint32_t cmdline_size;                  /* 0x238 */
- 	uint32_t hardware_subarch;              /* 0x23C */
- 	uint64_t hardware_subarch_data;         /* 0x240 */
--	uint8_t  tail[32*1024 - 0x248];		/* 0x248 */
- #endif
- } PACKED;
- 
-diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
-index 54c4427..6998587 100644
---- a/kexec/arch/i386/kexec-bzImage.c
-+++ b/kexec/arch/i386/kexec-bzImage.c
-@@ -44,7 +44,10 @@ static const int probe_debug = 0;
- int bzImage_probe(const char *buf, off_t len)
- {
- 	const struct x86_linux_header *header;
--	if ((uintmax_t)len < (uintmax_t)sizeof(header)) {
-+	if ((uintmax_t)len < (uintmax_t)(2 * 512)) {
-+		if (probe_debug) {
-+			fprintf(stderr, "File is too short to be a bzImage!\n");
-+		}
- 		return -1;
- 	}
- 	header = (const struct x86_linux_header *)buf;
-@@ -118,7 +121,7 @@ int do_bzImage_load(struct kexec_info *info,
- 	/*
- 	 * Find out about the file I am about to load.
- 	 */
--	if ((uintmax_t)kernel_len < (uintmax_t)sizeof(setup_header)) {
-+	if ((uintmax_t)kernel_len < (uintmax_t)(2 * 512)) {
- 		return -1;
- 	}
- 	memcpy(&setup_header, kernel, sizeof(setup_header));
+TODO:
+
+  - Currently, works only for symbols in vmlinux, extend it to module
+    symbols
+  - Functionality support:
+    - Implement the following callback functions.
+      - apialignment
+      - apigetenum
+      - apigetdefs
+    - Other functionalities specified in the code with TODO tag
+  - Support specifying eppic macros in makedumpfile.conf file
+  - Update erase info
+
+---
+
+Aravinda Prasad (7):
+      Initialize and setup eppic
+      makedumpfile and eppic interface layer
+      Eppic call back functions to query a dump image
+      Implement apigetctype call back function
+      Implement apimember and apigetrtype call back functions
+      Extend eppic built-in functions to include memset function
+      Support fully typed symbol access mode
+
+
+ Makefile          |    6 -
+ dwarf_info.c      |  338 ++++++++++++++++++++++++++++++++++++++++
+ dwarf_info.h      |   18 ++
+ erase_info.c      |   72 ++++++++-
+ erase_info.h      |    3 
+ extension_eppic.c |  446 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ extension_eppic.h |   78 +++++++++
+ makedumpfile.c    |    7 +
+ makedumpfile.h    |    6 +
+ 9 files changed, 967 insertions(+), 7 deletions(-)
+ create mode 100644 extension_eppic.c
+ create mode 100644 extension_eppic.h
+
+-- 
+Aravinda Prasad
 
 
 _______________________________________________
