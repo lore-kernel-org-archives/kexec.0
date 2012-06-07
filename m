@@ -1,32 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from e34.co.us.ibm.com ([32.97.110.152])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1ScD9C-00064d-Hf
- for kexec@lists.infradead.org; Wed, 06 Jun 2012 10:07:27 +0000
-Received: from /spool/local
- by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
- Violators will be prosecuted
- for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
- Wed, 6 Jun 2012 04:07:25 -0600
-Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
- [9.17.195.228])
- by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id 364F53E4005E
- for <kexec@lists.infradead.org>; Wed,  6 Jun 2012 10:07:22 +0000 (WET)
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
- by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
- q56A7LsU188698
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:07:21 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
- by d03av02.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
- q56A7KZx022143
- for <kexec@lists.infradead.org>; Wed, 6 Jun 2012 04:07:21 -0600
-Subject: [PATCH 7/7] Support fully typed symbol access mode
-From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
-Date: Wed, 06 Jun 2012 15:37:17 +0530
-Message-ID: <20120606100717.12534.95770.stgit@aravinda>
-In-Reply-To: <20120606095709.12534.63967.stgit@aravinda>
-References: <20120606095709.12534.63967.stgit@aravinda>
-MIME-Version: 1.0
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1ScTi3-0005ln-Ik
+ for kexec@lists.infradead.org; Thu, 07 Jun 2012 03:48:34 +0000
+Date: Thu, 7 Jun 2012 12:46:35 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH 4/4] makedumpfile: Add main routine of cyclic
+ processing.
+Message-Id: <20120607124635.e3b6fd7f.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120604.134212.319008231.d.hatayama@jp.fujitsu.com>
+References: <20120531135654.a26dd3fe.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120604.134212.319008231.d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,172 +24,152 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: ananth@in.ibm.com, mahesh@linux.vnet.ibm.com, LChouinard@s2sys.com, tachibana@mxm.nes.nec.co.jp, kumagai-atsushi@mxc.nes.nec.co.jp, buendgen@de.ibm.com
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org
 
-Eppic enables access to symbols in two ways. The first, is a more
-natural mode in that it makes symbols available as fully typed
-entities. The second, is generic and treats all symbols as an address
-to data which then needs to be cast to the proper type explicitly. The
-former obviously enables an easier cut & pasting of target code into
-eppic code.
+Hello HATAYAMA-san,
 
-Currently generic symbol access mode is supported. This patch extends
-the functionality to include support for fully typed symbol access mode
-(which will be the default mode) in eppic macros. User can switch to
-generic symbol access mode by setting the following environmental
-variable - EPPIC_LEGACY_MODE. libeppic.a will take care of handling
-EPPIC_LEGACY_MODE. libeppic.a will pass NULL to VALUE_S* argument of
-apigetval() call back function if EPPIC_LEGACY_MODE is set.
+On Mon, 04 Jun 2012 13:42:12 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-Refer to http://code.google.com/p/eppic/ for more information.
----
- dwarf_info.c      |   52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- dwarf_info.h      |    2 ++
- extension_eppic.c |   25 +++++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 0 deletions(-)
+> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Subject: [RFC PATCH 4/4] makedumpfile: Add main routine of cyclic processing.
+> Date: Thu, 31 May 2012 13:56:54 +0900
+> 
+> > +	/*
+> > +	 * Write pages and bitmap cyclically.
+> > +	 */
+> > +	for (info->split_start_pfn = 0, info->split_end_pfn = PFN_CYCLIC;
+> > +	     info->split_end_pfn <= info->max_mapnr;
+> > +	     info->split_start_pfn += PFN_CYCLIC, info->split_end_pfn += PFN_CYCLIC) {
+> 
+> The cyclic processing is orthogonal to the splitting feature. The
+> feature of splitting a single vmcore into multiple dumpfiles is an
+> important feature on large system to reduce dump generation time. They
+> should exist together.
 
-diff --git a/dwarf_info.c b/dwarf_info.c
-index 9029e46..745dc56 100644
---- a/dwarf_info.c
-+++ b/dwarf_info.c
-@@ -120,6 +120,15 @@ is_search_domain(int cmd)
- }
- 
- static int
-+is_search_die(int cmd)
-+{
-+	if (cmd == DWARF_INFO_GET_DIE)
-+		return TRUE;
-+	else
-+		return FALSE;
-+}
-+
-+static int
- process_module (Dwfl_Module *dwflmod,
- 		void **userdata __attribute__ ((unused)),
- 		const char *name __attribute__ ((unused)),
-@@ -853,6 +862,25 @@ search_domain(Dwarf_Die *die, int *found)
- }
- 
- static void
-+search_die(Dwarf_Die *die, int *found)
-+{
-+	const char *name;
-+
-+	do {
-+		name = dwarf_diename(die);
-+
-+		if ((!name) || strcmp(name, dwarf_info.symbol_name))
-+			continue;
-+
-+		if(found)
-+			*found = TRUE;
-+
-+		dwarf_info.die_offset = dwarf_dieoffset(die);
-+		return;
-+	} while (!dwarf_siblingof(die, die));
-+}
-+
-+static void
- search_die_tree(Dwarf_Die *die, int *found)
+As you pointed out, prototype can't be specified --split and -K at the same time.
+I will improve the issue in next prototype version if possible.
+
+At least, it is needed to change the variable names to clarify their purpose
+as follows.
+
+
+Thanks
+Atsushi Kumagai
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index a211a89..0154851 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2797,14 +2797,14 @@ set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
  {
- 	Dwarf_Die child;
-@@ -880,6 +908,9 @@ search_die_tree(Dwarf_Die *die, int *found)
+ 	int byte, bit;
  
- 	else if (is_search_domain(dwarf_info.cmd))
- 		search_domain(die, found);
-+
-+	else if (is_search_die(dwarf_info.cmd))
-+		search_die(die, found);
+-	if (pfn < info->split_start_pfn || info->split_end_pfn < pfn)
++	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn < pfn)
+ 		return FALSE;
+ 
+ 	/*
+ 	 * If val is 0, clear bit on the bitmap.
+ 	 */
+-	byte = (pfn - info->split_start_pfn)>>3;
+-	bit  = (pfn - info->split_start_pfn) & 7;
++	byte = (pfn - info->cyclic_start_pfn)>>3;
++	bit  = (pfn - info->cyclic_start_pfn) & 7;
+ 	if (val)
+ 		bitmap[byte] |= 1<<bit;
+ 	else
+@@ -3659,7 +3659,7 @@ create_1st_bitmap_cyclic()
+ 	 */
+ 	pfn_bitmap1 = 0;
+ 
+-	for (pfn = info->split_start_pfn; pfn <	info->split_end_pfn; pfn++) {
++	for (pfn = info->cyclic_start_pfn; pfn < info->cyclic_end_pfn; pfn++) {
+ 		if (is_in_segs(pfn_to_paddr(pfn))) {
+ 			set_bit_on_1st_bitmap(pfn);
+ 			pfn_bitmap1++;
+@@ -3871,7 +3871,7 @@ exclude_unnecessary_pages_cyclic(void)
+ 		if (mmd->mem_map == NOT_MEMMAP_ADDR)
+ 			continue;
+ 
+-		if (mmd->pfn_end >= info->split_start_pfn || mmd->pfn_start <= info->split_end_pfn) {
++		if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
+ 			if (!__exclude_unnecessary_pages(mmd->mem_map,
+ 							 mmd->pfn_start, mmd->pfn_end))
+ 				return FALSE;
+@@ -4554,7 +4554,7 @@ get_num_dumpable_cyclic(void)
+ 	if (!exclude_unnecessary_pages_cyclic())
+ 		return FALSE;
+ 
+-	for (pfn = info->split_start_pfn, num_dumpable = 0; pfn < info->split_end_pfn; pfn++) {
++	for (pfn = info->cyclic_start_pfn, num_dumpable = 0; pfn < info->cyclic_end_pfn; pfn++) {
+ 		if (is_dumpable_cyclic(info->partial_bitmap2, pfn)) {
+ 			num_dumpable++;
+ 		} 
+@@ -5105,8 +5105,8 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 
+ 	gettimeofday(&tv_start, NULL);
+ 
+-	start_pfn = info->split_start_pfn;
+-	end_pfn   = info->split_end_pfn;
++	start_pfn = info->cyclic_start_pfn;
++	end_pfn   = info->cyclic_end_pfn;
+ 
+ 	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+ 
+@@ -5507,9 +5507,9 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	 * Get number of dumpable pages.
+ 	 */
+ 	d_exclude_start = getdtime();
+-	for (info->split_start_pfn = 0, info->split_end_pfn = PFN_CYCLIC;
+-	     info->split_end_pfn <= info->max_mapnr;
+-	     info->split_start_pfn += PFN_CYCLIC, info->split_end_pfn += PFN_CYCLIC) {
++	for (info->cyclic_start_pfn = 0, info->cyclic_end_pfn = PFN_CYCLIC;
++	     info->cyclic_end_pfn <= info->max_mapnr;
++	     info->cyclic_start_pfn += PFN_CYCLIC, info->cyclic_end_pfn += PFN_CYCLIC) {
+ 
+ 		info->num_dumpable += get_num_dumpable_cyclic();
+ 	}
+@@ -5545,9 +5545,9 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	/*
+ 	 * Write pages and bitmap cyclically.
+ 	 */
+-	for (info->split_start_pfn = 0, info->split_end_pfn = PFN_CYCLIC;
+-	     info->split_end_pfn <= info->max_mapnr;
+-	     info->split_start_pfn += PFN_CYCLIC, info->split_end_pfn += PFN_CYCLIC) {
++	for (info->cyclic_start_pfn = 0, info->cyclic_end_pfn = PFN_CYCLIC;
++	     info->cyclic_end_pfn <= info->max_mapnr;
++	     info->cyclic_start_pfn += PFN_CYCLIC, info->cyclic_end_pfn += PFN_CYCLIC) {
+ 
+ 		d_exclude_start = getdtime();
+ 		if (!create_1st_bitmap_cyclic())
+diff --git a/makedumpfile.h b/makedumpfile.h
+index ca9b100..79a8e41 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -936,6 +936,8 @@ struct DumpInfo {
+ 	/*
+ 	 * for cyclic
+ 	 */
++	unsigned long long cyclic_start_pfn;
++	unsigned long long cyclic_end_pfn;
+ 	char            *partial_bitmap1;
+ 	char            *partial_bitmap2;
+ 	unsigned long long num_dumpable;
+@@ -1412,10 +1414,10 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+ static inline int
+ is_dumpable_cyclic(char *bitmap, unsigned long long pfn)
+ {
+-       if (pfn < info->split_start_pfn || info->split_end_pfn < pfn)
++       if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn < pfn)
+                return FALSE;
+        else
+-               return is_on(bitmap, pfn - info->split_start_pfn);
++               return is_on(bitmap, pfn - info->cyclic_start_pfn);
  }
- 
- static int
-@@ -1440,6 +1471,27 @@ get_die_name(unsigned long long die_off)
- }
- 
- /*
-+ * Get the die offset given the die name
-+ */
-+unsigned long long
-+get_die_offset(char *sysname)
-+{
-+	dwarf_info.cmd         = DWARF_INFO_GET_DIE;
-+	dwarf_info.symbol_name = sysname;
-+	dwarf_info.type_name   = NULL;
-+	dwarf_info.struct_size = NOT_FOUND_STRUCTURE;
-+	dwarf_info.die_offset  = 0;
-+
-+	if (!sysname)
-+		return 0;
-+
-+	if (!get_debug_info())
-+		return 0;
-+
-+	return (unsigned long long)dwarf_info.die_offset;
-+}
-+
-+/*
-  * Get length attribute given the die offset
-  */
- int
-diff --git a/dwarf_info.h b/dwarf_info.h
-index ac4feff..6aa9398 100644
---- a/dwarf_info.h
-+++ b/dwarf_info.h
-@@ -55,6 +55,7 @@ enum {
- 	DWARF_INFO_GET_DOMAIN_REF,
- 	DWARF_INFO_GET_DOMAIN_STRING,
- 	DWARF_INFO_GET_DOMAIN_BASE,
-+	DWARF_INFO_GET_DIE,
- };
- 
- char *get_dwarf_module_name(void);
-@@ -76,6 +77,7 @@ int get_die_member(unsigned long long die_off, int index, long *offset,
- int get_die_attr_type(unsigned long long die_off, int *type_flag,
- 	unsigned long long *die_attr_off);
- char *get_die_name(unsigned long long die_off);
-+unsigned long long get_die_offset(char *sysname);
- int get_die_length(unsigned long long die_off, int flag);
- int set_dwarf_debuginfo(char *mod_name, char *os_release, char *name_debuginfo, int fd_debuginfo);
- 
-diff --git a/extension_eppic.c b/extension_eppic.c
-index 826f860..4e97f38 100644
---- a/extension_eppic.c
-+++ b/extension_eppic.c
-@@ -308,6 +308,31 @@ apigetval(char *name, ull *val, VALUE_S *value)
- 		return 0;
- 
- 	*val = ptr;
-+
-+	if (!value)
-+		return 1;
-+
-+	/* Support for fully typed symbol access */
-+	ull type;
-+	VALUE_S *vref;
-+	TYPE_S *stype;
-+
-+	type = get_die_offset(name);
-+	stype = eppic_gettype(value);
-+
-+	apigetrtype(type, stype);
-+
-+	eppic_pushref(stype, 1);
-+	eppic_setmemaddr(value, *val);
-+	eppic_do_deref(1, value, value);
-+
-+	*val = eppic_getval(value);
-+
-+	if (!eppic_typeislocal(stype) && eppic_type_getidx(stype) > 100) {
-+		char *tname = get_die_name(eppic_type_getidx(stype));
-+		if(tname)
-+			eppic_chktype(stype, tname);
-+	}
- 	return 1;
- }
- 
 
+ static inline int
 
 _______________________________________________
 kexec mailing list
