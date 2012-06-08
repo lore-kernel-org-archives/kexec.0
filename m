@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sd0Ly-0004ap-Jh
- for kexec@lists.infradead.org; Fri, 08 Jun 2012 14:39:56 +0000
-Date: Fri, 8 Jun 2012 10:39:49 -0400
+ id 1Sd0yT-0007kN-Gs
+ for kexec@lists.infradead.org; Fri, 08 Jun 2012 15:19:43 +0000
+Date: Fri, 8 Jun 2012 11:19:36 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH] ppc/ppc64: Compile purgatory code with gcc option
  -msoft-float
-Message-ID: <20120608143949.GC29471@redhat.com>
+Message-ID: <20120608151936.GE29471@redhat.com>
 References: <20120608134315.GA29791@redhat.com>
  <20120608134801.GZ24904@tucnak.redhat.com>
+ <20120608143949.GC29471@redhat.com>
+ <20120608145113.GB24904@tucnak.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120608134801.GZ24904@tucnak.redhat.com>
+In-Reply-To: <20120608145113.GB24904@tucnak.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,48 +30,103 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Jakub Jelinek <jakub@redhat.com>
 Cc: Lingzhu Xiang <lxiang@redhat.com>, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jeremy Kerr <jk@ozlabs.org>
 
-On Fri, Jun 08, 2012 at 03:48:01PM +0200, Jakub Jelinek wrote:
-> On Fri, Jun 08, 2012 at 09:43:15AM -0400, Vivek Goyal wrote:
-> > Recently we faced an issue on power7 machine where kernel hanged in purgatory.
-> > Some investigation revealed that gcc is generating hardware FPU instructions.
-> > I have been told we can't use it at this point of time and as kernel is
-> > compiled with -msoft-float for ppc/ppc64, so should be purgatory (as it runs
-> > inside kernel context).
+On Fri, Jun 08, 2012 at 04:51:13PM +0200, Jakub Jelinek wrote:
+> On Fri, Jun 08, 2012 at 10:39:49AM -0400, Vivek Goyal wrote:
+> > BTW, What does -mcmodel do and why should we use -mcmodel? purgatory, is a
+> > separate binary which we reloate at turn time based on physical memory
+> > location. IOW, why should we make any assumptions about running location
+> > of purgatory and pass -mcmodel flag.
+> 
+> The default x86_64 -mcmodel=small requires that the binary (and all
+> corresponding data (rodata etc.) sections must be within the low 2GB of
+> address space.  Kernel code is usually in the topmost 2GB of address space,
+> and -mcmodel=kernel is the memory model for that (all code and all other
+> sections must be in topmost 2GB of address space).  Of course pointers
+> are 64-bit in both cases, so any memory you access solely through pointers,
+> not through symbols, can be anywhere.  Haven't looked at where purgatory
+> relocates itself into the address space.
+
+IIRC, by the time purgatory runs we turn the paging off and we are
+operating in protected mode. And by that time purgatory is running from
+low 2GB of address space.
+
+It is relocated by kexec-tools itself before it calls kernel. So in
+user space we decide a physical address where purgatory can be run
+from. Relocate this binary so that it can run from that address and
+then call kernel to load this binary at this address. (Kernel might
+store the binary at some other location but it is moved to it final
+destination just before kexec and just before we jump to it).
+
+Relocation happens here.
+
+kexec-tools/kexec/arch/i386/kexec-bzImage.c
+
+***********************************************************************
+
+        /* Load the trampoline.  This must load at a higher address
+         * the the argument/parameter segment or the kernel will stomp
+         * it's gdt.
+         *
+         * x86_64 purgatory code has got relocations type R_X86_64_32S
+         * that means purgatory got to be loaded within first 2G otherwise
+         * overflow takes place while applying relocations.
+         */
+        if (!real_mode_entry && relocatable_kernel)
+                elf_rel_build_load(info, &info->rhdr, purgatory,
+purgatory_size,
+                                        0x3000, 0x7fffffff, -1, 0);
+        else
+                elf_rel_build_load(info, &info->rhdr, purgatory,
+purgatory_size,
+                                        0x3000, 640*1024, -1, 0);
+        dbgprintf("Loaded purgatory at addr 0x%lx\n",
+info->rhdr.rel_addr);
+
+*************************************************************************
+
+So at this point of time, it does not look like that we should be passing
+-mcmodel for purgatory code.
+
+> 
+> -mno-sse -mno-mmx will tell gcc not to use any %mmX or %xmmX registers.
+> i?86 also passes -msoft-float in addition to -mno-sse -mno-mmx I think.
+> 
+
+Yes, i386 is also passing -msoft-float in kernel. Personally I have no
+issues in adding -mno-sse and -mno-mmx and -msoft-float for i386. It is
+that kind of thing that one gets the motivation to change these flags
+once something breaks down.
+
+[..]
+> > > hash computation unconditionally everywhere at -O0 must IMHO pessimize
+> > > things unnecessarily.
 > > 
-> > Thanks to Jakub Jelinek and Lingzhu Xiang for debugging and coming up with
-> > a fix for this issue.
+> > git blame points to following commit for forcing -O0 on sha256. CCing
+> > Jermey, if we can give some details why -O2 was a problem on IA6 and
+> > if problem is still there if he has objections if we swtich back to -O2.
+> > 
+> > commit adf85cbc1756e56c1f52f56235a3c08b3c5b8e05
+> > Author: Jeremy Kerr <jk@ozlabs.org>
+> > Date:   Thu Dec 13 16:18:53 2007 +0900
+> > 
+> >     Build system simplification/standardisation
 > 
-> IMNSHO as a follow-up all other architectures should be changed to
-> compile kernel code with the right kernel CFLAGS (e.g. -mcmodel=kernel
-> -mno-sse -mno-mmx should be used probably on x86_64, etc.).
+> I think the change was even older, this one just moved the -O0 CFLAGS from
+> one spot to a different one.
 
-Sure. These changes can be done in separate patches.
+You are right. Here is the original change.
 
-BTW, What does -mcmodel do and why should we use -mcmodel? purgatory, is a
-separate binary which we reloate at turn time based on physical memory
-location. IOW, why should we make any assumptions about running location
-of purgatory and pass -mcmodel flag.
+commit e90343c521b68237c17ea4e4ed376c4a726f0789
+Author: Simon Horman <horms@verge.net.au>
+Date:   Fri Oct 6 12:27:58 2006 +0900
 
-Eric, would have have any objections to making use of above gcc flags
-for purgatory?
-
-> 
-> Furthermore, is there still a reason to compile sha256.c with -O0?  If
-> there was a compiler bug? on ia64 6 years ago, with which gcc version
-> it was, has the problem been reported and resolved?  Compiling code like
-> hash computation unconditionally everywhere at -O0 must IMHO pessimize
-> things unnecessarily.
-
-git blame points to following commit for forcing -O0 on sha256. CCing
-Jermey, if we can give some details why -O2 was a problem on IA6 and
-if problem is still there if he has objections if we swtich back to -O2.
-
-commit adf85cbc1756e56c1f52f56235a3c08b3c5b8e05
-Author: Jeremy Kerr <jk@ozlabs.org>
-Date:   Thu Dec 13 16:18:53 2007 +0900
-
-    Build system simplification/standardisation
+    build-util_lib-optimisation-flags
     
+    [BUILD] Make sure sha256.c is compiled without optimisation
+
+
+It is almost 6 years old now. Simon, can it be changed to -O2 now?
+
 Thanks
 Vivek
 
