@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f49.google.com ([209.85.210.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SZzDW-0008Uz-2S
- for kexec@lists.infradead.org; Thu, 31 May 2012 06:50:43 +0000
-Received: by dadm1 with SMTP id m1so989225dad.36
- for <kexec@lists.infradead.org>; Wed, 30 May 2012 23:50:40 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SczTG-00069r-KJ
+ for kexec@lists.infradead.org; Fri, 08 Jun 2012 13:43:23 +0000
+Date: Fri, 8 Jun 2012 09:43:15 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH] ppc/ppc64: Compile purgatory code with gcc option -msoft-float
+Message-ID: <20120608134315.GA29791@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20120531135358.c1fc797f.kumagai-atsushi@mxc.nes.nec.co.jp>
-References: <20120531135358.c1fc797f.kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 31 May 2012 10:50:39 +0400
-Message-ID: <CAJGZr0LSC3GKKTSDm9zH4YiY3V3B27O1t0v7YQWNho_Q+s3msw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] makedumpfile: cyclic processing to keep memory
- consumption.
-From: Maxim Uvarov <muvarov@gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,306 +17,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============5940723426544595948=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+Cc: Jakub Jelinek <jakub@redhat.com>, "Suzuki K. Poulose" <suzuki@in.ibm.com>, Lingzhu Xiang <lxiang@redhat.com>
 
---===============5940723426544595948==
-Content-Type: multipart/alternative; boundary=e89a8ff1cc405cab5704c14f7c56
+Recently we faced an issue on power7 machine where kernel hanged in purgatory.
+Some investigation revealed that gcc is generating hardware FPU instructions.
+I have been told we can't use it at this point of time and as kernel is
+compiled with -msoft-float for ppc/ppc64, so should be purgatory (as it runs
+inside kernel context).
 
---e89a8ff1cc405cab5704c14f7c56
-Content-Type: text/plain; charset=ISO-8859-1
+Thanks to Jakub Jelinek and Lingzhu Xiang for debugging and coming up with
+a fix for this issue.
 
-Atsushi,
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Tested-by: Lingzhu Xiang <lxiang@redhat.com>
+Tested-by: Suzuki K. Poulose <suzuki@in.ibm.com> 
+---
+ purgatory/arch/ppc/Makefile   |    2 ++
+ purgatory/arch/ppc64/Makefile |    2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-do you have speed measurements for saving vmcore with this patches and
-without them?
-How much is speed up?
-
-Thanks,
-Maxim.
-
-2012/5/31 Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-
-> Hello,
->
-> I made the prototype of cyclic processing to keep memory consumption.
-> I attache the patch set based on v1.4.4, I would like to get your advice.
->
-> Introduction:
->
->  - The basic idea of cyclic processing is represented as below.
->  - cyclic processing doesn't use temporary bitmap file, store partial
-> bitmap data
->   in memory only for each cycle instead.
->  - The prototype only support compressed kdump format.
->  - The prototype worked for almost kernel version except some kernel
-> disabled PAE
->   in my environment.
->
-> Basic idea (HATAYAMA-san wrote):
->
->   +------------------------------------------+
->   |    main header (struct disk_dump_header) |
->   |------------------------------------------+
->   |    sub header (struct kdump_sub_header)  |
->   |------------------------------------------+
->   |                                          | <-- 1st cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |            1st-bitmap                    | <-- 2nd cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |                                          | <-- 3rd cycle
->   |------------------------------------------+
->   |                                          | <-- 1st cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |            2nd-bitmap                    | <-- 2nd cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |                                          | <-- 3rd cycle
->   |------------------------------------------+
->   |                                          | <-- 1st cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |            page header                   | <-- 2nd cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |                                          | <-- 3rd cycle
->   |------------------------------------------|
->   |                                          |
->   |            page data                     | <-- 1st cycle
->   |                                          |
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |            page data                     | <-- 2nd cycle
->   | -  -  -  -  -  -  -  -  -  -  -  -  -  - |
->   |                                          |
->   |                                          |
->   |            page data                     | <-- 3rd cycle
->   |                                          |
->   |                                          |
->   +------------------------------------------+
->
->
-> How to use:
->
->  Specify 'K' option, then makedumpfile works cyclically.
->
-> Example:
->
->  a. normal processing:
->
->    $ makedumpfile -cd31 vmcore testdump.cd31
->    Copying data                       : [100 %]
->
->    The dumpfile is saved to testdump.cd31.
->
->    makedumpfile Completed.
->
->  b. cyclic processing (too many messages will be displayed):
->
->    $ makedumpfile -Kcd31 vmcore testdump.Kcd31
->    Copying data                       : [  5 %]
->    Excluding free pages               : [100 %]
->    ...
->    Excluding free pages               : [100 %]
->    Copying data                       : [100 %]
->
->    The dumpfile is saved to testdump.Kcd31.
->
->    makedumpfile Completed.
->
->  c. compare each dumpfiles:
->
->    $ cmp testdump.cd31 testdump.Kcd31
->    $
->
-> TODO:
->
->  - Optimize code for performance.
->   (e.g. initialize for compression is done every cycle, it's a waste.)
->  - Support ELF format.
->  - Consider suitable size of target region.
->  - Fix some messages.
->  - And something noticed by you.
->
->
-> Thanks
-> Atsushi Kumagai
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
-
-
-
--- 
-Best regards,
-Maxim Uvarov
-
---e89a8ff1cc405cab5704c14f7c56
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Atsushi,<br><br>do you have speed measurements for saving vmcore with this =
-patches and without them?<br>How much is speed up?<br><br>Thanks,<br>Maxim.=
-<br><br><div class=3D"gmail_quote">2012/5/31 Atsushi Kumagai <span dir=3D"l=
-tr">&lt;<a href=3D"mailto:kumagai-atsushi@mxc.nes.nec.co.jp" target=3D"_bla=
-nk">kumagai-atsushi@mxc.nes.nec.co.jp</a>&gt;</span><br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">Hello,<br>
-<br>
-I made the prototype of cyclic processing to keep memory consumption.<br>
-I attache the patch set based on v1.4.4, I would like to get your advice.<b=
-r>
-<br>
-Introduction:<br>
-<br>
-=A0- The basic idea of cyclic processing is represented as below.<br>
-=A0- cyclic processing doesn&#39;t use temporary bitmap file, store partial=
- bitmap data<br>
- =A0 in memory only for each cycle instead.<br>
-=A0- The prototype only support compressed kdump format.<br>
-=A0- The prototype worked for almost kernel version except some kernel disa=
-bled PAE<br>
- =A0 in my environment.<br>
-<br>
-Basic idea (HATAYAMA-san wrote):<br>
-<br>
- =A0 +------------------------------------------+<br>
- =A0 | =A0 =A0main header (struct disk_dump_header) |<br>
- =A0 |------------------------------------------+<br>
- =A0 | =A0 =A0sub header (struct kdump_sub_header) =A0|<br>
- =A0 |------------------------------------------+<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 1st cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A01st-bitmap =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0| &lt;-- 2nd cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 3rd cycle<br>
- =A0 |------------------------------------------+<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 1st cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A02nd-bitmap =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0| &lt;-- 2nd cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 3rd cycle<br>
- =A0 |------------------------------------------+<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 1st cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0page header =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 | &lt;-- 2nd cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0| &lt;-- 3rd cycle<br>
- =A0 |------------------------------------------|<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0page data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | &lt;-- 1st cycle<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0page data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | &lt;-- 2nd cycle<br>
- =A0 | - =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- =A0- |=
-<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0page data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 | &lt;-- 3rd cycle<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 | =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0|<br>
- =A0 +------------------------------------------+<br>
-<br>
-<br>
-How to use:<br>
-<br>
- =A0Specify &#39;K&#39; option, then makedumpfile works cyclically.<br>
-<br>
-Example:<br>
-<br>
- =A0a. normal processing:<br>
-<br>
- =A0 =A0$ makedumpfile -cd31 vmcore testdump.cd31<br>
- =A0 =A0Copying data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 : [100 %]<=
-br>
-<br>
- =A0 =A0The dumpfile is saved to testdump.cd31.<br>
-<br>
- =A0 =A0makedumpfile Completed.<br>
-<br>
- =A0b. cyclic processing (too many messages will be displayed):<br>
-<br>
- =A0 =A0$ makedumpfile -Kcd31 vmcore testdump.Kcd31<br>
- =A0 =A0Copying data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 : [ =A05 %=
-]<br>
- =A0 =A0Excluding free pages =A0 =A0 =A0 =A0 =A0 =A0 =A0 : [100 %]<br>
- =A0 =A0...<br>
- =A0 =A0Excluding free pages =A0 =A0 =A0 =A0 =A0 =A0 =A0 : [100 %]<br>
- =A0 =A0Copying data =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 : [100 %]<=
-br>
-<br>
- =A0 =A0The dumpfile is saved to testdump.Kcd31.<br>
-<br>
- =A0 =A0makedumpfile Completed.<br>
-<br>
- =A0c. compare each dumpfiles:<br>
-<br>
- =A0 =A0$ cmp testdump.cd31 testdump.Kcd31<br>
- =A0 =A0$<br>
-<br>
-TODO:<br>
-<br>
-=A0- Optimize code for performance.<br>
- =A0 (e.g. initialize for compression is done every cycle, it&#39;s a waste=
-.)<br>
-=A0- Support ELF format.<br>
-=A0- Consider suitable size of target region.<br>
-=A0- Fix some messages.<br>
-=A0- And something noticed by you.<br>
-<br>
-<br>
-Thanks<br>
-Atsushi Kumagai<br>
-<br>
-_______________________________________________<br>
-kexec mailing list<br>
-<a href=3D"mailto:kexec@lists.infradead.org">kexec@lists.infradead.org</a><=
-br>
-<a href=3D"http://lists.infradead.org/mailman/listinfo/kexec" target=3D"_bl=
-ank">http://lists.infradead.org/mailman/listinfo/kexec</a><br>
-</blockquote></div><br><br clear=3D"all"><br>-- <br>Best regards,<br>Maxim =
-Uvarov<br>
-
---e89a8ff1cc405cab5704c14f7c56--
-
-
---===============5940723426544595948==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Index: kexec-tools/purgatory/arch/ppc64/Makefile
+===================================================================
+--- kexec-tools.orig/purgatory/arch/ppc64/Makefile	2012-02-20 14:45:25.000000000 -0500
++++ kexec-tools/purgatory/arch/ppc64/Makefile	2012-06-06 16:19:09.000696306 -0400
+@@ -9,7 +9,7 @@ ppc64_PURGATORY_SRCS += purgatory/arch/p
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/crashdump_backup.c
+ ppc64_PURGATORY_SRCS += purgatory/arch/ppc64/misc.S
+ 
+-ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -mcall-aixdesc
++ppc64_PURGATORY_EXTRA_CFLAGS += -m64 -mcall-aixdesc -msoft-float
+ ppc64_PURGATORY_EXTRA_ASFLAGS += -m64 -mcall-aixdesc
+ ppc64_PURGATORY_EXTRA_LDFLAGS += -melf64ppc
+ 
+Index: kexec-tools/purgatory/arch/ppc/Makefile
+===================================================================
+--- kexec-tools.orig/purgatory/arch/ppc/Makefile	2011-03-18 17:09:38.000000000 -0400
++++ kexec-tools/purgatory/arch/ppc/Makefile	2012-06-06 16:33:50.444406235 -0400
+@@ -7,6 +7,8 @@ ppc_PURGATORY_SRCS += purgatory/arch/ppc
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/purgatory-ppc.c
+ ppc_PURGATORY_SRCS += purgatory/arch/ppc/console-ppc.c
+ 
++ppc_PURGATORY_EXTRA_CFLAGS += -msoft-float
++
+ dist += purgatory/arch/ppc/Makefile $(ppc_PURGATORY_SRCS)		\
+ 	purgatory/arch/ppc/purgatory-ppc.h purgatory/arch/ppc/ppc_asm.h
+ 
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============5940723426544595948==--
-
