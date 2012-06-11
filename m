@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sdtfc-0000t3-LX
- for kexec@lists.infradead.org; Mon, 11 Jun 2012 01:43:53 +0000
-Date: Mon, 11 Jun 2012 10:43:46 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ppc/ppc64: Compile purgatory code with gcc option
- -msoft-float
-Message-ID: <20120611014346.GB7710@verge.net.au>
-References: <20120608134315.GA29791@redhat.com>
- <20120608134801.GZ24904@tucnak.redhat.com>
- <20120608143949.GC29471@redhat.com>
- <20120608145113.GB24904@tucnak.redhat.com>
- <20120608151936.GE29471@redhat.com>
+ id 1SdxJ9-0006qa-F0
+ for kexec@lists.infradead.org; Mon, 11 Jun 2012 05:36:56 +0000
+Message-ID: <4FD58399.4050700@cn.fujitsu.com>
+Date: Mon, 11 Jun 2012 13:35:21 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120608151936.GE29471@redhat.com>
+Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
+ for kdump
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
+ <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
+ <4FBA05F6.8070804@cn.fujitsu.com> <4FBA0C8A.2050003@redhat.com>
+ <4FBB0ACA.2040907@cn.fujitsu.com> <4FC30C40.80500@cn.fujitsu.com>
+ <4FC37D94.3080404@redhat.com> <4FC47579.2040504@cn.fujitsu.com>
+In-Reply-To: <4FC47579.2040504@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,117 +23,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Jakub Jelinek <jakub@redhat.com>, Lingzhu Xiang <lxiang@redhat.com>, kexec@lists.infradead.org, "Suzuki K. Poulose" <suzuki@in.ibm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Jeremy Kerr <jk@ozlabs.org>
+To: Avi Kivity <avi@redhat.com>
+Cc: dzickus@redhat.com, luto@mit.edu, masanori.yoshida.tv@hitachi.com, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-On Fri, Jun 08, 2012 at 11:19:36AM -0400, Vivek Goyal wrote:
-> On Fri, Jun 08, 2012 at 04:51:13PM +0200, Jakub Jelinek wrote:
-> > On Fri, Jun 08, 2012 at 10:39:49AM -0400, Vivek Goyal wrote:
-> > > BTW, What does -mcmodel do and why should we use -mcmodel? purgatory, is a
-> > > separate binary which we reloate at turn time based on physical memory
-> > > location. IOW, why should we make any assumptions about running location
-> > > of purgatory and pass -mcmodel flag.
-> > 
-> > The default x86_64 -mcmodel=small requires that the binary (and all
-> > corresponding data (rodata etc.) sections must be within the low 2GB of
-> > address space.  Kernel code is usually in the topmost 2GB of address space,
-> > and -mcmodel=kernel is the memory model for that (all code and all other
-> > sections must be in topmost 2GB of address space).  Of course pointers
-> > are 64-bit in both cases, so any memory you access solely through pointers,
-> > not through symbols, can be anywhere.  Haven't looked at where purgatory
-> > relocates itself into the address space.
-> 
-> IIRC, by the time purgatory runs we turn the paging off and we are
-> operating in protected mode. And by that time purgatory is running from
-> low 2GB of address space.
-> 
-> It is relocated by kexec-tools itself before it calls kernel. So in
-> user space we decide a physical address where purgatory can be run
-> from. Relocate this binary so that it can run from that address and
-> then call kernel to load this binary at this address. (Kernel might
-> store the binary at some other location but it is moved to it final
-> destination just before kexec and just before we jump to it).
-> 
-> Relocation happens here.
-> 
-> kexec-tools/kexec/arch/i386/kexec-bzImage.c
-> 
-> ***********************************************************************
-> 
->         /* Load the trampoline.  This must load at a higher address
->          * the the argument/parameter segment or the kernel will stomp
->          * it's gdt.
->          *
->          * x86_64 purgatory code has got relocations type R_X86_64_32S
->          * that means purgatory got to be loaded within first 2G otherwise
->          * overflow takes place while applying relocations.
->          */
->         if (!real_mode_entry && relocatable_kernel)
->                 elf_rel_build_load(info, &info->rhdr, purgatory,
-> purgatory_size,
->                                         0x3000, 0x7fffffff, -1, 0);
->         else
->                 elf_rel_build_load(info, &info->rhdr, purgatory,
-> purgatory_size,
->                                         0x3000, 640*1024, -1, 0);
->         dbgprintf("Loaded purgatory at addr 0x%lx\n",
-> info->rhdr.rel_addr);
-> 
-> *************************************************************************
-> 
-> So at this point of time, it does not look like that we should be passing
-> -mcmodel for purgatory code.
-> 
-> > 
-> > -mno-sse -mno-mmx will tell gcc not to use any %mmX or %xmmX registers.
-> > i?86 also passes -msoft-float in addition to -mno-sse -mno-mmx I think.
-> > 
-> 
-> Yes, i386 is also passing -msoft-float in kernel. Personally I have no
-> issues in adding -mno-sse and -mno-mmx and -msoft-float for i386. It is
-> that kind of thing that one gets the motivation to change these flags
-> once something breaks down.
-> 
-> [..]
-> > > > hash computation unconditionally everywhere at -O0 must IMHO pessimize
-> > > > things unnecessarily.
-> > > 
-> > > git blame points to following commit for forcing -O0 on sha256. CCing
-> > > Jermey, if we can give some details why -O2 was a problem on IA6 and
-> > > if problem is still there if he has objections if we swtich back to -O2.
-> > > 
-> > > commit adf85cbc1756e56c1f52f56235a3c08b3c5b8e05
-> > > Author: Jeremy Kerr <jk@ozlabs.org>
-> > > Date:   Thu Dec 13 16:18:53 2007 +0900
-> > > 
-> > >     Build system simplification/standardisation
-> > 
-> > I think the change was even older, this one just moved the -O0 CFLAGS from
-> > one spot to a different one.
-> 
-> You are right. Here is the original change.
-> 
-> commit e90343c521b68237c17ea4e4ed376c4a726f0789
-> Author: Simon Horman <horms@verge.net.au>
-> Date:   Fri Oct 6 12:27:58 2006 +0900
-> 
->     build-util_lib-optimisation-flags
->     
->     [BUILD] Make sure sha256.c is compiled without optimisation
-> 
-> 
-> It is almost 6 years old now. Simon, can it be changed to -O2 now?
-
-I have no objections.
-
-I will add your original patch. Do you want to provide a follow-up patch
-as well?
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQXZpLAoK09ogMjAxMsTqMDXUwjI5yNUgMTU6MDYsIFlhbmZlaSBaaGFuZyDQtLXAOgo+
+INPaIDIwMTLE6jA11MIyOMjVIDIxOjI4LCBBdmkgS2l2aXR5INC0tcA6Cj4+IE9uIDA1LzI4LzIw
+MTIgMDg6MjUgQU0sIFlhbmZlaSBaaGFuZyB3cm90ZToKPj4+Cj4+PiBEb3UgeW91IGhhdmUgYW55
+IGNvbW1lbnRzIGFib3V0IHRoaXMgcGF0Y2ggc2V0Pwo+Pgo+PiBJIHN0aWxsIGhhdmUgYSBoYXJk
+IHRpbWUgdW5kZXJzdGFuZGluZyB3aHkgaXQgaXMgbmVlZGVkLiAgSWYgdGhlIGhvc3QKPj4gY3Jh
+c2hlcywgdGhlcmUgaXMgbm8gcmVhc29uIHRvIGxvb2sgYXQgZ3Vlc3Qgc3RhdGU7IHRoZSBob3N0
+IHNob3VsZAo+PiBzdXJ2aXZlIG5vIG1hdHRlciB3aGF0IHRoZSBndWVzdCBkb2VzLgo+Pgo+Pgo+
+IAo+IE9LLiBMZXQgbWUgc3VtbWFyaXplIGl0Lgo+IAo+IDEuIFdoeSBpcyB0aGlzIHBhdGNoIG5l
+ZWRlZD8gKE91ciByZXF1aXJlbWVudCkKPiAgICAKPiBXZSBvbmNlIGNhbWUgdG8gYSBidWdneSBz
+aXR1YXRpb246IGEgaG9zdCBzY2hlZHVsZXIgYnVnIGNhdXNlZCBndWVzdCBtYWNoaW5lJ3MKPiB2
+Y3B1IHN0b3BwZWQgZm9yIGEgbG9uZyB0aW1lIGFuZCB0aGVuIGxlZCB0byBoZWFydGJlYXQgc3Rv
+cCAoaG9zdCBpcyBzdGlsbCBydW5uaW5nKS4KPiAgICAKPiB3ZSB3YW50IHRvIGhhdmUgYW4gZWZm
+aWNpZW50IHdheSB0byBtYWtlIHRoZSBidWcgYW5hbHlzaXMgd2hlbiB3ZSBjb21lIHRvIHRoZSBz
+aW1pbGFyCj4gc2l0dWF0aW9uIHdoZXJlIGd1ZXN0IG1hY2hpbmUgZG9lc24ndCB3b3JrIHdlbGwg
+ZHVlIHRvIHNvbWV0aGluZyBvZiBob3N0IG1hY2hpbmUncywgCj4gCj4gQmVjYXVzZSB3ZSBzaG91
+bGQgZGVidWcgYm90aCBob3N0IG1hY2hpbmUncyBhbmQgZ3Vlc3QgbWFjaGluZSdzIHNpZGVzIHRv
+IGxvb2sgZm9yCj4gdGhlIHJlYXNvbnMsIHNvIHdlIHdhbnQgdG8gZ2V0IGJvdGggaG9zdCBtYWNo
+aW5lJ3MgY3Jhc2ggZHVtcCBhbmQgZ3Vlc3QgbWFjaGluZSdzCj4gY3Jhc2ggZHVtcCBhdCB0aGUg
+c2FtZSB0aW1lIHdoZW4gdGhlIGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLiAKPiAKPiAyLiBXaGF0
+IHdpbGwgd2UgZG8/Cj4gICAgCj4gSWYgdGhpcyBidWcgd2FzIGZvdW5kIG9uIGN1c3RvbWVyJ3Mg
+ZW52aXJvbm1lbnQsIHdlIGhhdmUgdHdvIHdheXMgdG8gYXZvaWQKPiBhZmZlY3Rpbmcgb3RoZXIg
+Z3Vlc3QgbWFjaGluZXMgcnVubmluZyBvbiB0aGUgc2FtZSBob3N0LiBGaXJzdCwgd2UgY291bGQg
+ZG8gYnVnCj4gYW5hbHlzaXMgb24gYW5vdGhlciBlbnZpcm9ubWVudCB0byByZXByb2R1Y2UgdGhl
+IGJ1Z2d5IHNpdHVhdGlvbjsgU2Vjb25kLCB3ZQo+IGNvdWxkIG1pZ3JhdGUgb3RoZXIgZ3Vlc3Qg
+bWFjaGluZXMgdG8gb3RoZXIgaG9zdHMuIAo+IAo+IEFmdGVyIHRoZSBidWdneSBzaXR1YXRpb24g
+aXMgcmVwcm9kdWNlZCwgd2UgcGFuaWMgdGhlIGhvc3QgKm1hbnVhbGx5Ki4KPiBUaGVuIHdlIGNv
+dWxkIHVzZSB1c2VybGFuZCB0b29scyB0byBnZXQgZ3Vlc3QgbWFjaGluZSdzIGNyYXNoIGR1bXAg
+ZnJvbSBob3N0IG1hY2hpbmUncwo+IHdpdGggdGhlIGZlYXR1cmUgcHJvdmlkZWQgYnkgdGhpcyBw
+YXRjaCBzZXQuIEZpbmFsbHkgd2UgY291bGQgYW5hbHlzZSB0aGVtIHNlcGFyYXRlbHkKPiB0byBm
+aW5kIHdoaWNoIHNpZGUgY2F1c2VzIHRoZSBwcm9ibGVtLgo+IAoKQ291bGQgeW91IHBsZWFzZSB0
+ZWxsIG1lIHlvdXIgYXR0aXR1ZGUgdG93YXJkcyB0aGlzIHBhdGNoPyAKCkFuZCBoZXJlIGlzIGEg
+bmV3IGNhc2UgZnJvbSB0aGUgTGludXhDb24gSmFwYW46CgpEZXZlbG9wZXJzIGZyb20gSGl0YWNo
+IGFyZSBub3cgZGV2ZWxvcGluZyBhIG5ldyBsaXZlZHVtcCBtZWNoYW5pc20gZm9yIHRoZQpzYW1l
+IHJlYXNvbiBhcyBvdXJzLiBUaGV5IGhhdmUgY29tZSB0byB0aGUgc2l0dWF0aW9uICptYW55IHRp
+bWVzKiB0aGF0IGd1ZXN0Cm1hY2hpbmVzIGNyYXNoZWQgZHVlIHRvIGhvc3QncyBmYWlsdXJlcywg
+aW4gcGFydGljdWxhciwgdW5kZXIgZGV2ZWxvcG1lbnQuCgpTbyB0aGV5IGRldmVsb3AgdGhpcyBt
+ZWNoYW5pc20gdG8gZ2V0IGNyYXNoIGR1bXAgd2hpbGUgcmV0YWluaW5nIHRoZSBidWdneQpzaXR1
+YXRpb24gYmV0d2VlbiBob3N0IGFuZCBndWVzdCBtYWNoaW5lLiBUaGUgZGlmZmVyZW5jZSBiZXR3
+ZWVuIHRoZWlycyBhbmQKb3VycyBpcyB3aGV0aGVyIG9yIG5vdCB0byB1c2UgdGhlIGZlYXR1cmUg
+b24gX2N1c3RvbWVyJ3MgcnVubmluZyBtYWNoaW5lXy4KClRoYW5rcwpaaGFuZyBZYW5mZWkKCgoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
