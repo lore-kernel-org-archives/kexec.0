@@ -1,17 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SecSr-0003Nq-SV
- for kexec@lists.infradead.org; Wed, 13 Jun 2012 01:33:42 +0000
-Date: Wed, 13 Jun 2012 10:33:36 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] Load bzImages smaller than 32 KiB
-Message-ID: <20120613013336.GJ16686@verge.net.au>
-References: <20120601155931.GB17616@zzz> <20120604231459.GO28747@verge.net.au>
- <20120605234605.GA28884@zzz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120605234605.GA28884@zzz>
+Received: from plane.gmane.org ([80.91.229.3])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SedDf-0006Za-Q9
+ for kexec@lists.infradead.org; Wed, 13 Jun 2012 02:22:05 +0000
+Received: from list by plane.gmane.org with local (Exim 4.69)
+ (envelope-from <glkk-kexec@m.gmane.org>) id 1SedDS-0001KU-Sv
+ for kexec@lists.infradead.org; Wed, 13 Jun 2012 04:21:50 +0200
+Received: from 117.57.96.111 ([117.57.96.111])
+ by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+ id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Wed, 13 Jun 2012 04:21:50 +0200
+Received: from xiyou.wangcong by 117.57.96.111 with local (Gmexim 0.1 (Debian))
+ id 1AlnuQ-0007hv-00
+ for <kexec@lists.infradead.org>; Wed, 13 Jun 2012 04:21:50 +0200
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Subject: Re: Kexec: where does the kernel image get relocated?
+Date: Wed, 13 Jun 2012 02:21:34 +0000 (UTC)
+Message-ID: <jr8tfd$enn$1@dough.gmane.org>
+References: <9A3DED9B-FB11-49CC-A51E-40ED03E24999@vt.edu>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +31,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biggers <ebiggers3@gmail.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
 
-On Tue, Jun 05, 2012 at 07:46:07PM -0400, Eric Biggers wrote:
-> Allow bzImages smaller than 32KiB to be kexec'ed.
-> 
-> The current code will fail to load a bzImage smaller than 32768 bytes (sizeof
-> struct x86_linux_header), but the 'memdisk' program that comes with syslinux is
-> only about 26 KiB.  This patch changes the minimum size to 1024 bytes (2
-> sectors), which appears to be the limit that syslinux enforces.
-> 
-> Removed the "tail" field of struct x86_linux_header because it doesn't seem to
-> actually be used (is there a reason for it?).
-> 
-> Also, note that bzImage_probe() was incorrectly using `sizeof (header)', even
-> though header is a pointer.
-> 
-> Signed-off-by: Eric Biggers <ebiggers3@gmail.com>
+On Thu, 07 Jun 2012 at 22:47 GMT, Ben Shelton <beshelto@vt.edu> wrote:
+> Hi all,
+>
+> I'm working on a distributed-computing project where we'd like to boot multiple instances of the Linux kernel on the same machine.  We'd like to leverage kexec to decompress each guest kernel and copy it to an area within the physical address space.
+>
+> From following through the code and using GDB/QEMU, it seems like the steps to reboot with kexec look like this:
+>
+> - Decompress the kernel somewhere (not necessarily contiguous)
+> - In relocate_kernel_64.S, copy the kernel to a contiguous space and jump/return to purgatory
+> - In purgatory, reinitialize the hardware if necessary, then jump to the start of the kernel
+>
+> My issue is that I can't seem to find where the address to which the kernel is copied in step 2 is defined.  Can anyone give me a brief description of how this works?
+>
 
-Thanks, applied.
+The kernel relocates itself, you can check the code under
+#ifdef CONFIG_RELOCATABLE in arch/x86/boot/compressed/head_64.S and
+arch/x86/boot/compressed/misc.c.
+
+Thanks.
+
 
 _______________________________________________
 kexec mailing list
