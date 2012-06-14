@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SfA6Y-0004oe-Go
- for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:28:55 +0000
-Message-ID: <4FD9E70A.9090507@redhat.com>
-Date: Thu, 14 Jun 2012 16:28:42 +0300
+ id 1SfAFV-00061h-Ij
+ for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:38:10 +0000
+Message-ID: <4FD9E936.3030001@redhat.com>
+Date: Thu, 14 Jun 2012 16:37:58 +0300
 From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/5] x86: Add helper variables and functions to hold
+Subject: Re: [PATCH v2 3/5] KVM-INTEL: Add new module vmcsinfo-intel to fill
  VMCSINFO
-References: <4FB35C48.30708@cn.fujitsu.com> <4FB35CD4.3080801@cn.fujitsu.com>
-In-Reply-To: <4FB35CD4.3080801@cn.fujitsu.com>
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB35D60.6050009@cn.fujitsu.com>
+In-Reply-To: <4FB35D60.6050009@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,69 +19,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
 Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-On 05/16/2012 10:52 AM, zhangyanfei wrote:
-> This patch provides a set of variables to hold the VMCSINFO and also
-> some helper functions to help fill the VMCSINFO.
-
-Need to document the format.
-
-
-> +void vmcsinfo_append_id(u32 id)
-> +{
-> +	size_t r;
-> +
-> +	r = sizeof(id);
-> +	if (r + vmcsinfo_size > vmcsinfo_max_size)
-> +		return;
-> +
-> +	memcpy(&vmcsinfo_data[vmcsinfo_size], &id, r);
-> +	vmcsinfo_size += r;
-> +}
-> +EXPORT_SYMBOL_GPL(vmcsinfo_append_id);
-> +
-> +void vmcsinfo_append_field(u32 field, u64 offset)
-
-Why u64?  It's guaranteed to fit within a page.
-
-> +{
-> +	size_t r;
-> +
-> +	r = sizeof(field) + sizeof(offset);
-> +	if (r + vmcsinfo_size > vmcsinfo_max_size)
-> +		return;
-> +
-> +	memcpy(&vmcsinfo_data[vmcsinfo_size], &field, sizeof(field));
-> +	vmcsinfo_size += sizeof(field);
-> +	memcpy(&vmcsinfo_data[vmcsinfo_size], &offset, sizeof(offset));
-> +	vmcsinfo_size += sizeof(offset);
-
-Instead of this vmcsinfo_data, how about a struct with fields for the
-revision ID and field count, and an array for the fields?  Should be a
-lot simpler.
-
-> +}
-> +EXPORT_SYMBOL_GPL(vmcsinfo_append_field);
-> +
-> +unsigned long paddr_vmcsinfo_note(void)
-> +{
-> +	return __pa((unsigned long)(char *)&vmcsinfo_note);
-> +}
-> 
-
-
--- 
-error compiling committee.c: too many arguments to function
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDUvMTYvMjAxMiAxMDo1NSBBTSwgemhhbmd5YW5mZWkgd3JvdGU6Cj4gVGhpcyBwYXRjaCBp
+bXBsZW1lbnRzIGEgbmV3IG1vZHVsZSBuYW1lZCB2bWNzaW5mby1pbnRlbC4gVGhlCj4gbW9kdWxl
+IGZpbGxzIFZNQ1NJTkZPIHdpdGggdGhlIFZNQ1MgcmV2aXNpb24gaWRlbnRpZmllciwKPiBhbmQg
+ZW5jb2RlZCBvZmZzZXRzIG9mIFZNQ1MgZmllbGRzLgo+IAo+IE5vdGUsIG9mZnNldHMgb2YgZmll
+bGRzIGJlbG93IHdpbGwgbm90IGJlIGZpbGxlZCBpbnRvIFZNQ1NJTkZPOgo+IDEuIGZpZWxkcyBk
+ZWZpbmVkIGluIEludGVsIHNwZWNpZmljYXRpb24gKEludGVswq4gNjQgYW5kCj4gICAgSUEtMzIg
+QXJjaGl0ZWN0dXJlcyBTb2Z0d2FyZSBEZXZlbG9wZXLigJlzIE1hbnVhbCwgVm9sdW1lCj4gICAg
+M0MpIGJ1dCBub3QgZGVmaW5lZCBpbiAqdm1jc19maWVsZCouCj4gMi4gZmllbGRzIGRvbid0IGV4
+aXN0IGJlY2F1c2UgdGhlaXIgY29ycmVzcG9uZGluZyBjb250cm9sIGJpdHMKPiAgICBhcmUgbm90
+IHNldC4KPiAKPiArCj4gKy8qCj4gKyAqIFdlIHNlcGFyYXRlIHRoZXNlIGZpdmUgY29udHJvbCBm
+aWVsZHMgZnJvbSBvdGhlciBmaWVsZHMKPiArICogYmVjYXVzZSBzb21lIGZpZWxkcyBvbmx5IGV4
+aXN0IG9uIHByb2Nlc3NvcnMgdGhhdCBzdXBwb3J0Cj4gKyAqIHRoZSAxLXNldHRpbmcgb2YgY29u
+dHJvbCBiaXRzIGluIHRoZSBmaXZlIGNvbnRyb2wgZmllbGRzLgo+ICsgKi8KCkkgdGhvdWdodCB0
+aGlzIHdhcyBjaGVja2VkIG9ubHkgZHVyaW5nIFZNRU5UUlkuICBTbyBwZXJoYXBzIHlvdSBkb24n
+dApuZWVkIHRoaXMgc3BlY2lhbCBjYXNpbmcuCgpJbiBmYWN0IHlvdSBtaWdodCBiZSBhYmxlIHRv
+CgogICAvLyBwcmUtZmlsbCB2bWNzIHdpdGggcGF0dGVybnMKCiAgZm9yIChpID0gMDsgaSA8IDY0
+azsgKytpKQogICAgICBpZiAodm1jc19yZWFkX2NoZWNraW5nKGksICZwYXR0ZXJuKSkgewogICAg
+ICAgICAgIC8vIGRlY29kZSBwYXR0ZXJuCiAgICAgIH0gZWxzZQogICAgICAgICAgIC8vIGZpZWxk
+IGRvZXMgbm90IGV4aXN0IChWTSBJbnN0cnVjdGlvbiBlcnJvciAxMiksIGlnbm9yZQoKd2l0aCBu
+byBrbm93bGVkZ2Ugb2YgdGhlIGNvbnRyb2wgZmllbGRzLCBvciBvZiBhbnkgZmllbGQgbmFtZS4K
+Cgo+ICsKPiArLyoKPiArICogVGhlIGZvcm1hdCBvZiBWTUNTSU5GTyBpcyBnaXZlbiBiZWxvdzoK
+PiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICog
+ICB8IEJ5dGUgb2Zmc2V0IHwgQ29udGVudHMgICAgICAgICAgICAgICAgIHwKPiArICogICArLS0t
+LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICogICB8IDAgICAgICAg
+ICAgIHwgVk1DUyByZXZpc2lvbiBpZGVudGlmaWVyIHwKPiArICogICArLS0tLS0tLS0tLS0tLSst
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICogICB8IDQgICAgICAgICAgIHwgPGZpZWxk
+PjxlbmNvZGVkIG9mZnNldD4gIHwKPiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLSsKPiArICogICB8IDE2ICAgICAgICAgIHwgPGZpZWxkPjxlbmNvZGVkIG9m
+ZnNldD4gIHwKPiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LSsKPiArICogICAuLi4uLi4KPiArICoKPiArICogVGhlIGZpcnN0IDMyIGJpdHMgb2YgVk1DU0lO
+Rk8gY29udGFpbnMgdGhlIFZNQ1MgcmV2aXNpb24KPiArICogaWRlbnRpZmllci4KPiArICogVGhl
+IHJlbWFpbmRlciBvZiBWTUNTSU5GTyBpcyB1c2VkIGZvciA8ZmllbGQ+PGVuY29kZWQgb2Zmc2V0
+Pgo+ICsgKiBzZXRzLiBFYWNoIHNldCB0YWtlcyAxMiBieXRlczogZmllbGQgb2NjdXB5cyA0IGJ5
+dGVzCj4gKyAqIGFuZCBpdHMgY29ycmVzcG9uZGluZyBlbmNvZGVkIG9mZnNldCBvY2N1cHlzIDgg
+Ynl0ZXMuCj4gKyAqCj4gKyAqIEVuY29kZWQgb2Zmc2V0cyBhcmUgcmF3IHZhbHVlcyByZWFkIGJ5
+IHZtY3NfcmVhZHsxNiwgNjQsIDMyLCBsfSwKPiArICogYW5kIHRoZXkgYXJlIGFsbCB1bnNpZ25l
+ZCBleHRlbmRlZCB0byA4IGJ5dGVzIGZvciBlYWNoCj4gKyAqIDxmaWVsZD48ZW5jb2RlZCBvZmZz
+ZXQ+IHNldCBoYXMgdGhlIHNhbWUgc2l6ZS4KPiArICogV2UgZG8gbm90IGRlY29kZSBvZmZzZXRz
+IGhlcmUuIFRoZSBkZWNvZGluZyB3b3JrIGlzIGRlbGF5ZWQKPiArICogaW4gdXNlcnNwYWNlIHRv
+b2xzLgoKSXQncyBiZXR0ZXIgdG8gZG8gdGhlIGRlY29kaW5nIGhlcmUsIG9yIG5vIG9uZSB3aWxs
+IGtub3cgaG93IHRvIGRvIGl0LgpBbHNvIGhhdmUgYW4gbmZpZWxkcyBmaWVsZC4KLS0gCmVycm9y
+IGNvbXBpbGluZyBjb21taXR0ZWUuYzogdG9vIG1hbnkgYXJndW1lbnRzIHRvIGZ1bmN0aW9uCgoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
