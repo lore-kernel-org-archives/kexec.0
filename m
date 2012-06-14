@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sf9u5-0003i6-CU
- for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:16:03 +0000
-Message-ID: <4FD9E3FF.4050906@redhat.com>
-Date: Thu, 14 Jun 2012 16:15:43 +0300
+ id 1Sf9zz-00041u-A8
+ for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:22:07 +0000
+Message-ID: <4FD9E574.90800@redhat.com>
+Date: Thu, 14 Jun 2012 16:21:56 +0300
 From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
- for kdump
-References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
- <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
- <4FBA05F6.8070804@cn.fujitsu.com> <4FBA0C8A.2050003@redhat.com>
- <4FBB0ACA.2040907@cn.fujitsu.com> <4FC30C40.80500@cn.fujitsu.com>
- <4FC37D94.3080404@redhat.com> <4FC47579.2040504@cn.fujitsu.com>
- <4FD58399.4050700@cn.fujitsu.com>
-In-Reply-To: <4FD58399.4050700@cn.fujitsu.com>
+Subject: Re: [PATCH v2 5/5] Documentation: Add ABI entry for sysfs file
+ vmcsinfo and vmcsinfo_maxsize
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB35DEF.2040008@cn.fujitsu.com>
+In-Reply-To: <4FB35DEF.2040008@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +19,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, masanori.yoshida.tv@hitachi.com, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-T24gMDYvMTEvMjAxMiAwODozNSBBTSwgWWFuZmVpIFpoYW5nIHdyb3RlOgo+IEhlbGxvIEF2aSwK
-CgpTb3JyeSBhYm91dCB0aGUgZGVsYXkuLi4KCj4gCj4g09ogMjAxMsTqMDXUwjI5yNUgMTU6MDYs
-IFlhbmZlaSBaaGFuZyDQtLXAOgo+PiDT2iAyMDEyxOowNdTCMjjI1SAyMToyOCwgQXZpIEtpdml0
-eSDQtLXAOgo+Pj4gT24gMDUvMjgvMjAxMiAwODoyNSBBTSwgWWFuZmVpIFpoYW5nIHdyb3RlOgo+
-Pj4+Cj4+Pj4gRG91IHlvdSBoYXZlIGFueSBjb21tZW50cyBhYm91dCB0aGlzIHBhdGNoIHNldD8K
-Pj4+Cj4+PiBJIHN0aWxsIGhhdmUgYSBoYXJkIHRpbWUgdW5kZXJzdGFuZGluZyB3aHkgaXQgaXMg
-bmVlZGVkLiAgSWYgdGhlIGhvc3QKPj4+IGNyYXNoZXMsIHRoZXJlIGlzIG5vIHJlYXNvbiB0byBs
-b29rIGF0IGd1ZXN0IHN0YXRlOyB0aGUgaG9zdCBzaG91bGQKPj4+IHN1cnZpdmUgbm8gbWF0dGVy
-IHdoYXQgdGhlIGd1ZXN0IGRvZXMuCj4+Pgo+Pj4KPj4gCj4+IE9LLiBMZXQgbWUgc3VtbWFyaXpl
-IGl0Lgo+PiAKPj4gMS4gV2h5IGlzIHRoaXMgcGF0Y2ggbmVlZGVkPyAoT3VyIHJlcXVpcmVtZW50
-KQo+PiAgICAKPj4gV2Ugb25jZSBjYW1lIHRvIGEgYnVnZ3kgc2l0dWF0aW9uOiBhIGhvc3Qgc2No
-ZWR1bGVyIGJ1ZyBjYXVzZWQgZ3Vlc3QgbWFjaGluZSdzCj4+IHZjcHUgc3RvcHBlZCBmb3IgYSBs
-b25nIHRpbWUgYW5kIHRoZW4gbGVkIHRvIGhlYXJ0YmVhdCBzdG9wIChob3N0IGlzIHN0aWxsIHJ1
-bm5pbmcpLgo+PiAgICAKPj4gd2Ugd2FudCB0byBoYXZlIGFuIGVmZmljaWVudCB3YXkgdG8gbWFr
-ZSB0aGUgYnVnIGFuYWx5c2lzIHdoZW4gd2UgY29tZSB0byB0aGUgc2ltaWxhcgo+PiBzaXR1YXRp
-b24gd2hlcmUgZ3Vlc3QgbWFjaGluZSBkb2Vzbid0IHdvcmsgd2VsbCBkdWUgdG8gc29tZXRoaW5n
-IG9mIGhvc3QgbWFjaGluZSdzLCAKPj4gCj4+IEJlY2F1c2Ugd2Ugc2hvdWxkIGRlYnVnIGJvdGgg
-aG9zdCBtYWNoaW5lJ3MgYW5kIGd1ZXN0IG1hY2hpbmUncyBzaWRlcyB0byBsb29rIGZvcgo+PiB0
-aGUgcmVhc29ucywgc28gd2Ugd2FudCB0byBnZXQgYm90aCBob3N0IG1hY2hpbmUncyBjcmFzaCBk
-dW1wIGFuZCBndWVzdCBtYWNoaW5lJ3MKPj4gY3Jhc2ggZHVtcCBhdCB0aGUgc2FtZSB0aW1lIHdo
-ZW4gdGhlIGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLgoKSSB3b3VsZCBhcmd1ZSB0aGF0IHRoZXJl
-IGFyZSB0d28gc2VwYXJhdGUgYnVncyBoZXJlOiAoMSkgYSBob3N0IGJ1Zwp3aGljaCBjYXVzZWQg
-dGhlIHNjaGVkdWxpbmcgZGVsYXkgKDIpIHB1dHRpbmcgYSBoZWFydGJlYXQgc2VydmljZSBvbiBh
-CnZpcnR1YWxpemVkIGd1ZXN0cyB3aXRoIG5vIHJlYWwgdGltZSBndWFyYW50ZWVzLgoKQnV0IEkg
-dW5kZXJzdGFuZCB5b3VyIHNpdHVhdGlvbi4KCj4+IAo+PiAyLiBXaGF0IHdpbGwgd2UgZG8/Cj4+
-ICAgIAo+PiBJZiB0aGlzIGJ1ZyB3YXMgZm91bmQgb24gY3VzdG9tZXIncyBlbnZpcm9ubWVudCwg
-d2UgaGF2ZSB0d28gd2F5cyB0byBhdm9pZAo+PiBhZmZlY3Rpbmcgb3RoZXIgZ3Vlc3QgbWFjaGlu
-ZXMgcnVubmluZyBvbiB0aGUgc2FtZSBob3N0LiBGaXJzdCwgd2UgY291bGQgZG8gYnVnCj4+IGFu
-YWx5c2lzIG9uIGFub3RoZXIgZW52aXJvbm1lbnQgdG8gcmVwcm9kdWNlIHRoZSBidWdneSBzaXR1
-YXRpb247IFNlY29uZCwgd2UKPj4gY291bGQgbWlncmF0ZSBvdGhlciBndWVzdCBtYWNoaW5lcyB0
-byBvdGhlciBob3N0cy4gCgpZb3UgY291bGQgYWxzbyB1c2UgdHJhY2luZyAodGhlcmUncyB0aGUg
-bGF0ZW5jeSB0cmFjZXIgYW5kIHRoZSBzY2hlZHVsZXIKdHJhY2Vwb2ludHMpIHRvIGRlYnVnIHRo
-aXMgb24gYSBsaXZlIHN5c3RlbS4KCj4+IAo+PiBBZnRlciB0aGUgYnVnZ3kgc2l0dWF0aW9uIGlz
-IHJlcHJvZHVjZWQsIHdlIHBhbmljIHRoZSBob3N0ICptYW51YWxseSouCj4+IFRoZW4gd2UgY291
-bGQgdXNlIHVzZXJsYW5kIHRvb2xzIHRvIGdldCBndWVzdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCBm
-cm9tIGhvc3QgbWFjaGluZSdzCj4+IHdpdGggdGhlIGZlYXR1cmUgcHJvdmlkZWQgYnkgdGhpcyBw
-YXRjaCBzZXQuIEZpbmFsbHkgd2UgY291bGQgYW5hbHlzZSB0aGVtIHNlcGFyYXRlbHkKPj4gdG8g
-ZmluZCB3aGljaCBzaWRlIGNhdXNlcyB0aGUgcHJvYmxlbS4KPj4gCj4gCj4gQ291bGQgeW91IHBs
-ZWFzZSB0ZWxsIG1lIHlvdXIgYXR0aXR1ZGUgdG93YXJkcyB0aGlzIHBhdGNoPyAKCkkgc3RpbGwg
-ZGlzbGlrZSBpdCBjb25jZXB0dWFsbHkuICBCdXQgbGV0IG1lIGRvIGEgdGVjaG5pY2FsIHJldmll
-dyBvZgp0aGUgbGF0ZXN0IHZlcnNpb24uCgo+IEFuZCBoZXJlIGlzIGEgbmV3IGNhc2UgZnJvbSB0
-aGUgTGludXhDb24gSmFwYW46Cj4gCj4gRGV2ZWxvcGVycyBmcm9tIEhpdGFjaCBhcmUgbm93IGRl
-dmVsb3BpbmcgYSBuZXcgbGl2ZWR1bXAgbWVjaGFuaXNtIGZvciB0aGUKPiBzYW1lIHJlYXNvbiBh
-cyBvdXJzLiBUaGV5IGhhdmUgY29tZSB0byB0aGUgc2l0dWF0aW9uICptYW55IHRpbWVzKiB0aGF0
-IGd1ZXN0Cj4gbWFjaGluZXMgY3Jhc2hlZCBkdWUgdG8gaG9zdCdzIGZhaWx1cmVzLCBpbiBwYXJ0
-aWN1bGFyLCB1bmRlciBkZXZlbG9wbWVudC4KClRoaXMgaGFzIGhhcHBlbmVkIHRvIG1lIGFzIHdl
-bGwsIHBvc3NpYmxlIGV2ZW4gbW9yZSB0aW1lcyA6KS4gIEkgZG9uJ3QKdXNlIGNyYXNoIGR1bXBz
-IGZvciBkZWJ1Z2dpbmcgYnV0IGRpZmZlcmVudCBwZW9wbGUgbWF5IHVzZSBkaWZmZXJlbnQKdGVj
-aG5pcXVlcy4KCj4gU28gdGhleSBkZXZlbG9wIHRoaXMgbWVjaGFuaXNtIHRvIGdldCBjcmFzaCBk
-dW1wIHdoaWxlIHJldGFpbmluZyB0aGUgYnVnZ3kKPiBzaXR1YXRpb24gYmV0d2VlbiBob3N0IGFu
-ZCBndWVzdCBtYWNoaW5lLiBUaGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZWlycyBhbmQKPiBvdXJz
-IGlzIHdoZXRoZXIgb3Igbm90IHRvIHVzZSB0aGUgZmVhdHVyZSBvbiBfY3VzdG9tZXIncyBydW5u
-aW5nIG1hY2hpbmVfLgoKCi0tIAplcnJvciBjb21waWxpbmcgY29tbWl0dGVlLmM6IHRvbyBtYW55
-IGFyZ3VtZW50cyB0byBmdW5jdGlvbgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 05/16/2012 10:57 AM, zhangyanfei wrote:
+> We create two new sysfs files, vmcsinfo and vmcsinfo_maxsize. And
+> here we add an Documentation/ABI entry for them.
+> 
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-kernel-vmcsinfo b/Documentation/ABI/testing/sysfs-kernel-vmcsinfo
+> new file mode 100644
+> index 0000000..adbf866
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-kernel-vmcsinfo
+> @@ -0,0 +1,16 @@
+> +What:		/sys/kernel/vmcsinfo
+> +Date:		April 2012
+> +KernelVersion:	3.4.0
+> +Contact:	Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> +Description
+> +		Shows physical address of VMCSINFO. VMCSINFO contains
+> +		the VMCS revision identifier and encoded offsets of fields
+> +		in VMCS data on Intel processors equipped with the VT
+> +		extensions.
+> +
+> +What:		/sys/kernel/vmcsinfo_maxsize
+> +Date:		April 2012
+> +KernelVersion:	3.4.0
+> +Contact:	Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+> +Description
+> +		Shows max size of VMCSINFO.
+> 
+
+This describes the cpu, so maybe /sys/devices/cpu is a better place for
+these files.
+
+Would it make sense to expose the actual fields?
+
+that is, have /sys/devices/cpu/vmcs/0806 contain the offset of
+GUEST_DS_SELECTOR.
+
+-- 
+error compiling committee.c: too many arguments to function
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
