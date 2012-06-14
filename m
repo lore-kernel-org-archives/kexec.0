@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SeqqE-0000Za-Fl
- for kexec@lists.infradead.org; Wed, 13 Jun 2012 16:54:47 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <9A3DED9B-FB11-49CC-A51E-40ED03E24999@vt.edu>
-Date: Wed, 13 Jun 2012 09:54:04 -0700
-In-Reply-To: <9A3DED9B-FB11-49CC-A51E-40ED03E24999@vt.edu> (Ben Shelton's
- message of "Thu, 7 Jun 2012 18:47:35 -0400")
-Message-ID: <87ipevp2z7.fsf@xmission.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Sf9u5-0003i6-CU
+ for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:16:03 +0000
+Message-ID: <4FD9E3FF.4050906@redhat.com>
+Date: Thu, 14 Jun 2012 16:15:43 +0300
+From: Avi Kivity <avi@redhat.com>
 MIME-Version: 1.0
-Subject: Re: Kexec: where does the kernel image get relocated?
+Subject: Re: [PATCH v2 0/5] Export offsets of VMCS fields as note information
+ for kdump
+References: <4FB35C48.30708@cn.fujitsu.com> <4FB92D5A.3060507@redhat.com>
+ <4FB9A92D.7050108@cn.fujitsu.com> <4FB9FE08.4050905@redhat.com>
+ <4FBA05F6.8070804@cn.fujitsu.com> <4FBA0C8A.2050003@redhat.com>
+ <4FBB0ACA.2040907@cn.fujitsu.com> <4FC30C40.80500@cn.fujitsu.com>
+ <4FC37D94.3080404@redhat.com> <4FC47579.2040504@cn.fujitsu.com>
+ <4FD58399.4050700@cn.fujitsu.com>
+In-Reply-To: <4FD58399.4050700@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,42 +24,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ben Shelton <beshelto@vt.edu>
-Cc: Antonio Barbalace <antoniob@vt.edu>, kexec@lists.infradead.org, Cong Wang <xiyou.wangcong@gmail.com>
+To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, masanori.yoshida.tv@hitachi.com, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-Ben Shelton <beshelto@vt.edu> writes:
-
-> Hi all,
->
-> I'm working on a distributed-computing project where we'd like to boot multiple instances of the Linux kernel on the same machine.  We'd like to leverage kexec to decompress each guest kernel and copy it to an area within the physical address space.
->
-> From following through the code and using GDB/QEMU, it seems like the steps to reboot with kexec look like this:
->
-> - Decompress the kernel somewhere (not necessarily contiguous)
-> - In relocate_kernel_64.S, copy the kernel to a contiguous space and jump/return to purgatory
-> - In purgatory, reinitialize the hardware if necessary, then jump to the start of the kernel
->
-> My issue is that I can't seem to find where the address to which the
-> kernel is copied in step 2 is defined.  Can anyone give me a brief
-> description of how this works?
-
-The addresses are specified in the kexec_load system call.
-
-If the kernel doesn't like those addresses it might move itself as Cong
-Wang mentioned.
-
-/sbin/kexec looks at the headers of the kernel image and either use
-where the kernel is required to be loaded by the boot protocol or if the
-image is relocatable an available extent of memory that is supported by
-the boot protocol is picked.
-
-Eric
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDYvMTEvMjAxMiAwODozNSBBTSwgWWFuZmVpIFpoYW5nIHdyb3RlOgo+IEhlbGxvIEF2aSwK
+CgpTb3JyeSBhYm91dCB0aGUgZGVsYXkuLi4KCj4gCj4g09ogMjAxMsTqMDXUwjI5yNUgMTU6MDYs
+IFlhbmZlaSBaaGFuZyDQtLXAOgo+PiDT2iAyMDEyxOowNdTCMjjI1SAyMToyOCwgQXZpIEtpdml0
+eSDQtLXAOgo+Pj4gT24gMDUvMjgvMjAxMiAwODoyNSBBTSwgWWFuZmVpIFpoYW5nIHdyb3RlOgo+
+Pj4+Cj4+Pj4gRG91IHlvdSBoYXZlIGFueSBjb21tZW50cyBhYm91dCB0aGlzIHBhdGNoIHNldD8K
+Pj4+Cj4+PiBJIHN0aWxsIGhhdmUgYSBoYXJkIHRpbWUgdW5kZXJzdGFuZGluZyB3aHkgaXQgaXMg
+bmVlZGVkLiAgSWYgdGhlIGhvc3QKPj4+IGNyYXNoZXMsIHRoZXJlIGlzIG5vIHJlYXNvbiB0byBs
+b29rIGF0IGd1ZXN0IHN0YXRlOyB0aGUgaG9zdCBzaG91bGQKPj4+IHN1cnZpdmUgbm8gbWF0dGVy
+IHdoYXQgdGhlIGd1ZXN0IGRvZXMuCj4+Pgo+Pj4KPj4gCj4+IE9LLiBMZXQgbWUgc3VtbWFyaXpl
+IGl0Lgo+PiAKPj4gMS4gV2h5IGlzIHRoaXMgcGF0Y2ggbmVlZGVkPyAoT3VyIHJlcXVpcmVtZW50
+KQo+PiAgICAKPj4gV2Ugb25jZSBjYW1lIHRvIGEgYnVnZ3kgc2l0dWF0aW9uOiBhIGhvc3Qgc2No
+ZWR1bGVyIGJ1ZyBjYXVzZWQgZ3Vlc3QgbWFjaGluZSdzCj4+IHZjcHUgc3RvcHBlZCBmb3IgYSBs
+b25nIHRpbWUgYW5kIHRoZW4gbGVkIHRvIGhlYXJ0YmVhdCBzdG9wIChob3N0IGlzIHN0aWxsIHJ1
+bm5pbmcpLgo+PiAgICAKPj4gd2Ugd2FudCB0byBoYXZlIGFuIGVmZmljaWVudCB3YXkgdG8gbWFr
+ZSB0aGUgYnVnIGFuYWx5c2lzIHdoZW4gd2UgY29tZSB0byB0aGUgc2ltaWxhcgo+PiBzaXR1YXRp
+b24gd2hlcmUgZ3Vlc3QgbWFjaGluZSBkb2Vzbid0IHdvcmsgd2VsbCBkdWUgdG8gc29tZXRoaW5n
+IG9mIGhvc3QgbWFjaGluZSdzLCAKPj4gCj4+IEJlY2F1c2Ugd2Ugc2hvdWxkIGRlYnVnIGJvdGgg
+aG9zdCBtYWNoaW5lJ3MgYW5kIGd1ZXN0IG1hY2hpbmUncyBzaWRlcyB0byBsb29rIGZvcgo+PiB0
+aGUgcmVhc29ucywgc28gd2Ugd2FudCB0byBnZXQgYm90aCBob3N0IG1hY2hpbmUncyBjcmFzaCBk
+dW1wIGFuZCBndWVzdCBtYWNoaW5lJ3MKPj4gY3Jhc2ggZHVtcCBhdCB0aGUgc2FtZSB0aW1lIHdo
+ZW4gdGhlIGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLgoKSSB3b3VsZCBhcmd1ZSB0aGF0IHRoZXJl
+IGFyZSB0d28gc2VwYXJhdGUgYnVncyBoZXJlOiAoMSkgYSBob3N0IGJ1Zwp3aGljaCBjYXVzZWQg
+dGhlIHNjaGVkdWxpbmcgZGVsYXkgKDIpIHB1dHRpbmcgYSBoZWFydGJlYXQgc2VydmljZSBvbiBh
+CnZpcnR1YWxpemVkIGd1ZXN0cyB3aXRoIG5vIHJlYWwgdGltZSBndWFyYW50ZWVzLgoKQnV0IEkg
+dW5kZXJzdGFuZCB5b3VyIHNpdHVhdGlvbi4KCj4+IAo+PiAyLiBXaGF0IHdpbGwgd2UgZG8/Cj4+
+ICAgIAo+PiBJZiB0aGlzIGJ1ZyB3YXMgZm91bmQgb24gY3VzdG9tZXIncyBlbnZpcm9ubWVudCwg
+d2UgaGF2ZSB0d28gd2F5cyB0byBhdm9pZAo+PiBhZmZlY3Rpbmcgb3RoZXIgZ3Vlc3QgbWFjaGlu
+ZXMgcnVubmluZyBvbiB0aGUgc2FtZSBob3N0LiBGaXJzdCwgd2UgY291bGQgZG8gYnVnCj4+IGFu
+YWx5c2lzIG9uIGFub3RoZXIgZW52aXJvbm1lbnQgdG8gcmVwcm9kdWNlIHRoZSBidWdneSBzaXR1
+YXRpb247IFNlY29uZCwgd2UKPj4gY291bGQgbWlncmF0ZSBvdGhlciBndWVzdCBtYWNoaW5lcyB0
+byBvdGhlciBob3N0cy4gCgpZb3UgY291bGQgYWxzbyB1c2UgdHJhY2luZyAodGhlcmUncyB0aGUg
+bGF0ZW5jeSB0cmFjZXIgYW5kIHRoZSBzY2hlZHVsZXIKdHJhY2Vwb2ludHMpIHRvIGRlYnVnIHRo
+aXMgb24gYSBsaXZlIHN5c3RlbS4KCj4+IAo+PiBBZnRlciB0aGUgYnVnZ3kgc2l0dWF0aW9uIGlz
+IHJlcHJvZHVjZWQsIHdlIHBhbmljIHRoZSBob3N0ICptYW51YWxseSouCj4+IFRoZW4gd2UgY291
+bGQgdXNlIHVzZXJsYW5kIHRvb2xzIHRvIGdldCBndWVzdCBtYWNoaW5lJ3MgY3Jhc2ggZHVtcCBm
+cm9tIGhvc3QgbWFjaGluZSdzCj4+IHdpdGggdGhlIGZlYXR1cmUgcHJvdmlkZWQgYnkgdGhpcyBw
+YXRjaCBzZXQuIEZpbmFsbHkgd2UgY291bGQgYW5hbHlzZSB0aGVtIHNlcGFyYXRlbHkKPj4gdG8g
+ZmluZCB3aGljaCBzaWRlIGNhdXNlcyB0aGUgcHJvYmxlbS4KPj4gCj4gCj4gQ291bGQgeW91IHBs
+ZWFzZSB0ZWxsIG1lIHlvdXIgYXR0aXR1ZGUgdG93YXJkcyB0aGlzIHBhdGNoPyAKCkkgc3RpbGwg
+ZGlzbGlrZSBpdCBjb25jZXB0dWFsbHkuICBCdXQgbGV0IG1lIGRvIGEgdGVjaG5pY2FsIHJldmll
+dyBvZgp0aGUgbGF0ZXN0IHZlcnNpb24uCgo+IEFuZCBoZXJlIGlzIGEgbmV3IGNhc2UgZnJvbSB0
+aGUgTGludXhDb24gSmFwYW46Cj4gCj4gRGV2ZWxvcGVycyBmcm9tIEhpdGFjaCBhcmUgbm93IGRl
+dmVsb3BpbmcgYSBuZXcgbGl2ZWR1bXAgbWVjaGFuaXNtIGZvciB0aGUKPiBzYW1lIHJlYXNvbiBh
+cyBvdXJzLiBUaGV5IGhhdmUgY29tZSB0byB0aGUgc2l0dWF0aW9uICptYW55IHRpbWVzKiB0aGF0
+IGd1ZXN0Cj4gbWFjaGluZXMgY3Jhc2hlZCBkdWUgdG8gaG9zdCdzIGZhaWx1cmVzLCBpbiBwYXJ0
+aWN1bGFyLCB1bmRlciBkZXZlbG9wbWVudC4KClRoaXMgaGFzIGhhcHBlbmVkIHRvIG1lIGFzIHdl
+bGwsIHBvc3NpYmxlIGV2ZW4gbW9yZSB0aW1lcyA6KS4gIEkgZG9uJ3QKdXNlIGNyYXNoIGR1bXBz
+IGZvciBkZWJ1Z2dpbmcgYnV0IGRpZmZlcmVudCBwZW9wbGUgbWF5IHVzZSBkaWZmZXJlbnQKdGVj
+aG5pcXVlcy4KCj4gU28gdGhleSBkZXZlbG9wIHRoaXMgbWVjaGFuaXNtIHRvIGdldCBjcmFzaCBk
+dW1wIHdoaWxlIHJldGFpbmluZyB0aGUgYnVnZ3kKPiBzaXR1YXRpb24gYmV0d2VlbiBob3N0IGFu
+ZCBndWVzdCBtYWNoaW5lLiBUaGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHRoZWlycyBhbmQKPiBvdXJz
+IGlzIHdoZXRoZXIgb3Igbm90IHRvIHVzZSB0aGUgZmVhdHVyZSBvbiBfY3VzdG9tZXIncyBydW5u
+aW5nIG1hY2hpbmVfLgoKCi0tIAplcnJvciBjb21waWxpbmcgY29tbWl0dGVlLmM6IHRvbyBtYW55
+IGFyZ3VtZW50cyB0byBmdW5jdGlvbgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
