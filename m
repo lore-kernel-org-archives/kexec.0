@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SfAFV-00061h-Ij
- for kexec@lists.infradead.org; Thu, 14 Jun 2012 13:38:10 +0000
-Message-ID: <4FD9E936.3030001@redhat.com>
-Date: Thu, 14 Jun 2012 16:37:58 +0300
-From: Avi Kivity <avi@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 3/5] KVM-INTEL: Add new module vmcsinfo-intel to fill
- VMCSINFO
-References: <4FB35C48.30708@cn.fujitsu.com> <4FB35D60.6050009@cn.fujitsu.com>
-In-Reply-To: <4FB35D60.6050009@cn.fujitsu.com>
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SfLps-0006Hf-D9
+ for kexec@lists.infradead.org; Fri, 15 Jun 2012 02:00:30 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 9DCC43EE0C0
+ for <kexec@lists.infradead.org>; Fri, 15 Jun 2012 11:00:22 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 874FB45DE56
+ for <kexec@lists.infradead.org>; Fri, 15 Jun 2012 11:00:22 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6E4F645DE5B
+ for <kexec@lists.infradead.org>; Fri, 15 Jun 2012 11:00:22 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5FFA51DB8046
+ for <kexec@lists.infradead.org>; Fri, 15 Jun 2012 11:00:22 +0900 (JST)
+Received: from m024.s.css.fujitsu.com (m024.s.css.fujitsu.com [10.0.81.64])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 060AEE08003
+ for <kexec@lists.infradead.org>; Fri, 15 Jun 2012 11:00:22 +0900 (JST)
+Date: Fri, 15 Jun 2012 11:00:11 +0900 (JST)
+Message-Id: <20120615.110011.523939983.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120612173004.c662378a.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120604.121957.454958033.d.hatayama@jp.fujitsu.com>
+ <20120607150436.4c1d35cb.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120612173004.c662378a.kumagai-atsushi@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +35,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: zhangyanfei <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-T24gMDUvMTYvMjAxMiAxMDo1NSBBTSwgemhhbmd5YW5mZWkgd3JvdGU6Cj4gVGhpcyBwYXRjaCBp
-bXBsZW1lbnRzIGEgbmV3IG1vZHVsZSBuYW1lZCB2bWNzaW5mby1pbnRlbC4gVGhlCj4gbW9kdWxl
-IGZpbGxzIFZNQ1NJTkZPIHdpdGggdGhlIFZNQ1MgcmV2aXNpb24gaWRlbnRpZmllciwKPiBhbmQg
-ZW5jb2RlZCBvZmZzZXRzIG9mIFZNQ1MgZmllbGRzLgo+IAo+IE5vdGUsIG9mZnNldHMgb2YgZmll
-bGRzIGJlbG93IHdpbGwgbm90IGJlIGZpbGxlZCBpbnRvIFZNQ1NJTkZPOgo+IDEuIGZpZWxkcyBk
-ZWZpbmVkIGluIEludGVsIHNwZWNpZmljYXRpb24gKEludGVswq4gNjQgYW5kCj4gICAgSUEtMzIg
-QXJjaGl0ZWN0dXJlcyBTb2Z0d2FyZSBEZXZlbG9wZXLigJlzIE1hbnVhbCwgVm9sdW1lCj4gICAg
-M0MpIGJ1dCBub3QgZGVmaW5lZCBpbiAqdm1jc19maWVsZCouCj4gMi4gZmllbGRzIGRvbid0IGV4
-aXN0IGJlY2F1c2UgdGhlaXIgY29ycmVzcG9uZGluZyBjb250cm9sIGJpdHMKPiAgICBhcmUgbm90
-IHNldC4KPiAKPiArCj4gKy8qCj4gKyAqIFdlIHNlcGFyYXRlIHRoZXNlIGZpdmUgY29udHJvbCBm
-aWVsZHMgZnJvbSBvdGhlciBmaWVsZHMKPiArICogYmVjYXVzZSBzb21lIGZpZWxkcyBvbmx5IGV4
-aXN0IG9uIHByb2Nlc3NvcnMgdGhhdCBzdXBwb3J0Cj4gKyAqIHRoZSAxLXNldHRpbmcgb2YgY29u
-dHJvbCBiaXRzIGluIHRoZSBmaXZlIGNvbnRyb2wgZmllbGRzLgo+ICsgKi8KCkkgdGhvdWdodCB0
-aGlzIHdhcyBjaGVja2VkIG9ubHkgZHVyaW5nIFZNRU5UUlkuICBTbyBwZXJoYXBzIHlvdSBkb24n
-dApuZWVkIHRoaXMgc3BlY2lhbCBjYXNpbmcuCgpJbiBmYWN0IHlvdSBtaWdodCBiZSBhYmxlIHRv
-CgogICAvLyBwcmUtZmlsbCB2bWNzIHdpdGggcGF0dGVybnMKCiAgZm9yIChpID0gMDsgaSA8IDY0
-azsgKytpKQogICAgICBpZiAodm1jc19yZWFkX2NoZWNraW5nKGksICZwYXR0ZXJuKSkgewogICAg
-ICAgICAgIC8vIGRlY29kZSBwYXR0ZXJuCiAgICAgIH0gZWxzZQogICAgICAgICAgIC8vIGZpZWxk
-IGRvZXMgbm90IGV4aXN0IChWTSBJbnN0cnVjdGlvbiBlcnJvciAxMiksIGlnbm9yZQoKd2l0aCBu
-byBrbm93bGVkZ2Ugb2YgdGhlIGNvbnRyb2wgZmllbGRzLCBvciBvZiBhbnkgZmllbGQgbmFtZS4K
-Cgo+ICsKPiArLyoKPiArICogVGhlIGZvcm1hdCBvZiBWTUNTSU5GTyBpcyBnaXZlbiBiZWxvdzoK
-PiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICog
-ICB8IEJ5dGUgb2Zmc2V0IHwgQ29udGVudHMgICAgICAgICAgICAgICAgIHwKPiArICogICArLS0t
-LS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICogICB8IDAgICAgICAg
-ICAgIHwgVk1DUyByZXZpc2lvbiBpZGVudGlmaWVyIHwKPiArICogICArLS0tLS0tLS0tLS0tLSst
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLSsKPiArICogICB8IDQgICAgICAgICAgIHwgPGZpZWxk
-PjxlbmNvZGVkIG9mZnNldD4gIHwKPiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLSsKPiArICogICB8IDE2ICAgICAgICAgIHwgPGZpZWxkPjxlbmNvZGVkIG9m
-ZnNldD4gIHwKPiArICogICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LSsKPiArICogICAuLi4uLi4KPiArICoKPiArICogVGhlIGZpcnN0IDMyIGJpdHMgb2YgVk1DU0lO
-Rk8gY29udGFpbnMgdGhlIFZNQ1MgcmV2aXNpb24KPiArICogaWRlbnRpZmllci4KPiArICogVGhl
-IHJlbWFpbmRlciBvZiBWTUNTSU5GTyBpcyB1c2VkIGZvciA8ZmllbGQ+PGVuY29kZWQgb2Zmc2V0
-Pgo+ICsgKiBzZXRzLiBFYWNoIHNldCB0YWtlcyAxMiBieXRlczogZmllbGQgb2NjdXB5cyA0IGJ5
-dGVzCj4gKyAqIGFuZCBpdHMgY29ycmVzcG9uZGluZyBlbmNvZGVkIG9mZnNldCBvY2N1cHlzIDgg
-Ynl0ZXMuCj4gKyAqCj4gKyAqIEVuY29kZWQgb2Zmc2V0cyBhcmUgcmF3IHZhbHVlcyByZWFkIGJ5
-IHZtY3NfcmVhZHsxNiwgNjQsIDMyLCBsfSwKPiArICogYW5kIHRoZXkgYXJlIGFsbCB1bnNpZ25l
-ZCBleHRlbmRlZCB0byA4IGJ5dGVzIGZvciBlYWNoCj4gKyAqIDxmaWVsZD48ZW5jb2RlZCBvZmZz
-ZXQ+IHNldCBoYXMgdGhlIHNhbWUgc2l6ZS4KPiArICogV2UgZG8gbm90IGRlY29kZSBvZmZzZXRz
-IGhlcmUuIFRoZSBkZWNvZGluZyB3b3JrIGlzIGRlbGF5ZWQKPiArICogaW4gdXNlcnNwYWNlIHRv
-b2xzLgoKSXQncyBiZXR0ZXIgdG8gZG8gdGhlIGRlY29kaW5nIGhlcmUsIG9yIG5vIG9uZSB3aWxs
-IGtub3cgaG93IHRvIGRvIGl0LgpBbHNvIGhhdmUgYW4gbmZpZWxkcyBmaWVsZC4KLS0gCmVycm9y
-IGNvbXBpbGluZyBjb21taXR0ZWUuYzogdG9vIG1hbnkgYXJndW1lbnRzIHRvIGZ1bmN0aW9uCgoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH 2/4] makedumpfile: Add partial bitmap for cyclic.
+Date: Tue, 12 Jun 2012 17:30:04 +0900
+
+> Hello HATAYAMA-san,
+> 
+> On Thu, 7 Jun 2012 15:04:36 +0900
+> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> 
+>> On Mon, 04 Jun 2012 12:19:57 +0900 (JST)
+>> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>> 
+>> > > + */
+>> > > +#define BUFSIZE_CYCLIC	        (8192)
+>> > > +#define PFN_CYCLIC		(BUFSIZE_CYCLIC * BITPERBYTE)
+>> > > +
+>> > > +
+>> > > +/*
+>> > >   * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
+>> > 
+>> > How did you choose this buffer size? Best performance? I think the
+>> > performacne varies according to this buffer size, and to evaluate it,
+>> > it's useful to be able to specify the size through command-line.
+>>
+>> Honestly, the buffer size has no means, I defined it without a specific reason
+>> at first.
+>> 
+>> However, it's understandable that the size is important key for performance and
+>> I agree with your opinion that enabling to specify the size is useful.
+>> 
+>> But, I noticed just now, prototype with increased buffer size isn't work correctly.
+>> 
+>>  - BUFSIZE_CYCLIC = 8192:
+>> 
+>>     $ makedumpfile -Kcd31 vmcore testdump.Kcd31
+>>     ...
+>>     The dumpfile is saved to testdump.Kcd31.
+>> 
+>>     makedumpfile Completed.
+>>     $ ls -l testdump.*
+>>     -rw------- 1 kumagai kumagai 21167309  6月  7 13:55 testdump.Kcd31
+>>     -rw------- 1 kumagai kumagai 21167309  6月  7 13:28 testdump.cd31
+>>     $
+>> 
+>>  - BUFSIZE_CYCLIC = 16384:
+>> 
+>>     $ makedumpfile -Kcd31 vmcore testdump.Kcd31
+>>     ...
+>>     The dumpfile is saved to testdump.Kcd31.
+>> 
+>>     makedumpfile Completed.
+>>     $ ls -l testdump.*
+>>     -rw------- 1 kumagai kumagai 18836948  6月  7 13:59 testdump.Kcd31
+>>     -rw------- 1 kumagai kumagai 21167309  6月  7 13:28 testdump.cd31
+>>     $
+>> 
+>> 
+>> I must review my code quickly.
+> 
+> I found my mistake in the process of incraesing target region and
+> show the modification at the end of this email.
+> 
+> On Mon, 4 Jun 2012 16:54:49 +0900
+> Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp> wrote:
+> [...]
+>> After received your mail, I measured executing time with the patch below.
+>> The result below was measured in 5GB memory machine.
+>> 
+>> Result:
+>>   a. makedumpfile -Kcd31 
+>>     excluding time:   6.55 [sec]
+>>     writing time:     5.89 [sec]
+> 
+> I measured executing time with BUFSIZE=8192 on 4 June as above.
+> Additionally, I measured executing time with BUFSIZE=16384, 24576 and 32768
+> in the same environment.
+> 
+> Result:
+>     ------------------------------------------------------------------------
+>     buffer size [byte]	     excluding time [sec]        writing time [sec]
+>     ------------------------------------------------------------------------
+>     	  8192		 	    6.55			 5.89
+>     	 16384		 	    3.49			 5.91
+>     	 24576		 	    2.39			 5.96
+>     	 32768		 	    1.83			 5.96
+>     ------------------------------------------------------------------------
+> 
+> It seems that the buffer size is really effective in performance.
+> Even if we choose the way without tracing free_list, the overhead of cyclic processing
+> will be reduced, so I expect some speedup.
+
+Performacne of the excluding time looks improved propoertional to
+buffer size. I guess this result means part of processing to switch to
+next cycle is so much heavy. I'll follow something for further
+improvement around there.
+
+> 
+> If enabling to specify the buffer size, I think the information for decision of 
+> buffer size is needed. How do you decide the buffer size ?
+> 
+
+Proper buffer size depends on machine spec. I think it natural to
+choose the largest common divisor as default. OTOH, on the environment
+where users need maximal speed definitely, such as on the machine
+where large memory where a little bit time difference can reach a big
+difference in total, and such as when used in kdump, they would want
+to know the proper values by actually running makedumpfile for a
+variety of parameters relevant to speed. For such tool that make it
+easy to do this, I imagine a kind of tool to search for fatest mirror
+site.
+
+Thanks.
+HATAYAMA, Daisuke
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
