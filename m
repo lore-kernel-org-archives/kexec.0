@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate10.ts.fujitsu.com ([80.70.172.49])
+Received: from dgate20.ts.fujitsu.com ([80.70.172.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Si64I-00060Z-9B
- for kexec@lists.infradead.org; Fri, 22 Jun 2012 15:46:43 +0000
+ id 1Si669-00063q-98
+ for kexec@lists.infradead.org; Fri, 22 Jun 2012 15:48:38 +0000
 Received: from sanpedro.osd.mch.fsc.net (sanpedro.osd.mch.fsc.net
  [172.17.20.6])
- by sanpedro.mch.fsc.net (Postfix) with ESMTP id 5A03C968415
- for <kexec@lists.infradead.org>; Fri, 22 Jun 2012 17:46:40 +0200 (CEST)
+ by sanpedro.mch.fsc.net (Postfix) with ESMTP id 3D9B8966E00
+ for <kexec@lists.infradead.org>; Fri, 22 Jun 2012 17:48:26 +0200 (CEST)
 From: Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
-Subject: [PATCH 1/3] makedumpfile: Xen4: determine Xen version
-Date: Fri, 22 Jun 2012 17:46:39 +0200
+Subject: [PATCH 2/3] makedumpfile: Xen4: copy Xen4 memory distribution symbol
+ values from xen header file
+Date: Fri, 22 Jun 2012 17:48:26 +0200
 MIME-Version: 1.0
 Content-Disposition: inline
-Message-Id: <201206221746.40036.Norbert.Trapp@ts.fujitsu.com>
+Message-Id: <201206221748.26124.Norbert.Trapp@ts.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,209 +28,251 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-The core file contains information about the xen version. The
-Xen version is determined and different functions will be
-called for different Xen versions. Additionally a Xen3 problem
-with the page_info _domain offset for x86_64 gets repaired.
-
-In Xen3 xen/common/kexec.c the page_info _domain offset was set with:
-    VMCOREINFO_OFFSET_ALIAS(page_info, u, _domain);
-which is wrong for x86_in because the _domain is in union v.
-(xen/include/asm-x86/mm.h)
-For Xen3 in makedumpfile.c the offset is simply modified to 24
-for x86_64.
-
-For Xen4 we asked Xen development to use:
-    #ifdef __ia64__
-	VMCOREINFO_OFFSET_SUB(page_info, u.inuse, _domain);
-    #else
-	VMCOREINFO_OFFSET_SUB(page_info, v.inuse, _domain);
-    #endif
+copied Xen4 memmory values from xen config.h file to makedumpfile.h
+and added _XEN3 to the old Xen3 symbols. kvtop_xen_x86_64 in arch/x86_64.c
+distinguishes between Xen3 and Xen4.
 
 Signed-off-by: Norbert Trapp <norbert.trapp@ts.fujitsu.com>
 ---
- elf_info.c     |    2 +
- makedumpfile.c |   90 +++++++++++++++++++++++++++++++++++++++++++-------------
- makedumpfile.h |    3 ++
- 3 files changed, 74 insertions(+), 21 deletions(-)
+ arch/x86_64.c  |  121 +++++++++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.h |   76 +++++++++++++++++++++++++++++------
+ 2 files changed, 154 insertions(+), 43 deletions(-)
 
-diff --git a/elf_info.c b/elf_info.c
-index cf476a3..e723720 100644
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -159,6 +159,7 @@ check_elf_format(int fd, char *filename, int *phnum, unsigned int *num_load)
- 	if ((ehdr64.e_ident[EI_CLASS] == ELFCLASS64)
- 	    && (ehdr32.e_ident[EI_CLASS] != ELFCLASS32)) {
- 		(*phnum) = ehdr64.e_phnum;
-+		info->elf_machine = ehdr64.e_machine;
- 		for (i = 0; i < ehdr64.e_phnum; i++) {
- 			if (!get_elf64_phdr(fd, filename, i, &load64)) {
- 				ERRMSG("Can't find Phdr %d.\n", i);
-@@ -172,6 +173,7 @@ check_elf_format(int fd, char *filename, int *phnum, unsigned int *num_load)
- 	} else if ((ehdr64.e_ident[EI_CLASS] != ELFCLASS64)
- 	    && (ehdr32.e_ident[EI_CLASS] == ELFCLASS32)) {
- 		(*phnum) = ehdr32.e_phnum;
-+		info->elf_machine = ehdr32.e_machine;
- 		for (i = 0; i < ehdr32.e_phnum; i++) {
- 			if (!get_elf32_phdr(fd, filename, i, &load32)) {
- 				ERRMSG("Can't find Phdr %d.\n", i);
-diff --git a/makedumpfile.c b/makedumpfile.c
-index d024e95..7398f17 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5300,10 +5300,7 @@ get_structure_info_xen(void)
- {
- 	SIZE_INIT(page_info, "page_info");
- 	OFFSET_INIT(page_info.count_info, "page_info", "count_info");
--	/*
--	 * _domain is the first member of union u
--	 */
--	OFFSET_INIT(page_info._domain, "page_info", "u");
-+	OFFSET_IN_UNION_INIT(page_info._domain, "page_info", "_domain");
- 
- 	SIZE_INIT(domain, "domain");
- 	OFFSET_INIT(domain.domain_id, "domain", "domain_id");
-@@ -5313,6 +5310,41 @@ get_structure_info_xen(void)
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index 6d2f9cc..da61fd8 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -278,6 +278,54 @@ vaddr_to_paddr_x86_64(unsigned long vaddr)
+ 	return paddr;
  }
  
- int
-+get_xen_version(void)
++int
++is_xen_vaddr(unsigned long kvaddr)
 +{
-+	unsigned long   xen_major_version;
-+	unsigned long   xen_minor_version;
-+	off_t           offset_xen_crash_info;
-+	unsigned long   size_xen_crash_info;
-+	const off_t     failed = (off_t)-1;
++	int retval;
 +
-+	get_xen_crash_info(&offset_xen_crash_info, &size_xen_crash_info);
-+	if (info->xen_major_version && info->xen_minor_version)
-+		return TRUE;
-+
-+	if (lseek(info->fd_memory, offset_xen_crash_info, SEEK_SET) == failed) {
-+		ERRMSG("Can't seek the dump memory(%s). %s\n",
-+		    info->name_memory, strerror(errno));
-+		return FALSE;
++	if (info->xen_major_version < 4) {
++		retval = (kvaddr >= HYPERVISOR_VIRT_START_XEN3 && kvaddr < HYPERVISOR_VIRT_END_XEN3);
++		return retval;
 +	}
-+	if (read(info->fd_memory, &xen_major_version, sizeof(xen_major_version))
-+	    != sizeof(xen_major_version)) {
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		    info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+	if (read(info->fd_memory, &xen_minor_version, sizeof(xen_minor_version))
-+	    != sizeof(xen_major_version)) {
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		    info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+	info->xen_major_version = xen_major_version;
-+	info->xen_minor_version = xen_minor_version;
-+	return TRUE;
++	retval = (kvaddr >= HYPERVISOR_VIRT_START && kvaddr < HYPERVISOR_VIRT_END);
++	return retval;
 +}
 +
 +int
- get_xen_phys_start(void)
- {
- 	off_t offset, offset_xen_crash_info;
-@@ -5350,23 +5382,25 @@ get_xen_info(void)
- 	unsigned int domain_id;
- 	int num_domain;
++is_xen_text(unsigned long kvaddr, unsigned long long *entry)
++{
++	int retval;
++
++	if (info->xen_major_version < 4) {
++		retval = (kvaddr >= XEN_VIRT_START_XEN3 && kvaddr < DIRECTMAP_VIRT_START_XEN3);
++		if (retval)
++			*entry = (unsigned long)kvaddr - XEN_VIRT_START_XEN3 + info->xen_phys_start;
++		return retval;
++	}
++	retval = (kvaddr >= XEN_VIRT_START && kvaddr < XEN_VIRT_START + GB(1));
++	if (retval)
++		*entry = (unsigned long)kvaddr - XEN_VIRT_START + info->xen_phys_start;
++	return retval;
++}
++
++int
++is_direct(unsigned long kvaddr, unsigned long long *entry)
++{
++	int retval;
++
++	if (info->xen_major_version < 4) {
++		retval = (kvaddr >= DIRECTMAP_VIRT_START_XEN3 && kvaddr < DIRECTMAP_VIRT_END_XEN3);
++		if (retval)
++			*entry = (unsigned long)kvaddr - DIRECTMAP_VIRT_START_XEN3;
++		return retval;
++	}
++	retval = (kvaddr >= DIRECTMAP_VIRT_START && kvaddr < DIRECTMAP_VIRT_END);
++	if (retval)
++		*entry = (unsigned long)kvaddr - DIRECTMAP_VIRT_START;
++	return retval;
++}
++
++
+ /*
+  * for Xen extraction
+  */
+@@ -289,11 +337,11 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 	if (!is_xen_vaddr(kvaddr))
+ 		return NOT_PADDR;
  
--	if (SYMBOL(alloc_bitmap) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of alloc_bitmap.\n");
+-	if (is_xen_text(kvaddr))
+-		return (unsigned long)kvaddr - XEN_VIRT_START + info->xen_phys_start;
++	if (is_xen_text(kvaddr, &entry))
++		return entry;
+ 
+-	if (is_direct(kvaddr))
+-		return (unsigned long)kvaddr - DIRECTMAP_VIRT_START;
++	if (is_direct(kvaddr, &entry))
++		return entry;
+ 
+ 	if ((dirp = kvtop_xen_x86_64(SYMBOL(pgd_l4))) == NOT_PADDR)
+ 		return NOT_PADDR;
+@@ -350,34 +398,45 @@ int get_xen_info_x86_64(void)
+ 	}
+ 
+ 	if (SYMBOL(frame_table) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of frame_table.\n");
 -		return FALSE;
 -	}
--	if (!readmem(VADDR_XEN, SYMBOL(alloc_bitmap), &info->alloc_bitmap,
--	      sizeof(info->alloc_bitmap))) {
--		ERRMSG("Can't get the value of alloc_bitmap.\n");
+-	if (!readmem(VADDR_XEN, SYMBOL(frame_table), &frame_table_vaddr,
+-	    sizeof(frame_table_vaddr))) {
+-		ERRMSG("Can't get the value of frame_table.\n");
 -		return FALSE;
 -	}
--	if (SYMBOL(max_page) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of max_page.\n");
+-	info->frame_table_vaddr = frame_table_vaddr;
+-
+-	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
 -		return FALSE;
 -	}
--	if (!readmem(VADDR_XEN, SYMBOL(max_page), &info->max_page,
--	    sizeof(info->max_page))) {
--		ERRMSG("Can't get the value of max_page.\n");
+-	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
+-	    sizeof(xen_end))) {
+-		ERRMSG("Can't get the value of xenheap_phys_end.\n");
 -		return FALSE;
-+	if (info->xen_major_version <= 3) {
-+		if (SYMBOL(alloc_bitmap) == NOT_FOUND_SYMBOL) {
-+			ERRMSG("Can't get the symbol of alloc_bitmap.\n");
++		if (info->elf_machine != EM_X86_64) {
++			ERRMSG("Can't get the symbol of frame_table.\n");
 +			return FALSE;
 +		}
-+		if (!readmem(VADDR_XEN, SYMBOL(alloc_bitmap), &info->alloc_bitmap,
-+		      sizeof(info->alloc_bitmap))) {
-+			ERRMSG("Can't get the value of alloc_bitmap.\n");
++		info->frame_table_vaddr = FRAMETABLE_VIRT_START;
++	} else {
++		if (!readmem(VADDR_XEN, SYMBOL(frame_table), &frame_table_vaddr,
++		    sizeof(frame_table_vaddr))) {
++			ERRMSG("Can't get the value of frame_table.\n");
 +			return FALSE;
 +		}
-+		if (SYMBOL(max_page) == NOT_FOUND_SYMBOL) {
-+			ERRMSG("Can't get the symbol of max_page.\n");
++		info->frame_table_vaddr = frame_table_vaddr;
+ 	}
+-	info->xen_heap_start = 0;
+-	info->xen_heap_end   = paddr_to_pfn(xen_end);
+-
+-	/*
+-	 * pickled_id == domain addr for x86_64
+-	 */
+-	for (i = 0; i < info->num_domain; i++) {
+-		info->domain_list[i].pickled_id =
+-			info->domain_list[i].domain_addr;
++	if (info->xen_major_version < 4) {
++		if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
 +			return FALSE;
 +		}
-+		if (!readmem(VADDR_XEN, SYMBOL(max_page), &info->max_page,
-+		    sizeof(info->max_page))) {
-+			ERRMSG("Can't get the value of max_page.\n");
++		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
++		    sizeof(xen_end))) {
++			ERRMSG("Can't get the value of xenheap_phys_end.\n");
 +			return FALSE;
++		}
++		info->xen_heap_start = 0;
++		info->xen_heap_end   = paddr_to_pfn(xen_end);
++
++		/*
++		 * pickled_id == domain addr for x86_64
++		 */
++		for (i = 0; i < info->num_domain; i++) {
++			info->domain_list[i].pickled_id =
++				info->domain_list[i].domain_addr;
++		}
++	} else {
++		for (i = 0; i < info->num_domain; i++) {
++			info->domain_list[i].pickled_id =
++				((unsigned long)info->domain_list[i].domain_addr -
++				DIRECTMAP_VIRT_START) >> PAGESHIFT();
 +		}
  	}
  
- 	/*
-@@ -5503,6 +5537,8 @@ show_data_xen(void)
- 	MSG("OFFSET(domain.next_in_list): %ld\n", OFFSET(domain.next_in_list));
- 
- 	MSG("\n");
-+	MSG("xen_major_version: %lx\n", info->xen_major_version);
-+	MSG("xen_minor_version: %lx\n", info->xen_minor_version);
- 	MSG("xen_phys_start: %lx\n", info->xen_phys_start);
- 	MSG("frame_table_vaddr: %lx\n", info->frame_table_vaddr);
- 	MSG("xen_heap_start: %lx\n", info->xen_heap_start);
-@@ -5640,6 +5676,12 @@ read_vmcoreinfo_xen(void)
- 
- 	READ_MEMBER_OFFSET("page_info.count_info", page_info.count_info);
- 	READ_MEMBER_OFFSET("page_info._domain", page_info._domain);
-+	if (info->elf_machine == EM_X86_64) {
-+		if (info->xen_major_version < 4) {
-+			MSG("modified offset_table.page_info._domain from %ld to 24\n", offset_table.page_info._domain);
-+			offset_table.page_info._domain = 24;
-+		}
-+	}
- 	READ_MEMBER_OFFSET("domain.domain_id", domain.domain_id);
- 	READ_MEMBER_OFFSET("domain.next_in_list", domain.next_in_list);
- 
-@@ -5763,6 +5805,12 @@ initial_xen(void)
- 	off_t offset;
- 	unsigned long size;
- 
-+	if (!get_xen_version())
-+		return FALSE;
-+	if ((info->elf_machine != EM_X86_64) && (info->xen_major_version >= 4)) {
-+		MSG("Xen major version %lu is not supported yet for this machine.\n", info->xen_major_version);
-+		return FALSE;
-+	}
- #if defined(__powerpc64__) || defined(__powerpc32__)
- 	MSG("\n");
- 	MSG("Xen is not supported on powerpc.\n");
+ 	return TRUE;
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 6f5489d..d8d7779 100644
+index d8d7779..0d8cc15 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -843,6 +843,7 @@ struct DumpInfo {
- 	/*
- 	 * ELF header info:
- 	 */
-+	int			elf_machine;
- 	unsigned int		num_load_dumpfile;
- 	size_t			offset_load_dumpfile;
+@@ -1308,18 +1308,70 @@ int get_xen_info_x86(void);
+ #define MAX_X86_64_FRAMES	(info->page_size / sizeof(unsigned long))
  
-@@ -902,6 +903,8 @@ struct DumpInfo {
- 	/*
- 	 * for Xen extraction
- 	 */
-+	unsigned long		xen_major_version;
-+	unsigned long		xen_minor_version;
- 	unsigned long long	dom0_mapnr;  /* The number of page in domain-0.
- 					      * Different from max_mapnr.
- 					      * max_mapnr is the number of page
+ #define PAGE_OFFSET_XEN_DOM0  (0xffff880000000000) /* different from linux */
+-#define HYPERVISOR_VIRT_START (0xffff800000000000)
+-#define HYPERVISOR_VIRT_END   (0xffff880000000000)
+-#define DIRECTMAP_VIRT_START  (0xffff830000000000)
+-#define DIRECTMAP_VIRT_END    (0xffff840000000000)
+-#define XEN_VIRT_START        (0xffff828c80000000)
+-
+-#define is_xen_vaddr(x) \
+-	((x) >= HYPERVISOR_VIRT_START && (x) < HYPERVISOR_VIRT_END)
+-#define is_direct(x) \
+-	((x) >= DIRECTMAP_VIRT_START && (x) < DIRECTMAP_VIRT_END)
+-#define is_xen_text(x) \
+-	((x) >= XEN_VIRT_START && (x) < DIRECTMAP_VIRT_START)
++#define HYPERVISOR_VIRT_START_XEN3 (0xffff800000000000)
++#define HYPERVISOR_VIRT_END_XEN3   (0xffff880000000000)
++#define DIRECTMAP_VIRT_START_XEN3  (0xffff830000000000)
++#define DIRECTMAP_VIRT_END_XEN3    (0xffff840000000000)
++#define XEN_VIRT_START_XEN3        (0xffff828c80000000)
++
++/* copied from xen-4..../xen/include/asm-x86/config.h */
++
++#define L1_PAGETABLE_SHIFT      12
++#define PAGE_SHIFT              L1_PAGETABLE_SHIFT
++
++#define PML4_ENTRY_BITS 39
++#define PML4_ENTRY_BYTES (1UL << PML4_ENTRY_BITS)
++#define GB(_gb) (_gb ## UL << 30)
++
++#define PML4_ADDR(_slot)        \
++    ((((_slot ## UL) >> 8) * 0xffff000000000000UL) | \
++    (_slot ## UL << PML4_ENTRY_BITS))
++
++#define HYPERVISOR_VIRT_START   (PML4_ADDR(256))
++#define HYPERVISOR_VIRT_END     (HYPERVISOR_VIRT_START + PML4_ENTRY_BYTES*16)
++#define RO_MPT_VIRT_START       (PML4_ADDR(256))
++#define MPT_VIRT_SIZE           (PML4_ENTRY_BYTES / 2)
++#define RO_MPT_VIRT_END         (RO_MPT_VIRT_START + MPT_VIRT_SIZE)
++/* Slot 257: ioremap for PCI mmconfig space for 2048 segments (512GB)
++ *     - full 16-bit segment support needs 44 bits
++ *     - since PML4 slot has 39 bits, we limit segments to 2048 (11-bits)
++ */
++#define PCI_MCFG_VIRT_START     (PML4_ADDR(257))
++#define PCI_MCFG_VIRT_END       (PCI_MCFG_VIRT_START + PML4_ENTRY_BYTES)
++/* Slot 258: linear page table (guest table). */
++#define LINEAR_PT_VIRT_START    (PML4_ADDR(258))
++#define LINEAR_PT_VIRT_END      (LINEAR_PT_VIRT_START + PML4_ENTRY_BYTES)
++/* Slot 259: linear page table (shadow table). */
++#define SH_LINEAR_PT_VIRT_START (PML4_ADDR(259))
++#define SH_LINEAR_PT_VIRT_END   (SH_LINEAR_PT_VIRT_START + PML4_ENTRY_BYTES)
++/* Slot 260: per-domain mappings. */
++#define PERDOMAIN_VIRT_START    (PML4_ADDR(260))
++#define PERDOMAIN_VIRT_END      (PERDOMAIN_VIRT_START + (PERDOMAIN_MBYTES<<20))
++#define PERDOMAIN_MBYTES        (PML4_ENTRY_BYTES >> (20 + PAGETABLE_ORDER))
++/* Slot 261: machine-to-phys conversion table (256GB). */
++#define RDWR_MPT_VIRT_START     (PML4_ADDR(261))
++#define RDWR_MPT_VIRT_END       (RDWR_MPT_VIRT_START + MPT_VIRT_SIZE)
++/* Slot 261: ioremap()/fixmap area (16GB). */
++#define IOREMAP_VIRT_START      RDWR_MPT_VIRT_END
++#define IOREMAP_VIRT_END        (IOREMAP_VIRT_START + GB(16))
++/* Slot 261: compatibility machine-to-phys conversion table (1GB). */
++#define RDWR_COMPAT_MPT_VIRT_START IOREMAP_VIRT_END
++#define RDWR_COMPAT_MPT_VIRT_END (RDWR_COMPAT_MPT_VIRT_START + GB(1))
++/* Slot 261: high read-only compat machine-to-phys conversion table (1GB). */
++#define HIRO_COMPAT_MPT_VIRT_START RDWR_COMPAT_MPT_VIRT_END
++#define HIRO_COMPAT_MPT_VIRT_END (HIRO_COMPAT_MPT_VIRT_START + GB(1))
++/* Slot 261: xen text, static data and bss (1GB). */
++#define XEN_VIRT_START          (HIRO_COMPAT_MPT_VIRT_END)
++#define XEN_VIRT_END            (XEN_VIRT_START + GB(1))
++/* Slot 261: page-frame information array (40GB). */
++#define FRAMETABLE_VIRT_END     DIRECTMAP_VIRT_START
++#define FRAMETABLE_SIZE         ((DIRECTMAP_SIZE >> PAGE_SHIFT) * \
++                                 SIZE(page_info))
++#define FRAMETABLE_VIRT_START   (FRAMETABLE_VIRT_END - FRAMETABLE_SIZE)
++/* Slot 262-271: A direct 1:1 mapping of all of physical memory. */
++#define DIRECTMAP_VIRT_START    (PML4_ADDR(262))
++#define DIRECTMAP_SIZE          (PML4_ENTRY_BYTES*10)
++#define DIRECTMAP_VIRT_END      (DIRECTMAP_VIRT_START + DIRECTMAP_SIZE)
+ 
+ unsigned long long kvtop_xen_x86_64(unsigned long kvaddr);
+ #define kvtop_xen(X)	kvtop_xen_x86_64(X)
 -- 
 1.6.0.2
 
