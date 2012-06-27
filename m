@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sjo38-00063y-4u
- for kexec@lists.infradead.org; Wed, 27 Jun 2012 08:56:35 +0000
-Message-ID: <4FEAC9F9.1040208@cn.fujitsu.com>
-Date: Wed, 27 Jun 2012 16:53:13 +0800
+ id 1Sjo44-0006Hc-0g
+ for kexec@lists.infradead.org; Wed, 27 Jun 2012 08:57:33 +0000
+Message-ID: <4FEACA37.5060905@cn.fujitsu.com>
+Date: Wed, 27 Jun 2012 16:54:15 +0800
 From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 2/5] KVM: Export symbols for module vmcsinfo-intel
+Subject: [PATCH v3 3/5] KVM-INTEL: Add new module vmcsinfo-intel to fill
+ VMCSINFO
 References: <4FEAC945.50700@cn.fujitsu.com>
 In-Reply-To: <4FEAC945.50700@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
@@ -18,349 +19,159 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Avi Kivity <avi@redhat.com>, mtosatti@redhat.com
 Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-A new module named vmcsinfo-intel is used to fill VMCSINFO. And
-this module depends on kvm-intel and kvm module. So we should
-export some symbols of kvm-intel and kvm module that are needed
-by vmcsinfo-intel.
-
-Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
----
- arch/x86/include/asm/vmx.h |   73 +++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx.c         |   81 +++++++-------------------------------------
- include/linux/kvm_host.h   |    3 ++
- virt/kvm/kvm_main.c        |    8 ++--
- 4 files changed, 93 insertions(+), 72 deletions(-)
-
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index c364219..03b7ae3 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -26,6 +26,7 @@
-  */
- 
- #include <linux/types.h>
-+#include <linux/kvm_host.h>
- 
- #include <asm/vmcsinfo.h>
- 
-@@ -327,4 +328,76 @@ enum vm_instruction_error_number {
- 	VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID = 28,
- };
- 
-+#define __ex(x) __kvm_handle_fault_on_reboot(x)
-+#define __ex_clear(x, reg) \
-+	____kvm_handle_fault_on_reboot(x, "xor " reg " , " reg)
-+
-+struct vmcs {
-+	u32 revision_id;
-+	u32 abort;
-+	char data[0];
-+};
-+
-+struct vmcs_config {
-+	int size;
-+	int order;
-+	u32 revision_id;
-+	u32 pin_based_exec_ctrl;
-+	u32 cpu_based_exec_ctrl;
-+	u32 cpu_based_2nd_exec_ctrl;
-+	u32 vmexit_ctrl;
-+	u32 vmentry_ctrl;
-+};
-+
-+extern struct vmcs_config vmcs_config;
-+
-+DECLARE_PER_CPU(struct vmcs *, current_vmcs);
-+
-+enum vmcs_field_type {
-+	VMCS_FIELD_TYPE_U16 = 0,
-+	VMCS_FIELD_TYPE_U64 = 1,
-+	VMCS_FIELD_TYPE_U32 = 2,
-+	VMCS_FIELD_TYPE_NATURAL_WIDTH = 3
-+};
-+
-+static inline int vmcs_field_type(unsigned long field)
-+{
-+	if (0x1 & field)	/* the *_HIGH fields are all 32 bit */
-+		return VMCS_FIELD_TYPE_U32;
-+	return (field >> 13) & 0x3 ;
-+}
-+
-+static __always_inline unsigned long vmcs_readl(unsigned long field)
-+{
-+	unsigned long value;
-+
-+	asm volatile (__ex_clear(ASM_VMX_VMREAD_RDX_RAX, "%0")
-+		      : "=a"(value) : "d"(field) : "cc");
-+	return value;
-+}
-+
-+static __always_inline u16 vmcs_read16(unsigned long field)
-+{
-+	return vmcs_readl(field);
-+}
-+
-+static __always_inline u32 vmcs_read32(unsigned long field)
-+{
-+	return vmcs_readl(field);
-+}
-+
-+static __always_inline u64 vmcs_read64(unsigned long field)
-+{
-+#ifdef CONFIG_X86_64
-+	return vmcs_readl(field);
-+#else
-+	return vmcs_readl(field) | ((u64)vmcs_readl(field+1) << 32);
-+#endif
-+}
-+
-+struct vmcs *alloc_vmcs(void);
-+void vmcs_load(struct vmcs *);
-+void vmcs_clear(struct vmcs *);
-+void free_vmcs(struct vmcs *);
-+
- #endif
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index 32eb588..43ceae7 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -20,7 +20,6 @@
- #include "mmu.h"
- #include "cpuid.h"
- 
--#include <linux/kvm_host.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/mm.h>
-@@ -45,10 +44,6 @@
- 
- #include "trace.h"
- 
--#define __ex(x) __kvm_handle_fault_on_reboot(x)
--#define __ex_clear(x, reg) \
--	____kvm_handle_fault_on_reboot(x, "xor " reg " , " reg)
--
- MODULE_AUTHOR("Qumranet");
- MODULE_LICENSE("GPL");
- 
-@@ -127,12 +122,6 @@ module_param(ple_window, int, S_IRUGO);
- #define NR_AUTOLOAD_MSRS 8
- #define VMCS02_POOL_SIZE 1
- 
--struct vmcs {
--	u32 revision_id;
--	u32 abort;
--	char data[0];
--};
--
- /*
-  * Track a VMCS that may be loaded on a certain CPU. If it is (cpu!=-1), also
-  * remember whether it was VMLAUNCHed, and maintain a linked list of all VMCSs
-@@ -617,7 +606,9 @@ static void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3);
- static int vmx_set_tss_addr(struct kvm *kvm, unsigned int addr);
- 
- static DEFINE_PER_CPU(struct vmcs *, vmxarea);
--static DEFINE_PER_CPU(struct vmcs *, current_vmcs);
-+DEFINE_PER_CPU(struct vmcs *, current_vmcs);
-+EXPORT_SYMBOL_GPL(current_vmcs);
-+
- /*
-  * We maintain a per-CPU linked-list of VMCS loaded on that CPU. This is needed
-  * when a CPU is brought down, and we need to VMCLEAR all VMCSs loaded on it.
-@@ -636,16 +627,8 @@ static bool cpu_has_load_perf_global_ctrl;
- static DECLARE_BITMAP(vmx_vpid_bitmap, VMX_NR_VPIDS);
- static DEFINE_SPINLOCK(vmx_vpid_lock);
- 
--static struct vmcs_config {
--	int size;
--	int order;
--	u32 revision_id;
--	u32 pin_based_exec_ctrl;
--	u32 cpu_based_exec_ctrl;
--	u32 cpu_based_2nd_exec_ctrl;
--	u32 vmexit_ctrl;
--	u32 vmentry_ctrl;
--} vmcs_config;
-+struct vmcs_config vmcs_config;
-+EXPORT_SYMBOL_GPL(vmcs_config);
- 
- static struct vmx_capability {
- 	u32 ept;
-@@ -940,7 +923,7 @@ static struct shared_msr_entry *find_msr_entry(struct vcpu_vmx *vmx, u32 msr)
- 	return NULL;
- }
- 
--static void vmcs_clear(struct vmcs *vmcs)
-+void vmcs_clear(struct vmcs *vmcs)
- {
- 	u64 phys_addr = __pa(vmcs);
- 	u8 error;
-@@ -952,6 +935,7 @@ static void vmcs_clear(struct vmcs *vmcs)
- 		printk(KERN_ERR "kvm: vmclear fail: %p/%llx\n",
- 		       vmcs, phys_addr);
- }
-+EXPORT_SYMBOL_GPL(vmcs_clear);
- 
- static inline void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
- {
-@@ -960,7 +944,7 @@ static inline void loaded_vmcs_init(struct loaded_vmcs *loaded_vmcs)
- 	loaded_vmcs->launched = 0;
- }
- 
--static void vmcs_load(struct vmcs *vmcs)
-+void vmcs_load(struct vmcs *vmcs)
- {
- 	u64 phys_addr = __pa(vmcs);
- 	u8 error;
-@@ -972,6 +956,7 @@ static void vmcs_load(struct vmcs *vmcs)
- 		printk(KERN_ERR "kvm: vmptrld %p/%llx failed\n",
- 		       vmcs, phys_addr);
- }
-+EXPORT_SYMBOL_GPL(vmcs_load);
- 
- static void __loaded_vmcs_clear(void *arg)
- {
-@@ -1043,34 +1028,6 @@ static inline void ept_sync_individual_addr(u64 eptp, gpa_t gpa)
- 	}
- }
- 
--static __always_inline unsigned long vmcs_readl(unsigned long field)
--{
--	unsigned long value;
--
--	asm volatile (__ex_clear(ASM_VMX_VMREAD_RDX_RAX, "%0")
--		      : "=a"(value) : "d"(field) : "cc");
--	return value;
--}
--
--static __always_inline u16 vmcs_read16(unsigned long field)
--{
--	return vmcs_readl(field);
--}
--
--static __always_inline u32 vmcs_read32(unsigned long field)
--{
--	return vmcs_readl(field);
--}
--
--static __always_inline u64 vmcs_read64(unsigned long field)
--{
--#ifdef CONFIG_X86_64
--	return vmcs_readl(field);
--#else
--	return vmcs_readl(field) | ((u64)vmcs_readl(field+1) << 32);
--#endif
--}
--
- static noinline void vmwrite_error(unsigned long field, unsigned long value)
- {
- 	printk(KERN_ERR "vmwrite error: reg %lx value %lx (err %d)\n",
-@@ -2580,15 +2537,17 @@ static struct vmcs *alloc_vmcs_cpu(int cpu)
- 	return vmcs;
- }
- 
--static struct vmcs *alloc_vmcs(void)
-+struct vmcs *alloc_vmcs(void)
- {
- 	return alloc_vmcs_cpu(raw_smp_processor_id());
- }
-+EXPORT_SYMBOL_GPL(alloc_vmcs);
- 
--static void free_vmcs(struct vmcs *vmcs)
-+void free_vmcs(struct vmcs *vmcs)
- {
- 	free_pages((unsigned long)vmcs, vmcs_config.order);
- }
-+EXPORT_SYMBOL_GPL(free_vmcs);
- 
- /*
-  * Free a VMCS, but before that VMCLEAR it on the CPU where it was last loaded
-@@ -5314,20 +5273,6 @@ static int handle_vmresume(struct kvm_vcpu *vcpu)
- 	return nested_vmx_run(vcpu, false);
- }
- 
--enum vmcs_field_type {
--	VMCS_FIELD_TYPE_U16 = 0,
--	VMCS_FIELD_TYPE_U64 = 1,
--	VMCS_FIELD_TYPE_U32 = 2,
--	VMCS_FIELD_TYPE_NATURAL_WIDTH = 3
--};
--
--static inline int vmcs_field_type(unsigned long field)
--{
--	if (0x1 & field)	/* the *_HIGH fields are all 32 bit */
--		return VMCS_FIELD_TYPE_U32;
--	return (field >> 13) & 0x3 ;
--}
--
- static inline int vmcs_field_readonly(unsigned long field)
- {
- 	return (((field >> 10) & 0x3) == 1);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index c446435..0930fd9 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -95,6 +95,9 @@ enum kvm_bus {
- 	KVM_NR_BUSES
- };
- 
-+int hardware_enable_all(void);
-+void hardware_disable_all(void);
-+
- int kvm_io_bus_write(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
- 		     int len, const void *val);
- int kvm_io_bus_read(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr, int len,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 7e14068..26fd04d 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -90,8 +90,6 @@ static long kvm_vcpu_ioctl(struct file *file, unsigned int ioctl,
- static long kvm_vcpu_compat_ioctl(struct file *file, unsigned int ioctl,
- 				  unsigned long arg);
- #endif
--static int hardware_enable_all(void);
--static void hardware_disable_all(void);
- 
- static void kvm_io_bus_destroy(struct kvm_io_bus *bus);
- 
-@@ -2330,14 +2328,15 @@ static void hardware_disable_all_nolock(void)
- 		on_each_cpu(hardware_disable_nolock, NULL, 1);
- }
- 
--static void hardware_disable_all(void)
-+void hardware_disable_all(void)
- {
- 	raw_spin_lock(&kvm_lock);
- 	hardware_disable_all_nolock();
- 	raw_spin_unlock(&kvm_lock);
- }
-+EXPORT_SYMBOL_GPL(hardware_disable_all);
- 
--static int hardware_enable_all(void)
-+int hardware_enable_all(void)
- {
- 	int r = 0;
- 
-@@ -2358,6 +2357,7 @@ static int hardware_enable_all(void)
- 
- 	return r;
- }
-+EXPORT_SYMBOL_GPL(hardware_enable_all);
- 
- static int kvm_cpu_hotplug(struct notifier_block *notifier, unsigned long val,
- 			   void *v)
--- 
-1.7.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBpbXBsZW1lbnRzIGEgbmV3IG1vZHVsZSBuYW1lZCB2bWNzaW5mby1pbnRlbC4g
+VGhlCm1vZHVsZSBmaWxscyBWTUNTSU5GTyB3aXRoIHRoZSBWTUNTIHJldmlzaW9uIGlkZW50aWZp
+ZXIsCmFuZCBvZmZzZXRzIG9mIFZNQ1MgZmllbGRzLgoKTm90ZSwgb2Zmc2V0cyBvZiBmaWVsZHMg
+YmVsb3cgd2lsbCBub3QgYmUgZmlsbGVkIGludG8gVk1DU0lORk86CjEuIGZpZWxkcyBkZWZpbmVk
+IGluIEludGVsIHNwZWNpZmljYXRpb24gKEludGVswq4gNjQgYW5kCiAgIElBLTMyIEFyY2hpdGVj
+dHVyZXMgU29mdHdhcmUgRGV2ZWxvcGVy4oCZcyBNYW51YWwsIFZvbHVtZQogICAzQykgYnV0IG5v
+dCBkZWZpbmVkIGluICp2bWNzX2ZpZWxkKi4KMi4gZmllbGRzIHVuc3VwcG9ydGVkLgoKU2lnbmVk
+LW9mZi1ieTogemhhbmd5YW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1aml0c3UuY29tPgotLS0KIGFy
+Y2gveDg2L2t2bS9LY29uZmlnICAgIHwgICAxMSArKysKIGFyY2gveDg2L2t2bS9NYWtlZmlsZSAg
+IHwgICAgMyArCiBhcmNoL3g4Ni9rdm0vdm1jc2luZm8uYyB8ICAxOTggKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIDMgZmlsZXMgY2hhbmdlZCwgMjEyIGlu
+c2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC94ODYv
+a3ZtL3ZtY3NpbmZvLmMKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vS2NvbmZpZyBiL2FyY2gv
+eDg2L2t2bS9LY29uZmlnCmluZGV4IGEyOGYzMzguLjFkZDY0YjEgMTAwNjQ0Ci0tLSBhL2FyY2gv
+eDg2L2t2bS9LY29uZmlnCisrKyBiL2FyY2gveDg2L2t2bS9LY29uZmlnCkBAIC02Myw2ICs2Mywx
+NyBAQCBjb25maWcgS1ZNX0lOVEVMCiAJICBUbyBjb21waWxlIHRoaXMgYXMgYSBtb2R1bGUsIGNo
+b29zZSBNIGhlcmU6IHRoZSBtb2R1bGUKIAkgIHdpbGwgYmUgY2FsbGVkIGt2bS1pbnRlbC4KIAor
+Y29uZmlnIFZNQ1NJTkZPX0lOVEVMCisJdHJpc3RhdGUgIkV4cG9ydCBWTUNTSU5GTyBmb3IgSW50
+ZWwgcHJvY2Vzc29ycyIKKwlkZXBlbmRzIG9uIEtWTV9JTlRFTAorCS0tLWhlbHAtLS0KKwkgIFBy
+b3ZpZGVzIHN1cHBvcnQgZm9yIGV4cG9ydGluZyBWTUNTSU5GTyBvbiBJbnRlbCBwcm9jZXNzb3Jz
+IGVxdWlwcGVkCisJICB3aXRoIHRoZSBWVCBleHRlbnNpb25zLiBUaGUgVk1DU0lORk8gY29udGFp
+bnMgYSBWTUNTIHJldmlzaW9uCisJICBpZGVudGlmaWVyIGFuZCBvZmZzZXRzIG9mIFZNQ1MgZmll
+bGRzLgorCisJICBUbyBjb21waWxlIHRoaXMgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmU6IHRo
+ZSBtb2R1bGUKKwkgIHdpbGwgYmUgY2FsbGVkIHZtY3NpbmZvLWludGVsLgorCiBjb25maWcgS1ZN
+X0FNRAogCXRyaXN0YXRlICJLVk0gZm9yIEFNRCBwcm9jZXNzb3JzIHN1cHBvcnQiCiAJZGVwZW5k
+cyBvbiBLVk0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9NYWtlZmlsZSBiL2FyY2gveDg2L2t2
+bS9NYWtlZmlsZQppbmRleCA0ZjU3OWU4Li4xMmExZWY2IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9r
+dm0vTWFrZWZpbGUKKysrIGIvYXJjaC94ODYva3ZtL01ha2VmaWxlCkBAIC00LDYgKzQsNyBAQCBj
+Y2ZsYWdzLXkgKz0gLUl2aXJ0L2t2bSAtSWFyY2gveDg2L2t2bQogQ0ZMQUdTX3g4Ni5vIDo9IC1J
+LgogQ0ZMQUdTX3N2bS5vIDo9IC1JLgogQ0ZMQUdTX3ZteC5vIDo9IC1JLgorQ0ZMQUdTX3ZtY3Np
+bmZvLm8gOj0gLUkuCiAKIGt2bS15CQkJKz0gJChhZGRwcmVmaXggLi4vLi4vLi4vdmlydC9rdm0v
+LCBrdm1fbWFpbi5vIGlvYXBpYy5vIFwKIAkJCQljb2FsZXNjZWRfbW1pby5vIGlycV9jb21tLm8g
+ZXZlbnRmZC5vIFwKQEAgLTE1LDcgKzE2LDkgQEAga3ZtLXkJCQkrPSB4ODYubyBtbXUubyBlbXVs
+YXRlLm8gaTgyNTkubyBpcnEubyBsYXBpYy5vIFwKIAkJCSAgIGk4MjU0Lm8gdGltZXIubyBjcHVp
+ZC5vIHBtdS5vCiBrdm0taW50ZWwteQkJKz0gdm14Lm8KIGt2bS1hbWQteQkJKz0gc3ZtLm8KK3Zt
+Y3NpbmZvLWludGVsLXkJKz0gdm1jc2luZm8ubwogCiBvYmotJChDT05GSUdfS1ZNKQkrPSBrdm0u
+bwogb2JqLSQoQ09ORklHX0tWTV9JTlRFTCkJKz0ga3ZtLWludGVsLm8KIG9iai0kKENPTkZJR19L
+Vk1fQU1EKQkrPSBrdm0tYW1kLm8KK29iai0kKENPTkZJR19WTUNTSU5GT19JTlRFTCkJKz0gdm1j
+c2luZm8taW50ZWwubwpkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3ZtY3NpbmZvLmMgYi9hcmNo
+L3g4Ni9rdm0vdm1jc2luZm8uYwpuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi43
+YjE4NzNjCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC94ODYva3ZtL3ZtY3NpbmZvLmMKQEAgLTAs
+MCArMSwxOTggQEAKKy8qCisgKiBLZXJuZWwtYmFzZWQgVmlydHVhbCBNYWNoaW5lIGRyaXZlciBm
+b3IgTGludXgKKyAqCisgKiBUaGlzIG1vZHVsZSBlbmFibGVzIG1hY2hpbmVzIHdpdGggSW50ZWwg
+VlQteCBleHRlbnNpb25zIHRvIGV4cG9ydAorICogb2Zmc2V0cyBvZiBWTUNTIGZpZWxkcyBmb3Ig
+Z3Vlc3QgZGVidWdnaW5nLgorICoKKyAqIENvcHlyaWdodCAoQykgMjAxMiBGdWppdHN1LCBJbmMu
+CisgKgorICogQXV0aG9yczoKKyAqICAgWmhhbmcgWWFuZmVpIDx6aGFuZ3lhbmZlaUBjbi5mdWpp
+dHN1LmNvbT4KKyAqCisgKiBUaGlzIHdvcmsgaXMgbGljZW5zZWQgdW5kZXIgdGhlIHRlcm1zIG9m
+IHRoZSBHTlUgR1BMLCB2ZXJzaW9uIDIuICBTZWUKKyAqIHRoZSBDT1BZSU5HIGZpbGUgaW4gdGhl
+IHRvcC1sZXZlbCBkaXJlY3RvcnkuCisgKgorICovCisKKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
+aD4KKyNpbmNsdWRlIDxsaW51eC9tb2RfZGV2aWNldGFibGUuaD4KKyNpbmNsdWRlIDxsaW51eC9z
+d2FiLmg+CisKKyNpbmNsdWRlIDxhc20vdm14Lmg+CisjaW5jbHVkZSA8YXNtL3ZtY3NpbmZvLmg+
+CisKK01PRFVMRV9BVVRIT1IoIkZ1aml0c3UiKTsKK01PRFVMRV9MSUNFTlNFKCJHUEwiKTsKKwor
+c3RhdGljIGNvbnN0IHN0cnVjdCB4ODZfY3B1X2lkIHZtY3NpbmZvX2NwdV9pZFtdID0geworCVg4
+Nl9GRUFUVVJFX01BVENIKFg4Nl9GRUFUVVJFX1ZNWCksCisJe30KK307CitNT0RVTEVfREVWSUNF
+X1RBQkxFKHg4NmNwdSwgdm1jc2luZm9fY3B1X2lkKTsKKworLyoKKyAqIEZvciBjYWN1bGF0aW5n
+IG9mZnNldHMgb2YgZmllbGRzIGluIFZNQ1MgZGF0YSwgd2UgaW5kZXggZXZlcnkgMTYtYml0Cisg
+KiBmaWVsZCBieSB0aGlzIGtpbmQgb2YgZm9ybWF0OgorICogICAgICAgICB8IC0tLS0tLS0tLSAx
+NiBiaXRzIC0tLS0tLS0tLS0gfAorICogICAgICAgICArLS0tLS0tLS0tLS0tLSstKy0tLS0tLS0t
+LS0tLSstKworICogICAgICAgICB8IGhpZ2ggNyBiaXRzIHwxfCBsb3cgNyBiaXRzIHwwfAorICog
+ICAgICAgICArLS0tLS0tLS0tLS0tLSstKy0tLS0tLS0tLS0tLSstKworICogSW4gaGlnaCBieXRl
+LCB0aGUgbG93ZXN0IGJpdCBtdXN0IGJlIDE7IEluIGxvdyBieXRlLCB0aGUgbG93ZXN0IGJpdAor
+ICogbXVzdCBiZSAwLiBUaGUgdHdvIGJpdHMgYXJlIHNldCBsaWtlIHRoaXMgaW4gY2FzZSBpbmRl
+eGVzIGluIFZNQ1MKKyAqIGRhdGEgYXJlIHJlYWQgYXMgYmlnIGVuZGlhbiBtb2RlLgorICogVGhl
+IHJlbWFpbmluZyAxNCBiaXRzIG9mIHRoZSBpbmRleCBpbmRpY2F0ZSB0aGUgcmVhbCBvZmZzZXQg
+b2YgdGhlCisgKiBmaWVsZC4gQmVjYXVzZSB0aGUgc2l6ZSBvZiBhIFZNQ1MgcmVnaW9uIGlzIGF0
+IG1vc3QgNCBLQnl0ZXMsIHNvCisgKiAxNCBiaXRzIGFyZSBlbm91Z2ggdG8gaW5kZXggdGhlIHdo
+b2xlIFZNQ1MgcmVnaW9uLgorICoKKyAqIEVOQ09ESU5HX09GRlNFVDogZW5jb2RlIHRoZSBvZmZz
+ZXQgaW50byB0aGUgaW5kZXggb2YgdGhpcyBraW5kLgorICogREVDT0RJTkdfT0ZGU0VUOiBkZWNv
+ZGUgdGhlIGluZGV4IG9mIHRoaXMga2luZCBpbnRvIHJlYWwgb2Zmc2V0LgorICovCisjZGVmaW5l
+IE9GRlNFVF9ISUdIX1NISUZUICg3KQorI2RlZmluZSBPRkZTRVRfTE9XX01BU0sgICAoKDEgPDwg
+T0ZGU0VUX0hJR0hfU0hJRlQpIC0gMSkgLyogMHg3ZiAqLworI2RlZmluZSBPRkZTRVRfSElHSF9N
+QVNLICAoT0ZGU0VUX0xPV19NQVNLIDw8IE9GRlNFVF9ISUdIX1NISUZUKSAvKiAweDNmODAgKi8K
+KyNkZWZpbmUgRU5DT0RJTkdfT0ZGU0VUKG9mZnNldCkgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgXAorCSgoKChvZmZzZXQpICYgT0ZGU0VUX0xPV19NQVNLKSA8PCAxKSArICAg
+ICAgICAgICAgICAgICAgICAgIFwKKwkoKCgob2Zmc2V0KSAmIE9GRlNFVF9ISUdIX01BU0spIDw8
+IDIpIHwgMHgxMDApKQorLyoKKyAqIGluZGV4IGhlcmUgc2hvdWxkIGJlIGFsd2F5cyByZWFkIGlu
+IGxpdHRsZSBlbmRpYW4gbW9kZS4KKyAqLworI2RlZmluZSBERUNPRElOR19PRkZTRVRfTEUoaW5k
+ZXgpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCisJKCgoKGluZGV4KSA+PiAx
+KSAmIE9GRlNFVF9MT1dfTUFTSykgKyAgICAgICAgICAgICAgICAgICAgICAgXAorCSgoKGluZGV4
+KSA+PiAyKSAmIE9GRlNFVF9ISUdIX01BU0spKQorLyoKKyAqIG4gaW5kaWNhdGVzIHRoZSBiaXRz
+IG9mIGluZGV4LiBXZSBmaXJzdCBjaGVjayBpZiBpbmRleAorICogaXMgcmVhZCBpbiBiaWcgZW5k
+aWFuIG1vZGUuCisgKi8KKyNkZWZpbmUgREVDT0RJTkdfT0ZGU0VUKGluZGV4LCBuKSAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgXAorCSgoaW5kZXggJiAxKSA/IChERUNPRElOR19P
+RkZTRVRfTEUoX19zd2FiIyNuKGluZGV4KSkpIDogICAgIFwKKwkoREVDT0RJTkdfT0ZGU0VUX0xF
+KGluZGV4KSkpCisKKyNkZWZpbmUgRklFTERfT0ZGU0VUMTYoZmllbGQsIG9mZnNldCkgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXAorCXZtY3NpbmZvX2ZpZWxkKGZpZWxkLCBERUNPRElO
+R19PRkZTRVQob2Zmc2V0LCAxNikpCisjZGVmaW5lIEZJRUxEX09GRlNFVDY0KGZpZWxkLCBvZmZz
+ZXQpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwKKwl2bWNzaW5mb19maWVsZChmaWVs
+ZCwgREVDT0RJTkdfT0ZGU0VUKG9mZnNldCwgNjQpKQorI2RlZmluZSBGSUVMRF9PRkZTRVQzMihm
+aWVsZCwgb2Zmc2V0KSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcCisJdm1jc2luZm9f
+ZmllbGQoZmllbGQsIERFQ09ESU5HX09GRlNFVChvZmZzZXQsIDMyKSkKKyNkZWZpbmUgRklFTERf
+T0ZGU0VUTlcoZmllbGQsIG9mZnNldCkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXAor
+ZG8geyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBcCisJaWYgKHNpemVvZihvZmZzZXQpID09IDgpICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgXAorCQl2bWNzaW5mb19maWVsZChmaWVsZCwgREVDT0RJTkdfT0ZG
+U0VUKG9mZnNldCwgNjQpKTsgXAorCWVsc2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIFwKKwkJdm1jc2luZm9fZmllbGQoZmllbGQsIERFQ09E
+SU5HX09GRlNFVChvZmZzZXQsIDMyKSk7IFwKK30gd2hpbGUgKDApCisKKyNkZWZpbmUgVk1DU19G
+SUVMRF9DSEVDSyhmaWVsZCwgb2Zmc2V0LCB0eXBlKSAgICAgICAgICAgICAgICAgICAgICAgXAor
+ZG8geyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBcCisJaWYgKHZtY3NfcmVhZDMyKFZNX0lOU1RSVUNUSU9OX0VSUk9SKSAhPSAg
+ICAgICAgICAgICAgICAgICAgXAorCQlWTVhFUlJfVU5TVVBQT1JURURfVk1DU19DT01QT05FTlQp
+ICAgICAgICAgICAgICAgICAgXAorCQlGSUVMRF9PRkZTRVQjI3R5cGUoZmllbGQsIG9mZnNldCk7
+ICAgICAgICAgICAgICAgICAgXAorfSB3aGlsZSAoMCkKKworc3RhdGljIGlubGluZSB2b2lkIHZt
+Y3NfcmVhZF9jaGVja2luZyh1bnNpZ25lZCBsb25nIGZpZWxkKQoreworCXUxNiBvZmZzZXQxNjsK
+Kwl1NjQgb2Zmc2V0NjQ7CisJdTMyIG9mZnNldDMyOworCXVuc2lnbmVkIGxvbmcgb2Zmc2V0bnc7
+CisKKwlzd2l0Y2ggKHZtY3NfZmllbGRfdHlwZShmaWVsZCkpIHsKKwljYXNlIFZNQ1NfRklFTERf
+VFlQRV9VMTY6CisJCW9mZnNldDE2ID0gdm1jc19yZWFkMTYoZmllbGQpOworCQlWTUNTX0ZJRUxE
+X0NIRUNLKGZpZWxkLCBvZmZzZXQxNiwgMTYpOworCQlicmVhazsKKwljYXNlIFZNQ1NfRklFTERf
+VFlQRV9VNjQ6CisJCW9mZnNldDY0ID0gdm1jc19yZWFkNjQoZmllbGQpOworCQlWTUNTX0ZJRUxE
+X0NIRUNLKGZpZWxkLCBvZmZzZXQ2NCwgNjQpOworCQlicmVhazsKKwljYXNlIFZNQ1NfRklFTERf
+VFlQRV9VMzI6CisJCW9mZnNldDMyID0gdm1jc19yZWFkMzIoZmllbGQpOworCQlWTUNTX0ZJRUxE
+X0NIRUNLKGZpZWxkLCBvZmZzZXQzMiwgMzIpOworCQlicmVhazsKKwljYXNlIFZNQ1NfRklFTERf
+VFlQRV9OQVRVUkFMX1dJRFRIOgorCQlvZmZzZXRudyA9IHZtY3NfcmVhZGwoZmllbGQpOworCQlW
+TUNTX0ZJRUxEX0NIRUNLKGZpZWxkLCBvZmZzZXRudywgTlcpOworCQlicmVhazsKKwl9Cit9CisK
+Ky8qCisgKiBOb3RlLCBvZmZzZXRzIG9mIGZpZWxkcyBiZWxvdyB3aWxsIG5vdCBiZSBmaWxsZWQg
+aW50bworICogVk1DU0lORk86CisgKiAxLiBmaWVsZHMgZGVmaW5lZCBpbiBJbnRlbCBzcGVjaWZp
+Y2F0aW9uIChJbnRlbMKuIDY0IGFuZAorICogICAgSUEtMzIgQXJjaGl0ZWN0dXJlcyBTb2Z0d2Fy
+ZSBEZXZlbG9wZXLigJlzIE1hbnVhbCwgVm9sdW1lCisgKiAgICAzQykgYnV0IG5vdCBkZWZpbmVk
+IGluICp2bWNzX2ZpZWxkKi4KKyAqIDIuIGZpZWxkcyB1bnN1cHBvcnRlZC4KKyAqLworc3RhdGlj
+IGludCBfX2luaXQgYWxsb2Nfdm1jc2luZm9faW5pdCh2b2lkKQoreworLyoKKyAqIFRoZSBmaXJz
+dCA4IGJ5dGVzIGluIHZtY3MgcmVnaW9uIGFyZSBmb3IKKyAqICAgVk1DUyByZXZpc2lvbiBpZGVu
+dGlmaWVyCisgKiAgIFZNWC1hYm9ydCBpbmRpY2F0b3IKKyAqLworI2RlZmluZSBGSUVMRF9TVEFS
+VCAoOCkKKworCWludCByLCBvZmZzZXQ7CisJc3RydWN0IHZtY3MgKnZtY3M7CisJaW50IGNwdTsK
+Kwl1bnNpZ25lZCBsb25nIGZpZWxkOworCisJaWYgKHZtY3NpbmZvX2lzX2ZpbGxlZCgpKQorCQly
+ZXR1cm4gMDsKKworCXZtY3MgPSBhbGxvY192bWNzKCk7CisJaWYgKCF2bWNzKSB7CisJCXJldHVy
+biAtRU5PTUVNOworCX0KKworCXIgPSBoYXJkd2FyZV9lbmFibGVfYWxsKCk7CisJaWYgKHIpCisJ
+CWdvdG8gb3V0X2VycjsKKworCS8qCisJICogV3JpdGUgZW5jb2RlZCBvZmZzZXRzIGludG8gVk1D
+UyBkYXRhIGZvciBsYXRlciB2bWNzX3JlYWQuCisJICovCisJZm9yIChvZmZzZXQgPSBGSUVMRF9T
+VEFSVDsgb2Zmc2V0IDwgdm1jc19jb25maWcuc2l6ZTsKKwkgICAgIG9mZnNldCArPSBzaXplb2Yo
+dTE2KSkKKwkJKih1MTYgKikoKGNoYXIgKil2bWNzICsgb2Zmc2V0KSA9IEVOQ09ESU5HX09GRlNF
+VChvZmZzZXQpOworCisJY3B1ID0gZ2V0X2NwdSgpOworCXZtY3NfY2xlYXIodm1jcyk7CisJcGVy
+X2NwdShjdXJyZW50X3ZtY3MsIGNwdSkgPSB2bWNzOworCXZtY3NfbG9hZCh2bWNzKTsKKworCXZt
+Y3NpbmZvX3JldmlzaW9uX2lkKHZtY3MtPnJldmlzaW9uX2lkKTsKKwl2bWNzX3JlYWRfY2hlY2tp
+bmcoVk1fSU5TVFJVQ1RJT05fRVJST1IpOworCW9mZnNldCA9IGdldF92bWNzX2ZpZWxkX29mZnNl
+dChWTV9JTlNUUlVDVElPTl9FUlJPUik7CisJaWYgKG9mZnNldCA9PSAtMSkKKwkJZ290byBvdXRf
+Y2xlYXI7CisKKwlmb3IgKGZpZWxkID0gMDsgZmllbGQgPCBWTUNTSU5GT19NQVhfRklFTEQ7ICsr
+ZmllbGQpIHsKKwkJaWYgKGZpZWxkID09IFZNX0lOU1RSVUNUSU9OX0VSUk9SKQorCQkJY29udGlu
+dWU7CisJCS8qCisJCSAqIEJlZm9yZSBlYWNoIHJlYWRpbmcsIHplcm9lZCBmaWVsZCBWTV9JTlNU
+UlVDVElPTl9FUlJPUgorCQkgKi8KKwkJKih1MzIgKikoKGNoYXIgKil2bWNzICsgb2Zmc2V0KSA9
+IDA7CisJCXZtY3NfcmVhZF9jaGVja2luZyhmaWVsZCk7CisJfQorCXZtY3NpbmZvX2ZpbGxlZCgp
+OworCisJdXBkYXRlX3ZtY3NpbmZvX25vdGUoKTsKKworb3V0X2NsZWFyOgorCXZtY3NfY2xlYXIo
+dm1jcyk7CisJcHV0X2NwdSgpOworCitvdXRfZXJyOgorCWZyZWVfdm1jcyh2bWNzKTsKKwlyZXR1
+cm4gcjsKK30KKworc3RhdGljIHZvaWQgX19leGl0IGFsbG9jX3ZtY3NpbmZvX2V4aXQodm9pZCkK
+K3sKKwloYXJkd2FyZV9kaXNhYmxlX2FsbCgpOworfQorCittb2R1bGVfaW5pdChhbGxvY192bWNz
+aW5mb19pbml0KTsKK21vZHVsZV9leGl0KGFsbG9jX3ZtY3NpbmZvX2V4aXQpOwotLSAKMS43LjEK
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
+YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
