@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sjo5x-0006ir-UG
- for kexec@lists.infradead.org; Wed, 27 Jun 2012 08:59:30 +0000
-Message-ID: <4FEACAA8.8010402@cn.fujitsu.com>
-Date: Wed, 27 Jun 2012 16:56:08 +0800
-From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1Sjxp4-0004RE-RT
+ for kexec@lists.infradead.org; Wed, 27 Jun 2012 19:22:43 +0000
+Received: by pbbrq13 with SMTP id rq13so2141055pbb.36
+ for <kexec@lists.infradead.org>; Wed, 27 Jun 2012 12:22:41 -0700 (PDT)
+Date: Wed, 27 Jun 2012 12:22:36 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
+Message-ID: <20120627192236.GB1965@kroah.com>
+References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: [PATCH v3 5/5] Documentation: Add ABI entry for vmcs sysfs interface
-References: <4FEAC945.50700@cn.fujitsu.com>
-In-Reply-To: <4FEAC945.50700@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <4FEACA5E.4090009@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,35 +25,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>, mtosatti@redhat.com
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
 
-Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
----
- Documentation/ABI/testing/sysfs-devices-cpu-vmcs |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-cpu-vmcs
+On Wed, Jun 27, 2012 at 04:54:54PM +0800, Yanfei Zhang wrote:
+> This patch export offsets of fields via /sys/devices/cpu/vmcs/.
+> Individual offsets are contained in subfiles named by the filed's
+> encoding, e.g.: /sys/devices/cpu/vmcs/0800
+> 
+> Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
+> ---
+>  drivers/base/core.c |   13 +++++++++++++
+>  1 files changed, 13 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 346be8b..dd05ee7 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/async.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/netdevice.h>
+> +#include <asm/vmcsinfo.h>
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-cpu-vmcs b/Documentation/ABI/testing/sysfs-devices-cpu-vmcs
-new file mode 100644
-index 0000000..0846b07
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-cpu-vmcs
-@@ -0,0 +1,11 @@
-+What:		/sys/devices/cpu/vmcs/
-+Date:		June 2012
-+KernelVersion:	3.5.0
-+Contact:	Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-+Description:
-+		A collection of vmcs fields' offsets for Intel cpu.
-+
-+		Individual offsets are contained in subfiles named by
-+		the filed's encoding, e.g.:
-+
-+		/sys/devices/cpu/vmcs/0800
--- 
-1.7.1
+Did you just break the build on all other arches?  Not nice.
 
+> @@ -1038,6 +1039,11 @@ int device_add(struct device *dev)
+>  	error = dpm_sysfs_add(dev);
+>  	if (error)
+>  		goto DPMError;
+> +#if defined(CONFIG_KVM_INTEL) || defined(CONFIG_KVM_INTEL_MODULE)
+> +	error = vmcs_sysfs_add(dev);
+> +	if (error)
+> +		goto VMCSError;
+> +#endif
+
+Oh my no, that's no way to ever do this, you know better than that,
+please fix.
+
+greg k-h
 
 _______________________________________________
 kexec mailing list
