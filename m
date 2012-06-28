@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
+Received: from mail-pz0-f49.google.com ([209.85.210.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkD2m-0005wp-AE
- for kexec@lists.infradead.org; Thu, 28 Jun 2012 11:37:52 +0000
-Received: by pbbrq13 with SMTP id rq13so3182495pbb.36
- for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 04:37:51 -0700 (PDT)
-Date: Thu, 28 Jun 2012 04:37:38 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
-Message-ID: <20120628113738.GA5499@kroah.com>
-References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
- <20120627192236.GB1965@kroah.com> <4FEC29D6.5020109@cn.fujitsu.com>
+ id 1SkIfR-0005MA-O9
+ for kexec@lists.infradead.org; Thu, 28 Jun 2012 17:38:10 +0000
+Received: by mail-pz0-f49.google.com with SMTP id m1so3476359dad.36
+ for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 10:38:09 -0700 (PDT)
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Subject: [RFC PATCH 01/10] Move page flags setup for old kernels after
+ debuginfo initialization
+Date: Fri, 29 Jun 2012 02:38:05 +0900
+Message-ID: <20120628173805.19702.71171.stgit@fedora-machine>
+In-Reply-To: <20120628173757.19702.75678.stgit@fedora-machine>
+References: <20120628173757.19702.75678.stgit@fedora-machine>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4FEC29D6.5020109@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,49 +21,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
-T24gVGh1LCBKdW4gMjgsIDIwMTIgYXQgMDU6NTQ6MzBQTSArMDgwMCwgWWFuZmVpIFpoYW5nIHdy
-b3RlOgo+IOS6jiAyMDEy5bm0MDbmnIgyOOaXpSAwMzoyMiwgR3JlZyBLSCDlhpnpgZM6Cj4gPiBP
-biBXZWQsIEp1biAyNywgMjAxMiBhdCAwNDo1NDo1NFBNICswODAwLCBZYW5mZWkgWmhhbmcgd3Jv
-dGU6Cj4gPj4gVGhpcyBwYXRjaCBleHBvcnQgb2Zmc2V0cyBvZiBmaWVsZHMgdmlhIC9zeXMvZGV2
-aWNlcy9jcHUvdm1jcy8uCj4gPj4gSW5kaXZpZHVhbCBvZmZzZXRzIGFyZSBjb250YWluZWQgaW4g
-c3ViZmlsZXMgbmFtZWQgYnkgdGhlIGZpbGVkJ3MKPiA+PiBlbmNvZGluZywgZS5nLjogL3N5cy9k
-ZXZpY2VzL2NwdS92bWNzLzA4MDAKPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IHpoYW5neWFuZmVp
-IDx6aGFuZ3lhbmZlaUBjbi5mdWppdHN1LmNvbT4KPiA+PiAtLS0KPiA+PiAgZHJpdmVycy9iYXNl
-L2NvcmUuYyB8ICAgMTMgKysrKysrKysrKysrKwo+ID4+ICAxIGZpbGVzIGNoYW5nZWQsIDEzIGlu
-c2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9iYXNlL2NvcmUuYyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+PiBpbmRleCAzNDZiZThiLi5k
-ZDA1ZWU3IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+PiArKysgYi9k
-cml2ZXJzL2Jhc2UvY29yZS5jCj4gPj4gQEAgLTI2LDYgKzI2LDcgQEAKPiA+PiAgI2luY2x1ZGUg
-PGxpbnV4L2FzeW5jLmg+Cj4gPj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+Cj4gPj4g
-ICNpbmNsdWRlIDxsaW51eC9uZXRkZXZpY2UuaD4KPiA+PiArI2luY2x1ZGUgPGFzbS92bWNzaW5m
-by5oPgo+ID4gCj4gPiBEaWQgeW91IGp1c3QgYnJlYWsgdGhlIGJ1aWxkIG9uIGFsbCBvdGhlciBh
-cmNoZXM/ICBOb3QgbmljZS4KPiA+IAo+ID4+IEBAIC0xMDM4LDYgKzEwMzksMTEgQEAgaW50IGRl
-dmljZV9hZGQoc3RydWN0IGRldmljZSAqZGV2KQo+ID4+ICAJZXJyb3IgPSBkcG1fc3lzZnNfYWRk
-KGRldik7Cj4gPj4gIAlpZiAoZXJyb3IpCj4gPj4gIAkJZ290byBEUE1FcnJvcjsKPiA+PiArI2lm
-IGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTCkgfHwgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMX01P
-RFVMRSkKPiA+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQoZGV2KTsKPiA+PiArCWlmIChlcnJv
-cikKPiA+PiArCQlnb3RvIFZNQ1NFcnJvcjsKPiA+PiArI2VuZGlmCj4gPiAKPiA+IE9oIG15IG5v
-LCB0aGF0J3Mgbm8gd2F5IHRvIGV2ZXIgZG8gdGhpcywgeW91IGtub3cgYmV0dGVyIHRoYW4gdGhh
-dCwKPiA+IHBsZWFzZSBmaXguCj4gPiAKPiA+IGdyZWcgay1oCj4gPiAKPiAKPiBTb3JyeSBmb3Ig
-bXkgdGhvdWdodGxlc3MsIEhlcmUgaXMgdGhlIG5ldyBwYXRjaC4KPiAKPiAtLS0KPiAgZHJpdmVy
-cy9iYXNlL2NvcmUuYyB8ICAgMTMgKysrKysrKysrKysrKwo+ICAxIGZpbGVzIGNoYW5nZWQsIDEz
-IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-YmFzZS9jb3JlLmMgYi9kcml2ZXJzL2Jhc2UvY29yZS5jCj4gaW5kZXggMzQ2YmU4Yi4uN2I1MjY2
-YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2Jhc2UvY29yZS5jCj4gKysrIGIvZHJpdmVycy9iYXNl
-L2NvcmUuYwo+IEBAIC0zMCw2ICszMCwxMyBAQAo+ICAjaW5jbHVkZSAiYmFzZS5oIgo+ICAjaW5j
-bHVkZSAicG93ZXIvcG93ZXIuaCIKPiAgCj4gKyNpZiBkZWZpbmVkKENPTkZJR19LVk1fSU5URUwp
-IHx8IGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTF9NT0RVTEUpCj4gKyNpbmNsdWRlIDxhc20vdm1j
-c2luZm8uaD4KPiArI2Vsc2UKPiArc3RhdGljIGlubGluZSBpbnQgdm1jc19zeXNmc19hZGQoc3Ry
-dWN0IGRldmljZSAqZGV2KSB7IHJldHVybiAwOyB9Cj4gK3N0YXRpYyBpbmxpbmUgdm9pZCB2bWNz
-X3N5c2ZzX3JlbW92ZShzdHJ1Y3QgZGV2aWNlICpkZXYpIHsgfQo+ICsjZW5kaWYKCntzaWdofSAg
-Tm8sIGFnYWluLCB5b3Uga25vdyBiZXR0ZXIsIGRvbid0IGRvIHRoaXMuCgpncmVnIGstaAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+The hard coded values need to be used only if the corresponding values
+are not specified by debuginfo. So it should be done after debuginfo
+initialization.
+
+Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+---
+
+ makedumpfile.c |    5 +++--
+ 1 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d024e95..a6b3de7 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -2643,8 +2643,6 @@ initial(void)
+ 		debug_info = TRUE;
+ 	}
+ 
+-	if (!get_value_for_old_linux())
+-		return FALSE;
+ out:
+ 	if (!info->page_size) {
+ 		/*
+@@ -2706,6 +2704,9 @@ out:
+ 			return FALSE;
+ 	}
+ 
++	if (!get_value_for_old_linux())
++		return FALSE;
++
+ 	return TRUE;
+ }
+ 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
