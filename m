@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
+Received: from mail-pz0-f49.google.com ([209.85.210.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkIgJ-0005O7-Pd
- for kexec@lists.infradead.org; Thu, 28 Jun 2012 17:39:04 +0000
-Received: by mail-pb0-f49.google.com with SMTP id rq13so3656417pbb.36
- for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 10:39:03 -0700 (PDT)
+ id 1SkIgR-0005ZJ-O8
+ for kexec@lists.infradead.org; Thu, 28 Jun 2012 17:39:12 +0000
+Received: by mail-pz0-f49.google.com with SMTP id m1so3477513dad.36
+ for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 10:39:11 -0700 (PDT)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [RFC PATCH 08/10] Add page_is_buddy for recent kernels
-Date: Fri, 29 Jun 2012 02:39:00 +0900
-Message-ID: <20120628173900.19702.3277.stgit@fedora-machine>
+Subject: [RFC PATCH 09/10] Add page_is_buddy for PG_buddy
+Date: Fri, 29 Jun 2012 02:39:08 +0900
+Message-ID: <20120628173908.19702.4363.stgit@fedora-machine>
 In-Reply-To: <20120628173757.19702.75678.stgit@fedora-machine>
 References: <20120628173757.19702.75678.stgit@fedora-machine>
 MIME-Version: 1.0
@@ -27,79 +27,70 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-On kernels from v2.6.38 and later kernels, buddy page is marked by
-_mapcount == PAGE_BUDDY_MAPCOUNT_VALUE, which varies once as follows:
+On kernels from v2.6.18 to v2.6.37, buddy page is marked by the
+PG_buddy flag.
 
-  kernel version    | PAGE_BUDDY_MAPCOUNT_VALUE
-  ------------------+--------------------------
-  v2.6.38           | -2
-  v2.6.39 and later | -128
+  kernel version     | PG_buddy
+  ------------------ +---------------------------------
+  v2.6.17 to v2.6.26 | 19
+  v2.6.27 to v2.6.37 | 19 if CONFIG_PAGEFLAGS_EXTEND=y
+                     | 18 otherwise
 
-One more notice is that _mapcount shares its memory with other fields
-for SLAB/SLUB when PG_slab is set. We need to check if PG_slab is set
-or not before looking up _mapcount value.
+Note for hard coding: it's possible to determine whether
+CONFIG_PAGEFLAGS_EXTEND=yes or not by looking at error_status array
+defined in mm/memory-failure.c, for example.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- makedumpfile.c |   30 ++++++++++++++++++++++++++++++
- 1 files changed, 30 insertions(+), 0 deletions(-)
+ makedumpfile.c |   27 ++++++++++++++++++++-------
+ 1 files changed, 20 insertions(+), 7 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 37c371e..aea956f 100644
+index aea956f..675b47e 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -55,6 +55,8 @@ do { \
- 		*ptr_long_table = value; \
- } while (0)
- 
-+static void setup_page_is_buddy(void);
-+
- void
- initialize_tables(void)
- {
-@@ -2733,6 +2735,9 @@ out:
- 	if (!get_value_for_old_linux())
- 		return FALSE;
- 
-+	if (info->dump_level & DL_EXCLUDE_FREE_CONST)
-+		setup_page_is_buddy();
-+
- 	return TRUE;
+@@ -3518,6 +3518,16 @@ exclude_free_page(void)
  }
  
-@@ -3512,6 +3517,31 @@ exclude_free_page(void)
- 	return TRUE;
- }
- 
-+static int
-+page_is_buddy_v3(unsigned long flags, unsigned int _mapcount,
+ static int
++page_is_buddy_v2(unsigned long flags, unsigned int _mapcount,
 +		 unsigned long private, unsigned int _count)
 +{
-+	if (flags & (1UL << NUMBER(PG_slab)))
-+		return FALSE;
-+
-+	if (_mapcount == (int)NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE))
++	if (flags & (1UL << NUMBER(PG_buddy)))
 +		return TRUE;
 +
 +	return FALSE;
 +}
 +
-+static void
-+setup_page_is_buddy(void)
-+{
-+	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER
-+	    && SIZE(pageflags) != NOT_FOUND_STRUCTURE
-+	    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
-+		info->page_is_buddy = page_is_buddy_v3;
-+
-+	MSG("Can't select page_is_buddy handler; "
-+	    "filtering free pages is disabled.\n");
-+}
-+
++static int
+ page_is_buddy_v3(unsigned long flags, unsigned int _mapcount,
+ 		 unsigned long private, unsigned int _count)
+ {
+@@ -3533,13 +3543,16 @@ page_is_buddy_v3(unsigned long flags, unsigned int _mapcount,
+ static void
+ setup_page_is_buddy(void)
+ {
+-	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER
+-	    && SIZE(pageflags) != NOT_FOUND_STRUCTURE
+-	    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
+-		info->page_is_buddy = page_is_buddy_v3;
+-
+-	MSG("Can't select page_is_buddy handler; "
+-	    "filtering free pages is disabled.\n");
++	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
++		if (SIZE(pageflags) != NOT_FOUND_STRUCTURE
++		    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
++			info->page_is_buddy = page_is_buddy_v3;
++		else {
++			MSG("Can't select page_is_buddy handler; "
++			    "filtering free pages is disabled.\n");
++		}
++	} else
++		info->page_is_buddy = page_is_buddy_v2;
+ }
+ 
  /*
-  * If using a dumpfile in kdump-compressed format as a source file
-  * instead of /proc/vmcore, 1st-bitmap of a new dumpfile must be
 
 
 _______________________________________________
