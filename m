@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pz0-f49.google.com ([209.85.210.49])
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkIgR-0005ZJ-O8
- for kexec@lists.infradead.org; Thu, 28 Jun 2012 17:39:12 +0000
-Received: by mail-pz0-f49.google.com with SMTP id m1so3477513dad.36
- for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 10:39:11 -0700 (PDT)
+ id 1SkIgZ-0005O7-59
+ for kexec@lists.infradead.org; Thu, 28 Jun 2012 17:39:19 +0000
+Received: by mail-pb0-f49.google.com with SMTP id rq13so3656417pbb.36
+ for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 10:39:18 -0700 (PDT)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [RFC PATCH 09/10] Add page_is_buddy for PG_buddy
-Date: Fri, 29 Jun 2012 02:39:08 +0900
-Message-ID: <20120628173908.19702.4363.stgit@fedora-machine>
+Subject: [RFC PATCH 10/10] Add page_is_buddy for old kernels
+Date: Fri, 29 Jun 2012 02:39:15 +0900
+Message-ID: <20120628173915.19702.53050.stgit@fedora-machine>
 In-Reply-To: <20120628173757.19702.75678.stgit@fedora-machine>
 References: <20120628173757.19702.75678.stgit@fedora-machine>
 MIME-Version: 1.0
@@ -27,70 +27,59 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kumagai-atsushi@mxc.nes.nec.co.jp
 Cc: kexec@lists.infradead.org
 
-On kernels from v2.6.18 to v2.6.37, buddy page is marked by the
-PG_buddy flag.
+On kernels from v2.6.15 to v2.6.17 buddy page is marked by the
+condition that PG_private flag is set and _count == 0.
 
-  kernel version     | PG_buddy
-  ------------------ +---------------------------------
-  v2.6.17 to v2.6.26 | 19
-  v2.6.27 to v2.6.37 | 19 if CONFIG_PAGEFLAGS_EXTEND=y
-                     | 18 otherwise
+Unfortunately, I have yet to test this logic on these kernel versions
+simply because I've been failing to boot them on my box.
 
-Note for hard coding: it's possible to determine whether
-CONFIG_PAGEFLAGS_EXTEND=yes or not by looking at error_status array
-defined in mm/memory-failure.c, for example.
+Note that on these kernels, free list can be corrupted due to the bug
+that the above two conditions are not checked atomically. The reason
+why PG_buddy was introduced is a fix for this bug. Thus, the bug can
+also affect the logic based on mem_map array, which we cannot avoid
+definitely.
 
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- makedumpfile.c |   27 ++++++++++++++++++++-------
- 1 files changed, 20 insertions(+), 7 deletions(-)
+ makedumpfile.c |   17 +++++++++++++++--
+ 1 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index aea956f..675b47e 100644
+index 675b47e..b73cc64 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3518,6 +3518,16 @@ exclude_free_page(void)
+@@ -3518,6 +3518,18 @@ exclude_free_page(void)
  }
  
  static int
-+page_is_buddy_v2(unsigned long flags, unsigned int _mapcount,
++page_is_buddy_v1(unsigned long flags, unsigned int _mapcount,
 +		 unsigned long private, unsigned int _count)
 +{
-+	if (flags & (1UL << NUMBER(PG_buddy)))
++	if ((flags & (1UL << NUMBER(PG_private)))
++	    && _count == 0
++	    && private <= ARRAY_LENGTH(zone.free_area))
 +		return TRUE;
 +
 +	return FALSE;
 +}
 +
 +static int
- page_is_buddy_v3(unsigned long flags, unsigned int _mapcount,
+ page_is_buddy_v2(unsigned long flags, unsigned int _mapcount,
  		 unsigned long private, unsigned int _count)
  {
-@@ -3533,13 +3543,16 @@ page_is_buddy_v3(unsigned long flags, unsigned int _mapcount,
- static void
+@@ -3544,8 +3556,9 @@ static void
  setup_page_is_buddy(void)
  {
--	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER
--	    && SIZE(pageflags) != NOT_FOUND_STRUCTURE
--	    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
--		info->page_is_buddy = page_is_buddy_v3;
--
--	MSG("Can't select page_is_buddy handler; "
--	    "filtering free pages is disabled.\n");
-+	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
-+		if (SIZE(pageflags) != NOT_FOUND_STRUCTURE
-+		    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
-+			info->page_is_buddy = page_is_buddy_v3;
-+		else {
-+			MSG("Can't select page_is_buddy handler; "
-+			    "filtering free pages is disabled.\n");
-+		}
-+	} else
-+		info->page_is_buddy = page_is_buddy_v2;
- }
- 
- /*
+ 	if (NUMBER(PG_buddy) == NOT_FOUND_NUMBER) {
+-		if (SIZE(pageflags) != NOT_FOUND_STRUCTURE
+-		    && NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
++		if (SIZE(pageflags) == NOT_FOUND_STRUCTURE)
++			info->page_is_buddy = page_is_buddy_v1;
++		else if (NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE) != NOT_FOUND_NUMBER)
+ 			info->page_is_buddy = page_is_buddy_v3;
+ 		else {
+ 			MSG("Can't select page_is_buddy handler; "
 
 
 _______________________________________________
