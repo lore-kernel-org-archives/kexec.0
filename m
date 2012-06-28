@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pb0-f49.google.com ([209.85.160.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sjxp4-0004RE-RT
- for kexec@lists.infradead.org; Wed, 27 Jun 2012 19:22:43 +0000
-Received: by pbbrq13 with SMTP id rq13so2141055pbb.36
- for <kexec@lists.infradead.org>; Wed, 27 Jun 2012 12:22:41 -0700 (PDT)
-Date: Wed, 27 Jun 2012 12:22:36 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
-Message-ID: <20120627192236.GB1965@kroah.com>
-References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SkBU6-0003iQ-J9
+ for kexec@lists.infradead.org; Thu, 28 Jun 2012 09:57:59 +0000
+Message-ID: <4FEC29D6.5020109@cn.fujitsu.com>
+Date: Thu, 28 Jun 2012 17:54:30 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4FEACA5E.4090009@cn.fujitsu.com>
+Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
+References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
+ <20120627192236.GB1965@kroah.com>
+In-Reply-To: <20120627192236.GB1965@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,51 +19,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
 
-On Wed, Jun 27, 2012 at 04:54:54PM +0800, Yanfei Zhang wrote:
-> This patch export offsets of fields via /sys/devices/cpu/vmcs/.
-> Individual offsets are contained in subfiles named by the filed's
-> encoding, e.g.: /sys/devices/cpu/vmcs/0800
-> 
-> Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
-> ---
->  drivers/base/core.c |   13 +++++++++++++
->  1 files changed, 13 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 346be8b..dd05ee7 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -26,6 +26,7 @@
->  #include <linux/async.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/netdevice.h>
-> +#include <asm/vmcsinfo.h>
-
-Did you just break the build on all other arches?  Not nice.
-
-> @@ -1038,6 +1039,11 @@ int device_add(struct device *dev)
->  	error = dpm_sysfs_add(dev);
->  	if (error)
->  		goto DPMError;
-> +#if defined(CONFIG_KVM_INTEL) || defined(CONFIG_KVM_INTEL_MODULE)
-> +	error = vmcs_sysfs_add(dev);
-> +	if (error)
-> +		goto VMCSError;
-> +#endif
-
-Oh my no, that's no way to ever do this, you know better than that,
-please fix.
-
-greg k-h
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQwNuaciDI45pelIDAzOjIyLCBHcmVnIEtIIOWGmemBkzoKPiBPbiBXZWQsIEp1
+biAyNywgMjAxMiBhdCAwNDo1NDo1NFBNICswODAwLCBZYW5mZWkgWmhhbmcgd3JvdGU6Cj4+IFRo
+aXMgcGF0Y2ggZXhwb3J0IG9mZnNldHMgb2YgZmllbGRzIHZpYSAvc3lzL2RldmljZXMvY3B1L3Zt
+Y3MvLgo+PiBJbmRpdmlkdWFsIG9mZnNldHMgYXJlIGNvbnRhaW5lZCBpbiBzdWJmaWxlcyBuYW1l
+ZCBieSB0aGUgZmlsZWQncwo+PiBlbmNvZGluZywgZS5nLjogL3N5cy9kZXZpY2VzL2NwdS92bWNz
+LzA4MDAKPj4KPj4gU2lnbmVkLW9mZi1ieTogemhhbmd5YW5mZWkgPHpoYW5neWFuZmVpQGNuLmZ1
+aml0c3UuY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvYmFzZS9jb3JlLmMgfCAgIDEzICsrKysrKysr
+KysrKysKPj4gIDEgZmlsZXMgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMo
+LSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9jb3JlLmMgYi9kcml2ZXJzL2Jhc2Uv
+Y29yZS5jCj4+IGluZGV4IDM0NmJlOGIuLmRkMDVlZTcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMv
+YmFzZS9jb3JlLmMKPj4gKysrIGIvZHJpdmVycy9iYXNlL2NvcmUuYwo+PiBAQCAtMjYsNiArMjYs
+NyBAQAo+PiAgI2luY2x1ZGUgPGxpbnV4L2FzeW5jLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvcG1f
+cnVudGltZS5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4L25ldGRldmljZS5oPgo+PiArI2luY2x1ZGUg
+PGFzbS92bWNzaW5mby5oPgo+IAo+IERpZCB5b3UganVzdCBicmVhayB0aGUgYnVpbGQgb24gYWxs
+IG90aGVyIGFyY2hlcz8gIE5vdCBuaWNlLgo+IAo+PiBAQCAtMTAzOCw2ICsxMDM5LDExIEBAIGlu
+dCBkZXZpY2VfYWRkKHN0cnVjdCBkZXZpY2UgKmRldikKPj4gIAllcnJvciA9IGRwbV9zeXNmc19h
+ZGQoZGV2KTsKPj4gIAlpZiAoZXJyb3IpCj4+ICAJCWdvdG8gRFBNRXJyb3I7Cj4+ICsjaWYgZGVm
+aW5lZChDT05GSUdfS1ZNX0lOVEVMKSB8fCBkZWZpbmVkKENPTkZJR19LVk1fSU5URUxfTU9EVUxF
+KQo+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQoZGV2KTsKPj4gKwlpZiAoZXJyb3IpCj4+ICsJ
+CWdvdG8gVk1DU0Vycm9yOwo+PiArI2VuZGlmCj4gCj4gT2ggbXkgbm8sIHRoYXQncyBubyB3YXkg
+dG8gZXZlciBkbyB0aGlzLCB5b3Uga25vdyBiZXR0ZXIgdGhhbiB0aGF0LAo+IHBsZWFzZSBmaXgu
+Cj4gCj4gZ3JlZyBrLWgKPiAKClNvcnJ5IGZvciBteSB0aG91Z2h0bGVzcywgSGVyZSBpcyB0aGUg
+bmV3IHBhdGNoLgoKLS0tCiBkcml2ZXJzL2Jhc2UvY29yZS5jIHwgICAxMyArKysrKysrKysrKysr
+CiAxIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCgpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9iYXNlL2NvcmUuYyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKaW5kZXgg
+MzQ2YmU4Yi4uN2I1MjY2YSAxMDA2NDQKLS0tIGEvZHJpdmVycy9iYXNlL2NvcmUuYworKysgYi9k
+cml2ZXJzL2Jhc2UvY29yZS5jCkBAIC0zMCw2ICszMCwxMyBAQAogI2luY2x1ZGUgImJhc2UuaCIK
+ICNpbmNsdWRlICJwb3dlci9wb3dlci5oIgogCisjaWYgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVM
+KSB8fCBkZWZpbmVkKENPTkZJR19LVk1fSU5URUxfTU9EVUxFKQorI2luY2x1ZGUgPGFzbS92bWNz
+aW5mby5oPgorI2Vsc2UKK3N0YXRpYyBpbmxpbmUgaW50IHZtY3Nfc3lzZnNfYWRkKHN0cnVjdCBk
+ZXZpY2UgKmRldikgeyByZXR1cm4gMDsgfQorc3RhdGljIGlubGluZSB2b2lkIHZtY3Nfc3lzZnNf
+cmVtb3ZlKHN0cnVjdCBkZXZpY2UgKmRldikgeyB9CisjZW5kaWYKKwogI2lmZGVmIENPTkZJR19T
+WVNGU19ERVBSRUNBVEVECiAjaWZkZWYgQ09ORklHX1NZU0ZTX0RFUFJFQ0FURURfVjIKIGxvbmcg
+c3lzZnNfZGVwcmVjYXRlZCA9IDE7CkBAIC0xMDM4LDYgKzEwNDUsOSBAQCBpbnQgZGV2aWNlX2Fk
+ZChzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJZXJyb3IgPSBkcG1fc3lzZnNfYWRkKGRldik7CiAJaWYg
+KGVycm9yKQogCQlnb3RvIERQTUVycm9yOworCWVycm9yID0gdm1jc19zeXNmc19hZGQoZGV2KTsK
+KwlpZiAoZXJyb3IpCisJCWdvdG8gVk1DU0Vycm9yOwogCWRldmljZV9wbV9hZGQoZGV2KTsKIAog
+CS8qIE5vdGlmeSBjbGllbnRzIG9mIGRldmljZSBhZGRpdGlvbi4gIFRoaXMgY2FsbCBtdXN0IGNv
+bWUKQEAgLTEwNjksNiArMTA3OSw4IEBAIGludCBkZXZpY2VfYWRkKHN0cnVjdCBkZXZpY2UgKmRl
+dikKIGRvbmU6CiAJcHV0X2RldmljZShkZXYpOwogCXJldHVybiBlcnJvcjsKKyBWTUNTRXJyb3I6
+CisJZHBtX3N5c2ZzX3JlbW92ZShkZXYpOwogIERQTUVycm9yOgogCWJ1c19yZW1vdmVfZGV2aWNl
+KGRldik7CiAgQnVzRXJyb3I6CkBAIC0xMTcxLDYgKzExODMsNyBAQCB2b2lkIGRldmljZV9kZWwo
+c3RydWN0IGRldmljZSAqZGV2KQogCQlibG9ja2luZ19ub3RpZmllcl9jYWxsX2NoYWluKCZkZXYt
+PmJ1cy0+cC0+YnVzX25vdGlmaWVyLAogCQkJCQkgICAgIEJVU19OT1RJRllfREVMX0RFVklDRSwg
+ZGV2KTsKIAlkZXZpY2VfcG1fcmVtb3ZlKGRldik7CisJdm1jc19zeXNmc19yZW1vdmUoZGV2KTsK
+IAlkcG1fc3lzZnNfcmVtb3ZlKGRldik7CiAJaWYgKHBhcmVudCkKIAkJa2xpc3RfZGVsKCZkZXYt
+PnAtPmtub2RlX3BhcmVudCk7Ci0tIAoxLjcuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
