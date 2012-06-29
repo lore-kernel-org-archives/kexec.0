@@ -1,31 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from mail-gh0-f177.google.com ([209.85.160.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkRYI-0004JB-4d
- for kexec@lists.infradead.org; Fri, 29 Jun 2012 03:07:23 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 855423EE081
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 12:07:15 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6F5F145DE55
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 12:07:15 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5A74645DE54
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 12:07:15 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 4B8C31DB8053
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 12:07:15 +0900 (JST)
-Received: from m022.s.css.fujitsu.com (m022.s.css.fujitsu.com [10.0.81.62])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id F14091DB804F
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 12:07:14 +0900 (JST)
-Date: Fri, 29 Jun 2012 12:07:05 +0900 (JST)
-Message-Id: <20120629.120705.209862899.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH 00/10] Support free page filtering looking up
- mem_map array
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120628173757.19702.75678.stgit@fedora-machine>
-References: <20120628173757.19702.75678.stgit@fedora-machine>
-Mime-Version: 1.0
+ id 1SkRai-0004SS-CR
+ for kexec@lists.infradead.org; Fri, 29 Jun 2012 03:09:52 +0000
+Received: by ghbf11 with SMTP id f11so2570270ghb.36
+ for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 20:09:50 -0700 (PDT)
+Date: Thu, 28 Jun 2012 22:58:48 -0400
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
+Message-ID: <20120629025848.GC8074@kroah.com>
+References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
+ <20120627192236.GB1965@kroah.com> <4FEC29D6.5020109@cn.fujitsu.com>
+ <20120628113738.GA5499@kroah.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20120628113738.GA5499@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,71 +23,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org
+To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
 
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [RFC PATCH 00/10] Support free page filtering looking up mem_map array
-Date: Fri, 29 Jun 2012 02:37:57 +0900
-
-> This new free page filtering needs the following values.
-> 
->   - OFFSET(page._mapcount)
->   - OFFSET(page.private)
->   - SIZE(pageflags)
->   - NUMBER(PG_buddy)
->   - NUMBER(PG_slab)
->   - NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)
-> 
-> Unfortunately, OFFSET(_mapcount) and OFFSET(private) fields of page
-> structure cannot be obtained from VMLINUX using the exiting library in
-> makedumpfile since two members are anonymous components of union
-> types. We need a new interface for them.
-> 
-> To try to use this patch set, it's handy to pass manually editted
-> VMCOREINFO file via -i option.
-> 
-
-Concretely, I added the following values in VMCOREINFO generated with
--g option or using strings command directly to vmcore.
-
- * 3.1.0-7.fc16.x86_64
-
-NUMBER(PG_slab)=7
-SIZE(pageflags)=4
-OFFSET(page._mapcount)=24
-OFFSET(page.private)=48
-NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-128
-
- * 2.6.38
-SIZE(pageflags)=4
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-NUMBER(PG_slab)=7
-NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-2
-
- * 2.6.32
-NUMBER(PG_slab)=7
-NUMBER(PG_buddy)=19
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-SIZE(pageflags)=4
-
- * 2.6.18
-NUMBER(PG_slab)=7
-NUMBER(PG_buddy)=19
-OFFSET(page._mapcount)=12
-OFFSET(page.private)=16
-
-Thanks.
-HATAYAMA, Daisuke
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBKdW4gMjgsIDIwMTIgYXQgMDQ6Mzc6MzhBTSAtMDcwMCwgR3JlZyBLSCB3cm90ZToK
+PiBPbiBUaHUsIEp1biAyOCwgMjAxMiBhdCAwNTo1NDozMFBNICswODAwLCBZYW5mZWkgWmhhbmcg
+d3JvdGU6Cj4gPiDkuo4gMjAxMuW5tDA25pyIMjjml6UgMDM6MjIsIEdyZWcgS0gg5YaZ6YGTOgo+
+ID4gPiBPbiBXZWQsIEp1biAyNywgMjAxMiBhdCAwNDo1NDo1NFBNICswODAwLCBZYW5mZWkgWmhh
+bmcgd3JvdGU6Cj4gPiA+PiBUaGlzIHBhdGNoIGV4cG9ydCBvZmZzZXRzIG9mIGZpZWxkcyB2aWEg
+L3N5cy9kZXZpY2VzL2NwdS92bWNzLy4KPiA+ID4+IEluZGl2aWR1YWwgb2Zmc2V0cyBhcmUgY29u
+dGFpbmVkIGluIHN1YmZpbGVzIG5hbWVkIGJ5IHRoZSBmaWxlZCdzCj4gPiA+PiBlbmNvZGluZywg
+ZS5nLjogL3N5cy9kZXZpY2VzL2NwdS92bWNzLzA4MDAKPiA+ID4+Cj4gPiA+PiBTaWduZWQtb2Zm
+LWJ5OiB6aGFuZ3lhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gPiA+PiAtLS0K
+PiA+ID4+ICBkcml2ZXJzL2Jhc2UvY29yZS5jIHwgICAxMyArKysrKysrKysrKysrCj4gPiA+PiAg
+MSBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ID4gPj4K
+PiA+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJpdmVycy9iYXNlL2Nv
+cmUuYwo+ID4gPj4gaW5kZXggMzQ2YmU4Yi4uZGQwNWVlNyAxMDA2NDQKPiA+ID4+IC0tLSBhL2Ry
+aXZlcnMvYmFzZS9jb3JlLmMKPiA+ID4+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+ID4+
+IEBAIC0yNiw2ICsyNiw3IEBACj4gPiA+PiAgI2luY2x1ZGUgPGxpbnV4L2FzeW5jLmg+Cj4gPiA+
+PiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPiA+ID4+ICAjaW5jbHVkZSA8bGludXgv
+bmV0ZGV2aWNlLmg+Cj4gPiA+PiArI2luY2x1ZGUgPGFzbS92bWNzaW5mby5oPgo+ID4gPiAKPiA+
+ID4gRGlkIHlvdSBqdXN0IGJyZWFrIHRoZSBidWlsZCBvbiBhbGwgb3RoZXIgYXJjaGVzPyAgTm90
+IG5pY2UuCj4gPiA+IAo+ID4gPj4gQEAgLTEwMzgsNiArMTAzOSwxMSBAQCBpbnQgZGV2aWNlX2Fk
+ZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+PiAgCWVycm9yID0gZHBtX3N5c2ZzX2FkZChkZXYp
+Owo+ID4gPj4gIAlpZiAoZXJyb3IpCj4gPiA+PiAgCQlnb3RvIERQTUVycm9yOwo+ID4gPj4gKyNp
+ZiBkZWZpbmVkKENPTkZJR19LVk1fSU5URUwpIHx8IGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTF9N
+T0RVTEUpCj4gPiA+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQoZGV2KTsKPiA+ID4+ICsJaWYg
+KGVycm9yKQo+ID4gPj4gKwkJZ290byBWTUNTRXJyb3I7Cj4gPiA+PiArI2VuZGlmCj4gPiA+IAo+
+ID4gPiBPaCBteSBubywgdGhhdCdzIG5vIHdheSB0byBldmVyIGRvIHRoaXMsIHlvdSBrbm93IGJl
+dHRlciB0aGFuIHRoYXQsCj4gPiA+IHBsZWFzZSBmaXguCj4gPiA+IAo+ID4gPiBncmVnIGstaAo+
+ID4gPiAKPiA+IAo+ID4gU29ycnkgZm9yIG15IHRob3VnaHRsZXNzLCBIZXJlIGlzIHRoZSBuZXcg
+cGF0Y2guCj4gPiAKPiA+IC0tLQo+ID4gIGRyaXZlcnMvYmFzZS9jb3JlLmMgfCAgIDEzICsrKysr
+KysrKysrKysKPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDAgZGVsZXRp
+b25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJpdmVy
+cy9iYXNlL2NvcmUuYwo+ID4gaW5kZXggMzQ2YmU4Yi4uN2I1MjY2YSAxMDA2NDQKPiA+IC0tLSBh
+L2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+IEBA
+IC0zMCw2ICszMCwxMyBAQAo+ID4gICNpbmNsdWRlICJiYXNlLmgiCj4gPiAgI2luY2x1ZGUgInBv
+d2VyL3Bvd2VyLmgiCj4gPiAgCj4gPiArI2lmIGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTCkgfHwg
+ZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMX01PRFVMRSkKPiA+ICsjaW5jbHVkZSA8YXNtL3ZtY3Np
+bmZvLmg+Cj4gPiArI2Vsc2UKPiA+ICtzdGF0aWMgaW5saW5lIGludCB2bWNzX3N5c2ZzX2FkZChz
+dHJ1Y3QgZGV2aWNlICpkZXYpIHsgcmV0dXJuIDA7IH0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQg
+dm1jc19zeXNmc19yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KSB7IH0KPiA+ICsjZW5kaWYKPiAK
+PiB7c2lnaH0gIE5vLCBhZ2FpbiwgeW91IGtub3cgYmV0dGVyLCBkb24ndCBkbyB0aGlzLgoKT2ss
+IGFzIG90aGVycyBoYXZlIHJpZ2h0bHkgcG9pbnRlZCBvdXQsIHRoaXMgd2Fzbid0IHRoZSBtb3N0
+IGhlbHBmdWwKcmV2aWV3IGNvbW1lbnQsIHNvcnJ5IGFib3V0IHRoYXQuCgpJbiBMaW51eCwgd2Ug
+ZG9uJ3QgcHV0IGlmZGVmcyBpbiAuYyBmaWxlcywgd2UgcHV0IHRoZW0gaW4gLmggZmlsZXMuICBT
+ZWUKbWFueSBleGFtcGxlcyBvZiB0aGlzIGFsbCBvdmVyIHRoZSBwbGFjZS4gIFRoYXQncyBteSBt
+YWluIGNvbXBsYWludHMgdGhlCnBhc3QgdHdvIHRpbWVzIG9mIHRoaXMgcGF0Y2guCgpCdXQsIGZv
+ciB0aGlzLCBJIHdvdWxkIHF1ZXN0aW9uIHdoeSB5b3UgZXZlbiB3YW50IC8gbmVlZCB0byBkbyB0
+aGlzIGluCnRoZSBkcml2ZXJzL2Jhc2UvY29yZS8gZmlsZSBpbiB0aGUgZmlyc3QgcGxhY2UuICBT
+aG91bGRuJ3QgaXQgYmUgaW4gc29tZQphcmNoIG9yIGNwdSBzcGVjaWZpYyBmaWxlIGluc3RlYWQg
+dGhhdCBhbHJlYWR5IGhhbmRsZXMgdGhlIGNwdSBmaWxlcz8KCnRoYW5rcywKCmdyZWcgay1oCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
