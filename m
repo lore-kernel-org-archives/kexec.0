@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkQlL-0001LJ-Rb
- for kexec@lists.infradead.org; Fri, 29 Jun 2012 02:16:50 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.197])
- by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5T2GWMY003125
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 11:16:32 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
+ id 1SkQmP-0001Pk-2Z
+ for kexec@lists.infradead.org; Fri, 29 Jun 2012 02:17:54 +0000
+Received: from mailgate4.nec.co.jp ([10.7.69.184])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5T2Hlhg004245
+ for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 11:17:47 +0900 (JST)
+Received: (from root@localhost) by mailgate4.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id q5T2GWD16761 for kexec@lists.infradead.org;
- Fri, 29 Jun 2012 11:16:32 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5T2GVBG020399
- for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 11:16:31 +0900 (JST)
-Date: Fri, 29 Jun 2012 11:13:20 +0900
+ id q5T2HlY09064 for kexec@lists.infradead.org;
+ Fri, 29 Jun 2012 11:17:47 +0900 (JST)
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+ by mailsv.nec.co.jp (8.13.8/8.13.4) with ESMTP id q5T2HkJj019865
+ for <kexec@lists.infradead.org>; Fri, 29 Jun 2012 11:17:47 +0900 (JST)
+Date: Fri, 29 Jun 2012 11:16:05 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory
- consumption.
-Message-Id: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [RFC PATCH v2 1/10] Add flag to enable cyclic processing.
+Message-Id: <20120629111605.2dd0f2d6.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
+References: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,93 +34,106 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Hello,
+Introduce --cyclic option to enable cyclic processing. If --cyclic option is
+specified, then makedumpfile works cyclically and the memory usage will be constant.
 
-I improved prototype of cyclic processing as version 2.
-If there is no objection to basic idea, I want to consider the things
-related to performance as next step. (Concretely, buffer size and the patch set
-HATAYAMA-san sent a short time ago.) 
+Usage:
+    # makedumpfile --cyclic /proc/vmcore dumpfile
 
+Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+---
+ makedumpfile.8 |   12 ++++++++++++
+ makedumpfile.c |    4 ++++
+ makedumpfile.h |    1 +
+ print_info.c   |    9 +++++++++
+ 4 files changed, 26 insertions(+)
 
-Version 1:
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 1fb9756..6ab2599 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -346,6 +346,18 @@ on the following example.
+ .br
+ # makedumpfile \-\-reassemble dumpfile1 dumpfile2 dumpfile
  
-  http://lists.infradead.org/pipermail/kexec/2012-May/006363.html
-
-Introduction:
-
- - The purpose of cyclic processing is to fix memory consumption.
- - cyclic processing doesn't use temporary bitmap file, store partial bitmap data
-   in memory only for each cycle instead.
- - The prototype was passed the regression test which is used by every release.
-
-How to use:
-  
-  Specify '--cyclic' option, then makedumpfile works cyclically.
-
-Example:
-
-    $ makedumpfile --cyclic -cd31 vmcore testdump.cd31
-    Copying data                       : [  5 %]
-    Excluding free pages               : [100 %]
-    ...
-    Excluding free pages               : [100 %]
-    Copying data                       : [100 %]
-
-    The dumpfile is saved to testdump.cd31.
-
-    makedumpfile Completed.
-
-Changelog:
-
-  v1 =>  v2:
-
-    - Fix the process of increasing target region.
-    - Change method for kdump-compressed format.
-    - Add support for ELF format.
-    - Add support for --split option.
++
++.TP
++\fB\-\-cyclic\fR
++Creating bitmaps and writing pages cyclically for constant target memory range.
++As a result, makedumpfile can works in constant memory space regardless of 
++system memory size.
++This feature is \fITESTING VERSION\fR now.
++.br
++.B Example:
++.br
++# makedumpfile \-\-cyclic \-d 31 \-x vmlinux /proc/vmcore dumpfile
++
+ .TP
+ \fB\-\-xen-syms\fR \fIXEN-SYMS\fR
+ Specify the \fIXEN-SYMS\fR with debug information to analyze the xen's memory usage.
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d024e95..87bd680 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6945,6 +6945,7 @@ static struct option longopts[] = {
+ 	{"config", required_argument, NULL, 'C'},
+ 	{"help", no_argument, NULL, 'h'},
+ 	{"diskset", required_argument, NULL, 'k'},
++	{"cyclic", no_argument, NULL, 'Y'},
+ 	{0, 0, 0, 0}
+ };
  
-Memory consumption:
-
-  I measured the RSS of makedumpfile with ps(1) as memory consumption.
-
-    a. working for 5G memory:
-                 |                 RSS [KB]                
-                 |  no option  |    -cd31    |    -Ed31
-      -----------+-------------+-------------+-------------
-        v1.4.4   |     1108    |     1184    |      868
-        cyclic   |     2976    |     3252    |     2984
-
-        
-    b. working for 8G memory:
-                 |                 RSS [KB]                
-                 |  no option  |    -cd31    |    -Ed31
-      -----------+-------------+-------------+-------------
-        v1.4.4   |     1108    |     1180    |      864
-        cyclic   |     2972    |     3256    |     2984
-
-
-  This result seems to say that v1.4.4 is better than cyclic, but the size
-  of temporary bitmap file grows based on memory size. The increasing rate 
-  can be represented as (memory size / 4K / 8 ) * 2.
-
-     memory size [GB] |  bitmap size [KB]
-    ------------------+------------------
-            5         |       320
-            8         |       512
-           ...        |       ...
-          1,024       |      65,536
-
-  Even above size will be counted as memory consumption, if the system 
-  doesn't mount rootfs. This is the cause of the memory consumption issue
-  we discussed.
-
-  On the other hand, cyclic processing doesn't use temporary bitmap files,
-  all memory consumption will be appeared in RSS.
-  The memory consumption to store bitmap will be kept around 2MB(BUFSIZE_CYCLIC * 2).
-  
-
-Thanks
-Atsushi Kumagai
+@@ -7053,6 +7054,9 @@ main(int argc, char *argv[])
+ 		case 'y':
+ 			info->name_xen_syms = optarg;
+ 			break;
++		case 'Y':
++			info->flag_cyclic = TRUE;
++			break;
+ 		case 'z':
+ 			info->flag_read_vmcoreinfo = 1;
+ 			info->name_vmcoreinfo = optarg;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 6f5489d..287e055 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -801,6 +801,7 @@ struct DumpInfo {
+ 	int		flag_rearrange;      /* flag of creating dumpfile from
+ 						flattened format */
+ 	int		flag_split;	     /* splitting vmcore */
++  	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
+ 	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
+ 	int		flag_refiltering;    /* refilter from kdump-compressed file */
+ 	int		flag_force;	     /* overwrite existing stuff */
+diff --git a/print_info.c b/print_info.c
+index 61cafed..0d8a7b3 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -62,6 +62,10 @@ print_usage(void)
+ 	MSG("\n");
+ 	MSG("  Reassemble multiple DUMPFILEs:\n");
+ 	MSG("  # makedumpfile --reassemble DUMPFILE1 DUMPFILE2 [DUMPFILE3 ..] DUMPFILE\n");
++	MSG("    DUMPFILE2 [DUMPFILE3 ..]\n");
++	MSG("\n");
++	MSG("  Creating DUMPFILE with cyclic processing:\n");
++	MSG("  # makedumpfile --cyclic [OPTION] [-x VMLINUX|-i VMCOREINFO] VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Generating VMCOREINFO:\n");
+ 	MSG("  # makedumpfile -g VMCOREINFO -x VMLINUX\n");
+@@ -162,6 +166,11 @@ print_usage(void)
+ 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
+ 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
+ 	MSG("\n");
++	MSG("  [--cyclic]:\n");
++	MSG("      Creating bitmaps and writing pages for certain target memory range.\n");
++	MSG("      As a result, makedumpfile can works in constant memory space regardless of \n");
++	MSG("      system memory size. This feature is TESTING VERSION now.\n");
++	MSG("\n");
+ 	MSG("  [--xen-syms XEN-SYMS]:\n");
+ 	MSG("      Specify the XEN-SYMS to analyze Xen's memory usage.\n");
+ 	MSG("\n");
+-- 
+1.7.9.2
 
 _______________________________________________
 kexec mailing list
