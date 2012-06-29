@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-gh0-f177.google.com ([209.85.160.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SkRai-0004SS-CR
- for kexec@lists.infradead.org; Fri, 29 Jun 2012 03:09:52 +0000
-Received: by ghbf11 with SMTP id f11so2570270ghb.36
- for <kexec@lists.infradead.org>; Thu, 28 Jun 2012 20:09:50 -0700 (PDT)
-Date: Thu, 28 Jun 2012 22:58:48 -0400
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
-Message-ID: <20120629025848.GC8074@kroah.com>
-References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
- <20120627192236.GB1965@kroah.com> <4FEC29D6.5020109@cn.fujitsu.com>
- <20120628113738.GA5499@kroah.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120628113738.GA5499@kroah.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SkStL-0001J4-F5
+ for kexec@lists.infradead.org; Fri, 29 Jun 2012 04:33:14 +0000
+Date: Fri, 29 Jun 2012 13:30:38 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/3] makedumpfile: Xen4: exclude domU pages for Xen4
+Message-Id: <20120629133038.850a845b.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <201206221718.05680.Norbert.Trapp@ts.fujitsu.com>
+References: <201206221718.05680.Norbert.Trapp@ts.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,61 +18,71 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
+To: Norbert.Trapp@ts.fujitsu.com
+Cc: kexec@lists.infradead.org, fngw.zhang@huawei.com
 
-T24gVGh1LCBKdW4gMjgsIDIwMTIgYXQgMDQ6Mzc6MzhBTSAtMDcwMCwgR3JlZyBLSCB3cm90ZToK
-PiBPbiBUaHUsIEp1biAyOCwgMjAxMiBhdCAwNTo1NDozMFBNICswODAwLCBZYW5mZWkgWmhhbmcg
-d3JvdGU6Cj4gPiDkuo4gMjAxMuW5tDA25pyIMjjml6UgMDM6MjIsIEdyZWcgS0gg5YaZ6YGTOgo+
-ID4gPiBPbiBXZWQsIEp1biAyNywgMjAxMiBhdCAwNDo1NDo1NFBNICswODAwLCBZYW5mZWkgWmhh
-bmcgd3JvdGU6Cj4gPiA+PiBUaGlzIHBhdGNoIGV4cG9ydCBvZmZzZXRzIG9mIGZpZWxkcyB2aWEg
-L3N5cy9kZXZpY2VzL2NwdS92bWNzLy4KPiA+ID4+IEluZGl2aWR1YWwgb2Zmc2V0cyBhcmUgY29u
-dGFpbmVkIGluIHN1YmZpbGVzIG5hbWVkIGJ5IHRoZSBmaWxlZCdzCj4gPiA+PiBlbmNvZGluZywg
-ZS5nLjogL3N5cy9kZXZpY2VzL2NwdS92bWNzLzA4MDAKPiA+ID4+Cj4gPiA+PiBTaWduZWQtb2Zm
-LWJ5OiB6aGFuZ3lhbmZlaSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4gPiA+PiAtLS0K
-PiA+ID4+ICBkcml2ZXJzL2Jhc2UvY29yZS5jIHwgICAxMyArKysrKysrKysrKysrCj4gPiA+PiAg
-MSBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+ID4gPj4K
-PiA+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJpdmVycy9iYXNlL2Nv
-cmUuYwo+ID4gPj4gaW5kZXggMzQ2YmU4Yi4uZGQwNWVlNyAxMDA2NDQKPiA+ID4+IC0tLSBhL2Ry
-aXZlcnMvYmFzZS9jb3JlLmMKPiA+ID4+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+ID4+
-IEBAIC0yNiw2ICsyNiw3IEBACj4gPiA+PiAgI2luY2x1ZGUgPGxpbnV4L2FzeW5jLmg+Cj4gPiA+
-PiAgI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPiA+ID4+ICAjaW5jbHVkZSA8bGludXgv
-bmV0ZGV2aWNlLmg+Cj4gPiA+PiArI2luY2x1ZGUgPGFzbS92bWNzaW5mby5oPgo+ID4gPiAKPiA+
-ID4gRGlkIHlvdSBqdXN0IGJyZWFrIHRoZSBidWlsZCBvbiBhbGwgb3RoZXIgYXJjaGVzPyAgTm90
-IG5pY2UuCj4gPiA+IAo+ID4gPj4gQEAgLTEwMzgsNiArMTAzOSwxMSBAQCBpbnQgZGV2aWNlX2Fk
-ZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+PiAgCWVycm9yID0gZHBtX3N5c2ZzX2FkZChkZXYp
-Owo+ID4gPj4gIAlpZiAoZXJyb3IpCj4gPiA+PiAgCQlnb3RvIERQTUVycm9yOwo+ID4gPj4gKyNp
-ZiBkZWZpbmVkKENPTkZJR19LVk1fSU5URUwpIHx8IGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTF9N
-T0RVTEUpCj4gPiA+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQoZGV2KTsKPiA+ID4+ICsJaWYg
-KGVycm9yKQo+ID4gPj4gKwkJZ290byBWTUNTRXJyb3I7Cj4gPiA+PiArI2VuZGlmCj4gPiA+IAo+
-ID4gPiBPaCBteSBubywgdGhhdCdzIG5vIHdheSB0byBldmVyIGRvIHRoaXMsIHlvdSBrbm93IGJl
-dHRlciB0aGFuIHRoYXQsCj4gPiA+IHBsZWFzZSBmaXguCj4gPiA+IAo+ID4gPiBncmVnIGstaAo+
-ID4gPiAKPiA+IAo+ID4gU29ycnkgZm9yIG15IHRob3VnaHRsZXNzLCBIZXJlIGlzIHRoZSBuZXcg
-cGF0Y2guCj4gPiAKPiA+IC0tLQo+ID4gIGRyaXZlcnMvYmFzZS9jb3JlLmMgfCAgIDEzICsrKysr
-KysrKysrKysKPiA+ICAxIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDAgZGVsZXRp
-b25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJpdmVy
-cy9iYXNlL2NvcmUuYwo+ID4gaW5kZXggMzQ2YmU4Yi4uN2I1MjY2YSAxMDA2NDQKPiA+IC0tLSBh
-L2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPiA+IEBA
-IC0zMCw2ICszMCwxMyBAQAo+ID4gICNpbmNsdWRlICJiYXNlLmgiCj4gPiAgI2luY2x1ZGUgInBv
-d2VyL3Bvd2VyLmgiCj4gPiAgCj4gPiArI2lmIGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTCkgfHwg
-ZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMX01PRFVMRSkKPiA+ICsjaW5jbHVkZSA8YXNtL3ZtY3Np
-bmZvLmg+Cj4gPiArI2Vsc2UKPiA+ICtzdGF0aWMgaW5saW5lIGludCB2bWNzX3N5c2ZzX2FkZChz
-dHJ1Y3QgZGV2aWNlICpkZXYpIHsgcmV0dXJuIDA7IH0KPiA+ICtzdGF0aWMgaW5saW5lIHZvaWQg
-dm1jc19zeXNmc19yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KSB7IH0KPiA+ICsjZW5kaWYKPiAK
-PiB7c2lnaH0gIE5vLCBhZ2FpbiwgeW91IGtub3cgYmV0dGVyLCBkb24ndCBkbyB0aGlzLgoKT2ss
-IGFzIG90aGVycyBoYXZlIHJpZ2h0bHkgcG9pbnRlZCBvdXQsIHRoaXMgd2Fzbid0IHRoZSBtb3N0
-IGhlbHBmdWwKcmV2aWV3IGNvbW1lbnQsIHNvcnJ5IGFib3V0IHRoYXQuCgpJbiBMaW51eCwgd2Ug
-ZG9uJ3QgcHV0IGlmZGVmcyBpbiAuYyBmaWxlcywgd2UgcHV0IHRoZW0gaW4gLmggZmlsZXMuICBT
-ZWUKbWFueSBleGFtcGxlcyBvZiB0aGlzIGFsbCBvdmVyIHRoZSBwbGFjZS4gIFRoYXQncyBteSBt
-YWluIGNvbXBsYWludHMgdGhlCnBhc3QgdHdvIHRpbWVzIG9mIHRoaXMgcGF0Y2guCgpCdXQsIGZv
-ciB0aGlzLCBJIHdvdWxkIHF1ZXN0aW9uIHdoeSB5b3UgZXZlbiB3YW50IC8gbmVlZCB0byBkbyB0
-aGlzIGluCnRoZSBkcml2ZXJzL2Jhc2UvY29yZS8gZmlsZSBpbiB0aGUgZmlyc3QgcGxhY2UuICBT
-aG91bGRuJ3QgaXQgYmUgaW4gc29tZQphcmNoIG9yIGNwdSBzcGVjaWZpYyBmaWxlIGluc3RlYWQg
-dGhhdCBhbHJlYWR5IGhhbmRsZXMgdGhlIGNwdSBmaWxlcz8KCnRoYW5rcywKCmdyZWcgay1oCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
-aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Norbert,
+
+Thank you for your work.
+
+But, I don't know much about Xen, so I want to ask for help from Zhangfengwei
+and other experts in Xen.
+
+
+Thanks
+Atsushi Kumagai
+
+
+On Fri, 22 Jun 2012 17:18:05 +0200
+Norbert Trapp <Norbert.Trapp@ts.fujitsu.com> wrote:
+
+> 
+> Saving just the dom0 and Xen pages is a good idea because usually
+> the crash can be analysed in dom0 and saving just the Xen and dom0 pages
+> allows the machine to restart quickly.
+> 
+> makedumpfile needs to be modified to exclude domU pages when using Xen4
+> since the Xen implementation has changed. The Xen version can be determined
+> in the kcore file and then either Xen3 or Xen4 functions are used. The other
+> modifications are based on the goal of quickly finding the dom0 and Xen pages.
+> 
+> The domU page exclusion for Xen4 is implemented so far just for x86_64.
+> 
+> The kvtop_xen_x86_64 modification for a faster method to run through the page
+> table	(last_p.._read)	was seen in the crash utility source code.
+> 
+>  arch/x86_64.c  |  244 ++++++++++++++++++++++++++++----------
+>  elf_info.c     |    2 +
+>  makedumpfile.c |  362 ++++++++++++++++++++++++++++++++++++++++++++++++++++----
+>  makedumpfile.h |   79 +++++++++++--
+>  4 files changed, 591 insertions(+), 96 deletions(-)
+> 
+> With kind regards
+> 
+> Norbert Trapp
+> PDG ES&S SWE OS 6
+> 
+> FUJITSU
+> Fujitsu Technology Solutions GmbH
+> Domagkstrasse 28, D-80807 Muenchen, Germany
+> E-mail: Norbert.Trapp@xxxxxxxxxxxxxx
+> Web: ts.fujitsu.com
+> Company details: ts.fujitsu.com/imprint
+> Please be advised that neither Fujitsu, its affiliates, its employees or agents accept liability for any errors,
+> omissions or damages caused by delays of receipt or by any virus infection in this message or its attachments,
+> or which may otherwise arise as a result of this e-mail transmission.
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
