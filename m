@@ -1,28 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SltTO-0006U7-SH
- for kexec@lists.infradead.org; Tue, 03 Jul 2012 03:08:24 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 10FBB3EE0AE
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:37 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id ED54F45DEAD
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:33 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id D332745DE9E
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:33 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id C2B1D1DB803C
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:33 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 73B401DB8038
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:33 +0900 (JST)
+ id 1SltTR-0006UD-RP
+ for kexec@lists.infradead.org; Tue, 03 Jul 2012 03:08:26 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 1260B3EE0B6
+ for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:08:06 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id F073145DE4F
+ for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:08:05 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id DA30C45DE4E
+ for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:08:05 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id CE53A1DB8037
+ for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:08:05 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 877191DB802F
+ for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:08:05 +0900 (JST)
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 1/8] Add dump header for snappy
-Date: Tue, 03 Jul 2012 12:07:32 +0900
-Message-ID: <20120703030732.16633.31086.stgit@localhost6.localdomain6>
+Subject: [PATCH 7/8] Add help message
+Date: Tue, 03 Jul 2012 12:08:04 +0900
+Message-ID: <20120703030804.16633.72963.stgit@localhost6.localdomain6>
 In-Reply-To: <20120703030552.16633.42523.stgit@localhost6.localdomain6>
 References: <20120703030552.16633.42523.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
@@ -44,22 +43,50 @@ Cc: kexec@lists.infradead.org, crash-utility@redhat.com
 Signed-off-by: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
 ---
 
- diskdump_mod.h |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ print_info.c |   16 +++++++++++-----
+ 1 files changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/diskdump_mod.h b/diskdump_mod.h
-index e672485..af060b6 100644
---- a/diskdump_mod.h
-+++ b/diskdump_mod.h
-@@ -80,6 +80,8 @@ struct kdump_sub_header {
- /* page flags */
- #define DUMP_DH_COMPRESSED_ZLIB	0x1	/* page is compressed with zlib */
- #define DUMP_DH_COMPRESSED_LZO	0x2	/* paged is compressed with lzo */
-+#define DUMP_DH_COMPRESSED_SNAPPY	0x4
-+					/* paged is compressed with snappy */
- 
- /* descriptor of each page for vmcore */
- typedef struct page_desc {
+diff --git a/print_info.c b/print_info.c
+index 61cafed..1b455b2 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -39,6 +39,12 @@ print_usage(void)
+ #else
+ 	MSG("  disabled ('-l' option will be ignored.)\n");
+ #endif
++	MSG("snappy support:\n");
++#ifdef USESNAPPY
++	MSG("  enabled\n");
++#else
++	MSG("  disabled ('-p' option will be ignored.)\n");
++#endif
+ 	MSG("\n");
+ 	MSG("Usage:\n");
+ 	MSG("  Creating DUMPFILE:\n");
+@@ -83,10 +89,10 @@ print_usage(void)
+ 	MSG("\n");
+ 	MSG("\n");
+ 	MSG("Available options:\n");
+-	MSG("  [-c|-l]:\n");
+-	MSG("      Compress dump data by each page using zlib for -c option and lzo for\n");
+-	MSG("      -l option. A user cannot specify either of these options with -E option,\n");
+-	MSG("      because the ELF format does not support compressed data.\n");
++	MSG("  [-c|-l|-p]:\n");
++	MSG("      Compress dump data by each page using zlib for -c option, lzo for -l option\n");
++	MSG("      or snappy for -p option. A user cannot specify either of these options with\n");
++	MSG("      -E option, because the ELF format does not support compressed data.\n");
+ 	MSG("      THIS IS ONLY FOR THE CRASH UTILITY.\n");
+ 	MSG("\n");
+ 	MSG("  [-d DL]:\n");
+@@ -222,7 +228,7 @@ print_usage(void)
+ 	MSG("      Overwrite DUMPFILE even if it already exists.\n");
+ 	MSG("\n");
+ 	MSG("  [-h]:\n");
+-	MSG("      Show help message and LZO support status (enabled/disabled).\n");
++	MSG("      Show help message and LZO/snappy support status (enabled/disabled).\n");
+ 	MSG("\n");
+ 	MSG("  [-b <order>]\n");
+ 	MSG("      Specify the cache 2^order pages in ram when generating vmcore info\n");
 
 
 _______________________________________________
