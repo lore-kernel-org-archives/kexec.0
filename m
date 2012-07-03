@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SltTS-0006U4-7h
- for kexec@lists.infradead.org; Tue, 03 Jul 2012 03:08:26 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id B25F93EE0BC
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:28 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 9756845DE50
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:28 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 7E23145DD78
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:28 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 70BC81DB8038
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:28 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 286F3E08002
- for <kexec@lists.infradead.org>; Tue,  3 Jul 2012 12:07:28 +0900 (JST)
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: [PATCH 0/8] makedumpfile: Add Snappy Compression Support
-Date: Tue, 03 Jul 2012 12:07:27 +0900
-Message-ID: <20120703030552.16633.42523.stgit@localhost6.localdomain6>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Slz62-0007Nz-4y
+ for kexec@lists.infradead.org; Tue, 03 Jul 2012 09:08:41 +0000
+Message-ID: <4FF2B5CF.2000707@cn.fujitsu.com>
+Date: Tue, 03 Jul 2012 17:05:19 +0800
+From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
+References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
+ <20120627192236.GB1965@kroah.com> <4FEC29D6.5020109@cn.fujitsu.com>
+ <20120628113738.GA5499@kroah.com> <20120629025848.GC8074@kroah.com>
+In-Reply-To: <20120629025848.GC8074@kroah.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,66 +20,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
 
-This patch series add snappy compression support, applied on top of
-v1.4.4. snappy is fast compressoin algorhythm like lzo, but it's more
-optimized than lzo on x86 machines and some others.
-
-A lot of benchmark is available on the web. Here I only point at my
-benchmark I posted a few weeks ago,
-
-- http://lists.infradead.org/pipermail/kexec/2012-June/006425.html
-
-  where snappy shows mostly as good performance as simple copying on
-  the worst case that input data increases its data size during
-  compression; this means we can use snappy with mostly NO risk.
-
-How to get snappy libraries:
-
-  1) Use yum framework to get snappy and snappy-devel packages, or
-
-  2) Visit official website: http://code.google.com/p/snappy/,
-    download snappy-<version>.tar.gz and then build it.
-
-How to build makedumpfile with snappy support:
-
-  Do make as follows:
-
-  $ make USESNAPPY=on
-
----
-
-HATAYAMA Daisuke (8):
-      Add manual description
-      Add help message
-      Add uncompression processing
-      Add compression processing
-      Notify snappy unsupporting when disabled
-      Add snappy build support
-      Add command-line processing for snappy
-      Add dump header for snappy
-
-
- Makefile       |    5 +++++
- diskdump_mod.h |    2 ++
- makedumpfile.8 |    9 +++++---
- makedumpfile.c |   60 ++++++++++++++++++++++++++++++++++++++++++++++++++------
- makedumpfile.h |    3 +++
- print_info.c   |   16 ++++++++++-----
- 6 files changed, 80 insertions(+), 15 deletions(-)
-
--- 
-
-Thanks.
-HATAYAMA, Daisuke
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQwNuaciDI55pelIDEwOjU4LCBHcmVnIEtIIOWGmemBkzoKPiBPbiBUaHUsIEp1
+biAyOCwgMjAxMiBhdCAwNDozNzozOEFNIC0wNzAwLCBHcmVnIEtIIHdyb3RlOgo+PiBPbiBUaHUs
+IEp1biAyOCwgMjAxMiBhdCAwNTo1NDozMFBNICswODAwLCBZYW5mZWkgWmhhbmcgd3JvdGU6Cj4+
+PiDkuo4gMjAxMuW5tDA25pyIMjjml6UgMDM6MjIsIEdyZWcgS0gg5YaZ6YGTOgo+Pj4+IE9uIFdl
+ZCwgSnVuIDI3LCAyMDEyIGF0IDA0OjU0OjU0UE0gKzA4MDAsIFlhbmZlaSBaaGFuZyB3cm90ZToK
+Pj4+Pj4gVGhpcyBwYXRjaCBleHBvcnQgb2Zmc2V0cyBvZiBmaWVsZHMgdmlhIC9zeXMvZGV2aWNl
+cy9jcHUvdm1jcy8uCj4+Pj4+IEluZGl2aWR1YWwgb2Zmc2V0cyBhcmUgY29udGFpbmVkIGluIHN1
+YmZpbGVzIG5hbWVkIGJ5IHRoZSBmaWxlZCdzCj4+Pj4+IGVuY29kaW5nLCBlLmcuOiAvc3lzL2Rl
+dmljZXMvY3B1L3ZtY3MvMDgwMAo+Pj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiB6aGFuZ3lhbmZl
+aSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4+Pj4+IC0tLQo+Pj4+PiAgZHJpdmVycy9i
+YXNlL2NvcmUuYyB8ICAgMTMgKysrKysrKysrKysrKwo+Pj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCAx
+MyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9iYXNlL2NvcmUuYyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+Pj4gaW5kZXggMzQ2
+YmU4Yi4uZGQwNWVlNyAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9iYXNlL2NvcmUuYwo+Pj4+
+PiArKysgYi9kcml2ZXJzL2Jhc2UvY29yZS5jCj4+Pj4+IEBAIC0yNiw2ICsyNiw3IEBACj4+Pj4+
+ICAjaW5jbHVkZSA8bGludXgvYXN5bmMuaD4KPj4+Pj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50
+aW1lLmg+Cj4+Pj4+ICAjaW5jbHVkZSA8bGludXgvbmV0ZGV2aWNlLmg+Cj4+Pj4+ICsjaW5jbHVk
+ZSA8YXNtL3ZtY3NpbmZvLmg+Cj4+Pj4KPj4+PiBEaWQgeW91IGp1c3QgYnJlYWsgdGhlIGJ1aWxk
+IG9uIGFsbCBvdGhlciBhcmNoZXM/ICBOb3QgbmljZS4KPj4+Pgo+Pj4+PiBAQCAtMTAzOCw2ICsx
+MDM5LDExIEBAIGludCBkZXZpY2VfYWRkKHN0cnVjdCBkZXZpY2UgKmRldikKPj4+Pj4gIAllcnJv
+ciA9IGRwbV9zeXNmc19hZGQoZGV2KTsKPj4+Pj4gIAlpZiAoZXJyb3IpCj4+Pj4+ICAJCWdvdG8g
+RFBNRXJyb3I7Cj4+Pj4+ICsjaWYgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMKSB8fCBkZWZpbmVk
+KENPTkZJR19LVk1fSU5URUxfTU9EVUxFKQo+Pj4+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQo
+ZGV2KTsKPj4+Pj4gKwlpZiAoZXJyb3IpCj4+Pj4+ICsJCWdvdG8gVk1DU0Vycm9yOwo+Pj4+PiAr
+I2VuZGlmCj4+Pj4KPj4+PiBPaCBteSBubywgdGhhdCdzIG5vIHdheSB0byBldmVyIGRvIHRoaXMs
+IHlvdSBrbm93IGJldHRlciB0aGFuIHRoYXQsCj4+Pj4gcGxlYXNlIGZpeC4KPj4+Pgo+Pj4+IGdy
+ZWcgay1oCj4+Pj4KPj4+Cj4+PiBTb3JyeSBmb3IgbXkgdGhvdWdodGxlc3MsIEhlcmUgaXMgdGhl
+IG5ldyBwYXRjaC4KPj4+Cj4+PiAtLS0KPj4+ICBkcml2ZXJzL2Jhc2UvY29yZS5jIHwgICAxMyAr
+KysrKysrKysrKysrCj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAwIGRl
+bGV0aW9ucygtKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJp
+dmVycy9iYXNlL2NvcmUuYwo+Pj4gaW5kZXggMzQ2YmU4Yi4uN2I1MjY2YSAxMDA2NDQKPj4+IC0t
+LSBhL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+
+IEBAIC0zMCw2ICszMCwxMyBAQAo+Pj4gICNpbmNsdWRlICJiYXNlLmgiCj4+PiAgI2luY2x1ZGUg
+InBvd2VyL3Bvd2VyLmgiCj4+PiAgCj4+PiArI2lmIGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTCkg
+fHwgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMX01PRFVMRSkKPj4+ICsjaW5jbHVkZSA8YXNtL3Zt
+Y3NpbmZvLmg+Cj4+PiArI2Vsc2UKPj4+ICtzdGF0aWMgaW5saW5lIGludCB2bWNzX3N5c2ZzX2Fk
+ZChzdHJ1Y3QgZGV2aWNlICpkZXYpIHsgcmV0dXJuIDA7IH0KPj4+ICtzdGF0aWMgaW5saW5lIHZv
+aWQgdm1jc19zeXNmc19yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KSB7IH0KPj4+ICsjZW5kaWYK
+Pj4KPj4ge3NpZ2h9ICBObywgYWdhaW4sIHlvdSBrbm93IGJldHRlciwgZG9uJ3QgZG8gdGhpcy4K
+PiAKPiBPaywgYXMgb3RoZXJzIGhhdmUgcmlnaHRseSBwb2ludGVkIG91dCwgdGhpcyB3YXNuJ3Qg
+dGhlIG1vc3QgaGVscGZ1bAo+IHJldmlldyBjb21tZW50LCBzb3JyeSBhYm91dCB0aGF0Lgo+IAo+
+IEluIExpbnV4LCB3ZSBkb24ndCBwdXQgaWZkZWZzIGluIC5jIGZpbGVzLCB3ZSBwdXQgdGhlbSBp
+biAuaCBmaWxlcy4gIFNlZQo+IG1hbnkgZXhhbXBsZXMgb2YgdGhpcyBhbGwgb3ZlciB0aGUgcGxh
+Y2UuICBUaGF0J3MgbXkgbWFpbiBjb21wbGFpbnRzIHRoZQo+IHBhc3QgdHdvIHRpbWVzIG9mIHRo
+aXMgcGF0Y2guCj4gCj4gQnV0LCBmb3IgdGhpcywgSSB3b3VsZCBxdWVzdGlvbiB3aHkgeW91IGV2
+ZW4gd2FudCAvIG5lZWQgdG8gZG8gdGhpcyBpbgo+IHRoZSBkcml2ZXJzL2Jhc2UvY29yZS8gZmls
+ZSBpbiB0aGUgZmlyc3QgcGxhY2UuICBTaG91bGRuJ3QgaXQgYmUgaW4gc29tZQo+IGFyY2ggb3Ig
+Y3B1IHNwZWNpZmljIGZpbGUgaW5zdGVhZCB0aGF0IGFscmVhZHkgaGFuZGxlcyB0aGUgY3B1IGZp
+bGVzPwo+IAo+IHRoYW5rcywKPiAKPiBncmVnIGstaAo+IAoKTWFueSB0aGFua3MuIEkgaGF2ZSBt
+b3ZlZCB0aGUgY29kZSB0byBteSB2bWNzaW5mb19pbnRlbCBtb2R1bGUuClRoYW5rcyBhZ2FpbiBm
+b3IgeW91ciBoZWxwZnVsIGNvbW1lbnQuCgpUaGFua3MKWmhhbmcgWWFuZmVpCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
