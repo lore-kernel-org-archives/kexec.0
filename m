@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Slz62-0007Nz-4y
- for kexec@lists.infradead.org; Tue, 03 Jul 2012 09:08:41 +0000
-Message-ID: <4FF2B5CF.2000707@cn.fujitsu.com>
-Date: Tue, 03 Jul 2012 17:05:19 +0800
-From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v3 4/5] Sysfs: Export VMCSINFO via sysfs
-References: <4FEAC945.50700@cn.fujitsu.com> <4FEACA5E.4090009@cn.fujitsu.com>
- <20120627192236.GB1965@kroah.com> <4FEC29D6.5020109@cn.fujitsu.com>
- <20120628113738.GA5499@kroah.com> <20120629025848.GC8074@kroah.com>
-In-Reply-To: <20120629025848.GC8074@kroah.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SmIbG-0002ZV-QL
+ for kexec@lists.infradead.org; Wed, 04 Jul 2012 05:58:10 +0000
+Date: Wed, 4 Jul 2012 14:54:06 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
+ memory consumption.
+Message-Id: <20120704145406.bf22a34cec586e3c1e8e29b5@mxc.nes.nec.co.jp>
+In-Reply-To: <20120702123905.GG24929@redhat.com>
+References: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <20120702123905.GG24929@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,64 +20,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, Avi Kivity <avi@redhat.com>, ebiederm@xmission.com
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org
 
-5LqOIDIwMTLlubQwNuaciDI55pelIDEwOjU4LCBHcmVnIEtIIOWGmemBkzoKPiBPbiBUaHUsIEp1
-biAyOCwgMjAxMiBhdCAwNDozNzozOEFNIC0wNzAwLCBHcmVnIEtIIHdyb3RlOgo+PiBPbiBUaHUs
-IEp1biAyOCwgMjAxMiBhdCAwNTo1NDozMFBNICswODAwLCBZYW5mZWkgWmhhbmcgd3JvdGU6Cj4+
-PiDkuo4gMjAxMuW5tDA25pyIMjjml6UgMDM6MjIsIEdyZWcgS0gg5YaZ6YGTOgo+Pj4+IE9uIFdl
-ZCwgSnVuIDI3LCAyMDEyIGF0IDA0OjU0OjU0UE0gKzA4MDAsIFlhbmZlaSBaaGFuZyB3cm90ZToK
-Pj4+Pj4gVGhpcyBwYXRjaCBleHBvcnQgb2Zmc2V0cyBvZiBmaWVsZHMgdmlhIC9zeXMvZGV2aWNl
-cy9jcHUvdm1jcy8uCj4+Pj4+IEluZGl2aWR1YWwgb2Zmc2V0cyBhcmUgY29udGFpbmVkIGluIHN1
-YmZpbGVzIG5hbWVkIGJ5IHRoZSBmaWxlZCdzCj4+Pj4+IGVuY29kaW5nLCBlLmcuOiAvc3lzL2Rl
-dmljZXMvY3B1L3ZtY3MvMDgwMAo+Pj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiB6aGFuZ3lhbmZl
-aSA8emhhbmd5YW5mZWlAY24uZnVqaXRzdS5jb20+Cj4+Pj4+IC0tLQo+Pj4+PiAgZHJpdmVycy9i
-YXNlL2NvcmUuYyB8ICAgMTMgKysrKysrKysrKysrKwo+Pj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCAx
-MyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9iYXNlL2NvcmUuYyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+Pj4gaW5kZXggMzQ2
-YmU4Yi4uZGQwNWVlNyAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9iYXNlL2NvcmUuYwo+Pj4+
-PiArKysgYi9kcml2ZXJzL2Jhc2UvY29yZS5jCj4+Pj4+IEBAIC0yNiw2ICsyNiw3IEBACj4+Pj4+
-ICAjaW5jbHVkZSA8bGludXgvYXN5bmMuaD4KPj4+Pj4gICNpbmNsdWRlIDxsaW51eC9wbV9ydW50
-aW1lLmg+Cj4+Pj4+ICAjaW5jbHVkZSA8bGludXgvbmV0ZGV2aWNlLmg+Cj4+Pj4+ICsjaW5jbHVk
-ZSA8YXNtL3ZtY3NpbmZvLmg+Cj4+Pj4KPj4+PiBEaWQgeW91IGp1c3QgYnJlYWsgdGhlIGJ1aWxk
-IG9uIGFsbCBvdGhlciBhcmNoZXM/ICBOb3QgbmljZS4KPj4+Pgo+Pj4+PiBAQCAtMTAzOCw2ICsx
-MDM5LDExIEBAIGludCBkZXZpY2VfYWRkKHN0cnVjdCBkZXZpY2UgKmRldikKPj4+Pj4gIAllcnJv
-ciA9IGRwbV9zeXNmc19hZGQoZGV2KTsKPj4+Pj4gIAlpZiAoZXJyb3IpCj4+Pj4+ICAJCWdvdG8g
-RFBNRXJyb3I7Cj4+Pj4+ICsjaWYgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMKSB8fCBkZWZpbmVk
-KENPTkZJR19LVk1fSU5URUxfTU9EVUxFKQo+Pj4+PiArCWVycm9yID0gdm1jc19zeXNmc19hZGQo
-ZGV2KTsKPj4+Pj4gKwlpZiAoZXJyb3IpCj4+Pj4+ICsJCWdvdG8gVk1DU0Vycm9yOwo+Pj4+PiAr
-I2VuZGlmCj4+Pj4KPj4+PiBPaCBteSBubywgdGhhdCdzIG5vIHdheSB0byBldmVyIGRvIHRoaXMs
-IHlvdSBrbm93IGJldHRlciB0aGFuIHRoYXQsCj4+Pj4gcGxlYXNlIGZpeC4KPj4+Pgo+Pj4+IGdy
-ZWcgay1oCj4+Pj4KPj4+Cj4+PiBTb3JyeSBmb3IgbXkgdGhvdWdodGxlc3MsIEhlcmUgaXMgdGhl
-IG5ldyBwYXRjaC4KPj4+Cj4+PiAtLS0KPj4+ICBkcml2ZXJzL2Jhc2UvY29yZS5jIHwgICAxMyAr
-KysrKysrKysrKysrCj4+PiAgMSBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAwIGRl
-bGV0aW9ucygtKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Jhc2UvY29yZS5jIGIvZHJp
-dmVycy9iYXNlL2NvcmUuYwo+Pj4gaW5kZXggMzQ2YmU4Yi4uN2I1MjY2YSAxMDA2NDQKPj4+IC0t
-LSBhL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+ICsrKyBiL2RyaXZlcnMvYmFzZS9jb3JlLmMKPj4+
-IEBAIC0zMCw2ICszMCwxMyBAQAo+Pj4gICNpbmNsdWRlICJiYXNlLmgiCj4+PiAgI2luY2x1ZGUg
-InBvd2VyL3Bvd2VyLmgiCj4+PiAgCj4+PiArI2lmIGRlZmluZWQoQ09ORklHX0tWTV9JTlRFTCkg
-fHwgZGVmaW5lZChDT05GSUdfS1ZNX0lOVEVMX01PRFVMRSkKPj4+ICsjaW5jbHVkZSA8YXNtL3Zt
-Y3NpbmZvLmg+Cj4+PiArI2Vsc2UKPj4+ICtzdGF0aWMgaW5saW5lIGludCB2bWNzX3N5c2ZzX2Fk
-ZChzdHJ1Y3QgZGV2aWNlICpkZXYpIHsgcmV0dXJuIDA7IH0KPj4+ICtzdGF0aWMgaW5saW5lIHZv
-aWQgdm1jc19zeXNmc19yZW1vdmUoc3RydWN0IGRldmljZSAqZGV2KSB7IH0KPj4+ICsjZW5kaWYK
-Pj4KPj4ge3NpZ2h9ICBObywgYWdhaW4sIHlvdSBrbm93IGJldHRlciwgZG9uJ3QgZG8gdGhpcy4K
-PiAKPiBPaywgYXMgb3RoZXJzIGhhdmUgcmlnaHRseSBwb2ludGVkIG91dCwgdGhpcyB3YXNuJ3Qg
-dGhlIG1vc3QgaGVscGZ1bAo+IHJldmlldyBjb21tZW50LCBzb3JyeSBhYm91dCB0aGF0Lgo+IAo+
-IEluIExpbnV4LCB3ZSBkb24ndCBwdXQgaWZkZWZzIGluIC5jIGZpbGVzLCB3ZSBwdXQgdGhlbSBp
-biAuaCBmaWxlcy4gIFNlZQo+IG1hbnkgZXhhbXBsZXMgb2YgdGhpcyBhbGwgb3ZlciB0aGUgcGxh
-Y2UuICBUaGF0J3MgbXkgbWFpbiBjb21wbGFpbnRzIHRoZQo+IHBhc3QgdHdvIHRpbWVzIG9mIHRo
-aXMgcGF0Y2guCj4gCj4gQnV0LCBmb3IgdGhpcywgSSB3b3VsZCBxdWVzdGlvbiB3aHkgeW91IGV2
-ZW4gd2FudCAvIG5lZWQgdG8gZG8gdGhpcyBpbgo+IHRoZSBkcml2ZXJzL2Jhc2UvY29yZS8gZmls
-ZSBpbiB0aGUgZmlyc3QgcGxhY2UuICBTaG91bGRuJ3QgaXQgYmUgaW4gc29tZQo+IGFyY2ggb3Ig
-Y3B1IHNwZWNpZmljIGZpbGUgaW5zdGVhZCB0aGF0IGFscmVhZHkgaGFuZGxlcyB0aGUgY3B1IGZp
-bGVzPwo+IAo+IHRoYW5rcywKPiAKPiBncmVnIGstaAo+IAoKTWFueSB0aGFua3MuIEkgaGF2ZSBt
-b3ZlZCB0aGUgY29kZSB0byBteSB2bWNzaW5mb19pbnRlbCBtb2R1bGUuClRoYW5rcyBhZ2FpbiBm
-b3IgeW91ciBoZWxwZnVsIGNvbW1lbnQuCgpUaGFua3MKWmhhbmcgWWFuZmVpCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Vivek,
+
+On Mon, 2 Jul 2012 08:39:05 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
+
+> On Fri, Jun 29, 2012 at 11:13:20AM +0900, Atsushi Kumagai wrote:
+> > Hello,
+> > 
+> > I improved prototype of cyclic processing as version 2.
+> > If there is no objection to basic idea, I want to consider the things
+> > related to performance as next step. (Concretely, buffer size and the patch set
+> > HATAYAMA-san sent a short time ago.) 
+> > 
+> 
+> Hi Atushi san,
+> 
+> Good to see this work making progress. I have few queries.
+> 
+> - Do you have some numbers for bigger machines like 1TB or higher memory. 
+>   I am curious to know how bad is the time penalty.
+
+I'm afraid that I don't have such a large machine, so I need someone who can
+measure execution time in large machine.
+
+> - Will this work with option -F (flattned format). Often people save
+>   filtered dump over ssh and we need to make sure it does work with -F
+>   option too.
+
+Yes, the cyclic processing supports flattened format too.
+
+> > > Version 1:
+> >  
+> >   http://lists.infradead.org/pipermail/kexec/2012-May/006363.html
+> 
+> - I have few queries about the diagram in the link above.
+> 
+> - What is 1st cycle, 2nd cycle and 3rd cycle. Are we cycling thorough
+>   all the pages 3 times for everything?
+
+First, "3 times" is only for example. Practically, the number of cycle is 
+determined based on system memory size and BUFSIZE_CYCLIC:
+  
+  number of cycle = memory size / page size(4k) / bit per byte(8) / BUFSIZE_CYCLIC
+
+The beginning, the cause of the issue we discussed is to save the analytical 
+data(called bitmap) for whole memory at a time. The bitmap size increases 
+linearly based on system memory size, this issue will be clearly in large system.
+
+Therefore, we considered cyclic processing to work in constant memory space. 
+In cyclic processing mode, makedumpfile reads a constant region of memory,
+analyzes it, and writes pages to dumpfile repeatedly from start of memory to the end. 
+We called the processing for a constant region "one cycle".
+Each cycle creates the partial bitmap only for a constant region, so bitmap size
+will be kept constantly regardless of system memory size.
+
+> - What is 1st bitmap and 2nd bitmap and page_header? And why 3 cycles for
+>   each.
+> 
+> - And why 3 cycles for page_data.
+
+The kdump compressed format was described by Ohmichi-san, please see below.
+  
+  http://www.redhat.com/archives/crash-utility/2008-August/msg00001.html
+
+1st bitmap, 2nd bitmap, page_header and page_data correspond to each constant region,
+so it is necessary to write them at the same cycle.
+
+
+Thanks
+Atsushi Kumagai
+
+> Thanks
+> Vivek
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
