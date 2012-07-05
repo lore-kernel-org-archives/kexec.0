@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from nat28.tlf.novell.com ([130.57.49.28])
+Received: from mx4-phx2.redhat.com ([209.132.183.25])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Smoj1-0008VR-CF
- for kexec@lists.infradead.org; Thu, 05 Jul 2012 16:16:19 +0000
-Message-Id: <4FF5D557020000780008DEA5@nat28.tlf.novell.com>
-Date: Thu, 05 Jul 2012 16:56:39 +0100
-From: "Jan Beulich" <JBeulich@suse.com>
-Subject: Re: [Xen-devel] [PATCH 1/5] xen: Always calculate max_cpus
- value
-References: <20120705145839.GB2007@host-192-168-1-59.local.net-space.pl>
- <20120705150008.GC2007@host-192-168-1-59.local.net-space.pl>
-In-Reply-To: <20120705150008.GC2007@host-192-168-1-59.local.net-space.pl>
-Mime-Version: 1.0
-Content-Disposition: inline
+ id 1SmpW8-0002iK-AP
+ for kexec@lists.infradead.org; Thu, 05 Jul 2012 17:07:23 +0000
+Date: Thu, 05 Jul 2012 13:06:45 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Subject: Re: [PATCH 0/5] crash: Small bundle of fixes for Xen
+Message-ID: <cd5c6d38-c888-4272-b1ba-13c82acb6a12@zmail15.collab.prod.int.phx2.redhat.com>
+In-Reply-To: <20120705153333.GA27568@phenom.dumpdata.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,50 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: olaf@aepfle.de, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, xen-devel <xen-devel@lists.xen.org>, anderson@redhat.com, crash-utility@redhat.com
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, andrew cooper3 <andrew.cooper3@citrix.com>, Daniel Kiper <daniel.kiper@oracle.com>, kexec@lists.infradead.org, crash-utility@redhat.com
 
->>> On 05.07.12 at 17:00, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> max_cpus is not available since 20374 changeset (Miscellaneous data
-> placement adjustments). It was moved to __initdata section. This section
-> is freed after Xen initialization. Assume that max_cpus is always
-> equal to XEN_HYPER_SIZE(cpumask_t) * 8.
 
-Using nr_cpu_ids, when available, would seem a better fit. And
-I donm't see why, on dumps from old hypervisors, you wouldn't
-want to continue using max_cpus. Oh, wait, I see - you would
-have to be able to tell whether it actually sits in .init.data, which
-might not be strait forward.
 
-Jan
-
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+----- Original Message -----
+> On Thu, Jul 05, 2012 at 05:29:50PM +0200, Daniel Kiper wrote:
+> > On Thu, Jul 05, 2012 at 11:15:29AM -0400, Dave Anderson wrote:
+> > >
+> > >
+> > > ----- Original Message -----
+> > > > Hi,
+> > > >
+> > > > It looks that Xen support for crash have not been maintained
+> > > > since 2009. I am trying to fix this. Here it is small
+> > > > bundle of fixes:
+> > > >   - xen: Always calculate max_cpus value,
+> > > >   - xen: Read only crash notes for onlined CPUs,
+> > > >   - x86/xen: Read variables from dynamically allocated per_cpu
+> > > >   data,
+> > > >   - xen: Get idle data from alternative source,
+> > > >   - xen: Read data correctly from dynamically allocated console
+> > > >   ring
+> > > >   too.
+> > > >
+> > > > Daniel
+> > >
+> > > Daniel,
+> > >
+> > > Can you absolutely confirm that these changes are all
+> > > backwards-compatible?
+> > 
+> > I have not done tests with older versions of Xen. However,
+> > I made all patches with backward compatibility in mind. Anyway,
+> > If you wish I could do tests with let's say Xen Ver. 3.4
+> > and Xen Linux Kernel Ver. 2.6.18 at least.
 > 
-> diff -Npru crash-6.0.8.orig/xen_hyper.c crash-6.0.8/xen_hyper.c
-> --- crash-6.0.8.orig/xen_hyper.c	2012-06-29 16:59:18.000000000 +0200
-> +++ crash-6.0.8/xen_hyper.c	2012-07-05 14:52:59.000000000 +0200
-> @@ -1879,11 +1879,9 @@ xen_hyper_get_cpu_info(void)
->  	uint *cpu_idx;
->  	int i, j, cpus;
->  
-> -	get_symbol_data("max_cpus", sizeof(xht->max_cpus), &xht->max_cpus);
->  	XEN_HYPER_STRUCT_SIZE_INIT(cpumask_t, "cpumask_t");
-> -	if (XEN_HYPER_SIZE(cpumask_t) * 8 > xht->max_cpus) {
-> -		xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
-> -	}
-> +	xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
-> +
->  	if (xht->cpumask) {
->  		free(xht->cpumask);
->  	}
-> 
-> _______________________________________________
-> Xen-devel mailing list
-> Xen-devel@lists.xen.org 
-> http://lists.xen.org/xen-devel 
+> I think Dave is worried about it breaking with the version that is bundled
+> with RHEL5U8?
 
+Correct...
 
-
+Dave
+ 
 
 _______________________________________________
 kexec mailing list
