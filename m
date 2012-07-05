@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from acsinet15.oracle.com ([141.146.126.227])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SmoMV-0003FA-EZ
- for kexec@lists.infradead.org; Thu, 05 Jul 2012 15:53:01 +0000
-Date: Thu, 5 Jul 2012 17:51:57 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 0/5] crash: Small bundle of fixes for Xen
-Message-ID: <20120705155157.GI2007@host-192-168-1-59.local.net-space.pl>
-References: <20120705152950.GH2007@host-192-168-1-59.local.net-space.pl>
- <3afe7c6f-2802-4f4c-9376-62ad634e0c67@zmail15.collab.prod.int.phx2.redhat.com>
-MIME-Version: 1.0
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Smoj1-0008VR-CF
+ for kexec@lists.infradead.org; Thu, 05 Jul 2012 16:16:19 +0000
+Message-Id: <4FF5D557020000780008DEA5@nat28.tlf.novell.com>
+Date: Thu, 05 Jul 2012 16:56:39 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] [PATCH 1/5] xen: Always calculate max_cpus
+ value
+References: <20120705145839.GB2007@host-192-168-1-59.local.net-space.pl>
+ <20120705150008.GC2007@host-192-168-1-59.local.net-space.pl>
+In-Reply-To: <20120705150008.GC2007@host-192-168-1-59.local.net-space.pl>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3afe7c6f-2802-4f4c-9376-62ad634e0c67@zmail15.collab.prod.int.phx2.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,51 +25,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Anderson <anderson@redhat.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad wilk <konrad.wilk@oracle.com>, andrew cooper3 <andrew.cooper3@citrix.com>, kexec@lists.infradead.org, crash-utility@redhat.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: olaf@aepfle.de, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, xen-devel <xen-devel@lists.xen.org>, anderson@redhat.com, crash-utility@redhat.com
 
-On Thu, Jul 05, 2012 at 11:39:52AM -0400, Dave Anderson wrote:
->
->
-> ----- Original Message -----
-> > On Thu, Jul 05, 2012 at 11:15:29AM -0400, Dave Anderson wrote:
-> > >
-> > >
-> > > ----- Original Message -----
-> > > > Hi,
-> > > >
-> > > > It looks that Xen support for crash have not been maintained
-> > > > since 2009. I am trying to fix this. Here it is small
-> > > > bundle of fixes:
-> > > >   - xen: Always calculate max_cpus value,
-> > > >   - xen: Read only crash notes for onlined CPUs,
-> > > >   - x86/xen: Read variables from dynamically allocated per_cpu
-> > > >   data,
-> > > >   - xen: Get idle data from alternative source,
-> > > >   - xen: Read data correctly from dynamically allocated console
-> > > >   ring
-> > > >   too.
-> > > >
-> > > > Daniel
-> > >
-> > > Daniel,
-> > >
-> > > Can you absolutely confirm that these changes are all
-> > > backwards-compatible?
-> >
-> > I have not done tests with older versions of Xen. However,
-> > I made all patches with backward compatibility in mind. Anyway,
-> > If you wish I could do tests with let's say Xen Ver. 3.4
-> > and Xen Linux Kernel Ver. 2.6.18 at least.
-> >
-> > Daniel
->
-> That would be helpful -- I have very few Xen hypervisor sample dumpfiles,
-> and if I'm not mistaken, RHEL5 only went as far as Xen 3.1-something?
+>>> On 05.07.12 at 17:00, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> max_cpus is not available since 20374 changeset (Miscellaneous data
+> placement adjustments). It was moved to __initdata section. This section
+> is freed after Xen initialization. Assume that max_cpus is always
+> equal to XEN_HYPER_SIZE(cpumask_t) * 8.
 
-No problem. I will email you back.
+Using nr_cpu_ids, when available, would seem a better fit. And
+I donm't see why, on dumps from old hypervisors, you wouldn't
+want to continue using max_cpus. Oh, wait, I see - you would
+have to be able to tell whether it actually sits in .init.data, which
+might not be strait forward.
 
-Daniel
+Jan
+
+> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+> 
+> diff -Npru crash-6.0.8.orig/xen_hyper.c crash-6.0.8/xen_hyper.c
+> --- crash-6.0.8.orig/xen_hyper.c	2012-06-29 16:59:18.000000000 +0200
+> +++ crash-6.0.8/xen_hyper.c	2012-07-05 14:52:59.000000000 +0200
+> @@ -1879,11 +1879,9 @@ xen_hyper_get_cpu_info(void)
+>  	uint *cpu_idx;
+>  	int i, j, cpus;
+>  
+> -	get_symbol_data("max_cpus", sizeof(xht->max_cpus), &xht->max_cpus);
+>  	XEN_HYPER_STRUCT_SIZE_INIT(cpumask_t, "cpumask_t");
+> -	if (XEN_HYPER_SIZE(cpumask_t) * 8 > xht->max_cpus) {
+> -		xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
+> -	}
+> +	xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
+> +
+>  	if (xht->cpumask) {
+>  		free(xht->cpumask);
+>  	}
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xen.org 
+> http://lists.xen.org/xen-devel 
+
+
+
 
 _______________________________________________
 kexec mailing list
