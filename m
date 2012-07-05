@@ -1,31 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from e28smtp04.in.ibm.com ([122.248.162.4])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Smek0-0007xM-CN
- for kexec@lists.infradead.org; Thu, 05 Jul 2012 05:36:39 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 404653EE0C1
- for <kexec@lists.infradead.org>; Thu,  5 Jul 2012 14:36:31 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2A1FC45DD78
- for <kexec@lists.infradead.org>; Thu,  5 Jul 2012 14:36:31 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 12CAC45DD74
- for <kexec@lists.infradead.org>; Thu,  5 Jul 2012 14:36:31 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 05A061DB803A
- for <kexec@lists.infradead.org>; Thu,  5 Jul 2012 14:36:31 +0900 (JST)
-Received: from m024.s.css.fujitsu.com (m024.s.css.fujitsu.com [10.0.81.64])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B84E41DB8038
- for <kexec@lists.infradead.org>; Thu,  5 Jul 2012 14:36:30 +0900 (JST)
-Date: Thu, 05 Jul 2012 14:36:02 +0900 (JST)
-Message-Id: <20120705.143602.535885847.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH 0/8] makedumpfile: Add Snappy Compression Support
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120705140559.fcaac5a58fa4ab9b6532734c@mxc.nes.nec.co.jp>
-References: <20120703030552.16633.42523.stgit@localhost6.localdomain6>
- <20120705140559.fcaac5a58fa4ab9b6532734c@mxc.nes.nec.co.jp>
-Mime-Version: 1.0
+ id 1Smgwo-00042M-JX
+ for kexec@lists.infradead.org; Thu, 05 Jul 2012 07:58:03 +0000
+Received: from /spool/local
+ by e28smtp04.in.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <suzuki@in.ibm.com>;
+ Thu, 5 Jul 2012 13:27:22 +0530
+Received: from d28av01.in.ibm.com (d28av01.in.ibm.com [9.184.220.63])
+ by d28relay02.in.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q657vJiF6685094
+ for <kexec@lists.infradead.org>; Thu, 5 Jul 2012 13:27:19 +0530
+Received: from d28av01.in.ibm.com (loopback [127.0.0.1])
+ by d28av01.in.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q65DQro8031683
+ for <kexec@lists.infradead.org>; Thu, 5 Jul 2012 18:56:53 +0530
+Message-ID: <4FF548C8.8000302@in.ibm.com>
+Date: Thu, 05 Jul 2012 13:26:56 +0530
+From: "Suzuki K. Poulose" <suzuki@in.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH] [ppc] Do not reserve cpu spin-table for crash kernel
+References: <CAEsOVNeg2aogCwCy-v3ez4cC4VPF79A4PWRaO2ohDj_ypqCWmg@mail.gmail.com>
+ <20120524060933.14035.42732.stgit@suzukikp.in.ibm.com>
+ <4FDECA4F.6030905@in.ibm.com> <4FE848B9.5000001@in.ibm.com>
+In-Reply-To: <4FE848B9.5000001@in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,71 +33,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, crash-utility@redhat.com
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/8] makedumpfile: Add Snappy Compression Support
-Date: Thu, 5 Jul 2012 14:05:59 +0900
+On 06/25/2012 04:47 PM, Suzuki K. Poulose wrote:
+> Simon,
+>
 
-> On Tue, 03 Jul 2012 12:07:27 +0900
-> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+Ping.
 
-> 
-> Thank you for your work.
-> 
-> I will merge your patches into the next version with small addition:
-> 
-> diff --git a/README b/README
-> index ae986d1..638b111 100644
-> --- a/README
-> +++ b/README
-> @@ -45,6 +45,9 @@
->    6.Build with lzo support:
->      # make USELZO=on ; make install
->      The user has to prepare lzo library.
-> +  7.Build with snappy support:
-> +    # make USESNAPPY=on ; make install
-> +    The user has to prepare snappy library.
-> 
->  * SUPPORTED KERNELS
->    This makedumpfile supports the following kernels.
-> 
+Suzuki
 
-Thanks. I overlooked README file...
+> Please let me know your response.
+>
+> Thanks
+> Suzuki
+>
+> On 06/18/2012 11:57 AM, Suzuki K. Poulose wrote:
+>> On 05/24/2012 11:39 AM, Suzuki K. Poulose wrote:
+>>> As of now, the kexec reserves the spin-table for all the CPUs
+>>> on an SMP machine. The spin-table is pointed to by the
+>>> cpu-release-addr property in the device-tree. Reserving the
+>>> spin-table in the crash kernel will cause a BUG(), if the table
+>>> lies outside the memory reserved for the crashkernel.
+>>>
+>>> Disable reserving the spin-table regions and use maxcpus=1 to
+>>> use only the crashing CPU to boot the crash kernel.
+>>>
+>>> Signed-off-by: Suzuki K. Poulose<suzuki@in.ibm.com>
+>>
+>> Simon,
+>>
+>> Any response on this one ?
+>>
+>> I have tested this on a Currituck board (476, SMP) with a UP kernel.
+>> Without this patch, the secondary kernel hits 'PANIC' in boot while
+>> trying to reserve a memory(the spin table), outside the memory
+>> range(crash reserve).
+>>
+>>
+>> Thanks
+>> Suzuki
+>>
+>>> ---
+>>>
+>>> kexec/arch/ppc/crashdump-powerpc.c | 19 +++++++++++++------
+>>> kexec/arch/ppc/fixup_dtb.c | 4 ++++
+>>> 2 files changed, 17 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/kexec/arch/ppc/crashdump-powerpc.c
+>>> b/kexec/arch/ppc/crashdump-powerpc.c
+>>> index 1bef69b..4c8c75d 100644
+>>> --- a/kexec/arch/ppc/crashdump-powerpc.c
+>>> +++ b/kexec/arch/ppc/crashdump-powerpc.c
+>>> @@ -262,10 +262,19 @@ static void ulltoa(unsigned long long i, char
+>>> *str)
+>>> }
+>>> }
+>>>
+>>> +/* Append str to cmdline */
+>>> +static void add_cmdline(char *cmdline, char *str)
+>>> +{
+>>> + int cmdlen = strlen(cmdline) + strlen(str);
+>>> + if (cmdlen> (COMMAND_LINE_SIZE - 1))
+>>> + die("Command line overflow\n");
+>>> + strcat(cmdline, str);
+>>> +}
+>>> +
+>>> static int add_cmdline_param(char *cmdline, unsigned long long addr,
+>>> char *cmdstr, char *byte)
+>>> {
+>>> - int cmdlen, len, align = 1024;
+>>> + int align = 1024;
+>>> char str[COMMAND_LINE_SIZE], *ptr;
+>>>
+>>> /* Passing in =xxxK / =xxxM format. Saves space required in cmdline.*/
+>>> @@ -284,11 +293,8 @@ static int add_cmdline_param(char *cmdline,
+>>> unsigned long long addr,
+>>> ptr += strlen(str);
+>>> ulltoa(addr, ptr);
+>>> strcat(str, byte);
+>>> - len = strlen(str);
+>>> - cmdlen = strlen(cmdline) + len;
+>>> - if (cmdlen> (COMMAND_LINE_SIZE - 1))
+>>> - die("Command line overflow\n");
+>>> - strcat(cmdline, str);
+>>> +
+>>> + add_cmdline(cmdline, str);
+>>>
+>>> dbgprintf("Command line after adding elfcorehdr: %s\n", cmdline);
+>>>
+>>> @@ -365,6 +371,7 @@ int load_crashdump_segments(struct kexec_info
+>>> *info, char *mod_cmdline,
+>>> */
+>>> add_cmdline_param(mod_cmdline, elfcorehdr, " elfcorehdr=", "K");
+>>> add_cmdline_param(mod_cmdline, saved_max_mem, " savemaxmem=", "M");
+>>> + add_cmdline(mod_cmdline, " maxcpus=1");
+>>> return 0;
+>>> }
+>>>
+>>> diff --git a/kexec/arch/ppc/fixup_dtb.c b/kexec/arch/ppc/fixup_dtb.c
+>>> index e9890a4..f832026 100644
+>>> --- a/kexec/arch/ppc/fixup_dtb.c
+>>> +++ b/kexec/arch/ppc/fixup_dtb.c
+>>> @@ -172,6 +172,9 @@ static void fixup_reserve_regions(struct
+>>> kexec_info *info, char *blob_buf)
+>>> }
+>>> }
+>>>
+>>> +#if 0
+>>> + /* XXX: Do not reserve spin-table for CPUs. */
+>>> +
+>>> /* Add reserve regions for cpu-release-addr */
+>>> nodeoffset = fdt_node_offset_by_prop_value(blob_buf, -1,
+>>> "device_type", "cpu", 4);
+>>> while (nodeoffset != -FDT_ERR_NOTFOUND) {
+>>> @@ -201,6 +204,7 @@ static void fixup_reserve_regions(struct
+>>> kexec_info *info, char *blob_buf)
+>>> nodeoffset = fdt_node_offset_by_prop_value(blob_buf, nodeoffset,
+>>> "device_type", "cpu", 4);
+>>> }
+>>> +#endif
+>>>
+>>> out:
+>>> print_fdt_reserve_regions(blob_buf);
+>>>
+>>>
+>>> _______________________________________________
+>>> kexec mailing list
+>>> kexec@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/kexec
+>>>
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-> 
-> In addition, I did brief performance test with your patches:
->   - The source data is a vmcore saved on the disk, it might be sparse data.
->   - makedumpfile writes dumpfile to the same disk as the source data.
->   - execution time is average of 5 times.
-> 
->                         |    source     |    zlib     |     LZO     |   snappy  
-> ------------------------+---------------+-------------+-------------+-------------
->        size (byte)      | 5,107,498,116 | 242,398,239 | 309,549,499 | 487,542,710 
->   compression  ratio(%) |      ---      |     4.75    |     6.06    |    9.55
->    execution time (sec) |      ---      |      143    |     49.6    |    51.2
-> 
-> 
-> It seems that LZO still has worth in the case that good compression ratio is expected,
-> as you said in your benchmark report.
-> 
-
-Yes, this is just as I'm assuming. I think it's better to use snappy
-for the machine with hundreads of gigabytes or more. For the machine
-with less than that, it's still reasonable to use LZO because risk at
-the worst case is small.
-
-Also, snappy is well optimized for little endian, 64-bit
-machines. Though I don't see this actually to be honest, this might
-show considerably bad performance on other archs except for x86_64.
-
-Thanks.
-HATAYAMA, Daisuke
 
 
 _______________________________________________
