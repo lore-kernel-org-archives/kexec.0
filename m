@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
+Received: from nat28.tlf.novell.com ([130.57.49.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sn8un-0002lx-5e
- for kexec@lists.infradead.org; Fri, 06 Jul 2012 13:50:00 +0000
-Date: Fri, 6 Jul 2012 22:49:24 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Message-ID: <20120706134923.GA8320@verge.net.au>
-References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
-MIME-Version: 1.0
+ id 1Sn8xm-00037i-Bl
+ for kexec@lists.infradead.org; Fri, 06 Jul 2012 13:52:51 +0000
+Message-Id: <4FF70A09020000780008E155@nat28.tlf.novell.com>
+Date: Fri, 06 Jul 2012 14:53:45 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] incorrect layout of globals from head_64.S
+ during kexec boot
+References: <20120705210607.GA26908@aepfle.de>
+ <20120706084120.GA31219@router-fw-old.local.net-space.pl>
+ <20120706120750.GA8970@aepfle.de>
+ <4FF6FCA9020000780008E0BB@nat28.tlf.novell.com>
+ <20120706133105.GA20600@aepfle.de>
+In-Reply-To: <20120706133105.GA20600@aepfle.de>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,18 +28,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: Olaf Hering <olaf@aepfle.de>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Kiper <dkiper@net-space.pl>
 
-On Thu, Jul 05, 2012 at 02:16:35PM +0200, Daniel Kiper wrote:
-> vmcoreinfo file could exists under /sys/kernel (valid on baremetal only)
-> and/or under /sys/hypervisor (valid when Xen dom0 is running).
-> Read only one of them. It means that only one PT_NOTE will be
-> always created. Remove extra code for second PT_NOTE creation.
+>>> On 06.07.12 at 15:31, Olaf Hering <olaf@aepfle.de> wrote:
+> On Fri, Jul 06, Jan Beulich wrote:
 > 
-> Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+>> >>> On 06.07.12 at 14:07, Olaf Hering <olaf@aepfle.de> wrote:
+>> > But adding some debug to inspect
+>> > *output in parse_elf() shows that the second entry in program headers is
+>> > already shifted by 44 bytes in my testing, the others are shifted by the
+>> > same amount.
+>> 
+>> Unfortunately it's not clear what is shifted - the printout below
+>> looks just fine. Also, from your first mail I understood that the shift
+>> there was by an amount not divisible by 4 - does that amount vary?
+> 
+> The memory location of the second LOAD entry (the .data section) is wrong.
+> It should be at 0x1c00000, but in fact its content starts at 0x1c0002c.
+> I looked at the x86 boot code, the vmlinux is gzipped and placed as
+> binary blob, which is then extracted by decompress().
 
-Thanks, applied.
+Are the virtual addresses then offset as well?
+
+Is phdr->p_offset sane?
+
+And you didn't clarify whether the offset was always the same.
+
+Jan
+
 
 _______________________________________________
 kexec mailing list
