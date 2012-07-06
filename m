@@ -1,22 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from router-fw.net-space.pl ([89.174.63.77])
+Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SnAs4-0005Vi-IU
- for kexec@lists.infradead.org; Fri, 06 Jul 2012 15:55:08 +0000
-Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
- (dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
- id S1614602Ab2GFPy5 (ORCPT <rfc822;kexec@lists.infradead.org>);
- Fri, 6 Jul 2012 17:54:57 +0200
-Date: Fri, 6 Jul 2012 17:54:57 +0200
-From: Daniel Kiper <dkiper@net-space.pl>
-Subject: Re: incorrect layout of globals from head_64.S during kexec boot
-Message-ID: <20120706155457.GA3733@router-fw-old.local.net-space.pl>
+ id 1SnCLW-0000uD-D7
+ for kexec@lists.infradead.org; Fri, 06 Jul 2012 17:29:35 +0000
+Date: Fri, 6 Jul 2012 19:29:18 +0200
+From: Olaf Hering <olaf@aepfle.de>
+Subject: Re: [Xen-devel] incorrect layout of globals from head_64.S during
+ kexec boot
+Message-ID: <20120706172918.GA15222@aepfle.de>
 References: <20120705210607.GA26908@aepfle.de>
  <20120706084120.GA31219@router-fw-old.local.net-space.pl>
  <20120706120750.GA8970@aepfle.de>
-Mime-Version: 1.0
+ <4FF6FCA9020000780008E0BB@nat28.tlf.novell.com>
+ <20120706133105.GA20600@aepfle.de>
+ <20120706141419.GA21951@aepfle.de>
+ <4FF7174C020000780008E1FF@nat28.tlf.novell.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120706120750.GA8970@aepfle.de>
+In-Reply-To: <4FF7174C020000780008E1FF@nat28.tlf.novell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,60 +30,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Olaf Hering <olaf@aepfle.de>
+To: Jan Beulich <JBeulich@suse.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Daniel Kiper <dkiper@net-space.pl>
 
-On Fri, Jul 06, 2012 at 02:07:50PM +0200, Olaf Hering wrote:
-> On Fri, Jul 06, Daniel Kiper wrote:
->
-> > Copy is done a few times durnig kexec/kdump but the most important
-> > in this case, I think, is in relocate_kernel() function (look for
-> > rep movsl or rep movsq and code around it). But I am a bit surprised
-> > that kernel is decompressing itself. I always thought that it is done
-> > during kexec/kdump load phase but maybe I am wrong. Could you send
+On Fri, Jul 06, Jan Beulich wrote:
 
-I am wrong.
+> > Could it be that some code tweaks the stack content used by decompress()
+> > in some odd way? But that would most likely lead to a crash, not to
+> > unexpected uncompressing results.
+> 
+> Especially if the old and new kernel are using the exact same
+> image, how about the decompression writing over the shared
+> info page causing all this? As the decompressor wouldn't
+> expect Xen to possibly write stuff there itself, it could easily be
+> that some repeat count gets altered, thus breaking the
+> decompressed data without the decompression code necessarily
+> noticing.
 
-> > me more info about your Linux Kernel version, kexec-tools version
-> > and exact commands which you are using to load/exececute kernel?
->
-> Its kexec-tools and kernel mainline, but it happens also with older
-> versions of both. kexec works fine with the forward ported version of
-> xenlinux.
->
-> kexec -l bzImage --ramdisk=/boot/initrd-3.5.0-rc5-bug694863+ '--command-line=root=/dev/disk/by-label/sles11sp1_full
-> sysrq=yes
-> panic=9
-> oops=panic
-> console=ttyS0,115200
-> log_buf_len=16M
-> ignore_loglevel
-> initcall_debug
-> debug earlyprintk=serial,ttyS0,115200' -t bzImage --console-serial --serial=ttyS0 --serial-baud=115200 --debug
-> kexec -e
+In my case the gfn of the shared info page is 1f54.
+Is it possible to move the page at runtime? It looks like it can be done
+because the hvm loader configures fffff initially.
 
-Nothing special. But try also ELF loader.
+Perhaps the PVonHVM code has to give up the shared pages or move them to
+some dedicated unused page during the process of booting into the new
+kernel.
 
-> As Jan pointed out, the copying is done in
-> arch/x86/boot/compressed/misc.c. But adding some debug to inspect
-> *output in parse_elf() shows that the second entry in program headers is
-> already shifted by 44 bytes in my testing, the others are shifted by the
-> same amount.
->
-> Program Headers:
->   Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
->   LOAD           0x200000 0xffffffff81000000 0x0000000001000000 0xa3b000 0xa3b000 R E 0x200000
->   LOAD           0xe00000 0xffffffff81c00000 0x0000000001c00000 0x05b0e8 0x05b0e8 RW  0x200000
->   LOAD           0x1000000 0x0000000000000000 0x0000000001c5c000 0x012c40 0x012c40 RW  0x200000
->   LOAD           0x106f000 0xffffffff81c6f000 0x0000000001c6f000 0x087000 0x702000 RWE 0x200000
->   NOTE           0x82d5bc 0xffffffff8162d5bc 0x000000000162d5bc 0x00017c 0x00017c     0x4
->
-> That makes me wonder wether kexec-tools is the culprit.
+Konrad, any idea how that could be done?
 
-Is it relocatable kernel? If not please try use not relocatable one.
-Then kernel will be always in the same place.
+> If that's the case, there would be a more general problem here
+> (for kdump at least), as granted pages could also still get written
+> to when the new kernel already is in the process of launching.
 
-Daniel
+Maybe you meant to say kexec instead of kdump?
+kdump runs in its own memory area, so I think the worst thing is that
+some pages of the crashed kernel get modified.
+
+Olaf
 
 _______________________________________________
 kexec mailing list
