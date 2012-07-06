@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sn7KM-0006HC-If
- for kexec@lists.infradead.org; Fri, 06 Jul 2012 12:08:04 +0000
-Date: Fri, 6 Jul 2012 14:07:50 +0200
-From: Olaf Hering <olaf@aepfle.de>
-Subject: Re: incorrect layout of globals from head_64.S during kexec boot
-Message-ID: <20120706120750.GA8970@aepfle.de>
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Sn84Y-0004NC-QP
+ for kexec@lists.infradead.org; Fri, 06 Jul 2012 12:55:51 +0000
+Message-Id: <4FF6FCA9020000780008E0BB@nat28.tlf.novell.com>
+Date: Fri, 06 Jul 2012 13:56:41 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [Xen-devel] incorrect layout of globals from head_64.S
+ during kexec boot
 References: <20120705210607.GA26908@aepfle.de>
  <20120706084120.GA31219@router-fw-old.local.net-space.pl>
-MIME-Version: 1.0
+ <20120706120750.GA8970@aepfle.de>
+In-Reply-To: <20120706120750.GA8970@aepfle.de>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20120706084120.GA31219@router-fw-old.local.net-space.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,53 +26,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <dkiper@net-space.pl>
+To: Olaf Hering <olaf@aepfle.de>, Daniel Kiper <dkiper@net-space.pl>
 Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, Jul 06, Daniel Kiper wrote:
+>>> On 06.07.12 at 14:07, Olaf Hering <olaf@aepfle.de> wrote:
+> But adding some debug to inspect
+> *output in parse_elf() shows that the second entry in program headers is
+> already shifted by 44 bytes in my testing, the others are shifted by the
+> same amount.
 
-> Copy is done a few times durnig kexec/kdump but the most important
-> in this case, I think, is in relocate_kernel() function (look for
-> rep movsl or rep movsq and code around it). But I am a bit surprised
-> that kernel is decompressing itself. I always thought that it is done
-> during kexec/kdump load phase but maybe I am wrong. Could you send
-> me more info about your Linux Kernel version, kexec-tools version
-> and exact commands which you are using to load/exececute kernel?
+Unfortunately it's not clear what is shifted - the printout below
+looks just fine. Also, from your first mail I understood that the shift
+there was by an amount not divisible by 4 - does that amount vary?
 
-Its kexec-tools and kernel mainline, but it happens also with older
-versions of both. kexec works fine with the forward ported version of
-xenlinux.
+> Program Headers:
+>   Type           Offset   VirtAddr           PhysAddr           FileSiz  
+> MemSiz   Flg Align
+>   LOAD           0x200000 0xffffffff81000000 0x0000000001000000 0xa3b000 
+> 0xa3b000 R E 0x200000
+>   LOAD           0xe00000 0xffffffff81c00000 0x0000000001c00000 0x05b0e8 
+> 0x05b0e8 RW  0x200000
+>   LOAD           0x1000000 0x0000000000000000 0x0000000001c5c000 0x012c40 
+> 0x012c40 RW  0x200000
+>   LOAD           0x106f000 0xffffffff81c6f000 0x0000000001c6f000 0x087000 
+> 0x702000 RWE 0x200000
+>   NOTE           0x82d5bc 0xffffffff8162d5bc 0x000000000162d5bc 0x00017c 
+> 0x00017c     0x4
+> 
+> 
+> That makes me wonder wether kexec-tools is the culprit.
 
-kexec -l bzImage --ramdisk=/boot/initrd-3.5.0-rc5-bug694863+ '--command-line=root=/dev/disk/by-label/sles11sp1_full
-sysrq=yes
-panic=9
-oops=panic
-console=ttyS0,115200
-log_buf_len=16M
-ignore_loglevel
-initcall_debug
-debug earlyprintk=serial,ttyS0,115200' -t bzImage --console-serial --serial=ttyS0 --serial-baud=115200 --debug
-kexec -e
+Possibly, though generally any corruption to the compressed image
+should make decompression fail I would think.
 
+Jan
 
-As Jan pointed out, the copying is done in
-arch/x86/boot/compressed/misc.c. But adding some debug to inspect
-*output in parse_elf() shows that the second entry in program headers is
-already shifted by 44 bytes in my testing, the others are shifted by the
-same amount.
-
-Program Headers:
-  Type           Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   Flg Align
-  LOAD           0x200000 0xffffffff81000000 0x0000000001000000 0xa3b000 0xa3b000 R E 0x200000
-  LOAD           0xe00000 0xffffffff81c00000 0x0000000001c00000 0x05b0e8 0x05b0e8 RW  0x200000
-  LOAD           0x1000000 0x0000000000000000 0x0000000001c5c000 0x012c40 0x012c40 RW  0x200000
-  LOAD           0x106f000 0xffffffff81c6f000 0x0000000001c6f000 0x087000 0x702000 RWE 0x200000
-  NOTE           0x82d5bc 0xffffffff8162d5bc 0x000000000162d5bc 0x00017c 0x00017c     0x4
-
-
-That makes me wonder wether kexec-tools is the culprit.
-
-Olaf
 
 _______________________________________________
 kexec mailing list
