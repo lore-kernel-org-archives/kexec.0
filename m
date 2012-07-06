@@ -1,33 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from router-fw.net-space.pl ([89.174.63.77])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Sn44R-0001kU-GA
- for kexec@lists.infradead.org; Fri, 06 Jul 2012 08:39:24 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 8920C3EE0BB
- for <kexec@lists.infradead.org>; Fri,  6 Jul 2012 17:39:14 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 6EBFB45DE4E
- for <kexec@lists.infradead.org>; Fri,  6 Jul 2012 17:39:14 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 5317F45DE52
- for <kexec@lists.infradead.org>; Fri,  6 Jul 2012 17:39:14 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 45CDD1DB8041
- for <kexec@lists.infradead.org>; Fri,  6 Jul 2012 17:39:14 +0900 (JST)
-Received: from m023.s.css.fujitsu.com (m023.s.css.fujitsu.com [10.0.81.63])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 025221DB802F
- for <kexec@lists.infradead.org>; Fri,  6 Jul 2012 17:39:14 +0900 (JST)
-Date: Fri, 06 Jul 2012 17:38:50 +0900 (JST)
-Message-Id: <20120706.173850.11462611.d.hatayama@jp.fujitsu.com>
-Subject: Re: [PATCH v4 2/3] KVM-INTEL: Add new module vmcsinfo-intel to
- fill VMCSINFO
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <4FF6A0F3.2010201@cn.fujitsu.com>
-References: <4FF4155F.6070508@cn.fujitsu.com>
- <20120706.170410.119097767.d.hatayama@jp.fujitsu.com>
- <4FF6A0F3.2010201@cn.fujitsu.com>
+ id 1Sn4Fl-00035b-Go
+ for kexec@lists.infradead.org; Fri, 06 Jul 2012 08:51:07 +0000
+Received: (from localhost user: 'dkiper' uid#4000 fake: STDIN
+ (dkiper@router-fw.net-space.pl)) by router-fw-old.local.net-space.pl
+ id S1607412Ab2GFIlU (ORCPT <rfc822;kexec@lists.infradead.org>);
+ Fri, 6 Jul 2012 10:41:20 +0200
+Date: Fri, 6 Jul 2012 10:41:20 +0200
+From: Daniel Kiper <dkiper@net-space.pl>
+Subject: Re: incorrect layout of globals from head_64.S during kexec boot
+Message-ID: <20120706084120.GA31219@router-fw-old.local.net-space.pl>
+References: <20120705210607.GA26908@aepfle.de>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20120705210607.GA26908@aepfle.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -40,41 +27,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: wency@cn.fujitsu.com
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, joerg.roedel@amd.com, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, zhangyanfei@cn.fujitsu.com, avi@redhat.com, gregkh@linuxfoundation.org, ludwig.nussel@suse.de, ebiederm@xmission.com
+To: Olaf Hering <olaf@aepfle.de>
+Cc: xen-devel@lists.xensource.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-From: Wen Congyang <wency@cn.fujitsu.com>
-Subject: Re: [PATCH v4 2/3] KVM-INTEL: Add new module vmcsinfo-intel to fill VMCSINFO
-Date: Fri, 6 Jul 2012 16:25:23 +0800
+On Thu, Jul 05, 2012 at 11:06:07PM +0200, Olaf Hering wrote:
+>
+> During kexec in a Xen PVonHVM guest the new kernel crashes most of the
+> time in secondary_startup_64 because the content of phys_base is
+> corrupted. Its not zero as expected but has some random other values.
+> While debugging that crash I came up with the change below to inspect
+> the memory around phys_base.
+>
+> It turned out that the globales are not in the expected memory location.
+> An expected value such as phys_base_plus1 is shifted, but by a different
+> amount during repeated kexec attempts. Up to now I havent figured out
+> where this happens.
+>
+> My question is: were to put additional debug to trace the copying of the
+> data section to its final destination? Is this a task of kexec -l or
+> does that happen during decompressing? I suspect the latter. This is the
+> console output before the crash (the crash happens in 'movq %rax, %cr3'):
 
-> At 07/06/2012 04:04 PM, HATAYAMA Daisuke Wrote:
->> From: Yanfei Zhang <zhangyanfei@cn.fujitsu.com>
->> Subject: [PATCH v4 2/3] KVM-INTEL: Add new module vmcsinfo-intel to fill VMCSINFO
->> Date: Wed, 4 Jul 2012 18:05:19 +0800
->> 
->>> Besides, this patch also exports vmcs revision identifier via
->>> /sys/devices/system/cpu/vmcs_id and offsets of fields via
->>> /sys/devices/system/cpu/vmcs/.
->>> Individual offsets are contained in subfiles named by the filed's
->>> encoding, e.g.: /sys/devices/cpu/vmcs/0800
->> 
->> According to the discussion starting from
->> 
->> http://lkml.indiana.edu/hypermail/linux/kernel/1105.3/00749.html
-> 
-> IIRC, kvm can not work in such environment. The vcpu can run on
-> different cpu. If the cpu's vmcs is different, I don't know what
-> will happen. So do we need to support for such environment now?
-> I think that if kvm can not work in such environment, we should
-> not provide vmcs information for each physical cpu.
-> 
+Copy is done a few times durnig kexec/kdump but the most important
+in this case, I think, is in relocate_kernel() function (look for
+rep movsl or rep movsq and code around it). But I am a bit surprised
+that kernel is decompressing itself. I always thought that it is done
+during kexec/kdump load phase but maybe I am wrong. Could you send
+me more info about your Linux Kernel version, kexec-tools version
+and exact commands which you are using to load/exececute kernel?
 
-I think so too. The design can be kept very simple if kvm doesn't
-support such case, and it would be good news. Is it true?
-
-Thanks.
-HATAYAMA, Daisuke
-
+Daniel
 
 _______________________________________________
 kexec mailing list
