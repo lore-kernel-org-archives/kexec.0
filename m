@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SpGBU-00077D-Io
- for kexec@lists.infradead.org; Thu, 12 Jul 2012 09:59:47 +0000
-Message-ID: <4FFE9FF0.1030501@cn.fujitsu.com>
-Date: Thu, 12 Jul 2012 17:59:12 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-MIME-Version: 1.0
-Subject: [PATCH v5 3/3] Documentation: Add ABI entry for vmcs sysfs interface
-References: <4FFE9EDE.8080107@cn.fujitsu.com>
-In-Reply-To: <4FFE9EDE.8080107@cn.fujitsu.com>
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SpTto-0003F0-5N
+ for kexec@lists.infradead.org; Fri, 13 Jul 2012 00:38:26 +0000
+Date: Fri, 13 Jul 2012 09:36:11 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
+ memory consumption.
+Message-Id: <20120713093611.af556072aff44268f1bec0e1@mxc.nes.nec.co.jp>
+In-Reply-To: <20120711.142359.384961737.d.hatayama@jp.fujitsu.com>
+References: <20120702123905.GG24929@redhat.com>
+ <20120704145406.bf22a34cec586e3c1e8e29b5@mxc.nes.nec.co.jp>
+ <20120704.175211.155723295.d.hatayama@jp.fujitsu.com>
+ <20120711.142359.384961737.d.hatayama@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +26,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>, mtosatti@redhat.com
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com
 
-Signed-off-by: zhangyanfei <zhangyanfei@cn.fujitsu.com>
----
- Documentation/ABI/testing/sysfs-devices-system-cpu |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+Hello HATAYAMA-san,
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
-index 5dab364..2d0bc7f 100644
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -9,6 +9,26 @@ Description:
- 
- 		/sys/devices/system/cpu/cpu#/
- 
-+What:		/sys/devices/system/cpu/vmcs/
-+Date:		June 2012
-+Contact:	Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-+Description:
-+		A collection of vmcs fields' offsets for Intel cpu.
-+		Also including vmcs revision identifier.
-+
-+		Individual offsets are contained in subfiles named by
-+		the filed's encoding, e.g.:
-+
-+		/sys/devices/system/cpu/vmcs/0800
-+
-+What:		/sys/devices/system/cpu/vmcs/id
-+Date:		June 2012
-+Contact:	Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-+Description:
-+		Vmcs revision identifier in Intel cpu. The value enables
-+		software to avoid using a VMCS region formatted for one
-+		processor on a processor that uses a different format.
-+
- What:		/sys/devices/system/cpu/kernel_max
- 		/sys/devices/system/cpu/offline
- 		/sys/devices/system/cpu/online
--- 
-1.7.1
+On Wed, 11 Jul 2012 14:23:59 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+
+[...]
+> >>> Hi Atushi san,
+> >>> 
+> >>> Good to see this work making progress. I have few queries.
+> >>> 
+> >>> - Do you have some numbers for bigger machines like 1TB or higher memory. 
+> >>>   I am curious to know how bad is the time penalty.
+> >> 
+> >> I'm afraid that I don't have such a large machine, so I need someone who can
+> >> measure execution time in large machine.
+> >> 
+> > 
+> > I can prepare such machine but I cannot say I can use the machine on
+> > this day precisely for example. But I think it must be until the end
+> > of this month at most. So, I would like to fix content of benchmark
+> > first.
+> > 
+> 
+> Hello Kumagai-san,
+> 
+> I'm now trying to reserve the machine with big memory, but I'm not
+> accurately sure when I can use the machine; expecting within this
+> month? In advance, I want to make sure what I measure in this
+> benchmark in more detail.
+
+OK, I'm glad for your help.
+
+> I'm going to collect at least what you showed in your benchmark: RSS
+> size for no option, -cd31 and -Ed31. Is there another to collect?
+
+Would you collect RSS also for --split ?
+While I expect the RSS will be increase based on number of child processes,
+I want to see measured data.
+
+
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
