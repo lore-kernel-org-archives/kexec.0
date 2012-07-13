@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp02.citrix.com ([66.165.176.63])
+Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SphDW-0005Qs-QV
- for kexec@lists.infradead.org; Fri, 13 Jul 2012 14:51:40 +0000
-Message-ID: <500035EB.1020502@citrix.com>
-Date: Fri, 13 Jul 2012 15:51:23 +0100
-From: Andrew Cooper <andrew.cooper3@citrix.com>
+ id 1SpmLy-0007vd-Ro
+ for kexec@lists.infradead.org; Fri, 13 Jul 2012 20:20:49 +0000
+Date: Fri, 13 Jul 2012 22:20:03 +0200
+From: Olaf Hering <olaf@aepfle.de>
+Subject: Re: [Xen-devel] incorrect layout of globals from head_64.S during
+ kexec boot
+Message-ID: <20120713202003.GA20972@aepfle.de>
+References: <20120710180953.GB20075@aepfle.de>
+ <CC223C2F.3817C%keir.xen@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [Xen-devel] [PATCH 1/5] xen: Always calculate max_cpus value
-References: <20120705145839.GB2007@host-192-168-1-59.local.net-space.pl>
- <20120705150008.GC2007@host-192-168-1-59.local.net-space.pl>
- <4FF5D557020000780008DEA5@nat28.tlf.novell.com>
- <20120713131907.GB1876@host-192-168-1-59.local.net-space.pl>
-In-Reply-To: <20120713131907.GB1876@host-192-168-1-59.local.net-space.pl>
+Content-Disposition: inline
+In-Reply-To: <CC223C2F.3817C%keir.xen@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +25,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: "olaf@aepfle.de" <olaf@aepfle.de>, "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, xen-devel <xen-devel@lists.xen.org>, "anderson@redhat.com" <anderson@redhat.com>, Jan Beulich <JBeulich@suse.com>, "crash-utility@redhat.com" <crash-utility@redhat.com>
+To: Keir Fraser <keir.xen@gmail.com>
+Cc: xen-devel@lists.xensource.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Jan Beulich <JBeulich@suse.com>, Daniel Kiper <dkiper@net-space.pl>
 
-On 13/07/12 14:19, Daniel Kiper wrote:
-> On Thu, Jul 05, 2012 at 04:56:39PM +0100, Jan Beulich wrote:
->>>>> On 05.07.12 at 17:00, Daniel Kiper <daniel.kiper@oracle.com> wrote:
->>> max_cpus is not available since 20374 changeset (Miscellaneous data
->>> placement adjustments). It was moved to __initdata section. This section
->>> is freed after Xen initialization. Assume that max_cpus is always
->>> equal to XEN_HYPER_SIZE(cpumask_t) * 8.
->> Using nr_cpu_ids, when available, would seem a better fit. And
-> Hmmm... I could not find such animal in Xen source code.
-> However, maybe I missed something.
+On Tue, Jul 10, Keir Fraser wrote:
 
-nr_cpu_ids was introduced into xen-unstable with c/s 23982:511d5e65a302
+> On 10/07/2012 19:09, "Olaf Hering" <olaf@aepfle.de> wrote:
+> > I'm not sure, most likely the gfn will just disappear from the guest,
+> > like a ballooned page disappears. Accessing it will likely cause a
+> > crash.
+> 
+> Best thing to do, is possible, is map the shared-info page in the
+> xen-platform pci device's BAR memory range. Then it will not conflict with
+> any RAM.
+> 
+> If you do map it over the top of an existing RAM page, you will have to
+> repopulate that RAM page before kexec, using populate_physmap hypercall. The
+> good news is that the populate_physmap hypercall will have the side effect
+> of unmapping the shared-info page, reayd to be mapped wherever the new
+> kernel would like it to reside :)
 
-It is not present in 4.1 or earlier.
+Keir,
 
-~Andrew
+is this a safe thing to do in a SMP guest?
+If arch/x86/xen/enlighten.c:xen_hvm_init_shared_info() allocates a page
+(backed by mfn M and pfn A) and assigns *HYPERVISOR_shared_info and
+*xen_vcpu then everything will reference these pointers.
 
->
->> I donm't see why, on dumps from old hypervisors, you wouldn't
->> want to continue using max_cpus. Oh, wait, I see - you would
->> have to be able to tell whether it actually sits in .init.data, which
->> might not be strait forward.
-> Yep, but I will try to improve that once again.
->
-> Daniel
-
--- 
-Andrew Cooper - Dom0 Kernel Engineer, Citrix XenServer
-T: +44 (0)1223 225 900, http://www.citrix.com
+If drivers/xen/platform-pci.c:platform_pci_init would also do a
+XENMAPSPACE_shared_info call with pfn B, isnt there a small window where
+pfn A is not backed by a mfn because mfn M is now connected to pfn C? As
+a result other code paths which access *HYPERVISOR_shared_info and
+*xen_vcpu between the hypercall and the update of the pointers will read
+0xff.
 
 
+If I read the hypercall code of XENMEM_add_to_physmap correctly the mfn
+backing *HYPERVISOR_shared_info will remain the same, so there is no need
+to copy data from the old to the new *HYPERVISOR_shared_info.
 
+What do you think, is that race real?
+
+Olaf
 
 _______________________________________________
 kexec mailing list
