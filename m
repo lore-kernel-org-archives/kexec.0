@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Sr9c9-0005ZA-11
- for kexec@lists.infradead.org; Tue, 17 Jul 2012 15:23:08 +0000
-Date: Tue, 17 Jul 2012 11:23:00 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH] vmcore-dmesg: Do not write beyond end of allocated buffer
-Message-ID: <20120717152300.GB11031@redhat.com>
+ id 1SrGRZ-0003nH-55
+ for kexec@lists.infradead.org; Tue, 17 Jul 2012 22:40:44 +0000
+Date: Wed, 18 Jul 2012 07:40:32 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] vmcore-dmesg: Do not write beyond end of allocated buffer
+Message-ID: <20120717224031.GB22241@verge.net.au>
+References: <20120717152300.GB11031@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20120717152300.GB11031@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,85 +23,95 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>, horms@verge.net.au
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-scan_vmcoreinfo() currently assumes that every line in vmcoreinfo note ends
-with \n and overwrites new line character with \0. But last entry in note,
-CRASHTIME= does not end with \n and this leads to corrupting memory as we
-write beyond end of buffer.
+On Tue, Jul 17, 2012 at 11:23:00AM -0400, Vivek Goyal wrote:
+> scan_vmcoreinfo() currently assumes that every line in vmcoreinfo note ends
+> with \n and overwrites new line character with \0. But last entry in note,
+> CRASHTIME= does not end with \n and this leads to corrupting memory as we
+> write beyond end of buffer.
+> 
+> Normally things were fine but when I added some fields to vmcoreinfo, this
+> bug started showing and vmcore-dmesg started crashing.
+> 
+> I am planning to send a patch to fix this in kernel but it might be good
+> idea to handle this case in user space too so that vmcore-dmesg works
+> fine with cores of older kernels.
 
-Normally things were fine but when I added some fields to vmcoreinfo, this
-bug started showing and vmcore-dmesg started crashing.
+Good plan.
 
-I am planning to send a patch to fix this in kernel but it might be good
-idea to handle this case in user space too so that vmcore-dmesg works
-fine with cores of older kernels.
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> ---
+>  vmcore-dmesg/vmcore-dmesg.c |   27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
+> ===================================================================
+> --- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:54:02.700700235 -0400
+> +++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:55:08.232702248 -0400
+> @@ -14,6 +14,7 @@
+>  #include <sys/stat.h>
+>  #include <fcntl.h>
+>  #include <elf.h>
+> +#include <stdbool.h>
+>  
+>  /* The 32bit and 64bit note headers make it clear we don't care */
+>  typedef Elf32_Nhdr Elf_Nhdr;
+> @@ -220,6 +221,9 @@ static void scan_vmcoreinfo(char *start,
+>  {
+>  	char *last = start + size - 1;
+>  	char *pos, *eol;
+> +	char temp_buf[1024];
+> +	bool last_line = false;
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- vmcore-dmesg/vmcore-dmesg.c |   27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+Is there a chance of over-running temp_buf?
 
-Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-===================================================================
---- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:54:02.700700235 -0400
-+++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:55:08.232702248 -0400
-@@ -14,6 +14,7 @@
- #include <sys/stat.h>
- #include <fcntl.h>
- #include <elf.h>
-+#include <stdbool.h>
- 
- /* The 32bit and 64bit note headers make it clear we don't care */
- typedef Elf32_Nhdr Elf_Nhdr;
-@@ -220,6 +221,9 @@ static void scan_vmcoreinfo(char *start,
- {
- 	char *last = start + size - 1;
- 	char *pos, *eol;
-+	char temp_buf[1024];
-+	bool last_line = false;
-+
- #define SYMBOL(sym) {					\
- 	.str = "SYMBOL(" #sym  ")=",			\
- 	.name = #sym,					\
-@@ -243,7 +247,25 @@ static void scan_vmcoreinfo(char *start,
- 		/* Find the end of the current line */
- 		for (eol = pos; (eol <= last) && (*eol != '\n') ; eol++)
- 			;
--		len = eol - pos + 1;
-+		if (eol > last) {
-+			/*
-+			 * We did not find \n and note ended. Currently kernel
-+			 * is appending last field CRASH_TIME without \n. It
-+			 * is ugly but handle it.
-+			 */
-+			eol = last;
-+			len = eol - pos + 1;
-+			strncpy(temp_buf, pos, len);
-+			temp_buf[len + 1] = '\0';
-+
-+			pos = temp_buf;
-+			len = len + 1;
-+			eol = pos + len -1;
-+			last_line = true;
-+		} else  {
-+			len = eol - pos + 1;
-+		}
-+
- 		/* Stomp the last character so I am guaranteed a terminating null */
- 		*eol = '\0';
- 		/* Copy OSRELEASE if I see it */
-@@ -266,6 +288,9 @@ static void scan_vmcoreinfo(char *start,
- 			/* Remember the virtual address */
- 			*symbol[i].vaddr = vaddr;
- 		}
-+
-+		if (last_line)
-+			break;
- 	}
- }
- 
+I would be more comfortable if there was a check below to
+ensure that len can never be greater than sizeof(temp_buf).
+
+> +
+>  #define SYMBOL(sym) {					\
+>  	.str = "SYMBOL(" #sym  ")=",			\
+>  	.name = #sym,					\
+> @@ -243,7 +247,25 @@ static void scan_vmcoreinfo(char *start,
+>  		/* Find the end of the current line */
+>  		for (eol = pos; (eol <= last) && (*eol != '\n') ; eol++)
+>  			;
+> -		len = eol - pos + 1;
+> +		if (eol > last) {
+> +			/*
+> +			 * We did not find \n and note ended. Currently kernel
+> +			 * is appending last field CRASH_TIME without \n. It
+> +			 * is ugly but handle it.
+> +			 */
+> +			eol = last;
+> +			len = eol - pos + 1;
+> +			strncpy(temp_buf, pos, len);
+> +			temp_buf[len + 1] = '\0';
+> +
+> +			pos = temp_buf;
+> +			len = len + 1;
+> +			eol = pos + len -1;
+> +			last_line = true;
+> +		} else  {
+> +			len = eol - pos + 1;
+> +		}
+> +
+>  		/* Stomp the last character so I am guaranteed a terminating null */
+>  		*eol = '\0';
+>  		/* Copy OSRELEASE if I see it */
+> @@ -266,6 +288,9 @@ static void scan_vmcoreinfo(char *start,
+>  			/* Remember the virtual address */
+>  			*symbol[i].vaddr = vaddr;
+>  		}
+> +
+> +		if (last_line)
+> +			break;
+>  	}
+>  }
+>  
+> 
 
 _______________________________________________
 kexec mailing list
