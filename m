@@ -1,16 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SrGRZ-0003nH-55
- for kexec@lists.infradead.org; Tue, 17 Jul 2012 22:40:44 +0000
-Date: Wed, 18 Jul 2012 07:40:32 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] vmcore-dmesg: Do not write beyond end of allocated buffer
-Message-ID: <20120717224031.GB22241@verge.net.au>
-References: <20120717152300.GB11031@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120717152300.GB11031@redhat.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SrIak-0006PI-43
+ for kexec@lists.infradead.org; Wed, 18 Jul 2012 00:58:19 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 7429D3EE0B6
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 09:57:50 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 5BCB745DEAD
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 09:57:50 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 3BB5345DEB2
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 09:57:50 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 2C8421DB8038
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 09:57:50 +0900 (JST)
+Received: from m024.s.css.fujitsu.com (m024.s.css.fujitsu.com [10.0.81.64])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id D04FA1DB803C
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 09:57:49 +0900 (JST)
+Date: Wed, 18 Jul 2012 09:57:17 +0900 (JST)
+Message-Id: <20120718.095717.509840559.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
+ memory consumption.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120713171039.849f7922f76cdf0fbaa9f06a@mxc.nes.nec.co.jp>
+References: <20120713093611.af556072aff44268f1bec0e1@mxc.nes.nec.co.jp>
+ <20120713.141801.148862713.d.hatayama@jp.fujitsu.com>
+ <20120713171039.849f7922f76cdf0fbaa9f06a@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,95 +40,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Tue, Jul 17, 2012 at 11:23:00AM -0400, Vivek Goyal wrote:
-> scan_vmcoreinfo() currently assumes that every line in vmcoreinfo note ends
-> with \n and overwrites new line character with \0. But last entry in note,
-> CRASHTIME= does not end with \n and this leads to corrupting memory as we
-> write beyond end of buffer.
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
+Date: Fri, 13 Jul 2012 17:10:39 +0900
+
+> Hello HATAYAMA-san,
 > 
-> Normally things were fine but when I added some fields to vmcoreinfo, this
-> bug started showing and vmcore-dmesg started crashing.
+> On Fri, 13 Jul 2012 14:18:01 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 > 
-> I am planning to send a patch to fix this in kernel but it might be good
-> idea to handle this case in user space too so that vmcore-dmesg works
-> fine with cores of older kernels.
-
-Good plan.
-
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> ---
->  vmcore-dmesg/vmcore-dmesg.c |   27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
+>> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
+>> Date: Fri, 13 Jul 2012 09:36:11 +0900
+>> 
+>> > Hello HATAYAMA-san,
+>> > 
+>> > On Wed, 11 Jul 2012 14:23:59 +0900 (JST)
+>> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>> > 
+>> > [...]
+>> >> >>> Hi Atushi san,
+>> >> >>> 
+>> >> >>> Good to see this work making progress. I have few queries.
+>> >> >>> 
+>> >> >>> - Do you have some numbers for bigger machines like 1TB or higher memory. 
+>> >> >>>   I am curious to know how bad is the time penalty.
+>> >> >> 
+>> >> >> I'm afraid that I don't have such a large machine, so I need someone who can
+>> >> >> measure execution time in large machine.
+>> >> >> 
+>> >> > 
+>> >> > I can prepare such machine but I cannot say I can use the machine on
+>> >> > this day precisely for example. But I think it must be until the end
+>> >> > of this month at most. So, I would like to fix content of benchmark
+>> >> > first.
+>> >> > 
+>> >> 
+>> >> Hello Kumagai-san,
+>> >> 
+>> >> I'm now trying to reserve the machine with big memory, but I'm not
+>> >> accurately sure when I can use the machine; expecting within this
+>> >> month? In advance, I want to make sure what I measure in this
+>> >> benchmark in more detail.
+>> > 
+>> > OK, I'm glad for your help.
+>> > 
+>> >> I'm going to collect at least what you showed in your benchmark: RSS
+>> >> size for no option, -cd31 and -Ed31. Is there another to collect?
+>> > 
+>> > Would you collect RSS also for --split ?
+>> > While I expect the RSS will be increase based on number of child processes,
+>> > I want to see measured data.
+>> > 
+>> 
+>> Yes, I'll collect RSS information. But due to COW, child processes
+>> share parent process's memory until they modify their memory, so
+>> simply looking value of RSS is not enough. We need to measure size of
+>> shared part e.g. by looking at /proc/<PID>/smaps.
 > 
-> Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-> ===================================================================
-> --- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:54:02.700700235 -0400
-> +++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-07-19 01:55:08.232702248 -0400
-> @@ -14,6 +14,7 @@
->  #include <sys/stat.h>
->  #include <fcntl.h>
->  #include <elf.h>
-> +#include <stdbool.h>
->  
->  /* The 32bit and 64bit note headers make it clear we don't care */
->  typedef Elf32_Nhdr Elf_Nhdr;
-> @@ -220,6 +221,9 @@ static void scan_vmcoreinfo(char *start,
->  {
->  	char *last = start + size - 1;
->  	char *pos, *eol;
-> +	char temp_buf[1024];
-> +	bool last_line = false;
-
-Is there a chance of over-running temp_buf?
-
-I would be more comfortable if there was a check below to
-ensure that len can never be greater than sizeof(temp_buf).
-
-> +
->  #define SYMBOL(sym) {					\
->  	.str = "SYMBOL(" #sym  ")=",			\
->  	.name = #sym,					\
-> @@ -243,7 +247,25 @@ static void scan_vmcoreinfo(char *start,
->  		/* Find the end of the current line */
->  		for (eol = pos; (eol <= last) && (*eol != '\n') ; eol++)
->  			;
-> -		len = eol - pos + 1;
-> +		if (eol > last) {
-> +			/*
-> +			 * We did not find \n and note ended. Currently kernel
-> +			 * is appending last field CRASH_TIME without \n. It
-> +			 * is ugly but handle it.
-> +			 */
-> +			eol = last;
-> +			len = eol - pos + 1;
-> +			strncpy(temp_buf, pos, len);
-> +			temp_buf[len + 1] = '\0';
-> +
-> +			pos = temp_buf;
-> +			len = len + 1;
-> +			eol = pos + len -1;
-> +			last_line = true;
-> +		} else  {
-> +			len = eol - pos + 1;
-> +		}
-> +
->  		/* Stomp the last character so I am guaranteed a terminating null */
->  		*eol = '\0';
->  		/* Copy OSRELEASE if I see it */
-> @@ -266,6 +288,9 @@ static void scan_vmcoreinfo(char *start,
->  			/* Remember the virtual address */
->  			*symbol[i].vaddr = vaddr;
->  		}
-> +
-> +		if (last_line)
-> +			break;
->  	}
->  }
->  
+> You're right.  Would you choose the way which can correct effective
+> memory consumption ?
 > 
+
+OK. PSS in smaps seems proper here, and though /proc/<PID>/pagemap
+would also allow us to evaluate exact RSS, it's very slow. This is not
+RSS, valgrind seems useful for evaluating usage of heap memory.
+
+I'll consider how to evalute..
+
+>> And, what version of makedumpfile should I use for this bench? If you
+>> have additonal changes locally, it might be better to use the version.
+> 
+> Please use v1.4.4 + v2 patch of cyclic + performance improvement patch which
+> I sent today, it's the latest version internally.
+> 
+
+I'll use this version.
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
