@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SrXtC-0002a0-Vw
- for kexec@lists.infradead.org; Wed, 18 Jul 2012 17:18:20 +0000
-Date: Wed, 18 Jul 2012 13:18:12 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH] printk: Export struct log size and member offsets through
- vmcoreinfo
-Message-ID: <20120718171812.GC21746@redhat.com>
+Received: from mail-pb0-f49.google.com ([209.85.160.49])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SrY28-00037x-Gc
+ for kexec@lists.infradead.org; Wed, 18 Jul 2012 17:27:48 +0000
+Received: by pbbrq13 with SMTP id rq13so3137053pbb.36
+ for <kexec@lists.infradead.org>; Wed, 18 Jul 2012 10:27:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <20120718171812.GC21746@redhat.com>
+References: <20120718171812.GC21746@redhat.com>
+From: Kay Sievers <kay@vrfy.org>
+Date: Wed, 18 Jul 2012 19:27:08 +0200
+Message-ID: <CAPXgP12PioibfQhtAB0fCzL1MXmZvfvQqOGu_ZM0D8Sx4Vq7+w@mail.gmail.com>
+Subject: Re: [PATCH] printk: Export struct log size and member offsets through
+ vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +25,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux kernel mailing list <linux-kernel@vger.kernel.org>
-Cc: Kay Sievers <kay@vrfy.org>, Andrew Morton <akpm@linux-foundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Greg Kroah-Hartmann <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux kernel mailing list <linux-kernel@vger.kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-There are tools like makedumpfile and vmcore-dmesg which can extract
-kernel log buffer from vmcore. Since we introduced structured logging,
-that functionality is broken. Now user space tools need to know about
-"struct log" and offsets of various fields to be able to parse struct
-log data and extract text message or dictonary.
+On Wed, Jul 18, 2012 at 7:18 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
 
-This patch exports some of the fields.
+> Currently I am not exporting log "level" info as that is a bitfield and
+> offsetof() bitfields can't be calculated.
 
-Currently I am not exporting log "level" info as that is a bitfield and
-offsetof() bitfields can't be calculated. But if people start asking for
-log level info in the output then we probably either need to seprate
-out "level" or use bit shift operations for flags and level.
+We could make the level the lower 3 bits of the byte, export the byte,
+and define that only 3 bits of the byte are valid? Would that help?
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- kernel/printk.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+>  kernel/printk.c |    9 +++++++++
+>  1 file changed, 9 insertions(+)
 
-Index: linux-2.6/kernel/printk.c
-===================================================================
---- linux-2.6.orig/kernel/printk.c	2012-07-20 14:02:38.213581253 -0400
-+++ linux-2.6/kernel/printk.c	2012-07-20 14:02:42.004581438 -0400
-@@ -646,6 +646,15 @@ void log_buf_kexec_setup(void)
- 	VMCOREINFO_SYMBOL(log_buf_len);
- 	VMCOREINFO_SYMBOL(log_first_idx);
- 	VMCOREINFO_SYMBOL(log_next_idx);
-+	/*
-+	 * Export struct log size and field offsets. User space tools can
-+	 * parse it and detect any changes to structure down the line.
-+	 */
-+	VMCOREINFO_STRUCT_SIZE(log);
-+	VMCOREINFO_OFFSET(log, ts_nsec);
-+	VMCOREINFO_OFFSET(log, len);
-+	VMCOREINFO_OFFSET(log, text_len);
-+	VMCOREINFO_OFFSET(log, dict_len);
- }
- #endif
- 
+> +       /*
+> +        * Export struct log size and field offsets. User space tools can
+> +        * parse it and detect any changes to structure down the line.
+> +        */
+> +       VMCOREINFO_STRUCT_SIZE(log);
+> +       VMCOREINFO_OFFSET(log, ts_nsec);
+> +       VMCOREINFO_OFFSET(log, len);
+> +       VMCOREINFO_OFFSET(log, text_len);
+> +       VMCOREINFO_OFFSET(log, dict_len);
+
+Ah, nice, that's how you handle exporting structures, it was still on
+my list, to find out how all that should look like.
+
+Cc:ing Greg, to pick it up.
+
+Thanks a lot for taking care of it,
+Kay
 
 _______________________________________________
 kexec mailing list
