@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from nat.scz.novell.com ([213.151.88.252] helo=nathan.suse.cz)
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1StHdS-0001oU-VK
- for kexec@lists.infradead.org; Mon, 23 Jul 2012 12:21:16 +0000
-Message-Id: <20120723113255.195911521@suse.cz>
-Date: Mon, 23 Jul 2012 13:32:50 +0200
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1StHdZ-0003Z6-Tz
+ for kexec@lists.infradead.org; Mon, 23 Jul 2012 12:21:23 +0000
+Message-Id: <20120723113255.018179022@suse.cz>
+Date: Mon, 23 Jul 2012 13:32:49 +0200
 From: ptesarik@suse.cz
-Subject: [PATCH 6/8] Handle Xen4 heap pages
+Subject: [PATCH 5/8] Add infrastructure for Xen PGC_xxx macros
 References: <20120723113244.751777873@suse.cz>
-Content-Disposition: inline; filename=makedumpfile-xen4-heap.patch
+Content-Disposition: inline; filename=makedumpfile-xen4-PGC_flags.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,118 +25,94 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Petr Tesarik <ptesarik@suse.cz>
 
-In Xen3, heap pages were allocated in a fixed range, so they could be
-recognized by their address. This is no longer the case with Xen4. Instead, we
-have to look at the page flags and check if PGC_xen_heap is set.
+The highest bits of the _count field in struct page_info contain some
+page specific flags. However, since they are allocated from top to bottom,
+we need some infrastructure to get their values right on all platforms,
+namely a macro that defines the size of a "long" value.
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- arch/ia64.c    |   36 +++++++++++++++++-------------------
- arch/x86_64.c  |   18 ++++++++----------
- makedumpfile.c |    6 +++++-
- makedumpfile.h |    1 +
- 4 files changed, 31 insertions(+), 30 deletions(-)
+ makedumpfile.h |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
---- a/arch/ia64.c
-+++ b/arch/ia64.c
-@@ -335,26 +335,24 @@ get_xen_basic_info_ia64(void)
- 
- 	info->frame_table_vaddr = VIRT_FRAME_TABLE_ADDR; /* "frame_table" is same value */
- 
--	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
--		return FALSE;
-+	if (SYMBOL(xenheap_phys_end) != NOT_FOUND_SYMBOL) {
-+		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
-+		      sizeof(xen_end))) {
-+			ERRMSG("Can't get the value of xenheap_phys_end.\n");
-+			return FALSE;
-+		}
-+		if (SYMBOL(xen_pstart) == NOT_FOUND_SYMBOL) {
-+			ERRMSG("Can't get the symbol of xen_pstart.\n");
-+			return FALSE;
-+		}
-+		if (!readmem(VADDR_XEN, SYMBOL(xen_pstart), &xen_start,
-+		    sizeof(xen_start))) {
-+			ERRMSG("Can't get the value of xen_pstart.\n");
-+			return FALSE;
-+		}
-+		info->xen_heap_start = paddr_to_pfn(xen_start);
-+		info->xen_heap_end   = paddr_to_pfn(xen_end);
- 	}
--	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
--	      sizeof(xen_end))) {
--		ERRMSG("Can't get the value of xenheap_phys_end.\n");
--		return FALSE;
--	}
--	if (SYMBOL(xen_pstart) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of xen_pstart.\n");
--		return FALSE;
--	}
--	if (!readmem(VADDR_XEN, SYMBOL(xen_pstart), &xen_start,
--	    sizeof(xen_start))) {
--		ERRMSG("Can't get the value of xen_pstart.\n");
--		return FALSE;
--	}
--	info->xen_heap_start = paddr_to_pfn(xen_start);
--	info->xen_heap_end   = paddr_to_pfn(xen_end);
- 
- 	return TRUE;
- }
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -385,17 +385,15 @@ int get_xen_basic_info_x86_64(void)
- 	}
- 	info->frame_table_vaddr = frame_table_vaddr;
- 
--	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
--		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
--		return FALSE;
-+	if (SYMBOL(xenheap_phys_end) != NOT_FOUND_SYMBOL) {
-+		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
-+		    sizeof(xen_end))) {
-+			ERRMSG("Can't get the value of xenheap_phys_end.\n");
-+			return FALSE;
-+		}
-+		info->xen_heap_start = 0;
-+		info->xen_heap_end   = paddr_to_pfn(xen_end);
- 	}
--	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
--	    sizeof(xen_end))) {
--		ERRMSG("Can't get the value of xenheap_phys_end.\n");
--		return FALSE;
--	}
--	info->xen_heap_start = 0;
--	info->xen_heap_end   = paddr_to_pfn(xen_end);
- 
- 	return TRUE;
- }
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5715,7 +5715,11 @@ exclude_xen_user_domain(void)
- 			 */
- 			if (_domain == 0)
- 				continue;
--			if (info->xen_heap_start <= pfn && pfn < info->xen_heap_end)
-+			if (!info->xen_heap_end) {
-+				if (count_info & PGC_xen_heap)
-+					continue;
-+			} else if (info->xen_heap_start <= pfn &&
-+				   pfn < info->xen_heap_end)
- 				continue;
- 			if ((count_info & 0xffff) && is_select_domain(_domain))
- 				continue;
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -82,6 +82,7 @@ int get_mem_type(void);
-  */
- #define PG_shift(idx)	(BITS_PER_LONG - (idx))
- #define PG_mask(x, idx)	(x ## UL << PG_shift(idx))
-+#define PGC_xen_heap        PG_mask(1, 2)
+@@ -78,6 +78,12 @@ int get_mem_type(void);
+ #define LSEEKED_PDATA	(3)
  
  /*
++ * Xen page flags
++ */
++#define PG_shift(idx)	(BITS_PER_LONG - (idx))
++#define PG_mask(x, idx)	(x ## UL << PG_shift(idx))
++
++/*
   * Memory flags
+  */
+ #define MEMORY_PAGETABLE_4L	(1 << 0)
+@@ -426,6 +432,8 @@ do { \
+ #define VMEMMAP_END		(info->vmemmap_end)
+ 
+ #ifdef __arm__
++#define BITS_PER_LONG		32
++
+ #define KVBASE_MASK		(0xffff)
+ #define KVBASE			(SYMBOL(_stext) & ~KVBASE_MASK)
+ #define _SECTION_SIZE_BITS	(28)
+@@ -443,6 +451,8 @@ do { \
+ #endif /* arm */
+ 
+ #ifdef __x86__
++#define BITS_PER_LONG		32
++
+ #define __PAGE_OFFSET		(0xc0000000)
+ #define __VMALLOC_RESERVE       (128 << 20)
+ #define MAXMEM                  (-PAGE_OFFSET-__VMALLOC_RESERVE)
+@@ -474,6 +484,8 @@ do { \
+ #endif /* x86 */
+ 
+ #ifdef __x86_64__
++#define BITS_PER_LONG		64
++
+ #define __PAGE_OFFSET_ORIG	(0xffff810000000000) /* 2.6.26, or former */
+ #define __PAGE_OFFSET_2_6_27	(0xffff880000000000) /* 2.6.27, or later  */
+ 
+@@ -523,6 +535,8 @@ do { \
+ #endif /* x86_64 */
+ 
+ #ifdef __powerpc64__
++#define BITS_PER_LONG		64
++
+ #define __PAGE_OFFSET		(0xc000000000000000)
+ #define KERNELBASE		PAGE_OFFSET
+ #define VMALLOCBASE     	(0xD000000000000000)
+@@ -532,6 +546,7 @@ do { \
+ #endif
+ 
+ #ifdef __powerpc32__
++#define BITS_PER_LONG		32
+ 
+ #define __PAGE_OFFSET		(0xc0000000)
+ #define KERNELBASE		PAGE_OFFSET
+@@ -543,6 +558,8 @@ do { \
+ #endif
+ 
+ #ifdef __s390x__
++#define BITS_PER_LONG		64
++
+ #define __PAGE_OFFSET		(info->page_size - 1)
+ #define KERNELBASE		(0)
+ #define KVBASE			KERNELBASE
+@@ -583,6 +600,8 @@ do { \
+ #endif /* __s390x__ */
+ 
+ #ifdef __ia64__ /* ia64 */
++#define BITS_PER_LONG		64
++
+ #define REGION_SHIFT		(61)
+ 
+ #define KERNEL_CACHED_REGION	(7)
 
 
 
