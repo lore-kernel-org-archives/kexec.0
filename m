@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1StIAB-0005OS-Md
- for kexec@lists.infradead.org; Mon, 23 Jul 2012 12:55:10 +0000
-Message-ID: <500D48D2.7080209@redhat.com>
-Date: Mon, 23 Jul 2012 20:51:30 +0800
-From: Dave Young <dyoung@redhat.com>
+Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1StIBL-0005ZO-HG
+ for kexec@lists.infradead.org; Mon, 23 Jul 2012 12:56:17 +0000
+From: Petr Tesarik <ptesarik@suse.cz>
+Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
+Date: Mon, 23 Jul 2012 14:56:07 +0200
+References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
+In-Reply-To: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
-References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
- <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
- <500D340F.5080801@jp.fujitsu.com>
-In-Reply-To: <500D340F.5080801@jp.fujitsu.com>
+Message-Id: <201207231456.07783.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,149 +18,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: yinghai.lu@oracle.com, amwang@redhat.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, hpa@zytor.com, xiyou.wangcong@gmail.com, akpm@linux-foundation.org
+To: kexec@lists.infradead.org
+Cc: xen-devel@lists.xensource.com, Daniel Kiper <daniel.kiper@oracle.com>, horms@verge.net.au, olaf@aepfle.de, konrad.wilk@oracle.com
 
-On 07/23/2012 07:22 PM, Takao Indoh wrote:
-
-> (2012/07/23 19:00), Dave Young wrote:
->> On 07/17/2012 11:15 AM, Takao Indoh wrote:
->>
->>> Hi Cong,
->>>
->>> When I tested kdump with 3.5.0-rc6 kernel, I found a problem of kdump
->>> kernel's panic in find_early_table_space().
->>>
->>> init_memory_mapping: [mem 0x00000000-0x36ffafff]
->>> Kernel panic - not syncing: Cannot find space for the kernel page tables
->>> Pid: 0, comm: swapper Not tainted 3.5.0-rc6 #17
->>> Call Trace:
->>>   [<ffffffff8158549b>] panic+0xb8/0x1c8
->>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
->>>   [<ffffffff8157304c>] init_memory_mapping+0x46c/0x530
->>>   [<ffffffff818a73c7>] setup_arch+0x669/0xb0e
->>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
->>>   [<ffffffff818a3a1f>] start_kernel+0x9b/0x34a
->>>   [<ffffffff818a332d>] x86_64_start_reservations+0x131/0x136
->>>   [<ffffffff818a341f>] x86_64_start_kernel+0xed/0xf4
->>>
->>> In find_early_table_space(), a kernel tries to find free area below 512M
->>> for pgtable using memblock_find_in_range, but it fails because kdump
->>> kernel does not have enough free space below 512M due to the memmap
->>> restriction. This is the memmap option specified against kdump kernel
->>> when crashkernel=128M.
->>>
->>> memmap=560K@64K memmap=130492K@770608K
->>>
->>> Only 560KB area is available and it is not sufficient for pgtable (it
->>> seems that about 1.8MB area is needed for pgtable). This problem is
->>> fixed by your revert patch. I hope this patch gets merged.
->>
->>
->> I can reproduce this issue as well, probably related to some x86 mm init
->> commits, this alloc failure does not happen with reverting below commits:
->>
->> bd2753b2dda7bb43c7468826de75f49c6a7e8965
->> 722bc6b16771ed80871e1fd81c86d3627dda2ac8
-> Yeah, my result of bisect is as follows and at first I thought the
-> commit 722bc6 caused this regression.
-> 
-> 722bc6b16771ed80871e1fd81c86d3627dda2ac8 is the first bad commit
-> commit 722bc6b16771ed80871e1fd81c86d3627dda2ac8
-> Author: WANG Cong <xiyou.wangcong@gmail.com>
-> Date:   Mon Mar 5 15:05:13 2012 -0800
-> 
-> IIUC, this commit just fixes a bug of counting pgtable entries. As the
-> result, another problem came up to the surface. In the case of my
-> machine(16GB memory), before applying 722bc6, find_early_table_space()
-> requests about 12KB free area and it can be got from 560K@64K area
-> luckily. I think the size find_early_table_space() requests was a bug.
-> After the bug is fixed by the commit 722bc6, find_early_table_space()
-> requires 1.8MB area and it fails as I wrote.
-
-
-Sounds reasonable, if find_early_table_space is ok then I also vote to
-revert the s4 regression fix.
-
-> 
-> Thanks,
-> Takao Indoh
-> 
->>
->>>
->>> Thanks,
->>> Takao Indoh
->>>
->>> (2012/06/12 14:21), Cong Wang wrote:
->>>> From: Cong Wang <xiyou.wangcong@gmail.com>
->>>>
->>>> This reverts the following commit:
->>>>
->>>> 	commit 8548c84da2f47e71bbbe300f55edb768492575f7
->>>> 	Author: Takashi Iwai <tiwai@suse.de>
->>>> 	Date:   Sun Oct 23 23:19:12 2011 +0200
->>>>
->>>> 	    x86: Fix S4 regression
->>>> 	
->>>> 	    Commit 4b239f458 ("x86-64, mm: Put early page table high") causes a S4
->>>> 	    regression since 2.6.39, namely the machine reboots occasionally at S4
->>>> 	    resume.  It doesn't happen always, overall rate is about 1/20.  But,
->>>> 	    like other bugs, once when this happens, it continues to happen.
->>>> 	
->>>> 	    This patch fixes the problem by essentially reverting the memory
->>>> 	    assignment in the older way.
->>>>
->>>> According to the previous discussion:
->>>> http://marc.info/?l=linux-kernel&m=133161674120253&w=2
->>>> it seems that so far the best solution is just reverting it.
->>>>
->>>> Takashi, could you help to test if the S4 regression is still
->>>> there after this patch?
->>>>
->>>> Reported-by: CAI Qian <caiqian@redhat.com>
->>>> Cc: Dave Young <dyoung@redhat.com>
->>>> Cc: "H. Peter Anvin" <hpa@zytor.com>
->>>> Cc: Rafael J. Wysocki <rjw@sisk.pl>
->>>> Cc: Yinghai Lu <yinghai.lu@oracle.com>
->>>> Cc: Takashi Iwai <tiwai@suse.de>
->>>> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
->>>>
->>>> ---
->>>>    arch/x86/mm/init.c |    3 ++-
->>>>    1 files changed, 2 insertions(+), 1 deletions(-)
->>>>
->>>> diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
->>>> index bc4e9d8..7ab7975 100644
->>>> --- a/arch/x86/mm/init.c
->>>> +++ b/arch/x86/mm/init.c
->>>> @@ -74,8 +74,9 @@ static void __init find_early_table_space(struct map_range *mr, unsigned long en
->>>>    #ifdef CONFIG_X86_32
->>>>    	/* for fixmap */
->>>>    	tables += roundup(__end_of_fixed_addresses * sizeof(pte_t), PAGE_SIZE);
->>>> -#endif
->>>> +
->>>>    	good_end = max_pfn_mapped << PAGE_SHIFT;
->>>> +#endif
->>>>    
->>>>    	base = memblock_find_in_range(start, good_end, tables, PAGE_SIZE);
->>>>    	if (!base)
->>>>
->>
->>
->>
-> 
-
-
-
--- 
-Thanks
-Dave
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RG5lIMSMdCA1LiDEjWVydmVuY2UgMjAxMiAxNDoxNjozNSBEYW5pZWwgS2lwZXIgbmFwc2FsKGEp
+Ogo+IHZtY29yZWluZm8gZmlsZSBjb3VsZCBleGlzdHMgdW5kZXIgL3N5cy9rZXJuZWwgKHZhbGlk
+IG9uIGJhcmVtZXRhbCBvbmx5KQo+IGFuZC9vciB1bmRlciAvc3lzL2h5cGVydmlzb3IgKHZhbGlk
+IHdoZW4gWGVuIGRvbTAgaXMgcnVubmluZykuCj4gUmVhZCBvbmx5IG9uZSBvZiB0aGVtLiBJdCBt
+ZWFucyB0aGF0IG9ubHkgb25lIFBUX05PVEUgd2lsbCBiZQo+IGFsd2F5cyBjcmVhdGVkLiBSZW1v
+dmUgZXh0cmEgY29kZSBmb3Igc2Vjb25kIFBUX05PVEUgY3JlYXRpb24uCgpIaSBEYW5pZWwsCgph
+cmUgeW91IGFic29sdXRlbHkgc3VyZSB0aGlzIGlzIHRoZSByaWdodCB0aGluZyB0byBkbz8gSUlV
+QyB0aGVzZSB0d28gClZNQ09SSU5GTyBub3RlcyBhcmUgdmVyeSBkaWZmZXJlbnQuIFRoZSBvbmUg
+ZnJvbSAvc3lzL2tlcm5lbC92bWNvcmVpbmZvIApkZXNjcmliZXMgdGhlIERvbTAga2VybmVsICh0
+eXBlICdWTUNPUkVJTkZPJyksIHdoaWxlIHRoZSBvbmUgZnJvbSAKL3N5cy9oeXBlcnZpc29yIGRl
+c2NyaWJlcyB0aGUgWGVuIGh5cGVydmlzb3IgKHR5cGUgJ1hFTl9WTUNPUkVJTkZPJykuIElmIHlv
+dSAKa2VlcCBvbmx5IHRoZSBoeXBlcnZpc29yIG5vdGUsIHRoZW4gZS5nLiBtYWtlZHVtcGZpbGUg
+d29uJ3QgYmUgYWJsZSB0byB1c2UgCmR1bXBsZXZlbCBncmVhdGVyIHRoYW4gMSwgbm9yIHdpbGwg
+aXQgYmUgYWJsZSB0byBleHRyYWN0IHRoZSBsb2cgYnVmZmVyLgoKUGV0ciBUZXNhcmlrClNVU0Ug
+TGludXgKCj4gU2lnbmVkLW9mZi1ieTogRGFuaWVsIEtpcGVyIDxkYW5pZWwua2lwZXJAb3JhY2xl
+LmNvbT4KPiAtLS0KPiAga2V4ZWMvY3Jhc2hkdW1wLWVsZi5jIHwgICAzMyArKysrKysrLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyks
+IDI2IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9rZXhlYy9jcmFzaGR1bXAtZWxmLmMg
+Yi9rZXhlYy9jcmFzaGR1bXAtZWxmLmMKPiBpbmRleCA4ZDgyZGI5Li5lYzY2NTQ4IDEwMDY0NAo+
+IC0tLSBhL2tleGVjL2NyYXNoZHVtcC1lbGYuYwo+ICsrKyBiL2tleGVjL2NyYXNoZHVtcC1lbGYu
+Ywo+IEBAIC00MCw4ICs0MCw2IEBAIGludCBGVU5DKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLAo+
+ICAJdWludDY0X3Qgbm90ZXNfYWRkciwgbm90ZXNfbGVuOwo+ICAJdWludDY0X3Qgdm1jb3JlaW5m
+b19hZGRyLCB2bWNvcmVpbmZvX2xlbjsKPiAgCWludCBoYXNfdm1jb3JlaW5mbyA9IDA7Cj4gLQl1
+aW50NjRfdCB2bWNvcmVpbmZvX2FkZHJfeGVuLCB2bWNvcmVpbmZvX2xlbl94ZW47Cj4gLQlpbnQg
+aGFzX3ZtY29yZWluZm9feGVuID0gMDsKPiAgCWludCAoKmdldF9ub3RlX2luZm8pKGludCBjcHUs
+IHVpbnQ2NF90ICphZGRyLCB1aW50NjRfdCAqbGVuKTsKPiAKPiAgCWlmICh4ZW5fcHJlc2VudCgp
+KQo+IEBAIC01MywxNiArNTEsMTQgQEAgaW50IEZVTkMoc3RydWN0IGtleGVjX2luZm8gKmluZm8s
+Cj4gIAkJcmV0dXJuIC0xOwo+ICAJfQo+IAo+IC0JaWYgKGdldF9rZXJuZWxfdm1jb3JlaW5mbygm
+dm1jb3JlaW5mb19hZGRyLCAmdm1jb3JlaW5mb19sZW4pID09IDApIHsKPiAtCQloYXNfdm1jb3Jl
+aW5mbyA9IDE7Cj4gLQl9Cj4gLQo+IC0JaWYgKHhlbl9wcmVzZW50KCkgJiYKPiAtCSAgICBnZXRf
+eGVuX3ZtY29yZWluZm8oJnZtY29yZWluZm9fYWRkcl94ZW4sICZ2bWNvcmVpbmZvX2xlbl94ZW4p
+ID09IDApIHsKPiAtCQloYXNfdm1jb3JlaW5mb194ZW4gPSAxOwo+IC0JfQo+ICsJaWYgKHhlbl9w
+cmVzZW50KCkpIHsKPiArCQlpZiAoIWdldF94ZW5fdm1jb3JlaW5mbygmdm1jb3JlaW5mb19hZGRy
+LCAmdm1jb3JlaW5mb19sZW4pKQo+ICsJCQloYXNfdm1jb3JlaW5mbyA9IDE7Cj4gKwl9IGVsc2UK
+PiArCQlpZiAoIWdldF9rZXJuZWxfdm1jb3JlaW5mbygmdm1jb3JlaW5mb19hZGRyLCAmdm1jb3Jl
+aW5mb19sZW4pKQo+ICsJCQloYXNfdm1jb3JlaW5mbyA9IDE7Cj4gCj4gLQlzeiA9IHNpemVvZihF
+SERSKSArIChucl9jcHVzICsgaGFzX3ZtY29yZWluZm8gKyBoYXNfdm1jb3JlaW5mb194ZW4pICoK
+PiBzaXplb2YoUEhEUikgKyArCXN6ID0gc2l6ZW9mKEVIRFIpICsgKG5yX2NwdXMgKyBoYXNfdm1j
+b3JlaW5mbykgKgo+IHNpemVvZihQSERSKSArCj4gIAkgICAgIHJhbmdlcyAqIHNpemVvZihQSERS
+KTsKPiAKPiAgCS8qCj4gQEAgLTE3OSwyMSArMTc1LDYgQEAgaW50IEZVTkMoc3RydWN0IGtleGVj
+X2luZm8gKmluZm8sCj4gIAkJZGJncHJpbnRmX3BoZHIoInZtY29yZWluZm8gaGVhZGVyIiwgcGhk
+cik7Cj4gIAl9Cj4gCj4gLQlpZiAoaGFzX3ZtY29yZWluZm9feGVuKSB7Cj4gLQkJcGhkciA9IChQ
+SERSICopIGJ1ZnA7Cj4gLQkJYnVmcCArPSBzaXplb2YoUEhEUik7Cj4gLQkJcGhkci0+cF90eXBl
+CT0gUFRfTk9URTsKPiAtCQlwaGRyLT5wX2ZsYWdzCT0gMDsKPiAtCQlwaGRyLT5wX29mZnNldCAg
+PSBwaGRyLT5wX3BhZGRyID0gdm1jb3JlaW5mb19hZGRyX3hlbjsKPiAtCQlwaGRyLT5wX3ZhZGRy
+ICAgPSAwOwo+IC0JCXBoZHItPnBfZmlsZXN6CT0gcGhkci0+cF9tZW1zegk9IHZtY29yZWluZm9f
+bGVuX3hlbjsKPiAtCQkvKiBEbyB3ZSBuZWVkIGFueSBhbGlnbm1lbnQgb2Ygc2VnbWVudHM/ICov
+Cj4gLQkJcGhkci0+cF9hbGlnbgk9IDA7Cj4gLQo+IC0JCShlbGYtPmVfcGhudW0pKys7Cj4gLQkJ
+ZGJncHJpbnRmX3BoZHIoInZtY29yZWluZm9feGVuIGhlYWRlciIsIHBoZHIpOwo+IC0JfQo+IC0K
+PiAgCS8qIFNldHVwIGFuIFBUX0xPQUQgdHlwZSBwcm9ncmFtIGhlYWRlciBmb3IgdGhlIHJlZ2lv
+biB3aGVyZQo+ICAJICogS2VybmVsIGlzIG1hcHBlZCBpZiBlbGZfaW5mby0+a2Vybl9zaXplIGlz
+IG5vbi16ZXJvLgo+ICAJICovCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
