@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rcsinet15.oracle.com ([148.87.113.117])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1StfcI-00021C-7H
- for kexec@lists.infradead.org; Tue, 24 Jul 2012 13:57:39 +0000
-Date: Tue, 24 Jul 2012 15:54:10 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Message-ID: <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
-References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
- <201207231530.55871.ptesarik@suse.cz>
- <20120723201059.GA1848@host-192-168-1-59.local.net-space.pl>
- <201207241018.35292.ptesarik@suse.cz>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <201207241018.35292.ptesarik@suse.cz>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SthSc-0000Gk-TT
+ for kexec@lists.infradead.org; Tue, 24 Jul 2012 15:55:52 +0000
+Message-ID: <1343145331.16290.45.camel@cr0>
+Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
+From: Cong Wang <amwang@redhat.com>
+Date: Tue, 24 Jul 2012 23:55:31 +0800
+In-Reply-To: <500D340F.5080801@jp.fujitsu.com>
+References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
+ <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
+ <500D340F.5080801@jp.fujitsu.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,91 +24,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.cz>
-Cc: olaf@aepfle.de, horms@verge.net.au, kexec@lists.infradead.org, xen-devel@lists.xensource.com, konrad.wilk@oracle.com
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: yinghai.lu@oracle.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, hpa@zytor.com, xiyou.wangcong@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Tue, Jul 24, 2012 at 10:18:34AM +0200, Petr Tesarik wrote:
-> Dne Po 23. ??ervence 2012 22:10:59 Daniel Kiper napsal(a):
-> > Hi Petr,
-> >
-> > On Mon, Jul 23, 2012 at 03:30:55PM +0200, Petr Tesarik wrote:
-> > > Dne Po 23. ??ervence 2012 14:56:07 Petr Tesarik napsal(a):
-> > > > Dne ??t 5. ??ervence 2012 14:16:35 Daniel Kiper napsal(a):
-> > > > > vmcoreinfo file could exists under /sys/kernel (valid on baremetal
-> > > > > only) and/or under /sys/hypervisor (valid when Xen dom0 is running).
-> > > > > Read only one of them. It means that only one PT_NOTE will be always
-> > > > > created. Remove extra code for second PT_NOTE creation.
-> > > >
-> > > > Hi Daniel,
-> > > >
-> > > > are you absolutely sure this is the right thing to do? IIUC these two
-> > > > VMCORINFO notes are very different. The one from /sys/kernel/vmcoreinfo
-> > > > describes the Dom0 kernel (type 'VMCOREINFO'), while the one from
-> > > > /sys/hypervisor describes the Xen hypervisor (type 'XEN_VMCOREINFO').
-> > > > If you keep only the hypervisor note, then e.g. makedumpfile won't be
-> > > > able to use dumplevel greater than 1, nor will it be able to extract
-> > > > the log buffer.
-> > >
-> > > I've just verified this, and I'm confident we have to keep both notes in
-> > > the dump file. Simon, please revert Daniel's patch to avoid regressions.
-> > >
-> > > I'm attaching a sample VMCOREINFO_XEN and VMCOREINFO to demonstrate the
-> > > difference. Note that the VMCOREINFO_XEN note is actually too big,
-> > > because Xen doesn't bother to maintain the correct note size in the note
-> > > header, so it always spans a complete page minus sizeof(Elf64_Nhdr)...
-> >
-> > [...]
-> >
-> > The problem with /sys/kernel/vmcoreinfo under Xen is that it expose invalid
-> > physical address. It breaks /proc/vmcore in crash kernel. That is why I
-> > proposed that fix. Additionally, /sys/kernel/vmcoreinfo is not available
-> > under Xen Linux Ver. 2.6.18. However, I did not do any makedumpfile tests.
-> > If you discovered any issues with my patch please drop me more details
-> > about your tests (Xen version, Linux Kernel version, makedumpfile version,
-> > command lines, config files, logs, etc.). I will be more then happy to
-> > fix/improve kexec-tools and makedumpfile.
->
-> Hi Daniel,
->
-> well, Linux v2.6.18 does not have /sys/kernel/vmcoreinfo, simply because the
-> VMCOREINFO infrastructure was not present in 2.6.18. It was added later with
+On Mon, 2012-07-23 at 20:22 +0900, Takao Indoh wrote:
+> (2012/07/23 19:00), Dave Young wrote:
+> > On 07/17/2012 11:15 AM, Takao Indoh wrote:
+> > 
+> >> Hi Cong,
+> >>
+> >> When I tested kdump with 3.5.0-rc6 kernel, I found a problem of kdump
+> >> kernel's panic in find_early_table_space().
+> >>
+> >> init_memory_mapping: [mem 0x00000000-0x36ffafff]
+> >> Kernel panic - not syncing: Cannot find space for the kernel page tables
+> >> Pid: 0, comm: swapper Not tainted 3.5.0-rc6 #17
+> >> Call Trace:
+> >>   [<ffffffff8158549b>] panic+0xb8/0x1c8
+> >>   [<ffffffff8158565d>] ? printk+0x48/0x4a
+> >>   [<ffffffff8157304c>] init_memory_mapping+0x46c/0x530
+> >>   [<ffffffff818a73c7>] setup_arch+0x669/0xb0e
+> >>   [<ffffffff8158565d>] ? printk+0x48/0x4a
+> >>   [<ffffffff818a3a1f>] start_kernel+0x9b/0x34a
+> >>   [<ffffffff818a332d>] x86_64_start_reservations+0x131/0x136
+> >>   [<ffffffff818a341f>] x86_64_start_kernel+0xed/0xf4
+> >>
+> >> In find_early_table_space(), a kernel tries to find free area below 512M
+> >> for pgtable using memblock_find_in_range, but it fails because kdump
+> >> kernel does not have enough free space below 512M due to the memmap
+> >> restriction. This is the memmap option specified against kdump kernel
+> >> when crashkernel=128M.
+> >>
+> >> memmap=560K@64K memmap=130492K@770608K
+> >>
+> >> Only 560KB area is available and it is not sufficient for pgtable (it
+> >> seems that about 1.8MB area is needed for pgtable). This problem is
+> >> fixed by your revert patch. I hope this patch gets merged.
+> > 
+> > 
+> > I can reproduce this issue as well, probably related to some x86 mm init
+> > commits, this alloc failure does not happen with reverting below commits:
+> > 
+> > bd2753b2dda7bb43c7468826de75f49c6a7e8965
+> > 722bc6b16771ed80871e1fd81c86d3627dda2ac8
+> Yeah, my result of bisect is as follows and at first I thought the
+> commit 722bc6 caused this regression.
+> 
+> 722bc6b16771ed80871e1fd81c86d3627dda2ac8 is the first bad commit
+> commit 722bc6b16771ed80871e1fd81c86d3627dda2ac8
+> Author: WANG Cong <xiyou.wangcong@gmail.com>
+> Date:   Mon Mar 5 15:05:13 2012 -0800
+> 
+> IIUC, this commit just fixes a bug of counting pgtable entries. As the
+> result, another problem came up to the surface. In the case of my
+> machine(16GB memory), before applying 722bc6, find_early_table_space()
+> requests about 12KB free area and it can be got from 560K@64K area
+> luckily. I think the size find_early_table_space() requests was a bug.
+> After the bug is fixed by the commit 722bc6, find_early_table_space()
+> requires 1.8MB area and it fails as I wrote.
 
-Yep.
+Thanks for tracking this, Takao!
 
-> commit fd59d231f81cb02870b9cf15f456a897f3669b4e, which went into 2.6.24.
+I bet you are using x86_64 not x86 PAE? If so, could you try this patch
+https://patchwork.kernel.org/patch/1195751/
+? I already reviewed it.
 
-Hmmm... As I know 2.6.24 does not support kexec/kdump under Xen dom0. Correct?
+Sorry for the trouble!
 
-> I tested with the following combinations:
->
-> * xen-3.3.1 + kernel-xen-2.6.27.54 + kexec-tools-2.0.0 + makedumpfile-1.3.1
-> * xen-4.0.3 + kernel-xen-2.6.32.59 + kexec-tools-2.0.0 + makedumpfile-1.3.1
-> * xen-4.1.2 + kernel-xen-3.0.34 + kexec-tools-2.0.0 + makedumpfile-1.4.0
->
-> These versions correspond to SLES11-GA, SLES11-SP1 and SLES11-SP2,
-> respectively. All of them work just fine and save both ELF notes into the
-> dump.
 
-Could you test current kexec-tools development version and
-latest makedumpfile version on latest SLES version?
-
-> What do you mean by "invalid physical address"? I'm getting the correct
-> physical address under Xen. Obviously, it must be translated to machine
-> addresses if you need them from the secondary kernel.
-
-Correct vmcoreinfo address should be established by calling
-HYPERVISOR_kexec_op(KEXEC_CMD_kexec_get_range, KEXEC_RANGE_MA_VMCOREINFO).
-Address exposed by /sys/kernel/vmcoreinfo is calculated in other way.
-/sys/hypervisor/vmcoreinfo does it correctly (in older implementations
-and in my new upstream implementation which I am going to post shortly).
-
-> Anyway, let me re-install my test system and send all the necessary
-> information. What kind of log files are you interested in?
-
-If you spot any error in any logfile which in your opinion
-is relevent to our testes please send me it.
-
-Daniel
 
 _______________________________________________
 kexec mailing list
