@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1StaKX-0006ig-Lo
- for kexec@lists.infradead.org; Tue, 24 Jul 2012 08:19:00 +0000
-From: Petr Tesarik <ptesarik@suse.cz>
+Received: from rcsinet15.oracle.com ([148.87.113.117])
+ by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1StfcI-00021C-7H
+ for kexec@lists.infradead.org; Tue, 24 Jul 2012 13:57:39 +0000
+Date: Tue, 24 Jul 2012 15:54:10 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
 Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Date: Tue, 24 Jul 2012 10:18:34 +0200
+Message-ID: <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
 References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
  <201207231530.55871.ptesarik@suse.cz>
  <20120723201059.GA1848@host-192-168-1-59.local.net-space.pl>
-In-Reply-To: <20120723201059.GA1848@host-192-168-1-59.local.net-space.pl>
+ <201207241018.35292.ptesarik@suse.cz>
 MIME-Version: 1.0
-Message-Id: <201207241018.35292.ptesarik@suse.cz>
+Content-Disposition: inline
+In-Reply-To: <201207241018.35292.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,68 +22,97 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
+To: Petr Tesarik <ptesarik@suse.cz>
 Cc: olaf@aepfle.de, horms@verge.net.au, kexec@lists.infradead.org, xen-devel@lists.xensource.com, konrad.wilk@oracle.com
 
-RG5lIFBvIDIzLiDEjWVydmVuY2UgMjAxMiAyMjoxMDo1OSBEYW5pZWwgS2lwZXIgbmFwc2FsKGEp
-Ogo+IEhpIFBldHIsCj4gCj4gT24gTW9uLCBKdWwgMjMsIDIwMTIgYXQgMDM6MzA6NTVQTSArMDIw
-MCwgUGV0ciBUZXNhcmlrIHdyb3RlOgo+ID4gRG5lIFBvIDIzLiA/P2VydmVuY2UgMjAxMiAxNDo1
-NjowNyBQZXRyIFRlc2FyaWsgbmFwc2FsKGEpOgo+ID4gPiBEbmUgPz90IDUuID8/ZXJ2ZW5jZSAy
-MDEyIDE0OjE2OjM1IERhbmllbCBLaXBlciBuYXBzYWwoYSk6Cj4gPiA+ID4gdm1jb3JlaW5mbyBm
-aWxlIGNvdWxkIGV4aXN0cyB1bmRlciAvc3lzL2tlcm5lbCAodmFsaWQgb24gYmFyZW1ldGFsCj4g
-PiA+ID4gb25seSkgYW5kL29yIHVuZGVyIC9zeXMvaHlwZXJ2aXNvciAodmFsaWQgd2hlbiBYZW4g
-ZG9tMCBpcyBydW5uaW5nKS4KPiA+ID4gPiBSZWFkIG9ubHkgb25lIG9mIHRoZW0uIEl0IG1lYW5z
-IHRoYXQgb25seSBvbmUgUFRfTk9URSB3aWxsIGJlIGFsd2F5cwo+ID4gPiA+IGNyZWF0ZWQuIFJl
-bW92ZSBleHRyYSBjb2RlIGZvciBzZWNvbmQgUFRfTk9URSBjcmVhdGlvbi4KPiA+ID4gCj4gPiA+
-IEhpIERhbmllbCwKPiA+ID4gCj4gPiA+IGFyZSB5b3UgYWJzb2x1dGVseSBzdXJlIHRoaXMgaXMg
-dGhlIHJpZ2h0IHRoaW5nIHRvIGRvPyBJSVVDIHRoZXNlIHR3bwo+ID4gPiBWTUNPUklORk8gbm90
-ZXMgYXJlIHZlcnkgZGlmZmVyZW50LiBUaGUgb25lIGZyb20gL3N5cy9rZXJuZWwvdm1jb3JlaW5m
-bwo+ID4gPiBkZXNjcmliZXMgdGhlIERvbTAga2VybmVsICh0eXBlICdWTUNPUkVJTkZPJyksIHdo
-aWxlIHRoZSBvbmUgZnJvbQo+ID4gPiAvc3lzL2h5cGVydmlzb3IgZGVzY3JpYmVzIHRoZSBYZW4g
-aHlwZXJ2aXNvciAodHlwZSAnWEVOX1ZNQ09SRUlORk8nKS4KPiA+ID4gSWYgeW91IGtlZXAgb25s
-eSB0aGUgaHlwZXJ2aXNvciBub3RlLCB0aGVuIGUuZy4gbWFrZWR1bXBmaWxlIHdvbid0IGJlCj4g
-PiA+IGFibGUgdG8gdXNlIGR1bXBsZXZlbCBncmVhdGVyIHRoYW4gMSwgbm9yIHdpbGwgaXQgYmUg
-YWJsZSB0byBleHRyYWN0Cj4gPiA+IHRoZSBsb2cgYnVmZmVyLgo+ID4gCj4gPiBJJ3ZlIGp1c3Qg
-dmVyaWZpZWQgdGhpcywgYW5kIEknbSBjb25maWRlbnQgd2UgaGF2ZSB0byBrZWVwIGJvdGggbm90
-ZXMgaW4KPiA+IHRoZSBkdW1wIGZpbGUuIFNpbW9uLCBwbGVhc2UgcmV2ZXJ0IERhbmllbCdzIHBh
-dGNoIHRvIGF2b2lkIHJlZ3Jlc3Npb25zLgo+ID4gCj4gPiBJJ20gYXR0YWNoaW5nIGEgc2FtcGxl
-IFZNQ09SRUlORk9fWEVOIGFuZCBWTUNPUkVJTkZPIHRvIGRlbW9uc3RyYXRlIHRoZQo+ID4gZGlm
-ZmVyZW5jZS4gTm90ZSB0aGF0IHRoZSBWTUNPUkVJTkZPX1hFTiBub3RlIGlzIGFjdHVhbGx5IHRv
-byBiaWcsCj4gPiBiZWNhdXNlIFhlbiBkb2Vzbid0IGJvdGhlciB0byBtYWludGFpbiB0aGUgY29y
-cmVjdCBub3RlIHNpemUgaW4gdGhlIG5vdGUKPiA+IGhlYWRlciwgc28gaXQgYWx3YXlzIHNwYW5z
-IGEgY29tcGxldGUgcGFnZSBtaW51cyBzaXplb2YoRWxmNjRfTmhkcikuLi4KPiAKPiBbLi4uXQo+
-IAo+IFRoZSBwcm9ibGVtIHdpdGggL3N5cy9rZXJuZWwvdm1jb3JlaW5mbyB1bmRlciBYZW4gaXMg
-dGhhdCBpdCBleHBvc2UgaW52YWxpZAo+IHBoeXNpY2FsIGFkZHJlc3MuIEl0IGJyZWFrcyAvcHJv
-Yy92bWNvcmUgaW4gY3Jhc2gga2VybmVsLiBUaGF0IGlzIHdoeSBJCj4gcHJvcG9zZWQgdGhhdCBm
-aXguIEFkZGl0aW9uYWxseSwgL3N5cy9rZXJuZWwvdm1jb3JlaW5mbyBpcyBub3QgYXZhaWxhYmxl
-Cj4gdW5kZXIgWGVuIExpbnV4IFZlci4gMi42LjE4LiBIb3dldmVyLCBJIGRpZCBub3QgZG8gYW55
-IG1ha2VkdW1wZmlsZSB0ZXN0cy4KPiBJZiB5b3UgZGlzY292ZXJlZCBhbnkgaXNzdWVzIHdpdGgg
-bXkgcGF0Y2ggcGxlYXNlIGRyb3AgbWUgbW9yZSBkZXRhaWxzCj4gYWJvdXQgeW91ciB0ZXN0cyAo
-WGVuIHZlcnNpb24sIExpbnV4IEtlcm5lbCB2ZXJzaW9uLCBtYWtlZHVtcGZpbGUgdmVyc2lvbiwK
-PiBjb21tYW5kIGxpbmVzLCBjb25maWcgZmlsZXMsIGxvZ3MsIGV0Yy4pLiBJIHdpbGwgYmUgbW9y
-ZSB0aGVuIGhhcHB5IHRvCj4gZml4L2ltcHJvdmUga2V4ZWMtdG9vbHMgYW5kIG1ha2VkdW1wZmls
-ZS4KCkhpIERhbmllbCwKCndlbGwsIExpbnV4IHYyLjYuMTggZG9lcyBub3QgaGF2ZSAvc3lzL2tl
-cm5lbC92bWNvcmVpbmZvLCBzaW1wbHkgYmVjYXVzZSB0aGUgClZNQ09SRUlORk8gaW5mcmFzdHJ1
-Y3R1cmUgd2FzIG5vdCBwcmVzZW50IGluIDIuNi4xOC4gSXQgd2FzIGFkZGVkIGxhdGVyIHdpdGgg
-CmNvbW1pdCBmZDU5ZDIzMWY4MWNiMDI4NzBiOWNmMTVmNDU2YTg5N2YzNjY5YjRlLCB3aGljaCB3
-ZW50IGludG8gMi42LjI0LgoKSSB0ZXN0ZWQgd2l0aCB0aGUgZm9sbG93aW5nIGNvbWJpbmF0aW9u
-czoKCiogeGVuLTMuMy4xICsga2VybmVsLXhlbi0yLjYuMjcuNTQgKyBrZXhlYy10b29scy0yLjAu
-MCArIG1ha2VkdW1wZmlsZS0xLjMuMQoqIHhlbi00LjAuMyArIGtlcm5lbC14ZW4tMi42LjMyLjU5
-ICsga2V4ZWMtdG9vbHMtMi4wLjAgKyBtYWtlZHVtcGZpbGUtMS4zLjEKKiB4ZW4tNC4xLjIgKyBr
-ZXJuZWwteGVuLTMuMC4zNCArIGtleGVjLXRvb2xzLTIuMC4wICsgbWFrZWR1bXBmaWxlLTEuNC4w
-CgpUaGVzZSB2ZXJzaW9ucyBjb3JyZXNwb25kIHRvIFNMRVMxMS1HQSwgU0xFUzExLVNQMSBhbmQg
-U0xFUzExLVNQMiwgCnJlc3BlY3RpdmVseS4gQWxsIG9mIHRoZW0gd29yayBqdXN0IGZpbmUgYW5k
-IHNhdmUgYm90aCBFTEYgbm90ZXMgaW50byB0aGUgCmR1bXAuCgpXaGF0IGRvIHlvdSBtZWFuIGJ5
-ICJpbnZhbGlkIHBoeXNpY2FsIGFkZHJlc3MiPyBJJ20gZ2V0dGluZyB0aGUgY29ycmVjdCAKcGh5
-c2ljYWwgYWRkcmVzcyB1bmRlciBYZW4uIE9idmlvdXNseSwgaXQgbXVzdCBiZSB0cmFuc2xhdGVk
-IHRvIG1hY2hpbmUgCmFkZHJlc3NlcyBpZiB5b3UgbmVlZCB0aGVtIGZyb20gdGhlIHNlY29uZGFy
-eSBrZXJuZWwuCgpBbnl3YXksIGxldCBtZSByZS1pbnN0YWxsIG15IHRlc3Qgc3lzdGVtIGFuZCBz
-ZW5kIGFsbCB0aGUgbmVjZXNzYXJ5IAppbmZvcm1hdGlvbi4gV2hhdCBraW5kIG9mIGxvZyBmaWxl
-cyBhcmUgeW91IGludGVyZXN0ZWQgaW4/CgpQZXRyIFRlc2FyaWsKU1VTRSBMaW51eAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Tue, Jul 24, 2012 at 10:18:34AM +0200, Petr Tesarik wrote:
+> Dne Po 23. ??ervence 2012 22:10:59 Daniel Kiper napsal(a):
+> > Hi Petr,
+> >
+> > On Mon, Jul 23, 2012 at 03:30:55PM +0200, Petr Tesarik wrote:
+> > > Dne Po 23. ??ervence 2012 14:56:07 Petr Tesarik napsal(a):
+> > > > Dne ??t 5. ??ervence 2012 14:16:35 Daniel Kiper napsal(a):
+> > > > > vmcoreinfo file could exists under /sys/kernel (valid on baremetal
+> > > > > only) and/or under /sys/hypervisor (valid when Xen dom0 is running).
+> > > > > Read only one of them. It means that only one PT_NOTE will be always
+> > > > > created. Remove extra code for second PT_NOTE creation.
+> > > >
+> > > > Hi Daniel,
+> > > >
+> > > > are you absolutely sure this is the right thing to do? IIUC these two
+> > > > VMCORINFO notes are very different. The one from /sys/kernel/vmcoreinfo
+> > > > describes the Dom0 kernel (type 'VMCOREINFO'), while the one from
+> > > > /sys/hypervisor describes the Xen hypervisor (type 'XEN_VMCOREINFO').
+> > > > If you keep only the hypervisor note, then e.g. makedumpfile won't be
+> > > > able to use dumplevel greater than 1, nor will it be able to extract
+> > > > the log buffer.
+> > >
+> > > I've just verified this, and I'm confident we have to keep both notes in
+> > > the dump file. Simon, please revert Daniel's patch to avoid regressions.
+> > >
+> > > I'm attaching a sample VMCOREINFO_XEN and VMCOREINFO to demonstrate the
+> > > difference. Note that the VMCOREINFO_XEN note is actually too big,
+> > > because Xen doesn't bother to maintain the correct note size in the note
+> > > header, so it always spans a complete page minus sizeof(Elf64_Nhdr)...
+> >
+> > [...]
+> >
+> > The problem with /sys/kernel/vmcoreinfo under Xen is that it expose invalid
+> > physical address. It breaks /proc/vmcore in crash kernel. That is why I
+> > proposed that fix. Additionally, /sys/kernel/vmcoreinfo is not available
+> > under Xen Linux Ver. 2.6.18. However, I did not do any makedumpfile tests.
+> > If you discovered any issues with my patch please drop me more details
+> > about your tests (Xen version, Linux Kernel version, makedumpfile version,
+> > command lines, config files, logs, etc.). I will be more then happy to
+> > fix/improve kexec-tools and makedumpfile.
+>
+> Hi Daniel,
+>
+> well, Linux v2.6.18 does not have /sys/kernel/vmcoreinfo, simply because the
+> VMCOREINFO infrastructure was not present in 2.6.18. It was added later with
+
+Yep.
+
+> commit fd59d231f81cb02870b9cf15f456a897f3669b4e, which went into 2.6.24.
+
+Hmmm... As I know 2.6.24 does not support kexec/kdump under Xen dom0. Correct?
+
+> I tested with the following combinations:
+>
+> * xen-3.3.1 + kernel-xen-2.6.27.54 + kexec-tools-2.0.0 + makedumpfile-1.3.1
+> * xen-4.0.3 + kernel-xen-2.6.32.59 + kexec-tools-2.0.0 + makedumpfile-1.3.1
+> * xen-4.1.2 + kernel-xen-3.0.34 + kexec-tools-2.0.0 + makedumpfile-1.4.0
+>
+> These versions correspond to SLES11-GA, SLES11-SP1 and SLES11-SP2,
+> respectively. All of them work just fine and save both ELF notes into the
+> dump.
+
+Could you test current kexec-tools development version and
+latest makedumpfile version on latest SLES version?
+
+> What do you mean by "invalid physical address"? I'm getting the correct
+> physical address under Xen. Obviously, it must be translated to machine
+> addresses if you need them from the secondary kernel.
+
+Correct vmcoreinfo address should be established by calling
+HYPERVISOR_kexec_op(KEXEC_CMD_kexec_get_range, KEXEC_RANGE_MA_VMCOREINFO).
+Address exposed by /sys/kernel/vmcoreinfo is calculated in other way.
+/sys/hypervisor/vmcoreinfo does it correctly (in older implementations
+and in my new upstream implementation which I am going to post shortly).
+
+> Anyway, let me re-install my test system and send all the necessary
+> information. What kind of log files are you interested in?
+
+If you spot any error in any logfile which in your opinion
+is relevent to our testes please send me it.
+
+Daniel
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
