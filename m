@@ -1,32 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1StpNt-0001pG-TZ
- for kexec@lists.infradead.org; Wed, 25 Jul 2012 00:23:37 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 80F363EE0C1
- for <kexec@lists.infradead.org>; Wed, 25 Jul 2012 09:23:17 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 5F93A45DE5F
- for <kexec@lists.infradead.org>; Wed, 25 Jul 2012 09:23:17 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 7F64745DE5C
- for <kexec@lists.infradead.org>; Wed, 25 Jul 2012 09:23:14 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 6EC9A1DB8059
- for <kexec@lists.infradead.org>; Wed, 25 Jul 2012 09:23:14 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 13D801DB8050
- for <kexec@lists.infradead.org>; Wed, 25 Jul 2012 09:23:14 +0900 (JST)
-Message-ID: <500F3B7C.70009@jp.fujitsu.com>
-Date: Wed, 25 Jul 2012 09:19:08 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1Svg7w-0005gD-Kp
+ for kexec@lists.infradead.org; Mon, 30 Jul 2012 02:54:38 +0000
+Message-ID: <5015F737.7090508@cn.fujitsu.com>
+Date: Mon, 30 Jul 2012 10:53:43 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
-References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
- <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
- <500D340F.5080801@jp.fujitsu.com> <1343145331.16290.45.camel@cr0>
-In-Reply-To: <1343145331.16290.45.camel@cr0>
+Subject: Re: [PATCH v5 0/3] Export offsets of VMCS fields as note information
+ for kdump
+References: <4FFE9EDE.8080107@cn.fujitsu.com>
+In-Reply-To: <4FFE9EDE.8080107@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,83 +19,156 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: amwang@redhat.com
-Cc: yinghai.lu@oracle.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, hpa@zytor.com, xiyou.wangcong@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com
+To: Avi Kivity <avi@redhat.com>
+Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
 
-(2012/07/25 0:55), Cong Wang wrote:
-> On Mon, 2012-07-23 at 20:22 +0900, Takao Indoh wrote:
->> (2012/07/23 19:00), Dave Young wrote:
->>> On 07/17/2012 11:15 AM, Takao Indoh wrote:
->>>
->>>> Hi Cong,
->>>>
->>>> When I tested kdump with 3.5.0-rc6 kernel, I found a problem of kdump
->>>> kernel's panic in find_early_table_space().
->>>>
->>>> init_memory_mapping: [mem 0x00000000-0x36ffafff]
->>>> Kernel panic - not syncing: Cannot find space for the kernel page tables
->>>> Pid: 0, comm: swapper Not tainted 3.5.0-rc6 #17
->>>> Call Trace:
->>>>    [<ffffffff8158549b>] panic+0xb8/0x1c8
->>>>    [<ffffffff8158565d>] ? printk+0x48/0x4a
->>>>    [<ffffffff8157304c>] init_memory_mapping+0x46c/0x530
->>>>    [<ffffffff818a73c7>] setup_arch+0x669/0xb0e
->>>>    [<ffffffff8158565d>] ? printk+0x48/0x4a
->>>>    [<ffffffff818a3a1f>] start_kernel+0x9b/0x34a
->>>>    [<ffffffff818a332d>] x86_64_start_reservations+0x131/0x136
->>>>    [<ffffffff818a341f>] x86_64_start_kernel+0xed/0xf4
->>>>
->>>> In find_early_table_space(), a kernel tries to find free area below 512M
->>>> for pgtable using memblock_find_in_range, but it fails because kdump
->>>> kernel does not have enough free space below 512M due to the memmap
->>>> restriction. This is the memmap option specified against kdump kernel
->>>> when crashkernel=128M.
->>>>
->>>> memmap=560K@64K memmap=130492K@770608K
->>>>
->>>> Only 560KB area is available and it is not sufficient for pgtable (it
->>>> seems that about 1.8MB area is needed for pgtable). This problem is
->>>> fixed by your revert patch. I hope this patch gets merged.
->>>
->>>
->>> I can reproduce this issue as well, probably related to some x86 mm init
->>> commits, this alloc failure does not happen with reverting below commits:
->>>
->>> bd2753b2dda7bb43c7468826de75f49c6a7e8965
->>> 722bc6b16771ed80871e1fd81c86d3627dda2ac8
->> Yeah, my result of bisect is as follows and at first I thought the
->> commit 722bc6 caused this regression.
->>
->> 722bc6b16771ed80871e1fd81c86d3627dda2ac8 is the first bad commit
->> commit 722bc6b16771ed80871e1fd81c86d3627dda2ac8
->> Author: WANG Cong <xiyou.wangcong@gmail.com>
->> Date:   Mon Mar 5 15:05:13 2012 -0800
->>
->> IIUC, this commit just fixes a bug of counting pgtable entries. As the
->> result, another problem came up to the surface. In the case of my
->> machine(16GB memory), before applying 722bc6, find_early_table_space()
->> requests about 12KB free area and it can be got from 560K@64K area
->> luckily. I think the size find_early_table_space() requests was a bug.
->> After the bug is fixed by the commit 722bc6, find_early_table_space()
->> requires 1.8MB area and it fails as I wrote.
->
-> Thanks for tracking this, Takao!
->
-> I bet you are using x86_64 not x86 PAE? If so, could you try this patch
-> https://patchwork.kernel.org/patch/1195751/
-> ? I already reviewed it.
-
-Great, I applied it and now kdump works. Thanks!
-
-Thanks,
-Takao Indoh
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQXZpLAoKRG8geW91IGhhdmUgYW55IGNvbW1lbnRzIGFib3V0IHRoaXMgdmVyc2lvbiBv
+ZiB0aGUgcGF0Y2ggc2V0PwoK5LqOIDIwMTLlubQwN+aciDEy5pelIDE3OjU0LCBaaGFuZyBZYW5m
+ZWkg5YaZ6YGTOgo+IFRoaXMgcGF0Y2ggc2V0IGV4cG9ydHMgb2Zmc2V0cyBvZiBWTUNTIGZpZWxk
+cyBhcyBub3RlIGluZm9ybWF0aW9uIGZvcgo+IGtkdW1wLiBXZSBjYWxsIGl0IFZNQ1NJTkZPLiBU
+aGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+IHJ1bnRpbWUgc3RhdGUgb2Yg
+Z3Vlc3QgbWFjaGluZSBpbWFnZSwgc3VjaCBhcyByZWdpc3RlcnMsIGluIGhvc3QKPiBtYWNoaW5l
+J3MgY3Jhc2ggZHVtcCBhcyBWTUNTIGZvcm1hdC4gVGhlIHByb2JsZW0gaXMgdGhhdCBWTUNTIGlu
+dGVybmFsCj4gaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0cyBzcGVjaWZpY2F0aW9uLiBTbywgd2Ug
+c2xvdmUgdGhpcyBwcm9ibGVtCj4gYnkgcmV2ZXJzZSBlbmdpbmVlcmluZyBpbXBsZW1lbnRlZCBp
+biB0aGlzIHBhdGNoIHNldC4gVGhlIFZNQ1NJTkZPCj4gaXMgZXhwb3J0ZWQgdmlhIHN5c2ZzICgv
+c3lzL2RldmljZXMvc3lzdGVtL2NwdS92bWNzLykgdG8ga2V4ZWMtdG9vbHMuCj4gCj4gSGVyZSBh
+cmUgdHdvIHVzZXJjYXNlcyBmb3IgdHdvIGZlYXR1cmVzIHRoYXQgd2Ugd2FudC4KPiAKPiAxKSBD
+cmVhdGUgZ3Vlc3QgbWFjaGluZSdzIGNyYXNoIGR1bXBmaWxlIGZyb20gaG9zdCBtYWNoaW5lJ3Mg
+Y3Jhc2ggZHVtcGZpbGUKPiAKPiBJbiBnZW5lcmFsLCB3ZSB3YW50IHRvIHVzZSB0aGlzIGZlYXR1
+cmUgb24gZmFpbHVyZSBhbmFseXNpcyBmb3IgdGhlIHN5c3RlbQo+IHdoZXJlIHRoZSBwcm9jZXNz
+aW5nIGRlcGVuZHMgb24gdGhlIGNvbW11bmljYXRpb24gYmV0d2VlbiBob3N0IGFuZCBndWVzdAo+
+IG1hY2hpbmVzIHRvIGxvb2sgaW50byB0aGUgc3lzdGVtIGZyb20gYm90aCBtYWNoaW5lcydzIHZp
+ZXdwb2ludHMuCj4gCj4gQXMgYSBjb25jcmV0ZSBzaXR1YXRpb24sIGNvbnNpZGVyIHdoZXJlIHRo
+ZXJlJ3MgaGVhcnRiZWF0IG1vbml0b3JpbmcKPiBmZWF0dXJlIG9uIHRoZSBndWVzdCBtYWNoaW5l
+J3Mgc2lkZSwgd2hlcmUgd2UgbmVlZCB0byBkZXRlcm1pbmUgaW4KPiB3aGljaCBtYWNoaW5lIHNp
+ZGUgdGhlIGNhdXNlIG9mIGhlYXJ0YmVhdCBzdG9wIGxpZXMuIEluIG91ciBhY3R1YWwKPiBleHBl
+cmltZW50cywgd2UgZW5jb3VudGVyZWQgc3VjaCBzaXR1YXRpb24gYW5kIHdlIGZvdW5kIHRoZSBj
+YXVzZSBvZgo+IHRoZSBidWcgd2FzIGluIGhvc3QncyBwcm9jZXNzIHNjaGVkdWxhciBzbyBndWVz
+dCBtYWNoaW5lJ3MgdmNwdSBzdG9wcGVkCj4gZm9yIGEgbG9uZyB0aW1lIGFuZCB0aGVuIGxlZCB0
+byBoZWFydGJlYXQgc3RvcC4KPiAKPiBUaGUgbW9kdWxlIHRoYXQganVkZ2VzIGhlYXJ0YmVhdCBz
+dG9wIGlzIG9uIGd1ZXN0IG1hY2hpbmUsIHNvIHdlIG5lZWQKPiB0byBkZWJ1ZyBndWVzdCBtYWNo
+aW5lJ3MgZGF0YS4gQnV0IGlmIHRoZSBjYXVzZSBsaWVzIGluIGhvc3QgbWFjaGluZQo+IHNpZGUs
+IHdlIG5lZWQgdG8gbG9vayBpbnRvIGhvc3QgbWFjaGluZSdzIGNyYXNoIGR1bXAuCj4gCj4gV2l0
+aG91dCB0aGlzIGZlYXR1cmUsIHdlIGZpcnN0IGNyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgZHVtcCBh
+bmQgdGhlbgo+IGNyZWF0ZSBob3N0IG1haGluZSdzLCBidXQgdGhlcmUncyBvbmx5IGEgc2hvcnQg
+dGltZSBiZXR3ZWVuIHR3bwo+IHByb2Nlc3NpbmdzLCBkdXJpbmcgd2hpY2ggaXQncyB1bmxpa2Vs
+eSB0aGF0IGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLgo+IAo+IFNvLCB3ZSB0aGluayB0aGUgZmVh
+dHVyZSBpcyB1c2VmdWwgdG8gZGVidWcgYm90aCBndWVzdCBtYWNoaW5lJ3MgYW5kCj4gaG9zdCBt
+YWNoaW5lJ3Mgc2lkZXMgYXQgdGhlIHNhbWUgdGltZSwgYW5kIGV4cGVjdCB3ZSBjYW4gbWFrZSBm
+YWlsdXJlCj4gYW5hbHlzaXMgZWZmaWNpZW50bHkuCj4gCj4gT2YgY291cnNlLCB3ZSBiZWxpZXZl
+IHRoaXMgZmVhdHVyZSBpcyBjb21tb25seSB1c2VmdWwgb24gdGhlIHNpdHVhdGlvbgo+IHdoZXJl
+IGd1ZXN0IG1hY2hpbmUgZG9lc24ndCB3b3JrIHdlbGwgZHVlIHRvIHNvbWV0aGluZyBvZiBob3N0
+IG1hY2hpbmUncy4KPiAKPiAyKSBHZXQgb2Zmc2V0cyBvZiBWTUNTIGluZm9ybWF0aW9uIG9uIHRo
+ZSBDUFUgcnVubmluZyBvbiB0aGUgaG9zdCBtYWNoaW5lCj4gCj4gSWYga2R1bXAgZG9lc24ndCB3
+b3JrIHdlbGwsIHRoZW4gaXQgbWVhbnMgd2UgY2Fubm90IHVzZSBrdm0gQVBJIHRvIGdldAo+IHJl
+Z2lzdGVyIHZhbHVlcyBvZiBndWVzdCBtYWNoaW5lIGFuZCB0aGV5IGFyZSBzdGlsbCBsZWZ0IG9u
+IGl0cyB2bWNzCj4gcmVnaW9uLiBJbiB0aGUgY2FzZSwgd2UgdXNlIGNyYXNoIGR1bXAgbWVjaGFu
+aXNtIHJ1bm5pbmcgb3V0c2lkZSBvZgo+IGxpbnV4IGtlcm5lbCwgc3VjaCBhcyBzYWR1bXAsIGEg
+ZmlybXdhcmUtYmFzZWQgY3Jhc2ggZHVtcC4gVGhlbiBWTUNTCj4gaW5mb3JtYXRpb24gaXMgdGhl
+biBuZWNlc3NhcnkuCj4gCj4gVE9ETzoKPiAgIDEuIEluIGtleGVjLXRvb2xzLCBnZXQgVk1DU0lO
+Rk8gdmlhIHN5c2ZzIGFuZCBkdW1wIGl0IGFzIG5vdGUgaW5mb3JtYXRpb24KPiAgICAgIGludG8g
+dm1jb3JlLgo+ICAgMi4gRHVtcCBWTUNTIHJlZ2lvbiBvZiBlYWNoIGd1ZXN0IHZjcHUgYW5kIFZN
+Q1NJTkZPIGludG8gcWVtdS1wcm9jZXNzCj4gICAgICBjb3JlIGZpbGUuIFRvIGRvIHRoaXMsIHdl
+IHdpbGwgbW9kaWZ5IGtlcm5lbCBjb3JlIGR1bXBlciwgZ2RiIGdjb3JlCj4gICAgICBhbmQgY3Jh
+c2ggZ2NvcmUuCj4gICAzLiBEdW1wIGd1ZXN0IGltYWdlIGZyb20gdGhlIHFlbXUtcHJvY2VzcyBj
+b3JlIGZpbGUgaW50byBhIHZtY29yZS4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2NCB0byB2NToKPiAx
+LiBUaGUgVk1DU0lORk8gaXMgc3RvcmVkIGluIGEgdHdvLWRpbWVuc2lvbmFsIGFycmF5IGZpbGxl
+ZCB3aXRoIGVhY2gKPiAgICBmaWVsZCdzIGVuY29kaW5nIGFuZCBjb3JyZXNwb25kaW5nIG9mZnNl
+dC4gU28gdGhlIHNpemUgb2YgVk1DU0lORk8KPiAgICBpcyBtdWNoIHNtYWxsZXIuCj4gMi4gdm1j
+cyBzeXNmcyBmaWxlIC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L3ZtY3NfaWQgaXMgbW92ZWQgdG8K
+PiAgICAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS92bWNzL2lkLgo+IDMuIFJld3JpdGUgdGhlIEFC
+SSBlbnRyeSBmb3Igdm1jcyBpbnRlcmZhY2UgYW5kIHJlbW92ZSB0aGUgS2VybmVsVmVyc2lvbgo+
+ICAgIGxpbmUuCj4gCj4gQ2hhbmdlbG9nIGZyb20gdjMgdG8gdjQ6Cj4gMS4gQWxsIHRoZSB2YXJp
+YWJsZXMgYW5kIGZ1bmN0aW9ucyBhcmUgbW92ZWQgdG8gdm1jc2luZm8taW50ZWwgbW9kdWxlLgo+
+IDIuIEFkZCBhIG5ldyBzeXNmcyBpbnRlcmZhY2UgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvdm1j
+c19pZCB0byBleHBvcnQKPiAgICB2bWNzIHJldmlzaW9uIGlkZW50aWZpZXIuIEFuZCBvcmlnaWFs
+IHN5c2ZzIGludGVyZmFjZSBpcyBjaGFuZ2VkCj4gICAgZnJvbSAvc3lzL2RldmljZXMvY3B1L3Zt
+Y3MgdG8gL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvdm1jcy4gVGhhbmtzCj4gICAgR3JlZyBLSCBm
+b3IgaGlzIGhlbHBmdWwgY29tbWVudHMgYWJvdXQgc3lzZnMuCj4gCj4gQ2hhbmdlbG9nIGZyb20g
+djIgdG8gdjM6Cj4gMS4gTmV3IFZNQ1NJTkZPIGZvcm1hdC4KPiAgICBOb3cgdGhlIFZNQ1NJTkZP
+IGlzIG1haW5seSBtYWRlIHVwIG9mIGFuIGFycmF5IHRoYXQgY29udGFpbnMgYWxsIHZtY3MKPiAg
+ICBmaWVsZHMnIG9mZnNldHMuIFRoZSBvZmZzZXRzIGFyZW4ndCBlbmNvZGVkIGJlY2F1c2Ugd2Ug
+ZGVjb2RlIHRoZW0gaW4KPiAgICB0aGUgbW9kdWxlIGl0c2VsZi4gSWYgc29tZSBmaWVsZCBkb2Vz
+bid0IGV4aXN0IG9yIGl0cyBvZmZzZXQgY2Fubm90IGJlCj4gICAgZGVjb2RlZCBjb3JyZWN0bHks
+IHRoZSBvZmZzZXQgaW4gdGhlIGFycmF5IGlzIGp1c3Qgc2V0IHRvIHplcm8uCj4gMi4gTmV3IHN5
+c2ZzIGludGVyZmFjZSBhbmQgRG9jdW1lbnRhdGlvbi9BQkkgZW50cnkuIAo+ICAgIFdlIGV4cG9z
+ZSB0aGUgYWN0dWFsIGZpZWxkcyBpbiAvc3lzL2RldmljZXMvY3B1L3ZtY3MgaW5zdGVhZCBvZiBq
+dXN0Cj4gICAgZXhwb3J0aW5nIHRoZSBhZGRyZXNzIG9mIFZNQ1NJTkZPIGluIC9zeXMva2VybmVs
+L3ZtY3NpbmZvLgo+ICAgIEZvciBleGFtcGxlLCAvc3lzL2RldmljZXMvY3B1L3ZtY3MvMDgwMCBj
+b250YWlucyB0aGUgb2Zmc2V0IG9mCj4gICAgR1VFU1RfRFNfU0VMRUNUT1IuIDA4MDAgaXMgdGhl
+IGVuY29kaW5nIG9mIEdVRVNUX0RTX1NFTEVDVE9SLgo+ICAgIEFjY29yZGluZ2x5LCBBQkkgZW50
+cnkgaW4gRG9jdW1lbnRhdGlvbiBpcyBjaGFuZ2VkIGZyb20gc3lzZnMta2VybmVsLXZtY3NpbmZv
+Cj4gICAgdG8gc3lzZnMtZGV2aWNlcy1jcHUtdm1jcy4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2MSB0
+byB2MjoKPiAxLiBUaGUgVk1DU0lORk8gbm93IGhhcyBhIHNpbXBsZSBiaW5hcnkgPGZpZWxkPjxl
+bmNvZGVkIG9mZnNldD4gZm9ybWF0LAo+ICAgIGFzIGJlbG93Ogo+ICAgICAgKy0tLS0tLS0tLS0t
+LS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICB8IEJ5dGUgb2Zmc2V0IHwgQ29u
+dGVudHMgICAgICAgICAgICAgICAgIHwKPiAgICAgICstLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tKwo+ICAgICAgfCAwICAgICAgICAgICB8IFZNQ1MgcmV2aXNpb24gaWRl
+bnRpZmllciB8Cj4gICAgICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LSsKPiAgICAgIHwgNCAgICAgICAgICAgfCA8ZmllbGQ+PGVuY29kZWQgb2Zmc2V0PiAgfAo+ICAg
+ICAgKy0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICB8IDE2
+ICAgICAgICAgIHwgPGZpZWxkPjxlbmNvZGVkIG9mZnNldD4gIHwKPiAgICAgICstLS0tLS0tLS0t
+LS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwo+ICAgICAgLi4uLi4uCj4gICAKPiAgICBU
+aGUgZmlyc3QgMzIgYml0cyBvZiBWTUNTSU5GTyBjb250YWlucyB0aGUgVk1DUyByZXZpc2lvbiBp
+ZGVudGlmaWVyLgo+ICAgIFRoZSByZW1haW5kZXIgb2YgVk1DU0lORk8gaXMgdXNlZCBmb3IgPGZp
+ZWxkPjxlbmNvZGVkIG9mZnNldD4gc2V0cy4KPiAgICBFYWNoIHNldCB0YWtlcyAxMiBieXRlczog
+ZmllbGQgb2NjdXB5cyA0IGJ5dGVzIGFuZCBpdHMgY29ycmVzcG9uZGluZwo+ICAgIGVuY29kZWQg
+b2Zmc2V0IG9jY3VweXMgOCBieXRlcy4KPiAKPiAgICBFbmNvZGVkIG9mZnNldHMgYXJlIHJhdyB2
+YWx1ZXMgcmVhZCBieSB2bWNzX3JlYWR7MTYsIDY0LCAzMiwgbH0sIGFuZAo+ICAgIHRoZXkgYXJl
+IGFsbCB1bnNpZ25lZCBleHRlbmRlZCB0byA4IGJ5dGVzIGZvciBlYWNoIDxmaWVsZD48ZW5jb2Rl
+ZCBvZmZzZXQ+Cj4gICAgc2V0IHdpbGwgaGF2ZSB0aGUgc2FtZSBzaXplLiAKPiAgICBXZSBkbyBu
+b3QgZGVjb2RlIG9mZnNldHMgaGVyZS4gVGhlIGRlY29kaW5nIHdvcmsgaXMgZGVsYXllZCBpbiB1
+c2Vyc3BhY2UKPiAgICB0b29scyBmb3IgbW9yZSBmbGV4aWJsZSBoYW5kbGluZy4KPiAgICAKPiAg
+ICBBbmQgaGVyZSBhcmUgdHdvIGV4YW1wbGVzIG9mIHRoZSBuZXcgVk1DU0lORk86Cj4gICAgUHJv
+Y2Vzc29yOiBJbnRlbChSKSBDb3JlKFRNKTIgRHVvIENQVSAgICAgRTc1MDAgIEAgMi45M0dIego+
+ICAgIFZNQ1NJTkZPIGNvbnRhaW5zOgo+ICAgICAgPDAwMDAwMDBkPiAgICAgICAgICAgICAgICAg
+ICAtLT4gVk1DUyByZXZpc2lvbiBpZCA9IDB4ZAo+ICAgICAgPDAwMDA0MDAwPjwwMDAwMDAwMDAx
+ODQwMTgwPiAtLT4gT0ZGU0VUKFBJTl9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgwMTg0MDE4
+MAo+ICAgICAgPDAwMDA0MDAyPjwwMDAwMDAwMDAxOTQwMTkwPiAtLT4gT0ZGU0VUKENQVV9CQVNF
+RF9WTV9FWEVDX0NPTlRST0wpID0gMHgwMTk0MDE5MAo+ICAgICAgPDAwMDA0MDFlPjwwMDAwMDAw
+MDBmZTQwZmUwPiAtLT4gT0ZGU0VUKFNFQ09OREFSWV9WTV9FWEVDX0NPTlRST0wpID0gMHgwZmU0
+MGZlMAo+ICAgICAgPDAwMDA0MDBjPjwwMDAwMDAwMDAxZTQwMWUwPiAtLT4gT0ZGU0VUKFZNX0VY
+SVRfQ09OVFJPTFMpID0gMHgwMWU0MDFlMAo+ICAgICAgLi4uLi4uCj4gCj4gICAgUHJvY2Vzc29y
+OiBJbnRlbChSKSBYZW9uKFIpIENQVSAgICAgICAgICAgRTc1NDAgIEAgMi4wMEdIeiAoMjQgY29y
+ZXMpCj4gICAgVk1DU0lORk8gY29udGFpbnM6Cj4gICAgICA8MDAwMDAwMGU+ICAgICAgICAgICAg
+ICAgICAgIC0tPiBWTUNTIHJldmlzaW9uIGlkID0gMHhlIAo+ICAgICAgPDAwMDA0MDAwPjwwMDAw
+MDAwMDA1NTQwNTUwPiAtLT4gT0ZGU0VUKFBJTl9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgw
+NTU0MDU1MAo+ICAgICAgPDAwMDA0MDAyPjwwMDAwMDAwMDA1NDQwNTQwPiAtLT4gT0ZGU0VUKENQ
+VV9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgwNTQ0MDU0MAo+ICAgICAgPDAwMDA0MDFlPjww
+MDAwMDAwMDA1NGMwNTQ4PiAtLT4gT0ZGU0VUKFNFQ09OREFSWV9WTV9FWEVDX0NPTlRST0wpID0g
+MHgwNTRjMDU0OAo+ICAgICAgPDAwMDA0MDBjPjwwMDAwMDAwMDA1N2MwNTc4PiAtLT4gT0ZGU0VU
+KFZNX0VYSVRfQ09OVFJPTFMpID0gMHgwNTdjMDU3OAo+ICAgICAgLi4uLi4uCj4gCj4gMi4gQWRk
+IGEgbmV3IGtlcm5lbCBtb2R1bGUgKnZtY3NpbmZvLWludGVsKiBmb3IgZmlsbGluZyBWTUNTSU5G
+TyBpbnN0ZWFkCj4gICAgb2YgcHV0dGluZyBpdCBpbiBtb2R1bGUga3ZtLWludGVsLiBUaGUgbmV3
+IG1vZHVsZSBpcyBhdXRvLWxvYWRlZAo+ICAgIHdoZW4gdGhlIHZteCBjcHVmZWF0dXJlIGlzIGRl
+dGVjdGVkIGFuZCBpdCBkZXBlbmRzIG9uIG1vZHVsZSBrdm0taW50ZWwuCj4gICAgKkxvYWRpbmcg
+YW5kIHVubG9hZGluZyB0aGlzIG1vZHVsZSB3aWxsIGhhdmUgbm8gc2lkZSBlZmZlY3Qgb24gdGhl
+Cj4gICAgcnVubmluZyBndWVzdHMuKgo+IDMuIFRoZSBzeXNmcyBmaWxlIHZtY3NpbmZvIGlzIHNw
+bGl0dGVkIGludG8gMiBmaWxlczoKPiAgICAvc3lzL2tlcm5lbC92bWNzaW5mbzogc2hvd3MgcGh5
+c2ljYWwgYWRkcmVzcyBvZiBWTUNTSU5GTyBub3RlIGluZm9ybWF0aW9uLgo+ICAgIC9zeXMva2Vy
+bmVsL3ZtY3NpbmZvX21heHNpemU6IHNob3dzIG1heCBzaXplIG9mIFZNQ1NJTkZPLgo+IDQuIEEg
+bmV3IERvY3VtZW50YXRpb24vQUJJIGVudHJ5IGlzIGFkZGVkIGZvciB2bWNzaW5mbyBhbmQgdm1j
+c2luZm9fbWF4c2l6ZS4KPiA1LiBEbyBub3QgdXBkYXRlIFZNQ1NJTkZPIG5vdGUgd2hlbiB0aGUg
+a2VybmVsIGlzIHBhbmlja2VkLgo+IAo+IHpoYW5neWFuZmVpICgzKToKPiAgIEtWTTogRXhwb3J0
+IHN5bWJvbHMgZm9yIG1vZHVsZSB2bWNzaW5mby1pbnRlbAo+ICAgS1ZNLUlOVEVMOiBBZGQgbmV3
+IG1vZHVsZSB2bWNzaW5mby1pbnRlbCB0byBmaWxsIFZNQ1NJTkZPCj4gICBEb2N1bWVudGF0aW9u
+OiBBZGQgQUJJIGVudHJ5IGZvciB2bWNzIHN5c2ZzIGludGVyZmFjZS4KPiAKPiAgRG9jdW1lbnRh
+dGlvbi9BQkkvdGVzdGluZy9zeXNmcy1kZXZpY2VzLXN5c3RlbS1jcHUgfCAgIDIwICsKPiAgYXJj
+aC94ODYvaW5jbHVkZS9hc20vdm14LmggICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDczICsr
+Cj4gIGFyY2gveDg2L2t2bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICAxMSArCj4gIGFyY2gveDg2L2t2bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgICAgMyArCj4gIGFyY2gveDg2L2t2bS92bWNzaW5mby5jICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgIDcxNCArKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL3g4Ni9rdm0vdm14
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgODEgKy0tCj4gIGluY2x1ZGUv
+bGludXgva3ZtX2hvc3QuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMyArCj4gIHZp
+cnQva3ZtL2t2bV9tYWluLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCAr
+LQo+ICA4IGZpbGVzIGNoYW5nZWQsIDg0MSBpbnNlcnRpb25zKCspLCA3MiBkZWxldGlvbnMoLSkK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2t2bS92bWNzaW5mby5jCgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
+CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9rZXhlYwo=
