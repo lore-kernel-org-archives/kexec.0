@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Svg7w-0005gD-Kp
- for kexec@lists.infradead.org; Mon, 30 Jul 2012 02:54:38 +0000
-Message-ID: <5015F737.7090508@cn.fujitsu.com>
-Date: Mon, 30 Jul 2012 10:53:43 +0800
-From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+ id 1Svtpv-0001XE-0R
+ for kexec@lists.infradead.org; Mon, 30 Jul 2012 17:32:55 +0000
+Date: Mon, 30 Jul 2012 13:32:48 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: [PATCH] vmcore-dmesg: vmcore-dmesg: Make it work with new structured
+ logging format
+Message-ID: <20120730173248.GB2317@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 0/3] Export offsets of VMCS fields as note information
- for kdump
-References: <4FFE9EDE.8080107@cn.fujitsu.com>
-In-Reply-To: <4FFE9EDE.8080107@cn.fujitsu.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,156 +18,310 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Avi Kivity <avi@redhat.com>
-Cc: dzickus@redhat.com, luto@mit.edu, kvm@vger.kernel.org, Joerg Roedel <joerg.roedel@amd.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, paul.gortmaker@windriver.com, ludwig.nussel@suse.de, ebiederm@xmission.com, Greg KH <gregkh@linuxfoundation.org>
+To: Kexec Mailing List <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
 
-SGVsbG8gQXZpLAoKRG8geW91IGhhdmUgYW55IGNvbW1lbnRzIGFib3V0IHRoaXMgdmVyc2lvbiBv
-ZiB0aGUgcGF0Y2ggc2V0PwoK5LqOIDIwMTLlubQwN+aciDEy5pelIDE3OjU0LCBaaGFuZyBZYW5m
-ZWkg5YaZ6YGTOgo+IFRoaXMgcGF0Y2ggc2V0IGV4cG9ydHMgb2Zmc2V0cyBvZiBWTUNTIGZpZWxk
-cyBhcyBub3RlIGluZm9ybWF0aW9uIGZvcgo+IGtkdW1wLiBXZSBjYWxsIGl0IFZNQ1NJTkZPLiBU
-aGUgcHVycG9zZSBvZiBWTUNTSU5GTyBpcyB0byByZXRyaWV2ZQo+IHJ1bnRpbWUgc3RhdGUgb2Yg
-Z3Vlc3QgbWFjaGluZSBpbWFnZSwgc3VjaCBhcyByZWdpc3RlcnMsIGluIGhvc3QKPiBtYWNoaW5l
-J3MgY3Jhc2ggZHVtcCBhcyBWTUNTIGZvcm1hdC4gVGhlIHByb2JsZW0gaXMgdGhhdCBWTUNTIGlu
-dGVybmFsCj4gaXMgaGlkZGVuIGJ5IEludGVsIGluIGl0cyBzcGVjaWZpY2F0aW9uLiBTbywgd2Ug
-c2xvdmUgdGhpcyBwcm9ibGVtCj4gYnkgcmV2ZXJzZSBlbmdpbmVlcmluZyBpbXBsZW1lbnRlZCBp
-biB0aGlzIHBhdGNoIHNldC4gVGhlIFZNQ1NJTkZPCj4gaXMgZXhwb3J0ZWQgdmlhIHN5c2ZzICgv
-c3lzL2RldmljZXMvc3lzdGVtL2NwdS92bWNzLykgdG8ga2V4ZWMtdG9vbHMuCj4gCj4gSGVyZSBh
-cmUgdHdvIHVzZXJjYXNlcyBmb3IgdHdvIGZlYXR1cmVzIHRoYXQgd2Ugd2FudC4KPiAKPiAxKSBD
-cmVhdGUgZ3Vlc3QgbWFjaGluZSdzIGNyYXNoIGR1bXBmaWxlIGZyb20gaG9zdCBtYWNoaW5lJ3Mg
-Y3Jhc2ggZHVtcGZpbGUKPiAKPiBJbiBnZW5lcmFsLCB3ZSB3YW50IHRvIHVzZSB0aGlzIGZlYXR1
-cmUgb24gZmFpbHVyZSBhbmFseXNpcyBmb3IgdGhlIHN5c3RlbQo+IHdoZXJlIHRoZSBwcm9jZXNz
-aW5nIGRlcGVuZHMgb24gdGhlIGNvbW11bmljYXRpb24gYmV0d2VlbiBob3N0IGFuZCBndWVzdAo+
-IG1hY2hpbmVzIHRvIGxvb2sgaW50byB0aGUgc3lzdGVtIGZyb20gYm90aCBtYWNoaW5lcydzIHZp
-ZXdwb2ludHMuCj4gCj4gQXMgYSBjb25jcmV0ZSBzaXR1YXRpb24sIGNvbnNpZGVyIHdoZXJlIHRo
-ZXJlJ3MgaGVhcnRiZWF0IG1vbml0b3JpbmcKPiBmZWF0dXJlIG9uIHRoZSBndWVzdCBtYWNoaW5l
-J3Mgc2lkZSwgd2hlcmUgd2UgbmVlZCB0byBkZXRlcm1pbmUgaW4KPiB3aGljaCBtYWNoaW5lIHNp
-ZGUgdGhlIGNhdXNlIG9mIGhlYXJ0YmVhdCBzdG9wIGxpZXMuIEluIG91ciBhY3R1YWwKPiBleHBl
-cmltZW50cywgd2UgZW5jb3VudGVyZWQgc3VjaCBzaXR1YXRpb24gYW5kIHdlIGZvdW5kIHRoZSBj
-YXVzZSBvZgo+IHRoZSBidWcgd2FzIGluIGhvc3QncyBwcm9jZXNzIHNjaGVkdWxhciBzbyBndWVz
-dCBtYWNoaW5lJ3MgdmNwdSBzdG9wcGVkCj4gZm9yIGEgbG9uZyB0aW1lIGFuZCB0aGVuIGxlZCB0
-byBoZWFydGJlYXQgc3RvcC4KPiAKPiBUaGUgbW9kdWxlIHRoYXQganVkZ2VzIGhlYXJ0YmVhdCBz
-dG9wIGlzIG9uIGd1ZXN0IG1hY2hpbmUsIHNvIHdlIG5lZWQKPiB0byBkZWJ1ZyBndWVzdCBtYWNo
-aW5lJ3MgZGF0YS4gQnV0IGlmIHRoZSBjYXVzZSBsaWVzIGluIGhvc3QgbWFjaGluZQo+IHNpZGUs
-IHdlIG5lZWQgdG8gbG9vayBpbnRvIGhvc3QgbWFjaGluZSdzIGNyYXNoIGR1bXAuCj4gCj4gV2l0
-aG91dCB0aGlzIGZlYXR1cmUsIHdlIGZpcnN0IGNyZWF0ZSBndWVzdCBtYWNoaW5lJ3MgZHVtcCBh
-bmQgdGhlbgo+IGNyZWF0ZSBob3N0IG1haGluZSdzLCBidXQgdGhlcmUncyBvbmx5IGEgc2hvcnQg
-dGltZSBiZXR3ZWVuIHR3bwo+IHByb2Nlc3NpbmdzLCBkdXJpbmcgd2hpY2ggaXQncyB1bmxpa2Vs
-eSB0aGF0IGJ1Z2d5IHNpdHVhdGlvbiByZW1haW5zLgo+IAo+IFNvLCB3ZSB0aGluayB0aGUgZmVh
-dHVyZSBpcyB1c2VmdWwgdG8gZGVidWcgYm90aCBndWVzdCBtYWNoaW5lJ3MgYW5kCj4gaG9zdCBt
-YWNoaW5lJ3Mgc2lkZXMgYXQgdGhlIHNhbWUgdGltZSwgYW5kIGV4cGVjdCB3ZSBjYW4gbWFrZSBm
-YWlsdXJlCj4gYW5hbHlzaXMgZWZmaWNpZW50bHkuCj4gCj4gT2YgY291cnNlLCB3ZSBiZWxpZXZl
-IHRoaXMgZmVhdHVyZSBpcyBjb21tb25seSB1c2VmdWwgb24gdGhlIHNpdHVhdGlvbgo+IHdoZXJl
-IGd1ZXN0IG1hY2hpbmUgZG9lc24ndCB3b3JrIHdlbGwgZHVlIHRvIHNvbWV0aGluZyBvZiBob3N0
-IG1hY2hpbmUncy4KPiAKPiAyKSBHZXQgb2Zmc2V0cyBvZiBWTUNTIGluZm9ybWF0aW9uIG9uIHRo
-ZSBDUFUgcnVubmluZyBvbiB0aGUgaG9zdCBtYWNoaW5lCj4gCj4gSWYga2R1bXAgZG9lc24ndCB3
-b3JrIHdlbGwsIHRoZW4gaXQgbWVhbnMgd2UgY2Fubm90IHVzZSBrdm0gQVBJIHRvIGdldAo+IHJl
-Z2lzdGVyIHZhbHVlcyBvZiBndWVzdCBtYWNoaW5lIGFuZCB0aGV5IGFyZSBzdGlsbCBsZWZ0IG9u
-IGl0cyB2bWNzCj4gcmVnaW9uLiBJbiB0aGUgY2FzZSwgd2UgdXNlIGNyYXNoIGR1bXAgbWVjaGFu
-aXNtIHJ1bm5pbmcgb3V0c2lkZSBvZgo+IGxpbnV4IGtlcm5lbCwgc3VjaCBhcyBzYWR1bXAsIGEg
-ZmlybXdhcmUtYmFzZWQgY3Jhc2ggZHVtcC4gVGhlbiBWTUNTCj4gaW5mb3JtYXRpb24gaXMgdGhl
-biBuZWNlc3NhcnkuCj4gCj4gVE9ETzoKPiAgIDEuIEluIGtleGVjLXRvb2xzLCBnZXQgVk1DU0lO
-Rk8gdmlhIHN5c2ZzIGFuZCBkdW1wIGl0IGFzIG5vdGUgaW5mb3JtYXRpb24KPiAgICAgIGludG8g
-dm1jb3JlLgo+ICAgMi4gRHVtcCBWTUNTIHJlZ2lvbiBvZiBlYWNoIGd1ZXN0IHZjcHUgYW5kIFZN
-Q1NJTkZPIGludG8gcWVtdS1wcm9jZXNzCj4gICAgICBjb3JlIGZpbGUuIFRvIGRvIHRoaXMsIHdl
-IHdpbGwgbW9kaWZ5IGtlcm5lbCBjb3JlIGR1bXBlciwgZ2RiIGdjb3JlCj4gICAgICBhbmQgY3Jh
-c2ggZ2NvcmUuCj4gICAzLiBEdW1wIGd1ZXN0IGltYWdlIGZyb20gdGhlIHFlbXUtcHJvY2VzcyBj
-b3JlIGZpbGUgaW50byBhIHZtY29yZS4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2NCB0byB2NToKPiAx
-LiBUaGUgVk1DU0lORk8gaXMgc3RvcmVkIGluIGEgdHdvLWRpbWVuc2lvbmFsIGFycmF5IGZpbGxl
-ZCB3aXRoIGVhY2gKPiAgICBmaWVsZCdzIGVuY29kaW5nIGFuZCBjb3JyZXNwb25kaW5nIG9mZnNl
-dC4gU28gdGhlIHNpemUgb2YgVk1DU0lORk8KPiAgICBpcyBtdWNoIHNtYWxsZXIuCj4gMi4gdm1j
-cyBzeXNmcyBmaWxlIC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L3ZtY3NfaWQgaXMgbW92ZWQgdG8K
-PiAgICAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS92bWNzL2lkLgo+IDMuIFJld3JpdGUgdGhlIEFC
-SSBlbnRyeSBmb3Igdm1jcyBpbnRlcmZhY2UgYW5kIHJlbW92ZSB0aGUgS2VybmVsVmVyc2lvbgo+
-ICAgIGxpbmUuCj4gCj4gQ2hhbmdlbG9nIGZyb20gdjMgdG8gdjQ6Cj4gMS4gQWxsIHRoZSB2YXJp
-YWJsZXMgYW5kIGZ1bmN0aW9ucyBhcmUgbW92ZWQgdG8gdm1jc2luZm8taW50ZWwgbW9kdWxlLgo+
-IDIuIEFkZCBhIG5ldyBzeXNmcyBpbnRlcmZhY2UgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvdm1j
-c19pZCB0byBleHBvcnQKPiAgICB2bWNzIHJldmlzaW9uIGlkZW50aWZpZXIuIEFuZCBvcmlnaWFs
-IHN5c2ZzIGludGVyZmFjZSBpcyBjaGFuZ2VkCj4gICAgZnJvbSAvc3lzL2RldmljZXMvY3B1L3Zt
-Y3MgdG8gL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvdm1jcy4gVGhhbmtzCj4gICAgR3JlZyBLSCBm
-b3IgaGlzIGhlbHBmdWwgY29tbWVudHMgYWJvdXQgc3lzZnMuCj4gCj4gQ2hhbmdlbG9nIGZyb20g
-djIgdG8gdjM6Cj4gMS4gTmV3IFZNQ1NJTkZPIGZvcm1hdC4KPiAgICBOb3cgdGhlIFZNQ1NJTkZP
-IGlzIG1haW5seSBtYWRlIHVwIG9mIGFuIGFycmF5IHRoYXQgY29udGFpbnMgYWxsIHZtY3MKPiAg
-ICBmaWVsZHMnIG9mZnNldHMuIFRoZSBvZmZzZXRzIGFyZW4ndCBlbmNvZGVkIGJlY2F1c2Ugd2Ug
-ZGVjb2RlIHRoZW0gaW4KPiAgICB0aGUgbW9kdWxlIGl0c2VsZi4gSWYgc29tZSBmaWVsZCBkb2Vz
-bid0IGV4aXN0IG9yIGl0cyBvZmZzZXQgY2Fubm90IGJlCj4gICAgZGVjb2RlZCBjb3JyZWN0bHks
-IHRoZSBvZmZzZXQgaW4gdGhlIGFycmF5IGlzIGp1c3Qgc2V0IHRvIHplcm8uCj4gMi4gTmV3IHN5
-c2ZzIGludGVyZmFjZSBhbmQgRG9jdW1lbnRhdGlvbi9BQkkgZW50cnkuIAo+ICAgIFdlIGV4cG9z
-ZSB0aGUgYWN0dWFsIGZpZWxkcyBpbiAvc3lzL2RldmljZXMvY3B1L3ZtY3MgaW5zdGVhZCBvZiBq
-dXN0Cj4gICAgZXhwb3J0aW5nIHRoZSBhZGRyZXNzIG9mIFZNQ1NJTkZPIGluIC9zeXMva2VybmVs
-L3ZtY3NpbmZvLgo+ICAgIEZvciBleGFtcGxlLCAvc3lzL2RldmljZXMvY3B1L3ZtY3MvMDgwMCBj
-b250YWlucyB0aGUgb2Zmc2V0IG9mCj4gICAgR1VFU1RfRFNfU0VMRUNUT1IuIDA4MDAgaXMgdGhl
-IGVuY29kaW5nIG9mIEdVRVNUX0RTX1NFTEVDVE9SLgo+ICAgIEFjY29yZGluZ2x5LCBBQkkgZW50
-cnkgaW4gRG9jdW1lbnRhdGlvbiBpcyBjaGFuZ2VkIGZyb20gc3lzZnMta2VybmVsLXZtY3NpbmZv
-Cj4gICAgdG8gc3lzZnMtZGV2aWNlcy1jcHUtdm1jcy4KPiAKPiBDaGFuZ2Vsb2cgZnJvbSB2MSB0
-byB2MjoKPiAxLiBUaGUgVk1DU0lORk8gbm93IGhhcyBhIHNpbXBsZSBiaW5hcnkgPGZpZWxkPjxl
-bmNvZGVkIG9mZnNldD4gZm9ybWF0LAo+ICAgIGFzIGJlbG93Ogo+ICAgICAgKy0tLS0tLS0tLS0t
-LS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICB8IEJ5dGUgb2Zmc2V0IHwgQ29u
-dGVudHMgICAgICAgICAgICAgICAgIHwKPiAgICAgICstLS0tLS0tLS0tLS0tKy0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tKwo+ICAgICAgfCAwICAgICAgICAgICB8IFZNQ1MgcmV2aXNpb24gaWRl
-bnRpZmllciB8Cj4gICAgICArLS0tLS0tLS0tLS0tLSstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LSsKPiAgICAgIHwgNCAgICAgICAgICAgfCA8ZmllbGQ+PGVuY29kZWQgb2Zmc2V0PiAgfAo+ICAg
-ICAgKy0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0rCj4gICAgICB8IDE2
-ICAgICAgICAgIHwgPGZpZWxkPjxlbmNvZGVkIG9mZnNldD4gIHwKPiAgICAgICstLS0tLS0tLS0t
-LS0tKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tKwo+ICAgICAgLi4uLi4uCj4gICAKPiAgICBU
-aGUgZmlyc3QgMzIgYml0cyBvZiBWTUNTSU5GTyBjb250YWlucyB0aGUgVk1DUyByZXZpc2lvbiBp
-ZGVudGlmaWVyLgo+ICAgIFRoZSByZW1haW5kZXIgb2YgVk1DU0lORk8gaXMgdXNlZCBmb3IgPGZp
-ZWxkPjxlbmNvZGVkIG9mZnNldD4gc2V0cy4KPiAgICBFYWNoIHNldCB0YWtlcyAxMiBieXRlczog
-ZmllbGQgb2NjdXB5cyA0IGJ5dGVzIGFuZCBpdHMgY29ycmVzcG9uZGluZwo+ICAgIGVuY29kZWQg
-b2Zmc2V0IG9jY3VweXMgOCBieXRlcy4KPiAKPiAgICBFbmNvZGVkIG9mZnNldHMgYXJlIHJhdyB2
-YWx1ZXMgcmVhZCBieSB2bWNzX3JlYWR7MTYsIDY0LCAzMiwgbH0sIGFuZAo+ICAgIHRoZXkgYXJl
-IGFsbCB1bnNpZ25lZCBleHRlbmRlZCB0byA4IGJ5dGVzIGZvciBlYWNoIDxmaWVsZD48ZW5jb2Rl
-ZCBvZmZzZXQ+Cj4gICAgc2V0IHdpbGwgaGF2ZSB0aGUgc2FtZSBzaXplLiAKPiAgICBXZSBkbyBu
-b3QgZGVjb2RlIG9mZnNldHMgaGVyZS4gVGhlIGRlY29kaW5nIHdvcmsgaXMgZGVsYXllZCBpbiB1
-c2Vyc3BhY2UKPiAgICB0b29scyBmb3IgbW9yZSBmbGV4aWJsZSBoYW5kbGluZy4KPiAgICAKPiAg
-ICBBbmQgaGVyZSBhcmUgdHdvIGV4YW1wbGVzIG9mIHRoZSBuZXcgVk1DU0lORk86Cj4gICAgUHJv
-Y2Vzc29yOiBJbnRlbChSKSBDb3JlKFRNKTIgRHVvIENQVSAgICAgRTc1MDAgIEAgMi45M0dIego+
-ICAgIFZNQ1NJTkZPIGNvbnRhaW5zOgo+ICAgICAgPDAwMDAwMDBkPiAgICAgICAgICAgICAgICAg
-ICAtLT4gVk1DUyByZXZpc2lvbiBpZCA9IDB4ZAo+ICAgICAgPDAwMDA0MDAwPjwwMDAwMDAwMDAx
-ODQwMTgwPiAtLT4gT0ZGU0VUKFBJTl9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgwMTg0MDE4
-MAo+ICAgICAgPDAwMDA0MDAyPjwwMDAwMDAwMDAxOTQwMTkwPiAtLT4gT0ZGU0VUKENQVV9CQVNF
-RF9WTV9FWEVDX0NPTlRST0wpID0gMHgwMTk0MDE5MAo+ICAgICAgPDAwMDA0MDFlPjwwMDAwMDAw
-MDBmZTQwZmUwPiAtLT4gT0ZGU0VUKFNFQ09OREFSWV9WTV9FWEVDX0NPTlRST0wpID0gMHgwZmU0
-MGZlMAo+ICAgICAgPDAwMDA0MDBjPjwwMDAwMDAwMDAxZTQwMWUwPiAtLT4gT0ZGU0VUKFZNX0VY
-SVRfQ09OVFJPTFMpID0gMHgwMWU0MDFlMAo+ICAgICAgLi4uLi4uCj4gCj4gICAgUHJvY2Vzc29y
-OiBJbnRlbChSKSBYZW9uKFIpIENQVSAgICAgICAgICAgRTc1NDAgIEAgMi4wMEdIeiAoMjQgY29y
-ZXMpCj4gICAgVk1DU0lORk8gY29udGFpbnM6Cj4gICAgICA8MDAwMDAwMGU+ICAgICAgICAgICAg
-ICAgICAgIC0tPiBWTUNTIHJldmlzaW9uIGlkID0gMHhlIAo+ICAgICAgPDAwMDA0MDAwPjwwMDAw
-MDAwMDA1NTQwNTUwPiAtLT4gT0ZGU0VUKFBJTl9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgw
-NTU0MDU1MAo+ICAgICAgPDAwMDA0MDAyPjwwMDAwMDAwMDA1NDQwNTQwPiAtLT4gT0ZGU0VUKENQ
-VV9CQVNFRF9WTV9FWEVDX0NPTlRST0wpID0gMHgwNTQ0MDU0MAo+ICAgICAgPDAwMDA0MDFlPjww
-MDAwMDAwMDA1NGMwNTQ4PiAtLT4gT0ZGU0VUKFNFQ09OREFSWV9WTV9FWEVDX0NPTlRST0wpID0g
-MHgwNTRjMDU0OAo+ICAgICAgPDAwMDA0MDBjPjwwMDAwMDAwMDA1N2MwNTc4PiAtLT4gT0ZGU0VU
-KFZNX0VYSVRfQ09OVFJPTFMpID0gMHgwNTdjMDU3OAo+ICAgICAgLi4uLi4uCj4gCj4gMi4gQWRk
-IGEgbmV3IGtlcm5lbCBtb2R1bGUgKnZtY3NpbmZvLWludGVsKiBmb3IgZmlsbGluZyBWTUNTSU5G
-TyBpbnN0ZWFkCj4gICAgb2YgcHV0dGluZyBpdCBpbiBtb2R1bGUga3ZtLWludGVsLiBUaGUgbmV3
-IG1vZHVsZSBpcyBhdXRvLWxvYWRlZAo+ICAgIHdoZW4gdGhlIHZteCBjcHVmZWF0dXJlIGlzIGRl
-dGVjdGVkIGFuZCBpdCBkZXBlbmRzIG9uIG1vZHVsZSBrdm0taW50ZWwuCj4gICAgKkxvYWRpbmcg
-YW5kIHVubG9hZGluZyB0aGlzIG1vZHVsZSB3aWxsIGhhdmUgbm8gc2lkZSBlZmZlY3Qgb24gdGhl
-Cj4gICAgcnVubmluZyBndWVzdHMuKgo+IDMuIFRoZSBzeXNmcyBmaWxlIHZtY3NpbmZvIGlzIHNw
-bGl0dGVkIGludG8gMiBmaWxlczoKPiAgICAvc3lzL2tlcm5lbC92bWNzaW5mbzogc2hvd3MgcGh5
-c2ljYWwgYWRkcmVzcyBvZiBWTUNTSU5GTyBub3RlIGluZm9ybWF0aW9uLgo+ICAgIC9zeXMva2Vy
-bmVsL3ZtY3NpbmZvX21heHNpemU6IHNob3dzIG1heCBzaXplIG9mIFZNQ1NJTkZPLgo+IDQuIEEg
-bmV3IERvY3VtZW50YXRpb24vQUJJIGVudHJ5IGlzIGFkZGVkIGZvciB2bWNzaW5mbyBhbmQgdm1j
-c2luZm9fbWF4c2l6ZS4KPiA1LiBEbyBub3QgdXBkYXRlIFZNQ1NJTkZPIG5vdGUgd2hlbiB0aGUg
-a2VybmVsIGlzIHBhbmlja2VkLgo+IAo+IHpoYW5neWFuZmVpICgzKToKPiAgIEtWTTogRXhwb3J0
-IHN5bWJvbHMgZm9yIG1vZHVsZSB2bWNzaW5mby1pbnRlbAo+ICAgS1ZNLUlOVEVMOiBBZGQgbmV3
-IG1vZHVsZSB2bWNzaW5mby1pbnRlbCB0byBmaWxsIFZNQ1NJTkZPCj4gICBEb2N1bWVudGF0aW9u
-OiBBZGQgQUJJIGVudHJ5IGZvciB2bWNzIHN5c2ZzIGludGVyZmFjZS4KPiAKPiAgRG9jdW1lbnRh
-dGlvbi9BQkkvdGVzdGluZy9zeXNmcy1kZXZpY2VzLXN5c3RlbS1jcHUgfCAgIDIwICsKPiAgYXJj
-aC94ODYvaW5jbHVkZS9hc20vdm14LmggICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDczICsr
-Cj4gIGFyY2gveDg2L2t2bS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-ICAxMSArCj4gIGFyY2gveDg2L2t2bS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgICAgMyArCj4gIGFyY2gveDg2L2t2bS92bWNzaW5mby5jICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDcxNCArKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL3g4Ni9rdm0vdm14
-LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgODEgKy0tCj4gIGluY2x1ZGUv
-bGludXgva3ZtX2hvc3QuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMyArCj4gIHZp
-cnQva3ZtL2t2bV9tYWluLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCAr
-LQo+ICA4IGZpbGVzIGNoYW5nZWQsIDg0MSBpbnNlcnRpb25zKCspLCA3MiBkZWxldGlvbnMoLSkK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gveDg2L2t2bS92bWNzaW5mby5jCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0
-CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9rZXhlYwo=
+Now kernel has made kernel logging structured and exsisting vmcore-dmesg
+does not work with this new format. Hence kernel version 3.5 is broken. In
+3.6 now a kernel patch has been put which exports relevant fields. This
+patch parses those fields and makes vmcore-dmesg work with new logging
+format.
+
+Currently it does not display log levels or dictionary. I personally think
+that log levels are not very useful and it also requires additional kernel
+patches so that log levels are not bitfields and relevant information is
+exported to user space properly.
+
+Concept of dictionary is new and relevant information is exported. One can
+possibly enahnce vmcore-dmesg to also print dictionary contents based on
+a user command line option.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ vmcore-dmesg/vmcore-dmesg.c |  227 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 221 insertions(+), 6 deletions(-)
+
+Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
+===================================================================
+--- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 20:06:21.263781247 -0400
++++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 20:06:23.114781564 -0400
+@@ -15,6 +15,7 @@
+ #include <fcntl.h>
+ #include <elf.h>
+ #include <stdbool.h>
++#include <inttypes.h>
+ 
+ /* The 32bit and 64bit note headers make it clear we don't care */
+ typedef Elf32_Nhdr Elf_Nhdr;
+@@ -29,6 +30,18 @@ static loff_t log_end_vaddr;
+ static loff_t log_buf_len_vaddr;
+ static loff_t logged_chars_vaddr;
+ 
++/* record format logs */
++static loff_t log_first_idx_vaddr;
++static loff_t log_next_idx_vaddr;
++
++/* struct log size */
++static uint64_t log_sz;
++
++/* struct log field offsets */
++static uint64_t log_offset_ts_nsec = UINT64_MAX;
++static uint16_t log_offset_len = UINT16_MAX;
++static uint16_t log_offset_text_len = UINT16_MAX;
++
+ #if __BYTE_ORDER == __LITTLE_ENDIAN
+ #define ELFDATANATIVE ELFDATA2LSB
+ #elif __BYTE_ORDER == __BIG_ENDIAN
+@@ -240,6 +253,8 @@ static void scan_vmcoreinfo(char *start,
+ 		SYMBOL(log_end),
+ 		SYMBOL(log_buf_len),
+ 		SYMBOL(logged_chars),
++		SYMBOL(log_first_idx),
++		SYMBOL(log_next_idx),
+ 	};
+ 
+ 	for (pos = start; pos <= last; pos = eol + 1) {
+@@ -291,6 +306,20 @@ static void scan_vmcoreinfo(char *start,
+ 			*symbol[i].vaddr = vaddr;
+ 		}
+ 
++		/* Check for "SIZE(log)=" */
++		if (memcmp("SIZE(log)=", pos, 10) == 0)
++			log_sz = strtoull(pos + 10, NULL, 10);
++
++		/* Check for struct log field offsets */
++		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
++			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
++
++		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
++			log_offset_len = strtoul(pos + 16, NULL, 10);
++
++		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
++			log_offset_text_len = strtoul(pos + 21, NULL, 10);
++
+ 		if (last_line)
+ 			break;
+ 	}
+@@ -400,7 +429,19 @@ static int32_t read_file_s32(int fd, uin
+ 	return read_file_u32(fd, addr);
+ }
+ 
+-static void dump_dmesg(int fd)
++static void write_to_stdout(char *buf, unsigned int nr)
++{
++	ssize_t ret;
++
++	ret = write(STDOUT_FILENO, buf, nr);
++	if (ret != nr) {
++		fprintf(stderr, "Failed to write out the dmesg log buffer!:"
++			" %s\n", strerror(errno));
++		exit(54);
++	}
++}
++
++static void dump_dmesg_legacy(int fd)
+ {
+ 	uint64_t log_buf, log_buf_offset;
+ 	unsigned log_end, logged_chars, log_end_wrapped;
+@@ -455,12 +496,186 @@ static void dump_dmesg(int fd)
+ 			strerror(errno));
+ 		exit(53);
+ 	}
+-	ret = write(STDOUT_FILENO, buf + (log_buf_len -  logged_chars), logged_chars);
+-	if (ret != logged_chars) {
+-		fprintf(stderr, "Failed to write out the dmesg log buffer!: %s\n",
+-			strerror(errno));
+-		exit(54);
++
++	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
++}
++
++static inline uint16_t struct_val_u16(char *ptr, unsigned int offset)
++{
++	return(file16_to_cpu(*(uint16_t *)(ptr + offset)));
++}
++
++static inline uint32_t struct_val_u32(char *ptr, unsigned int offset)
++{
++	return(file32_to_cpu(*(uint32_t *)(ptr + offset)));
++}
++
++static inline uint32_t struct_val_u64(char *ptr, unsigned int offset)
++{
++	return(file64_to_cpu(*(uint64_t *)(ptr + offset)));
++}
++
++/* human readable text of the record */
++static char *log_text(char *msg)
++{
++	return msg + log_sz;
++}
++
++/* get record by index; idx must point to valid msg */
++static char *log_from_idx(char *log_buf, uint32_t idx)
++{
++	char *msg = log_buf + idx;
++
++	/*
++	 * A length == 0 record is the end of buffer marker. Wrap around and
++	 * read the message at the start of the buffer.
++	 */
++	if (!struct_val_u16(msg, log_offset_len))
++		return log_buf;
++	return msg;
++}
++
++/* get next record; idx must point to valid msg */
++static uint32_t log_next(char *log_buf, uint32_t idx)
++{
++	char *msg = log_buf + idx;
++	uint16_t len;
++
++	/* length == 0 indicates the end of the buffer; wrap */
++	/*
++	 * A length == 0 record is the end of buffer marker. Wrap around and
++	 * read the message at the start of the buffer as *this* one, and
++	 * return the one after that.
++	 */
++	len = struct_val_u16(msg, log_offset_len);
++	if (!len) {
++		msg = log_buf;
++		return struct_val_u16(msg, log_offset_len);
++	}
++	return idx + len;
++}
++
++/* Read headers of log records and dump accordingly */
++static void dump_dmesg_structured(int fd)
++{
++#define OUT_BUF_SIZE	4096
++	uint64_t log_buf, log_buf_offset, ts_nsec;
++	uint32_t log_first_idx, log_next_idx, current_idx, len = 0, i;
++	int log_buf_len;
++	char *buf, out_buf[OUT_BUF_SIZE];
++	ssize_t ret;
++	char *msg;
++	uint16_t text_len;
++	imaxdiv_t imaxdiv_sec, imaxdiv_usec;
++
++	if (!log_buf_vaddr) {
++		fprintf(stderr, "Missing the log_buf symbol\n");
++		exit(60);
++	}
++
++	if (!log_buf_len_vaddr) {
++		fprintf(stderr, "Missing the log_bug_len symbol\n");
++		exit(61);
++	}
++
++	if (!log_first_idx_vaddr) {
++		fprintf(stderr, "Missing the log_first_idx symbol\n");
++		exit(62);
++	}
++
++	if (!log_next_idx_vaddr) {
++		fprintf(stderr, "Missing the log_next_idx symbol\n");
++		exit(63);
++	}
++
++	if (!log_sz) {
++		fprintf(stderr, "Missing the struct log size export\n");
++		exit(64);
++	}
++
++	if (log_offset_ts_nsec == UINT64_MAX) {
++		fprintf(stderr, "Missing the log.ts_nsec offset export\n");
++		exit(65);
++	}
++
++	if (log_offset_len == UINT16_MAX) {
++		fprintf(stderr, "Missing the log.len offset export\n");
++		exit(66);
++	}
++
++	if (log_offset_text_len == UINT16_MAX) {
++		fprintf(stderr, "Missing the log.text_len offset export\n");
++		exit(67);
++	}
++
++	log_buf = read_file_pointer(fd, vaddr_to_offset(log_buf_vaddr));
++	log_buf_len = read_file_s32(fd, vaddr_to_offset(log_buf_len_vaddr));
++
++	log_first_idx = read_file_u32(fd, vaddr_to_offset(log_first_idx_vaddr));
++	log_next_idx = read_file_u32(fd, vaddr_to_offset(log_next_idx_vaddr));
++
++	log_buf_offset = vaddr_to_offset(log_buf);
++
++	buf = calloc(1, log_buf_len);
++	if (!buf) {
++		fprintf(stderr, "Failed to malloc %d bytes for the logbuf:"
++				" %s\n", log_buf_len, strerror(errno));
++		exit(64);
++	}
++
++	ret = pread(fd, buf, log_buf_len, log_buf_offset);
++	if (ret != log_buf_len) {
++		fprintf(stderr, "Failed to read log buffer of size %d bytes:"
++			" %s\n", log_buf_len, strerror(errno));
++		exit(65);
++	}
++
++	/* Parse records and write out data at standard output */
++
++	current_idx = log_first_idx;
++	len = 0;
++	while (current_idx != log_next_idx) {
++		msg = log_from_idx(buf, current_idx);
++		ts_nsec = struct_val_u64(msg, log_offset_ts_nsec);
++		imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
++		imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
++
++		len += sprintf(out_buf + len, "[%5llu.%06llu] ",
++			(long long unsigned int)imaxdiv_sec.quot,
++			(long long unsigned int)imaxdiv_usec.quot);
++
++		/* escape non-printable characters */
++		text_len = struct_val_u16(msg, log_offset_text_len);
++		for (i = 0; i < text_len; i++) {
++			unsigned char c = log_text(msg)[i];
++
++			if (c < ' ' || c >= 128)
++				len += sprintf(out_buf + len, "\\x%02x", c);
++			else
++				out_buf[len++] = c;
++
++			if (len >= OUT_BUF_SIZE - 16) {
++				write_to_stdout(out_buf, len);
++				len = 0;
++			}
++		}
++
++		out_buf[len++] = '\n';
++
++		/* Move to next record */
++		current_idx = log_next(buf, current_idx);
+ 	}
++
++	if (len)
++		write_to_stdout(out_buf, len);
++}
++
++static void dump_dmesg(int fd)
++{
++	if (log_first_idx_vaddr)
++		dump_dmesg_structured(fd);
++	else
++		dump_dmesg_legacy(fd);
+ }
+ 
+ int main(int argc, char **argv)
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
