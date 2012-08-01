@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Svtpv-0001XE-0R
- for kexec@lists.infradead.org; Mon, 30 Jul 2012 17:32:55 +0000
-Date: Mon, 30 Jul 2012 13:32:48 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: [PATCH] vmcore-dmesg: vmcore-dmesg: Make it work with new structured
- logging format
-Message-ID: <20120730173248.GB2317@redhat.com>
+ id 1SwRAf-00010M-MF
+ for kexec@lists.infradead.org; Wed, 01 Aug 2012 05:08:34 +0000
+Date: Wed, 1 Aug 2012 14:08:27 +0900
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] vmcore-dmesg: vmcore-dmesg: Make it work with new
+ structured logging format
+Message-ID: <20120801050827.GF19796@verge.net.au>
+References: <20120730173248.GB2317@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20120730173248.GB2317@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,304 +24,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kexec Mailing List <kexec@lists.infradead.org>, Simon Horman <horms@verge.net.au>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: Kexec Mailing List <kexec@lists.infradead.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Now kernel has made kernel logging structured and exsisting vmcore-dmesg
-does not work with this new format. Hence kernel version 3.5 is broken. In
-3.6 now a kernel patch has been put which exports relevant fields. This
-patch parses those fields and makes vmcore-dmesg work with new logging
-format.
+On Mon, Jul 30, 2012 at 01:32:48PM -0400, Vivek Goyal wrote:
+> Now kernel has made kernel logging structured and exsisting vmcore-dmesg
+> does not work with this new format. Hence kernel version 3.5 is broken. In
+> 3.6 now a kernel patch has been put which exports relevant fields. This
+> patch parses those fields and makes vmcore-dmesg work with new logging
+> format.
+> 
+> Currently it does not display log levels or dictionary. I personally think
+> that log levels are not very useful and it also requires additional kernel
+> patches so that log levels are not bitfields and relevant information is
+> exported to user space properly.
+> 
+> Concept of dictionary is new and relevant information is exported. One can
+> possibly enahnce vmcore-dmesg to also print dictionary contents based on
+> a user command line option.
+> 
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 
-Currently it does not display log levels or dictionary. I personally think
-that log levels are not very useful and it also requires additional kernel
-patches so that log levels are not bitfields and relevant information is
-exported to user space properly.
-
-Concept of dictionary is new and relevant information is exported. One can
-possibly enahnce vmcore-dmesg to also print dictionary contents based on
-a user command line option.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- vmcore-dmesg/vmcore-dmesg.c |  227 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 221 insertions(+), 6 deletions(-)
-
-Index: kexec-tools/vmcore-dmesg/vmcore-dmesg.c
-===================================================================
---- kexec-tools.orig/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 20:06:21.263781247 -0400
-+++ kexec-tools/vmcore-dmesg/vmcore-dmesg.c	2012-08-01 20:06:23.114781564 -0400
-@@ -15,6 +15,7 @@
- #include <fcntl.h>
- #include <elf.h>
- #include <stdbool.h>
-+#include <inttypes.h>
- 
- /* The 32bit and 64bit note headers make it clear we don't care */
- typedef Elf32_Nhdr Elf_Nhdr;
-@@ -29,6 +30,18 @@ static loff_t log_end_vaddr;
- static loff_t log_buf_len_vaddr;
- static loff_t logged_chars_vaddr;
- 
-+/* record format logs */
-+static loff_t log_first_idx_vaddr;
-+static loff_t log_next_idx_vaddr;
-+
-+/* struct log size */
-+static uint64_t log_sz;
-+
-+/* struct log field offsets */
-+static uint64_t log_offset_ts_nsec = UINT64_MAX;
-+static uint16_t log_offset_len = UINT16_MAX;
-+static uint16_t log_offset_text_len = UINT16_MAX;
-+
- #if __BYTE_ORDER == __LITTLE_ENDIAN
- #define ELFDATANATIVE ELFDATA2LSB
- #elif __BYTE_ORDER == __BIG_ENDIAN
-@@ -240,6 +253,8 @@ static void scan_vmcoreinfo(char *start,
- 		SYMBOL(log_end),
- 		SYMBOL(log_buf_len),
- 		SYMBOL(logged_chars),
-+		SYMBOL(log_first_idx),
-+		SYMBOL(log_next_idx),
- 	};
- 
- 	for (pos = start; pos <= last; pos = eol + 1) {
-@@ -291,6 +306,20 @@ static void scan_vmcoreinfo(char *start,
- 			*symbol[i].vaddr = vaddr;
- 		}
- 
-+		/* Check for "SIZE(log)=" */
-+		if (memcmp("SIZE(log)=", pos, 10) == 0)
-+			log_sz = strtoull(pos + 10, NULL, 10);
-+
-+		/* Check for struct log field offsets */
-+		if (memcmp("OFFSET(log.ts_nsec)=", pos, 20) == 0)
-+			log_offset_ts_nsec = strtoull(pos + 20, NULL, 10);
-+
-+		if (memcmp("OFFSET(log.len)=", pos, 16) == 0)
-+			log_offset_len = strtoul(pos + 16, NULL, 10);
-+
-+		if (memcmp("OFFSET(log.text_len)=", pos, 21) == 0)
-+			log_offset_text_len = strtoul(pos + 21, NULL, 10);
-+
- 		if (last_line)
- 			break;
- 	}
-@@ -400,7 +429,19 @@ static int32_t read_file_s32(int fd, uin
- 	return read_file_u32(fd, addr);
- }
- 
--static void dump_dmesg(int fd)
-+static void write_to_stdout(char *buf, unsigned int nr)
-+{
-+	ssize_t ret;
-+
-+	ret = write(STDOUT_FILENO, buf, nr);
-+	if (ret != nr) {
-+		fprintf(stderr, "Failed to write out the dmesg log buffer!:"
-+			" %s\n", strerror(errno));
-+		exit(54);
-+	}
-+}
-+
-+static void dump_dmesg_legacy(int fd)
- {
- 	uint64_t log_buf, log_buf_offset;
- 	unsigned log_end, logged_chars, log_end_wrapped;
-@@ -455,12 +496,186 @@ static void dump_dmesg(int fd)
- 			strerror(errno));
- 		exit(53);
- 	}
--	ret = write(STDOUT_FILENO, buf + (log_buf_len -  logged_chars), logged_chars);
--	if (ret != logged_chars) {
--		fprintf(stderr, "Failed to write out the dmesg log buffer!: %s\n",
--			strerror(errno));
--		exit(54);
-+
-+	write_to_stdout(buf + (log_buf_len -  logged_chars), logged_chars);
-+}
-+
-+static inline uint16_t struct_val_u16(char *ptr, unsigned int offset)
-+{
-+	return(file16_to_cpu(*(uint16_t *)(ptr + offset)));
-+}
-+
-+static inline uint32_t struct_val_u32(char *ptr, unsigned int offset)
-+{
-+	return(file32_to_cpu(*(uint32_t *)(ptr + offset)));
-+}
-+
-+static inline uint32_t struct_val_u64(char *ptr, unsigned int offset)
-+{
-+	return(file64_to_cpu(*(uint64_t *)(ptr + offset)));
-+}
-+
-+/* human readable text of the record */
-+static char *log_text(char *msg)
-+{
-+	return msg + log_sz;
-+}
-+
-+/* get record by index; idx must point to valid msg */
-+static char *log_from_idx(char *log_buf, uint32_t idx)
-+{
-+	char *msg = log_buf + idx;
-+
-+	/*
-+	 * A length == 0 record is the end of buffer marker. Wrap around and
-+	 * read the message at the start of the buffer.
-+	 */
-+	if (!struct_val_u16(msg, log_offset_len))
-+		return log_buf;
-+	return msg;
-+}
-+
-+/* get next record; idx must point to valid msg */
-+static uint32_t log_next(char *log_buf, uint32_t idx)
-+{
-+	char *msg = log_buf + idx;
-+	uint16_t len;
-+
-+	/* length == 0 indicates the end of the buffer; wrap */
-+	/*
-+	 * A length == 0 record is the end of buffer marker. Wrap around and
-+	 * read the message at the start of the buffer as *this* one, and
-+	 * return the one after that.
-+	 */
-+	len = struct_val_u16(msg, log_offset_len);
-+	if (!len) {
-+		msg = log_buf;
-+		return struct_val_u16(msg, log_offset_len);
-+	}
-+	return idx + len;
-+}
-+
-+/* Read headers of log records and dump accordingly */
-+static void dump_dmesg_structured(int fd)
-+{
-+#define OUT_BUF_SIZE	4096
-+	uint64_t log_buf, log_buf_offset, ts_nsec;
-+	uint32_t log_first_idx, log_next_idx, current_idx, len = 0, i;
-+	int log_buf_len;
-+	char *buf, out_buf[OUT_BUF_SIZE];
-+	ssize_t ret;
-+	char *msg;
-+	uint16_t text_len;
-+	imaxdiv_t imaxdiv_sec, imaxdiv_usec;
-+
-+	if (!log_buf_vaddr) {
-+		fprintf(stderr, "Missing the log_buf symbol\n");
-+		exit(60);
-+	}
-+
-+	if (!log_buf_len_vaddr) {
-+		fprintf(stderr, "Missing the log_bug_len symbol\n");
-+		exit(61);
-+	}
-+
-+	if (!log_first_idx_vaddr) {
-+		fprintf(stderr, "Missing the log_first_idx symbol\n");
-+		exit(62);
-+	}
-+
-+	if (!log_next_idx_vaddr) {
-+		fprintf(stderr, "Missing the log_next_idx symbol\n");
-+		exit(63);
-+	}
-+
-+	if (!log_sz) {
-+		fprintf(stderr, "Missing the struct log size export\n");
-+		exit(64);
-+	}
-+
-+	if (log_offset_ts_nsec == UINT64_MAX) {
-+		fprintf(stderr, "Missing the log.ts_nsec offset export\n");
-+		exit(65);
-+	}
-+
-+	if (log_offset_len == UINT16_MAX) {
-+		fprintf(stderr, "Missing the log.len offset export\n");
-+		exit(66);
-+	}
-+
-+	if (log_offset_text_len == UINT16_MAX) {
-+		fprintf(stderr, "Missing the log.text_len offset export\n");
-+		exit(67);
-+	}
-+
-+	log_buf = read_file_pointer(fd, vaddr_to_offset(log_buf_vaddr));
-+	log_buf_len = read_file_s32(fd, vaddr_to_offset(log_buf_len_vaddr));
-+
-+	log_first_idx = read_file_u32(fd, vaddr_to_offset(log_first_idx_vaddr));
-+	log_next_idx = read_file_u32(fd, vaddr_to_offset(log_next_idx_vaddr));
-+
-+	log_buf_offset = vaddr_to_offset(log_buf);
-+
-+	buf = calloc(1, log_buf_len);
-+	if (!buf) {
-+		fprintf(stderr, "Failed to malloc %d bytes for the logbuf:"
-+				" %s\n", log_buf_len, strerror(errno));
-+		exit(64);
-+	}
-+
-+	ret = pread(fd, buf, log_buf_len, log_buf_offset);
-+	if (ret != log_buf_len) {
-+		fprintf(stderr, "Failed to read log buffer of size %d bytes:"
-+			" %s\n", log_buf_len, strerror(errno));
-+		exit(65);
-+	}
-+
-+	/* Parse records and write out data at standard output */
-+
-+	current_idx = log_first_idx;
-+	len = 0;
-+	while (current_idx != log_next_idx) {
-+		msg = log_from_idx(buf, current_idx);
-+		ts_nsec = struct_val_u64(msg, log_offset_ts_nsec);
-+		imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
-+		imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
-+
-+		len += sprintf(out_buf + len, "[%5llu.%06llu] ",
-+			(long long unsigned int)imaxdiv_sec.quot,
-+			(long long unsigned int)imaxdiv_usec.quot);
-+
-+		/* escape non-printable characters */
-+		text_len = struct_val_u16(msg, log_offset_text_len);
-+		for (i = 0; i < text_len; i++) {
-+			unsigned char c = log_text(msg)[i];
-+
-+			if (c < ' ' || c >= 128)
-+				len += sprintf(out_buf + len, "\\x%02x", c);
-+			else
-+				out_buf[len++] = c;
-+
-+			if (len >= OUT_BUF_SIZE - 16) {
-+				write_to_stdout(out_buf, len);
-+				len = 0;
-+			}
-+		}
-+
-+		out_buf[len++] = '\n';
-+
-+		/* Move to next record */
-+		current_idx = log_next(buf, current_idx);
- 	}
-+
-+	if (len)
-+		write_to_stdout(out_buf, len);
-+}
-+
-+static void dump_dmesg(int fd)
-+{
-+	if (log_first_idx_vaddr)
-+		dump_dmesg_structured(fd);
-+	else
-+		dump_dmesg_legacy(fd);
- }
- 
- int main(int argc, char **argv)
-
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
