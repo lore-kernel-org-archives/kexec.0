@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Swlk1-0007a3-Re
- for kexec@lists.infradead.org; Thu, 02 Aug 2012 03:06:26 +0000
-Date: Thu, 2 Aug 2012 12:06:15 +0900
+ id 1Swm9d-0008H6-6O
+ for kexec@lists.infradead.org; Thu, 02 Aug 2012 03:32:54 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Message-ID: <20120802030615.GA20262@verge.net.au>
-References: <20120705121635.GA2007@host-192-168-1-59.local.net-space.pl>
- <201207231530.55871.ptesarik@suse.cz>
- <20120723201059.GA1848@host-192-168-1-59.local.net-space.pl>
- <201207241018.35292.ptesarik@suse.cz>
- <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120724135410.GA2230@host-192-168-1-59.local.net-space.pl>
+Subject: [PATCH] build: Avoid duplicate files in tarball
+Date: Thu,  2 Aug 2012 12:08:08 +0900
+Message-Id: <1343876888-21106-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +15,201 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: kexec@lists.infradead.org, olaf@aepfle.de, xen-devel@lists.xensource.com, Petr Tesarik <ptesarik@suse.cz>, konrad.wilk@oracle.com
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Tue, Jul 24, 2012 at 03:54:10PM +0200, Daniel Kiper wrote:
-> On Tue, Jul 24, 2012 at 10:18:34AM +0200, Petr Tesarik wrote:
-> > Dne Po 23. ??ervence 2012 22:10:59 Daniel Kiper napsal(a):
-> > > Hi Petr,
-> > >
-> > > On Mon, Jul 23, 2012 at 03:30:55PM +0200, Petr Tesarik wrote:
-> > > > Dne Po 23. ??ervence 2012 14:56:07 Petr Tesarik napsal(a):
-> > > > > Dne ??t 5. ??ervence 2012 14:16:35 Daniel Kiper napsal(a):
-> > > > > > vmcoreinfo file could exists under /sys/kernel (valid on baremetal
-> > > > > > only) and/or under /sys/hypervisor (valid when Xen dom0 is running).
-> > > > > > Read only one of them. It means that only one PT_NOTE will be always
-> > > > > > created. Remove extra code for second PT_NOTE creation.
-> > > > >
-> > > > > Hi Daniel,
-> > > > >
-> > > > > are you absolutely sure this is the right thing to do? IIUC these two
-> > > > > VMCORINFO notes are very different. The one from /sys/kernel/vmcoreinfo
-> > > > > describes the Dom0 kernel (type 'VMCOREINFO'), while the one from
-> > > > > /sys/hypervisor describes the Xen hypervisor (type 'XEN_VMCOREINFO').
-> > > > > If you keep only the hypervisor note, then e.g. makedumpfile won't be
-> > > > > able to use dumplevel greater than 1, nor will it be able to extract
-> > > > > the log buffer.
-> > > >
-> > > > I've just verified this, and I'm confident we have to keep both notes in
-> > > > the dump file. Simon, please revert Daniel's patch to avoid regressions.
-> > > >
-> > > > I'm attaching a sample VMCOREINFO_XEN and VMCOREINFO to demonstrate the
-> > > > difference. Note that the VMCOREINFO_XEN note is actually too big,
-> > > > because Xen doesn't bother to maintain the correct note size in the note
-> > > > header, so it always spans a complete page minus sizeof(Elf64_Nhdr)...
-> > >
-> > > [...]
-> > >
-> > > The problem with /sys/kernel/vmcoreinfo under Xen is that it expose invalid
-> > > physical address. It breaks /proc/vmcore in crash kernel. That is why I
-> > > proposed that fix. Additionally, /sys/kernel/vmcoreinfo is not available
-> > > under Xen Linux Ver. 2.6.18. However, I did not do any makedumpfile tests.
-> > > If you discovered any issues with my patch please drop me more details
-> > > about your tests (Xen version, Linux Kernel version, makedumpfile version,
-> > > command lines, config files, logs, etc.). I will be more then happy to
-> > > fix/improve kexec-tools and makedumpfile.
-> >
-> > Hi Daniel,
-> >
-> > well, Linux v2.6.18 does not have /sys/kernel/vmcoreinfo, simply because the
-> > VMCOREINFO infrastructure was not present in 2.6.18. It was added later with
-> 
-> Yep.
-> 
-> > commit fd59d231f81cb02870b9cf15f456a897f3669b4e, which went into 2.6.24.
-> 
-> Hmmm... As I know 2.6.24 does not support kexec/kdump under Xen dom0. Correct?
-> 
-> > I tested with the following combinations:
-> >
-> > * xen-3.3.1 + kernel-xen-2.6.27.54 + kexec-tools-2.0.0 + makedumpfile-1.3.1
-> > * xen-4.0.3 + kernel-xen-2.6.32.59 + kexec-tools-2.0.0 + makedumpfile-1.3.1
-> > * xen-4.1.2 + kernel-xen-3.0.34 + kexec-tools-2.0.0 + makedumpfile-1.4.0
-> >
-> > These versions correspond to SLES11-GA, SLES11-SP1 and SLES11-SP2,
-> > respectively. All of them work just fine and save both ELF notes into the
-> > dump.
-> 
-> Could you test current kexec-tools development version and
-> latest makedumpfile version on latest SLES version?
-> 
-> > What do you mean by "invalid physical address"? I'm getting the correct
-> > physical address under Xen. Obviously, it must be translated to machine
-> > addresses if you need them from the secondary kernel.
-> 
-> Correct vmcoreinfo address should be established by calling
-> HYPERVISOR_kexec_op(KEXEC_CMD_kexec_get_range, KEXEC_RANGE_MA_VMCOREINFO).
-> Address exposed by /sys/kernel/vmcoreinfo is calculated in other way.
-> /sys/hypervisor/vmcoreinfo does it correctly (in older implementations
-> and in my new upstream implementation which I am going to post shortly).
-> 
-> > Anyway, let me re-install my test system and send all the necessary
-> > information. What kind of log files are you interested in?
-> 
-> If you spot any error in any logfile which in your opinion
-> is relevent to our testes please send me it.
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ kexec/Makefile             | 75 +++++++++++++++++++++++++++-------------------
+ kexec/arch/arm/Makefile    |  2 +-
+ kexec/arch/ppc/Makefile    |  3 +-
+ kexec/arch/sh/Makefile     |  3 +-
+ kexec/arch/x86_64/Makefile | 12 +++++---
+ purgatory/Makefile         |  2 --
+ 6 files changed, 58 insertions(+), 39 deletions(-)
 
-Hi,
-
-is there any consensus on what to do here?
+diff --git a/kexec/Makefile b/kexec/Makefile
+index 8c815b5..dff8da6 100644
+--- a/kexec/Makefile
++++ b/kexec/Makefile
+@@ -7,47 +7,62 @@ $(PURGATORY_HEX_C): $(PURGATORY) $(BIN_TO_HEX)
+ 	$(MKDIR) -p $(@D)
+ 	$(BIN_TO_HEX) purgatory < $(PURGATORY) > $@
+ 
+-KEXEC_SRCS =
++KEXEC_SRCS = $(KEXEC_SRCS_base)
+ KEXEC_GENERATED_SRCS =
+ 
+-KEXEC_SRCS += kexec/kexec.c
+-KEXEC_SRCS += kexec/ifdown.c
+-KEXEC_SRCS += kexec/kexec-elf.c
+-KEXEC_SRCS += kexec/kexec-elf-exec.c
+-KEXEC_SRCS += kexec/kexec-elf-core.c
+-KEXEC_SRCS += kexec/kexec-elf-rel.c
+-KEXEC_SRCS += kexec/kexec-elf-boot.c
+-KEXEC_SRCS += kexec/kexec-iomem.c
+-KEXEC_SRCS += kexec/firmware_memmap.c
+-KEXEC_SRCS += kexec/crashdump.c
+-KEXEC_SRCS += kexec/crashdump-xen.c
+-KEXEC_SRCS += kexec/phys_arch.c
+-KEXEC_SRCS += kexec/kernel_version.c
+-KEXEC_SRCS += kexec/lzma.c
+-KEXEC_SRCS += kexec/zlib.c
++KEXEC_SRCS_base += kexec/kexec.c
++KEXEC_SRCS_base += kexec/ifdown.c
++KEXEC_SRCS_base += kexec/kexec-elf.c
++KEXEC_SRCS_base += kexec/kexec-elf-exec.c
++KEXEC_SRCS_base += kexec/kexec-elf-core.c
++KEXEC_SRCS_base += kexec/kexec-elf-rel.c
++KEXEC_SRCS_base += kexec/kexec-elf-boot.c
++KEXEC_SRCS_base += kexec/kexec-iomem.c
++KEXEC_SRCS_base += kexec/firmware_memmap.c
++KEXEC_SRCS_base += kexec/crashdump.c
++KEXEC_SRCS_base += kexec/crashdump-xen.c
++KEXEC_SRCS_base += kexec/phys_arch.c
++KEXEC_SRCS_base += kexec/kernel_version.c
++KEXEC_SRCS_base += kexec/lzma.c
++KEXEC_SRCS_base += kexec/zlib.c
+ 
+ KEXEC_GENERATED_SRCS += $(PURGATORY_HEX_C)
+ 
+-dist += kexec/Makefile $(KEXEC_SRCS) $(KEXEC_GENERATED_SRCS)	\
+-	kexec/crashdump-elf.c					\
++dist += kexec/Makefile $(KEXEC_GENERATED_SRCS)			\
++	$(KEXEC_SRCS_base) kexec/crashdump-elf.c		\
+ 	kexec/crashdump.h kexec/firmware_memmap.h		\
+ 	kexec/kexec-elf-boot.h					\
+ 	kexec/kexec-elf.h kexec/kexec-sha256.h			\
+ 	kexec/kexec-zlib.h kexec/kexec-lzma.h			\
+ 	kexec/kexec-syscall.h kexec/kexec.h kexec/kexec.8
+ 
+-$(ARCH)_PROC_IOMEM		= kexec/proc_iomem.c
+-KEXEC_SRCS += $($(ARCH)_PROC_IOMEM)
+-$(ARCH)_VIRT_TO_PHYS		= kexec/virt_to_phys.c
+-KEXEC_SRCS += $($(ARCH)_VIRT_TO_PHYS)
+-$(ARCH)_PHYS_TO_VIRT		= kexec/phys_to_virt.c
+-KEXEC_SRCS += $($(ARCH)_PHYS_TO_VIRT)
+-$(ARCH)_ADD_SEGMENT		= kexec/add_segment.c
+-KEXEC_SRCS += $($(ARCH)_ADD_SEGMENT)
+-$(ARCH)_ADD_BUFFER		= kexec/add_buffer.c
+-KEXEC_SRCS += $($(ARCH)_ADD_BUFFER)
+-$(ARCH)_ARCH_REUSE_INITRD	= kexec/arch_reuse_initrd.c
+-KEXEC_SRCS += $($(ARCH)_ARCH_REUSE_INITRD)
++dist				+= kexec/proc_iomem.c
++$(ARCH)_PROC_IOMEM		=  kexec/proc_iomem.c
++KEXEC_SRCS			+= $($(ARCH)_PROC_IOMEM)
++
++dist				+= kexec/virt_to_phys.c
++$(ARCH)_VIRT_TO_PHYS		=  kexec/virt_to_phys.c
++KEXEC_SRCS			+= $($(ARCH)_VIRT_TO_PHYS)
++
++dist				+= kexec/phys_to_virt.c
++$(ARCH)_PHYS_TO_VIRT		=  kexec/phys_to_virt.c
++KEXEC_SRCS			+= $($(ARCH)_PHYS_TO_VIRT)
++
++dist				+= kexec/add_segment.c
++$(ARCH)_ADD_SEGMENT		=  kexec/add_segment.c
++KEXEC_SRCS			+= $($(ARCH)_ADD_SEGMENT)
++
++dist				+= kexec/add_buffer.c
++$(ARCH)_ADD_BUFFER		=  kexec/add_buffer.c
++KEXEC_SRCS			+= $($(ARCH)_ADD_BUFFER)
++
++dist				+=  kexec/arch_reuse_initrd.c
++$(ARCH)_ARCH_REUSE_INITRD	=  kexec/arch_reuse_initrd.c
++KEXEC_SRCS			+= $($(ARCH)_ARCH_REUSE_INITRD)
++
++dist				+= kexec/kexec-uImage.c
++$(ARCH)_UIMAGE			=
++KEXEC_SRCS			+= $($(ARCH)_UIMAGE)
+ 
+ include $(srcdir)/kexec/arch/alpha/Makefile
+ include $(srcdir)/kexec/arch/arm/Makefile
+diff --git a/kexec/arch/arm/Makefile b/kexec/arch/arm/Makefile
+index 3d07e59..288ec33 100644
+--- a/kexec/arch/arm/Makefile
++++ b/kexec/arch/arm/Makefile
+@@ -6,8 +6,8 @@ arm_KEXEC_SRCS+= kexec/arch/arm/kexec-zImage-arm.c
+ arm_KEXEC_SRCS+= kexec/arch/arm/kexec-uImage-arm.c
+ arm_KEXEC_SRCS+= kexec/arch/arm/kexec-arm.c
+ arm_KEXEC_SRCS+= kexec/arch/arm/crashdump-arm.c
+-arm_KEXEC_SRCS+= kexec/kexec-uImage.c
+ 
++arm_UIMAGE = kexec/kexec-uImage.c
+ arm_PHYS_TO_VIRT = kexec/arch/arm/phys_to_virt.c
+ 
+ dist += kexec/arch/arm/Makefile $(arm_KEXEC_SRCS) $(arm_PHYS_TO_VIRT)	\
+diff --git a/kexec/arch/ppc/Makefile b/kexec/arch/ppc/Makefile
+index 41242a5..e868917 100644
+--- a/kexec/arch/ppc/Makefile
++++ b/kexec/arch/ppc/Makefile
+@@ -13,7 +13,8 @@ ppc_KEXEC_SRCS += kexec/arch/ppc/ppc-setup-dol.S
+ ppc_KEXEC_SRCS += kexec/arch/ppc/fixup_dtb.c
+ ppc_KEXEC_SRCS += kexec/arch/ppc/fs2dt.c
+ ppc_KEXEC_SRCS += kexec/arch/ppc/crashdump-powerpc.c
+-ppc_KEXEC_SRCS += kexec/kexec-uImage.c
++
++ppc_UIMAGE = kexec/kexec-uImage.c
+ 
+ libfdt_SRCS = kexec/arch/ppc/libfdt-wrapper.c
+ libfdt_SRCS += $(LIBFDT_SRCS:%=kexec/arch/ppc/libfdt/%)
+diff --git a/kexec/arch/sh/Makefile b/kexec/arch/sh/Makefile
+index a9f6081..7cf40ae 100644
+--- a/kexec/arch/sh/Makefile
++++ b/kexec/arch/sh/Makefile
+@@ -9,7 +9,8 @@ sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-sh.c
+ sh_KEXEC_SRCS += kexec/arch/sh/kexec-elf-rel-sh.c
+ sh_KEXEC_SRCS += kexec/arch/sh/netbsd_booter.S
+ sh_KEXEC_SRCS += kexec/arch/sh/crashdump-sh.c
+-sh_KEXEC_SRCS += kexec/kexec-uImage.c
++
++sh_UIMAGE = kexec/kexec-uImage.c
+ 
+ sh_ADD_BUFFER =
+ sh_ADD_SEGMENT =
+diff --git a/kexec/arch/x86_64/Makefile b/kexec/arch/x86_64/Makefile
+index 916babf..405bdf5 100644
+--- a/kexec/arch/x86_64/Makefile
++++ b/kexec/arch/x86_64/Makefile
+@@ -9,10 +9,14 @@ x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
+ x86_64_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
+ x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-x86-common.c
+ x86_64_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
+-x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-x86_64.c
+-x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-x86_64.c
+-x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+ 
+-dist += kexec/arch/x86_64/Makefile $(x86_64_KEXEC_SRCS) \
++x86_64_KEXEC_SRCS_native =  kexec/arch/x86_64/kexec-x86_64.c
++x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-x86_64.c
++x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
++
++x86_64_KEXEC_SRCS += $(x86_64_KEXEC_SRCS_native)
++
++# Don't add sources in i386/ to dist, as i386/Makefile adds them
++dist += kexec/arch/x86_64/Makefile $(x86_64_KEXEC_SRCS_native) \
+ 	kexec/arch/x86_64/kexec-x86_64.h \
+ 	kexec/arch/x86_64/include/arch/options.h
+diff --git a/purgatory/Makefile b/purgatory/Makefile
+index ee1679c..711799b 100644
+--- a/purgatory/Makefile
++++ b/purgatory/Makefile
+@@ -27,8 +27,6 @@ include $(srcdir)/purgatory/arch/s390/Makefile
+ include $(srcdir)/purgatory/arch/sh/Makefile
+ include $(srcdir)/purgatory/arch/x86_64/Makefile
+ 
+-PURGATORY_SRCS+=$($(ARCH)_PURGATORY_SRCS)
+-
+ PURGATORY_OBJS = $(call objify, $(PURGATORY_SRCS)) purgatory/sha256.o
+ PURGATORY_DEPS = $(call depify, $(PURGATORY_OBJS))
+ 
+-- 
+1.7.10.2.484.gcd07cc5
 
 
 _______________________________________________
