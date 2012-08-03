@@ -1,14 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from acsinet15.oracle.com ([141.146.126.227])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SwvR5-000157-2e
- for kexec@lists.infradead.org; Thu, 02 Aug 2012 13:27:31 +0000
+ id 1SxG3k-0003Sb-GE
+ for kexec@lists.infradead.org; Fri, 03 Aug 2012 11:28:50 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A3A2C3EE0BB
+ for <kexec@lists.infradead.org>; Fri,  3 Aug 2012 20:28:41 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8BC7345DEA6
+ for <kexec@lists.infradead.org>; Fri,  3 Aug 2012 20:28:41 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 7683A45DE9E
+ for <kexec@lists.infradead.org>; Fri,  3 Aug 2012 20:28:41 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 6AA121DB803C
+ for <kexec@lists.infradead.org>; Fri,  3 Aug 2012 20:28:41 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0CC7D1DB803B
+ for <kexec@lists.infradead.org>; Fri,  3 Aug 2012 20:28:41 +0900 (JST)
+Message-ID: <501BB4EF.7080909@jp.fujitsu.com>
+Date: Fri, 03 Aug 2012 20:24:31 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Message-ID: <1d901f35-be2d-418b-bc80-b8c0420f3c0d@default>
-Date: Thu, 2 Aug 2012 06:27:24 -0700 (PDT)
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Content-Disposition: inline
+Subject: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump with
+ iommu
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,25 +36,129 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: ptesarik@suse.cz, olaf@aepfle.de, xen-devel@lists.xensource.com, kexec@lists.infradead.org, konrad.wilk@oracle.com
+To: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: bhelgaas@google.com, hbabu@us.ibm.com, martin.wilck@ts.fujitsu.com, ishii.hironobu@jp.fujitsu.com, vgoyal@redhat.com
 
-Hi,
+Hi all,
 
-> > > If you spot any error in any logfile which in your opinion
-> > > is relevent to our testes please send me it.
-> >
-> > Hi,
-> >
-> > is there any consensus on what to do here?
->
-> As I know Petr was going to do some tests.
-> I have not received any reply from him till now.
-> Maybe he is busy or on vacation.
+This patch adds kernel parameter "reset_pcie_devices" which resets PCIe
+devices at boot time to address DMA problem on kdump with iommu. When
+this parameter is specified, a hot reset is triggered on each PCIe root
+port and downstream port to reset its downstream endpoint.
 
-According to automatic reply he is on vacation until 13/08/2012.
+Background:
+A kdump problem about DMA has been discussed for a long time. That is,
+when a kernel is switched to the kdump kernel DMA derived from first
+kernel affects second kernel. Recently this problem surfaces when iommu
+is used for PCI passthrough on KVM guest. In the case of the machine I
+use, when intel_iommu=on is specified, DMAR error is detected in kdump
+kernel and PCI SERR is also detected. Finally kdump fails because some
+devices does not work correctly.
 
-Daniel
+The root cause is that ongoing DMA from first kernel causes DMAR fault
+because page table of DMAR is initialized while kdump kernel is booting
+up. Therefore to address this problem DMA needs to be stopped before DMAR
+is initialized at kdump kernel boot time. By this patch, PCIe devices
+are reset by hot reset and its DMA is stopped when reset_pcie_devices is
+specified. One problem of this solution is that VGA is reset and the
+monitor blacks out when the link between the port and VGA controller was
+reset. So this patch does not reset the port whose child endpoint is VGA
+device.
+
+Any comments would be appreciated.
+
+Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+---
+ Documentation/kernel-parameters.txt |    4 +
+ drivers/pci/quirks.c                |   59 ++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index e714a02..e694e9f 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -2489,6 +2489,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 	reset_devices	[KNL] Force drivers to reset the underlying device
+ 			during initialization.
+ 
++	reset_pcie_devices
++			[PCIE] Reset PCIe endpoint at boot time by sending a
++			hot reset to root port and downstream port
++
+ 	resume=		[SWSUSP]
+ 			Specify the partition device for software suspend
+ 			Format:
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 5155317..7f7fc02 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -32,6 +32,65 @@
+ #include "pci.h"
+ 
+ /*
++ * Reset PCIe endpoint by sending a hot reset to root port and downstream port
++ */
++unsigned int reset_pcie_devices;
++EXPORT_SYMBOL(reset_pcie_devices);
++static int __init set_reset_pcie_devices(char *str)
++{
++	reset_pcie_devices = 1;
++	return 1;
++}
++__setup("reset_pcie_devices", set_reset_pcie_devices);
++
++static void __devinit quirk_pcie_device_reset(struct pci_dev *dev)
++{
++	struct pci_bus *subordinate;
++	struct pci_dev *child;
++	u16 ctrl;
++
++	if (!reset_pcie_devices || !pci_is_pcie(dev) || !dev->subordinate ||
++	    ((dev->pcie_type != PCI_EXP_TYPE_ROOT_PORT) &&
++	     (dev->pcie_type != PCI_EXP_TYPE_DOWNSTREAM)))
++		return;
++
++	subordinate = dev->subordinate;
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		if ((child->pcie_type == PCI_EXP_TYPE_UPSTREAM) ||
++		    (child->pcie_type == PCI_EXP_TYPE_PCI_BRIDGE) ||
++		    ((child->class >> 16) == PCI_BASE_CLASS_DISPLAY))
++		/* Don't reset switch, bridge, VGA device */
++		return;
++	}
++
++	dev_info(&dev->dev, "Reset Secondary bus\n");
++
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		dev_info(&child->dev, "save state\n");
++		pci_save_state(child);
++	}
++
++	/* Assert Secondary Bus Reset */
++	pci_read_config_word(dev, PCI_BRIDGE_CONTROL, &ctrl);
++	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
++	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
++
++	msleep(2);
++
++	/* De-assert Secondary Bus Reset */
++	ctrl &= ~PCI_BRIDGE_CTL_BUS_RESET;
++	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
++
++	msleep(200);
++
++	list_for_each_entry(child, &subordinate->devices, bus_list) {
++		dev_info(&child->dev, "restore state\n");
++		pci_restore_state(child);
++	}
++}
++DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_pcie_device_reset);
++
++/*
+  * Decoding should be disabled for a PCI device during BAR sizing to avoid
+  * conflict. But doing so may cause problems on host bridge and perhaps other
+  * key system devices. For devices that need to have mmio decoding always-on,
+
 
 _______________________________________________
 kexec mailing list
