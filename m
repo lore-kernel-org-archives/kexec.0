@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SyU8Y-0001o3-2a
- for kexec@lists.infradead.org; Mon, 06 Aug 2012 20:42:50 +0000
-Date: Mon, 6 Aug 2012 16:42:45 -0400
+ id 1SyUD7-0002Ko-NC
+ for kexec@lists.infradead.org; Mon, 06 Aug 2012 20:47:34 +0000
+Date: Mon, 6 Aug 2012 16:47:31 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
-Message-ID: <20120806204245.GI25559@redhat.com>
-References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
- <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
- <500D340F.5080801@jp.fujitsu.com> <1343145331.16290.45.camel@cr0>
- <500F3B7C.70009@jp.fujitsu.com>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
+ memory consumption.
+Message-ID: <20120806204731.GJ25559@redhat.com>
+References: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <500F3B7C.70009@jp.fujitsu.com>
+In-Reply-To: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,80 +24,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: rjw@sisk.pl, amwang@redhat.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yinghai.lu@oracle.com, hpa@zytor.com, xiyou.wangcong@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: kexec@lists.infradead.org
 
-On Wed, Jul 25, 2012 at 09:19:08AM +0900, Takao Indoh wrote:
-> (2012/07/25 0:55), Cong Wang wrote:
-> >On Mon, 2012-07-23 at 20:22 +0900, Takao Indoh wrote:
-> >>(2012/07/23 19:00), Dave Young wrote:
-> >>>On 07/17/2012 11:15 AM, Takao Indoh wrote:
-> >>>
-> >>>>Hi Cong,
-> >>>>
-> >>>>When I tested kdump with 3.5.0-rc6 kernel, I found a problem of kdump
-> >>>>kernel's panic in find_early_table_space().
-> >>>>
-> >>>>init_memory_mapping: [mem 0x00000000-0x36ffafff]
-> >>>>Kernel panic - not syncing: Cannot find space for the kernel page tables
-> >>>>Pid: 0, comm: swapper Not tainted 3.5.0-rc6 #17
-> >>>>Call Trace:
-> >>>>   [<ffffffff8158549b>] panic+0xb8/0x1c8
-> >>>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
-> >>>>   [<ffffffff8157304c>] init_memory_mapping+0x46c/0x530
-> >>>>   [<ffffffff818a73c7>] setup_arch+0x669/0xb0e
-> >>>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
-> >>>>   [<ffffffff818a3a1f>] start_kernel+0x9b/0x34a
-> >>>>   [<ffffffff818a332d>] x86_64_start_reservations+0x131/0x136
-> >>>>   [<ffffffff818a341f>] x86_64_start_kernel+0xed/0xf4
-> >>>>
-> >>>>In find_early_table_space(), a kernel tries to find free area below 512M
-> >>>>for pgtable using memblock_find_in_range, but it fails because kdump
-> >>>>kernel does not have enough free space below 512M due to the memmap
-> >>>>restriction. This is the memmap option specified against kdump kernel
-> >>>>when crashkernel=128M.
-> >>>>
-> >>>>memmap=560K@64K memmap=130492K@770608K
-> >>>>
-> >>>>Only 560KB area is available and it is not sufficient for pgtable (it
-> >>>>seems that about 1.8MB area is needed for pgtable). This problem is
-> >>>>fixed by your revert patch. I hope this patch gets merged.
-> >>>
-> >>>
-> >>>I can reproduce this issue as well, probably related to some x86 mm init
-> >>>commits, this alloc failure does not happen with reverting below commits:
-> >>>
-> >>>bd2753b2dda7bb43c7468826de75f49c6a7e8965
-> >>>722bc6b16771ed80871e1fd81c86d3627dda2ac8
-> >>Yeah, my result of bisect is as follows and at first I thought the
-> >>commit 722bc6 caused this regression.
-> >>
-> >>722bc6b16771ed80871e1fd81c86d3627dda2ac8 is the first bad commit
-> >>commit 722bc6b16771ed80871e1fd81c86d3627dda2ac8
-> >>Author: WANG Cong <xiyou.wangcong@gmail.com>
-> >>Date:   Mon Mar 5 15:05:13 2012 -0800
-> >>
-> >>IIUC, this commit just fixes a bug of counting pgtable entries. As the
-> >>result, another problem came up to the surface. In the case of my
-> >>machine(16GB memory), before applying 722bc6, find_early_table_space()
-> >>requests about 12KB free area and it can be got from 560K@64K area
-> >>luckily. I think the size find_early_table_space() requests was a bug.
-> >>After the bug is fixed by the commit 722bc6, find_early_table_space()
-> >>requires 1.8MB area and it fails as I wrote.
-> >
-> >Thanks for tracking this, Takao!
-> >
-> >I bet you are using x86_64 not x86 PAE? If so, could you try this patch
-> >https://patchwork.kernel.org/patch/1195751/
-> >? I already reviewed it.
+On Fri, Jun 29, 2012 at 11:13:20AM +0900, Atsushi Kumagai wrote:
+> Hello,
 > 
-> Great, I applied it and now kdump works. Thanks!
+> I improved prototype of cyclic processing as version 2.
+> If there is no objection to basic idea, I want to consider the things
+> related to performance as next step. (Concretely, buffer size and the patch set
+> HATAYAMA-san sent a short time ago.) 
 
-Did something happen on this patch. We definitely want to gain back the
-capability to be able to reserve 512MB of kdump memory.
+Hi Atsushi San,
+
+Just checking that what's the state of these patches now. Are they ready
+to be included in makedumpfile?
+
+I would love to see new makedumpfile where memory usage does not grow
+by physical memory present in the system. (Assuming computig overhead
+of cycles is bearable).
 
 Thanks
 Vivek
+
+> 
+> 
+> Version 1:
+>  
+>   http://lists.infradead.org/pipermail/kexec/2012-May/006363.html
+> 
+> Introduction:
+> 
+>  - The purpose of cyclic processing is to fix memory consumption.
+>  - cyclic processing doesn't use temporary bitmap file, store partial bitmap data
+>    in memory only for each cycle instead.
+>  - The prototype was passed the regression test which is used by every release.
+> 
+> How to use:
+>   
+>   Specify '--cyclic' option, then makedumpfile works cyclically.
+> 
+> Example:
+> 
+>     $ makedumpfile --cyclic -cd31 vmcore testdump.cd31
+>     Copying data                       : [  5 %]
+>     Excluding free pages               : [100 %]
+>     ...
+>     Excluding free pages               : [100 %]
+>     Copying data                       : [100 %]
+> 
+>     The dumpfile is saved to testdump.cd31.
+> 
+>     makedumpfile Completed.
+> 
+> Changelog:
+> 
+>   v1 =>  v2:
+> 
+>     - Fix the process of increasing target region.
+>     - Change method for kdump-compressed format.
+>     - Add support for ELF format.
+>     - Add support for --split option.
+>  
+> Memory consumption:
+> 
+>   I measured the RSS of makedumpfile with ps(1) as memory consumption.
+> 
+>     a. working for 5G memory:
+>                  |                 RSS [KB]                
+>                  |  no option  |    -cd31    |    -Ed31
+>       -----------+-------------+-------------+-------------
+>         v1.4.4   |     1108    |     1184    |      868
+>         cyclic   |     2976    |     3252    |     2984
+> 
+>         
+>     b. working for 8G memory:
+>                  |                 RSS [KB]                
+>                  |  no option  |    -cd31    |    -Ed31
+>       -----------+-------------+-------------+-------------
+>         v1.4.4   |     1108    |     1180    |      864
+>         cyclic   |     2972    |     3256    |     2984
+> 
+> 
+>   This result seems to say that v1.4.4 is better than cyclic, but the size
+>   of temporary bitmap file grows based on memory size. The increasing rate 
+>   can be represented as (memory size / 4K / 8 ) * 2.
+> 
+>      memory size [GB] |  bitmap size [KB]
+>     ------------------+------------------
+>             5         |       320
+>             8         |       512
+>            ...        |       ...
+>           1,024       |      65,536
+> 
+>   Even above size will be counted as memory consumption, if the system 
+>   doesn't mount rootfs. This is the cause of the memory consumption issue
+>   we discussed.
+> 
+>   On the other hand, cyclic processing doesn't use temporary bitmap files,
+>   all memory consumption will be appeared in RSS.
+>   The memory consumption to store bitmap will be kept around 2MB(BUFSIZE_CYCLIC * 2).
+>   
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
