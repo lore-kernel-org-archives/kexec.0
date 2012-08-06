@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SyU50-0001MQ-Tw
- for kexec@lists.infradead.org; Mon, 06 Aug 2012 20:39:12 +0000
-Date: Mon, 6 Aug 2012 16:39:02 -0400
+ id 1SyU8Y-0001o3-2a
+ for kexec@lists.infradead.org; Mon, 06 Aug 2012 20:42:50 +0000
+Date: Mon, 6 Aug 2012 16:42:45 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
- with iommu
-Message-ID: <20120806203902.GH25559@redhat.com>
-References: <501BB4EF.7080909@jp.fujitsu.com>
- <20120803114643.GA28330@redhat.com>
- <501F4877.5050605@jp.fujitsu.com>
+Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
+Message-ID: <20120806204245.GI25559@redhat.com>
+References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
+ <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
+ <500D340F.5080801@jp.fujitsu.com> <1343145331.16290.45.camel@cr0>
+ <500F3B7C.70009@jp.fujitsu.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <501F4877.5050605@jp.fujitsu.com>
+In-Reply-To: <500F3B7C.70009@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,49 +27,76 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Takao Indoh <indou.takao@jp.fujitsu.com>
-Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com
+Cc: rjw@sisk.pl, amwang@redhat.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, yinghai.lu@oracle.com, hpa@zytor.com, xiyou.wangcong@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Mon, Aug 06, 2012 at 01:30:47PM +0900, Takao Indoh wrote:
-> Hi Vivek,
-> 
-> (2012/08/03 20:46), Vivek Goyal wrote:
-> > On Fri, Aug 03, 2012 at 08:24:31PM +0900, Takao Indoh wrote:
-> >> Hi all,
+On Wed, Jul 25, 2012 at 09:19:08AM +0900, Takao Indoh wrote:
+> (2012/07/25 0:55), Cong Wang wrote:
+> >On Mon, 2012-07-23 at 20:22 +0900, Takao Indoh wrote:
+> >>(2012/07/23 19:00), Dave Young wrote:
+> >>>On 07/17/2012 11:15 AM, Takao Indoh wrote:
+> >>>
+> >>>>Hi Cong,
+> >>>>
+> >>>>When I tested kdump with 3.5.0-rc6 kernel, I found a problem of kdump
+> >>>>kernel's panic in find_early_table_space().
+> >>>>
+> >>>>init_memory_mapping: [mem 0x00000000-0x36ffafff]
+> >>>>Kernel panic - not syncing: Cannot find space for the kernel page tables
+> >>>>Pid: 0, comm: swapper Not tainted 3.5.0-rc6 #17
+> >>>>Call Trace:
+> >>>>   [<ffffffff8158549b>] panic+0xb8/0x1c8
+> >>>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
+> >>>>   [<ffffffff8157304c>] init_memory_mapping+0x46c/0x530
+> >>>>   [<ffffffff818a73c7>] setup_arch+0x669/0xb0e
+> >>>>   [<ffffffff8158565d>] ? printk+0x48/0x4a
+> >>>>   [<ffffffff818a3a1f>] start_kernel+0x9b/0x34a
+> >>>>   [<ffffffff818a332d>] x86_64_start_reservations+0x131/0x136
+> >>>>   [<ffffffff818a341f>] x86_64_start_kernel+0xed/0xf4
+> >>>>
+> >>>>In find_early_table_space(), a kernel tries to find free area below 512M
+> >>>>for pgtable using memblock_find_in_range, but it fails because kdump
+> >>>>kernel does not have enough free space below 512M due to the memmap
+> >>>>restriction. This is the memmap option specified against kdump kernel
+> >>>>when crashkernel=128M.
+> >>>>
+> >>>>memmap=560K@64K memmap=130492K@770608K
+> >>>>
+> >>>>Only 560KB area is available and it is not sufficient for pgtable (it
+> >>>>seems that about 1.8MB area is needed for pgtable). This problem is
+> >>>>fixed by your revert patch. I hope this patch gets merged.
+> >>>
+> >>>
+> >>>I can reproduce this issue as well, probably related to some x86 mm init
+> >>>commits, this alloc failure does not happen with reverting below commits:
+> >>>
+> >>>bd2753b2dda7bb43c7468826de75f49c6a7e8965
+> >>>722bc6b16771ed80871e1fd81c86d3627dda2ac8
+> >>Yeah, my result of bisect is as follows and at first I thought the
+> >>commit 722bc6 caused this regression.
 > >>
-> >> This patch adds kernel parameter "reset_pcie_devices" which resets PCIe
-> >> devices at boot time to address DMA problem on kdump with iommu. When
-> >> this parameter is specified, a hot reset is triggered on each PCIe root
-> >> port and downstream port to reset its downstream endpoint.
+> >>722bc6b16771ed80871e1fd81c86d3627dda2ac8 is the first bad commit
+> >>commit 722bc6b16771ed80871e1fd81c86d3627dda2ac8
+> >>Author: WANG Cong <xiyou.wangcong@gmail.com>
+> >>Date:   Mon Mar 5 15:05:13 2012 -0800
+> >>
+> >>IIUC, this commit just fixes a bug of counting pgtable entries. As the
+> >>result, another problem came up to the surface. In the case of my
+> >>machine(16GB memory), before applying 722bc6, find_early_table_space()
+> >>requests about 12KB free area and it can be got from 560K@64K area
+> >>luckily. I think the size find_early_table_space() requests was a bug.
+> >>After the bug is fixed by the commit 722bc6, find_early_table_space()
+> >>requires 1.8MB area and it fails as I wrote.
 > >
-> > Hi Takao,
+> >Thanks for tracking this, Takao!
 > >
-> > Why not use existing "reset_devices" parameter instead of introducing
-> > a new one?
+> >I bet you are using x86_64 not x86 PAE? If so, could you try this patch
+> >https://patchwork.kernel.org/patch/1195751/
+> >? I already reviewed it.
 > 
-> "reset_devices" is used for each driver to reset their own device, and
-> this patch resets all devices forcibly, so I thought they were different
-> things.
+> Great, I applied it and now kdump works. Thanks!
 
-Yes reset_devices currently is used for driver to reset its device. I
-thought one could very well extend its reach to reset pci express devices
-at bus level.
-
-Having them separate is not going to be much useful from kdump
-perspective. We will end up passing both reset_devices and
-reset_pcie_devices to second kernel whill lead to bus level reset as well
-as device level reset.
-
-Ideal situation would be that somehow detect that bus level reset has been
-done and skip device level reset (assuming bus level reset obviates the
-need of device level reset, please correct me if that's not the case). 
-
-After pcie reset, can we store the state in a variable and drivers can
-use that variable to check if PCIe level reset was done or not. If yes,
-skip device level reset (Assuming driver knows that device is on a
-PCIe slot).
-
-In that case we will not have to introduce new kernel command line, and
-also avoid double reset?
+Did something happen on this patch. We definitely want to gain back the
+capability to be able to reserve 512MB of kdump memory.
 
 Thanks
 Vivek
