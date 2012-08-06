@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SyIen-0003Zq-N8
- for kexec@lists.infradead.org; Mon, 06 Aug 2012 08:27:22 +0000
-Date: Mon, 6 Aug 2012 17:27:17 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
-Message-ID: <20120806082717.GT18095@verge.net.au>
-References: <1d901f35-be2d-418b-bc80-b8c0420f3c0d@default>
+Received: from rcsinet15.oracle.com ([148.87.113.117])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SyJg1-0000lD-8e
+ for kexec@lists.infradead.org; Mon, 06 Aug 2012 09:32:41 +0000
 MIME-Version: 1.0
+Message-ID: <4be0efaf-096f-44d7-9429-9c946b06bd73@default>
+Date: Mon, 6 Aug 2012 02:32:34 -0700 (PDT)
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH] kexec-tools: Read always one vmcoreinfo file
 Content-Disposition: inline
-In-Reply-To: <1d901f35-be2d-418b-bc80-b8c0420f3c0d@default>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: kexec@lists.infradead.org, olaf@aepfle.de, xen-devel@lists.xensource.com, ptesarik@suse.cz, konrad.wilk@oracle.com
+To: horms@verge.net.au
+Cc: ptesarik@suse.cz, olaf@aepfle.de, xen-devel@lists.xensource.com, kexec@lists.infradead.org, konrad.wilk@oracle.com
 
-On Thu, Aug 02, 2012 at 06:27:24AM -0700, Daniel Kiper wrote:
-> Hi,
-> 
-> > > > If you spot any error in any logfile which in your opinion
-> > > > is relevent to our testes please send me it.
-> > >
-> > > Hi,
-> > >
-> > > is there any consensus on what to do here?
+Hi,
+
+[...]
+
+> > > As I know Petr was going to do some tests.
+> > > I have not received any reply from him till now.
+> > > Maybe he is busy or on vacation.
 > >
-> > As I know Petr was going to do some tests.
-> > I have not received any reply from him till now.
-> > Maybe he is busy or on vacation.
-> 
-> According to automatic reply he is on vacation until 13/08/2012.
+> > According to automatic reply he is on vacation until 13/08/2012.
+>
+> Thanks. I guess we should wait then.
+>
+> Incidently, I will be on vacation for a week from the 13th.
 
-Thanks. I guess we should wait then.
+I am too but for three weeks. However, I will be reading
+email from time to time.
 
-Incidently, I will be on vacation for a week from the 13th.
+Daniel
 
 _______________________________________________
 kexec mailing list
