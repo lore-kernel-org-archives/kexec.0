@@ -1,21 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mo6-p00-ob.rzone.de ([2a01:238:20a:202:5300::1])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SxPWb-0006Yt-2L
- for kexec@lists.infradead.org; Fri, 03 Aug 2012 21:35:14 +0000
-Received: from probook.site
- (dslb-088-065-080-194.pools.arcor-ip.net [88.65.80.194])
- by smtp.strato.de (josoe mo53) (RZmta 30.5 DYNA|AUTH)
- with (DHE-RSA-AES256-SHA encrypted) ESMTPA id 20052ao73IDCqA
- for <kexec@lists.infradead.org>; Fri, 3 Aug 2012 23:35:07 +0200 (CEST)
-Date: Fri, 3 Aug 2012 23:35:06 +0200
-From: Olaf Hering <olaf@aepfle.de>
-Subject: Re: misc fixes for kexec available via git pull
-Message-ID: <20120803213506.GA4618@aepfle.de>
-References: <20120626160454.GA23459@aepfle.de>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1SyEdf-0005xX-Sa
+ for kexec@lists.infradead.org; Mon, 06 Aug 2012 04:09:57 +0000
+Message-ID: <501F4387.3010404@redhat.com>
+Date: Mon, 06 Aug 2012 00:09:43 -0400
+From: Don Dutile <ddutile@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120626160454.GA23459@aepfle.de>
+Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+References: <501BB4EF.7080909@jp.fujitsu.com>
+In-Reply-To: <501BB4EF.7080909@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,34 +23,144 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, vgoyal@redhat.com
 
-On Tue, Jun 26, Olaf Hering wrote:
+On 08/03/2012 07:24 AM, Takao Indoh wrote:
+> Hi all,
+> 
+> This patch adds kernel parameter "reset_pcie_devices" which resets PCIe
+> devices at boot time to address DMA problem on kdump with iommu. When
+> this parameter is specified, a hot reset is triggered on each PCIe root
+> port and downstream port to reset its downstream endpoint.
+> 
+> Background:
+> A kdump problem about DMA has been discussed for a long time. That is,
+> when a kernel is switched to the kdump kernel DMA derived from first
+> kernel affects second kernel. Recently this problem surfaces when iommu
+> is used for PCI passthrough on KVM guest. In the case of the machine I
+> use, when intel_iommu=on is specified, DMAR error is detected in kdump
+> kernel and PCI SERR is also detected. Finally kdump fails because some
+> devices does not work correctly.
+> 
+> The root cause is that ongoing DMA from first kernel causes DMAR fault
+> because page table of DMAR is initialized while kdump kernel is booting
+> up. Therefore to address this problem DMA needs to be stopped before DMAR
+> is initialized at kdump kernel boot time. By this patch, PCIe devices
+> are reset by hot reset and its DMA is stopped when reset_pcie_devices is
+> specified. One problem of this solution is that VGA is reset and the
+> monitor blacks out when the link between the port and VGA controller was
+> reset. So this patch does not reset the port whose child endpoint is VGA
+> device.
+> 
+> Any comments would be appreciated.
+> 
+> Signed-off-by: Takao Indoh<indou.takao@jp.fujitsu.com>
+> ---
+Have you considered something less disruptive such as clearing the 
+Master Enable in each endpoint's PCI Command Register ?
+That should prevent DMA transactions from endpoints during the kdump and
+kexec, and when the driver for the device gets reconfigured,
+Master Enable will be set back on, but after the driver has had the
+opportunity to do a device-specific reset.
 
-> I sent the individual patches a few days ago. Appearently they did not
-> make it to the list. Maybe because I was not subscribed at that time.
-> 
-> So here is the 'git request-pull -p' output.
-> 
-> Olaf
-> 
-> The following changes since commit c423dc9db2d052d997e85e741b16ca919ee3011e:
-> 
->   Support kernel_noload uImage type (2012-06-18 10:47:04 +0900)
-> 
-> are available in the git repository at:
->   git://github.com/olafhering/kexec-tools.git misc
-> 
-> Olaf Hering (5):
->       Fix xen_cpuid() inline asm to not clobber stack's red zone
->       fixed strncat size argument on ppc64
->       fix message and indenting in putnode in ppc64
->       fix comment typo in do_bzImage_load on x86
->       fix comment typo in locate_hole
+- Don
 
-ping?
+>   Documentation/kernel-parameters.txt |    4 +
+>   drivers/pci/quirks.c                |   59 ++++++++++++++++++++++++++
+>   2 files changed, 63 insertions(+)
+> 
+> diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+> index e714a02..e694e9f 100644
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2489,6 +2489,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+>   	reset_devices	[KNL] Force drivers to reset the underlying device
+>   			during initialization.
+> 
+> +	reset_pcie_devices
+> +			[PCIE] Reset PCIe endpoint at boot time by sending a
+> +			hot reset to root port and downstream port
+> +
+>   	resume=		[SWSUSP]
+>   			Specify the partition device for software suspend
+>   			Format:
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 5155317..7f7fc02 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -32,6 +32,65 @@
+>   #include "pci.h"
+> 
+>   /*
+> + * Reset PCIe endpoint by sending a hot reset to root port and downstream port
+> + */
+> +unsigned int reset_pcie_devices;
+> +EXPORT_SYMBOL(reset_pcie_devices);
+> +static int __init set_reset_pcie_devices(char *str)
+> +{
+> +	reset_pcie_devices = 1;
+> +	return 1;
+> +}
+> +__setup("reset_pcie_devices", set_reset_pcie_devices);
+> +
+> +static void __devinit quirk_pcie_device_reset(struct pci_dev *dev)
+> +{
+> +	struct pci_bus *subordinate;
+> +	struct pci_dev *child;
+> +	u16 ctrl;
+> +
+> +	if (!reset_pcie_devices || !pci_is_pcie(dev) || !dev->subordinate ||
+> +	    ((dev->pcie_type != PCI_EXP_TYPE_ROOT_PORT)&&
+> +	     (dev->pcie_type != PCI_EXP_TYPE_DOWNSTREAM)))
+> +		return;
+> +
+> +	subordinate = dev->subordinate;
+> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
+> +		if ((child->pcie_type == PCI_EXP_TYPE_UPSTREAM) ||
+> +		    (child->pcie_type == PCI_EXP_TYPE_PCI_BRIDGE) ||
+> +		    ((child->class>>  16) == PCI_BASE_CLASS_DISPLAY))
+> +		/* Don't reset switch, bridge, VGA device */
+> +		return;
+> +	}
+> +
+> +	dev_info(&dev->dev, "Reset Secondary bus\n");
+> +
+> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
+> +		dev_info(&child->dev, "save state\n");
+> +		pci_save_state(child);
+> +	}
+> +
+> +	/* Assert Secondary Bus Reset */
+> +	pci_read_config_word(dev, PCI_BRIDGE_CONTROL,&ctrl);
+> +	ctrl |= PCI_BRIDGE_CTL_BUS_RESET;
+> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> +
+> +	msleep(2);
+> +
+> +	/* De-assert Secondary Bus Reset */
+> +	ctrl&= ~PCI_BRIDGE_CTL_BUS_RESET;
+> +	pci_write_config_word(dev, PCI_BRIDGE_CONTROL, ctrl);
+> +
+> +	msleep(200);
+> +
+> +	list_for_each_entry(child,&subordinate->devices, bus_list) {
+> +		dev_info(&child->dev, "restore state\n");
+> +		pci_restore_state(child);
+> +	}
+> +}
+> +DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, quirk_pcie_device_reset);
+> +
+> +/*
+>    * Decoding should be disabled for a PCI device during BAR sizing to avoid
+>    * conflict. But doing so may cause problems on host bridge and perhaps other
+>    * key system devices. For devices that need to have mmio decoding always-on,
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Olaf
 
 _______________________________________________
 kexec mailing list
