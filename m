@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1SyUD7-0002Ko-NC
- for kexec@lists.infradead.org; Mon, 06 Aug 2012 20:47:34 +0000
-Date: Mon, 6 Aug 2012 16:47:31 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
- memory consumption.
-Message-ID: <20120806204731.GJ25559@redhat.com>
-References: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
+Received: from mail-vc0-f177.google.com ([209.85.220.177])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1SyVHJ-0005jo-T0
+ for kexec@lists.infradead.org; Mon, 06 Aug 2012 21:55:59 +0000
+Received: by vcbfl13 with SMTP id fl13so3201390vcb.36
+ for <kexec@lists.infradead.org>; Mon, 06 Aug 2012 14:55:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
+In-Reply-To: <20120806204245.GI25559@redhat.com>
+References: <1339478463-31172-1-git-send-email-amwang@redhat.com>
+ <5004D8BF.6050205@jp.fujitsu.com> <500D20A1.1030800@redhat.com>
+ <500D340F.5080801@jp.fujitsu.com> <1343145331.16290.45.camel@cr0>
+ <500F3B7C.70009@jp.fujitsu.com> <20120806204245.GI25559@redhat.com>
+Date: Mon, 6 Aug 2012 14:55:55 -0700
+Message-ID: <CAE9FiQW1AiKPVsesmQD5yTk1+4w56pkcDrsRo2yZThuB+2bsOQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: revert "x86: Fix S4 regression"
+From: Yinghai Lu <yinghai@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,115 +27,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Cc: kexec@lists.infradead.org
+To: Vivek Goyal <vgoyal@redhat.com>, Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, "H. Peter Anvin" <hpa@zytor.com>
+Cc: Takao Indoh <indou.takao@jp.fujitsu.com>, amwang@redhat.com, tiwai@suse.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rjw@sisk.pl, xiyou.wangcong@gmail.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-On Fri, Jun 29, 2012 at 11:13:20AM +0900, Atsushi Kumagai wrote:
-> Hello,
-> 
-> I improved prototype of cyclic processing as version 2.
-> If there is no objection to basic idea, I want to consider the things
-> related to performance as next step. (Concretely, buffer size and the patch set
-> HATAYAMA-san sent a short time ago.) 
+On Mon, Aug 6, 2012 at 1:42 PM, Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Hi Atsushi San,
+>
+> Did something happen on this patch. We definitely want to gain back the
+> capability to be able to reserve 512MB of kdump memory.
 
-Just checking that what's the state of these patches now. Are they ready
-to be included in makedumpfile?
+Maybe Ingo and peter could push that to Linus.
 
-I would love to see new makedumpfile where memory usage does not grow
-by physical memory present in the system. (Assuming computig overhead
-of cycles is bearable).
+Assume we have Acked-by from you, me and others.
 
 Thanks
-Vivek
 
-> 
-> 
-> Version 1:
->  
->   http://lists.infradead.org/pipermail/kexec/2012-May/006363.html
-> 
-> Introduction:
-> 
->  - The purpose of cyclic processing is to fix memory consumption.
->  - cyclic processing doesn't use temporary bitmap file, store partial bitmap data
->    in memory only for each cycle instead.
->  - The prototype was passed the regression test which is used by every release.
-> 
-> How to use:
->   
->   Specify '--cyclic' option, then makedumpfile works cyclically.
-> 
-> Example:
-> 
->     $ makedumpfile --cyclic -cd31 vmcore testdump.cd31
->     Copying data                       : [  5 %]
->     Excluding free pages               : [100 %]
->     ...
->     Excluding free pages               : [100 %]
->     Copying data                       : [100 %]
-> 
->     The dumpfile is saved to testdump.cd31.
-> 
->     makedumpfile Completed.
-> 
-> Changelog:
-> 
->   v1 =>  v2:
-> 
->     - Fix the process of increasing target region.
->     - Change method for kdump-compressed format.
->     - Add support for ELF format.
->     - Add support for --split option.
->  
-> Memory consumption:
-> 
->   I measured the RSS of makedumpfile with ps(1) as memory consumption.
-> 
->     a. working for 5G memory:
->                  |                 RSS [KB]                
->                  |  no option  |    -cd31    |    -Ed31
->       -----------+-------------+-------------+-------------
->         v1.4.4   |     1108    |     1184    |      868
->         cyclic   |     2976    |     3252    |     2984
-> 
->         
->     b. working for 8G memory:
->                  |                 RSS [KB]                
->                  |  no option  |    -cd31    |    -Ed31
->       -----------+-------------+-------------+-------------
->         v1.4.4   |     1108    |     1180    |      864
->         cyclic   |     2972    |     3256    |     2984
-> 
-> 
->   This result seems to say that v1.4.4 is better than cyclic, but the size
->   of temporary bitmap file grows based on memory size. The increasing rate 
->   can be represented as (memory size / 4K / 8 ) * 2.
-> 
->      memory size [GB] |  bitmap size [KB]
->     ------------------+------------------
->             5         |       320
->             8         |       512
->            ...        |       ...
->           1,024       |      65,536
-> 
->   Even above size will be counted as memory consumption, if the system 
->   doesn't mount rootfs. This is the cause of the memory consumption issue
->   we discussed.
-> 
->   On the other hand, cyclic processing doesn't use temporary bitmap files,
->   all memory consumption will be appeared in RSS.
->   The memory consumption to store bitmap will be kept around 2MB(BUFSIZE_CYCLIC * 2).
->   
-> 
-> Thanks
-> Atsushi Kumagai
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Yinghai
 
 _______________________________________________
 kexec mailing list
