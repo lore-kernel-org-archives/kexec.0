@@ -1,31 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SyeGR-0001H8-Jw
- for kexec@lists.infradead.org; Tue, 07 Aug 2012 07:31:43 +0000
+ id 1SyeKs-0002A7-6K
+ for kexec@lists.infradead.org; Tue, 07 Aug 2012 07:36:15 +0000
 Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 0600C3EE0C1
- for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:31:34 +0900 (JST)
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id AAA983EE0B5
+ for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:36:09 +0900 (JST)
 Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id DEF0545DE58
- for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:31:33 +0900 (JST)
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 93B0F45DE59
+ for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:36:09 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id C73F845DE54
- for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:31:33 +0900 (JST)
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 758B945DE55
+ for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:36:09 +0900 (JST)
 Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id B829D1DB804E
- for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:31:33 +0900 (JST)
-Received: from m020.s.css.fujitsu.com (m020.s.css.fujitsu.com [10.0.81.60])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 741B21DB804F
- for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:31:33 +0900 (JST)
-Date: Tue, 07 Aug 2012 16:31:20 +0900 (JST)
-Message-Id: <20120807.163120.106259238.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
- memory consumption.
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 675501DB8050
+ for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:36:09 +0900 (JST)
+Received: from m024.s.css.fujitsu.com (m024.s.css.fujitsu.com [10.0.81.64])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1BEEE1DB8053
+ for <kexec@lists.infradead.org>; Tue,  7 Aug 2012 16:36:09 +0900 (JST)
+Date: Tue, 07 Aug 2012 16:36:00 +0900 (JST)
+Message-Id: <20120807.163600.302188331.d.hatayama@jp.fujitsu.com>
+Subject: Re: makedumpfile -g with recent kernels
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120806204731.GJ25559@redhat.com>
-References: <20120629111320.694ec85b.kumagai-atsushi@mxc.nes.nec.co.jp>
- <20120806204731.GJ25559@redhat.com>
+In-Reply-To: <20120807152409.07d5767955d7bc77dcce05d2@mxc.nes.nec.co.jp>
+References: <20120802150429.37c6a87dd922cef0abb44310@mxc.nes.nec.co.jp>
+ <20120802.172305.442170409.d.hatayama@jp.fujitsu.com>
+ <20120807152409.07d5767955d7bc77dcce05d2@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,38 +39,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, stefan.bader@canonical.com
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
-Date: Mon, 6 Aug 2012 16:47:31 -0400
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: makedumpfile -g with recent kernels
+Date: Tue, 7 Aug 2012 15:24:09 +0900
 
-> On Fri, Jun 29, 2012 at 11:13:20AM +0900, Atsushi Kumagai wrote:
->> Hello,
+> Hello HATAYAMA-san,
+> 
+> On Thu, 02 Aug 2012 17:23:05 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> 
+>> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> Subject: Re: makedumpfile -g with recent kernels
+>> Date: Thu, 2 Aug 2012 15:04:29 +0900
 >> 
->> I improved prototype of cyclic processing as version 2.
->> If there is no objection to basic idea, I want to consider the things
->> related to performance as next step. (Concretely, buffer size and the patch set
->> HATAYAMA-san sent a short time ago.) 
+>> > Hello HATAYAMA-san,
+>> > 
+>> > On Thu, 02 Aug 2012 14:47:14 +0900 (JST)
+>> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+>> > 
+>> >> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+>> >> Subject: Re: makedumpfile -g with recent kernels
+>> >> Date: Thu, 2 Aug 2012 14:12:51 +0900
+>> >> 
+>> >> > Hello Stefan,
+>> >> > 
+>> >> > On Mon, 09 Jul 2012 11:17:13 +0200
+>> >> > Stefan Bader <stefan.bader@canonical.com> wrote:
+>> >> > 
+>> >> >> Hi,
+>> >> >> 
+>> >> >> I am not sure whether this really is the preferred way as I heard the required
+>> >> >> info now is in vmcore and vmcoreinfo would not be needed anymore. But just to
+>> >> >> have it produce some output I noticed that it trips again over some member of
+>> >> >> struct page that moved into some anonymous structure/union combo.
+>> >> >> There was some code that was quite specific for the page.mapping case (which now
+>> >> >> seems to be outside again). I changed the code to be more generic. It did fix my
+>> >> >> _count problem and should also handle the mapping case (though I could not test).
+>> >> >> So maybe this would be worth adding to the upstream code.
+>> >> >> 
+>> >> >> -Stefan
+>> >> >> 
+>> >> >> Please include me in cc's as I am not subscribed to this ml.
+>> >> > 
+>> >> > Thank you for your nice work!
+>> >> > 
+>> >> 
+>> >> Hello Kumagai-san,
+>> >> 
+>> >> I want to see a whole part of Stefan's patch. Could you post it on the
+>> >> ml?
+>> > 
+>> > This is the Stefan's patch. 
+>> > 
+>> 
+>> Thanks, and this patch helps a lot.
+>> 
+>> BTW, I think we can get rid of DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION
+>> path, too.
+>> 
+>> Thanks.
+>> HATAYAMA, Daisuke
 > 
-> Hi Atsushi San,
+> At first, I thought so. But DWARF_INFO_GET_MEMBER_OFFSET doesn't work for
+> kernel 2.6.16 and 2.6.17 even after applying Stefan's patch.
+> Additionally, I couldn't find the Die of page.mapping with dwarfdump in that
+> case. 
+> I don't know why the Die isn't included in some vmlinuxs, anyway, it seems
+> that the comment below is true.
 > 
-> Just checking that what's the state of these patches now. Are they ready
-> to be included in makedumpfile?
+>     832         /*
+>     833          * Some vmlinux(s) don't have debugging information about
+>     834          * page.mapping. Then, makedumpfile assumes that there is
+>     835          * "mapping" next to "private(unsigned long)" in the first
+>     836          * union.
+>     837          */
+>     838         if (OFFSET(page.mapping) == NOT_FOUND_STRUCTURE) {
+>     839                 OFFSET(page.mapping) = get_member_offset("page", NULL,
+>     840                     DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION);
 > 
-> I would love to see new makedumpfile where memory usage does not grow
-> by physical memory present in the system. (Assuming computig overhead
-> of cycles is bearable).
-> 
-> Thanks
-> Vivek
+> So DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION is still necessary for some kernels.
 > 
 
-Hello Vivek,
-
-I'm just now benchmarking cycle processing on our machine. Please wait
-for a while.
+Thanks for your explanation. I understand it. I have similar
+experience where pt_regs sturcture information is missing for some
+kernel debuginfo files.
 
 Thanks.
 HATAYAMA, Daisuke
