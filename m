@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SydFa-0000Hm-RU
- for kexec@lists.infradead.org; Tue, 07 Aug 2012 06:26:45 +0000
-Date: Tue, 7 Aug 2012 15:23:56 +0900
+ id 1SydH3-0000Jf-Sg
+ for kexec@lists.infradead.org; Tue, 07 Aug 2012 06:28:15 +0000
+Date: Tue, 7 Aug 2012 15:24:09 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 Subject: Re: makedumpfile -g with recent kernels
-Message-Id: <20120807152356.1c2dbacbe323c2706cc6e6e8@mxc.nes.nec.co.jp>
-In-Reply-To: <501F74C9.9070508@canonical.com>
-References: <4FFAA199.5040608@canonical.com>
- <20120802141251.2efc0e407259254e6ef60586@mxc.nes.nec.co.jp>
- <501A38F1.8030801@canonical.com>
- <20120806145418.5fc2e5473aeb94f0348b023e@mxc.nes.nec.co.jp>
- <501F74C9.9070508@canonical.com>
+Message-Id: <20120807152409.07d5767955d7bc77dcce05d2@mxc.nes.nec.co.jp>
+In-Reply-To: <20120802.172305.442170409.d.hatayama@jp.fujitsu.com>
+References: <20120802141251.2efc0e407259254e6ef60586@mxc.nes.nec.co.jp>
+ <20120802.144714.166856684.d.hatayama@jp.fujitsu.com>
+ <20120802150429.37c6a87dd922cef0abb44310@mxc.nes.nec.co.jp>
+ <20120802.172305.442170409.d.hatayama@jp.fujitsu.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,138 +25,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: stefan.bader@canonical.com
-Cc: kexec@lists.infradead.org
+To: d.hatayama@jp.fujitsu.com
+Cc: kexec@lists.infradead.org, stefan.bader@canonical.com
 
-Hello Stefan,
+Hello HATAYAMA-san,
 
-On Mon, 06 Aug 2012 09:39:53 +0200
-Stefan Bader <stefan.bader@canonical.com> wrote:
+On Thu, 02 Aug 2012 17:23:05 +0900 (JST)
+HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
 
-> On 06.08.2012 07:54, Atsushi Kumagai wrote:
-> > Hello Stefan,
-> > 
-> > On Thu, 02 Aug 2012 10:23:13 +0200
-> > Stefan Bader <stefan.bader@canonical.com> wrote:
-> > 
-> >>>   static void
-> >>>   adjust_member_offset(Dwarf_Die *die)
-> >>>   {
-> >>>           long offset;
-> >>>
-> >>>           if (dwarf_info.member_offset == NOT_FOUND_STRUCTURE)     // this comparison is always true
-> >>>                   return;
-> >>>           if (!get_data_member_location(die, &offset))
-> >>>                   return;
-> >>>           dwarf_info.member_offset += offset;
-> >>>   }
-> >>>
-> >>> At least, the change below works fine without regression.
-> >>>
-> >>>
-> >>> diff --git a/dwarf_info.c b/dwarf_info.c
-> >>> index 583df53..03e4c90 100644
-> >>> --- a/dwarf_info.c
-> >>> +++ b/dwarf_info.c
-> >>> @@ -520,7 +520,9 @@ search_member(Dwarf_Die *die)
-> >>>                         /*
-> >>>                          * Get the member offset.
-> >>>                          */
-> >>> -                       if (!get_data_member_location(walker, &offset))
-> >>> +                       if (dwarf_tag(die) == DW_TAG_union_type)
-> >>
-> >> Hm, should that not be die_type to check what the walker is on? And in that case
-> >> it seems that check was made just before... So maybe it would be ok to assume 0
-> >> as the offset when getting here...?
-> > 
-> > As you said, the walker will be a member of union or struct when reaching here,
-> > because is_anonymous_container() already checked the walker.
-> > 
-> > However, get_data_member_location() must succeed if the walker is a member of struct
-> > while it doesn't succeed if the walker is a member of union.
-> > That's why I added the code to check whether the walker is a member of union or not.
+> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Subject: Re: makedumpfile -g with recent kernels
+> Date: Thu, 2 Aug 2012 15:04:29 +0900
 > 
-> Right, I was just wondering whether that would allow to simplify even more. Like
-> this:
-
-It seems we misunderstood each other, I talked about DWARF_INFO_GET_MEMBER_OFFSET:
-
-         case DWARF_INFO_GET_MEMBER_OFFSET:
-                 if ((!name) || strcmp(name, dwarf_info.member_name))
-                         continue;
-                 /*
-                  * Get the member offset.
-                  */
-                 if (dwarf_tag(die) == DW_TAG_union_type)
-                         offset = 0;
-                 else if (!get_data_member_location(walker, &offset))
-                         continue;
-                 dwarf_info.member_offset = offset;
-                 return TRUE;
-
-And about your code:
-
->        case DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION:
->                 if (!get_die_type(walker, &die_type))
->                         continue;
->                 if (dwarf_tag(&die_type) != DW_TAG_union_type)
->                         continue;
+> > Hello HATAYAMA-san,
+> > 
+> > On Thu, 02 Aug 2012 14:47:14 +0900 (JST)
+> > HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> > 
+> >> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> >> Subject: Re: makedumpfile -g with recent kernels
+> >> Date: Thu, 2 Aug 2012 14:12:51 +0900
+> >> 
+> >> > Hello Stefan,
+> >> > 
+> >> > On Mon, 09 Jul 2012 11:17:13 +0200
+> >> > Stefan Bader <stefan.bader@canonical.com> wrote:
+> >> > 
+> >> >> Hi,
+> >> >> 
+> >> >> I am not sure whether this really is the preferred way as I heard the required
+> >> >> info now is in vmcore and vmcoreinfo would not be needed anymore. But just to
+> >> >> have it produce some output I noticed that it trips again over some member of
+> >> >> struct page that moved into some anonymous structure/union combo.
+> >> >> There was some code that was quite specific for the page.mapping case (which now
+> >> >> seems to be outside again). I changed the code to be more generic. It did fix my
+> >> >> _count problem and should also handle the mapping case (though I could not test).
+> >> >> So maybe this would be worth adding to the upstream code.
+> >> >> 
+> >> >> -Stefan
+> >> >> 
+> >> >> Please include me in cc's as I am not subscribed to this ml.
+> >> > 
+> >> > Thank you for your nice work!
+> >> > 
+> >> 
+> >> Hello Kumagai-san,
+> >> 
+> >> I want to see a whole part of Stefan's patch. Could you post it on the
+> >> ml?
+> > 
+> > This is the Stefan's patch. 
+> > 
 > 
->                 /*
->                  * At this point it is clear that this is a union.
->                  * Though unions have no offset elements (the offset
->                  * is always 0. So get_data_member_location would fail.
->                  */
->                  dwarf_info.member_offset = 0;
->                  return TRUE;
+> Thanks, and this patch helps a lot.
+> 
+> BTW, I think we can get rid of DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION
+> path, too.
+> 
+> Thanks.
+> HATAYAMA, Daisuke
 
-It's wrong that unions have no offset elements.
-Correctly, members of union have no offset elements.
+At first, I thought so. But DWARF_INFO_GET_MEMBER_OFFSET doesn't work for
+kernel 2.6.16 and 2.6.17 even after applying Stefan's patch.
+Additionally, I couldn't find the Die of page.mapping with dwarfdump in that
+case. 
+I don't know why the Die isn't included in some vmlinuxs, anyway, it seems
+that the comment below is true.
 
-So, I'll fix it similarly to DWARF_INFO_GET_MEMBER_OFFSET:
+    832         /*
+    833          * Some vmlinux(s) don't have debugging information about
+    834          * page.mapping. Then, makedumpfile assumes that there is
+    835          * "mapping" next to "private(unsigned long)" in the first
+    836          * union.
+    837          */
+    838         if (OFFSET(page.mapping) == NOT_FOUND_STRUCTURE) {
+    839                 OFFSET(page.mapping) = get_member_offset("page", NULL,
+    840                     DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION);
 
-        case DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION:
-                if (!get_die_type(walker, &die_type))
-                        continue;
-                if (dwarf_tag(&die_type) != DW_TAG_union_type)
-                        continue;
-                /*
-                 * Get the member offset.
-                 */
-                 if (dwarf_tag(die) == DW_TAG_union_type)
-                         offset = 0;
-                 else if (!get_data_member_location(walker, &offset))
-                         continue;
-                 dwarf_info.member_offset = offset;
-                 return TRUE;
+So DWARF_INFO_GET_MEMBER_OFFSET_1ST_UNION is still necessary for some kernels.
 
- 
+
 Thanks
 Atsushi Kumagai
-
-> > 
-> > 
-> > Thanks
-> > Atsushi Kumagai
-> > 
-> >>> +                               offset = 0;
-> >>> +                       else if (!get_data_member_location(walker, &offset))
-> >>>                                 continue;
-> >>>                         dwarf_info.member_offset = offset;
-> >>>                         return TRUE;
-> >>>
-> >>>
-> >>> Unless you have better way to fix this issue, I'll merge your patch into
-> >>> the next version with the change above.
-> >>>
-> >>> By the way, this fix enable us also to get the offset of page._mapcount and
-> >>> page.private, it's very helpful for the new method of free page filtering.
-> >>>
-> >>>   http://lists.infradead.org/pipermail/kexec/2012-June/006441.html
-> >>>
-> >>>
-> >>> Thanks
-> >>> Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
