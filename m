@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yx0-f177.google.com ([209.85.213.177])
+Received: from acsinet15.oracle.com ([141.146.126.227])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1Szr9U-0006Zz-Cm
- for kexec@lists.infradead.org; Fri, 10 Aug 2012 15:29:29 +0000
-Received: by yenq9 with SMTP id q9so1696510yen.36
- for <kexec@lists.infradead.org>; Fri, 10 Aug 2012 08:29:25 -0700 (PDT)
+ id 1SzpG2-0004hL-4A
+ for kexec@lists.infradead.org; Fri, 10 Aug 2012 13:28:06 +0000
+Date: Fri, 10 Aug 2012 15:26:41 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: [PATCH v2 3/6] x86/xen: Read variables from dynamically allocated
+ per_cpu data
+Message-ID: <20120810132641.GD2576@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
-Date: Fri, 10 Aug 2012 17:29:18 +0200
-Message-ID: <CAF41zFy-TF1yzCracNPW_G33UpvfseqhvX-mVaDjwvmN=Dk8hQ@mail.gmail.com>
-Subject: kexec in DomU of xen
-From: weijia wang <aawwjaa@gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,18 +22,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: anderson@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, olaf@aepfle.de, jbeulich@suse.com, ptesarik@suse.cz, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 
-Hi,
+per_cpu data is dynamically allocated since 21416 changeset (x86: Dynamically
+allocate percpu data area when a CPU comes online). Take into account that
+and read variables from correct address.
 
-   I am wandering that if kexec has supported the DomU of xen?
-   Because when I failed to use kexec for reloading a kernel in DomU.
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-kernel
-
-
-Thanks
-Weijia
+diff -Npru crash-6.0.8.orig/xen_hyper.c crash-6.0.8/xen_hyper.c
+--- crash-6.0.8.orig/xen_hyper.c	2012-07-05 15:47:09.000000000 +0200
++++ crash-6.0.8/xen_hyper.c	2012-07-05 15:50:19.000000000 +0200
+@@ -64,7 +64,6 @@ xen_hyper_init(void)
+ 	machdep->get_smp_cpus();
+ 	machdep->memory_size();
+ 
+-#ifdef IA64
+ 	if (symbol_exists("__per_cpu_offset")) {
+ 		xht->flags |= XEN_HYPER_SMP;
+ 		if((xht->__per_cpu_offset = malloc(sizeof(ulong) * XEN_HYPER_MAX_CPUS())) == NULL) {
+@@ -76,7 +75,6 @@ xen_hyper_init(void)
+ 			error(FATAL, "cannot read __per_cpu_offset.\n");
+ 		}
+ 	}
+-#endif
+ 
+ #if defined(X86) || defined(X86_64)
+ 	if (symbol_exists("__per_cpu_shift")) {
+diff -Npru crash-6.0.8.orig/xen_hyper_defs.h crash-6.0.8/xen_hyper_defs.h
+--- crash-6.0.8.orig/xen_hyper_defs.h	2012-06-29 16:59:18.000000000 +0200
++++ crash-6.0.8/xen_hyper_defs.h	2012-07-05 15:50:19.000000000 +0200
+@@ -136,7 +136,13 @@ typedef uint32_t	Elf_Word;
+ 
+ #if defined(X86) || defined(X86_64)
+ #define xen_hyper_per_cpu(var, cpu)  \
+-	((ulong)(var) + (((ulong)(cpu))<<xht->percpu_shift))
++	({ ulong __var_addr; \
++	   if (xht->__per_cpu_offset) \
++		__var_addr = (xht->flags & XEN_HYPER_SMP) ? \
++			((ulong)(var) + xht->__per_cpu_offset[cpu]) : (ulong)(var); \
++	   else \
++		__var_addr = (ulong)(var) + ((ulong)(cpu) << xht->percpu_shift); \
++	   __var_addr; })
+ #elif defined(IA64)
+ #define xen_hyper_per_cpu(var, cpu)  \
+ 	((xht->flags & XEN_HYPER_SMP) ? \
 
 _______________________________________________
 kexec mailing list
