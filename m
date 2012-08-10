@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from acsinet15.oracle.com ([141.146.126.227])
+Received: from mail-yx0-f177.google.com ([209.85.213.177])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T0pmk-00011N-ID
- for kexec@lists.infradead.org; Mon, 13 Aug 2012 08:14:04 +0000
-Date: Mon, 13 Aug 2012 10:12:35 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH v2 1/6] xen: Always calculate max_cpus value
-Message-ID: <20120813081235.GB2482@host-192-168-1-59.local.net-space.pl>
-References: <20120810132513.GB2576@host-192-168-1-59.local.net-space.pl>
- <502539410200007800094355@nat28.tlf.novell.com>
+ id 1Szr9U-0006Zz-Cm
+ for kexec@lists.infradead.org; Fri, 10 Aug 2012 15:29:29 +0000
+Received: by yenq9 with SMTP id q9so1696510yen.36
+ for <kexec@lists.infradead.org>; Fri, 10 Aug 2012 08:29:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <502539410200007800094355@nat28.tlf.novell.com>
+Date: Fri, 10 Aug 2012 17:29:18 +0200
+Message-ID: <CAF41zFy-TF1yzCracNPW_G33UpvfseqhvX-mVaDjwvmN=Dk8hQ@mail.gmail.com>
+Subject: kexec in DomU of xen
+From: weijia wang <aawwjaa@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,39 +22,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jan Beulich <JBeulich@suse.com>
-Cc: olaf@aepfle.de, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, ptesarik@suse.cz, xen-devel <xen-devel@lists.xen.org>, anderson@redhat.com, crash-utility@redhat.com
+To: kexec@lists.infradead.org
 
-On Fri, Aug 10, 2012 at 03:39:29PM +0100, Jan Beulich wrote:
-> >>> On 10.08.12 at 15:25, Daniel Kiper <daniel.kiper@oracle.com> wrote:
-> > max_cpus is not available since 20374 changeset (Miscellaneous data
-> > placement adjustments). It was moved to __initdata section. This section
-> > is freed after Xen initialization. Assume that max_cpus is always
-> > equal to XEN_HYPER_SIZE(cpumask_t) * 8.
->
-> Just to repeat my response to the original version of this patch,
-> which I don't recall having got any answer from you:
->
-> "Using nr_cpu_ids, when available, would seem a better fit. And
->  I don't see why, on dumps from old hypervisors, you wouldn't
->  want to continue using max_cpus. Oh, wait, I see - you would
->  have to be able to tell whether it actually sits in .init.data, which
->  might not be strait forward."
+Hi,
 
-As I promised earlier I thought about that. The simplest way
-to do that is to check in which section max_cpus resides. There
-is some instrumentation in crash tool to do that. However, sadly
-it does not differentiate between .data and .init.data section.
-I could write something from scratch which could do that but
-I think it could have larger costs then potential gains.
-Let's leave it as is now. Current approximation is not so bad.
-However, if any opportunity appears (some functions could
-differentiate between .data and .init.data section) then
-I could fix this.
+   I am wandering that if kexec has supported the DomU of xen?
+   Because when I failed to use kexec for reloading a kernel in DomU.
 
-Sorry, I should attach above description to original message.
+kernel
 
-Daniel
+
+Thanks
+Weijia
 
 _______________________________________________
 kexec mailing list
