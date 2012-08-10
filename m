@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from acsinet15.oracle.com ([141.146.126.227])
+Received: from rcsinet15.oracle.com ([148.87.113.117])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SzpDY-0004aK-6J
- for kexec@lists.infradead.org; Fri, 10 Aug 2012 13:25:32 +0000
-Date: Fri, 10 Aug 2012 15:23:57 +0200
+ id 1SzpEZ-0004c3-QR
+ for kexec@lists.infradead.org; Fri, 10 Aug 2012 13:26:36 +0000
+Date: Fri, 10 Aug 2012 15:25:13 +0200
 From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 0/6] crash: Bundle of fixes for Xen
-Message-ID: <20120810132357.GA2576@host-192-168-1-59.local.net-space.pl>
+Subject: [PATCH v2 1/6] xen: Always calculate max_cpus value
+Message-ID: <20120810132513.GB2576@host-192-168-1-59.local.net-space.pl>
 MIME-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
@@ -23,20 +23,30 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: anderson@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, olaf@aepfle.de, jbeulich@suse.com, ptesarik@suse.cz, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
 
-Hi,
+max_cpus is not available since 20374 changeset (Miscellaneous data
+placement adjustments). It was moved to __initdata section. This section
+is freed after Xen initialization. Assume that max_cpus is always
+equal to XEN_HYPER_SIZE(cpumask_t) * 8.
 
-It looks that Xen support for crash have not been maintained
-since 2009. I am trying to fix this. Here it is bundle of fixes:
-  - xen: Always calculate max_cpus value,
-  - xen: Read only crash notes for onlined CPUs,
-  - x86/xen: Read variables from dynamically allocated per_cpu data,
-  - xen: Get idle data from alternative source,
-  - xen: Read data correctly from dynamically allocated console ring, too
-    (fixed in this release),
-  - xen: Add support for 3 level P2M tree
-    (new patch in this release).
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
 
-Daniel
+diff -Npru crash-6.0.8.orig/xen_hyper.c crash-6.0.8/xen_hyper.c
+--- crash-6.0.8.orig/xen_hyper.c	2012-06-29 16:59:18.000000000 +0200
++++ crash-6.0.8/xen_hyper.c	2012-07-05 14:52:59.000000000 +0200
+@@ -1879,11 +1879,9 @@ xen_hyper_get_cpu_info(void)
+ 	uint *cpu_idx;
+ 	int i, j, cpus;
+ 
+-	get_symbol_data("max_cpus", sizeof(xht->max_cpus), &xht->max_cpus);
+ 	XEN_HYPER_STRUCT_SIZE_INIT(cpumask_t, "cpumask_t");
+-	if (XEN_HYPER_SIZE(cpumask_t) * 8 > xht->max_cpus) {
+-		xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
+-	}
++	xht->max_cpus = XEN_HYPER_SIZE(cpumask_t) * 8;
++
+ 	if (xht->cpumask) {
+ 		free(xht->cpumask);
+ 	}
 
 _______________________________________________
 kexec mailing list
