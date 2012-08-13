@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from acsinet15.oracle.com ([141.146.126.227])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1SzpG2-0004hL-4A
- for kexec@lists.infradead.org; Fri, 10 Aug 2012 13:28:06 +0000
-Date: Fri, 10 Aug 2012 15:26:41 +0200
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: [PATCH v2 3/6] x86/xen: Read variables from dynamically allocated
- per_cpu data
-Message-ID: <20120810132641.GD2576@host-192-168-1-59.local.net-space.pl>
-MIME-Version: 1.0
+Received: from nat28.tlf.novell.com ([130.57.49.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T0qfO-0002Dz-Qr
+ for kexec@lists.infradead.org; Mon, 13 Aug 2012 09:10:31 +0000
+Message-Id: <5028E09B0200007800094691@nat28.tlf.novell.com>
+Date: Mon, 13 Aug 2012 10:10:19 +0100
+From: "Jan Beulich" <JBeulich@suse.com>
+Subject: Re: [PATCH v2 1/6] xen: Always calculate max_cpus value
+References: <20120810132513.GB2576@host-192-168-1-59.local.net-space.pl>
+ <502539410200007800094355@nat28.tlf.novell.com>
+ <20120813081235.GB2482@host-192-168-1-59.local.net-space.pl>
+In-Reply-To: <20120813081235.GB2482@host-192-168-1-59.local.net-space.pl>
+Mime-Version: 1.0
 Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,51 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: anderson@redhat.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, olaf@aepfle.de, jbeulich@suse.com, ptesarik@suse.cz, crash-utility@redhat.com, kexec@lists.infradead.org, xen-devel@lists.xensource.com
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: olaf@aepfle.de, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, ptesarik@suse.cz, xen-devel <xen-devel@lists.xen.org>, anderson@redhat.com, crash-utility@redhat.com
 
-per_cpu data is dynamically allocated since 21416 changeset (x86: Dynamically
-allocate percpu data area when a CPU comes online). Take into account that
-and read variables from correct address.
+>>> On 13.08.12 at 10:12, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> On Fri, Aug 10, 2012 at 03:39:29PM +0100, Jan Beulich wrote:
+>> >>> On 10.08.12 at 15:25, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+>> > max_cpus is not available since 20374 changeset (Miscellaneous data
+>> > placement adjustments). It was moved to __initdata section. This section
+>> > is freed after Xen initialization. Assume that max_cpus is always
+>> > equal to XEN_HYPER_SIZE(cpumask_t) * 8.
+>>
+>> Just to repeat my response to the original version of this patch,
+>> which I don't recall having got any answer from you:
+>>
+>> "Using nr_cpu_ids, when available, would seem a better fit. And
+>>  I don't see why, on dumps from old hypervisors, you wouldn't
+>>  want to continue using max_cpus. Oh, wait, I see - you would
+>>  have to be able to tell whether it actually sits in .init.data, which
+>>  might not be strait forward."
+> 
+> As I promised earlier I thought about that. The simplest way
+> to do that is to check in which section max_cpus resides. There
+> is some instrumentation in crash tool to do that. However, sadly
+> it does not differentiate between .data and .init.data section.
+> I could write something from scratch which could do that but
+> I think it could have larger costs then potential gains.
+> Let's leave it as is now. Current approximation is not so bad.
+> However, if any opportunity appears (some functions could
+> differentiate between .data and .init.data section) then
+> I could fix this.
 
-Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+But minimally you should be using nr_cpu_ids when available.
+You just have to be prepared for bits beyond that value within
+any cpumask_t instance to have random contents.
 
-diff -Npru crash-6.0.8.orig/xen_hyper.c crash-6.0.8/xen_hyper.c
---- crash-6.0.8.orig/xen_hyper.c	2012-07-05 15:47:09.000000000 +0200
-+++ crash-6.0.8/xen_hyper.c	2012-07-05 15:50:19.000000000 +0200
-@@ -64,7 +64,6 @@ xen_hyper_init(void)
- 	machdep->get_smp_cpus();
- 	machdep->memory_size();
- 
--#ifdef IA64
- 	if (symbol_exists("__per_cpu_offset")) {
- 		xht->flags |= XEN_HYPER_SMP;
- 		if((xht->__per_cpu_offset = malloc(sizeof(ulong) * XEN_HYPER_MAX_CPUS())) == NULL) {
-@@ -76,7 +75,6 @@ xen_hyper_init(void)
- 			error(FATAL, "cannot read __per_cpu_offset.\n");
- 		}
- 	}
--#endif
- 
- #if defined(X86) || defined(X86_64)
- 	if (symbol_exists("__per_cpu_shift")) {
-diff -Npru crash-6.0.8.orig/xen_hyper_defs.h crash-6.0.8/xen_hyper_defs.h
---- crash-6.0.8.orig/xen_hyper_defs.h	2012-06-29 16:59:18.000000000 +0200
-+++ crash-6.0.8/xen_hyper_defs.h	2012-07-05 15:50:19.000000000 +0200
-@@ -136,7 +136,13 @@ typedef uint32_t	Elf_Word;
- 
- #if defined(X86) || defined(X86_64)
- #define xen_hyper_per_cpu(var, cpu)  \
--	((ulong)(var) + (((ulong)(cpu))<<xht->percpu_shift))
-+	({ ulong __var_addr; \
-+	   if (xht->__per_cpu_offset) \
-+		__var_addr = (xht->flags & XEN_HYPER_SMP) ? \
-+			((ulong)(var) + xht->__per_cpu_offset[cpu]) : (ulong)(var); \
-+	   else \
-+		__var_addr = (ulong)(var) + ((ulong)(cpu) << xht->percpu_shift); \
-+	   __var_addr; })
- #elif defined(IA64)
- #define xen_hyper_per_cpu(var, cpu)  \
- 	((xht->flags & XEN_HYPER_SMP) ? \
+Jan
+
 
 _______________________________________________
 kexec mailing list
