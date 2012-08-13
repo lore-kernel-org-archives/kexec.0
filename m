@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx4-phx2.redhat.com ([209.132.183.25])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1Szuct-00068V-Rc
- for kexec@lists.infradead.org; Fri, 10 Aug 2012 19:12:05 +0000
-Date: Fri, 10 Aug 2012 15:11:57 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1568927206.9177777.1344625917898.JavaMail.root@redhat.com>
-In-Reply-To: <20120810132357.GA2576@host-192-168-1-59.local.net-space.pl>
-Subject: Re: [PATCH v2 0/6] crash: Bundle of fixes for Xen
+Received: from acsinet15.oracle.com ([141.146.126.227])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1T0pmk-00011N-ID
+ for kexec@lists.infradead.org; Mon, 13 Aug 2012 08:14:04 +0000
+Date: Mon, 13 Aug 2012 10:12:35 +0200
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH v2 1/6] xen: Always calculate max_cpus value
+Message-ID: <20120813081235.GB2482@host-192-168-1-59.local.net-space.pl>
+References: <20120810132513.GB2576@host-192-168-1-59.local.net-space.pl>
+ <502539410200007800094355@nat28.tlf.novell.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <502539410200007800094355@nat28.tlf.novell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,36 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad wilk <konrad.wilk@oracle.com>, andrew cooper3 <andrew.cooper3@citrix.com>, ptesarik@suse.cz, jbeulich@suse.com, kexec@lists.infradead.org, crash-utility@redhat.com
+To: Jan Beulich <JBeulich@suse.com>
+Cc: olaf@aepfle.de, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, ptesarik@suse.cz, xen-devel <xen-devel@lists.xen.org>, anderson@redhat.com, crash-utility@redhat.com
 
+On Fri, Aug 10, 2012 at 03:39:29PM +0100, Jan Beulich wrote:
+> >>> On 10.08.12 at 15:25, Daniel Kiper <daniel.kiper@oracle.com> wrote:
+> > max_cpus is not available since 20374 changeset (Miscellaneous data
+> > placement adjustments). It was moved to __initdata section. This section
+> > is freed after Xen initialization. Assume that max_cpus is always
+> > equal to XEN_HYPER_SIZE(cpumask_t) * 8.
+>
+> Just to repeat my response to the original version of this patch,
+> which I don't recall having got any answer from you:
+>
+> "Using nr_cpu_ids, when available, would seem a better fit. And
+>  I don't see why, on dumps from old hypervisors, you wouldn't
+>  want to continue using max_cpus. Oh, wait, I see - you would
+>  have to be able to tell whether it actually sits in .init.data, which
+>  might not be strait forward."
 
+As I promised earlier I thought about that. The simplest way
+to do that is to check in which section max_cpus resides. There
+is some instrumentation in crash tool to do that. However, sadly
+it does not differentiate between .data and .init.data section.
+I could write something from scratch which could do that but
+I think it could have larger costs then potential gains.
+Let's leave it as is now. Current approximation is not so bad.
+However, if any opportunity appears (some functions could
+differentiate between .data and .init.data section) then
+I could fix this.
 
------ Original Message -----
-> Hi,
-> 
-> It looks that Xen support for crash have not been maintained
-> since 2009. I am trying to fix this. Here it is bundle of fixes:
->   - xen: Always calculate max_cpus value,
->   - xen: Read only crash notes for onlined CPUs,
->   - x86/xen: Read variables from dynamically allocated per_cpu data,
->   - xen: Get idle data from alternative source,
->   - xen: Read data correctly from dynamically allocated console ring, too
->     (fixed in this release),
->   - xen: Add support for 3 level P2M tree (new patch in this release).
-> 
-> Daniel
-> 
+Sorry, I should attach above description to original message.
 
-Hi Daniel,
-
-The original 5 updates specific to the Xen hypervisor look OK,
-but new patch 6/6 is going to take some studying/testing to
-alleviate my backwards-compatibility worries.  Can I ask whether
-you fully tested it with older 2-level P2M tree kernels? 
-
-Thanks,
-  Dave
+Daniel
 
 _______________________________________________
 kexec mailing list
