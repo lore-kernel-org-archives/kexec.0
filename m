@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T1FjX-0002Jb-UH
- for kexec@lists.infradead.org; Tue, 14 Aug 2012 11:56:29 +0000
-Date: Tue, 14 Aug 2012 20:55:32 +0900 (JST)
-Message-Id: <20120814.205532.509440957.d.hatayama@jp.fujitsu.com>
-Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
- memory consumption.
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120810143655.GA5416@redhat.com>
-References: <20120807.163120.106259238.d.hatayama@jp.fujitsu.com>
- <20120810.173938.37160718.d.hatayama@jp.fujitsu.com>
- <20120810143655.GA5416@redhat.com>
-Mime-Version: 1.0
+Received: from mx4-phx2.redhat.com ([209.132.183.25])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T108M-0007mE-Gc
+ for kexec@lists.infradead.org; Mon, 13 Aug 2012 19:17:03 +0000
+Date: Mon, 13 Aug 2012 15:16:53 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1827880283.12350529.1344885413402.JavaMail.root@redhat.com>
+In-Reply-To: <20120813073754.GA2482@host-192-168-1-59.local.net-space.pl>
+Subject: Re: [PATCH v2 0/6] crash: Bundle of fixes for Xen
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,132 +21,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, kumagai-atsushi@mxc.nes.nec.co.jp
+To: Daniel Kiper <daniel.kiper@oracle.com>
+Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad wilk <konrad.wilk@oracle.com>, andrew cooper3 <andrew.cooper3@citrix.com>, ptesarik@suse.cz, jbeulich@suse.com, kexec@lists.infradead.org, crash-utility@redhat.com
 
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
-Date: Fri, 10 Aug 2012 10:36:55 -0400
 
-> On Fri, Aug 10, 2012 at 05:39:38PM +0900, HATAYAMA Daisuke wrote:
+
+----- Original Message -----
+> On Fri, Aug 10, 2012 at 03:11:57PM -0400, Dave Anderson wrote:
+> >
+> >
+> > ----- Original Message -----
+> > > Hi,
+> > >
+> > > It looks that Xen support for crash have not been maintained
+> > > since 2009. I am trying to fix this. Here it is bundle of fixes:
+> > >   - xen: Always calculate max_cpus value,
+> > >   - xen: Read only crash notes for onlined CPUs,
+> > >   - x86/xen: Read variables from dynamically allocated per_cpu
+> > >   data,
+> > >   - xen: Get idle data from alternative source,
+> > >   - xen: Read data correctly from dynamically allocated console
+> > >   ring, too
+> > >     (fixed in this release),
+> > >   - xen: Add support for 3 level P2M tree (new patch in this
+> > >   release).
+> > >
+> > > Daniel
+> >
+> > Hi Daniel,
+> >
+> > The original 5 updates specific to the Xen hypervisor look OK,
+> > but new patch 6/6 is going to take some studying/testing to
+> > alleviate my backwards-compatibility worries.  Can I ask whether
+> > you fully tested it with older 2-level P2M tree kernels?
 > 
-> [..]
->> 
->> I finished benchmarking filtering time and demonstrate the result.
->> But I failed to collect amount of memory consumption by my mistake. If
->> they are necessary, I'll again try to collect them. But we have 9 days
->> vacation starting tommorow, so I'll do that after the vacation.
->> 
+> As you asked me earlier I have tested all patches on Xen 3.1 and 4.1,
+> Linux Kernel Ver. 2.6.18 (P2M array), 2.6.36 (2 level P2M tree)
+> and 2.6.39 (3 level P2M tree). Additionaly, there were some internal
+> tests done by others in my company.
 > 
-> Thanks a lot for doing this benchmarking.
-> 
->> The machine spec I used is as follows:
->> 
->>   Memory: 2TB
->>   CPU: Intel(R) Xeon(R) CPU E7- 8870  @ 2.40GHz
->>        (8 sockets, 10 cores, 2 threads)
->> 
->> In the first step, I chosed buffer size 10KB and it took about 3h 45m
->> 57s. So, next I changed the buffer size to 512KB and measured up to
->> 8MB.
-> 
-> What is this buffer size? Is user supposed to specify it? Is it some fixed
-> size buffer which makedumpfile can use to read in memory and once we cross
-> the buffer size we need to let some data from buffer go?
-> 
+> Daniel
 
-The buffer size is just the size for a single bitmap. A single bitmap
-has the given buffer size length. If passing 512kB as buffer size, two
-512kB bitmaps, so 1MB in total, are allocated.
+OK good.  It tests OK on a few older pvops kernels that I have on hand.
 
-The next equation holds:
+The only thing I've changed is to handle compiler warnings in x86_64.c and 
+x86.c by initializing p2m_top to NULL in x86_64_pvops_xendump_p2m_l3_create()
+and x86_pvops_xendump_p2m_l3_create().  I also used GETBUF() in those two
+functions to avoid having to add the malloc-failure line.
 
-number_of_cycles == system_memory / ( bit_per_bytes * page_size * the_buf_size )
+Queued for crash-6.0.9.
 
-On this benchmarking,
-
-  system_memory := 2TB
-  bit_per_bytes := 8
-  page_size := 4KB
-
-The buffer size was fixed in Kumagai-san's version, but in this
-benchmarking I added --bufsize command-line option for flexibility.
-
->> 
->> The result is as follows:
->> 
->> | buffer size | time       |
->> |-------------+------------|
->> | 8 MB        | 48.32 sec  |
->> | 4 MB        | 55.76 sec  |
->> | 2 MB        | 69.91 sec  |
->> | 1 MB        | 98.25 sec  |
->> | 512 KB      | 154.42 sec |
-> 
-> So, on a 2TB system, with 8MB buffer, we could filter and save vmcore in
-> around 48 seconds? Or is it just filtering time.
-> 
-
-Just filtering time. I first tried with writing memory but it took
-very long time over a few hours. There are several test cases for
-several buffer size, I needed to reduce the time required.
-
-> 48 seconds for 2TB system, sounds pretty decent to me.
-> 
-
-I think so too, because the time for writing data is by far larger
-than this time.
-
-> Are these results with existing free_list implementation or with your
-> patches of walking through mem_map array?
-> 
->> 
->> BTW, the existing free_list logic took about 48 sec for the same
->> vmcore as below.
-> 
-> I guess above results were with your patches of walking mem_map array.
-> 
-
-Yes, the above results are mem_map array case.
-
->> 
->> STEP [Excluding free pages       ] : 49.846321 seconds
->> STEP [Excluding unnecessary pages] : 6.339228 seconds
->> STEP [Excluding free pages       ] : 48.595884 seconds
->> STEP [Excluding unnecessary pages] : 6.530479 seconds
->> STEP [Excluding free pages       ] : 48.598879 seconds
->> STEP [Excluding unnecessary pages] : 6.527133 seconds
->> STEP [Excluding free pages       ] : 48.602401 seconds
->> STEP [Excluding unnecessary pages] : 6.502681 seconds
->> STEP [Excluding free pages       ] : 48.602010 seconds
->> STEP [Excluding unnecessary pages] : 6.469853 seconds
->> STEP [Excluding free pages       ] : 48.601637 seconds
->> STEP [Excluding unnecessary pages] : 6.431381 seconds
->> STEP [Excluding free pages       ] : 48.601195 seconds
->> STEP [Excluding unnecessary pages] : 6.416676 seconds
->> STEP [Excluding free pages       ] : 48.602221 seconds
->> STEP [Excluding unnecessary pages] : 6.387611 seconds
->> STEP [Excluding free pages       ] : 48.589972 seconds
->> STEP [Excluding unnecessary pages] : 0.816955 seconds
-> 
-> So what does above represent. Each step is taking 48 seconds or total
-> time taken to filter vmcore is 48 seconds? What's the buffer size used
-> here.
-> 
-
-The free_list logic always filteres a whole memory range even if the
-range we need to filter is only a cerntain part, so it took about 48
-seconds at each cycle.
-
-> Does that mean that filtering time for both mem_map array approach and
-> free_list approach are same?
-> 
-
-No.
-
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks,
+  Dave
+  
 
 _______________________________________________
 kexec mailing list
