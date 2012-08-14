@@ -1,14 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx3-phx2.redhat.com ([209.132.183.24])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T1Hj4-0001bS-MI
- for kexec@lists.infradead.org; Tue, 14 Aug 2012 14:04:08 +0000
-Date: Tue, 14 Aug 2012 10:04:00 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <1543188889.13757694.1344953040454.JavaMail.root@redhat.com>
-In-Reply-To: <20120814061408.GA2471@host-192-168-1-59.local.net-space.pl>
-Subject: Re: [PATCH v2 0/6] crash: Bundle of fixes for Xen
+Received: from e23smtp07.au.ibm.com ([202.81.31.140])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1T1CW9-0008BJ-6V
+ for kexec@lists.infradead.org; Tue, 14 Aug 2012 08:30:26 +0000
+Received: from /spool/local
+ by e23smtp07.au.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <mahesh@linux.vnet.ibm.com>;
+ Tue, 14 Aug 2012 18:29:24 +1000
+Received: from d23av02.au.ibm.com (d23av02.au.ibm.com [9.190.235.138])
+ by d23relay03.au.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q7E8UGx422478852
+ for <kexec@lists.infradead.org>; Tue, 14 Aug 2012 18:30:16 +1000
+Received: from d23av02.au.ibm.com (loopback [127.0.0.1])
+ by d23av02.au.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q7E8UFf6018283
+ for <kexec@lists.infradead.org>; Tue, 14 Aug 2012 18:30:15 +1000
+Message-ID: <502A0BF4.5070702@linux.vnet.ibm.com>
+Date: Tue, 14 Aug 2012 13:57:32 +0530
+From: Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com>
 MIME-Version: 1.0
+Subject: Re: [PATCH] build: Avoid duplicate files in tarball
+References: <1343876888-21106-1-git-send-email-horms@verge.net.au>
+In-Reply-To: <1343876888-21106-1-git-send-email-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +35,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad wilk <konrad.wilk@oracle.com>, andrew cooper3 <andrew.cooper3@citrix.com>, ptesarik@suse.cz, jbeulich@suse.com, kexec@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-
-
------ Original Message -----
-> On Mon, Aug 13, 2012 at 03:16:53PM -0400, Dave Anderson wrote:
+On 08/02/2012 08:38 AM, Simon Horman wrote:
+> Signed-off-by: Simon Horman <horms@verge.net.au>
+> ---
+>  kexec/Makefile             | 75 +++++++++++++++++++++++++++-------------------
+>  kexec/arch/arm/Makefile    |  2 +-
+>  kexec/arch/ppc/Makefile    |  3 +-
+>  kexec/arch/sh/Makefile     |  3 +-
+>  kexec/arch/x86_64/Makefile | 12 +++++---
+>  purgatory/Makefile         |  2 --
+>  6 files changed, 58 insertions(+), 39 deletions(-)
 > 
-> [...]
+[...]
+> diff --git a/kexec/arch/x86_64/Makefile b/kexec/arch/x86_64/Makefile
+> index 916babf..405bdf5 100644
+> --- a/kexec/arch/x86_64/Makefile
+> +++ b/kexec/arch/x86_64/Makefile
+> @@ -9,10 +9,14 @@ x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
+>  x86_64_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
+>  x86_64_KEXEC_SRCS += kexec/arch/i386/kexec-x86-common.c
+>  x86_64_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
+> -x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-x86_64.c
+> -x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-x86_64.c
+> -x86_64_KEXEC_SRCS += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
 > 
-> > OK good.  It tests OK on a few older pvops kernels that I have on
-> > hand.
-> >
-> > The only thing I've changed is to handle compiler warnings in x86_64.c and
-> > x86.c by initializing p2m_top to NULL in x86_64_pvops_xendump_p2m_l3_create()
-> > and x86_pvops_xendump_p2m_l3_create().  I also used GETBUF() in those two
-> > functions to avoid having to add the malloc-failure line.
+> -dist += kexec/arch/x86_64/Makefile $(x86_64_KEXEC_SRCS) \
+> +x86_64_KEXEC_SRCS_native =  kexec/arch/x86_64/kexec-x86_64.c
+> +x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-x86_64.c
+> +x86_64_KEXEC_SRCS_native += kexec/arch/x86_64/kexec-elf-rel-x86_64.c
+> +
+> +x86_64_KEXEC_SRCS += $(x86_64_KEXEC_SRCS_native)
+> +
+> +# Don't add sources in i386/ to dist, as i386/Makefile adds them
+> +dist += kexec/arch/x86_64/Makefile $(x86_64_KEXEC_SRCS_native) \
+>  	kexec/arch/x86_64/kexec-x86_64.h \
+>  	kexec/arch/x86_64/include/arch/options.h
+> diff --git a/purgatory/Makefile b/purgatory/Makefile
+> index ee1679c..711799b 100644
+> --- a/purgatory/Makefile
+> +++ b/purgatory/Makefile
+> @@ -27,8 +27,6 @@ include $(srcdir)/purgatory/arch/s390/Makefile
+>  include $(srcdir)/purgatory/arch/sh/Makefile
+>  include $(srcdir)/purgatory/arch/x86_64/Makefile
 > 
-> No problem. However, I am a bit surprised that you have seen some warnings.
-> I have not seen any. Did you compiled crash with extra options or something
-> like that? Or maybe there is a diffrence in our compilers (mine is gcc version
->  4.1.2 20061115 (prerelease) (Debian 4.1.1-21) - quite ancient).
+> -PURGATORY_SRCS+=$($(ARCH)_PURGATORY_SRCS)
 
-Extra options (also with gcc 4.1.2) -- try building with "make warn".  It adds:
+Any reason why the above line has been removed? With the above line
+removed nothing under 'purgatory/arch/*/' directory gets compiled. This
+makes loading of panic kernel (kexec -p) to fail. I tested it on ppc64
+and it fails. Same issue may also exist on other architecture.
 
- WARNING_OPTIONS=-Wall -O2 -Wstrict-prototypes -Wmissing-prototypes -fstack-protector
+Restored the line and able to load panic kernel successfully.
 
-or "make Warn", which adds -Werror to the above.
+> -
+>  PURGATORY_OBJS = $(call objify, $(PURGATORY_SRCS)) purgatory/sha256.o
+>  PURGATORY_DEPS = $(call depify, $(PURGATORY_OBJS))
+> 
 
-In those two functions there are "goto err" statements prior to allocating
-p2m_top, and so the free(p2m_top) could receive a random stack value.  Of
-course even if it did get by the free() call in that highly unlikely case,
-the crash session is just about to fatally shut itself down.
-
-Thanks,
-  Dave
 
 _______________________________________________
 kexec mailing list
