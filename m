@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout-de.gmx.net ([213.165.64.23])
- by merlin.infradead.org with smtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T1zOo-000511-Kd
- for kexec@lists.infradead.org; Thu, 16 Aug 2012 12:42:07 +0000
-Message-ID: <502CEA93.7090808@gmx.at>
-Date: Thu, 16 Aug 2012 14:41:55 +0200
-From: =?UTF-8?B?Q2hyaXN0aWFuIFNjaGF1YnNjaGzDpGdlcg==?=
- <christian.schaubschlaeger@gmx.at>
+Received: from out02.mta.xmission.com ([166.70.13.232])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T25f6-0003U4-86
+ for kexec@lists.infradead.org; Thu, 16 Aug 2012 19:23:22 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
+ <502CEA93.7090808@gmx.at>
+Date: Thu, 16 Aug 2012 12:22:46 -0700
+In-Reply-To: <502CEA93.7090808@gmx.at> ("Christian \=\?utf-8\?Q\?Schaubschl\?\=
+ \=\?utf-8\?Q\?\=C3\=A4ger\=22's\?\= message
+ of "Thu, 16 Aug 2012 14:41:55 +0200")
+Message-ID: <877gsy4p6h.fsf@xmission.com>
 MIME-Version: 1.0
 Subject: Re: Problem with kexec on i386, linux-3.5
-References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
-In-Reply-To: <87sjbqjgi8.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,54 +21,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Khalid Aziz <khalid.aziz@hp.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Christian =?utf-8?Q?Schaubschl=C3=A4ger?= <christian.schaubschlaeger@gmx.at>
+Cc: Khalid Aziz <khalid.aziz@hp.com>, kexec@lists.infradead.org
 
-
-
-> That is a tricky issue.  Sometimes the slightest things can set
-> something like this off.
->
-> Somewhere someone changed something in one of the drivers that made it
-> so that the hardware winds up in a state the int 13 disk driver does not
-> like it after kexec.
-> .
-> If you want to track this down I would recommend a bisect between 3.4
-> and 3.5-rc1 to see which change breaks your setup.
-
-I bistcted that down to this patch:
-
-commit b566a22c23327f18ce941ffad0ca907e50a53d41
-Author: Khalid Aziz <khalid.aziz@hp.com>
-Date:   Fri Apr 27 13:00:33 2012 -0600
-
-    PCI: disable Bus Master on PCI device shutdown
-   
-    Disable Bus Master bit on the device in pci_device_shutdown() to ensure PCI
-    devices do not continue to DMA data after shutdown.  This can cause memory
-    corruption in case of a kexec where the current kernel shuts down and
-    transfers control to a new kernel while a PCI device continues to DMA to
-    memory that does not belong to it any more in the new kernel.
-   
-    I have tested this code on two laptops, two workstations and a 16-socket
-    server.  kexec worked correctly on all of them.
-   
-    Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
-    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-
-Without this patch, int13 works fine here! If anyone needs more information, just let me know!
-
-
-Greetings,
-Christian
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Q2hyaXN0aWFuIFNjaGF1YnNjaGzDpGdlciA8Y2hyaXN0aWFuLnNjaGF1YnNjaGxhZWdlckBnbXgu
+YXQ+IHdyaXRlczoKCj4+IFRoYXQgaXMgYSB0cmlja3kgaXNzdWUuICBTb21ldGltZXMgdGhlIHNs
+aWdodGVzdCB0aGluZ3MgY2FuIHNldAo+PiBzb21ldGhpbmcgbGlrZSB0aGlzIG9mZi4KPj4KPj4g
+U29tZXdoZXJlIHNvbWVvbmUgY2hhbmdlZCBzb21ldGhpbmcgaW4gb25lIG9mIHRoZSBkcml2ZXJz
+IHRoYXQgbWFkZSBpdAo+PiBzbyB0aGF0IHRoZSBoYXJkd2FyZSB3aW5kcyB1cCBpbiBhIHN0YXRl
+IHRoZSBpbnQgMTMgZGlzayBkcml2ZXIgZG9lcyBub3QKPj4gbGlrZSBpdCBhZnRlciBrZXhlYy4K
+Pj4gLgo+PiBJZiB5b3Ugd2FudCB0byB0cmFjayB0aGlzIGRvd24gSSB3b3VsZCByZWNvbW1lbmQg
+YSBiaXNlY3QgYmV0d2VlbiAzLjQKPj4gYW5kIDMuNS1yYzEgdG8gc2VlIHdoaWNoIGNoYW5nZSBi
+cmVha3MgeW91ciBzZXR1cC4KPgo+IEkgYmlzdGN0ZWQgdGhhdCBkb3duIHRvIHRoaXMgcGF0Y2g6
+Cj4KPiBjb21taXQgYjU2NmEyMmMyMzMyN2YxOGNlOTQxZmZhZDBjYTkwN2U1MGE1M2Q0MQo+IEF1
+dGhvcjogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiBEYXRlOiAgIEZyaSBBcHIg
+MjcgMTM6MDA6MzMgMjAxMiAtMDYwMAo+Cj4gICAgIFBDSTogZGlzYWJsZSBCdXMgTWFzdGVyIG9u
+IFBDSSBkZXZpY2Ugc2h1dGRvd24KPiAgICAKPiAgICAgRGlzYWJsZSBCdXMgTWFzdGVyIGJpdCBv
+biB0aGUgZGV2aWNlIGluIHBjaV9kZXZpY2Vfc2h1dGRvd24oKSB0byBlbnN1cmUgUENJCj4gICAg
+IGRldmljZXMgZG8gbm90IGNvbnRpbnVlIHRvIERNQSBkYXRhIGFmdGVyIHNodXRkb3duLiAgVGhp
+cyBjYW4gY2F1c2UgbWVtb3J5Cj4gICAgIGNvcnJ1cHRpb24gaW4gY2FzZSBvZiBhIGtleGVjIHdo
+ZXJlIHRoZSBjdXJyZW50IGtlcm5lbCBzaHV0cyBkb3duIGFuZAo+ICAgICB0cmFuc2ZlcnMgY29u
+dHJvbCB0byBhIG5ldyBrZXJuZWwgd2hpbGUgYSBQQ0kgZGV2aWNlIGNvbnRpbnVlcyB0byBETUEg
+dG8KPiAgICAgbWVtb3J5IHRoYXQgZG9lcyBub3QgYmVsb25nIHRvIGl0IGFueSBtb3JlIGluIHRo
+ZSBuZXcga2VybmVsLgo+ICAgIAo+ICAgICBJIGhhdmUgdGVzdGVkIHRoaXMgY29kZSBvbiB0d28g
+bGFwdG9wcywgdHdvIHdvcmtzdGF0aW9ucyBhbmQgYSAxNi1zb2NrZXQKPiAgICAgc2VydmVyLiAg
+a2V4ZWMgd29ya2VkIGNvcnJlY3RseSBvbiBhbGwgb2YgdGhlbS4KPiAgICAKPiAgICAgU2lnbmVk
+LW9mZi1ieTogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiAgICAgU2lnbmVkLW9m
+Zi1ieTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPgo+Cj4gV2l0aG91dCB0
+aGlzIHBhdGNoLCBpbnQxMyB3b3JrcyBmaW5lIGhlcmUhIElmIGFueW9uZSBuZWVkcyBtb3JlCj4g
+aW5mb3JtYXRpb24sIGp1c3QgbGV0IG1lIGtub3chCgpXaGljaCBsZWFkcyB0byBhbiBpbnRlcmVz
+dGluZyBjb251bmRydW0uCgprZXhlYyBhcHBlYXJzIHRvIGJlIG1vcmUgcmVsaWFibGUgZm9yIGJv
+b3RpbmcgYW5vdGhlciBrZXJuZWwgd2l0aCB0aGlzCnBhdGNoIGFwcGxpZWQuICBUaGlzIHBhdGNo
+IGRvZXMga2lsbCB0aGUgZW50aWVyIHVzZSBjYXNlIG9mIG1ha2luZyBCSU9TCmNhbGxzLCBhbmQg
+SSBzdXNwZWN0IGl0IGFsc28gZG9lcyBuYXN0eSB0aGluZ3MgdG8gYWxwaGEgYm9vdGxvYWRlcnMu
+CgpNeSBndXQgZmVlbCBpcyB0aGF0IHRoZSB0cmFtcG9saW5lIGNvZGUgc2hvdWxkIHJlZW5hYmxl
+IGJ1cyBtYXN0ZXJpbmcKb24gdGhlIGRldmljZXMgdGhhdCBsaWUgYmVoaW5kIGludDEzLCBidXQg
+SSBkb24ndCBrbm93IGhvdyBwcmFjdGljYWwKdGhhdCBzdWdnZXN0aW9uIGlzIGluIHJlYWxpdHku
+CgpFcmljCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
