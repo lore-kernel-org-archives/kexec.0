@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T2E0v-00073o-K8
- for kexec@lists.infradead.org; Fri, 17 Aug 2012 04:18:27 +0000
-Date: Fri, 17 Aug 2012 13:16:37 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
-Message-Id: <20120817131637.804c9194d21e7e44133f63f9@mxc.nes.nec.co.jp>
-In-Reply-To: <502C9273.30504@linux.vnet.ibm.com>
-References: <20120606095709.12534.63967.stgit@aravinda>
- <20120611174432.114cdead.kumagai-atsushi@mxc.nes.nec.co.jp>
- <502C9273.30504@linux.vnet.ibm.com>
-Mime-Version: 1.0
+Received: from mailout-de.gmx.net ([213.165.64.23])
+ by merlin.infradead.org with smtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T2GW1-0004oc-6c
+ for kexec@lists.infradead.org; Fri, 17 Aug 2012 06:58:42 +0000
+Message-ID: <502DEB9D.7010308@gmx.at>
+Date: Fri, 17 Aug 2012 08:58:37 +0200
+From: =?UTF-8?B?Q2hyaXN0aWFuIFNjaGF1YnNjaGzDpGdlcg==?=
+ <christian.schaubschlaeger@gmx.at>
+MIME-Version: 1.0
+Subject: Re: Problem with kexec on i386, linux-3.5
+References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
+ <502CEA93.7090808@gmx.at> <877gsy4p6h.fsf@xmission.com>
+In-Reply-To: <877gsy4p6h.fsf@xmission.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,85 +24,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: aravinda@linux.vnet.ibm.com
-Cc: mahesh@linux.vnet.ibm.com, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org, ananth@in.ibm.com, buendgen@de.ibm.com
-
-Hello Aravinda,
-
-On Thu, 16 Aug 2012 11:55:55 +0530
-Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
- 
-> Hello Kumagai-san,
-> 
-> Did you get a chance to review the makedumpfile security key enhancement
-> patches?
-> 
-> - Aravinda
-
-Sorry for not responding.
-
-I'm afraid that I can't start to review them yet.
-I've been working on the cyclic mode feature for a few months,
-and I'm now preparing the next release including the feature.
-
-I'll release the next version soon, I'll review your patches after that.
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Khalid Aziz <khalid.aziz@hp.com>, kexec@lists.infradead.org
 
 
-Thanks
-Atsushi Kumagai
+>> I bistcted that down to this patch:
+>>
+>> commit b566a22c23327f18ce941ffad0ca907e50a53d41
+>> Author: Khalid Aziz <khalid.aziz@hp.com>
+>> Date:   Fri Apr 27 13:00:33 2012 -0600
+>>
+>>     PCI: disable Bus Master on PCI device shutdown
+>>    
+>>     Disable Bus Master bit on the device in pci_device_shutdown() to ensure PCI
+>>     devices do not continue to DMA data after shutdown.  This can cause memory
+>>     corruption in case of a kexec where the current kernel shuts down and
+>>     transfers control to a new kernel while a PCI device continues to DMA to
+>>     memory that does not belong to it any more in the new kernel.
+>>    
+>>     I have tested this code on two laptops, two workstations and a 16-socket
+>>     server.  kexec worked correctly on all of them.
+>>    
+>>     Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
+>>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>>
+>> Without this patch, int13 works fine here! If anyone needs more
+>> information, just let me know!
+> Which leads to an interesting conundrum.
+>
+> kexec appears to be more reliable for booting another kernel with this
+> patch applied.  This patch does kill the entier use case of making BIOS
+> calls, and I suspect it also does nasty things to alpha bootloaders.
+>
+> My gut feel is that the trampoline code should reenable bus mastering
+> on the devices that lie behind int13, but I don't know how practical
+> that suggestion is in reality.
 
-> 
-> > 
-> > 
-> > Thanks
-> > Atsushi Kumagai
-> > 
-> >> TODO:
-> >>
-> >>   - Currently, works only for symbols in vmlinux, extend it to module
-> >>     symbols
-> >>   - Functionality support:
-> >>     - Implement the following callback functions.
-> >>       - apialignment
-> >>       - apigetenum
-> >>       - apigetdefs
-> >>     - Other functionalities specified in the code with TODO tag
-> >>   - Support specifying eppic macros in makedumpfile.conf file
-> >>   - Update erase info
-> >>
-> >> ---
-> >>
-> >> Aravinda Prasad (7):
-> >>       Initialize and setup eppic
-> >>       makedumpfile and eppic interface layer
-> >>       Eppic call back functions to query a dump image
-> >>       Implement apigetctype call back function
-> >>       Implement apimember and apigetrtype call back functions
-> >>       Extend eppic built-in functions to include memset function
-> >>       Support fully typed symbol access mode
-> >>
-> >>
-> >>  Makefile          |    6 -
-> >>  dwarf_info.c      |  338 ++++++++++++++++++++++++++++++++++++++++
-> >>  dwarf_info.h      |   18 ++
-> >>  erase_info.c      |   72 ++++++++-
-> >>  erase_info.h      |    3 
-> >>  extension_eppic.c |  446 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  extension_eppic.h |   78 +++++++++
-> >>  makedumpfile.c    |    7 +
-> >>  makedumpfile.h    |    6 +
-> >>  9 files changed, 967 insertions(+), 7 deletions(-)
-> >>  create mode 100644 extension_eppic.c
-> >>  create mode 100644 extension_eppic.h
-> >>
-> >> -- 
-> >> Aravinda Prasad
-> > 
-> 
-> 
-> -- 
-> Regards,
-> Aravinda
+One could make this patch optional... e.g. let kexec tell the running kernel whether or not to disable bus mastering before booting the new one (something like 'kexec --disable-bus-mastering -l /boot/new_kernel.bin'). Don't know if this would be practicable...
+
+Christian
+
 
 _______________________________________________
 kexec mailing list
