@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T25f6-0003U4-86
- for kexec@lists.infradead.org; Thu, 16 Aug 2012 19:23:22 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
- <502CEA93.7090808@gmx.at>
-Date: Thu, 16 Aug 2012 12:22:46 -0700
-In-Reply-To: <502CEA93.7090808@gmx.at> ("Christian \=\?utf-8\?Q\?Schaubschl\?\=
- \=\?utf-8\?Q\?\=C3\=A4ger\=22's\?\= message
- of "Thu, 16 Aug 2012 14:41:55 +0200")
-Message-ID: <877gsy4p6h.fsf@xmission.com>
-MIME-Version: 1.0
-Subject: Re: Problem with kexec on i386, linux-3.5
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1T2E0v-00073o-K8
+ for kexec@lists.infradead.org; Fri, 17 Aug 2012 04:18:27 +0000
+Date: Fri, 17 Aug 2012 13:16:37 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
+Message-Id: <20120817131637.804c9194d21e7e44133f63f9@mxc.nes.nec.co.jp>
+In-Reply-To: <502C9273.30504@linux.vnet.ibm.com>
+References: <20120606095709.12534.63967.stgit@aravinda>
+ <20120611174432.114cdead.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <502C9273.30504@linux.vnet.ibm.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,46 +20,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christian =?utf-8?Q?Schaubschl=C3=A4ger?= <christian.schaubschlaeger@gmx.at>
-Cc: Khalid Aziz <khalid.aziz@hp.com>, kexec@lists.infradead.org
+To: aravinda@linux.vnet.ibm.com
+Cc: mahesh@linux.vnet.ibm.com, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org, ananth@in.ibm.com, buendgen@de.ibm.com
 
-Q2hyaXN0aWFuIFNjaGF1YnNjaGzDpGdlciA8Y2hyaXN0aWFuLnNjaGF1YnNjaGxhZWdlckBnbXgu
-YXQ+IHdyaXRlczoKCj4+IFRoYXQgaXMgYSB0cmlja3kgaXNzdWUuICBTb21ldGltZXMgdGhlIHNs
-aWdodGVzdCB0aGluZ3MgY2FuIHNldAo+PiBzb21ldGhpbmcgbGlrZSB0aGlzIG9mZi4KPj4KPj4g
-U29tZXdoZXJlIHNvbWVvbmUgY2hhbmdlZCBzb21ldGhpbmcgaW4gb25lIG9mIHRoZSBkcml2ZXJz
-IHRoYXQgbWFkZSBpdAo+PiBzbyB0aGF0IHRoZSBoYXJkd2FyZSB3aW5kcyB1cCBpbiBhIHN0YXRl
-IHRoZSBpbnQgMTMgZGlzayBkcml2ZXIgZG9lcyBub3QKPj4gbGlrZSBpdCBhZnRlciBrZXhlYy4K
-Pj4gLgo+PiBJZiB5b3Ugd2FudCB0byB0cmFjayB0aGlzIGRvd24gSSB3b3VsZCByZWNvbW1lbmQg
-YSBiaXNlY3QgYmV0d2VlbiAzLjQKPj4gYW5kIDMuNS1yYzEgdG8gc2VlIHdoaWNoIGNoYW5nZSBi
-cmVha3MgeW91ciBzZXR1cC4KPgo+IEkgYmlzdGN0ZWQgdGhhdCBkb3duIHRvIHRoaXMgcGF0Y2g6
-Cj4KPiBjb21taXQgYjU2NmEyMmMyMzMyN2YxOGNlOTQxZmZhZDBjYTkwN2U1MGE1M2Q0MQo+IEF1
-dGhvcjogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiBEYXRlOiAgIEZyaSBBcHIg
-MjcgMTM6MDA6MzMgMjAxMiAtMDYwMAo+Cj4gICAgIFBDSTogZGlzYWJsZSBCdXMgTWFzdGVyIG9u
-IFBDSSBkZXZpY2Ugc2h1dGRvd24KPiAgICAKPiAgICAgRGlzYWJsZSBCdXMgTWFzdGVyIGJpdCBv
-biB0aGUgZGV2aWNlIGluIHBjaV9kZXZpY2Vfc2h1dGRvd24oKSB0byBlbnN1cmUgUENJCj4gICAg
-IGRldmljZXMgZG8gbm90IGNvbnRpbnVlIHRvIERNQSBkYXRhIGFmdGVyIHNodXRkb3duLiAgVGhp
-cyBjYW4gY2F1c2UgbWVtb3J5Cj4gICAgIGNvcnJ1cHRpb24gaW4gY2FzZSBvZiBhIGtleGVjIHdo
-ZXJlIHRoZSBjdXJyZW50IGtlcm5lbCBzaHV0cyBkb3duIGFuZAo+ICAgICB0cmFuc2ZlcnMgY29u
-dHJvbCB0byBhIG5ldyBrZXJuZWwgd2hpbGUgYSBQQ0kgZGV2aWNlIGNvbnRpbnVlcyB0byBETUEg
-dG8KPiAgICAgbWVtb3J5IHRoYXQgZG9lcyBub3QgYmVsb25nIHRvIGl0IGFueSBtb3JlIGluIHRo
-ZSBuZXcga2VybmVsLgo+ICAgIAo+ICAgICBJIGhhdmUgdGVzdGVkIHRoaXMgY29kZSBvbiB0d28g
-bGFwdG9wcywgdHdvIHdvcmtzdGF0aW9ucyBhbmQgYSAxNi1zb2NrZXQKPiAgICAgc2VydmVyLiAg
-a2V4ZWMgd29ya2VkIGNvcnJlY3RseSBvbiBhbGwgb2YgdGhlbS4KPiAgICAKPiAgICAgU2lnbmVk
-LW9mZi1ieTogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiAgICAgU2lnbmVkLW9m
-Zi1ieTogQmpvcm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPgo+Cj4gV2l0aG91dCB0
-aGlzIHBhdGNoLCBpbnQxMyB3b3JrcyBmaW5lIGhlcmUhIElmIGFueW9uZSBuZWVkcyBtb3JlCj4g
-aW5mb3JtYXRpb24sIGp1c3QgbGV0IG1lIGtub3chCgpXaGljaCBsZWFkcyB0byBhbiBpbnRlcmVz
-dGluZyBjb251bmRydW0uCgprZXhlYyBhcHBlYXJzIHRvIGJlIG1vcmUgcmVsaWFibGUgZm9yIGJv
-b3RpbmcgYW5vdGhlciBrZXJuZWwgd2l0aCB0aGlzCnBhdGNoIGFwcGxpZWQuICBUaGlzIHBhdGNo
-IGRvZXMga2lsbCB0aGUgZW50aWVyIHVzZSBjYXNlIG9mIG1ha2luZyBCSU9TCmNhbGxzLCBhbmQg
-SSBzdXNwZWN0IGl0IGFsc28gZG9lcyBuYXN0eSB0aGluZ3MgdG8gYWxwaGEgYm9vdGxvYWRlcnMu
-CgpNeSBndXQgZmVlbCBpcyB0aGF0IHRoZSB0cmFtcG9saW5lIGNvZGUgc2hvdWxkIHJlZW5hYmxl
-IGJ1cyBtYXN0ZXJpbmcKb24gdGhlIGRldmljZXMgdGhhdCBsaWUgYmVoaW5kIGludDEzLCBidXQg
-SSBkb24ndCBrbm93IGhvdyBwcmFjdGljYWwKdGhhdCBzdWdnZXN0aW9uIGlzIGluIHJlYWxpdHku
-CgpFcmljCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello Aravinda,
+
+On Thu, 16 Aug 2012 11:55:55 +0530
+Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
+ 
+> Hello Kumagai-san,
+> 
+> Did you get a chance to review the makedumpfile security key enhancement
+> patches?
+> 
+> - Aravinda
+
+Sorry for not responding.
+
+I'm afraid that I can't start to review them yet.
+I've been working on the cyclic mode feature for a few months,
+and I'm now preparing the next release including the feature.
+
+I'll release the next version soon, I'll review your patches after that.
+
+
+Thanks
+Atsushi Kumagai
+
+> 
+> > 
+> > 
+> > Thanks
+> > Atsushi Kumagai
+> > 
+> >> TODO:
+> >>
+> >>   - Currently, works only for symbols in vmlinux, extend it to module
+> >>     symbols
+> >>   - Functionality support:
+> >>     - Implement the following callback functions.
+> >>       - apialignment
+> >>       - apigetenum
+> >>       - apigetdefs
+> >>     - Other functionalities specified in the code with TODO tag
+> >>   - Support specifying eppic macros in makedumpfile.conf file
+> >>   - Update erase info
+> >>
+> >> ---
+> >>
+> >> Aravinda Prasad (7):
+> >>       Initialize and setup eppic
+> >>       makedumpfile and eppic interface layer
+> >>       Eppic call back functions to query a dump image
+> >>       Implement apigetctype call back function
+> >>       Implement apimember and apigetrtype call back functions
+> >>       Extend eppic built-in functions to include memset function
+> >>       Support fully typed symbol access mode
+> >>
+> >>
+> >>  Makefile          |    6 -
+> >>  dwarf_info.c      |  338 ++++++++++++++++++++++++++++++++++++++++
+> >>  dwarf_info.h      |   18 ++
+> >>  erase_info.c      |   72 ++++++++-
+> >>  erase_info.h      |    3 
+> >>  extension_eppic.c |  446 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >>  extension_eppic.h |   78 +++++++++
+> >>  makedumpfile.c    |    7 +
+> >>  makedumpfile.h    |    6 +
+> >>  9 files changed, 967 insertions(+), 7 deletions(-)
+> >>  create mode 100644 extension_eppic.c
+> >>  create mode 100644 extension_eppic.h
+> >>
+> >> -- 
+> >> Aravinda Prasad
+> > 
+> 
+> 
+> -- 
+> Regards,
+> Aravinda
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
