@@ -1,17 +1,33 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout-de.gmx.net ([213.165.64.23])
- by merlin.infradead.org with smtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T2GW1-0004oc-6c
- for kexec@lists.infradead.org; Fri, 17 Aug 2012 06:58:42 +0000
-Message-ID: <502DEB9D.7010308@gmx.at>
-Date: Fri, 17 Aug 2012 08:58:37 +0200
-From: =?UTF-8?B?Q2hyaXN0aWFuIFNjaGF1YnNjaGzDpGdlcg==?=
- <christian.schaubschlaeger@gmx.at>
-MIME-Version: 1.0
-Subject: Re: Problem with kexec on i386, linux-3.5
-References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
- <502CEA93.7090808@gmx.at> <877gsy4p6h.fsf@xmission.com>
-In-Reply-To: <877gsy4p6h.fsf@xmission.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1T3FcL-0001zM-QW
+ for kexec@lists.infradead.org; Mon, 20 Aug 2012 00:13:19 +0000
+Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 0EF1E3EE0BD
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2012 09:13:11 +0900 (JST)
+Received: from smail (m4 [127.0.0.1])
+ by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id EC1F545DE50
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2012 09:13:10 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
+ by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id D648445DE52
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2012 09:13:10 +0900 (JST)
+Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id C8B7A1DB8037
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2012 09:13:10 +0900 (JST)
+Received: from m023.s.css.fujitsu.com (m023.s.css.fujitsu.com [10.0.81.63])
+ by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 8676EE08001
+ for <kexec@lists.infradead.org>; Mon, 20 Aug 2012 09:13:10 +0900 (JST)
+Date: Mon, 20 Aug 2012 09:12:44 +0900 (JST)
+Message-Id: <20120820.091244.40048129.d.hatayama@jp.fujitsu.com>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep
+ memory consumption.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120815152710.982b745a50673defdf9aabd1@mxc.nes.nec.co.jp>
+References: <20120810143655.GA5416@redhat.com>
+ <20120814.205532.509440957.d.hatayama@jp.fujitsu.com>
+ <20120815152710.982b745a50673defdf9aabd1@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +40,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Khalid Aziz <khalid.aziz@hp.com>, kexec@lists.infradead.org
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org, vgoyal@redhat.com
 
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
+Date: Wed, 15 Aug 2012 15:27:10 +0900
 
->> I bistcted that down to this patch:
->>
->> commit b566a22c23327f18ce941ffad0ca907e50a53d41
->> Author: Khalid Aziz <khalid.aziz@hp.com>
->> Date:   Fri Apr 27 13:00:33 2012 -0600
->>
->>     PCI: disable Bus Master on PCI device shutdown
->>    
->>     Disable Bus Master bit on the device in pci_device_shutdown() to ensure PCI
->>     devices do not continue to DMA data after shutdown.  This can cause memory
->>     corruption in case of a kexec where the current kernel shuts down and
->>     transfers control to a new kernel while a PCI device continues to DMA to
->>     memory that does not belong to it any more in the new kernel.
->>    
->>     I have tested this code on two laptops, two workstations and a 16-socket
->>     server.  kexec worked correctly on all of them.
->>    
->>     Signed-off-by: Khalid Aziz <khalid.aziz@hp.com>
->>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->>
->> Without this patch, int13 works fine here! If anyone needs more
->> information, just let me know!
-> Which leads to an interesting conundrum.
->
-> kexec appears to be more reliable for booting another kernel with this
-> patch applied.  This patch does kill the entier use case of making BIOS
-> calls, and I suspect it also does nasty things to alpha bootloaders.
->
-> My gut feel is that the trampoline code should reenable bus mastering
-> on the devices that lie behind int13, but I don't know how practical
-> that suggestion is in reality.
+> Hello HATAYAMA-san,
+> 
+> On Tue, 14 Aug 2012 20:55:32 +0900 (JST)
+> HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com> wrote:
+> 
+>> From: Vivek Goyal <vgoyal@redhat.com>
+>> Subject: Re: [RFC PATCH v2 0/10] makedumpfile: cyclic processing to keep memory consumption.
+>> Date: Fri, 10 Aug 2012 10:36:55 -0400
+>> 
+>> > On Fri, Aug 10, 2012 at 05:39:38PM +0900, HATAYAMA Daisuke wrote:
+>> > 
+>> > [..]
+>> >> 
+>> >> I finished benchmarking filtering time and demonstrate the result.
+>> >> But I failed to collect amount of memory consumption by my mistake. If
+>> >> they are necessary, I'll again try to collect them. But we have 9 days
+>> >> vacation starting tommorow, so I'll do that after the vacation.
+>> >> 
+> 
+> Thank you for your help.
+> Could you continue to measure amount of memory consumption ?
+> 
 
-One could make this patch optional... e.g. let kexec tell the running kernel whether or not to disable bus mastering before booting the new one (something like 'kexec --disable-bus-mastering -l /boot/new_kernel.bin'). Don't know if this would be practicable...
+OK, Kumagai-san, please wait for a while.
 
-Christian
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
