@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T3qNo-0002oM-2z
- for kexec@lists.infradead.org; Tue, 21 Aug 2012 15:28:45 +0000
-Received: from relay2.suse.de (unknown [195.135.220.254])
+ id 1T3qNq-0002ow-Uw
+ for kexec@lists.infradead.org; Tue, 21 Aug 2012 15:28:48 +0000
+Received: from relay1.suse.de (unknown [195.135.220.254])
  (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by mx2.suse.de (Postfix) with ESMTP id 3CBA2A3DD6
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2012 17:28:43 +0200 (CEST)
+ by mx2.suse.de (Postfix) with ESMTP id 1B328A3DD6
+ for <kexec@lists.infradead.org>; Tue, 21 Aug 2012 17:28:46 +0200 (CEST)
 Resent-To: kexec@lists.infradead.org
-Resent-Message-ID: <201208211728.42986.ptesarik@suse.cz>
-Message-Id: <20120821084452.172220263@azariah.suse.cz>
-Date: Tue, 21 Aug 2012 10:44:54 +0200
+Resent-Message-ID: <201208211728.45822.ptesarik@suse.cz>
+Message-Id: <20120821084452.346417647@azariah.suse.cz>
+Date: Tue, 21 Aug 2012 10:44:55 +0200
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [patch 3/9] Read the Xen crash ELF note into memory at startup
+Subject: [patch 4/9] Split Xen setup into early and late
 References: <20120821084451.587187471@azariah.suse.cz>
-Content-Disposition: inline; filename=03-crash_xen_info_t.patch
+Content-Disposition: inline; filename=04-split-xen-setup.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,315 +32,185 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Petr Tesarik <ptesarik@suse.cz>, Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
 
-Instead of seeking individual fields inside the ELF note, copy the
-corresponding struct type from the Xen sources, so people can understand
-why the code does what it does.
+Previously, get_xen_info_arch() was called after initializing the generic
+Xen variables. This is necessary, because the arch-specific code translates
+domain addresses to pickled domain IDs, and the domain list is initialized
+by the generic code.
 
-This is mainly a cleanup patch to improve maintainability, but it also
-simplifies reusing the crash note data from other places.
+Now, the virtual memory layout on x86_64 was changed in Xen4, and this
+initialization should ideally be done in the arch-specific code.
+Unfortunately, the generic code must know the virtual address space to
+perform readmem of type XEN_VADDR, so there is no working ordering, and
+instead we must provide hooks for "early" arch-specific initialization
+to set up data needed by the generic code, and "late" arch-specific
+initialization to do stuff that depends on data set by the generic code
+(currently only the domain_list).
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- arch/x86_64.c  |   24 ++++++++++++++--
- elf_info.c     |   25 -----------------
- elf_info.h     |    2 -
- makedumpfile.c |   82 ++++++++++++++++++++++++++++++++++++++++++---------------
- makedumpfile.h |   49 ++++++++++++++++++++++++++++++++--
- 5 files changed, 130 insertions(+), 52 deletions(-)
+ arch/ia64.c    |   14 +++++++++++---
+ arch/x86.c     |   10 ++++++++--
+ arch/x86_64.c  |   10 ++++++++--
+ makedumpfile.c |    6 ++++++
+ makedumpfile.h |    9 +++++++++
+ 5 files changed, 42 insertions(+), 7 deletions(-)
 
---- a/elf_info.c
-+++ b/elf_info.c
-@@ -88,7 +88,6 @@ static unsigned long		size_eraseinfo;
-  */
- static off_t			offset_xen_crash_info;
- static unsigned long		size_xen_crash_info;
--static unsigned long		xen_p2m_mfn;
- 
- 
- /*
-@@ -292,8 +291,7 @@ static int
- get_pt_note_info(void)
- {
- 	int n_type, size_desc;
--	unsigned long p2m_mfn;
--	off_t offset, offset_desc, off_p2m = 0;
-+	off_t offset, offset_desc;
- 	char buf[VMCOREINFO_XEN_NOTE_NAME_BYTES];
- 	char note[MAX_SIZE_NHDR];
- 
-@@ -349,21 +347,6 @@ get_pt_note_info(void)
- 			offset_xen_crash_info = offset_desc;
- 			size_xen_crash_info   = size_desc;
- 
--			off_p2m = offset + offset_next_note(note)
--					 - sizeof(p2m_mfn);
--			if (lseek(fd_memory, off_p2m, SEEK_SET) < 0){
--				ERRMSG("Can't seek the dump memory(%s). %s\n",
--				    name_memory, strerror(errno));
--				return FALSE;
--			}
--			if (read(fd_memory, &p2m_mfn, sizeof(p2m_mfn))
--			     != sizeof(p2m_mfn)) {
--				ERRMSG("Can't read the dump memory(%s). %s\n",
--				    name_memory, strerror(errno));
--				return FALSE;
--			}
--			xen_p2m_mfn = p2m_mfn;
--
- 		/*
- 		 * Check whether a source dumpfile contains eraseinfo.
- 		 *   /proc/vmcore does not contain eraseinfo, because eraseinfo
-@@ -859,9 +842,3 @@ set_eraseinfo(off_t offset, unsigned lon
- 	size_eraseinfo   = size;
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -291,11 +291,10 @@ kvtop_xen_x86(unsigned long kvaddr)
+ 	return entry;
  }
  
--unsigned long
--get_xen_p2m_mfn(void)
--{
--	return xen_p2m_mfn;
--}
--
---- a/elf_info.h
-+++ b/elf_info.h
-@@ -68,8 +68,6 @@ int has_eraseinfo(void);
- void get_eraseinfo(off_t *offset, unsigned long *size);
- void set_eraseinfo(off_t offset, unsigned long size);
+-int get_xen_info_x86(void)
++int get_xen_basic_info_x86(void)
+ {
+ 	unsigned long frame_table_vaddr;
+ 	unsigned long xen_end;
+-	int i;
  
--unsigned long get_xen_p2m_mfn(void);
--
- #endif  /* ELF_INFO_H */
+ 	if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
+ 	    SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
+@@ -331,6 +330,13 @@ int get_xen_info_x86(void)
+ 	info->xen_heap_start = 0;
+ 	info->xen_heap_end   = paddr_to_pfn(xen_end);
  
++	return TRUE;
++}
++
++int get_xen_info_x86(void)
++{
++	int i;
++
+ 	/*
+ 	 * pickled_id == domain addr for x86
+ 	 */
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -356,11 +356,10 @@ kvtop_xen_x86_64(unsigned long kvaddr)
+ 	return entry;
+ }
  
+-int get_xen_info_x86_64(void)
++int get_xen_basic_info_x86_64(void)
+ {
+ 	unsigned long frame_table_vaddr;
+ 	unsigned long xen_end;
+-	int i;
+ 
+ 	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get pml4.\n");
+@@ -390,6 +389,13 @@ int get_xen_info_x86_64(void)
+ 	info->xen_heap_start = 0;
+ 	info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 
++	return TRUE;
++}
++
++int get_xen_info_x86_64(void)
++{
++	int i;
++
+ 	/*
+ 	 * pickled_id == domain addr for x86_64
+ 	 */
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -5316,32 +5316,64 @@ get_structure_info_xen(void)
+@@ -5385,6 +5385,12 @@ get_xen_info(void)
+ 	unsigned int domain_id;
+ 	int num_domain;
+ 
++	/*
++	 * Get architecture specific basic data
++	 */
++	if (!get_xen_basic_info_arch())
++		return FALSE;
++
+ 	if (SYMBOL(alloc_bitmap) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get the symbol of alloc_bitmap.\n");
+ 		return FALSE;
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1321,6 +1321,7 @@ struct domain_list {
+ 
+ #ifdef __arm__
+ #define kvtop_xen(X)	FALSE
++#define get_xen_basic_info_arch(X) FALSE
+ #define get_xen_info_arch(X) FALSE
+ #endif	/* arm */
+ 
+@@ -1339,6 +1340,8 @@ struct domain_list {
+ unsigned long long kvtop_xen_x86(unsigned long kvaddr);
+ #define kvtop_xen(X)	kvtop_xen_x86(X)
+ 
++int get_xen_basic_info_x86(void);
++#define get_xen_basic_info_arch(X) get_xen_basic_info_x86(X)
+ int get_xen_info_x86(void);
+ #define get_xen_info_arch(X) get_xen_info_x86(X)
+ 
+@@ -1366,6 +1369,8 @@ int get_xen_info_x86(void);
+ unsigned long long kvtop_xen_x86_64(unsigned long kvaddr);
+ #define kvtop_xen(X)	kvtop_xen_x86_64(X)
+ 
++int get_xen_basic_info_x86_64(void);
++#define get_xen_basic_info_arch(X) get_xen_basic_info_x86_64(X)
+ int get_xen_info_x86_64(void);
+ #define get_xen_info_arch(X) get_xen_info_x86_64(X)
+ 
+@@ -1401,6 +1406,8 @@ int get_xen_info_x86_64(void);
+ unsigned long long kvtop_xen_ia64(unsigned long kvaddr);
+ #define kvtop_xen(X)	kvtop_xen_ia64(X)
+ 
++int get_xen_basic_info_ia64(void);
++#define get_xen_basic_info_arch(X) get_xen_basic_info_ia64(X)
+ int get_xen_info_ia64(void);
+ #define get_xen_info_arch(X) get_xen_info_ia64(X)
+ 
+@@ -1408,11 +1415,13 @@ int get_xen_info_ia64(void);
+ 
+ #if defined(__powerpc64__) || defined(__powerpc32__) /* powerpcXX */
+ #define kvtop_xen(X)	FALSE
++#define get_xen_basic_info_arch(X) FALSE
+ #define get_xen_info_arch(X) FALSE
+ #endif	/* powerpcXX */
+ 
+ #ifdef __s390x__ /* s390x */
+ #define kvtop_xen(X)	FALSE
++#define get_xen_basic_info_arch(X) FALSE
+ #define get_xen_info_arch(X) FALSE
+ #endif	/* s390x */
+ 
+--- a/arch/ia64.c
++++ b/arch/ia64.c
+@@ -329,10 +329,9 @@ kvtop_xen_ia64(unsigned long kvaddr)
  }
  
  int
--get_xen_phys_start(void)
-+init_xen_crash_info(void)
+-get_xen_info_ia64(void)
++get_xen_basic_info_ia64(void)
  {
--	off_t offset, offset_xen_crash_info;
--	unsigned long xen_phys_start, size_xen_crash_info;
--	const off_t failed = (off_t)-1;
-+	off_t		offset_xen_crash_info;
-+	unsigned long	size_xen_crash_info;
-+	void		*buf;
-+
-+	get_xen_crash_info(&offset_xen_crash_info, &size_xen_crash_info);
-+	if (!size_xen_crash_info) {
-+		info->xen_crash_info_v = -1;
-+		return TRUE;		/* missing info is non-fatal */
-+	}
-+
-+	if (size_xen_crash_info < sizeof(xen_crash_info_com_t)) {
-+		ERRMSG("Xen crash info too small (%lu bytes).\n",
-+		       size_xen_crash_info);
-+		return FALSE;
-+	}
-+
-+	buf = malloc(size_xen_crash_info);
-+	if (!buf) {
-+		ERRMSG("Can't allocate note (%lu bytes). %s\n",
-+		       size_xen_crash_info, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	if (lseek(info->fd_memory, offset_xen_crash_info, SEEK_SET) < 0) {
-+		ERRMSG("Can't seek the dump memory(%s). %s\n",
-+		       info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+	if (read(info->fd_memory, buf, size_xen_crash_info)
-+	    != size_xen_crash_info) {
-+		ERRMSG("Can't read the dump memory(%s). %s\n",
-+		       info->name_memory, strerror(errno));
-+		return FALSE;
-+	}
-+
-+	info->xen_crash_info.com = buf;
-+	if (size_xen_crash_info >= sizeof(xen_crash_info_v2_t))
-+		info->xen_crash_info_v = 2;
-+	else if (size_xen_crash_info >= sizeof(xen_crash_info_t))
-+		info->xen_crash_info_v = 1;
-+	else
-+		info->xen_crash_info_v = 0;
+-	unsigned long xen_start, xen_end, xen_heap_start;
+-	int i;
++	unsigned long xen_start, xen_end;
+ 
+ 	info->frame_table_vaddr = VIRT_FRAME_TABLE_ADDR; /* "frame_table" is same value */
+ 
+@@ -357,6 +356,15 @@ get_xen_info_ia64(void)
+ 	info->xen_heap_start = paddr_to_pfn(xen_start);
+ 	info->xen_heap_end   = paddr_to_pfn(xen_end);
  
 +	return TRUE;
 +}
 +
 +int
-+get_xen_phys_start(void)
++get_xen_info_ia64(void)
 +{
- 	if (info->xen_phys_start)
- 		return TRUE;
- 
--	get_xen_crash_info(&offset_xen_crash_info, &size_xen_crash_info);
--	if (size_xen_crash_info >= SIZE_XEN_CRASH_INFO_V2) {
--		offset = offset_xen_crash_info + size_xen_crash_info
--			 - sizeof(unsigned long) * 2;
--		if (lseek(info->fd_memory, offset, SEEK_SET) == failed) {
--			ERRMSG("Can't seek the dump memory(%s). %s\n",
--			    info->name_memory, strerror(errno));
--			return FALSE;
--		}
--		if (read(info->fd_memory, &xen_phys_start, sizeof(unsigned long))
--		    != sizeof(unsigned long)) {
--			ERRMSG("Can't read the dump memory(%s). %s\n",
--			    info->name_memory, strerror(errno));
--			return FALSE;
--		}
--		info->xen_phys_start = xen_phys_start;
--	}
-+#if defined(__x86__) || defined(__x86_64__)
-+	if (info->xen_crash_info_v >= 2)
-+		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-+#endif
- 
- 	return TRUE;
- }
-@@ -5506,6 +5538,12 @@ show_data_xen(void)
- 	MSG("OFFSET(domain.next_in_list): %ld\n", OFFSET(domain.next_in_list));
- 
- 	MSG("\n");
-+	if (info->xen_crash_info.com) {
-+		MSG("xen_major_version: %lx\n",
-+		    info->xen_crash_info.com->xen_major_version);
-+		MSG("xen_minor_version: %lx\n",
-+		    info->xen_crash_info.com->xen_minor_version);
-+	}
- 	MSG("xen_phys_start: %lx\n", info->xen_phys_start);
- 	MSG("frame_table_vaddr: %lx\n", info->frame_table_vaddr);
- 	MSG("xen_heap_start: %lx\n", info->xen_heap_start);
-@@ -5785,6 +5823,8 @@ initial_xen(void)
++	unsigned long xen_heap_start;
++	int i;
++
+ 	if (SYMBOL(xen_heap_start) == NOT_FOUND_SYMBOL) {
+ 		ERRMSG("Can't get the symbol of xen_heap_start.\n");
  		return FALSE;
- 	}
- #endif
-+	if (!init_xen_crash_info())
-+		return FALSE;
- 	if (!fallback_to_current_page_size())
- 		return FALSE;
- 	/*
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -416,8 +416,6 @@ do { \
- #define SIZE_BUF_STDIN	(4096)
- #define STRLEN_OSRELEASE (65)	/* same length as diskdump.h */
- 
--#define SIZE_XEN_CRASH_INFO_V2	(sizeof(unsigned long) * 10)
--
- /*
-  * The value of dependence on machine
-  */
-@@ -719,6 +717,43 @@ unsigned long long vaddr_to_paddr_ia64(u
- #define pfn_to_paddr(X) \
- 	(((unsigned long long)(X) + ARCH_PFN_OFFSET) << PAGESHIFT())
- 
-+/* Format of Xen crash info ELF note */
-+typedef struct {
-+	unsigned long xen_major_version;
-+	unsigned long xen_minor_version;
-+	unsigned long xen_extra_version;
-+	unsigned long xen_changeset;
-+	unsigned long xen_compiler;
-+	unsigned long xen_compile_date;
-+	unsigned long xen_compile_time;
-+	unsigned long tainted;
-+} xen_crash_info_com_t;
-+
-+typedef struct {
-+	xen_crash_info_com_t com;
-+#if defined(__x86__) || defined(__x86_64__)
-+	/* added by changeset 2b43fb3afb3e: */
-+	unsigned long dom0_pfn_to_mfn_frame_list_list;
-+#endif
-+#if defined(__ia64__)
-+	/* added by changeset d7c3b12014b3: */
-+	unsigned long dom0_mm_pgd_mfn;
-+#endif
-+} xen_crash_info_t;
-+
-+/* changeset 439a3e9459f2 added xen_phys_start
-+ * to the middle of the struct... */
-+typedef struct {
-+	xen_crash_info_com_t com;
-+#if defined(__x86__) || defined(__x86_64__)
-+	unsigned long xen_phys_start;
-+	unsigned long dom0_pfn_to_mfn_frame_list_list;
-+#endif
-+#if defined(__ia64__)
-+	unsigned long dom0_mm_pgd_mfn;
-+#endif
-+} xen_crash_info_v2_t;
-+
- struct mem_map_data {
- 	unsigned long long	pfn_start;
- 	unsigned long long	pfn_end;
-@@ -902,6 +937,16 @@ struct DumpInfo {
- 	/*
- 	 * for Xen extraction
- 	 */
-+	union {				/* Both versions of Xen crash info: */
-+		xen_crash_info_com_t *com;   /* common fields */
-+		xen_crash_info_t *v1;	     /* without xen_phys_start */
-+		xen_crash_info_v2_t *v2;     /* changeset 439a3e9459f2 */
-+	} xen_crash_info;
-+	int xen_crash_info_v;		/* Xen crash info version:
-+					 *   0 .. xen_crash_info_com_t
-+					 *   1 .. xen_crash_info_t
-+					 *   2 .. xen_crash_info_v2_t */
-+
- 	unsigned long long	dom0_mapnr;  /* The number of page in domain-0.
- 					      * Different from max_mapnr.
- 					      * max_mapnr is the number of page
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -30,6 +30,18 @@ is_vmalloc_addr(ulong vaddr)
- 	    || (vaddr >= MODULES_VADDR && vaddr <= MODULES_END));
- }
- 
-+static unsigned long
-+get_xen_p2m_mfn(void)
-+{
-+	if (info->xen_crash_info_v >= 2)
-+		return info->xen_crash_info.v2->
-+			dom0_pfn_to_mfn_frame_list_list;
-+	if (info->xen_crash_info_v >= 1)
-+		return info->xen_crash_info.v1->
-+			dom0_pfn_to_mfn_frame_list_list;
-+	return NOT_FOUND_LONG_VALUE;
-+}
-+
- int
- get_phys_base_x86_64(void)
- {
-@@ -59,6 +71,7 @@ get_phys_base_x86_64(void)
- int
- get_machdep_info_x86_64(void)
- {
-+	unsigned long p2m_mfn;
- 	int i, j, mfns[MAX_X86_64_FRAMES];
- 	unsigned long frame_mfn[MAX_X86_64_FRAMES];
- 	unsigned long buf[MFNS_PER_FRAME];
-@@ -72,9 +85,14 @@ get_machdep_info_x86_64(void)
- 	 * Get the information for translating domain-0's physical
- 	 * address into machine address.
- 	 */
--	if (!readmem(MADDR_XEN, pfn_to_paddr(get_xen_p2m_mfn()),
--					 &frame_mfn, PAGESIZE())) {
--		ERRMSG("Can't get p2m_mfn.\n");
-+	p2m_mfn = get_xen_p2m_mfn();
-+	if (p2m_mfn == (unsigned long)NOT_FOUND_LONG_VALUE) {
-+		ERRMSG("Can't get p2m_mfn address.\n");
-+		return FALSE;
-+	}
-+	if (!readmem(MADDR_XEN, pfn_to_paddr(p2m_mfn),
-+		     &frame_mfn, PAGESIZE())) {
-+		ERRMSG("Can't read p2m_mfn.\n");
- 		return FALSE;
- 	}
- 
 
 
 
