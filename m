@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T3qNw-0002qI-Mi
- for kexec@lists.infradead.org; Tue, 21 Aug 2012 15:28:53 +0000
+ id 1T3qO3-0002t7-Cd
+ for kexec@lists.infradead.org; Tue, 21 Aug 2012 15:29:00 +0000
 Received: from relay1.suse.de (unknown [195.135.220.254])
  (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by mx2.suse.de (Postfix) with ESMTP id B46E1A3DDE
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2012 17:28:51 +0200 (CEST)
+ by mx2.suse.de (Postfix) with ESMTP id 7F251A3DD6
+ for <kexec@lists.infradead.org>; Tue, 21 Aug 2012 17:28:58 +0200 (CEST)
 Resent-To: kexec@lists.infradead.org
-Resent-Message-ID: <201208211728.51440.ptesarik@suse.cz>
-Message-Id: <20120821084452.704313446@azariah.suse.cz>
-Date: Tue, 21 Aug 2012 10:44:57 +0200
+Resent-Message-ID: <201208211728.58251.ptesarik@suse.cz>
+Message-Id: <20120821084453.057322083@azariah.suse.cz>
+Date: Tue, 21 Aug 2012 10:44:59 +0200
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [patch 6/9] Fix domain pickled_id computation for xen-3.4+
+Subject: [patch 8/9] Add support for filtering out user pages under Xen4
 References: <20120821084451.587187471@azariah.suse.cz>
-Content-Disposition: inline; filename=06-xen-pickled-domain.patch
+Content-Disposition: inline; filename=08-xen4-exclude-user.patch
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,78 +30,190 @@ Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Petr Tesarik <ptesarik@suse.cz>, Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
+Cc: Petr Tesarik <ptesarik@suse.cz>, Norbert Trapp <norbert.trapp@ts.fujitsu.com>
 
-Originally, Xen stored the 32-bit address of the domain structure in struct
-page_info. On x86-64, the physical address was stored, but since all heap
-objects were allocated in the 1:1 mapping which started at 0xffff830000000000,
-the end result was the same as if we simply chopped off the high bits (actual
-implementation in makedumpfile).
+In Xen-4.0+, usage of a page must be determined from its PGC_xxx
+flags, which are stored in the highest bits of the _count field
+of struct page_info.
 
-Then, during the development of Xen-3.4, this logic was changed several times
-for x86-64:
+Let's keep the original function for Xen3 only and add a new
+function for walking the pages under Xen4. This avoids adding many
+new conditionals to the inner loop and also makes the logic easier
+to follow for all Xen versions.
 
-changeset 39517e863cc8 widened the _domain field to 64 bits and stored the
-        virtual address of struct domain instead of physical address
-changeset beba88f6f90d removed the pickle/unpickle macros
-changeset 0858f961c77a changed _domain back from unsigned long to u32,
-        *and* stores the MFN of struct domain instead
-
-All the above changes went into Xen-3.4, and the relation between a domain
-address and the contents of the _domain field hasn't changed since then.
-That means, when the MADDR space was compressed in Xen-4.0, the type of the
-_domain field was changed to _pdx_t, which was specifically invented to
-preserve its calculation from the struct domain address.
-
-To sum it up:
-
-1. For all Xen versions before Xen-3.4, the _domain field contains the address
-   of struct domain (with high bits chopped for x86-64).
-2. For all Xen versions starting with Xen-3.4, the _domain field can be
-   computed from struct domain address as:
-        (addr - DIRECTMAP_VIRT_START) >> PAGE_SHIFT
-
+Signed-off-by: Norbert Trapp <norbert.trapp@ts.fujitsu.com>
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- arch/x86_64.c |   26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ makedumpfile.c |  103 +++++++++++++++++++++++++++++++++++++++++++++++++++++----
+ makedumpfile.h |   25 +++++++++++++
+ 2 files changed, 122 insertions(+), 6 deletions(-)
 
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -405,12 +405,26 @@ int get_xen_info_x86_64(void)
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -78,6 +78,31 @@ int get_mem_type(void);
+ #define LSEEKED_PDATA	(3)
+ 
+ /*
++ * Xen page flags
++ */
++#define BITS_PER_BYTE (8)
++#define BITS_PER_LONG (BITS_PER_BYTE * sizeof(long))
++#define PG_shift(idx)	(BITS_PER_LONG - (idx))
++#define PG_mask(x, idx)	(x ## UL << PG_shift(idx))
++ /* Cleared when the owning guest 'frees' this page. */
++#define PGC_allocated       PG_mask(1, 1)
++ /* Page is Xen heap? */
++#define PGC_xen_heap        PG_mask(1, 2)
++ /* Page is broken? */
++#define PGC_broken          PG_mask(1, 7)
++ /* Mutually-exclusive page states: { inuse, offlining, offlined, free }. */
++#define PGC_state           PG_mask(3, 9)
++#define PGC_state_inuse     PG_mask(0, 9)
++#define PGC_state_offlining PG_mask(1, 9)
++#define PGC_state_offlined  PG_mask(2, 9)
++#define PGC_state_free      PG_mask(3, 9)
++#define page_state_is(ci, st) (((ci)&PGC_state) == PGC_state_##st)
++
++ /* Count of references to this frame. */
++#define PGC_count_width   PG_shift(9)
++#define PGC_count_mask    ((1UL<<PGC_count_width)-1)
++
++/*
+  * Memory flags
+  */
+ #define MEMORY_PAGETABLE_4L	(1 << 0)
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5719,7 +5719,7 @@ is_select_domain(unsigned int id)
+ }
+ 
+ int
+-exclude_xen_user_domain(void)
++exclude_xen3_user_domain(void)
  {
  	int i;
+ 	unsigned int count_info, _domain;
+@@ -5728,9 +5728,6 @@ exclude_xen_user_domain(void)
+ 	unsigned long long phys_start, phys_end;
+ 	unsigned long long pfn, pfn_end;
+ 	unsigned long long j, size;
+-	struct timeval tv_start;
+-
+-	gettimeofday(&tv_start, NULL);
  
--	/*
--	 * pickled_id == domain addr for x86_64
--	 */
--	for (i = 0; i < info->num_domain; i++) {
--		info->domain_list[i].pickled_id =
--			info->domain_list[i].domain_addr;
-+	if (info->xen_crash_info.com &&
-+	    (info->xen_crash_info.com->xen_major_version >= 4 ||
-+	     (info->xen_crash_info.com->xen_major_version == 3 &&
-+	      info->xen_crash_info.com->xen_minor_version >= 4))) {
-+		/*
-+		 * cf. changeset 0858f961c77a
-+		 */
-+		for (i = 0; i < info->num_domain; i++) {
-+			info->domain_list[i].pickled_id =
-+				(info->domain_list[i].domain_addr -
-+				 DIRECTMAP_VIRT_START) >> PAGESHIFT();
-+		}
-+	} else {
-+		/*
-+		 * pickled_id == domain addr for x86_64
-+		 */
-+		for (i = 0; i < info->num_domain; i++) {
-+			info->domain_list[i].pickled_id =
-+				info->domain_list[i].domain_addr;
-+		}
+ 	/*
+ 	 * NOTE: the first half of bitmap is not used for Xen extraction
+@@ -5781,13 +5778,107 @@ exclude_xen_user_domain(void)
+ 		}
  	}
  
- 	return TRUE;
++	return TRUE;
++}
++
++int
++exclude_xen4_user_domain(void)
++{
++	int i;
++	unsigned long count_info;
++	unsigned int  _domain;
++	unsigned int num_pt_loads = get_num_pt_loads();
++	unsigned long page_info_addr;
++	unsigned long long phys_start, phys_end;
++	unsigned long long pfn, pfn_end;
++	unsigned long long j, size;
++
++	/*
++	 * NOTE: the first half of bitmap is not used for Xen extraction
++	 */
++	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
++
++		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
++
++		pfn     = paddr_to_pfn(phys_start);
++		pfn_end = paddr_to_pfn(phys_end);
++		size    = pfn_end - pfn;
++
++		for (j = 0; pfn < pfn_end; pfn++, j++) {
++			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
++					size * num_pt_loads);
++
++			page_info_addr = info->frame_table_vaddr + pfn * SIZE(page_info);
++			if (!readmem(VADDR_XEN,
++			      page_info_addr + OFFSET(page_info.count_info),
++		 	      &count_info, sizeof(count_info))) {
++				clear_bit_on_2nd_bitmap(pfn);
++				continue;	/* page_info may not exist */
++			}
++
++			/* delete free and offlined pages
++			 * Note: Broken pages also get offlined
++			 */
++			if (page_state_is(count_info, free) ||
++			    page_state_is(count_info, offlined)) {
++				clear_bit_on_2nd_bitmap(pfn);
++				continue;
++			}
++
++			/* always keep Xen heap pages */
++			if (count_info & PGC_xen_heap)
++				continue;
++
++			/* delete pages not allocated to any domain */
++			if (! (count_info & PGC_allocated)) {
++				clear_bit_on_2nd_bitmap(pfn);
++				continue;
++			}
++
++			if (!readmem(VADDR_XEN,
++			      page_info_addr + OFFSET(page_info._domain),
++			      &_domain, sizeof(_domain))) {
++				ERRMSG("Can't get page_info._domain.\n");
++				return FALSE;
++			}
++
++			/*
++			 * keep:
++			 *  - anonymous (_domain == 0), or
++			 *  - selected domain page
++			 */
++			if (_domain == 0)
++				continue;
++			if (is_select_domain(_domain))
++				continue;
++			clear_bit_on_2nd_bitmap(pfn);
++		}
++	}
++
++	return TRUE;
++}
++
++int
++exclude_xen_user_domain(void)
++{
++	struct timeval tv_start;
++	int ret;
++
++	gettimeofday(&tv_start, NULL);
++
++	if (info->xen_crash_info.com &&
++	    info->xen_crash_info.com->xen_major_version >= 4)
++		ret = exclude_xen4_user_domain();
++	else
++		ret = exclude_xen3_user_domain();
++
+ 	/*
+ 	 * print [100 %]
+ 	 */
+-	print_progress(PROGRESS_XEN_DOMAIN, num_pt_loads, num_pt_loads);
++	print_progress(PROGRESS_XEN_DOMAIN, 1, 1);
+ 	print_execution_time(PROGRESS_XEN_DOMAIN, &tv_start);
+ 
+-	return TRUE;
++	return ret;
+ }
+ 
+ int
 
 
 
