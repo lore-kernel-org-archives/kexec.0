@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from mho-01-ewr.mailhop.org ([204.13.248.71])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T3qYo-0003Kj-M6
- for kexec@lists.infradead.org; Tue, 21 Aug 2012 15:40:07 +0000
-Received: from relay2.suse.de (unknown [195.135.220.254])
- (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mx2.suse.de (Postfix) with ESMTP id 80A2CA3B06
- for <kexec@lists.infradead.org>; Tue, 21 Aug 2012 17:40:05 +0200 (CEST)
-Resent-To: kexec@lists.infradead.org
-Resent-Message-ID: <201208211740.05270.ptesarik@suse.cz>
-Message-Id: <20120821153755.240665681@azariah.suse.cz>
-Date: Tue, 21 Aug 2012 17:37:36 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: [patch] Initialize Xen structures from initial()
-References: <20120821153735.094856832@azariah.suse.cz>
-Content-Disposition: inline; filename=xen-dump-mesg.patch
+ id 1T45qa-0006Tw-3q
+ for kexec@lists.infradead.org; Wed, 22 Aug 2012 07:59:28 +0000
+Received: from 24.104.77.188.dynamic.jazztel.es ([188.77.104.24]
+ helo=mail.viric.name)
+ by mho-01-ewr.mailhop.org with esmtpsa (TLSv1:AES256-SHA:256)
+ (Exim 4.72) (envelope-from <viric@viric.name>) id 1T45qY-000K9N-Sb
+ for kexec@lists.infradead.org; Wed, 22 Aug 2012 07:59:27 +0000
+Date: Wed, 22 Aug 2012 09:59:22 +0200
+From: =?iso-8859-1?Q?Llu=EDs?= Batlle i Rossell <viric@viric.name>
+Subject: Trying to kexec on panic, 3.5.1, tools 2.0.3
+Message-ID: <20120822075922.GF1960@vicerveza.homeunix.net>
+MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,66 +22,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Petr Tesarik <ptesarik@suse.cz>
 
-Hi all,
+Hello all,
 
-one more Xen-related patch. This one is independent of the
-other patch set.
+I'm trying to get kexec working in case of panic. I write because it does n=
+ot
+work for me...
 
-There are two functions to initialize the internal variables:
-initial() and initial_xen(). Both must be called for Xen dumps,
-but only initial() is called when dumping dmesg.
+Nevertheless, if I change '-p' for '-l' in my kexec command line, and then I
+issue a "kexec -e", the new kernel loads perfectly fine.
 
-With this patch applied, makedumpfile is capable of extracting
-dmesg from Xen dump files.
+But if I use '-p' (for the panic situation), and I do sysrq-c to cause a Cr=
+ash,
+I see the Oops in my netconsole, and then the screen of the computer (vga
+virtual console) shows over the previous kernel log, at the top:
 
-Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+early console in decompress_kernel
+I'm in purgatory
 
----
- makedumpfile.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+And that's the last I see, computer hanged.
 
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2514,6 +2514,8 @@ initialize_bitmap_memory(void)
- 	return TRUE;
- }
- 
-+int initial_xen(void);
-+
- int
- initial(void)
- {
-@@ -2521,6 +2523,9 @@ initial(void)
- 	unsigned long size;
- 	int debug_info = FALSE;
- 
-+	if (is_xen_memory() && !initial_xen())
-+		return FALSE;
-+
- #ifdef USELZO
- 	if (lzo_init() == LZO_E_OK)
- 		info->flag_lzo_support = TRUE;
-@@ -6215,10 +6220,6 @@ create_dumpfile(void)
- 		if (!get_elf_info(info->fd_memory, info->name_memory))
- 			return FALSE;
- 	}
--	if (is_xen_memory()) {
--		if (!initial_xen())
--			return FALSE;
--	}
- 	if (!initial())
- 		return FALSE;
- 
+I'm using kexectools 2.0.3, on linux 3.5.1. Any idea of what can be happeni=
+ng?
+I'm confused because "-l/-e" looks like working, but "-p" not, in the trivi=
+al
+sysrq-c case.
 
-
+Regards,
+Llu=EDs.
 
 _______________________________________________
 kexec mailing list
