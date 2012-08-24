@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T4ZfQ-00021V-2v
- for kexec@lists.infradead.org; Thu, 23 Aug 2012 15:49:57 +0000
+ id 1T4w18-0001n5-2Y
+ for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:41:51 +0000
+Subject: [PATCHv3 1/9] Make max_pfn symbol optional for Xen dumps
 From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [patch 8/9] Add support for filtering out user pages under Xen4
-Date: Thu, 23 Aug 2012 17:49:44 +0200
-References: <0E9227E8EFCFF54EA493F6C0399C015D3996033588@ABGEX70E.FSC.NET>
- <0E9227E8EFCFF54EA493F6C0399C015D39960338DA@ABGEX70E.FSC.NET>
- <201208231410.21324.ptesarik@suse.cz>
-In-Reply-To: <201208231410.21324.ptesarik@suse.cz>
+Date: Fri, 24 Aug 2012 17:41:42 +0200
 MIME-Version: 1.0
-Message-Id: <201208231749.45081.ptesarik@suse.cz>
+Message-Id: <201208241741.42527.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,52 +16,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Trapp, Norbert" <norbert.trapp@ts.fujitsu.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
 
-RG5lIMSMdCAyMy4gc3JwbmEgMjAxMiAxNDoxMDoyMSBqc3RlIG5hcHNhbChhKToKPiBEbmUgxIx0
-IDIzLiBzcnBuYSAyMDEyIDEyOjAwOjQxIGpzdGUgbmFwc2FsKGEpOgo+ID4gSGVsbG8gUGV0ciwK
-PiA+IAo+ID4gQWN0dWFsbHkgd2UgZGlkbid0IG5lZWQgdG8gcGF0Y2ggdGhlIGNyYXNoIHV0aWxp
-dHkgZm9yIHRoZSBTTEVTMTEgU1AxCj4gPiB2ZXJzaW9uIHdlIHVzZS4gV2hlbiBJIGNhbGwgdGhl
-IGNyYXNoIHV0aWxpdHkgd2l0aCB0aGUgdm1jb3JlLmQwIGFyZ3VtZW50Cj4gPiAKPiA+IHRoYXQg
-eW91ciBjdXJyZW50ICBtYWtlZHVtcGZpbGUgdmVyc2lvbiBwcm9kdWNlcywgSSBzZWU6Cj4gPiAJ
-V0FSTklORzogY3Jhc2hpbmdfY3B1IG5vdCBmb3VuZC4KPiA+IAljcmFzaDogaW52YWxpZCBrZXJu
-ZWwgdmlydHVhbCBhZGRyZXNzOiAwICB0eXBlOiAib3B0X3NjaGVkLCIKPiA+IAkKPiA+IAljcmFz
-aDogY2Fubm90IHJlYWQgb3B0X3NjaGVkLC4KCkhlbGxvIE5vcmJlcnQgb25jZSBhZ2FpbiwKCkkn
-dmUgaW52ZXN0aWdhdGVkIHRoZSBsb2dpYyBvbmNlIG1vcmUsIGFuZCB3ZSBzaG91bGQgcHJvYmFi
-bHkgcmV0aGluayB3aGF0IAp3ZSdyZSBmaWx0ZXJpbmcgb3V0IGZvciAiLVgiLiBUaGUgbWFudWFs
-IHBhZ2Ugc2F5czoKCi1YICBFeGNsdWRlICBhbGwgIHRoZSB1c2VyIGRvbWFpbiBwYWdlcyBmcm9t
-IFhlbiBrZHVtcCdzIFZNQ09SRSwgYW5kCiAgICBleHRyYWN0cyB0aGUgcGFydCBvZiB4ZW4gYW5k
-IGRvbWFpbi0wLgoKU28sIGRlcGVuZGluZyBvbiBob3cgSSByZWFkIGl0LCBpdCBzaG91bGQgZWl0
-aGVyOgoKIGEuIHRocm93IGF3YXkgYW55dGhpbmcgYnV0IGRvbV94ZW4sIGRvbV9pbyBhbmQgZG9t
-MCwgb3IKIGIuIGtlZXAgZXZlcnl0aGluZyBleGNlcHQgZG9tVQoKSSB2b3RlIGZvciBhLCBiZWNh
-dXNlIGl0IHNob3VsZCBnaXZlIHRoZSBzbWFsbGVzdCBkdW1wLiBOb3csIGFsbCBzdWNoIHBhZ2Vz
-IAp3aWxsIGhhdmU6CgoxLiBQR0NfYWxsb2NhdGVkIChpdCBpcyBhbGxvY2F0ZWQgdG8gYSBkb21h
-aW4pCjIuIG9uZSBvZiB0aGUgMyBrbm93biB2YWx1ZXMgZm9yIF9kb21haW4KCkFsbCBlbHNlIG9u
-bHkgYWRkcyB1bm5lY2Vzc2FyeSBjb21wbGV4aXR5LiBCdXQgZXZlbiB0aGF0IGRvZXMgbm90IGNv
-dmVyIGFsbCAKY2FzZXMuIEZvciBleGFtcGxlIHRoZSAib3B0X3NjaGVkIiAoYWN0dWFsbHkgb3Bz
-Lm9wdF9uYW1lKSBpcyBzdG9yZWQgYXQgCnBoeXNpY2FsIGFkZHJlc3MgMHgzZmEzOGIyOCAoUEZO
-IDB4M2ZhMzgpLCBidXQgZnJhbWVfdGFibGVbMHgzZmEzOF0gaXM6CgpzdHJ1Y3QgcGFnZV9pbmZv
-IHsKICB7CiAgICBsaXN0ID0gewogICAgICBuZXh0ID0gMCwgCiAgICAgIHByZXYgPSAwCiAgICB9
-LCAKICAgIHVwID0gMCwgCiAgICBzaHJfaGFuZGxlID0gMAogIH0sIAogIGNvdW50X2luZm8gPSAw
-LCAKICB1ID0gewogICAgaW51c2UgPSB7CiAgICAgIHR5cGVfaW5mbyA9IDAKICAgIH0sIAogICAg
-c2ggPSB7CiAgICAgIHR5cGUgPSAwLCAKICAgICAgcGlubmVkID0gMCwgCiAgICAgIGNvdW50ID0g
-MAogICAgfSwgCiAgICBmcmVlID0gewogICAgICBuZWVkX3RsYmZsdXNoID0gMCAnXDAwMCcKICAg
-IH0KICB9LCAKICB2ID0gewogICAgaW51c2UgPSB7CiAgICAgIF9kb21haW4gPSAwCiAgICB9LCAK
-ICAgIHNoID0gewogICAgICBiYWNrID0gMAogICAgfSwgCiAgICBmcmVlID0gewogICAgICBvcmRl
-ciA9IDAKICAgIH0KICB9LCAKICB7CiAgICB0bGJmbHVzaF90aW1lc3RhbXAgPSAwLCAKICAgIHsK
-ICAgICAgbnJfdmFsaWRhdGVkX3B0ZXMgPSAwLCAKICAgICAgcGFydGlhbF9wdGUgPSAwICdcMDAw
-JwogICAgfSwgCiAgICBzaGFkb3dfZmxhZ3MgPSAwLCAKICAgIG5leHRfc2hhZG93ID0gMAogIH0K
-fQoKVGhpcyBsb29rcyBwcmV0dHkgdW5pbml0aWFsaXplZCB0byBtZS4gWW91ciBwYXRjaCBrZWVw
-cyB0aGlzIHBhZ2UsIGJlY2F1c2UgeW91IApkb24ndCBmaWx0ZXIgb3V0IGFueXRoaW5nIHRoYXQg
-aGFzIFBHQ19hbGxvY2F0ZWQ9PTAgYW5kIFBHQ19zdGF0ZV9pbnVzZSAKKG51bWVyaWNhbGx5IDAp
-LCBidXQgSSdtIG5vdCBzdXJlIHRoYXQncyByaWdodC4KCkknbGwgdHJ5IGFza2luZyBvbiB0aGUg
-WGVuIG1haWxpbmcgbGlzdCBhYm91dCB0aGUgaW50ZW5kZWQgaGllcmFyY2h5IG9mIHRoZSAKdmFy
-aW91cyBQR0NfeHh4IGZsYWdzLgoKUGV0ciBUZXNhcmlrClNVU0UgTGludXgKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+After commit ec5b5835a113cf62a168d4a7354564a38de6b52c, makedumpfile fails
+on Xen dumps unless the "max_pfn" symbol is known. This happens even when
+the dump level is 0 and 1, where it worked previously. This is especially
+bad for kernels which do not put the "max_pfn" symbol into its VMCOREINFO.
+
+With this patch, the "max_pfn" symbol is required only if the specified
+dump level needs it.
+
+Note that we cannot call get_dom0_mapnr() from initial_xen(), because
+"max_pfn" is a Linux symbol, which means that:
+1. its address is determined in initial() (called after initial_xen)
+2. it tries to read a Dom0 symbol, and Dom0 physical->machine mapping is
+   initialized in get_machdep_info (called from initial).
+
+Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
+
+---
+ makedumpfile.c |   34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
+
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -143,13 +143,15 @@ get_dom0_mapnr()
+ {
+ 	unsigned long max_pfn;
+ 
+-	if (SYMBOL(max_pfn) == NOT_FOUND_SYMBOL)
+-		return FALSE;
+-
+-	if (!readmem(VADDR, SYMBOL(max_pfn), &max_pfn, sizeof max_pfn))
+-		return FALSE;
++	if (SYMBOL(max_pfn) != NOT_FOUND_SYMBOL) {
++		if (!readmem(VADDR, SYMBOL(max_pfn), &max_pfn, sizeof max_pfn)) {
++			ERRMSG("Can't read domain-0 max_pfn.\n");
++			return FALSE;
++		}
+ 
+-	info->dom0_mapnr = max_pfn;
++		info->dom0_mapnr = max_pfn;
++		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
++	}
+ 
+ 	return TRUE;
+ }
+@@ -2430,14 +2432,6 @@ get_mem_map(void)
+ {
+ 	int ret;
+ 
+-	if (is_xen_memory()) {
+-		if (!get_dom0_mapnr()) {
+-			ERRMSG("Can't domain-0 pfn.\n");
+-			return FALSE;
+-		}
+-		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
+-	}
+-
+ 	switch (get_mem_type()) {
+ 	case SPARSEMEM:
+ 		DEBUG_MSG("\n");
+@@ -2706,6 +2700,9 @@ out:
+ 			return FALSE;
+ 	}
+ 
++	if (is_xen_memory() && !get_dom0_mapnr())
++		return FALSE;
++
+ 	return TRUE;
+ }
+ 
+@@ -3475,6 +3472,10 @@ exclude_free_page(void)
+ 		ERRMSG("Can't get necessary structures for excluding free pages.
+\n");
+ 		return FALSE;
+ 	}
++	if (is_xen_memory() && !info->dom0_mapnr) {
++		ERRMSG("Can't get max domain-0 PFN for excluding free pages.\n");
++		return FALSE;
++	}
+ 
+ 	/*
+ 	 * Detect free pages and update 2nd-bitmap.
+@@ -3749,6 +3750,11 @@ exclude_unnecessary_pages(void)
+ 	struct mem_map_data *mmd;
+ 	struct timeval tv_start;
+ 
++	if (is_xen_memory() && !info->dom0_mapnr) {
++		ERRMSG("Can't get max domain-0 PFN for excluding pages.\n");
++		return FALSE;
++	}
++
+ 	gettimeofday(&tv_start, NULL);
+ 
+ 	for (mm = 0; mm < info->num_mem_map; mm++) {
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
