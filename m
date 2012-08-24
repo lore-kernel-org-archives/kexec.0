@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T4w5M-0002Zi-S1
- for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:46:13 +0000
+Received: from bee.tesarici.cz ([2a01:430:17:1::ffff:157])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T4w9o-0002pA-Q1
+ for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:50:49 +0000
 Subject: [PATCHv3 0/9] Support Xen versions up to xen-4.1
-From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 24 Aug 2012 17:46:09 +0200
+From: Petr =?utf-8?q?Tesa=C5=99=C3=ADk?= <petr@tesarici.cz>
+Date: Fri, 24 Aug 2012 17:41:27 +0200
 MIME-Version: 1.0
-Message-Id: <201208241746.09400.ptesarik@suse.cz>
+Message-Id: <201208241741.27573.petr@tesarici.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
