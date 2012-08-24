@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T4w18-0001n5-2Y
- for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:41:51 +0000
-Subject: [PATCHv3 1/9] Make max_pfn symbol optional for Xen dumps
+ id 1T4w1I-0001pn-A8
+ for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:42:01 +0000
+Subject: [PATCHv3 2/9] Xen: Fix the offset of the _domain field in struct
+ page_info
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 24 Aug 2012 17:41:42 +0200
+Date: Fri, 24 Aug 2012 17:41:55 +0200
 MIME-Version: 1.0
-Message-Id: <201208241741.42527.ptesarik@suse.cz>
+Message-Id: <201208241741.55847.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,99 +24,72 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
 
-After commit ec5b5835a113cf62a168d4a7354564a38de6b52c, makedumpfile fails
-on Xen dumps unless the "max_pfn" symbol is known. This happens even when
-the dump level is 0 and 1, where it worked previously. This is especially
-bad for kernels which do not put the "max_pfn" symbol into its VMCOREINFO.
+The page_info structure was re-arranged in Xen-3.4 (with changeset
+162cdb596b9a), and the _domain field moved from union "u" to union "v"
+on x86 and x86_64.
 
-With this patch, the "max_pfn" symbol is required only if the specified
-dump level needs it.
+By using OFFSET_IN_UNION_INIT we can cover all cases:
 
-Note that we cannot call get_dom0_mapnr() from initial_xen(), because
-"max_pfn" is a Linux symbol, which means that:
-1. its address is determined in initial() (called after initial_xen)
-2. it tries to read a Dom0 symbol, and Dom0 physical->machine mapping is
-   initialized in get_machdep_info (called from initial).
+1. old placement in union "u"
+2. new placement in union "v" on x86 and x86_64
+3. unmodified placement in union "u" on ia64
 
+Unfortunately, the re-arrangement was not reflected in xen/common/kexec.c,
+so the page_info _domain offset was still set with:
+    VMCOREINFO_OFFSET_ALIAS(page_info, u, _domain);
+
+The bug was spotted during Xen-4.1 development (changeset cb756381087c),
+and all Xen-4.1 releases are fixed like this:
+    #ifdef __ia64__
+	VMCOREINFO_OFFSET_SUB(page_info, u.inuse, _domain);
+    #else
+	VMCOREINFO_OFFSET_SUB(page_info, v.inuse, _domain);
+    #endif
+
+This changeset was also backported to Xen-4.0 branch as changeset
+3b90a5353f20, which first went into Xen-4.0.2.
+For Xen-3.4, this bug was never fixed.
+
+To sum it up:
+1. Xen versions up to and including Xen-3.3 output the correct offset
+2. Xen-4.1 and above is also correct
+3. Xen-4.0 is broken up to 4.0.2
+4. Xen-3.4 is always broken
+
+Some OS vendors may also have backported the patch to an otherwise broken
+version, so the above summary may not be reliable.
+
+Anyway, the VMCOREINFO produced by some Xen versions is wrong, and
+makedumpfile will behave incorrectly. Adding a workaround to makedumpfile
+for a bug in another package is wrong, because:
+
+A. Self-reliant users should upgrade Xen.
+B. Users of distro packages should report it as a bug to their vendor, and
+   the vendor should backport the patch.
+C. Users who need an immediate workaround should generate a vmcoreinfo file
+   using makedumpfile, which will be correct after applying this patch.
+
+Signed-off-by: Norbert Trapp <norbert.trapp@ts.fujitsu.com>
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- makedumpfile.c |   34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ makedumpfile.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -143,13 +143,15 @@ get_dom0_mapnr()
+@@ -5306,10 +5306,7 @@ get_structure_info_xen(void)
  {
- 	unsigned long max_pfn;
+ 	SIZE_INIT(page_info, "page_info");
+ 	OFFSET_INIT(page_info.count_info, "page_info", "count_info");
+-	/*
+-	 * _domain is the first member of union u
+-	 */
+-	OFFSET_INIT(page_info._domain, "page_info", "u");
++	OFFSET_IN_UNION_INIT(page_info._domain, "page_info", "_domain");
  
--	if (SYMBOL(max_pfn) == NOT_FOUND_SYMBOL)
--		return FALSE;
--
--	if (!readmem(VADDR, SYMBOL(max_pfn), &max_pfn, sizeof max_pfn))
--		return FALSE;
-+	if (SYMBOL(max_pfn) != NOT_FOUND_SYMBOL) {
-+		if (!readmem(VADDR, SYMBOL(max_pfn), &max_pfn, sizeof max_pfn)) {
-+			ERRMSG("Can't read domain-0 max_pfn.\n");
-+			return FALSE;
-+		}
- 
--	info->dom0_mapnr = max_pfn;
-+		info->dom0_mapnr = max_pfn;
-+		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
-+	}
- 
- 	return TRUE;
- }
-@@ -2430,14 +2432,6 @@ get_mem_map(void)
- {
- 	int ret;
- 
--	if (is_xen_memory()) {
--		if (!get_dom0_mapnr()) {
--			ERRMSG("Can't domain-0 pfn.\n");
--			return FALSE;
--		}
--		DEBUG_MSG("domain-0 pfn : %llx\n", info->dom0_mapnr);
--	}
--
- 	switch (get_mem_type()) {
- 	case SPARSEMEM:
- 		DEBUG_MSG("\n");
-@@ -2706,6 +2700,9 @@ out:
- 			return FALSE;
- 	}
- 
-+	if (is_xen_memory() && !get_dom0_mapnr())
-+		return FALSE;
-+
- 	return TRUE;
- }
- 
-@@ -3475,6 +3472,10 @@ exclude_free_page(void)
- 		ERRMSG("Can't get necessary structures for excluding free pages.
-\n");
- 		return FALSE;
- 	}
-+	if (is_xen_memory() && !info->dom0_mapnr) {
-+		ERRMSG("Can't get max domain-0 PFN for excluding free pages.\n");
-+		return FALSE;
-+	}
- 
- 	/*
- 	 * Detect free pages and update 2nd-bitmap.
-@@ -3749,6 +3750,11 @@ exclude_unnecessary_pages(void)
- 	struct mem_map_data *mmd;
- 	struct timeval tv_start;
- 
-+	if (is_xen_memory() && !info->dom0_mapnr) {
-+		ERRMSG("Can't get max domain-0 PFN for excluding pages.\n");
-+		return FALSE;
-+	}
-+
- 	gettimeofday(&tv_start, NULL);
- 
- 	for (mm = 0; mm < info->num_mem_map; mm++) {
+ 	SIZE_INIT(domain, "domain");
+ 	OFFSET_INIT(domain.domain_id, "domain", "domain_id");
 
 
 
