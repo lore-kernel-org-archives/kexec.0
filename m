@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T4w1k-0001yM-7N
- for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:42:29 +0000
-Subject: [PATCHv3 5/9] Initialize phys_start during early Xen setup
+ id 1T4w1s-00021V-Bn
+ for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:42:37 +0000
+Subject: [PATCHv3 6/9] Fix domain pickled_id computation for xen-3.4+
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 24 Aug 2012 17:42:24 +0200
+Date: Fri, 24 Aug 2012 17:42:32 +0200
 MIME-Version: 1.0
-Message-Id: <201208241742.24409.ptesarik@suse.cz>
+Message-Id: <201208241742.33067.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,86 +23,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
 
-With early Xen setup, we can move the initialization of xen_phys_start
-to the setup routine. This is cleaner, as we can get rid of ifdef'ed
-arch-specific code in makedumpfile.c (which should IMO stay generic).
+Originally, Xen stored the 32-bit address of the domain structure in struct
+page_info. On x86-64, the physical address was stored, but since all heap
+objects were allocated in the 1:1 mapping which started at 0xffff830000000000,
+the end result was the same as if we simply chopped off the high bits (actual
+implementation in makedumpfile).
+
+Then, during the development of Xen-3.4, this logic was changed several times
+for x86-64:
+
+changeset 39517e863cc8 widened the _domain field to 64 bits and stored the
+        virtual address of struct domain instead of physical address
+changeset beba88f6f90d removed the pickle/unpickle macros
+changeset 0858f961c77a changed _domain back from unsigned long to u32,
+        *and* stores the MFN of struct domain instead
+
+All the above changes went into Xen-3.4, and the relation between a domain
+address and the contents of the _domain field hasn't changed since then.
+That means, when the MADDR space was compressed in Xen-4.0, the type of the
+_domain field was changed to _pdx_t, which was specifically invented to
+preserve its calculation from the struct domain address.
+
+To sum it up:
+
+1. For all Xen versions before Xen-3.4, the _domain field contains the address
+   of struct domain (with high bits chopped for x86-64).
+2. For all Xen versions starting with Xen-3.4, the _domain field can be
+   computed from struct domain address as:
+        (addr - DIRECTMAP_VIRT_START) >> PAGE_SHIFT
 
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- arch/x86.c     |    9 +++++++++
- arch/x86_64.c  |    9 +++++++++
- makedumpfile.c |   16 ----------------
- 3 files changed, 18 insertions(+), 16 deletions(-)
+ arch/x86_64.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
---- a/arch/x86.c
-+++ b/arch/x86.c
-@@ -296,6 +296,15 @@ int get_xen_basic_info_x86(void)
- 	unsigned long frame_table_vaddr;
- 	unsigned long xen_end;
- 
-+	if (!info->xen_phys_start) {
-+		if (info->xen_crash_info_v < 2) {
-+			ERRMSG("Can't get Xen physical start address.\n"
-+			       "Please use the --xen_phys_start option.");
-+			return FALSE;
-+		}
-+		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-+	}
-+
- 	if (SYMBOL(pgd_l2) == NOT_FOUND_SYMBOL &&
- 	    SYMBOL(pgd_l3) == NOT_FOUND_SYMBOL) {
- 		ERRMSG("Can't get pgd.\n");
 --- a/arch/x86_64.c
 +++ b/arch/x86_64.c
-@@ -361,6 +361,15 @@ int get_xen_basic_info_x86_64(void)
- 	unsigned long frame_table_vaddr;
- 	unsigned long xen_end;
- 
-+ 	if (!info->xen_phys_start) {
-+		if (info->xen_crash_info_v < 2) {
-+			ERRMSG("Can't get Xen physical start address.\n"
-+			       "Please use the --xen_phys_start option.");
-+			return FALSE;
-+		}
-+		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
-+	}
-+
- 	if (SYMBOL(pgd_l4) == NOT_FOUND_SYMBOL) {
- 		ERRMSG("Can't get pml4.\n");
- 		return FALSE;
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5365,20 +5365,6 @@ init_xen_crash_info(void)
- }
- 
- int
--get_xen_phys_start(void)
--{
--	if (info->xen_phys_start)
--		return TRUE;
--
--#if defined(__x86__) || defined(__x86_64__)
--	if (info->xen_crash_info_v >= 2)
--		info->xen_phys_start = info->xen_crash_info.v2->xen_phys_start;
--#endif
--
--	return TRUE;
--}
--
--int
- get_xen_info(void)
+@@ -405,12 +405,26 @@ int get_xen_info_x86_64(void)
  {
- 	unsigned long domain;
-@@ -5877,8 +5863,6 @@ initial_xen(void)
- 		if (!read_vmcoreinfo_from_vmcore(offset, size, TRUE))
- 			return FALSE;
- 	}
--	if (!get_xen_phys_start())
--		return FALSE;
- 	if (!get_xen_info())
- 		return FALSE;
+ 	int i;
  
+-	/*
+-	 * pickled_id == domain addr for x86_64
+-	 */
+-	for (i = 0; i < info->num_domain; i++) {
+-		info->domain_list[i].pickled_id =
+-			info->domain_list[i].domain_addr;
++	if (info->xen_crash_info.com &&
++	    (info->xen_crash_info.com->xen_major_version >= 4 ||
++	     (info->xen_crash_info.com->xen_major_version == 3 &&
++	      info->xen_crash_info.com->xen_minor_version >= 4))) {
++		/*
++		 * cf. changeset 0858f961c77a
++		 */
++		for (i = 0; i < info->num_domain; i++) {
++			info->domain_list[i].pickled_id =
++				(info->domain_list[i].domain_addr -
++				 DIRECTMAP_VIRT_START) >> PAGESHIFT();
++		}
++	} else {
++		/*
++		 * pickled_id == domain addr for x86_64
++		 */
++		for (i = 0; i < info->num_domain; i++) {
++			info->domain_list[i].pickled_id =
++				info->domain_list[i].domain_addr;
++		}
+ 	}
+ 
+ 	return TRUE;
 
 
 
