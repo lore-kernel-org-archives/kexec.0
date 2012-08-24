@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T4w2h-0002Gs-CS
- for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:43:28 +0000
-Subject: [PATCHv3 8/9] Add support for filtering out user pages under Xen4
+ id 1T4w2n-0002Iv-Ty
+ for kexec@lists.infradead.org; Fri, 24 Aug 2012 15:43:35 +0000
+Subject: [PATCHv3 9/9] Do not fail for symbols removed in Xen4
 From: Petr Tesarik <ptesarik@suse.cz>
-Date: Fri, 24 Aug 2012 17:43:23 +0200
+Date: Fri, 24 Aug 2012 17:43:30 +0200
 MIME-Version: 1.0
-Message-Id: <201208241743.23829.ptesarik@suse.cz>
+Message-Id: <201208241743.30621.ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,189 +23,258 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Norbert Trapp <Norbert.Trapp@ts.fujitsu.com>
 
-In Xen-4.0+, usage of a page must be determined from its PGC_xxx
-flags, which are stored in the highest bits of the _count field
-of struct page_info.
+Xen-4.0+ removes some of the symbols that were necessary to process dump
+files on Xen-3, and makedumpfile fails if they are not found.
 
-Let's keep the original function for Xen3 only and add a new
-function for walking the pages under Xen4. This avoids adding many
-new conditionals to the inner loop and also makes the logic easier
-to follow for all Xen versions.
+Since most of these symbols are not needed for Xen4, we can simply remove
+the checks. The only exception is "frame_table". This used to be a global
+variable holding the address of the array of struct page_info. In Xen-4.0
+the array is always located at a fixed address in virtual address space.
+Xen adds a compatibility symbol for VMCOREINFO, but a "frame_table" symbol
+does not exist as such, so we must use the fixed address instead.
 
 Signed-off-by: Norbert Trapp <norbert.trapp@ts.fujitsu.com>
 Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
 
 ---
- makedumpfile.c |  102 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++----
- makedumpfile.h |   25 +++++++++++++
- 2 files changed, 121 insertions(+), 6 deletions(-)
+ arch/ia64.c    |   41 ++++++++++++++++++++++-------------------
+ arch/x86.c     |   49 ++++++++++++++++++++++++++-----------------------
+ arch/x86_64.c  |   49 ++++++++++++++++++++++++++-----------------------
+ makedumpfile.c |   37 ++++++++++++++++++++-----------------
+ 4 files changed, 94 insertions(+), 82 deletions(-)
 
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -78,6 +78,31 @@ int get_mem_type(void);
- #define LSEEKED_PDATA	(3)
- 
- /*
-+ * Xen page flags
-+ */
-+#define BITS_PER_BYTE (8)
-+#define BITS_PER_LONG (BITS_PER_BYTE * sizeof(long))
-+#define PG_shift(idx)	(BITS_PER_LONG - (idx))
-+#define PG_mask(x, idx)	(x ## UL << PG_shift(idx))
-+ /* Cleared when the owning guest 'frees' this page. */
-+#define PGC_allocated       PG_mask(1, 1)
-+ /* Page is Xen heap? */
-+#define PGC_xen_heap        PG_mask(1, 2)
-+ /* Page is broken? */
-+#define PGC_broken          PG_mask(1, 7)
-+ /* Mutually-exclusive page states: { inuse, offlining, offlined, free }. */
-+#define PGC_state           PG_mask(3, 9)
-+#define PGC_state_inuse     PG_mask(0, 9)
-+#define PGC_state_offlining PG_mask(1, 9)
-+#define PGC_state_offlined  PG_mask(2, 9)
-+#define PGC_state_free      PG_mask(3, 9)
-+#define page_state_is(ci, st) (((ci)&PGC_state) == PGC_state_##st)
-+
-+ /* Count of references to this frame. */
-+#define PGC_count_width   PG_shift(9)
-+#define PGC_count_mask    ((1UL<<PGC_count_width)-1)
-+
-+/*
-  * Memory flags
-  */
- #define MEMORY_PAGETABLE_4L	(1 << 0)
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -5719,7 +5719,7 @@ is_select_domain(unsigned int id)
- }
+@@ -5377,23 +5377,26 @@ get_xen_info(void)
+ 	if (!get_xen_basic_info_arch())
+ 		return FALSE;
  
- int
--exclude_xen_user_domain(void)
-+exclude_xen3_user_domain(void)
- {
- 	int i;
- 	unsigned int count_info, _domain;
-@@ -5728,9 +5728,6 @@ exclude_xen_user_domain(void)
- 	unsigned long long phys_start, phys_end;
- 	unsigned long long pfn, pfn_end;
- 	unsigned long long j, size;
--	struct timeval tv_start;
--
--	gettimeofday(&tv_start, NULL);
- 
- 	/*
- 	 * NOTE: the first half of bitmap is not used for Xen extraction
-@@ -5781,13 +5778,106 @@ exclude_xen_user_domain(void)
- 		}
+-	if (SYMBOL(alloc_bitmap) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of alloc_bitmap.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(alloc_bitmap), &info->alloc_bitmap,
+-	      sizeof(info->alloc_bitmap))) {
+-		ERRMSG("Can't get the value of alloc_bitmap.\n");
+-		return FALSE;
+-	}
+-	if (SYMBOL(max_page) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of max_page.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(max_page), &info->max_page,
+-	    sizeof(info->max_page))) {
+-		ERRMSG("Can't get the value of max_page.\n");
+-		return FALSE;
++	if (!info->xen_crash_info.com ||
++	    info->xen_crash_info.com->xen_major_version < 4) {
++		if (SYMBOL(alloc_bitmap) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of alloc_bitmap.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(alloc_bitmap), &info->alloc_bitmap,
++		      sizeof(info->alloc_bitmap))) {
++			ERRMSG("Can't get the value of alloc_bitmap.\n");
++			return FALSE;
++		}
++		if (SYMBOL(max_page) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of max_page.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(max_page), &info->max_page,
++		    sizeof(info->max_page))) {
++			ERRMSG("Can't get the value of max_page.\n");
++			return FALSE;
++		}
  	}
  
-+	return TRUE;
-+}
-+
-+int
-+exclude_xen4_user_domain(void)
-+{
-+	int i;
-+	unsigned long count_info;
-+	unsigned int  _domain;
-+	unsigned int num_pt_loads = get_num_pt_loads();
-+	unsigned long page_info_addr;
-+	unsigned long long phys_start, phys_end;
-+	unsigned long long pfn, pfn_end;
-+	unsigned long long j, size;
-+
-+	/*
-+	 * NOTE: the first half of bitmap is not used for Xen extraction
-+	 */
-+	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
-+
-+		print_progress(PROGRESS_XEN_DOMAIN, i, num_pt_loads);
-+
-+		pfn     = paddr_to_pfn(phys_start);
-+		pfn_end = paddr_to_pfn(phys_end);
-+		size    = pfn_end - pfn;
-+
-+		for (j = 0; pfn < pfn_end; pfn++, j++) {
-+			print_progress(PROGRESS_XEN_DOMAIN, j + (size * i),
-+					size * num_pt_loads);
-+
-+			page_info_addr = info->frame_table_vaddr + pfn * 
-SIZE(page_info);
-+			if (!readmem(VADDR_XEN,
-+			      page_info_addr + OFFSET(page_info.count_info),
-+		 	      &count_info, sizeof(count_info))) {
-+				clear_bit_on_2nd_bitmap(pfn);
-+				continue;	/* page_info may not exist */
-+			}
-+
-+			/* always keep Xen heap pages */
-+			if (count_info & PGC_xen_heap)
-+				continue;
-+
-+			/* delete free, offlined and broken pages */
-+			if (page_state_is(count_info, free) ||
-+			    page_state_is(count_info, offlined) ||
-+			    count_info & PGC_broken) {
-+				clear_bit_on_2nd_bitmap(pfn);
-+				continue;
-+			}
-+
-+			/* keep inuse pages not allocated to any domain
-+			 * this covers e.g. Xen static data
-+			 */
-+			if (! (count_info & PGC_allocated))
-+				continue;
-+
-+			/* Need to check the domain
-+			 * keep:
-+			 *  - anonymous (_domain == 0), or
-+			 *  - selected domain page
-+			 */
-+			if (!readmem(VADDR_XEN,
-+			      page_info_addr + OFFSET(page_info._domain),
-+			      &_domain, sizeof(_domain))) {
-+				ERRMSG("Can't get page_info._domain.\n");
-+				return FALSE;
-+			}
-+
-+			if (_domain == 0)
-+				continue;
-+			if (is_select_domain(_domain))
-+				continue;
-+			clear_bit_on_2nd_bitmap(pfn);
-+		}
-+	}
-+
-+	return TRUE;
-+}
-+
-+int
-+exclude_xen_user_domain(void)
-+{
-+	struct timeval tv_start;
-+	int ret;
-+
-+	gettimeofday(&tv_start, NULL);
-+
-+	if (info->xen_crash_info.com &&
-+	    info->xen_crash_info.com->xen_major_version >= 4)
-+		ret = exclude_xen4_user_domain();
-+	else
-+		ret = exclude_xen3_user_domain();
-+
  	/*
- 	 * print [100 %]
- 	 */
--	print_progress(PROGRESS_XEN_DOMAIN, num_pt_loads, num_pt_loads);
-+	print_progress(PROGRESS_XEN_DOMAIN, 1, 1);
- 	print_execution_time(PROGRESS_XEN_DOMAIN, &tv_start);
+--- a/arch/ia64.c
++++ b/arch/ia64.c
+@@ -335,26 +335,29 @@ get_xen_basic_info_ia64(void)
  
--	return TRUE;
-+	return ret;
+ 	info->frame_table_vaddr = VIRT_FRAME_TABLE_ADDR; /* "frame_table" is same 
+value */
+ 
+-	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
+-		return FALSE;
++	if (!info->xen_crash_info.com ||
++	    info->xen_crash_info.com->xen_major_version < 4) {
++		if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
++		      sizeof(xen_end))) {
++			ERRMSG("Can't get the value of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		if (SYMBOL(xen_pstart) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of xen_pstart.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(xen_pstart), &xen_start,
++		    sizeof(xen_start))) {
++			ERRMSG("Can't get the value of xen_pstart.\n");
++			return FALSE;
++		}
++		info->xen_heap_start = paddr_to_pfn(xen_start);
++		info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 	}
+-	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
+-	      sizeof(xen_end))) {
+-		ERRMSG("Can't get the value of xenheap_phys_end.\n");
+-		return FALSE;
+-	}
+-	if (SYMBOL(xen_pstart) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of xen_pstart.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(xen_pstart), &xen_start,
+-	    sizeof(xen_start))) {
+-		ERRMSG("Can't get the value of xen_pstart.\n");
+-		return FALSE;
+-	}
+-	info->xen_heap_start = paddr_to_pfn(xen_start);
+-	info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 
+ 	return TRUE;
  }
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -358,9 +358,6 @@ kvtop_xen_x86_64(unsigned long kvaddr)
  
- int
+ int get_xen_basic_info_x86_64(void)
+ {
+-	unsigned long frame_table_vaddr;
+-	unsigned long xen_end;
+-
+  	if (!info->xen_phys_start) {
+ 		if (info->xen_crash_info_v < 2) {
+ 			ERRMSG("Can't get Xen physical start address.\n"
+@@ -384,28 +381,34 @@ int get_xen_basic_info_x86_64(void)
+ 		return FALSE;
+ 	}
+ 
+-	if (SYMBOL(frame_table) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of frame_table.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(frame_table), &frame_table_vaddr,
+-	    sizeof(frame_table_vaddr))) {
+-		ERRMSG("Can't get the value of frame_table.\n");
+-		return FALSE;
+-	}
+-	info->frame_table_vaddr = frame_table_vaddr;
++	if (SYMBOL(frame_table) != NOT_FOUND_SYMBOL) {
++		unsigned long frame_table_vaddr;
+ 
+-	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
+-	    sizeof(xen_end))) {
+-		ERRMSG("Can't get the value of xenheap_phys_end.\n");
+-		return FALSE;
++		if (!readmem(VADDR_XEN, SYMBOL(frame_table),
++		    &frame_table_vaddr, sizeof(frame_table_vaddr))) {
++			ERRMSG("Can't get the value of frame_table.\n");
++			return FALSE;
++		}
++		info->frame_table_vaddr = frame_table_vaddr;
++	} else
++		info->frame_table_vaddr = FRAMETABLE_VIRT_START;
++
++	if (!info->xen_crash_info.com ||
++	    info->xen_crash_info.com->xen_major_version < 4) {
++		unsigned long xen_end;
++
++		if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
++		    sizeof(xen_end))) {
++			ERRMSG("Can't get the value of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		info->xen_heap_start = 0;
++		info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 	}
+-	info->xen_heap_start = 0;
+-	info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 
+ 	return TRUE;
+ }
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -293,9 +293,6 @@ kvtop_xen_x86(unsigned long kvaddr)
+ 
+ int get_xen_basic_info_x86(void)
+ {
+-	unsigned long frame_table_vaddr;
+-	unsigned long xen_end;
+-
+ 	if (!info->xen_phys_start) {
+ 		if (info->xen_crash_info_v < 2) {
+ 			ERRMSG("Can't get Xen physical start address.\n"
+@@ -316,28 +313,34 @@ int get_xen_basic_info_x86(void)
+ 		return FALSE;
+ 	}
+ 
+-	if (SYMBOL(frame_table) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of frame_table.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(frame_table), &frame_table_vaddr,
+-	    sizeof(frame_table_vaddr))) {
+-		ERRMSG("Can't get the value of frame_table.\n");
+-		return FALSE;
+-	}
+-	info->frame_table_vaddr = frame_table_vaddr;
++	if (SYMBOL(frame_table) != NOT_FOUND_SYMBOL) {
++		unsigned long frame_table_vaddr;
+ 
+-	if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
+-		ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
+-		return FALSE;
+-	}
+-	if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
+-	    sizeof(xen_end))) {
+-		ERRMSG("Can't get the value of xenheap_phys_end.\n");
+-		return FALSE;
++		if (!readmem(VADDR_XEN, SYMBOL(frame_table),
++		    &frame_table_vaddr, sizeof(frame_table_vaddr))) {
++			ERRMSG("Can't get the value of frame_table.\n");
++			return FALSE;
++		}
++		info->frame_table_vaddr = frame_table_vaddr;
++	} else
++		info->frame_table_vaddr = FRAMETABLE_VIRT_START;
++
++	if (!info->xen_crash_info.com ||
++	    info->xen_crash_info.com->xen_major_version < 4) {
++		unsigned long xen_end;
++
++		if (SYMBOL(xenheap_phys_end) == NOT_FOUND_SYMBOL) {
++			ERRMSG("Can't get the symbol of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		if (!readmem(VADDR_XEN, SYMBOL(xenheap_phys_end), &xen_end,
++		    sizeof(xen_end))) {
++			ERRMSG("Can't get the value of xenheap_phys_end.\n");
++			return FALSE;
++		}
++		info->xen_heap_start = 0;
++		info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 	}
+-	info->xen_heap_start = 0;
+-	info->xen_heap_end   = paddr_to_pfn(xen_end);
+ 
+ 	return TRUE;
+ }
 
 
 
