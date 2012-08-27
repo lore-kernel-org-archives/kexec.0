@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T5mrd-0004cL-N4
- for kexec@lists.infradead.org; Mon, 27 Aug 2012 00:07:36 +0000
-Date: Mon, 27 Aug 2012 09:07:20 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kdump: remove unused including <generated/utsrelease.h>
-Message-ID: <20120827000720.GA27105@verge.net.au>
-References: <CAPgLHd_ndLkDD7Q1WyqHifMYek9U3-cY0xrNdWfu+tfiDtiHdw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd_ndLkDD7Q1WyqHifMYek9U3-cY0xrNdWfu+tfiDtiHdw@mail.gmail.com>
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1T5u0i-00078K-V9
+ for kexec@lists.infradead.org; Mon, 27 Aug 2012 07:45:27 +0000
+Date: Mon, 27 Aug 2012 16:20:23 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
+Message-Id: <20120827162023.7d96073207d3e4863f119b5f@mxc.nes.nec.co.jp>
+In-Reply-To: <201208241746.09400.ptesarik@suse.cz>
+References: <201208241746.09400.ptesarik@suse.cz>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,51 +18,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: yongjun_wei@trendmicro.com.cn, kexec@lists.infradead.org, ebiederm@xmission.com, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+To: ptesarik@suse.cz
+Cc: kexec@lists.infradead.org, Norbert.Trapp@ts.fujitsu.com
 
-On Sat, Aug 25, 2012 at 10:18:20AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> 
-> Remove including <generated/utsrelease.h> that don't need it.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-
-Reviewed-by: Simon Horman <horms@verge.net.au
-
-Andrew, could you consider picking this up?
-
-> ---
->  kernel/kexec.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/kernel/kexec.c b/kernel/kexec.c
-> index 0668d58..5e4bd78 100644
-> --- a/kernel/kexec.c
-> +++ b/kernel/kexec.c
-> @@ -21,7 +21,6 @@
->  #include <linux/hardirq.h>
->  #include <linux/elf.h>
->  #include <linux/elfcore.h>
-> -#include <generated/utsrelease.h>
->  #include <linux/utsname.h>
->  #include <linux/numa.h>
->  #include <linux/suspend.h>
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gUGV0ciwKCk9uIEZyaSwgMjQgQXVnIDIwMTIgMTc6NDE6MjcgKzAyMDAKUGV0ciBUZXNh
+xZnDrWsgPHBldHJAdGVzYXJpY2kuY3o+IHdyb3RlOgoKPiBIZWxsbyBldmVyeWJvZHksCj4gCj4g
+dGhpcyBpcyB2ZXJzaW9uIDMgb2YgbXkgcGF0Y2ggc2V0LiBJJ20gdmVyeSBtdWNoIGluZGVidGVk
+IHRvIE5vcmJlcnQKPiBUcmFwcCBmb3IgaGlzIGV4dGVuc2l2ZSB0ZXN0aW5nIG9mIG15IHByZXZp
+b3VzIHBhdGNoIHNldCwgd2hpY2gKPiByZXZlYWxlZCB0aGF0IFhlbiBoeXBlcnZpc29yIHN0YXRp
+YyBkYXRhIHdhcyBub3Qga2VwdCB3aXRoIHRoZSBwcmV2aW91cwo+IHZlcnNpb24gb2YgdGhlIHBh
+dGNoIHNldC4KClRoYW5rIHlvdSBmb3IgeW91ciBoYXJkIHdvcmssIFBldHIgYW5kIE5vcmJlcnQu
+Cgo+IAo+IEkgY291bGQgYWxzbyBhZGQgdGhlIHBlcmZvcm1hbmNlIGltcHJvdmVtZW50cywgYnV0
+IEknbSBhZnJhaWQgaXQgd291bGQKPiBtYWtlIGZvciBhbiBpbmNyZW1lbnRhbCBwYXRjaCwgc28g
+bGV0J3Mgd2FpdCB1bnRpbCB0aGUgZmlsdGVyaW5nIGlzCj4gZmluYWxseSByaWdodC4KPiAKPiBJ
+IGhhdmUgcmUtdGVzdGVkIHRoaXMgcGF0Y2ggc2V0IHdpdGggdGhlIHNhbWUgcmVzdWx0IGFzIHYy
+Ogo+IAo+ICAgLSBYZW4tMy4yLjMgLSBXT1JLUwo+ICAgLSBYZW4tNC4wLjEgLSBXT1JLUyAob25s
+eSB3aXRoIC0teGVuLXN5bXMpCj4gICAtIFhlbi00LjAuMiAtIFdPUktTCj4gICAtIFhlbi00LjEu
+MiAtIFdPUktTCj4gCj4gRmlsdGVyaW5nIGZyZWUgcGFnZXMgKC1kMTYgYW5kIGFib3ZlKSBkb2Vz
+bid0IHdvcmsgKGV2ZW4gYWZ0ZXIgSSBtYW51YWxseQo+IHByb3ZpZGVkIHRoZSBtaXNzaW5nICJt
+YXhfcGZuIiBzeW1ib2wpLCBidXQgdGhhdCBzZWVtcyB1bnJlbGF0ZWQsIHNvIEknbQo+IGdvaW5n
+IHRvIGFkZHJlc3MgaXQgaW4gYSBzdWJzZXF1ZW50IHBhdGNoIHNldC4KPiAKPiBOb3JiZXJ0LCBp
+ZiB5b3UgdGVzdCB0aGVzZSBwYXRjaGVzLCBwbGVhc2Ugc2VuZCB5b3VyIGNvbW1lbnRzIHRvIHRo
+ZQo+IG1haWxpbmcgbGlzdC4KPiAKPiBBdHN1c2hpLXNhbiwgaWYgdGhlIHBhdGNoIHNldCBwYXNz
+ZXMgTm9yYmVydCdzIHRlc3RpbmcsIHdoYXQgZWxzZSBkbyB5b3UKPiBuZWVkIHRvIGFjY2VwdCB0
+aGUgY2hhbmdlcyBpbiB1cHN0cmVhbT8KCkknbGwgcmV2aWV3IHlvdXIgdjMgcGF0Y2ggc2V0IGFz
+IGJlc3QgSSBjYW4uCklmIEkgY2FuJ3Qgc2VlIGFueSBwcm9ibGVtLCB0aGVuIEknbGwgbWVyZ2Ug
+dGhlbSBpbnRvIHYxLjUuMS4KTm93LCBJIHBsYW4gdG8gcmVsZWFzZSB2MS41LjEgYmVmb3JlIHRo
+ZSBlbmQgb2YgU2VwdGVtYmVyLgoKClRoYW5rcwpBdHN1c2hpIEt1bWFnYWkKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
