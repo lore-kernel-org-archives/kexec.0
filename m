@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T6zWx-0001be-S6
- for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:51:13 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.193])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7p77B003240
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:51:07 +0900 (JST)
+ id 1T6zZ1-0001h2-L9
+ for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:53:20 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7rHYm028409
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:53:17 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id q7U7p7B09738 for kexec@lists.infradead.org;
- Thu, 30 Aug 2012 16:51:07 +0900 (JST)
+ id q7U7rHw13988 for kexec@lists.infradead.org;
+ Thu, 30 Aug 2012 16:53:17 +0900 (JST)
 Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7p6tu011093
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:51:06 +0900 (JST)
-Date: Thu, 30 Aug 2012 16:45:21 +0900
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7rGrL012837
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:53:16 +0900 (JST)
+Date: Thu, 30 Aug 2012 16:46:03 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 01/16] [PATCH v3 1/12] Introduce cyclic mode to keep memory
- usage constant.
-Message-Id: <20120830164521.0b07c16fe2993dd8afafc79b@mxc.nes.nec.co.jp>
+Subject: [PATCH 02/16] [PATCH v3 2/12] Prepare partial bitmap for cyclic mode.
+Message-Id: <20120830164603.96c853a197ced386bf4e5266@mxc.nes.nec.co.jp>
 In-Reply-To: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 References: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -35,165 +34,235 @@ Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-From 4882ae0b4b3ff3e129aa8d8062b50d2298148e8e Mon Sep 17 00:00:00 2001
+From 4a753a20f3dc69493413cfb1eca0471dbea8a721 Mon Sep 17 00:00:00 2001
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 23 Aug 2012 17:48:51 +0900
-Subject: [PATCH 01/16] [PATCH v3 1/12] Introduce cyclic mode to keep memory usage constant.
+Date: Thu, 23 Aug 2012 17:48:59 +0900
+Subject: [PATCH 02/16] [PATCH v3 2/12] Prepare partial bitmap for cyclic mode.
 
-This patchset introduces new filtering logic called "cyclic mode" as a default.
-In cyclic mode, makedumpfile reads a constant region of memory, analyzes it,
-and writes pages to dumpfile repeatedly from start of memory to the end.
-As a result, memory usage will be kept constant regardless of system memory size.
+cyclic mode uses partial bitmap instead of temporary bitmap file.
+partial bitmap is saved in memory only for each cycle.
 
-However, cyclic mode has performance issue in the logic to exclude free pages.
-(I'm going to improve this issue in feature release.)
-If you feel cyclic mode is too slow, you can specify --non-cyclic option.
+This patch introduce partial bitmap and extend some accessor functions
+to manage partial bitmap.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- README         |   15 +++++++++++++++
- makedumpfile.8 |   21 +++++++++++++++------
- makedumpfile.c |   11 +++++++++++
- makedumpfile.h |    1 +
- print_info.c   |    5 +++++
- 5 files changed, 47 insertions(+), 6 deletions(-)
+ makedumpfile.c |   99 ++++++++++++++++++++++++++++++++++++++++++++++++++------
+ makedumpfile.h |   23 +++++++++++++
+ 2 files changed, 113 insertions(+), 9 deletions(-)
 
-diff --git a/README b/README
-index ae986d1..7ae3872 100644
---- a/README
-+++ b/README
-@@ -122,6 +122,21 @@
-      does not exclude Xen user domain pages. So user should specify '-X'
-      option for excluding Xen user domain pages.
- 
-+  4. There are two running mode in makedumpfile-1.5.0 or later.
-+    cyclic mode:
-+      In this mode, makedumpfile reads a constant region of memory, analyzes
-+      it, and writes pages to dumpfile cyclically from start of memory to the
-+      end. Each cycle consume constant memory for analysis of constant region,
-+      so the memory usage of makedumpfile will be kept constant regardless of
-+      system memory size. This mode is default mode. 
-+
-+    non-cyclic mode:
-+      In this mode, makedumpfile creates temporary bitmap file in TMPDIR for
-+      analysis. The size of bitmap increases linearly based on physical memory
-+      size. Therefore, if your machine has a lots of memory and you use tmpfs
-+      on TMPDIR in 2nd kernel, makedumpfile can fail due to lack of memory.
-+      makedumpfile-1.4.4 or before has only this mode.
-+
- * FAQ
-   001: If installing elfutils-0.137 into older elfutils by the above way, the
-        following problem happens sometimes. If seeing, try to enable LDFLAGS
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index 1fb9756..7535a60 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -347,6 +347,15 @@ on the following example.
- # makedumpfile \-\-reassemble dumpfile1 dumpfile2 dumpfile
- 
- .TP
-+\fB\-\-non\-cyclic\fR
-+Running in non-cyclic mode, this mode uses old filtering logic same as v1.4.4 or before.
-+If you feel cyclic mode is too slow, please try this mode.
-+.br
-+.B Example:
-+.br
-+# makedumpfile \-\-non\-cyclic \-d 31 \-x vmlinux /proc/vmcore dumpfile
-+
-+.TP
- \fB\-\-xen-syms\fR \fIXEN-SYMS\fR
- Specify the \fIXEN-SYMS\fR with debug information to analyze the xen's memory usage.
- This option extracts the part of xen and domain-0.
-@@ -502,12 +511,12 @@ Show the version of makedumpfile.
- 
- .TP 8
- .B TMPDIR
--This environment variable is for a temporary memory bitmap file.
--If your machine has a lots of memory and you use tmpfs on /tmp, makedumpfile 
--can fail for a little memory in the 2nd kernel because makedumpfile makes a 
--very large temporary memory bitmap file in this case. To avoid this failure, 
--you can set a TMPDIR environment variable. If you do not set a TMPDIR 
--environment variable, makedumpfile uses /tmp directory for a temporary 
-+This environment variable is for a temporary memory bitmap file only in non-cyclic mode.
-+If your machine has a lots of memory and you use tmpfs on /tmp, makedumpfile
-+can fail for a little memory in the 2nd kernel because makedumpfile makes a
-+very large temporary memory bitmap file in this case. To avoid this failure,
-+you can set a TMPDIR environment variable. If you do not set a TMPDIR
-+environment variable, makedumpfile uses /tmp directory for a temporary
- bitmap file as a default.
- 
- .SH DIAGNOSTICS
 diff --git a/makedumpfile.c b/makedumpfile.c
-index d024e95..21bb55a 100644
+index 21bb55a..30851c2 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -2553,6 +2553,8 @@ initial(void)
- 							info->name_memory);
- 			return FALSE;
- 		}
-+		info->flag_cyclic = FALSE;
+@@ -165,6 +165,7 @@ is_in_same_page(unsigned long vaddr1, unsigned long vaddr2)
+ 
+ #define BITMAP_SECT_LEN 4096
+ static inline int is_dumpable(struct dump_bitmap *, unsigned long long);
++static inline int is_dumpable_cyclic(char *bitmap, unsigned long long);
+ unsigned long
+ pfn_to_pos(unsigned long long pfn)
+ {
+@@ -2721,6 +2722,12 @@ initialize_bitmap(struct dump_bitmap *bitmap)
+ }
+ 
+ void
++initialize_bitmap_cyclic(char *bitmap)
++{
++	memset(bitmap, 0, BUFSIZE_CYCLIC);
++}
 +
- 		info->phys_base = info->kh_memory->phys_base;
- 		info->max_dump_level |= info->kh_memory->dump_level;
++void
+ initialize_1st_bitmap(struct dump_bitmap *bitmap)
+ {
+ 	initialize_bitmap(bitmap);
+@@ -2784,6 +2791,27 @@ set_bitmap(struct dump_bitmap *bitmap, unsigned long long pfn,
+ }
  
-@@ -6945,6 +6947,7 @@ static struct option longopts[] = {
- 	{"config", required_argument, NULL, 'C'},
- 	{"help", no_argument, NULL, 'h'},
- 	{"diskset", required_argument, NULL, 'k'},
-+	{"non-cyclic", no_argument, NULL, 'Y'},
- 	{0, 0, 0, 0}
- };
- 
-@@ -6966,6 +6969,11 @@ main(int argc, char *argv[])
- 	}
- 	initialize_tables();
- 
+ int
++set_bitmap_cyclic(char *bitmap, unsigned long long pfn, int val)
++{
++	int byte, bit;
++
++	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
++		return FALSE;
++
 +	/*
-+	 * In default, makedumpfile works in constant memory space.
++	 * If val is 0, clear bit on the bitmap.
 +	 */
-+	info->flag_cyclic = TRUE;
-+	
- 	info->block_order = DEFAULT_ORDER;
- 	message_level = DEFAULT_MSG_LEVEL;
- 	while ((opt = getopt_long(argc, argv, "b:cDd:EFfg:hi:lMRrsvXx:", longopts,
-@@ -7053,6 +7061,9 @@ main(int argc, char *argv[])
- 		case 'y':
- 			info->name_xen_syms = optarg;
- 			break;
-+		case 'Y':
-+			info->flag_cyclic = FALSE;
-+			break;
- 		case 'z':
- 			info->flag_read_vmcoreinfo = 1;
- 			info->name_vmcoreinfo = optarg;
++	byte = (pfn - info->cyclic_start_pfn)>>3;
++	bit  = (pfn - info->cyclic_start_pfn) & 7;
++	if (val)
++		bitmap[byte] |= 1<<bit;
++	else
++		bitmap[byte] &= ~(1<<bit);
++
++	return TRUE;
++}
++
++int
+ sync_bitmap(struct dump_bitmap *bitmap)
+ {
+ 	off_t offset;
+@@ -2825,19 +2853,31 @@ sync_2nd_bitmap(void)
+ int
+ set_bit_on_1st_bitmap(unsigned long long pfn)
+ {
+-	return set_bitmap(info->bitmap1, pfn, 1);
++	if (info->flag_cyclic) {
++		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 1);
++	} else {
++		return set_bitmap(info->bitmap1, pfn, 1);
++	}
+ }
+ 
+ int
+ clear_bit_on_1st_bitmap(unsigned long long pfn)
+ {
+-	return set_bitmap(info->bitmap1, pfn, 0);
++	if (info->flag_cyclic) {
++		return set_bitmap_cyclic(info->partial_bitmap1, pfn, 0);
++	} else {
++		return set_bitmap(info->bitmap1, pfn, 0);
++	}
+ }
+ 
+ int
+ clear_bit_on_2nd_bitmap(unsigned long long pfn)
+ {
+-	return set_bitmap(info->bitmap2, pfn, 0);
++	if (info->flag_cyclic) {
++		return set_bitmap_cyclic(info->partial_bitmap2, pfn, 0);
++	} else {
++		return set_bitmap(info->bitmap2, pfn, 0);
++	}
+ }
+ 
+ int
+@@ -3916,6 +3956,38 @@ prepare_bitmap_buffer(void)
+ 	return TRUE;
+ }
+ 
++int
++prepare_bitmap_buffer_cyclic(void)
++{
++	unsigned long tmp;
++
++	/*
++	 * Create 2 bitmaps (1st-bitmap & 2nd-bitmap) on block_size boundary.
++	 * The crash utility requires both of them to be aligned to block_size
++	 * boundary.
++	 */
++	tmp = divideup(divideup(info->max_mapnr, BITPERBYTE), info->page_size);
++	info->len_bitmap = tmp*info->page_size*2;
++
++	/*
++	 * Prepare partial bitmap buffers for cyclic processing.
++	 */
++	if ((info->partial_bitmap1 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
++		ERRMSG("Can't allocate memory for the 1st-bitmap. %s\n",
++		       strerror(errno));
++		return FALSE;
++	}
++	if ((info->partial_bitmap2 = (char *)malloc(BUFSIZE_CYCLIC)) == NULL) {
++		ERRMSG("Can't allocate memory for the 2nd-bitmap. %s\n",
++		       strerror(errno));
++		return FALSE;
++	}
++	initialize_bitmap_cyclic(info->partial_bitmap1);
++	initialize_bitmap_cyclic(info->partial_bitmap2);
++
++	return TRUE;
++}
++
+ void
+ free_bitmap_buffer(void)
+ {
+@@ -3936,14 +4008,19 @@ create_dump_bitmap(void)
+ {
+ 	int ret = FALSE;
+ 
+-	if (!prepare_bitmap_buffer())
+-		goto out;
++	if (info->flag_cyclic) {
++		if (!prepare_bitmap_buffer_cyclic())
++			goto out;
++	} else {
++		if (!prepare_bitmap_buffer())
++			goto out;
+ 
+-	if (!create_1st_bitmap())
+-		goto out;
++		if (!create_1st_bitmap())
++			goto out;
+ 
+-	if (!create_2nd_bitmap())
+-		goto out;
++		if (!create_2nd_bitmap())
++			goto out;
++	}
+ 
+ 	ret = TRUE;
+ out:
+@@ -7210,6 +7287,10 @@ out:
+ 			free(info->splitting_info);
+ 		if (info->p2m_mfn_frame_list != NULL)
+ 			free(info->p2m_mfn_frame_list);
++		if (info->partial_bitmap1 != NULL)
++			free(info->partial_bitmap1);
++		if (info->partial_bitmap2 != NULL)
++			free(info->partial_bitmap2);
+ 		free(info);
+ 	}
+ 	free_elf_info();
 diff --git a/makedumpfile.h b/makedumpfile.h
-index 6f5489d..287e055 100644
+index 287e055..bf5dd43 100644
 --- a/makedumpfile.h
 +++ b/makedumpfile.h
-@@ -801,6 +801,7 @@ struct DumpInfo {
- 	int		flag_rearrange;      /* flag of creating dumpfile from
- 						flattened format */
- 	int		flag_split;	     /* splitting vmcore */
-+  	int		flag_cyclic;	     /* cyclic processing to keep memory consumption */
- 	int		flag_reassemble;     /* reassemble multiple dumpfiles into one */
- 	int		flag_refiltering;    /* refilter from kdump-compressed file */
- 	int		flag_force;	     /* overwrite existing stuff */
-diff --git a/print_info.c b/print_info.c
-index 61cafed..14eec8e 100644
---- a/print_info.c
-+++ b/print_info.c
-@@ -162,6 +162,11 @@ print_usage(void)
- 	MSG("      Reassemble multiple DUMPFILEs, which are created by --split option,\n");
- 	MSG("      into one DUMPFILE. dumpfile1 and dumpfile2 are reassembled into dumpfile.\n");
- 	MSG("\n");
-+	MSG("  [--non-cyclic]:\n");
-+	MSG("      Running in non-cyclic mode, this mode uses old filtering logic same as\n");
-+	MSG("      v1.4.4 or before.\n");
-+	MSG("      If you feel cyclic mode is too slow, please try this mode.\n");
-+	MSG("\n");
- 	MSG("  [--xen-syms XEN-SYMS]:\n");
- 	MSG("      Specify the XEN-SYMS to analyze Xen's memory usage.\n");
- 	MSG("\n");
+@@ -173,6 +173,12 @@ isAnon(unsigned long mapping)
+ #define FILENAME_STDOUT		"STDOUT"
+ 
+ /*
++ * For cyclic processing
++ */
++#define BUFSIZE_CYCLIC         (1024 * 1024)
++#define PFN_CYCLIC             (BUFSIZE_CYCLIC * BITPERBYTE)
++
++/*
+  * Minimam vmcore has 2 ProgramHeaderTables(PT_NOTE and PT_LOAD).
+  */
+ #define MIN_ELF32_HEADER_SIZE \
+@@ -926,6 +932,14 @@ struct DumpInfo {
+ 	unsigned long long split_end_pfn;  
+ 
+ 	/*
++	 * for cyclic processing
++	 */
++	char               *partial_bitmap1;
++	char               *partial_bitmap2;
++	unsigned long long cyclic_start_pfn;
++	unsigned long long cyclic_end_pfn;  
++
++	/*
+ 	 * sadump info:
+ 	 */
+ 	int flag_sadump_diskset;
+@@ -1395,6 +1409,15 @@ is_dumpable(struct dump_bitmap *bitmap, unsigned long long pfn)
+ }
+ 
+ static inline int
++is_dumpable_cyclic(char *bitmap, unsigned long long pfn)
++{
++	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
++		return FALSE;
++	else
++		return is_on(bitmap, pfn - info->cyclic_start_pfn);
++}
++
++static inline int
+ is_zero_page(unsigned char *buf, long page_size)
+ {
+ 	size_t i;
 -- 
 1.7.9.2
 
