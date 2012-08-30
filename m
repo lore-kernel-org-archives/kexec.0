@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T6zdG-0001r1-5t
- for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:57:43 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.192])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7vehK008564
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:57:40 +0900 (JST)
+ id 1T6zeB-0001su-03
+ for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:58:39 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.160])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7wbEs009675
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:58:37 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id q7U7veF20051 for kexec@lists.infradead.org;
- Thu, 30 Aug 2012 16:57:40 +0900 (JST)
+ id q7U7wbZ22623 for kexec@lists.infradead.org;
+ Thu, 30 Aug 2012 16:58:37 +0900 (JST)
 Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7vNkR015456
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:57:39 +0900 (JST)
-Date: Thu, 30 Aug 2012 16:48:37 +0900
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7wafY001390
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:58:36 +0900 (JST)
+Date: Thu, 30 Aug 2012 16:49:53 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 05/16] [PATCH v3 5/12] Add function to get num_dumpable for
- cyclic mode.
-Message-Id: <20120830164837.ebf555e6090599ebb90b4095@mxc.nes.nec.co.jp>
+Subject: [PATCH 06/16] [PATCH v3 6/12] Implement the main routine of cyclic
+ mode for kdump-compressed format.
+Message-Id: <20120830164953.fc02b0202ed48071bee34f89@mxc.nes.nec.co.jp>
 In-Reply-To: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 References: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -36,76 +36,296 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 23 Aug 2012 17:53:59 +0900
-Subject: [PATCH 05/16] [PATCH v3 5/12] Add function to get num_dumpable for cyclic mode.
+Date: Thu, 23 Aug 2012 17:54:03 +0900
+Subject: [PATCH 06/16] [PATCH v3 6/12] Implement the main routine of cyclic mode for kdump-compressed format.
 
-get_num_dumpable_cyclic() gets the number of dumpable pages with cyclic mode.
-This function is used to get info->num_dumpable and it is necessary to decide
-the offset of kdump-compressed page data.
+Implement the function which write out kdump-compressed dumpfile cyclically.
+The function is similar to current write_kdump_XXX(), but not use temporary
+bitmap file. Instead, use partial bitmap with updating it each cycle by cycle.
+
+As a result, makedumpfile can work with constant memory usage even in large
+memory system.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c |   17 +++++++++++++++++
- makedumpfile.h |    6 ++++++
- 2 files changed, 23 insertions(+)
+ makedumpfile.c |  250 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 250 insertions(+)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 64bc031..d007aea 100644
+index d007aea..6bd888c 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -4110,6 +4110,8 @@ create_dump_bitmap(void)
- 	if (info->flag_cyclic) {
- 		if (!prepare_bitmap_buffer_cyclic())
- 			goto out;
-+
-+		info->num_dumpable = get_num_dumpable_cyclic();
- 	} else {
- 		if (!prepare_bitmap_buffer())
- 			goto out;
-@@ -4571,6 +4573,21 @@ get_num_dumpable(void)
- 	return num_dumpable;
+@@ -5077,6 +5077,144 @@ out:
+ 	return ret;
  }
  
-+unsigned long long
-+get_num_dumpable_cyclic(void)
++int
++write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page,
++			 struct page_desc *pd_zero, off_t *offset_data)
 +{
-+	unsigned long long pfn, num_dumpable=0;
++	unsigned long long pfn, per;
++	unsigned long long start_pfn, end_pfn;
++	unsigned long size_out;
++	struct page_desc pd;
++	unsigned char buf[info->page_size], *buf_out = NULL;
++	unsigned long len_buf_out;
++	unsigned long long num_dumped=0;
++	const off_t failed = (off_t)-1;
 +
-+	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
-+		if (!update_cyclic_region(pfn))
-+			return FALSE;
++	int ret = FALSE;
 +
-+		if (is_dumpable_cyclic(info->partial_bitmap2, pfn))
-+			num_dumpable++;
++	if (info->flag_elf_dumpfile)
++		return FALSE;
++
++#ifdef USELZO
++	unsigned long len_buf_out_zlib, len_buf_out_lzo;
++	lzo_bytep wrkmem;
++
++	if ((wrkmem = malloc(LZO1X_1_MEM_COMPRESS)) == NULL) {
++		ERRMSG("Can't allocate memory for the working memory. %s\n",
++		       strerror(errno));
++		goto out;
 +	}
 +
-+	return num_dumpable;
-+}
- 
- int
- write_elf_load_segment(struct cache_data *cd_page, unsigned long long paddr,
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 1a49aa2..e336814 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -938,6 +938,7 @@ struct DumpInfo {
- 	char               *partial_bitmap2;
- 	unsigned long long cyclic_start_pfn;
- 	unsigned long long cyclic_end_pfn;  
-+	unsigned long long num_dumpable;
- 
- 	/*
- 	 * sadump info:
-@@ -1511,4 +1512,9 @@ struct elf_prstatus {
- 
- #endif
- 
-+/*
-+ * Function Prototype.
-+ */
-+unsigned long long get_num_dumpable_cyclic(void);
++	len_buf_out_zlib = compressBound(info->page_size);
++	len_buf_out_lzo = info->page_size + info->page_size / 16 + 64 + 3;
++	len_buf_out = MAX(len_buf_out_zlib, len_buf_out_lzo);
++#else
++	len_buf_out = compressBound(info->page_size);
++#endif
 +
- #endif /* MAKEDUMPFILE_H */
++	if ((buf_out = malloc(len_buf_out)) == NULL) {
++		ERRMSG("Can't allocate memory for the compression buffer. %s\n",
++		       strerror(errno));
++		goto out;
++	}
++
++	per = info->num_dumpable / 100;
++
++	/*
++	 * Set a fileoffset of Physical Address 0x0.
++	 */
++	if (lseek(info->fd_memory, get_offset_pt_load_memory(), SEEK_SET)
++	    == failed) {
++		ERRMSG("Can't seek the dump memory(%s). %s\n",
++		       info->name_memory, strerror(errno));
++		goto out;
++	}
++
++	start_pfn = info->cyclic_start_pfn;
++	end_pfn   = info->cyclic_end_pfn;
++
++	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
++
++		if ((num_dumped % per) == 0)
++			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
++
++		/*
++		 * Check the excluded page.
++		 */
++		if (!is_dumpable_cyclic(info->partial_bitmap2, pfn))
++			continue;
++
++		num_dumped++;
++
++		if (!read_pfn(pfn, buf))
++			goto out;
++
++		/*
++		 * Exclude the page filled with zeros.
++		 */
++		if ((info->dump_level & DL_EXCLUDE_ZERO)
++		    && is_zero_page(buf, info->page_size)) {
++			if (!write_cache(cd_header, pd_zero, sizeof(page_desc_t)))
++				goto out;
++			pfn_zero++;
++			continue;
++		}
++		/*
++		 * Compress the page data.
++		 */
++		size_out = len_buf_out;
++		if ((info->flag_compress & DUMP_DH_COMPRESSED_ZLIB)
++		    && ((size_out = len_buf_out),
++			compress2(buf_out, &size_out, buf, info->page_size,
++				  Z_BEST_SPEED) == Z_OK)
++		    && (size_out < info->page_size)) {
++			pd.flags = DUMP_DH_COMPRESSED_ZLIB;
++			pd.size  = size_out;
++			memcpy(buf, buf_out, pd.size);
++#ifdef USELZO
++		} else if (info->flag_lzo_support
++			   && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
++			   && ((size_out = info->page_size),
++			       lzo1x_1_compress(buf, info->page_size, buf_out,
++						&size_out, wrkmem) == LZO_E_OK)
++			   && (size_out < info->page_size)) {
++			pd.flags = DUMP_DH_COMPRESSED_LZO;
++			pd.size  = size_out;
++			memcpy(buf, buf_out, pd.size);
++#endif
++		} else {
++			pd.flags = 0;
++			pd.size  = info->page_size;
++		}
++		pd.page_flags = 0;
++		pd.offset     = *offset_data;
++		*offset_data  += pd.size;
++
++                /*
++                 * Write the page header.
++                 */
++                if (!write_cache(cd_header, &pd, sizeof(page_desc_t)))
++                        goto out;
++
++                /*
++                 * Write the page data.
++                 */
++                if (!write_cache(cd_page, buf, pd.size))
++                        goto out;
++        }
++
++	ret = TRUE;
++out:
++	if (buf_out != NULL)
++		free(buf_out);
++#ifdef USELZO
++	if (wrkmem != NULL)
++		free(wrkmem);
++#endif
++
++	return ret;
++}
++
+ /*
+  * Copy eraseinfo from input dumpfile/vmcore to output dumpfile.
+  */
+@@ -5346,6 +5484,111 @@ out:
+ 	return ret;
+ }
+ 
++int
++write_kdump_bitmap_cyclic(void)
++{
++	off_t offset;
++        int increment;
++	int ret = FALSE;
++
++	increment = divideup(info->cyclic_end_pfn - info->cyclic_start_pfn, BITPERBYTE);
++
++	if (info->flag_elf_dumpfile)
++		return FALSE;
++
++	offset = info->offset_bitmap1;
++	if (!write_buffer(info->fd_dumpfile, offset,
++			  info->partial_bitmap1, increment, info->name_dumpfile))
++		goto out;
++
++	offset += info->len_bitmap / 2;
++	if (!write_buffer(info->fd_dumpfile, offset,
++			  info->partial_bitmap2, increment, info->name_dumpfile))
++		goto out;
++
++	info->offset_bitmap1 += increment;
++
++	ret = TRUE;
++out:
++
++	return ret;
++}
++
++int
++write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
++{
++	struct page_desc pd_zero;
++	off_t offset_data=0;
++	struct disk_dump_header *dh = info->dump_header;
++	unsigned char buf[info->page_size];
++	unsigned long long pfn;
++	struct timeval tv_start;
++
++	gettimeofday(&tv_start, NULL);
++
++	/*
++	 * Reset counter for debug message.
++	 */
++	pfn_zero =  pfn_cache = pfn_cache_private = pfn_user = pfn_free = 0;
++	pfn_memhole = info->max_mapnr;
++
++	cd_header->offset
++		= (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size + dh->bitmap_blocks)
++		* dh->block_size;
++	cd_page->offset = cd_header->offset + sizeof(page_desc_t)*info->num_dumpable;
++	offset_data = cd_page->offset;
++	
++	/*
++	 * Write the data of zero-filled page.
++	 */
++	if (info->dump_level & DL_EXCLUDE_ZERO) {
++		pd_zero.size = info->page_size;
++		pd_zero.flags = 0;
++		pd_zero.offset = offset_data;
++		pd_zero.page_flags = 0;
++		memset(buf, 0, pd_zero.size);
++		if (!write_cache(cd_page, buf, pd_zero.size))
++			return FALSE;
++		offset_data += pd_zero.size;
++	}
++
++	/*
++	 * Write pages and bitmap cyclically.
++	 */
++	info->cyclic_start_pfn = 0;
++	info->cyclic_end_pfn = 0;
++	for (pfn = 0; pfn < info->max_mapnr; pfn++) {
++		if (is_cyclic_region(pfn))
++			continue;
++
++		if (!update_cyclic_region(pfn))
++                        return FALSE;
++
++		if (!write_kdump_pages_cyclic(cd_header, cd_page, &pd_zero, &offset_data))
++			return FALSE;
++
++		if (!write_kdump_bitmap_cyclic())
++			return FALSE;
++        }
++
++	/*
++	 * Write the remainder.
++	 */
++	if (!write_cache_bufsz(cd_page))
++		return FALSE;
++	if (!write_cache_bufsz(cd_header))
++		return FALSE;
++
++	/*
++	 * print [100 %]
++	 */
++	print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable);
++	print_execution_time(PROGRESS_COPY, &tv_start);
++	PROGRESS_MSG("\n");
++
++	return TRUE;
++}
++	
+ void
+ close_vmcoreinfo(void)
+ {
+@@ -6123,6 +6366,13 @@ writeout_dumpfile(void)
+ 			goto out;
+ 		if (!write_elf_eraseinfo(&cd_header))
+ 			goto out;
++	} else if (info->flag_cyclic) {
++		if (!write_kdump_header())
++			goto out;
++		if (!write_kdump_pages_and_bitmap_cyclic(&cd_header, &cd_page))
++			goto out;
++		if (!write_kdump_eraseinfo(&cd_page))
++			goto out;
+ 	} else {
+ 		if (!write_kdump_header())
+ 			goto out;
 -- 
 1.7.9.2
 
