@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T6zZm-0001jD-3B
- for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:54:07 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.195])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7s3CU005920
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:54:03 +0900 (JST)
+ id 1T6zbC-0001nT-Fh
+ for kexec@lists.infradead.org; Thu, 30 Aug 2012 07:55:35 +0000
+Received: from mailgate3.nec.co.jp ([10.7.69.192])
+ by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7tWJ5007021
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:55:32 +0900 (JST)
 Received: (from root@localhost) by mailgate3.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id q7U7s3O06549 for kexec@lists.infradead.org;
- Thu, 30 Aug 2012 16:54:03 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7s24h013216
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:54:02 +0900 (JST)
-Date: Thu, 30 Aug 2012 16:47:01 +0900
+ id q7U7tWO16293 for kexec@lists.infradead.org;
+ Thu, 30 Aug 2012 16:55:32 +0900 (JST)
+Received: from mail03.kamome.nec.co.jp (mail03.kamome.nec.co.jp [10.25.43.7])
+ by mailsv4.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U7tWJ5014021
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 16:55:32 +0900 (JST)
+Date: Thu, 30 Aug 2012 16:47:40 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 03/16] [PATCH v3 3/12] Change the function related to
- excluding unnecessary pages.
-Message-Id: <20120830164701.b64acec40a0bc1bac9b3457e@mxc.nes.nec.co.jp>
+Subject: [PATCH 04/16] [PATCH v3 4/12] Add function to update target region.
+Message-Id: <20120830164740.339af9370f72ace28afc687e@mxc.nes.nec.co.jp>
 In-Reply-To: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 References: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -36,178 +35,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 23 Aug 2012 17:49:16 +0900
-Subject: [PATCH 03/16] [PATCH v3 3/12] Change the function related to excluding unnecessary pages.
+Date: Thu, 23 Aug 2012 17:53:55 +0900
+Subject: [PATCH 04/16] [PATCH v3 4/12] Add function to update target region.
 
-Extend the function related to excluding unnecessary pages.
-The function creates partial bitmap corresponding to range of target region
-in cyclic mode.
+update_cyclic_region() updates target region with recalculating partial bitmap
+when traverse target region.
+This function helps cyclic mode to update partial bitmap for target region.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c |  100 +++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 89 insertions(+), 11 deletions(-)
+ makedumpfile.c |   21 +++++++++++++++++++++
+ makedumpfile.h |    9 +++++++++
+ 2 files changed, 30 insertions(+)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 30851c2..f706e29 100644
+index f706e29..64bc031 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -3266,9 +3266,9 @@ reset_bitmap_of_free_pages(unsigned long node_zones)
- 				}
- 				for (i = 0; i < (1<<order); i++) {
- 					pfn = start_pfn + i;
--					clear_bit_on_2nd_bitmap_for_kernel(pfn);
-+					if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+						found_free_pages++;
- 				}
--				found_free_pages += i;
- 
- 				previous = curr;
- 				if (!readmem(VADDR, curr+OFFSET(list_head.next),
-@@ -3302,7 +3302,7 @@ reset_bitmap_of_free_pages(unsigned long node_zones)
- 		ERRMSG("Can't get free_pages.\n");
- 		return FALSE;
- 	}
--	if (free_pages != found_free_pages) {
-+	if (free_pages != found_free_pages && !info->flag_cyclic) {
- 		/*
- 		 * On linux-2.6.21 or later, the number of free_pages is
- 		 * sometimes different from the one of the list "free_area",
-@@ -3642,6 +3642,39 @@ create_1st_bitmap(void)
- 	return TRUE;
+@@ -3894,6 +3894,27 @@ exclude_unnecessary_pages_cyclic(void)
  }
  
-+int
-+create_1st_bitmap_cyclic()
-+{
-+	int i;
-+	unsigned long long pfn, pfn_bitmap1;
-+	unsigned long long phys_start, phys_end;
-+	unsigned long long pfn_start, pfn_end;
-+
-+	/*
-+	 * At first, clear all the bits on the 1st-bitmap.
-+	 */
-+	initialize_bitmap_cyclic(info->partial_bitmap1);
-+
-+	/*
-+	 * If page is on memory hole, set bit on the 1st-bitmap.
-+	 */
-+	pfn_bitmap1 = 0;
-+	for (i = 0; get_pt_load(i, &phys_start, &phys_end, NULL, NULL); i++) {
-+		pfn_start = paddr_to_pfn(phys_start);
-+		pfn_end   = paddr_to_pfn(phys_end);
-+
-+		if (!is_in_segs(pfn_to_paddr(pfn_start)))
-+			pfn_start++;
-+		for (pfn = pfn_start; pfn < pfn_end; pfn++) {
-+			if (set_bit_on_1st_bitmap(pfn))
-+				pfn_bitmap1++;
-+		}
-+	}
-+	pfn_memhole -= pfn_bitmap1;
-+
-+	return TRUE;
-+}
-+
- /*
-  * Exclude the page filled with zero in case of creating an elf dumpfile.
-  */
-@@ -3682,8 +3715,8 @@ exclude_zero_pages(void)
- 			}
- 		}
- 		if (is_zero_page(buf, info->page_size)) {
--			clear_bit_on_2nd_bitmap(pfn);
--			pfn_zero++;
-+			if (clear_bit_on_2nd_bitmap(pfn))
-+				pfn_zero++;
- 		}
- 	}
- 
-@@ -3760,8 +3793,8 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		if ((info->dump_level & DL_EXCLUDE_CACHE)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isPrivate(flags) && !isAnon(mapping)) {
--			clear_bit_on_2nd_bitmap_for_kernel(pfn);
--			pfn_cache++;
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+				pfn_cache++;
- 		}
- 		/*
- 		 * Exclude the cache page with the private page.
-@@ -3769,16 +3802,16 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_CACHE_PRI)
- 		    && (isLRU(flags) || isSwapCache(flags))
- 		    && !isAnon(mapping)) {
--			clear_bit_on_2nd_bitmap_for_kernel(pfn);
--			pfn_cache_private++;
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+				pfn_cache_private++;
- 		}
- 		/*
- 		 * Exclude the data page of the user process.
- 		 */
- 		else if ((info->dump_level & DL_EXCLUDE_USER_DATA)
- 		    && isAnon(mapping)) {
--			clear_bit_on_2nd_bitmap_for_kernel(pfn);
--			pfn_user++;
-+			if (clear_bit_on_2nd_bitmap_for_kernel(pfn))
-+				pfn_user++;
- 		}
- 	}
- 	return TRUE;
-@@ -3815,6 +3848,51 @@ exclude_unnecessary_pages(void)
- 	return TRUE;
- }
- 
-+void
-+copy_bitmap_cyclic(void)
-+{
-+	memcpy(info->partial_bitmap2, info->partial_bitmap1, BUFSIZE_CYCLIC);
-+}
-+
-+int
-+exclude_unnecessary_pages_cyclic(void)
-+{
-+	unsigned int mm;
-+	struct mem_map_data *mmd;
-+
-+	/*
-+	 * Copy 1st-bitmap to 2nd-bitmap.
-+	 */
-+	copy_bitmap_cyclic();
-+
-+	if (info->dump_level & DL_EXCLUDE_FREE)
-+		if (!exclude_free_page())
-+			return FALSE;
-+
-+	/*
-+	 * Exclude cache pages, cache private pages, user data pages, and free pages.
-+	 */
-+	if (info->dump_level & DL_EXCLUDE_CACHE ||
-+	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
-+	    info->dump_level & DL_EXCLUDE_USER_DATA) {
-+		for (mm = 0; mm < info->num_mem_map; mm++) {
-+
-+			mmd = &info->mem_map_data[mm];
-+
-+			if (mmd->mem_map == NOT_MEMMAP_ADDR)
-+				continue;
-+
-+			if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
-+				if (!__exclude_unnecessary_pages(mmd->mem_map,
-+								 mmd->pfn_start, mmd->pfn_end))
-+					return FALSE;
-+			}
-+		}
-+	}
-+
-+	return TRUE;
-+}
-+
  int
++update_cyclic_region(unsigned long long pfn)
++{
++	if (is_cyclic_region(pfn))
++		return TRUE;
++
++	info->cyclic_start_pfn = round(pfn, PFN_CYCLIC);
++	info->cyclic_end_pfn = info->cyclic_start_pfn + PFN_CYCLIC;
++
++	if (info->cyclic_end_pfn > info->max_mapnr)
++		info->cyclic_end_pfn = info->max_mapnr;
++
++	if (!create_1st_bitmap_cyclic())
++		return FALSE;
++
++	if (!exclude_unnecessary_pages_cyclic())
++		return FALSE;
++
++	return TRUE;
++}
++
++int
  copy_bitmap(void)
  {
+ 	off_t offset;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index bf5dd43..1a49aa2 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1418,6 +1418,15 @@ is_dumpable_cyclic(char *bitmap, unsigned long long pfn)
+ }
+ 
+ static inline int
++is_cyclic_region(unsigned long long pfn)
++{
++	if (pfn < info->cyclic_start_pfn || info->cyclic_end_pfn <= pfn)
++		return FALSE;
++	else
++		return TRUE;
++}
++
++static inline int
+ is_zero_page(unsigned char *buf, long page_size)
+ {
+ 	size_t i;
 -- 
 1.7.9.2
 
