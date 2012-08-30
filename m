@@ -1,23 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
+Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T6zhH-000222-Jx
- for kexec@lists.infradead.org; Thu, 30 Aug 2012 08:01:52 +0000
-Received: from mailgate3.nec.co.jp ([10.7.69.192])
- by tyo201.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U81nc4012614
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 17:01:49 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
+ id 1T6zi7-00024k-SO
+ for kexec@lists.infradead.org; Thu, 30 Aug 2012 08:02:44 +0000
+Received: from mailgate4.nec.co.jp ([10.7.69.184])
+ by tyo202.gate.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U82c6N006505
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 17:02:38 +0900 (JST)
+Received: (from root@localhost) by mailgate4.nec.co.jp
  (8.11.7/3.7W-MAILGATE-NEC)
- id q7U81n628101 for kexec@lists.infradead.org;
- Thu, 30 Aug 2012 17:01:49 +0900 (JST)
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
- by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U81n9l003906
- for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 17:01:49 +0900 (JST)
-Date: Thu, 30 Aug 2012 16:53:35 +0900
+ id q7U82cY00953 for kexec@lists.infradead.org;
+ Thu, 30 Aug 2012 17:02:38 +0900 (JST)
+Received: from mail02.kamome.nec.co.jp (mail02.kamome.nec.co.jp [10.25.43.5])
+ by mailsv3.nec.co.jp (8.13.8/8.13.4) with ESMTP id q7U82bVp004457
+ for <kexec@lists.infradead.org>; Thu, 30 Aug 2012 17:02:37 +0900 (JST)
+Date: Thu, 30 Aug 2012 16:54:25 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: [PATCH 09/16] [PATCH v3 9/12] Enabling --split option with cyclic
- mode.
-Message-Id: <20120830165335.38c218860ae9c481fce1055c@mxc.nes.nec.co.jp>
+Subject: [PATCH 10/16] [PATCH v3 10/12] Change num_dumped value to global
+ for debug messages.
+Message-Id: <20120830165425.e543df047ce4625c844c739f@mxc.nes.nec.co.jp>
 In-Reply-To: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 References: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
 Mime-Version: 1.0
@@ -36,85 +36,77 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Date: Thu, 23 Aug 2012 17:54:16 +0900
-Subject: [PATCH 09/16] [PATCH v3 9/12] Enabling --split option with cyclic mode.
+Date: Thu, 23 Aug 2012 17:54:21 +0900
+Subject: [PATCH 10/16] [PATCH v3 10/12] Change num_dumped value to global for debug messages.
 
-This patch enable cyclic mode to split the dump data to multiple dumpfiles.
-At this time, the buffer of partial bitmap is prepared for each child process,
-you need to consider the amount of memory usage.
+num_dumped value is used to count the number of dumped pages.
+The value is defined as local value and doesn't work correctly for cyclic
+mode. (Because the value will be initialized by each cycle.)
 
-This patch split the dump data based on only max_mapnr and num_dumpfile,
-so the size of each split dumpfiles will be different by excluding
-unnecessary pages.
+This patch fix the above issue.
 
 Signed-off-by: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 ---
- makedumpfile.c |   42 +++++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
+ makedumpfile.c |   11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 1f499bb..6dfd397 100644
+index 6dfd397..cc90d39 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -5445,6 +5445,13 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
- 	start_pfn = info->cyclic_start_pfn;
- 	end_pfn   = info->cyclic_end_pfn;
+@@ -44,6 +44,8 @@ unsigned long long pfn_cache_private;
+ unsigned long long pfn_user;
+ unsigned long long pfn_free;
  
-+	if (info->flag_split) {
-+		if (start_pfn < info->split_start_pfn)
-+			start_pfn = info->split_start_pfn;
-+		if (end_pfn > info->split_end_pfn)
-+			end_pfn = info->split_end_pfn;
-+	}
++unsigned long long num_dumped;
 +
- 	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+ int retcd = FAILED;	/* return code */
  
- 		if ((num_dumped % per) == 0)
-@@ -6730,22 +6737,31 @@ setup_splitting(void)
- 	if (info->num_dumpfile <= 1)
- 		return FALSE;
+ #define INITIALIZE_LONG_TABLE(table, value) \
+@@ -4643,7 +4645,7 @@ write_elf_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	int i, phnum;
+ 	long page_size = info->page_size;
+ 	unsigned long long pfn, pfn_start, pfn_end, paddr, num_excluded;
+-	unsigned long long num_dumpable, num_dumped = 0, per;
++	unsigned long long num_dumpable, per;
+ 	unsigned long long memsz, filesz;
+ 	unsigned long frac_head, frac_tail;
+ 	off_t off_seg_load, off_memory;
+@@ -4988,7 +4990,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 	long page_size = info->page_size;
+ 	unsigned char buf[info->page_size];
+ 	unsigned long long pfn, pfn_start, pfn_end, paddr, num_excluded;
+-	unsigned long long num_dumpable, per, num_dumped=0;
++	unsigned long long num_dumpable, per;
+ 	unsigned long long memsz, filesz;
+ 	unsigned long frac_head, frac_tail;
+ 	off_t off_seg_load, off_memory;
+@@ -5205,7 +5207,7 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ int
+ write_kdump_pages(struct cache_data *cd_header, struct cache_data *cd_page)
+ {
+- 	unsigned long long pfn, per, num_dumpable, num_dumped = 0;
++ 	unsigned long long pfn, per, num_dumpable;
+ 	unsigned long long start_pfn, end_pfn;
+ 	unsigned long size_out;
+ 	struct page_desc pd, pd_zero;
+@@ -5399,7 +5401,6 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+ 	struct page_desc pd;
+ 	unsigned char buf[info->page_size], *buf_out = NULL;
+ 	unsigned long len_buf_out;
+-	unsigned long long num_dumped=0;
+ 	const off_t failed = (off_t)-1;
  
--	initialize_2nd_bitmap(&bitmap2);
-+	if (info->flag_cyclic) {
-+		for (i = 0; i < info->num_dumpfile; i++) {
-+			SPLITTING_START_PFN(i) = divideup(info->max_mapnr, info->num_dumpfile) * i;
-+			SPLITTING_END_PFN(i)   = divideup(info->max_mapnr, info->num_dumpfile) * (i + 1);
-+		}
-+		if (SPLITTING_END_PFN(i-1) > info->max_mapnr)
-+			SPLITTING_END_PFN(i-1) = info->max_mapnr;
-+        } else {
-+		initialize_2nd_bitmap(&bitmap2);
- 
--	pfn_per_dumpfile = num_dumpable / info->num_dumpfile;
--	start_pfn = end_pfn = 0;
--	for (i = 0; i < info->num_dumpfile; i++) {
--		start_pfn = end_pfn;
--		if (i == (info->num_dumpfile - 1)) {
--			end_pfn  = info->max_mapnr;
--		} else {
--			for (j = 0; j < pfn_per_dumpfile; end_pfn++) {
--				if (is_dumpable(&bitmap2, end_pfn))
--					j++;
-+		pfn_per_dumpfile = num_dumpable / info->num_dumpfile;
-+		start_pfn = end_pfn = 0;
-+		for (i = 0; i < info->num_dumpfile; i++) {
-+			start_pfn = end_pfn;
-+			if (i == (info->num_dumpfile - 1)) {
-+				end_pfn  = info->max_mapnr;
-+			} else {
-+				for (j = 0; j < pfn_per_dumpfile; end_pfn++) {
-+					if (is_dumpable(&bitmap2, end_pfn))
-+						j++;
-+				}
- 			}
-+			SPLITTING_START_PFN(i) = start_pfn;
-+			SPLITTING_END_PFN(i)   = end_pfn;
- 		}
--		SPLITTING_START_PFN(i) = start_pfn;
--		SPLITTING_END_PFN(i)   = end_pfn;
- 	}
- 
- 	return TRUE;
+ 	int ret = FALSE;
+@@ -7295,7 +7296,7 @@ reassemble_kdump_pages(void)
+ 	off_t offset_first_ph, offset_ph_org, offset_eraseinfo;
+ 	off_t offset_data_new, offset_zero_page = 0;
+ 	unsigned long long pfn, start_pfn, end_pfn;
+-	unsigned long long num_dumpable, num_dumped;
++	unsigned long long num_dumpable;
+ 	unsigned long size_eraseinfo;
+ 	struct dump_bitmap bitmap2;
+ 	struct disk_dump_header dh;
 -- 
 1.7.9.2
 
