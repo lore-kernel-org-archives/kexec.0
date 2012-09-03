@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([202.32.8.206])
+Received: from tyo201.gate.nec.co.jp ([202.32.8.193])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T8NZp-0004JL-02
- for kexec@lists.infradead.org; Mon, 03 Sep 2012 03:43:55 +0000
-Date: Mon, 3 Sep 2012 12:42:33 +0900
+ id 1T8Oo7-0005mf-86
+ for kexec@lists.infradead.org; Mon, 03 Sep 2012 05:02:45 +0000
+Date: Mon, 3 Sep 2012 14:01:00 +0900
 From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
-Message-Id: <20120903124233.61eafa52ffaed6a38a23710d@mxc.nes.nec.co.jp>
-In-Reply-To: <201208281949.50286.ptesarik@suse.cz>
-References: <201208281949.50286.ptesarik@suse.cz>
+Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
+Message-Id: <20120903140100.ac4dbf21401ace0e24a442d9@mxc.nes.nec.co.jp>
+In-Reply-To: <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
+References: <201208241741.27573.petr@tesarici.cz>
+ <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,43 +19,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ptesarik@suse.cz
+To: norbert.trapp@ts.fujitsu.com, petr@tesarici.cz
 Cc: kexec@lists.infradead.org
 
-Hello Petr,
-
-On Tue, 28 Aug 2012 19:49:49 +0200
-Petr Tesarik <ptesarik@suse.cz> wrote:
-
-> Add a simple cache for pages read from the dumpfile.
-> 
-> This is a big win if we read consecutive data from one page, e.g.
-> page descriptors, or even page table entries.
-> 
-> Note that makedumpfile now always reads a complete page. This was already
-> the case with kdump-compressed and sadump formats, but makedumpfile was
-> throwing most of the data away. For the kdump-compressed case, we may
-> actually save a lot of decompression, too.
-> 
-> I tried to keep the cache small to minimize memory footprint, but it should
-> be big enough to hold all pages to do 4-level paging plus some data. This
-> is needed e.g. for vmalloc areas or Xen page frame table data, which are not
-> contiguous in physical memory.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.cz>
-
-It's interesting to me. I want to know how performance will be improved
-with this patch, so do you have speed measurements ?
-
-
-Thanks
-Atsushi Kumagai
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gTm9yYmVydCBhbmQgUGV0ciwKCk9uIEZyaSwgMzEgQXVnIDIwMTIgMTc6MDU6MDEgKzAy
+MDAKIlRyYXBwLCBOb3JiZXJ0IiA8bm9yYmVydC50cmFwcEB0cy5mdWppdHN1LmNvbT4gd3JvdGU6
+Cgo+IAo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+IEZyb206IFBldHIgVGVzYcWZ
+w61rIFttYWlsdG86cGV0ckB0ZXNhcmljaS5jel0KPiA+IFNlbnQ6IEZyaWRheSwgQXVndXN0IDI0
+LCAyMDEyIDU6NDEgUE0KPiA+IFRvOiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gPiBDYzog
+VHJhcHAsIE5vcmJlcnQKPiA+IFN1YmplY3Q6IFtQQVRDSHYzIDAvOV0gU3VwcG9ydCBYZW4gdmVy
+c2lvbnMgdXAgdG8geGVuLTQuMQo+ID4gCj4gPiBIZWxsbyBldmVyeWJvZHksCj4gPiAKPiA+IHRo
+aXMgaXMgdmVyc2lvbiAzIG9mIG15IHBhdGNoIHNldC4gSSdtIHZlcnkgbXVjaCBpbmRlYnRlZCB0
+byBOb3JiZXJ0Cj4gPiBUcmFwcCBmb3IgaGlzIGV4dGVuc2l2ZSB0ZXN0aW5nIG9mIG15IHByZXZp
+b3VzIHBhdGNoIHNldCwgd2hpY2gKPiA+IHJldmVhbGVkIHRoYXQgWGVuIGh5cGVydmlzb3Igc3Rh
+dGljIGRhdGEgd2FzIG5vdCBrZXB0IHdpdGggdGhlIHByZXZpb3VzCj4gPiB2ZXJzaW9uIG9mIHRo
+ZSBwYXRjaCBzZXQuCj4gPiAKPiA+IEkgY291bGQgYWxzbyBhZGQgdGhlIHBlcmZvcm1hbmNlIGlt
+cHJvdmVtZW50cywgYnV0IEknbSBhZnJhaWQgaXQgd291bGQKPiA+IG1ha2UgZm9yIGFuIGluY3Jl
+bWVudGFsIHBhdGNoLCBzbyBsZXQncyB3YWl0IHVudGlsIHRoZSBmaWx0ZXJpbmcgaXMKPiA+IGZp
+bmFsbHkgcmlnaHQuCj4gPiAKPiA+IEkgaGF2ZSByZS10ZXN0ZWQgdGhpcyBwYXRjaCBzZXQgd2l0
+aCB0aGUgc2FtZSByZXN1bHQgYXMgdjI6Cj4gPiAKPiA+ICAgLSBYZW4tMy4yLjMgLSBXT1JLUwo+
+ID4gICAtIFhlbi00LjAuMSAtIFdPUktTIChvbmx5IHdpdGggLS14ZW4tc3ltcykKPiA+ICAgLSBY
+ZW4tNC4wLjIgLSBXT1JLUwo+ID4gICAtIFhlbi00LjEuMiAtIFdPUktTCj4gPiAKPiA+IEZpbHRl
+cmluZyBmcmVlIHBhZ2VzICgtZDE2IGFuZCBhYm92ZSkgZG9lc24ndCB3b3JrIChldmVuIGFmdGVy
+IEkgbWFudWFsbHkKPiA+IHByb3ZpZGVkIHRoZSBtaXNzaW5nICJtYXhfcGZuIiBzeW1ib2wpLCBi
+dXQgdGhhdCBzZWVtcyB1bnJlbGF0ZWQsIHNvIEknbQo+ID4gZ29pbmcgdG8gYWRkcmVzcyBpdCBp
+biBhIHN1YnNlcXVlbnQgcGF0Y2ggc2V0Lgo+ID4gCj4gPiBOb3JiZXJ0LCBpZiB5b3UgdGVzdCB0
+aGVzZSBwYXRjaGVzLCBwbGVhc2Ugc2VuZCB5b3VyIGNvbW1lbnRzIHRvIHRoZQo+ID4gbWFpbGlu
+ZyBsaXN0Lgo+IAo+IEhlbGxvIFBldHIgZXQgYWwuLAo+IAo+IGFmdGVyIHRlc3RpbmcgUGV0cidz
+IHBhdGNoZXMgUEFUQ0h2MyBwbHVzICJzdXBwb3J0IGZvciB4ODZfNjQgMUdCIHBhZ2VzIiwKPiAi
+YWRkIG1pc3NpbmcgcmV0dXJuIHN0YXRlbWVudCIgYW5kICJrZWVwIGR1bXBmaWxlIHBhZ2VzIGlu
+IGEgY2FjaGUiIG9uIGEKPiBtYWNoaW5lIHdpdGggWGVuIDQuMC4zIGFuZCAxR0IgcGFnZXMgdGhl
+cmUgaXMgb25seSBvbmUgY29tbWVudCBJIGhhdmU6Cj4gSXQgYWxsIHdvcmtlZCBuaWNlbHkhCgpU
+aGFuayB5b3UgZm9yIHlvdXIgcmVwb3J0LCB0aGF0J3MgZ29vZC4KU28sIEknbGwgcmV2aWV3IHRo
+ZXNlIHBhdGNoZXMgZm9yIG1ha2VkdW1wZmlsZS0xLjUuMS4KCgpUaGFua3MKQXRzdXNoaSBLdW1h
+Z2FpCgo+IFdpdGgga2luZCByZWdhcmRzLAo+IAo+IAlOb3JiZXJ0Cj4gCj4gTm9yYmVydCBUcmFw
+cAo+IFBCRyBQREcgRVMmUyBTV0UgT1MgNgo+IAo+IEZVSklUU1UKPiBGdWppdHN1IFRlY2hub2xv
+Z3kgU29sdXRpb25zIEdtYkgKPiBEb21hZ2tzdHJhw59lIDI4LCBELTgwODA3IE3DvG5jaGVuLCBH
+ZXJtYW55Cj4gRS1tYWlsOiBOb3JiZXJ0LlRyYXBwQHRzLmZ1aml0c3UuY29tCj4gV2ViOiB0cy5m
+dWppdHN1LmNvbQo+IENvbXBhbnkgZGV0YWlsczogdHMuZnVqaXRzdS5jb20vaW1wcmludAo+ICAK
+PiA+IEF0c3VzaGktc2FuLCBpZiB0aGUgcGF0Y2ggc2V0IHBhc3NlcyBOb3JiZXJ0J3MgdGVzdGlu
+Zywgd2hhdCBlbHNlIGRvIHlvdQo+ID4gbmVlZCB0byBhY2NlcHQgdGhlIGNoYW5nZXMgaW4gdXBz
+dHJlYW0/Cj4gPiAKPiA+IFJlZ2FyZHMsCj4gPiBQZXRyIFRlc2FyaWsKPiA+IFNVU0UgTGludXgK
+PiA+IAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
