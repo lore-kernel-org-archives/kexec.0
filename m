@@ -1,16 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate10.ts.fujitsu.com ([80.70.172.49])
+Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T7Sn1-0003kc-U5
- for kexec@lists.infradead.org; Fri, 31 Aug 2012 15:05:45 +0000
-From: "Trapp, Norbert" <norbert.trapp@ts.fujitsu.com>
-Date: Fri, 31 Aug 2012 17:05:01 +0200
-Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
-Message-ID: <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
-References: <201208241741.27573.petr@tesarici.cz>
-In-Reply-To: <201208241741.27573.petr@tesarici.cz>
-Content-Language: de-DE
-MIME-Version: 1.0
+ id 1T8MBH-0007VW-7h
+ for kexec@lists.infradead.org; Mon, 03 Sep 2012 02:14:30 +0000
+Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id D290A3EE0AE
+ for <kexec@lists.infradead.org>; Mon,  3 Sep 2012 11:14:19 +0900 (JST)
+Received: from smail (m2 [127.0.0.1])
+ by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id B9BCA45DE4E
+ for <kexec@lists.infradead.org>; Mon,  3 Sep 2012 11:14:19 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
+ by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 99D7E45DD74
+ for <kexec@lists.infradead.org>; Mon,  3 Sep 2012 11:14:19 +0900 (JST)
+Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8C9271DB803A
+ for <kexec@lists.infradead.org>; Mon,  3 Sep 2012 11:14:19 +0900 (JST)
+Received: from m025.s.css.fujitsu.com (m025.s.css.fujitsu.com [10.0.81.65])
+ by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 4A52D1DB802C
+ for <kexec@lists.infradead.org>; Mon,  3 Sep 2012 11:14:19 +0900 (JST)
+Date: Mon, 03 Sep 2012 11:13:35 +0900 (JST)
+Message-Id: <20120903.111335.108627870.d.hatayama@jp.fujitsu.com>
+Subject: Re: [PATCH 03/16] [PATCH v3 3/12] Change the function related to
+ excluding unnecessary pages.
+From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+In-Reply-To: <20120830164701.b64acec40a0bc1bac9b3457e@mxc.nes.nec.co.jp>
+References: <20120830164422.8d05cbcdd650398d5d5cbad9@mxc.nes.nec.co.jp>
+ <20120830164701.b64acec40a0bc1bac9b3457e@mxc.nes.nec.co.jp>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,84 +35,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: =?iso-8859-2?Q?Petr_Tesa=F8=EDk?= <petr@tesarici.cz>
+To: kumagai-atsushi@mxc.nes.nec.co.jp
+Cc: kexec@lists.infradead.org
 
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: [PATCH 03/16] [PATCH v3 3/12] Change the function related to excluding unnecessary pages.
+Date: Thu, 30 Aug 2012 16:47:01 +0900
 
-> -----Original Message-----
-> From: Petr Tesa=F8=EDk [mailto:petr@tesarici.cz]
-> Sent: Friday, August 24, 2012 5:41 PM
-> To: kexec@lists.infradead.org
-> Cc: Trapp, Norbert
-> Subject: [PATCHv3 0/9] Support Xen versions up to xen-4.1
-> =
+> From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+> Date: Thu, 23 Aug 2012 17:49:16 +0900
+> Subject: [PATCH 03/16] [PATCH v3 3/12] Change the function related to excluding unnecessary pages.
+<cut>
+> +int
+> +exclude_unnecessary_pages_cyclic(void)
+> +{
+> +	unsigned int mm;
+> +	struct mem_map_data *mmd;
+> +
+> +	/*
+> +	 * Copy 1st-bitmap to 2nd-bitmap.
+> +	 */
+> +	copy_bitmap_cyclic();
+> +
+> +	if (info->dump_level & DL_EXCLUDE_FREE)
+> +		if (!exclude_free_page())
+> +			return FALSE;
+> +
+> +	/*
+> +	 * Exclude cache pages, cache private pages, user data pages, and free pages.
+> +	 */
+> +	if (info->dump_level & DL_EXCLUDE_CACHE ||
+> +	    info->dump_level & DL_EXCLUDE_CACHE_PRI ||
+> +	    info->dump_level & DL_EXCLUDE_USER_DATA) {
+> +		for (mm = 0; mm < info->num_mem_map; mm++) {
+> +
+> +			mmd = &info->mem_map_data[mm];
+> +
+> +			if (mmd->mem_map == NOT_MEMMAP_ADDR)
+> +				continue;
+> +
+> +			if (mmd->pfn_end >= info->cyclic_start_pfn || mmd->pfn_start <= info->cyclic_end_pfn) {
+> +				if (!__exclude_unnecessary_pages(mmd->mem_map,
+> +								 mmd->pfn_start, mmd->pfn_end))
+> +					return FALSE;
+> +			}
+> +		}
+> +	}
 
-> Hello everybody,
-> =
+This patch misses reporting the time consumed for excluding necessary
+pages. I noticed this during benchmarking. Here is the patch I used at
+the time, but I wrote this version over your patch set.
 
-> this is version 3 of my patch set. I'm very much indebted to Norbert
-> Trapp for his extensive testing of my previous patch set, which
-> revealed that Xen hypervisor static data was not kept with the previous
-> version of the patch set.
-> =
+    Report the time consumed for excluding unnecessary pages in cyclic mode
 
-> I could also add the performance improvements, but I'm afraid it would
-> make for an incremental patch, so let's wait until the filtering is
-> finally right.
-> =
+    Here is the example:
 
-> I have re-tested this patch set with the same result as v2:
-> =
+    [Before]
+    STEP [Excluding free pages       ] : 0.500269 seconds
+    STEP [Excluding free pages       ] : 0.002081 seconds
+    STEP [Copying data               ] : 2.115097 seconds
 
->   - Xen-3.2.3 - WORKS
->   - Xen-4.0.1 - WORKS (only with --xen-syms)
->   - Xen-4.0.2 - WORKS
->   - Xen-4.1.2 - WORKS
-> =
+    [After]
 
-> Filtering free pages (-d16 and above) doesn't work (even after I manually
-> provided the missing "max_pfn" symbol), but that seems unrelated, so I'm
-> going to address it in a subsequent patch set.
-> =
+    STEP [Excluding free pages       ] : 0.002148 seconds
+    STEP [Excluding unnecessary pages] : 0.015641 seconds
+    STEP [Excluding free pages       ] : 0.002130 seconds
+    STEP [Excluding unnecessary pages] : 0.024436 seconds
+    STEP [Copying data               ] : 0.211287 seconds
 
-> Norbert, if you test these patches, please send your comments to the
-> mailing list.
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 0a43181..caac37b 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3882,6 +3882,7 @@ exclude_unnecessary_pages_cyclic(void)
+ {
+        unsigned int mm;
+        struct mem_map_data *mmd;
++       struct timeval tv_start;
 
-Hello Petr et al.,
+        /*
+         * Copy 1st-bitmap to 2nd-bitmap.
+@@ -3898,8 +3899,13 @@ exclude_unnecessary_pages_cyclic(void)
+        if (info->dump_level & DL_EXCLUDE_CACHE ||
+            info->dump_level & DL_EXCLUDE_CACHE_PRI ||
+            info->dump_level & DL_EXCLUDE_USER_DATA) {
++
++               gettimeofday(&tv_start, NULL);
++
+                for (mm = 0; mm < info->num_mem_map; mm++) {
 
-after testing Petr's patches PATCHv3 plus "support for x86_64 1GB pages",
-"add missing return statement" and "keep dumpfile pages in a cache" on a
-machine with Xen 4.0.3 and 1GB pages there is only one comment I have:
-It all worked nicely!
++                       print_progress(PROGRESS_UNN_PAGES, mm, info->num_mem_map);
++
+                        mmd = &info->mem_map_data[mm];
 
-With kind regards,
+                        if (mmd->mem_map == NOT_MEMMAP_ADDR)
+@@ -3911,6 +3917,12 @@ exclude_unnecessary_pages_cyclic(void)
+                                        return FALSE;
+                        }
+                }
++
++               /*
++                * print [100 %]
++                */
++               print_progress(PROGRESS_UNN_PAGES, info->num_mem_map, info->num_mem_map);
++               print_execution_time(PROGRESS_UNN_PAGES, &tv_start);
+        }
 
-	Norbert
+        return TRUE;
 
-Norbert Trapp
-PBG PDG ES&S SWE OS 6
-
-FUJITSU
-Fujitsu Technology Solutions GmbH
-Domagkstra=DFe 28, D-80807 M=FCnchen, Germany
-E-mail: Norbert.Trapp@ts.fujitsu.com
-Web: ts.fujitsu.com
-Company details: ts.fujitsu.com/imprint
- =
-
-> Atsushi-san, if the patch set passes Norbert's testing, what else do you
-> need to accept the changes in upstream?
-> =
-
-> Regards,
-> Petr Tesarik
-> SUSE Linux
-> =
-
+Thanks.
+HATAYAMA, Daisuke
 
 
 _______________________________________________
