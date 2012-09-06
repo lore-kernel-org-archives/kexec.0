@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lpp01m010-f49.google.com ([209.85.215.49])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T9h8B-0005Bu-Jb
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 18:48:48 +0000
-Received: by lagu2 with SMTP id u2so1297298lag.36
- for <kexec@lists.infradead.org>; Thu, 06 Sep 2012 11:48:44 -0700 (PDT)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T9icW-000455-6n
+ for kexec@lists.infradead.org; Thu, 06 Sep 2012 20:24:13 +0000
+Date: Thu, 6 Sep 2012 16:24:06 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+Message-ID: <20120906202406.GD27209@redhat.com>
+References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
+ <5047DBA9.8030000@hp.com>
 MIME-Version: 1.0
-In-Reply-To: <20120906094336.GJ1943@vicerveza.homeunix.net>
-References: <20120906094336.GJ1943@vicerveza.homeunix.net>
-Date: Thu, 6 Sep 2012 21:48:43 +0300
-Message-ID: <CAEnQRZCL--p6jB2H6gN7=sPHCnpQaDpJgu0RuHHDmX89hGhWmw@mail.gmail.com>
-Subject: Re: Getting the kexec on panic
-From: Daniel Baluta <daniel.baluta@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5047DBA9.8030000@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,34 +20,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?ISO-8859-1?Q?Llu=EDs_Batlle_i_Rossell?= <viric@viric.name>
-Cc: kexec@lists.infradead.org
+To: Khalid Aziz <khalid.aziz@hp.com>
+Cc: dyoung@redhat.com, horms@verge.net.au, kexec@lists.infradead.org
 
-On Thu, Sep 6, 2012 at 12:43 PM, Llu=EDs Batlle i Rossell
-<viric@viric.name> wrote:
-> Hello,
->
-> while I can load immediately a kernel using kexec, when I set it for pani=
-c and
-> crash with sysrq-c, the computer hangs.
->
-> I'm using the nvidia X driver; can it be that it stops the panic handling=
- from
-> working? I don't understand why it would work with normal kexec though, i=
-f it
-> were the case.
+On Wed, Sep 05, 2012 at 05:09:29PM -0600, Khalid Aziz wrote:
+[..]
+> More work will be needed to make this work, for example pass the
+> EFI runtime service memory map from one kernel to the next so we
+> keep it mapped in exact same spot, and other similar mapping issues.
 
-Hello,
+Hi Khalid,
 
-Did you setup a kernel for load on panic? Can you paste the output for
-# cat /proc/cmdline ?
+This sounds like significant amount of work. So till this work really
+gets merged, noefi is not a bad option. Atleast it will allow us
+to capture dump. And once a generic fix is in, one can remove it and
+build more fancy features which make use of EFI services in second
+kernel?
 
-thanks,
-Daniel.
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
