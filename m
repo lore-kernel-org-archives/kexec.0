@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T9SM3-0004vl-4b
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 03:02:09 +0000
-Message-ID: <5048114F.4050108@redhat.com>
-Date: Thu, 06 Sep 2012 10:58:23 +0800
+ id 1T9Sf9-0005KU-PP
+ for kexec@lists.infradead.org; Thu, 06 Sep 2012 03:21:53 +0000
+Message-ID: <504815EB.9000701@redhat.com>
+Date: Thu, 06 Sep 2012 11:18:03 +0800
 From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
 References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <20120905131852.GB19749@redhat.com>
-In-Reply-To: <20120905131852.GB19749@redhat.com>
+ <5047DBA9.8030000@hp.com>
+In-Reply-To: <5047DBA9.8030000@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,71 +23,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org
+To: Khalid Aziz <khalid.aziz@hp.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On 09/05/2012 09:18 PM, Vivek Goyal wrote:
+On 09/06/2012 07:09 AM, Khalid Aziz wrote:
 
-> On Wed, Sep 05, 2012 at 01:44:45PM +0800, Dave Young wrote:
->>
->> In case efi booting, kdump need kernel parameter noefi and acpi_rsdp=
->> to disable efi reinit and retrieve the acpi root table physical address.
->>
->> Add a function cmdline_add_efi to get the address from /sys/firmware/efi/systab
->> If there's no such file or read fail the function will just do nothing.
->>
->> Tested efi boot Fedora 17 on thinkpad T420.
->>
->> Signed-off-by: Dave Young <dyoung@redhat.com>
->> ---
->>  kexec/arch/i386/crashdump-x86.c |   47 ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>
->> --- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
->> +++ kexec-tools/kexec/arch/i386/crashdump-x86.c
->> @@ -27,6 +27,7 @@
->>  #include <sys/types.h>
->>  #include <sys/stat.h>
->>  #include <unistd.h>
->> +#include <fcntl.h>
->>  #include "../../kexec.h"
->>  #include "../../kexec-elf.h"
->>  #include "../../kexec-syscall.h"
->> @@ -658,6 +659,51 @@ static int cmdline_add_memmap_acpi(char 
->>  	return 0;
->>  }
->>  
->> +/* Appends 'noefi acpi_rsdp=' commandline for efi boot crash dump */
->> +static void cmdline_add_efi(char *cmdline)
->> +{
+> This will evaluate only the first line in systab. I do not believe you
+> are guaranteed to see ACPI20= or ACPI= in the first line. Here is the
+> systab file from my machine:
 > 
-> Hi Dave,
+> MPS=0xf4cf0
+> ACPI20=0xcac3e000
+> ACPI=0xcac3e000
+> SMBIOS=0xcac4cf98
 > 
-> It might be better to break it down in two functions. One for each
-> command line parameter.
+> We need to parse all the lines in systab.
 
 
-Ok, will do
+Thanks for the reporting, will address this in the update patch
 
+> I think running a kexec/kdump kernel with "noefi" is not a good idea.
+> Today kernel makes very little use of UEFI run time services but this
+> might change shortly. I have already seen ideas being proposed to use
+> UEFI variables to store kernel panic information which would require
+> accessing UEFI runtime services. If the kdump kernel runs into a panic,
+> it would be good to be able to use UEFI variables to store some sort of
+> tombstone. We might also start using UEFI runtime clock services one of
+> these days especially now that all PCs soon will have UEFI due to
+> Windows 8 requirements. There might be other ways to deal with EFI
+> virtualization issue. I have solved it on a custom ia64 kernel by
+> passing the kexec'd kernel a "kexec_reboot" on command line, although I
+> wouldn't recommend that approach as a general approach. Creating a new
+> kernel command line parameter just to tell the kernel to not virtualize
+> EFI sounds excessive. May be we can come up with a different way to tell
+> a kexec/kdump kernel to not virtualize EFI, like create a new signature,
+> for example "EL32_KEXEC" and "EL64_KEXEC", for
+> boot_params.efi_info.efi_loader_signature which tells the kexec/kdump
+> kernel to enable EFI but skip the step of virtualizing it. More work
+> will be needed to make this work, for example pass the EFI runtime
+> service memory map from one kernel to the next so we keep it mapped in
+> exact same spot, and other similar mapping issues.
 > 
-> Also, what's the corelation of efi and acpi_rsdp. Is acpi_rsdp required
-> only on EFI boot or in general it is required? If it is required in 
-> general, why kdump works currently.
 
 
-Hi, here is the background of this issue:
-http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
-
-> 
-> Thanks
-> Vivek
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-
+I'm not so familiar with uefi detail, is the virtualization issue mean
+"virtual mode" of efi?  From my understanding for kdump kernel I would
+vote for not interacting with bios at all. We have use "noefi" for long
+time by passing it to 2nd kernel while kexecing. I prefer to do this way
+until we have to switch to other approach.
 
 -- 
 Thanks
