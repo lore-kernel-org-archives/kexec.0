@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T9icW-000455-6n
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 20:24:13 +0000
-Date: Thu, 6 Sep 2012 16:24:06 -0400
+ id 1T9iyK-0005eY-9G
+ for kexec@lists.infradead.org; Thu, 06 Sep 2012 20:46:45 +0000
+Date: Thu, 6 Sep 2012 16:46:42 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
-Message-ID: <20120906202406.GD27209@redhat.com>
+Message-ID: <20120906204642.GE27209@redhat.com>
 References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <5047DBA9.8030000@hp.com>
+ <20120905131852.GB19749@redhat.com> <5048114F.4050108@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5047DBA9.8030000@hp.com>
+In-Reply-To: <5048114F.4050108@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,22 +24,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Khalid Aziz <khalid.aziz@hp.com>
-Cc: dyoung@redhat.com, horms@verge.net.au, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On Wed, Sep 05, 2012 at 05:09:29PM -0600, Khalid Aziz wrote:
+On Thu, Sep 06, 2012 at 10:58:23AM +0800, Dave Young wrote:
+
 [..]
-> More work will be needed to make this work, for example pass the
-> EFI runtime service memory map from one kernel to the next so we
-> keep it mapped in exact same spot, and other similar mapping issues.
+> > Also, what's the corelation of efi and acpi_rsdp. Is acpi_rsdp required
+> > only on EFI boot or in general it is required? If it is required in 
+> > general, why kdump works currently.
+> 
+> 
+> Hi, here is the background of this issue:
+> http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
 
-Hi Khalid,
-
-This sounds like significant amount of work. So till this work really
-gets merged, noefi is not a bad option. Atleast it will allow us
-to capture dump. And once a generic fix is in, one can remove it and
-build more fancy features which make use of EFI services in second
-kernel?
+Ok, looks like this is EFI specific. So keeping noefi and acpi_rsdp
+together makes sense.
 
 Thanks
 Vivek
