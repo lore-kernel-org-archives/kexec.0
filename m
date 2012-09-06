@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1T9SCW-0004r7-L0
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 02:52:18 +0000
-Message-ID: <50480EFD.5000100@redhat.com>
-Date: Thu, 06 Sep 2012 10:48:29 +0800
+ id 1T9SM3-0004vl-4b
+ for kexec@lists.infradead.org; Thu, 06 Sep 2012 03:02:09 +0000
+Message-ID: <5048114F.4050108@redhat.com>
+Date: Thu, 06 Sep 2012 10:58:23 +0800
 From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
 References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <20120905074550.GA11575@verge.net.au>
-In-Reply-To: <20120905074550.GA11575@verge.net.au>
+ <20120905131852.GB19749@redhat.com>
+In-Reply-To: <20120905131852.GB19749@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,10 +23,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, vgoyal@redhat.com
+To: Vivek Goyal <vgoyal@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org
 
-On 09/05/2012 03:45 PM, Simon Horman wrote:
+On 09/05/2012 09:18 PM, Vivek Goyal wrote:
 
 > On Wed, Sep 05, 2012 at 01:44:45PM +0800, Dave Young wrote:
 >>
@@ -37,17 +37,6 @@ On 09/05/2012 03:45 PM, Simon Horman wrote:
 >> If there's no such file or read fail the function will just do nothing.
 >>
 >> Tested efi boot Fedora 17 on thinkpad T420.
-> 
-> Hi Dave,
-> 
-> conceptually I am fine with this patch.
-> However, I do have a few nits in relation to the string handling
-> as explained below.
-
-
-Thanks for review.
-
-> 
 >>
 >> Signed-off-by: Dave Young <dyoung@redhat.com>
 >> ---
@@ -71,99 +60,27 @@ Thanks for review.
 >> +/* Appends 'noefi acpi_rsdp=' commandline for efi boot crash dump */
 >> +static void cmdline_add_efi(char *cmdline)
 >> +{
->> +	int cmdlen, len, fd, ret, i = 0;
->> +	char str_efi[64], str_tmp[32];
->> +
->> +	memset(str_efi, 0x0, sizeof(str_efi));
->> +	memset(str_tmp, 0x0, sizeof(str_tmp));
->> +	snprintf(str_efi, 18, "%s", " noefi acpi_rsdp=");
 > 
-> strncpy() might be be easier on the eyes.
+> Hi Dave,
+> 
+> It might be better to break it down in two functions. One for each
+> command line parameter.
 
 
-Will switch to use strncpy
+Ok, will do
 
 > 
->> +
->> +	fd = open("/sys/firmware/efi/systab", O_RDONLY);
->> +	if (fd < 0)
->> +		return;
->> +
->> +	while(1) {
->> +		ret = read(fd, &str_tmp[i], 1);
->> +		if (ret <= 0)
->> +			goto out_close;
->> +		if (str_tmp[i] == '\n') {
->> +			str_tmp[i] = '\0';
->> +			break;
->> +		}
->> +		i++;
->> +	}
-> 
-> It seems to me that the above code may overflow str_tmp.
+> Also, what's the corelation of efi and acpi_rsdp. Is acpi_rsdp required
+> only on EFI boot or in general it is required? If it is required in 
+> general, why kdump works currently.
 
 
-Oops, will fix
+Hi, here is the background of this issue:
+http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
 
 > 
-> Also, I wonder if read(fd, str_tmp, sizeof str_tmp) might make
-> things a bit easier over all.
-
-
-This is fine to me as well. Just also need to end with '\n'
-
-As Khalid said in another reply, the ACPI20= might not be the first
-line. will resolve that issue as well.
-
-> 
-> Finally, I have a personal preference for "a + i" over "&a[i]".
-> Though I'm not going to get excited about it.
-
-
-Both are fine to me, will convert.
-
-> 
->> +
->> +	if (!(strncmp(str_tmp, "ACPI20=", 7)))
->> +		strcat(str_efi, &str_tmp[7]);
->> +	else if (!(strncmp(str_tmp, "ACPI=", 5)))
->> +		strcat(str_efi, &str_tmp[5]);
->> +	else
->> +		goto out_close;
-> 
-> I wonder if strncat() would be better above, though I don't think
-> an overflow can actually occur if str_tmp is null-terminated.
-
-
-Will do
-
-> 
->> +
->> +	len = strlen(str_efi);
->> +	cmdlen = strlen(cmdline) + len;
->> +	if (cmdlen > (COMMAND_LINE_SIZE - 1))
->> +		die("Command line overflow\n");
->> +	strcat(cmdline, str_efi);
->> +
->> +	dbgprintf("Command line after adding efi\n");
->> +	dbgprintf("%s\n", cmdline);
->> +
->> +out_close:
->> +	close(fd);
->> +}
->> +
->>  static void get_backup_area(unsigned long *start, unsigned long *end)
->>  {
->>  	const char *iomem = proc_iomem();
->> @@ -830,6 +876,7 @@ int load_crashdump_segments(struct kexec
->>  	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
->>  		return -1;
->>  	cmdline_add_memmap(mod_cmdline, memmap_p);
->> +	cmdline_add_efi(mod_cmdline);
->>  	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
->>  
->>  	/* Inform second kernel about the presence of ACPI tables. */
->>
+> Thanks
+> Vivek
 > 
 > _______________________________________________
 > kexec mailing list
