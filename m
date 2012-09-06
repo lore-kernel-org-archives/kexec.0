@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from cantor2.suse.de ([195.135.220.15] helo=mx2.suse.de)
+Received: from g4t0015.houston.hp.com ([15.201.24.18])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T9eMF-00009G-Fz
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 15:51:09 +0000
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH] makedumpfile: keep dumpfile pages in a cache
-Date: Thu, 6 Sep 2012 17:50:52 +0200
-References: <201208281949.50286.ptesarik@suse.cz>
- <20120903124233.61eafa52ffaed6a38a23710d@mxc.nes.nec.co.jp>
- <201209030904.03661.ptesarik@suse.cz>
-In-Reply-To: <201209030904.03661.ptesarik@suse.cz>
+ id 1T9gKg-0007YQ-Br
+ for kexec@lists.infradead.org; Thu, 06 Sep 2012 17:57:42 +0000
+Message-ID: <5048E40E.7040003@hp.com>
+Date: Thu, 06 Sep 2012 11:57:34 -0600
+From: Khalid Aziz <khalid.aziz@hp.com>
 MIME-Version: 1.0
-Message-Id: <201209061750.52702.ptesarik@suse.cz>
+Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
+ <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
+In-Reply-To: <504815EB.9000701@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,107 +19,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Dave Young <dyoung@redhat.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
 
-RG5lIFBvIDMuIHrDocWZw60gMjAxMiAwOTowNDowMyBQZXRyIFRlc2FyaWsgbmFwc2FsKGEpOgo+
-IERuZSBQbyAzLiB6w6HFmcOtIDIwMTIgMDU6NDI6MzMgQXRzdXNoaSBLdW1hZ2FpIG5hcHNhbChh
-KToKPiA+IEhlbGxvIFBldHIsCj4gPiAKPiA+IE9uIFR1ZSwgMjggQXVnIDIwMTIgMTk6NDk6NDkg
-KzAyMDAKPiA+IAo+ID4gUGV0ciBUZXNhcmlrIDxwdGVzYXJpa0BzdXNlLmN6PiB3cm90ZToKPiA+
-ID4gQWRkIGEgc2ltcGxlIGNhY2hlIGZvciBwYWdlcyByZWFkIGZyb20gdGhlIGR1bXBmaWxlLgo+
-ID4gPiAKPiA+ID4gVGhpcyBpcyBhIGJpZyB3aW4gaWYgd2UgcmVhZCBjb25zZWN1dGl2ZSBkYXRh
-IGZyb20gb25lIHBhZ2UsIGUuZy4KPiA+ID4gcGFnZSBkZXNjcmlwdG9ycywgb3IgZXZlbiBwYWdl
-IHRhYmxlIGVudHJpZXMuCj4gPiA+IAo+ID4gPiBOb3RlIHRoYXQgbWFrZWR1bXBmaWxlIG5vdyBh
-bHdheXMgcmVhZHMgYSBjb21wbGV0ZSBwYWdlLiBUaGlzIHdhcwo+ID4gPiBhbHJlYWR5IHRoZSBj
-YXNlIHdpdGgga2R1bXAtY29tcHJlc3NlZCBhbmQgc2FkdW1wIGZvcm1hdHMsIGJ1dAo+ID4gPiBt
-YWtlZHVtcGZpbGUgd2FzIHRocm93aW5nIG1vc3Qgb2YgdGhlIGRhdGEgYXdheS4gRm9yIHRoZQo+
-ID4gPiBrZHVtcC1jb21wcmVzc2VkIGNhc2UsIHdlIG1heSBhY3R1YWxseSBzYXZlIGEgbG90IG9m
-IGRlY29tcHJlc3Npb24sCj4gPiA+IHRvby4KPiA+ID4gCj4gPiA+IEkgdHJpZWQgdG8ga2VlcCB0
-aGUgY2FjaGUgc21hbGwgdG8gbWluaW1pemUgbWVtb3J5IGZvb3RwcmludCwgYnV0IGl0Cj4gPiA+
-IHNob3VsZCBiZSBiaWcgZW5vdWdoIHRvIGhvbGQgYWxsIHBhZ2VzIHRvIGRvIDQtbGV2ZWwgcGFn
-aW5nIHBsdXMgc29tZQo+ID4gPiBkYXRhLiBUaGlzIGlzIG5lZWRlZCBlLmcuIGZvciB2bWFsbG9j
-IGFyZWFzIG9yIFhlbiBwYWdlIGZyYW1lIHRhYmxlCj4gPiA+IGRhdGEsIHdoaWNoIGFyZSBub3Qg
-Y29udGlndW91cyBpbiBwaHlzaWNhbCBtZW1vcnkuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY3o+Cj4gPiAKPiA+IEl0J3MgaW50ZXJlc3Rp
-bmcgdG8gbWUuIEkgd2FudCB0byBrbm93IGhvdyBwZXJmb3JtYW5jZSB3aWxsIGJlIGltcHJvdmVk
-Cj4gPiB3aXRoIHRoaXMgcGF0Y2gsIHNvIGRvIHlvdSBoYXZlIHNwZWVkIG1lYXN1cmVtZW50cyA/
-Cj4gCj4gTm90IHJlYWxseS4gSSBvbmx5IG1lYXN1cmVkIHRoZSBoaXQvbWlzcyByYXRpbywgYW5k
-IHdpdGggZmlsdGVyaW5nIFhlbiBkb21VCj4gYW5kIGR1bXAgbGV2ZWwgMCwgSSBnb3QgdGhlIGZv
-bGxvd2luZyBvbiBhIHNtYWxsIHN5c3RlbSAoMkcgUkFNKToKPiAKPiBjYWNoZSBoaXQ6IDE4MTg4
-ODAgIGNhY2hlIG1pc3M6IDE4NzMKPiAKPiBUaGUgaW1wcm92ZW1lbnQgaXNuJ3QgbXVjaCBmb3Ig
-bm9uLVhlbiBjYXNlLCBiZWNhdXNlIHRoZSBoaXRzIGFyZSBtb3N0bHkKPiBkdWUgdG8gdmlydHVh
-bC10by1waHlzaWNhbCB0cmFuc2xhdGlvbnMsIGFuZCBtb3N0IG9mIExpbnV4IGRhdGEgaXMgc3Rv
-cmVkCj4gYXQgdmlydHVhbCBhZGRyZXNzZXMgdGhhdCBjYW4gYmUgcmVzb2x2ZWQgYnkgYWRkaW5n
-L3N1YnRyYWN0aW5nIGEgZml4ZWQKPiBvZmZzZXQuCj4gCj4gT2YgY291cnNlLCB5b3Ugd2lsbCBh
-bHNvIHdpbiBvbmx5IHRoZSBzeXNjYWxsIG92ZXJoZWFkLCBiZWNhdXNlIExpbnV4IGtlZXBzCj4g
-dGhlIGRhdGEgaW4gdGhlIGtlcm5lbCBwYWdlY2FjaGUgYW55d2F5LiBJJ2xsIG1lYXN1cmUgdGhl
-IHRpbWVzIGZvciB5b3Ugb24KPiBhIHJlYXNvbmFibHkgbGFyZ2Ugc3lzdGVtICh+MjU2RykgYW5k
-IHNlbmQgdGhlIHJlc3VsdHMgaGVyZS4KCkkgY291bGRuJ3QgZ2V0IGEgbWVkaXVtLXNpemVkIHN5
-c3RlbSBmb3IgdGVzdGluZywgc28gSSBwZXJmb3JtZWQgc29tZSAKbWVhc3VyZW1lbnRzIG9uIGEg
-NjRHIHN5c3RlbS4gSSByYW4gbWFrZWR1bXBmaWxlIHJlcGVhdGVkbHkgZnJvbSB0aGUga2R1bXAg
-CmVudmlyb25tZW50LiBGaXJzdCBydW4gd2FzIHVzZWQgdG8gY2FjaGUgdGFyZ2V0IGZpbGVzeXN0
-ZW0gbWV0YWRhdGEsIGFuZCB0aGUgCmNhY2hlIHdhcyBub3QgZHJvcHBlZCBiZXR3ZWVuIHJ1bnMg
-dG8gbWluaW1pemUgZWZmZWN0cyBvZiB0aGUgdGFyZ2V0IApmaWxlc3lzdGVtLiBJIHJhbiBpdCBh
-Z2FpbnN0IC9wcm9jL3ZtY29yZSwgaS5lLiB0aGUgaW5wdXQgZmlsZSB3YXMgYWx3YXlzIApyZXNp
-ZGVudCwgbm90aGluZyB0byBza2V3IHRoZSByZXN1bHRzLgoKSSB0cmllZCB3aXRoIGEga2R1bXAg
-ZmlsZSB3aXRoIG5vIGNvbXByZXNzaW9uICh0byBnZXQgZ3ppcC9MWk8gb3V0IG9mIHRoZSAKcGlj
-dHVyZSkgYW5kIGFuIEVMRiBmaWxlLiBGb3IgdGhlIFhlbiBjYXNlIEkgb25seSBkaWQgdGhlIEVM
-RiBmaWxlLCBiZWNhdXNlIAprZHVtcCBpcyBub3QgYXZhaWxhYmxlLgoKRmlyc3QgSSByYW4gaXQg
-b24gYmFyZSBtZXRhbC4gVGhlcmUgd2FzIGEgc2xpZ2h0IGltcHJvdmVtZW50IGZvciAtZDMxOgoK
-a2R1bXAgbm8gY2FjaGU6CjYuMzJ1c2VyIDU1LjIwc3lzdGVtIDE6MTUuNjBlbGFwc2VkIDgxJUNQ
-VSAoMGF2Z3RleHQrMGF2Z2RhdGEgCjQ4MDBtYXhyZXNpZGVudClrCjIwODBpbnB1dHMrNTcxNDI5
-Nm91dHB1dHMgKDJtYWpvciszNDJtaW5vcilwYWdlZmF1bHRzIDBzd2FwcwoKa2R1bXAgd2l0aCBj
-YWNoZToKNi4wMnVzZXIgMjQuNThzeXN0ZW0gMDo0Ni41MWVsYXBzZWQgNjUlQ1BVICgwYXZndGV4
-dCswYXZnZGF0YSAKNDkxMm1heHJlc2lkZW50KWsKMTg2NGlucHV0cys1NzE0Mjg4b3V0cHV0cyAo
-Mm1ham9yKzM1MG1pbm9yKXBhZ2VmYXVsdHMgMHN3YXBzCgpFTEYgbm8gY2FjaGU6CjcuNTh1c2Vy
-IDc0LjI1c3lzdGVtIDE6NTkuNTJlbGFwc2VkIDY4JUNQVSAoMGF2Z3RleHQrMGF2Z2RhdGEgCjQ4
-MDBtYXhyZXNpZGVudClrCjcyOGlucHV0cys5Mjg4ODI0b3V0cHV0cyAoMW1ham9yKzM0Mm1pbm9y
-KXBhZ2VmYXVsdHMgMHN3YXBzCgpFTEYgd2l0aCBjYWNoZToKNy40M3VzZXIgNDQuMjFzeXN0ZW0g
-MToxNy40MWVsYXBzZWQgNjYlQ1BVICgwYXZndGV4dCswYXZnZGF0YSAKNDg5Nm1heHJlc2lkZW50
-KWsKNzI4aW5wdXRzKzkyODg3OTJvdXRwdXRzICgxbWFqb3IrMzQ5bWlub3IpcGFnZWZhdWx0cyAw
-c3dhcHMKClRvIHN1bSBpdCB1cCwgSSBjYW4gc2VlIGFuIGltcHJvdmVtZW50IG9mIGFwcHJveC4g
-NTAlIGluIHN5c3RlbSB0aW1lLiBUaGUgCmluY3JlYXNlIGluIG1lbW9yeSBjb25zdW1wdGlvbiBp
-cyBhIGJpdCBtb3JlIHRoYW4gSSB3b3VsZCBleHBlY3QgKHdoeSBkbyBJIHNlZSAKfjEwMGsgZm9y
-IGEgY2FjaGUgb2YgMTJrPyksIGJ1dCBhY2NlcHRhYmxlIG5ldmVydGhlbGVzcy4gSSBjYW4gc2Vl
-IGEgc2xpZ2h0IAppbmNyZWFzZSBpbiB1c2VyIHRpbWUgKGFwcHJveC4gMjUlKSBmb3IgdGhlIGtk
-dW1wIGNhc2UsIHdoaWNoIGNvdWxkIGJlIAphdHRyaWJ1dGVkIHRvIHRoZSBjYWNoZSBvdmVyaGVh
-ZC4gSSBkb24ndCBoYXZlIGFueSBleHBsYW5hdGlvbiBmb3IgdGhlIApkZWNyZWFzZWQgdXNlciB0
-aW1lIGZvciB0aGUgRUxGIGNhc2UsIGJ1dCBpdCdzIGNvbnNpc3RlbnQuCgpJIGFsc28gdHJpZWQg
-cnVubmluZyBtYWtlZHVtcGZpbGUgd2l0aCAtZDEuIFRoaXMgcmVzdWx0cyBpbiBsb25nIHNlcXVl
-bnRpYWwgCnJlYWRzLCBzbyBpdCdzIHRoZSB3b3JzdCBjYXNlIGZvciBhIHNpbXBsZSBMUlUtcG9s
-aWN5IGNhY2hlLiBUaGUgcmVzdWx0cyBhcmUgCnRvbyB1bnN0YWJsZSB0byBtYWtlIGEgcmVsaWFi
-bGUgbWVhc3VyZW1lbnQsIGJ1dCB0aGVyZSBzZWVtcyB0byBiZSBhIHNsaWdodCAKcGVyZm9ybWFu
-Y2UgaGl0LiBJdCBpcyBjZXJ0YWlubHkgbGVzcyB0aGFuIDUlIHRvdGFsIHRpbWUuCgpJIHRoaW5r
-IHRoZXJlIGFyZSB0d28gcmVhc29ucyBmb3IgdGhhdDoKCjEuIFdlJ3JlIGNvcHlpbmcgZmlsZSBk
-YXRhIHR3aWNlIGZvciBlYWNoIHBhZ2UgKG9uY2UgZnJvbSB0aGUga2VybmVsIHBhZ2UgCmNhY2hl
-IHRvIHRoZSBwcm9jZXNzIHNwYWNlLCBhbmQgb25jZSBmcm9tIHRoZSBpbnRlcm5hbCBjYWNoZSB0
-byB0aGUgCmRlc3RpbmF0aW9uKS4KMi4gSW5zdGVhZCBvZiByZXVzaW5nIHRoZSBzYW1lIGRhdGEg
-bG9jYXRpb24sIHdlJ3JlIHJvdGF0aW5nIDggZGlmZmVyZW50IHBhZ2VzIAoob3IgZXZlbiB1cCB0
-byB0d2ljZSBhcyBtdWNoIGlmIHRoZSBhbGxvY2F0ZWQgc3BhY2UgaXMgbmVpdGhlciBjb250aW51
-b3VzICBub3IgCnBhZ2UtYWxpZ25lZCkuIFRoaXMgc3RyZXNzZXMgYm90aCBmb3IgdGhlIENQVSdz
-IEwxIGQtY2FjaGUgYW5kIHRoZSBUTEIgYSB0aW55IApiaXQgbW9yZS4gTm90ZSB0aGF0IGluIHRo
-ZSAvcHJvYy92bWNvcmUgY2FzZSwgdGhlIGtlcm5lbCBzZXF1ZW50aWFsbHkgbWFwcyBhbGwgCnBo
-eXNpY2FsIG1lbW9yeSBvZiB0aGUgY3Jhc2hlZCBzeXN0ZW0sIHNvIGV2ZXJ5IGNhY2hlIHBhZ2Ug
-bWF5IGJlIGV2aWN0ZWQgCmJlZm9yZSB3ZSBnZXQgdG8gdXNpbmcgaXQgYWdhaW4uIFRoaXMgY291
-bGQgZXhwbGFpbiB3aHkgSSBvYnNlcnZlIGFuIGluY3JlYXNlIAppbiBzeXN0ZW0gdGltZSBkZXNw
-aXRlIG1ha2luZyBsZXNzIHN5c3RlbSBjYWxscy4KClRoZXJlJ3MgYSBsb3Qgb2YgdGhpbmdzIEkg
-Y291bGQgZG8gdG8gcmVnYWluIHRoZSBvbGQgcGVyZm9ybWFuY2UsIGlmIGFueWJvZHkgCmlzIGNv
-bmNlcm5lZCBhYm91dCB0aGUgc2xpZ2h0IHBlcmZvcm1hbmNlIHJlZ3Jlc3Npb24gZm9yIHRoaXMg
-d29yc3QgY2FzZS4gSnVzdCAKbGV0IG1lIGtub3cuCgpTZWNvbmQsIEkgcmFuIHdpdGggdGhlIFhl
-biBoeXBlcnZpc29yLiBTaW5jZSBkdW1wIGxldmVscyBncmVhdGVyIHRoYW4gMSBkb24ndCAKd29y
-aywgSSByYW4gd2l0aCAnLUUgLVggLWQxJy4gRXZlbiB0aG91Z2ggdGhpcyBpbmNsdWRlcyB0aGUg
-aW5lZmZpY2llbnQgcGFnZSAKd2FsayBkZXNjcmliZWQgYWJvdmUsIHRoZSBpbXByb3ZlbWVudCB3
-YXMgaW1tZW5zZS4KCm5vIGNhY2hlOgo5NS4zM3VzZXIgNjU3LjE4c3lzdGVtIDEzOjA4LjQwZWxh
-cHNlZCA5NSVDUFUgKDBhdmd0ZXh0KzBhdmdkYXRhIAo1NDQwbWF4cmVzaWRlbnQpawo3MDRpbnB1
-dHMrNjU2Mzg1Nm91dHB1dHMgKDFtYWpvciszODhtaW5vcilwYWdlZmF1bHRzIDBzd2FwcwoKd2l0
-aCBjYWNoZToKNjEuMTR1c2VyIDExMC4xNXN5c3RlbSAzOjI0LjI0ZWxhcHNlZCA4MyVDUFUgKDBh
-dmd0ZXh0KzBhdmdkYXRhIAo1NTg0bWF4cmVzaWRlbnQpawoyMzYwaW5wdXRzKzY1NjM4NzJvdXRw
-dXRzICgybWFqb3IrMzk2bWlub3IpcGFnZWZhdWx0cyAwc3dhcHMKCkluIHNob3J0LCBhbG1vc3Qg
-ODAlIHNob3J0ZXIgdG90YWwgdGltZS4KClBldHIgVGVzYXJpawpTVVNFIExpbnV4CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 09/05/2012 09:18 PM, Dave Young wrote:
+>
+>> I think running a kexec/kdump kernel with "noefi" is not a good idea.
+>> Today kernel makes very little use of UEFI run time services but this
+>> might change shortly. I have already seen ideas being proposed to use
+>> UEFI variables to store kernel panic information which would require
+>> accessing UEFI runtime services. If the kdump kernel runs into a panic,
+>> it would be good to be able to use UEFI variables to store some sort of
+>> tombstone. We might also start using UEFI runtime clock services one of
+>> these days especially now that all PCs soon will have UEFI due to
+>> Windows 8 requirements. There might be other ways to deal with EFI
+>> virtualization issue. I have solved it on a custom ia64 kernel by
+>> passing the kexec'd kernel a "kexec_reboot" on command line, although I
+>> wouldn't recommend that approach as a general approach. Creating a new
+>> kernel command line parameter just to tell the kernel to not virtualize
+>> EFI sounds excessive. May be we can come up with a different way to tell
+>> a kexec/kdump kernel to not virtualize EFI, like create a new signature,
+>> for example "EL32_KEXEC" and "EL64_KEXEC", for
+>> boot_params.efi_info.efi_loader_signature which tells the kexec/kdump
+>> kernel to enable EFI but skip the step of virtualizing it. More work
+>> will be needed to make this work, for example pass the EFI runtime
+>> service memory map from one kernel to the next so we keep it mapped in
+>> exact same spot, and other similar mapping issues.
+>>
+>
+> I'm not so familiar with uefi detail, is the virtualization issue mean
+> "virtual mode" of efi?  From my understanding for kdump kernel I would
+> vote for not interacting with bios at all. We have use "noefi" for long
+> time by passing it to 2nd kernel while kexecing. I prefer to do this way
+> until we have to switch to other approach.
+>
+Yes, that is what I mean by virtualizing issue. Using "noefi" for kdump 
+kernel will keep it from using any runtime EFI services. That could mean 
+kdump kernel may not be able to read clock or use EFI variables to store 
+a tombstone in case it runs into trouble. Is that acceptable?
+
+For the kexec'd kernel (not kdump kernel), being able to use runtime EFI 
+services will be essential as we move to EFI machines. We will have to 
+support enabling EFI on a kexec'd kernel. Does that sound reasonable?
+
+-- 
+Khalid
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
