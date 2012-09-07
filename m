@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ob0-f177.google.com ([209.85.214.177])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T9kDz-0003EU-0x
- for kexec@lists.infradead.org; Thu, 06 Sep 2012 22:07:00 +0000
-Received: by obbta17 with SMTP id ta17so3587686obb.36
- for <kexec@lists.infradead.org>; Thu, 06 Sep 2012 15:06:57 -0700 (PDT)
-Date: Thu, 6 Sep 2012 15:06:51 -0700
-From: Jerry Snitselaar <dev@snitselaar.org>
-Subject: Re: Getting the kexec on panic
-Message-ID: <20120906220651.GB1745@cantor.Home>
-References: <20120906094336.GJ1943@vicerveza.homeunix.net>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1T9uPw-0003XT-MF
+ for kexec@lists.infradead.org; Fri, 07 Sep 2012 09:00:02 +0000
+Message-ID: <5049B6AD.9000304@redhat.com>
+Date: Fri, 07 Sep 2012 16:56:13 +0800
+From: Dave Young <dyoung@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20120906094336.GJ1943@vicerveza.homeunix.net>
-Reply-To: Jerry Snitselaar <dev@snitselaar.org>
+Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
+ <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
+ <5048E40E.7040003@hp.com>
+In-Reply-To: <5048E40E.7040003@hp.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +20,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?iso-8859-1?Q?Llu=EDs?= Batlle i Rossell <viric@viric.name>
-Cc: kexec@lists.infradead.org
+To: Khalid Aziz <khalid.aziz@hp.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
 
-On Thu Sep 06 12, Llu=EDs Batlle i Rossell wrote:
-> Hello,
-> =
+On 09/07/2012 01:57 AM, Khalid Aziz wrote:
 
-> while I can load immediately a kernel using kexec, when I set it for pani=
-c and
-> crash with sysrq-c, the computer hangs.
-> =
+> On 09/05/2012 09:18 PM, Dave Young wrote:
+>>
+>>> I think running a kexec/kdump kernel with "noefi" is not a good idea.
+>>> Today kernel makes very little use of UEFI run time services but this
+>>> might change shortly. I have already seen ideas being proposed to use
+>>> UEFI variables to store kernel panic information which would require
+>>> accessing UEFI runtime services. If the kdump kernel runs into a panic,
+>>> it would be good to be able to use UEFI variables to store some sort of
+>>> tombstone. We might also start using UEFI runtime clock services one of
+>>> these days especially now that all PCs soon will have UEFI due to
+>>> Windows 8 requirements. There might be other ways to deal with EFI
+>>> virtualization issue. I have solved it on a custom ia64 kernel by
+>>> passing the kexec'd kernel a "kexec_reboot" on command line, although I
+>>> wouldn't recommend that approach as a general approach. Creating a new
+>>> kernel command line parameter just to tell the kernel to not virtualize
+>>> EFI sounds excessive. May be we can come up with a different way to tell
+>>> a kexec/kdump kernel to not virtualize EFI, like create a new signature,
+>>> for example "EL32_KEXEC" and "EL64_KEXEC", for
+>>> boot_params.efi_info.efi_loader_signature which tells the kexec/kdump
+>>> kernel to enable EFI but skip the step of virtualizing it. More work
+>>> will be needed to make this work, for example pass the EFI runtime
+>>> service memory map from one kernel to the next so we keep it mapped in
+>>> exact same spot, and other similar mapping issues.
+>>>
+>>
+>> I'm not so familiar with uefi detail, is the virtualization issue mean
+>> "virtual mode" of efi?  From my understanding for kdump kernel I would
+>> vote for not interacting with bios at all. We have use "noefi" for long
+>> time by passing it to 2nd kernel while kexecing. I prefer to do this way
+>> until we have to switch to other approach.
+>>
+> Yes, that is what I mean by virtualizing issue. Using "noefi" for kdump
+> kernel will keep it from using any runtime EFI services. That could mean
+> kdump kernel may not be able to read clock or use EFI variables to store
+> a tombstone in case it runs into trouble. Is that acceptable?
+> 
+> For the kexec'd kernel (not kdump kernel), being able to use runtime EFI
+> services will be essential as we move to EFI machines. We will have to
+> support enabling EFI on a kexec'd kernel. Does that sound reasonable?
+> 
 
-> I'm using the nvidia X driver; can it be that it stops the panic handling=
- from
-> working? I don't understand why it would work with normal kexec though, i=
-f it
-> were the case.
-> =
 
-> Regards,
-> Llu=EDs.
+It's probably needed, but currently relevant implementation  is not
+ready especially efi init code for kdump. We can address this once it's ok.
 
-Hi Lluis,
+I did some digging about the efi boot kdump in slackware with kernel
+from latest linus tree. I'm surprise that kdump works even without these
+"noefi" and "acpi_rsdp="
+
+With fedora 17 3.4.3 kernel passing "acpi_rsdp=" is enough for kdump
+kernel booting.
+
+Actually in x86 setup code if bootloader do not pass correct efi_info in
+boot_params efi_enabled will be set to 0 automaticlly.
+
+So as for this patch 'noefi' is not needed.
+
+I will do more testing to see why linus tree works without "acpi_rsdp="
 
 
-What kernel are you using? The commit 722bc6b "x86/mm: Fix the size calcula=
-tion of mapping tables" which started showing up in 3.5-rc1 causes problems=
- for the crash kernel. You might try this patchset[1] from Jacob Shin and s=
-ee if it resolves the problem for you if you are experiencing your problem =
-on a 3.5-rc1+ kernel.
-
-[1] https://lkml.org/lkml/2012/8/24/474
-
-Regards,
-Jerry
-
-> =
-
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+-- 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
