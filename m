@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0014.houston.hp.com ([15.201.24.17])
+Received: from g1t0029.austin.hp.com ([15.216.28.36])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TA0IO-0006NK-7x
- for kexec@lists.infradead.org; Fri, 07 Sep 2012 15:16:36 +0000
-Subject: Re: Problem with kexec on i386, linux-3.5
+ id 1TA5BC-0002z5-Lt
+ for kexec@lists.infradead.org; Fri, 07 Sep 2012 20:29:31 +0000
+Message-ID: <504A5927.2090605@hp.com>
+Date: Fri, 07 Sep 2012 14:29:27 -0600
 From: Khalid Aziz <khalid.aziz@hp.com>
-In-Reply-To: <502DEB9D.7010308@gmx.at>
-References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
- <502CEA93.7090808@gmx.at> <877gsy4p6h.fsf@xmission.com>
- <502DEB9D.7010308@gmx.at>
-Date: Fri, 07 Sep 2012 09:16:33 -0600
-Message-ID: <1347030993.20255.93.camel@lyra>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Subject: Re: Problem with kexec on i386, linux-3.5
+References: <500EE046.2000705@gmx.at>
+In-Reply-To: <500EE046.2000705@gmx.at>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,53 +18,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christian =?ISO-8859-1?Q?Schaubschl=E4ger?= <christian.schaubschlaeger@gmx.at>
-Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
+To: =?ISO-8859-1?Q?Christian_Schaubschl=E4ger?= <christian.schaubschlaeger@gmx.at>
+Cc: kexec@lists.infradead.org
 
-T24gRnJpLCAyMDEyLTA4LTE3IGF0IDA4OjU4ICswMjAwLCBDaHJpc3RpYW4gU2NoYXVic2NobMOk
-Z2VyIHdyb3RlOgo+ID4+IEkgYmlzdGN0ZWQgdGhhdCBkb3duIHRvIHRoaXMgcGF0Y2g6Cj4gPj4K
-PiA+PiBjb21taXQgYjU2NmEyMmMyMzMyN2YxOGNlOTQxZmZhZDBjYTkwN2U1MGE1M2Q0MQo+ID4+
-IEF1dGhvcjogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiA+PiBEYXRlOiAgIEZy
-aSBBcHIgMjcgMTM6MDA6MzMgMjAxMiAtMDYwMAo+ID4+Cj4gPj4gICAgIFBDSTogZGlzYWJsZSBC
-dXMgTWFzdGVyIG9uIFBDSSBkZXZpY2Ugc2h1dGRvd24KPiA+PiAgICAKPiA+PiAgICAgRGlzYWJs
-ZSBCdXMgTWFzdGVyIGJpdCBvbiB0aGUgZGV2aWNlIGluIHBjaV9kZXZpY2Vfc2h1dGRvd24oKSB0
-byBlbnN1cmUgUENJCj4gPj4gICAgIGRldmljZXMgZG8gbm90IGNvbnRpbnVlIHRvIERNQSBkYXRh
-IGFmdGVyIHNodXRkb3duLiAgVGhpcyBjYW4gY2F1c2UgbWVtb3J5Cj4gPj4gICAgIGNvcnJ1cHRp
-b24gaW4gY2FzZSBvZiBhIGtleGVjIHdoZXJlIHRoZSBjdXJyZW50IGtlcm5lbCBzaHV0cyBkb3du
-IGFuZAo+ID4+ICAgICB0cmFuc2ZlcnMgY29udHJvbCB0byBhIG5ldyBrZXJuZWwgd2hpbGUgYSBQ
-Q0kgZGV2aWNlIGNvbnRpbnVlcyB0byBETUEgdG8KPiA+PiAgICAgbWVtb3J5IHRoYXQgZG9lcyBu
-b3QgYmVsb25nIHRvIGl0IGFueSBtb3JlIGluIHRoZSBuZXcga2VybmVsLgo+ID4+ICAgIAo+ID4+
-ICAgICBJIGhhdmUgdGVzdGVkIHRoaXMgY29kZSBvbiB0d28gbGFwdG9wcywgdHdvIHdvcmtzdGF0
-aW9ucyBhbmQgYSAxNi1zb2NrZXQKPiA+PiAgICAgc2VydmVyLiAga2V4ZWMgd29ya2VkIGNvcnJl
-Y3RseSBvbiBhbGwgb2YgdGhlbS4KPiA+PiAgICAKPiA+PiAgICAgU2lnbmVkLW9mZi1ieTogS2hh
-bGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiA+PiAgICAgU2lnbmVkLW9mZi1ieTogQmpv
-cm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPiA+Pgo+ID4+Cj4gPj4gV2l0aG91dCB0
-aGlzIHBhdGNoLCBpbnQxMyB3b3JrcyBmaW5lIGhlcmUhIElmIGFueW9uZSBuZWVkcyBtb3JlCj4g
-Pj4gaW5mb3JtYXRpb24sIGp1c3QgbGV0IG1lIGtub3chCj4gPiBXaGljaCBsZWFkcyB0byBhbiBp
-bnRlcmVzdGluZyBjb251bmRydW0uCj4gPgo+ID4ga2V4ZWMgYXBwZWFycyB0byBiZSBtb3JlIHJl
-bGlhYmxlIGZvciBib290aW5nIGFub3RoZXIga2VybmVsIHdpdGggdGhpcwo+ID4gcGF0Y2ggYXBw
-bGllZC4gIFRoaXMgcGF0Y2ggZG9lcyBraWxsIHRoZSBlbnRpZXIgdXNlIGNhc2Ugb2YgbWFraW5n
-IEJJT1MKPiA+IGNhbGxzLCBhbmQgSSBzdXNwZWN0IGl0IGFsc28gZG9lcyBuYXN0eSB0aGluZ3Mg
-dG8gYWxwaGEgYm9vdGxvYWRlcnMuCj4gPgo+ID4gTXkgZ3V0IGZlZWwgaXMgdGhhdCB0aGUgdHJh
-bXBvbGluZSBjb2RlIHNob3VsZCByZWVuYWJsZSBidXMgbWFzdGVyaW5nCj4gPiBvbiB0aGUgZGV2
-aWNlcyB0aGF0IGxpZSBiZWhpbmQgaW50MTMsIGJ1dCBJIGRvbid0IGtub3cgaG93IHByYWN0aWNh
-bAo+ID4gdGhhdCBzdWdnZXN0aW9uIGlzIGluIHJlYWxpdHkuCj4gCj4gT25lIGNvdWxkIG1ha2Ug
-dGhpcyBwYXRjaCBvcHRpb25hbC4uLiBlLmcuIGxldCBrZXhlYyB0ZWxsIHRoZSBydW5uaW5nIGtl
-cm5lbCB3aGV0aGVyIG9yIG5vdCB0byBkaXNhYmxlIGJ1cyBtYXN0ZXJpbmcgYmVmb3JlIGJvb3Rp
-bmcgdGhlIG5ldyBvbmUgKHNvbWV0aGluZyBsaWtlICdrZXhlYyAtLWRpc2FibGUtYnVzLW1hc3Rl
-cmluZyAtbCAvYm9vdC9uZXdfa2VybmVsLmJpbicpLiBEb24ndCBrbm93IGlmIHRoaXMgd291bGQg
-YmUgcHJhY3RpY2FibGUuLi4KPiAKPiBDaHJpc3RpYW4KPiAKClNvcnJ5LCBJIGhhdmUgYmVlbiBv
-biB2YWNhdGlvbiBhbmQgaGFkbid0IGJlZW4gd2F0Y2hpbmcgbWFpbGluZyBsaXN0LiBJCndvdWxk
-IG5vdCB3YW50IHRvIG1ha2UgdGhpcyBwYXRjaCBvcHRpb25hbC4gSXQgd2lsbCBiZSBkaWZmaWN1
-bHQgZm9yCm1vc3QgZW5kIHVzZXJzIHRvIHRlbGwgaWYgdGhleSBzaG91bGQga2V4ZWMgd2l0aCB0
-aGlzIGVuYWJsZWQgb3Igbm90LiBJCndvdWxkIHJhdGhlciBmaXggaXNzdWVzIGNhdXNlZCBieSB0
-aGlzIHBhdGNoLgoKSSB3aWxsIHNwZW5kIHNvbWUgdGltZSB1bmRlcnN0YW5kaW5nIHRoZSBwcm9i
-bGVtIHlvdSBhcmUgc2VlaW5nIGFuZCBnZXQKYmFjayB0byB5b3UuCgpUaGFua3MKLS0gCktoYWxp
-ZCBBeml6IDxraGFsaWQuYXppekBocC5jb20+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
-Ywo=
+On 07/24/2012 11:49 AM, Christian Schaubschl=E4ger wrote:
+> Hello list,
+>
+> I'm not sure if this is the correct place to post this; if it's not, =
+
+> I'd like to apologize.
+>
+> Here's a short description of my problem:
+>
+> I have a tiny protected-/real mode program, which I start using kexec =
+
+> (kexec-tools 2.0.3 released 05 April 2012). At some point this program =
+
+> makes a call to extended-int13 to read data from the disk. Now =
+
+> starting with linux-3.5-rc1 (and at least up to linux-3.5) this =
+
+> extended int13 call does not work any more. Apparently the call =
+
+> returns with error code 0x80, which means "timeout (not ready)".
+>
+> I have two machines here, both with Intel chipsets (one CougarPoint, =
+
+> one older ICH7-M), and I see the same behaviour on both machines.
+>
+> When I use older kernels (starting from 2.6.something up to 3.4.6), =
+
+> everything works fine.
+>
+> Now I'm not sure if this is a kernel issue, or a kexec issue, or a =
+
+> mistake by myself. Maybe someone has a hint for me...
+>
+> If required, of course, I can provide more detailed information about =
+
+> my hardware, kernel config, etc. (since I'm not sure if this is the =
+
+> correct place, I wanted to keep this message short for now).
+>
+
+Hello Christian,
+
+Are you not loading the driver for your disk drive controller when the =
+
+new kernel boots up, even though you are not using the driver for disk =
+
+I/O? If yes, the driver should have re-enabled Bus Master bit in its =
+
+init routine. If you are loading the driver, which driver is it? I can =
+
+take a look at it and see if there is anything missing in the =
+
+initialization routine. Can you also include output from "lspci -v" from =
+
+your machine?
+
+Thanks
+-- =
+
+Khalid
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
