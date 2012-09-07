@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0015.houston.hp.com ([15.201.24.18])
+Received: from g4t0014.houston.hp.com ([15.201.24.17])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1T9zgP-0003zH-Oa
- for kexec@lists.infradead.org; Fri, 07 Sep 2012 14:37:22 +0000
-Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+ id 1TA0IO-0006NK-7x
+ for kexec@lists.infradead.org; Fri, 07 Sep 2012 15:16:36 +0000
+Subject: Re: Problem with kexec on i386, linux-3.5
 From: Khalid Aziz <khalid.aziz@hp.com>
-In-Reply-To: <5049B6AD.9000304@redhat.com>
-References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
- <5048E40E.7040003@hp.com>  <5049B6AD.9000304@redhat.com>
-Date: Fri, 07 Sep 2012 08:37:14 -0600
-Message-ID: <1347028634.20255.79.camel@lyra>
+In-Reply-To: <502DEB9D.7010308@gmx.at>
+References: <500EE046.2000705@gmx.at> <87sjbqjgi8.fsf@xmission.com>
+ <502CEA93.7090808@gmx.at> <877gsy4p6h.fsf@xmission.com>
+ <502DEB9D.7010308@gmx.at>
+Date: Fri, 07 Sep 2012 09:16:33 -0600
+Message-ID: <1347030993.20255.93.camel@lyra>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,41 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
+To: Christian =?ISO-8859-1?Q?Schaubschl=E4ger?= <christian.schaubschlaeger@gmx.at>
+Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Fri, 2012-09-07 at 16:56 +0800, Dave Young wrote:
-> Actually in x86 setup code if bootloader do not pass correct efi_info in
-> boot_params efi_enabled will be set to 0 automaticlly.
-> 
-
-When we kexec a kernel, the EFI signature is missing in the bootloader
-signature in boot_params, so kexec'd kernels currently disable EFI
-automatically even without noefi in this code:
-
-arch/x86/kernel/setup.c:
-
-733         if (!strncmp((char *)&boot_params.efi_info.efi_loader_signature,
-734                      "EL32", 4)) {
-735                 efi_enabled = 1;
-736                 efi_64bit = false;
-737         } else if (!strncmp((char *)&boot_params.efi_info.efi_loader_signatu     re,             
-738                      "EL64", 4)) {
-739                 efi_enabled = 1;
-740                 efi_64bit = true;
-741         }
-
-efi_enabled is initialized to 0.
-
--- 
-Khalid Aziz <khalid.aziz@hp.com>
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDEyLTA4LTE3IGF0IDA4OjU4ICswMjAwLCBDaHJpc3RpYW4gU2NoYXVic2NobMOk
+Z2VyIHdyb3RlOgo+ID4+IEkgYmlzdGN0ZWQgdGhhdCBkb3duIHRvIHRoaXMgcGF0Y2g6Cj4gPj4K
+PiA+PiBjb21taXQgYjU2NmEyMmMyMzMyN2YxOGNlOTQxZmZhZDBjYTkwN2U1MGE1M2Q0MQo+ID4+
+IEF1dGhvcjogS2hhbGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiA+PiBEYXRlOiAgIEZy
+aSBBcHIgMjcgMTM6MDA6MzMgMjAxMiAtMDYwMAo+ID4+Cj4gPj4gICAgIFBDSTogZGlzYWJsZSBC
+dXMgTWFzdGVyIG9uIFBDSSBkZXZpY2Ugc2h1dGRvd24KPiA+PiAgICAKPiA+PiAgICAgRGlzYWJs
+ZSBCdXMgTWFzdGVyIGJpdCBvbiB0aGUgZGV2aWNlIGluIHBjaV9kZXZpY2Vfc2h1dGRvd24oKSB0
+byBlbnN1cmUgUENJCj4gPj4gICAgIGRldmljZXMgZG8gbm90IGNvbnRpbnVlIHRvIERNQSBkYXRh
+IGFmdGVyIHNodXRkb3duLiAgVGhpcyBjYW4gY2F1c2UgbWVtb3J5Cj4gPj4gICAgIGNvcnJ1cHRp
+b24gaW4gY2FzZSBvZiBhIGtleGVjIHdoZXJlIHRoZSBjdXJyZW50IGtlcm5lbCBzaHV0cyBkb3du
+IGFuZAo+ID4+ICAgICB0cmFuc2ZlcnMgY29udHJvbCB0byBhIG5ldyBrZXJuZWwgd2hpbGUgYSBQ
+Q0kgZGV2aWNlIGNvbnRpbnVlcyB0byBETUEgdG8KPiA+PiAgICAgbWVtb3J5IHRoYXQgZG9lcyBu
+b3QgYmVsb25nIHRvIGl0IGFueSBtb3JlIGluIHRoZSBuZXcga2VybmVsLgo+ID4+ICAgIAo+ID4+
+ICAgICBJIGhhdmUgdGVzdGVkIHRoaXMgY29kZSBvbiB0d28gbGFwdG9wcywgdHdvIHdvcmtzdGF0
+aW9ucyBhbmQgYSAxNi1zb2NrZXQKPiA+PiAgICAgc2VydmVyLiAga2V4ZWMgd29ya2VkIGNvcnJl
+Y3RseSBvbiBhbGwgb2YgdGhlbS4KPiA+PiAgICAKPiA+PiAgICAgU2lnbmVkLW9mZi1ieTogS2hh
+bGlkIEF6aXogPGtoYWxpZC5heml6QGhwLmNvbT4KPiA+PiAgICAgU2lnbmVkLW9mZi1ieTogQmpv
+cm4gSGVsZ2FhcyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT4KPiA+Pgo+ID4+Cj4gPj4gV2l0aG91dCB0
+aGlzIHBhdGNoLCBpbnQxMyB3b3JrcyBmaW5lIGhlcmUhIElmIGFueW9uZSBuZWVkcyBtb3JlCj4g
+Pj4gaW5mb3JtYXRpb24sIGp1c3QgbGV0IG1lIGtub3chCj4gPiBXaGljaCBsZWFkcyB0byBhbiBp
+bnRlcmVzdGluZyBjb251bmRydW0uCj4gPgo+ID4ga2V4ZWMgYXBwZWFycyB0byBiZSBtb3JlIHJl
+bGlhYmxlIGZvciBib290aW5nIGFub3RoZXIga2VybmVsIHdpdGggdGhpcwo+ID4gcGF0Y2ggYXBw
+bGllZC4gIFRoaXMgcGF0Y2ggZG9lcyBraWxsIHRoZSBlbnRpZXIgdXNlIGNhc2Ugb2YgbWFraW5n
+IEJJT1MKPiA+IGNhbGxzLCBhbmQgSSBzdXNwZWN0IGl0IGFsc28gZG9lcyBuYXN0eSB0aGluZ3Mg
+dG8gYWxwaGEgYm9vdGxvYWRlcnMuCj4gPgo+ID4gTXkgZ3V0IGZlZWwgaXMgdGhhdCB0aGUgdHJh
+bXBvbGluZSBjb2RlIHNob3VsZCByZWVuYWJsZSBidXMgbWFzdGVyaW5nCj4gPiBvbiB0aGUgZGV2
+aWNlcyB0aGF0IGxpZSBiZWhpbmQgaW50MTMsIGJ1dCBJIGRvbid0IGtub3cgaG93IHByYWN0aWNh
+bAo+ID4gdGhhdCBzdWdnZXN0aW9uIGlzIGluIHJlYWxpdHkuCj4gCj4gT25lIGNvdWxkIG1ha2Ug
+dGhpcyBwYXRjaCBvcHRpb25hbC4uLiBlLmcuIGxldCBrZXhlYyB0ZWxsIHRoZSBydW5uaW5nIGtl
+cm5lbCB3aGV0aGVyIG9yIG5vdCB0byBkaXNhYmxlIGJ1cyBtYXN0ZXJpbmcgYmVmb3JlIGJvb3Rp
+bmcgdGhlIG5ldyBvbmUgKHNvbWV0aGluZyBsaWtlICdrZXhlYyAtLWRpc2FibGUtYnVzLW1hc3Rl
+cmluZyAtbCAvYm9vdC9uZXdfa2VybmVsLmJpbicpLiBEb24ndCBrbm93IGlmIHRoaXMgd291bGQg
+YmUgcHJhY3RpY2FibGUuLi4KPiAKPiBDaHJpc3RpYW4KPiAKClNvcnJ5LCBJIGhhdmUgYmVlbiBv
+biB2YWNhdGlvbiBhbmQgaGFkbid0IGJlZW4gd2F0Y2hpbmcgbWFpbGluZyBsaXN0LiBJCndvdWxk
+IG5vdCB3YW50IHRvIG1ha2UgdGhpcyBwYXRjaCBvcHRpb25hbC4gSXQgd2lsbCBiZSBkaWZmaWN1
+bHQgZm9yCm1vc3QgZW5kIHVzZXJzIHRvIHRlbGwgaWYgdGhleSBzaG91bGQga2V4ZWMgd2l0aCB0
+aGlzIGVuYWJsZWQgb3Igbm90LiBJCndvdWxkIHJhdGhlciBmaXggaXNzdWVzIGNhdXNlZCBieSB0
+aGlzIHBhdGNoLgoKSSB3aWxsIHNwZW5kIHNvbWUgdGltZSB1bmRlcnN0YW5kaW5nIHRoZSBwcm9i
+bGVtIHlvdSBhcmUgc2VlaW5nIGFuZCBnZXQKYmFjayB0byB5b3UuCgpUaGFua3MKLS0gCktoYWxp
+ZCBBeml6IDxraGFsaWQuYXppekBocC5jb20+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
+Ywo=
