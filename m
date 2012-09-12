@@ -1,35 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+Received: from dgate10.ts.fujitsu.com ([80.70.172.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TBitA-0000Zu-Ae
- for kexec@lists.infradead.org; Wed, 12 Sep 2012 09:05:41 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 52F913EE0BB
- for <kexec@lists.infradead.org>; Wed, 12 Sep 2012 18:05:35 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 37C3C45DE5A
- for <kexec@lists.infradead.org>; Wed, 12 Sep 2012 18:05:35 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 1E94B45DE56
- for <kexec@lists.infradead.org>; Wed, 12 Sep 2012 18:05:35 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id EC4E01DB803C
- for <kexec@lists.infradead.org>; Wed, 12 Sep 2012 18:05:34 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 9E69A1DB8051
- for <kexec@lists.infradead.org>; Wed, 12 Sep 2012 18:05:34 +0900 (JST)
-Message-ID: <50504F47.80909@jp.fujitsu.com>
-Date: Wed, 12 Sep 2012 18:00:55 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+ id 1TBo6g-00048e-F1
+ for kexec@lists.infradead.org; Wed, 12 Sep 2012 14:40:00 +0000
+From: "Trapp, Norbert" <norbert.trapp@ts.fujitsu.com>
+Date: Wed, 12 Sep 2012 16:39:49 +0200
+Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
+Message-ID: <0E9227E8EFCFF54EA493F6C0399C015D39C0F0F687@ABGEX70E.FSC.NET>
+References: <201208241741.27573.petr@tesarici.cz>
+ <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
+ <20120903140100.ac4dbf21401ace0e24a442d9@mxc.nes.nec.co.jp>
+In-Reply-To: <20120903140100.ac4dbf21401ace0e24a442d9@mxc.nes.nec.co.jp>
+Content-Language: de-DE
 MIME-Version: 1.0
-Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
- with iommu
-References: <501BB4EF.7080909@jp.fujitsu.com>
- <20120803114643.GA28330@redhat.com> <501F4877.5050605@jp.fujitsu.com>
- <20120806203902.GH25559@redhat.com> <50473306.1070803@jp.fujitsu.com>
- <20120910143604.GB639@redhat.com> <504F1343.7030607@jp.fujitsu.com>
- <20120911144323.GF12039@redhat.com>
-In-Reply-To: <20120911144323.GF12039@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,58 +21,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>, "petr@tesarici.cz" <petr@tesarici.cz>, "stefan.bader@canonical.com" <stefan.bader@canonical.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-(2012/09/11 23:43), Vivek Goyal wrote:
-> On Tue, Sep 11, 2012 at 07:32:35PM +0900, Takao Indoh wrote:
->
-> [..]
->> I'll post new patch which clears bus master bit and resets devices in
->> second kernel.
->>
->> As to the boot parameter to enable this function, you suggested using
->> reset_devices. I found that on a certain platform resetting devices
->> caused PCIe error due to a hardware bug. Therefore I think we need
->> new parameter apart from reset_devices to disable this function on
->> such a machine.
->
-> Can you explain a bit more how the error happens. I still don't think
-> that because of a bug in a platform somewhere we should be introducing
-> a separate command line parameter and not reuse the exisiting one. Also
-> you have not explained what's the bug and how a new parameter will
-> avoid the bug.
-
-The bug I mentioned is that ACS Violation occurs at PCIe switch when
-reading PCI configuration after device reset. I got information that
-this violation is caused by PCIe switch bug. The machine becomes fatal
-status by this error.
-
-The reason why I try to introduce new parameter is that I want to avoid
-regression by this patch. Let's say this patch was included in kernel
-and its reset function was enabled by reset_devices as you said. AFAIK
-reset_devices is always needed for kdump, so it means that devices are
-always reset at kdump boot time. It causes a regression that system
-always becomes abnormal status when we run kdump on the machine which has
-a bug I mentioned.
-
-To avoid this regression, I want to separate reset_devices from this
-reset function. Or how about this?
-- if user specify reset_devices, devices are reset by this patch, as you
-   said.
-- To avoid a regression I said, add new parameter like "pci=noreset".
-   If this parameter is specified, the reset function I add is disabled
-   and we can avoid regression.
-
-Thanks,
-Takao Indoh
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gQXRzdXNoaSwgUGV0ciwgU3RlZmFuIGV0IGFsLiwNCg0KV2hlbiBhcHBseWluZyB0aGUg
+bWFrZWR1bXBmaWxlIFhlbjQgcGF0Y2hlcyB0byB0aGUgbWFrZWR1bXBmaWxlIDEuNS4wDQp2ZXJz
+aW9uIGFuZCB1c2luZyBpdCBmb3IgYSBjcmFzaCBmaWxlIHRvIHNhdmUganVzdCB0aGUgZG9tMCBh
+bmQgeGVuIHBhZ2VzDQppdCBhZ2FpbiB3b3JrZWQgc3BsZW5kaWQgaW4gdGhhdCBtYWtlZHVtcGZp
+bGUgd2FzIG11Y2ggZmFzdGVyIHRoYW4gd2l0aG91dA0KdGhlIFhlbjQgcGF0Y2hlcy4gQWxhcyBJ
+IGhhZCB0byByZW1vdmUgdGhlIE9GRlNFVF9JTl9VTklPTl9JTklUKHBhZ2UuX2RvbWFpbiwNCiJw
+YWdlX2luZm8iLCAiZG9tYWluIikgY2FsbCBiZWNhdXNlIE9GRlNFVF9JTl9VTklPTl9JTklUIHdh
+cyBubyBsb25nZXIgcHJlc2VudC4NCkl0IGRpZG4ndCBtYXR0ZXIgbXVjaCBiZWNhdXNlIHRoZSBj
+YWxsIGlzIG9ubHkgbmVlZGVkIGZvciBtYWtlZHVtcGZpbGUgLWcgb3Igd2hlbg0KdXNpbmcgdGhl
+IC9ib290L3hlbi1zeW1zIGZpbGUuIEluIHRoZSBjdXJyZW50IDEuNS4wICBtYWtlZHVtcGZpbGUu
+YyB2ZXJzaW9uIHlvdQ0Kc2VlDQoNCiAgICBPRkZTRVRfSU5JVChwYWdlX2luZm8uX2RvbWFpbiwg
+InBhZ2VfaW5mbyIsICJ1IikuDQoNClRoZSBYZW40IHBhdGNoIG1vZGlmaWVkIHRoaXMgYmVjYXVz
+ZSB0aGUgX2RvbWFpbiBzdHJ1Y3R1cmUgbWVtYmVyIGlzIGluIGRpZmZlcmVudA0KdW5pb25zIGZv
+ciBkaWZmZXJlbnQgdmVyc2lvbiAoeDg2LCBpYTY0KSBhbmQgbWF5IGFsc28gbm90IGJlIHRoZSBm
+aXJzdCBlbnRyeSBpbg0KdGhlIHVuaW9uIGRlcGVuZGluZyBvbiB0aGUgWGVuIHZlcnNpb24uDQoN
+CiAgICBPRkZTRVRfSU5fVU5JT05fSU5JVChwYWdlX2luZm8uX2RvbWFpbiwgInBhZ2VfaW5mbyIs
+ICJfZG9tYWluIik7DQoNCkFzIGFuIGV4cGVyaW1lbnQgSSB0cmllZCB0byB1c2UNCg0KICAgIE9G
+RlNFVF9JTklUKHBhZ2VfaW5mby5fZG9tYWluLCAicGFnZV9pbmZvIiwgImRvbWFpbiIpDQoNCndp
+dGggbWFrZWR1bXBmaWxlIDEuNS4wLiBUbyBnZXQgdGhlIGNvcnJlY3Qgb2Zmc2V0IEkgaGFkIHRv
+DQptb2RpZnkgdGhlIGR3YXJmX2luZm8uYyBjb2RlOg0KDQotLS0gLi4vbWFrZWR1bXBmaWxlLTEu
+NS4wL2R3YXJmX2luZm8uYyAgMjAxMi0wOS0wNiAwNzozMDoyMy4wMDAwMDAwMDAgKzAyMDANCisr
+KyBkd2FyZl9pbmZvLmMgICAgICAgIDIwMTItMDktMTIgMTU6NDk6MjMuMDAwMDAwMDAwICswMjAw
+DQpAQCAtNDQ5LDggKzQ0OSw4IEBADQogc3RhdGljIGludA0KIGlzX2Fub255bW91c19jb250YWlu
+ZXIoRHdhcmZfRGllICpkaWUpDQogew0KLSAgICAgICBpZiAoZHdhcmZfZGllbmFtZShkaWUpKQ0K
+LSAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsNCisgICAgICAgLy9pZiAoZHdhcmZfZGllbmFt
+ZShkaWUpKQ0KKyAgICAgICAvLyAgICAgIHJldHVybiBGQUxTRTsNCiAgICAgICAgaWYgKGR3YXJm
+X3RhZyhkaWUpID09IERXX1RBR19zdHJ1Y3R1cmVfdHlwZSkNCiAgICAgICAgICAgICAgICByZXR1
+cm4gVFJVRTsNCiAgICAgICAgaWYgKGR3YXJmX2luZm8uY21kICE9IERXQVJGX0lORk9fR0VUX01F
+TUJFUl9PRkZTRVRfMVNUX1VOSU9ODQpAQCAtNDk1LDcgKzQ5NSw3IEBADQogICAgICAgICAgICAg
+ICAgICogRGVzY2VuZCBpbnRvIGFub255bW91cyBtZW1iZXJzIGFuZCBzZWFyY2ggZm9yIG1lbWJl
+cg0KICAgICAgICAgICAgICAgICAqIHRoZXJlLg0KICAgICAgICAgICAgICAgICAqLw0KLSAgICAg
+ICAgICAgICAgIGlmICghbmFtZSkgew0KKyAgICAgICAgICAgICAgIGlmICgoIW5hbWUpIHx8IChz
+dHJjbXAobmFtZSwgZHdhcmZfaW5mby5tZW1iZXJfbmFtZSkgIT0gMCkpIHsNCiAgICAgICAgICAg
+ICAgICAgICAgICAgIGlmICghZ2V0X2RpZV90eXBlKHdhbGtlciwgJmRpZV90eXBlKSkNCiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQogICAgICAgICAgICAgICAgICAg
+ICAgICBpZiAoaXNfYW5vbnltb3VzX2NvbnRhaW5lcigmZGllX3R5cGUpKQ0KDQoNClRoaXMgaXMg
+bm90IGEgcGF0Y2ggYnV0IGp1c3QgYSBkZXNjcmlwdGlvbiBvZiB3aGF0IEkgbW9kaWZpZWQgZm9y
+IGEgdGVzdC4NClRoZSB1bmRlcmx5aW5nIHF1ZXN0aW9uIGlzIHdoeSBvbmx5IHRoZSBhbm9ueW1v
+dXMgdW5pb25zIGFyZSB1c2VkIGFuZCBub3QgdGhlDQpvbmVzIHdpdGggYSBuYW1lLg0KDQpXaXRo
+IGtpbmQgcmVnYXJkcw0KDQoJTm9yYmVydA0KDQpOb3JiZXJ0IFRyYXBwDQpQREcgRVMmUyBTV0Ug
+T1MgNg0KDQpGVUpJVFNVDQpGdWppdHN1IFRlY2hub2xvZ3kgU29sdXRpb25zIEdtYkgNCkRvbWFn
+a3N0cmHDn2UgMjgsIEQtODA4MDcgTcO8bmNoZW4sIEdlcm1hbnkNCkUtbWFpbDogTm9yYmVydC5U
+cmFwcCBhdCB0cy5mdWppdHN1LmNvbQ0KV2ViOiB0cy5mdWppdHN1LmNvbQ0KQ29tcGFueSBkZXRh
+aWxzOiB0cy5mdWppdHN1LmNvbS9pbXByaW50DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gRnJvbTogQXRzdXNoaSBLdW1hZ2FpIFttYWlsdG86a3VtYWdhaS1hdHN1c2hpQG14Yy5u
+ZXMubmVjLmNvLmpwXQ0KPiBTZW50OiBNb25kYXksIFNlcHRlbWJlciAwMywgMjAxMiA3OjAxIEFN
+DQo+IFRvOiBUcmFwcCwgTm9yYmVydDsgcGV0ckB0ZXNhcmljaS5jeg0KPiBDYzoga2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjMgMC85XSBTdXBwb3J0IFhl
+biB2ZXJzaW9ucyB1cCB0byB4ZW4tNC4xDQo+IA0KLi4uDQo+IA0KPiBUaGFuayB5b3UgZm9yIHlv
+dXIgcmVwb3J0LCB0aGF0J3MgZ29vZC4NCj4gU28sIEknbGwgcmV2aWV3IHRoZXNlIHBhdGNoZXMg
+Zm9yIG1ha2VkdW1wZmlsZS0xLjUuMS4NCj4gDQo+IA0KPiBUaGFua3MNCj4gQXRzdXNoaSBLdW1h
+Z2FpDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
+eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
