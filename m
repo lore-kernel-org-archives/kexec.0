@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TC9dc-0002ri-Vp
- for kexec@lists.infradead.org; Thu, 13 Sep 2012 13:39:26 +0000
-Date: Thu, 13 Sep 2012 09:38:27 -0400
+ id 1TCA7a-0003W3-S8
+ for kexec@lists.infradead.org; Thu, 13 Sep 2012 14:10:24 +0000
+Date: Thu, 13 Sep 2012 10:10:18 -0400
 From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
-Message-ID: <20120913133827.GB4396@redhat.com>
-References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
- <5048E40E.7040003@hp.com> <5049B6AD.9000304@redhat.com>
- <1347028634.20255.79.camel@lyra>
+Subject: Query about cyclic buffer size
+Message-ID: <20120913141018.GG4396@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1347028634.20255.79.camel@lyra>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,42 +21,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Khalid Aziz <khalid.aziz@hp.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, Dave Young <dyoung@redhat.com>
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, WANG Chao <chaowang@redhat.com>
 
-On Fri, Sep 07, 2012 at 08:37:14AM -0600, Khalid Aziz wrote:
-> On Fri, 2012-09-07 at 16:56 +0800, Dave Young wrote:
-> > Actually in x86 setup code if bootloader do not pass correct efi_info in
-> > boot_params efi_enabled will be set to 0 automaticlly.
-> > 
-> 
-> When we kexec a kernel, the EFI signature is missing in the bootloader
-> signature in boot_params, so kexec'd kernels currently disable EFI
-> automatically even without noefi in this code:
-> 
-> arch/x86/kernel/setup.c:
-> 
-> 733         if (!strncmp((char *)&boot_params.efi_info.efi_loader_signature,
-> 734                      "EL32", 4)) {
-> 735                 efi_enabled = 1;
-> 736                 efi_64bit = false;
-> 737         } else if (!strncmp((char *)&boot_params.efi_info.efi_loader_signatu     re,             
-> 738                      "EL64", 4)) {
-> 739                 efi_enabled = 1;
-> 740                 efi_64bit = true;
-> 741         }
-> 
-> efi_enabled is initialized to 0.
+Hi Atsushi-san,
 
-Hi Khalid,
+How is size of cyclic buffer decided with 1.5.0? In practice I don't think
+asking user for the size is a good idea as user does not know how much
+memory will be left after kernel boot.
 
-So what does this mean? Second kernel assumes the regular BIOS and tries
-to initialize that way? That sounds broken or is it just fine given
-the fact we are anyway not planning to call into any of the efi services.
-But what about memory maps, ACPI tables etc.
+Will it make sense for makedumpfile to automatically determine the buffer
+size based on amount of free memory available in the system. Something
+like use 70-80% of free memory as cyclic buffer.
 
 Thanks
 Vivek
+
 
 _______________________________________________
 kexec mailing list
