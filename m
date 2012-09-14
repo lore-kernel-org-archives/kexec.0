@@ -1,14 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from rcsinet15.oracle.com ([148.87.113.117])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TCVX0-0005Ci-1y
- for kexec@lists.infradead.org; Fri, 14 Sep 2012 13:02:02 +0000
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TCY81-0007Pq-3T
+ for kexec@lists.infradead.org; Fri, 14 Sep 2012 15:48:26 +0000
+Date: Fri, 14 Sep 2012 11:48:18 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+Message-ID: <20120914154817.GE6221@redhat.com>
+References: <501BB4EF.7080909@jp.fujitsu.com>
+ <20120803114643.GA28330@redhat.com>
+ <501F4877.5050605@jp.fujitsu.com>
+ <20120806203902.GH25559@redhat.com>
+ <50473306.1070803@jp.fujitsu.com> <20120910143604.GB639@redhat.com>
+ <504F1343.7030607@jp.fujitsu.com>
+ <20120911144323.GF12039@redhat.com> <50504F47.80909@jp.fujitsu.com>
 MIME-Version: 1.0
-Message-ID: <ff6ec2d4-fe0b-4c2e-8547-567e887355d3@default>
-Date: Fri, 14 Sep 2012 06:01:53 -0700 (PDT)
-From: Daniel Kiper <daniel.kiper@oracle.com>
-Subject: Re: [PATCH 0/7] kdump: Xen fixes
 Content-Disposition: inline
+In-Reply-To: <50504F47.80909@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,17 +30,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, ptesarik@suse.cz, jbeulich@suse.com
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com
 
-Hi Simon,
+On Wed, Sep 12, 2012 at 06:00:55PM +0900, Takao Indoh wrote:
+> (2012/09/11 23:43), Vivek Goyal wrote:
+> >On Tue, Sep 11, 2012 at 07:32:35PM +0900, Takao Indoh wrote:
+> >
+> >[..]
+> >>I'll post new patch which clears bus master bit and resets devices in
+> >>second kernel.
+> >>
+> >>As to the boot parameter to enable this function, you suggested using
+> >>reset_devices. I found that on a certain platform resetting devices
+> >>caused PCIe error due to a hardware bug. Therefore I think we need
+> >>new parameter apart from reset_devices to disable this function on
+> >>such a machine.
+> >
+> >Can you explain a bit more how the error happens. I still don't think
+> >that because of a bug in a platform somewhere we should be introducing
+> >a separate command line parameter and not reuse the exisiting one. Also
+> >you have not explained what's the bug and how a new parameter will
+> >avoid the bug.
+> 
+> The bug I mentioned is that ACS Violation occurs at PCIe switch when
+> reading PCI configuration after device reset. I got information that
+> this violation is caused by PCIe switch bug. The machine becomes fatal
+> status by this error.
+> 
+> The reason why I try to introduce new parameter is that I want to avoid
+> regression by this patch. Let's say this patch was included in kernel
+> and its reset function was enabled by reset_devices as you said. AFAIK
+> reset_devices is always needed for kdump, so it means that devices are
+> always reset at kdump boot time. It causes a regression that system
+> always becomes abnormal status when we run kdump on the machine which has
+> a bug I mentioned.
+> 
+> To avoid this regression, I want to separate reset_devices from this
+> reset function. Or how about this?
+> - if user specify reset_devices, devices are reset by this patch, as you
+>   said.
+> - To avoid a regression I said, add new parameter like "pci=noreset".
+>   If this parameter is specified, the reset function I add is disabled
+>   and we can avoid regression.
 
-> do these relate to the changes that you were discussing
-> with Petr Tesarik in July?
+Can we identify that particular switch in code and not reset it in code.
+Introducing new paramenters to avoid bugs really feels odd.
 
-No. They are independent of vmcoreinfo patch.
+Also, what was the conclusion to avoid double reset. I am assuming that
+we don't want to do bus level reset as well as driver level reset based
+on reset_devices. 
 
-Daniel
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
