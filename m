@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TCMcu-0000sb-VG
- for kexec@lists.infradead.org; Fri, 14 Sep 2012 03:31:33 +0000
-Date: Fri, 14 Sep 2012 12:30:59 +0900
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] kdump: Xen fixes
-Message-ID: <20120914033059.GF17943@verge.net.au>
-References: <1347278271-5211-1-git-send-email-daniel.kiper@oracle.com>
+Received: from rcsinet15.oracle.com ([148.87.113.117])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TCVX0-0005Ci-1y
+ for kexec@lists.infradead.org; Fri, 14 Sep 2012 13:02:02 +0000
 MIME-Version: 1.0
+Message-ID: <ff6ec2d4-fe0b-4c2e-8547-567e887355d3@default>
+Date: Fri, 14 Sep 2012 06:01:53 -0700 (PDT)
+From: Daniel Kiper <daniel.kiper@oracle.com>
+Subject: Re: [PATCH 0/7] kdump: Xen fixes
 Content-Disposition: inline
-In-Reply-To: <1347278271-5211-1-git-send-email-daniel.kiper@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,40 +21,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Daniel Kiper <daniel.kiper@oracle.com>
-Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, ptesarik@suse.cz, jbeulich@suse.com, kexec@lists.infradead.org
+To: horms@verge.net.au
+Cc: olaf@aepfle.de, xen-devel@lists.xensource.com, konrad.wilk@oracle.com, andrew.cooper3@citrix.com, kexec@lists.infradead.org, ptesarik@suse.cz, jbeulich@suse.com
 
-On Mon, Sep 10, 2012 at 01:57:44PM +0200, Daniel Kiper wrote:
-> Hi,
-> 
-> Here I am sending Xen kdump fixes.
+Hi Simon,
 
-Hi Daniel,
+> do these relate to the changes that you were discussing
+> with Petr Tesarik in July?
 
-do these relate to the changes that you were discussing
-with Petr Tesarik in July?
+No. They are independent of vmcoreinfo patch.
 
-
-> Daniel Kiper (7):
->       kexec: Define some constants and structures conditionally
->       xen: Rename e820_to_kexec_type() to xen_e820_to_kexec_type() and export it
->       kexec: Move crash kernel area placement and size detection to is_crashkernel_mem_reserved()
->       kexec: Add segregate_lowmem_region()
->       kexec: Get backup area start address and size directly from mem_range
->       kexec: Move crash memory ranges logging
->       xen: Fix Xen kdump support
-> 
->  include/x86/x86-linux.h            |    7 +-
->  kexec/arch/i386/crashdump-x86.c    |  322 +++++++++++++++++++++++++++--------
->  kexec/arch/i386/kexec-x86-common.c |    6 +-
->  kexec/arch/i386/kexec-x86.h        |    2 +
->  4 files changed, 259 insertions(+), 78 deletions(-)
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Daniel
 
 _______________________________________________
 kexec mailing list
