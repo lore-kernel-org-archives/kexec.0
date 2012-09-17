@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from g4t0016.houston.hp.com ([15.201.24.19])
+Received: from dgate20.ts.fujitsu.com ([80.70.172.51])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TCcZ8-0004UZ-Em
- for kexec@lists.infradead.org; Fri, 14 Sep 2012 20:32:43 +0000
-Message-ID: <5053945F.9060107@hp.com>
-Date: Fri, 14 Sep 2012 14:32:31 -0600
-From: Khalid Aziz <khalid.aziz@hp.com>
+ id 1TDeXj-0003bW-OF
+ for kexec@lists.infradead.org; Mon, 17 Sep 2012 16:51:33 +0000
+From: "Trapp, Norbert" <norbert.trapp@ts.fujitsu.com>
+Date: Mon, 17 Sep 2012 18:52:57 +0200
+Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
+Message-ID: <0E9227E8EFCFF54EA493F6C0399C015D39C1018D5B@ABGEX70E.FSC.NET>
+References: <201208241741.27573.petr@tesarici.cz>
+ <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
+ <20120903140100.ac4dbf21401ace0e24a442d9@mxc.nes.nec.co.jp>
+ <0E9227E8EFCFF54EA493F6C0399C015D39C0F0F687@ABGEX70E.FSC.NET>
+ <505719BD.6080608@canonical.com>
+In-Reply-To: <505719BD.6080608@canonical.com>
+Content-Language: de-DE
 MIME-Version: 1.0
-Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
-References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
- <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
- <5048E40E.7040003@hp.com> <5049B6AD.9000304@redhat.com>
- <1347028634.20255.79.camel@lyra> <20120913133827.GB4396@redhat.com>
-In-Reply-To: <20120913133827.GB4396@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,37 +23,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, horms@verge.net.au, Dave Young <dyoung@redhat.com>
+To: Stefan Bader <stefan.bader@canonical.com>
+Cc: "petr@tesarici.cz" <petr@tesarici.cz>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
 
-On 09/13/2012 07:38 AM, Vivek Goyal wrote:
-> So what does this mean? Second kernel assumes the regular BIOS and tries
-> to initialize that way? That sounds broken or is it just fine given
-> the fact we are anyway not planning to call into any of the efi services.
-> But what about memory maps, ACPI tables etc.
-
-Hi Vivek,
-
-My understanding on x86 side is not as clear as on ia64 side of kexec. 
- From my reading of the code, second kernel seems to assume a regular 
-BIOS. It searches through EBDA or upper memory region E0000h-FFFFFh to 
-find RSDP, if an RSDP pointer was not passed to the second kernel. This 
-works on my EFI machine which also implements a BIOS compatibility 
-layer. I wonder how it works on pure EFI machines. Do pure EFI machines 
-not implement, say EBDA? If yes, acpi_find_root_pointer() should fail 
-tofind RSDP.As for memory map, all I can find are reference to e820 
-memory map which again assumes a BIOS but most EFI implementations I 
-have come across implement a BIOS compatibility layer, so this will work 
-still. I will look some more into this.
-
---
-Khalid
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gU3RlZmFuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0
+ZWZhbiBCYWRlciBbbWFpbHRvOnN0ZWZhbi5iYWRlckBjYW5vbmljYWwuY29tXQ0KPiBTZW50OiBN
+b25kYXksIFNlcHRlbWJlciAxNywgMjAxMiAyOjM4IFBNDQo+IFRvOiBUcmFwcCwgTm9yYmVydA0K
+PiBDYzogQXRzdXNoaSBLdW1hZ2FpOyBwZXRyQHRlc2FyaWNpLmN6OyBrZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2MyAwLzldIFN1cHBvcnQgWGVuIHZlcnNp
+b25zIHVwIHRvIHhlbi00LjENCj4gDQo+IE9uIDEyLjA5LjIwMTIgMTY6MzksIFRyYXBwLCBOb3Ji
+ZXJ0IHdyb3RlOg0KPiA+IEhlbGxvIEF0c3VzaGksIFBldHIsIFN0ZWZhbiBldCBhbC4sDQo+ID4N
+Cj4gDQo+IEhpIE5vcmJlcnQsDQo+IA0KPiA+IFdoZW4gYXBwbHlpbmcgdGhlIG1ha2VkdW1wZmls
+ZSBYZW40IHBhdGNoZXMgdG8gdGhlIG1ha2VkdW1wZmlsZSAxLjUuMA0KPiA+IHZlcnNpb24gYW5k
+IHVzaW5nIGl0IGZvciBhIGNyYXNoIGZpbGUgdG8gc2F2ZSBqdXN0IHRoZSBkb20wIGFuZCB4ZW4g
+cGFnZXMNCj4gPiBpdCBhZ2FpbiB3b3JrZWQgc3BsZW5kaWQgaW4gdGhhdCBtYWtlZHVtcGZpbGUg
+d2FzIG11Y2ggZmFzdGVyIHRoYW4gd2l0aG91dA0KPiA+IHRoZSBYZW40IHBhdGNoZXMuIEFsYXMg
+SSBoYWQgdG8gcmVtb3ZlIHRoZSBPRkZTRVRfSU5fVU5JT05fSU5JVChwYWdlLl9kb21haW4sDQo+
+ID4gInBhZ2VfaW5mbyIsICJkb21haW4iKSBjYWxsIGJlY2F1c2UgT0ZGU0VUX0lOX1VOSU9OX0lO
+SVQgd2FzIG5vIGxvbmdlciBwcmVzZW50Lg0KPiA+IEl0IGRpZG4ndCBtYXR0ZXIgbXVjaCBiZWNh
+dXNlIHRoZSBjYWxsIGlzIG9ubHkgbmVlZGVkIGZvciBtYWtlZHVtcGZpbGUgLWcgb3Igd2hlbg0K
+PiA+IHVzaW5nIHRoZSAvYm9vdC94ZW4tc3ltcyBmaWxlLiBJbiB0aGUgY3VycmVudCAxLjUuMCAg
+bWFrZWR1bXBmaWxlLmMgdmVyc2lvbiB5b3UNCj4gPiBzZWUNCj4gPg0KPiA+ICAgICBPRkZTRVRf
+SU5JVChwYWdlX2luZm8uX2RvbWFpbiwgInBhZ2VfaW5mbyIsICJ1IikuDQo+ID4NCj4gPiBUaGUg
+WGVuNCBwYXRjaCBtb2RpZmllZCB0aGlzIGJlY2F1c2UgdGhlIF9kb21haW4gc3RydWN0dXJlIG1l
+bWJlciBpcyBpbiBkaWZmZXJlbnQNCj4gPiB1bmlvbnMgZm9yIGRpZmZlcmVudCB2ZXJzaW9uICh4
+ODYsIGlhNjQpIGFuZCBtYXkgYWxzbyBub3QgYmUgdGhlIGZpcnN0IGVudHJ5IGluDQo+ID4gdGhl
+IHVuaW9uIGRlcGVuZGluZyBvbiB0aGUgWGVuIHZlcnNpb24uDQo+ID4NCj4gPiAgICAgT0ZGU0VU
+X0lOX1VOSU9OX0lOSVQocGFnZV9pbmZvLl9kb21haW4sICJwYWdlX2luZm8iLCAiX2RvbWFpbiIp
+Ow0KPiA+DQo+ID4gQXMgYW4gZXhwZXJpbWVudCBJIHRyaWVkIHRvIHVzZQ0KPiA+DQo+IA0KPiA+
+ICAgICBPRkZTRVRfSU5JVChwYWdlX2luZm8uX2RvbWFpbiwgInBhZ2VfaW5mbyIsICJkb21haW4i
+KQ0KPiANCj4gSnVzdCB0byBtYWtlIHN1cmUgYW5kIHNpbmNlIEkgYW0gYSBiaXQgbGF6eTogd2l0
+aCB0aGUgWGVuIHBhdGNoIHRoZSBwYWdlX2luZm8NCj4gc3RydWN0dXJlIGhhcyBhIG1lbWJlciAo
+c29tZXdoZXJlKSBuYW1lZCBkb21haW4/IChvciBfZG9tYWluKT8NCj4gDQoNCkp1c3QgdG8gZ2V0
+IHlvdSBvbiB0aGUgcmlnaHQgdHJhY2ssIHRoZSBzdHJ1Y3QgcGFnZV9pbmZvIGluIHRoZSBYZW4g
+Y29kZSBpcyBtZWFudC4NCk5vdCB0aGUgb25lIGluIHRoZSBtYWtlZHVtcGZpbGUgY29kZS4NCg0K
+Rm9yIGV4YW1wbGUgaW4geGVuLTQuMS4zL3hlbi9jb21tb24va2V4ZWMuYzoNCiNpZmRlZiBfX2lh
+NjRfXw0KICAgIFZNQ09SRUlORk9fT0ZGU0VUX1NVQihwYWdlX2luZm8sIHUuaW51c2UsIF9kb21h
+aW4pOw0KI2Vsc2UNCiAgICBWTUNPUkVJTkZPX09GRlNFVF9TVUIocGFnZV9pbmZvLCB2LmludXNl
+LCBfZG9tYWluKTsNCiNlbmRpZg0KDQpBbmQgdGhlIGRpZmZlcmVudCBwYWdlX2luZm8gc3RydWN0
+dXJlcyB5b3UgZmluZCBpbjoNCnhlbi00LjEuMy94ZW4vaW5jbHVkZS9hc20taWE2NC9tbS5oDQp4
+ZW4tNC4xLjMveGVuL2luY2x1ZGUvYXNtLXg4Ni9tbS5oDQoNCkFuZCBhbHNvIHRoZSBzdHJ1Y3R1
+cmVzIGNhbiBiZSBkaWZmZXJlbnQgZGVwZW5kaW5nIG9uIHRoZSBYZW4gdmVyc2lvbi4NCg0KPiA+
+DQo+ID4gd2l0aCBtYWtlZHVtcGZpbGUgMS41LjAuIFRvIGdldCB0aGUgY29ycmVjdCBvZmZzZXQg
+SSBoYWQgdG8NCj4gPiBtb2RpZnkgdGhlIGR3YXJmX2luZm8uYyBjb2RlOg0KPiA+DQo+ID4gLS0t
+IC4uL21ha2VkdW1wZmlsZS0xLjUuMC9kd2FyZl9pbmZvLmMgIDIwMTItMDktMDYgMDc6MzA6MjMu
+MDAwMDAwMDAwICswMjAwDQo+ID4gKysrIGR3YXJmX2luZm8uYyAgICAgICAgMjAxMi0wOS0xMiAx
+NTo0OToyMy4wMDAwMDAwMDAgKzAyMDANCj4gPiBAQCAtNDQ5LDggKzQ0OSw4IEBADQo+ID4gIHN0
+YXRpYyBpbnQNCj4gPiAgaXNfYW5vbnltb3VzX2NvbnRhaW5lcihEd2FyZl9EaWUgKmRpZSkNCj4g
+PiAgew0KPiA+IC0gICAgICAgaWYgKGR3YXJmX2RpZW5hbWUoZGllKSkNCj4gPiAtICAgICAgICAg
+ICAgICAgcmV0dXJuIEZBTFNFOw0KPiA+ICsgICAgICAgLy9pZiAoZHdhcmZfZGllbmFtZShkaWUp
+KQ0KPiA+ICsgICAgICAgLy8gICAgICByZXR1cm4gRkFMU0U7DQo+ID4gICAgICAgICBpZiAoZHdh
+cmZfdGFnKGRpZSkgPT0gRFdfVEFHX3N0cnVjdHVyZV90eXBlKQ0KPiA+ICAgICAgICAgICAgICAg
+ICByZXR1cm4gVFJVRTsNCj4gPiAgICAgICAgIGlmIChkd2FyZl9pbmZvLmNtZCAhPSBEV0FSRl9J
+TkZPX0dFVF9NRU1CRVJfT0ZGU0VUXzFTVF9VTklPTg0KPiA+IEBAIC00OTUsNyArNDk1LDcgQEAN
+Cj4gPiAgICAgICAgICAgICAgICAgICogRGVzY2VuZCBpbnRvIGFub255bW91cyBtZW1iZXJzIGFu
+ZCBzZWFyY2ggZm9yIG1lbWJlcg0KPiA+ICAgICAgICAgICAgICAgICAgKiB0aGVyZS4NCj4gPiAg
+ICAgICAgICAgICAgICAgICovDQo+ID4gLSAgICAgICAgICAgICAgIGlmICghbmFtZSkgew0KPiA+
+ICsgICAgICAgICAgICAgICBpZiAoKCFuYW1lKSB8fCAoc3RyY21wKG5hbWUsIGR3YXJmX2luZm8u
+bWVtYmVyX25hbWUpICE9IDApKSB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFn
+ZXRfZGllX3R5cGUod2Fsa2VyLCAmZGllX3R5cGUpKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgY29udGludWU7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaWYgKGlz
+X2Fub255bW91c19jb250YWluZXIoJmRpZV90eXBlKSkNCj4gPg0KPiA+DQo+ID4gVGhpcyBpcyBu
+b3QgYSBwYXRjaCBidXQganVzdCBhIGRlc2NyaXB0aW9uIG9mIHdoYXQgSSBtb2RpZmllZCBmb3Ig
+YSB0ZXN0Lg0KPiA+IFRoZSB1bmRlcmx5aW5nIHF1ZXN0aW9uIGlzIHdoeSBvbmx5IHRoZSBhbm9u
+eW1vdXMgdW5pb25zIGFyZSB1c2VkIGFuZCBub3QgdGhlDQo+ID4gb25lcyB3aXRoIGEgbmFtZS4N
+Cj4gDQo+IEkgbWFkZSB0aGUgcGF0Y2ggYmVjYXVzZSBvbmUgZWxlbWVudCBpbiBzb21lIGFub255
+bW91cyBzdHJ1Y3R1cmUvdW5pb24gY29tYm8gd2FzDQo+IG5vdCBmb3VuZCBpbiBuZXdlciBrZXJu
+ZWxzIGFuZCB0aGUgcHJldmlvdXMgZXhjZXB0aW9ucyBmb3Igc3VjaCBhIHRoaW5nIHdlcmUNCj4g
+aGFyZCBjb2RlZC4gQnV0IGFzIGZhciBhcyB0aGUgZHdhcmYgaW5mbyBJIHdhcyBsb29raW5nIGF0
+IHRoZSBuYW1lZA0KPiBzdHJ1Y3R1cmVzL3VuaW9ucyB3ZXJlIGhhbmRsZWQgYW5kIEkgZGlkIG5v
+dCB3YW50IHRvIG1vZGlmeSB0aGF0IGNhc2Ugd2l0aG91dCBhDQo+IHdheSB0byB0ZXN0Lg0KPiAN
+Cj4gLVN0ZWZhbg0KDQpXaXRoIGtpbmQgcmVnYXJkcw0KDQoJTm9yYmVydA0KDQpOb3JiZXJ0IFRy
+YXBwDQpQQkcgUERHIEVTJlMgU1dFIE9TIDYNCg0KRlVKSVRTVQ0KRnVqaXRzdSBUZWNobm9sb2d5
+IFNvbHV0aW9ucyBHbWJIDQpEb21hZ2tzdHJhw59lIDI4LCBELTgwODA3IE3DvG5jaGVuLCBHZXJt
+YW55DQpFLW1haWw6IE5vcmJlcnQuVHJhcHBAdHMuZnVqaXRzdS5jb20NCldlYjogdHMuZnVqaXRz
+dS5jb20NCkNvbXBhbnkgZGV0YWlsczogdHMuZnVqaXRzdS5jb20vaW1wcmludA0KDQoNCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
