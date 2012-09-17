@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from dgate20.ts.fujitsu.com ([80.70.172.51])
+Received: from mail-lpp01m010-f49.google.com ([209.85.215.49])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TDeXj-0003bW-OF
- for kexec@lists.infradead.org; Mon, 17 Sep 2012 16:51:33 +0000
-From: "Trapp, Norbert" <norbert.trapp@ts.fujitsu.com>
-Date: Mon, 17 Sep 2012 18:52:57 +0200
-Subject: Re: [PATCHv3 0/9] Support Xen versions up to xen-4.1
-Message-ID: <0E9227E8EFCFF54EA493F6C0399C015D39C1018D5B@ABGEX70E.FSC.NET>
-References: <201208241741.27573.petr@tesarici.cz>
- <0E9227E8EFCFF54EA493F6C0399C015D39BFC5A112@ABGEX70E.FSC.NET>
- <20120903140100.ac4dbf21401ace0e24a442d9@mxc.nes.nec.co.jp>
- <0E9227E8EFCFF54EA493F6C0399C015D39C0F0F687@ABGEX70E.FSC.NET>
- <505719BD.6080608@canonical.com>
-In-Reply-To: <505719BD.6080608@canonical.com>
-Content-Language: de-DE
+ id 1TDiL2-0005hH-5m
+ for kexec@lists.infradead.org; Mon, 17 Sep 2012 20:54:41 +0000
+Received: by lagu2 with SMTP id u2so4419061lag.36
+ for <kexec@lists.infradead.org>; Mon, 17 Sep 2012 13:54:36 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <1347872076-5260-2-git-send-email-ying.huang@intel.com>
+References: <1347872076-5260-1-git-send-email-ying.huang@intel.com>
+ <1347872076-5260-2-git-send-email-ying.huang@intel.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Date: Mon, 17 Sep 2012 14:54:16 -0600
+Message-ID: <CAErSpo5fVbN2vD5Omc7dGJFWUccYZoCOVRF4YmXPe2Oxm81u5g@mail.gmail.com>
+Subject: Re: [RFC 1/3] PCI/PM: Fix kexec for D3cold and bridge suspending
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,85 +21,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stefan Bader <stefan.bader@canonical.com>
-Cc: "petr@tesarici.cz" <petr@tesarici.cz>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+To: Huang Ying <ying.huang@intel.com>
+Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Eric Biederman <ebiederm@xmission.com>
 
-SGVsbG8gU3RlZmFuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN0
-ZWZhbiBCYWRlciBbbWFpbHRvOnN0ZWZhbi5iYWRlckBjYW5vbmljYWwuY29tXQ0KPiBTZW50OiBN
-b25kYXksIFNlcHRlbWJlciAxNywgMjAxMiAyOjM4IFBNDQo+IFRvOiBUcmFwcCwgTm9yYmVydA0K
-PiBDYzogQXRzdXNoaSBLdW1hZ2FpOyBwZXRyQHRlc2FyaWNpLmN6OyBrZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2MyAwLzldIFN1cHBvcnQgWGVuIHZlcnNp
-b25zIHVwIHRvIHhlbi00LjENCj4gDQo+IE9uIDEyLjA5LjIwMTIgMTY6MzksIFRyYXBwLCBOb3Ji
-ZXJ0IHdyb3RlOg0KPiA+IEhlbGxvIEF0c3VzaGksIFBldHIsIFN0ZWZhbiBldCBhbC4sDQo+ID4N
-Cj4gDQo+IEhpIE5vcmJlcnQsDQo+IA0KPiA+IFdoZW4gYXBwbHlpbmcgdGhlIG1ha2VkdW1wZmls
-ZSBYZW40IHBhdGNoZXMgdG8gdGhlIG1ha2VkdW1wZmlsZSAxLjUuMA0KPiA+IHZlcnNpb24gYW5k
-IHVzaW5nIGl0IGZvciBhIGNyYXNoIGZpbGUgdG8gc2F2ZSBqdXN0IHRoZSBkb20wIGFuZCB4ZW4g
-cGFnZXMNCj4gPiBpdCBhZ2FpbiB3b3JrZWQgc3BsZW5kaWQgaW4gdGhhdCBtYWtlZHVtcGZpbGUg
-d2FzIG11Y2ggZmFzdGVyIHRoYW4gd2l0aG91dA0KPiA+IHRoZSBYZW40IHBhdGNoZXMuIEFsYXMg
-SSBoYWQgdG8gcmVtb3ZlIHRoZSBPRkZTRVRfSU5fVU5JT05fSU5JVChwYWdlLl9kb21haW4sDQo+
-ID4gInBhZ2VfaW5mbyIsICJkb21haW4iKSBjYWxsIGJlY2F1c2UgT0ZGU0VUX0lOX1VOSU9OX0lO
-SVQgd2FzIG5vIGxvbmdlciBwcmVzZW50Lg0KPiA+IEl0IGRpZG4ndCBtYXR0ZXIgbXVjaCBiZWNh
-dXNlIHRoZSBjYWxsIGlzIG9ubHkgbmVlZGVkIGZvciBtYWtlZHVtcGZpbGUgLWcgb3Igd2hlbg0K
-PiA+IHVzaW5nIHRoZSAvYm9vdC94ZW4tc3ltcyBmaWxlLiBJbiB0aGUgY3VycmVudCAxLjUuMCAg
-bWFrZWR1bXBmaWxlLmMgdmVyc2lvbiB5b3UNCj4gPiBzZWUNCj4gPg0KPiA+ICAgICBPRkZTRVRf
-SU5JVChwYWdlX2luZm8uX2RvbWFpbiwgInBhZ2VfaW5mbyIsICJ1IikuDQo+ID4NCj4gPiBUaGUg
-WGVuNCBwYXRjaCBtb2RpZmllZCB0aGlzIGJlY2F1c2UgdGhlIF9kb21haW4gc3RydWN0dXJlIG1l
-bWJlciBpcyBpbiBkaWZmZXJlbnQNCj4gPiB1bmlvbnMgZm9yIGRpZmZlcmVudCB2ZXJzaW9uICh4
-ODYsIGlhNjQpIGFuZCBtYXkgYWxzbyBub3QgYmUgdGhlIGZpcnN0IGVudHJ5IGluDQo+ID4gdGhl
-IHVuaW9uIGRlcGVuZGluZyBvbiB0aGUgWGVuIHZlcnNpb24uDQo+ID4NCj4gPiAgICAgT0ZGU0VU
-X0lOX1VOSU9OX0lOSVQocGFnZV9pbmZvLl9kb21haW4sICJwYWdlX2luZm8iLCAiX2RvbWFpbiIp
-Ow0KPiA+DQo+ID4gQXMgYW4gZXhwZXJpbWVudCBJIHRyaWVkIHRvIHVzZQ0KPiA+DQo+IA0KPiA+
-ICAgICBPRkZTRVRfSU5JVChwYWdlX2luZm8uX2RvbWFpbiwgInBhZ2VfaW5mbyIsICJkb21haW4i
-KQ0KPiANCj4gSnVzdCB0byBtYWtlIHN1cmUgYW5kIHNpbmNlIEkgYW0gYSBiaXQgbGF6eTogd2l0
-aCB0aGUgWGVuIHBhdGNoIHRoZSBwYWdlX2luZm8NCj4gc3RydWN0dXJlIGhhcyBhIG1lbWJlciAo
-c29tZXdoZXJlKSBuYW1lZCBkb21haW4/IChvciBfZG9tYWluKT8NCj4gDQoNCkp1c3QgdG8gZ2V0
-IHlvdSBvbiB0aGUgcmlnaHQgdHJhY2ssIHRoZSBzdHJ1Y3QgcGFnZV9pbmZvIGluIHRoZSBYZW4g
-Y29kZSBpcyBtZWFudC4NCk5vdCB0aGUgb25lIGluIHRoZSBtYWtlZHVtcGZpbGUgY29kZS4NCg0K
-Rm9yIGV4YW1wbGUgaW4geGVuLTQuMS4zL3hlbi9jb21tb24va2V4ZWMuYzoNCiNpZmRlZiBfX2lh
-NjRfXw0KICAgIFZNQ09SRUlORk9fT0ZGU0VUX1NVQihwYWdlX2luZm8sIHUuaW51c2UsIF9kb21h
-aW4pOw0KI2Vsc2UNCiAgICBWTUNPUkVJTkZPX09GRlNFVF9TVUIocGFnZV9pbmZvLCB2LmludXNl
-LCBfZG9tYWluKTsNCiNlbmRpZg0KDQpBbmQgdGhlIGRpZmZlcmVudCBwYWdlX2luZm8gc3RydWN0
-dXJlcyB5b3UgZmluZCBpbjoNCnhlbi00LjEuMy94ZW4vaW5jbHVkZS9hc20taWE2NC9tbS5oDQp4
-ZW4tNC4xLjMveGVuL2luY2x1ZGUvYXNtLXg4Ni9tbS5oDQoNCkFuZCBhbHNvIHRoZSBzdHJ1Y3R1
-cmVzIGNhbiBiZSBkaWZmZXJlbnQgZGVwZW5kaW5nIG9uIHRoZSBYZW4gdmVyc2lvbi4NCg0KPiA+
-DQo+ID4gd2l0aCBtYWtlZHVtcGZpbGUgMS41LjAuIFRvIGdldCB0aGUgY29ycmVjdCBvZmZzZXQg
-SSBoYWQgdG8NCj4gPiBtb2RpZnkgdGhlIGR3YXJmX2luZm8uYyBjb2RlOg0KPiA+DQo+ID4gLS0t
-IC4uL21ha2VkdW1wZmlsZS0xLjUuMC9kd2FyZl9pbmZvLmMgIDIwMTItMDktMDYgMDc6MzA6MjMu
-MDAwMDAwMDAwICswMjAwDQo+ID4gKysrIGR3YXJmX2luZm8uYyAgICAgICAgMjAxMi0wOS0xMiAx
-NTo0OToyMy4wMDAwMDAwMDAgKzAyMDANCj4gPiBAQCAtNDQ5LDggKzQ0OSw4IEBADQo+ID4gIHN0
-YXRpYyBpbnQNCj4gPiAgaXNfYW5vbnltb3VzX2NvbnRhaW5lcihEd2FyZl9EaWUgKmRpZSkNCj4g
-PiAgew0KPiA+IC0gICAgICAgaWYgKGR3YXJmX2RpZW5hbWUoZGllKSkNCj4gPiAtICAgICAgICAg
-ICAgICAgcmV0dXJuIEZBTFNFOw0KPiA+ICsgICAgICAgLy9pZiAoZHdhcmZfZGllbmFtZShkaWUp
-KQ0KPiA+ICsgICAgICAgLy8gICAgICByZXR1cm4gRkFMU0U7DQo+ID4gICAgICAgICBpZiAoZHdh
-cmZfdGFnKGRpZSkgPT0gRFdfVEFHX3N0cnVjdHVyZV90eXBlKQ0KPiA+ICAgICAgICAgICAgICAg
-ICByZXR1cm4gVFJVRTsNCj4gPiAgICAgICAgIGlmIChkd2FyZl9pbmZvLmNtZCAhPSBEV0FSRl9J
-TkZPX0dFVF9NRU1CRVJfT0ZGU0VUXzFTVF9VTklPTg0KPiA+IEBAIC00OTUsNyArNDk1LDcgQEAN
-Cj4gPiAgICAgICAgICAgICAgICAgICogRGVzY2VuZCBpbnRvIGFub255bW91cyBtZW1iZXJzIGFu
-ZCBzZWFyY2ggZm9yIG1lbWJlcg0KPiA+ICAgICAgICAgICAgICAgICAgKiB0aGVyZS4NCj4gPiAg
-ICAgICAgICAgICAgICAgICovDQo+ID4gLSAgICAgICAgICAgICAgIGlmICghbmFtZSkgew0KPiA+
-ICsgICAgICAgICAgICAgICBpZiAoKCFuYW1lKSB8fCAoc3RyY21wKG5hbWUsIGR3YXJmX2luZm8u
-bWVtYmVyX25hbWUpICE9IDApKSB7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaWYgKCFn
-ZXRfZGllX3R5cGUod2Fsa2VyLCAmZGllX3R5cGUpKQ0KPiA+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgY29udGludWU7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaWYgKGlz
-X2Fub255bW91c19jb250YWluZXIoJmRpZV90eXBlKSkNCj4gPg0KPiA+DQo+ID4gVGhpcyBpcyBu
-b3QgYSBwYXRjaCBidXQganVzdCBhIGRlc2NyaXB0aW9uIG9mIHdoYXQgSSBtb2RpZmllZCBmb3Ig
-YSB0ZXN0Lg0KPiA+IFRoZSB1bmRlcmx5aW5nIHF1ZXN0aW9uIGlzIHdoeSBvbmx5IHRoZSBhbm9u
-eW1vdXMgdW5pb25zIGFyZSB1c2VkIGFuZCBub3QgdGhlDQo+ID4gb25lcyB3aXRoIGEgbmFtZS4N
-Cj4gDQo+IEkgbWFkZSB0aGUgcGF0Y2ggYmVjYXVzZSBvbmUgZWxlbWVudCBpbiBzb21lIGFub255
-bW91cyBzdHJ1Y3R1cmUvdW5pb24gY29tYm8gd2FzDQo+IG5vdCBmb3VuZCBpbiBuZXdlciBrZXJu
-ZWxzIGFuZCB0aGUgcHJldmlvdXMgZXhjZXB0aW9ucyBmb3Igc3VjaCBhIHRoaW5nIHdlcmUNCj4g
-aGFyZCBjb2RlZC4gQnV0IGFzIGZhciBhcyB0aGUgZHdhcmYgaW5mbyBJIHdhcyBsb29raW5nIGF0
-IHRoZSBuYW1lZA0KPiBzdHJ1Y3R1cmVzL3VuaW9ucyB3ZXJlIGhhbmRsZWQgYW5kIEkgZGlkIG5v
-dCB3YW50IHRvIG1vZGlmeSB0aGF0IGNhc2Ugd2l0aG91dCBhDQo+IHdheSB0byB0ZXN0Lg0KPiAN
-Cj4gLVN0ZWZhbg0KDQpXaXRoIGtpbmQgcmVnYXJkcw0KDQoJTm9yYmVydA0KDQpOb3JiZXJ0IFRy
-YXBwDQpQQkcgUERHIEVTJlMgU1dFIE9TIDYNCg0KRlVKSVRTVQ0KRnVqaXRzdSBUZWNobm9sb2d5
-IFNvbHV0aW9ucyBHbWJIDQpEb21hZ2tzdHJhw59lIDI4LCBELTgwODA3IE3DvG5jaGVuLCBHZXJt
-YW55DQpFLW1haWw6IE5vcmJlcnQuVHJhcHBAdHMuZnVqaXRzdS5jb20NCldlYjogdHMuZnVqaXRz
-dS5jb20NCkNvbXBhbnkgZGV0YWlsczogdHMuZnVqaXRzdS5jb20vaW1wcmludA0KDQoNCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
++cc Eric and kexec list
+
+On Mon, Sep 17, 2012 at 2:54 AM, Huang Ying <ying.huang@intel.com> wrote:
+> If PCI devices are put into D3cold before kexec, because the
+> configuration registers of PCI devices in D3cold are not accessible.
+>
+> And if PCI bridges are put into low power state before kexec,
+> configuration registers of PCI devices underneath the PCI bridges are
+> not accessible too.
+>
+> These will make some PCI devices can not be scanned after kexec, so
+> resume the PCI devices in D3cold or PCI bridges in low power state
+> before kexec.
+
+Don't we need to resume the device even without the kexec issue?  And
+even if it's in D1 or D2?
+
+It looks to me like pci_msi_shutdown() (and probably drv->shutdown())
+depend on the device being in D0.
+
+> Signed-off-by: Huang Ying <ying.huang@intel.com>
+> ---
+>  drivers/pci/pci-driver.c |    4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> --- a/drivers/pci/pci-driver.c
+> +++ b/drivers/pci/pci-driver.c
+> @@ -421,6 +421,10 @@ static void pci_device_shutdown(struct d
+>         struct pci_dev *pci_dev = to_pci_dev(dev);
+>         struct pci_driver *drv = pci_dev->driver;
+>
+> +       /* Resume bridges and devices in D3cold for kexec to work properly */
+> +       if (pci_dev->current_state == PCI_D3cold || pci_dev->subordinate)
+> +               pm_runtime_resume(dev);
+> +
+>         if (drv && drv->shutdown)
+>                 drv->shutdown(pci_dev);
+>         pci_msi_shutdown(pci_dev);
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
