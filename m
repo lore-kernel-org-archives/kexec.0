@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ogre.sisk.pl ([193.178.161.156])
+Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TEmCJ-0004Z8-Nl
- for kexec@lists.infradead.org; Thu, 20 Sep 2012 19:14:05 +0000
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [RFC 1/3] PCI/PM: Fix kexec for D3cold and bridge suspending
-Date: Thu, 20 Sep 2012 21:20:31 +0200
-References: <1347872076-5260-1-git-send-email-ying.huang@intel.com>
- <1347872076-5260-2-git-send-email-ying.huang@intel.com>
- <CAErSpo5fVbN2vD5Omc7dGJFWUccYZoCOVRF4YmXPe2Oxm81u5g@mail.gmail.com>
-In-Reply-To: <CAErSpo5fVbN2vD5Omc7dGJFWUccYZoCOVRF4YmXPe2Oxm81u5g@mail.gmail.com>
+ id 1TEn1D-0008UI-6N
+ for kexec@lists.infradead.org; Thu, 20 Sep 2012 20:06:40 +0000
+Date: Thu, 20 Sep 2012 16:06:34 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: makedumpfile 1.5.0 takes much more time to dump
+Message-ID: <20120920200633.GL4681@redhat.com>
 MIME-Version: 1.0
-Message-Id: <201209202120.32029.rjw@sisk.pl>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,65 +21,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Huang Ying <ying.huang@intel.com>
-Cc: linux-pci@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, chaowang@redhat.com
 
-On Monday, September 17, 2012, Bjorn Helgaas wrote:
-> +cc Eric and kexec list
-> 
-> On Mon, Sep 17, 2012 at 2:54 AM, Huang Ying <ying.huang@intel.com> wrote:
-> > If PCI devices are put into D3cold before kexec, because the
-> > configuration registers of PCI devices in D3cold are not accessible.
-> >
-> > And if PCI bridges are put into low power state before kexec,
-> > configuration registers of PCI devices underneath the PCI bridges are
-> > not accessible too.
-> >
-> > These will make some PCI devices can not be scanned after kexec, so
-> > resume the PCI devices in D3cold or PCI bridges in low power state
-> > before kexec.
-> 
-> Don't we need to resume the device even without the kexec issue?  And
-> even if it's in D1 or D2?
-> 
-> It looks to me like pci_msi_shutdown() (and probably drv->shutdown())
-> depend on the device being in D0.
+Hi Atsushi san,
 
-We should in theory, but we didn't do any power management of PCI bridges
-before, so this is the first time we have a problem with it.
+We tried makedumpfile 1.5.0 on a 1TB machine and it seems to regress
+badly. We reserved 192MB of memory and following are test results.
 
-So I'd say, yeah, let's resume if current_state is between D1 and D3cold
-inclusive and the kexec comment is not very helpful (the problem is not
-kexec-specific in general).
+#1. makedumpfile-1.4.2 -E --message-level 1 -d 31
+real     3m47.520s
+user     0m56.543s
+sys	 2m41.631s
 
-Speaking of kexec, it might consider using the hibernation device freeze
-instead of device shutdown (which the kexec jump feature does).  I've seen
-reports of problems that would be solved this way most likely.
+#2. makedumpfile-1.5.0 -E --message-level 1 -d 31
+real     52m25.262s
+user     32m51.310s
+sys	 18m53.265s
 
-Thanks,
-Rafael
+#3. makedumpfile-1.4.2 -c --message-level 1 -d 31
+real     8m49.107s
+user     4m34.180s
+sys	 4m8.691s
+
+#4. makedumpfile-1.5.0 -c --message-level 1 -d 31
+real     46m48.985s
+user     29m35.203s
+sys	 16m43.149s
+
+Thanks
+Vivek
 
 
-> > Signed-off-by: Huang Ying <ying.huang@intel.com>
-> > ---
-> >  drivers/pci/pci-driver.c |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -421,6 +421,10 @@ static void pci_device_shutdown(struct d
-> >         struct pci_dev *pci_dev = to_pci_dev(dev);
-> >         struct pci_driver *drv = pci_dev->driver;
-> >
-> > +       /* Resume bridges and devices in D3cold for kexec to work properly */
-> > +       if (pci_dev->current_state == PCI_D3cold || pci_dev->subordinate)
-> > +               pm_runtime_resume(dev);
-> > +
-> >         if (drv && drv->shutdown)
-> >                 drv->shutdown(pci_dev);
-> >         pci_msi_shutdown(pci_dev);
-> 
-> 
+
+
 
 
 _______________________________________________
