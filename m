@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TEbBN-0007dO-LD
- for kexec@lists.infradead.org; Thu, 20 Sep 2012 07:28:24 +0000
-Date: Thu, 20 Sep 2012 16:25:35 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: Query about cyclic buffer size
-Message-Id: <20120920162535.63048af2d22e607a8f809133@mxc.nes.nec.co.jp>
-In-Reply-To: <20120913141018.GG4396@redhat.com>
-References: <20120913141018.GG4396@redhat.com>
-Mime-Version: 1.0
+Received: from out01.mta.xmission.com ([166.70.13.231])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TEbLV-0005ut-Hn
+ for kexec@lists.infradead.org; Thu, 20 Sep 2012 07:38:51 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <1347872076-5260-1-git-send-email-ying.huang@intel.com>
+ <1347872076-5260-2-git-send-email-ying.huang@intel.com>
+ <CAErSpo5fVbN2vD5Omc7dGJFWUccYZoCOVRF4YmXPe2Oxm81u5g@mail.gmail.com>
+Date: Thu, 20 Sep 2012 00:38:33 -0700
+In-Reply-To: <CAErSpo5fVbN2vD5Omc7dGJFWUccYZoCOVRF4YmXPe2Oxm81u5g@mail.gmail.com>
+ (Bjorn Helgaas's message of "Mon, 17 Sep 2012 14:54:16 -0600")
+Message-ID: <877grpywhy.fsf@xmission.com>
+MIME-Version: 1.0
+Subject: Re: [RFC 1/3] PCI/PM: Fix kexec for D3cold and bridge suspending
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +25,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kexec@lists.infradead.org, dyoung@redhat.com, chaowang@redhat.com
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, Huang Ying <ying.huang@intel.com>
 
-Hello Vivek,
+Bjorn Helgaas <bhelgaas@google.com> writes:
 
-On Thu, 13 Sep 2012 10:10:18 -0400
-Vivek Goyal <vgoyal@redhat.com> wrote:
+> +cc Eric and kexec list
+>
+> On Mon, Sep 17, 2012 at 2:54 AM, Huang Ying <ying.huang@intel.com> wrote:
+>> If PCI devices are put into D3cold before kexec, because the
+>> configuration registers of PCI devices in D3cold are not accessible.
+>>
+>> And if PCI bridges are put into low power state before kexec,
+>> configuration registers of PCI devices underneath the PCI bridges are
+>> not accessible too.
+>>
+>> These will make some PCI devices can not be scanned after kexec, so
+>> resume the PCI devices in D3cold or PCI bridges in low power state
+>> before kexec.
+>
+> Don't we need to resume the device even without the kexec issue?  And
+> even if it's in D1 or D2?
 
-> Hi Atsushi-san,
-> 
-> How is size of cyclic buffer decided with 1.5.0? In practice I don't think
-> asking user for the size is a good idea as user does not know how much
-> memory will be left after kernel boot.
+The basic requirement is that the device needs to be visible so we can
+auto discover it.  As I recall most sleep states don't make the device
+invisible and we can handle the rest in the device initializatoin code.
 
-As you said, I don't think asking user for the size is a smart way, either.
-So, I agree with your basic idea explained in below.
+> It looks to me like pci_msi_shutdown() (and probably drv->shutdown())
+> depend on the device being in D0.
 
-> Will it make sense for makedumpfile to automatically determine the buffer
-> size based on amount of free memory available in the system. Something
-> like use 70-80% of free memory as cyclic buffer.
+There is certainly a depenency on the config registers being visible.
+Although I don't know if much will go wrong if they aren't.
 
-Now, I think makedumpfile should automatically choose the lesser of the two below
-as the size of cyclic buffer when the size isn't specified:
+Ceratinly pci_msi_shutdown doesn't have anything to do if the device has
+had so much power removed that the device is not even exectuing.
 
-  a. the size enough for storing the 1st/2nd bitmap for the whole of vmcore
-  b. the limit size (e.g. 70-80% of free memory)
+Eric
 
-However, I don't have a good idea how to determine the appropriate size
-for the case of "b". 
-If someone have a idea for the limit size, please let me know.
-
-
-By the way, I'll be on long vacation until Sep 30, so I can't reply.
-
-Thanks
-Atsushi kumagai
+>> Signed-off-by: Huang Ying <ying.huang@intel.com>
+>> ---
+>>  drivers/pci/pci-driver.c |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> --- a/drivers/pci/pci-driver.c
+>> +++ b/drivers/pci/pci-driver.c
+>> @@ -421,6 +421,10 @@ static void pci_device_shutdown(struct d
+>>         struct pci_dev *pci_dev = to_pci_dev(dev);
+>>         struct pci_driver *drv = pci_dev->driver;
+>>
+>> +       /* Resume bridges and devices in D3cold for kexec to work properly */
+>> +       if (pci_dev->current_state == PCI_D3cold || pci_dev->subordinate)
+>> +               pm_runtime_resume(dev);
+>> +
+>>         if (drv && drv->shutdown)
+>>                 drv->shutdown(pci_dev);
+>>         pci_msi_shutdown(pci_dev);
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
