@@ -1,36 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TE9Ys-0007g6-75
- for kexec@lists.infradead.org; Wed, 19 Sep 2012 01:58:47 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 143463EE0AE
- for <kexec@lists.infradead.org>; Wed, 19 Sep 2012 10:58:40 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id F2DBB45DE4E
- for <kexec@lists.infradead.org>; Wed, 19 Sep 2012 10:58:39 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id DC59245DE4D
- for <kexec@lists.infradead.org>; Wed, 19 Sep 2012 10:58:39 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id CED5E1DB802C
- for <kexec@lists.infradead.org>; Wed, 19 Sep 2012 10:58:39 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 885E51DB8038
- for <kexec@lists.infradead.org>; Wed, 19 Sep 2012 10:58:39 +0900 (JST)
-Message-ID: <5059256B.2010708@jp.fujitsu.com>
-Date: Wed, 19 Sep 2012 10:52:43 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-MIME-Version: 1.0
-Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
- with iommu
-References: <501BB4EF.7080909@jp.fujitsu.com>
- <20120803114643.GA28330@redhat.com> <501F4877.5050605@jp.fujitsu.com>
- <20120806203902.GH25559@redhat.com> <50473306.1070803@jp.fujitsu.com>
- <20120910143604.GB639@redhat.com> <504F1343.7030607@jp.fujitsu.com>
- <20120914200334.GA9041@phenom.dumpdata.com>
-In-Reply-To: <20120914200334.GA9041@phenom.dumpdata.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TEbBN-0007dO-LD
+ for kexec@lists.infradead.org; Thu, 20 Sep 2012 07:28:24 +0000
+Date: Thu, 20 Sep 2012 16:25:35 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: Query about cyclic buffer size
+Message-Id: <20120920162535.63048af2d22e607a8f809133@mxc.nes.nec.co.jp>
+In-Reply-To: <20120913141018.GG4396@redhat.com>
+References: <20120913141018.GG4396@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -39,28 +18,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: konrad@kernel.org
-Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, vgoyal@redhat.com
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, chaowang@redhat.com
 
-(2012/09/15 5:03), Konrad Rzeszutek Wilk wrote:
->> As to the boot parameter to enable this function, you suggested using
->> reset_devices. I found that on a certain platform resetting devices
->> caused PCIe error due to a hardware bug. Therefore I think we need
->> new parameter apart from reset_devices to disable this function on
->> such a machine.
->
-> Wouldn't a DMI quirk be better for this? That way the second kernel
-> internally would know not to do this.
+Hello Vivek,
 
-That sounds good. I'll try it, thanks.
+On Thu, 13 Sep 2012 10:10:18 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
 
-Thanks,
-Takao Indoh
+> Hi Atsushi-san,
+> 
+> How is size of cyclic buffer decided with 1.5.0? In practice I don't think
+> asking user for the size is a good idea as user does not know how much
+> memory will be left after kernel boot.
 
+As you said, I don't think asking user for the size is a smart way, either.
+So, I agree with your basic idea explained in below.
+
+> Will it make sense for makedumpfile to automatically determine the buffer
+> size based on amount of free memory available in the system. Something
+> like use 70-80% of free memory as cyclic buffer.
+
+Now, I think makedumpfile should automatically choose the lesser of the two below
+as the size of cyclic buffer when the size isn't specified:
+
+  a. the size enough for storing the 1st/2nd bitmap for the whole of vmcore
+  b. the limit size (e.g. 70-80% of free memory)
+
+However, I don't have a good idea how to determine the appropriate size
+for the case of "b". 
+If someone have a idea for the limit size, please let me know.
+
+
+By the way, I'll be on long vacation until Sep 30, so I can't reply.
+
+Thanks
+Atsushi kumagai
 
 _______________________________________________
 kexec mailing list
