@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from ogre.sisk.pl ([193.178.161.156])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TF7UK-0007Fe-T2
- for kexec@lists.infradead.org; Fri, 21 Sep 2012 17:58:06 +0000
-Message-ID: <505CAAA1.3040409@redhat.com>
-Date: Fri, 21 Sep 2012 13:57:53 -0400
-From: Don Dutile <ddutile@redhat.com>
+ id 1TF8ps-0005an-Vt
+ for kexec@lists.infradead.org; Fri, 21 Sep 2012 19:24:26 +0000
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [RFC 1/3] PCI/PM: Fix kexec for D3cold and bridge suspending
+Date: Fri, 21 Sep 2012 21:30:49 +0200
+References: <1347872076-5260-1-git-send-email-ying.huang@intel.com>
+ <201209202120.32029.rjw@sisk.pl> <1348187322.8212.224.camel@yhuang-dev>
+In-Reply-To: <1348187322.8212.224.camel@yhuang-dev>
 MIME-Version: 1.0
-Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
- with iommu
-References: <501BB4EF.7080909@jp.fujitsu.com>
- <20120803114643.GA28330@redhat.com> <501F4877.5050605@jp.fujitsu.com>
- <20120806203902.GH25559@redhat.com> <50473306.1070803@jp.fujitsu.com>
- <20120910143604.GB639@redhat.com> <504F1343.7030607@jp.fujitsu.com>
- <20120914200334.GA9041@phenom.dumpdata.com>
-In-Reply-To: <20120914200334.GA9041@phenom.dumpdata.com>
+Message-Id: <201209212130.50085.rjw@sisk.pl>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,29 +19,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad@kernel.org>
-Cc: martin.wilck@ts.fujitsu.com, Takao Indoh <indou.takao@jp.fujitsu.com>, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com, vgoyal@redhat.com
+To: Huang Ying <ying.huang@intel.com>
+Cc: linux-pm@vger.kernel.org, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Bjorn Helgaas <bhelgaas@google.com>
 
-On 09/14/2012 04:03 PM, Konrad Rzeszutek Wilk wrote:
->> As to the boot parameter to enable this function, you suggested using
->> reset_devices. I found that on a certain platform resetting devices
->> caused PCIe error due to a hardware bug. Therefore I think we need
->> new parameter apart from reset_devices to disable this function on
->> such a machine.
->
-> Wouldn't a DMI quirk be better for this? That way the second kernel
-> internally would know not to do this.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-a DMI quirk for a PCIe switch?  pci-quirk maybe?  there is a hook
-in per-device pci reset code path, which could be setup for such
-a case.
+On Friday, September 21, 2012, Huang Ying wrote:
+> On Thu, 2012-09-20 at 21:20 +0200, Rafael J. Wysocki wrote:
+> > On Monday, September 17, 2012, Bjorn Helgaas wrote:
+> > > +cc Eric and kexec list
+> > > 
+> > > On Mon, Sep 17, 2012 at 2:54 AM, Huang Ying <ying.huang@intel.com> wrote:
+> > > > If PCI devices are put into D3cold before kexec, because the
+> > > > configuration registers of PCI devices in D3cold are not accessible.
+> > > >
+> > > > And if PCI bridges are put into low power state before kexec,
+> > > > configuration registers of PCI devices underneath the PCI bridges are
+> > > > not accessible too.
+> > > >
+> > > > These will make some PCI devices can not be scanned after kexec, so
+> > > > resume the PCI devices in D3cold or PCI bridges in low power state
+> > > > before kexec.
+> > > 
+> > > Don't we need to resume the device even without the kexec issue?  And
+> > > even if it's in D1 or D2?
+> > > 
+> > > It looks to me like pci_msi_shutdown() (and probably drv->shutdown())
+> > > depend on the device being in D0.
+> > 
+> > We should in theory, but we didn't do any power management of PCI bridges
+> > before, so this is the first time we have a problem with it.
+> > 
+> > So I'd say, yeah, let's resume if current_state is between D1 and D3cold
+> > inclusive and the kexec comment is not very helpful (the problem is not
+> > kexec-specific in general).
+> 
+> Resume from D1 to D3cold for any device or just bridges?
+
+I'd say every device for starters.
+
+Thanks,
+Rafael
+
+
+> > Speaking of kexec, it might consider using the hibernation device freeze
+> > instead of device shutdown (which the kexec jump feature does).  I've seen
+> > reports of problems that would be solved this way most likely.
+> > 
+> > Thanks,
+> > Rafael
+> > 
+> > 
+> > > > Signed-off-by: Huang Ying <ying.huang@intel.com>
+> > > > ---
+> > > >  drivers/pci/pci-driver.c |    4 ++++
+> > > >  1 file changed, 4 insertions(+)
+> > > >
+> > > > --- a/drivers/pci/pci-driver.c
+> > > > +++ b/drivers/pci/pci-driver.c
+> > > > @@ -421,6 +421,10 @@ static void pci_device_shutdown(struct d
+> > > >         struct pci_dev *pci_dev = to_pci_dev(dev);
+> > > >         struct pci_driver *drv = pci_dev->driver;
+> > > >
+> > > > +       /* Resume bridges and devices in D3cold for kexec to work properly */
+> > > > +       if (pci_dev->current_state == PCI_D3cold || pci_dev->subordinate)
+> > > > +               pm_runtime_resume(dev);
+> > > > +
+> > > >         if (drv && drv->shutdown)
+> > > >                 drv->shutdown(pci_dev);
+> > > >         pci_msi_shutdown(pci_dev);
+> > > 
+> > > 
+> > 
+> 
+> 
+> 
+> 
 
 
 _______________________________________________
