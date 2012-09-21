@@ -1,31 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TErLd-0004vz-1f
- for kexec@lists.infradead.org; Fri, 21 Sep 2012 00:44:03 +0000
-Received: from m4.gw.fujitsu.co.jp (unknown [10.0.50.74])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 49BB13EE0AE
- for <kexec@lists.infradead.org>; Fri, 21 Sep 2012 09:43:59 +0900 (JST)
-Received: from smail (m4 [127.0.0.1])
- by outgoing.m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 327B245DE51
- for <kexec@lists.infradead.org>; Fri, 21 Sep 2012 09:43:59 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (s4.gw.fujitsu.co.jp [10.0.50.94])
- by m4.gw.fujitsu.co.jp (Postfix) with ESMTP id 1D31845DE4D
- for <kexec@lists.infradead.org>; Fri, 21 Sep 2012 09:43:59 +0900 (JST)
-Received: from s4.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id 0F8B61DB8037
- for <kexec@lists.infradead.org>; Fri, 21 Sep 2012 09:43:59 +0900 (JST)
-Received: from m020.s.css.fujitsu.com (m020.s.css.fujitsu.com [10.0.81.60])
- by s4.gw.fujitsu.co.jp (Postfix) with ESMTP id BEC221DB803E
- for <kexec@lists.infradead.org>; Fri, 21 Sep 2012 09:43:58 +0900 (JST)
-Date: Fri, 21 Sep 2012 09:43:42 +0900 (JST)
-Message-Id: <20120921.094342.284366330.d.hatayama@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TF3LT-0008It-3Z
+ for kexec@lists.infradead.org; Fri, 21 Sep 2012 13:32:40 +0000
+Date: Fri, 21 Sep 2012 09:32:32 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: makedumpfile 1.5.0 takes much more time to dump
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20120921.092357.94103398.d.hatayama@jp.fujitsu.com>
+Message-ID: <20120921133232.GC15909@redhat.com>
 References: <20120920200633.GL4681@redhat.com>
  <20120921.092357.94103398.d.hatayama@jp.fujitsu.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20120921.092357.94103398.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,42 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: kumagai-atsushi@mxc.nes.nec.co.jp, dyoung@redhat.com, kexec@lists.infradead.org, chaowang@redhat.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: dyoung@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com
 
-From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Subject: Re: makedumpfile 1.5.0 takes much more time to dump
-Date: Fri, 21 Sep 2012 09:23:57 +0900
-
+On Fri, Sep 21, 2012 at 09:23:57AM +0900, HATAYAMA Daisuke wrote:
 > From: Vivek Goyal <vgoyal@redhat.com>
 > Subject: makedumpfile 1.5.0 takes much more time to dump
 > Date: Thu, 20 Sep 2012 16:06:34 -0400
 > 
->> Hi Atsushi san,
->> 
->> We tried makedumpfile 1.5.0 on a 1TB machine and it seems to regress
->> badly. We reserved 192MB of memory and following are test results.
->> 
->> #1. makedumpfile-1.4.2 -E --message-level 1 -d 31
->> real     3m47.520s
->> user     0m56.543s
->> sys	 2m41.631s
->> 
->> #2. makedumpfile-1.5.0 -E --message-level 1 -d 31
->> real     52m25.262s
->> user     32m51.310s
->> sys	 18m53.265s
->> 
->> #3. makedumpfile-1.4.2 -c --message-level 1 -d 31
->> real     8m49.107s
->> user     4m34.180s
->> sys	 4m8.691s
->> 
->> #4. makedumpfile-1.5.0 -c --message-level 1 -d 31
->> real     46m48.985s
->> user     29m35.203s
->> sys	 16m43.149s
->> 
+> > Hi Atsushi san,
+> > 
+> > We tried makedumpfile 1.5.0 on a 1TB machine and it seems to regress
+> > badly. We reserved 192MB of memory and following are test results.
+> > 
+> > #1. makedumpfile-1.4.2 -E --message-level 1 -d 31
+> > real     3m47.520s
+> > user     0m56.543s
+> > sys	 2m41.631s
+> > 
+> > #2. makedumpfile-1.5.0 -E --message-level 1 -d 31
+> > real     52m25.262s
+> > user     32m51.310s
+> > sys	 18m53.265s
+> > 
+> > #3. makedumpfile-1.4.2 -c --message-level 1 -d 31
+> > real     8m49.107s
+> > user     4m34.180s
+> > sys	 4m8.691s
+> > 
+> > #4. makedumpfile-1.5.0 -c --message-level 1 -d 31
+> > real     46m48.985s
+> > user     29m35.203s
+> > sys	 16m43.149s
+> > 
 > 
 > Hello Vivek,
 > 
@@ -92,17 +75,16 @@ Date: Fri, 21 Sep 2012 09:23:57 +0900
 > 
 > I guess on this environment, it took about 50 seconds to filter free
 > pages in one cycle.
-> 
 
-I noticed a careless miss. 1TB is correct on your case.
+Ok, so once we have your walking through page struct patches in, hopefully
+this problem will be gone?
 
-   N = 1TB / (4KB * 8 * 1MB) = 32 cycles.
+If that's going to take time, can we make using of new logic conditional
+on a command line option. So that user has the option of using old
+logic.
 
-So, about 95 seconds for one cycle?
-
-Thanks.
-HATAYAMA, Daisuke
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
