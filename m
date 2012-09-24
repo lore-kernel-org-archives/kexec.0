@@ -1,37 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TG6oL-000349-3b
- for kexec@lists.infradead.org; Mon, 24 Sep 2012 11:26:49 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 623BC3EE0BC
- for <kexec@lists.infradead.org>; Mon, 24 Sep 2012 20:26:47 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 485EC45DE52
- for <kexec@lists.infradead.org>; Mon, 24 Sep 2012 20:26:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 2167045DE4D
- for <kexec@lists.infradead.org>; Mon, 24 Sep 2012 20:26:47 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 154CD1DB802C
- for <kexec@lists.infradead.org>; Mon, 24 Sep 2012 20:26:47 +0900 (JST)
-Received: from m1001.s.css.fujitsu.com (m1001.s.css.fujitsu.com
- [10.240.81.139])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id B4CB71DB803A
- for <kexec@lists.infradead.org>; Mon, 24 Sep 2012 20:26:46 +0900 (JST)
-Message-ID: <5060425A.8030303@jp.fujitsu.com>
-Date: Mon, 24 Sep 2012 20:22:02 +0900
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TGA0w-0005jw-L9
+ for kexec@lists.infradead.org; Mon, 24 Sep 2012 14:52:04 +0000
+Date: Mon, 24 Sep 2012 10:51:57 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: makedumpfile 1.5.0 takes much more time to dump
+Message-ID: <20120924145157.GA14886@redhat.com>
+References: <20120920200633.GL4681@redhat.com>
+ <20120921.092357.94103398.d.hatayama@jp.fujitsu.com>
+ <20120921133232.GC15909@redhat.com>
+ <20120924.095112.153507503.d.hatayama@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: Re: [RFC][PATCH] Reset PCIe devices to address DMA problem on kdump
- with iommu
-References: <501BB4EF.7080909@jp.fujitsu.com>
- <20120803114643.GA28330@redhat.com> <501F4877.5050605@jp.fujitsu.com>
- <20120806203902.GH25559@redhat.com> <50473306.1070803@jp.fujitsu.com>
- <20120910143604.GB639@redhat.com> <504F1343.7030607@jp.fujitsu.com>
- <20120911144323.GF12039@redhat.com> <50504F47.80909@jp.fujitsu.com>
- <20120914154817.GE6221@redhat.com>
-In-Reply-To: <20120914154817.GE6221@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20120924.095112.153507503.d.hatayama@jp.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -44,69 +26,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: vgoyal@redhat.com
-Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, ishii.hironobu@jp.fujitsu.com, bhelgaas@google.com
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: dyoung@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com
 
-(2012/09/15 0:48), Vivek Goyal wrote:
-> On Wed, Sep 12, 2012 at 06:00:55PM +0900, Takao Indoh wrote:
->> (2012/09/11 23:43), Vivek Goyal wrote:
->>> On Tue, Sep 11, 2012 at 07:32:35PM +0900, Takao Indoh wrote:
->>>
->>> [..]
->>>> I'll post new patch which clears bus master bit and resets devices in
->>>> second kernel.
->>>>
->>>> As to the boot parameter to enable this function, you suggested using
->>>> reset_devices. I found that on a certain platform resetting devices
->>>> caused PCIe error due to a hardware bug. Therefore I think we need
->>>> new parameter apart from reset_devices to disable this function on
->>>> such a machine.
->>>
->>> Can you explain a bit more how the error happens. I still don't think
->>> that because of a bug in a platform somewhere we should be introducing
->>> a separate command line parameter and not reuse the exisiting one. Also
->>> you have not explained what's the bug and how a new parameter will
->>> avoid the bug.
->>
->> The bug I mentioned is that ACS Violation occurs at PCIe switch when
->> reading PCI configuration after device reset. I got information that
->> this violation is caused by PCIe switch bug. The machine becomes fatal
->> status by this error.
->>
->> The reason why I try to introduce new parameter is that I want to avoid
->> regression by this patch. Let's say this patch was included in kernel
->> and its reset function was enabled by reset_devices as you said. AFAIK
->> reset_devices is always needed for kdump, so it means that devices are
->> always reset at kdump boot time. It causes a regression that system
->> always becomes abnormal status when we run kdump on the machine which has
->> a bug I mentioned.
->>
->> To avoid this regression, I want to separate reset_devices from this
->> reset function. Or how about this?
->> - if user specify reset_devices, devices are reset by this patch, as you
->>    said.
->> - To avoid a regression I said, add new parameter like "pci=noreset".
->>    If this parameter is specified, the reset function I add is disabled
->>    and we can avoid regression.
->
-> Can we identify that particular switch in code and not reset it in code.
-> Introducing new paramenters to avoid bugs really feels odd.
+On Mon, Sep 24, 2012 at 09:51:12AM +0900, HATAYAMA Daisuke wrote:
+> From: Vivek Goyal <vgoyal@redhat.com>
+> Subject: Re: makedumpfile 1.5.0 takes much more time to dump
+> Date: Fri, 21 Sep 2012 09:32:32 -0400
+> 
+> > On Fri, Sep 21, 2012 at 09:23:57AM +0900, HATAYAMA Daisuke wrote:
+> >> From: Vivek Goyal <vgoyal@redhat.com>
+> >> Subject: makedumpfile 1.5.0 takes much more time to dump
+> >> Date: Thu, 20 Sep 2012 16:06:34 -0400
+> >> 
+> >> > Hi Atsushi san,
+> >> > 
+> >> > We tried makedumpfile 1.5.0 on a 1TB machine and it seems to regress
+> >> > badly. We reserved 192MB of memory and following are test results.
+> >> > 
+> >> > #1. makedumpfile-1.4.2 -E --message-level 1 -d 31
+> >> > real     3m47.520s
+> >> > user     0m56.543s
+> >> > sys	 2m41.631s
+> >> > 
+> >> > #2. makedumpfile-1.5.0 -E --message-level 1 -d 31
+> >> > real     52m25.262s
+> >> > user     32m51.310s
+> >> > sys	 18m53.265s
+> >> > 
+> >> > #3. makedumpfile-1.4.2 -c --message-level 1 -d 31
+> >> > real     8m49.107s
+> >> > user     4m34.180s
+> >> > sys	 4m8.691s
+> >> > 
+> >> > #4. makedumpfile-1.5.0 -c --message-level 1 -d 31
+> >> > real     46m48.985s
+> >> > user     29m35.203s
+> >> > sys	 16m43.149s
+> >> > 
+> >> 
+> >> Hello Vivek,
+> >> 
+> >> On v1.5.0 we cannot filter free pages in constant space becuase we
+> >> have yet to test it. Instead, the existing method is used here, which
+> >> repeats walking on a whole page frames the number of cycles times.
+> >> 
+> >> As Kumagai-san explains, the number of cycles can be calculated by the
+> >> following expression:
+> >> 
+> >>   N = physical memory size / (page size * bit per byte(8) * BUFSIZE_CYCLIC)
+> >> 
+> >> So,
+> >> 
+> >>   N = 2TB / (4KB * 8 * 1MB) = 64 cycles.
+> >> 
+> >> I guess on this environment, it took about 50 seconds to filter free
+> >> pages in one cycle.
+> > 
+> > Ok, so once we have your walking through page struct patches in, hopefully
+> > this problem will be gone?
+> > 
+> 
+> Yes, then free page filtering is integrated in other mem_map array
+> logics. You can see how it takes from the following message.
+> 
+> Excluding unnecessary pages        : [100 %] STEP [Excluding unnecessary pages] : 0.204574 seconds
+> 
+> New logic takes equal to or quicker than the total time indicated by
+> the above kind of messages now.
+> 
+> > If that's going to take time, can we make using of new logic conditional
+> > on a command line option. So that user has the option of using old
+> > logic.
+> > 
+> 
+> Kumagai-san should decide this. 
 
-Maybe we can do it using PCI quirk or DMI quirk as Konrad and Don said.
-But I'm still thinking whether I can add boot parameter or something to
-disable reset function so that we can use it as workaround untill we add
-quirk when we find such a buggy hardware.
+Ok, thanks a lot for testing and information. Kumagai-san is on vacation
+till sept 30. So I will wait for the response.
 
-> Also, what was the conclusion to avoid double reset. I am assuming that
-> we don't want to do bus level reset as well as driver level reset based
-> on reset_devices.
-
-I don't have a good idea to do it yet. Maybe we need to write bus:slot:func
-information to somewhere when we reset device.
-
-Thanks,
-Takao Indoh
-
+Thanks
+Vivek
 
 _______________________________________________
 kexec mailing list
