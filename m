@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mho-04-ewr.mailhop.org ([204.13.248.74]
- helo=mho-02-ewr.mailhop.org)
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TIzE3-0001At-4Z
- for kexec@lists.infradead.org; Tue, 02 Oct 2012 09:57:15 +0000
-Received: from 172.44.21.95.dynamic.jazztel.es ([95.21.44.172]
- helo=mail.viric.name)
- by mho-02-ewr.mailhop.org with esmtpsa (TLSv1:AES256-SHA:256)
- (Exim 4.72) (envelope-from <viric@viric.name>) id 1TIzDx-0002j3-A1
- for kexec@lists.infradead.org; Tue, 02 Oct 2012 09:57:09 +0000
-Date: Tue, 2 Oct 2012 11:57:03 +0200
-From: =?iso-8859-1?Q?Llu=EDs?= Batlle i Rossell <viric@viric.name>
-Subject: Trying crashkernel on 3.6.0
-Message-ID: <20121002095703.GH24121@vicerveza.homeunix.net>
+Received: from mga14.intel.com ([143.182.124.37])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TJ8Hy-0007zi-JX
+ for kexec@lists.infradead.org; Tue, 02 Oct 2012 19:37:55 +0000
+From: Andi Kleen <andi@firstfloor.org>
+Subject: Re: [PATCH v2 0/2] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+References: <20121002074434.204.47750.sendpatchset@indoh>
+Date: Tue, 02 Oct 2012 12:37:44 -0700
+In-Reply-To: <20121002074434.204.47750.sendpatchset@indoh> (Takao Indoh's
+ message of "Tue, 2 Oct 2012 16:49:56 +0900 (JST)")
+Message-ID: <m2mx04wtpz.fsf@firstfloor.org>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +20,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, vgoyal@redhat.com
 
-Hello,
+Takao Indoh <indou.takao@jp.fujitsu.com> writes:
 
-I've set up kexec for launching on panic and a cmdline mentioning
-"crashkernel=3D64M nmi_watchdog=3Dpanic"; in linux 3.5, using sysrq-c I cou=
-ld only
-get the message of "going to the purgatory", but I was told that there coul=
-d be
-a bug fixed upstream.
+> These patches reset PCIe devices at boot time to address DMA problem on
+> kdump with iommu. When "reset_devices" is specified, a hot reset is
+> triggered on each PCIe root port and downstream port to reset its
+> downstream endpoint.
 
-In 3.6, I see the purgatory message, then Booting linux, and finally:
-PANIC: early exception 0d rip 10:ffffffff813df8b9 error 58b cr2 0
+Great. I've been pondering this for a long time, but you did finally
+implement it. I hope this will make kdump a lot more reliable at least
+on the systems that support per port reset.
 
-That happens mixed with the previous 80x25 console text I had at the time I
-pressed sysrq-c.
+Now the only question is: why make it a option and not default?
 
-Any idea what it can be about?
+-Andi
 
-Regards,
-Llu=EDs.
+-- 
+ak@linux.intel.com -- Speaking for myself only
 
 _______________________________________________
 kexec mailing list
