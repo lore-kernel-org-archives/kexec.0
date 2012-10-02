@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay3.sgi.com ([192.48.152.1] helo=relay.sgi.com)
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1THN9I-0007LT-5n
- for kexec@lists.infradead.org; Thu, 27 Sep 2012 23:05:41 +0000
-Date: Thu, 27 Sep 2012 18:07:12 -0500
-From: Cliff Wickman <cpw@sgi.com>
-Subject: Re: 896MB address limit
-Message-ID: <20120927230712.GA32673@sgi.com>
-References: <E1TGHkf-0006ZB-22@eag09.americas.sgi.com>
- <877grissof.fsf@xmission.com> <20120925141834.GA6184@sgi.com>
- <871uhqnnoz.fsf@xmission.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <871uhqnnoz.fsf@xmission.com>
+Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
+ by casper.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TIuYe-0006oc-1I
+ for kexec@lists.infradead.org; Tue, 02 Oct 2012 04:58:14 +0000
+Date: Tue, 2 Oct 2012 13:55:17 +0900
+From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Subject: Re: Query about cyclic buffer size
+Message-Id: <20121002135517.b963ab90594d18d3396f24a8@mxc.nes.nec.co.jp>
+In-Reply-To: <20120920131241.GA4681@redhat.com>
+References: <20120913141018.GG4396@redhat.com>
+ <20120920162535.63048af2d22e607a8f809133@mxc.nes.nec.co.jp>
+ <20120920131241.GA4681@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,110 +24,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
+To: vgoyal@redhat.com
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, chaowang@redhat.com
 
-On Tue, Sep 25, 2012 at 08:10:04AM -0700, Eric W. Biederman wrote:
-> Cliff Wickman <cpw@sgi.com> writes:
-> 
-> > Hi Eric, and all,
-> >
-> > On Mon, Sep 24, 2012 at 08:11:12PM -0700, Eric W. Biederman wrote:
-> >> Cliff Wickman <cpw@sgi.com> writes:
-> >> 
-> >> > Gentlemen,
-> >> >
-> >> > In dumping very large memories we are running up against the 896MB 
-> >> > limit in SLES11SP2 (3.0.38 kernel).
-> >> 
-> >> Odd.  That limit should be the maximum address in memory to load the
-> >> crash kernel.  Tha limit should have nothing to do with the dump process
-> >> itself.
-> >> 
-> >> Are you saying you need more that 512MiB reserved for the crash kernel
-> >> to be able to dump all of the memory in your system?
-> >> 
-> >> Eric
-> >
-> > As I noted to Eric privately, yes we need to bump up to crashkernel=1G
-> > or more for some very large memories.
-> >
-> > As an experiment I bumped
-> > +++ linux/arch/x86/kernel/setup.c
-> > @@ -528,7 +528,7 @@ static inline unsigned long long get_tot
-> >  #ifdef CONFIG_X86_32
-> >  # define CRASH_KERNEL_ADDR_MAX (512 << 20)
-> >  #else
-> > -# define CRASH_KERNEL_ADDR_MAX (896 << 20)
-> > +# define CRASH_KERNEL_ADDR_MAX (1700 << 20)
-> >
-> > And that seems to work.  i.e. I'm currently dumping a system where
-> > crashkernel=1G and it seems to be working.
-> >
-> > Am I just living dangerously? 
-> 
-> So fundamentally this should work.  However there have been a lot of
-> kinks and silly limitations in the x86 boot protocol.
-> 
-> So it used to be that the bootloader protocol variable ramdisk_max was
-> set to 896M for 32bit kernels.  Because the ramdisk could not be located
-> in high memory.
-> 
-> Looking today it appears that ramdisk_max has been upped to 4G.
-> 
-> I will let you look through the /sbin/kexec source code.
-> 
-> As for testing I would up the limit to 4G on x86_64 and see how far
-> you get.
-> 
-> The practical question does the system still work with crashkernel=32M
-> when you have raised the limit much higher. 
-> 
-> So I would test with crashkernel=1G@2G and see if that works.  If that
-> works I figure that in practice all of the bugs are historical and we
-> can forget them.  But a sweep through the /sbin/kexec code for the magic
-> number 896 might not be out of order.
-> 
-> Eric
+Hello Vivek,
 
-I did try setting the limit to 8G. The crashkernel did get loaded there
-but it would not execute there.
+On Thu, 20 Sep 2012 09:12:41 -0400
+Vivek Goyal <vgoyal@redhat.com> wrote:
+ 
+> > Now, I think makedumpfile should automatically choose the lesser of the two below
+> > as the size of cyclic buffer when the size isn't specified:
+> > 
+> >   a. the size enough for storing the 1st/2nd bitmap for the whole of vmcore
+> >   b. the limit size (e.g. 70-80% of free memory)
+> > 
+> > However, I don't have a good idea how to determine the appropriate size
+> > for the case of "b". 
+> > If someone have a idea for the limit size, please let me know.
+> 
+> May be just look at "free" output or "cat /proc/meminfo" and grep for
+> "MemFree" calculate the size of buffer.
 
-It works fine on a UV to set the limit to 4G and use a
-crashkernel=1280M.  We have a hole of almost 2G there.
+Thank you for your answer, but what I minded was to allocate most of 
+free memory is safe or not.
+But now, I think it may be safe because processes which need some memory
+will not be created while makedumpfile is running.
 
-The memory at 2G is already in use so I can't explicitly place it there.
+So, I will try to implement the above idea for v1.5.1.
+When I make the patch, I will post them.
 
-The kernel patch looks like this:
-Index: linux/arch/x86/kernel/setup.c
-===================================================================
---- linux.orig/arch/x86/kernel/setup.c
-+++ linux/arch/x86/kernel/setup.c
-@@ -522,13 +522,12 @@ static inline unsigned long long get_tot
- /*
-  * Keep the crash kernel below this limit.  On 32 bits earlier kernels
-  * would limit the kernel to the low 512 MiB due to mapping
-  * restrictions.
-- * On 64 bits, kexec-tools currently limits us to 896 MiB; increase
-  this
-- * limit once kexec-tools are fixed.
-+ * On 64 bits, the boot protocol limits us to 4G.
-  */
- #ifdef CONFIG_X86_32
- # define CRASH_KERNEL_ADDR_MAX (512 << 20)
- #else
--# define CRASH_KERNEL_ADDR_MAX (896 << 20)
-+# define CRASH_KERNEL_ADDR_MAX (1UL << 32)
- #endif
 
- static void __init reserve_crashkernel(void)
-
--Cliff
--- 
-Cliff Wickman
-SGI
-cpw@sgi.com
-(651) 683-3824
+Thanks
+Atsushi Kumagai
 
 _______________________________________________
 kexec mailing list
