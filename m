@@ -1,31 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TJa2N-0003YG-Dh
- for kexec@lists.infradead.org; Thu, 04 Oct 2012 01:15:40 +0000
-Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 160F63EE0AE
- for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:15:30 +0900 (JST)
-Received: from smail (m1 [127.0.0.1])
- by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id F2D8745DE58
- for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:15:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
- by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id DC63445DE54
- for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:15:29 +0900 (JST)
-Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id CC39CE08002
- for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:15:29 +0900 (JST)
-Received: from m023.s.css.fujitsu.com (m023.s.css.fujitsu.com [10.0.81.63])
- by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 874761DB8032
- for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:15:29 +0900 (JST)
-Date: Thu, 04 Oct 2012 10:15:14 +0900 (JST)
-Message-Id: <20121004.101514.97028749.d.hatayama@jp.fujitsu.com>
+ id 1TJaMa-0001M4-D3
+ for kexec@lists.infradead.org; Thu, 04 Oct 2012 01:36:32 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id 4A5153EE0AE
+ for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:36:29 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 2BD7445DEBA
+ for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:36:29 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 128E745DEB6
+ for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:36:29 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 0630F1DB803E
+ for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:36:29 +0900 (JST)
+Received: from m022.s.css.fujitsu.com (m022.s.css.fujitsu.com [10.0.81.62])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id B68A01DB803F
+ for <kexec@lists.infradead.org>; Thu,  4 Oct 2012 10:36:28 +0900 (JST)
+Date: Thu, 04 Oct 2012 10:36:16 +0900 (JST)
+Message-Id: <20121004.103616.510493732.d.hatayama@jp.fujitsu.com>
 Subject: Re: makedumpfile 1.5.0 takes much more time to dump
 From: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-In-Reply-To: <20121003163835.c4be2b609deb385aab247beb@mxc.nes.nec.co.jp>
-References: <20120924.095112.153507503.d.hatayama@jp.fujitsu.com>
- <20120924145157.GA14886@redhat.com>
+In-Reply-To: <20121003124813.GB20376@redhat.com>
+References: <20120924145157.GA14886@redhat.com>
  <20121003163835.c4be2b609deb385aab247beb@mxc.nes.nec.co.jp>
+ <20121003124813.GB20376@redhat.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -39,28 +39,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kumagai-atsushi@mxc.nes.nec.co.jp
-Cc: kexec@lists.infradead.org, dyoung@redhat.com, chaowang@redhat.com, vgoyal@redhat.com
+To: vgoyal@redhat.com
+Cc: dyoung@redhat.com, kumagai-atsushi@mxc.nes.nec.co.jp, kexec@lists.infradead.org, chaowang@redhat.com
 
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+From: Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: makedumpfile 1.5.0 takes much more time to dump
-Date: Wed, 3 Oct 2012 16:38:35 +0900
-<cut>
->> BTW, Kumagai-san, in what version do you plan release of this new
->> mem_map logic? Around v1.5.2? I want to re-send a new patch set to
->> which I add small changes and comments for maintainability.
+Date: Wed, 3 Oct 2012 08:48:13 -0400
+
+> On Wed, Oct 03, 2012 at 04:38:35PM +0900, Atsushi Kumagai wrote:
 > 
-> Yes, I plan to merge it in v1.5.2. 
-> Would you re-send the new patch set based on v1.5.1 ?
+> [..]
+>> > > If that's going to take time, can we make using of new logic conditional
+>> > > on a command line option. So that user has the option of using old
+>> > > logic.
+>> > > 
+>> > 
+>> > Kumagai-san should decide this. 
+>> 
+>> I'm not planning to make the cyclic mode optional.
+>> However, I think the performance issue should be improved even without
+>> mem_map array logic.
+>> 
+>> So, I will try to reduce the number of cycles as few times as possible for v1.5.1,
+>> the performance issue will be improved.
+>> To make sure of it, would you re-test with --cyclic-buffer 32768 (32MB), Vivek ?
+>> Then the result of v1.5.0 is still too bad, I will consider using the old logic 
+>> as default logic.
+> 
+> Actually chaowang did the testing. In the bug he provided data for 16MB
+> buffer.
+> 
+> makedumpfile with 16M cyclic buffer,
+> #1. makedumpfile-1.5.0 -c --message-level 1 -d 31 --cyclic-buffer 16384
+> real     12m51.886s
+> user     6m30.710s
+> sys      6m11.642s
+> #2. makedumpfile-1.5.0 -E --message-level 1 -d 31 --cyclic-buffer 16384
+> real     11m24.141s
+> user     4m25.897s
+> sys      6m38.116s
+> 
+> Which looks much better than default numbers. Chao, can you please do the
+> testing with 32MB buffer size and provide the data here.
 > 
 
-Yes, I'll do so.
-
-> Additionally, I'm afraid that I haven't reviewed the most of patches
-> for v1.5.1 yet. So I can't tell you when v1.5.2 will be released.
-> 
-
-Please tell me that later when you figure out.
+This 32MB setting is identical to the old logic in 1TB case except
+that the cyclic buffer is on memory, not treated via temporary
+file. So, free list filtering is done at most 1 time even on the worst
+case. But it's necessary to specify proper sizes for dumpfiles of
+other sizes.
 
 Thanks.
 HATAYAMA, Daisuke
