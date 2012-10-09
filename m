@@ -1,29 +1,32 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
- by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TKFy1-00053O-UH
- for kexec@lists.infradead.org; Fri, 05 Oct 2012 22:01:58 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1348991844-12285-1-git-send-email-yinghai@kernel.org>
- <1348991844-12285-5-git-send-email-yinghai@kernel.org>
- <alpine.DEB.2.02.1210011139320.29232@kaball.uk.xensource.com>
- <20121003165105.GA30214@jshin-Toonie>
- <CAE9FiQW7vcwSUen_TD8tZQd6aDU2-on5_T4Bjr6aqN1bxM_5Cg@mail.gmail.com>
- <20121004164630.GB2244@phenom.dumpdata.com>
- <CAE9FiQUBohwjOzOm26yJME=JzZ7eH55hM+Q=Kc4Pz+ocaw90Jg@mail.gmail.com>
- <871uhcsk93.fsf@xmission.com>
- <CAE9FiQVx93B_imGbs1ms7gcu_-Z9HvkcGePQi9XpWQo0SKu-Kg@mail.gmail.com>
- <87ehlcr4et.fsf@xmission.com>
- <CAE9FiQU_PSv6afXLcQ8ohrn1wqoVttO+u5MA5xBEE4jJRVx9Mw@mail.gmail.com>
- <877gr4r40b.fsf@xmission.com>
- <CAE9FiQUW3uvkooBxqEdSxV7T8h4=5qonoLbJCPGT0kTceqSNRw@mail.gmail.com>
-Date: Fri, 05 Oct 2012 15:01:26 -0700
-In-Reply-To: <CAE9FiQUW3uvkooBxqEdSxV7T8h4=5qonoLbJCPGT0kTceqSNRw@mail.gmail.com>
- (Yinghai Lu's message of "Fri, 5 Oct 2012 14:43:57 -0700")
-Message-ID: <87obkgpoi1.fsf_-_@xmission.com>
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TLVnj-0007aO-6T
+ for kexec@lists.infradead.org; Tue, 09 Oct 2012 09:08:33 +0000
+Received: from m1.gw.fujitsu.co.jp (unknown [10.0.50.71])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id 40DBE3EE0BC
+ for <kexec@lists.infradead.org>; Tue,  9 Oct 2012 18:08:23 +0900 (JST)
+Received: from smail (m1 [127.0.0.1])
+ by outgoing.m1.gw.fujitsu.co.jp (Postfix) with ESMTP id 222C445DE5B
+ for <kexec@lists.infradead.org>; Tue,  9 Oct 2012 18:08:23 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (s1.gw.fujitsu.co.jp [10.0.50.91])
+ by m1.gw.fujitsu.co.jp (Postfix) with ESMTP id EF6E045DE55
+ for <kexec@lists.infradead.org>; Tue,  9 Oct 2012 18:08:22 +0900 (JST)
+Received: from s1.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id DFEBF1DB8057
+ for <kexec@lists.infradead.org>; Tue,  9 Oct 2012 18:08:22 +0900 (JST)
+Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
+ by s1.gw.fujitsu.co.jp (Postfix) with ESMTP id 8987F1DB8052
+ for <kexec@lists.infradead.org>; Tue,  9 Oct 2012 18:08:22 +0900 (JST)
+Message-ID: <5073E84A.8080301@jp.fujitsu.com>
+Date: Tue, 09 Oct 2012 18:03:06 +0900
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
 MIME-Version: 1.0
-Subject: 896MB address limit (was: Re: [PATCH 04/13] x86,
- mm: Revert back good_end setting for 64bit)
+Subject: Re: [PATCH v2 0/2] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+References: <20121002074434.204.47750.sendpatchset@indoh>
+ <506C3C4C.1060808@redhat.com>
+In-Reply-To: <506C3C4C.1060808@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,41 +35,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yinghai Lu <yinghai@kernel.org>
-Cc: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, kexec@lists.infradead.org, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Jacob Shin <jacob.shin@amd.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Cliff Wickman <cpw@sgi.com>, "H. Peter Anvin" <hpa@zytor.com>, Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>
+To: ddutile@redhat.com
+Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, mingo@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, vgoyal@redhat.com
 
-
-I am going to see about merging these two threads.
-
-Yinghai Lu <yinghai@kernel.org> writes:
-
-> On Fri, Oct 5, 2012 at 2:41 PM, Eric W. Biederman <ebiederm@xmission.com> wrote:
->> Yinghai Lu <yinghai@kernel.org> writes:
+(2012/10/03 22:23), Don Dutile wrote:
+> On 10/02/2012 03:49 AM, Takao Indoh wrote:
+>> These patches reset PCIe devices at boot time to address DMA problem on
+>> kdump with iommu. When "reset_devices" is specified, a hot reset is
+>> triggered on each PCIe root port and downstream port to reset its
+>> downstream endpoint.
 >>
->>> with bzImage or vmlinux?
+>> Background:
+>> A kdump problem about DMA has been discussed for a long time. That is,
+>> when a kernel is switched to the kdump kernel DMA derived from first
+>> kernel affects second kernel. Recently this problem surfaces when iommu
+>> is used for PCI passthrough on KVM guest. In the case of the machine I
+>> use, when intel_iommu=on is specified, DMAR error is detected in kdump
+>> kernel and PCI SERR is also detected. Finally kdump fails because some
+>> devices does not work correctly.
 >>
->> bzImage I presume.  Certainly the bzImage has lost it's 896M limit,
->> which is where ultimiately the 896M limite came from.
+>> The root cause is that ongoing DMA from first kernel causes DMAR fault
+>> because page table of DMAR is initialized while kdump kernel is booting
+>> up. Therefore to address this problem DMA needs to be stopped before
+>> DMAR is initialized at kdump kernel boot time. By these patches, PCIe
+>> devices are reset by hot reset and its DMA is stopped when reset_devices
+>> is specified. One problem of this solution is that the monitor blacks
+>> out when VGA controller is reset. So this patch does not reset the port
+>> whose child endpoint is VGA device.
+>>
+>> v2:
+>> Reset devices in setup_arch() because reset need to be done before
+>> interrupt remapping is initialized.
+>>
+>> v1:
+>> https://lkml.org/lkml/2012/8/3/160
+>>
+>> Thanks,
+>> Takao Indoh
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 >
-> they are using updated kexec-tools ?
 >
-> last time when i checked the code for kexec-tools
-> found the 896M problem was from kexec-tools bzimage support.
+> Maybe you've tried the following, and I missed a thread on it,
+> but instead of a somewhat-large, reset hammer, did any one try
+> just reading all the endpoint-only device CMD register, flip the MasterEnable
+> bit off, and write it back? .... that would stop all DMA (should stop
+> all MSI writes as well since they are just another DMA), and then
+> restart the system?
+> May also have to do PCI INT Disable as well... and note, that's a PCI 2.3
+> optional feature.... so devices using INT signalling vs MSI
+> is just borked on IOMMU/intr-remapping systems... which I would expect
+> are few. Then again, if this is foolishly done, then reset legacy PCI
+> busses as the fallback.
 
-Cliff Wickman was the guy at sgi running the tests.
+Just clearing bus master bit and INTx disable bit in setup_arch() did
+not solve this problem. I still got DMAR error on devices(for exmaple,
+igb and megaraid_sas).
 
-To the best of my knowledge he was runing an up to date kexec-tools and
-was loading a bzImage.  Of course his initial reaction was where did the
-896M limit come from, as he had just updated to a kernel with the limit
-a few weeks ago.
+Clearing bus master in setup_arch() and resetting devices in fixup_final
+like v1 patch is better, DMAR error was not detected. But on certain
+machine kdump kernel hung up when resetting devices. It seems to be a
+problem specific to the platform.
 
-YH please talk to Cliff directly.
+And, resetting devices in setup_arch() like v2 patch solves all problems
+I found so far.
 
-Eric
+Thanks,
+Takao Indoh
 
 
 _______________________________________________
