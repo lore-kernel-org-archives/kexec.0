@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from qmta10.emeryville.ca.mail.comcast.net ([76.96.30.17])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TNmpZ-00031j-8Q
- for kexec@lists.infradead.org; Mon, 15 Oct 2012 15:43:50 +0000
-Message-ID: <507C2F18.8080904@redhat.com>
-Date: Mon, 15 Oct 2012 17:43:20 +0200
-From: Avi Kivity <avi@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
- necessary
-References: <5077BB7B.4030203@cn.fujitsu.com>
-In-Reply-To: <5077BB7B.4030203@cn.fujitsu.com>
+ id 1TNoMs-0004AF-PB
+ for kexec@lists.infradead.org; Mon, 15 Oct 2012 17:22:21 +0000
+Message-ID: <1350321429.7065.97.camel@rhapsody>
+Subject: Re: [PATCH v4 1/2] x86, pci: Reset PCIe devices at boot time
+From: Khalid Aziz <khalid@gonehiking.org>
+Date: Mon, 15 Oct 2012 11:17:09 -0600
+In-Reply-To: <20121015065526.2832.90867.sendpatchset@indoh>
+References: <20121015065516.2832.42378.sendpatchset@indoh>
+ <20121015065526.2832.90867.sendpatchset@indoh>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,30 +23,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Takao Indoh <indou.takao@jp.fujitsu.com>
+Cc: martin.wilck@ts.fujitsu.com, linux-pci@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com
 
-On 10/12/2012 08:40 AM, Zhang Yanfei wrote:
-> Currently, kdump just makes all the logical processors leave VMX operation by
-> executing VMXOFF instruction, so any VMCSs active on the logical processors may
-> be corrupted. But, sometimes, we need the VMCSs to debug guest images contained
-> in the host vmcore. To prevent the corruption, we should VMCLEAR the VMCSs before
-> executing the VMXOFF instruction.
-
-How have you verified that VMXOFF doesn't flush cached VMCSs already?
-
+On Mon, 2012-10-15 at 16:00 +0900, Takao Indoh wrote:
+> This patch resets PCIe devices at boot time by hot reset when
+> "reset_devices" is specified.
 > 
-> The patch set provides an alternative way to clear VMCSs related to guests
-> on all cpus when host is doing kdump.
+> Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
+> ---
+>  arch/x86/include/asm/pci-direct.h |    1 
+>  arch/x86/kernel/setup.c           |    3 
+>  arch/x86/pci/early.c              |  344 ++++++++++++++++++++++++++++
+>  include/linux/pci.h               |    2 
+>  init/main.c                       |    4 
+>  5 files changed, 352 insertions(+), 2 deletions(-)
 > 
 
-I'm not sure the sysctl is really necessary.  The only reason to turn if
-off is if the corruption is so severe that the loaded vmcs list itself
-causes a crash.  I think it should be rare enough that we can do it
-unconditionally.
 
--- 
-error compiling committee.c: too many arguments to function
+Looks good.
+
+Reviewed-by: Khalid Aziz <khalid@gonehiking.org>
+
+--
+Khalid
+
 
 _______________________________________________
 kexec mailing list
