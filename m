@@ -1,19 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo202.gate.nec.co.jp ([210.143.35.52])
- by bombadil.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TNcgl-00034L-Ep
- for kexec@lists.infradead.org; Mon, 15 Oct 2012 04:54:06 +0000
-Date: Mon, 15 Oct 2012 13:46:50 +0900
-From: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
-Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
-Message-Id: <20121015134650.9be8ae8a4a0af9869c7aedf5@mxc.nes.nec.co.jp>
-In-Reply-To: <5077AAAD.9060400@linux.vnet.ibm.com>
-References: <20120606095709.12534.63967.stgit@aravinda>
- <20120611174432.114cdead.kumagai-atsushi@mxc.nes.nec.co.jp>
- <502C9273.30504@linux.vnet.ibm.com>
- <20120817131637.804c9194d21e7e44133f63f9@mxc.nes.nec.co.jp>
- <5077AAAD.9060400@linux.vnet.ibm.com>
-Mime-Version: 1.0
+Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
+ by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
+ id 1TNef4-0000LW-BR
+ for kexec@lists.infradead.org; Mon, 15 Oct 2012 07:00:28 +0000
+Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
+ by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id A23DA3EE0C3
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:18 +0900 (JST)
+Received: from smail (m3 [127.0.0.1])
+ by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 8728745DEB6
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:18 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
+ by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id 53E0B45DEBC
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:18 +0900 (JST)
+Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id C35CD1DB8049
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:17 +0900 (JST)
+Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
+ [10.240.81.136])
+ by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 79DF71DB8043
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:17 +0900 (JST)
+From: Takao Indoh <indou.takao@jp.fujitsu.com>
+Message-Id: <20121015065516.2832.42378.sendpatchset@indoh>
+Subject: [PATCH v4 0/2] Reset PCIe devices to address DMA problem on kdump
+ with iommu
+Date: Mon, 15 Oct 2012 16:00:17 +0900 (JST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,58 +32,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mahesh@linux.vnet.ibm.com
-Cc: aravinda@linux.vnet.ibm.com, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org, ananth@in.ibm.com, buendgen@de.ibm.com
+To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc: martin.wilck@ts.fujitsu.com, Takao Indoh <indou.takao@jp.fujitsu.com>, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
 
-Hello Mahesh,
+These patches reset PCIe devices at boot time to address DMA problem on
+kdump with iommu. When "reset_devices" is specified, a hot reset is
+triggered on each PCIe root port and downstream port to reset its
+downstream endpoint.
 
-On Fri, 12 Oct 2012 10:59:17 +0530
-Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+Background:
+A kdump problem about DMA has been discussed for a long time. That is,
+when a kernel is switched to the kdump kernel DMA derived from first
+kernel affects second kernel. Recently this problem surfaces when iommu
+is used for PCI passthrough on KVM guest. In the case of the machine I
+use, when intel_iommu=on is specified, DMAR error is detected in kdump
+kernel and PCI SERR is also detected. Finally kdump fails because some
+devices does not work correctly.
 
-> On 08/17/2012 09:46 AM, Atsushi Kumagai wrote:
-> > Hello Aravinda,
-> > 
-> > On Thu, 16 Aug 2012 11:55:55 +0530
-> > Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
-> > 
-> >> Hello Kumagai-san,
-> >>
-> >> Did you get a chance to review the makedumpfile security key enhancement
-> >> patches?
-> >>
-> >> - Aravinda
-> > 
-> > Sorry for not responding.
-> > 
-> > I'm afraid that I can't start to review them yet.
-> > I've been working on the cyclic mode feature for a few months,
-> > and I'm now preparing the next release including the feature.
-> > 
-> > I'll release the next version soon, I'll review your patches after that.
-> > 
-> 
-> Hi Atsushi,
-> 
-> Did you get chance to review these patches?
+The root cause is that ongoing DMA from first kernel causes DMAR fault
+because page table of DMAR is initialized while kdump kernel is booting
+up. Therefore to address this problem DMA needs to be stopped before
+DMAR is initialized at kdump kernel boot time. By these patches, PCIe
+devices are reset by hot reset and its DMA is stopped when reset_devices
+is specified. One problem of this solution is that the monitor blacks
+out when VGA controller is reset. So this patch does not reset the port
+whose child endpoint is VGA device.
 
-I'm sorry for keeping you waiting.
-I have just started reviewing these patches, I have a comment for them.
+What I tried:
+- Clearing bus master bit and INTx disable bit at boot time
+    This did not solve this problem. I still got DMAR error on devices.
+- Resetting devices in fixup_final(v1 patch)
+    DMAR error disappeared, but sometimes PCI SERR was detected. This
+    is well explained here.
+    https://lkml.org/lkml/2012/9/9/245
+    This PCI SERR seems to be related to interrupt remapping.
+- Clearing bus master in setup_arch() and resetting devices in
+  fixup_final
+    Neither DMAR error nor PCI SERR occurred. But on certain machine
+    kdump kernel hung up when resetting devices. It seems to be a
+    problem specific to the platform.
+- Resetting devices in setup_arch() (v2 and later patch)
+    This solution solves all problems I found so far.
 
-These patches require all users to prepare libeppic, but I think 
-it's not good implementation because everyone has to build libeppic
-from the source code themselves, it isn't desirable for the users who
-don't need to use this feature.
+v4:
+Reduce waiting time after resetting devices. A previous patch does reset
+like this:
+  for (each device) {
+    save config registers
+    reset
+    wait for 500 ms
+    restore config registers
+  }
 
-So, I hope to change them to optional like LZO and snappy compression.
-Is it possible ?
+If there are N devices to be reset, it takes N*500 ms. On the other
+hand, the v4 patch does:
+  for (each device) {
+    save config registers
+    reset
+  }
+  wait 500 ms
+  for (each device) {
+    restore config registers
+  }
+Though it needs more memory space to save config registers, the waiting
+time is always 500ms.
 
+v3:
+Move alloc_bootmem and free_bootmem to early_reset_pcie_devices so that
+they are called only once.
+https://lkml.org/lkml/2012/10/10/57
 
-Thanks
-Atsushi Kumagai
+v2:
+Reset devices in setup_arch() because reset need to be done before
+interrupt remapping is initialized.
+https://lkml.org/lkml/2012/10/2/54
+
+v1:
+Add fixup_final quirk to reset PCIe devices
+https://lkml.org/lkml/2012/8/3/160
+
+Thanks,
+Takao Indoh
+
 
 _______________________________________________
 kexec mailing list
