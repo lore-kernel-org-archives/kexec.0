@@ -1,30 +1,37 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail5.fujitsu.co.jp ([192.51.44.35])
+Received: from e37.co.us.ibm.com ([32.97.110.158])
  by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TNefW-0000PC-5V
- for kexec@lists.infradead.org; Mon, 15 Oct 2012 07:00:55 +0000
-Received: from m2.gw.fujitsu.co.jp (unknown [10.0.50.72])
- by fgwmail5.fujitsu.co.jp (Postfix) with ESMTP id A88B23EE0CB
- for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:46 +0900 (JST)
-Received: from smail (m2 [127.0.0.1])
- by outgoing.m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 8DD0845DE54
- for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:46 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (s2.gw.fujitsu.co.jp [10.0.50.92])
- by m2.gw.fujitsu.co.jp (Postfix) with ESMTP id 72C7445DE4E
- for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:46 +0900 (JST)
-Received: from s2.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id 6322B1DB8043
- for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:46 +0900 (JST)
-Received: from m1000.s.css.fujitsu.com (m1000.s.css.fujitsu.com
- [10.240.81.136])
- by s2.gw.fujitsu.co.jp (Postfix) with ESMTP id CB3971DB803C
- for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 16:00:45 +0900 (JST)
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Message-Id: <20121015065535.2832.76673.sendpatchset@indoh>
-In-Reply-To: <20121015065516.2832.42378.sendpatchset@indoh>
-References: <20121015065516.2832.42378.sendpatchset@indoh>
-Subject: [PATCH v4 2/2] x86, pci: Enable PCI INTx when MSI is disabled
-Date: Mon, 15 Oct 2012 16:00:45 +0900 (JST)
+ id 1TNeit-0000uP-9K
+ for kexec@lists.infradead.org; Mon, 15 Oct 2012 07:04:23 +0000
+Received: from /spool/local
+ by e37.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <aravinda@linux.vnet.ibm.com>;
+ Mon, 15 Oct 2012 01:04:19 -0600
+Received: from d03relay01.boulder.ibm.com (d03relay01.boulder.ibm.com
+ [9.17.195.226])
+ by d03dlp02.boulder.ibm.com (Postfix) with ESMTP id A4A983E4003C
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 01:04:13 -0600 (MDT)
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+ by d03relay01.boulder.ibm.com (8.13.8/8.13.8/NCO v10.0) with ESMTP id
+ q9F74GeX224148
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 01:04:16 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+ by d03av04.boulder.ibm.com (8.14.4/8.13.1/NCO v10.0 AVout) with ESMTP id
+ q9F74Fr8006938
+ for <kexec@lists.infradead.org>; Mon, 15 Oct 2012 01:04:16 -0600
+Message-ID: <507BB56C.5080304@linux.vnet.ibm.com>
+Date: Mon, 15 Oct 2012 12:34:12 +0530
+From: Aravinda Prasad <aravinda@linux.vnet.ibm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/7] makedumpfile security key filtering with eppic
+References: <20120606095709.12534.63967.stgit@aravinda>
+ <20120611174432.114cdead.kumagai-atsushi@mxc.nes.nec.co.jp>
+ <502C9273.30504@linux.vnet.ibm.com>
+ <20120817131637.804c9194d21e7e44133f63f9@mxc.nes.nec.co.jp>
+ <5077AAAD.9060400@linux.vnet.ibm.com>
+ <20121015134650.9be8ae8a4a0af9869c7aedf5@mxc.nes.nec.co.jp>
+In-Reply-To: <20121015134650.9be8ae8a4a0af9869c7aedf5@mxc.nes.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,41 +40,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: martin.wilck@ts.fujitsu.com, Takao Indoh <indou.takao@jp.fujitsu.com>, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: Atsushi Kumagai <kumagai-atsushi@mxc.nes.nec.co.jp>
+Cc: mahesh@linux.vnet.ibm.com, tachibana@mxm.nes.nec.co.jp, kexec@lists.infradead.org, ananth@in.ibm.com, buendgen@de.ibm.com
 
-This patch enables INTx if MSI is disabled in pcibios_enable_device().
-In normal case interrupt disable bit in command register is 0b on boot
-time, but in case of kdump, this bit may be 1b. It causes problems of
-some drivers. At leaset I confirmed mptsas driver does not work in such
-a case. This patch fix this problem.
+Hi Atsushi,
 
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
----
- arch/x86/pci/common.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+On 2012-10-15 10:16, Atsushi Kumagai wrote:
 
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 720e973..2bb7ecc 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -615,8 +615,10 @@ int pcibios_enable_device(struct pci_dev *dev, int mask)
- 	if ((err = pci_enable_resources(dev, mask)) < 0)
- 		return err;
- 
--	if (!pci_dev_msi_enabled(dev))
-+	if (!pci_dev_msi_enabled(dev)) {
-+		pci_intx(dev, true);
- 		return pcibios_enable_irq(dev);
-+	}
- 	return 0;
- }
- 
+> Hello Mahesh,
+> 
+> On Fri, 12 Oct 2012 10:59:17 +0530
+> Mahesh Jagannath Salgaonkar <mahesh@linux.vnet.ibm.com> wrote:
+> 
+>> On 08/17/2012 09:46 AM, Atsushi Kumagai wrote:
+>>> Hello Aravinda,
+>>>
+>>> On Thu, 16 Aug 2012 11:55:55 +0530
+>>> Aravinda Prasad <aravinda@linux.vnet.ibm.com> wrote:
+>>>
+>>>> Hello Kumagai-san,
+>>>>
+>>>> Did you get a chance to review the makedumpfile security key enhancement
+>>>> patches?
+>>>>
+>>>> - Aravinda
+>>>
+>>> Sorry for not responding.
+>>>
+>>> I'm afraid that I can't start to review them yet.
+>>> I've been working on the cyclic mode feature for a few months,
+>>> and I'm now preparing the next release including the feature.
+>>>
+>>> I'll release the next version soon, I'll review your patches after that.
+>>>
+>>
+>> Hi Atsushi,
+>>
+>> Did you get chance to review these patches?
+> 
+> I'm sorry for keeping you waiting.
+> I have just started reviewing these patches, I have a comment for them.
+> 
+> These patches require all users to prepare libeppic, but I think 
+> it's not good implementation because everyone has to build libeppic
+> from the source code themselves, it isn't desirable for the users who
+> don't need to use this feature.
+> 
+> So, I hope to change them to optional like LZO and snappy compression.
+> Is it possible ?
+
+
+Yes it is possible.
+
+I will update the patch to have eppic as optional like LZO. I will
+include this along with other changes based on your review comments.
+
+> 
+> 
+> Thanks
+> Atsushi Kumagai
+> 
+
+
+-- 
+Regards,
+Aravinda
 
 
 _______________________________________________
