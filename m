@@ -1,29 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fgwmail6.fujitsu.co.jp ([192.51.44.36])
- by merlin.infradead.org with esmtps (Exim 4.76 #1 (Red Hat Linux))
- id 1TON2I-0005M1-8o
- for kexec@lists.infradead.org; Wed, 17 Oct 2012 06:23:22 +0000
-Received: from m3.gw.fujitsu.co.jp (unknown [10.0.50.73])
- by fgwmail6.fujitsu.co.jp (Postfix) with ESMTP id D52BB3EE0B6
- for <kexec@lists.infradead.org>; Wed, 17 Oct 2012 15:23:20 +0900 (JST)
-Received: from smail (m3 [127.0.0.1])
- by outgoing.m3.gw.fujitsu.co.jp (Postfix) with ESMTP id BC2E645DEB6
- for <kexec@lists.infradead.org>; Wed, 17 Oct 2012 15:23:20 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (s3.gw.fujitsu.co.jp [10.0.50.93])
- by m3.gw.fujitsu.co.jp (Postfix) with ESMTP id A30D745DEB5
- for <kexec@lists.infradead.org>; Wed, 17 Oct 2012 15:23:20 +0900 (JST)
-Received: from s3.gw.fujitsu.co.jp (localhost.localdomain [127.0.0.1])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 956D01DB803C
- for <kexec@lists.infradead.org>; Wed, 17 Oct 2012 15:23:20 +0900 (JST)
-Received: from ml14.s.css.fujitsu.com (ml14.s.css.fujitsu.com [10.240.81.134])
- by s3.gw.fujitsu.co.jp (Postfix) with ESMTP id 4D9681DB803B
- for <kexec@lists.infradead.org>; Wed, 17 Oct 2012 15:23:20 +0900 (JST)
-From: Takao Indoh <indou.takao@jp.fujitsu.com>
-Message-Id: <20121017061816.2944.78608.sendpatchset@indoh>
-In-Reply-To: <20121017061757.2944.36671.sendpatchset@indoh>
-References: <20121017061757.2944.36671.sendpatchset@indoh>
-Subject: [PATCH v5 2/2] x86, pci: Enable PCI INTx when MSI is disabled
-Date: Wed, 17 Oct 2012 15:23:19 +0900 (JST)
+Received: from mx1.redhat.com ([209.132.183.28])
+ by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
+ id 1TOQfx-0006aP-Dq
+ for kexec@lists.infradead.org; Wed, 17 Oct 2012 10:16:35 +0000
+Message-ID: <507E8575.4040908@redhat.com>
+Date: Wed, 17 Oct 2012 12:16:21 +0200
+From: Avi Kivity <avi@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
+ necessary
+References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
+ <507E17C0.9070305@cn.fujitsu.com>
+In-Reply-To: <507E17C0.9070305@cn.fujitsu.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,44 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-pci@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: martin.wilck@ts.fujitsu.com, Takao Indoh <indou.takao@jp.fujitsu.com>, kexec@lists.infradead.org, hbabu@us.ibm.com, andi@firstfloor.org, ddutile@redhat.com, ishii.hironobu@jp.fujitsu.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com, vgoyal@redhat.com, khalid@gonehiking.org
+To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
+Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
 
-This patch enables INTx if MSI is disabled in pcibios_enable_device().
-In normal case interrupt disable bit in command register is 0b on boot
-time, but in case of kdump, this bit may be 1b. It causes problems of
-some drivers. At leaset I confirmed mptsas driver does not work in such
-a case. This patch fix this problem.
-
-Signed-off-by: Takao Indoh <indou.takao@jp.fujitsu.com>
----
- arch/x86/pci/common.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/pci/common.c b/arch/x86/pci/common.c
-index 720e973..2bb7ecc 100644
---- a/arch/x86/pci/common.c
-+++ b/arch/x86/pci/common.c
-@@ -615,8 +615,10 @@ int pcibios_enable_device(struct pci_dev *dev, int mask)
- 	if ((err = pci_enable_resources(dev, mask)) < 0)
- 		return err;
- 
--	if (!pci_dev_msi_enabled(dev))
-+	if (!pci_dev_msi_enabled(dev)) {
-+		pci_intx(dev, true);
- 		return pcibios_enable_irq(dev);
-+	}
- 	return 0;
- }
- 
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTAvMTcvMjAxMiAwNDoyOCBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IOS6jiAyMDEy5bm0
+MTDmnIgxNeaXpSAyMzo0MywgQXZpIEtpdml0eSDlhpnpgZM6Cj4+IE9uIDEwLzEyLzIwMTIgMDg6
+NDAgQU0sIFpoYW5nIFlhbmZlaSB3cm90ZToKPj4+IEN1cnJlbnRseSwga2R1bXAganVzdCBtYWtl
+cyBhbGwgdGhlIGxvZ2ljYWwgcHJvY2Vzc29ycyBsZWF2ZSBWTVggb3BlcmF0aW9uIGJ5Cj4+PiBl
+eGVjdXRpbmcgVk1YT0ZGIGluc3RydWN0aW9uLCBzbyBhbnkgVk1DU3MgYWN0aXZlIG9uIHRoZSBs
+b2dpY2FsIHByb2Nlc3NvcnMgbWF5Cj4+PiBiZSBjb3JydXB0ZWQuIEJ1dCwgc29tZXRpbWVzLCB3
+ZSBuZWVkIHRoZSBWTUNTcyB0byBkZWJ1ZyBndWVzdCBpbWFnZXMgY29udGFpbmVkCj4+PiBpbiB0
+aGUgaG9zdCB2bWNvcmUuIFRvIHByZXZlbnQgdGhlIGNvcnJ1cHRpb24sIHdlIHNob3VsZCBWTUNM
+RUFSIHRoZSBWTUNTcyBiZWZvcmUKPj4+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9u
+Lgo+PiAKPj4gSG93IGhhdmUgeW91IHZlcmlmaWVkIHRoYXQgVk1YT0ZGIGRvZXNuJ3QgZmx1c2gg
+Y2FjaGVkIFZNQ1NzIGFscmVhZHk/Cj4+IAo+IAo+IEkgdHJpZWQgc29tZSB0ZXN0cywgZm9yIGV4
+YW1wbGUsIEkgbWFkZSBjb3BpZXMgZm9yIGV2ZXJ5IHZtY3MsIGFuZCBpbiB0aGUga2R1bXAKPiBw
+YXRoLCBJIGJhY2tlZCB1cCBhbGwgdGhlIGxvYWRlZCB2bWNzIGludG8gdGhlIGNvcGllcyBiZWZv
+cmUgdm14b2ZmLgo+IEFmdGVyIGdlbmVyYXRpbmcgdGhlIHZtY29yZSwgSSByZXRyaWV2ZSB0aGUg
+dm1jc3MgYW5kIHRoZWlyIGNvcGllcywgYW5kIGNvbXBhcmUgdGhlbSwKPiBubyBkaWZmZXJlbmNl
+cy4KPiAKPiBBbm90aGVyIHRlc3QgaXMgdXNpbmcgVk1DTEVBUiB0byBjbGVhciBhbGwgdGhlIGxv
+YWRlZCB2bWNzIGJlZm9yZSBWTVhPRkYsCj4gYW5kIGNvbXBhcmUgdGhlIHZtY3NzIGFuZCB0aGVp
+ciBjb3BpZXMsIHRoZXJlIGFyZSBpbmRlZWQgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUKPiB2bWNz
+IGFuZCBpdHMgY29weS4KPiAKPiBJIGtub3cgdGhlIHRlc3RzIG1heSBiZSBub3Qgc28gY29udmlu
+Y2luZywgZm9yIGV4YW1wbGUsIEkgdXNlZCBtZW1jcHkgdG8gYmFjayB1cAo+IHRoZSB2bWNzcyBh
+bmQgaXQgaXMgYW4gb3JkaW5hcnkgbWVtb3J5IG9wZXJhdGlvbi4gQnV0IHRvIGVuc3VyZSB0aGUg
+bm9uLWNvcnJ1cHRpb24KPiBvZiB0aGUgdm1jc3MgaW4gdGhlIHZtY29yZSwgSSB0aGluayB3ZSBz
+aG91bGQgVk1DTEVBUiB0aGUgdm1jc3MgYmVmb3JlIFZNWE9GRiBqdXN0Cj4gYXMgdGhlIEludGVs
+IHNwZWMgc2F5cy4KClNvcnJ5LCBJIHdhcyB1bmNsZWFyIC0tIEkgd2FzIHJlZmVycmluZyB0byB0
+aGUgc3BlYywgSSB3YXNuJ3Qgc3VyZQp3aGV0aGVyIFZNWE9GRiBpcyBkZWZpbmVkIHRvIGZsdXNo
+IFZNQ1NlcyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMKb24tY2hpcCBjYWNoZXMgc28g
+dGhhdCBpdCB3b24ndCBmbHVzaCB0aGVtIG91dCBpbiB0aGUgZnV0dXJlLCBjb3JydXB0aW5nCm1l
+bW9yeS4gIFdlIGRvbid0IHdhbnQgdG8gZGVwZW5kIG9uIGFjdHVhbCBiZWhhdmlvdXIgYXMgaXQg
+bWF5IGNoYW5nZQp3aXRoIGZ1dHVyZSB2ZXJzaW9uLgoKQ29weWluZyBzb21lIEludGVsIGZvbGss
+IG1heWJlIHRoZXkgY2FuIGNsYXJpZnkgaXQuCgo+IAo+Pj4KPj4+IFRoZSBwYXRjaCBzZXQgcHJv
+dmlkZXMgYW4gYWx0ZXJuYXRpdmUgd2F5IHRvIGNsZWFyIFZNQ1NzIHJlbGF0ZWQgdG8gZ3Vlc3Rz
+Cj4+PiBvbiBhbGwgY3B1cyB3aGVuIGhvc3QgaXMgZG9pbmcga2R1bXAuCj4+Pgo+PiAKPj4gSSdt
+IG5vdCBzdXJlIHRoZSBzeXNjdGwgaXMgcmVhbGx5IG5lY2Vzc2FyeS4gIFRoZSBvbmx5IHJlYXNv
+biB0byB0dXJuIGlmCj4+IG9mZiBpcyBpZiB0aGUgY29ycnVwdGlvbiBpcyBzbyBzZXZlcmUgdGhh
+dCB0aGUgbG9hZGVkIHZtY3MgbGlzdCBpdHNlbGYKPj4gY2F1c2VzIGEgY3Jhc2guICBJIHRoaW5r
+IGl0IHNob3VsZCBiZSByYXJlIGVub3VnaCB0aGF0IHdlIGNhbiBkbyBpdAo+PiB1bmNvbmRpdGlv
+bmFsbHkuCj4+IAo+IAo+IFlvdSBtZWFuIG5vdCB1c2luZyBzeXNjdGwgYW5kIGp1c3QgbGV0IFZN
+Q0xFQVItVk1DU1MgYmUgYSBkZWZhdWx0IGJlaGF2aW91cj8gSWYgc28sCj4gSSBhZ3JlZSB3aXRo
+IHlvdS4KClllcywgdGhhdCdzIHdoYXQgSSBtZWFudC4KCgotLSAKZXJyb3IgY29tcGlsaW5nIGNv
+bW1pdHRlZS5jOiB0b28gbWFueSBhcmd1bWVudHMgdG8gZnVuY3Rpb24KCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
