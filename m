@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TOQfx-0006aP-Dq
- for kexec@lists.infradead.org; Wed, 17 Oct 2012 10:16:35 +0000
-Message-ID: <507E8575.4040908@redhat.com>
-Date: Wed, 17 Oct 2012 12:16:21 +0200
-From: Avi Kivity <avi@redhat.com>
+ id 1TOUMg-0006Qx-1H
+ for kexec@lists.infradead.org; Wed, 17 Oct 2012 14:12:55 +0000
+Date: Wed, 17 Oct 2012 10:12:34 -0400
+From: Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
+Message-ID: <20121017141234.GD31663@redhat.com>
+References: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
 MIME-Version: 1.0
-Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
- necessary
-References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
- <507E17C0.9070305@cn.fujitsu.com>
-In-Reply-To: <507E17C0.9070305@cn.fujitsu.com>
+Content-Disposition: inline
+In-Reply-To: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,53 +19,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
-Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
+To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
+Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, tglx@linutronix.de
 
-T24gMTAvMTcvMjAxMiAwNDoyOCBBTSwgWmhhbmcgWWFuZmVpIHdyb3RlOgo+IOS6jiAyMDEy5bm0
-MTDmnIgxNeaXpSAyMzo0MywgQXZpIEtpdml0eSDlhpnpgZM6Cj4+IE9uIDEwLzEyLzIwMTIgMDg6
-NDAgQU0sIFpoYW5nIFlhbmZlaSB3cm90ZToKPj4+IEN1cnJlbnRseSwga2R1bXAganVzdCBtYWtl
-cyBhbGwgdGhlIGxvZ2ljYWwgcHJvY2Vzc29ycyBsZWF2ZSBWTVggb3BlcmF0aW9uIGJ5Cj4+PiBl
-eGVjdXRpbmcgVk1YT0ZGIGluc3RydWN0aW9uLCBzbyBhbnkgVk1DU3MgYWN0aXZlIG9uIHRoZSBs
-b2dpY2FsIHByb2Nlc3NvcnMgbWF5Cj4+PiBiZSBjb3JydXB0ZWQuIEJ1dCwgc29tZXRpbWVzLCB3
-ZSBuZWVkIHRoZSBWTUNTcyB0byBkZWJ1ZyBndWVzdCBpbWFnZXMgY29udGFpbmVkCj4+PiBpbiB0
-aGUgaG9zdCB2bWNvcmUuIFRvIHByZXZlbnQgdGhlIGNvcnJ1cHRpb24sIHdlIHNob3VsZCBWTUNM
-RUFSIHRoZSBWTUNTcyBiZWZvcmUKPj4+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9u
-Lgo+PiAKPj4gSG93IGhhdmUgeW91IHZlcmlmaWVkIHRoYXQgVk1YT0ZGIGRvZXNuJ3QgZmx1c2gg
-Y2FjaGVkIFZNQ1NzIGFscmVhZHk/Cj4+IAo+IAo+IEkgdHJpZWQgc29tZSB0ZXN0cywgZm9yIGV4
-YW1wbGUsIEkgbWFkZSBjb3BpZXMgZm9yIGV2ZXJ5IHZtY3MsIGFuZCBpbiB0aGUga2R1bXAKPiBw
-YXRoLCBJIGJhY2tlZCB1cCBhbGwgdGhlIGxvYWRlZCB2bWNzIGludG8gdGhlIGNvcGllcyBiZWZv
-cmUgdm14b2ZmLgo+IEFmdGVyIGdlbmVyYXRpbmcgdGhlIHZtY29yZSwgSSByZXRyaWV2ZSB0aGUg
-dm1jc3MgYW5kIHRoZWlyIGNvcGllcywgYW5kIGNvbXBhcmUgdGhlbSwKPiBubyBkaWZmZXJlbmNl
-cy4KPiAKPiBBbm90aGVyIHRlc3QgaXMgdXNpbmcgVk1DTEVBUiB0byBjbGVhciBhbGwgdGhlIGxv
-YWRlZCB2bWNzIGJlZm9yZSBWTVhPRkYsCj4gYW5kIGNvbXBhcmUgdGhlIHZtY3NzIGFuZCB0aGVp
-ciBjb3BpZXMsIHRoZXJlIGFyZSBpbmRlZWQgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUKPiB2bWNz
-IGFuZCBpdHMgY29weS4KPiAKPiBJIGtub3cgdGhlIHRlc3RzIG1heSBiZSBub3Qgc28gY29udmlu
-Y2luZywgZm9yIGV4YW1wbGUsIEkgdXNlZCBtZW1jcHkgdG8gYmFjayB1cAo+IHRoZSB2bWNzcyBh
-bmQgaXQgaXMgYW4gb3JkaW5hcnkgbWVtb3J5IG9wZXJhdGlvbi4gQnV0IHRvIGVuc3VyZSB0aGUg
-bm9uLWNvcnJ1cHRpb24KPiBvZiB0aGUgdm1jc3MgaW4gdGhlIHZtY29yZSwgSSB0aGluayB3ZSBz
-aG91bGQgVk1DTEVBUiB0aGUgdm1jc3MgYmVmb3JlIFZNWE9GRiBqdXN0Cj4gYXMgdGhlIEludGVs
-IHNwZWMgc2F5cy4KClNvcnJ5LCBJIHdhcyB1bmNsZWFyIC0tIEkgd2FzIHJlZmVycmluZyB0byB0
-aGUgc3BlYywgSSB3YXNuJ3Qgc3VyZQp3aGV0aGVyIFZNWE9GRiBpcyBkZWZpbmVkIHRvIGZsdXNo
-IFZNQ1NlcyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMKb24tY2hpcCBjYWNoZXMgc28g
-dGhhdCBpdCB3b24ndCBmbHVzaCB0aGVtIG91dCBpbiB0aGUgZnV0dXJlLCBjb3JydXB0aW5nCm1l
-bW9yeS4gIFdlIGRvbid0IHdhbnQgdG8gZGVwZW5kIG9uIGFjdHVhbCBiZWhhdmlvdXIgYXMgaXQg
-bWF5IGNoYW5nZQp3aXRoIGZ1dHVyZSB2ZXJzaW9uLgoKQ29weWluZyBzb21lIEludGVsIGZvbGss
-IG1heWJlIHRoZXkgY2FuIGNsYXJpZnkgaXQuCgo+IAo+Pj4KPj4+IFRoZSBwYXRjaCBzZXQgcHJv
-dmlkZXMgYW4gYWx0ZXJuYXRpdmUgd2F5IHRvIGNsZWFyIFZNQ1NzIHJlbGF0ZWQgdG8gZ3Vlc3Rz
-Cj4+PiBvbiBhbGwgY3B1cyB3aGVuIGhvc3QgaXMgZG9pbmcga2R1bXAuCj4+Pgo+PiAKPj4gSSdt
-IG5vdCBzdXJlIHRoZSBzeXNjdGwgaXMgcmVhbGx5IG5lY2Vzc2FyeS4gIFRoZSBvbmx5IHJlYXNv
-biB0byB0dXJuIGlmCj4+IG9mZiBpcyBpZiB0aGUgY29ycnVwdGlvbiBpcyBzbyBzZXZlcmUgdGhh
-dCB0aGUgbG9hZGVkIHZtY3MgbGlzdCBpdHNlbGYKPj4gY2F1c2VzIGEgY3Jhc2guICBJIHRoaW5r
-IGl0IHNob3VsZCBiZSByYXJlIGVub3VnaCB0aGF0IHdlIGNhbiBkbyBpdAo+PiB1bmNvbmRpdGlv
-bmFsbHkuCj4+IAo+IAo+IFlvdSBtZWFuIG5vdCB1c2luZyBzeXNjdGwgYW5kIGp1c3QgbGV0IFZN
-Q0xFQVItVk1DU1MgYmUgYSBkZWZhdWx0IGJlaGF2aW91cj8gSWYgc28sCj4gSSBhZ3JlZSB3aXRo
-IHlvdS4KClllcywgdGhhdCdzIHdoYXQgSSBtZWFudC4KCgotLSAKZXJyb3IgY29tcGlsaW5nIGNv
-bW1pdHRlZS5jOiB0b28gbWFueSBhcmd1bWVudHMgdG8gZnVuY3Rpb24KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On Tue, Oct 16, 2012 at 01:35:17PM +0900, HATAYAMA Daisuke wrote:
+> Multiple CPUs are useful for CPU-bound processing like compression and
+> I do want to use compression to generate crash dump quickly. But now
+> we cannot wakeup the 2nd and later cpus in the kdump 2nd kernel if
+> crash happens on AP. If crash happens on AP, kexec enters the 2nd
+> kernel with the AP, and there BSP in the 1st kernel is expected to be
+> haling in the 1st kernel or possibly in any fatal system error state.
+
+Hatayama san,
+
+Do you have any rough numbers on what kind of speed up we are looking
+at. IOW, what % of time is gone compressing a filetered dump. On large
+memory machines, saving huge dump files is anyway not an option due to
+time it takes. So we need to filter it to bare minimum and after that
+vmcore size should be reasonable and compression time might not be a
+big factor. Hence I am curious what kind of gains we are looking at.
+
+> 
+> To wake up AP, we use the method called INIT-INIT-SIPI. INIT causes
+> BSP to jump into BIOS init code. A typical visible behaviour is hang
+> or immediate reset, depending on the BIOS init code.
+> 
+> AP can be initiated by INIT even in a fatal state: MP spec explains
+> that processor-specific INIT can be used to recover AP from a fatal
+> system error. On the other hand, there's no method for BSP to recover;
+> it might be possible to do so by NMI plus any hand-coded reset code
+> that is carefully designed, but at least I have no idea in this
+> direction now.
+> 
+> Therefore, the idea I do in this patch set is simply to disable BSP if
+> vboot cpu is AP.
+
+So in regular boot BSP still works as we boot on BSP. So this will take
+effect only in kdump kernel?
+
+How well does it work with nr_cpus kernel parameter. Currently we boot
+with nr_cpus=1 to save upon amount of memory to be reserved. I guess
+you might want to boot with nr_cpus=2 or nr_cpus=4 in your case to
+speed up compression?
+
+
+[..]
+> Note: recent upstream kernel fails reserving memory for kdump 2nd
+> kernel. To run kdump, please apply the patch below on top of this
+> patch set:
+> https://lkml.org/lkml/2012/8/31/238
+
+Above is a big issue. 3.6 kernel is broken and I can't take dump on F18
+either. (works only on one machine). I have not looked enough into it
+the issue to figure out what's the issue at hand, but we really need
+atleast a stop gap fix (assuming others are working on longer term 
+fix).
+
+Thanks
+Vivek
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
