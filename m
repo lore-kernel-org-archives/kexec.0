@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx1.redhat.com ([209.132.183.28])
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TOgYm-0002mZ-Uw
- for kexec@lists.infradead.org; Thu, 18 Oct 2012 03:14:14 +0000
-Date: Thu, 18 Oct 2012 11:10:29 +0800
+ id 1TOgaS-0002yE-NO
+ for kexec@lists.infradead.org; Thu, 18 Oct 2012 03:15:57 +0000
+Message-ID: <507F7394.5020501@redhat.com>
+Date: Thu, 18 Oct 2012 11:12:20 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH v2] kdump: pass acpi_rsdp= to 2nd kernel for efi booting
-Message-ID: <20121018031028.GA3850@localhost.localdomain>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [PATCH]kdump: pass noefi and acpi_rsdp= to 2nd kernel
+References: <20120905054445.GA6370@dhcp-16-143.nay.redhat.com>
+ <5047DBA9.8030000@hp.com> <504815EB.9000701@redhat.com>
+ <5048E40E.7040003@hp.com> <5049B6AD.9000304@redhat.com>
+ <504FF4DB.6030601@redhat.com>
+In-Reply-To: <504FF4DB.6030601@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,83 +25,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com, khalid.aziz@hp.com
+To: Khalid Aziz <khalid.aziz@hp.com>
+Cc: horms@verge.net.au, kexec@lists.infradead.org, vgoyal@redhat.com
+
+On 09/12/2012 10:35 AM, Dave Young wrote:
+
+> On 09/07/2012 04:56 PM, Dave Young wrote:
+>>
+>> I did some digging about the efi boot kdump in slackware with kernel
+>> from latest linus tree. I'm surprise that kdump works even without these
+>> "noefi" and "acpi_rsdp="
+>>
+>> With fedora 17 3.4.3 kernel passing "acpi_rsdp=" is enough for kdump
+>> kernel booting.
+>>
+>> Actually in x86 setup code if bootloader do not pass correct efi_info in
+>> boot_params efi_enabled will be set to 0 automaticlly.
+>>
+>> So as for this patch 'noefi' is not needed.
+>>
+>> I will do more testing to see why linus tree works without "acpi_rsdp="
+>>
+> 
+> There's probably some efi changes between 3.4.3 - 3.6.0-rc4 cause this
+> works. I have not got time to bisect it.
 
 
-In case efi booting, kdump need kernel parameter acpi_rsdp= to retrieve
-the acpi root table physical address.
+During recent test, I found I mistakenly used wrong kernel config
+without CONFIG_EFI in 1st kernel for testing. acpi_rsdp= is still needed.
 
-Add a function cmdline_add_efi to get the address from /sys/firmware/efi/systab
-If there's no such file or read fail the function will just do nothing.
+Just resent the v2 patch, please help to review.
 
-Tested efi boot Fedora 17 on thinkpad T420.
-
-Some background info for this issue:
-http://lists.infradead.org/pipermail/kexec/2010-March/003889.html
-
-[v1 -> v2]:
-Address comments from Khalid and Simon
-use fgets instead of read(2) to iterate the file
-do not add 'noefi' because kexec does not construct EFI signature
-in bootloader signature in boot_params, so kexec'd kernel will
-disable EFI automatically even without noefi.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kexec/arch/i386/crashdump-x86.c |   35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
---- kexec-tools.orig/kexec/arch/i386/crashdump-x86.c
-+++ kexec-tools/kexec/arch/i386/crashdump-x86.c
-@@ -835,6 +835,40 @@ static int cmdline_add_memmap_acpi(char 
- 	return 0;
- }
- 
-+/* Appends 'acpi_rsdp=' commandline for efi boot crash dump */
-+static void cmdline_add_efi(char *cmdline)
-+{
-+	FILE *fp;
-+	int cmdlen, len;
-+	char line[MAX_LINE], *s;
-+	const char *acpis = " acpi_rsdp=";
-+
-+	fp = fopen("/sys/firmware/efi/systab", "r");
-+	if (!fp)
-+		return;
-+
-+	while(fgets(line, sizeof(line), fp) != 0) {
-+		/* ACPI20= always goes before ACPI= */
-+		if ((strstr(line, "ACPI20=")) || (strstr(line, "ACPI="))) {
-+		        line[strlen(line) - 1] = '\0';
-+			s = strchr(line, '=');
-+			s += 1;
-+			len = strlen(s) + strlen(acpis);
-+			cmdlen = strlen(cmdline) + len;
-+			if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+				die("Command line overflow\n");
-+			strcat(cmdline, acpis);
-+			strcat(cmdline, s);
-+			dbgprintf("Command line after adding efi\n");
-+			dbgprintf("%s\n", cmdline);
-+
-+			break;
-+		}
-+	}
-+
-+	fclose(fp);
-+}
-+
- static void get_backup_area(struct kexec_info *info,
- 				struct memory_range *range, int ranges)
- {
-@@ -998,6 +1032,7 @@ int load_crashdump_segments(struct kexec
- 	if (delete_memmap(memmap_p, elfcorehdr, memsz) < 0)
- 		return -1;
- 	cmdline_add_memmap(mod_cmdline, memmap_p);
-+	cmdline_add_efi(mod_cmdline);
- 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
- 
- 	/* Inform second kernel about the presence of ACPI tables. */
+-- 
+Thanks
+Dave
 
 _______________________________________________
 kexec mailing list
