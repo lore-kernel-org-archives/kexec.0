@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx1.redhat.com ([209.132.183.28])
+Received: from [222.73.24.84] (helo=song.cn.fujitsu.com)
  by merlin.infradead.org with esmtp (Exim 4.76 #1 (Red Hat Linux))
- id 1TOUMg-0006Qx-1H
- for kexec@lists.infradead.org; Wed, 17 Oct 2012 14:12:55 +0000
-Date: Wed, 17 Oct 2012 10:12:34 -0400
-From: Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v1 0/2] x86, apic: Disable BSP if boot cpu is AP
-Message-ID: <20121017141234.GD31663@redhat.com>
-References: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
+ id 1TOefu-0001AP-Bh
+ for kexec@lists.infradead.org; Thu, 18 Oct 2012 01:13:27 +0000
+Message-ID: <507F5762.3060208@cn.fujitsu.com>
+Date: Thu, 18 Oct 2012 09:12:02 +0800
+From: Zhang Yanfei <zhangyanfei@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20121016043357.20003.5885.stgit@localhost6.localdomain6>
+Subject: Re: [PATCH 0/3] x86: clear vmcss on all cpus when doing kdump if
+ necessary
+References: <5077BB7B.4030203@cn.fujitsu.com> <507C2F18.8080904@redhat.com>
+ <507E17C0.9070305@cn.fujitsu.com> <507E8575.4040908@redhat.com>
+In-Reply-To: <507E8575.4040908@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,70 +20,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: kexec-bounces@lists.infradead.org
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>
-Cc: len.brown@intel.com, fenghua.yu@intel.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, ebiederm@xmission.com, hpa@zytor.com, mingo@elte.hu, tglx@linutronix.de
+To: Avi Kivity <avi@redhat.com>
+Cc: x86@kernel.org, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, linux-doc@vger.kernel.org, "Hao, Xudong" <xudong.hao@intel.com>, mtosatti@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, "Nakajima, Jun" <jun.nakajima@intel.com>
 
-On Tue, Oct 16, 2012 at 01:35:17PM +0900, HATAYAMA Daisuke wrote:
-> Multiple CPUs are useful for CPU-bound processing like compression and
-> I do want to use compression to generate crash dump quickly. But now
-> we cannot wakeup the 2nd and later cpus in the kdump 2nd kernel if
-> crash happens on AP. If crash happens on AP, kexec enters the 2nd
-> kernel with the AP, and there BSP in the 1st kernel is expected to be
-> haling in the 1st kernel or possibly in any fatal system error state.
-
-Hatayama san,
-
-Do you have any rough numbers on what kind of speed up we are looking
-at. IOW, what % of time is gone compressing a filetered dump. On large
-memory machines, saving huge dump files is anyway not an option due to
-time it takes. So we need to filter it to bare minimum and after that
-vmcore size should be reasonable and compression time might not be a
-big factor. Hence I am curious what kind of gains we are looking at.
-
-> 
-> To wake up AP, we use the method called INIT-INIT-SIPI. INIT causes
-> BSP to jump into BIOS init code. A typical visible behaviour is hang
-> or immediate reset, depending on the BIOS init code.
-> 
-> AP can be initiated by INIT even in a fatal state: MP spec explains
-> that processor-specific INIT can be used to recover AP from a fatal
-> system error. On the other hand, there's no method for BSP to recover;
-> it might be possible to do so by NMI plus any hand-coded reset code
-> that is carefully designed, but at least I have no idea in this
-> direction now.
-> 
-> Therefore, the idea I do in this patch set is simply to disable BSP if
-> vboot cpu is AP.
-
-So in regular boot BSP still works as we boot on BSP. So this will take
-effect only in kdump kernel?
-
-How well does it work with nr_cpus kernel parameter. Currently we boot
-with nr_cpus=1 to save upon amount of memory to be reserved. I guess
-you might want to boot with nr_cpus=2 or nr_cpus=4 in your case to
-speed up compression?
-
-
-[..]
-> Note: recent upstream kernel fails reserving memory for kdump 2nd
-> kernel. To run kdump, please apply the patch below on top of this
-> patch set:
-> https://lkml.org/lkml/2012/8/31/238
-
-Above is a big issue. 3.6 kernel is broken and I can't take dump on F18
-either. (works only on one machine). I have not looked enough into it
-the issue to figure out what's the issue at hand, but we really need
-atleast a stop gap fix (assuming others are working on longer term 
-fix).
-
-Thanks
-Vivek
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5LqOIDIwMTLlubQxMOaciDE35pelIDE4OjE2LCBBdmkgS2l2aXR5IOWGmemBkzoKPiBPbiAxMC8x
+Ny8yMDEyIDA0OjI4IEFNLCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+IOS6jiAyMDEy5bm0MTDmnIgx
+NeaXpSAyMzo0MywgQXZpIEtpdml0eSDlhpnpgZM6Cj4+PiBPbiAxMC8xMi8yMDEyIDA4OjQwIEFN
+LCBaaGFuZyBZYW5mZWkgd3JvdGU6Cj4+Pj4gQ3VycmVudGx5LCBrZHVtcCBqdXN0IG1ha2VzIGFs
+bCB0aGUgbG9naWNhbCBwcm9jZXNzb3JzIGxlYXZlIFZNWCBvcGVyYXRpb24gYnkKPj4+PiBleGVj
+dXRpbmcgVk1YT0ZGIGluc3RydWN0aW9uLCBzbyBhbnkgVk1DU3MgYWN0aXZlIG9uIHRoZSBsb2dp
+Y2FsIHByb2Nlc3NvcnMgbWF5Cj4+Pj4gYmUgY29ycnVwdGVkLiBCdXQsIHNvbWV0aW1lcywgd2Ug
+bmVlZCB0aGUgVk1DU3MgdG8gZGVidWcgZ3Vlc3QgaW1hZ2VzIGNvbnRhaW5lZAo+Pj4+IGluIHRo
+ZSBob3N0IHZtY29yZS4gVG8gcHJldmVudCB0aGUgY29ycnVwdGlvbiwgd2Ugc2hvdWxkIFZNQ0xF
+QVIgdGhlIFZNQ1NzIGJlZm9yZQo+Pj4+IGV4ZWN1dGluZyB0aGUgVk1YT0ZGIGluc3RydWN0aW9u
+Lgo+Pj4KPj4+IEhvdyBoYXZlIHlvdSB2ZXJpZmllZCB0aGF0IFZNWE9GRiBkb2Vzbid0IGZsdXNo
+IGNhY2hlZCBWTUNTcyBhbHJlYWR5Pwo+Pj4KPj4KPj4gSSB0cmllZCBzb21lIHRlc3RzLCBmb3Ig
+ZXhhbXBsZSwgSSBtYWRlIGNvcGllcyBmb3IgZXZlcnkgdm1jcywgYW5kIGluIHRoZSBrZHVtcAo+
+PiBwYXRoLCBJIGJhY2tlZCB1cCBhbGwgdGhlIGxvYWRlZCB2bWNzIGludG8gdGhlIGNvcGllcyBi
+ZWZvcmUgdm14b2ZmLgo+PiBBZnRlciBnZW5lcmF0aW5nIHRoZSB2bWNvcmUsIEkgcmV0cmlldmUg
+dGhlIHZtY3NzIGFuZCB0aGVpciBjb3BpZXMsIGFuZCBjb21wYXJlIHRoZW0sCj4+IG5vIGRpZmZl
+cmVuY2VzLgo+Pgo+PiBBbm90aGVyIHRlc3QgaXMgdXNpbmcgVk1DTEVBUiB0byBjbGVhciBhbGwg
+dGhlIGxvYWRlZCB2bWNzIGJlZm9yZSBWTVhPRkYsCj4+IGFuZCBjb21wYXJlIHRoZSB2bWNzcyBh
+bmQgdGhlaXIgY29waWVzLCB0aGVyZSBhcmUgaW5kZWVkIGRpZmZlcmVuY2VzIGJldHdlZW4gdGhl
+Cj4+IHZtY3MgYW5kIGl0cyBjb3B5Lgo+Pgo+PiBJIGtub3cgdGhlIHRlc3RzIG1heSBiZSBub3Qg
+c28gY29udmluY2luZywgZm9yIGV4YW1wbGUsIEkgdXNlZCBtZW1jcHkgdG8gYmFjayB1cAo+PiB0
+aGUgdm1jc3MgYW5kIGl0IGlzIGFuIG9yZGluYXJ5IG1lbW9yeSBvcGVyYXRpb24uIEJ1dCB0byBl
+bnN1cmUgdGhlIG5vbi1jb3JydXB0aW9uCj4+IG9mIHRoZSB2bWNzcyBpbiB0aGUgdm1jb3JlLCBJ
+IHRoaW5rIHdlIHNob3VsZCBWTUNMRUFSIHRoZSB2bWNzcyBiZWZvcmUgVk1YT0ZGIGp1c3QKPj4g
+YXMgdGhlIEludGVsIHNwZWMgc2F5cy4KPiAKPiBTb3JyeSwgSSB3YXMgdW5jbGVhciAtLSBJIHdh
+cyByZWZlcnJpbmcgdG8gdGhlIHNwZWMsIEkgd2Fzbid0IHN1cmUKPiB3aGV0aGVyIFZNWE9GRiBp
+cyBkZWZpbmVkIHRvIGZsdXNoIFZNQ1NlcyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMK
+PiBvbi1jaGlwIGNhY2hlcyBzbyB0aGF0IGl0IHdvbid0IGZsdXNoIHRoZW0gb3V0IGluIHRoZSBm
+dXR1cmUsIGNvcnJ1cHRpbmcKPiBtZW1vcnkuICBXZSBkb24ndCB3YW50IHRvIGRlcGVuZCBvbiBh
+Y3R1YWwgYmVoYXZpb3VyIGFzIGl0IG1heSBjaGFuZ2UKPiB3aXRoIGZ1dHVyZSB2ZXJzaW9uLgo+
+IAo+IENvcHlpbmcgc29tZSBJbnRlbCBmb2xrLCBtYXliZSB0aGV5IGNhbiBjbGFyaWZ5IGl0Lgo+
+IAoKWWVzLCB0aGUgSW50ZWwgc3BlYyBzYXlzICJtYXkgYmUiIGFib3V0IHRoZSBWTUNTLWNvcnJ1
+cHRpb24gdGhpbmcuIEZyb20KY2hhcHRlciAyNC4xMC4xIGluIEludGVswq4gNjQgYW5kIElBLTMy
+IEFyY2hpdGVjdHVyZXMgU29mdHdhcmUgRGV2ZWxvcGVy4oCZcwpNYW51YWwgVm9sdW1lIDNDOlN5
+c3RlbSBQcm9ncmFtbWluZyBHdWlkZSwgUGFydCAzLCB0aGVyZSBpcyB0aGUgZGVzY3JpcHRpb246
+CgoiSWYgYSBsb2dpY2FsIHByb2Nlc3NvciBsZWF2ZXMgVk1YIG9wZXJhdGlvbiwgYW55IFZNQ1Nz
+IGFjdGl2ZSBvbiB0aGF0IGxvZ2ljYWwKcHJvY2Vzc29yIG1heSBiZSBjb3JydXB0ZWQgKHNlZSBi
+ZWxvdykuIFRvIHByZXZlbnQgc3VjaCBjb3JydXB0aW9uIG9mIGEgVk1DUyB0aGF0Cm1heSBiZSB1
+c2VkIGVpdGhlciBhZnRlciBhIHJldHVybiB0byBWTVggb3BlcmF0aW9uIG9yIG9uIGFub3RoZXIg
+bG9naWNhbCBwcm9jZXNzb3IsCnNvZnR3YXJlIHNob3VsZCBWTUNMRUFSIHRoYXQgVk1DUyBiZWZv
+cmUgZXhlY3V0aW5nIHRoZSBWTVhPRkYgaW5zdHJ1Y3Rpb24gb3IKcmVtb3ZpbmcgcG93ZXIgZnJv
+bSB0aGUgcHJvY2Vzc29yIChlLmcuLCBhcyBwYXJ0IG9mIGEgdHJhbnNpdGlvbiB0byB0aGUgUzMg
+YW5kIFM0CnBvd2VyIHN0YXRlcykuIgoKT3VyIHB1cnBvc2UgaXMgdG8gbWFrZSBzdXJlIHRoZSBW
+TUNTcyBpbiB0aGUgdm1jb3JlIGFyZSB1cGRhdGVkIGFuZCBub24tY29ycnVwdGVkLiBTbwphY2Nv
+cmRpbmcgdG8gdGhlIGRlc2NyaXB0aW9uIGFib3ZlLCBubyBtYXR0ZXIgd2hldGhlciBWTVhPRkYg
+aXMgZGVmaW5lZCB0byBmbHVzaApWTUNTcyBvciB3aGV0aGVyIGl0IGp1c3QgaW52YWxpZGF0ZXMg
+b24tY2hpcCBjYWNoZXMsIHdlJ2QgYmV0dGVyIFZNQ0xFQVIgdGhlClZNQ1NzIGJlZm9yZSBleGVj
+dXRpbmcgdGhlIFZNWE9GRi4KClRoYW5rcwpaaGFuZyBZYW5mZWkKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
